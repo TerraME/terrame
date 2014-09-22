@@ -49,11 +49,11 @@ local function dir(folder)
 	return fileTable
 end	
 
-local begin_red = "\027[00;31m"
+local begin_red    = "\027[00;31m"
 local begin_yellow = "\027[00;33m"
-local begin_green = "\027[00;32m"
-local begin_blue = "\027[00;34m"
-local end_color = "\027[00m"
+local begin_green  = "\027[00;32m"
+local begin_blue   = "\027[00;34m"
+local end_color    = "\027[00m"
 
 local print_blue = function(value)
 	if sessionInfo().separator == "/" then
@@ -278,19 +278,16 @@ doc = function(package)
 	-- colocar sempre o logo do TerraME, removendo o parametro logo = "img/terrame.png"
 end
 
-dofileNamespace = function(file)
+local dofileNamespace = function(file)
 	local local_env = {}
 
 	local oldmetatable = getmetatable(_G)
 	setmetatable(_G, {__newindex = local_env, __index = local_env})
-
 	dofile(file)
-
 	setmetatable(_G, oldmetatable)
 
 	return local_env
 end
-	
 
 -- altissima prioridade
 exectest = function(package, configFile)
@@ -449,7 +446,6 @@ executeTests = function(fileName)
 	end
 end
 
--- baixa prioridade
 build = function(folder, dev)
 	if dev == nil then dev = false end
 	-- pensar melhor:
