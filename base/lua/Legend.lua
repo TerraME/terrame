@@ -1,9 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright © 2001-2012 INPE and TerraLAB/UFOP -- www.terrame.org
---
---  Legend Objects for TerraME
---  Last change: April/2012
+-- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 --
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -23,10 +20,10 @@
 -- indirect, special, incidental, or consequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Authors:
---      Antonio Jose da Cunha Rodrigues
---      Rodrigo Reis Pereira
---      Henrique Cota Camello
+-- Authors: Antonio Jose da Cunha Rodrigues
+--          Rodrigo Reis Pereira
+--          Henrique Cota Camello
+-------------------------------------------------------------------------------------------
 
 -- Colors --------------------------------------------------------------------------
 

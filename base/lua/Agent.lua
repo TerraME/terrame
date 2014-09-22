@@ -53,7 +53,7 @@ Agent_ = {
 	--
 	-- agent:addSocialNetwork(network, "friends")
 	addSocialNetwork = function(self, set, id)
-		-- TODO: testar se o parametro set pode ser uma função!
+		-- TODO: testar se o parametro set pode ser uma function!
 		if type(set) ~= "SocialNetwork" and type(set) ~= "function" then
 			incompatibleTypesErrorMsg("#1", "SocialNetwork", type(set), 3)
 		end

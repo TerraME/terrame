@@ -20,9 +20,8 @@
 -- indirect, special, incidental, or consequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Authors: 
---      Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
---      Rodrigo Reis Pereira
+-- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
+--          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
 Cell_ = {

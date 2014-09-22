@@ -20,7 +20,7 @@
 -- indirect, special, incidental, or consequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Authors:  Pedro R. Andrade (pedro.andrade@inpe.br)
+-- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
 Model_ = {

@@ -20,8 +20,8 @@
 -- indirect, special, incidental, or consequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Authors:  Pedro R. Andrade (pedro.andrade@inpe.br)
---           Rodrigo Reis Pereira
+-- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
+--          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
 local createSocialNetworkByQuantity = function(soc, quantity, name, randomObj)

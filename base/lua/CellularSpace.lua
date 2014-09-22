@@ -311,7 +311,7 @@ CellularSpace_ = {
 			incompatibleTypesErrorMsg("strategy","string",type(data.strategy), 3)
 		end
 
-		return switch(data, "strategy") : caseof {
+		return switch(data, "strategy"):caseof{
 			["function"]   = function() 
 				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy"}, 3)
 				if data.filter == nil then
@@ -802,7 +802,7 @@ CellularSpace_ = {
 				values = {}
 				local count = 1
 				local cell = self.cells[1]
-				for k,v in pairs(cell) do
+				for k, v in pairs(cell) do
 					if k ~= "past" and k ~= "cObj_" and k ~= "x" and k ~= "y" then
 						values[count] = k
 						count = count + 1
@@ -815,7 +815,7 @@ CellularSpace_ = {
 		local s = "return function(cell)\n"
 		s = s.."cell.past = {"
 
-		for _,v in pairs(values) do
+		for _, v in pairs(values) do
 			if type(v) == "string" then
 				s = s..v.." = cell."..v..", "
 			else
@@ -967,20 +967,20 @@ function CellularSpace(data)
 			if data.xdim == nil then
 				data.xdim = 0
 			else
-				incompatibleTypesErrorMsg("xdim","positive integer number", type(data.xdim), 3)
+				incompatibleTypesErrorMsg("xdim", "positive integer number", type(data.xdim), 3)
 			end
 		elseif data.xdim <= 0 or math.floor(data.xdim) ~= data.xdim then
-			incompatibleValuesErrorMsg("xdim","positive integer number",data.xdim, 3)
+			incompatibleValuesErrorMsg("xdim", "positive integer number", data.xdim, 3)
 		end
 
 		if type(data.ydim) ~= "number" then
 			if data.ydim == nil then
 				data.ydim = data.xdim
 			else
-				incompatibleTypesErrorMsg("ydim","positive integer number", type(data.ydim), 3)
+				incompatibleTypesErrorMsg("ydim", "positive integer number", type(data.ydim), 3)
 			end
 		elseif data.ydim <= 0 or math.floor(data.ydim) ~= data.ydim then
-			incompatibleValuesErrorMsg("ydim","positive integer number",data.ydim, 3)
+			incompatibleValuesErrorMsg("ydim", "positive integer number", data.ydim, 3)
 		end
 
 		data.minRow = 0
@@ -1036,7 +1036,7 @@ function CellularSpace(data)
 		elseif type(data.dbType) ~= "string" then
 			incompatibleTypesErrorMsg("dbType", "string",type(data.dbType), 3)
 		elseif data.dbType ~= "mysql" and data.dbType ~= "ado" and data.dbType ~= "shp" then
-			incompatibleValuesErrorMsg("dbType","one of the strings from the set ['mysql','ado','shp']",data.dbType, 3)          
+			incompatibleValuesErrorMsg("dbType", "one of the strings from the set ['mysql','ado','shp']", data.dbType, 3)          
 		end
 	
 		cObj:setDBType(string.lower(data.dbType))	
@@ -1059,7 +1059,7 @@ function CellularSpace(data)
 		
 		if data.database:endswith(".shp") then
 			local dbname = data.database
-			local shapeExists = io.open(dbname,"r") and io.open(dbname:sub(1,dbname:len()-3).."dbf")
+			local shapeExists = io.open(dbname, "r") and io.open(dbname:sub(1, dbname:len() - 3).."dbf")
 			if not shapeExists then
 				customErrorMsg("Shapefile not found.", 3)
 			else
@@ -1089,7 +1089,7 @@ function CellularSpace(data)
 					if data.host == nil then
 						data.host = "localhost"
 					else
-						incompatibleTypesErrorMsg("host","string", type(data.host), 3)
+						incompatibleTypesErrorMsg("host", "string", type(data.host), 3)
 					end
 				end
 				cObj:setHostName(data.host)
@@ -1098,7 +1098,7 @@ function CellularSpace(data)
 					if data.user == nil then
 						data.user = "root"
 					else
-						incompatibleTypesErrorMsg("user","string",type(data.user), 3)
+						incompatibleTypesErrorMsg("user", "string",type(data.user), 3)
 					end
 				end
 				cObj:setUser(data.user)
@@ -1123,7 +1123,7 @@ function CellularSpace(data)
 					data.layer = ""
 					customWarningMsg("Parameter 'layer' will be set when loading the TerraLib database.", 3)
 				else
-					incompatibleTypesErrorMsg("layer","string", type(data.layer), 3)
+					incompatibleTypesErrorMsg("layer", "string", type(data.layer), 3)
 				end
 			end
 			cObj:setLayer(data.layer)
@@ -1131,12 +1131,12 @@ function CellularSpace(data)
 			if type(data.where) == "string" then 
 				cObj:setWhereClause(data.where)
 			elseif data.where ~= nil then
-				incompatibleTypesErrorMsg("where","string or nil", type(data.where), 3)
+				incompatibleTypesErrorMsg("where", "string or nil", type(data.where), 3)
 			end
 
 			if type(data.select) ~= "string" and type(data.select) ~= "table" then
 				if data.select ~= nil then
-					incompatibleTypesErrorMsg("select","string, table with strings or nil", type(data.select), 3)
+					incompatibleTypesErrorMsg("select", "string, table with strings or nil", type(data.select), 3)
 				end
 			else
 				if type(data.select) == "string" then
@@ -1179,7 +1179,7 @@ function CellularSpace(data)
 		end)
 
 		forEachElement(data.instance, function(attribute, value, mtype)
-			-- TO DO: Verificar a real necessidade de or attribute == "objectId_"
+			-- TODO: Verificar a real necessidade de or attribute == "objectId_"
 			if attribute == "id" or attribute == "parent" or attribute == "objectId_" then return
 			elseif mtype == "function" then
 				data[attribute] = function(cs, args)

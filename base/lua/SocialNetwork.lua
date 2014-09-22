@@ -22,6 +22,7 @@
 --
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --          Rodrigo Reis Pereira
+-------------------------------------------------------------------------------------------
 
 SocialNetwork_ = {
 	type_ = "SocialNetwork",

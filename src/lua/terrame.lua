@@ -481,7 +481,6 @@ packageInfo = function(package)
 	--end)
 end
 
--- alta prioridade
 --TODO: Raian-Diretorio onde ficarao instalados os pacotes nao deveria ser um campo desta tabela? 
 sessionInfo = function()
 	result = {

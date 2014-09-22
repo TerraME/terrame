@@ -1,10 +1,7 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright © 2001-2012 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 --
---  Observers for TerraME
---  Last change: April/2012 
--- 
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU Lesser General Public
@@ -23,9 +20,9 @@
 -- indirect, special, incidental, or consequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Authors: 
---      Antonio Jose da Cunha Rodrigues
---      Rodrigo Reis Pereira
+-- Authors: Antonio Jose da Cunha Rodrigues
+--          Rodrigo Reis Pereira
+-------------------------------------------------------------------------------------------
 
 -- Observer Types
 TME_OBSERVERS = {
