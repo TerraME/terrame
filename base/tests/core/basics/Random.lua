@@ -93,7 +93,6 @@ return {
 			local v = randomObj:number()
 			self:assert(v >= 0)
 			self:assert(v <= 1)
-			--self:assert_gte_number_precision(v, 0)
 		end
 
 		local randomObj = Random{}
@@ -102,7 +101,6 @@ return {
 			local v = randomObj:number(10.1)
 			self:assert(v >= 0)
 			self:assert(v <= 10.505)
-			--self:assert_gte_number_precision(v, 0)
 		end
 
 		local randomObj = Random{}
@@ -111,7 +109,6 @@ return {
 			local v = randomObj:number(-10.1)
 			self:assert(v <= 0)
 			self:assert(v >= -10.505)
-			--self:assert_gte_number_precision(v, 0)
 		end
 
 		local randomObj = Random{}
@@ -120,7 +117,6 @@ return {
 			local v = randomObj:number(10.1, 20.2)
 			self:assert(v <= 20.2)
 			self:assert(v >= 10.1)
-			--self:assert_gte_number_precision(v, 0)
 		end
 
 		local randomObj = Random{}
@@ -128,7 +124,6 @@ return {
 		for i = 1, 10 do
 			local v = randomObj:number(10.1, 10.1)
 			self:assert_equal(v, 10.1)
-			--self:assert_gte_number_precision(v, 0)
 		end
 
 		local randomObj = Random{}
@@ -137,7 +132,6 @@ return {
 			local v = randomObj:number(-10.1, 10.1)
 			self:assert(v <= 10.1)
 			self:assert(v >= -10.1)
-			--self:assert_gte_number_precision(v, 0)
 		end
 
 		randomObj = Random{}
@@ -145,7 +139,6 @@ return {
 		for i = 1, 10 do
 			local v = randomObj:number(-10.1, -10.1)
 			self:assert_equal(v, -10.1)
-			--self:assert_gte_number_precision(v, 0)
 		end
 	end,
 	reSeed = function(self)

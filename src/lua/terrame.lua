@@ -115,7 +115,6 @@ require = function(package, recursive, asnamespace)
 	end
 
 	local s = sessionInfo().separator
-
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
 	-- if os.rename(package_path, package_path) then
