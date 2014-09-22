@@ -464,9 +464,9 @@ build = function(folder, dev)
 	-- carregar o pacote
 end
 
--- baixa prioridade
 data = function(file, package)
-	-- return "TME_FOLDER/packages/package/data/file"
+	local file = sessionInfo().path..s.."packages"..s..package..s.."data"..s..file
+	return file
 	-- verificar se o arquivo existe senao retorna um erro
 end
 
