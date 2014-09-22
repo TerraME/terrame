@@ -1,6 +1,6 @@
 load = {
-	"Utils.lua",
 	"Random.lua",
+	"Utils.lua",
 	"UnitTest.lua",
 	"Model.lua",
 	"Legend.lua",

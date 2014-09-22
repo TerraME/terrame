@@ -49,45 +49,39 @@ local function dir(folder)
 	return fileTable
 end	
 
-begin_red = "\027[00;31m"
-end_red = "\027[00m"
+local begin_red = "\027[00;31m"
+local begin_yellow = "\027[00;33m"
+local begin_green = "\027[00;32m"
+local begin_blue = "\027[00;34m"
+local end_color = "\027[00m"
 
-begin_yellow = "\027[00;33m"
-end_yellow = "\027[00m"
-
-begin_green = "\027[00;32m"
-end_green = "\027[00m"
-
-begin_blue = "\027[00;34m"
-end_blue = "\027[00m"
-
-print_blue = function(value)
-	if s == "/" then
-		print(begin_blue..value..end_blue)
+local print_blue = function(value)
+	if sessionInfo().separator == "/" then
+		print(begin_blue..value..end_color)
 	else
-	print(value)
+		print(value)
 	end
 end
 
 local function print_red(value)
-	if s == "/" then
-	print(begin_red..value..end_red)
+	if sessionInfo().separator == "/" then
+		print(begin_red..value..end_color)
 	else
 		print(value)
 	end
 end
 
 local function print_green(value)
-	if s == "/" then
-		print(begin_green..value..end_green)
+	if sessionInfo().separator == "/" then
+		print(begin_green..value..end_color)
 	else
 		print(value)
 	end
 end
 
 local function print_yellow(value)
-	if s == "/" then
-		print(begin_yellow..value..end_yellow)
+	if sessionInfo().separator == "/" then
+		print(begin_yellow..value..end_color)
 	else
 		print(value)
 	end
@@ -411,9 +405,7 @@ executeTests = function(fileName)
 					UnitTest.success = UnitTest.success + 1
 				end
 
-				if getn(_G) == count_global then
-					UnitTest.success = UnitTest.success + 1
-				else
+				if getn(_G) > count_global then
 					UnitTest.fail = UnitTest.fail + 1
 					-- TODO: check if it is < or > (the code below works for >)
 					local variables = ""
@@ -434,6 +426,8 @@ executeTests = function(fileName)
 					forEachElement(pvariables, function(_, value)
 						_G[value] = nil
 					end)
+				else
+					UnitTest.success = UnitTest.success + 1
 				end
 
 				if UnitTest.count_last > 0 then

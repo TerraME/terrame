@@ -26,6 +26,18 @@
 --      Raian Vargas Maretto
 -------------------------------------------------------------------------------------------
 
+-- TODO: alow UnitTest.lua to use print_red from terrame.lua directly, removing the lines below
+local begin_red = "\027[00;31m"
+local end_color = "\027[00m"
+
+local function print_red(value)
+    if sessionInfo().separator == "/" then
+        print(begin_red..value..end_color)
+    else
+        print(value)
+    end
+end
+
 UnitTest = {
 	success = 0,
 	fail = 0,
@@ -147,3 +159,4 @@ UnitTest = {
 		end
 	end
 }
+

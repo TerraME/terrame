@@ -1106,7 +1106,7 @@ end
 -- dofile(TME_LUA_PATH.."//Model.lua")
 
 -- -- THIS A GLOBAL RANDOM OBJECT
--- TME_GLOBAL_RANDOM = Random{seed = os.time()}
+TME_GLOBAL_RANDOM = Random{seed = os.time()}
 
 -- dofile(TME_LUA_PATH .. "//Legend.lua")
 -- dofile(TME_LUA_PATH .. "//Observer.lua")
