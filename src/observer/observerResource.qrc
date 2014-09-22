@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/hand.png</file>
+        <file>icons/zoomIn.png</file>
+        <file>icons/zoomOut.png</file>
+        <file>icons/zoomWindow.png</file>
+        <file>icons/zoomRestore.png</file>
+        <file>icons/zoom.png</file>
+        <file>icons/legend.png</file>
+        <file>icons/pause.png</file>
+        <file>icons/play.png</file>
+        <file>icons/stop.png</file>
+        <file>icons/grid.png</file>
+        <file>icons/splitter.png</file>
+        <file>icons/backward.png</file>
+        <file>icons/forward.png</file>
+        <file>icons/seek-backward.png</file>
+        <file>icons/seek-forward.png</file>
+        <file>icons/compress.png</file>
+    </qresource>
+</RCC>
