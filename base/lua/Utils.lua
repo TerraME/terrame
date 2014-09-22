@@ -26,9 +26,6 @@
 --          Raian Vargas Maretto
 -------------------------------------------------------------------------------------------
 
-
--- Execution modes for TerraME
-
 --@header Some basic and useful functions for modeling.
 
 TME_EXECUTION_MODES = {
@@ -43,16 +40,10 @@ TME_CPP_MSG = nil
 
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
-local TME_VERSION = "1_3_1"
-TME_PATH = sessionInfo().path
---os.getenv("TME_PATH_" .. TME_VERSION)
-local TME_LUA_PATH = TME_PATH .. "//bin//Lua"
-
 TME_DB_VERSION="4_2_0"
-TME_DIR_SEPARATOR = package.config:sub(1, 1)
 
-if TME_PATH == nil or TME_PATH == "" then
-	error("Error: TME_PATH_" .. TME_VERSION .." environment variable should exist and point to TerraME installation folder.", 2)
+if sessionInfo().path == nil or sessionInfo().path == "" then
+	error("Error: TME_PATH environment variable should exist and point to TerraME installation folder.", 2)
 end
 
 -- To keep compatibilities with old versions of Lua
@@ -1100,46 +1091,5 @@ function writeCSV(data, filename, sep)
 	file:close()
 end
 
---Extra
--- dofile(TME_LUA_PATH .. "//Random.lua")
--- dofile(TME_LUA_PATH.."//Tests.lua")
--- dofile(TME_LUA_PATH.."//Model.lua")
-
--- -- THIS A GLOBAL RANDOM OBJECT
 TME_GLOBAL_RANDOM = Random{seed = os.time()}
-
--- dofile(TME_LUA_PATH .. "//Legend.lua")
--- dofile(TME_LUA_PATH .. "//Observer.lua")
--- dofile(TME_LUA_PATH .. "//SocialNetwork.lua")
--- dofile(TME_LUA_PATH .. "//Society.lua")
--- dofile(TME_LUA_PATH .. "//Group.lua")
-
--- -- KERNEL'S COMPONENTS
-
--- --Space ----------------------------------------------------------------------------------
--- dofile(TME_LUA_PATH .. "//Coord.lua")
--- dofile(TME_LUA_PATH .. "//Cell.lua")
--- dofile(TME_LUA_PATH .. "//CellularSpace.lua")
--- dofile(TME_LUA_PATH .. "//Neighborhood.lua")
-
--- --Time -----------------------------------------------------------------------------------
--- -- The constructor Event, differently of the others, does not return a table.
--- -- Instead, it returns a C++ object TeEvent. This makes sense since there is 
--- -- no meaning on the modeller's command: ev.time = 1. This because any attribute of
--- -- an Event is controled by the C++ simulation engine, including the attribute ev.time.
--- dofile(TME_LUA_PATH .. "//Pair.lua")
--- dofile(TME_LUA_PATH .. "//Event.lua")
--- dofile(TME_LUA_PATH .. "//Action.lua")
--- dofile(TME_LUA_PATH .. "//Timer.lua")
-
--- --Behavior -------------------------------------------------------------------------------
--- dofile(TME_LUA_PATH .. "//Jump.lua")
--- dofile(TME_LUA_PATH .. "//Flow.lua")
--- dofile(TME_LUA_PATH .. "//State.lua")
--- dofile(TME_LUA_PATH .. "//Automaton.lua")
--- dofile(TME_LUA_PATH .. "//Agent.lua")
--- dofile(TME_LUA_PATH .. "//Trajectory.lua")
-
--- --Evironment -----------------------------------------------------------------------------
--- dofile(TME_LUA_PATH .. "//Environment.lua")
 
