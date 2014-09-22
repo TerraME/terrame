@@ -470,9 +470,15 @@ data = function(file, package)
 	-- verificar se o arquivo existe senao retorna um erro
 end
 
--- alta prioridade
 packageInfo = function(package)
-	-- retornar o conteudo do arquivo DESCRIPTION do pacote em uma tabela
+	local s = sessionInfo().separator
+	local file = sessionInfo().path..s.."packages"..s..package..s.."description.lua"
+	
+	return dofileNamespace(file)
+
+	--forEachOrderedElement(ns, function(idx, value)
+	--	print(idx..": "..value)
+	--end)
 end
 
 -- alta prioridade
