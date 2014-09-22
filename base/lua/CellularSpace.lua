@@ -942,7 +942,7 @@ function CellularSpace(data)
  			namedParametersErrorMsg("CellularSpace", 3)
  		end
 	elseif getn(data) == 0 then
-		customErrorMsg("'CellularSpace' needs more informations to be created.", 3)
+		customErrorMsg("'CellularSpace' needs more information to be created.", 3)
 	end
 
 	local cObj = TeCellularSpace()
@@ -951,7 +951,7 @@ function CellularSpace(data)
 		if data.autoload == nil then
 			data.autoload = true
 		else
-			incompatibleTypesErrorMsg("autoload","boolean",type(data.autoload), 3)
+			incompatibleTypesErrorMsg("autoload", "boolean", type(data.autoload), 3)
 		end
 	end    
 
@@ -1006,10 +1006,14 @@ function CellularSpace(data)
 			end
 		end
 	else
-		if not data.database or type(data.database) ~="string" then
-			mandatoryArgumentErrorMsg("database", 3)
+		if type(data.database) ~= "string" then
+			if data.database == nil then
+				mandatoryArgumentErrorMsg("database", 3)
+			else
+				incompatibleTypesErrorMsg("database", "string", type(data.database), 3)
+			end
 		elseif data.database:endswith(".shp") or data.database:endswith(".mdb") or data.database:endswith(".csv") then
-			local f=io.open(data.database,"r")
+			local f = io.open(data.database, "r")
 			if not f then
 				customErrorMsg("File '".. data.database .."' not found.", 3)
 			end
@@ -1017,8 +1021,8 @@ function CellularSpace(data)
 		
 		if data.dbType == nil then
 			if data.database:endswith(".shp") or data.database:endswith(".mdb") or data.database:endswith(".csv") then
-				if not io.open(data.database,'r') then
-					resourceNotFoundErrorMsg("database",data.database, 3)
+				if not io.open(data.database, 'r') then
+					resourceNotFoundErrorMsg("database", data.database, 3)
 				else
 					if data.database:endswith(".shp") then
 						data.dbType = "shp"
@@ -1098,7 +1102,7 @@ function CellularSpace(data)
 					if data.user == nil then
 						data.user = "root"
 					else
-						incompatibleTypesErrorMsg("user", "string",type(data.user), 3)
+						incompatibleTypesErrorMsg("user", "string", type(data.user), 3)
 					end
 				end
 				cObj:setUser(data.user)
@@ -1121,7 +1125,6 @@ function CellularSpace(data)
 			if type(data.layer) ~= "string" then
 				if data.layer == nil then
 					data.layer = ""
-					customWarningMsg("Parameter 'layer' will be set when loading the TerraLib database.", 3)
 				else
 					incompatibleTypesErrorMsg("layer", "string", type(data.layer), 3)
 				end
