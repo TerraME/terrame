@@ -38,7 +38,7 @@ local function print_red(value)
     end
 end
 
-UnitTest = {
+UnitTest_ = {
 	success = 0,
 	fail = 0,
 	test = 0,
@@ -159,4 +159,20 @@ UnitTest = {
 		end
 	end
 }
+
+local metaTableUnitTest_ = {
+	__index = UnitTest_
+}
+
+function UnitTest(data)
+	setmetatable(data, metaTableUnitTest_)
+
+	if data.dbType ~= nil then
+		data.dbType = string.lower(data.dbType)
+	end
+
+	checkUnnecessaryParameters(data, {"dbType", "host", "port", "password", "user"}, 3)
+
+	return data
+end
 

@@ -315,22 +315,22 @@ executeTests = function(fileName)
 	-- TODO: possibilitar executar esta funcao mesmo que o usuario nao passe
 	-- um arquivo de teste, de forma que todos os testes serao executados.
 
-	dofile(fileName) -- Declaring folders, files, wait, etc.
-	-- local data = dofileNamespace(fileName)
-		
+	--dofile(fileName) -- Declaring folders, files, wait, etc.
+	local data = dofileNamespace(fileName)
+
 	-- Check every selected folder
-	if type(folder) == "string" then 
-		folder = {folder}
-	elseif folder == nil then
-		folder = {}
+	if type(data.folder) == "string" then 
+		data.folder = {data.folder}
+	elseif data.folder == nil then
+		data.folder = {}
 		local parentFolders = dir(srcDir)
 		for _, parentFolder in ipairs(parentFolders) do
 			local secondFolders = dir(srcDir..s..parentFolder)
 			for _, secondFolder in pairs(secondFolders) do
-				folder[#folder + 1] = parentFolder..s..secondFolder
+				data.folder[#folder + 1] = parentFolder..s..secondFolder
 			end
 		end
-	elseif type(folder) ~= "table" then
+	elseif type(data.folder) ~= "table" then
 		error("folder is not a string, table or nil")
 	end
 
@@ -343,13 +343,21 @@ executeTests = function(fileName)
 		global_variables[idx] = true
 	end)
 
+	local ut = UnitTest{
+		dbType = data.dbType,
+		user = data.user,
+		password = data.password,
+		port = data.port,
+		host = data.host
+	}
+
 	-- For each test in each file in each folder, execute the test
-	for _, eachFolder in ipairs(folder) do
-		if type(file) == "string" then
-			myFile = {file}
-		elseif type(file) == "table" then
-			myFile = file
-		elseif file == nil then
+	for _, eachFolder in ipairs(data.folder) do
+		if type(data.file) == "string" then
+			myFile = {data.file}
+		elseif type(data.file) == "table" then
+			myFile = data.file
+		elseif data.file == nil then
 			myFile = {}	
 			local myFile2 = dir(srcDir..s..eachFolder)
 			for _, eachFile in ipairs(myFile2) do
@@ -365,9 +373,9 @@ executeTests = function(fileName)
 			-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
 			local tests = dofile(srcDir..s..eachFolder..s..eachFile)
 
-			if type(test) == "string" then
-				myTest = {test}
-			elseif test == nil then
+			if type(data.test) == "string" then
+				myTest = {data.test}
+			elseif data.test == nil then
 				myTest = {}	
 				forEachOrderedElement(tests, function(index, value, mtype)
 					myTest[#myTest + 1] = index 					
@@ -377,32 +385,32 @@ executeTests = function(fileName)
 			else
 				error("test is not a string, table or nil")
 			end
-			
+
 			for _, eachTest in ipairs(myTest) do
 				print("Testing "..eachTest)
 
 				local my_function = function()
-					tests[eachTest](UnitTest)
+					tests[eachTest](ut)
 				end
 
-				UnitTest.test = UnitTest.test + 2
-				local count_test = UnitTest.test
+				ut.test = ut.test + 2
+				local count_test = ut.test
 
 				collectgarbage("collect")
 				local ok_execution, err = pcall(my_function)
 
 				if not ok_execution then
 					print_red("Wrong execution, got error: '"..err.."'.")
-					UnitTest.fail = UnitTest.fail + 1
-				elseif count_test == UnitTest.test then
-					UnitTest.fail = UnitTest.fail + 1
+					ut.fail = ut.fail + 1
+				elseif count_test == ut.test then
+					ut.fail = ut.fail + 1
 					print_red("No asserts were found in the test.")
 				else
-					UnitTest.success = UnitTest.success + 1
+					ut.success = ut.success + 1
 				end
 
 				if getn(_G) > count_global then
-					UnitTest.fail = UnitTest.fail + 1
+					ut.fail = ut.fail + 1
 					-- TODO: check if it is < or > (the code below works for >)
 					local variables = ""
 					local pvariables = {}
@@ -423,26 +431,26 @@ executeTests = function(fileName)
 						_G[value] = nil
 					end)
 				else
-					UnitTest.success = UnitTest.success + 1
+					ut.success = ut.success + 1
 				end
 
-				if UnitTest.count_last > 0 then
-					print_red("[The error above occurs more "..UnitTest.count_last.." times.]")
-					UnitTest.count_last = 0
-					UnitTest.last_error = ""
+				if ut.count_last > 0 then
+					print_red("[The error above occurs more "..ut.count_last.." times.]")
+					ut.count_last = 0
+					ut.last_error = ""
 				end
 			end
 		end
 	end 
 
 	print("\nReport:")
-	if UnitTest.fail > 0 then
-		print_red("Tests: "..UnitTest.test)
-		print_red("Success: "..UnitTest.success.." ("..round(UnitTest.success/UnitTest.test*100, 2).."%)")
-		print_red("Fail: "..UnitTest.fail.." ("..round(UnitTest.fail/UnitTest.test*100, 2).."%)")
+	if ut.fail > 0 then
+		print_red("Tests: "..ut.test)
+		print_red("Success: "..ut.success.." ("..round(ut.success/ut.test*100, 2).."%)")
+		print_red("Fail: "..ut.fail.." ("..round(ut.fail/ut.test*100, 2).."%)")
 	else
-		print_green("Tests: "..UnitTest.test)
-		print_green("Success: "..UnitTest.success.." (100%)")
+		print_green("Tests: "..ut.test)
+		print_green("Success: "..ut.success.." (100%)")
 	end
 end
 
@@ -464,7 +472,8 @@ build = function(folder, dev)
 	-- carregar o pacote
 end
 
-data = function(file, package)
+file = function(file, package)
+	local s = sessionInfo().separator
 	local file = sessionInfo().path..s.."packages"..s..package..s.."data"..s..file
 	return file
 	-- verificar se o arquivo existe senao retorna um erro
