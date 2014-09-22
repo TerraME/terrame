@@ -300,7 +300,7 @@ end
 	
 
 -- altissima prioridade
-test = function(package, configFile)
+exectest = function(package, configFile)
 	if package == nil then
 		package = "base"
 	else
@@ -374,6 +374,7 @@ executeTests = function(fileName)
 			print_green("Testing "..eachFolder..s..eachFile)
 			-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
 			local tests = dofile(srcDir..s..eachFolder..s..eachFile)
+
 			if type(test) == "string" then
 				myTest = {test}
 			elseif test == nil then
@@ -381,7 +382,6 @@ executeTests = function(fileName)
 				forEachOrderedElement(tests, function(index, value, mtype)
 					myTest[#myTest + 1] = index 					
 				end)
-		
 			elseif type(test) == "table" then
 				myTest = test
 			else

@@ -44,7 +44,8 @@ TME_CPP_MSG = nil
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
 local TME_VERSION = "1_3_1"
-TME_PATH = os.getenv("TME_PATH_" .. TME_VERSION)
+TME_PATH = sessionInfo().path
+--os.getenv("TME_PATH_" .. TME_VERSION)
 local TME_LUA_PATH = TME_PATH .. "//bin//Lua"
 
 TME_DB_VERSION="4_2_0"
@@ -443,7 +444,7 @@ function belong(value, values)
 	end
 
 	if values == nil then return false end
-	found = false
+	local found = false
 	forEachElement(values, function(_, mvalue)
 		if mvalue == value then
 			found = true
