@@ -114,7 +114,7 @@ UnitTest = {
 			if v1 == v2 then
 				self.success = self.success + 1
 			else 
-				self:print_error("Values should be equal, but got '"..v1.."', got '"..v2.."'.")
+				self:print_error("Values should be equal, but got '"..v1.."' and '"..v2.."'.")
 				self.fail = self.fail + 1
 			end
 		elseif type(v1) ~= type(v2) then
