@@ -132,7 +132,7 @@ UnitTest_ = {
 
 		local _, err = pcall(my_function)
 		if not err then
-			self:print_error("Test expected an error, but no error was found.", 2)
+			self:print_error("Test expected an error ('"..error_message.."'), but no error was found.", 2)
 			self.fail = self.fail + 1
 		else
 			local shortErrorMsg = string.match(err, ":[0-9]*:.*")
