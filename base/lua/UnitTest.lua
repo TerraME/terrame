@@ -142,7 +142,7 @@ UnitTest_ = {
 			-- carregado. descobrir este erro eh importante para verificar se o level foi usado corretamente.
 			if shortErrorMsg == nil then
 				self.fail = self.fail + 1
-				self:print_error("Error should contain line number (possibly wrond level), got: "..err)
+				self:print_error("Error should contain line number (possibly wrong level), got: '"..err.."'.")
 				return
 			end
 
