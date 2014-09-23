@@ -133,6 +133,7 @@ require = function(package, recursive, asnamespace)
 	end
 
 	local load_file = package_path..s.."load.lua"
+	local load_sequence
 
 	if os.rename(package_path..s.."load.lua", package_path..s.."load.lua") then
 		load_sequence = dofileNamespace(load_file)
@@ -147,11 +148,8 @@ require = function(package, recursive, asnamespace)
 		end
 	end
 
-	-- executar o script load.lua que deve ficar na raiz do pacote
 	-- executar a funcao onLoad() do pacote (esta funcao pode configurar algumas coisas e imprimir informacao
 	-- de que o pacote foi carregado com sucesso).
-	-- se load.lua nao existir significa que todos os arquivos podem ser carregados em qualquer ordem
-	-- load = {"Agent.lua", "Cell.lua", ..} -- com a ordem de carregamento
 end
 
 -- TODO: allow this to be executed directly from TerraME. Check if it is interesting to be executed
@@ -330,7 +328,6 @@ executeTests = function(fileName)
 	-- TODO: possibilitar executar esta funcao mesmo que o usuario nao passe
 	-- um arquivo de teste, de forma que todos os testes serao executados.
 
-	--dofile(fileName) -- Declaring folders, files, wait, etc.
 	local data = dofileNamespace(fileName)
 
 	-- Check every selected folder
