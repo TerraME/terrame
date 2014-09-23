@@ -321,7 +321,7 @@ Environment_ = {
     	if data.bidirect == nil then
 			data.bidirect = false
 		elseif type(data.bidirect) ~= "boolean" then
-			incompatibleTypesErrorMsg("bidirect","boolean",type(data.bidirect), 3)
+			incompatibleTypesErrorMsg("bidirect", "boolean", type(data.bidirect), 3)
 		end
 
 		local file = io.open(data.source, "r")

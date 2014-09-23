@@ -3454,8 +3454,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
             if(cell == NULL)
             {
                 file.close();
-                string err_out = string("Cell Id '") + string(cellId) + string("' found in the file '" ) + string(fileName) +
-                                 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
+                string err_out = string("Cell '") + string(cellId) + string("' is used by the file '" ) + string(fileName) +
+                                 string("' but was not found in the CellularSpace. Probably the file was made for another CellularSpace.");
                 lua_getglobal(L, "customErrorMsg");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,4);
