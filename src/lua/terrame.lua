@@ -128,9 +128,9 @@ require = function(package, recursive, asnamespace)
 	local s = sessionInfo().separator
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
-	-- if os.rename(package_path, package_path) then
-	-- 	customErrorMsg("Package "..package.." not found.", 3)
-	-- end
+	if os.rename(package_path, package_path) == nil then
+		customErrorMsg("Package "..package.." not found.", 3)
+	end
 
 	local load_file = package_path..s.."load.lua"
 
