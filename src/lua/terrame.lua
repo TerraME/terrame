@@ -339,7 +339,7 @@ executeTests = function(fileName)
 		for _, parentFolder in ipairs(parentFolders) do
 			local secondFolders = dir(srcDir..s..parentFolder)
 			for _, secondFolder in pairs(secondFolders) do
-				data.folder[#folder + 1] = parentFolder..s..secondFolder
+				data.folder[#data.folder + 1] = parentFolder..s..secondFolder
 			end
 		end
 	elseif type(data.folder) ~= "table" then
