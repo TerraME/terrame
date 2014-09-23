@@ -128,6 +128,7 @@ require = function(package, recursive, asnamespace)
 		dofile(load_file)
 		load_sequence = load
 		-- load_sequence = dofileNamespace(load_file)
+		-- load_sequence.load
 	else
 		load_sequence = dir(package_path..s.."lua")
 	end
@@ -479,6 +480,14 @@ file = function(file, package)
 	-- verificar se o arquivo existe senao retorna um erro
 end
 
+local VERSION = "1.3.1"
+
+-- RAIAN implementar
+execute = function(parameters) -- parameters is a string
+	-- implementa o sessionInfo
+	-- o execute vai chamar o build, test, etc.
+end
+
 packageInfo = function(package)
 	local s = sessionInfo().separator
 	local file = sessionInfo().path..s.."packages"..s..package..s.."description.lua"
@@ -494,8 +503,8 @@ end
 sessionInfo = function()
 	result = {
 		mode = "normal",
-		version = "1.3.1",
-		dbVersion = "1_3_1",
+		version = VERSION,
+		dbVersion = "1_3_1", -- TODO: remove this parameter?
 		separator = package.config:sub(1, 1),
 		path = os.getenv("TME_PATH")
 	}
