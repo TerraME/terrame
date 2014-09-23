@@ -154,6 +154,23 @@ require = function(package, recursive, asnamespace)
 	-- load = {"Agent.lua", "Cell.lua", ..} -- com a ordem de carregamento
 end
 
+-- TODO: allow this to be executed directly from TerraME. Check if it is interesting to be executed
+-- when the package is installed.
+importDatabase = function()
+	local s = sessionInfo().separator
+	local baseDir = sessionInfo().path..s.."packages/base"
+
+	-- before calling the commands below, we need to execute
+	-- "create database cabecadeboi;"
+	
+	local command = "mysql -u root -p -h localhost cabecaDeBoi < "..baseDir..s.."data"..s.."cabecaDeBoi.sql"
+	print(command)
+
+	command = "mysql -u root -p -h localhost db_emas < "..baseDir..s.."data"..s.."db_emas.sql"
+	print(command)
+--	os.execute(command)
+end
+
 configureTests = function(fileName)
 	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
 	local s = sessionInfo().separator
