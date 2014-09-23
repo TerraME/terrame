@@ -1,4 +1,4 @@
-load = {
+files = {
 	"Random.lua",
 	"Utils.lua",
 	"UnitTest.lua",

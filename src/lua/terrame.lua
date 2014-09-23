@@ -94,6 +94,17 @@ install = function(file)
 	-- verificar se a versao do terrame eh valida (built)
 end
 
+local dofileNamespace = function(file)
+	local local_env = {}
+
+	local oldmetatable = getmetatable(_G)
+	setmetatable(_G, {__newindex = local_env, __index = local_env})
+	dofile(file)
+	setmetatable(_G, oldmetatable)
+
+	return local_env
+end
+
 -- altissima prioridade (somente com o primeiro argumento)
 -- TODO: This function shouldn't have named parameters? It has two optional parameters. 
 require = function(package, recursive, asnamespace)
@@ -124,11 +135,8 @@ require = function(package, recursive, asnamespace)
 	local load_file = package_path..s.."load.lua"
 
 	if os.rename(package_path..s.."load.lua", package_path..s.."load.lua") then
-		-- TODO: dofileNamespace is returning an empty table, change here to it when it becomes to work
-		dofile(load_file)
-		load_sequence = load
-		-- load_sequence = dofileNamespace(load_file)
-		-- load_sequence.load
+		load_sequence = dofileNamespace(load_file)
+		load_sequence = load_sequence.files
 	else
 		load_sequence = dir(package_path..s.."lua")
 	end
@@ -146,7 +154,7 @@ require = function(package, recursive, asnamespace)
 	-- load = {"Agent.lua", "Cell.lua", ..} -- com a ordem de carregamento
 end
 
-function configureTests(fileName)
+configureTests = function(fileName)
 	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages/base"
@@ -277,17 +285,6 @@ doc = function(package)
 	-- no futuro, pegar tambem a pasta examples para gerar a documentacao
 	-- luadoc *.lua -d doc
 	-- colocar sempre o logo do TerraME, removendo o parametro logo = "img/terrame.png"
-end
-
-local dofileNamespace = function(file)
-	local local_env = {}
-
-	local oldmetatable = getmetatable(_G)
-	setmetatable(_G, {__newindex = local_env, __index = local_env})
-	dofile(file)
-	setmetatable(_G, oldmetatable)
-
-	return local_env
 end
 
 -- altissima prioridade
