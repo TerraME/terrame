@@ -3398,8 +3398,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
     if(strcmp(layer1Id, layer2Id) != 0)
     {
         file.close();
-        string err_out = string("This function does not support neighborhoods between two different layers! ") +
-                string("Use 'Environment:loadNeighborhood' function instead.");
+        string err_out = string("This function cannot load neighborhood between two layers. ") +
+                string("Use 'Environment:loadNeighborhood()' instead.");
         lua_getglobal(L, "customErrorMsg");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,4);
@@ -3410,7 +3410,7 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
     if(strcmp(layer1Id, this->getLayerName().c_str()) != 0)
     {
         file.close();
-        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built to this CellularSpace. ") +
+        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built for this CellularSpace. ") +
                 string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GPM file layer: '") + string(layer1Id) + string("'.");
         lua_getglobal(L, "customErrorMsg");
         lua_pushstring(L,err_out.c_str());
@@ -3617,7 +3617,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
     {
         file.close();
 
-        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built to this CellularSpace. ") +
+        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built for this CellularSpace. ") +
                 string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GAL file layer: '") + string(layerId) + string("'.");
         lua_getglobal(L, "customErrorMsg");
         lua_pushstring(L,err_out.c_str());
@@ -3813,7 +3813,7 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
     {
         file.close();
 
-        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built to this CellularSpace. ") +
+        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built for this CellularSpace. ") +
                 string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GWT file layer: '") + string(layerId) + string("'.");
 
         lua_getglobal(L, "customErrorMsg");
