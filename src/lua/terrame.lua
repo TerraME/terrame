@@ -159,9 +159,9 @@ importDatabase = function()
 	local baseDir = sessionInfo().path..s.."packages/base"
 
 	-- before calling the commands below, we need to execute
-	-- "create database cabecadeboi;"
+	-- "create database cabeca;"
 	
-	local command = "mysql -u root -p -h localhost cabecaDeBoi < "..baseDir..s.."data"..s.."cabecaDeBoi.sql"
+	local command = "mysql -u root -p -h localhost cabeca < "..baseDir..s.."data"..s.."cabecaDeBoi.sql"
 	print(command)
 
 	command = "mysql -u root -p -h localhost db_emas < "..baseDir..s.."data"..s.."db_emas.sql"
