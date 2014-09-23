@@ -3410,8 +3410,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
     if(strcmp(layer1Id, this->getLayerName().c_str()) != 0)
     {
         file.close();
-        string err_out = string("The neighborhood file '") + string(fileName) + string("' was not built to this CellularSpace!\n") +
-                string("\t->CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("'.\n") + string("\t->GPM file layer: '") + string(layer1Id) + string("'.");
+        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built to this CellularSpace. ") +
+                string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GPM file layer: '") + string(layer1Id) + string("'.");
         lua_getglobal(L, "customErrorMsg");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,4);
@@ -3616,8 +3616,9 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
     if(strcmp(layerId, this->getLayerName().c_str()))
     {
         file.close();
-        string err_out = string("The neighborhood file '" ) + string(fileName) + string("' was not built to this Cellular Space.\n") +
-                string("\t->Cellular Space layer: '") + string(this->getLayerName().c_str()) + string("'.\n") + string("\t->GAL file layer: '") + string(layerId) + string("'.");
+
+        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built to this CellularSpace. ") +
+                string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GAL file layer: '") + string(layerId) + string("'.");
         lua_getglobal(L, "customErrorMsg");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,4);
@@ -3811,9 +3812,10 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
     if(strcmp(layerId, this->getLayerName().c_str()))
     {
         file.close();
-        string err_out = string("The neighborhood file '" ) + string(fileName) + string("' was not built to this Cellular Space.\n") +
-                         string("\t->Cellular Space layer: '") + string(this->getLayerName().c_str()) + string("'.\n") +
-                         string("\t->GWT file layer: '") + string(layerId) + string("'.");
+
+        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built to this CellularSpace. ") +
+                string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GWT file layer: '") + string(layerId) + string("'.");
+
         lua_getglobal(L, "customErrorMsg");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,4);
