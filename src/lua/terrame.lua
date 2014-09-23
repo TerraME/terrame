@@ -458,8 +458,8 @@ executeTests = function(fileName)
 	print("\nReport:")
 	if ut.fail > 0 then
 		print_red("Tests: "..ut.test)
-		print_red("Success: "..ut.success.." ("..round(ut.success/ut.test*100, 2).."%)")
-		print_red("Fail: "..ut.fail.." ("..round(ut.fail/ut.test*100, 2).."%)")
+		print_red("Success: "..ut.success.." ("..round(ut.success/ut.test*100, 3).."%)")
+		print_red("Fail: "..ut.fail.." ("..round(ut.fail/ut.test*100, 3).."%)")
 	else
 		print_green("Tests: "..ut.test)
 		print_green("Success: "..ut.success.." (100%)")
