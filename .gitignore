@@ -8,6 +8,7 @@ CMakeFiles/
 CMakeScripts/
 CPackConfig.cmake
 CPackSourceConfig.cmake
+Makefile
 protocol.pb.cc
 protocol.pb.h
 qrc_observerResource.cxx
