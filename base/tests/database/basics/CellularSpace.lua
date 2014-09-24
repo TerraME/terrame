@@ -246,8 +246,6 @@ return{
 		unitTest:assert_equal(#cs.cells, 10201)
 		unitTest:assert_type(cs.cells[1], "Cell")
 
-		-- TODO: same as above (add files to data folder
-		--[[
 		cs = CellularSpace{database = file("EstadosBrasil.shp", "base"), autoload = false}
 		unitTest:assert_nil(cs.cells[1])
 		unitTest:assert_equal(#cs.cells, 0)
@@ -263,7 +261,6 @@ return{
 
 		cs:load()
 		unitTest:assert_equal(2500, #cs)
-		--]]
 
 		-- neighborhood between two cellular spaces
 		cs = CellularSpace{
