@@ -337,7 +337,10 @@ executeTests = function(fileName)
 	-- TODO: possibilitar executar esta funcao mesmo que o usuario nao passe
 	-- um arquivo de teste, de forma que todos os testes serao executados.
 
+	local oldFile = file -- necessary to allow reading 'file' parameter to the namespace
+	file = nil
 	local data = dofileNamespace(fileName)
+	file = oldFile
 
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
@@ -374,13 +377,18 @@ executeTests = function(fileName)
 
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
+		local myFile2 = dir(srcDir..s..eachFolder)
+		myFile = {}
 		if type(data.file) == "string" then
-			myFile = {data.file}
+			forEachElement(myFile2, function(_, value)
+				if value == data.file then
+					myFile = {data.file}
+				end
+			end)
 		elseif type(data.file) == "table" then
+			-- TODO: put only those in data.file that belong to myFile2, otherwise TerraME will crash
 			myFile = data.file
 		elseif data.file == nil then
-			myFile = {}	
-			local myFile2 = dir(srcDir..s..eachFolder)
 			for _, eachFile in ipairs(myFile2) do
 				myFile[#myFile + 1] = eachFile
 			end
