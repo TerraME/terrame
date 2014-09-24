@@ -131,15 +131,14 @@ require = function(package, recursive, asnamespace)
 	local load_file = package_path..s.."load.lua"
 	local load_sequence
 
-	if os.rename(package_path..s.."load.lua", package_path..s.."load.lua") then
-		load_sequence = dofileNamespace(load_file)
-		load_sequence = load_sequence.files
-	else
-		load_sequence = dir(package_path..s.."lua")
+	if os.rename(load_file, load_file) then
+		load_sequence = include(load_file).files
 	end
 
+	local i, file
+
 	if load_sequence then
-		for i, file in ipairs(load_sequence) do
+		for _, file in ipairs(load_sequence) do
 			dofile(package_path..s.."lua"..s..file)
 		end
 	end
@@ -150,7 +149,8 @@ end
 
 type__ = type
 
---- Return the type of an object. It extends the original Lua type() to support TerraME objects, whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
+--- Return the type of an object. It extends the original Lua type() to support TerraME objects, 
+-- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
 -- @param data Any object or value.
 -- @usage c = Cell{value = 3}
 -- print(type(c)) -- "Cell"
@@ -226,7 +226,7 @@ configureTests = function(fileName)
 	end
 	
 	-- Question about the choosen test
-	local function returnTest(folder,file)
+	local function returnTest(folder, file)
 		local tests = dofile(srcDir..s..folder..s..file)
 		local testsList = {}
 		print ("\n>> Choose Test: ")
@@ -351,8 +351,21 @@ end
 executeTests = function(fileName)
 	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages/base"
+	local baseDir = sessionInfo().path..s.."packages"..s.."base"
 	local srcDir = baseDir..s.."tests"
+
+	load_file = baseDir..s.."load.lua"
+	local load_sequence
+
+	if os.rename(load_file, load_file) then
+		load_sequence = include(load_file).files
+	end
+
+	local testfunctions = {} -- test functions store all the functions that need to be tested, extracted from the source code
+
+	for i, file in ipairs(load_sequence) do
+		testfunctions[file] = buildCountTable(include(baseDir..s.."lua"..s..file))
+	end
 
 	sessionInfo = function()
 		result = {
@@ -368,10 +381,7 @@ executeTests = function(fileName)
 	-- TODO: possibilitar executar esta funcao mesmo que o usuario nao passe
 	-- um arquivo de teste, de forma que todos os testes serao executados.
 
-	local oldFile = file -- necessary to allow reading 'file' parameter to the namespace
-	file = nil
-	local data = dofileNamespace(fileName)
-	file = oldFile
+	local data = include(fileName)
 
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
@@ -405,6 +415,14 @@ executeTests = function(fileName)
 		port = data.port,
 		host = data.host
 	}
+
+	ut.count_functions_total = 0
+	ut.count_functions_not_exist = 0
+	ut.count_functions_not_tested = 0
+	ut.executed_functions = 0
+	ut.functions_with_global_variables = 0
+	ut.functions_with_error = 0
+	ut.functions_without_assert = 0
 
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
@@ -453,24 +471,25 @@ executeTests = function(fileName)
 			for _, eachTest in ipairs(myTest) do
 				print("Testing "..eachTest)
 
-				local my_function = function()
-					tests[eachTest](ut)
+				if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
+					testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
+				elseif testfunctions[eachFile] then
+					print_red("Function does not exist in the source code.")
+					ut.count_functions_not_exist = ut.count_functions_not_exist + 1
 				end
 
-				ut.test = ut.test + 2
 				local count_test = ut.test
 
 				collectgarbage("collect")
-				local ok_execution, err = pcall(my_function)
+				local ok_execution, err = pcall(function() tests[eachTest](ut) end)
+				ut.executed_functions = ut.executed_functions + 1
 
 				if not ok_execution then
 					print_red("Wrong execution, got error: '"..err.."'.")
-					ut.fail = ut.fail + 1
+					ut.functions_with_error = ut.functions_with_error + 1
 				elseif count_test == ut.test then
-					ut.fail = ut.fail + 1
+					ut.functions_without_assert = ut.functions_without_assert + 1
 					print_red("No asserts were found in the test.")
-				else
-					ut.success = ut.success + 1
 				end
 
 				if getn(_G) > count_global then
@@ -507,14 +526,83 @@ executeTests = function(fileName)
 		end
 	end 
 
+	if type(data.file) == "string" then
+		print_green("Verifying tested functions from "..data.file)
+		forEachElement(testfunctions[data.file], function(idx, value)
+			ut.count_functions_total = ut.count_functions_total + 1
+			if value == 0 then
+				print_red("Function '"..idx.."' is not tested.")
+				ut.count_functions_not_tested = ut.count_functions_not_tested + 1
+			end
+		end)
+	elseif type(data.file) == "table" then
+		forEachElement(data.file, function(idx, value)
+			print_green("Verifying tested functions from "..value)
+			forEachElement(testfunctions[value], function(midx, mvalue)
+				ut.count_functions_total = ut.count_functions_total + 1
+				if mvalue == 0 then
+					print_red("Function '"..midx.."' is not tested.")
+					ut.count_functions_not_tested = ut.count_functions_not_tested + 1
+				end
+			end)
+		end)
+	elseif data.file == nil then
+		forEachElement(testfunctions, function(idx, value)
+			print_green("Verifying tested functions from "..idx)
+			forEachElement(value, function(midx, mvalue)
+				ut.count_functions_total = ut.count_functions_total + 1
+				if mvalue == 0 then
+					print_red("Function '"..midx.."' is not tested.")
+					ut.count_functions_not_tested = ut.count_functions_not_tested + 1
+				end
+			end)
+		end)
+	end
+
 	print("\nReport:")
 	if ut.fail > 0 then
-		print_red("Tests: "..ut.test)
-		print_red("Success: "..ut.success.." ("..round(ut.success/ut.test*100, 3).."%)")
-		print_red("Fail: "..ut.fail.." ("..round(ut.fail/ut.test*100, 3).."%)")
+		print_red("Asserts: "..ut.test)
+		print_red("Success: "..ut.success.." ("..round(ut.success / ut.test * 100, 3).."%)")
+		print_red("Fail: "..ut.fail.." ("..round(ut.fail / ut.test * 100, 3).."%)")
 	else
-		print_green("Tests: "..ut.test)
+		print_green("Asserts: "..ut.test)
 		print_green("Success: "..ut.success.." (100%)")
+	end
+
+	if ut.count_functions_not_exist == 0 and ut.count_functions_not_tested == 0 then
+		print_green("Source code functions: "..ut.count_functions_total)
+		print_green("Non-tested functions from the package: "..ut.count_functions_total.." (0%)")
+	else
+		print_red("Source code functions: "..ut.count_functions_total)
+		print_red("Tested functions that do not exist: "..ut.count_functions_not_exist)
+		print_red("Non-tested functions from the package: "..ut.count_functions_not_tested)
+	end
+
+	if ut.functions_with_error > 0 then
+		print_red(ut.functions_with_error.." out of "..ut.executed_functions.." finished with an unexpected error.")
+	else
+		print_green("All "..ut.executed_functions.." tested functions do not have any unexpected execution error.")
+	end
+
+	if ut.functions_with_global_variables > 0 then
+		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.."functions create some global variable.")
+	else
+		print_green("No function creates any global variable.")
+	end
+
+	if ut.functions_without_assert > 0 then
+		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." functions do not have at least one assert.")
+	else
+		print_green("All "..ut.executed_functions.." tested functions have at least one assert.")
+	end
+
+	if ut.fail == 0 and ut.count_functions_not_exist == 0 and ut.count_functions_not_tested == 0 and 
+	   ut.functions_with_global_variables == 0 and ut.functions_with_error == 0 and ut.functions_without_assert == 0 then
+		print_green("All tests were succesfully executed.")
+	else
+		local errors = ut.fail + ut.count_functions_not_exist + ut.count_functions_not_tested + 
+			ut.functions_with_global_variables + ut.functions_with_error + ut.functions_without_assert
+		print_red("Summing up, "..errors.." problems were found during the tests.")
 	end
 end
 
@@ -555,7 +643,7 @@ packageInfo = function(package)
 	local s = sessionInfo().separator
 	local file = sessionInfo().path..s.."packages"..s..package..s.."description.lua"
 	
-	return dofileNamespace(file)
+	return include(file)
 
 	--forEachOrderedElement(ns, function(idx, value)
 	--	print(idx..": "..value)
