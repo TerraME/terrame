@@ -912,21 +912,6 @@ function getn(t)
 end
 
 --############################################################
-type__ = type
-
---- Return the type of an object. It extends the original Lua type() to support TerraME objects, whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
--- @param data Any object or value.
--- @usage c = Cell{value = 3}
--- print(type(c)) -- "Cell"
-type = function(data)
-	local t = type__(data)
-	if t == "table" or t == "userdata" and getmetatable(data) then
-		if data.type_ ~= nil then
-			return data.type_
-		end
-	end
-	return t
-end
 
 --- Return a string describing a TerraME object. This function allows one to use the method print() directly from any TerraME object.
 -- @name tostring
