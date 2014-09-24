@@ -323,7 +323,16 @@ executeTests = function(fileName)
 	local baseDir = sessionInfo().path..s.."packages/base"
 	local srcDir = baseDir..s.."tests"
 
-	TME_MODE = TME_EXECUTION_MODES.DEBUG -- set the debug mode
+	sessionInfo = function()
+		result = {
+			mode = "debug",
+			version = VERSION,
+			dbVersion = "1_3_1", -- TODO: remove this parameter?
+			separator = package.config:sub(1, 1),
+			path = os.getenv("TME_PATH")
+		}
+		return result
+	end
 
 	-- TODO: possibilitar executar esta funcao mesmo que o usuario nao passe
 	-- um arquivo de teste, de forma que todos os testes serao executados.

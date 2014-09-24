@@ -28,19 +28,7 @@
 
 --@header Some basic and useful functions for modeling.
 
-TME_EXECUTION_MODES = {
-	QUIET = 0,
-	NORMAL = 1,
-	DEBUG = 2,
-	STRICT = 3 -- TODO: remove this option - deprecated
-}
-
-TME_MODE = 1
-TME_CPP_MSG = nil
-
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
-
-TME_DB_VERSION="4_2_0"
 
 if sessionInfo().path == nil or sessionInfo().path == "" then
 	error("Error: TME_PATH environment variable should exist and point to TerraME installation folder.", 2)
@@ -467,11 +455,11 @@ function customWarningMsg(msg,level)
 		error("Error: #1 should be a string.", 2)
 	elseif type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
 		error("Error: #2 should be a positive integer number.", 2)
-	elseif TME_MODE == TME_EXECUTION_MODES.NORMAL then
+	elseif sessionInfo().mode == "normal" then
 		local info = debug.getinfo(level)
 		local str = string.match(info.short_src, "[^/]*$")
 		print(str..":".. info.currentline ..": Warning: "..msg)
-	elseif TME_MODE == TME_EXECUTION_MODES.DEBUG then
+	elseif sessionInfo().mode == "debug" then
 		customErrorMsg(msg, level + 1)
 	end
 	io.flush()
