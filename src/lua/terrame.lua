@@ -393,24 +393,28 @@ executeTests = function(fileName)
 
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
-		local myFile2 = dir(srcDir..s..eachFolder)
+		local dirFiles = dir(srcDir..s..eachFolder)
 		myFile = {}
 		if type(data.file) == "string" then
-			forEachElement(myFile2, function(_, value)
-				if value == data.file then
-					myFile = {data.file}
+			if belong(data.file, dirFiles) then
+				myFile = {data.file}
+			end
+		elseif type(data.file) == "table" then
+			forEachElement(dirFiles, function(_, value)
+				if belong(value, data.file) then
+					myFile[#myFile + 1] = value
 				end
 			end)
-		elseif type(data.file) == "table" then
-			-- TODO: put only those in data.file that belong to myFile2, otherwise TerraME will crash
-			myFile = data.file
 		elseif data.file == nil then
-			for _, eachFile in ipairs(myFile2) do
-				myFile[#myFile + 1] = eachFile
-			end
-			
+			forEachElement(dirFiles, function(_, value)
+				myFile[#myFile + 1] = value
+			end)
 		else
 			error("file is not a string, table or nil.")
+		end
+
+		if #myFile == 0 then
+			print_green("Skipping folder "..eachFolder)
 		end
 
 		for _, eachFile in ipairs(myFile) do
