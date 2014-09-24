@@ -191,8 +191,6 @@ return{
 		unitTest:assert_equal(5673, #cs)
 
 		-- csv file
-		-- TODO: add the files cs.csv and EstadosBrasil.shp to data folder
-		--[[
 		cs = CellularSpace{database = file("cs.csv", "base"), sep = ";"}
 
 		unitTest:assert_type(cs, "CellularSpace")
@@ -227,7 +225,6 @@ return{
 		for i = 1, 27 do
 			unitTest:assert_equal(valuesDefault[i], cs.cells[i].POPUL)
 		end
-		--]]
 
 		-- late autoload
 		cs = CellularSpace{
