@@ -94,15 +94,11 @@ install = function(file)
 	-- verificar se a versao do terrame eh valida (built)
 end
 
-local dofileNamespace = function(file)
-	local local_env = {}
-
-	local oldmetatable = getmetatable(_G)
-	setmetatable(_G, {__newindex = local_env, __index = local_env})
-	dofile(file)
-	setmetatable(_G, oldmetatable)
-
-	return local_env
+-- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
+function include(scriptfile)
+    local env = setmetatable({}, {__index = _G})
+    assert(loadfile(scriptfile, 't', env))()
+    return setmetatable(env, nil)
 end
 
 -- altissima prioridade (somente com o primeiro argumento)
