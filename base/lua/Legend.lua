@@ -664,7 +664,7 @@ function Legend(data)
 			diffG = diffG + math.abs(nextColor[2]-color[2])
 			diffB = diffB + math.abs(nextColor[3]-color[3])
 		end
-		maxDiff = math.max(diffR, diffG, diffB)
+		local maxDiff = math.max(diffR, diffG, diffB)
 
 		if data.slices > maxDiff then
 			customErrorMsg("Number of slices is larger than the number of available colors. Using these colors, you can define a maximum of "..maxDiff.." slices.", 3)

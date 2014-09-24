@@ -518,7 +518,13 @@ CellularSpace_ = {
 			customErrorMsg(self.minCol, 3)
 		end
 
-		self.legend = load(legendStr)()
+		-- TODO: load legend was removed - investigate whether this is really necessary.
+		--self.legend = load(legendStr)()
+
+
+		if self.cells == nil then
+			customErrorMsg("It was not possible to load the CellularSpace", 4)
+		end
 
 		-- A ordenacao eh necessaria pq o TerraView ordena os 
 		-- objectIDs como strings:..., C00L10, C00L100, C00L11...
@@ -599,15 +605,15 @@ CellularSpace_ = {
 		end
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
-			if not io.open(data.source,'r')then
-				resourceNotFoundErrorMsg("source",data.source, 3)
+			if not io.open(data.source, 'r')then
+				resourceNotFoundErrorMsg("source", data.source, 3)
 			end
 		end
 
 		if data.name == nil then
 			data.name = "1"
 		elseif type(data.name) ~= "string" then 
-			incompatibleTypesErrorMsg("name","string", type(data.name), 3)
+			incompatibleTypesErrorMsg("name", "string", type(data.name), 3)
 		end
 
 		self.cObj_:loadNeighborhood(data.source, data.name)
@@ -661,30 +667,34 @@ CellularSpace_ = {
 			if time == nil then
 				mandatoryArgumentErrorMsg("#1", 3)
 			else
-				incompatibleTypesErrorMsg("#1","positive integer number",type(time), 3)
+				incompatibleTypesErrorMsg("#1", "positive integer number", type(time), 3)
 			end
 		elseif time < 0 then
-			incompatibleValuesErrorMsg("#1","positive integer number", time, 3)	  
+			incompatibleValuesErrorMsg("#1", "positive integer number", time, 3)	  
 		elseif math.floor(time) ~= time then
-			incompatibleValuesErrorMsg("#1","positive integer number",time, 3)
+			incompatibleValuesErrorMsg("#1", "positive integer number", time, 3)
 		end
 
 		if type(outputTableName) ~= "string" then 
 			if outputTableName == nil then
-				outputTableName = "theme_"
+				mandatoryArgumentErrorMsg("#2", 3)
 			else
 				incompatibleTypesErrorMsg("#2", "string", type(outputTableName), 3)
 			end
 		end
 
 		if type(attrNames) ~= "string" and type(attrNames) ~= "table" then
-  			incompatibleTypesErrorMsg("#3", "string", type(attrNames), 3)
+			if attrNames == nil then
+				mandatoryArgumentErrorMsg("#3", 3)
+			else
+  				incompatibleTypesErrorMsg("#3", "string", type(attrNames), 3)
+			end
 		end   
 
 		if type(attrNames) == "string" then attrNames = {attrNames} end
-		for _,attr in pairs(attrNames) do
+		for _, attr in pairs(attrNames) do
 			if not self.cells[1][attr] then
-				customErrorMsg("Attribute \""..attr.."\" not valid.",3)
+				customErrorMsg("Attribute '"..attr.."' does not exist in the CellularSpace.", 3)
 			end
 		end
 		local erros = self.cObj_:save(time, outputTableName, attrNames, self.cells)
@@ -942,7 +952,7 @@ function CellularSpace(data)
  			namedParametersErrorMsg("CellularSpace", 3)
  		end
 	elseif getn(data) == 0 then
-		customErrorMsg("'CellularSpace' needs more information to be created.", 3)
+		customErrorMsg("CellularSpace needs more information to be created.", 3)
 	end
 
 	local cObj = TeCellularSpace()

@@ -704,14 +704,14 @@ function Society(data)
 
 	if type(data.database) == "string" then
 		if data.database:endswith(".csv") then
+			if data.sep and type(data.sep) ~= "string" then
+				incompatibleTypesErrorMsg("sep", "string", type(data.sep), 3)
+			end			
 			local f = io.open(data.database)
 			if not f then
 				resourceNotFoundErrorMsg("database", data.database, 3)
 			end
 			f:close()
-			if data.sep and type(data.sep) ~= "string" then
-				incompatibleTypesErrorMsg("sep", "string", type(data.sep), 3)
-			end			
 			local csv = readCSV(data.database, data.sep)
 			for i = 1, #csv do
 				data:add(csv[i])

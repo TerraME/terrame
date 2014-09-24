@@ -1686,7 +1686,8 @@ int luaCellularSpace::loadShape(lua_State *L)
         cont++;
         SHPDestroyObject(obj);
     }
-    
+   
+	/* 
     if(execModes != Quiet ){
         char aux[100];
         sprintf(aux, "%i", cont);
@@ -1695,6 +1696,7 @@ int luaCellularSpace::loadShape(lua_State *L)
         lua_pushstring(L,err_out.c_str());
         lua_call(L,1,0);
     }
+	*/
 
     lua_pushnumber( L, minCol );
     lua_pushnumber( L, minLin );
@@ -1868,6 +1870,7 @@ int luaCellularSpace::load(lua_State *L)
 
         TeTheme temporaryTheme("temporaryTheme", inputLayer);
 
+		/*
         if(execModes != Quiet )
         {
             string err_out = string("Using TerraLib version '") + string(TERRALIB_VERSION) + string("' and database version '")+ string(TeDBVERSION.c_str()) +string("'.");
@@ -1875,7 +1878,8 @@ int luaCellularSpace::load(lua_State *L)
             lua_pushstring(L,err_out.c_str());
             lua_call(L,1,0);
         }
-        
+		*/
+
         if( ! whereClause.empty() )
         {
             // Create a temporary theme that aplies attribute restrictions over the
@@ -2063,7 +2067,7 @@ int luaCellularSpace::load(lua_State *L)
             //cout << "<";
             //if((cont % 79) == 0) cout << endl;
         }
-
+		/*
         if(execModes != Quiet ){
 
             char aux[100];
@@ -2073,7 +2077,7 @@ int luaCellularSpace::load(lua_State *L)
             lua_pushstring(L,err_out.c_str());
             lua_call(L,1,0);
         }
-
+		*/
         // returns values to the attributes minCol, minRow, maxCol and maxRow
         // of the lua cellularSpace
         lua_pushnumber( L, minCol );
@@ -2656,6 +2660,7 @@ int luaCellularSpace::save(lua_State *L)
 
     }
 
+	/*
     if(execModes != Quiet )
     {
         string err_out = string("Saving cellular space '") + string(inputThemeName.c_str()) + string("' into '") + string(outputTable) + string("' table...");
@@ -2663,6 +2668,7 @@ int luaCellularSpace::save(lua_State *L)
         lua_pushstring(L,err_out.c_str());
         lua_call(L,1,0);
     }
+	*/
 
     // Delete the new attribute table whether it already exist *********
     if( db->tableExist( string( outputTable ) ) )
@@ -2972,6 +2978,7 @@ int luaCellularSpace::save(lua_State *L)
 
     }
     // END: Raian
+	/*
     if(execModes != Quiet ) {
         char aux[100];
         sprintf(aux, "%i", contCells);
@@ -2980,6 +2987,7 @@ int luaCellularSpace::save(lua_State *L)
         lua_pushstring(L,err_out.c_str());
         lua_call(L,1,0);
     }
+	*/
 
     db->close();
     return 0;
@@ -3099,7 +3107,7 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
         }
     }
 
-    if(execModes != Quiet ) qWarning( "Loading default TerraLib GPM (Generalized Proximity Matrix). Please, wait...");
+    //if(execModes != Quiet ) qWarning( "Loading default TerraLib GPM (Generalized Proximity Matrix). Please, wait...");
     //  Load an existing proximity matrix or create a new one
     double tol = TeGetPrecision(inputLayer->projection());
     TePrecision::instance().setPrecision(tol);
@@ -3260,9 +3268,11 @@ int luaCellularSpace::loadNeighborhood(lua_State *L){
     char *auxExt;
     string wrngMsg = string();
 
+	/*
     if(execModes != Quiet ){
         wrngMsg = string("Loading neighborhood '" ) + string(neighName) + string("'");
     }
+	*/
 
     strcpy(aux, const_cast<char*>(fileName));
     auxExt = strtok( aux, "." );
@@ -3292,36 +3302,42 @@ int luaCellularSpace::loadNeighborhood(lua_State *L){
 
     if( strcmp( extension, "gpm" ) == 0 )
     {
+		/*
         if(execModes != Quiet ){
             wrngMsg += string("from the GPM file '") +  string(shortFileName) + string("'...");
             lua_getglobal(L, "print");
             lua_pushstring(L,wrngMsg.c_str());
             lua_call(L,1,0);
         }
+		*/
         return loadNeighborhoodGPMFile(L, fileName, neighName);
     }
     else
     {
         if( stricmp( extension, "gal" ) == 0 )
         {
+			/*
             if(execModes != Quiet ){
                 wrngMsg += string("from the GAL file '") +  string(shortFileName) + string("'...");
                 lua_getglobal(L, "print");
                 lua_pushstring(L,wrngMsg.c_str());
                 lua_call(L,1,0);
             }
+			*/
             return loadNeighborhoodGALFile(L, fileName, neighName);
         }
         else
         {
             if( stricmp( extension, "gwt" ) == 0 )
             {
+				/*
                 if(execModes != Quiet ){
                     wrngMsg += string("from the GWT file '") +  string(shortFileName) + string("'...");
                     lua_getglobal(L, "print");
                     lua_pushstring(L,wrngMsg.c_str());
                     lua_call(L,1,0);
                 }
+				*/
                 return loadNeighborhoodGWTFile(L, fileName, neighName);
             }
             else
@@ -3382,8 +3398,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
     if(strcmp(layer1Id, layer2Id) != 0)
     {
         file.close();
-        string err_out = string("This function does not support neighborhoods between two different layers! ") +
-                string("Use 'Environment:loadNeighborhood' function instead.");
+        string err_out = string("This function cannot load neighborhood between two layers. ") +
+                string("Use 'Environment:loadNeighborhood()' instead.");
         lua_getglobal(L, "customErrorMsg");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,4);
@@ -3394,8 +3410,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
     if(strcmp(layer1Id, this->getLayerName().c_str()) != 0)
     {
         file.close();
-        string err_out = string("The neighborhood file '") + string(fileName) + string("' was not built to this CellularSpace!\n") +
-                string("\t->CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("'.\n") + string("\t->GPM file layer: '") + string(layer1Id) + string("'.");
+        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built for this CellularSpace. ") +
+                string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GPM file layer: '") + string(layer1Id) + string("'.");
         lua_getglobal(L, "customErrorMsg");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,4);
@@ -3438,8 +3454,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
             if(cell == NULL)
             {
                 file.close();
-                string err_out = string("Cell Id '") + string(cellId) + string("' found in the file '" ) + string(fileName) +
-                                 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
+                string err_out = string("Cell '") + string(cellId) + string("' is used by the file '" ) + string(fileName) +
+                                 string("' but was not found in the CellularSpace. Probably the file was made for another CellularSpace.");
                 lua_getglobal(L, "customErrorMsg");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,4);
@@ -3600,8 +3616,9 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
     if(strcmp(layerId, this->getLayerName().c_str()))
     {
         file.close();
-        string err_out = string("The neighborhood file '" ) + string(fileName) + string("' was not built to this Cellular Space.\n") +
-                string("\t->Cellular Space layer: '") + string(this->getLayerName().c_str()) + string("'.\n") + string("\t->GAL file layer: '") + string(layerId) + string("'.");
+
+        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built for this CellularSpace. ") +
+                string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GAL file layer: '") + string(layerId) + string("'.");
         lua_getglobal(L, "customErrorMsg");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,4);
@@ -3795,9 +3812,10 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
     if(strcmp(layerId, this->getLayerName().c_str()))
     {
         file.close();
-        string err_out = string("The neighborhood file '" ) + string(fileName) + string("' was not built to this Cellular Space.\n") +
-                         string("\t->Cellular Space layer: '") + string(this->getLayerName().c_str()) + string("'.\n") +
-                         string("\t->GWT file layer: '") + string(layerId) + string("'.");
+
+        string err_out = string("Neighborhood file '") + string(fileName) + string("' was not built for this CellularSpace. ") +
+                string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GWT file layer: '") + string(layerId) + string("'.");
+
         lua_getglobal(L, "customErrorMsg");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,4);

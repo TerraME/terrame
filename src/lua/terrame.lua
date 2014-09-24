@@ -133,6 +133,7 @@ require = function(package, recursive, asnamespace)
 	end
 
 	local load_file = package_path..s.."load.lua"
+	local load_sequence
 
 	if os.rename(package_path..s.."load.lua", package_path..s.."load.lua") then
 		load_sequence = dofileNamespace(load_file)
@@ -147,11 +148,25 @@ require = function(package, recursive, asnamespace)
 		end
 	end
 
-	-- executar o script load.lua que deve ficar na raiz do pacote
 	-- executar a funcao onLoad() do pacote (esta funcao pode configurar algumas coisas e imprimir informacao
 	-- de que o pacote foi carregado com sucesso).
-	-- se load.lua nao existir significa que todos os arquivos podem ser carregados em qualquer ordem
-	-- load = {"Agent.lua", "Cell.lua", ..} -- com a ordem de carregamento
+end
+
+-- TODO: allow this to be executed directly from TerraME. Check if it is interesting to be executed
+-- when the package is installed.
+importDatabase = function()
+	local s = sessionInfo().separator
+	local baseDir = sessionInfo().path..s.."packages/base"
+
+	-- before calling the commands below, we need to execute
+	-- "create database cabeca;"
+	
+	local command = "mysql -u root -p -h localhost cabeca < "..baseDir..s.."data"..s.."cabecaDeBoi.sql"
+	print(command)
+
+	command = "mysql -u root -p -h localhost db_emas < "..baseDir..s.."data"..s.."db_emas.sql"
+	print(command)
+--	os.execute(command)
 end
 
 configureTests = function(fileName)
@@ -313,7 +328,6 @@ executeTests = function(fileName)
 	-- TODO: possibilitar executar esta funcao mesmo que o usuario nao passe
 	-- um arquivo de teste, de forma que todos os testes serao executados.
 
-	--dofile(fileName) -- Declaring folders, files, wait, etc.
 	local data = dofileNamespace(fileName)
 
 	-- Check every selected folder
@@ -325,7 +339,7 @@ executeTests = function(fileName)
 		for _, parentFolder in ipairs(parentFolders) do
 			local secondFolders = dir(srcDir..s..parentFolder)
 			for _, secondFolder in pairs(secondFolders) do
-				data.folder[#folder + 1] = parentFolder..s..secondFolder
+				data.folder[#data.folder + 1] = parentFolder..s..secondFolder
 			end
 		end
 	elseif type(data.folder) ~= "table" then
@@ -444,8 +458,8 @@ executeTests = function(fileName)
 	print("\nReport:")
 	if ut.fail > 0 then
 		print_red("Tests: "..ut.test)
-		print_red("Success: "..ut.success.." ("..round(ut.success/ut.test*100, 2).."%)")
-		print_red("Fail: "..ut.fail.." ("..round(ut.fail/ut.test*100, 2).."%)")
+		print_red("Success: "..ut.success.." ("..round(ut.success/ut.test*100, 3).."%)")
+		print_red("Fail: "..ut.fail.." ("..round(ut.fail/ut.test*100, 3).."%)")
 	else
 		print_green("Tests: "..ut.test)
 		print_green("Success: "..ut.success.." (100%)")
