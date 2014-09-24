@@ -327,6 +327,25 @@ exectest = function(package, configFile)
 	-- executar todos os testes
 end
 
+-- builds a table with zero counts for each element of the table gotten as argument
+local buildCountTable = function(mtable)
+	result = {}
+
+	forEachElement(mtable, function(idx, value, mtype)
+		if type__(value) == "table" then
+			forEachElement(value, function(midx, mvalue, mmtype)
+				if mmtype == "function" then
+					result[midx] = 0
+				end
+			end)
+		elseif mtype == "function" then
+			result[idx] = 0
+		end
+	end)
+	return result
+end
+
+
 -- RAIAN: FUncao do antonio que executa os testes. Devera ir para dentro da funcao test acima. Coloquei desta maneira 
 -- para executar os testes sem alterar a chamada no lado C++ por enquanto. 
 executeTests = function(fileName)
