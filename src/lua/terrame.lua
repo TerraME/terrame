@@ -416,9 +416,9 @@ executeTests = function(fileName)
 		host = data.host
 	}
 
-	ut.count_functions_total = 0
-	ut.count_functions_not_exist = 0
-	ut.count_functions_not_tested = 0
+	ut.functions_total = 0
+	ut.functions_not_exist = 0
+	ut.functions_not_tested = 0
 	ut.executed_functions = 0
 	ut.functions_with_global_variables = 0
 	ut.functions_with_error = 0
@@ -475,7 +475,7 @@ executeTests = function(fileName)
 					testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
 				elseif testfunctions[eachFile] then
 					print_red("Function does not exist in the source code.")
-					ut.count_functions_not_exist = ut.count_functions_not_exist + 1
+					ut.functions_not_exist = ut.functions_not_exist + 1
 				end
 
 				local count_test = ut.test
@@ -529,20 +529,20 @@ executeTests = function(fileName)
 	if type(data.file) == "string" then
 		print_green("Verifying tested functions from "..data.file)
 		forEachElement(testfunctions[data.file], function(idx, value)
-			ut.count_functions_total = ut.count_functions_total + 1
+			ut.functions_total = ut.functions_total + 1
 			if value == 0 then
 				print_red("Function '"..idx.."' is not tested.")
-				ut.count_functions_not_tested = ut.count_functions_not_tested + 1
+				ut.functions_not_tested = ut.functions_not_tested + 1
 			end
 		end)
 	elseif type(data.file) == "table" then
 		forEachElement(data.file, function(idx, value)
 			print_green("Verifying tested functions from "..value)
 			forEachElement(testfunctions[value], function(midx, mvalue)
-				ut.count_functions_total = ut.count_functions_total + 1
+				ut.functions_total = ut.functions_total + 1
 				if mvalue == 0 then
 					print_red("Function '"..midx.."' is not tested.")
-					ut.count_functions_not_tested = ut.count_functions_not_tested + 1
+					ut.functions_not_tested = ut.functions_not_tested + 1
 				end
 			end)
 		end)
@@ -550,10 +550,10 @@ executeTests = function(fileName)
 		forEachElement(testfunctions, function(idx, value)
 			print_green("Verifying tested functions from "..idx)
 			forEachElement(value, function(midx, mvalue)
-				ut.count_functions_total = ut.count_functions_total + 1
+				ut.functions_total = ut.functions_total + 1
 				if mvalue == 0 then
 					print_red("Function '"..midx.."' is not tested.")
-					ut.count_functions_not_tested = ut.count_functions_not_tested + 1
+					ut.functions_not_tested = ut.functions_not_tested + 1
 				end
 			end)
 		end)
@@ -561,31 +561,31 @@ executeTests = function(fileName)
 
 	print("\nReport:")
 	if ut.fail > 0 then
-		print_red("Asserts: "..ut.test)
-		print_red("Success: "..ut.success.." ("..round(ut.success / ut.test * 100, 3).."%)")
-		print_red("Fail: "..ut.fail.." ("..round(ut.fail / ut.test * 100, 3).."%)")
+		print_red(ut.fail.." out of "..ut.test.." asserts failed.")
 	else
-		print_green("Asserts: "..ut.test)
-		print_green("Success: "..ut.success.." (100%)")
+		print_green("All "..ut.test.." asserts were executed successfully.")
 	end
 
-	if ut.count_functions_not_exist == 0 and ut.count_functions_not_tested == 0 then
-		print_green("Source code functions: "..ut.count_functions_total)
-		print_green("Non-tested functions from the package: "..ut.count_functions_total.." (0%)")
+	if ut.functions_not_tested > 0 then
+		print_red(ut.functions_not_tested.." out of "..ut.functions_total.." of the package are not tested.")
 	else
-		print_red("Source code functions: "..ut.count_functions_total)
-		print_red("Tested functions that do not exist: "..ut.count_functions_not_exist)
-		print_red("Non-tested functions from the package: "..ut.count_functions_not_tested)
+		print_green("All "..ut.functions_total.." functions of the package are tested..")
+	end
+
+	if ut.functions_not_exist > 0 then
+		print_red(ut.functions_not_exist.." out of "..ut.functions_total.." do not exist in the source code of the package.")
+	else
+		print_green("All "..ut.functions_total.." tested functions exist in the source code of the package.")
 	end
 
 	if ut.functions_with_error > 0 then
-		print_red(ut.functions_with_error.." out of "..ut.executed_functions.." finished with an unexpected error.")
+		print_red(ut.functions_with_error.." out of "..ut.executed_functions.." functions stopped with an unexpected error.")
 	else
 		print_green("All "..ut.executed_functions.." tested functions do not have any unexpected execution error.")
 	end
 
 	if ut.functions_with_global_variables > 0 then
-		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.."functions create some global variable.")
+		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." functions create some global variable.")
 	else
 		print_green("No function creates any global variable.")
 	end
@@ -596,12 +596,12 @@ executeTests = function(fileName)
 		print_green("All "..ut.executed_functions.." tested functions have at least one assert.")
 	end
 
-	if ut.fail == 0 and ut.count_functions_not_exist == 0 and ut.count_functions_not_tested == 0 and 
-	   ut.functions_with_global_variables == 0 and ut.functions_with_error == 0 and ut.functions_without_assert == 0 then
+	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + 
+	               ut.functions_with_global_variables + ut.functions_with_error + ut.functions_without_assert
+
+	if errors == 0 then
 		print_green("All tests were succesfully executed.")
 	else
-		local errors = ut.fail + ut.count_functions_not_exist + ut.count_functions_not_tested + 
-			ut.functions_with_global_variables + ut.functions_with_error + ut.functions_without_assert
 		print_red("Summing up, "..errors.." problems were found during the tests.")
 	end
 end
