@@ -58,7 +58,6 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'xdim' expected positive integer number, got -123.")
 
-
 		error_func = function()
 			local cs = CellularSpace{
 				xdim = 30,
@@ -112,7 +111,6 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Function 'getCellByID' is deprecated. Use 'get' instead.")
 	end,
-
 	createNeighborhood = function(unitTest)
 		local cs = CellularSpace{xdim = 10, ydim = 10}
 		local cs2 = CellularSpace{xdim = 10, ydim = 10}
