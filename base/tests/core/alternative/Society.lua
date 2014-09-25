@@ -25,6 +25,22 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	notify = function(unitTest)
+		local sc1 = Society{
+			instance = Agent{},
+			quantity = 20
+		}
+
+		local error_func = function()
+			sc1:notify("not_int")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+
+		error_func = function()
+			sc1:notify(-1)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+	end,
 	Society = function(unitTest)
 		local ag1 = Agent{}
 

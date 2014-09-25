@@ -77,13 +77,13 @@ Timer_ = {
 		if modelTime == nil then
 			modelTime = self:getTime()
    		elseif type(modelTime) ~= "number" then
-			if type(modelTime == "Event") then
+			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
 				incompatibleTypesErrorMsg("#1", "Event or positive number", type(modelTime), 3) 
 			end
 		elseif modelTime < 0 then
-			incompatibleValuesErrorMsg("#1","positive number", modelTime, 3)   
+			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)   
 		end
 		self.cObj_:notify(modelTime)
 	end,
@@ -124,7 +124,7 @@ Timer_ = {
 		local t = type(event)
 		if t ~= "Pair" or t ~= "Event" then
 			-- TODO: esta funcao foi feita para dar errado porque sempre vai entrar neste if
-			incompatibleTypesErrorMsg("#2","Event",type(event), 3)
+			incompatibleTypesErrorMsg("#2", "Event",type(event), 3)
 		else
 			return self.cObj_:setEvent(event)
 		end
@@ -137,8 +137,8 @@ Timer_ = {
 		if type(events)~= "table" then
 			incompatibleTypesErrorMsg("#1", "table", type(events), 3)
 		end    
-		for i=1,getn(events) do
-			setEvent(i,events[i])
+		for i = 1, getn(events) do
+			setEvent(i, events[i])
 		end
 	end
 }
