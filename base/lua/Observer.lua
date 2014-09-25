@@ -1356,7 +1356,7 @@ function Observer(data)
 end
 
 killAllObservers = function()
-	forEachElement(createdObservers, function(idx, elem, etype)
-		elem:kill()
+	forEachElement(createdObservers, function(idx, obs)
+		obs:kill()
 	end)
 end
