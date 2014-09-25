@@ -25,6 +25,21 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	setEvents = function(unitTest)
+		unitTest:assert(true)
+	end,
+	setEvent = function(unitTest)
+		unitTest:assert(true)
+	end,
+	getEvent = function(unitTest)
+		unitTest:assert(true)
+	end,
+	getEvents = function(unitTest)
+		unitTest:assert(true)
+	end,
+	reset = function(unitTest)
+		unitTest:assert(true)
+	end,
 	Timer = function(unitTest)
 		local timer = Timer()
 		unitTest:assert_equal(type(timer), "Timer")

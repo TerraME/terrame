@@ -809,7 +809,7 @@ local function observerScheduler(subjType, subject, observerAttrs, datale)
 end
 
 -- OBSERVER STATEMACHINE
-function observerStateMachine(subjType, subject, observerAttrs, datale)
+local function observerStateMachine(subjType, subject, observerAttrs, datale)
 	local observerAttrs = {"currentState"}       
         
     if type(datale.legends) ~= "table"  then

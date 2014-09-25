@@ -65,6 +65,9 @@ return{
 
 		unitTest:assert_equal(u.success, 1)
 	end,
+	print_error = function(unitTest)
+		unitTest:assert(true)
+	end,
 	UnitTest = function(unitTest)
 		local u = UnitTest{}
 

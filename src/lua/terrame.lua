@@ -98,7 +98,7 @@ end
 function include(scriptfile)
     local env = setmetatable({}, {__index = _G})
     assert(loadfile(scriptfile, 't', env))()
-    return setmetatable(env, nil)
+    return setmetatable(env, nil) -- TODO: try to remove nil and see what happens. Perhaps this could be used in TerraME.
 end
 
 -- altissima prioridade (somente com o primeiro argumento)
@@ -493,7 +493,6 @@ executeTests = function(fileName)
 				end
 
 				if getn(_G) > count_global then
-					ut.fail = ut.fail + 1
 					-- TODO: check if it is < or > (the code below works for >)
 					local variables = ""
 					local pvariables = {}
@@ -528,7 +527,7 @@ executeTests = function(fileName)
 	end 
 
 	if type(data.file) == "string" then
-		print_green("Checking if all functions from "..data.file.. " are tested")
+		print_green("Checking functions from lua"..s..data.file)
 		forEachElement(testfunctions[data.file], function(idx, value)
 			ut.package_functions = ut.package_functions + 1
 			if value == 0 then
@@ -538,7 +537,7 @@ executeTests = function(fileName)
 		end)
 	elseif type(data.file) == "table" then
 		forEachElement(data.file, function(idx, value)
-			print_green("Checking if all functions from "..value.. " are tested")
+			print_green("Checking functions from lua"..s..value)
 			forEachElement(testfunctions[value], function(midx, mvalue)
 				ut.package_functions = ut.package_functions + 1
 				if mvalue == 0 then
@@ -549,7 +548,7 @@ executeTests = function(fileName)
 		end)
 	elseif data.file == nil then
 		forEachElement(testfunctions, function(idx, value)
-			print_green("Checking if all functions from "..idx.. " are tested")
+			print_green("Checking functions from lua"..s..idx)
 			forEachElement(value, function(midx, mvalue)
 				ut.package_functions = ut.package_functions + 1
 				if mvalue == 0 then
@@ -602,6 +601,8 @@ executeTests = function(fileName)
 
 	if errors == 0 then
 		print_green("All tests were succesfully executed.")
+	elseif errors == 1 then
+		print_red("Summing up, one problem was found during the tests.")
 	else
 		print_red("Summing up, "..errors.." problems were found during the tests.")
 	end

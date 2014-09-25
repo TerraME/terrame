@@ -54,7 +54,7 @@ return {
 		end
 		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected State or Trajectory, got Agent.")
 	end,
-	addSocialnetwork = function(unitTest)
+	addSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
 
 		local test_function = function()
@@ -289,7 +289,6 @@ return {
 		local error_func = function()
 			ag1:enter(c1)
 		end
-		--forEachElement(ag1, print)
 		unitTest:assert_error(error_func, "Error: Placement 'placement' was not found.")
 
 		local ag1 = Agent{}

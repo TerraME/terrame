@@ -24,7 +24,19 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
-return {
+return{
+	getLatency = function(unitTest)
+		unitTest:assert(true)
+	end,
+	build = function(unitTest)
+		unitTest:assert(true)
+	end,
+	getStateName = function(unitTest)
+		unitTest:assert(true)
+	end,
+	getTrajectoryStatus = function(unitTest)
+		unitTest:assert(true)
+	end,
 	Agent = function(unitTest)
 		local singleFooAgent = Agent{
 			id = "singleFoo",
@@ -89,6 +101,27 @@ return {
 		ag:addSocialNetwork(sn)
 		unitTest:assert(#ag:getSocialNetwork() == 5)
 	end,
+	getCell = function(unitTest)
+		local ag1 = Agent{}
+		local cs = CellularSpace{xdim = 3, ydim = 3}
+		cs:createNeighborhood()
+		local myEnv = Environment{cs, ag1}
+
+		myEnv:createPlacement{}
+
+		unitTest:assert_type(ag1:getCell(), "Cell")
+	end,
+	getCells = function(unitTest)
+		local ag1 = Agent{}
+		local cs = CellularSpace{xdim = 3, ydim = 3}
+		cs:createNeighborhood()
+		local myEnv = Environment{cs, ag1}
+
+		myEnv:createPlacement{}
+
+		unitTest:assert_type(ag1:getCells(), "table")
+		unitTest:assert_type(ag1:getCells()[1], "Cell")
+	end,
 	getSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
 		local sn = SocialNetwork{}
@@ -130,7 +163,7 @@ return {
 
 		unitTest:assert_nil(ag1:getCell("placement"))
 	end,
-	reproduce = function(unitTest)
+	die = function(unitTest)
 		local predator = Agent{
 			energy = 40,
 			name = "predator",
@@ -151,8 +184,22 @@ return {
 			print(dead.a)
 		end
 		unitTest:assert_error(test_function, "Error: Trying to use a function or an attribute of a dead Agent.")
+	end,
+	reproduce = function(unitTest)
+		local predator = Agent{
+			energy = 40,
+			name = "predator",
+			execute = function(self) return self.energy end
+		}
 
-		--predators.agents[4]:reproduce()
+		local predators = Society{
+			instance = predator, 
+			quantity = 5
+		}
+
+		predators.agents[2]:die()
+		-- TODO: also test
+		-- predators.agents[4]:reproduce()
 		predators.agents[4]:reproduce{age = 0}
 		unitTest:assert_equal(5, #predators)
 
@@ -190,7 +237,8 @@ return {
 		}
 
 		unitTest:assert(ag2.money == 5)
-
+	end,
+	on_message = function(unitTest)
 		local ag = Agent{
 			money = 0,
 			on_message = function(self,	m)
@@ -198,7 +246,7 @@ return {
 			end
 		}
 
-		sc = Society{instance = ag, quantity = 2}
+		local sc = Society{instance = ag, quantity = 2}
 		local ag1 = sc.agents[1]		
 		local ag2 = sc.agents[2]		
 
@@ -213,6 +261,18 @@ return {
 		unitTest:assert(ag2.money == 0)
 		sc:synchronize(1)
 		unitTest:assert(ag2.money == 5)
+	end,
+	sample = function(unitTest)
+		local ag = Agent{}
+		local sc = Society{instance = ag, quantity = 5}
+
+		local sn = SocialNetwork{}
+		forEachAgent(sc, function(agent)
+			sn:add(agent)
+		end)
+
+		ag:addSocialNetwork(sn)
+		unitTest:assert_type(ag:sample(), "Agent")
 	end,
 	setTrajectoryStatus = function(unitTest)
 		local ag1 = Agent{
@@ -259,7 +319,7 @@ return {
 		ag1:enter(c1,"placement")
 
 		ag1:walk()
-		unitTest:assert(type(ag1:getCell()) == "Cell")
+		unitTest:assert_type(ag1:getCell(), "Cell")
 	end,
 	__tostring = function(unitTest)
 		local ag1 = Agent{

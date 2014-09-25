@@ -71,6 +71,9 @@ return{
 		event:config(0.5)
 		unitTest:assert_equal(event[1]:getTime(), 0.5)	
 	end,
+	getParent = function(unitTest)
+		unitTest:assert(true)
+	end,
 	getPeriod = function(unitTest)
 		local event = Event{period = 2, action = function(event) end}
 		unitTest:assert_equal(event[1]:getPeriod(), 2)

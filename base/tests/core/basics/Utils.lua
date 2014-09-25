@@ -25,6 +25,18 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	integrate = function(unitTest)
+		unitTest:assert(true)
+	end,
+	suggest = function(unitTest)
+		unitTest:assert(true)
+	end,
+	switch = function(unitTest)
+		unitTest:assert(true)
+	end,
+	INTEGRATION_METHOD = function(unitTest)
+		unitTest:assert(true)
+	end,
 	belong = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}
 
