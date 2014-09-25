@@ -199,6 +199,32 @@ local function spatialCoupling(m, n, cs1, cs2, filterF, weightF, name)
 	end)
 end
 
+--#- Load the CellularSpace from a shapefile. This is an internal function and should not be documented.
+local loadShape = function(self)
+	self.legend = {} 
+	local x = 0
+	local y = 0
+	local legendStr = ""
+	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:loadShape()
+
+	self.legend = load(legendStr)()
+	-- A ordenacao eh necessaria pq o TerraView ordena os 
+	-- objectIDs como strings:..., C00L10, C00L100, C00L11...
+	table.sort(self.cells, function(a, b) 
+		if a.x < b.x then return true; end
+		if a.x > b.x then return false; end
+		return a.y < b.y
+	end)
+
+	self.xdim = self.maxCol
+	self.ydim = self.maxRow
+	self.cObj_:clear()
+	for i, tab in pairs(self.cells) do
+		tab.parent = self
+		self.cObj_:addCell(tab.x, tab.y, tab.cObj_)
+	end
+end
+
 CellularSpace_ = {
 	type_ = "CellularSpace",
 	--- Add a new Cell to the CellularSpace. It will be the last Cell of the CellularSpace.
