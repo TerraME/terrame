@@ -136,6 +136,14 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Cell does not have a Neighborhood named '1'.")
 	end,
+	size = function(unitTest)
+		local c = Cell{}
+
+		local error_func = function()
+			c:size()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
+	end,
 	getNeighborhood = function(unitTest)
 		local cell = Cell{x = 1, y = 1}
 		local n = Neighborhood()

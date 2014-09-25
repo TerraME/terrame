@@ -24,8 +24,6 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
-globalStateIdCounter = 0
-
 State_ = {
 	type_ = "State",
 	--- Return a string with the id of the State.
@@ -49,7 +47,7 @@ State_ = {
 
 }
 
-local metaTableState_ = {__index = State_, __tostring = tostringTerraME}
+metaTableState_ = {__index = State_, __tostring = tostringTerraME}
 --- A container of Jumps and Flows. Every State also has an id to identify itself in the Jumps of other States within the same Agent or Automaton.
 -- @param data A table that contains the State attributes.
 -- @param data.id A string with the unique identifier of the State.
@@ -70,8 +68,7 @@ function State(data)
 	local cObj = TeState()
 
 	if data.id == nil then
-		globalStateIdCounter = globalStateIdCounter + 1
-		data.id = "st".. globalStateIdCounter
+		data.id = "1"
 	elseif type(data.id) ~= "string" then
 		incompatibleTypesErrorMsg("id", "string", type(data.id), 3)
 	end
@@ -82,7 +79,7 @@ function State(data)
 		if type(ud) == "table" then cObj:add(ud.cObj_) end
 		if type(ud) == "userdata" then cObj:add(ud) end
 	end
-	--setmetatable(data, metaTableState_)
+--	setmetatable(data, metaTableState_)
   
 	return cObj
 end

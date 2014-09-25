@@ -25,52 +25,11 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	Coord = function(self)
-		local coord1 = Coord()
-		self:assert_equal(0, coord1:get().x)	
-		self:assert_equal(0, coord1:get().y)
-		self:assert_nil(coord1.x)-- to read Coord attributes, use Coord::get()
-		self:assert_nil(coord1.y) -- to write Coord attributes, use Coord::set({x = 0, y = 0})
-
-		-- test the Coord type
-		local c = Coord{x = 0, y = 99}
-		local cOut = c:get()
-		self:assert_equal(0, cOut.x)
-		self:assert_equal(99,cOut.y)
-		self:assert_nil(c.x)
-		self:assert_nil(c.y)
-		c.x = 10
-		c.y = 10
-
-		cOut = c:get()
-		self:assert_equal(cOut.x, 0)
-		self:assert_equal(cOut.y, 99) 
-		c:set({x = 10, y = 10})
-		cOut = c:get()
-		self:assert_equal(10, cOut.x)
-		self:assert_equal(10, cOut.y)	
-	end,
-	getX = function(unitTest)
-		local coord = Coord{x = 10, y = 11}
-		unitTest:assert_equal(10, coord:getX())
-	end,
-	getY = function(unitTest)
-		local coord = Coord{x = 10, y = 11}
-		unitTest:assert_equal(11, coord:getY())
-	end,
-	setX = function(unitTest)
-		local coord = Coord{x = 10, y = 11}
-		coord:setX(12)
-		unitTest:assert_equal(12, coord:getX())
-	end,
-	setY = function(unitTest)
-		local coord = Coord{x = 10, y = 11}
-		coord:setY(12)
-		unitTest:assert_equal(12, coord:getY())
-	end,
 	__tostring = function(unitTest)
-		local c = Coord {x = 1, y = 1}
-		unitTest:assert_equal(tostring(c), "cObj_  userdata\n")
+		local f1 = Flow { function(ev, agent, cell) 
+			agent.value = agent.value + 2 
+		end}
+		unitTest:assert_equal(string.sub(tostring(f1),1,8), "TeFlow (")
 	end
 }
 

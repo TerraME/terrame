@@ -150,44 +150,39 @@ function Event(data)
 	end
 end
 
---- Return the current simulation time, according to the Timer it belongs.
--- @usage event:getTime()
-local function getTime(self) end
-
---- Return the Timer that contains the Event.
--- @usage timer = event:getParent()
-local function getParent(self) end
-
---#- Change the attributes of the Event. It will be rescheduled according to its new attributes.
--- @param time The time instant the Event will occur again (default is the current time of the
--- Timer it will belong).
--- @param period The new periodicity of the Event (default is 1).
--- @param priority The new priority of the Event. The default priority is 0 (zero). Smaller
---  values have higher priority.
--- @usage event:config(1)
--- event:config(1, 0.05)
--- event:config(1, 0.05, -1)
-local function config(self, time, period, priority) end
-
---- Return the period of the Event.
--- @usage period = event:getPeriod()
-local function getPeriod(self) end
-
---- Return the priority of the Event.
--- @usage timer = event:getPriority()
-local function getPriority(self) end
-
---#- Change the priority of the Event. This change will take place as soon as the Event
--- is rescheduled.
--- @param period The new periodicity of the Event (default is 1).
--- @usage event:setPriority(4)
-local function setPriority(period) end
-
---- Notify every Observer connected to the Event.
--- @usage event:notify()
-local function notify() end
-
---- Return "Event".
--- @usage mtype = event:getType()
-local function getType() end
+Event_ = {
+	--- Return the current simulation time, according to the Timer it belongs.
+	-- @usage event:getTime()
+	getTime = function(self) end,
+	--- Return the Timer that contains the Event.
+	-- @usage timer = event:getParent()
+	getParent = function(self) end,
+	--#- Change the attributes of the Event. It will be rescheduled according to its new attributes.
+	-- @param time The time instant the Event will occur again (default is the current time of the
+	-- Timer it will belong).
+	-- @param period The new periodicity of the Event (default is 1).
+	-- @param priority The new priority of the Event. The default priority is 0 (zero). Smaller
+	--  values have higher priority.
+	-- @usage event:config(1)
+	-- event:config(1, 0.05)
+	-- event:config(1, 0.05, -1)
+	config = function(self, time, period, priority) end,
+	--- Return the period of the Event.
+	-- @usage period = event:getPeriod()
+	getPeriod = function(self) end,
+	--- Return the priority of the Event.
+	-- @usage timer = event:getPriority()
+	getPriority = function(self) end,
+	--#- Change the priority of the Event. This change will take place as soon as the Event
+	-- is rescheduled.
+	-- @param period The new periodicity of the Event (default is 1).
+	-- @usage event:setPriority(4)
+	-- setPriority = function(period) end,
+	--#- Notify every Observer connected to the Event.
+	-- @usage event:notify()
+	-- notify = function() end,
+	--- Return "Event".
+	-- @usage mtype = event:getType()
+	getType = function() end
+}
 

@@ -52,6 +52,54 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Cell (0,1) already belongs to the Neighborhood.")
 	end,
+	addCell = function(unitTest)
+		local neigh = Neighborhood()
+
+		local error_func = function()
+			neigh:addCell()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'addCell' is deprecated. Use 'add' instead.")
+	end,
+	addNeighbor = function(unitTest)
+		local neigh = Neighborhood()
+
+		local error_func = function()
+			neigh:addNeighbor()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'addNeighbor' is deprecated. Use 'add' instead.")
+	end,
+	eraseCell = function(unitTest)
+		local neigh = Neighborhood()
+
+		local error_func = function()
+			neigh:eraseCell()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'eraseCell' is deprecated. Use 'remove' instead.")
+	end,
+	eraseNeighbor = function(unitTest)
+		local neigh = Neighborhood()
+
+		local error_func = function()
+			neigh:eraseNeighbor()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'eraseNeighbor' is deprecated. Use 'remove' instead.")
+	end,
+	getCellWeight = function(unitTest)
+		local neigh = Neighborhood()
+
+		local error_func = function()
+			neigh:getCellWeight()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'getCellWeight' is deprecated. Use 'getWeight' instead.")
+	end,
+	getNeighWeight = function(unitTest)
+		local neigh = Neighborhood()
+
+		local error_func = function()
+			neigh:getNeighWeight()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'getNeighWeight' is deprecated. Use 'getWeight' instead.")
+	end,
 	getWeight = function(unitTest)
 		local cell1 = Cell{x = 0, y = 0}
 		local cell2 = Cell{x = 0, y = 1}
@@ -137,6 +185,30 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Random or nil, got number.")
 	end,
+	setCellWeight = function(unitTest)
+		local neigh = Neighborhood()
+
+		local error_func = function()
+			neigh:setCellWeight()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'setCellWeight' is deprecated. Use 'setWeight' instead.")
+	end,
+	setCellNeighbor = function(unitTest)
+		local neigh = Neighborhood()
+
+		local error_func = function()
+			neigh:setCellNeighbor()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'setCellNeighbor' is deprecated. Use 'remove and add' instead.")
+	end,
+	setNeighWeight = function(unitTest)
+		local neigh = Neighborhood()
+
+		local error_func = function()
+			neigh:setNeighWeight()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'setNeighWeight' is deprecated. Use 'setWeight' instead.")
+	end,
 	setWeight = function(unitTest)
 		local cell1 = Cell{}
 		local cell2 = Cell{}
@@ -166,7 +238,14 @@ return{
 			neigh:setWeight(cell1, 0.5)
 		end
 		unitTest:assert_error(error_func, "Error: Cell (0,0) does not belong to the Neighborhood.")
+	end,
+	size = function(unitTest)
+		local neigh = Neighborhood()
 
+		local error_func = function()
+			neigh:size()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
 	end
 }
 

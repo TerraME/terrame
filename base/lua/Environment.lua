@@ -468,13 +468,19 @@ Environment_ = {
 		if modelTime == nil then
 			modelTime = 1
 		elseif type(modelTime) ~= "number" then
-			incompatibleTypesErrorMsg("#1", "number", type(modelTime), 3) 
+			if type(modelTime) == "Event" then
+				modelTime = modelTime:getTime()
+			else
+				incompatibleTypesErrorMsg("#1", "Event or positive number", type(modelTime), 3)
+			end
+		elseif modelTime < 0 then
+			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)
 		end
 		self.cObj_:notify(modelTime)
 	end
 }
 
-local metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
+metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
 
 --- A container that encapsulates space, time, behavior, and other environments. Objects can be
 -- added directly when the Environment is declared or after it has been instantiated. It can

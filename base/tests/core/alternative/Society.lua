@@ -25,6 +25,37 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	notify = function(unitTest)
+		local sc1 = Society{
+			instance = Agent{},
+			quantity = 20
+		}
+
+		local error_func = function()
+			sc1:notify("not_int")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+
+		error_func = function()
+			sc1:notify(-1)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+	end,
+	sample = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 1
+		}
+
+		soc1:remove(soc1:sample())
+
+		local error_func = function()
+			soc1:sample()
+		end
+		unitTest:assert_error(error_func, "Error: Trying to sample an empty Society.")
+	end,
 	Society = function(unitTest)
 		local ag1 = Agent{}
 
@@ -312,6 +343,54 @@ return{
 			ag1 = sc1:get("asdfg")
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'index' expected positive integer number, got string.")
+	end,
+	getAgent = function(unitTest)
+		local ag1 = Agent{
+			name = "nonfoo",
+			execute = function(self) end
+		}
+
+		local sc1 = Society{
+			instance = ag1,
+			quantity = 10
+		}
+
+		local error_func = function()
+			sc1:getAgent("1")
+		end
+		unitTest:assert_error(error_func, "Error: Function 'getAgent' is deprecated. Use 'get' instead.")
+	end,
+	getAgents = function(unitTest)
+		local ag1 = Agent{
+			name = "nonfoo",
+			execute = function(self) end
+		}
+
+		local sc1 = Society{
+			instance = ag1,
+			quantity = 10
+		}
+
+		local error_func = function()
+			sc1:getAgents()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'getAgents' is deprecated. Use '.agents' instead.")
+	end,
+	size = function(unitTest)
+		local ag1 = Agent{
+			name = "nonfoo",
+			execute = function(self) end
+		}
+
+		local sc1 = Society{
+			instance = ag1,
+			quantity = 10
+		}
+
+		local error_func = function()
+			sc1:size()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
 	end,
 	split = function(unitTest)
 		local ag1 = Agent{

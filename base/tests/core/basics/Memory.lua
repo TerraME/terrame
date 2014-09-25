@@ -31,25 +31,23 @@ return{
 
 		for i = 1, 100 do
 			collectgarbage("collect")
-			local coord1 = Coord{x = 10, y = 10}
-			local coord2 = Coord{x = 12, y = 10}
+			local coord1 = TeCoord{x = 10, y = 10}
+			local coord2 = TeCoord{x = 12, y = 10}
 
-			local reg = debug.getregistry()
+			local reg = _G --debug.getregistry()
 			local count = 0
-			local countOutWT = 0
 			for k, v in pairs(reg) do
-				if type(k) == "number" and type(v) == "table" then
+				if type(v) == "table" then
 					for kk, vv in pairs(v) do
-						if type(kk) == "userdata" and type(vv) == "Coord" then
+						if type(vv) == "Coord" then
 							count = count + 1
 						end
 					end
 				elseif type(v) == "Coord" then
-					countOutWT = countOutWT + 1
+					count = count + 1
 				end
 			end
 			unitTest:assert_equal(2, count)
-			unitTest:assert_equal(0, countOutWT)
 
 			unitTest:assert_not_nil(coord2)
 			unitTest:assert_not_nil(coord1)

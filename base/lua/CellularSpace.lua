@@ -24,6 +24,8 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
+TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
+
 local function coordCoupling(cs1, cs2, name)
 	local lin
 	local col
@@ -197,6 +199,32 @@ local function spatialCoupling(m, n, cs1, cs2, filterF, weightF, name)
 		end	
 		cell:addNeighborhood(neighborhood, name)
 	end)
+end
+
+--#- Load the CellularSpace from a shapefile. This is an internal function and should not be documented.
+local loadShape = function(self)
+	self.legend = {} 
+	local x = 0
+	local y = 0
+	local legendStr = ""
+	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:loadShape()
+
+	self.legend = load(legendStr)()
+	-- A ordenacao eh necessaria pq o TerraView ordena os 
+	-- objectIDs como strings:..., C00L10, C00L100, C00L11...
+	table.sort(self.cells, function(a, b) 
+		if a.x < b.x then return true; end
+		if a.x > b.x then return false; end
+		return a.y < b.y
+	end)
+
+	self.xdim = self.maxCol
+	self.ydim = self.maxRow
+	self.cObj_:clear()
+	for i, tab in pairs(self.cells) do
+		tab.parent = self
+		self.cObj_:addCell(tab.x, tab.y, tab.cObj_)
+	end
 end
 
 CellularSpace_ = {
@@ -471,8 +499,10 @@ CellularSpace_ = {
 			end
 		end
 
-		local index = Coord {x = xIndex, y = yIndex}
-		return self.cObj_:getCell(index.cObj_)
+		local data =  {x = xIndex, y = yIndex}
+		local cObj_ = TeCoord(data)
+
+		return self.cObj_:getCell(cObj_)
 	end,
 	getCells = function(self)
 		deprecatedFunctionWarningMsg("getCells", ".cells", 2)
@@ -489,7 +519,7 @@ CellularSpace_ = {
 	-- @usage cs:load()
 	load = function(self)
 		if self.database:endswith("shp") then
-			return self:loadShape()
+			return loadShape(self)
 		elseif self.database:endswith(".csv") then
 			self.cells = {}
 			self.cObj_:clear()
@@ -529,31 +559,6 @@ CellularSpace_ = {
 		-- A ordenacao eh necessaria pq o TerraView ordena os 
 		-- objectIDs como strings:..., C00L10, C00L100, C00L11...
 		-- TODO: porque tem o table.sort aqui, se um cellularspace pode ser percorrido de qualquer forma?
-		table.sort(self.cells, function(a, b) 
-			if a.x < b.x then return true; end
-			if a.x > b.x then return false; end
-			return a.y < b.y
-		end)
-
-		self.xdim = self.maxCol
-		self.ydim = self.maxRow
-		self.cObj_:clear()
-		for i, tab in pairs(self.cells) do
-			tab.parent = self
-			self.cObj_:addCell(tab.x, tab.y, tab.cObj_)
-		end
-	end,
-	--#- Load the CellularSpace from a shapefile. This is an internal function and should not be documented.
-	loadShape = function(self)
-		self.legend = {} 
-		local x = 0
-		local y = 0
-		local legendStr = ""
-		self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:loadShape()
-
-		self.legend = load(legendStr)()
-		-- A ordenacao eh necessaria pq o TerraView ordena os 
-		-- objectIDs como strings:..., C00L10, C00L100, C00L11...
 		table.sort(self.cells, function(a, b) 
 			if a.x < b.x then return true; end
 			if a.x > b.x then return false; end
@@ -632,13 +637,13 @@ CellularSpace_ = {
 		if modelTime == nil then
 			modelTime = 1
 		elseif type(modelTime) ~= "number" then
-			if(type(modelTime == "Event")) then
+			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
 				incompatibleTypesErrorMsg("#1", "Event or positive number", type(modelTime), 3) 
 			end
 		elseif modelTime < 0 then
-			incompatibleValuesErrorMsg("#1","positive number", modelTime, 3)   
+			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)   
 		end
 		self.cObj_:notify(modelTime)
 	end,
@@ -701,12 +706,13 @@ CellularSpace_ = {
 	end,
 	--#- Save the attributes of a shapefile into the same file it was retrieved.
 	-- @usage cs:saveShape()
+--[[
 	saveShape = function(self)
 		local shapefileName = self.cObj_:getDBName()
 		if shapefileName == "" then
 			customErrorMsg("Shapefile must be loaded before being saved.", 3)
 		end
-		local shapeExists = io.open(shapefileName,"r") and io.open(shapefileName:sub(1,#shapefileName-3).."dbf")
+		local shapeExists = io.open(shapefileName, "r") and io.open(shapefileName:sub(1, #shapefileName - 3).."dbf")
 		if shapeExists == nil then
 			customErrorMsg("Shapefile not found.", 3)
 		else
@@ -714,7 +720,7 @@ CellularSpace_ = {
 		end
 		local contCells = 0
 		forEachCell(self, function(cell)
-			for k,v in pairs(cell) do
+			for k, v in pairs(cell) do
 				local type_
 				if type(v) == "number" then
 					type_ = 1
@@ -723,17 +729,16 @@ CellularSpace_ = {
 				else
 					type_ = 0
 				end
-				self.cObj_:saveShape(cell.objectId_,k,v,type_)
+				self.cObj_:saveShape(cell.objectId_, k, v, type_)
 			end
 			contCells = contCells + 1
 		end)
-		print("\tnumber of saved cells: "..contCells..".")
-		io.flush()
 	end,
+--]]
 	-- Retrieve the number of Cells of the CellularSpace.
 	-- @usage print(#cs)
 	size = function(self)
-		deprecatedFunctionWarningMsg("size()", "operator #", 3)
+		deprecatedFunctionWarningMsg("size", "operator #", 3)
 		return #self
 	end,
 	--- Split the CellularSpace into a table of Trajectories according to a classification 

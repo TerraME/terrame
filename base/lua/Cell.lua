@@ -203,7 +203,7 @@ Cell_ = {
 	-- @return a positive integer number
 	-- @usage size = #cell
 	size = function(self)
-		deprecatedFunctionWarningMsg("size()", "operator #", 3)
+		deprecatedFunctionWarningMsg("size", "operator #", 3)
 		return #self
 	end,
 	--- Synchronizes the Cell. TerraME can keep two copies of the attributes of a Cell in memory:
@@ -221,7 +221,7 @@ Cell_ = {
 	end
 }
 
-local metaTableCell_ = {
+metaTableCell_ = {
 	__index = Cell_,
 	--- Retrieve the number of Neighborhoods of the Cell.
 	-- @name #

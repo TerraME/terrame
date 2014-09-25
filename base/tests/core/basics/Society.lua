@@ -25,6 +25,14 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	__len = function(unitTest)
+		local sc1 = Society{
+			instance = Agent{},
+			quantity = 10
+		}
+
+		unitTest:assert_equal(10, #sc1)
+	end,
 	add = function(unitTest)
 		local ag1 = Agent{}
 
@@ -38,6 +46,39 @@ return {
 		unitTest:assert_equal(21, #sc1)
 		unitTest:assert_type(agent, "Agent")
 		unitTest:assert_equal(agent.id, "21")
+	end,
+	clear = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 10
+		}
+
+		soc1:clear()
+		unitTest:assert_equal(0, #soc1)
+	end,
+	remove = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 10
+		}
+
+		soc1:remove(soc1:sample())
+		unitTest:assert_equal(9, #soc1)
+	end,
+	sample = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 10
+		}
+
+		local ag = soc1:sample()
+		unitTest:assert_type(ag, "Agent")
 	end,
 	Society = function(unitTest)
 		TME_GLOBAL_RANDOM = Random{seed = 123}

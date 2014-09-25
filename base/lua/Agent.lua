@@ -204,6 +204,7 @@ Agent_ = {
 	--- Return the unique identifier of the Agent.
 	-- @usage id = agent:getId()
 	getId = function(self)
+		deprecatedFunctionWarningMsg("getId", ".id", 3)
 		return self.id
 	end,
 	--- Return the time when the machine executed the transition to the current state.
@@ -363,7 +364,7 @@ Agent_ = {
 				end
 				local call = "on_"..data.subject
 				if type(data.receiver[call]) ~= "function" then
-					customErrorMsg("Receiver (id = '".. data.receiver:getId() .."') does not implement function "..call ..".", 3)
+					customErrorMsg("Receiver (id = '".. data.receiver.id .."') does not implement function "..call ..".", 3)
 				else
 					data.receiver[call](data.receiver, data)
 					return true
@@ -420,13 +421,13 @@ Agent_ = {
 		if modelTime == nil then
 			modelTime = 1
 		elseif type(modelTime) ~= "number" then
-			if type(modelTime == "Event") then
+			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
 				incompatibleTypesErrorMsg("#1", "Event or positive number", type(modelTime), 3)
 			end
 		elseif modelTime < 0 then
-			incompatibleValuesErrorMsg("#1","positive number", modelTime, 3)
+			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)
 		end
 		self.cObj_:notify(modelTime)
 	end,
@@ -458,10 +459,10 @@ Agent_ = {
 	-- @param message A table with the received message. It has an attribute called sender with
 	-- the Agent that sent the message.
 	on_message = function(self, message)
-		customErrorMsg("Agent "..self:getId().." does not implement 'on_message'.", 3)
+		customErrorMsg("Agent "..self.id.." does not implement 'on_message'.", 3)
 	end,
 	randomWalk = function()
-		customErrorMsg("randomWalk() is deprecated. Please use walk() instead", 3)
+		deprecatedFunctionWarningMsg("randomWalk", "walk", 3)
 	end,
 	--- Execute a random walk to a neighbor Cell.
 	-- @param placement A string representing the index to be used. Default is "placement".
@@ -543,6 +544,7 @@ Agent_ = {
 	-- @param name A string.
 	-- @usage agent:setId("newid")
 	setId = function(self, name)
+		deprecatedFunctionWarningMsg("setId", ".id", 3)
 		self.id = name
 	end,
 	--- Activate or not the trajectories defined for a given Agent.
@@ -559,7 +561,8 @@ Agent_ = {
 	end
 }
 
-local metaTableAgent_ = {__index = Agent_, __tostring = tostringTerraME}
+metaTableAgent_ = {__index = Agent_, __tostring = tostringTerraME}
+
 --- An autonomous entity that is capable of performing actions as well as interact with other
 -- Agents and the spatial representation of the model. The Agent constructor gets a table
 -- containing the attributes and functions of the Agent. It can be  described as a simple table

@@ -25,11 +25,12 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	__len = function(unitTest)
+		local c1 = Cell{}
+
+		unitTest:assert_equal(0, #c1)
+	end,
 	Cell = function(unitTest)
-		local cell = Cell()
-
-		
-
 		local cell = Cell{
 			cover = "forest",
 			soilWater = 0,
@@ -115,6 +116,17 @@ return {
 		n:add(cell2)
 		unitTest:assert_equal(1, #ng)
 		unitTest:assert_nil(cell:getNeighborhood("wrong_name"))
+	end,
+	init = function(unitTest)
+		local c = Cell{
+			init = function(self)
+				self.value = 2
+			end
+		}
+
+		unitTest:assert_nil(c.value)
+		c:init()
+		unitTest:assert_equal(2, c.value)
 	end,
 	distance = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

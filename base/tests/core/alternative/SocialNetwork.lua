@@ -181,6 +181,14 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Agent '1' does not belong to the SocialNetwork.")
 	end,
+	size = function(unitTest)
+		local sn = SocialNetwork{}
+
+		local error_func = function()
+			sn:size()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
+	end,
 	SocialNetwork = function(unitTest)
 		local error_func = function()
 			sn = SocialNetwork(2)

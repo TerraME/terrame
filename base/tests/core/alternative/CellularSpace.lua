@@ -58,7 +58,6 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'xdim' expected positive integer number, got -123.")
 
-
 		error_func = function()
 			local cs = CellularSpace{
 				xdim = 30,
@@ -87,6 +86,30 @@ return{
 			cs:get(2)
 		end
 		unitTest:assert_error(error_func, "Error: Parameter '#2' is mandatory.")
+	end,
+	getCell = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:getCell(1, 2)
+		end
+		unitTest:assert_error(error_func, "Error: Function 'getCell' is deprecated. Use 'get' instead.")
+	end,
+	getCells = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:getCells()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'getCells' is deprecated. Use '.cells' instead.")
+	end,
+	getCellByID = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:getCellByID("C0L0")
+		end
+		unitTest:assert_error(error_func, "Error: Function 'getCellByID' is deprecated. Use 'get' instead.")
 	end,
 	createNeighborhood = function(unitTest)
 		local cs = CellularSpace{xdim = 10, ydim = 10}
@@ -436,6 +459,27 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'weight' expected function, got number.")
+	end,
+	notify = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:notify("not_int")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+
+		error_func = function()
+			cs:notify(-1)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+	end,
+	size = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:size()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
 	end,
 	split = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

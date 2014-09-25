@@ -94,15 +94,11 @@ install = function(file)
 	-- verificar se a versao do terrame eh valida (built)
 end
 
-local dofileNamespace = function(file)
-	local local_env = {}
-
-	local oldmetatable = getmetatable(_G)
-	setmetatable(_G, {__newindex = local_env, __index = local_env})
-	dofile(file)
-	setmetatable(_G, oldmetatable)
-
-	return local_env
+-- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
+function include(scriptfile)
+    local env = setmetatable({}, {__index = _G})
+    assert(loadfile(scriptfile, 't', env))()
+    return setmetatable(env, nil)
 end
 
 -- altissima prioridade (somente com o primeiro argumento)
@@ -135,21 +131,37 @@ require = function(package, recursive, asnamespace)
 	local load_file = package_path..s.."load.lua"
 	local load_sequence
 
-	if os.rename(package_path..s.."load.lua", package_path..s.."load.lua") then
-		load_sequence = dofileNamespace(load_file)
-		load_sequence = load_sequence.files
-	else
-		load_sequence = dir(package_path..s.."lua")
+	if os.rename(load_file, load_file) then
+		load_sequence = include(load_file).files
 	end
 
+	local i, file
+
 	if load_sequence then
-		for i, file in ipairs(load_sequence) do
+		for _, file in ipairs(load_sequence) do
 			dofile(package_path..s.."lua"..s..file)
 		end
 	end
 
 	-- executar a funcao onLoad() do pacote (esta funcao pode configurar algumas coisas e imprimir informacao
 	-- de que o pacote foi carregado com sucesso).
+end
+
+type__ = type
+
+--- Return the type of an object. It extends the original Lua type() to support TerraME objects, 
+-- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
+-- @param data Any object or value.
+-- @usage c = Cell{value = 3}
+-- print(type(c)) -- "Cell"
+type = function(data)
+    local t = type__(data)
+    if t == "table" or t == "userdata" and getmetatable(data) then
+        if data.type_ ~= nil then
+            return data.type_
+        end
+    end
+    return t
 end
 
 -- TODO: allow this to be executed directly from TerraME. Check if it is interesting to be executed
@@ -214,7 +226,7 @@ configureTests = function(fileName)
 	end
 	
 	-- Question about the choosen test
-	local function returnTest(folder,file)
+	local function returnTest(folder, file)
 		local tests = dofile(srcDir..s..folder..s..file)
 		local testsList = {}
 		print ("\n>> Choose Test: ")
@@ -315,20 +327,61 @@ exectest = function(package, configFile)
 	-- executar todos os testes
 end
 
+-- builds a table with zero counts for each element of the table gotten as argument
+local buildCountTable = function(mtable)
+	result = {}
+
+	forEachElement(mtable, function(idx, value, mtype)
+		if type__(value) == "table" then
+			forEachElement(value, function(midx, mvalue, mmtype)
+				if mmtype == "function" then
+					result[midx] = 0
+				end
+			end)
+		elseif mtype == "function" then
+			result[idx] = 0
+		end
+	end)
+	return result
+end
+
+
 -- RAIAN: FUncao do antonio que executa os testes. Devera ir para dentro da funcao test acima. Coloquei desta maneira 
 -- para executar os testes sem alterar a chamada no lado C++ por enquanto. 
 executeTests = function(fileName)
 	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages/base"
+	local baseDir = sessionInfo().path..s.."packages"..s.."base"
 	local srcDir = baseDir..s.."tests"
 
-	TME_MODE = TME_EXECUTION_MODES.DEBUG -- set the debug mode
+	load_file = baseDir..s.."load.lua"
+	local load_sequence
+
+	if os.rename(load_file, load_file) then
+		load_sequence = include(load_file).files
+	end
+
+	local testfunctions = {} -- test functions store all the functions that need to be tested, extracted from the source code
+
+	for i, file in ipairs(load_sequence) do
+		testfunctions[file] = buildCountTable(include(baseDir..s.."lua"..s..file))
+	end
+
+	sessionInfo = function()
+		result = {
+			mode = "debug",
+			version = VERSION,
+			dbVersion = "1_3_1", -- TODO: remove this parameter?
+			separator = package.config:sub(1, 1),
+			path = os.getenv("TME_PATH")
+		}
+		return result
+	end
 
 	-- TODO: possibilitar executar esta funcao mesmo que o usuario nao passe
 	-- um arquivo de teste, de forma que todos os testes serao executados.
 
-	local data = dofileNamespace(fileName)
+	local data = include(fileName)
 
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
@@ -363,21 +416,38 @@ executeTests = function(fileName)
 		host = data.host
 	}
 
+	ut.package_functions = 0
+	ut.functions_not_exist = 0
+	ut.functions_not_tested = 0
+	ut.executed_functions = 0
+	ut.functions_with_global_variables = 0
+	ut.functions_with_error = 0
+	ut.functions_without_assert = 0
+
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
+		local dirFiles = dir(srcDir..s..eachFolder)
+		myFile = {}
 		if type(data.file) == "string" then
-			myFile = {data.file}
-		elseif type(data.file) == "table" then
-			myFile = data.file
-		elseif data.file == nil then
-			myFile = {}	
-			local myFile2 = dir(srcDir..s..eachFolder)
-			for _, eachFile in ipairs(myFile2) do
-				myFile[#myFile + 1] = eachFile
+			if belong(data.file, dirFiles) then
+				myFile = {data.file}
 			end
-			
+		elseif type(data.file) == "table" then
+			forEachElement(dirFiles, function(_, value)
+				if belong(value, data.file) then
+					myFile[#myFile + 1] = value
+				end
+			end)
+		elseif data.file == nil then
+			forEachElement(dirFiles, function(_, value)
+				myFile[#myFile + 1] = value
+			end)
 		else
 			error("file is not a string, table or nil.")
+		end
+
+		if #myFile == 0 then
+			print_green("Skipping folder "..eachFolder)
 		end
 
 		for _, eachFile in ipairs(myFile) do
@@ -401,24 +471,25 @@ executeTests = function(fileName)
 			for _, eachTest in ipairs(myTest) do
 				print("Testing "..eachTest)
 
-				local my_function = function()
-					tests[eachTest](ut)
+				if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
+					testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
+				elseif testfunctions[eachFile] then
+					print_red("Function does not exist in the source code.")
+					ut.functions_not_exist = ut.functions_not_exist + 1
 				end
 
-				ut.test = ut.test + 2
 				local count_test = ut.test
 
 				collectgarbage("collect")
-				local ok_execution, err = pcall(my_function)
+				local ok_execution, err = pcall(function() tests[eachTest](ut) end)
+				ut.executed_functions = ut.executed_functions + 1
 
 				if not ok_execution then
 					print_red("Wrong execution, got error: '"..err.."'.")
-					ut.fail = ut.fail + 1
+					ut.functions_with_error = ut.functions_with_error + 1
 				elseif count_test == ut.test then
-					ut.fail = ut.fail + 1
+					ut.functions_without_assert = ut.functions_without_assert + 1
 					print_red("No asserts were found in the test.")
-				else
-					ut.success = ut.success + 1
 				end
 
 				if getn(_G) > count_global then
@@ -435,6 +506,7 @@ executeTests = function(fileName)
 					end)
 					variables = variables:sub(1, variables:len() - 2).."."
 					print_red("Test creates global variable(s): "..variables)
+					ut.functions_with_global_variables = ut.functions_with_global_variables + 1
 
 					-- we need to delete the global variables created in order
 					-- to ensure that a new error will be generated if this
@@ -455,14 +527,83 @@ executeTests = function(fileName)
 		end
 	end 
 
+	if type(data.file) == "string" then
+		print_green("Checking if all functions from "..data.file.. " are tested")
+		forEachElement(testfunctions[data.file], function(idx, value)
+			ut.package_functions = ut.package_functions + 1
+			if value == 0 then
+				print_red("Function '"..idx.."' is not tested.")
+				ut.functions_not_tested = ut.functions_not_tested + 1
+			end
+		end)
+	elseif type(data.file) == "table" then
+		forEachElement(data.file, function(idx, value)
+			print_green("Checking if all functions from "..value.. " are tested")
+			forEachElement(testfunctions[value], function(midx, mvalue)
+				ut.package_functions = ut.package_functions + 1
+				if mvalue == 0 then
+					print_red("Function '"..midx.."' is not tested.")
+					ut.functions_not_tested = ut.functions_not_tested + 1
+				end
+			end)
+		end)
+	elseif data.file == nil then
+		forEachElement(testfunctions, function(idx, value)
+			print_green("Checking if all functions from "..idx.. " are tested")
+			forEachElement(value, function(midx, mvalue)
+				ut.package_functions = ut.package_functions + 1
+				if mvalue == 0 then
+					print_red("Function '"..midx.."' is not tested.")
+					ut.functions_not_tested = ut.functions_not_tested + 1
+				end
+			end)
+		end)
+	end
+
 	print("\nReport:")
 	if ut.fail > 0 then
-		print_red("Tests: "..ut.test)
-		print_red("Success: "..ut.success.." ("..round(ut.success/ut.test*100, 3).."%)")
-		print_red("Fail: "..ut.fail.." ("..round(ut.fail/ut.test*100, 3).."%)")
+		print_red(ut.fail.." out of "..ut.test.." asserts failed.")
 	else
-		print_green("Tests: "..ut.test)
-		print_green("Success: "..ut.success.." (100%)")
+		print_green("All "..ut.test.." asserts were executed successfully.")
+	end
+
+	if ut.functions_with_error > 0 then
+		print_red(ut.functions_with_error.." out of "..ut.executed_functions.." tested functions stopped with an unexpected error.")
+	else
+		print_green("All "..ut.executed_functions.." tested functions do not have any unexpected execution error.")
+	end
+
+	if ut.functions_with_global_variables > 0 then
+		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
+	else
+		print_green("No function creates any global variable.")
+	end
+
+	if ut.functions_without_assert > 0 then
+		print_red(ut.functions_without_assert.." out of "..ut.executed_functions.." tested functions do not have at least one assert.")
+	else
+		print_green("All "..ut.executed_functions.." tested functions have at least one assert.")
+	end
+
+	if ut.functions_not_exist > 0 then
+		print_red(ut.functions_not_exist.." out of "..ut.executed_functions.." tested functions do not exist in the source code of the package.")
+	else
+		print_green("All "..ut.executed_functions.." tested functions exist in the source code of the package.")
+	end
+
+	if ut.functions_not_tested > 0 then
+		print_red(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions are not tested.")
+	else
+		print_green("All "..ut.package_functions.." functions of the package are tested.")
+	end
+
+	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + 
+	               ut.functions_with_global_variables + ut.functions_with_error + ut.functions_without_assert
+
+	if errors == 0 then
+		print_green("All tests were succesfully executed.")
+	else
+		print_red("Summing up, "..errors.." problems were found during the tests.")
 	end
 end
 
@@ -503,7 +644,7 @@ packageInfo = function(package)
 	local s = sessionInfo().separator
 	local file = sessionInfo().path..s.."packages"..s..package..s.."description.lua"
 	
-	return dofileNamespace(file)
+	return include(file)
 
 	--forEachOrderedElement(ns, function(idx, value)
 	--	print(idx..": "..value)
@@ -522,6 +663,59 @@ sessionInfo = function()
 	return result
 	-- atualizar todos os arquivos que usam as variaveis globais por uma chamada a esta funcao
 	-- remover as variaveis globais TME_MODE, ...
+end
+
+--- Return a string describing a TerraME object. This function allows one to use the method print() directly from any TerraME object.
+-- @name tostring
+-- @param data Any TerraME object.
+-- @usage c = Cell{cover = "forest", distRoad = 0.3}
+-- description = tostring(c)
+-- print(description)
+-- print(c) -- same result of line above
+tostringTerraME = function(self)
+	local rs = {}
+	local maxlen = 0
+
+	forEachElement(self, function(index)
+		if type(index) ~= "string" then index = tostring(index) end
+
+		if index:len() > maxlen then
+			maxlen = index:len()
+		end
+	end)
+
+	local result = ""
+	forEachOrderedElement(self, function(index, value, mtype)
+		if type(index) ~= "string" then index = tostring(index) end
+
+		result = result..index.." "
+
+		local size = maxlen - index:len()
+		local i
+		for i = 0, size do
+			result = result.." "
+		end
+
+		if mtype == "number" then
+			result = result..mtype.." ["..value.."]"
+		elseif mtype == "boolean" then
+			if value then
+				result = result.."boolean [true]"
+			else
+				result = result.."boolean [false]"
+			end
+		elseif mtype == "string" then
+			result = result.."string [".. value.."]"
+		elseif mtype == "table" then
+			result = result.."table of size "..#value..""
+		else
+			result = result..mtype
+		end
+
+		result = result.."\n"
+	end)
+
+	return result
 end
 
 require("base")

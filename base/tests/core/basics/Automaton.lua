@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP.
 --
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -21,36 +21,21 @@
 -- of this library and its documentation.
 --
 -- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
---          Rodrigo Reis Pereira
+--          Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
-metaTableFlow_ = {__tostring = tostringTerraME}
-
---- A Flow describes the behavior of an automaton or Agent in a given State.
--- @param data.1st A function(ev, agent, cell), where the arguments are: an Event that 
--- activated the Flow, the Automaton or Agent that owns the Flow, and the Cell over which
--- the Flow will be evaluated.
--- @usage Flow { function(ev, agent, cell)
---     agent.value = agent.value + 2
--- end}
-function Flow(data)
-	local cObj = TeFlow()
-
-	if data == nil then
-		data = {}
-	elseif type(data) ~= "table" then
-		tableParameterErrorMsg("Flow", 3)
+return{
+	__tostring = function(unitTest)
+		local at1 = Automaton{
+			id = "MyAutomaton",
+			State{
+				id = "second"
+			}
+		}
+		unitTest:assert_equal(tostring(at1), [[1      userdata
+cObj_  userdata
+id     string [MyAutomaton]
+]])
 	end
-
-	data.rule = cObj
-
-	if type(data[1]) ~= "function" then
-		customErrorMsg("Flow constructor expected a function as parameter.", 3)
-	end
-
-	setmetatable(data, metaTableFlow_)
-	cObj:setReference(data)
-
-	return cObj
-end
+}
 

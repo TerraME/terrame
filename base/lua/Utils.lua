@@ -28,19 +28,7 @@
 
 --@header Some basic and useful functions for modeling.
 
-TME_EXECUTION_MODES = {
-	QUIET = 0,
-	NORMAL = 1,
-	DEBUG = 2,
-	STRICT = 3 -- TODO: remove this option - deprecated
-}
-
-TME_MODE = 1
-TME_CPP_MSG = nil
-
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
-
-TME_DB_VERSION="4_2_0"
 
 if sessionInfo().path == nil or sessionInfo().path == "" then
 	error("Error: TME_PATH environment variable should exist and point to TerraME installation folder.", 2)
@@ -445,6 +433,13 @@ function belong(value, values)
 	return found
 end
 
+-- TODO: think about this kind of function. Today it is only used by Model.
+verify = function(condition, msg)
+	if not condition then
+		customErrorMsg(msg, 3)
+	end
+end
+
 function checkUnnecessaryParameters(data, parameters, level)
 	forEachElement(data, function(value)
 		if not belong(value, parameters) then
@@ -467,11 +462,11 @@ function customWarningMsg(msg,level)
 		error("Error: #1 should be a string.", 2)
 	elseif type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
 		error("Error: #2 should be a positive integer number.", 2)
-	elseif TME_MODE == TME_EXECUTION_MODES.NORMAL then
+	elseif sessionInfo().mode == "normal" then
 		local info = debug.getinfo(level)
 		local str = string.match(info.short_src, "[^/]*$")
 		print(str..":".. info.currentline ..": Warning: "..msg)
-	elseif TME_MODE == TME_EXECUTION_MODES.DEBUG then
+	elseif sessionInfo().mode == "debug" then
 		customErrorMsg(msg, level + 1)
 	end
 	io.flush()
@@ -924,113 +919,44 @@ function getn(t)
 end
 
 --############################################################
-type__ = type
-
---- Return the type of an object. It extends the original Lua type() to support TerraME objects, whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
--- @param data Any object or value.
--- @usage c = Cell{value = 3}
--- print(type(c)) -- "Cell"
-type = function(data)
-	local t = type__(data)
-	if t == "table" or t == "userdata" and getmetatable(data) then
-		if data.type_ ~= nil then
-			return data.type_
-		end
-	end
-	return t
-end
-
---- Return a string describing a TerraME object. This function allows one to use the method print() directly from any TerraME object.
--- @name tostring
--- @param data Any TerraME object.
--- @usage c = Cell{cover = "forest", distRoad = 0.3}
--- description = tostring(c)
--- print(description)
--- print(c) -- same result of line above
-tostringTerraME = function(self)
-	local rs = {}
-	local maxlen = 0
-
-	forEachElement(self, function(index)
-		if type(index) ~= "string" then index = tostring(index) end
-
-		if index:len() > maxlen then
-			maxlen = index:len()
-		end
-	end)
-
-	local result = ""
-	forEachOrderedElement(self, function(index, value, mtype)
-		if type(index) ~= "string" then index = tostring(index) end
-
-		result = result..index.." "
-
-		local size = maxlen - index:len()
-		local i
-		for i = 0, size do
-			result = result.." "
-		end
-
-		if mtype == "number" then
-			result = result..mtype.." ["..value.."]"
-		elseif mtype == "boolean" then
-			if value then
-				result = result.."boolean [true]"
-			else
-				result = result.."boolean [false]"
-			end
-		elseif mtype == "string" then
-			result = result.."string [".. value.."]"
-		elseif mtype == "table" then
-			result = result.."table of size "..#value..""
-		else
-			result = result..mtype
-		end
-
-		result = result.."\n"
-	end)
-
-	return result
-end
-
 -- Parses a single CSV line.
 -- Source: http://lua-users.org/wiki/LuaCsv
 -- @param line A string from the CSV file
 -- @param sep The value separator. Default is ','
 -- @return A tuple (table) of values
-local function ParseCSVLine (line,sep)
+local function ParseCSVLine(line, sep)
 	local res = {}
 	local pos = 1
 	sep = sep or ','
 	while true do 
-		local c = string.sub(line,pos,pos)
+		local c = string.sub(line, pos, pos)
 		if c == "" then break end
 		if c == '"' then
 			-- quoted value (ignore separator within)
 			local txt = ""
 			repeat
-				local startp,endp = string.find(line,'^%b""',pos)
-				txt = txt..string.sub(line,startp+1,endp-1)
+				local startp,endp = string.find(line, '^%b""', pos)
+				txt = txt..string.sub(line, startp + 1, endp - 1)
 				pos = endp + 1
-				c = string.sub(line,pos,pos) 
+				c = string.sub(line, pos, pos)
 				if c == '"' then txt = txt..'"' end 
 				-- check first char AFTER quoted string, if it is another
 				-- quoted string without separator, then append it
 				-- this is the way to "escape" the quote char in a quote. example:
 				-- value1,"blub""blip""boing",value3 will result in blub"blip"boing for the middle
 			until (c ~= '"')
-			table.insert(res,txt)
+			table.insert(res, txt)
 			assert(c == sep or c == "")
 			pos = pos + 1
 		else	
 			-- no quotes used, just look for the first separator
-			local startp,endp = string.find(line,sep,pos)
+			local startp, endp = string.find(line, sep, pos)
 			if startp then 
-				table.insert(res,string.sub(line,pos,startp-1))
+				table.insert(res,string.sub(line, pos, startp - 1))
 				pos = endp + 1
 			else
 				-- no separator found -> use rest of string and terminate
-				table.insert(res,string.sub(line,pos))
+				table.insert(res, string.sub(line, pos))
 				break
 			end 
 		end
@@ -1073,7 +999,7 @@ function writeCSV(data, filename, sep)
 	for k in pairs(data[1]) do
 		table.insert(fields, k)
 	end
-	file:write(table.concat(fields,sep))
+	file:write(table.concat(fields, sep))
 	file:write("\n")
 	for _, tuple in ipairs(data) do
 		local line = {}

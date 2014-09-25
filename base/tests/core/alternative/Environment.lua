@@ -174,6 +174,20 @@ return{
 		end
 
 		unitTest:assert_error(error_func, "Error: CellularSpace must be added before any Automaton.")
+	end,
+	notify = function(unitTest)
+		local env = Environment{}
+
+		local error_func = function()
+			env:notify("not_int")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+
+		error_func = function()
+			env:notify(-1)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
 	end
+
 }
 

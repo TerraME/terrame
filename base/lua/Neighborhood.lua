@@ -202,7 +202,7 @@ Neighborhood_ = {
 		self:setWeight(xIndex, yIndex, weight)
 	end,
 	size = function(self)
-		deprecatedFunctionWarningMsg("size()'", "operator #", 3)
+		deprecatedFunctionWarningMsg("size", "operator #", 3)
 		return #self
 	end,
 	--- Return the parent of the Neighborhood, which is the last Cell where the Neighborhood
@@ -213,7 +213,7 @@ Neighborhood_ = {
 	end
 }
 
-local metaTableNeighborhood_ = {
+metaTableNeighborhood_ = {
 	__index = Neighborhood_,
 	--- Retrieve the number of Cells of the Neighborhood.
 	-- @name #

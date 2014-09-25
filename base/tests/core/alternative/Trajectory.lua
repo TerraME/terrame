@@ -35,6 +35,16 @@ return{
 
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected Cell, got number.")
 	end,
+	addCell = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+		local trajectory = Trajectory{target = cs}
+
+		local error_func = function()
+			trajectory:addCell()
+		end
+
+		unitTest:assert_error(error_func, "Error: Function 'addCell' is deprecated. Use 'add' instead.")
+	end,
 	filter = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 		local trajectory = Trajectory{
@@ -44,6 +54,16 @@ return{
 			trajectory:filter("filter")
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected function or nil, got string.")
+	end,
+	getCell = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+		local trajectory = Trajectory{target = cs}
+
+		local error_func = function()
+			trajectory:getCell()
+		end
+
+		unitTest:assert_error(error_func, "Error: Function 'getCell' is deprecated. Use 'get' instead.")
 	end,
 	randomize = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

@@ -96,6 +96,17 @@ return {
 		local sn2 = ag1:getSocialNetwork()
 		unitTest:assert_equal(sn2, sn)
 	end,
+	init = function(unitTest)
+		local ag1 = Agent{
+			init = function(self)
+				self.value = 2
+			end
+		}
+
+		unitTest:assert_nil(ag1.value)
+		ag1:init()
+		unitTest:assert_equal(2, ag1.value)
+	end,
 	leave = function(unitTest)
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3, ydim = 3}
@@ -253,8 +264,8 @@ return {
 	__tostring = function(unitTest)
 		local ag1 = Agent{
 			name = "nonfoo",
-			init = function(unitTest) end,
-			execute = function(unitTest) end
+			init = function() end,
+			execute = function() end
 		}
 		unitTest:assert_equal(tostring(ag1), [[cObj_           userdata
 execute         function

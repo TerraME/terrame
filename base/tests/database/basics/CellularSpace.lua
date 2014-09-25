@@ -191,8 +191,6 @@ return{
 		unitTest:assert_equal(5673, #cs)
 
 		-- csv file
-		-- TODO: add the files cs.csv and EstadosBrasil.shp to data folder
-		--[[
 		cs = CellularSpace{database = file("cs.csv", "base"), sep = ";"}
 
 		unitTest:assert_type(cs, "CellularSpace")
@@ -227,7 +225,6 @@ return{
 		for i = 1, 27 do
 			unitTest:assert_equal(valuesDefault[i], cs.cells[i].POPUL)
 		end
-		--]]
 
 		-- late autoload
 		cs = CellularSpace{
@@ -249,8 +246,6 @@ return{
 		unitTest:assert_equal(#cs.cells, 10201)
 		unitTest:assert_type(cs.cells[1], "Cell")
 
-		-- TODO: same as above (add files to data folder
-		--[[
 		cs = CellularSpace{database = file("EstadosBrasil.shp", "base"), autoload = false}
 		unitTest:assert_nil(cs.cells[1])
 		unitTest:assert_equal(#cs.cells, 0)
@@ -266,7 +261,6 @@ return{
 
 		cs:load()
 		unitTest:assert_equal(2500, #cs)
-		--]]
 
 		-- neighborhood between two cellular spaces
 		cs = CellularSpace{

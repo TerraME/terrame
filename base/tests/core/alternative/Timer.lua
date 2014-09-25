@@ -25,6 +25,21 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	notify = function(unitTest)
+		local t = Timer{Event{action = function() end}}
+
+		t:execute(5)
+
+		local error_func = function()
+			t:notify("not_int")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+
+		error_func = function()
+			t:notify(-1)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+	end,
 	Timer = function(unitTest)
 		local error_func = function()
 			local timer = Timer{Cell()}

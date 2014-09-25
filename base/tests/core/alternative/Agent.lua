@@ -132,6 +132,13 @@ return {
 		end
 		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected Event, got table.")
 	end,
+	getId = function(unitTest)
+		local ag1 = Agent{}
+		local test_function = function()
+			ag1:getId()
+		end
+		unitTest:assert_error(test_function, "Error: Function 'getId' is deprecated. Use '.id' instead.")
+	end,
 	getSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
 
@@ -316,12 +323,45 @@ return {
 		end
 		unitTest:assert_error(test_function, "Error: Value 'not_placement' not found for parameter '#2'.")
 	end,
+	notify = function(unitTest)
+		local ag = Agent{x = 1, y = 1}
+
+		local error_func = function()
+			ag:notify("not_int")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+
+		error_func = function()
+			ag:notify(-1)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+	end,
+	randomWalk = function(unitTest)
+		local ag1 = Agent{}
+		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local myEnv = Environment{cs, ag1}
+
+		myEnv:createPlacement{strategy = "void", name = "placement"}
+		local c1 = cs.cells[1]
+		ag1:enter(c1)
+		local test_function = function()
+			ag1:randomWalk()
+		end
+		unitTest:assert_error(test_function, "Error: Function 'randomWalk' is deprecated. Use 'walk' instead.")
+	end,
 	reproduce = function(unitTest)
 		local a = Agent{}
 		local error_func = function()
 			a:reproduce()
 		end
 		unitTest:assert_error(error_func, "Error: Agent should belong to a Society to be able to reproduce.")
+	end,
+	setId = function(unitTest)
+		local ag1 = Agent{}
+		local test_function = function()
+			ag1:setId("aa")
+		end
+		unitTest:assert_error(test_function, "Error: Function 'setId' is deprecated. Use '.id' instead.")
 	end,
 	walk = function(unitTest)
 		local ag1 = Agent{}

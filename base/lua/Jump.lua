@@ -24,6 +24,22 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
+local Jump_ = {
+	setTarget = function(self, target)
+		if type(target) ~= "string" then
+			incompatibleTypesErrorMsg("#1", "string", type(target), 3)
+			return false
+		end
+		self.target = target
+		return true
+	end,	
+	getTarget = function(self)
+		return self.target
+	end
+}
+
+metaTableJump_ = {__index = Jump_, __tostring = tostringTerraME}
+
 --- Control a discrete transition between States. If the method in the first argument returns true, the target becomes the new active State.
 -- @param data.1st a function that returns a boolean value and takes as arguments an Event, an Agent or Automaton, and a Cell, respectively.
 -- @param data.target a string with another State id.
@@ -39,22 +55,7 @@ function Jump(data)
 	end
 
 	local cObj = TeJump()
-	local metaAttr = {rule = cObj,
-		setTarget = function(self, target)
-			if type(target) ~= "string" then
-				incompatibleTypesErrorMsg("#1", "string", type(target), 3)
-				return false
-			end
-			self.target = target
-			return true
-		end,	
-
-		getTarget = function(self)
-			return self.target
-		end
-	}
-
-	local metaTable = {__index = metaAttr, __tostring = tostringTerraME}
+	data.rule = cObj
 
 	if type(data[1]) ~= "function" then
 		customErrorMsg("Jump constructor expected a function as first parameter.", 3)
@@ -64,7 +65,8 @@ function Jump(data)
 		data.target = "st1"
 	end  
 	cObj:setTargetControlModeName(data.target) 
-	setmetatable(data, metaTable)
+	setmetatable(data, metaTableJump_)
 	cObj:setReference(data)
 	return cObj
 end
+
