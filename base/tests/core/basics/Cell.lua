@@ -25,11 +25,12 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	__len = function(unitTest)
+		local c1 = Cell{}
+
+		unitTest:assert_equal(0, #c1)
+	end,
 	Cell = function(unitTest)
-		local cell = Cell()
-
-		
-
 		local cell = Cell{
 			cover = "forest",
 			soilWater = 0,

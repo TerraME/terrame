@@ -25,6 +25,14 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	__len = function(unitTest)
+		local sc1 = Society{
+			instance = Agent{},
+			quantity = 10
+		}
+
+		unitTest:assert_equal(10, #sc1)
+	end,
 	add = function(unitTest)
 		local ag1 = Agent{}
 

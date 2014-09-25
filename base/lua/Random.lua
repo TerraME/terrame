@@ -123,7 +123,7 @@ Random_ = {
 	end
 }
 
-local metaTableRandom_ = {__index = Random_, __tostring = tostringTerraME}
+metaTableRandom_ = {__index = Random_, __tostring = tostringTerraME}
 
 --- Type to generate random numbers. It uses RandomLib, a C++ interface to the Mersenne Twister
 -- random number generator MT19937 and to the SIMD-oriented Fast Mersenne Twister random number

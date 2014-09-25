@@ -145,7 +145,7 @@ Timer_ = {
 
 -- TODO: implement operator #, that returns the number of Events of the Timer
 
-local metaTableTimer_ = {__index = Timer_, __tostring = tostringTerraME}
+metaTableTimer_ = {__index = Timer_, __tostring = tostringTerraME}
 
 --- A Timer is an event-based scheduler that executes and controls the simulation. It contains a
 -- set of Events. It allows the model to take into consideration processes that start

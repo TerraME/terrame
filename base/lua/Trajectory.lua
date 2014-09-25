@@ -149,7 +149,7 @@ Trajectory_ = {
 }
 
 setmetatable(Trajectory_, metaTableCellularSpace_)
-local metaTableTrajectory_ = {
+metaTableTrajectory_ = {
 	__index = Trajectory_,
 	--- Retrieve the number of Cells of the CellularSpace.
 	-- @name #

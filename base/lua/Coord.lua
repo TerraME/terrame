@@ -109,7 +109,7 @@ Coord_ = {
 	end
 }
 
-local metaTableCoord_ = {__index = Coord_, __tostring = tostringTerraME}
+metaTableCoord_ = {__index = Coord_, __tostring = tostringTerraME}
 
 --#-A spatial location, represented by a pair (x, y).
 -- @param data.x A position on the horizontal axis of a two-dimensional Cartesian coordinate system. Defalt is 0.

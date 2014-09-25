@@ -221,7 +221,7 @@ Cell_ = {
 	end
 }
 
-local metaTableCell_ = {
+metaTableCell_ = {
 	__index = Cell_,
 	--- Retrieve the number of Neighborhoods of the Cell.
 	-- @name #

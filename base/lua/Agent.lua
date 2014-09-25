@@ -559,7 +559,8 @@ Agent_ = {
 	end
 }
 
-local metaTableAgent_ = {__index = Agent_, __tostring = tostringTerraME}
+metaTableAgent_ = {__index = Agent_, __tostring = tostringTerraME}
+
 --- An autonomous entity that is capable of performing actions as well as interact with other
 -- Agents and the spatial representation of the model. The Agent constructor gets a table
 -- containing the attributes and functions of the Agent. It can be  described as a simple table

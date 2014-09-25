@@ -474,7 +474,7 @@ Environment_ = {
 	end
 }
 
-local metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
+metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
 
 --- A container that encapsulates space, time, behavior, and other environments. Objects can be
 -- added directly when the Environment is declared or after it has been instantiated. It can

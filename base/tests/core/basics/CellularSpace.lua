@@ -25,6 +25,11 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	__len = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		unitTest:assert_equal(#cs, 100)
+	end,
 	add = function(unitTest)
 		local cs = CellularSpace{
 			xdim = 10,

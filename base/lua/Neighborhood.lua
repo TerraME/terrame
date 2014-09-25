@@ -213,7 +213,7 @@ Neighborhood_ = {
 	end
 }
 
-local metaTableNeighborhood_ = {
+metaTableNeighborhood_ = {
 	__index = Neighborhood_,
 	--- Retrieve the number of Cells of the Neighborhood.
 	-- @name #

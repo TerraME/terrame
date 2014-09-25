@@ -126,7 +126,8 @@ Group_ = {
 }
 
 setmetatable(Group_, metaTableSociety_)
-local metaTableGroup_ = {
+
+metaTableGroup_ = {
 	__index = Group_,
 	--- Return the number of Agents of the Group.
 	-- @name #
