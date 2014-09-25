@@ -426,7 +426,7 @@ Society_ = {
 	-- Return the number of Agents of the Society.
 	-- @usage print(#soc)
 	size = function(self)
-		deprecatedFunctionWarningMsg("size()", "operator #", 3)
+		deprecatedFunctionWarningMsg("size", "operator #", 3)
 		return #self
 	end,
 	--- Split the Society into a set of Groups according to a classification strategy. The 

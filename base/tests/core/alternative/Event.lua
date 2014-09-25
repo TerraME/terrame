@@ -57,6 +57,11 @@ return{
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'action' expected one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory], got number.")
 
 		error_func = function()
+			event = Event{message = function() end}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'message' is deprecated, use 'action' instead.")
+
+		error_func = function()
 			event = Event{myaction = function() end}
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'myaction' is unnecessary.")

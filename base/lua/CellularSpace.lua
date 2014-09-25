@@ -733,7 +733,7 @@ CellularSpace_ = {
 	-- Retrieve the number of Cells of the CellularSpace.
 	-- @usage print(#cs)
 	size = function(self)
-		deprecatedFunctionWarningMsg("size()", "operator #", 3)
+		deprecatedFunctionWarningMsg("size", "operator #", 3)
 		return #self
 	end,
 	--- Split the CellularSpace into a table of Trajectories according to a classification 

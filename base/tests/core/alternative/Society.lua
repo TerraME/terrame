@@ -313,6 +313,54 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'index' expected positive integer number, got string.")
 	end,
+	getAgent = function(unitTest)
+		local ag1 = Agent{
+			name = "nonfoo",
+			execute = function(self) end
+		}
+
+		local sc1 = Society{
+			instance = ag1,
+			quantity = 10
+		}
+
+		local error_func = function()
+			sc1:getAgent("1")
+		end
+		unitTest:assert_error(error_func, "Error: Function 'getAgent' is deprecated. Use 'get' instead.")
+	end,
+	getAgents = function(unitTest)
+		local ag1 = Agent{
+			name = "nonfoo",
+			execute = function(self) end
+		}
+
+		local sc1 = Society{
+			instance = ag1,
+			quantity = 10
+		}
+
+		local error_func = function()
+			sc1:getAgents()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'getAgents' is deprecated. Use '.agents' instead.")
+	end,
+	size = function(unitTest)
+		local ag1 = Agent{
+			name = "nonfoo",
+			execute = function(self) end
+		}
+
+		local sc1 = Society{
+			instance = ag1,
+			quantity = 10
+		}
+
+		local error_func = function()
+			sc1:size()
+		end
+		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
+	end,
 	split = function(unitTest)
 		local ag1 = Agent{
 			name = "nonfoo",

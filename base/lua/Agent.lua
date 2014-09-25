@@ -461,7 +461,7 @@ Agent_ = {
 		customErrorMsg("Agent "..self:getId().." does not implement 'on_message'.", 3)
 	end,
 	randomWalk = function()
-		customErrorMsg("randomWalk() is deprecated. Please use walk() instead", 3)
+		deprecatedFunctionWarningMsg("randomWalk", "walk", 3)
 	end,
 	--- Execute a random walk to a neighbor Cell.
 	-- @param placement A string representing the index to be used. Default is "placement".
