@@ -2,6 +2,7 @@
 .gitignore.swp
 bin/
 __/
+clean_cmake.sh
 cmake_install.cmake
 CMakeCache.txt
 CMakeFiles/
@@ -23,4 +24,3 @@ ui_receiverGUI.h
 ui_senderGUI.h
 ui_spatialObserverGUI.h
 ui_plotPropertiesGUI.h
-clean_cmake.sh
