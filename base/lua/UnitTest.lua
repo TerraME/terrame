@@ -39,6 +39,7 @@ local function print_red(value)
 end
 
 UnitTest_ = {
+	type_ = "UnitTest",
 	success = 0,
 	fail = 0,
 	test = 0,
