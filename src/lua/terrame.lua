@@ -416,7 +416,7 @@ executeTests = function(fileName)
 		host = data.host
 	}
 
-	ut.functions_total = 0
+	ut.package_functions = 0
 	ut.functions_not_exist = 0
 	ut.functions_not_tested = 0
 	ut.executed_functions = 0
@@ -506,6 +506,7 @@ executeTests = function(fileName)
 					end)
 					variables = variables:sub(1, variables:len() - 2).."."
 					print_red("Test creates global variable(s): "..variables)
+					ut.functions_with_global_variables = ut.functions_with_global_variables + 1
 
 					-- we need to delete the global variables created in order
 					-- to ensure that a new error will be generated if this
@@ -527,9 +528,9 @@ executeTests = function(fileName)
 	end 
 
 	if type(data.file) == "string" then
-		print_green("Verifying tested functions from "..data.file)
+		print_green("Checking if all functions from "..data.file.. " are tested")
 		forEachElement(testfunctions[data.file], function(idx, value)
-			ut.functions_total = ut.functions_total + 1
+			ut.package_functions = ut.package_functions + 1
 			if value == 0 then
 				print_red("Function '"..idx.."' is not tested.")
 				ut.functions_not_tested = ut.functions_not_tested + 1
@@ -537,9 +538,9 @@ executeTests = function(fileName)
 		end)
 	elseif type(data.file) == "table" then
 		forEachElement(data.file, function(idx, value)
-			print_green("Verifying tested functions from "..value)
+			print_green("Checking if all functions from "..value.. " are tested")
 			forEachElement(testfunctions[value], function(midx, mvalue)
-				ut.functions_total = ut.functions_total + 1
+				ut.package_functions = ut.package_functions + 1
 				if mvalue == 0 then
 					print_red("Function '"..midx.."' is not tested.")
 					ut.functions_not_tested = ut.functions_not_tested + 1
@@ -548,9 +549,9 @@ executeTests = function(fileName)
 		end)
 	elseif data.file == nil then
 		forEachElement(testfunctions, function(idx, value)
-			print_green("Verifying tested functions from "..idx)
+			print_green("Checking if all functions from "..idx.. " are tested")
 			forEachElement(value, function(midx, mvalue)
-				ut.functions_total = ut.functions_total + 1
+				ut.package_functions = ut.package_functions + 1
 				if mvalue == 0 then
 					print_red("Function '"..midx.."' is not tested.")
 					ut.functions_not_tested = ut.functions_not_tested + 1
@@ -566,34 +567,34 @@ executeTests = function(fileName)
 		print_green("All "..ut.test.." asserts were executed successfully.")
 	end
 
-	if ut.functions_not_tested > 0 then
-		print_red(ut.functions_not_tested.." out of "..ut.functions_total.." of the package are not tested.")
-	else
-		print_green("All "..ut.functions_total.." functions of the package are tested..")
-	end
-
-	if ut.functions_not_exist > 0 then
-		print_red(ut.functions_not_exist.." out of "..ut.functions_total.." do not exist in the source code of the package.")
-	else
-		print_green("All "..ut.functions_total.." tested functions exist in the source code of the package.")
-	end
-
 	if ut.functions_with_error > 0 then
-		print_red(ut.functions_with_error.." out of "..ut.executed_functions.." functions stopped with an unexpected error.")
+		print_red(ut.functions_with_error.." out of "..ut.executed_functions.." tested functions stopped with an unexpected error.")
 	else
 		print_green("All "..ut.executed_functions.." tested functions do not have any unexpected execution error.")
 	end
 
 	if ut.functions_with_global_variables > 0 then
-		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." functions create some global variable.")
+		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
 	else
 		print_green("No function creates any global variable.")
 	end
 
 	if ut.functions_without_assert > 0 then
-		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." functions do not have at least one assert.")
+		print_red(ut.functions_without_assert.." out of "..ut.executed_functions.." tested functions do not have at least one assert.")
 	else
 		print_green("All "..ut.executed_functions.." tested functions have at least one assert.")
+	end
+
+	if ut.functions_not_exist > 0 then
+		print_red(ut.functions_not_exist.." out of "..ut.executed_functions.." tested functions do not exist in the source code of the package.")
+	else
+		print_green("All "..ut.executed_functions.." tested functions exist in the source code of the package.")
+	end
+
+	if ut.functions_not_tested > 0 then
+		print_red(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions are not tested.")
+	else
+		print_green("All "..ut.package_functions.." functions of the package are tested.")
 	end
 
 	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + 
