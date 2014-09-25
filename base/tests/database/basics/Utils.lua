@@ -25,7 +25,7 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	writeCSV = function(UnitTest)
+	writeCSV = function(unitTest)
 		local example =
 		{
 			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
@@ -45,14 +45,22 @@ return{
 
 		writeCSV(example, filename)
 		local data = readCSV(filename)
-		UnitTest:assert_not_nil(data)
-		UnitTest:assert_equal(#example, #data)
+		unitTest:assert_not_nil(data)
+		unitTest:assert_equal(#example, #data)
 
 		for i = 1, #example do
 			for k in pairs(example[i]) do
-				UnitTest:assert_equal(example[i][k], data[i][k])
+				unitTest:assert_equal(example[i][k], data[i][k])
 			end
 		end
-  end
+	end,
+	readCSV = function(unitTest)
+		local mfile = file("agents.csv", "base")
+
+		local csv = readCSV(mfile)
+
+		unitTest:assert_equal(4, #csv)
+		unitTest:assert_equal(20, csv[1].age)
+	end
 }
 
