@@ -121,6 +121,12 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Value 'neighborhood' not found for parameter '1'.")
 	end,
+	verify = function(unitTest)
+		local error_func = function(unitTest)
+			verify(false, "error")
+		end
+		unitTest:assert_error(error_func, "Error: error")
+	end,
 	forEachAgent = function(unitTest)
 		local a = Agent{value = 2}
 		local soc = Society{instance = a, quantity = 10}
@@ -379,37 +385,8 @@ return{
 	end,
 	elapsedTime = function(unitTest)
 		unitTest:assert_type(elapsedTime(50), "string")
-	end,
-	tostring = function(unitTest)
-		local st1 = State{
-			id = "first"
-		}
-		unitTest:assert_equal(string.sub(tostring(st1),1,9), "TeState (")
-
-		local at1 = Automaton{
-			id = "MyAutomaton",
-			State{
-				id = "second"
-			}
-		}
-		unitTest:assert_equal(tostring(at1), [[1      userdata
-cObj_  userdata
-id     string [MyAutomaton]
-]])
-
-		local f1 = Flow { function(ev, agent, cell) 
-			agent.value = agent.value + 2 
-		end}
-		unitTest:assert_equal(string.sub(tostring(f1),1,8), "TeFlow (")
-
-		local j1 = Jump{ function(ev, unitTest)
-			if unitTest.x > 5 then 
-				return true 
-			end
-		end,
-		target = "go"}
-		unitTest:assert_equal(string.sub(tostring(j1),1,8), "TeJump (")
-
+	end
+--	tostring = function(unitTest)
 	--	cs1 = CellularSpace{ xdim = 10 }
 	--	cs1:createNeighborhood()
 	-- TODO: colocar o print do Observer nos testes de observer
@@ -435,13 +412,6 @@ type          number [1]
 width         number [2]
 ] ])
 --]]
-	end,
-	type = function(unitTest)
-		unitTest:assert_type(2, "number")
-		unitTest:assert_type(nil, "nil")
-		unitTest:assert_type("str", "string")
-		unitTest:assert_type(Agent{}, "Agent")
-		unitTest:assert_type(CellularSpace{xdim = 2}, "CellularSpace")
-	end
+--	end
 }
 

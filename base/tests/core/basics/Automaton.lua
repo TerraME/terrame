@@ -26,35 +26,16 @@
 
 return{
 	__tostring = function(unitTest)
-		local j1 = Jump{ function(ev, unitTest)
-			if unitTest.x > 5 then 
-				return true 
-			end
-		end,
-		target = "go"}
-		unitTest:assert_equal(string.sub(tostring(j1),1,8), "TeJump (")
-	end,
-	Jump = function(unitTest)
-		local jump = Jump{ function(cell,env,ag1)
-				return cell.water > ag1.energy
-			end,
-			target = nil
+		local at1 = Automaton{
+			id = "MyAutomaton",
+			State{
+				id = "second"
+			}
 		}
-		unitTest:assert(true)
-
-		local jump = Jump{ function(cell,env,ag1)
-				return cell.water > ag1.energy
-			end,
-			target = 8
-		}
-		unitTest:assert(true)
-
-		local j = Jump{ function(cell,env,ag1)
-				return cell.water > c.capInf
-			end,
-			target = "wrongString"
-		}
-		unitTest:assert(true)
+		unitTest:assert_equal(tostring(at1), [[1      userdata
+cObj_  userdata
+id     string [MyAutomaton]
+]])
 	end
 }
 
