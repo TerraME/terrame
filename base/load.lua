@@ -8,7 +8,6 @@ files = {
 	"SocialNetwork.lua",
 	"Society.lua",
 	"Group.lua",
-	"Coord.lua",
 	"Cell.lua",
 	"CellularSpace.lua",
 	"Neighborhood.lua",
@@ -24,3 +23,4 @@ files = {
 	"Trajectory.lua",
 	"Environment.lua"
 }
+
