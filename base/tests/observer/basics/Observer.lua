@@ -36,6 +36,9 @@ return{
 	end,
 	getCurveLabels = function(unitTest)
 		unitTest:assert(true)
+	end,
+	killAllObservers = function(unitTest)
+		unitTest:assert(true)
 	end
 }
 
