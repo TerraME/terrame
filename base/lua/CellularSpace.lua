@@ -24,6 +24,8 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
+TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
+
 local function coordCoupling(cs1, cs2, name)
 	local lin
 	local col
@@ -497,8 +499,10 @@ CellularSpace_ = {
 			end
 		end
 
-		local index = Coord {x = xIndex, y = yIndex}
-		return self.cObj_:getCell(index.cObj_)
+		local data =  {x = xIndex, y = yIndex}
+		local cObj_ = TeCoord(data)
+
+		return self.cObj_:getCell(cObj_)
 	end,
 	getCells = function(self)
 		deprecatedFunctionWarningMsg("getCells", ".cells", 2)
