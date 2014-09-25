@@ -48,7 +48,7 @@ SocialNetwork_ = {
 			incompatibleValuesErrorMsg("#2", "positive number", weight, 3)
 		end
 
-		local id = connection:getId()
+		local id = connection.id
 		if id == nil then
 			customErrorMsg("Agent should have an id in order to be added to a SocialNetwork.", 3)
 		elseif self.connections[id] ~= nil then
@@ -80,7 +80,7 @@ SocialNetwork_ = {
 			end
 		end
 
-		local id = connection:getId()
+		local id = connection.id
 
 		if id == nil then
 			customErrorMsg("Agent does not belong to the SocialNetwork because it does not have an id.", 3)
@@ -103,7 +103,7 @@ SocialNetwork_ = {
 				incompatibleTypesErrorMsg("#1", "Agent", type(connection), 3)
 			end
 		end
-		return self.connections[connection:getId()] ~= nil
+		return self.connections[connection.id] ~= nil
 	end,
 	--- Return whether the SocialNetwork does not contain any connection.
 	-- @usage if sn:isEmpty() then
@@ -124,7 +124,7 @@ SocialNetwork_ = {
 			end
 		end
 
-		local id = connection:getId()
+		local id = connection.id
 		if self.connections[id] == nil then
 			customWarningMsg("Trying to remove an Agent that does not belong to the SocialNetwork.", 3)
 		else
@@ -182,7 +182,7 @@ SocialNetwork_ = {
 			incompatibleValuesErrorMsg("#2","positive number", weight, 3)
 		end
 
-		local id = connection:getId()
+		local id = connection.id
 
 		if id == nil then
 			customErrorMsg("Agent does not belong to the SocialNetwork because it does not have an id.", 3)

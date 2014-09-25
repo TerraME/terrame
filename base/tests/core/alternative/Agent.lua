@@ -132,6 +132,13 @@ return {
 		end
 		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected Event, got table.")
 	end,
+	getId = function(unitTest)
+		local ag1 = Agent{}
+		local test_function = function()
+			ag1:getId()
+		end
+		unitTest:assert_error(test_function, "Error: Function 'getId' is deprecated. Use '.id' instead.")
+	end,
 	getSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
 
@@ -348,6 +355,13 @@ return {
 			a:reproduce()
 		end
 		unitTest:assert_error(error_func, "Error: Agent should belong to a Society to be able to reproduce.")
+	end,
+	setId = function(unitTest)
+		local ag1 = Agent{}
+		local test_function = function()
+			ag1:setId("aa")
+		end
+		unitTest:assert_error(test_function, "Error: Function 'setId' is deprecated. Use '.id' instead.")
 	end,
 	walk = function(unitTest)
 		local ag1 = Agent{}

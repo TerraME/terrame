@@ -204,6 +204,7 @@ Agent_ = {
 	--- Return the unique identifier of the Agent.
 	-- @usage id = agent:getId()
 	getId = function(self)
+		deprecatedFunctionWarningMsg("getId", ".id", 3)
 		return self.id
 	end,
 	--- Return the time when the machine executed the transition to the current state.
@@ -363,7 +364,7 @@ Agent_ = {
 				end
 				local call = "on_"..data.subject
 				if type(data.receiver[call]) ~= "function" then
-					customErrorMsg("Receiver (id = '".. data.receiver:getId() .."') does not implement function "..call ..".", 3)
+					customErrorMsg("Receiver (id = '".. data.receiver.id .."') does not implement function "..call ..".", 3)
 				else
 					data.receiver[call](data.receiver, data)
 					return true
@@ -458,7 +459,7 @@ Agent_ = {
 	-- @param message A table with the received message. It has an attribute called sender with
 	-- the Agent that sent the message.
 	on_message = function(self, message)
-		customErrorMsg("Agent "..self:getId().." does not implement 'on_message'.", 3)
+		customErrorMsg("Agent "..self.id.." does not implement 'on_message'.", 3)
 	end,
 	randomWalk = function()
 		deprecatedFunctionWarningMsg("randomWalk", "walk", 3)
@@ -543,6 +544,7 @@ Agent_ = {
 	-- @param name A string.
 	-- @usage agent:setId("newid")
 	setId = function(self, name)
+		deprecatedFunctionWarningMsg("setId", ".id", 3)
 		self.id = name
 	end,
 	--- Activate or not the trajectories defined for a given Agent.
