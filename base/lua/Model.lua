@@ -567,12 +567,6 @@ local interface = function(self, ordering)
 --	os.execute("terrame model-interface.lua")
 end
 
-verify = function(condition, msg)
-	if not condition then
-		customErrorMsg(msg, 3)
-	end
-end
-
 --- Type that defines a model. Its constructor returns a constructor for the new type.
 -- The idea is to take only strings, numbers, booleans, and vectors of these three types as the
 -- only possible arguments to any Model. Functions can be mapped to the strings and then be

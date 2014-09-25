@@ -433,6 +433,13 @@ function belong(value, values)
 	return found
 end
 
+-- TODO: think about this kind of function. Today it is only used by Model.
+verify = function(condition, msg)
+	if not condition then
+		customErrorMsg(msg, 3)
+	end
+end
+
 function checkUnnecessaryParameters(data, parameters, level)
 	forEachElement(data, function(value)
 		if not belong(value, parameters) then
