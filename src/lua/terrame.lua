@@ -97,8 +97,8 @@ end
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
 function include(scriptfile)
     local env = setmetatable({}, {__index = _G})
-    assert(loadfile(scriptfile, 't', env))()
-    return setmetatable(env, nil)
+    loadfile(scriptfile, 't', env)()
+    return setmetatable(env, nil) -- TODO: try to remove nil and see what happens. Perhaps this could be used in TerraME.
 end
 
 -- altissima prioridade (somente com o primeiro argumento)
@@ -349,6 +349,8 @@ end
 -- RAIAN: FUncao do antonio que executa os testes. Devera ir para dentro da funcao test acima. Coloquei desta maneira 
 -- para executar os testes sem alterar a chamada no lado C++ por enquanto. 
 executeTests = function(fileName)
+	local initialTime = os.clock()
+
 	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s.."base"
@@ -382,6 +384,8 @@ executeTests = function(fileName)
 	-- um arquivo de teste, de forma que todos os testes serao executados.
 
 	local data = include(fileName)
+
+	local examples = data.file == nil and data.folder == nil and data.test == nil
 
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
@@ -423,6 +427,8 @@ executeTests = function(fileName)
 	ut.functions_with_global_variables = 0
 	ut.functions_with_error = 0
 	ut.functions_without_assert = 0
+	ut.examples = 0
+	ut.examples_error = 0
 
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
@@ -447,7 +453,7 @@ executeTests = function(fileName)
 		end
 
 		if #myFile == 0 then
-			print_green("Skipping folder "..eachFolder)
+			print_yellow("Skipping folder "..eachFolder)
 		end
 
 		for _, eachFile in ipairs(myFile) do
@@ -493,7 +499,6 @@ executeTests = function(fileName)
 				end
 
 				if getn(_G) > count_global then
-					ut.fail = ut.fail + 1
 					-- TODO: check if it is < or > (the code below works for >)
 					local variables = ""
 					local pvariables = {}
@@ -527,8 +532,9 @@ executeTests = function(fileName)
 		end
 	end 
 
+	-- checking if all source code functions were tested
 	if type(data.file) == "string" then
-		print_green("Checking if all functions from "..data.file.. " are tested")
+		print_green("Checking functions from lua"..s..data.file)
 		forEachElement(testfunctions[data.file], function(idx, value)
 			ut.package_functions = ut.package_functions + 1
 			if value == 0 then
@@ -538,7 +544,7 @@ executeTests = function(fileName)
 		end)
 	elseif type(data.file) == "table" then
 		forEachElement(data.file, function(idx, value)
-			print_green("Checking if all functions from "..value.. " are tested")
+			print_green("Checking functions from lua"..s..value)
 			forEachElement(testfunctions[value], function(midx, mvalue)
 				ut.package_functions = ut.package_functions + 1
 				if mvalue == 0 then
@@ -549,7 +555,7 @@ executeTests = function(fileName)
 		end)
 	elseif data.file == nil then
 		forEachElement(testfunctions, function(idx, value)
-			print_green("Checking if all functions from "..idx.. " are tested")
+			print_green("Checking functions from lua"..s..idx)
 			forEachElement(value, function(midx, mvalue)
 				ut.package_functions = ut.package_functions + 1
 				if mvalue == 0 then
@@ -560,7 +566,33 @@ executeTests = function(fileName)
 		end)
 	end
 
+	-- executing examples
+	if examples then
+		print_green("Testing examples")
+		local dirFiles = dir(baseDir..s.."examples")
+		forEachElement(dirFiles, function(idx, value)
+			print("Testing "..value)
+			io.flush()
+			collectgarbage("collect")
+			
+			ut.examples = ut.examples + 1
+			local ok_execution, err = pcall(function() include(baseDir..s.."examples"..s..value) end)
+			
+			if not ok_execution then
+				ut.examples_error = ut.examples_error + 1
+				print_red(err)
+			end
+		end)
+	else
+		print_yellow("Skipping examples")
+	end
+
+	local finalTime = os.clock()
+
 	print("\nReport:")
+
+	print_green("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
+
 	if ut.fail > 0 then
 		print_red(ut.fail.." out of "..ut.test.." asserts failed.")
 	else
@@ -597,11 +629,25 @@ executeTests = function(fileName)
 		print_green("All "..ut.package_functions.." functions of the package are tested.")
 	end
 
-	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + 
+	if examples then
+		if ut.examples == 0 then
+			print_red("No examples were found.")
+		elseif ut.examples_error == 0 then
+			print_green("All "..ut.examples.." examples were successfully executed.")
+		else
+			print_red(ut.examples_error.." out of "..ut.examples.." examples have unexpected execution error.")
+		end
+	else
+		print_yellow("No examples were executed.")
+	end
+
+	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error +
 	               ut.functions_with_global_variables + ut.functions_with_error + ut.functions_without_assert
 
 	if errors == 0 then
 		print_green("All tests were succesfully executed.")
+	elseif errors == 1 then
+		print_red("Summing up, one problem was found during the tests.")
 	else
 		print_red("Summing up, "..errors.." problems were found during the tests.")
 	end

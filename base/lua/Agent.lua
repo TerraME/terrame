@@ -538,7 +538,17 @@ Agent_ = {
 	-- internal random number generator.
 	-- @usage ag_friend = agent:sample("friends")
 	sample = function(self, id, randomObj)
-		return self:getSocialNetwork(id):sample(randomObj)
+		if id == nil then
+			id = "1"
+		end
+
+		local sn = self:getSocialNetwork(id)
+
+		if sn == nil then
+			customErrorMsg("Agent does not have a SocialNetwork named '"..id.."'.", 3)
+		end
+
+		return sn:sample(randomObj)
 	end,
 	--- Set the unique identifier of the Agent.
 	-- @param name A string.

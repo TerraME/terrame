@@ -25,6 +25,15 @@
 -------------------------------------------------------------------------------------------
 
 return {
+	setId = function(unitTest)
+		unitTest:assert(true)
+	end,
+	getId = function(unitTest)
+		unitTest:assert(true)
+	end,
+	getStateName = function(unitTest)
+		unitTest:assert(true)
+	end,
 	__len = function(unitTest)
 		local c1 = Cell{}
 

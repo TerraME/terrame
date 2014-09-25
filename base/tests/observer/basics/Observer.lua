@@ -17,49 +17,28 @@
 -- The framework provided hereunder is on an "as is" basis, and the authors have no
 -- obligation to provide maintenance, support, updates, enhancements, or modifications.
 -- In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
--- indirect, special, incidental, or consequential damages arising out of the use
+-- indirect, special, incidental, or caonsequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
---          Pedro R. Andrade (pedro.andrade@inpe.br)
+-- Authors: Pedro R. Andrade
+--          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
 return{
-	getLatency = function(unitTest)
+	Observer = function(unitTest)
 		unitTest:assert(true)
 	end,
-	build = function(unitTest)
+	kill = function(unitTest)
 		unitTest:assert(true)
 	end,
-	getStateName = function(unitTest)
+	killAll = function(unitTest)
 		unitTest:assert(true)
 	end,
-	getStates = function(unitTest)
+	getCurveLabels = function(unitTest)
 		unitTest:assert(true)
 	end,
-	getState = function(unitTest)
+	killAllObservers = function(unitTest)
 		unitTest:assert(true)
-	end,
-	getId = function(unitTest)
-		unitTest:assert(true)
-	end,
-	setId = function(unitTest)
-		unitTest:assert(true)
-	end,
-	notify = function(unitTest)
-		unitTest:assert(true)
-	end,
-	__tostring = function(unitTest)
-		local at1 = Automaton{
-			id = "MyAutomaton",
-			State{
-				id = "second"
-			}
-		}
-		unitTest:assert_equal(tostring(at1), [[1      userdata
-cObj_  userdata
-id     string [MyAutomaton]
-]])
 	end
 }
 

@@ -17,49 +17,66 @@
 -- The framework provided hereunder is on an "as is" basis, and the authors have no
 -- obligation to provide maintenance, support, updates, enhancements, or modifications.
 -- In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
--- indirect, special, incidental, or consequential damages arising out of the use
+-- indirect, special, incidental, or caonsequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
---          Pedro R. Andrade (pedro.andrade@inpe.br)
+-- Authors: Pedro R. Andrade
+--          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
 return{
-	getLatency = function(unitTest)
+	assert = function(unitTest)
+		local u = UnitTest{}
+
+		u:assert(true)
+
+		unitTest:assert_equal(u.success, 1)
+	end,
+	assert_equal = function(unitTest)
+		local u = UnitTest{}
+		u:assert_equal(true, true)
+
+		unitTest:assert_equal(u.success, 1)
+	end,
+	assert_error = function(unitTest)
+		local u = UnitTest{}
+
+		local error_func = function() x = 3 + nil end
+		u:assert_error(error_func, "attempt to perform arithmetic on a nil value")
+
+		unitTest:assert_equal(u.success, 1)
+	end,
+	assert_nil = function(unitTest)
+		local u = UnitTest{}
+		u:assert_nil()
+
+		unitTest:assert_equal(u.success, 1)
+	end,
+	assert_not_nil = function(unitTest)
+		local u = UnitTest{}
+		u:assert_not_nil(true)
+
+		unitTest:assert_equal(u.success, 1)
+	end,
+	assert_type = function(unitTest)
+		local u = UnitTest{}
+
+		u:assert_type(2, "number")
+
+		unitTest:assert_equal(u.success, 1)
+	end,
+	print_error = function(unitTest)
 		unitTest:assert(true)
 	end,
-	build = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getStateName = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getStates = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getState = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getId = function(unitTest)
-		unitTest:assert(true)
-	end,
-	setId = function(unitTest)
-		unitTest:assert(true)
-	end,
-	notify = function(unitTest)
-		unitTest:assert(true)
-	end,
-	__tostring = function(unitTest)
-		local at1 = Automaton{
-			id = "MyAutomaton",
-			State{
-				id = "second"
-			}
-		}
-		unitTest:assert_equal(tostring(at1), [[1      userdata
-cObj_  userdata
-id     string [MyAutomaton]
-]])
+	UnitTest = function(unitTest)
+		local u = UnitTest{}
+
+		unitTest:assert_type(u, "UnitTest")
+		unitTest:assert_equal(u.success, 0)
+		unitTest:assert_equal(u.fail, 0)
+		unitTest:assert_equal(u.test, 0)
+		unitTest:assert_equal(u.last_error, "")
+		unitTest:assert_equal(u.count_last, 0)
 	end
 }
 

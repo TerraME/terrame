@@ -24,29 +24,29 @@
 --          Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
+local Tube = Model{
+	simulationSteps = {10, 20, 30},
+	initialWater    = 200,
+	flow            = 20,
+	observingStep   = 1,
+	checkZero       = false,
+	block = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, level = {1, 2, 3}},
+	setup = function(model)
+		model.water = model.initialWater
+		model.timer = Timer{
+			Event{action = function()
+				model.water = model.water + 1
+			end}
+		}
+	end,
+	check = function(model)
+		verify(model.simulationSteps > 0, "Simulation steps should be greater than zero.")
+		verify(model.initialWater > 0, "Initial water should be greater than zero.")
+	end
+}
+
 return{
 	Model = function(unitTest)
-		local Tube = Model{
-			simulationSteps = {10, 20, 30},
-			initialWater    = 200,
-			flow            = 20,
-			observingStep   = 1,
-			checkZero       = false,
-			block = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, level = {1, 2, 3}},
-			setup = function(model)
-				model.water = model.initialWater
-				model.timer = Timer{
-					Event{action = function()
-						model.water = model.water + 1
-					end}
-				}
-			end,
-			check = function(model)
-				verify(model.simulationSteps > 0, "Simulation steps should be greater than zero.")
-				verify(model.initialWater > 0, "Initial water should be greater than zero.")
-			end
-		}
-
 		local t = Tube{}
 
 		unitTest:assert_equal(t.simulationSteps, 10)
@@ -61,8 +61,18 @@ return{
 		unitTest:assert_equal(t.block.xmax, 10)
 		unitTest:assert_equal(t.block.level, 1)
 		unitTest:assert(t.checkZero)
-
-		t = Tube{block = {level = 2}}
+	end,
+	interface = function(unitTest)
+		unitTest:assert(true)
+	end,
+	check = function(unitTest)
+		unitTest:assert(true)
+	end,
+	setup = function(unitTest)
+		unitTest:assert(true)
+	end,
+	execute = function(unitTest)
+		local t = Tube{block = {level = 2}}
 
 		unitTest:assert_equal(t.block.xmin, 0)
 		unitTest:assert_equal(t.block.level, 2)

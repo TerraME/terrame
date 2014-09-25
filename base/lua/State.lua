@@ -24,6 +24,7 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
+--[[
 State_ = {
 	type_ = "State",
 	--- Return a string with the id of the State.
@@ -34,21 +35,22 @@ State_ = {
 	--- Change the id of the State. It returns a boolean value indicating whether the operation was succesfully executed.
 	-- @param idValue A string that will be set as the id of the State.
 	setId = function(self, idValue)
-		local idOld= self.cObj_:getID()
+		local idOld = self.cObj_:getID()
 
 		if type(idValue) ~= "string" then
 			incompatibleTypesErrorMsg("#1", "string", type(idValue), 3)
 		end	
 
-		self.id= idValue
+		self.id = idValue
 		self.cObj_:setid(idValue)
-		return true
 	end
-
 }
+--]]
 
-metaTableState_ = {__index = State_, __tostring = tostringTerraME}
---- A container of Jumps and Flows. Every State also has an id to identify itself in the Jumps of other States within the same Agent or Automaton.
+--metaTableState_ = {__index = State_, __tostring = tostringTerraME}
+metaTableState_ = {__tostring = tostringTerraME}
+--- A container of Jumps and Flows. Every State also has an id to identify itself in the Jumps of
+-- other States within the same Agent or Automaton.
 -- @param data A table that contains the State attributes.
 -- @param data.id A string with the unique identifier of the State.
 -- @usage State {
@@ -83,3 +85,4 @@ function State(data)
   
 	return cObj
 end
+
