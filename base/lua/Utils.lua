@@ -917,39 +917,39 @@ end
 -- @param line A string from the CSV file
 -- @param sep The value separator. Default is ','
 -- @return A tuple (table) of values
-local function ParseCSVLine (line,sep)
+local function ParseCSVLine(line, sep)
 	local res = {}
 	local pos = 1
 	sep = sep or ','
 	while true do 
-		local c = string.sub(line,pos,pos)
+		local c = string.sub(line, pos, pos)
 		if c == "" then break end
 		if c == '"' then
 			-- quoted value (ignore separator within)
 			local txt = ""
 			repeat
-				local startp,endp = string.find(line,'^%b""',pos)
-				txt = txt..string.sub(line,startp+1,endp-1)
+				local startp,endp = string.find(line, '^%b""', pos)
+				txt = txt..string.sub(line, startp + 1, endp - 1)
 				pos = endp + 1
-				c = string.sub(line,pos,pos) 
+				c = string.sub(line, pos, pos)
 				if c == '"' then txt = txt..'"' end 
 				-- check first char AFTER quoted string, if it is another
 				-- quoted string without separator, then append it
 				-- this is the way to "escape" the quote char in a quote. example:
 				-- value1,"blub""blip""boing",value3 will result in blub"blip"boing for the middle
 			until (c ~= '"')
-			table.insert(res,txt)
+			table.insert(res, txt)
 			assert(c == sep or c == "")
 			pos = pos + 1
 		else	
 			-- no quotes used, just look for the first separator
-			local startp,endp = string.find(line,sep,pos)
+			local startp, endp = string.find(line, sep, pos)
 			if startp then 
-				table.insert(res,string.sub(line,pos,startp-1))
+				table.insert(res,string.sub(line, pos, startp - 1))
 				pos = endp + 1
 			else
 				-- no separator found -> use rest of string and terminate
-				table.insert(res,string.sub(line,pos))
+				table.insert(res, string.sub(line, pos))
 				break
 			end 
 		end
@@ -992,7 +992,7 @@ function writeCSV(data, filename, sep)
 	for k in pairs(data[1]) do
 		table.insert(fields, k)
 	end
-	file:write(table.concat(fields,sep))
+	file:write(table.concat(fields, sep))
 	file:write("\n")
 	for _, tuple in ipairs(data) do
 		local line = {}
