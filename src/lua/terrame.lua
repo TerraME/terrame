@@ -147,7 +147,7 @@ require = function(package, recursive, asnamespace)
 	-- de que o pacote foi carregado com sucesso).
 end
 
-type__ = type
+local type__ = type
 
 --- Return the type of an object. It extends the original Lua type() to support TerraME objects, 
 -- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
@@ -345,7 +345,6 @@ local buildCountTable = function(mtable)
 	return result
 end
 
-
 -- RAIAN: FUncao do antonio que executa os testes. Devera ir para dentro da funcao test acima. Coloquei desta maneira 
 -- para executar os testes sem alterar a chamada no lado C++ por enquanto. 
 executeTests = function(fileName)
@@ -385,7 +384,7 @@ executeTests = function(fileName)
 
 	local data = include(fileName)
 
-	local examples = data.file == nil and data.folder == nil and data.test == nil
+	local examples = (data.file == nil and data.folder == nil and data.test == nil) or data.examples
 
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
