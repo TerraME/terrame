@@ -349,6 +349,8 @@ end
 -- RAIAN: FUncao do antonio que executa os testes. Devera ir para dentro da funcao test acima. Coloquei desta maneira 
 -- para executar os testes sem alterar a chamada no lado C++ por enquanto. 
 executeTests = function(fileName)
+	local initialTime = os.clock()
+
 	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s.."base"
@@ -585,7 +587,12 @@ executeTests = function(fileName)
 		print_yellow("Skipping examples")
 	end
 
+	local finalTime = os.clock()
+
 	print("\nReport:")
+
+	print_green("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
+
 	if ut.fail > 0 then
 		print_red(ut.fail.." out of "..ut.test.." asserts failed.")
 	else
@@ -631,7 +638,7 @@ executeTests = function(fileName)
 			print_red(ut.examples_error.." out of "..ut.examples.." examples have unexpected execution error.")
 		end
 	else
-		print_green("No examples were executed.")
+		print_yellow("No examples were executed.")
 	end
 
 	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error +
