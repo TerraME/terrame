@@ -182,19 +182,8 @@ public:
     /// no parameters
     int size(lua_State* L);
 
-    /// Registers the luaCellularSpace object in the Lua stack
-    // @DANIEL
-    // Movido para Reference
-    // int setReference( lua_State* L);
-
-    /// Gets the luaCellularSpace object reference
-    // @DANIEL
-    // Movido para Reference
-    // int getReference( lua_State *L );
-
     int setPort(lua_State* L);
 
-	//@RAIAN
 	/// Gets the name of the layer
 	/// \author Raian Vargas Maretto
 	void setLayerName( string layerName );
@@ -206,7 +195,6 @@ public:
 	/// Sets the name of the layer
 	/// \author Raian Vargas Maretto
 	string getLayerName( );
-	//@RAIAN: Fim
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observeb attributes table, observer type parameters

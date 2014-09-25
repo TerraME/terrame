@@ -88,6 +88,8 @@ TME_TYPES_USER = {
 	["Society"]         = TME_TYPES.SOCIETY
 }
 
+local createdObservers = {}
+
 --#######################################################################################################################
 -- OBSERVERS CREATION
 -- TME_OBSERVERS.TEXTSCREEN
@@ -892,7 +894,6 @@ local function observerShapefile(subjType, subject, tbDimensions, observerAttrs,
 	end
 
 	if #tbDimensions ~= 0 then
-		-- cellularspace
 		return subject.cObj_:createObserver(TME_OBSERVERS.SHAPEFILE, tbDimensions, observerAttrs, observerParams, csCells)
 	else
 		if subject.cObj_ then
@@ -911,10 +912,7 @@ Observer_ = {
 	kill = function(self, func)
 		if self.subject.cObj_ then 
 			if self.type == TME_OBSERVERS.NEIGHBORHOOD or self.type == "neighborhood" then
-				--@RAIAN: Alterei para retirar o parametro 'cellspace' do observer Neighborhood
-				-- return self.subject.cObj_:kill(self.id, self.cellspace.cObj_)
 				return self.subject.cObj_:kill(self.id, self.observer.subject.cObj_)
-				--@RAIAN: FIM 
 			else
 				return self.subject.cObj_:kill(self.id)
 			end
@@ -1239,6 +1237,8 @@ function Observer(data)
 	end
 	observerId = nil
 
+	table.insert(createdObservers, data)
+
 	if observerType == TME_OBSERVERS.TEXTSCREEN then
 		if data.attributes == nil then
 			data.attributes = {}
@@ -1355,3 +1355,8 @@ function Observer(data)
 	return data
 end
 
+killAllObservers = function()
+	forEachElement(createdObservers, function(idx, elem, etype)
+		elem:kill()
+	end)
+end

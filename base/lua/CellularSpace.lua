@@ -1187,7 +1187,7 @@ function CellularSpace(data)
 
 		forEachCell(data, function(cell)
 			setmetatable(cell, {__index = data.instance})
-			-- TO DO: Verificar a real necessidade
+			-- TODO: Verificar a real necessidade
 			forEachElement(data.instance, function(attribute, value, mtype)
 				if attribute ~= "objectId_" and attribute ~= "x" and attribute ~= "id" and attribute ~= "y" and attribute ~= "past" and attribute ~= "cObj_" and attribute ~= "agents_" then 
 					cell[attribute] = value

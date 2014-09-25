@@ -196,7 +196,7 @@ Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
     method(luaCellularSpace, setReference),
     method(luaCellularSpace, getCell),
     method(luaCellularSpace, setPort),
-    
+	
     // ANTONIO
     method(luaCellularSpace, createObserver),
     method(luaCellularSpace, notify),

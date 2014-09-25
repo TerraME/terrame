@@ -63,7 +63,6 @@ of this library and its documentation.
 
 #ifndef TME_NO_TERRALIB
 
-// RODRIGO
 #if defined( TME_MSVC ) && defined( TME_WIN32 )
 	#include <TeAdoDB.h>
 	#include <windows.h>
@@ -240,8 +239,6 @@ int luaCellularSpace::getCell(lua_State *L)
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
     luaCell *cell = ::findCell( this, cellIndex );
     if( cell != NULL )
-        // @DANIEL
-        // ::getReference(L, cell);
         cell->getReference(L);
     else
         lua_pushnil( L );
@@ -256,25 +253,6 @@ int luaCellularSpace::size(lua_State* L)
     return 1;
 }
 
-/// Registers the luaCellularSpace object in the Lua stack
-// @DANIEL
-// Movido para Reference
-//int luaCellularSpace::setReference( lua_State* L)
-//{
-//    ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//    return 0;
-//}
-
-/// Gets the luaCellularSpace object reference
-// @DANIEL
-// Movido para Reference
-//int luaCellularSpace::getReference( lua_State *L )
-//{
-//    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//    return 1;
-//}
-
-//@RAIAN
 /// Sets the name of the TerraLib layer related to the CellularSpace object
 /// parameter: layerName is a string containing the new layerName
 /// \author Raian Vargas Maretto
@@ -299,7 +277,6 @@ int luaCellularSpace::getLayerName( lua_State *L )
     lua_pushstring(L, this->inputLayerName.c_str());
     return 1;
 }
-//@RAIAN: FIM
 
 /// Creates several types of observers to the luaCellularSpace object
 /// parameters: observer type, observeb attributes table, observer type parameters
@@ -325,12 +302,6 @@ int luaCellularSpace::createObserver( lua_State * luaL)
     // Não modifica em nada a pilha recupera o enum referente ao tipo
     // do observer
     TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, top - 5);
-
-    //if (! lua_istable(luaL, top - 3) )
-    //{
-    //    qFatal("\nError: The Attribute table not found. Incorrect sintax.\n");
-    //    return -1;
-    //}
     
     QStringList allCellSpaceAttribs, allCellAttribs, obsAttribs;
     QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
