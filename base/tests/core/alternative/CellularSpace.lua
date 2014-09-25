@@ -462,6 +462,19 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'weight' expected function, got number.")
 	end,
+	notify = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:notify("not_int")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+
+		error_func = function()
+			cs:notify(-1)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+	end,
 	size = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
