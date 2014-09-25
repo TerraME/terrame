@@ -421,13 +421,13 @@ Agent_ = {
 		if modelTime == nil then
 			modelTime = 1
 		elseif type(modelTime) ~= "number" then
-			if type(modelTime == "Event") then
+			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
 				incompatibleTypesErrorMsg("#1", "Event or positive number", type(modelTime), 3)
 			end
 		elseif modelTime < 0 then
-			incompatibleValuesErrorMsg("#1","positive number", modelTime, 3)
+			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)
 		end
 		self.cObj_:notify(modelTime)
 	end,

@@ -117,6 +117,17 @@ return {
 		unitTest:assert_equal(1, #ng)
 		unitTest:assert_nil(cell:getNeighborhood("wrong_name"))
 	end,
+	init = function(unitTest)
+		local c = Cell{
+			init = function(self)
+				self.value = 2
+			end
+		}
+
+		unitTest:assert_nil(c.value)
+		c:init()
+		unitTest:assert_equal(2, c.value)
+	end,
 	distance = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
