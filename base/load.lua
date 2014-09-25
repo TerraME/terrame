@@ -21,6 +21,7 @@ files = {
 	"Automaton.lua",
 	"Agent.lua",
 	"Trajectory.lua",
-	"Environment.lua"
+	"Environment.lua",
+	"Chart.lua"
 }
 
