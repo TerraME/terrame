@@ -97,7 +97,7 @@ end
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
 function include(scriptfile)
     local env = setmetatable({}, {__index = _G})
-    assert(loadfile(scriptfile, 't', env))()
+    loadfile(scriptfile, 't', env)()
     return setmetatable(env, nil) -- TODO: try to remove nil and see what happens. Perhaps this could be used in TerraME.
 end
 
@@ -383,6 +383,8 @@ executeTests = function(fileName)
 
 	local data = include(fileName)
 
+	local examples = data.file == nil and data.folder == nil and data.test == nil
+
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
 		data.folder = {data.folder}
@@ -423,6 +425,8 @@ executeTests = function(fileName)
 	ut.functions_with_global_variables = 0
 	ut.functions_with_error = 0
 	ut.functions_without_assert = 0
+	ut.examples = 0
+	ut.examples_error = 0
 
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
@@ -447,7 +451,7 @@ executeTests = function(fileName)
 		end
 
 		if #myFile == 0 then
-			print_green("Skipping folder "..eachFolder)
+			print_yellow("Skipping folder "..eachFolder)
 		end
 
 		for _, eachFile in ipairs(myFile) do
@@ -526,6 +530,7 @@ executeTests = function(fileName)
 		end
 	end 
 
+	-- checking if all source code functions were tested
 	if type(data.file) == "string" then
 		print_green("Checking functions from lua"..s..data.file)
 		forEachElement(testfunctions[data.file], function(idx, value)
@@ -557,6 +562,27 @@ executeTests = function(fileName)
 				end
 			end)
 		end)
+	end
+
+	-- executing examples
+	if examples then
+		print_green("Testing examples")
+		local dirFiles = dir(baseDir..s.."examples")
+		forEachElement(dirFiles, function(idx, value)
+			print("Testing "..value)
+			io.flush()
+			collectgarbage("collect")
+			
+			ut.examples = ut.examples + 1
+			local ok_execution, err = pcall(function() include(baseDir..s.."examples"..s..value) end)
+			
+			if not ok_execution then
+				ut.examples_error = ut.examples_error + 1
+				print_red(err)
+			end
+		end)
+	else
+		print_yellow("Skipping examples")
 	end
 
 	print("\nReport:")
@@ -596,7 +622,19 @@ executeTests = function(fileName)
 		print_green("All "..ut.package_functions.." functions of the package are tested.")
 	end
 
-	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + 
+	if examples then
+		if ut.examples == 0 then
+			print_red("No examples were found.")
+		elseif ut.examples_error == 0 then
+			print_green("All "..ut.examples.." examples were successfully executed.")
+		else
+			print_red(ut.examples_error.." out of "..ut.examples.." examples have unexpected execution error.")
+		end
+	else
+		print_green("No examples were executed.")
+	end
+
+	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error +
 	               ut.functions_with_global_variables + ut.functions_with_error + ut.functions_without_assert
 
 	if errors == 0 then
