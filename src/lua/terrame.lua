@@ -665,5 +665,58 @@ sessionInfo = function()
 	-- remover as variaveis globais TME_MODE, ...
 end
 
+--- Return a string describing a TerraME object. This function allows one to use the method print() directly from any TerraME object.
+-- @name tostring
+-- @param data Any TerraME object.
+-- @usage c = Cell{cover = "forest", distRoad = 0.3}
+-- description = tostring(c)
+-- print(description)
+-- print(c) -- same result of line above
+tostringTerraME = function(self)
+	local rs = {}
+	local maxlen = 0
+
+	forEachElement(self, function(index)
+		if type(index) ~= "string" then index = tostring(index) end
+
+		if index:len() > maxlen then
+			maxlen = index:len()
+		end
+	end)
+
+	local result = ""
+	forEachOrderedElement(self, function(index, value, mtype)
+		if type(index) ~= "string" then index = tostring(index) end
+
+		result = result..index.." "
+
+		local size = maxlen - index:len()
+		local i
+		for i = 0, size do
+			result = result.." "
+		end
+
+		if mtype == "number" then
+			result = result..mtype.." ["..value.."]"
+		elseif mtype == "boolean" then
+			if value then
+				result = result.."boolean [true]"
+			else
+				result = result.."boolean [false]"
+			end
+		elseif mtype == "string" then
+			result = result.."string [".. value.."]"
+		elseif mtype == "table" then
+			result = result.."table of size "..#value..""
+		else
+			result = result..mtype
+		end
+
+		result = result.."\n"
+	end)
+
+	return result
+end
+
 require("base")
 
