@@ -41,6 +41,21 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
 	end,
+	sample = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 1
+		}
+
+		soc1:remove(soc1:sample())
+
+		local error_func = function()
+			soc1:sample()
+		end
+		unitTest:assert_error(error_func, "Error: Trying to sample an empty Society.")
+	end,
 	Society = function(unitTest)
 		local ag1 = Agent{}
 

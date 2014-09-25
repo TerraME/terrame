@@ -372,18 +372,11 @@ Society_ = {
 		end)
 		self.cObj_:notify(modelTime)
 	end,
-	--[[
-	self
-	arg Agent
-	--: * incompatible types. Parameter 'arg' expected Agent, got {type(arg)}.
-	: string incompatible types. Parameter 'arg' expected Agent, got string.
-	: nil
-	--]]
-
 	--- Remove a given Agent from the Society. It returns whether the agent was sucessfully removed.
 	-- @usage soc:remove(agent)
 	-- @param arg The Agent that will be removed.
 	remove = function(self, arg)
+		-- TODO: add error messages to this function
 		if type(arg) == "Agent" then
 			-- remove agent from agents's table
 			for k, v in pairs(self.agents) do
@@ -395,7 +388,7 @@ Society_ = {
 				end
 			end
 			return false
-		else
+		else -- TODO: verify if the code below is really necessary
 			-- It uses the function func
 			local ret = false
 			for i = #self.agents, 1, -1  do
@@ -420,7 +413,7 @@ Society_ = {
 				return self.agents[TME_GLOBAL_RANDOM:integer(1, #self.agents)]
 			end
 		else
-			customErrorMsg("Trying to sample an empty Society", 2)
+			customErrorMsg("Trying to sample an empty Society.", 2)
 		end
 	end,
 	-- Return the number of Agents of the Society.
