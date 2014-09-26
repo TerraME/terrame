@@ -430,6 +430,7 @@ executeTests = function(fileName)
 	ut.functions_without_assert = 0
 	ut.examples = 0
 	ut.examples_error = 0
+	ut.wrong_file = 0
 
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
@@ -459,6 +460,7 @@ executeTests = function(fileName)
 
 		for _, eachFile in ipairs(myFile) do
 			print_green("Testing "..eachFolder..s..eachFile)
+			ut.current_file = eachFolder..s..eachFile
 			-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
 			local tests = dofile(srcDir..s..eachFolder..s..eachFile)
 
@@ -614,6 +616,12 @@ executeTests = function(fileName)
 		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
 	else
 		print_green("No function creates any global variable.")
+	end
+
+	if ut.wrong_file > 0 then
+		print_red(ut.wrong_file.." assert_error calls found an error message pointing to an internal file (wrong level).")
+	else
+		print_green("No assert_error has error messages pointing to internal files.")
 	end
 
 	if ut.functions_without_assert > 0 then

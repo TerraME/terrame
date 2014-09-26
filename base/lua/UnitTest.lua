@@ -136,6 +136,13 @@ UnitTest_ = {
 			self:print_error("Test expected an error ('"..error_message.."'), but no error was found.", 2)
 			self.fail = self.fail + 1
 		else
+			if self.current_file then
+				local err2 = string.match(err, self.current_file)
+				if err2 ~= self.current_file then
+					print_red("Error in wrong file. It should occur in '"..self.current_file.."', got '"..err.."'.")
+					self.wrong_file = self.wrong_file + 1
+				end
+			end
 			local shortErrorMsg = string.match(err, ":[0-9]*:.*")
 
 			-- TODO: verificar se tem como pegar o nome do arquivo e verificar se o erro nao ocorre
