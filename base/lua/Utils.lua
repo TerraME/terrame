@@ -374,7 +374,7 @@ function switch(data, att)
 						end)
 						word = string.sub(word, 0, string.len(word) - 2).."]."
 					end
-					customErrorMsg("'"..self.casevar.."' is an invalid value for parameter '"..att.."'. "..word, 3)
+					customErrorMsg("'"..self.casevar.."' is an invalid value for parameter '"..att.."'. "..word, 4)
 				end
 			end
 		}
@@ -419,7 +419,7 @@ end
 
 function belong(value, values)
 	if type__(values) ~= "table" then
-		incompatibleTypesErrorMsg("#2", "table", type(values), 2)
+		incompatibleTypesErrorMsg("#2", "table", type(values), 3)
 	end
 
 	if values == nil then return false end
@@ -833,11 +833,11 @@ end
 --     print(element, etype)
 -- end)
 forEachElement = function(obj, func)
-	if obj == nil then mandatoryArgumentErrorMsg("#1", 2) end
-	if func == nil then mandatoryArgumentErrorMsg("#2", 2) end
+	if obj == nil then mandatoryArgumentErrorMsg("#1", 3) end
+	if func == nil then mandatoryArgumentErrorMsg("#2", 3) end
 
 	if type(func) ~= "function" then
-		incompatibleTypesErrorMsg("#2", "function", type(func), 2)
+		incompatibleTypesErrorMsg("#2", "function", type(func), 3)
 	end
 
 	for k, ud in pairs(obj) do
@@ -848,10 +848,10 @@ end
 
 --TODO: esta funcao ignora elementos que possuem o mesmo lower case (ex: aAa e aaa). Tratar este caso.
 forEachOrderedElement = function(obj, func)
-	if obj == nil then mandatoryArgumentErrorMsg("#1", 2) end
+	if obj == nil then mandatoryArgumentErrorMsg("#1", 3) end
 
 	if type(func) ~= "function" then
-		incompatibleTypesErrorMsg("#2", "function", type(func), 2)
+		incompatibleTypesErrorMsg("#2", "function", type(func), 3)
 	end
 
 	local strk
@@ -909,7 +909,7 @@ end
 -- @return TODO
 function getn(t)
 	if type(t) ~= "table" then
-		incompatibleTypesErrorMsg("#1", "table", type(t), 2)
+		incompatibleTypesErrorMsg("#1", "table", type(t), 3)
 	end
 
 	local n = 0

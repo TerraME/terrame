@@ -125,7 +125,7 @@ Chart = function(data)
 		end
 	end
 
-	verify(#data.select > 0, "Charts must select at least one attribute.", 3)
+	verify(#data.select > 0, "Charts must select at least one attribute.", 4)
 
 	if data.label == nil then
 		data.label = {}

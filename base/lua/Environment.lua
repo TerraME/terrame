@@ -198,7 +198,7 @@ Environment_ = {
 				qty_agents = qty_agents + #ud
 				forEachElement(ud.placements, function(index)
 					if index == data.name then
-						customErrorMsg("There is a Society within this Environment that already has this placement.", 3)
+						customErrorMsg("There is a Society within this Environment that already has this placement.", 5)
 					end
 				end)
 

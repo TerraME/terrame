@@ -658,7 +658,7 @@ executeTests = function(fileName)
 		print_yellow("No examples were executed.")
 	end
 
-	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error +
+	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error + ut.wrong_file +
 	               ut.functions_with_global_variables + ut.functions_with_error + ut.functions_without_assert
 
 	if errors == 0 then

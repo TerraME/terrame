@@ -67,10 +67,10 @@ Neighborhood_ = {
 		self.cObj_:clear()
 	end,
 	eraseCell = function(self, xIndex, yIndex)
-		deprecatedFunctionWarningMsg("eraseCell", "remove", 2)
+		deprecatedFunctionWarningMsg("eraseCell", "remove", 3)
 	end,
 	eraseNeighbor = function(self, cell)
-		deprecatedFunctionWarningMsg("eraseNeighbor", "remove", 2)
+		deprecatedFunctionWarningMsg("eraseNeighbor", "remove", 3)
 		self:remove(cell)
 	end,
 	--- Remove a Cell from the Neighborhood.

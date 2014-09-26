@@ -1773,7 +1773,7 @@ int luaCellularSpace::load(lua_State *L)
                 string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
                 lua_getglobal(L, "customErrorMsg");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
+                lua_pushnumber(L,5);
                 lua_call(L,2,0);
                 return 0;
             }

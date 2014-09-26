@@ -339,137 +339,137 @@ CellularSpace_ = {
 			incompatibleTypesErrorMsg("strategy","string",type(data.strategy), 3)
 		end
 
-		return switch(data, "strategy"):caseof{
-			["function"]   = function() 
-				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy"}, 3)
+		switch(data, "strategy"):caseof{
+			["function"] = function() 
+				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy"}, 4)
 				if data.filter == nil then
-					mandatoryArgumentErrorMsg("filter", 3)
+					mandatoryArgumentErrorMsg("filter", 4)
 				elseif type(data.filter) ~="function" then
-					incompatibleTypesErrorMsg("filter", "function", type(data.filter), 3)
+					incompatibleTypesErrorMsg("filter", "function", type(data.filter), 4)
 				end
 
 				if data.weight == nil then
 					data.weight = function() return 1 end
 				elseif type(data.weight) ~= "function" then
-					incompatibleTypesErrorMsg("weight", "function", type(data.weight), 3)
+					incompatibleTypesErrorMsg("weight", "function", type(data.weight), 4)
 				end
 
-				return createNeighborhood(self, data.filter, data.weight, data.name) 
+				createNeighborhood(self, data.filter, data.weight, data.name) 
 			end,
 			moore = function()
-				checkUnnecessaryParameters(data, {"self", "wrap", "name", "strategy"}, 3)
+				checkUnnecessaryParameters(data, {"self", "wrap", "name", "strategy"}, 4)
 				if data.self == nil then
 					data.self = false
 				elseif type(data.self) ~= "boolean" then
-					incompatibleTypesErrorMsg("self","boolean",type(data.self),3)
+					incompatibleTypesErrorMsg("self", "boolean", type(data.self), 4)
 				end
 
 				if data.wrap == nil then
 					data.wrap = false
 				elseif type(data.wrap) ~= "boolean" then
-					incompatibleTypesErrorMsg("wrap","boolean",type(data.wrap),3)
+					incompatibleTypesErrorMsg("wrap", "boolean", type(data.wrap), 4)
 				end
 
-				return createMooreNeighborhood(self, data.name, data.self, data.wrap)
+				createMooreNeighborhood(self, data.name, data.self, data.wrap)
 			end,
 			mxn = function()
-				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "m", "n", "target"}, 3)
+				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "m", "n", "target"}, 4)
 				if data.m == nil then
-					mandatoryArgumentErrorMsg("m", 3)
+					mandatoryArgumentErrorMsg("m", 4)
 				elseif type(data.m) ~= "number" then
-					incompatibleTypesErrorMsg("m", "positive integer number (greater than zero)", type(data.m), 3)
+					incompatibleTypesErrorMsg("m", "positive integer number (greater than zero)", type(data.m), 4)
 				elseif data.m <= 0 then
-					incompatibleValuesErrorMsg("m", "positive integer number (greater than zero)", data.m, 3)
+					incompatibleValuesErrorMsg("m", "positive integer number (greater than zero)", data.m, 4)
 				elseif math.floor(data.m) ~= data.m then
-					incompatibleValuesErrorMsg("m", "positive integer number (greater than zero)", "real number", 3)
+					incompatibleValuesErrorMsg("m", "positive integer number (greater than zero)", "real number", 4)
 				elseif data.m % 2 == 0 then
 					data.m = data.m + 1
-					customWarningMsg("Parameter 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.", 3)
+					customWarningMsg("Parameter 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.", 4)
 				end
 
 				if data.n == nil then
 					data.n = data.m
 				elseif type(data.n) ~= "number" then
-					incompatibleTypesErrorMsg("n", "positive integer number (greater than zero)", type(data.n), 3)
+					incompatibleTypesErrorMsg("n", "positive integer number (greater than zero)", type(data.n), 4)
 				elseif data.n <= 0 then
-					incompatibleValuesErrorMsg("n", "positive integer number (greater than zero)", data.n, 3)
+					incompatibleValuesErrorMsg("n", "positive integer number (greater than zero)", data.n, 4)
 				elseif math.floor(data.n) ~= data.n then
-					incompatibleValuesErrorMsg("n", "positive integer number (greater than zero)", "real number", 3)
+					incompatibleValuesErrorMsg("n", "positive integer number (greater than zero)", "real number", 4)
 				elseif data.n % 2 == 0 then
 					data.n = data.n + 1
-					customWarningMsg("Parameter 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.", 3)
+					customWarningMsg("Parameter 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.", 4)
 				end
 
 				if data.filter == nil then
 					data.filter = function() return true end
-				elseif type(data.filter) ~="function" then
-					incompatibleTypesErrorMsg("filter","function",type(data.filter),3)
+				elseif type(data.filter) ~= "function" then
+					incompatibleTypesErrorMsg("filter", "function", type(data.filter), 4)
 				end
 
 				if data.weight == nil then
 					data.weight = function() return 1 end
 				elseif type(data.weight) ~= "function" then
-					incompatibleTypesErrorMsg("weight", "function", type(data.weight), 3)
+					incompatibleTypesErrorMsg("weight", "function", type(data.weight), 4)
 				end
 
 				if data.target == nil then
-					return createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name)
+					createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name)
 				else
 					if type(data.target) ~= "CellularSpace" then
-						incompatibleTypesErrorMsg("target", "CellularSpace or nil", type(data.target), 3)
+						incompatibleTypesErrorMsg("target", "CellularSpace or nil", type(data.target), 4)
 					end
-					return spatialCoupling(data.m, data.n, self, data.target, data.filter, data.weight, data.name)
+					spatialCoupling(data.m, data.n, self, data.target, data.filter, data.weight, data.name)
 				end
 			end,
 			vonneumann = function() 
-				checkUnnecessaryParameters(data, {"name", "strategy", "wrap", "self"}, 3)
+				checkUnnecessaryParameters(data, {"name", "strategy", "wrap", "self"}, 4)
 				if data.self == nil then
 					data.self = false
 				elseif type(data.self) ~= "boolean" then
-					incompatibleTypesErrorMsg("self", "boolean", type(data.self), 3)
+					incompatibleTypesErrorMsg("self", "boolean", type(data.self), 4)
 				end
 
 				if data.wrap == nil then
 					data.wrap = false
 				elseif type(data.wrap) ~= "boolean" then
-					incompatibleTypesErrorMsg("wrap","boolean",type(data.wrap), 3)
+					incompatibleTypesErrorMsg("wrap","boolean",type(data.wrap), 4)
 				end
 
-				return createVonNeumannNeighborhood(self, data.name, data.self, data.wrap) 
+				createVonNeumannNeighborhood(self, data.name, data.self, data.wrap) 
 			end,
-			["3x3"]        = function() 
-				checkUnnecessaryParameters(data, {"name", "strategy", "filter", "weight"}, 3)
+			["3x3"] = function() 
+				checkUnnecessaryParameters(data, {"name", "strategy", "filter", "weight"}, 4)
 				data.m = 3
 				data.n = 3
 
 				if data.filter == nil then
 					data.filter = function() return true end
 				elseif type(data.filter) ~="function" then
-					incompatibleTypesErrorMsg("filter", "function", type(data.filter), 3)
+					incompatibleTypesErrorMsg("filter", "function", type(data.filter), 4)
 				end
 
 				if data.weight == nil then
 					data.weight = function() return 1 end
 				elseif type(data.weight) ~= "function" then
-					incompatibleTypesErrorMsg("weight","function", type(data.weight), 3)
+					incompatibleTypesErrorMsg("weight", "function", type(data.weight), 4)
 				end
 
-				return createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name) 
+				createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name) 
 			end,
 			coord = function() 
-				checkUnnecessaryParameters(data, {"name", "strategy", "target"}, 3)
+				checkUnnecessaryParameters(data, {"name", "strategy", "target"}, 4)
 				if data.target == nil then
 					mandatoryArgumentErrorMsg("target", 3)
 				elseif type(data.target) ~= "CellularSpace" then
-					incompatibleTypesErrorMsg("target", "CellularSpace", type(data.target), 3)
+					incompatibleTypesErrorMsg("target", "CellularSpace", type(data.target), 4)
 				end
 
-				return coordCoupling(self, data.target, data.name) 
+				coordCoupling(self, data.target, data.name) 
 			end
 		}
 	end,
 	getCell = function(self, xIndex, yIndex)
-		deprecatedFunctionWarningMsg("getCell", "get", 2)
+		deprecatedFunctionWarningMsg("getCell", "get", 3)
 		return self:get(xIndex, yIndex)
 	end,
 	--- Retrieve a Cell from the CellularSpace, given its id or its x and y.
@@ -505,11 +505,11 @@ CellularSpace_ = {
 		return self.cObj_:getCell(cObj_)
 	end,
 	getCells = function(self)
-		deprecatedFunctionWarningMsg("getCells", ".cells", 2)
+		deprecatedFunctionWarningMsg("getCells", ".cells", 3)
 		return self.cells
 	end,
 	getCellByID = function(self, cellID)
-		deprecatedFunctionWarningMsg("getCellByID", "get", 2)
+		deprecatedFunctionWarningMsg("getCellByID", "get", 3)
 		return self:get(cellID)
 	end,	
 	--- Load the CellularSpace from the database. TerraME automatically executes this function when

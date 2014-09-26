@@ -226,9 +226,6 @@ Agent_ = {
 		end
 
 		local s = self.socialnetworks[id] 
-		if s == nil then
-			customErrorMsg("Agent does not have a SocialNetwork named '"..id.."'.", 3)
-		end
 		if type(s) == "function" then
 			s = s(self)
 		end

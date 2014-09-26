@@ -318,7 +318,7 @@ Society_ = {
 		}
 	end,
 	getAgent = function(self, index)
-		deprecatedFunctionWarningMsg("getAgent", "get", 2)
+		deprecatedFunctionWarningMsg("getAgent", "get", 3)
 		return self:get(index)
 	end,
 	--- Return a given Agent based on its index.
@@ -340,7 +340,7 @@ Society_ = {
 	--- Return a vector with the Agents of the Society.
 	-- @usage agent = soc:getAgents()[1]
 	getAgents = function(self)
-		deprecatedFunctionWarningMsg("getAgents", ".agents", 2)
+		deprecatedFunctionWarningMsg("getAgents", ".agents", 3)
 		return self.agents
 	end,
 	--- Notify all the Agents of the Society.
@@ -413,7 +413,7 @@ Society_ = {
 				return self.agents[TME_GLOBAL_RANDOM:integer(1, #self.agents)]
 			end
 		else
-			customErrorMsg("Trying to sample an empty Society.", 2)
+			customErrorMsg("Trying to sample an empty Society.", 3)
 		end
 	end,
 	-- Return the number of Agents of the Society.
