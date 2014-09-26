@@ -147,7 +147,7 @@ require = function(package, recursive, asnamespace)
 	-- de que o pacote foi carregado com sucesso).
 end
 
-local type__ = type
+type__ = type
 
 --- Return the type of an object. It extends the original Lua type() to support TerraME objects, 
 -- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
@@ -385,11 +385,13 @@ executeTests = function(fileName)
 	local data = include(fileName)
 
 	local examples = (data.file == nil and data.folder == nil and data.test == nil) or data.examples
+	local check_functions = false
 
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
 		data.folder = {data.folder}
 	elseif data.folder == nil then
+		check_functions = true
 		data.folder = {}
 		local parentFolders = dir(srcDir)
 		for _, parentFolder in ipairs(parentFolders) do
@@ -532,37 +534,41 @@ executeTests = function(fileName)
 	end 
 
 	-- checking if all source code functions were tested
-	if type(data.file) == "string" then
-		print_green("Checking functions from lua"..s..data.file)
-		forEachElement(testfunctions[data.file], function(idx, value)
-			ut.package_functions = ut.package_functions + 1
-			if value == 0 then
-				print_red("Function '"..idx.."' is not tested.")
-				ut.functions_not_tested = ut.functions_not_tested + 1
-			end
-		end)
-	elseif type(data.file) == "table" then
-		forEachOrderedElement(data.file, function(idx, value)
-			print_green("Checking functions from lua"..s..value)
-			forEachElement(testfunctions[value], function(midx, mvalue)
+	if check_functions then
+		if type(data.file) == "string" then
+			print_green("Checking functions from lua"..s..data.file)
+			forEachElement(testfunctions[data.file], function(idx, value)
 				ut.package_functions = ut.package_functions + 1
-				if mvalue == 0 then
-					print_red("Function '"..midx.."' is not tested.")
+				if value == 0 then
+					print_red("Function '"..idx.."' is not tested.")
 					ut.functions_not_tested = ut.functions_not_tested + 1
 				end
 			end)
-		end)
-	elseif data.file == nil then
-		forEachOrderedElement(testfunctions, function(idx, value)
-			print_green("Checking functions from lua"..s..idx)
-			forEachElement(value, function(midx, mvalue)
-				ut.package_functions = ut.package_functions + 1
-				if mvalue == 0 then
-					print_red("Function '"..midx.."' is not tested.")
-					ut.functions_not_tested = ut.functions_not_tested + 1
-				end
+		elseif type(data.file) == "table" then
+			forEachOrderedElement(data.file, function(idx, value)
+				print_green("Checking functions from lua"..s..value)
+				forEachElement(testfunctions[value], function(midx, mvalue)
+					ut.package_functions = ut.package_functions + 1
+					if mvalue == 0 then
+						print_red("Function '"..midx.."' is not tested.")
+						ut.functions_not_tested = ut.functions_not_tested + 1
+					end
+				end)
 			end)
-		end)
+		elseif data.file == nil then
+			forEachOrderedElement(testfunctions, function(idx, value)
+				print_green("Checking functions from lua"..s..idx)
+				forEachElement(value, function(midx, mvalue)
+					ut.package_functions = ut.package_functions + 1
+					if mvalue == 0 then
+						print_red("Function '"..midx.."' is not tested.")
+						ut.functions_not_tested = ut.functions_not_tested + 1
+					end
+				end)
+			end)
+		end
+	else
+		print_yellow("Skipping source code functions check")
 	end
 
 	-- executing examples
@@ -622,10 +628,14 @@ executeTests = function(fileName)
 		print_green("All "..ut.executed_functions.." tested functions exist in the source code of the package.")
 	end
 
-	if ut.functions_not_tested > 0 then
-		print_red(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions are not tested.")
+	if check_functions then
+		if ut.functions_not_tested > 0 then
+			print_red(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions are not tested.")
+		else
+			print_green("All "..ut.package_functions.." functions of the package are tested.")
+		end
 	else
-		print_green("All "..ut.package_functions.." functions of the package are tested.")
+		print_yellow("No source code functions were verified.")
 	end
 
 	if examples then
