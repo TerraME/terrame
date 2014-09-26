@@ -369,7 +369,7 @@ return{
 					database = "cabeca"
 				}
 			end
-			unitTest:assert_error(error_func, "Error: Access denied for user ''@'localhost' to database 'cabeca'.", 10)
+			unitTest:assert_error(error_func, "Error: Access denied for user ''@'localhost' to database 'cabeca'.", 24)
 
 			error_func = function()
 				local cs = CellularSpace{
