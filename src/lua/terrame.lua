@@ -542,7 +542,7 @@ executeTests = function(fileName)
 			end
 		end)
 	elseif type(data.file) == "table" then
-		forEachElement(data.file, function(idx, value)
+		forEachOrderedElement(data.file, function(idx, value)
 			print_green("Checking functions from lua"..s..value)
 			forEachElement(testfunctions[value], function(midx, mvalue)
 				ut.package_functions = ut.package_functions + 1
@@ -553,7 +553,7 @@ executeTests = function(fileName)
 			end)
 		end)
 	elseif data.file == nil then
-		forEachElement(testfunctions, function(idx, value)
+		forEachOrderedElement(testfunctions, function(idx, value)
 			print_green("Checking functions from lua"..s..idx)
 			forEachElement(value, function(midx, mvalue)
 				ut.package_functions = ut.package_functions + 1
