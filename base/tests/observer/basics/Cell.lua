@@ -26,24 +26,35 @@
 
 return{
 	Cell = function(unitTest)
-		local world = Cell{
-		    count = 0
-		}
+        local world = Cell{
+            count = 0,
+            value = function(self)
+                return self.count + 2
+            end,
+            sum = function(self)
+                return self.count + 4
+            end
+        }
 
-		local c = Chart{subject = world}
-
+        local c = Chart{subject = world}
 		unitTest:assert_type(c, "number")
 
-		world:notify(0)
+        local c = Chart{subject = world, select = {"count", "value", "sum"}}
+		unitTest:assert_type(c, "number")
 
-		local t = Timer{
-		    Event{action = function(e)
-				world.count = world.count + 1
-		        world:notify(e)
-		    end}
-		}
+        local c = Chart{subject = world}
+		unitTest:assert_type(c, "number")
 
-		t:execute(30)
+        world:notify(0)
+
+        local t = Timer{
+            Event{action = function(e)
+                world.count = world.count + 1
+                world:notify(e)
+            end}
+        }
+
+        t:execute(30)
 	end
 }
 

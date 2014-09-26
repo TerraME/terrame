@@ -629,11 +629,6 @@ CellularSpace_ = {
 	-- @usage cs:notify()
 	-- cs:notify(event:getTime())
 	notify = function (self, modelTime)
-		if type(self.attrfunc_) == "table" then
-			forEachCell(self, function(cell)
-				cell[self.attrfunc_[1].."_"] = cell[self.attrfunc_[1]](cell)
-			end)
-		end
 		if modelTime == nil then
 			modelTime = 1
 		elseif type(modelTime) ~= "number" then
@@ -645,6 +640,13 @@ CellularSpace_ = {
 		elseif modelTime < 0 then
 			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)   
 		end
+
+        if self.obsattrs then
+            forEachElement(self.obsattrs, function(idx)
+                self[idx.."_"] = self[idx](self)
+            end)
+        end
+
 		self.cObj_:notify(modelTime)
 	end,
 	--- Retrieve a random Cell from the CellularSpace.

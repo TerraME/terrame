@@ -45,22 +45,39 @@ Chart = function(data)
 	optionalTableElement(data, "xAxis",  "string", 3)
 	optionalTableElement(data, "title",  "string", 3)
 
+	if type(data.select) == "string" then data.select = {data.select} end
+	if type(data.label)  == "string" then data.label  = {data.label} end
+
+	optionalTableElement(data, "select", "table",  3)
+	optionalTableElement(data, "label",  "table",  3)
+
 	if data.yLabel == nil then data.yLabel = "" end
 	if data.xLabel == nil then data.xLabel = "" end
 	if data.title  == nil then data.title  = "" end
 
 	if data.select == nil then
+		verify(data.label == nil, "As select is nil, it is not possible to use label.", 4)
+
 		data.select = {}
 
 		if type(data.subject) == "Cell" then
 			forEachElement(data.subject, function(idx, value, mtype)
-				if mtype == "number" and idx ~= "x" and idx ~= "y" then
+				local size = string.len(idx)
+				if mtype == "number" and idx ~= "x" and idx ~= "y" and string.sub(idx, size, size) ~= "_" then
+					data.select[#data.select + 1] = idx
+				end
+			end)
+		elseif type(data.subject) == "Agent" then
+			forEachElement(data.subject, function(idx, value, mtype)
+				local size = string.len(idx)
+				if mtype == "number" and string.sub(idx, size, size) ~= "_" then
 					data.select[#data.select + 1] = idx
 				end
 			end)
 		elseif type(data.subject) == "CellularSpace" then
 			forEachElement(data.subject, function(idx, value, mtype)
-				if mtype == "number" and not belong(idx, {"minCol","maxCol", "minRow", "maxRow", "ydim", "xdim"}) then
+				local size = string.len(idx)
+				if mtype == "number" and not belong(idx, {"minCol","maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, size, size) ~= "_" then
 					data.select[#data.select + 1] = idx
 				end
 			end)
@@ -83,17 +100,49 @@ Chart = function(data)
 		forEachElement(data.select, function(_, value)
 			if data.subject[value] == nil then
 				customErrorMsg("Selected element '"..value.."' does not belong to the subject.", 5)
+			elseif type(data.subject[value]) == "function" then
+				if data.subject.obsattrs == nil then
+					data.subject.obsattrs = {}
+				end
+
+				data.subject.obsattrs[value] = true
 			elseif type(data.subject[value]) ~= "number" then
-				customErrorMsg("Selected element '"..value.."' should be a number, got "..type(data.subject[value])..".", 5)
+				customErrorMsg("Selected element '"..value.."' should be a number or function, got "..type(data.subject[value])..".", 5)
 			end
 		end)
+
+		if data.subject.obsattrs then
+			forEachElement(data.subject.obsattrs, function(idx)
+				for i = 1, #data.select do
+					if data.select[i] == idx then
+						data.select[i] = idx.."_"
+						local mvalue = data.subject[idx](data.subject)
+						verify(type(mvalue) == "number", "Function "..idx.. "returns a non-number value.", 4)
+						data.subject[idx.."_"] = mvalue
+					end
+				end
+			end)
+		end
 	end
 
 	verify(#data.select > 0, "Charts must select at least one attribute.", 3)
 
-	if data.labels == nil then data.labels = data.select end
+	if data.label == nil then
+		data.label = {}
+		for i = 1, #data.select do
+			data.label[i] = data.select[i]
+		end
+	end
 
-	checkUnnecessaryParameters(data, {"subject", "select", "yLabel", "xLabel", "title", "labels"}, 3)
+	for i = 1, #data.label do
+		local size = string.len(data.label[i])
+
+		if string.sub(data.label[i], size, size) == "_" then
+			data.label[i] = string.sub(data.label[i], 1, size - 1)
+		end
+	end
+
+	checkUnnecessaryParameters(data, {"subject", "select", "yLabel", "xLabel", "title", "label"}, 3)
 
 	local observerType
 	if data.xAxis == nil then
@@ -117,23 +166,23 @@ Chart = function(data)
 	table.insert(observerParams, data.xLabel)
 	table.insert(observerParams, data.yLabel)
 
-    local labels = ""
+    local label = ""
 
-    if type(data.labels) == "table" then
-        local labelsCount = #data.labels
+    if type(data.label) == "table" then
+        local labelCount = #data.label
         local attrCount = #data.select
 
-        if labelsCount < attrCount then
-            labels = table.concat(data.labels, ";")
-            for i = labelsCount + 1, attrCount do
-                labels = labels..";"..tostring(i)..";"
+        if labelCount < attrCount then
+            label = table.concat(data.label, ";")
+            for i = labelCount + 1, attrCount do
+                label = label..";"..tostring(i)..";"
             end
         else
-            labels = table.concat(data.labels, ";")
+            label = table.concat(data.label, ";")
         end
     end
 
-	table.insert(observerParams, labels)
+	table.insert(observerParams, label)
 
 	if subject.cObj_ then
 		if type(subject) == "CellularSpace" then

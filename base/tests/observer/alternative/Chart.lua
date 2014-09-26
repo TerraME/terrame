@@ -87,10 +87,17 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: The subject does not have at least one valid numeric attribute to be used.")
 
+		world.msum = 5
+
+		local error_func = function()
+        	Chart{subject = world, label = {"sss"}}
+		end
+		unitTest:assert_error(error_func, "Error: As select is nil, it is not possible to use label.")
+
 		local error_func = function()
         	Chart{subject = world, select = "value"}
 		end
-		unitTest:assert_error(error_func, "Error: Selected element 'value' should be a number, got string.")
+		unitTest:assert_error(error_func, "Error: Selected element 'value' should be a number or function, got string.")
 	end
 }
 

@@ -165,6 +165,13 @@ Cell_ = {
 		elseif modelTime < 0 then
 			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)
 		end
+
+		if self.obsattrs then
+			forEachElement(self.obsattrs, function(idx)
+				self[idx.."_"] = self[idx](self)
+			end)
+		end
+
 		self.cObj_:notify(modelTime)
 	end,
 	--- Returns a random Cell from a Neighborhood of this Cell
