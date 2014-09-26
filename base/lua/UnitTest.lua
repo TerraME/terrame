@@ -128,7 +128,7 @@ UnitTest_ = {
 			self.success = self.success + 1
 		end
 	end,
-	assert_error = function (self, my_function, error_message)
+	assert_error = function (self, my_function, error_message, max_error)
 		self.test = self.test + 1
 
 		local _, err = pcall(my_function)
@@ -151,11 +151,18 @@ UnitTest_ = {
 
 			local distance = levenshtein(error_message, shortErrorMsg)
 
-			if distance == 0 then
+			if (distance == 0) or (max_error and distance <= max_error) then
 				self.success = self.success + 1
 			else
 				self.fail = self.fail + 1
-				self:print_error("Test expected:\n  '"..error_message.."'\n  got:\n  '"..shortErrorMsg.."'")
+
+				local error_msg = "Test expected:\n  '"..error_message.."'\n  got:\n  '"..shortErrorMsg.."'"
+
+				if max_error then
+					error_msg = error_msg.."\nIt would accept an error of at most "..max_error.." character(s), but got "..distance.."."
+				end
+
+				self:print_error(error_msg)
 			end
 		end
 	end

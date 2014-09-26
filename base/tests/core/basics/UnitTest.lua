@@ -44,7 +44,10 @@ return{
 		local error_func = function() x = 3 + nil end
 		u:assert_error(error_func, "attempt to perform arithmetic on a nil value")
 
-		unitTest:assert_equal(u.success, 1)
+		local error_func = function() x = 3 + nil end
+		u:assert_error(error_func, "attempt to perform arithmetic on a  value", 3)
+
+		unitTest:assert_equal(u.success, 2)
 	end,
 	assert_nil = function(unitTest)
 		local u = UnitTest{}

@@ -369,8 +369,7 @@ return{
 					database = "cabeca"
 				}
 			end
-			-- TODO: there is an error in TerraLib here, because the username is not shown.
-			unitTest:assert_error(error_func, "Error: Access denied for user ''@'localhost' to database 'cabeca'.")
+			unitTest:assert_error(error_func, "Error: Access denied for user ''@'localhost' to database 'cabeca'.", 10)
 
 			error_func = function()
 				local cs = CellularSpace{
@@ -411,7 +410,7 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Error: Can't connect to MySQL server on '321456' (65).")
+			unitTest:assert_error(error_func, "Error: Can't connect to MySQL server on '321456' (XX).", 2)
 		end
 	end,
 	loadNeighborhood = function(unitTest)
