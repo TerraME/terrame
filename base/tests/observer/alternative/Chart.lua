@@ -25,7 +25,72 @@
 
 return{
 	Chart = function(unitTest)
-		unitTest:assert(true)
+		local c = Cell{value = 5}
+
+		local error_func = function()
+			Chart{}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'subject' is mandatory.")
+
+		local error_func = function()
+			Chart{subject = c, select = 5}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'select' expected table, got number.")
+
+		local error_func = function()
+			Chart{subject = c, select = "mvalue"}
+		end
+		unitTest:assert_error(error_func, "Error: Selected element 'mvalue' does not belong to the subject.")
+
+		local error_func = function()
+			Chart{subject = c, xLabel = 5}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'xLabel' expected string, got number.")
+
+		local error_func = function()
+			Chart{subject = c, yLabel = 5}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'yLabel' expected string, got number.")
+
+		local error_func = function()
+			Chart{subject = c, title = 5}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'title' expected string, got number.")
+
+		local error_func = function()
+			Chart{subject = c, xAxis = 5}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'xAxis' expected string, got number.")
+
+		local error_func = function()
+			Chart{subject = c, xwc = 5}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'xwc' is unnecessary.")
+
+		local error_func = function()
+			Chart{subject = c, select = {}}
+		end
+		unitTest:assert_error(error_func, "Error: Charts must select at least one attribute.")
+
+        local unit = Cell{
+            count = 0
+        }
+
+        local world = CellularSpace{
+            xdim = 10,
+			value = "aaa",
+            instance = unit
+        }
+
+		local error_func = function()
+        	Chart{subject = world}
+		end
+		unitTest:assert_error(error_func, "Error: The subject does not have at least one valid numeric attribute to be used.")
+
+		local error_func = function()
+        	Chart{subject = world, select = "value"}
+		end
+		unitTest:assert_error(error_func, "Error: Selected element 'value' should be a number, got string.")
 	end
 }
 

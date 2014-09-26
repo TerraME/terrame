@@ -23,13 +23,44 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
+local optionalTableElement = function(table, attr, allowedType, level)
+	local value = table[attr]
+	local mtype = type(value)
+
+	if value ~= nil and mtype ~= allowedType then
+		incompatibleTypesErrorMsg(attr, allowedType, mtype, level + 1)
+	end
+end
+
+local compulsoryTableElement = function(table, attr, level)
+	if table[attr] == nil then
+		mandatoryArgumentErrorMsg(attr, level + 1)
+	end
+end
+
 Chart = function(data)
+	compulsoryTableElement(data, "subject", 3)
+	optionalTableElement(data, "yLabel", "string", 3)
+	optionalTableElement(data, "xLabel", "string", 3)
+	optionalTableElement(data, "xAxis",  "string", 3)
+	optionalTableElement(data, "title",  "string", 3)
+
+	if data.yLabel == nil then data.yLabel = "" end
+	if data.xLabel == nil then data.xLabel = "" end
+	if data.title  == nil then data.title  = "" end
+
 	if data.select == nil then
 		data.select = {}
 
 		if type(data.subject) == "Cell" then
 			forEachElement(data.subject, function(idx, value, mtype)
 				if mtype == "number" and idx ~= "x" and idx ~= "y" then
+					data.select[#data.select + 1] = idx
+				end
+			end)
+		elseif type(data.subject) == "CellularSpace" then
+			forEachElement(data.subject, function(idx, value, mtype)
+				if mtype == "number" and not belong(idx, {"minCol","maxCol", "minRow", "maxRow", "ydim", "xdim"}) then
 					data.select[#data.select + 1] = idx
 				end
 			end)
@@ -40,24 +71,78 @@ Chart = function(data)
 				end
 			end)
 		end
+
+		verify(#data.select > 0, "The subject does not have at least one valid numeric attribute to be used.", 4)
+	else
+		if type(data.select) == "string" then
+			data.select = {data.select}
+		else
+			optionalTableElement(data, "select", "table", 3)
+		end
+
+		forEachElement(data.select, function(_, value)
+			if data.subject[value] == nil then
+				customErrorMsg("Selected element '"..value.."' does not belong to the subject.", 5)
+			elseif type(data.subject[value]) ~= "number" then
+				customErrorMsg("Selected element '"..value.."' should be a number, got "..type(data.subject[value])..".", 5)
+			end
+		end)
 	end
 
-	if data.xLabel == nil then
-		data.xLabel = "time"
+	verify(#data.select > 0, "Charts must select at least one attribute.", 3)
+
+	if data.labels == nil then data.labels = data.select end
+
+	checkUnnecessaryParameters(data, {"subject", "select", "yLabel", "xLabel", "title", "labels"}, 3)
+
+	local observerType
+	if data.xAxis == nil then
+		observerType = TME_OBSERVERS.DYNAMICGRAPHIC
+	else
+		observerType = TME_OBSERVERS.GRAPHIC
+		table.insert(data.select, data.xAxis)
 	end
 
-	if data.labels == nil then
-		data.labels =  data.select
+	local observerParams = {}
+	local subject = data.subject
+	if type(subject) == "Automaton" then
+		local locatedInCell = data.location
+		if type(locatedInCell) ~= "Cell" then
+			customErrorMsg("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
+		else
+			table.insert(observerParams, locatedInCell)
+		end
 	end
-	local obs = Observer {
-		subject     = data.subject,
-		attributes  = data.select,
-		title       = data.title,
-		curveLabels = data.labels,
-		xLabel      = data.xLabel,
-		yLabel      = data.yLabel,
-		type        = "chart"
-	}
-	return obs
+	table.insert(observerParams, data.title)
+	table.insert(observerParams, data.xLabel)
+	table.insert(observerParams, data.yLabel)
+
+    local labels = ""
+
+    if type(data.labels) == "table" then
+        local labelsCount = #data.labels
+        local attrCount = #data.select
+
+        if labelsCount < attrCount then
+            labels = table.concat(data.labels, ";")
+            for i = labelsCount + 1, attrCount do
+                labels = labels..";"..tostring(i)..";"
+            end
+        else
+            labels = table.concat(data.labels, ";")
+        end
+    end
+
+	table.insert(observerParams, labels)
+
+	if subject.cObj_ then
+		if type(subject) == "CellularSpace" then
+			return subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
+		else
+			return subject.cObj_:createObserver(observerType, data.select, observerParams)
+		end
+	else
+		return subject:createObserver(observerType, data.select, observerParams)
+	end	
 end
 

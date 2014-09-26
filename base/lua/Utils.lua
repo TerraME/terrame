@@ -418,7 +418,7 @@ function delay(delay_s)
 end
 
 function belong(value, values)
-	if type(values) ~= "table" then
+	if type__(values) ~= "table" then
 		incompatibleTypesErrorMsg("#2", "table", type(values), 2)
 	end
 
@@ -434,9 +434,10 @@ function belong(value, values)
 end
 
 -- TODO: think about this kind of function. Today it is only used by Model.
-verify = function(condition, msg)
+verify = function(condition, msg, level)
+	if level == nil then level = 3 end
 	if not condition then
-		customErrorMsg(msg, 3)
+		customErrorMsg(msg, level)
 	end
 end
 
