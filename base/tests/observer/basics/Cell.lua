@@ -21,7 +21,6 @@
 -- of this library and its documentation.
 --
 -- Authors: Pedro R. Andrade
---          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
 return{

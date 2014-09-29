@@ -24,25 +24,25 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	Agent = function(unitTest)
-		local world = Agent{
-		    count = 0
-		}
+	Clock = function(unitTest)
+		local c = Cell{value = 5}
 
-		local c = Chart{subject = world}
+		local t = Timer{}
 
-		unitTest:assert_type(c, "number")
+		local error_func = function()
+			Clock{}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'subject' is mandatory.")
 
-		world:notify(0)
+		local error_func = function()
+			Clock{subject = Cell{}}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'subject' expected Timer, got Cell.")
 
-		local t = Timer{
-		    Event{action = function(e)
-				world.count = world.count + 1
-		        world:notify(e)
-		    end}
-		}
-
-		t:execute(30)
+		local error_func = function()
+			Clock{subject = t, xwc = 5}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'xwc' is unnecessary.")
 	end
 }
 

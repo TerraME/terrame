@@ -24,25 +24,30 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	Agent = function(unitTest)
-		local world = Agent{
-		    count = 0
+	Timer = function(unitTest)
+		local timer
+
+		timer = Timer{
+			Event{time = 1, period = 1, priority = 1, action = function(event) timer:notify() end},
+			Event{time = 1, period = 1, priority = 2, action = function(event) timer:notify() end},
+			Event{time = 1, period = 1, priority = 3, action = function(event) timer:notify() end},
+			Event{time = 1, period = 1, priority = 4, action = function(event) timer:notify() end}
 		}
 
-		local c = Chart{subject = world}
+		Clock{subject = timer}
+		timer:execute(50)
 
-		unitTest:assert_type(c, "number")
-
-		world:notify(0)
-
-		local t = Timer{
-		    Event{action = function(e)
-				world.count = world.count + 1
-		        world:notify(e)
-		    end}
+		timer = Timer{
+			ev1 = Event{time = 1, period = 1, priority =  1, action = function(event) timer:notify() end},
+			ev2 = Event{time = 1, period = 4, priority = 10, action = function(event) timer:notify() end},
+			ev3 = Event{time = 1, period = 4, priority = 10, action = function(event) timer:notify() end},
+			ev4 = Event{time = 1, period = 4, priority = 10, action = function(event) timer:notify() end}
 		}
 
-		t:execute(30)
+		Clock{subject = timer}
+		timer:execute(50)
+
+		unitTest:assert(true)
 	end
 }
 

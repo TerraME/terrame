@@ -23,6 +23,7 @@ files = {
 	"Trajectory.lua",
 	"Environment.lua",
 	"Chart.lua",
+	"Clock.lua",
 	"Map.lua"
 }
 

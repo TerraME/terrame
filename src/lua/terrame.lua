@@ -483,7 +483,7 @@ executeTests = function(fileName)
 				if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
 					testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
 				elseif testfunctions[eachFile] then
-					print_red("Function does not exist in the source code.")
+					print_red("Function does not exist in the respective file in the source code.")
 					ut.functions_not_exist = ut.functions_not_exist + 1
 				end
 
