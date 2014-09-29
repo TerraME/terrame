@@ -72,9 +72,6 @@ return{
 		local u = UnitTest{sleep = 1}
 		unitTest:assert(true)
 	end,
-	print_error = function(unitTest)
-		unitTest:assert(true)
-	end,
 	UnitTest = function(unitTest)
 		local u = UnitTest{}
 

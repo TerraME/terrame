@@ -70,7 +70,7 @@ UnitTest_ = {
 	-- @param value Any value.
 	assert = function(self, value)
 		self.test = self.test + 1
-		if value then
+		if value == true then
 			self.success = self.success + 1
 		else
 			local msg

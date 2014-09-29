@@ -410,7 +410,7 @@ return{
 
 				unitTest:assert(filterFunction(c, neigh))
 
-				unitTest:assert(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
+				unitTest:assert_equal(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
 			end)
 		end)
 
@@ -714,7 +714,7 @@ return{
 
 				unitTest:assert(filterFunction(c, neigh))
 
-				unitTest:assert(1, weight)
+				unitTest:assert_equal(1, weight)
 			end
 			)
 		end)
