@@ -69,7 +69,43 @@ local slicedColorBar = function (min, max, slices, colornames)
 	return colorBar
 end
 
-Map = function(data)
+local optionalTableElement = function(table, attr, allowedType, level)
+	local value = table[attr]
+	local mtype = type(value)
 
+	if value ~= nil and mtype ~= allowedType then
+		incompatibleTypesErrorMsg(attr, allowedType, mtype, level + 1)
+	end
+end
+
+local compulsoryTableElement = function(table, attr, level)
+	if table[attr] == nil then
+		mandatoryArgumentErrorMsg(attr, level + 1)
+	end
+end
+
+Map = function(data)
+	compulsoryTableElement(data, "subject", 3)
+	optionalTableElement(data, "subject", "CellularSpace", 3)
+	compulsoryTableElement(data, "select",  3)
+
+	optionalTableElement(data, "values", "table", 3)
+	optionalTableElement(data, "labels", "table", 3)
+	optionalTableElement(data, "colors", "string", 3)
+
+	checkUnnecessaryParameters(data, {"subject", "select", "values", "labels", "colors"}, 3)
+
+	if type(data.select) == "string" then data.select = {data.select} end
+
+	optionalTableElement(data, "select", "table", 3)
+
+	verify(#data.select > 0, "Maps must select at least one attribute.", 4)
+
+	forEachElement(data.select, function(_, value)
+		verify(data.subject.cells[1][value] ~= nil, "Selected element '"..value.."' does not belong to the subject.", 6)
+	end)
+
+	verify(#data.labels == 0 or #data.labels == #data.values, "There should exist labels for each value.", 4)
+	verify(#data.colors == 0 or #data.colors == #data.values, "There should exist colors for each value.", 4)
 end
 

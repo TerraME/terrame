@@ -25,7 +25,43 @@
 
 return{
 	Map = function(unitTest)
-		unitTest:assert(true)
+		local c = CellularSpace{xdim = 5}
+
+		local error_func = function()
+			Map{}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'subject' is mandatory.")
+
+		local error_func = function()
+			Map{subject = Neighborhood()}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'subject' expected CellularSpace, got Neighborhood.")
+
+		local error_func = function()
+			Map{subject = c}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'select' is mandatory.")
+
+		local error_func = function()
+			Map{subject = c, select = 5}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'select' expected table, got number.")
+
+		local error_func = function()
+			Map{subject = c, select = "mvalue"}
+		end
+		unitTest:assert_error(error_func, "Error: Selected element 'mvalue' does not belong to the subject.")
+
+		local error_func = function()
+			Map{subject = c, select = "x", title = 5}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'title' is unnecessary.")
+
+		local error_func = function()
+			Map{subject = c, select = {}}
+		end
+		unitTest:assert_error(error_func, "Error: Maps must select at least one attribute.")
+
 	end
 }
 

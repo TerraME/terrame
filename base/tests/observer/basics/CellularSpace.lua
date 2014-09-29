@@ -26,7 +26,7 @@
 return{
 	CellularSpace = function(unitTest)
 		local unit = Cell{
-		    count = 0
+			count = 0
 		}
 
 		local world = CellularSpace{
@@ -42,16 +42,32 @@ return{
 		world:notify(0)
 
 		local t = Timer{
-		    Event{action = function(e)
+			Event{action = function(e)
 				world.value = world.value + 99
 				forEachCell(world, function(cell)
 					cell.count = cell.count + 1
 				end)
-		        world:notify(e)
-		    end}
+				world:notify(e)
+			end}
 		}
 
 		t:execute(30)
+	--[[
+		world = CellularSpace{
+			xdim = 10
+		}
+
+		Map{
+			subject = world,
+			select  = "x",
+			colors  = "Blues",
+			values  = {0, 10}
+		}
+
+		world:notify()
+	end
+	--]]
+		unitTest:delay()
 	end
 }
 
