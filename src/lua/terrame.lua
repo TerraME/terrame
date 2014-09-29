@@ -537,8 +537,9 @@ executeTests = function(fileName)
 
 	-- checking if all source code functions were tested
 	if check_functions then
+		print_green("Checking if functions from source code were tested")
 		if type(data.file) == "string" then
-			print_green("Checking functions from lua"..s..data.file)
+			print("Checking "..data.file)
 			forEachElement(testfunctions[data.file], function(idx, value)
 				ut.package_functions = ut.package_functions + 1
 				if value == 0 then
@@ -548,7 +549,7 @@ executeTests = function(fileName)
 			end)
 		elseif type(data.file) == "table" then
 			forEachOrderedElement(data.file, function(idx, value)
-				print_green("Checking functions from lua"..s..value)
+				print("Checking "..value)
 				forEachElement(testfunctions[value], function(midx, mvalue)
 					ut.package_functions = ut.package_functions + 1
 					if mvalue == 0 then
@@ -559,7 +560,7 @@ executeTests = function(fileName)
 			end)
 		elseif data.file == nil then
 			forEachOrderedElement(testfunctions, function(idx, value)
-				print_green("Checking functions from lua"..s..idx)
+				print("Checking "..idx)
 				forEachElement(value, function(midx, mvalue)
 					ut.package_functions = ut.package_functions + 1
 					if mvalue == 0 then
