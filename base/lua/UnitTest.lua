@@ -46,6 +46,7 @@ UnitTest_ = {
 	wrong_file = 0,
 	last_error = "",
 	count_last = 0,
+	delayed_time = 0,
 	print_error = function(self, msg)
 		local info = debug.getinfo(3)
 		local str = string.match(info.short_src, "[^/]*$")
@@ -192,8 +193,9 @@ function UnitTest(data)
 	checkUnnecessaryParameters(data, {"dbType", "host", "port", "password", "user", "sleep"}, 3)
 
 	if data.sleep then
-		data.delay = function()
+		data.delay = function(self)
 			delay(data.sleep)
+			self.delayed_time = self.delayed_time + data.sleep
 		end
 	end
 

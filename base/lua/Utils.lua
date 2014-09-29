@@ -414,7 +414,7 @@ end
 function delay(delay_s)
 	delay_s = delay_s or 1
 	local time_to = os.time() + delay_s
-	while os.time() < time_to do end
+	while os.time() <= time_to do end
 end
 
 function belong(value, values)

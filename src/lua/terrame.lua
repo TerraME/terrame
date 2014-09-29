@@ -600,7 +600,14 @@ executeTests = function(fileName)
 
 	print("\nReport:")
 
-	print_green("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
+	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds"
+	if ut.delayed_time > 0 then
+		text = text.." ("..ut.delayed_time.. " seconds sleeping)."
+	else
+		text = text.."."
+	end
+
+	print_green(text)
 
 	if ut.fail > 0 then
 		print_red(ut.fail.." out of "..ut.test.." asserts failed.")
