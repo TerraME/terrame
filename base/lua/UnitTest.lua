@@ -21,9 +21,9 @@
 -- of this library and its documentation.
 --
 -- Authors: 
---      Antonio Gomes de Oliveira Junior
 --      Pedro R. Andrade
 --      Raian Vargas Maretto
+--      Antonio Gomes de Oliveira Junior
 -------------------------------------------------------------------------------------------
 
 -- TODO: alow UnitTest.lua to use print_red from terrame.lua directly, removing the lines below
@@ -65,6 +65,8 @@ UnitTest_ = {
 			print_red(str)
 		end
 	end,
+	--- Check if a given value is true. In any other case (number, string, false, or nil) it generates an error
+	-- @param value Any value.
 	assert = function(self, value)
 		self.test = self.test + 1
 		if value then
@@ -74,6 +76,9 @@ UnitTest_ = {
 			self.fail = self.fail + 1
 		end
 	end,	
+	--- Check if a value belongs to a given type. If not, it generates an error.
+	-- @param value Any value.
+	-- @param mtype A string with the name of a type.
 	assert_type = function (self, value, mtype)
 		self.test = self.test + 1
 		if type(value) == mtype then
@@ -83,6 +88,8 @@ UnitTest_ = {
 			self.fail = self.fail + 1
 		end
 	end,	
+	--- Check if a given value is nil. Otherwise it generates an error.
+	-- @param value Any value.
 	assert_nil = function(self, value)
 		self.test = self.test + 1
 		if value == nil then
@@ -92,6 +99,8 @@ UnitTest_ = {
 			self.fail = self.fail + 1
 		end
 	end,
+	--- Check if a given value is not nil. Otherwise it generates an error.
+	-- @param value Any value.
 	assert_not_nil = function (self, value)
 		self.test = self.test + 1
 		if value ~= nil then
@@ -101,6 +110,12 @@ UnitTest_ = {
 			self.fail = self.fail + 1
 		end
 	end,
+	--- Check if two values are equal. In this function, two tables are equal only when they are the
+	-- same object (if not, they would not be equal even if they share the same internal content).
+	-- @param v1 Any value.
+	-- @param v2 Any value.
+	-- @param tol A number indicating a maximum error tolerance. This parameter is optional and can
+	-- be used only with numeric values. The default tolerance is zero.
 	assert_equal = function (self, v1, v2, tol)
 		self.test = self.test + 1
 
@@ -130,6 +145,14 @@ UnitTest_ = {
 			self.success = self.success + 1
 		end
 	end,
+	--- Verify if a function produces an error.
+	-- @param my_function A function.
+	-- @param error_message A string describing the error message that the function should produce.
+	-- This string should contain only the error message, without the description of the file name
+	-- the error was produced.
+	-- @param max_error A number indicating the maximum discrepance between the generated error and the
+	-- expected error. It is necessary in error messages that include information that can change
+	-- from machine to machine, such as an username. The default value is zero (no discrepance).
 	assert_error = function (self, my_function, error_message, max_error)
 		local _, err = pcall(my_function)
 		if not err then
@@ -176,6 +199,10 @@ UnitTest_ = {
 		self.test = self.test + 1
 	end,
 	delay = function()
+	--- Executes a delay in seconds during the test. Calling this function, the user can change the
+	-- delay when the UnitTest is built.
+	-- @param time A number with a time delay in seconds.
+	delay = function(time)
 	end
 }
 
@@ -183,6 +210,15 @@ local metaTableUnitTest_ = {
 	__index = UnitTest_
 }
 
+--- Type for testing packages. All its arguments (but sleep) are necessary only when the tests
+-- work with database access.
+-- @param data.dbType Name of the data source. See CellularSpace.
+-- @param data.host Name of the host. See CellularSpace.
+-- @param data.port Number of the port. See CellularSpace.
+-- @param data.password A password. See CellularSpace.
+-- @param data.user A user name. See CellularSpace.
+-- @param data.sleep A number indicating the amount of time to sleep every time there is a delay in
+-- the tests.
 function UnitTest(data)
 	setmetatable(data, metaTableUnitTest_)
 
