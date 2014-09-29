@@ -232,7 +232,7 @@ int luaSociety::createObserver( lua_State * luaL)
     	lua_pushnil(luaL);
     	while(lua_next(luaL, top) != 0)
     	{
-    	    if (execModes != Quiet )
+/*    	    if (execModes != Quiet )
             {
     	        string err_out = string("The parameter table is empty.");
     	        lua_getglobal(L, "customWarningMsg");
@@ -240,7 +240,7 @@ int luaSociety::createObserver( lua_State * luaL)
     	        lua_pushnumber(L,5);
     	        lua_call(L,2,0);
     	    }
-
+*/
     	    if (obsAttribs.empty())
     	    {
 			    obsAttribs = allAttribs;
@@ -252,6 +252,7 @@ int luaSociety::createObserver( lua_State * luaL)
         	else
         	{
         	    // Verifica se o atributo informado realmente existe na celula
+/*
         	    for (int i = 0; i < obsAttribs.size(); i++)
         	    {
         	        if (! observedAttribs.contains(obsAttribs.at(i)) )
@@ -268,6 +269,7 @@ int luaSociety::createObserver( lua_State * luaL)
                     	return 0;
                 	}
             	}
+*/
         	}
 
         	ObserverTextScreen *obsText = 0;

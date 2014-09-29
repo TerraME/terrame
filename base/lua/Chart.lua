@@ -77,16 +77,19 @@ Chart = function(data)
 		elseif type(data.subject) == "CellularSpace" then
 			forEachElement(data.subject, function(idx, value, mtype)
 				local size = string.len(idx)
-				if mtype == "number" and not belong(idx, {"minCol","maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, size, size) ~= "_" then
+				if mtype == "number" and not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, size, size) ~= "_" then
 					data.select[#data.select + 1] = idx
 				end
 			end)
-		else
+		elseif type(data.subject) == "Society" then
 			forEachElement(data.subject, function(idx, value, mtype)
 				if mtype == "number" then
 					data.select[#data.select + 1] = idx
 				end
 			end)
+			data.select[#data.select + 1] = "#"
+		else
+			customErrorMsg("Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society.", 3)
 		end
 
 		verify(#data.select > 0, "The subject does not have at least one valid numeric attribute to be used.", 4)
@@ -99,13 +102,23 @@ Chart = function(data)
 
 		forEachElement(data.select, function(_, value)
 			if data.subject[value] == nil then
-				customErrorMsg("Selected element '"..value.."' does not belong to the subject.", 5)
+				if  value == "#" then
+					if data.subject.obsattrs == nil then
+						data.subject.obsattrs = {}
+					end
+
+					data.subject.obsattrs["quantity_"] = true
+					data.subject.quantity_ = #data.subject
+				else
+					customErrorMsg("Selected element '"..value.."' does not belong to the subject.", 5)
+				end
 			elseif type(data.subject[value]) == "function" then
 				if data.subject.obsattrs == nil then
 					data.subject.obsattrs = {}
 				end
 
 				data.subject.obsattrs[value] = true
+
 			elseif type(data.subject[value]) ~= "number" then
 				customErrorMsg("Selected element '"..value.."' should be a number or function, got "..type(data.subject[value])..".", 5)
 			end
@@ -130,7 +143,11 @@ Chart = function(data)
 	if data.label == nil then
 		data.label = {}
 		for i = 1, #data.select do
-			data.label[i] = data.select[i]
+			if data.select[i] == "#" then
+				data.label[i] = "quantity"
+			else
+				data.label[i] = data.select[i]
+			end
 		end
 	end
 
@@ -188,6 +205,7 @@ Chart = function(data)
 		if type(subject) == "CellularSpace" then
 			return subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
 		else
+			subject.observerId = 1
 			return subject.cObj_:createObserver(observerType, data.select, observerParams)
 		end
 	else

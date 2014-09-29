@@ -347,15 +347,6 @@ Society_ = {
 	-- @param modelTime The notification time.
 	-- @usage society:notify()
 	notify = function (self, modelTime)
-		if type(self.attrfunc_) == "table" then
-			forEachElement(self.attrfunc_, function(pos, value)
-				if value == "quantity_" then
-					self.quantity_ = #self
-				else
-					self[value.."_"] = self[value](self)
-				end
-			end)
-		end
 		if modelTime == nil then
 			modelTime = 1
 		elseif type(modelTime) ~= "number" then
@@ -367,6 +358,17 @@ Society_ = {
 		elseif modelTime < 0 then
 			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)   
 		end
+
+		if self.obsattrs then
+			forEachElement(self.obsattrs, function(idx)
+				if idx == "quantity_" then
+					self.quantity_ = #self
+				else
+					self[idx.."_"] = self[idx](self)
+				end
+			end)
+		end
+
 		forEachAgent(self, function(agent)
 			agent:notify(modelTime)
 		end)
