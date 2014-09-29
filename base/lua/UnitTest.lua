@@ -38,6 +38,25 @@ local function print_red(value)
     end
 end
 
+local print_error = function(self, msg)
+	local info = debug.getinfo(3)
+	local str = string.match(info.short_src, "[^/]*$")
+	str = str..":".. info.currentline ..": "..msg
+	if self.last_error == str then
+		self.count_last = self.count_last + 1
+	elseif self.count_last > 0 then
+		print_red("[The error above occurs more "..self.count_last.." times.]")
+		self.count_last = 0
+		self.last_error = str
+	else
+		self.last_error = str
+	end
+
+	if self.count_last == 0 then
+		print_red(str)
+	end
+end
+
 UnitTest_ = {
 	type_ = "UnitTest",
 	success = 0,
@@ -47,24 +66,6 @@ UnitTest_ = {
 	last_error = "",
 	count_last = 0,
 	delayed_time = 0,
-	print_error = function(self, msg)
-		local info = debug.getinfo(3)
-		local str = string.match(info.short_src, "[^/]*$")
-		str = str..":".. info.currentline ..": "..msg
-		if self.last_error == str then
-			self.count_last = self.count_last + 1
-		elseif self.count_last > 0 then
-			print_red("[The error above occurs more "..self.count_last.." times.]")
-			self.count_last = 0
-			self.last_error = str
-		else
-			self.last_error = str
-		end
-
-		if self.count_last == 0 then
-			print_red(str)
-		end
-	end,
 	--- Check if a given value is true. In any other case (number, string, false, or nil) it generates an error
 	-- @param value Any value.
 	assert = function(self, value)
@@ -72,10 +73,18 @@ UnitTest_ = {
 		if value then
 			self.success = self.success + 1
 		else
-			self:print_error("Test should be true got false.")
+			local msg
+			local mtype = type(value)
+			if belong(mtype, {"number", "boolean", "string"}) then
+				msg = value.." (a "..mtype..")."
+			else
+				msg = " a "..mtype.."."
+			end
+
+			print_error(self, "Test should be true got "..msg)
 			self.fail = self.fail + 1
 		end
-	end,	
+	end,
 	--- Check if a value belongs to a given type. If not, it generates an error.
 	-- @param value Any value.
 	-- @param mtype A string with the name of a type.
@@ -84,10 +93,10 @@ UnitTest_ = {
 		if type(value) == mtype then
 			self.success = self.success + 1
 		else
-			self:print_error("Test should be "..mtype.." got "..type(value)..".")
+			print_error(self, "Test should be "..mtype.." got "..type(value)..".")
 			self.fail = self.fail + 1
 		end
-	end,	
+	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
 	-- @param value Any value.
 	assert_nil = function(self, value)
@@ -95,7 +104,7 @@ UnitTest_ = {
 		if value == nil then
 			self.success = self.success + 1
 		else
-			print_red("Test should be nil, got "..type(value)..".")
+			print_error(self, "Test should be nil, got "..type(value)..".")
 			self.fail = self.fail + 1
 		end
 	end,
@@ -106,7 +115,7 @@ UnitTest_ = {
 		if value ~= nil then
 			self.success = self.success + 1
 		else
-			print_red("Test should not be nil.")
+			print_error(self, "Test should not be nil.")
 			self.fail = self.fail + 1
 		end
 	end,
@@ -125,22 +134,22 @@ UnitTest_ = {
 			if v1 <= v2 + tol and v1 >= v2 - tol then
 				self.success = self.success + 1
 			else 
-				self:print_error("Values should be equal, but got '"..v1.."' and '"..v2.."'.")
+				print_error(self, "Values should be equal, but got '"..v1.."' and '"..v2.."'.")
 				self.fail = self.fail + 1
 			end
 		elseif type(v1) == "string" and type(v2) == "string" then
 			if v1 == v2 then
 				self.success = self.success + 1
 			else 
-				self:print_error("Values should be equal, but got '"..v1.."' and '"..v2.."'.")
+				print_error(self, "Values should be equal, but got '"..v1.."' and '"..v2.."'.")
 				self.fail = self.fail + 1
 			end
 		elseif type(v1) ~= type(v2) then
 				self.fail = self.fail + 1
-			self:print_error("Values should be equal, but they have different types ("..type(v1).." and "..type(v2)..").")
+			print_error(self, "Values should be equal, but they have different types ("..type(v1).." and "..type(v2)..").")
 		elseif v1 ~= v2 then
 				self.fail = self.fail + 1
-			self:print_error("Values have the same type ("..type(v1)..") but different values.")
+			print_error(self, "Values have the same type ("..type(v1)..") but different values.")
 		else
 			self.success = self.success + 1
 		end
@@ -156,7 +165,7 @@ UnitTest_ = {
 	assert_error = function (self, my_function, error_message, max_error)
 		local _, err = pcall(my_function)
 		if not err then
-			self:print_error("Test expected an error ('"..error_message.."'), but no error was found.", 2)
+			print_red(self, "Test expected an error ('"..error_message.."'), but no error was found.", 2)
 			self.fail = self.fail + 1
 		else
 			if self.current_file then
@@ -174,7 +183,7 @@ UnitTest_ = {
 			-- carregado. descobrir este erro eh importante para verificar se o level foi usado corretamente.
 			if shortErrorMsg == nil then
 				self.wrong_file = self.wrong_file + 1
-				self:print_error("Error should contain line number (possibly wrong level), got: '"..err.."'.")
+				print_red(self, "Error should contain line number (possibly wrong level), got: '"..err.."'.")
 				return
 			end
 
@@ -193,12 +202,11 @@ UnitTest_ = {
 					error_msg = error_msg.."\nIt would accept an error of at most "..max_error.." character(s), but got "..distance.."."
 				end
 
-				self:print_error(error_msg)
+				print_error(self, error_msg)
 			end
 		end
 		self.test = self.test + 1
 	end,
-	delay = function()
 	--- Executes a delay in seconds during the test. Calling this function, the user can change the
 	-- delay when the UnitTest is built.
 	-- @param time A number with a time delay in seconds.
