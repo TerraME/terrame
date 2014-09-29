@@ -165,7 +165,7 @@ UnitTest_ = {
 	assert_error = function (self, my_function, error_message, max_error)
 		local _, err = pcall(my_function)
 		if not err then
-			print_red(self, "Test expected an error ('"..error_message.."'), but no error was found.", 2)
+			print_error(self, "Test expected an error ('"..error_message.."'), but no error was found.", 2)
 			self.fail = self.fail + 1
 		else
 			if self.current_file then
@@ -183,7 +183,7 @@ UnitTest_ = {
 			-- carregado. descobrir este erro eh importante para verificar se o level foi usado corretamente.
 			if shortErrorMsg == nil then
 				self.wrong_file = self.wrong_file + 1
-				print_red(self, "Error should contain line number (possibly wrong level), got: '"..err.."'.")
+				print_red("Error should contain line number (possibly wrong level), got: '"..err.."'.")
 				return
 			end
 
