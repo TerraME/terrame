@@ -491,6 +491,7 @@ executeTests = function(fileName)
 
 				collectgarbage("collect")
 				local ok_execution, err = pcall(function() tests[eachTest](ut) end)
+				killAllObservers()
 				ut.executed_functions = ut.executed_functions + 1
 
 				if not ok_execution then

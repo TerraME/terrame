@@ -48,10 +48,15 @@ Clock = function(data)
 	local observerParams = {"", ""}
 	local observerType = TME_OBSERVERS.SCHEDULER
 
+	local id
 	if data.subject.cObj_ then
-		return data.subject.cObj_:createObserver(observerType, observerAttrs, observerParams)
+		id = data.subject.cObj_:createObserver(observerType, observerAttrs, observerParams)
 	else
-		return data.subject:createObserver(observerType, observerAttrs, observerParams)
+		id = data.subject:createObserver(observerType, observerAttrs, observerParams)
 	end
+
+    table.insert(createdObservers, {subject = data.subject, id = id})
+	return id
+
 end
 

@@ -201,15 +201,21 @@ Chart = function(data)
 
 	table.insert(observerParams, label)
 
+	local id
+
 	if subject.cObj_ then
 		if type(subject) == "CellularSpace" then
-			return subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
+			id = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
 		else
-			subject.observerId = 1
-			return subject.cObj_:createObserver(observerType, data.select, observerParams)
+			if type(subject) == "Society" then
+				subject.observerId = 1 -- TODO: verify why this line is necessary
+			end
+			id = subject.cObj_:createObserver(observerType, data.select, observerParams)
 		end
 	else
-		return subject:createObserver(observerType, data.select, observerParams)
+		id = subject:createObserver(observerType, data.select, observerParams)
 	end	
+    table.insert(createdObservers, {subject = data.subject, id = id})
+	return id
 end
 
