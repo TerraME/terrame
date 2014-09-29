@@ -418,7 +418,8 @@ executeTests = function(fileName)
 		user = data.user,
 		password = data.password,
 		port = data.port,
-		host = data.host
+		host = data.host,
+		sleep = data.sleep
 	}
 
 	ut.package_functions = 0
@@ -430,7 +431,6 @@ executeTests = function(fileName)
 	ut.functions_without_assert = 0
 	ut.examples = 0
 	ut.examples_error = 0
-	ut.wrong_file = 0
 
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
@@ -543,7 +543,7 @@ executeTests = function(fileName)
 			forEachElement(testfunctions[data.file], function(idx, value)
 				ut.package_functions = ut.package_functions + 1
 				if value == 0 then
-					print_red("Function '"..idx.."' is not tested.")
+					print_red("Function '"..idx.."' was not tested.")
 					ut.functions_not_tested = ut.functions_not_tested + 1
 				end
 			end)
@@ -553,7 +553,7 @@ executeTests = function(fileName)
 				forEachElement(testfunctions[value], function(midx, mvalue)
 					ut.package_functions = ut.package_functions + 1
 					if mvalue == 0 then
-						print_red("Function '"..midx.."' is not tested.")
+						print_red("Function '"..midx.."' was not tested.")
 						ut.functions_not_tested = ut.functions_not_tested + 1
 					end
 				end)
@@ -564,7 +564,7 @@ executeTests = function(fileName)
 				forEachElement(value, function(midx, mvalue)
 					ut.package_functions = ut.package_functions + 1
 					if mvalue == 0 then
-						print_red("Function '"..midx.."' is not tested.")
+						print_red("Function '"..midx.."' was not tested.")
 						ut.functions_not_tested = ut.functions_not_tested + 1
 					end
 				end)

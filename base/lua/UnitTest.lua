@@ -43,6 +43,7 @@ UnitTest_ = {
 	success = 0,
 	fail = 0,
 	test = 0,
+	wrong_file = 0,
 	last_error = "",
 	count_last = 0,
 	print_error = function(self, msg)
@@ -129,8 +130,6 @@ UnitTest_ = {
 		end
 	end,
 	assert_error = function (self, my_function, error_message, max_error)
-		self.test = self.test + 1
-
 		local _, err = pcall(my_function)
 		if not err then
 			self:print_error("Test expected an error ('"..error_message.."'), but no error was found.", 2)
@@ -139,8 +138,9 @@ UnitTest_ = {
 			if self.current_file then
 				local err2 = string.match(err, self.current_file)
 				if err2 ~= self.current_file then
-					print_red("Error in wrong file. It should occur in '"..self.current_file.."', got '"..err.."'.")
+					print_red("Error in wrong file (possibly wrong level). It should occur in '"..self.current_file.."', got '"..err.."'.")
 					self.wrong_file = self.wrong_file + 1
+					return
 				end
 			end
 			local shortErrorMsg = string.match(err, ":[0-9]*:.*")
@@ -149,7 +149,7 @@ UnitTest_ = {
 			-- em um dos arquivos internos. na verdade o erro tem que ocorrer no arquivo que foi
 			-- carregado. descobrir este erro eh importante para verificar se o level foi usado corretamente.
 			if shortErrorMsg == nil then
-				self.fail = self.fail + 1
+				self.wrong_file = self.wrong_file + 1
 				self:print_error("Error should contain line number (possibly wrong level), got: '"..err.."'.")
 				return
 			end
@@ -172,6 +172,9 @@ UnitTest_ = {
 				self:print_error(error_msg)
 			end
 		end
+		self.test = self.test + 1
+	end,
+	delay = function()
 	end
 }
 
@@ -186,7 +189,13 @@ function UnitTest(data)
 		data.dbType = string.lower(data.dbType)
 	end
 
-	checkUnnecessaryParameters(data, {"dbType", "host", "port", "password", "user"}, 3)
+	checkUnnecessaryParameters(data, {"dbType", "host", "port", "password", "user", "sleep"}, 3)
+
+	if data.sleep then
+		data.delay = function()
+			delay(data.sleep)
+		end
+	end
 
 	return data
 end

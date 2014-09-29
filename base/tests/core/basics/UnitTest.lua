@@ -68,6 +68,10 @@ return{
 
 		unitTest:assert_equal(u.success, 1)
 	end,
+	delay = function(unitTest)
+		local u = UnitTest{sleep = 1}
+		unitTest:assert(true)
+	end,
 	print_error = function(unitTest)
 		unitTest:assert(true)
 	end,

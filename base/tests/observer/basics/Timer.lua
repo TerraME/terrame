@@ -34,6 +34,8 @@ return{
 			Event{time = 1, period = 1, priority = 4, action = function(event) timer:notify() end}
 		}
 
+		unitTest:delay()
+
 		Clock{subject = timer}
 		timer:execute(50)
 
@@ -48,6 +50,7 @@ return{
 		timer:execute(50)
 
 		unitTest:assert(true)
+		unitTest:delay()
 	end
 }
 
