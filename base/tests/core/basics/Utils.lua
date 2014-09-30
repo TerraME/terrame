@@ -49,21 +49,21 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'aaa' is unnecessary.")
 	end,
-	customErrorMsg = function(unitTest)
+	customError = function(unitTest)
 		local error_func = function()
-			customErrorMsg("test.", 2)
+			customError("test.", 2)
 		end
 		unitTest:assert_error(error_func, "Error: test.")
 	end,
-	customWarningMsg = function(unitTest)
+	customWarning = function(unitTest)
 		local error_func = function()
-			customWarningMsg("test.", 2)
+			customWarning("test.", 2)
 		end
 		unitTest:assert_error(error_func, "Error: test.")
 	end,
-	defaultValueWarningMsg = function(unitTest)
+	defaultValueWarning = function(unitTest)
 		local error_func = function()
-			defaultValueWarningMsg(2)
+			defaultValueWarning(2)
 		end
 		unitTest:assert_error(error_func, "Error: #1 should be a string.")
 	end,
@@ -74,33 +74,33 @@ return{
 
 		unitTest:assert(t2 - t1 >= 1)
 	end,
-	deprecatedFunctionWarningMsg = function(unitTest)
+	deprecatedFunctionWarning = function(unitTest)
 		local error_func = function()
-			deprecatedFunctionWarningMsg("abc", "def", 2)
+			deprecatedFunctionWarning("abc", "def", 2)
 		end
 		unitTest:assert_error(error_func, "Error: Function 'abc' is deprecated. Use 'def' instead.")
 	end,
-	incompatibleFileExtensionErrorMsg = function(unitTest)
+	incompatibleFileExtensionError = function(unitTest)
 		local error_func = function()
-			incompatibleFileExtensionErrorMsg("file", ".txt", 2)
+			incompatibleFileExtensionError("file", ".txt", 2)
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'file' does not support '.txt'.")
 	end,
-	incompatibleTypesErrorMsg = function(unitTest)
+	incompatibleTypeError = function(unitTest)
 		local error_func = function()
-			incompatibleTypesErrorMsg("cell", "Cell", "Agent", 2)
+			incompatibleTypeError("cell", "Cell", "Agent", 2)
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'cell' expected Cell, got Agent.")
 	end,
-	incompatibleValuesErrorMsg = function(unitTest)
+	incompatibleValueError = function(unitTest)
 		local error_func = function()
-			incompatibleValuesErrorMsg("position", "1, 2, or 3", "4", 2)
+			incompatibleValueError("position", "1, 2, or 3", "4", 2)
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'position' expected 1, 2, or 3, got '4'.")
 	end,
-	resourceNotFoundErrorMsg = function(unitTest)
+	resourceNotFoundError = function(unitTest)
 		local error_func = function()
-			resourceNotFoundErrorMsg("file", "/usr/local/file.txt", 2)
+			resourceNotFoundError("file", "/usr/local/file.txt", 2)
 		end
 		unitTest:assert_error(error_func, "Error: Resource '/usr/local/file.txt' not found for parameter 'file'.")
 	end,
@@ -109,27 +109,27 @@ return{
 		unitTest:assert_equal(levenshtein("abvaacc", "abcaacac"), 2)
 		unitTest:assert_equal(levenshtein("abvxwtaacc", "abcaacac"), 5)
 	end,
-	mandatoryArgumentErrorMsg = function(unitTest)
+	mandatoryArgumentError = function(unitTest)
 		local error_func = function()
-			mandatoryArgumentErrorMsg("neighborhood", 2)
+			mandatoryArgumentError("neighborhood", 2)
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'neighborhood' is mandatory.")
 	end,
-	namedParametersErrorMsg = function(unitTest)
+	namedParametersError = function(unitTest)
 		local error_func = function()
-			namedParametersErrorMsg("CellularSpace", 2)
+			namedParametersError("CellularSpace", 2)
 		end
 		unitTest:assert_error(error_func, "Error: Parameters for 'CellularSpace' must be named.")
 	end,
-	tableParameterErrorMsg = function(unitTest)
+	tableParameterError = function(unitTest)
 		local error_func = function()
-			tableParameterErrorMsg("CellularSpace", 2)
+			tableParameterError("CellularSpace", 2)
 		end
 		unitTest:assert_error(error_func, "Error: Parameter for 'CellularSpace' must be a table.")
 	end,
-	valueNotFoundErrorMsg = function(unitTest)
+	valueNotFoundError = function(unitTest)
 		local error_func = function()
-			valueNotFoundErrorMsg("1", "neighborhood", 2)
+			valueNotFoundError("1", "neighborhood", 2)
 		end
 		unitTest:assert_error(error_func, "Error: Value 'neighborhood' not found for parameter '1'.")
 	end,

@@ -205,7 +205,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
     if(! lua_istable(luaL, top) )
     {
         string errorMsg = string("Attributes table not found. Incorrect sintax.");
-		lua_getglobal(L, "customErrorMsg");
+		lua_getglobal(L, "customError");
         lua_pushstring(L,errorMsg.c_str());
 		lua_pushnumber(L,5);
 		lua_call(L,2,0);
@@ -254,7 +254,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
             {
                 
                 string err_out = string("Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,err_out.c_str());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);

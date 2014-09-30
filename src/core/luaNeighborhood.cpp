@@ -977,7 +977,7 @@ int luaNeighborhood::getParent( lua_State *L )
 
         if (! cellSpace)
         {
-            lua_getglobal(L, "customErrorMsg");
+            lua_getglobal(L, "customError");
             lua_pushstring(L,errorMsg.c_str());
             lua_pushnumber(L,5);
             lua_call(L,2,0);
@@ -989,7 +989,7 @@ int luaNeighborhood::getParent( lua_State *L )
 
             if (! obsMap)
             {
-                lua_getglobal(L, "customErrorMsg");
+                lua_getglobal(L, "customError");
                 lua_pushstring(L,errorMsg.c_str());
                 lua_pushnumber(L,5);
                 lua_call(L,2,0);
@@ -1003,7 +1003,7 @@ int luaNeighborhood::getParent( lua_State *L )
 
             if (! obsImage)
             {
-                lua_getglobal(L, "customErrorMsg");
+                lua_getglobal(L, "customError");
                 lua_pushstring(L,errorMsg.c_str());
                 lua_pushnumber(L,5);
                 lua_call(L,2,0);

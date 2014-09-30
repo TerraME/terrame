@@ -28,13 +28,13 @@ local optionalTableElement = function(table, attr, allowedType, level)
 	local mtype = type(value)
 
 	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypesErrorMsg(attr, allowedType, mtype, level + 1)
+		incompatibleTypeError(attr, allowedType, mtype, level + 1)
 	end
 end
 
 local compulsoryTableElement = function(table, attr, level)
 	if table[attr] == nil then
-		mandatoryArgumentErrorMsg(attr, level + 1)
+		mandatoryArgumentError(attr, level + 1)
 	end
 end
 

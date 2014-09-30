@@ -262,7 +262,7 @@ int luaSociety::createObserver( lua_State * luaL)
                 	if (! allAttribs.contains(obsAttribs.at(i)))
                 	{
 						string errorMsg = string("Attribute name ") + string(obsAttribs.at(i).toAscii().data()) + string(" not found.");
-						lua_getglobal(L, "customErrorMsg");
+						lua_getglobal(L, "customError");
 						lua_pushstring(L,errorMsg.c_str());
 						lua_pushnumber(L,5);
 						lua_call(L,2,0);
@@ -599,7 +599,7 @@ int luaSociety::createObserver( lua_State * luaL)
 
         if (! cellSpace)
 		{
-			lua_getglobal(L, "customErrorMsg");
+			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.toAscii().data());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);
@@ -612,7 +612,7 @@ int luaSociety::createObserver( lua_State * luaL)
 
             if (! obsMap)
 			{
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);
@@ -627,7 +627,7 @@ int luaSociety::createObserver( lua_State * luaL)
 
             if (! obsImage)
 			{
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);

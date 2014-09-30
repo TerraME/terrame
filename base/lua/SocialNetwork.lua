@@ -34,25 +34,25 @@ SocialNetwork_ = {
 	add = function(self, connection, weight)
 		if type(connection) ~= "Agent" then
 			if connection == nil then
-				mandatoryArgumentErrorMsg("#1", 3)
+				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypesErrorMsg("#1", "Agent", type(connection), 3)
+				incompatibleTypeError("#1", "Agent", type(connection), 3)
 			end
 		end
 
 		if weight == nil then
 			weight = 1
 		elseif type(weight) ~= "number"  then
-			incompatibleTypesErrorMsg("#2", "positive number", type(weight), 3)
+			incompatibleTypeError("#2", "positive number", type(weight), 3)
 		elseif weight < 0 then
-			incompatibleValuesErrorMsg("#2", "positive number", weight, 3)
+			incompatibleValueError("#2", "positive number", weight, 3)
 		end
 
 		local id = connection.id
 		if id == nil then
-			customErrorMsg("Agent should have an id in order to be added to a SocialNetwork.", 3)
+			customError("Agent should have an id in order to be added to a SocialNetwork.", 3)
 		elseif self.connections[id] ~= nil then
-			customWarningMsg("Agent '"..id.."' already belongs to the SocialNetwork.", 3)
+			customWarning("Agent '"..id.."' already belongs to the SocialNetwork.", 3)
 			return false
 		end
 		
@@ -74,18 +74,18 @@ SocialNetwork_ = {
 	getWeight = function(self, connection)
 		if type(connection) ~= "Agent" then
 			if connection == nil then
-				mandatoryArgumentErrorMsg("#1", 3)
+				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypesErrorMsg("#1", "Agent", type(connection), 3)
+				incompatibleTypeError("#1", "Agent", type(connection), 3)
 			end
 		end
 
 		local id = connection.id
 
 		if id == nil then
-			customErrorMsg("Agent does not belong to the SocialNetwork because it does not have an id.", 3)
+			customError("Agent does not belong to the SocialNetwork because it does not have an id.", 3)
 		elseif self.connections[id] == nil then
-			customErrorMsg("Agent '"..id.."' does not belong to the SocialNetwork.", 3)
+			customError("Agent '"..id.."' does not belong to the SocialNetwork.", 3)
 		end
 
 		return self.weights[id]
@@ -98,9 +98,9 @@ SocialNetwork_ = {
 	isConnection = function(self, connection)
 		if type(connection) ~= "Agent" then
 			if connection == nil then
-				mandatoryArgumentErrorMsg("#1", 3)
+				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypesErrorMsg("#1", "Agent", type(connection), 3)
+				incompatibleTypeError("#1", "Agent", type(connection), 3)
 			end
 		end
 		return self.connections[connection.id] ~= nil
@@ -118,15 +118,15 @@ SocialNetwork_ = {
 	remove = function(self, connection)
 		if type(connection) ~= "Agent" then
 			if connection == nil then
-				mandatoryArgumentErrorMsg("#1", 3)
+				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypesErrorMsg("#1", "Agent", type(connection), 3)
+				incompatibleTypeError("#1", "Agent", type(connection), 3)
 			end
 		end
 
 		local id = connection.id
 		if self.connections[id] == nil then
-			customWarningMsg("Trying to remove an Agent that does not belong to the SocialNetwork.", 3)
+			customWarning("Trying to remove an Agent that does not belong to the SocialNetwork.", 3)
 		else
 			self.connections[id] = nil
 			self.weights[id] = nil
@@ -138,7 +138,7 @@ SocialNetwork_ = {
 	-- @usage agent = sn:sample()
 	sample = function(self, randomObj)
 		if self:isEmpty() then
-			customErrorMsg("It is not possible to sample the SocialNetwork because it is empty.", 3)
+			customError("It is not possible to sample the SocialNetwork because it is empty.", 3)
 		end
 
 		local pos
@@ -147,7 +147,7 @@ SocialNetwork_ = {
 		elseif type(randomObj) == "Random" then
 			pos = randomObj:integer(1, self.count)
 		else
-			incompatibleTypesErrorMsg("#1", "Random or nil", type(randomObj), 3)
+			incompatibleTypeError("#1", "Random or nil", type(randomObj), 3)
 		end
 
 		local count = 1
@@ -168,32 +168,32 @@ SocialNetwork_ = {
 	setWeight = function(self, connection, weight)
 		if type(connection) ~= "Agent" then
 			if connection == nil then
-				mandatoryArgumentErrorMsg("#1", 3)
+				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypesErrorMsg("#1", "Agent", type(connection), 3)
+				incompatibleTypeError("#1", "Agent", type(connection), 3)
 			end
 		elseif type(weight) ~= "number" then
 			if weight == nil then
-				mandatoryArgumentErrorMsg("#2", 3)
+				mandatoryArgumentError("#2", 3)
 			else
-				incompatibleTypesErrorMsg("#2", "positive number", type(weight), 3)
+				incompatibleTypeError("#2", "positive number", type(weight), 3)
 			end
 		elseif weight < 0 then
-			incompatibleValuesErrorMsg("#2","positive number", weight, 3)
+			incompatibleValueError("#2","positive number", weight, 3)
 		end
 
 		local id = connection.id
 
 		if id == nil then
-			customErrorMsg("Agent does not belong to the SocialNetwork because it does not have an id.", 3)
+			customError("Agent does not belong to the SocialNetwork because it does not have an id.", 3)
 		elseif self.connections[id] == nil then
-			customErrorMsg("Agent '"..id.."' does not belong to the SocialNetwork.", 3)
+			customError("Agent '"..id.."' does not belong to the SocialNetwork.", 3)
 		end
 
 		self.weights[id] = weight
 	end,
 	size = function(self)
-		deprecatedFunctionWarningMsg("size", "operator #", 3)
+		deprecatedFunctionWarning("size", "operator #", 3)
 		return #self
 	end
 }
@@ -225,7 +225,7 @@ function SocialNetwork(data)
 		if data == nil then
 			data = {}
 		else
-			namedParametersErrorMsg("SocialNetwork", 3)
+			namedParametersError("SocialNetwork", 3)
 		end
 	end
 

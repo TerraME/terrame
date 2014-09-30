@@ -39,13 +39,13 @@ function Flow(data)
 	if data == nil then
 		data = {}
 	elseif type(data) ~= "table" then
-		tableParameterErrorMsg("Flow", 3)
+		tableParameterError("Flow", 3)
 	end
 
 	data.rule = cObj
 
 	if type(data[1]) ~= "function" then
-		customErrorMsg("Flow constructor expected a function as parameter.", 3)
+		customError("Flow constructor expected a function as parameter.", 3)
 	end
 
 	setmetatable(data, metaTableFlow_)

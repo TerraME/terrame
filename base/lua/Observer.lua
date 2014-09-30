@@ -95,14 +95,14 @@ createdObservers = {}
 -- TME_OBSERVERS.TEXTSCREEN
 local function observerTextScreen(subjType, subject, observerAttrs, datale)
 	if datale.observer ~= nil then
-		customErrorMsg("Cannot attach observers of type 'textscreen' to other observers. Only 'image' and 'map' observers can be attached.", 4)
+		customError("Cannot attach observers of type 'textscreen' to other observers. Only 'image' and 'map' observers can be attached.", 4)
 	end
 	local observerParams = {}
 
 	if subjType == TME_TYPES.AUTOMATON then
 		local locatedInCell = datale.location
 		if type(locatedInCell) ~= "Cell" then
-			customErrorMsg("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
+			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
 		else
 			table.insert(observerParams, locatedInCell)
 		end
@@ -122,7 +122,7 @@ end
 -- TME_OBSERVERS.LOGFILE
 local function observerLogFile(subjType, subject, observerAttrs, datale)
 	if datale.observer ~= nil then
-		customErrorMsg("Cannot attach observers of type 'logfile' to other observers. Only 'image' and 'map' observers can be attached.", 4)
+		customError("Cannot attach observers of type 'logfile' to other observers. Only 'image' and 'map' observers can be attached.", 4)
 	end
 
 	local outfile = datale.outfile or "result_.csv"
@@ -132,7 +132,7 @@ local function observerLogFile(subjType, subject, observerAttrs, datale)
 	if subjType == TME_TYPES.AUTOMATON then
 		local locatedInCell = datale.location
 		if type(locatedInCell) ~= "Cell" then
-			incompatibleTypesErrorMsg("location", "Cell", type(datale.location), 4)
+			incompatibleTypeError("location", "Cell", type(datale.location), 4)
 		else 
 			table.insert(observerParams, locatedInCell)
 		end
@@ -155,7 +155,7 @@ end
 -- TME_OBSERVERS.TABLE
 local function observerTable(subjType, subject, observerAttrs, datale)
 	if datale.observer ~= nil then
-		customErrorMsg("Cannot attach observers of type 'table' to other observers. Only 'image' and 'map' observers can be attached.", 4)
+		customError("Cannot attach observers of type 'table' to other observers. Only 'image' and 'map' observers can be attached.", 4)
 	end
 
 	local column1Label = datale.yLabel or "Attributes"
@@ -164,7 +164,7 @@ local function observerTable(subjType, subject, observerAttrs, datale)
 	if subjType == TME_TYPES.AUTOMATON then
 		local locatedInCell = datale.location
 		if type(locatedInCell) ~= "Cell" then
-			customErrorMsg("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
+			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
 		else
 			table.insert(observerParams, locatedInCell)
 		end
@@ -189,11 +189,11 @@ end
 -- TME_OBSERVERS.CHART
 local function observerChart(subjType, subject, observerAttrs, datale)
 	if datale.observer ~= nil then
-		customErrorMsg("Cannot attach observers of type 'chart' to other observers. Only 'image' and 'map' observers can be attached.", 4)
+		customError("Cannot attach observers of type 'chart' to other observers. Only 'image' and 'map' observers can be attached.", 4)
 	end
 
 	if not observerAttrs or type(observerAttrs) ~= "table" or #observerAttrs == 0 then
-		customErrorMsg("Chart observers must have at least one attribute.", 4)
+		customError("Chart observers must have at least one attribute.", 4)
 	end
 
 	if type(datale.curveLabels) ~= "table" then
@@ -209,7 +209,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 			end
 			str = str .."}"
 		else 
-			incompatibleTypesErrorMsg("curveLabels","table",type(datale.curveLabels), 4)
+			incompatibleTypeError("curveLabels","table",type(datale.curveLabels), 4)
 		end
 	end
 	
@@ -217,7 +217,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 		if datale.yLabel == nil then
 			datale.yLabel = ""
 		else
-			incompatibleTypesErrorMsg("yLabel","string",type(datale.yLabel), 4)
+			incompatibleTypeError("yLabel","string",type(datale.yLabel), 4)
 		end
 	end
 	
@@ -225,7 +225,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 		if datale.xLabel == nil then
 			datale.xLabel = "time"
 		else
-			incompatibleTypesErrorMsg("xLabel","string", type(datale.xLabel), 4)
+			incompatibleTypeError("xLabel","string", type(datale.xLabel), 4)
 		end
 	end
 	
@@ -233,7 +233,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 		if datale.title == nil then
 			datale.title = ""
 		else
-			incompatibleTypesErrorMsg("title","string", type(datale.title), 4)
+			incompatibleTypeError("title","string", type(datale.title), 4)
 		end
 	end
 	
@@ -241,7 +241,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 		if datale.xAxis == nil then
 			--datale.xAxis = "time" TRATADO NO NÍVEL C++
 		else
-			incompatibleTypesErrorMsg("xAxis", "string", type(datale.xAxis), 4)		
+			incompatibleTypeError("xAxis", "string", type(datale.xAxis), 4)		
 		end	
 	end
 	
@@ -282,7 +282,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 	if subjType == TME_TYPES.AUTOMATO then
 		local locatedInCell = datale.location
 		if type(locatedInCell) ~= "Cell" then
-			customErrorMsg("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
+			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
 		else
 			table.insert(observerParams, locatedInCell)
 		end
@@ -387,7 +387,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 	elseif subjType == TME_TYPES.NEIGHBORHOOD then
 		observerAttrs = {"weight"}
 	elseif observerAttrs == nil or #observerAttrs > 2 or #observerAttrs == 0 then
-		customErrorMsg("Map observers must have exactly one or two attributes.", 4)
+		customError("Map observers must have exactly one or two attributes.", 4)
 	end
 
 	local observerParams = {}
@@ -396,7 +396,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 		if datale.legends == nil then
 			datale.legends = {}
 		else
-			incompatibleTypesErrorMsg("legends","table",type(datale.legends), 4)	
+			incompatibleTypeError("legends","table",type(datale.legends), 4)	
 		end
 	end
 	
@@ -409,7 +409,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 			end
 		end
 		if not flagOk then
-			customErrorMsg("Parameter 'legends' expects a set of Legend objects.", 4)
+			customError("Parameter 'legends' expects a set of Legend objects.", 4)
 		end	
 	end
 	
@@ -471,7 +471,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 	   or subjType == TME_TYPES.NEIGHBORHOOD then
 
 		local csObserver = datale.observer
-		if not csObserver then customErrorMsg("Parameter 'observer' not found.", 3) end
+		if not csObserver then customError("Parameter 'observer' not found.", 3) end
 		local cs = csObserver.subject
 		table.insert(observerParams, cs)
 		table.insert(observerParams, csObserver.id)
@@ -483,9 +483,9 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 
 	if #tbDimensions ~= 0 then
 		if type(observerAttrs) ~= "table" then
-			incompatibleTypesErrorMsg("attributes","table",type(observerAttrs), 3)
+			incompatibleTypeError("attributes","table",type(observerAttrs), 3)
 		elseif #observerAttrs == 0 or #observerAttrs > 2 then
-			customErrorMsg("Map observers must have exactly one or two attributes.", 3)
+			customError("Map observers must have exactly one or two attributes.", 3)
 		end
 		-- cellularspace
 		-- RAIAN: Solucao provisoria para corrigir o problema de desesnhar inicio todo preto. 
@@ -502,7 +502,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 			local obsId = -1
 			forEachAgent(subject, function(ag)
 				if ag.cObj_ == nil then
-					customErrorMsg("It is simple agent and it can not be observable.", 3)
+					customError("It is simple agent and it can not be observable.", 3)
 				end
 				obsId = ag.cObj_:createObserver(TME_OBSERVERS.MAP, observerAttrs, observerParams)
 			end)
@@ -521,22 +521,22 @@ end
 -- OBSERVER NEIGHBORHOOD
 local function observerNeighborhood(subject, neighborhoods, datale)
 	if #neighborhoods > 2 or #neighborhoods == 0 then
-		customErrorMsg("Neighborhood Observers must have exactly one or two neighborhoods.", 3)
+		customError("Neighborhood Observers must have exactly one or two neighborhoods.", 3)
 	end
 
 	local observerParams = {}
 	local legends = datale.legends or {}
 
 	csObserver = datale.observer
-	if not csObserver then customErrorMsg("Parameter 'observer' was not found.", 3) end
+	if not csObserver then customError("Parameter 'observer' was not found.", 3) end
 
 	--@RAIAN: Alteracoes para remover parametro "cellspace"
 	if csObserver.type ~= "map" and csObserver.type ~= TME_OBSERVERS.MAP and csObserver.type ~= "image" and csObserver.type ~= TME_OBSERVERS.IMAGE then
-		customErrorMsg("Cannot attach observers of type '".. csObserver.type .."'. Only 'image' and 'map' observers can be attached.", 3)
+		customError("Cannot attach observers of type '".. csObserver.type .."'. Only 'image' and 'map' observers can be attached.", 3)
 	end
 
 	local cs = csObserver.subject
-	if not cs or type(cs) ~= "CellularSpace" then customErrorMsg("Basis observer is not related to a CellularSpace.", 3) end
+	if not cs or type(cs) ~= "CellularSpace" then customError("Basis observer is not related to a CellularSpace.", 3) end
 
 	table.insert(observerParams, cs)
 	table.insert(observerParams, csObserver.id)
@@ -561,12 +561,12 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 		observerAttrs = {"weight"}		
 	elseif type(observerAttrs) ~= "table" then
 		if observerAttrs == nil then
-			customErrorMsg("Image observers must have exactly one or two attributes.", 4)
+			customError("Image observers must have exactly one or two attributes.", 4)
 		else
-			incompatibleTypesErrorMsg("attributes","table",type(observerAttrs), 4)
+			incompatibleTypeError("attributes","table",type(observerAttrs), 4)
 		end
 	elseif #observerAttrs > 2 or #observerAttrs == 0 then
-		customErrorMsg("Image observers must have exactly one or two attributes.", 4)   
+		customError("Image observers must have exactly one or two attributes.", 4)   
 	end
 
 	local observerParams = {}
@@ -626,10 +626,10 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 		or subjType == TME_TYPES.NEIGHBORHOOD then
 
 		local csObserver = datale["observer"]
-		if (not csObserver) then customErrorMsg("Error: Parameter 'observer' not found.", 3) end
+		if (not csObserver) then customError("Error: Parameter 'observer' not found.", 3) end
 
 		local cs = csObserver.subject
-		if not cs then customErrorMsg("Parameter 'cellspace' not found.", 3) end
+		if not cs then customError("Parameter 'cellspace' not found.", 3) end
 
 		table.insert(observerParams, cs)
 		table.insert(observerParams, csObserver.id)
@@ -641,9 +641,9 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 
 	if #tbDimensions ~= 0 then
 		if type(observerAttrs) ~= "table" then
-			incompatibleTypesErrorMsg("attributes","table",type(observerAttrs), 3)
+			incompatibleTypeError("attributes","table",type(observerAttrs), 3)
 		elseif #observerAttrs == 0 or #observerAttrs > 2 then
-			customErrorMsg("Image observers must have exactly one or two attributes.", 3)
+			customError("Image observers must have exactly one or two attributes.", 3)
 		end
 
 		-- cellularspace
@@ -661,7 +661,7 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 			local obsId = -1
 			forEachAgent(subject, function(ag)
 				if ag.cObj_ == nil then
-					customErrorMsg("It is simple agent and it can not be observable.", 3)
+					customError("It is simple agent and it can not be observable.", 3)
 				end
 				obsId = ag.cObj_:createObserver(TME_OBSERVERS.IMAGE, observerAttrs, observerParams)
 			end)
@@ -682,18 +682,18 @@ local function observerUDPSender(subjType, subject, tbDimensions, observerAttrs,
 	local observerParams = {}
   
 	if datale.port and type(datale.port) ~="number" then
-		incompatibleTypesErrorMsg("port", "number", type(datale.port), 4)
+		incompatibleTypeError("port", "number", type(datale.port), 4)
 	elseif type(datale.port) =="number" then
 		local pt = datale.port
 		-- TODO completar lista de portas do sistema
 		if pt == 80 or pt == 8080 then
-			customErrorMsg("Observers UDP should not use system ports.", 4)
+			customError("Observers UDP should not use system ports.", 4)
 		end
 	end
 	local port = datale.port or 456456
 	port = "".. port
 	if datale.hosts and type(datale.hosts) ~= "table" then
-		incompatibleTypesErrorMsg("hosts","table",type(datale.hosts), 4)   
+		incompatibleTypeError("hosts","table",type(datale.hosts), 4)   
 	elseif datale.hosts then
 		if datale.hosts and #datale.hosts == 0 then
 			datale.hosts = nil
@@ -706,7 +706,7 @@ local function observerUDPSender(subjType, subject, tbDimensions, observerAttrs,
 				end		
 			end
 			if not flag then
-				customErrorMsg("Attribute 'hosts' must be a string table.", 4)
+				customError("Attribute 'hosts' must be a string table.", 4)
 			end	  
 		end
 	end
@@ -722,7 +722,7 @@ local function observerUDPSender(subjType, subject, tbDimensions, observerAttrs,
 			end
 		end
 		if not flag then
-			customErrorMsg("Attribute '".. attr .."' not found.", 4)
+			customError("Attribute '".. attr .."' not found.", 4)
 		end
 	end
 
@@ -787,7 +787,7 @@ local function observerTCPSender(subjType, subject, tbDimensions, observerAttrs,
 	if subjType == TME_TYPES.CELL then
 		return subject.cObj_:createObserver(TME_OBSERVERS.TCPSENDER, observerAttrs, observerParams)
 	else
-		customErrorMsg("Observer TCP not implemented for this subject!!!", 3);
+		customError("Observer TCP not implemented for this subject!!!", 3);
 	end
 	
 	-- if subject.cObj_ then
@@ -818,21 +818,21 @@ local function observerStateMachine(subjType, subject, observerAttrs, datale)
 		if datale.legends == nil then
 			datale.legends = {}
 		else
-			incompatibleTypesErrorMsg("legends","table",type(datale.legends), 4)	
+			incompatibleTypeError("legends","table",type(datale.legends), 4)	
 		end
 	end
 	
 	local legends = datale.legends
 
 	if #legends > 1 then
-		customErrorMsg("State machine observers can have only one legend.", 3)
+		customError("State machine observers can have only one legend.", 3)
 	end
 
 	local observerParams = {}
 	if subjType == TME_TYPES.AUTOMATON then
 		local locatedInCell = datale.location
 		if type(locatedInCell) ~= "Cell" then
-			customErrorMsg("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 3)
+			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 3)
 		else 
 			table.insert(observerParams,locatedInCell)
 		end
@@ -854,10 +854,10 @@ end
 -- Last parameter is used only for trajectories
 local function observerShapefile(subjType, subject, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
 	if #observerAttrs > 2 or #observerAttrs == 0 then
-		customErrorMsg("Map observers must have exactly one or two attributes.", 3)
+		customError("Map observers must have exactly one or two attributes.", 3)
 	end
 	if subjType ~= TME_TYPES.CELLSPACE then
-		customErrorMsg("The subject for Observer Shapefile should be a CellularSpace.", 3)
+		customError("The subject for Observer Shapefile should be a CellularSpace.", 3)
 	end
 
 	local observerParams = {}
@@ -928,7 +928,7 @@ Observer_ = {
 		if type(self.subject) == "Society" then
 			return self.subject:remove(function(ag) return true end)
 		else
-			customErrorMsg("This function is not applicable to this type.", 3)
+			customError("This function is not applicable to this type.", 3)
 		end
 	end,
 	getCurveLabels = function(self)
@@ -1065,29 +1065,29 @@ function Observer(data)
 
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterErrorMsg("Observer", 3)
+			tableParameterError("Observer", 3)
 		else
- 			namedParametersErrorMsg("Observer", 3)
+ 			namedParametersError("Observer", 3)
 		end
 	elseif getn(data) == 0 then
-		customErrorMsg("Observer needs more information to be created.", 3)
+		customError("Observer needs more information to be created.", 3)
 	end
 
 	local t = type(data.subject)
 	if t ~= "Agent" and t ~= "Automaton" and t ~= "Cell" and t ~= "CellularSpace" and t ~= "Environment"
 	and t ~= "Event" and t ~= "table" and t ~= "Neighborhood" and t ~= "Society" and t ~= "Timer" and t ~= "Trajectory" then
-		incompatibleTypesErrorMsg("subject","one of the following types [Agent, Automaton, Cell, CellularSpace, Environment, Event, Neighborhood, Society, Timer, Trajectory]",type(data.subject), 3)
+		incompatibleTypeError("subject","one of the following types [Agent, Automaton, Cell, CellularSpace, Environment, Event, Neighborhood, Society, Timer, Trajectory]",type(data.subject), 3)
 	else
 		if t == "Agent" or t == "Automaton" then
 			if data.type == "map" or data.type == "image" then
 				if type(data.observer) ~= "Observer" then
-					incompatibleTypesErrorMsg("observer","Observer",type(data.observer), 3)
+					incompatibleTypeError("observer","Observer",type(data.observer), 3)
 				else
 					-- verificação de tipos de observer acoplados
 					if data.observer.type ~= data.type then
-						customErrorMsg("Cannot attach observers of different types. Only 'image' and 'map' observers can be attached.", 3)
+						customError("Cannot attach observers of different types. Only 'image' and 'map' observers can be attached.", 3)
 					elseif data.type ~= "image" and data.type ~= "map" then
-						customErrorMsg("Cannot attach observers of type '".. type(data.observer.type) .."' to other observers. Only 'image' and 'map' observers can be attached.", 3)
+						customError("Cannot attach observers of type '".. type(data.observer.type) .."' to other observers. Only 'image' and 'map' observers can be attached.", 3)
 					end
 				end
 			end
@@ -1122,31 +1122,31 @@ function Observer(data)
 
 		if t == "Cell" or t == "Environment" then
 			if data.type ~= "chart" and data.type ~= "logfile" and data.type ~= "table" and  data.type ~= "textscreen" and  data.type ~= "udpsender" and data.type ~= "neighborhood" then
-				incompatibleValuesErrorMsg("type","one of the strings from the set ['chart','logfile','neighborhood','table','textscreen','udpsender']","'".. dt .."'", 3)
+				incompatibleValueError("type","one of the strings from the set ['chart','logfile','neighborhood','table','textscreen','udpsender']","'".. dt .."'", 3)
 			end
 		elseif t == "CellularSpace" then
 			if data.type ~= "chart" and data.type ~= "image" and data.type ~= "logfile" and  data.type ~= "map" and  data.type ~= "table" and data.type ~= "textscreen" and data.type~= "udpsender" and data.type ~= "shapefile" then
-				incompatibleValuesErrorMsg("type","one of the strings from the set ['chart','image','logfile','map','table','textscreen','udpsender','shapefile']","'".. dt .."'", 3)
+				incompatibleValueError("type","one of the strings from the set ['chart','image','logfile','map','table','textscreen','udpsender','shapefile']","'".. dt .."'", 3)
 			end
 		elseif t == "Society" or t == "Trajectory" then
 			if data.type ~= "chart" and data.type ~= "image" and data.type ~= "logfile" and  data.type ~= "map" and  data.type ~= "table" and data.type ~= "textscreen" and data.type~= "udpsender" then
-				incompatibleValuesErrorMsg("type","one of the strings from the set ['chart','image','logfile','map','table','textscreen','udpsender']","'".. dt .."'", 3)
+				incompatibleValueError("type","one of the strings from the set ['chart','image','logfile','map','table','textscreen','udpsender']","'".. dt .."'", 3)
 			end
 		elseif t == "Event" or t == "userdata" or t == "Pair" then
 			if data.type ~= "logfile" and data.type ~= "table" and data.type ~= "textscreen" and  data.type~= "udpsender" then
-				incompatibleValuesErrorMsg("type","one of the strings from the set ['logfile','table','textscreen','udpsender']","'".. dt .."'", 3)
+				incompatibleValueError("type","one of the strings from the set ['logfile','table','textscreen','udpsender']","'".. dt .."'", 3)
 			end
 		elseif t == "Neighborhood" then
 			if data.type ~= "neighborhood" and data.type ~= "table" and data.type~= "udpsender" then
-				incompatibleValuesErrorMsg("type","one of the strings from the set ['neighborhood','table','udpsender']","'".. dt .."'", 3)
+				incompatibleValueError("type","one of the strings from the set ['neighborhood','table','udpsender']","'".. dt .."'", 3)
 			end
 		elseif t == "Timer" then
 			if data.type ~= "logfile" and data.type ~= "scheduler" and data.type ~= "table" and  data.type ~= "textscreen" and  data.type~= "udpsender" then
-				incompatibleValuesErrorMsg("type","one of the strings from the set ['logfile','scheduler','table','textscreen','udpsender']","'".. dt .."'", 3)
+				incompatibleValueError("type","one of the strings from the set ['logfile','scheduler','table','textscreen','udpsender']","'".. dt .."'", 3)
 			end
 		elseif t == "Agent" or t == "Automaton" then
 			if data.type ~= "chart" and data.type ~= "image" and data.type ~= "logfile" and  data.type ~= "map" and  data.type ~= "statemachine" and  data.type ~= "table" and  data.type ~= "textscreen" and  data.type ~= "udpsender" then
-				incompatibleValuesErrorMsg("type","one of the strings from the set ['chart','image','logfile','map','statemachine','table','textscreen','udpsender']","'".. dt .."'", 3)
+				incompatibleValueError("type","one of the strings from the set ['chart','image','logfile','map','statemachine','table','textscreen','udpsender']","'".. dt .."'", 3)
 			end
 		end
 	end
@@ -1162,7 +1162,7 @@ function Observer(data)
 
 	subject = data.subject
 	if subject == nil then
-		customErrorMsg("Parameter 'subject' is compulsory.", 3)
+		customError("Parameter 'subject' is compulsory.", 3)
 	else
 		-- Checks the Lua subject type
 		if type(subject) == "table" and subject.cObj_ ~= nil then
@@ -1220,20 +1220,20 @@ function Observer(data)
 		end
 
 		if #data.attributes ~= 0 and not flagAttrsValid then
-			customErrorMsg("Incompatible values. Parameter 'attributes' expected a set of valid object fields.", 3)
+			customError("Incompatible values. Parameter 'attributes' expected a set of valid object fields.", 3)
 		elseif #data.attributes == 0 then
 			if data.type == "image" then
-				customErrorMsg("Image observers must have exactly one or two attributes.", 3)
+				customError("Image observers must have exactly one or two attributes.", 3)
 			elseif data.type == "map" then
-				customErrorMsg("Map observers must have exactly one or two attributes.", 3)
+				customError("Map observers must have exactly one or two attributes.", 3)
 			elseif data.type == "chart" then
-				customErrorMsg("Chart observers must have at least one attribute.", 3)
+				customError("Chart observers must have at least one attribute.", 3)
 			end
 
 			data.attributes = {}
 		end
 	elseif type(data.attributes) ~= "nil" then
-		incompatibleTypesErrorMsg("attributes","table",type(data.attributes), 3)
+		incompatibleTypeError("attributes","table",type(data.attributes), 3)
 	end
 	observerId = nil
 
@@ -1272,15 +1272,15 @@ function Observer(data)
 		end
 	elseif observerType == TME_OBSERVERS.IMAGE then
 		if data.legends == nil then
-			customWarningMsg("A default legend will be used.", 3)
+			customWarning("A default legend will be used.", 3)
 		elseif type(data.legends) ~= "table" then
-			incompatibleTypesErrorMsg("legends","table",type(data.legends), 3)
+			incompatibleTypeError("legends","table",type(data.legends), 3)
 		elseif type(data.legends[1]) ~= "Legend" then
 			isTableLeg = true
 			for _,legend in pairs(data.legends) do
 				if type(legend) ~= "Legend" then
 					isTableLeg = false
-					incompatibleTypesErrorMsg("legends","a set of legends",type(legend), 3)
+					incompatibleTypeError("legends","a set of legends",type(legend), 3)
 				end
 			end
 		end
@@ -1288,13 +1288,13 @@ function Observer(data)
 		if data.path == nil then
 			data.path = "."
 		elseif type(data.path) ~= "string" then
-			incompatibleTypesErrorMsg("path","string",type(data.path), 3)	  
+			incompatibleTypeError("path","string",type(data.path), 3)	  
 		end
 
 		if data.prefix == nil then 	
 			data.prefix = "result_"
 		elseif type(data.prefix) ~= "string" then
-			incompatibleTypesErrorMsg("prefix","string",type(data.prefix), 3)
+			incompatibleTypeError("prefix","string",type(data.prefix), 3)
 		end
 
 		local tbDimensions = {}
@@ -1328,7 +1328,7 @@ function Observer(data)
 		observerId = observerStateMachine(subjectType, cppSubject, data.attributes, data)
 	elseif observerType == TME_OBSERVERS.NEIGHBORHOOD then
 		--RAIAN: Substituindo o observer Neighborhood por Map
-		deprecatedFunctionWarningMsg("Neighborhood Observer", "Map or Image Observer with Neighborhood object as subject", 3)
+		deprecatedFunctionWarning("Neighborhood Observer", "Map or Image Observer with Neighborhood object as subject", 3)
 		observerId = observerNeighborhood(cppSubject, neighborhoods, data)
 	elseif observerType == TME_OBSERVERS.SHAPEFILE then
 		local tbDimensions = {}

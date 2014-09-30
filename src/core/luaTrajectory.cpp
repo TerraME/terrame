@@ -198,7 +198,7 @@ int luaTrajectory::createObserver( lua_State *L )
                 if (! allAttribs.contains(obsAttribs.at(i)))
                 {
 					string err_out = string("Attribute name '" ) + string (qPrintable(obsAttribs.at(i))) + string("' not found.");
-					lua_getglobal(L, "customErrorMsg");
+					lua_getglobal(L, "customError");
 					lua_pushstring(L,err_out.c_str());
 					lua_pushnumber(L,5);
 					lua_call(L,2,0);
@@ -538,7 +538,7 @@ int luaTrajectory::createObserver( lua_State *L )
 
         if (! cellSpace)
 		{
-			lua_getglobal(L, "customErrorMsg");
+			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.toAscii().data());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);
@@ -551,7 +551,7 @@ int luaTrajectory::createObserver( lua_State *L )
 
             if (! obsMap)
 			{
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);
@@ -566,7 +566,7 @@ int luaTrajectory::createObserver( lua_State *L )
 
             if (! obsImage)
 			{
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);

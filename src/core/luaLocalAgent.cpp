@@ -142,7 +142,7 @@ int luaLocalAgent::build( lua_State *){
     {
 		string errorMsg = string("You must add a state to the agent before use "
 								 "it as a jump condition targert...");
-		lua_getglobal(L, "customErrorMsg");
+		lua_getglobal(L, "customError");
 		lua_pushstring(L,errorMsg.c_str());
 		lua_pushnumber(L,5);
 		lua_call(L,2,0);
@@ -258,7 +258,7 @@ int luaLocalAgent::createObserver( lua_State *L )
         if(! lua_istable(luaL, top) )
         {
             string errorMsg = string("Attributes table not found. Incorrect sintax.");
-			lua_getglobal(L, "customErrorMsg");
+			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.c_str());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);
@@ -289,7 +289,7 @@ int luaLocalAgent::createObserver( lua_State *L )
                 if ( ! key.isNull() || ! key.isEmpty())
                 {
 					string err_out = string("Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
-					lua_getglobal(L, "customErrorMsg");
+					lua_getglobal(L, "customError");
 					lua_pushstring(L,err_out.c_str());
 					lua_pushnumber(L,4);
 					lua_call(L,2,0);
@@ -314,7 +314,7 @@ int luaLocalAgent::createObserver( lua_State *L )
         if(! lua_istable(luaL, top) )
         {
             string errorMsg = string("Parameter table not found. Incorrect sintax.");
-			lua_getglobal(L, "customErrorMsg");
+			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.c_str());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);
@@ -766,7 +766,7 @@ int luaLocalAgent::createObserver( lua_State *L )
 
         if (! cellSpace)
 		{
-			lua_getglobal(L, "customErrorMsg");
+			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.toAscii().data());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);
@@ -800,7 +800,7 @@ int luaLocalAgent::createObserver( lua_State *L )
 
             if (! obsMap)
 			{
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);
@@ -815,7 +815,7 @@ int luaLocalAgent::createObserver( lua_State *L )
 
             if (! obsImage)
 			{
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);

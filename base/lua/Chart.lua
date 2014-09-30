@@ -28,13 +28,13 @@ local optionalTableElement = function(table, attr, allowedType, level)
 	local mtype = type(value)
 
 	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypesErrorMsg(attr, allowedType, mtype, level + 1)
+		incompatibleTypeError(attr, allowedType, mtype, level + 1)
 	end
 end
 
 local compulsoryTableElement = function(table, attr, level)
 	if table[attr] == nil then
-		mandatoryArgumentErrorMsg(attr, level + 1)
+		mandatoryArgumentError(attr, level + 1)
 	end
 end
 
@@ -89,7 +89,7 @@ Chart = function(data)
 			end)
 			data.select[#data.select + 1] = "#"
 		else
-			customErrorMsg("Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society.", 3)
+			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society.", 3)
 		end
 
 		verify(#data.select > 0, "The subject does not have at least one valid numeric attribute to be used.", 4)
@@ -110,7 +110,7 @@ Chart = function(data)
 					data.subject.obsattrs["quantity_"] = true
 					data.subject.quantity_ = #data.subject
 				else
-					customErrorMsg("Selected element '"..value.."' does not belong to the subject.", 5)
+					customError("Selected element '"..value.."' does not belong to the subject.", 5)
 				end
 			elseif type(data.subject[value]) == "function" then
 				if data.subject.obsattrs == nil then
@@ -120,7 +120,7 @@ Chart = function(data)
 				data.subject.obsattrs[value] = true
 
 			elseif type(data.subject[value]) ~= "number" then
-				customErrorMsg("Selected element '"..value.."' should be a number or function, got "..type(data.subject[value])..".", 5)
+				customError("Selected element '"..value.."' should be a number or function, got "..type(data.subject[value])..".", 5)
 			end
 		end)
 
@@ -174,7 +174,7 @@ Chart = function(data)
 	if type(subject) == "Automaton" then
 		local locatedInCell = data.location
 		if type(locatedInCell) ~= "Cell" then
-			customErrorMsg("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
+			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
 		else
 			table.insert(observerParams, locatedInCell)
 		end

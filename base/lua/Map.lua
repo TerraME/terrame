@@ -110,13 +110,13 @@ local optionalTableElement = function(table, attr, allowedType, level)
 	local mtype = type(value)
 
 	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypesErrorMsg(attr, allowedType, mtype, level + 1)
+		incompatibleTypeError(attr, allowedType, mtype, level + 1)
 	end
 end
 
 local compulsoryTableElement = function(table, attr, level)
 	if table[attr] == nil then
-		mandatoryArgumentErrorMsg(attr, level + 1)
+		mandatoryArgumentError(attr, level + 1)
 	end
 end
 
@@ -137,7 +137,7 @@ Map = function(data)
 		elseif data.colors == nil and data.select == nil then
 			data.grouping = "background"
 		else
-			customErrorMsg("It was not possible to infer parameter grouping.", 3)
+			customError("It was not possible to infer parameter grouping.", 3)
 		end
 	end
 
@@ -221,12 +221,12 @@ Map = function(data)
 				data.colors[i] = colors[colorName]
 	
 				if data.colors[i] == nil then
-					customErrorMsg("Color '" .. colorName .. "' not found. Check the name or use a table with an RGB description.", 3)
+					customError("Color '" .. colorName .. "' not found. Check the name or use a table with an RGB description.", 3)
 				end
 			elseif type(data.colors[i]) ~= "table" then
-				customErrorMsg("Invalid description for color in position "..i..". It should be a table or string, got "..type(data.colors[i])..".", 3)
+				customError("Invalid description for color in position "..i..". It should be a table or string, got "..type(data.colors[i])..".", 3)
 			elseif #data.colors[i] ~= 3 then
-				customErrorMsg("Invalid description for color in position "..i..". It should have 3 values, got "..#data.colors[i]..".", 3)
+				customError("Invalid description for color in position "..i..". It should have 3 values, got "..#data.colors[i]..".", 3)
 			end
 		end
 	end

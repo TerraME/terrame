@@ -117,7 +117,7 @@ require = function(package, recursive, asnamespace)
 		if package == nil then
 			mandatoryArgumentErrorMsg("#1", 3)
 		else
-			incompatibleTypesErrorMsg("#1", "string", type(package), 3)
+			incompatibleTypeError("#1", "string", type(package), 3)
 		end
 	end
 
@@ -125,7 +125,7 @@ require = function(package, recursive, asnamespace)
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
 	if os.rename(package_path, package_path) == nil then
-		customErrorMsg("Package "..package.." not found.", 3)
+		customError("Package "..package.." not found.", 3)
 	end
 
 	local load_file = package_path..s.."load.lua"

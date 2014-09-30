@@ -176,27 +176,27 @@ UnitTest_ = {
 					return
 				end
 			end
-			local shortErrorMsg = string.match(err, ":[0-9]*:.*")
+			local shortError = string.match(err, ":[0-9]*:.*")
 
 			-- TODO: verificar se tem como pegar o nome do arquivo e verificar se o erro nao ocorre
 			-- em um dos arquivos internos. na verdade o erro tem que ocorrer no arquivo que foi
 			-- carregado. descobrir este erro eh importante para verificar se o level foi usado corretamente.
-			if shortErrorMsg == nil then
+			if shortError == nil then
 				self.wrong_file = self.wrong_file + 1
 				print_red("Error should contain line number (possibly wrong level), got: '"..err.."'.")
 				return
 			end
 
-			shortErrorMsg = string.gsub(shortErrorMsg,":[0-9]*: ", "")
+			shortError = string.gsub(shortError,":[0-9]*: ", "")
 
-			local distance = levenshtein(error_message, shortErrorMsg)
+			local distance = levenshtein(error_message, shortError)
 
 			if (distance == 0) or (max_error and distance <= max_error) then
 				self.success = self.success + 1
 			else
 				self.fail = self.fail + 1
 
-				local error_msg = "Test expected:\n  '"..error_message.."'\n  got:\n  '"..shortErrorMsg.."'"
+				local error_msg = "Test expected:\n  '"..error_message.."'\n  got:\n  '"..shortError.."'"
 
 				if max_error then
 					error_msg = error_msg.."\nIt would accept an error of at most "..max_error.." character(s), but got "..distance.."."

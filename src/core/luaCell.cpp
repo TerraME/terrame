@@ -346,7 +346,7 @@ int luaCell::createObserver( lua_State * )
         if(! lua_istable(luaL, top) )
         {
             string err_out = string("Attribute table not found. Incorrect sintax.");
-            lua_getglobal(L, "customErrorMsg");
+            lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
             lua_pushnumber(L,3);
             lua_call(L,2,0);
@@ -374,7 +374,7 @@ int luaCell::createObserver( lua_State * )
                 if ( ! key.isNull() || ! key.isEmpty())
                 {
                     string err_out = string("Attribute '"+ key.toStdString() +"' not found.");
-                    lua_getglobal(L, "customErrorMsg");
+                    lua_getglobal(L, "customError");
                     lua_pushstring(L,err_out.c_str());
                     lua_pushnumber(L,3);
                     lua_call(L,2,0);

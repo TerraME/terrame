@@ -196,7 +196,7 @@ int luaTimer::createObserver( lua_State *luaL)
     if(! lua_istable(luaL, top) )
     {
         string err_out = string("Attribute table not found. Incorrect sintax.");
-        lua_getglobal(L, "customErrorMsg");
+        lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,4);
         lua_call(L,2,0);
@@ -231,7 +231,7 @@ int luaTimer::createObserver( lua_State *luaL)
             if ( ! key.isNull() || ! key.isEmpty())
             {
                 string err_out = string("Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,err_out.c_str());
 				lua_pushnumber(L,4);
 				lua_call(L,2,0);
@@ -271,7 +271,7 @@ int luaTimer::createObserver( lua_State *luaL)
     if(! lua_istable(luaL, top) )
     {
         string err_out = string("Attribute table not found. Incorrect sintax.");
-        lua_getglobal(L, "customErrorMsg");
+        lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,5);
         lua_call(L,2,0);

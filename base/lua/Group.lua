@@ -31,7 +31,7 @@ Group_ = {
 	-- @usage group:add(agent)
 	add = function(self, agent)
 		if type(agent) ~= "Agent" then
-			incompatibleTypesErrorMsg("#1","Agent", type(agent), 3)
+			incompatibleTypeError("#1","Agent", type(agent), 3)
 		else
 			table.insert(self.agents, agent)
 		end
@@ -59,13 +59,13 @@ Group_ = {
 		if type(f) == "function" then
 			self.select = f
 		elseif f ~= nil then
-			incompatibleTypesErrorMsg("#1", "function or nil", type(f), 3)
+			incompatibleTypeError("#1", "function or nil", type(f), 3)
 		end
 
 		self.agents = {}
 
 		if self.parent == nil then
-			customErrorMsg("It is not possible to filter a Group without a parent.", 3)
+			customError("It is not possible to filter a Group without a parent.", 3)
 		end
 
 		if type(self.select) == "function" then
@@ -87,7 +87,7 @@ Group_ = {
 		if randomObj == nil then 
 			randomObj = TME_GLOBAL_RANDOM      
 		elseif type(randomObj) ~= "Random" then
-			incompatibleTypesErrorMsg("#1", "Random or nil", type(randomObj), 3)
+			incompatibleTypeError("#1", "Random or nil", type(randomObj), 3)
 		end
 
 		local numagents = #self
@@ -116,7 +116,7 @@ Group_ = {
 		if type(greaterThan) == "function" then
 			self.greater = greaterThan
 		elseif greaterThan ~= nil then
-			incompatibleTypesErrorMsg("#1", "function or nil", type(greaterThan), 3)
+			incompatibleTypeError("#1", "function or nil", type(greaterThan), 3)
 		end
 
 		if type(self.greater) == "function" then
@@ -169,24 +169,24 @@ metaTableGroup_ = {
 Group = function(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterErrorMsg("Group", 3)
+			tableParameterError("Group", 3)
 		else
- 			namedParametersErrorMsg("Group", 3)
+ 			namedParametersError("Group", 3)
  		end
 	end
 
 	checkUnnecessaryParameters(data, {"target", "build", "select", "greater"}, 3)
 
 	if type(data.target) ~= "Society" and type(data.target) ~= "Group" and data.target ~= nil then
-		incompatibleTypesErrorMsg("target", "Society, Group, or nil", type(data.target), 3)
+		incompatibleTypeError("target", "Society, Group, or nil", type(data.target), 3)
 	end
 
 	if data.build == nil then
 		data.build = true
 	elseif type(data.build) ~= "boolean" then
-		incompatibleTypesErrorMsg("build", "boolean", type(data.build), 3)   
+		incompatibleTypeError("build", "boolean", type(data.build), 3)   
 	elseif data.build == true then
-		defaultValueWarningMsg("build", "true", 3)
+		defaultValueWarning("build", "true", 3)
 	end	
 
 	data.parent = data.target
@@ -202,11 +202,11 @@ Group = function(data)
 	data.target = nil
 
 	if data.select ~= nil and type(data.select) ~= "function" then
-		incompatibleTypesErrorMsg("select", "function or nil", type(data.select), 3)
+		incompatibleTypeError("select", "function or nil", type(data.select), 3)
 	end
 
 	if data.greater ~= nil and type(data.greater) ~= "function" then
-		incompatibleTypesErrorMsg("greater", "function or nil", type(data.greater), 3)
+		incompatibleTypeError("greater", "function or nil", type(data.greater), 3)
 	end
 
 	data.agents = {}
