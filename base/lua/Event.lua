@@ -77,7 +77,7 @@ function Event(data)
 	if data.time == nil then
 		data.time = 1
 	elseif type(data.time) ~= "number" then
-		incompatibleTypeError("time", "positive number", type(data.time), 3)
+		incompatibleTypeError("time", "positive number", data.time, 3)
 	--TODO: se adicionar estas linhas abaixo o Event aborta o TerraME
 	--	elseif data.time == 1 then
 	--		defaultValueWarning("time", "1", 3)
@@ -86,7 +86,7 @@ function Event(data)
 	if data.period == nil then
 		data.period = 1
 	elseif type(data.period) ~= "number" then
-		incompatibleTypeError("period", "positive number (except zero)", type(data.period), 3)
+		incompatibleTypeError("period", "positive number (except zero)", data.period, 3)
 	elseif data.period <= 0 then
 		incompatibleValueError("period","positive number (except zero)", data.period, 3)
 	--TODO: se adicionar estas linhas abaixo o Event aborta o TerraME
@@ -99,7 +99,7 @@ function Event(data)
 	if data.priority == nil then
 		data.priority = 0
 	elseif type(data.priority) ~= "number" then
-		incompatibleTypeError("priority", "positive number (except zero)", type(data.priority), 3)
+		incompatibleTypeError("priority", "positive number (except zero)", data.priority, 3)
 	--TODO: se adicionar estas linhas abaixo o Event aborta o TerraME
 	--	elseif data.priority == 0 then
 	--		defaultValueWarning("priority", "0", 3)
@@ -143,7 +143,7 @@ function Event(data)
 			end
 			return Pair{cObj, Action{func}}
 		else
-			incompatibleTypeError("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", type(data.action), 3)
+			incompatibleTypeError("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", data.action, 3)
 		end
 	else
 		return cObj

@@ -132,7 +132,7 @@ local function observerLogFile(subjType, subject, observerAttrs, datale)
 	if subjType == TME_TYPES.AUTOMATON then
 		local locatedInCell = datale.location
 		if type(locatedInCell) ~= "Cell" then
-			incompatibleTypeError("location", "Cell", type(datale.location), 4)
+			incompatibleTypeError("location", "Cell", datale.location, 4)
 		else 
 			table.insert(observerParams, locatedInCell)
 		end
@@ -209,7 +209,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 			end
 			str = str .."}"
 		else 
-			incompatibleTypeError("curveLabels","table",type(datale.curveLabels), 4)
+			incompatibleTypeError("curveLabels","table", datale.curveLabels, 4)
 		end
 	end
 	
@@ -217,7 +217,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 		if datale.yLabel == nil then
 			datale.yLabel = ""
 		else
-			incompatibleTypeError("yLabel","string",type(datale.yLabel), 4)
+			incompatibleTypeError("yLabel","string", datale.yLabel, 4)
 		end
 	end
 	
@@ -225,7 +225,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 		if datale.xLabel == nil then
 			datale.xLabel = "time"
 		else
-			incompatibleTypeError("xLabel","string", type(datale.xLabel), 4)
+			incompatibleTypeError("xLabel","string", datale.xLabel, 4)
 		end
 	end
 	
@@ -233,7 +233,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 		if datale.title == nil then
 			datale.title = ""
 		else
-			incompatibleTypeError("title","string", type(datale.title), 4)
+			incompatibleTypeError("title","string", datale.title, 4)
 		end
 	end
 	
@@ -241,7 +241,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 		if datale.xAxis == nil then
 			--datale.xAxis = "time" TRATADO NO NÍVEL C++
 		else
-			incompatibleTypeError("xAxis", "string", type(datale.xAxis), 4)		
+			incompatibleTypeError("xAxis", "string", datale.xAxis, 4)		
 		end	
 	end
 	
@@ -396,7 +396,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 		if datale.legends == nil then
 			datale.legends = {}
 		else
-			incompatibleTypeError("legends","table",type(datale.legends), 4)	
+			incompatibleTypeError("legends","table", datale.legends, 4)	
 		end
 	end
 	
@@ -483,7 +483,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 
 	if #tbDimensions ~= 0 then
 		if type(observerAttrs) ~= "table" then
-			incompatibleTypeError("attributes","table",type(observerAttrs), 3)
+			incompatibleTypeError("attributes","table", observerAttrs, 3)
 		elseif #observerAttrs == 0 or #observerAttrs > 2 then
 			customError("Map observers must have exactly one or two attributes.", 3)
 		end
@@ -563,7 +563,7 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 		if observerAttrs == nil then
 			customError("Image observers must have exactly one or two attributes.", 4)
 		else
-			incompatibleTypeError("attributes","table",type(observerAttrs), 4)
+			incompatibleTypeError("attributes","table", observerAttrs, 4)
 		end
 	elseif #observerAttrs > 2 or #observerAttrs == 0 then
 		customError("Image observers must have exactly one or two attributes.", 4)   
@@ -641,7 +641,7 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 
 	if #tbDimensions ~= 0 then
 		if type(observerAttrs) ~= "table" then
-			incompatibleTypeError("attributes","table",type(observerAttrs), 3)
+			incompatibleTypeError("attributes","table", observerAttrs, 3)
 		elseif #observerAttrs == 0 or #observerAttrs > 2 then
 			customError("Image observers must have exactly one or two attributes.", 3)
 		end
@@ -682,7 +682,7 @@ local function observerUDPSender(subjType, subject, tbDimensions, observerAttrs,
 	local observerParams = {}
   
 	if datale.port and type(datale.port) ~="number" then
-		incompatibleTypeError("port", "number", type(datale.port), 4)
+		incompatibleTypeError("port", "number", datale.port, 4)
 	elseif type(datale.port) =="number" then
 		local pt = datale.port
 		-- TODO completar lista de portas do sistema
@@ -693,7 +693,7 @@ local function observerUDPSender(subjType, subject, tbDimensions, observerAttrs,
 	local port = datale.port or 456456
 	port = "".. port
 	if datale.hosts and type(datale.hosts) ~= "table" then
-		incompatibleTypeError("hosts","table",type(datale.hosts), 4)   
+		incompatibleTypeError("hosts","table", datale.hosts, 4)   
 	elseif datale.hosts then
 		if datale.hosts and #datale.hosts == 0 then
 			datale.hosts = nil
@@ -818,7 +818,7 @@ local function observerStateMachine(subjType, subject, observerAttrs, datale)
 		if datale.legends == nil then
 			datale.legends = {}
 		else
-			incompatibleTypeError("legends","table",type(datale.legends), 4)	
+			incompatibleTypeError("legends","table", datale.legends, 4)	
 		end
 	end
 	
@@ -1076,12 +1076,12 @@ function Observer(data)
 	local t = type(data.subject)
 	if t ~= "Agent" and t ~= "Automaton" and t ~= "Cell" and t ~= "CellularSpace" and t ~= "Environment"
 	and t ~= "Event" and t ~= "table" and t ~= "Neighborhood" and t ~= "Society" and t ~= "Timer" and t ~= "Trajectory" then
-		incompatibleTypeError("subject","one of the following types [Agent, Automaton, Cell, CellularSpace, Environment, Event, Neighborhood, Society, Timer, Trajectory]",type(data.subject), 3)
+		incompatibleTypeError("subject","one of the following types [Agent, Automaton, Cell, CellularSpace, Environment, Event, Neighborhood, Society, Timer, Trajectory]", data.subject, 3)
 	else
 		if t == "Agent" or t == "Automaton" then
 			if data.type == "map" or data.type == "image" then
 				if type(data.observer) ~= "Observer" then
-					incompatibleTypeError("observer","Observer",type(data.observer), 3)
+					incompatibleTypeError("observer","Observer", data.observer, 3)
 				else
 					-- verificação de tipos de observer acoplados
 					if data.observer.type ~= data.type then
@@ -1233,7 +1233,7 @@ function Observer(data)
 			data.attributes = {}
 		end
 	elseif type(data.attributes) ~= "nil" then
-		incompatibleTypeError("attributes","table",type(data.attributes), 3)
+		incompatibleTypeError("attributes","table", data.attributes, 3)
 	end
 	observerId = nil
 
@@ -1274,13 +1274,13 @@ function Observer(data)
 		if data.legends == nil then
 			customWarning("A default legend will be used.", 3)
 		elseif type(data.legends) ~= "table" then
-			incompatibleTypeError("legends","table",type(data.legends), 3)
+			incompatibleTypeError("legends","table", data.legends, 3)
 		elseif type(data.legends[1]) ~= "Legend" then
 			isTableLeg = true
 			for _,legend in pairs(data.legends) do
 				if type(legend) ~= "Legend" then
 					isTableLeg = false
-					incompatibleTypeError("legends","a set of legends",type(legend), 3)
+					incompatibleTypeError("legends","a set of legends", legend, 3)
 				end
 			end
 		end
@@ -1288,13 +1288,13 @@ function Observer(data)
 		if data.path == nil then
 			data.path = "."
 		elseif type(data.path) ~= "string" then
-			incompatibleTypeError("path","string",type(data.path), 3)	  
+			incompatibleTypeError("path","string", data.path, 3)	  
 		end
 
 		if data.prefix == nil then 	
 			data.prefix = "result_"
 		elseif type(data.prefix) ~= "string" then
-			incompatibleTypeError("prefix","string",type(data.prefix), 3)
+			incompatibleTypeError("prefix","string", data.prefix, 3)
 		end
 
 		local tbDimensions = {}

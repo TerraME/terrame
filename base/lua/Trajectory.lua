@@ -32,7 +32,7 @@ Trajectory_ = {
 	-- @usage traj:add(cell)
 	add = function(self, cell)
 		if type(cell) ~="Cell" then
-			incompatibleTypeError("#2", "Cell", type(cell), 3)
+			incompatibleTypeError("#2", "Cell", cell, 3)
 		end
 
 		table.insert(self.cells, cell)
@@ -68,7 +68,7 @@ Trajectory_ = {
 		if type(f) == "function" then
 			self.select = f
 		elseif f ~= nil then
-			incompatibleTypeError("#1", "function or nil", type(f), 3)
+			incompatibleTypeError("#1", "function or nil", f, 3)
 		end
 
 		self.cells = {}
@@ -103,7 +103,7 @@ Trajectory_ = {
 		if randomObj == nil then 
 			randomObj = TME_GLOBAL_RANDOM      
 		elseif type(randomObj) ~= "Random" then
-			incompatibleTypeError("#1", "Random or nil", type(randomObj), 3)
+			incompatibleTypeError("#1", "Random or nil", randomObj, 3)
 		end
 
 		local numcells = #self
@@ -135,7 +135,7 @@ Trajectory_ = {
 		if type(greaterThan) == "function" then
 			self.greater = greaterThan
 		elseif greaterThan ~= nil then
-			incompatibleTypeError("#1", "function or nil", type(greaterThan), 3)
+			incompatibleTypeError("#1", "function or nil", greaterThan, 3)
 		end
 
 		if type(self.greater) == "function" then
@@ -218,13 +218,13 @@ function Trajectory(data)
 	end
 
 	if type(data.target) ~= "CellularSpace" and type(data.target) ~= "Trajectory" then
-		incompatibleTypeError("target", "CellularSpace or Trajectory", type(data.target), 3)
+		incompatibleTypeError("target", "CellularSpace or Trajectory", data.target, 3)
 	end
 
 	if data.build == nil then
 		data.build = true
 	elseif type(data.build) ~= "boolean" then
-		incompatibleTypeError("build", "boolean", type(data.build), 3)
+		incompatibleTypeError("build", "boolean", data.build, 3)
 	elseif data.build == true then
 		defaultValueWarning("build", "true", 3)
 	end
@@ -242,11 +242,11 @@ function Trajectory(data)
 	data.target = nil
 
 	if data.select ~= nil and type(data.select) ~= "function" then
-		incompatibleTypeError("select", "function or nil", type(data.select), 3)
+		incompatibleTypeError("select", "function or nil", data.select, 3)
 	end
 
 	if data.greater ~= nil and type(data.greater) ~= "function" then
-		incompatibleTypeError("greater", "function or nil", type(data.greater), 3)
+		incompatibleTypeError("greater", "function or nil", data.greater, 3)
 	end
 
 	local cObj = TeTrajectory()

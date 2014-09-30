@@ -42,7 +42,7 @@ Agent_ = {
 		if type(object) == "userdata" or type(object) == "Trajectory" then
 			self.cObj_:add(object)
 		else
-			incompatibleTypeError("#1", "State or Trajectory", type(object), 3)
+			incompatibleTypeError("#1", "State or Trajectory", object, 3)
 		end
 	end,
 	--- Add a SocialNetwork to the Agent. This function replaces previous SocialNetwork with the
@@ -55,13 +55,13 @@ Agent_ = {
 	addSocialNetwork = function(self, set, id)
 		-- TODO: testar se o parametro set pode ser uma function!
 		if type(set) ~= "SocialNetwork" and type(set) ~= "function" then
-			incompatibleTypeError("#1", "SocialNetwork", type(set), 3)
+			incompatibleTypeError("#1", "SocialNetwork", set, 3)
 		end
 
 		if id == nil then
 			id = "1"
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#2", "string", type(id), 3)
+			incompatibleTypeError("#2", "string", id, 3)
 		end
 		self.socialnetworks[id] = set
 	end,
@@ -122,13 +122,13 @@ Agent_ = {
 	-- @see Environment:createPlacement
 	enter = function(self, cell, placement)
 		if type(cell)~="Cell" then
-			incompatibleTypeError("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		if placement == nil then
 			placement = "placement"
 		elseif type(placement) ~= "string" then
-			incompatibleTypeError("#2", "string", type(placement), 3) 
+			incompatibleTypeError("#2", "string", placement, 3) 
 		end
 
 		if self[placement] then 
@@ -163,7 +163,7 @@ Agent_ = {
 		if type(event) == "Event" then
 			self.cObj_:execute(event)
 		else
-			incompatibleTypeError("#1", "Event", type(event), 3)
+			incompatibleTypeError("#1", "Event", event, 3)
 		end
 	end,
 	--- Return the Cell where the Agent is located according to its placement. It assumes
@@ -175,7 +175,7 @@ Agent_ = {
 			if type(placement) == "nil" then
 				placement = "placement"
 			else
-				incompatibleTypeError("#1", "string", type(placement), 3)
+				incompatibleTypeError("#1", "string", placement, 3)
 			end
 		end
 		if type(self[placement]) ~= "Trajectory" then
@@ -191,7 +191,7 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#1", "string", type(placement), 3)
+				incompatibleTypeError("#1", "string", placement, 3)
 			end
 		end
 
@@ -222,7 +222,7 @@ Agent_ = {
 		if id == nil then
 			id = "1"
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#1", "string", type(id), 3)
+			incompatibleTypeError("#1", "string", id, 3)
 		end
 
 		local s = self.socialnetworks[id] 
@@ -274,7 +274,7 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#2", "string", type(placement), 3)
+				incompatibleTypeError("#2", "string", placement, 3)
 			end
 		end
 
@@ -282,7 +282,7 @@ Agent_ = {
 			if cell == nil then
 				cell = self[placement].cells[1]
 			else
-				incompatibleTypeError("#1", "Cell", type(cell), 3)
+				incompatibleTypeError("#1", "Cell", cell, 3)
 			end
 		end
 
@@ -343,13 +343,13 @@ Agent_ = {
 
 		data.sender = self
 		if type(data.receiver) ~= "Agent" then
-			incompatibleTypeError("receiver", "Agent", type(data.receiver), 3)
+			incompatibleTypeError("receiver", "Agent", data.receiver, 3)
 		end
 
 		if data.delay == nil then
 			data.delay = 0
 		elseif type(data.delay) ~= "number" then
-			incompatibleTypeError("delay", "positive integer number", type(data.delay), 3)
+			incompatibleTypeError("delay", "positive integer number", data.delay, 3)
 		elseif data.delay < 0 then
 			incompatibleValueError("delay", "positive integer number", data.delay, 3)
 		end
@@ -357,7 +357,7 @@ Agent_ = {
 		if data.delay == 0 then
 			if data.subject then
 				if type(data.subject) ~= "string" then
-					incompatibleTypeError("subject", "string", type(data.subject), 3)
+					incompatibleTypeError("subject", "string", data.subject, 3)
 				end
 				local call = "on_"..data.subject
 				if type(data.receiver[call]) ~= "function" then
@@ -390,7 +390,7 @@ Agent_ = {
 			if newcell == nil then
 				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypeError("#1", "Cell", type(newcell), 3)
+				incompatibleTypeError("#1", "Cell", newcell, 3)
 			end
 		end
 
@@ -398,7 +398,7 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#2", "string", type(placement), 3)
+				incompatibleTypeError("#2", "string", placement, 3)
 			end
 		end
 
@@ -421,7 +421,7 @@ Agent_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", type(modelTime), 3)
+				incompatibleTypeError("#1", "Event or positive number", modelTime, 3)
 			end
 		elseif modelTime < 0 then
 			incompatibleValueError("#1", "Event or positive number", modelTime, 3)
@@ -481,7 +481,7 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#1", "string", type(placement), 3)
+				incompatibleTypeError("#1", "string", placement, 3)
 			end
 		end
 
@@ -489,7 +489,7 @@ Agent_ = {
 			if neighborhood == nil then
 				neighborhood = "1"
 			else
-				incompatibleTypeError("#2", "string", type(neighborhood), 3)
+				incompatibleTypeError("#2", "string", neighborhood, 3)
 			end
 		end
 
@@ -635,7 +635,7 @@ function Agent(data)
 	setmetatable(data, metaTableAgent_)
 
 	if type(data.id) ~= "string" and data.id ~= nil then
-		incompatibleTypeError("id", "string or nil", type(data.id), 3)
+		incompatibleTypeError("id", "string or nil", data.id, 3)
 	end
 
 	local cObj = TeGlobalAutomaton()

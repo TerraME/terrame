@@ -37,13 +37,13 @@ Cell_ = {
 		if neigh == nil then
 			mandatoryArgumentError("#1", 3)
 		elseif type(neigh) ~= "Neighborhood" then
-			incompatibleTypeError("#1", "Neighborhood", type(neigh), 3)
+			incompatibleTypeError("#1", "Neighborhood", neigh, 3)
 		end
 
 		if id == nil then
 			id = "1"
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#2", "string", type(id), 3)
+			incompatibleTypeError("#2", "string", id, 3)
 		end
 
 		if self.neighborhoods == nil then self.neighborhoods = {} end
@@ -58,7 +58,7 @@ Cell_ = {
 			if cell == nil then
 				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypeError("#1", "Cell", type(cell), 3)
+				incompatibleTypeError("#1", "Cell", cell, 3)
 			end
 		end
 
@@ -105,7 +105,7 @@ Cell_ = {
 		if index == nil then
 			index = "1"
 		elseif type(index) ~= "string" then 
-			incompatibleTypeError("#1", "string", type(index), 3)
+			incompatibleTypeError("#1", "string", index, 3)
 		end
 
 		return self.cObj_:getNeighborhood(index)
@@ -160,7 +160,7 @@ Cell_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", type(modelTime), 3)
+				incompatibleTypeError("#1", "Event or positive number", modelTime, 3)
 			end
 		elseif modelTime < 0 then
 			incompatibleValueError("#1", "Event or positive number", modelTime, 3)
@@ -200,7 +200,7 @@ Cell_ = {
 		if id == nil then
 			mandatoryArgumentError("#1", 3)
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#1", "string", type(id), 3)
+			incompatibleTypeError("#1", "string", id, 3)
 		end
 		self.id = id
 		self.cObj_:setID(self.id)
@@ -267,7 +267,7 @@ function Cell(data)
 	end
 
 	if type(data.id) ~= "string" and data.id ~= nil then
-		incompatibleTypeError("id", "string or nil", type(data.id), 3)
+		incompatibleTypeError("id", "string or nil", data.id, 3)
 	end
 
 	data.cObj_ = TeCell()
@@ -279,7 +279,7 @@ function Cell(data)
 	if data.x == nil then
 		data.x = 0 
 	elseif type(data.x) ~= "number" then
-		incompatibleTypeError("x", "positive integer number", type(data.x), 3)
+		incompatibleTypeError("x", "positive integer number", data.x, 3)
 	elseif data.x < 0 or math.floor(data.x) ~= data.x then
 		incompatibleValueError("x", "positive integer number", data.x, 3)
 	end
@@ -287,7 +287,7 @@ function Cell(data)
 	if data.y == nil then
 		data.y = 0 
 	elseif type(data.y) ~= "number" then
-		incompatibleTypeError("y", "positive integer number", type(data.y), 3)
+		incompatibleTypeError("y", "positive integer number", data.y, 3)
 	elseif data.y < 0 or math.floor(data.y) ~= data.y then
 		incompatibleValueError("y", "positive integer number", data.y, 3)
 	end

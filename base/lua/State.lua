@@ -38,7 +38,7 @@ State_ = {
 		local idOld = self.cObj_:getID()
 
 		if type(idValue) ~= "string" then
-			incompatibleTypeError("#1", "string", type(idValue), 3)
+			incompatibleTypeError("#1", "string", idValue, 3)
 		end	
 
 		self.id = idValue
@@ -72,7 +72,7 @@ function State(data)
 	if data.id == nil then
 		data.id = "1"
 	elseif type(data.id) ~= "string" then
-		incompatibleTypeError("id", "string", type(data.id), 3)
+		incompatibleTypeError("id", "string", data.id, 3)
 	end
 	--data.__tostring = tostringTerraME
 	cObj:config(data.id)

@@ -88,7 +88,7 @@ return{
 	end,
 	incompatibleTypeError = function(unitTest)
 		local error_func = function()
-			incompatibleTypeError("cell", "Cell", "Agent", 2)
+			incompatibleTypeError("cell", "Cell", Agent{}, 2)
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'cell' expected Cell, got Agent.")
 	end,

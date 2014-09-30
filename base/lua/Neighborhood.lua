@@ -35,13 +35,13 @@ Neighborhood_ = {
 		if cell == nil then
 			mandatoryArgumentError("#1", 3)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		if weight == nil then
 			weight = 1
 		elseif type(weight) ~= "number" then
-			incompatibleTypeError("#2", "number", type(weight), 3)
+			incompatibleTypeError("#2", "number", weight, 3)
 		end
 
 		if not self:isNeighbor(cell) then
@@ -80,7 +80,7 @@ Neighborhood_ = {
 		if cell == nil then
 			mandatoryArgumentError("#1", 3)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		if not self:isNeighbor(cell) then
@@ -108,7 +108,7 @@ Neighborhood_ = {
 		if cell == nil then
 			mandatoryArgumentError("#1", 3)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		local result = self.cObj_:getNeighWeight(cell.x, cell.y, cell.cObj_)
@@ -138,7 +138,7 @@ Neighborhood_ = {
 		if cell == nil then
 			mandatoryArgumentError("#1", 3)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		return self.cObj_:isNeighbor(cell.x, cell.y, cell.cObj_)
@@ -158,7 +158,7 @@ Neighborhood_ = {
 		elseif type(randomObj) == "Random" then
 			pos = randomObj:integer(1, #self)
 		else
-			incompatibleTypeError("#1", "Random or nil", type(randomObj), 3)
+			incompatibleTypeError("#1", "Random or nil", randomObj, 3)
 		end
 
 		local count = 1
@@ -178,13 +178,13 @@ Neighborhood_ = {
 		if cell == nil then
 			mandatoryArgumentError("#1", 3)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		if weight == nil then
 			mandatoryArgumentError("#2", 3)
 		elseif type(weight) ~= "number" then
-			incompatibleTypeError("#2", "number", type(weight), 3)
+			incompatibleTypeError("#2", "number", weight, 3)
 		end
 	
 		local result = self.cObj_:setNeighWeight(cell.x, cell.y, cell.cObj_, weight)

@@ -40,7 +40,7 @@ Model_ = {
 		if finalTime == nil then
 			mandatoryArgumentError("#1", 3)	
 		elseif type(finalTime) ~= "number" then 
-			incompatibleTypeError("#1", "number", type(finalTime), 3)
+			incompatibleTypeError("#1", "number", finalTime, 3)
 		end
 		self.exec:execute(finalTime)
     end,
@@ -660,7 +660,7 @@ Model = function(attrTab)
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "table" and #value > 0 then
 				if type(argv[name]) ~= type(value[1]) then
-					incompatibleTypeError(name, type(value[1]), type(argv[name]), 5)
+					incompatibleTypeError(name, type(value[1]), argv[name], 5)
 				elseif not belong(argv[name], value) then
 					local str = "one of {"
 					forEachElement(value, function(_, v)
@@ -679,11 +679,11 @@ Model = function(attrTab)
 					elseif type(ivalue) == "table" and #ivalue == 0 then
 
 					elseif itype ~= type(iargv[iname]) then
-						incompatibleTypeError(name.."."..iname, itype, type(iargv[iname]), 7)
+						incompatibleTypeError(name.."."..iname, itype, iargv[iname], 7)
 					end
 				end)
 			elseif type(argv[name]) ~= mtype then
-				incompatibleTypeError(name, mtype, type(argv[name]), 5)
+				incompatibleTypeError(name, mtype, argv[name], 5)
 			end
 		end)
 

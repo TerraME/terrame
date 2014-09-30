@@ -36,14 +36,14 @@ SocialNetwork_ = {
 			if connection == nil then
 				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypeError("#1", "Agent", type(connection), 3)
+				incompatibleTypeError("#1", "Agent", connection, 3)
 			end
 		end
 
 		if weight == nil then
 			weight = 1
 		elseif type(weight) ~= "number"  then
-			incompatibleTypeError("#2", "positive number", type(weight), 3)
+			incompatibleTypeError("#2", "positive number", weight, 3)
 		elseif weight < 0 then
 			incompatibleValueError("#2", "positive number", weight, 3)
 		end
@@ -76,7 +76,7 @@ SocialNetwork_ = {
 			if connection == nil then
 				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypeError("#1", "Agent", type(connection), 3)
+				incompatibleTypeError("#1", "Agent", connection, 3)
 			end
 		end
 
@@ -100,7 +100,7 @@ SocialNetwork_ = {
 			if connection == nil then
 				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypeError("#1", "Agent", type(connection), 3)
+				incompatibleTypeError("#1", "Agent", connection, 3)
 			end
 		end
 		return self.connections[connection.id] ~= nil
@@ -120,7 +120,7 @@ SocialNetwork_ = {
 			if connection == nil then
 				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypeError("#1", "Agent", type(connection), 3)
+				incompatibleTypeError("#1", "Agent", connection, 3)
 			end
 		end
 
@@ -147,7 +147,7 @@ SocialNetwork_ = {
 		elseif type(randomObj) == "Random" then
 			pos = randomObj:integer(1, self.count)
 		else
-			incompatibleTypeError("#1", "Random or nil", type(randomObj), 3)
+			incompatibleTypeError("#1", "Random or nil", randomObj, 3)
 		end
 
 		local count = 1
@@ -170,13 +170,13 @@ SocialNetwork_ = {
 			if connection == nil then
 				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypeError("#1", "Agent", type(connection), 3)
+				incompatibleTypeError("#1", "Agent", connection, 3)
 			end
 		elseif type(weight) ~= "number" then
 			if weight == nil then
 				mandatoryArgumentError("#2", 3)
 			else
-				incompatibleTypeError("#2", "positive number", type(weight), 3)
+				incompatibleTypeError("#2", "positive number", weight, 3)
 			end
 		elseif weight < 0 then
 			incompatibleValueError("#2","positive number", weight, 3)

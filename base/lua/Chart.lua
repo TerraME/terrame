@@ -28,7 +28,7 @@ local optionalTableElement = function(table, attr, allowedType, level)
 	local mtype = type(value)
 
 	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypeError(attr, allowedType, mtype, level + 1)
+		incompatibleTypeError(attr, allowedType, value, level + 1)
 	end
 end
 

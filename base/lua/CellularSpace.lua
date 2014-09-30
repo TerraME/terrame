@@ -320,7 +320,7 @@ CellularSpace_ = {
 		if data.name == nil then
 			data.name = "1"
 		elseif type(data.name) ~= "string" then 
-			incompatibleTypeError("name", "string", type(data.name), 3)
+			incompatibleTypeError("name", "string", data.name, 3)
 		elseif data.name == "1" then
 			defaultValueWarning("name", "1", 3)
 		end
@@ -336,7 +336,7 @@ CellularSpace_ = {
 		if data.strategy == nil then
 			data.strategy = "moore"
 		elseif type(data.strategy) ~= "string" then
-			incompatibleTypeError("strategy","string",type(data.strategy), 3)
+			incompatibleTypeError("strategy", "string", data.strategy, 3)
 		end
 
 		switch(data, "strategy"):caseof{
@@ -345,13 +345,13 @@ CellularSpace_ = {
 				if data.filter == nil then
 					mandatoryArgumentError("filter", 4)
 				elseif type(data.filter) ~="function" then
-					incompatibleTypeError("filter", "function", type(data.filter), 4)
+					incompatibleTypeError("filter", "function", data.filter, 4)
 				end
 
 				if data.weight == nil then
 					data.weight = function() return 1 end
 				elseif type(data.weight) ~= "function" then
-					incompatibleTypeError("weight", "function", type(data.weight), 4)
+					incompatibleTypeError("weight", "function", data.weight, 4)
 				end
 
 				createNeighborhood(self, data.filter, data.weight, data.name) 
@@ -361,13 +361,13 @@ CellularSpace_ = {
 				if data.self == nil then
 					data.self = false
 				elseif type(data.self) ~= "boolean" then
-					incompatibleTypeError("self", "boolean", type(data.self), 4)
+					incompatibleTypeError("self", "boolean", data.self, 4)
 				end
 
 				if data.wrap == nil then
 					data.wrap = false
 				elseif type(data.wrap) ~= "boolean" then
-					incompatibleTypeError("wrap", "boolean", type(data.wrap), 4)
+					incompatibleTypeError("wrap", "boolean", data.wrap, 4)
 				end
 
 				createMooreNeighborhood(self, data.name, data.self, data.wrap)
@@ -377,7 +377,7 @@ CellularSpace_ = {
 				if data.m == nil then
 					mandatoryArgumentError("m", 4)
 				elseif type(data.m) ~= "number" then
-					incompatibleTypeError("m", "positive integer number (greater than zero)", type(data.m), 4)
+					incompatibleTypeError("m", "positive integer number (greater than zero)", data.m, 4)
 				elseif data.m <= 0 then
 					incompatibleValueError("m", "positive integer number (greater than zero)", data.m, 4)
 				elseif math.floor(data.m) ~= data.m then
@@ -390,7 +390,7 @@ CellularSpace_ = {
 				if data.n == nil then
 					data.n = data.m
 				elseif type(data.n) ~= "number" then
-					incompatibleTypeError("n", "positive integer number (greater than zero)", type(data.n), 4)
+					incompatibleTypeError("n", "positive integer number (greater than zero)", data.n, 4)
 				elseif data.n <= 0 then
 					incompatibleValueError("n", "positive integer number (greater than zero)", data.n, 4)
 				elseif math.floor(data.n) ~= data.n then
@@ -403,20 +403,20 @@ CellularSpace_ = {
 				if data.filter == nil then
 					data.filter = function() return true end
 				elseif type(data.filter) ~= "function" then
-					incompatibleTypeError("filter", "function", type(data.filter), 4)
+					incompatibleTypeError("filter", "function", data.filter, 4)
 				end
 
 				if data.weight == nil then
 					data.weight = function() return 1 end
 				elseif type(data.weight) ~= "function" then
-					incompatibleTypeError("weight", "function", type(data.weight), 4)
+					incompatibleTypeError("weight", "function", data.weight, 4)
 				end
 
 				if data.target == nil then
 					createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name)
 				else
 					if type(data.target) ~= "CellularSpace" then
-						incompatibleTypeError("target", "CellularSpace or nil", type(data.target), 4)
+						incompatibleTypeError("target", "CellularSpace or nil", data.target, 4)
 					end
 					spatialCoupling(data.m, data.n, self, data.target, data.filter, data.weight, data.name)
 				end
@@ -426,13 +426,13 @@ CellularSpace_ = {
 				if data.self == nil then
 					data.self = false
 				elseif type(data.self) ~= "boolean" then
-					incompatibleTypeError("self", "boolean", type(data.self), 4)
+					incompatibleTypeError("self", "boolean", data.self, 4)
 				end
 
 				if data.wrap == nil then
 					data.wrap = false
 				elseif type(data.wrap) ~= "boolean" then
-					incompatibleTypeError("wrap","boolean",type(data.wrap), 4)
+					incompatibleTypeError("wrap", "boolean", data.wrap, 4)
 				end
 
 				createVonNeumannNeighborhood(self, data.name, data.self, data.wrap) 
@@ -445,13 +445,13 @@ CellularSpace_ = {
 				if data.filter == nil then
 					data.filter = function() return true end
 				elseif type(data.filter) ~="function" then
-					incompatibleTypeError("filter", "function", type(data.filter), 4)
+					incompatibleTypeError("filter", "function", data.filter, 4)
 				end
 
 				if data.weight == nil then
 					data.weight = function() return 1 end
 				elseif type(data.weight) ~= "function" then
-					incompatibleTypeError("weight", "function", type(data.weight), 4)
+					incompatibleTypeError("weight", "function", data.weight, 4)
 				end
 
 				createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name) 
@@ -461,7 +461,7 @@ CellularSpace_ = {
 				if data.target == nil then
 					mandatoryArgumentError("target", 3)
 				elseif type(data.target) ~= "CellularSpace" then
-					incompatibleTypeError("target", "CellularSpace", type(data.target), 4)
+					incompatibleTypeError("target", "CellularSpace", data.target, 4)
 				end
 
 				coordCoupling(self, data.target, data.name) 
@@ -489,13 +489,13 @@ CellularSpace_ = {
 			if xIndex == nil then
 				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypeError("#1", "positive integer number", type(xIndex), 3)
+				incompatibleTypeError("#1", "positive integer number", xIndex, 3)
 			end
 		elseif type(yIndex) ~= "number" or math.floor(yIndex) ~= yIndex then
 			if yIndex == nil then
 				mandatoryArgumentError("#2", 3)
 			else
-				incompatibleTypeError("#2", "positive integer number", type(yIndex), 3)
+				incompatibleTypeError("#2", "positive integer number", yIndex, 3)
 			end
 		end
 
@@ -605,7 +605,7 @@ CellularSpace_ = {
 		if data.source == nil then
 			mandatoryArgumentError("source", 3)
 		elseif type(data.source) ~= "string" then 
-			incompatibleTypeError("source", "string", type(data.source), 3)
+			incompatibleTypeError("source", "string", data.source, 3)
 		end
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
@@ -617,7 +617,7 @@ CellularSpace_ = {
 		if data.name == nil then
 			data.name = "1"
 		elseif type(data.name) ~= "string" then 
-			incompatibleTypeError("name", "string", type(data.name), 3)
+			incompatibleTypeError("name", "string", data.name, 3)
 		end
 
 		self.cObj_:loadNeighborhood(data.source, data.name)
@@ -634,7 +634,7 @@ CellularSpace_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", type(modelTime), 3) 
+				incompatibleTypeError("#1", "Event or positive number", modelTime, 3) 
 			end
 		elseif modelTime < 0 then
 			incompatibleValueError("#1", "Event or positive number", modelTime, 3)   
@@ -673,7 +673,7 @@ CellularSpace_ = {
 			if time == nil then
 				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypeError("#1", "positive integer number", type(time), 3)
+				incompatibleTypeError("#1", "positive integer number", time, 3)
 			end
 		elseif time < 0 then
 			incompatibleValueError("#1", "positive integer number", time, 3)	  
@@ -685,7 +685,7 @@ CellularSpace_ = {
 			if outputTableName == nil then
 				mandatoryArgumentError("#2", 3)
 			else
-				incompatibleTypeError("#2", "string", type(outputTableName), 3)
+				incompatibleTypeError("#2", "string", outputTableName, 3)
 			end
 		end
 
@@ -693,7 +693,7 @@ CellularSpace_ = {
 			if attrNames == nil then
 				mandatoryArgumentError("#3", 3)
 			else
-  				incompatibleTypeError("#3", "string", type(attrNames), 3)
+  				incompatibleTypeError("#3", "string", attrNames, 3)
 			end
 		end   
 
@@ -773,7 +773,7 @@ CellularSpace_ = {
 			if argument == nil then
 				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypeError("#1", "string or function", type(argument), 3)
+				incompatibleTypeError("#1", "string or function", argument, 3)
 			end
 		end
 
@@ -825,7 +825,7 @@ CellularSpace_ = {
 					end
 				end
 			else
-				incompatibleTypeError("#1", "string, table or nil", type(values), 3)
+				incompatibleTypeError("#1", "string, table or nil", values, 3)
 			end
 		end
 		local s = "return function(cell)\n"
@@ -855,6 +855,8 @@ metaTableCellularSpace_ = {
 	end,
 	__tostring = tostringTerraME
 }
+
+--TODO: verificar upper right??
 
 --- A multivalued set of Cells. It can be retrieved from databases, files, or created
 -- directly within TerraME. 
@@ -967,7 +969,7 @@ function CellularSpace(data)
 		if data.autoload == nil then
 			data.autoload = true
 		else
-			incompatibleTypeError("autoload", "boolean", type(data.autoload), 3)
+			incompatibleTypeError("autoload", "boolean", data.autoload, 3)
 		end
 	end    
 
@@ -983,7 +985,7 @@ function CellularSpace(data)
 			if data.xdim == nil then
 				data.xdim = 0
 			else
-				incompatibleTypeError("xdim", "positive integer number", type(data.xdim), 3)
+				incompatibleTypeError("xdim", "positive integer number", data.xdim, 3)
 			end
 		elseif data.xdim <= 0 or math.floor(data.xdim) ~= data.xdim then
 			incompatibleValueError("xdim", "positive integer number", data.xdim, 3)
@@ -993,7 +995,7 @@ function CellularSpace(data)
 			if data.ydim == nil then
 				data.ydim = data.xdim
 			else
-				incompatibleTypeError("ydim", "positive integer number", type(data.ydim), 3)
+				incompatibleTypeError("ydim", "positive integer number", data.ydim, 3)
 			end
 		elseif data.ydim <= 0 or math.floor(data.ydim) ~= data.ydim then
 			incompatibleValueError("ydim", "positive integer number", data.ydim, 3)
@@ -1026,7 +1028,7 @@ function CellularSpace(data)
 			if data.database == nil then
 				mandatoryArgumentError("database", 3)
 			else
-				incompatibleTypeError("database", "string", type(data.database), 3)
+				incompatibleTypeError("database", "string", data.database, 3)
 			end
 		elseif data.database:endswith(".shp") or data.database:endswith(".mdb") or data.database:endswith(".csv") then
 			local f = io.open(data.database, "r")
@@ -1054,7 +1056,7 @@ function CellularSpace(data)
 				data.dbType = "mysql"
 			end
 		elseif type(data.dbType) ~= "string" then
-			incompatibleTypeError("dbType", "string",type(data.dbType), 3)
+			incompatibleTypeError("dbType", "string", data.dbType, 3)
 		elseif data.dbType ~= "mysql" and data.dbType ~= "ado" and data.dbType ~= "shp" then
 			incompatibleValueError("dbType", "one of the strings from the set ['mysql','ado','shp']", data.dbType, 3)          
 		end
@@ -1087,7 +1089,7 @@ function CellularSpace(data)
 			end
 		elseif data.database:endswith(".csv") then
 			if data.sep and type(data.sep) ~= "string" then
-				incompatibleTypeError("sep", "string", type(data.sep), 3)
+				incompatibleTypeError("sep", "string", data.sep, 3)
 			end
 		else
 			if data.dbType == "mysql" then
@@ -1096,7 +1098,7 @@ function CellularSpace(data)
 					if data.port == nil then
 						data.port = 3306
 					else
-						incompatibleTypeError("port", "positive integer number", type(data.port), 3)
+						incompatibleTypeError("port", "positive integer number", data.port, 3)
 					end
 				elseif data.port ~= math.floor(data.port) or data.port < 0 then
 					incompatibleValueError("port", "positive integer number", data.port, 3)
@@ -1109,7 +1111,7 @@ function CellularSpace(data)
 					if data.host == nil then
 						data.host = "localhost"
 					else
-						incompatibleTypeError("host", "string", type(data.host), 3)
+						incompatibleTypeError("host", "string", data.host, 3)
 					end
 				end
 				cObj:setHostName(data.host)
@@ -1118,7 +1120,7 @@ function CellularSpace(data)
 					if data.user == nil then
 						data.user = "root"
 					else
-						incompatibleTypeError("user", "string", type(data.user), 3)
+						incompatibleTypeError("user", "string", data.user, 3)
 					end
 				end
 				cObj:setUser(data.user)
@@ -1126,7 +1128,7 @@ function CellularSpace(data)
 				if data.password == nil then
 					mandatoryArgumentError("password", 3)
 				elseif type(data.password) ~= "string" then
-					incompatibleTypeError("password", "string", type(data.password), 3)
+					incompatibleTypeError("password", "string", data.password, 3)
 				end
 				cObj:setPassword(data.password)
 			end
@@ -1134,7 +1136,7 @@ function CellularSpace(data)
 			if data.theme == nil then
 				mandatoryArgumentError("theme", 3)
 			elseif type(data.theme) ~= "string" then 
-				incompatibleTypeError("theme", "string", type(data.theme), 3)
+				incompatibleTypeError("theme", "string", data.theme, 3)
 			end
 			cObj:setTheme(data.theme) 
 
@@ -1142,7 +1144,7 @@ function CellularSpace(data)
 				if data.layer == nil then
 					data.layer = ""
 				else
-					incompatibleTypeError("layer", "string", type(data.layer), 3)
+					incompatibleTypeError("layer", "string", data.layer, 3)
 				end
 			end
 			cObj:setLayer(data.layer)
@@ -1150,12 +1152,12 @@ function CellularSpace(data)
 			if type(data.where) == "string" then 
 				cObj:setWhereClause(data.where)
 			elseif data.where ~= nil then
-				incompatibleTypeError("where", "string or nil", type(data.where), 3)
+				incompatibleTypeError("where", "string or nil", data.where, 3)
 			end
 
 			if type(data.select) ~= "string" and type(data.select) ~= "table" then
 				if data.select ~= nil then
-					incompatibleTypeError("select", "string, table with strings or nil", type(data.select), 3)
+					incompatibleTypeError("select", "string, table with strings or nil", data.select, 3)
 				end
 			else
 				if type(data.select) == "string" then
@@ -1183,7 +1185,7 @@ function CellularSpace(data)
 
 	if data.instance ~= nil then
 		if type(data.instance) ~= "Cell" then
-			incompatibleTypeError("instance", "Cell", type(data.instance), 3)
+			incompatibleTypeError("instance", "Cell", data.instance, 3)
 		end
 
 		forEachCell(data, function(cell)

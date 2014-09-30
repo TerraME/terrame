@@ -445,7 +445,7 @@ function Legend(data)
 	if not data.colorBar or (type(data.colorBar) == "table" and #data.colorBar == 0) then
 		data.colorBar = nil
 	elseif type(data.colorBar) ~= "table" then
-		incompatibleTypeError("colorBar", "table", type(data.colorBar), 3)
+		incompatibleTypeError("colorBar", "table", data.colorBar, 3)
 	end
 
 	if data.stdColorBar and type(data.stdColorBar) == "table" and #data.stdColorBar == 0 then
@@ -638,7 +638,7 @@ function Legend(data)
 	else
 		--@RAIAN: Tratando tipos incompatíveis
 		if type(data.slices) ~= "number" then
-			incompatibleTypeError("slices", "integer number between 1 and 255", type(data.slices), 3)
+			incompatibleTypeError("slices", "integer number between 1 and 255", data.slices, 3)
 		end
 
 		local intPart, fracPart = math.modf(data.slices)
@@ -705,7 +705,7 @@ function Legend(data)
 		end
 	else
 		if type(data.precision) ~= "number" then
-			incompatibleTypeError("precision", "integer number greater than or equal to 1 (one)", type(data.precision), 3)
+			incompatibleTypeError("precision", "integer number greater than or equal to 1 (one)", data.precision, 3)
 		end
 
 		local intPart, fracPart = math.modf(data.precision)
@@ -747,7 +747,7 @@ function Legend(data)
 				end
 			end
 		elseif type(data.stdColorBar) ~= "string" then
-			incompatibleTypeError("stdColorBar","table",type(data.stdColorBar), 4)
+			incompatibleTypeError("stdColorBar","table", data.stdColorBar, 4)
 		end
 		data.colorBar = data.colorBar .. COLORBAR_SEP .. data.stdColorBar
 		-- it is not necessary to keep 'stdColorBar' as it is attached to 'colorBar'

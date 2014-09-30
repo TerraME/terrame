@@ -104,7 +104,7 @@ Environment_ = {
 			object.parent = self
 			table.insert(self, object)
 		else
-      		incompatibleTypeError("#1", "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory", t, 3)
+      		incompatibleTypeError("#1", "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory", object, 3)
     	end
 		object.parent = self
 		return self.cObj_:add(object.cObj_)
@@ -162,14 +162,14 @@ Environment_ = {
 		if data.strategy == nil then
 			data.strategy = "random"      
 		elseif type(data.strategy) ~= "string" then
-			incompatibleTypeError("strategy", "string", type(data.strategy), 3)
+			incompatibleTypeError("strategy", "string", data.strategy, 3)
 		end
 
 		if type(data.name) ~= "string" then  
 			if type(data.name) == "nil" then
 				data.name = "placement"
 			else
-				incompatibleTypeError("name", "string", type(data.name), 3)
+				incompatibleTypeError("name", "string", data.name, 3)
 			end
 		end
 
@@ -178,7 +178,7 @@ Environment_ = {
 				if type(data.max) == "nil" then
 					data.max = math.huge
 				else
-					incompatibleTypeError("max", "positive integer number", type(data.max), 3)
+					incompatibleTypeError("max", "positive integer number", data.max, 3)
 				end
 			elseif data.max <= 0 then
 				incompatibleValueError("max", "positive integer number", data.max, 3)
@@ -270,7 +270,7 @@ Environment_ = {
 	-- @usage environment:execute(1000)
 	execute = function(self, finalTime) 
 		if type(finalTime) ~= "number" then
-			incompatibleTypeError("#1", "number", type(finalTime), 3)
+			incompatibleTypeError("#1", "number", finalTime, 3)
 		end
 		self.cObj_:config(finalTime)
 		self.cObj_:execute()
@@ -297,7 +297,7 @@ Environment_ = {
 		if data.name == nil then
 			data.name = "1"
 		elseif type(data.name) ~= "string" then 
-			incompatibleTypeError("name", "string", type(data.name), 3)
+			incompatibleTypeError("name", "string", data.name, 3)
 		end
 
 		if type(data.source) == "string" then
@@ -313,7 +313,7 @@ Environment_ = {
 		elseif data.source == nil then
 			mandatoryArgumentError("source", 3)
 		elseif type(data.source ~= "string") then
-			incompatibleTypeError("source", "string", type(data.source), 3)
+			incompatibleTypeError("source", "string", data.source, 3)
 		end
 
 		local extension = string.match(data.source, "%w+$")
@@ -321,7 +321,7 @@ Environment_ = {
     	if data.bidirect == nil then
 			data.bidirect = false
 		elseif type(data.bidirect) ~= "boolean" then
-			incompatibleTypeError("bidirect", "boolean", type(data.bidirect), 3)
+			incompatibleTypeError("bidirect", "boolean", data.bidirect, 3)
 		end
 
 		local file = io.open(data.source, "r")
@@ -471,7 +471,7 @@ Environment_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", type(modelTime), 3)
+				incompatibleTypeError("#1", "Event or positive number", modelTime, 3)
 			end
 		elseif modelTime < 0 then
 			incompatibleValueError("#1", "Event or positive number", modelTime, 3)
@@ -506,7 +506,7 @@ function Environment(data)
 	if data.id == nil then
 		data.id = "1"
 	elseif type(data.id) ~= "string" then
-		incompatibleTypeError("id","string",type(data.id), 3)
+		incompatibleTypeError("id", "string", data.id, 3)
 	end
 	local cObj = TeScale(data.id)
 	setmetatable(data, metaTableEnvironment_)

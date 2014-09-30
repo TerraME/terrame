@@ -33,7 +33,7 @@ Random_ = {
 		if seed == nil then seed = os.time() end
 
 		if type(seed) ~= "number" then
-			incompatibleTypeError("#1", "number", type(seed), 3)
+			incompatibleTypeError("#1", "number", seed, 3)
 		end
 
 		self.seed = seed
@@ -55,11 +55,11 @@ Random_ = {
 	-- value = random:integer(5, 10) -- from 5 to 10
 	integer = function(self, v1, v2)
 		if type(v1) ~= "number" and v1 ~= nil then
-			incompatibleTypeError("#1", "number or nil", type(v1), 3)
+			incompatibleTypeError("#1", "number or nil", v1, 3)
 		end
 
 		if type(v2) ~= "number" and v2 ~= nil then
-			incompatibleTypeError("#2", "number or nil", type(v2), 3)
+			incompatibleTypeError("#2", "number or nil", v2, 3)
 		end
 
 		if v2 then
@@ -88,11 +88,11 @@ Random_ = {
 	-- value = random:number(5, 10) -- between 5 and 10
 	number = function(self, v1, v2)
 		if type(v1) ~= "number" and v1 ~= nil then
-			incompatibleTypeError("#1", "number or nil", type(v1), 3)
+			incompatibleTypeError("#1", "number or nil", v1, 3)
 		end
 
 		if type(v2) ~= "number" and v2 ~= nil then
-			incompatibleTypeError("#2", "number or nil", type(v2), 3)
+			incompatibleTypeError("#2", "number or nil", v2, 3)
 		end
 
 		if not v1 and not v2 then
