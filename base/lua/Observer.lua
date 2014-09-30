@@ -1183,10 +1183,10 @@ function Observer(data)
 		if type(subjectType) == "string" then subjectType = TME_TYPES_USER[type(subject)] end
 	end
 
-	neighborhoods = data.neighIndex or {}
+	local neighborhoods = data.neighIndex or {}
 
 	-- retrieve observer basic items
-	observerId = -1
+	local observerId = -1
 	local observerType = data.type or nil
 	if type(observerType) == "string" then observerType = TME_OBSERVERS_USER[observerType] end
 

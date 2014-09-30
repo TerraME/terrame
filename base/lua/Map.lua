@@ -123,25 +123,140 @@ end
 Map = function(data)
 	compulsoryTableElement(data, "subject", 3)
 	optionalTableElement(data, "subject", "CellularSpace", 3)
-	compulsoryTableElement(data, "select",  3)
-
 	optionalTableElement(data, "values", "table", 3)
 	optionalTableElement(data, "labels", "table", 3)
-	optionalTableElement(data, "colors", "string", 3)
+	optionalTableElement(data, "select", "string", 3)
 
-	checkUnnecessaryParameters(data, {"subject", "select", "values", "labels", "colors"}, 3)
+	if data.grouping == nil then
+		if data.slices ~= nil then
+			data.grouping = "equalsteps"
+		elseif data.min and data.max then
+			data.grouping = "equalsteps"
+		elseif data.values ~= nil then
+			data.grouping = "uniquevalues"
+		elseif data.colors == nil and data.select == nil then
+			data.grouping = "background"
+		else
+			customErrorMsg("It was not possible to infer parameter grouping.", 3)
+		end
+	end
 
-	if type(data.select) == "string" then data.select = {data.select} end
+	switch(data, "grouping"):caseof{
+		equalsteps = function()
+			compulsoryTableElement(data, "select", 4)
+			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.", 5)
+			compulsoryTableElement(data, "slices", 4)
+			compulsoryTableElement(data, "colors", 4)
 
-	optionalTableElement(data, "select", "table", 3)
+			--verify(#data.labels == 0 or #data.labels == data.slices, "There should exist labels for each value.", 4)
+			--verify(type(data.colors) ~= "string" or #data.colors == 2, "There should exist two colors for each value.", 4)
+			if data.min == nil or data.max == nil then
+				local min = math.huge
+				local max = -math.huge
 
-	verify(#data.select > 0, "Maps must select at least one attribute.", 4)
+				forEachCell(data.subject, function(cell)
+					local mdata = cell[data.select]
+					if min > mdata then
+						min = mdata
+					elseif max < mdata then
+						max = mdata
+					end
+				end)
+			end
 
-	forEachElement(data.select, function(_, value)
-		verify(data.subject.cells[1][value] ~= nil, "Selected element '"..value.."' does not belong to the subject.", 6)
-	end)
+			checkUnnecessaryParameters(data, {"subject", "select", "labels", "colors", "grouping", "min", "max", "slices"}, 4)
+		end,
+		uniquevalues = function()
+			compulsoryTableElement(data, "select", 4)
 
-	verify(#data.labels == 0 or #data.labels == #data.values, "There should exist labels for each value.", 4)
-	verify(#data.colors == 0 or #data.colors == #data.values, "There should exist colors for each value.", 4)
+			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.", 5)
+
+			compulsoryTableElement(data, "colors", 4)
+
+			verify(#data.colors == #data.values, "There should exist colors for each value.", 5)
+
+			if data.values == nil then
+				data.values = {}
+				forEachCell(data.subject, function(cell)
+					if not belong(cell[data.select], data.values) then
+						data.values[#data.values + 1] = cell[data.select]
+					end
+				end)
+			else
+				local theType = type(data.values[1])
+				forEachElement(data.values, function(_, _, mtype)
+					verify(mtype == theType, "All values should have the same type, got "..theType.." and "..mtype..".", 6)
+				end)
+			end
+
+			if data.labels == nil then
+				data.labels = data.values
+			end
+			verify(#data.labels == #data.values, "There should exist labels for each value.", 5)
+
+			checkUnnecessaryParameters(data, {"subject", "select", "values", "labels", "colors", "grouping"}, 4)
+		end,
+		background = function()
+			checkUnnecessaryParameters(data, {"subject", "colors", "grouping"}, 4)
+
+			forEachCell(data.subject, function(cell)
+				cell.background_ = 0
+			end)
+		end
+	}
+
+	-- TODO: select with more than one attribute
+	--if type(data.select) == "string" then data.select = {data.select} end
+	--optionalTableElement(data, "select", "table", 3)
+	--verify(#data.select > 0, "Maps must select at least one attribute.", 4)
+
+	--forEachElement(data.select, function(_, value)
+	--	verify(data.subject.cells[1][value] ~= nil, "Selected element '"..value.."' does not belong to the subject.", 6)
+	--end)
+
+	if type(data.colors) == "table" then
+		for i = 1, #data.colors do
+			if type(data.colors[i]) == "string" then
+				local colorName = data.colors[i]
+				data.colors[i] = colors[colorName]
+	
+				if data.colors[i] == nil then
+					customErrorMsg("Color '" .. colorName .. "' not found. Check the name or use a table with an RGB description.", 3)
+				end
+			elseif type(data.colors[i]) ~= "table" then
+				customErrorMsg("Invalid description for color in position "..i..". It should be a table or string, got "..type(data.colors[i])..".", 3)
+			elseif #data.colors[i] ~= 3 then
+				customErrorMsg("Invalid description for color in position "..i..". It should have 3 values, got "..#data.colors[i]..".", 3)
+			end
+		end
+	end
+
+	local observerType = TME_OBSERVERS.MAP
+	local tbDimensions = {data.subject.maxCol - data.subject.minCol + 1, data.subject.maxRow - data.subject.minRow + 1}
+
+	local observerParams = {}
+	local colorBar = {}
+
+	if data.grouping == "uniquevalues" then
+		for i = 1, #data.values do
+			table.insert(colorBar, {value = data.values[i],
+                                    color = data.colors[i],
+                                    label = data.labels[i]})
+		end
+	end
+
+	local legend = Legend{
+			grouping = data.grouping,
+			colorBar = colorBar,
+			slices = data.slices,
+			max = data.max,
+			min = data.min
+	}
+
+	print(legend)
+	table.insert(observerParams, legend)
+
+	local idObs = data.subject.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.subject.cells)
+	print(idObs)
 end
 
