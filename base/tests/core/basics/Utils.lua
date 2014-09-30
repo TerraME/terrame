@@ -28,12 +28,6 @@ return{
 	integrate = function(unitTest)
 		unitTest:assert(true)
 	end,
-	suggest = function(unitTest)
-		unitTest:assert(true)
-	end,
-	switch = function(unitTest)
-		unitTest:assert(true)
-	end,
 	INTEGRATION_METHOD = function(unitTest)
 		unitTest:assert(true)
 	end,
@@ -43,30 +37,6 @@ return{
 		unitTest:assert(belong("b", mvector))
 		unitTest:assert(not belong("e", mvector))
 	end,
-	checkUnnecessaryParameters = function(unitTest)
-		local error_func = function(unitTest)
-			checkUnnecessaryParameters({aaa = "aaa"}, {"abc", "acd", "aab"}, 2)
-		end
-		unitTest:assert_error(error_func, "Error: Parameter 'aaa' is unnecessary.")
-	end,
-	customError = function(unitTest)
-		local error_func = function()
-			customError("test.", 2)
-		end
-		unitTest:assert_error(error_func, "Error: test.")
-	end,
-	customWarning = function(unitTest)
-		local error_func = function()
-			customWarning("test.", 2)
-		end
-		unitTest:assert_error(error_func, "Error: test.")
-	end,
-	defaultValueWarning = function(unitTest)
-		local error_func = function()
-			defaultValueWarning(2)
-		end
-		unitTest:assert_error(error_func, "Error: #1 should be a string.")
-	end,
 	delay = function(unitTest)
 		local t1 = os.time()
 		delay(1)
@@ -74,70 +44,10 @@ return{
 
 		unitTest:assert(t2 - t1 >= 1)
 	end,
-	deprecatedFunctionWarning = function(unitTest)
-		local error_func = function()
-			deprecatedFunctionWarning("abc", "def", 2)
-		end
-		unitTest:assert_error(error_func, "Error: Function 'abc' is deprecated. Use 'def' instead.")
-	end,
-	incompatibleFileExtensionError = function(unitTest)
-		local error_func = function()
-			incompatibleFileExtensionError("file", ".txt", 2)
-		end
-		unitTest:assert_error(error_func, "Error: Parameter 'file' does not support '.txt'.")
-	end,
-	incompatibleTypeError = function(unitTest)
-		local error_func = function()
-			incompatibleTypeError("cell", "Cell", Agent{}, 2)
-		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'cell' expected Cell, got Agent.")
-	end,
-	incompatibleValueError = function(unitTest)
-		local error_func = function()
-			incompatibleValueError("position", "1, 2, or 3", "4", 2)
-		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'position' expected 1, 2, or 3, got '4'.")
-	end,
-	resourceNotFoundError = function(unitTest)
-		local error_func = function()
-			resourceNotFoundError("file", "/usr/local/file.txt", 2)
-		end
-		unitTest:assert_error(error_func, "Error: Resource '/usr/local/file.txt' not found for parameter 'file'.")
-	end,
 	levenshtein = function(unitTest)
 		unitTest:assert_equal(levenshtein("abv", "abc"), 1)
 		unitTest:assert_equal(levenshtein("abvaacc", "abcaacac"), 2)
 		unitTest:assert_equal(levenshtein("abvxwtaacc", "abcaacac"), 5)
-	end,
-	mandatoryArgumentError = function(unitTest)
-		local error_func = function()
-			mandatoryArgumentError("neighborhood", 2)
-		end
-		unitTest:assert_error(error_func, "Error: Parameter 'neighborhood' is mandatory.")
-	end,
-	namedParametersError = function(unitTest)
-		local error_func = function()
-			namedParametersError("CellularSpace", 2)
-		end
-		unitTest:assert_error(error_func, "Error: Parameters for 'CellularSpace' must be named.")
-	end,
-	tableParameterError = function(unitTest)
-		local error_func = function()
-			tableParameterError("CellularSpace", 2)
-		end
-		unitTest:assert_error(error_func, "Error: Parameter for 'CellularSpace' must be a table.")
-	end,
-	valueNotFoundError = function(unitTest)
-		local error_func = function()
-			valueNotFoundError("1", "neighborhood", 2)
-		end
-		unitTest:assert_error(error_func, "Error: Value 'neighborhood' not found for parameter '1'.")
-	end,
-	verify = function(unitTest)
-		local error_func = function(unitTest)
-			verify(false, "error")
-		end
-		unitTest:assert_error(error_func, "Error: error")
 	end,
 	forEachAgent = function(unitTest)
 		local a = Agent{value = 2}
