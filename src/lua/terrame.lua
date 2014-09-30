@@ -55,35 +55,37 @@ local begin_green  = "\027[00;32m"
 local begin_blue   = "\027[00;34m"
 local end_color    = "\027[00m"
 
+print__ = print
+
 local print_blue = function(value)
 	if sessionInfo().separator == "/" then
-		print(begin_blue..value..end_color)
+		print__(begin_blue..value..end_color)
 	else
-		print(value)
+		print__(value)
 	end
 end
 
 local function print_red(value)
 	if sessionInfo().separator == "/" then
-		print(begin_red..value..end_color)
+		print__(begin_red..value..end_color)
 	else
-		print(value)
+		print__(value)
 	end
 end
 
 local function print_green(value)
 	if sessionInfo().separator == "/" then
-		print(begin_green..value..end_color)
+		print__(begin_green..value..end_color)
 	else
-		print(value)
+		print__(value)
 	end
 end
 
 local function print_yellow(value)
 	if sessionInfo().separator == "/" then
-		print(begin_yellow..value..end_color)
+		print__(begin_yellow..value..end_color)
 	else
-		print(value)
+		print__(value)
 	end
 end
 
@@ -258,14 +260,14 @@ configureTests = function(fileName)
 		print("\n>> Choose option: \n")	
 		local luaTests = {}
 		luaTests[#luaTests + 1] = '""'
-		print ("("..(#luaTests)..")".." ".."ALL")
+		print("("..(#luaTests)..")".." ".."ALL")
 		local luaTests2 = dir(srcDir..s..options[tonumber(answer)])
 		for _, test in ipairs(luaTests2) do
 			luaTests[#luaTests + 1] = test
 		end
 		
 		for index, tests in ipairs(luaTests2) do
-			print ("("..(index + 1)..")".." "..tests)
+			print("("..(index + 1)..")".." "..tests)
 		end
 	
 		usertest = io.read()
@@ -431,6 +433,7 @@ executeTests = function(fileName)
 	ut.functions_without_assert = 0
 	ut.examples = 0
 	ut.examples_error = 0
+	ut.print_calls = 0
 
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
@@ -490,7 +493,16 @@ executeTests = function(fileName)
 				local count_test = ut.test
 
 				collectgarbage("collect")
+
+				print = function(...)
+					ut.print_calls = ut.print_calls + 1
+					print_red(...)
+				end
+
 				local ok_execution, err = pcall(function() tests[eachTest](ut) end)
+
+				print = print__
+
 				killAllObservers()
 				ut.executed_functions = ut.executed_functions + 1
 
@@ -621,18 +633,6 @@ executeTests = function(fileName)
 		print_green("All "..ut.executed_functions.." tested functions do not have any unexpected execution error.")
 	end
 
-	if ut.functions_with_global_variables > 0 then
-		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
-	else
-		print_green("No function creates any global variable.")
-	end
-
-	if ut.wrong_file > 0 then
-		print_red(ut.wrong_file.." assert_error calls found an error message pointing to an internal file (wrong level).")
-	else
-		print_green("No assert_error has error messages pointing to internal files.")
-	end
-
 	if ut.functions_without_assert > 0 then
 		print_red(ut.functions_without_assert.." out of "..ut.executed_functions.." tested functions do not have at least one assert.")
 	else
@@ -643,6 +643,24 @@ executeTests = function(fileName)
 		print_red(ut.functions_not_exist.." out of "..ut.executed_functions.." tested functions do not exist in the source code of the package.")
 	else
 		print_green("All "..ut.executed_functions.." tested functions exist in the source code of the package.")
+	end
+
+	if ut.functions_with_global_variables > 0 then
+		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
+	else
+		print_green("No function creates any global variable.")
+	end
+
+	if ut.print_calls > 0 then
+		print_red(ut.print_calls.." print calls were found in the tests.")
+	else
+		print_green("No function prints any text on the screen.")
+	end
+
+	if ut.wrong_file > 0 then
+		print_red(ut.wrong_file.." assert_error calls found an error message pointing to an internal file (wrong level).")
+	else
+		print_green("No assert_error has error messages pointing to internal files.")
 	end
 
 	if check_functions then
@@ -667,11 +685,12 @@ executeTests = function(fileName)
 		print_yellow("No examples were executed.")
 	end
 
-	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error + ut.wrong_file +
-	               ut.functions_with_global_variables + ut.functions_with_error + ut.functions_without_assert
+	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error + 
+	               ut.wrong_file + ut.print_calls + ut.functions_with_global_variables + 
+	               ut.functions_with_error + ut.functions_without_assert
 
 	if errors == 0 then
-		print_green("All tests were succesfully executed.")
+		print_green("Summing up, all tests were succesfully executed.")
 	elseif errors == 1 then
 		print_red("Summing up, one problem was found during the tests.")
 	else
