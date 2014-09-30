@@ -23,6 +23,42 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
+-- Based on a color table available at http://gucky.uni-muenster.de/cgi-bin/rgbtab-en
+local colors = {
+	black        = {  0,   0,   0},
+	white        = {255, 255, 255},
+	lightRed     = {255, 102, 102},
+	red          = {255,   0,   0},
+	darkRed      = {128,   0,   0},
+	lightYellow  = {255, 255, 153},
+	yellow       = {255, 255,   0},
+	darkYellow   = {255, 215,   0},
+	lightOrange  = {255, 180,   0},
+	orange       = {238, 154,   0},
+	darkOrange   = {205, 103,   0},
+	lightBrown   = {128,  85,  85},
+	brown        = {128,  64,  64},
+	darkBrown    = {108,  53,  53},
+	lightGreen   = {153, 255, 153},
+	green        = {  0, 255,   0},
+	darkGreen    = {  0, 128,   0},
+	lightCyan    = {128, 255, 255},
+	cyan         = {  0, 255, 255},
+	darkCyan     = {  0, 128, 128},
+	lightBlue    = {173, 216, 230},
+	blue         = {  0,   0, 255},
+	darkBlue     = {  0,   0, 128},
+	lightGray    = {200, 200, 200},
+	gray         = {160, 160, 160},
+	darkGray     = {128, 128, 128},
+	lightMagenta = {255, 128, 255},
+	magenta      = {255,   0, 255},
+	darkMagenta  = {139,   0, 139},
+	lightPurple  = {155, 048, 255},
+	purple       = {125, 038, 205},
+	darkPurple   = {085, 026, 139}
+}
+
 local ColorBrewer = {
 	YellowsGreens    = {{255,255,229},{247,252,185},{217,240,163},{173,221,142},{120,198,121},{65,171,93},{35,132,67},{0,104,55},{0,69,41}},
 	YellowsGreensBlues   = {{255,255,217},{237,248,177},{199,233,180},{127,205,187},{65,182,196},{29,145,192},{34,94,168},{37,52,148},{8,29,88}},
