@@ -972,13 +972,13 @@ int luaNeighborhood::getParent( lua_State *L )
             lua_pop(luaL, 1);
         }
 
-        string errorMsg = string("Error: The Observer ID ") + to_string(obsId) + string(" was not found. ") +
-                          string("Check the declaration of this observer.");
+        QString errorMsg = QString("Error: The Observer ID ") + QString(obsId) + QString(" was not found. ") +
+                          QString("Check the declaration of this observer.");
 
         if (! cellSpace)
         {
             lua_getglobal(L, "customError");
-            lua_pushstring(L,errorMsg.c_str());
+            lua_pushstring(L,errorMsg.toAscii().data());
             //lua_pushnumber(L,5);
             lua_call(L,1,0);
         }
@@ -990,7 +990,7 @@ int luaNeighborhood::getParent( lua_State *L )
             if (! obsMap)
             {
                 lua_getglobal(L, "customError");
-                lua_pushstring(L,errorMsg.c_str());
+                lua_pushstring(L,errorMsg.toAscii().data());
                 //lua_pushnumber(L,5);
                 lua_call(L,1,0);
             }
@@ -1004,7 +1004,7 @@ int luaNeighborhood::getParent( lua_State *L )
             if (! obsImage)
             {
                 lua_getglobal(L, "customError");
-                lua_pushstring(L,errorMsg.c_str());
+                lua_pushstring(L,errorMsg.toAscii().data());
                 //lua_pushnumber(L,5);
                 lua_call(L,1,0);
             }

@@ -108,7 +108,7 @@ public slots:
     void enableGrid(bool);
     void drawAgent(const QImage &result, const QSize &size = QSize());
     void save(const QImage &result);
-    inline void mappingSociety(Attributes *attrib, QPainter *p, 
+    /*inline*/ void mappingSociety(Attributes *attrib, QPainter *p, 
         const QImage &result = QImage(), const QSize &size = QSize());
 
 protected:

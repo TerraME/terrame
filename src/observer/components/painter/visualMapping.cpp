@@ -807,6 +807,7 @@ void VisualMapping::mappingAllText(Attributes *attrib, QPainter *p)
     }
 }
 
+//TODO: This method must be moved to the header file, because it must be inline.
 void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
     const QImage &result, const QSize &size)
 {
