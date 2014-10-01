@@ -314,19 +314,6 @@ doc = function(package)
 	-- colocar sempre o logo do TerraME, removendo o parametro logo = "img/terrame.png"
 end
 
--- altissima prioridade
-exectest = function(package, configFile)
-	if package == nil then
-		package = "base"
-	else
-		require("base")
-	end
-
-	require(package)
-
-	-- executar todos os testes
-end
-
 -- builds a table with zero counts for each element of the table gotten as argument
 local buildCountTable = function(mtable)
 	result = {}
@@ -347,7 +334,17 @@ end
 
 -- RAIAN: FUncao do antonio que executa os testes. Devera ir para dentro da funcao test acima. Coloquei desta maneira 
 -- para executar os testes sem alterar a chamada no lado C++ por enquanto. 
-executeTests = function(fileName)
+-- TODO: implement package param
+executeTests = function(fileName, package)
+	local package 
+	if package == nil then
+		package = "base"
+	else
+		require("base")
+	end
+
+	require(package)
+
 	local initialTime = os.clock()
 
 	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
@@ -366,17 +363,6 @@ executeTests = function(fileName)
 
 	for i, file in ipairs(load_sequence) do
 		testfunctions[file] = buildCountTable(include(baseDir..s.."lua"..s..file))
-	end
-
-	sessionInfo = function()
-		result = {
-			mode = "debug",
-			version = VERSION,
-			dbVersion = "1_3_1", -- TODO: remove this parameter?
-			separator = package.config:sub(1, 1),
-			path = os.getenv("TME_PATH")
-		}
-		return result
 	end
 
 	-- TODO: possibilitar executar esta funcao mesmo que o usuario nao passe
@@ -677,12 +663,120 @@ file = function(file, package)
 	-- verificar se o arquivo existe senao retorna um erro
 end
 
-local VERSION = "1.3.1"
+
+local versions = function()
+    print("\nTerraME - Terra Modeling Environment")
+    print(" Version: ", sessionInfo().version)
+    print(" Location (TME_PATH): "..sessionInfo().path)
+
+    print(" Compiled with: ")
+    -- TODO: Verify how to retrieve these informations.
+    -- qWarning("    %s ", LUA_RELEASE);
+    -- qWarning("    Qt %s ", qVersion());
+    -- qWarning("    Qwt %s ", QWT_VERSION_STR);
+
+    -- qWarning("    TerraLib %s (Database version: %s) ", 
+    --     TERRALIB_VERSION,       // macro in the file "TeVersion.h"
+    --     TeDBVERSION.c_str());   // macro in the file "TeDefines.h" linha 221
+
+    print("\nFor more information, please visit: www.terrame.org\n")
+end
+
+local usage = function()
+	print("\n")
+    print("Usage: TerraME [[-gui] | [-mode=normal|debug|quiet]] file1.lua file2.lua ...")
+    print("       or TerraME [-version]\n")
+    print("Options: ")
+	print(" -autoclose                 Automatically close the platform after simulation.")
+	print(" -config-tests <file_name>  Generate a file used to configure the execution of the tests.")
+	print(" -draw-all-higher <value>   Draw all subjects when percentage of changes was higher")
+    print("                            than <value>. Value must be between interval [0, 1].")
+    print(" -gui                       Show the player for the application (it works only ")
+    print("                            when an Environment and/or a Timer objects are used).")
+	print(" -ide                       Configure TerraME for running from IDEs in Windows systems.")
+    print(" -mode=normal (default)     Warnings enabled.")
+	print(" -mode=debug                Warnings treated as errors.")
+	print(" -mode=quiet                Warnings disabled.")
+    print(" -version                   TerraME general information.")
+	print(" -test                      Execute tests.")
+    print(" -workers <value>           Sets the number of threads used for spatial observers.")
+end
 
 -- RAIAN implementar
 execute = function(parameters) -- parameters is a string
 	-- implementa o sessionInfo
 	-- o execute vai chamar o build, test, etc.
+
+	if parameters == nil or #parameters < 1 then 
+		print("\nYou should provide, at least, a model file as parameter.")
+		usage()
+		return
+	end
+
+	local executionMode = "normal"
+
+	local info = {
+		mode = executionMode,
+		version = "2.0",
+		dbVersion = "1_3_1", -- TODO: remove this parameter?
+		separator = package.config:sub(1, 1),
+		path = os.getenv("TME_PATH")
+	}
+
+	sessionInfo = function()
+		return info
+		-- atualizar todos os arquivos que usam as variaveis globais por uma chamada a esta funcao
+		-- remover as variaveis globais TME_MODE, ...
+	end
+
+	local paramCount = 1
+	while paramCount <= #parameters do
+		param = parameters[paramCount]
+		if string.sub(param, 1, 1) == "-" then
+			if param == "-version" then
+				versions()
+				usage()
+				return
+			elseif param == "-ide" then
+				local __cellEmpty = Cell{attrib = 1}
+				local __obsEmpty = Observer{subject = __cellEmpty, type = "chart", attributes = {"attrib"}}
+				__obsEmpty:kill()
+			elseif param == "-mode=normal" then
+				info.mode = "normal"
+			elseif param == "-mode=debug" then
+				info.mode = "debug"
+			elseif param == "-mode=quiet" then
+				info.mode = "quiet"
+			elseif param == "-config-tests" then
+				paramCount = paramCount + 1
+				local correct, errorMsg = pcall(configureTests, parameters[paramCount])
+				if not correct then 
+					print(errorMsg)
+				end
+				return
+			elseif param == "-test" then
+				info.mode = "debug"
+				paramCount = paramCount + 1
+				local correct, errorMsg = pcall(executeTests, parameters[paramCount])
+				if not correct then
+					print(errorMsg)
+				end
+				return
+			elseif param == "-autoclose" then
+
+			end
+		else
+			-- TODO: Verify this block
+			require("base")
+			local correct, errorMsg = pcall(dofile, param)
+			if not correct then
+				print(erroMsg)
+			end
+			return
+		end
+		paramCount = paramCount + 1
+	end
+
 end
 
 packageInfo = function(package)
@@ -694,20 +788,6 @@ packageInfo = function(package)
 	--forEachOrderedElement(ns, function(idx, value)
 	--	print(idx..": "..value)
 	--end)
-end
-
---TODO: Raian-Diretorio onde ficarao instalados os pacotes nao deveria ser um campo desta tabela? 
-sessionInfo = function()
-	result = {
-		mode = "normal",
-		version = VERSION,
-		dbVersion = "1_3_1", -- TODO: remove this parameter?
-		separator = package.config:sub(1, 1),
-		path = os.getenv("TME_PATH")
-	}
-	return result
-	-- atualizar todos os arquivos que usam as variaveis globais por uma chamada a esta funcao
-	-- remover as variaveis globais TME_MODE, ...
 end
 
 --- Return a string describing a TerraME object. This function allows one to use the method print() directly from any TerraME object.
@@ -762,6 +842,4 @@ tostringTerraME = function(self)
 
 	return result
 end
-
-require("base")
 

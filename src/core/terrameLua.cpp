@@ -116,62 +116,6 @@ void outputHandle(QtMsgType type, const char *msg)
     }
 }
 
-// Shows the usage of TerraME
-void usage()
-{
-	qWarning("\n");
-    qWarning("Usage: TerraME [[-gui] | [-mode=normal|debug|quiet]] file1.lua file2.lua ...");
-    qWarning("       or TerraME [-version]\n");
-    qWarning("Options: ");
-	qWarning(" -autoclose                 Automatically close the platform after simulation.");
-	qWarning(" -config-tests <file_name>  Generate a file used to configure the execution of the tests.");
-	qWarning(" -draw-all-higher <value>   Draw all subjects when percentage of changes was higher");
-    qWarning("                            than <value>. Value must be between interval [0, 1].");
-    qWarning(" -gui                       Show the player for the application (it works only ");
-    qWarning("                            when an Environment and/or a Timer objects are used).");
-	qWarning(" -ide                       Configure TerraME for running from IDEs in Windows systems.");
-    qWarning(" -mode=normal (default)     Warnings enabled.");
-	qWarning(" -mode=debug                Warnings treated as errors.");
-	qWarning(" -mode=quiet                Warnings disabled.");
-    qWarning(" -version                   TerraME general information.");
-	qWarning(" -test                      Execute tests.");
-    qWarning(" -workers <value>           Sets the number of threads used for spatial observers.");
-
-    //fprintf(stderr, "\nYou should provide, at least, a model file as parameter.\n");
-    //fprintf(stderr, "\nUsage examples: ");
-    //fprintf(stderr, "\n\tTerraME [-gui] [-quiet] myModel1.lua [myModel2.lua .. myModelN.lua]\n");
-    //fprintf(stderr, "\n\tTerraME -version\n");
-}
-
-// Shows the TerraMe and dependecies versions
-void versions()
-{
-    //qWarning("\nTerraLab -- Earth System Modelling and Simulation Laboratory");
-    qWarning("\nTerraME - Terra Modeling Environment");
-    qWarning(" Version: %s ", TME_VERSION);     // macro in the file "terrameLua5_1.h"
-    // string buffer = "TME_PATH_";
-
-    QString tmeVersion = QString("%1").arg(TME_VERSION);
-    // buffer.append(tmeVersion.replace(QString("."),QString("_")).toAscii().constData());
-    // qWarning("        Location: '%s' ", getenv(buffer.c_str()));
-    qWarning(" Location (TME_PATH): '%s'", getenv(TME_PATH));
-
-    qWarning(" Compiled with: ");
-    qWarning("    %s ", LUA_RELEASE);                  // macro in the file "lua.h"
-    qWarning("    Qt %s ", qVersion());                // Qt version method
-    qWarning("    Qwt %s ", QWT_VERSION_STR);          // macro in the file "qwt_global.h"                   
-
-#ifndef TME_NO_TERRALIB
-    qWarning("    TerraLib %s (Database version: %s) ", 
-        TERRALIB_VERSION,       // macro in the file "TeVersion.h"
-        TeDBVERSION.c_str());   // macro in the file "TeDefines.h" linha 221
-#else
-    qWarning("    TerraLib (disabled at compilation time) ");
-#endif
-
-    qWarning("\nFor more information, please visit: www.terrame.org\n");
-}
-
 /// Opens Lua environment and Lua libraries 
 void openLuaEnvironment()
 {
@@ -220,15 +164,6 @@ void registerClasses()
     Luna<luaSociety > ::Register(L);
 }
 
-void createEmptyObserver(lua_State* L)
-{
-	luaL_loadstring(L,
-			"local __cellEmpty = Cell{attrib = 1} \n"
-			"local __obsEmpty = Observer{subject = __cellEmpty, type = \"chart\", attributes = {\"attrib\"}}\n"
-			"__obsEmpty:kill()");
-	lua_call(L, 0, 0);
-}
-
 extern ExecutionModes execModes;
 
 int main ( int argc, char *argv[] )
@@ -242,7 +177,7 @@ int main ( int argc, char *argv[] )
     Q_INIT_RESOURCE(observerResource);
 
     // TODO
-    // retrive lua version from TerraME.lua
+    // retrive lua version from terrame.lua
     TME_VERSION = "2.0";
     TME_PATH = "TME_PATH";
 
@@ -308,8 +243,6 @@ int main ( int argc, char *argv[] )
     tmePath.append("/lua/terrame.lua");
 #endif
 
-    //char buff[256];
-
     // runs the lua core files 
     int error = luaL_loadfile(L, tmePath.toAscii().constData()) || lua_pcall(L, 0, 0, 0);
     if (error)
@@ -323,42 +256,55 @@ int main ( int argc, char *argv[] )
     // Execute the lua files passe
     if( argc < 2)
     {
-        qWarning("\nYou should provide, at least, a model file as parameter.");
-        usage();
-        //qWarning("\nPlease, try again...");
-        lua_close( L );
-        return -1;
-    }
+		lua_getglobal(L, "execute");
+		lua_pushnil(L);
+		lua_call(L, 1, 0);
+		return -1;
+	}
+	else
+	{
+		
+		lua_getglobal(L, "execute");
+		lua_newtable(L);
 
-    int argument = 1;
-    while( argument < argc )
-    {
+		int argument = 1;
+		while( argument < argc )
+		{
+			lua_pushnumber(L, argument);
+			lua_pushstring(L, argv[argument]);
+			lua_settable(L, -3);
+			
+			argument++;
+			
+		}
+		
+		lua_call(L, 1, 0);
+	}
+		
+		//@RAIAN: ANTIGO - TODO: remove this
+#ifdef NOCPP_RAIAN
         if ( argv[argument][0] == '-')
         {
-            if ( ! strcmp(argv[argument],"-version") )
-            {
-                versions();
-            }
-            else if( !strcmp(argv[argument], "-ide"))
-			{
-				createEmptyObserver(L);
-			}
-            else if ( ! strcmp(argv[argument],"-mode=quiet") )
-            {
-				execModes = Quiet;
-			}
-			//else if(! strcmp(argv[argument],"-mode=strict"))
-			//{
-			//	execModes = Strict;
-			//}
-			else if(! strcmp(argv[argument],"-mode=normal"))
-			{
-				execModes = Normal;
-			}
-			else if(! strcmp(argv[argument],"-mode=debug"))
-			{
-				execModes = Debug;
-			}
+//            if ( ! strcmp(argv[argument],"-version") )
+//            {
+//                versions();
+//            }
+//            else if( !strcmp(argv[argument], "-ide"))
+//			{
+//				createEmptyObserver(L);
+//			}
+//            else if ( ! strcmp(argv[argument],"-mode=quiet") )
+//            {
+//				execModes = Quiet;
+//			}
+//			else if(! strcmp(argv[argument],"-mode=normal"))
+//			{
+//				execModes = Normal;
+//			}
+//			else if(! strcmp(argv[argument],"-mode=debug"))
+//			{
+//				execModes = Debug;
+//			}
 			else if ( ! strcmp(argv[argument], "-autoclose") )
 			{
 				autoClose = true;
@@ -383,40 +329,40 @@ int main ( int argc, char *argv[] )
 
 				argument++;
 			}
-			else if(!strcmp(argv[argument], "-config-tests"))
-			{
-				lua_getglobal(L, "configureTests");
-				
-				argument++;
-				if(!argv[argument])
-				{
-					lua_pushnil(L);
-				}
-				else
-				{
-					string fileName = argv[argument];
-					lua_pushstring(L, fileName.c_str());
-				}
-				lua_call(L, 1, 0);
-				return 0;
-			}
-			else if(!strcmp(argv[argument], "-test"))
-			{
-				lua_getglobal(L, "executeTests");
-				
-				argument++;
-				if(!argv[argument])
-				{
-					lua_pushnil(L);
-				}
-				else
-				{
-					string fileName = argv[argument];
-					lua_pushstring(L, fileName.c_str());
-				}
-				lua_call(L, 1, 0);
-				return 0;
-			}
+//			else if(!strcmp(argv[argument], "-config-tests"))
+//			{
+//				lua_getglobal(L, "configureTests");
+//				
+//				argument++;
+//				if(!argv[argument])
+//				{
+//					lua_pushnil(L);
+//				}
+//				else
+//				{
+//					string fileName = argv[argument];
+//					lua_pushstring(L, fileName.c_str());
+//				}
+//				lua_call(L, 1, 0);
+//				return 0;
+//			}
+//			else if(!strcmp(argv[argument], "-test"))
+//			{
+//				lua_getglobal(L, "executeTests");
+//				
+//				argument++;
+//				if(!argv[argument])
+//				{
+//					lua_pushnil(L);
+//				}
+//				else
+//				{
+//					string fileName = argv[argument];
+//					lua_pushstring(L, fileName.c_str());
+//				}
+//				lua_call(L, 1, 0);
+//				return 0;
+//			}
 			// argv[argument] is not "-gui"
 			else if ( strcmp(argv[argument],"-gui") )
 			{
@@ -460,8 +406,10 @@ int main ( int argc, char *argv[] )
             }
         }
         argument++;
-
-    }
+		
+#endif
+		//@RAIAN: ANTIGO - FIM
+	
     //// Lua interpreter line-by-line
     //while (fgets(buff, sizeof(buff), stdin) != NULL)
     //{
