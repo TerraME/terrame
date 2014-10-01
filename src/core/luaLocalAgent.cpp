@@ -144,8 +144,8 @@ int luaLocalAgent::build( lua_State *){
 								 "it as a jump condition targert...");
 		lua_getglobal(L, "customError");
 		lua_pushstring(L,errorMsg.c_str());
-		lua_pushnumber(L,5);
-		lua_call(L,2,0);
+		//lua_pushnumber(L,5);
+		lua_call(L,1,0);
         return 0;
     }
     return 0;
@@ -260,8 +260,8 @@ int luaLocalAgent::createObserver( lua_State *L )
             string errorMsg = string("Attributes table not found. Incorrect sintax.");
 			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.c_str());
-			lua_pushnumber(L,5);
-			lua_call(L,2,0);
+			//lua_pushnumber(L,5);
+			lua_call(L,1,0);
 			return 0;
         }
 
@@ -291,8 +291,8 @@ int luaLocalAgent::createObserver( lua_State *L )
 					string err_out = string("Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L,err_out.c_str());
-					lua_pushnumber(L,4);
-					lua_call(L,2,0);
+					//lua_pushnumber(L,4);
+					lua_call(L,1,0);
                     return -1;
                 }
             }
@@ -316,8 +316,8 @@ int luaLocalAgent::createObserver( lua_State *L )
             string errorMsg = string("Parameter table not found. Incorrect sintax.");
 			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.c_str());
-			lua_pushnumber(L,5);
-			lua_call(L,2,0);
+			//lua_pushnumber(L,5);
+			lua_call(L,1,0);
 			return 0;
         }
 
@@ -429,8 +429,8 @@ int luaLocalAgent::createObserver( lua_State *L )
                 string err_out = string("The parameter table is empty.");
                 lua_getglobal(L, "customWarningMsg");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
             }
         }
         //------------------------
@@ -638,8 +638,8 @@ int luaLocalAgent::createObserver( lua_State *L )
                     string err_out = string("Observer will send broadcast.");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
                 obsUDPSender->addHost(BROADCAST_HOST);
             }
@@ -768,8 +768,8 @@ int luaLocalAgent::createObserver( lua_State *L )
 		{
 			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.toAscii().data());
-			lua_pushnumber(L,5);
-			lua_call(L,2,0);
+			//lua_pushnumber(L,5);
+			lua_call(L,1,0);
 			return 0;
 		}
 
@@ -802,8 +802,8 @@ int luaLocalAgent::createObserver( lua_State *L )
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				//lua_pushnumber(L,5);
+				lua_call(L,1,0);
 				return 0;
 			}
 
@@ -817,8 +817,8 @@ int luaLocalAgent::createObserver( lua_State *L )
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				//lua_pushnumber(L,5);
+				lua_call(L,1,0);
 				return 0;
 			}
 
@@ -1045,8 +1045,8 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
                             QString str = QString("Could not find the Automaton inside an Environment object.");
                             lua_getglobal(L, "customWarningMsg");
                             lua_pushstring(L,str.toAscii().constData());
-                            lua_pushnumber(L,5);
-                            lua_call(L,2,0);
+                            //lua_pushnumber(L,5);
+                            lua_call(L,1,0);
                         }
                     }
 
@@ -1244,8 +1244,8 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
                     QString str = QString("Could not find the Automaton inside an Environment object.");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,str.toAscii().constData());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
             }
         }
@@ -1533,8 +1533,8 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
                     string err_out = string("Could not find the Automaton inside an Environment object.");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
             }
         }

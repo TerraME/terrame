@@ -207,8 +207,8 @@ int luaEnvironment::createObserver( lua_State *luaL )
         string errorMsg = string("Attributes table not found. Incorrect sintax.");
 		lua_getglobal(L, "customError");
         lua_pushstring(L,errorMsg.c_str());
-		lua_pushnumber(L,5);
-		lua_call(L,2,0);
+		//lua_pushnumber(L,5);
+		lua_call(L,1,0);
 		return 0;
     }
 
@@ -256,8 +256,8 @@ int luaEnvironment::createObserver( lua_State *luaL )
                 string err_out = string("Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,err_out.c_str());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				//lua_pushnumber(L,5);
+				lua_call(L,1,0);
                 return -1;
             }
         }
@@ -288,8 +288,9 @@ int luaEnvironment::createObserver( lua_State *luaL )
     {
 		string errorMsg = string("Attributes table not found. Incorrect sintax.");
 		lua_pushstring(L,errorMsg.c_str());
-		lua_pushnumber(L,5);
-		lua_call(L,2,0);
+		//TODO: there is something wrong here.. which function will be called?
+		//lua_pushnumber(L,5);
+		lua_call(L,1,0);
 		return 0;
     }
 
@@ -365,8 +366,8 @@ int luaEnvironment::createObserver( lua_State *luaL )
             QString str = QString("The parameter table is empty.");
             lua_getglobal(L, "customWarningMsg");
             lua_pushstring(L,str.toAscii().constData());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
         }
     }
     //------------------------
@@ -575,8 +576,8 @@ int luaEnvironment::createObserver( lua_State *luaL )
                 string err_out = string("Observer will send broadcast.");
                 lua_getglobal(L, "customWarningMsg");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
             }
 
             obsUDPSender->addHost(BROADCAST_HOST);

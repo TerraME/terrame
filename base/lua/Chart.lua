@@ -23,40 +23,40 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
-local optionalTableElement = function(table, attr, allowedType, level)
+local optionalTableElement = function(table, attr, allowedType)
 	local value = table[attr]
 	local mtype = type(value)
 
 	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypeError(attr, allowedType, value, level + 1)
+		incompatibleTypeError(attr, allowedType, value)
 	end
 end
 
-local compulsoryTableElement = function(table, attr, level)
+local compulsoryTableElement = function(table, attr)
 	if table[attr] == nil then
-		mandatoryArgumentError(attr, level + 1)
+		mandatoryArgumentError(attr)
 	end
 end
 
 Chart = function(data)
-	compulsoryTableElement(data, "subject", 3)
-	optionalTableElement(data, "yLabel", "string", 3)
-	optionalTableElement(data, "xLabel", "string", 3)
-	optionalTableElement(data, "xAxis",  "string", 3)
-	optionalTableElement(data, "title",  "string", 3)
+	compulsoryTableElement(data, "subject")
+	optionalTableElement(data, "yLabel", "string")
+	optionalTableElement(data, "xLabel", "string")
+	optionalTableElement(data, "xAxis",  "string")
+	optionalTableElement(data, "title",  "string")
 
 	if type(data.select) == "string" then data.select = {data.select} end
 	if type(data.label)  == "string" then data.label  = {data.label} end
 
-	optionalTableElement(data, "select", "table",  3)
-	optionalTableElement(data, "label",  "table",  3)
+	optionalTableElement(data, "select", "table")
+	optionalTableElement(data, "label",  "table")
 
 	if data.yLabel == nil then data.yLabel = "" end
 	if data.xLabel == nil then data.xLabel = "" end
 	if data.title  == nil then data.title  = "" end
 
 	if data.select == nil then
-		verify(data.label == nil, "As select is nil, it is not possible to use label.", 4)
+		verify(data.label == nil, "As select is nil, it is not possible to use label.")
 
 		data.select = {}
 
@@ -89,15 +89,15 @@ Chart = function(data)
 			end)
 			data.select[#data.select + 1] = "#"
 		else
-			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society.", 3)
+			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society.")
 		end
 
-		verify(#data.select > 0, "The subject does not have at least one valid numeric attribute to be used.", 4)
+		verify(#data.select > 0, "The subject does not have at least one valid numeric attribute to be used.")
 	else
 		if type(data.select) == "string" then
 			data.select = {data.select}
 		else
-			optionalTableElement(data, "select", "table", 3)
+			optionalTableElement(data, "select", "table")
 		end
 
 		forEachElement(data.select, function(_, value)
@@ -110,7 +110,7 @@ Chart = function(data)
 					data.subject.obsattrs["quantity_"] = true
 					data.subject.quantity_ = #data.subject
 				else
-					customError("Selected element '"..value.."' does not belong to the subject.", 5)
+					customError("Selected element '"..value.."' does not belong to the subject.")
 				end
 			elseif type(data.subject[value]) == "function" then
 				if data.subject.obsattrs == nil then
@@ -120,7 +120,7 @@ Chart = function(data)
 				data.subject.obsattrs[value] = true
 
 			elseif type(data.subject[value]) ~= "number" then
-				customError("Selected element '"..value.."' should be a number or function, got "..type(data.subject[value])..".", 5)
+				customError("Selected element '"..value.."' should be a number or function, got "..type(data.subject[value])..".")
 			end
 		end)
 
@@ -130,7 +130,7 @@ Chart = function(data)
 					if data.select[i] == idx then
 						data.select[i] = idx.."_"
 						local mvalue = data.subject[idx](data.subject)
-						verify(type(mvalue) == "number", "Function "..idx.. "returns a non-number value.", 4)
+						verify(type(mvalue) == "number", "Function "..idx.. "returns a non-number value.")
 						data.subject[idx.."_"] = mvalue
 					end
 				end
@@ -138,7 +138,7 @@ Chart = function(data)
 		end
 	end
 
-	verify(#data.select > 0, "Charts must select at least one attribute.", 4)
+	verify(#data.select > 0, "Charts must select at least one attribute.")
 
 	if data.label == nil then
 		data.label = {}
@@ -159,7 +159,7 @@ Chart = function(data)
 		end
 	end
 
-	checkUnnecessaryParameters(data, {"subject", "select", "yLabel", "xLabel", "title", "label"}, 3)
+	checkUnnecessaryParameters(data, {"subject", "select", "yLabel", "xLabel", "title", "label"})
 
 	local observerType
 	if data.xAxis == nil then
@@ -174,7 +174,7 @@ Chart = function(data)
 	if type(subject) == "Automaton" then
 		local locatedInCell = data.location
 		if type(locatedInCell) ~= "Cell" then
-			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
+			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".")
 		else
 			table.insert(observerParams, locatedInCell)
 		end

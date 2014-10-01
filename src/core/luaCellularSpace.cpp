@@ -581,8 +581,8 @@ int luaCellularSpace::createObserver( lua_State * luaL)
                     string err_out = string("Attribute name '" ) + string (qPrintable(obsAttribs.at(i))) + string("' not found.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L,err_out.c_str());
-					lua_pushnumber(L,5);
-					lua_call(L,2,0);
+					//lua_pushnumber(L,5);
+					lua_call(L,1,0);
                     return 0;
                 }
             }
@@ -616,8 +616,8 @@ int luaCellularSpace::createObserver( lua_State * luaL)
                     string err_out = string("Attribute name '") + string(qPrintable(obsAttribs.at(i))) + string("' not found or does not belong to this subject.");
                     lua_getglobal(L, "customError");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
 
                     return 0;
                 }
@@ -922,8 +922,8 @@ int luaCellularSpace::createObserver( lua_State * luaL)
                 string err_out = string("Observer will send broadcast.");
                 lua_getglobal(L, "customWarningMsg");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
             }
 
             obsUDPSender->addHost(BROADCAST_HOST);
@@ -953,8 +953,8 @@ int luaCellularSpace::createObserver( lua_State * luaL)
                 string err_out = string("Port not defined.");
                 lua_getglobal(L, "customWarningMsg");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
             }
         }
         else
@@ -970,8 +970,8 @@ int luaCellularSpace::createObserver( lua_State * luaL)
                 string err_out = string("Observer will send to local host.");
                 lua_getglobal(L, "customWarningMsg");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
             }
             obsTCPSender->addHost(LOCAL_HOST);
         }
@@ -1537,9 +1537,10 @@ int luaCellularSpace::loadShape(lua_State *L)
     if(!hSHP || !hDBF)
     {
 		string errorMsg = string("It was not possible to open the shapefile ") + dbName + string(".");
+		// TODO: there is something wrong here
         lua_pushstring(L,errorMsg.c_str());
-		lua_pushnumber(L,5);
-		lua_call(L,2,0);
+		//lua_pushnumber(L,5);
+		lua_call(L,1,0);
 		return 0;
     }
 
@@ -1604,9 +1605,10 @@ int luaCellularSpace::loadShape(lua_State *L)
         if( !lua_isfunction(L, -1))
         {
             string err_out = string("It was not possible to open the shapefile ") + dbName + string(".");
+			// TODO: there is something wrong here
 			lua_pushstring(L,err_out.c_str());
-			lua_pushnumber(L,5);
-			lua_call(L,2,0);
+			//lua_pushnumber(L,5);
+			lua_call(L,1,0);
 			return 0;
         };
         
@@ -1688,8 +1690,8 @@ int luaCellularSpace::loadShape(lua_State *L)
     string err_out = string("Failed on load shapefile: Method is disabled in compilation time.");
     lua_getglobal(L, "customWarningMsg");
     lua_pushstring(L,err_out.c_str());
-    lua_pushnumber(L,5);
-    lua_call(L,2,0);
+    //lua_pushnumber(L,5);
+    lua_call(L,1,0);
 
     return 0;
 #endif
@@ -1743,8 +1745,8 @@ int luaCellularSpace::load(lua_State *L)
             string err_out = db->errorMessage() + string(".");
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
 
@@ -1756,8 +1758,8 @@ int luaCellularSpace::load(lua_State *L)
             db->close();
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
 
@@ -1773,8 +1775,8 @@ int luaCellularSpace::load(lua_State *L)
                 string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
                 return 0;
             }
             // Load input layers
@@ -1788,8 +1790,8 @@ int luaCellularSpace::load(lua_State *L)
                 string err_out = string("Can't load input layer '") + string(inputLayerName) + string("'.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
                 return false;
             }
         }
@@ -1802,8 +1804,8 @@ int luaCellularSpace::load(lua_State *L)
                 string err_out = string("Can't open input layer '") + string(inputLayerName) + string("'.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
                 db->close();
                 return 0;
             }
@@ -1824,8 +1826,8 @@ int luaCellularSpace::load(lua_State *L)
                 string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
                 db->close();
                 return 0;
             }
@@ -1960,8 +1962,8 @@ int luaCellularSpace::load(lua_State *L)
                 string err_out = string("Event constructor not found.'");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
                 return 0;
             };
 
@@ -2095,8 +2097,8 @@ int luaCellularSpace::load(lua_State *L)
         string err_out = string("It is not possible to load the TerraLib database '") + string(db->errorMessage().c_str()) + string("'.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return 0;
     }
 }
@@ -2545,8 +2547,8 @@ int luaCellularSpace::save(lua_State *L)
         string err_out = string("Attribute names table not found.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
 
@@ -2555,8 +2557,8 @@ int luaCellularSpace::save(lua_State *L)
         string err_out = string("Cells not found.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
 
@@ -2580,8 +2582,8 @@ int luaCellularSpace::save(lua_State *L)
         string err_out = db->errorMessage() + string(".");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
 
@@ -2596,8 +2598,8 @@ int luaCellularSpace::save(lua_State *L)
             string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,4);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,4);
+            lua_call(L,1,0);
             db->close();
             return false;
         }
@@ -2608,8 +2610,8 @@ int luaCellularSpace::save(lua_State *L)
             string err_out = string("Failed to load layer '") + string(db->errorMessage()) + string("'.");
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,4);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,4);
+            lua_call(L,1,0);
             db->close();
             return false;
         }
@@ -2623,8 +2625,8 @@ int luaCellularSpace::save(lua_State *L)
             string err_out = string("Failed to load layer '") + string(db->errorMessage()) + string("'.");
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,4);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,4);
+            lua_call(L,1,0);
             db->close();
             return false;
         }
@@ -2765,8 +2767,8 @@ int luaCellularSpace::save(lua_State *L)
         string err_out = string("Failed to create table '") + string(outputTable) + string("' in the TerraLib database.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         db->close();
         return false;
     }
@@ -2840,8 +2842,8 @@ int luaCellularSpace::save(lua_State *L)
             string err_out = string("Could not create table '") + string(outputTable) + string("' in the TerraLib database.");
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
     }
@@ -2863,8 +2865,8 @@ int luaCellularSpace::save(lua_State *L)
 			
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
     }
@@ -2880,8 +2882,8 @@ int luaCellularSpace::save(lua_State *L)
 			
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
     }
@@ -2903,8 +2905,8 @@ int luaCellularSpace::save(lua_State *L)
 			
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
         // delete the existing theme
@@ -2917,8 +2919,8 @@ int luaCellularSpace::save(lua_State *L)
 			
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
         // BEGIN: Raian
@@ -2929,8 +2931,8 @@ int luaCellularSpace::save(lua_State *L)
             string err_out = string("Fail to create theme \"") + string(inputThemeName) + string("\" - ")+ db->errorMessage()  + string("\n");
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
 
@@ -2942,8 +2944,8 @@ int luaCellularSpace::save(lua_State *L)
             string err_out = string("Fail to create theme \"") + string(inputThemeName) + string("\" - ")+ db->errorMessage()  + string("\n");
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
 
@@ -2996,8 +2998,8 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
         string err_out = db->errorMessage().c_str() + string( "\n");
 		lua_getglobal(L, "customError");
 		lua_pushstring(L,err_out.c_str());
-		lua_pushnumber(L,5);
-		lua_call(L,2,0);
+		//lua_pushnumber(L,5);
+		lua_call(L,1,0);
 		return 0;
     }
 
@@ -3015,8 +3017,8 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 			
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
         // Load input layers
@@ -3029,8 +3031,8 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 			
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
 
@@ -3047,8 +3049,8 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 			
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
         // Load input theme
@@ -3072,8 +3074,8 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 			
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
             return 0;
         }
     }
@@ -3328,8 +3330,8 @@ int luaCellularSpace::loadNeighborhood(lua_State *L){
                     string err_out = string("The file extension '" ) + string(extension) + string("' is not suported.");
                     lua_getglobal(L, "customError");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,4);
+                    lua_call(L,1,0);
                     return false;
                 }
 
@@ -3355,8 +3357,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
         string err_out = string("Failed to open neighborhood file '" ) + string(fileName) + string("'.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
     }
 
     file.seekg(0, ios::beg);
@@ -3373,8 +3375,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
                 string("Use 'Environment:loadNeighborhood()' instead.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
 
@@ -3385,8 +3387,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
                 string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GPM file layer: '") + string(layer1Id) + string("'.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
 
@@ -3397,8 +3399,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
         string err_out = string("The GPM must have exatly zero or one attributes. Currently, TerraME does not support neighborhoods with more than one attribute.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
     else
@@ -3429,8 +3431,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
                                  string("' but was not found in the CellularSpace. Probably the file was made for another CellularSpace.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
             }
 
             // creates the neighborhood and adds it to the cell's set of neighborhoods
@@ -3454,8 +3456,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
                 string err_out = string("Neighborhood constructor not found." );
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
             }
 
             // puts the neighborhood on the stack top
@@ -3480,8 +3482,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
                 string err_out = string("Neighborhood constructor was not found in the stack." );
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
             }
 
             // Gets the neighbors and add them to the neighborhood
@@ -3497,8 +3499,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
                                      string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
                     lua_getglobal(L, "customError");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,4);
+                    lua_call(L,1,0);
                     lua_pushnil( L );
                     return 1;
                 }
@@ -3568,8 +3570,8 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
         string err_out = string("Failed to open neighborhood file '" ) + string(fileName) + string("'");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
 
@@ -3592,8 +3594,8 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
                 string("CellularSpace layer: '") + string(this->getLayerName().c_str()) + string("', ") + string("GAL file layer: '") + string(layerId) + string("'.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
 
@@ -3622,8 +3624,8 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
                                  string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
             }
 
             // creates the neighborhood and add it to the cell's set of neighborhoods
@@ -3647,8 +3649,8 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
                 string err_out = string("Neighborhood constructor not found.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
                 return 0;
             }
 
@@ -3674,8 +3676,8 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
                 string err_out = string("Neighborhood constructor not found in the stack.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
                 return 0;
             }
 
@@ -3694,8 +3696,8 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
                                      string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
                     lua_getglobal(L, "customError");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,4);
+                    lua_call(L,1,0);
                 }
 
                 // Add the new neighbor to the neighborhood
@@ -3732,8 +3734,8 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
         string err_out = string("Unexpected end of file! Probably it is corrupted.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
     file.close();
@@ -3764,8 +3766,8 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
         string err_out = string("Failed to open neighborhood file '") + string(fileName) + string("'.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
 
@@ -3789,8 +3791,8 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
 
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
     }
 
     // gets the name of the key variable (it either will not be used).
@@ -3818,8 +3820,8 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
                                  string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
             }
 
             // Creates a neighborhood and add it to the cell's set of neighborhoods
@@ -3844,8 +3846,8 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
                 string err_out = string("Neighborhood constructor not found.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
                 return 0;
             }
 
@@ -3871,8 +3873,8 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
                 string err_out = string("Neighborhood constructor not found in the stack.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
                 return 0;
             }
 
@@ -3893,8 +3895,8 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
                                      string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
                     lua_getglobal(L, "customError");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,4);
+                    lua_call(L,1,0);
                 }
 
                 // Add the new neighbor to the neighborhood
@@ -3936,8 +3938,8 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
         string err_out = string("Unexpected end of file! Probably it is corrupted.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
     file.close();
@@ -3974,8 +3976,8 @@ int luaCellularSpace::loadTXTNeighborhood( lua_State *L, const char* fileName, c
         string err_out = string("Failed to open neighborhood file '") + string(fileName) + string("'.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
     }
 
     // gets the total number of cells
@@ -4044,8 +4046,8 @@ int luaCellularSpace::loadTXTNeighborhood( lua_State *L, const char* fileName, c
                 string err_out = string("Neighborhood constructor not found.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
                 return 0;
             }
 
@@ -4071,8 +4073,8 @@ int luaCellularSpace::loadTXTNeighborhood( lua_State *L, const char* fileName, c
                 string err_out = string("Neighborhood constructor not found in the stack.");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
                 return 0;
             }
 
@@ -4099,8 +4101,8 @@ int luaCellularSpace::loadTXTNeighborhood( lua_State *L, const char* fileName, c
         string err_out = string("Unexpected end of file! Probably it is corrupted.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
         return false;
     }
     file.close();

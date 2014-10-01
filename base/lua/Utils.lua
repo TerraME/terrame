@@ -221,7 +221,7 @@ function d(data)
 
 	if type(data[1]) == "table" then
 		if #data[1] ~= #data[2] then 
-			customError("You should provide the same number of differential equations and initial conditions.", 2)
+			customError("You should provide the same number of differential equations and initial conditions.")
 		end
 	end
 
@@ -271,10 +271,10 @@ integrate = function(attrs)
 	if type(attrs.equation) == "table" then
 		if type(attrs.initial) == "table" then
 			if getn(attrs.equation) ~= getn(attrs.initial) then
-				customError("Tables equation and initial shoud have the same size.", 2)
+				customError("Tables equation and initial shoud have the same size.")
 			end
 		else
-			customError("As equation is a table, initial should also be a table, got "..type(attrs.initial)..".", 2)
+			customError("As equation is a table, initial should also be a table, got "..type(attrs.initial)..".")
 		end
 	end
 
@@ -305,7 +305,7 @@ end
 
 function belong(value, values)
 	if type__(values) ~= "table" then
-		incompatibleTypeError("#2", "table", values, 3)
+		incompatibleTypeError("#2", "table", values)
 	end
 
 	if values == nil then return false end
@@ -358,10 +358,10 @@ end
 function forEachCell(cs, f)
 	local t = type(cs)
 	if t ~= "CellularSpace" and t ~= "Trajectory" and t ~= "Agent" then
-		incompatibleTypeError("#1", "CellularSpace, Trajectory, or Agent", cs, 3)
+		incompatibleTypeError("#1", "CellularSpace, Trajectory, or Agent", cs)
 	end
 	if type(f) ~= "function" then
-		incompatibleTypeError("#2", "function", f, 3)
+		incompatibleTypeError("#2", "function", f)
 	end
 	for i, cell in ipairs(cs.cells) do
 		result = f(cell, i)
@@ -385,11 +385,11 @@ end
 -- end)
 function forEachCellPair(cs1, cs2, f)
 	if type(cs1) ~= "CellularSpace" then
-		incompatibleTypeError("#1", "CellularSpace", cs1, 3)
+		incompatibleTypeError("#1", "CellularSpace", cs1)
 	elseif type(cs2) ~= "CellularSpace" then
-		incompatibleTypeError("#2", "CellularSpace", cs2, 3)
+		incompatibleTypeError("#2", "CellularSpace", cs2)
 	elseif type(f) ~= "function" then
-		incompatibleTypeError("#3", "function", f, 3)
+		incompatibleTypeError("#3", "function", f)
 	end
 
 	for i, cell1 in ipairs(cs1.cells) do
@@ -425,20 +425,20 @@ end
 --@see CellularSpace:loadNeighborhood
 function forEachNeighbor(cell, index, f)
 	if type(cell) ~= "Cell" then
-		incompatibleTypeError("#1", "Cell", cell, 3)
+		incompatibleTypeError("#1", "Cell", cell)
 	end
 
 	if type(index) == "function" then
 		f = index
 		index = "1"
 	elseif type(index) ~= "string" then
-		incompatibleTypeError("#2", "function or string", index, 3)
+		incompatibleTypeError("#2", "function or string", index)
 	elseif type(f) ~= "function" then
-		incompatibleTypeError("#3", "function", f, 3)
+		incompatibleTypeError("#3", "function", f)
 	end
 	local neighborhood = cell:getNeighborhood(index)
 	if neighborhood == nil then
-		customError("Neighborhood '"..index.."' does not exist.", 3)
+		customError("Neighborhood '"..index.."' does not exist.")
 	end
 	neighborhood.cObj_:first()
 	while not neighborhood.cObj_:isLast() do
@@ -460,10 +460,10 @@ end
 -- end)
 function forEachNeighborhood(cell, f)
 	if type(cell) ~= "Cell" then
-		incompatibleTypeError("#1", "Cell", cell, 3)
+		incompatibleTypeError("#1", "Cell", cell)
 	end
 	if type(f) ~= "function" then
-		incompatibleTypeError("#2", "function", f, 3)
+		incompatibleTypeError("#2", "function", f)
 	end
 
 	cell.cObj_:first()
@@ -500,21 +500,21 @@ end
 -- @see Society:createSocialNetwork
 function forEachConnection(agent, index, f)
 	if type(agent) ~= "Agent" then
-		incompatibleTypeError("#1", "Agent", agent, 3)
+		incompatibleTypeError("#1", "Agent", agent)
 	end
 
 	if type(index) == "function" then
 		f = index
 		index = "1"
 	elseif type(index) ~= "string" then
-		incompatibleTypeError("#2", "function or string", index, 3)
+		incompatibleTypeError("#2", "function or string", index)
 	elseif type(f) ~= "function" then
-		incompatibleTypeError("#3", "function", f, 3)
+		incompatibleTypeError("#3", "function", f)
 	end
 
 	local socialnetwork = agent:getSocialNetwork(index)
 	if not socialnetwork then
-		customError("Agent does not have a SocialNetwork named '"..index.."'.", 3)
+		customError("Agent does not have a SocialNetwork named '"..index.."'.")
 	end
 	for index, connection in pairs(socialnetwork.connections) do
 		local weight = socialnetwork.weights[index]
@@ -539,16 +539,16 @@ end
 function forEachAgent(obj, func)
 	local t = type(obj)
 	if t ~= "Society" and t ~= "Cell" and t ~= "Group" then
-		incompatibleTypeError("#1", "Society, Group, or Cell", obj, 3)
+		incompatibleTypeError("#1", "Society, Group, or Cell", obj)
 	end
 
 	if type(func) ~= "function" then
-		incompatibleTypeError("#2", "function", func, 3)
+		incompatibleTypeError("#2", "function", func)
 	end
 
 	local ags = obj.agents
 	if ags == nil then 
-		customError("Could not get agents from the "..type(obj)..".", 3)
+		customError("Could not get agents from the "..type(obj)..".")
 	end
 	-- forEachAgent needs to be different from the other forEachs because the
 	-- ageng can die along its own execution and it shifts back all the other
@@ -576,11 +576,11 @@ greaterByAttribute = function(attribute, operator)
 	if operator == nil then
 		operator = "<"
 	elseif not belong(operator, {"<", ">", "<=", ">="}) then
-		incompatibleValueError("#2", "<, >, <=, or >=", operator, 3)
+		incompatibleValueError("#2", "<, >, <=, or >=", operator)
 	end
 
 	if type(attribute) ~= "string" then
-		incompatibleTypeError("attribute", "string", attribute, 3)
+		incompatibleTypeError("attribute", "string", attribute)
 	end
 	local str = "return function(o1, o2) return o1."..attribute.." "..operator.." o2."..attribute.." end"
 	return load(str)()
@@ -598,7 +598,7 @@ greaterByCoord = function(operator)
 	if operator == nil then
 		operator = "<"
 	elseif not belong(operator, {"<", ">", "<=", ">="}) then
-		incompatibleValueError("#1", "<, >, <=, or >=", operator, 3)
+		incompatibleValueError("#1", "<, >, <=, or >=", operator)
 	end
 
 	local str = "return function(a,b)\n"
@@ -619,11 +619,11 @@ end
 --     print(element, etype)
 -- end)
 forEachElement = function(obj, func)
-	if obj == nil then mandatoryArgumentError("#1", 3) end
-	if func == nil then mandatoryArgumentError("#2", 3) end
+	if obj == nil then mandatoryArgumentError("#1") end
+	if func == nil then mandatoryArgumentError("#2") end
 
 	if type(func) ~= "function" then
-		incompatibleTypeError("#2", "function", func, 3)
+		incompatibleTypeError("#2", "function", func)
 	end
 
 	for k, ud in pairs(obj) do
@@ -634,10 +634,10 @@ end
 
 --TODO: esta funcao ignora elementos que possuem o mesmo lower case (ex: aAa e aaa). Tratar este caso.
 forEachOrderedElement = function(obj, func)
-	if obj == nil then mandatoryArgumentError("#1", 3) end
+	if obj == nil then mandatoryArgumentError("#1") end
 
 	if type(func) ~= "function" then
-		incompatibleTypeError("#2", "function", func, 3)
+		incompatibleTypeError("#2", "function", func)
 	end
 
 	local strk
@@ -695,7 +695,7 @@ end
 -- @return TODO
 function getn(t)
 	if type(t) ~= "table" then
-		incompatibleTypeError("#1", "table", t, 3)
+		incompatibleTypeError("#1", "table", t)
 	end
 
 	local n = 0

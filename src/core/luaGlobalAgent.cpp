@@ -100,8 +100,8 @@ int luaGlobalAgent::build( lua_State *)
         string err_out = string("A control mode must be added to the agent before use it as a jump condition target.");
         lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        //lua_pushnumber(L,4);
+        lua_call(L,1,0);
     }
     return 0;
 }
@@ -223,8 +223,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
             string err_out = string("Attributes table not found. Incorrect sintax");
             lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,4);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,4);
+            lua_call(L,1,0);
             return -1;
         }
 
@@ -253,8 +253,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
                     string err_out = string("Attribute '" ) + string (key.toStdString()) + string("' not found");
                     lua_getglobal(L, "customError");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,4);
+                    lua_call(L,1,0);
                     return -1;
                 }
             }
@@ -392,8 +392,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 string err_out = string("The parameter table is empty.");
                 lua_getglobal(L, "customWarningMsg");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
             }
         }
 
@@ -614,8 +614,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
                     string err_out = string("Observer will send broadcast.");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
                 obsUDPSender->addHost(BROADCAST_HOST);
             }
@@ -750,8 +750,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
 		{
 			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.toAscii().data());
-			lua_pushnumber(L,5);
-			lua_call(L,2,0);
+			//lua_pushnumber(L,5);
+			lua_call(L,1,0);
 			return 0;
 		}
 
@@ -786,8 +786,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				//lua_pushnumber(L,5);
+				lua_call(L,1,0);
 				return 0;
 			}
 
@@ -801,8 +801,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				//lua_pushnumber(L,5);
+				lua_call(L,1,0);
 				return 0;
 			}
 
@@ -828,8 +828,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
 				string err_out = string("Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,err_out.c_str());
-				lua_pushnumber(L,4);
-				lua_call(L,2,0);
+				//lua_pushnumber(L,4);
+				lua_call(L,1,0);
                 return 0;
             }
             

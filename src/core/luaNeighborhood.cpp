@@ -618,8 +618,8 @@ int luaNeighborhood::getParent( lua_State *L )
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
             }
             break;
@@ -637,8 +637,8 @@ int luaNeighborhood::getParent( lua_State *L )
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
             }
             break;
@@ -696,8 +696,8 @@ int luaNeighborhood::getParent( lua_State *L )
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
             }
             break;
@@ -719,8 +719,8 @@ int luaNeighborhood::getParent( lua_State *L )
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
             }
             break;
@@ -732,8 +732,8 @@ int luaNeighborhood::getParent( lua_State *L )
                                         "correspond to a valid type of Observer.");
                 lua_getglobal(L, "customWarningMsg");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
             }
             return 0;
         }
@@ -749,8 +749,8 @@ int luaNeighborhood::getParent( lua_State *L )
                     string err_out = string("Filename was not specified. Using default '") + string(qPrintable(DEFAULT_NAME));
                                             lua_getglobal(L, "customWarningMsg");
                                             lua_pushstring(L,err_out.c_str());
-                                            lua_pushnumber(L,5);
-                                            lua_call(L,2,0);
+                                            //lua_pushnumber(L,5);
+                                            lua_call(L,1,0);
                 }
                 obsLog->setFileName(DEFAULT_NAME + ".csv");
             }
@@ -767,8 +767,8 @@ int luaNeighborhood::getParent( lua_State *L )
                     string err_out = string("Separator not defined, using \";\".");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
                 obsLog->setSeparator();
             }
@@ -798,8 +798,8 @@ int luaNeighborhood::getParent( lua_State *L )
                     string err_out = string("Column title not defined.");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
             }
 
@@ -979,8 +979,8 @@ int luaNeighborhood::getParent( lua_State *L )
         {
             lua_getglobal(L, "customError");
             lua_pushstring(L,errorMsg.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
+            //lua_pushnumber(L,5);
+            lua_call(L,1,0);
         }
 
         if (typeObserver == TObsMap)
@@ -991,8 +991,8 @@ int luaNeighborhood::getParent( lua_State *L )
             {
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,errorMsg.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
             }
 
             obsMap->registry(this);
@@ -1005,8 +1005,8 @@ int luaNeighborhood::getParent( lua_State *L )
             {
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,errorMsg.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,5);
+                lua_call(L,1,0);
             }
 
             obsImage->registry(this);

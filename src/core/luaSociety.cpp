@@ -237,8 +237,8 @@ int luaSociety::createObserver( lua_State * luaL)
     	        string err_out = string("The parameter table is empty.");
     	        lua_getglobal(L, "customWarningMsg");
     	        lua_pushstring(L,err_out.c_str());
-    	        lua_pushnumber(L,5);
-    	        lua_call(L,2,0);
+    	        //lua_pushnumber(L,5);
+    	        lua_call(L,1,0);
     	    }
 */
     	    if (obsAttribs.empty())
@@ -264,8 +264,8 @@ int luaSociety::createObserver( lua_State * luaL)
 						string errorMsg = string("Attribute name ") + string(obsAttribs.at(i).toAscii().data()) + string(" not found.");
 						lua_getglobal(L, "customError");
 						lua_pushstring(L,errorMsg.c_str());
-						lua_pushnumber(L,5);
-						lua_call(L,2,0);
+						//lua_pushnumber(L,5);
+						lua_call(L,1,0);
                     	return 0;
                 	}
             	}
@@ -477,8 +477,8 @@ int luaSociety::createObserver( lua_State * luaL)
 						string err_out = string("Observer will send to broadcast.");
 						lua_getglobal(L, "customWarningMsg");
 						lua_pushstring(L,err_out.c_str());
-						lua_pushnumber(L,5);
-						lua_call(L,2,0);
+						//lua_pushnumber(L,5);
+						lua_call(L,1,0);
 					}
 					obsUDPSender->addHost(BROADCAST_HOST);
 				}
@@ -601,8 +601,8 @@ int luaSociety::createObserver( lua_State * luaL)
 		{
 			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.toAscii().data());
-			lua_pushnumber(L,5);
-			lua_call(L,2,0);
+			//lua_pushnumber(L,5);
+			lua_call(L,1,0);
 			return 0;
 		}
 
@@ -614,8 +614,8 @@ int luaSociety::createObserver( lua_State * luaL)
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				//lua_pushnumber(L,5);
+				lua_call(L,1,0);
 				return 0;
 			}
 
@@ -629,8 +629,8 @@ int luaSociety::createObserver( lua_State * luaL)
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				//lua_pushnumber(L,5);
+				lua_call(L,1,0);
 				return 0;
 			}
 

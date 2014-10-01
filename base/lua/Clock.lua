@@ -23,26 +23,26 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
-local optionalTableElement = function(table, attr, allowedType, level)
+local optionalTableElement = function(table, attr, allowedType)
 	local value = table[attr]
 	local mtype = type(value)
 
 	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypeError(attr, allowedType, value, level + 1)
+		incompatibleTypeError(attr, allowedType, value)
 	end
 end
 
-local compulsoryTableElement = function(table, attr, level)
+local compulsoryTableElement = function(table, attr)
 	if table[attr] == nil then
-		mandatoryArgumentError(attr, level + 1)
+		mandatoryArgumentError(attr)
 	end
 end
 
 Clock = function(data)
-	compulsoryTableElement(data, "subject", 3)
-	optionalTableElement(data, "subject", "Timer", 3)
+	compulsoryTableElement(data, "subject")
+	optionalTableElement(data, "subject", "Timer")
 
-	checkUnnecessaryParameters(data, {"subject"}, 3)
+	checkUnnecessaryParameters(data, {"subject"})
 
 	local observerAttrs = {}
 	local observerParams = {"", ""}

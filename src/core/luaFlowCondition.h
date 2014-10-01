@@ -96,8 +96,8 @@ public:
                 string err_out = string(" Error: rule can not be executed " ) + string (lua_tostring(L,-1)) + string("\".\n");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);             
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);             
                 return 0;
             }
 

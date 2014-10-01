@@ -35,7 +35,7 @@ Automaton_ = {
 		if type(object) == "Trajectory" or type(object) == "State" then
 			self.cObj_:add(object)
 		else
-			incompatibleTypeError("#1", "State or Trajectory", object, 3)  
+			incompatibleTypeError("#1", "State or Trajectory", object)  
 		end
 	end,
 	--- Check if the state machine was correctly defined. It verifies whether the targets of Jump rules match the ids of the States.
@@ -54,7 +54,7 @@ Automaton_ = {
 		if t == "Event" or t == "Pair" then
 			self.cObj_:execute(event)
 		else
-			incompatibleTypeError("#1", "Event", event, 3)  
+			incompatibleTypeError("#1", "Event", event)
 		end
 	end,
 	--- Retrieves the time when the machine executed the transition to the current state. Before running, the latency is zero.
@@ -77,10 +77,10 @@ Automaton_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime, 3) 
+				incompatibleTypeError("#1", "Event or positive number", modelTime) 
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "positive number", modelTime, 3)   
+			incompatibleValueError("#1", "positive number", modelTime)   
 		end
 		self.cObj_:notify(modelTime)
 	end,
@@ -91,7 +91,7 @@ Automaton_ = {
 		if status == nil then
 			status = false
 		elseif type(status) ~= "boolean" then
-			incompatibleTypeError("#1", "boolean", status, 3)
+			incompatibleTypeError("#1", "boolean", status)
 		end
 		self.cObj_:setActionRegionStatus(status)
 	end,
@@ -101,7 +101,7 @@ Automaton_ = {
 	setId = function(self,id)
 		if id == nil then
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("id", "string", id, 3)
+			incompatibleTypeError("id", "string", id)
 		end
 		self.id = id
 	end,
@@ -128,9 +128,9 @@ Automaton_ = {
 		if index == nil then
 			index = 1
 		elseif type(index) ~= "number" then
-			incompatibleTypeError("#1", "positive integer number", index, 3)
+			incompatibleTypeError("#1", "positive integer number", index)
 		elseif index < 0 then
-			incompatibleValueError("#1", "positive integer number", index, 3)
+			incompatibleValueError("#1", "positive integer number", index)
 		end
 		local statesVector = self:getStates()
 		return statesVector[index]
@@ -152,9 +152,9 @@ metaTableAutomaton_ = {__index = Automaton_, __tostring = tostringTerraME}
 function Automaton(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterError("Automaton", 3)
+			tableParameterError("Automaton")
 		else
- 			namedParametersError("Automaton", 3)
+ 			namedParametersError("Automaton")
  		end
 	end
 
@@ -163,7 +163,7 @@ function Automaton(data)
 	if data.id == nil then
 		data.id = "1"
 	elseif type(data.id) ~= "string" then
-		incompatibleTypeError("id", "string", data.id, 3)    
+		incompatibleTypeError("id", "string", data.id)
 	end
 
 	setmetatable(data, metaTableAutomaton_)

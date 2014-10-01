@@ -36,9 +36,9 @@ Timer_ = {
 			table.insert(self.events, event)
 			self.cObj_:add(event.cObj_[1], event.cObj_[2].cObj_)
 		elseif event == nil then
-			mandatoryArgumentError("#1", 3)
+			mandatoryArgumentError("#1")
 		else
-			incompatibleTypeError("#1", "Event or table", event, 3)
+			incompatibleTypeError("#1", "Event or table", event)
 		end
 	end,
 	--- Retrieve the current simulation time.
@@ -57,9 +57,9 @@ Timer_ = {
 	-- @usage timer:execute(2013)
 	execute = function(self, finalTime)
  	   if finalTime == nil then
-			mandatoryArgumentError("#1", 3)	
+			mandatoryArgumentError("#1")
     	elseif type(finalTime) ~= "number" then 
-			incompatibleTypeError("#1", "number", finalTime, 3)
+			incompatibleTypeError("#1", "number", finalTime)
 		end
 		self.cObj_:execute(finalTime)
 	end,
@@ -80,10 +80,10 @@ Timer_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime, 3) 
+				incompatibleTypeError("#1", "Event or positive number", modelTime) 
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "Event or positive number", modelTime, 3)   
+			incompatibleValueError("#1", "Event or positive number", modelTime)   
 		end
 		self.cObj_:notify(modelTime)
 	end,
@@ -95,9 +95,9 @@ Timer_ = {
 			index = 1
 		elseif type(index)~= "number" then
 			-- TODO: there is something wrong here. If the type is not number, it cannot be a float number
-			incompatibleTypeError("index", "positive integer number", "float number", 3)      
+			incompatibleTypeError("index", "positive integer number", "float number")      
 		elseif index < 0 or math.floor(index) ~= index then
-			incompatibleValueError("index", "positive integer number", "negative number", 3)
+			incompatibleValueError("index", "positive integer number", "negative number")
 		end
 		return self.cObj_:getEvent(index)
 	end,
@@ -117,15 +117,15 @@ Timer_ = {
     	if index == nil then
 			index = 1
 		elseif type(index)~= "number" then
-			incompatibleTypeError("#1", "positive integer number", index, 3)
+			incompatibleTypeError("#1", "positive integer number", index)
 		elseif index < 0 or math.floor(index) ~= index then
-			incompatibleValueError("#1", "positive integer number", index, 3)       
+			incompatibleValueError("#1", "positive integer number", index)
 		end
 
 		local t = type(event)
 		if t ~= "Pair" or t ~= "Event" then
 			-- TODO: esta funcao foi feita para dar errado porque sempre vai entrar neste if
-			incompatibleTypeError("#2", "Event", event, 3)
+			incompatibleTypeError("#2", "Event", event)
 		else
 			return self.cObj_:setEvent(event)
 		end
@@ -136,7 +136,7 @@ Timer_ = {
 	-- were sucessfully changed.
 	setEvents = function(self, events)
 		if type(events)~= "table" then
-			incompatibleTypeError("#1", "table", events, 3)
+			incompatibleTypeError("#1", "table", events)
 		end    
 		for i = 1, getn(events) do
 			setEvent(i, events[i])
@@ -163,7 +163,7 @@ function Timer(data)
 		if data == nil then
 			data = {}
 		else
- 			tableParameterError("Timer", 3)
+ 			tableParameterError("Timer")
  		end
 	end
 	
@@ -176,7 +176,7 @@ function Timer(data)
 			cObj:add(ud.cObj_[1], ud.cObj_[2].cObj_) 
 			table.insert(eventTab, ud)
 		elseif type(ud) ~= "userdata" then
-			incompatibleTypeError(tostring(i), "Event, table, or userdata", ud, 3)
+			incompatibleTypeError(tostring(i), "Event, table, or userdata", ud)
 		end
 	end
 

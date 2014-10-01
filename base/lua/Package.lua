@@ -44,7 +44,7 @@ function switch(data, att)
 					if type(f) == "function" then
 						return f(self.casevar,self)
 					else
-						customError("Case "..tostring(self.casevar).." not a function.", 2)
+						customError("Case "..tostring(self.casevar).." not a function.")
 					end
 				end
 			end
@@ -64,7 +64,7 @@ function switch(data, att)
 					if type(f) == "function" then
 						return f(self.casevar,self)
 					else
-						customError("Case "..tostring(self.casevar).." should be a function.", 2)
+						customError("Case "..tostring(self.casevar).." should be a function.")
 					end
 				else
 					local distance = string.len(self.casevar)
@@ -85,7 +85,7 @@ function switch(data, att)
 						end)
 						word = string.sub(word, 0, string.len(word) - 2).."]."
 					end
-					customError("'"..self.casevar.."' is an invalid value for parameter '"..att.."'. "..word, 4)
+					customError("'"..self.casevar.."' is an invalid value for parameter '"..att.."'. "..word)
 				end
 			end
 		}

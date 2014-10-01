@@ -26,7 +26,7 @@
 -------------------------------------------------------------------------------------------
 
 local deadAgentMetaTable_ = {__index = function()
-	customError("Trying to use a function or an attribute of a dead Agent.", 3)
+	customError("Trying to use a function or an attribute of a dead Agent.")
 end}
 
 Agent_ = {
@@ -42,7 +42,7 @@ Agent_ = {
 		if type(object) == "userdata" or type(object) == "Trajectory" then
 			self.cObj_:add(object)
 		else
-			incompatibleTypeError("#1", "State or Trajectory", object, 3)
+			incompatibleTypeError("#1", "State or Trajectory", object)
 		end
 	end,
 	--- Add a SocialNetwork to the Agent. This function replaces previous SocialNetwork with the
@@ -55,13 +55,13 @@ Agent_ = {
 	addSocialNetwork = function(self, set, id)
 		-- TODO: testar se o parametro set pode ser uma function!
 		if type(set) ~= "SocialNetwork" and type(set) ~= "function" then
-			incompatibleTypeError("#1", "SocialNetwork", set, 3)
+			incompatibleTypeError("#1", "SocialNetwork", set)
 		end
 
 		if id == nil then
 			id = "1"
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#2", "string", id, 3)
+			incompatibleTypeError("#2", "string", id)
 		end
 		self.socialnetworks[id] = set
 	end,
@@ -83,7 +83,7 @@ Agent_ = {
 	-- @usage agent:die()
 	die = function(self, remove_placements)
 		if remove_placements == true and not self.parent then
-			customError("Cannot remove the placements of an Agent that does not belong to a Society.", 3)
+			customError("Cannot remove the placements of an Agent that does not belong to a Society.")
 		end
 
 		if remove_placements == nil then
@@ -96,17 +96,17 @@ Agent_ = {
 				self:leave(nil, placement)
 			end)
 		end
-		self.execute = function() customWarning("Trying to execute a dead agent.", 3) end
+		self.execute = function() customWarning("Trying to execute a dead agent.") end
 		-- remove all the possible ways of getting delayed messages
 		forEachElement(self, function(idx, _, mtype)
 			if mtype == "function" and idx:sub(1, 3) == "on_" then
 				self[idx] = function()
-					customWarning("Trying to send a message to a dead Agent.", 3)
+					customWarning("Trying to send a message to a dead Agent.")
 				end
 			end
 		end)
 		self.on_message = function()
-			customWarning("Trying to send a message to a dead Agent.", 3)
+			customWarning("Trying to send a message to a dead Agent.")
 		end
 		self.parent:remove(self)
 		setmetatable(self, deadAgentMetaTable_)
@@ -122,24 +122,24 @@ Agent_ = {
 	-- @see Environment:createPlacement
 	enter = function(self, cell, placement)
 		if type(cell)~="Cell" then
-			incompatibleTypeError("#1", "Cell", cell, 3)
+			incompatibleTypeError("#1", "Cell", cell)
 		end
 
 		if placement == nil then
 			placement = "placement"
 		elseif type(placement) ~= "string" then
-			incompatibleTypeError("#2", "string", placement, 3) 
+			incompatibleTypeError("#2", "string", placement)
 		end
 
 		if self[placement] then 
 			self[placement].cells[1] = cell
 		else
-			customError("Placement '"..placement.."' was not found.", 3)
+			customError("Placement '"..placement.."' was not found.")
 		end
 		if cell[placement] then
 			cell[placement]:add(self)
 		else
-			customError("Placement '"..placement.."' was not found.", 3)
+			customError("Placement '"..placement.."' was not found.")
 		end
 		self.cell = cell
 	end,
@@ -163,7 +163,7 @@ Agent_ = {
 		if type(event) == "Event" then
 			self.cObj_:execute(event)
 		else
-			incompatibleTypeError("#1", "Event", event, 3)
+			incompatibleTypeError("#1", "Event", event)
 		end
 	end,
 	--- Return the Cell where the Agent is located according to its placement. It assumes
@@ -175,11 +175,11 @@ Agent_ = {
 			if type(placement) == "nil" then
 				placement = "placement"
 			else
-				incompatibleTypeError("#1", "string", placement, 3)
+				incompatibleTypeError("#1", "string", placement)
 			end
 		end
 		if type(self[placement]) ~= "Trajectory" then
-			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".", 3)
+			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
 		end
 		return self[placement].cells[1]		
 	end,
@@ -191,12 +191,12 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#1", "string", placement, 3)
+				incompatibleTypeError("#1", "string", placement)
 			end
 		end
 
 		if type(self[placement]) ~= "Trajectory" then
-			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".", 3)
+			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
 		end
 
 		return self[placement].cells
@@ -204,7 +204,7 @@ Agent_ = {
 	--- Return the unique identifier of the Agent.
 	-- @usage id = agent:getId()
 	getId = function(self)
-		deprecatedFunctionWarning("getId", ".id", 3)
+		deprecatedFunctionWarning("getId", ".id")
 		return self.id
 	end,
 	--- Return the time when the machine executed the transition to the current state.
@@ -222,7 +222,7 @@ Agent_ = {
 		if id == nil then
 			id = "1"
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#1", "string", id, 3)
+			incompatibleTypeError("#1", "string", id)
 		end
 
 		local s = self.socialnetworks[id] 
@@ -274,7 +274,7 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#2", "string", placement, 3)
+				incompatibleTypeError("#2", "string", placement)
 			end
 		end
 
@@ -282,14 +282,14 @@ Agent_ = {
 			if cell == nil then
 				cell = self[placement].cells[1]
 			else
-				incompatibleTypeError("#1", "Cell", cell, 3)
+				incompatibleTypeError("#1", "Cell", cell)
 			end
 		end
 
 		if self[placement] == nil then
-			valueNotFoundError("#1",placement, 3)
+			valueNotFoundError("#1", placement)
 		elseif type(self[placement]) ~= "Trajectory" then
-			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".", 3)
+			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
 		end
 
 		self.cell = nil
@@ -335,33 +335,33 @@ Agent_ = {
 	message = function(self, data)
 		if type(data) ~= "table" then
 			if data == nil then
-				tableParameterError("message", 3)
+				tableParameterError("message")
 			else
-				namedParametersError("message", 3)
+				namedParametersError("message")
 			end
 		end
 
 		data.sender = self
 		if type(data.receiver) ~= "Agent" then
-			incompatibleTypeError("receiver", "Agent", data.receiver, 3)
+			incompatibleTypeError("receiver", "Agent", data.receiver)
 		end
 
 		if data.delay == nil then
 			data.delay = 0
 		elseif type(data.delay) ~= "number" then
-			incompatibleTypeError("delay", "positive integer number", data.delay, 3)
+			incompatibleTypeError("delay", "positive integer number", data.delay)
 		elseif data.delay < 0 then
-			incompatibleValueError("delay", "positive integer number", data.delay, 3)
+			incompatibleValueError("delay", "positive integer number", data.delay)
 		end
 
 		if data.delay == 0 then
 			if data.subject then
 				if type(data.subject) ~= "string" then
-					incompatibleTypeError("subject", "string", data.subject, 3)
+					incompatibleTypeError("subject", "string", data.subject)
 				end
 				local call = "on_"..data.subject
 				if type(data.receiver[call]) ~= "function" then
-					customError("Receiver (id = '".. data.receiver.id .."') does not implement function "..call ..".", 3)
+					customError("Receiver (id = '".. data.receiver.id .."') does not implement function "..call ..".")
 				else
 					data.receiver[call](data.receiver, data)
 					return true
@@ -371,7 +371,7 @@ Agent_ = {
 				return true
 			end
 		elseif type(self.parent) ~= "Society" then
-			customError("Agent must be within a Society to send messages with delay.", 3)
+			customError("Agent must be within a Society to send messages with delay.")
 		else
 			table.insert(self.parent.messages, data)
 			return true
@@ -388,9 +388,9 @@ Agent_ = {
 	move = function(self, newcell, placement)
 		if type(newcell) ~= "Cell" then
 			if newcell == nil then
-				mandatoryArgumentError("#1", 3)
+				mandatoryArgumentError("#1")
 			else
-				incompatibleTypeError("#1", "Cell", newcell, 3)
+				incompatibleTypeError("#1", "Cell", newcell)
 			end
 		end
 
@@ -398,14 +398,14 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#2", "string", placement, 3)
+				incompatibleTypeError("#2", "string", placement)
 			end
 		end
 
 		if self[placement] == nil then
-			customError("Value '".. placement .."' not found for parameter '#2'.", 3)
+			customError("Value '".. placement .."' not found for parameter '#2'.")
 		elseif not self[placement].cells[1] then 
-			customError("Agent is not inside of any Cell.", 3)
+			customError("Agent is not inside of any Cell.")
 		end
 
 		self:leave(self[placement].cells[1], placement)
@@ -421,10 +421,10 @@ Agent_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime, 3)
+				incompatibleTypeError("#1", "Event or positive number", modelTime)
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "Event or positive number", modelTime, 3)
+			incompatibleValueError("#1", "Event or positive number", modelTime)
 		end
 
         if self.obsattrs then
@@ -463,10 +463,10 @@ Agent_ = {
 	-- @param message A table with the received message. It has an attribute called sender with
 	-- the Agent that sent the message.
 	on_message = function(self, message)
-		customError("Agent "..self.id.." does not implement 'on_message'.", 3)
+		customError("Agent "..self.id.." does not implement 'on_message'.")
 	end,
 	randomWalk = function()
-		deprecatedFunctionWarning("randomWalk", "walk", 3)
+		deprecatedFunctionWarning("randomWalk", "walk")
 	end,
 	--- Execute a random walk to a neighbor Cell.
 	-- @param placement A string representing the index to be used. Default is "placement".
@@ -481,7 +481,7 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#1", "string", placement, 3)
+				incompatibleTypeError("#1", "string", placement)
 			end
 		end
 
@@ -489,18 +489,18 @@ Agent_ = {
 			if neighborhood == nil then
 				neighborhood = "1"
 			else
-				incompatibleTypeError("#2", "string", neighborhood, 3)
+				incompatibleTypeError("#2", "string", neighborhood)
 			end
 		end
 
 		if type(self[placement]) ~= "Trajectory" then
-			valueNotFoundError("#1",placement, 3)
+			valueNotFoundError("#1", placement)
 		end
 
 		local c1 = self:getCell(placement)
 		local c2 = c1:getNeighborhood(neighborhood)
 		if c2 == nil then
-			valueNotFoundError("#2",neighborhood, 3)
+			valueNotFoundError("#2", neighborhood)
 		end
 		self:move(c2:sample(randomObj), placement)
 	end,
@@ -520,19 +520,19 @@ Agent_ = {
 	-- }
 	reproduce = function(self, data)
 		if self.parent == nil then
-			customError("Agent should belong to a Society to be able to reproduce.", 3)
+			customError("Agent should belong to a Society to be able to reproduce.")
 		end
 		if type(data) ~= "table" then
 			if data == nil then
 				data = {}
 			else
-				namedParametersError("reproduce", 3)
+				namedParametersError("reproduce")
 			end
 		end
 		local ag = self.parent:add(data)
 
 		if self.placement ~= nil then
-			ag:enter(self:getCell("placement"),"placement")
+			ag:enter(self:getCell("placement"), "placement")
 		end
 		return ag
 	end,
@@ -549,7 +549,7 @@ Agent_ = {
 		local sn = self:getSocialNetwork(id)
 
 		if sn == nil then
-			customError("Agent does not have a SocialNetwork named '"..id.."'.", 3)
+			customError("Agent does not have a SocialNetwork named '"..id.."'.")
 		end
 
 		return sn:sample(randomObj)
@@ -558,7 +558,7 @@ Agent_ = {
 	-- @param name A string.
 	-- @usage agent:setId("newid")
 	setId = function(self, name)
-		deprecatedFunctionWarning("setId", ".id", 3)
+		deprecatedFunctionWarning("setId", ".id")
 		self.id = name
 	end,
 	--- Activate or not the trajectories defined for a given Agent.
@@ -626,16 +626,16 @@ metaTableAgent_ = {__index = Agent_, __tostring = tostringTerraME}
 function Agent(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterError("Agent", 3)
+			tableParameterError("Agent")
 		else
-			namedParametersError("Agent", 3)
+			namedParametersError("Agent")
 		end
 	end
 
 	setmetatable(data, metaTableAgent_)
 
 	if type(data.id) ~= "string" and data.id ~= nil then
-		incompatibleTypeError("id", "string or nil", data.id, 3)
+		incompatibleTypeError("id", "string or nil", data.id)
 	end
 
 	local cObj = TeGlobalAutomaton()

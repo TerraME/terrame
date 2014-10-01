@@ -200,8 +200,8 @@ int luaTrajectory::createObserver( lua_State *L )
 					string err_out = string("Attribute name '" ) + string (qPrintable(obsAttribs.at(i))) + string("' not found.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L,err_out.c_str());
-					lua_pushnumber(L,5);
-					lua_call(L,2,0);
+					//lua_pushnumber(L,5);
+					lua_call(L,1,0);
                     return 0;
                 }
             }
@@ -313,8 +313,8 @@ int luaTrajectory::createObserver( lua_State *L )
                 string err_out = string("In this context, the code '") + string(str) + string("' does not correspond to a valid type of Observer.");
                 lua_getglobal(L, "customWarningMsg");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                //lua_pushnumber(L,4);
+                lua_call(L,1,0);
             }
             return 0; 
         }
@@ -336,8 +336,8 @@ int luaTrajectory::createObserver( lua_State *L )
                     string err_out = string("Filename was not specified, using a default '") + string(DEFAULT_NAME.toStdString()) + string("'.");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                   // lua_pushnumber(L,4);
+                    lua_call(L,1,0);
                 }
 		        obsLog->setFileName(DEFAULT_NAME + ".csv");
 		    }
@@ -353,8 +353,8 @@ int luaTrajectory::createObserver( lua_State *L )
                     string err_out = string("Separator not defined, using ';'.");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,4);
+                    lua_call(L,1,0);
                 }
 		        obsLog->setSeparator();
 		    }
@@ -383,8 +383,8 @@ int luaTrajectory::createObserver( lua_State *L )
                     string err_out = string("Column title not defined.");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,4);
+                    lua_call(L,1,0);
                 }
 		    }
 
@@ -424,8 +424,8 @@ int luaTrajectory::createObserver( lua_State *L )
                     string err_out = string("Port not defined.");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,4);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,4);
+                    lua_call(L,1,0);
                 }
 		    }
 		    else
@@ -440,8 +440,8 @@ int luaTrajectory::createObserver( lua_State *L )
                     string err_out = string("Observer will send broadcast.");
                     lua_getglobal(L, "customWarningMsg");
                     lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
+                    //lua_pushnumber(L,5);
+                    lua_call(L,1,0);
                 }
 		        obsUDPSender->addHost(BROADCAST_HOST);
 		    }
@@ -540,8 +540,8 @@ int luaTrajectory::createObserver( lua_State *L )
 		{
 			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.toAscii().data());
-			lua_pushnumber(L,5);
-			lua_call(L,2,0);
+			//lua_pushnumber(L,5);
+			lua_call(L,1,0);
 			return 0;
 		}
 
@@ -553,8 +553,8 @@ int luaTrajectory::createObserver( lua_State *L )
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				//lua_pushnumber(L,5);
+				lua_call(L,1,0);
 				return 0;
 			}
 
@@ -568,8 +568,8 @@ int luaTrajectory::createObserver( lua_State *L )
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				//lua_pushnumber(L,5);
+				lua_call(L,1,0);
 				return 0;
 			}
 

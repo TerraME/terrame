@@ -105,27 +105,27 @@ local slicedColorBar = function (min, max, slices, colornames)
 	return colorBar
 end
 
-local optionalTableElement = function(table, attr, allowedType, level)
+local optionalTableElement = function(table, attr, allowedType)
 	local value = table[attr]
 	local mtype = type(value)
 
 	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypeError(attr, allowedType, value, level + 1)
+		incompatibleTypeError(attr, allowedType, value)
 	end
 end
 
-local compulsoryTableElement = function(table, attr, level)
+local compulsoryTableElement = function(table, attr)
 	if table[attr] == nil then
-		mandatoryArgumentError(attr, level + 1)
+		mandatoryArgumentError(attr)
 	end
 end
 
 Map = function(data)
-	compulsoryTableElement(data, "subject", 3)
-	optionalTableElement(data, "subject", "CellularSpace", 3)
-	optionalTableElement(data, "values", "table", 3)
-	optionalTableElement(data, "labels", "table", 3)
-	optionalTableElement(data, "select", "string", 3)
+	compulsoryTableElement(data, "subject")
+	optionalTableElement(data, "subject", "CellularSpace")
+	optionalTableElement(data, "values", "table")
+	optionalTableElement(data, "labels", "table")
+	optionalTableElement(data, "select", "string")
 
 	if data.grouping == nil then
 		if data.slices ~= nil then
@@ -137,19 +137,19 @@ Map = function(data)
 		elseif data.colors == nil and data.select == nil then
 			data.grouping = "background"
 		else
-			customError("It was not possible to infer parameter grouping.", 3)
+			customError("It was not possible to infer parameter grouping.")
 		end
 	end
 
 	switch(data, "grouping"):caseof{
 		equalsteps = function()
-			compulsoryTableElement(data, "select", 4)
-			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.", 5)
-			compulsoryTableElement(data, "slices", 4)
-			compulsoryTableElement(data, "colors", 4)
+			compulsoryTableElement(data, "select")
+			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
+			compulsoryTableElement(data, "slices")
+			compulsoryTableElement(data, "colors")
 
-			--verify(#data.labels == 0 or #data.labels == data.slices, "There should exist labels for each value.", 4)
-			--verify(type(data.colors) ~= "string" or #data.colors == 2, "There should exist two colors for each value.", 4)
+			--verify(#data.labels == 0 or #data.labels == data.slices, "There should exist labels for each value.")
+			--verify(type(data.colors) ~= "string" or #data.colors == 2, "There should exist two colors for each value.")
 			if data.min == nil or data.max == nil then
 				local min = math.huge
 				local max = -math.huge
@@ -164,16 +164,16 @@ Map = function(data)
 				end)
 			end
 
-			checkUnnecessaryParameters(data, {"subject", "select", "labels", "colors", "grouping", "min", "max", "slices"}, 4)
+			checkUnnecessaryParameters(data, {"subject", "select", "labels", "colors", "grouping", "min", "max", "slices"})
 		end,
 		uniquevalues = function()
-			compulsoryTableElement(data, "select", 4)
+			compulsoryTableElement(data, "select")
 
-			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.", 5)
+			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
 
-			compulsoryTableElement(data, "colors", 4)
+			compulsoryTableElement(data, "colors")
 
-			verify(#data.colors == #data.values, "There should exist colors for each value.", 5)
+			verify(#data.colors == #data.values, "There should exist colors for each value.")
 
 			if data.values == nil then
 				data.values = {}
@@ -185,19 +185,19 @@ Map = function(data)
 			else
 				local theType = type(data.values[1])
 				forEachElement(data.values, function(_, _, mtype)
-					verify(mtype == theType, "All values should have the same type, got "..theType.." and "..mtype..".", 6)
+					verify(mtype == theType, "All values should have the same type, got "..theType.." and "..mtype..".")
 				end)
 			end
 
 			if data.labels == nil then
 				data.labels = data.values
 			end
-			verify(#data.labels == #data.values, "There should exist labels for each value.", 5)
+			verify(#data.labels == #data.values, "There should exist labels for each value.")
 
-			checkUnnecessaryParameters(data, {"subject", "select", "values", "labels", "colors", "grouping"}, 4)
+			checkUnnecessaryParameters(data, {"subject", "select", "values", "labels", "colors", "grouping"})
 		end,
 		background = function()
-			checkUnnecessaryParameters(data, {"subject", "colors", "grouping"}, 4)
+			checkUnnecessaryParameters(data, {"subject", "colors", "grouping"})
 
 			forEachCell(data.subject, function(cell)
 				cell.background_ = 0
@@ -207,11 +207,11 @@ Map = function(data)
 
 	-- TODO: select with more than one attribute
 	--if type(data.select) == "string" then data.select = {data.select} end
-	--optionalTableElement(data, "select", "table", 3)
-	--verify(#data.select > 0, "Maps must select at least one attribute.", 4)
+	--optionalTableElement(data, "select", "table")
+	--verify(#data.select > 0, "Maps must select at least one attribute.")
 
 	--forEachElement(data.select, function(_, value)
-	--	verify(data.subject.cells[1][value] ~= nil, "Selected element '"..value.."' does not belong to the subject.", 6)
+	--	verify(data.subject.cells[1][value] ~= nil, "Selected element '"..value.."' does not belong to the subject.")
 	--end)
 
 	if type(data.colors) == "table" then
@@ -221,12 +221,12 @@ Map = function(data)
 				data.colors[i] = colors[colorName]
 	
 				if data.colors[i] == nil then
-					customError("Color '" .. colorName .. "' not found. Check the name or use a table with an RGB description.", 3)
+					customError("Color '" .. colorName .. "' not found. Check the name or use a table with an RGB description.")
 				end
 			elseif type(data.colors[i]) ~= "table" then
-				customError("Invalid description for color in position "..i..". It should be a table or string, got "..type(data.colors[i])..".", 3)
+				customError("Invalid description for color in position "..i..". It should be a table or string, got "..type(data.colors[i])..".")
 			elseif #data.colors[i] ~= 3 then
-				customError("Invalid description for color in position "..i..". It should have 3 values, got "..#data.colors[i]..".", 3)
+				customError("Invalid description for color in position "..i..". It should have 3 values, got "..#data.colors[i]..".")
 			end
 		end
 	end

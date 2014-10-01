@@ -45,7 +45,7 @@ function Flow(data)
 	data.rule = cObj
 
 	if type(data[1]) ~= "function" then
-		customError("Flow constructor expected a function as parameter.", 3)
+		customError("Flow constructor expected a function as parameter.")
 	end
 
 	setmetatable(data, metaTableFlow_)

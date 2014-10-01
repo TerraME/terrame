@@ -35,15 +35,15 @@ Cell_ = {
 	-- cell:addNeighborhood(n, "east")
 	addNeighborhood = function(self, neigh, id)
 		if neigh == nil then
-			mandatoryArgumentError("#1", 3)
+			mandatoryArgumentError("#1")
 		elseif type(neigh) ~= "Neighborhood" then
-			incompatibleTypeError("#1", "Neighborhood", neigh, 3)
+			incompatibleTypeError("#1", "Neighborhood", neigh)
 		end
 
 		if id == nil then
 			id = "1"
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#2", "string", id, 3)
+			incompatibleTypeError("#2", "string", id)
 		end
 
 		if self.neighborhoods == nil then self.neighborhoods = {} end
@@ -56,9 +56,9 @@ Cell_ = {
 	distance = function(self, cell)
 		if type(cell) ~= "Cell" then
 			if cell == nil then
-				mandatoryArgumentError("#1", 3)
+				mandatoryArgumentError("#1")
 			else
-				incompatibleTypeError("#1", "Cell", cell, 3)
+				incompatibleTypeError("#1", "Cell", cell)
 			end
 		end
 
@@ -72,9 +72,9 @@ Cell_ = {
 		if type(self[placement]) == "Group" then
 			return self[placement].agents[1]
 		elseif self[placement] == nil then
-			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.", 3)
+			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.")
 		else
-			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".", 3)
+			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".")
 		end
 	end,
 	--- Retrieve the Agents that belong to the Cell. Agents are indexed by numeric positions.
@@ -87,9 +87,9 @@ Cell_ = {
 		if type(self[placement]) == "Group" then
 			return self[placement].agents
 		elseif self[placement] == nil then
-			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.", 3)
+			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.")
 		else
-			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".", 3)
+			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".")
 		end
 	end,
 	--- Retrieve a string with the unique identifier of the Cell.
@@ -105,7 +105,7 @@ Cell_ = {
 		if index == nil then
 			index = "1"
 		elseif type(index) ~= "string" then 
-			incompatibleTypeError("#1", "string", index, 3)
+			incompatibleTypeError("#1", "string", index)
 		end
 
 		return self.cObj_:getNeighborhood(index)
@@ -138,9 +138,9 @@ Cell_ = {
 		if type(self[placement]) == "Group" then
 			return #(self[placement].agents) == 0
 		elseif self[placement] == nil then
-			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.", 3)
+			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.")
 		else
-			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".", 3)
+			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".")
 		end
 	end,
 	--- Retrieve the name of the current state of a given Agent.
@@ -160,10 +160,10 @@ Cell_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime, 3)
+				incompatibleTypeError("#1", "Event or positive number", modelTime)
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "Event or positive number", modelTime, 3)
+			incompatibleValueError("#1", "Event or positive number", modelTime)
 		end
 
 		if self.obsattrs then
@@ -189,7 +189,7 @@ Cell_ = {
 		local neigh = self:getNeighborhood(id)
 
 		if neigh == nil then
-			customError("Cell does not have a Neighborhood named '"..id.."'.", 3)
+			customError("Cell does not have a Neighborhood named '"..id.."'.")
 		end
 		return neigh:sample(randomObj)
 	end,
@@ -198,9 +198,9 @@ Cell_ = {
 	-- @usage cell:setId("newid")
 	setId = function(self, id)
 		if id == nil then
-			mandatoryArgumentError("#1", 3)
+			mandatoryArgumentError("#1")
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#1", "string", id, 3)
+			incompatibleTypeError("#1", "string", id)
 		end
 		self.id = id
 		self.cObj_:setID(self.id)
@@ -210,7 +210,7 @@ Cell_ = {
 	-- @return a positive integer number
 	-- @usage size = #cell
 	size = function(self)
-		deprecatedFunctionWarning("size", "operator #", 3)
+		deprecatedFunctionWarning("size", "operator #")
 		return #self
 	end,
 	--- Synchronizes the Cell. TerraME can keep two copies of the attributes of a Cell in memory:
@@ -262,12 +262,12 @@ function Cell(data)
 		if data == nil then
 			data = {}
 		else
- 			tableParameterError("Cell", 3)
+ 			tableParameterError("Cell")
  		end
 	end
 
 	if type(data.id) ~= "string" and data.id ~= nil then
-		incompatibleTypeError("id", "string or nil", data.id, 3)
+		incompatibleTypeError("id", "string or nil", data.id)
 	end
 
 	data.cObj_ = TeCell()
@@ -279,17 +279,17 @@ function Cell(data)
 	if data.x == nil then
 		data.x = 0 
 	elseif type(data.x) ~= "number" then
-		incompatibleTypeError("x", "positive integer number", data.x, 3)
+		incompatibleTypeError("x", "positive integer number", data.x)
 	elseif data.x < 0 or math.floor(data.x) ~= data.x then
-		incompatibleValueError("x", "positive integer number", data.x, 3)
+		incompatibleValueError("x", "positive integer number", data.x)
 	end
 
 	if data.y == nil then
 		data.y = 0 
 	elseif type(data.y) ~= "number" then
-		incompatibleTypeError("y", "positive integer number", data.y, 3)
+		incompatibleTypeError("y", "positive integer number", data.y)
 	elseif data.y < 0 or math.floor(data.y) ~= data.y then
-		incompatibleValueError("y", "positive integer number", data.y, 3)
+		incompatibleValueError("y", "positive integer number", data.y)
 	end
 
 	-- TODO: this will probably not work properly for databases.

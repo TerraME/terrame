@@ -32,7 +32,7 @@ Model_ = {
 	--- Creates the objects of the model. This function must be implemented by the derived type.
 	--@usage model:setup()
 	setup = function(self)
-		customError("Function 'setup' was not implemented by the Model.", 4)
+		customError("Function 'setup' was not implemented by the Model.")
 	end,
 	--- Run the model. It checks the parameters, create the objects, and then simulate until numRuns.
 	--@usage model:execute(20)
@@ -40,7 +40,7 @@ Model_ = {
 		if finalTime == nil then
 			mandatoryArgumentError("#1", 3)	
 		elseif type(finalTime) ~= "number" then 
-			incompatibleTypeError("#1", "number", finalTime, 3)
+			incompatibleTypeError("#1", "number", finalTime)
 		end
 		self.exec:execute(finalTime)
     end,
@@ -603,7 +603,7 @@ Model = function(attrTab)
 			local ttype = type(value[1])
 			forEachElement(value, function(_, _, mttype)
 				if mttype ~= ttype then
-					customError("All the elements of table '"..name.."' should have the same type.", 7)
+					customError("All the elements of table '"..name.."' should have the same type.")
 				end
 			end)
 		elseif mtype == "table" and #value == 0 then
@@ -612,7 +612,7 @@ Model = function(attrTab)
 					local ttype = type(mvalue[1])
 					forEachElement(mvalue, function(_, _, ittype)
 						if ittype ~= ttype then
-							customError("All the elements of table '"..name.."."..mname.."' should have the same type.", 9)
+							customError("All the elements of table '"..name.."."..mname.."' should have the same type.")
 						end
 					end)
 				end
@@ -660,14 +660,14 @@ Model = function(attrTab)
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "table" and #value > 0 then
 				if type(argv[name]) ~= type(value[1]) then
-					incompatibleTypeError(name, type(value[1]), argv[name], 5)
+					incompatibleTypeError(name, type(value[1]), argv[name])
 				elseif not belong(argv[name], value) then
 					local str = "one of {"
 					forEachElement(value, function(_, v)
 						str = str..v..", "
 					end)
 					str = string.sub(str, 1, str:len() - 2).."}"
-					incompatibleValueError(name, str, argv[name], 5)
+					incompatibleValueError(name, str, argv[name])
 				end
 			elseif mtype == "table" and #value == 0 then
 				local iargv = argv[name]
@@ -679,11 +679,11 @@ Model = function(attrTab)
 					elseif type(ivalue) == "table" and #ivalue == 0 then
 
 					elseif itype ~= type(iargv[iname]) then
-						incompatibleTypeError(name.."."..iname, itype, iargv[iname], 7)
+						incompatibleTypeError(name.."."..iname, itype, iargv[iname])
 					end
 				end)
 			elseif type(argv[name]) ~= mtype then
-				incompatibleTypeError(name, mtype, argv[name], 5)
+				incompatibleTypeError(name, mtype, argv[name])
 			end
 		end)
 
@@ -693,12 +693,12 @@ Model = function(attrTab)
 				local attrTabValue = attrTab[name]
 				forEachElement(value, function(mname, mvalue, mtype)
 					if attrTabValue[mname] == nil then
-						customError("Attribute '"..name.."."..mname.."' does not exist in the Model.", 7)
+						customError("Attribute '"..name.."."..mname.."' does not exist in the Model.")
 					end
 				end)
 
 			elseif attrTab[name] == nil then
-				customError("Attribute '"..name.."' does not exist in the Model.", 5)
+				customError("Attribute '"..name.."' does not exist in the Model.")
 			end
 		end)
 
@@ -716,7 +716,7 @@ Model = function(attrTab)
 					text = "'"..name.."' (Timer)"
 					exec = value
 				else
-					customError("The object has two running objects: '"..name.."' (Timer) and "..text..".", 5)
+					customError("The object has two running objects: '"..name.."' (Timer) and "..text..".")
 				end
 			elseif mtype == "Environment" then
 				forEachElement(value, function(mname, mvalue, mmtype)
@@ -726,7 +726,7 @@ Model = function(attrTab)
 							exec = value
 							return false
 						else
-							customError("The object has two running objects: '"..name.."' (Environment) and "..text..".", 7)
+							customError("The object has two running objects: '"..name.."' (Environment) and "..text..".")
 						end
 					end
 				end)
@@ -734,7 +734,7 @@ Model = function(attrTab)
 		end)
 
 		if exec == nil then
-			customError("The object does not have a Timer.", 3)
+			customError("The object does not have a Timer.")
 		end
 
 		argv.exec = exec
