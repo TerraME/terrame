@@ -378,14 +378,13 @@ executeTests = function(fileName, package)
 		data = {}
 	end
 
-	local examples = (data.file == nil and data.folder == nil and data.test == nil) or data.examples
-	local check_functions = false
+	local check_functions = data.folder == nil and data.file == nil and data.test == nil
+	local examples = check_functions or data.examples
 
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
 		data.folder = {data.folder}
 	elseif data.folder == nil then
-		check_functions = true
 		data.folder = {}
 		local parentFolders = dir(srcDir)
 		for _, parentFolder in ipairs(parentFolders) do
@@ -459,18 +458,30 @@ executeTests = function(fileName, package)
 			-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
 			local tests = dofile(srcDir..s..eachFolder..s..eachFile)
 
+			myTest = {}
 			if type(data.test) == "string" then
-				myTest = {data.test}
+				if tests[data.test] then
+					myTest = {data.test}
+				end
 			elseif data.test == nil then
-				myTest = {}	
 				forEachOrderedElement(tests, function(index, value, mtype)
 					myTest[#myTest + 1] = index 					
 				end)
-			elseif type(test) == "table" then
-				myTest = test
+			elseif type(data.test) == "table" then
+				--myTest = test
+				forEachElement(data.test, function(_, value)
+					if tests[value] then
+						myTest[#myTest + 1] = value
+					end
+				end)
 			else
 				error("test is not a string, table or nil")
 			end
+
+			if #myTest == 0 then
+				print_yellow("Skipping file "..eachFile)
+			end
+
 
 			for _, eachTest in ipairs(myTest) do
 				print("Testing "..eachTest)
