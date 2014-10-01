@@ -466,7 +466,6 @@ executeTests = function(fileName, package)
 					myTest[#myTest + 1] = index 					
 				end)
 			elseif type(data.test) == "table" then
-				--myTest = test
 				forEachElement(data.test, function(_, value)
 					if tests[value] then
 						myTest[#myTest + 1] = value
@@ -842,10 +841,83 @@ execute = function(parameters) -- parameters is a string
 		else
 			-- TODO: Verify this block
 			require("base")
-			local correct, errorMsg = pcall(dofile, param)
-			if not correct then
-				print(erroMsg)
+
+			local function getLevel()
+			    local level = 1
+
+				local str = ""
+				str = str.."Stack traceback:\n"
+
+			    local info = debug.getinfo(level)
+			    while info ~= nil do
+			        local m1 = string.match(info.short_src, "terrame/bin/lua")
+			        local m2 = string.match(info.short_src, "terrame/bin/packages/base/lua")
+			        local m3 = string.match(info.short_src, "%[C%]")
+			        if m1 or m2 or m3 then
+			        else
+						str = str.."\t File "..info.short_src..", line "..info.currentline
+						if info.name then
+							str = str..", in function "..info.name
+						else
+							str = str..", in main chunk"
+						end
+						str = str.."\n"
+			        end
+			    	level = level + 1
+			    	info = debug.getinfo(level)
+			    end
+				return string.sub(str, 0, string.len(str) - 1)
 			end
+
+			local success, result = xpcall(function() dofile(param) end, function(err)
+			    local m1 = string.match(err, "terrame/bin/lua")
+			    local m2 = string.match(err, "terrame/bin/packages/base/lua")
+			    local m3 = string.match(err, "%[C%]")
+
+				if m1 or m2 or m3 then
+					local str = 
+							"********************************************************************************************\n"..
+							"TERRAME INTERNAL ERROR. PLEASE WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
+							"********************************************************************************************\n"..
+							err.."\nStack traceback:\n"
+
+					local level = 1
+			    	local info = debug.getinfo(level)
+			    	while info ~= nil do
+			    	    local m1 = string.match(info.short_src, "terrame/bin/lua")
+			    	    local m2 = string.match(info.short_src, "terrame/bin/packages/base/lua")
+			    	    local m3 = string.match(info.short_src, "%[C%]")
+
+						if info.short_src == "[C]" then
+							str = str.."\t Internal C file"
+						else
+							str = str.."\t File "..info.short_src
+						end
+
+						if info.currentline > 0 then
+							str = str..", line "..info.currentline
+						end
+
+						if info.name then
+							str = str..", in function "..info.name
+						else
+							str = str..", in main chunk"
+						end
+						str = str.."\n"
+			    		level = level + 1
+			    		info = debug.getinfo(level)
+			    	end
+					return string.sub(str, 0, string.len(str) - 1)
+
+				else
+					return err.."\n"..getLevel()
+				end
+			end)
+
+			if not success then
+				print_red(result)
+			end
+
 			return
 		end
 		paramCount = paramCount + 1
