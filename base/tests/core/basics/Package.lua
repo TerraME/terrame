@@ -27,19 +27,19 @@
 return{
 	checkUnnecessaryParameters = function(unitTest)
 		local error_func = function(unitTest)
-			checkUnnecessaryParameters({aaa = "aaa"}, {"abc", "acd", "aab"}, 2)
+			checkUnnecessaryParameters({aaa = "aaa"}, {"abc", "acd", "aab"})
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'aaa' is unnecessary.")
 	end,
 	customError = function(unitTest)
 		local error_func = function()
-			customError("test.", 2)
+			customError("test.")
 		end
 		unitTest:assert_error(error_func, "Error: test.")
 	end,
 	customWarning = function(unitTest)
 		local error_func = function()
-			customWarning("test.", 2)
+			customWarning("test.")
 		end
 		unitTest:assert_error(error_func, "Error: test.")
 	end,
@@ -51,43 +51,43 @@ return{
 	end,
 	deprecatedFunctionWarning = function(unitTest)
 		local error_func = function()
-			deprecatedFunctionWarning("abc", "def", 2)
+			deprecatedFunctionWarning("abc", "def")
 		end
 		unitTest:assert_error(error_func, "Error: Function 'abc' is deprecated. Use 'def' instead.")
 	end,
 	incompatibleFileExtensionError = function(unitTest)
 		local error_func = function()
-			incompatibleFileExtensionError("file", ".txt", 2)
+			incompatibleFileExtensionError("file", ".txt")
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'file' does not support '.txt'.")
 	end,
 	incompatibleTypeError = function(unitTest)
 		local error_func = function()
-			incompatibleTypeError("cell", "Cell", Agent{}, 2)
+			incompatibleTypeError("cell", "Cell", Agent{})
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'cell' expected Cell, got Agent.")
 	end,
 	incompatibleValueError = function(unitTest)
 		local error_func = function()
-			incompatibleValueError("position", "1, 2, or 3", "4", 2)
+			incompatibleValueError("position", "1, 2, or 3", "4")
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'position' expected 1, 2, or 3, got '4'.")
 	end,
 	resourceNotFoundError = function(unitTest)
 		local error_func = function()
-			resourceNotFoundError("file", "/usr/local/file.txt", 2)
+			resourceNotFoundError("file", "/usr/local/file.txt")
 		end
 		unitTest:assert_error(error_func, "Error: Resource '/usr/local/file.txt' not found for parameter 'file'.")
 	end,
 	mandatoryArgumentError = function(unitTest)
 		local error_func = function()
-			mandatoryArgumentError("neighborhood", 2)
+			mandatoryArgumentError("neighborhood")
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'neighborhood' is mandatory.")
 	end,
 	namedParametersError = function(unitTest)
 		local error_func = function()
-			namedParametersError("CellularSpace", 2)
+			namedParametersError("CellularSpace")
 		end
 		unitTest:assert_error(error_func, "Error: Parameters for 'CellularSpace' must be named.")
 	end,
@@ -99,13 +99,13 @@ return{
 	end,
 	tableParameterError = function(unitTest)
 		local error_func = function()
-			tableParameterError("CellularSpace", 2)
+			tableParameterError("CellularSpace")
 		end
 		unitTest:assert_error(error_func, "Error: Parameter for 'CellularSpace' must be a table.")
 	end,
 	valueNotFoundError = function(unitTest)
 		local error_func = function()
-			valueNotFoundError("1", "neighborhood", 2)
+			valueNotFoundError("1", "neighborhood")
 		end
 		unitTest:assert_error(error_func, "Error: Value 'neighborhood' not found for parameter '1'.")
 	end,

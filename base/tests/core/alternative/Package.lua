@@ -27,36 +27,21 @@
 return{
 	customError = function(unitTest)
 		local error_func = function()
-			customError(2, 2)
+			customError(2)
 		end
 		unitTest:assert_error(error_func, "Error: #1 should be a string.")
-
-		error_func = function()
-			customError("test.", -1)
-		end
-		unitTest:assert_error(error_func, "Error: #2 should be a positive integer number.")
 	end,
 	customWarning = function(unitTest)
 		local error_func = function()
-			customWarning(2, 2)
+			customWarning(2)
 		end
 		unitTest:assert_error(error_func, "Error: #1 should be a string.")
-
-		error_func = function()
-			customWarning("test.", -1)
-		end
-		unitTest:assert_error(error_func, "Error: #2 should be a positive integer number.")
 	end,
 	defaultValueWarning = function(unitTest)
 		local error_func = function()
 			defaultValueWarning(2)
 		end
 		unitTest:assert_error(error_func, "Error: #1 should be a string.")
-
-		error_func = function()
-			defaultValueWarning("test.", "abc", -1)
-		end
-		unitTest:assert_error(error_func, "Error: #2 should be a positive integer number.")
 	end,
 	deprecatedFunctionWarning = function(unitTest)
 		local error_func = function()
@@ -68,12 +53,6 @@ return{
 			deprecatedFunctionWarning("test.", -1)
 		end
 		unitTest:assert_error(error_func, "Error: #2 should be a string.")
-
-		error_func = function()
-			deprecatedFunctionWarning("test.", "abc", -1)
-		end
-		unitTest:assert_error(error_func, "Error: #3 should be a positive integer number.")
 	end
-	-- TODO: implement forEachSocialNetwork
 }
 
