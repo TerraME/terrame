@@ -370,7 +370,13 @@ executeTests = function(fileName, package)
 	-- TODO: possibilitar executar esta funcao mesmo que o usuario nao passe
 	-- um arquivo de teste, de forma que todos os testes serao executados.
 
-	local data = include(fileName)
+	local data
+
+	if type(fileName) == "string" then
+		data = include(fileName)
+	else
+		data = {}
+	end
 
 	local examples = (data.file == nil and data.folder == nil and data.test == nil) or data.examples
 	local check_functions = false
