@@ -21,66 +21,28 @@
 -- of this library and its documentation.
 --
 -- Authors: Pedro R. Andrade
---          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
 return{
-	assert = function(unitTest)
-		local u = UnitTest{}
+	Agent = function(unitTest)
+		local world = Agent{
+		    count = 0
+		}
 
-		u:assert(true)
+		local c = Chart{subject = world}
 
-		unitTest:assert_equal(u.success, 1)
-	end,
-	assert_equal = function(unitTest)
-		local u = UnitTest{}
-		u:assert_equal(true, true)
+		unitTest:assert_type(c, "number")
 
-		unitTest:assert_equal(u.success, 1)
-	end,
-	assert_error = function(unitTest)
-		local u = UnitTest{}
+		world:notify(0)
 
-		local error_func = function() x = 3 + nil end
-		u:assert_error(error_func, "attempt to perform arithmetic on a nil value")
+		local t = Timer{
+		    Event{action = function(e)
+				world.count = world.count + 1
+		        world:notify(e)
+		    end}
+		}
 
-		local error_func = function() x = 3 + nil end
-		u:assert_error(error_func, "attempt to perform arithmetic on a  value", 3)
-
-		unitTest:assert_equal(u.success, 2)
-	end,
-	assert_nil = function(unitTest)
-		local u = UnitTest{}
-		u:assert_nil()
-
-		unitTest:assert_equal(u.success, 1)
-	end,
-	assert_not_nil = function(unitTest)
-		local u = UnitTest{}
-		u:assert_not_nil(true)
-
-		unitTest:assert_equal(u.success, 1)
-	end,
-	assert_type = function(unitTest)
-		local u = UnitTest{}
-
-		u:assert_type(2, "number")
-
-		unitTest:assert_equal(u.success, 1)
-	end,
-	delay = function(unitTest)
-		local u = UnitTest{sleep = 1}
-		unitTest:assert(true)
-	end,
-	UnitTest = function(unitTest)
-		local u = UnitTest{}
-
-		unitTest:assert_type(u, "UnitTest")
-		unitTest:assert_equal(u.success, 0)
-		unitTest:assert_equal(u.fail, 0)
-		unitTest:assert_equal(u.test, 0)
-		unitTest:assert_equal(u.last_error, "")
-		unitTest:assert_equal(u.count_last, 0)
+		t:execute(30)
 	end
 }
 

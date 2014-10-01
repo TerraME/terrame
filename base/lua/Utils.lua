@@ -221,7 +221,7 @@ function d(data)
 
 	if type(data[1]) == "table" then
 		if #data[1] ~= #data[2] then 
-			customErrorMsg("You should provide the same number of differential equations and initial conditions.", 2)
+			customError("You should provide the same number of differential equations and initial conditions.", 2)
 		end
 	end
 
@@ -271,10 +271,10 @@ integrate = function(attrs)
 	if type(attrs.equation) == "table" then
 		if type(attrs.initial) == "table" then
 			if getn(attrs.equation) ~= getn(attrs.initial) then
-				customErrorMsg("Tables equation and initial shoud have the same size.", 2)
+				customError("Tables equation and initial shoud have the same size.", 2)
 			end
 		else
-			customErrorMsg("As equation is a table, initial should also be a table, got "..type(attrs.initial)..".", 2)
+			customError("As equation is a table, initial should also be a table, got "..type(attrs.initial)..".", 2)
 		end
 	end
 
@@ -297,7 +297,28 @@ integrate = function(attrs)
 	return result
 end
 
--- **********************************************************************************************
+function delay(delay_s)
+	delay_s = delay_s or 1
+	local time_to = os.time() + delay_s
+	while os.time() <= time_to do end
+end
+
+function belong(value, values)
+	if type__(values) ~= "table" then
+		incompatibleTypeError("#2", "table", values, 3)
+	end
+
+	if values == nil then return false end
+	local found = false
+	forEachElement(values, function(_, mvalue)
+		if mvalue == value then
+			found = true
+			return false
+		end
+	end)
+	return found
+end
+
 -- string distance 
 -- TODO: add error messages for this function
 function levenshtein(s, t)
@@ -312,240 +333,6 @@ function levenshtein(s, t)
 		end
 	end
 	return d[#d]
-end
-
--- **********************************************************************************************
--- TerraME syntactic sugar constructs
-
-function switch(data, att)
-	if type(data) == "number" then
-		local swtbl = {
-			casevar = data,
-			caseof = function(self, code)
-				local f
-				if self.casevar then
-					f = code[self.casevar] or code.default
-				else
-					f = code.missing or code.default
-				end
-
-				if f then
-					if type(f) == "function" then
-						return f(self.casevar,self)
-					else
-						customErrorMsg("Case "..tostring(self.casevar).." not a function.", 2)
-					end
-				end
-			end
-		}
-		return swtbl
-	else
-		local swtbl = {
-			casevar = data[att],
-			caseof = function(self, code)
-				local f
-				if self.casevar then
-					f = code[self.casevar] or code.default
-				else
-					f = code.missing or code.default
-				end
-				if f then
-					if type(f) == "function" then
-						return f(self.casevar,self)
-					else
-						customErrorMsg("Case "..tostring(self.casevar).." should be a function.", 2)
-					end
-				else
-					local distance = string.len(self.casevar)
-					local word
-					forEachElement(code, function(a)
-						local d = levenshtein(a, self.casevar) 
-						if d < distance then
-							distance = d
-							word = a
-						end
-					end)
-					if distance < string.len(self.casevar) * 0.6 then
-						word = "Do you mean '"..word.."'?"
-					else
-						word = "It must be a string from the set ["
-						forEachOrderedElement(code, function(a)
-							word = word.."'"..a.."', "
-						end)
-						word = string.sub(word, 0, string.len(word) - 2).."]."
-					end
-					customErrorMsg("'"..self.casevar.."' is an invalid value for parameter '"..att.."'. "..word, 3)
-				end
-			end
-		}
-		return swtbl
-	end
-end
-
--- Attribute name suggestion based on levenshtein string distance
-function suggest(typedValues, possibleValues)
-	local strMsg = ""
-	for k, v in pairs(typedValues) do
-		local notCorrectParameters = {}
-		local correctedSuggestions = {}
-		if not belong(k, possibleValues) then
-			table.insert(notCorrectParameters,k)
-			local moreSimilar = "" 
-			local moreSimilarDistance = 1000000
-			for j = 1, #possibleValues do
-				local distance = levenshtein(k, possibleValues[j])
-				if distance <= moreSimilarDistance then
-					moreSimilarDistance = distance
-					moreSimilar = possibleValues[j]
-				end
-			end
-			table.insert(correctedSuggestions, moreSimilar)
-		end
-
-		for i = 1, getn(notCorrectParameters) do
- 			local dst = levenshtein(notCorrectParameters[i], correctedSuggestions[i])
- 			if dst < math.floor(#notCorrectParameters[i] * 0.6) then
- 				customWarningMsg("Attribute '".. notCorrectParameters[i] .."' not found. Do you mean '".. correctedSuggestions[i].."'?", 4)
- 			end
-		end
-	end
-end
-
-function delay(delay_s)
-	delay_s = delay_s or 1
-	local time_to = os.time() + delay_s
-	while os.time() < time_to do end
-end
-
-function belong(value, values)
-	if type(values) ~= "table" then
-		incompatibleTypesErrorMsg("#2", "table", type(values), 2)
-	end
-
-	if values == nil then return false end
-	local found = false
-	forEachElement(values, function(_, mvalue)
-		if mvalue == value then
-			found = true
-			return false
-		end
-	end)
-	return found
-end
-
--- TODO: think about this kind of function. Today it is only used by Model.
-verify = function(condition, msg)
-	if not condition then
-		customErrorMsg(msg, 3)
-	end
-end
-
-function checkUnnecessaryParameters(data, parameters, level)
-	forEachElement(data, function(value)
-		if not belong(value, parameters) then
-			customWarningMsg("Parameter '"..value.."' is unnecessary.", level + 3)
-		end
-	end)
-end
-
-function customErrorMsg(msg, level)
-	if type(msg) ~= "string" then
-		error("Error: #1 should be a string.", 2)
-	elseif type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
-		error("Error: #2 should be a positive integer number.", 2)
-	end
-	error("Error: "..msg, level)
-end
-
-function customWarningMsg(msg,level)
-	if type(msg) ~= "string" then
-		error("Error: #1 should be a string.", 2)
-	elseif type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
-		error("Error: #2 should be a positive integer number.", 2)
-	elseif sessionInfo().mode == "normal" then
-		local info = debug.getinfo(level)
-		local str = string.match(info.short_src, "[^/]*$")
-		print(str..":".. info.currentline ..": Warning: "..msg)
-	elseif sessionInfo().mode == "debug" then
-		customErrorMsg(msg, level + 1)
-	end
-	io.flush()
-end
-
-function defaultValueWarningMsg(parameter, value, level)
-	if type(parameter) ~= "string" then
-		error("Error: #1 should be a string.", 2)
-	elseif type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
-		error("Error: #2 should be a positive integer number.", 2)
-	end
-
-	customWarningMsg("Parameter '"..parameter.."' could be removed as it is the default value ("..value..").", level + 1)
-end
-
-function deprecatedFunctionWarningMsg(functionName, functionExpected, level)
-	if type(functionName) ~= "string" then
-		error("Error: #1 should be a string.", 2)
-	end
-
-	if type(functionExpected) ~= "string" then
-		error("Error: #2 should be a string.", 2)
-	end
-
-	if type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
-		error("Error: #3 should be a positive integer number.", 2)
-	end
-
-	local text = "Function '"..functionName.."' is deprecated. Use '"..functionExpected.."' instead."
-	customWarningMsg(text, level + 1)
-end
-
-function incompatibleTypesErrorMsg(attr, expectedTypesString, gottenType, level)
-	if expectedTypesString == nil then expectedTypesString = "nil" end
-	if gottenType == nil then gottenType = "nil" end
-
-	local text = "Incompatible types. Parameter '"..attr.."' expected "..
-		expectedTypesString..", got "..gottenType.."."
-
-	customErrorMsg(text, level + 1)
-end
-
-function incompatibleValuesErrorMsg(attr, expectedValues, gottenValue, level)
-	if expectedValues == nil then expectedValues = "nil" end
-
-	local msg = "Incompatible values. Parameter '"..attr.."' expected ".. expectedValues ..", got "
-	if type(gottenValue) == "string" then
-		msg = msg.."'"..gottenValue.."'."
-	elseif gottenValue == nil then
-		msg = msg.."nil."
-	else
-		msg = msg..gottenValue.."."
-	end
-	customErrorMsg(msg, level + 1)
-end
-
-function incompatibleFileExtensionErrorMsg(attr, ext, level)
-	customErrorMsg("Parameter '".. attr .."' does not support '"..ext.."'.", level + 1)
-end
-
-function resourceNotFoundErrorMsg(attr, path, level)
-	customErrorMsg("Resource '"..path.."' not found for parameter '"..attr.."'.",level + 1)
-end
-
-function valueNotFoundErrorMsg(attr, value, level)
-	if type(value) == nil then value = "nil" end
-	customErrorMsg("Value '"..value.."' not found for parameter '"..attr.."'.",level + 1)
-end
-
-function mandatoryArgumentErrorMsg(attr, level)
-	customErrorMsg("Parameter '"..attr.."' is mandatory.", level + 1)
-end
-
-function namedParametersErrorMsg(funcName, level)
-	customErrorMsg("Parameters for '"..funcName.."' must be named.", level + 1)
-end
-
-function tableParameterErrorMsg(funcName, level)
-	customErrorMsg("Parameter for '"..funcName.."' must be a table.", level + 1)
 end
 
 --############################################################
@@ -571,10 +358,10 @@ end
 function forEachCell(cs, f)
 	local t = type(cs)
 	if t ~= "CellularSpace" and t ~= "Trajectory" and t ~= "Agent" then
-		incompatibleTypesErrorMsg("#1", "CellularSpace, Trajectory, or Agent", t, 3)
+		incompatibleTypeError("#1", "CellularSpace, Trajectory, or Agent", cs, 3)
 	end
 	if type(f) ~= "function" then
-		incompatibleTypesErrorMsg("#2", "function", type(f), 3)
+		incompatibleTypeError("#2", "function", f, 3)
 	end
 	for i, cell in ipairs(cs.cells) do
 		result = f(cell, i)
@@ -598,11 +385,11 @@ end
 -- end)
 function forEachCellPair(cs1, cs2, f)
 	if type(cs1) ~= "CellularSpace" then
-		incompatibleTypesErrorMsg("#1", "CellularSpace", type(cs1), 3)
+		incompatibleTypeError("#1", "CellularSpace", cs1, 3)
 	elseif type(cs2) ~= "CellularSpace" then
-		incompatibleTypesErrorMsg("#2", "CellularSpace", type(cs2), 3)
+		incompatibleTypeError("#2", "CellularSpace", cs2, 3)
 	elseif type(f) ~= "function" then
-		incompatibleTypesErrorMsg("#3", "function", type(f), 3)
+		incompatibleTypeError("#3", "function", f, 3)
 	end
 
 	for i, cell1 in ipairs(cs1.cells) do
@@ -638,20 +425,20 @@ end
 --@see CellularSpace:loadNeighborhood
 function forEachNeighbor(cell, index, f)
 	if type(cell) ~= "Cell" then
-		incompatibleTypesErrorMsg("#1", "Cell", type(cell), 3)
+		incompatibleTypeError("#1", "Cell", cell, 3)
 	end
 
 	if type(index) == "function" then
 		f = index
 		index = "1"
 	elseif type(index) ~= "string" then
-		incompatibleTypesErrorMsg("#2", "function or string", type(index), 3)
+		incompatibleTypeError("#2", "function or string", index, 3)
 	elseif type(f) ~= "function" then
-		incompatibleTypesErrorMsg("#3", "function", type(f), 3)
+		incompatibleTypeError("#3", "function", f, 3)
 	end
 	local neighborhood = cell:getNeighborhood(index)
 	if neighborhood == nil then
-		customErrorMsg("Neighborhood '"..index.."' does not exist.", 3)
+		customError("Neighborhood '"..index.."' does not exist.", 3)
 	end
 	neighborhood.cObj_:first()
 	while not neighborhood.cObj_:isLast() do
@@ -673,10 +460,10 @@ end
 -- end)
 function forEachNeighborhood(cell, f)
 	if type(cell) ~= "Cell" then
-		incompatibleTypesErrorMsg("#1", "Cell", type(cell), 3)
+		incompatibleTypeError("#1", "Cell", cell, 3)
 	end
 	if type(f) ~= "function" then
-		incompatibleTypesErrorMsg("#2", "function", type(f), 3)
+		incompatibleTypeError("#2", "function", f, 3)
 	end
 
 	cell.cObj_:first()
@@ -713,21 +500,21 @@ end
 -- @see Society:createSocialNetwork
 function forEachConnection(agent, index, f)
 	if type(agent) ~= "Agent" then
-		incompatibleTypesErrorMsg("#1", "Agent", type(agent), 3)
+		incompatibleTypeError("#1", "Agent", agent, 3)
 	end
 
 	if type(index) == "function" then
 		f = index
 		index = "1"
 	elseif type(index) ~= "string" then
-		incompatibleTypesErrorMsg("#2", "function or string", type(index), 3)
+		incompatibleTypeError("#2", "function or string", index, 3)
 	elseif type(f) ~= "function" then
-		incompatibleTypesErrorMsg("#3", "function", type(f), 3)
+		incompatibleTypeError("#3", "function", f, 3)
 	end
 
 	local socialnetwork = agent:getSocialNetwork(index)
 	if not socialnetwork then
-		customErrorMsg("Agent does not have a SocialNetwork named '"..index.."'.", 3)
+		customError("Agent does not have a SocialNetwork named '"..index.."'.", 3)
 	end
 	for index, connection in pairs(socialnetwork.connections) do
 		local weight = socialnetwork.weights[index]
@@ -752,16 +539,16 @@ end
 function forEachAgent(obj, func)
 	local t = type(obj)
 	if t ~= "Society" and t ~= "Cell" and t ~= "Group" then
-		incompatibleTypesErrorMsg("#1", "Society, Group, or Cell", t, 3)
+		incompatibleTypeError("#1", "Society, Group, or Cell", obj, 3)
 	end
 
 	if type(func) ~= "function" then
-		incompatibleTypesErrorMsg("#2", "function", type(func), 3)
+		incompatibleTypeError("#2", "function", func, 3)
 	end
 
 	local ags = obj.agents
 	if ags == nil then 
-		customErrorMsg("Could not get agents from the "..type(obj)..".", 3)
+		customError("Could not get agents from the "..type(obj)..".", 3)
 	end
 	-- forEachAgent needs to be different from the other forEachs because the
 	-- ageng can die along its own execution and it shifts back all the other
@@ -789,11 +576,11 @@ greaterByAttribute = function(attribute, operator)
 	if operator == nil then
 		operator = "<"
 	elseif not belong(operator, {"<", ">", "<=", ">="}) then
-		incompatibleValuesErrorMsg("#2", "<, >, <=, or >=", operator, 3)
+		incompatibleValueError("#2", "<, >, <=, or >=", operator, 3)
 	end
 
 	if type(attribute) ~= "string" then
-		incompatibleTypesErrorMsg("attribute", "string", type(attribute), 3)
+		incompatibleTypeError("attribute", "string", attribute, 3)
 	end
 	local str = "return function(o1, o2) return o1."..attribute.." "..operator.." o2."..attribute.." end"
 	return load(str)()
@@ -811,7 +598,7 @@ greaterByCoord = function(operator)
 	if operator == nil then
 		operator = "<"
 	elseif not belong(operator, {"<", ">", "<=", ">="}) then
-		incompatibleValuesErrorMsg("#1", "<, >, <=, or >=", operator, 3)
+		incompatibleValueError("#1", "<, >, <=, or >=", operator, 3)
 	end
 
 	local str = "return function(a,b)\n"
@@ -832,11 +619,11 @@ end
 --     print(element, etype)
 -- end)
 forEachElement = function(obj, func)
-	if obj == nil then mandatoryArgumentErrorMsg("#1", 2) end
-	if func == nil then mandatoryArgumentErrorMsg("#2", 2) end
+	if obj == nil then mandatoryArgumentError("#1", 3) end
+	if func == nil then mandatoryArgumentError("#2", 3) end
 
 	if type(func) ~= "function" then
-		incompatibleTypesErrorMsg("#2", "function", type(func), 2)
+		incompatibleTypeError("#2", "function", func, 3)
 	end
 
 	for k, ud in pairs(obj) do
@@ -847,10 +634,10 @@ end
 
 --TODO: esta funcao ignora elementos que possuem o mesmo lower case (ex: aAa e aaa). Tratar este caso.
 forEachOrderedElement = function(obj, func)
-	if obj == nil then mandatoryArgumentErrorMsg("#1", 2) end
+	if obj == nil then mandatoryArgumentError("#1", 3) end
 
 	if type(func) ~= "function" then
-		incompatibleTypesErrorMsg("#2", "function", type(func), 2)
+		incompatibleTypeError("#2", "function", func, 3)
 	end
 
 	local strk
@@ -908,7 +695,7 @@ end
 -- @return TODO
 function getn(t)
 	if type(t) ~= "table" then
-		incompatibleTypesErrorMsg("#1", "table", type(t), 2)
+		incompatibleTypeError("#1", "table", t, 3)
 	end
 
 	local n = 0

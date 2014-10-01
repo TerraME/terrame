@@ -41,21 +41,21 @@ Pair_ = {
 		if time == nil then
 			time = self.cObj_[1]:getTime()
 		elseif type(time) ~= "number" then
-			incompatibleTypesErrorMsg("#1", "number",type(time), 3)
+			incompatibleTypeError("#1", "number", time, 3)
 		end
 
 		if period == nil then
 			period = self.cObj_[1]:getPeriod()
 		elseif type(period) ~= "number" then
-			incompatibleTypesErrorMsg("#2", "number", type(period), 3)
+			incompatibleTypeError("#2", "number", period, 3)
 		elseif period <= 0 then
-			incompatibleValuesErrorMsg("#2", "positive number", period, 3)
+			incompatibleValueError("#2", "positive number", period, 3)
 		end
 
 		if priority == nil then
 			priority = self.cObj_[1]:getPriority()
 		elseif type(priority) ~= "number" then
-			incompatibleTypesErrorMsg("#3", "number", type(priority), 3)
+			incompatibleTypeError("#3", "number", priority, 3)
 		end
 
 		self.cObj_[1]:config(time, period, priority)
@@ -68,7 +68,7 @@ function Pair(data)
 	if data == nil then data = {} end
 
 	if getn(data) ~= 2 then
-		customErrorMsg("A pair must have two attributes.", 3)
+		customError("A pair must have two attributes.", 3)
 	end
 
 	setmetatable(data, metaTablePair_)

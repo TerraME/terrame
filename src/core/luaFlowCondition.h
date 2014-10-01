@@ -94,7 +94,7 @@ public:
             if( lua_pcall( L, 3, 1, 0) != 0 )
             {
                 string err_out = string(" Error: rule can not be executed " ) + string (lua_tostring(L,-1)) + string("\".\n");
-                lua_getglobal(L, "customErrorMsg");
+                lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,4);
                 lua_call(L,2,0);             

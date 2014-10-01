@@ -333,7 +333,7 @@ return{
 		local tr1 = Trajectory{
 			target = cs1
 		}
-		unitTest:assert(#tr1, 200)
+		unitTest:assert_equal(#tr1, 200)
 	end,
 	__tostring = function(unitTest)
 		local cs1 = CellularSpace{

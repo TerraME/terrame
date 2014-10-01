@@ -25,7 +25,99 @@
 
 return{
 	Map = function(unitTest)
-		unitTest:assert(true)
+		local c = CellularSpace{xdim = 5}
+
+		local error_func = function()
+			Map{}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'subject' is mandatory.")
+
+		error_func = function()
+			Map{subject = Neighborhood()}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'subject' expected CellularSpace, got Neighborhood.")
+
+		error_func = function()
+			Map{subject = c, select = 5}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'select' expected string, got number.")
+
+		error_func = function()
+			Map{subject = c, grouping = "equalsteps"}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'select' is mandatory.")
+
+		error_func = function()
+			Map{subject = c, select = "mvalue", grouping = "equalsteps"}
+		end
+		unitTest:assert_error(error_func, "Error: Selected element 'mvalue' does not belong to the subject.")
+
+		error_func = function()
+			Map{subject = c, select = {}}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'select' expected string, got table.")
+
+		error_func = function()
+			Map{subject = c, select = "x", slices = 10, colors = {{1, 2}, "red"}}
+		end
+		unitTest:assert_error(error_func, "Error: Invalid description for color in position 1. It should have 3 values, got 2.")
+
+		error_func = function()
+			Map{subject = c, select = "x", slices = 10, colors = {2, "red"}}
+		end
+		unitTest:assert_error(error_func, "Error: Invalid description for color in position 1. It should be a table or string, got number.")
+
+		error_func = function()
+			Map{subject = c, select = "x", title = 5, slices = 10, colors = {"blue", "red"}}
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'title' is unnecessary.")
+
+		error_func = function()
+			Map{
+				subject = c,
+				select = "x",
+				values = {1, 2, 3},
+				colors = {"red", "green"},
+				labels = {"1", "2", "3"}
+			}
+		end
+		unitTest:assert_error(error_func, "Error: There should exist colors for each value.")
+
+		error_func = function()
+			Map{
+				subject = c,
+				select = "x",
+				values = {1, 2, 3},
+				colors = {"red", "green", "blue"},
+				labels = {"1", "2"}
+			}
+		end
+		unitTest:assert_error(error_func, "Error: There should exist labels for each value.")
+
+		error_func = function()
+			Map{
+				subject = c,
+				select = "x",
+				values = {1, 2, 3},
+				colors = {"red", "green", "blues"},
+				labels = {"1", "2", "3"}
+			}
+		end
+		unitTest:assert_error(error_func, "Error: Color 'blues' not found. Check the name or use a table with an RGB description.")
+
+		error_func = function()
+			Map{
+				subject = c,
+				select = "x",
+				values = {1, 2, 3},
+				grouping = "uniquevalue",
+				colors = {"red", "green", "blue"},
+				labels = {"1", "2", "3"}
+			}
+		end
+		unitTest:assert_error(error_func, "Error: 'uniquevalue' is an invalid value for parameter 'grouping'. Do you mean 'uniquevalues'?")
+
+
 	end
 }
 

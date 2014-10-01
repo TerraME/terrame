@@ -305,7 +305,7 @@ function colorBarToString(colorBar)
 				end
 				str = str .. ITEM_SEP
 			else
-				customErrorMsg("Invalid color in 'colorBar'.", 3)
+				customError("Invalid color in 'colorBar'.", 3)
 			end
 		end
 
@@ -413,9 +413,9 @@ local metaTableLegend_ = {__index = Legend_, __tostring = tostringTerraME}
 function Legend(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterErrorMsg("Legend", 3)
+			tableParameterError("Legend", 3)
 		else
- 			namedParametersErrorMsg("Legend", 3)
+ 			namedParametersError("Legend", 3)
 		end
 	end
 
@@ -445,7 +445,7 @@ function Legend(data)
 	if not data.colorBar or (type(data.colorBar) == "table" and #data.colorBar == 0) then
 		data.colorBar = nil
 	elseif type(data.colorBar) ~= "table" then
-		incompatibleTypesErrorMsg("colorBar", "table", type(data.colorBar), 3)
+		incompatibleTypeError("colorBar", "table", data.colorBar, 3)
 	end
 
 	if data.stdColorBar and type(data.stdColorBar) == "table" and #data.stdColorBar == 0 then
@@ -503,7 +503,7 @@ function Legend(data)
 				data.colorBar[i].color = TME_LEGEND_COLOR_USER[data.colorBar[i].color]
 
 				if data.colorBar[i].color == nil then
-					customErrorMsg("Color name '" .. colorName .. "' not found. Please, check the color name or set its value using a table with the RGB composition.", 3)
+					customError("Color name '" .. colorName .. "' not found. Please, check the color name or set its value using a table with the RGB composition.", 3)
 				end
 			end
 
@@ -513,7 +513,7 @@ function Legend(data)
 				theType = vtype
 			else
 				if vtype ~= theType then
-					customErrorMsg("Each 'value' within colorBar should have the same type.", 3)
+					customError("Each 'value' within colorBar should have the same type.", 3)
 				end
 			end
 		end
@@ -521,7 +521,7 @@ function Legend(data)
 
 	if type(data.colorBar) == "table" then
 		if #data.colorBar <= 1 and (data.grouping == "equalsteps" or data.grouping == TME_LEGEND_GROUPING_USER.equalsteps or data.grouping == "stddeviation" or data.grouping == TME_LEGEND_GROUPING_USER.stddeviation) then
-			customErrorMsg("Parameter 'colorBar' requires at least two colors.", 3)
+			customError("Parameter 'colorBar' requires at least two colors.", 3)
 		end
 	end
 
@@ -638,16 +638,16 @@ function Legend(data)
 	else
 		--@RAIAN: Tratando tipos incompatíveis
 		if type(data.slices) ~= "number" then
-			incompatibleTypesErrorMsg("slices", "integer number between 1 and 255", type(data.slices), 3)
+			incompatibleTypeError("slices", "integer number between 1 and 255", data.slices, 3)
 		end
 
 		local intPart, fracPart = math.modf(data.slices)
 		if data.slices > 255 then
-			incompatibleValuesErrorMsg("slices", "integer number between 1 and 255", data.slices, 3)
+			incompatibleValueError("slices", "integer number between 1 and 255", data.slices, 3)
 		elseif data.slices < 1 then
-			incompatibleValuesErrorMsg("slices", "integer number between 1 and 255", data.slices, 3)
+			incompatibleValueError("slices", "integer number between 1 and 255", data.slices, 3)
 		elseif fracPart ~= 0 then
-			incompatibleValuesErrorMsg("slices", "integer number between 1 and 255", data.slices, 3)
+			incompatibleValueError("slices", "integer number between 1 and 255", data.slices, 3)
 		end
 	end
 
@@ -667,7 +667,7 @@ function Legend(data)
 		local maxDiff = math.max(diffR, diffG, diffB)
 
 		if data.slices > maxDiff then
-			customErrorMsg("Number of slices is larger than the number of available colors. Using these colors, you can define a maximum of "..maxDiff.." slices.", 3)
+			customError("Number of slices is larger than the number of available colors. Using these colors, you can define a maximum of "..maxDiff.." slices.", 3)
 		end
 	end
 	-- precision setup
@@ -705,14 +705,14 @@ function Legend(data)
 		end
 	else
 		if type(data.precision) ~= "number" then
-			incompatibleTypesErrorMsg("precision", "integer number greater than or equal to 1 (one)", type(data.precision), 3)
+			incompatibleTypeError("precision", "integer number greater than or equal to 1 (one)", data.precision, 3)
 		end
 
 		local intPart, fracPart = math.modf(data.precision)
 		if data.precision < 1 then
-			incompatibleValuesErrorMsg("precision", "integer number greater than or equal to 1 (one)", data.precision, 3)
+			incompatibleValueError("precision", "integer number greater than or equal to 1 (one)", data.precision, 3)
 		elseif fracPart ~= 0 then
-			incompatibleValuesErrorMsg("precision", "integer number greater than or equal to 1 (one)", data.precision, 3)
+			incompatibleValueError("precision", "integer number greater than or equal to 1 (one)", data.precision, 3)
 		end
 	end
 
@@ -723,7 +723,7 @@ function Legend(data)
 	if data.width    == nil then data.width    = DEF_WIDTH       end
 
 	if data.width < 1 then
-		customErrorMsg("width", "greater than or equal to one", data.width, 3)
+		customError("width", "greater than or equal to one", data.width, 3)
 	end
 
 	--###############################################
@@ -732,7 +732,7 @@ function Legend(data)
 		data.colorBar = colorBarToString(data.colorBar)
 	else
 		-- Verificar
-		--customWarningMsg("Warning: Attribute 'colorBar' should be a table, got a ".. type(data.colorBar) .. ". Using default color bar.", 4)
+		--customWarning("Warning: Attribute 'colorBar' should be a table, got a ".. type(data.colorBar) .. ". Using default color bar.", 4)
 		data.colorBar = colorBarToString(DEF_COLOR)
 	end
 
@@ -743,11 +743,11 @@ function Legend(data)
 			else
 				-- Verificar
 				if not QUIET_MODE then
-					customWarningMsg("Warning: Attribute 'stdColorBar' is incomplete.", 4)
+					customWarning("Warning: Attribute 'stdColorBar' is incomplete.", 4)
 				end
 			end
 		elseif type(data.stdColorBar) ~= "string" then
-			incompatibleTypesErrorMsg("stdColorBar","table",type(data.stdColorBar), 4)
+			incompatibleTypeError("stdColorBar","table", data.stdColorBar, 4)
 		end
 		data.colorBar = data.colorBar .. COLORBAR_SEP .. data.stdColorBar
 		-- it is not necessary to keep 'stdColorBar' as it is attached to 'colorBar'

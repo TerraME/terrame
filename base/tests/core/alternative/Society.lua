@@ -317,10 +317,8 @@ return{
 
 		sc:createSocialNetwork{probability = 0.5 , name = "2"}
 		forEachAgent(sc, function(ag)
-			local error_func = function()
-				ag:getSocialNetwork()
-			end
-			unitTest:assert_error(error_func, "Error: Agent does not have a SocialNetwork named '1'.")
+			-- TODO: move this assert to basic tests
+			unitTest:assert_nil(ag:getSocialNetwork())
 		end)
 	end,
 	get = function(unitTest)

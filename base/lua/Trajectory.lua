@@ -32,14 +32,14 @@ Trajectory_ = {
 	-- @usage traj:add(cell)
 	add = function(self, cell)
 		if type(cell) ~="Cell" then
-			incompatibleTypesErrorMsg("#2", "Cell", type(cell), 3)
+			incompatibleTypeError("#2", "Cell", cell, 3)
 		end
 
 		table.insert(self.cells, cell)
 		self.cObj_:add(#self + 1, cell.cObj_)
 	end,
 	addCell = function(self,  cell)
-		deprecatedFunctionWarningMsg("addCell", "add", 3)
+		deprecatedFunctionWarning("addCell", "add", 3)
 		return self:add(cell)
 	end,	
 	--- Retrieve a copy of the Trajectory, with the same parent, select, greater, and Cells.
@@ -68,7 +68,7 @@ Trajectory_ = {
 		if type(f) == "function" then
 			self.select = f
 		elseif f ~= nil then
-			incompatibleTypesErrorMsg("#1", "function or nil", type(f), 3)
+			incompatibleTypeError("#1", "function or nil", f, 3)
 		end
 
 		self.cells = {}
@@ -92,7 +92,7 @@ Trajectory_ = {
 		return self.parent:get(x, y)
 	end,
 	getCell = function(self, index)
-		deprecatedFunctionWarningMsg("getCell", "get", 3)
+		deprecatedFunctionWarning("getCell", "get", 3)
 		return self:get(index:getX(), index:getY())
 	end,
 	--- Randomize the Cells, changing their traversing order.
@@ -103,7 +103,7 @@ Trajectory_ = {
 		if randomObj == nil then 
 			randomObj = TME_GLOBAL_RANDOM      
 		elseif type(randomObj) ~= "Random" then
-			incompatibleTypesErrorMsg("#1", "Random or nil", type(randomObj), 3)
+			incompatibleTypeError("#1", "Random or nil", randomObj, 3)
 		end
 
 		local numcells = #self
@@ -135,7 +135,7 @@ Trajectory_ = {
 		if type(greaterThan) == "function" then
 			self.greater = greaterThan
 		elseif greaterThan ~= nil then
-			incompatibleTypesErrorMsg("#1", "function or nil", type(greaterThan), 3)
+			incompatibleTypeError("#1", "function or nil", greaterThan, 3)
 		end
 
 		if type(self.greater) == "function" then
@@ -205,28 +205,28 @@ metaTableTrajectory_ = {
 function Trajectory(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterErrorMsg("Trajectory", 3)
+			tableParameterError("Trajectory", 3)
 		else
- 			namedParametersErrorMsg("Trajectory", 3)
+ 			namedParametersError("Trajectory", 3)
 		end
 	end
 
 	checkUnnecessaryParameters(data, {"target", "build", "select", "greater"}, 3)
 
 	if data.target == nil then
-		mandatoryArgumentErrorMsg("target", 3)
+		mandatoryArgumentError("target", 3)
 	end
 
 	if type(data.target) ~= "CellularSpace" and type(data.target) ~= "Trajectory" then
-		incompatibleTypesErrorMsg("target", "CellularSpace or Trajectory", type(data.target), 3)
+		incompatibleTypeError("target", "CellularSpace or Trajectory", data.target, 3)
 	end
 
 	if data.build == nil then
 		data.build = true
 	elseif type(data.build) ~= "boolean" then
-		incompatibleTypesErrorMsg("build", "boolean", type(data.build), 3)
+		incompatibleTypeError("build", "boolean", data.build, 3)
 	elseif data.build == true then
-		defaultValueWarningMsg("build", "true", 3)
+		defaultValueWarning("build", "true", 3)
 	end
 
 	data.parent = data.target
@@ -242,11 +242,11 @@ function Trajectory(data)
 	data.target = nil
 
 	if data.select ~= nil and type(data.select) ~= "function" then
-		incompatibleTypesErrorMsg("select", "function or nil", type(data.select), 3)
+		incompatibleTypeError("select", "function or nil", data.select, 3)
 	end
 
 	if data.greater ~= nil and type(data.greater) ~= "function" then
-		incompatibleTypesErrorMsg("greater", "function or nil", type(data.greater), 3)
+		incompatibleTypeError("greater", "function or nil", data.greater, 3)
 	end
 
 	local cObj = TeTrajectory()

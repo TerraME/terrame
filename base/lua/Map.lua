@@ -23,6 +23,42 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
+-- Based on a color table available at http://gucky.uni-muenster.de/cgi-bin/rgbtab-en
+local colors = {
+	black        = {  0,   0,   0},
+	white        = {255, 255, 255},
+	lightRed     = {255, 102, 102},
+	red          = {255,   0,   0},
+	darkRed      = {128,   0,   0},
+	lightYellow  = {255, 255, 153},
+	yellow       = {255, 255,   0},
+	darkYellow   = {255, 215,   0},
+	lightOrange  = {255, 180,   0},
+	orange       = {238, 154,   0},
+	darkOrange   = {205, 103,   0},
+	lightBrown   = {128,  85,  85},
+	brown        = {128,  64,  64},
+	darkBrown    = {108,  53,  53},
+	lightGreen   = {153, 255, 153},
+	green        = {  0, 255,   0},
+	darkGreen    = {  0, 128,   0},
+	lightCyan    = {128, 255, 255},
+	cyan         = {  0, 255, 255},
+	darkCyan     = {  0, 128, 128},
+	lightBlue    = {173, 216, 230},
+	blue         = {  0,   0, 255},
+	darkBlue     = {  0,   0, 128},
+	lightGray    = {200, 200, 200},
+	gray         = {160, 160, 160},
+	darkGray     = {128, 128, 128},
+	lightMagenta = {255, 128, 255},
+	magenta      = {255,   0, 255},
+	darkMagenta  = {139,   0, 139},
+	lightPurple  = {155, 048, 255},
+	purple       = {125, 038, 205},
+	darkPurple   = {085, 026, 139}
+}
+
 local ColorBrewer = {
 	YellowsGreens    = {{255,255,229},{247,252,185},{217,240,163},{173,221,142},{120,198,121},{65,171,93},{35,132,67},{0,104,55},{0,69,41}},
 	YellowsGreensBlues   = {{255,255,217},{237,248,177},{199,233,180},{127,205,187},{65,182,196},{29,145,192},{34,94,168},{37,52,148},{8,29,88}},
@@ -69,7 +105,158 @@ local slicedColorBar = function (min, max, slices, colornames)
 	return colorBar
 end
 
-Map = function(data)
+local optionalTableElement = function(table, attr, allowedType, level)
+	local value = table[attr]
+	local mtype = type(value)
 
+	if value ~= nil and mtype ~= allowedType then
+		incompatibleTypeError(attr, allowedType, value, level + 1)
+	end
+end
+
+local compulsoryTableElement = function(table, attr, level)
+	if table[attr] == nil then
+		mandatoryArgumentError(attr, level + 1)
+	end
+end
+
+Map = function(data)
+	compulsoryTableElement(data, "subject", 3)
+	optionalTableElement(data, "subject", "CellularSpace", 3)
+	optionalTableElement(data, "values", "table", 3)
+	optionalTableElement(data, "labels", "table", 3)
+	optionalTableElement(data, "select", "string", 3)
+
+	if data.grouping == nil then
+		if data.slices ~= nil then
+			data.grouping = "equalsteps"
+		elseif data.min and data.max then
+			data.grouping = "equalsteps"
+		elseif data.values ~= nil then
+			data.grouping = "uniquevalues"
+		elseif data.colors == nil and data.select == nil then
+			data.grouping = "background"
+		else
+			customError("It was not possible to infer parameter grouping.", 3)
+		end
+	end
+
+	switch(data, "grouping"):caseof{
+		equalsteps = function()
+			compulsoryTableElement(data, "select", 4)
+			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.", 5)
+			compulsoryTableElement(data, "slices", 4)
+			compulsoryTableElement(data, "colors", 4)
+
+			--verify(#data.labels == 0 or #data.labels == data.slices, "There should exist labels for each value.", 4)
+			--verify(type(data.colors) ~= "string" or #data.colors == 2, "There should exist two colors for each value.", 4)
+			if data.min == nil or data.max == nil then
+				local min = math.huge
+				local max = -math.huge
+
+				forEachCell(data.subject, function(cell)
+					local mdata = cell[data.select]
+					if min > mdata then
+						min = mdata
+					elseif max < mdata then
+						max = mdata
+					end
+				end)
+			end
+
+			checkUnnecessaryParameters(data, {"subject", "select", "labels", "colors", "grouping", "min", "max", "slices"}, 4)
+		end,
+		uniquevalues = function()
+			compulsoryTableElement(data, "select", 4)
+
+			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.", 5)
+
+			compulsoryTableElement(data, "colors", 4)
+
+			verify(#data.colors == #data.values, "There should exist colors for each value.", 5)
+
+			if data.values == nil then
+				data.values = {}
+				forEachCell(data.subject, function(cell)
+					if not belong(cell[data.select], data.values) then
+						data.values[#data.values + 1] = cell[data.select]
+					end
+				end)
+			else
+				local theType = type(data.values[1])
+				forEachElement(data.values, function(_, _, mtype)
+					verify(mtype == theType, "All values should have the same type, got "..theType.." and "..mtype..".", 6)
+				end)
+			end
+
+			if data.labels == nil then
+				data.labels = data.values
+			end
+			verify(#data.labels == #data.values, "There should exist labels for each value.", 5)
+
+			checkUnnecessaryParameters(data, {"subject", "select", "values", "labels", "colors", "grouping"}, 4)
+		end,
+		background = function()
+			checkUnnecessaryParameters(data, {"subject", "colors", "grouping"}, 4)
+
+			forEachCell(data.subject, function(cell)
+				cell.background_ = 0
+			end)
+		end
+	}
+
+	-- TODO: select with more than one attribute
+	--if type(data.select) == "string" then data.select = {data.select} end
+	--optionalTableElement(data, "select", "table", 3)
+	--verify(#data.select > 0, "Maps must select at least one attribute.", 4)
+
+	--forEachElement(data.select, function(_, value)
+	--	verify(data.subject.cells[1][value] ~= nil, "Selected element '"..value.."' does not belong to the subject.", 6)
+	--end)
+
+	if type(data.colors) == "table" then
+		for i = 1, #data.colors do
+			if type(data.colors[i]) == "string" then
+				local colorName = data.colors[i]
+				data.colors[i] = colors[colorName]
+	
+				if data.colors[i] == nil then
+					customError("Color '" .. colorName .. "' not found. Check the name or use a table with an RGB description.", 3)
+				end
+			elseif type(data.colors[i]) ~= "table" then
+				customError("Invalid description for color in position "..i..". It should be a table or string, got "..type(data.colors[i])..".", 3)
+			elseif #data.colors[i] ~= 3 then
+				customError("Invalid description for color in position "..i..". It should have 3 values, got "..#data.colors[i]..".", 3)
+			end
+		end
+	end
+
+	local observerType = TME_OBSERVERS.MAP
+	local tbDimensions = {data.subject.maxCol - data.subject.minCol + 1, data.subject.maxRow - data.subject.minRow + 1}
+
+	local observerParams = {}
+	local colorBar = {}
+
+	if data.grouping == "uniquevalues" then
+		for i = 1, #data.values do
+			table.insert(colorBar, {value = data.values[i],
+                                    color = data.colors[i],
+                                    label = data.labels[i]})
+		end
+	end
+
+	local legend = Legend{
+			grouping = data.grouping,
+			colorBar = colorBar,
+			slices = data.slices,
+			max = data.max,
+			min = data.min
+	}
+
+	print(legend)
+	table.insert(observerParams, legend)
+
+	local idObs = data.subject.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.subject.cells)
+	print(idObs)
 end
 

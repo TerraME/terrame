@@ -55,35 +55,37 @@ local begin_green  = "\027[00;32m"
 local begin_blue   = "\027[00;34m"
 local end_color    = "\027[00m"
 
+print__ = print
+
 local print_blue = function(value)
 	if sessionInfo().separator == "/" then
-		print(begin_blue..value..end_color)
+		print__(begin_blue..value..end_color)
 	else
-		print(value)
+		print__(value)
 	end
 end
 
 local function print_red(value)
 	if sessionInfo().separator == "/" then
-		print(begin_red..value..end_color)
+		print__(begin_red..value..end_color)
 	else
-		print(value)
+		print__(value)
 	end
 end
 
 local function print_green(value)
 	if sessionInfo().separator == "/" then
-		print(begin_green..value..end_color)
+		print__(begin_green..value..end_color)
 	else
-		print(value)
+		print__(value)
 	end
 end
 
 local function print_yellow(value)
 	if sessionInfo().separator == "/" then
-		print(begin_yellow..value..end_color)
+		print__(begin_yellow..value..end_color)
 	else
-		print(value)
+		print__(value)
 	end
 end
 
@@ -117,7 +119,7 @@ require = function(package, recursive, asnamespace)
 		if package == nil then
 			mandatoryArgumentErrorMsg("#1", 3)
 		else
-			incompatibleTypesErrorMsg("#1", "string", type(package), 3)
+			incompatibleTypeError("#1", "string", type(package), 3)
 		end
 	end
 
@@ -125,7 +127,7 @@ require = function(package, recursive, asnamespace)
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
 	if os.rename(package_path, package_path) == nil then
-		customErrorMsg("Package "..package.." not found.", 3)
+		customError("Package "..package.." not found.", 3)
 	end
 
 	local load_file = package_path..s.."load.lua"
@@ -147,7 +149,7 @@ require = function(package, recursive, asnamespace)
 	-- de que o pacote foi carregado com sucesso).
 end
 
-local type__ = type
+type__ = type
 
 --- Return the type of an object. It extends the original Lua type() to support TerraME objects, 
 -- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
@@ -258,14 +260,14 @@ configureTests = function(fileName)
 		print("\n>> Choose option: \n")	
 		local luaTests = {}
 		luaTests[#luaTests + 1] = '""'
-		print ("("..(#luaTests)..")".." ".."ALL")
+		print("("..(#luaTests)..")".." ".."ALL")
 		local luaTests2 = dir(srcDir..s..options[tonumber(answer)])
 		for _, test in ipairs(luaTests2) do
 			luaTests[#luaTests + 1] = test
 		end
 		
 		for index, tests in ipairs(luaTests2) do
-			print ("("..(index + 1)..")".." "..tests)
+			print("("..(index + 1)..")".." "..tests)
 		end
 	
 		usertest = io.read()
@@ -371,11 +373,13 @@ executeTests = function(fileName, package)
 	local data = include(fileName)
 
 	local examples = (data.file == nil and data.folder == nil and data.test == nil) or data.examples
+	local check_functions = false
 
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
 		data.folder = {data.folder}
 	elseif data.folder == nil then
+		check_functions = true
 		data.folder = {}
 		local parentFolders = dir(srcDir)
 		for _, parentFolder in ipairs(parentFolders) do
@@ -402,7 +406,8 @@ executeTests = function(fileName, package)
 		user = data.user,
 		password = data.password,
 		port = data.port,
-		host = data.host
+		host = data.host,
+		sleep = data.sleep
 	}
 
 	ut.package_functions = 0
@@ -414,6 +419,7 @@ executeTests = function(fileName, package)
 	ut.functions_without_assert = 0
 	ut.examples = 0
 	ut.examples_error = 0
+	ut.print_calls = 0
 
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
@@ -443,6 +449,7 @@ executeTests = function(fileName, package)
 
 		for _, eachFile in ipairs(myFile) do
 			print_green("Testing "..eachFolder..s..eachFile)
+			ut.current_file = eachFolder..s..eachFile
 			-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
 			local tests = dofile(srcDir..s..eachFolder..s..eachFile)
 
@@ -465,14 +472,24 @@ executeTests = function(fileName, package)
 				if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
 					testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
 				elseif testfunctions[eachFile] then
-					print_red("Function does not exist in the source code.")
+					print_red("Function does not exist in the respective file in the source code.")
 					ut.functions_not_exist = ut.functions_not_exist + 1
 				end
 
 				local count_test = ut.test
 
 				collectgarbage("collect")
+
+				print = function(...)
+					ut.print_calls = ut.print_calls + 1
+					print_red(...)
+				end
+
 				local ok_execution, err = pcall(function() tests[eachTest](ut) end)
+
+				print = print__
+
+				killAllObservers()
 				ut.executed_functions = ut.executed_functions + 1
 
 				if not ok_execution then
@@ -518,37 +535,42 @@ executeTests = function(fileName, package)
 	end 
 
 	-- checking if all source code functions were tested
-	if type(data.file) == "string" then
-		print_green("Checking functions from lua"..s..data.file)
-		forEachElement(testfunctions[data.file], function(idx, value)
-			ut.package_functions = ut.package_functions + 1
-			if value == 0 then
-				print_red("Function '"..idx.."' is not tested.")
-				ut.functions_not_tested = ut.functions_not_tested + 1
-			end
-		end)
-	elseif type(data.file) == "table" then
-		forEachOrderedElement(data.file, function(idx, value)
-			print_green("Checking functions from lua"..s..value)
-			forEachElement(testfunctions[value], function(midx, mvalue)
+	if check_functions then
+		print_green("Checking if functions from source code were tested")
+		if type(data.file) == "string" then
+			print("Checking "..data.file)
+			forEachElement(testfunctions[data.file], function(idx, value)
 				ut.package_functions = ut.package_functions + 1
-				if mvalue == 0 then
-					print_red("Function '"..midx.."' is not tested.")
+				if value == 0 then
+					print_red("Function '"..idx.."' was not tested.")
 					ut.functions_not_tested = ut.functions_not_tested + 1
 				end
 			end)
-		end)
-	elseif data.file == nil then
-		forEachOrderedElement(testfunctions, function(idx, value)
-			print_green("Checking functions from lua"..s..idx)
-			forEachElement(value, function(midx, mvalue)
-				ut.package_functions = ut.package_functions + 1
-				if mvalue == 0 then
-					print_red("Function '"..midx.."' is not tested.")
-					ut.functions_not_tested = ut.functions_not_tested + 1
-				end
+		elseif type(data.file) == "table" then
+			forEachOrderedElement(data.file, function(idx, value)
+				print("Checking "..value)
+				forEachElement(testfunctions[value], function(midx, mvalue)
+					ut.package_functions = ut.package_functions + 1
+					if mvalue == 0 then
+						print_red("Function '"..midx.."' was not tested.")
+						ut.functions_not_tested = ut.functions_not_tested + 1
+					end
+				end)
 			end)
-		end)
+		elseif data.file == nil then
+			forEachOrderedElement(testfunctions, function(idx, value)
+				print("Checking "..idx)
+				forEachElement(value, function(midx, mvalue)
+					ut.package_functions = ut.package_functions + 1
+					if mvalue == 0 then
+						print_red("Function '"..midx.."' was not tested.")
+						ut.functions_not_tested = ut.functions_not_tested + 1
+					end
+				end)
+			end)
+		end
+	else
+		print_yellow("Skipping source code functions check")
 	end
 
 	-- executing examples
@@ -576,7 +598,14 @@ executeTests = function(fileName, package)
 
 	print("\nReport:")
 
-	print_green("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
+	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds"
+	if ut.delayed_time > 0 then
+		text = text.." ("..ut.delayed_time.. " seconds sleeping)."
+	else
+		text = text.."."
+	end
+
+	print_green(text)
 
 	if ut.fail > 0 then
 		print_red(ut.fail.." out of "..ut.test.." asserts failed.")
@@ -588,12 +617,6 @@ executeTests = function(fileName, package)
 		print_red(ut.functions_with_error.." out of "..ut.executed_functions.." tested functions stopped with an unexpected error.")
 	else
 		print_green("All "..ut.executed_functions.." tested functions do not have any unexpected execution error.")
-	end
-
-	if ut.functions_with_global_variables > 0 then
-		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
-	else
-		print_green("No function creates any global variable.")
 	end
 
 	if ut.functions_without_assert > 0 then
@@ -608,10 +631,32 @@ executeTests = function(fileName, package)
 		print_green("All "..ut.executed_functions.." tested functions exist in the source code of the package.")
 	end
 
-	if ut.functions_not_tested > 0 then
-		print_red(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions are not tested.")
+	if ut.functions_with_global_variables > 0 then
+		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
 	else
-		print_green("All "..ut.package_functions.." functions of the package are tested.")
+		print_green("No function creates any global variable.")
+	end
+
+	if ut.print_calls > 0 then
+		print_red(ut.print_calls.." print calls were found in the tests.")
+	else
+		print_green("No function prints any text on the screen.")
+	end
+
+	if ut.wrong_file > 0 then
+		print_red(ut.wrong_file.." assert_error calls found an error message pointing to an internal file (wrong level).")
+	else
+		print_green("No assert_error has error messages pointing to internal files.")
+	end
+
+	if check_functions then
+		if ut.functions_not_tested > 0 then
+			print_red(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions are not tested.")
+		else
+			print_green("All "..ut.package_functions.." functions of the package are tested.")
+		end
+	else
+		print_yellow("No source code functions were verified.")
 	end
 
 	if examples then
@@ -626,11 +671,12 @@ executeTests = function(fileName, package)
 		print_yellow("No examples were executed.")
 	end
 
-	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error +
-	               ut.functions_with_global_variables + ut.functions_with_error + ut.functions_without_assert
+	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error + 
+	               ut.wrong_file + ut.print_calls + ut.functions_with_global_variables + 
+	               ut.functions_with_error + ut.functions_without_assert
 
 	if errors == 0 then
-		print_green("All tests were succesfully executed.")
+		print_green("Summing up, all tests were succesfully executed.")
 	elseif errors == 1 then
 		print_red("Summing up, one problem was found during the tests.")
 	else

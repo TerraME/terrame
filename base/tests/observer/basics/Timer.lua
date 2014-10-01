@@ -21,66 +21,36 @@
 -- of this library and its documentation.
 --
 -- Authors: Pedro R. Andrade
---          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
 return{
-	assert = function(unitTest)
-		local u = UnitTest{}
+	Timer = function(unitTest)
+		local timer
 
-		u:assert(true)
+		timer = Timer{
+			Event{time = 1, period = 1, priority = 1, action = function(event) timer:notify() end},
+			Event{time = 1, period = 1, priority = 2, action = function(event) timer:notify() end},
+			Event{time = 1, period = 1, priority = 3, action = function(event) timer:notify() end},
+			Event{time = 1, period = 1, priority = 4, action = function(event) timer:notify() end}
+		}
 
-		unitTest:assert_equal(u.success, 1)
-	end,
-	assert_equal = function(unitTest)
-		local u = UnitTest{}
-		u:assert_equal(true, true)
+		unitTest:delay()
 
-		unitTest:assert_equal(u.success, 1)
-	end,
-	assert_error = function(unitTest)
-		local u = UnitTest{}
+		Clock{subject = timer}
+		timer:execute(50)
 
-		local error_func = function() x = 3 + nil end
-		u:assert_error(error_func, "attempt to perform arithmetic on a nil value")
+		timer = Timer{
+			ev1 = Event{time = 1, period = 1, priority =  1, action = function(event) timer:notify() end},
+			ev2 = Event{time = 1, period = 4, priority = 10, action = function(event) timer:notify() end},
+			ev3 = Event{time = 1, period = 4, priority = 10, action = function(event) timer:notify() end},
+			ev4 = Event{time = 1, period = 4, priority = 10, action = function(event) timer:notify() end}
+		}
 
-		local error_func = function() x = 3 + nil end
-		u:assert_error(error_func, "attempt to perform arithmetic on a  value", 3)
+		Clock{subject = timer}
+		timer:execute(50)
 
-		unitTest:assert_equal(u.success, 2)
-	end,
-	assert_nil = function(unitTest)
-		local u = UnitTest{}
-		u:assert_nil()
-
-		unitTest:assert_equal(u.success, 1)
-	end,
-	assert_not_nil = function(unitTest)
-		local u = UnitTest{}
-		u:assert_not_nil(true)
-
-		unitTest:assert_equal(u.success, 1)
-	end,
-	assert_type = function(unitTest)
-		local u = UnitTest{}
-
-		u:assert_type(2, "number")
-
-		unitTest:assert_equal(u.success, 1)
-	end,
-	delay = function(unitTest)
-		local u = UnitTest{sleep = 1}
 		unitTest:assert(true)
-	end,
-	UnitTest = function(unitTest)
-		local u = UnitTest{}
-
-		unitTest:assert_type(u, "UnitTest")
-		unitTest:assert_equal(u.success, 0)
-		unitTest:assert_equal(u.fail, 0)
-		unitTest:assert_equal(u.test, 0)
-		unitTest:assert_equal(u.last_error, "")
-		unitTest:assert_equal(u.count_last, 0)
+		unitTest:delay()
 	end
 }
 

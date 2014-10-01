@@ -31,55 +31,6 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected table, got string.")
 	end,
-	customErrorMsg = function(unitTest)
-		local error_func = function()
-			customErrorMsg(2, 2)
-		end
-		unitTest:assert_error(error_func, "Error: #1 should be a string.")
-
-		error_func = function()
-			customErrorMsg("test.", -1)
-		end
-		unitTest:assert_error(error_func, "Error: #2 should be a positive integer number.")
-	end,
-	customWarningMsg = function(unitTest)
-		local error_func = function()
-			customWarningMsg(2, 2)
-		end
-		unitTest:assert_error(error_func, "Error: #1 should be a string.")
-
-		error_func = function()
-			customWarningMsg("test.", -1)
-		end
-		unitTest:assert_error(error_func, "Error: #2 should be a positive integer number.")
-	end,
-	defaultValueWarningMsg = function(unitTest)
-		local error_func = function()
-			defaultValueWarningMsg(2)
-		end
-		unitTest:assert_error(error_func, "Error: #1 should be a string.")
-
-		error_func = function()
-			defaultValueWarningMsg("test.", "abc", -1)
-		end
-		unitTest:assert_error(error_func, "Error: #2 should be a positive integer number.")
-	end,
-	deprecatedFunctionWarningMsg = function(unitTest)
-		local error_func = function()
-			deprecatedFunctionWarningMsg(2)
-		end
-		unitTest:assert_error(error_func, "Error: #1 should be a string.")
-
-		error_func = function()
-			deprecatedFunctionWarningMsg("test.", -1)
-		end
-		unitTest:assert_error(error_func, "Error: #2 should be a string.")
-
-		error_func = function()
-			deprecatedFunctionWarningMsg("test.", "abc", -1)
-		end
-		unitTest:assert_error(error_func, "Error: #3 should be a positive integer number.")
-	end,
 	forEachAgent = function(unitTest)
 		local a = Agent{value = 2}
 		local soc = Society{instance = a, quantity = 10}

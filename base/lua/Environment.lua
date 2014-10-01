@@ -104,7 +104,7 @@ Environment_ = {
 			object.parent = self
 			table.insert(self, object)
 		else
-      		incompatibleTypesErrorMsg("#1", "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory", t, 3)
+      		incompatibleTypeError("#1", "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory", object, 3)
     	end
 		object.parent = self
 		return self.cObj_:add(object.cObj_)
@@ -151,7 +151,7 @@ Environment_ = {
 			if data == nil then
 				data = {}
 			else
-	 			namedParametersErrorMsg("createPlacement", 3)
+	 			namedParametersError("createPlacement", 3)
 			end
 		end
 
@@ -162,14 +162,14 @@ Environment_ = {
 		if data.strategy == nil then
 			data.strategy = "random"      
 		elseif type(data.strategy) ~= "string" then
-			incompatibleTypesErrorMsg("strategy", "string", type(data.strategy), 3)
+			incompatibleTypeError("strategy", "string", data.strategy, 3)
 		end
 
 		if type(data.name) ~= "string" then  
 			if type(data.name) == "nil" then
 				data.name = "placement"
 			else
-				incompatibleTypesErrorMsg("name", "string", type(data.name), 3)
+				incompatibleTypeError("name", "string", data.name, 3)
 			end
 		end
 
@@ -178,10 +178,10 @@ Environment_ = {
 				if type(data.max) == "nil" then
 					data.max = math.huge
 				else
-					incompatibleTypesErrorMsg("max", "positive integer number", type(data.max), 3)
+					incompatibleTypeError("max", "positive integer number", data.max, 3)
 				end
 			elseif data.max <= 0 then
-				incompatibleValuesErrorMsg("max", "positive integer number", data.max, 3)
+				incompatibleValueError("max", "positive integer number", data.max, 3)
 			end
 		end
 
@@ -191,14 +191,14 @@ Environment_ = {
 			local t = type(ud)
 			if t == "CellularSpace" or t == "Trajectory" then
 				if mycs ~= nil then
-					customErrorMsg("Environment should contain only one CellularSpace or Trajectory.", 3)
+					customError("Environment should contain only one CellularSpace or Trajectory.", 3)
 				end
 				mycs = ud
 			elseif t == "Society" then
 				qty_agents = qty_agents + #ud
 				forEachElement(ud.placements, function(index)
 					if index == data.name then
-						customErrorMsg("There is a Society within this Environment that already has this placement.", 3)
+						customError("There is a Society within this Environment that already has this placement.", 5)
 					end
 				end)
 
@@ -207,17 +207,17 @@ Environment_ = {
 				qty_agents = qty_agents + 1
 				foundsoc = true
 			elseif t == "Group" then
-				customErrorMsg("Placements is still not implemented for groups.", 3)
+				customError("Placements is still not implemented for groups.", 3)
 			end
 		end
 
 		if mycs == nil then
-			customErrorMsg("The Environment does not contain a CellularSpace.", 3)
+			customError("The Environment does not contain a CellularSpace.", 3)
 		elseif not foundsoc then
-			customErrorMsg("Could not find a behavioral entity (Society or Agent) within the Environment.", 3)
+			customError("Could not find a behavioral entity (Society or Agent) within the Environment.", 3)
 		end
 		if data.strategy == "random" and data.max ~= nil and qty_agents > #mycs * data.max then
-			customErrorMsg("It is not possible to put that amount of agents in space.", 3)
+			customError("It is not possible to put that amount of agents in space.", 3)
 		end
 
 		local idCounter = 0
@@ -270,7 +270,7 @@ Environment_ = {
 	-- @usage environment:execute(1000)
 	execute = function(self, finalTime) 
 		if type(finalTime) ~= "number" then
-			incompatibleTypesErrorMsg("#1", "number", type(finalTime), 3)
+			incompatibleTypeError("#1", "number", finalTime, 3)
 		end
 		self.cObj_:config(finalTime)
 		self.cObj_:execute()
@@ -288,32 +288,32 @@ Environment_ = {
 	loadNeighborhood = function(self, data)
 		if type(data) ~= "table" then
 			if data == nil then
-				tableParameterErrorMsg("loadNeighborhood", 3)
+				tableParameterError("loadNeighborhood", 3)
 			else
-	 			namedParametersErrorMsg("loadNeighborhood", 3)
+	 			namedParametersError("loadNeighborhood", 3)
 			end
 		end
 
 		if data.name == nil then
 			data.name = "1"
 		elseif type(data.name) ~= "string" then 
-			incompatibleTypesErrorMsg("name", "string", type(data.name), 3)
+			incompatibleTypeError("name", "string", data.name, 3)
 		end
 
 		if type(data.source) == "string" then
 			local extension = string.match(data.source, "%w+$")		
 			if extension ~= "gpm" then
-				customErrorMsg("File extension '"..extension.."' is not supported.", 3)
+				customError("File extension '"..extension.."' is not supported.", 3)
 			else
 				local file = io.open(data.source, "r")
 				if not file then
-					resourceNotFoundErrorMsg("source", data.source, 3)
+					resourceNotFoundError("source", data.source, 3)
 				end
 			end
 		elseif data.source == nil then
-			mandatoryArgumentErrorMsg("source", 3)
+			mandatoryArgumentError("source", 3)
 		elseif type(data.source ~= "string") then
-			incompatibleTypesErrorMsg("source", "string", type(data.source), 3)
+			incompatibleTypeError("source", "string", data.source, 3)
 		end
 
 		local extension = string.match(data.source, "%w+$")
@@ -321,12 +321,12 @@ Environment_ = {
     	if data.bidirect == nil then
 			data.bidirect = false
 		elseif type(data.bidirect) ~= "boolean" then
-			incompatibleTypesErrorMsg("bidirect", "boolean", type(data.bidirect), 3)
+			incompatibleTypeError("bidirect", "boolean", data.bidirect, 3)
 		end
 
 		local file = io.open(data.source, "r")
 		if not file then
-			resourceNotFoundErrorMsg("source", data.source, 3)
+			resourceNotFoundError("source", data.source, 3)
 		end
 
 		local header = file:read()
@@ -340,11 +340,11 @@ Environment_ = {
 		local layer2Id = string.sub(header, (layer1Idx + 1), (layer2Idx - 1))
 
 		if layer1Id == layer2Id then 
-			customErrorMsg("This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.", 3) 
+			customError("This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.", 3) 
 		end
 
 		if numAttributes > 1 then
-			customErrorMsg("This function does not support GPM with more than one attribute.", 3)
+			customError("This function does not support GPM with more than one attribute.", 3)
 		end
 
 		local beginName = layer2Idx
@@ -374,7 +374,7 @@ Environment_ = {
 		end
 		
 		if cellSpaces[1] == nil or cellSpaces[2] == nil then
-			customErrorMsg("CellularSpaces were not found in the Environment.", 2)
+			customError("CellularSpaces were not found in the Environment.", 2)
 		end
 
 		repeat
@@ -415,7 +415,7 @@ Environment_ = {
 							weight = tonumber(weightAux)
 
 							if weight == nil then
-								customErrorMsg("The string '"..weightAux.."' found as weight in the file '"..data.source..
+								customError("The string '"..weightAux.."' found as weight in the file '"..data.source..
 								"' could not be converted to a number.", 3)
 							end
 						else
@@ -423,7 +423,7 @@ Environment_ = {
 							weight = tonumber(weightAux)
 
 							if weight == nil then
-								customErrorMsg("The string '"..weightAux.."' found as weight in the file '"..data.source..
+								customError("The string '"..weightAux.."' found as weight in the file '"..data.source..
 								"' could not be converted to a number.", 3)
 							end
 						end
@@ -471,10 +471,10 @@ Environment_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypesErrorMsg("#1", "Event or positive number", type(modelTime), 3)
+				incompatibleTypeError("#1", "Event or positive number", modelTime, 3)
 			end
 		elseif modelTime < 0 then
-			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)
+			incompatibleValueError("#1", "Event or positive number", modelTime, 3)
 		end
 		self.cObj_:notify(modelTime)
 	end
@@ -497,16 +497,16 @@ metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
 function Environment(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterErrorMsg("Environment", 3)
+			tableParameterError("Environment", 3)
 		else
-			namedParametersErrorMsg("Environment", 3)
+			namedParametersError("Environment", 3)
 		end
 	end
 
 	if data.id == nil then
 		data.id = "1"
 	elseif type(data.id) ~= "string" then
-		incompatibleTypesErrorMsg("id","string",type(data.id), 3)
+		incompatibleTypeError("id", "string", data.id, 3)
 	end
 	local cObj = TeScale(data.id)
 	setmetatable(data, metaTableEnvironment_)
@@ -519,7 +519,7 @@ function Environment(data)
 		elseif t == "userdata" then
 			cObj:add(ud)
 	    elseif t == "CellularSpace" and flagAutomatons then
-			customErrorMsg("CellularSpace must be added before any Automaton.", 3)
+			customError("CellularSpace must be added before any Automaton.", 3)
 	    elseif t == "Automaton" then
 			ud.parent = data
 			cObj:add(ud.cObj_)    

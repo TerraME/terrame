@@ -35,15 +35,15 @@ Cell_ = {
 	-- cell:addNeighborhood(n, "east")
 	addNeighborhood = function(self, neigh, id)
 		if neigh == nil then
-			mandatoryArgumentErrorMsg("#1", 3)
+			mandatoryArgumentError("#1", 3)
 		elseif type(neigh) ~= "Neighborhood" then
-			incompatibleTypesErrorMsg("#1", "Neighborhood", type(neigh), 3)
+			incompatibleTypeError("#1", "Neighborhood", neigh, 3)
 		end
 
 		if id == nil then
 			id = "1"
 		elseif type(id) ~= "string" then
-			incompatibleTypesErrorMsg("#2", "string", type(id), 3)
+			incompatibleTypeError("#2", "string", id, 3)
 		end
 
 		if self.neighborhoods == nil then self.neighborhoods = {} end
@@ -56,9 +56,9 @@ Cell_ = {
 	distance = function(self, cell)
 		if type(cell) ~= "Cell" then
 			if cell == nil then
-				mandatoryArgumentErrorMsg("#1", 3)
+				mandatoryArgumentError("#1", 3)
 			else
-				incompatibleTypesErrorMsg("#1", "Cell", type(cell), 3)
+				incompatibleTypeError("#1", "Cell", cell, 3)
 			end
 		end
 
@@ -72,9 +72,9 @@ Cell_ = {
 		if type(self[placement]) == "Group" then
 			return self[placement].agents[1]
 		elseif self[placement] == nil then
-			customErrorMsg("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.", 3)
+			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.", 3)
 		else
-			customErrorMsg("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".", 3)
+			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".", 3)
 		end
 	end,
 	--- Retrieve the Agents that belong to the Cell. Agents are indexed by numeric positions.
@@ -87,9 +87,9 @@ Cell_ = {
 		if type(self[placement]) == "Group" then
 			return self[placement].agents
 		elseif self[placement] == nil then
-			customErrorMsg("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.", 3)
+			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.", 3)
 		else
-			customErrorMsg("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".", 3)
+			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".", 3)
 		end
 	end,
 	--- Retrieve a string with the unique identifier of the Cell.
@@ -105,7 +105,7 @@ Cell_ = {
 		if index == nil then
 			index = "1"
 		elseif type(index) ~= "string" then 
-			incompatibleTypesErrorMsg("#1", "string", type(index), 3)
+			incompatibleTypeError("#1", "string", index, 3)
 		end
 
 		return self.cObj_:getNeighborhood(index)
@@ -138,9 +138,9 @@ Cell_ = {
 		if type(self[placement]) == "Group" then
 			return #(self[placement].agents) == 0
 		elseif self[placement] == nil then
-			customErrorMsg("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.", 3)
+			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.", 3)
 		else
-			customErrorMsg("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".", 3)
+			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".", 3)
 		end
 	end,
 	--- Retrieve the name of the current state of a given Agent.
@@ -160,11 +160,18 @@ Cell_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypesErrorMsg("#1", "Event or positive number", type(modelTime), 3)
+				incompatibleTypeError("#1", "Event or positive number", modelTime, 3)
 			end
 		elseif modelTime < 0 then
-			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)
+			incompatibleValueError("#1", "Event or positive number", modelTime, 3)
 		end
+
+		if self.obsattrs then
+			forEachElement(self.obsattrs, function(idx)
+				self[idx.."_"] = self[idx](self)
+			end)
+		end
+
 		self.cObj_:notify(modelTime)
 	end,
 	--- Returns a random Cell from a Neighborhood of this Cell
@@ -182,7 +189,7 @@ Cell_ = {
 		local neigh = self:getNeighborhood(id)
 
 		if neigh == nil then
-			customErrorMsg("Cell does not have a Neighborhood named '"..id.."'.", 3)
+			customError("Cell does not have a Neighborhood named '"..id.."'.", 3)
 		end
 		return neigh:sample(randomObj)
 	end,
@@ -191,9 +198,9 @@ Cell_ = {
 	-- @usage cell:setId("newid")
 	setId = function(self, id)
 		if id == nil then
-			mandatoryArgumentErrorMsg("#1", 3)
+			mandatoryArgumentError("#1", 3)
 		elseif type(id) ~= "string" then
-			incompatibleTypesErrorMsg("#1", "string", type(id), 3)
+			incompatibleTypeError("#1", "string", id, 3)
 		end
 		self.id = id
 		self.cObj_:setID(self.id)
@@ -203,7 +210,7 @@ Cell_ = {
 	-- @return a positive integer number
 	-- @usage size = #cell
 	size = function(self)
-		deprecatedFunctionWarningMsg("size", "operator #", 3)
+		deprecatedFunctionWarning("size", "operator #", 3)
 		return #self
 	end,
 	--- Synchronizes the Cell. TerraME can keep two copies of the attributes of a Cell in memory:
@@ -255,12 +262,12 @@ function Cell(data)
 		if data == nil then
 			data = {}
 		else
- 			tableParameterErrorMsg("Cell", 3)
+ 			tableParameterError("Cell", 3)
  		end
 	end
 
 	if type(data.id) ~= "string" and data.id ~= nil then
-		incompatibleTypesErrorMsg("id", "string or nil", type(data.id), 3)
+		incompatibleTypeError("id", "string or nil", data.id, 3)
 	end
 
 	data.cObj_ = TeCell()
@@ -272,17 +279,17 @@ function Cell(data)
 	if data.x == nil then
 		data.x = 0 
 	elseif type(data.x) ~= "number" then
-		incompatibleTypesErrorMsg("x", "positive integer number", type(data.x), 3)
+		incompatibleTypeError("x", "positive integer number", data.x, 3)
 	elseif data.x < 0 or math.floor(data.x) ~= data.x then
-		incompatibleValuesErrorMsg("x", "positive integer number", data.x, 3)
+		incompatibleValueError("x", "positive integer number", data.x, 3)
 	end
 
 	if data.y == nil then
 		data.y = 0 
 	elseif type(data.y) ~= "number" then
-		incompatibleTypesErrorMsg("y", "positive integer number", type(data.y), 3)
+		incompatibleTypeError("y", "positive integer number", data.y, 3)
 	elseif data.y < 0 or math.floor(data.y) ~= data.y then
-		incompatibleValuesErrorMsg("y", "positive integer number", data.y, 3)
+		incompatibleValueError("y", "positive integer number", data.y, 3)
 	end
 
 	-- TODO: this will probably not work properly for databases.

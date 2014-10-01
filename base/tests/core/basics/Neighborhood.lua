@@ -122,15 +122,15 @@ return{
 		neigh:add(cell3)
 
 		neigh:remove(cell1)
-		unitTest:assert(#neigh, 2)
+		unitTest:assert_equal(#neigh, 2)
 		unitTest:assert(not neigh:isNeighbor(cell1))
 
 		neigh:remove(cell2)
-		unitTest:assert(#neigh, 1)
+		unitTest:assert_equal(#neigh, 1)
 		unitTest:assert(not neigh:isNeighbor(cell2))
 
 		neigh:remove(cell3)
-		unitTest:assert(#neigh, 0)
+		unitTest:assert_equal(#neigh, 0)
 		unitTest:assert(not neigh:isNeighbor(cell3))
 	end,
 	sample = function(unitTest)

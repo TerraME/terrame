@@ -118,15 +118,15 @@ return{
 		sntw:add(ag3)
 
 		sntw:remove(ag1)
-		unitTest:assert(#sntw, 2)
+		unitTest:assert_equal(#sntw, 2)
 		unitTest:assert(not sntw:isConnection(ag1))
 
 		sntw:remove(ag2)
-		unitTest:assert(#sntw, 1)
+		unitTest:assert_equal(#sntw, 1)
 		unitTest:assert(not sntw:isConnection(ag2))
 
 		sntw:remove(ag3)
-		unitTest:assert(#sntw, 0)
+		unitTest:assert_equal(#sntw, 0)
 		unitTest:assert(not sntw:isConnection(ag3))
 	end,
 	sample = function(unitTest)

@@ -64,12 +64,12 @@ function Event(data)
 	if data == nil then
 		data = {}
 	elseif type(data) ~= "table" then
-		namedParametersErrorMsg("Event", 3)
+		namedParametersError("Event", 3)
 	end
 
 	local cObj = TeEvent()
 	if data.message ~= nil then 
-		customErrorMsg("Parameter 'message' is deprecated, use 'action' instead.", 3)
+		customError("Parameter 'message' is deprecated, use 'action' instead.", 3)
 	end
 
 	checkUnnecessaryParameters(data, {"time", "action", "priority", "period"}, 3)
@@ -77,21 +77,21 @@ function Event(data)
 	if data.time == nil then
 		data.time = 1
 	elseif type(data.time) ~= "number" then
-		incompatibleTypesErrorMsg("time", "positive number", type(data.time), 3)
+		incompatibleTypeError("time", "positive number", data.time, 3)
 	--TODO: se adicionar estas linhas abaixo o Event aborta o TerraME
 	--	elseif data.time == 1 then
-	--		defaultValueWarningMsg("time", "1", 3)
+	--		defaultValueWarning("time", "1", 3)
 	end
 
 	if data.period == nil then
 		data.period = 1
 	elseif type(data.period) ~= "number" then
-		incompatibleTypesErrorMsg("period", "positive number (except zero)", type(data.period), 3)
+		incompatibleTypeError("period", "positive number (except zero)", data.period, 3)
 	elseif data.period <= 0 then
-		incompatibleValuesErrorMsg("period","positive number (except zero)", data.period, 3)
+		incompatibleValueError("period","positive number (except zero)", data.period, 3)
 	--TODO: se adicionar estas linhas abaixo o Event aborta o TerraME
 	--	elseif data.period == 1 then
-	--		defaultValueWarningMsg("period", "1", 3)
+	--		defaultValueWarning("period", "1", 3)
 	end
 
 	-- TODO: possibilitar priority descrito como string: "low", "medium", "high", "very..."
@@ -99,10 +99,10 @@ function Event(data)
 	if data.priority == nil then
 		data.priority = 0
 	elseif type(data.priority) ~= "number" then
-		incompatibleTypesErrorMsg("priority", "positive number (except zero)", type(data.priority), 3)
+		incompatibleTypeError("priority", "positive number (except zero)", data.priority, 3)
 	--TODO: se adicionar estas linhas abaixo o Event aborta o TerraME
 	--	elseif data.priority == 0 then
-	--		defaultValueWarningMsg("priority", "0", 3)
+	--		defaultValueWarning("priority", "0", 3)
 	end
 
 	cObj:config(data.time, data.period, data.priority)
@@ -143,7 +143,7 @@ function Event(data)
 			end
 			return Pair{cObj, Action{func}}
 		else
-			incompatibleTypesErrorMsg("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", type(data.action), 3)
+			incompatibleTypeError("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", data.action, 3)
 		end
 	else
 		return cObj

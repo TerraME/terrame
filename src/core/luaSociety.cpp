@@ -232,7 +232,7 @@ int luaSociety::createObserver( lua_State * luaL)
     	lua_pushnil(luaL);
     	while(lua_next(luaL, top) != 0)
     	{
-    	    if (execModes != Quiet )
+/*    	    if (execModes != Quiet )
             {
     	        string err_out = string("The parameter table is empty.");
     	        lua_getglobal(L, "customWarningMsg");
@@ -240,7 +240,7 @@ int luaSociety::createObserver( lua_State * luaL)
     	        lua_pushnumber(L,5);
     	        lua_call(L,2,0);
     	    }
-
+*/
     	    if (obsAttribs.empty())
     	    {
 			    obsAttribs = allAttribs;
@@ -252,6 +252,7 @@ int luaSociety::createObserver( lua_State * luaL)
         	else
         	{
         	    // Verifica se o atributo informado realmente existe na celula
+/*
         	    for (int i = 0; i < obsAttribs.size(); i++)
         	    {
         	        if (! observedAttribs.contains(obsAttribs.at(i)) )
@@ -261,13 +262,14 @@ int luaSociety::createObserver( lua_State * luaL)
                 	if (! allAttribs.contains(obsAttribs.at(i)))
                 	{
 						string errorMsg = string("Attribute name ") + string(obsAttribs.at(i).toAscii().data()) + string(" not found.");
-						lua_getglobal(L, "customErrorMsg");
+						lua_getglobal(L, "customError");
 						lua_pushstring(L,errorMsg.c_str());
 						lua_pushnumber(L,5);
 						lua_call(L,2,0);
                     	return 0;
                 	}
             	}
+*/
         	}
 
         	ObserverTextScreen *obsText = 0;
@@ -597,7 +599,7 @@ int luaSociety::createObserver( lua_State * luaL)
 
         if (! cellSpace)
 		{
-			lua_getglobal(L, "customErrorMsg");
+			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.toAscii().data());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);
@@ -610,7 +612,7 @@ int luaSociety::createObserver( lua_State * luaL)
 
             if (! obsMap)
 			{
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);
@@ -625,7 +627,7 @@ int luaSociety::createObserver( lua_State * luaL)
 
             if (! obsImage)
 			{
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);

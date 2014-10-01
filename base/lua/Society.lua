@@ -142,7 +142,7 @@ Society_ = {
 			setmetatable(agent, metaTable)
 			agent:init()
 		elseif mtype ~= "Agent" then
-			incompatibleTypesErrorMsg("#1", "Agent or table", mtype, 3)
+			incompatibleTypeError("#1", "Agent or table", agent, 3)
 		end
 
 		agent.parent = self
@@ -228,9 +228,9 @@ Society_ = {
 	createSocialNetwork = function(self, data)
 		if type(data) ~= "table" then
 			if data == nil then
-				tableParameterErrorMsg("createSocialNetwork", 3)
+				tableParameterError("createSocialNetwork", 3)
 			else
-	 			namedParametersErrorMsg("createSocialNetwork", 3)
+	 			namedParametersError("createSocialNetwork", 3)
 			end
 		end
 		if data.strategy == nil then
@@ -241,7 +241,7 @@ Society_ = {
 			elseif data.func ~= nil then
 				data.strategy = "func"
 			else
-				customErrorMsg("It was not possible to infer a value for argument 'strategy'.", 3)
+				customError("It was not possible to infer a value for argument 'strategy'.", 3)
 			end
 		end
 
@@ -249,44 +249,44 @@ Society_ = {
 			if data.name == nil then
 				data.name = "1"
 			else
-				incompatibleTypesErrorMsg("name", "string", type(data.id), 3)
+				incompatibleTypeError("name", "string", data.id, 3)
 			end
 		end
 
 		if self.agents[1].socialnetworks[data.name] ~= nil then
-			customErrorMsg("SocialNetwork '"..data.name.."' already exists in the Society.", 3)
+			customError("SocialNetwork '"..data.name.."' already exists in the Society.", 3)
 		end
 
 		if data.strategy == "probability" then
 			if type(data.probability) ~= "number" then
-				incompatibleTypesErrorMsg("probability", "a number between 0 and 1", type(data.probability), 3)
+				incompatibleTypeError("probability", "a number between 0 and 1", data.probability, 3)
 			elseif data.probability <= 0 or data.probability > 1 then
-				incompatibleValuesErrorMsg("probability","a number between 0 and 1",data.probability, 3)
+				incompatibleValueError("probability", "a number between 0 and 1", data.probability, 3)
 			end
 		elseif data.strategy == "quantity" then
 			if type(data.quantity) ~= "number" then
-				incompatibleTypesErrorMsg("quantity","positive integer number (except zero)", type(data.quantity), 3)
+				incompatibleTypeError("quantity", "positive integer number (except zero)", data.quantity, 3)
 			elseif data.quantity <= 0 then
-				incompatibleValuesErrorMsg("quantity", "positive integer number (except zero)", data.quantity, 3)
+				incompatibleValueError("quantity", "positive integer number (except zero)", data.quantity, 3)
 			elseif math.floor(data.quantity) ~= data.quantity then
-				incompatibleValuesErrorMsg("quantity", "positive integer number (except zero)", data.quantity, 3)
+				incompatibleValueError("quantity", "positive integer number (except zero)", data.quantity, 3)
 			end
 		elseif data.strategy == "cell" then
 			if data.self == nil then data.self = false end
 			if self.agents[1].placement == nil or self.agents[1].placement.cells[1] == nil then
-				customErrorMsg("Society has no placement. Use Environment:createPlacement() first.", 3)
+				customError("Society has no placement. Use Environment:createPlacement() first.", 3)
 			end
 		elseif data.strategy == "neighbor" then
 			if data.neighborhood == nil then data.neighborhood = "1" end
 
 			if self.agents[1].placement == nil or self.agents[1].placement.cells[1] == nil then
-				customErrorMsg("Society has no placement. Use Environment:createPlacement() first.", 3)
+				customError("Society has no placement. Use Environment:createPlacement() first.", 3)
 			elseif self.agents[1].placement.cells[1]:getNeighborhood(data.neighborhood) == nil then
-				customErrorMsg("CellularSpace has no Neighborhood named '"..data.neighborhood.."'. Use CellularSpace:createNeighborhood() first.", 3)
+				customError("CellularSpace has no Neighborhood named '"..data.neighborhood.."'. Use CellularSpace:createNeighborhood() first.", 3)
 			end
 		elseif data.strategy == "func" then
 			if type(data.func) ~= "function" then
-				incompatibleTypesErrorMsg("func", "function", type(data.func), 3)
+				incompatibleTypeError("func", "function", data.func, 3)
 			end
 		end
 
@@ -318,7 +318,7 @@ Society_ = {
 		}
 	end,
 	getAgent = function(self, index)
-		deprecatedFunctionWarningMsg("getAgent", "get", 2)
+		deprecatedFunctionWarning("getAgent", "get", 3)
 		return self:get(index)
 	end,
 	--- Return a given Agent based on its index.
@@ -329,44 +329,46 @@ Society_ = {
 		-- depois coloca esta tabela na propria sociedade, e entao atualiza o getAgentByID para retornar
 		-- uma consulta a esta tabela. Fazer o mesmo para o CellularSpace, com um getCellByID
 		if type(index) ~= "number" then
-			incompatibleTypesErrorMsg("index", "positive integer number", type(index), 3)
+			incompatibleTypeError("index", "positive integer number", index, 3)
 		elseif index < 0 then
-			incompatibleValuesErrorMsg("index", "positive integer number", "negative number", 3)
+			incompatibleValueError("index", "positive integer number", "negative number", 3)
 		elseif math.floor(index) ~= index then
-			incompatibleValuesErrorMsg("index", "positive integer number", "float number", 3)
+			incompatibleValueError("index", "positive integer number", "float number", 3)
 		end
 		return self.agents[index]
 	end,
 	--- Return a vector with the Agents of the Society.
 	-- @usage agent = soc:getAgents()[1]
 	getAgents = function(self)
-		deprecatedFunctionWarningMsg("getAgents", ".agents", 2)
+		deprecatedFunctionWarning("getAgents", ".agents", 3)
 		return self.agents
 	end,
 	--- Notify all the Agents of the Society.
 	-- @param modelTime The notification time.
 	-- @usage society:notify()
 	notify = function (self, modelTime)
-		if type(self.attrfunc_) == "table" then
-			forEachElement(self.attrfunc_, function(pos, value)
-				if value == "quantity_" then
-					self.quantity_ = #self
-				else
-					self[value.."_"] = self[value](self)
-				end
-			end)
-		end
 		if modelTime == nil then
 			modelTime = 1
 		elseif type(modelTime) ~= "number" then
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypesErrorMsg("#1", "Event or positive number", type(modelTime), 3) 
+				incompatibleTypeError("#1", "Event or positive number", modelTime, 3) 
 			end
 		elseif modelTime < 0 then
-			incompatibleValuesErrorMsg("#1", "Event or positive number", modelTime, 3)   
+			incompatibleValueError("#1", "Event or positive number", modelTime, 3)   
 		end
+
+		if self.obsattrs then
+			forEachElement(self.obsattrs, function(idx)
+				if idx == "quantity_" then
+					self.quantity_ = #self
+				else
+					self[idx.."_"] = self[idx](self)
+				end
+			end)
+		end
+
 		forEachAgent(self, function(agent)
 			agent:notify(modelTime)
 		end)
@@ -413,13 +415,13 @@ Society_ = {
 				return self.agents[TME_GLOBAL_RANDOM:integer(1, #self.agents)]
 			end
 		else
-			customErrorMsg("Trying to sample an empty Society.", 2)
+			customError("Trying to sample an empty Society.", 3)
 		end
 	end,
 	-- Return the number of Agents of the Society.
 	-- @usage print(#soc)
 	size = function(self)
-		deprecatedFunctionWarningMsg("size", "operator #", 3)
+		deprecatedFunctionWarning("size", "operator #", 3)
 		return #self
 	end,
 	--- Split the Society into a set of Groups according to a classification strategy. The 
@@ -461,7 +463,7 @@ Society_ = {
 		end
 
 		if type(argument) ~= "function" then
-			incompatibleTypesErrorMsg("#1", "string or function", type(argument), 3)
+			incompatibleTypeError("#1", "string or function", argument, 3)
 		end
 
 		local result = {}
@@ -493,10 +495,10 @@ Society_ = {
 			if type(delay) == "nil" then
 				delay = 1
 			else
-				incompatibleTypesErrorMsg("#1", "positive number", type(delay), 3)
+				incompatibleTypeError("#1", "positive number", delay, 3)
 			end
 		elseif delay <= 0 then
-			incompatibleValuesErrorMsg("#1", "positive number", delay, 3)
+			incompatibleValueError("#1", "positive number", delay, 3)
 		end
 
 		local k = 1
@@ -618,7 +620,7 @@ function Society(data)
 		if data == nil then
     		data = {}
 		else
- 			namedParametersErrorMsg("Society", 3)
+ 			namedParametersError("Society", 3)
   		end
 	end
 
@@ -635,15 +637,15 @@ function Society(data)
 	if type(data.id) ~= "string" then
 		if type(data.id) == "nil" then
 		else
-			incompatibleTypesErrorMsg("id", "string", type(data.id), 3)
+			incompatibleTypeError("id", "string", data.id, 3)
 		end
 	end
 
 	if type(data.instance) ~= "Agent" then
 		if type(data.instance) == "nil" then
-			mandatoryArgumentErrorMsg("instance", 3)
+			mandatoryArgumentError("instance", 3)
 		else
-			incompatibleTypesErrorMsg("instance", "Agent", type(data.instance), 3)
+			incompatibleTypeError("instance", "Agent", data.instance, 3)
 		end
 	end
 
@@ -652,7 +654,7 @@ function Society(data)
 		if attribute == "id" or attribute == "parent" then return
 		elseif attribute == "messages" or attribute == "instance" or 
                attribute == "autoincrement" or attribute == "placements" then
-			customWarningMsg("Attribute '"..attribute.."' belong to both Society and Agent.", 5)
+			customWarning("Attribute '"..attribute.."' belong to both Society and Agent.", 5)
 			return
 		elseif mtype == "function" then
 			data[attribute] = function(soc, args)
@@ -698,11 +700,11 @@ function Society(data)
 	if type(data.database) == "string" then
 		if data.database:endswith(".csv") then
 			if data.sep and type(data.sep) ~= "string" then
-				incompatibleTypesErrorMsg("sep", "string", type(data.sep), 3)
+				incompatibleTypeError("sep", "string", data.sep, 3)
 			end			
 			local f = io.open(data.database)
 			if not f then
-				resourceNotFoundErrorMsg("database", data.database, 3)
+				resourceNotFoundError("database", data.database, 3)
 			end
 			f:close()
 			local csv = readCSV(data.database, data.sep)
@@ -727,12 +729,12 @@ function Society(data)
 	else
 		if type(data.quantity) ~= "number" then
 			if data.quantity == nil then
-				mandatoryArgumentErrorMsg("quantity", 3)
+				mandatoryArgumentError("quantity", 3)
 			else
-				incompatibleTypesErrorMsg("quantity", "positive integer number (except zero)", type(data.quantity), 3)
+				incompatibleTypeError("quantity", "positive integer number (except zero)", data.quantity, 3)
 			end
 		elseif data.quantity <= 0 or math.floor(data.quantity) ~= data.quantity then
-			incompatibleValuesErrorMsg("quantity", "positive integer number (except zero)", data.quantity, 3)
+			incompatibleValueError("quantity", "positive integer number (except zero)", data.quantity, 3)
 		end
 	
 		local quantity = data.quantity
@@ -746,7 +748,7 @@ function Society(data)
 	data.quantity = 0
 	for i = 1, quantity do
 	if type(data.id) ~= "string" then
-	incompatibleTypesMsg("id","string", type(data.id))
+	incompatibleTypes("id","string", data.id)
 	end
 	data:add()
 	end

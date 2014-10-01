@@ -87,7 +87,7 @@ public:
         if( !lua_istable(L, -1) )
         {
             string err_out = string("Action function " ) + string (msg) + string(" not defined!");
-			lua_getglobal(L, "customErrorMsg");
+			lua_getglobal(L, "customError");
 			lua_pushstring(L,err_out.c_str());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);
@@ -103,7 +103,7 @@ public:
         if( !lua_isfunction(L, -1))
         {
 			string err_out = string("Event constructor not found.");
-			lua_getglobal(L, "customErrorMsg");
+			lua_getglobal(L, "customError");
 			lua_pushstring(L,err_out.c_str());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);
@@ -126,7 +126,7 @@ public:
         if( lua_pcall( L, 1, 1, 0) != 0 )
         {
             string err_out = string("Event constructor not found in the stack.");
-			lua_getglobal(L, "customErrorMsg");
+			lua_getglobal(L, "customError");
 			lua_pushstring(L,err_out.c_str());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);
@@ -145,7 +145,7 @@ public:
         {
             string err_out = string (lua_tostring(L,-1)) + string("\n") +
 							 string("'action' function is missing or has failed during execution.\nStopping TerraME." );
-			lua_getglobal(L, "customErrorMsg");
+			lua_getglobal(L, "customError");
 			lua_pushstring(L,err_out.c_str());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);

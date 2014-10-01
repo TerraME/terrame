@@ -27,7 +27,7 @@
 local Jump_ = {
 	setTarget = function(self, target)
 		if type(target) ~= "string" then
-			incompatibleTypesErrorMsg("#1", "string", type(target), 3)
+			incompatibleTypeError("#1", "string", target, 3)
 			return false
 		end
 		self.target = target
@@ -51,14 +51,14 @@ metaTableJump_ = {__index = Jump_, __tostring = tostringTerraME}
 -- }
 function Jump(data)
 	if type(data) ~= "table" then
-		tableParameterErrorMsg("Jump", 3)
+		tableParameterError("Jump", 3)
 	end
 
 	local cObj = TeJump()
 	data.rule = cObj
 
 	if type(data[1]) ~= "function" then
-		customErrorMsg("Jump constructor expected a function as first parameter.", 3)
+		customError("Jump constructor expected a function as first parameter.", 3)
 	end
 
 	if type(data.target) ~= "string" then 

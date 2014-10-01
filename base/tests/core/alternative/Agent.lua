@@ -153,10 +153,8 @@ return {
 		sn = SocialNetwork{}
 
 		ag1:addSocialNetwork(sn, "friends")
-		local test_function = function()
-			sn2 = ag1:getSocialNetwork("notfriends")		
-		end
-		unitTest:assert_error(test_function, "Error: Agent does not have a SocialNetwork named 'notfriends'.")
+		-- TODO: move this assert to basic tests
+		unitTest:assert_nil(ag1:getSocialNetwork("notfriends"))	
 	end,
 	leave = function(unitTest)
 		local test_function = function()

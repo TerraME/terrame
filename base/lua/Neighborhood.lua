@@ -33,30 +33,30 @@ Neighborhood_ = {
 	-- @usage n:add(cell, 0.02)
 	add = function(self, cell, weight)
 		if cell == nil then
-			mandatoryArgumentErrorMsg("#1", 3)
+			mandatoryArgumentError("#1", 3)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypesErrorMsg("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		if weight == nil then
 			weight = 1
 		elseif type(weight) ~= "number" then
-			incompatibleTypesErrorMsg("#2", "number", type(weight), 3)
+			incompatibleTypeError("#2", "number", weight, 3)
 		end
 
 		if not self:isNeighbor(cell) then
 			return self.cObj_:addNeighbor(cell.x, cell.y, cell.cObj_, weight)
 		else
-			customWarningMsg("Cell ("..cell.x..","..cell.y..") already belongs to the Neighborhood.", 3)
+			customWarning("Cell ("..cell.x..","..cell.y..") already belongs to the Neighborhood.", 3)
 			self.cObj_:setNeighWeight(cell.x, cell.y, cell.cObj_, weight)
 		end
 	end,
 	addNeighbor = function(self, cell, weight)
-		deprecatedFunctionWarningMsg("addNeighbor", "add", 3)
+		deprecatedFunctionWarning("addNeighbor", "add", 3)
 		self:add(cell, weight)
 	end,
 	addCell = function(self, xIndex, yIndex, cellularSpace, weight)
-		deprecatedFunctionWarningMsg("addCell", "add", 3)
+		deprecatedFunctionWarning("addCell", "add", 3)
 		local cell = cellularSpace:getCell(xIndex, yIndex)
 		self:add(cell, weight)
 	end,
@@ -67,10 +67,10 @@ Neighborhood_ = {
 		self.cObj_:clear()
 	end,
 	eraseCell = function(self, xIndex, yIndex)
-		deprecatedFunctionWarningMsg("eraseCell", "remove", 2)
+		deprecatedFunctionWarning("eraseCell", "remove", 3)
 	end,
 	eraseNeighbor = function(self, cell)
-		deprecatedFunctionWarningMsg("eraseNeighbor", "remove", 2)
+		deprecatedFunctionWarning("eraseNeighbor", "remove", 3)
 		self:remove(cell)
 	end,
 	--- Remove a Cell from the Neighborhood.
@@ -78,9 +78,9 @@ Neighborhood_ = {
 	-- @usage n:remove(cell)
 	remove = function(self, cell)
 		if cell == nil then
-			mandatoryArgumentErrorMsg("#1", 3)
+			mandatoryArgumentError("#1", 3)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypesErrorMsg("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		if not self:isNeighbor(cell) then
@@ -90,14 +90,14 @@ Neighborhood_ = {
 		local result = self.cObj_:eraseNeighbor(cell.x, cell.y, cell.cObj_)
 
 		if not result then
-			customErrorMsg("Trying to remove a Cell that does not belong to the Neighborhood.", 3)
+			customError("Trying to remove a Cell that does not belong to the Neighborhood.", 3)
 		end
 	end,
 	setCellNeighbor = function(self, index, cell)
-		deprecatedFunctionWarningMsg("setCellNeighbor", "remove and add", 3)
+		deprecatedFunctionWarning("setCellNeighbor", "remove and add", 3)
 	end,
 	getCellWeight = function(self, xIndex, yIndex)
-		deprecatedFunctionWarningMsg("getCellWeight", "getWeight", 3)
+		deprecatedFunctionWarning("getCellWeight", "getWeight", 3)
 		return 0
 	end,
 	--- Retrieve the weight of the connection to a given neighbour Cell. It returns nil when
@@ -106,20 +106,20 @@ Neighborhood_ = {
 	-- @usage w = n:getWeight(cell)
 	getWeight = function(self, cell)
 		if cell == nil then
-			mandatoryArgumentErrorMsg("#1", 3)
+			mandatoryArgumentError("#1", 3)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypesErrorMsg("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		local result = self.cObj_:getNeighWeight(cell.x, cell.y, cell.cObj_)
 
 		if result == nil then
-			customErrorMsg("Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.", 3)
+			customError("Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.", 3)
 		end
 		return result
 	end,
 	getNeighWeight = function(self, cell)
-		deprecatedFunctionWarningMsg("getNeighWeight", "getWeight", 3)
+		deprecatedFunctionWarning("getNeighWeight", "getWeight", 3)
 		return self:getWeight(cell)
 	end,
 	--- Return whether the Neighborhood does not contain any Cell.
@@ -136,9 +136,9 @@ Neighborhood_ = {
 	-- end
 	isNeighbor = function(self, cell)
 		if cell == nil then
-			mandatoryArgumentErrorMsg("#1", 3)
+			mandatoryArgumentError("#1", 3)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypesErrorMsg("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		return self.cObj_:isNeighbor(cell.x, cell.y, cell.cObj_)
@@ -149,7 +149,7 @@ Neighborhood_ = {
 	-- @usage cell = n:sample()
 	sample = function(self, randomObj)
 		if self:isEmpty() then
-			customErrorMsg("It is not possible to sample the Neighborhood because it is empty.", 3)
+			customError("It is not possible to sample the Neighborhood because it is empty.", 3)
 		end
 
 		local pos
@@ -158,7 +158,7 @@ Neighborhood_ = {
 		elseif type(randomObj) == "Random" then
 			pos = randomObj:integer(1, #self)
 		else
-			incompatibleTypesErrorMsg("#1", "Random or nil", type(randomObj), 3)
+			incompatibleTypeError("#1", "Random or nil", randomObj, 3)
 		end
 
 		local count = 1
@@ -176,33 +176,33 @@ Neighborhood_ = {
 	-- @usage n:setWeight(cell, 0.01)
 	setWeight = function(self, cell, weight)
 		if cell == nil then
-			mandatoryArgumentErrorMsg("#1", 3)
+			mandatoryArgumentError("#1", 3)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypesErrorMsg("#1", "Cell", type(cell), 3)
+			incompatibleTypeError("#1", "Cell", cell, 3)
 		end
 
 		if weight == nil then
-			mandatoryArgumentErrorMsg("#2", 3)
+			mandatoryArgumentError("#2", 3)
 		elseif type(weight) ~= "number" then
-			incompatibleTypesErrorMsg("#2", "number", type(weight), 3)
+			incompatibleTypeError("#2", "number", weight, 3)
 		end
 	
 		local result = self.cObj_:setNeighWeight(cell.x, cell.y, cell.cObj_, weight)
 
 		if not result then
-			customErrorMsg("Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.", 3)
+			customError("Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.", 3)
 		end
 	end,
 	setCellWeight = function(self, xIndex, yIndex, weight)
-		deprecatedFunctionWarningMsg("setCellWeight", "setWeight", 3)
+		deprecatedFunctionWarning("setCellWeight", "setWeight", 3)
 		self:setWeight(xIndex, yIndex, weight)
 	end,
 	setNeighWeight = function(self, cell, weight)
-		deprecatedFunctionWarningMsg("setNeighWeight", "setWeight", 3)
+		deprecatedFunctionWarning("setNeighWeight", "setWeight", 3)
 		self:setWeight(xIndex, yIndex, weight)
 	end,
 	size = function(self)
-		deprecatedFunctionWarningMsg("size", "operator #", 3)
+		deprecatedFunctionWarning("size", "operator #", 3)
 		return #self
 	end,
 	--- Return the parent of the Neighborhood, which is the last Cell where the Neighborhood
@@ -239,7 +239,7 @@ function Neighborhood(data)
 		if data == nil then
 			data = {} 
 		else
-			namedParametersErrorMsg("Neighborhood", 3)
+			namedParametersError("Neighborhood", 3)
 		end
 	end
 
