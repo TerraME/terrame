@@ -589,8 +589,20 @@ executeTests = function(fileName, package)
 			collectgarbage("collect")
 			
 			ut.examples = ut.examples + 1
+
+			collectgarbage("collect")
+
+			print = function(...)
+				ut.print_calls = ut.print_calls + 1
+				print_red(...)
+			end
+
 			local ok_execution, err = pcall(function() include(baseDir..s.."examples"..s..value) end)
-			
+
+			print = print__
+
+			killAllObservers()
+	
 			if not ok_execution then
 				ut.examples_error = ut.examples_error + 1
 				print_red(err)
@@ -688,6 +700,7 @@ executeTests = function(fileName, package)
 	else
 		print_red("Summing up, "..errors.." problems were found during the tests.")
 	end
+	os.exit() -- TODO: remove it. Up to now, if this line does not exist TerraME will not end.
 end
 
 build = function(folder, dev)
