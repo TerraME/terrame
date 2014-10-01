@@ -123,56 +123,82 @@ function suggest(typedValues, possibleValues)
 end
 
 -- TODO: think about this kind of function. Today it is only used by Model.
-verify = function(condition, msg, level)
-	if level == nil then level = 3 end
+verify = function(condition, msg)
 	if not condition then
-		customError(msg, level)
+		customError(msg)
 	end
 end
 
-function checkUnnecessaryParameters(data, parameters, level)
+function checkUnnecessaryParameters(data, parameters)
 	forEachElement(data, function(value)
 		if not belong(value, parameters) then
-			customWarning("Parameter '"..value.."' is unnecessary.", level + 3)
+			customWarning("Parameter '"..value.."' is unnecessary.")
 		end
 	end)
 end
 
-function customError(msg, level)
+local function getLevel()
+	local level = 1
+		
+	while true do
+		local info = debug.getinfo(level)
+
+		if info == nil then print("WRONG LEVEL: "..level) end
+
+		local m1 = string.match(info.short_src, "terrame/bin/lua")
+		local m2 = string.match(info.short_src, "terrame/bin/packages/base/lua")
+		local m3 = string.match(info.short_src, "%[C%]")
+		if m1 or m2 or m3 then
+			level = level + 1
+		else
+			return level - 1 -- minus one because of getLevel()
+		end
+	end
+end
+
+function customError(msg)
 	if type(msg) ~= "string" then
 		error("Error: #1 should be a string.", 2)
-	elseif type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
-		error("Error: #2 should be a positive integer number.", 2)
 	end
+
+	local level = getLevel()
 	error("Error: "..msg, level)
 end
 
-function customWarning(msg, level)
+function customWarning(msg)
 	if type(msg) ~= "string" then
 		error("Error: #1 should be a string.", 2)
-	elseif type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
-		error("Error: #2 should be a positive integer number.", 2)
 	elseif sessionInfo().mode == "normal" then
+		local level = getLevel()
 		local info = debug.getinfo(level)
 		local str = string.match(info.short_src, "[^/]*$")
 		print(str..":".. info.currentline ..": Warning: "..msg)
 	elseif sessionInfo().mode == "debug" then
-		customError(msg, level + 1)
+		customError(msg)
 	end
 	io.flush()
 end
 
-function defaultValueWarning(parameter, value, level)
-	if type(parameter) ~= "string" then
-		error("Error: #1 should be a string.", 2)
-	elseif type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
-		error("Error: #2 should be a positive integer number.", 2)
+-- TODO: experimental function
+local defaultTableValue = function(data, idx, value)
+	if data[idx] == nil then
+		data[idx] = value
+	elseif type(data[idx]) ~= type(value) then
+		incompatibleTypeError(idx, type(value), data[idx])
+	elseif data[idx] == value then
+		defaultValueWarning(idx, value)
 	end
-
-	customWarning("Parameter '"..parameter.."' could be removed as it is the default value ("..value..").", level + 1)
 end
 
-function deprecatedFunctionWarning(functionName, functionExpected, level)
+function defaultValueWarning(parameter, value)
+	if type(parameter) ~= "string" then
+		error("Error: #1 should be a string.", 2)
+	end
+
+	customWarning("Parameter '"..parameter.."' could be removed as it is the default value ("..value..").")
+end
+
+function deprecatedFunctionWarning(functionName, functionExpected)
 	if type(functionName) ~= "string" then
 		error("Error: #1 should be a string.", 2)
 	end
@@ -181,24 +207,20 @@ function deprecatedFunctionWarning(functionName, functionExpected, level)
 		error("Error: #2 should be a string.", 2)
 	end
 
-	if type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
-		error("Error: #3 should be a positive integer number.", 2)
-	end
-
 	local text = "Function '"..functionName.."' is deprecated. Use '"..functionExpected.."' instead."
-	customWarning(text, level + 1)
+	customWarning(text)
 end
 
-function incompatibleTypeError(attr, expectedTypesString, gottenValue, level)
+function incompatibleTypeError(attr, expectedTypesString, gottenValue)
 	if expectedTypesString == nil then expectedTypesString = "nil" end
 
 	local text = "Incompatible types. Parameter '"..attr.."' expected "..
 		expectedTypesString..", got "..type(gottenValue).."."
 
-	customError(text, level + 1)
+	customError(text)
 end
 
-function incompatibleValueError(attr, expectedValues, gottenValue, level)
+function incompatibleValueError(attr, expectedValues, gottenValue)
 	if expectedValues == nil then expectedValues = "nil" end
 
 	local msg = "Incompatible values. Parameter '"..attr.."' expected ".. expectedValues ..", got "
@@ -209,31 +231,31 @@ function incompatibleValueError(attr, expectedValues, gottenValue, level)
 	else
 		msg = msg..gottenValue.."."
 	end
-	customError(msg, level + 1)
+	customError(msg)
 end
 
-function incompatibleFileExtensionError(attr, ext, level)
-	customError("Parameter '".. attr .."' does not support '"..ext.."'.", level + 1)
+function incompatibleFileExtensionError(attr, ext)
+	customError("Parameter '".. attr .."' does not support '"..ext.."'.")
 end
 
-function resourceNotFoundError(attr, path, level)
-	customError("Resource '"..path.."' not found for parameter '"..attr.."'.",level + 1)
+function resourceNotFoundError(attr, path)
+	customError("Resource '"..path.."' not found for parameter '"..attr.."'.")
 end
 
-function valueNotFoundError(attr, value, level)
+function valueNotFoundError(attr, value)
 	if type(value) == nil then value = "nil" end
-	customError("Value '"..value.."' not found for parameter '"..attr.."'.",level + 1)
+	customError("Value '"..value.."' not found for parameter '"..attr.."'.")
 end
 
-function mandatoryArgumentError(attr, level)
-	customError("Parameter '"..attr.."' is mandatory.", level + 1)
+function mandatoryArgumentError(attr)
+	customError("Parameter '"..attr.."' is mandatory.")
 end
 
-function namedParametersError(funcName, level)
-	customError("Parameters for '"..funcName.."' must be named.", level + 1)
+function namedParametersError(funcName)
+	customError("Parameters for '"..funcName.."' must be named.")
 end
 
-function tableParameterError(funcName, level)
-	customError("Parameter for '"..funcName.."' must be a table.", level + 1)
+function tableParameterError(funcName)
+	customError("Parameter for '"..funcName.."' must be a table.")
 end
 
