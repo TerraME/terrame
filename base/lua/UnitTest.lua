@@ -32,9 +32,9 @@ local end_color = "\027[00m"
 
 local function print_red(value)
     if sessionInfo().separator == "/" then
-        print(begin_red..value..end_color)
+        print__(begin_red..value..end_color)
     else
-        print(value)
+        print__(value)
     end
 end
 
@@ -233,8 +233,6 @@ function UnitTest(data)
 	if data.dbType ~= nil then
 		data.dbType = string.lower(data.dbType)
 	end
-
-	checkUnnecessaryParameters(data, {"dbType", "host", "port", "password", "user", "sleep"}, 3)
 
 	if data.sleep then
 		data.delay = function(self)

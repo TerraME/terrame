@@ -407,26 +407,26 @@ executeTests = function(fileName, package)
 		global_variables[idx] = true
 	end)
 
+	checkUnnecessaryParameters(data, {"dbType", "host", "port", "password", "user", "sleep", "examples", "folder", "test", "file"}, 3)
+
 	local ut = UnitTest{
 		dbType = data.dbType,
 		user = data.user,
 		password = data.password,
 		port = data.port,
 		host = data.host,
-		sleep = data.sleep
+		sleep = data.sleep,
+		package_functions = 0,
+		functions_not_exist = 0,
+		functions_not_tested = 0,
+		executed_functions = 0,
+		functions_with_global_variables = 0,
+		functions_with_error = 0,
+		functions_without_assert = 0,
+		examples = 0,
+		examples_error = 0,
+		print_calls = 0,
 	}
-
-	ut.package_functions = 0
-	ut.functions_not_exist = 0
-	ut.functions_not_tested = 0
-	ut.executed_functions = 0
-	ut.functions_with_global_variables = 0
-	ut.functions_with_error = 0
-	ut.functions_without_assert = 0
-	ut.examples = 0
-	ut.examples_error = 0
-	ut.print_calls = 0
-
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
 		local dirFiles = dir(srcDir..s..eachFolder)
@@ -735,7 +735,7 @@ local versions = function()
 end
 
 local usage = function()
-	print("\n")
+	print("")
     print("Usage: TerraME [[-gui] | [-mode=normal|debug|quiet]] file1.lua file2.lua ...")
     print("       or TerraME [-version]\n")
     print("Options: ")
@@ -828,7 +828,6 @@ execute = function(parameters) -- parameters is a string
 		end
 		paramCount = paramCount + 1
 	end
-
 end
 
 packageInfo = function(package)

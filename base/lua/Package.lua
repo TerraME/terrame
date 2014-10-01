@@ -147,7 +147,7 @@ function customError(msg, level)
 	error("Error: "..msg, level)
 end
 
-function customWarning(msg,level)
+function customWarning(msg, level)
 	if type(msg) ~= "string" then
 		error("Error: #1 should be a string.", 2)
 	elseif type(level) ~= "number" or level < 0 or math.floor(level) ~= level then
