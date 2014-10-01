@@ -221,9 +221,7 @@ configureTests = function(fileName)
 		print("\n >> Wait between tests? \n(1) True \n(2) False")
 		local wait = io.read()
 		if wait == '1' then
-			test:write("wait = true\n")
-		elseif wait == '2' then
-			test:write("wait = false\n")			
+			test:write("sleep = 2\n")
 		end
 	end
 	
@@ -248,10 +246,10 @@ configureTests = function(fileName)
 		if dbtype == '1' then
 			print(">> Input Password: ")
 			local password = io.read()	
-			test:write("database = 'mysql'\n")
+			test:write("dbType = 'mysql'\n")
 			test:write("password = '".. password.."'\n")
 		elseif dbtype == "2" then
-			test:write("database = 'ado'\n")
+			test:write("dbType = 'ado'\n")
 		end
 	end
 	
