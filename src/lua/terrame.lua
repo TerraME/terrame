@@ -872,7 +872,7 @@ execute = function(parameters) -- parameters is a string
 			        local m3 = string.match(info.short_src, "%[C%]")
 			        if m1 or m2 or m3 then
 			        else
-						str = str.."\t File "..info.short_src..", line "..info.currentline
+						str = str.."    File "..info.short_src..", line "..info.currentline
 						if info.name then
 							str = str..", in function "..info.name
 						else
@@ -896,9 +896,10 @@ execute = function(parameters) -- parameters is a string
 
 				if m1 or m2 or m3 then
 					local str = 
-							"********************************************************************************************\n"..
-							"TERRAME INTERNAL ERROR. PLEASE WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
-							"********************************************************************************************\n"..
+							"*************************************************************\n"..
+							"UNEXPECTED TERRAME INTERNAL ERROR. PLEASE GIVE US A FEEDBACK.\n"..
+							"WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
+							"*************************************************************\n"..
 							err.."\nStack traceback:\n"
 
 					local level = 1
@@ -909,9 +910,9 @@ execute = function(parameters) -- parameters is a string
 			    	    local m3 = string.match(info.short_src, "%[C%]")
 
 						if info.short_src == "[C]" then
-							str = str.."\t Internal C file"
+							str = str.."    Internal C file"
 						else
-							str = str.."\t File "..info.short_src
+							str = str.."    File "..info.short_src
 						end
 
 						if info.currentline > 0 then
