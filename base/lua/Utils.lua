@@ -28,6 +28,7 @@
 
 --@header Some basic and useful functions for modeling.
 
+-- TODO: move these lines below to terrame.lua
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
 if sessionInfo().path == nil or sessionInfo().path == "" then
@@ -39,6 +40,27 @@ local load = load
 if _VERSION ~= "Lua 5.2" then
 	load = loadstring
 end	
+
+-- This function is from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
+--- Function that returns a string describing the internal content of an object.
+function vardump(o, indent)
+	if indent == nil then indent = '' end
+
+	local indent2 = indent..'    '
+	if type__(o) == 'table' then
+		local s = indent..'{'..'\n'
+		local first = true
+		forEachOrderedElement(o, function(k, v)
+			if first == false then s = s .. ', \n' end
+			if type__(k) ~= 'number' then k = "'"..tostring(k).."'" end
+			s = s..indent2..'['..k..'] = '..vardump(v, indent2)
+			first = false
+		end)
+		return s..'\n'..indent..'}'
+	else
+		return "'"..tostring(o).."'"
+	end
+end
 
 -- **********************************************************************************************
 -- util math functions
@@ -238,19 +260,32 @@ function d(data)
 	end
 end
 
---- A second order function to numerically solve ordinary differential equations with a given initial value.
--- @param attrs.method the name of a numeric algorithm to solve the ordinary differential equations in a given [a,b[ interval. See the options below.
+--- A second order function to numerically solve ordinary differential equations with a given 
+-- initial value.
+-- @param attrs.method the name of a numeric algorithm to solve the ordinary differential 
+-- equations in a given [a,b[ interval. See the options below.
 -- @tab method
 -- Method & Description \
 -- "euler" (default) & Euler method \
 -- "heun" & Heun (Second Order Euler) \
 -- "rungekutta" & Runge-Kutta Method (Fourth Order)
--- @param attrs.equation A differential equation or a vector of differential equations. Each equation is described as a function of one or two parameters that returns a value of its derivative f(t, y), where t is the time instant, and y starts with the value of attribute initial and changes according to the result of f() and the chosen method. The calls to f will use the first parameter (t) in the interval [a,b[, according to the parameter step.
--- @param attrs.initial The initial condition, or a vector of initial conditions, which must be satisfied. Each initial condition represents the value of y when t (first parameter of f) is equal to the value of parameter a.
+-- @param attrs.equation A differential equation or a vector of differential equations. Each 
+-- equation is described as a function of one or two parameters that returns a value of its 
+-- derivative f(t, y), where t is the time instant, and y starts with the value of attribute
+-- initial and changes according to the result of f() and the chosen method. The calls to f
+-- will use the first parameter (t) in the interval [a,b[, according to the parameter step.
+-- @param attrs.initial The initial condition, or a vector of initial conditions, which must be
+-- satisfied. Each initial condition represents the value of y when t (first parameter of f)
+-- is equal to the value of parameter a.
 -- @param attrs.a The beginning of the interval.
 -- @param attrs.b The end of the interval.
--- @param attrs.step The step within the interval (optional, using 0.1 as default). It must satisfy the condition that (b - a) is a multiple of step.
--- @param attrs.event An Event, that can be used to set parameters a and b with values event:getTime() - event:getPeriodicity() and event:getTime(), respectively. The period of the event must be a multiple of step. Note that the first execution of the event will compute the equation relative to a time interval between event.time - event.period and event.time. Be careful about that.
+-- @param attrs.step The step within the interval (optional, using 0.1 as default). It must
+-- satisfy the condition that (b - a) is a multiple of step.
+-- @param attrs.event An Event, that can be used to set parameters a and b with values
+-- event:getTime() - event:getPeriodicity() and event:getTime(), respectively. The period of the
+-- event must be a multiple of step. Note that the first execution of the event will compute the
+-- equation relative to a time interval between event.time - event.period and event.time. Be
+-- careful about that.
 -- @usage v = integrate {
 --     equation = function(t, y)
 --         return t - 0.1 * y
@@ -566,8 +601,8 @@ end
 --- Return a function that compares two tables (which can be, for instance, Agents or Cells).
 -- The function returns which one has a priority over the other, according to an attribute of the
 -- objects and a given operator. If the function was not built successfully it returns nil.
---@param attribute A string with the name of the attribute.
---@param operator A string with the operator, which can be ">", "<", "<=", or ">=". Default is "<".
+-- @param attribute A string with the name of the attribute.
+-- @param operator A string with the operator, which can be ">", "<", "<=", or ">=". Default is "<".
 -- @usage t = Trajectory {
 --     target = cs,
 --     sort = greaterByAttribute("cover")
@@ -589,8 +624,8 @@ end
 --- Return a function that compares two tables with x and y attributes (basically two regular
 -- Cells). The function returns which one has a priority over the other, according to a given
 -- operator.
---@param operator A string with the operator, which can be ">", "<", "<=", or ">=". Default is "<".
---@usage t = Trajectory {
+-- @param operator A string with the operator, which can be ">", "<", "<=", or ">=". Default is "<".
+-- @usage t = Trajectory {
 --     target = cs,
 --     sort = greaterByCoord()
 -- }
@@ -658,7 +693,7 @@ forEachOrderedElement = function(obj, func)
 	end
 end
 
----Convert the time from the os library to a more readable value. It returns a string in the format 
+--- Convert the time from the os library to a more readable value. It returns a string in the format 
 -- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is more than one day.
 -- @param s A number to be converted.
 -- @usage print(elapsedTime(100)) -- 00:01:40
@@ -754,7 +789,7 @@ local function ParseCSVLine(line, sep)
 	return res
 end
 
--- Read a CSV file and return an array of tables.
+--- Read a CSV file and return an array of tables.
 -- The first line of the file list the attributes of each table.
 -- @param file A string, adress of the CSV file.
 -- @param sep The value separator. Default is ','

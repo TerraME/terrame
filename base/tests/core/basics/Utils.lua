@@ -307,6 +307,19 @@ return{
 	end,
 	elapsedTime = function(unitTest)
 		unitTest:assert_type(elapsedTime(50), "string")
+	end,
+	vardump = function(unitTest)
+		local x = {a = 2, b = 3, w = {2, 3, 4}}
+
+		unitTest:assert_equal(vardump(x), [[{
+    ['a'] = '2', 
+    ['b'] = '3', 
+    ['w'] =     {
+        [1] = '2', 
+        [2] = '3', 
+        [3] = '4'
+    }
+}]])
 	end
 --	tostring = function(unitTest)
 	--	cs1 = CellularSpace{ xdim = 10 }

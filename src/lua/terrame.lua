@@ -98,9 +98,9 @@ end
 
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
 function include(scriptfile)
-    local env = setmetatable({}, {__index = _G})
-    loadfile(scriptfile, 't', env)()
-    return setmetatable(env, nil) -- TODO: try to remove nil and see what happens. Perhaps this could be used in TerraME.
+	local env = setmetatable({}, {__index = _G})
+	loadfile(scriptfile, 't', env)()
+	return setmetatable(env, nil) -- TODO: try to remove nil and see what happens. Perhaps this could be used in TerraME.
 end
 
 -- altissima prioridade (somente com o primeiro argumento)
@@ -157,13 +157,13 @@ type__ = type
 -- @usage c = Cell{value = 3}
 -- print(type(c)) -- "Cell"
 type = function(data)
-    local t = type__(data)
-    if t == "table" or t == "userdata" and getmetatable(data) then
-        if data.type_ ~= nil then
-            return data.type_
-        end
-    end
-    return t
+	local t = type__(data)
+	if t == "table" or t == "userdata" and getmetatable(data) then
+		if data.type_ ~= nil then
+			return data.type_
+		end
+	end
+	return t
 end
 
 -- TODO: allow this to be executed directly from TerraME. Check if it is interesting to be executed
@@ -738,41 +738,41 @@ end
 
 
 local versions = function()
-    print("\nTerraME - Terra Modeling Environment")
-    print(" Version: ", sessionInfo().version)
-    print(" Location (TME_PATH): "..sessionInfo().path)
+	print("\nTerraME - Terra Modeling Environment")
+	print(" Version: ", sessionInfo().version)
+	print(" Location (TME_PATH): "..sessionInfo().path)
 
-    print(" Compiled with: ")
-    -- TODO: Verify how to retrieve these informations.
-    -- qWarning("    %s ", LUA_RELEASE);
-    -- qWarning("    Qt %s ", qVersion());
-    -- qWarning("    Qwt %s ", QWT_VERSION_STR);
+	print(" Compiled with: ")
+	-- TODO: Verify how to retrieve these informations.
+	-- qWarning("    %s ", LUA_RELEASE);
+	-- qWarning("    Qt %s ", qVersion());
+	-- qWarning("    Qwt %s ", QWT_VERSION_STR);
 
-    -- qWarning("    TerraLib %s (Database version: %s) ", 
-    --     TERRALIB_VERSION,       // macro in the file "TeVersion.h"
-    --     TeDBVERSION.c_str());   // macro in the file "TeDefines.h" linha 221
+	-- qWarning("    TerraLib %s (Database version: %s) ", 
+	--     TERRALIB_VERSION,       // macro in the file "TeVersion.h"
+	--     TeDBVERSION.c_str());   // macro in the file "TeDefines.h" linha 221
 
-    print("\nFor more information, please visit: www.terrame.org\n")
+	print("\nFor more information, please visit: www.terrame.org\n")
 end
 
 local usage = function()
 	print("")
-    print("Usage: TerraME [[-gui] | [-mode=normal|debug|quiet]] file1.lua file2.lua ...")
-    print("       or TerraME [-version]\n")
-    print("Options: ")
+	print("Usage: TerraME [[-gui] | [-mode=normal|debug|quiet]] file1.lua file2.lua ...")
+	print("       or TerraME [-version]\n")
+	print("Options: ")
 	print(" -autoclose                 Automatically close the platform after simulation.")
 	print(" -config-tests <file_name>  Generate a file used to configure the execution of the tests.")
 	print(" -draw-all-higher <value>   Draw all subjects when percentage of changes was higher")
-    print("                            than <value>. Value must be between interval [0, 1].")
-    print(" -gui                       Show the player for the application (it works only ")
-    print("                            when an Environment and/or a Timer objects are used).")
+	print("                            than <value>. Value must be between interval [0, 1].")
+	print(" -gui                       Show the player for the application (it works only ")
+	print("                            when an Environment and/or a Timer objects are used).")
 	print(" -ide                       Configure TerraME for running from IDEs in Windows systems.")
-    print(" -mode=normal (default)     Warnings enabled.")
+	print(" -mode=normal (default)     Warnings enabled.")
 	print(" -mode=debug                Warnings treated as errors.")
 	print(" -mode=quiet                Warnings disabled.")
-    print(" -version                   TerraME general information.")
+	print(" -version                   TerraME general information.")
 	print(" -test                      Execute tests.")
-    print(" -workers <value>           Sets the number of threads used for spatial observers.")
+	print(" -workers <value>           Sets the number of threads used for spatial observers.")
 end
 
 replaceSpecialChars = function(pattern)
@@ -860,11 +860,12 @@ execute = function(parameters) -- parameters is a string
 			require("base")
 
 			local function getLevel()
-			    local level = 1
+				local level = 1
 
 				local str = ""
 				str = str.."Stack traceback:\n"
 
+<<<<<<< HEAD
 			    local info = debug.getinfo(level)
 			    while info ~= nil do
 			        local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/lua"))
@@ -873,45 +874,70 @@ execute = function(parameters) -- parameters is a string
 			        if m1 or m2 or m3 then
 			        else
 						str = str.."\t File "..info.short_src..", line "..info.currentline
+=======
+				local info = debug.getinfo(level)
+				while info ~= nil do
+					local m1 = string.match(info.short_src, "terrame/bin/lua")
+					local m2 = string.match(info.short_src, "terrame/bin/packages/base/lua")
+					local m3 = string.match(info.short_src, "%[C%]")
+					if m1 or m2 or m3 then
+					else
+						str = str.."    File "..info.short_src..", line "..info.currentline
+>>>>>>> b68419c1967e2d7517d88475197ddadd21bb712c
 						if info.name then
 							str = str..", in function "..info.name
 						else
 							str = str..", in main chunk"
 						end
 						str = str.."\n"
-			        end
-			    	level = level + 1
-			    	info = debug.getinfo(level)
-			    end
+					end
+					level = level + 1
+					info = debug.getinfo(level)
+				end
 				return string.sub(str, 0, string.len(str) - 1)
 			end
 
 			local success, result = xpcall(function() dofile(param) end, function(err)
+<<<<<<< HEAD
 				local luaFolder = replaceSpecialChars(sessionInfo().path.."/lua")
 				local baseLuaFolder = replaceSpecialChars(sessionInfo().path.."/packages/base/lua")
 				
 			    local m1 = string.match(err, string.sub(luaFolder, string.len(luaFolder) - 25, string.len(luaFolder)))
 			    local m2 = string.match(err, string.sub(baseLuaFolder, string.len(baseLuaFolder) - 25, string.len(baseLuaFolder)))
 			    local m3 = string.match(err, "%[C%]")
+=======
+				local m1 = string.match(err, "terrame/bin/lua")
+				local m2 = string.match(err, "terrame/bin/packages/base/lua")
+				local m3 = string.match(err, "%[C%]")
+>>>>>>> b68419c1967e2d7517d88475197ddadd21bb712c
 
 				if m1 or m2 or m3 then
 					local str = 
-							"********************************************************************************************\n"..
-							"TERRAME INTERNAL ERROR. PLEASE WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
-							"********************************************************************************************\n"..
+							"*************************************************************\n"..
+							"UNEXPECTED TERRAME INTERNAL ERROR. PLEASE GIVE US A FEEDBACK.\n"..
+							"WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
+							"*************************************************************\n"..
 							err.."\nStack traceback:\n"
 
 					local level = 1
+<<<<<<< HEAD
 			    	local info = debug.getinfo(level)
 			    	while info ~= nil do
 			    	    local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/lua"))
 			    	    local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/packages/base/lua"))
 			    	    local m3 = string.match(info.short_src, "%[C%]")
+=======
+					local info = debug.getinfo(level)
+					while info ~= nil do
+						local m1 = string.match(info.short_src, "terrame/bin/lua")
+						local m2 = string.match(info.short_src, "terrame/bin/packages/base/lua")
+						local m3 = string.match(info.short_src, "%[C%]")
+>>>>>>> b68419c1967e2d7517d88475197ddadd21bb712c
 
 						if info.short_src == "[C]" then
-							str = str.."\t Internal C file"
+							str = str.."    Internal C file"
 						else
-							str = str.."\t File "..info.short_src
+							str = str.."    File "..info.short_src
 						end
 
 						if info.currentline > 0 then
@@ -924,9 +950,9 @@ execute = function(parameters) -- parameters is a string
 							str = str..", in main chunk"
 						end
 						str = str.."\n"
-			    		level = level + 1
-			    		info = debug.getinfo(level)
-			    	end
+						level = level + 1
+						info = debug.getinfo(level)
+					end
 					return string.sub(str, 0, string.len(str) - 1)
 
 				else
