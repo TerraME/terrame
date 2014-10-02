@@ -329,41 +329,6 @@ int main ( int argc, char *argv[] )
 
 				argument++;
 			}
-//			else if(!strcmp(argv[argument], "-config-tests"))
-//			{
-//				lua_getglobal(L, "configureTests");
-//				
-//				argument++;
-//				if(!argv[argument])
-//				{
-//					lua_pushnil(L);
-//				}
-//				else
-//				{
-//					string fileName = argv[argument];
-//					lua_pushstring(L, fileName.c_str());
-//				}
-//				lua_call(L, 1, 0);
-//				return 0;
-//			}
-//			else if(!strcmp(argv[argument], "-test"))
-//			{
-//				lua_getglobal(L, "executeTests");
-//				
-//				argument++;
-//				if(!argv[argument])
-//				{
-//					lua_pushnil(L);
-//				}
-//				else
-//				{
-//					string fileName = argv[argument];
-//					lua_pushstring(L, fileName.c_str());
-//				}
-//				lua_call(L, 1, 0);
-//				return 0;
-//			}
-			// argv[argument] is not "-gui"
 			else if ( strcmp(argv[argument],"-gui") )
 			{
 				qWarning("\nInvalid arguments.");

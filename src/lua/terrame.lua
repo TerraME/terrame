@@ -775,6 +775,19 @@ local usage = function()
     print(" -workers <value>           Sets the number of threads used for spatial observers.")
 end
 
+replaceSpecialChars = function(pattern)
+	local specialChars = {"%%", "%^", "%$", "%(", "%)", "%.", "%[", "%]", "%*", "%+", "%-", "%?"}
+
+	for __, spChar in ipairs(specialChars) do
+		if spChar ~= "%%" then
+			pattern = string.gsub(pattern, spChar, "%"..spChar)
+		else
+			pattern = string.gsub(pattern, spChar, "%%"..spChar)
+		end
+	end
+	return pattern
+end
+
 -- RAIAN implementar
 execute = function(parameters) -- parameters is a string
 	-- implementa o sessionInfo
@@ -836,7 +849,11 @@ execute = function(parameters) -- parameters is a string
 				end
 				return
 			elseif param == "-autoclose" then
-
+				-- TODO
+			elseif param == "-workers" then
+				-- TODO
+			elseif param == "-draw-all-higher" then
+				-- TODO
 			end
 		else
 			-- TODO: Verify this block
@@ -850,8 +867,8 @@ execute = function(parameters) -- parameters is a string
 
 			    local info = debug.getinfo(level)
 			    while info ~= nil do
-			        local m1 = string.match(info.short_src, "terrame/bin/lua")
-			        local m2 = string.match(info.short_src, "terrame/bin/packages/base/lua")
+			        local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/lua"))
+			        local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/packages/base/lua"))
 			        local m3 = string.match(info.short_src, "%[C%]")
 			        if m1 or m2 or m3 then
 			        else
@@ -870,8 +887,11 @@ execute = function(parameters) -- parameters is a string
 			end
 
 			local success, result = xpcall(function() dofile(param) end, function(err)
-			    local m1 = string.match(err, "terrame/bin/lua")
-			    local m2 = string.match(err, "terrame/bin/packages/base/lua")
+				local luaFolder = replaceSpecialChars(sessionInfo().path.."/lua")
+				local baseLuaFolder = replaceSpecialChars(sessionInfo().path.."/packages/base/lua")
+				
+			    local m1 = string.match(err, string.sub(luaFolder, string.len(luaFolder) - 25, string.len(luaFolder)))
+			    local m2 = string.match(err, string.sub(baseLuaFolder, string.len(baseLuaFolder) - 25, string.len(baseLuaFolder)))
 			    local m3 = string.match(err, "%[C%]")
 
 				if m1 or m2 or m3 then
@@ -884,8 +904,8 @@ execute = function(parameters) -- parameters is a string
 					local level = 1
 			    	local info = debug.getinfo(level)
 			    	while info ~= nil do
-			    	    local m1 = string.match(info.short_src, "terrame/bin/lua")
-			    	    local m2 = string.match(info.short_src, "terrame/bin/packages/base/lua")
+			    	    local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/lua"))
+			    	    local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/packages/base/lua"))
 			    	    local m3 = string.match(info.short_src, "%[C%]")
 
 						if info.short_src == "[C]" then

@@ -145,8 +145,8 @@ local function getLevel()
 
 		if info == nil then print("WRONG LEVEL: "..level) end
 
-		local m1 = string.match(info.short_src, "terrame/bin/lua")
-		local m2 = string.match(info.short_src, "terrame/bin/packages/base/lua")
+		local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/lua"))
+		local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/packages/base/lua"))
 		local m3 = string.match(info.short_src, "%[C%]")
 		if m1 or m2 or m3 then
 			level = level + 1
