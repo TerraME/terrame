@@ -28,6 +28,7 @@
 
 --@header Some basic and useful functions for modeling.
 
+-- TODO: move these lines below to terrame.lua
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
 if sessionInfo().path == nil or sessionInfo().path == "" then
@@ -39,6 +40,27 @@ local load = load
 if _VERSION ~= "Lua 5.2" then
 	load = loadstring
 end	
+
+-- This function is from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
+--- Function that returns a string describing the internal content of an object.
+function vardump(o, indent)
+	if indent == nil then indent = '' end
+
+	local indent2 = indent..'    '
+	if type__(o) == 'table' then
+		local s = indent..'{'..'\n'
+		local first = true
+		forEachOrderedElement(o, function(k, v)
+			if first == false then s = s .. ', \n' end
+			if type__(k) ~= 'number' then k = "'"..tostring(k).."'" end
+			s = s..indent2..'['..k..'] = '..vardump(v, indent2)
+			first = false
+		end)
+		return s..'\n'..indent..'}'
+	else
+		return "'"..tostring(o).."'"
+	end
+end
 
 -- **********************************************************************************************
 -- util math functions
