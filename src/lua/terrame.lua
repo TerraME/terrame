@@ -862,13 +862,40 @@ execute = function(parameters) -- parameters is a string
 				local str = ""
 				str = str.."Stack traceback:\n"
 
+				local last_function = ""
+				local found_function = false
+
 				local info = debug.getinfo(level)
 				while info ~= nil do
 					local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/lua"))
 					local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/packages/base/lua"))
 					local m3 = string.match(info.short_src, "%[C%]")
 					if m1 or m2 or m3 then
+						last_function = info.name
 					else
+						if not found_function then
+							if     last_function == "__add"      then last_function = "operator + (addition)"
+							elseif last_function == "__sub"      then last_function = "operator - (subtraction)"
+							elseif last_function == "__mul"      then last_function = "operator * (multiplication)"
+							elseif last_function == "__div"      then last_function = "operator / (division)"
+							elseif last_function == "__mod"      then last_function = "operator % (modulo)"
+							elseif last_function == "__pow"      then last_function = "operator ^ (exponentiation)"
+							elseif last_function == "__unm"      then last_function = "operator - (minus)"
+							elseif last_function == "__concat"   then last_function = "operator .. (concatenation)"
+							elseif last_function == "__len"      then last_function = "operator # (size)"
+							elseif last_function == "__eq"       then last_function = "operator == (equal)"
+							elseif last_function == "__lt"       then last_function = "comparison operator"
+							elseif last_function == "__le"       then last_function = "comparison operator"
+							elseif last_function == "__index"    then last_function = "operator [] (index)"
+							elseif last_function == "__newindex" then last_function = "operator [] (index)"
+							elseif last_function == "__call"     then last_function = "call"
+							else   last_function = "function "..last_function
+							end
+
+							str = str.. "    In "..last_function.."\n"
+							found_function = true
+						end
+
 						str = str.."    File "..info.short_src..", line "..info.currentline
 						if info.name then
 							str = str..", in function "..info.name
