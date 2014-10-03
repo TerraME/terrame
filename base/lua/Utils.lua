@@ -394,10 +394,10 @@ function forEachCell(cs, f)
 	local t = type(cs)
 	if t ~= "CellularSpace" and t ~= "Trajectory" and t ~= "Agent" then
 		incompatibleTypeError("#1", "CellularSpace, Trajectory, or Agent", cs)
-	end
-	if type(f) ~= "function" then
+	elseif type(f) ~= "function" then
 		incompatibleTypeError("#2", "function", f)
 	end
+
 	for i, cell in ipairs(cs.cells) do
 		result = f(cell, i)
 		if result == false then return false end
@@ -461,9 +461,7 @@ end
 function forEachNeighbor(cell, index, f)
 	if type(cell) ~= "Cell" then
 		incompatibleTypeError("#1", "Cell", cell)
-	end
-
-	if type(index) == "function" then
+	elseif type(index) == "function" then
 		f = index
 		index = "1"
 	elseif type(index) ~= "string" then
@@ -471,6 +469,7 @@ function forEachNeighbor(cell, index, f)
 	elseif type(f) ~= "function" then
 		incompatibleTypeError("#3", "function", f)
 	end
+
 	local neighborhood = cell:getNeighborhood(index)
 	if neighborhood == nil then
 		customError("Neighborhood '"..index.."' does not exist.")
@@ -496,8 +495,7 @@ end
 function forEachNeighborhood(cell, f)
 	if type(cell) ~= "Cell" then
 		incompatibleTypeError("#1", "Cell", cell)
-	end
-	if type(f) ~= "function" then
+	elseif type(f) ~= "function" then
 		incompatibleTypeError("#2", "function", f)
 	end
 
@@ -536,9 +534,7 @@ end
 function forEachConnection(agent, index, f)
 	if type(agent) ~= "Agent" then
 		incompatibleTypeError("#1", "Agent", agent)
-	end
-
-	if type(index) == "function" then
+	elseif type(index) == "function" then
 		f = index
 		index = "1"
 	elseif type(index) ~= "string" then
@@ -575,9 +571,7 @@ function forEachAgent(obj, func)
 	local t = type(obj)
 	if t ~= "Society" and t ~= "Cell" and t ~= "Group" then
 		incompatibleTypeError("#1", "Society, Group, or Cell", obj)
-	end
-
-	if type(func) ~= "function" then
+	elseif type(func) ~= "function" then
 		incompatibleTypeError("#2", "function", func)
 	end
 
@@ -590,7 +584,7 @@ function forEachAgent(obj, func)
 	-- agents in society.agents. If ipairs was used instead, forEach would
 	-- skip the next agent of the vector after the removed agent.
 	local k = 1
-	for i = 1,#ags do
+	for i = 1, #ags do
 		local ag = ags[k]
 		if ag and func(ag, i) == false then return false end
 		if ag == ags[k] then k = k + 1 end
@@ -653,10 +647,11 @@ end
 --     print(element, etype)
 -- end)
 forEachElement = function(obj, func)
-	if obj == nil then mandatoryArgumentError("#1") end
-	if func == nil then mandatoryArgumentError("#2") end
-
-	if type(func) ~= "function" then
+	if obj == nil then
+		mandatoryArgumentError("#1")
+	elseif func == nil then
+		mandatoryArgumentError("#2")
+	elseif type(func) ~= "function" then
 		incompatibleTypeError("#2", "function", func)
 	end
 
@@ -667,10 +662,21 @@ forEachElement = function(obj, func)
 end
 
 --TODO: esta funcao ignora elementos que possuem o mesmo lower case (ex: aAa e aaa). Tratar este caso.
+--- Second order function to transverse a given object, applying a function to each of its
+-- elements according to their alphabetical order. It can be used for instance to trasverse all 
+-- the elements of an Agent or an
+-- Environment. It returns true if no call to the function taken as argument returns false.
+-- @param obj A TerraME object or a table.
+-- @param func A user-defined function that takes three arguments: the index of the element,
+-- the element itself, and the type of the element. If some call to this function returns
+-- false then forEachElement() stops.
+-- @usage forEachElement(cell, function(idx, element, etype)
+--     print(element, etype)
+-- end)
 forEachOrderedElement = function(obj, func)
-	if obj == nil then mandatoryArgumentError("#1") end
-
-	if type(func) ~= "function" then
+	if obj == nil then
+		mandatoryArgumentError("#1")
+	elseif type(func) ~= "function" then
 		incompatibleTypeError("#2", "function", func)
 	end
 
@@ -716,17 +722,16 @@ end
 -- @param send TODO
 -- @return TODO
 function string.endswith(self, send)
-	-- case insensitve
+	-- case insensitive
 	local send = send:lower().."$"
 	local match = self:lower():match(send)
 	return match and true or false
 	-- return #self >= #send and self:find(send, #self-#send+1, true) and true or false
 end
 
--- substitute for table.getn
--- TODO
--- @para t TODO
--- @return TODO
+--- Return the number of elements of atable, be them named or not.
+-- It is a substitute for the deprecated function table.getn.
+-- @param t A table.
 function getn(t)
 	if type(t) ~= "table" then
 		incompatibleTypeError("#1", "table", t)
@@ -734,7 +739,7 @@ function getn(t)
 
 	local n = 0
 	for k, v in pairs(t) do
-		n = n +1
+		n = n + 1
 	end
 	return n
 end
