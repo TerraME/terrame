@@ -178,7 +178,7 @@ return{
 		local error_func = function()
 			local gt = greaterByAttribute(2)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'attribute' expected string, got number.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected string, got number.")
 
 		error_func = function()
 			local gt = greaterByAttribute("cover", "==")

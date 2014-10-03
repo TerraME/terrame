@@ -608,15 +608,14 @@ end
 --     sort = greaterByAttribute("cover")
 -- }
 greaterByAttribute = function(attribute, operator)
-	if operator == nil then
+	if type(attribute) ~= "string" then
+		incompatibleTypeError("#1", "string", attribute)
+	elseif operator == nil then
 		operator = "<"
 	elseif not belong(operator, {"<", ">", "<=", ">="}) then
 		incompatibleValueError("#2", "<, >, <=, or >=", operator)
 	end
 
-	if type(attribute) ~= "string" then
-		incompatibleTypeError("attribute", "string", attribute)
-	end
 	local str = "return function(o1, o2) return o1."..attribute.." "..operator.." o2."..attribute.." end"
 	return load(str)()
 end
