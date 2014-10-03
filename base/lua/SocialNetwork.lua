@@ -134,21 +134,13 @@ SocialNetwork_ = {
 		end
 	end,
 	--- Return a random Agent from the SocialNetwork.
-	-- @randomObj A Random object.
 	-- @usage agent = sn:sample()
-	sample = function(self, randomObj)
+	sample = function(self)
 		if self:isEmpty() then
 			customError("It is not possible to sample the SocialNetwork because it is empty.")
 		end
 
-		local pos
-		if randomObj == nil then
-			pos = TME_GLOBAL_RANDOM:integer(1, self.count)
-		elseif type(randomObj) == "Random" then
-			pos = randomObj:integer(1, self.count)
-		else
-			incompatibleTypeError("#1", "Random or nil", randomObj)
-		end
+		local pos = Random():integer(1, self.count)
 
 		local count = 1
 		local result

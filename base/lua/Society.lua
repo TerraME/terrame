@@ -24,16 +24,12 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
-local createSocialNetworkByQuantity = function(soc, quantity, name, randomObj)
+local createSocialNetworkByQuantity = function(soc, quantity, name)
 	forEachAgent(soc, function(agent)
 		local quant = 0
 		local rs = SocialNetwork()
-		local rand
-		if type(randomObj) == "Random" then
-			rand = randomObj
-		else
-			rand = TME_GLOBAL_RANDOM
-		end
+		local rand = Random()
+
 		while quant < quantity do
 			local randomagent = soc:sample(rand)
 			if randomagent ~= agent and not rs:isConnection(randomagent) then
@@ -45,15 +41,11 @@ local createSocialNetworkByQuantity = function(soc, quantity, name, randomObj)
 	end)
 end
 
-local createSocialNetworkByProbability = function(soc, probability, name, randomObj)
+local createSocialNetworkByProbability = function(soc, probability, name)
 	forEachAgent(soc, function(agent)
 		local rs = SocialNetwork()
-		local rand
-		if type(randomObj) == "Random" then
-			rand = randomObj
-		else
-			rand = TME_GLOBAL_RANDOM
-		end
+		local rand = Random()
+
 		forEachAgent(soc, function(hint)
 			if hint ~= agent and rand:number() < probability then
 				rs:add(hint, 1)
@@ -405,15 +397,10 @@ Society_ = {
 		end
 	end,
 	--- Return a random Agent from the Society.
-	-- @param randomObj A random object.
 	-- @usage agent = soc:sample()
-	sample = function(self,randomObj)
+	sample = function(self)
 		if #self.agents > 0 then
-			if type(randomObj) == "Random" then
-				return self.agents[randomObj:integer(1, #self.agents)]
-			else
-				return self.agents[TME_GLOBAL_RANDOM:integer(1, #self.agents)]
-			end
+			return self.agents[Random():integer(1, #self.agents)]
 		else
 			customError("Trying to sample an empty Society.")
 		end

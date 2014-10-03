@@ -297,7 +297,7 @@ return{
 		local ag1 = Agent{
 			name = "nonfoo",
 			init = function(self)
-				self.age = TME_GLOBAL_RANDOM:integer(10)
+				self.age = Random():integer(10)
 			end,
 			execute = function(self)
 				self.age = self.age + 1

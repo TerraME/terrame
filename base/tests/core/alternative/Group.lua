@@ -31,7 +31,7 @@ return{
 		local boi = Agent{
 			energy = 20,
 			init = function(self)
-				self.money = TME_GLOBAL_RANDOM:integer(100)
+				self.money = Random():integer(100)
 			end
 		}
 
@@ -133,14 +133,6 @@ return{
 			group:filter(function() return true end)
 		end
 		unitTest:assert_error(error_func, "Error: It is not possible to filter a Group without a parent.")
-	end,
-	randomize = function(unitTest)
-		local group = Group{}
-
-		local error_func = function()
-			group:randomize("terralab")
-		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Random or nil, got string.")
 	end,
 	sort = function(unitTest)
 		local group = Group{}

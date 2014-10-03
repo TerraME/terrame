@@ -127,12 +127,13 @@ metaTableRandom_ = {__index = Random_, __tostring = tostringTerraME}
 
 --- Type to generate random numbers. It uses RandomLib, a C++ interface to the Mersenne Twister
 -- random number generator MT19937 and to the SIMD-oriented Fast Mersenne Twister random number
--- generator, SFMT19937. Every instance of Random has its own random seed.
+-- generator, SFMT19937. Random is a singleton, which means that every copy of Random created
+-- by the user has the same seed.
 -- @param data.seed An integer number to generate the pseudo-random numbers.
 -- Default is the current time of the system.
 -- @usage random = Random()
 --
--- random = Random {seed = 0}
+-- random = Random{seed = 0}
 function Random(data)
 	if type(data) ~= "table" then
 		if data == nil then
@@ -145,11 +146,13 @@ function Random(data)
 	checkUnnecessaryParameters(data, {"seed"})
 
 	if data.seed then
-		data.cObj_ = RandomUtil(data.seed)
-	else
+		Random_.cObj_ = RandomUtil(data.seed)
+		Random_.seed = data.seed
+		data.seed = nil
+	elseif not Random_.cObj_ then
 		local sd = os.time()
-		data.cObj_ = RandomUtil(sd)
-		data.seed = sd
+		Random_.seed = sd
+		Random_.cObj_ = RandomUtil(sd)
 	end
 
 	setmetatable(data, metaTableRandom_)

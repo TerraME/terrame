@@ -650,14 +650,9 @@ CellularSpace_ = {
 		self.cObj_:notify(modelTime)
 	end,
 	--- Retrieve a random Cell from the CellularSpace.
-	-- @param randomObj a Random object (optional).
 	-- @usage cell = cs:sample()
-	sample = function(self, randomObj)
-		if type(randomObj) == "Random" then
-			return self.cells[randomObj:integer(1, #self)]                          
-		else
-			return self.cells[TME_GLOBAL_RANDOM:integer(1, #self)]            
-		end         
+	sample = function(self)
+		return self.cells[Random():integer(1, #self)]            
 	end,
 	--- Save the attributes of a CellularSpace into the same database it was retrieved.
 	-- @param time A temporal value to be stored in the database, which can be different from

@@ -65,16 +65,6 @@ return{
 
 		unitTest:assert_error(error_func, "Error: Function 'getCell' is deprecated. Use 'get' instead.")
 	end,
-	randomize = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-		local trajectory = Trajectory{target = cs}
-
-		local error_func = function()
-			trajectory:randomize(2)
-		end
-
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Random or nil, got number.")
-	end,
 	sort = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 		local trajectory = Trajectory{target = cs}

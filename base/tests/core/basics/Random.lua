@@ -182,9 +182,7 @@ return {
 	end,
 	__tostring = function(unitTest)
 		local randomObj = Random{seed = 12345}
-		unitTest:assert_equal(tostring(randomObj), [[cObj_  userdata
-seed   number [12345]
-]])
+		unitTest:assert_equal(tostring(randomObj), "")
 	end
 }
 

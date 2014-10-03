@@ -839,5 +839,3 @@ function writeCSV(data, filename, sep)
 	file:close()
 end
 
-TME_GLOBAL_RANDOM = Random{seed = os.time()}
-

@@ -133,12 +133,6 @@ return{
 			sn:sample()
 		end
 		unitTest:assert_error(error_func, "Error: It is not possible to sample the SocialNetwork because it is empty.")
-
-		sn:add(a)
-		error_func = function()
-			sn:sample(2)
-		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Random or nil, got number.")
 	end,
 	setWeight = function(unitTest)
 		local ag1 = Agent{id = "1"}

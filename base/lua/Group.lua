@@ -81,14 +81,9 @@ Group_ = {
 		end
 	end,
 	--- Randomizes the Agents, changing the traversing order.
-	-- @param randomObj a Random object. As default, TerraME uses its internal random number generator.
 	-- @usage group:randomize()
-	randomize = function(self, randomObj)
-		if randomObj == nil then 
-			randomObj = TME_GLOBAL_RANDOM      
-		elseif type(randomObj) ~= "Random" then
-			incompatibleTypeError("#1", "Random or nil", randomObj)
-		end
+	randomize = function(self)
+		local randomObj = Random()
 
 		local numagents = #self
 		for i = 1, numagents do

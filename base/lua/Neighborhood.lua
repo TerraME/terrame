@@ -144,22 +144,13 @@ Neighborhood_ = {
 		return self.cObj_:isNeighbor(cell.x, cell.y, cell.cObj_)
 	end,
 	--- Retrieve a random Cell from the Neighborhood.
-	-- @param randomObj A Random object. As default, TerraME uses its internal random number
-	-- generator.
 	-- @usage cell = n:sample()
-	sample = function(self, randomObj)
+	sample = function(self)
 		if self:isEmpty() then
 			customError("It is not possible to sample the Neighborhood because it is empty.")
 		end
 
-		local pos
-		if randomObj == nil then
-			pos = TME_GLOBAL_RANDOM:integer(1, #self)
-		elseif type(randomObj) == "Random" then
-			pos = randomObj:integer(1, #self)
-		else
-			incompatibleTypeError("#1", "Random or nil", randomObj)
-		end
+		local pos = Random():integer(1, #self)
 
 		local count = 1
 		self.cObj_:first()

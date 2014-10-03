@@ -96,15 +96,9 @@ Trajectory_ = {
 		return self:get(index:getX(), index:getY())
 	end,
 	--- Randomize the Cells, changing their traversing order.
-	-- @param randomObj A Random object. As default, TerraME uses its internal random 
-	-- number generator.
 	-- @usage traj:randomize()
-	randomize = function(self, randomObj)
-		if randomObj == nil then 
-			randomObj = TME_GLOBAL_RANDOM      
-		elseif type(randomObj) ~= "Random" then
-			incompatibleTypeError("#1", "Random or nil", randomObj)
-		end
+	randomize = function(self)
+		local randomObj = Random()
 
 		local numcells = #self
 		for i = 1, numcells do

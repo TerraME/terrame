@@ -179,11 +179,6 @@ return{
 		unitTest:assert_error(error_func, "Error: It is not possible to sample the Neighborhood because it is empty.")
 
 		neigh:add(c)
-
-		error_func = function()
-			neigh:sample(2)
-		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Random or nil, got number.")
 	end,
 	setCellWeight = function(unitTest)
 		local neigh = Neighborhood()

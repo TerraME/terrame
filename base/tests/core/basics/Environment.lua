@@ -76,7 +76,7 @@ return{
 		end)
 		unitTest:assert_equal(4, cont)
 
-		TME_GLOBAL_RANDOM:reSeed(12345)
+		Random():reSeed(12345)
 
 		local predator = Agent{
 			energy = 40,

@@ -81,10 +81,7 @@ return {
 		unitTest:assert_type(ag, "Agent")
 	end,
 	Society = function(unitTest)
-		TME_GLOBAL_RANDOM = Random{seed = 123}
-
-		local randomObj = Random{}
-		randomObj:reSeed(0)
+		Random{seed = 0}
 
 		local singleFooAgent = Agent{
 			size = 10,
@@ -99,7 +96,7 @@ return {
 		local nonFooAgent = Agent{
 			name = "nonfoo",
 			init = function(self)
-				self.age = randomObj:integer(10)
+				self.age = Random():integer(10)
 			end,
 			execute = function(self)
 				self.age = self.age + 1
@@ -146,7 +143,7 @@ return {
 
 		t:execute(50)
 
-		unitTest:assert_equal(8, findCounter)
+		unitTest:assert_equal(5, findCounter)
 
 		local count1 = 0
 		local count2 = 0
@@ -155,7 +152,7 @@ return {
 			if not cell:isEmpty() then count2 = count2 + 1 end
 		end)
 		unitTest:assert_equal(51, count1)
-		unitTest:assert_equal(42, count2)
+		unitTest:assert_equal(47, count2)
 
 		local agent1 = Agent{}
 
@@ -288,9 +285,7 @@ return {
 		unitTest:assert_equal(16, received)
 	end,
 	createSocialNetwork = function(unitTest)
-		TME_GLOBAL_RANDOM:reSeed(12345)
-
-		local randomObj = Random{ seed = 123 }
+		Random{seed = 12345}
 
 		local predator = Agent{
 			energy = 40,
@@ -347,7 +342,7 @@ return {
 		local ag1 = Agent{
 			name = "nonfoo",
 			init = function(self)
-				self.age = TME_GLOBAL_RANDOM:integer(10)
+				self.age = Random():integer(10)
 			end,
 			execute = function(self)
 				self.age = self.age + 1
