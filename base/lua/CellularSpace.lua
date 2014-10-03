@@ -233,10 +233,13 @@ CellularSpace_ = {
 	-- @param cell A Cell.
 	-- @usage cs:add(cell)
 	add = function(self, cell)
-		if cell.parent ~= nil then 
+		if type(cell) ~= "Cell" then
+			incompatibleTypeError("#1", "Cell", cell)
+		elseif cell.parent ~= nil then 
 			customWarning("The cell already had a parent and it was replaced.")
 			-- TODO: I believe that a cell must belong to one, and only one, cs. Therefore the line above should be an error
 		end
+
 		cell.parent = self
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 		table.insert(self.cells, cell)

@@ -25,6 +25,20 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	add = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+		local cs2 = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:add(2)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got number.")
+
+		local error_func = function()
+			cs:add(cs2:sample())
+		end
+		unitTest:assert_error(error_func, "Error: The cell already had a parent and it was replaced.")
+	end,
 	CellularSpace = function(unitTest)
 		local error_func = function()
 			local cs = CellularSpace{
