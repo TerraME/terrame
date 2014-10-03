@@ -226,12 +226,10 @@ metaTableNeighborhood_ = {
 -- with an auto incremented number.
 -- @usage n = Neighborhood()
 function Neighborhood(data)
-	if type(data) ~= "table" then
-		if data == nil then
-			data = {} 
-		else
-			namedParametersError()
-		end
+	if data == nil then
+		data = {} 
+	else
+		verifyNamedTable(data)
 	end
 
 	checkUnnecessaryParameters(data, {""}) -- this function takes zero parameters

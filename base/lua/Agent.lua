@@ -333,13 +333,7 @@ Agent_ = {
 	--     quantity = 20
 	-- }
 	message = function(self, data)
-		if type(data) ~= "table" then
-			if data == nil then
-				tableParameterError()
-			else
-				namedParametersError()
-			end
-		end
+		verifyNamedTable(data)
 
 		data.sender = self
 		if type(data.receiver) ~= "Agent" then

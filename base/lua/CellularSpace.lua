@@ -312,12 +312,10 @@ CellularSpace_ = {
 	--     name = "spatialCoupling"
 	-- }
 	createNeighborhood = function(self, data)
-		if type(data) ~= "table" then
-			if data == nil then 
-				data = {} 
-			else
-	 			namedParametersError()
-			end
+		if data == nil then
+			data = {}
+		else
+			verifyNamedTable(data)
 		end
 
 		if data.name == nil then
@@ -599,13 +597,8 @@ CellularSpace_ = {
 	--     name = "mtab"
 	-- }
 	loadNeighborhood = function(self, data)
-		if type(data) ~= "table" then
-			if data == nil then 
-				tableParameterError()
-			else
-	 			namedParametersError()
-			end
-		end
+		verifyNamedTable(data)
+
 		if data.source == nil then
 			mandatoryArgumentError("source")
 		elseif type(data.source) ~= "string" then 
@@ -952,13 +945,9 @@ metaTableCellularSpace_ = {
 --     ydim = 20
 -- }
 function CellularSpace(data)
-	if type(data) ~= "table" then
-		if data == nil then
-			tableParameterError()
-		else
- 			namedParametersError()
- 		end
-	elseif getn(data) == 0 then
+	verifyNamedTable(data)
+
+	if getn(data) == 0 then
 		customError("CellularSpace needs more information to be created.")
 	end
 

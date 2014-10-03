@@ -135,12 +135,10 @@ metaTableRandom_ = {__index = Random_, __tostring = tostringTerraME}
 --
 -- random = Random{seed = 0}
 function Random(data)
-	if type(data) ~= "table" then
-		if data == nil then
-			data = {}
-		else
-			tableParameterError()
-		end
+	if data == nil then
+		data = {}
+	else
+		verifyNamedTable(data)
 	end
 
 	checkUnnecessaryParameters(data, {"seed"})

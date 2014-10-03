@@ -85,23 +85,27 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'neighborhood' is mandatory.")
 	end,
-	namedParametersError = function(unitTest)
+	verifyNamedTable = function(unitTest)
 		local error_func = function()
-			namedParametersError()
+			verifyNamedTable()
+		end
+		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
+
+		local error_func = function()
+			verifyNamedTable(123)
 		end
 		unitTest:assert_error(error_func, "Error: Parameters must be named.")
+
+		local error_func = function()
+			verifyNamedTable{x = 3, 3, 4}
+		end
+		unitTest:assert_error(error_func, "Error: All elements of the argument must be named.")
 	end,
 	suggest = function(unitTest)
 		unitTest:assert(true)
 	end,
 	switch = function(unitTest)
 		unitTest:assert(true)
-	end,
-	tableParameterError = function(unitTest)
-		local error_func = function()
-			tableParameterError()
-		end
-		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
 	end,
 	valueNotFoundError = function(unitTest)
 		local error_func = function()

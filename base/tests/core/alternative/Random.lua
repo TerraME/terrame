@@ -29,7 +29,7 @@ return{
 		local error_func = function()
 			local r = Random(12345)
 		end
-		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
+		unitTest:assert_error(error_func, "Error: Parameters must be named.")
 
 		local error_func = function()
 			local r = Random{x = 12345}

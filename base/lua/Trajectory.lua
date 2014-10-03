@@ -197,13 +197,7 @@ metaTableTrajectory_ = {
 --     build = false
 -- }
 function Trajectory(data)
-	if type(data) ~= "table" then
-		if data == nil then
-			tableParameterError()
-		else
- 			namedParametersError()
-		end
-	end
+	verifyNamedTable(data)
 
 	checkUnnecessaryParameters(data, {"target", "build", "select", "greater"})
 

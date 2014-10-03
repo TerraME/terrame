@@ -162,13 +162,7 @@ metaTableGroup_ = {
 -- @output select The last function used to filter the Group.
 -- @output greater The last function used to sort the Group.
 Group = function(data)
-	if type(data) ~= "table" then
-		if data == nil then
-			tableParameterError()
-		else
- 			namedParametersError()
- 		end
-	end
+	verifyNamedTable(data)
 
 	checkUnnecessaryParameters(data, {"target", "build", "select", "greater"})
 

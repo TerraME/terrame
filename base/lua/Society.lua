@@ -218,13 +218,8 @@ Society_ = {
 	--    name = "byneighbor"
 	--}
 	createSocialNetwork = function(self, data)
-		if type(data) ~= "table" then
-			if data == nil then
-				tableParameterError()
-			else
-	 			namedParametersError()
-			end
-		end
+		verifyNamedTable(data)
+
 		if data.strategy == nil then
 			if data.probability ~= nil then
 				data.strategy = "probability"
@@ -603,13 +598,7 @@ metaTableSociety_ = {
 --     database = "file.csv"
 -- }
 function Society(data)
-	if type(data) ~= "table" then
-		if data == nil then
-    		data = {}
-		else
- 			namedParametersError("Society")
-  		end
-	end
+	verifyNamedTable(data)
 
 	data.cObj_ = TeSociety()
 	data.agents = {}

@@ -129,6 +129,18 @@ verify = function(condition, msg)
 	end
 end
 
+verifyNamedTable = function(data)
+	if type(data) ~= "table" then
+		if data == nil then
+			customError("Parameter must be a table.")
+		else
+			customError("Parameters must be named.")
+		end
+	elseif #data > 0 then
+		customError("All elements of the argument must be named.")
+	end
+end
+
 function checkUnnecessaryParameters(data, parameters)
 	forEachElement(data, function(value)
 		if not belong(value, parameters) then
@@ -261,13 +273,5 @@ end
 
 function mandatoryArgumentError(attr)
 	customError("Parameter '"..attr.."' is mandatory.")
-end
-
-function namedParametersError(funcName)
-	customError("Parameters must be named.")
-end
-
-function tableParameterError(funcName)
-	customError("Parameter must be a table.")
 end
 
