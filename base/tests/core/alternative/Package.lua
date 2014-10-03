@@ -37,6 +37,18 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: #1 should be a string.")
 	end,
+	defaultTableValue = function(unitTest)
+		local t = {x = 5}
+		local error_func = function()
+			defaultTableValue(t, "x", false)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'x' expected boolean, got number.")
+
+		local error_func = function()
+			defaultTableValue(t, "x", 5)
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'x' could be removed as it is the default value (5).")
+	end,
 	defaultValueWarning = function(unitTest)
 		local error_func = function()
 			defaultValueWarning(2)

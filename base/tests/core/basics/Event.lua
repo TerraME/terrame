@@ -46,7 +46,7 @@ return{
 		unitTest:assert_equal(event[1]:getPriority(), -5.2)
 	end,
 	config = function(unitTest)
-		local event = Event{time = 1, action = function(event) end}
+		local event = Event{action = function(event) end}
 
 		event:config(0.5, 2, 1)
 

@@ -69,15 +69,17 @@ return{
 		end)
 		unitTest:assert_equal(count, 10)
 
-		local cs = CellularSpace{xdim = 1, ydim = 1}
+		local cs = CellularSpace{xdim = 2}
 		local e = Environment{soc, cs}
 
 		e:createPlacement()
 
 		count = 0
-		forEachAgent(cs:sample(), function(ag)
-			unitTest:assert_equal(ag.value, 2)
-			count = count + 1
+		forEachCell(cs, function(cell)
+			forEachAgent(cell, function(ag)
+				unitTest:assert_equal(ag.value, 2)
+				count = count + 1
+			end)
 		end)
 		unitTest:assert_equal(count, 10)
 	end,

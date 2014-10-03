@@ -29,30 +29,30 @@ return{
 		local error_func = function()
 			event = Event{time = "time", period = 2, priority = -1, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'time' expected positive number, got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'time' expected number, got string.")
 
 		error_func = function()
-			event = Event{time = 1, period = "1", priority = 1, action = function(event) end}
+			event = Event{period = "1", priority = 1, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'period' expected positive number (except zero), got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'period' expected number, got string.")
 
 		error_func = function()
-			event = Event{time = 1, period = -1, priority = 1, action = function(event) end}
+			event = Event{period = -1, priority = 1, action = function(event) end}
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'period' expected positive number (except zero), got -1.")
 
 		error_func = function()
-			event = Event{time = 1, period = 2, priority = "aaa", action = function(event) end}
+			event = Event{period = 2, priority = "aaa", action = function(event) end}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'priority' expected positive number (except zero), got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'priority' expected number, got string.")
 
 		error_func = function()
-			event = Event{time = 1, period = 0, priority = 1, action = function() end}
+			event = Event{period = 0, priority = 1, action = function() end}
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'period' expected positive number (except zero), got 0.")
 
 		error_func = function()
-			event = Event{time = 1, period = 2, priority = 1, action = -5.5}
+			event = Event{period = 2, priority = 1, action = -5.5}
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'action' expected one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory], got number.")
 
@@ -67,25 +67,25 @@ return{
 		unitTest:assert_error(error_func, "Error: Parameter 'myaction' is unnecessary.")
 	end,
 	config = function(unitTest)
-		local event = Event{time = 1, action = function(event) end}
+		local event = Event{action = function(event) end}
 		local error_func = function()
 			event:config(1, -2, 1)
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#2' expected positive number, got -2.")
 
-		event = Event{time = 1, action = function(event) end}
+		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, 0, 1)
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#2' expected positive number, got 0.")
 
-		event = Event{time = 1, action = function(event) end}
+		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, "5")
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected number, got string.")
 
-		event = Event{time = 1, action = function(event) end}
+		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, 1, "aa")
 		end

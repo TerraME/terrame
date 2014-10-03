@@ -49,6 +49,12 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: #1 should be a string.")
 	end,
+	defaultTableValue = function(unitTest)
+		local t = {x = 5}
+		defaultTableValue(t, "y", 8)
+
+		unitTest:assert_equal(t.y, 8)
+	end,
 	deprecatedFunctionWarning = function(unitTest)
 		local error_func = function()
 			deprecatedFunctionWarning("abc", "def")

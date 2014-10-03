@@ -28,10 +28,10 @@ return{
 		local timer
 
 		timer = Timer{
-			Event{time = 1, period = 1, priority = 1, action = function(event) timer:notify() end},
-			Event{time = 1, period = 1, priority = 2, action = function(event) timer:notify() end},
-			Event{time = 1, period = 1, priority = 3, action = function(event) timer:notify() end},
-			Event{time = 1, period = 1, priority = 4, action = function(event) timer:notify() end}
+			Event{priority = 1, action = function(event) timer:notify() end},
+			Event{priority = 2, action = function(event) timer:notify() end},
+			Event{priority = 3, action = function(event) timer:notify() end},
+			Event{priority = 4, action = function(event) timer:notify() end}
 		}
 
 		unitTest:delay()
@@ -40,10 +40,10 @@ return{
 		timer:execute(50)
 
 		timer = Timer{
-			ev1 = Event{time = 1, period = 1, priority =  1, action = function(event) timer:notify() end},
-			ev2 = Event{time = 1, period = 4, priority = 10, action = function(event) timer:notify() end},
-			ev3 = Event{time = 1, period = 4, priority = 10, action = function(event) timer:notify() end},
-			ev4 = Event{time = 1, period = 4, priority = 10, action = function(event) timer:notify() end}
+			ev1 = Event{priority =  1, action = function(event) timer:notify() end},
+			ev2 = Event{priority = 10, action = function(event) timer:notify() end},
+			ev3 = Event{priority = 10, action = function(event) timer:notify() end},
+			ev4 = Event{priority = 10, action = function(event) timer:notify() end}
 		}
 
 		Clock{subject = timer}

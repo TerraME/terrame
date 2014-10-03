@@ -24,7 +24,7 @@
 --          Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
-local cs = CellularSpace{xdim = 10, ydim = 10}
+local cs = CellularSpace{xdim = 10}
 
 local state1 = State{
 	id = "seco",
@@ -58,7 +58,7 @@ local state2 = State{
 	}
 }
 
-local ev = Event{time = 1, period = 1, priority = 1, action = function() return true end}
+local ev = Event{action = function() return true end}
 
 return{
 	Automaton = function(unitTest)

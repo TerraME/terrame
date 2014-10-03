@@ -46,7 +46,7 @@ return{
 			quantity = 20
 		}
 
-		local cs = CellularSpace{xdim = 5, ydim = 5}
+		local cs = CellularSpace{xdim = 5}
 
 		local env = Environment{cs, sc1}
 
@@ -81,7 +81,7 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'max' expected positive integer number, got -13.")
 
-		local cs = CellularSpace{xdim = 10, ydim = 10}
+		local cs = CellularSpace{xdim = 10}
 		local ag1 = Agent{}
 		local sc1 = Society {instance = ag1, quantity = 20}
 

@@ -334,7 +334,7 @@ return{
 			where = "height_ > 100"
 		}
 
-		cs:createNeighborhood{strategy = "moore", name = "first", self = true}
+		cs:createNeighborhood{name = "first", self = true}
 
 		cs:createNeighborhood{
 			strategy = "3x3",

@@ -27,8 +27,8 @@
 
 return{
 	loadNeighborhood = function(unitTest)
-		local cs1 = CellularSpace{ xdim = 10, ydim = 10}
-		local cs2 = CellularSpace{ xdim = 10, ydim = 10}
+		local cs1 = CellularSpace{xdim = 10}
+		local cs2 = CellularSpace{xdim = 10}
 
 		local env = Environment{cs1, cs2}
 

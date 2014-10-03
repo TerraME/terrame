@@ -31,10 +31,7 @@ return{
 		unitTest:assert_equal(#cs, 100)
 	end,
 	add = function(unitTest)
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
+		local cs = CellularSpace{xdim = 10}
 
 		local c = Cell{}
 
@@ -43,10 +40,7 @@ return{
 		unitTest:assert_equal(cs.cells[101], c)
 	end,
 	CellularSpace = function(unitTest)
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
+		local cs = CellularSpace{xdim = 10}
 
 		unitTest:assert_type(cs, "CellularSpace")
 		unitTest:assert_equal(#cs, 100)
@@ -115,7 +109,7 @@ return{
 		unitTest:assert_equal(32, sizes[5])
 		unitTest:assert_equal(64, sizes[8])
 
-		cs:createNeighborhood{strategy = "moore", name = "neigh2"}
+		cs:createNeighborhood{name = "neigh2"}
 
 		forEachNeighbor(cs:sample(), "neigh2", function(c, neigh, weight)
 				unitTest:assert(c ~= neigh)
@@ -126,7 +120,7 @@ return{
 				unitTest:assert(neigh.y <= (c.y + 1))
 			end)
 
-		cs:createNeighborhood{strategy = "moore", name = "my_neighborhood2", self = true}
+		cs:createNeighborhood{name = "my_neighborhood2", self = true}
 
 		local sizes = {}
 
@@ -163,7 +157,7 @@ return{
 			or yNeigh == (((yCell + 1) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
 		end
 
-		cs:createNeighborhood{strategy = "moore", name = "my_neighborhood3", wrap = true}
+		cs:createNeighborhood{name = "my_neighborhood3", wrap = true}
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood3")
@@ -175,7 +169,6 @@ return{
 		end)
 
 		cs:createNeighborhood{
-			strategy = "moore",
 			name = "my_neighborhood4",
 			wrap = true,
 			self = true

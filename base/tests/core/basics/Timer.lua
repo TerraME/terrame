@@ -73,7 +73,7 @@ return {
 	add = function(unitTest)
 		local cont = 0
 		local timer2 = Timer{
-			Event{time = 1, period = 1, action = function(event)
+			Event{action = function(event)
 				cont = cont + 1
 				unitTest:assert_not_nil(event)
 
@@ -84,7 +84,7 @@ return {
 				unitTest:assert_equal(2, event:getPeriod())
 			end},
 
-			Event{time = 1, period = 1, action = function(event)
+			Event{action = function(event)
 				cont = cont + 1
 				return false
 			end}
@@ -194,7 +194,7 @@ return {
 
 		local cont2 = 50
 
-		local ev2 = Event{priority = 0, period = 5, time = 50, action = function(event)
+		local ev2 = Event{period = 5, time = 50, action = function(event)
 			unitTest:assert_equal(event:getPriority(), 0)
 			unitTest:assert_equal(event:getTime(), cont2)
 			cont2 = cont2 + event:getPeriod()
@@ -209,7 +209,7 @@ return {
 	end,
 	__tostring = function(unitTest)
 		local t1 = Timer{
-			Event{time = 1, period = 1, priority = 1, action = function(ev)
+			Event{priority = 1, action = function(ev)
 				ag1:execute(ev)
 			end}
 		}

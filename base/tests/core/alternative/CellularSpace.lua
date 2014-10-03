@@ -62,7 +62,7 @@ return{
 				ydim = 30
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'xdim' expected positive integer number, got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'xdim' expected number, got string.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -78,7 +78,7 @@ return{
 				ydim = "terralab"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'ydim' expected positive integer number, got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'ydim' expected number, got string.")
 
 		error_func = function()
 			cs = CellularSpace{
@@ -126,8 +126,8 @@ return{
 		unitTest:assert_error(error_func, "Error: Function 'getCellByID' is deprecated. Use 'get' instead.")
 	end,
 	createNeighborhood = function(unitTest)
-		local cs = CellularSpace{xdim = 10, ydim = 10}
-		local cs2 = CellularSpace{xdim = 10, ydim = 10}
+		local cs = CellularSpace{xdim = 10}
+		local cs2 = CellularSpace{xdim = 10}
 
 		local error_func = function()
 			cs:createNeighborhood("dataTest")
@@ -146,13 +146,12 @@ return{
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'strategy' expected string, got number.")
 
 		error_func = function()
-			cs:createNeighborhood{strategy = "moore", name = 50}
+			cs:createNeighborhood{name = 50}
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got number.")
 
 		error_func = function()
 			cs:createNeighborhood{
-				strategy = "moore",
 				name = {}
 			}
 		end
@@ -160,7 +159,6 @@ return{
 	
 		error_func = function()
 			cs:createNeighborhood{
-				strategy = "moore",
 				name = "my_neighborhood",
 				self = "true"
 			}
@@ -169,9 +167,7 @@ return{
 	
 		error_func = function()
 			cs:createNeighborhood{
-				strategy = "moore",
 				name = "my_neighborhood",
-				self = true,
 				wrap = "true"
 			}
 		end
@@ -190,7 +186,6 @@ return{
 			cs:createNeighborhood{
 				strategy = "vonneumann",
 				name = "my_neighborhood",
-				self = false,
 				wrap = "true"
 			}
 		end

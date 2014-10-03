@@ -204,7 +204,7 @@ function customWarning(msg)
 end
 
 -- TODO: experimental function
-local defaultTableValue = function(data, idx, value)
+defaultTableValue = function(data, idx, value)
 	if data[idx] == nil then
 		data[idx] = value
 	elseif type(data[idx]) ~= type(value) then
@@ -219,7 +219,7 @@ function defaultValueWarning(parameter, value)
 		error("Error: #1 should be a string.", 2)
 	end
 
-	customWarning("Parameter '"..parameter.."' could be removed as it is the default value ("..value..").")
+	customWarning("Parameter '"..parameter.."' could be removed as it is the default value ("..tostring(value)..").")
 end
 
 function deprecatedFunctionWarning(functionName, functionExpected)

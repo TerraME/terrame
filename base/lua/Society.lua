@@ -232,13 +232,7 @@ Society_ = {
 			end
 		end
 
-		if type(data.name) ~= "string" then
-			if data.name == nil then
-				data.name = "1"
-			else
-				incompatibleTypeError("name", "string", data.id)
-			end
-		end
+		defaultTableValue(data, "name", "1")
 
 		if self.agents[1].socialnetworks[data.name] ~= nil then
 			customError("SocialNetwork '"..data.name.."' already exists in the Society.")

@@ -126,12 +126,9 @@ return {
 
 		unitTest:assert_equal(239, sum)
 
-		local cs = CellularSpace{
-			xdim = 20,
-			ydim = 20
-		}
+		local cs = CellularSpace{xdim = 20}
 
-		cs:createNeighborhood{strategy = "moore"}
+		cs:createNeighborhood{}
 
 		local env = Environment{nonFooSociety, cs, singleFooAgent}
 
@@ -320,7 +317,7 @@ return {
 		unitTest:assert_equal(100,   count_quant)
 		unitTest:assert_equal(10000, count_all)
 
-		local cs = CellularSpace{xdim = 5, ydim = 5}
+		local cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
 
 		local env = Environment{cs, predators}

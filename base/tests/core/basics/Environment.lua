@@ -39,7 +39,7 @@ return{
 			quantity = 2
 		}
 
-		local cs = CellularSpace{xdim = 5, ydim = 5}
+		local cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
 
 		local env = Environment{cs, predators}
@@ -139,10 +139,7 @@ return{
 		unitTest:assert_equal(0,  count_wplace)
 	end,
 	Environment = function(self)
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
+		local cs = CellularSpace{xdim = 10}
 
 		local a = Agent{
 			id = "ag1",
@@ -162,7 +159,7 @@ return{
 		}
 
 		local t = Timer{
-			Event{time = 1, period = 1, priority = 1, action = function(ev)
+			Event{action = function(ev)
 				a:execute(ev)
 			end}
 		}
@@ -188,14 +185,14 @@ return{
 
 		local env = Environment{
 			clock1 = Timer{
-				Event{time = 0, period = 1, action = function(event) 
+				Event{time = 0, action = function(event) 
 					if event:getTime() == timeMemory then 
 						self:assert(orderToken <= 1)
 					end
 					timeMemory = event:getTime()
 					orderToken = 1
 				end},
-				Event{time = 1, period = 1, priority = 1, action = function(event)
+				Event{priority = 1, action = function(event)
 					timeMemory = event:getTime()
 					if event:getTime() == timeMemory then 
 						self:assert(1 <= orderToken)
@@ -215,7 +212,7 @@ return{
 					end
 					orderToken = 3
 				end},
-				Event{time = 1, period = 1, priority = 3, action = function(event) 
+				Event{priority = 3, action = function(event) 
 					if event:getTime() == timeMemory then
 						self:assert(orderToken <= 4)
 					else
@@ -235,14 +232,14 @@ return{
 		local env = Environment{
 			firstEnv = Environment{
 				clock1 = Timer{
-					Event{time = 0, period = 1, action = function(event) 
+					Event{time = 0, action = function(event) 
 						if event:getTime() == timeMemory then 
 							self:assert(1 <= orderToken)
 						end
 						timeMemory = event:getTime()
 						orderToken = 1
 					end},
-					Event{time = 1, period = 1, priority = 1, action = function(event) 
+					Event{priority = 1, action = function(event) 
 						timeMemory = event:getTime()
 
 						if event:getTime() == timeMemory then 
@@ -265,7 +262,7 @@ return{
 						end
 						orderToken = 3
 					end},
-					Event{time = 1, period = 1, priority = 3, action = function(event) 
+					Event{priority = 3, action = function(event) 
 						if event:getTime() == timeMemory then 
 							self:assert(4 <= orderToken)
 						else
@@ -295,14 +292,14 @@ return{
 		local env = Environment{
 			firstEnv = Environment{
 				clock1 = Timer{
-					Event{time = 0, period = 1, priority = PRIO1, action = function(event) 
+					Event{time = 0, priority = PRIO1, action = function(event) 
 						if event:getTime() == timeMemory then 
 							self:assert(1 <= orderToken)
 						end
 						timeMemory = event:getTime()
 						orderToken = 1
 					end},
-					Event{time = 1, period = 1, priority = PRIO2, action = function(event) 
+					Event{priority = PRIO2, action = function(event) 
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert(1 <= orderToken)
@@ -322,7 +319,7 @@ return{
 						end
 						orderToken = 3
 					end},
-					Event{time = 1, period = 1, priority = PRIO4, action = function(event) 
+					Event{priority = PRIO4, action = function(event) 
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert(3 <= orderToken)
@@ -335,7 +332,7 @@ return{
 			},
 			secondEnv = Environment{
 				clock1 = Timer{
-					Event{time = 0, period = 1, priority = PRIO5, action = function(event)
+					Event{time = 0, priority = PRIO5, action = function(event)
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert(4 <= orderToken)
@@ -344,7 +341,7 @@ return{
 						end
 						orderToken = 5
 					end},
-					Event{time = 1, period = 1, priority = PRIO6, action = function(event) 
+					Event{priority = PRIO6, action = function(event) 
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert(5 <= orderToken)
@@ -364,7 +361,7 @@ return{
 						end
 						orderToken = 7
 					end},
-					Event{time = 1, period = 1, priority = PRIO8, action = function(event) 
+					Event{priority = PRIO8, action = function(event) 
 						if event:getTime() == timeMemory then 
 							self:assert(8 <= orderToken)
 						else
@@ -396,14 +393,14 @@ return{
 
 		local env = Environment{
 			clock1 = Timer{
-				Event{time = 0, period = 1, priority = PRIO0, action = function(event) 
+				Event{time = 0, priority = PRIO0, action = function(event) 
 					if event:getTime() == timeMemory then 
 						self:assert(-1 <= orderToken)
 					end
 					timeMemory = event:getTime()
 					orderToken = 0
 				end},
-				Event{time = 1, period = 1, priority = PRIO1, action = function(event) 
+				Event{priority = PRIO1, action = function(event) 
 					timeMemory = event:getTime()
 					if event:getTime() == timeMemory then 
 						self:assert(0 <= orderToken)
@@ -424,7 +421,7 @@ return{
 					end
 					orderToken = 2
 				end},
-				Event{time = 1, period = 1, priority = PRIO3, action = function(event) 
+				Event{priority = PRIO3, action = function(event) 
 					timeMemory = event:getTime()
 					if event:getTime() == timeMemory then 
 						self:assert(orderToken <= 2)
@@ -437,7 +434,7 @@ return{
 
 			firstEnv = Environment{
 				clock1 = Timer{
-					Event{time = 0, period = 1, priority = PRIO4, action = function(event) 
+					Event{time = 0, priority = PRIO4, action = function(event) 
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert(3 <= orderToken)
@@ -446,7 +443,7 @@ return{
 						end
 						orderToken = 4
 					end},
-					Event{time = 1, period = 1, priority = PRIO5, action = function(event) 
+					Event{priority = PRIO5, action = function(event) 
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert(4 <= orderToken)
@@ -457,7 +454,7 @@ return{
 					end}
 				},
 				clock2 = Timer{
-					Event{time = 0, period = 2 , priority = PRIO6, action = function(event) 
+					Event{time = 0, period = 2, priority = PRIO6, action = function(event) 
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert(5 <= orderToken)
@@ -466,7 +463,7 @@ return{
 						end
 						orderToken = 6
 					end},
-					Event{time = 1, period = 1, priority = PRIO7, action = function(event) 
+					Event{priority = PRIO7, action = function(event) 
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert(6 <= orderToken)
@@ -479,7 +476,7 @@ return{
 			},
 			secondEnv = Environment{
 				clock1 = Timer{
-					Event{time = 0, period = 1, priority = PRIO8, action = function(event) 
+					Event{time = 0, priority = PRIO8, action = function(event) 
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert_(7 <= orderToken)
@@ -488,7 +485,7 @@ return{
 						end
 						orderToken = 8
 					end},
-					Event{time = 1, period = 1, priority = PRIO9, action = function(event) 
+					Event{priority = PRIO9, action = function(event) 
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert(8 <= orderToken)
@@ -508,7 +505,7 @@ return{
 						end
 						orderToken = 10
 					end},
-					Event{time = 1, period = 1, priority = PRIO11, action = function(event)
+					Event{priority = PRIO11, action = function(event)
 						timeMemory = event:getTime()
 						if event:getTime() == timeMemory then 
 							self:assert(10 <= orderToken)
@@ -533,8 +530,6 @@ return{
 cObj_  userdata
 id     string [env]
 ]])
-
-
 	end
 }
 

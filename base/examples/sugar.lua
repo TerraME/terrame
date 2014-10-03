@@ -7,7 +7,6 @@ cell = Cell{
 
 cs = CellularSpace{
 	xdim = 20,
-	ydim = 20,
 	instance = cell
 }
 

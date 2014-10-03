@@ -50,10 +50,7 @@ return{
 		unitTest:assert_equal(10, singleFooAgent.size)
 		unitTest:assert_equal("singleFoo", singleFooAgent.id)
 
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
+		local cs = CellularSpace{xdim = 10}
 
 		cs:createNeighborhood()
 
@@ -103,7 +100,7 @@ return{
 	end,
 	getCell = function(unitTest)
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		cs:createNeighborhood()
 		local myEnv = Environment{cs, ag1}
 
@@ -113,7 +110,7 @@ return{
 	end,
 	getCells = function(unitTest)
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		cs:createNeighborhood()
 		local myEnv = Environment{cs, ag1}
 
@@ -142,7 +139,7 @@ return{
 	end,
 	leave = function(unitTest)
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -153,7 +150,7 @@ return{
 		unitTest:assert_nil(ag1:getCell("placement"))
 
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -280,7 +277,7 @@ return{
 			hungry = false,
 			counter = 0,
 		}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		forEachCell(cs, function(cell) 
 			cell.soilType = 0 
 		end)
@@ -296,7 +293,7 @@ return{
 			hungry = false,
 			counter = 0,
 		}
-		cs = CellularSpace{xdim = 3, ydim = 3}
+		cs = CellularSpace{xdim = 3}
 		forEachCell(cs, function(cell) 
 			cell.soilType = 0 
 		end)
@@ -310,7 +307,7 @@ return{
 	end,
 	walk = function(unitTest)
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		cs:createNeighborhood()
 		local myEnv = Environment{cs, ag1}
 

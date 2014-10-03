@@ -238,7 +238,7 @@ return{
 				name = 2
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got nil.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got number.")
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "cell", name = "c"}
@@ -246,7 +246,7 @@ return{
 
 		unitTest:assert_error(error_func, "Error: Society has no placement. Use Environment:createPlacement() first.")
 
-		local cs = CellularSpace{xdim = 5, ydim = 5}
+		local cs = CellularSpace{xdim = 5}
 		local ag1 = Agent{}
 		local sc1 = Society{instance = ag1, quantity = 20}
 		local env = Environment{cs, sc1}
@@ -259,7 +259,7 @@ return{
 
 		local ag1 = Agent{}
 		local sc1 = Society{instance = ag1, quantity = 20}
-		local cs = CellularSpace{xdim = 5, ydim = 5}
+		local cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
 		local env = Environment{cs, sc1}
 
@@ -277,7 +277,7 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = 22}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got nil.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got number.")
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", quantity = 1}

@@ -26,10 +26,7 @@
 
 return{
 	Trajectory = function(unitTest)
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
+		local cs = CellularSpace{xdim = 10}
 
 		local it = Trajectory{
 			target = cs
@@ -85,10 +82,7 @@ return{
 		unitTest:assert_equal(8, cont)
 
 		-- Trajectory inside of another trajectory
-		local cellSpace = CellularSpace{
-			xdim = 5,
-			ydim = 5
-		}
+		local cellSpace = CellularSpace{xdim = 5}
 
 		local cont = 1
 
@@ -130,7 +124,6 @@ return{
 
 		local cs = CellularSpace{
 			xdim = 5,
-			ydim = 5,
 			instance = c
 		}
 
@@ -143,10 +136,7 @@ return{
 		unitTest:assert(t:w() == 40)
 	end,
 	add = function(unitTest)
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
+		local cs = CellularSpace{xdim = 10}
 
 		local it = Trajectory{
 			target = cs,
@@ -163,10 +153,7 @@ return{
 		unitTest:assert(it.cells[3] == cs.cells[3])
 	end,
 	clone = function(unitTest)
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
+		local cs = CellularSpace{xdim = 10}
 
 		local t = Trajectory{
 			target = cs,
@@ -187,14 +174,8 @@ return{
 		unitTest:assert(t.cells[1] == t2.cells[1])
 	end,
 	filter = function(unitTest)
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
-
-		local it = Trajectory{
-			target = cs
-		}
+		local cs = CellularSpace{xdim = 10}
+		local it = Trajectory{target = cs}
 
 		it:filter(function(c)
 			if c.x < 9 and c.x > 7 and c.y > 5 then return true end
@@ -208,24 +189,14 @@ return{
 		unitTest:assert_equal(4, #it)
 	end,
 	get = function(unitTest)
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
-
-		local it = Trajectory{
-			target = cs
-		}
+		local cs = CellularSpace{xdim = 10}
+		local it = Trajectory{target = cs}
 
 		unitTest:assert_equal(8, it:get(8, 9).x)
 		unitTest:assert_equal(9, it:get(8, 9).y)
 	end,
 	randomize = function(unitTest)
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
-
+		local cs = CellularSpace{xdim = 10}
 		local it = Trajectory{target = cs}
 
 		it:randomize()
@@ -237,14 +208,8 @@ return{
 		unitTest:assert_equal(100, #it)
 	end,
 	sort = function(unitTest)
-		local cs = CellularSpace{
-			xdim = 10,
-			ydim = 10
-		}
-
-		local it = Trajectory{
-			target = cs
-		}
+		local cs = CellularSpace{xdim = 10}
+		local it = Trajectory{target = cs}
 
 		it:sort(function(a, b)
 			return a.y > b.y
@@ -272,10 +237,7 @@ return{
 		unitTest:assert_equal(100, cont)
 	end,
 	rebuild = function(unitTest) 
-		local cs = CellularSpace{
-			xdim = 5,
-			ydim = 5
-		}
+		local cs = CellularSpace{xdim = 5}
 
 		forEachCell(cs, function(cell)
 			cell.value = math.random(12)
@@ -330,9 +292,8 @@ return{
 			ydim = 20
 		}
 
-		local tr1 = Trajectory{
-			target = cs1
-		}
+		local tr1 = Trajectory{target = cs1}
+
 		unitTest:assert_equal(#tr1, 200)
 	end,
 	__tostring = function(unitTest)

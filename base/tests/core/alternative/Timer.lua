@@ -49,7 +49,7 @@ return {
 	end,
 	add = function(unitTest)
 		local timer = Timer{
-			Event{time = 1, period = 2, priority = 0, action = function(event)
+			Event{period = 2, action = function(event)
 			end}
 		}
 
@@ -60,7 +60,7 @@ return {
 		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
 
 		timer = Timer{
-			Event{time = 1, period = 2, priority = 0, action = function(event)
+			Event{period = 2, action = function(event)
 			end}
 		}
 		error_func = function()
@@ -70,7 +70,7 @@ return {
 	end,
 	execute = function(unitTest)
 		local timer = Timer{
-			Event{time = 1, period = 2, priority = 0, action = function(event)
+			Event{period = 2, action = function(event)
 			end}
 		}
 
@@ -80,7 +80,7 @@ return {
 		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
 
 		timer = Timer{
-			Event{time = 1, period = 2, priority = 0, action = function(event)
+			Event{period = 2, action = function(event)
 			end}
 		}
 

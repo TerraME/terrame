@@ -318,27 +318,16 @@ CellularSpace_ = {
 			verifyNamedTable(data)
 		end
 
-		if data.name == nil then
-			data.name = "1"
-		elseif type(data.name) ~= "string" then 
-			incompatibleTypeError("name", "string", data.name)
-		elseif data.name == "1" then
-			defaultValueWarning("name", "1", 3)
-		end
+		defaultTableValue(data, "name", "1")
 
 		if self.cells[1] and #self.cells[1] > 0 then
-			-- TODO: bug aqui porque se nao tiver a vizinhanca ele retorna erro no proprio get
 			if self.cells[1]:getNeighborhood(data.name) ~= nil then
 				local msg = "Neighborhood '"..data.name.."' already exists."
 				customWarning(msg)
 			end
 		end
 
-		if data.strategy == nil then
-			data.strategy = "moore"
-		elseif type(data.strategy) ~= "string" then
-			incompatibleTypeError("strategy", "string", data.strategy)
-		end
+		defaultTableValue(data, "strategy", "moore")
 
 		switch(data, "strategy"):caseof{
 			["function"] = function() 
@@ -359,17 +348,9 @@ CellularSpace_ = {
 			end,
 			moore = function()
 				checkUnnecessaryParameters(data, {"self", "wrap", "name", "strategy"})
-				if data.self == nil then
-					data.self = false
-				elseif type(data.self) ~= "boolean" then
-					incompatibleTypeError("self", "boolean", data.self)
-				end
 
-				if data.wrap == nil then
-					data.wrap = false
-				elseif type(data.wrap) ~= "boolean" then
-					incompatibleTypeError("wrap", "boolean", data.wrap)
-				end
+				defaultTableValue(data, "self", false)
+				defaultTableValue(data, "wrap", false)
 
 				createMooreNeighborhood(self, data.name, data.self, data.wrap)
 			end,
@@ -401,17 +382,8 @@ CellularSpace_ = {
 					customWarning("Parameter 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 				end
 
-				if data.filter == nil then
-					data.filter = function() return true end
-				elseif type(data.filter) ~= "function" then
-					incompatibleTypeError("filter", "function", data.filter)
-				end
-
-				if data.weight == nil then
-					data.weight = function() return 1 end
-				elseif type(data.weight) ~= "function" then
-					incompatibleTypeError("weight", "function", data.weight)
-				end
+				defaultTableValue(data, "filter", function() return true end)
+				defaultTableValue(data, "weight", function() return 1 end)
 
 				if data.target == nil then
 					createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name)
@@ -424,17 +396,8 @@ CellularSpace_ = {
 			end,
 			vonneumann = function() 
 				checkUnnecessaryParameters(data, {"name", "strategy", "wrap", "self"})
-				if data.self == nil then
-					data.self = false
-				elseif type(data.self) ~= "boolean" then
-					incompatibleTypeError("self", "boolean", data.self)
-				end
-
-				if data.wrap == nil then
-					data.wrap = false
-				elseif type(data.wrap) ~= "boolean" then
-					incompatibleTypeError("wrap", "boolean", data.wrap)
-				end
+				defaultTableValue(data, "self", false)
+				defaultTableValue(data, "wrap", false)
 
 				createVonNeumannNeighborhood(self, data.name, data.self, data.wrap) 
 			end,
@@ -443,22 +406,14 @@ CellularSpace_ = {
 				data.m = 3
 				data.n = 3
 
-				if data.filter == nil then
-					data.filter = function() return true end
-				elseif type(data.filter) ~="function" then
-					incompatibleTypeError("filter", "function", data.filter)
-				end
-
-				if data.weight == nil then
-					data.weight = function() return 1 end
-				elseif type(data.weight) ~= "function" then
-					incompatibleTypeError("weight", "function", data.weight)
-				end
+				defaultTableValue(data, "filter", function() return true end)
+				defaultTableValue(data, "weight", function() return 1 end)
 
 				createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name) 
 			end,
 			coord = function() 
 				checkUnnecessaryParameters(data, {"name", "strategy", "target"})
+
 				if data.target == nil then
 					mandatoryArgumentError("target")
 				elseif type(data.target) ~= "CellularSpace" then
@@ -953,12 +908,8 @@ function CellularSpace(data)
 
 	local cObj = TeCellularSpace()
 
-	if data.database ~= nil and type(data.autoload) ~= "boolean" then
-		if data.autoload == nil then
-			data.autoload = true
-		else
-			incompatibleTypeError("autoload", "boolean", data.autoload)
-		end
+	if data.database ~= nil then
+		defaultTableValue(data, "autoload", true)
 	end    
 
 	data.cells = {}
@@ -969,23 +920,15 @@ function CellularSpace(data)
 	if data.maxCol == nil then data.maxCol = -data.minCol end
 
 	if data.xdim or data.ydim then -- rectangular "virtual" cellular space
-		if type(data.xdim) ~= "number" then
-			if data.xdim == nil then
-				data.xdim = 0
-			else
-				incompatibleTypeError("xdim", "positive integer number", data.xdim)
-			end
-		elseif data.xdim <= 0 or math.floor(data.xdim) ~= data.xdim then
+		-- TODO: maybe there should not exist a default xdim value
+		defaultTableValue(data, "xdim", 1)
+		defaultTableValue(data, "ydim", data.xdim)
+
+		if data.xdim <= 0 or math.floor(data.xdim) ~= data.xdim then
 			incompatibleValueError("xdim", "positive integer number", data.xdim)
 		end
 
-		if type(data.ydim) ~= "number" then
-			if data.ydim == nil then
-				data.ydim = data.xdim
-			else
-				incompatibleTypeError("ydim", "positive integer number", data.ydim)
-			end
-		elseif data.ydim <= 0 or math.floor(data.ydim) ~= data.ydim then
+		if data.ydim <= 0 or math.floor(data.ydim) ~= data.ydim then
 			incompatibleValueError("ydim", "positive integer number", data.ydim)
 		end
 

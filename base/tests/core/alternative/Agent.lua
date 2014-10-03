@@ -77,7 +77,7 @@ return {
 	end,
 	enter = function(unitTest)
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -89,7 +89,7 @@ return {
 
 		local test_function = function()
 			local ag1 = Agent{}
-			local cs = CellularSpace{xdim = 3, ydim = 3}
+			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
 			myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -99,7 +99,7 @@ return {
 		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected Cell, got table.")
 
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -159,7 +159,7 @@ return {
 	leave = function(unitTest)
 		local test_function = function()
 			local ag1 = Agent{}
-			local cs = CellularSpace{xdim = 3, ydim = 3}
+			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
 			myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -171,7 +171,7 @@ return {
 
 		local test_function = function()
 			local ag1 = Agent{}
-			local cs = CellularSpace{xdim = 3, ydim = 3}
+			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
 			myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -182,7 +182,7 @@ return {
 		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#2' expected string, got number.")
 
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -252,7 +252,7 @@ return {
 	move = function(unitTest)
 		local test_function = function()
 			local ag1 = Agent{}
-			local cs = CellularSpace{ xdim = 3, ydim = 3}
+			local cs = CellularSpace{ xdim = 3}
 			local myEnv = Environment {cs, ag1}
 
 			myEnv:createPlacement{strategy = "void", name = "renting"}
@@ -265,7 +265,7 @@ return {
 
 		local ag1 = Agent{}
 		local ag2 = Agent{}
-		local cs = CellularSpace{ xdim = 3, ydim = 3}
+		local cs = CellularSpace{ xdim = 3}
 		local myEnv = Environment {cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "renting"}
@@ -278,7 +278,7 @@ return {
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got Agent.")
 
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "test"}
@@ -290,7 +290,7 @@ return {
 		unitTest:assert_error(error_func, "Error: Placement 'placement' was not found.")
 
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "renting"}
@@ -307,7 +307,7 @@ return {
 		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#2' expected string, got number.")
 
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "renting"}
@@ -335,7 +335,7 @@ return {
 	end,
 	randomWalk = function(unitTest)
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -362,7 +362,7 @@ return {
 	end,
 	walk = function(unitTest)
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -375,7 +375,7 @@ return {
 
 		local test_function = function()
 			local ag1 = Agent{}
-			local cs = CellularSpace{xdim = 3, ydim = 3}
+			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
 			myEnv:createPlacement{strategy = "void", name = "placement"}
@@ -387,7 +387,7 @@ return {
 		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected string, got number.")
 
 		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3, ydim = 3}
+		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "placement"}

@@ -243,7 +243,7 @@ return{
 
 			unitTest:assert_not_nil(cs)
 
-			cs:createNeighborhood{strategy = "moore", name = "moore"}
+			cs:createNeighborhood{name = "moore"}
 
 			local reg = debug.getregistry()
 			local countNeigh = 0
@@ -445,7 +445,7 @@ return{
 
 		for i = 1, 100 do
 			collectgarbage("collect")
-			evt = Event{time = 1, period = 1, priority = 1, action = function(event)
+			evt = Event{priority = 1, action = function(event)
 				time = event:getTime()
 			end}
 			unitTest:assert_not_nil(evt)
@@ -487,7 +487,7 @@ return{
 		for i = 1, 100 do
 			collectgarbage("collect")
 			local t = Timer{
-				Event{time = 1, period = 1, priority = 1, action = function(event)
+				Event{priority = 1, action = function(event)
 					time = event:getTime()
 				end}
 			}
