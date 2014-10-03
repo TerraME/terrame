@@ -188,7 +188,7 @@ return{
 			sn = SocialNetwork(2)
 		end
 		-- TODO: melhorar este erro abaixo. Fazer o mesmo para o neighborhood.
-		unitTest:assert_error(error_func, "Error: Parameters for 'SocialNetwork' must be named.")
+		unitTest:assert_error(error_func, "Error: Parameters must be named.")
 
 		local error_func = function()
 			sn = SocialNetwork{id = "3"}

@@ -164,9 +164,9 @@ metaTableGroup_ = {
 Group = function(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterError("Group")
+			tableParameterError()
 		else
- 			namedParametersError("Group")
+ 			namedParametersError()
  		end
 	end
 

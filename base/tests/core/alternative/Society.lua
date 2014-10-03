@@ -122,12 +122,12 @@ return{
 		local error_func = function()
 			sc1:createSocialNetwork()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter for 'createSocialNetwork' must be a table.")
+		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
 
 		error_func = function()
 			sc1:createSocialNetwork(15)
 		end
-		unitTest:assert_error(error_func, "Error: Parameters for 'createSocialNetwork' must be named.")
+		unitTest:assert_error(error_func, "Error: Parameters must be named.")
 
 		error_func = function()
 			sc1:createSocialNetwork{

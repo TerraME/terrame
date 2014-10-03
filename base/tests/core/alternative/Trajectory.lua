@@ -80,12 +80,12 @@ return{
 		local error_func = function()
 			trajectory = Trajectory()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter for 'Trajectory' must be a table.")
+		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
 
 		local error_func = function()
 			trajectory = Trajectory(3)
 		end
-		unitTest:assert_error(error_func, "Error: Parameters for 'Trajectory' must be named.")
+		unitTest:assert_error(error_func, "Error: Parameters must be named.")
 
 		error_func = function()
  			local traj = Trajectory{

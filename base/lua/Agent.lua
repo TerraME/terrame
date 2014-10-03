@@ -335,9 +335,9 @@ Agent_ = {
 	message = function(self, data)
 		if type(data) ~= "table" then
 			if data == nil then
-				tableParameterError("message")
+				tableParameterError()
 			else
-				namedParametersError("message")
+				namedParametersError()
 			end
 		end
 

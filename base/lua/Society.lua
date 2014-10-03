@@ -220,9 +220,9 @@ Society_ = {
 	createSocialNetwork = function(self, data)
 		if type(data) ~= "table" then
 			if data == nil then
-				tableParameterError("createSocialNetwork")
+				tableParameterError()
 			else
-	 			namedParametersError("createSocialNetwork")
+	 			namedParametersError()
 			end
 		end
 		if data.strategy == nil then

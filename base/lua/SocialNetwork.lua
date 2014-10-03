@@ -217,7 +217,7 @@ function SocialNetwork(data)
 		if data == nil then
 			data = {}
 		else
-			namedParametersError("SocialNetwork")
+			namedParametersError()
 		end
 	end
 

@@ -230,7 +230,7 @@ function Neighborhood(data)
 		if data == nil then
 			data = {} 
 		else
-			namedParametersError("Neighborhood")
+			namedParametersError()
 		end
 	end
 

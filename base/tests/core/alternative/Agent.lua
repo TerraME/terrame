@@ -202,7 +202,7 @@ return {
 
 			ag1:message()
 		end
-		unitTest:assert_error(test_function, "Error: Parameter for 'message' must be a table.")
+		unitTest:assert_error(test_function, "Error: Parameter must be a table.")
 
 		local test_function = function()
 			local ag = Agent{}
@@ -212,7 +212,7 @@ return {
 
 			ag1:message(123)
 		end
-		unitTest:assert_error(test_function, "Error: Parameters for 'message' must be named.")
+		unitTest:assert_error(test_function, "Error: Parameters must be named.")
 
 		local ag = Agent{}
 		local sc = Society{instance = ag, quantity = 2}

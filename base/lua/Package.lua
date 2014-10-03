@@ -264,10 +264,10 @@ function mandatoryArgumentError(attr)
 end
 
 function namedParametersError(funcName)
-	customError("Parameters for '"..funcName.."' must be named.")
+	customError("Parameters must be named.")
 end
 
 function tableParameterError(funcName)
-	customError("Parameter for '"..funcName.."' must be a table.")
+	customError("Parameter must be a table.")
 end
 

@@ -139,7 +139,7 @@ function Random(data)
 		if data == nil then
 			data = {}
 		else
-			tableParameterError("Random")
+			tableParameterError()
 		end
 	end
 

@@ -43,12 +43,12 @@ return{
 		local error_func = function()
 			group1 = Group()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter for 'Group' must be a table.")
+		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
 
 		error_func = function()
 			group1 = Group(3)
 		end
-		unitTest:assert_error(error_func, "Error: Parameters for 'Group' must be named.")
+		unitTest:assert_error(error_func, "Error: Parameters must be named.")
 
 		error_func = function()
  			local gr = Group{

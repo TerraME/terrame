@@ -118,7 +118,7 @@ return{
 		local error_func = function()
 			cs:createNeighborhood("dataTest")
 		end
-		unitTest:assert_error(error_func, "Error: Parameters for 'createNeighborhood' must be named.")
+		unitTest:assert_error(error_func, "Error: Parameters must be named.")
 	
 		error_func = function()
 			cs:createNeighborhood{strategy = "teste"}

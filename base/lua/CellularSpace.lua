@@ -313,7 +313,7 @@ CellularSpace_ = {
 			if data == nil then 
 				data = {} 
 			else
-	 			namedParametersError("createNeighborhood")
+	 			namedParametersError()
 			end
 		end
 
@@ -598,9 +598,9 @@ CellularSpace_ = {
 	loadNeighborhood = function(self, data)
 		if type(data) ~= "table" then
 			if data == nil then 
-				tableParameterError("loadNeighborhood")
+				tableParameterError()
 			else
-	 			namedParametersError("loadNeighborhood")
+	 			namedParametersError()
 			end
 		end
 		if data.source == nil then
@@ -951,9 +951,9 @@ metaTableCellularSpace_ = {
 function CellularSpace(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterError("CellularSpace")
+			tableParameterError()
 		else
- 			namedParametersError("CellularSpace")
+ 			namedParametersError()
  		end
 	elseif getn(data) == 0 then
 		customError("CellularSpace needs more information to be created.")

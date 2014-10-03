@@ -138,7 +138,7 @@ return{
 		local error_func = function()
 			neigh = Neighborhood(2)
 		end
-		unitTest:assert_error(error_func, "Error: Parameters for 'Neighborhood' must be named.")
+		unitTest:assert_error(error_func, "Error: Parameters must be named.")
 
 		local error_func = function()
 			neigh = Neighborhood{id = "1"}

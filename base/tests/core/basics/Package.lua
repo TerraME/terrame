@@ -87,9 +87,9 @@ return{
 	end,
 	namedParametersError = function(unitTest)
 		local error_func = function()
-			namedParametersError("CellularSpace")
+			namedParametersError()
 		end
-		unitTest:assert_error(error_func, "Error: Parameters for 'CellularSpace' must be named.")
+		unitTest:assert_error(error_func, "Error: Parameters must be named.")
 	end,
 	suggest = function(unitTest)
 		unitTest:assert(true)
@@ -99,9 +99,9 @@ return{
 	end,
 	tableParameterError = function(unitTest)
 		local error_func = function()
-			tableParameterError("CellularSpace")
+			tableParameterError()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter for 'CellularSpace' must be a table.")
+		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
 	end,
 	valueNotFoundError = function(unitTest)
 		local error_func = function()

@@ -199,9 +199,9 @@ metaTableTrajectory_ = {
 function Trajectory(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterError("Trajectory")
+			tableParameterError()
 		else
- 			namedParametersError("Trajectory")
+ 			namedParametersError()
 		end
 	end
 
