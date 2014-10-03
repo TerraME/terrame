@@ -70,7 +70,10 @@ UnitTest_ = {
 	-- @param value Any value.
 	assert = function(self, value)
 		self.test = self.test + 1
-		if value == true then
+
+		if type(value) ~= "boolean" then
+			incompatibleTypeError("#1", "boolean", value)
+		elseif value == true then
 			self.success = self.success + 1
 		else
 			local msg
@@ -90,6 +93,9 @@ UnitTest_ = {
 	-- @param mtype A string with the name of a type.
 	assert_type = function (self, value, mtype)
 		self.test = self.test + 1
+		if type(mtype) ~= "string" then
+			incompatibleTypeError("#2", "string", mtype)
+		end
 		if type(value) == mtype then
 			self.success = self.success + 1
 		else
@@ -128,7 +134,14 @@ UnitTest_ = {
 	assert_equal = function (self, v1, v2, tol)
 		self.test = self.test + 1
 
+		if tol ~= nil and type(v1) ~= "number" then
+			customError("#3 should be used only when comparing numbers (#1 is "..type(v1)..").")
+		end
+
 		if tol == nil then tol = 0 end
+		if type(tol) ~= "number" then
+			incompatibleTypeError("#3", "number", tol)
+		end
 
 		if type(v1) == "number" and type(v2) == "number" then
 			if v1 <= v2 + tol and v1 >= v2 - tol then
@@ -163,6 +176,14 @@ UnitTest_ = {
 	-- expected error. It is necessary in error messages that include information that can change
 	-- from machine to machine, such as an username. The default value is zero (no discrepance).
 	assert_error = function (self, my_function, error_message, max_error)
+		if type(my_function) ~= "function" then
+			incompatibleTypeError("#1", "function", my_function)
+		elseif type(error_message) ~= "string" then
+			incompatibleTypeError("#2", "string", error_message)
+		elseif max_error ~= nil and type(max_error) ~= "number" then
+			incompatibleTypeError("#3", "number or nil", max_error)
+		end
+
 		local _, err = pcall(my_function)
 		if not err then
 			print_error(self, "Test expected an error ('"..error_message.."'), but no error was found.", 2)
@@ -209,8 +230,7 @@ UnitTest_ = {
 	end,
 	--- Executes a delay in seconds during the test. Calling this function, the user can change the
 	-- delay when the UnitTest is built.
-	-- @param time A number with a time delay in seconds.
-	delay = function(time)
+	delay = function()
 	end
 }
 
