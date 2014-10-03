@@ -165,6 +165,18 @@ function customError(msg)
 	error("Error: "..msg, level)
 end
 
+-- TODO: move this from here
+local begin_yellow = "\027[00;33m"
+local end_color    = "\027[00m"
+
+local function print_yellow(value)
+    if sessionInfo().separator == "/" then
+        print__(begin_yellow..value..end_color)
+    else
+        print__(value)
+    end
+end
+
 function customWarning(msg)
 	if type(msg) ~= "string" then
 		error("Error: #1 should be a string.", 2)
@@ -172,7 +184,7 @@ function customWarning(msg)
 		local level = getLevel()
 		local info = debug.getinfo(level)
 		local str = string.match(info.short_src, "[^/]*$")
-		print(str..":".. info.currentline ..": Warning: "..msg)
+		print_yellow(str..":".. info.currentline ..": Warning: "..msg)
 	elseif sessionInfo().mode == "debug" then
 		customError(msg)
 	end
