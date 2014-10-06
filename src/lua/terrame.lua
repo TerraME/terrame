@@ -183,14 +183,48 @@ importDatabase = function()
 --	os.execute(command)
 end
 
-configureTests = function(fileName)
+-- find the folders inside a package that contain
+-- lua files, starting from package/tests
+local testfolders = function(folder)
+	local result = {}
+	require("base")
+
+	local lf 
+	lf = function(mfolder)
+		local parentFolders = dir(folder.."/"..mfolder)
+		local found = false	
+		forEachElement(parentFolders, function(idx, value)
+			if string.endswith(value, ".lua") then
+				if not found then
+					found = true
+					table.insert(result, mfolder)
+				end
+			else
+				if mfolder == "" then
+					lf(value)
+				else
+					lf(mfolder.."/"..value)
+				end
+			end
+		end)
+	end
+
+	lf("tests")
+
+	return(result)
+end
+
+configureTests = function(fileName, package)
+	if package == "" then
+		package = "base"
+	end
+
 	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages/base"
+	local baseDir = sessionInfo().path..s.."packages"..s..package
 	local srcDir = baseDir..s.."tests"
 
-	-- Prints the names of the folders inside the "run" folder, for the user to choose from
-	local firstFolders = dir(srcDir)
+	local tf = testfolders(baseDir)
 	local options = {}
 	local optionparent = {}
 	print (">> Choose option: ")
@@ -198,19 +232,11 @@ configureTests = function(fileName)
 	optionparent[#optionparent + 1] = "ALL"
 	print("("..#options..")".." ALL")
 
-	for _, parentFolder in ipairs(firstFolders) do
-		local childFolders = dir(srcDir..s..parentFolder)
-		for index, childFolder in ipairs(childFolders) do
-			if s == "\\" then		
-				options[#options + 1] = parentFolder..s..s..childFolder
-			else
-				options[#options + 1] = parentFolder..s..childFolder
-			end
-			optionparent[#optionparent + 1] = parentFolder
-			print("("..#options..")".." "..options[#options])
-		end
-	end
-	
+	forEachElement(tf, function(_, folder)
+		options[#options + 1] = folder
+		print("("..#options..")".." "..options[#options])
+	end)
+
 	local answer = io.read()
 	local test = io.open(fileName, "w")
 	
@@ -227,7 +253,7 @@ configureTests = function(fileName)
 	
 	-- Question about the choosen test
 	local function returnTest(folder, file)
-		local tests = dofile(srcDir..s..folder..s..file)
+		local tests = dofile(baseDir..s..folder..s..file)
 		local testsList = {}
 		print ("\n>> Choose Test: ")
 		testsList[#testsList + 1] = "ALL"
@@ -259,7 +285,7 @@ configureTests = function(fileName)
 		local luaTests = {}
 		luaTests[#luaTests + 1] = '""'
 		print("("..(#luaTests)..")".." ".."ALL")
-		local luaTests2 = dir(srcDir..s..options[tonumber(answer)])
+		local luaTests2 = dir(baseDir..s..options[tonumber(answer)])
 		for _, test in ipairs(luaTests2) do
 			luaTests[#luaTests + 1] = test
 		end
@@ -330,36 +356,6 @@ local buildCountTable = function(mtable)
 		end
 	end)
 	return result
-end
-
--- find the folders inside a package that contain
--- lua files, starting from package/tests
-local testfolders = function(folder)
-	local result = {}
-
-	local lf 
-	lf = function(mfolder)
-		local parentFolders = dir(folder.."/"..mfolder)
-		local found = false	
-		forEachElement(parentFolders, function(idx, value)
-			if string.endswith(value, ".lua") then
-				if not found then
-					found = true
-					table.insert(result, mfolder)
-				end
-			else
-				if mfolder == "" then
-					lf(value)
-				else
-					lf(mfolder.."/"..value)
-				end
-			end
-		end)
-	end
-
-	lf("tests")
-
-	return(result)
 end
 
 isfile = function(file)
@@ -921,7 +917,7 @@ execute = function(parameters) -- parameters is a string
 				info.mode = "quiet"
 			elseif param == "-config-tests" then
 				paramCount = paramCount + 1
-				local correct, errorMsg = pcall(configureTests, parameters[paramCount])
+				local correct, errorMsg = pcall(configureTests, parameters[paramCount], package)
 				if not correct then 
 					print(errorMsg)
 				end
