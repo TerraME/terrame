@@ -506,6 +506,10 @@ executeTests = function(fileName, package)
 			-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
 			local tests = dofile(baseDir..s..eachFolder..s..eachFile)
 
+			if type(tests) ~= "table" or getn(tests) == 0 then
+				customError("The file does not implement any test.")
+			end
+
 			myTest = {}
 			if type(data.test) == "string" then
 				if tests[data.test] then
