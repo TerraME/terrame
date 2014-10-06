@@ -812,6 +812,8 @@ execute = function(parameters) -- parameters is a string
 		-- remover as variaveis globais TME_MODE, ...
 	end
 
+	local package = ""
+
 	local paramCount = 1
 	while paramCount <= #parameters do
 		param = parameters[paramCount]
@@ -837,6 +839,10 @@ execute = function(parameters) -- parameters is a string
 					print(errorMsg)
 				end
 				return
+			elseif param == "-package" then
+				paramCount = paramCount + 1
+				package = parameters[paramCount]
+				
 			elseif param == "-test" then
 				info.mode = "debug"
 				paramCount = paramCount + 1
@@ -854,8 +860,15 @@ execute = function(parameters) -- parameters is a string
 			end
 		else
 			-- TODO: Verify this block
-			require("base")
 
+			if package ~= "" then
+				if package ~= "base" then
+					require("base")
+				end
+				require(package)
+				local s = sessionInfo().separator
+				param = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..param
+			end
 			local function getLevel()
 				local level = 1
 
