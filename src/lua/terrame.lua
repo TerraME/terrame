@@ -126,7 +126,7 @@ require = function(package, recursive, asnamespace)
 	local s = sessionInfo().separator
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
-	if os.rename(package_path, package_path) == nil then
+	if not isfile(package_path) then
 		customError("Package "..package.." not found.", 3)
 	end
 
@@ -330,6 +330,10 @@ local buildCountTable = function(mtable)
 		end
 	end)
 	return result
+end
+
+isfile = function(file)
+	return os.rename(file, file)
 end
 
 -- RAIAN: FUncao do antonio que executa os testes. Devera ir para dentro da funcao test acima. Coloquei desta maneira 
