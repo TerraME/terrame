@@ -340,7 +340,6 @@ end
 -- para executar os testes sem alterar a chamada no lado C++ por enquanto. 
 -- TODO: implement package param
 executeTests = function(fileName, package)
-	local package 
 	if package == nil then
 		package = "base"
 	else
@@ -353,8 +352,12 @@ executeTests = function(fileName, package)
 
 	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages"..s.."base"
+	local baseDir = sessionInfo().path..s.."packages"..s..package
 	local srcDir = baseDir..s.."tests"
+
+	if not isfile(srcDir) then
+		customError("Folder 'tests' does not exist in package '"..package.."'.")
+	end
 
 	load_file = baseDir..s.."load.lua"
 	local load_sequence
@@ -368,9 +371,6 @@ executeTests = function(fileName, package)
 	for i, file in ipairs(load_sequence) do
 		testfunctions[file] = buildCountTable(include(baseDir..s.."lua"..s..file))
 	end
-
-	-- TODO: possibilitar executar esta funcao mesmo que o usuario nao passe
-	-- um arquivo de teste, de forma que todos os testes serao executados.
 
 	local data
 
@@ -850,7 +850,7 @@ execute = function(parameters) -- parameters is a string
 			elseif param == "-test" then
 				info.mode = "debug"
 				paramCount = paramCount + 1
-				local correct, errorMsg = pcall(executeTests, parameters[paramCount])
+				local correct, errorMsg = pcall(executeTests, parameters[paramCount], package)
 				if not correct then
 					print(errorMsg)
 				end
