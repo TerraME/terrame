@@ -155,7 +155,10 @@ local function getLevel()
 	while true do
 		local info = debug.getinfo(level)
 
-		if info == nil then print("WRONG LEVEL: "..level) end
+		if info == nil then 
+			return level - 1
+		end
+		--print("WRONG LEVEL: "..level) end
 
 		local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/lua"))
 		local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/packages/base/lua"))

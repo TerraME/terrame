@@ -332,6 +332,36 @@ local buildCountTable = function(mtable)
 	return result
 end
 
+-- find the folders inside a package that contain
+-- lua files, starting from package/tests
+local testfolders = function(folder)
+	local result = {}
+
+	local lf 
+	lf = function(mfolder)
+		local parentFolders = dir(folder.."/"..mfolder)
+		local found = false	
+		forEachElement(parentFolders, function(idx, value)
+			if string.endswith(value, ".lua") then
+				if not found then
+					found = true
+					table.insert(result, mfolder)
+				end
+			else
+				if mfolder == "" then
+					lf(value)
+				else
+					lf(mfolder.."/"..value)
+				end
+			end
+		end)
+	end
+
+	lf("tests")
+
+	return(result)
+end
+
 isfile = function(file)
 	return os.rename(file, file)
 end
@@ -383,20 +413,36 @@ executeTests = function(fileName, package)
 	local check_functions = data.folder == nil and data.file == nil and data.test == nil
 	local examples = check_functions or data.examples
 
+	local tf = testfolders(baseDir)
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
-		data.folder = {data.folder}
-	elseif data.folder == nil then
+		local mfolder = data.folder
 		data.folder = {}
-		local parentFolders = dir(srcDir)
-		for _, parentFolder in ipairs(parentFolders) do
-			local secondFolders = dir(srcDir..s..parentFolder)
-			for _, secondFolder in pairs(secondFolders) do
-				data.folder[#data.folder + 1] = parentFolder..s..secondFolder
+		forEachElement(tf, function(_, value)
+			if string.match(value, mfolder) then
+				table.insert(data.folder, value)
 			end
-		end
-	elseif type(data.folder) ~= "table" then
-		error("folder is not a string, table or nil")
+		end)
+	elseif data.folder == nil then
+		data.folder = tf
+	elseif type(data.folder) == "table" then
+		local mfolder = data.folder
+		data.folder = {}
+		forEachElement(tf, function(_, value)
+			local found = false
+			forEachElement(mfolder, function(_, mvalue)
+				if string.match(value, mvalue) and not found then
+					table.insert(data.folder, value)
+					found = true
+				end
+			end)
+		end)
+	else
+		customError("Parameter 'folder' is not a string, table or nil.")
+	end
+
+	if #data.folder == 0 then
+		customError("Could not find any folder to be tested according to the value of 'folder'.")
 	end
 
 	local myTest
@@ -430,7 +476,7 @@ executeTests = function(fileName, package)
 	}
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
-		local dirFiles = dir(srcDir..s..eachFolder)
+		local dirFiles = dir(baseDir..s..eachFolder)
 		myFile = {}
 		if type(data.file) == "string" then
 			if belong(data.file, dirFiles) then
@@ -458,7 +504,7 @@ executeTests = function(fileName, package)
 			print_green("Testing "..eachFolder..s..eachFile)
 			ut.current_file = eachFolder..s..eachFile
 			-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
-			local tests = dofile(srcDir..s..eachFolder..s..eachFile)
+			local tests = dofile(baseDir..s..eachFolder..s..eachFile)
 
 			myTest = {}
 			if type(data.test) == "string" then
@@ -850,6 +896,10 @@ execute = function(parameters) -- parameters is a string
 			elseif param == "-test" then
 				info.mode = "debug"
 				paramCount = paramCount + 1
+				if package == "" then
+					package = "base"
+				end
+
 				local correct, errorMsg = pcall(executeTests, parameters[paramCount], package)
 				if not correct then
 					print(errorMsg)
