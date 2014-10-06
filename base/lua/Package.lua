@@ -149,28 +149,6 @@ function checkUnnecessaryParameters(data, parameters)
 	end)
 end
 
-local function getLevel()
-	local level = 1
-		
-	while true do
-		local info = debug.getinfo(level)
-
-		if info == nil then 
-			return level - 1
-		end
-		--print("WRONG LEVEL: "..level) end
-
-		local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/lua"))
-		local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/packages/base/lua"))
-		local m3 = string.match(info.short_src, "%[C%]")
-		if m1 or m2 or m3 then
-			level = level + 1
-		else
-			return level - 1 -- minus one because of getLevel()
-		end
-	end
-end
-
 function customError(msg)
 	if type(msg) ~= "string" then
 		error("Error: #1 should be a string.", 2)

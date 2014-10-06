@@ -839,6 +839,43 @@ replaceSpecialChars = function(pattern)
 	return pattern
 end
 
+function getLevel()
+    local level = 1
+
+    while true do
+        local info = debug.getinfo(level)
+
+        if info == nil then
+            return level - 1
+        end
+        --print("WRONG LEVEL: "..level) end
+
+		local s = sessionInfo().separator
+        local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path..s.."lua"))
+
+		local packages = dir(sessionInfo().path..s.."packages")
+
+		local m2
+
+		forEachElement(packages, function(_, value)
+			if not m2 then
+        		m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path..s.."packages"..s..value..s.."lua"))
+			end
+		end)
+
+        local m3 = string.match(info.short_src, "%[C%]")
+        if m1 or m2 or m3 then
+            level = level + 1
+        else
+            return level - 1 -- minus one because of getLevel()
+        end
+    end
+end
+
+
+
+
+
 -- RAIAN implementar
 execute = function(parameters) -- parameters is a string
 	-- implementa o sessionInfo
