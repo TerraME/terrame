@@ -58,11 +58,11 @@ return{
 
 		-- FIXME: this observer does not draw the cells in the screen here.
 		-- If one copies the script below to a separate file it works.
-		-- FIXME: it also generates a warning:
+		-- FIXME: it also generates a warning: -- FIXED
 		-- libpng warning: iCCP: known incorrect sRGB profile
---[[
+
 	-- FIXME: because of this test, we get an internal error:
-	-- libc++abi.dylib: Pure virtual function called!
+	-- libc++abi.dylib: Pure virtual function called! -> TODO - RAIAN: I was not able to reproduce this error
 		local world = CellularSpace{
 			xdim = 10
 		}
@@ -93,7 +93,7 @@ return{
 		world:notify()
 		world:notify()
 		world:notify()
---]]
+
 
 
 --[[

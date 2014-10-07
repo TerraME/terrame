@@ -132,32 +132,29 @@ bool Decoder::decodeAttributes(SubjectAttributes *subjAttr,
             {
                 subjAttr->setX(raw.number());
             }
-            else
-            {
-                // if (key == "y")
-                if (strcmp(raw.key().c_str(), "y") == 0)
-                {
+			// if (key == "y")
+            else if (strcmp(raw.key().c_str(), "y") == 0)
+			{
                     subjAttr->setY(raw.number());
-                }
-                else
-                {
-                    /*
-                    if (mapAttributes)
-                    {
-                        Attributes *attrib = mapAttributes->value(raw.key().c_str());
-                    
-                        if (attrib)
-                        {
-                            // TO-DO: Código irá falhar qdo o id do subject não for 
-                            // condizente com a posição no vetor de valores do atributo
-                            double d = raw.number();
-                            attrib->addValue(subjAttr->getId(), d);
-                        }
-                    }
-                    */
-                    subjAttr->addItem(raw.key().c_str(), raw.number());
-                }
-            }
+			}
+			else
+			{
+				/*
+				if (mapAttributes)
+				{
+					Attributes *attrib = mapAttributes->value(raw.key().c_str());
+				
+					if (attrib)
+					{
+						// TODO: Codigo ira falhar qdo o id do subject nao for
+						// condizente com a posicao no vetor de valores do atributo
+						double d = raw.number();
+						attrib->addValue(subjAttr->getId(), d);
+					}
+				}
+				*/
+				subjAttr->addItem(raw.key().c_str(), raw.number());
+			}
         }
     }
 

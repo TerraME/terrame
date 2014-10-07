@@ -955,6 +955,8 @@ execute = function(parameters) -- parameters is a string
 				require(package)
 				local s = sessionInfo().separator
 				param = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..param
+			else
+				require("base")
 			end
 			local function getLevel()
 				local level = 1

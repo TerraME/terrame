@@ -530,7 +530,6 @@ local function observerNeighborhood(subject, neighborhoods, datale)
 	csObserver = datale.observer
 	if not csObserver then customError("Parameter 'observer' was not found.", 3) end
 
-	--@RAIAN: Alteracoes para remover parametro "cellspace"
 	if csObserver.type ~= "map" and csObserver.type ~= TME_OBSERVERS.MAP and csObserver.type ~= "image" and csObserver.type ~= TME_OBSERVERS.IMAGE then
 		customError("Cannot attach observers of type '".. csObserver.type .."'. Only 'image' and 'map' observers can be attached.", 3)
 	end
@@ -546,7 +545,6 @@ local function observerNeighborhood(subject, neighborhoods, datale)
 	end
 
 	obs = subject.cObj_:createObserver(TME_OBSERVERS.NEIGHBORHOOD, neighborhoods, observerParams)
-	-- @RAIAN: Acrescentando o ID do observer
 	subject.observerId = obs
 	return obs
 end
