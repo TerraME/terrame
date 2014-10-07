@@ -41,12 +41,11 @@ extern "C"
 #include "luaCell.h"
 #include "reference.h"
 
-#ifdef TME_PROTOCOL_BUFFERS
+// Protocol Buffers
 namespace ObserverDatagramPkg
 {
     class SubjectAttribute; 
 }
-#endif
 
 class TeDatabase;
 class TeTheme;
@@ -71,24 +70,14 @@ class luaCellularSpace : public CellSpaceSubjectInterf, public Reference<luaCell
     string whereClause;  ///< SQL WHERE CLAUSE string used to querie the TeTheme
     int port;
 
-    // @DANIEL
-    // Movido para Reference
-    //int ref; ///< The position of the object in the Lua stack
-
-    // Antonio - construtor
     lua_State *luaL; ///< Stores locally the lua stack location in memory
     TypesOfSubjects subjectType;
     bool getSpaceDimensions;
     QHash<QString, QString> observedAttribs;
     QHash<int, Observer *> observersHash;
 
-#ifdef TME_PROTOCOL_BUFFERS
     QByteArray getAll(QDataStream& in, const QStringList& attribs);
     QByteArray getChanges(QDataStream& in, const QStringList& attribs);
-#else
-    QByteArray getAll(QDataStream& in, int obsId, const QStringList& attribs);
-    QByteArray getChanges(QDataStream& in, int obsId, const QStringList& attribs);
-#endif
 
 #ifndef TME_NO_TERRALIB
     void loadLegendsFromDatabase(TeDatabase *db, TeTheme *inputTheme, QString& luaLegend);
@@ -219,20 +208,15 @@ public:
     QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
 
 
-#ifdef TME_PROTOCOL_BUFFERS
+	/**
+	 * Gets the attributes of Lua stack
+	 * \param attribs the list of attributes observed
+	 */
     QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
         ObserverDatagramPkg::SubjectAttribute *parentSubj);
-#else
-    /**
-     * Gets the attributes of Lua stack
-     * \param attribs the list of attributes observed
-     */
-    QByteArray pop(lua_State *L, const QStringList& attribs);
-#endif
 
     /// Destroys the observer object instance
     int kill(lua_State *L);
-
 
     /// This method loads a neighborhood from a file. Extensions supported: .GAL, .GWT, .txt
 	/// \author  Raian Vargas Maretto

@@ -47,12 +47,8 @@ extern "C"
 
 class luaSociety : public SocietySubjectInterf, public Reference<luaSociety>
 {
-    // @DANIEL
-    // Movido para clsse Reference
-    // int ref; ///< The position of the object in the Lua stack
     string objectId_; ///< luaSociety identifier
 	
-    // Antonio - construtor
     TypesOfSubjects subjectType;
     lua_State *luaL; ///< Stores locally the lua stack location in memory
     QHash<QString, QString> observedAttribs;
@@ -60,13 +56,8 @@ class luaSociety : public SocietySubjectInterf, public Reference<luaSociety>
     QString attrClassName, attrNeighName;
     luaCellularSpace *cellSpace;
 
-#ifdef TME_PROTOCOL_BUFFERS
     QByteArray getAll(QDataStream& in, const QStringList& attribs);
     QByteArray getChanges(QDataStream& in, const QStringList& attribs);
-#else
-    QByteArray getAll(QDataStream& in, int obsId, const QStringList& attribs);
-    QByteArray getChanges(QDataStream& in, int obsId, const QStringList& attribs);
-#endif
 
 public:
     ///< Data structure issued by Luna<T>
@@ -79,93 +70,15 @@ public:
     /// Constructor
     luaSociety(lua_State *L);
 
-    /// Returns the current internal state of the LocalAgent (Automaton) within the cell and received as parameter
-    int getCurrentStateName( lua_State *L );
-
-    /// Puts the iterator in the beginning of the luaNeighborhood composite.
-    int first(lua_State *L);
-
-    /// Puts the iterator in the end of the luaNeighborhood composite.
-    int last(lua_State *L);
-
-    /// Returns true if the Neighborhood iterator is in the beginning of the Neighbor composite data structure
-    /// no parameters
-    int isFirst(lua_State *L);
-
-    /// Returns true if the Neighborhood iterator is in the end of the Neighbor composite data structure
-    /// no parameters
-    int isLast(lua_State *L);
-
-    /// Returns true if the Neighborhood is empty.
-    /// no parameters
-    int isEmpty(lua_State *L);
-
-    /// Clears all the Neighborhood content
-    /// no parameters
-    int clear(lua_State *L);
-
-    /// Returns the number of Neighbors cells in the Neighborhood
-    int size(lua_State *L);
-
-    /// Fowards the Neighborhood iterator to the next Neighbor cell
-    // no parameters
-    int next( lua_State *L );
-
     /// destructor
     ~luaSociety( void );
-
-    /// Sets the Society latency
-    int setLatency(lua_State *L);
-
-    /// Gets the Society latency
-    int getLatency(lua_State *L);
-
-    /// Sets the neighborhood
-    int setNeighborhood(lua_State *L);
-
-    /// Gets the current active luaNeighboorhood
-    int getCurrentNeighborhood(lua_State *L);
-
-    /// Returns the Neihborhood graph which name has been received as a parameter
-    int getNeighborhood(lua_State *L);
-
-    /// Adds a new luaNeighborhood graph to the Society
-    /// parameters: identifier, luaNeighborhood
-    int addNeighborhood( lua_State *L );
-
-    /// Synchronizes the luaSociety
-    int synchronize(lua_State *L);
-
-    /// Registers the luaSociety object in the Lua stack
-    // @DANIEL
-    // Movido para clsse Reference
-    // int setReference( lua_State* L);
-
-    /// Gets the luaSociety object reference
-    // @DANIEL
-    // Movido para clsse Reference
-    // int getReference( lua_State *L );
 
     /// Gets the luaSociety identifier
     int getID( lua_State *L );
 
     /// Sets the luaSociety identifier
     int setID( lua_State *L );
-
-	/// Gets the luaSociety identifier
-	/// \author Raian Vargas Maretto
-		const char* getID();
-
-	// Raian
-	/// Sets the cell index
-	/// \author Raian Vargas Maretto
-        int setIndex(lua_State *L);
-
-	//Raian
-	/// Gets the cell index (x,y)
-	/// \author Raian Vargas Maretto
-        //SocietyIndex getIndex();
-		
+	
     /// Creates several types of observers
     /// parameters: observer type, observeb attributes table, observer type parameters
     int createObserver( lua_State *L );
@@ -183,17 +96,12 @@ public:
     /// \param attribs the list of attributes observed
     QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
 
-
-#ifdef TME_PROTOCOL_BUFFERS
+	/**
+	 * Gets the attributes of Lua stack
+	 * \param attribs the list of attributes observed
+	 */
     QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
         ObserverDatagramPkg::SubjectAttribute *parentSubj);
-#else
-    /**
-     * Gets the attributes of Lua stack
-     * \param attribs the list of attributes observed
-     */
-    QByteArray pop(lua_State *L, const QStringList& attribs);
-#endif
 
     /// Destroys the observer object instance
     int kill(lua_State *L);

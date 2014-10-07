@@ -225,9 +225,8 @@ int luaCell::addNeighborhood( lua_State *L )
     pair< string, CellNeighborhood*> pStrNeigh;
     neigh->CellNeighborhood::setID(id);
 
-    //@RAIAN: setting the neighborhood parent
+	// setting the neighborhood parent
     neigh->CellNeighborhood::setParent(this);
-    //@RAIAN: FIM
 
     pStrNeigh.first = id;
     pStrNeigh.second = neigh;
@@ -250,14 +249,12 @@ int luaCell::getID( lua_State *L )
     return 1;
 }
 
-//@RAIAN
 /// Gets the luaCell identifier
 /// \author Raian Vargas Maretto
 const char* luaCell::getID( )
 {
     return this->objectId_.c_str();
 }
-//@RAIAN: Fim.
 
 /// Sets the luaCell identifier
 int luaCell::setID( lua_State *L )
@@ -267,7 +264,6 @@ int luaCell::setID( lua_State *L )
     return 0;
 }
 
-//Raian
 /// Sets the cell index (x,y)
 /// Parameters: cell.x, cell.y
 /// \author Raian Vargas Maretto
@@ -285,7 +281,6 @@ void luaCell::setIndex(const CellIndex& index)
     //return 0;
 }
 
-//Raian
 /// Gets the cell index (x,y)
 /// \author Raian Vargas Maretto
 const CellIndex & luaCell::getIndex() const
