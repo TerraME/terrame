@@ -26,24 +26,24 @@
 Model_ = {
 	--- Check whether the instance of the model has correct parameters. This function is optional
 	-- and it is called before creating internal objects.
-	--@usage model:check()
+	-- @usage model:check()
 	check = function(self)
 	end,
 	--- Creates the objects of the model. This function must be implemented by the derived type.
-	--@usage model:setup()
+	-- @usage model:setup()
 	setup = function(self)
 		customError("Function 'setup' was not implemented by the Model.")
 	end,
 	--- Run the model. It checks the parameters, create the objects, and then simulate until numRuns.
-	--@usage model:execute(20)
-    execute = function(self, finalTime)
+	-- @usage model:execute(20)
+	execute = function(self, finalTime)
 		if finalTime == nil then
 			mandatoryArgumentError("#1", 3)	
 		elseif type(finalTime) ~= "number" then 
 			incompatibleTypeError("#1", "number", finalTime)
 		end
 		self.exec:execute(finalTime)
-    end,
+	end,
 	--- Defines the distribution of components in the graphical interface. If this function is not
 	-- implemented in the Model, the components will be distributed automatically. This function
 	-- should return a table with tables composed by strings. Each position of the table describes
@@ -68,19 +68,6 @@ local stringToLabel = function(mstring)
 		end
 	end
 	return result
-end
-
-local function tprint (tbl, indent)
-  if not indent then indent = 0 end
-  for k, v in pairs(tbl) do
-    formatting = string.rep("  ", indent) .. k .. ": "
-    if type(v) == "table" then
-      print(formatting)
-      tprint(v, indent + 1)
-    else
-      print(formatting .. tostring(v))
-    end
-  end
 end
 
 local create_ordering = function(self, max_buffer)
@@ -276,8 +263,8 @@ local interface = function(self, ordering)
 	
 				r = r.."lineEdit"..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n"
-                --r = r.."lineEdit"..value..".minimumSize = {120,28}\n"
-                --r = r.."lineEdit"..value..".maximumSize = {150,28}\n"
+				--r = r.."lineEdit"..value..".minimumSize = {120,28}\n"
+				--r = r.."lineEdit"..value..".maximumSize = {150,28}\n"
 
 				if self[value] ~= math.huge then
 					r = r.."lineEdit"..value..":setText(\""..self[value].."\")\n\n"
@@ -486,7 +473,7 @@ local interface = function(self, ordering)
 	r = r.."qt.ui.layout_add(ExternalLayout, ButtonsLayout)\n"
 
 	r = r.."qt.connect(QuitButton, \"clicked()\", Dialog, \"close()\")\n"
-  
+
 	r = r.."\n\nmfunction = function()\n"
 	r = r.."result = \"result = {}\"".."\n"
 
@@ -571,18 +558,24 @@ end
 -- The idea is to take only strings, numbers, booleans, and vectors of these three types as the
 -- only possible arguments to any Model. Functions can be mapped to the strings and then be
 -- solved internally. 
---@param attrTab A table with the description of the type. Each named argument of this table
+-- @param attrTab A table with the description of the type. Each named argument of this table
 -- will be considered as an argument of the constructor of the type. The values of each
 -- named argument have an associated semantinc, which means that they are not necessarially the
 -- default value. [Note that some of these features were not implemented yet.] See the table below:
 -- @tab attrTab
 -- Attribute type & Description & Default value \
 -- number or bool & The instance has to belong to that type. & The value itself. \
--- string & The instance has to belong to that type. If it is in the format "*.a;*.b;...", it describes a file extension. The modeler then has to use a filename as argument with one of the extensions defined by this string. & The value itself. \
--- table & The instance has to have a value belonging to the table (the table must have a single type). & The first position of the table.\ 
--- named table & It will verify each attribute according to the rules above. & The table itself. It is possible to define only part of the table in the instance, keeping the other default values. \
--- empty table & It will verify whether the instance has a non-empty table as argument. It does not check any table values. The only requirement is that all them must have the same type. & None (the argument is compulsory).
---@usage mymodel = Model{
+-- string & The instance has to belong to that type. If it is in the format "*.a;*.b;...", it 
+-- describes a file extension. The modeler then has to use a filename as argument with one of the
+-- extensions defined by this string. & The value itself. \
+-- table & The instance has to have a value belonging to the table (the table must have a single
+-- type). & The first position of the table.\ 
+-- named table & It will verify each attribute according to the rules above. & The table itself.
+-- It is possible to define only part of the table in the instance, keeping the other default values. \
+-- empty table & It will verify whether the instance has a non-empty table as argument. It does not
+-- check any table values. The only requirement is that all them must have the same type. & None (the
+-- argument is compulsory).
+-- @usage mymodel = Model{
 --     par1 = 3,
 --     par2 = {"low", "medium", "high"},
 --     par3 = {min = 3, max = 5},
