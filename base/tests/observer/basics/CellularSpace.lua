@@ -63,6 +63,7 @@ return{
 
 	-- FIXME: because of this test, we get an internal error:
 	-- libc++abi.dylib: Pure virtual function called! -> TODO - RAIAN: I was not able to reproduce this error
+--[[
 		local world = CellularSpace{
 			xdim = 10
 		}
@@ -94,7 +95,7 @@ return{
 		world:notify()
 		world:notify()
 
-
+--]]
 
 --[[
 		Map{
