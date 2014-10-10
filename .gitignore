@@ -26,3 +26,4 @@ ui_receiverGUI.h
 ui_senderGUI.h
 ui_spatialObserverGUI.h
 ui_plotPropertiesGUI.h
+.project
