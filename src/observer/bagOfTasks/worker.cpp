@@ -75,7 +75,7 @@ void Worker::run()
                   
                     switch (task->getType())
                     {
-                        // TO-DO: Causa problemas no 'join' do TaskManager?
+                        // TODO: Causa problemas no 'join' do TaskManager?
 
                         // Re-inserts the task in the bag because
                         // TaskManager manages the task priority

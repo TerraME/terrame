@@ -40,8 +40,6 @@ extern "C"
 }
 #include "luna.h"
 
-// Raian: Tive que acrescentar este include para poder utilizar o CellularSpace nas
-// no observer do tipo Neighborhood.
 #include "luaCellularSpace.h"
 
 #ifdef TME_PROTOCOL_BUFFERS
@@ -63,9 +61,6 @@ namespace ObserverDatagramPkg
 */
 class luaCell : public CellSubjectInterf, public Reference<luaCell>
 {
-    // @DANIEL:
-    // Movido para a classe Reference
-    // int ref; ///< The position of the object in the Lua stack
     string objectId_; ///< luaCell identifier
     NeighCmpstInterf::iterator it; ///< Neighborhood iterator.
 
@@ -156,16 +151,6 @@ public:
     /// Synchronizes the luaCell
     int synchronize(lua_State *L);
 
-    // @DANIEL:
-    // Movido para a classe Reference
-    /// Registers the luaCell object in the Lua stack
-    //int setReference( lua_State* L);
-
-    // @DANIEL:
-    // Movido para a classe Reference
-    /// Gets the luaCell object reference
-    //int getReference( lua_State *L );
-
     /// Gets the luaCell identifier
     int getID( lua_State *L );
 
@@ -176,15 +161,12 @@ public:
 	/// \author Raian Vargas Maretto
 		const char* getID();
 
-	// Raian
 	/// Sets the cell index
 	/// \author Raian Vargas Maretto
-    /// // O índice pode ser definido quando a célula é adicionada nó espaço
         int setIndex(lua_State *L);
 
     void setIndex(const CellIndex& index);
 
-	//Raian
 	/// Gets the cell index (x,y)
 	/// \author Raian Vargas Maretto
     const CellIndex & getIndex() const;
@@ -218,13 +200,5 @@ public:
     /// Destroys the observer object instance
     int kill(lua_State *L);
 };
-
-
-/// Gets the luaCell position of the luaCell in the Lua stack
-/// \param L is a pointer to the Lua stack
-/// \param cell is a pointer to the cell within the Lua stack
-// @DANIEL:
-// Qual o motivo do encapsulamento?
-//void getReference( lua_State *L, luaCell *cell );
 
 #endif

@@ -39,10 +39,7 @@ luaGlobalAgent::luaGlobalAgent(lua_State *L)
     observedAttribs.clear();
 }
 
-luaGlobalAgent::~luaGlobalAgent(void)
-{
-    // luaL_unref( L, LUA_REGISTRYINDEX, ref);
-}
+luaGlobalAgent::~luaGlobalAgent(void){ }
 
 int luaGlobalAgent::getLatency( lua_State *L)
 {

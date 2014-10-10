@@ -46,47 +46,13 @@ extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with 
 class luaAgent : public Reference<luaAgent>
 {
 private:
-    // @DANIEL
-    // Movido para a classe Reference
-    //int ref; ///< The position of the object in the Lua stack
 
 protected:
-    // @DANIEL
-//    int getRef()
-//    {
-//        return ref;
-//    }
 
 public:
 
     ///  Destructor
-    virtual ~luaAgent(void)
-    {
-        // @DANIEL
-        // não misturar gerência de memória da camada C++ com a camada Lua
-        // luaL_unref( L, LUA_REGISTRYINDEX, ref);
-    }
-
-    /// Registers the luaAgent object in the Lua stack
-    //virtual
-    // @DANIEL
-    // Movido para a classe Reference
-//    int setReference( lua_State* L) //= 0;
-//    {
-//        ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//        return 0;
-//    }
-
-    // virtual
-    /// Gets the luaAgent object reference.
-    // @DANIEL
-    // Movido para a classe Reference
-//    int getReference( lua_State *L ) // = 0;
-//    {
-//        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//        return 1;
-//    }
-
+    virtual ~luaAgent(void){ }
 };
 
 #endif

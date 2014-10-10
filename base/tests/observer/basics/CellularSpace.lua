@@ -26,7 +26,6 @@
 return{
 	CellularSpace = function(unitTest)
 -- FIXME: if the following lines were uncommented together with the next test, TerraME aborts
---[[
 		local unit = Cell{
 			count = 0
 		}
@@ -54,7 +53,6 @@ return{
 		}
 
 		t:execute(30)
---]]
 
 		-- FIXME: this observer does not draw the cells in the screen here.
 		-- If one copies the script below to a separate file it works.
@@ -93,7 +91,6 @@ return{
 		world:notify()
 		world:notify()
 		world:notify()
-
 
 
 --[[

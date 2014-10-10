@@ -42,9 +42,6 @@ extern "C"
 */
 class luaCellIndex : Reference<luaCellIndex>
 {
-    // @DANIEL:
-    // Movido para a classe Reference
-    //int ref; ///< The position of the object in the Lua stack
 
 public:
     ///< Data structure issued by Luna<T>
@@ -85,24 +82,6 @@ public:
         lua_pushnumber(L, y); 
         return 2;
     }
-
-    // @DANIEL:
-    // Movido para a classe Reference
-    /// Sets the luaCellIndex object reference. This registers the Lua object position in the Lua stack.
-//    int setReference( lua_State* L)
-//    {
-//        ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//        return 0;
-//    }
-
-    // @DANIEL:
-    // Movido para a classe Reference
-    /// Gets the luaCellIndex object reference.
-//    int getReference( lua_State *L )
-//    {
-//        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//        return 1;
-//    }
 };
 
 #endif
