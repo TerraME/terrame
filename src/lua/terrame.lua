@@ -32,21 +32,22 @@ local function dir(folder)
 	if s == "\\" then
 		command = "dir "..folder.." /b > "..folder..s.."aux.txt"
 	elseif s == "/" then
-		command = "ls -1 "..folder.." > "..folder..s.."aux.txt"
+		command = "ls -1 "..folder.." 2> /dev/null".." > "..folder..s.."aux.txt"
 	end
 	
-	os.execute(command)
-	local file = io.open(folder..s.."aux.txt", "r")
-	local fileTable = {}
-	for line in file:lines() do
-		if line ~= "README.txt" and line ~= ".svn" and line ~= ".aux.txt.swp" and line ~= "aux.txt" then 
-			fileTable[#fileTable + 1] = line
+	if os.execute(command) ~= nil then 
+		local file = io.open(folder..s.."aux.txt", "r")
+		local fileTable = {}
+		for line in file:lines() do
+			if line ~= "README.txt" and line ~= ".svn" and line ~= ".aux.txt.swp" and line ~= "aux.txt" then 
+				fileTable[#fileTable + 1] = line
+			end
 		end
-	end
 
-	file:close()
-	os.execute("rm "..folder..s.."aux.txt")
-	return fileTable
+		file:close()
+		os.execute("rm "..folder..s.."aux.txt")
+		return fileTable
+	end
 end	
 
 local begin_red    = "\027[00;31m"
@@ -473,126 +474,128 @@ executeTests = function(fileName, package)
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
 		local dirFiles = dir(baseDir..s..eachFolder)
-		myFile = {}
-		if type(data.file) == "string" then
-			if belong(data.file, dirFiles) then
-				myFile = {data.file}
-			end
-		elseif type(data.file) == "table" then
-			forEachElement(dirFiles, function(_, value)
-				if belong(value, data.file) then
-					myFile[#myFile + 1] = value
+		if dirFiles ~= nil then 
+			myFile = {}
+			if type(data.file) == "string" then
+				if belong(data.file, dirFiles) then
+					myFile = {data.file}
 				end
-			end)
-		elseif data.file == nil then
-			forEachElement(dirFiles, function(_, value)
-				myFile[#myFile + 1] = value
-			end)
-		else
-			error("file is not a string, table or nil.")
-		end
-
-		if #myFile == 0 then
-			print_yellow("Skipping folder "..eachFolder)
-		end
-
-		for _, eachFile in ipairs(myFile) do
-			print_green("Testing "..eachFolder..s..eachFile)
-			ut.current_file = eachFolder..s..eachFile
-			-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
-			local tests = dofile(baseDir..s..eachFolder..s..eachFile)
-
-			if type(tests) ~= "table" or getn(tests) == 0 then
-				customError("The file does not implement any test.")
-			end
-
-			myTest = {}
-			if type(data.test) == "string" then
-				if tests[data.test] then
-					myTest = {data.test}
-				end
-			elseif data.test == nil then
-				forEachOrderedElement(tests, function(index, value, mtype)
-					myTest[#myTest + 1] = index 					
-				end)
-			elseif type(data.test) == "table" then
-				forEachElement(data.test, function(_, value)
-					if tests[value] then
-						myTest[#myTest + 1] = value
+			elseif type(data.file) == "table" then
+				forEachElement(dirFiles, function(_, value)
+					if belong(value, data.file) then
+						myFile[#myFile + 1] = value
 					end
 				end)
+			elseif data.file == nil then
+				forEachElement(dirFiles, function(_, value)
+					myFile[#myFile + 1] = value
+				end)
 			else
-				error("test is not a string, table or nil")
+				error("file is not a string, table or nil.")
 			end
 
-			if #myTest == 0 then
-				print_yellow("Skipping file "..eachFile)
+			if #myFile == 0 then
+				print_yellow("Skipping folder "..eachFolder)
 			end
 
+			for _, eachFile in ipairs(myFile) do
+				print_green("Testing "..eachFolder..s..eachFile)
+				ut.current_file = eachFolder..s..eachFile
+				-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
+				local tests = dofile(baseDir..s..eachFolder..s..eachFile)
 
-			for _, eachTest in ipairs(myTest) do
-				print("Testing "..eachTest)
-
-				if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
-					testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
-				elseif testfunctions[eachFile] then
-					print_red("Function does not exist in the respective file in the source code.")
-					ut.functions_not_exist = ut.functions_not_exist + 1
+				if type(tests) ~= "table" or getn(tests) == 0 then
+					customError("The file does not implement any test.")
 				end
 
-				local count_test = ut.test
-
-				collectgarbage("collect")
-
-				print = function(...)
-					ut.print_calls = ut.print_calls + 1
-					print_red(...)
-				end
-
-				local ok_execution, err = pcall(function() tests[eachTest](ut) end)
-
-				print = print__
-
-				killAllObservers()
-				ut.executed_functions = ut.executed_functions + 1
-
-				if not ok_execution then
-					print_red("Wrong execution, got error: '"..err.."'.")
-					ut.functions_with_error = ut.functions_with_error + 1
-				elseif count_test == ut.test then
-					ut.functions_without_assert = ut.functions_without_assert + 1
-					print_red("No asserts were found in the test.")
-				end
-
-				if getn(_G) > count_global then
-					-- TODO: check if it is < or > (the code below works for >)
-					local variables = ""
-					local pvariables = {}
-					forEachElement(_G, function(idx, _, mtype)
-					-- TODO: trocar por forEachOrderedElement, mas esta dando pau
-						if global_variables[idx] == nil then
-							variables = variables.."'"..idx.."' ("..mtype.."), "
-							pvariables[#pvariables + 1] = idx
+				myTest = {}
+				if type(data.test) == "string" then
+					if tests[data.test] then
+						myTest = {data.test}
+					end
+				elseif data.test == nil then
+					forEachOrderedElement(tests, function(index, value, mtype)
+						myTest[#myTest + 1] = index 					
+					end)
+				elseif type(data.test) == "table" then
+					forEachElement(data.test, function(_, value)
+						if tests[value] then
+							myTest[#myTest + 1] = value
 						end
 					end)
-					variables = variables:sub(1, variables:len() - 2).."."
-					print_red("Test creates global variable(s): "..variables)
-					ut.functions_with_global_variables = ut.functions_with_global_variables + 1
-
-					-- we need to delete the global variables created in order
-					-- to ensure that a new error will be generated if this
-					-- variable is found again
-					forEachElement(pvariables, function(_, value)
-						_G[value] = nil
-					end)
 				else
-					ut.success = ut.success + 1
+					error("test is not a string, table or nil")
 				end
 
-				if ut.count_last > 0 then
-					print_red("[The error above occurs more "..ut.count_last.." times.]")
-					ut.count_last = 0
-					ut.last_error = ""
+				if #myTest == 0 then
+					print_yellow("Skipping file "..eachFile)
+				end
+
+
+				for _, eachTest in ipairs(myTest) do
+					print("Testing "..eachTest)
+
+					if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
+						testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
+					elseif testfunctions[eachFile] then
+						print_red("Function does not exist in the respective file in the source code.")
+						ut.functions_not_exist = ut.functions_not_exist + 1
+					end
+
+					local count_test = ut.test
+
+					collectgarbage("collect")
+
+					print = function(...)
+						ut.print_calls = ut.print_calls + 1
+						print_red(...)
+					end
+
+					local ok_execution, err = pcall(function() tests[eachTest](ut) end)
+
+					print = print__
+
+					killAllObservers()
+					ut.executed_functions = ut.executed_functions + 1
+
+					if not ok_execution then
+						print_red("Wrong execution, got error: '"..err.."'.")
+						ut.functions_with_error = ut.functions_with_error + 1
+					elseif count_test == ut.test then
+						ut.functions_without_assert = ut.functions_without_assert + 1
+						print_red("No asserts were found in the test.")
+					end
+
+					if getn(_G) > count_global then
+						-- TODO: check if it is < or > (the code below works for >)
+						local variables = ""
+						local pvariables = {}
+						forEachElement(_G, function(idx, _, mtype)
+						-- TODO: trocar por forEachOrderedElement, mas esta dando pau
+							if global_variables[idx] == nil then
+								variables = variables.."'"..idx.."' ("..mtype.."), "
+								pvariables[#pvariables + 1] = idx
+							end
+						end)
+						variables = variables:sub(1, variables:len() - 2).."."
+						print_red("Test creates global variable(s): "..variables)
+						ut.functions_with_global_variables = ut.functions_with_global_variables + 1
+
+						-- we need to delete the global variables created in order
+						-- to ensure that a new error will be generated if this
+						-- variable is found again
+						forEachElement(pvariables, function(_, value)
+							_G[value] = nil
+						end)
+					else
+						ut.success = ut.success + 1
+					end
+
+					if ut.count_last > 0 then
+						print_red("[The error above occurs more "..ut.count_last.." times.]")
+						ut.count_last = 0
+						ut.last_error = ""
+					end
 				end
 			end
 		end
@@ -641,31 +644,33 @@ executeTests = function(fileName, package)
 	if examples then
 		print_green("Testing examples")
 		local dirFiles = dir(baseDir..s.."examples")
-		forEachElement(dirFiles, function(idx, value)
-			print("Testing "..value)
-			io.flush()
-			collectgarbage("collect")
-			
-			ut.examples = ut.examples + 1
+		if dirFiles ~= nil then
+			forEachElement(dirFiles, function(idx, value)
+				print("Testing "..value)
+				io.flush()
+				collectgarbage("collect")
+				
+				ut.examples = ut.examples + 1
 
-			collectgarbage("collect")
+				collectgarbage("collect")
 
-			print = function(...)
-				ut.print_calls = ut.print_calls + 1
-				print_red(...)
-			end
+				print = function(...)
+					ut.print_calls = ut.print_calls + 1
+					print_red(...)
+				end
 
-			local ok_execution, err = pcall(function() include(baseDir..s.."examples"..s..value) end)
+				local ok_execution, err = pcall(function() include(baseDir..s.."examples"..s..value) end)
 
-			print = print__
+				print = print__
 
-			killAllObservers()
-	
-			if not ok_execution then
-				ut.examples_error = ut.examples_error + 1
-				print_red(err)
-			end
-		end)
+				killAllObservers()
+		
+				if not ok_execution then
+					ut.examples_error = ut.examples_error + 1
+					print_red(err)
+				end
+			end)
+		end
 	else
 		print_yellow("Skipping examples")
 	end
