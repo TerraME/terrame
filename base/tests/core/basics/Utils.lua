@@ -344,7 +344,6 @@ precision     number [4]
 slices        number [2]
 stdDeviation  number [-1]
 style         number [1]
-symbol        string [®]
 type          number [1]
 width         number [2]
 ] ])

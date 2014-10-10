@@ -249,7 +249,7 @@ local DEF_COLOR = { {color = TME_LEGEND_COLOR.WHITE, value = DEF_MIN }, {color =
 local DEF_STD_COLOR = { {color = TME_LEGEND_COLOR.BLACK, value = DEF_MIN }, {color = TME_LEGEND_COLOR.WHITE, value = DEF_MAX }}
 local DEF_FONT = "Symbol"
 local DEF_FONT_SIZE = 12
-local DEF_FONT_SYMBOL = "®" -- equivale a seta na fonte symbol
+local DEF_FONT_SYMBOL = string.char(174) -- equivale a seta na fonte symbol
 local DEF_WIDTH = 2 -- 5
 local DEF_CURVE_STYLE = TME_LEGEND_CURVE_STYLE.LINES
 local DEF_CURVE_SYMBOL = TME_LEGEND_CURVE_SYMBOL.NOSYMBOL
@@ -634,9 +634,7 @@ function Legend(data)
 		if data.slices == nil then
 			data.slices = DEF_SLICES
 		end
-	--@RAIAN: Tratando o caso em que a quantidade de slices e menor que zero ou maior que a quantidade de cores disponiveis, numeros reais
 	else
-		--@RAIAN: Tratando tipos incompatíveis
 		if type(data.slices) ~= "number" then
 			incompatibleTypeError("slices", "integer number between 1 and 255", data.slices, 3)
 		end

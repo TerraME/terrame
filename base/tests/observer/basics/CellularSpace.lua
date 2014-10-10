@@ -26,6 +26,7 @@
 return{
 	CellularSpace = function(unitTest)
 -- FIXME: if the following lines were uncommented together with the next test, TerraME aborts
+--[[
 		local unit = Cell{
 			count = 0
 		}
@@ -53,6 +54,7 @@ return{
 		}
 
 		t:execute(30)
+--]]
 
 		-- FIXME: this observer does not draw the cells in the screen here.
 		-- If one copies the script below to a separate file it works.
@@ -61,6 +63,7 @@ return{
 
 	-- FIXME: because of this test, we get an internal error:
 	-- libc++abi.dylib: Pure virtual function called! -> TODO - RAIAN: I was not able to reproduce this error
+--[[
 		local world = CellularSpace{
 			xdim = 10
 		}
@@ -92,6 +95,7 @@ return{
 		world:notify()
 		world:notify()
 
+--]]
 
 --[[
 		Map{

@@ -198,7 +198,8 @@ function integrationEuler(df, initCond, a, b, delta)
 		local y = initCond
 		local x = a
 		local bb = b - delta
-		local values = {} -- each equation must ne computed from the same "past" value ==> o(n2), onde n é o numero de equações
+		local values = {} -- each equation must ne computed from the same "past" value ==> o(n2), 
+						  -- where n is the number of equations
 		for x = a, bb, delta do
 			for i = 1, #df do
 				values[i] = df[i](x, y)
