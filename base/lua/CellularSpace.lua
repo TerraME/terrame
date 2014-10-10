@@ -497,9 +497,7 @@ CellularSpace_ = {
 
 		self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow, legendStr = self.cObj_:load()
 
-		-- tratamento de erros de conexao com banco de dados
-		-- as variaveis self.cells e self.minCol foram reutilizadas com semanticas não adequadas neste ponto
-		-- vide luaCellularSpace.cpp (método load)
+		-- checking database connection errors
 		if self.cells == -1 then
 			-- TODO: verify the error below. it seems that it never occurs
 			customError(self.minCol)

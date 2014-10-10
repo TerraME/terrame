@@ -239,7 +239,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 	
 	if type(datale.xAxis) ~="string" then
 		if datale.xAxis == nil then
-			--datale.xAxis = "time" TRATADO NO NÍVEL C++
+			--datale.xAxis = "time"
 		else
 			incompatibleTypeError("xAxis", "string", datale.xAxis, 4)		
 		end	
@@ -449,7 +449,6 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 				datale.legends = { Legend { colorBar = automatonColorBar } }
 			end,
 			[TME_TYPES.TRAJECTORY] = function()
-				-- qq coisa informada na lista de atributos deve ser substituída por isto
 				observerAttrs = {"trajectory"}
 				local trajectoryColorBar = getDefaultTrajectoryColorBar(trajectorySize,1)
 				datale.legends = { Legend { colorBar = trajectoryColorBar, slices = trajectorySize } }
@@ -603,7 +602,6 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 			local automatonColorBar = getDefaultAutomatonColorBar(1)
 			datale.legends = { Legend { colorBar = automatonColorBar } }
 		elseif subjType == TME_TYPES.TRAJECTORY then
-			-- qq coisa informada na lista de atributos deve ser substituída por isto
 			observerAttrs = {"trajectory"}
 			local trajectoryColorBar = getDefaultTrajectoryColorBar(trajectorySize,1)
 			datale.legends = { Legend { colorBar = trajectoryColorBar, slices = trajectorySize } }
@@ -1081,7 +1079,6 @@ function Observer(data)
 				if type(data.observer) ~= "Observer" then
 					incompatibleTypeError("observer","Observer", data.observer, 3)
 				else
-					-- verificação de tipos de observer acoplados
 					if data.observer.type ~= data.type then
 						customError("Cannot attach observers of different types. Only 'image' and 'map' observers can be attached.", 3)
 					elseif data.type ~= "image" and data.type ~= "map" then
