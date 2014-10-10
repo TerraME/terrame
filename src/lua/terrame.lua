@@ -938,6 +938,9 @@ execute = function(parameters) -- parameters is a string
 					print(errorMsg)
 				end
 				return
+			elseif param == "-help" then 
+				usage()
+				return
 			elseif param == "-autoclose" then
 				-- TODO
 			elseif param == "-workers" then
