@@ -469,7 +469,7 @@ executeTests = function(fileName, package)
 		functions_without_assert = 0,
 		examples = 0,
 		examples_error = 0,
-		print_calls = 0,
+		print_calls = 0
 	}
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
@@ -649,6 +649,13 @@ executeTests = function(fileName, package)
 		local dirFiles = dir(baseDir..s.."examples")
 		if dirFiles ~= nil then
 			forEachElement(dirFiles, function(idx, value)
+				if not string.endswith(value, ".lua") then
+					if not string.endswith(value, ".log") then
+						print_yellow("Skipping "..value)
+					end
+					return true
+				end
+
 				print("Testing "..value)
 				io.flush()
 				collectgarbage("collect")
@@ -657,9 +664,31 @@ executeTests = function(fileName, package)
 
 				collectgarbage("collect")
 
-				print = function(...)
-					ut.print_calls = ut.print_calls + 1
-					print_red(...)
+				local logfile = nil
+				local writing_log = false
+				print = function(x)
+					if not logfile then
+						local lfilename = string.sub(value, 0, string.len(value) - 3).."log"
+
+						logfile = io.open(baseDir..s.."examples"..s..lfilename, "r")
+						if logfile == nil then
+							print_yellow("Creating log file "..lfilename)
+							logfile = io.open(baseDir..s.."examples"..s..lfilename, "w")
+							writing_log = true
+						end
+					end
+
+					if writing_log then
+						local str = logfile:write(x.."\n")
+					else
+						local str = logfile:read(string.len(x) + 1)
+						if str ~= x.."\n" then
+							ut.examples_error = ut.examples_error + 1
+							print_red("Different strings:")
+							print_red("Log file: '"..str.."'.")
+							print_red("Simulation: '"..x.."'.")
+						end
+					end
 				end
 
 				xpcall(function() include(baseDir..s.."examples"..s..value) end, function(err)

@@ -727,6 +727,7 @@ function string.endswith(self, send)
 	local send = send:lower().."$"
 	local match = self:lower():match(send)
 	return match and true or false
+	-- TODO: and true or false???
 	-- return #self >= #send and self:find(send, #self-#send+1, true) and true or false
 end
 

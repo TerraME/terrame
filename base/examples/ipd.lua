@@ -1,6 +1,8 @@
 -- ITERATED PRISONER'S DILEMMA MODEL
 -- (C) 2010 INPE AND UFOP
 
+math.randomseed(0)
+
 -- STRATEGIES AND META-STRATEGIES
 COOPERATE     = 1
 NOT_COOPERATE = 2
@@ -131,7 +133,6 @@ function Game(p1, p2)
 end
 
 -- MODEL
-math.randomseed(os.time())
 nplayers = getn(CHAMPIONSHIP)
 
 -- create a matrix with the results
