@@ -26,7 +26,8 @@
 -------------------------------------------------------------------------------------------
 
 -- Creates a text file with the names of the files inside a given folder
-local function dir(folder)
+-- RAIAN: I changed this function from local to global, in order to use it in luadoc
+function dir(folder)
 	local s = sessionInfo().separator
 	local command
 	if s == "\\" then
@@ -215,7 +216,7 @@ local testfolders = function(folder)
 	return(result)
 end
 
-configureTests = function(fileName, package)
+local configureTests = function(fileName, package)
 	if package == "" then
 		package = "base"
 	end
@@ -334,11 +335,21 @@ configureTests = function(fileName, package)
 	test:close()
 end
 
-doc = function(package)
+local doc = function(package)
 	-- gera a documentacao do arquivo em TME_FOLDER/packages/package/doc a partir da pasta packages/package/lua/*.lua
 	-- no futuro, pegar tambem a pasta examples para gerar a documentacao
 	-- luadoc *.lua -d doc
 	-- colocar sempre o logo do TerraME, removendo o parametro logo = "img/terrame.png"
+
+	require("luadoc")
+	require("base")
+
+	local s = sessionInfo().separator
+	local package_path = sessionInfo().path..s.."packages"..s..package
+
+	local files = dir(package_path..s.."lua")
+
+	luadocMain(package, files)
 end
 
 -- builds a table with zero counts for each element of the table gotten as argument
@@ -365,8 +376,7 @@ end
 
 -- RAIAN: FUncao do antonio que executa os testes. Devera ir para dentro da funcao test acima. Coloquei desta maneira 
 -- para executar os testes sem alterar a chamada no lado C++ por enquanto. 
--- TODO: implement package param
-executeTests = function(fileName, package)
+local executeTests = function(fileName, package)
 	if package == nil then
 		package = "base"
 	else
@@ -946,6 +956,67 @@ execute = function(parameters) -- parameters is a string
 			elseif param == "-help" then 
 				usage()
 				return
+			elseif param == "-doc" then
+				paramCount = paramCount + 1
+				if package == "" then
+					package = "base"
+				end
+				-- TODO: verify error handler
+				local success, result = xpcall(function() doc(package) end, function(err)
+					local s = sessionInfo().separator
+					local luaFolder = replaceSpecialChars(sessionInfo().path..s.."lua")
+					local baseLuaFolder = replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"..s.."lua")
+					local luadocLuaFolder = replaceSpecialChars(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua")
+					
+					local m1 = string.match(err, string.sub(luaFolder, string.len(luaFolder) - 25, string.len(luaFolder)))
+					local m2 = string.match(err, string.sub(baseLuaFolder, string.len(baseLuaFolder) - 25, string.len(baseLuaFolder)))
+					local m3 = string.match(err, string.sub(luadocLuaFolder, string.len(luadocLuaFolder) - 25, string.len(luadocLuaFolder)))
+					local m4 = string.match(err, "%[C%]")
+
+					if m1 or m2 or m3 or m4 then
+						local str = 
+								"*************************************************************\n"..
+								"UNEXPECTED TERRAME INTERNAL ERROR. PLEASE GIVE US A FEEDBACK.\n"..
+								"WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
+								"*************************************************************\n"..
+								err.."\nStack traceback:\n"
+
+						local level = 1
+						local info = debug.getinfo(level)
+						while info ~= nil do
+							local m1 = string.match(info.source, luaFolder)
+							local m2 = string.match(info.source, baseLuaFolder)
+							local m3 = string.match(info.source, luadocLuaFolder)
+							local m4 = string.match(info.short_src, "%[C%]")
+
+							if info.short_src == "[C]" then
+								str = str.."    Internal C file"
+							else
+								str = str.."    File "..info.short_src
+							end
+
+							if info.currentline > 0 then
+								str = str..", line "..info.currentline
+							end
+
+							if info.name then
+								str = str..", in function "..info.name
+							else
+								str = str..", in main chunk"
+							end
+							str = str.."\n"
+							level = level + 1
+							info = debug.getinfo(level)
+						end
+						return string.sub(str, 0, string.len(str) - 1)
+
+					else
+						return err.."\n"..getLevel()
+					end
+				end)
+				if not success then
+					print_red(result)
+				end
 			elseif param == "-autoclose" then
 				-- TODO
 			elseif param == "-workers" then
