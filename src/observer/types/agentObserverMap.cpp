@@ -11,10 +11,7 @@
 #include <QTreeWidget>
 #include <QDebug>
 #include "terrameGlobals.h"
-
-#ifdef TME_BLACK_BOARD
-    #include "blackBoard.h"
-#endif
+#include "blackBoard.h"
 
 #define TME_STATISTIC_UNDEF
 
