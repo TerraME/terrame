@@ -892,6 +892,14 @@ function traceback()
 		local m3 = string.match(info.short_src, "%[C%]")
 		if m1 or m2 or m3 then
 			last_function = info.name
+
+			-- add the lines below if you want to see all the traceback
+			--[[
+			if last_function then
+				str = str.. "\n    In "..last_function.."\n"
+				str = str.."    File "..info.short_src..", line "..info.currentline
+			end
+			--]]
 		else
 			if not found_function then
 				if     last_function == "__add"      then last_function = "operator + (addition)"
