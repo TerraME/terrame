@@ -551,17 +551,20 @@ executeTests = function(fileName, package)
 						print_red(...)
 					end
 
-					local ok_execution, err = pcall(function() tests[eachTest](ut) end)
+					local found_error = false
+					local ok_execution, err = xpcall(function() tests[eachTest](ut) end, function(err)
+						print_red("Wrong execution, got error: '"..err.."'.")
+						ut.functions_with_error = ut.functions_with_error + 1
+						print_red(traceback())
+						found_error = true
+					end)
 
 					print = print__
 
 					killAllObservers()
 					ut.executed_functions = ut.executed_functions + 1
 
-					if not ok_execution then
-						print_red("Wrong execution, got error: '"..err.."'.")
-						ut.functions_with_error = ut.functions_with_error + 1
-					elseif count_test == ut.test then
+					if count_test == ut.test and not found_error then
 						ut.functions_without_assert = ut.functions_without_assert + 1
 						print_red("No asserts were found in the test.")
 					end
