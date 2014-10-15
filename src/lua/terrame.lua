@@ -726,7 +726,16 @@ local executeTests = function(fileName, package)
 					end
 				end
 
-				xpcall(function() include(baseDir..s.."examples"..s..value) end, function(err)
+				collectgarbage("collect")
+				
+				ut.examples = ut.examples + 1
+
+				local myfunc = function()
+					local env = setmetatable({}, {__index = _G})
+					loadfile(baseDir..s.."examples"..s..value, 't', env)()
+					return setmetatable(env, nil)
+				end
+				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
 					print_red(err)
 					print_red(traceback())
