@@ -695,7 +695,11 @@ local executeTests = function(fileName, package)
 						if str ~= x.."\n" then
 							ut.examples_error = ut.examples_error + 1
 							print_red("Different strings:")
-							print_red("Log file: '"..str.."'.")
+							if str == nil then
+								print_red("Log file: <empty>")
+							else
+								print_red("Log file: '"..str.."'.")
+							end
 							print_red("Simulation: '"..x.."'.")
 						end
 					end
@@ -706,6 +710,15 @@ local executeTests = function(fileName, package)
 					print_red(err)
 					print_red(traceback())
 				end)
+
+				if not writing_log and logfile then
+					local str = logfile:read("*all")
+					if str and str ~= "" then
+						ut.examples_error = ut.examples_error + 1
+						print_red("Output file contains text not printed by the simulation: ")
+						print_red("'"..str.."'")
+					end
+				end	
 
 				print = print__
 
