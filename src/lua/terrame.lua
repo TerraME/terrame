@@ -141,8 +141,14 @@ require = function(package, recursive, asnamespace)
 	local load_file = package_path..s.."load.lua"
 	local load_sequence
 
-	if os.rename(load_file, load_file) then
+	if isfile(load_file) then
 		load_sequence = include(load_file).files
+	end
+
+	local all_files = dir(package_path..s.."lua")
+	local count_files = {}
+	for _, file in ipairs(all_files) do
+		count_files[file] = 0
 	end
 
 	local i, file
@@ -150,6 +156,15 @@ require = function(package, recursive, asnamespace)
 	if load_sequence then
 		for _, file in ipairs(load_sequence) do
 			dofile(package_path..s.."lua"..s..file)
+			count_files[file] = count_files[file] + 1
+		end
+	end
+
+	for mfile, count in pairs(count_files) do
+		if count == 0 then
+			print_red("File lua/"..mfile.." is never loaded.")
+		elseif count > 1 then
+			print_red("File lua/"..mfile.." is loaded "..count.." times.")
 		end
 	end
 
