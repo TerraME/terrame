@@ -461,7 +461,12 @@ local executeTests = function(fileName, package)
 		global_variables[idx] = true
 	end)
 
-	checkUnnecessaryParameters(data, {"dbType", "host", "port", "password", "user", "sleep", "examples", "folder", "test", "file"}, 3)
+	local parameters = {"sleep", "examples", "folder", "test", "file"}
+	forEachElement(data, function(value)
+		if not belong(value, parameters) then
+			customWarning("Attribute '"..value.."' in file '"..fileName.."' is unnecessary.")
+		end
+	end)
 
 	local ut = UnitTest{
 		dbType = data.dbType,
