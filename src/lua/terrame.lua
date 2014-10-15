@@ -1062,10 +1062,9 @@ execute = function(parameters) -- parameters is a string
 					package = "base"
 				end
 
-				local correct, errorMsg = pcall(executeTests, parameters[paramCount], package)
-				if not correct then
-					print(errorMsg)
-				end
+				local correct, errorMsg = xpcall(function() executeTests(parameters[paramCount], package) end, function(err)
+					print_red(err)
+				end)
 				return
 			elseif param == "-help" then 
 				usage()
