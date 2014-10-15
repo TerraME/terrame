@@ -101,7 +101,13 @@ end
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
 function include(scriptfile)
 	local env = setmetatable({}, {__index = _G})
-	loadfile(scriptfile, 't', env)()
+	if not isfile(scriptfile) then
+		customError("File '"..scriptfile.."' does not exist.")
+	end
+	xpcall(function() loadfile(scriptfile, 't', env)() end, function(err)
+		print_red(err)
+		print_red(traceback())
+	end)
 	return setmetatable(env, nil) -- TODO: try to remove nil and see what happens. Perhaps this could be used in TerraME.
 end
 
