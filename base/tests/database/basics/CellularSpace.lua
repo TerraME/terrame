@@ -27,11 +27,12 @@
 
 return{
 	CellularSpace = function(unitTest)
-		local mdbType = unitTest.dbType
-		local mhost = unitTest.host
-		local muser = unitTest.user
-		local mpassword = unitTest.password
-		local mport = unitTest.port
+		local config = getConfig()
+		local mdbType = config.dbType
+		local mhost = config.host
+		local muser = config.user
+		local mpassword = config.password
+		local mport = config.port
 		local mdatabase
 
 		if mdbType == "ado" then
@@ -367,11 +368,12 @@ return{
 		unitTest:assert_equal(451.98359156683, sumWeight, 0.00001)
 	end,
 	save = function(unitTest)
-		local mdbType = unitTest.dbType
-		local mhost = unitTest.host
-		local muser = unitTest.user
-		local mpassword = unitTest.password
-		local mport = unitTest.port
+		local config = getConfig()
+		local mdbType = config.dbType
+		local mhost = config.host
+		local muser = config.user
+		local mpassword = config.password
+		local mport = config.port
 		local mdatabase
 
 		if mdbType == "ado" then
@@ -401,11 +403,13 @@ return{
 		-- TODO: add saveShape. Also saveCSV?
 	end,
 	loadNeighborhood = function(unitTest)
-		local mdbType = unitTest.dbType
-		local mhost = unitTest.host
-		local muser = unitTest.user
-		local mpassword = unitTest.password
-		local mport = unitTest.port
+		local config = getConfig()
+		local mdbType = config.dbType
+		local mhost = config.host
+		local muser = config.user
+		local mpassword = config.password
+		local mport = config.port
+
 		local mdatabase1, mdatabase2, mdatabase3
 
 		if mdbType == "ado" then

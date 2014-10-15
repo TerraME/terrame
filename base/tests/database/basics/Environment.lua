@@ -27,11 +27,12 @@
 
 return{
 	loadNeighborhood = function(unitTest)
-		local mdbType = unitTest.dbType
-		local mhost = unitTest.host
-		local muser = unitTest.user
-		local mpassword = unitTest.password
-		local mport = unitTest.port
+		local config = getConfig()
+		local mdbType = config.dbType
+		local mhost = config.host
+		local muser = config.user
+		local mpassword = config.password
+		local mport = config.port
 		local mdatabase
 
 		if mdbType == "ado" then
