@@ -974,10 +974,12 @@ function traceback()
 				elseif last_function == "__index"    then last_function = "operator [] (index)"
 				elseif last_function == "__newindex" then last_function = "operator [] (index)"
 				elseif last_function == "__call"     then last_function = "call"
-				else   last_function = "function "..last_function
+				elseif last_function ~= nil          then last_function = "function '"..last_function.."'"
 				end
 
-				str = str.. "    In "..last_function.."\n"
+				if last_function then
+					str = str.. "    In "..last_function.."\n"
+				end
 				found_function = true
 			end
 
