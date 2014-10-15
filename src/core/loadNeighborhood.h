@@ -99,7 +99,7 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
 
     gpm = new TeGeneralizedProxMatrix<set>(gpmId, table, impl, ws);
 
-    // Eu estava tentando utilizar a API da GPM, mas é dificil construir uma GPM a partir da
+    // Eu estava tentando utilizar a API da GPM, mas e dificil construir uma GPM a partir da
     // do banco, falta na API metodos para carregar os metadados como estrategias de construcao,
     // estrategia de slicing etc. Desisti e pus metodos parametros por referencia para retornar
     // as os metadados que eu preciso
@@ -226,7 +226,7 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
 
     gpm = new TeGeneralizedProxMatrix<set>(gpmId, table, impl, ws);
 
-    // Eu estava tentando utilizar a API da GPM, mas é dificil construir uma GPM a partir da
+    // Eu estava tentando utilizar a API da GPM, mas e dificil construir uma GPM a partir da
     // do banco, falta na API metodos para carregar os metadados como estrategias de construcao,
     // estrategia de slicing etc. Desisti e pus metodos parametros por referencia para retornar
     // as os metadados que eu preciso

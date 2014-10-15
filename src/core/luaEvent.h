@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright � 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -38,12 +38,10 @@ extern "C"
 
 #include <QHash>
 
-#ifdef TME_PROTOCOL_BUFFERS
 namespace ObserverDatagramPkg
 {
     class SubjectAttribute; 
 }
-#endif
 
 /**
 * \brief  
@@ -52,7 +50,6 @@ namespace ObserverDatagramPkg
 */
 class luaEvent : public EventSubjectInterf, public Reference<luaEvent>
 {
-    // Antonio
     lua_State *luaL;
     TypesOfSubjects subjectType;
     QHash<QString, double> observedAttribs;

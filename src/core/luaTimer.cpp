@@ -9,10 +9,7 @@
 #include "observerUDPSender.h"
 #include "observerScheduler.h"
 
-
-#ifdef TME_PROTOCOL_BUFFERS
-	#include "protocol.pb.h"
-#endif
+#include "protocol.pb.h"
 
 ///< Global variable: Lua stack used for comunication with C++ modules.
 extern lua_State * L; 
@@ -23,7 +20,6 @@ extern ExecutionModes execModes;
 
 luaTimer::luaTimer(lua_State *L)
 {
-    // Antonio
     luaL = L;
     subjectType = TObsTimer;
     observedAttribs.clear();
@@ -93,7 +89,7 @@ int luaTimer::createObserver( lua_State *luaL)
     // atributos da celula
     int top = lua_gettop(luaL);
 
-    // Não modifica em nada a pilha recupera o enum referente ao tipo
+    // Nao modifica em nada a pilha recupera o enum referente ao tipo
     // do observer
     int typeObserver = (int)luaL_checkinteger(luaL, top - 3);
     bool isGraphicType = (typeObserver == TObsDynamicGraphic)
@@ -192,7 +188,7 @@ int luaTimer::createObserver( lua_State *luaL)
     //lua_settop(luaL, top - 1);
     //top = lua_gettop(luaL);
 
-    // Verificação da sintaxe da tabela Atributos
+    // Verificacao da sintaxe da tabela Atributos
     if(! lua_istable(luaL, top) )
     {
         string err_out = string("Attribute table not found. Incorrect sintax.");
@@ -218,7 +214,7 @@ int luaTimer::createObserver( lua_State *luaL)
         printf("\t%s \n", qPrintable(key));
 #endif
 
-        // Verifica se o atributo informado não existe deve ter sido digitado errado
+        // Verifica se o atributo informado nao existe deve ter sido digitado errado
         if (allAttribs.contains(key))
         {
             obsAttribs.push_back(key);
@@ -285,7 +281,7 @@ int luaTimer::createObserver( lua_State *luaL)
 #endif
 
     // Recupera a tabela de parametros os observadores do tipo Table e Graphic
-    // caso não seja um tabela a sintaxe do metodo esta incorreta
+    // caso nao seja um tabela a sintaxe do metodo esta incorreta
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 1) != 0)
     {   
@@ -316,9 +312,9 @@ int luaTimer::createObserver( lua_State *luaL)
         lua_pop(luaL, 1);
     }
 
-    // Caso não seja definido nenhum parametro,
-    // e o observador não é TextScreen então
-    // lança um warning
+    // Caso nao seja definido nenhum parametro,
+    // e o observador nao e TextScreen entao
+    // lanca um warning
     if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
     {
         if (execModes != Quiet ){
@@ -450,7 +446,7 @@ int luaTimer::createObserver( lua_State *luaL)
             obsLog->setFileName(cols.at(0));
         }
 
-        // caso não seja definido, utiliza o default ";"
+        // caso nao seja definido, utiliza o default ";"
         if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
             if (execModes != Quiet )
@@ -690,7 +686,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
     lua_pushnil(luaL);
     while(lua_next(luaL, position ) != 0)
     {
-        // Caso o indice n„o seja um string causava erro
+        // Caso o indice nao seja um string causava erro
         if (lua_type(luaL, -2) == LUA_TSTRING)
         {
             key = luaL_checkstring(luaL, -2);
@@ -989,7 +985,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs)
     lua_pushnil(luaL);
     while(lua_next(luaL, position ) != 0)
     {
-        // Caso o indice n„o seja um string causava erro
+        // Caso o indice nao seja um string causava erro
         if (lua_type(luaL, -2) == LUA_TSTRING)
         {
             key = luaL_checkstring(luaL, -2);

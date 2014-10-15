@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -38,9 +38,6 @@ class LuaRandomUtil : public Reference<LuaRandomUtil>
 {
     RandomLib::Random r;
 
-    // @DANIEL
-    // Movido para a classe Reference
-    // int ref;
 public:
     ///< Data structure issued by Luna<T>
     static const char className[];
@@ -50,12 +47,6 @@ public:
 public:
     LuaRandomUtil(lua_State *L)
     {
-        // @DANIEL
-        // O objeto Lua não está sendo utilizado. Porque colocá-lo na pilha?
-        // this->ref = 0;
-        // lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-        // int top = lua_gettop(L);
-
         int seed = (int) luaL_checkinteger(L, -1);
         r.Reseed(seed);
     }
@@ -78,11 +69,6 @@ public:
 */
     // reseed(int v)
     int reseed(lua_State *L){
-        // @DANIEL
-        // O objeto Lua não está sendo utilizado. Porque colocá-lo na pilha?
-        // lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-        // int top = lua_gettop(L);
-        // int v = (int)luaL_checkinteger(L, top - 1);
         int v = (int)luaL_checkinteger(L, -1);
         this->r.Reseed(v);
         return 1;
@@ -92,10 +78,6 @@ public:
     // random(a)
     // random(a,b)
     int random(lua_State *L){
-        // @DANIEL
-        // O objeto Lua não está sendo utilizado. Porque colocá-lo na pilha?
-        // lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-        // int top = lua_gettop(L);
 
         // int arg2 = (int)luaL_checkinteger(L, top - 1);
         // int arg = (int)luaL_checkinteger(L, top - 2);
@@ -125,10 +107,6 @@ public:
     // random(a)
     // random(a,b)
     int randomInteger(lua_State *L){
-        // @DANIEL
-        // O objeto Lua não está sendo utilizado. Porque colocá-lo na pilha?
-        // lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-        // int top = lua_gettop(L);
 
         // int arg2 = (int)luaL_checkinteger(L, top - 1);
         // int arg = (int)luaL_checkinteger(L, top - 2);
@@ -139,24 +117,6 @@ public:
         lua_pushnumber(L, v);
         return 1;
     }
-
-    /// Registers the RandomUtil object in the Lua stack
-    // @DANIEL
-    // Movido para a classe Reference
-//    int setReference( lua_State* L)
-//    {
-//        ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//        return 0;
-//    }
-
-    /// Gets the RandomUtil object reference
-    // @DANIEL
-    // Movido para a classe Reference
-//    int getReference( lua_State *L )
-//    {
-//        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//        return 1;
-//    }
 };
 
 #endif // LUA_RANDOM_UTIL_H

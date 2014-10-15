@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -39,9 +39,7 @@ of this library and its documentation.
 #include "observerLogFile.h"
 #include "observerTable.h"
 
-#ifdef TME_PROTOCOL_BUFFERS
-	#include "protocol.pb.h"
-#endif
+#include "protocol.pb.h"
 
 extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern ExecutionModes execModes;
@@ -54,7 +52,6 @@ luaNeighborhood::luaNeighborhood(lua_State *L) {
     it = CellNeighborhood::begin();
     itNext = false;
 
-    // Antonio
     luaL = L;
     subjectType = TObsNeighborhood;
     cellSpace = 0;
@@ -439,8 +436,8 @@ int luaNeighborhood::getParent( lua_State *L )
      // recupero a referencia da celula
 	Reference<luaNeighborhood>::getReference(luaL);
             
-    // flags para a definição do uso de compressão
-    // na transmissão de datagramas e da visibilidade
+    // flags para a definicao do uso de compressao
+    // na transmissao de datagramas e da visibilidade
     // dos observadores Udp Sender 
     bool compressDatagram = false, obsVisible = true;
 
@@ -759,7 +756,7 @@ int luaNeighborhood::getParent( lua_State *L )
                 obsLog->setFileName(cols.at(0));
             }
 
-            // caso não seja definido, utiliza o default ";"
+            // caso nao seja definido, utiliza o default ";"
             if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
             {
                 if (execModes != Quiet)
@@ -1177,8 +1174,6 @@ QByteArray luaNeighborhood::pop(lua_State *, const QStringList &attribs,
             raw = cellNeighborSubj->add_rawattributes();
 
 
-            // De acordo com o Raian, somente o peso é observável pois o objeto
-            // vizinhaça recuperado da célula existe apenas em C++
             raw->set_key("weight");
             // raw->set_key(attribs.first().toAscii().constData());
             raw->set_number(num);
@@ -1233,7 +1228,6 @@ QByteArray luaNeighborhood::pop(lua_State *, const QStringList &attribs,
 
 QByteArray luaNeighborhood::getAll(QDataStream &, const QStringList &attribs)
 {
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
 	Reference<luaNeighborhood>::getReference(luaL);
     ObserverDatagramPkg::SubjectAttribute neighSubj;
     return pop(luaL, attribs, &neighSubj, 0);

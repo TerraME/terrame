@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -197,8 +197,7 @@ public:
         bool run = true;
         while( run  & (time <= finalTime) )
         {
-            // Alteração Antonio, Player
-            // 10/02/2012
+            // Player
             while (paused)
                 qApp->processEvents();
 
@@ -246,8 +245,6 @@ public:
                     }
                 }
             }
-            // Alteração Antonio
-            // 05/03/2012
             if (step)
                 paused = true;
         }

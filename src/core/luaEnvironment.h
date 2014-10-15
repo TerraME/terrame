@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright � 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -34,12 +34,10 @@ of this library and its documentation.
 
 #include <QHash>
 
-#ifdef TME_PROTOCOL_BUFFERS
 namespace ObserverDatagramPkg
 {
     class SubjectAttribute; 
 }
-#endif
 
 /**
 * \brief  
@@ -51,10 +49,6 @@ class luaEnvironment : public EnvironmentSubjectInterf, public Reference<luaEnvi
 private:
     string id; ///< Environment identifier
 
-    // Antonio
-    // @DANIEL
-    // Movido para classe Reference
-    //int ref;
     lua_State *luaL;
     TypesOfSubjects subjectType;
     QHash<QString, QString> observedAttribs;
@@ -108,16 +102,6 @@ public:
 
     /// Executes the luaEnvironment object
     int execute( lua_State *L);
-
-    /// Sets Lua object reference
-    // @DANIEL
-    // Movido para classe Reference
-    //int setReference( lua_State* L);
-
-    /// Gets Lua object reference
-    // @DANIEL
-    // Movido para classe Reference
-    //int getReference( lua_State *L );
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observeb attributes table, observer type parameters

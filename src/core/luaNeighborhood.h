@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright � 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -44,12 +44,10 @@ extern "C"
 
 class luaCellularSpace;
 
-#ifdef TME_PROTOCOL_BUFFERS
 namespace ObserverDatagramPkg
 {
     class SubjectAttribute; 
 }
-#endif
 
 /**
 * \brief  
@@ -59,9 +57,6 @@ namespace ObserverDatagramPkg
 class luaNeighborhood : public NeighborhoodSubjectInterf, public Reference<luaNeighborhood>
 {
     CellNeighborhood::iterator it; ///< luaNeighboorhood interator
-    // @DANIEL
-    // Movido para Reference
-    // int ref; ///< The position of the object in the Lua stack
     bool itNext; ///< auxliary variable used to avoid iterator problems that occurs when the erase() method is called
 
 #ifdef TME_PROTOCOL_BUFFERS
@@ -96,10 +91,10 @@ public:
     /// parameters: cell.y, cell.x,  cell, weight
     int addNeighbor(lua_State *L);
 
-    /// Removes the luaNeighbor cell from the luaNeighborhood 
+	/// Removes the luaNeighbor cell from the luaNeighborhood 
 	/// parameters: cell.x, cell.y
 	/// \author Raian Vargas Maretto
-		int eraseNeighbor(lua_State *L);
+	int eraseNeighbor(lua_State *L);
 
     /// Adds a new luaNeighbor cell to the luaNeighborhood
     /// parameters: cell index,  cell, weight
@@ -179,12 +174,10 @@ public:
     /// no parameters
     int next( lua_State *L );
 
-    //@RAIAN
     /// Fowards the Neighborhood iterator to the previous Neighbor cell
     /// no parameters
     ///\author Raian Vargas Maretto
     int previous( lua_State *L );
-    //@RAIAN: FIM
 
     /// Gets the X coordinate of the Neighbor cell pointed by the Neighborhood interator
     /// no parameters
@@ -210,23 +203,10 @@ public:
     /// no parameters
     int size(lua_State *L);
 
-    /// Registers the Lua object in the Lua stack, storing its reference
-    // @DANIEL
-    // Movido para Reference
-    // int setReference( lua_State* L);
-
-    /// Gets the luaNeighborhood object reference.
-    /// no parameters
-    // @DANIEL
-    // Movido para Reference
-    // int getReference( lua_State *L );
-
-    //@RAIAN
         /// Gets the Neighborhood Parent, i. e., the "central" cell in the neighborhood graph.
         /// no parameters
         /// \author Raian Vargas Maretto
         int getParent( lua_State *L );
-    //@RAIAN
     
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observeb attributes table, observer type parameters

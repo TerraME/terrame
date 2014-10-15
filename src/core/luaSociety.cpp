@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -94,8 +94,8 @@ int luaSociety::createObserver( lua_State * luaL)
     // retrieve Lua object reference
     Reference<luaSociety>::getReference(luaL);
 
-    // flags para a definição do uso de compressão
-    // na transmissão de datagramas e da visibilidade
+    // flags para a definicao do uso de compressao
+    // na transmissao de datagramas e da visibilidade
     // dos observadores Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
@@ -405,7 +405,7 @@ int luaSociety::createObserver( lua_State * luaL)
 					obsLog->setFileName(cols.at(0));
 				}
 
-				// caso não seja definido, utiliza o default ";"
+				// caso nao seja definido, utiliza o default ";"
 				if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
 				{
 					if (execModes != Quiet )
@@ -864,7 +864,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
                     observedAttribs.insert(key, valueTmp);
                 }
 
-                // Recupera a tabela de agentes e delega a cada um sua serialização
+                // Recupera a tabela de agentes e delega a cada um sua serializacao
                 if(key == "agents")
                 {
                     int top = lua_gettop(luaL);

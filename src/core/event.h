@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright Â© 2001-2008 INPE and TerraLAB/UFOP.
+Copyright 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -23,16 +23,16 @@ of this library and its documentation.
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
 
-//  Eventos sï¿½o estï¿½mulos aos quais o sistema sendo simulado deve
-//  responder ou estï¿½mulos que disparam aï¿½ï¿½es de controle do simulador. Uma aï¿½ï¿½o
-//  de controle comum ï¿½ o cï¿½lculo e o salvamento, periï¿½dico, de informaï¿½ï¿½es
-//  estatï¿½scas na base de dados do simulador. Informacoes sobre os agentes tambï¿½m,
+//  Eventos sao estimulos aos quais o sistema sendo simulado deve
+//  responder ou estimulos que disparam acoes de controle do simulador. Uma acao
+//  de controle comum e o calculo e o salvamento, periodico, de informacoes
+//  estatisticas na base de dados do simulador. Informacoes sobre os agentes tambem,
 //  sao importantes. Exemplos de eventos aos quais os
-//  sistemas simulados geralmente precisam responder sï¿½o: um usuï¿½rio realiza uma
-//  operaï¿½ï¿½o de entrada de dados ou um processo do sistema simulado solicita
-//  informaï¿½ï¿½es a outro processo.
+//  sistemas simulados geralmente precisam responder sao: um usuario realiza uma
+//  operacao de entrada de dados ou um processo do sistema simulado solicita
+//  informacoes a outro processo.
 //    Todo evento possui um tipo que o identifica e define qual rotina deve ser
-//    chamada para tratï¿½-lo. Todo evento deve registrar o momento em que deve
+//    chamada para trata-lo. Todo evento deve registrar o momento em que deve
 //    ocorrer.
 
 
@@ -171,7 +171,7 @@ public:
 /// Compares Event objects. 
 /// \param e1 is a Event object
 /// \param e2 is a Event object
-/// \return A booleÃ n valus:  true if e1 must occur earlier than e2, false otherwise.
+/// \return A boolean value:  true if e1 must occur earlier than e2, false otherwise.
 bool operator<(Event e1, Event e2 );
 
 #endif

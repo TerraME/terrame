@@ -118,12 +118,10 @@ int luaGlobalAgent::createObserver( lua_State *L )
 #endif
 
     // recupero a referencia da celula
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef()); // ref);
     Reference<luaAgent>::getReference(luaL);
         
-    // flags para a definição do uso de compressão
-    // na transmissão de datagramas e da visibilidade
+    // flags para a definicao do uso de compressao
+    // na transmissao de datagramas e da visibilidade
     // dos observadores Udp Sender 
     bool compressDatagram = false, obsVisible = true;
 
@@ -131,7 +129,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
     // atributos da celula
     int top = lua_gettop(luaL);
 
-    // Não modifica em nada a pilha recupera o enum referente ao tipo
+    // Nao modifica em nada a pilha recupera o enum referente ao tipo
     // do observer
     int typeObserver = (int)luaL_checkinteger(luaL, 1);
 
@@ -185,7 +183,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 // Adiciona o estado do atributo na lista de parametros
                 // allAttribs.push_back( state );
 
-                // Recupero a transição dos estados
+                // Recupero a transicao dos estados
                 ProcessCompositeInterf::iterator prIt;
                 prIt = lcm->ProcessCompositeInterf::begin();
 
@@ -198,7 +196,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
                     jIt++;
                 }
 
-                // cria um par (estado, transição) e adiciona na lista de estados
+                // cria um par (estado, transicao) e adiciona na lista de estados
                 allStates.push_back(qMakePair(state, transition));
             }
             allAttribs.push_back(key);
@@ -214,7 +212,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
         lua_settop(luaL, top - 1);
         top = lua_gettop(luaL);
 
-        // Verificação da sintaxe da tabela Atributos
+        // Verificacao da sintaxe da tabela Atributos
         if(! lua_istable(luaL, top) )
         {
             string err_out = string("Attributes table not found. Incorrect sintax");
@@ -284,7 +282,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
 #endif
 
         // Recupera a tabela de parametros dos observadores do tipo table e Graphic
-        // caso não seja um tabela a sintaxe do metodo esta incorreta
+        // caso nao seja um tabela a sintaxe do metodo esta incorreta
         lua_pushnil(luaL);
         while(lua_next(luaL, top) != 0)
         {
@@ -381,8 +379,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
             lua_pop(luaL, 1);
         }
 
-        // Caso não seja definido nenhum parametro e o observador não é 
-        // TextScreen então lança um warning
+        // Caso nao seja definido nenhum parametro e o observador nao e 
+        // TextScreen entao lanca um warning
         if ((cols.isEmpty()) && (typeObserver !=  TObsTextScreen))
         {
             if (execModes != Quiet ){
@@ -551,7 +549,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 obsLog->setFileName(cols.at(0));
             }
 
-            // caso não seja definido, utiliza o default ";"
+            // caso nao seja definido, utiliza o default ";"
             if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
             {
                 if (execModes != Quiet)
@@ -686,7 +684,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 isLegend = true;
             }
 
-            // recupera o espaço celular
+            // recupera o espaco celular
             if (lua_istable(luaL, -1))
             {
                 int paramTop = lua_gettop(luaL);

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -64,8 +64,8 @@ class luaCell : public CellSubjectInterf, public Reference<luaCell>
     string objectId_; ///< luaCell identifier
     NeighCmpstInterf::iterator it; ///< Neighborhood iterator.
 
-    // O índice pode ser definido quando a célula é adicionada nó espaço
-	CellIndex idx; //Raian: Índice da célula.
+    // O indice pode ser definido quando a celula e adicionada no espaco
+	CellIndex idx; //Raian: indice da celula.
 	
     // Antonio - construtor
     TypesOfSubjects subjectType;

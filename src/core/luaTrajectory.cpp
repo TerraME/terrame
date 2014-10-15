@@ -60,15 +60,15 @@ int luaTrajectory::createObserver( lua_State *L )
     // recupero a referencia da celula
     Reference<luaTrajectory>::getReference(luaL);
 
-    // flags para a definição do uso de compressão
-    // na transmissão de datagramas e da visibilidade
+    // flags para a definicao do uso de compressao
+    // na transmissao de datagramas e da visibilidade
     // dos observadores Udp Sender 
     bool compressDatagram = false, obsVisible = true;
 
     // recupero a tabela de atributos da celula
     int top = lua_gettop(luaL);
 
-    // Não modifica em nada a pilha recupera o enum referente ao tipo
+    // Nao modifica em nada a pilha recupera o enum referente ao tipo
     // do observer
     int typeObserver = (int)luaL_checkinteger(luaL, 1);
 
@@ -346,7 +346,7 @@ int luaTrajectory::createObserver( lua_State *L )
 		        obsLog->setFileName(cols.at(0));
 		    }
 
-            // caso não seja definido, utiliza o default ";"
+            // caso nao seja definido, utiliza o default ";"
 		    if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
 		    {
                 if (execModes != Quiet ){
@@ -1074,7 +1074,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
                     attrs.append(PROTOCOL_SEPARATOR);
 
                     // Recupera a tabela de cells e delega a cada
-                    // celula sua serialização
+                    // celula sua serializao
                     // if (key == "cells")
                     {
                         int top = lua_gettop(luaL);

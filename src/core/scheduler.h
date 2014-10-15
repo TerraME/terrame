@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -57,7 +57,6 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #include "event.h"
 #include "message.h"
 
-// Alteração Antonio
 #include <QApplication>
 #include "player.h"
 
@@ -115,8 +114,8 @@ public:
         return time_;
     }
 
-    // CORRIGIR ADD METHOD: carece de mudan�a aqui, pois quando um evento � adicionado a um escalonador
-    // toda a estrutura de simula��o deve ser alterada: a arvore de escalonadores
+    // CORRIGIR ADD METHOD: carece de mudanca aqui, pois quando um evento e adicionado a um escalonador
+    // toda a estrutura de simulacao deve ser alterada: a arvore de escalonadores
     // e a arvore de ambientes (escalas)
 
     /// Adds a new pair Event-Messsage to the Scheduler queue.
@@ -177,8 +176,7 @@ public:
         iterator = eventMessageQueue.begin();
         while( iterator != eventMessageQueue.end() && time_.getTime() <= finalTime )
         {
-            // Alteração Antonio, Player
-            // 10/02/2012
+		//Player
             while (paused)
                 qApp->processEvents();
 
@@ -199,8 +197,6 @@ public:
 
             iterator = eventMessageQueue.begin();
 
-            // Alteração Antonio
-            // 05/03/2012
             if (step)
                 paused = true;
         }

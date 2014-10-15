@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright � 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -45,12 +45,10 @@ of this library and its documentation.
 class luaControlMode;
 class luaCellularSpace;
 
-#ifdef TME_PROTOCOL_BUFFERS
 namespace ObserverDatagramPkg
 {
     class SubjectAttribute; 
 }
-#endif
 
 /**
 * \brief

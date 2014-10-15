@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -41,11 +41,7 @@ extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with 
 
 class luaMessage : public Message, public Reference<luaMessage>
 {
-    // Antonio
     TypesOfSubjects subjectType;
-    // @DANIEL
-    // Movido para a classe Reference
-    // int ref; ///< The position of the object in the Lua stack
     string msg;  ///< The message indentifier
 
 public:
@@ -63,12 +59,7 @@ public:
     }
 
     /// Destructor
-    ~luaMessage(void)
-    {
-        // @DANIEL
-        // não misturar gerência de memória de C++ com o lado Lua
-        // luaL_unref( L, LUA_REGISTRYINDEX, ref);
-    }
+    ~luaMessage(void){}
 
 
     /// Configures the luaMessage object
@@ -168,25 +159,6 @@ public:
 
         return result;
     }
-
-    /// Registers the luaMessage object in the Lua stack
-    // @DANIEL
-    // Movido para a classe Reference
-//    int setReference( lua_State* L)
-//    {
-//        ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//        return 0;
-//    }
-
-    /// Gets the luaMessage object position in the Lua stack
-    // @DANIEL
-    // Movido para a classe Reference
-//    int getReference( lua_State *L )
-//    {
-//        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//        return 1;
-//    }
-
 };
 
 

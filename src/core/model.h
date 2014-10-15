@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -47,31 +47,31 @@ using namespace std;
 
 typedef string ModelID;
 // Classe Model: define a interface para um modelo de uso geral. Suas interfaces
-// derivadas poderiam modelar regiões, relógios, as leis que governam o comportamento 
-// de algum fenômeno ou as interferências resultantes da cooperação de comunidades de 
-// indivíduos autônomos sobre um determinado ambiente.
-// Para implementar essas subclasses o programador poderia lançar mão de modelos 
-// matemáticos como, por exemplo, células que modelam regiões, geralmente, retangulares 
-// ou hexagonais do espaço. Algoritmos de simulação, como simulação de Monte Carlo ou 
-// simulação dirigia por evetos poderiam ser utilizados para se implementar os relógios. 
-// Máquinas de estados como os autômatos de estados finitos ou autômantos de pilha 
-// poderiam ser utilizadas para modelar o comportamento de fenômenos. Técnicas de 
-// inteligência artificial como agentes poderiam ser utilizadas para simular 
-// indivíduos autônomos. 
+// derivadas poderiam modelar regioes, relogios, as leis que governam o comportamento 
+// de algum fenomeno ou as interferencias resultantes da cooperacao de comunidades de 
+// individuos autonomos sobre um determinado ambiente.
+// Para implementar essas subclasses o programador poderia lancar mao de modelos 
+// matematicos como, por exemplo, celulas que modelam regioes, geralmente, retangulares 
+// ou hexagonais do espaco. Algoritmos de simulacao, como simulacao de Monte Carlo ou 
+// simulacao dirigia por evetos poderiam ser utilizados para se implementar os relogios. 
+// Maquinas de estados como os automatos de estados finitos ou automantos de pilha 
+// poderiam ser utilizadas para modelar o comportamento de fenomenos. Tecnicas de 
+// inteligencia artificial como agentes poderiam ser utilizadas para simular 
+// individuos autonomos. 
 //
 
 /**
  * \brief Define a interface para um modelo de uso geral.
  *
- * Suas interfaces derivadas poderiam modelar regiões, relógios, as leis que governam o comportamento
- * de algum fenômeno ou as interferências resultantes da cooperação de comunidades de indivíduos
- * autônomos sobre um determinado ambiente.
- * Para implementar essas subclasses o programador poderia lançar mão de modelos matemáticos como, por exemplo,
- * células que modelam regiões, geralmente, retangulares ou hexagonais do espaço. Algoritmos de simulação,
- * como simulação de Monte Carlo ou simulação dirigia por evetos poderiam ser utilizados para se implementar
- * os relógios. Máquinas de estados como os autômatos de estados finitos ou autômantos de pilha poderiam ser
- * utilizadas para modelar o comportamento de fenômenos. Técnicas de inteligência artificial como agentes
- * poderiam ser utilizadas para simular indivíduos autônomos.
+ * Suas interfaces derivadas poderiam modelar regioes, relogios, as leis que governam o comportamento
+ * de algum fenomeno ou as interferencias resultantes da cooperacao de comunidades de individuos
+ * autonomos sobre um determinado ambiente.
+ * Para implementar essas subclasses o programador poderia lancar mao de modelos matematicos como, por exemplo,
+ * celulas que modelam regioes, geralmente, retangulares ou hexagonais do espaco. Algoritmos de simulacao,
+ * como simulacao de Monte Carlo ou simulacao dirigia por evetos poderiam ser utilizados para se implementar
+ * os relogios. Maquinas de estados como os automatos de estados finitos ou automantos de pilha poderiam ser
+ * utilizadas para modelar o comportamento de fenomenos. Tecnicas de inteligencia artificial como agentes
+ * poderiam ser utilizadas para simular individuos autonomos.
  */
 
 /**
@@ -123,5 +123,5 @@ public:
 #endif
 
 // Metodo abstrato que deve ser implementado pelo programador para definir 
-// os objetos que compï¿½em uma instância de um modelo.
+// os objetos que compilem uma instancia de um modelo.
 ///virtual void modelDefinition( )  = 0;

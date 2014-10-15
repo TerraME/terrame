@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -21,9 +21,9 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 
 Author: Tiago Garcia de Senna Carneiro
-Raian Vargas Maretto
-        Antônio José da Cunha Rodrigues
-Rodrigo Reis Pereira
+	Raian Vargas Maretto
+        Antonio Jose da Cunha Rodrigues
+	Rodrigo Reis Pereira
 *************************************************************************************/
 
 #include <QtGui/QApplication>
@@ -37,13 +37,9 @@ Rodrigo Reis Pereira
     #include <QFile>
 #endif
 
-#ifdef TME_BLACK_BOARD
-	#include "blackBoard.h"
-#endif
+#include "blackBoard.h"
 
-#ifdef TME_PROTOCOL_BUFFERS
-	#include "protocol.pb.h"
-#endif
+#include "protocol.pb.h"
 
 #ifndef TME_OBSERVER_CLIENT_MODE
 
@@ -58,7 +54,7 @@ Rodrigo Reis Pereira
 
 //////////////////////////////////////////////////////////////////////////////
 //// Percorre a lista de widget fechando cada um deles
-//// Método responsável por evitar a mensagem abaixo na tela
+//// Metodo responsavel por evitar a mensagem abaixo na tela
 //// "QObject::killTimers: timers cannot be stopped from another thread"
 //void closeAllWidgets()
 //{

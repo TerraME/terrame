@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -36,18 +36,17 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #include <map>
 using namespace std;
 
-//  Define uma classe genérica para implementar o padrão composite. 
-//  Esta classe é uma generalizalização do código encontrado
-//	na biblioteca TerraLib cujos autores são os senhores Ricardo Cartaxo e 
-//  Gilberto Câmara.
+// This file defines a generic class to implement the composite design pattern.
+// This class generalizes the source code found in the TerraLib library, whose 
+// authors are Dr Ricardo Cartaxo and Dr Gilberto Camara.  
 
 //////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * \brief Define uma classe genérica para implementar o padrão composite.
+ * \brief Defines a generic class to implement the Composite Design Pattern.
  *
- * Esta classe é uma generalização do código encontrado na biblioteca TerraLib, cujos
- * autores são os senhores Ricardo Cartaxo e Gilberto Câmara
+ * This class generalizes the source code found in the TerraLib library, whose 
+ * authors are Dr Ricardo Cartaxo and Dr Gilberto Camara.
  */
 template <class TElemnt>
 class vectorComposite : public Implementation 

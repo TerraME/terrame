@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -356,7 +356,7 @@ int luaCell::createObserver( lua_State * )
             QString key( luaL_checkstring(luaL, -1) );
             attribTable = true;
 
-            // Verifica se o atributo informado n�o existe deve ter sido digitado errado
+            // Verifica se o atributo informado nao existe deve ter sido digitado errado
             if (allAttribs.contains(key))
             {
                 obsAttribs.push_back(key);
@@ -398,7 +398,7 @@ int luaCell::createObserver( lua_State * )
         QStringList cols, obsParams;
 
         // Recupera a tabela de parametros os observadores do tipo Table e Graphic
-        // caso não seja um tabela a sintaxe do metodo esta incorreta
+        // caso nao seja um tabela a sintaxe do metodo esta incorreta
         lua_pushnil(luaL);
         while(lua_next(luaL, top) != 0)
         {
@@ -455,9 +455,9 @@ int luaCell::createObserver( lua_State * )
             lua_pop(luaL, 1);
         }
 
-        // Caso não seja definido nenhum parametro,
-        // e o observador não é TextScreen então
-        // lança um warning
+        // Caso nao seja definido nenhum parametro,
+        // e o observador nao e TextScreen entao
+        // lanca um warning
         if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
         {
             if (execModes != Quiet){
@@ -641,7 +641,7 @@ int luaCell::createObserver( lua_State * )
                 obsLog->setFileName(cols.at(0));
             }
 
-            // caso não seja definido, utiliza o default ";"
+            // caso nao seja definido, utiliza o default ";"
             if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
             {
                 if (execModes != Quiet ){
@@ -802,7 +802,7 @@ int luaCell::createObserver( lua_State * )
 
     //
     // Comentado em 13/11/2013
-    // Remover na prÛxima iteraÁ„o
+    // Remover na proxima iteracao
     // 
 //	//@RAIAN
 //	// Comeca a criacao do Observer do tipo Neighborhood
@@ -915,8 +915,8 @@ int luaCell::createObserver( lua_State * )
 //				qFatal("%s", qPrintable(errorMsg));
 //			obsMap->registry(this, QString("neighborhood") + className);
 //		
-//        // TO-DO: RemoÁ„o Antonio
-//        // o teste j· havia sido feito
+//        // TODO: Remocao Antonio
+//        // o teste ja havia sido feito
 //        // }
 //        // if(typeObserver == TObsNeigh)
 //		// {
@@ -1001,7 +1001,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
                 msg.append(QString::number(TObsNeighborhood));
                 msg.append(PROTOCOL_SEPARATOR);
 
-                // Pega as informaçõe da célula central (this)
+                // Pega as informacoe da celula central (this)
                 QString cellMsg = this->pop(luaL, QStringList() << "x" << "y");
 
                 elements.append(cellMsg);
@@ -1295,7 +1295,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
                 msg.append(QString::number(TObsNeighborhood));
 				msg.append(PROTOCOL_SEPARATOR);
 
-				// Pega as informaÁıes da cÈlula central (this)
+				// Retrieve information about the central cell (this) 
 				cellMsg = this->pop(luaL, QStringList() << "x" << "y");
 
 				elements.append(cellMsg);
@@ -1311,7 +1311,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 				// Number of internal subjects
 				msg.append(QString::number(neighSize + 1));
 				msg.append(PROTOCOL_SEPARATOR);
-                // TO-DO: pq dois separadores em sequencia?
+				 // TODO: pq dois separadores em sequencia?
 				msg.append(PROTOCOL_SEPARATOR); 
 
 				while(itNeigh != neigh->end())
@@ -1320,7 +1320,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 					CellIndex neighIdx = (CellIndex)itNeigh->first;
 					double weight = neigh->getWeight(neighIdx);
 
-                    // TO-DO:  Raian, verif. se h· necessidade desta chamada
+                    			// TODO:  Raian, verif. se hia necessidade desta chamada
 					// int ref = neighbor->getReference(luaL);
 					neighbor->getReference(luaL);
 					cellMsg = neighbor->pop(luaL, QStringList() << "x" << "y" << "@getWeight");
@@ -1379,7 +1379,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 
         msg.append(attrs);
 
-            // TO-DO: Porque essa verificaÁ„o
+	// TODO: Porque essa verificacao
         //@RAIAN: Para uso na serializacao da Vizinhanca
         if(!attribs.contains("@getWeight"))
             msg.append(PROTOCOL_SEPARATOR);
@@ -1399,12 +1399,11 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
     return msg;
 }
 
-//@RODRIGO
 QByteArray luaCell::getAll(QDataStream & /*in*/, int /*observerId*/, const QStringList& attribs)
 {
 	// recupero a referencia na pilha lua
-    Reference<luaCell>::getReference(luaL);
-    return pop(luaL, attribs);
+	Reference<luaCell>::getReference(luaL);
+	return pop(luaL, attribs);
 }
 
 QByteArray luaCell::getChanges(QDataStream& in, int observerId, const QStringList& attribs)

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright � 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -35,12 +35,10 @@ of this library and its documentation.
 class luaCell;
 class luaCellularSpace;
 
-#ifdef TME_PROTOCOL_BUFFERS
 namespace ObserverDatagramPkg
 {
     class SubjectAttribute; 
 }
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -52,8 +50,6 @@ class luaLocalAgent : public LocalAgentSubjectInterf, public luaAgent
 {
 private:
 
-    // Antonio
-    // int ref;
     lua_State *luaL;
     TypesOfSubjects subjectType;
     luaCell *whereCell;
@@ -105,9 +101,6 @@ public:
 
     /// Builds the luaLocalAgent object
     int build( lua_State* L);
-
-    // int setReference( lua_State* L);
-    // int getReference( lua_State *L );
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observeb attributes table, observer type parameters

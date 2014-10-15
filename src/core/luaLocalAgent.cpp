@@ -47,9 +47,7 @@ of this library and its documentation.
 #include "agentObserverImage.h"
 #include "observerStateMachine.h"
 
-#ifdef TME_PROTOCOL_BUFFERS
-	#include "protocol.pb.h"
-#endif
+#include "protocol.pb.h"
 
 /// < Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L; 
@@ -159,12 +157,10 @@ int luaLocalAgent::createObserver( lua_State *L )
 #endif
 
     // recupero a referencia da celula
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef()); // ref);
     Reference<luaAgent>::getReference(luaL);
         
-    // flags para a definição do uso de compressão
-    // na transmissão de datagramas e da visibilidade
+    // flags para a definicao do uso de compressao
+    // na transmissao de datagramas e da visibilidade
     // dos observadores Udp Sender 
     bool compressDatagram = false, obsVisible = true;
 
@@ -225,7 +221,7 @@ int luaLocalAgent::createObserver( lua_State *L )
                 // Adiciona o estado do atributo na lista de parametros
                 // allAttribs.push_back( state );
 
-                // Recupero a transição dos estados
+                // Recupero a transicao dos estados
                 ProcessCompositeInterf::iterator prIt;
                 prIt = lcm->ProcessCompositeInterf::begin();
 
@@ -238,7 +234,7 @@ int luaLocalAgent::createObserver( lua_State *L )
                     jIt++;
                 }
 
-                // cria um par (estado, transição) e adiciona na lista de estados
+                // cria um par (estado, transicao) e adiciona na lista de estados
                 allStates.push_back(qMakePair(state, transition));
             }
             allAttribs.push_back(key);
@@ -981,7 +977,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
     const QByteArray currState = "currentState" + attrClassName;
     ObserverDatagramPkg::RawAttribute *raw = 0;
     
-    // Percorre as celulas do espaço recuperando o 
+    // Percorre as celulas do espaco recuperando o 
     // estado do automato
     if (lua_istable(luaL, position - 1))
     {
@@ -1336,7 +1332,7 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
     double num = 0;
     QByteArray text, key, attrs, elements;
 
-    // Percorre as celulas do espaço recuperando o 
+    // Percorre as celulas do espaco recuperando o 
     // estado do automato
     if (lua_istable(luaL, position - 1))
     {
