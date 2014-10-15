@@ -223,7 +223,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'where' expected string or nil, got number.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'where' expected string, got number.")
 
 		-- TODO: add the error below
 		--[[
@@ -326,7 +326,7 @@ return{
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'port' expected positive integer number, got table.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'port' expected number, got table.")
 
 		error_func = function()
 			local cs = CellularSpace{

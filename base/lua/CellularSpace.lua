@@ -1023,36 +1023,19 @@ function CellularSpace(data)
 		else
 			if data.dbType == "mysql" then
 				-- until 1024 also 65535
-				if type(data.port) ~= "number" then
-					if data.port == nil then
-						data.port = 3306
-					else
-						incompatibleTypeError("port", "positive integer number", data.port)
-					end
-				elseif data.port ~= math.floor(data.port) or data.port < 0 then
+				defaultTableValue(data, "port", 3306)
+
+				if data.port ~= math.floor(data.port) or data.port < 0 then
 					incompatibleValueError("port", "positive integer number", data.port)
 				elseif data.port < 1024 then
 					customError("Parameter 'port' should have values above 1023 to avoid using system reserved values.\nApplication reserved port values should be avoided as well (ex.: MySQL 3306).")
 				end
 				cObj:setPort(data.port)	 
 
-				if type(data.host) ~= "string" then
-					if data.host == nil then
-						data.host = "localhost"
-					else
-						incompatibleTypeError("host", "string", data.host)
-					end
-				end
-				cObj:setHostName(data.host)
-
-				if type(data.user) ~= "string" then
-					if data.user == nil then
-						data.user = "root"
-					else
-						incompatibleTypeError("user", "string", data.user)
-					end
-				end
+				defaultTableValue(data, "host", "localhost")
+				defaultTableValue(data, "user", "root")
 				cObj:setUser(data.user)
+				cObj:setHostName(data.host)
 
 				if data.password == nil then
 					mandatoryArgumentError("password")
@@ -1069,20 +1052,11 @@ function CellularSpace(data)
 			end
 			cObj:setTheme(data.theme) 
 
-			if type(data.layer) ~= "string" then
-				if data.layer == nil then
-					data.layer = ""
-				else
-					incompatibleTypeError("layer", "string", data.layer)
-				end
-			end
+			defaultTableValue(data, "layer", "")
 			cObj:setLayer(data.layer)
 
-			if type(data.where) == "string" then 
-				cObj:setWhereClause(data.where)
-			elseif data.where ~= nil then
-				incompatibleTypeError("where", "string or nil", data.where)
-			end
+			defaultTableValue(data, "where", "")
+			cObj:setWhereClause(data.where)
 
 			if type(data.select) ~= "string" and type(data.select) ~= "table" then
 				if data.select ~= nil then

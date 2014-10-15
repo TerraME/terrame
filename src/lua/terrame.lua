@@ -694,11 +694,6 @@ local executeTests = function(fileName, package)
 
 				print("Testing "..value)
 				io.flush()
-				collectgarbage("collect")
-				
-				ut.examples = ut.examples + 1
-
-				collectgarbage("collect")
 
 				local logfile = nil
 				local writing_log = false

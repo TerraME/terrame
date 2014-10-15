@@ -17,11 +17,12 @@
 -- The framework provided hereunder is on an "as is" basis, and the authors have no
 -- obligation to provide maintenance, support, updates, enhancements, or modifications.
 -- In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
--- indirect, special, incidental, or caonsequential damages arising out of the use
+-- indirect, special, incidental, or consequential damages arising out of the use
 -- of this library and its documentation.
 --
 -- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 --          Rodrigo Reis Pereira
+--          Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
 return{
@@ -61,6 +62,10 @@ return{
 
 		unitTest:assert_equal(4, #csv)
 		unitTest:assert_equal(20, csv[1].age)
+	end,
+	getConfig = function(unitTest)
+		local cf = getConfig()
+		unitTest:assert_nil(cf.qwertyuiop)
 	end
 }
 
