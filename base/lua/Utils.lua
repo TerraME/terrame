@@ -66,12 +66,7 @@ end
 -- util math functions
 
 function getConfig()
-	local config = include("config.lua")
-	local env = setmetatable(config, {__index = function(x, y)
-		customError("Attribute '"..y.."' does not exist in config.lua.") 
-	end})
-
-	return config
+	return include("config.lua")
 end
 
 -- rounds a number given its value and a precision

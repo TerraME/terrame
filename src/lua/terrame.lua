@@ -505,7 +505,8 @@ local executeTests = function(fileName, package)
 		functions_without_assert = 0,
 		examples = 0,
 		examples_error = 0,
-		print_calls = 0
+		print_calls = 0,
+		log_files = 0
 	}
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
@@ -694,11 +695,6 @@ local executeTests = function(fileName, package)
 
 				print("Testing "..value)
 				io.flush()
-				collectgarbage("collect")
-				
-				ut.examples = ut.examples + 1
-
-				collectgarbage("collect")
 
 				local logfile = nil
 				local writing_log = false
@@ -711,6 +707,7 @@ local executeTests = function(fileName, package)
 							print_yellow("Creating log file "..lfilename)
 							logfile = io.open(baseDir..s.."examples"..s..lfilename, "w")
 							writing_log = true
+							ut.log_files = ut.log_files + 1
 						end
 					end
 
@@ -731,7 +728,16 @@ local executeTests = function(fileName, package)
 					end
 				end
 
-				xpcall(function() include(baseDir..s.."examples"..s..value) end, function(err)
+				collectgarbage("collect")
+				
+				ut.examples = ut.examples + 1
+
+				local myfunc = function()
+					local env = setmetatable({}, {__index = _G})
+					loadfile(baseDir..s.."examples"..s..value, 't', env)()
+					return setmetatable(env, nil)
+				end
+				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
 					print_red(err)
 					print_red(traceback())
@@ -828,6 +834,12 @@ local executeTests = function(fileName, package)
 			print_green("All "..ut.examples.." examples were successfully executed.")
 		else
 			print_red(ut.examples_error.." out of "..ut.examples.." examples have unexpected execution error.")
+		end
+
+		if ut.log_files > 0 then
+			print_red(ut.log_files.." log files were created in the examples. Please run the tests again.")
+		else
+			print_green("No new log file was created.")
 		end
 	else
 		print_yellow("No examples were executed.")

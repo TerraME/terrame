@@ -20,11 +20,7 @@ dbType = "mysql"
 			os.exit()
 		else
 			unitTest:assert_not_nil(cf.dbType)
-			unitTest:assert_not_nil(cf.host)
 			unitTest:assert_not_nil(cf.password)
-			unitTest:assert_not_nil(cf.port)
-			unitTest:assert_not_nil(cf.user)
 		end
-
 	end
 }
