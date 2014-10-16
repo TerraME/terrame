@@ -397,15 +397,23 @@ end
 -- RAIAN: FUncao do antonio que executa os testes. Devera ir para dentro da funcao test acima. Coloquei desta maneira 
 -- para executar os testes sem alterar a chamada no lado C++ por enquanto. 
 local executeTests = function(fileName, package)
-	if package == nil then
-		package = "base"
-	else
+	local initialTime = os.clock()
+
+	if package ~= "base" then
 		require("base")
 	end
 
-	require(package)
+	local print_when_loading = 0
 
-	local initialTime = os.clock()
+	print_green("Loading package "..package)
+	print("Verifying print calls")
+	print = function(...)
+		-- FIXME: print_when_loading should be called ut.print_when_loading (see below the UnitTest)
+		print_when_loading = print_when_loading + 1
+		print_red(...)
+	end
+
+	require(package)
 
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s..package
@@ -418,7 +426,8 @@ local executeTests = function(fileName, package)
 	load_file = baseDir..s.."load.lua"
 	local load_sequence
 
-	if os.rename(load_file, load_file) then
+	print = function(...) end
+	if isfile(load_file, load_file) then
 		load_sequence = include(load_file).files
 	end
 
@@ -427,6 +436,7 @@ local executeTests = function(fileName, package)
 	for i, file in ipairs(load_sequence) do
 		testfunctions[file] = buildCountTable(include(baseDir..s.."lua"..s..file))
 	end
+	print = print__
 
 	local data
 
@@ -470,10 +480,6 @@ local executeTests = function(fileName, package)
 	if #data.folder == 0 then
 		customError("Could not find any folder to be tested according to the value of 'folder'.")
 	end
-
-	local myTest
-	local myFile
-
 	local global_variables = {}
 	local count_global = getn(_G)
 	forEachElement(_G, function(idx)
@@ -501,6 +507,10 @@ local executeTests = function(fileName, package)
 		print_calls = 0,
 		log_files = 0
 	}
+
+	local myTest
+	local myFile
+
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
 		local dirFiles = dir(baseDir..s..eachFolder)
@@ -767,6 +777,13 @@ local executeTests = function(fileName, package)
 	end
 
 	print_green(text)
+
+
+	if print_when_loading > 0 then
+		print_red(print_when_loading.." print calls when loading the package.")
+	else
+		print_green("No print calls when loading the package.")
+	end
 
 	if ut.fail > 0 then
 		print_red(ut.fail.." out of "..ut.test.." asserts failed.")
