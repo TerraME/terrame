@@ -10,6 +10,7 @@ local assert, pairs, tostring, type = assert, pairs, tostring, type
 -- local tags = require "luadoc.taglet.standard.tags"
 -- local string = require "string"
 -- local table = require "table"
+local lfs = lfs
 local print = print
 local pairs = pairs
 local ipairs = ipairs

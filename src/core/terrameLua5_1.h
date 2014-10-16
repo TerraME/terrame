@@ -56,9 +56,9 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 
 extern "C"
 {
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
+	#include <lua.h>
+	#include <lauxlib.h>
+	#include <lualib.h>
 }
 #include "luna.h"
 
