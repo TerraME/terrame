@@ -256,3 +256,12 @@ function mandatoryArgumentError(attr)
 	customError("Parameter '"..attr.."' is mandatory.")
 end
 
+-- TODO: verify the name of this function
+function mandatoryTableArgument(table, attr, mtype)
+	if table[attr] == nil then
+		customError("Parameter '"..attr.."' is mandatory.")
+	elseif type(table[attr]) ~= mtype then
+		incompatibleTypeError(attr, mtype, table[attr])
+	end
+end
+
