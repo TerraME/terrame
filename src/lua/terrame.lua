@@ -210,7 +210,6 @@ end
 -- lua files, starting from package/tests
 local testfolders = function(folder)
 	local result = {}
-	require("base")
 
 	local lf 
 	lf = function(mfolder)
@@ -408,7 +407,6 @@ local executeTests = function(fileName, package)
 
 	local initialTime = os.clock()
 
-	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s..package
 	local srcDir = baseDir..s.."tests"
@@ -490,11 +488,6 @@ local executeTests = function(fileName, package)
 	end)
 
 	local ut = UnitTest{
-		dbType = data.dbType,
-		user = data.user,
-		password = data.password,
-		port = data.port,
-		host = data.host,
 		sleep = data.sleep,
 		package_functions = 0,
 		functions_not_exist = 0,
@@ -1172,7 +1165,6 @@ execute = function(parameters) -- parameters is a string
 			end
 		else
 			-- TODO: Verify this block
-
 			if package ~= "" then
 				if package ~= "base" then
 					require("base")
