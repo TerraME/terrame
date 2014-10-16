@@ -41,7 +41,7 @@ end
 -- Main function -- RAIAN: Renamed to stardDoc instead of main
 -- @see luadoc.doclet.html, luadoc.doclet.formatter, luadoc.doclet.raw
 -- @see luadoc.taglet.standard
-function startDoc (files, options)
+function startDoc (files, options, package_path)
 	-- logger = util.loadlogengine(options)
 
 	-- load config file
@@ -62,7 +62,7 @@ function startDoc (files, options)
 	-- analyze input
 	taglet.options = options
 	taglet.logger = logger
-	local doc = taglet.start(files)
+	local doc = taglet.start(files, package_path)
 	
 	doc.description = ldescription()
 	

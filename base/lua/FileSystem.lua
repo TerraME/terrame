@@ -50,7 +50,7 @@ end
 -- This function uses stat internally thus if the given filepath is a symbolic link, it is followed 
 -- (if it points to another link the chain is followed recursively) and the information is about the 
 -- file it refers to. To obtain information about the link itself, see function lfs.symlinkattributes.
-local attributes = function(filepath [, attributename])
+local attributes = function(filepath, attributename)
 end
 
 -- lfs.chdir (path)
@@ -115,7 +115,7 @@ end
 -- lfs.symlinkattributes (filepath [, aname])
 -- Identical to lfs.attributes except that it obtains information about the link itself (not the file it 
 -- refers to). On Windows this function does not yet support links, and is identical to lfs.attributes.
-local symlinkattributes = function(filepath [, attributename])
+local symlinkattributes = function(filepath, attributename)
 end
 
 -- lfs.touch (filepath [, atime [, mtime]])
@@ -125,7 +125,7 @@ end
 -- standard function os.time). If the modification time is omitted, the access time provided is used; 
 -- if both times are omitted, the current time is used.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
-local touch = function(filepath [, atime [, mtime]])
+local touch = function(filepath, atime, mtime)
 end
 
 -- lfs.unlock (filehandle[, start[, length]])

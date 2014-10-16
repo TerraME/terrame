@@ -111,7 +111,7 @@ end
 -------------------------------------------------------------------------------
 -- Main function. Process command-line parameters and call luadoc processor.
 -- RAIAN: Renamed to luadocMain instead of main
-function luadocMain(arg, files)
+function luadocMain(package_path, files)
 	-- Process options
 	-- local argc = #arg
 	-- if argc < 1 then
@@ -123,7 +123,7 @@ function luadocMain(arg, files)
 
 	-- local options = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."config.lua").default_options
 
-	return startDoc(files, options)
+	return startDoc(files, options, package_path)
 end
 
 -- main(arg)

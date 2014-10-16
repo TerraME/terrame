@@ -3,17 +3,17 @@
 -------------------------------------------------------------------------------
 
 local assert, pairs, tostring, type = assert, pairs, tostring, type
--- local io = require "io"
--- local lfs = require "lfs"
--- local luadoc = require "luadoc"
 -- local util = require "luadoc.util"
 -- local tags = require "luadoc.taglet.standard.tags"
--- local string = require "string"
--- local table = require "table"
-local lfs = lfs
+local io = io
+local table = table
+local sessionInfo = sessionInfo
+local attributes = attributes
+local string = string
 local print = print
 local pairs = pairs
 local ipairs = ipairs
+local forEachElement = forEachElement
 -- module 'luadoc.taglet.standard'
 
 -------------------------------------------------------------------------------
@@ -441,14 +441,16 @@ end
 
 function file (filepath, doc)
 	local patterns = { "%.lua$", "%.luadoc$" }
-	local valid = table.foreachi(patterns, function (_, pattern)
+	local valid = false
+	forEachElement(patterns, function(_, pattern)
 		if string.find(filepath, pattern) ~= nil then
-			return true
+			valid = true
 		end
+		return valid
 	end)
 	
 	if valid then
-		logger:info(string.format("processing file `%s'", filepath))
+		-- logger:info(string.format("processing file `%s'", filepath))
 		doc = parse_file(filepath, doc)
 	end
 	for _, filepath in ipairs(doc.files) do
@@ -668,31 +670,32 @@ function check_header(filepath)
 end
 
 -------------------------------------------------------------------------------
-function start (files, doc)
+function start (files, package_path)
+	local s = sessionInfo().separator
 	assert(files, "file list not specified")
 	
 	-- Create an empty document, or use the given one
-	doc = doc or {
+	-- doc = doc or {
+	local doc = {
 		files = {},
 		modules = {},
 	}
 	assert(doc.files, "undefined `files' field")
 	assert(doc.modules, "undefined `modules' field")
 	
-	-- RAIAN
 	--table.foreachi(files, function (_, path)
-	for _, path in ipairs(files) do
-		local attr = lfs.attributes(path)
-		assert(attr, string.format("error stating path `%s'", path))
+	for _, file_ in ipairs(files) do
+		local file_path = package_path..s.."lua"..s..file_
+		local attr = attributes(file_path)
+		assert(attr, string.format("error stating path `%s'", file_path))
 		
 		if attr.mode == "file" then
-			doc = file(path, doc)
+			doc = file(file_path, doc)
 		elseif attr.mode == "directory" then
-			doc = directory(path, doc)
+			doc = directory(file_path, doc)
 		end
 	--end)
 	end
-	--RAIAN: FIM
 	
 	-- exclude undocumented files
 	exclude_undoc(doc.files)
