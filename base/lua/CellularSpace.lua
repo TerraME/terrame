@@ -332,17 +332,9 @@ CellularSpace_ = {
 		switch(data, "strategy"):caseof{
 			["function"] = function() 
 				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy"})
-				if data.filter == nil then
-					mandatoryArgumentError("filter")
-				elseif type(data.filter) ~="function" then
-					incompatibleTypeError("filter", "function", data.filter)
-				end
+				mandatoryTableArgument(data, "filter", "function")
 
-				if data.weight == nil then
-					data.weight = function() return 1 end
-				elseif type(data.weight) ~= "function" then
-					incompatibleTypeError("weight", "function", data.weight)
-				end
+				defaultTableValue(data, "weight", function() return 1 end)
 
 				createNeighborhood(self, data.filter, data.weight, data.name) 
 			end,
@@ -356,11 +348,9 @@ CellularSpace_ = {
 			end,
 			mxn = function()
 				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "m", "n", "target"})
-				if data.m == nil then
-					mandatoryArgumentError("m")
-				elseif type(data.m) ~= "number" then
-					incompatibleTypeError("m", "positive integer number (greater than zero)", data.m)
-				elseif data.m <= 0 then
+				mandatoryTableArgument(data, "m", "number")
+
+				if data.m <= 0 then
 					incompatibleValueError("m", "positive integer number (greater than zero)", data.m)
 				elseif math.floor(data.m) ~= data.m then
 					incompatibleValueError("m", "positive integer number (greater than zero)", "real number")
@@ -369,11 +359,9 @@ CellularSpace_ = {
 					customWarning("Parameter 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 				end
 
-				if data.n == nil then
-					data.n = data.m
-				elseif type(data.n) ~= "number" then
-					incompatibleTypeError("n", "positive integer number (greater than zero)", data.n)
-				elseif data.n <= 0 then
+				defaultTableValue(data, "n", data.m)
+
+				if data.n <= 0 then
 					incompatibleValueError("n", "positive integer number (greater than zero)", data.n)
 				elseif math.floor(data.n) ~= data.n then
 					incompatibleValueError("n", "positive integer number (greater than zero)", "real number")
@@ -388,9 +376,7 @@ CellularSpace_ = {
 				if data.target == nil then
 					createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name)
 				else
-					if type(data.target) ~= "CellularSpace" then
-						incompatibleTypeError("target", "CellularSpace or nil", data.target)
-					end
+					mandatoryTableArgument(data, "target", "CellularSpace")
 					spatialCoupling(data.m, data.n, self, data.target, data.filter, data.weight, data.name)
 				end
 			end,
@@ -413,12 +399,7 @@ CellularSpace_ = {
 			end,
 			coord = function() 
 				checkUnnecessaryParameters(data, {"name", "strategy", "target"})
-
-				if data.target == nil then
-					mandatoryArgumentError("target")
-				elseif type(data.target) ~= "CellularSpace" then
-					incompatibleTypeError("target", "CellularSpace", data.target)
-				end
+				mandatoryTableArgument(data, "target", "CellularSpace")
 
 				coordCoupling(self, data.target, data.name) 
 			end
