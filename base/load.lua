@@ -26,6 +26,7 @@ files = {
 	"Chart.lua",
 	"Clock.lua",
 	"Map.lua",
+	"InternetSender.lua",
 	"FileSystem.lua"
 }
 

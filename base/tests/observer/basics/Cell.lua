@@ -55,6 +55,15 @@ return{
 
         t:execute(30)
 		unitTest:delay()
+
+-- FIXME: bug below
+--[[
+		world = Cell{value = 3}
+
+		c = InternetSender{subject = world}
+		unitTest:assert_type(c, "number")
+		unitTest:delay()
+--]]
 	end
 }
 
