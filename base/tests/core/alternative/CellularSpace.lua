@@ -235,7 +235,7 @@ return{
 				weight = function() return 1 end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'm' expected positive integer number (greater than zero), got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'm' expected number, got string.")
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -265,7 +265,7 @@ return{
 				weight = function() return 1 end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'n' expected positive integer number (greater than zero), got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'n' expected number, got string.")
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -292,7 +292,6 @@ return{
 				strategy = "mxn",
 				name = "my_neighborhood",
 				m = 5,
-				n = 5,
 				filter = true
 			}
 		end
@@ -303,7 +302,6 @@ return{
 				strategy = "mxn",
 				name = "my_neighborhood",
 				m = 5,
-				n = 5,
 				filter = function() end,
 				weight = true
 			}
@@ -314,22 +312,33 @@ return{
 			cs:createNeighborhood{
 				strategy = "mxn",
 				name = "my_neighborhood",
-				target = "teste",
 				m = 5,
 				n = 5,
 				filter = function() end,
 				weight = function() end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'target' expected CellularSpace or nil, got string.")
+		unitTest:assert_error(error_func, "Error: Parameter 'n' could be removed as it is the default value (5).")
+		
+		error_func = function()
+			cs:createNeighborhood{
+				strategy = "mxn",
+				name = "my_neighborhood",
+				target = "teste",
+				m = 5,
+				filter = function() end,
+				weight = function() end
+			}
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'target' expected CellularSpace, got string.")
 	
+
 		error_func = function()
 			cs:createNeighborhood{
 				strategy = "mxn",
 				name = "my_neighborhood",
 				target = cs,
-				m = 4,
-				n = 5
+				m = 4
 			}
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
@@ -369,7 +378,7 @@ return{
 				end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'm' expected positive integer number (greater than zero), got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'm' expected number, got string.")
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -402,7 +411,7 @@ return{
 				weight = function() return 1 end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'n' expected positive integer number (greater than zero), got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'n' expected number, got string.")
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -522,11 +531,15 @@ return{
 		unitTest:assert_error(error_func, "Error: Parameter 'values' should contain only strings.")
 	end,
 	load = function(unitTest)
+		unitTest:assert(true)
+		-- TODO: is there one possible test here?
+--[[
 		local csK = CellularSpace{xdim = 2}
 		local error_func = function()
 			csK:load()
 		end
 		unitTest:assert_error(error_func, "Error: Cannot load volatile cellular spaces.")
+--]]
 	end
 }
 

@@ -38,10 +38,10 @@ return{
         local c = Chart{subject = world}
 		unitTest:assert_type(c, "number")
 
-        local c = Chart{subject = world, select = {"count", "value", "sum"}}
+        c = Chart{subject = world, select = {"count", "value", "sum"}}
 		unitTest:assert_type(c, "number")
 
-        local c = Chart{subject = world}
+        c = Chart{subject = world}
 		unitTest:assert_type(c, "number")
 
         world:notify(0)
@@ -55,6 +55,15 @@ return{
 
         t:execute(30)
 		unitTest:delay()
+
+-- FIXME: bug below
+--[[
+		world = Cell{value = 3}
+
+		c = InternetSender{subject = world}
+		unitTest:assert_type(c, "number")
+		unitTest:delay()
+--]]
 	end
 }
 

@@ -288,7 +288,6 @@ return{
 			strategy = "mxn",
 			target = cs2,
 			m = 3,
-			n = 3,		
 			filter = function(cell,neigh) 
 				return not ((cell.x == neigh.x) and (cell.y == neigh.y))
 			end,

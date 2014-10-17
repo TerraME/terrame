@@ -91,6 +91,20 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'neighborhood' is mandatory.")
 	end,
+	mandatoryTableArgument = function(unitTest)
+		local mtable = {bbb = 3, ccc = "aaa"}
+
+		local error_func = function()
+			mandatoryTableArgument(mtable, "bbb", "string")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'bbb' expected string, got number.")
+
+		error_func = function()
+			mandatoryTableArgument(mtable, "ddd", "string")
+		end
+		unitTest:assert_error(error_func, "Error: Parameter 'ddd' is mandatory.")
+	end,
+
 	verifyNamedTable = function(unitTest)
 		local error_func = function()
 			verifyNamedTable()

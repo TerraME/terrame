@@ -75,7 +75,7 @@ return{
 		unitTest:assert_equal(2, c.y)
 	end,
 	createNeighborhood = function(unitTest)
-		local cs = CellularSpace{xdim=10}
+		local cs = CellularSpace{xdim = 10}
 
 		cs:createNeighborhood()
 
@@ -453,7 +453,6 @@ return{
 			strategy = "mxn",
 			name = "my_neighborhood2",
 			m = 5,
-			n = 5
 		}
 
 		local sizes = {}
@@ -532,7 +531,6 @@ return{
 			strategy = "mxn",
 			name = "my_neighborhood4",
 			m = 5,
-			n = 5,
 			filter = filterFunction,
 			weight = weightFunction
 		}
@@ -619,7 +617,6 @@ return{
 			name = "my_neighborhood6",
 			target = cs2,
 			m = 5,
-			n = 5,
 			filter = filterFunction,
 			weight = weightFunction
 		}
@@ -875,6 +872,7 @@ return{
 			vvv = 333}
 		unitTest:assert_equal(tostring(cs1), [[cells   table of size 200
 cObj_   userdata
+dbType  string [virtual]
 load    function
 maxCol  number [9]
 maxRow  number [19]
