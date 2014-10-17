@@ -59,7 +59,7 @@ local end_color    = "\027[00m"
 
 print__ = print
 
-local print_blue = function(value)
+print_blue = function(value)
 	if sessionInfo().separator == "/" then
 		print__(begin_blue..value..end_color)
 	else
@@ -67,7 +67,7 @@ local print_blue = function(value)
 	end
 end
 
-local function print_red(value)
+function print_red(value)
 	if sessionInfo().separator == "/" then
 		print__(begin_red..value..end_color)
 	else
@@ -75,7 +75,7 @@ local function print_red(value)
 	end
 end
 
-local function print_green(value)
+function print_green(value)
 	if sessionInfo().separator == "/" then
 		print__(begin_green..value..end_color)
 	else
@@ -83,7 +83,7 @@ local function print_green(value)
 	end
 end
 
-local function print_yellow(value)
+function print_yellow(value)
 	if sessionInfo().separator == "/" then
 		print__(begin_yellow..value..end_color)
 	else
