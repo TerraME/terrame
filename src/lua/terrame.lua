@@ -413,7 +413,12 @@ local executeTests = function(fileName, package)
 		print_red(...)
 	end
 
-	require(package)
+    xpcall(function() require(package) end, function(err)
+		print_red("Package could not be loaded.")
+        print_red(err)
+        print_red(traceback())
+		os.exit()
+    end)
 
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s..package
