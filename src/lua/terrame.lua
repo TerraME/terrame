@@ -539,7 +539,6 @@ local executeTests = function(fileName, package)
 			end
 
 			for _, eachFile in ipairs(myFile) do
-				print_green("Testing "..eachFolder..s..eachFile)
 				ut.current_file = eachFolder..s..eachFile
 				-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
 				local tests = dofile(baseDir..s..eachFolder..s..eachFile)
@@ -567,8 +566,10 @@ local executeTests = function(fileName, package)
 					error("test is not a string, table or nil")
 				end
 
-				if #myTest == 0 then
-					print_yellow("Skipping file "..eachFile)
+				if #myTest > 0 then
+					print_green("Testing "..eachFolder..s..eachFile)
+				else
+					print_yellow("Skipping "..eachFolder..s..eachFile)
 				end
 
 
