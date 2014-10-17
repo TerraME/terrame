@@ -52,6 +52,11 @@ Author: Tiago Garcia de Senna Carneiro
 #include "player.h"
 #include "registryObjects.h"
 
+extern "C"
+{
+	#include "lfs.h"
+}
+
 //////////////////////////////////////////////////////////////////////////////
 //// Percorre a lista de widget fechando cada um deles
 //// Metodo responsavel por evitar a mensagem abaixo na tela
@@ -232,6 +237,9 @@ int main ( int argc, char *argv[] )
 
     openLuaEnvironment();  // Opens Lua environment and libraries
     registerClasses();      // records TerraME Classes in Lua environment
+	
+	// Loads lfs functions
+	luaopen_lfs(L);
 
 #if defined ( TME_WIN32 )
     tmePath.append("\\lua\\terrame.lua");

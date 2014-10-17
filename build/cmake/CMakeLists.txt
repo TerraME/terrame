@@ -37,36 +37,8 @@ set(BASE_DIR ${ROOT}/base)
 
 # file(MAKE_DIRECTORY ${BINARY_DIR}/packages)
 
-# file(MAKE_DIRECTORY ${ROOT}/bin/Lua)
+# file(MAKE_DIRECTORY ${ROOT}/bin/lua)
 
-# file(COPY
-# 	${SRCDIR}/lua/Action.lua
-# 	${SRCDIR}/lua/Agent.lua
-# 	${SRCDIR}/lua/Automaton.lua
-# 	${SRCDIR}/lua/Cell.lua
-# 	${SRCDIR}/lua/CellularSpace.lua
-# 	${SRCDIR}/lua/Coord.lua
-# 	${SRCDIR}/lua/Environment.lua 
-# 	${SRCDIR}/lua/Event.lua
-# 	${SRCDIR}/lua/Flow.lua
-# 	${SRCDIR}/lua/Group.lua
-# 	${SRCDIR}/lua/Jump.lua
-# 	${SRCDIR}/lua/Legend.lua 
-# 	${SRCDIR}/lua/Model.lua 
-# 	${SRCDIR}/lua/Neighborhood.lua
-# 	${SRCDIR}/lua/Observer.lua
-# 	${SRCDIR}/lua/Pair.lua	
-# 	${SRCDIR}/lua/SocialNetwork.lua	
-# 	${SRCDIR}/lua/Society.lua	
-# 	${SRCDIR}/lua/State.lua
-# 	${SRCDIR}/lua/Tests.lua
-# 	${SRCDIR}/lua/Timer.lua
-# 	${SRCDIR}/lua/Trajectory.lua
-# 	${SRCDIR}/lua/Random.lua  
-# 	${SRCDIR}/lua/Utils.lua
-
-# 	DESTINATION ${BINARY_DIR}/Lua
-# 	)
 file(COPY
 	${BASE_DIR}/
 
@@ -109,6 +81,7 @@ include_directories( ${SRCDIR}
 	${SRCDIR_OBSERVER}/types/stateMachine
 	${SRCDIR_OBSERVER}/
 	${SRCDIR_OBSERVER}/bagOfTasks
+	${SRCDIR}/luaFileSystem
 
 	/usr/local/include
 )
@@ -138,7 +111,8 @@ file(GLOB SRCS
 	${SRCDIR_OBSERVER}/types/image/*.cpp 
 	${SRCDIR_OBSERVER}/types/stateMachine/*.cpp 
 	${SRCDIR_OBSERVER}/*.cpp
-	${SRCDIR_OBSERVER}/bagOfTasks/*.cpp 
+	${SRCDIR_OBSERVER}/bagOfTasks/*.cpp
+	${SRCDIR}/luaFileSystem/*.c
 )
 
 # Set header files location
@@ -166,7 +140,8 @@ file(GLOB HEADERS
 	${SRCDIR_OBSERVER}/types/image/*.h 
 	${SRCDIR_OBSERVER}/types/stateMachine/*.h 
 	${SRCDIR_OBSERVER}/*.h 
-	${SRCDIR_OBSERVER}/bagOfTasks/*.h 
+	${SRCDIR_OBSERVER}/bagOfTasks/*.h
+	${SRCDIR}/luaFileSystem/*.h
 )
 
 set(LIBS)
@@ -698,6 +673,11 @@ source_group("observer\\bagOfTasks" FILES
 	${SRCDIR_OBSERVER}/bagOfTasks/taskManager.h
 	${SRCDIR_OBSERVER}/bagOfTasks/worker.cpp
 	${SRCDIR_OBSERVER}/bagOfTasks/worker.h
+)
+
+source_group("luaFileSystem" FILES
+	${SRCDIR}/luaFileSystem/lfs.c
+	${SRCDIR}/luaFileSystem/lfs.h
 )
 
 ## ------------------------------------- Set Installation procedure -------------------------------------------- ##

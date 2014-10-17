@@ -25,6 +25,7 @@ files = {
 	"Environment.lua",
 	"Chart.lua",
 	"Clock.lua",
-	"Map.lua"
+	"Map.lua",
+	"FileSystem.lua"
 }
 
