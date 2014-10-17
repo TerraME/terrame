@@ -14,6 +14,10 @@ local print = print
 local pairs = pairs
 local ipairs = ipairs
 local forEachElement = forEachElement
+local print_yellow = print_yellow
+local s = sessionInfo().separator
+local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
+local tags = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."taglet"..s.."standard"..s.."tags.lua")
 -- module 'luadoc.taglet.standard'
 
 -------------------------------------------------------------------------------
@@ -52,17 +56,19 @@ local function_patterns = {
 local function check_function (line)
 	line = util.trim(line)
 
-	local info = table.foreachi(function_patterns, function (_, pattern)
+	local info
+	forEachElement(function_patterns, function (_, pattern)
 		local r, _, l, id, param = string.find(line, pattern)
 		if r ~= nil then
 			-- remove self
 			--~ table.foreachi(util.split("%s*,%s*", param), print)
 			param = param:gsub("(self%s*,?%s*)", "")
-			return {
+			info = {
 				name = id,
 				private = (l == "local"),
 				param = util.split("%s*,%s*", param),
 			}
+			return false
 		end
 	end)
 
@@ -160,7 +166,8 @@ end
 local function parse_comment (block, first_line)
 
 	-- get the first non-empty line of code
-	local code = table.foreachi(block.code, function(_, line)
+	local code 
+	forEachElement(block.code, function(_, line)
 		if not util.line_empty(line) then
 			-- `local' declarations are ignored in two cases:
 			-- when the `nolocals' option is turned on; and
@@ -168,9 +175,10 @@ local function parse_comment (block, first_line)
 			--	necessary to avoid confusion between the top
 			--	local declarations and the `module' definition.
 			if (options.nolocals or first_line) and line:find"^%s*local" then
-				return
+				return false
 			end
-			return line
+			code = line
+			return false
 		end
 	end)
 	
@@ -199,7 +207,7 @@ local function parse_comment (block, first_line)
 	local currenttag = "description"
 	local currenttext
 	
-	table.foreachi(block.comment, function (_, line)
+	forEachElement(block.comment, function (_, line)
 		-- armazena linha completa
 		local example_code = line:gsub("^%s*%-+%s?", "")
 		line = util.trim_comment(line)
@@ -469,8 +477,8 @@ end
 
 function directory (path, doc)
 	for f in dir(path) do
-		local fullpath = path .. "/" .. f
-		local attr = lfs.attributes(fullpath)
+		local fullpath = path..s..f
+		local attr = attributes(fullpath)
 		assert(attr, string.format("error stating file `%s'", fullpath))
 		
 		if attr.mode == "file" then
@@ -564,7 +572,7 @@ local function check_function_usage(files)
 			if type(usage) == "string" then
 				if not string.match(usage, function_name) then
 					local warning = "%s: '%s' does not call itself in its @usage"
-					print(warning:format(file_name, function_name))
+					print_yellow(warning:format(file_name, function_name))
 				end
 			end
 		end
@@ -603,7 +611,7 @@ local function check_undoc_params(files)
 				for k = 1, #params do
 					if not params[params[k]] then
 						local warning = "%s: '%s' has undocumented parameter '%s'"
-						print(warning:format(file_name, function_name, params[k]))
+						print_yellow(warning:format(file_name, function_name, params[k]))
 					end
 				end
 			end

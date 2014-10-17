@@ -21,15 +21,15 @@
 -- information
 
 local s = sessionInfo().separator
+local luadoc_dirLocal = sessionInfo().path..s.."packages"..s.."luadoc"
 
 --[[local]] default_options = {
 	output_dir = "",
-	-- taglet = "luadoc.taglet.standard",
-	taglet = sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."taglet"..s.."standard.lua",
-	-- doclet = "luadoc.doclet.html",
-	doclet = sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."doclet"..s.."html.lua",
+	luadoc_dir = luadoc_dirLocal,
+	taglet = luadoc_dirLocal..s.."lua"..s.."taglet"..s.."standard.lua",
+	doclet = luadoc_dirLocal..s.."lua"..s.."doclet"..s.."html.lua",
 	-- TODO: find a way to define doclet specific options
-	template_dir = "luadoc/doclet/html/",
+	template_dir = luadoc_dirLocal..s.."lua"..s.."doclet"..s.."html"..s,
 	nomodules = false,
 	nofiles = false,
 	verbose = true,

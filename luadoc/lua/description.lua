@@ -1,4 +1,4 @@
-local M = {
+--[[local]] M = {
 	version = "0.0.1",
 	date = "01 January 2014",
 	package = "Package",
@@ -9,4 +9,4 @@ local M = {
 	content = [[Description]]
 }
 
-return M
+-- return M

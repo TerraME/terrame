@@ -9,7 +9,6 @@ local find, format, gsub, strsub = string.find, string.format, string.gsub, stri
 local concat, tinsert = table.concat, table.insert
 local open = io.open
 local print = print 
-module (...)
 
 ----------------------------------------------------------------------------
 -- function to do output
@@ -114,6 +113,7 @@ end
 -- @param filename String with the name of the file containing the template.
 -- @param env Table with the environment to run the resulting function.
 
+--TODO: Maybe this function must be renamed
 function include (filename, env)
 	-- read the whole contents of the file
 	local fh = assert (open (filename))

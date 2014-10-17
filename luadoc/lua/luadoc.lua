@@ -111,7 +111,8 @@ end
 -------------------------------------------------------------------------------
 -- Main function. Process command-line parameters and call luadoc processor.
 -- RAIAN: Renamed to luadocMain instead of main
-function luadocMain(package_path, files)
+function luadocMain(package_path, files, package)
+	print_green("Generating documentation for the package "..package)
 	-- Process options
 	-- local argc = #arg
 	-- if argc < 1 then
@@ -120,6 +121,14 @@ function luadocMain(package_path, files)
 	-- end
 
 	local --[[files,]] options = process_options (arg)
+
+	-- forEachElement(files, function(idx, elem, etype)
+	-- 	files[idx] = package_path..s.."lua"..s..elem
+	-- end)
+
+	-- forEachElement(files, function(idx, elem, etype)
+	-- 	print(idx, elem)
+	-- end)
 
 	-- local options = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."config.lua").default_options
 

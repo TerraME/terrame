@@ -24,17 +24,18 @@ _DESCRIPTION = "Documentation Generator Tool for the Lua language"
 _VERSION = "LuaDoc 3.0.1"
 
 
-local function ldescription()
-	local script = loadfile("description.lua")
+local function ldescription(package_path)
+	local script = include(package_path..s.."description.lua")
 	if script then
-		local _env = {}
-		setfenv(script, _env)
-		pcall(script)
-		return _env		
+		-- local _env = {}
+		-- setfenv(script, _env)
+		-- pcall(script)
+		-- return _env
+		return script
 	else
-		print("Package description file 'description.lua' not found. Using default description.")
+		print_yellow("Package description file 'description.lua' not found. Using default description.")
 	end
-	return require("luadoc.description")
+	return include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."description.lua").M
 end
 
 -------------------------------------------------------------------------------
@@ -64,9 +65,10 @@ function startDoc (files, options, package_path)
 	taglet.logger = logger
 	local doc = taglet.start(files, package_path)
 	
-	doc.description = ldescription()
+	doc.description = ldescription(package_path)
 	
 	doclet.options = options
 	doclet.logger = logger
+
 	doclet.start(doc)
 end

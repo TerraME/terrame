@@ -13,16 +13,18 @@
 -------------------------------------------------------------------------------
 
 local assert, getfenv, ipairs, loadstring, pairs, setfenv, tostring, tonumber, type = assert, getfenv, ipairs, loadstring, pairs, setfenv, tostring, tonumber, type
--- local io = require"io"
--- local lfs = require "lfs"
--- local lp = require "luadoc.lp"
+local io = io
 -- local luadoc = require"luadoc"
 local package = package
--- local string = require"string"
--- local table = require"table"
+local string = string
+local table = table
 local print =  print
--- local util = require "luadoc.util"
--- local highlighting = require "luadoc.doclet.highlighting"
+local print_green = print_green
+local forEachElement = forEachElement
+local s = sessionInfo().separator
+local lp = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."lp.lua")
+local highlighting = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."doclet"..s.."highlighting.lua")
+local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
 -- module "luadoc.doclet.html"
 
 -------------------------------------------------------------------------------
@@ -33,15 +35,15 @@ local print =  print
 --	or nil in case the file is not found.
 
 local function search (path, name)
-  for c in string.gfind(path, "[^;]+") do
-    c = string.gsub(c, "%?", name)
-    local f = io.open(c)
-    if f then   -- file exist?
-      f:close()
-      return c
-    end
-  end
-  return nil    -- file not found
+	for c in string.gmatch(path, "[^;]+") do
+		c = string.gsub(c, "%?", name)
+		local f = io.open(c)
+		if f then   -- file exist?
+			f:close()
+			return c
+		end
+	end
+	return nil    -- file not found
 end
 
 -------------------------------------------------------------------------------
@@ -52,8 +54,12 @@ function includeMod (template, env)
 	local templatepath = options.template_dir .. template
 	
 	-- search using package.path (modified to search .lp instead of .lua
-	local search_path = string.gsub(package.path, "%.lua", "")
-	local templatepath = search(search_path, templatepath)
+
+	-- TODO: Verificar se compensa ter a possibilidade de se deixar os templates em outra pasta. 
+	-- Assim o usuario poderia ter seu próprio template
+
+	-- local search_path = string.gsub(package.path, "%.lua", "")
+	-- local templatepath = search(search_path, templatepath)
 	assert(templatepath, string.format("template `%s' not found", template))
 	
 	env = env or {}
@@ -70,7 +76,7 @@ function includeMod (template, env)
 	env.pairs = pairs
 	env.string = string
 	env.util = util
-  env.hl = highlighting
+	env.hl = highlighting
 	return lp.include(templatepath, env)
 end
 
@@ -213,7 +219,7 @@ function symbol_link (symbol, doc, module_doc, file_doc, from)
 	local href = 
 --		file_link(symbol, from) or
 		module_link(symbol, doc, from) or 
-    file_func_link(symbol, doc, file_doc, from) or
+	file_func_link(symbol, doc, file_doc, from) or
 		link_to(symbol, doc, module_doc, file_doc, from, "functions") or
 		link_to(symbol, doc, module_doc, file_doc, from, "tables")
   
@@ -308,15 +314,15 @@ end
 -- @param doc Table with the structured documentation.
 
 function start (doc)
-  -- Reserveds words for parser
-  if doc.files then
-    highlighting.setWords(doc.files.funcnames)
-  end
+	-- Reserveds words for parser
+	if doc.files then
+		highlighting.setWords(doc.files.funcnames)
+	end
 	-- Generate index file
 	if (#doc.files > 0 or #doc.modules > 0) and (not options.noindexpage) then
 		local filename = options.output_dir.."index.html"
-		logger:info(string.format("generating file `%s'", filename))
-		local f = openFile(filename, "w")
+		print_green(string.format("generating file `%s'", filename))
+		local f = util.openFile(filename, "w")
 		assert(f, string.format("could not open `%s' for writing", filename))
 		io.output(f)
 		includeMod("index.lp", { doc = doc })
@@ -331,7 +337,7 @@ function start (doc)
 			local filename = out_module(modulename)
 			logger:info(string.format("generating file `%s'", filename))
 			
-			local f = openFile(filename, "w")
+			local f = util.openFile(filename, "w")
 			assert(f, string.format("could not open `%s' for writing", filename))
 			io.output(f)
 			includeMod("module.lp", { doc = doc, module_doc = module_doc })
@@ -347,7 +353,7 @@ function start (doc)
 			local filename = out_file(file_doc.name)
 			logger:info(string.format("generating file `%s'", filename))
 			
-			local f = openFile(filename, "w")
+			local f = util.openFile(filename, "w")
 			assert(f, string.format("could not open `%s' for writing", filename))
 			io.output(f)
 			includeMod("file.lp", { doc = doc, file_doc = file_doc } )
@@ -356,7 +362,7 @@ function start (doc)
 	end
 	
 	-- copy extra files
-	local f = openFile(options.output_dir.."luadoc.css", "w")
+	local f = util.openFile(options.output_dir.."luadoc.css", "w")
 	io.output(f)
 	includeMod("luadoc.css")
 	f:close()

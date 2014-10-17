@@ -3,21 +3,29 @@
 -- @release $Id: tags.lua,v 1.8 2007/09/05 12:39:09 tomas Exp $
 -------------------------------------------------------------------------------
 
-local luadoc = require "luadoc"
-local util = require "luadoc.util"
-local string = require "string"
-local table = require "table"
+-- local luadoc = require "luadoc"
+-- local util = require "luadoc.util"
+-- local string = require "string"
+-- local table = require "table"
 local assert, type, tostring = assert, type, tostring
 local print = print
 local pairs = pairs
-module "luadoc.taglet.standard.tags"
+local string = string
+local table = table
+local forEachElement = forEachElement
+local s = sessionInfo().separator
+local print_yellow = print_yellow
+local print_red = print_red
+local io = io
+local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
+-- module "luadoc.taglet.standard.tags"
 
 -------------------------------------------------------------------------------
 
 local function author (tag, block, text)
 	block[tag] = block[tag] or {}
 	if not text then
-		luadoc.logger:warn("author `name' not defined [["..text.."]]: skipping")
+		print_yellow("Warning: author `name' not defined [["..text.."]]: skipping")
 		return
 	end
 	table.insert (block[tag], text)
@@ -59,7 +67,7 @@ end
 
 local function field (tag, block, text)
 	if block["class"] ~= "table" then
-		luadoc.logger:warn("documenting `field' for block that is not a `table'")
+		print_yellow("documenting `field' for block that is not a `table'")
 	end
 	block[tag] = block[tag] or {}
 
@@ -76,7 +84,8 @@ end
 
 local function name (tag, block, text)
 	if block[tag] and block[tag] ~= text then
-		luadoc.logger:error(string.format("block name conflict: `%s' -> `%s'", block[tag], text))
+		print_red(string.format("block name conflict: `%s' -> `%s'", block[tag], text))
+		io.exit()
 	end
 	
 	block[tag] = text
@@ -93,7 +102,7 @@ local function param (tag, block, text)
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	if not name then
-		luadoc.logger:warn("parameter `name' not defined [["..text.."]]: skipping")
+		print_yellow("Warning: parameter `name' not defined [["..text.."]]: skipping")
 		return
 	end
  
@@ -102,9 +111,11 @@ local function param (tag, block, text)
 	if param_tab then
 		name = field
 		-- match documented parameter with declared parameter
-		local i = table.foreachi(block[tag], function (i, v)
+		local i
+		forEachElement(block[tag], function (idx, v)
 			if v == param_tab then
-				return i
+				i = idx
+				return false
 			end
 		end)
 
@@ -119,13 +130,16 @@ local function param (tag, block, text)
   
   
 	-- match documented parameter with declared parameter
-	local i = table.foreachi(block[tag], function (i, v)
+	local i 
+
+	forEachElement(block[tag], function (idx, v)
 		if v == name then
-			return i
+			i = idx
+			return false
 		end
 	end)
 	if i == nil then
-		luadoc.logger:warn(string.format("documenting undefined parameter `%s'", name))
+		print_yellow(string.format("Warning: documenting undefined parameter `%s'", name))
 		table.insert(block[tag], name)
 	end
 	block[tag][name] = desc
@@ -162,7 +176,7 @@ local function see (tag, block, text)
 	
 	local s = util.split("%s*,%s*", text)			
 	
-	table.foreachi(s, function (_, v)
+	forEachElement(s, function (_, v)
 		table.insert(block[tag], v)
 	end)
 end
@@ -187,7 +201,7 @@ local function output (tag, block, text)
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
   if not name then
-		luadoc.logger:warn("output `name' not defined [["..text.."]]: skipping")
+		print_yellow("Warning: output `name' not defined [["..text.."]]: skipping")
 		return
 	end
   
@@ -236,7 +250,8 @@ handlers["inherits"] = inherits
 
 function handle (tag, block, text)
 	if not handlers[tag] then
-		luadoc.logger:error(string.format("undefined handler for tag `%s'", tag))
+		print_red(string.format("Error: undefined handler for tag `%s'", tag))
+		io.exit()
 		return
 	end
 --	assert(handlers[tag], string.format("undefined handler for tag `%s'", tag))

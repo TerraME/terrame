@@ -369,7 +369,7 @@ local doc = function(package)
 
 	local files = dir(package_path..s.."lua")
 
-	luadocMain(package_path, files)
+	luadocMain(package_path, files, package)
 end
 
 -- builds a table with zero counts for each element of the table gotten as argument
