@@ -201,17 +201,43 @@ local function spatialCoupling(m, n, cs1, cs2, filterF, weightF, name)
 	end)
 end
 
---#- Load the CellularSpace from a shapefile. This is an internal function and should not be documented.
+local checkMdb = function(self)
+	mandatoryTableArgument(data, "theme", "string")
+	defaultTableValue(data, "layer", "")
+	defaultTableValue(data, "where", "")
+
+	self.cObj_:setTheme(data.theme) 
+	self.cObj_:setLayer(data.layer)
+	self.cObj_:setWhereClause(data.where)
+
+	if type(data.select) == "string" then
+		data.select = {data.select}
+	end
+
+	if type(data.select) ~= "table" then
+		if data.select ~= nil then
+			incompatibleTypeError("select", "string, table with strings or nil", data.select)
+		end
+	else
+		for i in ipairs(data.select) do
+			self.cObj_:addAttrName(data.select[i])
+		end
+	end
+end
+
+local checkShape = function(self)
+	local dbf = self.database:sub(1, self.database:len() - 3).."dbf"
+	f = io.open(dbf)
+	if not f then
+		customError("File '"..dbf.."' not found.")
+	else
+		io.close(f)
+	end
+end
+
 local loadShape = function(self)
-	self.legend = {} 
-	local x = 0
-	local y = 0
-	local legendStr = ""
 	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:loadShape()
 
-	self.legend = load(legendStr)()
-	-- A ordenacao eh necessaria pq o TerraView ordena os 
-	-- objectIDs como strings:..., C00L10, C00L100, C00L11...
 	table.sort(self.cells, function(a, b) 
 		if a.x < b.x then return true; end
 		if a.x > b.x then return false; end
@@ -226,6 +252,184 @@ local loadShape = function(self)
 		self.cObj_:addCell(tab.x, tab.y, tab.cObj_)
 	end
 end
+
+local checkCsv = function(self)
+	defaultTableValue(self, "sep", ",")
+end
+
+local loadCsv = function(self)
+	if self.minRow == nil then self.minRow = 100000 end
+	if self.minCol == nil then self.minCol = 100000 end
+	if self.maxRow == nil then self.maxRow = -self.minRow end
+	if self.maxCol == nil then self.maxCol = -self.minCol end
+
+	self.cells = {}
+	self.cObj_:clear()
+	local data = readCSV(self.database, self.sep)
+	local cellIdCounter = 0
+	for i = 1, #data do
+		cellIdCounter = cellIdCounter + 1
+		data[i].id = tostring(cellIdCounter)
+		local cell = Cell(data[i])
+		self:add(cell)
+	end
+	return 
+end
+
+local checkVirtual = function(self)
+	mandatoryTableArgument(self, "xdim", "number")
+	defaultTableValue(self, "ydim", self.xdim)
+
+	if self.xdim <= 0 or math.floor(self.xdim) ~= self.xdim then
+		incompatibleValueError("xdim", "positive integer number", self.xdim)
+	end
+
+	if self.ydim <= 0 or math.floor(self.ydim) ~= self.ydim then
+		incompatibleValueError("ydim", "positive integer number", self.ydim)
+	end
+end
+
+local loadVirtual = function(self)
+	self.minRow = 0
+	self.minCol = 0
+	self.maxRow = self.ydim - 1
+	self.maxCol = self.xdim - 1
+
+	self.cells = {}
+	self.cObj_:clear()
+	local cellIdCounter = 1
+	for i = 1, self.xdim do
+		for j = 1, self.ydim do
+			local c = Cell{id = tostring(cellIdCounter), x = i - 1, y = j - 1}
+		cellIdCounter = cellIdCounter + 1
+			c.parent = self
+			self.cObj_:addCell(c.x, c.y, c.cObj_)
+			table.insert(self.cells, c)
+		end
+	end
+end
+
+local checkMySQL = function(self)
+	-- until 1024 also 65535
+	defaultTableValue(self, "port", 3306)
+	defaultTableValue(self, "host", "localhost")
+	defaultTableValue(self, "user", "root")
+	mandatoryTableArgument(self, "password", "string")
+	mandatoryTableArgument(self, "database", "string") -- TODO: remove this line and check the error
+
+	if self.port ~= math.floor(self.port) or self.port < 0 then
+		incompatibleValueError("port", "positive integer number", self.port)
+	elseif self.port < 1024 then
+		customError("Parameter 'port' should have values above 1023 to avoid using system reserved values.\nApplication reserved port values should be avoided as well (ex.: MySQL 3306).")
+	end
+
+	self.cObj_:setUser(self.user)
+	self.cObj_:setHostName(self.host)
+	self.cObj_:setPassword(self.password)
+	self.cObj_:setPort(self.port)	
+
+
+	mandatoryTableArgument(self, "theme", "string")
+	defaultTableValue(self, "layer", "")
+	defaultTableValue(self, "where", "")
+
+	self.cObj_:setTheme(self.theme) 
+	self.cObj_:setLayer(self.layer)
+	self.cObj_:setWhereClause(self.where)
+
+	if type(self.select) == "string" then
+		self.select = {self.select}
+	end
+
+	if type(self.select) ~= "table" then
+		if self.select ~= nil then
+			incompatibleTypeError("select", "string, table with strings or nil", self.select)
+		end
+	else
+		for i in ipairs(self.select) do
+			self.cObj_:addAttrName(self.select[i])
+		end
+	end
+end
+
+local loadDb = function(self)
+	-- TODO: this function call used to get another return value (legendStr, in the end). Remove this
+	-- returning value from the C++ code. Do the same for loadShape
+	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:load()
+
+	if self.cells == nil then
+		customError("It was not possible to load the CellularSpace.")
+	end
+
+	table.sort(self.cells, function(a, b) 
+		if a.x < b.x then return true; end
+		if a.x > b.x then return false; end
+		return a.y < b.y
+	end)
+
+	self.xdim = self.maxCol
+	self.ydim = self.maxRow
+	self.cObj_:clear()
+	for _, tab in pairs(self.cells) do
+		tab.parent = self
+		self.cObj_:addCell(tab.x, tab.y, tab.cObj_)
+	end
+end
+
+local CellularSpaceDrivers = {}
+
+local registerCellularSpaceDriver = function(data)
+	-- TODO: verify types of each value of data
+	-- TODO: add LuaDoc tag to any register call
+
+	if type(data.compulsory) == "string" then
+		data.compulsory = {data.compulsory}
+	end
+
+	defaultTableValue(data, "compulsory", {})
+	defaultTableValue(data, "extension", true)
+
+	mandatoryTableArgument(data, "load", "function")
+
+	CellularSpaceDrivers[data.dbType] =  data
+end
+
+registerCellularSpaceDriver{
+	dbType = "mdb",
+	load = loadDb,
+	check = checkMdb
+}
+
+registerCellularSpaceDriver{
+	dbType = "shp",
+	load = loadShape,
+	check = checkShape
+}
+
+registerCellularSpaceDriver{
+	dbType = "virtual",
+	extension = false,
+	compulsory = "xdim",
+	optional = "ydim",
+	load = loadVirtual,
+	check = checkVirtual
+}
+
+registerCellularSpaceDriver{
+	dbType = "csv",
+	optional = {"sep"},
+	load = loadCsv,
+	check = checkCsv
+}
+
+registerCellularSpaceDriver{
+	dbType = "mysql",
+	extension = false,
+	compulsory = {"password"},
+	optional = {"host", "user", "port"},
+	load = loadDb,
+	check = checkMySQL
+}
 
 CellularSpace_ = {
 	type_ = "CellularSpace",
@@ -455,59 +659,7 @@ CellularSpace_ = {
 	-- with volatile CellularSpace.
 	-- @usage cs:load()
 	load = function(self)
-		if self.database:endswith("shp") then
-			return loadShape(self)
-		elseif self.database:endswith(".csv") then
-			self.cells = {}
-			self.cObj_:clear()
-			local data = readCSV(self.database, self.sep)
-			local cellIdCounter = 0
-			for i = 1, #data do
-				cellIdCounter = cellIdCounter + 1
-				data[i].id = tostring(cellIdCounter)
-				local cell = Cell(data[i])
-				self:add(cell)
-			end
-			return 
-		end
-
-		self.legend = {} 
-		local x = 0
-		local y = 0
-		local legendStr = ""
-
-		self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow, legendStr = self.cObj_:load()
-
-		-- checking database connection errors
-		if self.cells == -1 then
-			-- TODO: verify the error below. it seems that it never occurs
-			customError(self.minCol)
-		end
-
-		-- TODO: load legend was removed - investigate whether this is really necessary.
-		--self.legend = load(legendStr)()
-
-
-		if self.cells == nil then
-			customError("It was not possible to load the CellularSpace")
-		end
-
-		-- A ordenacao eh necessaria pq o TerraView ordena os 
-		-- objectIDs como strings:..., C00L10, C00L100, C00L11...
-		-- TODO: porque tem o table.sort aqui, se um cellularspace pode ser percorrido de qualquer forma?
-		table.sort(self.cells, function(a, b) 
-			if a.x < b.x then return true; end
-			if a.x > b.x then return false; end
-			return a.y < b.y
-		end)
-
-		self.xdim = self.maxCol
-		self.ydim = self.maxRow
-		self.cObj_:clear()
-		for i, tab in pairs(self.cells) do
-			tab.parent = self
-			self.cObj_:addCell(tab.x, tab.y, tab.cObj_)
-		end
+		customError("Load function was not implemented.")
 	end,
 	--- Load a Neighborhood stored in an external source. Each Cell receives its own set of 
 	-- neighbors.
@@ -881,190 +1033,108 @@ metaTableCellularSpace_ = {
 function CellularSpace(data)
 	verifyNamedTable(data)
 
-	if getn(data) == 0 then
-		customError("CellularSpace needs more information to be created.")
+	local getExtension = function(filename)
+		for i = 1, filename:len() do
+			if filename:sub(i, i) == "." then
+				return filename:sub(i + 1, filename:len())
+			end
+		end
+		return ""
 	end
 
-	local cObj = TeCellularSpace()
-
-	if data.database ~= nil then
-		defaultTableValue(data, "autoload", true)
-	end    
-
-	data.cells = {}
-	data.cObj_= cObj
-	if data.minRow == nil then data.minRow = 100000 end
-	if data.minCol == nil then data.minCol = 100000 end
-	if data.maxRow == nil then data.maxRow = -data.minRow end
-	if data.maxCol == nil then data.maxCol = -data.minCol end
-
-	if data.xdim or data.ydim then -- rectangular "virtual" cellular space
-		-- TODO: maybe there should not exist a default xdim value
-		defaultTableValue(data, "xdim", 1)
-		defaultTableValue(data, "ydim", data.xdim)
-
-		if data.xdim <= 0 or math.floor(data.xdim) ~= data.xdim then
-			incompatibleValueError("xdim", "positive integer number", data.xdim)
-		end
-
-		if data.ydim <= 0 or math.floor(data.ydim) ~= data.ydim then
-			incompatibleValueError("ydim", "positive integer number", data.ydim)
-		end
-
-		data.minRow = 0
-		data.minCol = 0
-		data.maxRow = data.ydim - 1
-		data.maxCol = data.xdim - 1
-
-		data.load = function(self)
-			self.cells = {}
-			self.cObj_:clear()
-			local cellIdCounter = 1
-			for i = 1, self.xdim do
-				for j = 1, self.ydim do
-					local c = Cell{id = tostring(cellIdCounter), x = i - 1, y = j - 1}
-					cellIdCounter = cellIdCounter + 1
-					c.parent = self
-					self.cObj_:addCell(c.x, c.y, c.cObj_)
-					table.insert(self.cells, c)
-				end
-			end
-			data.load = function(self)
-				customError("Cannot load volatile cellular spaces.")
-			end
-		end
-	else
-		if type(data.database) ~= "string" then
-			if data.database == nil then
-				mandatoryArgumentError("database")
-			else
-				incompatibleTypeError("database", "string", data.database)
-			end
-		elseif data.database:endswith(".shp") or data.database:endswith(".mdb") or data.database:endswith(".csv") then
-			local f = io.open(data.database, "r")
-			if not f then
-				customError("File '".. data.database .."' not found.")
-			end
-		end		
-		
-		if data.dbType == nil then
-			if data.database:endswith(".shp") or data.database:endswith(".mdb") or data.database:endswith(".csv") then
-				if not io.open(data.database, 'r') then
-					resourceNotFoundError("database", data.database)
-				else
-					if data.database:endswith(".shp") then
-						data.dbType = "shp"
-					elseif data.database:endswith(".mdb") then
-						data.dbType = "ado"
-					elseif data.database:endswith(".csv") then
-						data.dbType = "csv"					
+	if data.dbType == nil then
+		if data.database == nil then
+			local candidates = {}
+			forEachElement(CellularSpaceDrivers, function(idx, value)
+				local all = true
+				forEachElement(value.compulsory, function(midx, mvalue)
+					if data[mvalue] == nil then
+						all = false
 					end
-					cObj:setDBType(string.lower(data.dbType))
-					cObj:setDBName(data.database)
+				end)
+
+				if value.extension and (not data.database or getExtension(data.database) ~= idx) then
+					all = false
 				end
+				if all then
+					table.insert(candidates, idx)
+				end
+			end)
+
+			if #candidates == 0 then
+				customError("No candidates.")
+			elseif #candidates == 1 then
+				data.dbType = candidates[1]
+			else
+				str = ""
+				forEachElement(candidates, function(idx, value)
+					str = str..value..", "
+				end)
+				customError("More than one candidate: "..str)
+			end
+		else
+			local ext = getExtension(data.database)
+
+			if CellularSpaceDrivers[ext] ~= nil then
+				data.dbType = ext
 			else
 				data.dbType = "mysql"
 			end
-		elseif type(data.dbType) ~= "string" then
-			incompatibleTypeError("dbType", "string", data.dbType)
-		elseif data.dbType ~= "mysql" and data.dbType ~= "ado" and data.dbType ~= "shp" then
-			incompatibleValueError("dbType", "one of the strings from the set ['mysql','ado','shp']", data.dbType)          
 		end
-	
-		cObj:setDBType(string.lower(data.dbType))	
-		cObj:setDBName(data.database)		
-
-		if data.dbType == "mysql" then                    
-			cObj:setDBName(data.database)
-		elseif not data.database:endswith(".shp") and not data.database:endswith(".mdb") and not data.database:endswith(".csv") then
-			local ext
-			local pos = 0
-			for i = 1, data.database:len() do
-				if data.database:sub(i,i) == "." then
-					pos = i
-					break
-				end
-			end
-			ext = data.database:sub(pos,data.database:len())
-			incompatibleFileExtensionError("database",ext)
-		end
+	else
+		mandatoryTableArgument(data, "dbType", "string")
+		-- TODO: try to remove the line below
+		--data.dbType = string.lower(data.dbType)
 		
-		if data.database:endswith(".shp") then
-			local dbname = data.database
-			local shapeExists = io.open(dbname, "r") and io.open(dbname:sub(1, dbname:len() - 3).."dbf")
-			if not shapeExists then
-				customError("Shapefile not found.")
+		if CellularSpaceDrivers[data.dbType] == nil then
+			--customError("Not found ".. data.dbType)
+			--TODO: compute the available extensions
+			incompatibleValueError("dbType", "one of the strings from the set ['mysql','ado','shp']", data.dbType)          
+		elseif CellularSpaceDrivers[data.dbType].extension then
+			mandatoryTableArgument(data, "database", "string")
+			if getExtension(data.database) ~= data.dbType then
+				customError("dbType and file extension should be the same.")
+			end
+
+			local f = io.open(data.database, 'r') 
+			if not f then
+				resourceNotFoundError("database", data.database)
 			else
-				io.close(shapeExists)
+				io.close(f)
 			end
-		elseif data.database:endswith(".csv") then
-			if data.sep and type(data.sep) ~= "string" then
-				incompatibleTypeError("sep", "string", data.sep)
-			end
-		else
-			if data.dbType == "mysql" then
-				-- until 1024 also 65535
-				defaultTableValue(data, "port", 3306)
-
-				if data.port ~= math.floor(data.port) or data.port < 0 then
-					incompatibleValueError("port", "positive integer number", data.port)
-				elseif data.port < 1024 then
-					customError("Parameter 'port' should have values above 1023 to avoid using system reserved values.\nApplication reserved port values should be avoided as well (ex.: MySQL 3306).")
-				end
-				cObj:setPort(data.port)	 
-
-				defaultTableValue(data, "host", "localhost")
-				defaultTableValue(data, "user", "root")
-				cObj:setUser(data.user)
-				cObj:setHostName(data.host)
-
-				if data.password == nil then
-					mandatoryArgumentError("password")
-				elseif type(data.password) ~= "string" then
-					incompatibleTypeError("password", "string", data.password)
-				end
-				cObj:setPassword(data.password)
-			end
-
-			if data.theme == nil then
-				mandatoryArgumentError("theme")
-			elseif type(data.theme) ~= "string" then 
-				incompatibleTypeError("theme", "string", data.theme)
-			end
-			cObj:setTheme(data.theme) 
-
-			defaultTableValue(data, "layer", "")
-			cObj:setLayer(data.layer)
-
-			defaultTableValue(data, "where", "")
-			cObj:setWhereClause(data.where)
-
-			if type(data.select) ~= "string" and type(data.select) ~= "table" then
-				if data.select ~= nil then
-					incompatibleTypeError("select", "string, table with strings or nil", data.select)
-				end
-			else
-				if type(data.select) == "string" then
-					data.select = {data.select}
-				end
-				cObj:clearAttrName()
-				for i in ipairs(data.select) do
-					cObj:addAttrName(data.select[i])
-				end
-			end
-
 		end
 	end
+
+	defaultTableValue(data, "autoload", true)
+
+	local cObj = TeCellularSpace()
+	data.cObj_= cObj
+
+	cObj:setDBType(data.dbType)	
+
+	if data.database then 
+		mandatoryTableArgument(data, "database", "string") -- TODO: remove this line and check the error
+		cObj:setDBName(data.database)		
+	end
+
+	if CellularSpaceDrivers[data.dbType].check then
+		CellularSpaceDrivers[data.dbType].check(data)
+	end
+
+	data.load = CellularSpaceDrivers[data.dbType].load
+
 	setmetatable(data, metaTableCellularSpace_)
 	cObj:setReference(data)
 
-	-- load and autoload parameter verification	
-	if data.xdim then
+	if data.autoload then
 		data:load()
-	elseif data.database ~= nil and data.autoload then
-			data:load()
-			-- needed for Environment's loadNeighborhood	
+		-- needed for Environment's loadNeighborhood	
+		if data.database then
 			data.layer = data.cObj_:getLayerName()
+		end
+		data.autoload = nil
+	else
+		data.cells = {}
 	end
 
 	if data.instance ~= nil then
