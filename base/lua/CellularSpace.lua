@@ -640,7 +640,7 @@ CellularSpace_ = {
 			end
 		end
 
-		local data =  {x = xIndex, y = yIndex}
+		local data = {x = xIndex, y = yIndex}
 		local cObj_ = TeCoord(data)
 
 		return self.cObj_:getCell(cObj_)
@@ -1033,6 +1033,7 @@ metaTableCellularSpace_ = {
 function CellularSpace(data)
 	verifyNamedTable(data)
 
+	-- TODO: move to Utils.lua
 	local getExtension = function(filename)
 		for i = 1, filename:len() do
 			if filename:sub(i, i) == "." then

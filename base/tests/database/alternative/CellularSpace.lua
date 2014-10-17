@@ -95,6 +95,27 @@ return{
 				}
 			end
 			unitTest:assert_error(error_func, "Error: Unknown database 'terralab'.")
+
+--[[
+TODO: the test above returns the error
+  'Error: Wrong TerraLib database version, expected '4.1.2', got '.
+Please, use TerraView to update the '' database.'
+However, the database does not exist!
+
+			error_func = function()
+				local cs = CellularSpace{
+					dbType = mdbType,
+					host = mhost,
+					user = muser,
+					password = mpassword,
+					port = mport,
+					theme = "cells90x90",
+					layer = "cells90x90",
+					database = ""
+				}
+			end
+			unitTest:assert_error(error_func, "Error: Unknown database 'terralab'.")
+--]]
 		end
 
 		error_func = function()

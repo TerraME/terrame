@@ -72,30 +72,30 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Charts must select at least one attribute.")
 
-        local unit = Cell{
-            count = 0
-        }
+		local unit = Cell{
+			count = 0
+		}
 
-        local world = CellularSpace{
-            xdim = 10,
+		local world = CellularSpace{
+			xdim = 10,
 			value = "aaa",
-            instance = unit
-        }
+			instance = unit
+		}
 
 		local error_func = function()
-        	Chart{subject = world}
+			Chart{subject = world}
 		end
 		unitTest:assert_error(error_func, "Error: The subject does not have at least one valid numeric attribute to be used.")
 
 		world.msum = 5
 
 		local error_func = function()
-        	Chart{subject = world, label = {"sss"}}
+			Chart{subject = world, label = {"sss"}}
 		end
 		unitTest:assert_error(error_func, "Error: As select is nil, it is not possible to use label.")
 
 		local error_func = function()
-        	Chart{subject = world, select = "value"}
+			Chart{subject = world, select = "value"}
 		end
 		unitTest:assert_error(error_func, "Error: Selected element 'value' should be a number or function, got string.")
 	end

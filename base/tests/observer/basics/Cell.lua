@@ -38,10 +38,10 @@ return{
         local c = Chart{subject = world}
 		unitTest:assert_type(c, "number")
 
-        local c = Chart{subject = world, select = {"count", "value", "sum"}}
+        c = Chart{subject = world, select = {"count", "value", "sum"}}
 		unitTest:assert_type(c, "number")
 
-        local c = Chart{subject = world}
+        c = Chart{subject = world}
 		unitTest:assert_type(c, "number")
 
         world:notify(0)

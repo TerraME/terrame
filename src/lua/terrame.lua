@@ -162,9 +162,9 @@ require = function(package, recursive, asnamespace)
 
 	for mfile, count in pairs(count_files) do
 		if count == 0 then
-			print_red("File lua/"..mfile.." is never loaded.")
+			print_yellow("File lua/"..mfile.." is not loaded.")
 		elseif count > 1 then
-			print_red("File lua/"..mfile.." is loaded "..count.." times.")
+			print_yellow("File lua/"..mfile.." is loaded "..count.." times.")
 		end
 	end
 
@@ -406,7 +406,6 @@ local executeTests = function(fileName, package)
 	local print_when_loading = 0
 
 	print_green("Loading package "..package)
-	print("Verifying print calls")
 	print = function(...)
 		-- FIXME: print_when_loading should be called ut.print_when_loading (see below the UnitTest)
 		print_when_loading = print_when_loading + 1
