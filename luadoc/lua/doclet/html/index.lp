@@ -3,7 +3,7 @@
 <html>
 <head>
     <title><%=doc.description.package%></title>
-    <link rel="stylesheet" href="<%=luadoc.doclet.html.link("luadoc.css")%>" type="text/css" />
+    <link rel="stylesheet" href="<%=luadoc.link("luadoc.css")%>" type="text/css" />
 	<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
 </head>
 
@@ -21,7 +21,7 @@
 <div id="main">
 <div id="navigation">
 
-<%=luadoc.doclet.html.include("menu.lp", { doc=doc })%>
+<%=luadoc.include("menu.lp", { doc=doc })%>
 
 </div> <!-- id="navigation" -->
 
@@ -46,7 +46,7 @@
 <tr><td colspan="2">Modules</td></tr>
 <%for _, modulename in ipairs(doc.modules) do%>
 	<tr>
-		<td class="name"><a href="<%=luadoc.doclet.html.module_link(modulename, doc)%>"><%=modulename%></a></td>
+		<td class="name"><a href="<%=luadoc.module_link(modulename, doc)%>"><%=modulename%></a></td>
 		<td class="summary"><%=doc.modules[modulename].summary%></td>
 	</tr>
 <%end%>
@@ -60,7 +60,7 @@
 <%for _, filepath in ipairs(doc.files) do%>
 	<%if doc.files[filepath].type == "type" then%>
 	<tr>
-		<td class="name"><a href="<%=luadoc.doclet.html.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td>
+		<td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td>
 		<td class="summary">
 			<%= doc.files[filepath].summary or "" %>
         </td>
@@ -77,7 +77,7 @@
 <%for _, filepath in ipairs(doc.files) do%>
 	<%if doc.files[filepath].type == "file" then%>
 	<tr>
-		<td class="name"><a href="<%=luadoc.doclet.html.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td>
+		<td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td>
 		<td class="summary">
           <%= doc.files[filepath].summary or "" %>
     </td>

@@ -4,11 +4,13 @@
 -- @release $Id: lp.lua,v 1.7 2007/04/18 14:28:39 tomas Exp $
 ----------------------------------------------------------------------------
 
-local assert, error, getfenv, loadstring, setfenv = assert, error, getfenv, loadstring, setfenv
+local assert, error, loadstring, select, string = assert, error, loadstring, select, string
 local find, format, gsub, strsub = string.find, string.format, string.gsub, string.sub
 local concat, tinsert = table.concat, table.insert
 local open = io.open
 local print = print 
+local debug = debug
+local load = load
 
 ----------------------------------------------------------------------------
 -- function to do output
@@ -107,6 +109,37 @@ function compile (string, chunkname)
 end
 
 ----------------------------------------------------------------------------
+-- Simulates the setenv function from lua 5.1
+-- Based in: http://stackoverflow.com/questions/14290527/recreating-setfenv-in-lua-5-2
+local print_red, xpcall, traceback = print_red, xpcall, traceback
+local function setfenv(f, env)
+    local _, environment =  xpcall(function() return load(string.dump(f), nil, 'bt', env) end, function(err)
+		print_red(err)
+		print_red(traceback())
+	end)
+
+	return environment
+    -- return load(string.dump(f), nil, "bt", env)
+end
+
+----------------------------------------------------------------------------
+-- Simulates the getfenv function from lua 5.1
+-- source: http://stackoverflow.com/questions/14290527/recreating-setfenv-in-lua-5-2
+local function findenv(f)
+	local level = 1
+	repeat
+		local name, value = debug.getupvalue(f, level)
+		if name == '_ENV' then return level, value end
+		level = level + 1
+	until name == nil
+	return nil 
+end
+
+local getfenv = function (f) 
+	return select(2, findenv(f)) or _G
+end
+
+----------------------------------------------------------------------------
 -- Translates and executes a template in a given file.
 -- The translation creates a Lua function which will be executed in an
 -- optionally given environment.
@@ -124,7 +157,8 @@ function include (filename, env)
 	local _env
 	if env then
 		_env = getfenv (prog)
-		setfenv (prog, env)
+		setfenv (prog, env)()
+	else
+		prog ()
 	end
-	prog ()
 end

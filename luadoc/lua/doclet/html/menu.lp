@@ -13,7 +13,7 @@ end
 	<%if not module_doc and not file_doc then%>
 	<li><strong>Index</strong></li>
 	<%else%>
-	<li><a href="<%=luadoc.doclet.html.link("index.html", from)%>">Index</a></li>
+	<li><a href="<%=luadoc.link("index.html", from)%>">Index</a></li>
 	<%end%>
 </ul>
 
@@ -27,7 +27,7 @@ end
 	<li><strong><%=modulename%></strong></li>
 	<%else%>
 	<li>
-		<a href="<%=luadoc.doclet.html.module_link(modulename, doc, from)%>"><%=modulename%></a>
+		<a href="<%=luadoc.module_link(modulename, doc, from)%>"><%=modulename%></a>
 	</li>
 <%	end
 end%>
@@ -45,7 +45,7 @@ end%>
 		<li><strong><%=filepath:match("(.-)%.lua")%></strong></li>
 		<%else%>
 		<li>
-			<a href="<%=luadoc.doclet.html.file_link(filepath, from)%>"><%=filepath:match("(.-)%.lua")%></a>
+			<a href="<%=luadoc.file_link(filepath, from)%>"><%=filepath:match("(.-)%.lua")%></a>
 		</li>
 		<%end%>
 	<%end%>
@@ -63,7 +63,7 @@ end%>
 		<li><strong><%=filepath:match("(.-)%.lua")%></strong></li>
 		<%else%>
 		<li>
-			<a href="<%=luadoc.doclet.html.file_link(filepath, from)%>"><%=filepath:match("(.-)%.lua")%></a>
+			<a href="<%=luadoc.file_link(filepath, from)%>"><%=filepath:match("(.-)%.lua")%></a>
 		</li>
 		<%end%>
 	<%end%>

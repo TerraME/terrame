@@ -121,6 +121,7 @@ function luadocMain(package_path, files, package)
 	-- end
 
 	local --[[files,]] options = process_options (arg)
+	options.output_dir = package_path..s.."doc"
 
 	-- forEachElement(files, function(idx, elem, etype)
 	-- 	files[idx] = package_path..s.."lua"..s..elem

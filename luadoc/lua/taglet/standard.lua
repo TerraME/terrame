@@ -693,7 +693,7 @@ function start (files, package_path)
 	
 	--table.foreachi(files, function (_, path)
 	for _, file_ in ipairs(files) do
-		local file_path = package_path..s.."lua"..s..file_
+		local file_path = package_path..s.."lua"..s..]]file_
 		local attr = attributes(file_path)
 		assert(attr, string.format("error stating path `%s'", file_path))
 		

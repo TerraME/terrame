@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Reference</title>
-    <link rel="stylesheet" href="<%=luadoc.doclet.html.link('luadoc.css', 'files/'..file_doc.name)%>" type="text/css" />
+    <link rel="stylesheet" href="<%=luadoc.link('luadoc.css', 'files/'..file_doc.name)%>" type="text/css" />
 	<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
 </head>
 
@@ -19,7 +19,7 @@
 <div id="main">
 
 <div id="navigation">
-<%=luadoc.doclet.html.include("menu.lp", { doc=doc, file_doc=file_doc })%>
+<%=luadoc.include("menu.lp", { doc=doc, file_doc=file_doc })%>
 
 </div> <!-- id="navigation" -->
 
@@ -29,7 +29,7 @@
 <% if #file_doc.functions > 0 then
   local constructor = file_doc.functions[file_doc.functions[1]]
   if constructor.inherits then%>
-    (inherits <a href="<%=luadoc.doclet.html.symbol_link(constructor.inherits, doc, module_doc, file_doc, "files/.."..file_doc.name)%>">
+    (inherits <a href="<%=luadoc.symbol_link(constructor.inherits, doc, module_doc, file_doc, "files/.."..file_doc.name)%>">
       <%= constructor.inherits %></a>)
   <% end %>
 <% end %>
@@ -38,7 +38,7 @@
 
 <%if file_doc.description then%>
 <span class="description"><%=
-luadoc.doclet.html.link_description(file_doc.description, doc, module_doc, file_doc, "files/.."..file_doc.name, true)%></span>
+luadoc.link_description(file_doc.description, doc, module_doc, file_doc, "files/.."..file_doc.name, true)%></span>
 <%end%>
 <%if file_doc.author then%>
 <p><b><%= #file_doc.author>1 and "Authors" or "Author" %>:</b>
@@ -58,7 +58,7 @@ luadoc.doclet.html.link_description(file_doc.description, doc, module_doc, file_
 
 <%if #file_doc.functions > 0 then%>
 <% if file_doc.functions[1] == file_doc.name:match("(.-)%.lua") then %>
-<%=luadoc.doclet.html.include("function.lp", { doc=doc, file_doc=file_doc, func=file_doc.functions[file_doc.functions[1]] })
+<%=luadoc.include("function.lp", { doc=doc, file_doc=file_doc, func=file_doc.functions[file_doc.functions[1]] })
 %><% table.remove(file_doc.functions, 1) %>
 <% end %>
 <%if #file_doc.functions > 0 then%>
@@ -100,7 +100,7 @@ luadoc.doclet.html.link_description(file_doc.description, doc, module_doc, file_
 <dl class="function">
 <%for i, func_name in ipairs(file_doc.functions) do
     if func_name ~= file_doc.name:match("(.-)%.lua") then %>
-<%=luadoc.doclet.html.include("function.lp", { doc=doc, file_doc=file_doc, func=file_doc.functions[func_name] })%>
+<%=luadoc.include("function.lp", { doc=doc, file_doc=file_doc, func=file_doc.functions[func_name] })%>
     <%end%>
 <%end%>
 </dl>
@@ -112,7 +112,7 @@ luadoc.doclet.html.link_description(file_doc.description, doc, module_doc, file_
 	<%end%>
 <dl class="variable">
 <%for _, tab_name in ipairs(file_doc.variables) do%>
-<%=luadoc.doclet.html.include("table.lp", { doc=doc, file_doc=file_doc, tab=file_doc.variables[tab_name] })%>
+<%=luadoc.include("table.lp", { doc=doc, file_doc=file_doc, tab=file_doc.variables[tab_name] })%>
 <%end%>
 </dl>
 <%end%>

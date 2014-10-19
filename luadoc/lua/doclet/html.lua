@@ -77,6 +77,14 @@ function includeMod (template, env)
 	env.string = string
 	env.util = util
 	env.hl = highlighting
+	-- Adding luadoc functions in the environment
+	env.luadoc = {}
+	env.luadoc.link = link
+	env.luadoc.include = includeMod
+	env.luadoc.file_link = file_link
+	env.luadoc.symbol_link = symbol_link
+	env.luadoc.link_description = link_description
+	env.luadoc.module_link = module_link
 	return lp.include(templatepath, env)
 end
 
@@ -107,8 +115,9 @@ function module_link (modulename, doc, from)
 	from = from or ""
 
 	if doc.modules[modulename] == nil then
---		logger:error(string.format("unresolved reference to module `%s'", modulename))
-		return
+		print_red(string.format("unresolved reference to module `%s'", modulename))
+		io.exit()
+		-- return
 	end
 	
 	local href = "modules/" .. modulename .. ".html"
@@ -127,7 +136,8 @@ function file_func_link (symbol, doc, file_doc, from)
 	funcname = string.gsub(funcname, "%s*$", "")
 	if filename == "" then filename = funcname end
 	if doc.files[filename .. ".lua"] == nil then
---		logger:error(string.format("unresolved reference to module `%s'", modulename))
+		print_red(string.format("unresolved reference to module `%s'", modulename))
+		io.exit()
 		-- print(file_doc.name .. ": unresolved reference to " .. filename)
 		return
 	end
@@ -197,8 +207,9 @@ function link_to (fname, doc, module_doc, file_doc, from, kind)
 
 	local module_doc = doc.modules[modulename]
 	if not module_doc then
---		logger:error(string.format("unresolved reference to function `%s': module `%s' not found", fname, modulename))
-		return
+		print_red(string.format("unresolved reference to function `%s': module `%s' not found", fname, modulename))
+		io.exit()
+		-- return
 	end
 	
 	for _, func_name in pairs(module_doc[kind]) do
@@ -207,7 +218,8 @@ function link_to (fname, doc, module_doc, file_doc, from, kind)
 		end
 	end
 	
---	logger:error(string.format("unresolved reference to function `%s' of module `%s'", fname, modulename))
+	print_red(string.format("unresolved reference to function `%s' of module `%s'", fname, modulename))
+	io.exit()
 end
 
 -------------------------------------------------------------------------------
@@ -351,7 +363,7 @@ function start (doc)
 			local file_doc = doc.files[filepath]
 			-- assembly the filename
 			local filename = out_file(file_doc.name)
-			logger:info(string.format("generating file `%s'", filename))
+			print_green(string.format("generating file `%s'", filename))
 			
 			local f = util.openFile(filename, "w")
 			assert(f, string.format("could not open `%s' for writing", filename))

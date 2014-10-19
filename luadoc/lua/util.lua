@@ -5,9 +5,7 @@
 
 -- local lfs = require "lfs"
 local type, table, io, assert, tostring, setmetatable, pcall = type, table, io, assert, tostring, setmetatable, pcall
-local print = print
-local string = string
-local ipairs = ipairs
+local print, string, ipairs, mkdir = print, string, ipairs, mkdir
 
 -------------------------------------------------------------------------------
 -- Module with several utilities that could not fit in a specific module
@@ -153,9 +151,9 @@ function openFile (filename, mode)
 	if f == nil then
 		filename = string.gsub(filename, "\\", "/")
 		local dir = ""
-		for d in string.gfind(filename, ".-/") do
+		for d in string.gmatch(filename, ".-/") do
 			dir = dir .. d
-			lfs.mkdir(dir)
+			mkdir(dir)
 		end
 		f = io.open(filename, mode)
 	end

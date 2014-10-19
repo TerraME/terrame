@@ -1,5 +1,6 @@
 -- module highlighting
 -- local M = {}
+local string, table = string, table
 
 local patterns = {
 	{"^(%s+)"},                   -- spaces

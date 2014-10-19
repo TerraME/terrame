@@ -3,18 +3,14 @@
 -- @release $Id: init.lua,v 1.4 2008/02/17 06:42:51 jasonsantos Exp $
 -------------------------------------------------------------------------------
 
--- local require = require
 local loadfile = loadfile
 local print = print
--- local util = require "luadoc.util"
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
 local pcall = pcall
 local setfenv = setfenv
 
 logger = {}
-
--- module ("luadoc")
 
 -------------------------------------------------------------------------------
 -- LuaDoc version number.
