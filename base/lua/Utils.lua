@@ -432,6 +432,8 @@ function forEachCellPair(cs1, cs2, f)
 		incompatibleTypeError("#3", "function", f)
 	end
 
+	verify(#cs1 == #cs2, "CellularSpaces should have the same size.")
+
 	for i, cell1 in ipairs(cs1.cells) do
 		local cell2 = cs2.cells[i]
 		result = f(cell1, cell2, i)
