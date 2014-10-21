@@ -70,8 +70,13 @@ function getConfig()
 end
 
 -- rounds a number given its value and a precision
--- TODO: add error messages for this function
 function round(num, idp)
+	if type(num) ~= "number" then
+		incompatibleTypeError("#1", "number", num)
+	elseif type(idp) ~= "number" and idp ~= nil then
+		incompatibleTypeError("#2", "number", idp)
+	end
+		
 	local mult = 10 ^ (idp or 0)
 	return math.floor(num * mult + 0.5) / mult
 end

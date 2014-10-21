@@ -191,6 +191,17 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected <, >, <=, or >=, got '=='.")
 	end,
+	round = function(unitTest)
+		local error_func = function()
+			x = round("a")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected number, got string.")
+
+		error_func = function()
+			x = round(2.5, "a")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected number, got string.")
+	end
 	-- TODO: implement forEachSocialNetwork
 }
 
