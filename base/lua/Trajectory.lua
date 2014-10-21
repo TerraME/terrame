@@ -38,6 +38,7 @@ Trajectory_ = {
 		table.insert(self.cells, cell)
 		self.cObj_:add(#self + 1, cell.cObj_)
 	end,
+	--- Add a new Cell to the Trajectory. Deprecated. Use Trajectory:add instead.
 	addCell = function(self,  cell)
 		deprecatedFunctionWarning("addCell", "add")
 		return self:add(cell)
@@ -88,6 +89,7 @@ Trajectory_ = {
 			end
 		end
 	end,
+	-- Return a cell given its x and y locations
 	get = function(self, x, y)
 		return self.parent:get(x, y)
 	end,

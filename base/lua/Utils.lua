@@ -737,7 +737,7 @@ function string.endswith(self, send)
 end
 
 --- Return the number of elements of atable, be them named or not.
--- It is a substitute for the deprecated function table.getn.
+-- It is a substitute for the old Lua function table.getn.
 -- @param t A table.
 function getn(t)
 	if type(t) ~= "table" then

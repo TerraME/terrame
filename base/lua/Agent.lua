@@ -200,7 +200,7 @@ Agent_ = {
 
 		return self[placement].cells
 	end,
-	--- Return the unique identifier of the Agent.
+	--- Return the unique identifier of the Agent. Deprecated. Use .id instead.
 	-- @usage id = agent:getId()
 	getId = function(self)
 		deprecatedFunctionWarning("getId", ".id")
@@ -458,6 +458,7 @@ Agent_ = {
 	on_message = function(self, message)
 		customError("Agent "..self.id.." does not implement 'on_message'.")
 	end,
+	--- Execute a random walk to a neighbor Cell. Deprecated. Use Agent:walk instead.
 	randomWalk = function()
 		deprecatedFunctionWarning("randomWalk", "walk")
 	end,
@@ -547,7 +548,7 @@ Agent_ = {
 
 		return sn:sample(randomObj)
 	end,
-	--- Set the unique identifier of the Agent.
+	--- Set the unique identifier of the Agent. Deprecated. Use .id instead.
 	-- @param name A string.
 	-- @usage agent:setId("newid")
 	setId = function(self, name)

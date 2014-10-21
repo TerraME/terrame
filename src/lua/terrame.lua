@@ -893,7 +893,7 @@ file = function(file, package)
 	local file = sessionInfo().path..s.."packages"..s..package..s.."data"..s..file
 	if not isfile(file) then
 		customError("File '"..file.."' does not exist in package '"..package.."'.")
-	en
+	end
 	return file
 end
 

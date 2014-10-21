@@ -202,6 +202,7 @@ function defaultValueWarning(parameter, value)
 	customWarning("Parameter '"..parameter.."' could be removed as it is the default value ("..tostring(value)..").")
 end
 
+--- Generates
 function deprecatedFunctionWarning(functionName, functionExpected)
 	if type(functionName) ~= "string" then
 		error("Error: #1 should be a string.", 2)
