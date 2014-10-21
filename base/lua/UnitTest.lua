@@ -184,15 +184,14 @@ UnitTest_ = {
 			incompatibleTypeError("#3", "number or nil", max_error)
 		end
 
-		local _, err = pcall(my_function)
-		if not err then
-			print_error(self, "Test expected an error ('"..error_message.."'), but no error was found.", 2)
-			self.fail = self.fail + 1
-		else
+		local found_error = false
+		local _, err = xpcall(my_function, function(err)
+			found_error = true
 			if self.current_file then
 				local err2 = string.match(err, self.current_file)
 				if err2 ~= self.current_file then
 					print_red("Error in wrong file (possibly wrong level). It should occur in '"..self.current_file.."', got '"..err.."'.")
+					print_red(traceback())
 					self.wrong_file = self.wrong_file + 1
 					return
 				end
@@ -225,7 +224,13 @@ UnitTest_ = {
 
 				print_error(self, error_msg)
 			end
+		end)
+
+		if not found_error then
+			print_error(self, "Test expected an error ('"..error_message.."'), but no error was found.", 2)
+			self.fail = self.fail + 1
 		end
+
 		self.test = self.test + 1
 	end,
 	--- Executes a delay in seconds during the test. Calling this function, the user can change the
