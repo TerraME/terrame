@@ -37,7 +37,7 @@ return{
 		local error_func = function()
 			cs:add(cs2:sample())
 		end
-		unitTest:assert_error(error_func, "Error: The cell already had a parent and will not be replaced.")
+		unitTest:assert_error(error_func, "Error: The cell already has a parent.")
 	end,
 	CellularSpace = function(unitTest)
 		local error_func = function()

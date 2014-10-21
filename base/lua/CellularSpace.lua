@@ -518,7 +518,7 @@ CellularSpace_ = {
 		if type(cell) ~= "Cell" then
 			incompatibleTypeError("#1", "Cell", cell)
 		elseif cell.parent ~= nil then 
-			customError("The cell already has a parent and it will not be replaced.")
+			customError("The cell already has a parent.")
 		end
 
 		cell.parent = self
