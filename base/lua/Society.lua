@@ -394,7 +394,7 @@ Society_ = {
 			customError("Trying to sample an empty Society.")
 		end
 	end,
-	-- Return the number of Agents of the Society.
+	--- Return the number of Agents of the Society.
 	-- @usage print(#soc)
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")

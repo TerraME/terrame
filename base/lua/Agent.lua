@@ -38,7 +38,7 @@ Agent_ = {
 	-- agent:add(trajectory)
 	add = function(self, object)
 		--if type(object) == "State" or type(object) == "Trajectory" then
-		-- State esta sendo tratado como userdata!!!!!!!!!!!
+		-- State is being considered userdata!
 		if type(object) == "userdata" or type(object) == "Trajectory" then
 			self.cObj_:add(object)
 		else
@@ -53,7 +53,6 @@ Agent_ = {
 	--
 	-- agent:addSocialNetwork(network, "friends")
 	addSocialNetwork = function(self, set, id)
-		-- TODO: testar se o parametro set pode ser uma function!
 		if type(set) ~= "SocialNetwork" and type(set) ~= "function" then
 			incompatibleTypeError("#1", "SocialNetwork", set)
 		end
@@ -113,7 +112,7 @@ Agent_ = {
 	end,
 	--- Put the Agent into a Cell, using their placements. If the Agent is already inside of a
 	-- Cell, use Agent:move() instead. The agent needs to have a placement to be able to
-	--  use Agent:enter(), Agent:leave(), or Agent:move().
+	-- use Agent:enter(), Agent:leave(), or Agent:move().
 	-- @param cell A Cell.
 	-- @param placement A string representing the index to be used. Default is "placement".
 	-- @usage agent:enter(newcell)
@@ -158,7 +157,7 @@ Agent_ = {
 	-- execute = function(self)
 	--     self.size = self.size + 1
 	--     self:walk() 
-	--end}
+	-- end}
 	execute = function(self, event)
 		if type(event) == "Event" then
 			self.cObj_:execute(event)

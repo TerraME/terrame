@@ -112,7 +112,7 @@ SocialNetwork_ = {
 	isEmpty = function(self)
 		return self.count == 0
 	end,
-	-- Remove an Agent from the SocialNetwork.
+	--- Remove an Agent from the SocialNetwork.
 	-- @param connection An Agent.
 	-- @usage sn:remove(agent)
 	remove = function(self, connection)
@@ -153,7 +153,7 @@ SocialNetwork_ = {
 		end)
 		return result
 	end,
-	-- Update the weight of a connection.
+	--- Update the weight of a connection.
 	-- @param connection An Agent.
 	-- @param weight A number pointing out the new weight.
 	-- @usage sn:setWeight(agent, 0.001)

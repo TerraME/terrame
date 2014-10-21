@@ -26,7 +26,7 @@
 
 Automaton_ = {
 	type_ = "Automaton",
-	---Add a new Trajectory or State to the Automaton. It returns a boolean value
+	--- Add a new Trajectory or State to the Automaton. It returns a boolean value
 	-- indicating whether the new element was successfully added.
 	-- @param object A Trajectory or State.
 	-- @usage automaton:add(state)
@@ -38,14 +38,17 @@ Automaton_ = {
 			incompatibleTypeError("#1", "State or Trajectory", object)  
 		end
 	end,
-	--- Check if the state machine was correctly defined. It verifies whether the targets of Jump rules match the ids of the States.
+	--- Check if the state machine was correctly defined. It verifies whether the targets of Jump 
+	-- rules match the ids of the States.
 	-- @usage automaton:build()
 	build = function(self)
 		self.cObj_:build()
 	end,
-	---Execute the state machine. First, it executes the Jump of the current State while it jumps from State to State. 
-	---When the machine stops jumping, it executes all the Flows of the current State. Usually, this function is called within 
-	---an Event, thus the time of the Event can be got from the Timer. It returns a boolean value indicating whether the Jumps were executed correctly.
+	--- Execute the state machine. First, it executes the Jump of the current State while it
+	-- jumps from State to State. When the machine stops jumping, it executes all the Flows of
+	-- the current State. Usually, this function is called within an Event, thus the time of the
+	-- Event can be got from the Timer. It returns a boolean value indicating whether the Jumps
+	-- were executed correctly.
 	-- @param event An Event.
 	-- @usage automaton:execute(event)
 	execute = function(self, event)
@@ -57,7 +60,8 @@ Automaton_ = {
 			incompatibleTypeError("#1", "Event", event)
 		end
 	end,
-	--- Retrieves the time when the machine executed the transition to the current state. Before running, the latency is zero.
+	--- Retrieves the time when the machine executed the transition to the current state. Before
+	-- running, the latency is zero.
 	-- @usage latency = automaton:getLatency()
 	getLatency = function(self) 
 		return self.cObj_:getLatency()
@@ -67,7 +71,7 @@ Automaton_ = {
 	getStateName = function(self)
 		return "Where?"
 	end,
-	---Notify every Observer connected to the Automaton.
+	--- Notify every Observer connected to the Automaton.
 	-- @param modelTime The time to be used by the Observer.
 	-- @usage automaton:notify()
 	notify = function (self, modelTime)
@@ -84,7 +88,8 @@ Automaton_ = {
 		end
 		self.cObj_:notify(modelTime)
 	end,
-	---Activate or not the Trajectories defined for the Automata. Returns whether the change  was successfully executed.
+	--- Activate or not the Trajectories defined for the Automata. Returns whether the
+	-- change  was successfully executed.
 	-- @param status A boolean that indicates if the Trajectories will be activated.
 	-- @usage automaton:setTrajectoryStatus(true)
 	setTrajectoryStatus = function(self, status)
@@ -95,7 +100,8 @@ Automaton_ = {
 		end
 		self.cObj_:setActionRegionStatus(status)
 	end,
-	---Set the unique identifier of the Automaton. Return a boolean value indicating whether the id was changed correctly.
+	--- Set the unique identifier of the Automaton. Return a boolean value indicating whether
+	-- the id was changed correctly.
 	-- @param id A string that names the Automaton.
 	-- @usage automaton:setId("newid")
 	setId = function(self,id)
@@ -110,7 +116,7 @@ Automaton_ = {
 	getId = function(self)
 		return self.id
 	end,
-	---Get all the States inside the Automaton. It returns a vector indexed by numeric positions.
+	--- Get all the States inside the Automaton. It returns a vector indexed by numeric positions.
 	-- @usage state = automaton:getStates()[1]
 	getStates = function(self)
 		local statesVector = {}
@@ -121,7 +127,7 @@ Automaton_ = {
 		end
 		return statesVector
 	end,
-	---Get a State of the Automaton according to a given position.
+	--- Get a State of the Automaton according to a given position.
 	-- @param index A number indicating the position of the State to be retrieved.
 	-- @usage state = automaton:getState(1)
 	getState = function(self, index)

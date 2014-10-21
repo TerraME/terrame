@@ -77,7 +77,7 @@ function round(num, idp)
 end
 
 --- Implements the Heun (Euler Second Order) Method to integrate ordinary differential equations.
---- It is a method of type Predictor-Corrector.
+-- It is a method of type Predictor-Corrector.
 -- @param df The differential equantion.
 -- @param initCond The initial condition that must be satisfied.
 -- @param a The value of 'a' in the interval [a,b[.
@@ -375,7 +375,6 @@ function levenshtein(s, t)
 	return d[#d]
 end
 
---############################################################
 --Utilities functions---------------------------------------------------
 
 --- Second order function to transverse a given CellularSpace, Trajectory, or Agent, 
@@ -442,18 +441,18 @@ function forEachCellPair(cs1, cs2, f)
 	return true
 end
 
----Second order function to transverse a given Neighborhood of a Cell, applying a
---function in each of its neighbors. It returns true if no call to the function taken as
---argument returns false. There are two ways of using this function because the
---second argument is optional.
---@param cell A Cell.
---@param index (Optional) A string with the name of the Neighborhood to be transversed.
---Default is "1".
+--- Second order function to transverse a given Neighborhood of a Cell, applying a
+-- function in each of its neighbors. It returns true if no call to the function taken as
+-- argument returns false. There are two ways of using this function because the
+-- second argument is optional.
+-- @param cell A Cell.
+-- @param index (Optional) A string with the name of the Neighborhood to be transversed.
+-- Default is "1".
 -- @param f A user-defined function that takes three arguments: the Cell itself, the neighbor
 -- Cell, and the connection weight. If some call to it returns false, forEachNeighbor() stops
 -- and does not process any other neighbor. In the case where the second argument is missing,
 -- this function becomes the second argument.
---@usage forEachNeighbor(cell, function(cell, neighbor)
+-- @usage forEachNeighbor(cell, function(cell, neighbor)
 --     if neighbor.deforestation > 0.9 then
 --         cell.deforestation = cell.deforestation * 1.01
 --     end
@@ -463,8 +462,8 @@ end
 -- forEachNeighbor(cell, "roads", function(cell, neighbor, weight)
 --     neigh_deforestation = neigh_deforestation + neighbor.deforestation * weight
 -- end)
---@see CellularSpace:createNeighborhood
---@see CellularSpace:loadNeighborhood
+-- @see CellularSpace:createNeighborhood
+-- @see CellularSpace:loadNeighborhood
 function forEachNeighbor(cell, index, f)
 	if type(cell) ~= "Cell" then
 		incompatibleTypeError("#1", "Cell", cell)
@@ -494,9 +493,9 @@ end
 
 --- Second order function to transverse all Neighborhoods of a Cell, applying a given function
 -- on them. It returns true if no call to the function taken as argument returns false.
---@param cell A Cell.
---@param f A function that receives a Neighborhood as parameter.
---@usage forEachNeighborhood(cell, function(neighborhood)
+-- @param cell A Cell.
+-- @param f A function that receives a Neighborhood as parameter.
+-- @usage forEachNeighborhood(cell, function(neighborhood)
 --     print(neighborhood:getId())
 -- end)
 function forEachNeighborhood(cell, f)
@@ -752,7 +751,6 @@ function getn(t)
 	return n
 end
 
---############################################################
 -- Parses a single CSV line.
 -- Source: http://lua-users.org/wiki/LuaCsv
 -- @param line A string from the CSV file

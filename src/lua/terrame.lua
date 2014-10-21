@@ -91,7 +91,6 @@ function print_yellow(value)
 	end
 end
 
--- baixa prioridade
 install = function(file)
 	-- descompactar o pacote em TME_FOLDER/packages
 	-- verificar se as dependencias estao instaladas (depends)
@@ -111,7 +110,6 @@ function include(scriptfile)
 	return setmetatable(env, nil) -- TODO: try to remove nil and see what happens. Perhaps this could be used in TerraME.
 end
 
--- altissima prioridade (somente com o primeiro argumento)
 -- TODO: This function shouldn't have named parameters? It has two optional parameters. 
 require = function(package, recursive, asnamespace)
 	-- asnamespaca significa que os objetos do pacote estarao todos dentro de um namespace
@@ -394,8 +392,6 @@ isfile = function(file)
 	return os.rename(file, file)
 end
 
--- RAIAN: FUncao do antonio que executa os testes. Devera ir para dentro da funcao test acima. Coloquei desta maneira 
--- para executar os testes sem alterar a chamada no lado C++ por enquanto. 
 local executeTests = function(fileName, package)
 	local initialTime = os.clock()
 
@@ -895,10 +891,11 @@ end
 file = function(file, package)
 	local s = sessionInfo().separator
 	local file = sessionInfo().path..s.."packages"..s..package..s.."data"..s..file
+	if not isfile(file) then
+		customError("File '"..file.."' does not exist in package '"..package.."'.")
+	en
 	return file
-	-- verificar se o arquivo existe senao retorna um erro
 end
-
 
 local versions = function()
 	print("\nTerraME - Terra Modeling Environment")
@@ -952,12 +949,11 @@ function getLevel()
 	local level = 1
 
 	while true do
-	local info = debug.getinfo(level)
+		local info = debug.getinfo(level)
 
-	if info == nil then
-		return level - 1
-	end
-	--print("WRONG LEVEL: "..level) end
+		if info == nil then
+			return level - 1
+		end
 
 		local s = sessionInfo().separator
 		local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path..s.."lua"))
@@ -1045,15 +1041,11 @@ function traceback()
 	return string.sub(str, 0, string.len(str) - 1)
 end
 
--- RAIAN implementar
 execute = function(parameters) -- parameters is a string
-	-- implementa o sessionInfo
-	-- o execute vai chamar o build, test, etc.
-
 	if parameters == nil or #parameters < 1 then 
 		print("\nYou should provide, at least, a model file as parameter.")
 		usage()
-		return
+		os.exit()
 	end
 
 	local executionMode = "normal"

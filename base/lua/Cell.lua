@@ -292,7 +292,7 @@ function Cell(data)
 		incompatibleValueError("y", "positive integer number", data.y)
 	end
 
-	-- TODO: this will probably not work properly for databases.
+	--  The lines below were removed, but until now it does not produce any errors:
 	--data.cObj_:setID("C"..data.x.."L"..data.y)
 	--data.id = data.cObj_:getID()
 

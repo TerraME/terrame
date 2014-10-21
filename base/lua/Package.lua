@@ -122,7 +122,7 @@ function suggest(typedValues, possibleValues)
 	end
 end
 
--- TODO: think about this kind of function. Today it is only used by Model.
+--- Verify a given condition, otherwise stops the simulation with an error.
 verify = function(condition, msg)
 	if not condition then
 		customError(msg)
@@ -184,7 +184,6 @@ function customWarning(msg)
 	io.flush()
 end
 
--- TODO: experimental function
 defaultTableValue = function(data, idx, value)
 	if data[idx] == nil then
 		data[idx] = value

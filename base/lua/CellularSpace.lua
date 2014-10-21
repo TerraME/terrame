@@ -84,7 +84,6 @@ local function createMooreNeighborhood(cs, name, self, wrap)
 	end
 end
 
--- Creates a von Neumann neighborhood for each cell
 local function createVonNeumannNeighborhood(cs, name, self, wrap)
 	for i, cell in ipairs(cs.cells) do
 		local neigh = Neighborhood()
@@ -134,9 +133,6 @@ local function createNeighborhood(cs, filterF, weightF, name)
 	end)
 end
 
--- Creates a M (collumns) x N (rows) stationary (couclelis) neighborhood
--- filterF(cell,neigh):bool --> true, if the neighborhood relationship will be included, otherwise false
--- weightF(cell,neigh):real --> calculates the neighborhood relationship weight
 local function createMxNNeighborhood(cs, m, n, filterF, weightF, name)
 	m = math.floor(m/2)
 	n = math.floor(n/2)
@@ -161,9 +157,6 @@ local function createMxNNeighborhood(cs, m, n, filterF, weightF, name)
 	end)
 end
 
--- Creates a M (collumns) x N (rows) stationary (couclelis) neighborhood bettween TWO different CellularSpace
--- filterF(cell,neigh):bool --> true, if the neighborhood relationship will be included, otherwise false
--- weightF(cell,neigh):real --> calculates the neighborhood relationship weight
 local function spatialCoupling(m, n, cs1, cs2, filterF, weightF, name)
 	m = math.floor(m / 2)
 	n = math.floor(n / 2)
@@ -293,7 +286,6 @@ local function ParseCSVLine(line, sep)
 	end
 	return res
 end
-
 
 local loadMap = function(self)
     local i = 0
@@ -435,8 +427,6 @@ local checkMySQL = function(self)
 end
 
 local loadDb = function(self)
-	-- TODO: this function call used to get another return value (legendStr, in the end). Remove this
-	-- returning value from the C++ code. Do the same for loadShape
 	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:load()
 
 	if self.cells == nil then
@@ -461,9 +451,6 @@ end
 local CellularSpaceDrivers = {}
 
 local registerCellularSpaceDriver = function(data)
-	-- TODO: verify types of each value of data
-	-- TODO: add LuaDoc tag to any register call
-
 	if type(data.compulsory) == "string" then
 		data.compulsory = {data.compulsory}
 	end
@@ -531,8 +518,7 @@ CellularSpace_ = {
 		if type(cell) ~= "Cell" then
 			incompatibleTypeError("#1", "Cell", cell)
 		elseif cell.parent ~= nil then 
-			customWarning("The cell already had a parent and it was replaced.")
-			-- TODO: I believe that a cell must belong to one, and only one, cs. Therefore the line above should be an error
+			customError("The cell already has a parent and it will not be replaced.")
 		end
 
 		cell.parent = self
@@ -905,7 +891,7 @@ CellularSpace_ = {
 		end)
 	end,
 --]]
-	-- Retrieve the number of Cells of the CellularSpace.
+	--- Retrieve the number of Cells of the CellularSpace.
 	-- @usage print(#cs)
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")

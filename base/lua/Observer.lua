@@ -90,12 +90,11 @@ TME_TYPES_USER = {
 
 createdObservers = {}
 
---#######################################################################################################################
 -- OBSERVERS CREATION
 -- TME_OBSERVERS.TEXTSCREEN
 local function observerTextScreen(subjType, subject, observerAttrs, datale)
 	if datale.observer ~= nil then
-		customError("Cannot attach observers of type 'textscreen' to other observers. Only 'image' and 'map' observers can be attached.", 4)
+		customError("Cannot attach observers of type 'textscreen' to other observers.", 4)
 	end
 	local observerParams = {}
 
@@ -122,7 +121,7 @@ end
 -- TME_OBSERVERS.LOGFILE
 local function observerLogFile(subjType, subject, observerAttrs, datale)
 	if datale.observer ~= nil then
-		customError("Cannot attach observers of type 'logfile' to other observers. Only 'image' and 'map' observers can be attached.", 4)
+		customError("Cannot attach observers of type 'logfile' to other observers.", 4)
 	end
 
 	local outfile = datale.outfile or "result_.csv"
@@ -155,7 +154,7 @@ end
 -- TME_OBSERVERS.TABLE
 local function observerTable(subjType, subject, observerAttrs, datale)
 	if datale.observer ~= nil then
-		customError("Cannot attach observers of type 'table' to other observers. Only 'image' and 'map' observers can be attached.", 4)
+		customError("Cannot attach observers of type 'table' to other observers.", 4)
 	end
 
 	local column1Label = datale.yLabel or "Attributes"
@@ -189,7 +188,7 @@ end
 -- TME_OBSERVERS.CHART
 local function observerChart(subjType, subject, observerAttrs, datale)
 	if datale.observer ~= nil then
-		customError("Cannot attach observers of type 'chart' to other observers. Only 'image' and 'map' observers can be attached.", 4)
+		customError("Cannot attach observers of type 'chart' to other observers.", 4)
 	end
 
 	if not observerAttrs or type(observerAttrs) ~= "table" or #observerAttrs == 0 then
@@ -262,7 +261,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 		if curveLabelsCount < attrCount then
 			curveLabels = table.concat(datale.curveLabels, DEF_CURVE_SEP)
 			for i = curveLabelsCount + 1, attrCount do 
-				curveLabels = curveLabels .. DEF_CURVE_SEP .. DEF_CURVE_NAME .. tostring(i) .. DEF_CURVE_SEP
+				curveLabels = curveLabels..DEF_CURVE_SEP..DEF_CURVE_NAME..tostring(i)..DEF_CURVE_SEP
 			end
 		else
 			curveLabels = table.concat(datale.curveLabels, DEF_CURVE_SEP)
@@ -309,11 +308,10 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 	end	
 end
 
---#####################################################################################################
 -- DEFAULT MAP AND IMAGE OBSERVERS LEGENDS colobar functions
 local function getDefaultCellspaceNumberColorBars(i)
 	local defaultCellspaceNumberColorBars = {
-		{ {color = TME_LEGEND_COLOR.WHITE, value = 0}, {color = TME_LEGEND_COLOR.BLACK, value = 1} },--grouping = TME_GROUPING.EQUALSTEPS
+		{ {color = TME_LEGEND_COLOR.WHITE, value = 0}, {color = TME_LEGEND_COLOR.BLACK, value = 1} },
 		{ {color = TME_LEGEND_COLOR.YELLOW, value = 0}, {color = TME_LEGEND_COLOR.BLUE, value = 1} },
 		{ {color = TME_LEGEND_COLOR.GREEN, value = 0}, {color = TME_LEGEND_COLOR.RED, value = 1} }
 	}
@@ -375,14 +373,12 @@ local function getDefaultSocietyColorBar(i)
 	return defaultSocietyColorBar[i % #defaultSocietyColorBar+1]
 end
 
---#####################################################################################################
 -- OBSERVER MAP
--- In this function the second parameter can assume two types of entities: a lua class ou a c++ one depending on the subject type
--- This is necessary for Society type.
+-- In this function the second parameter can assume two types of entities: a lua class ou a c++ one depending
+-- on the subject type. This is necessary for Society type.
 -- Last parameter is used only for trajectories
 local function observerMap(subjType, subject, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
 	if subjType == TME_TYPES.TRAJECTORY then
-		-- qq coisa informada na lista de atributos deve ser substituida por isto
 		observerAttrs = {"trajectory"}		
 	elseif subjType == TME_TYPES.NEIGHBORHOOD then
 		observerAttrs = {"weight"}
@@ -422,7 +418,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 					local t = type(csCells[1][observerAttrs[i]])
 					local leg = {}
 					if t == "number" then 
-						leg = Legend { type = TME_LEGEND_TYPE.NUMBER, colorBar = getDefaultCellspaceNumberColorBars(i) }			
+						leg = Legend{type = TME_LEGEND_TYPE.NUMBER, colorBar = getDefaultCellspaceNumberColorBars(i)}			
 					elseif t == "boolean" then
 						leg = Legend { grouping = TME_LEGEND_GROUPING.UNIQUEVALUE,
 							maximum = 1, minimum = 0, 
@@ -487,16 +483,13 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 			customError("Map observers must have exactly one or two attributes.", 3)
 		end
 		-- cellularspace
-		-- RAIAN: Solucao provisoria para corrigir o problema de desesnhar inicio todo preto. 
-		-- TODO: CORRIGIR
+		-- TODO: Solucao provisoria para corrigir o problema de desesnhar inicio todo preto. 
 		-- return subject.cObj_:createObserver(TME_OBSERVERS.MAP, tbDimensions, observerAttrs, observerParams, csCells)
 		local idObs = subject.cObj_:createObserver(TME_OBSERVERS.MAP, tbDimensions, observerAttrs, observerParams, csCells)
 		subject.cObj_:notify(0)
 		subject.cObj_:notify(0)
 		return idObs
-		-- RAIAN: FIM
 	else
-		-- society
 		if type(subject) == "Society" then
 			local obsId = -1
 			forEachAgent(subject, function(ag)
@@ -529,12 +522,15 @@ local function observerNeighborhood(subject, neighborhoods, datale)
 	csObserver = datale.observer
 	if not csObserver then customError("Parameter 'observer' was not found.", 3) end
 
-	if csObserver.type ~= "map" and csObserver.type ~= TME_OBSERVERS.MAP and csObserver.type ~= "image" and csObserver.type ~= TME_OBSERVERS.IMAGE then
-		customError("Cannot attach observers of type '".. csObserver.type .."'. Only 'image' and 'map' observers can be attached.", 3)
+	local mtype = csObserver.type
+	if mtype ~= "map" and mtype ~= TME_OBSERVERS.MAP and mtype ~= "image" and mtype ~= TME_OBSERVERS.IMAGE then
+		customError("Cannot attach observers of type '".. csObserver.type .."'.", 3)
 	end
 
 	local cs = csObserver.subject
-	if not cs or type(cs) ~= "CellularSpace" then customError("Basis observer is not related to a CellularSpace.", 3) end
+	if not cs or type(cs) ~= "CellularSpace" then
+		customError("Basis observer is not related to a CellularSpace.", 3)
+	end
 
 	table.insert(observerParams, cs)
 	table.insert(observerParams, csObserver.id)
@@ -552,7 +548,6 @@ end
 -- Last parameter is used only for trajectories
 local function observerImage(subjType, subject, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
 	if subjType == TME_TYPES.TRAJECTORY then
-		-- qq coisa informada na lista de atributos deve ser substituida por isto
 		observerAttrs = {"trajectory"}
 	elseif subjType == TME_TYPES.NEIGHBORHOOD then
 		observerAttrs = {"weight"}		
@@ -642,17 +637,13 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 			customError("Image observers must have exactly one or two attributes.", 3)
 		end
 
-		-- cellularspace
-		-- RAIAN: Solucao provisoria para corrigir o problema de desesnhar inicio todo preto. 
-		-- TODO: CORRIGIR
+		-- TODO: Solucao provisoria para corrigir o problema de desesnhar inicio todo preto. 
 		-- return subject.cObj_:createObserver(TME_OBSERVERS.IMAGE, tbDimensions, observerAttrs, observerParams, csCells)
 		local idObs = subject.cObj_:createObserver(TME_OBSERVERS.IMAGE, tbDimensions, observerAttrs, observerParams, csCells)
 		subject.cObj_:notify(0)
 		subject.cObj_:notify(0)
 		return idObs
-		-- RAIAN: FIM
 	else
-		-- society
 		if type(subject) == "Society" then
 			local obsId = -1
 			forEachAgent(subject, function(ag)
@@ -843,10 +834,9 @@ local function observerStateMachine(subjType, subject, observerAttrs, datale)
 	--return subject.cObj_:createObserver(TME_OBSERVERS.STATEMACHINE, observerAttrs, observerParams)
 end
 
---#####################################################################################################
 -- OBSERVER SHAPEFILE
--- In this function the second parameter can assume two types of entities: a lua class ou a c++ one depending on the subject type
--- This is necessary for Society type.
+-- In this function the second parameter can assume two types of entities: a lua class ou a c++ one
+-- depending on the subject type. This is necessary for Society type.
 -- Last parameter is used only for trajectories
 local function observerShapefile(subjType, subject, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
 	if #observerAttrs > 2 or #observerAttrs == 0 then
@@ -900,8 +890,6 @@ local function observerShapefile(subjType, subject, tbDimensions, observerAttrs,
 	end
 end
 
---##########################################################################
-
 -- Constructor for Observers
 Observer_ = {
 	type_ = "Observer",
@@ -933,16 +921,30 @@ Observer_ = {
 }
 
 local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabel", "yLabel", "title", "curveLabels", "legends", "path", "location", "outfile", "separator", "prefix", "observer",--[["cellspace",]] "neighIndex", "neighType", "port", "hosts"}
---- Observer is the way to collect data from the objects of a model in order to save, to graphically plot them, or to send them to another computer. Observers can be created from any TerraME object that has a built-in function called notify(). This function needs to be called to update its observers because they are passive objects. Observers do not need to be put into an object to exist, as in the second example on the left side.
+--- Observer is the way to collect data from the objects of a model in order to save, toi
+-- graphically plot them, or to send them to another computer. Observers can be created from any
+-- TerraME object that has a built-in function called notify(). This function needs to be called
+-- to update its observers because they are passive objects. Observers do not need to be put into
+-- an object to exist, as in the second example on the left side.
 -- Default values of observer types depend on the parameters. See table below for a description on how it works.
 -- @param data.type A string to define the way to observe a given object. See the table below.
--- @param data.attributes A vector of strings with the name of the attributes to be observed. If it is only a single value then it can also be described as a string. 
--- @param data.file Name of the file to be saved. In the case of images, it represent the fixed part of the file name that will be concatenated with a timestamp and ".png". In the case of logfiles, it must be a file ending with ".csv". Default value is "result_" for image files and result_.csv for logfiles.
+-- @param data.attributes A vector of strings with the name of the attributes to be observed. If it is only a
+-- single value then it can also be described as a string. 
+-- @param data.file Name of the file to be saved. In the case of images, it represent the fixed
+-- part of the file name that will be concatenated with a timestamp and ".png". In the case of
+-- logfiles, it must be a file ending with ".csv". Default value is "result_" for image files and
+-- result_.csv for logfiles.
 -- @param data.host A string or a vector of strings with host names for udpsenders.
 -- @param data.legends A Legend or a vector of Legends to paint objects according to their properties.
 -- @param data.location A Cell representing a location to observe an Automaton.
--- @param data.neighIndex A string or a vector of strings representing the neighborhood indexes to be drawn by a neighborhood observer. Default is "1".
--- @param data.neighType One of three strings, "basic" (default), "color", or "width", for neighborhood observers. Basic type draws neighborhoods as lines with the same color and width. Color draws them using colors according to their weights. Width draws them with widths according to their weights. All them use the attribute width of Legends. The first two use it as width for all lines, while the last one interpolates the weights of the relations to draw widths between one pixel and the Legend width.
+-- @param data.neighIndex A string or a vector of strings representing the neighborhood indexes to
+-- be drawn by a neighborhood observer. Default is "1".
+-- @param data.neighType One of three strings, "basic" (default), "color", or "width", for
+-- neighborhood observers. Basic type draws neighborhoods as lines with the same color and width.
+-- Color draws them using colors according to their weights. Width draws them with widths
+-- according to their weights. All them use the attribute width of Legends. The first two use it as
+-- width for all lines, while the last one interpolates the weights of the relations to draw widths
+-- between one pixel and the Legend width.
 -- @param data.observer An Observer that will be used as background for drawing properties of observed objects that canxnot be drawn alone.
 -- @param data.port A string or a vector of strings with ports for the respective host names to be used by udpsenders.
 -- @param data.separator The attribute separator character (i.e., ";"). Used only for logfiles.
@@ -951,17 +953,29 @@ local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabe
 -- @param data.xaxis A string representing the attribute to be used as x axis in a chart observer. When nil, time will be used as axis.
 -- @param data.xLabel Name of the x-axis. It does not show any label as default.
 -- @param data.yLabel Name of the y-axis. It does not show any label as default.
--- @param data.curveLabels Vector of the same size of attributes that indicates the labels for each line of a chart. Default is the name of the attributes.
+-- @param data.curveLabels Vector of the same size of attributes that indicates the labels for each
+-- line of a chart. Default is the name of the attributes.
 --
 -- @tab type
 -- Type & Description & Compulsory parameters & Optional parameters \
--- "chart" & Create a line chart showing the variation of one or more attributes (y axis) of an object. X axis values come from the single argument of notify(). & subject, attributes & xaxis, xLabel, yLabel, title, curveLabels \
--- "image" & Create a map with the spatial distribution of a given Agent, CellularSpace, Society or Trajectory, saving it in a png file for each notify(). It works in the same way of the observer map. & subject, attributes & file, legends \
+-- "chart" & Create a line chart showing the variation of one or more attributes (y axis) of an
+-- object. X axis values come from the single argument of notify(). & subject, attributes & xaxis, xLabel, yLabel, title, curveLabels \
+-- "image" & Create a map with the spatial distribution of a given Agent, CellularSpace, Society or
+-- Trajectory, saving it in a png file for each notify(). It works in the same way of the observer map. & subject, attributes & file, legends \
 -- "logfile" & Save attributes of an object into a csv text file, with one row for each notify(). & subject, file, attributes, separator & \ 
--- "map" & Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent, or Society. It draws each element into the screen, according to one or two attributes (two is allowed only for CellularSpace) colored from one or two Legends, respectively. The second attribute and Legend are used as background. & subject, attributes, observer (unless when the subject is a CellularSpace), legends & \
--- "neighborhood" & Draw the Neighborhood of a Cell, or the Neighborhoods of each Cell within a Trajectory, CellularSpace, or Environment. They are drawn as lines, according to a neighType. & subject, observer & neighIndex, neighType \
+-- "map" & Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
+-- or Society. It draws each element into the screen, according to one or two attributes (two is
+-- allowed only for CellularSpace) colored from one or two Legends, respectively. The second
+-- attribute and Legend are used as background. & subject, attributes, observer (unless when the
+-- subject is a CellularSpace), legends & \
+-- "neighborhood" & Draw the Neighborhood of a Cell, or the Neighborhoods of each Cell within a
+-- Trajectory, CellularSpace, or Environment. They are drawn as lines, according to a neighType.
+-- & subject, observer & neighIndex, neighType \
 -- "scheduler" & Create a display with the current time and Event queue of a given Timer. & subject & \
--- "statemachine" & Draw the state machine of an Automaton in a Cell or an Agent. As default, states are drawn as gray circles with a green circle to represent the current state. Unique value Legends can be used to map state names to colors, putting the current state in evidence with bold font. & subject, location (only when the subject is an Automaton), legends & \
+-- "statemachine" & Draw the state machine of an Automaton in a Cell or an Agent. As default,
+-- states are drawn as gray circles with a green circle to represent the current state. Unique
+-- value Legends can be used to map state names to colors, putting the current state in evidence
+-- with bold font. & subject, location (only when the subject is an Automaton), legends & \
 -- "table" & Display a table with the current attributes of an object. Each notify() overwrites the previous values. & subject, attributes & \
 -- "textscreen" & Create a display in a tabular format with the current attributes of an object. It will have one row for each notify(). &
 -- subject, attributes & \

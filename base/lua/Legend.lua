@@ -27,7 +27,7 @@
 
 -- Colors --------------------------------------------------------------------------
 
--- @DANIEL: Based on color table at http://gucky.uni-muenster.de/cgi-bin/rgbtab-en
+-- Based on color table at http://gucky.uni-muenster.de/cgi-bin/rgbtab-en
 TME_LEGEND_COLOR = {
 	BLACK           = {  0,   0,   0},
 	WHITE           = {255, 255, 255},	
@@ -249,7 +249,7 @@ local DEF_COLOR = { {color = TME_LEGEND_COLOR.WHITE, value = DEF_MIN }, {color =
 local DEF_STD_COLOR = { {color = TME_LEGEND_COLOR.BLACK, value = DEF_MIN }, {color = TME_LEGEND_COLOR.WHITE, value = DEF_MAX }}
 local DEF_FONT = "Symbol"
 local DEF_FONT_SIZE = 12
-local DEF_FONT_SYMBOL = string.char(174) -- equivale a seta na fonte symbol
+local DEF_FONT_SYMBOL = string.char(174) -- arrow in the font Symbol
 local DEF_WIDTH = 2 -- 5
 local DEF_CURVE_STYLE = TME_LEGEND_CURVE_STYLE.LINES
 local DEF_CURVE_SYMBOL = TME_LEGEND_CURVE_SYMBOL.NOSYMBOL
@@ -276,9 +276,6 @@ end
 -- Convert the colorBar for a string
 -- Output format:
 --   colorBar = color table; value; label; distance;#color table; value; label; distance;
--- TODO
--- @param colorBar TODO
--- @return TODO
 function colorBarToString(colorBar)
 	local str = ""
 
@@ -287,7 +284,6 @@ function colorBarToString(colorBar)
 		return str
 	end
 
-	-- Constants for separating values
 	local COMP_COLOR_SEP = ","
 	local ITEM_SEP = ";"
 	local ITEM_NULL = "?"
@@ -309,14 +305,12 @@ function colorBarToString(colorBar)
 			end
 		end
 
-		-- value
 		if item.value ~= nil then
 			str = str .. tostring(item.value) .. ITEM_SEP
 		else
 			str = str .. ITEM_NULL .. ITEM_SEP
 		end
 
-		-- label
 		if item.label ~= nil and type(item.label) == "string" then
 			str = str .. item.label .. ITEM_SEP
 		elseif item.value ~= nil then
@@ -332,7 +326,6 @@ function colorBarToString(colorBar)
 			str = str .. ITEM_NULL .. ITEM_SEP
 		end
 
-		-- distance
 		if item.distance ~= nil and type(item.distance == "number") then
 			str = str .. item.distance .. ITEM_SEP
 		else
@@ -369,29 +362,53 @@ Legend_ = {
 }
 
 local metaTableLegend_ = {__index = Legend_, __tostring = tostringTerraME}
--- Creates a new Legend to be used with Observers
----Type that defines how to color an attribute to be observed. It is used only with a map Observer. The configuration of a legend can be changed visually by double clicking the graphical interface along the simulation.
+--- Type that defines how to color an attribute to be observed. It is used only with a map 
+-- Observer. The configuration of a legend can be changed visually by double clicking the
+-- graphical interface along the simulation.
 -- @param data A table
 -- @param data.grouping A string with the strategy to slice and color the data. See below.
--- @param data.type The type of the attribute to be observed. It has to be one of "bool", "number", "string", and "datetime" (an ordered string).
--- @param data.slices The number of colors to be used for plotting. It must be an integer number greater than one.
--- @param data.precision The number of decimal digits for slicing. It must be an integer number greater than zero. It indicates that differences less than 10^(-digits) will not be considered. It means that, for instance, if a slice is in the interval [1.0,2.0] and precision is 2 (0.01), a value 0.99 might belong to such slice.
--- @param data.stdDeviation When the grouping mode is stddeviation, it has to be one of "full", "half" "quarter", or "none".
+-- @param data.type The type of the attribute to be observed. It has to be one of "bool",
+-- "number", "string", and "datetime" (an ordered string).
+-- @param data.slices The number of colors to be used for plotting. It must be an integer
+-- number greater than one.
+-- @param data.precision The number of decimal digits for slicing. It must be an integer
+-- number greater than zero. It indicates that differences less than 10^(-digits) will
+-- not be considered. It means that, for instance, if a slice is in the interval [1.0, 2.0]
+-- and precision is 2 (0.01), a value 0.99 might belong to such slice.
+-- @param data.stdDeviation When the grouping mode is stddeviation, it has to be one of "full",
+-- "half" "quarter", or "none".
 -- @param data.maximum The maximum value of the attribute (used only for numbers).
 -- @param data.minimum The minimum value of the attribute (used only for numbers).
 -- @param data.width The width of the line to be drawn. Used for drawing Neighborhoods (default is 10).
--- @param data.symbol A symbol to draw Agents. It can be one of: "none", "ellipse", "rect", "diamond", "triangle", "dtriangle", "utriangle", "ltriangle", "rtriangle", "cross", "xcross", "hline", "vline", "asterisk", "star", "hexagon". Default is an arrow.
+-- @param data.symbol A symbol to draw Agents. It can be one of: "none", "ellipse", "rect",
+-- "diamond", "triangle", "dtriangle", "utriangle", "ltriangle", "rtriangle", "cross", "xcross",
+-- "hline", "vline", "asterisk", "star", "hexagon". Default is an arrow.
 -- @param data.font A string with the font used to draw each Agent. Default is "Symbol".
 -- @param data.fontSize An integer positive number indicating the font size. Default is 12.
--- @param data.colorBar A table where each position is a table with a 'color', a 'value', and a 'label' (optional). Colors can be described as string ("red", "green", "blue", "white", "black", "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers representing RGB compositions. Labels are strings that will be shown in the graphical interface describing the colors.
--- @param data.stdColorBar A table just as colorBar. It is needed only when standard deviation is the chosen strategy.
+-- @param data.colorBar A table where each position is a table with a 'color', a 'value', and a
+-- 'label' (optional). Colors can be described as string ("red", "green", "blue", "white", "black",
+-- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
+-- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
+-- representing RGB compositions. Labels are strings that will be shown in the graphical
+-- interface describing the colors.
+-- @param data.stdColorBar A table just as colorBar. It is needed only when standard deviation is
+-- the chosen strategy.
 --
 -- @tab grouping
 -- Grouping & Description & Compulsory parameters & Optional parameters\
--- "equalsteps" &The values are divided into a set of slices with the same range. Each slice is associated to a given color. Equalsteps require only two colors in the colorBar, one for the minimum and the other for the maximum value. The other colors are computed from a linear interpolation of the two colors. &colorBar, slices, maximum, minimum & precision, type, width, font, fontSize, symbol \
--- "quantil" & Aggregate the values into slices with approximately the same size. Values are ordered from lower to higher and then sliced. This strategy uses two colors in the same way of equalsteps. & colorBar, slices, maximum, minimum & precision, type, width \
--- "stdeviation" & Define slices according to the distribution of a given attribute. Values with similar positive or negative distances to the average will belong to the same slice. & colorBar, stdColorBar & stdDeviation, precision, type, width \
--- "uniquevalue" & Map each attribute value to a given color. Attributes with type string can only be sliced with this strategy. &colorBar & type, width
+-- "equalsteps" &The values are divided into a set of slices with the same range. Each slice is
+-- associated to a given color. Equalsteps require only two colors in the colorBar, one for the
+-- minimum and the other for the maximum value. The other colors are computed from a linear
+-- interpolation of the two colors. &colorBar, slices, maximum, minimum & precision, type, width,
+-- font, fontSize, symbol \
+-- "quantil" & Aggregate the values into slices with approximately the same size. Values are
+-- ordered from lower to higher and then sliced. This strategy uses two colors in the same way
+-- of equalsteps. & colorBar, slices, maximum, minimum & precision, type, width \
+-- "stdeviation" & Define slices according to the distribution of a given attribute. Values with
+-- similar positive or negative distances to the average will belong to the same slice. &
+-- colorBar, stdColorBar & stdDeviation, precision, type, width \
+-- "uniquevalue" & Map each attribute value to a given color. Attributes with type string can
+-- only be sliced with this strategy. &colorBar & type, width
 --
 -- @usage coverLeg = Legend {
 --     grouping = "uniquevalue",
@@ -440,7 +457,6 @@ function Legend(data)
 		data.style = TME_LEGEND_CURVE_STYLE_USER[data.style]
 	end
 
-	--###############################################
 	-- LEGEND PRE-SETUP
 	if not data.colorBar or (type(data.colorBar) == "table" and #data.colorBar == 0) then
 		data.colorBar = nil
@@ -452,7 +468,6 @@ function Legend(data)
 		data.stdColorBar = nil
 	end
 
-	--###############################################
 	-- LEGEND PARAMETERS SETUP
 	-- colorBar setup
 	if data.colorBar == nil then
@@ -493,7 +508,7 @@ function Legend(data)
 				}
 			end
 		else
-		--print("NAO CONSIGO INFERIR 'colorBar'")
+			customError("Could not infer colorBar.")
 		end
 	else
 		local theType
@@ -608,7 +623,6 @@ function Legend(data)
 
 	-- stdDeviation setup
 	if data.stdDeviation == nil then
-		--print("NAO CONSIGO INFERIR 'stdDeviation'")
 		data.stdDeviation = DEF_STD_DEV
 	end
 
@@ -724,12 +738,10 @@ function Legend(data)
 		customError("width", "greater than or equal to one", data.width, 3)
 	end
 
-	--###############################################
 	-- colorBar and stdColorBar setup complement
 	if type(data.colorBar) == "table" then
 		data.colorBar = colorBarToString(data.colorBar)
 	else
-		-- Verificar
 		--customWarning("Warning: Attribute 'colorBar' should be a table, got a ".. type(data.colorBar) .. ". Using default color bar.", 4)
 		data.colorBar = colorBarToString(DEF_COLOR)
 	end
@@ -739,10 +751,7 @@ function Legend(data)
 			if #data.stdColorBar > 2 then
 				data.stdColorBar = colorBarToString(data.stdColorBar)
 			else
-				-- Verificar
-				if not QUIET_MODE then
-					customWarning("Warning: Attribute 'stdColorBar' is incomplete.", 4)
-				end
+				customWarning("Warning: Attribute 'stdColorBar' is incomplete.", 4)
 			end
 		elseif type(data.stdColorBar) ~= "string" then
 			incompatibleTypeError("stdColorBar","table", data.stdColorBar, 4)

@@ -25,8 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 Pair_ = {
-	-- ESSE TYPE PRECISA REVISAO
-	-- IMPLICA EM FALHA DO TIMER, EVENT  
 	--type_ = "Pair", 
 	notify = function(self, modelTime)
 		if (modelTime == nil) or (type(modelTime) ~= 'number') then 
