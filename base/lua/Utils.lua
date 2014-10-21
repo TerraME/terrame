@@ -365,8 +365,13 @@ function belong(value, values)
 end
 
 -- string distance 
--- TODO: add error messages for this function
 function levenshtein(s, t)
+	if type(s) ~= "string" then
+		incompatibleTypeError("#1", "string", s)
+	elseif type(t) ~= "string" then
+		incompatibleTypeError("#2", "string", t)
+	end
+
 	local d, sn, tn = {}, #s, #t
 	local byte, min = string.byte, math.min
 	for i = 0, sn do d[i * tn] = i end

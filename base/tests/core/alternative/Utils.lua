@@ -191,6 +191,17 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected <, >, <=, or >=, got '=='.")
 	end,
+	levenshtein = function(unitTest)
+		local error_func = function()
+			local gt = levenshtein(2)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected string, got number.")	
+	
+		error_func = function()
+			local gt = levenshtein("abc", 2)
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected string, got number.")	
+	end,
 	round = function(unitTest)
 		local error_func = function()
 			x = round("a")
