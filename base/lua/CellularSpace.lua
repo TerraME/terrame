@@ -288,8 +288,8 @@ local function ParseCSVLine(line, sep)
 end
 
 local loadMap = function(self)
-    local i = 0
-    local j = 0
+	local i = 0
+	local j = 0
 
 	if self.minRow == nil then self.minRow = 100000 end
 	if self.minCol == nil then self.minCol = 100000 end
@@ -297,17 +297,17 @@ local loadMap = function(self)
 	if self.maxCol == nil then self.maxCol = -self.minCol end
 
 	self.cells = {}
-    for line in io.lines(self.database) do
-        j  = 0
+	for line in io.lines(self.database) do
+		j  = 0
 
 		res = ParseCSVLine(line, self.sep)
 
 		forEachElement(res, function(_, value)
-            local p = Cell {x = j, y = i} 
-         	p[self.attrname] = tonumber(value)
+			local p = Cell {x = j, y = i} 
+		 	p[self.attrname] = tonumber(value)
 			self:add(p)
 		end)
-    end
+	end
 end
 
 local loadShape = function(self)
@@ -686,6 +686,7 @@ CellularSpace_ = {
 			end
 		}
 	end,
+	--- Return a cell from the CellularSpace given its x and y location. Deprecated. Use get instead.
 	getCell = function(self, xIndex, yIndex)
 		deprecatedFunctionWarning("getCell", "get")
 		return self:get(xIndex, yIndex)
@@ -722,10 +723,12 @@ CellularSpace_ = {
 
 		return self.cObj_:getCell(cObj_)
 	end,
+	--- Return all the cells of the CellularSpace in a vector. Deprecated. Use .cells instead.
 	getCells = function(self)
 		deprecatedFunctionWarning("getCells", ".cells")
 		return self.cells
 	end,
+	--- Return a cell from the CellularSpace given its id. Deprecated. Use get instead.
 	getCellByID = function(self, cellID)
 		deprecatedFunctionWarning("getCellByID", "get")
 		return self:get(cellID)
