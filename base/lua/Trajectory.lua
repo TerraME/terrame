@@ -89,10 +89,13 @@ Trajectory_ = {
 			end
 		end
 	end,
-	-- Return a cell given its x and y locations
+	--- Return a cell given its x and y locations.
+	-- @param x The x location.
+	-- @param y The y location.
 	get = function(self, x, y)
 		return self.parent:get(x, y)
 	end,
+	--- Return a cell given its x and y locations. Deprecated. Use Trajectory:get instead.
 	getCell = function(self, index)
 		deprecatedFunctionWarning("getCell", "get")
 		return self:get(index:getX(), index:getY())

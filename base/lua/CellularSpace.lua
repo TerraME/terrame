@@ -894,7 +894,7 @@ CellularSpace_ = {
 		end)
 	end,
 --]]
-	--- Retrieve the number of Cells of the CellularSpace.
+	--- Retrieve the number of Cells of the CellularSpace. Deprecated. Use # instead.
 	-- @usage print(#cs)
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")

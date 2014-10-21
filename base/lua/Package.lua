@@ -28,8 +28,13 @@
 
 --@header Some basic and useful functions to develop packages.
 
+--- Implement a switch case function, where options are given and there are functions
+-- associated to them.
+-- @param data A table.
+-- @param att The chosen attribute.
 function switch(data, att)
 	if type(data) == "number" then
+		-- TODO: it if is number, the parameter att is ignored. Is it ok?
 		local swtbl = {
 			casevar = data,
 			caseof = function(self, code)
@@ -93,9 +98,8 @@ function switch(data, att)
 	end
 end
 
--- Attribute name suggestion based on levenshtein string distance
+-- TODO: this function should be removed (only Legend and Observer use it).
 function suggest(typedValues, possibleValues)
-	local str = ""
 	for k, v in pairs(typedValues) do
 		local notCorrectParameters = {}
 		local correctedSuggestions = {}
@@ -113,22 +117,27 @@ function suggest(typedValues, possibleValues)
 			table.insert(correctedSuggestions, moreSimilar)
 		end
 
-		for i = 1, getn(notCorrectParameters) do
- 			local dst = levenshtein(notCorrectParameters[i], correctedSuggestions[i])
- 			if dst < math.floor(#notCorrectParameters[i] * 0.6) then
- 				customWarning("Attribute '".. notCorrectParameters[i] .."' not found. Do you mean '".. correctedSuggestions[i].."'?", 4)
- 			end
+		for i = 1, #notCorrectParameters do
+			local dst = levenshtein(notCorrectParameters[i], correctedSuggestions[i])
+			if dst < math.floor(#notCorrectParameters[i] * 0.6) then
+				customError("Attribute '".. notCorrectParameters[i] .."' not found. Do you mean '".. correctedSuggestions[i].."'?")
+			end
 		end
 	end
 end
 
 --- Verify a given condition, otherwise stops the simulation with an error.
+-- @param condition A value of any type. If it is not true, the function generates an error.
+-- @param msg A string with the error to be displayed.
 verify = function(condition, msg)
 	if not condition then
 		customError(msg)
 	end
 end
 
+--- Verify whether the table passed as argument is a named table. It generates errors if it is nil,
+-- if it is not a table, or if it has numeric indexes.
+-- @param data A value of any type.
 verifyNamedTable = function(data)
 	if type(data) ~= "table" then
 		if data == nil then
@@ -141,6 +150,10 @@ verifyNamedTable = function(data)
 	end
 end
 
+--- Verify whether the used has used only the allowed parameters for a functoin, generating
+-- a warning otherwise.
+-- @param data The list of parameters used in the function call.
+-- @param parameters The list of the allowed parameters.
 function checkUnnecessaryParameters(data, parameters)
 	forEachElement(data, function(value)
 		if not belong(value, parameters) then
@@ -149,6 +162,8 @@ function checkUnnecessaryParameters(data, parameters)
 	end)
 end
 
+--- Generate an error.
+-- @param msg A string describing the error.
 function customError(msg)
 	if type(msg) ~= "string" then
 		error("Error: #1 should be a string.", 2)
@@ -163,13 +178,15 @@ local begin_yellow = "\027[00;33m"
 local end_color    = "\027[00m"
 
 local function print_yellow(value)
-    if sessionInfo().separator == "/" then
-        print__(begin_yellow..value..end_color)
-    else
-        print__(value)
-    end
+	if sessionInfo().separator == "/" then
+		print__(begin_yellow..value..end_color)
+	else
+		print__(value)
+	end
 end
 
+--- Generate a warning.
+-- @param msg A string describing the warning.
 function customWarning(msg)
 	if type(msg) ~= "string" then
 		error("Error: #1 should be a string.", 2)
@@ -184,6 +201,11 @@ function customWarning(msg)
 	io.flush()
 end
 
+--- Verifies the default value of a given element of a table. It puts the default value in the table if it does not
+-- exist, generates an error if the value has a different type, or a warning if it is equal to the default value.
+-- @param data A table.
+-- @param idx The element of the table (a string).
+-- @param value The default value (any type).
 defaultTableValue = function(data, idx, value)
 	if data[idx] == nil then
 		data[idx] = value
@@ -194,6 +216,9 @@ defaultTableValue = function(data, idx, value)
 	end
 end
 
+--- Generates a warning if the element of a table is the default value.
+-- @param parameter The element.
+-- @param value The default value.
 function defaultValueWarning(parameter, value)
 	if type(parameter) ~= "string" then
 		error("Error: #1 should be a string.", 2)
@@ -202,7 +227,9 @@ function defaultValueWarning(parameter, value)
 	customWarning("Parameter '"..parameter.."' could be removed as it is the default value ("..tostring(value)..").")
 end
 
---- Generates
+--- Generates a warning for deprecated functions.
+-- @param functionName Name of the deprecated function.
+-- @param functionExpected A string with the name of the function to be used instead of the deprecated function.
 function deprecatedFunctionWarning(functionName, functionExpected)
 	if type(functionName) ~= "string" then
 		error("Error: #1 should be a string.", 2)
@@ -216,6 +243,10 @@ function deprecatedFunctionWarning(functionName, functionExpected)
 	customWarning(text)
 end
 
+--- Generate an error from a wrong type for a parameter of a function.
+-- @param attr A string with an attribute name, or position (such as #1).
+-- @param expectedTypeString A string with the expected type.
+-- @param gottenValue The value passed as argument with wrong type.
 function incompatibleTypeError(attr, expectedTypesString, gottenValue)
 	if expectedTypesString == nil then expectedTypesString = "nil" end
 
@@ -225,6 +256,10 @@ function incompatibleTypeError(attr, expectedTypesString, gottenValue)
 	customError(text)
 end
 
+--- Generate an error from a wrong value for a parameter of a function.
+-- @param attr A string with an attribute name, or position (such as #1).
+-- @param expectedTypeString A string with the expected type values for the parameter.
+-- @param gottenValue The value passed as argument with wrong value.
 function incompatibleValueError(attr, expectedValues, gottenValue)
 	if expectedValues == nil then expectedValues = "nil" end
 
@@ -239,32 +274,52 @@ function incompatibleValueError(attr, expectedValues, gottenValue)
 	customError(msg)
 end
 
+--- Generate an error indicating that the function does not support a given file extension.
+-- @param attr The attribute name (a string).
+-- @param ext The file extension (a string).
 function incompatibleFileExtensionError(attr, ext)
-	customError("Parameter '".. attr .."' does not support '"..ext.."'.")
+	customError("Parameter '".. attr.."' does not support '"..ext.."'.")
 end
 
+--- Generate an error indicating that a given resource was not found.
+-- @param attr The attribute name (a string).
+-- @param path The location of the resource, described as a string.
 function resourceNotFoundError(attr, path)
 	customError("Resource '"..path.."' not found for parameter '"..attr.."'.")
 end
 
+--- Generate an error due to a wrong value for a parameter.
+-- @param attr The parameter name (a string).
+-- @param value The wrong value, which can belong to any type.
 function valueNotFoundError(attr, value)
 	if type(value) == nil then value = "nil" end
 	customError("Value '"..value.."' not found for parameter '"..attr.."'.")
 end
 
+--- Generate an error indicating that a given parameter is mandatory.
+-- @param attr The name of the parameter (a string).
 function mandatoryArgumentError(attr)
 	customError("Parameter '"..attr.."' is mandatory.")
 end
 
--- TODO: verify the name of this function
+--- Verify whether the table contains a mandatory argument. It produces an error if the value is nil or
+-- it has a type different from the required type.
+-- @param table A table.
+-- @param attr The attribute name (a string).
+-- @param mtype The required type for the attribute (a string).
 function mandatoryTableArgument(table, attr, mtype)
 	if table[attr] == nil then
 		customError("Parameter '"..attr.."' is mandatory.")
-	elseif type(table[attr]) ~= mtype then
+	elseif type(table[attr]) ~= mtype and mtype ~= nil then
 		incompatibleTypeError(attr, mtype, table[attr])
 	end
 end
 
+--- Verify whether the table contains an optional argument. It produces an error if the value is not nil and
+-- it has a type different from the required type.
+-- @param table A table.
+-- @param attr The attribute name (a string).
+-- @param allowedType The required type for the attribute (a string).
 optionalTableArgument = function(table, attr, allowedType)
 	local value = table[attr]
 	local mtype = type(value)

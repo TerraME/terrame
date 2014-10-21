@@ -593,7 +593,7 @@ local executeTests = function(fileName, package)
 					end
 
 					local found_error = false
-					local ok_execution, err = xpcall(function() tests[eachTest](ut) end, function(err)
+					xpcall(function() tests[eachTest](ut) end, function(err)
 						print_red("Wrong execution, got error: '"..err.."'.")
 						ut.functions_with_error = ut.functions_with_error + 1
 						print_red(traceback())

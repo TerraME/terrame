@@ -65,11 +65,15 @@ end
 -- **********************************************************************************************
 -- util math functions
 
+--- Return a table with the content of the file config.lua, stored in the directory where TerraME
+-- was executed. All the global variables of the file are elements of the table.
 function getConfig()
 	return include("config.lua")
 end
 
--- rounds a number given its value and a precision
+--- Round a number given its value and a precision.
+-- @param num A number.
+-- @param idp The number of decimal places to be used. Default is zero.
 function round(num, idp)
 	if type(num) ~= "number" then
 		incompatibleTypeError("#1", "number", num)
@@ -342,12 +346,17 @@ integrate = function(attrs)
 	return result
 end
 
+--- Pause the simulation for a given time.
+-- @param delay_s A number indicating how long in seconds should the model pause. Default is one.
 function delay(delay_s)
 	delay_s = delay_s or 1
 	local time_to = os.time() + delay_s
 	while os.time() <= time_to do end
 end
 
+--- Return whether a given value belong to a table.
+-- @param value A value.
+-- @param values A table
 function belong(value, values)
 	if type__(values) ~= "table" then
 		incompatibleTypeError("#2", "table", values)
@@ -364,7 +373,9 @@ function belong(value, values)
 	return found
 end
 
--- string distance 
+--- Return the Levenshtein's distance between two strings.
+-- @param s A string.
+-- @param t Another string.
 function levenshtein(s, t)
 	if type(s) ~= "string" then
 		incompatibleTypeError("#1", "string", s)
@@ -732,18 +743,12 @@ function elapsedTime(s)
 	end
 end
 
--- extents to the string class
--- TODO
--- @param self TODO
--- @param send TODO
--- @return TODO
+--- Return whether a string ends with a given substring (no case sensitive).
+-- @param self A string.
+-- @param send A substring describing the end of #1.
 function string.endswith(self, send)
-	-- case insensitive
 	local send = send:lower().."$"
-	local match = self:lower():match(send)
-	return match and true or false
-	-- TODO: and true or false???
-	-- return #self >= #send and self:find(send, #self-#send+1, true) and true or false
+	return self:lower():match(send)
 end
 
 --- Return the number of elements of atable, be them named or not.
