@@ -23,23 +23,8 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
-local optionalTableElement = function(table, attr, allowedType)
-	local value = table[attr]
-	local mtype = type(value)
-
-	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypeError(attr, allowedType, value)
-	end
-end
-
-local compulsoryTableElement = function(table, attr)
-	if table[attr] == nil then
-		mandatoryArgumentError(attr)
-	end
-end
-
 InternetSender = function(data)
-	compulsoryTableElement(data, "subject")
+	mandatoryTableArgument(data, "subject")
 	defaultTableValue(data, "host", "localhost")
 	defaultTableValue(data, "port", 456456)
 	defaultTableValue(data, "visible", true)
@@ -48,11 +33,8 @@ InternetSender = function(data)
 
 	if type(data.select) == "string" then data.select = {data.select} end
 
-	optionalTableElement(data, "select", "table")
-
 	if data.select == nil then
 		data.select = {}
-
 		if type(data.subject) == "Cell" then
 			forEachElement(data.subject, function(idx, value, mtype)
 				local size = string.len(idx)
@@ -60,6 +42,7 @@ InternetSender = function(data)
 					data.select[#data.select + 1] = idx
 				end
 			end)
+
 		elseif type(data.subject) == "Agent" then
 			forEachElement(data.subject, function(idx, value, mtype)
 				local size = string.len(idx)
@@ -85,12 +68,8 @@ InternetSender = function(data)
 
 		verify(#data.select > 0, "The subject does not have at least one valid attribute to be used.")
 	else
-		if type(data.select) == "string" then
-			data.select = {data.select}
-		else
-			optionalTableElement(data, "select", "table")
-		end
-
+		mandatoryTableArgument(data, "select", "table")
+		verify(#data.select > 0, "InternetSender must select at least one attribute.")
 		forEachElement(data.select, function(_, value)
 			if data.subject[value] == nil then
 				if  value == "#" then
@@ -124,8 +103,6 @@ InternetSender = function(data)
 			end)
 		end
 	end
-
-	verify(#data.select > 0, "InternetSender must select at least one attribute.")
 
 	checkUnnecessaryParameters(data, {"subject", "protocol", "select", "port", "host", "visible", "compress"})
 

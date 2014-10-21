@@ -23,37 +23,19 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
-local optionalTableElement = function(table, attr, allowedType)
-	local value = table[attr]
-	local mtype = type(value)
-
-	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypeError(attr, allowedType, value)
-	end
-end
-
-local compulsoryTableElement = function(table, attr)
-	if table[attr] == nil then
-		mandatoryArgumentError(attr)
-	end
-end
-
 Chart = function(data)
-	compulsoryTableElement(data, "subject")
-	optionalTableElement(data, "yLabel", "string")
-	optionalTableElement(data, "xLabel", "string")
-	optionalTableElement(data, "xAxis",  "string")
-	optionalTableElement(data, "title",  "string")
+	mandatoryTableArgument(data, "subject")
+	defaultTableValue(data, "yLabel", "")
+	defaultTableValue(data, "xLabel", "")
+	defaultTableValue(data, "title",  "")
+
+	optionalTableArgument(data, "xAxis",  "string")
 
 	if type(data.select) == "string" then data.select = {data.select} end
 	if type(data.label)  == "string" then data.label  = {data.label} end
 
-	optionalTableElement(data, "select", "table")
-	optionalTableElement(data, "label",  "table")
-
-	if data.yLabel == nil then data.yLabel = "" end
-	if data.xLabel == nil then data.xLabel = "" end
-	if data.title  == nil then data.title  = "" end
+	optionalTableArgument(data, "select", "table")
+	optionalTableArgument(data, "label",  "table")
 
 	if data.select == nil then
 		verify(data.label == nil, "As select is nil, it is not possible to use label.")
@@ -97,7 +79,7 @@ Chart = function(data)
 		if type(data.select) == "string" then
 			data.select = {data.select}
 		else
-			optionalTableElement(data, "select", "table")
+			optionalTableArgument(data, "select", "table")
 		end
 
 		forEachElement(data.select, function(_, value)

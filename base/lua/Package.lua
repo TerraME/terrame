@@ -265,3 +265,12 @@ function mandatoryTableArgument(table, attr, mtype)
 	end
 end
 
+optionalTableArgument = function(table, attr, allowedType)
+	local value = table[attr]
+	local mtype = type(value)
+
+	if value ~= nil and mtype ~= allowedType then
+		incompatibleTypeError(attr, allowedType, value)
+	end
+end
+

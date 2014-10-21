@@ -104,7 +104,14 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'ddd' is mandatory.")
 	end,
+	optionalTableArgument = function(unitTest)
+		local mtable = {bbb = 3, ccc = "aaa"}
 
+		local error_func = function()
+			optionalTableArgument(mtable, "bbb", "string")
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'bbb' expected string, got number.")
+	end,
 	verifyNamedTable = function(unitTest)
 		local error_func = function()
 			verifyNamedTable()

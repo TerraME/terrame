@@ -105,27 +105,11 @@ local slicedColorBar = function (min, max, slices, colornames)
 	return colorBar
 end
 
-local optionalTableElement = function(table, attr, allowedType)
-	local value = table[attr]
-	local mtype = type(value)
-
-	if value ~= nil and mtype ~= allowedType then
-		incompatibleTypeError(attr, allowedType, value)
-	end
-end
-
-local compulsoryTableElement = function(table, attr)
-	if table[attr] == nil then
-		mandatoryArgumentError(attr)
-	end
-end
-
 Map = function(data)
-	compulsoryTableElement(data, "subject")
-	optionalTableElement(data, "subject", "CellularSpace")
-	optionalTableElement(data, "values", "table")
-	optionalTableElement(data, "labels", "table")
-	optionalTableElement(data, "select", "string")
+	mandatoryTableArgument(data, "subject", "CellularSpace")
+	optionalTableArgument(data, "values", "table")
+	optionalTableArgument(data, "labels", "table")
+	optionalTableArgument(data, "select", "string")
 
 	if data.grouping == nil then
 		if data.slices ~= nil then
@@ -143,10 +127,10 @@ Map = function(data)
 
 	switch(data, "grouping"):caseof{
 		equalsteps = function()
-			compulsoryTableElement(data, "select")
+			mandatoryTableArgument(data, "select")
 			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
-			compulsoryTableElement(data, "slices")
-			compulsoryTableElement(data, "colors")
+			mandatoryTableArgument(data, "slices")
+			mandatoryTableArgument(data, "colors")
 
 			--verify(#data.labels == 0 or #data.labels == data.slices, "There should exist labels for each value.")
 			--verify(type(data.colors) ~= "string" or #data.colors == 2, "There should exist two colors for each value.")
@@ -167,11 +151,11 @@ Map = function(data)
 			checkUnnecessaryParameters(data, {"subject", "select", "labels", "colors", "grouping", "min", "max", "slices"})
 		end,
 		uniquevalues = function()
-			compulsoryTableElement(data, "select")
+			mandatoryTableArgument(data, "select")
 
 			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
 
-			compulsoryTableElement(data, "colors")
+			mandatoryTableArgument(data, "colors")
 
 			verify(#data.colors == #data.values, "There should exist colors for each value.")
 
@@ -207,7 +191,7 @@ Map = function(data)
 
 	-- TODO: select with more than one attribute
 	--if type(data.select) == "string" then data.select = {data.select} end
-	--optionalTableElement(data, "select", "table")
+	--optionalTableArgument(data, "select", "table")
 	--verify(#data.select > 0, "Maps must select at least one attribute.")
 
 	--forEachElement(data.select, function(_, value)
