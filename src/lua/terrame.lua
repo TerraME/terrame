@@ -48,6 +48,8 @@ function dir(folder)
 		file:close()
 		os.execute("rm "..folder..s.."aux.txt")
 		return fileTable
+	else
+		customError(folder.." is not a folder or is empty or does not exist.")
 	end
 end	
 
@@ -1099,7 +1101,7 @@ execute = function(parameters) -- parameters is a string
 
 				local correct, errorMsg = xpcall(function() executeTests(parameters[paramCount], package) end, function(err)
 					printError(err)
-					printError(traceback())
+					--printError(traceback())
 				end)
 				return
 			elseif param == "-help" then 
