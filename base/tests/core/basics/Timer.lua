@@ -69,6 +69,27 @@ return {
 		clock1:execute(10)
 
 		unitTest:assert_equal(countEvent, 11)
+
+		local count = 0
+		local ag1 = Agent{execute = function() count = count + 1 end}
+		local ag2 = Agent{execute = function() count = count + 1 end}
+		local c = Cell{}
+		local cs = CellularSpace{xdim = 5}
+		local t = Trajectory{target = cs}
+
+		local soc = Society{instance = ag2, quantity = 5}
+
+		t = Timer{
+			Event{action = ag1},
+			Event{action = soc},
+			Event{action = c},
+			Event{action = cs},
+			Event{action = t}
+		}
+
+		t:execute(10)
+
+		unitTest:assert_equal(60, count)
 	end,
 	add = function(unitTest)
 		local cont = 0

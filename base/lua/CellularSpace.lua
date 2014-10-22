@@ -1144,7 +1144,7 @@ function CellularSpace(data)
 			end)
 
 			if #candidates == 0 then
-				customError("No candidates.")
+				customError("Not enough information to infer how to build the Cellularspace.")
 			elseif #candidates == 1 then
 				data.dbType = candidates[1]
 			else
