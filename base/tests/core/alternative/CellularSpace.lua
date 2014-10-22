@@ -34,10 +34,20 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got number.")
 
-		local error_func = function()
+		error_func = function()
 			cs:add(cs2:sample())
 		end
 		unitTest:assert_error(error_func, "Error: The cell already has a parent.")
+
+		local c = Cell{x = 30, y = 30}
+		local c2 = Cell{x = 30, y = 30}
+
+		cs:add(c)
+
+		error_func = function()
+			cs:add(c2)
+		end
+		unitTest:assert_error(error_func, "Error: Cell (30, 30) already belongs to the CellularSpace.")
 	end,
 	CellularSpace = function(unitTest)
 		local error_func = function()

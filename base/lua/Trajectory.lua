@@ -35,6 +35,8 @@ Trajectory_ = {
 			incompatibleTypeError("#2", "Cell", cell)
 		end
 
+	-- TODO: uncomment after solving #22
+	--	verify(not self:get(cell.x, cell.y), "Cell ("..cell.x..", "..cell.y..") already belongs to the Trajectory.")
 		table.insert(self.cells, cell)
 		self.cObj_:add(#self + 1, cell.cObj_)
 	end,
@@ -93,6 +95,7 @@ Trajectory_ = {
 	-- @param x The x location.
 	-- @param y The y location.
 	get = function(self, x, y)
+		-- TODO: change this - add will never work because the cell already belongs to the cellular space.
 		return self.parent:get(x, y)
 	end,
 	--- Return a cell given its x and y locations. Deprecated. Use Trajectory:get instead.

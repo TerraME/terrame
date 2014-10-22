@@ -521,6 +521,8 @@ CellularSpace_ = {
 			customError("The cell already has a parent.")
 		end
 
+		verify(not self:get(cell.x, cell.y), "Cell ("..cell.x..", "..cell.y..") already belongs to the CellularSpace.")
+
 		cell.parent = self
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 		table.insert(self.cells, cell)

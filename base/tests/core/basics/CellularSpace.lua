@@ -33,7 +33,7 @@ return{
 	add = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
-		local c = Cell{}
+		local c = Cell{x = 20, y = 20}
 
 		cs:add(c)
 		unitTest:assert_equal(#cs, 101)
