@@ -51,23 +51,22 @@ function dir(folder)
 	end
 end	
 
+file = function(file, package)
+	local s = sessionInfo().separator
+	local file = sessionInfo().path..s.."packages"..s..package..s.."data"..s..file
+	if not isfile(file) then
+		customError("File '"..file.."' does not exist in package '"..package.."'.")
+	end
+	return file
+end
+
+print__ = print
 local begin_red    = "\027[00;31m"
 local begin_yellow = "\027[00;33m"
 local begin_green  = "\027[00;32m"
-local begin_blue   = "\027[00;34m"
 local end_color    = "\027[00m"
 
-print__ = print
-
-print_blue = function(value)
-	if sessionInfo().separator == "/" then
-		print__(begin_blue..value..end_color)
-	else
-		print__(value)
-	end
-end
-
-function print_red(value)
+function printError(value)
 	if sessionInfo().separator == "/" then
 		print__(begin_red..value..end_color)
 	else
@@ -75,7 +74,7 @@ function print_red(value)
 	end
 end
 
-function print_green(value)
+function printNote(value)
 	if sessionInfo().separator == "/" then
 		print__(begin_green..value..end_color)
 	else
@@ -83,7 +82,7 @@ function print_green(value)
 	end
 end
 
-function print_yellow(value)
+function printWarning(value)
 	if sessionInfo().separator == "/" then
 		print__(begin_yellow..value..end_color)
 	else
@@ -104,8 +103,8 @@ function include(scriptfile)
 		customError("File '"..scriptfile.."' does not exist.")
 	end
 	xpcall(function() loadfile(scriptfile, 't', env)() end, function(err)
-		print_red(err)
-		print_red(traceback())
+		printError(err)
+		printError(traceback())
 	end)
 	return setmetatable(env, nil) -- TODO: try to remove nil and see what happens. Perhaps this could be used in TerraME.
 end
@@ -160,9 +159,9 @@ require = function(package, recursive, asnamespace)
 
 	for mfile, count in pairs(count_files) do
 		if count == 0 then
-			print_yellow("File lua/"..mfile.." is not loaded.")
+			printWarning("File lua/"..mfile.." is not loaded.")
 		elseif count > 1 then
-			print_yellow("File lua/"..mfile.." is loaded "..count.." times.")
+			printWarning("File lua/"..mfile.." is loaded "..count.." times.")
 		end
 	end
 
@@ -220,6 +219,7 @@ local testfolders = function(folder)
 					table.insert(result, mfolder)
 				end
 			else
+				-- TODO: verify whether the value is really a folder here and show an error message
 				if mfolder == "" then
 					lf(value)
 				else
@@ -401,17 +401,17 @@ local executeTests = function(fileName, package)
 
 	local print_when_loading = 0
 
-	print_green("Loading package "..package)
+	printNote("Loading package "..package)
 	print = function(...)
 		-- FIXME: print_when_loading should be called ut.print_when_loading (see below the UnitTest)
 		print_when_loading = print_when_loading + 1
-		print_red(...)
+		printError(...)
 	end
 
     xpcall(function() require(package) end, function(err)
-		print_red("Package could not be loaded.")
-        print_red(err)
-        print_red(traceback())
+		printError("Package could not be loaded.")
+        printError(err)
+        printError(traceback())
 		os.exit()
     end)
 
@@ -535,7 +535,7 @@ local executeTests = function(fileName, package)
 			end
 
 			if #myFile == 0 then
-				print_yellow("Skipping folder "..eachFolder)
+				printWarning("Skipping folder "..eachFolder)
 			end
 
 			for _, eachFile in ipairs(myFile) do
@@ -567,9 +567,9 @@ local executeTests = function(fileName, package)
 				end
 
 				if #myTest > 0 then
-					print_green("Testing "..eachFolder..s..eachFile)
+					printNote("Testing "..eachFolder..s..eachFile)
 				else
-					print_yellow("Skipping "..eachFolder..s..eachFile)
+					printWarning("Skipping "..eachFolder..s..eachFile)
 				end
 
 
@@ -579,7 +579,7 @@ local executeTests = function(fileName, package)
 					if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
 						testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
 					elseif testfunctions[eachFile] then
-						print_red("Function does not exist in the respective file in the source code.")
+						printError("Function does not exist in the respective file in the source code.")
 						ut.functions_not_exist = ut.functions_not_exist + 1
 					end
 
@@ -589,14 +589,14 @@ local executeTests = function(fileName, package)
 
 					print = function(...)
 						ut.print_calls = ut.print_calls + 1
-						print_red(...)
+						printError(...)
 					end
 
 					local found_error = false
 					xpcall(function() tests[eachTest](ut) end, function(err)
-						print_red("Wrong execution, got error: '"..err.."'.")
+						printError("Wrong execution, got error: '"..err.."'.")
 						ut.functions_with_error = ut.functions_with_error + 1
-						print_red(traceback())
+						printError(traceback())
 						found_error = true
 					end)
 
@@ -607,7 +607,7 @@ local executeTests = function(fileName, package)
 
 					if count_test == ut.test and not found_error then
 						ut.functions_without_assert = ut.functions_without_assert + 1
-						print_red("No asserts were found in the test.")
+						printError("No asserts were found in the test.")
 					end
 
 					if getn(_G) > count_global then
@@ -622,7 +622,7 @@ local executeTests = function(fileName, package)
 							end
 						end)
 						variables = variables:sub(1, variables:len() - 2).."."
-						print_red("Test creates global variable(s): "..variables)
+						printError("Test creates global variable(s): "..variables)
 						ut.functions_with_global_variables = ut.functions_with_global_variables + 1
 
 						-- we need to delete the global variables created in order
@@ -636,7 +636,7 @@ local executeTests = function(fileName, package)
 					end
 
 					if ut.count_last > 0 then
-						print_red("[The error above occurs more "..ut.count_last.." times.]")
+						printError("[The error above occurs more "..ut.count_last.." times.]")
 						ut.count_last = 0
 						ut.last_error = ""
 					end
@@ -647,13 +647,13 @@ local executeTests = function(fileName, package)
 
 	-- checking if all source code functions were tested
 	if check_functions then
-		print_green("Checking if functions from source code were tested")
+		printNote("Checking if functions from source code were tested")
 		if type(data.file) == "string" then
 			print("Checking "..data.file)
 			forEachElement(testfunctions[data.file], function(idx, value)
 				ut.package_functions = ut.package_functions + 1
 				if value == 0 then
-					print_red("Function '"..idx.."' was not tested.")
+					printError("Function '"..idx.."' was not tested.")
 					ut.functions_not_tested = ut.functions_not_tested + 1
 				end
 			end)
@@ -663,7 +663,7 @@ local executeTests = function(fileName, package)
 				forEachElement(testfunctions[value], function(midx, mvalue)
 					ut.package_functions = ut.package_functions + 1
 					if mvalue == 0 then
-						print_red("Function '"..midx.."' was not tested.")
+						printError("Function '"..midx.."' was not tested.")
 						ut.functions_not_tested = ut.functions_not_tested + 1
 					end
 				end)
@@ -674,25 +674,25 @@ local executeTests = function(fileName, package)
 				forEachElement(value, function(midx, mvalue)
 					ut.package_functions = ut.package_functions + 1
 					if mvalue == 0 then
-						print_red("Function '"..midx.."' was not tested.")
+						printError("Function '"..midx.."' was not tested.")
 						ut.functions_not_tested = ut.functions_not_tested + 1
 					end
 				end)
 			end)
 		end
 	else
-		print_yellow("Skipping source code functions check")
+		printWarning("Skipping source code functions check")
 	end
 
 	-- executing examples
 	if examples then
-		print_green("Testing examples")
+		printNote("Testing examples")
 		local dirFiles = dir(baseDir..s.."examples")
 		if dirFiles ~= nil then
 			forEachElement(dirFiles, function(idx, value)
 				if not string.endswith(value, ".lua") then
 					if not string.endswith(value, ".log") then
-						print_yellow("Skipping "..value)
+						printWarning("Skipping "..value)
 					end
 					return true
 				end
@@ -708,7 +708,7 @@ local executeTests = function(fileName, package)
 
 						logfile = io.open(baseDir..s.."examples"..s..lfilename, "r")
 						if logfile == nil then
-							print_yellow("Creating log file "..lfilename)
+							printWarning("Creating log file "..lfilename)
 							logfile = io.open(baseDir..s.."examples"..s..lfilename, "w")
 							writing_log = true
 							ut.log_files = ut.log_files + 1
@@ -721,13 +721,13 @@ local executeTests = function(fileName, package)
 						local str = logfile:read(string.len(x) + 1)
 						if str ~= x.."\n" then
 							ut.examples_error = ut.examples_error + 1
-							print_red("Different strings:")
+							printError("Different strings:")
 							if str == nil then
-								print_red("Log file: <empty>")
+								printError("Log file: <empty>")
 							else
-								print_red("Log file: '"..str.."'.")
+								printError("Log file: '"..str.."'.")
 							end
-							print_red("Simulation: '"..x.."'.")
+							printError("Simulation: '"..x.."'.")
 						end
 					end
 				end
@@ -743,16 +743,16 @@ local executeTests = function(fileName, package)
 				end
 				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
-					print_red(err)
-					print_red(traceback())
+					printError(err)
+					printError(traceback())
 				end)
 
 				if not writing_log and logfile then
 					local str = logfile:read("*all")
 					if str and str ~= "" then
 						ut.examples_error = ut.examples_error + 1
-						print_red("Output file contains text not printed by the simulation: ")
-						print_red("'"..str.."'")
+						printError("Output file contains text not printed by the simulation: ")
+						printError("'"..str.."'")
 					end
 				end	
 
@@ -763,7 +763,7 @@ local executeTests = function(fileName, package)
 			end)
 		end
 	else
-		print_yellow("Skipping examples")
+		printWarning("Skipping examples")
 	end
 
 	local finalTime = os.clock()
@@ -777,83 +777,83 @@ local executeTests = function(fileName, package)
 		text = text.."."
 	end
 
-	print_green(text)
+	printNote(text)
 
 
 	if print_when_loading > 0 then
-		print_red(print_when_loading.." print calls when loading the package.")
+		printError(print_when_loading.." print calls when loading the package.")
 	else
-		print_green("No print calls when loading the package.")
+		printNote("No print calls when loading the package.")
 	end
 
 	if ut.fail > 0 then
-		print_red(ut.fail.." out of "..ut.test.." asserts failed.")
+		printError(ut.fail.." out of "..ut.test.." asserts failed.")
 	else
-		print_green("All "..ut.test.." asserts were executed successfully.")
+		printNote("All "..ut.test.." asserts were executed successfully.")
 	end
 
 	if ut.functions_with_error > 0 then
-		print_red(ut.functions_with_error.." out of "..ut.executed_functions.." tested functions stopped with an unexpected error.")
+		printError(ut.functions_with_error.." out of "..ut.executed_functions.." tested functions stopped with an unexpected error.")
 	else
-		print_green("All "..ut.executed_functions.." tested functions do not have any unexpected execution error.")
+		printNote("All "..ut.executed_functions.." tested functions do not have any unexpected execution error.")
 	end
 
 	if ut.functions_without_assert > 0 then
-		print_red(ut.functions_without_assert.." out of "..ut.executed_functions.." tested functions do not have at least one assert.")
+		printError(ut.functions_without_assert.." out of "..ut.executed_functions.." tested functions do not have at least one assert.")
 	else
-		print_green("All "..ut.executed_functions.." tested functions have at least one assert.")
+		printNote("All "..ut.executed_functions.." tested functions have at least one assert.")
 	end
 
 	if ut.functions_not_exist > 0 then
-		print_red(ut.functions_not_exist.." out of "..ut.executed_functions.." tested functions do not exist in the source code of the package.")
+		printError(ut.functions_not_exist.." out of "..ut.executed_functions.." tested functions do not exist in the source code of the package.")
 	else
-		print_green("All "..ut.executed_functions.." tested functions exist in the source code of the package.")
+		printNote("All "..ut.executed_functions.." tested functions exist in the source code of the package.")
 	end
 
 	if ut.functions_with_global_variables > 0 then
-		print_red(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
+		printError(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
 	else
-		print_green("No function creates any global variable.")
+		printNote("No function creates any global variable.")
 	end
 
 	if ut.print_calls > 0 then
-		print_red(ut.print_calls.." print calls were found in the tests.")
+		printError(ut.print_calls.." print calls were found in the tests.")
 	else
-		print_green("No function prints any text on the screen.")
+		printNote("No function prints any text on the screen.")
 	end
 
 	if ut.wrong_file > 0 then
-		print_red(ut.wrong_file.." assert_error calls found an error message pointing to an internal file (wrong level).")
+		printError(ut.wrong_file.." assert_error calls found an error message pointing to an internal file (wrong level).")
 	else
-		print_green("No assert_error has error messages pointing to internal files.")
+		printNote("No assert_error has error messages pointing to internal files.")
 	end
 
 	if check_functions then
 		if ut.functions_not_tested > 0 then
-			print_red(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions are not tested.")
+			printError(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions are not tested.")
 		else
-			print_green("All "..ut.package_functions.." functions of the package are tested.")
+			printNote("All "..ut.package_functions.." functions of the package are tested.")
 		end
 	else
-		print_yellow("No source code functions were verified.")
+		printWarning("No source code functions were verified.")
 	end
 
 	if examples then
 		if ut.examples == 0 then
-			print_red("No examples were found.")
+			printError("No examples were found.")
 		elseif ut.examples_error == 0 then
-			print_green("All "..ut.examples.." examples were successfully executed.")
+			printNote("All "..ut.examples.." examples were successfully executed.")
 		else
-			print_red(ut.examples_error.." out of "..ut.examples.." examples have unexpected execution error.")
+			printError(ut.examples_error.." out of "..ut.examples.." examples have unexpected execution error.")
 		end
 
 		if ut.log_files > 0 then
-			print_red(ut.log_files.." log files were created in the examples. Please run the tests again.")
+			printError(ut.log_files.." log files were created in the examples. Please run the tests again.")
 		else
-			print_green("No new log file was created.")
+			printNote("No new log file was created.")
 		end
 	else
-		print_yellow("No examples were executed.")
+		printWarning("No examples were executed.")
 	end
 
 	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error + 
@@ -861,18 +861,18 @@ local executeTests = function(fileName, package)
 	               ut.functions_with_error + ut.functions_without_assert
 
 	if errors == 0 then
-		print_green("Summing up, all tests were succesfully executed.")
+		printNote("Summing up, all tests were succesfully executed.")
 	elseif errors == 1 then
-		print_red("Summing up, one problem was found during the tests.")
+		printError("Summing up, one problem was found during the tests.")
 	else
-		print_red("Summing up, "..errors.." problems were found during the tests.")
+		printError("Summing up, "..errors.." problems were found during the tests.")
 	end
 	os.exit() -- TODO: remove it. Up to now, if this line does not exist TerraME will not end.
 end
 
 build = function(folder, dev)
 	if dev == nil then dev = false end
-	-- pensar melhor:
+	-- TODO: pensar melhor:
 	-- dev indica se o pacote gerado sera para desenvolvimento ou nao
 	-- um pacote dev contem todos os testes e todos os dados
 
@@ -886,15 +886,6 @@ build = function(folder, dev)
 
 	-- instalar o pacote
 	-- carregar o pacote
-end
-
-file = function(file, package)
-	local s = sessionInfo().separator
-	local file = sessionInfo().path..s.."packages"..s..package..s.."data"..s..file
-	if not isfile(file) then
-		customError("File '"..file.."' does not exist in package '"..package.."'.")
-	end
-	return file
 end
 
 local versions = function()
@@ -1060,9 +1051,13 @@ execute = function(parameters) -- parameters is a string
 
 	sessionInfo = function()
 		return info
-		-- atualizar todos os arquivos que usam as variaveis globais por uma chamada a esta funcao
+		-- TODO: atualizar todos os arquivos que usam as variaveis globais por uma chamada a esta funcao
 		-- remover as variaveis globais TME_MODE, ...
 	end
+
+	-- Package.lua contains functions that terrame.lua needs, but should also be
+	-- documented and availeble for the final users.
+	dofile(file("../lua/Package.lua", "base"))
 
 	local package = ""
 
@@ -1103,7 +1098,8 @@ execute = function(parameters) -- parameters is a string
 				end
 
 				local correct, errorMsg = xpcall(function() executeTests(parameters[paramCount], package) end, function(err)
-					print_red(err)
+					printError(err)
+					printError(traceback())
 				end)
 				return
 			elseif param == "-help" then 
@@ -1168,7 +1164,7 @@ execute = function(parameters) -- parameters is a string
 					end
 				end)
 				if not success then
-					print_red(result)
+					printError(result)
 				end
 			elseif param == "-autoclose" then
 				-- TODO
@@ -1239,7 +1235,7 @@ execute = function(parameters) -- parameters is a string
 			end)
 
 			if not success then
-				print_red(result)
+				printError(result)
 			end
 
 			return
