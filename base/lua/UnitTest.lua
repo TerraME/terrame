@@ -27,8 +27,14 @@
 -------------------------------------------------------------------------------------------
 
 local print_error = function(self, msg)
-	local info = debug.getinfo(3)
-	local str = string.match(info.short_src, "[^/]*$")
+	local level = 1
+    local info = debug.getinfo(level)
+    while not string.match(info.source, "/tests/") do
+		level = level + 1
+    	info = debug.getinfo(level)
+	end
+
+	local str = info.short_src
 	str = str..":".. info.currentline ..": "..msg
 	if self.last_error == str then
 		self.count_last = self.count_last + 1
