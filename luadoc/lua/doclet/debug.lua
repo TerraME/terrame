@@ -3,8 +3,6 @@
 -- @release $Id: debug.lua,v 1.3 2007/04/18 14:28:39 tomas Exp $
 -----------------------------------------------------------------
 
-module "luadoc.doclet.debug"
-
 function printline()
 	print(string.rep('-', 79))
 end
@@ -26,21 +24,23 @@ function start (doc)
 	end
 	printline()
 	
-	for i, v in pairs(doc.files) do
+	forEachOrderedElement(doc.files, function(i, v)
 		print('\t', i, v)
-	end
+	end)
 	printline()
-	for i, v in pairs(doc.files[doc.files[1]]) do
+
+	forEachOrderedElement(doc.files[doc.files[1]], function(i, v)
 		print(i, v)
-	end
-	
+	end)
 	printline()
-	for i, v in pairs(doc.files[doc.files[1]].doc[1]) do
+
+	forEachOrderedElement(doc.files[doc.files[1]].doc[1], function(i, v)
 		print(i, v)
-	end
+	end)
 	printline()
+
 	print("Params")
-	for i, v in pairs(doc.files[doc.files[1]].doc[1].param) do
+	forEachOrderedElement(doc.files[doc.files[1]].doc[1].param, function(i, v)
 		print(i, v)
-	end
+	end)
 end

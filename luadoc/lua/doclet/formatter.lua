@@ -6,14 +6,11 @@
 -- @release $Id: formatter.lua,v 1.5 2007/04/18 14:28:39 tomas Exp $
 -------------------------------------------------------------------------------
 
--- local util = require "luadoc.util"
 local sessionInfo = sessionInfo
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
-local assert, ipairs, pairs, type = assert, ipairs, pairs, type
-local string, table, print_green, forEachElement = string, table, print_green, forEachElement
-
--- module "luadoc.doclet.formatter"
+local assert, ipairs, type = assert, ipairs, type
+local string, table, print_green, forEachOrderedElement = string, table, print_green, forEachOrderedElement
 
 options = {
 	output_dir = "./",
@@ -57,14 +54,14 @@ function start (doc)
 			
 			if block.class == "function" then
 				-- parameters
-				forEachElement(block.param, function (_, param_name)
+				forEachOrderedElement(block.param, function (_, param_name)
 					f:write(util.comment(util.wrap(string.format("@param %s %s", param_name, block.param[param_name] or todo), 77)))
 					f:write("\n")
 				end)
 				
 				-- return
 				if type(block.ret) == "table" then
-					forEachElement(block.ret, function (_, ret)
+					forEachOrderedElement(block.ret, function (_, ret)
 						f:write(util.comment(util.wrap(string.format("@return %s", ret), 77)).."\n")
 					end)
 				else

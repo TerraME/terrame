@@ -3,22 +3,16 @@
 -- @release $Id: tags.lua,v 1.8 2007/09/05 12:39:09 tomas Exp $
 -------------------------------------------------------------------------------
 
--- local luadoc = require "luadoc"
--- local util = require "luadoc.util"
--- local string = require "string"
--- local table = require "table"
 local assert, type, tostring = assert, type, tostring
 local print = print
-local pairs = pairs
 local string = string
 local table = table
-local forEachElement = forEachElement
+local forEachOrderedElement = forEachOrderedElement
 local s = sessionInfo().separator
 local print_yellow = print_yellow
 local print_red = print_red
-local io = io
+local io, os = io, os
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
--- module "luadoc.taglet.standard.tags"
 
 -------------------------------------------------------------------------------
 
@@ -85,7 +79,7 @@ end
 local function name (tag, block, text)
 	if block[tag] and block[tag] ~= text then
 		print_red(string.format("block name conflict: `%s' -> `%s'", block[tag], text))
-		io.exit()
+		-- os.exit()
 	end
 	
 	block[tag] = text
@@ -112,7 +106,7 @@ local function param (tag, block, text)
 		name = field
 		-- match documented parameter with declared parameter
 		local i
-		forEachElement(block[tag], function (idx, v)
+		forEachOrderedElement(block[tag], function (idx, v)
 			if v == param_tab then
 				i = idx
 				return false
@@ -131,8 +125,7 @@ local function param (tag, block, text)
   
 	-- match documented parameter with declared parameter
 	local i 
-
-	forEachElement(block[tag], function (idx, v)
+	forEachOrderedElement(block[tag], function (idx, v)
 		if v == name then
 			i = idx
 			return false
@@ -176,7 +169,7 @@ local function see (tag, block, text)
 	
 	local s = util.split("%s*,%s*", text)			
 	
-	forEachElement(s, function (_, v)
+	forEachOrderedElement(s, function (_, v)
 		table.insert(block[tag], v)
 	end)
 end
@@ -214,6 +207,7 @@ end
 local function tab(tag, block, text)
 	block[tag] = block[tag] or {}
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
+	print("DESC: ", desc)
 	--desc = desc:gsub("%s*([&\\])%s*", "%1")
 	local rows = {}
 	for line in desc:gmatch("[^\\]+") do
@@ -251,7 +245,7 @@ handlers["inherits"] = inherits
 function handle (tag, block, text)
 	if not handlers[tag] then
 		print_red(string.format("Error: undefined handler for tag `%s'", tag))
-		io.exit()
+		-- io.exit()
 		return
 	end
 --	assert(handlers[tag], string.format("undefined handler for tag `%s'", tag))

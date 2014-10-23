@@ -1,4 +1,5 @@
--- #!/usr/bin/env lua
+-- This code was adapted by Raian Vargas Maretto and Pedro Ribeiro de Andrade
+-- It was based on LuaDoc code (http://www.keplerproject.org/luadoc/index.html)
 -------------------------------------------------------------------------------
 -- LuaDoc launcher.
 -- @release $Id: luadoc.lua.in,v 1.1 2008/02/17 06:42:51 jasonsantos Exp $
@@ -81,10 +82,10 @@ local OPTIONS = {
 
 -------------------------------------------------------------------------------
 
-local function process_options (arg)
-	local files = {}
+-- local function process_options (arg)
+	-- local files = {}
 	-- local options = require "luadoc.config"
-	local options = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."config.lua").default_options
+	-- local options = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."config.lua").default_options
 	-- local i = 1
 	-- while i <= #arg do
 	-- 	local argi = arg[i]
@@ -105,8 +106,8 @@ local function process_options (arg)
 	-- 	end
 	-- 	i = i+1
 	-- end
-	return --[[files,]] options
-end 
+	-- return --[[files,]] options
+-- end 
 
 -------------------------------------------------------------------------------
 -- Main function. Process command-line parameters and call luadoc processor.
@@ -120,20 +121,12 @@ function luadocMain(package_path, files, package)
 	-- 	return
 	-- end
 
-	local --[[files,]] options = process_options (arg)
-	options.output_dir = package_path..s.."doc"
+	-- local --[[files,]] options = process_options (arg)
 
-	-- forEachElement(files, function(idx, elem, etype)
-	-- 	files[idx] = package_path..s.."lua"..s..elem
-	-- end)
-
-	-- forEachElement(files, function(idx, elem, etype)
-	-- 	print(idx, elem)
-	-- end)
-
-	-- local options = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."config.lua").default_options
+	local options = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."config.lua").default_options
+	options.output_dir = package_path..s.."doc"..s
+	options.short_output_path = package..s.."doc"..s
+	options.short_lua_path = package..s.."lua"..s
 
 	return startDoc(files, options, package_path)
 end
-
--- main(arg)

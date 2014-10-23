@@ -2,23 +2,20 @@
 -- @release $Id: standard.lua,v 1.39 2007/12/21 17:50:48 tomas Exp $
 -------------------------------------------------------------------------------
 
-local assert, pairs, tostring, type = assert, pairs, tostring, type
--- local util = require "luadoc.util"
--- local tags = require "luadoc.taglet.standard.tags"
+local assert, tostring, type = assert, tostring, type
 local io = io
 local table = table
 local sessionInfo = sessionInfo
 local attributes = attributes
 local string = string
 local print = print
-local pairs = pairs
 local ipairs = ipairs
-local forEachElement = forEachElement
-local print_yellow = print_yellow
+local pairs = pairs
+local forEachOrderedElement = forEachOrderedElement
+local print_yellow, print_blue, print_green = print_yellow, print_blue, print_green
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
 local tags = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."taglet"..s.."standard"..s.."tags.lua")
--- module 'luadoc.taglet.standard'
 
 -------------------------------------------------------------------------------
 -- Creates an iterator for an array base on a class type.
@@ -57,7 +54,7 @@ local function check_function (line)
 	line = util.trim(line)
 
 	local info
-	forEachElement(function_patterns, function (_, pattern)
+	forEachOrderedElement(function_patterns, function (_, pattern)
 		local r, _, l, id, param = string.find(line, pattern)
 		if r ~= nil then
 			-- remove self
@@ -102,7 +99,7 @@ local function check_module (line, currentmodule)
 	local r, _, modulename = string.find(line, "^module%s*[%s\"'(%[]+([^,\"')%]]+)")
 	if r then
 		-- found module definition
-		logger:debug(string.format("found module `%s'", modulename))
+		print_blue(string.format("found module `%s'", modulename))
 		return modulename
 	end
 	return currentmodule
@@ -167,7 +164,7 @@ local function parse_comment (block, first_line)
 
 	-- get the first non-empty line of code
 	local code 
-	forEachElement(block.code, function(_, line)
+	forEachOrderedElement(block.code, function(_, line)
 		if not util.line_empty(line) then
 			-- `local' declarations are ignored in two cases:
 			-- when the `nolocals' option is turned on; and
@@ -207,7 +204,7 @@ local function parse_comment (block, first_line)
 	local currenttag = "description"
 	local currenttext
 	
-	forEachElement(block.comment, function (_, line)
+	forEachOrderedElement(block.comment, function (_, line)
 		-- armazena linha completa
 		local example_code = line:gsub("^%s*%-+%s?", "")
 		line = util.trim_comment(line)
@@ -216,10 +213,16 @@ local function parse_comment (block, first_line)
 		if r ~= nil then
 			-- found new tag, add previous one, and start a new one
 			-- TODO: what to do with invalid tags? issue an error? or log a warning?
+			print("----------------------")
+			print("TAG: ", currenttag)
+			print("TEXT: ", currenttext)
 			tags.handle(currenttag, block, currenttext)
 			
 			currenttag = tag
 			currenttext = text
+			print("TAG: ", currenttag)
+			print("TEXT: ", currenttext)
+			print("----------------------")
 		else
 			-- keep code indentation
 			if currenttag == "usage" then
@@ -295,12 +298,13 @@ end
 -- @param doc table with documentation
 -- @return table with documentation
 
-function parse_file (filepath, doc)
+function parse_file (luapath, fileName, doc)
 	local blocks = {}
 	local modulename = nil
+	fullpath = luapath..fileName
 	
 	-- read each line
-	local f = io.open(filepath, "r")
+	local f = io.open(fullpath, "r")
 	local i = 1
 	local line = f:read()
 	local first = true
@@ -323,34 +327,34 @@ function parse_file (filepath, doc)
 	end
 	f:close()
 	-- store blocks in file hierarchy
-	assert(doc.files[filepath] == nil, string.format("doc for file `%s' already defined", filepath))
-	table.insert(doc.files, filepath)
-	doc.files[filepath] = {
+	assert(doc.files[fileName] == nil, string.format("doc for file `%s' already defined", fileName))
+	table.insert(doc.files, fileName)
+	doc.files[fileName] = {
 		type = "file",
-		name = filepath,
+		name = fileName,
 		doc = blocks,
 --		functions = class_iterator(blocks, "function"),
 --		tables = class_iterator(blocks, "table"),
 	}
 --
-	local first = doc.files[filepath].doc[1]
+	local first = doc.files[fileName].doc[1]
 	if first and modulename then
-		doc.files[filepath].author = first.author
-		doc.files[filepath].copyright = first.copyright
-		doc.files[filepath].description = first.description
-		doc.files[filepath].release = first.release
-		doc.files[filepath].summary = first.summary
+		doc.files[fileName].author = first.author
+		doc.files[fileName].copyright = first.copyright
+		doc.files[fileName].description = first.description
+		doc.files[fileName].release = first.release
+		doc.files[fileName].summary = first.summary
 	end
 
 	-- if module definition is found, store in module hierarchy
 	if modulename ~= nil then
 		if modulename == "..." then
-				modulename = string.gsub (filepath, "%.lua$", "")
+				modulename = string.gsub (fileName, "%.lua$", "")
 				modulename = string.gsub (modulename, "/", ".")
 		end
 		if doc.modules[modulename] ~= nil then
 			-- module is already defined, just add the blocks
-			table.foreachi(blocks, function (_, v)
+			forEachOrderedElement(blocks, function (_, v)
 				table.insert(doc.modules[modulename].doc, v)
 			end)
 		else
@@ -410,23 +414,23 @@ function parse_file (filepath, doc)
 	end
 	
 	-- make functions table
-	doc.files[filepath].functions = {}
+	doc.files[fileName].functions = {}
 	for f in class_iterator(blocks, "function")() do
-		table.insert(doc.files[filepath].functions, f.name)
-		doc.files[filepath].functions[f.name] = f
+		table.insert(doc.files[fileName].functions, f.name)
+		doc.files[fileName].functions[f.name] = f
 	end
 	
 	-- make tables variables
-	doc.files[filepath].variables = {}
+	doc.files[fileName].variables = {}
 	for t in class_iterator(blocks, "variable")() do
-		table.insert(doc.files[filepath].variables, t.name)
-		doc.files[filepath].variables[t.name] = t
+		table.insert(doc.files[fileName].variables, t.name)
+		doc.files[fileName].variables[t.name] = t
 	end
 	-- -- make tables table
 	-- doc.files[filepath].tables = {}
 	for t in class_iterator(blocks, "table")() do
-		table.insert(doc.files[filepath].variables, t.name)
-		doc.files[filepath].variables[t.name] = t
+		table.insert(doc.files[fileName].variables, t.name)
+		doc.files[fileName].variables[t.name] = t
 	end
 
 	-- -- make tables table
@@ -447,24 +451,32 @@ end
 -- @return table with documentation
 -- @see parse_file
 
-function file (filepath, doc)
+function file (lua_path, fileName, doc, short_lua_path)
 	local patterns = { "%.lua$", "%.luadoc$" }
 	local valid = false
-	forEachElement(patterns, function(_, pattern)
-		if string.find(filepath, pattern) ~= nil then
+	forEachOrderedElement(patterns, function(_, pattern)
+		if string.find(lua_path..fileName, pattern) ~= nil then
 			valid = true
 		end
 		return valid
 	end)
 	
 	if valid then
-		-- logger:info(string.format("processing file `%s'", filepath))
-		doc = parse_file(filepath, doc)
+		print_green(string.format("processing file `%s'", short_lua_path..fileName))
+		doc = parse_file(lua_path, fileName, doc)
 	end
-	for _, filepath in ipairs(doc.files) do
-		local description = check_header(filepath)
-		doc.files[filepath].description = description
-		doc.files[filepath].summary = parse_summary(description)
+	-- forEachOrderedElement(doc, function(idx, elem, etype)
+	-- 	print(idx, "-", elem)
+	-- 	if etype == "table" then 
+	-- 		forEachOrderedElement(elem, function(i,e)
+	-- 			print("->", idx.."["..i.."]", "-", e)
+	-- 		end)
+	-- 	end
+	-- end)
+	for _, file_ in ipairs(doc.files) do
+		local description = check_header(lua_path..file_)
+		doc.files[file_].description = description
+		doc.files[file_].summary = parse_summary(description)
 	end
 	return doc
 end
@@ -475,16 +487,16 @@ end
 -- @param doc table with documentation
 -- @return table with documentation
 
-function directory (path, doc)
-	for f in dir(path) do
-		local fullpath = path..s..f
+function directory (lua_path, file_, doc, short_lua_path)
+	for f in lfsdir(lua_path) do
+		local fullpath = lua_path..s..f
 		local attr = attributes(fullpath)
 		assert(attr, string.format("error stating file `%s'", fullpath))
 		
 		if attr.mode == "file" then
-			doc = file(fullpath, doc)
+			doc = file(lua_path, f, doc, short_lua_path)
 		elseif attr.mode == "directory" and f ~= "." and f ~= ".." then
-			doc = directory(fullpath, doc)
+			doc = directory(lua_path, f, doc, short_lua_path)
 		end
 	end
 	return doc
@@ -513,27 +525,27 @@ end
 
 -- Stores reserved words for parsing
 local function reserved_words(tab)
-  tab.funcnames = tab.funcnames or {}
-  for i = 1, #tab do
-    local doc = tab[tab[i]]
-    if doc.functions and #doc.functions > 0 then
-      for j = 1, #doc.functions do
-        local name = doc.functions[j]
-        tab.funcnames[name] = name
-      end
-    end
-  end
+	tab.funcnames = tab.funcnames or {}
+		for i = 1, #tab do
+			local doc = tab[tab[i]]
+			if doc.functions and #doc.functions > 0 then
+				for j = 1, #doc.functions do
+				local name = doc.functions[j]
+				tab.funcnames[name] = name
+			end
+		end
+	end
 end
 
 local function exclude_undoc(tab)
-  for i = #tab, 1, -1 do
-  	-- local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].tables + #tab[tab[i]].variables
-  	local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].variables
-    if doc_blocs == 0 then
-      tab[tab[i]] = nil
-      table.remove(tab, i)
-    end
-  end
+	for i = #tab, 1, -1 do
+		-- local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].tables + #tab[tab[i]].variables
+		local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].variables
+		if doc_blocs == 0 then
+			tab[tab[i]] = nil
+			table.remove(tab, i)
+		end
+	end
 end
 
 -- report functions with no usage definition
@@ -678,32 +690,31 @@ function check_header(filepath)
 end
 
 -------------------------------------------------------------------------------
-function start (files, package_path)
+function start (files, package_path, short_lua_path)
 	local s = sessionInfo().separator
 	assert(files, "file list not specified")
+	local lua_path = package_path..s.."lua"..s
 	
 	-- Create an empty document, or use the given one
-	-- doc = doc or {
 	local doc = {
+		luapath = lua_path,
 		files = {},
 		modules = {},
 	}
 	assert(doc.files, "undefined `files' field")
 	assert(doc.modules, "undefined `modules' field")
 	
-	--table.foreachi(files, function (_, path)
-	for _, file_ in ipairs(files) do
-		local file_path = package_path..s.."lua"..s..]]file_
-		local attr = attributes(file_path)
-		assert(attr, string.format("error stating path `%s'", file_path))
+	forEachOrderedElement(files, function (_, file_)
+		local attr = attributes(lua_path..file_)
+		assert(attr, string.format("error stating path `%s'", lua_path))
 		
 		if attr.mode == "file" then
-			doc = file(file_path, doc)
+			doc = file(lua_path, file_, doc, short_lua_path)
 		elseif attr.mode == "directory" then
-			doc = directory(file_path, doc)
+			local file_path = lua_path..file_
+			doc = directory(lua_path, file_, doc, short_lua_path)
 		end
-	--end)
-	end
+	end)
 	
 	-- exclude undocumented files
 	exclude_undoc(doc.files)
@@ -711,7 +722,6 @@ function start (files, package_path)
 	-- sort documentation
 	sort_doc(doc.files)
 	sort_doc(doc.modules)
-
 
 	reserved_words(doc.files)
 

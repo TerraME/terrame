@@ -42,14 +42,13 @@ function startDoc (files, options, package_path)
 	-- logger = util.loadlogengine(options)
 
 	-- load config file
-	if options.config ~= nil then
+	-- if options.config ~= nil then
 		-- load specified config file
-		dofile(options.config)
-	else
+		-- dofile(options.config)
+	-- else
 		-- load default config file
-		-- require("luadoc.config")
-		dofile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."config.lua")
-	end
+		-- dofile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."config.lua")
+	-- end
 	
 	-- local taglet = require(options.taglet)
 	local taglet = include(options.taglet)
@@ -58,13 +57,13 @@ function startDoc (files, options, package_path)
 
 	-- analyze input
 	taglet.options = options
-	taglet.logger = logger
-	local doc = taglet.start(files, package_path)
+	-- taglet.logger = logger
+	local doc = taglet.start(files, package_path, options.short_lua_path)
 	
 	doc.description = ldescription(package_path)
 	
 	doclet.options = options
-	doclet.logger = logger
+	-- doclet.logger = logger
 
 	doclet.start(doc)
 end
