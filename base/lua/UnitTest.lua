@@ -26,18 +26,6 @@
 --      Antonio Gomes de Oliveira Junior
 -------------------------------------------------------------------------------------------
 
--- TODO: alow UnitTest.lua to use print_red from terrame.lua directly, removing the lines below
-local begin_red = "\027[00;31m"
-local end_color = "\027[00m"
-
-local function print_red(value)
-    if sessionInfo().separator == "/" then
-        print__(begin_red..value..end_color)
-    else
-        print__(value)
-    end
-end
-
 local print_error = function(self, msg)
 	local info = debug.getinfo(3)
 	local str = string.match(info.short_src, "[^/]*$")
@@ -53,7 +41,7 @@ local print_error = function(self, msg)
 	end
 
 	if self.count_last == 0 then
-		print_red(str)
+		printError(str)
 	end
 end
 
