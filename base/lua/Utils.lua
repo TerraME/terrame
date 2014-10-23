@@ -62,6 +62,22 @@ function vardump(o, indent)
 	end
 end
 
+--- Return a function that executes a function of a given object when executed. 
+-- The function takes as argument an It is useful to
+-- be used as an action of an Event.
+-- @param obj Any TerraME object.
+-- @param func A string with the function to be executed. 
+-- @usage a = Agent{exec = function(self, ev) print(ev:getTime()) end}
+--
+-- t = Timer{
+--     Event{action = call(a, "exec")}
+-- }
+--
+-- t:execute(10)
+function call(obj, func)
+	return function(ev) obj[func](obj, ev) end
+end
+
 -- **********************************************************************************************
 -- util math functions
 
