@@ -220,7 +220,7 @@ end
 
 local checkShape = function(self)
 	local dbf = self.database:sub(1, self.database:len() - 3).."dbf"
-	f = io.open(dbf)
+	local f = io.open(dbf)
 	if not f then
 		customError("File '"..dbf.."' not found.")
 	else
@@ -300,13 +300,15 @@ local loadMap = function(self)
 	for line in io.lines(self.database) do
 		j  = 0
 
-		res = ParseCSVLine(line, self.sep)
+		local res = ParseCSVLine(line, self.sep)
 
 		forEachElement(res, function(_, value)
-			local p = Cell {x = j, y = i} 
+			local p = Cell {x = i, y = j} 
 		 	p[self.attrname] = tonumber(value)
 			self:add(p)
+			j = j + 1
 		end)
+		i = i + 1
 	end
 end
 
