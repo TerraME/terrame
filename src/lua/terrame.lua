@@ -25,6 +25,13 @@
 --       Raian V. Maretto
 -------------------------------------------------------------------------------------------
 
+if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
+
+-- To keep compatibilities with old versions of Lua
+--if _VERSION ~= "Lua 5.2" then
+--	load = loadstring
+--end	
+
 -- Creates a text file with the names of the files inside a given folder
 -- RAIAN: I changed this function from local to global, in order to use it in luadoc
 function dir(folder)
@@ -1055,6 +1062,10 @@ execute = function(parameters) -- parameters is a string
 		return info
 		-- TODO: atualizar todos os arquivos que usam as variaveis globais por uma chamada a esta funcao
 		-- remover as variaveis globais TME_MODE, ...
+	end
+
+	if sessionInfo().path == nil or sessionInfo().path == "" then
+		error("Error: TME_PATH environment variable should exist and point to TerraME installation folder.", 2)
 	end
 
 	-- Package.lua contains functions that terrame.lua needs, but should also be
