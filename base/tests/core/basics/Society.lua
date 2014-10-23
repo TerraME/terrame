@@ -362,6 +362,86 @@ return {
 			name = "void"
 		}
 		unitTest:assert_equal(0, #sc:sample():getSocialNetwork("void"))
+
+		-- on the fly social networks
+		local predator = Agent{
+			energy = 40,
+			name = "predator",
+			execute = function(self)
+				new_cell = self:getCell("house"):getNeighborhood():sample(randomObj)
+				self:move(new_cell, "house")
+				self:walk("stay")
+			end
+		}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 100
+		}
+
+		predators:createSocialNetwork{probability = 0.5, name = "friends", onthefly = true}
+		predators:createSocialNetwork{quantity = 1, name = "boss", onthefly = true}
+		predators:createSocialNetwork{func = function() return true end, name = "all", onthefly = true}
+
+		local count_prob = 0
+		local count_quant = 0
+		local count_all = 0
+
+		forEachAgent(predators, function(ag)
+			count_prob  = count_prob  + #ag:getSocialNetwork("friends")
+			count_quant = count_quant + #ag:getSocialNetwork("boss")
+			count_all   = count_all   + #ag:getSocialNetwork("all")
+		end)
+
+		unitTest:assert_equal(4943,  count_prob)
+		unitTest:assert_equal(100,   count_quant)
+		unitTest:assert_equal(10000, count_all)
+
+		local count_prob = 0
+		local count_quant = 0
+		local count_all = 0
+
+		forEachAgent(predators, function(ag)
+			count_prob  = count_prob  + #ag:getSocialNetwork("friends")
+			count_quant = count_quant + #ag:getSocialNetwork("boss")
+			count_all   = count_all   + #ag:getSocialNetwork("all")
+		end)
+
+		unitTest:assert_equal(5019,  count_prob)
+		unitTest:assert_equal(100,   count_quant)
+		unitTest:assert_equal(10000, count_all)
+
+		local cs = CellularSpace{xdim = 5}
+		cs:createNeighborhood()
+
+		local env = Environment{cs, predators}
+		env:createPlacement{strategy = "random"}
+
+		predators:createSocialNetwork{strategy = "cell", name = "c", onthefly = true}
+		predators:createSocialNetwork{strategy = "neighbor", name = "n", onthefly = true}
+
+		local count_c = 0
+		local count_n = 0
+		forEachAgent(predators, function(ag)
+			count_c  = count_c + #ag:getSocialNetwork("c")
+			count_n  = count_n + #ag:getSocialNetwork("n")
+		end)
+
+		unitTest:assert_equal(384, count_c)
+		unitTest:assert_equal(2168, count_n)
+
+		predators:sample():die()
+
+		local count_c = 0
+		local count_n = 0
+		forEachAgent(predators, function(ag)
+			count_c  = count_c + #ag:getSocialNetwork("c")
+			count_n  = count_n + #ag:getSocialNetwork("n")
+		end)
+
+
+		unitTest:assert_equal(380, count_c)
+		unitTest:assert_equal(2094, count_n)
 	end,
 	split = function(unitTest)
 		local randomObj = Random{}
