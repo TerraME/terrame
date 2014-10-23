@@ -298,7 +298,7 @@ local loadMap = function(self)
 
 	self.cells = {}
 	for line in io.lines(self.database) do
-		j  = 0
+		j = 0
 
 		local res = ParseCSVLine(line, self.sep)
 
@@ -310,6 +310,9 @@ local loadMap = function(self)
 		end)
 		i = i + 1
 	end
+
+	self.xdim = self.maxRow
+	self.ydim = self.maxCol
 end
 
 local loadShape = function(self)
