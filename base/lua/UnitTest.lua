@@ -39,7 +39,7 @@ local print_error = function(self, msg)
 	if self.last_error == str then
 		self.count_last = self.count_last + 1
 	elseif self.count_last > 0 then
-		print_red("[The error above occurs more "..self.count_last.." times.]")
+		printError("[The error above occurs more "..self.count_last.." times.]")
 		self.count_last = 0
 		self.last_error = str
 	else
@@ -184,8 +184,8 @@ UnitTest_ = {
 			if self.current_file then
 				local err2 = string.match(err, self.current_file)
 				if err2 ~= self.current_file then
-					print_red("Error in wrong file (possibly wrong level). It should occur in '"..self.current_file.."', got '"..err.."'.")
-					print_red(traceback())
+					printError("Error in wrong file (possibly wrong level). It should occur in '"..self.current_file.."', got '"..err.."'.")
+					printError(traceback())
 					self.wrong_file = self.wrong_file + 1
 					return
 				end
@@ -197,7 +197,7 @@ UnitTest_ = {
 			-- carregado. descobrir este erro eh importante para verificar se o level foi usado corretamente.
 			if shortError == nil then
 				self.wrong_file = self.wrong_file + 1
-				print_red("Error should contain line number (possibly wrong level), got: '"..err.."'.")
+				printError("Error should contain line number (possibly wrong level), got: '"..err.."'.")
 				return
 			end
 
