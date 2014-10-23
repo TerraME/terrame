@@ -311,9 +311,10 @@ return{
 			unitTest:assert(neighborhood:isNeighbor(cell))
 		end)
 
+		-- mxn
 		local cs = CellularSpace{xdim = 10}
 
-		cs:createNeighborhood{strategy = "3x3"}
+		cs:createNeighborhood{strategy = "mxn"}
 
 		local sizes = {}
 
@@ -345,7 +346,7 @@ return{
 		end
 
 		cs:createNeighborhood{
-			strategy = "3x3",
+			strategy = "mxn",
 			name = "my_neighborhood1",
 			filter = filterFunction
 		}
@@ -379,7 +380,7 @@ return{
 		end
 
 		cs:createNeighborhood{
-			strategy = "3x3",
+			strategy = "mxn",
 			name = "my_neighborhood2",
 			filter = filterFunction,
 			weight = weightFunction
@@ -411,7 +412,6 @@ return{
 		unitTest:assert_equal(18, sizes[2])
 		unitTest:assert_equal(72, sizes[3])
 
-		-- mxn
 		local cs = CellularSpace{xdim = 10}
 		local cs2 = CellularSpace{xdim = 10}
 
@@ -489,7 +489,6 @@ return{
 		cs:createNeighborhood{
 			strategy = "mxn",
 			name = "my_neighborhood3",
-			m = 3,
 			n = 5,
 			filter = filterFunction
 		}
@@ -569,7 +568,6 @@ return{
 		cs:createNeighborhood{
 			strategy = "mxn",
 			name = "my_neighborhood5",
-			m = 3,
 			n = 5,
 			filter = filterFunction,
 			weight = weightFunction

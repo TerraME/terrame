@@ -208,33 +208,8 @@ return{
 				filter = "teste"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'filter' expected function, got string.")
+		unitTest:assert_error(error_func, "Error: Function 'createNeighborhood with strategy 3x3' is deprecated. Use 'mxn' instead.")
 	
-		error_func = function()
-			cs:createNeighborhood{
-				strategy = "3x3",
-				name = "my_neighborhood",
-				filter = function() return true end,
-				weight = true
-			}
-		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'weight' expected function, got boolean.")
-	
-		error_func = function()
-			cs:createNeighborhood{
-				strategy = "mxn"
-			}
-		end
-		unitTest:assert_error(error_func, "Error: Parameter 'm' is mandatory.")
-
-		error_func = function()
-			cs:createNeighborhood{
-				strategy = "mxn",
-				name = "my_neighborhood"
-			}
-		end
-		unitTest:assert_error(error_func, "Error: Parameter 'm' is mandatory.")
-
 		error_func = function()
 			cs:createNeighborhood{
 				strategy = "mxn",
@@ -364,15 +339,6 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Parameter 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 	
-		error_func = function()
-			cs:createNeighborhood{
-				strategy = "mxn",
-				name = "my_neighborhood",
-				target = cs2
-			}
-		end
-		unitTest:assert_error(error_func, "Error: Parameter 'm' is mandatory.")
-
 		error_func = function()
 			cs:createNeighborhood{
 				strategy = "mxn",

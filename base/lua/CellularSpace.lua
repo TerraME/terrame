@@ -495,7 +495,7 @@ CellularSpace_ = {
 	-- See the table below.
 	-- @tab strategy
 	-- Strategy & Description & Compulsory Parameters & Optional Parameters \
-	-- "3x3" & A 3x3 (Couclelis) Neighborhood. & & name, filter, weight \
+	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight \
 	-- "coord" & A bidirected relation between two CellularSpaces connecting Cells with the same 
 	-- (x, y) coordinates. & target & name\
 	-- "function" & A Neighborhood based on a function where any other Cell can be a neighbor. & 
@@ -588,7 +588,7 @@ CellularSpace_ = {
 			end,
 			mxn = function()
 				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "onthefly"})
-				mandatoryTableArgument(data, "m", "number")
+				defaultTableValue(data, "m", 3)
 
 				if data.m <= 0 then
 					incompatibleValueError("m", "positive integer number (greater than zero)", data.m)
@@ -625,6 +625,8 @@ CellularSpace_ = {
 				data.func = getVonNeumannNeighborhood
 			end,
 			["3x3"] = function() 
+				deprecatedFunctionWarning("createNeighborhood with strategy 3x3", "mxn")
+
 				checkUnnecessaryParameters(data, {"name", "strategy", "filter", "weight", "onthefly"})
 				data.m = 3
 				data.n = 3

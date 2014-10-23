@@ -287,7 +287,6 @@ return{
 		cs:createNeighborhood{
 			strategy = "mxn",
 			target = cs2,
-			m = 3,
 			filter = function(cell,neigh) 
 				return not ((cell.x == neigh.x) and (cell.y == neigh.y))
 			end,
@@ -337,7 +336,7 @@ return{
 		cs:createNeighborhood{name = "first", self = true}
 
 		cs:createNeighborhood{
-			strategy = "3x3",
+			strategy = "mxn",
 			filter = function(c, n) return n.height_ < c.height_ end,
 			weight = function(c, n) return (c.height_ - n.height_ ) / (c.height_ + n.height_) end,
 			name = "second"
