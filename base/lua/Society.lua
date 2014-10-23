@@ -24,92 +24,78 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
-local createSocialNetworkByQuantity = function(soc, quantity, name)
-	forEachAgent(soc, function(agent)
+local getSocialNetworkByQuantity = function(soc, data)
+	return function(agent)
 		local quant = 0
 		local rs = SocialNetwork()
 		local rand = Random()
 
-		while quant < quantity do
+		while quant < data.quantity do
 			local randomagent = soc:sample(rand)
 			if randomagent ~= agent and not rs:isConnection(randomagent) then
 				rs:add(randomagent, 1)
 				quant = quant + 1
 			end
 		end
-		agent:addSocialNetwork(rs, name)
-	end)
+		return rs
+	end
 end
 
-local createSocialNetworkByProbability = function(soc, probability, name)
-	forEachAgent(soc, function(agent)
+local getSocialNetworkByProbability = function(soc, data)
+	return function(agent)
 		local rs = SocialNetwork()
 		local rand = Random()
 
 		forEachAgent(soc, function(hint)
-			if hint ~= agent and rand:number() < probability then
+			if hint ~= agent and rand:number() < data.probability then
 				rs:add(hint, 1)
 			end
 		end)
-		agent:addSocialNetwork(rs, name)
-	end)
+		return rs
+	end
 end
 
-local function createEmptySocialNetwork(soc, name)
-	forEachAgent(soc, function(agent)
-		local rs = SocialNetwork()
-		agent:addSocialNetwork(rs, name)
-	end)
+local getEmptySocialNetwork = function()
+	return function()
+		return SocialNetwork()
+	end
 end
 
-local function createSocialNetworkByFunction(society, func, name)
-	forEachAgent(society, function(agent)
+local getSocialNetworkByFunction = function(soc, data)
+	return function(agent)
 		local rs = SocialNetwork()
 
-		forEachAgent(society, function(hint)
-			if func(agent, hint) then
+		forEachAgent(soc, function(hint)
+			if data.func(agent, hint) then
 				rs:add(hint, 1)
 			end
 		end)
-		agent:addSocialNetwork(rs, name)
-	end)
+		return rs
+	end
 end
 
-local function createDynamicSocialNetworkByFunction(society, func, name)
-	forEachAgent(society, function(agent)
-		agent:addSocialNetwork(func, name)
-	end)
-end
-
-local function createDynamicSocialNetworkByCell(society, self, name)
-	if self == nil then self = false end
-	if name == nil then name = "1" end
-	local runfunction = function(agent)
+local getSocialNetworkByCell = function(soc, data)
+	return function(agent)
 		local  rs = SocialNetwork()
-
-		forEachAgent(agent:getCell("placement"), function(agentwithin)
-			if agent ~= agentwithin or self then
+		forEachAgent(agent:getCell(data.placement), function(agentwithin)
+			if agent ~= agentwithin or data.self then
 				rs:add(agentwithin, 1)
 			end
 		end)
 		return rs
 	end
-	createDynamicSocialNetworkByFunction(society, runfunction, name)
 end
 
-local function createDynamicSocialNetworkByNeighbor(society, neighborhoodName, name)
-	if name == nil then name = "1" end
-	if neighborhoodName == nil then neighborhoodName = "1" end
-	local runfunction = function(agent)
+local getSocialNetworkByNeighbor = function(soc, data)
+	return function(agent)
 		local rs = SocialNetwork()
-		forEachNeighbor(agent:getCell("placement"), neighborhoodName, function(cell, neigh)
+		forEachNeighbor(agent:getCell(data.placement), data.neighborhood, function(cell, neigh)
 			forEachAgent(neigh, function(agentwithin)
 				rs:add(agentwithin, 1)
 			end)
 		end)
 		return rs
 	end
-	createDynamicSocialNetworkByFunction(society, runfunction, name)
 end
 
 Society_ = {
@@ -169,8 +155,20 @@ Society_ = {
 	-- will have the second Agent in its SocialNetwork. When using this argument, the default
 	-- value of strategy becomes "func".
 	-- @param data.name Name of the relation.
-	-- @param data.neighborhood A string with the index of the Neighborhood that will be used to
-	-- compute the network.
+	-- @param data.onthefly If false (default), the SocialNetwork will be built and stored in
+	-- each Agent of the Society. It means that the SocialNetwork will change only if the 
+	-- modeler explicitly add or remove connections. If true, the SocialNetwork will be
+	-- computed every time the simulation calls Agent:getSocialNetwork.
+	-- It means that the SocialNetwork might change naturally along the simulation, according to 
+	-- the adopted strategy. For instance, if the SocialNetwork of an Agent is based on its
+	-- Neighborhood and the Agent walks to another Cell, an on-the-fly SocialNetwork will also be
+	-- updated. A computational consequence of having on-the-fly SocialNetworks is that it saves
+	-- memory (because the SocialNetworks are not explicitly represented), but it consumes more
+	-- time, as it needs to be built again even if no changes occur in the simulation.
+	-- @param data.neighborhood A string with the name of the Neighborhood that will be used to
+	-- create the SocialNetwork. Default is "1".
+	-- @param data.placement A string with the name of the Placement that will be used to
+	-- create the SocialNetwork. Default is "placement".
 	-- @param data.probability A number between 0 and 1 indicating the probability of each
 	-- connection. The probability is applied for each pair of Agents. When using this argument,
 	-- the default value of strategy becomes "probability".
@@ -225,6 +223,7 @@ Society_ = {
 				data.strategy = "probability"
 			elseif data.quantity ~= nil then
 				data.strategy = "quantity"
+				if data.quantity == 1 then data.quantity = nil end
 			elseif data.func ~= nil then
 				data.strategy = "func"
 			else
@@ -233,70 +232,88 @@ Society_ = {
 		end
 
 		defaultTableValue(data, "name", "1")
+		defaultTableValue(data, "onthefly", false)
 
 		if self.agents[1].socialnetworks[data.name] ~= nil then
 			customError("SocialNetwork '"..data.name.."' already exists in the Society.")
 		end
 
-		if data.strategy == "probability" then
-			if type(data.probability) ~= "number" then
-				incompatibleTypeError("probability", "a number between 0 and 1", data.probability)
-			elseif data.probability <= 0 or data.probability > 1 then
-				incompatibleValueError("probability", "a number between 0 and 1", data.probability)
-			end
-		elseif data.strategy == "quantity" then
-			if type(data.quantity) ~= "number" then
-				incompatibleTypeError("quantity", "positive integer number (except zero)", data.quantity)
-			elseif data.quantity <= 0 then
-				incompatibleValueError("quantity", "positive integer number (except zero)", data.quantity)
-			elseif math.floor(data.quantity) ~= data.quantity then
-				incompatibleValueError("quantity", "positive integer number (except zero)", data.quantity)
-			end
-		elseif data.strategy == "cell" then
-			if data.self == nil then data.self = false end
-			if self.agents[1].placement == nil or self.agents[1].placement.cells[1] == nil then
-				customError("Society has no placement. Use Environment:createPlacement() first.")
-			end
-		elseif data.strategy == "neighbor" then
-			if data.neighborhood == nil then data.neighborhood = "1" end
-
-			if self.agents[1].placement == nil or self.agents[1].placement.cells[1] == nil then
-				customError("Society has no placement. Use Environment:createPlacement() first.")
-			elseif self.agents[1].placement.cells[1]:getNeighborhood(data.neighborhood) == nil then
-				customError("CellularSpace has no Neighborhood named '"..data.neighborhood.."'. Use CellularSpace:createNeighborhood() first.")
-			end
-		elseif data.strategy == "func" then
-			if type(data.func) ~= "function" then
-				incompatibleTypeError("func", "function", data.func)
-			end
-		end
-
 		switch(data, "strategy"):caseof{
 			probability = function() 
-				checkUnnecessaryParameters(data, {"strategy", "probability", "name", "random"})
-				createSocialNetworkByProbability(self, data.probability, data.name, data.random)
-			end,
-			quantity = function()
-				checkUnnecessaryParameters(data, {"strategy", "quantity", "name", "random"})
-				createSocialNetworkByQuantity(self, data.quantity, data.name, data.random)
+				checkUnnecessaryParameters(data, {"strategy", "probability", "name", "random", "onthefly"})
+
+				mandatoryTableArgument(data, "probability", "number")
+
+				if data.probability <= 0 or data.probability > 1 then
+					incompatibleValueError("probability", "a number between 0 and 1", data.probability)
+				end
+
+				data.mfunc = getSocialNetworkByProbability
 			end,
 			func = function()
-				checkUnnecessaryParameters(data, {"strategy", "func", "name"})
-				createSocialNetworkByFunction(self, data.func, data.name)
+				checkUnnecessaryParameters(data, {"strategy", "func", "name", "onthefly"})
+
+				mandatoryTableArgument(data, "func", "function")
+
+				data.mfunc = getSocialNetworkByFunction
 			end,
 			cell = function()
-				checkUnnecessaryParameters(data, {"strategy", "self", "name"})
-				createDynamicSocialNetworkByCell(self, data.self, data.name)
+				checkUnnecessaryParameters(data, {"strategy", "self", "name", "placement", "onthefly"})
+
+				defaultTableValue(data, "self", false)
+				defaultTableValue(data, "placement", "placement")
+
+				if self.agents[1][data.placement] == nil or self.agents[1][data.placement].cells[1] == nil then
+					customError("Society has no placement. Use Environment:createPlacement() first.")
+				end
+
+				data.mfunc = getSocialNetworkByCell
 			end,
 			neighbor = function()
-				checkUnnecessaryParameters(data, {"strategy", "neighborhood", "name"})
-				createDynamicSocialNetworkByNeighbor(self, data.neighborhood, data.name)
+				checkUnnecessaryParameters(data, {"strategy", "neighborhood", "name", "placement", "onthefly"})
+
+				defaultTableValue(data, "neighborhood", "1")
+				defaultTableValue(data, "placement", "placement")
+
+				if self.agents[1][data.placement] == nil or self.agents[1][data.placement].cells[1] == nil then
+					customError("Society has no placement. Use Environment:createPlacement() first.")
+				elseif self.agents[1].placement.cells[1]:getNeighborhood(data.neighborhood) == nil then
+					customError("CellularSpace has no Neighborhood named '"..data.neighborhood.."'. Use CellularSpace:createNeighborhood() first.")
+				end
+
+				data.mfunc = getSocialNetworkByNeighbor
+			end,
+			quantity = function()
+				checkUnnecessaryParameters(data, {"strategy", "quantity", "name", "random", "onthefly"})
+
+				defaultTableValue(data, "quantity", 1)
+
+				if data.quantity <= 0 then
+					incompatibleValueError("quantity", "positive number (except zero)", data.quantity)
+				elseif math.floor(data.quantity) ~= data.quantity then
+					incompatibleValueError("quantity", "integer number", data.quantity)
+				end
+
+				data.mfunc = getSocialNetworkByQuantity
 			end,
 			void = function()
-				checkUnnecessaryParameters(data, {"strategy", "name"})
-				createEmptySocialNetwork(self, data.name)
+				checkUnnecessaryParameters(data, {"strategy", "name", "onthefly"})
+
+				data.mfunc = getEmptySocialNetwork
 			end
 		}
+
+		local func = data.mfunc(self, data)
+		local name = data.name
+		if data.onthefly then
+			forEachAgent(self, function(agent)
+				agent:addSocialNetwork(func, name)
+			end)
+		else
+			forEachAgent(self, function(agent)
+				agent:addSocialNetwork(func(agent), name)
+			end)
+		end
 	end,
 	--- Return a given Agent based on its index. Deprecated. Use Society:get instead.
 	getAgent = function(self, index)
