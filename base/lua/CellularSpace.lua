@@ -26,39 +26,17 @@
 
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
-local function coordCoupling(cs1, cs2, name)
-	local lin
-	local col
-	local i = 0
-	forEachCell(cs1, function(cell)
-		local neighborhood = Neighborhood()
-		local neighCell = cs2:get(cell.x, cell.y)
-		if neighCell then
-			neighborhood:add(neighCell, 1)
-		end
-		cell:addNeighborhood(neighborhood, name)
-	end)
-	forEachCell(cs2, function(cell)
-		local neighborhood = Neighborhood()
-		local neighCell = cs1:get(cell.x, cell.y)
-		if neighCell then 
-			neighborhood:add(neighCell, 1)
-		end
-		cell:addNeighborhood(neighborhood, name)
-	end)
-end
-
-local function createMooreNeighborhood(cs, name, self, wrap)
-	for i, cell in ipairs(cs.cells) do
+local function getMooreNeighborhood(cs, data)
+	return function(cell)
 		local neigh = Neighborhood()
 		local indexes = {}
 		local lin = -1
 		while lin <= 1 do
 			local col = -1
 			while col <= 1 do 
-				if self or (lin ~= col or col ~= 0) then
+				if data.self or (lin ~= col or col ~= 0) then
 					local index = nil
-					if wrap then
+					if data.wrap then
 						index = cs:get(
 							((cell.x + col) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol,
 							((cell.y + lin) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
@@ -79,22 +57,21 @@ local function createMooreNeighborhood(cs, name, self, wrap)
 		for i, index in ipairs(indexes) do
 			neigh:add(index, weight)
 		end
-
-		cell:addNeighborhood(neigh, name)
+		return neigh
 	end
 end
 
-local function createVonNeumannNeighborhood(cs, name, self, wrap)
-	for i, cell in ipairs(cs.cells) do
+local function getVonNeumannNeighborhood(cs, data)
+	return function(cell)
 		local neigh = Neighborhood()
 		local indexes = {}
 		local lin = -1
 		while lin <= 1 do
 			local col = -1
 			while col <= 1 do
-				if ((lin == 0 or col == 0) and lin ~= col) or (self and lin == 0 and col == 0) then
+				if ((lin == 0 or col == 0) and lin ~= col) or (data.self and lin == 0 and col == 0) then
 					local index = nil
-					if wrap then
+					if data.wrap then
 						index = cs:get(
 							((cell.x + col) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol,
 							((cell.y + lin) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
@@ -116,82 +93,51 @@ local function createVonNeumannNeighborhood(cs, name, self, wrap)
 			neigh:add(index, weight)
 		end
 
-		cell:addNeighborhood(neigh, name)
+		return neigh, name
 	end
 end
 
--- Creates a neighborhood for each cell according to a modeler defined function
-local function createNeighborhood(cs, filterF, weightF, name)
-	forEachCell(cs, function(cell)
+local function getFunctionNeighborhood(cs, data)
+	return function(cell)
 		local neighborhood = Neighborhood()
 		forEachCell(cs, function(neighCell)
-			if filterF(cell, neighCell) then
-				neighborhood:add(neighCell, weightF(cell, neighCell))
+			if data.filter(cell, neighCell) then
+				neighborhood:add(neighCell, data.weight(cell, neighCell))
 			end
 		end)
-		cell:addNeighborhood(neighborhood, name)
-	end)
+		return neighborhood
+	end
 end
 
-local function createMxNNeighborhood(cs, m, n, filterF, weightF, name)
-	m = math.floor(m/2)
-	n = math.floor(n/2)
+local function getCoordCoupling(cs, data)
+	return function(cell)
+		local neighborhood = Neighborhood()
+		local neighCell = data.target:get(cell.x, cell.y)
+		if neighCell then
+			neighborhood:add(neighCell, 1)
+		end
+		return neighborhood
+	end
+end
 
-	local lin
-	local col
-	local i = 0
+local function getMxNNeighborhood(cs, data)
+	local m = math.floor(data.m/2)
+	local n = math.floor(data.n/2)
 
-	forEachCell(cs, function(cell)
+	return function(cell)
 		local neighborhood = Neighborhood()
 		for lin = -n, n do
 			for col = -m, m do
-				local neighCell = cs:get(cell.x + col, cell.y + lin)
+				local neighCell = data.target:get(cell.x + col, cell.y + lin)
 				if neighCell then
-					if filterF(cell, neighCell) then
-						neighborhood:add(neighCell, weightF(cell, neighCell))
+					if data.filter(cell, neighCell) then
+						neighborhood:add(neighCell, data.weight(cell, neighCell))
 					end
 				end
 			end
 		end
-		cell:addNeighborhood(neighborhood, name)
-	end)
-end
-
-local function spatialCoupling(m, n, cs1, cs2, filterF, weightF, name)
-	m = math.floor(m / 2)
-	n = math.floor(n / 2)
-
-	local lin
-	local col
-	local i = 0
-	forEachCell(cs1, function(cell)
-		local neighborhood = Neighborhood()
-		for lin = -n, n do
-			for col = -m, m do
-				local neighCell = cs2:get(cell.x + col, cell.y + lin)
-				if neighCell then
-					if filterF(cell, neighCell) then
-						neighborhood:add(neighCell, weightF(cell, neighCell))
-					end
-				end
-			end
-		end
-		cell:addNeighborhood(neighborhood, name)
-	end)
-	forEachCell(cs2, function(cell)
-		local neighborhood = Neighborhood()
-		for lin = -n, n do
-			for col = -m, m do
-				local neighCell = cs1:get(cell.x + col, cell.y + lin)
-				if neighCell then 
-					if filterF(cell, neighCell) then
-						neighborhood:add(neighCell, weightF(cell, neighCell))
-					end
-				end
-			end
-		end	
-		cell:addNeighborhood(neighborhood, name)
-	end)
+		return neighborhood
+	end
 end
 
 local checkMdb = function(self)
@@ -539,6 +485,12 @@ CellularSpace_ = {
 	--- Create a Neighborhood for each Cell of the CellularSpace. It gets a table as argument, with 
 	-- the following attributes:
 	-- @param data A table
+	-- @param data.onthefly If false (default), the Neighborhood will be built and stored in
+	-- each Cell of the CelularSpace. If true, the Neighborhood will be
+	-- computed every time the simulation calls Cell:getNeighborhood.
+	-- A computational consequence of having on-the-fly Neighborhoods is that it saves
+	-- memory (because the Neighborhoods are not explicitly represented), but it consumes more
+	-- time, as it needs to be built again and again.
 	-- @param data.strategy A string with the strategy to be used for creating the Neighborhood. 
 	-- See the table below.
 	-- @tab strategy
@@ -610,32 +562,32 @@ CellularSpace_ = {
 
 		if self.cells[1] and #self.cells[1] > 0 then
 			if self.cells[1]:getNeighborhood(data.name) ~= nil then
-				local msg = "Neighborhood '"..data.name.."' already exists."
-				customWarning(msg)
+				customError("Neighborhood '"..data.name.."' already exists.")
 			end
 		end
 
 		defaultTableValue(data, "strategy", "moore")
+		defaultTableValue(data, "onthefly", false)
 
 		switch(data, "strategy"):caseof{
 			["function"] = function() 
-				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy"})
+				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "onthefly"})
 				mandatoryTableArgument(data, "filter", "function")
 
 				defaultTableValue(data, "weight", function() return 1 end)
 
-				createNeighborhood(self, data.filter, data.weight, data.name) 
+				data.func = getFunctionNeighborhood
 			end,
 			moore = function()
-				checkUnnecessaryParameters(data, {"self", "wrap", "name", "strategy"})
+				checkUnnecessaryParameters(data, {"self", "wrap", "name", "strategy", "onthefly"})
 
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
 
-				createMooreNeighborhood(self, data.name, data.self, data.wrap)
+				data.func = getMooreNeighborhood
 			end,
 			mxn = function()
-				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "m", "n", "target"})
+				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "onthefly"})
 				mandatoryTableArgument(data, "m", "number")
 
 				if data.m <= 0 then
@@ -661,37 +613,65 @@ CellularSpace_ = {
 				defaultTableValue(data, "filter", function() return true end)
 				defaultTableValue(data, "weight", function() return 1 end)
 
-				if data.target == nil then
-					createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name)
-				else
-					mandatoryTableArgument(data, "target", "CellularSpace")
-					spatialCoupling(data.m, data.n, self, data.target, data.filter, data.weight, data.name)
-				end
+				defaultTableValue(data, "target", self)
+
+				data.func = getMxNNeighborhood
 			end,
 			vonneumann = function() 
-				checkUnnecessaryParameters(data, {"name", "strategy", "wrap", "self"})
+				checkUnnecessaryParameters(data, {"name", "strategy", "wrap", "self", "onthefly"})
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
 
-				createVonNeumannNeighborhood(self, data.name, data.self, data.wrap) 
+				data.func = getVonNeumannNeighborhood
 			end,
 			["3x3"] = function() 
-				checkUnnecessaryParameters(data, {"name", "strategy", "filter", "weight"})
+				checkUnnecessaryParameters(data, {"name", "strategy", "filter", "weight", "onthefly"})
 				data.m = 3
 				data.n = 3
 
 				defaultTableValue(data, "filter", function() return true end)
 				defaultTableValue(data, "weight", function() return 1 end)
 
-				createMxNNeighborhood(self, data.m, data.n, data.filter, data.weight, data.name) 
+				data.target = self
+				data.func = getMxNNeighborhood
 			end,
 			coord = function() 
-				checkUnnecessaryParameters(data, {"name", "strategy", "target"})
+				checkUnnecessaryParameters(data, {"name", "strategy", "target", "onthefly"})
 				mandatoryTableArgument(data, "target", "CellularSpace")
 
-				coordCoupling(self, data.target, data.name) 
+				data.func = getCoordCoupling
 			end
 		}
+
+		local func = data.func(self, data)
+
+		if data.onthefly then
+			forEachCell(self, function(cell)
+				cell:addNeighborhood(func, data.name)
+			end)
+		else
+			forEachCell(self, function(cell)
+				cell:addNeighborhood(func(cell), data.name)
+			end)
+		end
+
+		local mtarget = data.target
+
+		if mtarget and mtarget ~= self then
+			data.target = self
+
+			local func = data.func(mtarget, data)
+
+			if data.onthefly then
+				forEachCell(mtarget, function(cell)
+					cell:addNeighborhood(func, data.name)
+				end)
+			else
+				forEachCell(mtarget, function(cell)
+					cell:addNeighborhood(func(cell), data.name)
+				end)
+			end
+		end
 	end,
 	--- Return a cell from the CellularSpace given its x and y location. Deprecated. Use get instead.
 	getCell = function(self, xIndex, yIndex)

@@ -60,7 +60,7 @@ return {
 		local test_function = function()
 			ag1:addSocialNetwork(nil,"friends")
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected SocialNetwork, got nil.")
+		unitTest:assert_error(test_function, "Error: Parameter '#1' is mandatory.")
 
 		local test_function = function()
 			local ag1 = Agent{}

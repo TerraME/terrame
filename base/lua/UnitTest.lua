@@ -73,7 +73,7 @@ UnitTest_ = {
 			local msg
 			local mtype = type(value)
 			if belong(mtype, {"number", "boolean", "string"}) then
-				msg = value.." (a "..mtype..")."
+				msg = tostring(value).." (a "..mtype..")."
 			else
 				msg = " a "..mtype.."."
 			end

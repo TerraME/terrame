@@ -36,7 +36,7 @@ Cell_ = {
 	addNeighborhood = function(self, neigh, id)
 		if neigh == nil then
 			mandatoryArgumentError("#1")
-		elseif type(neigh) ~= "Neighborhood" then
+		elseif type(neigh) ~= "Neighborhood" and type(neigh)  ~= "function" then
 			incompatibleTypeError("#1", "Neighborhood", neigh)
 		end
 
@@ -49,7 +49,9 @@ Cell_ = {
 		if self.neighborhoods == nil then self.neighborhoods = {} end
 		self.neighborhoods[id] = neigh
 
-		self.cObj_:addNeighborhood(id, neigh.cObj_)
+		if type(neigh) == "Neighborhood" then
+			self.cObj_:addNeighborhood(id, neigh.cObj_)
+		end
 	end,
 	--- Compute the Euclidean distance to a given Cell.
 	-- @param cell A Cell.
@@ -108,7 +110,16 @@ Cell_ = {
 			incompatibleTypeError("#1", "string", index)
 		end
 
-		return self.cObj_:getNeighborhood(index)
+		if self.neighborhoods then
+			local s = self.neighborhoods[index] 
+			if type(s) == "function" then
+				return s(self)
+			end
+		end
+
+		if not s then
+			return self.cObj_:getNeighborhood(index)
+		end
 	end,
 	--- A user-defined function that is used to initialize a Cell when a CellularSpace is
 	-- created. This function gets the Cell itself as parameter.

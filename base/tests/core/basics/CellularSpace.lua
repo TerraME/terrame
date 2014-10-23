@@ -798,6 +798,77 @@ return{
 		forEachCell(cs, function(cell)
 			unitTest:assert_type(cell:getNeighborhood(), "Neighborhood")
 		end)
+
+		-- on the fly
+		local cs = CellularSpace{xdim = 10}
+
+		cs:createNeighborhood{onthefly = true}
+
+		unitTest:assert_type(cs.cells[1].neighborhoods["1"], "function")
+		unitTest:assert_type(cs.cells[1]:getNeighborhood(), "Neighborhood")
+
+		-- Vector of size counters - Used to verify the size of the neighborhoods
+		local sizes = {}
+
+		forEachCell(cs, function(cell)
+			local neighborhood = cell:getNeighborhood()
+			unitTest:assert(not neighborhood:isNeighbor(cell))
+
+			local neighborhoodSize = #neighborhood
+
+			local sumWeight = 0
+
+			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
+			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
+
+			forEachNeighbor(cell, function(c, neigh, weight)
+				unitTest:assert(neigh.x >= (c.x - 1))
+				unitTest:assert(neigh.x <= (c.x + 1))
+				unitTest:assert(neigh.y >= (c.y -1))
+				unitTest:assert(neigh.y <= (c.y + 1))
+
+				sumWeight = sumWeight + weight
+			end)
+
+			unitTest:assert_equal(1, sumWeight, 0.00001)
+		end)
+
+		unitTest:assert_equal(4, sizes[3])
+		unitTest:assert_equal(32, sizes[5])
+		unitTest:assert_equal(64, sizes[8])
+
+		cs = CellularSpace{xdim = 10}
+
+		cs:createNeighborhood{strategy = "vonneumann", onthefly = true}
+
+		unitTest:assert_type(cs.cells[1].neighborhoods["1"], "function")
+		unitTest:assert_type(cs.cells[1]:getNeighborhood(), "Neighborhood")
+		local sizes = {}
+
+		forEachCell(cs, function(cell)
+			local neighborhood = cell:getNeighborhood("1")
+
+			local neighborhoodSize = #neighborhood
+
+			local sumWeight = 0
+
+			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
+			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
+
+			forEachNeighbor(cell, function(c, neigh, weight)
+				unitTest:assert(neigh.x == c.x or neigh.y == c.y)
+
+				sumWeight = sumWeight + weight
+			end)
+
+			unitTest:assert_equal(1, sumWeight, 0.00001)
+
+			unitTest:assert(not neighborhood:isNeighbor(cell))
+		end)
+
+		unitTest:assert_equal(4, sizes[2])
+		unitTest:assert_equal(32, sizes[3])
+		unitTest:assert_equal(64, sizes[4])
 	end,
 	synchronize = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
