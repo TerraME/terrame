@@ -375,9 +375,9 @@ Society_ = {
 	end,
 	--- Remove a given Agent from the Society. It returns whether the agent was sucessfully removed.
 	-- @usage soc:remove(agent)
-	-- @param arg The Agent that will be removed.
+	-- @param arg The Agent that will be removed, or a function that takes an Agent as argument and
+	-- returns true if the Agent must be removed.
 	remove = function(self, arg)
-		-- TODO: add error messages to this function
 		if type(arg) == "Agent" then
 			-- remove agent from agents's table
 			for k, v in pairs(self.agents) do
@@ -388,19 +388,18 @@ Society_ = {
 					return arg.cObj_:kill(self.observerId)
 				end
 			end
+			customError("Could not remove the Agent (id = '"..tostring(arg.id).."').")
 			return false
-		else -- TODO: verify if the code below is really necessary
+		elseif type(arg) == "function" then
 			-- It uses the function func
 			local ret = false
 			for i = #self.agents, 1, -1  do
-				if arg(self.agents[i]) then
+				if arg(self.agents[i]) == true then
 					ret = self:remove(self.agents[i])
-					if ret == false then
-						return false
-					end
 				end
 			end
-			return ret
+		else
+			incompatibleTypeError("#1", "Agent or function", arg) 
 		end
 	end,
 	--- Return a random Agent from the Society.

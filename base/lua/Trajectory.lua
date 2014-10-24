@@ -41,7 +41,7 @@ Trajectory_ = {
 		self.cObj_:add(#self + 1, cell.cObj_)
 	end,
 	--- Add a new Cell to the Trajectory. Deprecated. Use Trajectory:add instead.
-	addCell = function(self,  cell)
+	addCell = function(self, cell)
 		deprecatedFunctionWarning("addCell", "add")
 		return self:add(cell)
 	end,	
@@ -95,7 +95,16 @@ Trajectory_ = {
 	-- @param x The x location.
 	-- @param y The y location.
 	get = function(self, x, y)
-		-- TODO: change this - add will never work because the cell already belongs to the cellular space.
+		-- TODO: #22 change this - add will never work because the cell already belongs to the cellular space and then it will never add.
+
+		-- The following does not work:
+		--[[
+		local data = {x = x, y = y}
+		local cObj_ = TeCoord(data)
+
+		return self.cObj_:getCell(cObj_)
+		--]]
+
 		return self.parent:get(x, y)
 	end,
 	--- Return a cell given its x and y locations. Deprecated. Use Trajectory:get instead.
