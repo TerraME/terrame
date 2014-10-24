@@ -212,7 +212,7 @@ However, the database does not exist!
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'select' expected string, table with strings or nil, got number.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'select' expected table, got number.")
 
 		--TODO: add this error
 		--[[

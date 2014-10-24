@@ -141,26 +141,22 @@ local function getMxNNeighborhood(cs, data)
 end
 
 local checkMdb = function(self)
-	mandatoryTableArgument(data, "theme", "string")
-	defaultTableValue(data, "layer", "")
-	defaultTableValue(data, "where", "")
+	mandatoryTableArgument(self, "theme", "string")
+	defaultTableValue(self, "layer", "")
+	defaultTableValue(self, "where", "")
 
-	self.cObj_:setTheme(data.theme) 
-	self.cObj_:setLayer(data.layer)
-	self.cObj_:setWhereClause(data.where)
+	self.cObj_:setTheme(self.theme) 
+	self.cObj_:setLayer(self.layer)
+	self.cObj_:setWhereClause(self.where)
 
-	if type(data.select) == "string" then
-		data.select = {data.select}
+	if type(self.select) == "string" then
+		self.select = {self.select}
 	end
 
-	if type(data.select) ~= "table" then
-		if data.select ~= nil then
-			incompatibleTypeError("select", "string, table with strings or nil", data.select)
-		end
-	else
-		for i in ipairs(data.select) do
-			self.cObj_:addAttrName(data.select[i])
-		end
+	defaultTableValue(self, "select", {})
+
+	for i in ipairs(self.select) do
+		self.cObj_:addAttrName(self.select[i])
 	end
 end
 
@@ -366,14 +362,10 @@ local checkMySQL = function(self)
 		self.select = {self.select}
 	end
 
-	if type(self.select) ~= "table" then
-		if self.select ~= nil then
-			incompatibleTypeError("select", "string, table with strings or nil", self.select)
-		end
-	else
-		for i in ipairs(self.select) do
-			self.cObj_:addAttrName(self.select[i])
-		end
+	defaultTableValue(self, "select", {})
+
+	for i in ipairs(self.select) do
+		self.cObj_:addAttrName(self.select[i])
 	end
 end
 
