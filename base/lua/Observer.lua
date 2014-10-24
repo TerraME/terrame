@@ -247,7 +247,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 
 	local chartTitle = datale.title or ""
 	local yLabel = datale.yLabel or ""
-	local xLabel = ""
+	local xLabel = datale.xLabel or ""
 	local observerType = ""
 	local curveLabels = ""
 

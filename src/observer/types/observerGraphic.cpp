@@ -72,12 +72,12 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     
     plotter = new ChartPlot(parent);
     plotter->setAutoReplot(true);
-    // plotter->setStyleSheet("background-color: rgb(255, 255, 255);");
+    plotter->setStyleSheet("background-color: rgb(255, 255, 255);");
     plotter->setFrameShape(QFrame::Box);
     plotter->setFrameShadow(QFrame::Plain);
     plotter->setLineWidth(0);
     plotter->setMargin(10);
-    plotter->resize(300, 180);
+    plotter->resize(450, 350);
     plotter->setWindowTitle("TerraME Observer : Chart");
 
     plotter->showNormal();
