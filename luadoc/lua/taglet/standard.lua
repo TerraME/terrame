@@ -12,7 +12,7 @@ local print = print
 local ipairs = ipairs
 local pairs = pairs
 local forEachOrderedElement = forEachOrderedElement
-local print_yellow, print_blue, print_green = print_yellow, print_blue, print_green
+local printWarning, printNote = printWarning, printNote
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
 local tags = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."taglet"..s.."standard"..s.."tags.lua")
@@ -99,7 +99,7 @@ local function check_module (line, currentmodule)
 	local r, _, modulename = string.find(line, "^module%s*[%s\"'(%[]+([^,\"')%]]+)")
 	if r then
 		-- found module definition
-		print_blue(string.format("found module `%s'", modulename))
+		printNote(string.format("found module `%s'", modulename))
 		return modulename
 	end
 	return currentmodule
@@ -172,7 +172,7 @@ local function parse_comment (block, first_line)
 			--	necessary to avoid confusion between the top
 			--	local declarations and the `module' definition.
 			if (options.nolocals or first_line) and line:find"^%s*local" then
-				return false
+				return 
 			end
 			code = line
 			return false
@@ -213,16 +213,10 @@ local function parse_comment (block, first_line)
 		if r ~= nil then
 			-- found new tag, add previous one, and start a new one
 			-- TODO: what to do with invalid tags? issue an error? or log a warning?
-			print("----------------------")
-			print("TAG: ", currenttag)
-			print("TEXT: ", currenttext)
 			tags.handle(currenttag, block, currenttext)
 			
 			currenttag = tag
 			currenttext = text
-			print("TAG: ", currenttag)
-			print("TEXT: ", currenttext)
-			print("----------------------")
 		else
 			-- keep code indentation
 			if currenttag == "usage" then
@@ -462,17 +456,17 @@ function file (lua_path, fileName, doc, short_lua_path)
 	end)
 	
 	if valid then
-		print_green(string.format("processing file `%s'", short_lua_path..fileName))
+		printNote(string.format("processing file `%s'", short_lua_path..fileName))
 		doc = parse_file(lua_path, fileName, doc)
 	end
-	-- forEachOrderedElement(doc, function(idx, elem, etype)
-	-- 	print(idx, "-", elem)
-	-- 	if etype == "table" then 
-	-- 		forEachOrderedElement(elem, function(i,e)
-	-- 			print("->", idx.."["..i.."]", "-", e)
-	-- 		end)
-	-- 	end
-	-- end)
+	forEachOrderedElement(doc, function(idx, elem, etype)
+		print(idx, "-", elem)
+		if etype == "table" then 
+			forEachOrderedElement(elem, function(i,e)
+				print("->", idx.."["..i.."]", "-", e)
+			end)
+		end
+	end)
 	for _, file_ in ipairs(doc.files) do
 		local description = check_header(lua_path..file_)
 		doc.files[file_].description = description
@@ -584,7 +578,7 @@ local function check_function_usage(files)
 			if type(usage) == "string" then
 				if not string.match(usage, function_name) then
 					local warning = "%s: '%s' does not call itself in its @usage"
-					print_yellow(warning:format(file_name, function_name))
+					printWarning(warning:format(file_name, function_name))
 				end
 			end
 		end
@@ -623,7 +617,7 @@ local function check_undoc_params(files)
 				for k = 1, #params do
 					if not params[params[k]] then
 						local warning = "%s: '%s' has undocumented parameter '%s'"
-						print_yellow(warning:format(file_name, function_name, params[k]))
+						printWarning(warning:format(file_name, function_name, params[k]))
 					end
 				end
 			end
@@ -701,6 +695,7 @@ function start (files, package_path, short_lua_path)
 		files = {},
 		modules = {},
 	}
+	assert(doc.luapath, "undefined `luapath' field")
 	assert(doc.files, "undefined `files' field")
 	assert(doc.modules, "undefined `modules' field")
 	

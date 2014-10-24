@@ -369,6 +369,8 @@ local doc = function(package)
 
 	local files = dir(package_path..s.."lua")
 
+	-- TODO: Verify if the package exists (Use lfs functions)
+
 	luadocMain(package_path, files, package)
 end
 

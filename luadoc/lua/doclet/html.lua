@@ -17,7 +17,7 @@ local io, pairs = io, pairs
 local package, forEachOrderedElement, string = package, forEachOrderedElement, string
 local table = table
 local print =  print
-local print_green = print_green
+local printNote = printNote
 local s = sessionInfo().separator
 local lp = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."lp.lua")
 local highlighting = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."doclet"..s.."highlighting.lua")
@@ -111,9 +111,8 @@ function module_link (modulename, doc, from)
 	from = from or ""
 
 	if doc.modules[modulename] == nil then
-		print_red(string.format("unresolved reference to module `%s'", modulename))
-		io.exit()
-		-- return
+		printError(string.format("unresolved reference to module `%s'", modulename))
+		return
 	end
 	
 	local href = "modules/" .. modulename .. ".html"
@@ -132,8 +131,7 @@ function file_func_link (symbol, doc, file_doc, from)
 	funcname = string.gsub(funcname, "%s*$", "")
 	if filename == "" then filename = funcname end
 	if doc.files[filename .. ".lua"] == nil then
-		print_red(string.format("unresolved reference to module `%s'", modulename))
-		io.exit()
+		printError(string.format("unresolved reference to module `%s'", modulename))
 		-- print(file_doc.name .. ": unresolved reference to " .. filename)
 		return
 	end
@@ -203,8 +201,7 @@ function link_to (fname, doc, module_doc, file_doc, from, kind)
 
 	local module_doc = doc.modules[modulename]
 	if not module_doc then
-		print_red(string.format("unresolved reference to function `%s': module `%s' not found", fname, modulename))
-		-- io.exit()
+		printError(string.format("unresolved reference to function `%s': module `%s' not found", fname, modulename))
 		return
 	end
 	
@@ -214,8 +211,7 @@ function link_to (fname, doc, module_doc, file_doc, from, kind)
 		end
 	end
 	
-	print_red(string.format("unresolved reference to function `%s' of module `%s'", fname, modulename))
-	-- io.exit()
+	printError(string.format("unresolved reference to function `%s' of module `%s'", fname, modulename))
 end
 
 -------------------------------------------------------------------------------
@@ -232,8 +228,8 @@ function symbol_link (symbol, doc, module_doc, file_doc, from)
 		link_to(symbol, doc, module_doc, file_doc, from, "tables")
   
 	if not href then
-		print_red(string.format("unresolved reference to symbol `%s'", symbol))
-		print_red(string.format("%s: unresolved reference to symbol '%s'", file_doc.name, symbol))
+		printError(string.format("unresolved reference to symbol `%s'", symbol))
+		printError(string.format("%s: unresolved reference to symbol '%s'", file_doc.name, symbol))
 	end
 	
 	return href or ""
@@ -332,7 +328,7 @@ function start (doc)
 	if (#doc.files > 0 or #doc.modules > 0) and (not options.noindexpage) then
 		local filename = options.output_dir.."index.html"
 		local short_fileName = options.short_output_path.."index.html"
-		print_green(string.format("generating file `%s'", short_fileName))
+		printNote(string.format("generating file `%s'", short_fileName))
 		local f = util.openFile(filename, "w")
 		assert(f, string.format("could not open `%s' for writing", filename))
 		io.output(f)
@@ -346,7 +342,7 @@ function start (doc)
 			local module_doc = doc.modules[modulename]
 			-- assembly the filename
 			local filename = out_module(modulename)
-			print_green(string.format("generating file `%s'", filename))
+			printNote(string.format("generating file `%s'", filename))
 			
 			local f = util.openFile(filename, "w")
 			assert(f, string.format("could not open `%s' for writing", filename))
@@ -362,7 +358,7 @@ function start (doc)
 			local file_doc = doc.files[filepath]
 			-- assembly the filename
 			local filepath, short_filepath = out_file(file_doc.name)
-			print_green(string.format("generating file `%s'", short_filepath))
+			printNote(string.format("generating file `%s'", short_filepath))
 			
 			local f = util.openFile(filepath, "w")
 			assert(f, string.format("could not open `%s' for writing", short_filepath))

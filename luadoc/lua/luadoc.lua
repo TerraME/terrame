@@ -113,7 +113,7 @@ local OPTIONS = {
 -- Main function. Process command-line parameters and call luadoc processor.
 -- RAIAN: Renamed to luadocMain instead of main
 function luadocMain(package_path, files, package)
-	print_green("Generating documentation for the package "..package)
+	printNote("Generating documentation for the package "..package)
 	-- Process options
 	-- local argc = #arg
 	-- if argc < 1 then

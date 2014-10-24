@@ -29,7 +29,7 @@ local function ldescription(package_path)
 		-- return _env
 		return script
 	else
-		print_yellow("Package description file 'description.lua' not found. Using default description.")
+		printWarning("Package description file 'description.lua' not found. Using default description.")
 	end
 	return include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."description.lua").M
 end

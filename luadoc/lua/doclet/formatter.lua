@@ -10,7 +10,7 @@ local sessionInfo = sessionInfo
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
 local assert, ipairs, type = assert, ipairs, type
-local string, table, print_green, forEachOrderedElement = string, table, print_green, forEachOrderedElement
+local string, table, printNote, forEachOrderedElement = string, table, printNote, forEachOrderedElement
 
 options = {
 	output_dir = "./",
@@ -37,7 +37,7 @@ function start (doc)
 	for i, file_doc in ipairs(doc.files) do
 		-- assembly the filename
 		local filename = out_file(file_doc.name)
-		print_green(string.format("generating file `%s'", filename))
+		printNote(string.format("generating file `%s'", filename))
 
 		-- TODO: confirm file overwrite
 		local f = openFile(filename, "w")

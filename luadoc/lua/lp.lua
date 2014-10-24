@@ -111,11 +111,11 @@ end
 ----------------------------------------------------------------------------
 -- Simulates the setenv function from lua 5.1
 -- Based in: http://stackoverflow.com/questions/14290527/recreating-setfenv-in-lua-5-2
-local print_red, xpcall, traceback = print_red, xpcall, traceback
+local printError, xpcall, traceback = printError, xpcall, traceback
 local function setfenv(f, env)
     local _, environment =  xpcall(function() return load(string.dump(f), nil, 'bt', env) end, function(err)
-		print_red(err)
-		print_red(traceback())
+		printError(err)
+		printError(traceback())
 	end)
 
 	return environment

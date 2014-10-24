@@ -9,9 +9,9 @@ local string = string
 local table = table
 local forEachOrderedElement = forEachOrderedElement
 local s = sessionInfo().separator
-local print_yellow = print_yellow
-local print_red = print_red
-local io, os = io, os
+local printWarning = printWarning
+local printError = printError
+local os = os
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
 
 -------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s
 local function author (tag, block, text)
 	block[tag] = block[tag] or {}
 	if not text then
-		print_yellow("Warning: author `name' not defined [["..text.."]]: skipping")
+		printWarning("Warning: author `name' not defined [["..text.."]]: skipping")
 		return
 	end
 	table.insert (block[tag], text)
@@ -61,7 +61,7 @@ end
 
 local function field (tag, block, text)
 	if block["class"] ~= "table" then
-		print_yellow("documenting `field' for block that is not a `table'")
+		printWarning("documenting `field' for block that is not a `table'")
 	end
 	block[tag] = block[tag] or {}
 
@@ -78,8 +78,7 @@ end
 
 local function name (tag, block, text)
 	if block[tag] and block[tag] ~= text then
-		print_red(string.format("block name conflict: `%s' -> `%s'", block[tag], text))
-		-- os.exit()
+		printError(string.format("block name conflict: `%s' -> `%s'", block[tag], text))
 	end
 	
 	block[tag] = text
@@ -96,7 +95,7 @@ local function param (tag, block, text)
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	if not name then
-		print_yellow("Warning: parameter `name' not defined [["..text.."]]: skipping")
+		printWarning("Warning: parameter `name' not defined [["..text.."]]: skipping")
 		return
 	end
  
@@ -132,7 +131,7 @@ local function param (tag, block, text)
 		end
 	end)
 	if i == nil then
-		print_yellow(string.format("Warning: documenting undefined parameter `%s'", name))
+		printWarning(string.format("Warning: documenting undefined parameter `%s'", name))
 		table.insert(block[tag], name)
 	end
 	block[tag][name] = desc
@@ -190,14 +189,14 @@ end
 -------------------------------------------------------------------------------
 
 local function output (tag, block, text)
-  block[tag] = block[tag] or {}
+	block[tag] = block[tag] or {}
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
-  if not name then
-		print_yellow("Warning: output `name' not defined [["..text.."]]: skipping")
+	if not name then
+		printWarning("Warning: output `name' not defined [["..text.."]]: skipping")
 		return
 	end
-  
+
 	table.insert(block[tag], name)
 	block[tag][name] = desc
 end
@@ -207,7 +206,6 @@ end
 local function tab(tag, block, text)
 	block[tag] = block[tag] or {}
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
-	print("DESC: ", desc)
 	--desc = desc:gsub("%s*([&\\])%s*", "%1")
 	local rows = {}
 	for line in desc:gmatch("[^\\]+") do
@@ -244,8 +242,7 @@ handlers["inherits"] = inherits
 
 function handle (tag, block, text)
 	if not handlers[tag] then
-		print_red(string.format("Error: undefined handler for tag `%s'", tag))
-		-- io.exit()
+		printError(string.format("Error: undefined handler for tag `%s'", tag))
 		return
 	end
 --	assert(handlers[tag], string.format("undefined handler for tag `%s'", tag))
