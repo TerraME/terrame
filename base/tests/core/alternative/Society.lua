@@ -167,18 +167,11 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
-				strategy = "quantity"
-			}
-		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'quantity' expected positive integer number (except zero), got nil.")
-
-		error_func = function()
-			sc1:createSocialNetwork{
 				strategy = "quantity",
 				quantity = "terralab"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'quantity' expected positive integer number (except zero), got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'quantity' expected number, got string.")
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -186,7 +179,7 @@ return{
 				quantity = 0
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'quantity' expected positive integer number (except zero), got 0.")
+		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'quantity' expected positive number (except zero), got 0.")
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -204,7 +197,7 @@ return{
 			}
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'probability' expected a number between 0 and 1, got string.")
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'probability' expected number, got string.")
 
 		error_func = function()
 			sc1:createSocialNetwork{

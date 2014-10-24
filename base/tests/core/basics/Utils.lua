@@ -37,6 +37,17 @@ return{
 		unitTest:assert(belong("b", mvector))
 		unitTest:assert(not belong("e", mvector))
 	end,
+	call = function(unitTest)
+		local cont = 0
+		local a = Agent{map = function(self, ev) cont = cont + 1 end}
+
+		local t = Timer{
+		    Event{action = call(a, "map")}
+		}
+
+		t:execute(10)
+		unitTest:assert_equal(cont, 10)
+	end,
 	delay = function(unitTest)
 		local t1 = os.time()
 		delay(1)

@@ -287,7 +287,6 @@ return{
 		cs:createNeighborhood{
 			strategy = "mxn",
 			target = cs2,
-			m = 3,
 			filter = function(cell,neigh) 
 				return not ((cell.x == neigh.x) and (cell.y == neigh.y))
 			end,
@@ -337,7 +336,7 @@ return{
 		cs:createNeighborhood{name = "first", self = true}
 
 		cs:createNeighborhood{
-			strategy = "3x3",
+			strategy = "mxn",
 			filter = function(c, n) return n.height_ < c.height_ end,
 			weight = function(c, n) return (c.height_ - n.height_ ) / (c.height_ + n.height_) end,
 			name = "second"
@@ -365,6 +364,13 @@ return{
 		end)
 		unitTest:assert_equal(18582, countNeigh)
 		unitTest:assert_equal(451.98359156683, sumWeight, 0.00001)
+
+		local cs = CellularSpace{
+			database = file("simple.map", "base")
+		}
+
+		unitTest:assert_equal(#cs, 100)
+
 	end,
 	save = function(unitTest)
 		local config = getConfig()

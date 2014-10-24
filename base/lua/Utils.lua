@@ -28,19 +28,6 @@
 
 --@header Some basic and useful functions for modeling.
 
--- TODO: move these lines below to terrame.lua
-if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
-
-if sessionInfo().path == nil or sessionInfo().path == "" then
-	error("Error: TME_PATH environment variable should exist and point to TerraME installation folder.", 2)
-end
-
--- To keep compatibilities with old versions of Lua
-local load = load
-if _VERSION ~= "Lua 5.2" then
-	load = loadstring
-end	
-
 -- This function is from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
 --- Function that returns a string describing the internal content of an object.
 function vardump(o, indent)
@@ -60,6 +47,22 @@ function vardump(o, indent)
 	else
 		return "'"..tostring(o).."'"
 	end
+end
+
+--- Return a function that executes a function of a given object when executed. 
+-- The function takes as argument an It is useful to
+-- be used as an action of an Event.
+-- @param obj Any TerraME object.
+-- @param func A string with the function to be executed. 
+-- @usage a = Agent{exec = function(self, ev) print(ev:getTime()) end}
+--
+-- t = Timer{
+--     Event{action = call(a, "exec")}
+-- }
+--
+-- t:execute(10)
+function call(obj, func)
+	return function(ev) obj[func](obj, ev) end
 end
 
 -- **********************************************************************************************

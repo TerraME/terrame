@@ -54,7 +54,11 @@ Agent_ = {
 	-- agent:addSocialNetwork(network, "friends")
 	addSocialNetwork = function(self, set, id)
 		if type(set) ~= "SocialNetwork" and type(set) ~= "function" then
-			incompatibleTypeError("#1", "SocialNetwork", set)
+			if set == nil then
+				mandatoryArgumentError("#1")
+			else
+				incompatibleTypeError("#1", "SocialNetwork", set)
+			end
 		end
 
 		if id == nil then

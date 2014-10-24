@@ -26,26 +26,20 @@
 --      Antonio Gomes de Oliveira Junior
 -------------------------------------------------------------------------------------------
 
--- TODO: alow UnitTest.lua to use print_red from terrame.lua directly, removing the lines below
-local begin_red = "\027[00;31m"
-local end_color = "\027[00m"
-
-local function print_red(value)
-    if sessionInfo().separator == "/" then
-        print__(begin_red..value..end_color)
-    else
-        print__(value)
-    end
-end
-
 local print_error = function(self, msg)
-	local info = debug.getinfo(3)
-	local str = string.match(info.short_src, "[^/]*$")
+	local level = 1
+    local info = debug.getinfo(level)
+    while not string.match(info.source, "/tests/") do
+		level = level + 1
+    	info = debug.getinfo(level)
+	end
+
+	local str = info.short_src
 	str = str..":".. info.currentline ..": "..msg
 	if self.last_error == str then
 		self.count_last = self.count_last + 1
 	elseif self.count_last > 0 then
-		print_red("[The error above occurs more "..self.count_last.." times.]")
+		printError("[The error above occurs more "..self.count_last.." times.]")
 		self.count_last = 0
 		self.last_error = str
 	else
@@ -53,7 +47,7 @@ local print_error = function(self, msg)
 	end
 
 	if self.count_last == 0 then
-		print_red(str)
+		printError(str)
 	end
 end
 
@@ -79,7 +73,7 @@ UnitTest_ = {
 			local msg
 			local mtype = type(value)
 			if belong(mtype, {"number", "boolean", "string"}) then
-				msg = value.." (a "..mtype..")."
+				msg = tostring(value).." (a "..mtype..")."
 			else
 				msg = " a "..mtype.."."
 			end
@@ -190,8 +184,8 @@ UnitTest_ = {
 			if self.current_file then
 				local err2 = string.match(err, self.current_file)
 				if err2 ~= self.current_file then
-					print_red("Error in wrong file (possibly wrong level). It should occur in '"..self.current_file.."', got '"..err.."'.")
-					print_red(traceback())
+					printError("Error in wrong file (possibly wrong level). It should occur in '"..self.current_file.."', got '"..err.."'.")
+					printError(traceback())
 					self.wrong_file = self.wrong_file + 1
 					return
 				end
@@ -203,7 +197,7 @@ UnitTest_ = {
 			-- carregado. descobrir este erro eh importante para verificar se o level foi usado corretamente.
 			if shortError == nil then
 				self.wrong_file = self.wrong_file + 1
-				print_red("Error should contain line number (possibly wrong level), got: '"..err.."'.")
+				printError("Error should contain line number (possibly wrong level), got: '"..err.."'.")
 				return
 			end
 
