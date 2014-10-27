@@ -3,16 +3,11 @@
 -------------------------------------------------------------------------------
 
 local assert, tostring, type = assert, tostring, type
-local io = io
-local table = table
+local io, table, string = io, table, string
+local ipairs, pairs = ipairs, pairs
+local printWarning, printNote, attributes = printWarning, printNote, attributes
 local sessionInfo = sessionInfo
-local attributes = attributes
-local string = string
-local print = print
-local ipairs = ipairs
-local pairs = pairs
-local forEachOrderedElement = forEachOrderedElement
-local printWarning, printNote = printWarning, printNote
+
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
 local tags = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."taglet"..s.."standard"..s.."tags.lua")
@@ -54,7 +49,7 @@ local function check_function (line)
 	line = util.trim(line)
 
 	local info
-	forEachOrderedElement(function_patterns, function (_, pattern)
+	for _, pattern in ipairs(function_patterns) do
 		local r, _, l, id, param = string.find(line, pattern)
 		if r ~= nil then
 			-- remove self
@@ -65,9 +60,9 @@ local function check_function (line)
 				private = (l == "local"),
 				param = util.split("%s*,%s*", param),
 			}
-			return false
+			break
 		end
-	end)
+	end
 
 	-- TODO: remove these assert's?
 	if info ~= nil then
@@ -164,7 +159,7 @@ local function parse_comment (block, first_line)
 
 	-- get the first non-empty line of code
 	local code 
-	forEachOrderedElement(block.code, function(_, line)
+	for _, line in ipairs(block.code) do
 		if not util.line_empty(line) then
 			-- `local' declarations are ignored in two cases:
 			-- when the `nolocals' option is turned on; and
@@ -175,9 +170,9 @@ local function parse_comment (block, first_line)
 				return 
 			end
 			code = line
-			return false
+			break
 		end
-	end)
+	end
 	
 	-- parse first line of code
 	if code ~= nil then
@@ -204,7 +199,7 @@ local function parse_comment (block, first_line)
 	local currenttag = "description"
 	local currenttext
 	
-	forEachOrderedElement(block.comment, function (_, line)
+	for _, line in ipairs(block.comment) do
 		-- armazena linha completa
 		local example_code = line:gsub("^%s*%-+%s?", "")
 		line = util.trim_comment(line)
@@ -227,7 +222,7 @@ local function parse_comment (block, first_line)
 			end
 			assert(string.sub(currenttext, 1, 1) ~= " ", string.format("`%s', `%s'", currenttext, line))
 		end
-	end)
+	end
 	tags.handle(currenttag, block, currenttext)
   
 	-- extracts summary information from the description
@@ -256,7 +251,6 @@ end
 -- @return line
 -- @return block parsed
 -- @return modulename if found
-
 local function parse_block (f, line, modulename, first)
 	local block = {
 		comment = {},
@@ -268,7 +262,7 @@ local function parse_block (f, line, modulename, first)
 			-- reached end of comment, read the code below it
 			-- TODO: allow empty lines
 			line, block.code, modulename = parse_code(f, line, modulename)
-			
+
 			-- parse information in block comment
 			block = parse_comment(block, first)
 
@@ -348,9 +342,9 @@ function parse_file (luapath, fileName, doc)
 		end
 		if doc.modules[modulename] ~= nil then
 			-- module is already defined, just add the blocks
-			forEachOrderedElement(blocks, function (_, v)
+			for _, v in ipairs(blocks) do
 				table.insert(doc.modules[modulename].doc, v)
-			end)
+			end
 		else
 			-- TODO: put this in a different module
 			table.insert(doc.modules, modulename)
@@ -444,29 +438,20 @@ end
 -- @param doc table with documentation
 -- @return table with documentation
 -- @see parse_file
-
 function file (lua_path, fileName, doc, short_lua_path)
 	local patterns = { "%.lua$", "%.luadoc$" }
 	local valid = false
-	forEachOrderedElement(patterns, function(_, pattern)
+	for _, pattern in ipairs(patterns) do
 		if string.find(lua_path..fileName, pattern) ~= nil then
 			valid = true
 		end
-		return valid
-	end)
+		break
+	end
 	
 	if valid then
 		printNote(string.format("processing file `%s'", short_lua_path..fileName))
 		doc = parse_file(lua_path, fileName, doc)
 	end
-	forEachOrderedElement(doc, function(idx, elem, etype)
-		print(idx, "-", elem)
-		if etype == "table" then 
-			forEachOrderedElement(elem, function(i,e)
-				print("->", idx.."["..i.."]", "-", e)
-			end)
-		end
-	end)
 	for _, file_ in ipairs(doc.files) do
 		local description = check_header(lua_path..file_)
 		doc.files[file_].description = description
@@ -563,7 +548,7 @@ local function check_usage(files)
 		local file_name = no_usage[i]
 		for j = 1, #no_usage[file_name] do
 			local function_name = no_usage[file_name][j]
-			print(file_name .. ": " .. "No @usage definition for '" .. function_name .. "'")
+			printWarning(file_name .. ": " .. "No @usage definition for '" .. function_name .. "'")
 		end
 	end
 end
@@ -668,7 +653,7 @@ function check_header(filepath)
 	end
 
 	if text == "" then
-		print "No description on @header"
+		printError "No description on @header"
 		return text
 	else
 		line = f:read()
@@ -699,7 +684,7 @@ function start (files, package_path, short_lua_path)
 	assert(doc.files, "undefined `files' field")
 	assert(doc.modules, "undefined `modules' field")
 	
-	forEachOrderedElement(files, function (_, file_)
+	for _, file_ in ipairs(files) do
 		local attr = attributes(lua_path..file_)
 		assert(attr, string.format("error stating path `%s'", lua_path))
 		
@@ -709,7 +694,7 @@ function start (files, package_path, short_lua_path)
 			local file_path = lua_path..file_
 			doc = directory(lua_path, file_, doc, short_lua_path)
 		end
-	end)
+	end
 	
 	-- exclude undocumented files
 	exclude_undoc(doc.files)

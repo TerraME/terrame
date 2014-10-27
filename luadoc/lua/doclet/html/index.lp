@@ -12,8 +12,8 @@
 
 <div id="product">
 	<div id="product_logo">
-		<a href="<%=doc.description.url%>">
-		<img src='<%=doc.description.logo%>'/><br/></div></a>
+		<a href="<%="www.terrame.org"%>">
+		<img src='<%="./img/terrame.png"%>'/><br/></div></a>
 	<div id="product_name"><big><b></b></big></div>
 	<div id="product_description"></div>
 </div> <!-- id="product" -->
@@ -29,7 +29,7 @@
 <div id="index-header">
 	<h1><%=doc.description.package%></h1>
 	Version: <%= doc.description.version %><br>
-	Release: <%= doc.description.date %><br>
+	Release: <%= doc.description.date or "" %><br>
 	<%= doc.description.authors %><br>
 	<% local emails = {}
 	local email_link = "<a href=\"mailto:%s\"> %s </a>"

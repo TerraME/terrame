@@ -4,11 +4,10 @@
 -------------------------------------------------------------------------------
 
 local loadfile = loadfile
-local print = print
+local pcall = pcall
+
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
-local pcall = pcall
-local setfenv = setfenv
 
 logger = {}
 
@@ -19,9 +18,12 @@ _COPYRIGHT = "Copyright (c) 2003-2007 The Kepler Project"
 _DESCRIPTION = "Documentation Generator Tool for the Lua language"
 _VERSION = "LuaDoc 3.0.1"
 
-
+local pairs = pairs
+local print = print
 local function ldescription(package_path)
 	local script = include(package_path..s.."description.lua")
+	script.logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."terrame.png"
+	script.destination_logo = package_path..s.."doc"..s.."img"..s
 	if script then
 		-- local _env = {}
 		-- setfenv(script, _env)

@@ -4,7 +4,6 @@ package = "TerraME"
 url = "http://www.terrame.org"
 authors = "TerraLAB/UFOP and INPE"
 contact = "pedro.andrade@inpe.br, tiago@iceb.ufop.br"
-logo = "img/terrame.png"
 content = [[This document presents a detailed description of each type and function of TerraME, ordered alphabetically by its types. TerraME adopts <i>American English</i> (e.g., neighbor instead of neighbo<b>u</b>r), with the following syntax convention:
 <ul>
 <li>Names of types have the <b>upper</b> <a href="http://en.wikipedia.org/wiki/CamelCase">CamelCase</a> style, starting with a capital letter, followed by other words starting with capitalized letters (e.g., Agent, Trajectory, CellularSpace).</li>

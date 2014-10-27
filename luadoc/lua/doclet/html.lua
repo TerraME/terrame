@@ -13,16 +13,16 @@
 -------------------------------------------------------------------------------
 
 local assert, getfenv, ipairs, loadstring, setfenv, tostring, tonumber, type = assert, getfenv, ipairs, loadstring, setfenv, tostring, tonumber, type
-local io, pairs = io, pairs
-local package, forEachOrderedElement, string = package, forEachOrderedElement, string
+local io, pairs, os = io, pairs, os
+local package, string, mkdir = package, string, mkdir
 local table = table
 local print =  print
-local printNote = printNote
+local printNote, printError, getn = printNote, printError, getn
+
 local s = sessionInfo().separator
 local lp = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."lp.lua")
 local highlighting = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."doclet"..s.."highlighting.lua")
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
--- module "luadoc.doclet.html"
 
 -------------------------------------------------------------------------------
 -- Looks for a file `name' in given path. Removed from compat-5.1
@@ -110,7 +110,7 @@ function module_link (modulename, doc, from)
 	assert(doc)
 	from = from or ""
 
-	if doc.modules[modulename] == nil then
+	if doc.modules[modulename] == nil and getn(doc.modules) > 0 then
 		printError(string.format("unresolved reference to module `%s'", modulename))
 		return
 	end
@@ -257,7 +257,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab)
 		table.insert(word_table, anchor)
 		token = string.gsub(token, "([%(%)])", "%%%1")
 		word_table[token] = #word_table
-		description_linked = string.gsub(description_linked, token, "%$"..#word_table.."%$", 1)
+		description_linked = string.gsub(description_linked, token, "$"..#word_table.."$", 1)
 	end
 	
 	--find types
@@ -280,7 +280,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab)
 			end
 			types_linked[type_name] = type_name
 			word_table[token] = #word_table
-			description_linked = string.gsub(description_linked, token, "%$"..#word_table.."%$", 1)
+			description_linked = string.gsub(description_linked, token, "$"..#word_table.."$", 1)
 		end
 	end
 	description_linked = string.gsub(description_linked,"%$(%d-)%$", function(key)
@@ -324,6 +324,7 @@ function start (doc)
 	if doc.files then
 		highlighting.setWords(doc.files.funcnames)
 	end
+
 	-- Generate index file
 	if (#doc.files > 0 or #doc.modules > 0) and (not options.noindexpage) then
 		local filename = options.output_dir.."index.html"
@@ -373,4 +374,8 @@ function start (doc)
 	io.output(f)
 	includeMod("luadoc.css")
 	f:close()
+
+	-- Copy logo
+	mkdir(doc.description.destination_logo)
+	os.execute("cp "..doc.description.logo.." "..doc.description.destination_logo)
 end

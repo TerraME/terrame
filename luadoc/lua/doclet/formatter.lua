@@ -10,7 +10,7 @@ local sessionInfo = sessionInfo
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
 local assert, ipairs, type = assert, ipairs, type
-local string, table, printNote, forEachOrderedElement = string, table, printNote, forEachOrderedElement
+local string, table, printNote = string, table, printNote
 
 options = {
 	output_dir = "./",
@@ -54,16 +54,16 @@ function start (doc)
 			
 			if block.class == "function" then
 				-- parameters
-				forEachOrderedElement(block.param, function (_, param_name)
+				for _, param_name in ipairs(block.param) do
 					f:write(util.comment(util.wrap(string.format("@param %s %s", param_name, block.param[param_name] or todo), 77)))
 					f:write("\n")
-				end)
+				end
 				
 				-- return
 				if type(block.ret) == "table" then
-					forEachOrderedElement(block.ret, function (_, ret)
+					for _, ret in ipairs(block.ret) do
 						f:write(util.comment(util.wrap(string.format("@return %s", ret), 77)).."\n")
-					end)
+					end
 				else
 					f:write(util.comment(util.wrap(string.format("@return %s", block.ret or todo), 77)).."\n")
 				end

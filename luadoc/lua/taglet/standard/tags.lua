@@ -3,15 +3,11 @@
 -- @release $Id: tags.lua,v 1.8 2007/09/05 12:39:09 tomas Exp $
 -------------------------------------------------------------------------------
 
-local assert, type, tostring = assert, type, tostring
-local print = print
-local string = string
-local table = table
-local forEachOrderedElement = forEachOrderedElement
+local assert, type, tostring, ipairs = assert, type, tostring, ipairs
+local string, table = string, table
+local printWarning, printError = printWarning, printError
+
 local s = sessionInfo().separator
-local printWarning = printWarning
-local printError = printError
-local os = os
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
 
 -------------------------------------------------------------------------------
@@ -19,7 +15,7 @@ local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s
 local function author (tag, block, text)
 	block[tag] = block[tag] or {}
 	if not text then
-		printWarning("Warning: author `name' not defined [["..text.."]]: skipping")
+		printError("Warning: author `name' not defined [["..text.."]]: skipping")
 		return
 	end
 	table.insert (block[tag], text)
@@ -89,7 +85,7 @@ end
 -- @param tag String with the name of the tag (it must be "param" always).
 -- @param block Table with previous information about the block.
 -- @param text String with the current line beeing processed.
-
+local print = print
 local function param (tag, block, text)
 	block[tag] = block[tag] or {}
 	-- TODO: make this pattern more flexible, accepting empty descriptions
@@ -105,12 +101,12 @@ local function param (tag, block, text)
 		name = field
 		-- match documented parameter with declared parameter
 		local i
-		forEachOrderedElement(block[tag], function (idx, v)
+		for idx, v in ipairs(block[tag]) do
 			if v == param_tab then
 				i = idx
-				return false
+				break
 			end
-		end)
+		end
 
 		-- excludes table from the list of parameters
 		if i then
@@ -124,12 +120,12 @@ local function param (tag, block, text)
   
 	-- match documented parameter with declared parameter
 	local i 
-	forEachOrderedElement(block[tag], function (idx, v)
+	for idx, v in ipairs(block[tag]) do
 		if v == name then
 			i = idx
-			return false
+			break
 		end
-	end)
+	end
 	if i == nil then
 		printWarning(string.format("Warning: documenting undefined parameter `%s'", name))
 		table.insert(block[tag], name)
@@ -166,11 +162,11 @@ local function see (tag, block, text)
 	-- remove trailing "."
 	text = string.gsub(text, "(.*)%.$", "%1")
 	
-	local s = util.split("%s*,%s*", text)			
+	local str = util.split("%s*,%s*", text)			
 	
-	forEachOrderedElement(s, function (_, v)
+	for _, v in ipairs(str) do
 		table.insert(block[tag], v)
-	end)
+	end
 end
 
 -------------------------------------------------------------------------------

@@ -24,23 +24,21 @@ function start (doc)
 	end
 	printline()
 	
-	forEachOrderedElement(doc.files, function(i, v)
+	for i, v in pairs(doc.files) do
 		print('\t', i, v)
-	end)
+	end
 	printline()
-
-	forEachOrderedElement(doc.files[doc.files[1]], function(i, v)
+	for i, v in pairs(doc.files[doc.files[1]]) do
 		print(i, v)
-	end)
-	printline()
+	end
 
-	forEachOrderedElement(doc.files[doc.files[1]].doc[1], function(i, v)
+	printline()
+	for i, v in pairs(doc.files[doc.files[1]].doc[1]) do
 		print(i, v)
-	end)
+	end
 	printline()
-
 	print("Params")
-	forEachOrderedElement(doc.files[doc.files[1]].doc[1].param, function(i, v)
+	for i, v in pairs(doc.files[doc.files[1]].doc[1].param) do
 		print(i, v)
-	end)
+	end
 end

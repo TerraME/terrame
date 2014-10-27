@@ -5,7 +5,7 @@
 
 -- local lfs = require "lfs"
 local type, table, io, assert, tostring, setmetatable, pcall = type, table, io, assert, tostring, setmetatable, pcall
-local print, string, ipairs, mkdir = print, string, ipairs, mkdir
+local print, string, ipairs, mkdir, printWarning = print, string, ipairs, mkdir, printWarning
 
 -------------------------------------------------------------------------------
 -- Module with several utilities that could not fit in a specific module
@@ -257,10 +257,10 @@ function check_parameters(parsed_params, func, filename)
 	end
 	for _, param in ipairs(unknown) do
 		local warning = "%s: Unknown parameter '%s' in '%s'"
-		print(warning:format(filename, param, func.name))
+		printWarning(warning:format(filename, param, func.name))
 	end
 	for _, param in ipairs(unused) do
 		local warning = "%s: Unused parameter '%s' in '%s'"
-		print(warning:format(filename, param, func.name))
+		printWarning(warning:format(filename, param, func.name))
 	end
 end

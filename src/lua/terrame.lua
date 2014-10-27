@@ -374,9 +374,11 @@ local doc = function(package)
 	local s = sessionInfo().separator
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
-	local files = dir(package_path..s.."lua")
+	if not isfile(package_path) then
+		customError("Package "..package.." not found.", 3)
+	end
 
-	-- TODO: Verify if the package exists (Use lfs functions)
+	local files = dir(package_path..s.."lua")
 
 	luadocMain(package_path, files, package)
 end
