@@ -329,9 +329,9 @@ function start (doc)
 	if (#doc.files > 0 or #doc.modules > 0) and (not options.noindexpage) then
 		local filename = options.output_dir.."index.html"
 		local short_fileName = options.short_output_path.."index.html"
-		printNote(string.format("generating file `%s'", short_fileName))
+		printNote(string.format("Generating file %s", short_fileName))
 		local f = util.openFile(filename, "w")
-		assert(f, string.format("could not open `%s' for writing", filename))
+		assert(f, string.format("Could not open %s for writing", filename))
 		io.output(f)
 		includeMod("index.lp", { doc = doc })
 		f:close()
@@ -343,10 +343,10 @@ function start (doc)
 			local module_doc = doc.modules[modulename]
 			-- assembly the filename
 			local filename = out_module(modulename)
-			printNote(string.format("generating file `%s'", filename))
+			printNote(string.format("Generating file %s", filename))
 			
 			local f = util.openFile(filename, "w")
-			assert(f, string.format("could not open `%s' for writing", filename))
+			assert(f, string.format("Could not open %s for writing", filename))
 			io.output(f)
 			includeMod("module.lp", { doc = doc, module_doc = module_doc })
 			f:close()
@@ -359,10 +359,10 @@ function start (doc)
 			local file_doc = doc.files[filepath]
 			-- assembly the filename
 			local filepath, short_filepath = out_file(file_doc.name)
-			printNote(string.format("generating file `%s'", short_filepath))
+			printNote(string.format("Generating file %s", short_filepath))
 			
 			local f = util.openFile(filepath, "w")
-			assert(f, string.format("could not open `%s' for writing", short_filepath))
+			assert(f, string.format("Could not open %s for writing", short_filepath))
 			io.output(f)
 			includeMod("file.lp", { doc = doc, file_doc = file_doc } )
 			f:close()

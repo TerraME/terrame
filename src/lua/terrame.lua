@@ -168,9 +168,9 @@ require = function(package, recursive, asnamespace)
 
 	for mfile, count in pairs(count_files) do
 		if count == 0 then
-			printWarning("File lua/"..mfile.." is not loaded.")
+			printWarning("File lua/"..mfile.." is ignored by load.lua.")
 		elseif count > 1 then
-			printWarning("File lua/"..mfile.." is loaded "..count.." times.")
+			printWarning("File lua/"..mfile.." is loaded "..count.." times in load.lua.")
 		end
 	end
 

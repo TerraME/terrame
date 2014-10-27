@@ -37,11 +37,11 @@ function start (doc)
 	for i, file_doc in ipairs(doc.files) do
 		-- assembly the filename
 		local filename = out_file(file_doc.name)
-		printNote(string.format("generating file `%s'", filename))
+		printNote(string.format("Generating file %s", filename))
 
 		-- TODO: confirm file overwrite
 		local f = openFile(filename, "w")
-		assert(f, string.format("could not open `%s' for writing", filename))
+		assert(f, string.format("Could not open %s for writing", filename))
 
 		for _, block in ipairs(file_doc.doc) do
 

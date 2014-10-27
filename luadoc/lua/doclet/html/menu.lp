@@ -55,7 +55,7 @@ end%>
 
 <!-- Files list -->
 <%if not options.nofiles and #doc.files > 0 then%>
-<h1>Files</h1>
+<h1>Functions</h1>
 <ul>
 <%for _, filepath in ipairs(doc.files) do
 	if doc.files[filepath].type == "file" then

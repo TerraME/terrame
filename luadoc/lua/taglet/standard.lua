@@ -449,7 +449,7 @@ function file (lua_path, fileName, doc, short_lua_path)
 	end
 	
 	if valid then
-		printNote(string.format("processing file `%s'", short_lua_path..fileName))
+		printNote(string.format("Processing file %s", short_lua_path..fileName))
 		doc = parse_file(lua_path, fileName, doc)
 	end
 	for _, file_ in ipairs(doc.files) do

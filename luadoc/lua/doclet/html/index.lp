@@ -71,7 +71,7 @@
 <%end%>
 
 <%if not options.nofiles and #doc.files > 0 then%>
-<h2>Files</h2>
+<h2>Functions</h2>
 <table class="file_list">
 <!--<tr><td colspan="2">Files</td></tr>-->
 <%for _, filepath in ipairs(doc.files) do%>
