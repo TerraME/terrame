@@ -368,8 +368,8 @@ local doc = function(package)
 	-- luadoc *.lua -d doc
 	-- colocar sempre o logo do TerraME, removendo o parametro logo = "img/terrame.png"
 
-	require("luadoc")
 	require("base")
+	require("luadoc")
 
 	local s = sessionInfo().separator
 	local package_path = sessionInfo().path..s.."packages"..s..package
