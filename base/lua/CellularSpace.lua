@@ -337,12 +337,14 @@ local checkMySQL = function(self)
 	defaultTableValue(self, "host", "localhost")
 	defaultTableValue(self, "user", "root")
 	mandatoryTableArgument(self, "password", "string")
-	mandatoryTableArgument(self, "database", "string") -- TODO: remove this line and check the error
+	mandatoryTableArgument(self, "database", "string")
+
+	verify(self.database ~= "", "Invalid database name.")
 
 	if self.port ~= math.floor(self.port) or self.port < 0 then
 		incompatibleValueError("port", "positive integer number", self.port)
 	elseif self.port < 1024 then
-		customError("Parameter 'port' should have values above 1023 to avoid using system reserved values.\nApplication reserved port values should be avoided as well (ex.: MySQL 3306).")
+		customError("Parameter 'port' should have values above 1023 to avoid using system reserved values.")
 	end
 
 	self.cObj_:setUser(self.user)
@@ -928,8 +930,7 @@ CellularSpace_ = {
 		local i = 1
 		forEachCell(self, function(cell)
 			class = argument(cell)
-			if class == nil then return end
-			-- TODO: se retirar esta linha acima aparece um erro estranho nos testes que nao deveria acontecer
+			if class == nil then return end -- the cell will not belong to any Trajectory
 
 			if result[class] == nil then
 				result[class] = Trajectory{target = self, build = false}
@@ -995,13 +996,11 @@ metaTableCellularSpace_ = {
 	__tostring = tostringTerraME
 }
 
---TODO: verificar upper right??
-
 --- A multivalued set of Cells. It can be retrieved from databases, files, or created
 -- directly within TerraME. 
 -- See the table below with the description and the arguments of each data source.
 -- Every Cell of a CellularSpace has an (x, y) location, starting from (0, 0). This Cell
--- represents the upper right location.  Note that CellularSpaces loaded from
+-- represents the upper left location.  Note that CellularSpaces loaded from
 -- databases might not have this cell, according to the original geometry that was used to
 -- create the CellularSpace. Calling Utils:forEachCell() traverses CellularSpaces.
 --
@@ -1144,13 +1143,14 @@ function CellularSpace(data)
 		end
 	else
 		mandatoryTableArgument(data, "dbType", "string")
-		-- TODO: try to remove the line below
-		--data.dbType = string.lower(data.dbType)
 		
 		if CellularSpaceDrivers[data.dbType] == nil then
-			--customError("Not found ".. data.dbType)
-			--TODO: compute the available extensions
-			incompatibleValueError("dbType", "one of the strings from the set ['mysql','ado','shp']", data.dbType)          
+			local word = "It must be a string from the set ["
+			forEachOrderedElement(CellularSpaceDrivers, function(a)
+				word = word.."'"..a.."', "
+			end)
+			word = string.sub(word, 0, string.len(word) - 2).."]."
+			customError("'"..data.dbType.."' is an invalid value for parameter 'dbType'. "..word)
 		elseif CellularSpaceDrivers[data.dbType].extension then
 			mandatoryTableArgument(data, "database", "string")
 			if getExtension(data.database) ~= data.dbType then
@@ -1174,7 +1174,7 @@ function CellularSpace(data)
 	cObj:setDBType(data.dbType)	
 
 	if data.database then 
-		mandatoryTableArgument(data, "database", "string") -- TODO: remove this line and check the error
+		mandatoryTableArgument(data, "database", "string")
 		cObj:setDBName(data.database)		
 	end
 
@@ -1205,9 +1205,8 @@ function CellularSpace(data)
 
 		forEachCell(data, function(cell)
 			setmetatable(cell, {__index = data.instance})
-			-- TODO: Verificar a real necessidade
 			forEachElement(data.instance, function(attribute, value, mtype)
-				if attribute ~= "objectId_" and attribute ~= "x" and attribute ~= "id" and attribute ~= "y" and attribute ~= "past" and attribute ~= "cObj_" and attribute ~= "agents_" then 
+				if not string.endswith(attribute, "_") and attribute ~= "x" and attribute ~= "id" and attribute ~= "y" and attribute ~= "past" then 
 					cell[attribute] = value
 				end
 			end)
@@ -1215,8 +1214,7 @@ function CellularSpace(data)
 		end)
 
 		forEachElement(data.instance, function(attribute, value, mtype)
-			-- TODO: Verificar a real necessidade de or attribute == "objectId_"
-			if attribute == "id" or attribute == "parent" or attribute == "objectId_" then return
+			if attribute == "id" or attribute == "parent" or string.endswith(attribute, "_") then return
 			elseif mtype == "function" then
 				data[attribute] = function(cs, args)
 					forEachCell(cs, function(cell)
@@ -1224,14 +1222,14 @@ function CellularSpace(data)
 					end)
 				end
 			elseif mtype == "number" then
-				if attribute ~= "x" and attribute ~= "y" then -- TODO remove this line as soon as #981 is solved
-				data[attribute] = function(cs)
-					local quantity = 0
-					forEachCell(cs, function(cell)
-						quantity = quantity + cell[attribute]
-					end)
-					return quantity
-				end
+				if attribute ~= "x" and attribute ~= "y" then
+					data[attribute] = function(cs)
+						local quantity = 0
+						forEachCell(cs, function(cell)
+							quantity = quantity + cell[attribute]
+						end)
+						return quantity
+					end
 				end
 			elseif mtype == "boolean" then
 				data[attribute] = function(cs)

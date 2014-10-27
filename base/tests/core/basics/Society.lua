@@ -68,6 +68,24 @@ return {
 
 		soc1:remove(soc1:sample())
 		unitTest:assert_equal(9, #soc1)
+
+		local ag1 = Agent{
+			name = "nonfoo",
+			init = function(self)
+				self.age = Random():integer(10)
+			end
+		}
+
+		local sc = Society{
+			instance = ag1,
+			quantity = 10
+		}
+
+		sc:remove(function(ag)
+			return ag.age > 5
+		end)
+
+		unitTest:assert_equal(9, #soc1)
 	end,
 	sample = function(unitTest)
 		local agent1 = Agent{}

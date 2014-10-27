@@ -1,0 +1,21 @@
+
+world = Cell{water = 40}
+
+o = Observer{
+    subject = world,
+    type = "chart",
+	xLabel = "Time",
+	yLabel = "Gallons",
+    attributes = {"water"}
+}
+
+t = Timer {
+    Event {time = 1, period = 1, action = function()
+        world.water = world.water - 5
+    end},
+    Event {time = 0, period = 0.25, action = function(e)
+    	world:notify(e:getTime())
+    end}
+}
+
+t:execute(8)

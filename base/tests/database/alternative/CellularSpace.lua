@@ -319,7 +319,7 @@ However, the database does not exist!
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'dbType' expected one of the strings from the set ['mysql','ado','shp'], got 'post'.")
+		unitTest:assert_error(error_func, "Error: 'post' is an invalid value for parameter 'dbType'. It must be a string from the set ['csv', 'map', 'mdb', 'mysql', 'shp', 'virtual'].")
 
 		error_func = function()
 			local cs = CellularSpace{

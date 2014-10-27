@@ -41,6 +41,27 @@ return{
 		end
 		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
 	end,
+	remove = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 1
+		}
+
+		local ag = soc1:sample()
+		soc1:remove(ag)
+
+		local error_func = function()
+			soc1:remove()
+		end
+		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent or function, got nil.")
+	
+		local error_func = function()
+			soc1:remove(ag)
+		end
+		unitTest:assert_error(error_func, "Error: Could not remove the Agent (id = '1').")
+	end,
 	sample = function(unitTest)
 		local agent1 = Agent{}
 
