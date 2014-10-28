@@ -454,13 +454,21 @@ local executeTests = function(fileName, package)
 	local data
 
 	if type(fileName) == "string" then
+		printNote("Loading configuration file "..fileName)
 		data = include(fileName)
+		if getn(data) == 0 then
+			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'folder', 'file', 'sleep', 'test'}.")
+			os.exit()
+		end
 	else
 		data = {}
 	end
 
 	local check_functions = data.folder == nil and data.file == nil and data.test == nil
-	local examples = check_functions or data.examples
+	local examples = data.examples
+	if examples == nil then
+		examples = check_functions
+	end
 
 	local tf = testfolders(baseDir)
 	-- Check every selected folder
