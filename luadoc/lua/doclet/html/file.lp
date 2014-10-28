@@ -12,7 +12,7 @@
 
 <div id="product">
 	<div id="product_logo">
-		<a href="<%="www.terrame.org"%>">
+		<a href="<%="http://www.terrame.org"%>">
 		<img src='<%="../img/terrame.png"%>'/><br/></div></a>
 	<div id="product_name"><big><b></b></big></div>
 	<div id="product_description"></div>

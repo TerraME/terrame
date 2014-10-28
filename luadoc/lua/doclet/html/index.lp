@@ -12,7 +12,7 @@
 
 <div id="product">
 	<div id="product_logo">
-		<a href="<%="www.terrame.org"%>">
+		<a href="<%="http://www.terrame.org"%>">
 		<img src='<%="./img/terrame.png"%>'/><br/></div></a>
 	<div id="product_name"><big><b></b></big></div>
 	<div id="product_description"></div>
@@ -29,8 +29,9 @@
 <div id="index-header">
 	<h1><%=doc.description.package%></h1>
 	Version: <%= doc.description.version %><br>
-	Release: <%= doc.description.date or "" %><br>
+	Release: <%= doc.description.date %><br>
 	<%= doc.description.authors %><br>
+	<%= "<a href= \""..doc.description.url.."\">"..string.gsub(doc.description.url, "http:%/%/", "").."</a>" %><br>
 	<% local emails = {}
 	local email_link = "<a href=\"mailto:%s\"> %s </a>"
 	for contact in string.gmatch(doc.description.contact, "[^@%s]+@[^,%s]+") do	

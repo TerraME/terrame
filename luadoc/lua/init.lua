@@ -3,8 +3,8 @@
 -- @release $Id: init.lua,v 1.4 2008/02/17 06:42:51 jasonsantos Exp $
 -------------------------------------------------------------------------------
 
-local loadfile = loadfile
-local pcall = pcall
+local print, pairs, pcall, loadfile = print, pairs, pcall, loadfile
+local belong = belong
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
@@ -18,21 +18,74 @@ _COPYRIGHT = "Copyright (c) 2003-2007 The Kepler Project"
 _DESCRIPTION = "Documentation Generator Tool for the Lua language"
 _VERSION = "LuaDoc 3.0.1"
 
-local pairs = pairs
-local print = print
 local function ldescription(package_path)
 	local script = include(package_path..s.."description.lua")
-	script.logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."terrame.png"
-	script.destination_logo = package_path..s.."doc"..s.."img"..s
 	if script then
-		-- local _env = {}
-		-- setfenv(script, _env)
-		-- pcall(script)
-		-- return _env
+		local allowedFields = {"version", "date", "package", "authors", "contact", "content", "url"}
+		
+		for field, _ in pairs(script) do
+			if not belong(field, allowedFields) then
+				printError("Error: Field '"..field.."' of 'description.lua' is unnecessary.")
+			end
+		end
+
+		if script.version == nil then
+			printError("Error: 'description.lua' does not contain field 'version'.")
+			script.version = "Undefined Version"
+		elseif type(script.version) ~= "string" then
+			printError("Error: Incompatible types. Field 'version' in 'description.lua' expected 'string', got '"..type(script.version).."'.")
+		end
+
+		if script.date == nil then
+			printError("Error: 'description.lua' does not contain field 'date'.")
+			script.date = "Undefined Date"
+		elseif type(script.date) ~= "string" then
+			printError("Error: Incompatible types. Field 'date' in 'description.lua' expected 'string', got '"..type(script.date).."'.")
+		end
+
+		if script.package == nil then
+			printError("Error: 'description.lua' does not contain field 'package'.")
+			script.package = "Undefined Package"
+		elseif type(script.package) ~= "string" then
+			printError("Error: Incompatible types. Field 'package' in 'description.lua' expected 'string', got '"..type(script.package).."'.")
+		end
+
+		if script.authors == nil then
+			printError("Error: 'description.lua' does not contain field 'authors'.")
+			script.authors = "Undefined Author"
+		elseif type(script.authors) ~= "string" then
+			printError("Error: Incompatible types. Field 'authors' in 'description.lua' expected 'string', got '"..type(script.authors).."'.")
+		end
+
+		if script.contact == nil then
+			printError("Error: 'description.lua' does not contain field 'contact'.")
+			script.contact = "Undefined Contact"
+		elseif type(script.contact) ~= "string" then
+			printError("Error: Incompatible types. Field 'contact' in 'description.lua' expected 'string', got '"..type(script.contact).."'.")
+		end
+
+		if script.content == nil then
+			printError("Error: 'description.lua' does not contain field 'content'.")
+			script.content = [[Undefined Description]]
+		elseif type(script.content) ~= "string" then
+			printError("Error: Incompatible types. Field 'content' in 'description.lua' expected 'string', got '"..type(script.content).."'.")
+		end
+
+		if script.url == nil then
+			script.url = ""
+		elseif type(script.url) ~= "string" then
+			printError("Error: Incompatible types. Field 'url' in 'description.lua' expected 'string', got '"..type(script.url).."'.")
+		end
+
+		script.logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."terrame.png"
+		script.destination_logo = package_path..s.."doc"..s.."img"..s
+
 		return script
 	else
-		printWarning("Package description file 'description.lua' not found. Using default description.")
+		printError("Package description file 'description.lua' was not found.")
 	end
+	script.logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."terrame.png"
+	script.destination_logo = package_path..s.."doc"..s.."img"..s
 	return include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."description.lua").M
 end
 
