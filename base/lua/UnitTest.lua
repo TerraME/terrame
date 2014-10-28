@@ -62,6 +62,7 @@ UnitTest_ = {
 	delayed_time = 0,
 	--- Check if a given value is true. In any other case (number, string, false, or nil) it generates an error
 	-- @param value Any value.
+	-- @usage unitTest:assert(2 < 3)
 	assert = function(self, value)
 		self.test = self.test + 1
 
@@ -85,6 +86,7 @@ UnitTest_ = {
 	--- Check if a value belongs to a given type. If not, it generates an error.
 	-- @param value Any value.
 	-- @param mtype A string with the name of a type.
+	-- @usage unitTest:assert_type(2, "number")
 	assert_type = function (self, value, mtype)
 		self.test = self.test + 1
 		if type(mtype) ~= "string" then
@@ -99,6 +101,7 @@ UnitTest_ = {
 	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
 	-- @param value Any value.
+	-- @usage unitTest:assert_nil()
 	assert_nil = function(self, value)
 		self.test = self.test + 1
 		if value == nil then
@@ -110,6 +113,7 @@ UnitTest_ = {
 	end,
 	--- Check if a given value is not nil. Otherwise it generates an error.
 	-- @param value Any value.
+	-- @usage unitTest:assert_not_nil(2)
 	assert_not_nil = function (self, value)
 		self.test = self.test + 1
 		if value ~= nil then
@@ -125,6 +129,8 @@ UnitTest_ = {
 	-- @param v2 Any value.
 	-- @param tol A number indicating a maximum error tolerance. This parameter is optional and can
 	-- be used only with numeric values. The default tolerance is zero.
+	-- @usage unitTest:assert_equal(3, 3)
+	-- unitTest:assert_equal(2, 2.1, 0.2)
 	assert_equal = function (self, v1, v2, tol)
 		self.test = self.test + 1
 
@@ -169,7 +175,9 @@ UnitTest_ = {
 	-- @param max_error A number indicating the maximum discrepance between the generated error and the
 	-- expected error. It is necessary in error messages that include information that can change
 	-- from machine to machine, such as an username. The default value is zero (no discrepance).
-	assert_error = function (self, my_function, error_message, max_error)
+	-- @usage error_func = function() verify(2 > 3, "wrong operator") end
+	-- unitTest:assert_error(error_func, "wrong operator")
+	assert_error = function(self, my_function, error_message, max_error)
 		if type(my_function) ~= "function" then
 			incompatibleTypeError("#1", "function", my_function)
 		elseif type(error_message) ~= "string" then
@@ -229,6 +237,7 @@ UnitTest_ = {
 	end,
 	--- Executes a delay in seconds during the test. Calling this function, the user can change the
 	-- delay when the UnitTest is built.
+	-- @usage unitTest:delay()
 	delay = function()
 	end
 }
@@ -246,6 +255,7 @@ local metaTableUnitTest_ = {
 -- @param data.user A user name. See CellularSpace.
 -- @param data.sleep A number indicating the amount of time to sleep every time there is a delay in
 -- the tests.
+-- @usage unitTest = UnitTest{}
 function UnitTest(data)
 	setmetatable(data, metaTableUnitTest_)
 

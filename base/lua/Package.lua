@@ -129,7 +129,8 @@ end
 --- Verify a given condition, otherwise stops the simulation with an error.
 -- @param condition A value of any type. If it is not true, the function generates an error.
 -- @param msg A string with the error to be displayed.
-verify = function(condition, msg)
+-- @usage verify(2 < 3, "wrong operator")
+function verify(condition, msg)
 	if not condition then
 		customError(msg)
 	end
@@ -138,7 +139,9 @@ end
 --- Verify whether the table passed as argument is a named table. It generates errors if it is nil,
 -- if it is not a table, or if it has numeric indexes.
 -- @param data A value of any type.
-verifyNamedTable = function(data)
+-- @usage t = {value = 2}
+-- verifyNamedTable(t)
+function verifyNamedTable(data)
 	if type(data) ~= "table" then
 		if data == nil then
 			customError("Parameter must be a table.")
@@ -154,6 +157,8 @@ end
 -- a warning otherwise.
 -- @param data The list of parameters used in the function call.
 -- @param parameters The list of the allowed parameters.
+-- @usage t = {value = 2}
+-- checkUnnecessaryParameters(t, {"target", "select"})
 function checkUnnecessaryParameters(data, parameters)
 	forEachElement(data, function(value)
 		if not belong(value, parameters) then
@@ -164,6 +169,7 @@ end
 
 --- Generate an error.
 -- @param msg A string describing the error.
+-- @usage customError("error message")
 function customError(msg)
 	if type(msg) ~= "string" then
 		error("Error: #1 should be a string.", 2)
@@ -175,6 +181,7 @@ end
 
 --- Generate a warning.
 -- @param msg A string describing the warning.
+-- @usage customWarning("warning message")
 function customWarning(msg)
 	if type(msg) ~= "string" then
 		error("Error: #1 should be a string.", 2)
@@ -194,7 +201,9 @@ end
 -- @param data A table.
 -- @param idx The element of the table (a string).
 -- @param value The default value (any type).
-defaultTableValue = function(data, idx, value)
+-- @usage t = {x = 5}
+-- defaultTableValue(t, "y", 8)
+function defaultTableValue(data, idx, value)
 	if data[idx] == nil then
 		data[idx] = value
 	elseif type(data[idx]) ~= type(value) then
@@ -207,6 +216,7 @@ end
 --- Generates a warning if the element of a table is the default value.
 -- @param parameter The element.
 -- @param value The default value.
+-- @usage defaultValueWarning("size", 2)
 function defaultValueWarning(parameter, value)
 	if type(parameter) ~= "string" then
 		error("Error: #1 should be a string.", 2)
@@ -218,6 +228,7 @@ end
 --- Generates a warning for deprecated functions.
 -- @param functionName Name of the deprecated function.
 -- @param functionExpected A string with the name of the function to be used instead of the deprecated function.
+-- @usage deprecatedFunctionWarning("abc", "def")
 function deprecatedFunctionWarning(functionName, functionExpected)
 	if type(functionName) ~= "string" then
 		error("Error: #1 should be a string.", 2)
@@ -235,6 +246,7 @@ end
 -- @param attr A string with an attribute name, or position (such as #1).
 -- @param expectedTypeString A string with the expected type.
 -- @param gottenValue The value passed as argument with wrong type.
+-- @usage incompatibleTypeError("cell", "Cell", Agent{})
 function incompatibleTypeError(attr, expectedTypesString, gottenValue)
 	if expectedTypesString == nil then expectedTypesString = "nil" end
 
@@ -248,6 +260,7 @@ end
 -- @param attr A string with an attribute name, or position (such as #1).
 -- @param expectedTypeString A string with the expected type values for the parameter.
 -- @param gottenValue The value passed as argument with wrong value.
+-- @usage incompatibleValueError("position", "1, 2, or 3", "4")
 function incompatibleValueError(attr, expectedValues, gottenValue)
 	if expectedValues == nil then expectedValues = "nil" end
 
@@ -265,6 +278,7 @@ end
 --- Generate an error indicating that the function does not support a given file extension.
 -- @param attr The attribute name (a string).
 -- @param ext The file extension (a string).
+-- @usage incompatibleFileExtensionError("file", ".txt")
 function incompatibleFileExtensionError(attr, ext)
 	customError("Parameter '".. attr.."' does not support '"..ext.."'.")
 end
@@ -272,6 +286,7 @@ end
 --- Generate an error indicating that a given resource was not found.
 -- @param attr The attribute name (a string).
 -- @param path The location of the resource, described as a string.
+-- @usage resourceNotFoundError("file", "/usr/local/file.txt")
 function resourceNotFoundError(attr, path)
 	customError("Resource '"..path.."' not found for parameter '"..attr.."'.")
 end
@@ -279,6 +294,7 @@ end
 --- Generate an error due to a wrong value for a parameter.
 -- @param attr The parameter name (a string).
 -- @param value The wrong value, which can belong to any type.
+-- @usage valueNotFoundError("1", "neighborhood")
 function valueNotFoundError(attr, value)
 	if type(value) == nil then value = "nil" end
 	customError("Value '"..value.."' not found for parameter '"..attr.."'.")
@@ -286,6 +302,7 @@ end
 
 --- Generate an error indicating that a given parameter is mandatory.
 -- @param attr The name of the parameter (a string).
+-- @usage mandatoryArgumentError("target")
 function mandatoryArgumentError(attr)
 	customError("Parameter '"..attr.."' is mandatory.")
 end
@@ -295,6 +312,8 @@ end
 -- @param table A table.
 -- @param attr The attribute name (a string).
 -- @param mtype The required type for the attribute (a string).
+-- @usage mtable = {bbb = 3, ccc = "aaa"}
+-- mandatoryTableArgument(mtable, "bbb", "string")
 function mandatoryTableArgument(table, attr, mtype)
 	if table[attr] == nil then
 		customError("Parameter '"..attr.."' is mandatory.")
@@ -308,7 +327,9 @@ end
 -- @param table A table.
 -- @param attr The attribute name (a string).
 -- @param allowedType The required type for the attribute (a string).
-optionalTableArgument = function(table, attr, allowedType)
+-- @usage mtable = {bbb = 3, ccc = "aaa"}
+-- optionalTableArgument(mtable, "bbb", "string")
+function optionalTableArgument(table, attr, allowedType)
 	local value = table[attr]
 	local mtype = type(value)
 

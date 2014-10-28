@@ -316,13 +316,15 @@ Society_ = {
 		end
 	end,
 	--- Return a given Agent based on its index. Deprecated. Use Society:get instead.
+	-- @param index The index of the Agent that will be returned.
+	-- @usage agent = soc:getAgent("1")
 	getAgent = function(self, index)
 		deprecatedFunctionWarning("getAgent", "get")
 		return self:get(index)
 	end,
 	--- Return a given Agent based on its index.
 	-- @param index The index of the Agent that will be returned.
-	-- @usage agent = soc:getAgent("1")
+	-- @usage agent = soc:get("1")
 	get = function(self, index)
 		--TODO: implementar a funcao getAgentByID, que gera uma tabela [ID] -> posicao em soc.agents
 		-- depois coloca esta tabela na propria sociedade, e entao atualiza o getAgentByID para retornar
@@ -412,7 +414,7 @@ Society_ = {
 		end
 	end,
 	--- Return the number of Agents of the Society. Deprecated. Use # instead.
-	-- @usage print(#soc)
+	-- @usage print(soc:size())
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")
 		return #self

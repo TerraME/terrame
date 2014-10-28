@@ -45,9 +45,9 @@ return{
 	end,
 	defaultValueWarning = function(unitTest)
 		local error_func = function()
-			defaultValueWarning(2)
+			defaultValueWarning("size", 2)
 		end
-		unitTest:assert_error(error_func, "Error: #1 should be a string.")
+		unitTest:assert_error(error_func, "Error: Parameter 'size' could be removed as it is the default value (2).")
 	end,
 	defaultTableValue = function(unitTest)
 		local t = {x = 5}

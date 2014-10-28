@@ -41,6 +41,8 @@ Trajectory_ = {
 		self.cObj_:add(#self + 1, cell.cObj_)
 	end,
 	--- Add a new Cell to the Trajectory. Deprecated. Use Trajectory:add instead.
+	-- @param cell A Cell that will be added.
+	-- @usage traj:addCell(cell)
 	addCell = function(self, cell)
 		deprecatedFunctionWarning("addCell", "add")
 		return self:add(cell)
@@ -94,6 +96,7 @@ Trajectory_ = {
 	--- Return a cell given its x and y locations.
 	-- @param x The x location.
 	-- @param y The y location.
+	-- @usage traj:get(1, 1)
 	get = function(self, x, y)
 		-- TODO: #22 change this - add will never work because the cell already belongs to the cellular space and then it will never add.
 
@@ -108,6 +111,8 @@ Trajectory_ = {
 		return self.parent:get(x, y)
 	end,
 	--- Return a cell given its x and y locations. Deprecated. Use Trajectory:get instead.
+	-- @param index a Coord.
+	-- @usage traj:getCell(index)
 	getCell = function(self, index)
 		deprecatedFunctionWarning("getCell", "get")
 		return self:get(index:getX(), index:getY())

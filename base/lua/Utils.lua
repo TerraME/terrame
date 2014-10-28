@@ -26,10 +26,13 @@
 --          Raian Vargas Maretto
 -------------------------------------------------------------------------------------------
 
---@header Some basic and useful functions for modeling.
+-- @header Some basic and useful functions for modeling.
 
--- This function is from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
+-- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
 --- Function that returns a string describing the internal content of an object.
+-- @param o The object to be converted into a string.
+-- @param indent A string with one level of indentation.
+-- @usage vardump{name = "john", age = 20}
 function vardump(o, indent)
 	if indent == nil then indent = '' end
 
@@ -65,11 +68,9 @@ function call(obj, func)
 	return function(ev) obj[func](obj, ev) end
 end
 
--- **********************************************************************************************
--- util math functions
-
 --- Return a table with the content of the file config.lua, stored in the directory where TerraME
 -- was executed. All the global variables of the file are elements of the table.
+-- @usage getConfig()
 function getConfig()
 	return include("config.lua")
 end
@@ -77,6 +78,7 @@ end
 --- Round a number given its value and a precision.
 -- @param num A number.
 -- @param idp The number of decimal places to be used. Default is zero.
+-- @usage round(2.34566, 3)
 function round(num, idp)
 	if type(num) ~= "number" then
 		incompatibleTypeError("#1", "number", num)
@@ -313,7 +315,7 @@ end
 --     b = 100,
 --     step = 0.1
 -- }
-integrate = function(attrs)
+function integrate(attrs)
 	if attrs.event ~= nil then
 		attrs.a = attrs.event:getTime() - attrs.event:getPeriod() 
 		if attrs.a < 1 then attrs.a = 1 end
@@ -351,6 +353,7 @@ end
 
 --- Pause the simulation for a given time.
 -- @param delay_s A number indicating how long in seconds should the model pause. Default is one.
+-- @usage delay(2.5)
 function delay(delay_s)
 	delay_s = delay_s or 1
 	local time_to = os.time() + delay_s
@@ -359,7 +362,8 @@ end
 
 --- Return whether a given value belong to a table.
 -- @param value A value.
--- @param values A table
+-- @param values A table.
+-- @usage belong(2, {1, 2, 3})
 function belong(value, values)
 	if type__(values) ~= "table" then
 		incompatibleTypeError("#2", "table", values)
@@ -379,6 +383,7 @@ end
 --- Return the Levenshtein's distance between two strings.
 -- @param s A string.
 -- @param t Another string.
+-- @usage levenshtein("abc", "abb")
 function levenshtein(s, t)
 	if type(s) ~= "string" then
 		incompatibleTypeError("#1", "string", s)
@@ -398,8 +403,6 @@ function levenshtein(s, t)
 	end
 	return d[#d]
 end
-
---Utilities functions---------------------------------------------------
 
 --- Second order function to transverse a given CellularSpace, Trajectory, or Agent, 
 -- applying a given function on each of its Cells. If any of the function calls returns 
@@ -631,7 +634,7 @@ end
 --     target = cs,
 --     sort = greaterByAttribute("cover")
 -- }
-greaterByAttribute = function(attribute, operator)
+function greaterByAttribute(attribute, operator)
 	if type(attribute) ~= "string" then
 		incompatibleTypeError("#1", "string", attribute)
 	elseif operator == nil then
@@ -652,7 +655,7 @@ end
 --     target = cs,
 --     sort = greaterByCoord()
 -- }
-greaterByCoord = function(operator)
+function greaterByCoord(operator)
 	if operator == nil then
 		operator = "<"
 	elseif not belong(operator, {"<", ">", "<=", ">="}) then
@@ -676,7 +679,7 @@ end
 -- @usage forEachElement(cell, function(idx, element, etype)
 --     print(element, etype)
 -- end)
-forEachElement = function(obj, func)
+function forEachElement(obj, func)
 	if obj == nil then
 		mandatoryArgumentError("#1")
 	elseif func == nil then
@@ -700,10 +703,10 @@ end
 -- @param func A user-defined function that takes three arguments: the index of the element,
 -- the element itself, and the type of the element. If some call to this function returns
 -- false then forEachElement() stops.
--- @usage forEachElement(cell, function(idx, element, etype)
+-- @usage forEachOrderedElement(cell, function(idx, element, etype)
 --     print(element, etype)
 -- end)
-forEachOrderedElement = function(obj, func)
+function forEachOrderedElement(obj, func)
 	if obj == nil then
 		mandatoryArgumentError("#1")
 	elseif type(func) ~= "function" then
@@ -757,6 +760,7 @@ end
 --- Return the number of elements of atable, be them named or not.
 -- It is a substitute for the old Lua function table.getn.
 -- @param t A table.
+-- @usage getn{name = "john", age = 20}
 function getn(t)
 	if type(t) ~= "table" then
 		incompatibleTypeError("#1", "table", t)
@@ -817,6 +821,7 @@ local function ParseCSVLine(line, sep)
 	return res
 end
 
+-- TODO: verify whether there is a warning message pointing that argument file does not exist in the function
 --- Read a CSV file and return an array of tables.
 -- The first line of the file list the attributes of each table.
 -- @param file A string, adress of the CSV file.

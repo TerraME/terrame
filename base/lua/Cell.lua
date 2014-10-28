@@ -55,6 +55,8 @@ Cell_ = {
 	end,
 	--- Compute the Euclidean distance to a given Cell.
 	-- @param cell A Cell.
+	-- @usage c2 = Cell{x = 10, y = 10}
+	-- cell:distance(c2)
 	distance = function(self, cell)
 		if type(cell) ~= "Cell" then
 			if cell == nil then

@@ -129,7 +129,7 @@ metaTableRandom_ = {__index = Random_, __tostring = tostringTerraME}
 -- random number generator MT19937 and to the SIMD-oriented Fast Mersenne Twister random number
 -- generator, SFMT19937. Random is a singleton, which means that every copy of Random created
 -- by the user has the same seed.
--- @param data.seed An integer number to generate the pseudo-random numbers.
+-- @param data.seed A number to generate the pseudo-random numbers.
 -- Default is the current time of the system.
 -- @usage random = Random()
 --
