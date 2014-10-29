@@ -105,9 +105,8 @@ function startDoc (files, options, package_path)
 		-- dofile(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."config.lua")
 	-- end
 	
-	-- local taglet = require(options.taglet)
 	local taglet = include(options.taglet)
-	-- local doclet = require(options.doclet)
+	
 	local doclet = include(options.doclet)
 
 	-- analyze input

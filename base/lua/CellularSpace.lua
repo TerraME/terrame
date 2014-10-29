@@ -487,7 +487,7 @@ CellularSpace_ = {
 	-- time, as it needs to be built again and again.
 	-- @param data.strategy A string with the strategy to be used for creating the Neighborhood. 
 	-- See the table below.
-	-- @tab strategy
+	-- @tabular strategy
 	-- Strategy & Description & Compulsory Parameters & Optional Parameters \
 	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight \
 	-- "coord" & A bidirected relation between two CellularSpaces connecting Cells with the same 
@@ -730,7 +730,7 @@ CellularSpace_ = {
 	-- to be loaded. See below.
 	-- @param tbAttrLoad.source A string with the name of the Neighborhood
 	-- to be loaded within TerraME. Default is "1".
-	-- @tab name
+	-- @tabular name
 	-- Source & Description \
 	--"*.gal" & Load a Neighborhood from contiguity relationships described as a GAL file.\
 	-- "*.gwt" & Load a Neighborhood from a GWT (generalized weights) file.\
@@ -887,7 +887,7 @@ CellularSpace_ = {
 	-- strategy. The generated Trajectories have empty intersection and union equals to the
 	-- whole CellularSpace (unless function below returns nil for some Cell). 
 	-- @param argument A string or a function, as follows:
-	-- @tab argument
+	-- @tabular argument
 	-- Type of argument & Description \
 	-- string & The argument must represent the name of one attribute of the Cells of the
 	-- CellularSpace. Split then creates one Trajectory for each possible value of the attribute
@@ -1040,7 +1040,7 @@ metaTableCellularSpace_ = {
 -- instance. For each attribute of the instance, one function is created in the CellularSpace with
 -- the same name (note that attributes declared exclusively in Cell:init() will not be mapped, as
 -- they do not belong to the instance). The table below describes how each attribute is mapped:
--- @tab instance
+-- @tabular instance
 -- Attribute of instance & Function within the CellularSpace \
 -- function & Call the function of each of its Cells. \
 -- number & Return the sum of the number in each of its Cells. \
@@ -1052,7 +1052,7 @@ metaTableCellularSpace_ = {
 -- @param data.ydim Number of lines, in the case of creating a CellularSpace without needing to
 -- load from a database. Default is equal to xdim.
 --
--- @tab data
+-- @tabular data
 -- Data source & Description & Compulsory parameters & Optional parameters\
 -- Access & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer, select,
 -- where \

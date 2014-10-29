@@ -44,7 +44,7 @@ TeEvent.type_ = "Event"
 -- the Event is removed from the Timer and will not be executed again. Action can also be a TerraME
 -- object. In this case, each type has its own set of functions that will be activated by
 -- the Event. See below how the objects are activated. Arrows indicate the execution order:
--- @tab action
+-- @tabular action
 -- Object & Function(s) activated \
 -- Agent/Automaton & execute -> notify \
 -- CellularSpace/Cell & synchronize -> notify \

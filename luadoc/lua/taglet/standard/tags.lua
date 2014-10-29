@@ -231,7 +231,7 @@ handlers["return"] = ret
 handlers["see"] = see
 handlers["usage"] = usage
 handlers["output"] = output
-handlers["tab"] = tab
+handlers["tabular"] = tab
 handlers["inherits"] = inherits
 
 -------------------------------------------------------------------------------

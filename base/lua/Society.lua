@@ -178,7 +178,7 @@ Society_ = {
 	-- @param data.self A boolean value indicating whether the Agent can be connected to itself.
 	-- Default is false.
 	-- @param data.random A Random object. Default is the internal random generator.
-	-- @tab strategy
+	-- @tabular strategy
 	-- Strategy &
 	-- Description &
 	-- Compulsory parameters & Optional parameters \
@@ -425,7 +425,7 @@ Society_ = {
 	-- to the type of its only and compulsory argument, that can be:
 	-- @param argument string or function
 	--
-	-- @tab argument
+	-- @tabular argument
 	-- Type of argument &
 	-- Description \
 	-- string &
@@ -532,7 +532,7 @@ metaTableSociety_ = {
 -- Calling Utils:forEachAgent() traverses Societies
 -- Societies have additional functions related to its parameter instance, according to the 
 -- table below.
--- @tab instance
+-- @tabular instance
 -- Attribute of instance & Function within the Society \
 -- function & Call the function of each of its Agents. \
 -- number & Return the sum of the number in each of its Agents. \
@@ -542,7 +542,7 @@ metaTableSociety_ = {
 -- @param data.database Name of the database.
 -- @param data.dbType A string with the name of the source the Society will be read from. 
 -- TerraME always converts this string to lower case. See the table below:
--- @tab dbType
+-- @tabular dbType
 -- dbType & Description & Compulsory parameters & Optional parameters \
 -- "volatile" & Create agents from scratch. This is the default value when using the argument
 -- quantity. & quantity, instance & \

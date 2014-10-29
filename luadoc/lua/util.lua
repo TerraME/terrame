@@ -250,7 +250,7 @@ function check_parameters(parsed_params, func, filename)
 	end
 	for _, param in ipairs(func.param) do
 		--print("\t", param)
-		if not parsed_params[param] and not func.tab[param] and not unused[param] then
+		if not parsed_params[param] and not func.tabular[param] and not unused[param] then
 			unused[param] = param
 			table.insert(unused, param)
 		end

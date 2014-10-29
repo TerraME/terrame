@@ -16,10 +16,10 @@ end
 <span class="description"><%=
 luadoc.link_description(func.description or "", doc, module_doc, file_doc, from, true)%></span>
 
-<%if type(func.tab) == "table" and #func.tab > 0 then %>
-	<%for i = 1, #func.tab do 
-		if not func.param[func.tab[i]] then
-			local tab = func.tab[func.tab[i]] %> 
+<%if type(func.tabular) == "table" and #func.tabular > 0 then %>
+	<%for i = 1, #func.tabular do 
+		if not func.param[func.tabular[i]] then
+			local tab = func.tabular[func.tabular[i]] %> 
 			<table class="param_tab">
 			<% for j, line in ipairs(tab) do %>
 				<tr>
@@ -62,13 +62,13 @@ end %>
     <li>
 	  <strong><%=param_name%></strong>: <%= luadoc.link_description(param_desc or "", doc, module_doc, file_doc, from) %>
     </li> 
-    <% if type(func.tab) == "table" and func.tab[func.param[i]] then %>
+    <% if type(func.tabular) == "table" and func.tabular[func.param[i]] then %>
       </span>
       <!-- Strategy of the parameter -->
-      <% local tab = func.tab[func.param[i]]
-      for i = 1, #func.tab do
-        if func.tab[func.tab[i]] == tab then
-          table.remove(func.tab, i)
+      <% local tab = func.tabular[func.param[i]]
+      for i = 1, #func.tabular do
+        if func.tabular[func.tabular[i]] == tab then
+          table.remove(func.tabular, i)
           break
         end
       end

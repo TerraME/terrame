@@ -239,6 +239,7 @@ local function parse_comment (block, first_line)
 		end)
 	end
 	if block.output	then table.sort(block.output)	end
+
 	return block
 end
 
@@ -669,6 +670,7 @@ function check_header(filepath)
 end
 
 -------------------------------------------------------------------------------
+local forEachElement, print = forEachElement, print
 function start (files, package_path, short_lua_path)
 	local s = sessionInfo().separator
 	assert(files, "file list not specified")
