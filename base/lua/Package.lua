@@ -28,6 +28,17 @@
 
 --@header Some basic and useful functions to develop packages.
 
+function file(filename, package)
+	if package == nil then package = "base" end
+
+	local s = sessionInfo().separator
+	local file = sessionInfo().path..s.."packages"..s..package..s.."data"..s..filename
+	if not isfile(file) then
+		customError("File '"..file.."' does not exist in package '"..package.."'.")
+	end
+	return file
+end
+
 --- Implement a switch case function, where options are given and there are functions
 -- associated to them.
 -- @param data A table.
