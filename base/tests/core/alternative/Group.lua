@@ -43,12 +43,12 @@ return{
 		local error_func = function()
 			group1 = Group()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
+		unitTest:assert_error(error_func, tableParameterMsg())
 
 		error_func = function()
 			group1 = Group(3)
 		end
-		unitTest:assert_error(error_func, "Error: Parameters must be named.")
+		unitTest:assert_error(error_func, namedParametersMsg())
 
 		error_func = function()
  			local gr = Group{
@@ -56,7 +56,7 @@ return{
  				selection = function() return true end
  			}
  		end
-		unitTest:assert_error(error_func, "Error: Parameter 'selection' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("selection"))
 
 		error_func = function()
 			group1 = Group{
@@ -69,7 +69,7 @@ return{
 				end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'target' expected Society, Group, or nil, got CellularSpace.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("target", "Society, Group, or nil", cs))
 
 		error_func = function()
 			group1 = Group{
@@ -77,7 +77,7 @@ return{
 				build = 15
 			}
 		end
-		unitTest:assert_error(error_func,"Error: Incompatible types. Parameter 'build' expected boolean, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("build", "boolean", 15))
 
 		error_func = function()
 			group1 = Group{
@@ -85,7 +85,7 @@ return{
 				build = true
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'build' could be removed as it is the default value (true).")
+		unitTest:assert_error(error_func, defaultValueMsg("build", true))
 
 		error_func = function()
 			group1 = Group{
@@ -96,7 +96,7 @@ return{
 				end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'select' expected function or nil, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "function or nil", 12))
 
 		error_func = function()
 			group1 = Group{
@@ -107,7 +107,7 @@ return{
 				greater = 12
 			}
 		end
-		unitTest:assert_error(error_func,"Error: Incompatible types. Parameter 'greater' expected function or nil, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("greater", "function or nil", 12))
 	end,
 	add = function(unitTest)
 		local group = Group{}
@@ -115,31 +115,31 @@ return{
 		local error_func = function()
 			group:add()
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent"))
 
 		error_func = function()
 			group:add("wrongType")
 		end
-		unitTest:assert_error(error_func,"Error: Incompatible types. Parameter '#1' expected Agent, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent", "wrongType"))
 	end,
 	filter = function(unitTest)
 		local group = Group{}
 		local error_func = function()
 			group:filter("notFunction")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected function or nil, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function or nil", "notFunction"))
 
 		error_func = function()
 			group:filter(function() return true end)
 		end
-		unitTest:assert_error(error_func, "Error: It is not possible to filter a Group without a parent.")
+		unitTest:assert_error(error_func, "It is not possible to filter a Group without a parent.")
 	end,
 	sort = function(unitTest)
 		local group = Group{}
 		local error_func = function()
 			group:sort("notFunction")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected function or nil, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function or nil", "notFunction"))
 	end
 }
 

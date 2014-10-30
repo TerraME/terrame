@@ -29,12 +29,12 @@ return{
 		local error_func = function()
 			local r = Random(12345)
 		end
-		unitTest:assert_error(error_func, "Error: Parameters must be named.")
+		unitTest:assert_error(error_func, namedParametersMsg())
 
 		local error_func = function()
 			local r = Random{x = 12345}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'x' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("x"))
 	end,
 	integer = function(unitTest)
 		local randomObj = Random{}
@@ -42,12 +42,12 @@ return{
 		local error_func = function()
 			randomObj:integer("terralab")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected number or nil, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number or nil", "terralab"))
 
 		local error_func = function()
 			randomObj:integer(2, "terralab")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected number or nil, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number or nil", "terralab"))
 	end,
 	number = function(unitTest)
 		local randomObj = Random{}
@@ -55,19 +55,19 @@ return{
 		local error_func = function()
 			randomObj:number("terralab")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected number or nil, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number or nil", "terralab"))
 
 		local error_func = function()
 			randomObj:number(2.5, "terralab")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected number or nil, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number or nil", "terralab"))
 	end,
 	reSeed = function(unitTest)
 		local randomObj = Random{}
 		local error_func = function()
 			randomObj:reSeed("terralab")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "terralab"))
 	end
 }
 

@@ -42,7 +42,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'source' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("source"))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -51,7 +51,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'source' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("source", "string", 5))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -61,7 +61,7 @@ return{
 			}
 		end
 		-- TODO: implement a better error msg, as this is not a file extension.
-		unitTest:assert_error(error_func, "Error: File extension 'teste1' is not supported.")
+		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("source", "teste1"))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -70,7 +70,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assert_error(error_func, "Error: File extension 'abc' is not supported.")
+		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("source", "abc"))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -79,7 +79,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 6))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -88,7 +88,7 @@ return{
 				bidirect = 13
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'bidirect' expected boolean, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("bidirect", "boolean", 13))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -96,7 +96,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.")
+		unitTest:assert_error(error_func, "This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.")
 		
 		error_func = function()
 			env:loadNeighborhood{
@@ -104,7 +104,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: File extension 'teste' is not supported.")
+		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("source", "teste"))
 	end
 }
 

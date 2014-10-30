@@ -26,54 +26,44 @@
 
 return {
 	Agent = function(unitTest)
-		local test_function = function()
+		local error_func = function()
 			local ag1 = Agent{id = 123}
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter 'id' expected string or nil, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("id", "string or nil", 123))
 	end,
 	add = function(unitTest)
 		local ag1 = Agent{}
 
-		local test_function = function()
+		local error_func = function()
 			ag1:add()
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected State or Trajectory, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "State or Trajectory", nil))
 
-		test_function = function()
+		error_func = function()
 			ag1:add(123)
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected State or Trajectory, got number.")
-
-		test_function = function()
-			ag1:add("notstate")
-		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected State or Trajectory, got string.")
-
-		test_function = function()
-			ag1:add(ag1)
-		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected State or Trajectory, got Agent.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "State or Trajectory", 123))
 	end,
 	addSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
 
-		local test_function = function()
+		local error_func = function()
 			ag1:addSocialNetwork(nil,"friends")
 		end
-		unitTest:assert_error(test_function, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
-		local test_function = function()
+		local error_func = function()
 			local ag1 = Agent{}
 			ag1:addSocialNetwork({},"friends")
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected SocialNetwork, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "SocialNetwork", {}))
 
 		local ag1 = Agent{}
 		local sn = SocialNetwork{}
-		local test_function = function()
-			ag1:addSocialNetwork(sn,123)
+		local error_func = function()
+			ag1:addSocialNetwork(sn, 123)
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#2' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
 	end,
 	enter = function(unitTest)
 		local ag1 = Agent{}
@@ -82,12 +72,12 @@ return {
 
 		myEnv:createPlacement{strategy = "void", name = "placement"}
 		local cell = cs.cells[1]
-		local test_function = function()
+		local error_func = function()
 			ag1:enter(nil, "placement")
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected Cell, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", nil))
 
-		local test_function = function()
+		local error_func = function()
 			local ag1 = Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
@@ -96,7 +86,7 @@ return {
 			cell = cs.cells[1]
 			ag1:enter({}, "placement")
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected Cell, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", {}))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -104,10 +94,10 @@ return {
 
 		myEnv:createPlacement{strategy = "void", name = "placement"}
 		cell = cs.cells[1]
-		local test_function = function()
+		local error_func = function()
 			ag1:enter(cell, 123)
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#2' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
 	end,
 	execute = function(unitTest)
 		local ag1 = Agent{
@@ -116,12 +106,12 @@ return {
 				id = "first"
 			},
 		}
-		local test_function = function()
+		local error_func = function()
 			ag1:execute(nil)
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected Event, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event", nil))
 
-		local test_function = function()
+		local error_func = function()
 			ag1 = Agent{
 				id = "MyFirst",
 				State{
@@ -130,24 +120,24 @@ return {
 			}
 			ag1:execute({})
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected Event, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event", {}))
 	end,
 	getId = function(unitTest)
 		local ag1 = Agent{}
-		local test_function = function()
+		local error_func = function()
 			ag1:getId()
 		end
-		unitTest:assert_error(test_function, "Error: Function 'getId' is deprecated. Use '.id' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getId", ".id"))
 	end,
 	getSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
 
 		local sn = SocialNetwork{}
 		ag1:addSocialNetwork(sn)
-		local test_function = function()
+		local error_func = function()
 			sn2 = ag1:getSocialNetwork{}
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected string, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", {}))
 
 		local ag1 = Agent{}
 		sn = SocialNetwork{}
@@ -157,7 +147,7 @@ return {
 		unitTest:assert_nil(ag1:getSocialNetwork("notfriends"))	
 	end,
 	leave = function(unitTest)
-		local test_function = function()
+		local error_func = function()
 			local ag1 = Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
@@ -167,9 +157,9 @@ return {
 			ag1:enter(cell, "placement")
 			ag1:leave(cell, {})
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#2' expected string, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", {}))
 
-		local test_function = function()
+		local error_func = function()
 			local ag1 = Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
@@ -179,7 +169,7 @@ return {
 			ag1:enter(cell, "placement")
 			ag1:leave(cell, 123)
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#2' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -188,13 +178,13 @@ return {
 		myEnv:createPlacement{strategy = "void", name = "placement"}
 		local cell = cs.cells[1]
 		ag1:enter(cell,"placement")
-		local test_function = function()
+		local error_func = function()
 			ag1:leave(cell,"notplacement")
 		end
-		unitTest:assert_error(test_function, "Error: Value 'notplacement' not found for parameter '#1'.")
+		unitTest:assert_error(error_func, valueNotFoundMsg(1, "notplacement"))
 	end,
 	message = function(unitTest)
-		local test_function = function()
+		local error_func = function()
 			local ag = Agent{}
 
 			local sc = Society{instance = ag, quantity = 2}
@@ -202,9 +192,9 @@ return {
 
 			ag1:message()
 		end
-		unitTest:assert_error(test_function, "Error: Parameter must be a table.")
+		unitTest:assert_error(error_func, tableParameterMsg())
 
-		local test_function = function()
+		local error_func = function()
 			local ag = Agent{}
 
 			local sc = Society{instance = ag, quantity = 2}
@@ -212,45 +202,46 @@ return {
 
 			ag1:message(123)
 		end
-		unitTest:assert_error(test_function, "Error: Parameters must be named.")
+		unitTest:assert_error(error_func, namedParametersMsg())
 
 		local ag = Agent{}
 		local sc = Society{instance = ag, quantity = 2}
 		local ag1 = sc.agents[1]		
-		local test_function = function()
+		local error_func = function()
 			ag1:message{}
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter 'receiver' expected Agent, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("receiver", "Agent"))
 
 		local ag = Agent{}	
 		local sc = Society{instance = ag, quantity = 2}
 		local ag1 = sc.agents[1]		
 		local ag2 = sc.agents[2]		
-		unitTest:assert_error(function()
+		error_func = function()
 			ag1:message{
 				receiver = ag2,
 				delay = "not_number",
 				content = "money"
 			}
+		end
 
-		end,"Error: Incompatible types. Parameter 'delay' expected positive integer number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("delay", "positive integer number", "money"))
 
 		local ag = Agent{}
 
 		sc = Society{instance = ag, quantity = 2}
 		local ag1 = sc.agents[1]		
 		local ag2 = sc.agents[2]		
-		local test_function = function()
+		local error_func = function()
 			ag1:message{
 				receiver = ag2,
 				delay = -1,
 				content = "money"
 			}
 		end
-		unitTest:assert_error(test_function, "Error: Incompatible values. Parameter 'delay' expected positive integer number, got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("delay", "positive integer number", -1))
 	end,
 	move = function(unitTest)
-		local test_function = function()
+		local error_func = function()
 			local ag1 = Agent{}
 			local cs = CellularSpace{ xdim = 3}
 			local myEnv = Environment {cs, ag1}
@@ -261,7 +252,7 @@ return {
 			local c1 = cs.cells[4]
 			ag1:move()
 		end
-		unitTest:assert_error(test_function, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		local ag1 = Agent{}
 		local ag2 = Agent{}
@@ -275,7 +266,7 @@ return {
 		local error_func = function()
 			ag1:move(ag2, "renting")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got Agent.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", ag2))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -287,7 +278,7 @@ return {
 		local error_func = function()
 			ag1:enter(c1)
 		end
-		unitTest:assert_error(error_func, "Error: Placement 'placement' was not found.")
+		unitTest:assert_error(error_func, "Placement 'placement' was not found.")
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -298,13 +289,12 @@ return {
 
 		local c1 = cs.cells[1]
 		ag1:enter(c1, "renting")
-		--ag1:enter(c1,nil)
 		
-		local test_function = function()
+		local error_func = function()
 			ag1:move(c1, 123)
 		end
 
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#2' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -315,10 +305,10 @@ return {
 		ag1:enter(c1, "renting")
 		c1 = cs.cells[4]
 
-		local test_function = function()
+		local error_func = function()
 			ag1:move(c1,"not_placement")
 		end
-		unitTest:assert_error(test_function, "Error: Value 'not_placement' not found for parameter '#2'.")
+		unitTest:assert_error(error_func, valueNotFoundMsg(2, "not_placement"))
 	end,
 	notify = function(unitTest)
 		local ag = Agent{x = 1, y = 1}
@@ -326,12 +316,12 @@ return {
 		local error_func = function()
 			ag:notify("not_int")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
 
 		error_func = function()
 			ag:notify(-1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
 	end,
 	randomWalk = function(unitTest)
 		local ag1 = Agent{}
@@ -341,24 +331,24 @@ return {
 		myEnv:createPlacement{strategy = "void", name = "placement"}
 		local c1 = cs.cells[1]
 		ag1:enter(c1)
-		local test_function = function()
+		local error_func = function()
 			ag1:randomWalk()
 		end
-		unitTest:assert_error(test_function, "Error: Function 'randomWalk' is deprecated. Use 'walk' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("randomWalk", "walk"))
 	end,
 	reproduce = function(unitTest)
 		local a = Agent{}
 		local error_func = function()
 			a:reproduce()
 		end
-		unitTest:assert_error(error_func, "Error: Agent should belong to a Society to be able to reproduce.")
+		unitTest:assert_error(error_func, "Agent should belong to a Society to be able to reproduce.")
 	end,
 	setId = function(unitTest)
 		local ag1 = Agent{}
-		local test_function = function()
+		local error_func = function()
 			ag1:setId("aa")
 		end
-		unitTest:assert_error(test_function, "Error: Function 'setId' is deprecated. Use '.id' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("setId", ".id"))
 	end,
 	walk = function(unitTest)
 		local ag1 = Agent{}
@@ -368,12 +358,12 @@ return {
 		myEnv:createPlacement{strategy = "void", name = "placement"}
 		local c1 = cs.cells[1]
 		ag1:enter(c1)
-		local test_function = function()
+		local error_func = function()
 			ag1:walk()
 		end
-		unitTest:assert_error(test_function, "Error: Value '1' not found for parameter '#2'.")
+		unitTest:assert_error(error_func, valueNotFoundMsg(2, "1"))
 
-		local test_function = function()
+		local error_func = function()
 			local ag1 = Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
@@ -384,7 +374,7 @@ return {
 			ag1:walk(123)
 		end
 
-		unitTest:assert_error(test_function, "Error: Incompatible types. Parameter '#1' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 123))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -393,10 +383,10 @@ return {
 		myEnv:createPlacement{strategy = "void", name = "placement"}
 		c1 = cs.cells[1]
 		ag1:enter(c1,"placement")
-		local test_function = function()
+		local error_func = function()
 			ag1:walk("123")
 		end
-		unitTest:assert_error(test_function, "Error: Value '123' not found for parameter '#1'.")
+		unitTest:assert_error(error_func, valueNotFoundMsg(1, "123"))
 	end
 }
 

@@ -31,12 +31,12 @@ return{
 		local error_func = function()
 			env:add(nil)
 		end
-		unitTest:assert_error(error_func,"Error: Incompatible types. Parameter '#1' expected Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory"))
 
 		error_func = function()
 			env:add{}
 		end
-		unitTest:assert_error(error_func,"Error: Incompatible types. Parameter '#1' expected Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory", {}))
 	end,
 	createPlacement = function(unitTest)
 		local ag1 = Agent{}
@@ -53,33 +53,33 @@ return{
 		local error_func = function()
 			env:createPlacement{name = "placement", max = "13"}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'max' expected positive integer number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("max", "positive integer number", "13"))
 
 		error_func = function()
 			env:createPlacement{strategy = 15, name = "placement", max = 13}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'strategy' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("strategy", "string", 13))
 
 		error_func = function()
 			env:createPlacement{strategy = "teste1", name = "placement", max = 13}
 		end
-		unitTest:assert_error(error_func, "Error: 'teste1' is an invalid value for parameter 'strategy'. It must be a string from the set ['random', 'uniform', 'void'].")
+		unitTest:assert_error(error_func, "'teste1' is an invalid value for parameter 'strategy'. It must be a string from the set ['random', 'uniform', 'void'].")
 
 		error_func = function()
 			-- TODO: se trocar o name abaixo por placement ele da erro dizendo que este placement ja existe. verificar.
 			env:createPlacement{strategy = "unifor", name = "placement2", max = 13}
 		end
-		unitTest:assert_error(error_func, "Error: 'unifor' is an invalid value for parameter 'strategy'. Do you mean 'uniform'?")
+		unitTest:assert_error(error_func, "'unifor' is an invalid value for parameter 'strategy'. Do you mean 'uniform'?")
 
 		error_func = function()
 			env:createPlacement{strategy = "random", name = 15, max = 13}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 13))
 
 		error_func = function()
 			env:createPlacement{strategy = "random", name = "placement", max = -13}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'max' expected positive integer number, got -13.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("max", "positive integer number", -13))
 
 		local cs = CellularSpace{xdim = 10}
 		local ag1 = Agent{}
@@ -90,14 +90,14 @@ return{
 		error_func = function()
 			env:createPlacement{strategy = "random"}
 		end
-		unitTest:assert_error(error_func, "Error: The Environment does not contain a CellularSpace.")
+		unitTest:assert_error(error_func, "The Environment does not contain a CellularSpace.")
 
 		env = Environment{cs}
 
 		error_func = function()
 			env:createPlacement{strategy = "random"}
 		end
-		unitTest:assert_error(error_func, "Error: Could not find a behavioral entity (Society or Agent) within the Environment.")
+		unitTest:assert_error(error_func, "Could not find a behavioral entity (Society or Agent) within the Environment.")
 
 		env = Environment{cs, sc1}
 		env:createPlacement{strategy = "random"}
@@ -105,7 +105,7 @@ return{
 		error_func = function()
 			env:createPlacement{strategy = "random"}
 		end
-		unitTest:assert_error(error_func, "Error: There is a Society within this Environment that already has this placement.")
+		unitTest:assert_error(error_func, "There is a Society within this Environment that already has this placement.")
 	end,
 	execute = function(unitTest)
 		local env = Environment{}
@@ -114,7 +114,7 @@ return{
 			env:execute(nil)
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected number, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number"))
 	end,
 	Environment = function(unitTest)
 		local state1 = State{
@@ -173,7 +173,7 @@ return{
 			envmt = Environment{at1, cs}
 		end
 
-		unitTest:assert_error(error_func, "Error: CellularSpace must be added before any Automaton.")
+		unitTest:assert_error(error_func, "CellularSpace must be added before any Automaton.")
 	end,
 	notify = function(unitTest)
 		local env = Environment{}
@@ -181,12 +181,12 @@ return{
 		local error_func = function()
 			env:notify("not_int")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
 
 		error_func = function()
 			env:notify(-1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
 	end
 
 }

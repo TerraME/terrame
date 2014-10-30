@@ -51,7 +51,7 @@ return{
 				layer = "cells90x90"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'database' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("database"))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -65,7 +65,7 @@ return{
 				database = {}
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'database' expected string, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("database", "string", {}))
 
 		if dbType == "ado" then
 			error_func = function()
@@ -80,7 +80,7 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Error: Parameter 'database' does not support 'terralab'.")
+			unitTest:assert_error(error_func, "Parameter 'database' does not support 'terralab'.")
 		else
 			error_func = function()
 				local cs = CellularSpace{
@@ -94,11 +94,11 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Error: Unknown database 'terralab'.")
+			unitTest:assert_error(error_func, "Unknown database 'terralab'.")
 
 --[[
 TODO: the test above returns the error
-  'Error: Wrong TerraLib database version, expected '4.1.2', got '.
+  'Wrong TerraLib database version, expected '4.1.2', got '.
 Please, use TerraView to update the '' database.'
 However, the database does not exist!
 
@@ -114,7 +114,7 @@ However, the database does not exist!
 					database = ""
 				}
 			end
-			unitTest:assert_error(error_func, "Error: Unknown database 'terralab'.")
+			unitTest:assert_error(error_func, "Unknown database 'terralab'.")
 --]]
 		end
 
@@ -130,21 +130,7 @@ However, the database does not exist!
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'layer' expected string, got number.")
-
-		error_func = function()
-			local cs = CellularSpace{
-				dbType = mdbType,
-				host = mhost,
-				user = muser,
-				password = mpassword,
-				port = mport,
-				theme = "cells90x90",
-				layer = 3,
-				database = mdatabase
-			}
-		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'layer' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("layer", "string", 3))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -158,7 +144,7 @@ However, the database does not exist!
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Can't open input layer 'terralab'.")
+		unitTest:assert_error(error_func, "Can't open input layer 'terralab'.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -171,7 +157,7 @@ However, the database does not exist!
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'theme' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("theme"))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -185,7 +171,7 @@ However, the database does not exist!
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'theme' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("theme", "string", 2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -198,7 +184,7 @@ However, the database does not exist!
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Can't open input theme 'terralab'.")
+		unitTest:assert_error(error_func, "Can't open input theme 'terralab'.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -212,7 +198,7 @@ However, the database does not exist!
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'select' expected table, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 34))
 
 		--TODO: add this error
 		--[[
@@ -228,7 +214,7 @@ However, the database does not exist!
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Invalid 'select'...")
+		unitTest:assert_error(error_func, "Invalid 'select'...")
 		--]]
 
 		error_func = function()
@@ -244,7 +230,7 @@ However, the database does not exist!
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'where' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("where", "string", 34))
 
 		-- TODO: add the error below
 		--[[
@@ -261,7 +247,7 @@ However, the database does not exist!
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Error: bad SCL command.")
+		unitTest:assert_error(error_func, "bad SCL command.")
 		--]]
 
 
@@ -277,7 +263,7 @@ However, the database does not exist!
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'user' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("user", "string", 2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -291,7 +277,7 @@ However, the database does not exist!
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'password' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("password", "string", 2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -305,7 +291,7 @@ However, the database does not exist!
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'dbType' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("dbType", "string", 2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -319,7 +305,7 @@ However, the database does not exist!
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Error: 'post' is an invalid value for parameter 'dbType'. It must be a string from the set ['csv', 'map', 'mdb', 'mysql', 'shp', 'virtual'].")
+		unitTest:assert_error(error_func, "'post' is an invalid value for parameter 'dbType'. It must be a string from the set ['csv', 'map', 'mdb', 'mysql', 'shp', 'virtual'].")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -333,7 +319,7 @@ However, the database does not exist!
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'host' expected string, got number.") 
+		unitTest:assert_error(error_func, incompatibleTypeMsg("host", "string", 34))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -347,7 +333,7 @@ However, the database does not exist!
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'port' expected number, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("port", "number", {}))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -361,7 +347,7 @@ However, the database does not exist!
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'port' expected positive integer number, got 34.2.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("port", "positive integer number", 34.2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -376,7 +362,7 @@ However, the database does not exist!
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'autoload' expected boolean, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("autoload", "boolean", 123))
 
 		if mdbType ~= "ado" then
 			error_func = function()
@@ -391,7 +377,7 @@ However, the database does not exist!
 					database = "cabeca"
 				}
 			end
-			unitTest:assert_error(error_func, "Error: Access denied for user ''@'localhost' to database 'cabeca'.", 24)
+			unitTest:assert_error(error_func, "Access denied for user ''@'localhost' to database 'cabeca'.", 24)
 
 			error_func = function()
 				local cs = CellularSpace{
@@ -404,7 +390,7 @@ However, the database does not exist!
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Error: Parameter 'password' is mandatory.")
+			unitTest:assert_error(error_func, mandatoryArgumentMsg("password"))
 
 			error_func = function()
 				local cs = CellularSpace{
@@ -418,7 +404,7 @@ However, the database does not exist!
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Error: Access denied for user 'root'@'localhost' (using password: YES).")
+			unitTest:assert_error(error_func, "Access denied for user 'root'@'localhost' (using password: YES).")
 		
 			error_func = function()
 				local cs = CellularSpace{
@@ -432,7 +418,7 @@ However, the database does not exist!
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Error: Can't connect to MySQL server on '321456' (XX).", 2)
+			unitTest:assert_error(error_func, "Can't connect to MySQL server on '321456' (XX).", 2)
 		end
 	end,
 	loadNeighborhood = function(unitTest)
@@ -457,27 +443,27 @@ However, the database does not exist!
 		local error_func = function()
 			cs:loadNeighborhood()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter for 'loadNeighborhood' must be a table.")
+		unitTest:assert_error(error_func, "Parameter for 'loadNeighborhood' must be a table.")
 	
 		error_func = function()
 			cs:loadNeighborhood{}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'source' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("source"))
 		
 		error_func = function()
 			cs:loadNeighborhood{source = 123}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'source' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("source", "string", 123))
 
 		error_func = function()
 			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm"}
 		end
-		unitTest:assert_error(error_func, "Error: Resource 'neighCabecaDeBoi900x900.gpm' not found for parameter 'source'.")
+		unitTest:assert_error(error_func, resourceNotFoundMsg("source", "neighCabecaDeBoi900x900.gpm"))
 	
 		error_func = function()
 			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm", name = 22}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 22))
 	end,
 	save = function(unitTest)
 		local config = getConfig()
@@ -501,37 +487,37 @@ However, the database does not exist!
 		local error_func = function()
 			cs:save("terralab", "themeName", "height_")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected positive integer number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "positive integer number", "terralab"))
 	
 		error_func = function()
 			cs:save(-18, "themeName", "height_")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected positive integer number, got -18.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive integer number", -18))
 	
 		error_func = function()
 			cs:save(3, nil, "height_")
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#2' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
 	
 		error_func = function()
 			cs:save(3, 2, "height_")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		error_func = function()
 			cs:save(18, "themeName")
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#3' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(3))
 	
 		error_func = function()
 			cs:save(18, "themeName", 3)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#3' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "string", 3))
 		
 		error_func = function()
 			cs:save(18, "themeName", "terralab")
 		end
-		unitTest:assert_error(error_func, "Error: Attribute 'terralab' does not exist in the CellularSpace.")
+		unitTest:assert_error(error_func, "Attribute 'terralab' does not exist in the CellularSpace.")
 	end,
 	loadNeighborhood = function(unitTest)	
 		local config = getConfig()
@@ -557,17 +543,17 @@ However, the database does not exist!
 		local error_func = function()
 			cs:loadNeighborhood{source = "arquivo.gpm"}
 		end
-		unitTest:assert_error(error_func, "Error: Resource 'arquivo.gpm' not found for parameter 'source'.")
+		unitTest:assert_error(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
 
 		error_func = function()
 			cs:loadNeighborhood{source = "gpmlinesDbEmas_invalid.teste"}
 		end
-		unitTest:assert_error(error_func, "Error: The file extension 'teste' is not suported.")
+		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("source", "teste"))
 
 		error_func = function()
 			cs:loadNeighborhood{source = file("neighCabecaDeBoi900x900_invalid.gpm", "base")}
 		end
-		unitTest:assert_error(error_func, "Error: This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
+		unitTest:assert_error(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
 
 		local mfile = file("neighCabecaDeBoi900x900.gpm", "base")
 
@@ -577,7 +563,7 @@ However, the database does not exist!
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cells900x900'.")
+		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cells900x900'.")
 
 		mfile = file("neighCabecaDeBoi900x900.gal", "base")
 
@@ -587,7 +573,7 @@ However, the database does not exist!
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cells900x900'.")
+		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cells900x900'.")
 
 		mfile = file("neighCabecaDeBoi900x900.gwt", "base")
 
@@ -597,7 +583,7 @@ However, the database does not exist!
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cells900x900'.")
+		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cells900x900'.")
 	end
 }
 

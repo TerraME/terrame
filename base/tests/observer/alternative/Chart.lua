@@ -30,47 +30,47 @@ return{
 		local error_func = function()
 			Chart{}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'subject' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
 
 		local error_func = function()
 			Chart{subject = c, select = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'select' expected table, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 5))
 
 		local error_func = function()
 			Chart{subject = c, select = "mvalue"}
 		end
-		unitTest:assert_error(error_func, "Error: Selected element 'mvalue' does not belong to the subject.")
+		unitTest:assert_error(error_func, "Selected element 'mvalue' does not belong to the subject.")
 
 		local error_func = function()
 			Chart{subject = c, xLabel = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'xLabel' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("xLabel", "string", 5))
 
 		local error_func = function()
 			Chart{subject = c, yLabel = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'yLabel' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("yLabel", "string", 5))
 
 		local error_func = function()
 			Chart{subject = c, title = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'title' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("title", "string", 5))
 
 		local error_func = function()
 			Chart{subject = c, xAxis = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'xAxis' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("xAxis", "string", 5))
 
 		local error_func = function()
 			Chart{subject = c, xwc = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'xwc' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("xwc"))
 
 		local error_func = function()
 			Chart{subject = c, select = {}}
 		end
-		unitTest:assert_error(error_func, "Error: Charts must select at least one attribute.")
+		unitTest:assert_error(error_func, "Charts must select at least one attribute.")
 
 		local unit = Cell{
 			count = 0
@@ -85,19 +85,19 @@ return{
 		local error_func = function()
 			Chart{subject = world}
 		end
-		unitTest:assert_error(error_func, "Error: The subject does not have at least one valid numeric attribute to be used.")
+		unitTest:assert_error(error_func, "The subject does not have at least one valid numeric attribute to be used.")
 
 		world.msum = 5
 
 		local error_func = function()
 			Chart{subject = world, label = {"sss"}}
 		end
-		unitTest:assert_error(error_func, "Error: As select is nil, it is not possible to use label.")
+		unitTest:assert_error(error_func, "As select is nil, it is not possible to use label.")
 
 		local error_func = function()
 			Chart{subject = world, select = "value"}
 		end
-		unitTest:assert_error(error_func, "Error: Selected element 'value' should be a number or function, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("value", "number or function", "value"))
 	end
 }
 

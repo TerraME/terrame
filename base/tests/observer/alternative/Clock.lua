@@ -32,17 +32,17 @@ return{
 		local error_func = function()
 			Clock{}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'subject' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
 
 		local error_func = function()
 			Clock{subject = Cell{}}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'subject' expected Timer, got Cell.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("subject", "Timer", Cell{}))
 
 		local error_func = function()
 			Clock{subject = t, xwc = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'xwc' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("xwc"))
 	end
 }
 

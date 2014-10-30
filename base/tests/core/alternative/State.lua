@@ -52,7 +52,7 @@ return{
 						self.x = self.x + 1
 					end}
 			}
-		end,"Error: Incompatible types. Parameter 'id' expected string, got table.")
+		end, incompatibleTypeMsg("id", "string", {}))
 
 		unitTest:assert_error(function()
 			State{
@@ -66,7 +66,7 @@ return{
 						self.x = self.x + 1
 					end}
 			}
-		end,"Error: Incompatible types. Parameter 'id' expected string, got number.")
+		end, incompatibleTypeMsg("id", "string", 123))
 
 		local s = State{
 			id="IdState",

@@ -33,33 +33,33 @@ return{
 		local error_func = function()
 			sn:add()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			sn:add(112)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent", 112))
 
 		error_func = function()
 			sn:add(ag1, "not_number")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected positive number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "positive number", "not_number"))
 
 		error_func = function()
 			sn:add(ag1, -1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#2' expected positive number, got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", -1))
 
 		local error_func = function()
 			sn:add(ag1)
 		end
-		unitTest:assert_error(error_func, "Error: Agent should have an id in order to be added to a SocialNetwork.")
+		unitTest:assert_error(error_func, "Agent should have an id in order to be added to a SocialNetwork.")
 
 		local error_func = function()
 			sn:add(ag2)
 			sn:add(ag2)
 		end
-		unitTest:assert_error(error_func, "Error: Agent '2' already belongs to the SocialNetwork.")
+		unitTest:assert_error(error_func, "Agent '2' already belongs to the SocialNetwork.")
 	end,
 	getWeight = function(unitTest)
 		local ag1 = Agent{id = "1"}
@@ -70,22 +70,22 @@ return{
 		local error_func = function()
 			sn:getWeight()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			sn:getWeight(cell)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent, got Cell.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent", cell))
 
 		error_func = function()
 			sn:getWeight(ag2)
 		end
-		unitTest:assert_error(error_func, "Error: Agent does not belong to the SocialNetwork because it does not have an id.")
+		unitTest:assert_error(error_func, "Agent does not belong to the SocialNetwork because it does not have an id.")
 
 		error_func = function()
 			sn:getWeight(ag1)
 		end
-		unitTest:assert_error(error_func, "Error: Agent '1' does not belong to the SocialNetwork.")
+		unitTest:assert_error(error_func, "Agent '1' does not belong to the SocialNetwork.")
 	end,
 	isConnection = function(unitTest)
 		local ag1 = Agent{id = "1"}
@@ -94,12 +94,12 @@ return{
 		local error_func = function()
 			sn:isConnection()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 		
 		error_func = function()
 			sn:isConnection(123)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent", 123))
 	end,
 	remove = function(unitTest)
 		local ag1 = Agent{id = "1"}
@@ -108,22 +108,17 @@ return{
 		local error_func = function()
 			sn:remove()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			sn:remove(123)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent, got number.")
-
-		error_func = function()
-			sn:remove(123)
-		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent", 123))
 
 		local error_func = function()
 			sn:remove(ag1)
 		end
-		unitTest:assert_error(error_func, "Error: Trying to remove an Agent that does not belong to the SocialNetwork.")
+		unitTest:assert_error(error_func, "Trying to remove an Agent that does not belong to the SocialNetwork.")
 	end,
 	sample = function(unitTest)
 		local sn = SocialNetwork()
@@ -132,7 +127,7 @@ return{
 		local error_func = function()
 			sn:sample()
 		end
-		unitTest:assert_error(error_func, "Error: It is not possible to sample the SocialNetwork because it is empty.")
+		unitTest:assert_error(error_func, "It is not possible to sample the SocialNetwork because it is empty.")
 	end,
 	setWeight = function(unitTest)
 		local ag1 = Agent{id = "1"}
@@ -143,37 +138,37 @@ return{
 		local error_func = function()
 			sn:setWeight()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			sn:setWeight(cell)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent, got Cell.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent", cell))
 
 		error_func = function()
 			sn:setWeight(ag1)
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#2' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			sn:setWeight(ag1, "notnumber")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected positive number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "positive number", "notnumber"))
 
 		error_func = function()
 			sn:setWeight(ag1, -1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#2' expected positive number, got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", -1))
 
 		error_func = function()
 			sn:setWeight(ag2, 0.5)
 		end
-		unitTest:assert_error(error_func, "Error: Agent does not belong to the SocialNetwork because it does not have an id.")
+		unitTest:assert_error(error_func, "Agent does not belong to the SocialNetwork because it does not have an id.")
 
 		error_func = function()
 			sn:setWeight(ag1, 0.5)
 		end
-		unitTest:assert_error(error_func, "Error: Agent '1' does not belong to the SocialNetwork.")
+		unitTest:assert_error(error_func, "Agent '1' does not belong to the SocialNetwork.")
 	end,
 	size = function(unitTest)
 		local sn = SocialNetwork{}
@@ -181,19 +176,19 @@ return{
 		local error_func = function()
 			sn:size()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end,
 	SocialNetwork = function(unitTest)
 		local error_func = function()
 			sn = SocialNetwork(2)
 		end
 		-- TODO: melhorar este erro abaixo. Fazer o mesmo para o neighborhood.
-		unitTest:assert_error(error_func, "Error: Parameters must be named.")
+		unitTest:assert_error(error_func, namedParametersMsg())
 
 		local error_func = function()
 			sn = SocialNetwork{id = "3"}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'id' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("id"))
 	end
 }
 

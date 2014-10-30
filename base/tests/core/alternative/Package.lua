@@ -29,42 +29,42 @@ return{
 		local error_func = function()
 			customError(2)
 		end
-		unitTest:assert_error(error_func, "Error: #1 should be a string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	customWarning = function(unitTest)
 		local error_func = function()
 			customWarning(2)
 		end
-		unitTest:assert_error(error_func, "Error: #1 should be a string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	defaultTableValue = function(unitTest)
 		local t = {x = 5}
 		local error_func = function()
 			defaultTableValue(t, "x", false)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'x' expected boolean, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("x", "boolean", 5))
 
 		local error_func = function()
 			defaultTableValue(t, "x", 5)
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'x' could be removed as it is the default value (5).")
+		unitTest:assert_error(error_func, defaultValueMsg("x", 5))
 	end,
 	defaultValueWarning = function(unitTest)
 		local error_func = function()
 			defaultValueWarning(2)
 		end
-		unitTest:assert_error(error_func, "Error: #1 should be a string.")
+		unitTest:assert_error(error_func, "#1 should be a string.")
 	end,
 	deprecatedFunctionWarning = function(unitTest)
 		local error_func = function()
 			deprecatedFunctionWarning(2)
 		end
-		unitTest:assert_error(error_func, "Error: #1 should be a string.")
+		unitTest:assert_error(error_func, "#1 should be a string.")
 
 		error_func = function()
 			deprecatedFunctionWarning("test.", -1)
 		end
-		unitTest:assert_error(error_func, "Error: #2 should be a string.")
+		unitTest:assert_error(error_func, "#2 should be a string.")
 	end
 }
 

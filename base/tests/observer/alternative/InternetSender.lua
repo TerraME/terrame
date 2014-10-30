@@ -30,84 +30,84 @@ return{
 		local error_func = function()
 			InternetSender{}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'subject' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
 
 		error_func = function()
 			InternetSender{subject = c, select = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'select' expected table, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 5))
 
 		error_func = function()
 			InternetSender{subject = c, select = "mvalue"}
 		end
-		unitTest:assert_error(error_func, "Error: Selected element 'mvalue' does not belong to the subject.")
+		unitTest:assert_error(error_func, "Selected element 'mvalue' does not belong to the subject.")
 
 		error_func = function()
 			InternetSender{subject = c, host = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'host' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("host", "string", 5))
 
 		error_func = function()
 			InternetSender{subject = c, host = "localhost"}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'host' could be removed as it is the default value (localhost).")
+		unitTest:assert_error(error_func, defaultValueMsg("host", "localhost"))
 
 		error_func = function()
 			InternetSender{subject = c, port = "5"}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'port' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("port", "number", "5"))
 
 		error_func = function()
 			InternetSender{subject = c, port = 456456}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'port' could be removed as it is the default value (456456).")
+		unitTest:assert_error(error_func, defaultValueMsg("port", "456456"))
 
 		error_func = function()
 			InternetSender{subject = c, protocol = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'protocol' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("protocol", "string", 5))
 
 		error_func = function()
 			InternetSender{subject = c, protocol = "tcp"}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'protocol' could be removed as it is the default value (tcp).")
+		unitTest:assert_error(error_func, defaultValueMsg("protocol", "tcp"))
 
 		error_func = function()
 			InternetSender{subject = c, protocol = "vdp"}
 		end
-		unitTest:assert_error(error_func, "Error: 'vdp' is an invalid value for parameter 'protocol'. Do you mean 'udp'?")
+		unitTest:assert_error(error_func, "'vdp' is an invalid value for parameter 'protocol'. Do you mean 'udp'?")
 
 		error_func = function()
 			InternetSender{subject = c, visible = 4}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'visible' expected boolean, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("visible", "boolean", 4))
 
 		error_func = function()
 			InternetSender{subject = c, visible = true}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'visible' could be removed as it is the default value (true).")
+		unitTest:assert_error(error_func, defaultValueMsg("visible", "true"))
 
 		error_func = function()
 			InternetSender{subject = c, compress = 4}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'compress' expected boolean, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("compress", "boolean", 4))
 
 		error_func = function()
 			InternetSender{subject = c, compress = true}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'compress' could be removed as it is the default value (true).")
+		unitTest:assert_error(error_func, defaultValueMsg("compress", "true"))
 
 		error_func = function()
 			InternetSender{subject = c, select = {}}
 		end
-		unitTest:assert_error(error_func, "Error: InternetSender must select at least one attribute.")
+		unitTest:assert_error(error_func, "InternetSender must select at least one attribute.")
 
 		local unit = Cell{}
 
 		error_func = function()
 			InternetSender{subject = unit}
 		end
-		unitTest:assert_error(error_func, "Error: The subject does not have at least one valid attribute to be used.")
+		unitTest:assert_error(error_func, "The subject does not have at least one valid attribute to be used.")
 	end
 }
 
