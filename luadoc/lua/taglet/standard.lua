@@ -5,11 +5,11 @@
 local assert, tostring, type = assert, tostring, type
 local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
-local printWarning, printNote, printError, print, attributes = printWarning, printNote, printError, print, attributes
+local printNote, printError, print, attributes = printNote, printError, print, attributes
 local sessionInfo = sessionInfo
 
 local s = sessionInfo().separator
-local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
+local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 local tags = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."taglet"..s.."standard"..s.."tags.lua")
 
 -------------------------------------------------------------------------------
@@ -529,7 +529,7 @@ local function exclude_undoc(tab, doc_report)
 		-- local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].tables + #tab[tab[i]].variables
 		local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].variables
 		if doc_blocs == 0 then
-			printError("File "..tab[tab[i]].name.." was not documented.")
+			printError("File "..tab[tab[i]].name.." is not documented.")
 			doc_report.undoc_files = doc_report.undoc_files + 1
 
 			tab[tab[i]] = nil
@@ -554,7 +554,7 @@ local function check_usage(files, doc_report)
 					table.insert(no_usage, file_name)
 				end
 				table.insert(no_usage[file_name], function_name)
-				printError("@usage definition for '" .. function_name .. "' was not found")
+				printError("Function '"..function_name.."' has no @usage definition")
 				doc_report.lack_usage = doc_report.lack_usage + 1
 			end
 		end

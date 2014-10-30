@@ -5,17 +5,17 @@
 
 local assert, type, tostring, ipairs = assert, type, tostring, ipairs
 local string, table = string, table
-local printWarning, printError = printWarning, printError
+local printError = printError
 
 local s = sessionInfo().separator
-local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
+local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 
 -------------------------------------------------------------------------------
 
 local function author (tag, block, text)
 	block[tag] = block[tag] or {}
 	if not text then
-		printError("Warning: author `name' not defined [["..text.."]]: skipping")
+		printError("Warning: author 'name' not defined [["..text.."]]: skipping")
 		return
 	end
 	table.insert (block[tag], text)
@@ -57,7 +57,7 @@ end
 
 local function field (tag, block, text)
 	if block["class"] ~= "table" then
-		printWarning("documenting `field' for block that is not a `table'")
+		printError("documenting 'field' for block that is not a 'table'")
 	end
 	block[tag] = block[tag] or {}
 
@@ -98,7 +98,7 @@ local function name (tag, block, text, doc_report)
 	end
 
 	if func_name and func_name ~= text then
-		printError(string.format("Block name conflict: `%s' -> `%s'", block[tag], text))
+		printError(string.format("Block name conflict: '%s' -> `%s'", block[tag], text))
 		doc_report.block_name_conflict = doc_report.block_name_conflict + 1
 	end
 	
@@ -116,7 +116,7 @@ local function param (tag, block, text, doc_report)
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	if not name then
-		printError("parameter `name' not defined [["..text.."]]: skipping")
+		printError("parameter 'name' not defined [["..text.."]]: skipping")
 		return
 	end
  
@@ -152,7 +152,7 @@ local function param (tag, block, text, doc_report)
 		end
 	end
 	if i == nil then
-		printError(string.format("Documenting undefined parameter `%s' in function '%s'", name, block.name))
+		printError(string.format("Documenting undefined parameter '%s' in function '%s'", name, block.name))
 		table.insert(block[tag], name)
 		doc_report.undefined_param = doc_report.undefined_param + 1
 	end
@@ -215,7 +215,7 @@ local function output (tag, block, text)
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	if not name then
-		printWarning("Warning: output `name' not defined [["..text.."]]: skipping")
+		printError("Warning: output 'name' not defined [["..text.."]]: skipping")
 		return
 	end
 

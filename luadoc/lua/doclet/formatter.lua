@@ -8,7 +8,7 @@
 
 local sessionInfo = sessionInfo
 local s = sessionInfo().separator
-local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
+local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 local assert, ipairs, type = assert, ipairs, type
 local string, table, printNote = string, table, printNote
 
