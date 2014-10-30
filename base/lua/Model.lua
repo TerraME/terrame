@@ -38,9 +38,9 @@ Model_ = {
 	-- @usage model:execute(20)
 	execute = function(self, finalTime)
 		if finalTime == nil then
-			mandatoryArgumentError("#1", 3)	
+			mandatoryArgumentError(1, 3)	
 		elseif type(finalTime) ~= "number" then 
-			incompatibleTypeError("#1", "number", finalTime)
+			incompatibleTypeError(1, "number", finalTime)
 		end
 		self.exec:execute(finalTime)
 	end,

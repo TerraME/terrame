@@ -180,7 +180,7 @@ return{
 		local test_function = function()
 			print(dead.a)
 		end
-		unitTest:assert_error(test_function, "Error: Trying to use a function or an attribute of a dead Agent.")
+		unitTest:assert_error(test_function, "Trying to use a function or an attribute of a dead Agent.")
 	end,
 	reproduce = function(unitTest)
 		local predator = Agent{

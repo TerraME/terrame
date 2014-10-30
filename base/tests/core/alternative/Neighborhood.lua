@@ -34,23 +34,23 @@ return{
 		local error_func = function()
 			neigh:add()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			neigh:add(112)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 112))
 
 		error_func = function()
 			neigh:add(cell1, "not_number")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "not_number"))
 
 		local error_func = function()
 			neigh:add(cell2)
 			neigh:add(cell2)
 		end
-		unitTest:assert_error(error_func, "Error: Cell (0,1) already belongs to the Neighborhood.")
+		unitTest:assert_error(error_func, "Cell (0,1) already belongs to the Neighborhood.")
 	end,
 	addCell = function(unitTest)
 		local neigh = Neighborhood()
@@ -58,7 +58,7 @@ return{
 		local error_func = function()
 			neigh:addCell()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'addCell' is deprecated. Use 'add' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("addCell", "add"))
 	end,
 	addNeighbor = function(unitTest)
 		local neigh = Neighborhood()
@@ -66,7 +66,7 @@ return{
 		local error_func = function()
 			neigh:addNeighbor()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'addNeighbor' is deprecated. Use 'add' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("addNeighbor", "add"))
 	end,
 	eraseCell = function(unitTest)
 		local neigh = Neighborhood()
@@ -74,7 +74,7 @@ return{
 		local error_func = function()
 			neigh:eraseCell()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'eraseCell' is deprecated. Use 'remove' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("eraseCell", "remove"))
 	end,
 	eraseNeighbor = function(unitTest)
 		local neigh = Neighborhood()
@@ -82,7 +82,7 @@ return{
 		local error_func = function()
 			neigh:eraseNeighbor()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'eraseNeighbor' is deprecated. Use 'remove' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("eraseNeighbor", "remove"))
 	end,
 	getCellWeight = function(unitTest)
 		local neigh = Neighborhood()
@@ -90,7 +90,7 @@ return{
 		local error_func = function()
 			neigh:getCellWeight()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'getCellWeight' is deprecated. Use 'getWeight' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCellWeight", "getWeight"))
 	end,
 	getNeighWeight = function(unitTest)
 		local neigh = Neighborhood()
@@ -98,7 +98,7 @@ return{
 		local error_func = function()
 			neigh:getNeighWeight()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'getNeighWeight' is deprecated. Use 'getWeight' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getNeighWeight", "getWeight"))
 	end,
 	getWeight = function(unitTest)
 		local cell1 = Cell{x = 0, y = 0}
@@ -108,17 +108,17 @@ return{
 		local error_func = function()
 			neigh:getWeight()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			neigh:getWeight(12345)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 12345))
 
 		error_func = function()
 			neigh:getWeight(cell1)
 		end
-		unitTest:assert_error(error_func, "Error: Cell (0,0) does not belong to the Neighborhood.")
+		unitTest:assert_error(error_func, "Cell (0,0) does not belong to the Neighborhood.")
 	end,
 	isNeighbor = function(unitTest)
 		local cell1 = Cell{}
@@ -127,23 +127,23 @@ return{
 		local error_func = function()
 			neigh:isNeighbor()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 		
 		error_func = function()
 			neigh:isNeighbor(123)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 123))
 	end,
 	Neighborhood = function(unitTest)
 		local error_func = function()
 			neigh = Neighborhood(2)
 		end
-		unitTest:assert_error(error_func, "Error: Parameters must be named.")
+		unitTest:assert_error(error_func, namedParametersMsg())
 
 		local error_func = function()
 			neigh = Neighborhood{id = "1"}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'id' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("id"))
 	end,
 	remove = function(unitTest)
 		local cell1 = Cell{}
@@ -152,22 +152,22 @@ return{
 		local error_func = function()
 			neigh:remove()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			neigh:remove(123)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 123))
 
 		error_func = function()
 			neigh:remove(123)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 123))
 
 		local error_func = function()
 			neigh:remove(cell1)
 		end
-		unitTest:assert_error(error_func, "Error: Trying to remove a Cell that does not belong to the Neighborhood.")
+		unitTest:assert_error(error_func, "Trying to remove a Cell that does not belong to the Neighborhood.")
 	end,
 	sample = function(unitTest)
 		local neigh = Neighborhood()
@@ -176,7 +176,7 @@ return{
 		local error_func = function()
 			neigh:sample()
 		end
-		unitTest:assert_error(error_func, "Error: It is not possible to sample the Neighborhood because it is empty.")
+		unitTest:assert_error(error_func, "It is not possible to sample the Neighborhood because it is empty.")
 
 		neigh:add(c)
 	end,
@@ -186,7 +186,7 @@ return{
 		local error_func = function()
 			neigh:setCellWeight()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'setCellWeight' is deprecated. Use 'setWeight' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("setCellWeight", "setWeight"))
 	end,
 	setCellNeighbor = function(unitTest)
 		local neigh = Neighborhood()
@@ -194,7 +194,7 @@ return{
 		local error_func = function()
 			neigh:setCellNeighbor()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'setCellNeighbor' is deprecated. Use 'remove and add' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("setCellNeighbor", "remove and add"))
 	end,
 	setNeighWeight = function(unitTest)
 		local neigh = Neighborhood()
@@ -202,7 +202,7 @@ return{
 		local error_func = function()
 			neigh:setNeighWeight()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'setNeighWeight' is deprecated. Use 'setWeight' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("setNeighWeight", "setWeight"))
 	end,
 	setWeight = function(unitTest)
 		local cell1 = Cell{}
@@ -212,27 +212,27 @@ return{
 		local error_func = function()
 			neigh:setWeight()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			neigh:setWeight(12345)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 12345))
 
 		error_func = function()
 			neigh:setWeight(cell1)
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#2' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			neigh:setWeight(cell1, "notnumber")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "notnumber"))
 
 		error_func = function()
 			neigh:setWeight(cell1, 0.5)
 		end
-		unitTest:assert_error(error_func, "Error: Cell (0,0) does not belong to the Neighborhood.")
+		unitTest:assert_error(error_func, "Cell (0,0) does not belong to the Neighborhood.")
 	end,
 	size = function(unitTest)
 		local neigh = Neighborhood()
@@ -240,7 +240,7 @@ return{
 		local error_func = function()
 			neigh:size()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end
 }
 

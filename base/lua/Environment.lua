@@ -104,7 +104,7 @@ Environment_ = {
 			object.parent = self
 			table.insert(self, object)
 		else
-      		incompatibleTypeError("#1", "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory", object)
+      		incompatibleTypeError(1, "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory", object)
     	end
 		object.parent = self
 		return self.cObj_:add(object.cObj_)
@@ -270,7 +270,7 @@ Environment_ = {
 	-- @usage environment:execute(1000)
 	execute = function(self, finalTime) 
 		if type(finalTime) ~= "number" then
-			incompatibleTypeError("#1", "number", finalTime)
+			incompatibleTypeError(1, "number", finalTime)
 		end
 		self.cObj_:config(finalTime)
 		self.cObj_:execute()
@@ -303,7 +303,7 @@ Environment_ = {
 		if type(data.source) == "string" then
 			local extension = string.match(data.source, "%w+$")
 			if extension ~= "gpm" then
-				customError("File extension '"..extension.."' is not supported.")
+				incompatibleFileExtensionError("source", extension)
 			else
 				local file = io.open(data.source, "r")
 				if not file then
@@ -471,10 +471,10 @@ Environment_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime)
+				incompatibleTypeError(1, "Event or positive number", modelTime)
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "Event or positive number", modelTime)
+			incompatibleValueError(1, "Event or positive number", modelTime)
 		end
 		self.cObj_:notify(modelTime)
 	end

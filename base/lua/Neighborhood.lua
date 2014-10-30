@@ -33,15 +33,15 @@ Neighborhood_ = {
 	-- @usage n:add(cell, 0.02)
 	add = function(self, cell, weight)
 		if cell == nil then
-			mandatoryArgumentError("#1")
+			mandatoryArgumentError(1)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", cell)
+			incompatibleTypeError(1, "Cell", cell)
 		end
 
 		if weight == nil then
 			weight = 1
 		elseif type(weight) ~= "number" then
-			incompatibleTypeError("#2", "number", weight)
+			incompatibleTypeError(2, "number", weight)
 		end
 
 		verify(not self:isNeighbor(cell), "Cell ("..cell.x..","..cell.y..") already belongs to the Neighborhood.")
@@ -85,9 +85,9 @@ Neighborhood_ = {
 	-- @usage n:remove(cell)
 	remove = function(self, cell)
 		if cell == nil then
-			mandatoryArgumentError("#1")
+			mandatoryArgumentError(1)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", cell)
+			incompatibleTypeError(1, "Cell", cell)
 		end
 
 		if not self:isNeighbor(cell) then
@@ -121,9 +121,9 @@ Neighborhood_ = {
 	-- @usage w = n:getWeight(cell)
 	getWeight = function(self, cell)
 		if cell == nil then
-			mandatoryArgumentError("#1")
+			mandatoryArgumentError(1)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", cell)
+			incompatibleTypeError(1, "Cell", cell)
 		end
 
 		local result = self.cObj_:getNeighWeight(cell.x, cell.y, cell.cObj_)
@@ -154,9 +154,9 @@ Neighborhood_ = {
 	-- end
 	isNeighbor = function(self, cell)
 		if cell == nil then
-			mandatoryArgumentError("#1")
+			mandatoryArgumentError(1)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", cell)
+			incompatibleTypeError(1, "Cell", cell)
 		end
 
 		return self.cObj_:isNeighbor(cell.x, cell.y, cell.cObj_)
@@ -185,15 +185,15 @@ Neighborhood_ = {
 	-- @usage n:setWeight(cell, 0.01)
 	setWeight = function(self, cell, weight)
 		if cell == nil then
-			mandatoryArgumentError("#1")
+			mandatoryArgumentError(1)
 		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", cell)
+			incompatibleTypeError(1, "Cell", cell)
 		end
 
 		if weight == nil then
-			mandatoryArgumentError("#2")
+			mandatoryArgumentError(2)
 		elseif type(weight) ~= "number" then
-			incompatibleTypeError("#2", "number", weight)
+			incompatibleTypeError(2, "number", weight)
 		end
 	
 		local result = self.cObj_:setNeighWeight(cell.x, cell.y, cell.cObj_, weight)

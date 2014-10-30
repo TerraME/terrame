@@ -35,15 +35,15 @@ Cell_ = {
 	-- cell:addNeighborhood(n, "east")
 	addNeighborhood = function(self, neigh, id)
 		if neigh == nil then
-			mandatoryArgumentError("#1")
+			mandatoryArgumentError(1)
 		elseif type(neigh) ~= "Neighborhood" and type(neigh)  ~= "function" then
-			incompatibleTypeError("#1", "Neighborhood", neigh)
+			incompatibleTypeError(1, "Neighborhood", neigh)
 		end
 
 		if id == nil then
 			id = "1"
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#2", "string", id)
+			incompatibleTypeError(2, "string", id)
 		end
 
 		if self.neighborhoods == nil then self.neighborhoods = {} end
@@ -60,9 +60,9 @@ Cell_ = {
 	distance = function(self, cell)
 		if type(cell) ~= "Cell" then
 			if cell == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "Cell", cell)
+				incompatibleTypeError(1, "Cell", cell)
 			end
 		end
 
@@ -109,7 +109,7 @@ Cell_ = {
 		if index == nil then
 			index = "1"
 		elseif type(index) ~= "string" then 
-			incompatibleTypeError("#1", "string", index)
+			incompatibleTypeError(1, "string", index)
 		end
 
 		if self.neighborhoods then
@@ -173,10 +173,10 @@ Cell_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime)
+				incompatibleTypeError(1, "Event or positive number", modelTime)
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "Event or positive number", modelTime)
+			incompatibleValueError(1, "Event or positive number", modelTime)
 		end
 
 		if self.obsattrs then
@@ -211,9 +211,9 @@ Cell_ = {
 	-- @usage cell:setId("newid")
 	setId = function(self, id)
 		if id == nil then
-			mandatoryArgumentError("#1")
+			mandatoryArgumentError(1)
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#1", "string", id)
+			incompatibleTypeError(1, "string", id)
 		end
 		self.id = id
 		self.cObj_:setID(self.id)

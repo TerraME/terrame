@@ -81,9 +81,9 @@ end
 -- @usage round(2.34566, 3)
 function round(num, idp)
 	if type(num) ~= "number" then
-		incompatibleTypeError("#1", "number", num)
+		incompatibleTypeError(1, "number", num)
 	elseif type(idp) ~= "number" and idp ~= nil then
-		incompatibleTypeError("#2", "number", idp)
+		incompatibleTypeError(2, "number", idp)
 	end
 		
 	local mult = 10 ^ (idp or 0)
@@ -366,7 +366,7 @@ end
 -- @usage belong(2, {1, 2, 3})
 function belong(value, values)
 	if type__(values) ~= "table" then
-		incompatibleTypeError("#2", "table", values)
+		incompatibleTypeError(2, "table", values)
 	end
 
 	if values == nil then return false end
@@ -386,9 +386,9 @@ end
 -- @usage levenshtein("abc", "abb")
 function levenshtein(s, t)
 	if type(s) ~= "string" then
-		incompatibleTypeError("#1", "string", s)
+		incompatibleTypeError(1, "string", s)
 	elseif type(t) ~= "string" then
-		incompatibleTypeError("#2", "string", t)
+		incompatibleTypeError(2, "string", t)
 	end
 
 	local d, sn, tn = {}, #s, #t
@@ -424,9 +424,9 @@ end
 function forEachCell(cs, f)
 	local t = type(cs)
 	if t ~= "CellularSpace" and t ~= "Trajectory" and t ~= "Agent" then
-		incompatibleTypeError("#1", "CellularSpace, Trajectory, or Agent", cs)
+		incompatibleTypeError(1, "CellularSpace, Trajectory, or Agent", cs)
 	elseif type(f) ~= "function" then
-		incompatibleTypeError("#2", "function", f)
+		incompatibleTypeError(2, "function", f)
 	end
 
 	for i, cell in ipairs(cs.cells) do
@@ -451,11 +451,11 @@ end
 -- end)
 function forEachCellPair(cs1, cs2, f)
 	if type(cs1) ~= "CellularSpace" then
-		incompatibleTypeError("#1", "CellularSpace", cs1)
+		incompatibleTypeError(1, "CellularSpace", cs1)
 	elseif type(cs2) ~= "CellularSpace" then
-		incompatibleTypeError("#2", "CellularSpace", cs2)
+		incompatibleTypeError(2, "CellularSpace", cs2)
 	elseif type(f) ~= "function" then
-		incompatibleTypeError("#3", "function", f)
+		incompatibleTypeError(3, "function", f)
 	end
 
 	verify(#cs1 == #cs2, "CellularSpaces should have the same size.")
@@ -493,14 +493,14 @@ end
 -- @see CellularSpace:loadNeighborhood
 function forEachNeighbor(cell, index, f)
 	if type(cell) ~= "Cell" then
-		incompatibleTypeError("#1", "Cell", cell)
+		incompatibleTypeError(1, "Cell", cell)
 	elseif type(index) == "function" then
 		f = index
 		index = "1"
 	elseif type(index) ~= "string" then
-		incompatibleTypeError("#2", "function or string", index)
+		incompatibleTypeError(2, "function or string", index)
 	elseif type(f) ~= "function" then
-		incompatibleTypeError("#3", "function", f)
+		incompatibleTypeError(3, "function", f)
 	end
 
 	local neighborhood = cell:getNeighborhood(index)
@@ -527,9 +527,9 @@ end
 -- end)
 function forEachNeighborhood(cell, f)
 	if type(cell) ~= "Cell" then
-		incompatibleTypeError("#1", "Cell", cell)
+		incompatibleTypeError(1, "Cell", cell)
 	elseif type(f) ~= "function" then
-		incompatibleTypeError("#2", "function", f)
+		incompatibleTypeError(2, "function", f)
 	end
 
 	cell.cObj_:first()
@@ -566,14 +566,14 @@ end
 -- @see Society:createSocialNetwork
 function forEachConnection(agent, index, f)
 	if type(agent) ~= "Agent" then
-		incompatibleTypeError("#1", "Agent", agent)
+		incompatibleTypeError(1, "Agent", agent)
 	elseif type(index) == "function" then
 		f = index
 		index = "1"
 	elseif type(index) ~= "string" then
-		incompatibleTypeError("#2", "function or string", index)
+		incompatibleTypeError(2, "function or string", index)
 	elseif type(f) ~= "function" then
-		incompatibleTypeError("#3", "function", f)
+		incompatibleTypeError(3, "function", f)
 	end
 
 	local socialnetwork = agent:getSocialNetwork(index)
@@ -603,9 +603,9 @@ end
 function forEachAgent(obj, func)
 	local t = type(obj)
 	if t ~= "Society" and t ~= "Cell" and t ~= "Group" then
-		incompatibleTypeError("#1", "Society, Group, or Cell", obj)
+		incompatibleTypeError(1, "Society, Group, or Cell", obj)
 	elseif type(func) ~= "function" then
-		incompatibleTypeError("#2", "function", func)
+		incompatibleTypeError(2, "function", func)
 	end
 
 	local ags = obj.agents
@@ -636,11 +636,11 @@ end
 -- }
 function greaterByAttribute(attribute, operator)
 	if type(attribute) ~= "string" then
-		incompatibleTypeError("#1", "string", attribute)
+		incompatibleTypeError(1, "string", attribute)
 	elseif operator == nil then
 		operator = "<"
 	elseif not belong(operator, {"<", ">", "<=", ">="}) then
-		incompatibleValueError("#2", "<, >, <=, or >=", operator)
+		incompatibleValueError(2, "<, >, <=, or >=", operator)
 	end
 
 	local str = "return function(o1, o2) return o1."..attribute.." "..operator.." o2."..attribute.." end"
@@ -659,7 +659,7 @@ function greaterByCoord(operator)
 	if operator == nil then
 		operator = "<"
 	elseif not belong(operator, {"<", ">", "<=", ">="}) then
-		incompatibleValueError("#1", "<, >, <=, or >=", operator)
+		incompatibleValueError(1, "<, >, <=, or >=", operator)
 	end
 
 	local str = "return function(a,b)\n"
@@ -681,11 +681,11 @@ end
 -- end)
 function forEachElement(obj, func)
 	if obj == nil then
-		mandatoryArgumentError("#1")
+		mandatoryArgumentError(1)
 	elseif func == nil then
-		mandatoryArgumentError("#2")
+		mandatoryArgumentError(2)
 	elseif type(func) ~= "function" then
-		incompatibleTypeError("#2", "function", func)
+		incompatibleTypeError(2, "function", func)
 	end
 
 	for k, ud in pairs(obj) do
@@ -708,9 +708,9 @@ end
 -- end)
 function forEachOrderedElement(obj, func)
 	if obj == nil then
-		mandatoryArgumentError("#1")
+		mandatoryArgumentError(1)
 	elseif type(func) ~= "function" then
-		incompatibleTypeError("#2", "function", func)
+		incompatibleTypeError(2, "function", func)
 	end
 
 	local strk
@@ -763,7 +763,7 @@ end
 -- @usage getn{name = "john", age = 20}
 function getn(t)
 	if type(t) ~= "table" then
-		incompatibleTypeError("#1", "table", t)
+		incompatibleTypeError(1, "table", t)
 	end
 
 	local n = 0

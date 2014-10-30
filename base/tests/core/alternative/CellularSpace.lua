@@ -32,12 +32,12 @@ return{
 		local error_func = function()
 			cs:add(2)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 2))
 
 		error_func = function()
 			cs:add(cs2:sample())
 		end
-		unitTest:assert_error(error_func, "Error: The cell already has a parent.")
+		unitTest:assert_error(error_func, "The cell already has a parent.")
 
 		local c = Cell{x = 30, y = 30}
 		local c2 = Cell{x = 30, y = 30}
@@ -47,7 +47,7 @@ return{
 		error_func = function()
 			cs:add(c2)
 		end
-		unitTest:assert_error(error_func, "Error: Cell (30, 30) already belongs to the CellularSpace.")
+		unitTest:assert_error(error_func, "Cell (30, 30) already belongs to the CellularSpace.")
 	end,
 	CellularSpace = function(unitTest)
 		local error_func = function()
@@ -56,7 +56,7 @@ return{
 				ydim = 30
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'xdim' expected positive integer number, got 0.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("xdim", "positive integer number", 0))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -64,7 +64,7 @@ return{
 				ydim = 0
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'ydim' expected positive integer number, got 0.")
+		unitTest:assert_error(error_func,  incompatibleValueMsg("ydim", "positive integer number", 0))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -72,7 +72,7 @@ return{
 				ydim = 30
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'xdim' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("xdim", "number", "terralab"))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -80,7 +80,7 @@ return{
 				ydim = 30
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'xdim' expected positive integer number, got -123.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("xdim", "positive integer number", -123))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -88,7 +88,7 @@ return{
 				ydim = "terralab"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'ydim' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("ydim", "number", "terralab"))
 
 		error_func = function()
 			cs = CellularSpace{
@@ -96,7 +96,7 @@ return{
 				ydim = -123
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'ydim' expected positive integer number, got -123.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("ydim", "positive integer number", -123))
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -104,12 +104,12 @@ return{
 		local error_func = function()
 			cs:get()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			cs:get(2)
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#2' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
 	end,
 	getCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -117,7 +117,7 @@ return{
 		local error_func = function()
 			cs:getCell(1, 2)
 		end
-		unitTest:assert_error(error_func, "Error: Function 'getCell' is deprecated. Use 'get' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCell", "get"))
 	end,
 	getCells = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -125,7 +125,7 @@ return{
 		local error_func = function()
 			cs:getCells()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'getCells' is deprecated. Use '.cells' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCells", ".cells"))
 	end,
 	getCellByID = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -133,7 +133,7 @@ return{
 		local error_func = function()
 			cs:getCellByID("C0L0")
 		end
-		unitTest:assert_error(error_func, "Error: Function 'getCellByID' is deprecated. Use 'get' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCellByID", "get"))
 	end,
 	createNeighborhood = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -142,30 +142,30 @@ return{
 		local error_func = function()
 			cs:createNeighborhood("dataTest")
 		end
-		unitTest:assert_error(error_func, "Error: Parameters must be named.")
+		unitTest:assert_error(error_func, namedParametersMsg())
 	
 		error_func = function()
 			cs:createNeighborhood{strategy = "teste"}
 		end
-		unitTest:assert_error(error_func, "Error: 'teste' is an invalid value for parameter 'strategy'. It must be a string from the set ['3x3', 'coord', 'function', 'moore', 'mxn', 'vonneumann']."
+		unitTest:assert_error(error_func, "'teste' is an invalid value for parameter 'strategy'. It must be a string from the set ['3x3', 'coord', 'function', 'moore', 'mxn', 'vonneumann']."
 		)
 
 		error_func = function()
 			cs:createNeighborhood{strategy = 50}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'strategy' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("strategy", "string", 50))
 
 		error_func = function()
 			cs:createNeighborhood{name = 50}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 50))
 
 		error_func = function()
 			cs:createNeighborhood{
 				name = {}
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", {}))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -173,7 +173,7 @@ return{
 				self = "true"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'self' expected boolean, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("self", "boolean", "true"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -181,7 +181,7 @@ return{
 				wrap = "true"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'wrap' expected boolean, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("wrap", "boolean", "true"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -190,7 +190,7 @@ return{
 				self = "true"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'self' expected boolean, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("self", "boolean", "true"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -199,7 +199,7 @@ return{
 				wrap = "true"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'wrap' expected boolean, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("wrap", "boolean", "true"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -208,7 +208,7 @@ return{
 				filter = "teste"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Function 'createNeighborhood with strategy 3x3' is deprecated. Use 'mxn' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("createNeighborhood with strategy 3x3", "mxn"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -220,7 +220,7 @@ return{
 				weight = function() return 1 end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'm' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("m", "number", "teste"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -229,7 +229,7 @@ return{
 				m = -1
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'm' expected positive integer number (greater than zero), got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("m", "positive integer number (greater than zero)", -1))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -238,7 +238,7 @@ return{
 				m = 0
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'm' expected positive integer number (greater than zero), got 0.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("m", "positive integer number (greater than zero)", 0))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -250,7 +250,7 @@ return{
 				weight = function() return 1 end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'n' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("n", "number", "teste"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -260,7 +260,7 @@ return{
 				n = -1
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'n' expected positive integer number (greater than zero), got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", -1))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -270,7 +270,7 @@ return{
 				n = 0
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'n' expected positive integer number (greater than zero), got 0.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", 0))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -280,7 +280,7 @@ return{
 				filter = true
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'filter' expected function, got boolean.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("filter", "function", true))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -291,7 +291,7 @@ return{
 				weight = true
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'weight' expected function, got boolean.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("weight", "function", true))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -303,7 +303,7 @@ return{
 				weight = function() end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'n' could be removed as it is the default value (5).")
+		unitTest:assert_error(error_func, defaultValueMsg("n", 5))
 		
 		error_func = function()
 			cs:createNeighborhood{
@@ -315,8 +315,7 @@ return{
 				weight = function() end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'target' expected CellularSpace, got string.")
-	
+		unitTest:assert_error(error_func, incompatibleTypeMsg("target", "CellularSpace", "teste"))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -326,7 +325,7 @@ return{
 				m = 4
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
+		unitTest:assert_error(error_func, "Parameter 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -337,7 +336,7 @@ return{
 				n = 4
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
+		unitTest:assert_error(error_func, "Parameter 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -354,7 +353,7 @@ return{
 				end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'm' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("m", "number", "teste"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -364,7 +363,7 @@ return{
 				m = -1
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'm' expected positive integer number (greater than zero), got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("m", "positive integer number (greater than zero)", -1))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -374,7 +373,7 @@ return{
 				m = 0
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'm' expected positive integer number (greater than zero), got 0.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("m", "positive integer number (greater than zero)", 0))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -387,7 +386,7 @@ return{
 				weight = function() return 1 end
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'n' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("n", "number", "teste"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -398,7 +397,7 @@ return{
 				n = -1
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'n' expected positive integer number (greater than zero), got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", -1))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -409,14 +408,14 @@ return{
 				n = 0
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'n' expected positive integer number (greater than zero), got 0.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", 0))
 
 		error_func = function()
 			cs:createNeighborhood{
 				strategy = "function"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'filter' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("filter"))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -424,7 +423,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'filter' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("filter"))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -433,7 +432,7 @@ return{
 				filter = true
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'filter' expected function, got boolean.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("filter", "function", true))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -442,7 +441,7 @@ return{
 				weight = weightFunction
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'filter' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("filter"))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -452,7 +451,7 @@ return{
 				weight = 3
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'weight' expected function, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("weight", "function", 3))
 	end,
 	notify = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -460,12 +459,12 @@ return{
 		local error_func = function()
 			cs:notify("not_int")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
 
 		error_func = function()
 			cs:notify(-1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
 	end,
 	size = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -473,7 +472,7 @@ return{
 		local error_func = function()
 			cs:size()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end,
 	split = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -481,17 +480,17 @@ return{
 		local error_func = function()
 			cs:split()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			cs:split(34)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected string or function, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string or function", 34))
 
 		error_func = function()
 			cs:split({})
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected string or function, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string or function", {}))
 	end,
 	synchronize = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
@@ -499,12 +498,12 @@ return{
 		local error_func = function()
 			cs:synchronize(true)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected string, table or nil, got boolean.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string, table or nil", true))
 
 		error_func = function()
 			cs:synchronize{123, "height_"}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'values' should contain only strings.")
+		unitTest:assert_error(error_func, "Parameter 'values' should contain only strings.")
 	end,
 	load = function(unitTest)
 		unitTest:assert(true)

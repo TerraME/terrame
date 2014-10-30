@@ -29,67 +29,67 @@ return{
 		local error_func = function()
 			event = Event{time = "time", period = 2, priority = -1, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'time' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("time", "number", "time"))
 
 		error_func = function()
 			event = Event{period = "1", priority = 1, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'period' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("period", "number", "1"))
 
 		error_func = function()
 			event = Event{period = -1, priority = 1, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'period' expected positive number (except zero), got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("period", "positive number (except zero)", -1))
 
 		error_func = function()
 			event = Event{period = 2, priority = "aaa", action = function(event) end}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'priority' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("priority", "number", "aaa"))
 
 		error_func = function()
 			event = Event{period = 0, priority = 1, action = function() end}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'period' expected positive number (except zero), got 0.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("period", "positive number (except zero)", 0))
 
 		error_func = function()
 			event = Event{period = 2, priority = 1, action = -5.5}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'action' expected one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory], got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", -5.5))
 
 		error_func = function()
 			event = Event{message = function() end}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'message' is deprecated, use 'action' instead.")
+		unitTest:assert_error(error_func, "Parameter 'message' is deprecated, use 'action' instead.")
 
 		error_func = function()
 			event = Event{myaction = function() end}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'myaction' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("myaction"))
 	end,
 	config = function(unitTest)
 		local event = Event{action = function(event) end}
 		local error_func = function()
 			event:config(1, -2, 1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#2' expected positive number, got -2.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", -2))
 
 		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, 0, 1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#2' expected positive number, got 0.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", 0))
 
 		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, "5")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "5"))
 
 		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, 1, "aa")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#3' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number", "aa"))
 	end
 }
 

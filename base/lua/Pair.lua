@@ -39,21 +39,21 @@ Pair_ = {
 		if time == nil then
 			time = self.cObj_[1]:getTime()
 		elseif type(time) ~= "number" then
-			incompatibleTypeError("#1", "number", time)
+			incompatibleTypeError(1, "number", time)
 		end
 
 		if period == nil then
 			period = self.cObj_[1]:getPeriod()
 		elseif type(period) ~= "number" then
-			incompatibleTypeError("#2", "number", period)
+			incompatibleTypeError(2, "number", period)
 		elseif period <= 0 then
-			incompatibleValueError("#2", "positive number", period)
+			incompatibleValueError(2, "positive number", period)
 		end
 
 		if priority == nil then
 			priority = self.cObj_[1]:getPriority()
 		elseif type(priority) ~= "number" then
-			incompatibleTypeError("#3", "number", priority)
+			incompatibleTypeError(3, "number", priority)
 		end
 
 		self.cObj_[1]:config(time, period, priority)

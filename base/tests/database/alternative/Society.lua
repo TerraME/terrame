@@ -34,7 +34,7 @@ return{
 				database = "not_a_file.csv"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Resource 'not_a_file.csv' not found for parameter 'database'.")
+		unitTest:assert_error(error_func, resourceNotFoundMsg("database", "not_a_file.csv"))
 
 		error_func = function()
 			sc2 = Society{
@@ -43,7 +43,7 @@ return{
 				sep = 10
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'sep' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("sep", "string", 10))
 	end
 }
 

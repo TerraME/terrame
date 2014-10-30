@@ -33,19 +33,19 @@ return {
 		local error_func = function()
 			t:notify("not_int")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
 
 		error_func = function()
 			t:notify(-1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
 	end,
 	Timer = function(unitTest)
 		local error_func = function()
 			local timer = Timer{Cell()}
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '1' expected Event, table, or userdata, got Cell.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("1", "Event, table, or userdata", Cell()))
 	end,
 	add = function(unitTest)
 		local timer = Timer{
@@ -57,7 +57,7 @@ return {
 			timer:add(nil)
 		end
 
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		timer = Timer{
 			Event{period = 2, action = function(event)
@@ -66,7 +66,7 @@ return {
 		error_func = function()
 			timer:add("ev")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or table, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or table", "ev"))
 	end,
 	execute = function(unitTest)
 		local timer = Timer{
@@ -77,7 +77,7 @@ return {
 		local error_func = function()
 			timer:execute()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		timer = Timer{
 			Event{period = 2, action = function(event)
@@ -87,7 +87,7 @@ return {
 		error_func = function()
 			timer:execute("2")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "2"))
 	end
 }
 

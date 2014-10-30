@@ -34,12 +34,12 @@ return{
 		local error_func = function()
 			sc1:notify("not_int")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
 
 		error_func = function()
 			sc1:notify(-1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
 	end,
 	remove = function(unitTest)
 		local agent1 = Agent{}
@@ -55,12 +55,12 @@ return{
 		local error_func = function()
 			soc1:remove()
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent or function, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent or function"))
 	
 		local error_func = function()
 			soc1:remove(ag)
 		end
-		unitTest:assert_error(error_func, "Error: Could not remove the Agent (id = '1').")
+		unitTest:assert_error(error_func, "Could not remove the Agent (id = '1').")
 	end,
 	sample = function(unitTest)
 		local agent1 = Agent{}
@@ -75,7 +75,7 @@ return{
 		local error_func = function()
 			soc1:sample()
 		end
-		unitTest:assert_error(error_func, "Error: Trying to sample an empty Society.")
+		unitTest:assert_error(error_func, "Trying to sample an empty Society.")
 	end,
 	Society = function(unitTest)
 		local ag1 = Agent{}
@@ -90,7 +90,7 @@ return{
 				quantity = 20
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'instance' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("instance"))
 
 		error_func = function()
 			sc2 = Society{
@@ -98,14 +98,14 @@ return{
 				quantity = 20
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'instance' expected Agent, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("instance", "Agent", "wrongType"))
 
 		error_func = function()
 			sc2 = Society{
 				instance = ag1
 			}
 		end
-		unitTest:assert_error(error_func,"Error: Parameter 'quantity' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("quantity"))
 
 		error_func = function()
 			sc2 = Society{
@@ -113,7 +113,7 @@ return{
 				quantity = "wrongType"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'quantity' expected positive integer number (except zero), got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("quantity", "positive integer number (except zero)", "wrongType"))
 
 		error_func = function()
 			sc2 = Society{
@@ -121,7 +121,7 @@ return{
 				quantity = -15
 			}
 		end
-		unitTest:assert_error(error_func,"Error: Incompatible values. Parameter 'quantity' expected positive integer number (except zero), got -15.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("quantity", "positive integer number (except zero)", -15))
 	end,
 	add = function(unitTest)
 		local ag1 = Agent{}
@@ -134,7 +134,7 @@ return{
 		local error_func = function()
 			sc1:add("wrongType")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent or table, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent or table", "wrongType"))
 	end,
 	createSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
@@ -143,26 +143,26 @@ return{
 		local error_func = function()
 			sc1:createSocialNetwork()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
+		unitTest:assert_error(error_func, tableParameterMsg())
 
 		error_func = function()
 			sc1:createSocialNetwork(15)
 		end
-		unitTest:assert_error(error_func, "Error: Parameters must be named.")
+		unitTest:assert_error(error_func, namedParametersMsg())
 
 		error_func = function()
 			sc1:createSocialNetwork{
 				strategy = "voi"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: 'voi' is an invalid value for parameter 'strategy'. Do you mean 'void'?")
+		unitTest:assert_error(error_func, "'voi' is an invalid value for parameter 'strategy'. Do you mean 'void'?")
 
 		error_func = function()
 			sc1:createSocialNetwork{
 				strategy = "terralab"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: 'terralab' is an invalid value for parameter 'strategy'. It must be a string from the set ['cell', 'func', 'neighbor', 'probability', 'quantity', 'void'].")
+		unitTest:assert_error(error_func, "'terralab' is an invalid value for parameter 'strategy'. It must be a string from the set ['cell', 'func', 'neighbor', 'probability', 'quantity', 'void'].")
 
 		sc1:createSocialNetwork{
 			strategy = "void",
@@ -175,7 +175,7 @@ return{
 				name = "void"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: SocialNetwork 'void' already exists in the Society.")
+		unitTest:assert_error(error_func, "SocialNetwork 'void' already exists in the Society.")
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -184,7 +184,7 @@ return{
 				probability = 0.5
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'probability' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("probability"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -192,7 +192,7 @@ return{
 				quantity = "terralab"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'quantity' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("quantity", "number", "terralab"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -200,7 +200,7 @@ return{
 				quantity = 0
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'quantity' expected positive number (except zero), got 0.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("quantity", "positive number (except zero)", 0))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -209,16 +209,16 @@ return{
 				probability = 0.2
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'probability' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("probability"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
 				strategy = "probability",
-				probability = "wrong value"
+				probability = "wrongValue"
 			}
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'probability' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("probability", "number", "wrongValue"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -226,7 +226,7 @@ return{
 				probability = 0
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'probability' expected a number between 0 and 1, got 0.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("probability", "a number between 0 and 1", 0))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -235,7 +235,7 @@ return{
 				quantity = 5	
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'quantity' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -243,7 +243,7 @@ return{
 				probability = 1.5,
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'probability' expected a number between 0 and 1, got 1.5.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("probability", "a number between 0 and 1", 1.5))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -252,13 +252,13 @@ return{
 				name = 2
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 2))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "cell", name = "c"}
 		end
 
-		unitTest:assert_error(error_func, "Error: Society has no placement. Use Environment:createPlacement() first.")
+		unitTest:assert_error(error_func, "Society has no placement. Use Environment:createPlacement() first.")
 
 		local cs = CellularSpace{xdim = 5}
 		local ag1 = Agent{}
@@ -269,7 +269,7 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = "c"}
 		end
-		unitTest:assert_error(error_func, "Error: CellularSpace has no Neighborhood named '1'. Use CellularSpace:createNeighborhood() first.")
+		unitTest:assert_error(error_func, "CellularSpace has no Neighborhood named '1'. Use CellularSpace:createNeighborhood() first.")
 
 		local ag1 = Agent{}
 		local sc1 = Society{instance = ag1, quantity = 20}
@@ -280,33 +280,33 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = "c"}
 		end
-		unitTest:assert_error(error_func, "Error: Society has no placement. Use Environment:createPlacement() first.")
+		unitTest:assert_error(error_func, "Society has no placement. Use Environment:createPlacement() first.")
 
 		env:createPlacement{strategy = "random"}
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "cell", name = "c", quantity = 5}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'quantity' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = 22}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'name' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 22))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", quantity = 1}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'quantity' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "func", name = "c", func = 3}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'func' expected function, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("func", "function", 3))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "func", name = "c", func = function(ag) return true end, quantity = 1}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'quantity' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
 
 		local ag1 = Agent{
 			name = "nonfoo",
@@ -349,12 +349,12 @@ return{
 		local error_func = function()
 			ag1 = sc1:get(nil)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'index' expected positive integer number, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("index", "positive integer number"))
 
 		error_func = function()
 			ag1 = sc1:get("asdfg")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'index' expected positive integer number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("index", "positive integer number", "asdfg"))
 	end,
 	getAgent = function(unitTest)
 		local ag1 = Agent{
@@ -370,7 +370,7 @@ return{
 		local error_func = function()
 			sc1:getAgent("1")
 		end
-		unitTest:assert_error(error_func, "Error: Function 'getAgent' is deprecated. Use 'get' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getAgent", "get"))
 	end,
 	getAgents = function(unitTest)
 		local ag1 = Agent{
@@ -386,7 +386,7 @@ return{
 		local error_func = function()
 			sc1:getAgents()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'getAgents' is deprecated. Use '.agents' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getAgents", ".agents"))
 	end,
 	size = function(unitTest)
 		local ag1 = Agent{
@@ -402,7 +402,7 @@ return{
 		local error_func = function()
 			sc1:size()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end,
 	split = function(unitTest)
 		local ag1 = Agent{
@@ -418,12 +418,12 @@ return{
 		local error_func = function()
 			group = sc1:split(nil)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected string or function, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string or function"))
 
 		error_func = function()
 			group = sc1:split(15)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected string or function, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string or function", 15))
 	end,
 	synchronize = function(unitTest)
 		local ag1 = Agent{
@@ -441,12 +441,12 @@ return{
 		local error_func = function()
 			sc1:synchronize("test")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected positive number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "positive number", "test"))
 
 		error_func = function()
 			sc1:synchronize(-13)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected positive number, got -13.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -13))
 	end
 }
 

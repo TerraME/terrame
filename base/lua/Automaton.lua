@@ -35,7 +35,7 @@ Automaton_ = {
 		if type(object) == "Trajectory" or type(object) == "State" then
 			self.cObj_:add(object)
 		else
-			incompatibleTypeError("#1", "State or Trajectory", object)  
+			incompatibleTypeError(1, "State or Trajectory", object)  
 		end
 	end,
 	--- Check if the state machine was correctly defined. It verifies whether the targets of Jump 
@@ -57,7 +57,7 @@ Automaton_ = {
 		if t == "Event" or t == "Pair" then
 			self.cObj_:execute(event)
 		else
-			incompatibleTypeError("#1", "Event", event)
+			incompatibleTypeError(1, "Event", event)
 		end
 	end,
 	--- Retrieves the time when the machine executed the transition to the current state. Before
@@ -81,10 +81,10 @@ Automaton_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime) 
+				incompatibleTypeError(1, "Event or positive number", modelTime) 
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "positive number", modelTime)   
+			incompatibleValueError(1, "positive number", modelTime)   
 		end
 		self.cObj_:notify(modelTime)
 	end,
@@ -96,7 +96,7 @@ Automaton_ = {
 		if status == nil then
 			status = false
 		elseif type(status) ~= "boolean" then
-			incompatibleTypeError("#1", "boolean", status)
+			incompatibleTypeError(1, "boolean", status)
 		end
 		self.cObj_:setActionRegionStatus(status)
 	end,
@@ -134,9 +134,9 @@ Automaton_ = {
 		if index == nil then
 			index = 1
 		elseif type(index) ~= "number" then
-			incompatibleTypeError("#1", "positive integer number", index)
+			incompatibleTypeError(1, "positive integer number", index)
 		elseif index < 0 then
-			incompatibleValueError("#1", "positive integer number", index)
+			incompatibleValueError(1, "positive integer number", index)
 		end
 		local statesVector = self:getStates()
 		return statesVector[index]

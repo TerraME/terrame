@@ -32,7 +32,7 @@ return{
 			u:assert(2)
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected boolean, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "boolean", 2))
 	end,
 	assert_equal = function(unitTest)
 		local u = UnitTest{}
@@ -41,13 +41,13 @@ return{
 			u:assert_equal(2, 2, "a")
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#3' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number", "a"))
 
 		local error_func = function()
 			u:assert_equal("abc", "abc", 2)
 		end
 
-		unitTest:assert_error(error_func, "Error: #3 should be used only when comparing numbers (#1 is string).")
+		unitTest:assert_error(error_func, "#3 should be used only when comparing numbers (#1 is string).")
 	end,
 	assert_error = function(unitTest)
 		local u = UnitTest{}
@@ -56,19 +56,19 @@ return{
 			u:assert_error(2)
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected function, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", 2))
 
 		local error_func = function()
 			u:assert_error(function() end, 2)
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		local error_func = function()
 			u:assert_error(function() end, "aaa", false)
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#3' expected number or nil, got boolean.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number or nil", false))
 	end,
 	assert_type = function(unitTest)
 		local u = UnitTest{}
@@ -77,7 +77,7 @@ return{
 			u:assert_type(2, 2)
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
 	end
 }
 

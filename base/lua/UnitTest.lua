@@ -154,7 +154,7 @@ UnitTest_ = {
 			if v1 == v2 then
 				self.success = self.success + 1
 			else 
-				print_error(self, "Values should be equal, but got '"..v1.."' and '"..v2.."'.")
+				print_error(self, "Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'.")
 				self.fail = self.fail + 1
 			end
 		elseif type(v1) ~= type(v2) then
@@ -210,6 +210,13 @@ UnitTest_ = {
 			end
 
 			shortError = string.gsub(shortError,":[0-9]*: ", "")
+			local start = shortError:sub(1, 7)
+
+			if start ~= "Error: " then
+				print_error(self, "The error message does not start with \"Error:\": "..shortError)
+			end
+
+			shortError = shortError:sub(8, shortError:len())
 
 			local distance = levenshtein(error_message, shortError)
 

@@ -29,25 +29,65 @@ return{
 		local error_func = function(unitTest)
 			checkUnnecessaryParameters({aaa = "aaa"}, {"abc", "acd", "aab"})
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'aaa' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("aaa"))
 	end,
+
+	unnecessaryParameterMsg = function(unitTest)
+		unitTest:assert_equal(unnecessaryParameterMsg("aaa"), "Parameter 'aaa' is unnecessary.")
+	end,
+
+	incompatibleTypeMsg = function(unitTest)
+		unitTest:assert_equal(incompatibleTypeMsg("aaa", "string", 2), "Incompatible types. Parameter 'aaa' expected string, got number.")
+	end,
+
+	defaultValueMsg = function(unitTest)
+		unitTest:assert_equal(defaultValueMsg("aaa", 2), "Parameter 'aaa' could be removed as it is the default value (2).")
+	end,
+	resourceNotFoundMsg = function(unitTest)
+		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for parameter 'aaa'.")
+	end,
+
+	valueNotFoundMsg = function(unitTest)
+		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for parameter 'aaa'.")
+	end,
+
+	tableParameterMsg = function(unitTest)
+		unitTest:assert_equal(tableParameterMsg(), "Parameter must be a table.")
+	end,
+
+	mandatoryArgumentMsg = function(unitTest)
+		unitTest:assert_equal(mandatoryArgumentMsg("aaa"), "Parameter 'aaa' is mandatory.")
+	end,
+
+	namedParametersMsg = function(unitTest)
+		unitTest:assert_equal(namedParametersMsg(), "Parameters must be named.")
+	end,
+
+	incompatibleFileExtensionMsg = function(unitTest)
+		unitTest:assert_equal(incompatibleFileExtensionMsg("aaa", "bbb"), "Parameter 'aaa' does not support extension 'bbb'.")
+	end,
+
+
+
+
+
 	customError = function(unitTest)
 		local error_func = function()
 			customError("test.")
 		end
-		unitTest:assert_error(error_func, "Error: test.")
+		unitTest:assert_error(error_func, "test.")
 	end,
 	customWarning = function(unitTest)
 		local error_func = function()
 			customWarning("test.")
 		end
-		unitTest:assert_error(error_func, "Error: test.")
+		unitTest:assert_error(error_func, "test.")
 	end,
 	defaultValueWarning = function(unitTest)
 		local error_func = function()
 			defaultValueWarning("size", 2)
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'size' could be removed as it is the default value (2).")
+		unitTest:assert_error(error_func, defaultValueMsg("size", 2))
 	end,
 	defaultTableValue = function(unitTest)
 		local t = {x = 5}
@@ -59,37 +99,45 @@ return{
 		local error_func = function()
 			deprecatedFunctionWarning("abc", "def")
 		end
-		unitTest:assert_error(error_func, "Error: Function 'abc' is deprecated. Use 'def' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("abc", "def"))
+	end,
+	deprecatedFunctionMsg = function(unitTest)
+		unitTest:assert_equal(deprecatedFunctionMsg("aaa", "bbb"), "Function 'aaa' is deprecated. Use 'bbb' instead.")
 	end,
 	incompatibleFileExtensionError = function(unitTest)
 		local error_func = function()
 			incompatibleFileExtensionError("file", ".txt")
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'file' does not support '.txt'.")
+		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("file", ".txt"))
 	end,
 	incompatibleTypeError = function(unitTest)
 		local error_func = function()
 			incompatibleTypeError("cell", "Cell", Agent{})
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'cell' expected Cell, got Agent.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("cell", "Cell", Agent{}))
 	end,
 	incompatibleValueError = function(unitTest)
 		local error_func = function()
 			incompatibleValueError("position", "1, 2, or 3", "4")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'position' expected 1, 2, or 3, got '4'.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("position", "1, 2, or 3", "4"))
+	end,
+	incompatibleValueMsg = function(unitTest)
+		local str = incompatibleValueMsg("attr", "positive", -2)
+		unitTest:assert_equal(str, "Incompatible values. Parameter 'attr' expected positive, got -2.")
+		local str = incompatibleValueMsg("attr", "positive", "aa")
 	end,
 	resourceNotFoundError = function(unitTest)
 		local error_func = function()
 			resourceNotFoundError("file", "/usr/local/file.txt")
 		end
-		unitTest:assert_error(error_func, "Error: Resource '/usr/local/file.txt' not found for parameter 'file'.")
+		unitTest:assert_error(error_func, resourceNotFoundMsg("file", "/usr/local/file.txt"))
 	end,
 	mandatoryArgumentError = function(unitTest)
 		local error_func = function()
 			mandatoryArgumentError("neighborhood")
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'neighborhood' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("neighborhood"))
 	end,
 	mandatoryTableArgument = function(unitTest)
 		local mtable = {bbb = 3, ccc = "aaa"}
@@ -97,12 +145,12 @@ return{
 		local error_func = function()
 			mandatoryTableArgument(mtable, "bbb", "string")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'bbb' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("bbb", "string", 3))
 
 		error_func = function()
 			mandatoryTableArgument(mtable, "ddd", "string")
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'ddd' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("ddd", "string"))
 	end,
 	optionalTableArgument = function(unitTest)
 		local mtable = {bbb = 3, ccc = "aaa"}
@@ -110,23 +158,23 @@ return{
 		local error_func = function()
 			optionalTableArgument(mtable, "bbb", "string")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'bbb' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("bbb", "string", 3))
 	end,
 	verifyNamedTable = function(unitTest)
 		local error_func = function()
 			verifyNamedTable()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
+		unitTest:assert_error(error_func, tableParameterMsg())
 
 		local error_func = function()
 			verifyNamedTable(123)
 		end
-		unitTest:assert_error(error_func, "Error: Parameters must be named.")
+		unitTest:assert_error(error_func, namedParametersMsg())
 
 		local error_func = function()
 			verifyNamedTable{x = 3, 3, 4}
 		end
-		unitTest:assert_error(error_func, "Error: All elements of the argument must be named.")
+		unitTest:assert_error(error_func, "All elements of the argument must be named.")
 	end,
 	suggest = function(unitTest)
 		unitTest:assert(true)
@@ -138,13 +186,13 @@ return{
 		local error_func = function()
 			valueNotFoundError("1", "neighborhood")
 		end
-		unitTest:assert_error(error_func, "Error: Value 'neighborhood' not found for parameter '1'.")
+		unitTest:assert_error(error_func, "Value 'neighborhood' not found for parameter '1'.")
 	end,
 	verify = function(unitTest)
 		local error_func = function(unitTest)
 			verify(false, "error")
 		end
-		unitTest:assert_error(error_func, "Error: error")
+		unitTest:assert_error(error_func, "error")
 	end
 }
 

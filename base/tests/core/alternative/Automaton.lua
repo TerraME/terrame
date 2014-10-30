@@ -99,7 +99,7 @@ return{
 			}
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'id' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("id", "string", 15))
 
 		at1 = Automaton{
 			it = Trajectory{
@@ -143,7 +143,7 @@ return{
 		local error_func = function()
 			at1:add()
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected State or Trajectory, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "State or Trajectory"))
 
 		at1 = Automaton{
 			it = Trajectory{
@@ -164,7 +164,7 @@ return{
 		local error_func = function()
 			at1:add("notTrajectoryOrTtate")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected State or Trajectory, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "State or Trajectory", "notTrajectoryOrTtate"))
 	end,
 	execute = function(unitTest)
 		local at1 = Automaton{
@@ -186,7 +186,7 @@ return{
 		local error_func = function()
 			at1:execute()
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event"))
 
 		at1 = Automaton{
 			it = Trajectory{
@@ -207,7 +207,7 @@ return{
 		error_func = function()
 			at1:execute("notEvent")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event", "notEvent"))
 	end,
 	setTrajectoryStatus = function(unitTest)	
 		local at1 = Automaton{
@@ -247,7 +247,7 @@ return{
 		local error_func = function()
 			at1:setTrajectoryStatus("notBoolean")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected boolean, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "boolean", "notBoolean"))
 	end
 }
 

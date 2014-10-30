@@ -28,11 +28,11 @@ return{
 	Flow = function(unitTest)
 		unitTest:assert_error( function()
 			fl1 = Flow(nil)
-		end, "Error: Flow constructor expected a function as parameter.")
+		end, "Flow constructor expected a function as parameter.")
 
 		unitTest:assert_error( function()
 			fl1 = Flow{nil}
-		end, "Error: Flow constructor expected a function as parameter.")
+		end, "Flow constructor expected a function as parameter.")
 	end
 }
 

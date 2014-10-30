@@ -38,7 +38,7 @@ State_ = {
 		local idOld = self.cObj_:getID()
 
 		if type(idValue) ~= "string" then
-			incompatibleTypeError("#1", "string", idValue)
+			incompatibleTypeError(1, "string", idValue)
 		end	
 
 		self.id = idValue

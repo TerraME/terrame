@@ -31,7 +31,7 @@ Group_ = {
 	-- @usage group:add(agent)
 	add = function(self, agent)
 		if type(agent) ~= "Agent" then
-			incompatibleTypeError("#1", "Agent", agent)
+			incompatibleTypeError(1, "Agent", agent)
 		else
 			table.insert(self.agents, agent)
 		end
@@ -59,7 +59,7 @@ Group_ = {
 		if type(f) == "function" then
 			self.select = f
 		elseif f ~= nil then
-			incompatibleTypeError("#1", "function or nil", f)
+			incompatibleTypeError(1, "function or nil", f)
 		end
 
 		self.agents = {}
@@ -111,7 +111,7 @@ Group_ = {
 		if type(greaterThan) == "function" then
 			self.greater = greaterThan
 		elseif greaterThan ~= nil then
-			incompatibleTypeError("#1", "function or nil", greaterThan)
+			incompatibleTypeError(1, "function or nil", greaterThan)
 		end
 
 		if type(self.greater) == "function" then

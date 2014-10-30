@@ -33,7 +33,7 @@ return{
 			trajectory:add(2)
 		end
 
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected Cell, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "Cell", 2))
 	end,
 	addCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -43,7 +43,7 @@ return{
 			trajectory:addCell()
 		end
 
-		unitTest:assert_error(error_func, "Error: Function 'addCell' is deprecated. Use 'add' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("addCell", "add"))
 	end,
 	filter = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -53,7 +53,7 @@ return{
 		local error_func = function()
 			trajectory:filter("filter")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected function or nil, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function or nil", "filter"))
 	end,
 	getCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -63,7 +63,7 @@ return{
 			trajectory:getCell()
 		end
 
-		unitTest:assert_error(error_func, "Error: Function 'getCell' is deprecated. Use 'get' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCell", "get"))
 	end,
 	sort = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -72,7 +72,7 @@ return{
 		local error_func = function()
 			trajectory:sort("func")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected function or nil, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function or nil", "func"))
 	end,
 	Trajectory = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -80,12 +80,12 @@ return{
 		local error_func = function()
 			trajectory = Trajectory()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter must be a table.")
+		unitTest:assert_error(error_func, tableParameterMsg())
 
 		local error_func = function()
 			trajectory = Trajectory(3)
 		end
-		unitTest:assert_error(error_func, "Error: Parameters must be named.")
+		unitTest:assert_error(error_func, namedParametersMsg())
 
 		error_func = function()
  			local traj = Trajectory{
@@ -93,19 +93,19 @@ return{
  				selection = function() return true end
  			}
  		end
-		unitTest:assert_error(error_func, "Error: Parameter 'selection' is unnecessary.")
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("selection"))
 
 		local error_func = function()
 			trajectory = Trajectory{}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'target' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("target"))
 
 		error_func = function()
 			trajectory = Trajectory{
 				target = "cs"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'target' expected CellularSpace or Trajectory, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("target", "CellularSpace or Trajectory", "cs"))
 
 		-- build
 		error_func = function()
@@ -114,7 +114,7 @@ return{
 				build = "build"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'build' expected boolean, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("build", "boolean", "build"))
 
 		error_func = function()
 			local traj = Trajectory{
@@ -122,7 +122,7 @@ return{
 				build = true
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Parameter 'build' could be removed as it is the default value (true).")
+		unitTest:assert_error(error_func, defaultValueMsg("build", true))
 
 		-- greater
 		error_func = function()
@@ -131,7 +131,7 @@ return{
 				greater = "func"
 			}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'greater' expected function or nil, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("greater", "function or nil", "func"))
 
 		-- select
 		error_func = function()
@@ -140,7 +140,7 @@ return{
 				select = "func"
 			}
 		end
-		unitTest:assert_error(error_func,"Error: Incompatible types. Parameter 'select' expected function or nil, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "function or nil", "func"))
 	end
 }
 

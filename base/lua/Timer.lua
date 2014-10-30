@@ -36,9 +36,9 @@ Timer_ = {
 			table.insert(self.events, event)
 			self.cObj_:add(event.cObj_[1], event.cObj_[2].cObj_)
 		elseif event == nil then
-			mandatoryArgumentError("#1")
+			mandatoryArgumentError(1)
 		else
-			incompatibleTypeError("#1", "Event or table", event)
+			incompatibleTypeError(1, "Event or table", event)
 		end
 	end,
 	--- Retrieve the current simulation time.
@@ -57,9 +57,9 @@ Timer_ = {
 	-- @usage timer:execute(2013)
 	execute = function(self, finalTime)
  	   if finalTime == nil then
-			mandatoryArgumentError("#1")
+			mandatoryArgumentError(1)
     	elseif type(finalTime) ~= "number" then 
-			incompatibleTypeError("#1", "number", finalTime)
+			incompatibleTypeError(1, "number", finalTime)
 		end
 		self.cObj_:execute(finalTime)
 	end,
@@ -80,10 +80,10 @@ Timer_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime) 
+				incompatibleTypeError(1, "Event or positive number", modelTime) 
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "Event or positive number", modelTime)   
+			incompatibleValueError(1, "Event or positive number", modelTime)   
 		end
 		self.cObj_:notify(modelTime)
 	end,
@@ -117,15 +117,15 @@ Timer_ = {
     	if index == nil then
 			index = 1
 		elseif type(index)~= "number" then
-			incompatibleTypeError("#1", "positive integer number", index)
+			incompatibleTypeError(1, "positive integer number", index)
 		elseif index < 0 or math.floor(index) ~= index then
-			incompatibleValueError("#1", "positive integer number", index)
+			incompatibleValueError(1, "positive integer number", index)
 		end
 
 		local t = type(event)
 		if t ~= "Pair" or t ~= "Event" then
 			-- TODO: esta funcao foi feita para dar errado porque sempre vai entrar neste if
-			incompatibleTypeError("#2", "Event", event)
+			incompatibleTypeError(2, "Event", event)
 		else
 			return self.cObj_:setEvent(event)
 		end
@@ -136,7 +136,7 @@ Timer_ = {
 	-- were sucessfully changed.
 	setEvents = function(self, events)
 		if type(events)~= "table" then
-			incompatibleTypeError("#1", "table", events)
+			incompatibleTypeError(1, "table", events)
 		end    
 		for i = 1, getn(events) do
 			setEvent(i, events[i])

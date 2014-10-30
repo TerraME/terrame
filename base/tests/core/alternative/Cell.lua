@@ -32,12 +32,12 @@ return{
 		local error_func = function()
 			cell = Cell{x = 2.22, y = 0}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'x' expected positive integer number, got 2.22.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("x", "positive integer number", 2.22))
 
 		error_func = function()
 			cell = Cell{x = -2, y = 1}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'x' expected positive integer number, got -2.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("x", "positive integer number", -2))
 
 		cell = Cell{x = 1}
 		unitTest:assert_equal(0, cell.y)
@@ -45,31 +45,31 @@ return{
 		error_func = function()
 			cell = Cell{x = 1, y = 2.22}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'y' expected positive integer number, got 2.22.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("y", "positive integer number", 2.22))
 
 		error_func = function()
 			cell = Cell{x = 1, y = -2}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'y' expected positive integer number, got -2.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("y", "positive integer number", -2))
 	end,
 	addNeighborhood = function(unitTest)
 		local cell = Cell{x = 1, y = 1}
 		local n = Neighborhood()
 
 		local error_func = function()
-			unitTest:assert_false(cell:addNeighborhood())
+			cell:addNeighborhood()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
-			unitTest:assert_false(cell:addNeighborhood(123))
+			cell:addNeighborhood(123)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Neighborhood, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Neighborhood", 123))
 
 		error_func = function()
 			cell:addNeighborhood(n, 123)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
 	end,
 	distance = function(unitTest)
 	end,
@@ -80,12 +80,12 @@ return{
 		local error_func = function()
 			c:getAgent()
 		end
-		unitTest:assert_error(error_func, "Error: Placement 'placement' does not exist. Use Environment:createPlacement first.")
+		unitTest:assert_error(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
 
 		local error_func = function()
 			c:getAgent("friends")
 		end
-		unitTest:assert_error(error_func, "Error: Placement 'friends' should be a Group, got number.")
+		unitTest:assert_error(error_func, "Placement 'friends' should be a Group, got number.")
 	end,			
 	getAgents = function(unitTest)
 		local c = Cell{}
@@ -94,12 +94,12 @@ return{
 		local error_func = function()
 			c:getAgents()
 		end
-		unitTest:assert_error(error_func, "Error: Placement 'placement' does not exist. Use Environment:createPlacement first.")
+		unitTest:assert_error(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
 
 		local error_func = function()
 			c:getAgents("friends")
 		end
-		unitTest:assert_error(error_func, "Error: Placement 'friends' should be a Group, got number.")
+		unitTest:assert_error(error_func, "Placement 'friends' should be a Group, got number.")
 	end,
 	distance = function(unitTest)
 		local c = Cell{}
@@ -107,12 +107,12 @@ return{
 		local error_func = function()
 			c:distance()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
 			c:distance(12345)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 12345))
 	end,
 	isEmpty = function(unitTest)
 		local c = Cell{}
@@ -121,12 +121,12 @@ return{
 		local error_func = function()
 			c:isEmpty()
 		end
-		unitTest:assert_error(error_func, "Error: Placement 'placement' does not exist. Use Environment:createPlacement first.")
+		unitTest:assert_error(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
 
 		local error_func = function()
 			c:isEmpty("friends")
 		end
-		unitTest:assert_error(error_func, "Error: Placement 'friends' should be a Group, got number.")
+		unitTest:assert_error(error_func, "Placement 'friends' should be a Group, got number.")
 	end,
 	sample = function(unitTest)
 		local c = Cell{}
@@ -134,7 +134,7 @@ return{
 		local error_func = function()
 			c:sample()
 		end
-		unitTest:assert_error(error_func, "Error: Cell does not have a Neighborhood named '1'.")
+		unitTest:assert_error(error_func, "Cell does not have a Neighborhood named '1'.")
 	end,
 	size = function(unitTest)
 		local c = Cell{}
@@ -142,7 +142,7 @@ return{
 		local error_func = function()
 			c:size()
 		end
-		unitTest:assert_error(error_func, "Error: Function 'size' is deprecated. Use 'operator #' instead.")
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end,
 	getNeighborhood = function(unitTest)
 		local cell = Cell{x = 1, y = 1}
@@ -152,7 +152,7 @@ return{
 		local error_func = function()
 			n1 = cell:getNeighborhood(1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
 	notify = function(unitTest)
 		local cell = Cell{x = 1, y = 1}
@@ -160,12 +160,12 @@ return{
 		local error_func = function()
 			cell:notify("not_int")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Event or positive number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
 
 		error_func = function()
 			cell:notify(-1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected Event or positive number, got -1.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
 	end
 }
 

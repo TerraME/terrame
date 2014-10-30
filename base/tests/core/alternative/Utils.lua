@@ -29,7 +29,7 @@ return{
 		local error_func = function()
 			belong("2", "2")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected table, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "table", "2"))
 	end,
 	forEachAgent = function(unitTest)
 		local a = Agent{value = 2}
@@ -38,23 +38,23 @@ return{
 		local error_func = function()
 			forEachAgent(nil, function() end)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Society, Group, or Cell, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Society, Group, or Cell"))
 
 		error_func = function()
 			forEachAgent(soc)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected function, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function"))
 	end,
 	forEachCell = function(unitTest)
 		local error_func = function()
 			forEachCell()
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected CellularSpace, Trajectory, or Agent, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "CellularSpace, Trajectory, or Agent"))
 
 		error_func = function()
 			forEachCell(CellularSpace{xdim = 5})
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected function, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function"))
 	end,
 	forEachCellPair = function(unitTest)
 		local cs1 = CellularSpace{xdim = 10}
@@ -63,17 +63,17 @@ return{
 		local error_func = function()
 			forEachCellPair()
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected CellularSpace, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "CellularSpace"))
 
 		error_func = function()
 			forEachCellPair(cs1)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected CellularSpace, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "CellularSpace"))
 
 		error_func = function()
 			forEachCellPair(cs1, cs2)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#3' expected function, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "function"))
 	end,	
 	forEachConnection = function(unitTest)
 		local a = Agent{value = 2}
@@ -84,40 +84,40 @@ return{
 		local error_func = function()
 			forEachConnection(nil, function() end)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Agent, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent"))
 
 		error_func = function()
 			forEachConnection(soc.agents[1])
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected function or string, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function or string"))
 
 		error_func = function()
 			forEachConnection(soc.agents[1], "1")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#3' expected function, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "function"))
 
 		error_func = function()
 			forEachConnection(soc.agents[1], "2", function() end)
 		end
-		unitTest:assert_error(error_func, "Error: Agent does not have a SocialNetwork named '2'.")
+		unitTest:assert_error(error_func, "Agent does not have a SocialNetwork named '2'.")
 	end,
 	forEachElement = function(unitTest)
 		local error_func = function()
 			forEachElement()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		local agent = Agent{w = 3, f = 5}
 
 		error_func = function()
 			forEachElement(agent)
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#2' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			forEachElement(agent, 12345)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected function, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function", 12345))
 	end,
 	forEachNeighbor = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -127,22 +127,22 @@ return{
 		local error_func = function()
 			forEachNeighbor(nil, function() end)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell"))
 
 		error_func = function()
 			forEachNeighbor(cell)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected function or string, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function or string"))
 
 		error_func = function()
 			forEachNeighbor(cell, "1")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#3' expected function, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "function"))
 
 		error_func = function()
 			forEachNeighbor(cell, "2", function() end)
 		end
-		unitTest:assert_error(error_func, "Error: Neighborhood '2' does not exist.")
+		unitTest:assert_error(error_func, "Neighborhood '2' does not exist.")
 	end,
 	forEachNeighborhood = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -150,68 +150,68 @@ return{
 		local error_func = function()
 			forEachNeighborhood(nil, function() end)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected Cell, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell"))
 
 		error_func = function()
 			forEachNeighborhood(cs:sample())
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected function, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function"))
 	end,
 	forEachOrderedElement = function(unitTest)
 		local error_func = function()
 			forEachOrderedElement()
 		end
-		unitTest:assert_error(error_func, "Error: Parameter '#1' is mandatory.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			forEachOrderedElement({1, 2, 3})
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected function, got nil.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function"))
 	end,
 	getn = function(unitTest)
 		local error_func = function()
 			getn("2")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected table, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "table", "2"))
 	end,
 	greaterByAttribute = function(unitTest)
 		local error_func = function()
 			local gt = greaterByAttribute(2)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected string, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
 			local gt = greaterByAttribute("cover", "==")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#2' expected <, >, <=, or >=, got '=='.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(2, "<, >, <=, or >=", "=="))
 	end,
 	greaterByCoord = function(unitTest)
 		local error_func = function()
 			local gt = greaterByCoord("==")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter '#1' expected <, >, <=, or >=, got '=='.")
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "<, >, <=, or >=", "=="))
 	end,
 	levenshtein = function(unitTest)
 		local error_func = function()
 			local gt = levenshtein(2)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected string, got number.")	
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	
 		error_func = function()
 			local gt = levenshtein("abc", 2)
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected string, got number.")	
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
 	end,
 	round = function(unitTest)
 		local error_func = function()
 			x = round("a")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#1' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "a"))
 
 		error_func = function()
 			x = round(2.5, "a")
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter '#2' expected number, got string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "a"))
 	end
 	-- TODO: implement forEachSocialNetwork
 }

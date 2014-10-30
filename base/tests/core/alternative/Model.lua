@@ -30,14 +30,14 @@ return{
 				simulationSteps = {10, 20, "30"},
 			}
 		end
-		unitTest:assert_error(error_func, "Error: All the elements of table 'simulationSteps' should have the same type.")
+		unitTest:assert_error(error_func, "All the elements of table 'simulationSteps' should have the same type.")
 
 		local error_func = function()
 			local Tube = Model{
 				simulationSteps = {aa = 3, bb = {10, 20, "30"}},
 			}
 		end
-		unitTest:assert_error(error_func, "Error: All the elements of table 'simulationSteps.bb' should have the same type.")
+		unitTest:assert_error(error_func, "All the elements of table 'simulationSteps.bb' should have the same type.")
 
 		local Tube = Model{
 			setup = function(model) end,
@@ -46,7 +46,7 @@ return{
 		local error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "Error: The object does not have a Timer.")
+		unitTest:assert_error(error_func, "The object does not have a Timer.")
 	
 		local Tube = Model{
 			setup = function(model)
@@ -58,7 +58,7 @@ return{
 		local error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "Error: The object has two running objects: 't2' (Timer) and 't' (Timer).")
+		unitTest:assert_error(error_func, "The object has two running objects: 't2' (Timer) and 't' (Timer).")
 	
 		local Tube = Model{
 			setup = function(model)
@@ -70,7 +70,7 @@ return{
 		local error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "Error: The object has two running objects: 't' (Timer) and 'e' (Environment).")
+		unitTest:assert_error(error_func, "The object has two running objects: 't' (Timer) and 'e' (Environment).")
 	
 		-- this test is necessary because it changes the searching order between the Timer and the Environment	
 		local Tube = Model{
@@ -83,7 +83,7 @@ return{
 		local error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "Error: The object has two running objects: 't' (Environment) and 'e' (Timer).")
+		unitTest:assert_error(error_func, "The object has two running objects: 't' (Environment) and 'e' (Timer).")
 	
 		local Tube = Model{
 			simulationSteps = {10, 20, 30},
@@ -102,37 +102,37 @@ return{
 		local error_func = function()
 			local m = Tube{flow = {a = 2}}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'flow' expected number, got table.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("flow", "number", {a = 2}))
 
 		local error_func = function()
 			local m = Tube{simulationSteps = 40}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible values. Parameter 'simulationSteps' expected one of {10, 20, 30}, got 40.")
+		unitTest:assert_error(error_func, incompatibleValueMsg("simulationSteps", "one of {10, 20, 30}", 40))
 
 		local error_func = function()
 			local m = Tube{s = 3}
 		end
-		unitTest:assert_error(error_func, "Error: Attribute 's' does not exist in the Model.")
+		unitTest:assert_error(error_func, "Attribute 's' does not exist in the Model.")
 
 		local error_func = function()
 			local m = Tube{checkZero = 3}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'checkZero' expected boolean, got number.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("checkZero", "boolean", 3))
 	
 		local error_func = function()
 			local m = Tube{initialWater = -5}
 		end
-		unitTest:assert_error(error_func, "Error: Initial water should be greater than zero.")
+		unitTest:assert_error(error_func, "Initial water should be greater than zero.")
 
 		local error_func = function()
 			local m = Tube{block = {xmix = 5}}
 		end
-		unitTest:assert_error(error_func, "Error: Attribute 'block.xmix' does not exist in the Model.")
+		unitTest:assert_error(error_func, "Attribute 'block.xmix' does not exist in the Model.")
 
 		local error_func = function()
 			local m = Tube{block = {xmin = false}}
 		end
-		unitTest:assert_error(error_func, "Error: Incompatible types. Parameter 'block.xmin' expected number, got boolean.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg("block.xmin", "number", false))
 			
 		local Tube = Model{simulationSteps = 10}
 
@@ -144,7 +144,7 @@ return{
 		local error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "Error: Function 'setup' was not implemented by the Model.")
+		unitTest:assert_error(error_func, "Function 'setup' was not implemented by the Model.")
 	end
 }
 

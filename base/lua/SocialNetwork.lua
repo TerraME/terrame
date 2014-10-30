@@ -34,18 +34,18 @@ SocialNetwork_ = {
 	add = function(self, connection, weight)
 		if type(connection) ~= "Agent" then
 			if connection == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "Agent", connection)
+				incompatibleTypeError(1, "Agent", connection)
 			end
 		end
 
 		if weight == nil then
 			weight = 1
 		elseif type(weight) ~= "number"  then
-			incompatibleTypeError("#2", "positive number", weight)
+			incompatibleTypeError(2, "positive number", weight)
 		elseif weight < 0 then
-			incompatibleValueError("#2", "positive number", weight)
+			incompatibleValueError(2, "positive number", weight)
 		end
 
 		local id = connection.id
@@ -74,9 +74,9 @@ SocialNetwork_ = {
 	getWeight = function(self, connection)
 		if type(connection) ~= "Agent" then
 			if connection == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "Agent", connection)
+				incompatibleTypeError(1, "Agent", connection)
 			end
 		end
 
@@ -98,9 +98,9 @@ SocialNetwork_ = {
 	isConnection = function(self, connection)
 		if type(connection) ~= "Agent" then
 			if connection == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "Agent", connection)
+				incompatibleTypeError(1, "Agent", connection)
 			end
 		end
 		return self.connections[connection.id] ~= nil
@@ -118,9 +118,9 @@ SocialNetwork_ = {
 	remove = function(self, connection)
 		if type(connection) ~= "Agent" then
 			if connection == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "Agent", connection)
+				incompatibleTypeError(1, "Agent", connection)
 			end
 		end
 
@@ -160,18 +160,18 @@ SocialNetwork_ = {
 	setWeight = function(self, connection, weight)
 		if type(connection) ~= "Agent" then
 			if connection == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "Agent", connection)
+				incompatibleTypeError(1, "Agent", connection)
 			end
 		elseif type(weight) ~= "number" then
 			if weight == nil then
-				mandatoryArgumentError("#2")
+				mandatoryArgumentError(2)
 			else
-				incompatibleTypeError("#2", "positive number", weight)
+				incompatibleTypeError(2, "positive number", weight)
 			end
 		elseif weight < 0 then
-			incompatibleValueError("#2", "positive number", weight)
+			incompatibleValueError(2, "positive number", weight)
 		end
 
 		local id = connection.id
