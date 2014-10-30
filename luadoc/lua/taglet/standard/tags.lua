@@ -73,7 +73,6 @@ end
 -- an error and do not change the previous value
 
 local function name (tag, block, text, doc_report)
-
 	local differentNameFunctions = {
 		__add = "+",
 		__sub = "-",
@@ -89,7 +88,7 @@ local function name (tag, block, text, doc_report)
 		-- __le = "comparison operator",
 		-- __index = "operator [] (index)"
 		-- __newindex = "operator [] (index)"
-		__call = "call"
+		--__call = "call"
 	}
 
 	local func_name = block[tag]
@@ -98,9 +97,8 @@ local function name (tag, block, text, doc_report)
 		func_name = differentNameFunctions[block[tag]]
 	end
 
-
 	if func_name and func_name ~= text then
-		printError(string.format("block name conflict: `%s' -> `%s'", block[tag], text))
+		printError(string.format("Block name conflict: `%s' -> `%s'", block[tag], text))
 		doc_report.block_name_conflict = doc_report.block_name_conflict + 1
 	end
 	
