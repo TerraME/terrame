@@ -878,9 +878,9 @@ local executeTests = function(fileName, package)
 
 
 	if print_when_loading > 0 then
-		printError(print_when_loading.." print calls when loading the package.")
+		printError(print_when_loading.." print calls were found when loading the package.")
 	else
-		printNote("No print calls when loading the package.")
+		printNote("No print calls were found when loading the package.")
 	end
 
 	if ut.fail > 0 then
@@ -910,7 +910,7 @@ local executeTests = function(fileName, package)
 	if ut.functions_with_global_variables > 0 then
 		printError(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
 	else
-		printNote("No function creates any global variable.")
+		printNote("No tested function creates any global variable.")
 	end
 
 	if ut.print_calls > 0 then
@@ -922,14 +922,14 @@ local executeTests = function(fileName, package)
 	if ut.wrong_file > 0 then
 		printError(ut.wrong_file.." assert_error calls found an error message pointing to an internal file (wrong level).")
 	else
-		printNote("No assert_error has error messages pointing to internal files.")
+		printNote("No assert_error calls had error messages pointing to internal files.")
 	end
 
 	if check_functions then
 		if ut.functions_not_tested > 0 then
-			printError(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions are not tested.")
+			printError(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions were not tested.")
 		else
-			printNote("All "..ut.package_functions.." functions of the package are tested.")
+			printNote("All "..ut.package_functions.." functions of the package were tested.")
 		end
 	else
 		printWarning("No source code functions were verified.")
@@ -941,7 +941,7 @@ local executeTests = function(fileName, package)
 		elseif ut.examples_error == 0 then
 			printNote("All "..ut.examples.." examples were successfully executed.")
 		else
-			printError(ut.examples_error.." out of "..ut.examples.." examples have unexpected execution error.")
+			printError(ut.examples_error.." out of "..ut.examples.." examples had unexpected execution error.")
 		end
 
 		if ut.log_files > 0 then

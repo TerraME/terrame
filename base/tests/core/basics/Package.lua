@@ -31,7 +31,6 @@ return{
 		end
 		unitTest:assert_error(error_func, unnecessaryParameterMsg("aaa"))
 	end,
-
 	unnecessaryParameterMsg = function(unitTest)
 		unitTest:assert_equal(unnecessaryParameterMsg("aaa"), "Parameter 'aaa' is unnecessary.")
 	end,
@@ -39,38 +38,27 @@ return{
 	incompatibleTypeMsg = function(unitTest)
 		unitTest:assert_equal(incompatibleTypeMsg("aaa", "string", 2), "Incompatible types. Parameter 'aaa' expected string, got number.")
 	end,
-
 	defaultValueMsg = function(unitTest)
 		unitTest:assert_equal(defaultValueMsg("aaa", 2), "Parameter 'aaa' could be removed as it is the default value (2).")
 	end,
 	resourceNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for parameter 'aaa'.")
 	end,
-
 	valueNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for parameter 'aaa'.")
 	end,
-
 	tableParameterMsg = function(unitTest)
 		unitTest:assert_equal(tableParameterMsg(), "Parameter must be a table.")
 	end,
-
 	mandatoryArgumentMsg = function(unitTest)
 		unitTest:assert_equal(mandatoryArgumentMsg("aaa"), "Parameter 'aaa' is mandatory.")
 	end,
-
 	namedParametersMsg = function(unitTest)
 		unitTest:assert_equal(namedParametersMsg(), "Parameters must be named.")
 	end,
-
 	incompatibleFileExtensionMsg = function(unitTest)
 		unitTest:assert_equal(incompatibleFileExtensionMsg("aaa", "bbb"), "Parameter 'aaa' does not support extension 'bbb'.")
 	end,
-
-
-
-
-
 	customError = function(unitTest)
 		local error_func = function()
 			customError("test.")
@@ -103,6 +91,9 @@ return{
 	end,
 	deprecatedFunctionMsg = function(unitTest)
 		unitTest:assert_equal(deprecatedFunctionMsg("aaa", "bbb"), "Function 'aaa' is deprecated. Use 'bbb' instead.")
+	end,
+	file = function(unitTest)
+		unitTest:assert_type(file("cs.csv"), "string")
 	end,
 	incompatibleFileExtensionError = function(unitTest)
 		local error_func = function()
