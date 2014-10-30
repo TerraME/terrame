@@ -956,7 +956,7 @@ local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabe
 -- @param data.curveLabels Vector of the same size of attributes that indicates the labels for each
 -- line of a chart. Default is the name of the attributes.
 --
--- @tab type
+-- @tabular type
 -- Type & Description & Compulsory parameters & Optional parameters \
 -- "chart" & Create a line chart showing the variation of one or more attributes (y axis) of an
 -- object. X axis values come from the single argument of notify(). & subject, attributes & xaxis, xLabel, yLabel, title, curveLabels \
@@ -997,7 +997,7 @@ local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabe
 --	 type = "chart",
 --	 attributes = {"water"}
 -- }
--- @tab default_parameters
+-- @tabular default_parameters
 -- Parameters, from higher to lower priority &
 -- Default type \
 -- file == "*.csv"  &

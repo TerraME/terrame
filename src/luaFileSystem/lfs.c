@@ -880,8 +880,8 @@ static const struct luaL_Reg fslib[] = {
 };
 
 int luaopen_lfs (lua_State *L) {
-//        dir_create_meta (L);
-//        lock_create_meta (L);
+	dir_create_meta (L);
+	lock_create_meta (L);
 //        luaL_newlib (L, fslib);
 //        lua_pushvalue(L, -1);
 //        lua_setglobal(L, LFS_LIBNAME);

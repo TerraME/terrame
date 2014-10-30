@@ -4,7 +4,7 @@
 
 local assert, tostring, type = assert, tostring, type
 local io, table, string = io, table, string
-local ipairs, pairs = ipairs, pairs
+local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
 local printWarning, printNote, attributes = printWarning, printNote, attributes
 local sessionInfo = sessionInfo
 
@@ -239,6 +239,7 @@ local function parse_comment (block, first_line)
 		end)
 	end
 	if block.output	then table.sort(block.output)	end
+
 	return block
 end
 
@@ -319,6 +320,7 @@ function parse_file (luapath, fileName, doc)
 	table.insert(doc.files, fileName)
 	doc.files[fileName] = {
 		type = "file",
+		path = luapath,
 		name = fileName,
 		doc = blocks,
 --		functions = class_iterator(blocks, "function"),
@@ -451,11 +453,12 @@ function file (lua_path, fileName, doc, short_lua_path)
 	if valid then
 		printNote(string.format("Processing file %s", short_lua_path..fileName))
 		doc = parse_file(lua_path, fileName, doc)
-	end
-	for _, file_ in ipairs(doc.files) do
-		local description = check_header(lua_path..file_)
-		doc.files[file_].description = description
-		doc.files[file_].summary = parse_summary(description)
+
+		for _, file_ in ipairs(doc.files) do
+			local description = check_header(doc.files[file_].path..file_)
+			doc.files[file_].description = description
+			doc.files[file_].summary = parse_summary(description)
+		end
 	end
 	return doc
 end
@@ -465,17 +468,17 @@ end
 -- @param path directory to search
 -- @param doc table with documentation
 -- @return table with documentation
-
 function directory (lua_path, file_, doc, short_lua_path)
 	for f in lfsdir(lua_path) do
-		local fullpath = lua_path..s..f
+		local fullpath = lua_path..f
 		local attr = attributes(fullpath)
 		assert(attr, string.format("error stating file `%s'", fullpath))
 		
 		if attr.mode == "file" then
 			doc = file(lua_path, f, doc, short_lua_path)
 		elseif attr.mode == "directory" and f ~= "." and f ~= ".." then
-			doc = directory(lua_path, f, doc, short_lua_path)
+			fullpath = fullpath..s
+			doc = directory(fullpath, f, doc, short_lua_path)
 		end
 	end
 	return doc
@@ -691,8 +694,9 @@ function start (files, package_path, short_lua_path)
 		if attr.mode == "file" then
 			doc = file(lua_path, file_, doc, short_lua_path)
 		elseif attr.mode == "directory" then
-			local file_path = lua_path..file_
-			doc = directory(lua_path, file_, doc, short_lua_path)
+			local dir_path = lua_path..file_..s
+			local short_dir_path = short_lua_path..file_..s
+			doc = directory(dir_path, file_, doc, short_dir_path)
 		end
 	end
 	

@@ -562,7 +562,7 @@ end
 -- will be considered as an argument of the constructor of the type. The values of each
 -- named argument have an associated semantinc, which means that they are not necessarially the
 -- default value. [Note that some of these features were not implemented yet.] See the table below:
--- @tab attrTab
+-- @tabular attrTab
 -- Attribute type & Description & Default value \
 -- number or bool & The instance has to belong to that type. & The value itself. \
 -- string & The instance has to belong to that type. If it is in the format "*.a;*.b;...", it 

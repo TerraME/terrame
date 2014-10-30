@@ -125,8 +125,8 @@ function luadocMain(package_path, files, package)
 
 	local options = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."config.lua").default_options
 	options.output_dir = package_path..s.."doc"..s
-	options.short_output_path = package..s.."doc"..s
-	options.short_lua_path = package..s.."lua"..s
+	options.short_output_path = "doc"..s
+	options.short_lua_path = "lua"..s
 
 	return startDoc(files, options, package_path)
 end

@@ -283,7 +283,7 @@ end
 -- initial value.
 -- @param attrs.method the name of a numeric algorithm to solve the ordinary differential 
 -- equations in a given [a,b[ interval. See the options below.
--- @tab method
+-- @tabular method
 -- Method & Description \
 -- "euler" (default) & Euler method \
 -- "heun" & Heun (Second Order Euler) \

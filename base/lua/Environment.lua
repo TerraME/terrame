@@ -127,7 +127,7 @@ Environment_ = {
 	-- Note that using this parameter does not force the simulation to have a maximum number of
 	-- agents inside cells along the simulation - controlling the maximum is always up to
 	-- the modeler.
-	-- @tab strategy Strategy & Description & Parameters \
+	-- @tabular strategy Strategy & Description & Parameters \
 	-- "random"(default) & Create placements between Agents and Cells randomly, putting each Agent
 	-- in a Cell randomly chosen. & name, max \
 	-- "uniform" & Create placements uniformly. The first Agents enter in the first Cells. The
