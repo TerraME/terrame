@@ -60,7 +60,7 @@ luadoc.link_description(file_doc.description, doc, module_doc, file_doc, "files/
 
 <%if #file_doc.functions > 0 then%>
 <% if file_doc.functions[1] == file_doc.name:match("(.-)%.lua") then %>
-<%=luadoc.include("function.lp", { doc=doc, file_doc=file_doc, func=file_doc.functions[file_doc.functions[1]] })
+<%=luadoc.include("function.lp", { doc=doc, file_doc=file_doc, func=file_doc.functions[file_doc.functions[1]], doc_report = doc_report })
 %><% table.remove(file_doc.functions, 1) %>
 <% end %>
 <%if #file_doc.functions > 0 then%>
@@ -102,7 +102,7 @@ luadoc.link_description(file_doc.description, doc, module_doc, file_doc, "files/
 <dl class="function">
 <%for i, func_name in ipairs(file_doc.functions) do
     if func_name ~= file_doc.name:match("(.-)%.lua") then %>
-<%=luadoc.include("function.lp", { doc=doc, file_doc=file_doc, func=file_doc.functions[func_name] })%>
+<%=luadoc.include("function.lp", { doc=doc, file_doc=file_doc, func=file_doc.functions[func_name], doc_report = doc_report })%>
     <%end%>
 <%end%>
 </dl>

@@ -5,7 +5,7 @@
 local assert, tostring, type = assert, tostring, type
 local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
-local printWarning, printNote, attributes = printWarning, printNote, attributes
+local printWarning, printNote, printError, print, attributes = printWarning, printNote, printError, print, attributes
 local sessionInfo = sessionInfo
 
 local s = sessionInfo().separator
@@ -155,7 +155,7 @@ end
 -- @param block block with comment field
 -- @return block parameter
 
-local function parse_comment (block, first_line)
+local function parse_comment (block, first_line, doc_report)
 
 	-- get the first non-empty line of code
 	local code 
@@ -208,7 +208,7 @@ local function parse_comment (block, first_line)
 		if r ~= nil then
 			-- found new tag, add previous one, and start a new one
 			-- TODO: what to do with invalid tags? issue an error? or log a warning?
-			tags.handle(currenttag, block, currenttext)
+			tags.handle(currenttag, block, currenttext, doc_report)
 			
 			currenttag = tag
 			currenttext = text
@@ -223,7 +223,7 @@ local function parse_comment (block, first_line)
 			assert(string.sub(currenttext, 1, 1) ~= " ", string.format("`%s', `%s'", currenttext, line))
 		end
 	end
-	tags.handle(currenttag, block, currenttext)
+	tags.handle(currenttag, block, currenttext, doc_report)
   
 	-- extracts summary information from the description
 	block.summary = parse_summary(block.description)
@@ -252,7 +252,7 @@ end
 -- @return line
 -- @return block parsed
 -- @return modulename if found
-local function parse_block (f, line, modulename, first)
+local function parse_block (f, line, modulename, first, doc_report)
 	local block = {
 		comment = {},
 		code = {},
@@ -265,7 +265,7 @@ local function parse_block (f, line, modulename, first)
 			line, block.code, modulename = parse_code(f, line, modulename)
 
 			-- parse information in block comment
-			block = parse_comment(block, first)
+			block = parse_comment(block, first, doc_report)
 
 			return line, block, modulename
 		else
@@ -276,7 +276,7 @@ local function parse_block (f, line, modulename, first)
 	-- reached end of file
 	
 	-- parse information in block comment
-	block = parse_comment(block, first)
+	block = parse_comment(block, first, doc_report)
 	
 	return line, block, modulename, header
 end
@@ -287,7 +287,7 @@ end
 -- @param doc table with documentation
 -- @return table with documentation
 
-function parse_file (luapath, fileName, doc)
+function parse_file (luapath, fileName, doc, doc_report, short_lua_path)
 	local blocks = {}
 	local modulename = nil
 	fullpath = luapath..fileName
@@ -301,7 +301,7 @@ function parse_file (luapath, fileName, doc)
 		if string.find(line, "^[\t ]*%-%-%-") then
 			-- reached a luadoc block
 			local block
-			line, block, modulename = parse_block(f, line, modulename, first)
+			line, block, modulename = parse_block(f, line, modulename, first, doc_report)
 			table.insert(blocks, block)
 		else
 			-- look for a module definition
@@ -321,6 +321,7 @@ function parse_file (luapath, fileName, doc)
 	doc.files[fileName] = {
 		type = "file",
 		path = luapath,
+		short_path = short_lua_path,
 		name = fileName,
 		doc = blocks,
 --		functions = class_iterator(blocks, "function"),
@@ -406,6 +407,7 @@ function parse_file (luapath, fileName, doc)
 	-- make functions table
 	doc.files[fileName].functions = {}
 	for f in class_iterator(blocks, "function")() do
+		doc_report.functions = doc_report.functions + 1
 		table.insert(doc.files[fileName].functions, f.name)
 		doc.files[fileName].functions[f.name] = f
 	end
@@ -413,6 +415,7 @@ function parse_file (luapath, fileName, doc)
 	-- make tables variables
 	doc.files[fileName].variables = {}
 	for t in class_iterator(blocks, "variable")() do
+		doc_report.variables = doc_report.variables + 1
 		table.insert(doc.files[fileName].variables, t.name)
 		doc.files[fileName].variables[t.name] = t
 	end
@@ -440,7 +443,7 @@ end
 -- @param doc table with documentation
 -- @return table with documentation
 -- @see parse_file
-function file (lua_path, fileName, doc, short_lua_path)
+function file (lua_path, fileName, doc, short_lua_path, doc_report)
 	local patterns = { "%.lua$", "%.luadoc$" }
 	local valid = false
 	for _, pattern in ipairs(patterns) do
@@ -451,8 +454,9 @@ function file (lua_path, fileName, doc, short_lua_path)
 	end
 	
 	if valid then
-		printNote(string.format("Processing file %s", short_lua_path..fileName))
-		doc = parse_file(lua_path, fileName, doc)
+		print(string.format("Parsing %s", short_lua_path..fileName))
+		doc_report.lua_files = doc_report.lua_files + 1
+		doc = parse_file(lua_path, fileName, doc, doc_report, short_lua_path)
 
 		for _, file_ in ipairs(doc.files) do
 			local description = check_header(doc.files[file_].path..file_)
@@ -519,11 +523,15 @@ local function reserved_words(tab)
 	end
 end
 
-local function exclude_undoc(tab)
+local function exclude_undoc(tab, doc_report)
+	printNote("Checking undocumented files")
 	for i = #tab, 1, -1 do
 		-- local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].tables + #tab[tab[i]].variables
 		local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].variables
 		if doc_blocs == 0 then
+			printError("File "..tab[tab[i]].name.." was not documented.")
+			doc_report.undoc_files = doc_report.undoc_files + 1
+
 			tab[tab[i]] = nil
 			table.remove(tab, i)
 		end
@@ -531,10 +539,12 @@ local function exclude_undoc(tab)
 end
 
 -- report functions with no usage definition
-local function check_usage(files)
+local function check_usage(files, doc_report)
 	local no_usage = {}
+	printNote("Checking @usage definition")
 	for i = 1, #files do
 		local file_name = files[i]
+		print("Checking "..files[file_name].short_path..file_name)
 		local functions = files[file_name].functions
 		for j = 1, #functions do
 			local function_name = functions[j]
@@ -544,6 +554,8 @@ local function check_usage(files)
 					table.insert(no_usage, file_name)
 				end
 				table.insert(no_usage[file_name], function_name)
+				printError(file_name .. ": " .. "No @usage definition for '" .. function_name .. "'")
+				doc_report.lack_usage = doc_report.lack_usage + 1
 			end
 		end
 	end
@@ -551,22 +563,24 @@ local function check_usage(files)
 		local file_name = no_usage[i]
 		for j = 1, #no_usage[file_name] do
 			local function_name = no_usage[file_name][j]
-			printWarning(file_name .. ": " .. "No @usage definition for '" .. function_name .. "'")
 		end
 	end
 end
 
-local function check_function_usage(files)
+local function check_function_usage(files, doc_report)
+	printNote("Checking calls on @usage")
 	for i = 1, #files do
 		local file_name = files[i]
+		print("Checking "..files[file_name].short_path..file_name)
 		local functions = files[file_name].functions
 		for j = 1, #functions do
 			local function_name = functions[j]
 			local usage = functions[function_name].usage
 			if type(usage) == "string" then
 				if not string.match(usage, function_name) then
-					local warning = "%s: '%s' does not call itself in its @usage"
-					printWarning(warning:format(file_name, function_name))
+					local message = "%s: '%s' does not call itself in its @usage"
+					printError(message:format(file_name, function_name))
+					doc_report.no_call_itself_usage = doc_report.no_call_itself_usage + 1
 				end
 			end
 		end
@@ -594,18 +608,22 @@ local function check_tab_cols(files)
 	--end
 end
 
-local function check_undoc_params(files)
+local function check_undoc_params(files, doc_report)
+	printNote("Checking undocumented parameters")
 	for i = 1, #files do
 		local file_name = files[i]
+		print("Checking "..files[file_name].short_path..file_name)
 		local functions = files[file_name].functions
 		for j = 1, #functions do
 			local function_name = functions[j]
 			local params = functions[function_name].param
 			if type(params) == "table" and not params.named then
+				doc_report.parameters = doc_report.parameters + #params
 				for k = 1, #params do
 					if not params[params[k]] then
 						local warning = "%s: '%s' has undocumented parameter '%s'"
-						printWarning(warning:format(file_name, function_name, params[k]))
+						printError(warning:format(file_name, function_name, params[k]))
+						doc_report.undoc_param = doc_report.undoc_param + 1
 					end
 				end
 			end
@@ -672,7 +690,7 @@ function check_header(filepath)
 end
 
 -------------------------------------------------------------------------------
-function start (files, package_path, short_lua_path)
+function start (files, package_path, short_lua_path, doc_report)
 	local s = sessionInfo().separator
 	assert(files, "file list not specified")
 	local lua_path = package_path..s.."lua"..s
@@ -687,12 +705,13 @@ function start (files, package_path, short_lua_path)
 	assert(doc.files, "undefined `files' field")
 	assert(doc.modules, "undefined `modules' field")
 	
+	printNote("Parsing lua files")
 	for _, file_ in ipairs(files) do
 		local attr = attributes(lua_path..file_)
 		assert(attr, string.format("error stating path `%s'", lua_path))
 		
 		if attr.mode == "file" then
-			doc = file(lua_path, file_, doc, short_lua_path)
+			doc = file(lua_path, file_, doc, short_lua_path, doc_report)
 		elseif attr.mode == "directory" then
 			local dir_path = lua_path..file_..s
 			local short_dir_path = short_lua_path..file_..s
@@ -701,7 +720,7 @@ function start (files, package_path, short_lua_path)
 	end
 	
 	-- exclude undocumented files
-	exclude_undoc(doc.files)
+	exclude_undoc(doc.files, doc_report)
 
 	-- sort documentation
 	sort_doc(doc.files)
@@ -710,9 +729,9 @@ function start (files, package_path, short_lua_path)
 	reserved_words(doc.files)
 
 	-- Warnings
-	check_usage(doc.files)
-	check_undoc_params(doc.files)
-	check_function_usage(doc.files)
+	check_usage(doc.files, doc_report)
+	check_function_usage(doc.files, doc_report)
+	check_undoc_params(doc.files, doc_report)
 	check_tab_cols(doc.files)
 	check_constructor_file(doc)
 	return doc

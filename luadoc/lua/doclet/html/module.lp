@@ -88,7 +88,7 @@
 <h2><a name="functions"></a>Functions</h2>
 <dl class="function">
 <%for _, func_name in ipairs(module_doc.functions) do%>
-<%=luadoc.doclet.html.include("function.lp", { doc=doc, module_doc=module_doc, func=module_doc.functions[func_name] })%>
+<%=luadoc.doclet.html.include("function.lp", { doc=doc, module_doc=module_doc, func=module_doc.functions[func_name], doc_report = doc_report })%>
 <%end%>
 </dl>
 <%end%>

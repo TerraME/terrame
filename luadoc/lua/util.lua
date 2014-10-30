@@ -5,7 +5,7 @@
 
 -- local lfs = require "lfs"
 local type, table, io, assert, tostring, setmetatable, pcall = type, table, io, assert, tostring, setmetatable, pcall
-local print, string, ipairs, mkdir, printWarning = print, string, ipairs, mkdir, printWarning
+local print, string, ipairs, mkdir, printWarning, printNote, printError = print, string, ipairs, mkdir, printWarning, printNote, printError
 
 -------------------------------------------------------------------------------
 -- Module with several utilities that could not fit in a specific module
@@ -204,7 +204,7 @@ end
 
 local check_parameters
 -- Sort a tab descriptor and check for declared parameters
-function parse_tab(tab, func, filename)
+function parse_tab(tab, func, filename, doc_report)
 	local parameters = {}
 	local header = tab[1]
 	
@@ -232,12 +232,12 @@ function parse_tab(tab, func, filename)
 		end
 	end
 	if is_strategy_table then
-		check_parameters(parameters, func, filename)
+		check_parameters(parameters, func, filename, doc_report)
 	end	
 	-- ordenar e adicionar a lista
 end
 
-function check_parameters(parsed_params, func, filename)
+function check_parameters(parsed_params, func, filename, doc_report)
 	local unknown = {}
 	local unused = {}
 	
@@ -257,10 +257,11 @@ function check_parameters(parsed_params, func, filename)
 	end
 	for _, param in ipairs(unknown) do
 		local warning = "%s: Unknown parameter '%s' in '%s'"
-		printWarning(warning:format(filename, param, func.name))
+		printError(warning:format(filename, param, func.name))
 	end
 	for _, param in ipairs(unused) do
-		local warning = "%s: Unused parameter '%s' in '%s'"
-		printWarning(warning:format(filename, param, func.name))
+		local warning = "%s: Parameter '%s' in '%s' is not used in the HTML table"
+		printError(warning:format(filename, param, func.name))
+		doc_report.unused_param = doc_report.unused_param + 1
 	end
 end

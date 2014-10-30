@@ -367,6 +367,7 @@ local doc = function(package)
 	-- no futuro, pegar tambem a pasta examples para gerar a documentacao
 	-- luadoc *.lua -d doc
 	-- colocar sempre o logo do TerraME, removendo o parametro logo = "img/terrame.png"
+	local initialTime = os.clock()
 
 	require("base")
 	require("luadoc")
@@ -374,13 +375,88 @@ local doc = function(package)
 	local s = sessionInfo().separator
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
-	if not isfile(package_path) then
-		customError("Package "..package.." not found.", 3)
-	end
+	xpcall(function() require(package) end, function(err)
+		printError("Package could "..package.." not be loaded.")
+        printError(err)
+        printError(traceback())
+		os.exit()
+    end)
 
 	local files = dir(package_path..s.."lua")
 
-	luadocMain(package_path, files, package)
+	local doc_report = {
+		parameters = 0,
+		lua_files = 0,
+		html_files = 0,
+		functions = 0,
+		variables = 0,
+
+		undoc_param = 0,
+		undefined_param = 0,
+		unused_param = 0,
+		undoc_files = 0,
+		lack_usage = 0,
+		block_name_conflict = 0,
+		no_call_itself_usage = 0,
+		non_doc_functions = 0
+	}
+
+	luadocMain(package_path, files, package, doc_report)
+
+	local finalTime = os.clock()
+
+	print("\nReport: ")
+	printNote("Documentation generated in "..round(finalTime - initialTime, 2).." seconds.")
+
+	if doc_report.undoc_param == 0 then
+		printNote("All "..doc_report.parameters.." parameters are documented.")
+	else
+		printError(doc_report.undoc_param.." parameters are not documented.")
+	end
+
+	if doc_report.unused_param == 0 then
+		printNote("All "..doc_report.parameters.." parameters are used in the HTML tables.")
+	else
+		printError(doc_report.unused_param.." table parameters are not used in the HTML tables.")
+	end
+
+	if doc_report.undoc_files == 0 then
+		printNote("All "..doc_report.lua_files.." files of the package are documented.")
+	else
+		printError(doc_report.undoc_files.." files were not documented.")
+	end
+
+	if doc_report.lack_usage == 0 then
+		printNote("All "..doc_report.functions.." have @usage field defined.")
+	else
+		printError(doc_report.lack_usage.." functions have not defined @usage field.")
+	end
+
+	if doc_report.no_call_itself_usage == 0 then
+		printNote("All "..doc_report.functions.." functions call thenselves in its @usage.")
+	else
+		printError(doc_report.no_call_itself_usage.." functions do not call itself in its @usage.")
+	end
+
+	if doc_report.non_doc_functions == 0 then
+		printNote("All "..doc_report.functions.." functions of the package are documented.")
+	else
+		printError(doc_report.non_doc_functions.." functions are not documented.")
+	end
+
+	if doc_report.block_name_conflict == 0 then
+		printNote("No block name conflict was found.")
+	else
+		printError(doc_report.block_name_conflict.." functions were documented with a different name.")
+	end
+
+	if doc_report.undefined_param == 0 then
+		printNote("No undefined parameter was found.")
+	else
+		printError(doc_report.undefined_param.." undefined parameters was found.")
+	end
+
+	printNote(doc_report.html_files.." html files were generated.")
 end
 
 -- builds a table with zero counts for each element of the table gotten as argument

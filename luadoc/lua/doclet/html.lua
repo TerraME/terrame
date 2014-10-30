@@ -81,6 +81,7 @@ function includeMod (template, env)
 	env.luadoc.symbol_link = symbol_link
 	env.luadoc.link_description = link_description
 	env.luadoc.module_link = module_link
+
 	return lp.include(templatepath, env)
 end
 
@@ -319,21 +320,23 @@ end
 -- Generate the output.
 -- @param doc Table with the structured documentation.
 
-function start (doc)
+function start (doc, doc_report)
 	-- Reserveds words for parser
 	if doc.files then
 		highlighting.setWords(doc.files.funcnames)
 	end
 
+	printNote("Generating HTML files")
+
 	-- Generate index file
 	if (#doc.files > 0 or #doc.modules > 0) and (not options.noindexpage) then
 		local filename = options.output_dir.."index.html"
 		local short_fileName = options.short_output_path.."index.html"
-		printNote(string.format("Generating file %s", short_fileName))
+		print(string.format("Generating %s", short_fileName))
 		local f = util.openFile(filename, "w")
 		assert(f, string.format("Could not open %s for writing", filename))
 		io.output(f)
-		includeMod("index.lp", { doc = doc })
+		includeMod("index.lp", { doc = doc, doc_report = doc_report })
 		f:close()
 	end
 	
@@ -343,12 +346,13 @@ function start (doc)
 			local module_doc = doc.modules[modulename]
 			-- assembly the filename
 			local filename = out_module(modulename)
-			printNote(string.format("Generating file %s", filename))
+			print(string.format("Generating %s", filename))
+			doc_report.html_files = doc_report.html_files + 1
 			
 			local f = util.openFile(filename, "w")
 			assert(f, string.format("Could not open %s for writing", filename))
 			io.output(f)
-			includeMod("module.lp", { doc = doc, module_doc = module_doc })
+			includeMod("module.lp", { doc = doc, module_doc = module_doc, doc_report = doc_report })
 			f:close()
 		end
 	end
@@ -359,12 +363,13 @@ function start (doc)
 			local file_doc = doc.files[filepath]
 			-- assembly the filename
 			local filepath, short_filepath = out_file(file_doc.name)
-			printNote(string.format("Generating file %s", short_filepath))
+			print(string.format("Generating %s", short_filepath))
+			doc_report.html_files = doc_report.html_files + 1
 			
 			local f = util.openFile(filepath, "w")
 			assert(f, string.format("Could not open %s for writing", short_filepath))
 			io.output(f)
-			includeMod("file.lp", { doc = doc, file_doc = file_doc } )
+			includeMod("file.lp", { doc = doc, file_doc = file_doc, doc_report = doc_report } )
 			f:close()
 		end
 	end

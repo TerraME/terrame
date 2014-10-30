@@ -74,7 +74,7 @@ end %>
       end
        %> 
       <table class="param_tab">
-	  <%util.parse_tab(tab, func, file_doc.name)%>
+	  <%util.parse_tab(tab, func, file_doc.name, doc_report)%>
       <% for j, line in ipairs(tab) do %>
         <tr>
         <% for _, data in ipairs(line) do %>

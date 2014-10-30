@@ -72,9 +72,10 @@ end
 -- Set the name of the comment block. If the block already has a name, issue
 -- an error and do not change the previous value
 
-local function name (tag, block, text)
+local function name (tag, block, text, doc_report)
 	if block[tag] and block[tag] ~= text then
 		printError(string.format("block name conflict: `%s' -> `%s'", block[tag], text))
+		doc_report.block_name_conflict = doc_report.block_name_conflict + 1
 	end
 	
 	block[tag] = text
@@ -86,12 +87,12 @@ end
 -- @param block Table with previous information about the block.
 -- @param text String with the current line beeing processed.
 local print = print
-local function param (tag, block, text)
+local function param (tag, block, text, doc_report)
 	block[tag] = block[tag] or {}
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	if not name then
-		printWarning("Warning: parameter `name' not defined [["..text.."]]: skipping")
+		printError("Warning: parameter `name' not defined [["..text.."]]: skipping")
 		return
 	end
  
@@ -127,8 +128,9 @@ local function param (tag, block, text)
 		end
 	end
 	if i == nil then
-		printWarning(string.format("Warning: documenting undefined parameter `%s'", name))
+		printError(string.format("Warning: documenting undefined parameter `%s'", name))
 		table.insert(block[tag], name)
+		doc_report.undefined_param = doc_report.undefined_param + 1
 	end
 	block[tag][name] = desc
 end
@@ -236,11 +238,11 @@ handlers["inherits"] = inherits
 
 -------------------------------------------------------------------------------
 
-function handle (tag, block, text)
+function handle (tag, block, text, doc_report)
 	if not handlers[tag] then
 		printError(string.format("Error: undefined handler for tag `%s'", tag))
 		return
 	end
 --	assert(handlers[tag], string.format("undefined handler for tag `%s'", tag))
-	return handlers[tag](tag, block, text)
+	return handlers[tag](tag, block, text, doc_report)
 end
