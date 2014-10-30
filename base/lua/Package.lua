@@ -90,6 +90,7 @@ function switch(data, att)
 						end)
 						word = string.sub(word, 0, string.len(word) - 2).."]."
 					end
+					-- TODO add Msg functions for errors in swith to allow them to be used in the tests
 					customError("'"..self.casevar.."' is an invalid value for parameter '"..att.."'. "..word)
 				end
 			end
@@ -144,13 +145,21 @@ end
 function verifyNamedTable(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			customError("Parameter must be a table.")
+			customError(tableParameterMsg())
 		else
-			customError("Parameters must be named.")
+			customError(namedParametersMsg())
 		end
 	elseif #data > 0 then
 		customError("All elements of the argument must be named.")
 	end
+end
+
+tableParameterMsg = function()
+	return "Parameter must be a table."
+end
+
+namedParametersMsg = function()
+	return "Parameters must be named."
 end
 
 --- Verify whether the used has used only the allowed parameters for a functoin, generating
@@ -162,9 +171,13 @@ end
 function checkUnnecessaryParameters(data, parameters)
 	forEachElement(data, function(value)
 		if not belong(value, parameters) then
-			customWarning("Parameter '"..value.."' is unnecessary.")
+			customWarning(unnecessaryParameterMsg(value))
 		end
 	end)
+end
+
+function unnecessaryParameterMsg(value)
+	return "Parameter '"..tostring(value).."' is unnecessary."
 end
 
 --- Generate an error.
@@ -172,7 +185,7 @@ end
 -- @usage customError("error message")
 function customError(msg)
 	if type(msg) ~= "string" then
-		error("Error: #1 should be a string.", 2)
+		customError(incompatibleTypeMsg(1, "string", msg))
 	end
 
 	local level = getLevel()
@@ -184,7 +197,7 @@ end
 -- @usage customWarning("warning message")
 function customWarning(msg)
 	if type(msg) ~= "string" then
-		error("Error: #1 should be a string.", 2)
+		customError(incompatibleTypeMsg(1, "string", msg))
 	elseif sessionInfo().mode == "normal" then
 		local level = getLevel()
 		local info = debug.getinfo(level)
@@ -222,7 +235,11 @@ function defaultValueWarning(parameter, value)
 		error("Error: #1 should be a string.", 2)
 	end
 
-	customWarning("Parameter '"..parameter.."' could be removed as it is the default value ("..tostring(value)..").")
+	customWarning(defaultValueMsg(parameter, value))
+end
+
+function defaultValueMsg(parameter, value)
+	return "Parameter '"..parameter.."' could be removed as it is the default value ("..tostring(value)..")."
 end
 
 --- Generates a warning for deprecated functions.
@@ -232,14 +249,15 @@ end
 function deprecatedFunctionWarning(functionName, functionExpected)
 	if type(functionName) ~= "string" then
 		error("Error: #1 should be a string.", 2)
-	end
-
-	if type(functionExpected) ~= "string" then
+	elseif type(functionExpected) ~= "string" then
 		error("Error: #2 should be a string.", 2)
 	end
 
-	local text = "Function '"..functionName.."' is deprecated. Use '"..functionExpected.."' instead."
-	customWarning(text)
+	customWarning(deprecatedFunctionMsg(functionName, functionExpected))
+end
+
+function deprecatedFunctionMsg(functionName, functionExpected)
+	return "Function '"..functionName.."' is deprecated. Use '"..functionExpected.."' instead."
 end
 
 --- Generate an error from a wrong type for a parameter of a function.
@@ -248,12 +266,18 @@ end
 -- @param gottenValue The value passed as argument with wrong type.
 -- @usage incompatibleTypeError("cell", "Cell", Agent{})
 function incompatibleTypeError(attr, expectedTypesString, gottenValue)
+	customError(incompatibleTypeMsg(attr, expectedTypesString, gottenValue))
+end
+
+function incompatibleTypeMsg(attr, expectedTypesString, gottenValue)
+	if type(attr) == "number" then
+		attr = "#"..attr
+	end
+
 	if expectedTypesString == nil then expectedTypesString = "nil" end
 
-	local text = "Incompatible types. Parameter '"..attr.."' expected "..
+	return "Incompatible types. Parameter '"..attr.."' expected "..
 		expectedTypesString..", got "..type(gottenValue).."."
-
-	customError(text)
 end
 
 --- Generate an error from a wrong value for a parameter of a function.
@@ -262,7 +286,15 @@ end
 -- @param gottenValue The value passed as argument with wrong value.
 -- @usage incompatibleValueError("position", "1, 2, or 3", "4")
 function incompatibleValueError(attr, expectedValues, gottenValue)
+	customError(incompatibleValueMsg(attr, expectedValues, gottenValue))
+end
+
+function incompatibleValueMsg(attr, expectedValues, gottenValue)
 	if expectedValues == nil then expectedValues = "nil" end
+
+	if type(attr) == "number" then
+		attr = "#"..attr
+	end
 
 	local msg = "Incompatible values. Parameter '"..attr.."' expected ".. expectedValues ..", got "
 	if type(gottenValue) == "string" then
@@ -272,7 +304,7 @@ function incompatibleValueError(attr, expectedValues, gottenValue)
 	else
 		msg = msg..gottenValue.."."
 	end
-	customError(msg)
+	return msg
 end
 
 --- Generate an error indicating that the function does not support a given file extension.
@@ -280,15 +312,24 @@ end
 -- @param ext The file extension (a string).
 -- @usage incompatibleFileExtensionError("file", ".txt")
 function incompatibleFileExtensionError(attr, ext)
-	customError("Parameter '".. attr.."' does not support '"..ext.."'.")
+	customError(incompatibleFileExtensionMsg(attr, ext))
 end
+
+function incompatibleFileExtensionMsg(attr, ext)
+	return "Parameter '".. attr.."' does not support extension '"..ext.."'."
+end
+
 
 --- Generate an error indicating that a given resource was not found.
 -- @param attr The attribute name (a string).
 -- @param path The location of the resource, described as a string.
 -- @usage resourceNotFoundError("file", "/usr/local/file.txt")
 function resourceNotFoundError(attr, path)
-	customError("Resource '"..path.."' not found for parameter '"..attr.."'.")
+	customError(resourceNotFoundMsg(attr, path))
+end
+
+function resourceNotFoundMsg(attr, path)
+    return "Resource '"..path.."' not found for parameter '"..attr.."'."
 end
 
 --- Generate an error due to a wrong value for a parameter.
@@ -296,15 +337,30 @@ end
 -- @param value The wrong value, which can belong to any type.
 -- @usage valueNotFoundError("1", "neighborhood")
 function valueNotFoundError(attr, value)
+	customError(valueNotFoundMsg(attr, value))
+end
+
+function valueNotFoundMsg(attr, value)
 	if type(value) == nil then value = "nil" end
-	customError("Value '"..value.."' not found for parameter '"..attr.."'.")
+	if type(attr) == "number" then
+		attr = "#"..attr
+	end
+
+	return "Value '"..value.."' not found for parameter '"..attr.."'."
 end
 
 --- Generate an error indicating that a given parameter is mandatory.
 -- @param attr The name of the parameter (a string).
 -- @usage mandatoryArgumentError("target")
 function mandatoryArgumentError(attr)
-	customError("Parameter '"..attr.."' is mandatory.")
+	customError(mandatoryArgumentMsg(attr))
+end
+
+function mandatoryArgumentMsg(attr)
+	if type(attr) == "number" then
+		attr = "#"..attr
+	end
+	return "Parameter '"..attr.."' is mandatory."
 end
 
 --- Verify whether the table contains a mandatory argument. It produces an error if the value is nil or

@@ -32,7 +32,7 @@ Trajectory_ = {
 	-- @usage traj:add(cell)
 	add = function(self, cell)
 		if type(cell) ~="Cell" then
-			incompatibleTypeError("#2", "Cell", cell)
+			incompatibleTypeError(2, "Cell", cell)
 		end
 
 	-- TODO: uncomment after solving #22
@@ -73,7 +73,7 @@ Trajectory_ = {
 		if type(f) == "function" then
 			self.select = f
 		elseif f ~= nil then
-			incompatibleTypeError("#1", "function or nil", f)
+			incompatibleTypeError(1, "function or nil", f)
 		end
 
 		self.cells = {}
@@ -151,7 +151,7 @@ Trajectory_ = {
 		if type(greaterThan) == "function" then
 			self.greater = greaterThan
 		elseif greaterThan ~= nil then
-			incompatibleTypeError("#1", "function or nil", greaterThan)
+			incompatibleTypeError(1, "function or nil", greaterThan)
 		end
 
 		if type(self.greater) == "function" then

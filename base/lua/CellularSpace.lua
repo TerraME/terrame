@@ -461,7 +461,7 @@ CellularSpace_ = {
 	-- @usage cs:add(cell)
 	add = function(self, cell)
 		if type(cell) ~= "Cell" then
-			incompatibleTypeError("#1", "Cell", cell)
+			incompatibleTypeError(1, "Cell", cell)
 		elseif cell.parent ~= nil then 
 			customError("The cell already has a parent.")
 		end
@@ -689,15 +689,15 @@ CellularSpace_ = {
 			return self.cObj_:getCellByID(xIndex)
 		elseif type(xIndex) ~= "number" or math.floor(xIndex) ~= xIndex then
 			if xIndex == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "positive integer number", xIndex)
+				incompatibleTypeError(1, "positive integer number", xIndex)
 			end
 		elseif type(yIndex) ~= "number" or math.floor(yIndex) ~= yIndex then
 			if yIndex == nil then
-				mandatoryArgumentError("#2")
+				mandatoryArgumentError(2)
 			else
-				incompatibleTypeError("#2", "positive integer number", yIndex)
+				incompatibleTypeError(2, "positive integer number", yIndex)
 			end
 		end
 
@@ -758,6 +758,8 @@ CellularSpace_ = {
 			if not io.open(data.source, 'r') then
 				resourceNotFoundError("source", data.source)
 			end
+		else
+			incompatibleFileExtensionError("source", string.match(data.source, "%w+$"))
 		end
 
 		if data.name == nil then
@@ -780,10 +782,10 @@ CellularSpace_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime) 
+				incompatibleTypeError(1, "Event or positive number", modelTime) 
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "Event or positive number", modelTime)   
+			incompatibleValueError(1, "Event or positive number", modelTime)   
 		end
 
         if self.obsattrs then
@@ -812,29 +814,29 @@ CellularSpace_ = {
 	save = function(self, time, outputTableName, attrNames)
 		if type(time) ~= "number" then
 			if time == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "positive integer number", time)
+				incompatibleTypeError(1, "positive integer number", time)
 			end
 		elseif time < 0 then
-			incompatibleValueError("#1", "positive integer number", time)	  
+			incompatibleValueError(1, "positive integer number", time)	  
 		elseif math.floor(time) ~= time then
-			incompatibleValueError("#1", "positive integer number", time)
+			incompatibleValueError(1, "positive integer number", time)
 		end
 
 		if type(outputTableName) ~= "string" then 
 			if outputTableName == nil then
-				mandatoryArgumentError("#2")
+				mandatoryArgumentError(2)
 			else
-				incompatibleTypeError("#2", "string", outputTableName)
+				incompatibleTypeError(2, "string", outputTableName)
 			end
 		end
 
 		if type(attrNames) ~= "string" and type(attrNames) ~= "table" then
 			if attrNames == nil then
-				mandatoryArgumentError("#3")
+				mandatoryArgumentError(3)
 			else
-  				incompatibleTypeError("#3", "string", attrNames)
+  				incompatibleTypeError(3, "string", attrNames)
 			end
 		end   
 
@@ -912,9 +914,9 @@ CellularSpace_ = {
 	split = function(self, argument)
 		if type(argument) ~= "function" and type(argument) ~= "string" then
 			if argument == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "string or function", argument)
+				incompatibleTypeError(1, "string or function", argument)
 			end
 		end
 
@@ -965,7 +967,7 @@ CellularSpace_ = {
 					end
 				end
 			else
-				incompatibleTypeError("#1", "string, table or nil", values)
+				incompatibleTypeError(1, "string, table or nil", values)
 			end
 		end
 		local s = "return function(cell)\n"

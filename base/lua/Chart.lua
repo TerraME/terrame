@@ -102,7 +102,7 @@ Chart = function(data)
 				data.subject.obsattrs[value] = true
 
 			elseif type(data.subject[value]) ~= "number" then
-				customError("Selected element '"..value.."' should be a number or function, got "..type(data.subject[value])..".")
+				incompatibleTypeError(value, "number or function", data.subject[value])
 			end
 		end)
 

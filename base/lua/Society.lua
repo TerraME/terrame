@@ -120,7 +120,7 @@ Society_ = {
 			setmetatable(agent, metaTable)
 			agent:init()
 		elseif mtype ~= "Agent" then
-			incompatibleTypeError("#1", "Agent or table", agent)
+			incompatibleTypeError(1, "Agent or table", agent)
 		end
 
 		agent.parent = self
@@ -354,10 +354,10 @@ Society_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime) 
+				incompatibleTypeError(1, "Event or positive number", modelTime) 
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "Event or positive number", modelTime)   
+			incompatibleValueError(1, "Event or positive number", modelTime)   
 		end
 
 		if self.obsattrs then
@@ -401,7 +401,7 @@ Society_ = {
 				end
 			end
 		else
-			incompatibleTypeError("#1", "Agent or function", arg) 
+			incompatibleTypeError(1, "Agent or function", arg) 
 		end
 	end,
 	--- Return a random Agent from the Society.
@@ -458,7 +458,7 @@ Society_ = {
 		end
 
 		if type(argument) ~= "function" then
-			incompatibleTypeError("#1", "string or function", argument)
+			incompatibleTypeError(1, "string or function", argument)
 		end
 
 		local result = {}
@@ -490,10 +490,10 @@ Society_ = {
 			if type(delay) == "nil" then
 				delay = 1
 			else
-				incompatibleTypeError("#1", "positive number", delay)
+				incompatibleTypeError(1, "positive number", delay)
 			end
 		elseif delay <= 0 then
-			incompatibleValueError("#1", "positive number", delay)
+			incompatibleValueError(1, "positive number", delay)
 		end
 
 		local k = 1

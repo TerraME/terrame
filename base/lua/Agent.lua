@@ -42,7 +42,7 @@ Agent_ = {
 		if type(object) == "userdata" or type(object) == "Trajectory" then
 			self.cObj_:add(object)
 		else
-			incompatibleTypeError("#1", "State or Trajectory", object)
+			incompatibleTypeError(1, "State or Trajectory", object)
 		end
 	end,
 	--- Add a SocialNetwork to the Agent. This function replaces previous SocialNetwork with the
@@ -55,16 +55,16 @@ Agent_ = {
 	addSocialNetwork = function(self, set, id)
 		if type(set) ~= "SocialNetwork" and type(set) ~= "function" then
 			if set == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "SocialNetwork", set)
+				incompatibleTypeError(1, "SocialNetwork", set)
 			end
 		end
 
 		if id == nil then
 			id = "1"
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#2", "string", id)
+			incompatibleTypeError(2, "string", id)
 		end
 		self.socialnetworks[id] = set
 	end,
@@ -125,13 +125,13 @@ Agent_ = {
 	-- @see Environment:createPlacement
 	enter = function(self, cell, placement)
 		if type(cell)~="Cell" then
-			incompatibleTypeError("#1", "Cell", cell)
+			incompatibleTypeError(1, "Cell", cell)
 		end
 
 		if placement == nil then
 			placement = "placement"
 		elseif type(placement) ~= "string" then
-			incompatibleTypeError("#2", "string", placement)
+			incompatibleTypeError(2, "string", placement)
 		end
 
 		if self[placement] then 
@@ -166,7 +166,7 @@ Agent_ = {
 		if type(event) == "Event" then
 			self.cObj_:execute(event)
 		else
-			incompatibleTypeError("#1", "Event", event)
+			incompatibleTypeError(1, "Event", event)
 		end
 	end,
 	--- Return the Cell where the Agent is located according to its placement. It assumes
@@ -178,7 +178,7 @@ Agent_ = {
 			if type(placement) == "nil" then
 				placement = "placement"
 			else
-				incompatibleTypeError("#1", "string", placement)
+				incompatibleTypeError(1, "string", placement)
 			end
 		end
 		if type(self[placement]) ~= "Trajectory" then
@@ -194,7 +194,7 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#1", "string", placement)
+				incompatibleTypeError(1, "string", placement)
 			end
 		end
 
@@ -225,7 +225,7 @@ Agent_ = {
 		if id == nil then
 			id = "1"
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("#1", "string", id)
+			incompatibleTypeError(1, "string", id)
 		end
 
 		local s = self.socialnetworks[id] 
@@ -277,7 +277,7 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#2", "string", placement)
+				incompatibleTypeError(2, "string", placement)
 			end
 		end
 
@@ -285,12 +285,12 @@ Agent_ = {
 			if cell == nil then
 				cell = self[placement].cells[1]
 			else
-				incompatibleTypeError("#1", "Cell", cell)
+				incompatibleTypeError(1, "Cell", cell)
 			end
 		end
 
 		if self[placement] == nil then
-			valueNotFoundError("#1", placement)
+			valueNotFoundError(1, placement)
 		elseif type(self[placement]) ~= "Trajectory" then
 			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
 		end
@@ -385,9 +385,9 @@ Agent_ = {
 	move = function(self, newcell, placement)
 		if type(newcell) ~= "Cell" then
 			if newcell == nil then
-				mandatoryArgumentError("#1")
+				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError("#1", "Cell", newcell)
+				incompatibleTypeError(1, "Cell", newcell)
 			end
 		end
 
@@ -395,7 +395,7 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#2", "string", placement)
+				incompatibleTypeError(2, "string", placement)
 			end
 		end
 
@@ -418,10 +418,10 @@ Agent_ = {
 			if type(modelTime) == "Event" then
 				modelTime = modelTime:getTime()
 			else
-				incompatibleTypeError("#1", "Event or positive number", modelTime)
+				incompatibleTypeError(1, "Event or positive number", modelTime)
 			end
 		elseif modelTime < 0 then
-			incompatibleValueError("#1", "Event or positive number", modelTime)
+			incompatibleValueError(1, "Event or positive number", modelTime)
 		end
 
         if self.obsattrs then
@@ -481,7 +481,7 @@ Agent_ = {
 			if placement == nil then
 				placement = "placement"
 			else
-				incompatibleTypeError("#1", "string", placement)
+				incompatibleTypeError(1, "string", placement)
 			end
 		end
 
@@ -489,18 +489,18 @@ Agent_ = {
 			if neighborhood == nil then
 				neighborhood = "1"
 			else
-				incompatibleTypeError("#2", "string", neighborhood)
+				incompatibleTypeError(2, "string", neighborhood)
 			end
 		end
 
 		if type(self[placement]) ~= "Trajectory" then
-			valueNotFoundError("#1", placement)
+			valueNotFoundError(1, placement)
 		end
 
 		local c1 = self:getCell(placement)
 		local c2 = c1:getNeighborhood(neighborhood)
 		if c2 == nil then
-			valueNotFoundError("#2", neighborhood)
+			valueNotFoundError(2, neighborhood)
 		end
 		self:move(c2:sample(randomObj), placement)
 	end,

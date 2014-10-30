@@ -27,7 +27,7 @@
 local Jump_ = {
 	setTarget = function(self, target)
 		if type(target) ~= "string" then
-			incompatibleTypeError("#1", "string", target)
+			incompatibleTypeError(1, "string", target)
 			return false
 		end
 		self.target = target
