@@ -409,19 +409,19 @@ local doc = function(package)
 	printNote("Documentation generated in "..round(finalTime - initialTime, 2).." seconds.")
 
 	if doc_report.undoc_param == 0 then
-		printNote("All "..doc_report.parameters.." parameters are documented.")
+		printNote("All "..doc_report.parameters.." parameters were documented.")
 	else
-		printError(doc_report.undoc_param.." parameters are not documented.")
+		printError(doc_report.undoc_param.." parameters were not documented.")
 	end
 
 	if doc_report.unused_param == 0 then
-		printNote("All "..doc_report.parameters.." parameters are used in the HTML tables.")
+		printNote("All "..doc_report.parameters.." parameters were used in the HTML tables.")
 	else
-		printError(doc_report.unused_param.." table parameters are not used in the HTML tables.")
+		printError(doc_report.unused_param.." table parameters were not used in the HTML tables.")
 	end
 
 	if doc_report.undoc_files == 0 then
-		printNote("All "..doc_report.lua_files.." files of the package are documented.")
+		printNote("All "..doc_report.lua_files.." files of the package were documented.")
 	else
 		printError(doc_report.undoc_files.." files were not documented.")
 	end
@@ -429,19 +429,19 @@ local doc = function(package)
 	if doc_report.lack_usage == 0 then
 		printNote("All "..doc_report.functions.." have @usage field defined.")
 	else
-		printError(doc_report.lack_usage.." functions have not defined @usage field.")
+		printError(doc_report.lack_usage.." functions did not define @usage field.")
 	end
 
 	if doc_report.no_call_itself_usage == 0 then
-		printNote("All "..doc_report.functions.." functions call thenselves in its @usage.")
+		printNote("All "..doc_report.functions.." functions called themselves in its @usage.")
 	else
 		printError(doc_report.no_call_itself_usage.." functions do not call itself in its @usage.")
 	end
 
 	if doc_report.non_doc_functions == 0 then
-		printNote("All "..doc_report.functions.." functions of the package are documented.")
+		printNote("All "..doc_report.functions.." functions of the package were documented.")
 	else
-		printError(doc_report.non_doc_functions.." functions are not documented.")
+		printError(doc_report.non_doc_functions.." functions were not documented.")
 	end
 
 	if doc_report.block_name_conflict == 0 then
@@ -456,7 +456,19 @@ local doc = function(package)
 		printError(doc_report.undefined_param.." undefined parameters was found.")
 	end
 
-	printNote(doc_report.html_files.." html files were generated.")
+	printNote(doc_report.html_files.." HTML files were built.")
+
+	local errors = doc_report.undoc_param + doc_report.unused_param + doc_report.undoc_files +
+				   doc_report.lack_usage + doc_report.no_call_itself_usage + doc_report.non_doc_functions +
+				   doc_report.block_name_conflict + doc_report.undefined_param
+
+	if errors == 0 then
+		printNote("Summing up, all tests were succesfully executed.")
+	elseif errors == 1 then
+		printError("Summing up, one problem was found during the tests.")
+	else
+		printError("Summing up, "..errors.." problems were found during the tests.")
+	end
 end
 
 -- builds a table with zero counts for each element of the table gotten as argument

@@ -554,7 +554,7 @@ local function check_usage(files, doc_report)
 					table.insert(no_usage, file_name)
 				end
 				table.insert(no_usage[file_name], function_name)
-				printError(file_name .. ": " .. "No @usage definition for '" .. function_name .. "'")
+				printError("@usage definition for '" .. function_name .. "' was not found")
 				doc_report.lack_usage = doc_report.lack_usage + 1
 			end
 		end
@@ -568,7 +568,7 @@ local function check_usage(files, doc_report)
 end
 
 local function check_function_usage(files, doc_report)
-	printNote("Checking calls on @usage")
+	printNote("Checking calls to functions in @usage")
 	for i = 1, #files do
 		local file_name = files[i]
 		print("Checking "..files[file_name].short_path..file_name)
@@ -621,8 +621,8 @@ local function check_undoc_params(files, doc_report)
 				doc_report.parameters = doc_report.parameters + #params
 				for k = 1, #params do
 					if not params[params[k]] then
-						local warning = "%s: '%s' has undocumented parameter '%s'"
-						printError(warning:format(file_name, function_name, params[k]))
+						local warning = "Function '%s' has undocumented parameter '%s'"
+						printError(warning:format(function_name, params[k]))
 						doc_report.undoc_param = doc_report.undoc_param + 1
 					end
 				end

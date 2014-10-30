@@ -73,7 +73,33 @@ end
 -- an error and do not change the previous value
 
 local function name (tag, block, text, doc_report)
-	if block[tag] and block[tag] ~= text then
+
+	local differentNameFunctions = {
+		__add = "+",
+		__sub = "-",
+		__mul = "*",
+		__div = "/",
+		__mod = "%",
+		__pow = "^",
+		__unm = "-",
+		__concat = "..",
+		__len = "#",
+		__eq = "==",
+		-- __lt = "comparison operator",
+		-- __le = "comparison operator",
+		-- __index = "operator [] (index)"
+		-- __newindex = "operator [] (index)"
+		__call = "call"
+	}
+
+	local func_name = block[tag]
+
+	if differentNameFunctions[func_name] ~= nil then
+		func_name = differentNameFunctions[block[tag]]
+	end
+
+
+	if func_name and func_name ~= text then
 		printError(string.format("block name conflict: `%s' -> `%s'", block[tag], text))
 		doc_report.block_name_conflict = doc_report.block_name_conflict + 1
 	end
@@ -92,7 +118,7 @@ local function param (tag, block, text, doc_report)
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	if not name then
-		printError("Warning: parameter `name' not defined [["..text.."]]: skipping")
+		printError("parameter `name' not defined [["..text.."]]: skipping")
 		return
 	end
  
@@ -128,7 +154,7 @@ local function param (tag, block, text, doc_report)
 		end
 	end
 	if i == nil then
-		printError(string.format("Warning: documenting undefined parameter `%s'", name))
+		printError(string.format("Documenting undefined parameter `%s' in function '%s'", name, block.name))
 		table.insert(block[tag], name)
 		doc_report.undefined_param = doc_report.undefined_param + 1
 	end
