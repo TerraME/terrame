@@ -186,7 +186,8 @@ require = function(package)
 	end
 
 	for mfile, count in pairs(count_files) do
-		if count == 0 then
+		local attr = attributes(package_path..s.."lua"..s..mfile)
+		if count == 0 and attr.mode ~= "directory" then
 			printWarning("File lua/"..mfile.." is ignored by load.lua.")
 		elseif count > 1 then
 			printWarning("File lua/"..mfile.." is loaded "..count.." times in load.lua.")
