@@ -60,15 +60,6 @@ function dir(folder)
 	end
 end	
 
-file = function(file, package)
-	local s = sessionInfo().separator
-	local file = sessionInfo().path..s.."packages"..s..package..s.."data"..s..file
-	if not isfile(file) then
-		customError("File '"..file.."' does not exist in package '"..package.."'.")
-	end
-	return file
-end
-
 print__ = print
 local begin_red    = "\027[00;31m"
 local begin_yellow = "\027[00;33m"
@@ -1170,7 +1161,8 @@ execute = function(parameters) -- parameters is a string
 
 	-- Package.lua contains functions that terrame.lua needs, but should also be
 	-- documented and availeble for the final users.
-	dofile(file("../lua/Package.lua", "base"))
+	local s = sessionInfo().separator
+	dofile(sessionInfo().path..s.."packages"..s.."base"..s.."lua"..s.."Package.lua")
 
 	local package = ""
 
