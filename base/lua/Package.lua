@@ -28,6 +28,11 @@
 
 --@header Some basic and useful functions to develop packages.
 
+--- Return the path to a file of a given package. The file must be inside the data folder
+-- of the package.
+-- @param filename A string with the name of the file.
+-- @param package A string with the name of the package.
+-- @usage file("cs.csv") 
 function file(filename, package)
 	if package == nil then package = "base" end
 
@@ -149,7 +154,8 @@ function verify(condition, msg)
 end
 
 --- Verify whether the table passed as argument is a named table. It generates errors if it is nil,
--- if it is not a table, or if it has numeric indexes.
+-- if it is not a table, or if it has numeric indexes. The error messages come from
+-- Package:tableParameterMsg() and Package:namedParametersMsg().
 -- @param data A value of any type.
 -- @usage t = {value = 2}
 -- verifyNamedTable(t)
@@ -165,16 +171,20 @@ function verifyNamedTable(data)
 	end
 end
 
-tableParameterMsg = function()
+--- Return a message indicating that the parameter of a function must be a table.
+-- @usage tableParameterMsg()
+function tableParameterMsg()
 	return "Parameter must be a table."
 end
 
-namedParametersMsg = function()
+--- Return a message indicating that the parameters of a function must be named.
+-- @usage namedParametersMsg()
+function namedParametersMsg()
 	return "Parameters must be named."
 end
 
 --- Verify whether the used has used only the allowed parameters for a functoin, generating
--- a warning otherwise.
+-- a warning otherwise. The warning comes from Package:unnecessaryParameterMsg().
 -- @param data The list of parameters used in the function call.
 -- @param parameters The list of the allowed parameters.
 -- @usage t = {value = 2}
@@ -187,11 +197,14 @@ function checkUnnecessaryParameters(data, parameters)
 	end)
 end
 
+--- Return a message indicating that a given parameter is unnecessary.
+-- @param value A string or number or boolean value.
+-- @usage unnecessaryParameterMsg("file")
 function unnecessaryParameterMsg(value)
 	return "Parameter '"..tostring(value).."' is unnecessary."
 end
 
---- Generate an error.
+--- Stop the simulation with an error.
 -- @param msg A string describing the error.
 -- @usage customError("error message")
 function customError(msg)
@@ -203,7 +216,7 @@ function customError(msg)
 	error("Error: "..msg, level)
 end
 
---- Generate a warning.
+--- Print a warning. If TerraME is executing in the debug mode, it stops the simulation with an error.
 -- @param msg A string describing the warning.
 -- @usage customWarning("warning message")
 function customWarning(msg)
@@ -221,7 +234,8 @@ function customWarning(msg)
 end
 
 --- Verifies the default value of a given element of a table. It puts the default value in the table if it does not
--- exist, generates an error if the value has a different type, or a warning if it is equal to the default value.
+-- exist, stops with an error (Package:incompatibleTypeMsg()) if the value has a different type, or a 
+-- warning (Package:defaultValueWarning()) if it is equal to the default value.
 -- @param data A table.
 -- @param idx The element of the table (a string).
 -- @param value The default value (any type).
@@ -237,7 +251,8 @@ function defaultTableValue(data, idx, value)
 	end
 end
 
---- Generates a warning if the element of a table is the default value.
+--- Print a warning if the element of a table is the default value. If TerraME is running in the
+-- debug mode, the simulation stops with an error. The warning message comes from Package:defaultValueMsg().
 -- @param parameter The element.
 -- @param value The default value.
 -- @usage defaultValueWarning("size", 2)
@@ -249,11 +264,17 @@ function defaultValueWarning(parameter, value)
 	customWarning(defaultValueMsg(parameter, value))
 end
 
+--- Return a message indicating that the modeler is using the default value and therefore it could be removed.
+-- @param parameter A string.
+-- @param value A number or string or boolean value.
+-- @usage defaultValueMsg("dbtype", "mysql")
 function defaultValueMsg(parameter, value)
 	return "Parameter '"..parameter.."' could be removed as it is the default value ("..tostring(value)..")."
 end
 
---- Generates a warning for deprecated functions.
+--- Pring a warning indicating a deprecated function. If TerraME is running in the
+-- debug mode, the simulation stops with an error. The warning as well as the error
+-- comes from Package:deprecatedFunctionMsg().
 -- @param functionName Name of the deprecated function.
 -- @param functionExpected A string with the name of the function to be used instead of the deprecated function.
 -- @usage deprecatedFunctionWarning("abc", "def")
@@ -267,11 +288,15 @@ function deprecatedFunctionWarning(functionName, functionExpected)
 	customWarning(deprecatedFunctionMsg(functionName, functionExpected))
 end
 
+--- Return a message indicating that a function is deprecated and must be replaced.
+-- @param parameter A string with the deprecated function.
+-- @param value A string with a function or an object to replace the deprecated function.
 function deprecatedFunctionMsg(functionName, functionExpected)
 	return "Function '"..functionName.."' is deprecated. Use '"..functionExpected.."' instead."
 end
 
---- Generate an error from a wrong type for a parameter of a function.
+--- Stop the simulation with an error from a wrong type for a parameter of a function.
+-- The error message is the return value of Package:incompatibleTypeMsg().
 -- @param attr A string with an attribute name, or position (such as #1).
 -- @param expectedTypeString A string with the expected type.
 -- @param gottenValue The value passed as argument with wrong type.
@@ -280,6 +305,11 @@ function incompatibleTypeError(attr, expectedTypesString, gottenValue)
 	customError(incompatibleTypeMsg(attr, expectedTypesString, gottenValue))
 end
 
+--- Return an error message for incompatible types.
+-- @param attr Name of the attribute. It can be a number indicating the position of the argument in a non-named function.
+-- @param expectedTypesString The expected type.
+-- @param gottenValue The gotten value, that does not belong to the expected type.
+-- @usage incompatibleTypeMsg("dbType", "string", 2)
 function incompatibleTypeMsg(attr, expectedTypesString, gottenValue)
 	if type(attr) == "number" then
 		attr = "#"..attr
@@ -291,8 +321,9 @@ function incompatibleTypeMsg(attr, expectedTypesString, gottenValue)
 		expectedTypesString..", got "..type(gottenValue).."."
 end
 
---- Generate an error from a wrong value for a parameter of a function.
--- @param attr A string with an attribute name, or position (such as #1).
+--- Stop the simulation with an error from a wrong value for a parameter of a function.
+-- The error message comes from Package:incompatibleValueMsg().
+-- @param attr A string with an attribute name (for named-functions), or position (for non-named functions).
 -- @param expectedTypeString A string with the expected type values for the parameter.
 -- @param gottenValue The value passed as argument with wrong value.
 -- @usage incompatibleValueError("position", "1, 2, or 3", "4")
@@ -300,6 +331,11 @@ function incompatibleValueError(attr, expectedValues, gottenValue)
 	customError(incompatibleValueMsg(attr, expectedValues, gottenValue))
 end
 
+--- Return an error message for incompatible values.
+-- @param attr Name of the attribute. It can be a number indicating the position of the argument in a non-named function.
+-- @param expectedValues The expected values.
+-- @param gottenValue The gotten value, that does not belong to the expected values.
+-- @usage incompatibleValueMsg("dbType", "one of {1, 3, 4}", 2)
 function incompatibleValueMsg(attr, expectedValues, gottenValue)
 	if expectedValues == nil then expectedValues = "nil" end
 
@@ -318,7 +354,8 @@ function incompatibleValueMsg(attr, expectedValues, gottenValue)
 	return msg
 end
 
---- Generate an error indicating that the function does not support a given file extension.
+--- Stop the simulation with an error indicating that the function does not support a given file extension.
+-- The error message comes from Package:incompatibleFileExtensionMsg().
 -- @param attr The attribute name (a string).
 -- @param ext The file extension (a string).
 -- @usage incompatibleFileExtensionError("file", ".txt")
@@ -326,12 +363,16 @@ function incompatibleFileExtensionError(attr, ext)
 	customError(incompatibleFileExtensionMsg(attr, ext))
 end
 
+--- Return a message indicating that a given file extension is incompatible.
+-- @param attr A string or a number with the argument of the function.
+-- @param ext The incompatible file extension.
+-- @usage incompatibleFileExtensionMsg("file", "csv")
 function incompatibleFileExtensionMsg(attr, ext)
 	return "Parameter '".. attr.."' does not support extension '"..ext.."'."
 end
 
-
---- Generate an error indicating that a given resource was not found.
+--- Stop the simulation with an error indicating that a given resource was not found.
+-- The error message comes from Package:resourceNotFoundMsg().
 -- @param attr The attribute name (a string).
 -- @param path The location of the resource, described as a string.
 -- @usage resourceNotFoundError("file", "/usr/local/file.txt")
@@ -339,11 +380,16 @@ function resourceNotFoundError(attr, path)
 	customError(resourceNotFoundMsg(attr, path))
 end
 
+--- Return a message indicating that a given resource could not be found.
+-- @param attr Name of the parameter. It can be a string or a number.
+-- @param path The location of the resource in the computer.
+-- @usage resourceNotFoundMsg("file", "c:\\myfiles\\file.csv")
 function resourceNotFoundMsg(attr, path)
     return "Resource '"..path.."' not found for parameter '"..attr.."'."
 end
 
---- Generate an error due to a wrong value for a parameter.
+--- Stop the simulation with an error due to a wrong value for a parameter.
+-- The error message comes from Package:valueNotFoundMsg().
 -- @param attr The parameter name (a string).
 -- @param value The wrong value, which can belong to any type.
 -- @usage valueNotFoundError("1", "neighborhood")
@@ -351,6 +397,9 @@ function valueNotFoundError(attr, value)
 	customError(valueNotFoundMsg(attr, value))
 end
 
+--- Return a message indicating that a given parameter of a function is mandatory.
+-- @param The name of the parameter. It can be a string or a number.
+-- @usage mandatoryArgumentMsg(2)
 function valueNotFoundMsg(attr, value)
 	if type(value) == nil then value = "nil" end
 	if type(attr) == "number" then
@@ -360,13 +409,18 @@ function valueNotFoundMsg(attr, value)
 	return "Value '"..value.."' not found for parameter '"..attr.."'."
 end
 
---- Generate an error indicating that a given parameter is mandatory.
+--- Stop the simulation with an error indicating that a given parameter is mandatory.
+-- The error message comes from Package:mandatoryArgumentMsg().
 -- @param attr The name of the parameter (a string).
 -- @usage mandatoryArgumentError("target")
 function mandatoryArgumentError(attr)
 	customError(mandatoryArgumentMsg(attr))
 end
 
+--- Return a message indicating that a given parameter of a function is mandatory.
+-- @param The name of the parameter. It can be a string or a number.
+-- @usage mandatoryArgumentMsg(2)
+-- mandatoryArgumentMsg("target")
 function mandatoryArgumentMsg(attr)
 	if type(attr) == "number" then
 		attr = "#"..attr
@@ -375,6 +429,7 @@ function mandatoryArgumentMsg(attr)
 end
 
 --- Verify whether the table contains a mandatory argument. It produces an error if the value is nil or
+-- The error message comes from Package:mandatoryArgumentMsg() or Package:incompatibleTypeMsg().
 -- it has a type different from the required type.
 -- @param table A table.
 -- @param attr The attribute name (a string).
@@ -383,14 +438,14 @@ end
 -- mandatoryTableArgument(mtable, "bbb", "string")
 function mandatoryTableArgument(table, attr, mtype)
 	if table[attr] == nil then
-		customError("Parameter '"..attr.."' is mandatory.")
+		customError(mandatoryArgumentMsg(attr))
 	elseif type(table[attr]) ~= mtype and mtype ~= nil then
 		incompatibleTypeError(attr, mtype, table[attr])
 	end
 end
 
 --- Verify whether the table contains an optional argument. It produces an error if the value is not nil and
--- it has a type different from the required type.
+-- it has a type different from the required type. The error comes from Package:incompatibleTypeError().
 -- @param table A table.
 -- @param attr The attribute name (a string).
 -- @param allowedType The required type for the attribute (a string).
