@@ -289,8 +289,8 @@ function deprecatedFunctionWarning(functionName, functionExpected)
 end
 
 --- Return a message indicating that a function is deprecated and must be replaced.
--- @param parameter A string with the deprecated function.
--- @param value A string with a function or an object to replace the deprecated function.
+-- @param functionName A string with the deprecated function.
+-- @param functionExpected A string with a function or an object to replace the deprecated function.
 function deprecatedFunctionMsg(functionName, functionExpected)
 	return "Function '"..functionName.."' is deprecated. Use '"..functionExpected.."' instead."
 end
@@ -398,7 +398,8 @@ function valueNotFoundError(attr, value)
 end
 
 --- Return a message indicating that a given parameter of a function is mandatory.
--- @param The name of the parameter. It can be a string or a number.
+-- @param attr The name of the parameter. It can be a string or a number.
+-- @oaram value The valued used as argument to the function.
 -- @usage mandatoryArgumentMsg(2)
 function valueNotFoundMsg(attr, value)
 	if type(value) == nil then value = "nil" end
@@ -418,7 +419,7 @@ function mandatoryArgumentError(attr)
 end
 
 --- Return a message indicating that a given parameter of a function is mandatory.
--- @param The name of the parameter. It can be a string or a number.
+-- @param attr The name of the parameter. It can be a string or a number.
 -- @usage mandatoryArgumentMsg(2)
 -- mandatoryArgumentMsg("target")
 function mandatoryArgumentMsg(attr)
