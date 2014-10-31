@@ -20,9 +20,9 @@ local print =  print
 local printNote, printError, getn = printNote, printError, getn
 
 local s = sessionInfo().separator
-local lp = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."lp.lua")
+local lp = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."lp.lua")
 local highlighting = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."doclet"..s.."highlighting.lua")
-local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."util.lua")
+local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 
 -------------------------------------------------------------------------------
 -- Looks for a file `name' in given path. Removed from compat-5.1
@@ -326,13 +326,13 @@ function start (doc, doc_report)
 		highlighting.setWords(doc.files.funcnames)
 	end
 
-	printNote("Generating HTML files")
+	printNote("Building HTML files")
 
 	-- Generate index file
 	if (#doc.files > 0 or #doc.modules > 0) and (not options.noindexpage) then
 		local filename = options.output_dir.."index.html"
 		local short_fileName = options.short_output_path.."index.html"
-		print(string.format("Generating %s", short_fileName))
+		print(string.format("Building %s", short_fileName))
 		local f = util.openFile(filename, "w")
 		assert(f, string.format("Could not open %s for writing", filename))
 		io.output(f)
@@ -346,7 +346,7 @@ function start (doc, doc_report)
 			local module_doc = doc.modules[modulename]
 			-- assembly the filename
 			local filename = out_module(modulename)
-			print(string.format("Generating %s", filename))
+			print(string.format("Building %s", filename))
 			doc_report.html_files = doc_report.html_files + 1
 			
 			local f = util.openFile(filename, "w")
@@ -363,7 +363,7 @@ function start (doc, doc_report)
 			local file_doc = doc.files[filepath]
 			-- assembly the filename
 			local filepath, short_filepath = out_file(file_doc.name)
-			print(string.format("Generating %s", short_filepath))
+			print(string.format("Building %s", short_filepath))
 			doc_report.html_files = doc_report.html_files + 1
 			
 			local f = util.openFile(filepath, "w")

@@ -5,7 +5,7 @@
 
 -- local lfs = require "lfs"
 local type, table, io, assert, tostring, setmetatable, pcall = type, table, io, assert, tostring, setmetatable, pcall
-local print, string, ipairs, mkdir, printWarning, printNote, printError = print, string, ipairs, mkdir, printWarning, printNote, printError
+local print, string, ipairs, mkdir, printNote, printError = print, string, ipairs, mkdir, printNote, printError
 
 -------------------------------------------------------------------------------
 -- Module with several utilities that could not fit in a specific module

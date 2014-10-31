@@ -382,6 +382,7 @@ local doc = function(package)
 		functions = 0,
 		variables = 0,
 
+		wrong_description = 0,
 		undoc_param = 0,
 		undefined_param = 0,
 		unused_param = 0,
@@ -397,7 +398,7 @@ local doc = function(package)
 	local finalTime = os.clock()
 
 	print("\nReport: ")
-	printNote("Documentation generated in "..round(finalTime - initialTime, 2).." seconds.")
+	printNote("Documentation built in "..round(finalTime - initialTime, 2).." seconds.")
 
 	if doc_report.undoc_param == 0 then
 		printNote("All "..doc_report.parameters.." parameters were documented.")
@@ -412,9 +413,9 @@ local doc = function(package)
 	end
 
 	if doc_report.undoc_files == 0 then
-		printNote("All "..doc_report.lua_files.." files of the package were documented.")
+		printNote(doc_report.html_files.." HTML files were built.")
 	else
-		printError(doc_report.undoc_files.." files were not documented.")
+		printError(doc_report.undoc_files.." out of "..doc_report.lua_files.." files were not documented.")
 	end
 
 	if doc_report.lack_usage == 0 then
@@ -424,9 +425,9 @@ local doc = function(package)
 	end
 
 	if doc_report.no_call_itself_usage == 0 then
-		printNote("All "..doc_report.functions.." functions called themselves in its @usage.")
+		printNote("All "..doc_report.functions.." functions called themselves in their @usage.")
 	else
-		printError(doc_report.no_call_itself_usage.." functions do not call itself in its @usage.")
+		printError(doc_report.no_call_itself_usage.." functions do not call themselves in their @usage.")
 	end
 
 	if doc_report.non_doc_functions == 0 then
@@ -436,22 +437,26 @@ local doc = function(package)
 	end
 
 	if doc_report.block_name_conflict == 0 then
-		printNote("No block name conflict was found.")
+		printNote("No block name conflicts were found.")
 	else
 		printError(doc_report.block_name_conflict.." functions were documented with a different name.")
 	end
 
 	if doc_report.undefined_param == 0 then
-		printNote("No undefined parameter was found.")
+		printNote("No undefined parameter were found.")
 	else
-		printError(doc_report.undefined_param.." undefined parameters was found.")
+		printError(doc_report.undefined_param.." undefined parameters were found.")
 	end
 
-	printNote(doc_report.html_files.." HTML files were built.")
+	if doc_report.wrong_description == 0 then
+		printNote("All fields in file 'description.lua' are correct.")
+	else
+		printError(doc_report.wrong_description.." problems were found in file 'description.lua'")
+	end
 
 	local errors = doc_report.undoc_param + doc_report.unused_param + doc_report.undoc_files +
 				   doc_report.lack_usage + doc_report.no_call_itself_usage + doc_report.non_doc_functions +
-				   doc_report.block_name_conflict + doc_report.undefined_param
+				   doc_report.block_name_conflict + doc_report.undefined_param + doc_report.wrong_description
 
 	if errors == 0 then
 		printNote("Summing up, all tests were succesfully executed.")
