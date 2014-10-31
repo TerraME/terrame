@@ -143,6 +143,60 @@ function suggest(typedValues, possibleValues)
 	end
 end
 
+--- Load a given package.
+-- @param package A package name.
+-- @usage require("calibration")
+require = function(package)
+	-- verificar se a pasta TME_FOLDER/packages/package existe
+	if type(package) ~= "string" then
+		if package == nil then
+			mandatoryArgumentErrorMsg("#1", 3)
+		else
+			incompatibleTypeError("#1", "string", type(package), 3)
+		end
+	end
+
+	local s = sessionInfo().separator
+	local package_path = sessionInfo().path..s.."packages"..s..package
+
+	if not isfile(package_path) then
+		customError("Package '"..package.."' is not installed.", 3)
+	end
+
+	local load_file = package_path..s.."load.lua"
+	local load_sequence
+
+	if isfile(load_file) then
+		load_sequence = include(load_file).files
+	end
+
+	local all_files = dir(package_path..s.."lua")
+	local count_files = {}
+	for _, file in ipairs(all_files) do
+		count_files[file] = 0
+	end
+
+	local i, file
+
+	if load_sequence then
+		for _, file in ipairs(load_sequence) do
+			dofile(package_path..s.."lua"..s..file)
+			count_files[file] = count_files[file] + 1
+		end
+	end
+
+	for mfile, count in pairs(count_files) do
+		if count == 0 then
+			printWarning("File lua/"..mfile.." is ignored by load.lua.")
+		elseif count > 1 then
+			printWarning("File lua/"..mfile.." is loaded "..count.." times in load.lua.")
+		end
+	end
+
+	-- executar a funcao onLoad() do pacote (esta funcao pode configurar algumas coisas e imprimir informacao
+	-- de que o pacote foi carregado com sucesso).
+end
+
 --- Verify a given condition, otherwise stops the simulation with an error.
 -- @param condition A value of any type. If it is not true, the function generates an error.
 -- @param msg A string with the error to be displayed.

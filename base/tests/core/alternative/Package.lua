@@ -65,6 +65,12 @@ return{
 			deprecatedFunctionWarning("test.", -1)
 		end
 		unitTest:assert_error(error_func, "#2 should be a string.")
+	end,
+	require = function(unitTest)
+		local error_func = function()
+			require("asdfgh")
+		end
+		unitTest:assert_error(error_func, "Package 'asdfgh' is not installed.")
 	end
 }
 
