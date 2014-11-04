@@ -67,7 +67,7 @@ local function check_function (line)
 	-- TODO: remove these assert's?
 	if info ~= nil then
 		assert(info.name, "function name undefined")
-		assert(info.param, string.format("undefined parameter list for function `%s'", info.name))
+		assert(info.param, string.format("undefined parameter list for function '%s'", info.name))
 	end
 
 	return info
@@ -94,7 +94,7 @@ local function check_module (line, currentmodule)
 	local r, _, modulename = string.find(line, "^module%s*[%s\"'(%[]+([^,\"')%]]+)")
 	if r then
 		-- found module definition
-		printNote(string.format("found module `%s'", modulename))
+		printNote(string.format("found module '%s'", modulename))
 		return modulename
 	end
 	return currentmodule
@@ -161,11 +161,11 @@ local function parse_comment (block, first_line, doc_report)
 	local code 
 	for _, line in ipairs(block.code) do
 		if not util.line_empty(line) then
-			-- `local' declarations are ignored in two cases:
-			-- when the `nolocals' option is turned on; and
+			-- 'local' declarations are ignored in two cases:
+			-- when the 'nolocals' option is turned on; and
 			-- when the first block of a file is parsed (this is
 			--	necessary to avoid confusion between the top
-			--	local declarations and the `module' definition.
+			--	local declarations and the 'module' definition.
 			if (options.nolocals or first_line) and line:find"^%s*local" then
 				return 
 			end
@@ -220,14 +220,14 @@ local function parse_comment (block, first_line, doc_report)
 			else
 				currenttext = util.concat(currenttext, line)
 			end
-			assert(string.sub(currenttext, 1, 1) ~= " ", string.format("`%s', `%s'", currenttext, line))
+			assert(string.sub(currenttext, 1, 1) ~= " ", string.format("'%s', '%s'", currenttext, line))
 		end
 	end
 	tags.handle(currenttag, block, currenttext, doc_report)
   
 	-- extracts summary information from the description
 	block.summary = parse_summary(block.description)
-	assert(string.sub(block.description, 1, 1) ~= " ", string.format("`%s'", block.description))
+	assert(string.sub(block.description, 1, 1) ~= " ", string.format("'%s'", block.description))
 	
 	-- sort 
 	if block.see	then table.sort(block.see)	end	
@@ -316,7 +316,7 @@ function parse_file (luapath, fileName, doc, doc_report, short_lua_path)
 	end
 	f:close()
 	-- store blocks in file hierarchy
-	assert(doc.files[fileName] == nil, string.format("doc for file `%s' already defined", fileName))
+	assert(doc.files[fileName] == nil, string.format("doc for file '%s' already defined", fileName))
 	table.insert(doc.files, fileName)
 	doc.files[fileName] = {
 		type = "file",
@@ -476,7 +476,7 @@ function directory (lua_path, file_, doc, short_lua_path)
 	for f in lfsdir(lua_path) do
 		local fullpath = lua_path..f
 		local attr = attributes(fullpath)
-		assert(attr, string.format("error stating file `%s'", fullpath))
+		assert(attr, string.format("error stating file '%s'", fullpath))
 		
 		if attr.mode == "file" then
 			doc = file(lua_path, f, doc, short_lua_path)
@@ -701,14 +701,14 @@ function start (files, package_path, short_lua_path, doc_report)
 		files = {},
 		modules = {},
 	}
-	assert(doc.luapath, "undefined `luapath' field")
-	assert(doc.files, "undefined `files' field")
-	assert(doc.modules, "undefined `modules' field")
+	assert(doc.luapath, "undefined 'luapath' field")
+	assert(doc.files, "undefined 'files' field")
+	assert(doc.modules, "undefined 'modules' field")
 	
 	printNote("Parsing lua files")
 	for _, file_ in ipairs(files) do
 		local attr = attributes(lua_path..file_)
-		assert(attr, string.format("error stating path `%s'", lua_path))
+		assert(attr, string.format("error stating path '%s'", lua_path))
 		
 		if attr.mode == "file" then
 			doc = file(lua_path, file_, doc, short_lua_path, doc_report)

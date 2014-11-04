@@ -15,7 +15,7 @@ local load = load
 ----------------------------------------------------------------------------
 -- function to do output
 local outfunc = "io.write"
--- accepts the old expression field: `$| <Lua expression> |$'
+-- accepts the old expression field: '$| <Lua expression> |$'
 local compatmode = true
 
 --
@@ -28,9 +28,9 @@ local compatmode = true
 local function out (s, i, f)
 	s = strsub(s, i, f or -1)
 	if s == "" then return s end
-	-- we could use `%q' here, but this way we have better control
+	-- we could use '%q' here, but this way we have better control
 	s = gsub(s, "([\\\n\'])", "\\%1")
-	-- substitute '\r' by '\'+'r' and let `loadstring' reconstruct it
+	-- substitute '\r' by '\'+'r' and let 'loadstring' reconstruct it
 	s = gsub(s, "\r", "\\r")
 	return format(" %s('%s'); ", outfunc, s)
 end
@@ -48,7 +48,7 @@ function translate (s)
 	end
 	s = gsub(s, "<%%(.-)%%>", "<?lua %1 ?>")
 	local res = {}
-	local start = 1   -- start of untranslated part in `s'
+	local start = 1   -- start of untranslated part in 's'
 	while true do
 		local ip, fp, target, exp, code = find(s, "<%?(%w*)[ \t]*(=?)(.-)%?>", start)
 		if not ip then break end

@@ -98,7 +98,7 @@ local function name (tag, block, text, doc_report)
 	end
 
 	if func_name and func_name ~= text then
-		printError(string.format("Block name conflict: '%s' -> `%s'", block[tag], text))
+		printError(string.format("Block name conflict: '%s' -> '%s'", block[tag], text))
 		doc_report.block_name_conflict = doc_report.block_name_conflict + 1
 	end
 	
@@ -264,9 +264,9 @@ handlers["inherits"] = inherits
 
 function handle (tag, block, text, doc_report)
 	if not handlers[tag] then
-		printError(string.format("Error: undefined handler for tag `%s'", tag))
+		printError(string.format("Error: undefined handler for tag '%s'", tag))
 		return
 	end
---	assert(handlers[tag], string.format("undefined handler for tag `%s'", tag))
+--	assert(handlers[tag], string.format("undefined handler for tag '%s'", tag))
 	return handlers[tag](tag, block, text, doc_report)
 end

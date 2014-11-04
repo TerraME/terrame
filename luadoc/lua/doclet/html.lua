@@ -25,7 +25,7 @@ local highlighting = include(sessionInfo().path..s.."packages"..s.."luadoc"..s..
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 
 -------------------------------------------------------------------------------
--- Looks for a file `name' in given path. Removed from compat-5.1
+-- Looks for a file 'name' in given path. Removed from compat-5.1
 -- @param path String with the path.
 -- @param name String with the name to look for.
 -- @return String with the complete path of the file found
@@ -57,7 +57,7 @@ function includeMod (template, env)
 
 	-- local search_path = string.gsub(package.path, "%.lua", "")
 	-- local templatepath = search(search_path, templatepath)
-	assert(templatepath, string.format("template `%s' not found", template))
+	assert(templatepath, string.format("template '%s' not found", template))
 	
 	env = env or {}
 	env.table = table
@@ -111,8 +111,8 @@ function module_link (modulename, doc, from)
 	assert(doc)
 	from = from or ""
 
-	if doc.modules[modulename] == nil and getn(doc.modules) > 0 then
-		printError(string.format("unresolved reference to module `%s'", modulename))
+	if (doc.modules[modulename] == nil and getn(doc.modules) > 0) or getn(doc.modules) == 0 then
+		-- printError(string.format("unresolved reference to module '%s'", modulename))
 		return
 	end
 	
@@ -132,7 +132,7 @@ function file_func_link (symbol, doc, file_doc, from)
 	funcname = string.gsub(funcname, "%s*$", "")
 	if filename == "" then filename = funcname end
 	if doc.files[filename .. ".lua"] == nil then
-		printError(string.format("unresolved reference to module `%s'", modulename))
+		printError(string.format("unresolved reference to module '%s'", modulename))
 		-- print(file_doc.name .. ": unresolved reference to " .. filename)
 		return
 	end
@@ -202,7 +202,7 @@ function link_to (fname, doc, module_doc, file_doc, from, kind)
 
 	local module_doc = doc.modules[modulename]
 	if not module_doc then
-		printError(string.format("unresolved reference to function `%s': module `%s' not found", fname, modulename))
+		printError(string.format("unresolved reference to function '%s': module '%s' not found", fname, modulename))
 		return
 	end
 	
@@ -212,7 +212,7 @@ function link_to (fname, doc, module_doc, file_doc, from, kind)
 		end
 	end
 	
-	printError(string.format("unresolved reference to function `%s' of module `%s'", fname, modulename))
+	printError(string.format("unresolved reference to function '%s' of module '%s'", fname, modulename))
 end
 
 -------------------------------------------------------------------------------
@@ -222,14 +222,14 @@ function symbol_link (symbol, doc, module_doc, file_doc, from)
 	assert(symbol)
 	assert(doc)
 	local href = 
---		file_link(symbol, from) or
+		-- file_link(symbol, from) or
 		module_link(symbol, doc, from) or 
-	file_func_link(symbol, doc, file_doc, from) or
+		file_func_link(symbol, doc, file_doc, from) or
 		link_to(symbol, doc, module_doc, file_doc, from, "functions") or
 		link_to(symbol, doc, module_doc, file_doc, from, "tables")
   
 	if not href then
-		printError(string.format("unresolved reference to symbol `%s'", symbol))
+		printError(string.format("unresolved reference to symbol '%s'", symbol))
 		printError(string.format("%s: unresolved reference to symbol '%s'", file_doc.name, symbol))
 	end
 	
