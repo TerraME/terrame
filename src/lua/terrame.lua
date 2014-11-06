@@ -32,34 +32,6 @@ if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 --	load = loadstring
 --end	
 
--- Creates a text file with the names of the files inside a given folder
--- RAIAN: I changed this function from local to global, in order to use it in luadoc
-function dir(folder)
-	local s = sessionInfo().separator
-	local command
-	if s == "\\" then
-		command = "dir "..folder.." /b > "..folder..s.."aux.txt"
-	elseif s == "/" then
-		command = "ls -1 "..folder.." 2> /dev/null".." > "..folder..s.."aux.txt"
-	end
-	
-	if os.execute(command) ~= nil then 
-		local file = io.open(folder..s.."aux.txt", "r")
-		local fileTable = {}
-		for line in file:lines() do
-			if line ~= "README.txt" and line ~= ".svn" and line ~= ".aux.txt.swp" and line ~= "aux.txt" then 
-				fileTable[#fileTable + 1] = line
-			end
-		end
-
-		file:close()
-		os.execute("rm "..folder..s.."aux.txt")
-		return fileTable
-	else
-		customError(folder.." is not a folder or is empty or does not exist.")
-	end
-end	
-
 print__ = print
 local begin_red    = "\027[00;31m"
 local begin_yellow = "\027[00;33m"
@@ -303,10 +275,6 @@ local buildCountTable = function(mtable)
 		end
 	end)
 	return result
-end
-
-isfile = function(file)
-	return os.rename(file, file)
 end
 
 local executeTests = function(fileName, package)
@@ -977,8 +945,10 @@ execute = function(parameters) -- parameters is a string
 	-- Package.lua contains functions that terrame.lua needs, but should also be
 	-- documented and availeble for the final users.
 	local s = info_.separator
-	dofile(info_.path..s.."packages"..s.."base"..s.."lua"..s.."Package.lua")
-	dofile(info_.path..s.."packages"..s.."base"..s.."lua"..s.."Utils.lua")
+	local path = info_.path..s.."packages"..s.."base"..s.."lua"..s
+	dofile(path.."Package.lua")
+	dofile(path.."FileSystem.lua")
+	dofile(path.."Utils.lua")
 
 	info_.version = packageInfo().version
 
