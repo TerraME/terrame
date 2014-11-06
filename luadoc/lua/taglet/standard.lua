@@ -166,7 +166,7 @@ local function parse_comment (block, first_line, doc_report)
 			-- when the first block of a file is parsed (this is
 			--	necessary to avoid confusion between the top
 			--	local declarations and the 'module' definition.
-			if (options.nolocals or first_line) and line:find"^%s*local" then
+			if (options.nolocals or first_line) and line:find("^%s*local") then
 				return 
 			end
 			code = line

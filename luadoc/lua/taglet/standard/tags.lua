@@ -142,7 +142,6 @@ local function param (tag, block, text, doc_report)
 		block[tag].named = true
 	end
   
-  
 	-- match documented parameter with declared parameter
 	local i 
 	for idx, v in ipairs(block[tag]) do
@@ -152,9 +151,11 @@ local function param (tag, block, text, doc_report)
 		end
 	end
 	if i == nil then
-		printError(string.format("Documenting undefined parameter '%s' in function '%s'", name, block.name))
+		if not param_tab then
+			printError(string.format("Documenting undefined parameter '%s' in function '%s'", name, block.name))
+			doc_report.undefined_param = doc_report.undefined_param + 1
+		end
 		table.insert(block[tag], name)
-		doc_report.undefined_param = doc_report.undefined_param + 1
 	end
 	block[tag][name] = desc
 end
@@ -215,7 +216,7 @@ local function output (tag, block, text)
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	if not name then
-		printError("Warning: output 'name' not defined [["..text.."]]: skipping")
+		printError("output 'name' not defined [["..text.."]]: skipping")
 		return
 	end
 
@@ -264,7 +265,7 @@ handlers["inherits"] = inherits
 
 function handle (tag, block, text, doc_report)
 	if not handlers[tag] then
-		printError(string.format("Error: undefined handler for tag '%s'", tag))
+		printError(string.format("undefined handler for tag '%s'", tag))
 		return
 	end
 --	assert(handlers[tag], string.format("undefined handler for tag '%s'", tag))

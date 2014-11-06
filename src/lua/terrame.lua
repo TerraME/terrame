@@ -319,6 +319,7 @@ local doc = function(package)
 		parameters = 0,
 		lua_files = 0,
 		html_files = 0,
+		global_functions = 0,
 		functions = 0,
 		variables = 0,
 
@@ -365,9 +366,9 @@ local doc = function(package)
 	end
 
 	if doc_report.no_call_itself_usage == 0 then
-		printNote("All "..doc_report.functions.." functions called themselves in their @usage.")
+		printNote("All "..doc_report.functions.." documented functions called themselves in their @usage.")
 	else
-		printError(doc_report.no_call_itself_usage.." functions do not call themselves in their @usage.")
+		printError(doc_report.no_call_itself_usage.." documented functions do not call themselves in their @usage.")
 	end
 
 	if doc_report.non_doc_functions == 0 then

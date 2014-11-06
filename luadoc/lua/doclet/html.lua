@@ -132,15 +132,14 @@ function file_func_link (symbol, doc, file_doc, from)
 	funcname = string.gsub(funcname, "%s*$", "")
 	if filename == "" then filename = funcname end
 	if doc.files[filename .. ".lua"] == nil then
-		printError(string.format("unresolved reference to module '%s'", modulename))
-		-- print(file_doc.name .. ": unresolved reference to " .. filename)
+		printError(string.format("unresolved reference to file '%s'", filename))
 		return
 	end
 	
 	local functions = doc.files[filename..".lua"]["functions"]
 	if filename ~= funcname and not functions[funcname] then
 		--print(string.format("%s: unresolved reference to %s",	file_doc.name, symbol))
-			return
+		return
 	end
 	
 	local href = "files/" .. filename .. ".html"
@@ -326,7 +325,7 @@ function start (doc, doc_report)
 		highlighting.setWords(doc.files.funcnames)
 	end
 
-	printNote("Building HTML files")
+	printNote("Building and checking HTML files")
 
 	-- Generate index file
 	if (#doc.files > 0 or #doc.modules > 0) and (not options.noindexpage) then
