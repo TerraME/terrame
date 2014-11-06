@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 -- 
@@ -21,7 +21,7 @@
 -- of this library and its documentation.
 -- 
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
 -- Based on a color table available at http://gucky.uni-muenster.de/cgi-bin/rgbtab-en
 local colors = {

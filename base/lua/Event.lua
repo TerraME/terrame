@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 --
@@ -23,7 +23,7 @@
 -- Authors: 
 --      Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 --      Rodrigo Reis Pereira
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
 -- Set type to "Event"
 TeEvent.type_ = "Event"

@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 --
@@ -24,7 +24,7 @@
 --          Rodrigo Reis Pereira
 --          Antonio Jose da Cunha Rodrigues
 --          Raian Vargas Maretto
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
 -- @header Some basic and useful functions for modeling.
 

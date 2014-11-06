@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 --
@@ -24,7 +24,7 @@
 --      Pedro R. Andrade
 --      Raian Vargas Maretto
 --      Antonio Gomes de Oliveira Junior
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
 local print_error = function(self, msg)
 	local level = 1
