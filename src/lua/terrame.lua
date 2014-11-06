@@ -83,26 +83,11 @@ end
 
 type__ = type
 
---- Return the type of an object. It extends the original Lua type() to support TerraME objects, 
--- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
--- @param data Any object or value.
--- @usage c = Cell{value = 3}
--- print(type(c)) -- "Cell"
-type = function(data)
-	local t = type__(data)
-	if t == "table" or t == "userdata" and getmetatable(data) then
-		if data.type_ ~= nil then
-			return data.type_
-		end
-	end
-	return t
-end
-
 -- TODO: allow this to be executed directly from TerraME. Check if it is interesting to be executed
 -- when the package is installed.
 importDatabase = function()
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages/base"
+	local baseDir = sessionInfo().path..s.."packages"..s.."base"
 
 	-- before calling the commands below, we need to execute
 	-- "create database cabeca;"

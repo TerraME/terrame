@@ -66,7 +66,7 @@ isfile = function(file)
 	return os.rename(file, file)
 end
 
--- Return the files in a given directory.
+--- Return the files in a given directory.
 -- @param folder A string describing a folder.
 -- @usage dir("C:\\")
 function dir(folder)

@@ -37,6 +37,21 @@ function sessionInfo()
 	return info_ -- this is a global variable created when TerraME is initialized
 end
 
+--- Return the type of an object. It extends the original Lua type() to support TerraME objects, 
+-- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
+-- @param data Any object or value.
+-- @usage c = Cell{value = 3}
+-- print(type(c)) -- "Cell"
+type = function(data)
+	local t = type__(data)
+	if t == "table" or t == "userdata" and getmetatable(data) then
+		if data.type_ ~= nil then
+			return data.type_
+		end
+	end
+	return t
+end
+
 -- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
 --- Function that returns a string describing the internal content of an object.
 -- @param o The object to be converted into a string.
