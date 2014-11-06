@@ -962,30 +962,25 @@ execute = function(parameters) -- parameters is a string
 		os.exit()
 	end
 
-	local executionMode = "normal"
-
-	local info = {
-		mode = executionMode,
-		version = "2.0",
+	-- this variable is used by Utils:sessionInfo()
+	info_ = {
+		mode = "normal",
 		dbVersion = "1_3_1", -- TODO: remove this parameter?
 		separator = package.config:sub(1, 1),
 		path = os.getenv("TME_PATH")
 	}
 
-	sessionInfo = function()
-		return info
-		-- TODO: atualizar todos os arquivos que usam as variaveis globais por uma chamada a esta funcao
-		-- remover as variaveis globais TME_MODE, ...
-	end
-
-	if sessionInfo().path == nil or sessionInfo().path == "" then
+	if info_.path == nil or info_.path == "" then
 		error("Error: TME_PATH environment variable should exist and point to TerraME installation folder.", 2)
 	end
 
 	-- Package.lua contains functions that terrame.lua needs, but should also be
 	-- documented and availeble for the final users.
-	local s = sessionInfo().separator
-	dofile(sessionInfo().path..s.."packages"..s.."base"..s.."lua"..s.."Package.lua")
+	local s = info_.separator
+	dofile(info_.path..s.."packages"..s.."base"..s.."lua"..s.."Package.lua")
+	dofile(info_.path..s.."packages"..s.."base"..s.."lua"..s.."Utils.lua")
+
+	info_.version = packageInfo().version
 
 	local package = ""
 
@@ -1002,17 +997,17 @@ execute = function(parameters) -- parameters is a string
 				local __obsEmpty = Observer{subject = __cellEmpty, type = "chart", attributes = {"attrib"}}
 				__obsEmpty:kill()
 			elseif param == "-mode=normal" then
-				info.mode = "normal"
+				info_.mode = "normal"
 			elseif param == "-mode=debug" then
-				info.mode = "debug"
+				info_.mode = "debug"
 			elseif param == "-mode=quiet" then
-				info.mode = "quiet"
+				info_.mode = "quiet"
 			elseif param == "-package" then
 				paramCount = paramCount + 1
 				package = parameters[paramCount]
 				
 			elseif param == "-test" then
-				info.mode = "debug"
+				info_.mode = "debug"
 				paramCount = paramCount + 1
 				if package == "" then
 					package = "base"

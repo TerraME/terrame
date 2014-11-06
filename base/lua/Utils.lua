@@ -28,6 +28,15 @@
 
 -- @header Some basic and useful functions for modeling.
 
+--- Return information about the current simulation. The result is a table
+-- with the following values: mode ("normal", "debug", or "quiet"), dbVersion (the
+-- current TerraLib version for databases), separator (the directory separator),
+-- path (the location of TerraME in the computer).
+-- @usage sessionInfo().version
+function sessionInfo()
+	return info_ -- this is a global variable created when TerraME is initialized
+end
+
 -- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
 --- Function that returns a string describing the internal content of an object.
 -- @param o The object to be converted into a string.
