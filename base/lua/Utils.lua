@@ -97,6 +97,8 @@ end
 -- @param a The value of 'a' in the interval [a,b[.
 -- @param b The value of 'b' of in the interval [a,b[.
 -- @param delta The step of the independent variable.
+-- @usage f = function(x) return x^3 end
+-- v = integrationHeun(f, 0, 0, 3, 0.1)
 function integrationHeun(df, initCond, a, b, delta)
 	if type(df) == "function" then
 		local x = a
@@ -142,6 +144,8 @@ end
 -- @param a The value of 'a' in the interval [a,b[.
 -- @param b The value of 'b' of in the interval [a,b[.
 -- @param delta The step of the independent variable.
+-- @usage f = function(x) return x^3 end
+-- v = integrationRungeKutta(f, 0, 0, 3, 0.1)
 function integrationRungeKutta(df, initCond, a, b, delta)
 	local i = 0
 	if type(df) == "function" then
@@ -202,6 +206,8 @@ end
 -- @param a The value of 'a' in the interval [a,b[.
 -- @param b The value of 'b' of in the interval [a,b[.
 -- @param delta The step of the independent variable.
+-- @usage f = function(x) return x^3 end
+-- v = integrationEuler(f, 0, 0, 3, 0.1)
 function integrationEuler(df, initCond, a, b, delta)
 	if type(df) == "function" then
 		local y = initCond

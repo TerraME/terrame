@@ -48,6 +48,10 @@ end
 -- associated to them.
 -- @param data A table.
 -- @param att The chosen attribute.
+-- @usage switch(data, "protocol"):caseof{
+--     tcp = function() print("tcp") end,
+--     udp = function() print("udp") end
+-- }
 function switch(data, att)
 	if type(data) == "number" then
 		-- TODO: it if is number, the parameter att is ignored. Is it ok?
