@@ -27,14 +27,14 @@
 
 return{
 	Neighborhood = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		unitTest:assert_type(neigh, "Neighborhood")
 
 		local neigh = Neighborhood()
 		unitTest:assert_type(neigh, "Neighborhood")
 	end,
 	add = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 1, y = 1}
 
@@ -51,7 +51,7 @@ return{
 		unitTest:assert_equal(#neigh, 2)
 	end,
 	clear = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
 		local cell3 = Cell{x = 1, y = 1}
@@ -65,7 +65,7 @@ return{
 		unitTest:assert(neigh:isEmpty())
 	end,
 	getParent = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
 
@@ -74,7 +74,7 @@ return{
 		unitTest:assert_equal(cell2, neigh:getParent())
 	end,	
 	getWeight = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
 		local cell3 = Cell{x = 1, y = 1}
@@ -88,7 +88,7 @@ return{
 		unitTest:assert_equal(0.2, neigh:getWeight(cell3))
 	end,
 	isNeighbor = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
 		local cell3 = Cell{x = 1, y = 1}
@@ -101,7 +101,7 @@ return{
 		unitTest:assert(not neigh:isNeighbor(cell3))
 	end,
 	isEmpty = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		local cell1 = Cell{}
 
 		unitTest:assert(neigh:isEmpty())
@@ -112,7 +112,7 @@ return{
 		unitTest:assert(neigh:isEmpty())
 	end,
 	remove = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
 		local cell3 = Cell{x = 1, y = 1}
@@ -135,7 +135,7 @@ return{
 	end,
 	sample = function(unitTest)
 		local randomObj = Random{seed = 12345}
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
 		local cell3 = Cell{x = 1, y = 1}
@@ -150,7 +150,7 @@ return{
 		unitTest:assert_equal(type(neigh:sample()), type(cell1))
 	end,
 	setWeight = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		local cell1 = Cell{}
 		local cell2 = Cell{x = 0, y = 1}
 		local cell3 = Cell{x = 1, y = 1}
@@ -168,7 +168,7 @@ return{
 		unitTest:assert_equal(0.9, neigh:getWeight(cell3))
 	end,
 	__len = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 		local cell1 = Cell{}
 
 		unitTest:assert_equal(#neigh, 0)
@@ -179,7 +179,7 @@ return{
 		unitTest:assert_equal(#neigh, 0)
 	end,
 	__tostring = function(unitTest)
-		local neigh = Neighborhood{}
+		local neigh = Neighborhood()
 
 		unitTest:assert_equal(tostring(neigh),[[cObj_  userdata
 ]])

@@ -214,14 +214,8 @@ metaTableSocialNetwork_ = {
 -- @output count The number of Agents in the SocialNetwork.
 -- @usage sn = SocialNetwork()
 --  sn = SocialNetwork{}
-function SocialNetwork(data)
-	if data == nil then
-		data = {}
-	else
-		verifyNamedTable(data)
-	end
-
-	checkUnnecessaryParameters(data, {""}) -- this function takes zero parameters
+function SocialNetwork()
+	local data = {}
 
 	setmetatable(data, metaTableSocialNetwork_)
 	data:clear()

@@ -48,18 +48,18 @@ return {
 		local ag1 = Agent{}
 
 		local error_func = function()
-			ag1:addSocialNetwork(nil,"friends")
+			ag1:addSocialNetwork(nil, "friends")
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
 			local ag1 = Agent{}
-			ag1:addSocialNetwork({},"friends")
+			ag1:addSocialNetwork({}, "friends")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "SocialNetwork", {}))
 
 		local ag1 = Agent{}
-		local sn = SocialNetwork{}
+		local sn = SocialNetwork()
 		local error_func = function()
 			ag1:addSocialNetwork(sn, 123)
 		end
@@ -132,7 +132,7 @@ return {
 	getSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
 
-		local sn = SocialNetwork{}
+		local sn = SocialNetwork()
 		ag1:addSocialNetwork(sn)
 		local error_func = function()
 			sn2 = ag1:getSocialNetwork{}
@@ -140,7 +140,7 @@ return {
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", {}))
 
 		local ag1 = Agent{}
-		sn = SocialNetwork{}
+		sn = SocialNetwork()
 
 		ag1:addSocialNetwork(sn, "friends")
 		-- TODO: move this assert to basic tests

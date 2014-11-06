@@ -251,17 +251,9 @@ metaTableNeighborhood_ = {
 -- CellularSpace:createNeighborhood(). Neighborhoods can also be loaded from external soures
 -- using CellularSpace:loadNeighborhood(). Calling Utils:forEachNeighbor()
 -- from a Cell traverses one of its Neighborhoods.
--- @param data.id a unique identifier for the neighborhood. As default, TerraME uses a string
--- with an auto incremented number.
 -- @usage n = Neighborhood()
-function Neighborhood(data)
-	if data == nil then
-		data = {} 
-	else
-		verifyNamedTable(data)
-	end
-
-	checkUnnecessaryParameters(data, {""}) -- this function takes zero parameters
+function Neighborhood()
+	local data = {}
 
 	data.cObj_ = TeNeighborhood()
 	data.cObj_:setReference(data)

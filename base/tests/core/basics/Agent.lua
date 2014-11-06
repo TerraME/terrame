@@ -81,7 +81,7 @@ return{
 	end,
 	addSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
-		local sn = SocialNetwork{}
+		local sn = SocialNetwork()
 		ag1:addSocialNetwork(sn)
 		unitTest:assert_type(ag1:getSocialNetwork(), "SocialNetwork")
 		unitTest:assert_equal(#ag1:getSocialNetwork(), 0)
@@ -90,7 +90,7 @@ return{
 
 		local sc = Society{instance = ag, quantity = 5}
 
-		sn = SocialNetwork{}
+		sn = SocialNetwork()
 		forEachAgent(sc, function(agent)
 			sn:add(agent)
 		end)
@@ -121,7 +121,7 @@ return{
 	end,
 	getSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
-		local sn = SocialNetwork{}
+		local sn = SocialNetwork()
 		ag1:addSocialNetwork(sn)
 		local sn2 = ag1:getSocialNetwork()
 		unitTest:assert_equal(sn2, sn)
@@ -263,7 +263,7 @@ return{
 		local ag = Agent{}
 		local sc = Society{instance = ag, quantity = 5}
 
-		local sn = SocialNetwork{}
+		local sn = SocialNetwork()
 		forEachAgent(sc, function(agent)
 			sn:add(agent)
 		end)
