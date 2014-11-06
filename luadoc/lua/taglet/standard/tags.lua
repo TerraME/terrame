@@ -265,7 +265,8 @@ handlers["inherits"] = inherits
 
 function handle (tag, block, text, doc_report)
 	if not handlers[tag] then
-		printError(string.format("undefined handler for tag '%s'", tag))
+		printError(string.format("Tag '%s' is invalid", tag))
+		doc_report.invalid_tags = doc_report.invalid_tags + 1
 		return
 	end
 --	assert(handlers[tag], string.format("undefined handler for tag '%s'", tag))

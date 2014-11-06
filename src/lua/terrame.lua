@@ -170,7 +170,8 @@ local doc = function(package)
 		block_name_conflict = 0,
 		no_call_itself_usage = 0,
 		non_doc_functions = 0,
-		wrong_links = 0
+		wrong_links = 0,
+		invalid_tags = 0
 	}
 
 	luadocMain(package_path, files, package, doc_report)
@@ -238,6 +239,12 @@ local doc = function(package)
 		printNote("All "..doc_report.links.." links were correctly generated.")
 	else
 		printError(doc_report.wrong_links.." of "..doc_report.links.." links to undefined functions of files were found")
+	end
+
+	if doc_report.invalid_tags == 0 then
+		printNote("No invalid tags were found.")
+	else
+		printError(doc_report.invalid_tags.." invalid tags were found.")
 	end
 
 	local errors = doc_report.undoc_param + doc_report.unused_param + doc_report.undoc_files +
