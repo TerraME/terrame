@@ -548,7 +548,7 @@ However, the database does not exist!
 		error_func = function()
 			cs:loadNeighborhood{source = "gpmlinesDbEmas_invalid.teste"}
 		end
-		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("source", "teste"))
+		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste"))
 
 		error_func = function()
 			cs:loadNeighborhood{source = file("neighCabecaDeBoi900x900_invalid.gpm", "base")}

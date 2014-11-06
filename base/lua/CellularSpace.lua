@@ -765,7 +765,7 @@ CellularSpace_ = {
 				resourceNotFoundError("source", data.source)
 			end
 		else
-			incompatibleFileExtensionError("source", string.match(data.source, "%w+$"))
+			invalidFileExtensionError("source", string.match(data.source, "%w+$"))
 		end
 
 		if data.name == nil then

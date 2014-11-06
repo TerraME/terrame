@@ -432,19 +432,19 @@ function incompatibleValueMsg(attr, expectedValues, gottenValue)
 end
 
 --- Stop the simulation with an error indicating that the function does not support a given file extension.
--- The error message comes from Package:incompatibleFileExtensionMsg().
+-- The error message comes from Package:invalidFileExtensionMsg().
 -- @param attr The attribute name (a string).
 -- @param ext The file extension (a string).
--- @usage incompatibleFileExtensionError("file", ".txt")
-function incompatibleFileExtensionError(attr, ext)
-	customError(incompatibleFileExtensionMsg(attr, ext))
+-- @usage invalidFileExtensionError("file", ".txt")
+function invalidFileExtensionError(attr, ext)
+	customError(invalidFileExtensionMsg(attr, ext))
 end
 
 --- Return a message indicating that a given file extension is incompatible.
 -- @param attr A string or a number with the argument of the function.
 -- @param ext The incompatible file extension.
--- @usage incompatibleFileExtensionMsg("file", "csv")
-function incompatibleFileExtensionMsg(attr, ext)
+-- @usage invalidFileExtensionMsg("file", "csv")
+function invalidFileExtensionMsg(attr, ext)
 	return "Parameter '".. attr.."' does not support extension '"..ext.."'."
 end
 

@@ -303,7 +303,7 @@ Environment_ = {
 		if type(data.source) == "string" then
 			local extension = string.match(data.source, "%w+$")
 			if extension ~= "gpm" then
-				incompatibleFileExtensionError("source", extension)
+				invalidFileExtensionError("source", extension)
 			else
 				local file = io.open(data.source, "r")
 				if not file then

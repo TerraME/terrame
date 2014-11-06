@@ -64,8 +64,8 @@ return{
 	namedParametersMsg = function(unitTest)
 		unitTest:assert_equal(namedParametersMsg(), "Parameters must be named.")
 	end,
-	incompatibleFileExtensionMsg = function(unitTest)
-		unitTest:assert_equal(incompatibleFileExtensionMsg("aaa", "bbb"), "Parameter 'aaa' does not support extension 'bbb'.")
+	invalidFileExtensionMsg = function(unitTest)
+		unitTest:assert_equal(invalidFileExtensionMsg("aaa", "bbb"), "Parameter 'aaa' does not support extension 'bbb'.")
 	end,
 	customError = function(unitTest)
 		local error_func = function()
@@ -103,11 +103,11 @@ return{
 	file = function(unitTest)
 		unitTest:assert_type(file("cs.csv"), "string")
 	end,
-	incompatibleFileExtensionError = function(unitTest)
+	invalidFileExtensionError = function(unitTest)
 		local error_func = function()
-			incompatibleFileExtensionError("file", ".txt")
+			invalidFileExtensionError("file", ".txt")
 		end
-		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("file", ".txt"))
+		unitTest:assert_error(error_func, invalidFileExtensionMsg("file", ".txt"))
 	end,
 	incompatibleTypeError = function(unitTest)
 		local error_func = function()

@@ -61,7 +61,7 @@ return{
 			}
 		end
 		-- TODO: implement a better error msg, as this is not a file extension.
-		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("source", "teste1"))
+		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste1"))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -70,7 +70,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("source", "abc"))
+		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "abc"))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -104,7 +104,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("source", "teste"))
+		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste"))
 	end
 }
 
