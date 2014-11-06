@@ -1,5 +1,5 @@
 
--- Function dir implemented in terrame.lua
+--- Function dir implemented in terrame.lua
 local dir = function()
 end
 
@@ -53,14 +53,14 @@ end
 local attributes = function(filepath, attributename)
 end
 
--- lfs.chdir (path)
--- Changes the current working directory to the given path.
+--- Changes the current working directory to the given path.
 -- Returns true in case of success or nil plus an error string.
+-- @usage chdir("c:\\tests")
 local chdir = function(path)
 end
 
--- lfs.currentdir ()
--- Returns a string with the current working directory or nil plus an error string.
+--- Returns a string with the current working directory or nil plus an error string.
+-- @usage currentdir()
 local currentdir = function()
 end
 
