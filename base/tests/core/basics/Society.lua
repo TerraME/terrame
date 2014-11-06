@@ -246,7 +246,7 @@ return {
 
 		unitTest:assert_equal(3, #soc)
 
-		local friends = SocialNetwork{}
+		local friends = SocialNetwork()
 		friends:add(john)
 		friends:add(mary)
 

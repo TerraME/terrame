@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 --
@@ -22,17 +22,17 @@
 --
 -- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 --          Rodrigo Reis Pereira
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
 --[[
 State_ = {
 	type_ = "State",
-	--- Return a string with the id of the State.
+	--#- Return a string with the id of the State.
 	getId = function(self) 
 		id = self.cObj_:getID()
 		return id
 	end,
-	--- Change the id of the State. It returns a boolean value indicating whether the operation was succesfully executed.
+	--#- Change the id of the State. It returns a boolean value indicating whether the operation was succesfully executed.
 	-- @param idValue A string that will be set as the id of the State.
 	setId = function(self, idValue)
 		local idOld = self.cObj_:getID()

@@ -1,7 +1,6 @@
 
 data{
 	file = {"EstadosBrasil.dbf", "EstadosBrasil.shp", "EstadosBrasil.shx"},
-	usage = "file('EstadosBrasil.shp')",
 	summary = "A shapefile desribing the 27 Brazilian states.",
 	source = "IBGE (www.ibge.br)",
 	attributes =  {},

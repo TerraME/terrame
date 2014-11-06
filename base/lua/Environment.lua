@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 --
@@ -23,7 +23,7 @@
 -- Authors: 
 --      Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 --      Rodrigo Reis Pereira
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
 local createRandomPlacement = function(environment, cs, max, placement)
 	if max == nil then
@@ -303,7 +303,7 @@ Environment_ = {
 		if type(data.source) == "string" then
 			local extension = string.match(data.source, "%w+$")
 			if extension ~= "gpm" then
-				incompatibleFileExtensionError("source", extension)
+				invalidFileExtensionError("source", extension)
 			else
 				local file = io.open(data.source, "r")
 				if not file then

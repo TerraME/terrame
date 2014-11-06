@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 -- 
@@ -21,8 +21,11 @@
 -- of this library and its documentation.
 -- 
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
+--- Create a display with the current time and Event queue of a given Timer.
+-- @param data.subject A timer.
+-- @usage Clock{subject = timer}
 Clock = function(data)
 	mandatoryTableArgument(data, "subject", "Timer")
 

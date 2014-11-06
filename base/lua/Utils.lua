@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 --
@@ -24,9 +24,33 @@
 --          Rodrigo Reis Pereira
 --          Antonio Jose da Cunha Rodrigues
 --          Raian Vargas Maretto
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
 -- @header Some basic and useful functions for modeling.
+
+--- Return information about the current simulation. The result is a table
+-- with the following values: mode ("normal", "debug", or "quiet"), dbVersion (the
+-- current TerraLib version for databases), separator (the directory separator),
+-- path (the location of TerraME in the computer).
+-- @usage sessionInfo().version
+function sessionInfo()
+	return info_ -- this is a global variable created when TerraME is initialized
+end
+
+--- Return the type of an object. It extends the original Lua type() to support TerraME objects, 
+-- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
+-- @param data Any object or value.
+-- @usage c = Cell{value = 3}
+-- print(type(c)) -- "Cell"
+type = function(data)
+	local t = type__(data)
+	if t == "table" or t == "userdata" and getmetatable(data) then
+		if data.type_ ~= nil then
+			return data.type_
+		end
+	end
+	return t
+end
 
 -- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
 --- Function that returns a string describing the internal content of an object.
@@ -97,6 +121,8 @@ end
 -- @param a The value of 'a' in the interval [a,b[.
 -- @param b The value of 'b' of in the interval [a,b[.
 -- @param delta The step of the independent variable.
+-- @usage f = function(x) return x^3 end
+-- v = integrationHeun(f, 0, 0, 3, 0.1)
 function integrationHeun(df, initCond, a, b, delta)
 	if type(df) == "function" then
 		local x = a
@@ -142,6 +168,8 @@ end
 -- @param a The value of 'a' in the interval [a,b[.
 -- @param b The value of 'b' of in the interval [a,b[.
 -- @param delta The step of the independent variable.
+-- @usage f = function(x) return x^3 end
+-- v = integrationRungeKutta(f, 0, 0, 3, 0.1)
 function integrationRungeKutta(df, initCond, a, b, delta)
 	local i = 0
 	if type(df) == "function" then
@@ -202,6 +230,8 @@ end
 -- @param a The value of 'a' in the interval [a,b[.
 -- @param b The value of 'b' of in the interval [a,b[.
 -- @param delta The step of the independent variable.
+-- @usage f = function(x) return x^3 end
+-- v = integrationEuler(f, 0, 0, 3, 0.1)
 function integrationEuler(df, initCond, a, b, delta)
 	if type(df) == "function" then
 		local y = initCond
@@ -752,6 +782,7 @@ end
 --- Return whether a string ends with a given substring (no case sensitive).
 -- @param self A string.
 -- @param send A substring describing the end of #1.
+-- @usage string.endswith("abcdef", "def")
 function string.endswith(self, send)
 	local send = send:lower().."$"
 	return self:lower():match(send)
@@ -824,9 +855,9 @@ end
 -- TODO: verify whether there is a warning message pointing that argument file does not exist in the function
 --- Read a CSV file and return an array of tables.
 -- The first line of the file list the attributes of each table.
--- @param file A string, adress of the CSV file.
+-- @param filename A string, adress of the CSV file.
 -- @param sep The value separator. Default is ','
--- @return A array of tables.
+-- @usage mytable = readCSV("file.csv", ";")
 function readCSV(filename, sep)
 	local data = {}
 	local file = io.open(filename)

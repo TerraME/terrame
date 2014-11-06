@@ -41,6 +41,14 @@ return{
 	defaultValueMsg = function(unitTest)
 		unitTest:assert_equal(defaultValueMsg("aaa", 2), "Parameter 'aaa' could be removed as it is the default value (2).")
 	end,
+	packageInfo = function(unitTest)
+		local r = packageInfo()
+
+		unitTest:assert_equal(r.version, "2.0")
+		unitTest:assert_equal(r.date, "17 October 2014")
+		unitTest:assert_equal(r.package, "TerraME")
+		unitTest:assert_equal(r.url, "http://www.terrame.org")
+	end,
 	resourceNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for parameter 'aaa'.")
 	end,
@@ -56,8 +64,8 @@ return{
 	namedParametersMsg = function(unitTest)
 		unitTest:assert_equal(namedParametersMsg(), "Parameters must be named.")
 	end,
-	incompatibleFileExtensionMsg = function(unitTest)
-		unitTest:assert_equal(incompatibleFileExtensionMsg("aaa", "bbb"), "Parameter 'aaa' does not support extension 'bbb'.")
+	invalidFileExtensionMsg = function(unitTest)
+		unitTest:assert_equal(invalidFileExtensionMsg("aaa", "bbb"), "Parameter 'aaa' does not support extension 'bbb'.")
 	end,
 	customError = function(unitTest)
 		local error_func = function()
@@ -95,11 +103,11 @@ return{
 	file = function(unitTest)
 		unitTest:assert_type(file("cs.csv"), "string")
 	end,
-	incompatibleFileExtensionError = function(unitTest)
+	invalidFileExtensionError = function(unitTest)
 		local error_func = function()
-			incompatibleFileExtensionError("file", ".txt")
+			invalidFileExtensionError("file", ".txt")
 		end
-		unitTest:assert_error(error_func, incompatibleFileExtensionMsg("file", ".txt"))
+		unitTest:assert_error(error_func, invalidFileExtensionMsg("file", ".txt"))
 	end,
 	incompatibleTypeError = function(unitTest)
 		local error_func = function()

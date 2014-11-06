@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 -- 
@@ -21,7 +21,7 @@
 -- of this library and its documentation.
 -- 
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
 -- Based on a color table available at http://gucky.uni-muenster.de/cgi-bin/rgbtab-en
 local colors = {
@@ -105,6 +105,14 @@ local slicedColorBar = function (min, max, slices, colornames)
 	return colorBar
 end
 
+--- Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
+-- or Society. It draws each element into the screen, according to some attribute
+-- @param data.subject A CellularSpace, Trajectory, Agent, or Society.
+-- @param data.values A table with the possible values for the selected attributes.
+-- @param data.grouping A string with the strategy to slice and color the data. See below.
+-- @param data.labels A table with the labels for the attributes.
+-- @param data.select The attribute to be used.
+-- @usage Map{subject = cs}
 Map = function(data)
 	mandatoryTableArgument(data, "subject", "CellularSpace")
 	optionalTableArgument(data, "values", "table")

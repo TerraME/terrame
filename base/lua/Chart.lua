@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 -- 
@@ -21,8 +21,20 @@
 -- of this library and its documentation.
 -- 
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
+--- Create a line chart showing the variation of one or more attributes (y axis) of an
+-- object. X axis values come from the single argument of notify(). 
+-- @param data.subject An Agent, Cell, CellularSpace, Society.
+-- @param data.select A vector of strings with the name of the attributes to be observed. If it is only a
+-- single value then it can also be described as a string. 
+-- @param data.xLabel Name of the x-axis. It does not show any label as default.
+-- @param data.yLabel Name of the y-axis. It does not show any label as default.
+-- @param data.label Vector of the same size of select that indicates the labels for each
+-- line of a chart. Default is the name of the attributes.
+-- @param data.xAxis Name of the attribute to be used as x axis (instead of time). In this case,
+-- notify() will not need the argument for plotting Charts.
+-- @usage Chart{subject = cs}
 Chart = function(data)
 	mandatoryTableArgument(data, "subject")
 	defaultTableValue(data, "yLabel", "")

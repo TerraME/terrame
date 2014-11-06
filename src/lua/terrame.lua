@@ -32,34 +32,6 @@ if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 --	load = loadstring
 --end	
 
--- Creates a text file with the names of the files inside a given folder
--- RAIAN: I changed this function from local to global, in order to use it in luadoc
-function dir(folder)
-	local s = sessionInfo().separator
-	local command
-	if s == "\\" then
-		command = "dir "..folder.." /b > "..folder..s.."aux.txt"
-	elseif s == "/" then
-		command = "ls -1 "..folder.." 2> /dev/null".." > "..folder..s.."aux.txt"
-	end
-	
-	if os.execute(command) ~= nil then 
-		local file = io.open(folder..s.."aux.txt", "r")
-		local fileTable = {}
-		for line in file:lines() do
-			if line ~= "README.txt" and line ~= ".svn" and line ~= ".aux.txt.swp" and line ~= "aux.txt" then 
-				fileTable[#fileTable + 1] = line
-			end
-		end
-
-		file:close()
-		os.execute("rm "..folder..s.."aux.txt")
-		return fileTable
-	else
-		customError(folder.." is not a folder or is empty or does not exist.")
-	end
-end	
-
 print__ = print
 local begin_red    = "\027[00;31m"
 local begin_yellow = "\027[00;33m"
@@ -111,26 +83,11 @@ end
 
 type__ = type
 
---- Return the type of an object. It extends the original Lua type() to support TerraME objects, 
--- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
--- @param data Any object or value.
--- @usage c = Cell{value = 3}
--- print(type(c)) -- "Cell"
-type = function(data)
-	local t = type__(data)
-	if t == "table" or t == "userdata" and getmetatable(data) then
-		if data.type_ ~= nil then
-			return data.type_
-		end
-	end
-	return t
-end
-
 -- TODO: allow this to be executed directly from TerraME. Check if it is interesting to be executed
 -- when the package is installed.
 importDatabase = function()
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages/base"
+	local baseDir = sessionInfo().path..s.."packages"..s.."base"
 
 	-- before calling the commands below, we need to execute
 	-- "create database cabeca;"
@@ -174,125 +131,6 @@ local testfolders = function(folder)
 	return(result)
 end
 
-local configureTests = function(fileName, package)
-	if package == "" then
-		package = "base"
-	end
-
-	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
-	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages"..s..package
-	local srcDir = baseDir..s.."tests"
-
-	local tf = testfolders(baseDir)
-	local options = {}
-	local optionparent = {}
-	print (">> Choose option: ")
-	options[#options + 1] = "ALL"
-	optionparent[#optionparent + 1] = "ALL"
-	print("("..#options..")".." ALL")
-
-	forEachElement(tf, function(_, folder)
-		options[#options + 1] = folder
-		print("("..#options..")".." "..options[#options])
-	end)
-
-	local answer = io.read()
-	local test = io.open(fileName, "w")
-	
-	-- There is a function for each of the questions that can be asked for the user
-	
-	-- Question to wait between tests
-	local function waitQuestion()
-		print("\n >> Wait between tests? \n(1) True \n(2) False")
-		local wait = io.read()
-		if wait == '1' then
-			test:write("sleep = 2\n")
-		end
-	end
-	
-	-- Question about the choosen test
-	local function returnTest(folder, file)
-		local tests = dofile(baseDir..s..folder..s..file)
-		local testsList = {}
-		print ("\n>> Choose Test: ")
-		testsList[#testsList + 1] = "ALL"
-		print("("..#testsList..") ALL")
-		forEachOrderedElement(tests, function(index, value, mtype)		
-			testsList[#testsList + 1] = index
-			print("("..#testsList..") "..index)
-		end)
-		return testsList
-	end
-	
-	-- Question about the database and password if necessary
-	local function databaseQuestion()
-		print("\n>> Choose database type: \n(1) MySQL\n(2) MSAccess")
-		local dbtype = io.read()
-		if dbtype == '1' then
-			print(">> Input Password: ")
-			local password = io.read()	
-			test:write("dbType = 'mysql'\n")
-			test:write("password = '".. password.."'\n")
-		elseif dbtype == "2" then
-			test:write("dbType = 'ado'\n")
-		end
-	end
-	
-	-- Question about the test file
-	local function fileQuestion()	
-		print("\n>> Choose option: \n")	
-		local luaTests = {}
-		luaTests[#luaTests + 1] = '""'
-		print("("..(#luaTests)..")".." ".."ALL")
-		local luaTests2 = dir(baseDir..s..options[tonumber(answer)])
-		for _, test in ipairs(luaTests2) do
-			luaTests[#luaTests + 1] = test
-		end
-		
-		for index, tests in ipairs(luaTests2) do
-			print("("..(index + 1)..")".." "..tests)
-		end
-	
-		usertest = io.read()
-		if tonumber(usertest) ~= 1 then
-			test:write("file = ".."'"..luaTests[tonumber(usertest)].."'".."\n")
-			local results = returnTest(options[tonumber(answer)], luaTests[tonumber(usertest)])
-			local answerTest = io.read()
-			if tonumber(answerTest) ~= 1 then
-				test:write("test = ".."'"..results[tonumber(answerTest)].."'")
-			end
-		end
-		
-		return luaTests[tonumber(usertest)]
-	end
-	
-	-- If the user chooses something else than ALL, it writes the choosen folder
-	if tonumber(answer) ~= 1 then
-		test:write("folder = ".."'"..options[tonumber(answer)].."'".."\n")
-	end
-	
-	-- Check which of the folders the user has choosen to test, and asks the appropriate questions
-	if optionparent[tonumber(answer)] == "observer" then
-		waitQuestion()
-		local luaTests = fileQuestion()
-	elseif optionparent[tonumber(answer)] == "database" then
-		databaseQuestion()
-		local luaTests = fileQuestion()
-	elseif optionparent[tonumber(answer)] == "core" then	
-		local luaTests = fileQuestion()
-	elseif tonumber(answer) == 1 then
-		waitQuestion()
-		databaseQuestion()	
-	else 
-		waitQuestion()
-		databaseQuestion()
-		local luaTests = fileQuestion()	
-	end
-
-	test:close()
-end
-
 local doc = function(package)
 	-- gera a documentacao do arquivo em TME_FOLDER/packages/package/doc a partir da pasta packages/package/lua/*.lua
 	-- no futuro, pegar tambem a pasta examples para gerar a documentacao
@@ -309,7 +147,6 @@ local doc = function(package)
 	xpcall(function() require(package) end, function(err)
 		printError("Package could "..package.." not be loaded.")
         printError(err)
-        printError(traceback())
 		os.exit()
     end)
 
@@ -426,10 +263,6 @@ local buildCountTable = function(mtable)
 	return result
 end
 
-isfile = function(file)
-	return os.rename(file, file)
-end
-
 local executeTests = function(fileName, package)
 	local initialTime = os.clock()
 
@@ -449,7 +282,6 @@ local executeTests = function(fileName, package)
     xpcall(function() require(package) end, function(err)
 		printError("Package could not be loaded.")
         printError(err)
-        printError(traceback())
 		os.exit()
     end)
 
@@ -958,7 +790,6 @@ local usage = function()
 	print("       or TerraME [-version]\n")
 	print("Options: ")
 	print(" -autoclose                 Automatically close the platform after simulation.")
-	print(" -config-tests <file_name>  Generate a file used to configure the execution of the tests.")
 	print(" -draw-all-higher <value>   Draw all subjects when percentage of changes was higher")
 	print("                            than <value>. Value must be between interval [0, 1].")
 	print(" -gui                       Show the player for the application (it works only ")
@@ -1085,30 +916,27 @@ execute = function(parameters) -- parameters is a string
 		os.exit()
 	end
 
-	local executionMode = "normal"
-
-	local info = {
-		mode = executionMode,
-		version = "2.0",
+	-- this variable is used by Utils:sessionInfo()
+	info_ = {
+		mode = "normal",
 		dbVersion = "1_3_1", -- TODO: remove this parameter?
 		separator = package.config:sub(1, 1),
 		path = os.getenv("TME_PATH")
 	}
 
-	sessionInfo = function()
-		return info
-		-- TODO: atualizar todos os arquivos que usam as variaveis globais por uma chamada a esta funcao
-		-- remover as variaveis globais TME_MODE, ...
-	end
-
-	if sessionInfo().path == nil or sessionInfo().path == "" then
+	if info_.path == nil or info_.path == "" then
 		error("Error: TME_PATH environment variable should exist and point to TerraME installation folder.", 2)
 	end
 
 	-- Package.lua contains functions that terrame.lua needs, but should also be
 	-- documented and availeble for the final users.
-	local s = sessionInfo().separator
-	dofile(sessionInfo().path..s.."packages"..s.."base"..s.."lua"..s.."Package.lua")
+	local s = info_.separator
+	local path = info_.path..s.."packages"..s.."base"..s.."lua"..s
+	dofile(path.."Package.lua")
+	dofile(path.."FileSystem.lua")
+	dofile(path.."Utils.lua")
+
+	info_.version = packageInfo().version
 
 	local package = ""
 
@@ -1125,24 +953,17 @@ execute = function(parameters) -- parameters is a string
 				local __obsEmpty = Observer{subject = __cellEmpty, type = "chart", attributes = {"attrib"}}
 				__obsEmpty:kill()
 			elseif param == "-mode=normal" then
-				info.mode = "normal"
+				info_.mode = "normal"
 			elseif param == "-mode=debug" then
-				info.mode = "debug"
+				info_.mode = "debug"
 			elseif param == "-mode=quiet" then
-				info.mode = "quiet"
-			elseif param == "-config-tests" then
-				paramCount = paramCount + 1
-				local correct, errorMsg = pcall(configureTests, parameters[paramCount], package)
-				if not correct then 
-					print(errorMsg)
-				end
-				return
+				info_.mode = "quiet"
 			elseif param == "-package" then
 				paramCount = paramCount + 1
 				package = parameters[paramCount]
 				
 			elseif param == "-test" then
-				info.mode = "debug"
+				info_.mode = "debug"
 				paramCount = paramCount + 1
 				if package == "" then
 					package = "base"
@@ -1293,17 +1114,6 @@ execute = function(parameters) -- parameters is a string
 		end
 		paramCount = paramCount + 1
 	end
-end
-
-packageInfo = function(package)
-	local s = sessionInfo().separator
-	local file = sessionInfo().path..s.."packages"..s..package..s.."description.lua"
-	
-	return include(file)
-
-	--forEachOrderedElement(ns, function(idx, value)
-	--	print(idx..": "..value)
-	--end)
 end
 
 --- Return a string describing a TerraME object. This function allows one to use the method print() directly from any TerraME object.

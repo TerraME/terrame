@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 --
@@ -21,7 +21,7 @@
 -- of this library and its documentation.
 --
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
 Model_ = {
 	--- Check whether the instance of the model has correct parameters. This function is optional
@@ -35,6 +35,7 @@ Model_ = {
 		customError("Function 'setup' was not implemented by the Model.")
 	end,
 	--- Run the model. It checks the parameters, create the objects, and then simulate until numRuns.
+	-- @param finalTime A number with the final time of the simulation.
 	-- @usage model:execute(20)
 	execute = function(self, finalTime)
 		if finalTime == nil then
@@ -49,6 +50,7 @@ Model_ = {
 	-- should return a table with tables composed by strings. Each position of the table describes
 	-- a column of components in the interface. Note that if this function returns a table, the
 	-- elements that do not belong to the table will not be shown in the graphical interface.
+	-- @usage model:interface()
 	interface = function(self)
 		return nil
 	end

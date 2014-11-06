@@ -1,9 +1,4 @@
 
--- Function dir implemented in terrame.lua
-local dir = function()
-end
-
- 
 -- The functions bellow are from LuaFileSystem 1.6.2
 -- Copyright Kepler Project 2003 (http://www.keplerproject.org/luafilesystem)
 
@@ -53,16 +48,52 @@ end
 local attributes = function(filepath, attributename)
 end
 
--- lfs.chdir (path)
--- Changes the current working directory to the given path.
+--- Changes the current working directory to the given path.
 -- Returns true in case of success or nil plus an error string.
+-- @usage chdir("c:\\tests")
 local chdir = function(path)
 end
 
--- lfs.currentdir ()
--- Returns a string with the current working directory or nil plus an error string.
+--- Returns a string with the current working directory or nil plus an error string.
+-- @usage currentdir()
 local currentdir = function()
 end
+
+--- Return whether a given string represents a file stored in the computer.
+-- @param file A string.
+-- @usage isfile("C:\\file.txt")
+isfile = function(file)
+	return os.rename(file, file)
+end
+
+--- Return the files in a given directory.
+-- @param folder A string describing a folder.
+-- @usage dir("C:\\")
+function dir(folder)
+	local s = sessionInfo().separator
+	local command
+	if s == "\\" then
+		command = "dir "..folder.." /b > "..folder..s.."aux.txt"
+	elseif s == "/" then
+		command = "ls -1 "..folder.." 2> /dev/null".." > "..folder..s.."aux.txt"
+	end
+	
+	if os.execute(command) ~= nil then 
+		local file = io.open(folder..s.."aux.txt", "r")
+		local fileTable = {}
+		for line in file:lines() do
+			if line ~= "README.txt" and line ~= ".svn" and line ~= ".aux.txt.swp" and line ~= "aux.txt" then 
+				fileTable[#fileTable + 1] = line
+			end
+		end
+
+		file:close()
+		os.execute("rm "..folder..s.."aux.txt")
+		return fileTable
+	else
+		customError(folder.." is not a folder or is empty or does not exist.")
+	end
+end	
 
 -- iter, dir_obj = lfs.dir (path)
 -- Lua iterator over the entries of a given directory. Each time the iterator is called with dir_obj 

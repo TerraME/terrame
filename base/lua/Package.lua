@@ -1,4 +1,4 @@
--------------------------------------------------------------------------------------------
+--#########################################################################################
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 -- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
 --
@@ -24,9 +24,26 @@
 --          Rodrigo Reis Pereira
 --          Antonio Jose da Cunha Rodrigues
 --          Raian Vargas Maretto
--------------------------------------------------------------------------------------------
+--#########################################################################################
 
 --@header Some basic and useful functions to develop packages.
+
+--- Return the description of a package. It reads from file description.lua of the package.
+-- @param package Name of the package. If nil, packageInfo will return
+-- the description of TerraME.
+-- @usage packageInfo().version
+packageInfo = function(package)
+	if package == nil then package = "base" end
+
+	local s = sessionInfo().separator
+	local pkgfile = sessionInfo().path..s.."packages"..s..package
+	if not isfile(pkgfile) then
+		customError("Package '"..package.."' is not installed.", 3)
+	end
+	
+	local file = pkgfile..s.."description.lua"
+	return include(file)
+end
 
 --- Return the path to a file of a given package. The file must be inside the data folder
 -- of the package.
@@ -48,6 +65,10 @@ end
 -- associated to them.
 -- @param data A table.
 -- @param att The chosen attribute.
+-- @usage switch(data, "protocol"):caseof{
+--     tcp = function() print("tcp") end,
+--     udp = function() print("udp") end
+-- }
 function switch(data, att)
 	if type(data) == "number" then
 		-- TODO: it if is number, the parameter att is ignored. Is it ok?
@@ -346,6 +367,7 @@ end
 --- Return a message indicating that a function is deprecated and must be replaced.
 -- @param functionName A string with the deprecated function.
 -- @param functionExpected A string with a function or an object to replace the deprecated function.
+-- @usage deprecatedFunctionMsg("abc", "def")
 function deprecatedFunctionMsg(functionName, functionExpected)
 	return "Function '"..functionName.."' is deprecated. Use '"..functionExpected.."' instead."
 end
@@ -353,7 +375,7 @@ end
 --- Stop the simulation with an error from a wrong type for a parameter of a function.
 -- The error message is the return value of Package:incompatibleTypeMsg().
 -- @param attr A string with an attribute name, or position (such as #1).
--- @param expectedTypeString A string with the expected type.
+-- @param expectedTypesString A string with the possible type (or types).
 -- @param gottenValue The value passed as argument with wrong type.
 -- @usage incompatibleTypeError("cell", "Cell", Agent{})
 function incompatibleTypeError(attr, expectedTypesString, gottenValue)
@@ -379,7 +401,7 @@ end
 --- Stop the simulation with an error from a wrong value for a parameter of a function.
 -- The error message comes from Package:incompatibleValueMsg().
 -- @param attr A string with an attribute name (for named-functions), or position (for non-named functions).
--- @param expectedTypeString A string with the expected type values for the parameter.
+-- @param expectedValues A string with the expected type values for the parameter.
 -- @param gottenValue The value passed as argument with wrong value.
 -- @usage incompatibleValueError("position", "1, 2, or 3", "4")
 function incompatibleValueError(attr, expectedValues, gottenValue)
@@ -410,19 +432,19 @@ function incompatibleValueMsg(attr, expectedValues, gottenValue)
 end
 
 --- Stop the simulation with an error indicating that the function does not support a given file extension.
--- The error message comes from Package:incompatibleFileExtensionMsg().
+-- The error message comes from Package:invalidFileExtensionMsg().
 -- @param attr The attribute name (a string).
 -- @param ext The file extension (a string).
--- @usage incompatibleFileExtensionError("file", ".txt")
-function incompatibleFileExtensionError(attr, ext)
-	customError(incompatibleFileExtensionMsg(attr, ext))
+-- @usage invalidFileExtensionError("file", ".txt")
+function invalidFileExtensionError(attr, ext)
+	customError(invalidFileExtensionMsg(attr, ext))
 end
 
 --- Return a message indicating that a given file extension is incompatible.
 -- @param attr A string or a number with the argument of the function.
 -- @param ext The incompatible file extension.
--- @usage incompatibleFileExtensionMsg("file", "csv")
-function incompatibleFileExtensionMsg(attr, ext)
+-- @usage invalidFileExtensionMsg("file", "csv")
+function invalidFileExtensionMsg(attr, ext)
 	return "Parameter '".. attr.."' does not support extension '"..ext.."'."
 end
 
@@ -454,8 +476,8 @@ end
 
 --- Return a message indicating that a given parameter of a function is mandatory.
 -- @param attr The name of the parameter. It can be a string or a number.
--- @oaram value The valued used as argument to the function.
--- @usage mandatoryArgumentMsg(2)
+-- @param value The valued used as argument to the function.
+-- @usage valueNotFoundMsg("1", "neighborhood")
 function valueNotFoundMsg(attr, value)
 	if type(value) == nil then value = "nil" end
 	if type(attr) == "number" then

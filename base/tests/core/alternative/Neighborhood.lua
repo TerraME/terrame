@@ -134,17 +134,6 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 123))
 	end,
-	Neighborhood = function(unitTest)
-		local error_func = function()
-			neigh = Neighborhood(2)
-		end
-		unitTest:assert_error(error_func, namedParametersMsg())
-
-		local error_func = function()
-			neigh = Neighborhood{id = "1"}
-		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("id"))
-	end,
 	remove = function(unitTest)
 		local cell1 = Cell{}
 		local neigh = Neighborhood()

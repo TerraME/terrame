@@ -26,7 +26,7 @@
 
 return{
 	SocialNetwork = function(unitTest)
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		unitTest:assert_type(sntw, "SocialNetwork")
 
 		local sntw = SocialNetwork()
@@ -37,7 +37,7 @@ return{
 		unitTest:assert_equal(#sntw.weights, 0)
 	end,
 	add = function(unitTest)
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 		local ag2 = Agent{id = "2"}
 
@@ -54,7 +54,7 @@ return{
 		unitTest:assert_equal(sntw.count, 2)
 	end,
 	clear = function(unitTest)
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 		local ag2 = Agent{id = "2"}
 		local ag3 = Agent{id = "3"}
@@ -70,7 +70,7 @@ return{
 		unitTest:assert_equal(#sntw.weights, 0)
 	end,
 	getWeight = function(unitTest)
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 		local ag2 = Agent{id = "2"}
 		local ag3 = Agent{id = "3"}
@@ -84,7 +84,7 @@ return{
 		unitTest:assert_equal(0.2, sntw:getWeight(ag3))
 	end,
 	isConnection = function(unitTest)
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 		local ag2 = Agent{id = "2"}
 		local ag3 = Agent{id = "3"}
@@ -97,7 +97,7 @@ return{
 		unitTest:assert(not sntw:isConnection(ag3))
 	end,
 	isEmpty = function(unitTest)
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 
 		unitTest:assert(sntw:isEmpty())
@@ -108,7 +108,7 @@ return{
 		unitTest:assert(sntw:isEmpty())
 	end,
 	remove = function(unitTest)
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 		local ag2 = Agent{id = "2"}
 		local ag3 = Agent{id = "3"}
@@ -131,7 +131,7 @@ return{
 	end,
 	sample = function(unitTest)
 		local randomObj = Random{seed = 12345}
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 		local ag2 = Agent{id = "2"}
 		local ag3 = Agent{id = "3"}
@@ -148,7 +148,7 @@ return{
 		unitTest:assert_equal(sntw:sample(randomObj), ag2)
 	end,
 	setWeight = function(unitTest)
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 		local ag2 = Agent{id = "2"}
 		local ag3 = Agent{id = "3"}
@@ -166,7 +166,7 @@ return{
 		unitTest:assert_equal(0.9, sntw:getWeight(ag3))
 	end,
 	__len = function(unitTest)
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 
 		unitTest:assert_equal(#sntw, 0)
@@ -177,7 +177,7 @@ return{
 		unitTest:assert_equal(#sntw, 0)
 	end,
 	__tostring = function(unitTest)
-		local sntw = SocialNetwork{}
+		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
 
 		sntw:add(ag1)

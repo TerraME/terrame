@@ -321,6 +321,17 @@ return{
 	elapsedTime = function(unitTest)
 		unitTest:assert_type(elapsedTime(50), "string")
 	end,
+	sessionInfo = function(unitTest)
+		local s = sessionInfo()
+
+		unitTest:assert_equal(s.mode, "debug")
+		unitTest:assert_equal(s.version, packageInfo().version)
+	end,
+	type = function(unitTest)
+		local c = Cell{}
+
+		unitTest:assert_equal(type(c), "Cell")
+	end,
 	vardump = function(unitTest)
 		local x = {a = 2, b = 3, w = {2, 3, 4}}
 
