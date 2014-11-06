@@ -14,7 +14,7 @@ end
 <dd>
 <%end %>
 <span class="description"><%=
-luadoc.link_description(func.description or "", doc, module_doc, file_doc, from, true)%></span>
+luadoc.link_description(func.description or "", doc, module_doc, file_doc, from, true, doc_report)%></span>
 
 <%if type(func.tabular) == "table" and #func.tabular > 0 then %>
 	<%for i = 1, #func.tabular do 
@@ -60,7 +60,7 @@ end %>
 		param_name = i .. sufix
 	end %>
     <li>
-	  <strong><%=param_name%></strong>: <%= luadoc.link_description(param_desc or "", doc, module_doc, file_doc, from) %>
+	  <strong><%=param_name%></strong>: <%= luadoc.link_description(param_desc or "", doc, module_doc, file_doc, from, nil, doc_report) %>
     </li> 
     <% if type(func.tabular) == "table" and func.tabular[func.param[i]] then %>
       </span>
@@ -81,7 +81,7 @@ end %>
           <% local td
           if j == 1 then td = "th" else td = "td"  end %>
             <<%=td%>>
-            <%= luadoc.link_description(data or "", doc, module_doc, file_doc, from) %>
+            <%= luadoc.link_description(data or "", doc, module_doc, file_doc, from, nil, doc_report) %>
             </<%=td%>>
           <% end %>
         <% end %>
@@ -101,7 +101,7 @@ end %>
 	<%for p = 1, #func.output do%>
 	<li>
 	  <strong><%=func.output[p]%></strong>: <%=
-	  luadoc.link_description(func.output[func.output[p]] or "", doc, module_doc, file_doc, from)%>
+	  luadoc.link_description(func.output[func.output[p]] or "", doc, module_doc, file_doc, from, nil, doc_report)%>
 	</li>
 	<%end%>
 </span>
@@ -142,7 +142,7 @@ end %>
 <ul>
 	<%for i = 1, #func.see do %>
 	<li>
-		<%local href = luadoc.symbol_link(func.see[i], doc, module_doc, file_doc, from)%>
+		<%local href = luadoc.symbol_link(func.see[i], doc, module_doc, file_doc, from, doc_report)%>
 		<%if href ~= "" then %>	<a href="<%=href%>"><%=func.see[i]%>	</a>
 		<%else%>	<%=func.see[i]%>
 		<%end%>

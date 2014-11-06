@@ -121,7 +121,7 @@ function module_link (modulename, doc, from)
 	return href
 end
 
-function file_func_link (symbol, doc, file_doc, from)
+function file_func_link (symbol, doc, file_doc, from, doc_report)
 	-- TODO: replace "." by "/" to create directories?
 	-- TODO: how to deal with module names with "/"?
 	assert(symbol)
@@ -132,7 +132,7 @@ function file_func_link (symbol, doc, file_doc, from)
 	funcname = string.gsub(funcname, "%s*$", "")
 	if filename == "" then filename = funcname end
 	if doc.files[filename .. ".lua"] == nil then
-		printError(string.format("unresolved reference to file '%s'", filename))
+		printError(string.format("Reference not found to file '%s'", filename))
 		return
 	end
 	
@@ -201,7 +201,7 @@ function link_to (fname, doc, module_doc, file_doc, from, kind)
 
 	local module_doc = doc.modules[modulename]
 	if not module_doc then
-		printError(string.format("unresolved reference to function '%s': module '%s' not found", fname, modulename))
+		printError(string.format("Reference not found to function '%s' of module '%s'", fname, modulename))
 		return
 	end
 	
@@ -211,31 +211,33 @@ function link_to (fname, doc, module_doc, file_doc, from, kind)
 		end
 	end
 	
-	printError(string.format("unresolved reference to function '%s' of module '%s'", fname, modulename))
+	printError(string.format("Reference not found to function '%s' of module '%s'", fname, modulename))
 end
 
 -------------------------------------------------------------------------------
 -- Make a link to a file, module or function
 
-function symbol_link (symbol, doc, module_doc, file_doc, from)
+function symbol_link (symbol, doc, module_doc, file_doc, from, doc_report)
 	assert(symbol)
 	assert(doc)
+	doc_report.links = doc_report.links + 1
 	local href = 
 		-- file_link(symbol, from) or
 		module_link(symbol, doc, from) or 
-		file_func_link(symbol, doc, file_doc, from) or
+		file_func_link(symbol, doc, file_doc, from, doc_report) or
 		link_to(symbol, doc, module_doc, file_doc, from, "functions") or
 		link_to(symbol, doc, module_doc, file_doc, from, "tables")
   
 	if not href then
-		printError(string.format("unresolved reference to symbol '%s'", symbol))
-		printError(string.format("%s: unresolved reference to symbol '%s'", file_doc.name, symbol))
+		-- printError(string.format("Trying to link undefined function '%s'", symbol))
+		printError(string.format("%s: Trying to link undefined function '%s'", file_doc.name, symbol))
+		doc_report.wrong_links = doc_report.wrong_links + 1
 	end
 	
 	return href or ""
 end
 
-function link_description(description, doc, module_doc, file_doc, from, new_tab)
+function link_description(description, doc, module_doc, file_doc, from, new_tab, doc_report)
 	if new_tab then
 		types_linked = {}
 	else
@@ -247,7 +249,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab)
 	
 	--for word in string.gmatch(description, "[%a_][%w_]-[%.%:][%a_][%w_]-%(%s-%)") do
 	for token, signature, te_type, func_name, braces in string.gmatch(description, "((([%u][%w_]-)[%.%:]([%a_][%w_]-))(%(.-%)))") do
-		local href = symbol_link(signature, doc, module_doc, file_doc, from)
+		local href = symbol_link(signature, doc, module_doc, file_doc, from, doc_report)
 		local anchor
 		if te_type == "Utils" then
 			anchor = "<a href="..href..">"..func_name..braces.."</a>"
@@ -273,7 +275,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab)
 				if doc.files[file_name_link] then
 					href = file_link(file_name_link, from)
 				else
-					href = symbol_link (type_name, doc, module_doc, file_doc, from)
+					href = symbol_link (type_name, doc, module_doc, file_doc, from, doc_report)
 				end
 				local anchor = "<a href="..href..">"..token.."</a>"
 				table.insert(word_table, anchor)

@@ -159,6 +159,7 @@ local doc = function(package)
 		global_functions = 0,
 		functions = 0,
 		variables = 0,
+		links = 0,
 
 		wrong_description = 0,
 		undoc_param = 0,
@@ -168,7 +169,8 @@ local doc = function(package)
 		lack_usage = 0,
 		block_name_conflict = 0,
 		no_call_itself_usage = 0,
-		non_doc_functions = 0
+		non_doc_functions = 0,
+		wrong_links = 0
 	}
 
 	luadocMain(package_path, files, package, doc_report)
@@ -232,9 +234,16 @@ local doc = function(package)
 		printError(doc_report.wrong_description.." problems were found in file 'description.lua'")
 	end
 
+	if doc_report.wrong_links == 0 then
+		printNote("All "..doc_report.links.." links were correctly generated.")
+	else
+		printError(doc_report.wrong_links.." of "..doc_report.links.." links to undefined functions of files were found")
+	end
+
 	local errors = doc_report.undoc_param + doc_report.unused_param + doc_report.undoc_files +
 				   doc_report.lack_usage + doc_report.no_call_itself_usage + doc_report.non_doc_functions +
-				   doc_report.block_name_conflict + doc_report.undefined_param + doc_report.wrong_description
+				   doc_report.block_name_conflict + doc_report.undefined_param + doc_report.wrong_description + 
+				   doc_report.wrong_links
 
 	if errors == 0 then
 		printNote("Summing up, all tests were succesfully executed.")
