@@ -23,6 +23,9 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
+--- Plots a chart.
+-- @param data.subject An Agent, Cell, CellularSpace, Society.
+-- @usage Chart{subject = cs}
 Chart = function(data)
 	mandatoryTableArgument(data, "subject")
 	defaultTableValue(data, "yLabel", "")

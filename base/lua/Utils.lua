@@ -752,6 +752,7 @@ end
 --- Return whether a string ends with a given substring (no case sensitive).
 -- @param self A string.
 -- @param send A substring describing the end of #1.
+-- @usage string.endswith("abcdef", "def")
 function string.endswith(self, send)
 	local send = send:lower().."$"
 	return self:lower():match(send)
@@ -824,9 +825,9 @@ end
 -- TODO: verify whether there is a warning message pointing that argument file does not exist in the function
 --- Read a CSV file and return an array of tables.
 -- The first line of the file list the attributes of each table.
--- @param file A string, adress of the CSV file.
+-- @param filename A string, adress of the CSV file.
 -- @param sep The value separator. Default is ','
--- @return A array of tables.
+-- @usage mytable = readCSV("file.csv", ";")
 function readCSV(filename, sep)
 	local data = {}
 	local file = io.open(filename)

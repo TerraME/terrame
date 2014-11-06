@@ -243,6 +243,7 @@ Agent_ = {
 	--- Return the status of the Trajectories of the Agent. 
 	-- This function is useful only when the Agent is described as a state machine.
 	-- @see Agent:setTrajectoryStatus
+	-- @usage agent:getTrajectoryStatus()
 	getTrajectoryStatus = function(self)
 		return self.cObj_:getActionRegionStatus()
 	end,
@@ -463,7 +464,7 @@ Agent_ = {
 		customError("Agent "..self.id.." does not implement 'on_message'.")
 	end,
 	--- Execute a random walk to a neighbor Cell. Deprecated. Use Agent:walk instead.
-	-- agent:randomWalk()
+	-- @usage agent:randomWalk()
 	randomWalk = function(self)
 		deprecatedFunctionWarning("randomWalk", "walk")
 		self:walk()

@@ -105,6 +105,9 @@ local slicedColorBar = function (min, max, slices, colornames)
 	return colorBar
 end
 
+--- Plots a map.
+-- @param data.subject A CellularSpace.
+-- @usage Map{subject = cs}
 Map = function(data)
 	mandatoryTableArgument(data, "subject", "CellularSpace")
 	optionalTableArgument(data, "values", "table")

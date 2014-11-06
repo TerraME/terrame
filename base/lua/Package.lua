@@ -346,6 +346,7 @@ end
 --- Return a message indicating that a function is deprecated and must be replaced.
 -- @param functionName A string with the deprecated function.
 -- @param functionExpected A string with a function or an object to replace the deprecated function.
+-- @usage deprecatedFunctionMsg("abc", "def")
 function deprecatedFunctionMsg(functionName, functionExpected)
 	return "Function '"..functionName.."' is deprecated. Use '"..functionExpected.."' instead."
 end
@@ -353,7 +354,7 @@ end
 --- Stop the simulation with an error from a wrong type for a parameter of a function.
 -- The error message is the return value of Package:incompatibleTypeMsg().
 -- @param attr A string with an attribute name, or position (such as #1).
--- @param expectedTypeString A string with the expected type.
+-- @param expectedTypesString A string with the possible type (or types).
 -- @param gottenValue The value passed as argument with wrong type.
 -- @usage incompatibleTypeError("cell", "Cell", Agent{})
 function incompatibleTypeError(attr, expectedTypesString, gottenValue)
@@ -379,7 +380,7 @@ end
 --- Stop the simulation with an error from a wrong value for a parameter of a function.
 -- The error message comes from Package:incompatibleValueMsg().
 -- @param attr A string with an attribute name (for named-functions), or position (for non-named functions).
--- @param expectedTypeString A string with the expected type values for the parameter.
+-- @param expectedValues A string with the expected type values for the parameter.
 -- @param gottenValue The value passed as argument with wrong value.
 -- @usage incompatibleValueError("position", "1, 2, or 3", "4")
 function incompatibleValueError(attr, expectedValues, gottenValue)
@@ -454,8 +455,8 @@ end
 
 --- Return a message indicating that a given parameter of a function is mandatory.
 -- @param attr The name of the parameter. It can be a string or a number.
--- @oaram value The valued used as argument to the function.
--- @usage mandatoryArgumentMsg(2)
+-- @param value The valued used as argument to the function.
+-- @usage valueNotFoundMsg("1", "neighborhood")
 function valueNotFoundMsg(attr, value)
 	if type(value) == nil then value = "nil" end
 	if type(attr) == "number" then

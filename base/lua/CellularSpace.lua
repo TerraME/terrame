@@ -489,17 +489,17 @@ CellularSpace_ = {
 	-- See the table below.
 	-- @tabular strategy
 	-- Strategy & Description & Compulsory Parameters & Optional Parameters \
-	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight \
+	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight, onthefly \
 	-- "coord" & A bidirected relation between two CellularSpaces connecting Cells with the same 
-	-- (x, y) coordinates. & target & name\
+	-- (x, y) coordinates. & target & name, onthefly\
 	-- "function" & A Neighborhood based on a function where any other Cell can be a neighbor. & 
-	-- filter & name, weight \
+	-- filter & name, weight, onthefly \
 	-- "moore"(default) & A Moore (queen) Neighborhood, connecting each Cell to its (at most) 
-	-- eight touching Cells. & & name, self, wrap \
+	-- eight touching Cells. & & name, self, wrap, onthefly \
 	-- "mxn" & A m (columns) by n (rows) Neighborhood within the CellularSpace or between two
-	-- CellularSpaces if target is used. & m & name, n, filter, weight, target \
+	-- CellularSpaces if target is used. & m & name, n, filter, weight, target, onthefly \
 	-- "vonneumann" & A von Neumann (rook) Neighborhood, connecting each Cell to its (at most)
-	-- four ortogonally surrounding Cells. & & name, self, wrap
+	-- four ortogonally surrounding Cells. & & name, self, wrap, onthefly
 	-- @param data.filter A function(Cell, Cell)->bool, where the first argument is the Cell itself
 	-- and the other represent a possible neighbor. It returns true when the neighbor will be
 	-- included in the relation. In the case of two CellularSpaces, this function is called twice
@@ -670,6 +670,9 @@ CellularSpace_ = {
 		end
 	end,
 	--- Return a cell from the CellularSpace given its x and y location. Deprecated. Use get instead.
+	-- @param xIndex A number with the x location of the cell to be returned.
+	-- @param yIndex A number with the y location of the cell to be returned.
+	-- @usage cs:getCell(2, 2)
 	getCell = function(self, xIndex, yIndex)
 		deprecatedFunctionWarning("getCell", "get")
 		return self:get(xIndex, yIndex)
@@ -707,11 +710,14 @@ CellularSpace_ = {
 		return self.cObj_:getCell(cObj_)
 	end,
 	--- Return all the cells of the CellularSpace in a vector. Deprecated. Use .cells instead.
+	-- @usage cs:getCells()
 	getCells = function(self)
 		deprecatedFunctionWarning("getCells", ".cells")
 		return self.cells
 	end,
 	--- Return a cell from the CellularSpace given its id. Deprecated. Use get instead.
+	-- @param cellID A string with the unique identifier of the Cell to be returned.
+	-- @usage cs:getCellByID("2")
 	getCellByID = function(self, cellID)
 		deprecatedFunctionWarning("getCellByID", "get")
 		return self:get(cellID)

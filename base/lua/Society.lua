@@ -185,20 +185,20 @@ Society_ = {
 	-- "cell" &
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
 	-- same Cell the Agent belongs. & &
-	-- name, self \
+	-- name, placement, self, onthefly \
 	-- "func" &
 	-- Create a SocialNetwork according to a membership function. & func &
-	-- name \
+	-- name, onthefly \
 	-- "neighbor" &
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
 	-- neighbor Cells of the one the Agent belongs. &
-	-- & name, neighborhood \
+	-- & name, neighborhood, placement, onthefly \
 	-- "probability" &
 	-- Applies a probability for each pair of Agents (excluding the agent itself). &
-	-- probability & name, random \
+	-- probability & name, random, onthefly \
 	-- "quantity" &
 	-- Number of connections randomly taken from the Society (excluding the agent itself). &
-	-- quantity & name, random \
+	-- quantity & name, random, onthefly \
 	-- "void" &
 	-- Create an empty SocialNetwork for each Agent of the Society. &
 	-- & name \
@@ -232,7 +232,10 @@ Society_ = {
 		end
 
 		defaultTableValue(data, "name", "1")
-		defaultTableValue(data, "onthefly", false)
+
+		if data.strategy ~= "void" then
+			defaultTableValue(data, "onthefly", false)
+		end
 
 		if self.agents[1].socialnetworks[data.name] ~= nil then
 			customError("SocialNetwork '"..data.name.."' already exists in the Society.")
@@ -297,7 +300,7 @@ Society_ = {
 				data.mfunc = getSocialNetworkByQuantity
 			end,
 			void = function()
-				checkUnnecessaryParameters(data, {"strategy", "name", "onthefly"})
+				checkUnnecessaryParameters(data, {"strategy", "name"})
 
 				data.mfunc = getEmptySocialNetwork
 			end
