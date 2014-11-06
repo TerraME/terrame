@@ -174,125 +174,6 @@ local testfolders = function(folder)
 	return(result)
 end
 
-local configureTests = function(fileName, package)
-	if package == "" then
-		package = "base"
-	end
-
-	--TODO: Colocar aqui o caminho para o pacote especificado. Por enquando esta direto para o base
-	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages"..s..package
-	local srcDir = baseDir..s.."tests"
-
-	local tf = testfolders(baseDir)
-	local options = {}
-	local optionparent = {}
-	print (">> Choose option: ")
-	options[#options + 1] = "ALL"
-	optionparent[#optionparent + 1] = "ALL"
-	print("("..#options..")".." ALL")
-
-	forEachElement(tf, function(_, folder)
-		options[#options + 1] = folder
-		print("("..#options..")".." "..options[#options])
-	end)
-
-	local answer = io.read()
-	local test = io.open(fileName, "w")
-	
-	-- There is a function for each of the questions that can be asked for the user
-	
-	-- Question to wait between tests
-	local function waitQuestion()
-		print("\n >> Wait between tests? \n(1) True \n(2) False")
-		local wait = io.read()
-		if wait == '1' then
-			test:write("sleep = 2\n")
-		end
-	end
-	
-	-- Question about the choosen test
-	local function returnTest(folder, file)
-		local tests = dofile(baseDir..s..folder..s..file)
-		local testsList = {}
-		print ("\n>> Choose Test: ")
-		testsList[#testsList + 1] = "ALL"
-		print("("..#testsList..") ALL")
-		forEachOrderedElement(tests, function(index, value, mtype)		
-			testsList[#testsList + 1] = index
-			print("("..#testsList..") "..index)
-		end)
-		return testsList
-	end
-	
-	-- Question about the database and password if necessary
-	local function databaseQuestion()
-		print("\n>> Choose database type: \n(1) MySQL\n(2) MSAccess")
-		local dbtype = io.read()
-		if dbtype == '1' then
-			print(">> Input Password: ")
-			local password = io.read()	
-			test:write("dbType = 'mysql'\n")
-			test:write("password = '".. password.."'\n")
-		elseif dbtype == "2" then
-			test:write("dbType = 'ado'\n")
-		end
-	end
-	
-	-- Question about the test file
-	local function fileQuestion()	
-		print("\n>> Choose option: \n")	
-		local luaTests = {}
-		luaTests[#luaTests + 1] = '""'
-		print("("..(#luaTests)..")".." ".."ALL")
-		local luaTests2 = dir(baseDir..s..options[tonumber(answer)])
-		for _, test in ipairs(luaTests2) do
-			luaTests[#luaTests + 1] = test
-		end
-		
-		for index, tests in ipairs(luaTests2) do
-			print("("..(index + 1)..")".." "..tests)
-		end
-	
-		usertest = io.read()
-		if tonumber(usertest) ~= 1 then
-			test:write("file = ".."'"..luaTests[tonumber(usertest)].."'".."\n")
-			local results = returnTest(options[tonumber(answer)], luaTests[tonumber(usertest)])
-			local answerTest = io.read()
-			if tonumber(answerTest) ~= 1 then
-				test:write("test = ".."'"..results[tonumber(answerTest)].."'")
-			end
-		end
-		
-		return luaTests[tonumber(usertest)]
-	end
-	
-	-- If the user chooses something else than ALL, it writes the choosen folder
-	if tonumber(answer) ~= 1 then
-		test:write("folder = ".."'"..options[tonumber(answer)].."'".."\n")
-	end
-	
-	-- Check which of the folders the user has choosen to test, and asks the appropriate questions
-	if optionparent[tonumber(answer)] == "observer" then
-		waitQuestion()
-		local luaTests = fileQuestion()
-	elseif optionparent[tonumber(answer)] == "database" then
-		databaseQuestion()
-		local luaTests = fileQuestion()
-	elseif optionparent[tonumber(answer)] == "core" then	
-		local luaTests = fileQuestion()
-	elseif tonumber(answer) == 1 then
-		waitQuestion()
-		databaseQuestion()	
-	else 
-		waitQuestion()
-		databaseQuestion()
-		local luaTests = fileQuestion()	
-	end
-
-	test:close()
-end
-
 local doc = function(package)
 	-- gera a documentacao do arquivo em TME_FOLDER/packages/package/doc a partir da pasta packages/package/lua/*.lua
 	-- no futuro, pegar tambem a pasta examples para gerar a documentacao
@@ -309,7 +190,6 @@ local doc = function(package)
 	xpcall(function() require(package) end, function(err)
 		printError("Package could "..package.." not be loaded.")
         printError(err)
-        printError(traceback())
 		os.exit()
     end)
 
@@ -448,7 +328,6 @@ local executeTests = function(fileName, package)
     xpcall(function() require(package) end, function(err)
 		printError("Package could not be loaded.")
         printError(err)
-        printError(traceback())
 		os.exit()
     end)
 
@@ -957,7 +836,6 @@ local usage = function()
 	print("       or TerraME [-version]\n")
 	print("Options: ")
 	print(" -autoclose                 Automatically close the platform after simulation.")
-	print(" -config-tests <file_name>  Generate a file used to configure the execution of the tests.")
 	print(" -draw-all-higher <value>   Draw all subjects when percentage of changes was higher")
 	print("                            than <value>. Value must be between interval [0, 1].")
 	print(" -gui                       Show the player for the application (it works only ")
@@ -1129,13 +1007,6 @@ execute = function(parameters) -- parameters is a string
 				info.mode = "debug"
 			elseif param == "-mode=quiet" then
 				info.mode = "quiet"
-			elseif param == "-config-tests" then
-				paramCount = paramCount + 1
-				local correct, errorMsg = pcall(configureTests, parameters[paramCount], package)
-				if not correct then 
-					print(errorMsg)
-				end
-				return
 			elseif param == "-package" then
 				paramCount = paramCount + 1
 				package = parameters[paramCount]
