@@ -1165,17 +1165,6 @@ execute = function(parameters) -- parameters is a string
 	end
 end
 
-packageInfo = function(package)
-	local s = sessionInfo().separator
-	local file = sessionInfo().path..s.."packages"..s..package..s.."description.lua"
-	
-	return include(file)
-
-	--forEachOrderedElement(ns, function(idx, value)
-	--	print(idx..": "..value)
-	--end)
-end
-
 --- Return a string describing a TerraME object. This function allows one to use the method print() directly from any TerraME object.
 -- @name tostring
 -- @param data Any TerraME object.

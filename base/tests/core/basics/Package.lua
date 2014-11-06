@@ -41,6 +41,14 @@ return{
 	defaultValueMsg = function(unitTest)
 		unitTest:assert_equal(defaultValueMsg("aaa", 2), "Parameter 'aaa' could be removed as it is the default value (2).")
 	end,
+	packageInfo = function(unitTest)
+		local r = packageInfo()
+
+		unitTest:assert_equal(r.version, "2.0")
+		unitTest:assert_equal(r.date, "17 October 2014")
+		unitTest:assert_equal(r.package, "TerraME")
+		unitTest:assert_equal(r.url, "http://www.terrame.org")
+	end,
 	resourceNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for parameter 'aaa'.")
 	end,

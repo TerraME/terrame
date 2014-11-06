@@ -28,6 +28,23 @@
 
 --@header Some basic and useful functions to develop packages.
 
+--- Return the description of a package. It reads from file description.lua of the package.
+-- @param package Name of the package. If nil, packageInfo will return
+-- the description of TerraME.
+-- @usage packageInfo().version
+packageInfo = function(package)
+	if package == nil then package = "base" end
+
+	local s = sessionInfo().separator
+	local pkgfile = sessionInfo().path..s.."packages"..s..package
+	if not isfile(pkgfile) then
+		customError("Package '"..package.."' is not installed.", 3)
+	end
+	
+	local file = pkgfile..s.."description.lua"
+	return include(file)
+end
+
 --- Return the path to a file of a given package. The file must be inside the data folder
 -- of the package.
 -- @param filename A string with the name of the file.

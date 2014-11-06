@@ -71,6 +71,12 @@ return{
 			require("asdfgh")
 		end
 		unitTest:assert_error(error_func, "Package 'asdfgh' is not installed.")
+	end,
+	packageInfo = function(unitTest)
+		local error_func = function()
+        	local r = packageInfo("asdfgh")
+		end
+		unitTest:assert_error(error_func, "Package 'asdfgh' is not installed.")
 	end
 }
 
