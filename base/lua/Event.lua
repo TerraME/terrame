@@ -25,8 +25,69 @@
 --      Rodrigo Reis Pereira
 --#########################################################################################
 
+local Pair_ = {
+	--type_ = "Pair", 
+	notify = function(self, modelTime)
+		if (modelTime == nil) or (type(modelTime) ~= 'number') then 
+			modelTime = 0
+		end
+		if (type(self.cObj_[1]) == 'userdata') then
+			self.cObj_[1]:notify(modelTime)
+		end
+	end,
+	-- TODO: Verify if it can be moved to Event.lua
+	config = function(self, time, period, priority)
+		if time == nil then
+			time = self.cObj_[1]:getTime()
+		elseif type(time) ~= "number" then
+			incompatibleTypeError(1, "number", time)
+		end
+
+		if period == nil then
+			period = self.cObj_[1]:getPeriod()
+		elseif type(period) ~= "number" then
+			incompatibleTypeError(2, "number", period)
+		elseif period <= 0 then
+			incompatibleValueError(2, "positive number", period)
+		end
+
+		if priority == nil then
+			priority = self.cObj_[1]:getPriority()
+		elseif type(priority) ~= "number" then
+			incompatibleTypeError(3, "number", priority)
+		end
+
+		self.cObj_[1]:config(time, period, priority)
+	end
+}
+
+local metaTablePair_ = {__index = Pair_, __tostring = tostringTerraME}
+
+local function Pair(data)
+	if data == nil then data = {} end
+
+	if getn(data) ~= 2 then
+		customError("A pair must have two attributes.")
+	end
+
+	setmetatable(data, metaTablePair_)
+	data.cObj_ = data	
+
+	return data
+end
+
 -- Set type to "Event"
 TeEvent.type_ = "Event"
+
+local function Action(data)
+	local cObj = TeMessage()
+	local metaAttr = {cObj_ = cObj}
+	local metaTable = {__index = metaAttr, __tostring = tostringTerraME}
+	if data.id ~= nil then cObj:config(data.id) end
+	setmetatable(data, metaTable)
+	cObj:setReference(data)
+	return data
+end
 
 --- An Event represents a time instant when the simulation engine must execute some computation.
 -- In order to be executed, Events must belong to a Timer. An Event is usually rescheduled to be
