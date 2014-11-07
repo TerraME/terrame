@@ -866,7 +866,7 @@ static const struct luaL_Reg fslib[] = {
         {"attributes", file_info},
         {"chdir", change_dir},
         {"currentdir", get_dir},
-        {"lfsdir", dir_iter_factory},
+        {"dir", dir_iter_factory},
         {"link", make_link},
         {"lock", file_lock},
         {"mkdir", make_dir},
@@ -882,17 +882,17 @@ static const struct luaL_Reg fslib[] = {
 int luaopen_lfs (lua_State *L) {
 	dir_create_meta (L);
 	lock_create_meta (L);
-//        luaL_newlib (L, fslib);
-//        lua_pushvalue(L, -1);
-//        lua_setglobal(L, LFS_LIBNAME);
-//        set_info (L);
-//        return 1;
-	int contFunc = 0;
-	for(luaL_Reg* i = fslib; i->func != NULL; i++)
-	{
-		lua_pushcfunction(L, i->func);
-		lua_setglobal(L, i->name);
-		contFunc++;
-	}
-	return contFunc;
+	luaL_newlib (L, fslib);
+	lua_pushvalue(L, -1);
+	lua_setglobal(L, LFS_LIBNAME);
+	set_info (L);
+	return 1;
+//	int contFunc = 0;
+//	for(luaL_Reg* i = fslib; i->func != NULL; i++)
+//	{
+//		lua_pushcfunction(L, i->func);
+//		lua_setglobal(L, i->name);
+//		contFunc++;
+//	}
+//	return contFunc;
 }

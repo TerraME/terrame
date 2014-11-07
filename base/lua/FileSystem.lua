@@ -45,18 +45,21 @@
 -- This function uses stat internally thus if the given filepath is a symbolic link, it is followed 
 -- (if it points to another link the chain is followed recursively) and the information is about the 
 -- file it refers to. To obtain information about the link itself, see function lfs.symlinkattributes.
-local attributes = function(filepath, attributename)
+attributes = function(filepath, attributename)
+	return lfs.attributes(filepath, attributename)
 end
 
 --- Changes the current working directory to the given path.
 -- Returns true in case of success or nil plus an error string.
 -- @usage chdir("c:\\tests")
-local chdir = function(path)
+chdir = function(path)
+	return lfs.chdir(path)
 end
 
 --- Returns a string with the current working directory or nil plus an error string.
 -- @usage currentdir()
-local currentdir = function()
+currentdir = function()
+	return lfs.currentdir()
 end
 
 --- Return whether a given string represents a file stored in the computer.
@@ -69,7 +72,7 @@ end
 --- Return the files in a given directory.
 -- @param folder A string describing a folder.
 -- @usage dir("C:\\")
-function dir(folder)
+dir = function(folder)
 	local s = sessionInfo().separator
 	local command
 	if s == "\\" then
@@ -100,7 +103,8 @@ end
 -- it returns a directory entry's name as a string, or nil if there are no more entries. You can 
 -- also iterate by calling dir_obj:next(), and explicitly close the directory before the iteration 
 -- finished with dir_obj:close(). Raises an error if path is not a directory.
-local lfsdir = function(path)
+lfsdir = function(path)
+	return lfs.dir(path)
 end
 
 -- lfs.lock (filehandle, mode[, start[, length]])
@@ -109,7 +113,8 @@ end
 -- (for a write/exclusive lock). The optional arguments start and length can be used to specify a 
 -- starting point and its length; both should be numbers.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
-local lock = function(fh, mode)
+lock = function(fh, mode)
+	return lfs.lock(fh, mode)
 end
 
 -- lfs.lock_dir(path, [seconds_stale])
@@ -119,19 +124,22 @@ end
 -- lock:free(). 
 -- In case of any errors it returns nil and the error message. In particular, if the lock exists and is 
 -- not stale it returns the "File exists" message.
-local lock_dir = function(path)
+lock_dir = function(path)
+	return lfs.lock_dir
 end
 
 -- lfs.mkdir (dirname)
 -- Creates a new directory. The argument is the name of the new directory.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
-local mkdir = function(path)
+mkdir = function(path)
+	return lfs.mkdir(path)
 end
 
 -- lfs.rmdir (dirname)
 -- Removes an existing directory. The argument is the name of the directory.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
-local rmdir = function(path)
+rmdir = function(path)
+	return lfs.rmdir(path)
 end
 
 -- lfs.setmode (file, mode)
@@ -139,14 +147,15 @@ end
 -- followed the previous mode string for the file, or nil followed by an error string in case of errors. 
 -- On non-Windows platforms, where the two modes are identical, setting the mode has no effect, and the 
 -- mode is always returned as binary.
-local setmode = function(filepath, mode)
-	return 
+setmode = function(filepath, mode)
+	return lfs.setmode(filepath, mode)
 end
 
 -- lfs.symlinkattributes (filepath [, aname])
 -- Identical to lfs.attributes except that it obtains information about the link itself (not the file it 
 -- refers to). On Windows this function does not yet support links, and is identical to lfs.attributes.
-local symlinkattributes = function(filepath, attributename)
+symlinkattributes = function(filepath, attributename)
+	return lfs.symlinkattributes(filepath, attributename)
 end
 
 -- lfs.touch (filepath [, atime [, mtime]])
@@ -156,7 +165,8 @@ end
 -- standard function os.time). If the modification time is omitted, the access time provided is used; 
 -- if both times are omitted, the current time is used.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
-local touch = function(filepath, atime, mtime)
+touch = function(filepath, atime, mtime)
+	return lfs.touch(filepath, atime, mtime)
 end
 
 -- lfs.unlock (filehandle[, start[, length]])
@@ -164,5 +174,6 @@ end
 -- as the first argument. The optional arguments start and length can be used to specify a starting point 
 -- and its length; both should be numbers.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
-local unlock = function(fh)
+unlock = function(fh)
+	return lfs.unlock(fh)
 end
