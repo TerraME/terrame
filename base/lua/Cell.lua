@@ -193,7 +193,7 @@ Cell_ = {
 	-- @param id A string with the neighborhood's name to be retrieved. Default is "1".
 	-- @usage cell_neighbor = cell:sample()
 	-- @usage cell_neighbor = cell:sample("myneighborhood")
-	-- @see getNeighborhood
+	-- @see Cell:getNeighborhood
 	sample = function(self, id, randomObj)
 		if id == nil then
 			id = "1"

@@ -143,8 +143,8 @@ end %>
 	<%for i = 1, #func.see do %>
 	<li>
 		<%local href = luadoc.symbol_link(func.see[i], doc, module_doc, file_doc, from, doc_report)%>
-		<%if href ~= "" then %>	<a href="<%=href%>"><%=func.see[i]%>	</a>
-		<%else%>	<%=func.see[i]%>
+		<%if href ~= "unresolved" then %>	<a href="<%=href%>"><%=func.see[i]%>	</a>
+		<%else%>	<font color="red"><b><%="Unresolved link to function "..func.see[i]%></b></font>
 		<%end%>
 	</li>
 	<%end%>

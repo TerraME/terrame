@@ -132,8 +132,9 @@ function file_func_link (symbol, doc, file_doc, from, doc_report)
 	funcname = string.gsub(funcname, "%s*$", "")
 	if filename == "" then filename = funcname end
 	if doc.files[filename .. ".lua"] == nil then
-		printError(string.format("Reference not found to file '%s'", filename))
-		return
+		printError(string.format("Trying to link undefined function or file '%s'", filename))
+		doc_report.wrong_links = doc_report.wrong_links + 1
+		return "unresolved"
 	end
 	
 	local functions = doc.files[filename..".lua"]["functions"]
@@ -201,7 +202,7 @@ function link_to (fname, doc, module_doc, file_doc, from, kind)
 
 	local module_doc = doc.modules[modulename]
 	if not module_doc then
-		printError(string.format("Reference not found to function '%s' of module '%s'", fname, modulename))
+		-- printError(string.format("Reference not found to function '%s' of module '%s'", fname, modulename))
 		return
 	end
 	
@@ -211,7 +212,7 @@ function link_to (fname, doc, module_doc, file_doc, from, kind)
 		end
 	end
 	
-	printError(string.format("Reference not found to function '%s' of module '%s'", fname, modulename))
+	-- printError(string.format("Reference not found to function '%s' of module '%s'", fname, modulename))
 end
 
 -------------------------------------------------------------------------------
@@ -227,14 +228,13 @@ function symbol_link (symbol, doc, module_doc, file_doc, from, doc_report)
 		file_func_link(symbol, doc, file_doc, from, doc_report) or
 		link_to(symbol, doc, module_doc, file_doc, from, "functions") or
 		link_to(symbol, doc, module_doc, file_doc, from, "tables")
-  
+
 	if not href then
-		-- printError(string.format("Trying to link undefined function '%s'", symbol))
 		printError(string.format("%s: Trying to link undefined function '%s'", file_doc.name, symbol))
 		doc_report.wrong_links = doc_report.wrong_links + 1
 	end
-	
-	return href or ""
+
+	return href or "unresolved"
 end
 
 function link_description(description, doc, module_doc, file_doc, from, new_tab, doc_report)
