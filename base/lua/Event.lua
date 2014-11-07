@@ -35,7 +35,6 @@ local Pair_ = {
 			self.cObj_[1]:notify(modelTime)
 		end
 	end,
-	-- TODO: Verify if it can be moved to Event.lua
 	config = function(self, time, period, priority)
 		if time == nil then
 			time = self.cObj_[1]:getTime()
@@ -94,12 +93,20 @@ end
 -- executed again according to its period, unless its action returns false. The functions
 -- available for Events can be used only along the simulation, when the Event is activated and
 -- comes as a parameter of an action.
--- @param data.time A positive integer number representing the first instant of time when the
+-- @param data.time A number representing the first instant of time when the
 -- Event will occur. Default is 1.
--- @param data.period A positive integer number representing the periodicity of the Event. 
+-- @param data.period A positive number representing the periodicity of the Event. 
 -- Default is 1.
--- @param data.priority A positive integer number defining the priority of the Event over 
--- other Events. Smaller values have higher priority. Default is 0.
+-- @param data.priority A defining the priority of the Event over 
+-- other Events. Smaller values have higher priority. Default is 0. Priorities can also be defined
+-- as strings:
+-- @tabular priority
+-- Value & Priority\
+-- "verylow" & 10 \
+-- "low" & 5 \
+-- "medium" & 0 \
+-- "high" & -5 \
+-- "veryhigh" & -10
 -- @param data.action A function from where, in general, the simulation engine services are 
 -- invoked. This function has one single argument, the Event itself. If the action returns false,
 -- the Event is removed from the Timer and will not be executed again. Action can also be a TerraME
@@ -166,10 +173,16 @@ function Event(data)
 --	defaultTableValue(data, "priority", 0)
 
 -- [[
-	-- TODO: possibilitar priority descrito como string: "low", "medium", "high", "very..."
-	-- mapeando estas strings para numeros
 	if data.priority == nil then
 		data.priority = 0
+	elseif type(data.priority) == "string" then
+		switch(data, "priority"):caseof{
+			verylow  = function() data.priority = 10  end,
+			low      = function() data.priority = 5   end,
+			medium   = function() data.priority = 0   end,
+			high     = function() data.priority = -5  end,
+			veryhigh = function() data.priority = -10 end
+		}
 	elseif type(data.priority) ~= "number" then
 		incompatibleTypeError("priority", "number", data.priority)
 	--TODO: se adicionar estas linhas abaixo o Event aborta o TerraME

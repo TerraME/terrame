@@ -42,9 +42,14 @@ return{
 		unitTest:assert_error(error_func, incompatibleValueMsg("period", "positive number (except zero)", -1))
 
 		error_func = function()
+			event = Event{period = 2, priority = true, action = function(event) end}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("priority", "number", true))
+
+		error_func = function()
 			event = Event{period = 2, priority = "aaa", action = function(event) end}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("priority", "number", "aaa"))
+		unitTest:assert_error(error_func, "'aaa' is an invalid value for parameter 'priority'. It must be a string from the set ['high', 'low', 'medium', 'veryhigh', 'verylow'].")
 
 		error_func = function()
 			event = Event{period = 0, priority = 1, action = function() end}

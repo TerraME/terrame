@@ -44,6 +44,21 @@ return{
 		unitTest:assert_equal(event[1]:getTime(), -1)
 		unitTest:assert_equal(event[1]:getPeriod(), 2)
 		unitTest:assert_equal(event[1]:getPriority(), -5.2)
+
+		event = Event{time = 0.5, period = 2, priority = "verylow", action = function(event) end}
+		unitTest:assert_equal(event[1]:getPriority(), 10)
+
+		event = Event{time = 0.5, period = 2, priority = "low", action = function(event) end}
+		unitTest:assert_equal(event[1]:getPriority(), 5)
+
+		event = Event{time = 0.5, period = 2, priority = "medium", action = function(event) end}
+		unitTest:assert_equal(event[1]:getPriority(), 0)
+
+		event = Event{time = 0.5, period = 2, priority = "high", action = function(event) end}
+		unitTest:assert_equal(event[1]:getPriority(), -5)
+
+		event = Event{time = 0.5, period = 2, priority = "veryhigh", action = function(event) end}
+		unitTest:assert_equal(event[1]:getPriority(), -10)
 	end,
 	config = function(unitTest)
 		local event = Event{action = function(event) end}

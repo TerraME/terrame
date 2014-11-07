@@ -20,21 +20,21 @@ _VERSION = "LuaDoc 3.0.1"
 
 local function ldescription(package_path, doc_report)
 	printNote("Checking 'description.lua'")
-	local script
-
-	pcall(function() script = include(package_path..s.."description.lua") end)
 
 	local defaultFields = {
-			version = "Undefined version",
-			date    = "Undefined date",
-			package = "Undefined package",
-			authors = "Undefined authors",
-			contact = "Undefined contact",
-			content = "Undefined content",
-			url     = "",
-			logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."terrame.png",
-			destination_logo = package_path..s.."doc"..s.."img"..s
-		}
+		version = "Undefined version",
+		date    = "Undefined date",
+		package = "Undefined package",
+		authors = "Undefined authors",
+		contact = "Undefined contact",
+		content = "Undefined content",
+		url     = "",
+		logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."terrame.png",
+		destination_logo = package_path..s.."doc"..s.."img"..s
+	}
+
+	local script
+	pcall(function() script = include(package_path..s.."description.lua") end)
 
 	if not script then
 		printError("'description.lua' was not found in the package.")
