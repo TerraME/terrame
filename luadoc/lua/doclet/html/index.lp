@@ -27,19 +27,39 @@
 
 <div id="content">
 <div id="index-header">
-	<h1><%=doc.description.title%></h1>
-	Version: <%= doc.description.version %><br>
-	Release: <%= doc.description.date %><br>
-	<%= doc.description.authors %><br>
-	<%= "<a href= \""..doc.description.url.."\">"..string.gsub(doc.description.url, "http:%/%/", "").."</a>" %><br>
+	<%if doc.description.title ~= "Undefined title" then %> <h1><%=doc.description.title%></h1>
+	<%else%> <h1><font color="red"><b><%=doc.description.title%></b></font></h1>
+	<%end%>
+
+	<%if doc.description.version ~= "Undefined version" then %>Version: <%= doc.description.version %><br>
+	<%else%> Version: <font color="red"><b><%= doc.description.version %></b></font><br>
+	<%end%>
+
+	<%if doc.description.date ~= "Undefined date" then %>Release: <%= doc.description.date %><br>
+	<%else%> Release: <font color="red"><b><%= doc.description.date %></b></font><br>
+	<%end%>
+
+	<%if doc.description.authors ~= "Undefined authors" then %> <%= doc.description.authors %><br>
+	<%else%> <font color="red"><b><%= doc.description.authors %></b></font><br>
+	<%end%>
+
+	<%if doc.description.url ~= "" then%>
+		<%= "<a href= \""..doc.description.url.."\">"..string.gsub(doc.description.url, "http:%/%/", "").."</a>" %><br>
+	<%end%>
+
+	<% if doc.description.contact ~= "Undefined contact" then %>
 	<% local emails = {}
 	local email_link = "<a href=\"mailto:%s\"> %s </a>"
 	for contact in string.gmatch(doc.description.contact, "[^@%s]+@[^,%s]+") do	
 		table.insert(emails, string.format(email_link, contact, contact))
 	end %>
 	<%= table.concat(emails, ", ") %><br>
+	<%else%> <font color="red"><b><%= doc.description.contact %></b></font><br>
+	<%end%>
 </div>
-<p><%= doc.description.content %>
+<p> <%if doc.description.content ~= "Undefined content" then%> <%= doc.description.content %>
+	<%else%> <font color="red"><b><%= doc.description.content %></b></font>
+	<%end%>
 
 <%if not options.nomodules and #doc.modules > 0 then%>
 <h2>Modules</h2>
