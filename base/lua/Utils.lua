@@ -780,12 +780,12 @@ function elapsedTime(s)
 end
 
 --- Return whether a string ends with a given substring (no case sensitive).
--- @param self A string.
+-- @param str A string.
 -- @param send A substring describing the end of #1.
 -- @usage string.endswith("abcdef", "def")
-function string.endswith(self, send)
+function string.endswith(str, send)
 	local send = send:lower().."$"
-	return self:lower():match(send)
+	return str:lower():match(send)
 end
 
 --- Return the number of elements of atable, be them named or not.

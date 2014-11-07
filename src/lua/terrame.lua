@@ -179,42 +179,24 @@ local doc = function(package)
 	local finalTime = os.clock()
 
 	print("\nReport: ")
-	printNote("Documentation built in "..round(finalTime - initialTime, 2).." seconds.")
-
-	if doc_report.undoc_param == 0 then
-		printNote("All "..doc_report.parameters.." parameters were documented.")
-	else
-		printError(doc_report.undoc_param.." parameters were not documented.")
-	end
-
-	if doc_report.unused_param == 0 then
-		printNote("All "..doc_report.parameters.." parameters were used in the HTML tables.")
-	else
-		printError(doc_report.unused_param.." table parameters were not used in the HTML tables.")
-	end
+	printNote("Documentation was built in "..round(finalTime - initialTime, 2).." seconds.")
 
 	if doc_report.undoc_files == 0 then
-		printNote(doc_report.html_files.." HTML files were built.")
+		printNote(doc_report.html_files.." HTML files were created.")
 	else
 		printError(doc_report.undoc_files.." out of "..doc_report.lua_files.." files were not documented.")
 	end
 
-	if doc_report.lack_usage == 0 then
-		printNote("All "..doc_report.functions.." have @usage field defined.")
+	if doc_report.wrong_description == 0 then
+		printNote("All fields of 'description.lua' are correct.")
 	else
-		printError(doc_report.lack_usage.." functions did not define @usage field.")
-	end
-
-	if doc_report.no_call_itself_usage == 0 then
-		printNote("All "..doc_report.functions.." documented functions called themselves in their @usage.")
-	else
-		printError(doc_report.no_call_itself_usage.." documented functions do not call themselves in their @usage.")
+		printError(doc_report.wrong_description.." problems were found in 'description.lua'")
 	end
 
 	if doc_report.non_doc_functions == 0 then
-		printNote("All "..doc_report.functions.." functions of the package were documented.")
+		printNote("All "..doc_report.functions.." functions of the package are documented.")
 	else
-		printError(doc_report.non_doc_functions.." functions were not documented.")
+		printError(doc_report.non_doc_functions.." out of "..doc_report.functions.." functions are not documented.")
 	end
 
 	if doc_report.block_name_conflict == 0 then
@@ -223,28 +205,47 @@ local doc = function(package)
 		printError(doc_report.block_name_conflict.." functions were documented with a different name.")
 	end
 
+	if doc_report.undoc_param == 0 then
+		printNote("All "..doc_report.parameters.." parameters were documented.")
+	else
+		printError(doc_report.undoc_param.." parameters were not documented.")
+	end
+
 	if doc_report.undefined_param == 0 then
-		printNote("No undefined parameter were found.")
+		printNote("No undefined parameters were found.")
 	else
 		printError(doc_report.undefined_param.." undefined parameters were found.")
 	end
 
-	if doc_report.wrong_description == 0 then
-		printNote("All fields in file 'description.lua' are correct.")
+	if doc_report.unused_param == 0 then
+		printNote("All "..doc_report.parameters.." parameters are used in the HTML tables.")
 	else
-		printError(doc_report.wrong_description.." problems were found in file 'description.lua'")
+		printError(doc_report.unused_param.." table parameters are not used in the HTML tables.")
 	end
 
-	if doc_report.wrong_links == 0 then
-		printNote("All "..doc_report.links.." links were correctly generated.")
+	if doc_report.lack_usage == 0 then
+		printNote("All "..doc_report.functions.." have @usage field defined.")
 	else
-		printError(doc_report.wrong_links.." of "..doc_report.links.." links to undefined functions of files were found")
+		printError(doc_report.lack_usage.." out of "..doc_report.functions.." functions do not have @usage.")
+	end
+
+	if doc_report.no_call_itself_usage == 0 then
+		printNote("All "..doc_report.functions.." documented functions call themselves in their @usage.")
+	else
+		printError(doc_report.no_call_itself_usage.." out of "..doc_report.functions.." documented functions do not call themselves in their @usage.")
 	end
 
 	if doc_report.invalid_tags == 0 then
 		printNote("No invalid tags were found.")
 	else
 		printError(doc_report.invalid_tags.." invalid tags were found.")
+	end
+
+
+	if doc_report.wrong_links == 0 then
+		printNote("All "..doc_report.links.." links were correctly built.")
+	else
+		printError(doc_report.wrong_links.." of "..doc_report.links.." links to undefined functions of files were found.")
 	end
 
 	local errors = doc_report.undoc_param + doc_report.unused_param + doc_report.undoc_files +
