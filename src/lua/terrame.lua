@@ -241,7 +241,6 @@ local doc = function(package)
 		printError(doc_report.invalid_tags.." invalid tags were found.")
 	end
 
-
 	if doc_report.wrong_links == 0 then
 		printNote("All "..doc_report.links.." links were correctly built.")
 	else
@@ -674,7 +673,6 @@ local executeTests = function(fileName, package)
 
 	printNote(text)
 
-
 	if print_when_loading > 0 then
 		printError(print_when_loading.." print calls were found when loading the package.")
 	else
@@ -798,7 +796,7 @@ local versions = function()
 	--     TERRALIB_VERSION,       // macro in the file "TeVersion.h"
 	--     TeDBVERSION.c_str());   // macro in the file "TeDefines.h" linha 221
 
-	print("\nFor more information, please visit: www.terrame.org\n")
+	print("\nFor more information, please visit www.terrame.org\n")
 end
 
 local usage = function()
@@ -816,7 +814,9 @@ local usage = function()
 	print(" -mode=debug                Warnings treated as errors.")
 	print(" -mode=quiet                Warnings disabled.")
 	print(" -version                   TerraME general information.")
-	print(" -test                      Execute tests.")
+	print(" [-package pkg] -test       Execute tests.")
+	print(" [-package pkg] -example    Run an example.")
+	print(" [-package pkg] -doc        Build the documentation.")
 	print(" -workers <value>           Sets the number of threads used for spatial observers.")
 end
 
@@ -926,15 +926,14 @@ function traceback()
 	return string.sub(str, 0, string.len(str) - 1)
 end
 
-execute = function(parameters) -- parameters is a string
+execute = function(parameters) -- parameters is a vector of strings
 	if parameters == nil or #parameters < 1 then 
-		print("\nYou should provide, at least, a model file as parameter.")
+		print("\nYou should provide, at least, a file as parameter.")
 		usage()
 		os.exit()
 	end
 
-	-- this variable is used by Utils:sessionInfo()
-	info_ = {
+	info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
 		dbVersion = "1_3_1", -- TODO: remove this parameter?
 		separator = package.config:sub(1, 1),
@@ -955,7 +954,7 @@ execute = function(parameters) -- parameters is a string
 
 	info_.version = packageInfo().version
 
-	local package = ""
+	local package = "base"
 
 	local paramCount = 1
 	while paramCount <= #parameters do
@@ -964,7 +963,7 @@ execute = function(parameters) -- parameters is a string
 			if param == "-version" then
 				versions()
 				usage()
-				return
+				os.exit()
 			elseif param == "-ide" then
 				local __cellEmpty = Cell{attrib = 1}
 				local __obsEmpty = Observer{subject = __cellEmpty, type = "chart", attributes = {"attrib"}}
@@ -978,13 +977,9 @@ execute = function(parameters) -- parameters is a string
 			elseif param == "-package" then
 				paramCount = paramCount + 1
 				package = parameters[paramCount]
-				
 			elseif param == "-test" then
 				info_.mode = "debug"
 				paramCount = paramCount + 1
-				if package == "" then
-					package = "base"
-				end
 
 				local correct, errorMsg = xpcall(function() executeTests(parameters[paramCount], package) end, function(err)
 					printError(err)
@@ -993,12 +988,8 @@ execute = function(parameters) -- parameters is a string
 				return
 			elseif param == "-help" then 
 				usage()
-				return
+				os.exit()
 			elseif param == "-doc" then
-				paramCount = paramCount + 1
-				if package == "" then
-					package = "base"
-				end
 				-- TODO: verify error handler
 				local success, result = xpcall(function() doc(package) end, function(err)
 					local s = sessionInfo().separator
@@ -1061,19 +1052,57 @@ execute = function(parameters) -- parameters is a string
 				-- TODO
 			elseif param == "-draw-all-higher" then
 				-- TODO
+			elseif param == "-build" then
+				if package ~= "base" then
+					param = sessionInfo().path..s.."packages"..s..package
+					local info = packageInfo(package)
+					printNote("Creating "..package.."_"..info.version..".zip ")
+					os.execute("zip -qr "..package.."_"..info.version..".zip "..param)
+				else
+					printError("TerraME cannot be built using -build.")
+				end
+				os.exit()
+			elseif param == "-install" then
+
+			
+			elseif param == "-example" then
+				paramCount = paramCount + 1
+				local file = parameters[paramCount]
+
+				if file then
+					param = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..file
+					if not isfile(param) then
+						printError("Example '"..file.."' does not exist in package '"..package.."'.")
+						print("Please use one from the list below:")
+					end
+				elseif package == "base" then
+					print("TerraME has the following examples:")
+				else
+					print("Package '"..package.."' has the following examples:")
+				end
+
+				if file and isfile(param) then
+					if package ~= "base" then
+						require("base")
+					end
+					require(package)
+					dofile(param)
+				else
+					files = dir(sessionInfo().path..s.."packages"..s..package..s.."examples")
+
+					forEachElement(files, function(_, value)
+						print(" - "..value)
+					end)
+					os.exit()	
+				end
 			end
 		else
-			-- TODO: Verify this block
-			if package ~= "" then
-				if package ~= "base" then
-					require("base")
-				end
-				require(package)
-				local s = sessionInfo().separator
-				param = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..param
-			else
+			if package ~= "base" then
 				require("base")
 			end
+			require(package)
+			local s = sessionInfo().separator
+
 			local success, result = xpcall(function() dofile(param) end, function(err)
 				local luaFolder = replaceSpecialChars(sessionInfo().path.."/lua")
 				local baseLuaFolder = replaceSpecialChars(sessionInfo().path.."/packages/base/lua")
