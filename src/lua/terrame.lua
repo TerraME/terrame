@@ -963,7 +963,7 @@ execute = function(parameters) -- parameters is a vector of strings
 			if param == "-version" then
 				versions()
 				usage()
-				return
+				os.exit()
 			elseif param == "-ide" then
 				local __cellEmpty = Cell{attrib = 1}
 				local __obsEmpty = Observer{subject = __cellEmpty, type = "chart", attributes = {"attrib"}}
@@ -988,11 +988,8 @@ execute = function(parameters) -- parameters is a vector of strings
 				return
 			elseif param == "-help" then 
 				usage()
-				return
+				os.exit()
 			elseif param == "-doc" then
-				-- TODO: remove the line below?
-				paramCount = paramCount + 1
-
 				-- TODO: verify error handler
 				local success, result = xpcall(function() doc(package) end, function(err)
 					local s = sessionInfo().separator
@@ -1055,6 +1052,19 @@ execute = function(parameters) -- parameters is a vector of strings
 				-- TODO
 			elseif param == "-draw-all-higher" then
 				-- TODO
+			elseif param == "-build" then
+				if package ~= "base" then
+					param = sessionInfo().path..s.."packages"..s..package
+					local info = packageInfo(package)
+					printNote("Creating "..package.."_"..info.version..".zip ")
+					os.execute("zip -qr "..package.."_"..info.version..".zip "..param)
+				else
+					printError("TerraME cannot be built using -build.")
+				end
+				os.exit()
+			elseif param == "-install" then
+
+			
 			elseif param == "-example" then
 				paramCount = paramCount + 1
 				local file = parameters[paramCount]
