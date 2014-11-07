@@ -167,8 +167,7 @@ end
 --- Load a given package.
 -- @param package A package name.
 -- @usage require("calibration")
-require = function(package)
-	-- verificar se a pasta TME_FOLDER/packages/package existe
+function require(package)
 	if type(package) ~= "string" then
 		if package == nil then
 			mandatoryArgumentErrorMsg("#1", 3)
@@ -214,9 +213,6 @@ require = function(package)
 			printWarning("File lua/"..mfile.." is loaded "..count.." times in load.lua.")
 		end
 	end
-
-	-- executar a funcao onLoad() do pacote (esta funcao pode configurar algumas coisas e imprimir informacao
-	-- de que o pacote foi carregado com sucesso).
 end
 
 --- Verify a given condition, otherwise stops the simulation with an error.
