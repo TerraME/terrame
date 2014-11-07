@@ -1,6 +1,7 @@
 version = "2.0"
 date = "17 October 2014"
-package = "TerraME"
+package = "base"
+title = "TerraME Types and Functions"
 url = "http://www.terrame.org"
 authors = "TerraLAB/UFOP and INPE"
 contact = "pedro.andrade@inpe.br, tiago@iceb.ufop.br"

@@ -2,7 +2,7 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-    <title><%=doc.description.package%></title>
+    <title><%=doc.description.title%></title>
     <link rel="stylesheet" href="<%=luadoc.link("luadoc.css")%>" type="text/css" />
 	<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
 </head>
@@ -27,7 +27,7 @@
 
 <div id="content">
 <div id="index-header">
-	<h1><%=doc.description.package%></h1>
+	<h1><%=doc.description.title%></h1>
 	Version: <%= doc.description.version %><br>
 	Release: <%= doc.description.date %><br>
 	<%= doc.description.authors %><br>

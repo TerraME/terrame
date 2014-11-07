@@ -25,6 +25,7 @@ local function ldescription(package_path, doc_report)
 		version = "Undefined version",
 		date    = "Undefined date",
 		package = "Undefined package",
+		title = "Undefined title",
 		authors = "Undefined authors",
 		contact = "Undefined contact",
 		content = "Undefined content",
@@ -43,7 +44,7 @@ local function ldescription(package_path, doc_report)
 		return defaultFields
 	end
 
-	local allowedFields = {"version", "date", "package", "authors", "contact", "content", "url"}
+	local allowedFields = {"version", "date", "package", "title", "authors", "contact", "content", "url"}
 		
 	for field, _ in pairs(script) do
 		if not belong(field, allowedFields) then
@@ -67,6 +68,7 @@ local function ldescription(package_path, doc_report)
 	checkString("version")
 	checkString("date")
 	checkString("package")
+	checkString("title")
 	checkString("authors")
 	checkString("contact")
 	checkString("content")
