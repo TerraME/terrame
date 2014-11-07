@@ -101,11 +101,11 @@ function startDoc (files, options, package_path, doc_report)
 
 	-- analyze input
 	taglet.options = options
+	description = ldescription(package_path, doc_report)
 	-- taglet.logger = logger
 	local doc = taglet.start(files, package_path, options.short_lua_path, doc_report)
 	
-	doc.description = ldescription(package_path, doc_report)
-	
+	doc.description = description	
 	doclet.options = options
 	-- doclet.logger = logger
 

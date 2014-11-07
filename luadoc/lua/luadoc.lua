@@ -1,4 +1,4 @@
--- This code was adapted by Raian Vargas Maretto and Pedro Ribeiro de Andrade
+-- This code was adapted by Raian Vargas Maretto and Pedro R. Andrade
 -- It was based on LuaDoc code (http://www.keplerproject.org/luadoc/index.html)
 -------------------------------------------------------------------------------
 -- LuaDoc launcher.
@@ -25,7 +25,7 @@ end
 
 local function print_help ()
 	print ("Usage: "..arg[0]..[[ [options|files]
-Generate documentation from files. Available options are:
+Build documentation from files. Available options are:
   -d path                      output directory path
   -t path                      template directory path
   -h, --help                   print this help and exit
@@ -113,7 +113,7 @@ local OPTIONS = {
 -- Main function. Process command-line parameters and call luadoc processor.
 -- RAIAN: Renamed to luadocMain instead of main
 function luadocMain(package_path, files, package, doc_report)
-	printNote("Generating documentation for package '"..package.."'")
+	printNote("Building documentation for package '"..package.."'")
 	-- Process options
 	-- local argc = #arg
 	-- if argc < 1 then
