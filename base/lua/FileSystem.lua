@@ -1,5 +1,6 @@
 
---@header The functions bellow are from taken from LuaFileSystem 1.6.2.
+--@header Functions to handle files and directories. 
+-- Most of the functions bellow are from taken from LuaFileSystem 1.6.2.
 -- Copyright Kepler Project 2003 (http://www.keplerproject.org/luafilesystem).
 
 --- Return a table with the file attributes corresponding to filepath (or nil followed by an error 
@@ -15,36 +16,36 @@
 -- @param attributename A string with the name of the attribute to be read.
 -- @tabular attributename
 -- Attribute & Description \
--- dev &
--- 	on Unix systems, this represents the device that the inode resides on. On Windows 
--- 	systems, represents the drive number of the disk containing the file \
--- ino &
--- 	on Unix systems, this represents the inode number. On Windows systems this has no meaning \
--- mode &
--- 	string representing the associated protection mode (the values could be file, directory, 
--- 	link, socket, named pipe, char device, block device or other) \
--- nlink &
--- 	number of hard links to the file \
--- uid &
--- 	user-id of owner (Unix only, always 0 on Windows) \
--- gid &
--- 	group-id of owner (Unix only, always 0 on Windows) \
--- rdev &
--- 	on Unix systems, represents the device type, for special file inodes. On Windows systems 
--- 	represents the same as dev \
--- access &
--- 	time of last access \
--- modification &
--- 	time of last data modification \
--- change &
--- 	time of last file status change \
--- size &
--- 	file size, in bytes \
--- blocks &
--- 	block allocated for file; (Unix only) \
--- blksize &
--- 	optimal file system I/O blocksize; (Unix only)
--- @usage attributes(filepath [, aname])
+-- "dev" &
+-- on Unix systems, this represents the device that the inode resides on. On Windows 
+-- systems, represents the drive number of the disk containing the file \
+-- "ino" &
+-- on Unix systems, this represents the inode number. On Windows systems this has no meaning \
+-- "mode" &
+-- string representing the associated protection mode (the values could be file, directory, 
+-- link, socket, named pipe, char device, block device or other) \
+-- "nlink" &
+-- number of hard links to the file \
+-- "uid" &
+-- user-id of owner (Unix only, always 0 on Windows) \
+-- "gid" &
+-- group-id of owner (Unix only, always 0 on Windows) \
+-- "rdev" &
+-- on Unix systems, represents the device type, for special file inodes. On Windows systems 
+-- represents the same as dev \
+-- "access" &
+-- time of last access \
+-- "modification" &
+-- time of last data modification \
+-- "change" &
+-- time of last file status change \
+-- "size" &
+-- file size, in bytes \
+-- "blocks" &
+-- block allocated for file; (Unix only) \
+-- "blksize" &
+-- optimal file system I/O blocksize; (Unix only)
+-- @usage attributes(filepath, "mode")
 attributes = function(filepath, attributename)
 	return lfs.attributes(filepath, attributename)
 end
@@ -116,7 +117,7 @@ end
 -- @param fh A string with the file path.
 -- @param mode A string representing the mode. It could be either r (for a read/shared lock) or w 
 -- (for a write/exclusive lock).
--- @usage lfs.lock (filehandle, mode[, start[, length]])
+-- @usage lock(filehandle, "r")
 lock = function(fh, mode)
 	return lfs.lock(fh, mode)
 end
@@ -128,7 +129,7 @@ end
 -- In case of any errors it returns nil and the error message. In particular, if the lock exists and is 
 -- not stale it returns the "File exists" message.
 -- @param path A string with the path.
--- @usage lfs.lock_dir(path, [seconds_stale])
+-- @usage lock_dir(path)
 lock_dir = function(path)
 	return lfs.lock_dir
 end
@@ -155,7 +156,7 @@ end
 -- mode is always returned as binary.
 -- @param filepath A string with the file path.
 -- @param mode A string that can be either "binary" or "text". 
--- @usage setmode(file, mode)
+-- @usage setmode(file, "text")
 setmode = function(filepath, mode)
 	return lfs.setmode(filepath, mode)
 end
@@ -163,19 +164,21 @@ end
 --- Identical to FileSystem:attributes() except that it obtains information about the link itself (not the file it 
 -- refers to). On Windows this function does not yet support links, and is identical to FileSystem:attributes().
 -- @param filepath A string with the file path.
--- @usage symlinkattributes (filepath [, aname])
+-- @param attributename A string with the name of the attribute to be read.
+-- @usage symlinkattributes(filepath, "size")
 symlinkattributes = function(filepath, attributename)
 	return lfs.symlinkattributes(filepath, attributename)
 end
 
---- Set access and modification times of a file. This function is a bind to utime function. The first 
--- argument is the filename, the second argument (atime) is the access time, and the third argument (mtime) 
--- is the modification time. Both times are provided in seconds (which should be generated with Lua 
+--- Set access and modification times of a file. This function is a bind to utime function.
+-- Times are provided in seconds (which should be generated with Lua 
 -- standard function os.time). If the modification time is omitted, the access time provided is used; 
 -- if both times are omitted, the current time is used.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @param filepath A string with the file path.
--- @usage touch(filepath [, atime [, mtime]])
+-- @param filepath A string with the file name.
+-- @param atime The new access time (in seconds).
+-- @param mtime The new modification time (in seconds).
+-- @usage touch(filepath)
 touch = function(filepath, atime, mtime)
 	return lfs.touch(filepath, atime, mtime)
 end
@@ -185,7 +188,8 @@ end
 -- and its length; both should be numbers.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 -- @param fh A string with the file path.
--- @usage unlock (filehandle[, start[, length]])
+-- @usage unlock(filehandle)
 unlock = function(fh)
 	return lfs.unlock(fh)
 end
+

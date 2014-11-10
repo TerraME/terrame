@@ -724,8 +724,7 @@ CellularSpace_ = {
 	end,	
 	--- Load the CellularSpace from the database. TerraME automatically executes this function when
 	-- the CellularSpace is created, but one can execute this to load the attributes again, erasing
-	-- each other attribute and relations created by the modeler. This function can not be used
-	-- with volatile CellularSpace.
+	-- each other attribute and relations created by the modeler.
 	-- @usage cs:load()
 	load = function(self)
 		customError("Load function was not implemented.")
@@ -1060,18 +1059,18 @@ metaTableCellularSpace_ = {
 -- @param data.ydim Number of lines, in the case of creating a CellularSpace without needing to
 -- load from a database. Default is equal to xdim.
 --
--- @tabular data
--- Data source & Description & Compulsory parameters & Optional parameters\
--- Access & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer, select,
+-- @tabular data.dbType
+-- dbType & Description & Compulsory parameters & Optional parameters\
+-- "mdb" & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer, select,
 -- where \
--- CSV & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
+-- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
 -- requires at least two attributes: x and y. & database & sep\
--- MySQL & Load from a TerraLib database stored in a MySQL database. & database, theme & host, 
+-- "mysql" & Load from a TerraLib database stored in a MySQL database. & database, theme & host, 
 -- layer, password, port, select, user, where \
--- Shapefile & Load data from a shapefile. It requires three files with the same name and 
+-- "shp" & Load data from a shapefile. It requires three files with the same name and 
 -- different extensions: .shp, .shx, and .dbf. The argument database must contain the file with
 -- extension .shp.& database & \
--- Volatile & Create a rectangular cellular space from scratch. Cells will be instantiated with
+-- "virtual" & Create a rectangular cellular space from scratch. Cells will be instantiated with
 -- only two attributes: x and y. & xdim & ydim 
 -- @output cells A vector of Cells pointed by the CellularSpace.
 -- @output parent The Environment it belongs.
