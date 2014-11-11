@@ -53,7 +53,7 @@
 
 	<% if doc.description.contact ~= "Undefined contact" then %>
 	<% local emails = {}
-	local email_link = "<a href=\"mailto:%s\"> %s </a>"
+	local email_link = "<a href=\"mailto:%s\"> %s</a>"
 	for contact in string.gmatch(doc.description.contact, "[^@%s]+@[^,%s]+") do	
 		table.insert(emails, string.format(email_link, contact, contact))
 	end %>
