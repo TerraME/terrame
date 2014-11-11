@@ -46,7 +46,7 @@ return{
 
 		unitTest:assert_equal(r.version, "2.0")
 		unitTest:assert_equal(r.date, "17 October 2014")
-		unitTest:assert_equal(r.package, "TerraME")
+		unitTest:assert_equal(r.package, "base")
 		unitTest:assert_equal(r.url, "http://www.terrame.org")
 	end,
 	resourceNotFoundMsg = function(unitTest)
