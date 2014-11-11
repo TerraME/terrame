@@ -2,7 +2,11 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-    <title><%=doc.description.title%></title>
+    <%if doc.description.title == "" then%>
+		<title><%=doc.description.package%></title>
+	<%else%>
+    	<title><%=doc.description.title%></title>
+    <%end%>
     <link rel="stylesheet" href="<%=luadoc.link("luadoc.css")%>" type="text/css" />
 	<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
 </head>
@@ -27,8 +31,8 @@
 
 <div id="content">
 <div id="index-header">
-	<%if doc.description.title ~= "Undefined title" then %> <h1><%=doc.description.title%></h1>
-	<%else%> <h1><font color="red"><b><%=doc.description.title%></b></font></h1>
+	<%if doc.description.title ~= "" then %> <h1><%=doc.description.title%></h1>
+	<%else%> <h1><%=doc.description.package%></h1>
 	<%end%>
 
 	<%if doc.description.version ~= "Undefined version" then %>Version: <%= doc.description.version %><br>

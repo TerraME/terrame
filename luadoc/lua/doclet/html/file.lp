@@ -2,7 +2,11 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-    <title><%=doc.description.title%></title>
+    <%if doc.description.title == "" then%>
+		<title><%=doc.description.package%></title>
+	<%else%>
+    	<title><%=doc.description.title%></title>
+    <%end%>
     <link rel="stylesheet" href="<%=luadoc.link('luadoc.css', 'files/'..file_doc.name)%>" type="text/css" />
 	<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
 </head>
