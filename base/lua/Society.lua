@@ -318,9 +318,10 @@ Society_ = {
 			end)
 		end
 	end,
-	--- Return a given Agent based on its index. Deprecated. Use Society:get instead.
+	--- Return a given Agent based on its index.
 	-- @param index The index of the Agent that will be returned.
 	-- @usage agent = soc:getAgent("1")
+	-- @deprecated Society:get
 	getAgent = function(self, index)
 		deprecatedFunctionWarning("getAgent", "get")
 		return self:get(index)
@@ -341,8 +342,9 @@ Society_ = {
 		end
 		return self.agents[index]
 	end,
-	--- Return a vector with the Agents of the Society. Deprecated. Use .agents instead.
+	--- Return a vector with the Agents of the Society.
 	-- @usage agent = soc:getAgents()[1]
+	-- @deprecated Society.agents
 	getAgents = function(self)
 		deprecatedFunctionWarning("getAgents", ".agents")
 		return self.agents
@@ -416,8 +418,9 @@ Society_ = {
 			customError("Trying to sample an empty Society.")
 		end
 	end,
-	--- Return the number of Agents of the Society. Deprecated. Use # instead.
+	--- Return the number of Agents of the Society.
 	-- @usage print(soc:size())
+	-- deprecated #
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")
 		return #self

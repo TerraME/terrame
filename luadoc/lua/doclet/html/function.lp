@@ -9,7 +9,23 @@ end
 %>
 <% if file_doc.name:match("(.-)%.lua") ~= func.name then %>
 <dt><h2><%=func.private and "local " or ""%><a name="<%=func.name%>">
-</a><strong><%=func.name%></strong>&nbsp;
+<%if func.deprecated and func.deprecated[1] then%>
+	<%if func.deprecated[2] then%>
+		<%local href = luadoc.symbol_link(func.deprecated[2], doc, module_doc, file_doc, from, doc_report)%>
+
+		</a><strong><%=func.name%> - <font color="red"> Deprecated.
+			<%if href ~= "unresolved" then %>	
+				Use <a href="<%=href%>"><%=func.deprecated[2]%></a> instead.
+			<%else%> 
+				Use <%=func.deprecated[2]%> instead.
+			<%end%>
+		</font></strong>&nbsp;
+	<%else%>
+		</a><strong><%=func.name%> - <font color="red"> Deprecated. </font></strong>&nbsp;
+	<%end%>
+<%else%>
+	</a><strong><%=func.name%></strong>&nbsp;
+<%end%>
 </h2></dt>
 <dd>
 <%end %>

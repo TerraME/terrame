@@ -184,8 +184,9 @@ SocialNetwork_ = {
 
 		self.weights[id] = weight
 	end,
-	--- Retrieve the number of connections of the SocialNetwork. Deprecated. Use # instead.
+	--- Retrieve the number of connections of the SocialNetwork.
 	-- @usage sn:size()
+	-- @deprecated #
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")
 		return #self

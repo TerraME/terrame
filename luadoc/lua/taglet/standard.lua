@@ -204,7 +204,7 @@ local function parse_comment (block, first_line, doc_report)
 		local example_code = line:gsub("^%s*%-+%s?", "")
 		line = util.trim_comment(line)
 		
-		local r, _, tag, text = string.find(line, "@([_%w%.]+)%s+(.*)")
+		local r, _, tag, text = string.find(line, "@([_%w%.]+)%s*(.*)")
 		if r ~= nil then
 			-- found new tag, add previous one, and start a new one
 			-- TODO: what to do with invalid tags? issue an error? or log a warning?
