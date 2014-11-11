@@ -1,6 +1,6 @@
 
 --@header Functions to handle files and directories. 
--- Most of the functions bellow are from taken from LuaFileSystem 1.6.2.
+-- Most of the functions bellow are taken from LuaFileSystem 1.6.2.
 -- Copyright Kepler Project 2003 (http://www.keplerproject.org/luafilesystem).
 
 --- Return a table with the file attributes corresponding to filepath (or nil followed by an error 
