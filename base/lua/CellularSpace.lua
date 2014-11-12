@@ -669,10 +669,11 @@ CellularSpace_ = {
 			end
 		end
 	end,
-	--- Return a cell from the CellularSpace given its x and y location. Deprecated. Use get instead.
+	--- Return a cell from the CellularSpace given its x and y location.
 	-- @param xIndex A number with the x location of the cell to be returned.
 	-- @param yIndex A number with the y location of the cell to be returned.
 	-- @usage cs:getCell(2, 2)
+	-- @deprecated CellularSpace:get
 	getCell = function(self, xIndex, yIndex)
 		deprecatedFunctionWarning("getCell", "get")
 		return self:get(xIndex, yIndex)
@@ -709,15 +710,17 @@ CellularSpace_ = {
 
 		return self.cObj_:getCell(cObj_)
 	end,
-	--- Return all the cells of the CellularSpace in a vector. Deprecated. Use .cells instead.
+	--- Return all the cells of the CellularSpace in a vector.
 	-- @usage cs:getCells()
+	-- @deprecated CellularSpace.cells
 	getCells = function(self)
 		deprecatedFunctionWarning("getCells", ".cells")
 		return self.cells
 	end,
-	--- Return a cell from the CellularSpace given its id. Deprecated. Use get instead.
+	--- Return a cell from the CellularSpace given its id.
 	-- @param cellID A string with the unique identifier of the Cell to be returned.
 	-- @usage cs:getCellByID("2")
+	-- @deprecated CellularSpace:get
 	getCellByID = function(self, cellID)
 		deprecatedFunctionWarning("getCellByID", "get")
 		return self:get(cellID)
@@ -884,8 +887,9 @@ CellularSpace_ = {
 		end)
 	end,
 --]]
-	--- Retrieve the number of Cells of the CellularSpace. Deprecated. Use # instead.
+	--- Retrieve the number of Cells of the CellularSpace.
 	-- @usage print(cs:size())
+	-- @deprecated #
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")
 		return #self

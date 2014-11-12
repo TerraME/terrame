@@ -68,15 +68,23 @@ luadoc.link_description(file_doc.description, doc, module_doc, file_doc, "files/
 %><% table.remove(file_doc.functions, 1) %>
 <% end %>
 <%if #file_doc.functions > 0 then%>
-<h2 class="function_list">Functions</h2>
-<table class="function_list">
-<%for _, func_name in ipairs(file_doc.functions) do
-  local func_data = file_doc.functions[func_name]%>
-	  <tr>
-		<td class="name" nowrap><%=func_data.private and "local " or ""%><a href="#<%=func_name%>"><%=func_name%></a>&nbsp;
-	  <td class="summary"><%=func_data.summary%></td>
-    </tr>
-<%end%>
+	<h2 class="function_list">Functions</h2>
+	<table class="function_list">
+	<%for _, func_name in ipairs(file_doc.functions) do
+		local func_data = file_doc.functions[func_name]%>
+		<%if func_data.deprecated then%>
+			<tr>
+				<td class="name" nowrap><%=func_data.private and "local " or ""%><a href="#<%=func_name%>"><%=func_name%></a> -
+				<font color="red"><b> Deprecated</b></font>&nbsp;
+				<td class="summary"><%=func_data.summary%></td>
+			</tr>
+		<%else%>
+			<tr>
+				<td class="name" nowrap><%=func_data.private and "local " or ""%><a href="#<%=func_name%>"><%=func_name%></a>&nbsp;
+				<td class="summary"><%=func_data.summary%></td>
+			</tr>
+		<%end%>
+	<%end%>
 <%end%>
 </table>
 <%end%>

@@ -40,9 +40,10 @@ Trajectory_ = {
 		table.insert(self.cells, cell)
 		self.cObj_:add(#self + 1, cell.cObj_)
 	end,
-	--- Add a new Cell to the Trajectory. Deprecated. Use Trajectory:add instead.
+	--- Add a new Cell to the Trajectory.
 	-- @param cell A Cell that will be added.
 	-- @usage traj:addCell(cell)
+	-- @deprecated Trajectory:add
 	addCell = function(self, cell)
 		deprecatedFunctionWarning("addCell", "add")
 		return self:add(cell)
@@ -110,9 +111,10 @@ Trajectory_ = {
 
 		return self.parent:get(x, y)
 	end,
-	--- Return a cell given its x and y locations. Deprecated. Use Trajectory:get instead.
+	--- Return a cell given its x and y locations.
 	-- @param index a Coord.
 	-- @usage traj:getCell(index)
+	-- @deprecated Trajectory:get
 	getCell = function(self, index)
 		deprecatedFunctionWarning("getCell", "get")
 		return self:get(index:getX(), index:getY())

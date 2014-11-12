@@ -219,9 +219,10 @@ Cell_ = {
 		self.cObj_:setID(self.id)
 		self.objectId_ = data.cObj_:getID()
 	end,
-	--- Retrieve the number of Neighborhoods of the Cell. Deprecated. Use # instead.
+	--- Retrieve the number of Neighborhoods of the Cell.
 	-- @return a positive integer number
 	-- @usage size = #cell
+	-- @deprecated #
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")
 		return #self
