@@ -244,7 +244,7 @@ local doc = function(package)
 	if doc_report.wrong_links == 0 then
 		printNote("All "..doc_report.links.." links were correctly built.")
 	else
-		printError(doc_report.wrong_links.." of "..doc_report.links.." links to undefined functions of files were found.")
+		printError(doc_report.wrong_links.." out of "..doc_report.links.." links are invalid.")
 	end
 
 	local errors = doc_report.undoc_param + doc_report.unused_param + doc_report.undoc_files +

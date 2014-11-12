@@ -420,7 +420,7 @@ Society_ = {
 	end,
 	--- Return the number of Agents of the Society.
 	-- @usage print(soc:size())
-	-- deprecated #
+	-- @deprecated Society:#
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")
 		return #self

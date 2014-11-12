@@ -74,8 +74,8 @@ luadoc.link_description(file_doc.description, doc, module_doc, file_doc, "files/
 		local func_data = file_doc.functions[func_name]%>
 		<%if func_data.deprecated then%>
 			<tr>
-				<td class="name" nowrap><%=func_data.private and "local " or ""%><a href="#<%=func_name%>"><%=func_name%></a> -
-				<font color="red"><b> Deprecated</b></font>&nbsp;
+				<td class="name" nowrap><%=func_data.private and "local " or ""%><a href="#<%=func_name%>"><%=func_name%></a>
+				<i><font color="gray"> (deprecated)</font></i>&nbsp;
 				<td class="summary"><%=func_data.summary%></td>
 			</tr>
 		<%else%>

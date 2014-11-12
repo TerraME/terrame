@@ -13,15 +13,15 @@ end
 	<%if func.deprecated[2] then%>
 		<%local href = luadoc.symbol_link(func.deprecated[2], doc, module_doc, file_doc, from, doc_report)%>
 
-		</a><strong><%=func.name%> - <font color="red"> Deprecated.
+		</a><font color="gray"><%=func.name%> <i>(deprecated, use
 			<%if href ~= "unresolved" then %>	
-				Use <a href="<%=href%>"><%=func.deprecated[2]%></a> instead.
+				<a href="<%=href%>"><%=func.deprecated[2]%></a> 
 			<%else%> 
-				Use <%=func.deprecated[2]%> instead.
+				<%=func.deprecated[2]%> 
 			<%end%>
-		</font></strong>&nbsp;
+		instead)</i></font>&nbsp;
 	<%else%>
-		</a><strong><%=func.name%> - <font color="red"> Deprecated. </font></strong>&nbsp;
+		</a><font color="gray"><%=func.name%><i> (deprecated) </font></i>&nbsp;
 	<%end%>
 <%else%>
 	</a><strong><%=func.name%></strong>&nbsp;

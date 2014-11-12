@@ -889,7 +889,7 @@ CellularSpace_ = {
 --]]
 	--- Retrieve the number of Cells of the CellularSpace.
 	-- @usage print(cs:size())
-	-- @deprecated #
+	-- @deprecated CellularSpace:#
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")
 		return #self
