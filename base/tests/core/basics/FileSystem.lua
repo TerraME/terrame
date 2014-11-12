@@ -26,9 +26,7 @@
 
 return{
 	dir = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
-		local d = dir(info.path..s.."packages"..s.."base"..s.."data")
+		local d = dir(packageInfo().data)
 		unitTest:assert_equal(#d, 21) -- 21 files
 	end,
 	isfile = function(unitTest)
@@ -56,17 +54,15 @@ return{
 		chdir(cur_dir)
 	end,
 	lfsdir = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
+		local pathdata = packageInfo().data
 
-		local pathdata = info.path..s.."packages"..s.."base"..s.."data"
 		local dirtab1 = dir(pathdata)
 
 		local dirtab2 = {}
 		for f in lfsdir(pathdata) do
 			if f ~= "." and f ~= "." then
 				table.insert(dirtab2, f)
-				local attr = attributes(pathdata..s..f, "mode")
+				local attr = attributes(pathdata..f, "mode")
 				unitTest:assert(attr == "file" or attr == "directory")
 			end
 		end
@@ -74,122 +70,103 @@ return{
 		unitTest:assert(getn(dirtab1) <= getn(dirtab2))
 	end,
 	lock = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
-		local pathdata = info.path..s.."packages"..s.."base"..s.."data"
-		local f = io.open(pathdata..s.."teste.txt", "w+")
+		local pathdata = packageInfo().data
+
+		local f = io.open(pathdata.."test.txt", "w+")
 
 		unitTest:assert(lock(f, "w"))
 
-		os.execute("rm "..pathdata..s.."teste.txt")
+		os.execute("rm "..pathdata.."test.txt")
 	end,
 	mkdir = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
-		local pathdata = info.path..s.."packages"..s.."base"..s.."data"
+		local pathdata = packageInfo().data
 
-		unitTest:assert(mkdir(pathdata..s.."teste"))
+		unitTest:assert(mkdir(pathdata.."test"))
 
-		local attr = attributes(pathdata..s.."teste", "mode")
+		local attr = attributes(pathdata.."test", "mode")
 
 		unitTest:assert_equal(attr, "directory")
 
-		rmdir(pathdata..s.."teste")
+		rmdir(pathdata.."test")
 	end,
 	rmdir = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
-		local pathdata = info.path..s.."packages"..s.."base"..s.."data"
+		local pathdata = packageInfo().data
 
-		unitTest:assert(mkdir(pathdata..s.."teste"))
+		unitTest:assert(mkdir(pathdata.."test"))
 
-		local attr = attributes(pathdata..s.."teste", "mode")
+		local attr = attributes(pathdata.."test", "mode")
 
 		unitTest:assert_equal(attr, "directory")
 
-		unitTest:assert(rmdir(pathdata..s.."teste"))
+		unitTest:assert(rmdir(pathdata.."test"))
 	end, 
 	setmode = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
-		local pathdata = info.path..s.."packages"..s.."base"..s.."data"
+		local pathdata = packageInfo().data
 
-		local f = io.open(pathdata..s.."testefile.txt", "w+")
-		f:write("teste")
+		local f = io.open(pathdata.."testfile.txt", "w+")
+		f:write("test")
 		local success, mode = setmode(f, "binary")
 
 		unitTest:assert(success)
-		if s == "/" then
-			unitTest:assert_equal(mode, "binary")
-		else
-			unitTest:assert_equal(mode, "text")
-		end
+	
+		unitTest:assert_equal(mode, "binary")
 
 		success, mode = setmode(f, "text")
 
 		unitTest:assert(success)
-		unitTest:assert_equal(mode, "binary")
+		unitTest:assert_equal(mode, "binary") -- TODO: shouldn't it be text?
 
 		f:close()
-		os.execute("rm "..pathdata..s.."testefile.txt")
+		os.execute("rm "..pathdata.."testfile.txt")
 	end,
 	symlinkattributes = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
-		local pathdata = info.path..s.."packages"..s.."base"..s.."data"
+		local pathdata = packageInfo().data
 
-		os.execute("ln -s "..pathdata..s.."agents.csv "..pathdata..s.."agentslink")
-		local attr = symlinkattributes(pathdata..s.."agentslink")
+		os.execute("ln -s "..pathdata.."agents.csv "..pathdata.."agentslink")
+		local attr = symlinkattributes(pathdata.."agentslink")
 
 		unitTest:assert_equal(attr.mode, "link")
 		unitTest:assert_equal(attr.nlink, 1)
-		unitTest:assert_equal(attr.size, 93)
+		unitTest:assert(attr.size >= 61)
 
-		os.execute("rm "..pathdata..s.."agentslink")
+		os.execute("rm "..pathdata.."agentslink")
 	end,
 	lock_dir = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
-		local pathdata = info.path..s.."packages"..s.."base"..s.."data"
+		local pathdata = packageInfo().data
 
-		mkdir(pathdata..s.."teste")
+		mkdir(pathdata.."test")
 
-		local f = lock_dir(pathdata..s.."teste")
+		local f = lock_dir(pathdata.."test")
 		unitTest:assert_not_nil(f)
 
-		rmdir(pathdata..s.."teste")
+		rmdir(pathdata.."test")
 	end,
 	touch = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
+		local pathdata = packageInfo().data
 
-		local pathdata = info.path..s.."packages"..s.."base"..s.."data"
-
-		local f = io.open(pathdata..s.."testefile.txt", "w+")
-		f:write("teste")
+		local f = io.open(pathdata.."testfile.txt", "w+")
+		f:write("test")
 		f:close()
 
-		unitTest:assert(touch(pathdata..s.."testefile.txt", 10000, 10000))
-		local attr = attributes(pathdata..s.."testefile.txt")
+		unitTest:assert(touch(pathdata.."testfile.txt", 10000, 10000))
+		local attr = attributes(pathdata.."testfile.txt")
 
 		unitTest:assert_equal(attr.access, 10000)
 		unitTest:assert_equal(attr.modification, 10000)
 
-		os.execute("rm "..pathdata..s.."testefile.txt")
+		os.execute("rm "..pathdata.."testfile.txt")
 	end, 
 	unlock = function(unitTest)
-		local info = sessionInfo()
-		local s = info.separator
+		local pathdata = packageInfo().data
 
-		local pathdata = info.path..s.."packages"..s.."base"..s.."data"
-
-		local f = io.open(pathdata..s.."testefile.txt", "w+")
-		f:write("teste")
+		local f = io.open(pathdata.."testfile.txt", "w+")
+		f:write("test")
 
 		unitTest:assert(lock(f, "w"))
 		unitTest:assert(unlock(f))
 
 		f:close()
-		os.execute("rm "..pathdata..s.."testefile.txt")
+		os.execute("rm "..pathdata.."testfile.txt")
 	end
 }
+

@@ -28,7 +28,9 @@
 
 --@header Some basic and useful functions to develop packages.
 
---- Return the description of a package. It reads from file description.lua of the package.
+--- Return the description of a package. It reads all the attributes from file 
+-- description.lua of the package and create an additional attribute data, with 
+-- the path to folder data in the package.
 -- @param package Name of the package. If nil, packageInfo will return
 -- the description of TerraME.
 -- @usage packageInfo().version
@@ -42,7 +44,9 @@ packageInfo = function(package)
 	end
 	
 	local file = pkgfile..s.."description.lua"
-	return include(file)
+	local result = include(file)
+	result.data = pkgfile..s.."data"..s
+	return result
 end
 
 --- Return the path to a file of a given package. The file must be inside the data folder
