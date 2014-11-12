@@ -38,7 +38,7 @@ packageInfo = function(package)
 	local s = sessionInfo().separator
 	local pkgfile = sessionInfo().path..s.."packages"..s..package
 	if not isfile(pkgfile) then
-		customError("Package '"..package.."' is not installed.", 3)
+		customError("Package '"..package.."' is not installed.")
 	end
 	
 	local file = pkgfile..s.."description.lua"

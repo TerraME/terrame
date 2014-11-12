@@ -39,9 +39,12 @@ Random_ = {
 		self.seed = seed
 		self.cObj_:reseed(seed)
 	end,
-	sample = function(self, vector)
-		local int = self:integer(1, #vector)
-		return vector[int]
+	--- Return a random element of a table.
+	-- @param mtable A table with indexes as numbers.
+	-- @usage random:sample{2, 3, 4, 6}
+	sample = function(self, mtable)
+		local int = self:integer(1, #mtable)
+		return mtable[int]
 	end,
 	--- Generate an integer random number.
 	-- @param v1 An integer number. If abscent, integer() will generate numbers between zero and

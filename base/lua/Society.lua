@@ -627,19 +627,13 @@ function Society(data)
 	data.cObj_:setReference(data)
 
 	if type(data.id) ~= "string" then
-		if type(data.id) == "nil" then
+		if data.id == nil then
 		else
 			incompatibleTypeError("id", "string", data.id)
 		end
 	end
 
-	if type(data.instance) ~= "Agent" then
-		if type(data.instance) == "nil" then
-			mandatoryArgumentError("instance")
-		else
-			incompatibleTypeError("instance", "Agent", data.instance)
-		end
-	end
+	mandatoryTableArgument(data, "instance", "Agent")
 
 	-- create functions for the society according to the attributes of its instance
 	forEachElement(data.instance, function(attribute, value, mtype)
