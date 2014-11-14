@@ -720,8 +720,9 @@ function forEachElement(obj, func)
 
 	for k, ud in pairs(obj) do
 		local t = type(ud)
-		func(k, ud, t)
+		if func(k, ud, t) == false then return false end
 	end
+	return true
 end
 
 --TODO: esta funcao ignora elementos que possuem o mesmo lower case (ex: aAa e aaa). Tratar este caso.
