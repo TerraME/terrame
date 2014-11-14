@@ -124,7 +124,6 @@ return{
 	incompatibleValueMsg = function(unitTest)
 		local str = incompatibleValueMsg("attr", "positive", -2)
 		unitTest:assert_equal(str, "Incompatible values. Parameter 'attr' expected positive, got -2.")
-		local str = incompatibleValueMsg("attr", "positive", "aa")
 	end,
 	resourceNotFoundError = function(unitTest)
 		local error_func = function()
@@ -192,6 +191,20 @@ return{
 			verify(false, "error")
 		end
 		unitTest:assert_error(error_func, "error")
+	end,
+	switchInvalidParameterMsg = function(unitTest)
+		local options = {
+			aaa = true,
+			bbb = true,
+			ccc = true
+		}
+		local str = switchInvalidParameterMsg("ddd", "attr", options)
+		unitTest:assert_equal(str, "'ddd' is an invalid value for parameter 'attr'. It must be a string from the set ['aaa', 'bbb', 'ccc'].")
+
+	end,
+	switchInvalidParameterSuggestionMsg = function(unitTest)
+		local str = switchInvalidParameterSuggestionMsg("aab", "attr", "aaa")
+		unitTest:assert_equal(str, "'aab' is an invalid value for parameter 'attr'. Do you mean 'aaa'?")
 	end
 }
 

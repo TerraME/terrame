@@ -115,9 +115,7 @@ return{
 				labels = {"1", "2", "3"}
 			}
 		end
-		unitTest:assert_error(error_func, "'uniquevalue' is an invalid value for parameter 'grouping'. Do you mean 'uniquevalues'?")
-
-
+		unitTest:assert_error(error_func, switchInvalidParameterSuggestionMsg("uniquevalue", "grouping", "uniquevalues"))
 	end
 }
 

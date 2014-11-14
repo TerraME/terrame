@@ -305,7 +305,17 @@ However, the database does not exist!
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "'post' is an invalid value for parameter 'dbType'. It must be a string from the set ['csv', 'map', 'mdb', 'mysql', 'shp', 'virtual'].")
+
+		local options = {
+			csv = true,
+			map = true,
+			mdb = true,
+			mysql = true,
+			shp = true,
+			virtual = true
+		}
+
+		unitTest:assert_error(error_func, switchInvalidParameterMsg("post", "dbType", options))
 
 		error_func = function()
 			local cs = CellularSpace{

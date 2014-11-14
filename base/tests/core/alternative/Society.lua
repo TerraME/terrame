@@ -155,14 +155,25 @@ return{
 				strategy = "voi"
 			}
 		end
-		unitTest:assert_error(error_func, "'voi' is an invalid value for parameter 'strategy'. Do you mean 'void'?")
+		unitTest:assert_error(error_func, switchInvalidParameterSuggestionMsg("voi", "strategy", "void"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
 				strategy = "terralab"
 			}
 		end
-		unitTest:assert_error(error_func, "'terralab' is an invalid value for parameter 'strategy'. It must be a string from the set ['cell', 'func', 'neighbor', 'probability', 'quantity', 'void'].")
+
+		local options = {
+			cell = true,
+			func = true,
+			-- TODO: why this is func and CellularSpace:createNeighborhood is function?
+			neighbor = true,
+			probability = true,
+			quantity = true,
+			void = true
+		}
+			
+		unitTest:assert_error(error_func, switchInvalidParameterMsg("terralab", "strategy", options))
 
 		sc1:createSocialNetwork{
 			strategy = "void",

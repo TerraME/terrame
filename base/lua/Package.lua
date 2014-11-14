@@ -90,7 +90,7 @@ function switch(data, att)
 					if type(f) == "function" then
 						return f(self.casevar,self)
 					else
-						customError("Case "..tostring(self.casevar).." not a function.")
+						customError("Case "..tostring(self.casevar).." should be a function.")
 					end
 				end
 			end
@@ -123,21 +123,36 @@ function switch(data, att)
 						end
 					end)
 					if distance < string.len(self.casevar) * 0.6 then
-						word = "Do you mean '"..word.."'?"
+						customError(switchInvalidParameterSuggestionMsg(self.casevar, att, word))
 					else
-						word = "It must be a string from the set ["
-						forEachOrderedElement(code, function(a)
-							word = word.."'"..a.."', "
-						end)
-						word = string.sub(word, 0, string.len(word) - 2).."]."
+						customError(switchInvalidParameterMsg(self.casevar, att, code))
 					end
-					-- TODO add Msg functions for errors in swith to allow them to be used in the tests
-					customError("'"..self.casevar.."' is an invalid value for parameter '"..att.."'. "..word)
 				end
 			end
 		}
 		return swtbl
 	end
+end
+
+--- Return a message for a wrong parameter value showing the options.
+-- @param casevar Value of the attribute.
+-- @param att Name of the attribute.
+-- @param options A table with the available options.
+function switchInvalidParameterMsg(casevar, att, options)
+	local word = "It must be a string from the set ["
+	forEachOrderedElement(options, function(a)
+		word = word.."'"..a.."', "
+	end)
+	word = string.sub(word, 0, string.len(word) - 2).."]."
+	return "'"..casevar.."' is an invalid value for parameter '"..att.."'. "..word
+end
+
+--- Return a message for a wrong parameter value showing the most similar option.
+-- @param casevar Value of the attribute.
+-- @param att Name of the attribute.
+-- @param options A suggestion for to replace the wrong value.
+function switchInvalidParameterSuggestionMsg(casevar, att, suggestion)
+	return "'"..casevar.."' is an invalid value for parameter '"..att.."'. Do you mean '"..suggestion.."'?"
 end
 
 -- TODO: this function should be removed (only Legend and Observer use it).

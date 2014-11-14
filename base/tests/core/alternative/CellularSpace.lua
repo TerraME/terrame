@@ -147,8 +147,17 @@ return{
 		error_func = function()
 			cs:createNeighborhood{strategy = "teste"}
 		end
-		unitTest:assert_error(error_func, "'teste' is an invalid value for parameter 'strategy'. It must be a string from the set ['3x3', 'coord', 'function', 'moore', 'mxn', 'vonneumann']."
-		)
+
+		local options = {
+			["3x3"] = true,
+			coord = true,
+			["function"] = true,
+			moore = true,
+			mxn = true,
+			vonneumann = true
+		}
+
+		unitTest:assert_error(error_func, switchInvalidParameterMsg("teste", "strategy", options))
 
 		error_func = function()
 			cs:createNeighborhood{strategy = 50}

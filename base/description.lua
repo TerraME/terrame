@@ -3,7 +3,7 @@ date = "17 October 2014"
 package = "base"
 title = "TerraME Types and Functions"
 url = "http://www.terrame.org"
-authors = "TerraLAB/UFOP and INPE"
+authors = "INPE and TerraLAB/UFOP"
 contact = "pedro.andrade@inpe.br, tiago@iceb.ufop.br"
 content = [[This document presents a detailed description of each type and function of TerraME, ordered alphabetically by its types. TerraME adopts <i>American English</i> (e.g., neighbor instead of neighbo<b>u</b>r), with the following syntax convention:
 <ul>
