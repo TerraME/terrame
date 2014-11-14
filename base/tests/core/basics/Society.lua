@@ -316,6 +316,10 @@ return {
 			instance = predator,
 			quantity = 100
 		}
+	
+		forEachAgent(predators, function(ag)
+			unitTest:assert_nil(ag:getSocialNetwork())
+		end)
 
 		predators:createSocialNetwork{probability = 0.5, name = "friends"}
 		predators:createSocialNetwork{quantity = 1, name = "boss"}

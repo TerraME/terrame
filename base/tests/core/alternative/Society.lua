@@ -333,17 +333,6 @@ return{
 				end)
 			end
 		}
-
-		local sc = Society{
-			instance = ag1,
-			quantity = 10
-		}
-
-		sc:createSocialNetwork{probability = 0.5 , name = "2"}
-		forEachAgent(sc, function(ag)
-			-- TODO: move this assert to basic tests
-			unitTest:assert_nil(ag:getSocialNetwork())
-		end)
 	end,
 	get = function(unitTest)
 		local ag1 = Agent{

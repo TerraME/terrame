@@ -868,6 +868,17 @@ return{
 		unitTest:assert_equal(32, sizes[3])
 		unitTest:assert_equal(64, sizes[4])
 	end,
+	load = function(unitTest)
+		local cs = CellularSpace{xdim = 5}
+
+		forEachCell(cs, function(cell)
+			cell.w = 3
+		end)
+
+		cs:load()
+
+		unitTest:assert_nil(cs:sample().w)
+	end,
 	synchronize = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
 

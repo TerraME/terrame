@@ -81,6 +81,8 @@ return{
 	end,
 	addSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
+		unitTest:assert_nil(ag1:getSocialNetwork("notfriends"))	
+
 		local sn = SocialNetwork()
 		ag1:addSocialNetwork(sn)
 		unitTest:assert_type(ag1:getSocialNetwork(), "SocialNetwork")
@@ -195,10 +197,11 @@ return{
 		}
 
 		predators.agents[2]:die()
-		-- TODO: also test
-		-- predators.agents[4]:reproduce()
+
+		predators.agents[4]:reproduce()
+
 		predators.agents[4]:reproduce{age = 0}
-		unitTest:assert_equal(5, #predators)
+		unitTest:assert_equal(6, #predators)
 
 		local cont = 3
 		local sum = 0
@@ -208,13 +211,13 @@ return{
 			if cont == 1 then predators.agents[4]:die() end
 			cont = cont - 1
 		end)
-		unitTest:assert_equal(120, sum)
-		unitTest:assert_equal(3, #predators)
+		unitTest:assert_equal(160, sum)
+		unitTest:assert_equal(4, #predators)
 
 		forEachAgent(predators, function(agent)
 			agent:reproduce{age = 0}
 		end)
-		unitTest:assert_equal(6, #predators)
+		unitTest:assert_equal(8, #predators)
 	end,
 	message = function(unitTest)
 		local ag = Agent{

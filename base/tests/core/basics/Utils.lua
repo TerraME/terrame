@@ -224,7 +224,6 @@ return{
 		end)
 		unitTest:assert_equal(count, 2)
 	end,
-	-- TODO: for each forEach, implement a test where there is a return false and thus it does not processes all the elements.
 	forEachNeighborhood = function(unitTest)
 		local c1 = Cell{}
 		local c2 = Cell{}
@@ -402,31 +401,5 @@ return{
     }
 }]])
 	end
---	tostring = function(unitTest)
-	--	cs1 = CellularSpace{ xdim = 10 }
-	--	cs1:createNeighborhood()
-	-- TODO: colocar o print do Observer nos testes de observer
---    print("########## OBSERVER\n")
---    local obs1 = Observer{ subject = auxC }
---    auxC:notify()
---    print(obs1)
---    obs1:kill()
---[[
-		local leg1 = Legend{}
-		unitTest:assert_equal(tostring(leg1), [[colorBar      string [255,255,255;0;0;?;#0,0,0;100;100;?;#]
-font          string [Symbol]
-fontSize      number [12]
-grouping      number [0]
-maximum       number [100]
-minimum       number [0]
-precision     number [4]
-slices        number [2]
-stdDeviation  number [-1]
-style         number [1]
-type          number [1]
-width         number [2]
-] ])
---]]
---	end
 }
 

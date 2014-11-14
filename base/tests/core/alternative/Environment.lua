@@ -73,8 +73,7 @@ return{
 		unitTest:assert_error(error_func, switchInvalidParameterMsg("teste1", "strategy", options))
 
 		error_func = function()
-			-- TODO: se trocar o name abaixo por placement ele da erro dizendo que este placement ja existe. verificar.
-			env:createPlacement{strategy = "unifor", name = "placement2", max = 13}
+			env:createPlacement{strategy = "unifor", name = "placement", max = 13}
 		end
 		unitTest:assert_error(error_func, switchInvalidParameterSuggestionMsg("unifor", "strategy", "uniform"))
 

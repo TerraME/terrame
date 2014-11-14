@@ -83,7 +83,33 @@ local createUniformPlacement = function(environment, cs, placement)
 	end)
 end
 
-local createVoidPlacement = function(environment, cs, placement)
+local createVoidPlacement = function(environment, cs, data)
+	local placement = data.name
+	forEachElement(environment, function(_, element)
+		local t = type(element)
+		if t == "CellularSpace" or t == "Trajectory" then
+			local melement = element
+			if t == "Trajectory" then melement = element.parent end -- use the CellularSpace
+
+			forEachCell(melement, function(cell)
+				cell[placement] = Group{build = false}
+				cell[placement].agents = {}
+				cell.agents = cell[placement].agents
+			end)
+		elseif t == "Society" then
+			element.placements[data.name] = cs
+			forEachAgent(element, function(agent)
+				agent[placement] = Trajectory{build = false, target = cs}
+				agent[placement].cells = {}
+				agent.cells = agent[placement].cells
+			end)
+		elseif t == "Agent" then
+			element[placement] = Trajectory{build = false, target = cs}
+			element[placement].cells = {}
+			element.cells = element[placement].cells
+		end
+	end)
+
 	forEachElement(environment, function(_, element, mtype)
 		if mtype == "Society" then
 			element.placements[placement] = cs
@@ -220,46 +246,20 @@ Environment_ = {
 			customError("It is not possible to put that amount of agents in space.")
 		end
 
-		local idCounter = 0
-		forEachElement(self, function(_, element)
-			local t = type(element)
-			local placement = data.name
-			if t == "CellularSpace" or t == "Trajectory" then
-				local melement = element
-				if t == "Trajectory" then melement = element.parent end -- use the CellularSpace
-
-				forEachCell(melement, function(cell)
-					idCounter = idCounter + 1
-					cell[placement] = Group{build = false}
-					cell[placement].agents = {}
-					cell.agents = cell[placement].agents
-				end)
-			elseif t == "Society" then
-				element.placements[data.name] = mycs
-				forEachAgent(element, function(agent)
-					agent[placement] = Trajectory{build = false, target = mycs}
-					agent[placement].cells = {}
-					agent.cells = agent[placement].cells
-				end)
-			elseif t == "Agent" then
-				element[placement] = Trajectory{build = false, target = mycs}
-				element[placement].cells = {}
-				element.cells = element[placement].cells
-			end
-		end)
-
 		switch(data, "strategy"):caseof{
 			random = function() 
 				checkUnnecessaryParameters(data, {"strategy", "name", "max"})
+				createVoidPlacement(self, mycs, data) 
 				createRandomPlacement(self, mycs, data.max, data.name)
 			end,
 			uniform = function()
 				checkUnnecessaryParameters(data, {"strategy", "name"})
+				createVoidPlacement(self, mycs, data) 
 				createUniformPlacement(self, mycs, data.name)
 			end,
 			void = function()
 				checkUnnecessaryParameters(data, {"strategy", "name"})
-				createVoidPlacement(self, mycs, data.name) 
+				createVoidPlacement(self, mycs, data) 
 			end
 		}
 	end,
