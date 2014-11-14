@@ -141,34 +141,6 @@ function switchInvalidParameterSuggestionMsg(casevar, att, suggestion)
 	return "'"..casevar.."' is an invalid value for parameter '"..att.."'. Do you mean '"..suggestion.."'?"
 end
 
--- TODO: this function should be removed (only Legend and Observer use it).
-function suggest(typedValues, possibleValues)
-	for k, v in pairs(typedValues) do
-		local notCorrectParameters = {}
-		local correctedSuggestions = {}
-		if not belong(k, possibleValues) then
-			table.insert(notCorrectParameters,k)
-			local moreSimilar = "" 
-			local moreSimilarDistance = 1000000
-			for j = 1, #possibleValues do
-				local distance = levenshtein(k, possibleValues[j])
-				if distance <= moreSimilarDistance then
-					moreSimilarDistance = distance
-					moreSimilar = possibleValues[j]
-				end
-			end
-			table.insert(correctedSuggestions, moreSimilar)
-		end
-
-		for i = 1, #notCorrectParameters do
-			local dst = levenshtein(notCorrectParameters[i], correctedSuggestions[i])
-			if dst < math.floor(#notCorrectParameters[i] * 0.6) then
-				customError("Attribute '".. notCorrectParameters[i] .."' not found. Do you mean '".. correctedSuggestions[i].."'?")
-			end
-		end
-	end
-end
-
 --- Load a given package.
 -- @param package A package name.
 -- @usage require("calibration")

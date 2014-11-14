@@ -191,9 +191,6 @@ return{
 		end
 		unitTest:assert_error(error_func, "All elements of the argument must be named.")
 	end,
-	suggest = function(unitTest)
-		unitTest:assert(true)
-	end,
 	switch = function(unitTest)
 		unitTest:assert(true)
 	end,
