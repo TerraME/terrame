@@ -852,7 +852,6 @@ local function ParseCSVLine(line, sep)
 	return res
 end
 
--- TODO: verify whether there is a warning message pointing that argument file does not exist in the function
 --- Read a CSV file and return an array of tables.
 -- The first line of the file list the attributes of each table.
 -- @param filename A string, adress of the CSV file.
@@ -861,6 +860,11 @@ end
 function readCSV(filename, sep)
 	local data = {}
 	local file = io.open(filename)
+
+	if not file then
+		resourceNotFoundError(1, filename)
+	end
+
 	local fields = ParseCSVLine(file:read(), sep)
 	local line = file:read()
 	while line do

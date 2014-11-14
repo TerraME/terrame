@@ -452,6 +452,10 @@ end
 -- @param path The location of the resource in the computer.
 -- @usage resourceNotFoundMsg("file", "c:\\myfiles\\file.csv")
 function resourceNotFoundMsg(attr, path)
+	if type(attr) == "number" then
+		attr = "#"..attr
+	end
+
     return "Resource '"..path.."' not found for parameter '"..attr.."'."
 end
 
