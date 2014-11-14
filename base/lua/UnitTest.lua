@@ -232,6 +232,7 @@ UnitTest_ = {
 				end
 
 				print_error(self, error_msg)
+				-- print(traceback())
 			end
 		end)
 

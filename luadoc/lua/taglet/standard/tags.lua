@@ -249,10 +249,6 @@ local function deprecated(tag, block, text)
 	block[tag] = block[tag] or {}
 	table.insert(block[tag], true)
 
-	if text == nil then
-		printError("Deprecated function "..block.name.." did not defined a function to replace it.")
-	end
-
 	-- remove trailing "."
 	text = string.gsub(text, "(.*)%.$", "%1")
 	

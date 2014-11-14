@@ -239,15 +239,17 @@ local loadMap = function(self)
 	if self.maxCol == nil then self.maxCol = -self.minCol end
 
 	self.cells = {}
+	self.cObj_:clear()
 	for line in io.lines(self.database) do
 		j = 0
 
 		local res = ParseCSVLine(line, self.sep)
 
 		forEachElement(res, function(_, value)
-			local p = Cell {x = i, y = j} 
+			local p = Cell {x = j, y = i} 
 		 	p[self.attrname] = tonumber(value)
 			self:add(p)
+			self.cObj_:addCell(p.x, p.y, p.cObj_)
 			j = j + 1
 		end)
 		i = i + 1
@@ -294,6 +296,7 @@ local loadCsv = function(self)
 		data[i].id = tostring(cellIdCounter)
 		local cell = Cell(data[i])
 		self:add(cell)
+		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 	end
 	return 
 end
@@ -323,7 +326,7 @@ local loadVirtual = function(self)
 	for i = 1, self.xdim do
 		for j = 1, self.ydim do
 			local c = Cell{id = tostring(cellIdCounter), x = i - 1, y = j - 1}
-		cellIdCounter = cellIdCounter + 1
+			cellIdCounter = cellIdCounter + 1
 			c.parent = self
 			self.cObj_:addCell(c.x, c.y, c.cObj_)
 			table.insert(self.cells, c)
@@ -889,7 +892,7 @@ CellularSpace_ = {
 --]]
 	--- Retrieve the number of Cells of the CellularSpace.
 	-- @usage print(cs:size())
-	-- @deprecated #
+	-- @deprecated CellularSpace:#
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")
 		return #self

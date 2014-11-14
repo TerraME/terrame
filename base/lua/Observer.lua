@@ -1160,7 +1160,7 @@ function Observer(data)
 		end
 	end
 
-	suggest(data, observerPossibleParams)
+	checkUnnecessaryParameters(data, observerPossibleParams)
 
 	local metaTable = {__index = Observer_,__tostring = tostringTerraME}
 	setmetatable(data, metaTable)

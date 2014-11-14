@@ -147,8 +147,17 @@ return{
 		error_func = function()
 			cs:createNeighborhood{strategy = "teste"}
 		end
-		unitTest:assert_error(error_func, "'teste' is an invalid value for parameter 'strategy'. It must be a string from the set ['3x3', 'coord', 'function', 'moore', 'mxn', 'vonneumann']."
-		)
+
+		local options = {
+			["3x3"] = true,
+			coord = true,
+			["function"] = true,
+			moore = true,
+			mxn = true,
+			vonneumann = true
+		}
+
+		unitTest:assert_error(error_func, switchInvalidParameterMsg("teste", "strategy", options))
 
 		error_func = function()
 			cs:createNeighborhood{strategy = 50}
@@ -504,17 +513,6 @@ return{
 			cs:synchronize{123, "height_"}
 		end
 		unitTest:assert_error(error_func, "Parameter 'values' should contain only strings.")
-	end,
-	load = function(unitTest)
-		unitTest:assert(true)
-		-- TODO: is there one possible test here?
---[[
-		local csK = CellularSpace{xdim = 2}
-		local error_func = function()
-			csK:load()
-		end
-		unitTest:assert_error(error_func, "Error: Cannot load volatile cellular spaces.")
---]]
 	end
 }
 

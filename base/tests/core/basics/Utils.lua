@@ -71,6 +71,13 @@ return{
 		end)
 		unitTest:assert_equal(count, 10)
 
+		count = 0
+		forEachAgent(soc, function(ag)
+			count = count + 1
+			if count > 5 then return false end
+		end)
+		unitTest:assert_equal(count, 6)
+
 		local g = Group{target = soc}
 
 		count = 0
@@ -102,6 +109,14 @@ return{
 		forEachCell(cs, function(cell) cell.value = 2 end)
 		forEachCell(cs, function(cell) unitTest:assert_equal(cell.value, 2) end)
 
+		local count = 0
+		forEachCell(cs, function(cell)
+			count = count + 1
+			if count > 10 then return false end
+		end)
+		unitTest:assert_equal(count, 11)
+
+
 		local t = Trajectory{target = cs}
 		forEachCell(t, function(cell) cell.value = 4 end)
 		forEachCell(cs, function(cell) unitTest:assert_equal(cell.value, 4) end)
@@ -127,6 +142,13 @@ return{
 		end)
 
 		unitTest:assert_equal(count, 100)
+
+		local count = 0
+		forEachCellPair(cs1, cs2, function()
+			count = count + 1
+			if count > 10 then return false end
+		end)
+		unitTest:assert_equal(count, 11)
 	end,
 	forEachConnection = function(unitTest)
 		local a = Agent{value = 2}
@@ -144,6 +166,13 @@ return{
 		end)
 
 		unitTest:assert_equal(cont, 3)
+
+		local count = 0
+		forEachConnection(s, function()
+			count = count + 1
+			return false
+		end)
+		unitTest:assert_equal(count, 1)
 	end,
 	forEachElement = function(unitTest)
 		local mvector = {a = "a", b = "b", c = "c", d = "d"}
@@ -166,6 +195,13 @@ return{
 			count = count + 1
 		end)
 		unitTest:assert_equal(count, 5)
+
+		count = 0
+		forEachElement(mvector, function()
+			count = count + 1
+			if count > 2 then return false end
+		end)
+		unitTest:assert_equal(count, 3)
 	end,
 	forEachNeighbor = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -180,8 +216,14 @@ return{
 			count = count + 1
 		end)
 		unitTest:assert_equal(count, 3)
+
+		count = 0
+		forEachNeighbor(c, function()
+			count = count + 1
+			if count > 1 then return false end
+		end)
+		unitTest:assert_equal(count, 2)
 	end,
-	-- TODO: for each forEach, implement a test where there is a return false and thus it does not processes all the elements.
 	forEachNeighborhood = function(unitTest)
 		local c1 = Cell{}
 		local c2 = Cell{}
@@ -203,6 +245,13 @@ return{
 			count = count + 1
 		end)
 		unitTest:assert_equal(count, 2)
+
+		local count = 0
+		forEachNeighborhood(c1, function()
+			count = count + 1
+			return false
+		end)
+		unitTest:assert_equal(count, 1)
 	end,
 	forEachOrderedElement = function(unitTest)
 		local result = {"a", "b", "c"}
@@ -217,6 +266,13 @@ return{
 			unitTest:assert_equal(value, result[cont])
 		end)
 		unitTest:assert_equal(cont, 3)
+
+		local cont = 0
+		forEachOrderedElement(list, function()
+			cont = cont + 1
+			return false
+		end)
+		unitTest:assert_equal(cont, 1)
 	end,
 	getn = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}
@@ -345,31 +401,5 @@ return{
     }
 }]])
 	end
---	tostring = function(unitTest)
-	--	cs1 = CellularSpace{ xdim = 10 }
-	--	cs1:createNeighborhood()
-	-- TODO: colocar o print do Observer nos testes de observer
---    print("########## OBSERVER\n")
---    local obs1 = Observer{ subject = auxC }
---    auxC:notify()
---    print(obs1)
---    obs1:kill()
---[[
-		local leg1 = Legend{}
-		unitTest:assert_equal(tostring(leg1), [[colorBar      string [255,255,255;0;0;?;#0,0,0;100;100;?;#]
-font          string [Symbol]
-fontSize      number [12]
-grouping      number [0]
-maximum       number [100]
-minimum       number [0]
-precision     number [4]
-slices        number [2]
-stdDeviation  number [-1]
-style         number [1]
-type          number [1]
-width         number [2]
-] ])
---]]
---	end
 }
 

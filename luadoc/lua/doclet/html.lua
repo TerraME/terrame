@@ -132,7 +132,7 @@ function file_func_link (symbol, doc, file_doc, from, doc_report)
 	funcname = string.gsub(funcname, "%s*$", "")
 	if filename == "" then filename = funcname end
 	if doc.files[filename .. ".lua"] == nil then
-		printError(string.format("Trying to link undefined function or file '%s'", filename))
+		printError(string.format("Invalid link to '%s'", filename))
 		doc_report.wrong_links = doc_report.wrong_links + 1
 		return "unresolved"
 	end
@@ -230,7 +230,7 @@ function symbol_link (symbol, doc, module_doc, file_doc, from, doc_report)
 		link_to(symbol, doc, module_doc, file_doc, from, "tables")
 
 	if not href then
-		printError(string.format("%s: Trying to link undefined function '%s'", file_doc.name, symbol))
+		printError(string.format("Invalid link to '%s'", symbol))
 		doc_report.wrong_links = doc_report.wrong_links + 1
 	end
 

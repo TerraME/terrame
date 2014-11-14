@@ -138,13 +138,6 @@ return {
 			sn2 = ag1:getSocialNetwork{}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", {}))
-
-		local ag1 = Agent{}
-		sn = SocialNetwork()
-
-		ag1:addSocialNetwork(sn, "friends")
-		-- TODO: move this assert to basic tests
-		unitTest:assert_nil(ag1:getSocialNetwork("notfriends"))	
 	end,
 	leave = function(unitTest)
 		local error_func = function()

@@ -63,13 +63,19 @@ return{
 		error_func = function()
 			env:createPlacement{strategy = "teste1", name = "placement", max = 13}
 		end
-		unitTest:assert_error(error_func, "'teste1' is an invalid value for parameter 'strategy'. It must be a string from the set ['random', 'uniform', 'void'].")
+
+		local options = {
+			random = true,
+			uniform = true,
+			void = true
+		}
+
+		unitTest:assert_error(error_func, switchInvalidParameterMsg("teste1", "strategy", options))
 
 		error_func = function()
-			-- TODO: se trocar o name abaixo por placement ele da erro dizendo que este placement ja existe. verificar.
-			env:createPlacement{strategy = "unifor", name = "placement2", max = 13}
+			env:createPlacement{strategy = "unifor", name = "placement", max = 13}
 		end
-		unitTest:assert_error(error_func, "'unifor' is an invalid value for parameter 'strategy'. Do you mean 'uniform'?")
+		unitTest:assert_error(error_func, switchInvalidParameterSuggestionMsg("unifor", "strategy", "uniform"))
 
 		error_func = function()
 			env:createPlacement{strategy = "random", name = 15, max = 13}

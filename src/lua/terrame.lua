@@ -255,7 +255,7 @@ local doc = function(package)
 	if doc_report.wrong_links == 0 then
 		printNote("All "..doc_report.links.." links were correctly built.")
 	else
-		printError(doc_report.wrong_links.." of "..doc_report.links.." links to undefined functions of files were found.")
+		printError(doc_report.wrong_links.." out of "..doc_report.links.." links are invalid.")
 	end
 
 	if doc_report.undoc_examples == 0 then
@@ -1089,8 +1089,7 @@ execute = function(parameters) -- parameters is a vector of strings
 
 			
 			elseif param == "-example" then
-				paramCount = paramCount + 1
-				local file = parameters[paramCount]
+				local file = parameters[paramCount + 1]
 
 				if file then
 					param = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..file
@@ -1105,11 +1104,9 @@ execute = function(parameters) -- parameters is a vector of strings
 				end
 
 				if file and isfile(param) then
-					if package ~= "base" then
-						require("base")
-					end
-					require(package)
-					dofile(param)
+					-- it only changes the file to point to the package and let it run as it
+					-- was a call such as "TerraME .../package/examples/example.lua"
+					parameters[paramCount + 1] = param
 				else
 					files = dir(sessionInfo().path..s.."packages"..s..package..s.."examples")
 

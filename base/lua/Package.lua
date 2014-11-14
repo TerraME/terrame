@@ -28,7 +28,9 @@
 
 --@header Some basic and useful functions to develop packages.
 
---- Return the description of a package. It reads from file description.lua of the package.
+--- Return the description of a package. It reads all the attributes from file 
+-- description.lua of the package and create an additional attribute data, with 
+-- the path to folder data in the package.
 -- @param package Name of the package. If nil, packageInfo will return
 -- the description of TerraME.
 -- @usage packageInfo().version
@@ -38,11 +40,13 @@ packageInfo = function(package)
 	local s = sessionInfo().separator
 	local pkgfile = sessionInfo().path..s.."packages"..s..package
 	if not isfile(pkgfile) then
-		customError("Package '"..package.."' is not installed.", 3)
+		customError("Package '"..package.."' is not installed.")
 	end
 	
 	local file = pkgfile..s.."description.lua"
-	return include(file)
+	local result = include(file)
+	result.data = pkgfile..s.."data"..s
+	return result
 end
 
 --- Return the path to a file of a given package. The file must be inside the data folder
@@ -70,117 +74,84 @@ end
 --     udp = function() print("udp") end
 -- }
 function switch(data, att)
-	if type(data) == "number" then
-		-- TODO: it if is number, the parameter att is ignored. Is it ok?
-		local swtbl = {
-			casevar = data,
-			caseof = function(self, code)
-				local f
-				if self.casevar then
-					f = code[self.casevar] or code.default
-				else
-					f = code.missing or code.default
-				end
+	mandatoryArgument(1, "table", data)
+	mandatoryArgument(2, "string", att)
 
-				if f then
-					if type(f) == "function" then
-						return f(self.casevar,self)
-					else
-						customError("Case "..tostring(self.casevar).." not a function.")
+	local swtbl = {
+		casevar = data[att],
+		caseof = function(self, code)
+			local f
+			if self.casevar then
+				f = code[self.casevar] or code.default
+			else
+				f = code.missing or code.default
+			end
+			if f then
+				if type(f) == "function" then
+					return f(self.casevar,self)
+				else
+					customError("Case "..tostring(self.casevar).." should be a function.")
+				end
+			else
+				local distance = string.len(self.casevar)
+				local word
+				forEachElement(code, function(a)
+					local d = levenshtein(a, self.casevar) 
+					if d < distance then
+						distance = d
+						word = a
 					end
+				end)
+				if distance < string.len(self.casevar) * 0.6 then
+					customError(switchInvalidParameterSuggestionMsg(self.casevar, att, word))
+				else
+					customError(switchInvalidParameterMsg(self.casevar, att, code))
 				end
 			end
-		}
-		return swtbl
-	else
-		local swtbl = {
-			casevar = data[att],
-			caseof = function(self, code)
-				local f
-				if self.casevar then
-					f = code[self.casevar] or code.default
-				else
-					f = code.missing or code.default
-				end
-				if f then
-					if type(f) == "function" then
-						return f(self.casevar,self)
-					else
-						customError("Case "..tostring(self.casevar).." should be a function.")
-					end
-				else
-					local distance = string.len(self.casevar)
-					local word
-					forEachElement(code, function(a)
-						local d = levenshtein(a, self.casevar) 
-						if d < distance then
-							distance = d
-							word = a
-						end
-					end)
-					if distance < string.len(self.casevar) * 0.6 then
-						word = "Do you mean '"..word.."'?"
-					else
-						word = "It must be a string from the set ["
-						forEachOrderedElement(code, function(a)
-							word = word.."'"..a.."', "
-						end)
-						word = string.sub(word, 0, string.len(word) - 2).."]."
-					end
-					-- TODO add Msg functions for errors in swith to allow them to be used in the tests
-					customError("'"..self.casevar.."' is an invalid value for parameter '"..att.."'. "..word)
-				end
-			end
-		}
-		return swtbl
-	end
+		end
+	}
+	return swtbl
 end
 
--- TODO: this function should be removed (only Legend and Observer use it).
-function suggest(typedValues, possibleValues)
-	for k, v in pairs(typedValues) do
-		local notCorrectParameters = {}
-		local correctedSuggestions = {}
-		if not belong(k, possibleValues) then
-			table.insert(notCorrectParameters,k)
-			local moreSimilar = "" 
-			local moreSimilarDistance = 1000000
-			for j = 1, #possibleValues do
-				local distance = levenshtein(k, possibleValues[j])
-				if distance <= moreSimilarDistance then
-					moreSimilarDistance = distance
-					moreSimilar = possibleValues[j]
-				end
-			end
-			table.insert(correctedSuggestions, moreSimilar)
-		end
+--- Return a message for a wrong parameter value showing the options.
+-- @param casevar Value of the attribute.
+-- @param att Name of the attribute.
+-- @param options A table with the available options.
+-- @usage local options = {
+--     aaa = true,
+--     bbb = true,
+--     ccc = true
+-- }
+-- switchInvalidParameterMsg("ddd", "attr", options)
+function switchInvalidParameterMsg(casevar, att, options)
+	local word = "It must be a string from the set ["
+	forEachOrderedElement(options, function(a)
+		word = word.."'"..a.."', "
+	end)
+	word = string.sub(word, 0, string.len(word) - 2).."]."
+	return "'"..casevar.."' is an invalid value for parameter '"..att.."'. "..word
+end
 
-		for i = 1, #notCorrectParameters do
-			local dst = levenshtein(notCorrectParameters[i], correctedSuggestions[i])
-			if dst < math.floor(#notCorrectParameters[i] * 0.6) then
-				customError("Attribute '".. notCorrectParameters[i] .."' not found. Do you mean '".. correctedSuggestions[i].."'?")
-			end
-		end
-	end
+--- Return a message for a wrong parameter value showing the most similar option.
+-- @param casevar Value of the attribute.
+-- @param att Name of the attribute.
+-- @param suggestion A suggestion for to replace the wrong value.
+-- @usage switchInvalidParameterSuggestionMsg("aab", "attr", "aaa")
+function switchInvalidParameterSuggestionMsg(casevar, att, suggestion)
+	return "'"..casevar.."' is an invalid value for parameter '"..att.."'. Do you mean '"..suggestion.."'?"
 end
 
 --- Load a given package.
 -- @param package A package name.
 -- @usage require("calibration")
 function require(package)
-	if type(package) ~= "string" then
-		if package == nil then
-			mandatoryArgumentErrorMsg("#1", 3)
-		else
-			incompatibleTypeError("#1", "string", type(package), 3)
-		end
-	end
+	mandatoryArgument(1, "string", package)
 
 	local s = sessionInfo().separator
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
 	if not isfile(package_path) then
-		customError("Package '"..package.."' is not installed.", 3)
+		customError("Package '"..package.."' is not installed.")
 	end
 
 	local load_file = package_path..s.."load.lua"
@@ -263,17 +234,45 @@ end
 -- checkUnnecessaryParameters(t, {"target", "select"})
 function checkUnnecessaryParameters(data, parameters)
 	forEachElement(data, function(value)
+		local notCorrectParameters = {}
+		local correctedSuggestions = {}
 		if not belong(value, parameters) then
-			customWarning(unnecessaryParameterMsg(value))
+			table.insert(notCorrectParameters, value)
+			local moreSimilar = "" 
+			local moreSimilarDistance = 1000000
+			for j = 1, #parameters do
+				local distance = levenshtein(value, parameters[j])
+				if distance <= moreSimilarDistance then
+					moreSimilarDistance = distance
+					moreSimilar = parameters[j]
+				end
+			end
+			table.insert(correctedSuggestions, moreSimilar)
+		end
+
+		for i = 1, #notCorrectParameters do
+			local dst = levenshtein(notCorrectParameters[i], correctedSuggestions[i])
+			local msg = unnecessaryParameterMsg(value)
+			if dst < math.floor(#notCorrectParameters[i] * 0.6) and data[i] == nil then
+				msg = unnecessaryParameterMsg(value, correctedSuggestions[i])
+			end
+			customWarning(msg)
 		end
 	end)
 end
 
 --- Return a message indicating that a given parameter is unnecessary.
 -- @param value A string or number or boolean value.
+-- @param suggestion A possible suggestion for the parameter.
 -- @usage unnecessaryParameterMsg("file")
-function unnecessaryParameterMsg(value)
-	return "Parameter '"..tostring(value).."' is unnecessary."
+-- unnecessaryParameterMsg("filf", "file")
+function unnecessaryParameterMsg(value, suggestion)
+	local str = "Parameter '"..tostring(value).."' is unnecessary."
+
+	if suggestion then
+		str = str .." Do you mean '"..suggestion.."'?"
+	end
+	return str
 end
 
 --- Stop the simulation with an error.
@@ -329,9 +328,7 @@ end
 -- @param value The default value.
 -- @usage defaultValueWarning("size", 2)
 function defaultValueWarning(parameter, value)
-	if type(parameter) ~= "string" then
-		error("Error: #1 should be a string.", 2)
-	end
+	mandatoryArgument(1, "string", parameter)
 
 	customWarning(defaultValueMsg(parameter, value))
 end
@@ -351,11 +348,8 @@ end
 -- @param functionExpected A string with the name of the function to be used instead of the deprecated function.
 -- @usage deprecatedFunctionWarning("abc", "def")
 function deprecatedFunctionWarning(functionName, functionExpected)
-	if type(functionName) ~= "string" then
-		error("Error: #1 should be a string.", 2)
-	elseif type(functionExpected) ~= "string" then
-		error("Error: #2 should be a string.", 2)
-	end
+	mandatoryArgument(1, "string", functionName)
+	mandatoryArgument(2, "string", functionExpected)
 
 	customWarning(deprecatedFunctionMsg(functionName, functionExpected))
 end
@@ -458,6 +452,10 @@ end
 -- @param path The location of the resource in the computer.
 -- @usage resourceNotFoundMsg("file", "c:\\myfiles\\file.csv")
 function resourceNotFoundMsg(attr, path)
+	if type(attr) == "number" then
+		attr = "#"..attr
+	end
+
     return "Resource '"..path.."' not found for parameter '"..attr.."'."
 end
 
@@ -481,6 +479,22 @@ function valueNotFoundMsg(attr, value)
 	end
 
 	return "Value '"..value.."' not found for parameter '"..attr.."'."
+end
+
+--- Verify whether a given parameter of a non-named function belong to the correct type.
+-- The error message comes from Package:mandatoryArgumentMsg() and Package:incompatibleTypeMsg().
+-- @param position The position of the parameter in the function signature (a number).
+-- @param mtype The required type for the parameter.
+-- @param value The valued used as argument to the function call.
+-- @usage mandatoryArgument(1, "string", parameter)
+function mandatoryArgument(position, mtype, value)
+	if type(value) ~= mtype then
+		if value == nil then
+			mandatoryArgumentError(position)
+		else
+			incompatibleTypeError(position, mtype, value)
+		end
+	end
 end
 
 --- Stop the simulation with an error indicating that a given parameter is mandatory.

@@ -49,7 +49,16 @@ return{
 		error_func = function()
 			event = Event{period = 2, priority = "aaa", action = function(event) end}
 		end
-		unitTest:assert_error(error_func, "'aaa' is an invalid value for parameter 'priority'. It must be a string from the set ['high', 'low', 'medium', 'veryhigh', 'verylow'].")
+
+		local options = {
+			high = true,
+			low = true,
+			medium = true,
+			veryhigh = true,
+			verylow = true
+		}
+
+		unitTest:assert_error(error_func, switchInvalidParameterMsg("aaa", "priority", options))
 
 		error_func = function()
 			event = Event{period = 0, priority = 1, action = function() end}
@@ -69,7 +78,7 @@ return{
 		error_func = function()
 			event = Event{myaction = function() end}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("myaction"))
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("myaction", "action"))
 	end,
 	config = function(unitTest)
 		local event = Event{action = function(event) end}

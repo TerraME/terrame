@@ -30,6 +30,12 @@ return{
 			checkUnnecessaryParameters({aaa = "aaa"}, {"abc", "acd", "aab"})
 		end
 		unitTest:assert_error(error_func, unnecessaryParameterMsg("aaa"))
+
+		local error_func = function(unitTest)
+			checkUnnecessaryParameters({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
+		end
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("aaaa", "aaab"))
+
 	end,
 	unnecessaryParameterMsg = function(unitTest)
 		unitTest:assert_equal(unnecessaryParameterMsg("aaa"), "Parameter 'aaa' is unnecessary.")
@@ -57,6 +63,17 @@ return{
 	end,
 	tableParameterMsg = function(unitTest)
 		unitTest:assert_equal(tableParameterMsg(), "Parameter must be a table.")
+	end,
+	mandatoryArgument = function(unitTest)
+		local error_func = function()
+			mandatoryArgument(1, "string")
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+
+		local error_func = function()
+			mandatoryArgument(1, "string", 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	mandatoryArgumentMsg = function(unitTest)
 		unitTest:assert_equal(mandatoryArgumentMsg("aaa"), "Parameter 'aaa' is mandatory.")
@@ -124,7 +141,6 @@ return{
 	incompatibleValueMsg = function(unitTest)
 		local str = incompatibleValueMsg("attr", "positive", -2)
 		unitTest:assert_equal(str, "Incompatible values. Parameter 'attr' expected positive, got -2.")
-		local str = incompatibleValueMsg("attr", "positive", "aa")
 	end,
 	resourceNotFoundError = function(unitTest)
 		local error_func = function()
@@ -175,9 +191,6 @@ return{
 		end
 		unitTest:assert_error(error_func, "All elements of the argument must be named.")
 	end,
-	suggest = function(unitTest)
-		unitTest:assert(true)
-	end,
 	switch = function(unitTest)
 		unitTest:assert(true)
 	end,
@@ -192,6 +205,20 @@ return{
 			verify(false, "error")
 		end
 		unitTest:assert_error(error_func, "error")
+	end,
+	switchInvalidParameterMsg = function(unitTest)
+		local options = {
+			aaa = true,
+			bbb = true,
+			ccc = true
+		}
+		local str = switchInvalidParameterMsg("ddd", "attr", options)
+		unitTest:assert_equal(str, "'ddd' is an invalid value for parameter 'attr'. It must be a string from the set ['aaa', 'bbb', 'ccc'].")
+
+	end,
+	switchInvalidParameterSuggestionMsg = function(unitTest)
+		local str = switchInvalidParameterSuggestionMsg("aab", "attr", "aaa")
+		unitTest:assert_equal(str, "'aab' is an invalid value for parameter 'attr'. Do you mean 'aaa'?")
 	end
 }
 

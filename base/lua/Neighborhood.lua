@@ -238,7 +238,7 @@ Neighborhood_ = {
 	end,
 	--- Retrieve the number of Cells of the Neighborhood.
 	-- @usage n:size()
-	-- @deprecated #
+	-- @deprecated Neighborhood:#
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")
 		return #self

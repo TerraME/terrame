@@ -222,7 +222,7 @@ Cell_ = {
 	--- Retrieve the number of Neighborhoods of the Cell.
 	-- @return a positive integer number
 	-- @usage size = #cell
-	-- @deprecated #
+	-- @deprecated Cell:#
 	size = function(self)
 		deprecatedFunctionWarning("size", "operator #")
 		return #self

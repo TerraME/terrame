@@ -155,14 +155,24 @@ return{
 				strategy = "voi"
 			}
 		end
-		unitTest:assert_error(error_func, "'voi' is an invalid value for parameter 'strategy'. Do you mean 'void'?")
+		unitTest:assert_error(error_func, switchInvalidParameterSuggestionMsg("voi", "strategy", "void"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
 				strategy = "terralab"
 			}
 		end
-		unitTest:assert_error(error_func, "'terralab' is an invalid value for parameter 'strategy'. It must be a string from the set ['cell', 'func', 'neighbor', 'probability', 'quantity', 'void'].")
+
+		local options = {
+			cell = true,
+			["function"] = true,
+			neighbor = true,
+			probability = true,
+			quantity = true,
+			void = true
+		}
+			
+		unitTest:assert_error(error_func, switchInvalidParameterMsg("terralab", "strategy", options))
 
 		sc1:createSocialNetwork{
 			strategy = "void",
@@ -299,12 +309,12 @@ return{
 		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
 
 		error_func = function()
-			sc1:createSocialNetwork{strategy = "func", name = "c", func = 3}
+			sc1:createSocialNetwork{strategy = "function", name = "c", filter = 3}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("func", "function", 3))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("filter", "function", 3))
 
 		error_func = function()
-			sc1:createSocialNetwork{strategy = "func", name = "c", func = function(ag) return true end, quantity = 1}
+			sc1:createSocialNetwork{strategy = "function", name = "c", filter = function(ag) return true end, quantity = 1}
 		end
 		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
 
@@ -323,17 +333,6 @@ return{
 				end)
 			end
 		}
-
-		local sc = Society{
-			instance = ag1,
-			quantity = 10
-		}
-
-		sc:createSocialNetwork{probability = 0.5 , name = "2"}
-		forEachAgent(sc, function(ag)
-			-- TODO: move this assert to basic tests
-			unitTest:assert_nil(ag:getSocialNetwork())
-		end)
 	end,
 	get = function(unitTest)
 		local ag1 = Agent{
