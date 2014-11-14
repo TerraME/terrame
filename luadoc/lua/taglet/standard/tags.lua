@@ -110,7 +110,7 @@ end
 -- @param tag String with the name of the tag (it must be "param" always).
 -- @param block Table with previous information about the block.
 -- @param text String with the current line beeing processed.
-local print = print
+
 local function param (tag, block, text, doc_report)
 	block[tag] = block[tag] or {}
 	-- TODO: make this pattern more flexible, accepting empty descriptions

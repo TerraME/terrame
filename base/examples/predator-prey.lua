@@ -1,4 +1,5 @@
 -- (C) 2010 INPE AND UFOP
+-- @example Implementation of the predator-prey model.
 
 PASTURE = 0
 SOIL = 1

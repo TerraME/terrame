@@ -6,11 +6,7 @@
 
 local assert, error, loadstring, select, string = assert, error, loadstring, select, string
 local find, format, gsub, strsub = string.find, string.format, string.gsub, string.sub
-local concat, tinsert = table.concat, table.insert
-local open = io.open
-local print = print 
-local debug = debug
-local load = load
+local concat, tinsert, open, print, debug, load = table.concat, table.insert, io.open, print, debug, load
 
 ----------------------------------------------------------------------------
 -- function to do output

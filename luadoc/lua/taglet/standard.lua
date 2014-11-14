@@ -6,7 +6,7 @@ local assert, tostring, type = assert, tostring, type
 local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
 local printNote, printError, print, attributes = printNote, printError, print, attributes
-local sessionInfo = sessionInfo
+local sessionInfo, belong = sessionInfo, belong
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
@@ -458,10 +458,24 @@ function file (lua_path, fileName, doc, short_lua_path, doc_report)
 		doc_report.lua_files = doc_report.lua_files + 1
 		doc = parse_file(lua_path, fileName, doc, doc_report, short_lua_path)
 
-		for _, file_ in ipairs(doc.files) do
-			local description = check_header(doc.files[file_].path..file_)
-			doc.files[file_].description = description
-			doc.files[file_].summary = parse_summary(description)
+		if string.find(short_lua_path, "examples") == nil then
+			for _, file_ in ipairs(doc.files) do
+				local description = check_header(doc.files[file_].path..file_)
+				doc.files[file_].description = description
+				doc.files[file_].summary = parse_summary(description)
+			end
+		else
+			local description = check_example(doc.files[fileName].path..fileName, doc, fileName, doc_report)
+			doc.files[fileName].description = description
+			doc.files[fileName].summary = parse_summary(description)
+			doc.files[fileName].type = "example"
+			doc_report.examples = doc_report.examples + 1
+		end
+	elseif not valid and belong(fileName, doc.examples) then
+		for i, j in ipairs(doc.examples) do
+			if j == fileName then
+				doc.examples[i] = "invalid"
+			end
 		end
 	end
 	return doc
@@ -523,14 +537,28 @@ local function reserved_words(tab)
 	end
 end
 
-local function exclude_undoc(tab, doc_report)
+local function exclude_undoc(tab, doc_report, doc)
 	printNote("Checking undocumented files")
 	for i = #tab, 1, -1 do
 		-- local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].tables + #tab[tab[i]].variables
-		local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].variables
+		local example = 0
+		if tab[tab[i]].type == "example" and tab[tab[i]].description ~= "" then
+			example = 1
+		end
+		local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].variables + example
 		if doc_blocs == 0 then
-			printError("File "..tab[tab[i]].name.." is not documented.")
-			doc_report.undoc_files = doc_report.undoc_files + 1
+			if tab[tab[i]].type == "example" then
+				printError("Example "..tab[tab[i]].name.." is not documented.")
+				doc_report.undoc_examples = doc_report.undoc_examples + 1
+				for k, v in ipairs(doc.examples) do
+					if v == tab[i] then
+						table.remove(doc.examples, k)
+					end
+				end
+			else
+				printError("File "..tab[tab[i]].name.." is not documented.")
+				doc_report.undoc_files = doc_report.undoc_files + 1
+			end
 
 			tab[tab[i]] = nil
 			table.remove(tab, i)
@@ -674,7 +702,40 @@ function check_header(filepath)
 	end
 
 	if text == "" then
-		printError "No description on @header"
+		printError("No description on @header")
+		return text
+	else
+		line = f:read()
+		while line and line:match("^%s*%-%-") do
+			local next_text = line:match("%-%-(.*)")
+			next_text = util.trim(next_text)
+			text = text .. " " .. next_text
+			line = f:read()
+		end
+	end
+	f:close()
+	return text
+end
+
+function check_example(filepath, doc, file_name, doc_report)
+	f = io.open(filepath)
+	local line
+
+	repeat
+		line = f:read()
+	until not line or line:match("^%s*%-%-%s*@example(.*)")
+
+	local text = ""
+	if line then
+		text = line:match("@example(.*)")
+		text = util.trim(text)
+	else
+		return text
+	end
+
+	if text == "" then
+		printError("No description found on @example")
+		doc_report.problem_examples = doc_report.problem_examples + 1
 		return text
 	else
 		line = f:read()
@@ -690,25 +751,29 @@ function check_header(filepath)
 end
 
 -------------------------------------------------------------------------------
-function start (files, package_path, short_lua_path, doc_report)
+function start (files, examples, package_path, short_lua_path, doc_report)
 	local s = sessionInfo().separator
 	assert(files, "file list not specified")
 	local lua_path = package_path..s.."lua"..s
+	local examples_path = package_path..s.."examples"..s
+	local short_examples_path = "examples"..s
 	
 	-- Create an empty document, or use the given one
 	local doc = {
 		luapath = lua_path,
 		files = {},
 		modules = {},
+		examples = examples
 	}
 	assert(doc.luapath, "undefined 'luapath' field")
 	assert(doc.files, "undefined 'files' field")
 	assert(doc.modules, "undefined 'modules' field")
+	assert(doc.modules, "undefined 'examples' field")
 	
 	printNote("Parsing lua files")
 	for _, file_ in ipairs(files) do
 		local attr = attributes(lua_path..file_)
-		assert(attr, string.format("error stating path '%s'", lua_path))
+		assert(attr, string.format("error stating path '%s'", lua_path..file_))
 		
 		if attr.mode == "file" then
 			doc = file(lua_path, file_, doc, short_lua_path, doc_report)
@@ -718,9 +783,34 @@ function start (files, package_path, short_lua_path, doc_report)
 			doc = directory(dir_path, file_, doc, short_dir_path)
 		end
 	end
+
+	printNote("Parsing examples")
+	if #examples < 1 then
+		printError("No examples were found.")
+		doc_report.problem_examples = doc_report.problem_examples + 1
+	else
+		for _, file_ in ipairs(examples) do
+			local attr = attributes(examples_path..file_)
+			assert(attr, string.format("error stating path '%s'", examples_path..file_))
+			
+			if attr.mode == "file" then
+				doc = file(examples_path, file_, doc, short_examples_path, doc_report)
+			elseif attr.mode == "directory" then
+				local dir_path = examples_path..file_..s
+				local short_dir_path = short_examples_path..file_..s
+				doc = directory(dir_path, file_, doc, short_dir_path)
+			end
+		end
+	end
+
+	for i, j in ipairs(doc.examples) do
+		if j == "invalid" then
+			table.remove(doc.examples, i)
+		end
+	end
 	
 	-- exclude undocumented files
-	exclude_undoc(doc.files, doc_report)
+	exclude_undoc(doc.files, doc_report, doc)
 
 	-- sort documentation
 	sort_doc(doc.files)

@@ -150,7 +150,15 @@ local doc = function(package)
 		os.exit()
     end)
 
-	local files = dir(package_path..s.."lua")
+	local lua_files = dir(package_path..s.."lua")
+
+	local example_files
+
+	if attributes(package_path..s.."examples", "mode") == "directory" then
+		example_files = dir(package_path..s.."examples")
+	else
+		example_files = {}
+	end
 
 	local doc_report = {
 		parameters = 0,
@@ -160,6 +168,7 @@ local doc = function(package)
 		functions = 0,
 		variables = 0,
 		links = 0,
+		examples = 0,
 
 		wrong_description = 0,
 		undoc_param = 0,
@@ -171,10 +180,12 @@ local doc = function(package)
 		no_call_itself_usage = 0,
 		non_doc_functions = 0,
 		wrong_links = 0,
-		invalid_tags = 0
+		invalid_tags = 0,
+		problem_examples = 0, 
+		undoc_examples = 0
 	}
 
-	luadocMain(package_path, files, package, doc_report)
+	luadocMain(package_path, lua_files, example_files, package, doc_report)
 
 	local finalTime = os.clock()
 
@@ -247,10 +258,22 @@ local doc = function(package)
 		printError(doc_report.wrong_links.." of "..doc_report.links.." links to undefined functions of files were found.")
 	end
 
+	if doc_report.undoc_examples == 0 then
+		printNote("All "..doc_report.examples.." were documented.")
+	else
+		printError(doc_report.undoc_examples.." out of "..doc_report.examples.." examples were not documented.")
+	end
+
+	if doc_report.problem_examples == 0 then
+		printNote("All "..(doc_report.examples - doc_report.undoc_examples).." documented examples were correct.")
+	else
+		printError(doc_report.problem_examples.." problems were found in the documentation of the examples.")
+	end
+
 	local errors = doc_report.undoc_param + doc_report.unused_param + doc_report.undoc_files +
 				   doc_report.lack_usage + doc_report.no_call_itself_usage + doc_report.non_doc_functions +
 				   doc_report.block_name_conflict + doc_report.undefined_param + doc_report.wrong_description + 
-				   doc_report.wrong_links
+				   doc_report.wrong_links + doc_report.problem_examples + doc_report.undoc_examples
 
 	if errors == 0 then
 		printNote("Summing up, all tests were succesfully executed.")

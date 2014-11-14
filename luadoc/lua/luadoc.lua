@@ -112,7 +112,7 @@ local OPTIONS = {
 -------------------------------------------------------------------------------
 -- Main function. Process command-line parameters and call luadoc processor.
 -- RAIAN: Renamed to luadocMain instead of main
-function luadocMain(package_path, files, package, doc_report)
+function luadocMain(package_path, lua_files, example_files, package, doc_report)
 	printNote("Building documentation for package '"..package.."'")
 	-- Process options
 	-- local argc = #arg
@@ -121,12 +121,12 @@ function luadocMain(package_path, files, package, doc_report)
 	-- 	return
 	-- end
 
-	-- local --[[files,]] options = process_options (arg)
+	-- local --[[lua_files,]] options = process_options (arg)
 
 	local options = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."config.lua").default_options
 	options.output_dir = package_path..s.."doc"..s
 	options.short_output_path = "doc"..s
 	options.short_lua_path = "lua"..s
 
-	startDoc(files, options, package_path, doc_report)
+	startDoc(lua_files, example_files, options, package_path, doc_report)
 end

@@ -374,9 +374,22 @@ function start (doc, doc_report)
 			f:close()
 		end
 	end
+
+	if not options.nofiles and #doc.examples > 0 then
+		local filename = options.output_dir..s.."files"..s.."examples.html"
+		local short_fileName = options.short_output_path.."examples.html"
+		print(string.format("Building %s", short_fileName))
+
+		local f = util.openFile(filename, "w")
+		assert(f, string.format("Could not open %s for writing", filename))
+		io.output(f)
+
+		includeMod("examples.lp", { doc = doc, examples = examples })
+		f:close()
+	end
 	
 	-- copy extra files
-	local f = util.openFile(options.output_dir.."luadoc.css", "w")
+	local f = util.openFile(options.output_dir..  "luadoc.css", "w")
 	io.output(f)
 	includeMod("luadoc.css")
 	f:close()

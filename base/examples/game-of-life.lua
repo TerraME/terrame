@@ -1,6 +1,8 @@
 -- CONWAY'S GAME OF LIFE
 -- (C) 2010 INPE AND UFOP
 
+-- @example Implementation of the game of life model.
+
 ALIVE = 1
 DEAD  = 2
 TURNS = 20
