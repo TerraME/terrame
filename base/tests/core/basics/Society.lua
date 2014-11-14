@@ -319,7 +319,7 @@ return {
 
 		predators:createSocialNetwork{probability = 0.5, name = "friends"}
 		predators:createSocialNetwork{quantity = 1, name = "boss"}
-		predators:createSocialNetwork{func = function() return true end, name = "all"}
+		predators:createSocialNetwork{filter = function() return true end, name = "all"}
 
 		local count_prob = 0
 		local count_quant = 0
@@ -399,7 +399,7 @@ return {
 
 		predators:createSocialNetwork{probability = 0.5, name = "friends", onthefly = true}
 		predators:createSocialNetwork{quantity = 1, name = "boss", onthefly = true}
-		predators:createSocialNetwork{func = function() return true end, name = "all", onthefly = true}
+		predators:createSocialNetwork{filter = function() return true end, name = "all", onthefly = true}
 
 		local count_prob = 0
 		local count_quant = 0

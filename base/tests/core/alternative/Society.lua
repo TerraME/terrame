@@ -165,8 +165,7 @@ return{
 
 		local options = {
 			cell = true,
-			func = true,
-			-- TODO: why this is func and CellularSpace:createNeighborhood is function?
+			["function"] = true,
 			neighbor = true,
 			probability = true,
 			quantity = true,
@@ -310,12 +309,12 @@ return{
 		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
 
 		error_func = function()
-			sc1:createSocialNetwork{strategy = "func", name = "c", func = 3}
+			sc1:createSocialNetwork{strategy = "function", name = "c", filter = 3}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("func", "function", 3))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("filter", "function", 3))
 
 		error_func = function()
-			sc1:createSocialNetwork{strategy = "func", name = "c", func = function(ag) return true end, quantity = 1}
+			sc1:createSocialNetwork{strategy = "function", name = "c", filter = function(ag) return true end, quantity = 1}
 		end
 		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
 

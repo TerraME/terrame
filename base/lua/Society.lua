@@ -66,7 +66,7 @@ local getSocialNetworkByFunction = function(soc, data)
 		local rs = SocialNetwork()
 
 		forEachAgent(soc, function(hint)
-			if data.func(agent, hint) then
+			if data.filter(agent, hint) then
 				rs:add(hint, 1)
 			end
 		end)
@@ -151,9 +151,9 @@ Society_ = {
 	-- represent the strategies, which must be only one for call:
 	-- @param data.strategy A string with the strategy to be used for creating the SocialNetwork. 
 	-- See the table below.
-	-- @param data.func A function (Agent, Agent)->boolean that returns true if the first Agent 
+	-- @param data.filter A function (Agent, Agent)->boolean that returns true if the first Agent 
 	-- will have the second Agent in its SocialNetwork. When using this argument, the default
-	-- value of strategy becomes "func".
+	-- value of strategy becomes "function".
 	-- @param data.name Name of the relation.
 	-- @param data.onthefly If false (default), the SocialNetwork will be built and stored in
 	-- each Agent of the Society. It means that the SocialNetwork will change only if the 
@@ -186,8 +186,8 @@ Society_ = {
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
 	-- same Cell the Agent belongs. & &
 	-- name, placement, self, onthefly \
-	-- "func" &
-	-- Create a SocialNetwork according to a membership function. & func &
+	-- "function" &
+	-- Create a SocialNetwork according to a membership function. & filter &
 	-- name, onthefly \
 	-- "neighbor" &
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
@@ -224,8 +224,8 @@ Society_ = {
 			elseif data.quantity ~= nil then
 				data.strategy = "quantity"
 				if data.quantity == 1 then data.quantity = nil end
-			elseif data.func ~= nil then
-				data.strategy = "func"
+			elseif data.filter ~= nil then
+				data.strategy = "function"
 			else
 				customError("It was not possible to infer a value for argument 'strategy'.")
 			end
@@ -253,10 +253,10 @@ Society_ = {
 
 				data.mfunc = getSocialNetworkByProbability
 			end,
-			func = function()
-				checkUnnecessaryParameters(data, {"strategy", "func", "name", "onthefly"})
+			["function"] = function()
+				checkUnnecessaryParameters(data, {"strategy", "filter", "name", "onthefly"})
 
-				mandatoryTableArgument(data, "func", "function")
+				mandatoryTableArgument(data, "filter", "function")
 
 				data.mfunc = getSocialNetworkByFunction
 			end,
