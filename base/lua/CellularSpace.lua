@@ -246,7 +246,7 @@ local loadMap = function(self)
 		local res = ParseCSVLine(line, self.sep)
 
 		forEachElement(res, function(_, value)
-			local p = Cell {x = i, y = j} 
+			local p = Cell {x = j, y = i} 
 		 	p[self.attrname] = tonumber(value)
 			self:add(p)
 			self.cObj_:addCell(p.x, p.y, p.cObj_)
