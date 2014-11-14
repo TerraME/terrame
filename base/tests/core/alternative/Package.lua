@@ -53,18 +53,18 @@ return{
 		local error_func = function()
 			defaultValueWarning(2)
 		end
-		unitTest:assert_error(error_func, "#1 should be a string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	deprecatedFunctionWarning = function(unitTest)
 		local error_func = function()
 			deprecatedFunctionWarning(2)
 		end
-		unitTest:assert_error(error_func, "#1 should be a string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
 			deprecatedFunctionWarning("test.", -1)
 		end
-		unitTest:assert_error(error_func, "#2 should be a string.")
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", -1))
 	end,
 	require = function(unitTest)
 		local error_func = function()

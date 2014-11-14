@@ -58,6 +58,17 @@ return{
 	tableParameterMsg = function(unitTest)
 		unitTest:assert_equal(tableParameterMsg(), "Parameter must be a table.")
 	end,
+	mandatoryArgument = function(unitTest)
+		local error_func = function()
+			mandatoryArgument(1, "string")
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+
+		local error_func = function()
+			mandatoryArgument(1, "string", 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+	end,
 	mandatoryArgumentMsg = function(unitTest)
 		unitTest:assert_equal(mandatoryArgumentMsg("aaa"), "Parameter 'aaa' is mandatory.")
 	end,

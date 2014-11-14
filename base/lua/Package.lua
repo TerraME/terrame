@@ -74,70 +74,55 @@ end
 --     udp = function() print("udp") end
 -- }
 function switch(data, att)
-	if type(data) == "number" then
-		-- TODO: it if is number, the parameter att is ignored. Is it ok?
-		local swtbl = {
-			casevar = data,
-			caseof = function(self, code)
-				local f
-				if self.casevar then
-					f = code[self.casevar] or code.default
-				else
-					f = code.missing or code.default
-				end
+	mandatoryArgument(1, "table", data)
+	mandatoryArgument(2, "string", att)
 
-				if f then
-					if type(f) == "function" then
-						return f(self.casevar,self)
-					else
-						customError("Case "..tostring(self.casevar).." should be a function.")
+	local swtbl = {
+		casevar = data[att],
+		caseof = function(self, code)
+			local f
+			if self.casevar then
+				f = code[self.casevar] or code.default
+			else
+				f = code.missing or code.default
+			end
+			if f then
+				if type(f) == "function" then
+					return f(self.casevar,self)
+				else
+					customError("Case "..tostring(self.casevar).." should be a function.")
+				end
+			else
+				local distance = string.len(self.casevar)
+				local word
+				forEachElement(code, function(a)
+					local d = levenshtein(a, self.casevar) 
+					if d < distance then
+						distance = d
+						word = a
 					end
+				end)
+				if distance < string.len(self.casevar) * 0.6 then
+					customError(switchInvalidParameterSuggestionMsg(self.casevar, att, word))
+				else
+					customError(switchInvalidParameterMsg(self.casevar, att, code))
 				end
 			end
-		}
-		return swtbl
-	else
-		local swtbl = {
-			casevar = data[att],
-			caseof = function(self, code)
-				local f
-				if self.casevar then
-					f = code[self.casevar] or code.default
-				else
-					f = code.missing or code.default
-				end
-				if f then
-					if type(f) == "function" then
-						return f(self.casevar,self)
-					else
-						customError("Case "..tostring(self.casevar).." should be a function.")
-					end
-				else
-					local distance = string.len(self.casevar)
-					local word
-					forEachElement(code, function(a)
-						local d = levenshtein(a, self.casevar) 
-						if d < distance then
-							distance = d
-							word = a
-						end
-					end)
-					if distance < string.len(self.casevar) * 0.6 then
-						customError(switchInvalidParameterSuggestionMsg(self.casevar, att, word))
-					else
-						customError(switchInvalidParameterMsg(self.casevar, att, code))
-					end
-				end
-			end
-		}
-		return swtbl
-	end
+		end
+	}
+	return swtbl
 end
 
 --- Return a message for a wrong parameter value showing the options.
 -- @param casevar Value of the attribute.
 -- @param att Name of the attribute.
 -- @param options A table with the available options.
+-- @usage local options = {
+--     aaa = true,
+--     bbb = true,
+--     ccc = true
+-- }
+-- switchInvalidParameterMsg("ddd", "attr", options)
 function switchInvalidParameterMsg(casevar, att, options)
 	local word = "It must be a string from the set ["
 	forEachOrderedElement(options, function(a)
@@ -150,7 +135,8 @@ end
 --- Return a message for a wrong parameter value showing the most similar option.
 -- @param casevar Value of the attribute.
 -- @param att Name of the attribute.
--- @param options A suggestion for to replace the wrong value.
+-- @param suggestion A suggestion for to replace the wrong value.
+-- @usage switchInvalidParameterSuggestionMsg("aab", "attr", "aaa")
 function switchInvalidParameterSuggestionMsg(casevar, att, suggestion)
 	return "'"..casevar.."' is an invalid value for parameter '"..att.."'. Do you mean '"..suggestion.."'?"
 end
@@ -187,19 +173,13 @@ end
 -- @param package A package name.
 -- @usage require("calibration")
 function require(package)
-	if type(package) ~= "string" then
-		if package == nil then
-			mandatoryArgumentErrorMsg("#1", 3)
-		else
-			incompatibleTypeError("#1", "string", type(package), 3)
-		end
-	end
+	mandatoryArgument(1, "string", package)
 
 	local s = sessionInfo().separator
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
 	if not isfile(package_path) then
-		customError("Package '"..package.."' is not installed.", 3)
+		customError("Package '"..package.."' is not installed.")
 	end
 
 	local load_file = package_path..s.."load.lua"
@@ -348,9 +328,7 @@ end
 -- @param value The default value.
 -- @usage defaultValueWarning("size", 2)
 function defaultValueWarning(parameter, value)
-	if type(parameter) ~= "string" then
-		error("Error: #1 should be a string.", 2)
-	end
+	mandatoryArgument(1, "string", parameter)
 
 	customWarning(defaultValueMsg(parameter, value))
 end
@@ -370,11 +348,8 @@ end
 -- @param functionExpected A string with the name of the function to be used instead of the deprecated function.
 -- @usage deprecatedFunctionWarning("abc", "def")
 function deprecatedFunctionWarning(functionName, functionExpected)
-	if type(functionName) ~= "string" then
-		error("Error: #1 should be a string.", 2)
-	elseif type(functionExpected) ~= "string" then
-		error("Error: #2 should be a string.", 2)
-	end
+	mandatoryArgument(1, "string", functionName)
+	mandatoryArgument(2, "string", functionExpected)
 
 	customWarning(deprecatedFunctionMsg(functionName, functionExpected))
 end
@@ -500,6 +475,22 @@ function valueNotFoundMsg(attr, value)
 	end
 
 	return "Value '"..value.."' not found for parameter '"..attr.."'."
+end
+
+--- Verify whether a given parameter of a non-named function belong to the correct type.
+-- The error message comes from Package:mandatoryArgumentMsg() and Package:incompatibleTypeMsg().
+-- @param position The position of the parameter in the function signature (a number).
+-- @param mtype The required type for the parameter.
+-- @param value The valued used as argument to the function call.
+-- @usage mandatoryArgument(1, "string", parameter)
+function mandatoryArgument(position, mtype, value)
+	if type(value) ~= mtype then
+		if value == nil then
+			mandatoryArgumentError(position)
+		else
+			incompatibleTypeError(position, mtype, value)
+		end
+	end
 end
 
 --- Stop the simulation with an error indicating that a given parameter is mandatory.
