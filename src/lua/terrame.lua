@@ -1066,8 +1066,7 @@ execute = function(parameters) -- parameters is a vector of strings
 
 			
 			elseif param == "-example" then
-				paramCount = paramCount + 1
-				local file = parameters[paramCount]
+				local file = parameters[paramCount + 1]
 
 				if file then
 					param = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..file
@@ -1082,11 +1081,9 @@ execute = function(parameters) -- parameters is a vector of strings
 				end
 
 				if file and isfile(param) then
-					if package ~= "base" then
-						require("base")
-					end
-					require(package)
-					dofile(param)
+					-- it only changes the file to point to the package and let it run as it
+					-- was a call such as "TerraME .../package/examples/example.lua"
+					parameters[paramCount + 1] = param
 				else
 					files = dir(sessionInfo().path..s.."packages"..s..package..s.."examples")
 
