@@ -93,7 +93,7 @@ return{
  				selection = function() return true end
  			}
  		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("selection"))
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("selection", "select"))
 
 		local error_func = function()
 			trajectory = Trajectory{}

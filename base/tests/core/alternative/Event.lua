@@ -78,7 +78,7 @@ return{
 		error_func = function()
 			event = Event{myaction = function() end}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("myaction"))
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("myaction", "action"))
 	end,
 	config = function(unitTest)
 		local event = Event{action = function(event) end}

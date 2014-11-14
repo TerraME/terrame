@@ -30,6 +30,12 @@ return{
 			checkUnnecessaryParameters({aaa = "aaa"}, {"abc", "acd", "aab"})
 		end
 		unitTest:assert_error(error_func, unnecessaryParameterMsg("aaa"))
+
+		local error_func = function(unitTest)
+			checkUnnecessaryParameters({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
+		end
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("aaaa", "aaab"))
+
 	end,
 	unnecessaryParameterMsg = function(unitTest)
 		unitTest:assert_equal(unnecessaryParameterMsg("aaa"), "Parameter 'aaa' is unnecessary.")

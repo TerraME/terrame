@@ -262,17 +262,45 @@ end
 -- checkUnnecessaryParameters(t, {"target", "select"})
 function checkUnnecessaryParameters(data, parameters)
 	forEachElement(data, function(value)
+		local notCorrectParameters = {}
+		local correctedSuggestions = {}
 		if not belong(value, parameters) then
-			customWarning(unnecessaryParameterMsg(value))
+			table.insert(notCorrectParameters, value)
+			local moreSimilar = "" 
+			local moreSimilarDistance = 1000000
+			for j = 1, #parameters do
+				local distance = levenshtein(value, parameters[j])
+				if distance <= moreSimilarDistance then
+					moreSimilarDistance = distance
+					moreSimilar = parameters[j]
+				end
+			end
+			table.insert(correctedSuggestions, moreSimilar)
+		end
+
+		for i = 1, #notCorrectParameters do
+			local dst = levenshtein(notCorrectParameters[i], correctedSuggestions[i])
+			local msg = unnecessaryParameterMsg(value)
+			if dst < math.floor(#notCorrectParameters[i] * 0.6) and data[i] == nil then
+				msg = unnecessaryParameterMsg(value, correctedSuggestions[i])
+			end
+			customWarning(msg)
 		end
 	end)
 end
 
 --- Return a message indicating that a given parameter is unnecessary.
 -- @param value A string or number or boolean value.
+-- @param suggestion A possible suggestion for the parameter.
 -- @usage unnecessaryParameterMsg("file")
-function unnecessaryParameterMsg(value)
-	return "Parameter '"..tostring(value).."' is unnecessary."
+-- unnecessaryParameterMsg("filf", "file")
+function unnecessaryParameterMsg(value, suggestion)
+	local str = "Parameter '"..tostring(value).."' is unnecessary."
+
+	if suggestion then
+		str = str .." Do you mean '"..suggestion.."'?"
+	end
+	return str
 end
 
 --- Stop the simulation with an error.

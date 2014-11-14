@@ -56,7 +56,7 @@ return{
  				selection = function() return true end
  			}
  		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("selection"))
+		unitTest:assert_error(error_func, unnecessaryParameterMsg("selection", "select"))
 
 		error_func = function()
 			group1 = Group{
