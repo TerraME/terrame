@@ -17,7 +17,7 @@ local io, pairs, os = io, pairs, os
 local package, string, mkdir = package, string, mkdir
 local table = table
 local print =  print
-local printNote, printError, getn = printNote, printError, getn
+local printNote, printError, getn, belong = printNote, printError, getn, belong
 
 local s = sessionInfo().separator
 local lp = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."lp.lua")
@@ -362,16 +362,18 @@ function start (doc, doc_report)
 	if not options.nofiles then
 		for _, filepath in ipairs(doc.files) do
 			local file_doc = doc.files[filepath]
-			-- assembly the filename
-			local filepath, short_filepath = out_file(file_doc.name)
-			print(string.format("Building %s", short_filepath))
-			doc_report.html_files = doc_report.html_files + 1
-			
-			local f = util.openFile(filepath, "w")
-			assert(f, string.format("Could not open %s for writing", short_filepath))
-			io.output(f)
-			includeMod("file.lp", { doc = doc, file_doc = file_doc, doc_report = doc_report } )
-			f:close()
+			if not belong(filepath, doc.examples) then
+				-- assembly the filename
+				local filepath, short_filepath = out_file(file_doc.name)
+				print(string.format("Building %s", short_filepath))
+				doc_report.html_files = doc_report.html_files + 1
+				
+				local f = util.openFile(filepath, "w")
+				assert(f, string.format("Could not open %s for writing", short_filepath))
+				io.output(f)
+				includeMod("file.lp", { doc = doc, file_doc = file_doc, doc_report = doc_report } )
+				f:close()
+			end
 		end
 	end
 
@@ -384,7 +386,7 @@ function start (doc, doc_report)
 		assert(f, string.format("Could not open %s for writing", filename))
 		io.output(f)
 
-		includeMod("examples.lp", { doc = doc, examples = examples })
+		includeMod("examples.lp", { doc = doc })
 		f:close()
 	end
 	
