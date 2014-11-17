@@ -595,18 +595,20 @@ local function check_usage(files, doc_report)
 	printNote("Checking @usage definition")
 	for i = 1, #files do
 		local file_name = files[i]
-		print("Checking "..files[file_name].short_path..file_name)
-		local functions = files[file_name].functions
-		for j = 1, #functions do
-			local function_name = functions[j]
-			if not functions[function_name].usage then
-				if not no_usage[file_name] then
-					no_usage[file_name] = {}
-					table.insert(no_usage, file_name)
+		if files[file_name].type ~= "example" then
+			print("Checking "..files[file_name].short_path..file_name)
+			local functions = files[file_name].functions
+			for j = 1, #functions do
+				local function_name = functions[j]
+				if not functions[function_name].usage then
+					if not no_usage[file_name] then
+						no_usage[file_name] = {}
+						table.insert(no_usage, file_name)
+					end
+					table.insert(no_usage[file_name], function_name)
+					printError("Function '"..function_name.."' has no @usage definition")
+					doc_report.lack_usage = doc_report.lack_usage + 1
 				end
-				table.insert(no_usage[file_name], function_name)
-				printError("Function '"..function_name.."' has no @usage definition")
-				doc_report.lack_usage = doc_report.lack_usage + 1
 			end
 		end
 	end
@@ -622,16 +624,18 @@ local function check_function_usage(files, doc_report)
 	printNote("Checking calls to functions in @usage")
 	for i = 1, #files do
 		local file_name = files[i]
-		print("Checking "..files[file_name].short_path..file_name)
-		local functions = files[file_name].functions
-		for j = 1, #functions do
-			local function_name = functions[j]
-			local usage = functions[function_name].usage
-			if type(usage) == "string" then
-				if not string.match(usage, function_name) then
-					local message = "%s: '%s' does not call itself in its @usage"
-					printError(message:format(file_name, function_name))
-					doc_report.no_call_itself_usage = doc_report.no_call_itself_usage + 1
+		if files[file_name].type ~= "example" then
+			print("Checking "..files[file_name].short_path..file_name)
+			local functions = files[file_name].functions
+			for j = 1, #functions do
+				local function_name = functions[j]
+				local usage = functions[function_name].usage
+				if type(usage) == "string" then
+					if not string.match(usage, function_name) then
+						local message = "%s: '%s' does not call itself in its @usage"
+						printError(message:format(file_name, function_name))
+						doc_report.no_call_itself_usage = doc_report.no_call_itself_usage + 1
+					end
 				end
 			end
 		end
@@ -663,18 +667,20 @@ local function check_undoc_params(files, doc_report)
 	printNote("Checking undocumented parameters")
 	for i = 1, #files do
 		local file_name = files[i]
-		print("Checking "..files[file_name].short_path..file_name)
-		local functions = files[file_name].functions
-		for j = 1, #functions do
-			local function_name = functions[j]
-			local params = functions[function_name].param
-			if type(params) == "table" and not params.named then
-				doc_report.parameters = doc_report.parameters + #params
-				for k = 1, #params do
-					if not params[params[k]] then
-						local warning = "Function '%s' has undocumented parameter '%s'"
-						printError(warning:format(function_name, params[k]))
-						doc_report.undoc_param = doc_report.undoc_param + 1
+		if files[file_name].type ~= "example" then
+			print("Checking "..files[file_name].short_path..file_name)
+			local functions = files[file_name].functions
+			for j = 1, #functions do
+				local function_name = functions[j]
+				local params = functions[function_name].param
+				if type(params) == "table" and not params.named then
+					doc_report.parameters = doc_report.parameters + #params
+					for k = 1, #params do
+						if not params[params[k]] then
+							local warning = "Function '%s' has undocumented parameter '%s'"
+							printError(warning:format(function_name, params[k]))
+							doc_report.undoc_param = doc_report.undoc_param + 1
+						end
 					end
 				end
 			end
