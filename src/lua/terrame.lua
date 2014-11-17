@@ -195,7 +195,7 @@ local doc = function(package)
 	if doc_report.undoc_files == 0 then
 		printNote(doc_report.html_files.." HTML files were created.")
 	else
-		printError(doc_report.undoc_files.." out of "..doc_report.lua_files.." files were not documented.")
+		printError(doc_report.undoc_files.." out of "..doc_report.lua_files.." files are not documented.")
 	end
 
 	if doc_report.wrong_description == 0 then
@@ -217,9 +217,9 @@ local doc = function(package)
 	end
 
 	if doc_report.undoc_param == 0 then
-		printNote("All "..doc_report.parameters.." parameters were documented.")
+		printNote("All "..doc_report.parameters.." parameters are documented.")
 	else
-		printError(doc_report.undoc_param.." parameters were not documented.")
+		printError(doc_report.undoc_param.." parameters are not documented.")
 	end
 
 	if doc_report.undefined_param == 0 then
@@ -259,9 +259,9 @@ local doc = function(package)
 	end
 
 	if doc_report.undoc_examples == 0 then
-		printNote("All "..doc_report.examples.." were documented.")
+		printNote("All "..doc_report.examples.." examples are documented.")
 	else
-		printError(doc_report.undoc_examples.." out of "..doc_report.examples.." examples were not documented.")
+		printError(doc_report.undoc_examples.." out of "..doc_report.examples.." examples are not documented.")
 	end
 
 	if doc_report.problem_examples == 0 then

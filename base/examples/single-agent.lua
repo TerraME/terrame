@@ -1,3 +1,6 @@
+
+-- @example A simple example with one Agent that moves randomly in space.
+
 EMPTY = 0
 FULL = 1
 

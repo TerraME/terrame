@@ -1,4 +1,7 @@
 
+-- @example A simple implementation of Sugarscape model.
+-- It is based on Epstein and Axtell's book Growing Artificial Societies.
+
 cell = Cell{
 	init = function()
 		cell.sugar = math.random(0, 4)

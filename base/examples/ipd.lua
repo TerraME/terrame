@@ -1,5 +1,4 @@
--- ITERATED PRISONER'S DILEMMA MODEL
--- (C) 2010 INPE AND UFOP
+-- @example Iterated Prisoner's dilemma model.
 
 math.randomseed(0)
 

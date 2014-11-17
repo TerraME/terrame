@@ -1,4 +1,6 @@
 
+-- @example A simple Susceptible-Infected-Recovered (SIR) model.
+
 world = Cell{
 	susceptible = 9998,
 	infected = 2,

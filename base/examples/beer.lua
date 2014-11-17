@@ -1,19 +1,14 @@
--- implementation of beer economic chain model
---
--- this model represents an economic chaing with a final consumer with a random demand.
---
--- the agents in the economic chain need to fill the demand by requesting beer to the
+-- @example Implementation of beer economic chain model.
+-- This model represents an economic chaing with a final consumer with a random demand.
+-- The agents in the economic chain need to fill the demand by requesting beer to the
 -- previous agent of the chain.
---
--- there is a delay in the economic chain because beer takes three time steps to be
+-- There is a delay in the economic chain because beer takes three time steps to be
 -- delivered from one agent to the next agent in the chain.
---
--- Pedro R. Andrade
--- 2014/01/27
+-- @param NUMBER_OF_AGENTS Number of agents in the chain, excluding the producer and the consumer.
 
 math.randomseed(os.time())
 
-NUMBER_OF_AGENTS = 3 -- in the chain, plus the producer and the consumer
+NUMBER_OF_AGENTS = 3
 
 RequestBeer = function(agent, quantity)
 	agent:message{receiver = agent.from, delay = 1, content = "request", value = quantity}

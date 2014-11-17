@@ -1,7 +1,8 @@
--- CONWAY'S GAME OF LIFE
--- (C) 2010 INPE AND UFOP
+-- @example Implementation of Conway's Game of Life.
+-- It creates the initial distribution of alive cells randomly.
+-- @param PROBABILITY The probability of a Cell to be alive.
 
--- @example Implementation of the game of life model.
+PROBABILITY = 0.15
 
 ALIVE = 1
 DEAD  = 2
@@ -10,7 +11,7 @@ TURNS = 20
 function random(cs)
 	forEachCell (cs, function (cell)
 		local v = math.random()
-		if v > 0.85 then
+		if v <= PROBABILITY then
 			cell.state = ALIVE
 		else
 			cell.state = DEAD
