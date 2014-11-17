@@ -170,7 +170,6 @@ setmetatable(Trajectory_, metaTableCellularSpace_)
 metaTableTrajectory_ = {
 	__index = Trajectory_,
 	--- Retrieve the number of Cells of the CellularSpace.
-	-- @name #
 	-- @usage print(#traj)
 	__len = function(self)
 		return #self.cells

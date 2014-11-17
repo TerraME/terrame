@@ -1002,7 +1002,6 @@ CellularSpace_ = {
 metaTableCellularSpace_ = {
 	__index = CellularSpace_,
 	--- Retrieve the number of Cells of the CellularSpace.
-	-- @name #
 	-- @usage print(#cs)
 	__len = function(self)
 		return #self.cells

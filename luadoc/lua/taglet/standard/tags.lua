@@ -72,38 +72,38 @@ end
 -- Set the name of the comment block. If the block already has a name, issue
 -- an error and do not change the previous value
 
-local function name (tag, block, text, doc_report)
-	local differentNameFunctions = {
-		__add = "+",
-		__sub = "-",
-		__mul = "*",
-		__div = "/",
-		__mod = "%",
-		__pow = "^",
-		__unm = "-",
-		__concat = "..",
-		__len = "#",
-		__eq = "==",
-		-- __lt = "comparison operator",
-		-- __le = "comparison operator",
-		-- __index = "operator [] (index)"
-		-- __newindex = "operator [] (index)"
-		--__call = "call"
-	}
+-- local function name (tag, block, text, doc_report)
+-- 	local differentNameFunctions = {
+-- 		__add = "+",
+-- 		__sub = "-",
+-- 		__mul = "*",
+-- 		__div = "/",
+-- 		__mod = "%",
+-- 		__pow = "^",
+-- 		__unm = "-",
+-- 		__concat = "..",
+-- 		__len = "#",
+-- 		__eq = "==",
+-- 		-- __lt = "comparison operator",
+-- 		-- __le = "comparison operator",
+-- 		-- __index = "operator [] (index)"
+-- 		-- __newindex = "operator [] (index)"
+-- 		--__call = "call"
+-- 	}
 
-	local func_name = block[tag]
+-- 	local func_name = block[tag]
 
-	if differentNameFunctions[func_name] ~= nil then
-		func_name = differentNameFunctions[block[tag]]
-	end
+-- 	if differentNameFunctions[func_name] ~= nil then
+-- 		func_name = differentNameFunctions[block[tag]]
+-- 	end
 
-	if func_name and func_name ~= text then
-		printError(string.format("Block name conflict: '%s' -> '%s'", block[tag], text))
-		doc_report.block_name_conflict = doc_report.block_name_conflict + 1
-	end
+-- 	if func_name and func_name ~= text then
+-- 		printError(string.format("Block name conflict: '%s' -> '%s'", block[tag], text))
+-- 		doc_report.block_name_conflict = doc_report.block_name_conflict + 1
+-- 	end
 	
-	block[tag] = text
-end
+-- 	block[tag] = text
+-- end
 
 -------------------------------------------------------------------------------
 -- Processes a parameter documentation.
@@ -267,7 +267,7 @@ handlers["class"] = class
 handlers["copyright"] = copyright
 handlers["description"] = description
 handlers["field"] = field
-handlers["name"] = name
+-- handlers["name"] = name
 handlers["param"] = param
 handlers["release"] = release
 handlers["return"] = ret

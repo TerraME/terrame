@@ -60,6 +60,29 @@ local function check_function (line)
 				private = (l == "local"),
 				param = util.split("%s*,%s*", param),
 			}
+
+			local replaceNameFunctions = {
+				__add = "+",
+				__sub = "-",
+				__mul = "*",
+				__div = "/",
+				__mod = "%",
+				__pow = "^",
+				__unm = "-",
+				__concat = "..",
+				__len = "#",
+				__eq = "==",
+				-- __lt = "comparison operator",
+				-- __le = "comparison operator",
+				-- __index = "operator [] (index)"
+				-- __newindex = "operator [] (index)"
+				--__call = "call"
+			}
+
+			if replaceNameFunctions[info.name] ~= nil then
+				info.name = replaceNameFunctions[info.name]
+			end
+
 			break
 		end
 	end

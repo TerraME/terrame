@@ -525,7 +525,6 @@ Society_ = {
 metaTableSociety_ = {
 	__index = Society_,
 	--- Return the number of Agents of the Society.
-	-- @name #
 	-- @usage print(#soc)
 	__len = function(self)
 		return #self.agents

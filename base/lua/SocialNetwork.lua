@@ -196,7 +196,6 @@ SocialNetwork_ = {
 metaTableSocialNetwork_ = {
 	__index = SocialNetwork_,
 	--- Retrieve the number of connections of the SocialNetwork.
-	-- @name #
 	-- @usage print(#sn)
 	__len = function(self)
 		return self.count

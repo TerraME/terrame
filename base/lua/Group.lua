@@ -125,7 +125,6 @@ setmetatable(Group_, metaTableSociety_)
 metaTableGroup_ = {
 	__index = Group_,
 	--- Return the number of Agents of the Group.
-	-- @name #
 	-- @usage print(#group)
 	__len = function(self)
 		return #self.agents

@@ -245,7 +245,6 @@ Cell_ = {
 metaTableCell_ = {
 	__index = Cell_,
 	--- Retrieve the number of Neighborhoods of the Cell.
-	-- @name #
 	-- @return a positive integer number
 	-- @usage size = #cell
 	__len = function(self)
