@@ -302,8 +302,8 @@ function out_file (filename)
 	local short_filepath = h
 	h = "files/" .. h
 --	h = options.output_dir .. string.gsub (h, "^.-([%w_]+%.html)$", "%1")
+	short_filepath = options.short_output_path..h
 	h = options.output_dir..h
-	short_filepath = options.short_output_path..short_filepath
 	return h, short_filepath
 end
 
@@ -379,7 +379,7 @@ function start (doc, doc_report)
 
 	if not options.nofiles and #doc.examples > 0 then
 		local filename = options.output_dir..s.."files"..s.."examples.html"
-		local short_fileName = options.short_output_path.."examples.html"
+		local short_fileName = options.short_output_path.."files"..s.."examples.html"
 		print(string.format("Building %s", short_fileName))
 
 		local f = util.openFile(filename, "w")
