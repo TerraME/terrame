@@ -11,11 +11,18 @@ end
 <dt><h2><%=func.private and "local " or ""%><a name="<%=func.name%>">
 <%if func.deprecated and func.deprecated[1] then%>
 	<%if func.deprecated[2] then%>
-		<%local href = luadoc.symbol_link(func.deprecated[2], doc, module_doc, file_doc, from, doc_report)%>
+		<%local href = luadoc.symbol_link(func.deprecated[2], doc, module_doc, file_doc, from, doc_report)
+		local _,_,filename, funcname = string.find(func.deprecated[2], "^(.-)[%.%:]?([^%.%:]*)$")
+		local text
+		if filename ~= "" and filename ~= string.gsub(file_doc.name, "%.lua$", "") then 
+		  	text = funcname.." ("..filename..")"
+		else
+		  	text = funcname
+		end%>
 
 		</a><font color="gray"><%=func.name%> <i>(deprecated, use
 			<%if href ~= "unresolved" then %>	
-				<a href="<%=href%>"><%=func.deprecated[2]%></a> 
+				<a href="<%=href%>"><%=text%></a> 
 			<%else%> 
 				<%=func.deprecated[2]%> 
 			<%end%>
@@ -158,8 +165,16 @@ end %>
 <ul>
 	<%for i = 1, #func.see do %>
 	<li>
-		<%local href = luadoc.symbol_link(func.see[i], doc, module_doc, file_doc, from, doc_report)%>
-		<%if href ~= "unresolved" then %>	<a href="<%=href%>"><%=func.see[i]%>	</a>
+		<%local href = luadoc.symbol_link(func.see[i], doc, module_doc, file_doc, from, doc_report)
+		local _,_,filename, funcname = string.find(func.see[i], "^(.-)[%.%:]?([^%.%:]*)$")
+		local text
+		if filename ~= "" and filename ~= string.gsub(file_doc.name, "%.lua$", "") then
+		  	text = funcname.." ("..filename..")"
+		else
+		  	text = funcname
+		end%>
+
+		<%if href ~= "unresolved" then %>	<a href="<%=href%>"><%=text%>	</a>
 		<%else%>	<font color="red"><b><%="Unresolved link to function "..func.see[i]%></b></font>
 		<%end%>
 	</li>
