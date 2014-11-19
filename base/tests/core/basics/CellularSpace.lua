@@ -950,8 +950,8 @@ return{
 			ydim = 20,
 			xyz = function() end,
 			vvv = 333}
-		unitTest:assert_equal(tostring(cs1), [[cells   table of size 200
-cObj_   userdata
+		unitTest:assert_equal(tostring(cs1), [[cObj_   userdata
+cells   table of size 200
 dbType  string [virtual]
 load    function
 maxCol  number [9]

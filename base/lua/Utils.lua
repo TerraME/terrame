@@ -748,7 +748,7 @@ function forEachOrderedElement(obj, func)
 	local order = {}
 	local reference = {}
 	for k, ud in pairs(obj) do
-		strk = tostring(k):lower()
+		strk = tostring(k)
 		order[#order + 1] = strk
 		reference[strk] = k
 	end
