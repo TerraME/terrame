@@ -1,3 +1,6 @@
+
+-- @example A model with 100 moving and growing agents.
+
 EMPTY = 0
 FULL = 1
 

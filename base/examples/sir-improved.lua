@@ -1,4 +1,7 @@
 
+-- @example A Susceptible-Infected-Recovered (SIR) model. In this model
+-- the disease has a duration.
+
 contacts = 6
 infections = 0.25
 duration = 8

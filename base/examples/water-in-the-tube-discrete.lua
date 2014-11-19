@@ -1,4 +1,7 @@
 
+-- @example A model that describes water flowing out of a tube. It uses
+-- an observation step more frequent than the execution.
+
 world = Cell{water = 40}
 
 o = Observer{

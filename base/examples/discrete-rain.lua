@@ -1,4 +1,6 @@
 
+-- @example A simple discrete rain model.
+
 -- model parameters
 C = 2 -- rain/t
 K = 0.4 -- flow coefficient

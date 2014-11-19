@@ -1,3 +1,6 @@
+
+-- @example A model with static agents that can reproduce.
+
 EMPTY = 0
 FULL = 1
 

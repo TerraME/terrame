@@ -1,4 +1,6 @@
 
+-- @example A model that describes water flowing in and out of a tube.
+
 world = Cell{water = 40}
 
 o = Observer{

@@ -1,3 +1,6 @@
+
+-- @example A simple drainage model.
+
 -- RAIN DRAINAGE MODELS
 -- (C) 2010 INPE AND UFOP
 

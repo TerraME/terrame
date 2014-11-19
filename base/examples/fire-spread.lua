@@ -1,6 +1,5 @@
--- FIRE SPREAD MODELS
--- (C) 2010 INPE AND UFOP
 
+-- @example A fire spread model.
 
 -- automaton states
 NO_DATA     = 0

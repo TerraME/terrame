@@ -1,4 +1,8 @@
 
+-- @example A Susceptible-Infected-Recovered (SIR) model with a public campaign. The
+-- campaign reduces the number of contacts by half whenever there are more than 1000
+-- infected individuous in the population.
+
 contacts = 6
 infections = 0.25
 duration = 2
