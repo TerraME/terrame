@@ -164,7 +164,6 @@ function Event(data)
 --]]
 	if data.period <= 0 then
 		incompatibleValueError("period", "positive number (except zero)", data.period)
-	--TODO: se adicionar estas linhas abaixo o Event aborta o TerraME
 	--	elseif data.period == 1 then
 	--		defaultValueWarning("period", "1", 3)
 	end
@@ -185,7 +184,6 @@ function Event(data)
 		}
 	elseif type(data.priority) ~= "number" then
 		incompatibleTypeError("priority", "number", data.priority)
-	--TODO: se adicionar estas linhas abaixo o Event aborta o TerraME
 	--	elseif data.priority == 0 then
 	--		defaultValueWarning("priority", "0", 3)
 	end
@@ -205,21 +203,19 @@ function Event(data)
 			return Pair{cObj, Action{func}}
 		elseif targettype == "Cell" then
 			local func = function(event)
-				data.action:notify(event:getTime())
+				data.action:notify(event)
 			end
 			return Pair{cObj, Action{func}}
 		elseif targettype == "CellularSpace" then
 			local func = function(event)
 				data.action:synchronize()
-				data.action:notify(event:getTime())
+				data.action:notify(event)
 			end
 			return Pair{cObj, Action{func}}
 		elseif targettype == "Agent" or targettype == "Automaton" then
 			local func = function(event)
 				data.action:execute(event)
-				--data.target:synchronize() 
-				--data.target:notify(event:getTime())
-				--TODO PEDRO: colocar o notify aqui!!
+				data.action:notify(event)
 			end
 			return Pair{cObj, Action{func}}
 		elseif targettype == "Group" or targettype == "Trajectory" then

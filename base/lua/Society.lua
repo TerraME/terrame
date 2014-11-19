@@ -330,9 +330,6 @@ Society_ = {
 	-- @param index The index of the Agent that will be returned.
 	-- @usage agent = soc:get("1")
 	get = function(self, index)
-		--TODO: implementar a funcao getAgentByID, que gera uma tabela [ID] -> posicao em soc.agents
-		-- depois coloca esta tabela na propria sociedade, e entao atualiza o getAgentByID para retornar
-		-- uma consulta a esta tabela. Fazer o mesmo para o CellularSpace, com um getCellByID
 		if type(index) ~= "number" then
 			incompatibleTypeError("index", "positive integer number", index)
 		elseif index < 0 then
@@ -652,7 +649,6 @@ function Society(data)
 			end
 		elseif mtype == "number" then
 			data[attribute] = function(soc)
-				-- TODO: verify the type of soc and return error. implement alternative tests to all the cases
 				local quantity = 0
 				forEachAgent(soc, function(agent)
 					quantity = quantity + agent[attribute]

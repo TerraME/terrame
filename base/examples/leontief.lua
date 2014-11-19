@@ -1,3 +1,9 @@
+
+-- @example Model to study scenarios for the economy of Southeast Para state. 
+-- Andrade et al. 2010 From input-output matrixes to agent-based models: A case study on 
+-- carbon credits in a local economy. BWSS 2010.
+-- @param scenario
+
 -- (C) 2010 INPE AND UFOP
 M_NAMES    = 17
 M_SALARIES = 18

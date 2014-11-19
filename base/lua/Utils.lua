@@ -725,7 +725,6 @@ function forEachElement(obj, func)
 	return true
 end
 
---TODO: esta funcao ignora elementos que possuem o mesmo lower case (ex: aAa e aaa). Tratar este caso.
 --- Second order function to transverse a given object, applying a function to each of its
 -- elements according to their alphabetical order. It can be used for instance to trasverse all 
 -- the elements of an Agent or an
