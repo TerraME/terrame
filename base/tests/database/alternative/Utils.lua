@@ -26,9 +26,9 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	readCSV = function(unitTest)
+	read = function(unitTest)
 		local error_func = function()
-			local csv = readCSV("asdfgh.csv")
+			local csv = csv.read("asdfgh.csv")
 		end
 
 		unitTest:assert_error(error_func, resourceNotFoundMsg(1, "asdfgh.csv"))

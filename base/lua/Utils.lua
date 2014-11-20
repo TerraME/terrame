@@ -804,12 +804,14 @@ function getn(t)
 	return n
 end
 
--- Parses a single CSV line.
--- Source: http://lua-users.org/wiki/LuaCsv
--- @param line A string from the CSV file
--- @param sep The value separator. Default is ','
--- @return A tuple (table) of values
-local function ParseCSVLine(line, sep)
+csv = {}
+
+--- Parses a single CSV line. It returns a vector of strings with the individual values. 
+-- This function was taken from http://lua-users.org/wiki/LuaCsv.
+-- @param line A string from the CSV file.
+-- @param sep The value separator. Default is ','.
+-- @usage csv.parseLine(line, ",")
+function csv.parseLine(line, sep)
 	local res = {}
 	local pos = 1
 	sep = sep or ','
@@ -856,8 +858,8 @@ end
 -- The first line of the file list the attributes of each table.
 -- @param filename A string, adress of the CSV file.
 -- @param sep The value separator. Default is ','
--- @usage mytable = readCSV("file.csv", ";")
-function readCSV(filename, sep)
+-- @usage mytable = csv.read("file.csv", ";")
+function csv.read(filename, sep)
 	local data = {}
 	local file = io.open(filename)
 
@@ -865,11 +867,11 @@ function readCSV(filename, sep)
 		resourceNotFoundError(1, filename)
 	end
 
-	local fields = ParseCSVLine(file:read(), sep)
+	local fields = csv.parseLine(file:read(), sep)
 	local line = file:read()
 	while line do
 		local element = {}
-		local tuple = ParseCSVLine(line, sep)
+		local tuple = csv.parseLine(line, sep)
 		if #tuple == #fields then
 			for k, v in ipairs(fields) do
 				element[v] = tonumber(tuple[k]) or tuple[k]
@@ -882,7 +884,13 @@ function readCSV(filename, sep)
 	return data
 end
 
-function writeCSV(data, filename, sep)
+--- Write a given table into a  CSV file.
+-- The first line of the file will list the attributes of each table.
+-- @param data A table to be saved.
+-- @param filename A string, adress of the CSV file.
+-- @param sep The value separator. Default is ','
+-- @usage csv.write(mytable, "file.csv", ";")
+function csv.write(data, filename, sep)
 	sep = sep or ","
 	local file = io.open(filename, "w")
 	local fields = {}

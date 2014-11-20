@@ -26,7 +26,7 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	writeCSV = function(unitTest)
+	write = function(unitTest)
 		local example =
 		{
 			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
@@ -44,8 +44,8 @@ return{
 		local filename = "/tmp/" .. tostring(example):match("table: (.+)") .. ".csv"
 		-- TODO: implement a function to handle tmp files in TerraME
 
-		writeCSV(example, filename)
-		local data = readCSV(filename)
+		csv.write(example, filename)
+		local data = csv.read(filename)
 		unitTest:assert_not_nil(data)
 		unitTest:assert_equal(#example, #data)
 
@@ -55,13 +55,19 @@ return{
 			end
 		end
 	end,
-	readCSV = function(unitTest)
+	read = function(unitTest)
 		local mfile = file("agents.csv", "base")
 
-		local csv = readCSV(mfile)
+		local csv = csv.read(mfile)
 
 		unitTest:assert_equal(4, #csv)
 		unitTest:assert_equal(20, csv[1].age)
+	end,
+	parseLine = function(unitTest)
+		local line = csv.parseLine("2,5,aa", ",")
+		unitTest:assert_equal(line[1], "2")
+		unitTest:assert_equal(line[2], "5")
+		unitTest:assert_equal(line[3], "aa")
 	end,
 	getConfig = function(unitTest)
 		local cf = getConfig()
