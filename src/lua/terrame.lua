@@ -102,9 +102,11 @@ end
 local testfolders = function(folder, ut)
 	local result = {}
 
+	local s = sessionInfo().separator
+
 	local lf 
 	lf = function(mfolder)
-		local parentFolders = dir(folder.."/"..mfolder)
+		local parentFolders = dir(folder..s..mfolder)
 		local found_file = false	
 		local found_folder = false	
 		forEachElement(parentFolders, function(idx, value)
@@ -113,11 +115,11 @@ local testfolders = function(folder, ut)
 					found_file = true
 					table.insert(result, mfolder)
 				end
-			elseif attributes(folder.."/"..mfolder.."/"..value, "mode") == "directory" then
-				lf(mfolder.."/"..value)
+			elseif attributes(folder..s..mfolder..s..value, "mode") == "directory" then
+				lf(mfolder..s..value)
 				found_folder = true
 			else
-				printError("'"..mfolder.."/"..value.."' is not a folder neither a .lua file and will be ignored.")
+				printError("'"..mfolder..s..value.."' is not a folder neither a .lua file and will be ignored.")
 				ut.invalid_test_file = ut.invalid_test_file + 1
 			end
 		end)

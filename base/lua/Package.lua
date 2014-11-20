@@ -155,13 +155,15 @@ function require(package)
 	end
 
 	local load_file = package_path..s.."load.lua"
+	local all_files = dir(package_path..s.."lua")
 	local load_sequence
 
 	if isfile(load_file) then
 		load_sequence = include(load_file).files
+	else
+		load_sequence = all_files
 	end
 
-	local all_files = dir(package_path..s.."lua")
 	local count_files = {}
 	for _, file in ipairs(all_files) do
 		count_files[file] = 0
@@ -179,9 +181,9 @@ function require(package)
 	for mfile, count in pairs(count_files) do
 		local attr = attributes(package_path..s.."lua"..s..mfile)
 		if count == 0 and attr.mode ~= "directory" then
-			printWarning("File lua/"..mfile.." is ignored by load.lua.")
+			printWarning("File lua"..s..mfile.." is ignored by load.lua.")
 		elseif count > 1 then
-			printWarning("File lua/"..mfile.." is loaded "..count.." times in load.lua.")
+			printWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.")
 		end
 	end
 end
