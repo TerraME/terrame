@@ -427,72 +427,71 @@ local executeTests = function(fileName, package)
 		end
 	end)
 
-	local myTest
-	local myFile
+	local myTests
+	local myFiles
 
 	-- For each test in each file in each folder, execute the test
 	for _, eachFolder in ipairs(data.folder) do
 		local dirFiles = dir(baseDir..s..eachFolder)
 		if dirFiles ~= nil then 
-			myFile = {}
+			myFiles = {}
 			if type(data.file) == "string" then
 				if belong(data.file, dirFiles) then
-					myFile = {data.file}
+					myFiles = {data.file}
 				end
 			elseif type(data.file) == "table" then
 				forEachElement(dirFiles, function(_, value)
 					if belong(value, data.file) then
-						myFile[#myFile + 1] = value
+						myFiles[#myFiles + 1] = value
 					end
 				end)
 			elseif data.file == nil then
 				forEachElement(dirFiles, function(_, value)
-					myFile[#myFile + 1] = value
+					myFiles[#myFiles + 1] = value
 				end)
 			else
 				error("file is not a string, table or nil.")
 			end
 
-			if #myFile == 0 then
+			if #myFiles == 0 then
 				printWarning("Skipping folder "..eachFolder)
 			end
 
-			for _, eachFile in ipairs(myFile) do
+			for _, eachFile in ipairs(myFiles) do
 				ut.current_file = eachFolder..s..eachFile
-				-- TODO: o teste abaixo supoe que eachFile existe. Fazer este teste e ignorar caso nao exista.
 				local tests = dofile(baseDir..s..eachFolder..s..eachFile)
 
 				if type(tests) ~= "table" or getn(tests) == 0 then
 					customError("The file does not implement any test.")
 				end
 
-				myTest = {}
+				myTests = {}
 				if type(data.test) == "string" then
 					if tests[data.test] then
-						myTest = {data.test}
+						myTests = {data.test}
 					end
 				elseif data.test == nil then
 					forEachOrderedElement(tests, function(index, value, mtype)
-						myTest[#myTest + 1] = index 					
+						myTests[#myTests + 1] = index 					
 					end)
 				elseif type(data.test) == "table" then
 					forEachElement(data.test, function(_, value)
 						if tests[value] then
-							myTest[#myTest + 1] = value
+							myTests[#myTests + 1] = value
 						end
 					end)
 				else
 					error("test is not a string, table or nil")
 				end
 
-				if #myTest > 0 then
+				if #myTests > 0 then
 					printNote("Testing "..eachFolder..s..eachFile)
 				else
 					printWarning("Skipping "..eachFolder..s..eachFile)
 				end
 
 
-				for _, eachTest in ipairs(myTest) do
+				for _, eachTest in ipairs(myTests) do
 					print("Testing "..eachTest)
 
 					if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
@@ -997,7 +996,6 @@ execute = function(parameters) -- parameters is a vector of strings
 				usage()
 				os.exit()
 			elseif param == "-doc" then
-				-- TODO: verify error handler
 				local success, result = xpcall(function() doc(package) end, function(err)
 					local s = sessionInfo().separator
 					local luaFolder = replaceSpecialChars(sessionInfo().path..s.."lua")
