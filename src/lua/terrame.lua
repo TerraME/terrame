@@ -99,7 +99,7 @@ end
 
 -- find the folders inside a package that contain
 -- lua files, starting from package/tests
-local testfolders = function(folder)
+local testfolders = function(folder, ut)
 	local result = {}
 
 	local lf 
@@ -112,13 +112,16 @@ local testfolders = function(folder)
 					found = true
 					table.insert(result, mfolder)
 				end
-			else
+			elseif attributes(folder.."/"..mfolder.."/"..value, "mode") == "directory" then
 				-- TODO: verify whether the value is really a folder here and show an error message
-				if mfolder == "" then
-					lf(value)
-				else
+				--if mfolder == "" then
+				--	lf(value)
+				--else
 					lf(mfolder.."/"..value)
-				end
+				--end
+			else
+				printError("'"..mfolder.."/"..value.."' is not a folder neither a .lua file and will be ignored.")
+				ut.invalid_test_file = ut.invalid_test_file + 1
 			end
 		end)
 	end
@@ -363,7 +366,23 @@ local executeTests = function(fileName, package)
 		examples = check_functions
 	end
 
-	local tf = testfolders(baseDir)
+	local ut = UnitTest{
+		sleep = data.sleep,
+		package_functions = 0,
+		functions_not_exist = 0,
+		functions_not_tested = 0,
+		executed_functions = 0,
+		functions_with_global_variables = 0,
+		functions_with_error = 0,
+		functions_without_assert = 0,
+		examples = 0,
+		examples_error = 0,
+		print_calls = 0,
+		log_files = 0,
+		invalid_test_file = 0
+	}
+
+	local tf = testfolders(baseDir, ut)
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
 		local mfolder = data.folder
@@ -406,21 +425,6 @@ local executeTests = function(fileName, package)
 			customWarning("Attribute '"..value.."' in file '"..fileName.."' is unnecessary.")
 		end
 	end)
-
-	local ut = UnitTest{
-		sleep = data.sleep,
-		package_functions = 0,
-		functions_not_exist = 0,
-		functions_not_tested = 0,
-		executed_functions = 0,
-		functions_with_global_variables = 0,
-		functions_with_error = 0,
-		functions_without_assert = 0,
-		examples = 0,
-		examples_error = 0,
-		print_calls = 0,
-		log_files = 0
-	}
 
 	local myTest
 	local myFile
@@ -695,6 +699,12 @@ local executeTests = function(fileName, package)
 		printError(print_when_loading.." print calls were found when loading the package.")
 	else
 		printNote("No print calls were found when loading the package.")
+	end
+
+	if ut.invalid_test_file > 0 then
+		printError("There are "..ut.invalid_test_file.." invalid files in folder 'test'.")
+	else
+		printNote("All files in folder 'test' end with .lua.")
 	end
 
 	if ut.fail > 0 then
