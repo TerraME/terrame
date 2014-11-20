@@ -105,25 +105,26 @@ local testfolders = function(folder, ut)
 	local lf 
 	lf = function(mfolder)
 		local parentFolders = dir(folder.."/"..mfolder)
-		local found = false	
+		local found_file = false	
+		local found_folder = false	
 		forEachElement(parentFolders, function(idx, value)
 			if string.endswith(value, ".lua") then
-				if not found then
-					found = true
+				if not found_file then
+					found_file = true
 					table.insert(result, mfolder)
 				end
 			elseif attributes(folder.."/"..mfolder.."/"..value, "mode") == "directory" then
-				-- TODO: verify whether the value is really a folder here and show an error message
-				--if mfolder == "" then
-				--	lf(value)
-				--else
-					lf(mfolder.."/"..value)
-				--end
+				lf(mfolder.."/"..value)
+				found_folder = true
 			else
 				printError("'"..mfolder.."/"..value.."' is not a folder neither a .lua file and will be ignored.")
 				ut.invalid_test_file = ut.invalid_test_file + 1
 			end
 		end)
+		if not found_file and not found_folder then
+			printError("Folder '"..mfolder.."' is empty.")
+			ut.invalid_test_file = ut.invalid_test_file + 1
+		end
 	end
 
 	lf("tests")
@@ -702,9 +703,9 @@ local executeTests = function(fileName, package)
 	end
 
 	if ut.invalid_test_file > 0 then
-		printError("There are "..ut.invalid_test_file.." invalid files in folder 'test'.")
+		printError("There are "..ut.invalid_test_file.." invalid files or folders in folder 'test'.")
 	else
-		printNote("All files in folder 'test' end with .lua.")
+		printNote("There are no invalid files or folders in folder 'tests'.")
 	end
 
 	if ut.fail > 0 then
