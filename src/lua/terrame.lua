@@ -552,7 +552,7 @@ local executeTests = function(fileName, package)
 					end
 
 					if ut.count_last > 0 then
-						printError("[The error above occurs more "..ut.count_last.." times.]")
+						printError("[The error above occurs "..ut.count_last.." more times.]")
 						ut.count_last = 0
 						ut.last_error = ""
 					end

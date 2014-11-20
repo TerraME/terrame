@@ -254,18 +254,18 @@ return{
 		unitTest:assert_equal(count, 1)
 	end,
 	forEachOrderedElement = function(unitTest)
-		local result = {"a", "b", "c"}
-		local list = {a = "a", b = "b", c = "c"}
+		local result = {1, 2, 3, "a", "b", "c"}
+		local list = {1, 2, 3, a = "a", b = "b", c = "c"}
 
 		local cont = 0
 		forEachOrderedElement(list, function(idx, value, mtype)
 			cont = cont + 1
-			unitTest:assert_equal(mtype, "string")
+			unitTest:assert_equal(mtype, type(result[cont]))
 
 			unitTest:assert_equal(idx, result[cont])
 			unitTest:assert_equal(value, result[cont])
 		end)
-		unitTest:assert_equal(cont, 3)
+		unitTest:assert_equal(cont, 6)
 
 		local cont = 0
 		forEachOrderedElement(list, function()
@@ -273,6 +273,9 @@ return{
 			return false
 		end)
 		unitTest:assert_equal(cont, 1)
+
+
+
 	end,
 	getn = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}
