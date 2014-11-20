@@ -35,7 +35,7 @@ Trajectory_ = {
 			incompatibleTypeError(2, "Cell", cell)
 		end
 
-	-- TODO: uncomment after solving #22
+	-- uncomment after solving #22
 	--	verify(not self:get(cell.x, cell.y), "Cell ("..cell.x..", "..cell.y..") already belongs to the Trajectory.")
 		table.insert(self.cells, cell)
 		self.cObj_:add(#self + 1, cell.cObj_)
@@ -99,7 +99,7 @@ Trajectory_ = {
 	-- @param y The y location.
 	-- @usage traj:get(1, 1)
 	get = function(self, x, y)
-		-- TODO: #22 change this - add will never work because the cell already belongs to the cellular space and then it will never add.
+		-- #22 change this - add will never work because the cell already belongs to the cellular space and then it will never add.
 
 		-- The following does not work:
 		--[[

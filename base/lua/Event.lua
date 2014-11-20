@@ -142,13 +142,14 @@ function Event(data)
 
 	checkUnnecessaryParameters(data, {"time", "action", "priority", "period"})
 
+-- #83
 --	defaultTableValue(data, "time", 1)
 -- [[
 	if data.time == nil then
 		data.time = 1
 	elseif type(data.time) ~= "number" then
 		incompatibleTypeError("time", "number", data.time)
-	--TODO: se adicionar estas linhas abaixo o Event aborta o TerraME
+	-- #83
 	--	elseif data.time == 1 then
 	--		defaultValueWarning("time", "1", 3)
 	end

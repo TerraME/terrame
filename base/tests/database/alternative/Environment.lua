@@ -32,7 +32,6 @@ return{
 
 		local env = Environment{cs1, cs2}
 
-		--TODO: add a test with an error because the neighborhood already exist.
 		cs1:createNeighborhood{}
 
 		local error_func = function()
@@ -60,7 +59,6 @@ return{
 				bidirect = true
 			}
 		end
-		-- TODO: implement a better error msg, as this is not a file extension.
 		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste1"))
 
 		error_func = function()

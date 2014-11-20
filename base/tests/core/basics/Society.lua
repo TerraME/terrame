@@ -215,7 +215,7 @@ return {
 		unitTest:assert_equal(soc:human(), 10)
 		unitTest:assert_equal(soc:gender().male, 10)
 	end,
-	synchronize = function(unitTest) -- TODO: esta igual ao message do Agent, alterar um dos dois
+	synchronize = function(unitTest)
 		local randomObj = Random{}
 		randomObj:reSeed(0)
 

@@ -164,7 +164,7 @@ return{
 			unitTest:assert_type(cell.y, "number")
 			unitTest:assert_not_nil(cell.height_)
 			unitTest:assert_not_nil(cell.soilWater)
-			-- TODO: unitTest:assert_nil(cell.umatributoquenaofoiselecionado)
+			unitTest:assert_nil(cell.umatributoquenaofoiselecionado)
 		end)
 		unitTest:assert_equal(10201, #cs)
 
@@ -405,7 +405,6 @@ return{
 			cs:save(t, "themeName", "height_")
 		end
 		unitTest:assert(true)
-		-- TODO: add saveShape. Also saveCSV?
 	end,
 	loadNeighborhood = function(unitTest)
 		local config = getConfig()
@@ -436,7 +435,7 @@ return{
 			theme = "cells90x90"
 		}
 
-		-- TODO: the code below is not working properly
+		-- #197
 		--[[
 		cs:loadNeighborhood{source = "GPM_NAME"}
 
@@ -486,7 +485,7 @@ return{
 
 		local countTest = 1
 
-		-- FIXME error here
+		-- #46 error here
 --[[
 		cs1:loadNeighborhood{source = file("neighCabecaDeBoi900x900.gpm", "base")}
 

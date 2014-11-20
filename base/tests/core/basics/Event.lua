@@ -100,16 +100,6 @@ return{
 		unitTest:assert_equal(event[1]:getPriority(), -10)
 		event:config(0, 1, 2)
 		unitTest:assert_equal(event[1]:getPriority(), 2)	
-	end,
-	--TODO: Comentei este teste porque o Event nao tem getParent. 
-	-- getParent = function(unitTest)
-	-- 	local event = Event{priority = -10, action = function(event) end}
-		
-	-- 	unitTest:assert_nil(event:getParent())
-
-	-- 	local timer = Timer{event}
-
-	-- 	unitTest:assert_equal(event:getParent(), timer)
-	-- end
+	end
 }
 

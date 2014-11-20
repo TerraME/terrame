@@ -483,7 +483,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 			customError("Map observers must have exactly one or two attributes.", 3)
 		end
 		-- cellularspace
-		-- TODO: Solucao provisoria para corrigir o problema de desesnhar inicio todo preto. 
+		-- #201
 		-- return subject.cObj_:createObserver(TME_OBSERVERS.MAP, tbDimensions, observerAttrs, observerParams, csCells)
 		local idObs = subject.cObj_:createObserver(TME_OBSERVERS.MAP, tbDimensions, observerAttrs, observerParams, csCells)
 		subject.cObj_:notify(0)
@@ -637,7 +637,7 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 			customError("Image observers must have exactly one or two attributes.", 3)
 		end
 
-		-- TODO: Solucao provisoria para corrigir o problema de desesnhar inicio todo preto. 
+		-- #201
 		-- return subject.cObj_:createObserver(TME_OBSERVERS.IMAGE, tbDimensions, observerAttrs, observerParams, csCells)
 		local idObs = subject.cObj_:createObserver(TME_OBSERVERS.IMAGE, tbDimensions, observerAttrs, observerParams, csCells)
 		subject.cObj_:notify(0)
@@ -672,7 +672,7 @@ local function observerUDPSender(subjType, subject, tbDimensions, observerAttrs,
 		incompatibleTypeError("port", "number", datale.port, 4)
 	elseif type(datale.port) =="number" then
 		local pt = datale.port
-		-- TODO completar lista de portas do sistema
+		-- #200
 		if pt == 80 or pt == 8080 then
 			customError("Observers UDP should not use system ports.", 4)
 		end

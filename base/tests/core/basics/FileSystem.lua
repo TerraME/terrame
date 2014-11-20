@@ -114,7 +114,7 @@ return{
 		success, mode = setmode(f, "text")
 
 		unitTest:assert(success)
-		unitTest:assert_equal(mode, "binary") -- TODO: shouldn't it be text?
+		unitTest:assert_equal(mode, "binary") -- #199
 
 		f:close()
 		os.execute("rm "..pathdata.."testfile.txt")

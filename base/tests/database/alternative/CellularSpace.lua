@@ -97,7 +97,8 @@ return{
 			unitTest:assert_error(error_func, "Unknown database 'terralab'.")
 
 --[[
-TODO: the test above returns the error
+#46
+the test below returns the error
   'Wrong TerraLib database version, expected '4.1.2', got '.
 Please, use TerraView to update the '' database.'
 However, the database does not exist!
@@ -200,7 +201,7 @@ However, the database does not exist!
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 34))
 
-		--TODO: add this error
+		--#46  add this error
 		--[[
 		error_func = function()
 			local cs = CellularSpace{
@@ -232,7 +233,7 @@ However, the database does not exist!
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("where", "string", 34))
 
-		-- TODO: add the error below
+		-- #46 add the error below
 		--[[
 		error_func = function()
 			local cs = CellularSpace{

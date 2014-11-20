@@ -63,12 +63,6 @@ Timer_ = {
 		end
 		self.cObj_:execute(finalTime)
 	end,
-	--TODO: this function was removed from the interface. Rethink about it.
-	--#- Reset the Timer to time zero, keeping the same queue.
-	-- @usage timer:reset()
-	reset = function(self)
-		self.cObj_:reset()
-	end,
 	--- Notify every Observer connected to the Timer.
 	-- @param modelTime An positive integer number representing time to be used by the
 	-- Observer. Default is the current simulation time 'self:getTime()'.
@@ -87,64 +81,7 @@ Timer_ = {
 		end
 		self.cObj_:notify(modelTime)
 	end,
-	--TODO: this function was removed from the interface. Rethink about it.
-	--#- Retrieve an Event from the Timer.
-	-- @param index A positive integer number representing a index from an Event. Default is 1.
-	getEvent = function(self, index)
-    	if index == nil then
-			index = 1
-		elseif type(index)~= "number" then
-			-- TODO: there is something wrong here. If the type is not number, it cannot be a float number
-			incompatibleTypeError("index", "positive integer number", "float number")      
-		elseif index < 0 or math.floor(index) ~= index then
-			incompatibleValueError("index", "positive integer number", "negative number")
-		end
-		return self.cObj_:getEvent(index)
-	end,
-	--TODO: this function was removed from the interface. Rethink about it.
-	--#- Retrieve a table containing all Events of the Timer.
-	-- @usage timer:getEvents()[1]
-	getEvents = function(self)
-		return self.cObj_:getEvents()
-	end,
-	--TODO: this function was removed from the interface. Rethink about it.
-	--#- Change one Event of the Timer. Returns a boolean value indicating whether the Event
-	-- was sucessfully changed.
-	-- @param index A positive integer number representing the index of the Event to be replaced.
-	-- @param event An Event which will be setted.
-	-- @usage timer:setEvent(1, Event{...})
-	setEvent = function(self, index, event)
-    	if index == nil then
-			index = 1
-		elseif type(index)~= "number" then
-			incompatibleTypeError(1, "positive integer number", index)
-		elseif index < 0 or math.floor(index) ~= index then
-			incompatibleValueError(1, "positive integer number", index)
-		end
-
-		local t = type(event)
-		if t ~= "Pair" or t ~= "Event" then
-			-- TODO: esta funcao foi feita para dar errado porque sempre vai entrar neste if
-			incompatibleTypeError(2, "Event", event)
-		else
-			return self.cObj_:setEvent(event)
-		end
-	end,
-	--TODO: this function was removed from the interface. Rethink about it.
-	--#- Update the set of events of the Timer.
-	-- @param events A table of Events. Return a boolean value indicating whether all Events
-	-- were sucessfully changed.
-	setEvents = function(self, events)
-		if type(events)~= "table" then
-			incompatibleTypeError(1, "table", events)
-		end    
-		for i = 1, getn(events) do
-			setEvent(i, events[i])
-		end
-	end
 }
-
--- TODO: implement operator #, that returns the number of Events of the Timer
 
 metaTableTimer_ = {__index = Timer_, __tostring = tostringTerraME}
 

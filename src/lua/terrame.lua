@@ -63,9 +63,7 @@ function printWarning(value)
 end
 
 install = function(file)
-	-- descompactar o pacote em TME_FOLDER/packages
-	-- verificar se as dependencias estao instaladas (depends)
-	-- verificar se a versao do terrame eh valida (built)
+	-- #9
 end
 
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
@@ -78,13 +76,12 @@ function include(scriptfile)
 		printError(err)
 		printError(traceback())
 	end)
-	return setmetatable(env, nil) -- TODO: try to remove nil and see what happens. Perhaps this could be used in TerraME.
+	return setmetatable(env, nil)
 end
 
 type__ = type
 
--- TODO: allow this to be executed directly from TerraME. Check if it is interesting to be executed
--- when the package is installed.
+-- #36
 importDatabase = function()
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s.."base"
@@ -528,11 +525,9 @@ local executeTests = function(fileName, package)
 					end
 
 					if getn(_G) > count_global then
-						-- TODO: check if it is < or > (the code below works for >)
 						local variables = ""
 						local pvariables = {}
 						forEachElement(_G, function(idx, _, mtype)
-						-- TODO: trocar por forEachOrderedElement, mas esta dando pau
 							if global_variables[idx] == nil then
 								variables = variables.."'"..idx.."' ("..mtype.."), "
 								pvariables[#pvariables + 1] = idx
@@ -783,25 +778,11 @@ local executeTests = function(fileName, package)
 	else
 		printError("Summing up, "..errors.." problems were found during the tests.")
 	end
-	os.exit() -- TODO: remove it. Up to now, if this line does not exist TerraME will not end.
+	os.exit() -- #76
 end
 
-build = function(folder, dev)
-	if dev == nil then dev = false end
-	-- TODO: pensar melhor:
-	-- dev indica se o pacote gerado sera para desenvolvimento ou nao
-	-- um pacote dev contem todos os testes e todos os dados
-
-	-- verificar as tags do arquivo DESCRIPTION
-	-- atualizar os campos 'data' e 'built' no DESCRIPTION
-	-- doc() -- gerar documentacao das pastas lua e examples.
-	-- test() -- executar todos os testes unitarios
-	-- executar todos os examples (nao pode gerar erro)
-
-	-- gerar o zip
-
-	-- instalar o pacote
-	-- carregar o pacote
+build = function(folder)
+	-- #15
 end
 
 local versions = function()
@@ -809,15 +790,7 @@ local versions = function()
 	print(" Version: ", sessionInfo().version)
 	print(" Location (TME_PATH): "..sessionInfo().path)
 
-	print(" Compiled with: ")
-	-- TODO: Verify how to retrieve these informations.
-	-- qWarning("    %s ", LUA_RELEASE);
-	-- qWarning("    Qt %s ", qVersion());
-	-- qWarning("    Qwt %s ", QWT_VERSION_STR);
-
-	-- qWarning("    TerraLib %s (Database version: %s) ", 
-	--     TERRALIB_VERSION,       // macro in the file "TeVersion.h"
-	--     TeDBVERSION.c_str());   // macro in the file "TeDefines.h" linha 221
+	-- #203
 
 	print("\nFor more information, please visit www.terrame.org\n")
 end
@@ -958,7 +931,7 @@ execute = function(parameters) -- parameters is a vector of strings
 
 	info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
-		dbVersion = "1_3_1", -- TODO: remove this parameter?
+		dbVersion = "1_3_1",
 		separator = package.config:sub(1, 1),
 		path = os.getenv("TME_PATH")
 	}
@@ -1070,11 +1043,11 @@ execute = function(parameters) -- parameters is a vector of strings
 					printError(result)
 				end
 			elseif param == "-autoclose" then
-				-- TODO
+				-- #77
 			elseif param == "-workers" then
-				-- TODO
+				-- #80
 			elseif param == "-draw-all-higher" then
-				-- TODO
+				-- #78
 			elseif param == "-build" then
 				if package ~= "base" then
 					param = sessionInfo().path..s.."packages"..s..package

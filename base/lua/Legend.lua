@@ -617,7 +617,7 @@ function Legend(data)
 			if theType == "number"  then data.type = TME_LEGEND_TYPE.NUMBER end
 			if theType == "string"  then data.type = TME_LEGEND_TYPE.TEXT end
 			if theType == "boolean" then data.type = TME_LEGEND_TYPE.BOOL end
-			if theType == "date"    then data.type = TME_LEGEND_TYPE.DATETIME end -- TODO: 'date' is not a Lua type. The code will never enter here.
+			if theType == "date"    then data.type = TME_LEGEND_TYPE.DATETIME end -- FIXME: 'date' is not a Lua type. The code will never enter here.
 		end
 	end
 

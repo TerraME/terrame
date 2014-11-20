@@ -25,21 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	setEvents = function(unitTest)
-		unitTest:assert(true)
-	end,
-	setEvent = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getEvent = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getEvents = function(unitTest)
-		unitTest:assert(true)
-	end,
-	reset = function(unitTest)
-		unitTest:assert(true)
-	end,
 	Timer = function(unitTest)
 		local timer = Timer()
 		unitTest:assert_equal(type(timer), "Timer")
@@ -113,9 +98,8 @@ return {
 
 		unitTest:assert_equal(1, timer2:getTime())
 		timer2:execute(6)
-		unitTest:assert_equal(7, timer2:getTime()) 	-- TODO: se eu mandei executar ate o tempo 6,
-												-- por que o tempo final eh 7?
-		unitTest:assert_equal(7, cont)
+		unitTest:assert_equal(7, timer2:getTime())
+		unitTest:assert_equal(7, cont) -- #193
 
 		cont = 0
 		timer2:execute(4)
@@ -123,7 +107,7 @@ return {
 		unitTest:assert_equal(0, cont)
 
 		cont = 0
-		timer2:reset()
+		--timer2:reset()
 		unitTest:assert_equal(7, timer2:getTime())
 		timer2:execute(4)
 		unitTest:assert_equal(7, timer2:getTime())

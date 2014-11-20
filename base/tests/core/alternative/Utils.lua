@@ -213,6 +213,5 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "a"))
 	end
-	-- TODO: implement forEachSocialNetwork
 }
 

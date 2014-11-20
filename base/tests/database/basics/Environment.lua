@@ -60,7 +60,7 @@ return{
 		}
 
 		unitTest:assert(true)
-		-- TODO: error here. It seems that theme Limit does not exist.
+		-- #46
 --[[
 		local cs3 = CellularSpace{
 			host = mhost,

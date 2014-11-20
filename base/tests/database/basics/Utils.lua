@@ -42,7 +42,7 @@ return{
 		}
 
 		local filename = "/tmp/" .. tostring(example):match("table: (.+)") .. ".csv"
-		-- TODO: implement a function to handle tmp files in TerraME
+		-- #68 implement a function to handle tmp folders
 
 		csv.write(example, filename)
 		local data = csv.read(filename)

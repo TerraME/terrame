@@ -192,7 +192,7 @@ UnitTest_ = {
 			if self.current_file then
 				local err2 = string.match(err, self.current_file)
 				if err2 ~= self.current_file then
-					printError("Error in wrong file (possibly wrong level). It should occur in '"..self.current_file.."', got '"..err.."'.")
+					printError("Error in wrong file (possibly wrong stack level). It should occur in '"..self.current_file.."', got '"..err.."'.")
 					printError(traceback())
 					self.wrong_file = self.wrong_file + 1
 					return
@@ -200,12 +200,10 @@ UnitTest_ = {
 			end
 			local shortError = string.match(err, ":[0-9]*:.*")
 
-			-- TODO: verificar se tem como pegar o nome do arquivo e verificar se o erro nao ocorre
-			-- em um dos arquivos internos. na verdade o erro tem que ocorrer no arquivo que foi
-			-- carregado. descobrir este erro eh importante para verificar se o level foi usado corretamente.
 			if shortError == nil then
 				self.wrong_file = self.wrong_file + 1
-				printError("Error should contain line number (possibly wrong level), got: '"..err.."'.")
+				printError("Error should contain line number (possibly wrong stack level), got: '"..err.."'.")
+				printError(traceback())
 				return
 			end
 

@@ -175,8 +175,8 @@ return{
 		env:add(t)
 
 		env:execute(10)
-		--assert_equal(11, env:getTime() ) -- TODO: I still need to implement "getTime" for the Environment class
-		self:assert_equal(13, a.x) -- TODO: se a.x continua 13, significa que o agente nao executou
+		--assert_equal(11, env:getTime() ) -- #195
+		self:assert_equal(13, a.x)
 	end,
 	execute = function(self)
 		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)

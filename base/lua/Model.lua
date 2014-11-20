@@ -536,7 +536,6 @@ local interface = function(self, ordering)
 		end
 	end)
 
-	-- TODO: make it generic - today it works only with sugarscape
 	r = r.."..\"\\nreturn Tube(result)\""
 	r = r.."\ndofile(\"Tube.lua\")\n\n"
 
