@@ -35,7 +35,11 @@ local function ldescription(package_path, doc_report)
 	}
 
 	local script
-	pcall(function() script = include(package_path..s.."description.lua") end)
+	xpcall(function() script = include(package_path..s.."description.lua") end, function(err)
+		printError("Error when executing file 'description.lua'.")
+		printError(err)
+		os.exit()
+	end)
 
 	if not script then
 		printError("'description.lua' was not found in the package.")

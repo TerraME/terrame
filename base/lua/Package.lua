@@ -44,7 +44,17 @@ packageInfo = function(package)
 	end
 	
 	local file = pkgfile..s.."description.lua"
-	local result = include(file)
+	local result 
+	xpcall(function() result = include(file) end, function(err)
+		printError("Package "..package.." has a corrupted description.lua")
+		printError(err)
+		os.exit()
+	end)
+
+	if result == nil then
+		customError("Could not read description.lua")
+	end
+
 	result.data = pkgfile..s.."data"..s
 	return result
 end
@@ -159,7 +169,23 @@ function require(package)
 	local load_sequence
 
 	if isfile(load_file) then
-		load_sequence = include(load_file).files
+		xpcall(function() load_sequence = include(load_file) end, function(err)
+			printError("Package '"..package.."' could not be loaded.")
+			print(err)
+		end)
+
+		checkUnnecessaryParameters(load_sequence, {"files"})
+
+		load_sequence = load_sequence.files
+		if load_sequence == nil then
+			printError("Package '"..package.."' could not be loaded.")
+			printError("load.lua should declare table 'files', with the order of the files to be loaded.")
+			os.exit()
+		elseif type(load_sequence) ~= "table" then
+			printError("Package '"..package.."' could not be loaded.")
+			printError("In load.lua, 'files' should be table, got "..type(load_sequence)..".")
+			os.exit()
+		end
 	else
 		load_sequence = all_files
 	end
@@ -173,7 +199,17 @@ function require(package)
 
 	if load_sequence then
 		for _, file in ipairs(load_sequence) do
-			dofile(package_path..s.."lua"..s..file)
+			local mfile = package_path..s.."lua"..s..file
+			if not isfile(mfile) then
+				printError("Cannot open "..mfile..". No such file.")
+				printError("Please check "..package_path..s.."load.lua")
+				os.exit()
+			end
+			xpcall(function() dofile(mfile) end, function(err)
+				printError("Package '"..package.."' could not be loaded.")
+				printError(err)
+				os.exit()
+			end)
 			count_files[file] = count_files[file] + 1
 		end
 	end

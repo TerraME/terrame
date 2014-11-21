@@ -72,10 +72,8 @@ function include(scriptfile)
 	if not isfile(scriptfile) then
 		customError("File '"..scriptfile.."' does not exist.")
 	end
-	xpcall(function() loadfile(scriptfile, 't', env)() end, function(err)
-		printError(err)
-		printError(traceback())
-	end)
+	loadfile(scriptfile, 't', env)() 
+
 	return setmetatable(env, nil)
 end
 
@@ -308,65 +306,51 @@ end
 local executeTests = function(fileName, package)
 	local initialTime = os.clock()
 
-	if package ~= "base" then
-		require("base")
-	end
-
-	local print_when_loading = 0
-
-	printNote("Loading package "..package)
-	print = function(...)
-		-- FIXME: print_when_loading should be called ut.print_when_loading (see below the UnitTest)
-		print_when_loading = print_when_loading + 1
-		printError(...)
-	end
-
-    xpcall(function() require(package) end, function(err)
-		printError("Package could not be loaded.")
-        printError(err)
-		os.exit()
-    end)
-
-	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages"..s..package
-	local srcDir = baseDir..s.."tests"
-
-	if not isfile(srcDir) then
-		customError("Folder 'tests' does not exist in package '"..package.."'.")
-	end
-
-	load_file = baseDir..s.."load.lua"
-	local load_sequence
-
-	print = function(...) end
-	if isfile(load_file, load_file) then
-		load_sequence = include(load_file).files
-	end
-
-	local testfunctions = {} -- test functions store all the functions that need to be tested, extracted from the source code
-
-	for i, file in ipairs(load_sequence) do
-		testfunctions[file] = buildCountTable(include(baseDir..s.."lua"..s..file))
-	end
-	print = print__
+	require("base")
 
 	local data
 
 	if type(fileName) == "string" then
-		printNote("Loading configuration file "..fileName)
-		data = include(fileName)
+		printNote("Loading configuration file '"..fileName.."'")
+	
+		xpcall(function() data = include(fileName) end, function(err)
+			printError(err)
+			os.exit()
+		end)
+
 		if getn(data) == 0 then
 			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'folder', 'file', 'sleep', 'test'}.")
 			os.exit()
 		end
+
+		if data.folder ~= nil and type(data.folder) ~= "string" and type(data.folder) ~= "table" then
+			customError("'folder' should be string, table, or nil, got "..type(data.folder)..".")
+		end
+
+		if data.file ~= nil and type(data.file) ~= "string" and type(data.file) ~= "table" then
+			customError("'file' should be string, table, or nil, got "..type(data.file)..".")
+		end
+
+		if data.test ~= nil and type(data.test) ~= "string" and type(data.test) ~= "table" then
+			customError("'test' should be string, table, or nil, got "..type(data.test)..".")
+		end
+
+		if data.sleep ~= nil and type(data.sleep) ~= "number"  then
+			customError("'sleep' should be number or nil, got "..type(data.sleep)..".")
+		end
+
+		if data.examples ~= nil and type(data.examples) ~= "boolean" then
+			customError("'examples' should be boolean or nil, got "..type(data.examples)..".")
+		end
+
+		checkUnnecessaryParameters(data, {"folder", "file", "test", "sleep", "examples"})
 	else
 		data = {}
 	end
 
 	local check_functions = data.folder == nil and data.file == nil and data.test == nil
-	local examples = data.examples
-	if examples == nil then
-		examples = check_functions
+	if data.examples == nil then
+		data.examples = check_functions
 	end
 
 	local ut = UnitTest{
@@ -382,8 +366,51 @@ local executeTests = function(fileName, package)
 		examples_error = 0,
 		print_calls = 0,
 		log_files = 0,
-		invalid_test_file = 0
+		invalid_test_file = 0,
+		print_when_loading = 0
 	}
+
+	printNote("Loading package "..package)
+	print = function(...)
+		ut.print_when_loading = ut.print_when_loading + 1
+		printError(...)
+	end
+
+    require(package)
+
+	local s = sessionInfo().separator
+	local baseDir = sessionInfo().path..s.."packages"..s..package
+	local srcDir = baseDir..s.."tests"
+
+	if not isfile(srcDir) then
+		customError("Folder 'tests' does not exist in package '"..package.."'.")
+	end
+
+	load_file = baseDir..s.."load.lua"
+	local load_sequence
+
+	if isfile(load_file) then
+		-- the 'include' below does not need to be inside a xpcall because 
+		-- the package was already loaded with success
+		load_sequence = include(load_file).files
+	else
+		local dir = dir(baseDir..s.."lua")
+		load_sequence = {}
+		forEachElement(dir, function(_, mfile)
+			if string.endswith(mfile, ".lua") then
+				table.insert(load_sequence, mfile)
+			end
+		end)
+	end
+
+	local testfunctions = {} -- test functions store all the functions that need to be tested, extracted from the source code
+
+	for i, file in ipairs(load_sequence) do
+		-- the 'include' below does not need to be inside a xpcall because 
+		-- the package was already loaded with success
+		testfunctions[file] = buildCountTable(include(baseDir..s.."lua"..s..file))
+	end
+	print = print__
 
 	local tf = testfolders(baseDir, ut)
 	-- Check every selected folder
@@ -461,10 +488,17 @@ local executeTests = function(fileName, package)
 
 			for _, eachFile in ipairs(myFiles) do
 				ut.current_file = eachFolder..s..eachFile
-				local tests = dofile(baseDir..s..eachFolder..s..eachFile)
+				local tests
+				xpcall(function() tests = dofile(baseDir..s..eachFolder..s..eachFile) end, function(err)
+					printNote("Testing "..eachFolder..s..eachFile)
+					printError("Could not load file "..err)
+					os.exit()
+				end)
 
 				if type(tests) ~= "table" or getn(tests) == 0 then
-					customError("The file does not implement any test.")
+					printNote("Testing "..eachFolder..s..eachFile)
+					printError("The file does not implement any test.")
+					os.exit()
 				end
 
 				myTests = {}
@@ -603,7 +637,7 @@ local executeTests = function(fileName, package)
 	end
 
 	-- executing examples
-	if examples then
+	if data.examples then
 		printNote("Testing examples")
 		local dirFiles = dir(baseDir..s.."examples")
 		if dirFiles ~= nil then
@@ -697,8 +731,8 @@ local executeTests = function(fileName, package)
 
 	printNote(text)
 
-	if print_when_loading > 0 then
-		printError(print_when_loading.." print calls were found when loading the package.")
+	if ut.print_when_loading > 0 then
+		printError(ut.print_when_loading.." print calls were found when loading the package.")
 	else
 		printNote("No print calls were found when loading the package.")
 	end
@@ -761,7 +795,7 @@ local executeTests = function(fileName, package)
 		printWarning("No source code functions were verified.")
 	end
 
-	if examples then
+	if data.examples then
 		if ut.examples == 0 then
 			printError("No examples were found.")
 		elseif ut.examples_error == 0 then
