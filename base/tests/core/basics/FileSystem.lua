@@ -100,6 +100,10 @@ return{
 
 		unitTest:assert(rmdir(pathdata.."test"))
 	end, 
+	runCommand = function(unitTest)
+		local d = runCommand("ls "..packageInfo().data)
+		unitTest:assert_equal(#d, 21) -- 21 files
+	end,
 	setmode = function(unitTest)
 		local pathdata = packageInfo().data
 

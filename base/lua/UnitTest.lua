@@ -252,20 +252,7 @@ UnitTest_ = {
 	-- @usage tmpfolder = unitTest:tmpFolder()
 	tmpFolder = function(self)
 		if not self.tmpfolder then
-			local function tmpDir()
-				os.execute("mktemp -d .terrametmpXXXXX > .aux.txt")
-
-				local file = io.open(".aux.txt", "r")
-				local fileTable = {}
-				for line in file:lines() do
-					fileTable[#fileTable + 1] = line
-				end
-
-				file:close()
-				return fileTable[1]
-			end
-
-			self.tmpfolder = tmpDir()
+			self.tmpfolder = runCommand("mktemp -d .terrametmpXXXXX")[1]
 		end
 		return self.tmpfolder
 	end

@@ -62,10 +62,6 @@ function printWarning(value)
 	end
 end
 
-install = function(file)
-	-- #9
-end
-
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
 function include(scriptfile)
 	local env = setmetatable({}, {__index = _G})

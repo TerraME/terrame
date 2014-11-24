@@ -71,6 +71,29 @@ isfile = function(file)
 	return os.rename(file, file)
 end
 
+--- Execute a system command and return its output. Each line of the output will be a position
+-- in the returned table.
+-- @param command A command.
+-- @param number A number indicating the output to be captured. Default is 1 (standard output). 
+-- It is also possible to use 2, to capture the error output.
+-- @usage runCommand("dir")
+function runCommand(command, number)
+	if number == nil then number = 1 end
+	
+	command = command.." "..number.."> .aux.txt"
+	
+	os.execute(command)
+	local file = io.open(".aux.txt", "r")
+	local fileTable = {}
+	for line in file:lines() do
+		fileTable[#fileTable + 1] = line
+	end
+
+	file:close()
+	os.execute("rm .aux.txt")
+	return fileTable
+end
+
 --- Return the files in a given directory.
 -- @param folder A string describing a folder.
 -- @usage dir("C:\\")
@@ -78,25 +101,17 @@ dir = function(folder)
 	local s = sessionInfo().separator
 	local command
 	if s == "\\" then
-		command = "dir "..folder.." /b > "..folder..s..".aux.txt"
+		command = "dir "..folder.." /b"
 	elseif s == "/" then
-		command = "ls -1 "..folder.." 2> /dev/null".." > "..folder..s..".aux.txt"
+		command = "ls -1 "..folder.." 2> /dev/null"
 	end
-	
-	if os.execute(command) ~= nil then 
-		local file = io.open(folder..s..".aux.txt", "r")
-		local fileTable = {}
-		for line in file:lines() do
-			if line ~= "README.txt" and line ~= ".svn" and line ~= ".aux.txt.swp" and line ~= "aux.txt" then 
-				fileTable[#fileTable + 1] = line
-			end
-		end
 
-		file:close()
-		os.execute("rm "..folder..s..".aux.txt")
-		return fileTable
-	else
+	local result =  runCommand(command)
+	
+	if not result or not result[1] then
 		customError(folder.." is not a folder or is empty or does not exist.")
+	else
+		return result
 	end
 end	
 
