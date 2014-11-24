@@ -95,6 +95,7 @@ end
 --- Return a table with the content of the file config.lua, stored in the directory where TerraME
 -- was executed. All the global variables of the file are elements of the returned table. 
 -- Some packages require some variables in this file in order to be tested or executed.
+-- TerraME execution options -imporDb and -exportDb also use this file.
 -- @usage getConfig()
 function getConfig()
 	return include("config.lua")

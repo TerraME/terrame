@@ -75,7 +75,29 @@ end
 
 type__ = type
 
-function exportDatabase(package)
+local function sqlFiles(package)
+	local s = sessionInfo().separator
+	local files = {}
+	data = function(mtable)
+		if type(mtable.file) == "string" then mtable.file = {mtable.file} end
+
+		forEachElement(mtable.file, function(_, mfile)
+			if string.endswith(mfile, ".sql") then
+				table.insert(files, mfile)
+			end
+		end)
+	end
+
+	xpcall(function() dofile(sessionInfo().path..s.."packages"..s..package..s.."data.lua") end, function(err)
+		printError("Error loading "..package..s.."data.lua")
+		printError(err)
+		os.exit()
+	end)
+
+	return files
+end
+
+local function exportDatabase(package)
 	local s = sessionInfo().separator
 
 	local config = getConfig()
@@ -102,39 +124,28 @@ function exportDatabase(package)
 	end
 
 	local folder = packageInfo(package).data
+	local files = sqlFiles(package)
 
-	local files = {}
-	data = function(mtable)
-		if type(mtable.file) == "string" then mtable.file = {mtable.file} end
+	forEachElement(files, function(_, mfile)
+		local database = string.sub(mfile, 1, string.len(mfile) - 4)
 
-		forEachElement(mtable.file, function(_, mfile)
-			if string.endswith(mfile, ".sql") then
-				local database = string.sub(mfile, 1, string.len(mfile) - 4)
+		if isfile(sessionInfo().path..s.."packages"..s..package..s.."data"..s..mfile) then
+			printWarning("File "..mfile.." already exists and will not be replaced")
+		else
+			printNote("Exporting database "..database)
+			local result = runCommand(command.." "..database.." > "..folder..mfile, 2)
 
-				if isfile(sessionInfo().path..s.."packages"..s..package..s.."data"..s..mfile) then
-					printWarning("File "..mfile.." already exists and will not be replaced")
-				else
-					printNote("Exporting database "..database)
-					local result = runCommand(command.." "..database.." > "..folder..mfile, 2)
-
-					if result and result[1] then
-						printError(result[1])
-						os.execute("rm "..folder..mfile)
-					else
-						printNote("Database '"..database.."'successfully exported")
-					end
-				end
+			if result and result[1] then
+				printError(result[1])
+				os.execute("rm "..folder..mfile)
+			else
+				printNote("Database '"..database.."'successfully exported")
 			end
-		end)
-	end
-
-	xpcall(function() dofile(sessionInfo().path..s.."packages"..s..package..s.."data.lua") end, function(err)
-		printError("Error loading data.lua")
-		printError(err)
+		end
 	end)
 end
 
-function importDatabase(package)
+local function importDatabase(package)
 	local s = sessionInfo().separator
 
 	local config = getConfig()
@@ -161,36 +172,32 @@ function importDatabase(package)
 	end
 
 	local folder = packageInfo(package).data
+	local files = sqlFiles(package)
 
-	local files = {}
-	local d = dir(folder)
+	forEachElement(files, function(_, value)
+		local database = string.sub(value, 1, string.len(value) - 4)
 
-	forEachElement(d, function(_, value)
-		if string.endswith(value, ".sql") then
-			local database = string.sub(value, 1, string.len(value) - 4)
+		if drop then
+			printNote("Deleting database '"..database.."'")
+			local result = runCommand(command.." -e \"drop database "..database.."\"", 2)
+		end
 
-			if drop then
-				printNote("Deleting database '"..database.."'")
-				local result = runCommand(command.." -e \"drop database "..database.."\"", 2)
-			end
-
-			printNote("Creating database '"..database.."'")
-			local result = runCommand(command.." -e \"create database "..database.."\"", 2)
-			if result and result[1] then
-				printError(result[1])
-				printError("Add 'drop=true' to your config.lua to allow replacing databases if needed.")
-			else
-				printNote("Importing database '"..database.."'")
-				os.execute(command .." "..database.." < "..folder..value)
-				printNote("Database '"..database.."' successfully imported")
-			end
+		printNote("Creating database '"..database.."'")
+		local result = runCommand(command.." -e \"create database "..database.."\"", 2)
+		if result and result[1] then
+			printError(result[1])
+			printError("Add 'drop = true' to your config.lua to allow replacing databases if needed.")
+		else
+			printNote("Importing database '"..database.."'")
+			os.execute(command .." "..database.." < "..folder..value)
+			printNote("Database '"..database.."' successfully imported")
 		end
 	end)
 end
 
 -- find the folders inside a package that contain
 -- lua files, starting from package/tests
-local testfolders = function(folder, ut)
+local function testfolders(folder, ut)
 	local result = {}
 
 	local s = sessionInfo().separator
@@ -225,7 +232,7 @@ local testfolders = function(folder, ut)
 	return(result)
 end
 
-local executeDoc = function(package)
+local function executeDoc(package)
 	local initialTime = os.clock()
 
 	require("base")
@@ -1020,7 +1027,7 @@ local usage = function()
 	print(" -gui                       Show the player for the application (it works only ")
 	print("                            when an Environment and/or a Timer objects are used).")
 	print(" -ide                       Configure TerraME for running from IDEs in Windows systems.")
-	print(" [-package pkg] -importDb   Imports .sql files from folder data into MySQL.")
+	print(" [-package pkg] -importDb   Imports .sql files described in data.lua from folder data to MySQL.")
 	print(" -mode=normal (default)     Warnings enabled.")
 	print(" -mode=debug                Warnings treated as errors.")
 	print(" -mode=quiet                Warnings disabled.")
