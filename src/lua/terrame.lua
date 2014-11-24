@@ -827,6 +827,7 @@ end
 
 buildPackage = function(package)
 	printNote("Testing package "..package)
+	local s = sessionInfo().separator
 	local testErrors
 	xpcall(function() testErrors = executeTests(package) end, function(err)
 		printError(err)
@@ -861,6 +862,48 @@ buildPackage = function(package)
 	chdir(currentDir)
 	os.execute("mv "..packageDir..s..file.." .")
 end
+
+local function installPackage(file)
+	if file == nil then
+		printError("You need to choose the file to be installed.")
+		return
+	elseif not isfile(file) then
+		printError("No such file: "..file)
+		return
+	end
+
+	printNote("Installing "..file)
+
+	local s = sessionInfo().separator
+	local package
+	xpcall(function() package = string.sub(file, 1, string.find(file, "_") - 1) end, function(err)
+		printError(file.." is not a valid file name for a TerraME package")
+		os.exit()
+	end)
+
+	local param = sessionInfo().path..s.."packages"..s..package
+
+	local currentDir = currentdir()
+	local packageDir = sessionInfo().path..s.."packages"
+
+	os.execute("cp "..file.." "..packageDir)
+	chdir(packageDir)
+
+	os.execute("unzip -q "..file)
+
+	printNote("Trying to load package "..package)
+	xpcall(function() require(package) end, function(err)
+		printError("Package could not be loaded:")
+		printError(err)
+
+		os.execute("rm -rf "..package)
+		os.exit()
+	end)
+	printNote("Package successfully installed")
+	chdir(currentDir)
+	os.execute("rm "..packageDir..s..file)
+end
+
 
 local versions = function()
 	print("\nTerraME - Terra Modeling Environment")
@@ -1132,8 +1175,8 @@ execute = function(parameters) -- parameters is a vector of strings
 				end
 				os.exit()
 			elseif param == "-install" then
-
-			
+				installPackage(parameters[paramCount + 1])
+				os.exit()
 			elseif param == "-example" then
 				local file = parameters[paramCount + 1]
 
