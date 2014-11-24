@@ -75,9 +75,67 @@ end
 
 type__ = type
 
-function importDatabase (package)
+function exportDatabase(package)
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages"..s.."base"
+
+	local config = getConfig()
+
+	local user = config.user
+	local password = config.password
+	local host = config.host
+	local drop = config.drop
+
+	local command = "mysqldump"
+
+	if user then
+		command = command.." -u"..user
+	else
+		command = command.." -u root"
+	end
+
+	if password and password ~= "" then
+		command = command.." -p="..password
+	end
+
+	if host then
+		command = command.." -h="..host
+	end
+
+	local folder = packageInfo(package).data
+
+	local files = {}
+	data = function(mtable)
+		if type(mtable.file) == "string" then mtable.file = {mtable.file} end
+
+		forEachElement(mtable.file, function(_, mfile)
+			if string.endswith(mfile, ".sql") then
+				local database = string.sub(mfile, 1, string.len(mfile) - 4)
+
+				if isfile(sessionInfo().path..s.."packages"..s..package..s.."data"..s..mfile) then
+					printWarning("File "..mfile.." already exists and will not be replaced")
+				else
+					printNote("Exporting database "..database)
+					local result = runCommand(command.." "..database.." > "..folder..mfile, 2)
+
+					if result and result[1] then
+						printError(result[1])
+						os.execute("rm "..folder..mfile)
+					else
+						printNote("Database '"..database.."'successfully exported")
+					end
+				end
+			end
+		end)
+	end
+
+	xpcall(function() dofile(sessionInfo().path..s.."packages"..s..package..s.."data.lua") end, function(err)
+		printError("Error loading data.lua")
+		printError(err)
+	end)
+end
+
+function importDatabase(package)
+	local s = sessionInfo().separator
 
 	local config = getConfig()
 
@@ -958,10 +1016,11 @@ local usage = function()
 	print(" -autoclose                 Automatically close the platform after simulation.")
 	print(" -draw-all-higher <value>   Draw all subjects when percentage of changes was higher")
 	print("                            than <value>. Value must be between interval [0, 1].")
+	print(" [-package pkg] -exportDb   Exports .sql files described in data.lua from MySQL to folder data.")
 	print(" -gui                       Show the player for the application (it works only ")
 	print("                            when an Environment and/or a Timer objects are used).")
 	print(" -ide                       Configure TerraME for running from IDEs in Windows systems.")
-	print(" -importDb                  Imports .sql files into MySQL.")
+	print(" [-package pkg] -importDb   Imports .sql files from folder data into MySQL.")
 	print(" -mode=normal (default)     Warnings enabled.")
 	print(" -mode=debug                Warnings treated as errors.")
 	print(" -mode=quiet                Warnings disabled.")
@@ -1215,6 +1274,9 @@ execute = function(parameters) -- parameters is a vector of strings
 				os.exit()
 			elseif param == "-importDb" then
 				importDatabase(package)
+				os.exit()
+			elseif param == "-exportDb" then
+				exportDatabase(package)
 				os.exit()
 			elseif param == "-example" then
 				local file = parameters[paramCount + 1]
