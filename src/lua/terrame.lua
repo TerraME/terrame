@@ -132,11 +132,7 @@ local testfolders = function(folder, ut)
 	return(result)
 end
 
-local doc = function(package)
-	-- gera a documentacao do arquivo em TME_FOLDER/packages/package/doc a partir da pasta packages/package/lua/*.lua
-	-- no futuro, pegar tambem a pasta examples para gerar a documentacao
-	-- luadoc *.lua -d doc
-	-- colocar sempre o logo do TerraME, removendo o parametro logo = "img/terrame.png"
+local executeDoc = function(package)
 	local initialTime = os.clock()
 
 	require("base")
@@ -277,12 +273,13 @@ local doc = function(package)
 				   doc_report.wrong_links + doc_report.problem_examples + doc_report.undoc_examples
 
 	if errors == 0 then
-		printNote("Summing up, all tests were succesfully executed.")
+		printNote("Summing up, all the documentation was succesfully built.")
 	elseif errors == 1 then
-		printError("Summing up, one problem was found during the tests.")
+		printError("Summing up, one problem was found in the documentation.")
 	else
-		printError("Summing up, "..errors.." problems were found during the tests.")
+		printError("Summing up, "..errors.." problems were found in the documentation.")
 	end
+	return errors
 end
 
 -- builds a table with zero counts for each element of the table gotten as argument
@@ -303,7 +300,7 @@ local buildCountTable = function(mtable)
 	return result
 end
 
-local executeTests = function(fileName, package)
+local executeTests = function(package, fileName)
 	local initialTime = os.clock()
 
 	require("base")
@@ -824,11 +821,45 @@ local executeTests = function(fileName, package)
 	else
 		printError("Summing up, "..errors.." problems were found during the tests.")
 	end
-	os.exit() -- #76
+
+	return errors
 end
 
-build = function(folder)
-	-- #15
+buildPackage = function(package)
+	printNote("Testing package "..package)
+	local testErrors
+	xpcall(function() testErrors = executeTests(package) end, function(err)
+		printError(err)
+	end)
+	if testErrors > 0 then
+		printError("Build aborted due to the errors in the tests.")
+		return
+	end
+
+	printNote("Building documentation for "..package)
+	local docErrors
+	xpcall(function() docErrors = executeDoc(package) end, function(err)
+		printError(err)
+	end)
+
+	if docErrors > 0 then
+		printError("Build aborted due to the errors in the documentation.")
+		return
+	end
+
+	printNote("Building package "..package)
+	local info = packageInfo(package)
+	local file = package.."_"..info.version..".zip"
+	printNote("Creating file "..file)
+	local currentDir = currentdir()
+	local packageDir = sessionInfo().path..s.."packages"
+	chdir(packageDir)
+	os.execute("zip -qr "..file.." "..package)
+	if isfile(file) then
+		printNote("Package "..package.." successfully built")
+	end
+	chdir(currentDir)
+	os.execute("mv "..packageDir..s..file.." .")
 end
 
 local versions = function()
@@ -1023,16 +1054,16 @@ execute = function(parameters) -- parameters is a vector of strings
 				info_.mode = "debug"
 				paramCount = paramCount + 1
 
-				local correct, errorMsg = xpcall(function() executeTests(parameters[paramCount], package) end, function(err)
+				local correct, errorMsg = xpcall(function() executeTests(package, parameters[paramCount]) end, function(err)
 					printError(err)
 					--printError(traceback())
 				end)
-				return
+				os.exit() -- #76
 			elseif param == "-help" then 
 				usage()
 				os.exit()
 			elseif param == "-doc" then
-				local success, result = xpcall(function() doc(package) end, function(err)
+				local success, result = xpcall(function() executeDoc(package) end, function(err)
 					local s = sessionInfo().separator
 					local luaFolder = replaceSpecialChars(sessionInfo().path..s.."lua")
 					local baseLuaFolder = replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"..s.."lua")
@@ -1094,13 +1125,10 @@ execute = function(parameters) -- parameters is a vector of strings
 			elseif param == "-draw-all-higher" then
 				-- #78
 			elseif param == "-build" then
-				if package ~= "base" then
-					param = sessionInfo().path..s.."packages"..s..package
-					local info = packageInfo(package)
-					printNote("Creating "..package.."_"..info.version..".zip ")
-					os.execute("zip -qr "..package.."_"..info.version..".zip "..param)
-				else
+				if package == "base" then
 					printError("TerraME cannot be built using -build.")
+				else
+					buildPackage(package)
 				end
 				os.exit()
 			elseif param == "-install" then

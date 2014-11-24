@@ -822,7 +822,7 @@ function csv.parseLine(line, sep)
 			-- quoted value (ignore separator within)
 			local txt = ""
 			repeat
-				local startp,endp = string.find(line, '^%b""', pos)
+				local startp, endp = string.find(line, '^%b""', pos)
 				txt = txt..string.sub(line, startp + 1, endp - 1)
 				pos = endp + 1
 				c = string.sub(line, pos, pos)
