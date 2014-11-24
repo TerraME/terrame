@@ -151,7 +151,8 @@ function switchInvalidParameterSuggestionMsg(casevar, att, suggestion)
 	return "'"..casevar.."' is an invalid value for parameter '"..att.."'. Do you mean '"..suggestion.."'?"
 end
 
---- Load a given package.
+--- Load a given package. If the package is not installed, it tries to load from a folder in the
+-- current directory.
 -- @param package A package name.
 -- @usage require("calibration")
 function require(package)
@@ -161,7 +162,12 @@ function require(package)
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
 	if not isfile(package_path) then
-		customError("Package '"..package.."' is not installed.")
+		if isfile(package) then
+			printWarning("Loading package '"..package.."' from a folder in the current directory")
+			package_path = package
+		else
+			customError("Package '"..package.."' is not installed")
+		end
 	end
 
 	local load_file = package_path..s.."load.lua"
