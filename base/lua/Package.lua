@@ -166,7 +166,7 @@ function require(package)
 			printWarning("Loading package '"..package.."' from a folder in the current directory")
 			package_path = package
 		else
-			customError("Package '"..package.."' is not installed")
+			customError("Package '"..package.."' is not installed.")
 		end
 	end
 

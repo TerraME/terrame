@@ -245,6 +245,29 @@ UnitTest_ = {
 	-- delay when the UnitTest is built.
 	-- @usage unitTest:delay()
 	delay = function()
+	end,
+	--- Create a temporary folder in the current directory and return its name. Every time this function
+	-- is executed with the same instance of UnitTest it returns the same folder. This folder needs to
+	-- be removed manually in the end of the tests or in the end of the simulation.
+	-- @usage tmpfolder = unitTest:tmpFolder()
+	tmpFolder = function(self)
+		if not self.tmpfolder then
+			local function tmpDir()
+				os.execute("mktemp -d .terrametmpXXXXX > .aux.txt")
+
+				local file = io.open(".aux.txt", "r")
+				local fileTable = {}
+				for line in file:lines() do
+					fileTable[#fileTable + 1] = line
+				end
+
+				file:close()
+				return fileTable[1]
+			end
+
+			self.tmpfolder = tmpDir()
+		end
+		return self.tmpfolder
 	end
 }
 

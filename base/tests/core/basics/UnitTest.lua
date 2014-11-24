@@ -72,6 +72,16 @@ return{
 		local u = UnitTest{sleep = 1}
 		unitTest:assert(true)
 	end,
+	tmpFolder = function(unitTest)
+		local u = UnitTest{}
+
+		local f = u:tmpFolder()
+		local g = u:tmpFolder()
+
+		unitTest:assert_equal(f, g)
+		unitTest:assert_type(f, "string")
+		os.execute("rm -rf "..f)
+	end,
 	UnitTest = function(unitTest)
 		local u = UnitTest{}
 

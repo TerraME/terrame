@@ -78,13 +78,13 @@ dir = function(folder)
 	local s = sessionInfo().separator
 	local command
 	if s == "\\" then
-		command = "dir "..folder.." /b > "..folder..s.."aux.txt"
+		command = "dir "..folder.." /b > "..folder..s..".aux.txt"
 	elseif s == "/" then
-		command = "ls -1 "..folder.." 2> /dev/null".." > "..folder..s.."aux.txt"
+		command = "ls -1 "..folder.." 2> /dev/null".." > "..folder..s..".aux.txt"
 	end
 	
 	if os.execute(command) ~= nil then 
-		local file = io.open(folder..s.."aux.txt", "r")
+		local file = io.open(folder..s..".aux.txt", "r")
 		local fileTable = {}
 		for line in file:lines() do
 			if line ~= "README.txt" and line ~= ".svn" and line ~= ".aux.txt.swp" and line ~= "aux.txt" then 
@@ -93,7 +93,7 @@ dir = function(folder)
 		end
 
 		file:close()
-		os.execute("rm "..folder..s.."aux.txt")
+		os.execute("rm "..folder..s..".aux.txt")
 		return fileTable
 	else
 		customError(folder.." is not a folder or is empty or does not exist.")
