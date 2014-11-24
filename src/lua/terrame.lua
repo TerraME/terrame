@@ -75,20 +75,59 @@ end
 
 type__ = type
 
--- #36
-importDatabase = function()
+function importDatabase (package)
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s.."base"
 
-	-- before calling the commands below, we need to execute
-	-- "create database cabeca;"
-	
-	local command = "mysql -u root -p -h localhost cabeca < "..baseDir..s.."data"..s.."cabecaDeBoi.sql"
-	print(command)
+	local config = getConfig()
 
-	command = "mysql -u root -p -h localhost db_emas < "..baseDir..s.."data"..s.."db_emas.sql"
-	print(command)
---	os.execute(command)
+	local user = config.user
+	local password = config.password
+	local host = config.host
+	local drop = config.drop
+
+	local command = "mysql"
+
+	if user then
+		command = command.." -u"..user
+	else
+		command = command.." -u root"
+	end
+
+	if password and password ~= "" then
+		command = command.." -p="..password
+	end
+
+	if host then
+		command = command.." -h="..host
+	end
+
+	local folder = packageInfo(package).data
+
+	local files = {}
+	local d = dir(folder)
+
+	forEachElement(d, function(_, value)
+		if string.endswith(value, ".sql") then
+			local database = string.sub(value, 1, string.len(value) - 4)
+
+			if drop then
+				printNote("Deleting database '"..database.."'")
+				local result = runCommand(command.." -e \"drop database "..database.."\"", 2)
+			end
+
+			printNote("Creating database '"..database.."'")
+			local result = runCommand(command.." -e \"create database "..database.."\"", 2)
+			if result and result[1] then
+				printError(result[1])
+				printError("Add 'drop=true' to your config.lua to allow replacing databases if needed.")
+			else
+				printNote("Importing database '"..database.."'")
+				os.execute(command .." "..database.." < "..folder..value)
+				printNote("Database '"..database.."' successfully imported")
+			end
+		end
+	end)
 end
 
 -- find the folders inside a package that contain
@@ -922,6 +961,7 @@ local usage = function()
 	print(" -gui                       Show the player for the application (it works only ")
 	print("                            when an Environment and/or a Timer objects are used).")
 	print(" -ide                       Configure TerraME for running from IDEs in Windows systems.")
+	print(" -importDb                  Imports .sql files into MySQL.")
 	print(" -mode=normal (default)     Warnings enabled.")
 	print(" -mode=debug                Warnings treated as errors.")
 	print(" -mode=quiet                Warnings disabled.")
@@ -1172,6 +1212,9 @@ execute = function(parameters) -- parameters is a vector of strings
 				os.exit()
 			elseif param == "-install" then
 				installPackage(parameters[paramCount + 1])
+				os.exit()
+			elseif param == "-importDb" then
+				importDatabase(package)
 				os.exit()
 			elseif param == "-example" then
 				local file = parameters[paramCount + 1]
