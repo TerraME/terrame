@@ -72,7 +72,7 @@ return{
 
 		error_func = function()
 			env:loadNeighborhood{
-				source = file("gpmPolLinDbEmas.gpm", "base"),
+				source = file("emas-pollin.gpm", "base"),
 				name = 6,
 				bidirect = true
 			}
@@ -81,7 +81,7 @@ return{
 
 		error_func = function()
 			env:loadNeighborhood{
-				source = file("gpmPolLinDbEmas.gpm", "base"),
+				source = file("emas-pollin.gpm", "base"),
 				name = "neigh1",
 				bidirect = 13
 			}
@@ -90,7 +90,7 @@ return{
 
 		error_func = function()
 			env:loadNeighborhood{
-				source = file("gpmdistanceDbEmasCells.gpm", "base"),
+				source = file("emas-distance.gpm", "base"),
 				name = "my_neighborhood"
 			}
 		end

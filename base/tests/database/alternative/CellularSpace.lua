@@ -562,11 +562,11 @@ However, the database does not exist!
 		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste"))
 
 		error_func = function()
-			cs:loadNeighborhood{source = file("neighCabecaDeBoi900x900_invalid.gpm", "base")}
+			cs:loadNeighborhood{source = file("cabecadeboi-invalid-neigh.gpm", "base")}
 		end
 		unitTest:assert_error(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
 
-		local mfile = file("neighCabecaDeBoi900x900.gpm", "base")
+		local mfile = file("cabecadeboi-neigh.gpm", "base")
 
 		error_func = function()
 			cs2:loadNeighborhood{
@@ -576,7 +576,7 @@ However, the database does not exist!
 		end
 		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cells900x900'.")
 
-		mfile = file("neighCabecaDeBoi900x900.gal", "base")
+		mfile = file("cabecadeboi-neigh.gal", "base")
 
 		error_func = function()
 			cs2:loadNeighborhood{
@@ -586,7 +586,7 @@ However, the database does not exist!
 		end
 		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cells900x900'.")
 
-		mfile = file("neighCabecaDeBoi900x900.gwt", "base")
+		mfile = file("cabecadeboi-neigh.gwt", "base")
 
 		error_func = function()
 			cs2:loadNeighborhood{

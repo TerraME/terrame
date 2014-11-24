@@ -36,9 +36,9 @@ return{
 		local mdatabase
 
 		if mdbType == "ado" then
-			mdatabase = data("db_emas.mdb", "base")
+			mdatabase = data("emas.mdb", "base")
 		else
-			mdatabase = "db_emas"
+			mdatabase = "emas"
 		end
 
 		local cs = CellularSpace{
