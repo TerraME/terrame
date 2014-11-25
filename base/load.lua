@@ -27,6 +27,7 @@ files = {
 	"InternetSender.lua",
 	"FileSystem.lua",
 	"VisualTable.lua",
+	"TextScreen.lua",
 	"LogFile.lua"
 }
 

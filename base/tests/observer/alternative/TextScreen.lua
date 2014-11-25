@@ -24,41 +24,35 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	Society = function(unitTest)
-		local ag = Agent{
-		    height = 1,
-			grow = function(self)
-				self.height = self.height + 1
-			end
-		}
+	TextScreen = function(unitTest)
+		local c = Cell{value = 5}
 
-		local soc = Society{
-			instance = ag,
-			quantity = 10,
-			value = 5
-		}
+		local error_func = function()
+			TextScreen{}
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
 
-		--local c = Chart{subject = soc}
-		--unitTest:assert_type(c, "number")
+		error_func = function()
+			TextScreen{subject = c, select = 5}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 5))
 
-		local c = Chart{subject = soc, select = "value"}--{"height", "#"}}
-		unitTest:assert_type(c, "number")
+		error_func = function()
+			TextScreen{subject = c, select = "mvalue"}
+		end
+		unitTest:assert_error(error_func, "Selected element 'mvalue' does not belong to the subject.")
 
-		soc:notify(0)
+		error_func = function()
+			TextScreen{subject = c, select = {}}
+		end
+		unitTest:assert_error(error_func, "TextScreen must select at least one attribute.")
 
-		local t = Timer{
-		    Event{action = function(e)
-				soc:grow()
-				soc.value = soc.value + 1
-		        soc:notify(e)
-		    end}
-		}
+		local unit = Cell{}
 
-		TextScreen{subject = soc}
---		LogFile{subject = soc}
-		VisualTable{subject = soc}
-		t:execute(30)
-		unitTest:delay()
+		error_func = function()
+			TextScreen{subject = unit}
+		end
+		unitTest:assert_error(error_func, "The subject does not have at least one valid attribute to be used.")
 	end
 }
 
