@@ -54,6 +54,7 @@ return{
         }
 
 		LogFile{subject = world}
+		VisualTable{subject = world}
         t:execute(30)
 		unitTest:delay()
 

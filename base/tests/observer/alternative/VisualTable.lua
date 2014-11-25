@@ -24,27 +24,35 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	Agent = function(unitTest)
-		local world = Agent{
-		    count = 0
-		}
+	VisualTable = function(unitTest)
+		local c = Cell{value = 5}
 
-		local c = Chart{subject = world}
+		local error_func = function()
+			VisualTable{}
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
 
-		unitTest:assert_type(c, "number")
+		error_func = function()
+			VisualTable{subject = c, select = 5}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 5))
 
-		world:notify(0)
+		error_func = function()
+			VisualTable{subject = c, select = "mvalue"}
+		end
+		unitTest:assert_error(error_func, "Selected element 'mvalue' does not belong to the subject.")
 
-		local t = Timer{
-		    Event{action = function(e)
-				world.count = world.count + 1
-		        world:notify(e)
-		    end}
-		}
+		error_func = function()
+			VisualTable{subject = c, select = {}}
+		end
+		unitTest:assert_error(error_func, "VisualTable must select at least one attribute.")
 
-		LogFile{subject = world}
-		VisualTable{subject = world}
-		t:execute(30)
+		local unit = Cell{}
+
+		error_func = function()
+			VisualTable{subject = unit}
+		end
+		unitTest:assert_error(error_func, "The subject does not have at least one valid attribute to be used.")
 	end
 }
 

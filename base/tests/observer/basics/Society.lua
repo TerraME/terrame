@@ -55,6 +55,7 @@ return{
 		}
 
 --		LogFile{subject = soc}
+		VisualTable{subject = soc}
 		t:execute(30)
 		unitTest:delay()
 	end
