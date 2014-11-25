@@ -54,6 +54,7 @@ return{
 		    end}
 		}
 
+--		LogFile{subject = soc}
 		t:execute(30)
 		unitTest:delay()
 	end

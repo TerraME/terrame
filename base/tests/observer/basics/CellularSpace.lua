@@ -53,6 +53,7 @@ return{
 			end}
 		}
 
+		LogFile{subject = world}
 		t:execute(30)
 --]]
 
