@@ -1144,6 +1144,7 @@ function CellularSpace(data)
 
 	if data.database then 
 		mandatoryTableArgument(data, "database", "string")
+		verify(data.database ~= "", "Empty database name.")
 		cObj:setDBName(data.database)		
 	end
 
