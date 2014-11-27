@@ -25,8 +25,6 @@ inline bool operator<(const QPair<Task *, int> &t, int priority)
 
 }  // using namespace BagOfTasks;
 
-
-
 TaskManager & TaskManager::getInstance()
 {
     static TaskManager taskManager;

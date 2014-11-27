@@ -53,3 +53,4 @@ private:
 } // namespace BagOfTasks
 
 #endif // WORKER_H
+

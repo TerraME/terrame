@@ -22,7 +22,7 @@ of this library and its documentation.
 
 Author: Tiago Garcia de Senna Carneiro
 	Raian Vargas Maretto
-        Antonio Jose da Cunha Rodrigues
+		Antonio Jose da Cunha Rodrigues
 	Rodrigo Reis Pereira
 *************************************************************************************/
 
@@ -32,9 +32,8 @@ Author: Tiago Garcia de Senna Carneiro
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    // Estatisticas de desempenho
-    #include "statistic.h"
-    #include <QFile>
+	#include "statistic.h"
+	#include <QFile>
 #endif
 
 #include "blackBoard.h"
@@ -65,201 +64,191 @@ extern "C"
 //{
 //  int i = 0;
 //  foreach (QWidget *widget, QApplication::allWidgets()){
-//    widget->close();
-//    i++;
-//    printf("%i", i);
+//	widget->close();
+//	i++;
+//	printf("%i", i);
 //  }
 //}
 
 ////////////////////////////////////////////////////////////////////////////
-// Percorre a lista de widget verificando se
-// algum widget foi inicializado
 bool existWindows()
 {
-    foreach (QWidget *widget, QApplication::allWidgets())
-    {
-        if (widget) // && widget->isVisible())
-            return true;
-    }
-    return false;
+	foreach(QWidget *widget, QApplication::allWidgets())
+	{
+		if (widget) // && widget->isVisible())
+			return true;
+	}
+	return false;
 }
 
 void outputHandle(QtMsgType type, const char *msg)
 {
-    // ModelConsole &console = ModelConsole::getInstance();
-    //if(! console.isVisible())
-    //    console.show();
+	// ModelConsole &console = ModelConsole::getInstance();
+	//if(! console.isVisible())
+	//	console.show();
 
-    Player &player = Player::getInstance();
+	Player &player = Player::getInstance();
 
-    //in this function, you can write the message to any stream!
-    switch (type) {
-        case QtDebugMsg:
-            player.appendMessage("Debug: " + QString(msg));
-            break;
-
-        case QtWarningMsg:
-            player.appendMessage(QString(msg));
-            break;
-
-        case QtCriticalMsg:
-            player.appendMessage("Critical: " + QString(msg));
-            break;
-
-        case QtFatalMsg:
-            player.appendMessage("Fatal: " + QString(msg));
-            fprintf(stderr, "Fatal: %s\n", msg);
-            abort();
-
-        default:
-            fprintf(stdout, "%s\n", msg);
-            break;
-    }
+	//in this function, you can write the message to any stream!
+	switch (type) {
+		case QtDebugMsg:
+			player.appendMessage("Debug: " + QString(msg));
+			break;
+		case QtWarningMsg:
+			player.appendMessage(QString(msg));
+			break;
+		case QtCriticalMsg:
+			player.appendMessage("Critical: " + QString(msg));
+			break;
+		case QtFatalMsg:
+			player.appendMessage("Fatal: " + QString(msg));
+			fprintf(stderr, "Fatal: %s\n", msg);
+			abort();
+		default:
+			fprintf(stdout, "%s\n", msg);
+			break;
+	}
 }
 
 /// Opens Lua environment and Lua libraries 
 void openLuaEnvironment()
 {
-    // tentando utilizar um tipo meu em lua
-    //L = lua_open();
-    L = luaL_newstate();
+	// tentando utilizar um tipo meu em lua
+	//L = lua_open();
+	L = luaL_newstate();
 
 #if defined( TME_LUA_5_0 )
-    luaopen_base(L);             // opens the basic library
-    luaopen_table(L);            // opens the table library
-    luaopen_io(L);               // opens the I/O library
-    luaopen_string(L);           // opens the string lib.
-    luaopen_math(L);             // opens the math lib.
+	luaopen_base(L);			 // opens the basic library
+	luaopen_table(L);			// opens the table library
+	luaopen_io(L);			   // opens the I/O library
+	luaopen_string(L);		   // opens the string lib.
+	luaopen_math(L);			 // opens the math lib.
 #else
-    luaL_openlibs(L);  // open libraries
+	luaL_openlibs(L);  // open libraries
 #endif
 }
 
 /// Records TerraME classes into Lua environment
 void registerClasses()
 {
-    //lua_register(L, "msgbox",  lua_msgbox);
+	//lua_register(L, "msgbox",  lua_msgbox);
 
-    Luna<luaCellIndex>::Register(L);
+	Luna<luaCellIndex>::Register(L);
 
-    Luna<luaCell >::Register(L);
-    Luna<luaNeighborhood >::Register(L);
-    Luna<luaCellularSpace >::Register(L);
+	Luna<luaCell>::Register(L);
+	Luna<luaNeighborhood>::Register(L);
+	Luna<luaCellularSpace>::Register(L);
 
-    Luna<luaFlowCondition >::Register(L);
-    Luna<luaJumpCondition >::Register(L);
-    Luna<luaControlMode >::Register(L);
-    Luna<luaLocalAgent >::Register(L);
-    Luna<luaGlobalAgent >::Register(L);
+	Luna<luaFlowCondition>::Register(L);
+	Luna<luaJumpCondition>::Register(L);
+	Luna<luaControlMode>::Register(L);
+	Luna<luaLocalAgent>::Register(L);
+	Luna<luaGlobalAgent>::Register(L);
 
-    Luna<luaTimer >::Register(L);
-    Luna<luaEvent >::Register(L);
-    Luna<luaMessage >::Register(L);
+	Luna<luaTimer>::Register(L);
+	Luna<luaEvent>::Register(L);
+	Luna<luaMessage>::Register(L);
 
-    Luna<luaEnvironment > ::Register(L);
-
-    Luna<luaTrajectory > ::Register(L);    
-
-    //@RODRIGO
-    Luna<LuaRandomUtil > ::Register(L);
-    Luna<luaSociety > ::Register(L);
+	Luna<luaEnvironment>::Register(L);
+	Luna<luaTrajectory>::Register(L);
+	Luna<LuaRandomUtil>::Register(L);
+	Luna<luaSociety>::Register(L);
 }
 
 extern ExecutionModes execModes;
 
-int main ( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
 #ifdef TME_PROTOCOL_BUFFERS
-    // Verify that the version of the library that we linked against is
-    // compatible with the version of the headers we compiled against.
-    GOOGLE_PROTOBUF_VERIFY_VERSION; 
+	// Verify that the version of the library that we linked against is
+	// compatible with the version of the headers we compiled against.
+	GOOGLE_PROTOBUF_VERIFY_VERSION; 
 #endif
 
-    Q_INIT_RESOURCE(observerResource);
+	Q_INIT_RESOURCE(observerResource);
 
-    // TODO
-    // retrive lua version from terrame.lua
-    TME_VERSION = "2.0";
-    TME_PATH = "TME_PATH";
+	// TODO
+	// retrive lua version from terrame.lua
+	TME_VERSION = "2.0";
+	TME_PATH = "TME_PATH";
 
-    QApplication app(argc, argv);
-    //app.setQuitOnLastWindowClosed(true);
+	QApplication app(argc, argv);
+	//app.setQuitOnLastWindowClosed(true);
 
 #ifdef TME_STATISTIC
-    {
+	{
 		Statistic::getInstance();
 
-        QFile statFile(app.applicationDirPath() + "/output_MemoryUsage.txt");
-        if (statFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            QTextStream out(&statFile);
+		QFile statFile(app.applicationDirPath() + "/output_MemoryUsage.txt");
+		if (statFile.open(QIODevice::WriteOnly | QIODevice::Text))
+		{
+			QTextStream out(&statFile);
 
 #ifdef TME_WIN32
-            out << "Name                Pid      VM      WS    Priv Priv Pk   Faults   NonP Page\n";
+			out << "Name				Pid	  VM	  WS	Priv Priv Pk   Faults   NonP Page\n";
 #else
-            out << "Mem\n";
+			out << "Mem\n";
 #endif // TME_WIN32
-
-        }
-        statFile.close();
-    }
+		}
+		statFile.close();
+	}
 #endif // TME_STATISTIC
 
-    execModes = Normal;
-    SHOW_GUI = false;
-    WORKERS_NUMBER = 505;
-    paused = false;
-    step = false;
-    bool autoClose = false;
+	execModes = Normal;
+	SHOW_GUI = false;
+	WORKERS_NUMBER = 505;
+	paused = false;
+	step = false;
+	bool autoClose = false;
 
-    // Register the message handle of Observer Player
-    if ((argc > 2) && (! strcmp(argv[1], "-gui")))
-    {
-        SHOW_GUI = true;
+	// Register the message handle of Observer Player
+	if((argc > 2) && (! strcmp(argv[1], "-gui")))
+	{
+		SHOW_GUI = true;
 
-        qInstallMsgHandler(outputHandle);
-        Player::getInstance().show();
-        Player::getInstance().setEnabled(false);
+		qInstallMsgHandler(outputHandle);
+		Player::getInstance().show();
+		Player::getInstance().setEnabled(false);
 
-        qWarning("Warning: The TerraME Player will be able to execute only when "
-            "an Environment and/or a Timer object are used in the model file.");
-        app.processEvents();
-    }    
+		qWarning("Warning: The TerraME Player will be able to execute only when "
+			"an Environment and/or a Timer object are used in the model file.");
+		app.processEvents();
+	}	
 
-    // Loads the TerrME constructors for LUA
-    QString tmePath(getenv(TME_PATH));
+	// Loads the TerrME constructors for LUA
+	QString tmePath(getenv(TME_PATH));
 
-    if (tmePath.isEmpty())
-    {
-        qFatal("%s environment variable should exist and point to TerraME "
-            "installation folder.", TME_PATH);
-    }
+	if(tmePath.isEmpty())
+	{
+		qFatal("%s environment variable should exist and point to TerraME "
+			"installation folder.", TME_PATH);
+	}
 
-    openLuaEnvironment();  // Opens Lua environment and libraries
-    registerClasses();      // records TerraME Classes in Lua environment
+	openLuaEnvironment();  // Opens Lua environment and libraries
+	registerClasses();	  // records TerraME Classes in Lua environment
 	
 	// Loads lfs functions
 	luaopen_lfs(L);
 
 #if defined ( TME_WIN32 )
-    tmePath.append("\\lua\\terrame.lua");
+	tmePath.append("\\lua\\terrame.lua");
 #else
-    tmePath.append("/lua/terrame.lua");
+	tmePath.append("/lua/terrame.lua");
 #endif
 
-    // runs the lua core files 
-    int error = luaL_loadfile(L, tmePath.toAscii().constData()) || lua_pcall(L, 0, 0, 0);
-    if (error)
-    {
-        fprintf(stderr, "\n%s", lua_tostring(L, -1));
-        lua_pop(L, 1);  // pop error message from the stack
-        lua_close( L );
-        return -1;
-    }
+	// runs the lua core files 
+	int error = luaL_loadfile(L, tmePath.toAscii().constData()) || lua_pcall(L, 0, 0, 0);
+	if(error)
+	{
+		fprintf(stderr, "\n%s", lua_tostring(L, -1));
+		lua_pop(L, 1);  // pop error message from the stack
+		lua_close(L);
+		return -1;
+	}
 
-    // Execute the lua files passe
-    if( argc < 2)
-    {
+	// Execute the lua files
+	if(argc < 2)
+	{
 		lua_getglobal(L, "execute");
 		lua_pushnil(L);
 		lua_call(L, 1, 0);
@@ -267,38 +256,35 @@ int main ( int argc, char *argv[] )
 	}
 	else
 	{
-		
 		lua_getglobal(L, "execute");
 		lua_newtable(L);
 
 		int argument = 1;
-		while( argument < argc )
+		while(argument < argc)
 		{
 			lua_pushnumber(L, argument);
 			lua_pushstring(L, argv[argument]);
 			lua_settable(L, -3);
 			
-			argument++;
-			
+			argument++;		
 		}
 		
 		lua_call(L, 1, 0);
 	}
 		
-		//@RAIAN: ANTIGO - TODO: remove this
 #ifdef NOCPP_RAIAN
-        if ( argv[argument][0] == '-')
-        {
-//            if ( ! strcmp(argv[argument],"-version") )
-//            {
-//                versions();
-//            }
-//            else if( !strcmp(argv[argument], "-ide"))
+		if ( argv[argument][0] == '-')
+		{
+//			if ( ! strcmp(argv[argument],"-version") )
+//			{
+//				versions();
+//			}
+//			else if( !strcmp(argv[argument], "-ide"))
 //			{
 //				createEmptyObserver(L);
 //			}
-//            else if ( ! strcmp(argv[argument],"-mode=quiet") )
-//            {
+//			else if ( ! strcmp(argv[argument],"-mode=quiet") )
+//			{
 //				execModes = Quiet;
 //			}
 //			else if(! strcmp(argv[argument],"-mode=normal"))
@@ -324,108 +310,104 @@ int main ( int argc, char *argv[] )
 			
 				argument++;
 			}
-			else if ( ! strcmp(argv[argument], "-workers") )
+			else if (! strcmp(argv[argument], "-workers"))
 			{
 				bool ok = false;
 				int number = QString( argv[argument + 1] ).toInt(&ok);
-				if (ok)
-					WORKERS_NUMBER = number;
+				if(ok) WORKERS_NUMBER = number;
 
 				argument++;
 			}
-			else if ( strcmp(argv[argument],"-gui") )
+			else if(strcmp(argv[argument],"-gui"))
 			{
 				qWarning("\nInvalid arguments.");
 				usage();
 				return -1;
 			}
-			
-			if (argc < 3)
+			if(argc < 3)
 			{
 				usage();
 				return -1;
 			}
-        }
-        else
-        {
-            // creates the "TME_MODE" variable in the Lua namespace
-            lua_pushnumber(L, execModes);
-            lua_setglobal(L, "TME_MODE");
+		}
+		else
+		{
+			// creates the "TME_MODE" variable in the Lua namespace
+			lua_pushnumber(L, execModes);
+			lua_setglobal(L, "TME_MODE");
 
 #ifdef TME_STATISTIC
-            // double t = Statistic::getInstance().startMiliTime();
-            double t0 = Statistic::getInstance().startMiliTime(), t1 = 0.0;
+			// double t = Statistic::getInstance().startMiliTime();
+			double t0 = Statistic::getInstance().startMiliTime(), t1 = 0.0;
 #endif
-            // runs the lua files received as paremeters
-            error =  luaL_loadfile(L, argv[argument] ) || lua_pcall(L, 0, 0, 0);
+			// runs the lua files received as paremeters
+			error =  luaL_loadfile(L, argv[argument] ) || lua_pcall(L, 0, 0, 0);
 
 #ifdef TME_STATISTIC
-            t1 = Statistic::getInstance().endMicroTime();
-            // t1 = Statistic::getInstance().endMiliTime();
-            qDebug() << "total simulation time - inicial: " << t0 
-                << " final: " << t1 << " = " << t1 - t0 << " ms";
+			t1 = Statistic::getInstance().endMicroTime();
+			// t1 = Statistic::getInstance().endMiliTime();
+			qDebug() << "total simulation time - inicial: " << t0 
+				<< " final: " << t1 << " = " << t1 - t0 << " ms";
 #endif
 
-            if (error)
-            {
-                fprintf(stderr, "\n%s\n", lua_tostring(L, -1));
-                lua_pop(L, 1);  // pop error message from the stack
-                lua_close( L );
-                return false;
-            }
-        }
-        argument++;
+			if (error)
+			{
+				fprintf(stderr, "\n%s\n", lua_tostring(L, -1));
+				lua_pop(L, 1);  // pop error message from the stack
+				lua_close( L );
+				return false;
+			}
+		}
+		argument++;
 		
 #endif
-		//@RAIAN: ANTIGO - FIM
-	
-    //// Lua interpreter line-by-line
-    //while (fgets(buff, sizeof(buff), stdin) != NULL)
-    //{
-    //error = luaL_loadbuffer(L, buff, strlen(buff), "line") ||lua_pcall(L, 0, 0, 0);
-    //if (error)
-    //{
-    //   fprintf(stderr, "%s", lua_tostring(L, -1));
-    //   lua_pop(L, 1);  // pop error message from the stack
-    //}
-    //}
+	//// Lua interpreter line-by-line
+	//while (fgets(buff, sizeof(buff), stdin) != NULL)
+	//{
+	//error = luaL_loadbuffer(L, buff, strlen(buff), "line") ||lua_pcall(L, 0, 0, 0);
+	//if (error)
+	//{
+	//   fprintf(stderr, "%s", lua_tostring(L, -1));
+	//   lua_pop(L, 1);  // pop error message from the stack
+	//}
+	//}
 
-    lua_close( L );
+	lua_close(L);
 
-    // Caso no exista nenhum janela entao finaliza
-    // a aplicacao
-    if (! existWindows())
+	// Caso no exista nenhum janela entao finaliza
+	// a aplicacao
+	if (! existWindows())
 	{
-        app.exit();
-        return 0;
-    }
+		app.exit();
+		return 0;
+	}
 
-    // Percorre uma lista fechando todos os widgets
-    //closeAllWidgets();
+	// Percorre uma lista fechando todos os widgets
+	//closeAllWidgets();
 
-    //int ret = app.exec();
-    //return ret;
+	//int ret = app.exec();
+	//return ret;
 
 #ifdef TME_STATISTIC
-    Statistic::getInstance().collectMemoryUsage();
-    Statistic::getInstance().saveData();
-    QFile::copy(app.applicationDirPath() + "/output_MemoryUsage.txt",
-        app.applicationDirPath() + "/memoryUsage_"
-                        + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss")
-                        + "_.csv");
+	Statistic::getInstance().collectMemoryUsage();
+	Statistic::getIn stance().saveData();
+	QFile::copy(app.applicationDirPath() + "/output_MemoryUsage.txt",
+		app.applicationDirPath() + "/memoryUsage_"
+						+ QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss")
+						+ "_.csv");
 
-    // exit(0);
+	// exit(0);
 #endif
 
-    if (autoClose)
-    {
-        // app.processEvents();
-        exit(0);
-        qDebug() << "\ncloseAllWindows()"; std::cout.flush();
-        return 0;
-    }
+	if (autoClose)
+	{
+		// app.processEvents();
+		exit(0);
+		qDebug() << "\ncloseAllWindows()"; std::cout.flush();
+		return 0;
+	}
 
-    return app.exec();
+	return app.exec();
 }
 #else
 
@@ -441,79 +423,79 @@ bool paused = false;
 
 void receiverUsage()
 {
-    qWarning() << "You need to put the mode of receiver.";
-    qWarning() << "Specific the mode: ";
-    qWarning() << "   terrame -help                   \t Show this help and exit";
-    qWarning() << "   terrame ";
-    qWarning() << "   terrame -workers <value> [option] \t Show this helps";
-    qWarning() << "\nOption";   
-    qWarning() << "    -tcp              \t Receiver in mode TCP (default mode)";
-    qWarning() << "    -udp              \t Receiver in mode UDP";
-    qWarning() << "";
+	qWarning() << "You need to put the mode of receiver.";
+	qWarning() << "Specific the mode: ";
+	qWarning() << "   terrame -help				   \t Show this help and exit";
+	qWarning() << "   terrame ";
+	qWarning() << "   terrame -workers <value> [option] \t Show this helps";
+	qWarning() << "\nOption";   
+	qWarning() << "	-tcp			  \t Receiver in mode TCP (default mode)";
+	qWarning() << "	-udp			  \t Receiver in mode UDP";
+	qWarning() << "";
 }
 
-int main ( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(observerResource);
-    QApplication app(argc, argv);
+	Q_INIT_RESOURCE(observerResource);
+	QApplication app(argc, argv);
 
-    int ret = -1;    
-    
-    if (argc < 2)
-    {
-        qWarning() << "Running in receiver in mode TCP..";
-        ReceiverTcpServer receiver;
-	    receiver.show();
-        return app.exec();
-    }
-    else
-    {
-        QStringList argsList = app.arguments();
+	int ret = -1;	
+	
+	if(argc < 2)
+	{
+		qWarning() << "Running in receiver in mode TCP..";
+		ReceiverTcpServer receiver;
+		receiver.show();
+		return app.exec();
+	}
+	else
+	{
+		QStringList argsList = app.arguments();
 
-        int index = argsList.indexOf("-workers");
-        if ( index > 1 )
-        {
-            bool ok = false;
-            int number = argsList.at(index++).toInt(&ok);
-            if (ok)
-                WORKERS_NUMBER = number;
-        }
+		int index = argsList.indexOf("-workers");
+		if(index > 1)
+		{
+			bool ok = false;
+			int number = argsList.at(index++).toInt(&ok);
+			if (ok) WORKERS_NUMBER = number;
+		}
 
-        index = argsList.indexOf("-help");
-        if ( index > 1 )
-        {
-            receiverUsage();
-            return 0;
-        }
+		index = argsList.indexOf("-help");
+		if(index > 1)
+		{
+			receiverUsage();
+			return 0;
+		}
 
-        index = argsList.indexOf("-tcp");
-        if ( index > 1 )
-        {
-            qWarning() << "Running in receiver in mode TCP..";
-            ReceiverTcpServer receiver;
-            receiver.show();
+		index = argsList.indexOf("-tcp");
+		if(index > 1)
+		{
+			qWarning() << "Running in receiver in mode TCP..";
+			ReceiverTcpServer receiver;
+			receiver.show();
 
-            ret = app.exec();
-            // return app.exec();
-        }
-        
-        index = argsList.indexOf("-udp");
-        if ( index > 1 )
-        {
-            qWarning() << "Running in receiver in mode UDP..";
-            ReceiverUDP receiver;
-            receiver.show();
+			ret = app.exec();
+			// return app.exec();
+		}
+		
+		index = argsList.indexOf("-udp");
+		if(index > 1)
+		{
+			qWarning() << "Running in receiver in mode UDP..";
+			ReceiverUDP receiver;
+			receiver.show();
 
-            ret = app.exec();
-            // return app.exec();
-        }
-    }
-    
+			ret = app.exec();
+			// return app.exec();
+		}
+	}
+	
 #ifdef TME_STATISTIC
-    Statistic::getInstance().collectMemoryUsage();
-    Statistic::getInstance().saveData("client_");
+	Statistic::getInstance().collectMemoryUsage();
+	Statistic::getInstance().saveData("client_");
 #endif
-    return ret;
-}    
+	return ret;
+}	
 
 #endif
+

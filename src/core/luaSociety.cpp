@@ -21,8 +21,8 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
 /*! \file luaSociety.cpp
-    \brief This file contains the implementation for the luaSociety objects.
-        \author Tiago Garcia de Senna Carneiro
+	\brief This file contains the implementation for the luaSociety objects.
+		\author Tiago Garcia de Senna Carneiro
 */
 
 #include "luaSociety.h"
@@ -55,11 +55,11 @@ extern ExecutionModes execModes;
 /// Constructor
 luaSociety::luaSociety(lua_State *L)
 {
-    luaL = L;
-    subjectType = TObsSociety;
-    observedAttribs.clear();
+	luaL = L;
+	subjectType = TObsSociety;
+	observedAttribs.clear();
 
-    attrNeighName = "";
+	attrNeighName = "";
 }
 
 /// destructor
@@ -68,16 +68,16 @@ luaSociety::~luaSociety( void ) { }
 /// Gets the luaSociety identifier
 int luaSociety::getID( lua_State *L )
 {
-    lua_pushstring(L, objectId_.c_str() );
-    return 1;
+	lua_pushstring(L, objectId_.c_str() );
+	return 1;
 }
 
 /// Sets the luaSociety identifier
 int luaSociety::setID( lua_State *L )
 {
-    const char* id = luaL_checkstring( L , -1);
-    objectId_ = string( id );
-    return 0;
+	const char* id = luaL_checkstring( L , -1);
+	objectId_ = string( id );
+	return 0;
 }
 
 /// Creates several types of observers
@@ -88,29 +88,29 @@ int luaSociety::createObserver( lua_State * luaL)
 {
 
 #ifdef DEBUG_OBSERVER
-    luaStackToQString(7);
+	luaStackToQString(7);
 #endif
 
-    // retrieve Lua object reference
-    Reference<luaSociety>::getReference(luaL);
+	// retrieve Lua object reference
+	Reference<luaSociety>::getReference(luaL);
 
-    // flags para a definicao do uso de compressao
-    // na transmissao de datagramas e da visibilidade
-    // dos observadores Udp Sender
-    bool compressDatagram = false, obsVisible = true;
+	// flags para a definicao do uso de compressao
+	// na transmissao de datagramas e da visibilidade
+	// dos observadores Udp Sender
+	bool compressDatagram = false, obsVisible = true;
 
-    // recupero a tabela de
-    // atributos da celula
-    int top = lua_gettop(luaL);
+	// recupero a tabela de
+	// atributos da celula
+	int top = lua_gettop(luaL);
 
-    // Nao modifica em nada a pilha
-    // recupera o enum referente ao tipo
-    // do observer
-    TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, 1);
+	// Nao modifica em nada a pilha
+	// recupera o enum referente ao tipo
+	// do observer
+	TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, 1);
 
-    if ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
-    {
-        QStringList allAgentsAttribs, allSocietyAttribs, obsAttribs, obsParams, cols;
+	if ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
+	{
+		QStringList allAgentsAttribs, allSocietyAttribs, obsAttribs, obsParams, cols;
 		
 #ifdef DEBUG_OBSERVER
 		luaStackToQString(12);
@@ -160,17 +160,17 @@ int luaSociety::createObserver( lua_State * luaL)
 		qDebug() << "allAgentsAttribs: " << allAgentsAttribs;
 #endif
 
-        // qDebug() << "Recupera a tabela de parametros";
-    	lua_pushnil(luaL);
-    	while(lua_next(luaL, top - 1 ) != 0)
-    	{
-    	    QString key;
+		// qDebug() << "Recupera a tabela de parametros";
+		lua_pushnil(luaL);
+		while(lua_next(luaL, top - 1 ) != 0)
+		{
+			QString key;
 
-    	    if (lua_type(luaL, -2) == LUA_TSTRING)
-    	    {
-        		key = luaL_checkstring(luaL, -2);
-        	}
-        	else if (lua_type(luaL, -2) == LUA_TNUMBER)
+			if (lua_type(luaL, -2) == LUA_TSTRING)
+			{
+				key = luaL_checkstring(luaL, -2);
+			}
+			else if (lua_type(luaL, -2) == LUA_TNUMBER)
 			{
 				char aux[100];
 				double number = luaL_checknumber(luaL, -2);
@@ -178,8 +178,8 @@ int luaSociety::createObserver( lua_State * luaL)
 				key = aux;
 			}
 
-        	switch (lua_type(luaL, -1))
-        	{
+			switch (lua_type(luaL, -1))
+			{
 				case LUA_TBOOLEAN:
 				{
 					bool val = lua_toboolean(luaL, -1);
@@ -234,61 +234,61 @@ int luaSociety::createObserver( lua_State * luaL)
 				}
 				default:
 					break;
-        	}
-        	lua_pop(luaL, 1);
-    	}
+			}
+			lua_pop(luaL, 1);
+		}
 
-    	// qDebug() << "Recupera a tabela de atributos";
-    	lua_pushnil(luaL);
-    	while(lua_next(luaL, top - 2) != 0)
-    	{
-    	    if (lua_type(luaL, -1) == LUA_TSTRING)
-    	    {
-    	        obsAttribs.push_back(luaL_checkstring(luaL, -1));
-    	    }
-    	    lua_pop(luaL, 1);
-    	}
+		// qDebug() << "Recupera a tabela de atributos";
+		lua_pushnil(luaL);
+		while(lua_next(luaL, top - 2) != 0)
+		{
+			if (lua_type(luaL, -1) == LUA_TSTRING)
+			{
+				obsAttribs.push_back(luaL_checkstring(luaL, -1));
+			}
+			lua_pop(luaL, 1);
+		}
 
-    	// Retrieves all subject attributes
-    	lua_pushnil(luaL);
-    	while(lua_next(luaL, top) != 0)
-    	{
-    	    if (obsAttribs.empty())
-    	    {
-			    obsAttribs = allSocietyAttribs;
+		// Retrieves all subject attributes
+		lua_pushnil(luaL);
+		while(lua_next(luaL, top) != 0)
+		{
+			if (obsAttribs.empty())
+			{
+				obsAttribs = allSocietyAttribs;
 
-    	        foreach(const QString &key, allSocietyAttribs)
-    	            observedAttribs.insert(key, "");
-        	}
-        	else
-        	{
-        	    // Verifica se o atributo informado realmente existe na celula
-        	    for (int i = 0; i < obsAttribs.size(); i++)
-        	    {
-        	        if (! observedAttribs.contains(obsAttribs.at(i)) )
-                	    observedAttribs.insert(obsAttribs.at(i), "");
+				foreach(const QString &key, allSocietyAttribs)
+					observedAttribs.insert(key, "");
+			}
+			else
+			{
+				// Verifica se o atributo informado realmente existe na celula
+				for (int i = 0; i < obsAttribs.size(); i++)
+				{
+					if (! observedAttribs.contains(obsAttribs.at(i)) )
+						observedAttribs.insert(obsAttribs.at(i), "");
 
-                	if (! allSocietyAttribs.contains(obsAttribs.at(i)))
-                	{
+					if (! allSocietyAttribs.contains(obsAttribs.at(i)))
+					{
 						string errorMsg = string("Attribute name ") + string(obsAttribs.at(i).toAscii().data()) + string(" not found.");
 						lua_getglobal(L, "customError");
 						lua_pushstring(L,errorMsg.c_str());
 						//lua_pushnumber(L,5);
 						lua_call(L,1,0);
-                    	return 0;
-                	}
-            	}
-        	}
+						return 0;
+					}
+				}
+			}
 
-        	ObserverTextScreen *obsText = 0;
-        	ObserverTable *obsTable = 0;
-        	ObserverGraphic *obsGraphic = 0;
-        	ObserverLogFile *obsLog = 0;
-        	ObserverUDPSender *obsUDPSender = 0;
-        	int obsId = -1;
+			ObserverTextScreen *obsText = 0;
+			ObserverTable *obsTable = 0;
+			ObserverGraphic *obsGraphic = 0;
+			ObserverLogFile *obsLog = 0;
+			ObserverUDPSender *obsUDPSender = 0;
+			int obsId = -1;
 
-        	switch (typeObserver)
-        	{
+			switch (typeObserver)
+			{
 				case TObsTextScreen:
 					obsText = (ObserverTextScreen*)SocietySubjectInterf::createObserver(TObsTextScreen);
 					if (obsText)
@@ -380,7 +380,7 @@ int luaSociety::createObserver( lua_State * luaL)
 								 "valid type of Observer.",  getObserverName(typeObserver) );
 					}
 					return 0;
-        	}
+			}
 
 #ifdef DEBUG_OBSERVER
 			qDebug() << "obsParams: " << obsParams;
@@ -502,109 +502,109 @@ int luaSociety::createObserver( lua_State * luaL)
 				return 1;
 			}
 		}
-    //   ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
-    // Creation of spatial observers
-    }
-    else
-    {
-        QStringList allAttribs, obsAttribs;
-        QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
-        QString key;
+	//   ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
+	// Creation of spatial observers
+	}
+	else
+	{
+		QStringList allAttribs, obsAttribs;
+		QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
+		QString key;
 
-        bool getObserverId = false, isLegend = false;
-        int obsId = -1;
+		bool getObserverId = false, isLegend = false;
+		int obsId = -1;
 
-        cellSpace = 0;
-        AgentObserverMap *obsMap = 0;
-        AgentObserverImage *obsImage = 0;
+		cellSpace = 0;
+		AgentObserverMap *obsMap = 0;
+		AgentObserverImage *obsImage = 0;
 
-        // Recupera todos os atributos do agente
-        // buscando apenas a classe do agente
-        lua_pushnil(luaL);
-        while(lua_next(luaL, top ) != 0)
-        {
-            if (lua_type(luaL, -2) == LUA_TSTRING)
-            {
-                key = luaL_checkstring(luaL, -2);
-                allAttribs.append(key);
+		// Recupera todos os atributos do agente
+		// buscando apenas a classe do agente
+		lua_pushnil(luaL);
+		while(lua_next(luaL, top ) != 0)
+		{
+			if (lua_type(luaL, -2) == LUA_TSTRING)
+			{
+				key = luaL_checkstring(luaL, -2);
+				allAttribs.append(key);
 
-                if (key == "class")
-                {
-                    attrClassName.append(" (");
-                    attrClassName.append( luaL_checkstring(luaL, -1) );
-                    attrClassName.append(")");
-                }
-            }
-            lua_pop(luaL, 1);
-        }
+				if (key == "class")
+				{
+					attrClassName.append(" (");
+					attrClassName.append( luaL_checkstring(luaL, -1) );
+					attrClassName.append(")");
+				}
+			}
+			lua_pop(luaL, 1);
+		}
 
-        // Recupera os parametros
-        lua_pushnil(luaL);
-        while(lua_next(luaL, top - 1) != 0)
-        {
-            // Recupera o ID do observer map
-            if ( (lua_isnumber(luaL, -1) && (! getObserverId)) )
-            {
-                obsId = luaL_checknumber(luaL, -1);
-                getObserverId = true;
-                isLegend = true;
-            }
+		// Recupera os parametros
+		lua_pushnil(luaL);
+		while(lua_next(luaL, top - 1) != 0)
+		{
+			// Recupera o ID do observer map
+			if ( (lua_isnumber(luaL, -1) && (! getObserverId)) )
+			{
+				obsId = luaL_checknumber(luaL, -1);
+				getObserverId = true;
+				isLegend = true;
+			}
 
-            // recupera o espao celular
-            if (lua_istable(luaL, -1))
-            {
-                int paramTop = lua_gettop(luaL);
+			// recupera o espao celular
+			if (lua_istable(luaL, -1))
+			{
+				int paramTop = lua_gettop(luaL);
 
-                lua_pushnil(luaL);
-                while(lua_next(luaL, paramTop) != 0)
-                {
-                    if (isudatatype(luaL, -1, "TeCellularSpace"))
-                    {
-                        cellSpace = Luna<luaCellularSpace>::check(L, -1);
-                    }
-                    else
-                    {
-                        if (isLegend)
-                        {
-                            key = luaL_checkstring(luaL, -2);
+				lua_pushnil(luaL);
+				while(lua_next(luaL, paramTop) != 0)
+				{
+					if (isudatatype(luaL, -1, "TeCellularSpace"))
+					{
+						cellSpace = Luna<luaCellularSpace>::check(L, -1);
+					}
+					else
+					{
+						if (isLegend)
+						{
+							key = luaL_checkstring(luaL, -2);
 
-                            obsParams.push_back(key);
+							obsParams.push_back(key);
 
-                            bool boolAux;
-                            double numAux;
-                            QString strAux;
+							bool boolAux;
+							double numAux;
+							QString strAux;
 
-                            switch( lua_type(luaL, -1) )
-                            {
-                            case LUA_TBOOLEAN:
-                                boolAux = lua_toboolean(luaL, -1);
-                                break;
+							switch( lua_type(luaL, -1) )
+							{
+							case LUA_TBOOLEAN:
+								boolAux = lua_toboolean(luaL, -1);
+								break;
 
-                            case LUA_TNUMBER:
-                                numAux = luaL_checknumber(luaL, -1);
-                                obsParamsAtribs.push_back(QString::number(numAux));
-                                break;
+							case LUA_TNUMBER:
+								numAux = luaL_checknumber(luaL, -1);
+								obsParamsAtribs.push_back(QString::number(numAux));
+								break;
 
-                            case LUA_TSTRING:
-                                strAux = luaL_checkstring(luaL, -1);
-                                obsParamsAtribs.push_back(QString(strAux));
-                                break;
+							case LUA_TSTRING:
+								strAux = luaL_checkstring(luaL, -1);
+								obsParamsAtribs.push_back(QString(strAux));
+								break;
 
-                            default:
-                                break;
-                            }
-                        } // isLegend
-                    }
-                    lua_pop(luaL, 1);
-                }
-            }
-            lua_pop(luaL, 1);
-        }
+							default:
+								break;
+							}
+						} // isLegend
+					}
+					lua_pop(luaL, 1);
+				}
+			}
+			lua_pop(luaL, 1);
+		}
 
-        QString errorMsg = QString("\nError: The Observer ID \"%1\" was not found. "
-            "Check the declaration of this observer.\n").arg(obsId);
+		QString errorMsg = QString("\nError: The Observer ID \"%1\" was not found. "
+			"Check the declaration of this observer.\n").arg(obsId);
 
-        if (! cellSpace)
+		if (! cellSpace)
 		{
 			lua_getglobal(L, "customError");
 			lua_pushstring(L,errorMsg.toAscii().data());
@@ -613,11 +613,11 @@ int luaSociety::createObserver( lua_State * luaL)
 			return 0;
 		}
 
-        if (typeObserver == TObsMap)
-        {
-            obsMap = (AgentObserverMap *)cellSpace->getObserver(obsId);
+		if (typeObserver == TObsMap)
+		{
+			obsMap = (AgentObserverMap *)cellSpace->getObserver(obsId);
 
-            if (! obsMap)
+			if (! obsMap)
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
@@ -626,13 +626,13 @@ int luaSociety::createObserver( lua_State * luaL)
 				return 0;
 			}
 
-            obsMap->registry(this);
-        }
-        else
-        {
-            obsImage = (AgentObserverImage *)cellSpace->getObserver(obsId);
+			obsMap->registry(this);
+		}
+		else
+		{
+			obsImage = (AgentObserverImage *)cellSpace->getObserver(obsId);
 
-            if (! obsImage)
+			if (! obsImage)
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,errorMsg.toAscii().data());
@@ -641,425 +641,419 @@ int luaSociety::createObserver( lua_State * luaL)
 				return 0;
 			}
 
-            obsImage->registry(this);
-        }
+			obsImage->registry(this);
+		}
 
-        // Recupera os atributos
-        lua_pushnil(luaL);
-        while(lua_next(luaL, top - 2) != 0)
-        {
-            key = luaL_checkstring(luaL, -1);
+		// Recupera os atributos
+		lua_pushnil(luaL);
+		while(lua_next(luaL, top - 2) != 0)
+		{
+			key = luaL_checkstring(luaL, -1);
 
-            if (key == "currentState")
-                key += attrClassName;
+			if (key == "currentState")
+				key += attrClassName;
 
-            obsAttribs.push_back(key);
-            lua_pop(luaL, 1);
-        }
-        
-        for(int i = 0; i < obsAttribs.size(); i++)
-        {
-            if (! observedAttribs.contains(obsAttribs.at(i)) )
-                // observedAttribs.push_back(obsAttribs.at(i));
-                observedAttribs.insert(obsAttribs.at(i), "");
-        }
+			obsAttribs.push_back(key);
+			lua_pop(luaL, 1);
+		}
+		
+		for(int i = 0; i < obsAttribs.size(); i++)
+		{
+			if (! observedAttribs.contains(obsAttribs.at(i)) )
+				// observedAttribs.push_back(obsAttribs.at(i));
+				observedAttribs.insert(obsAttribs.at(i), "");
+		}
 
 #ifdef DEBUG_OBSERVER
-        qDebug() << "\n\nluaSociety::createObserver()" << getId() << "attrClassName" << attrClassName;
-        // qDebug() << "\nobsParamsLeg: " << obsParams;
-        // qDebug() << "\nobsParamsAtribs: " << obsParamsAtribs;
-        qDebug() << "\n-- obsAttribs: " << obsAttribs;
-        qDebug() << "\n--allAttribs: " << allAttribs;
+		qDebug() << "\n\nluaSociety::createObserver()" << getId() << "attrClassName" << attrClassName;
+		// qDebug() << "\nobsParamsLeg: " << obsParams;
+		// qDebug() << "\nobsParamsAtribs: " << obsParamsAtribs;
+		qDebug() << "\n-- obsAttribs: " << obsAttribs;
+		qDebug() << "\n--allAttribs: " << allAttribs;
 
-        // qDebug() << "observedAttribs.keys()" << observedAttribs.keys();
+		// qDebug() << "observedAttribs.keys()" << observedAttribs.keys();
 #endif
 
-        if (typeObserver == TObsMap)
-        {
-            // ao definir os valores dos atributos do agente,
-            // redefino o tipo do atributos na super classe ObserverMap
-            obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsSociety);
-            obsMap->setSubjectAttributes(obsAttribs, getId(), attrClassName);
-        }
-        else
-        {
-            obsImage->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsSociety);
-            obsImage->setSubjectAttributes(obsAttribs, getId(), attrClassName);
-        }
-        lua_pushnumber(luaL, obsId);
-        return 1;
-    }
+		if (typeObserver == TObsMap)
+		{
+			// ao definir os valores dos atributos do agente,
+			// redefino o tipo do atributos na super classe ObserverMap
+			obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsSociety);
+			obsMap->setSubjectAttributes(obsAttribs, getId(), attrClassName);
+		}
+		else
+		{
+			obsImage->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsSociety);
+			obsImage->setSubjectAttributes(obsAttribs, getId(), attrClassName);
+		}
+		lua_pushnumber(luaL, obsId);
+		return 1;
+	}
 
-    return 0;
+	return 0;
 }
 
 const TypesOfSubjects luaSociety::getType() const
 {
-    return subjectType;
+	return subjectType;
 }
 
 /// Notifies observers about changes in the luaSociety internal state
 int luaSociety::notify(lua_State *L )
 {
 #ifdef TME_STATISTIC
-    double t = Statistic::getInstance().startTime();
+	double t = Statistic::getInstance().startTime();
 
-    double time = luaL_checknumber(L, -1);
-    SocietySubjectInterf::notifyObservers(time);
+	double time = luaL_checknumber(L, -1);
+	SocietySubjectInterf::notifyObservers(time);
 
-    t = Statistic::getInstance().endTime() - t;
-    Statistic::getInstance().addElapsedTime("Total Response Time - cell", t);
-    Statistic::getInstance().collectMemoryUsage();
+	t = Statistic::getInstance().endTime() - t;
+	Statistic::getInstance().addElapsedTime("Total Response Time - cell", t);
+	Statistic::getInstance().collectMemoryUsage();
 #else
-    double time = luaL_checknumber(L, -1);
-    SocietySubjectInterf::notify(time);
+	double time = luaL_checknumber(L, -1);
+	SocietySubjectInterf::notify(time);
 #endif
-    return 0;
+	return 0;
 }
 
 QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/, const QStringList & /* attribs */)
 {
-    int obsCurrentState = 0; //serverSession->getState(observerId);
-    QByteArray content;
+	int obsCurrentState = 0; //serverSession->getState(observerId);
+	QByteArray content;
 
-    switch(obsCurrentState)
-    {
-    case 0:
-        content = getAll(in, (QStringList)observedAttribs.keys());
+	switch(obsCurrentState)
+	{
+	case 0:
+		content = getAll(in, (QStringList)observedAttribs.keys());
 			
-        // serverSession->setState(observerId, 1);
-        //if (! QUIET_MODE )
-        // 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
-        break;
+		// serverSession->setState(observerId, 1);
+		//if (! QUIET_MODE )
+		// 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+		break;
 
-    case 1:
-        content = getChanges(in, (QStringList) observedAttribs.keys());
+	case 1:
+		content = getChanges(in, (QStringList) observedAttribs.keys());
 			
-        // serverSession->setState(observerId, 0);
-        //if (! QUIET_MODE )
-        // 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
-        break;
-    }
-    // cleans the stack
-    // lua_settop(L, 0);
+		// serverSession->setState(observerId, 0);
+		//if (! QUIET_MODE )
+		// 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+		break;
+	}
+	// cleans the stack
+	// lua_settop(L, 0);
 
 #ifdef DEBUG_OBSERVER
-    qDebug() << "\nluaSociety::getState() - byteArray" <<
-        "\n\tcontent.size()" << content.size() << "\n";
+	qDebug() << "\nluaSociety::getState() - byteArray" <<
+		"\n\tcontent.size()" << content.size() << "\n";
 #endif
 
-    in << content;
-    return in;
+	in << content;
+	return in;
 }
 
 QByteArray luaSociety::getAll(QDataStream& /*in*/, const QStringList &attribs)
 {
 	// recupero a referencia na pilha lua
 	Reference<luaSociety>::getReference(luaL);
-    ObserverDatagramPkg::SubjectAttribute socSubj;
-    return pop(luaL, attribs, &socSubj, 0);
+	ObserverDatagramPkg::SubjectAttribute socSubj;
+	return pop(luaL, attribs, &socSubj, 0);
 }
 
 QByteArray luaSociety::getChanges(QDataStream& in, const QStringList &attribs)
 {
-    return getAll(in, attribs);
+	return getAll(in, attribs);
 }
 
 QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs, 
-    ObserverDatagramPkg::SubjectAttribute *currSubj,
-    ObserverDatagramPkg::SubjectAttribute *parentSubj)
+	ObserverDatagramPkg::SubjectAttribute *currSubj,
+	ObserverDatagramPkg::SubjectAttribute *parentSubj)
 {
 #ifdef TME_STATISTIC 
-    double t = Statistic::getInstance().startMicroTime();
+	double t = Statistic::getInstance().startMicroTime();
 #endif 
 
-    bool valueChanged = false;
-    char result[20];
-    double num = 0.0;
+	bool valueChanged = false;
+	char result[20];
+	double num = 0.0;
 
-    // recupero a referencia na pilha lua
 	Reference<luaSociety>::getReference(luaL);
-    int position = lua_gettop(luaL);
-    
-    QByteArray key, valueTmp;
-    ObserverDatagramPkg::RawAttribute *raw = 0;
+	int position = lua_gettop(luaL);
+	
+	QByteArray key, valueTmp;
+	ObserverDatagramPkg::RawAttribute *raw = 0;
 
-    lua_pushnil(luaL);
-    while(lua_next(luaL, position ) != 0)
-    {
-        key = luaL_checkstring(luaL, -2);
+	lua_pushnil(luaL);
+	while(lua_next(luaL, position) != 0)
+	{
+		key = luaL_checkstring(luaL, -2);
 
-        if ((attribs.contains(key)) || (key == "agents"))
-        {
-            switch( lua_type(luaL, -1) )
-            {
-            case LUA_TBOOLEAN:
-                valueTmp = QByteArray::number( lua_toboolean(luaL, -1) );
+		if((attribs.contains(key)) || (key == "agents"))
+		{
+			switch(lua_type(luaL, -1))
+			{
+			case LUA_TBOOLEAN:
+				valueTmp = QByteArray::number(lua_toboolean(luaL, -1));
 
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (! currSubj))
-                        currSubj = parentSubj->add_internalsubject();
+				if(observedAttribs.value(key) != valueTmp)
+				{
+					if((parentSubj) && (! currSubj))
+						currSubj = parentSubj->add_internalsubject();
 
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_number(valueTmp.toDouble());
+					raw = currSubj->add_rawattributes();
+					raw->set_key(key);
+					raw->set_number(valueTmp.toDouble());
 
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
-
-            case LUA_TNUMBER:
-                num = luaL_checknumber(luaL, -1);
-                doubleToText(num, valueTmp, 20);
+					valueChanged = true;
+					observedAttribs.insert(key, valueTmp);
+				}
+				break;
+			case LUA_TNUMBER:
+				num = luaL_checknumber(luaL, -1);
+				doubleToText(num, valueTmp, 20);
 					
 				
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (! currSubj))
-                        currSubj = parentSubj->add_internalsubject();
+				if(observedAttribs.value(key) != valueTmp)
+				{
+					if((parentSubj) && (! currSubj))
+						currSubj = parentSubj->add_internalsubject();
 
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_number(num);
+					raw = currSubj->add_rawattributes();
+					raw->set_key(key);
+					raw->set_number(num);
 
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
+					valueChanged = true;
+					observedAttribs.insert(key, valueTmp);
+				}
+				break;
+			case LUA_TSTRING:
+				valueTmp = luaL_checkstring(luaL, -1);
 
-            case LUA_TSTRING:
-                valueTmp = luaL_checkstring(luaL, -1);
+				if(observedAttribs.value(key) != valueTmp)
+				{
+					if((parentSubj) && (! currSubj))
+						currSubj = parentSubj->add_internalsubject();
 
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (! currSubj))
-                        currSubj = parentSubj->add_internalsubject();
+					raw = currSubj->add_rawattributes();
+					raw->set_key(key);
+					raw->set_text(valueTmp);
 
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_text(valueTmp);
+					valueChanged = true;
+					observedAttribs.insert(key, valueTmp);
+				}
+				break;
+			case LUA_TTABLE:
+			{
+				sprintf(result, "%p", lua_topointer(luaL, -1) );
+				valueTmp = result;
 
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
+				if(observedAttribs.value(key) != valueTmp)
+				{
+					if((parentSubj) && (! currSubj))
+						currSubj = parentSubj->add_internalsubject();
 
-            case LUA_TTABLE:
-            {
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                valueTmp = result;
+					raw = currSubj->add_rawattributes();
+					raw->set_key(key);
+					raw->set_text(LUA_ADDRESS_TABLE + static_cast<const char*>(result));
 
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (! currSubj))
-                        currSubj = parentSubj->add_internalsubject();
+					valueChanged = true;
+					observedAttribs.insert(key, valueTmp);
+				}
 
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_text(LUA_ADDRESS_TABLE + static_cast<const char*>(result));
+				// Recupera a tabela de agentes e delega a cada um sua serializacao
+				if(key == "agents")
+				{
+					int top = lua_gettop(luaL);
 
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
+					//qDebug() << "\n --- key:" << key  
+					//	<< "attribs" << attribs << "\n";
 
-                // Recupera a tabela de agentes e delega a cada um sua serializacao
-                if(key == "agents")
-                {
-                    int top = lua_gettop(luaL);
+					lua_pushnil(luaL);
+					while(lua_next(luaL, top) != 0)
+					{
+						int agentTop = lua_gettop(luaL);
+						lua_pushstring(luaL, "cObj_");
+						lua_gettable(luaL, agentTop);
 
-                    //qDebug() << "\n --- key:" << key  
-                    //    << "attribs" << attribs << "\n";
+						luaGlobalAgent* agent;
+						agent = (luaGlobalAgent*)Luna<luaGlobalAgent>::check(luaL, -1);
+						lua_pop(luaL, 1);
 
-                    lua_pushnil(luaL);
-                    while(lua_next(luaL, top) != 0)
-                    {
-                        int agentTop = lua_gettop(luaL);
-                        lua_pushstring(luaL, "cObj_");
-                        lua_gettable(luaL, agentTop);
+						int internalCount = currSubj->internalsubject_size();
+						agent->pop(luaL, attribs, 0, currSubj);
 
-                        luaGlobalAgent* agent;
-                        agent = (luaGlobalAgent*)Luna<luaGlobalAgent>::check(luaL, -1);
-                        lua_pop(luaL, 1);
+						if (currSubj->internalsubject_size() != internalCount)
+							valueChanged = true;
+					
+						lua_pop(luaL, 1);
+					}
+				}
+				break;
+			}
+			case LUA_TUSERDATA:
+			{
+				sprintf(result, "%p", lua_topointer(luaL, -1) );
+				valueTmp = result;
 
-                        int internalCount = currSubj->internalsubject_size();
-                        agent->pop(luaL, attribs, 0, currSubj);
+				if(observedAttribs.value(key) != valueTmp)
+				{
+					if((parentSubj) && (! currSubj))
+						currSubj = parentSubj->add_internalsubject();
 
-                        if (currSubj->internalsubject_size() != internalCount)
-                            valueChanged = true;
-                    
-                        lua_pop(luaL, 1);
-                    }
-                }
-                break;
-            }
+					raw = currSubj->add_rawattributes();
+					raw->set_key(key);
+					raw->set_text(LUA_ADDRESS_USER_DATA + static_cast<const char*>(result));
 
-            case LUA_TUSERDATA:
-            {
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                valueTmp = result;
+					valueChanged = true;
+					observedAttribs.insert(key, valueTmp);
+				}
+				break;
+			}
+			case LUA_TFUNCTION:
+			{
+				sprintf(result, "%p", lua_topointer(luaL, -1) );
+				valueTmp = result;
 
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (! currSubj))
-                        currSubj = parentSubj->add_internalsubject();
+				if(observedAttribs.value(key) != valueTmp)
+				{
+					if((parentSubj) && (! currSubj))
+						currSubj = parentSubj->add_internalsubject();
 
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_text(LUA_ADDRESS_USER_DATA + static_cast<const char*>(result));
+					raw = currSubj->add_rawattributes();
+					raw->set_key(key);
+					raw->set_text(LUA_ADDRESS_FUNCTION + static_cast<const char*>(result));
 
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
-            }
+					valueChanged = true;
+					observedAttribs.insert(key, valueTmp);
+				}
+				break;
+			}
 
-            case LUA_TFUNCTION:
-            {
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                valueTmp = result;
+			default:
+			{
+				sprintf(result, "%p", lua_topointer(luaL, -1) );
+				valueTmp = result;
 
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (! currSubj))
-                        currSubj = parentSubj->add_internalsubject();
+				if(observedAttribs.value(key) != valueTmp)
+				{
+					if((parentSubj) && (! currSubj))
+						currSubj = parentSubj->add_internalsubject();
 
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_text(LUA_ADDRESS_FUNCTION + static_cast<const char*>(result));
+					raw = currSubj->add_rawattributes();
+					raw->set_key(key);
+					raw->set_text(LUA_ADDRESS_OTHER + static_cast<const char*>(result));
 
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
-            }
+					valueChanged = true;
+					observedAttribs.insert(key, valueTmp);
+				}
+				break;
+			}
+			} // switch
+		}
+		lua_pop(luaL, 1);
+	}
+	
+	if(valueChanged)
+	{
+		 if((parentSubj) && (! currSubj))
+			currSubj = parentSubj->add_internalsubject();
 
-            default:
-            {
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
-                valueTmp = result;
+		// id
+		currSubj->set_id(getId());
 
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (! currSubj))
-                        currSubj = parentSubj->add_internalsubject();
+		// subjectType
+		currSubj->set_type(ObserverDatagramPkg::TObsSociety);
 
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_text(LUA_ADDRESS_OTHER + static_cast<const char*>(result));
+		// #attrs
+		currSubj->set_attribsnumber(currSubj->rawattributes_size());
 
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
-            }
-            } // switch
-        }
-        lua_pop(luaL, 1);
-    }
-    
-    if (valueChanged)
-    {
-         if ((parentSubj) && (! currSubj))
-            currSubj = parentSubj->add_internalsubject();
-
-        // id
-        currSubj->set_id(getId());
-
-        // subjectType
-        currSubj->set_type(ObserverDatagramPkg::TObsSociety);
-
-        // #attrs
-        currSubj->set_attribsnumber(currSubj->rawattributes_size());
-
-        // #elements
-        currSubj->set_itemsnumber(currSubj->internalsubject_size());
-    
+		// #elements
+		currSubj->set_itemsnumber(currSubj->internalsubject_size());
+	
 #ifdef TME_STATISTIC
-        if (! parentSubj)
-        {
-            t = Statistic::getInstance().endMicroTime() - t;
-            Statistic::getInstance().addElapsedTime("pop lua", t);
+		if (! parentSubj)
+		{
+			t = Statistic::getInstance().endMicroTime() - t;
+			Statistic::getInstance().addElapsedTime("pop lua", t);
  
-            // std::string serialized;
-            // csSubj->SerializeToString(&serialized);
-            // QString serialized;
-            QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
+			// std::string serialized;
+			// csSubj->SerializeToString(&serialized);
+			// QString serialized;
+			QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
 
 #ifdef DEBUG_OBSERVER
-            qDebug() << "\nluaSociety:pop - currSubj size:" << currSubj->internalsubject_size();
-            std::cout << currSubj->DebugString();
-            std::cout.flush();
+			qDebug() << "\nluaSociety:pop - currSubj size:" << currSubj->internalsubject_size();
+			std::cout << currSubj->DebugString();
+			std::cout.flush();
 #endif
-            return byteArray;
-        }
+			return byteArray;
+		}
 
-        t = Statistic::getInstance().endMicroTime() - t;
-        Statistic::getInstance().addElapsedTime("pop lua", t);
+		t = Statistic::getInstance().endMicroTime() - t;
+		Statistic::getInstance().addElapsedTime("pop lua", t);
 
-        return QByteArray();
+		return QByteArray();
 
 #else
 
-        if (! parentSubj)
-        {
-            QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
+		if (! parentSubj)
+		{
+			QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
 
 #ifdef DEBUG_OBSERVER
-            qDebug() << "\n\nluaSociety::pop()" 
-                << "\n\tByteSize()" << currSubj->ByteSize() 
-                << "\n\tbyteArray.size()" << byteArray.size() 
-                << "\ncurrSubj->DebugString()\n";
+			qDebug() << "\n\nluaSociety::pop()" 
+				<< "\n\tByteSize()" << currSubj->ByteSize() 
+				<< "\n\tbyteArray.size()" << byteArray.size() 
+				<< "\ncurrSubj->DebugString()\n";
 
-            std::cout << currSubj->DebugString() << "\n";
-            std::cout.flush();
+			std::cout << currSubj->DebugString() << "\n";
+			std::cout.flush();
 
-            std::string parseCheck;
-            if (! currSubj->SerializeToString(&parseCheck))
-            {
-                qDebug() << "\n\n SerializeToString FALHOU !!! \n\n";
-                std::abort();
-            }
+			std::string parseCheck;
+			if (! currSubj->SerializeToString(&parseCheck))
+			{
+				qDebug() << "\n\n SerializeToString FALHOU !!! \n\n";
+				std::abort();
+			}
 
-            if (! currSubj->ParseFromString(parseCheck))
-            {
-                qDebug() << "\n\n ParseFromString FALHOU !!! \n\n";
-                std::abort();
-            }
-            std::cout.flush();
+			if (! currSubj->ParseFromString(parseCheck))
+			{
+				qDebug() << "\n\n ParseFromString FALHOU !!! \n\n";
+				std::abort();
+			}
+			std::cout.flush();
 #endif
 
-            return byteArray;
-        }
-    }
-    return QByteArray();
+			return byteArray;
+		}
+	}
+	return QByteArray();
 
 #endif
 }
 
 int luaSociety::kill(lua_State *luaL)
 {
-    int id = luaL_checknumber(luaL, 1);
+	int id = luaL_checknumber(luaL, 1);
 
-    bool result = SocietySubjectInterf::kill(id);
-    if (! result)
+	bool result = SocietySubjectInterf::kill(id);
+	if (! result)
 	{
-        if (cellSpace)
-        {
-            Observer *obs = cellSpace->getObserverById(id);
+		if (cellSpace)
+		{
+			Observer *obs = cellSpace->getObserverById(id);
 
-            if (obs)
-    		{
-                if (obs->getType() == TObsMap)
-                    result = ((AgentObserverMap *)obs)->unregistry(this, attrClassName);
-                else
-                    result = ((AgentObserverImage *)obs)->unregistry(this, attrClassName);
-    		}
+			if (obs)
+			{
+				if (obs->getType() == TObsMap)
+					result = ((AgentObserverMap *)obs)->unregistry(this, attrClassName);
+				else
+					result = ((AgentObserverImage *)obs)->unregistry(this, attrClassName);
+			}
 		}
-    }
-    lua_pushboolean(luaL, result);
-    return 1;
+	}
+	lua_pushboolean(luaL, result);
+	return 1;
 }
 
 /// Gets the luaSociety position of the luaSociety in the Lua stack
@@ -1067,5 +1061,6 @@ int luaSociety::kill(lua_State *luaL)
 /// \param cell is a pointer to the cell within the Lua stack
 void getReference( lua_State *L, luaSociety *cell )
 {
-    cell->getReference(L);
+	cell->getReference(L);
 }
+

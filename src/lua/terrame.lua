@@ -286,7 +286,7 @@ local function executeDoc(package)
 
 	local finalTime = os.clock()
 
-	print("\nReport: ")
+	print("\nReport:")
 	printNote("Documentation was built in "..round(finalTime - initialTime, 2).." seconds.")
 
 	if doc_report.undoc_files == 0 then
@@ -373,7 +373,7 @@ local function executeDoc(package)
 				   doc_report.wrong_links + doc_report.problem_examples + doc_report.undoc_examples
 
 	if errors == 0 then
-		printNote("Summing up, all the documentation was succesfully built.")
+		printNote("Summing up, all the documentation was successfully built.")
 	elseif errors == 1 then
 		printError("Summing up, one problem was found in the documentation.")
 	else
@@ -915,7 +915,7 @@ local executeTests = function(package, fileName)
 	               ut.functions_with_error + ut.functions_without_assert
 
 	if errors == 0 then
-		printNote("Summing up, all tests were succesfully executed.")
+		printNote("Summing up, all tests were successfully executed.")
 	elseif errors == 1 then
 		printError("Summing up, one problem was found during the tests.")
 	else
@@ -1310,7 +1310,7 @@ execute = function(parameters) -- parameters is a vector of strings
 					forEachElement(files, function(_, value)
 						print(" - "..value)
 					end)
-					os.exit()	
+					os.exit()
 				end
 			end
 		else
@@ -1319,6 +1319,13 @@ execute = function(parameters) -- parameters is a vector of strings
 			end
 			require(package)
 			local s = sessionInfo().separator
+
+			local displayFile = param..".tme"
+			if isfile(displayFile) then
+				print("Found display file")
+				local display = dofile(displayFile)
+				-- visualArrangement(display)
+			end
 
 			local success, result = xpcall(function() dofile(param) end, function(err)
 				local luaFolder = replaceSpecialChars(sessionInfo().path.."/lua")

@@ -279,7 +279,7 @@ int luaCellularSpace::getLayerName( lua_State *L )
 
 /// Creates several types of observers to the luaCellularSpace object
 /// parameters: observer type, observeb attributes table, observer type parameters
-int luaCellularSpace::createObserver( lua_State * luaL)
+int luaCellularSpace::createObserver(lua_State * luaL)
 {
     // Gets the reference to the Cellular Space object in the Lua stack
     Reference<luaCellularSpace>::getReference(luaL);

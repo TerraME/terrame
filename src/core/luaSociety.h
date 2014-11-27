@@ -21,10 +21,10 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
 /*! \file luaSociety.h
-    \brief This file definitions for the luaSociety objects.
-        \author Tiago Garcia de Senna Carneiro
+	\brief This file definitions for the luaSociety objects.
+		\author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUASOCIETY_H)
+#if ! defined(LUASOCIETY_H)
 #define LUASOCIETY_H
 
 #include "societySubjectInterf.h"
@@ -47,70 +47,69 @@ extern "C"
 
 class luaSociety : public SocietySubjectInterf, public Reference<luaSociety>
 {
-    string objectId_; ///< luaSociety identifier
+	string objectId_; ///< luaSociety identifier
 	
-    TypesOfSubjects subjectType;
-    lua_State *luaL; ///< Stores locally the lua stack location in memory
-    QHash<QString, QString> observedAttribs;
+	TypesOfSubjects subjectType;
+	lua_State *luaL; ///< Stores locally the lua stack location in memory
+	QHash<QString, QString> observedAttribs;
 
-    QString attrClassName, attrNeighName;
-    luaCellularSpace *cellSpace;
+	QString attrClassName, attrNeighName;
+	luaCellularSpace *cellSpace;
 
-    QByteArray getAll(QDataStream& in, const QStringList& attribs);
-    QByteArray getChanges(QDataStream& in, const QStringList& attribs);
+	QByteArray getAll(QDataStream& in, const QStringList& attribs);
+	QByteArray getChanges(QDataStream& in, const QStringList& attribs);
+public:
+	///< Data structure issued by Luna<T>
+	static const char className[]; 
+
+	///< Data structure issued by Luna<T>
+	static Luna<luaSociety>::RegType methods[]; 
 
 public:
-    ///< Data structure issued by Luna<T>
-    static const char className[]; 
+	/// Constructor
+	luaSociety(lua_State *L);
 
-    ///< Data structure issued by Luna<T>
-    static Luna<luaSociety>::RegType methods[]; 
+	/// destructor
+	~luaSociety(void);
 
-public:
-    /// Constructor
-    luaSociety(lua_State *L);
+	/// Gets the luaSociety identifier
+	int getID(lua_State *L);
 
-    /// destructor
-    ~luaSociety( void );
-
-    /// Gets the luaSociety identifier
-    int getID( lua_State *L );
-
-    /// Sets the luaSociety identifier
-    int setID( lua_State *L );
+	/// Sets the luaSociety identifier
+	int setID(lua_State *L);
 	
-    /// Creates several types of observers
-    /// parameters: observer type, observeb attributes table, observer type parameters
-    int createObserver( lua_State *L );
+	/// Creates several types of observers
+	/// parameters: observer type, observeb attributes table, observer type parameters
+	int createObserver(lua_State *L);
 
-    /// Notifies observers about changes in the luaSociety internal state
-    int notify(lua_State *L );
+	/// Notifies observers about changes in the luaSociety internal state
+	int notify(lua_State *L);
 
-    /// Gets the subject's type
-    const TypesOfSubjects getType() const;
+	/// Gets the subject's type
+	const TypesOfSubjects getType() const;
 
-    /// Gets the object's internal state (serialization)
-    /// \param in the serializated object that contains the data that will be observed in the observer
-    /// \param subject a pointer to a observed subject
-    /// \param observerId the id of the observer
-    /// \param attribs the list of attributes observed
-    QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
+	/// Gets the object's internal state (serialization)
+	/// \param in the serializated object that contains the data that will be observed in the observer
+	/// \param subject a pointer to a observed subject
+	/// \param observerId the id of the observer
+	/// \param attribs the list of attributes observed
+	QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
 
 	/**
 	 * Gets the attributes of Lua stack
 	 * \param attribs the list of attributes observed
 	 */
-    QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
-        ObserverDatagramPkg::SubjectAttribute *parentSubj);
+	QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
+		ObserverDatagramPkg::SubjectAttribute *parentSubj);
 
-    /// Destroys the observer object instance
-    int kill(lua_State *L);
+	/// Destroys the observer object instance
+	int kill(lua_State *L);
 };
-
 
 /// Gets the luaSociety position of the luaSociety in the Lua stack
 /// \param L is a pointer to the Lua stack
 /// \param cell is a pointer to the cell within the Lua stack
-void getReference( lua_State *L, luaSociety *cell );
+void getReference(lua_State *L, luaSociety *cell);
 
 #endif
+
