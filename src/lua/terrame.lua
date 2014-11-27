@@ -243,9 +243,9 @@ local function executeDoc(package)
 
 	xpcall(function() require(package) end, function(err)
 		printError("Package could "..package.." not be loaded.")
-        printError(err)
+		printError(err)
 		os.exit()
-    end)
+	end)
 
 	local lua_files = dir(package_path..s.."lua")
 
@@ -266,7 +266,6 @@ local function executeDoc(package)
 		variables = 0,
 		links = 0,
 		examples = 0,
-
 		wrong_description = 0,
 		undoc_param = 0,
 		undefined_param = 0,
@@ -473,7 +472,7 @@ local executeTests = function(package, fileName)
 		printError(...)
 	end
 
-    require(package)
+	require(package)
 
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s..package
@@ -507,9 +506,11 @@ local executeTests = function(package, fileName)
 		-- the package was already loaded with success
 		testfunctions[file] = buildCountTable(include(baseDir..s.."lua"..s..file))
 	end
+
 	print = print__
 
 	local tf = testfolders(baseDir, ut)
+
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
 		local mfolder = data.folder
@@ -525,6 +526,7 @@ local executeTests = function(package, fileName)
 		local mfolder = data.folder
 		data.folder = {}
 		forEachElement(tf, function(_, value)
+			-- TODO: instead of using found, why not use "return false" in forEachElement?
 			local found = false
 			forEachElement(mfolder, function(_, mvalue)
 				if string.match(value, mvalue) and not found then
@@ -534,18 +536,23 @@ local executeTests = function(package, fileName)
 			end)
 		end)
 	else
+		-- TODO: I think this error will never occur because when this function reads
+		-- the file it already checks this.
 		customError("Parameter 'folder' is not a string, table or nil.")
 	end
 
 	if #data.folder == 0 then
 		customError("Could not find any folder to be tested according to the value of 'folder'.")
 	end
+
 	local global_variables = {}
 	local count_global = getn(_G)
 	forEachElement(_G, function(idx)
 		global_variables[idx] = true
 	end)
 
+	-- TODO: I think this warning will never occur because when this function reads
+	-- the file it already checks this.
 	local parameters = {"sleep", "examples", "folder", "test", "file"}
 	forEachElement(data, function(value)
 		if not belong(value, parameters) then
@@ -557,8 +564,11 @@ local executeTests = function(package, fileName)
 	local myFiles
 
 	-- For each test in each file in each folder, execute the test
+	-- TODO: change this to forEachElement...
 	for _, eachFolder in ipairs(data.folder) do
 		local dirFiles = dir(baseDir..s..eachFolder)
+		-- TODO: ... and this to "if dirfiles == nil then return end" to avoid a scope
+		-- maybe this check could be done previously, instead of here.
 		if dirFiles ~= nil then 
 			myFiles = {}
 			if type(data.file) == "string" then
@@ -576,6 +586,7 @@ local executeTests = function(package, fileName)
 					myFiles[#myFiles + 1] = value
 				end)
 			else
+				-- TODO: I think the line below will never be executed
 				error("file is not a string, table or nil.")
 			end
 
@@ -614,6 +625,7 @@ local executeTests = function(package, fileName)
 						end
 					end)
 				else
+					-- TODO: I think it will never enter here too
 					error("test is not a string, table or nil")
 				end
 
@@ -623,10 +635,11 @@ local executeTests = function(package, fileName)
 					printWarning("Skipping "..eachFolder..s..eachFile)
 				end
 
-
 				for _, eachTest in ipairs(myTests) do
 					print("Testing "..eachTest)
+					io.flush()
 
+					-- TODO: separate this ifs into two, to avoid the next elseif, having only an else.
 					if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
 						testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
 					elseif testfunctions[eachFile] then
@@ -657,8 +670,8 @@ local executeTests = function(package, fileName)
 					ut.executed_functions = ut.executed_functions + 1
 
 					if count_test == ut.test and not found_error then
-						ut.functions_without_assert = ut.functions_without_assert + 1
 						printError("No asserts were found in the test.")
+						ut.functions_without_assert = ut.functions_without_assert + 1
 					end
 
 					if getn(_G) > count_global then
@@ -674,9 +687,10 @@ local executeTests = function(package, fileName)
 						printError("Test creates global variable(s): "..variables)
 						ut.functions_with_global_variables = ut.functions_with_global_variables + 1
 
-						-- we need to delete the global variables created in order
-						-- to ensure that a new error will be generated if this
-						-- variable is found again
+						-- we need to delete the global variables created in order to ensure that a 
+						-- new error will be generated if this variable is found again. This need
+						-- to be done here because we cannot change _G inside a forEachElement
+						-- traversing _G
 						forEachElement(pvariables, function(_, value)
 							_G[value] = nil
 						end)
@@ -684,6 +698,7 @@ local executeTests = function(package, fileName)
 						ut.success = ut.success + 1
 					end
 
+					-- TODO: rethink about the code below. Why sould it be placed here?
 					if ut.count_last > 0 then
 						printError("[The error above occurs "..ut.count_last.." more times.]")
 						ut.count_last = 0
@@ -696,6 +711,7 @@ local executeTests = function(package, fileName)
 
 	-- checking if all source code functions were tested
 	if check_functions then
+		-- TODO: check_functions is true only when data.file == nil!!
 		printNote("Checking if functions from source code were tested")
 		if type(data.file) == "string" then
 			print("Checking "..data.file)
@@ -787,6 +803,7 @@ local executeTests = function(package, fileName)
 
 				local myfunc = function()
 					local env = setmetatable({}, {__index = _G})
+					-- TODO: why loadfile here? Why not include or dofile()?
 					loadfile(baseDir..s.."examples"..s..value, 't', env)()
 					return setmetatable(env, nil)
 				end
@@ -808,7 +825,6 @@ local executeTests = function(package, fileName)
 				print = print__
 
 				killAllObservers()
-		
 			end)
 		end
 	else
@@ -825,7 +841,6 @@ local executeTests = function(package, fileName)
 	else
 		text = text.."."
 	end
-
 	printNote(text)
 
 	if ut.print_when_loading > 0 then
