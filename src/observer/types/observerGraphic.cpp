@@ -34,6 +34,8 @@ extern ExecutionModes execModes;
     #include "legendAttributes.h"
 #endif
 
+#include "visualArrangement.h"
+
 using namespace TerraMEObserver;
 
 // Hue component values contains 12 values and it is used
@@ -71,14 +73,30 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
 #endif
     
     plotter = new ChartPlot(parent);
+	plotter->id = getId();
     plotter->setAutoReplot(true);
     plotter->setStyleSheet("background-color: rgb(255, 255, 255);");
     plotter->setFrameShape(QFrame::Box);
     plotter->setFrameShadow(QFrame::Plain);
     plotter->setLineWidth(0);
     plotter->setMargin(10);
-    plotter->resize(450, 350);
-    plotter->setWindowTitle("TerraME Observer : Chart");
+
+	VisualArrangement* v = VisualArrangement::getInstance();
+
+	SizeVisualArrangement s = v->getSize(getId());
+	PositionVisualArrangement p = v->getPosition(getId());
+
+	if(s.width > 0 && s.height > 0)
+	    plotter->resize(s.width, s.height);
+	else
+	    plotter->resize(450, 350);
+
+	if(p.x > 0 && p.y > 0)
+		plotter->move(p.x, p.y);
+	else
+		plotter->move(50 + getId() * 50, 50 + getId() * 50);
+
+    plotter->setWindowTitle("TerraME :: Chart");
 
     plotter->showNormal();
 
@@ -90,7 +108,6 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
 ObserverGraphic::~ObserverGraphic()
 {
     // wait();
-   
     foreach(InternalCurve *curve, internalCurves->values())
         delete curve;
     delete internalCurves; internalCurves = 0;

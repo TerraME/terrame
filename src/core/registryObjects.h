@@ -234,11 +234,11 @@ Luna<luaGlobalAgent>::RegType luaGlobalAgent::methods[] =
 {
 	method(luaGlobalAgent, add),
 	method(luaGlobalAgent, getLatency ),
-	method(luaGlobalAgent, build ),
-	method(luaGlobalAgent, setActionRegionStatus ),
-	method(luaGlobalAgent, getActionRegionStatus ),
-	method(luaGlobalAgent, execute ),
-	method(luaGlobalAgent, getControlModeName ),
+	method(luaGlobalAgent, build),
+	method(luaGlobalAgent, setActionRegionStatus),
+	method(luaGlobalAgent, getActionRegionStatus),
+	method(luaGlobalAgent, execute),
+	method(luaGlobalAgent, getControlModeName),
 	method(luaGlobalAgent, getReference),
 	method(luaGlobalAgent, setReference),
 	
@@ -253,9 +253,9 @@ const char luaLocalAgent::className[] = "TeLocalAutomaton";
 Luna<luaLocalAgent>::RegType luaLocalAgent::methods[] =
 {
 	method(luaLocalAgent, add),
-	method(luaLocalAgent, getLatency ),
-	method(luaLocalAgent, build ),
-	method(luaLocalAgent, setActionRegionStatus ),
+	method(luaLocalAgent, getLatency),
+	method(luaLocalAgent, build),
+	method(luaLocalAgent, setActionRegionStatus),
 	method(luaLocalAgent, execute),
 	method(luaLocalAgent, getReference),
 	method(luaLocalAgent, setReference),
@@ -271,7 +271,7 @@ const char luaTrajectory::className[] = "TeTrajectory";
 
 Luna<luaTrajectory>::RegType luaTrajectory::methods[] = {
 	method(luaTrajectory, add),
-	method(luaTrajectory, clear ),
+	method(luaTrajectory, clear),
 	method(luaTrajectory, getReference),
 	method(luaTrajectory, setReference),
 	
@@ -280,6 +280,16 @@ Luna<luaTrajectory>::RegType luaTrajectory::methods[] = {
 	method(luaTrajectory, kill),
 	{0,0}
 };
+
+const char luaVisualArrangement::className[] = "TeVisualArrangement";
+
+Luna<luaVisualArrangement>::RegType luaVisualArrangement::methods[] = {
+	method(luaVisualArrangement, setFile),
+	method(luaVisualArrangement, addPosition),
+	method(luaVisualArrangement, addSize),
+	{0,0}
+};
+
 
 //****************************** TIME ***********************************************//
 //----------------------------------------------------------------------------------------------

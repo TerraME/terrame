@@ -1320,11 +1320,18 @@ execute = function(parameters) -- parameters is a vector of strings
 			require(package)
 			local s = sessionInfo().separator
 
-			local displayFile = param..".tme"
+			local displayFile = string.sub(param, 0, string.len(param) - 3).."tme"
+
+			local cObj = TeVisualArrangement()
+			cObj:setFile(displayFile)
+
 			if isfile(displayFile) then
-				print("Found display file")
 				local display = dofile(displayFile)
-				-- visualArrangement(display)
+
+				forEachElement(display, function(idx, data)
+					cObj:addPosition(idx, data.x, data.y)
+					cObj:addSize(idx, data.width, data.height)
+				end)
 			end
 
 			local success, result = xpcall(function() dofile(param) end, function(err)

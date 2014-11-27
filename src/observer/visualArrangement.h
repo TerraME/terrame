@@ -22,59 +22,49 @@
 *
 *************************************************************************************/
 
-#ifndef CHART_PLOT_H
-#define CHART_PLOT_H
+#ifndef VISUAL_ARRANGEMENT
+#define VISUAL_ARRANGEMENT
 
-#include <qwt_plot.h>
-
-class QContextMenuEvent;
-class QMouseEvent;
-class QAction;
-class QwtPlotPicker;
-
-class PlotPropertiesGUI;
-
+#include <map>
+#include <string>
 #include <iostream>
+#include <fstream>
+
 using namespace std;
 
-namespace TerraMEObserver {
-
-class InternalCurve;
-
-
-class ChartPlot : public QwtPlot
+struct PositionVisualArrangement
 {
-    Q_OBJECT
-
-public:
-    ChartPlot(QWidget *parent);
-    virtual ~ChartPlot();
-
-    void setInternalCurves(const QList<TerraMEObserver::InternalCurve *> &internalCurves);
-	int id;
-private slots:
-    void exportChart();
-    void propertiesChart();
-
-protected:
-    void contextMenuEvent(QContextMenuEvent *ev);
-    void mouseDoubleClickEvent(QMouseEvent *ev);
-	void resizeEvent(QResizeEvent*);
-	void moveEvent(QMoveEvent*);
-	void closeEvent() { cout << "CLOSE" << endl; }
-private:
-    /**
-     * Draws a picker to the mouse cursor in the plot window
-     * \return boolean, \a true if the curve could be draw
-     */
-    void createPicker();
-
-    QAction *exportAct, *propertiesAct;
-    PlotPropertiesGUI *plotPropGui;
-    QList<TerraMEObserver::InternalCurve *> internalCurves;
-
-    QwtPlotPicker *picker;
+	int x;
+	int y;
 };
 
-}
-#endif // CHART_PLOT_H
+struct SizeVisualArrangement
+{
+	int width;
+	int height;
+};
+
+class VisualArrangement 
+{
+public:
+	static VisualArrangement* getInstance();
+
+	void addSize(int, SizeVisualArrangement);
+	void addPosition(int, PositionVisualArrangement);
+
+	SizeVisualArrangement getSize(int);
+	PositionVisualArrangement getPosition(int);
+	void setFile(string);
+
+	void buildLuaCode();
+protected:
+	VisualArrangement() {}
+	static VisualArrangement* myarrangement;
+	string file;
+private:
+	map<int, PositionVisualArrangement> position;
+	map<int, SizeVisualArrangement> size;
+};
+
+#endif
+

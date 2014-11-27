@@ -1,12 +1,14 @@
 #include "taskManager.h"
 
 #include "worker.h"
+#include "visualArrangement.h"
 
 #include <QPair>
 #include <QDebug>
 #include <QMutexLocker>
 
 #include <iostream>
+using namespace std;
 
 extern int WORKERS_NUMBER;
 
@@ -74,7 +76,6 @@ TaskManager & TaskManager::operator=(const TaskManager &)
 
 TaskManager::~TaskManager()
 {
-    
     // Stops all workers execution
     for(int i = 0; i < workers.size(); i++)
         workers.at(i)->stop();
@@ -99,6 +100,10 @@ TaskManager::~TaskManager()
     qDebug() << "bagOfTasks.size()" << bagOfTasks.size();
     qDebug() << "~TaskManager()"; std::cout.flush();
 #endif
+
+	VisualArrangement* v = VisualArrangement::getInstance();
+
+	v->buildLuaCode();
 }
 
 // #include <qthreadpool.h>
@@ -146,3 +151,4 @@ const Worker * TaskManager::getWorker()
         requestedWorkerPos + 1 : 0);
     return workers.at( requestedWorkerPos );
 }
+

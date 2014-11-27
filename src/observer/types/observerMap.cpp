@@ -742,7 +742,6 @@ void ObserverMap::resizeEvent(QResizeEvent *)
 {
     if (zoomComboBox->currentText() == WINDOW)
         zoomWindow();
-
     // painterWidget->calculateResult();
 }
 
