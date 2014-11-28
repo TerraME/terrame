@@ -61,11 +61,9 @@ Agent_ = {
 			end
 		end
 
-		if id == nil then
-			id = "1"
-		elseif type(id) ~= "string" then
-			incompatibleTypeError(2, "string", id)
-		end
+		optionalArgument(2, "string", id)
+		if id == nil then id = "1" end
+
 		self.socialnetworks[id] = set
 	end,
 	--- Check if the state machine was correctly defined, verifying
@@ -85,12 +83,11 @@ Agent_ = {
 	-- and remove the relations by himself/herself.
 	-- @usage agent:die()
 	die = function(self, remove_placements)
+		optionalArgument(1, "boolean", remove_placements)
+		if remove_placements == nil then remove_placements = true end
+
 		if remove_placements == true and not self.parent then
 			customError("Cannot remove the placements of an Agent that does not belong to a Society.")
-		end
-
-		if remove_placements == nil then
-			remove_placements = true
 		end
 
 		-- remove all the placements
@@ -124,15 +121,10 @@ Agent_ = {
 	-- agent:enter(newcell, "renting")
 	-- @see Environment:createPlacement
 	enter = function(self, cell, placement)
-		if type(cell)~="Cell" then
-			incompatibleTypeError(1, "Cell", cell)
-		end
+		mandatoryArgument(1, "Cell", cell)
 
-		if placement == nil then
-			placement = "placement"
-		elseif type(placement) ~= "string" then
-			incompatibleTypeError(2, "string", placement)
-		end
+		optionalArgument(2, "string", placement)
+		if placement == nil then placement = "placement" end
 
 		if self[placement] then 
 			self[placement].cells[1] = cell
@@ -163,24 +155,18 @@ Agent_ = {
 	--     self:walk() 
 	-- end}
 	execute = function(self, event)
-		if type(event) == "Event" then
-			self.cObj_:execute(event)
-		else
-			incompatibleTypeError(1, "Event", event)
-		end
+		mandatoryArgument(1, "Event", event)
+
+		self.cObj_:execute(event)
 	end,
 	--- Return the Cell where the Agent is located according to its placement. It assumes
 	-- that each Agent belongs to at most one Cell.
 	-- @param placement  A string representing the index to be used. Default is "placement".
 	-- @usage cell = agent:getCell()
 	getCell = function(self, placement)
-		if type(placement) ~= "string" then
-			if type(placement) == "nil" then
-				placement = "placement"
-			else
-				incompatibleTypeError(1, "string", placement)
-			end
-		end
+		optionalArgument(1, "string", placement)
+		if placement == nil then placement = "placement" end
+
 		if type(self[placement]) ~= "Trajectory" then
 			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
 		end
@@ -190,13 +176,8 @@ Agent_ = {
 	-- @param placement A string representing the index to be used. Default is "placement".
 	-- @usage cell = agent:getCells()[1]
 	getCells = function(self, placement)
-		if type(placement) ~= "string" then
-			if placement == nil then
-				placement = "placement"
-			else
-				incompatibleTypeError(1, "string", placement)
-			end
-		end
+		optionalArgument(1, "string", placement)
+		if placement == nil then placement = "placement" end
 
 		if type(self[placement]) ~= "Trajectory" then
 			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
@@ -223,11 +204,8 @@ Agent_ = {
 	-- @usage net = agent:getSocialNetwork("friends")
 	-- @see Society:createSocialNetwork
 	getSocialNetwork = function(self, id)
-		if id == nil then
-			id = "1"
-		elseif type(id) ~= "string" then
-			incompatibleTypeError(1, "string", id)
-		end
+		optionalArgument(1, "string", id)
+		if id == nil then id = "1" end
 
 		local s = self.socialnetworks[id] 
 		if type(s) == "function" then
@@ -275,21 +253,11 @@ Agent_ = {
 	--
 	-- agent:leave(cell, "renting")
 	leave = function(self, cell, placement)
-		if type(placement) ~= "string" then
-			if placement == nil then
-				placement = "placement"
-			else
-				incompatibleTypeError(2, "string", placement)
-			end
-		end
+		optionalArgument(1, "Cell", cell)
+		if cell == nil then cell = self[placement].cells[1] end
 
-		if type(cell) ~= "Cell" then
-			if cell == nil then
-				cell = self[placement].cells[1]
-			else
-				incompatibleTypeError(1, "Cell", cell)
-			end
-		end
+		optionalArgument(2, "string", placement)
+		if placement == nil then placement = "placement" end
 
 		if self[placement] == nil then
 			valueNotFoundError(1, placement)
@@ -341,19 +309,15 @@ Agent_ = {
 		verifyNamedTable(data)
 
 		data.sender = self
-		if type(data.receiver) ~= "Agent" then
-			incompatibleTypeError("receiver", "Agent", data.receiver)
-		end
+		mandatoryTableArgument(data, "receiver", "Agent")
 
-		if data.delay == nil then
-			data.delay = 0
-		elseif type(data.delay) ~= "number" then
-			incompatibleTypeError("delay", "positive integer number", data.delay)
-		elseif data.delay < 0 then
+		defaultTableValue(data, "delay", 0)
+
+		verify(type(self.parent) == "Society", "Agent must be within a Society to send messages with delay.")
+
+		if data.delay < 0 then
 			incompatibleValueError("delay", "positive integer number", data.delay)
-		end
-
-		if data.delay == 0 then
+		elseif data.delay == 0 then
 			if data.subject then
 				if type(data.subject) ~= "string" then
 					incompatibleTypeError("subject", "string", data.subject)
@@ -362,18 +326,13 @@ Agent_ = {
 				if type(data.receiver[call]) ~= "function" then
 					customError("Receiver (id = '".. data.receiver.id .."') does not implement function "..call ..".")
 				else
-					data.receiver[call](data.receiver, data)
-					return true
+					return data.receiver[call](data.receiver, data)
 				end
 			else
-				data.receiver:on_message(data)
-				return true
+				return data.receiver:on_message(data)
 			end
-		elseif type(self.parent) ~= "Society" then
-			customError("Agent must be within a Society to send messages with delay.")
 		else
 			table.insert(self.parent.messages, data)
-			return true
 		end
 	end,
 	--- Move the Agent to a new Cell. The agent needs to have a placement to be able to use
@@ -385,21 +344,10 @@ Agent_ = {
 	-- agent:move(newcell, "renting")
 	-- @see Environment:createPlacement
 	move = function(self, newcell, placement)
-		if type(newcell) ~= "Cell" then
-			if newcell == nil then
-				mandatoryArgumentError(1)
-			else
-				incompatibleTypeError(1, "Cell", newcell)
-			end
-		end
+		mandatoryArgument(1, "Cell", newcell)
 
-		if type(placement) ~= "string" then
-			if placement == nil then
-				placement = "placement"
-			else
-				incompatibleTypeError(2, "string", placement)
-			end
-		end
+		optionalArgument(2, "string", placement)
+		if placement == nil then placement = "placement" end
 
 		if self[placement] == nil then
 			customError("Value '".. placement .."' not found for parameter '#2'.")
@@ -475,26 +423,15 @@ Agent_ = {
 	-- @param placement A string representing the index to be used. Default is "placement".
 	-- @param neighborhood A string representing the index of the Neighborhood to be used.
 	-- Default is "placement".
-	-- @param randomObj A Random object. Default is the internal TerraME random number generator.
 	-- @usage agent:walk()
 	--
 	-- agent:walk("moore")
-	walk = function(self, placement, neighborhood, randomObj)
-		if type(placement) ~= "string" then
-			if placement == nil then
-				placement = "placement"
-			else
-				incompatibleTypeError(1, "string", placement)
-			end
-		end
+	walk = function(self, placement, neighborhood)
+		optionalArgument(1, "string", placement)
+		if placement == nil then placement = "placement" end
 
-		if type(neighborhood) ~= "string" then
-			if neighborhood == nil then
-				neighborhood = "1"
-			else
-				incompatibleTypeError(2, "string", neighborhood)
-			end
-		end
+		optionalArgument(2, "string", neighborhood)
+		if neighborhood == nil then neighborhood = "1" end
 
 		if type(self[placement]) ~= "Trajectory" then
 			valueNotFoundError(1, placement)
@@ -505,7 +442,7 @@ Agent_ = {
 		if c2 == nil then
 			valueNotFoundError(2, neighborhood)
 		end
-		self:move(c2:sample(randomObj), placement)
+		self:move(c2:sample(), placement)
 	end,
 	--- Create an Agent with the same behavior in the same Cell where the original Agent is
 	-- (according to its placement). The new Agent is pushed into the same Society the original
@@ -522,40 +459,40 @@ Agent_ = {
 	--     house = agent.house:clone() -- house is a placement
 	-- }
 	reproduce = function(self, data)
-		if self.parent == nil then
-			customError("Agent should belong to a Society to be able to reproduce.")
-		end
+		verify(type(self.parent) == "Society", "Agent should belong to a Society to be able to reproduce.")
+
 		if type(data) ~= "table" then
 			if data == nil then
 				data = {}
 			else
-				namedParametersError("reproduce")
+				verifyNamedTable(data)
 			end
 		end
 		local ag = self.parent:add(data)
 
 		if self.placement ~= nil then
-			ag:enter(self:getCell("placement"), "placement")
+			forEachElement(self.parent.placements, function(idx)
+				if idx == "placement" then
+					ag:enter(self:getCell())
+				else
+					ag:enter(self:getCell(idx), idx)
+				end
+			end)
 		end
 		return ag
 	end,
 	--- Returns a random Agent from a SocialNetwork of this Agent.
 	-- @param id Name of the relation.
-	-- @param randomObj A random object. As default, TerraME uses its
-	-- internal random number generator.
 	-- @usage ag_friend = agent:sample("friends")
-	sample = function(self, id, randomObj)
-		if id == nil then
-			id = "1"
-		end
+	sample = function(self, id)
+		optionalArgument(1, "string", id)
+		if id == nil then id = "1" end
 
 		local sn = self:getSocialNetwork(id)
 
-		if sn == nil then
-			customError("Agent does not have a SocialNetwork named '"..id.."'.")
-		end
+		verify(sn, "Agent does not have a SocialNetwork named '"..id.."'.")
 
-		return sn:sample(randomObj)
+		return sn:sample()
 	end,
 	--- Set the unique identifier of the Agent.
 	-- @param name A string.
@@ -572,9 +509,9 @@ Agent_ = {
 	-- Agent is described as a state machine.
 	-- @usage agent:setTrajectoryStatus(true)
 	setTrajectoryStatus = function(self, status)
-		if type(status) ~= "boolean" then
-			status = false
-		end
+		optionalArgument(1, "boolean", status)
+		if status == nil then status = false end
+
 		self.cObj_:setActionRegionStatus(status)
 	end
 }
@@ -630,17 +567,15 @@ metaTableAgent_ = {__index = Agent_, __tostring = tostringTerraME}
 function Agent(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterError("Agent")
+			data = {}
 		else
-			namedParametersError("Agent")
-		end
+ 			customError(tableParameterMsg())
+ 		end
 	end
 
 	setmetatable(data, metaTableAgent_)
 
-	if type(data.id) ~= "string" and data.id ~= nil then
-		incompatibleTypeError("id", "string or nil", data.id)
-	end
+	optionalTableArgument(data, "id", "string")
 
 	local cObj = TeGlobalAutomaton()
 	data.cObj_ = cObj

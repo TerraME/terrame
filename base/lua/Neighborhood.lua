@@ -32,16 +32,12 @@ Neighborhood_ = {
 	-- @param weight A number representing the weight of the connection. Default is zero.
 	-- @usage n:add(cell, 0.02)
 	add = function(self, cell, weight)
-		if cell == nil then
-			mandatoryArgumentError(1)
-		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError(1, "Cell", cell)
-		end
+		mandatoryArgument(1, "Cell", cell)
+
+		optionalArgument(2, "number", weight)
 
 		if weight == nil then
 			weight = 1
-		elseif type(weight) ~= "number" then
-			incompatibleTypeError(2, "number", weight)
 		end
 
 		verify(not self:isNeighbor(cell), "Cell ("..cell.x..","..cell.y..") already belongs to the Neighborhood.")
@@ -95,21 +91,11 @@ Neighborhood_ = {
 	-- @param cell A cell which will be removed.
 	-- @usage n:remove(cell)
 	remove = function(self, cell)
-		if cell == nil then
-			mandatoryArgumentError(1)
-		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError(1, "Cell", cell)
-		end
+		mandatoryArgument(1, "Cell", cell)
 
-		if not self:isNeighbor(cell) then
-
-		end
+		verify(self:isNeighbor(cell), "Trying to remove a Cell that does not belong to the Neighborhood.")
 
 		local result = self.cObj_:eraseNeighbor(cell.x, cell.y, cell.cObj_)
-
-		if not result then
-			customError("Trying to remove a Cell that does not belong to the Neighborhood.")
-		end
 	end,
 	--- Remove a Cell from the Neighborhood.
 	-- Neighborhood:add instead.
@@ -134,17 +120,11 @@ Neighborhood_ = {
 	-- @param cell A Cell.
 	-- @usage w = n:getWeight(cell)
 	getWeight = function(self, cell)
-		if cell == nil then
-			mandatoryArgumentError(1)
-		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError(1, "Cell", cell)
-		end
+		mandatoryArgument(1, "Cell", cell)
 
 		local result = self.cObj_:getNeighWeight(cell.x, cell.y, cell.cObj_)
+		verify(result, "Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.")
 
-		if result == nil then
-			customError("Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.")
-		end
 		return result
 	end,
 	--- Retrieve the weight of the connection to a given neighbour Cell.
@@ -168,11 +148,7 @@ Neighborhood_ = {
 	--     -- ...
 	-- end
 	isNeighbor = function(self, cell)
-		if cell == nil then
-			mandatoryArgumentError(1)
-		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError(1, "Cell", cell)
-		end
+		mandatoryArgument(1, "Cell", cell)
 
 		return self.cObj_:isNeighbor(cell.x, cell.y, cell.cObj_)
 	end,
@@ -199,23 +175,12 @@ Neighborhood_ = {
 	-- @param weight The new weight.
 	-- @usage n:setWeight(cell, 0.01)
 	setWeight = function(self, cell, weight)
-		if cell == nil then
-			mandatoryArgumentError(1)
-		elseif type(cell) ~= "Cell" then
-			incompatibleTypeError(1, "Cell", cell)
-		end
-
-		if weight == nil then
-			mandatoryArgumentError(2)
-		elseif type(weight) ~= "number" then
-			incompatibleTypeError(2, "number", weight)
-		end
+		mandatoryArgument(1, "Cell", cell)
+		mandatoryArgument(2, "number", weight)
 	
 		local result = self.cObj_:setNeighWeight(cell.x, cell.y, cell.cObj_, weight)
 
-		if not result then
-			customError("Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.")
-		end
+		verify(result, "Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.")
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
 	-- @param xIndex A number.

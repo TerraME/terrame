@@ -37,7 +37,7 @@ e = Environment {
 	soc
 }
 
-e:createPlacement{strategy = "random", max = 1}
+e:createPlacement{max = 1}
 
 c = Cell{quantity = 1}
 

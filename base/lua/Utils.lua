@@ -42,7 +42,7 @@ end
 -- @param data Any object or value.
 -- @usage c = Cell{value = 3}
 -- print(type(c)) -- "Cell"
-type = function(data)
+function type(data)
 	local t = type__(data)
 	if t == "table" or t == "userdata" and getmetatable(data) then
 		if data.type_ ~= nil then
@@ -188,7 +188,7 @@ function integrationRungeKutta(df, initCond, a, b, delta)
 			y2 = df(x + midDelta, y + midDelta * y1)
 			y3 = df(x + midDelta, y + midDelta * y2)
 			y4 = df(x + delta, y + delta* y3)
-			y = y + delta * (y1 + 2 * y2 + 2 * y3 + y4)/6
+			y = y + delta * (y1 + 2 * y2 + 2 * y3 + y4) / 6
 		end
 		return y
 	else
@@ -215,7 +215,7 @@ function integrationRungeKutta(df, initCond, a, b, delta)
 				y3 = df[i](x + midDelta, yTemp )
 				yTemp[i] = y[i] + delta * y3
 				y4 = df[i](x + delta, yTemp)
-				values[i] = y[i] + delta * (y1 + 2 * y2 + 2 * y3 + y4)/6
+				values[i] = y[i] + delta * (y1 + 2 * y2 + 2 * y3 + y4) / 6
 			end
 			for i = 1, sizeDF do
 				y[i] = values[i]
@@ -364,8 +364,8 @@ function integrate(attrs)
 		end
 	end
 
-	if attrs.step == nil then attrs.step = 0.1 end
-	if attrs.method == nil then attrs.method = "euler" end
+	defaultTableValue(attrs, "step", 0.1)
+	defaultTableValue(attrs, "method", "euler")
 
 	local result = switch(attrs, "method"): caseof {
 		euler = function() return integrationEuler(attrs.equation, attrs.initial, attrs.a, attrs.b, attrs.step) end,
@@ -417,11 +417,8 @@ end
 -- @param t Another string.
 -- @usage levenshtein("abc", "abb")
 function levenshtein(s, t)
-	if type(s) ~= "string" then
-		incompatibleTypeError(1, "string", s)
-	elseif type(t) ~= "string" then
-		incompatibleTypeError(2, "string", t)
-	end
+	mandatoryArgument(1, "string", s)
+	mandatoryArgument(2, "string", t)
 
 	local d, sn, tn = {}, #s, #t
 	local byte, min = string.byte, math.min
@@ -848,7 +845,7 @@ function csv.parseLine(line, sep)
 				-- value1,"blub""blip""boing",value3 will result in blub"blip"boing for the middle
 			until (c ~= '"')
 			table.insert(res, txt)
-			assert(c == sep or c == "")
+			verify(c == sep or c == "", "Invalid csv file.")
 			pos = pos + 1
 		else	
 			-- no quotes used, just look for the first separator

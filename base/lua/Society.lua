@@ -330,9 +330,9 @@ Society_ = {
 	-- @param index The index of the Agent that will be returned.
 	-- @usage agent = soc:get("1")
 	get = function(self, index)
-		if type(index) ~= "number" then
-			incompatibleTypeError("index", "positive integer number", index)
-		elseif index < 0 then
+		mandatoryArgument(1, "number", index)
+
+		if index < 0 then
 			incompatibleValueError("index", "positive integer number", "negative number")
 		elseif math.floor(index) ~= index then
 			incompatibleValueError("index", "positive integer number", "float number")
@@ -458,9 +458,7 @@ Society_ = {
 				if agent[value] then return agent[value] end
 				return nil
 			end
-		end
-
-		if type(argument) ~= "function" then
+		elseif type(argument) ~= "function" then
 			incompatibleTypeError(1, "string or function", argument)
 		end
 
@@ -489,12 +487,10 @@ Society_ = {
 	-- @usage soc:synchronize()
 	-- soc:synchronize(2)
 	synchronize = function(self, delay)
-		if type(delay) ~= "number"then
-			if type(delay) == "nil" then
+		optionalArgument(1, "number", delay)
+
+		if delay == nil then
 				delay = 1
-			else
-				incompatibleTypeError(1, "positive number", delay)
-			end
 		elseif delay <= 0 then
 			incompatibleValueError(1, "positive number", delay)
 		end
@@ -727,16 +723,6 @@ function Society(data)
 			data:add({})
 		end
 	end
-	--[[
-	local quantity = data.quantity
-	data.quantity = 0
-	for i = 1, quantity do
-	if type(data.id) ~= "string" then
-	incompatibleTypes("id","string", data.id)
-	end
-	data:add()
-	end
-	--]]
 
 	return data
 end

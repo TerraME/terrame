@@ -43,7 +43,7 @@ return{
 		cs:createNeighborhood()
 
 		local env = Environment{cs, predators}
-		env:createPlacement{strategy = "random", max = 1}
+		env:createPlacement{max = 1}
 
 		local cont = 0
 		forEachCell(cs, function(cell)
@@ -97,7 +97,7 @@ return{
 		cs:createNeighborhood()
 
 		local env = Environment{cs, predators}
-		env:createPlacement{strategy = "random", max = 1, name = "house"}
+		env:createPlacement{max = 1, name = "house"}
 		env:createPlacement{strategy = "uniform", name = "stay"}
 		env:createPlacement{strategy = "void", name = "workingplace"}
 			

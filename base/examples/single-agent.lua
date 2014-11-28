@@ -26,7 +26,7 @@ e = Environment {
 	singleFooAgent
 }
 
-e:createPlacement{strategy = "random"}
+e:createPlacement()
 
 t = Timer {
 	Event{action = singleFooAgent},

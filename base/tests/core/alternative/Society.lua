@@ -274,7 +274,7 @@ return{
 		local ag1 = Agent{}
 		local sc1 = Society{instance = ag1, quantity = 20}
 		local env = Environment{cs, sc1}
-		env:createPlacement{strategy = "random"}
+		env:createPlacement()
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = "c"}
@@ -292,7 +292,7 @@ return{
 		end
 		unitTest:assert_error(error_func, "Society has no placement. Use Environment:createPlacement() first.")
 
-		env:createPlacement{strategy = "random"}
+		env:createPlacement()
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "cell", name = "c", quantity = 5}
 		end
@@ -348,12 +348,12 @@ return{
 		local error_func = function()
 			ag1 = sc1:get(nil)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("index", "positive integer number"))
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			ag1 = sc1:get("asdfg")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("index", "positive integer number", "asdfg"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "asdfg"))
 	end,
 	getAgent = function(unitTest)
 		local ag1 = Agent{
@@ -440,7 +440,7 @@ return{
 		local error_func = function()
 			sc1:synchronize("test")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "positive number", "test"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "test"))
 
 		error_func = function()
 			sc1:synchronize(-13)

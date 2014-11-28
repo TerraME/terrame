@@ -26,10 +26,12 @@
 
 return{
 	Cell = function(unitTest)
-		local cell = Cell{y = 0}
-		unitTest:assert_equal(0, cell.x)
-
 		local error_func = function()
+			local cell = Cell(2)
+		end
+		unitTest:assert_error(error_func, namedParametersMsg())
+
+		error_func = function()
 			cell = Cell{x = 2.22, y = 0}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("x", "positive integer number", 2.22))
@@ -38,9 +40,6 @@ return{
 			cell = Cell{x = -2, y = 1}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("x", "positive integer number", -2))
-
-		cell = Cell{x = 1}
-		unitTest:assert_equal(0, cell.y)
 
 		error_func = function()
 			cell = Cell{x = 1, y = 2.22}

@@ -68,7 +68,7 @@ env = Environment{
 	preys
 }
 
-env:createPlacement{strategy = "random", max = 1}
+env:createPlacement{max = 1}
 
 dopasture = function(cell)
 	cell.cover = 0

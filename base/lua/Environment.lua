@@ -25,12 +25,16 @@
 --      Rodrigo Reis Pereira
 --#########################################################################################
 
-local createRandomPlacement = function(environment, cs, max, placement)
+local function createRandomPlacement(environment, cs, max, placement)
+	local nplacement = placement
+	if nplacement == nil then
+		nplacement = "placement"
+	end
 	if max == nil then
 		forEachElement(environment, function(_, element)
 			local t = type(element)
 			if t == "Society" then
-				element.placements[placement] = cs
+				element.placements[nplacement] = cs
 				forEachAgent(element, function(agent)
 					agent:enter(cs:sample(), placement)
 				end)
@@ -42,17 +46,17 @@ local createRandomPlacement = function(environment, cs, max, placement)
 		forEachElement(environment, function(_, element)
 			local t = type(element)
 			if t == "Society" then
-				element.placements[placement] = cs
+				element.placements[nplacement] = cs
 				forEachAgent(element, function(agent)
 					local cell = cs:sample()
-					while #cell[placement] >= max do
+					while #cell[nplacement] >= max do
 						cell = cs:sample()
 					end
 					agent:enter(cell, placement)
 				end)
 			elseif t == "Agent" then
 				local cell = cs:sample()
-				while #cell[placement] >= max do
+				while #cell[nplacement] >= max do
 					cell = cs:sample()
 				end 
 				element:enter(cell, placement)
@@ -61,11 +65,16 @@ local createRandomPlacement = function(environment, cs, max, placement)
 	end
 end
 
-local createUniformPlacement = function(environment, cs, placement)
+local function createUniformPlacement(environment, cs, placement)
+	local nplacement = placement
+	if nplacement == nil then
+		nplacement = "placement"
+	end
+
 	local counter = 1 
 	forEachElement(environment, function(_, element, mtype)
 		if mtype == "Society" then
-			element.placements[placement] = cs
+			element.placements[nplacement] = cs
 			forEachAgent(element, function(agent)
 				agent:enter(cs.cells[counter], placement)
 				counter = counter + 1 
@@ -83,8 +92,13 @@ local createUniformPlacement = function(environment, cs, placement)
 	end)
 end
 
-local createVoidPlacement = function(environment, cs, data)
+local function createVoidPlacement(environment, cs, data)
 	local placement = data.name
+	local nplacement = placement
+	if nplacement == nil then
+		nplacement = "placement"
+	end
+
 	forEachElement(environment, function(_, element)
 		local t = type(element)
 		if t == "CellularSpace" or t == "Trajectory" then
@@ -92,27 +106,27 @@ local createVoidPlacement = function(environment, cs, data)
 			if t == "Trajectory" then melement = element.parent end -- use the CellularSpace
 
 			forEachCell(melement, function(cell)
-				cell[placement] = Group{build = false}
-				cell[placement].agents = {}
-				cell.agents = cell[placement].agents
+				cell[nplacement] = Group{build = false}
+				cell[nplacement].agents = {}
+				cell.agents = cell[nplacement].agents
 			end)
 		elseif t == "Society" then
-			element.placements[data.name] = cs
+			element.placements[nplacement] = cs
 			forEachAgent(element, function(agent)
-				agent[placement] = Trajectory{build = false, target = cs}
-				agent[placement].cells = {}
-				agent.cells = agent[placement].cells
+				agent[nplacement] = Trajectory{build = false, target = cs}
+				agent[nplacement].cells = {}
+				agent.cells = agent[nplacement].cells
 			end)
 		elseif t == "Agent" then
-			element[placement] = Trajectory{build = false, target = cs}
-			element[placement].cells = {}
-			element.cells = element[placement].cells
+			element[nplacement] = Trajectory{build = false, target = cs}
+			element[nplacement].cells = {}
+			element.cells = element[nplacement].cells
 		end
 	end)
 
 	forEachElement(environment, function(_, element, mtype)
 		if mtype == "Society" then
-			element.placements[placement] = cs
+			element.placements[nplacement] = cs
 		end
 	end)
 end
@@ -125,8 +139,7 @@ Environment_ = {
 	-- environment:add(cellularSpace)
 	add = function (self, object)
 		local t = type(object)
-		if t == "CellularSpace" or t == "Society" or t == "Agent" or 
-		   t == "Automaton" or t == "Timer" or t == "Trajectory" or t == "Cell" then
+		if belong(t, {"CellularSpace", "Society", "Agent", "Automaton", "Timer", "Trajectory", "Cell"}) then
 			object.parent = self
 			table.insert(self, object)
 		else
@@ -177,7 +190,7 @@ Environment_ = {
 			if data == nil then
 				data = {}
 			else
-	 			namedParametersError("createPlacement")
+				verifyNamedTable(data)
 			end
 		end
 
@@ -185,28 +198,15 @@ Environment_ = {
 		local mysoc
 		local foundsoc
 
-		if data.strategy == nil then
-			data.strategy = "random"      
-		elseif type(data.strategy) ~= "string" then
-			incompatibleTypeError("strategy", "string", data.strategy)
-		end
+		defaultTableValue(data, "strategy", "random")
+		defaultTableValue(data, "name", "placement")
 
-		if type(data.name) ~= "string" then  
-			if type(data.name) == "nil" then
-				data.name = "placement"
-			else
-				incompatibleTypeError("name", "string", data.name)
-			end
-		end
+		if data.name == "placement" then data.name = nil end -- to avoid warning messages
 
 		if data.strategy == "random" then
-			if type(data.max) ~= "number" then
-				if type(data.max) == "nil" then
-					data.max = math.huge
-				else
-					incompatibleTypeError("max", "positive integer number", data.max)
-				end
-			elseif data.max <= 0 then
+			defaultTableValue(data, "max", math.huge)
+
+			if data.max <= 0 then
 				incompatibleValueError("max", "positive integer number", data.max)
 			end
 		end
@@ -223,7 +223,7 @@ Environment_ = {
 			elseif t == "Society" then
 				qty_agents = qty_agents + #ud
 				forEachElement(ud.placements, function(index)
-					if index == data.name then
+					if index == data.name or (data.name == nil and index == "placement") then
 						customError("There is a Society within this Environment that already has this placement.")
 					end
 				end)
@@ -237,11 +237,9 @@ Environment_ = {
 			end
 		end
 
-		if mycs == nil then
-			customError("The Environment does not contain a CellularSpace.")
-		elseif not foundsoc then
-			customError("Could not find a behavioral entity (Society or Agent) within the Environment.")
-		end
+		verify(mycs, "The Environment does not contain a CellularSpace.")
+		verify(foundsoc, "Could not find a behavioral entity (Society or Agent) within the Environment.")
+
 		if data.strategy == "random" and data.max ~= nil and qty_agents > #mycs * data.max then
 			customError("It is not possible to put that amount of agents in space.")
 		end
@@ -269,9 +267,7 @@ Environment_ = {
 	-- Timers stop when there is no Event scheduled to a time less or equal to the final time.
 	-- @usage environment:execute(1000)
 	execute = function(self, finalTime) 
-		if type(finalTime) ~= "number" then
-			incompatibleTypeError(1, "number", finalTime)
-		end
+		mandatoryArgument(1, "number", finalTime)
 		self.cObj_:config(finalTime)
 		self.cObj_:execute()
 	end,
@@ -286,43 +282,17 @@ Environment_ = {
 	--     name = "newNeigh"
 	-- }
 	loadNeighborhood = function(self, data)
-		if type(data) ~= "table" then
-			if data == nil then
-				tableParameterError("loadNeighborhood")
-			else
-	 			namedParametersError("loadNeighborhood")
-			end
-		end
+		verifyNamedTable(data)
 
-		if data.name == nil then
-			data.name = "1"
-		elseif type(data.name) ~= "string" then 
-			incompatibleTypeError("name", "string", data.name)
-		end
-
-		if type(data.source) == "string" then
-			local extension = string.match(data.source, "%w+$")
-			if extension ~= "gpm" then
-				invalidFileExtensionError("source", extension)
-			else
-				local file = io.open(data.source, "r")
-				if not file then
-					resourceNotFoundError("source", data.source)
-				end
-			end
-		elseif data.source == nil then
-			mandatoryArgumentError("source")
-		elseif type(data.source ~= "string") then
-			incompatibleTypeError("source", "string", data.source)
-		end
+		defaultTableValue(data, "name", "1")
+		mandatoryTableArgument(data, "source", "string")
 
 		local extension = string.match(data.source, "%w+$")
-    
-    	if data.bidirect == nil then
-			data.bidirect = false
-		elseif type(data.bidirect) ~= "boolean" then
-			incompatibleTypeError("bidirect", "boolean", data.bidirect)
+		if extension ~= "gpm" then
+			invalidFileExtensionError("source", extension)
 		end
+    
+		defaultTableValue(data, "bidirect", false)
 
 		local file = io.open(data.source, "r")
 		if not file then
@@ -339,13 +309,10 @@ Environment_ = {
 		local layer1Id = string.sub(header, (numAttribIdx + 1), (layer1Idx - 1))
 		local layer2Id = string.sub(header, (layer1Idx + 1), (layer2Idx - 1))
 
-		if layer1Id == layer2Id then 
-			customError("This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.") 
-		end
+		verify(layer1Id ~= layer2Id, "This function does not load neighborhoods between cells from the same "..
+			"CellularSpace. Use CellularSpace:loadNeighborhood() instead.") 
 
-		if numAttributes > 1 then
-			customError("This function does not support GPM with more than one attribute.")
-		end
+		verify(numAttributes == 1, "This function does not support GPM with more than one attribute.")
 
 		local beginName = layer2Idx
 		local attribNames = {}
@@ -497,17 +464,14 @@ metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
 function Environment(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterError("Environment")
+ 			customError(tableParameterMsg())
 		else
-			namedParametersError("Environment")
+ 			customError(namedParametersMsg())
 		end
 	end
 
-	if data.id == nil then
-		data.id = "1"
-	elseif type(data.id) ~= "string" then
-		incompatibleTypeError("id", "string", data.id)
-	end
+	defaultTableValue(data, "id", "1")
+
 	local cObj = TeScale(data.id)
 	setmetatable(data, metaTableEnvironment_)
 	cObj:setReference(data)

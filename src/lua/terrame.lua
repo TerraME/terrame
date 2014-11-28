@@ -597,13 +597,10 @@ local executeTests = function(package, fileName)
 						myFiles[#myFiles + 1] = value
 					end
 				end)
-			elseif data.file == nil then
+			else -- nil
 				forEachElement(dirFiles, function(_, value)
 					myFiles[#myFiles + 1] = value
 				end)
-			else
-				-- TODO: I think the line below will never be executed
-				error("file is not a string, table or nil.")
 			end
 
 			if #myFiles == 0 then
@@ -634,15 +631,12 @@ local executeTests = function(package, fileName)
 					forEachOrderedElement(tests, function(index, value, mtype)
 						myTests[#myTests + 1] = index 					
 					end)
-				elseif type(data.test) == "table" then
+				else -- table
 					forEachElement(data.test, function(_, value)
 						if tests[value] then
 							myTests[#myTests + 1] = value
 						end
 					end)
-				else
-					-- TODO: I think it will never enter here too
-					error("test is not a string, table or nil")
 				end
 
 				if #myTests > 0 then
@@ -655,12 +649,13 @@ local executeTests = function(package, fileName)
 					print("Testing "..eachTest)
 					io.flush()
 
-					-- TODO: separate this ifs into two, to avoid the next elseif, having only an else.
-					if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
-						testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
-					elseif testfunctions[eachFile] then
-						printError("Function does not exist in the respective file in the source code.")
-						ut.functions_not_exist = ut.functions_not_exist + 1
+					if testfunctions[eachFile] then
+						if testfunctions[eachFile][eachTest] then
+							testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
+						else
+							printError("Function does not exist in the respective file in the source code.")
+							ut.functions_not_exist = ut.functions_not_exist + 1
+						end
 					end
 
 					local count_test = ut.test
@@ -714,7 +709,6 @@ local executeTests = function(package, fileName)
 						ut.success = ut.success + 1
 					end
 
-					-- TODO: rethink about the code below. Why sould it be placed here?
 					if ut.count_last > 0 then
 						printError("[The error above occurs "..ut.count_last.." more times.]")
 						ut.count_last = 0
@@ -812,14 +806,15 @@ local executeTests = function(package, fileName)
 
 				local myfunc = function()
 					local env = setmetatable({}, {__index = _G})
-					-- TODO: why loadfile here? Why not include or dofile()?
+					-- loadfile is necessary to avoid any global variable from one
+					-- example affect another example
 					loadfile(baseDir..s.."examples"..s..value, 't', env)()
-					return setmetatable(env, nil)
 				end
 				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
 					printError(err)
 					printError(traceback())
+					writing_log = true -- to avoid showing errors in the log file
 				end)
 
 				if not writing_log and logfile then
@@ -830,6 +825,10 @@ local executeTests = function(package, fileName)
 						printError("'"..str.."'")
 					end
 				end	
+
+				if logfile ~= nil then
+					io.close(logfile)
+				end
 
 				print = print__
 
@@ -922,7 +921,7 @@ local executeTests = function(package, fileName)
 		elseif ut.examples_error == 0 then
 			printNote("All "..ut.examples.." examples were successfully executed.")
 		else
-			printError(ut.examples_error.." out of "..ut.examples.." examples had unexpected execution error.")
+			printError(ut.examples_error.." errors were found in the "..ut.examples.." examples.")
 		end
 
 		if ut.log_files > 0 then

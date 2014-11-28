@@ -515,7 +515,7 @@ return{
 		error_func = function()
 			cs:save(18, "themeName", 3)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "string", 3))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "table", 3))
 		
 		error_func = function()
 			cs:save(18, "themeName", "terralab")

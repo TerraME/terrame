@@ -34,7 +34,7 @@ soc = Society{
 }
 
 env = Environment{cs, soc}
-env:createPlacement{strategy = "random"}
+env:createPlacement()
 
 --[[
 Chart{subject = soc}
