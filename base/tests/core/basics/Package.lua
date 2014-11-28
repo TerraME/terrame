@@ -167,6 +167,12 @@ return{
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg("ddd", "string"))
 	end,
+	optionalArgument = function(unitTest)
+		local error_func = function()
+			optionalArgument(1, "string", 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+	end,
 	optionalTableArgument = function(unitTest)
 		local mtable = {bbb = 3, ccc = "aaa"}
 

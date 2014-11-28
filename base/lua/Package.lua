@@ -576,6 +576,18 @@ function mandatoryTableArgument(table, attr, mtype)
 	end
 end
 
+--- Verify whether an optional parameter of a non-named function belong to the correct type.
+-- The error message comes from Package:incompatibleTypeMsg(), only if the parameter is not nil.
+-- @param position The position of the parameter in the function signature (a number).
+-- @param mtype The required type for the parameter.
+-- @param value The valued used as argument to the function call.
+-- @usage optionalArgument(1, "string", parameter)
+function optionalArgument(position, mtype, value)
+	if value ~= nil and type(value) ~= mtype then
+		incompatibleTypeError(position, mtype, value)
+	end
+end
+
 --- Verify whether the table contains an optional argument. It produces an error if the value is not nil and
 -- it has a type different from the required type. The error comes from Package:incompatibleTypeError().
 -- @param table A table.
