@@ -790,6 +790,19 @@ function string.endswith(str, send)
 	return str:lower():match(send)
 end
 
+--- Return the extension of a given file name. It returns the substring after the last dot.
+-- If it does not have a dot, an empty string is returned.
+-- @param filename A string with the file name.
+-- @usage getExtension("file.txt") -- ".txt"
+function getExtension(filename)
+	for i = 1, filename:len() do
+		if filename:sub(i, i) == "." then
+			return filename:sub(i + 1, filename:len())
+		end
+	end
+	return ""
+end
+
 --- Return the number of elements of atable, be them named or not.
 -- It is a substitute for the old Lua function table.getn.
 -- @param t A table.

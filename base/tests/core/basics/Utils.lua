@@ -277,6 +277,9 @@ return{
 
 
 	end,
+	getExtension = function(unitTest)
+		unitTest:assert_equal(getExtension("file.txt"), "txt")
+	end,
 	getn = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}
 
