@@ -66,7 +66,7 @@ SizeVisualArrangement VisualArrangement::getSize(int id)
 
 void VisualArrangement::buildLuaCode()
 {
-	if(file == "") return;
+	if(file == "" or myarrangement->position.size() == 0) return;
 
 	ofstream f(file);
 

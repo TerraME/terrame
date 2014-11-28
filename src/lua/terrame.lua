@@ -97,6 +97,28 @@ local function sqlFiles(package)
 	return files
 end
 
+local function examples(package)
+	local s = sessionInfo().separator
+	local examplespath = sessionInfo().path..s.."packages"..s..package..s.."examples"
+
+	if attributes(examplespath, "mode") ~= "directory" then
+		printError("examples is not a directory")
+		os.exit()
+	end
+
+	local files = dir(examplespath)
+	local result = {}
+
+	forEachElement(files, function(_, fname)
+		if string.endswith(fname, ".lua") then
+			table.insert(result, fname)
+		elseif not string.endswith(fname, ".tme") and not string.endswith(fname, ".log") then
+			printWarning("Test file '"..fname.."' does not have a valid extension")
+		end
+	end)
+	return result
+end
+
 local function exportDatabase(package)
 	local s = sessionInfo().separator
 
@@ -249,13 +271,7 @@ local function executeDoc(package)
 
 	local lua_files = dir(package_path..s.."lua")
 
-	local example_files
-
-	if attributes(package_path..s.."examples", "mode") == "directory" then
-		example_files = dir(package_path..s.."examples")
-	else
-		example_files = {}
-	end
+	local example_files = examples(package)
 
 	local doc_report = {
 		parameters = 0,
@@ -752,16 +768,9 @@ local executeTests = function(package, fileName)
 	-- executing examples
 	if data.examples then
 		printNote("Testing examples")
-		local dirFiles = dir(baseDir..s.."examples")
+		local dirFiles = examples(package)
 		if dirFiles ~= nil then
 			forEachElement(dirFiles, function(idx, value)
-				if not string.endswith(value, ".lua") then
-					if not string.endswith(value, ".log") then
-						printWarning("Skipping "..value)
-					end
-					return true
-				end
-
 				print("Testing "..value)
 				io.flush()
 
@@ -1320,7 +1329,7 @@ execute = function(parameters) -- parameters is a vector of strings
 					-- was a call such as "TerraME .../package/examples/example.lua"
 					parameters[paramCount + 1] = param
 				else
-					files = dir(sessionInfo().path..s.."packages"..s..package..s.."examples")
+					files = examples(package)
 
 					forEachElement(files, function(_, value)
 						print(" - "..value)
