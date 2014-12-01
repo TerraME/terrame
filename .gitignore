@@ -15,6 +15,7 @@ Makefile
 protocol.pb.cc
 protocol.pb.h
 qrc_observerResource.cxx
+qrc_observerResource.cpp
 TerraME.build/
 TerraME.xcodeproj
 ui_imageGUI.h
