@@ -236,7 +236,7 @@ QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, i
     }
 
     item->setPath(path);
-    item->scale(sx, sy);
+    item->setTransform(QTransform::fromScale(sx, sy), true);
     return item;
 }
 
@@ -253,7 +253,7 @@ QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int
 
     item->setPath(path);
     item->setBrush(Qt::black);
-    item->scale(sx, sy);
+    item->setTransform(QTransform::fromScale(sx, sy), true);
 
     return item;
 }
@@ -295,7 +295,7 @@ QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, 
     item->setBrush(Qt::NoBrush);
 
     item->setPath(path);
-    item->scale(sx, sy);
+    item->setTransform(QTransform::fromScale(sx, sy), true);
 
     return item;
 }

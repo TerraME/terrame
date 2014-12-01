@@ -1,7 +1,7 @@
 #include "observerTextScreen.h"
 
-#include <QtGui/QApplication>
-#include <QtCore/QByteArray>
+#include <QApplication>
+#include <QByteArray>
 
 #ifdef TME_BLACK_BOARD
 	#include "blackBoard.h"

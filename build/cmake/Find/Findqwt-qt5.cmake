@@ -27,34 +27,46 @@
 #  QWT_LIBRARIES     - The qwt libraries.
 #	
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 # Find library - - tries to find *.a,*.so,*.dylib in paths hard-coded by the script
 
 find_library(QWT_LIBRARY
-   NAMES qwt qwt-qt4
-   PATHS /usr/lib /usr/local/lib /opt/lib /opt/local/lib ${DEPS}/qwt/lib
+   NAMES qwt qwt-qt5
+   PATHS /usr/lib /usr/local/lib /opt/lib /opt/local/lib ${DEPS}/qwt/lib /usr/local/qwt-6.1.1/lib
 )
 
 # Export include and library path for linking with other libraries
-if(QWTQT4_LIBRARY)
+if(QWTQT5_LIBRARY)
 	# Find path - tries to find *.h in paths hard-coded by the script
 	find_path(QWT_INCLUDE_DIR qwt.h
-		HINTS  /usr/include/qwt-qt4 ${DEPS}/qwt/src
+		HINTS  /usr/include/qwt-qt4 ${DEPS}/qwt/src /usr/local/qwt-6.1.1/lib
+		PATH_SUFFIXES Frameworks
+		NO_DEFAULT_PATH
 	)
-else(QWTQT4_LIBRARY)
+else(QWTQT5_LIBRARY)
 	# Find path - tries to find *.h in paths hard-coded by the script
 	find_path(QWT_INCLUDE_DIR qwt.h
-	HINTS  /usr/include/qwt-qt4 /opt/include /opt/include/qwt /opt/local/include /opt/local/include/qwt /usr/include /usr/include/qwt /usr/local/include /usr/local/include/qwt ${DEPS}/qwt/src
+	HINTS  /usr/include/qwt-qt4 /opt/include /opt/include/qwt /opt/local/include /opt/local/include/qwt /usr/include /usr/include/qwt /usr/local/include /usr/local/include/qwt ${DEPS}/qwt/src /usr/local/qwt-6.1.1/lib
 	)
-endif(QWTQT4_LIBRARY)
+endif(QWTQT5_LIBRARY)
 
-if(QWT_INCLUDE_DIR AND (QWTQT4_LIBRARY OR QWT_LIBRARY))
+if(QWT_INCLUDE_DIR AND (QWTQT5_LIBRARY OR QWT_LIBRARY))
 	set(QWT_FOUND TRUE)
-else(QWT_INCLUDE_DIR AND (QWTQT4_LIBRARY OR QWT_LIBRARY))
+else(QWT_INCLUDE_DIR AND (QWTQT5_LIBRARY OR QWT_LIBRARY))
 	set(QWT_FOUND FALSE)
-	message("Looked for qwt library named qwt.")
-	message("Could NOT find qwt library")
-endif(QWT_INCLUDE_DIR AND (QWTQT4_LIBRARY OR QWT_LIBRARY))
+	message("Looked for qwt library.")
+	message("Could NOT find qwt:")
+	if(QWT_LIBRARY)
+		message("\tLibrary: ${QWT_LIBRARY}")
+	else(QWT_LIBRARY)
+		message("\tLibrary: -- NOT FOUND --")
+	endif(QWT_LIBRARY)
+	if(QWT_INCLUDE_DIR)
+		message("\tInclude dir of qwt.h: ${QWT_INCLUDE_DIR}")
+	else(QWT_INCLUDE_DIR)
+		message("\tInflude dir of qwt.h: -- NOT FOUND --")
+	endif(QWT_INCLUDE_DIR)
+endif(QWT_INCLUDE_DIR AND (QWTQT5_LIBRARY OR QWT_LIBRARY))
 
-mark_as_advanced(  QWT_LIBRARY QWTQT4_LIBRARY QWT_LIBRARY )
+mark_as_advanced(  QWT_LIBRARY QWTQT5_LIBRARY )
  

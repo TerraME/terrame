@@ -5,7 +5,7 @@
 #include <QPalette>
 #include <QDebug>
 
-#include <qwt_legend_item.h>
+#include <qwt_plot_legenditem.h>
 #include <qwt_plot_item.h>
 
 #include "chartPlot.h"
@@ -76,7 +76,8 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     plotter->setFrameShape(QFrame::Box);
     plotter->setFrameShadow(QFrame::Plain);
     plotter->setLineWidth(0);
-    plotter->setMargin(10);
+    // TODO: Find an alternative solution to this. In qwt 6.1 setMargin does not exist for a QwtPlot. 
+    // plotter->setMargin(10);
     plotter->resize(450, 350);
     plotter->setWindowTitle("TerraME Observer : Chart");
 
@@ -487,14 +488,14 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 
                 // symbol
                 num = legAttribs.at(symbol).toInt();
-                QwtSymbol qwtSymbol;
-                qwtSymbol.setStyle( (QwtSymbol::Style) num);
-                qwtSymbol.setPen(pen);
+                QwtSymbol *qwtSymbol;
+                qwtSymbol->setStyle( (QwtSymbol::Style) num);
+                qwtSymbol->setPen(pen);
                 // increments the symbol size in two values
-                qwtSymbol.setSize(pen.width() + 2);
+                qwtSymbol->setSize(pen.width() + 2);
 
-                if (qwtSymbol.brush().style() != Qt::NoBrush)
-                    qwtSymbol.setBrush(pen.color());
+                if (qwtSymbol->brush().style() != Qt::NoBrush)
+                    qwtSymbol->setBrush(pen.color());
 
                 interCurve->plotCurve->setSymbol(qwtSymbol);
 
@@ -628,7 +629,7 @@ void ObserverGraphic::draw()
             if (internalCurves->contains(attrib->getName()))
             {
                 curve = internalCurves->value( attrib->getName() );
-                curve->plotCurve->setData(*xAxisValues, *curve->values); 
+                curve->plotCurve->setSamples(*xAxisValues, *curve->values); 
             }
         }
     }

@@ -94,8 +94,9 @@ void PlotPropertiesGUI::consistGUI(QList<InternalCurve *> *interCurves)
     ui->treeCurve->setSortingEnabled(true);
 
 
-    // General tab 
-    ui->marginSpinBox->setValue(plotter->margin());
+    // General tab
+	// TODO: Verify if it is necessary and put it back if yes
+//    ui->marginSpinBox->setValue(plotter->margin());
     ui->borderWidthSpinBox->setValue(plotter->lineWidth());
 
     if (ui->borderColorButton->isEnabled())
@@ -167,7 +168,7 @@ void PlotPropertiesGUI::canvasColorClicked()
         QPalette palette = plotter->canvas()->palette();
         palette.setColor(QPalette::Background, color);
         plotter->canvas()->setPalette(palette);
-        plotter->canvas()->replot();
+        plotter->canvas()->update();
     }
 }
 
@@ -193,7 +194,7 @@ void PlotPropertiesGUI::borderWidthValue(int value)
 
 void PlotPropertiesGUI::marginValue(int value)
 {
-    plotter->setMargin(value);
+//    plotter->setMargin(value);
 }
 
 void PlotPropertiesGUI::selectedStyle(int value)
@@ -207,14 +208,15 @@ void PlotPropertiesGUI::selectedSymbol(int value)
 {
     QwtPlotCurve *plotCurve = internalCurves.value(currentCurve)->plotCurve;
 
-    QwtSymbol symbol, oldSym = plotCurve->symbol();
-    symbol.setStyle((QwtSymbol::Style) (value - 1)); // starts in -1); 
-    symbol.setSize(ui->symbolSizeSpinBox->value());
-    symbol.setPen(oldSym.pen());
+	const QwtSymbol* const oldSym = plotCurve->symbol();
+	QwtSymbol * symbol;
+	symbol->setStyle((QwtSymbol::Style) (value - 1)); // starts in -1);
+    symbol->setSize(ui->symbolSizeSpinBox->value());
+    symbol->setPen(oldSym->pen());
 
-    if (symbol.brush().style() != Qt::NoBrush)
+    if (symbol->brush().style() != Qt::NoBrush)
 	    // symbol.setBrush(QBrush(oldSym.pen().color()));
-        symbol.setBrush(QBrush(plotCurve->pen().color()));
+        symbol->setBrush(QBrush(plotCurve->pen().color()));
 
     plotCurve->setSymbol(symbol);
     plotter->replot();
@@ -247,13 +249,14 @@ void PlotPropertiesGUI::symbolSizeValue(int value)
     QwtPlotCurve *plotCurve = internalCurves.value(currentCurve)->plotCurve;
 
     // Changes only the symbol width
-    QwtSymbol symbol = plotCurve->symbol();
-    symbol.setStyle((QwtSymbol::Style) (ui->curveSymbolCombo->currentIndex() - 1)); // starts in -1 
+    const QwtSymbol * const oldSymbol = plotCurve->symbol();
+	QwtSymbol * symbol;
+    symbol->setStyle((QwtSymbol::Style) (ui->curveSymbolCombo->currentIndex() - 1)); // starts in -1
 
-    if (symbol.brush().style() != Qt::NoBrush)
-        symbol.setBrush(QBrush(plotCurve->pen().color()));
+    if (symbol->brush().style() != Qt::NoBrush)
+        symbol->setBrush(QBrush(plotCurve->pen().color()));
 
-    symbol.setSize(value);
+    symbol->setSize(value);
     plotCurve->setSymbol(symbol);
     plotter->replot();
 }
@@ -323,9 +326,10 @@ void PlotPropertiesGUI::consistCurveTab(const QString &name)
 {
     QwtPlotCurve *plotCurve = internalCurves.value(name)->plotCurve;
 
-    QwtSymbol symbol = plotCurve->symbol();
-    ui->symbolSizeSpinBox->setValue( symbol.size().width() );
-    ui->curveSymbolCombo->setCurrentIndex( (int)symbol.style() + 1); // Starts in -1
+    const QwtSymbol* const oldSymbol = plotCurve->symbol();
+	QwtSymbol *symbol = new QwtSymbol(oldSymbol->style(), oldSymbol->brush(), oldSymbol->pen(), oldSymbol->size());
+    ui->symbolSizeSpinBox->setValue( symbol->size().width() );
+    ui->curveSymbolCombo->setCurrentIndex( (int)symbol->style() + 1); // Starts in -1
     // Fixes bug built when used 'plotCurve->symbol()'
     plotCurve->setSymbol(symbol);
 

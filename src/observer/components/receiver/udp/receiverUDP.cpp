@@ -162,7 +162,7 @@ void ReceiverUDP::processPendingDatagrams()
     msgReceiver++;
     ui->setMessagesStatus(msgReceiver);
 
-    if ((pos > -1)) // && (data != COMPLETE_STATE.toAscii()))
+    if ((pos > -1)) // && (data != COMPLETE_STATE.toLatin1()))
     {
         // redimensiona o objeto e insere lixo
         // msg.insert( (int)pos, data); 

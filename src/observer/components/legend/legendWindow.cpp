@@ -2,10 +2,10 @@
 
 class ObsLegend;
 
-#include <QtGui/QMessageBox>
-#include <QtCore/QFile>
-#include <QtCore/QTextStream>
-#include <QtGui/QPainter>
+#include <QMessageBox>
+#include <QFile>
+#include <QTextStream>
+#include <QPainter>
 #include <QDebug>
 
 #include <cmath>
@@ -253,7 +253,7 @@ void LegendWindow::attributesComboBox_activated(const QString &selected)
     if (! attrib)
         return;
 #ifdef DEBUG_OBSERVER
-    printf("attributesComboBox_activated:\n %s\n", attrib->toQString().toAscii().constData());
+    printf("attributesComboBox_activated:\n %s\n", attrib->toQString().toLatin1().constData());
 #endif
 
     if (attributesActive != selected)
@@ -389,7 +389,7 @@ void LegendWindow::applyPushButton_clicked()
         else
         {
             if (execModes != Quiet){
-                string err_out = msg.toAscii().constData();
+                string err_out = msg.toLatin1().constData();
                 lua_getglobal(L, "customWarningMsg");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,4);
@@ -1142,7 +1142,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         {
             if (execModes != Quiet )
             {
-				string str = msg.toAscii().data();
+				string str = msg.toLatin1().data();
 				lua_getglobal(L, "customWarningMsg");
 				lua_pushstring(L,str.c_str());
 				lua_pushnumber(L,5);
@@ -1219,7 +1219,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
                 {
                     if (execModes != Quiet)
                     {
-						string str = msg.toAscii().data();
+						string str = msg.toLatin1().data();
 						lua_getglobal(L, "customWarningMsg");
 						lua_pushstring(L,str.c_str());
 						lua_pushnumber(L,5);
@@ -2146,33 +2146,33 @@ void LegendWindow::setupUi()
 
 void LegendWindow::retranslateUi()
 {
-    this->setWindowTitle(QApplication::translate("LegendWindow", "Legend Editor", 0, QApplication::UnicodeUTF8));
-    groupingParamsGroupBox->setTitle(QApplication::translate("LegendWindow", "Grouping Parameters", 0, QApplication::UnicodeUTF8));
-    attributeTextLabel->setText(QApplication::translate("LegendWindow", "Attribute:", 0, QApplication::UnicodeUTF8));
-    groupingModeTextLabel->setText(QApplication::translate("LegendWindow", "Mode:", 0, QApplication::UnicodeUTF8));
-    precisionTextLabel->setText(QApplication::translate("LegendWindow", "Precision:", 0, QApplication::UnicodeUTF8));
-    slicesTextLabel->setText(QApplication::translate("LegendWindow", "Slices:", 0, QApplication::UnicodeUTF8));
-    stdDevTextLabel->setText(QApplication::translate("LegendWindow", "Standard Deviation:", 0, QApplication::UnicodeUTF8));
-    functionTextLabel->setText(QApplication::translate("LegendWindow", "Function:", 0, QApplication::UnicodeUTF8));
-    chrononTextLabel->setText(QApplication::translate("LegendWindow", "Chronon:", 0, QApplication::UnicodeUTF8));
-    applyPushButton->setText(QApplication::translate("LegendWindow", "&Apply", 0, QApplication::UnicodeUTF8));
-    applyPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+A", 0, QApplication::UnicodeUTF8));
-    colorGroupBox->setTitle(QApplication::translate("LegendWindow", "Colors", 0, QApplication::UnicodeUTF8));
-    clearColorsPushButton->setText(QApplication::translate("LegendWindow", "Clear", 0, QApplication::UnicodeUTF8));
-    invertColorsPushButton->setText(QApplication::translate("LegendWindow", "Invert", 0, QApplication::UnicodeUTF8));
-    equalSpacePushButton->setText(QApplication::translate("LegendWindow", "Equal Space", 0, QApplication::UnicodeUTF8));
-    loadGroupBox->setTitle(QApplication::translate("LegendWindow", "Load Color Bar", 0, QApplication::UnicodeUTF8));
+    this->setWindowTitle(QApplication::translate("LegendWindow", "Legend Editor", 0));
+    groupingParamsGroupBox->setTitle(QApplication::translate("LegendWindow", "Grouping Parameters", 0));
+    attributeTextLabel->setText(QApplication::translate("LegendWindow", "Attribute:", 0));
+    groupingModeTextLabel->setText(QApplication::translate("LegendWindow", "Mode:", 0));
+    precisionTextLabel->setText(QApplication::translate("LegendWindow", "Precision:", 0));
+    slicesTextLabel->setText(QApplication::translate("LegendWindow", "Slices:", 0));
+    stdDevTextLabel->setText(QApplication::translate("LegendWindow", "Standard Deviation:", 0));
+    functionTextLabel->setText(QApplication::translate("LegendWindow", "Function:", 0));
+    chrononTextLabel->setText(QApplication::translate("LegendWindow", "Chronon:", 0));
+    applyPushButton->setText(QApplication::translate("LegendWindow", "&Apply", 0));
+    applyPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+A", 0));
+    colorGroupBox->setTitle(QApplication::translate("LegendWindow", "Colors", 0));
+    clearColorsPushButton->setText(QApplication::translate("LegendWindow", "Clear", 0));
+    invertColorsPushButton->setText(QApplication::translate("LegendWindow", "Invert", 0));
+    equalSpacePushButton->setText(QApplication::translate("LegendWindow", "Equal Space", 0));
+    loadGroupBox->setTitle(QApplication::translate("LegendWindow", "Load Color Bar", 0));
     loadNamesComboBox->clear();
     loadNamesComboBox->insertItems(0, QStringList()
-                                   << QApplication::translate("LegendWindow", "      -------------------------------------", 0, QApplication::UnicodeUTF8)
+                                   << QApplication::translate("LegendWindow", "      -------------------------------------", 0)
                                    );
-    saveColorPushButton->setText(QApplication::translate("LegendWindow", "Save...", 0, QApplication::UnicodeUTF8));
-    okPushButton->setText(QApplication::translate("LegendWindow", "&OK", 0, QApplication::UnicodeUTF8));
-    okPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+O", 0, QApplication::UnicodeUTF8));
-    cancelPushButton->setText(QApplication::translate("LegendWindow", "&Cancel", 0, QApplication::UnicodeUTF8));
-    cancelPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+C", 0, QApplication::UnicodeUTF8));
-    helpPushButton->setText(QApplication::translate("LegendWindow", "&Help", 0, QApplication::UnicodeUTF8));
-    helpPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+H", 0, QApplication::UnicodeUTF8));
+    saveColorPushButton->setText(QApplication::translate("LegendWindow", "Save...", 0));
+    okPushButton->setText(QApplication::translate("LegendWindow", "&OK", 0));
+    okPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+O", 0));
+    cancelPushButton->setText(QApplication::translate("LegendWindow", "&Cancel", 0));
+    cancelPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+C", 0));
+    helpPushButton->setText(QApplication::translate("LegendWindow", "&Help", 0));
+    helpPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+H", 0));
 
 } // retranslateUi
 

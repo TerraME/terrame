@@ -43,7 +43,7 @@ public:
         values = new QVector<double>();
 
         plotCurve = new QwtPlotCurve(name);
-        plotCurve->setPaintAttribute(QwtPlotCurve::PaintFiltered, true);
+        plotCurve->setPaintAttribute(QwtPlotCurve::FilterPoints, true);
         plotCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
         plotCurve->attach(plotter);
     }

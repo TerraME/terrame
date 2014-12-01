@@ -346,7 +346,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
         if (execModes != Quiet ){
             QString str = QString("The parameter table is empty.");
             lua_getglobal(L, "customWarningMsg");
-            lua_pushstring(L,str.toAscii().constData());
+            lua_pushstring(L,str.toLatin1().constData());
             //lua_pushnumber(L,5);
             lua_call(L,1,0);
         }
@@ -621,14 +621,14 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int /*observer
             content = getAll(in, observedAttribs.keys());
             // serverSession->setState(observerId, 1);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observedAttribs.keys());
             // serverSession->setState(observerId, 0);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack
@@ -657,14 +657,14 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int observerId
             content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack

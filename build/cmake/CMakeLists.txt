@@ -240,16 +240,16 @@ if(MINGW)
 		set(LIBS ${LIBS} ${QWT_LIBRARY})
 	endif( QWT_FOUND )
 else(MINGW)
-	find_package(qwt-qt4)
+	find_package(qwt-qt5)
 	if( QWT_FOUND )
-		message("-- Found qwt library ${QWT_LIBRARY} and include_dir ${QWT_INCLUDE_DIR}")
+		message("-- Found qwt library ${QWT_LIBRARY} and include directories ${QWT_INCLUDE_DIR}")
 		include_directories(${QWT_INCLUDE_DIR})
 		link_directories(${QWT_LIBRARY_DIR})
-		if(QWTQT4_LIBRARY)
-			set(LIBS ${LIBS} ${QWTQT4_LIBRARY})
-		else(QWTQT4_LIBRARY)
+		if(QWTQT5_LIBRARY)
+			set(LIBS ${LIBS} ${QWTQT5_LIBRARY})
+		else(QWTQT5_LIBRARY)
 			set(LIBS ${LIBS} ${QWT_LIBRARY})
-		endif(QWTQT4_LIBRARY)
+		endif(QWTQT5_LIBRARY)
 	endif( QWT_FOUND )
 endif(MINGW)
 
@@ -314,12 +314,15 @@ endif(PROTOBUF_FOUND)
 ### --------------
 #QT4
 #-- TODO: Vefify if it is all correct and how to check the version
-find_package(Qt4 REQUIRED)
-set(QT_USE_QTNETWORK TRUE)
-include(${QT_USE_FILE})
-set(LIBS ${LIBS} ${QT_LIBRARIES})
-link_directories(${QT_LIBRARIES})
-include_directories(${QT_INCLUDES})
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Network REQUIRED)
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Gui REQUIRED)
+# set(QT_USE_QTNETWORK TRUE)
+# include(${QT_USE_FILE})
+set(LIBS ${LIBS} ${Qt5Network_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+link_directories(${Qt5Network_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+include_directories(${Qt5Network_INCLUDE_DIRS} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS})
 
 ## ------------------------------------------------------------------------------------------------------------- ##
 # Set Qt moc parameters
@@ -375,9 +378,9 @@ set(UIS
 	${SRCDIR_OBSERVER}/components/console/modelConsoleGUI.ui
 )
 
-qt4_wrap_cpp(MOC_SRCS ${MOC_HDRS})
-qt4_add_resources(MOC_SRCS ${MOC_RSRCS})
-qt4_wrap_ui(UI_SRCS ${UIS})
+qt5_wrap_cpp(MOC_SRCS ${MOC_HDRS})
+qt5_add_resources(MOC_SRCS ${MOC_RSRCS})
+qt5_wrap_ui(UI_SRCS ${UIS})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -726,7 +729,7 @@ set(CPACK_OSX_PACKAGE_VERSION "10.9")
 SET(CPACK_PACKAGE_VENDOR "TerraLAB")
 SET(CPACK_PACKAGE_NAME "TerraME")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_BINARY_DIR}/Description.txt")
-set(CPACK_RESOURCE_FILE_LICENSE "${ROOT}/licences/terrame-license-gpl-3.0.txt")
+set(CPACK_RESOURCE_FILE_LICENSE "${ROOT}/licences/terrame-license-lgpl-3.0.txt")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "TerraME is a programming environment for spatial dynamical modelling")
 set(CPACK_PACKAGE_ICON "/Users/raian/Documents/INPE/TerraME/source_code/PackageInstaller/Logomarca/logo_canto.png")
 set(CPACK_DMG_BACKGROUND_IMAGE "/Users/raian/Documents/INPE/TerraME/source_code/PackageInstaller/Logomarca/logo_canto.png")
@@ -746,7 +749,7 @@ include(CPack)
 
 ########### Get dependencies ################
 # RAIAN: COMENTEI AQUI, pois e necessario resolver o problema do LOCATION. Ao resolver, remover comentarios
-# get_target_property(MY_BINARY_LOCATION TerraME LOCATION)
+# get_target_property(MY_BINARY_LOCATION terrame LOCATION)
 # configure_file(
 #    "${CMAKE_CURRENT_SOURCE_DIR}/dependencies.cmake.in"
 #    "${CMAKE_CURRENT_BINARY_DIR}/dependencies.cmake"

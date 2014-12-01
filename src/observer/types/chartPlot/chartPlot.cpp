@@ -20,7 +20,7 @@ using namespace TerraMEObserver;
 struct CurveBkp
 {
     QPen pen;
-    QwtSymbol symbol;
+    const QwtSymbol *symbol;
     QwtPlotCurve::CurveStyle style;
 };
 
@@ -31,9 +31,9 @@ ChartPlot::ChartPlot(QWidget *parent) : QwtPlot(parent)
     exportAct = new QAction("Export...", this);
     propertiesAct = new QAction("Properties...", this);
 
-    canvas()->setFrameShape(QFrame::NoFrame);
-    canvas()->setFrameShadow(QFrame::Plain);
-    canvas()->setLineWidth(0);
+    ((QFrame*)canvas())->setFrameShape(QFrame::NoFrame);
+    ((QFrame*)canvas())->setFrameShadow(QFrame::Plain);
+    ((QFrame*)canvas())->setLineWidth(0);
 
 	// QwtPlotLayout *layout = plotter->plotLayout();
 	// layout->setCanvasMargin(0);
@@ -84,7 +84,8 @@ void ChartPlot::propertiesChart()
     
     // Creates chart objects back-up
 	QPalette plotterPalette = palette();
-    int plotterMargin = margin();
+	// TODO: Verify if it is necessary and put it back if yes
+//    int plotterMargin = margin();
     int plotterLWidth = lineWidth();
     QPalette canvasPalette = canvas()->palette();
     QFont titleFont = title().font(), axesFont = axisTitle(QwtPlot::xBottom).font();
@@ -104,7 +105,8 @@ void ChartPlot::propertiesChart()
         // Roll-backs plotter objects
 
         setPalette(plotterPalette);
-        setMargin(plotterMargin);
+		// TODO: Verify if it is necessary and put it back if yes
+//        setMargin(plotterMargin);
         setLineWidth(plotterLWidth);
 
         // Title 
@@ -133,7 +135,7 @@ void ChartPlot::propertiesChart()
             CurveBkp bkp = curvesBkp.at(i);
             internalCurves.at(i)->plotCurve->setPen(bkp.pen);
             internalCurves.at(i)->plotCurve->setStyle(bkp.style);
-            internalCurves.at(i)->plotCurve->setSymbol(bkp.symbol);
+            internalCurves.at(i)->plotCurve->setSymbol((QwtSymbol*)bkp.symbol);
         }
     }
 }
@@ -147,7 +149,7 @@ void ChartPlot::createPicker()
 {
     // cria o objeto responsável por exibir as coordenadas do ponteiro do mouse na tela
     picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft,
-        QwtPicker::PointSelection | QwtPicker::DragSelection,
+        /*QwtPicker::PointSelection | QwtPicker::DragSelection,*/
         QwtPlotPicker::CrossRubberBand, QwtPicker::ActiveOnly, //AlwaysOn,
         canvas());
 

@@ -270,7 +270,7 @@ int luaSociety::createObserver( lua_State * luaL)
 
                 	if (! allSocietyAttribs.contains(obsAttribs.at(i)))
                 	{
-						string errorMsg = string("Attribute name ") + string(obsAttribs.at(i).toAscii().data()) + string(" not found.");
+						string errorMsg = string("Attribute name ") + string(obsAttribs.at(i).toLatin1().data()) + string(" not found.");
 						lua_getglobal(L, "customError");
 						lua_pushstring(L,errorMsg.c_str());
 						//lua_pushnumber(L,5);
@@ -607,7 +607,7 @@ int luaSociety::createObserver( lua_State * luaL)
         if (! cellSpace)
 		{
 			lua_getglobal(L, "customError");
-			lua_pushstring(L,errorMsg.toAscii().data());
+			lua_pushstring(L,errorMsg.toLatin1().data());
 			//lua_pushnumber(L,5);
 			lua_call(L,1,0);
 			return 0;
@@ -620,7 +620,7 @@ int luaSociety::createObserver( lua_State * luaL)
             if (! obsMap)
 			{
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,errorMsg.toAscii().data());
+				lua_pushstring(L,errorMsg.toLatin1().data());
 				//lua_pushnumber(L,5);
 				lua_call(L,1,0);
 				return 0;
@@ -635,7 +635,7 @@ int luaSociety::createObserver( lua_State * luaL)
             if (! obsImage)
 			{
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,errorMsg.toAscii().data());
+				lua_pushstring(L,errorMsg.toLatin1().data());
 				//lua_pushnumber(L,5);
 				lua_call(L,1,0);
 				return 0;
@@ -729,7 +729,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/
 			
         // serverSession->setState(observerId, 1);
         //if (! QUIET_MODE )
-        // 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+        // 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
@@ -737,7 +737,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/
 			
         // serverSession->setState(observerId, 0);
         //if (! QUIET_MODE )
-        // 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+        // 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
         break;
     }
     // cleans the stack

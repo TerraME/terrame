@@ -429,7 +429,7 @@ void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
                     {	
 						if (execModes != Quiet){
 							string str = string("Invalid color. You need to reconfigure the "
-										"maximum and the minimum values of the attribute ") + string(attrib->getName().toAscii().data());
+										"maximum and the minimum values of the attribute ") + string(attrib->getName().toLatin1().data());
 							lua_getglobal(L, "customWarningMsg");
 							lua_pushstring(L,str.c_str());
 							lua_pushnumber(L,5);
@@ -593,7 +593,7 @@ void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
                     {
 						if (execModes != Quiet){
 							string str = string("Invalid color. You need to reconfigure the "
-												"maximum and the minimum values of the attribute ") + string(attrib->getName().toAscii().data());
+												"maximum and the minimum values of the attribute ") + string(attrib->getName().toLatin1().data());
 							lua_getglobal(L, "customWarningMsg");
 							lua_pushstring(L,str.c_str());
 							lua_pushnumber(L,5);
@@ -1273,7 +1273,7 @@ void VisualMapping::mappingNeighborhood(Attributes *attrib, QPainter *p)
                     {
 						if (execModes != Quiet){
 							string str = string("Invalid color. You need to reconfigure the "
-												"maximum and the minimum values of the attribute") + string(attrib->getName().toAscii().data());
+												"maximum and the minimum values of the attribute") + string(attrib->getName().toLatin1().data());
 							lua_getglobal(L, "customWarningMsg");
 							lua_pushstring(L,str.c_str());
 							lua_pushnumber(L,5);

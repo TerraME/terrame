@@ -257,7 +257,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
         {
-			string err_out = string("Error: Parameter legend") + LEGEND_KEYS.at(j).toAscii().data() + string(" not found. ") +
+			string err_out = string("Error: Parameter legend") + LEGEND_KEYS.at(j).toLatin1().data() + string(" not found. ") +
 							 string("Please check it in the model.");
 			lua_getglobal(L, "customErrorMsg");
 			lua_pushstring(L,err_out.c_str());

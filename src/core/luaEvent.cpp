@@ -578,14 +578,14 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int /*observerId*/, 
             content = getAll(in, observedAttribs.keys());
             // serverSession->setState(observerId, 1);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observedAttribs.keys());
             // serverSession->setState(observerId, 0);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
 	}
     // cleans the stack
@@ -613,14 +613,14 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, cons
         content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
         content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack

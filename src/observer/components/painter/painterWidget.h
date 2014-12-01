@@ -25,13 +25,13 @@
 #ifndef PAINTER_WIDGET_H
 #define PAINTER_WIDGET_H
 
-#include <QtGui/QScrollArea>
-#include <QtGui/QLabel>
-#include <QtGui/QImage>
-#include <QtGui/QPainter>
-#include <QtCore/QHash>
-#include <QtCore/QString>
-#include <QtGui/QPaintEvent>
+#include <QScrollArea>
+#include <QLabel>
+#include <QImage>
+#include <QPainter>
+#include <QHash>
+#include <QString>
+#include <QPaintEvent>
 #include <iostream>
 
 #include "visualMapping.h"

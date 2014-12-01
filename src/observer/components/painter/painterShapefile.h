@@ -1,11 +1,11 @@
 #ifndef PAINTER_SHAPEFILE_H
 #define PAINTER_SHAPEFILE_H
 
-#include "../../observer.h"
+#include "observer.h"
 
 #include "shapefil.h"
 
-#include <QtGui/QGraphicsPathItem>
+#include <QGraphicsPathItem>
 
 namespace TerraMEObserver {
 

@@ -3,7 +3,7 @@
 
 #include "observerMapSuperclass.h"
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QVector>
 #include <QHash>
 #include <string>

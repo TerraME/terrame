@@ -71,7 +71,7 @@ bool DatagramReceiverTask::execute()
             //// msgReceiver++;
             //// ui->setMessagesStatus(msgReceiver);
 
-            //if ((pos > -1)) // && (data != COMPLETE_STATE.toAscii()))
+            //if ((pos > -1)) // && (data != COMPLETE_STATE.toLatin1()))
             //{
             //    qDebug() << "completeData.replace() pos:" << pos << "size:" << data.size() 
             //        << "completeData.size" << completeData.size();
@@ -156,7 +156,7 @@ void DatagramReceiverTask::process(const QString & /*state*/)
 //
 //    int id = state.mid(0, pos).toInt(&ok);
 //    
-//    // qDebug() << "state.mid: " << state.mid(0, 10).toAscii().constData();
+//    // qDebug() << "state.mid: " << state.mid(0, 10).toLatin1().constData();
 //
 //    if (ok)
 //    {
@@ -173,8 +173,8 @@ void DatagramReceiverTask::process(const QString & /*state*/)
 //        subjAttr->setSubjectType( (TypesOfSubjects) type);
 //      
 //#ifdef TME_PROTOCOL_BUFFERS
-//        // bool dec = bb.decode(id, state.toAscii());
-//        bool decoded = bb.decode(state.toAscii());
+//        // bool dec = bb.decode(id, state.toLatin1());
+//        bool decoded = bb.decode(state.toLatin1());
 //#else
 //        // bool dec = bb.decode(id, state);
 //        bool decoded = bb.decode(state);

@@ -975,7 +975,7 @@ int luaNeighborhood::getParent( lua_State *L )
         if (! cellSpace)
         {
             lua_getglobal(L, "customError");
-            lua_pushstring(L,errorMsg.toAscii().data());
+            lua_pushstring(L,errorMsg.toLatin1().data());
             //lua_pushnumber(L,5);
             lua_call(L,1,0);
         }
@@ -987,7 +987,7 @@ int luaNeighborhood::getParent( lua_State *L )
             if (! obsMap)
             {
                 lua_getglobal(L, "customError");
-                lua_pushstring(L,errorMsg.toAscii().data());
+                lua_pushstring(L,errorMsg.toLatin1().data());
                 //lua_pushnumber(L,5);
                 lua_call(L,1,0);
             }
@@ -1001,7 +1001,7 @@ int luaNeighborhood::getParent( lua_State *L )
             if (! obsImage)
             {
                 lua_getglobal(L, "customError");
-                lua_pushstring(L,errorMsg.toAscii().data());
+                lua_pushstring(L,errorMsg.toLatin1().data());
                 //lua_pushnumber(L,5);
                 lua_call(L,1,0);
             }
@@ -1079,13 +1079,13 @@ QDataStream& luaNeighborhood::getState(QDataStream& in, Subject *, int /*observe
         case 0:
             content = getAll(in, attribs);
             // serverSession->setState(observerId, 1);
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, attribs);
             // serverSession->setState(observerId, 0);
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack
@@ -1113,13 +1113,13 @@ QDataStream& luaNeighborhood::getState(QDataStream& in, Subject *, int observerI
         case 0:
             content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack
@@ -1175,7 +1175,7 @@ QByteArray luaNeighborhood::pop(lua_State *, const QStringList &attribs,
 
 
             raw->set_key("weight");
-            // raw->set_key(attribs.first().toAscii().constData());
+            // raw->set_key(attribs.first().toLatin1().constData());
             raw->set_number(num);
 
             cellNeighborSubj->set_id( neighbor->getId() );

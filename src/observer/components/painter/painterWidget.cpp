@@ -1,12 +1,12 @@
 #include "painterWidget.h"
 
 #include <QApplication>
-#include <QtGui/QPixmap>
-#include <QtGui/QPainter>
-#include <QtCore/QMetaType>
-#include <QtGui/QMessageBox>
-#include <QtGui/QScrollBar>
-#include <QtCore/QFile>
+#include <QPixmap>
+#include <QPainter>
+#include <QMetaType>
+#include <QMessageBox>
+#include <QScrollBar>
+#include <QFile>
 #include <QDebug>
 
 #include "observerImpl.h"

@@ -18,7 +18,7 @@ using namespace TerraMEObserver;
 static const int ARROW_SIZE = 16;
 
 Edge::Edge(Node *orig, Node *dest, QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsLineItem(parent, scene)
+    : QGraphicsLineItem(parent/*, scene*/)
 {
     origin = orig;
     destiny = dest;

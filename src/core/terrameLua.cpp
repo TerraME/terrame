@@ -26,8 +26,8 @@ Author: Tiago Garcia de Senna Carneiro
 	Rodrigo Reis Pereira
 *************************************************************************************/
 
-#include <QtGui/QApplication>
-#include <QtCore/QSystemLocale>
+#include <QApplication>
+// #include <QSystemLocale>
 
 #define TME_STATISTIC_UNDEF
 
@@ -84,7 +84,7 @@ bool existWindows()
     return false;
 }
 
-void outputHandle(QtMsgType type, const char *msg)
+void outputHandle(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     // ModelConsole &console = ModelConsole::getInstance();
     //if(! console.isVisible())
@@ -95,24 +95,24 @@ void outputHandle(QtMsgType type, const char *msg)
     //in this function, you can write the message to any stream!
     switch (type) {
         case QtDebugMsg:
-            player.appendMessage("Debug: " + QString(msg));
+            player.appendMessage("Debug: " + QString(msg.toLatin1().data()));
             break;
 
         case QtWarningMsg:
-            player.appendMessage(QString(msg));
+            player.appendMessage(QString(msg.toLatin1().data()));
             break;
 
         case QtCriticalMsg:
-            player.appendMessage("Critical: " + QString(msg));
+            player.appendMessage("Critical: " + QString(msg.toLatin1().data()));
             break;
 
         case QtFatalMsg:
-            player.appendMessage("Fatal: " + QString(msg));
-            fprintf(stderr, "Fatal: %s\n", msg);
+            player.appendMessage("Fatal: " + QString(msg.toLatin1().data()));
+            fprintf(stderr, "Fatal: %s\n", msg.toLatin1().data());
             abort();
 
         default:
-            fprintf(stdout, "%s\n", msg);
+            fprintf(stdout, "%s\n", msg.toLatin1().data());
             break;
     }
 }
@@ -217,7 +217,7 @@ int main ( int argc, char *argv[] )
     {
         SHOW_GUI = true;
 
-        qInstallMsgHandler(outputHandle);
+        qInstallMessageHandler(outputHandle);
         Player::getInstance().show();
         Player::getInstance().setEnabled(false);
 
@@ -248,7 +248,7 @@ int main ( int argc, char *argv[] )
 #endif
 
     // runs the lua core files 
-    int error = luaL_loadfile(L, tmePath.toAscii().constData()) || lua_pcall(L, 0, 0, 0);
+    int error = luaL_loadfile(L, tmePath.toLatin1().constData()) || lua_pcall(L, 0, 0, 0);
     if (error)
     {
         fprintf(stderr, "\n%s", lua_tostring(L, -1));

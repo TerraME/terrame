@@ -251,13 +251,13 @@ int luaTimer::createObserver( lua_State *luaL)
     printf("\n----\n");
     printf("obsAttribs.size(): %i\n", obsAttribs.size());
     for (int i = 0; i < obsAttribs.size(); i++)
-        printf("\tobsAttribs.at(%i): %s\n", i, obsAttribs.at(i).toAscii().constData());
+        printf("\tobsAttribs.at(%i): %s\n", i, obsAttribs.at(i).toLatin1().constData());
 
     printf("\n");
 
     printf("allAttribs.size(): %i\n", allAttribs.size());
     for (int i = 0; i < allAttribs.size(); i++)
-        printf("\tallAttribs.at(%i): %s\n", i, allAttribs.at(i).toAscii().constData());
+        printf("\tallAttribs.at(%i): %s\n", i, allAttribs.at(i).toLatin1().constData());
 
     printf("----\n");
 #endif
@@ -592,14 +592,14 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int /*observerId*/, 
             content = getAll(in, observedAttribs.keys());
             // serverSession->setState(observerId, 1);
             //if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observedAttribs.keys());
             // serverSession->setState(observerId, 0);
             //if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack
@@ -628,14 +628,14 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId, cons
             content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
             //if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
             //if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack

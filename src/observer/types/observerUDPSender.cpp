@@ -149,7 +149,7 @@ bool ObserverUDPSender::draw(QDataStream &state)
             created = true;
     	}
 
-        emit addState(stateAux.toAscii());
+        emit addState(stateAux.toLatin1());
     	qApp->processEvents();
 	}
     else
@@ -184,7 +184,7 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //    double t = 0.0, compressionSum = 0.0, renderingSum = 0.0;
 //#endif
 //
-//    QByteArray data(msg.toAscii().constData(), msg.size());
+//    QByteArray data(msg.toLatin1().constData(), msg.size());
 //
 //    qint64 bytesWritten = 0, bytesRead = data.size();
 //    int pos = 0;
@@ -281,7 +281,7 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //        qApp->processEvents();
 //    }
 //
-//    completeState(COMPLETE_STATE.toAscii());
+//    completeState(COMPLETE_STATE.toLatin1());
 //
 //    msgCount++;
 //    stateCount++;

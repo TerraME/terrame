@@ -763,7 +763,7 @@ int luaLocalAgent::createObserver( lua_State *L )
         if (! cellSpace)
 		{
 			lua_getglobal(L, "customError");
-			lua_pushstring(L,errorMsg.toAscii().data());
+			lua_pushstring(L,errorMsg.toLatin1().data());
 			//lua_pushnumber(L,5);
 			lua_call(L,1,0);
 			return 0;
@@ -797,7 +797,7 @@ int luaLocalAgent::createObserver( lua_State *L )
             if (! obsMap)
 			{
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,errorMsg.toAscii().data());
+				lua_pushstring(L,errorMsg.toLatin1().data());
 				//lua_pushnumber(L,5);
 				lua_call(L,1,0);
 				return 0;
@@ -812,7 +812,7 @@ int luaLocalAgent::createObserver( lua_State *L )
             if (! obsImage)
 			{
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,errorMsg.toAscii().data());
+				lua_pushstring(L,errorMsg.toLatin1().data());
 				//lua_pushnumber(L,5);
 				lua_call(L,1,0);
 				return 0;
@@ -890,14 +890,14 @@ QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *, int /*observerI
         content = getAll(in, observedAttribs.keys());
         // serverSession->setState(observerId, 1);
         // if (! QUIET_MODE )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
         content = getChanges(in, observedAttribs.keys());
         // serverSession->setState(observerId, 0);
         // if (! QUIET_MODE )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
         break;
     }
     // cleans the stack
@@ -925,14 +925,14 @@ QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *, int observerId,
         content = getAll(in, observerId, attribs);
         // serverSession->setState(observerId, 1);
         // if (execModes == Quiet )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
         content = getChanges(in, observerId, attribs);
         // serverSession->setState(observerId, 0);
         // if (execModes == Quiet )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
         break;
     }
     // cleans the stack
@@ -1040,7 +1040,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
                         if (execModes != Quiet ){
                             QString str = QString("Could not find the Automaton inside an Environment object.");
                             lua_getglobal(L, "customWarningMsg");
-                            lua_pushstring(L,str.toAscii().constData());
+                            lua_pushstring(L,str.toLatin1().constData());
                             //lua_pushnumber(L,5);
                             lua_call(L,1,0);
                         }
@@ -1239,7 +1239,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
                 if (execModes != Quiet ){
                     QString str = QString("Could not find the Automaton inside an Environment object.");
                     lua_getglobal(L, "customWarningMsg");
-                    lua_pushstring(L,str.toAscii().constData());
+                    lua_pushstring(L,str.toLatin1().constData());
                     //lua_pushnumber(L,5);
                     lua_call(L,1,0);
                 }
