@@ -186,11 +186,11 @@ local function importDatabase(package)
 	end
 
 	if password and password ~= "" then
-		command = command.." -p="..password
+		command = command.." -p"..password
 	end
 
 	if host then
-		command = command.." -h="..host
+		command = command.." -h"..host
 	end
 
 	local folder = packageInfo(package).data
