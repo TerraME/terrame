@@ -28,32 +28,29 @@
 local Pair_ = {
 	--type_ = "Pair", 
 	notify = function(self, modelTime)
-		if (modelTime == nil) or (type(modelTime) ~= 'number') then 
+		if modelTime == nil then 
 			modelTime = 0
 		end
-		if (type(self.cObj_[1]) == 'userdata') then
+		if type(self.cObj_[1]) == 'userdata' then
 			self.cObj_[1]:notify(modelTime)
 		end
 	end,
 	config = function(self, time, period, priority)
+		optionalArgument(1, "number", time)
 		if time == nil then
 			time = self.cObj_[1]:getTime()
-		elseif type(time) ~= "number" then
-			incompatibleTypeError(1, "number", time)
 		end
 
+		optionalArgument(2, "number", period)
 		if period == nil then
 			period = self.cObj_[1]:getPeriod()
-		elseif type(period) ~= "number" then
-			incompatibleTypeError(2, "number", period)
 		elseif period <= 0 then
 			incompatibleValueError(2, "positive number", period)
 		end
 
+		optionalArgument(3, "number", priority)
 		if priority == nil then
 			priority = self.cObj_[1]:getPriority()
-		elseif type(priority) ~= "number" then
-			incompatibleTypeError(3, "number", priority)
 		end
 
 		self.cObj_[1]:config(time, period, priority)

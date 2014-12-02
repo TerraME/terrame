@@ -11,7 +11,6 @@ using namespace BagOfTasks;
 static int workerCount = 0;
 
 Worker::Worker(QWaitCondition &waitCond, QMutex &mtex)
-
     : waitCondition(waitCond), mutex(mtex)
 {
     abort = false;

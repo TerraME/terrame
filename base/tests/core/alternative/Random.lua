@@ -42,12 +42,12 @@ return{
 		local error_func = function()
 			randomObj:integer("terralab")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number or nil", "terralab"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "terralab"))
 
 		local error_func = function()
 			randomObj:integer(2, "terralab")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number or nil", "terralab"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "terralab"))
 	end,
 	number = function(unitTest)
 		local randomObj = Random{}
@@ -55,12 +55,12 @@ return{
 		local error_func = function()
 			randomObj:number("terralab")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number or nil", "terralab"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "terralab"))
 
 		local error_func = function()
 			randomObj:number(2.5, "terralab")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number or nil", "terralab"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "terralab"))
 	end,
 	reSeed = function(unitTest)
 		local randomObj = Random{}
@@ -68,6 +68,13 @@ return{
 			randomObj:reSeed("terralab")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "terralab"))
+	end,
+	sample = function(unitTest)
+		local randomObj = Random{}
+		local error_func = function()
+			randomObj:sample(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "table", 2))
 	end
 }
 

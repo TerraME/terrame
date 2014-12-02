@@ -51,17 +51,23 @@ return{
 		local env = Environment{cs, sc1}
 
 		local error_func = function()
-			env:createPlacement{name = "placement", max = "13"}
+			env:createPlacement(2)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("max", "positive integer number", "13"))
+		unitTest:assert_error(error_func, namedParametersMsg())
+
 
 		error_func = function()
-			env:createPlacement{strategy = 15, name = "placement", max = 13}
+			env:createPlacement{max = "13"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("max", "number", "13"))
+
+		error_func = function()
+			env:createPlacement{strategy = 15, max = 13}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("strategy", "string", 13))
 
 		error_func = function()
-			env:createPlacement{strategy = "teste1", name = "placement", max = 13}
+			env:createPlacement{strategy = "teste1", max = 13}
 		end
 
 		local options = {
@@ -73,17 +79,17 @@ return{
 		unitTest:assert_error(error_func, switchInvalidParameterMsg("teste1", "strategy", options))
 
 		error_func = function()
-			env:createPlacement{strategy = "unifor", name = "placement", max = 13}
+			env:createPlacement{strategy = "unifor", max = 13}
 		end
 		unitTest:assert_error(error_func, switchInvalidParameterSuggestionMsg("unifor", "strategy", "uniform"))
 
 		error_func = function()
-			env:createPlacement{strategy = "random", name = 15, max = 13}
+			env:createPlacement{name = 15, max = 13}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 13))
 
 		error_func = function()
-			env:createPlacement{strategy = "random", name = "placement", max = -13}
+			env:createPlacement{max = -13}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("max", "positive integer number", -13))
 
@@ -94,22 +100,22 @@ return{
 		env = Environment{sc1}
 
 		error_func = function()
-			env:createPlacement{strategy = "random"}
+			env:createPlacement()
 		end
 		unitTest:assert_error(error_func, "The Environment does not contain a CellularSpace.")
 
 		env = Environment{cs}
 
 		error_func = function()
-			env:createPlacement{strategy = "random"}
+			env:createPlacement()
 		end
 		unitTest:assert_error(error_func, "Could not find a behavioral entity (Society or Agent) within the Environment.")
 
 		env = Environment{cs, sc1}
-		env:createPlacement{strategy = "random"}
+		env:createPlacement()
 
 		error_func = function()
-			env:createPlacement{strategy = "random"}
+			env:createPlacement()
 		end
 		unitTest:assert_error(error_func, "There is a Society within this Environment that already has this placement.")
 	end,
@@ -117,10 +123,10 @@ return{
 		local env = Environment{}
 
 		local error_func = function()
-			env:execute(nil)
+			env:execute()
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number"))
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 	end,
 	Environment = function(unitTest)
 		local state1 = State{
@@ -174,6 +180,18 @@ return{
 			st2 = state2,
 			st1 = state1
 		}
+
+		local error_func = function()
+			envmt = Environment()
+		end
+
+		unitTest:assert_error(error_func, tableParameterMsg())
+
+		local error_func = function()
+			envmt = Environment(2)
+		end
+
+		unitTest:assert_error(error_func, namedParametersMsg())
 
 		local error_func = function()
 			envmt = Environment{at1, cs}

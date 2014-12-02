@@ -42,6 +42,12 @@ return {
 	end,
 	Timer = function(unitTest)
 		local error_func = function()
+			local timer = Timer(2)
+		end
+
+		unitTest:assert_error(error_func, tableParameterMsg())
+	
+		error_func = function()
 			local timer = Timer{Cell()}
 		end
 

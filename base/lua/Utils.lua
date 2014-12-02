@@ -42,7 +42,7 @@ end
 -- @param data Any object or value.
 -- @usage c = Cell{value = 3}
 -- print(type(c)) -- "Cell"
-type = function(data)
+function type(data)
 	local t = type__(data)
 	if t == "table" or t == "userdata" and getmetatable(data) then
 		if data.type_ ~= nil then
@@ -93,7 +93,9 @@ function call(obj, func)
 end
 
 --- Return a table with the content of the file config.lua, stored in the directory where TerraME
--- was executed. All the global variables of the file are elements of the table.
+-- was executed. All the global variables of the file are elements of the returned table. 
+-- Some packages require some variables in this file in order to be tested or executed.
+-- TerraME execution options -imporDb and -exportDb also use this file.
 -- @usage getConfig()
 function getConfig()
 	return include("config.lua")
@@ -186,7 +188,7 @@ function integrationRungeKutta(df, initCond, a, b, delta)
 			y2 = df(x + midDelta, y + midDelta * y1)
 			y3 = df(x + midDelta, y + midDelta * y2)
 			y4 = df(x + delta, y + delta* y3)
-			y = y + delta * (y1 + 2 * y2 + 2 * y3 + y4)/6
+			y = y + delta * (y1 + 2 * y2 + 2 * y3 + y4) / 6
 		end
 		return y
 	else
@@ -213,7 +215,7 @@ function integrationRungeKutta(df, initCond, a, b, delta)
 				y3 = df[i](x + midDelta, yTemp )
 				yTemp[i] = y[i] + delta * y3
 				y4 = df[i](x + delta, yTemp)
-				values[i] = y[i] + delta * (y1 + 2 * y2 + 2 * y3 + y4)/6
+				values[i] = y[i] + delta * (y1 + 2 * y2 + 2 * y3 + y4) / 6
 			end
 			for i = 1, sizeDF do
 				y[i] = values[i]
@@ -362,8 +364,8 @@ function integrate(attrs)
 		end
 	end
 
-	if attrs.step == nil then attrs.step = 0.1 end
-	if attrs.method == nil then attrs.method = "euler" end
+	defaultTableValue(attrs, "step", 0.1)
+	defaultTableValue(attrs, "method", "euler")
 
 	local result = switch(attrs, "method"): caseof {
 		euler = function() return integrationEuler(attrs.equation, attrs.initial, attrs.a, attrs.b, attrs.step) end,
@@ -415,11 +417,8 @@ end
 -- @param t Another string.
 -- @usage levenshtein("abc", "abb")
 function levenshtein(s, t)
-	if type(s) ~= "string" then
-		incompatibleTypeError(1, "string", s)
-	elseif type(t) ~= "string" then
-		incompatibleTypeError(2, "string", t)
-	end
+	mandatoryArgument(1, "string", s)
+	mandatoryArgument(2, "string", t)
 
 	local d, sn, tn = {}, #s, #t
 	local byte, min = string.byte, math.min
@@ -788,6 +787,19 @@ function string.endswith(str, send)
 	return str:lower():match(send)
 end
 
+--- Return the extension of a given file name. It returns the substring after the last dot.
+-- If it does not have a dot, an empty string is returned.
+-- @param filename A string with the file name.
+-- @usage getExtension("file.txt") -- ".txt"
+function getExtension(filename)
+	for i = 1, filename:len() do
+		if filename:sub(i, i) == "." then
+			return filename:sub(i + 1, filename:len())
+		end
+	end
+	return ""
+end
+
 --- Return the number of elements of atable, be them named or not.
 -- It is a substitute for the old Lua function table.getn.
 -- @param t A table.
@@ -822,7 +834,7 @@ function csv.parseLine(line, sep)
 			-- quoted value (ignore separator within)
 			local txt = ""
 			repeat
-				local startp,endp = string.find(line, '^%b""', pos)
+				local startp, endp = string.find(line, '^%b""', pos)
 				txt = txt..string.sub(line, startp + 1, endp - 1)
 				pos = endp + 1
 				c = string.sub(line, pos, pos)
@@ -833,7 +845,7 @@ function csv.parseLine(line, sep)
 				-- value1,"blub""blip""boing",value3 will result in blub"blip"boing for the middle
 			until (c ~= '"')
 			table.insert(res, txt)
-			assert(c == sep or c == "")
+			verify(c == sep or c == "", "Invalid csv file.")
 			pos = pos + 1
 		else	
 			-- no quotes used, just look for the first separator

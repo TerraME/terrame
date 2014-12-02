@@ -7,6 +7,7 @@
 
 #include "plotPropertiesGUI.h"
 #include "internalCurve.h"
+#include "visualArrangement.h"
 
 #include <qwt_legend.h>
 #include <qwt_symbol.h>
@@ -15,7 +16,6 @@
 #include <qwt_plot_picker.h>
 
 using namespace TerraMEObserver;
-
 
 struct CurveBkp
 {
@@ -26,6 +26,7 @@ struct CurveBkp
 
 ChartPlot::ChartPlot(QWidget *parent) : QwtPlot(parent)
 {
+	id = 1;
     picker = 0;
     plotPropGui = 0;
     exportAct = new QAction("Export...", this);
@@ -67,6 +68,30 @@ void ChartPlot::contextMenuEvent(QContextMenuEvent *ev)
 void ChartPlot::mouseDoubleClickEvent(QMouseEvent * /*ev*/)
 {
     propertiesChart();
+}
+
+void ChartPlot::resizeEvent(QResizeEvent * q)
+{
+	VisualArrangement* v = VisualArrangement::getInstance();
+
+	SizeVisualArrangement s;
+	s.height = q->size().height();
+	s.width = q->size().width();	
+
+	v->addSize(id, s);
+
+	QwtPlot::resizeEvent(q);
+}
+
+void ChartPlot::moveEvent(QMoveEvent* q)
+{
+	VisualArrangement* v = VisualArrangement::getInstance();
+
+	PositionVisualArrangement s;
+	s.x = q->pos().x();
+	s.y = q->pos().y();	
+
+	v->addPosition(id, s);
 }
 
 void ChartPlot::exportChart()

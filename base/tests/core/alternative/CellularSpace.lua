@@ -330,7 +330,6 @@ return{
 			cs:createNeighborhood{
 				strategy = "mxn",
 				name = "my_neighborhood",
-				target = cs,
 				m = 4
 			}
 		end
@@ -340,7 +339,6 @@ return{
 			cs:createNeighborhood{
 				strategy = "mxn",
 				name = "my_neighborhood",
-				target = cs,
 				m = 5,
 				n = 4
 			}

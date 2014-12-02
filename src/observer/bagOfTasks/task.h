@@ -93,3 +93,4 @@ private:
 }  // namespace BagOfTasks
 
 #endif // TASK_H
+

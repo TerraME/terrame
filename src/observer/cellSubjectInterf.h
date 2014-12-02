@@ -22,14 +22,12 @@
 *
 *************************************************************************************/
 
-
 #ifndef CONCRET_SUBJECT_INTERF
 #define CONCRET_SUBJECT_INTERF
 
 #include <QtCore/QStringList>
 #include "observerInterf.h"
 #include "terrameIncludes.h"
-
 
 /**
  * \brief Cell Concret Subject
@@ -63,5 +61,5 @@ public:
     bool kill(int id);
 };
 
-
 #endif
+

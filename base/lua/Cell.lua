@@ -40,11 +40,8 @@ Cell_ = {
 			incompatibleTypeError(1, "Neighborhood", neigh)
 		end
 
-		if id == nil then
-			id = "1"
-		elseif type(id) ~= "string" then
-			incompatibleTypeError(2, "string", id)
-		end
+		if id == nil then id = "1" end
+		mandatoryArgument(2, "string", id)
 
 		if self.neighborhoods == nil then self.neighborhoods = {} end
 		self.neighborhoods[id] = neigh
@@ -58,13 +55,7 @@ Cell_ = {
 	-- @usage c2 = Cell{x = 10, y = 10}
 	-- cell:distance(c2)
 	distance = function(self, cell)
-		if type(cell) ~= "Cell" then
-			if cell == nil then
-				mandatoryArgumentError(1)
-			else
-				incompatibleTypeError(1, "Cell", cell)
-			end
-		end
+		mandatoryArgument(1, "Cell", cell)
 
 		return math.sqrt((self.x - cell.x) ^ 2 + (self.y - cell.y) ^ 2)
 	end,	
@@ -72,22 +63,15 @@ Cell_ = {
 	-- @param placement a string. Default is 'placement'.
 	-- @usage agent = cell:getAgent()
 	getAgent = function(self, placement)
-		if placement == nil then placement = "placement" end
-		if type(self[placement]) == "Group" then
-			return self[placement].agents[1]
-		elseif self[placement] == nil then
-			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.")
-		else
-			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".")
-		end
+		return self:getAgents(placement)[1]
 	end,
 	--- Retrieve the Agents that belong to the Cell. Agents are indexed by numeric positions.
 	-- @param placement A string. Default is 'placement'.
 	-- @usage agent = cell:getAgents()[1]
 	getAgents = function(self, placement)
-		if placement == nil then
-			placement = "placement"
-		end
+		if placement == nil then placement = "placement" end
+		mandatoryArgument(1, "string", placement)
+
 		if type(self[placement]) == "Group" then
 			return self[placement].agents
 		elseif self[placement] == nil then
@@ -119,9 +103,7 @@ Cell_ = {
 			end
 		end
 
-		if not s then
-			return self.cObj_:getNeighborhood(index)
-		end
+		return self.cObj_:getNeighborhood(index)
 	end,
 	--- A user-defined function that is used to initialize a Cell when a CellularSpace is
 	-- created. This function gets the Cell itself as parameter.
@@ -145,16 +127,7 @@ Cell_ = {
 	-- @usage print(cell:isEmpty())
 	-- print(cell:isEmpty("workingplace"))
 	isEmpty = function(self, placement)
-		if placement == nil then
-			placement = "placement"
-		end
-		if type(self[placement]) == "Group" then
-			return #(self[placement].agents) == 0
-		elseif self[placement] == nil then
-			customError("Placement '".. placement.. "' does not exist. Use Environment:createPlacement first.")
-		else
-			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".")
-		end
+		return #self:getAgents(placement) == 0
 	end,
 	--- Retrieve the name of the current state of a given Agent.
 	-- @param agent an Agent.
@@ -188,16 +161,14 @@ Cell_ = {
 		self.cObj_:notify(modelTime)
 	end,
 	--- Returns a random Cell from a Neighborhood of this Cell
-	-- @param randomObj A Random object. As default, TerraME uses its
-	-- internal random number generator.
 	-- @param id A string with the neighborhood's name to be retrieved. Default is "1".
 	-- @usage cell_neighbor = cell:sample()
-	-- @usage cell_neighbor = cell:sample("myneighborhood")
+	-- cell_neighbor = cell:sample("myneighborhood")
 	-- @see Cell:getNeighborhood
-	sample = function(self, id, randomObj)
-		if id == nil then
-			id = "1"
-		end
+	sample = function(self, id)
+		local randomObj = Random()
+		if id == nil then id = "1" end
+		mandatoryArgument(1, "string", id)
 
 		local neigh = self:getNeighborhood(id)
 
@@ -210,11 +181,7 @@ Cell_ = {
 	-- @param id A string.
 	-- @usage cell:setId("newid")
 	setId = function(self, id)
-		if id == nil then
-			mandatoryArgumentError(1)
-		elseif type(id) ~= "string" then
-			incompatibleTypeError(1, "string", id)
-		end
+		mandatoryArgument(1, "string", id)
 		self.id = id
 		self.cObj_:setID(self.id)
 		self.objectId_ = data.cObj_:getID()
@@ -234,7 +201,7 @@ Cell_ = {
 	-- @see CellularSpace:synchronize
 	synchronize = function(self) 
 		self.past = {}
-		for k,v in pairs(self) do 
+		for k, v in pairs(self) do 
 			if k ~= "past" then
 				self.past[k] = v
 			end
@@ -275,7 +242,7 @@ function Cell(data)
 		if data == nil then
 			data = {}
 		else
- 			tableParameterError("Cell")
+			verifyNamedTable(data)
  		end
 	end
 

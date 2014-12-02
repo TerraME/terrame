@@ -392,7 +392,7 @@ registerCellularSpaceDriver{
 
 registerCellularSpaceDriver{
 	dbType = "csv",
-	optional = {"sep"},
+	optional = "sep",
 	load = loadCsv,
 	check = checkCsv
 }
@@ -407,7 +407,7 @@ registerCellularSpaceDriver{
 registerCellularSpaceDriver{
 	dbType = "mysql",
 	extension = false,
-	compulsory = {"password"},
+	compulsory = "password",
 	optional = {"host", "user", "port"},
 	load = loadDb,
 	check = checkMySQL
@@ -524,25 +524,27 @@ CellularSpace_ = {
 
 		switch(data, "strategy"):caseof{
 			["function"] = function() 
-				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "onthefly"})
 				mandatoryTableArgument(data, "filter", "function")
+				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "onthefly"})
 
 				defaultTableValue(data, "weight", function() return 1 end)
 
 				data.func = getFunctionNeighborhood
 			end,
 			moore = function()
-				checkUnnecessaryParameters(data, {"self", "wrap", "name", "strategy", "onthefly"})
-
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
+
+				checkUnnecessaryParameters(data, {"self", "wrap", "name", "strategy", "onthefly"})
 
 				data.func = getMooreNeighborhood
 			end,
 			mxn = function()
-				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "onthefly"})
-				defaultTableValue(data, "m", 3)
+				defaultTableValue(data, "filter", function() return true end)
+				defaultTableValue(data, "weight", function() return 1 end)
+				defaultTableValue(data, "target", self)
 
+				defaultTableValue(data, "m", 3)
 				if data.m <= 0 then
 					incompatibleValueError("m", "positive integer number (greater than zero)", data.m)
 				elseif math.floor(data.m) ~= data.m then
@@ -553,7 +555,6 @@ CellularSpace_ = {
 				end
 
 				defaultTableValue(data, "n", data.m)
-
 				if data.n <= 0 then
 					incompatibleValueError("n", "positive integer number (greater than zero)", data.n)
 				elseif math.floor(data.n) ~= data.n then
@@ -563,36 +564,34 @@ CellularSpace_ = {
 					customWarning("Parameter 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 				end
 
-				defaultTableValue(data, "filter", function() return true end)
-				defaultTableValue(data, "weight", function() return 1 end)
-
-				defaultTableValue(data, "target", self)
-
+				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "onthefly"})
 				data.func = getMxNNeighborhood
 			end,
 			vonneumann = function() 
-				checkUnnecessaryParameters(data, {"name", "strategy", "wrap", "self", "onthefly"})
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
+
+				checkUnnecessaryParameters(data, {"name", "strategy", "wrap", "self", "onthefly"})
 
 				data.func = getVonNeumannNeighborhood
 			end,
 			["3x3"] = function() 
 				deprecatedFunctionWarning("createNeighborhood with strategy 3x3", "mxn")
 
-				checkUnnecessaryParameters(data, {"name", "strategy", "filter", "weight", "onthefly"})
-				data.m = 3
-				data.n = 3
-
 				defaultTableValue(data, "filter", function() return true end)
 				defaultTableValue(data, "weight", function() return 1 end)
 
+				checkUnnecessaryParameters(data, {"name", "strategy", "filter", "weight", "onthefly"})
+
 				data.target = self
+				data.m = 3
+				data.n = 3
 				data.func = getMxNNeighborhood
 			end,
 			coord = function() 
-				checkUnnecessaryParameters(data, {"name", "strategy", "target", "onthefly"})
 				mandatoryTableArgument(data, "target", "CellularSpace")
+
+				checkUnnecessaryParameters(data, {"name", "strategy", "target", "onthefly"})
 
 				data.func = getCoordCoupling
 			end
@@ -646,7 +645,7 @@ CellularSpace_ = {
 	get = function(self, xIndex, yIndex)
 		if type(xIndex) == "string" then
 			if yIndex ~= nil then
-				customWarning("As #1 is string, #2 should be nil, got a "..type(yIndex)..".")
+				customWarning("As #1 is string, #2 should be nil, but got "..type(yIndex)..".")
 			end
 
 			return self.cObj_:getCellByID(xIndex)
@@ -722,7 +721,7 @@ CellularSpace_ = {
 		end
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
-			if not io.open(data.source, 'r') then
+			if not io.open(data.source, "r") then
 				resourceNotFoundError("source", data.source)
 			end
 		else
@@ -755,18 +754,18 @@ CellularSpace_ = {
 			incompatibleValueError(1, "Event or positive number", modelTime)   
 		end
 
-        if self.obsattrs then
-            forEachElement(self.obsattrs, function(idx)
-                self[idx.."_"] = self[idx](self)
-            end)
-        end
+		if self.obsattrs then
+			forEachElement(self.obsattrs, function(idx)
+				self[idx.."_"] = self[idx](self)
+			end)
+		end
 
 		self.cObj_:notify(modelTime)
 	end,
 	--- Retrieve a random Cell from the CellularSpace.
 	-- @usage cell = cs:sample()
 	sample = function(self)
-		return self.cells[Random():integer(1, #self)]            
+		return self.cells[Random():integer(1, #self)]
 	end,
 	--- Save the attributes of a CellularSpace into the same database it was retrieved.
 	-- @param time A temporal value to be stored in the database, which can be different from
@@ -791,23 +790,12 @@ CellularSpace_ = {
 			incompatibleValueError(1, "positive integer number", time)
 		end
 
-		if type(outputTableName) ~= "string" then 
-			if outputTableName == nil then
-				mandatoryArgumentError(2)
-			else
-				incompatibleTypeError(2, "string", outputTableName)
-			end
-		end
-
-		if type(attrNames) ~= "string" and type(attrNames) ~= "table" then
-			if attrNames == nil then
-				mandatoryArgumentError(3)
-			else
-  				incompatibleTypeError(3, "string", attrNames)
-			end
-		end   
+		mandatoryArgument(2, "string", outputTableName)
 
 		if type(attrNames) == "string" then attrNames = {attrNames} end
+
+		mandatoryArgument(3, "table", attrNames)
+
 		for _, attr in pairs(attrNames) do
 			if not self.cells[1][attr] then
 				customError("Attribute '"..attr.."' does not exist in the CellularSpace.")
@@ -897,7 +885,6 @@ CellularSpace_ = {
 
 		local result = {}
 		local class
-		local i = 1
 		forEachCell(self, function(cell)
 			class = argument(cell)
 			if class == nil then return end -- the cell will not belong to any Trajectory
@@ -906,8 +893,7 @@ CellularSpace_ = {
 				result[class] = Trajectory{target = self, build = false}
 			end
 			table.insert(result[class].cells, cell)
-			result[class].cObj_:add(i, cell.cObj_)
-			i = i + 1
+			result[class].cObj_:add(#result[class], cell.cObj_)
 		end)
 		return result
 	end,
@@ -919,19 +905,14 @@ CellularSpace_ = {
 	-- cs:synchronize("landuse")
 	-- cs:synchronize{"water","use"}
 	synchronize = function(self, values)
-		if #self <= 0 then
-			customError("CellularSpace needs to be loaded first.")
-		end
 		if type(values) == "string" then values = {values} end
 		if type(values) ~= "table" then 
 			if values == nil then
 				values = {}
-				local count = 1
 				local cell = self.cells[1]
 				for k, v in pairs(cell) do
-					if k ~= "past" and k ~= "cObj_" and k ~= "x" and k ~= "y" then
-						values[count] = k
-						count = count + 1
+					if not belong(k, {"past", "cObj_", "x", "y"}) then
+						table.insert(values, k)
 					end
 				end
 			else
@@ -1062,15 +1043,6 @@ metaTableCellularSpace_ = {
 function CellularSpace(data)
 	verifyNamedTable(data)
 
-	local getExtension = function(filename)
-		for i = 1, filename:len() do
-			if filename:sub(i, i) == "." then
-				return filename:sub(i + 1, filename:len())
-			end
-		end
-		return ""
-	end
-
 	if data.dbType == nil then
 		if data.database == nil then
 			local candidates = {}
@@ -1144,6 +1116,7 @@ function CellularSpace(data)
 
 	if data.database then 
 		mandatoryTableArgument(data, "database", "string")
+		verify(data.database ~= "", "Empty database name.")
 		cObj:setDBName(data.database)		
 	end
 
@@ -1168,14 +1141,12 @@ function CellularSpace(data)
 	end
 
 	if data.instance ~= nil then
-		if type(data.instance) ~= "Cell" then
-			incompatibleTypeError("instance", "Cell", data.instance)
-		end
+		mandatoryTableArgument(data, "instance", "Cell")
 
 		forEachCell(data, function(cell)
 			setmetatable(cell, {__index = data.instance})
 			forEachElement(data.instance, function(attribute, value, mtype)
-				if not string.endswith(attribute, "_") and attribute ~= "x" and attribute ~= "id" and attribute ~= "y" and attribute ~= "past" then 
+				if not string.endswith(attribute, "_") and not belong(attribute, {"x", "id", "y", "past"}) then 
 					cell[attribute] = value
 				end
 			end)

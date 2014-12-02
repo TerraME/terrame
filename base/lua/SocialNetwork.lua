@@ -32,20 +32,11 @@ SocialNetwork_ = {
 	-- @usage sn:add(agent)
 	-- sn:add(agent, 0.5)
 	add = function(self, connection, weight)
-		if type(connection) ~= "Agent" then
-			if connection == nil then
-				mandatoryArgumentError(1)
-			else
-				incompatibleTypeError(1, "Agent", connection)
-			end
-		end
+		mandatoryArgument(1, "Agent", connection)
+		optionalArgument(2, "number", weight)
 
 		if weight == nil then
 			weight = 1
-		elseif type(weight) ~= "number"  then
-			incompatibleTypeError(2, "positive number", weight)
-		elseif weight < 0 then
-			incompatibleValueError(2, "positive number", weight)
 		end
 
 		local id = connection.id
@@ -72,13 +63,7 @@ SocialNetwork_ = {
 	-- @param connection An Agent.
 	-- @usage print(sn:getWeight(agent))
 	getWeight = function(self, connection)
-		if type(connection) ~= "Agent" then
-			if connection == nil then
-				mandatoryArgumentError(1)
-			else
-				incompatibleTypeError(1, "Agent", connection)
-			end
-		end
+		mandatoryArgument(1, "Agent", connection)
 
 		local id = connection.id
 
@@ -96,13 +81,7 @@ SocialNetwork_ = {
 	--     print("not connected")
 	-- end
 	isConnection = function(self, connection)
-		if type(connection) ~= "Agent" then
-			if connection == nil then
-				mandatoryArgumentError(1)
-			else
-				incompatibleTypeError(1, "Agent", connection)
-			end
-		end
+		mandatoryArgument(1, "Agent", connection)
 		return self.connections[connection.id] ~= nil
 	end,
 	--- Return whether the SocialNetwork does not contain any connection.
@@ -116,13 +95,7 @@ SocialNetwork_ = {
 	-- @param connection An Agent.
 	-- @usage sn:remove(agent)
 	remove = function(self, connection)
-		if type(connection) ~= "Agent" then
-			if connection == nil then
-				mandatoryArgumentError(1)
-			else
-				incompatibleTypeError(1, "Agent", connection)
-			end
-		end
+		mandatoryArgument(1, "Agent", connection)
 
 		local id = connection.id
 		if self.connections[id] == nil then
@@ -158,21 +131,8 @@ SocialNetwork_ = {
 	-- @param weight A number pointing out the new weight.
 	-- @usage sn:setWeight(agent, 0.001)
 	setWeight = function(self, connection, weight)
-		if type(connection) ~= "Agent" then
-			if connection == nil then
-				mandatoryArgumentError(1)
-			else
-				incompatibleTypeError(1, "Agent", connection)
-			end
-		elseif type(weight) ~= "number" then
-			if weight == nil then
-				mandatoryArgumentError(2)
-			else
-				incompatibleTypeError(2, "positive number", weight)
-			end
-		elseif weight < 0 then
-			incompatibleValueError(2, "positive number", weight)
-		end
+		mandatoryArgument(1, "Agent", connection)
+		mandatoryArgument(2, "number", weight)
 
 		local id = connection.id
 

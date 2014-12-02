@@ -76,11 +76,9 @@ public:
         return bagOfTasks.isEmpty();
     }
 
-
 #ifndef UNIT_TME_TEST
 private:
 #endif
-
     TaskManager();
     TaskManager(const TaskManager &);
     TaskManager & operator=(const TaskManager &);
@@ -102,3 +100,4 @@ private:
 } // namespace BagOfTasks
 
 #endif // TASKMANAGER_H
+

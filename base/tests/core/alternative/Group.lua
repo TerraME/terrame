@@ -96,7 +96,7 @@ return{
 				end
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "function or nil", 12))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "function", 12))
 
 		error_func = function()
 			group1 = Group{
@@ -107,7 +107,7 @@ return{
 				greater = 12
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("greater", "function or nil", 12))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("greater", "function", 12))
 	end,
 	add = function(unitTest)
 		local group = Group{}
@@ -115,7 +115,7 @@ return{
 		local error_func = function()
 			group:add()
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent"))
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			group:add("wrongType")
@@ -127,7 +127,7 @@ return{
 		local error_func = function()
 			group:filter("notFunction")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function or nil", "notFunction"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
 
 		error_func = function()
 			group:filter(function() return true end)
@@ -139,7 +139,7 @@ return{
 		local error_func = function()
 			group:sort("notFunction")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function or nil", "notFunction"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
 	end
 }
 

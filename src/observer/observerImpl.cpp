@@ -54,7 +54,6 @@ const char *const stdDevNames[] =
     "Full", "Half", "Quarter"
 };
 
-
 // const char *getSubjectName(TypesOfSubjects type)
 const char *getSubjectName(int type)
 {
@@ -107,7 +106,6 @@ void delay(double seconds)
 #include <QFile>
 #include <QTextStream>
 
-
 void TerraMEObserver::dumpRetrievedState(const QString & msg, const QString &name)
 {
     static int asas = 0; asas++;
@@ -138,7 +136,7 @@ void TerraMEObserver::formatSpeed(double speed, QString &strSpeed)
 }
 
 
-// mantem o numero de observer já criados
+// store the number of observers created along the simulation
 static long int numObserverCreated = 0;
 static long int numSubjectCreated = 0;
 
@@ -209,7 +207,6 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
 
 #ifdef TME_BLACK_BOARD
 
-
 #ifdef TME_STATISTIC
     if ((time == -1) && (obsHandle_->getType() == TObsUDPSender))
     {
@@ -240,7 +237,6 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
         Statistic::getInstance().addElapsedTime(name, t);
     }    
 #else
-
     // getState via BlackBoard
     QDataStream& state = BlackBoard::getInstance().getState(subject_, obsHandle_->getId(), attribList);
 
@@ -249,9 +245,7 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
 
 #endif
 
-
 #else  // TME_BLACK_BOARD
-
     // getState feito a partir do subject
     QByteArray byteArray;
     QBuffer buffer(&byteArray);
@@ -268,10 +262,9 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
     {
         t = Statistic::getInstance().startMicroTime();
 #endif
-
     	QDataStream& state = subject_->getState(out, subject_, obsHandle_->getId(), attribList);
 
-        // O estado já esta disponível
+        // State is already available
         buffer.close();
         buffer.open(QIODevice::ReadOnly);
 
@@ -289,7 +282,6 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
         // Captura o tempo de espera para os observadores que tambem sao threads
         Statistic::getInstance().startVolatileMicroTime();
 #endif
-
     	obsHandle_->draw( state );
     	buffer.close();
 
@@ -301,7 +293,6 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
 #endif
 
 #endif  // TME_BLACK_BOARD
-    
     return true;
 }
 
@@ -369,11 +360,8 @@ void ObserverImpl::setDirtyBit()
 
 int ObserverImpl::close()
 {
-    // Do nothing;
     return 0;
 }
-
-
 
 ////////////////////////////////////////////////////////////  Subject
 SubjectImpl::SubjectImpl()

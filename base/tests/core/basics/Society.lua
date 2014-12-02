@@ -150,7 +150,7 @@ return {
 
 		local env = Environment{nonFooSociety, cs, singleFooAgent}
 
-		env:createPlacement{strategy = "random", max = 1}
+		env:createPlacement{max = 1}
 
 		local t = Timer{
 			Event {action = nonFooSociety},
@@ -343,7 +343,7 @@ return {
 		cs:createNeighborhood()
 
 		local env = Environment{cs, predators}
-		env:createPlacement{strategy = "random"}
+		env:createPlacement()
 
 		predators:createSocialNetwork{strategy = "cell", name = "c"}
 		predators:createSocialNetwork{strategy = "neighbor", name = "n"}
@@ -437,7 +437,7 @@ return {
 		cs:createNeighborhood()
 
 		local env = Environment{cs, predators}
-		env:createPlacement{strategy = "random"}
+		env:createPlacement()
 
 		predators:createSocialNetwork{strategy = "cell", name = "c", onthefly = true}
 		predators:createSocialNetwork{strategy = "neighbor", name = "n", onthefly = true}

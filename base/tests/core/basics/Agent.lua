@@ -59,7 +59,7 @@ return{
 			singleFooAgent
 		}
 
-		e:createPlacement{strategy = "random"}
+		e:createPlacement()
 		unitTest:assert_type(singleFooAgent:getCell(), "Cell")
 		unitTest:assert_equal(1, #singleFooAgent:getCell().placement)
 
@@ -144,7 +144,7 @@ return{
 		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		local cell = cs.cells[1]
 		ag1:enter(cell, "placement")
 		ag1:leave(nil, "placement")
@@ -155,7 +155,7 @@ return{
 		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		cell = cs.cells[1]
 		ag1:enter(cell, "placement")
 		ag1:leave(cell, "placement")
@@ -286,7 +286,7 @@ return{
 		end)
 
 		local myEnv = Environment{cs, ag1}
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		local c1 = cs.cells[1]
 		ag1:enter(c1)
 		ag1:setTrajectoryStatus(nil)
@@ -302,10 +302,10 @@ return{
 		end)
 
 		local myEnv = Environment{cs, ag1}
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		local c1 = cs.cells[1]
 		ag1:enter(c1, "placement")
-		ag1:setTrajectoryStatus(3)
+		ag1:setTrajectoryStatus()
 		unitTest:assert(true)
 	end,
 	walk = function(unitTest)
@@ -314,7 +314,7 @@ return{
 		cs:createNeighborhood()
 		local myEnv = Environment{cs, ag1}
 
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		local c1 = cs.cells[1]
 		ag1:enter(c1,"placement")
 

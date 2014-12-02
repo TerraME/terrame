@@ -56,11 +56,7 @@ Timer_ = {
 	-- final time. This argument is mandatory.
 	-- @usage timer:execute(2013)
 	execute = function(self, finalTime)
- 	   if finalTime == nil then
-			mandatoryArgumentError(1)
-    	elseif type(finalTime) ~= "number" then 
-			incompatibleTypeError(1, "number", finalTime)
-		end
+		mandatoryArgument(1, "number", finalTime)
 		self.cObj_:execute(finalTime)
 	end,
 	--- Notify every Observer connected to the Timer.
@@ -95,15 +91,15 @@ metaTableTimer_ = {__index = Timer_, __tostring = tostringTerraME}
 --     Event {...}
 -- }
 function Timer(data)
-	local cObj = TeTimer()
 	if type(data) ~= "table" then
 		if data == nil then
 			data = {}
 		else
- 			tableParameterError("Timer")
+ 			customError(tableParameterMsg())
  		end
 	end
 	
+	local cObj = TeTimer()
 	data.cObj_ = cObj
 	local eventTab = {}
 

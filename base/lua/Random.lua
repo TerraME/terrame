@@ -32,9 +32,7 @@ Random_ = {
 	reSeed = function(self, seed)
 		if seed == nil then seed = os.time() end
 
-		if type(seed) ~= "number" then
-			incompatibleTypeError(1, "number", seed)
-		end
+		optionalArgument(1, "number", seed)
 
 		self.seed = seed
 		self.cObj_:reseed(seed)
@@ -43,6 +41,8 @@ Random_ = {
 	-- @param mtable A table with indexes as numbers.
 	-- @usage random:sample{2, 3, 4, 6}
 	sample = function(self, mtable)
+		mandatoryArgument(1, "table", mtable)
+
 		local int = self:integer(1, #mtable)
 		return mtable[int]
 	end,
@@ -57,13 +57,8 @@ Random_ = {
 	--
 	-- value = random:integer(5, 10) -- from 5 to 10
 	integer = function(self, v1, v2)
-		if type(v1) ~= "number" and v1 ~= nil then
-			incompatibleTypeError(1, "number or nil", v1)
-		end
-
-		if type(v2) ~= "number" and v2 ~= nil then
-			incompatibleTypeError(2, "number or nil", v2)
-		end
+		optionalArgument(1, "number", v1)
+		optionalArgument(2, "number", v2)
 
 		if v2 then
 			if v1 then
@@ -90,13 +85,8 @@ Random_ = {
 	--
 	-- value = random:number(5, 10) -- between 5 and 10
 	number = function(self, v1, v2)
-		if type(v1) ~= "number" and v1 ~= nil then
-			incompatibleTypeError(1, "number or nil", v1)
-		end
-
-		if type(v2) ~= "number" and v2 ~= nil then
-			incompatibleTypeError(2, "number or nil", v2)
-		end
+		optionalArgument(1, "number", v1)
+		optionalArgument(2, "number", v2)
 
 		if not v1 and not v2 then
 			return self.cObj_:random(-1, -1)

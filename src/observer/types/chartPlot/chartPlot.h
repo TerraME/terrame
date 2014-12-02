@@ -34,6 +34,8 @@ class QwtPlotPicker;
 
 class PlotPropertiesGUI;
 
+#include <iostream>
+using namespace std;
 
 namespace TerraMEObserver {
 
@@ -49,7 +51,7 @@ public:
     virtual ~ChartPlot();
 
     void setInternalCurves(const QList<TerraMEObserver::InternalCurve *> &internalCurves);
-
+	int id;
 private slots:
     void exportChart();
     void propertiesChart();
@@ -57,7 +59,9 @@ private slots:
 protected:
     void contextMenuEvent(QContextMenuEvent *ev);
     void mouseDoubleClickEvent(QMouseEvent *ev);
-
+	void resizeEvent(QResizeEvent*);
+	void moveEvent(QMoveEvent*);
+	void closeEvent() { cout << "CLOSE" << endl; }
 private:
     /**
      * Draws a picker to the mouse cursor in the plot window
@@ -65,13 +69,11 @@ private:
      */
     void createPicker();
 
-
     QAction *exportAct, *propertiesAct;
     PlotPropertiesGUI *plotPropGui;
     QList<TerraMEObserver::InternalCurve *> internalCurves;
 
     QwtPlotPicker *picker;
-
 };
 
 }

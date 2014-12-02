@@ -33,7 +33,7 @@ return{
 			trajectory:add(2)
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "Cell", 2))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 2))
 	end,
 	addCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -53,7 +53,7 @@ return{
 		local error_func = function()
 			trajectory:filter("filter")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function or nil", "filter"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", "filter"))
 	end,
 	getCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -72,7 +72,7 @@ return{
 		local error_func = function()
 			trajectory:sort("func")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function or nil", "func"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", "func"))
 	end,
 	Trajectory = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -131,7 +131,7 @@ return{
 				greater = "func"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("greater", "function or nil", "func"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("greater", "function", "func"))
 
 		-- select
 		error_func = function()
@@ -140,7 +140,7 @@ return{
 				select = "func"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "function or nil", "func"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "function", "func"))
 	end
 }
 

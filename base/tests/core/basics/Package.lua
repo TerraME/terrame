@@ -118,7 +118,7 @@ return{
 		unitTest:assert_equal(deprecatedFunctionMsg("aaa", "bbb"), "Function 'aaa' is deprecated. Use 'bbb' instead.")
 	end,
 	file = function(unitTest)
-		unitTest:assert_type(file("cs.csv"), "string")
+		unitTest:assert_type(file("simple-cs.csv"), "string")
 	end,
 	invalidFileExtensionError = function(unitTest)
 		local error_func = function()
@@ -166,6 +166,12 @@ return{
 			mandatoryTableArgument(mtable, "ddd", "string")
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg("ddd", "string"))
+	end,
+	optionalArgument = function(unitTest)
+		local error_func = function()
+			optionalArgument(1, "string", 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	optionalTableArgument = function(unitTest)
 		local mtable = {bbb = 3, ccc = "aaa"}

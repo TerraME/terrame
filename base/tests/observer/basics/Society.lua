@@ -54,6 +54,9 @@ return{
 		    end}
 		}
 
+		TextScreen{subject = soc}
+--		LogFile{subject = soc} -- #215
+		VisualTable{subject = soc}
 		t:execute(30)
 		unitTest:delay()
 	end

@@ -95,7 +95,6 @@ bool paused;
 /// true - 
 bool step;
 
-
 class luaCell;
 
 void getReference( lua_State *L, luaCell *cell );
@@ -104,7 +103,6 @@ class luaCell;
 class luaCellularSpace;
 
 luaCell * findCell( luaCellularSpace*, CellIndex& );
-
 
 // SPACE REPRESENATION
 #include "luaNeighborhood.h"
@@ -132,4 +130,7 @@ luaCell * findCell( luaCellularSpace*, CellIndex& );
 // ENVIRONMENT
 #include "luaEnvironment.h"
 
+#include "luaVisualArrangement.h"
+
 #endif // TERRAME_LUA_5_1_H
+

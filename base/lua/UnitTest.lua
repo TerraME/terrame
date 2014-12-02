@@ -245,6 +245,16 @@ UnitTest_ = {
 	-- delay when the UnitTest is built.
 	-- @usage unitTest:delay()
 	delay = function()
+	end,
+	--- Create a temporary folder in the current directory and return its name. Every time this function
+	-- is executed with the same instance of UnitTest it returns the same folder. This folder needs to
+	-- be removed manually in the end of the tests or in the end of the simulation.
+	-- @usage tmpfolder = unitTest:tmpFolder()
+	tmpFolder = function(self)
+		if not self.tmpfolder then
+			self.tmpfolder = runCommand("mktemp -d .terrametmpXXXXX")[1]
+		end
+		return self.tmpfolder
 	end
 }
 

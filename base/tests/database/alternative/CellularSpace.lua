@@ -96,13 +96,6 @@ return{
 			end
 			unitTest:assert_error(error_func, "Unknown database 'terralab'.")
 
---[[
-#46
-the test below returns the error
-  'Wrong TerraLib database version, expected '4.1.2', got '.
-Please, use TerraView to update the '' database.'
-However, the database does not exist!
-
 			error_func = function()
 				local cs = CellularSpace{
 					dbType = mdbType,
@@ -115,8 +108,7 @@ However, the database does not exist!
 					database = ""
 				}
 			end
-			unitTest:assert_error(error_func, "Unknown database 'terralab'.")
---]]
+			unitTest:assert_error(error_func, "Empty database name.")
 		end
 
 		error_func = function()
@@ -523,7 +515,7 @@ However, the database does not exist!
 		error_func = function()
 			cs:save(18, "themeName", 3)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "string", 3))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "table", 3))
 		
 		error_func = function()
 			cs:save(18, "themeName", "terralab")
@@ -562,11 +554,11 @@ However, the database does not exist!
 		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste"))
 
 		error_func = function()
-			cs:loadNeighborhood{source = file("neighCabecaDeBoi900x900_invalid.gpm", "base")}
+			cs:loadNeighborhood{source = file("cabecadeboi-invalid-neigh.gpm", "base")}
 		end
 		unitTest:assert_error(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
 
-		local mfile = file("neighCabecaDeBoi900x900.gpm", "base")
+		local mfile = file("cabecadeboi-neigh.gpm", "base")
 
 		error_func = function()
 			cs2:loadNeighborhood{
@@ -576,7 +568,7 @@ However, the database does not exist!
 		end
 		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cells900x900'.")
 
-		mfile = file("neighCabecaDeBoi900x900.gal", "base")
+		mfile = file("cabecadeboi-neigh.gal", "base")
 
 		error_func = function()
 			cs2:loadNeighborhood{
@@ -586,7 +578,7 @@ However, the database does not exist!
 		end
 		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cells900x900'.")
 
-		mfile = file("neighCabecaDeBoi900x900.gwt", "base")
+		mfile = file("cabecadeboi-neigh.gwt", "base")
 
 		error_func = function()
 			cs2:loadNeighborhood{

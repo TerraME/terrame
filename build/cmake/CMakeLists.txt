@@ -459,6 +459,8 @@ source_group("core" FILES
 	${SRCDIR}/core/luaTimer.h
 	${SRCDIR}/core/luaTrajectory.cpp
 	${SRCDIR}/core/luaTrajectory.h
+	${SRCDIR}/core/luaVisualArrangement.cpp
+	${SRCDIR}/core/luaVisualArrangement.h
 	${SRCDIR}/core/luaUtils.cpp
 	${SRCDIR}/core/luaUtils.h
 	${SRCDIR}/core/luna.h
@@ -510,6 +512,8 @@ source_group("observer" FILES
 	${SRCDIR_OBSERVER}/terrameIncludes.h
 	${SRCDIR_OBSERVER}/trajectorySubjectInterf.cpp
 	${SRCDIR_OBSERVER}/trajectorySubjectInterf.h
+	${SRCDIR_OBSERVER}/visualArrangement.h
+	${SRCDIR_OBSERVER}/visualArrangement.cpp
 )
 
 source_group("observer\\components\\console" FILES

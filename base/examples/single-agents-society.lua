@@ -31,7 +31,7 @@ e = Environment {
 	soc
 }
 
-e:createPlacement{strategy = "random", max = 1}
+e:createPlacement{max = 1}
 
 t = Timer {
 	Event{action = soc},

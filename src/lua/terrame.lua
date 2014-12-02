@@ -62,10 +62,6 @@ function printWarning(value)
 	end
 end
 
-install = function(file)
-	-- #9
-end
-
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
 function include(scriptfile)
 	local env = setmetatable({}, {__index = _G})
@@ -79,25 +75,151 @@ end
 
 type__ = type
 
--- #36
-importDatabase = function()
+local function sqlFiles(package)
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages"..s.."base"
+	local files = {}
+	data = function(mtable)
+		if type(mtable.file) == "string" then mtable.file = {mtable.file} end
 
-	-- before calling the commands below, we need to execute
-	-- "create database cabeca;"
-	
-	local command = "mysql -u root -p -h localhost cabeca < "..baseDir..s.."data"..s.."cabecaDeBoi.sql"
-	print(command)
+		forEachElement(mtable.file, function(_, mfile)
+			if string.endswith(mfile, ".sql") then
+				table.insert(files, mfile)
+			end
+		end)
+	end
 
-	command = "mysql -u root -p -h localhost db_emas < "..baseDir..s.."data"..s.."db_emas.sql"
-	print(command)
---	os.execute(command)
+	xpcall(function() dofile(sessionInfo().path..s.."packages"..s..package..s.."data.lua") end, function(err)
+		printError("Error loading "..package..s.."data.lua")
+		printError(err)
+		os.exit()
+	end)
+
+	return files
+end
+
+local function examples(package)
+	local s = sessionInfo().separator
+	local examplespath = sessionInfo().path..s.."packages"..s..package..s.."examples"
+
+	if attributes(examplespath, "mode") ~= "directory" then
+		printError("examples is not a directory")
+		os.exit()
+	end
+
+	local files = dir(examplespath)
+	local result = {}
+
+	forEachElement(files, function(_, fname)
+		if string.endswith(fname, ".lua") then
+			table.insert(result, fname)
+		elseif not string.endswith(fname, ".tme") and not string.endswith(fname, ".log") then
+			printWarning("Test file '"..fname.."' does not have a valid extension")
+		end
+	end)
+	return result
+end
+
+local function exportDatabase(package)
+	local s = sessionInfo().separator
+
+	local config = getConfig()
+
+	local user = config.user
+	local password = config.password
+	local host = config.host
+	local drop = config.drop
+
+	local command = "mysqldump"
+
+	if user then
+		command = command.." -u"..user
+	else
+		command = command.." -u root"
+	end
+
+	if password and password ~= "" then
+		command = command.." -p="..password
+	end
+
+	if host then
+		command = command.." -h="..host
+	end
+
+	local folder = packageInfo(package).data
+	local files = sqlFiles(package)
+
+	forEachElement(files, function(_, mfile)
+		local database = string.sub(mfile, 1, string.len(mfile) - 4)
+
+		if isfile(sessionInfo().path..s.."packages"..s..package..s.."data"..s..mfile) then
+			printWarning("File "..mfile.." already exists and will not be replaced")
+		else
+			printNote("Exporting database "..database)
+			local result = runCommand(command.." "..database.." > "..folder..mfile, 2)
+
+			if result and result[1] then
+				printError(result[1])
+				os.execute("rm "..folder..mfile)
+			else
+				printNote("Database '"..database.."'successfully exported")
+			end
+		end
+	end)
+end
+
+local function importDatabase(package)
+	local s = sessionInfo().separator
+
+	local config = getConfig()
+
+	local user = config.user
+	local password = config.password
+	local host = config.host
+	local drop = config.drop
+
+	local command = "mysql"
+
+	if user then
+		command = command.." -u"..user
+	else
+		command = command.." -u root"
+	end
+
+	if password and password ~= "" then
+		command = command.." -p="..password
+	end
+
+	if host then
+		command = command.." -h="..host
+	end
+
+	local folder = packageInfo(package).data
+	local files = sqlFiles(package)
+
+	forEachElement(files, function(_, value)
+		local database = string.sub(value, 1, string.len(value) - 4)
+
+		if drop then
+			printNote("Deleting database '"..database.."'")
+			local result = runCommand(command.." -e \"drop database "..database.."\"", 2)
+		end
+
+		printNote("Creating database '"..database.."'")
+		local result = runCommand(command.." -e \"create database "..database.."\"", 2)
+		if result and result[1] then
+			printError(result[1])
+			printError("Add 'drop = true' to your config.lua to allow replacing databases if needed.")
+		else
+			printNote("Importing database '"..database.."'")
+			os.execute(command .." "..database.." < "..folder..value)
+			printNote("Database '"..database.."' successfully imported")
+		end
+	end)
 end
 
 -- find the folders inside a package that contain
 -- lua files, starting from package/tests
-local testfolders = function(folder, ut)
+local function testfolders(folder, ut)
 	local result = {}
 
 	local s = sessionInfo().separator
@@ -132,11 +254,7 @@ local testfolders = function(folder, ut)
 	return(result)
 end
 
-local doc = function(package)
-	-- gera a documentacao do arquivo em TME_FOLDER/packages/package/doc a partir da pasta packages/package/lua/*.lua
-	-- no futuro, pegar tambem a pasta examples para gerar a documentacao
-	-- luadoc *.lua -d doc
-	-- colocar sempre o logo do TerraME, removendo o parametro logo = "img/terrame.png"
+local function executeDoc(package)
 	local initialTime = os.clock()
 
 	require("base")
@@ -147,19 +265,13 @@ local doc = function(package)
 
 	xpcall(function() require(package) end, function(err)
 		printError("Package could "..package.." not be loaded.")
-        printError(err)
+		printError(err)
 		os.exit()
-    end)
+	end)
 
 	local lua_files = dir(package_path..s.."lua")
 
-	local example_files
-
-	if attributes(package_path..s.."examples", "mode") == "directory" then
-		example_files = dir(package_path..s.."examples")
-	else
-		example_files = {}
-	end
+	local example_files = examples(package)
 
 	local doc_report = {
 		parameters = 0,
@@ -170,7 +282,6 @@ local doc = function(package)
 		variables = 0,
 		links = 0,
 		examples = 0,
-
 		wrong_description = 0,
 		undoc_param = 0,
 		undefined_param = 0,
@@ -190,7 +301,7 @@ local doc = function(package)
 
 	local finalTime = os.clock()
 
-	print("\nReport: ")
+	print("\nReport:")
 	printNote("Documentation was built in "..round(finalTime - initialTime, 2).." seconds.")
 
 	if doc_report.undoc_files == 0 then
@@ -277,12 +388,13 @@ local doc = function(package)
 				   doc_report.wrong_links + doc_report.problem_examples + doc_report.undoc_examples
 
 	if errors == 0 then
-		printNote("Summing up, all tests were succesfully executed.")
+		printNote("Summing up, all the documentation was successfully built.")
 	elseif errors == 1 then
-		printError("Summing up, one problem was found during the tests.")
+		printError("Summing up, one problem was found in the documentation.")
 	else
-		printError("Summing up, "..errors.." problems were found during the tests.")
+		printError("Summing up, "..errors.." problems were found in the documentation.")
 	end
+	return errors
 end
 
 -- builds a table with zero counts for each element of the table gotten as argument
@@ -303,7 +415,7 @@ local buildCountTable = function(mtable)
 	return result
 end
 
-local executeTests = function(fileName, package)
+local executeTests = function(package, fileName)
 	local initialTime = os.clock()
 
 	require("base")
@@ -376,7 +488,7 @@ local executeTests = function(fileName, package)
 		printError(...)
 	end
 
-    require(package)
+	require(package)
 
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s..package
@@ -410,9 +522,11 @@ local executeTests = function(fileName, package)
 		-- the package was already loaded with success
 		testfunctions[file] = buildCountTable(include(baseDir..s.."lua"..s..file))
 	end
+
 	print = print__
 
 	local tf = testfolders(baseDir, ut)
+
 	-- Check every selected folder
 	if type(data.folder) == "string" then 
 		local mfolder = data.folder
@@ -428,6 +542,7 @@ local executeTests = function(fileName, package)
 		local mfolder = data.folder
 		data.folder = {}
 		forEachElement(tf, function(_, value)
+			-- TODO: instead of using found, why not use "return false" in forEachElement?
 			local found = false
 			forEachElement(mfolder, function(_, mvalue)
 				if string.match(value, mvalue) and not found then
@@ -437,18 +552,23 @@ local executeTests = function(fileName, package)
 			end)
 		end)
 	else
+		-- TODO: I think this error will never occur because when this function reads
+		-- the file it already checks this.
 		customError("Parameter 'folder' is not a string, table or nil.")
 	end
 
 	if #data.folder == 0 then
 		customError("Could not find any folder to be tested according to the value of 'folder'.")
 	end
+
 	local global_variables = {}
 	local count_global = getn(_G)
 	forEachElement(_G, function(idx)
 		global_variables[idx] = true
 	end)
 
+	-- TODO: I think this warning will never occur because when this function reads
+	-- the file it already checks this.
 	local parameters = {"sleep", "examples", "folder", "test", "file"}
 	forEachElement(data, function(value)
 		if not belong(value, parameters) then
@@ -460,8 +580,11 @@ local executeTests = function(fileName, package)
 	local myFiles
 
 	-- For each test in each file in each folder, execute the test
+	-- TODO: change this to forEachElement...
 	for _, eachFolder in ipairs(data.folder) do
 		local dirFiles = dir(baseDir..s..eachFolder)
+		-- TODO: ... and this to "if dirfiles == nil then return end" to avoid a scope
+		-- maybe this check could be done previously, instead of here.
 		if dirFiles ~= nil then 
 			myFiles = {}
 			if type(data.file) == "string" then
@@ -474,12 +597,10 @@ local executeTests = function(fileName, package)
 						myFiles[#myFiles + 1] = value
 					end
 				end)
-			elseif data.file == nil then
+			else -- nil
 				forEachElement(dirFiles, function(_, value)
 					myFiles[#myFiles + 1] = value
 				end)
-			else
-				error("file is not a string, table or nil.")
 			end
 
 			if #myFiles == 0 then
@@ -510,14 +631,12 @@ local executeTests = function(fileName, package)
 					forEachOrderedElement(tests, function(index, value, mtype)
 						myTests[#myTests + 1] = index 					
 					end)
-				elseif type(data.test) == "table" then
+				else -- table
 					forEachElement(data.test, function(_, value)
 						if tests[value] then
 							myTests[#myTests + 1] = value
 						end
 					end)
-				else
-					error("test is not a string, table or nil")
 				end
 
 				if #myTests > 0 then
@@ -526,15 +645,17 @@ local executeTests = function(fileName, package)
 					printWarning("Skipping "..eachFolder..s..eachFile)
 				end
 
-
 				for _, eachTest in ipairs(myTests) do
 					print("Testing "..eachTest)
+					io.flush()
 
-					if testfunctions[eachFile] and testfunctions[eachFile][eachTest] then
-						testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
-					elseif testfunctions[eachFile] then
-						printError("Function does not exist in the respective file in the source code.")
-						ut.functions_not_exist = ut.functions_not_exist + 1
+					if testfunctions[eachFile] then
+						if testfunctions[eachFile][eachTest] then
+							testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
+						else
+							printError("Function does not exist in the respective file in the source code.")
+							ut.functions_not_exist = ut.functions_not_exist + 1
+						end
 					end
 
 					local count_test = ut.test
@@ -560,8 +681,8 @@ local executeTests = function(fileName, package)
 					ut.executed_functions = ut.executed_functions + 1
 
 					if count_test == ut.test and not found_error then
-						ut.functions_without_assert = ut.functions_without_assert + 1
 						printError("No asserts were found in the test.")
+						ut.functions_without_assert = ut.functions_without_assert + 1
 					end
 
 					if getn(_G) > count_global then
@@ -577,9 +698,10 @@ local executeTests = function(fileName, package)
 						printError("Test creates global variable(s): "..variables)
 						ut.functions_with_global_variables = ut.functions_with_global_variables + 1
 
-						-- we need to delete the global variables created in order
-						-- to ensure that a new error will be generated if this
-						-- variable is found again
+						-- we need to delete the global variables created in order to ensure that a 
+						-- new error will be generated if this variable is found again. This need
+						-- to be done here because we cannot change _G inside a forEachElement
+						-- traversing _G
 						forEachElement(pvariables, function(_, value)
 							_G[value] = nil
 						end)
@@ -599,6 +721,7 @@ local executeTests = function(fileName, package)
 
 	-- checking if all source code functions were tested
 	if check_functions then
+		-- TODO: check_functions is true only when data.file == nil!!
 		printNote("Checking if functions from source code were tested")
 		if type(data.file) == "string" then
 			print("Checking "..data.file)
@@ -639,16 +762,9 @@ local executeTests = function(fileName, package)
 	-- executing examples
 	if data.examples then
 		printNote("Testing examples")
-		local dirFiles = dir(baseDir..s.."examples")
+		local dirFiles = examples(package)
 		if dirFiles ~= nil then
 			forEachElement(dirFiles, function(idx, value)
-				if not string.endswith(value, ".lua") then
-					if not string.endswith(value, ".log") then
-						printWarning("Skipping "..value)
-					end
-					return true
-				end
-
 				print("Testing "..value)
 				io.flush()
 
@@ -690,13 +806,15 @@ local executeTests = function(fileName, package)
 
 				local myfunc = function()
 					local env = setmetatable({}, {__index = _G})
+					-- loadfile is necessary to avoid any global variable from one
+					-- example affect another example
 					loadfile(baseDir..s.."examples"..s..value, 't', env)()
-					return setmetatable(env, nil)
 				end
 				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
 					printError(err)
 					printError(traceback())
+					writing_log = true -- to avoid showing errors in the log file
 				end)
 
 				if not writing_log and logfile then
@@ -708,10 +826,13 @@ local executeTests = function(fileName, package)
 					end
 				end	
 
+				if logfile ~= nil then
+					io.close(logfile)
+				end
+
 				print = print__
 
 				killAllObservers()
-		
 			end)
 		end
 	else
@@ -728,7 +849,6 @@ local executeTests = function(fileName, package)
 	else
 		text = text.."."
 	end
-
 	printNote(text)
 
 	if ut.print_when_loading > 0 then
@@ -801,7 +921,7 @@ local executeTests = function(fileName, package)
 		elseif ut.examples_error == 0 then
 			printNote("All "..ut.examples.." examples were successfully executed.")
 		else
-			printError(ut.examples_error.." out of "..ut.examples.." examples had unexpected execution error.")
+			printError(ut.examples_error.." errors were found in the "..ut.examples.." examples.")
 		end
 
 		if ut.log_files > 0 then
@@ -818,18 +938,95 @@ local executeTests = function(fileName, package)
 	               ut.functions_with_error + ut.functions_without_assert
 
 	if errors == 0 then
-		printNote("Summing up, all tests were succesfully executed.")
+		printNote("Summing up, all tests were successfully executed.")
 	elseif errors == 1 then
 		printError("Summing up, one problem was found during the tests.")
 	else
 		printError("Summing up, "..errors.." problems were found during the tests.")
 	end
-	os.exit() -- #76
+
+	return errors
 end
 
-build = function(folder)
-	-- #15
+buildPackage = function(package)
+	printNote("Testing package "..package)
+	local s = sessionInfo().separator
+	local testErrors
+	xpcall(function() testErrors = executeTests(package) end, function(err)
+		printError(err)
+	end)
+	if testErrors > 0 then
+		printError("Build aborted due to the errors in the tests.")
+		return
+	end
+
+	printNote("Building documentation for "..package)
+	local docErrors
+	xpcall(function() docErrors = executeDoc(package) end, function(err)
+		printError(err)
+	end)
+
+	if docErrors > 0 then
+		printError("Build aborted due to the errors in the documentation.")
+		return
+	end
+
+	printNote("Building package "..package)
+	local info = packageInfo(package)
+	local file = package.."_"..info.version..".zip"
+	printNote("Creating file "..file)
+	local currentDir = currentdir()
+	local packageDir = sessionInfo().path..s.."packages"
+	chdir(packageDir)
+	os.execute("zip -qr "..file.." "..package)
+	if isfile(file) then
+		printNote("Package "..package.." successfully built")
+	end
+	chdir(currentDir)
+	os.execute("mv "..packageDir..s..file.." .")
 end
+
+local function installPackage(file)
+	if file == nil then
+		printError("You need to choose the file to be installed.")
+		return
+	elseif not isfile(file) then
+		printError("No such file: "..file)
+		return
+	end
+
+	printNote("Installing "..file)
+
+	local s = sessionInfo().separator
+	local package
+	xpcall(function() package = string.sub(file, 1, string.find(file, "_") - 1) end, function(err)
+		printError(file.." is not a valid file name for a TerraME package")
+		os.exit()
+	end)
+
+	local param = sessionInfo().path..s.."packages"..s..package
+
+	local currentDir = currentdir()
+	local packageDir = sessionInfo().path..s.."packages"
+
+	os.execute("cp "..file.." "..packageDir)
+	chdir(packageDir)
+
+	os.execute("unzip -q "..file)
+
+	printNote("Trying to load package "..package)
+	xpcall(function() require(package) end, function(err)
+		printError("Package could not be loaded:")
+		printError(err)
+
+		os.execute("rm -rf "..package)
+		os.exit()
+	end)
+	printNote("Package successfully installed")
+	chdir(currentDir)
+	os.execute("rm "..packageDir..s..file)
+end
+
 
 local versions = function()
 	print("\nTerraME - Terra Modeling Environment")
@@ -849,9 +1046,11 @@ local usage = function()
 	print(" -autoclose                 Automatically close the platform after simulation.")
 	print(" -draw-all-higher <value>   Draw all subjects when percentage of changes was higher")
 	print("                            than <value>. Value must be between interval [0, 1].")
+	print(" [-package pkg] -exportDb   Exports .sql files described in data.lua from MySQL to folder data.")
 	print(" -gui                       Show the player for the application (it works only ")
 	print("                            when an Environment and/or a Timer objects are used).")
 	print(" -ide                       Configure TerraME for running from IDEs in Windows systems.")
+	print(" [-package pkg] -importDb   Imports .sql files described in data.lua from folder data to MySQL.")
 	print(" -mode=normal (default)     Warnings enabled.")
 	print(" -mode=debug                Warnings treated as errors.")
 	print(" -mode=quiet                Warnings disabled.")
@@ -1023,16 +1222,16 @@ execute = function(parameters) -- parameters is a vector of strings
 				info_.mode = "debug"
 				paramCount = paramCount + 1
 
-				local correct, errorMsg = xpcall(function() executeTests(parameters[paramCount], package) end, function(err)
+				local correct, errorMsg = xpcall(function() executeTests(package, parameters[paramCount]) end, function(err)
 					printError(err)
 					--printError(traceback())
 				end)
-				return
+				os.exit() -- #76
 			elseif param == "-help" then 
 				usage()
 				os.exit()
 			elseif param == "-doc" then
-				local success, result = xpcall(function() doc(package) end, function(err)
+				local success, result = xpcall(function() executeDoc(package) end, function(err)
 					local s = sessionInfo().separator
 					local luaFolder = replaceSpecialChars(sessionInfo().path..s.."lua")
 					local baseLuaFolder = replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"..s.."lua")
@@ -1094,18 +1293,21 @@ execute = function(parameters) -- parameters is a vector of strings
 			elseif param == "-draw-all-higher" then
 				-- #78
 			elseif param == "-build" then
-				if package ~= "base" then
-					param = sessionInfo().path..s.."packages"..s..package
-					local info = packageInfo(package)
-					printNote("Creating "..package.."_"..info.version..".zip ")
-					os.execute("zip -qr "..package.."_"..info.version..".zip "..param)
-				else
+				if package == "base" then
 					printError("TerraME cannot be built using -build.")
+				else
+					buildPackage(package)
 				end
 				os.exit()
 			elseif param == "-install" then
-
-			
+				installPackage(parameters[paramCount + 1])
+				os.exit()
+			elseif param == "-importDb" then
+				importDatabase(package)
+				os.exit()
+			elseif param == "-exportDb" then
+				exportDatabase(package)
+				os.exit()
 			elseif param == "-example" then
 				local file = parameters[paramCount + 1]
 
@@ -1126,12 +1328,12 @@ execute = function(parameters) -- parameters is a vector of strings
 					-- was a call such as "TerraME .../package/examples/example.lua"
 					parameters[paramCount + 1] = param
 				else
-					files = dir(sessionInfo().path..s.."packages"..s..package..s.."examples")
+					files = examples(package)
 
 					forEachElement(files, function(_, value)
 						print(" - "..value)
 					end)
-					os.exit()	
+					os.exit()
 				end
 			end
 		else
@@ -1140,6 +1342,20 @@ execute = function(parameters) -- parameters is a vector of strings
 			end
 			require(package)
 			local s = sessionInfo().separator
+
+			local displayFile = string.sub(param, 0, string.len(param) - 3).."tme"
+
+			local cObj = TeVisualArrangement()
+			cObj:setFile(displayFile)
+
+			if isfile(displayFile) then
+				local display = dofile(displayFile)
+
+				forEachElement(display, function(idx, data)
+					cObj:addPosition(idx, data.x, data.y)
+					cObj:addSize(idx, data.width, data.height)
+				end)
+			end
 
 			local success, result = xpcall(function() dofile(param) end, function(err)
 				local luaFolder = replaceSpecialChars(sessionInfo().path.."/lua")

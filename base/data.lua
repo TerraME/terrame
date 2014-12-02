@@ -1,6 +1,6 @@
 
 data{
-	file = {"EstadosBrasil.dbf", "EstadosBrasil.shp", "EstadosBrasil.shx"},
+	file = {"brazilstates.dbf", "brazilstates.shp", "brazilstates.shx"},
 	summary = "A shapefile desribing the 27 Brazilian states.",
 	source = "IBGE (www.ibge.br)",
 	attributes =  {},
@@ -17,12 +17,12 @@ data{
 }
 
 data{
-	file = {"cabecaDeBoi.mdb", "cabecaDeBoi.sql"}
+	file = {"cabecadeboi.mdb", "cabecadeboi.sql"}
 
 }
 
 data{
-	file = {"db_emas.mdb", "db_emas.sql"},
+	file = {"emas.mdb", "emas.sql"},
 	reference = "Almeida, Rodolfo M., et al. 'Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil.' X Simposio Brasileiro de Geoinfoamatica (2008)",
 	summary = "Land cover data on Parque Nacional das Emas, Brazil"
 }

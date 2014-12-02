@@ -151,7 +151,8 @@ function switchInvalidParameterSuggestionMsg(casevar, att, suggestion)
 	return "'"..casevar.."' is an invalid value for parameter '"..att.."'. Do you mean '"..suggestion.."'?"
 end
 
---- Load a given package.
+--- Load a given package. If the package is not installed, it tries to load from a folder in the
+-- current directory.
 -- @param package A package name.
 -- @usage require("calibration")
 function require(package)
@@ -161,7 +162,12 @@ function require(package)
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
 	if not isfile(package_path) then
-		customError("Package '"..package.."' is not installed.")
+		if isfile(package) then
+			printWarning("Loading package '"..package.."' from a folder in the current directory")
+			package_path = package
+		else
+			customError("Package '"..package.."' is not installed.")
+		end
 	end
 
 	local load_file = package_path..s.."load.lua"
@@ -567,6 +573,18 @@ function mandatoryTableArgument(table, attr, mtype)
 		customError(mandatoryArgumentMsg(attr))
 	elseif type(table[attr]) ~= mtype and mtype ~= nil then
 		incompatibleTypeError(attr, mtype, table[attr])
+	end
+end
+
+--- Verify whether an optional parameter of a non-named function belong to the correct type.
+-- The error message comes from Package:incompatibleTypeMsg(), only if the parameter is not nil.
+-- @param position The position of the parameter in the function signature (a number).
+-- @param mtype The required type for the parameter.
+-- @param value The valued used as argument to the function call.
+-- @usage optionalArgument(1, "string", parameter)
+function optionalArgument(position, mtype, value)
+	if value ~= nil and type(value) ~= mtype then
+		incompatibleTypeError(position, mtype, value)
 	end
 end
 

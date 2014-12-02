@@ -97,7 +97,7 @@ static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SL
 
 
 //// Integers
-static const int LEGEND_ITENS = LEGEND_KEYS.size(); /// Número de itens que compoem a legenda de cada atributo
+static const int LEGEND_ITENS = LEGEND_KEYS.size(); /// Number of items composing the legend of each attribute
 static const int ZOOM_MAX = 11;
 static const int ZOOM_MIN = -ZOOM_MAX;
 
@@ -128,8 +128,6 @@ static const QSize ICON_SIZE(16, 16);
 //// QPoint
 static const QPoint ZERO_POINT(0, 0);
 
-
-
 //////////////////// ENUMERATORS
 
 /**
@@ -140,7 +138,6 @@ static const QPoint ZERO_POINT(0, 0);
 enum TypesOfSubjects 
 {
     TObsUnknown         = 0,   //!< Type unknown
-
     TObsCell,                  //!< Cell type
     TObsCellularSpace,         //!< CellularSpace type
     TObsNeighborhood,          //!< Neighborhood type
@@ -166,7 +163,6 @@ enum TypesOfSubjects
 enum TypesOfObservers
 {
     TObsUndefined       =  0,   //!< Undefined type
-
     TObsTextScreen      =  1,   //!< TextScreen type
     TObsLogFile         =  2,   //!< LogFile type
     TObsTable           =  3,   //!< Table type
@@ -193,7 +189,6 @@ enum TypesOfData
     TObsNumber,                 //!< Numeric type 
     TObsDateTime,               //!< Time stamp type 
     TObsText,                   //!< Textual type
-
     TObsUnknownData     = 100   //!< Unknown type
 };
 
@@ -209,7 +204,6 @@ enum GroupingMode
     TObsStdDeviation    = 2,    //!< Standard deviation type
     TObsUniqueValue     = 3     //!< Unique value type
 };
-
 
 /**
 * \enum TerraMEObserver::StdDev
@@ -228,3 +222,4 @@ enum StdDev
 } // TerraMEObserver
 
 #endif // OBSERVER_GLOBAL_ITEMS
+

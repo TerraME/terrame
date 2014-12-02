@@ -31,14 +31,12 @@ Trajectory_ = {
 	-- @param cell A Cell that will be added.
 	-- @usage traj:add(cell)
 	add = function(self, cell)
-		if type(cell) ~="Cell" then
-			incompatibleTypeError(2, "Cell", cell)
-		end
+		mandatoryArgument(1, "Cell", cell)
 
-	-- uncomment after solving #22
-	--	verify(not self:get(cell.x, cell.y), "Cell ("..cell.x..", "..cell.y..") already belongs to the Trajectory.")
+		-- uncomment after solving #22
+		--	verify(not self:get(cell.x, cell.y), "Cell ("..cell.x..", "..cell.y..") already belongs to the Trajectory.")
 		table.insert(self.cells, cell)
-		self.cObj_:add(#self + 1, cell.cObj_)
+		self.cObj_:add(#self, cell.cObj_)
 	end,
 	--- Add a new Cell to the Trajectory.
 	-- @param cell A Cell that will be added.
@@ -57,6 +55,7 @@ Trajectory_ = {
 			greater = self.greater,
 			build = false
 		}
+
 		forEachCell(self, function(cell)
 			cloneT:add(cell)
 		end)
@@ -71,11 +70,9 @@ Trajectory_ = {
 	--     return cell.cover = "forest"
 	-- end)
 	filter = function(self, f)
-		if type(f) == "function" then
-			self.select = f
-		elseif f ~= nil then
-			incompatibleTypeError(1, "function or nil", f)
-		end
+		optionalArgument(1, "function", f)
+
+		if f then self.select = f end
 
 		self.cells = {}
 		self.cObj_:clear()
@@ -141,7 +138,7 @@ Trajectory_ = {
 	end,
 	--- Sort the current CellularSpace subset of the Trajectory. It returns a boolean value indicating
 	--  whether the Trajectory was sucessfully sorted.
-	-- @param greaterThan A function (Cell, Cell)->boolean to sort the generated subset of Cells. It 
+	-- @param f A function (Cell, Cell)->boolean to sort the generated subset of Cells. It 
 	-- returns true if the first one has priority over the second one. Default: No sorting function 
 	-- will be applied.
 	-- @see Utils:greaterByAttribute
@@ -149,12 +146,10 @@ Trajectory_ = {
 	-- @usage traj:sort(function(c, d)
 	--     return c.dist < d.dist
 	-- end)
-	sort = function(self, greaterThan)
-		if type(greaterThan) == "function" then
-			self.greater = greaterThan
-		elseif greaterThan ~= nil then
-			incompatibleTypeError(1, "function or nil", greaterThan)
-		end
+	sort = function(self, f)
+		optionalArgument(1, "function", f)
+
+		if f then self.greater = f end
 
 		if type(self.greater) == "function" then
 			table.sort(self.cells, self.greater)
@@ -226,39 +221,25 @@ function Trajectory(data)
 
 	if data.target == nil then
 		mandatoryArgumentError("target")
-	end
-
-	if type(data.target) ~= "CellularSpace" and type(data.target) ~= "Trajectory" then
+	elseif type(data.target) ~= "CellularSpace" and type(data.target) ~= "Trajectory" then
 		incompatibleTypeError("target", "CellularSpace or Trajectory", data.target)
 	end
 
-	if data.build == nil then
-		data.build = true
-	elseif type(data.build) ~= "boolean" then
-		incompatibleTypeError("build", "boolean", data.build)
-	elseif data.build == true then
-		defaultValueWarning("build", "true")
-	end
+	defaultTableValue(data, "build", true)
 
 	data.parent = data.target
-	if data.parent ~= nil then
-		-- Copy the functions from the parent to the Trajectory (only those that do not exist)
-		forEachElement(data.parent, function(idx, value, mtype)
-			if mtype == "function" and data[idx] == nil then
-				data[idx] = value
-			end
-		end)
-	end
+
+	-- Copy the functions from the parent to the Trajectory (only those that do not exist)
+	forEachElement(data.parent, function(idx, value, mtype)
+		if mtype == "function" and data[idx] == nil then
+			data[idx] = value
+		end
+	end)
 
 	data.target = nil
 
-	if data.select ~= nil and type(data.select) ~= "function" then
-		incompatibleTypeError("select", "function or nil", data.select)
-	end
-
-	if data.greater ~= nil and type(data.greater) ~= "function" then
-		incompatibleTypeError("greater", "function or nil", data.greater)
-	end
+	optionalTableArgument(data, "select", "function")
+	optionalTableArgument(data, "greater", "function")
 
 	local cObj = TeTrajectory()
 	data.cObj_ = cObj

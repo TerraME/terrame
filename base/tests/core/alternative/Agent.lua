@@ -29,7 +29,7 @@ return {
 		local error_func = function()
 			local ag1 = Agent{id = 123}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("id", "string or nil", 123))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("id", "string", 123))
 	end,
 	add = function(unitTest)
 		local ag1 = Agent{}
@@ -70,19 +70,19 @@ return {
 		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		local cell = cs.cells[1]
 		local error_func = function()
 			ag1:enter(nil, "placement")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", nil))
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
 			local ag1 = Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
-			myEnv:createPlacement{strategy = "void", name = "placement"}
+			myEnv:createPlacement{strategy = "void"}
 			cell = cs.cells[1]
 			ag1:enter({}, "placement")
 		end
@@ -92,7 +92,7 @@ return {
 		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		cell = cs.cells[1]
 		local error_func = function()
 			ag1:enter(cell, 123)
@@ -107,9 +107,9 @@ return {
 			},
 		}
 		local error_func = function()
-			ag1:execute(nil)
+			ag1:execute()
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event", nil))
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
 			ag1 = Agent{
@@ -145,7 +145,7 @@ return {
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
-			myEnv:createPlacement{strategy = "void", name = "placement"}
+			myEnv:createPlacement{strategy = "void"}
 			local cell = cs.cells[1]
 			ag1:enter(cell, "placement")
 			ag1:leave(cell, {})
@@ -157,7 +157,7 @@ return {
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
-			myEnv:createPlacement{strategy = "void", name = "placement"}
+			myEnv:createPlacement{strategy = "void"}
 			local cell = cs.cells[1]
 			ag1:enter(cell, "placement")
 			ag1:leave(cell, 123)
@@ -168,7 +168,7 @@ return {
 		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		local cell = cs.cells[1]
 		ag1:enter(cell,"placement")
 		local error_func = function()
@@ -203,7 +203,7 @@ return {
 		local error_func = function()
 			ag1:message{}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("receiver", "Agent"))
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("receiver"))
 
 		local ag = Agent{}	
 		local sc = Society{instance = ag, quantity = 2}
@@ -217,7 +217,7 @@ return {
 			}
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg("delay", "positive integer number", "money"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("delay", "number", "money"))
 
 		local ag = Agent{}
 
@@ -278,7 +278,7 @@ return {
 		local myEnv = Environment{cs, ag1}
 
 		myEnv:createPlacement{strategy = "void", name = "renting"}
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 
 		local c1 = cs.cells[1]
 		ag1:enter(c1, "renting")
@@ -321,7 +321,7 @@ return {
 		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		local c1 = cs.cells[1]
 		ag1:enter(c1)
 		local error_func = function()
@@ -348,7 +348,7 @@ return {
 		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		local c1 = cs.cells[1]
 		ag1:enter(c1)
 		local error_func = function()
@@ -361,7 +361,7 @@ return {
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
 
-			myEnv:createPlacement{strategy = "void", name = "placement"}
+			myEnv:createPlacement{strategy = "void"}
 			c1 = cs.cells[1]
 			ag1:enter(c1)
 			ag1:walk(123)
@@ -373,7 +373,7 @@ return {
 		local cs = CellularSpace{xdim = 3}
 		local myEnv = Environment{cs, ag1}
 
-		myEnv:createPlacement{strategy = "void", name = "placement"}
+		myEnv:createPlacement{strategy = "void"}
 		c1 = cs.cells[1]
 		ag1:enter(c1,"placement")
 		local error_func = function()

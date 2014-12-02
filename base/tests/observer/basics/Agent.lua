@@ -42,6 +42,9 @@ return{
 		    end}
 		}
 
+		TextScreen{subject = world}
+		LogFile{subject = world}
+		VisualTable{subject = world}
 		t:execute(30)
 	end
 }

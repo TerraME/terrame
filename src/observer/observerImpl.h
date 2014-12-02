@@ -46,7 +46,6 @@ using namespace TerraMEObserver;
 
 class SubjectImpl;
 
-
 /**
  * \brief
  *  Implementation for a Observer object.
@@ -134,7 +133,6 @@ public:
      */
     int close();
 
-
 // protected:
     /* *
     * \copydoc TerraMEObserver::Observer::setId
@@ -158,10 +156,7 @@ private:
     Observer* obsHandle_;
 };
 
-
-
 ////////////////////////////////////////////////////////////  Subject
-
 
 /**
  * \brief
@@ -245,5 +240,5 @@ private:
     int subjectID;
 };
 
-
 #endif
+

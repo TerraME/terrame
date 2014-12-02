@@ -244,7 +244,9 @@ s:add(family)
 s:add(capital_formation)
 s:add(government)
 
-exogenous_agent = Agent{name = "-=-=-=  exogenous  -=-=-"}
+exogenous_agent = Agent{name = "-=-=-=  exogenous  -=-=-", execute = function() end}
+
+s:add(exogenous_agent)
 
 default_scenario = function()
 	for i = 1, 16 do

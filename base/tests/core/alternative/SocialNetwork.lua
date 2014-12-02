@@ -43,12 +43,7 @@ return{
 		error_func = function()
 			sn:add(ag1, "not_number")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "positive number", "not_number"))
-
-		error_func = function()
-			sn:add(ag1, -1)
-		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", -1))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "not_number"))
 
 		local error_func = function()
 			sn:add(ag1)
@@ -153,12 +148,7 @@ return{
 		error_func = function()
 			sn:setWeight(ag1, "notnumber")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "positive number", "notnumber"))
-
-		error_func = function()
-			sn:setWeight(ag1, -1)
-		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", -1))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "notnumber"))
 
 		error_func = function()
 			sn:setWeight(ag2, 0.5)

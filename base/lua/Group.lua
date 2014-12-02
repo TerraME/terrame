@@ -30,11 +30,9 @@ Group_ = {
 	-- @param agent The Agent to be added.
 	-- @usage group:add(agent)
 	add = function(self, agent)
-		if type(agent) ~= "Agent" then
-			incompatibleTypeError(1, "Agent", agent)
-		else
-			table.insert(self.agents, agent)
-		end
+		mandatoryArgument(1, "Agent", agent)
+
+		table.insert(self.agents, agent)
 	end,
 	--- Clone the Group. It returns a copy  with the same parent, select, greater and Agents.
 	-- @usage group:clone()
@@ -56,17 +54,14 @@ Group_ = {
 	--     return agent.age > 18
 	-- end)
 	filter = function(self, f)
-		if type(f) == "function" then
-			self.select = f
-		elseif f ~= nil then
-			incompatibleTypeError(1, "function or nil", f)
-		end
+		optionalArgument(1, "function", f)
 
-		self.agents = {}
+		if f then self.select = f end
 
 		if self.parent == nil then
 			customError("It is not possible to filter a Group without a parent.")
 		end
+		self.agents = {}
 
 		if type(self.select) == "function" then
 			forEachAgent(self.parent, function(agent)
@@ -101,18 +96,16 @@ Group_ = {
 		self:sort()
 	end,
 	--- Sort the current Society subset. It returns whether the current Society was sorted.
-	-- @param greaterThan A function(ag1, ag2)-> boolean, an ordering function with the same 
+	-- @param f A function(ag1, ag2)-> boolean, an ordering function with the same 
 	-- signature of argument greater.
 	-- @see Utils:greaterByAttribute
 	-- @usage group:sort(function(ag1, ag2)
 	--     return ag1.money > ag2.money
 	-- end)
-	sort = function(self, greaterThan)
-		if type(greaterThan) == "function" then
-			self.greater = greaterThan
-		elseif greaterThan ~= nil then
-			incompatibleTypeError(1, "function or nil", greaterThan)
-		end
+	sort = function(self, f)
+		optionalArgument(1, "function", f)
+
+		if f then self.greater = f end
 
 		if type(self.greater) == "function" then
 			table.sort(self.agents, self.greater)
@@ -160,7 +153,7 @@ metaTableGroup_ = {
 -- @output parent The Society where the Group takes place.
 -- @output select The last function used to filter the Group.
 -- @output greater The last function used to sort the Group.
-Group = function(data)
+function Group(data)
 	verifyNamedTable(data)
 
 	checkUnnecessaryParameters(data, {"target", "build", "select", "greater"})
@@ -169,13 +162,7 @@ Group = function(data)
 		incompatibleTypeError("target", "Society, Group, or nil", data.target)
 	end
 
-	if data.build == nil then
-		data.build = true
-	elseif type(data.build) ~= "boolean" then
-		incompatibleTypeError("build", "boolean", data.build)
-	elseif data.build == true then
-		defaultValueWarning("build", "true")
-	end	
+	defaultTableValue(data, "build", true)
 
 	data.parent = data.target
 	if data.parent ~= nil then
@@ -189,13 +176,8 @@ Group = function(data)
 
 	data.target = nil
 
-	if data.select ~= nil and type(data.select) ~= "function" then
-		incompatibleTypeError("select", "function or nil", data.select)
-	end
-
-	if data.greater ~= nil and type(data.greater) ~= "function" then
-		incompatibleTypeError("greater", "function or nil", data.greater)
-	end
+	optionalTableArgument(data, "select", "function")
+	optionalTableArgument(data, "greater", "function")
 
 	data.agents = {}
 
