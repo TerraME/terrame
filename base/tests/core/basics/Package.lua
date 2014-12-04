@@ -56,10 +56,10 @@ return{
 		unitTest:assert_equal(r.url, "http://www.terrame.org")
 	end,
 	resourceNotFoundMsg = function(unitTest)
-		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for parameter 'aaa'.")
+		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for argument 'aaa'.")
 	end,
 	valueNotFoundMsg = function(unitTest)
-		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for parameter 'aaa'.")
+		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for argument 'aaa'.")
 	end,
 	tableArgumentMsg = function(unitTest)
 		unitTest:assert_equal(tableArgumentMsg(), "Argument must be a table.")
@@ -204,7 +204,7 @@ return{
 		local error_func = function()
 			valueNotFoundError("1", "neighborhood")
 		end
-		unitTest:assert_error(error_func, "Value 'neighborhood' not found for parameter '1'.")
+		unitTest:assert_error(error_func, "Value 'neighborhood' not found for argument '1'.")
 	end,
 	verify = function(unitTest)
 		local error_func = function(unitTest)
@@ -219,12 +219,12 @@ return{
 			ccc = true
 		}
 		local str = switchInvalidArgumentMsg("ddd", "attr", options)
-		unitTest:assert_equal(str, "'ddd' is an invalid value for parameter 'attr'. It must be a string from the set ['aaa', 'bbb', 'ccc'].")
+		unitTest:assert_equal(str, "'ddd' is an invalid value for argument 'attr'. It must be a string from the set ['aaa', 'bbb', 'ccc'].")
 
 	end,
 	switchInvalidArgumentSuggestionMsg = function(unitTest)
 		local str = switchInvalidArgumentSuggestionMsg("aab", "attr", "aaa")
-		unitTest:assert_equal(str, "'aab' is an invalid value for parameter 'attr'. Do you mean 'aaa'?")
+		unitTest:assert_equal(str, "'aab' is an invalid value for argument 'attr'. Do you mean 'aaa'?")
 	end
 }
 

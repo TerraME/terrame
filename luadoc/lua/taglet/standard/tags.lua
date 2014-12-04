@@ -106,43 +106,43 @@ end
 -- end
 
 -------------------------------------------------------------------------------
--- Processes a parameter documentation.
--- @param tag String with the name of the tag (it must be "param" always).
--- @param block Table with previous information about the block.
--- @param text String with the current line beeing processed.
+-- Processes a argument documentation.
+-- @arg tag String with the name of the tag (it must be "arg" always).
+-- @arg block Table with previous information about the block.
+-- @arg text String with the current line beeing processed.
 
-local function param (tag, block, text, doc_report)
+local function arg (tag, block, text, doc_report)
 	block[tag] = block[tag] or {}
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	if not name then
-		printError("parameter 'name' not defined [["..text.."]]: skipping")
+		printError("argument 'name' not defined [["..text.."]]: skipping")
 		return
 	end
  
-	-- match table(dot)parameter
-	local param_tab, field = name:match("(.-)%.(.*)")
-	if param_tab then
+	-- match table(dot)argument
+	local arg_tab, field = name:match("(.-)%.(.*)")
+	if arg_tab then
 		name = field
-		-- match documented parameter with declared parameter
+		-- match documented argument with declared argument
 		local i
 		for idx, v in ipairs(block[tag]) do
-			if v == param_tab then
+			if v == arg_tab then
 				i = idx
 				break
 			end
 		end
 
-		-- excludes table from the list of parameters
+		-- excludes table from the list of arguments
 		if i then
 			table.remove(block[tag],i)
-			block[tag][param_tab] = nil
+			block[tag][arg_tab] = nil
 		end
-		-- set to print name of the parameters
+		-- set to print name of the arguments
 		block[tag].named = true
 	end
   
-	-- match documented parameter with declared parameter
+	-- match documented argument with declared argument
 	local i 
 	for idx, v in ipairs(block[tag]) do
 		if v == name then
@@ -151,9 +151,9 @@ local function param (tag, block, text, doc_report)
 		end
 	end
 	if i == nil then
-		if not param_tab then
-			printError(string.format("Documenting undefined parameter '%s' in function '%s'", name, block.name))
-			doc_report.undefined_param = doc_report.undefined_param + 1
+		if not arg_tab then
+			printError(string.format("Documenting undefined argument '%s' in function '%s'", name, block.name))
+			doc_report.undefined_arg = doc_report.undefined_arg + 1
 		end
 		table.insert(block[tag], name)
 	end
@@ -268,7 +268,7 @@ handlers["copyright"] = copyright
 handlers["description"] = description
 handlers["field"] = field
 -- handlers["name"] = name
-handlers["param"] = param
+handlers["arg"] = arg
 handlers["release"] = release
 handlers["return"] = ret
 handlers["see"] = see

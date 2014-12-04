@@ -107,11 +107,11 @@ end
 
 --- Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
 -- or Society. It draws each element into the screen, according to some attribute
--- @param data.subject A CellularSpace, Trajectory, Agent, or Society.
--- @param data.values A table with the possible values for the selected attributes.
--- @param data.grouping A string with the strategy to slice and color the data. See below.
--- @param data.labels A table with the labels for the attributes.
--- @param data.select The attribute to be used.
+-- @arg data.subject A CellularSpace, Trajectory, Agent, or Society.
+-- @arg data.values A table with the possible values for the selected attributes.
+-- @arg data.grouping A string with the strategy to slice and color the data. See below.
+-- @arg data.labels A table with the labels for the attributes.
+-- @arg data.select The attribute to be used.
 -- @usage Map{subject = cs}
 Map = function(data)
 	mandatoryTableArgument(data, "subject", "CellularSpace")
@@ -129,7 +129,7 @@ Map = function(data)
 		elseif data.colors == nil and data.select == nil then
 			data.grouping = "background"
 		else
-			customError("It was not possible to infer parameter grouping.")
+			customError("It was not possible to infer argument grouping.")
 		end
 	end
 

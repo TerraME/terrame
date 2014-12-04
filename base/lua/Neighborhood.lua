@@ -28,8 +28,8 @@ Neighborhood_ = {
 	type_ = "Neighborhood",
 	--- Add a new Cell to the Neighborhood. 
 	-- It returns a boolean value indicating whether the Cell was correctly added.
-	-- @param cell A Cell to be added.
-	-- @param weight A number representing the weight of the connection. Default is zero.
+	-- @arg cell A Cell to be added.
+	-- @arg weight A number representing the weight of the connection. Default is zero.
 	-- @usage n:add(cell, 0.02)
 	add = function(self, cell, weight)
 		mandatoryArgument(1, "Cell", cell)
@@ -45,8 +45,8 @@ Neighborhood_ = {
 		return self.cObj_:addNeighbor(cell.x, cell.y, cell.cObj_, weight)
 	end,
 	--- Add a new Cell to the Neighborhood.
-	-- @param cell A Cell.
-	-- @param weight A number representing the weight of the connection. Default is zero.
+	-- @arg cell A Cell.
+	-- @arg weight A number representing the weight of the connection. Default is zero.
 	-- @usage n:addNeighbor(cell, 0.7)
 	-- @deprecated Neighborhood:add
 	addNeighbor = function(self, cell, weight)
@@ -54,10 +54,10 @@ Neighborhood_ = {
 		self:add(cell, weight)
 	end,
 	--- Add a new Cell to the Neighborhood.
-	-- @param xIndex A number.
-	-- @param yIndex A number.
-	-- @param cellularSpace A CellularSpace.
-	-- @param weight A number representing the weight of the connection. Default is zero.
+	-- @arg xIndex A number.
+	-- @arg yIndex A number.
+	-- @arg cellularSpace A CellularSpace.
+	-- @arg weight A number representing the weight of the connection. Default is zero.
 	-- @usage n:addCell(2, 2, cs, 0.5)
 	-- @deprecated Neighborhood:add
 	addCell = function(self, xIndex, yIndex, cellularSpace, weight)
@@ -72,15 +72,15 @@ Neighborhood_ = {
 		self.cObj_:clear()
 	end,
 	--- Remove a Cell from the Neighborhood.
-	-- @param xIndex A number.
-	-- @param yIndex A number.
+	-- @arg xIndex A number.
+	-- @arg yIndex A number.
 	-- @usage n:eraseCell(2, 2)
 	-- @deprecated Neighborhood:remove
 	eraseCell = function(self, xIndex, yIndex)
 		deprecatedFunctionWarning("eraseCell", "remove")
 	end,
 	--- Remove a Cell from the Neighborhood.
-	-- @param cell A Cell.
+	-- @arg cell A Cell.
 	-- @usage n:eraseNeighbor("2")
 	-- @deprecated Neighborhood:remove
 	eraseNeighbor = function(self, cell)
@@ -88,7 +88,7 @@ Neighborhood_ = {
 		self:remove(cell)
 	end,
 	--- Remove a Cell from the Neighborhood.
-	-- @param cell A cell which will be removed.
+	-- @arg cell A cell which will be removed.
 	-- @usage n:remove(cell)
 	remove = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
@@ -99,16 +99,16 @@ Neighborhood_ = {
 	end,
 	--- Remove a Cell from the Neighborhood.
 	-- Neighborhood:add instead.
-	-- @param index A number.
-	-- @param cell A Cell.
+	-- @arg index A number.
+	-- @arg cell A Cell.
 	-- @usage n:setCellNeighbor(2, "2")
 	-- @deprecated Neighborhood:remove
 	setCellNeighbor = function(self, index, cell)
 		deprecatedFunctionWarning("setCellNeighbor", "remove and add")
 	end,
 	--- Retrieve the weight of the connection to a given neighbour Cell.
-	-- @param xIndex A number.
-	-- @param yIndex A number.
+	-- @arg xIndex A number.
+	-- @arg yIndex A number.
 	-- @usage n:getCellWeight(2, 2)
 	-- @deprecated Neighborhood:getWeight
 	getCellWeight = function(self, xIndex, yIndex)
@@ -117,7 +117,7 @@ Neighborhood_ = {
 	end,
 	--- Retrieve the weight of the connection to a given neighbour Cell. It returns nil when
 	-- the Cell is not a neighbor.
-	-- @param cell A Cell.
+	-- @arg cell A Cell.
 	-- @usage w = n:getWeight(cell)
 	getWeight = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
@@ -128,7 +128,7 @@ Neighborhood_ = {
 		return result
 	end,
 	--- Retrieve the weight of the connection to a given neighbour Cell.
-	-- @param cell A Cell.
+	-- @arg cell A Cell.
 	-- @usage n:getNeighWeight(cell)
 	-- @deprecated Neighborhood:getWeight
 	getNeighWeight = function(self, cell)
@@ -143,7 +143,7 @@ Neighborhood_ = {
 		return self.cObj_:isEmpty()
 	end,
 	--- Return whether a given Cell belongs to the Neighborhood.
-	-- @param cell A Cell.
+	-- @arg cell A Cell.
 	-- @usage if n:isNeighbor() then
 	--     -- ...
 	-- end
@@ -171,8 +171,8 @@ Neighborhood_ = {
 		end
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
-	-- @param cell A Cell.
-	-- @param weight The new weight.
+	-- @arg cell A Cell.
+	-- @arg weight The new weight.
 	-- @usage n:setWeight(cell, 0.01)
 	setWeight = function(self, cell, weight)
 		mandatoryArgument(1, "Cell", cell)
@@ -183,9 +183,9 @@ Neighborhood_ = {
 		verify(result, "Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.")
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
-	-- @param xIndex A number.
-	-- @param yIndex A number.
-	-- @param weight A number representing the weight of the connection. Default is zero.
+	-- @arg xIndex A number.
+	-- @arg yIndex A number.
+	-- @arg weight A number representing the weight of the connection. Default is zero.
 	-- @usage n:setCellWeight(2, 2, 0.5)
 	-- @deprecated Neighborhood:setWeight
 	setCellWeight = function(self, xIndex, yIndex, weight)
@@ -193,8 +193,8 @@ Neighborhood_ = {
 		self:setWeight(xIndex, yIndex, weight)
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
-	-- @param cell A Cell.
-	-- @param weight A number representing the weight of the connection. Default is zero.
+	-- @arg cell A Cell.
+	-- @arg weight A number representing the weight of the connection. Default is zero.
 	-- @usage n:setNeighWeight(cell, 0.3)
 	-- @deprecated Neighborhood:setWeight
 	setNeighWeight = function(self, cell, weight)

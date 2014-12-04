@@ -27,7 +27,7 @@
 Random_ = {
 	type_ = "Random",
 	--- Reset the seed to generate random numbers.
-	-- @param seed A positive integer number.
+	-- @arg seed A positive integer number.
 	-- @usage value = random:reSeed(1)
 	reSeed = function(self, seed)
 		if seed == nil then seed = os.time() end
@@ -38,7 +38,7 @@ Random_ = {
 		self.cObj_:reseed(seed)
 	end,
 	--- Return a random element of a table.
-	-- @param mtable A table with indexes as numbers.
+	-- @arg mtable A table with indexes as numbers.
 	-- @usage random:sample{2, 3, 4, 6}
 	sample = function(self, mtable)
 		mandatoryArgument(1, "table", mtable)
@@ -47,10 +47,10 @@ Random_ = {
 		return mtable[int]
 	end,
 	--- Generate an integer random number.
-	-- @param v1 An integer number. If abscent, integer() will generate numbers between zero and
-	-- one. If it is the only parameter used, it will generate numbers from zero to this value.
-	-- @param v2 An integer number. When used, integer() will generate numbers between the first
-	-- parameter and the second, inclusive.
+	-- @arg v1 An integer number. If abscent, integer() will generate numbers between zero and
+	-- one. If it is the only argument used, it will generate numbers from zero to this value.
+	-- @arg v2 An integer number. When used, integer() will generate numbers between the first
+	-- argument and the second, inclusive.
 	-- @usage value = random:integer() -- 0 or 1
 	--
 	-- value = random:integer(10) -- from 0 to 10
@@ -75,9 +75,9 @@ Random_ = {
 		end
 	end,
 	--- Generate a real number randomly.
-	-- @param v1 A number. If abscent, number() will generate numbers between zero and one. If
-	-- it is the only parameter used, it will generate numbers from zero to this value.
-	-- @param v2 A number. When used, number() will generate numbers between the first parameter
+	-- @arg v1 A number. If abscent, number() will generate numbers between zero and one. If
+	-- it is the only argument used, it will generate numbers from zero to this value.
+	-- @arg v2 A number. When used, number() will generate numbers between the first argument
 	-- and the second.
 	-- @usage value = random:number() -- between 0 and 1
 	--
@@ -122,7 +122,7 @@ metaTableRandom_ = {__index = Random_, __tostring = tostringTerraME}
 -- random number generator MT19937 and to the SIMD-oriented Fast Mersenne Twister random number
 -- generator, SFMT19937. Random is a singleton, which means that every copy of Random created
 -- by the user has the same seed.
--- @param data.seed A number to generate the pseudo-random numbers.
+-- @arg data.seed A number to generate the pseudo-random numbers.
 -- Default is the current time of the system.
 -- @usage random = Random()
 --

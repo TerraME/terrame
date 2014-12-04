@@ -25,14 +25,14 @@
 
 --- Create a line chart showing the variation of one or more attributes (y axis) of an
 -- object. X axis values come from the single argument of notify(). 
--- @param data.subject An Agent, Cell, CellularSpace, Society.
--- @param data.select A vector of strings with the name of the attributes to be observed. If it is only a
+-- @arg data.subject An Agent, Cell, CellularSpace, Society.
+-- @arg data.select A vector of strings with the name of the attributes to be observed. If it is only a
 -- single value then it can also be described as a string. 
--- @param data.xLabel Name of the x-axis. It does not show any label as default.
--- @param data.yLabel Name of the y-axis. It does not show any label as default.
--- @param data.label Vector of the same size of select that indicates the labels for each
+-- @arg data.xLabel Name of the x-axis. It does not show any label as default.
+-- @arg data.yLabel Name of the y-axis. It does not show any label as default.
+-- @arg data.label Vector of the same size of select that indicates the labels for each
 -- line of a chart. Default is the name of the attributes.
--- @param data.xAxis Name of the attribute to be used as x axis (instead of time). In this case,
+-- @arg data.xAxis Name of the attribute to be used as x axis (instead of time). In this case,
 -- notify() will not need the argument for plotting Charts.
 -- @usage Chart{subject = cs}
 Chart = function(data)
@@ -168,7 +168,7 @@ Chart = function(data)
 	if type(subject) == "Automaton" then
 		local locatedInCell = data.location
 		if type(locatedInCell) ~= "Cell" then
-			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".")
+			customError("Observing an Automaton requires argument 'location' to be a Cell, got "..type(locatedInCell)..".")
 		else
 			table.insert(observerParams, locatedInCell)
 		end

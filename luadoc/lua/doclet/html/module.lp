@@ -53,7 +53,7 @@
 <table class="function_list">
 <%for _, func_name in ipairs(module_doc.functions) do
   local func_data = module_doc.functions[func_name]
-  local allParams = func_data["param"]
+  local allParams = func_data["arg"]
   local selectedParams = {}
   for i=1,#allParams do
     local pos = string.find(allParams[i],"%.")

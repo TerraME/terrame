@@ -110,7 +110,7 @@ local OPTIONS = {
 -- end 
 
 -------------------------------------------------------------------------------
--- Main function. Process command-line parameters and call luadoc processor.
+-- Main function. Process command-line arguments and call luadoc processor.
 -- RAIAN: Renamed to luadocMain instead of main
 function luadocMain(package_path, lua_files, example_files, package, doc_report)
 	printNote("Building documentation for package '"..package.."'")

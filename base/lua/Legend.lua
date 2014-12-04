@@ -365,37 +365,37 @@ local metaTableLegend_ = {__index = Legend_, __tostring = tostringTerraME}
 --- Type that defines how to color an attribute to be observed. It is used only with a map 
 -- Observer. The configuration of a legend can be changed visually by double clicking the
 -- graphical interface along the simulation.
--- @param data A table
--- @param data.grouping A string with the strategy to slice and color the data. See below.
--- @param data.type The type of the attribute to be observed. It has to be one of "bool",
+-- @arg data A table
+-- @arg data.grouping A string with the strategy to slice and color the data. See below.
+-- @arg data.type The type of the attribute to be observed. It has to be one of "bool",
 -- "number", "string", and "datetime" (an ordered string).
--- @param data.slices The number of colors to be used for plotting. It must be an integer
+-- @arg data.slices The number of colors to be used for plotting. It must be an integer
 -- number greater than one.
--- @param data.precision The number of decimal digits for slicing. It must be an integer
+-- @arg data.precision The number of decimal digits for slicing. It must be an integer
 -- number greater than zero. It indicates that differences less than 10^(-digits) will
 -- not be considered. It means that, for instance, if a slice is in the interval [1.0, 2.0]
 -- and precision is 2 (0.01), a value 0.99 might belong to such slice.
--- @param data.stdDeviation When the grouping mode is stddeviation, it has to be one of "full",
+-- @arg data.stdDeviation When the grouping mode is stddeviation, it has to be one of "full",
 -- "half" "quarter", or "none".
--- @param data.maximum The maximum value of the attribute (used only for numbers).
--- @param data.minimum The minimum value of the attribute (used only for numbers).
--- @param data.width The width of the line to be drawn. Used for drawing Neighborhoods (default is 10).
--- @param data.symbol A symbol to draw Agents. It can be one of: "none", "ellipse", "rect",
+-- @arg data.maximum The maximum value of the attribute (used only for numbers).
+-- @arg data.minimum The minimum value of the attribute (used only for numbers).
+-- @arg data.width The width of the line to be drawn. Used for drawing Neighborhoods (default is 10).
+-- @arg data.symbol A symbol to draw Agents. It can be one of: "none", "ellipse", "rect",
 -- "diamond", "triangle", "dtriangle", "utriangle", "ltriangle", "rtriangle", "cross", "xcross",
 -- "hline", "vline", "asterisk", "star", "hexagon". Default is an arrow.
--- @param data.font A string with the font used to draw each Agent. Default is "Symbol".
--- @param data.fontSize An integer positive number indicating the font size. Default is 12.
--- @param data.colorBar A table where each position is a table with a 'color', a 'value', and a
+-- @arg data.font A string with the font used to draw each Agent. Default is "Symbol".
+-- @arg data.fontSize An integer positive number indicating the font size. Default is 12.
+-- @arg data.colorBar A table where each position is a table with a 'color', a 'value', and a
 -- 'label' (optional). Colors can be described as string ("red", "green", "blue", "white", "black",
 -- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
 -- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
 -- representing RGB compositions. Labels are strings that will be shown in the graphical
 -- interface describing the colors.
--- @param data.stdColorBar A table just as colorBar. It is needed only when standard deviation is
+-- @arg data.stdColorBar A table just as colorBar. It is needed only when standard deviation is
 -- the chosen strategy.
 --
 -- @tabular grouping
--- Grouping & Description & Compulsory parameters & Optional parameters\
+-- Grouping & Description & Compulsory arguments & Optional arguments\
 -- "equalsteps" &The values are divided into a set of slices with the same range. Each slice is
 -- associated to a given color. Equalsteps require only two colors in the colorBar, one for the
 -- minimum and the other for the maximum value. The other colors are computed from a linear

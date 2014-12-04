@@ -14,8 +14,8 @@ local tags = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s
 
 -------------------------------------------------------------------------------
 -- Creates an iterator for an array base on a class type.
--- @param t array to iterate over
--- @param class name of the class to iterate over
+-- @arg t array to iterate over
+-- @arg class name of the class to iterate over
 
 function class_iterator (t, class)
 	return function ()
@@ -42,7 +42,7 @@ local function_patterns = {
 
 -------------------------------------------------------------------------------
 -- Checks if the line contains a function definition
--- @param line string with line text
+-- @arg line string with line text
 -- @return function information or nil if no function definition found
 
 local function check_function (line)
@@ -50,15 +50,15 @@ local function check_function (line)
 
 	local info
 	for _, pattern in ipairs(function_patterns) do
-		local r, _, l, id, param = string.find(line, pattern)
+		local r, _, l, id, arg = string.find(line, pattern)
 		if r ~= nil then
 			-- remove self
-			--~ table.foreachi(util.split("%s*,%s*", param), print)
-			param = param:gsub("(self%s*,?%s*)", "")
+			--~ table.foreachi(util.split("%s*,%s*", arg), print)
+			arg = arg:gsub("(self%s*,?%s*)", "")
 			info = {
 				name = id,
 				private = (l == "local"),
-				param = util.split("%s*,%s*", param),
+				arg = util.split("%s*,%s*", arg),
 			}
 
 			local replaceNameFunctions = {
@@ -90,7 +90,7 @@ local function check_function (line)
 	-- TODO: remove these assert's?
 	if info ~= nil then
 		assert(info.name, "function name undefined")
-		assert(info.param, string.format("undefined parameter list for function '%s'", info.name))
+		assert(info.arg, string.format("undefined argument list for function '%s'", info.name))
 	end
 
 	return info
@@ -98,8 +98,8 @@ end
 
 -------------------------------------------------------------------------------
 -- Checks if the line contains a module definition.
--- @param line string with line text
--- @param currentmodule module already found, if any
+-- @arg line string with line text
+-- @arg currentmodule module already found, if any
 -- @return the name of the defined module, or nil if there is no module 
 -- definition
 
@@ -128,7 +128,7 @@ end
 -- doc comment should be a summary sentence, containing a concise but complete 
 -- description of the item. It is important to write crisp and informative 
 -- initial sentences that can stand on their own
--- @param description text with item description
+-- @arg description text with item description
 -- @return summary string or nil if description is nil
 
 local function parse_summary (description)
@@ -148,9 +148,9 @@ local function parse_summary (description)
 end
 
 -------------------------------------------------------------------------------
--- @param f file handle
--- @param line current line being parsed
--- @param modulename module already found, if any
+-- @arg f file handle
+-- @arg line current line being parsed
+-- @arg modulename module already found, if any
 -- @return current line
 -- @return code block
 -- @return modulename if found
@@ -175,8 +175,8 @@ end
 
 -------------------------------------------------------------------------------
 -- Parses the information inside a block comment
--- @param block block with comment field
--- @return block parameter
+-- @arg block block with comment field
+-- @return block argument
 
 local function parse_comment (block, first_line, doc_report)
 
@@ -204,14 +204,14 @@ local function parse_comment (block, first_line, doc_report)
 		if func_info then
 			block.class = "function"
 			block.name = func_info.name
-			block.param = func_info.param
+			block.arg = func_info.arg
 			block.private = func_info.private
 		elseif module_name then
 			block.class = "module"
 			block.name = module_name
-			block.param = {}
+			block.arg = {}
 		else
-			block.param = {}
+			block.arg = {}
 		end
 	else
 		-- TODO: comment without any code. Does this means we are dealing
@@ -254,8 +254,8 @@ local function parse_comment (block, first_line, doc_report)
 	
 	-- sort 
 	if block.see	then table.sort(block.see)	end	
-	if block.param	and block.param.named then
-		table.sort(block.param, function(a, b) 
+	if block.arg	and block.arg.named then
+		table.sort(block.arg, function(a, b) 
 			if a:match("^%W") then return false end
 			if b:match("^%W") then return true end
 			return a < b
@@ -269,9 +269,9 @@ end
 -------------------------------------------------------------------------------
 -- Parses a block of comment, started with ---. Read until the next block of
 -- comment.
--- @param f file handle
--- @param line being parsed
--- @param modulename module already found, if any
+-- @arg f file handle
+-- @arg line being parsed
+-- @arg modulename module already found, if any
 -- @return line
 -- @return block parsed
 -- @return modulename if found
@@ -306,8 +306,8 @@ end
 
 -------------------------------------------------------------------------------
 -- Parses a file documented following luadoc format.
--- @param filepath full path of file to parse
--- @param doc table with documentation
+-- @arg filepath full path of file to parse
+-- @arg doc table with documentation
 -- @return table with documentation
 
 function parse_file (luapath, fileName, doc, doc_report, short_lua_path)
@@ -462,8 +462,8 @@ end
 -------------------------------------------------------------------------------
 -- Checks if the file is terminated by ".lua" or ".luadoc" and calls the 
 -- function that does the actual parsing
--- @param filepath full path of the file to parse
--- @param doc table with documentation
+-- @arg filepath full path of the file to parse
+-- @arg doc table with documentation
 -- @return table with documentation
 -- @see parse_file
 function file (lua_path, fileName, doc, short_lua_path, doc_report)
@@ -506,8 +506,8 @@ end
 
 -------------------------------------------------------------------------------
 -- Recursively iterates through a directory, parsing each file
--- @param path directory to search
--- @param doc table with documentation
+-- @arg path directory to search
+-- @arg doc table with documentation
 -- @return table with documentation
 function directory (lua_path, file_, doc, short_lua_path)
 	for f in lfsdir(lua_path) do
@@ -642,7 +642,7 @@ local function check_function_usage(files, doc_report)
 	end
 end
 
--- Check counting of columns on table of parameters
+-- Check counting of columns on table of arguments
 local function check_tab_cols(files)
 	--for _, file_name in ipairs(files) do
 		--local file = files[file_name]
@@ -663,8 +663,8 @@ local function check_tab_cols(files)
 	--end
 end
 
-local function check_undoc_params(files, doc_report)
-	printNote("Checking undocumented parameters")
+local function check_undoc_args(files, doc_report)
+	printNote("Checking undocumented arguments")
 	for i = 1, #files do
 		local file_name = files[i]
 		if files[file_name].type ~= "example" then
@@ -672,14 +672,14 @@ local function check_undoc_params(files, doc_report)
 			local functions = files[file_name].functions
 			for j = 1, #functions do
 				local function_name = functions[j]
-				local params = functions[function_name].param
-				if type(params) == "table" and not params.named then
-					doc_report.parameters = doc_report.parameters + #params
-					for k = 1, #params do
-						if not params[params[k]] then
-							local warning = "Function '%s' has undocumented parameter '%s'"
-							printError(warning:format(function_name, params[k]))
-							doc_report.undoc_param = doc_report.undoc_param + 1
+				local args = functions[function_name].arg
+				if type(args) == "table" and not args.named then
+					doc_report.arguments = doc_report.arguments + #args
+					for k = 1, #args do
+						if not args[args[k]] then
+							local warning = "Function '%s' has undocumented argument '%s'"
+							printError(warning:format(function_name, args[k]))
+							doc_report.undoc_arg = doc_report.undoc_arg + 1
 						end
 					end
 				end
@@ -850,7 +850,7 @@ function start (files, examples, package_path, short_lua_path, doc_report)
 	-- Warnings
 	check_usage(doc.files, doc_report)
 	check_function_usage(doc.files, doc_report)
-	check_undoc_params(doc.files, doc_report)
+	check_undoc_args(doc.files, doc_report)
 	check_tab_cols(doc.files)
 	check_constructor_file(doc)
 	return doc

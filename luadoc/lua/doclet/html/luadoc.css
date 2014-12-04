@@ -85,7 +85,7 @@ hr {
 }
 
 ul { list-style-type: disc; }
-ul span.param, span.output { list-style-type: none; }
+ul span.arg, span.output { list-style-type: none; }
 
 table.index { border: 1px #00007f; }
 table.index td { text-align: left; vertical-align: top; }
@@ -244,7 +244,7 @@ div.header, div.footer { margin-left: 0em; }
 	}
 }
 
-table.param_tab
+table.arg_tab
 {
 	margin-top: 1em;
 	margin-bottom: 1em;
@@ -366,12 +366,12 @@ pre.example span.function{
   font-weight:bold;
 }
 
-.description, .param, .output{
+.description, .arg, .output{
   line-height:150%;
   text-align:justify;
 }
 
-.param, .output{
+.arg, .output{
 	text-indent:-15px;
 }
 

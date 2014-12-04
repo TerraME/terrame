@@ -9,7 +9,7 @@ end
 
 -----------------------------------------------------------------
 -- Print debug information about document
--- @param doc Table with the structured documentation.
+-- @arg doc Table with the structured documentation.
 
 function start (doc)
 	print("Files:")
@@ -38,7 +38,7 @@ function start (doc)
 	end
 	printline()
 	print("Params")
-	for i, v in pairs(doc.files[doc.files[1]].doc[1].param) do
+	for i, v in pairs(doc.files[doc.files[1]].doc[1].arg) do
 		print(i, v)
 	end
 end

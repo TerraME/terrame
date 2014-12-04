@@ -14,7 +14,7 @@ local print, string, ipairs, mkdir, printNote, printError = print, string, ipair
 
 -------------------------------------------------------------------------------
 -- Removes spaces from the begining and end of a given string
--- @param s string to be trimmed
+-- @arg s string to be trimmed
 -- @return trimmed string
 
 function trim (s)
@@ -24,7 +24,7 @@ end
 -------------------------------------------------------------------------------
 -- Removes spaces from the begining and end of a given string, considering the
 -- string is inside a lua comment.
--- @param s string to be trimmed
+-- @arg s string to be trimmed
 -- @return trimmed string
 -- @see trim
 -- @see string.gsub
@@ -36,7 +36,7 @@ end
 
 -------------------------------------------------------------------------------
 -- Checks if a given line is empty
--- @param line string with a line
+-- @arg line string with a line
 -- @return true if line is empty, false otherwise
 
 function line_empty (line)
@@ -45,8 +45,8 @@ end
 
 -------------------------------------------------------------------------------
 -- Appends two string, but if the first one is nil, use to second one
--- @param str1 first string, can be nil
--- @param str2 second string
+-- @arg str1 first string, can be nil
+-- @arg str2 second string
 -- @return str1 .. " " .. str2, or str2 if str1 is nil
 
 function concat (str1, str2)
@@ -60,7 +60,7 @@ end
 -------------------------------------------------------------------------------
 -- Split text into a list consisting of the strings in text,
 -- separated by strings matching delim (which may be a pattern). 
--- @param delim if delim is "" then action is the same as %s+ except that 
+-- @arg delim if delim is "" then action is the same as %s+ except that 
 -- field 1 may be preceeded by leading whitespace
 -- @usage split(",%s*", "Anna, Bob, Charlie,Dolores")
 -- @usage split(""," x y") gives {"x","y"}
@@ -103,7 +103,7 @@ end
 
 -------------------------------------------------------------------------------
 -- Comments a paragraph.
--- @param text text to comment with "--", may contain several lines
+-- @arg text text to comment with "--", may contain several lines
 -- @return commented text
 
 function comment (text)
@@ -113,10 +113,10 @@ end
 
 -------------------------------------------------------------------------------
 -- Wrap a string into a paragraph.
--- @param s string to wrap
--- @param w width to wrap to [80]
--- @param i1 indent of first line [0]
--- @param i2 indent of subsequent lines [0]
+-- @arg s string to wrap
+-- @arg w width to wrap to [80]
+-- @arg i1 indent of first line [0]
+-- @arg i2 indent of subsequent lines [0]
 -- @return wrapped paragraph
 
 function wrap(s, w, i1, i2)
@@ -142,8 +142,8 @@ end
 
 -------------------------------------------------------------------------------
 -- Opens a file, creating the directories if necessary
--- @param filename full path of the file to open (or create)
--- @param mode mode of opening
+-- @arg filename full path of the file to open (or create)
+-- @arg mode mode of opening
 -- @return file handle
 
 function openFile (filename, mode)
@@ -163,7 +163,7 @@ end
 
 ----------------------------------------------------------------------------------
 -- Creates a Logger with LuaLogging, if present. Otherwise, creates a mock logger.
--- @param options a table with options for the logging mechanism
+-- @arg options a table with options for the logging mechanism
 -- @return logger object that will implement log methods
 
 function loadlogengine(options)
@@ -202,57 +202,57 @@ function loadlogengine(options)
 	return logger
 end
 
-local check_parameters
--- Sort a tab descriptor and check for declared parameters
+local check_arguments
+-- Sort a tab descriptor and check for declared arguments
 function parse_tab(tab, func, filename, doc_report)
-	local parameters = {}
+	local arguments = {}
 	local header = tab[1]
 	
 	local is_strategy_table
 	for k, title in ipairs(header) do
 		local title = title:lower()
-		if title:match("parameters")  then
+		if title:match("arguments")  then
 			is_strategy_table = true
 			local line = 2
 			while (line <= #tab) do
-				local param_list = tab[line][k]
-				local param_tab = split(",%s*", param_list)
-				table.sort(param_tab)
-				param_list = table.concat(param_tab, ", ")
-				tab[line][k] = param_list
+				local arg_list = tab[line][k]
+				local arg_tab = split(",%s*", arg_list)
+				table.sort(arg_tab)
+				arg_list = table.concat(arg_tab, ", ")
+				tab[line][k] = arg_list
 				line = line + 1
-				for _, v in ipairs(param_tab) do
+				for _, v in ipairs(arg_tab) do
 					v = v:match("%S+")
-					if not parameters[v] then
-						parameters[v] = v
-						table.insert(parameters, v)
+					if not arguments[v] then
+						arguments[v] = v
+						table.insert(arguments, v)
 					end
 				end
 			end
 		end
 	end
 	if is_strategy_table then
-		check_parameters(parameters, func, filename, doc_report)
+		check_arguments(arguments, func, filename, doc_report)
 	end	
 	-- ordenar e adicionar a lista
 end
 
-function check_parameters(parsed_params, func, filename, doc_report)
+function check_arguments(parsed_args, func, filename, doc_report)
 	local unknown = {}
 	local unused = {}
 	
-	for _, param in ipairs(parsed_params) do
-		--print("\t", param)
-		if not func.param[param] and not unknown[param] then
-			unknown[param] = param
-			table.insert(unknown, param)
+	for _, arg in ipairs(parsed_args) do
+		--print("\t", arg)
+		if not func.arg[arg] and not unknown[arg] then
+			unknown[arg] = arg
+			table.insert(unknown, arg)
 		end
 	end
-	for _, param in ipairs(func.param) do
-		--print("\t", param)
-		if not parsed_params[param] and not func.tabular[param] and not unused[param] then
-			unused[param] = param
-			table.insert(unused, param)
+	for _, arg in ipairs(func.arg) do
+		--print("\t", arg)
+		if not parsed_args[arg] and not func.tabular[arg] and not unused[arg] then
+			unused[arg] = arg
+			table.insert(unused, arg)
 		end
 	end
 	for _, arg in ipairs(unknown) do
@@ -260,9 +260,9 @@ function check_parameters(parsed_params, func, filename, doc_report)
 		printError(warning:format(arg, func.name))
 		doc_report.unknown_arg = doc_report.unknown_arg + 1
 	end
-	for _, param in ipairs(unused) do
-		local warning = "%s: Parameter '%s' in '%s' is not used in the HTML table"
-		printError(warning:format(filename, param, func.name))
-		doc_report.unused_param = doc_report.unused_param + 1
+	for _, arg in ipairs(unused) do
+		local warning = "Argument '%s' in '%s' is not used in the HTML table"
+		printError(warning:format(arg, func.name))
+		doc_report.unused_arg = doc_report.unused_arg + 1
 	end
 end

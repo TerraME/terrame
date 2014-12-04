@@ -27,7 +27,7 @@ Group_ = {
 	type_ = "Group",
 	--- Add a new Agent to the Group. It returns a boolean value indicating whether the Agent was 
 	-- sucessfully added.
-	-- @param agent The Agent to be added.
+	-- @arg agent The Agent to be added.
 	-- @usage group:add(agent)
 	add = function(self, agent)
 		mandatoryArgument(1, "Agent", agent)
@@ -49,7 +49,7 @@ Group_ = {
 		return cloneG
 	end,
 	--- Apply a filter over the original Society.
-	-- @param f A function(agent)-> boolean, such as the argument select.
+	-- @arg f A function(agent)-> boolean, such as the argument select.
 	-- @usage group:filter(function(agent)
 	--     return agent.age > 18
 	-- end)
@@ -96,7 +96,7 @@ Group_ = {
 		self:sort()
 	end,
 	--- Sort the current Society subset. It returns whether the current Society was sorted.
-	-- @param f A function(ag1, ag2)-> boolean, an ordering function with the same 
+	-- @arg f A function(ag1, ag2)-> boolean, an ordering function with the same 
 	-- signature of argument greater.
 	-- @see Utils:greaterByAttribute
 	-- @usage group:sort(function(ag1, ag2)
@@ -128,14 +128,14 @@ metaTableGroup_ = {
 --- Type that defines an ordered selection over a Society. It inherits Society; therefore 
 -- it is possible to apply all functions of such type to a Group. For instance, calling 
 -- Utils:forEachAgent() also traverses Groups.
--- @param data.target The Society over which the Group will take place.
--- @param data.select A function(Agent)->boolean, to filter the Society. Note that, according 
+-- @arg data.target The Society over which the Group will take place.
+-- @arg data.select A function(Agent)->boolean, to filter the Society. Note that, according 
 -- to Lua language, if this function returns anything but false or nil, the Agent will be added 
 -- to the Group. If this argument is missing, all Agents will be included in the Group.
--- @param data.greater A function(Agent, Agent)->boolean, to sort the generated subset of Agents. It 
+-- @arg data.greater A function(Agent, Agent)->boolean, to sort the generated subset of Agents. It 
 -- returns true if the first one has priority over the second one. See Utils:greaterByAttribute() 
 -- as a predefined option to sort objects. 
--- @param data.build A boolean value indicating whether the Group will be computed or not when created.
+-- @arg data.build A boolean value indicating whether the Group will be computed or not when created.
 -- @usage group = Group {
 --     target = society,
 --     select = function(agent)

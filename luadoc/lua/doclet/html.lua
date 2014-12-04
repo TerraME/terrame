@@ -26,8 +26,8 @@ local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s
 
 -------------------------------------------------------------------------------
 -- Looks for a file 'name' in given path. Removed from compat-5.1
--- @param path String with the path.
--- @param name String with the name to look for.
+-- @arg path String with the path.
+-- @arg name String with the name to look for.
 -- @return String with the complete path of the file found
 --	or nil in case the file is not found.
 
@@ -87,7 +87,7 @@ end
 
 -------------------------------------------------------------------------------
 -- Returns a link to a html file, appending "../" to the link to make it right.
--- @param html Name of the html file to link to
+-- @arg html Name of the html file to link to
 -- @return link to the html file
 
 function link (html, from)
@@ -100,7 +100,7 @@ end
 -------------------------------------------------------------------------------
 -- Returns the name of the html file to be generated from a module.
 -- Files with "lua" or "luadoc" extensions are replaced by "html" extension.
--- @param modulename Name of the module to be processed, may be a .lua file or
+-- @arg modulename Name of the module to be processed, may be a .lua file or
 -- a .luadoc file.
 -- @return name of the generated html file for the module
 
@@ -155,9 +155,9 @@ end
 -------------------------------------------------------------------------------
 -- Returns the name of the html file to be generated from a lua(doc) file.
 -- Files with "lua" or "luadoc" extensions are replaced by "html" extension.
--- @param to Name of the file to be processed, may be a .lua file or
+-- @arg to Name of the file to be processed, may be a .lua file or
 -- a .luadoc file.
--- @param from path of where am I, based on this we append ..'s to the
+-- @arg from path of where am I, based on this we append ..'s to the
 -- beginning of path
 -- @return name of the generated html file
 
@@ -175,9 +175,9 @@ end
 
 -------------------------------------------------------------------------------
 -- Returns a link to a function or to a table
--- @param fname name of the function or table to link to.
--- @param doc documentation table
--- @param kind String specying the kinf of element to link ("functions" or "tables").
+-- @arg fname name of the function or table to link to.
+-- @arg doc documentation table
+-- @arg kind String specying the kinf of element to link ("functions" or "tables").
 
 function link_to (fname, doc, module_doc, file_doc, from, kind)
 	assert(fname)
@@ -320,7 +320,7 @@ end
 
 -----------------------------------------------------------------
 -- Generate the output.
--- @param doc Table with the structured documentation.
+-- @arg doc Table with the structured documentation.
 
 function start (doc, doc_report)
 	-- Reserveds words for parser

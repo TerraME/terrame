@@ -28,8 +28,8 @@ Cell_ = {
 	type_ = "Cell",
 	--- Add a new Neighborhood to the Cell. This function replaces previous Neighborhood with the
 	-- same id (if it exists) without showing any warning message.
-	-- @param neigh A Neighborhood.
-	-- @param id Neighborhood's name. Default is "1".
+	-- @arg neigh A Neighborhood.
+	-- @arg id Neighborhood's name. Default is "1".
 	-- @see Neighborhood
 	-- @usage cell:addNeighborhood(n)
 	-- cell:addNeighborhood(n, "east")
@@ -51,7 +51,7 @@ Cell_ = {
 		end
 	end,
 	--- Compute the Euclidean distance to a given Cell.
-	-- @param cell A Cell.
+	-- @arg cell A Cell.
 	-- @usage c2 = Cell{x = 10, y = 10}
 	-- cell:distance(c2)
 	distance = function(self, cell)
@@ -60,13 +60,13 @@ Cell_ = {
 		return math.sqrt((self.x - cell.x) ^ 2 + (self.y - cell.y) ^ 2)
 	end,	
 	--- Retrieve an Agent that belongs to the Cell. It assumes that there is at least one Agent per Cell.
-	-- @param placement a string. Default is 'placement'.
+	-- @arg placement a string. Default is 'placement'.
 	-- @usage agent = cell:getAgent()
 	getAgent = function(self, placement)
 		return self:getAgents(placement)[1]
 	end,
 	--- Retrieve the Agents that belong to the Cell. Agents are indexed by numeric positions.
-	-- @param placement A string. Default is 'placement'.
+	-- @arg placement A string. Default is 'placement'.
 	-- @usage agent = cell:getAgents()[1]
 	getAgents = function(self, placement)
 		if placement == nil then placement = "placement" end
@@ -86,7 +86,7 @@ Cell_ = {
 		return self.cObj_:getID()
 	end,
 	--- Retrieve a Neighborhood of the Cell.
-	-- @param index A string with the neighborhood's name to be retrieved. Default is "1".
+	-- @arg index A string with the neighborhood's name to be retrieved. Default is "1".
 	-- @usage n = cell:getNeighborhood()
 	-- n = cell:getNeighborhood("moore")
 	getNeighborhood = function(self, index)
@@ -106,7 +106,7 @@ Cell_ = {
 		return self.cObj_:getNeighborhood(index)
 	end,
 	--- A user-defined function that is used to initialize a Cell when a CellularSpace is
-	-- created. This function gets the Cell itself as parameter.
+	-- created. This function gets the Cell itself as argument.
 	-- @usage cell = Cell{
 	--     init = function(self)
 	--         self.population = math.random(1, 100) -- initial population chosen randomly
@@ -123,20 +123,20 @@ Cell_ = {
 	init = function(self) -- virtual function that might be implemented by the modeler
 	end,
 	--- Return whether the cell is empty according to a given placement.
-	-- @param placement A string with the placement. The default value is "placement".
+	-- @arg placement A string with the placement. The default value is "placement".
 	-- @usage print(cell:isEmpty())
 	-- print(cell:isEmpty("workingplace"))
 	isEmpty = function(self, placement)
 		return #self:getAgents(placement) == 0
 	end,
 	--- Retrieve the name of the current state of a given Agent.
-	-- @param agent an Agent.
+	-- @arg agent an Agent.
 	-- @usage name = cell:getStateName()
 	getStateName = function(self, agent)
 		return self.cObj_:getCurrentStateName(agent.cObj_)
 	end, 
 	--- Notify every Observer connected to the Cell.
-	-- @param modelTime The time to be used by the Observer. Most of the strategies available ignore
+	-- @arg modelTime The time to be used by the Observer. Most of the strategies available ignore
 	-- this value; therefore it can be left empty. See the Observer documentation for details.
 	-- @usage cell:notify()
 	notify = function (self, modelTime)
@@ -161,7 +161,7 @@ Cell_ = {
 		self.cObj_:notify(modelTime)
 	end,
 	--- Returns a random Cell from a Neighborhood of this Cell
-	-- @param id A string with the neighborhood's name to be retrieved. Default is "1".
+	-- @arg id A string with the neighborhood's name to be retrieved. Default is "1".
 	-- @usage cell_neighbor = cell:sample()
 	-- cell_neighbor = cell:sample("myneighborhood")
 	-- @see Cell:getNeighborhood
@@ -178,7 +178,7 @@ Cell_ = {
 		return neigh:sample(randomObj)
 	end,
 	--- Update the 'id' of the cell.
-	-- @param id A string.
+	-- @arg id A string.
 	-- @usage cell:setId("newid")
 	setId = function(self, id)
 		mandatoryArgument(1, "string", id)
@@ -224,8 +224,8 @@ metaTableCell_ = {
 -- It is a table that may contain nearness relations as well as persistent and runtime attributes. 
 -- Persistent attributes are loaded from and saved
 -- to databases, while runtime attributes exist only along the simulation.
--- @param data.x A positive integer number starting in 0 (default).
--- @param data.y A positive integer number starting in 0 (default).
+-- @arg data.x A positive integer number starting in 0 (default).
+-- @arg data.y A positive integer number starting in 0 (default).
 -- @output past a copy of the attributes at the time of the last synchronization.
 -- @output parent the CellularSpace it belongs.
 -- @output placement a Group representing the default placement of the Cell (only when its

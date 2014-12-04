@@ -41,9 +41,9 @@ luadoc.link_description(func.description or "", doc, module_doc, file_doc, from,
 
 <%if type(func.tabular) == "table" and #func.tabular > 0 then %>
 	<%for i = 1, #func.tabular do 
-		if not func.param[func.tabular[i]] then
+		if not func.arg[func.tabular[i]] then
 			local tab = func.tabular[func.tabular[i]] %> 
-			<table class="param_tab">
+			<table class="arg_tab">
 			<% for j, line in ipairs(tab) do %>
 				<tr>
 					<% local td
@@ -60,15 +60,15 @@ luadoc.link_description(func.description or "", doc, module_doc, file_doc, from,
 	end
 end %>
 
-<% if type(func.param) == "table" and #func.param > 0 then %>
-<!-- Function parameters -->
-  <h3>Parameters</h3>
-<ul><span class="param">
-<%for i = 1, #func.param do
-	local param_desc = func.param[func.param[i]] or ""
-	local param_name
-	if func.param.named then
-		param_name = func.param[i]
+<% if type(func.arg) == "table" and #func.arg > 0 then %>
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+<%for i = 1, #func.arg do
+	local arg_desc = func.arg[func.arg[i]] or ""
+	local arg_name
+	if func.arg.named then
+		arg_name = func.arg[i]
 	else
 		local sufix
 		if i == 1 then
@@ -80,15 +80,15 @@ end %>
 		else
 			sufix = "th"
 		end
-		param_name = i .. sufix
+		arg_name = i .. sufix
 	end %>
     <li>
-	  <strong><%=param_name%></strong>: <%= luadoc.link_description(param_desc or "", doc, module_doc, file_doc, from, nil, doc_report) %>
+	  <strong><%=arg_name%></strong>: <%= luadoc.link_description(arg_desc or "", doc, module_doc, file_doc, from, nil, doc_report) %>
     </li> 
-    <% if type(func.tabular) == "table" and func.tabular[func.param[i]] then %>
+    <% if type(func.tabular) == "table" and func.tabular[func.arg[i]] then %>
       </span>
-      <!-- Strategy of the parameter -->
-      <% local tab = func.tabular[func.param[i]]
+      <!-- Strategy of the argument -->
+      <% local tab = func.tabular[func.arg[i]]
       for i = 1, #func.tabular do
         if func.tabular[func.tabular[i]] == tab then
           table.remove(func.tabular, i)
@@ -96,7 +96,7 @@ end %>
         end
       end
        %> 
-      <table class="param_tab">
+      <table class="arg_tab">
 	  <%util.parse_tab(tab, func, file_doc.name, doc_report)%>
       <% for j, line in ipairs(tab) do %>
         <tr>
@@ -110,7 +110,7 @@ end %>
         <% end %>
         </tr>    
       </table>
-      <span class="param">
+      <span class="arg">
     <% end %>
   <%end%>
   </span></ul>

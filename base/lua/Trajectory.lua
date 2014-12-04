@@ -28,7 +28,7 @@
 Trajectory_ = {
 	type_ = "Trajectory",
 	--- Add a new Cell to the Trajectory.
-	-- @param cell A Cell that will be added.
+	-- @arg cell A Cell that will be added.
 	-- @usage traj:add(cell)
 	add = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
@@ -39,7 +39,7 @@ Trajectory_ = {
 		self.cObj_:add(#self, cell.cObj_)
 	end,
 	--- Add a new Cell to the Trajectory.
-	-- @param cell A Cell that will be added.
+	-- @arg cell A Cell that will be added.
 	-- @usage traj:addCell(cell)
 	-- @deprecated Trajectory:add
 	addCell = function(self, cell)
@@ -63,7 +63,7 @@ Trajectory_ = {
 	end,
 	--- Apply a filter over the original CellularSpace. It returns true if the function was applied 
 	-- sucessfully.
-	-- @param f A function (Cell)->boolean to filter the CellularSpace, adding to the Trajectory 
+	-- @arg f A function (Cell)->boolean to filter the CellularSpace, adding to the Trajectory 
 	-- only those Cells whose returning value is true. The default value is the previous filter 
 	-- applied to the Trajectory.  
 	-- @usage traj:filter(function(cell)
@@ -92,8 +92,8 @@ Trajectory_ = {
 		end
 	end,
 	--- Return a cell given its x and y locations.
-	-- @param x The x location.
-	-- @param y The y location.
+	-- @arg x The x location.
+	-- @arg y The y location.
 	-- @usage traj:get(1, 1)
 	get = function(self, x, y)
 		-- #22 change this - add will never work because the cell already belongs to the cellular space and then it will never add.
@@ -109,7 +109,7 @@ Trajectory_ = {
 		return self.parent:get(x, y)
 	end,
 	--- Return a cell given its x and y locations.
-	-- @param index a Coord.
+	-- @arg index a Coord.
 	-- @usage traj:getCell(index)
 	-- @deprecated Trajectory:get
 	getCell = function(self, index)
@@ -138,7 +138,7 @@ Trajectory_ = {
 	end,
 	--- Sort the current CellularSpace subset of the Trajectory. It returns a boolean value indicating
 	--  whether the Trajectory was sucessfully sorted.
-	-- @param f A function (Cell, Cell)->boolean to sort the generated subset of Cells. It 
+	-- @arg f A function (Cell, Cell)->boolean to sort the generated subset of Cells. It 
 	-- returns true if the first one has priority over the second one. Default: No sorting function 
 	-- will be applied.
 	-- @see Utils:greaterByAttribute
@@ -176,16 +176,16 @@ metaTableTrajectory_ = {
 -- CellularSpace; therefore it is possible to use all functions of such type within a Trajectory. For 
 -- instance, calling Utils:forEachCell() also traverses Trajectories, and it is possible to create a 
 -- Trajectory from another Trajectory.
--- @param data.target The CellularSpace over which the Trajectory will take place.
--- @param data.select A function (Cell)->boolean to filter the CellularSpace, adding to the Trajectory
+-- @arg data.target The CellularSpace over which the Trajectory will take place.
+-- @arg data.select A function (Cell)->boolean to filter the CellularSpace, adding to the Trajectory
 -- only those Cells whose returning value is true. If this argument is missing, all Cells will be 
 -- included in the Trajectory. Note that, according to Lua language, if this function returns
 -- anything but false or nil, the Cell will be added to the Trajectory.
--- @param data.greater A function (Cell, Cell)->boolean to sort the generated subset of Cells. It 
+-- @arg data.greater A function (Cell, Cell)->boolean to sort the generated subset of Cells. It 
 -- returns true if the first one has priority over the second one. If this argument is missing, no 
 -- sorting function will be applied. See Utils:greaterByAttribute() and Utils:greaterByCoord() as 
 -- predefined options to sort objects.
--- @param data.build A boolean value indicating whether the Trajectory will be computed or not when 
+-- @arg data.build A boolean value indicating whether the Trajectory will be computed or not when 
 -- created. Default is true.
 --
 -- @output cells A vector of Cells pointed by the Trajectory.

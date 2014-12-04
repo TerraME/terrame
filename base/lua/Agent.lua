@@ -32,7 +32,7 @@ end}
 Agent_ = {
 	type_ = "Agent",
 	--- Add a Trajectory or State to the Agent.
-	-- @param object A State or Trajectory.
+	-- @arg object A State or Trajectory.
 	-- @usage agent:add(state)
 	--
 	-- agent:add(trajectory)
@@ -47,8 +47,8 @@ Agent_ = {
 	end,
 	--- Add a SocialNetwork to the Agent. This function replaces previous SocialNetwork with the
 	-- same id (if it exists) without showing any warning message.
-	-- @param set A SocialNetwork.
-	-- @param id Name of the relation. Default is "1".
+	-- @arg set A SocialNetwork.
+	-- @arg id Name of the relation. Default is "1".
 	-- @usage agent:addSocialNetwork(network)
 	--
 	-- agent:addSocialNetwork(network, "friends")
@@ -75,11 +75,11 @@ Agent_ = {
 	end,
 	---Kill the agent and remove it from the Society it belongs. The methods execute() and
 	-- on_message() of the Agent are set to do nothing.
-	-- @param remove_placements A boolean value indicating whether the 
+	-- @arg remove_placements A boolean value indicating whether the 
 	-- relations of the Agent should be removed. Default is true, but it 
 	-- only works with simple placements, where one Agent is connected to 
 	-- a single Cell in each placement. If more complex relations are used 
-	-- in the model, then the modeler should set this parameter as false
+	-- in the model, then the modeler should set this argument as false
 	-- and remove the relations by himself/herself.
 	-- @usage agent:die()
 	die = function(self, remove_placements)
@@ -114,8 +114,8 @@ Agent_ = {
 	--- Put the Agent into a Cell, using their placements. If the Agent is already inside of a
 	-- Cell, use Agent:move() instead. The agent needs to have a placement to be able to
 	-- use Agent:enter(), Agent:leave(), or Agent:move().
-	-- @param cell A Cell.
-	-- @param placement A string representing the index to be used. Default is "placement".
+	-- @arg cell A Cell.
+	-- @arg placement A string representing the index to be used. Default is "placement".
 	-- @usage agent:enter(newcell)
 	--
 	-- agent:enter(newcell, "renting")
@@ -144,7 +144,7 @@ Agent_ = {
 	-- of the current State. Usually, this function is called within an Event, thus the time
 	-- of the Event can be got directly from the Timer. When the Agent is not defined as a
 	-- composition of States, the modeler should follow a signature to describe this function.
-	-- @param event An Event.
+	-- @arg event An Event.
 	-- @usage agent:execute()
 	--
 	-- agent:execute(event)
@@ -161,7 +161,7 @@ Agent_ = {
 	end,
 	--- Return the Cell where the Agent is located according to its placement. It assumes
 	-- that each Agent belongs to at most one Cell.
-	-- @param placement  A string representing the index to be used. Default is "placement".
+	-- @arg placement  A string representing the index to be used. Default is "placement".
 	-- @usage cell = agent:getCell()
 	getCell = function(self, placement)
 		optionalArgument(1, "string", placement)
@@ -173,7 +173,7 @@ Agent_ = {
 		return self[placement].cells[1]		
 	end,
 	--- Return the Cells pointed by the Agent according to its placement.
-	-- @param placement A string representing the index to be used. Default is "placement".
+	-- @arg placement A string representing the index to be used. Default is "placement".
 	-- @usage cell = agent:getCells()[1]
 	getCells = function(self, placement)
 		optionalArgument(1, "string", placement)
@@ -200,7 +200,7 @@ Agent_ = {
 		return self.cObj_:getLatency()
 	end,
 	--- Returns a SocialNetwork of the Agent given its name.
-	-- @param id Name of the relation.
+	-- @arg id Name of the relation.
 	-- @usage net = agent:getSocialNetwork("friends")
 	-- @see Society:createSocialNetwork
 	getSocialNetwork = function(self, id)
@@ -244,8 +244,8 @@ Agent_ = {
 	end,
 	--- Remove the Agent from a given Cell. 
 	--The agent needs to have a placement to be able to use Agent:enter(), Agent:leave(), or Agent:move().
-	-- @param cell A Cell. Default is the first (or the only) Cell of the placement.
-	-- @param placement A string representing the index to be used. Default is "placement".
+	-- @arg cell A Cell. Default is the first (or the only) Cell of the placement.
+	-- @arg placement A string representing the index to be used. Default is "placement".
 	-- @see Environment:createPlacement
 	-- @usage agent:leave()
 	--
@@ -289,15 +289,15 @@ Agent_ = {
 	-- Agent:on_message(). Messages can arrive exactly after they are sent (synchronous) or have
 	-- some delay (asynchronous). In the latter case, it is necessary to call function
 	-- Society:synchronize() from the Society they belong to activate the messages.
-	-- @param data.receiver The Agent that will get the message.
-	-- @param data.subject A string describing the function that will be called in the receiver.
+	-- @arg data.receiver The Agent that will get the message.
+	-- @arg data.subject A string describing the function that will be called in the receiver.
 	-- Given a string x, the receiver will get the message in a function called on_x. Default is
 	-- "message". The function to receive the message must be implemented by the modeler. See
 	-- Agent:on_message() for more details.
-	-- @param data.delay An integer indicating the number of times synchronize needs to be called
+	-- @arg data.delay An integer indicating the number of times synchronize needs to be called
 	-- before activating this message. Default is zero (no delay, no synchronization required).
 	-- Whenever a delayed message is received, it comes with the element delay = true.
-	-- @param data.... Other arguments are allowed to this function, as the message is a table.
+	-- @arg data.... Other arguments are allowed to this function, as the message is a table.
 	-- The receiver will get all the attributes sent plus a sender value. 
 	-- @usage agent:message {
 	--     receiver = agent2,
@@ -337,8 +337,8 @@ Agent_ = {
 	end,
 	--- Move the Agent to a new Cell. The agent needs to have a placement to be able to use
 	-- Agent:enter(), Agent:leave(), or Agent:move().
-	-- @param newcell The new Cell.
-	-- @param placement A string representing the index to be used. Default is "placement".
+	-- @arg newcell The new Cell.
+	-- @arg placement A string representing the index to be used. Default is "placement".
 	-- @usage agent:move(newcell)
 	--
 	-- agent:move(newcell, "renting")
@@ -350,7 +350,7 @@ Agent_ = {
 		if placement == nil then placement = "placement" end
 
 		if self[placement] == nil then
-			customError("Value '".. placement .."' not found for parameter '#2'.")
+			valueNotFoundError(2, placement)
 		elseif not self[placement].cells[1] then 
 			customError("Agent is not inside of any Cell.")
 		end
@@ -359,7 +359,7 @@ Agent_ = {
 		self:enter(newcell, placement)
 	end,
 	--- Notify the Observers of the Agent.
-	-- @param modelTime An integer number representing the notification time.
+	-- @arg modelTime An integer number representing the notification time.
 	-- @usage agent:notify()
 	notify = function (self, modelTime)
 		if modelTime == nil then
@@ -407,7 +407,7 @@ Agent_ = {
 	--     end
 	--     --...
 	-- }
-	-- @param message A table with the received message. It has an attribute called sender with
+	-- @arg message A table with the received message. It has an attribute called sender with
 	-- the Agent that sent the message.
 	on_message = function(self, message)
 		customError("Agent "..self.id.." does not implement 'on_message'.")
@@ -420,8 +420,8 @@ Agent_ = {
 		self:walk()
 	end,
 	--- Execute a random walk to a neighbor Cell.
-	-- @param placement A string representing the index to be used. Default is "placement".
-	-- @param neighborhood A string representing the index of the Neighborhood to be used.
+	-- @arg placement A string representing the index to be used. Default is "placement".
+	-- @arg neighborhood A string representing the index of the Neighborhood to be used.
 	-- Default is "placement".
 	-- @usage agent:walk()
 	--
@@ -449,7 +449,7 @@ Agent_ = {
 	-- Agent belongs and placements created using the Society are instantiated with size zero if
 	-- the only argument of reproduce does not contain such placements. This function returns
 	-- the new Agent.
-	-- @param data An optional table with attributes of the new Agent.
+	-- @arg data An optional table with attributes of the new Agent.
 	-- @usage child = agent:reproduce()
 	--
 	-- child = agent:reproduce{age=0}
@@ -482,7 +482,7 @@ Agent_ = {
 		return ag
 	end,
 	--- Returns a random Agent from a SocialNetwork of this Agent.
-	-- @param id Name of the relation.
+	-- @arg id Name of the relation.
 	-- @usage ag_friend = agent:sample("friends")
 	sample = function(self, id)
 		optionalArgument(1, "string", id)
@@ -495,7 +495,7 @@ Agent_ = {
 		return sn:sample()
 	end,
 	--- Set the unique identifier of the Agent.
-	-- @param name A string.
+	-- @arg name A string.
 	-- @usage agent:setId("newid")
 	-- @deprecated Agent.id
 	setId = function(self, name)
@@ -503,7 +503,7 @@ Agent_ = {
 		self.id = name
 	end,
 	--- Activate or not the trajectories defined for a given Agent.
-	-- @param status Use or not the trajectories. As default, trajectories are turned off. If
+	-- @arg status Use or not the trajectories. As default, trajectories are turned off. If
 	-- status is true, when executed, the Agent that contains States will automatically
 	-- traverse all trajectories defined within it. This function is useful only when the
 	-- Agent is described as a state machine.
@@ -526,11 +526,11 @@ metaTableAgent_ = {__index = Agent_, __tostring = tostringTerraME}
 -- states, there is a set of signatures that can be implemented by the modeller,
 -- such as Agent:init(), Agent:on_message(), and Agent:execute().
 -- An Agent can belong to a Society and can have SocialNetworks.
--- @param data.id The unique identifier of the Agent. Default is a string with a numeric auto increment.
--- @param data.init A function to be executed when the Agent enters in a Society (optional, see below).
--- @param data.execute A function describing the behavior of the agent each time step it is
+-- @arg data.id The unique identifier of the Agent. Default is a string with a numeric auto increment.
+-- @arg data.init A function to be executed when the Agent enters in a Society (optional, see below).
+-- @arg data.execute A function describing the behavior of the agent each time step it is
 -- executed (optional, see below).
--- @param data.on_message A function describing the behavior of the agent when it receives a
+-- @arg data.on_message A function describing the behavior of the agent when it receives a
 -- message (optional, see below).
 -- @output cells A vector of Cells necessary to use Utils:forEachCell(). This value is the same
 -- of "agent.placement.cells".

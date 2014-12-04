@@ -16,9 +16,9 @@ local compatmode = true
 
 --
 -- Builds a piece of Lua code which outputs the (part of the) given string.
--- @param s String.
--- @param i Number with the initial position in the string.
--- @param f Number with the final position in the string (default == -1).
+-- @arg s String.
+-- @arg i Number with the initial position in the string.
+-- @arg f Number with the final position in the string (default == -1).
 -- @return String with the correspondent Lua code which outputs the part of the string.
 --
 local function out (s, i, f)
@@ -34,7 +34,7 @@ end
 
 ----------------------------------------------------------------------------
 -- Translate the template to Lua code.
--- @param s String to translate.
+-- @arg s String to translate.
 -- @return String with translated code.
 ----------------------------------------------------------------------------
 function translate (s)
@@ -68,7 +68,7 @@ end
 
 ----------------------------------------------------------------------------
 -- Defines the name of the output function.
--- @param f String with the name of the function which produces output.
+-- @arg f String with the name of the function which produces output.
 
 function setoutfunc (f)
 	outfunc = f
@@ -76,7 +76,7 @@ end
 
 ----------------------------------------------------------------------------
 -- Turns on or off the compatibility with old CGILua 3.X behavior.
--- @param c Boolean indicating if the compatibility mode should be used.
+-- @arg c Boolean indicating if the compatibility mode should be used.
 
 function setcompatmode (c)
 	compatmode = c
@@ -91,8 +91,8 @@ local cache = {}
 -- Translates a template into a Lua function.
 -- Does NOT execute the resulting function.
 -- Uses a cache of templates.
--- @param string String with the template to be translated.
--- @param chunkname String with the name of the chunk, for debugging purposes.
+-- @arg string String with the template to be translated.
+-- @arg chunkname String with the name of the chunk, for debugging purposes.
 -- @return Function with the resulting translation.
 
 function compile (string, chunkname)
@@ -139,8 +139,8 @@ end
 -- Translates and executes a template in a given file.
 -- The translation creates a Lua function which will be executed in an
 -- optionally given environment.
--- @param filename String with the name of the file containing the template.
--- @param env Table with the environment to run the resulting function.
+-- @arg filename String with the name of the file containing the template.
+-- @arg env Table with the environment to run the resulting function.
 
 --TODO: Maybe this function must be renamed
 function include (filename, env)

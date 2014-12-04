@@ -24,7 +24,7 @@
 --#########################################################################################
 
 --- Create a display with the current time and Event queue of a given Timer.
--- @param data.subject A timer.
+-- @arg data.subject A timer.
 -- @usage Clock{subject = timer}
 Clock = function(data)
 	mandatoryTableArgument(data, "subject", "Timer")

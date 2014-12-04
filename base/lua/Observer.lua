@@ -101,7 +101,7 @@ local function observerTextScreen(subjType, subject, observerAttrs, datale)
 	if subjType == TME_TYPES.AUTOMATON then
 		local locatedInCell = datale.location
 		if type(locatedInCell) ~= "Cell" then
-			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
+			customError("Observing an Automaton requires argument 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
 		else
 			table.insert(observerParams, locatedInCell)
 		end
@@ -163,7 +163,7 @@ local function observerTable(subjType, subject, observerAttrs, datale)
 	if subjType == TME_TYPES.AUTOMATON then
 		local locatedInCell = datale.location
 		if type(locatedInCell) ~= "Cell" then
-			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
+			customError("Observing an Automaton requires argument 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
 		else
 			table.insert(observerParams, locatedInCell)
 		end
@@ -281,7 +281,7 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 	if subjType == TME_TYPES.AUTOMATO then
 		local locatedInCell = datale.location
 		if type(locatedInCell) ~= "Cell" then
-			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
+			customError("Observing an Automaton requires argument 'location' to be a Cell, got "..type(locatedInCell)..".", 4)
 		else
 			table.insert(observerParams, locatedInCell)
 		end
@@ -374,9 +374,9 @@ local function getDefaultSocietyColorBar(i)
 end
 
 -- OBSERVER MAP
--- In this function the second parameter can assume two types of entities: a lua class ou a c++ one depending
+-- In this function the second argument can assume two types of entities: a lua class ou a c++ one depending
 -- on the subject type. This is necessary for Society type.
--- Last parameter is used only for trajectories
+-- Last argument is used only for trajectories
 local function observerMap(subjType, subject, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
 	if subjType == TME_TYPES.TRAJECTORY then
 		observerAttrs = {"trajectory"}		
@@ -545,7 +545,7 @@ local function observerNeighborhood(subject, neighborhoods, datale)
 end
 
 -- OBSERVER IMAGE
--- Last parameter is used only for trajectories
+-- Last argument is used only for trajectories
 local function observerImage(subjType, subject, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
 	if subjType == TME_TYPES.TRAJECTORY then
 		observerAttrs = {"trajectory"}
@@ -715,12 +715,12 @@ local function observerUDPSender(subjType, subject, tbDimensions, observerAttrs,
 
 	local hosts = datale.host or {""}
 
-	-- if visible parameter not exist so it is defined as true (default)
+	-- if visible argument not exist so it is defined as true (default)
 	if datale.visible ~= nil and datale.visible == false then
 		observerParams.visible = datale.visible
 	end
 
-	-- if compress parameter not exist so it is defined as false (default)
+	-- if compress argument not exist so it is defined as false (default)
 	if datale.compress ~= nil and datale.compress == true then
 		observerParams.compress = datale.compress
 	end
@@ -750,12 +750,12 @@ local function observerTCPSender(subjType, subject, tbDimensions, observerAttrs,
 	local port = datale.port or 456456
 	local hosts = datale.hosts or {""}
 
-	-- if visible parameter not exist so it is defined as true (default)
+	-- if visible argument not exist so it is defined as true (default)
 	if datale.visible ~= nil and datale.visible == false then
 		observerParams.visible = datale.visible
 	end
 
-	-- if compress parameter not exist so it is defined as false (default)
+	-- if compress argument not exist so it is defined as false (default)
 	if datale.compress ~= nil and datale.compress == true then
 		observerParams.compress = datale.compress
 	end
@@ -819,7 +819,7 @@ local function observerStateMachine(subjType, subject, observerAttrs, datale)
 	if subjType == TME_TYPES.AUTOMATON then
 		local locatedInCell = datale.location
 		if type(locatedInCell) ~= "Cell" then
-			customError("Observing an Automaton requires parameter 'location' to be a Cell, got "..type(locatedInCell)..".", 3)
+			customError("Observing an Automaton requires argument 'location' to be a Cell, got "..type(locatedInCell)..".", 3)
 		else 
 			table.insert(observerParams,locatedInCell)
 		end
@@ -835,9 +835,9 @@ local function observerStateMachine(subjType, subject, observerAttrs, datale)
 end
 
 -- OBSERVER SHAPEFILE
--- In this function the second parameter can assume two types of entities: a lua class ou a c++ one
+-- In this function the second argument can assume two types of entities: a lua class ou a c++ one
 -- depending on the subject type. This is necessary for Society type.
--- Last parameter is used only for trajectories
+-- Last argument is used only for trajectories
 local function observerShapefile(subjType, subject, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
 	if #observerAttrs > 2 or #observerAttrs == 0 then
 		customError("Map observers must have exactly one or two attributes.", 3)
@@ -926,38 +926,38 @@ local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabe
 -- TerraME object that has a built-in function called notify(). This function needs to be called
 -- to update its observers because they are passive objects. Observers do not need to be put into
 -- an object to exist, as in the second example on the left side.
--- Default values of observer types depend on the parameters. See table below for a description on how it works.
--- @param data.type A string to define the way to observe a given object. See the table below.
--- @param data.attributes A vector of strings with the name of the attributes to be observed. If it is only a
+-- Default values of observer types depend on the arguments. See table below for a description on how it works.
+-- @arg data.type A string to define the way to observe a given object. See the table below.
+-- @arg data.attributes A vector of strings with the name of the attributes to be observed. If it is only a
 -- single value then it can also be described as a string. 
--- @param data.file Name of the file to be saved. In the case of images, it represent the fixed
+-- @arg data.file Name of the file to be saved. In the case of images, it represent the fixed
 -- part of the file name that will be concatenated with a timestamp and ".png". In the case of
 -- logfiles, it must be a file ending with ".csv". Default value is "result_" for image files and
 -- result_.csv for logfiles.
--- @param data.host A string or a vector of strings with host names for udpsenders.
--- @param data.legends A Legend or a vector of Legends to paint objects according to their properties.
--- @param data.location A Cell representing a location to observe an Automaton.
--- @param data.neighIndex A string or a vector of strings representing the neighborhood indexes to
+-- @arg data.host A string or a vector of strings with host names for udpsenders.
+-- @arg data.legends A Legend or a vector of Legends to paint objects according to their properties.
+-- @arg data.location A Cell representing a location to observe an Automaton.
+-- @arg data.neighIndex A string or a vector of strings representing the neighborhood indexes to
 -- be drawn by a neighborhood observer. Default is "1".
--- @param data.neighType One of three strings, "basic" (default), "color", or "width", for
+-- @arg data.neighType One of three strings, "basic" (default), "color", or "width", for
 -- neighborhood observers. Basic type draws neighborhoods as lines with the same color and width.
 -- Color draws them using colors according to their weights. Width draws them with widths
 -- according to their weights. All them use the attribute width of Legends. The first two use it as
 -- width for all lines, while the last one interpolates the weights of the relations to draw widths
 -- between one pixel and the Legend width.
--- @param data.observer An Observer that will be used as background for drawing properties of observed objects that canxnot be drawn alone.
--- @param data.port A string or a vector of strings with ports for the respective host names to be used by udpsenders.
--- @param data.separator The attribute separator character (i.e., ";"). Used only for logfiles.
--- @param data.subject The TerraME object that will be observed.
--- @param data.title An overall title to the observer.
--- @param data.xaxis A string representing the attribute to be used as x axis in a chart observer. When nil, time will be used as axis.
--- @param data.xLabel Name of the x-axis. It does not show any label as default.
--- @param data.yLabel Name of the y-axis. It does not show any label as default.
--- @param data.curveLabels Vector of the same size of attributes that indicates the labels for each
+-- @arg data.observer An Observer that will be used as background for drawing properties of observed objects that canxnot be drawn alone.
+-- @arg data.port A string or a vector of strings with ports for the respective host names to be used by udpsenders.
+-- @arg data.separator The attribute separator character (i.e., ";"). Used only for logfiles.
+-- @arg data.subject The TerraME object that will be observed.
+-- @arg data.title An overall title to the observer.
+-- @arg data.xaxis A string representing the attribute to be used as x axis in a chart observer. When nil, time will be used as axis.
+-- @arg data.xLabel Name of the x-axis. It does not show any label as default.
+-- @arg data.yLabel Name of the y-axis. It does not show any label as default.
+-- @arg data.curveLabels Vector of the same size of attributes that indicates the labels for each
 -- line of a chart. Default is the name of the attributes.
 --
 -- @tabular type
--- Type & Description & Compulsory parameters & Optional parameters \
+-- Type & Description & Compulsory arguments & Optional arguments \
 -- "chart" & Create a line chart showing the variation of one or more attributes (y axis) of an
 -- object. X axis values come from the single argument of notify(). & subject, attributes & xaxis, xLabel, yLabel, title, curveLabels \
 -- "image" & Create a map with the spatial distribution of a given Agent, CellularSpace, Society or
@@ -997,7 +997,7 @@ local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabe
 --	 type = "chart",
 --	 attributes = {"water"}
 -- }
--- @tabular default_parameters
+-- @tabular default_arguments
 -- Arguments, from higher to lower priority &
 -- Default type \
 -- file == "*.csv"  &

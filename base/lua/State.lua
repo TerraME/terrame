@@ -33,7 +33,7 @@ State_ = {
 		return id
 	end,
 	--#- Change the id of the State. It returns a boolean value indicating whether the operation was succesfully executed.
-	-- @param idValue A string that will be set as the id of the State.
+	-- @arg idValue A string that will be set as the id of the State.
 	setId = function(self, idValue)
 		local idOld = self.cObj_:getID()
 
@@ -51,8 +51,8 @@ State_ = {
 metaTableState_ = {__tostring = tostringTerraME}
 --- A container of Jumps and Flows. Every State also has an id to identify itself in the Jumps of
 -- other States within the same Agent or Automaton.
--- @param data A table that contains the State attributes.
--- @param data.id A string with the unique identifier of the State.
+-- @arg data A table that contains the State attributes.
+-- @arg data.id A string with the unique identifier of the State.
 -- @usage State {
 --     id = "working",
 --     Jump{...},

@@ -274,7 +274,7 @@ local function executeDoc(package)
 	local example_files = examples(package)
 
 	local doc_report = {
-		parameters = 0,
+		arguments = 0,
 		lua_files = 0,
 		html_files = 0,
 		global_functions = 0,
@@ -283,9 +283,9 @@ local function executeDoc(package)
 		links = 0,
 		examples = 0,
 		wrong_description = 0,
-		undoc_param = 0,
-		undefined_param = 0,
-		unused_param = 0,
+		undoc_arg = 0,
+		undefined_arg = 0,
+		unused_arg = 0,
 		unknown_arg = 0,
 		undoc_files = 0,
 		lack_usage = 0,
@@ -329,22 +329,22 @@ local function executeDoc(package)
 		printError(doc_report.block_name_conflict.." functions were documented with a different name.")
 	end
 
-	if doc_report.undoc_param == 0 then
-		printNote("All "..doc_report.parameters.." parameters are documented.")
+	if doc_report.undoc_arg == 0 then
+		printNote("All "..doc_report.arguments.." arguments are documented.")
 	else
-		printError(doc_report.undoc_param.." parameters are not documented.")
+		printError(doc_report.undoc_arg.." arguments are not documented.")
 	end
 
-	if doc_report.undefined_param == 0 then
-		printNote("No undefined parameters were found.")
+	if doc_report.undefined_arg == 0 then
+		printNote("No undefined arguments were found.")
 	else
-		printError(doc_report.undefined_param.." undefined parameters were found.")
+		printError(doc_report.undefined_arg.." undefined arguments were found.")
 	end
 
-	if doc_report.unused_param == 0 then
-		printNote("All "..doc_report.parameters.." parameters are used in the HTML tables.")
+	if doc_report.unused_arg == 0 then
+		printNote("All "..doc_report.arguments.." arguments are used in the HTML tables.")
 	else
-		printError(doc_report.unused_param.." table parameters are not used in the HTML tables.")
+		printError(doc_report.unused_arg.." table arguments are not used in the HTML tables.")
 	end
 
 	if doc_report.unknown_arg == 0 then
@@ -390,10 +390,10 @@ local function executeDoc(package)
 		printError(doc_report.problem_examples.." problems were found in the documentation of the examples.")
 	end
 
-	local errors = doc_report.undoc_param + doc_report.unused_param + doc_report.undoc_files +
+	local errors = doc_report.undoc_arg + doc_report.unused_arg + doc_report.undoc_files +
 				   doc_report.lack_usage + doc_report.no_call_itself_usage + doc_report.non_doc_functions +
-				   doc_report.block_name_conflict + doc_report.undefined_param + doc_report.wrong_description + 
-				   doc_report.wrong_links + doc_report.problem_examples + doc_report.undoc_examples
+				   doc_report.block_name_conflict + doc_report.undefined_arg + doc_report.wrong_description + 
+				   doc_report.wrong_links + doc_report.problem_examples + doc_report.undoc_examples + 
 				   doc_report.unknown_arg
 
 	if errors == 0 then
@@ -578,9 +578,9 @@ local executeTests = function(package, fileName)
 
 	-- TODO: I think this warning will never occur because when this function reads
 	-- the file it already checks this.
-	local parameters = {"sleep", "examples", "folder", "test", "file"}
+	local arguments = {"sleep", "examples", "folder", "test", "file"}
 	forEachElement(data, function(value)
-		if not belong(value, parameters) then
+		if not belong(value, arguments) then
 			customWarning("Attribute '"..value.."' in file '"..fileName.."' is unnecessary.")
 		end
 	end)
@@ -1013,7 +1013,7 @@ local function installPackage(file)
 		os.exit()
 	end)
 
-	local param = sessionInfo().path..s.."packages"..s..package
+	local arg = sessionInfo().path..s.."packages"..s..package
 
 	local currentDir = currentdir()
 	local packageDir = sessionInfo().path..s.."packages"
@@ -1176,9 +1176,9 @@ function traceback()
 	return string.sub(str, 0, string.len(str) - 1)
 end
 
-execute = function(parameters) -- parameters is a vector of strings
-	if parameters == nil or #parameters < 1 then 
-		print("\nYou should provide, at least, a file as parameter.")
+execute = function(arguments) -- arguments is a vector of strings
+	if arguments == nil or #arguments < 1 then 
+		print("\nYou should provide, at least, a file as argument.")
 		usage()
 		os.exit()
 	end
@@ -1206,40 +1206,40 @@ execute = function(parameters) -- parameters is a vector of strings
 
 	local package = "base"
 
-	local paramCount = 1
-	while paramCount <= #parameters do
-		param = parameters[paramCount]
-		if string.sub(param, 1, 1) == "-" then
-			if param == "-version" then
+	local argCount = 1
+	while argCount <= #arguments do
+		arg = arguments[argCount]
+		if string.sub(arg, 1, 1) == "-" then
+			if arg == "-version" then
 				versions()
 				usage()
 				os.exit()
-			elseif param == "-ide" then
+			elseif arg == "-ide" then
 				local __cellEmpty = Cell{attrib = 1}
 				local __obsEmpty = Observer{subject = __cellEmpty, type = "chart", attributes = {"attrib"}}
 				__obsEmpty:kill()
-			elseif param == "-mode=normal" then
+			elseif arg == "-mode=normal" then
 				info_.mode = "normal"
-			elseif param == "-mode=debug" then
+			elseif arg == "-mode=debug" then
 				info_.mode = "debug"
-			elseif param == "-mode=quiet" then
+			elseif arg == "-mode=quiet" then
 				info_.mode = "quiet"
-			elseif param == "-package" then
-				paramCount = paramCount + 1
-				package = parameters[paramCount]
-			elseif param == "-test" then
+			elseif arg == "-package" then
+				argCount = argCount + 1
+				package = arguments[argCount]
+			elseif arg == "-test" then
 				info_.mode = "debug"
-				paramCount = paramCount + 1
+				argCount = argCount + 1
 
-				local correct, errorMsg = xpcall(function() executeTests(package, parameters[paramCount]) end, function(err)
+				local correct, errorMsg = xpcall(function() executeTests(package, arguments[argCount]) end, function(err)
 					printError(err)
 					--printError(traceback())
 				end)
 				os.exit() -- #76
-			elseif param == "-help" then 
+			elseif arg == "-help" then 
 				usage()
 				os.exit()
-			elseif param == "-doc" then
+			elseif arg == "-doc" then
 				local success, result = xpcall(function() executeDoc(package) end, function(err)
 					local s = sessionInfo().separator
 					local luaFolder = replaceSpecialChars(sessionInfo().path..s.."lua")
@@ -1295,34 +1295,34 @@ execute = function(parameters) -- parameters is a vector of strings
 				if not success then
 					printError(result)
 				end
-			elseif param == "-autoclose" then
+			elseif arg == "-autoclose" then
 				-- #77
-			elseif param == "-workers" then
+			elseif arg == "-workers" then
 				-- #80
-			elseif param == "-draw-all-higher" then
+			elseif arg == "-draw-all-higher" then
 				-- #78
-			elseif param == "-build" then
+			elseif arg == "-build" then
 				if package == "base" then
 					printError("TerraME cannot be built using -build.")
 				else
 					buildPackage(package)
 				end
 				os.exit()
-			elseif param == "-install" then
-				installPackage(parameters[paramCount + 1])
+			elseif arg == "-install" then
+				installPackage(arguments[argCount + 1])
 				os.exit()
-			elseif param == "-importDb" then
+			elseif arg == "-importDb" then
 				importDatabase(package)
 				os.exit()
-			elseif param == "-exportDb" then
+			elseif arg == "-exportDb" then
 				exportDatabase(package)
 				os.exit()
-			elseif param == "-example" then
-				local file = parameters[paramCount + 1]
+			elseif arg == "-example" then
+				local file = arguments[argCount + 1]
 
 				if file then
-					param = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..file
-					if not isfile(param) then
+					arg = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..file
+					if not isfile(arg) then
 						printError("Example '"..file.."' does not exist in package '"..package.."'.")
 						print("Please use one from the list below:")
 					end
@@ -1332,10 +1332,10 @@ execute = function(parameters) -- parameters is a vector of strings
 					print("Package '"..package.."' has the following examples:")
 				end
 
-				if file and isfile(param) then
+				if file and isfile(arg) then
 					-- it only changes the file to point to the package and let it run as it
 					-- was a call such as "TerraME .../package/examples/example.lua"
-					parameters[paramCount + 1] = param
+					arguments[argCount + 1] = arg
 				else
 					files = examples(package)
 
@@ -1352,7 +1352,7 @@ execute = function(parameters) -- parameters is a vector of strings
 			require(package)
 			local s = sessionInfo().separator
 
-			local displayFile = string.sub(param, 0, string.len(param) - 3).."tme"
+			local displayFile = string.sub(arg, 0, string.len(arg) - 3).."tme"
 
 			local cObj = TeVisualArrangement()
 			cObj:setFile(displayFile)
@@ -1366,7 +1366,7 @@ execute = function(parameters) -- parameters is a vector of strings
 				end)
 			end
 
-			local success, result = xpcall(function() dofile(param) end, function(err)
+			local success, result = xpcall(function() dofile(arg) end, function(err)
 				local luaFolder = replaceSpecialChars(sessionInfo().path.."/lua")
 				local baseLuaFolder = replaceSpecialChars(sessionInfo().path.."/packages/base/lua")
 				
@@ -1421,17 +1421,10 @@ execute = function(parameters) -- parameters is a vector of strings
 
 			return
 		end
-		paramCount = paramCount + 1
+		argCount = argCount + 1
 	end
 end
 
---- Return a string describing a TerraME object. This function allows one to use the method print() directly from any TerraME object.
--- @name tostring
--- @param data Any TerraME object.
--- @usage c = Cell{cover = "forest", distRoad = 0.3}
--- description = tostring(c)
--- print(description)
--- print(c) -- same result of line above
 tostringTerraME = function(self)
 	local rs = {}
 	local maxlen = 0

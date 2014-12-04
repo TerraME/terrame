@@ -28,7 +28,7 @@ Automaton_ = {
 	type_ = "Automaton",
 	--- Add a new Trajectory or State to the Automaton. It returns a boolean value
 	-- indicating whether the new element was successfully added.
-	-- @param object A Trajectory or State.
+	-- @arg object A Trajectory or State.
 	-- @usage automaton:add(state)
 	-- automaton:add(trajectory)
 	add = function(self, object)
@@ -49,7 +49,7 @@ Automaton_ = {
 	-- the current State. Usually, this function is called within an Event, thus the time of the
 	-- Event can be got from the Timer. It returns a boolean value indicating whether the Jumps
 	-- were executed correctly.
-	-- @param event An Event.
+	-- @arg event An Event.
 	-- @usage automaton:execute(event)
 	execute = function(self, event)
 		local t = type(event)
@@ -72,7 +72,7 @@ Automaton_ = {
 		return "Where?"
 	end,
 	--- Notify every Observer connected to the Automaton.
-	-- @param modelTime The time to be used by the Observer.
+	-- @arg modelTime The time to be used by the Observer.
 	-- @usage automaton:notify()
 	notify = function (self, modelTime)
 		if modelTime == nil then
@@ -90,7 +90,7 @@ Automaton_ = {
 	end,
 	--- Activate or not the Trajectories defined for the Automata. Returns whether the
 	-- change  was successfully executed.
-	-- @param status A boolean that indicates if the Trajectories will be activated.
+	-- @arg status A boolean that indicates if the Trajectories will be activated.
 	-- @usage automaton:setTrajectoryStatus(true)
 	setTrajectoryStatus = function(self, status)
 		if status == nil then
@@ -102,7 +102,7 @@ Automaton_ = {
 	end,
 	--- Set the unique identifier of the Automaton. Return a boolean value indicating whether
 	-- the id was changed correctly.
-	-- @param id A string that names the Automaton.
+	-- @arg id A string that names the Automaton.
 	-- @usage automaton:setId("newid")
 	setId = function(self,id)
 		if id == nil then
@@ -128,7 +128,7 @@ Automaton_ = {
 		return statesVector
 	end,
 	--- Get a State of the Automaton according to a given position.
-	-- @param index A number indicating the position of the State to be retrieved.
+	-- @arg index A number indicating the position of the State to be retrieved.
 	-- @usage state = automaton:getState(1)
 	getState = function(self, index)
 		if index == nil then
@@ -147,7 +147,7 @@ metaTableAutomaton_ = {__index = Automaton_, __tostring = tostringTerraME}
 
 --- A hybrid state machine that needs to be located on a CellularSpace, and is replicated over 
 -- each Cell of the space. It has independent States in each Cell.
--- @param data.id A string that names the Automanton.
+-- @arg data.id A string that names the Automanton.
 -- @output parent The Environment it belongs.
 -- @usage automaton = Automaton {
 --     id = "MyAutomaton",

@@ -12,8 +12,8 @@
 -- This function uses stat internally thus if the given filepath is a symbolic link, it is followed 
 -- (if it points to another link the chain is followed recursively) and the information is about the 
 -- file it refers to. To obtain information about the link itself, see FileSystem:symlinkattributes().
--- @param filepath A string with the file path.
--- @param attributename A string with the name of the attribute to be read.
+-- @arg filepath A string with the file path.
+-- @arg attributename A string with the name of the attribute to be read.
 -- @tabular attributename
 -- Attribute & Description \
 -- "dev" &
@@ -52,7 +52,7 @@ end
 
 --- Change the current working directory to the given path.
 -- Returns true in case of success or nil plus an error string.
--- @param path A string with the path.
+-- @arg path A string with the path.
 -- @usage chdir("c:\\tests")
 chdir = function(path)
 	return lfs.chdir(path)
@@ -65,7 +65,7 @@ currentdir = function()
 end
 
 --- Return whether a given string represents a file stored in the computer.
--- @param file A string.
+-- @arg file A string.
 -- @usage isfile("C:\\file.txt")
 isfile = function(file)
 	return os.rename(file, file)
@@ -73,8 +73,8 @@ end
 
 --- Execute a system command and return its output. Each line of the output will be a position
 -- in the returned table.
--- @param command A command.
--- @param number A number indicating the output to be captured. Default is 1 (standard output). 
+-- @arg command A command.
+-- @arg number A number indicating the output to be captured. Default is 1 (standard output). 
 -- It is also possible to use 2, to capture the error output.
 -- @usage runCommand("dir")
 function runCommand(command, number)
@@ -95,7 +95,7 @@ function runCommand(command, number)
 end
 
 --- Return the files in a given directory.
--- @param folder A string describing a folder.
+-- @arg folder A string describing a folder.
 -- @usage dir("C:\\")
 dir = function(folder)
 	local s = sessionInfo().separator
@@ -119,7 +119,7 @@ end
 -- it returns a directory entry's name as a string, or nil if there are no more entries. You can 
 -- also iterate by calling dir_obj:next(), and explicitly close the directory before the iteration 
 -- finished with dir_obj:close(). Raises an error if path is not a directory.
--- @param path A string with the path.
+-- @arg path A string with the path.
 -- @usage iter, dir_obj = lfsdir(path)
 lfsdir = function(path)
 	return lfs.dir(path)
@@ -129,8 +129,8 @@ end
 -- specified as the first argument. The optional arguments start and length can be used to specify a 
 -- starting point and its length; both should be numbers.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @param fh A string with the file path.
--- @param mode A string representing the mode. It could be either r (for a read/shared lock) or w 
+-- @arg fh A string with the file path.
+-- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w 
 -- (for a write/exclusive lock).
 -- @usage lock(filehandle, "r")
 lock = function(fh, mode)
@@ -138,12 +138,12 @@ lock = function(fh, mode)
 end
 
 --- Create a lockfile (called lockfile.lfs) in path if it does not exist and returns the lock. If the 
--- lock already exists checks if it's stale, using the second parameter (default for the second 
--- parameter is INT_MAX, which in practice means the lock will never be stale. To free the the lock call 
+-- lock already exists checks if it's stale, using the second argeter (default for the second 
+-- argeter is INT_MAX, which in practice means the lock will never be stale. To free the the lock call 
 -- lock:free(). 
 -- In case of any errors it returns nil and the error message. In particular, if the lock exists and is 
 -- not stale it returns the "File exists" message.
--- @param path A string with the path.
+-- @arg path A string with the path.
 -- @usage lock_dir(path)
 lock_dir = function(path)
 	return lfs.lock_dir
@@ -151,7 +151,7 @@ end
 
 --- Create a new directory. The argument is the name of the new directory.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @param path A string with the path.
+-- @arg path A string with the path.
 -- @usage mkdir(dirname)
 mkdir = function(path)
 	return lfs.mkdir(path)
@@ -159,7 +159,7 @@ end
 
 --- Remove an existing directory. The argument is the name of the directory.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @param path A string with the path.
+-- @arg path A string with the path.
 -- @usage rmdir(dirname)
 rmdir = function(path)
 	return lfs.rmdir(path)
@@ -169,8 +169,8 @@ end
 -- followed the previous mode string for the file, or nil followed by an error string in case of errors. 
 -- On non-Windows platforms, where the two modes are identical, setting the mode has no effect, and the 
 -- mode is always returned as binary.
--- @param filepath A string with the file path.
--- @param mode A string that can be either "binary" or "text". 
+-- @arg filepath A string with the file path.
+-- @arg mode A string that can be either "binary" or "text". 
 -- @usage setmode(file, "text")
 setmode = function(filepath, mode)
 	return lfs.setmode(filepath, mode)
@@ -178,8 +178,8 @@ end
 
 --- Identical to FileSystem:attributes() except that it obtains information about the link itself (not the file it 
 -- refers to). On Windows this function does not yet support links, and is identical to FileSystem:attributes().
--- @param filepath A string with the file path.
--- @param attributename A string with the name of the attribute to be read.
+-- @arg filepath A string with the file path.
+-- @arg attributename A string with the name of the attribute to be read.
 -- @usage symlinkattributes(filepath, "size")
 symlinkattributes = function(filepath, attributename)
 	return lfs.symlinkattributes(filepath, attributename)
@@ -190,9 +190,9 @@ end
 -- standard function os.time). If the modification time is omitted, the access time provided is used; 
 -- if both times are omitted, the current time is used.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @param filepath A string with the file name.
--- @param atime The new access time (in seconds).
--- @param mtime The new modification time (in seconds).
+-- @arg filepath A string with the file name.
+-- @arg atime The new access time (in seconds).
+-- @arg mtime The new modification time (in seconds).
 -- @usage touch(filepath)
 touch = function(filepath, atime, mtime)
 	return lfs.touch(filepath, atime, mtime)
@@ -202,7 +202,7 @@ end
 -- as the first argument. The optional arguments start and length can be used to specify a starting point 
 -- and its length; both should be numbers.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @param fh A string with the file path.
+-- @arg fh A string with the file path.
 -- @usage unlock(filehandle)
 unlock = function(fh)
 	return lfs.unlock(fh)

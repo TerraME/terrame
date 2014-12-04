@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Doclet to format source code according to LuaDoc standard tags. This doclet
 -- (re)write .lua files adding missing standard tags. Texts are formatted to
--- 80 columns and function parameters are added based on code analysis.
+-- 80 columns and function arguments are added based on code analysis.
 --
 -- @release $Id: formatter.lua,v 1.5 2007/04/18 14:28:39 tomas Exp $
 -------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ end
 -------------------------------------------------------------------------------
 -- Generate a new lua file for each input lua file. If the user does not 
 -- specify a different output directory input files will be rewritten.
--- @param doc documentation table
+-- @arg doc documentation table
 
 function start (doc)
 	local todo = "<TODO>"
@@ -53,9 +53,9 @@ function start (doc)
 			f:write("\n")
 			
 			if block.class == "function" then
-				-- parameters
-				for _, param_name in ipairs(block.param) do
-					f:write(util.comment(util.wrap(string.format("@param %s %s", param_name, block.param[param_name] or todo), 77)))
+				-- arguments
+				for _, arg_name in ipairs(block.arg) do
+					f:write(util.comment(util.wrap(string.format("@arg %s %s", arg_name, block.arg[arg_name] or todo), 77)))
 					f:write("\n")
 				end
 				

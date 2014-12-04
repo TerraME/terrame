@@ -25,17 +25,17 @@
 
 --- Creates an Internet connection to send observed attributes of an object through a 
 --- TCP or UDP port of a given IP. 
--- @param data.subject An Agent, Cell, CellularSpace, Society.
--- @param data.port A string or a vector of strings with ports for the respective host 
+-- @arg data.subject An Agent, Cell, CellularSpace, Society.
+-- @arg data.port A string or a vector of strings with ports for the respective host 
 -- names to be used by udpsenders.
--- @param data.host A string or a vector of strings with host names for udpsenders.
--- @param data.visible A boolean value indicating whether the InternetSender will create
+-- @arg data.host A string or a vector of strings with host names for udpsenders.
+-- @arg data.visible A boolean value indicating whether the InternetSender will create
 -- a window to display its data.
--- @param data.protocol A string with the protocol to be used. It can be "tcp" or "udp".
--- @param data.compress Compress the data to be transfered? It might be interesting not to 
+-- @arg data.protocol A string with the protocol to be used. It can be "tcp" or "udp".
+-- @arg data.compress Compress the data to be transfered? It might be interesting not to 
 -- compress when the connection is on the localhost, or when there is a very fast connection,
 -- to make the simulation faster.
--- @param data.select A vector of strings with the name of the attributes to be observed.
+-- @arg data.select A vector of strings with the name of the attributes to be observed.
 -- If it is only a single value then it can also be described as a string. 
 -- @usage InternetSender{subject = cs}
 InternetSender = function(data)

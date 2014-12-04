@@ -31,7 +31,7 @@ return{
 				target = "wet"
 			}
 		end
-		unitTest:assert_error(error_func, "Jump constructor expected a function as first parameter.")
+		unitTest:assert_error(error_func, "Jump constructor expected a function as first argument.")
 
 		local error_func = function()
 			Jump{ 
@@ -39,7 +39,7 @@ return{
 				target = "wet"
 			}
 		end
-		unitTest:assert_error(error_func, "Jump constructor expected a function as first parameter.")
+		unitTest:assert_error(error_func, "Jump constructor expected a function as first argument.")
 	end
 }
 

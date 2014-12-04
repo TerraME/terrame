@@ -24,7 +24,7 @@
 --#########################################################################################
 
 Model_ = {
-	--- Check whether the instance of the model has correct parameters. This function is optional
+	--- Check whether the instance of the model has correct arguments. This function is optional
 	-- and it is called before creating internal objects.
 	-- @usage model:check()
 	check = function(self)
@@ -34,8 +34,8 @@ Model_ = {
 	setup = function(self)
 		customError("Function 'setup' was not implemented by the Model.")
 	end,
-	--- Run the model. It checks the parameters, create the objects, and then simulate until numRuns.
-	-- @param finalTime A number with the final time of the simulation.
+	--- Run the model. It checks the arguments, create the objects, and then simulate until numRuns.
+	-- @arg finalTime A number with the final time of the simulation.
 	-- @usage model:execute(20)
 	execute = function(self, finalTime)
 		if finalTime == nil then
@@ -226,7 +226,7 @@ local interface = function(self, ordering)
 	r = r.."Dialog = qt.new_qobject(qt.meta.QDialog)\n"
 	r = r.."Dialog.windowTitle = \"Create model instance\"\n\n"
 
-	-- the first layout will contain a layout with the parameters in the top 
+	-- the first layout will contain a layout with the arguments in the top 
 	-- and another with the buttons in the bottom
 	r = r.."ExternalLayout = qt.new_qobject(qt.meta.QVBoxLayout)\n"
 	r = r.."qt.ui.layout_add(Dialog, ExternalLayout)\n"
@@ -559,7 +559,7 @@ end
 -- The idea is to take only strings, numbers, booleans, and vectors of these three types as the
 -- only possible arguments to any Model. Functions can be mapped to the strings and then be
 -- solved internally. 
--- @param attrTab A table with the description of the type. Each named argument of this table
+-- @arg attrTab A table with the description of the type. Each named argument of this table
 -- will be considered as an argument of the constructor of the type. The values of each
 -- named argument have an associated semantinc, which means that they are not necessarially the
 -- default value. [Note that some of these features were not implemented yet.] See the table below:
@@ -681,7 +681,7 @@ Model = function(attrTab)
 			end
 		end)
 
-		-- verify whether there are some parameters in the instance that does not belong to the Model
+		-- verify whether there are some arguments in the instance that does not belong to the Model
 		forEachElement(argv, function(name, value, mtype)
 			if type(value) == "table" then
 				local attrTabValue = attrTab[name]

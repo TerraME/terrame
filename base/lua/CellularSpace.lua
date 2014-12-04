@@ -416,7 +416,7 @@ registerCellularSpaceDriver{
 CellularSpace_ = {
 	type_ = "CellularSpace",
 	--- Add a new Cell to the CellularSpace. It will be the last Cell of the CellularSpace.
-	-- @param cell A Cell.
+	-- @arg cell A Cell.
 	-- @usage cs:add(cell)
 	add = function(self, cell)
 		if type(cell) ~= "Cell" then
@@ -437,14 +437,14 @@ CellularSpace_ = {
 	end,
 	--- Create a Neighborhood for each Cell of the CellularSpace. It gets a table as argument, with 
 	-- the following attributes:
-	-- @param data A table
-	-- @param data.onthefly If false (default), the Neighborhood will be built and stored in
+	-- @arg data A table
+	-- @arg data.onthefly If false (default), the Neighborhood will be built and stored in
 	-- each Cell of the CelularSpace. If true, the Neighborhood will be
 	-- computed every time the simulation calls Cell:getNeighborhood.
 	-- A computational consequence of having on-the-fly Neighborhoods is that it saves
 	-- memory (because the Neighborhoods are not explicitly represented), but it consumes more
 	-- time, as it needs to be built again and again.
-	-- @param data.strategy A string with the strategy to be used for creating the Neighborhood. 
+	-- @arg data.strategy A string with the strategy to be used for creating the Neighborhood. 
 	-- See the table below.
 	-- @tabular strategy
 	-- Strategy & Description & Compulsory Arguments & Optional Arguments \
@@ -459,25 +459,25 @@ CellularSpace_ = {
 	-- CellularSpaces if target is used. & m & name, n, filter, weight, target, onthefly \
 	-- "vonneumann" & A von Neumann (rook) Neighborhood, connecting each Cell to its (at most)
 	-- four ortogonally surrounding Cells. & & name, self, wrap, onthefly
-	-- @param data.filter A function(Cell, Cell)->bool, where the first argument is the Cell itself
+	-- @arg data.filter A function(Cell, Cell)->bool, where the first argument is the Cell itself
 	-- and the other represent a possible neighbor. It returns true when the neighbor will be
 	-- included in the relation. In the case of two CellularSpaces, this function is called twice
 	-- for e ach pair of Cells, first filter(c1, c2) and then filter(c2, c1), where c1 belongs to
 	-- cs1 and c2 belongs to cs2. The default is a function that returns true.
-	-- @param data.m Number of columns. If m is even then it will be increased by one to keep the
+	-- @arg data.m Number of columns. If m is even then it will be increased by one to keep the
 	-- Cell in the center of the Neighborhood.
-	-- @param data.n Number of rows. If n is even then it will be increased by one to keep the Cell
+	-- @arg data.n Number of rows. If n is even then it will be increased by one to keep the Cell
 	-- in the center of the Neighborhood.
-	-- @param data.name A string with the name of the Neighborhood to be created. 
+	-- @arg data.name A string with the name of the Neighborhood to be created. 
 	-- The default is "1".
-	-- @param data.self Add the Cell as neighbor of itself? Default is false. Note that the 
+	-- @arg data.self Add the Cell as neighbor of itself? Default is false. Note that the 
 	-- functions that do not require this argument always depend on a filter function, which will
 	-- define whether the Cell can be neighbor of itself.
-	-- @param data.target Another CellularSpace whose Cells will be used to create neighborhoods.
-	-- @param data.weight A function(Cell, Cell)->number, where the first argument is the Cell
+	-- @arg data.target Another CellularSpace whose Cells will be used to create neighborhoods.
+	-- @arg data.weight A function(Cell, Cell)->number, where the first argument is the Cell
 	-- itself and the other represent its neighbor. It calculates the weight of the relation. The
 	-- weight will be computed only if filter returns true.
-	-- @param data.wrap Whether Cells in the borders will be connected to the Cells in the
+	-- @arg data.wrap Whether Cells in the borders will be connected to the Cells in the
 	-- opposite border. Default is false.
 	-- @usage cs:createNeighborhood() -- moore
 	--
@@ -628,8 +628,8 @@ CellularSpace_ = {
 		end
 	end,
 	--- Return a cell from the CellularSpace given its x and y location.
-	-- @param xIndex A number with the x location of the cell to be returned.
-	-- @param yIndex A number with the y location of the cell to be returned.
+	-- @arg xIndex A number with the x location of the cell to be returned.
+	-- @arg yIndex A number with the y location of the cell to be returned.
 	-- @usage cs:getCell(2, 2)
 	-- @deprecated CellularSpace:get
 	getCell = function(self, xIndex, yIndex)
@@ -637,8 +637,8 @@ CellularSpace_ = {
 		return self:get(xIndex, yIndex)
 	end,
 	--- Retrieve a Cell from the CellularSpace, given its id or its x and y.
-	-- @param xIndex A number indicating x coord. It can also be a string with the object id.
-	-- @param yIndex A number indicating y coord. This argument is unnecessary when the first 
+	-- @arg xIndex A number indicating x coord. It can also be a string with the object id.
+	-- @arg yIndex A number indicating y coord. This argument is unnecessary when the first 
 	-- argument is a string.
 	-- @usage cs:get(2, 2)
 	-- cs:get("5")
@@ -676,7 +676,7 @@ CellularSpace_ = {
 		return self.cells
 	end,
 	--- Return a cell from the CellularSpace given its id.
-	-- @param cellID A string with the unique identifier of the Cell to be returned.
+	-- @arg cellID A string with the unique identifier of the Cell to be returned.
 	-- @usage cs:getCellByID("2")
 	-- @deprecated CellularSpace:get
 	getCellByID = function(self, cellID)
@@ -692,9 +692,9 @@ CellularSpace_ = {
 	end,
 	--- Load a Neighborhood stored in an external source. Each Cell receives its own set of 
 	-- neighbors.
-	-- @param data.name A string with the location of the Neighborhood 
+	-- @arg data.name A string with the location of the Neighborhood 
 	-- to be loaded. See below.
-	-- @param tbAttrLoad.source A string with the name of the Neighborhood
+	-- @arg tbAttrLoad.source A string with the name of the Neighborhood
 	-- to be loaded within TerraME. Default is "1".
 	-- @tabular name
 	-- Source & Description \
@@ -737,7 +737,7 @@ CellularSpace_ = {
 		self.cObj_:loadNeighborhood(data.source, data.name)
 	end,
 	--- Notify every Observer connected to the CellularSpace.
-	-- @param modelTime The time to be used by the Observer. Most of the strategies available 
+	-- @arg modelTime The time to be used by the Observer. Most of the strategies available 
 	-- ignore this value. 
 	-- @usage cs:notify()
 	-- cs:notify(event:getTime())
@@ -768,10 +768,10 @@ CellularSpace_ = {
 		return self.cells[Random():integer(1, #self)]
 	end,
 	--- Save the attributes of a CellularSpace into the same database it was retrieved.
-	-- @param time A temporal value to be stored in the database, which can be different from
+	-- @arg time A temporal value to be stored in the database, which can be different from
 	-- the simulation time.
-	-- @param outputTableName Name of the table to store the attributes of the Cells.
-	-- @param attrNames A vector with the names of the attributes to be saved (default is all
+	-- @arg outputTableName Name of the table to store the attributes of the Cells.
+	-- @arg attrNames A vector with the names of the attributes to be saved (default is all
 	-- of them). When saving a single attribute, you can use attrNames = "attribute" instead
 	-- of attrNames = {"attribute"}.
 	-- @usage cs:save(20,"table")
@@ -844,7 +844,7 @@ CellularSpace_ = {
 	--- Split the CellularSpace into a table of Trajectories according to a classification 
 	-- strategy. The generated Trajectories have empty intersection and union equals to the
 	-- whole CellularSpace (unless function below returns nil for some Cell). 
-	-- @param argument A string or a function, as follows:
+	-- @arg argument A string or a function, as follows:
 	-- @tabular argument
 	-- Type of argument & Description \
 	-- string & The argument must represent the name of one attribute of the Cells of the
@@ -898,7 +898,7 @@ CellularSpace_ = {
 		return result
 	end,
 	--- Synchronize the CellularSpace, calling the function synchronize() for each of its Cells.
-	-- @param values A string or a vector of strings with the attributes to be synchronized. If 
+	-- @arg values A string or a vector of strings with the attributes to be synchronized. If 
 	-- empty, TerraME synchronizes every attribute read from the database but the (x, y) 
 	-- coordinates and the attributes created along the simulation.
 	-- @usage cs:synchronize()
@@ -954,37 +954,37 @@ metaTableCellularSpace_ = {
 -- databases might not have this cell, according to the original geometry that was used to
 -- create the CellularSpace. Calling Utils:forEachCell() traverses CellularSpaces.
 --
--- @param data A table.
--- @param data.database Name of the database. It can also describe the location of a
+-- @arg data A table.
+-- @arg data.database Name of the database. It can also describe the location of a
 -- shapefile. In thiscase, the other arguments will be ignored.
--- @param data.theme Name of the theme to be loaded.
--- @param data.dbType Name of the data source. It tries to infer the data source according
--- to the extension of the parameter database. When it does not have an extension or when the
+-- @arg data.theme Name of the theme to be loaded.
+-- @arg data.dbType Name of the data source. It tries to infer the data source according
+-- to the extension of the argument database. When it does not have an extension or when the
 -- extension is not recognized it will read data from a MySQL database. The default value depends
 -- on the database name. If it has a ".mdb" extension, the default value is "ado". If it has a
 -- "shp" extension it will load a shapefile. Otherwise it is "mysql"). TerraME always converts
 -- this string to lower case.
--- @param data.host Host where the database is stored (default is "localhost").
--- @param data.port Port number of the connection.
--- @param data.user Username (default is "").
--- @param data.sep A string with the file separator for reading a CSV (default is ",").
--- @param data.password The password (default is "").
--- @param data.layer A boolean value indicating whether the CellularSpace will be loaded
+-- @arg data.host Host where the database is stored (default is "localhost").
+-- @arg data.port Port number of the connection.
+-- @arg data.user Username (default is "").
+-- @arg data.sep A string with the file separator for reading a CSV (default is ",").
+-- @arg data.password The password (default is "").
+-- @arg data.layer A boolean value indicating whether the CellularSpace will be loaded
 -- automatically (true, default value) or the user by herself will call load (false).
--- @param data.autoload A boolean value indicating whether the CellularSpace will be loaded
+-- @arg data.autoload A boolean value indicating whether the CellularSpace will be loaded
 -- automatically (true, default value) or the user by herself will call load (false).
--- @param data.select A table containing the names of the attributes to be retrieved (default is
+-- @arg data.select A table containing the names of the attributes to be retrieved (default is
 -- all attributes). When retrieving a single attribute, you can use select = "attribute" instead
 -- of select = {"attribute"}. It is possible to rename the attribute name using "as", for example,
 -- select= {"lc as landcover"} reads lc from the database but replaces the name to landcover in
 -- the Cells. Attributes that contain "." in their names (such as results of table joins) will be
 -- read with "_" replacing "." in order to follow Lua syntax to manipulate data.
--- @param data.where An SQL restriction on the properties of the Cells (default is "", applying no
+-- @arg data.where An SQL restriction on the properties of the Cells (default is "", applying no
 -- restriction. Only the Cells that reflect the established criteria will be loaded). For example,
--- the operator to compare value is "=" and not "==". This parameter can only be used when reading
+-- the operator to compare value is "=" and not "==". This argument can only be used when reading
 -- data from a database.
--- @param data.instance A Cell with the description of attributes and functions. 
--- When using this parameter, each Cell will have attributes and functions according to the
+-- @arg data.instance A Cell with the description of attributes and functions. 
+-- When using this argument, each Cell will have attributes and functions according to the
 -- instance. The CellularSpace calls Cell:init() from the instance for each of its Cells.
 -- Additional functions are also created to the CellularSpace, according to the attributes of the
 -- instance. For each attribute of the instance, one function is created in the CellularSpace with
@@ -997,13 +997,13 @@ metaTableCellularSpace_ = {
 -- boolean & Return the sum of true values in each of its Cells. \
 -- string & Return a table with positions equal to the unique strings and values equal to the
 -- number of occurrences in each of its Cells.
--- @param data.xdim Number of columns, in the case of creating a CellularSpace without needing to
+-- @arg data.xdim Number of columns, in the case of creating a CellularSpace without needing to
 -- load from a database.
--- @param data.ydim Number of lines, in the case of creating a CellularSpace without needing to
+-- @arg data.ydim Number of lines, in the case of creating a CellularSpace without needing to
 -- load from a database. Default is equal to xdim.
 --
 -- @tabular data.dbType
--- dbType & Description & Compulsory parameters & Optional parameters\
+-- dbType & Description & Compulsory arguments & Optional arguments\
 -- "mdb" & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer, select,
 -- where \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
@@ -1091,7 +1091,7 @@ function CellularSpace(data)
 				word = word.."'"..a.."', "
 			end)
 			word = string.sub(word, 0, string.len(word) - 2).."]."
-			customError("'"..data.dbType.."' is an invalid value for parameter 'dbType'. "..word)
+			customError("'"..data.dbType.."' is an invalid value for argument 'dbType'. "..word)
 		elseif CellularSpaceDrivers[data.dbType].extension then
 			mandatoryTableArgument(data, "database", "string")
 			if getExtension(data.database) ~= data.dbType then

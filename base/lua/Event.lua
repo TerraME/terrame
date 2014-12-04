@@ -89,12 +89,12 @@ end
 -- In order to be executed, Events must belong to a Timer. An Event is usually rescheduled to be
 -- executed again according to its period, unless its action returns false. The functions
 -- available for Events can be used only along the simulation, when the Event is activated and
--- comes as a parameter of an action.
--- @param data.time A number representing the first instant of time when the
+-- comes as a argument of an action.
+-- @arg data.time A number representing the first instant of time when the
 -- Event will occur. Default is 1.
--- @param data.period A positive number representing the periodicity of the Event. 
+-- @arg data.period A positive number representing the periodicity of the Event. 
 -- Default is 1.
--- @param data.priority A defining the priority of the Event over 
+-- @arg data.priority A defining the priority of the Event over 
 -- other Events. Smaller values have higher priority. Default is 0. Priorities can also be defined
 -- as strings:
 -- @tabular priority
@@ -104,7 +104,7 @@ end
 -- "medium" & 0 \
 -- "high" & -5 \
 -- "veryhigh" & -10
--- @param data.action A function from where, in general, the simulation engine services are 
+-- @arg data.action A function from where, in general, the simulation engine services are 
 -- invoked. This function has one single argument, the Event itself. If the action returns false,
 -- the Event is removed from the Timer and will not be executed again. Action can also be a TerraME
 -- object. In this case, each type has its own set of functions that will be activated by
@@ -237,10 +237,10 @@ Event_ = {
 	-- @usage timer = event:getParent()
 	getParent = function(self) end,
 	--#- Change the attributes of the Event. It will be rescheduled according to its new attributes.
-	-- @param time The time instant the Event will occur again (default is the current time of the
+	-- @arg time The time instant the Event will occur again (default is the current time of the
 	-- Timer it will belong).
-	-- @param period The new periodicity of the Event (default is 1).
-	-- @param priority The new priority of the Event. The default priority is 0 (zero). Smaller
+	-- @arg period The new periodicity of the Event (default is 1).
+	-- @arg priority The new priority of the Event. The default priority is 0 (zero). Smaller
 	--  values have higher priority.
 	-- @usage event:config(1)
 	-- event:config(1, 0.05)
@@ -254,7 +254,7 @@ Event_ = {
 	getPriority = function(self) end,
 	--#- Change the priority of the Event. This change will take place as soon as the Event
 	-- is rescheduled.
-	-- @param period The new periodicity of the Event (default is 1).
+	-- @arg period The new periodicity of the Event (default is 1).
 	-- @usage event:setPriority(4)
 	-- setPriority = function(period) end,
 	--#- Notify every Observer connected to the Event.

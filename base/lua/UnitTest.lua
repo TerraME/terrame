@@ -61,7 +61,7 @@ UnitTest_ = {
 	count_last = 0,
 	delayed_time = 0,
 	--- Check if a given value is true. In any other case (number, string, false, or nil) it generates an error
-	-- @param value Any value.
+	-- @arg value Any value.
 	-- @usage unitTest:assert(2 < 3)
 	assert = function(self, value)
 		self.test = self.test + 1
@@ -84,8 +84,8 @@ UnitTest_ = {
 		end
 	end,
 	--- Check if a value belongs to a given type. If not, it generates an error.
-	-- @param value Any value.
-	-- @param mtype A string with the name of a type.
+	-- @arg value Any value.
+	-- @arg mtype A string with the name of a type.
 	-- @usage unitTest:assert_type(2, "number")
 	assert_type = function (self, value, mtype)
 		self.test = self.test + 1
@@ -100,7 +100,7 @@ UnitTest_ = {
 		end
 	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
-	-- @param value Any value.
+	-- @arg value Any value.
 	-- @usage unitTest:assert_nil()
 	assert_nil = function(self, value)
 		self.test = self.test + 1
@@ -112,7 +112,7 @@ UnitTest_ = {
 		end
 	end,
 	--- Check if a given value is not nil. Otherwise it generates an error.
-	-- @param value Any value.
+	-- @arg value Any value.
 	-- @usage unitTest:assert_not_nil(2)
 	assert_not_nil = function (self, value)
 		self.test = self.test + 1
@@ -125,9 +125,9 @@ UnitTest_ = {
 	end,
 	--- Check if two values are equal. In this function, two tables are equal only when they are the
 	-- same object (if not, they would not be equal even if they share the same internal content).
-	-- @param v1 Any value.
-	-- @param v2 Any value.
-	-- @param tol A number indicating a maximum error tolerance. This parameter is optional and can
+	-- @arg v1 Any value.
+	-- @arg v2 Any value.
+	-- @arg tol A number indicating a maximum error tolerance. This argument is optional and can
 	-- be used only with numeric values. The default tolerance is zero.
 	-- @usage unitTest:assert_equal(3, 3)
 	-- unitTest:assert_equal(2, 2.1, 0.2)
@@ -168,11 +168,11 @@ UnitTest_ = {
 		end
 	end,
 	--- Verify if a function produces an error.
-	-- @param my_function A function.
-	-- @param error_message A string describing the error message that the function should produce.
+	-- @arg my_function A function.
+	-- @arg error_message A string describing the error message that the function should produce.
 	-- This string should contain only the error message, without the description of the file name
 	-- the error was produced.
-	-- @param max_error A number indicating the maximum discrepance between the generated error and the
+	-- @arg max_error A number indicating the maximum discrepance between the generated error and the
 	-- expected error. It is necessary in error messages that include information that can change
 	-- from machine to machine, such as an username. The default value is zero (no discrepance).
 	-- @usage error_func = function() verify(2 > 3, "wrong operator") end
@@ -264,12 +264,12 @@ local metaTableUnitTest_ = {
 
 --- Type for testing packages. All its arguments (but sleep) are necessary only when the tests
 -- work with database access.
--- @param data.dbType Name of the data source. See CellularSpace.
--- @param data.host Name of the host. See CellularSpace.
--- @param data.port Number of the port. See CellularSpace.
--- @param data.password A password. See CellularSpace.
--- @param data.user A user name. See CellularSpace.
--- @param data.sleep A number indicating the amount of time to sleep every time there is a delay in
+-- @arg data.dbType Name of the data source. See CellularSpace.
+-- @arg data.host Name of the host. See CellularSpace.
+-- @arg data.port Number of the port. See CellularSpace.
+-- @arg data.password A password. See CellularSpace.
+-- @arg data.user A user name. See CellularSpace.
+-- @arg data.sleep A number indicating the amount of time to sleep every time there is a delay in
 -- the tests.
 -- @usage unitTest = UnitTest{}
 function UnitTest(data)

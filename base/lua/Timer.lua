@@ -28,7 +28,7 @@
 Timer_ = {
 	type_ = "Timer",
 	--- Add a new Event to the timer.
-	-- @param event An Event.
+	-- @arg event An Event.
 	-- @usage timer:add(Event{...})
 	add = function (self, event)
 		if type(event) == "table" then 
@@ -51,7 +51,7 @@ Timer_ = {
 	-- to execute again according to its period. The Timer stops only when all its event are
 	-- scheduled to execute after the given time, or when there is no remaining events. It
 	-- returns whether the events were sucessfully executed.
-	-- @param finalTime A  number representing the time to stop the simulation.
+	-- @arg finalTime A  number representing the time to stop the simulation.
 	-- The timer will stop when there is no Event scheduled to a time less or equal to the
 	-- final time. This argument is mandatory.
 	-- @usage timer:execute(2013)
@@ -60,7 +60,7 @@ Timer_ = {
 		self.cObj_:execute(finalTime)
 	end,
 	--- Notify every Observer connected to the Timer.
-	-- @param modelTime An positive integer number representing time to be used by the
+	-- @arg modelTime An positive integer number representing time to be used by the
 	-- Observer. Default is the current simulation time 'self:getTime()'.
 	-- @usage timer:notify()
 	notify = function (self, modelTime)
@@ -85,7 +85,7 @@ metaTableTimer_ = {__index = Timer_, __tostring = tostringTerraME}
 -- set of Events. It allows the model to take into consideration processes that start
 -- independently and act in different periodicities. It starts with time 0 and, once it is in a
 -- given time, it ensures that all the Events before that time were already executed.
--- @param data A table containing all Events of the Timer.
+-- @arg data A table containing all Events of the Timer.
 -- @usage timer = Timer {
 --     Event {...},
 --     Event {...}

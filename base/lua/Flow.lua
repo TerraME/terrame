@@ -27,7 +27,7 @@
 metaTableFlow_ = {__tostring = tostringTerraME}
 
 --- A Flow describes the behavior of an automaton or Agent in a given State.
--- @param data.1st A function(ev, agent, cell), where the arguments are: an Event that 
+-- @arg data.1st A function(ev, agent, cell), where the arguments are: an Event that 
 -- activated the Flow, the Automaton or Agent that owns the Flow, and the Cell over which
 -- the Flow will be evaluated.
 -- @usage Flow { function(ev, agent, cell)
@@ -45,7 +45,7 @@ function Flow(data)
 	data.rule = cObj
 
 	if type(data[1]) ~= "function" then
-		customError("Flow constructor expected a function as parameter.")
+		customError("Flow constructor expected a function as argument.")
 	end
 
 	setmetatable(data, metaTableFlow_)

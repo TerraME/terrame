@@ -101,7 +101,7 @@ end
 Society_ = {
 	type_ = "Society",
 	--- Add a new Agent to the Society.
-	-- @param agent The new Agent that will be added to the Society. If nil, the Society will add a 
+	-- @arg agent The new Agent that will be added to the Society. If nil, the Society will add a 
 	-- copy of the instance used to build the Society. In this case, the Society executes 
 	-- Agent:init() after creating the copy.
 	-- @usage soc:add(agent)
@@ -149,13 +149,13 @@ Society_ = {
 	end,
 	--- Create a directed SocialNetwork for each Agent of the Society. The following arguments 
 	-- represent the strategies, which must be only one for call:
-	-- @param data.strategy A string with the strategy to be used for creating the SocialNetwork. 
+	-- @arg data.strategy A string with the strategy to be used for creating the SocialNetwork. 
 	-- See the table below.
-	-- @param data.filter A function (Agent, Agent)->boolean that returns true if the first Agent 
+	-- @arg data.filter A function (Agent, Agent)->boolean that returns true if the first Agent 
 	-- will have the second Agent in its SocialNetwork. When using this argument, the default
 	-- value of strategy becomes "function".
-	-- @param data.name Name of the relation.
-	-- @param data.onthefly If false (default), the SocialNetwork will be built and stored in
+	-- @arg data.name Name of the relation.
+	-- @arg data.onthefly If false (default), the SocialNetwork will be built and stored in
 	-- each Agent of the Society. It means that the SocialNetwork will change only if the 
 	-- modeler explicitly add or remove connections. If true, the SocialNetwork will be
 	-- computed every time the simulation calls Agent:getSocialNetwork.
@@ -165,23 +165,23 @@ Society_ = {
 	-- updated. A computational consequence of having on-the-fly SocialNetworks is that it saves
 	-- memory (because the SocialNetworks are not explicitly represented), but it consumes more
 	-- time, as it needs to be built again even if no changes occur in the simulation.
-	-- @param data.neighborhood A string with the name of the Neighborhood that will be used to
+	-- @arg data.neighborhood A string with the name of the Neighborhood that will be used to
 	-- create the SocialNetwork. Default is "1".
-	-- @param data.placement A string with the name of the Placement that will be used to
+	-- @arg data.placement A string with the name of the Placement that will be used to
 	-- create the SocialNetwork. Default is "placement".
-	-- @param data.probability A number between 0 and 1 indicating the probability of each
+	-- @arg data.probability A number between 0 and 1 indicating the probability of each
 	-- connection. The probability is applied for each pair of Agents. When using this argument,
 	-- the default value of strategy becomes "probability".
-	-- @param data.quantity A number indicating the number of connections each Agent will have,
+	-- @arg data.quantity A number indicating the number of connections each Agent will have,
 	-- taking randomly from the whole Society. When using this argument, the default value of
 	-- strategy becomes "quantity".
-	-- @param data.self A boolean value indicating whether the Agent can be connected to itself.
+	-- @arg data.self A boolean value indicating whether the Agent can be connected to itself.
 	-- Default is false.
-	-- @param data.random A Random object. Default is the internal random generator.
+	-- @arg data.random A Random object. Default is the internal random generator.
 	-- @tabular strategy
 	-- Strategy &
 	-- Description &
-	-- Compulsory parameters & Optional parameters \
+	-- Compulsory arguments & Optional arguments \
 	-- "cell" &
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
 	-- same Cell the Agent belongs. & &
@@ -319,7 +319,7 @@ Society_ = {
 		end
 	end,
 	--- Return a given Agent based on its index.
-	-- @param index The index of the Agent that will be returned.
+	-- @arg index The index of the Agent that will be returned.
 	-- @usage agent = soc:getAgent("1")
 	-- @deprecated Society:get
 	getAgent = function(self, index)
@@ -327,7 +327,7 @@ Society_ = {
 		return self:get(index)
 	end,
 	--- Return a given Agent based on its index.
-	-- @param index The index of the Agent that will be returned.
+	-- @arg index The index of the Agent that will be returned.
 	-- @usage agent = soc:get("1")
 	get = function(self, index)
 		mandatoryArgument(1, "number", index)
@@ -347,7 +347,7 @@ Society_ = {
 		return self.agents
 	end,
 	--- Notify all the Agents of the Society.
-	-- @param modelTime The notification time.
+	-- @arg modelTime The notification time.
 	-- @usage society:notify()
 	notify = function (self, modelTime)
 		if modelTime == nil then
@@ -379,7 +379,7 @@ Society_ = {
 	end,
 	--- Remove a given Agent from the Society. It returns whether the agent was sucessfully removed.
 	-- @usage soc:remove(agent)
-	-- @param arg The Agent that will be removed, or a function that takes an Agent as argument and
+	-- @arg arg The Agent that will be removed, or a function that takes an Agent as argument and
 	-- returns true if the Agent must be removed.
 	remove = function(self, arg)
 		if type(arg) == "Agent" then
@@ -426,7 +426,7 @@ Society_ = {
 	-- generated Groups have empty intersection and union equals to the whole 
 	-- CellularSpace (unless function below returns nil for some Agent). It works according 
 	-- to the type of its only and compulsory argument, that can be:
-	-- @param argument string or function
+	-- @arg argument string or function
 	--
 	-- @tabular argument
 	-- Type of argument &
@@ -481,7 +481,7 @@ Society_ = {
 		return result
 	end,
 	--- Activate each asynchronous message sent by Agents belonging to the Society.
-	-- @param delay A number indicating the current delay to be delivered. Messages with delay less
+	-- @arg delay A number indicating the current delay to be delivered. Messages with delay less
 	-- or equal this value are sent, while the others have their delays reduced by this value.
 	-- Default is one.
 	-- @usage soc:synchronize()
@@ -526,9 +526,9 @@ metaTableSociety_ = {
 }
 --- Type to create and manipulate a set of Agents. Each Agent within a Society has a 
 -- unique id, which is initialized while creating the Society. There are different ways to 
--- create a Society. See the parameter dbType for the options.
+-- create a Society. See the argument dbType for the options.
 -- Calling Utils:forEachAgent() traverses Societies
--- Societies have additional functions related to its parameter instance, according to the 
+-- Societies have additional functions related to its argument instance, according to the 
 -- table below.
 -- @tabular instance
 -- Attribute of instance & Function within the Society \
@@ -537,41 +537,41 @@ metaTableSociety_ = {
 -- boolean & Return the sum of true values in each of its Agents. \
 -- string & Return a table with positions equal to the unique strings and values equal to the
 -- number of occurrences in each of its Agents.
--- @param data.database Name of the database.
--- @param data.dbType A string with the name of the source the Society will be read from. 
+-- @arg data.database Name of the database.
+-- @arg data.dbType A string with the name of the source the Society will be read from. 
 -- TerraME always converts this string to lower case. See the table below:
 -- @tabular dbType
--- dbType & Description & Compulsory parameters & Optional parameters \
+-- dbType & Description & Compulsory arguments & Optional arguments \
 -- "volatile" & Create agents from scratch. This is the default value when using the argument
 -- quantity. & quantity, instance & \
 -- "database" & Load agents from a database. This is the default value when using the argument
 -- theme. & theme, database, instance & layer, host, password, select, where, user, port \
--- "csv" & Load agents from a csv file. This is the default value when value of parameter
+-- "csv" & Load agents from a csv file. This is the default value when value of argument
 -- database ends with ".csv". & database, id, instance & sep
--- @param data.host Host where the database is stored (default is "localhost").
--- @param data.id The unique identifier attribute used when reading the Society from a file.
--- @param data.instance An Agent with the description of attributes and functions. When using this
--- parameter, each Agent will have attributes and functions according to the instance. The Society
+-- @arg data.host Host where the database is stored (default is "localhost").
+-- @arg data.id The unique identifier attribute used when reading the Society from a file.
+-- @arg data.instance An Agent with the description of attributes and functions. When using this
+-- argument, each Agent will have attributes and functions according to the instance. The Society
 -- calls Agent:init() from the instance for each of its Agents. Additional functions are also
 -- created to the Society, according to the attributes of the instance. For each attribute of the
 -- instance, one function is created in the Society with the same name (note that attributes
 -- declared exclusively in Agent:init() will not be mapped, as they do not belong to the
 -- instance). The table below describes how each attribute is mapped:
--- @param data.layer Name of the layer the theme was created from. It must be used to solve a
+-- @arg data.layer Name of the layer the theme was created from. It must be used to solve a
 -- conflict when there are two themes with the same name (default is "").
--- @param data.password The password (default is "").
--- @param data.port Port number of the connection.
--- @param data.sep A string with the file separator for reading a CSV (default is ",").
--- @param data.quantity Number of Agents to be created. It is used when the Society will not be
+-- @arg data.password The password (default is "").
+-- @arg data.port Port number of the connection.
+-- @arg data.sep A string with the file separator for reading a CSV (default is ",").
+-- @arg data.quantity Number of Agents to be created. It is used when the Society will not be
 -- loaded from a file or database.
--- @param data.select A table containing the names of the attributes to be retrieved (default is
+-- @arg data.select A table containing the names of the attributes to be retrieved (default is
 -- all attributes). When retrieving a single attribute, you can use select = "attribute" instead
 -- of select = {"attribute"}. It is possible to rename the attribute name using "as", for
 -- example, select = {"currentage as age"} reads currentage from the database but replaces the
 -- name to age in the Agents.
--- @param data.theme Name of the theme to be loaded.
--- @param data.user Username (default is "").
--- @param data.where A SQL restriction on the properties of the Agents (default is "", applying
+-- @arg data.theme Name of the theme to be loaded.
+-- @arg data.user Username (default is "").
+-- @arg data.where A SQL restriction on the properties of the Agents (default is "", applying
 -- no restriction. Only the Agents that reflect the established criteria will be loaded). This
 -- argument ignores the "as" flexibility of select. 
 --

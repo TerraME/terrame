@@ -25,8 +25,8 @@
 
 --- Creates a window to output attributes of an object. Each call to notify() add one
 -- more line to the content of the window.
--- @param data.subject An Agent, Cell, CellularSpace, Society.
--- @param data.select A vector of strings with the name of the attributes to be observed.
+-- @arg data.subject An Agent, Cell, CellularSpace, Society.
+-- @arg data.select A vector of strings with the name of the attributes to be observed.
 -- If it is only a single value then it can also be described as a string. 
 -- @usage TextScreen{subject = cs}
 TextScreen = function(data)

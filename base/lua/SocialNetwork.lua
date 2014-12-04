@@ -27,8 +27,8 @@
 SocialNetwork_ = {
 	type_ = "SocialNetwork",
 	--- Add a new connection to the SocialNetwork.
-	-- @param connection An Agent.
-	-- @param weight A number representing the weight of the connection (default nil - no weight).
+	-- @arg connection An Agent.
+	-- @arg weight A number representing the weight of the connection (default nil - no weight).
 	-- @usage sn:add(agent)
 	-- sn:add(agent, 0.5)
 	add = function(self, connection, weight)
@@ -60,7 +60,7 @@ SocialNetwork_ = {
 		self.weights = {}
 	end,
 	--- Return a number with the weight of a given connection.
-	-- @param connection An Agent.
+	-- @arg connection An Agent.
 	-- @usage print(sn:getWeight(agent))
 	getWeight = function(self, connection)
 		mandatoryArgument(1, "Agent", connection)
@@ -76,7 +76,7 @@ SocialNetwork_ = {
 		return self.weights[id]
 	end,
 	--- Return whether a given Agent belongs to the SocialNetwork.
-	-- @param connection An Agent.
+	-- @arg connection An Agent.
 	-- @usage if sn:isConnection(agent) then
 	--     print("not connected")
 	-- end
@@ -92,7 +92,7 @@ SocialNetwork_ = {
 		return self.count == 0
 	end,
 	--- Remove an Agent from the SocialNetwork.
-	-- @param connection An Agent.
+	-- @arg connection An Agent.
 	-- @usage sn:remove(agent)
 	remove = function(self, connection)
 		mandatoryArgument(1, "Agent", connection)
@@ -127,8 +127,8 @@ SocialNetwork_ = {
 		return result
 	end,
 	--- Update the weight of a connection.
-	-- @param connection An Agent.
-	-- @param weight A number pointing out the new weight.
+	-- @arg connection An Agent.
+	-- @arg weight A number pointing out the new weight.
 	-- @usage sn:setWeight(agent, 0.001)
 	setWeight = function(self, connection, weight)
 		mandatoryArgument(1, "Agent", connection)

@@ -26,10 +26,10 @@
 --- Creates a log file to save attributes of an object. The saved file uses the csv
 -- standard: The first line contains the attribute names and the following lines
 -- contains values according to the calls to notify().
--- @param data.subject An Agent, Cell, CellularSpace, Society.
--- @param data.file A string with the file name to be saved. Default is "result.csv".
--- @param data.separator A string with the separator. Default is ",".
--- @param data.select A vector of strings with the name of the attributes to be observed.
+-- @arg data.subject An Agent, Cell, CellularSpace, Society.
+-- @arg data.file A string with the file name to be saved. Default is "result.csv".
+-- @arg data.separator A string with the separator. Default is ",".
+-- @arg data.select A vector of strings with the name of the attributes to be observed.
 -- If it is only a single value then it can also be described as a string. 
 -- @usage LogFile{subject = cs}
 LogFile = function(data)

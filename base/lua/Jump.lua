@@ -41,8 +41,8 @@ local Jump_ = {
 metaTableJump_ = {__index = Jump_, __tostring = tostringTerraME}
 
 --- Control a discrete transition between States. If the method in the first argument returns true, the target becomes the new active State.
--- @param data.1st a function that returns a boolean value and takes as arguments an Event, an Agent or Automaton, and a Cell, respectively.
--- @param data.target a string with another State id.
+-- @arg data.1st a function that returns a boolean value and takes as arguments an Event, an Agent or Automaton, and a Cell, respectively.
+-- @arg data.target a string with another State id.
 -- @usage Jump {
 --     function(ev, agent, c)
 --         return c.water > c.capInf
@@ -58,7 +58,7 @@ function Jump(data)
 	data.rule = cObj
 
 	if type(data[1]) ~= "function" then
-		customError("Jump constructor expected a function as first parameter.")
+		customError("Jump constructor expected a function as first argument.")
 	end
 
 	if type(data.target) ~= "string" then 

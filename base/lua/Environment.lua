@@ -134,7 +134,7 @@ end
 Environment_ = { 
 	type_ = "Environment",
 	--- Add an element to the Environment.
-	-- @param object An Agent, Automaton, CellularSpace, Timer or Environment.
+	-- @arg object An Agent, Automaton, CellularSpace, Timer or Environment.
 	-- @usage environment:add(agent)
 	-- environment:add(cellularSpace)
 	add = function (self, object)
@@ -152,18 +152,18 @@ Environment_ = {
 	-- Environment must have only one CellularSpace or Trajectory to place agents. It is possible
 	-- to have more than one behavioural entity in the Environment. When distributing Agents over
 	-- a Trajectory, the Agents will be able to move over the whole CellularSpace.
-	-- @param data.strategy A string containing the strategy to be used for creating a placement
+	-- @arg data.strategy A string containing the strategy to be used for creating a placement
 	-- between Agents and Cells. See the options below:
-	-- @param data.name A string representing the name of the relation in TerraME objects. Default
+	-- @arg data.name A string representing the name of the relation in TerraME objects. Default
 	-- is "placement", which means that the modeler can use Agent:enter(), Agent:move(), and
 	-- Agent:leave() directly. If the name is different from the default value, the modeler will
 	-- have to use the last argument of these functions to indicate which relation they are
 	-- changing or perform changes on these relations manually.
-	-- @param data.max A number representing the maximum number of Agents that can enter in the
+	-- @arg data.max A number representing the maximum number of Agents that can enter in the
 	-- same Cell when creating the placement. Default is having no limit. Using max is
 	-- computationally efficient only when the number of Agents is considerably lower than the
 	-- number of Cells times max. Otherwise, it is better to consider using the uniform strategy.
-	-- Note that using this parameter does not force the simulation to have a maximum number of
+	-- Note that using this argument does not force the simulation to have a maximum number of
 	-- agents inside cells along the simulation - controlling the maximum is always up to
 	-- the modeler.
 	-- @tabular strategy Strategy & Description & Arguments \
@@ -263,7 +263,7 @@ Environment_ = {
 	end,
 	--- Execute the Environment until a given time. It activates the Timers it contains, the Timers
 	-- of the Environments it contains, and so on.
-	-- @param finalTime A positve integer number representing the time to stop the simulation.
+	-- @arg finalTime A positve integer number representing the time to stop the simulation.
 	-- Timers stop when there is no Event scheduled to a time less or equal to the final time.
 	-- @usage environment:execute(1000)
 	execute = function(self, finalTime) 
@@ -272,10 +272,10 @@ Environment_ = {
 		self.cObj_:execute()
 	end,
 	--- Load a Neighborhood between two different CellularSpaces.
-	-- @param data.source A string representing the name of the file to be loaded.
-	-- @param data.name A string representing the name of the relation to be created.
+	-- @arg data.source A string representing the name of the file to be loaded.
+	-- @arg data.name A string representing the name of the relation to be created.
 	-- Default is '1'.
-	-- @param data.bidirect If 'true' then for each relation from Cell a to Cell b, create
+	-- @arg data.bidirect If 'true' then for each relation from Cell a to Cell b, create
 	-- also a relation from b to a. Default is 'false'.
 	-- @usage environment:loadNeighborhood{  
 	--     source = "file.gpm",
@@ -428,7 +428,7 @@ Environment_ = {
 		file:close()
 	end,
 	--- Notify every Observer connected to the Environment.
-	-- @param modelTime An positive integer number representing time to be used by the Observer.
+	-- @arg modelTime An positive integer number representing time to be used by the Observer.
 	-- Most of the strategies available ignore this value, therefore it can be left empty.
 	-- @usage env:notify()
 	notify = function (self, modelTime)
@@ -453,7 +453,7 @@ metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
 -- added directly when the Environment is declared or after it has been instantiated. It can
 -- control the simulation engine, synchronizing all the Timers within it. Calling
 -- Utils:forEachElement() traverses each object of an Environment.
--- @param data A table containing all the elements of the Environment to be created.
+-- @arg data A table containing all the elements of the Environment to be created.
 -- @usage environment = Environment {
 --     cs1 = CellularSpace{...},
 --     ag1 = Agent{...},
