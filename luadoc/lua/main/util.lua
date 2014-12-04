@@ -255,9 +255,10 @@ function check_parameters(parsed_params, func, filename, doc_report)
 			table.insert(unused, param)
 		end
 	end
-	for _, param in ipairs(unknown) do
-		local warning = "%s: Unknown parameter '%s' in '%s'"
-		printError(warning:format(filename, param, func.name))
+	for _, arg in ipairs(unknown) do
+		local warning = "Unknown argument '%s' in '%s'"
+		printError(warning:format(arg, func.name))
+		doc_report.unknown_arg = doc_report.unknown_arg + 1
 	end
 	for _, param in ipairs(unused) do
 		local warning = "%s: Parameter '%s' in '%s' is not used in the HTML table"

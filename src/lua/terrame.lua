@@ -286,6 +286,7 @@ local function executeDoc(package)
 		undoc_param = 0,
 		undefined_param = 0,
 		unused_param = 0,
+		unknown_arg = 0,
 		undoc_files = 0,
 		lack_usage = 0,
 		block_name_conflict = 0,
@@ -346,6 +347,13 @@ local function executeDoc(package)
 		printError(doc_report.unused_param.." table parameters are not used in the HTML tables.")
 	end
 
+	if doc_report.unknown_arg == 0 then
+		printNote("All "..doc_report.arguments.." arguments are used in the HTML tables.")
+	else
+		printError(doc_report.unknown_arg.." table arguments are unknown.")
+	end
+
+
 	if doc_report.lack_usage == 0 then
 		printNote("All "..doc_report.functions.." have @usage field defined.")
 	else
@@ -386,6 +394,7 @@ local function executeDoc(package)
 				   doc_report.lack_usage + doc_report.no_call_itself_usage + doc_report.non_doc_functions +
 				   doc_report.block_name_conflict + doc_report.undefined_param + doc_report.wrong_description + 
 				   doc_report.wrong_links + doc_report.problem_examples + doc_report.undoc_examples
+				   doc_report.unknown_arg
 
 	if errors == 0 then
 		printNote("Summing up, all the documentation was successfully built.")
