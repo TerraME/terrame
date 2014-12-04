@@ -27,12 +27,9 @@
 
 if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
--- To keep compatibilities with old versions of Lua
---if _VERSION ~= "Lua 5.2" then
---	load = loadstring
---end	
-
+type__  = type
 print__ = print
+
 local begin_red    = "\027[00;31m"
 local begin_yellow = "\027[00;33m"
 local begin_green  = "\027[00;32m"
@@ -72,8 +69,6 @@ function include(scriptfile)
 
 	return setmetatable(env, nil)
 end
-
-type__ = type
 
 local function sqlFiles(package)
 	local s = sessionInfo().separator
@@ -353,7 +348,6 @@ local function executeDoc(package)
 		printError(doc_report.unknown_arg.." table arguments are unknown.")
 	end
 
-
 	if doc_report.lack_usage == 0 then
 		printNote("All "..doc_report.functions.." have @usage field defined.")
 	else
@@ -469,9 +463,9 @@ local executeTests = function(package, fileName)
 		data = {}
 	end
 
-	local check_functions = data.folder == nil and data.file == nil and data.test == nil
+	local check_functions = data.folder == nil and data.test == nil
 	if data.examples == nil then
-		data.examples = check_functions
+		data.examples = check_functions and data.file == nil
 	end
 
 	local ut = UnitTest{
@@ -547,23 +541,17 @@ local executeTests = function(package, fileName)
 		end)
 	elseif data.folder == nil then
 		data.folder = tf
-	elseif type(data.folder) == "table" then
+	else -- table
 		local mfolder = data.folder
 		data.folder = {}
 		forEachElement(tf, function(_, value)
-			-- TODO: instead of using found, why not use "return false" in forEachElement?
-			local found = false
 			forEachElement(mfolder, function(_, mvalue)
 				if string.match(value, mvalue) and not found then
 					table.insert(data.folder, value)
-					found = true
+					return false
 				end
 			end)
 		end)
-	else
-		-- TODO: I think this error will never occur because when this function reads
-		-- the file it already checks this.
-		customError("Parameter 'folder' is not a string, table or nil.")
 	end
 
 	if #data.folder == 0 then
@@ -576,161 +564,149 @@ local executeTests = function(package, fileName)
 		global_variables[idx] = true
 	end)
 
-	-- TODO: I think this warning will never occur because when this function reads
-	-- the file it already checks this.
-	local arguments = {"sleep", "examples", "folder", "test", "file"}
-	forEachElement(data, function(value)
-		if not belong(value, arguments) then
-			customWarning("Attribute '"..value.."' in file '"..fileName.."' is unnecessary.")
-		end
-	end)
-
 	local myTests
 	local myFiles
 
 	-- For each test in each file in each folder, execute the test
-	-- TODO: change this to forEachElement...
-	for _, eachFolder in ipairs(data.folder) do
+	forEachElement(data.folder, function(_, eachFolder)
 		local dirFiles = dir(baseDir..s..eachFolder)
-		-- TODO: ... and this to "if dirfiles == nil then return end" to avoid a scope
-		-- maybe this check could be done previously, instead of here.
-		if dirFiles ~= nil then 
-			myFiles = {}
-			if type(data.file) == "string" then
-				if belong(data.file, dirFiles) then
-					myFiles = {data.file}
-				end
-			elseif type(data.file) == "table" then
-				forEachElement(dirFiles, function(_, value)
-					if belong(value, data.file) then
-						myFiles[#myFiles + 1] = value
-					end
-				end)
-			else -- nil
-				forEachElement(dirFiles, function(_, value)
+
+		if dirFiles == nil then return end
+
+		myFiles = {}
+		if type(data.file) == "string" then
+			if belong(data.file, dirFiles) then
+				myFiles = {data.file}
+			end
+		elseif type(data.file) == "table" then
+			forEachElement(dirFiles, function(_, value)
+				if belong(value, data.file) then
 					myFiles[#myFiles + 1] = value
+				end
+			end)
+		else -- nil
+				forEachElement(dirFiles, function(_, value)
+				myFiles[#myFiles + 1] = value
+			end)
+		end
+
+		if #myFiles == 0 then
+			printWarning("Skipping folder "..eachFolder)
+		end
+
+		for _, eachFile in ipairs(myFiles) do
+			ut.current_file = eachFolder..s..eachFile
+			local tests
+			xpcall(function() tests = dofile(baseDir..s..eachFolder..s..eachFile) end, function(err)
+				printNote("Testing "..eachFolder..s..eachFile)
+				printError("Could not load file "..err)
+				os.exit()
+			end)
+
+			if type(tests) ~= "table" or getn(tests) == 0 then
+				printNote("Testing "..eachFolder..s..eachFile)
+				printError("The file does not implement any test.")
+				os.exit()
+			end
+
+			myTests = {}
+			if type(data.test) == "string" then
+				if tests[data.test] then
+					myTests = {data.test}
+				end
+			elseif data.test == nil then
+				forEachOrderedElement(tests, function(index, value, mtype)
+					myTests[#myTests + 1] = index 					
+				end)
+			else -- table
+				forEachElement(data.test, function(_, value)
+					if tests[value] then
+						myTests[#myTests + 1] = value
+					end
 				end)
 			end
 
-			if #myFiles == 0 then
-				printWarning("Skipping folder "..eachFolder)
+			if #myTests > 0 then
+				printNote("Testing "..eachFolder..s..eachFile)
+			else
+				printWarning("Skipping "..eachFolder..s..eachFile)
 			end
 
-			for _, eachFile in ipairs(myFiles) do
-				ut.current_file = eachFolder..s..eachFile
-				local tests
-				xpcall(function() tests = dofile(baseDir..s..eachFolder..s..eachFile) end, function(err)
-					printNote("Testing "..eachFolder..s..eachFile)
-					printError("Could not load file "..err)
-					os.exit()
-				end)
+			for _, eachTest in ipairs(myTests) do
+				print("Testing "..eachTest)
+				io.flush()
 
-				if type(tests) ~= "table" or getn(tests) == 0 then
-					printNote("Testing "..eachFolder..s..eachFile)
-					printError("The file does not implement any test.")
-					os.exit()
-				end
-
-				myTests = {}
-				if type(data.test) == "string" then
-					if tests[data.test] then
-						myTests = {data.test}
-					end
-				elseif data.test == nil then
-					forEachOrderedElement(tests, function(index, value, mtype)
-						myTests[#myTests + 1] = index 					
-					end)
-				else -- table
-					forEachElement(data.test, function(_, value)
-						if tests[value] then
-							myTests[#myTests + 1] = value
-						end
-					end)
-				end
-
-				if #myTests > 0 then
-					printNote("Testing "..eachFolder..s..eachFile)
-				else
-					printWarning("Skipping "..eachFolder..s..eachFile)
-				end
-
-				for _, eachTest in ipairs(myTests) do
-					print("Testing "..eachTest)
-					io.flush()
-
-					if testfunctions[eachFile] then
-						if testfunctions[eachFile][eachTest] then
-							testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
-						else
-							printError("Function does not exist in the respective file in the source code.")
-							ut.functions_not_exist = ut.functions_not_exist + 1
-						end
-					end
-
-					local count_test = ut.test
-
-					collectgarbage("collect")
-
-					print = function(...)
-						ut.print_calls = ut.print_calls + 1
-						printError(...)
-					end
-
-					local found_error = false
-					xpcall(function() tests[eachTest](ut) end, function(err)
-						printError("Wrong execution, got error: '"..err.."'.")
-						ut.functions_with_error = ut.functions_with_error + 1
-						printError(traceback())
-						found_error = true
-					end)
-
-					print = print__
-
-					killAllObservers()
-					ut.executed_functions = ut.executed_functions + 1
-
-					if count_test == ut.test and not found_error then
-						printError("No asserts were found in the test.")
-						ut.functions_without_assert = ut.functions_without_assert + 1
-					end
-
-					if getn(_G) > count_global then
-						local variables = ""
-						local pvariables = {}
-						forEachElement(_G, function(idx, _, mtype)
-							if global_variables[idx] == nil then
-								variables = variables.."'"..idx.."' ("..mtype.."), "
-								pvariables[#pvariables + 1] = idx
-							end
-						end)
-						variables = variables:sub(1, variables:len() - 2).."."
-						printError("Test creates global variable(s): "..variables)
-						ut.functions_with_global_variables = ut.functions_with_global_variables + 1
-
-						-- we need to delete the global variables created in order to ensure that a 
-						-- new error will be generated if this variable is found again. This need
-						-- to be done here because we cannot change _G inside a forEachElement
-						-- traversing _G
-						forEachElement(pvariables, function(_, value)
-							_G[value] = nil
-						end)
+				if testfunctions[eachFile] then
+					if testfunctions[eachFile][eachTest] then
+						testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
 					else
-						ut.success = ut.success + 1
+						printError("Function does not exist in the respective file in the source code.")
+						ut.functions_not_exist = ut.functions_not_exist + 1
 					end
+				end
 
-					if ut.count_last > 0 then
-						printError("[The error above occurs "..ut.count_last.." more times.]")
-						ut.count_last = 0
-						ut.last_error = ""
-					end
+				local count_test = ut.test
+
+				collectgarbage("collect")
+
+				print = function(...)
+					ut.print_calls = ut.print_calls + 1
+					printError(...)
+				end
+
+				local found_error = false
+				xpcall(function() tests[eachTest](ut) end, function(err)
+					printError("Wrong execution, got error: '"..err.."'.")
+					ut.functions_with_error = ut.functions_with_error + 1
+					printError(traceback())
+					found_error = true
+				end)
+
+				print = print__
+
+				killAllObservers()
+				ut.executed_functions = ut.executed_functions + 1
+
+				if count_test == ut.test and not found_error then
+					printError("No asserts were found in the test.")
+					ut.functions_without_assert = ut.functions_without_assert + 1
+				end
+
+				if getn(_G) > count_global then
+					local variables = ""
+					local pvariables = {}
+					forEachElement(_G, function(idx, _, mtype)
+						if global_variables[idx] == nil then
+							variables = variables.."'"..idx.."' ("..mtype.."), "
+							pvariables[#pvariables + 1] = idx
+						end
+					end)
+					variables = variables:sub(1, variables:len() - 2).."."
+					printError("Test creates global variable(s): "..variables)
+					ut.functions_with_global_variables = ut.functions_with_global_variables + 1
+
+					-- we need to delete the global variables created in order to ensure that a 
+					-- new error will be generated if this variable is found again. This need
+					-- to be done here because we cannot change _G inside a forEachElement
+					-- traversing _G
+					forEachElement(pvariables, function(_, value)
+						_G[value] = nil
+					end)
+				else
+					ut.success = ut.success + 1
+				end
+
+				if ut.count_last > 0 then
+					printError("[The error above occurs "..ut.count_last.." more times.]")
+					ut.count_last = 0
+					ut.last_error = ""
 				end
 			end
 		end
-	end 
+	end) 
 
 	-- checking if all source code functions were tested
 	if check_functions then
-		-- TODO: check_functions is true only when data.file == nil!!
 		printNote("Checking if functions from source code were tested")
 		if type(data.file) == "string" then
 			print("Checking "..data.file)
@@ -752,7 +728,7 @@ local executeTests = function(package, fileName)
 					end
 				end)
 			end)
-		elseif data.file == nil then
+		else -- nil
 			forEachOrderedElement(testfunctions, function(idx, value)
 				print("Checking "..idx)
 				forEachElement(value, function(midx, mvalue)
