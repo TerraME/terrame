@@ -39,7 +39,7 @@ function Flow(data)
 	if data == nil then
 		data = {}
 	elseif type(data) ~= "table" then
-		tableParameterError("Flow", 3)
+ 		customError(tableArgumentMsg())
 	end
 
 	data.rule = cObj

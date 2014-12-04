@@ -58,7 +58,7 @@ return{
 			verylow = true
 		}
 
-		unitTest:assert_error(error_func, switchInvalidParameterMsg("aaa", "priority", options))
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("aaa", "priority", options))
 
 		error_func = function()
 			event = Event{period = 0, priority = 1, action = function() end}
@@ -73,12 +73,12 @@ return{
 		error_func = function()
 			event = Event{message = function() end}
 		end
-		unitTest:assert_error(error_func, "Parameter 'message' is deprecated, use 'action' instead.")
+		unitTest:assert_error(error_func, "Argument 'message' is deprecated, use 'action' instead.")
 
 		error_func = function()
 			event = Event{myaction = function() end}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("myaction", "action"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("myaction", "action"))
 	end,
 	config = function(unitTest)
 		local event = Event{action = function(event) end}

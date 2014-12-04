@@ -70,7 +70,7 @@ return{
 		error_func = function()
 			Map{subject = c, select = "x", title = 5, slices = 10, colors = {"blue", "red"}}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("title"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("title"))
 
 		error_func = function()
 			Map{
@@ -115,7 +115,7 @@ return{
 				labels = {"1", "2", "3"}
 			}
 		end
-		unitTest:assert_error(error_func, switchInvalidParameterSuggestionMsg("uniquevalue", "grouping", "uniquevalues"))
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("uniquevalue", "grouping", "uniquevalues"))
 	end
 }
 

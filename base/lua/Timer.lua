@@ -95,7 +95,7 @@ function Timer(data)
 		if data == nil then
 			data = {}
 		else
- 			customError(tableParameterMsg())
+ 			customError(tableArgumentMsg())
  		end
 	end
 	

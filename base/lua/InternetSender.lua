@@ -118,7 +118,7 @@ InternetSender = function(data)
 		end
 	end
 
-	checkUnnecessaryParameters(data, {"subject", "protocol", "select", "port", "host", "visible", "compress"})
+	checkUnnecessaryArguments(data, {"subject", "protocol", "select", "port", "host", "visible", "compress"})
 
 	local observerType
 	if data.xAxis == nil then

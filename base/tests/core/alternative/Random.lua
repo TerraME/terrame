@@ -29,12 +29,12 @@ return{
 		local error_func = function()
 			local r = Random(12345)
 		end
-		unitTest:assert_error(error_func, namedParametersMsg())
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 
 		local error_func = function()
 			local r = Random{x = 12345}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("x"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("x"))
 	end,
 	integer = function(unitTest)
 		local randomObj = Random{}

@@ -243,7 +243,7 @@ Society_ = {
 
 		switch(data, "strategy"):caseof{
 			probability = function() 
-				checkUnnecessaryParameters(data, {"strategy", "probability", "name", "random", "onthefly"})
+				checkUnnecessaryArguments(data, {"strategy", "probability", "name", "random", "onthefly"})
 
 				mandatoryTableArgument(data, "probability", "number")
 
@@ -254,14 +254,14 @@ Society_ = {
 				data.mfunc = getSocialNetworkByProbability
 			end,
 			["function"] = function()
-				checkUnnecessaryParameters(data, {"strategy", "filter", "name", "onthefly"})
+				checkUnnecessaryArguments(data, {"strategy", "filter", "name", "onthefly"})
 
 				mandatoryTableArgument(data, "filter", "function")
 
 				data.mfunc = getSocialNetworkByFunction
 			end,
 			cell = function()
-				checkUnnecessaryParameters(data, {"strategy", "self", "name", "placement", "onthefly"})
+				checkUnnecessaryArguments(data, {"strategy", "self", "name", "placement", "onthefly"})
 
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "placement", "placement")
@@ -273,7 +273,7 @@ Society_ = {
 				data.mfunc = getSocialNetworkByCell
 			end,
 			neighbor = function()
-				checkUnnecessaryParameters(data, {"strategy", "neighborhood", "name", "placement", "onthefly"})
+				checkUnnecessaryArguments(data, {"strategy", "neighborhood", "name", "placement", "onthefly"})
 
 				defaultTableValue(data, "neighborhood", "1")
 				defaultTableValue(data, "placement", "placement")
@@ -287,7 +287,7 @@ Society_ = {
 				data.mfunc = getSocialNetworkByNeighbor
 			end,
 			quantity = function()
-				checkUnnecessaryParameters(data, {"strategy", "quantity", "name", "random", "onthefly"})
+				checkUnnecessaryArguments(data, {"strategy", "quantity", "name", "random", "onthefly"})
 
 				defaultTableValue(data, "quantity", 1)
 
@@ -300,7 +300,7 @@ Society_ = {
 				data.mfunc = getSocialNetworkByQuantity
 			end,
 			void = function()
-				checkUnnecessaryParameters(data, {"strategy", "name"})
+				checkUnnecessaryArguments(data, {"strategy", "name"})
 
 				data.mfunc = getEmptySocialNetwork
 			end

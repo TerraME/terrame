@@ -113,9 +113,9 @@ function switch(data, att)
 					end
 				end)
 				if distance < string.len(self.casevar) * 0.6 then
-					customError(switchInvalidParameterSuggestionMsg(self.casevar, att, word))
+					customError(switchInvalidArgumentSuggestionMsg(self.casevar, att, word))
 				else
-					customError(switchInvalidParameterMsg(self.casevar, att, code))
+					customError(switchInvalidArgumentMsg(self.casevar, att, code))
 				end
 			end
 		end
@@ -132,8 +132,8 @@ end
 --     bbb = true,
 --     ccc = true
 -- }
--- switchInvalidParameterMsg("ddd", "attr", options)
-function switchInvalidParameterMsg(casevar, att, options)
+-- switchInvalidArgumentMsg("ddd", "attr", options)
+function switchInvalidArgumentMsg(casevar, att, options)
 	local word = "It must be a string from the set ["
 	forEachOrderedElement(options, function(a)
 		word = word.."'"..a.."', "
@@ -146,8 +146,8 @@ end
 -- @param casevar Value of the attribute.
 -- @param att Name of the attribute.
 -- @param suggestion A suggestion for to replace the wrong value.
--- @usage switchInvalidParameterSuggestionMsg("aab", "attr", "aaa")
-function switchInvalidParameterSuggestionMsg(casevar, att, suggestion)
+-- @usage switchInvalidArgumentSuggestionMsg("aab", "attr", "aaa")
+function switchInvalidArgumentSuggestionMsg(casevar, att, suggestion)
 	return "'"..casevar.."' is an invalid value for parameter '"..att.."'. Do you mean '"..suggestion.."'?"
 end
 
@@ -180,7 +180,7 @@ function require(package)
 			print(err)
 		end)
 
-		checkUnnecessaryParameters(load_sequence, {"files"})
+		checkUnnecessaryArguments(load_sequence, {"files"})
 
 		load_sequence = load_sequence.files
 		if load_sequence == nil then
@@ -242,16 +242,16 @@ end
 
 --- Verify whether the table passed as argument is a named table. It generates errors if it is nil,
 -- if it is not a table, or if it has numeric indexes. The error messages come from
--- Package:tableParameterMsg() and Package:namedParametersMsg().
+-- Package:tableArgumentMsg() and Package:namedArgumentsMsg().
 -- @param data A value of any type.
 -- @usage t = {value = 2}
 -- verifyNamedTable(t)
 function verifyNamedTable(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			customError(tableParameterMsg())
+			customError(tableArgumentMsg())
 		else
-			customError(namedParametersMsg())
+			customError(namedArgumentsMsg())
 		end
 	elseif #data > 0 then
 		customError("All elements of the argument must be named.")
@@ -259,29 +259,29 @@ function verifyNamedTable(data)
 end
 
 --- Return a message indicating that the parameter of a function must be a table.
--- @usage tableParameterMsg()
-function tableParameterMsg()
-	return "Parameter must be a table."
+-- @usage tableArgumentMsg()
+function tableArgumentMsg()
+	return "Argument must be a table."
 end
 
 --- Return a message indicating that the parameters of a function must be named.
--- @usage namedParametersMsg()
-function namedParametersMsg()
-	return "Parameters must be named."
+-- @usage namedArgumentsMsg()
+function namedArgumentsMsg()
+	return "Arguments must be named."
 end
 
 --- Verify whether the used has used only the allowed parameters for a functoin, generating
--- a warning otherwise. The warning comes from Package:unnecessaryParameterMsg().
+-- a warning otherwise. The warning comes from Package:unnecessaryArgumentMsg().
 -- @param data The list of parameters used in the function call.
 -- @param parameters The list of the allowed parameters.
 -- @usage t = {value = 2}
--- checkUnnecessaryParameters(t, {"target", "select"})
-function checkUnnecessaryParameters(data, parameters)
+-- checkUnnecessaryArguments(t, {"target", "select"})
+function checkUnnecessaryArguments(data, parameters)
 	forEachElement(data, function(value)
-		local notCorrectParameters = {}
+		local notCorrectArguments = {}
 		local correctedSuggestions = {}
 		if not belong(value, parameters) then
-			table.insert(notCorrectParameters, value)
+			table.insert(notCorrectArguments, value)
 			local moreSimilar = "" 
 			local moreSimilarDistance = 1000000
 			for j = 1, #parameters do
@@ -294,11 +294,11 @@ function checkUnnecessaryParameters(data, parameters)
 			table.insert(correctedSuggestions, moreSimilar)
 		end
 
-		for i = 1, #notCorrectParameters do
-			local dst = levenshtein(notCorrectParameters[i], correctedSuggestions[i])
-			local msg = unnecessaryParameterMsg(value)
-			if dst < math.floor(#notCorrectParameters[i] * 0.6) and data[i] == nil then
-				msg = unnecessaryParameterMsg(value, correctedSuggestions[i])
+		for i = 1, #notCorrectArguments do
+			local dst = levenshtein(notCorrectArguments[i], correctedSuggestions[i])
+			local msg = unnecessaryArgumentMsg(value)
+			if dst < math.floor(#notCorrectArguments[i] * 0.6) and data[i] == nil then
+				msg = unnecessaryArgumentMsg(value, correctedSuggestions[i])
 			end
 			customWarning(msg)
 		end
@@ -308,10 +308,10 @@ end
 --- Return a message indicating that a given parameter is unnecessary.
 -- @param value A string or number or boolean value.
 -- @param suggestion A possible suggestion for the parameter.
--- @usage unnecessaryParameterMsg("file")
--- unnecessaryParameterMsg("filf", "file")
-function unnecessaryParameterMsg(value, suggestion)
-	local str = "Parameter '"..tostring(value).."' is unnecessary."
+-- @usage unnecessaryArgumentMsg("file")
+-- unnecessaryArgumentMsg("filf", "file")
+function unnecessaryArgumentMsg(value, suggestion)
+	local str = "Argument '"..tostring(value).."' is unnecessary."
 
 	if suggestion then
 		str = str .." Do you mean '"..suggestion.."'?"
@@ -382,7 +382,7 @@ end
 -- @param value A number or string or boolean value.
 -- @usage defaultValueMsg("dbtype", "mysql")
 function defaultValueMsg(parameter, value)
-	return "Parameter '"..parameter.."' could be removed as it is the default value ("..tostring(value)..")."
+	return "Argument '"..parameter.."' could be removed as it is the default value ("..tostring(value)..")."
 end
 
 --- Pring a warning indicating a deprecated function. If TerraME is running in the
@@ -428,7 +428,7 @@ function incompatibleTypeMsg(attr, expectedTypesString, gottenValue)
 
 	if expectedTypesString == nil then expectedTypesString = "nil" end
 
-	return "Incompatible types. Parameter '"..attr.."' expected "..
+	return "Incompatible types. Argument '"..attr.."' expected "..
 		expectedTypesString..", got "..type(gottenValue).."."
 end
 
@@ -454,7 +454,7 @@ function incompatibleValueMsg(attr, expectedValues, gottenValue)
 		attr = "#"..attr
 	end
 
-	local msg = "Incompatible values. Parameter '"..attr.."' expected ".. expectedValues ..", got "
+	local msg = "Incompatible values. Argument '"..attr.."' expected ".. expectedValues ..", got "
 	if type(gottenValue) == "string" then
 		msg = msg.."'"..gottenValue.."'."
 	elseif gottenValue == nil then
@@ -479,7 +479,7 @@ end
 -- @param ext The incompatible file extension.
 -- @usage invalidFileExtensionMsg("file", "csv")
 function invalidFileExtensionMsg(attr, ext)
-	return "Parameter '".. attr.."' does not support extension '"..ext.."'."
+	return "Argument '".. attr.."' does not support extension '"..ext.."'."
 end
 
 --- Stop the simulation with an error indicating that a given resource was not found.
@@ -557,7 +557,7 @@ function mandatoryArgumentMsg(attr)
 	if type(attr) == "number" then
 		attr = "#"..attr
 	end
-	return "Parameter '"..attr.."' is mandatory."
+	return "Argument '"..attr.."' is mandatory."
 end
 
 --- Verify whether the table contains a mandatory argument. It produces an error if the value is nil or

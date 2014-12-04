@@ -53,7 +53,7 @@ return{
 		local error_func = function()
 			env:createPlacement(2)
 		end
-		unitTest:assert_error(error_func, namedParametersMsg())
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 
 
 		error_func = function()
@@ -76,12 +76,12 @@ return{
 			void = true
 		}
 
-		unitTest:assert_error(error_func, switchInvalidParameterMsg("teste1", "strategy", options))
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("teste1", "strategy", options))
 
 		error_func = function()
 			env:createPlacement{strategy = "unifor", max = 13}
 		end
-		unitTest:assert_error(error_func, switchInvalidParameterSuggestionMsg("unifor", "strategy", "uniform"))
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("unifor", "strategy", "uniform"))
 
 		error_func = function()
 			env:createPlacement{name = 15, max = 13}
@@ -185,13 +185,13 @@ return{
 			envmt = Environment()
 		end
 
-		unitTest:assert_error(error_func, tableParameterMsg())
+		unitTest:assert_error(error_func, tableArgumentMsg())
 
 		local error_func = function()
 			envmt = Environment(2)
 		end
 
-		unitTest:assert_error(error_func, namedParametersMsg())
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 
 		local error_func = function()
 			envmt = Environment{at1, cs}

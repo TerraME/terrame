@@ -158,9 +158,9 @@ metaTableAutomaton_ = {__index = Automaton_, __tostring = tostringTerraME}
 function Automaton(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterError("Automaton")
+ 			customError(tableArgumentMsg())
 		else
- 			namedParametersError("Automaton")
+ 			customError(namedParametersMsg())
  		end
 	end
 

@@ -107,7 +107,7 @@ TextScreen = function(data)
 		end
 	end
 
-	checkUnnecessaryParameters(data, {"subject", "select"})
+	checkUnnecessaryArguments(data, {"subject", "select"})
 
 	local observerType = TME_OBSERVERS.TEXTSCREEN
 	local observerParams = {}

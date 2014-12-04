@@ -80,7 +80,7 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Parameter 'database' does not support 'terralab'.")
+			unitTest:assert_error(error_func, "Argument 'database' does not support 'terralab'.")
 		else
 			error_func = function()
 				local cs = CellularSpace{
@@ -308,7 +308,7 @@ return{
 			virtual = true
 		}
 
-		unitTest:assert_error(error_func, switchInvalidParameterMsg("post", "dbType", options))
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("post", "dbType", options))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -446,7 +446,7 @@ return{
 		local error_func = function()
 			cs:loadNeighborhood()
 		end
-		unitTest:assert_error(error_func, "Parameter for 'loadNeighborhood' must be a table.")
+		unitTest:assert_error(error_func, "Argument for 'loadNeighborhood' must be a table.")
 	
 		error_func = function()
 			cs:loadNeighborhood{}

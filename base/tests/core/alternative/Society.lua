@@ -143,19 +143,19 @@ return{
 		local error_func = function()
 			sc1:createSocialNetwork()
 		end
-		unitTest:assert_error(error_func, tableParameterMsg())
+		unitTest:assert_error(error_func, tableArgumentMsg())
 
 		error_func = function()
 			sc1:createSocialNetwork(15)
 		end
-		unitTest:assert_error(error_func, namedParametersMsg())
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 
 		error_func = function()
 			sc1:createSocialNetwork{
 				strategy = "voi"
 			}
 		end
-		unitTest:assert_error(error_func, switchInvalidParameterSuggestionMsg("voi", "strategy", "void"))
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("voi", "strategy", "void"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -172,7 +172,7 @@ return{
 			void = true
 		}
 			
-		unitTest:assert_error(error_func, switchInvalidParameterMsg("terralab", "strategy", options))
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("terralab", "strategy", options))
 
 		sc1:createSocialNetwork{
 			strategy = "void",
@@ -194,7 +194,7 @@ return{
 				probability = 0.5
 			}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("probability"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("probability"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -219,7 +219,7 @@ return{
 				probability = 0.2
 			}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("probability"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("probability"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -245,7 +245,7 @@ return{
 				quantity = 5	
 			}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("quantity"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -296,7 +296,7 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "cell", name = "c", quantity = 5}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("quantity"))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = 22}
@@ -306,7 +306,7 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", quantity = 1}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("quantity"))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "function", name = "c", filter = 3}
@@ -316,7 +316,7 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "function", name = "c", filter = function(ag) return true end, quantity = 1}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("quantity"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("quantity"))
 
 		local ag1 = Agent{
 			name = "nonfoo",

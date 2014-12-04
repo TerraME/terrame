@@ -156,7 +156,7 @@ metaTableGroup_ = {
 function Group(data)
 	verifyNamedTable(data)
 
-	checkUnnecessaryParameters(data, {"target", "build", "select", "greater"})
+	checkUnnecessaryArguments(data, {"target", "build", "select", "greater"})
 
 	if type(data.target) ~= "Society" and type(data.target) ~= "Group" and data.target ~= nil then
 		incompatibleTypeError("target", "Society, Group, or nil", data.target)

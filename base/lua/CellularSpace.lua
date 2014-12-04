@@ -303,7 +303,7 @@ local checkMySQL = function(self)
 	if self.port ~= math.floor(self.port) or self.port < 0 then
 		incompatibleValueError("port", "positive integer number", self.port)
 	elseif self.port < 1024 then
-		customError("Parameter 'port' should have values above 1023 to avoid using system reserved values.")
+		customError("Argument 'port' should have values above 1023 to avoid using system reserved values.")
 	end
 
 	self.cObj_:setUser(self.user)
@@ -447,7 +447,7 @@ CellularSpace_ = {
 	-- @param data.strategy A string with the strategy to be used for creating the Neighborhood. 
 	-- See the table below.
 	-- @tabular strategy
-	-- Strategy & Description & Compulsory Parameters & Optional Parameters \
+	-- Strategy & Description & Compulsory Arguments & Optional Arguments \
 	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight, onthefly \
 	-- "coord" & A bidirected relation between two CellularSpaces connecting Cells with the same 
 	-- (x, y) coordinates. & target & name, onthefly\
@@ -525,7 +525,7 @@ CellularSpace_ = {
 		switch(data, "strategy"):caseof{
 			["function"] = function() 
 				mandatoryTableArgument(data, "filter", "function")
-				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "onthefly"})
+				checkUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "onthefly"})
 
 				defaultTableValue(data, "weight", function() return 1 end)
 
@@ -535,7 +535,7 @@ CellularSpace_ = {
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
 
-				checkUnnecessaryParameters(data, {"self", "wrap", "name", "strategy", "onthefly"})
+				checkUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "onthefly"})
 
 				data.func = getMooreNeighborhood
 			end,
@@ -551,7 +551,7 @@ CellularSpace_ = {
 					incompatibleValueError("m", "positive integer number (greater than zero)", "real number")
 				elseif data.m % 2 == 0 then
 					data.m = data.m + 1
-					customWarning("Parameter 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
+					customWarning("Argument 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 				end
 
 				defaultTableValue(data, "n", data.m)
@@ -561,17 +561,17 @@ CellularSpace_ = {
 					incompatibleValueError("n", "positive integer number (greater than zero)", "real number")
 				elseif data.n % 2 == 0 then
 					data.n = data.n + 1
-					customWarning("Parameter 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
+					customWarning("Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 				end
 
-				checkUnnecessaryParameters(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "onthefly"})
+				checkUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "onthefly"})
 				data.func = getMxNNeighborhood
 			end,
 			vonneumann = function() 
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
 
-				checkUnnecessaryParameters(data, {"name", "strategy", "wrap", "self", "onthefly"})
+				checkUnnecessaryArguments(data, {"name", "strategy", "wrap", "self", "onthefly"})
 
 				data.func = getVonNeumannNeighborhood
 			end,
@@ -581,7 +581,7 @@ CellularSpace_ = {
 				defaultTableValue(data, "filter", function() return true end)
 				defaultTableValue(data, "weight", function() return 1 end)
 
-				checkUnnecessaryParameters(data, {"name", "strategy", "filter", "weight", "onthefly"})
+				checkUnnecessaryArguments(data, {"name", "strategy", "filter", "weight", "onthefly"})
 
 				data.target = self
 				data.m = 3
@@ -591,7 +591,7 @@ CellularSpace_ = {
 			coord = function() 
 				mandatoryTableArgument(data, "target", "CellularSpace")
 
-				checkUnnecessaryParameters(data, {"name", "strategy", "target", "onthefly"})
+				checkUnnecessaryArguments(data, {"name", "strategy", "target", "onthefly"})
 
 				data.func = getCoordCoupling
 			end
@@ -926,7 +926,7 @@ CellularSpace_ = {
 			if type(v) == "string" then
 				s = s..v.." = cell."..v..", "
 			else
-				customError("Parameter 'values' should contain only strings.")
+				customError("Argument 'values' should contain only strings.")
 			end
 		end
 

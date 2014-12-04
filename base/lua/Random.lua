@@ -134,7 +134,7 @@ function Random(data)
 		verifyNamedTable(data)
 	end
 
-	checkUnnecessaryParameters(data, {"seed"})
+	checkUnnecessaryArguments(data, {"seed"})
 
 	if data.seed then
 		Random_.cObj_ = RandomUtil(data.seed)

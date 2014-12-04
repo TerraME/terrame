@@ -217,7 +217,7 @@ metaTableTrajectory_ = {
 function Trajectory(data)
 	verifyNamedTable(data)
 
-	checkUnnecessaryParameters(data, {"target", "build", "select", "greater"})
+	checkUnnecessaryArguments(data, {"target", "build", "select", "greater"})
 
 	if data.target == nil then
 		mandatoryArgumentError("target")

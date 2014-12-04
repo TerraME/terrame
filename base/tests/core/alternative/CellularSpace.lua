@@ -142,7 +142,7 @@ return{
 		local error_func = function()
 			cs:createNeighborhood("dataTest")
 		end
-		unitTest:assert_error(error_func, namedParametersMsg())
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 	
 		error_func = function()
 			cs:createNeighborhood{strategy = "teste"}
@@ -157,7 +157,7 @@ return{
 			vonneumann = true
 		}
 
-		unitTest:assert_error(error_func, switchInvalidParameterMsg("teste", "strategy", options))
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("teste", "strategy", options))
 
 		error_func = function()
 			cs:createNeighborhood{strategy = 50}
@@ -333,7 +333,7 @@ return{
 				m = 4
 			}
 		end
-		unitTest:assert_error(error_func, "Parameter 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
+		unitTest:assert_error(error_func, "Argument 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -343,7 +343,7 @@ return{
 				n = 4
 			}
 		end
-		unitTest:assert_error(error_func, "Parameter 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
+		unitTest:assert_error(error_func, "Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -510,7 +510,7 @@ return{
 		error_func = function()
 			cs:synchronize{123, "height_"}
 		end
-		unitTest:assert_error(error_func, "Parameter 'values' should contain only strings.")
+		unitTest:assert_error(error_func, "Argument 'values' should contain only strings.")
 	end
 }
 

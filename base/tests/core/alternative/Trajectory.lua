@@ -80,12 +80,12 @@ return{
 		local error_func = function()
 			trajectory = Trajectory()
 		end
-		unitTest:assert_error(error_func, tableParameterMsg())
+		unitTest:assert_error(error_func, tableArgumentMsg())
 
 		local error_func = function()
 			trajectory = Trajectory(3)
 		end
-		unitTest:assert_error(error_func, namedParametersMsg())
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 
 		error_func = function()
  			local traj = Trajectory{
@@ -93,7 +93,7 @@ return{
  				selection = function() return true end
  			}
  		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("selection", "select"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("selection", "select"))
 
 		local error_func = function()
 			trajectory = Trajectory{}

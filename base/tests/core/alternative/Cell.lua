@@ -29,7 +29,7 @@ return{
 		local error_func = function()
 			local cell = Cell(2)
 		end
-		unitTest:assert_error(error_func, namedParametersMsg())
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 
 		error_func = function()
 			cell = Cell{x = 2.22, y = 0}

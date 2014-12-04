@@ -166,7 +166,7 @@ Environment_ = {
 	-- Note that using this parameter does not force the simulation to have a maximum number of
 	-- agents inside cells along the simulation - controlling the maximum is always up to
 	-- the modeler.
-	-- @tabular strategy Strategy & Description & Parameters \
+	-- @tabular strategy Strategy & Description & Arguments \
 	-- "random"(default) & Create placements between Agents and Cells randomly, putting each Agent
 	-- in a Cell randomly chosen. & name, max \
 	-- "uniform" & Create placements uniformly. The first Agents enter in the first Cells. The
@@ -246,17 +246,17 @@ Environment_ = {
 
 		switch(data, "strategy"):caseof{
 			random = function() 
-				checkUnnecessaryParameters(data, {"strategy", "name", "max"})
+				checkUnnecessaryArguments(data, {"strategy", "name", "max"})
 				createVoidPlacement(self, mycs, data) 
 				createRandomPlacement(self, mycs, data.max, data.name)
 			end,
 			uniform = function()
-				checkUnnecessaryParameters(data, {"strategy", "name"})
+				checkUnnecessaryArguments(data, {"strategy", "name"})
 				createVoidPlacement(self, mycs, data) 
 				createUniformPlacement(self, mycs, data.name)
 			end,
 			void = function()
-				checkUnnecessaryParameters(data, {"strategy", "name"})
+				checkUnnecessaryArguments(data, {"strategy", "name"})
 				createVoidPlacement(self, mycs, data) 
 			end
 		}
@@ -464,9 +464,9 @@ metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
 function Environment(data)
 	if type(data) ~= "table" then
 		if data == nil then
- 			customError(tableParameterMsg())
+ 			customError(tableArgumentMsg())
 		else
- 			customError(namedParametersMsg())
+ 			customError(namedArgumentsMsg())
 		end
 	end
 

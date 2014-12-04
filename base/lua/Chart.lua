@@ -153,7 +153,7 @@ Chart = function(data)
 		end
 	end
 
-	checkUnnecessaryParameters(data, {"subject", "select", "yLabel", "xLabel", "title", "label"})
+	checkUnnecessaryArguments(data, {"subject", "select", "yLabel", "xLabel", "title", "label"})
 
 	local observerType
 	if data.xAxis == nil then

@@ -185,7 +185,7 @@ return {
 
 			ag1:message()
 		end
-		unitTest:assert_error(error_func, tableParameterMsg())
+		unitTest:assert_error(error_func, tableArgumentMsg())
 
 		local error_func = function()
 			local ag = Agent{}
@@ -195,7 +195,7 @@ return {
 
 			ag1:message(123)
 		end
-		unitTest:assert_error(error_func, namedParametersMsg())
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 
 		local ag = Agent{}
 		local sc = Society{instance = ag, quantity = 2}

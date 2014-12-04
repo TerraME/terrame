@@ -156,7 +156,7 @@ Map = function(data)
 				end)
 			end
 
-			checkUnnecessaryParameters(data, {"subject", "select", "labels", "colors", "grouping", "min", "max", "slices"})
+			checkUnnecessaryArguments(data, {"subject", "select", "labels", "colors", "grouping", "min", "max", "slices"})
 		end,
 		uniquevalues = function()
 			mandatoryTableArgument(data, "select")
@@ -186,10 +186,10 @@ Map = function(data)
 			end
 			verify(#data.labels == #data.values, "There should exist labels for each value.")
 
-			checkUnnecessaryParameters(data, {"subject", "select", "values", "labels", "colors", "grouping"})
+			checkUnnecessaryArguments(data, {"subject", "select", "values", "labels", "colors", "grouping"})
 		end,
 		background = function()
-			checkUnnecessaryParameters(data, {"subject", "colors", "grouping"})
+			checkUnnecessaryArguments(data, {"subject", "colors", "grouping"})
 
 			forEachCell(data.subject, function(cell)
 				cell.background_ = 0

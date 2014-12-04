@@ -63,7 +63,7 @@ function State(data)
 		if data == nil then
 			data = {}
 		else
- 			tableParameterError("State")
+ 			customError(tableArgumentMsg())
  		end
 	end
 

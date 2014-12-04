@@ -129,15 +129,15 @@ function Event(data)
 	if data == nil then
 		data = {}
 	elseif type(data) ~= "table" then
-		namedParametersError("Event")
+		namedArgumentsError("Event")
 	end
 
 	local cObj = TeEvent()
 	if data.message ~= nil then 
-		customError("Parameter 'message' is deprecated, use 'action' instead.")
+		customError("Argument 'message' is deprecated, use 'action' instead.")
 	end
 
-	checkUnnecessaryParameters(data, {"time", "action", "priority", "period"})
+	checkUnnecessaryArguments(data, {"time", "action", "priority", "period"})
 
 -- #83
 --	defaultTableValue(data, "time", 1)

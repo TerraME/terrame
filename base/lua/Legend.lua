@@ -430,15 +430,15 @@ local metaTableLegend_ = {__index = Legend_, __tostring = tostringTerraME}
 function Legend(data)
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterError("Legend", 3)
+			tableArgumentError("Legend", 3)
 		else
- 			namedParametersError("Legend", 3)
+ 			namedArgumentsError("Legend", 3)
 		end
 	end
 
 	setmetatable(data, metaTableLegend_)
 
-	checkUnnecessaryParameters(data, legendPossibleParams)
+	checkUnnecessaryArguments(data, legendPossibleParams)
 
 	-- conversion of string values from user layer
 	if type(data.type) == "string" then
@@ -536,7 +536,7 @@ function Legend(data)
 
 	if type(data.colorBar) == "table" then
 		if #data.colorBar <= 1 and (data.grouping == "equalsteps" or data.grouping == TME_LEGEND_GROUPING_USER.equalsteps or data.grouping == "stddeviation" or data.grouping == TME_LEGEND_GROUPING_USER.stddeviation) then
-			customError("Parameter 'colorBar' requires at least two colors.", 3)
+			customError("Argument 'colorBar' requires at least two colors.", 3)
 		end
 	end
 

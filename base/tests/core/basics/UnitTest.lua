@@ -42,10 +42,10 @@ return{
 		local u = UnitTest{}
 
 		local error_func = function() CellularSpace{xdim = "a"} end
-		u:assert_error(error_func, "Incompatible types. Parameter 'xdim' expected number, got string.")
+		u:assert_error(error_func, "Incompatible types. Argument 'xdim' expected number, got string.")
 
 		local error_func = function() CellularSpace{xdim = "a"} end
-		u:assert_error(error_func, "Incompatible types. Parameter 'xdim' expected number, got   string.", 3)
+		u:assert_error(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
 
 		unitTest:assert_equal(u.success, 2)
 	end,

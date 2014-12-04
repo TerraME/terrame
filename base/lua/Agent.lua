@@ -569,7 +569,7 @@ function Agent(data)
 		if data == nil then
 			data = {}
 		else
- 			customError(tableParameterMsg())
+ 			customError(tableArgumentMsg())
  		end
 	end
 

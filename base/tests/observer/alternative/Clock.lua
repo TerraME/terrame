@@ -42,7 +42,7 @@ return{
 		local error_func = function()
 			Clock{subject = t, xwc = 5}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("xwc"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("xwc"))
 	end
 }
 

@@ -75,7 +75,7 @@ return{
 		error_func = function()
 			InternetSender{subject = c, protocol = "vdp"}
 		end
-		unitTest:assert_error(error_func, switchInvalidParameterSuggestionMsg("vdp", "protocol", "udp"))
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("vdp", "protocol", "udp"))
 
 		error_func = function()
 			InternetSender{subject = c, visible = 4}

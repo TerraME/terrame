@@ -25,27 +25,27 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	checkUnnecessaryParameters = function(unitTest)
+	checkUnnecessaryArguments = function(unitTest)
 		local error_func = function(unitTest)
-			checkUnnecessaryParameters({aaa = "aaa"}, {"abc", "acd", "aab"})
+			checkUnnecessaryArguments({aaa = "aaa"}, {"abc", "acd", "aab"})
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("aaa"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaa"))
 
 		local error_func = function(unitTest)
-			checkUnnecessaryParameters({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
+			checkUnnecessaryArguments({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("aaaa", "aaab"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaaa", "aaab"))
 
 	end,
-	unnecessaryParameterMsg = function(unitTest)
-		unitTest:assert_equal(unnecessaryParameterMsg("aaa"), "Parameter 'aaa' is unnecessary.")
+	unnecessaryArgumentMsg = function(unitTest)
+		unitTest:assert_equal(unnecessaryArgumentMsg("aaa"), "Argument 'aaa' is unnecessary.")
 	end,
 
 	incompatibleTypeMsg = function(unitTest)
-		unitTest:assert_equal(incompatibleTypeMsg("aaa", "string", 2), "Incompatible types. Parameter 'aaa' expected string, got number.")
+		unitTest:assert_equal(incompatibleTypeMsg("aaa", "string", 2), "Incompatible types. Argument 'aaa' expected string, got number.")
 	end,
 	defaultValueMsg = function(unitTest)
-		unitTest:assert_equal(defaultValueMsg("aaa", 2), "Parameter 'aaa' could be removed as it is the default value (2).")
+		unitTest:assert_equal(defaultValueMsg("aaa", 2), "Argument 'aaa' could be removed as it is the default value (2).")
 	end,
 	packageInfo = function(unitTest)
 		local r = packageInfo()
@@ -61,8 +61,8 @@ return{
 	valueNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for parameter 'aaa'.")
 	end,
-	tableParameterMsg = function(unitTest)
-		unitTest:assert_equal(tableParameterMsg(), "Parameter must be a table.")
+	tableArgumentMsg = function(unitTest)
+		unitTest:assert_equal(tableArgumentMsg(), "Argument must be a table.")
 	end,
 	mandatoryArgument = function(unitTest)
 		local error_func = function()
@@ -76,13 +76,13 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	mandatoryArgumentMsg = function(unitTest)
-		unitTest:assert_equal(mandatoryArgumentMsg("aaa"), "Parameter 'aaa' is mandatory.")
+		unitTest:assert_equal(mandatoryArgumentMsg("aaa"), "Argument 'aaa' is mandatory.")
 	end,
-	namedParametersMsg = function(unitTest)
-		unitTest:assert_equal(namedParametersMsg(), "Parameters must be named.")
+	namedArgumentsMsg = function(unitTest)
+		unitTest:assert_equal(namedArgumentsMsg(), "Arguments must be named.")
 	end,
 	invalidFileExtensionMsg = function(unitTest)
-		unitTest:assert_equal(invalidFileExtensionMsg("aaa", "bbb"), "Parameter 'aaa' does not support extension 'bbb'.")
+		unitTest:assert_equal(invalidFileExtensionMsg("aaa", "bbb"), "Argument 'aaa' does not support extension 'bbb'.")
 	end,
 	customError = function(unitTest)
 		local error_func = function()
@@ -140,7 +140,7 @@ return{
 	end,
 	incompatibleValueMsg = function(unitTest)
 		local str = incompatibleValueMsg("attr", "positive", -2)
-		unitTest:assert_equal(str, "Incompatible values. Parameter 'attr' expected positive, got -2.")
+		unitTest:assert_equal(str, "Incompatible values. Argument 'attr' expected positive, got -2.")
 	end,
 	resourceNotFoundError = function(unitTest)
 		local error_func = function()
@@ -185,12 +185,12 @@ return{
 		local error_func = function()
 			verifyNamedTable()
 		end
-		unitTest:assert_error(error_func, tableParameterMsg())
+		unitTest:assert_error(error_func, tableArgumentMsg())
 
 		local error_func = function()
 			verifyNamedTable(123)
 		end
-		unitTest:assert_error(error_func, namedParametersMsg())
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 
 		local error_func = function()
 			verifyNamedTable{x = 3, 3, 4}
@@ -212,18 +212,18 @@ return{
 		end
 		unitTest:assert_error(error_func, "error")
 	end,
-	switchInvalidParameterMsg = function(unitTest)
+	switchInvalidArgumentMsg = function(unitTest)
 		local options = {
 			aaa = true,
 			bbb = true,
 			ccc = true
 		}
-		local str = switchInvalidParameterMsg("ddd", "attr", options)
+		local str = switchInvalidArgumentMsg("ddd", "attr", options)
 		unitTest:assert_equal(str, "'ddd' is an invalid value for parameter 'attr'. It must be a string from the set ['aaa', 'bbb', 'ccc'].")
 
 	end,
-	switchInvalidParameterSuggestionMsg = function(unitTest)
-		local str = switchInvalidParameterSuggestionMsg("aab", "attr", "aaa")
+	switchInvalidArgumentSuggestionMsg = function(unitTest)
+		local str = switchInvalidArgumentSuggestionMsg("aab", "attr", "aaa")
 		unitTest:assert_equal(str, "'aab' is an invalid value for parameter 'attr'. Do you mean 'aaa'?")
 	end
 }

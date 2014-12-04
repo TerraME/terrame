@@ -65,7 +65,7 @@ return{
 		local error_func = function()
 			Chart{subject = c, xwc = 5}
 		end
-		unitTest:assert_error(error_func, unnecessaryParameterMsg("xwc"))
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("xwc"))
 
 		local error_func = function()
 			Chart{subject = c, select = {}}

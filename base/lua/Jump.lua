@@ -51,7 +51,7 @@ metaTableJump_ = {__index = Jump_, __tostring = tostringTerraME}
 -- }
 function Jump(data)
 	if type(data) ~= "table" then
-		tableParameterError("Jump")
+ 		customError(tableArgumentMsg())
 	end
 
 	local cObj = TeJump()

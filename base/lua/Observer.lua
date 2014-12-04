@@ -405,7 +405,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 			end
 		end
 		if not flagOk then
-			customError("Parameter 'legends' expects a set of Legend objects.", 4)
+			customError("Argument 'legends' expects a set of Legend objects.", 4)
 		end	
 	end
 	
@@ -466,7 +466,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 	   or subjType == TME_TYPES.NEIGHBORHOOD then
 
 		local csObserver = datale.observer
-		if not csObserver then customError("Parameter 'observer' not found.", 3) end
+		if not csObserver then customError("Argument 'observer' not found.", 3) end
 		local cs = csObserver.subject
 		table.insert(observerParams, cs)
 		table.insert(observerParams, csObserver.id)
@@ -520,7 +520,7 @@ local function observerNeighborhood(subject, neighborhoods, datale)
 	local legends = datale.legends or {}
 
 	csObserver = datale.observer
-	if not csObserver then customError("Parameter 'observer' was not found.", 3) end
+	if not csObserver then customError("Argument 'observer' was not found.", 3) end
 
 	local mtype = csObserver.type
 	if mtype ~= "map" and mtype ~= TME_OBSERVERS.MAP and mtype ~= "image" and mtype ~= TME_OBSERVERS.IMAGE then
@@ -617,10 +617,10 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 		or subjType == TME_TYPES.NEIGHBORHOOD then
 
 		local csObserver = datale["observer"]
-		if (not csObserver) then customError("Error: Parameter 'observer' not found.", 3) end
+		if (not csObserver) then customError("Argument 'observer' not found.") end
 
 		local cs = csObserver.subject
-		if not cs then customError("Parameter 'cellspace' not found.", 3) end
+		if not cs then customError("Argument 'cellspace' not found.") end
 
 		table.insert(observerParams, cs)
 		table.insert(observerParams, csObserver.id)
@@ -998,7 +998,7 @@ local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabe
 --	 attributes = {"water"}
 -- }
 -- @tabular default_parameters
--- Parameters, from higher to lower priority &
+-- Arguments, from higher to lower priority &
 -- Default type \
 -- file == "*.csv"  &
 -- logfile \
@@ -1075,9 +1075,9 @@ function Observer(data)
 
 	if type(data) ~= "table" then
 		if data == nil then
-			tableParameterError("Observer", 3)
+			tableArgumentError("Observer", 3)
 		else
- 			namedParametersError("Observer", 3)
+ 			namedArgumentsError("Observer", 3)
 		end
 	elseif getn(data) == 0 then
 		customError("Observer needs more information to be created.", 3)
@@ -1160,7 +1160,7 @@ function Observer(data)
 		end
 	end
 
-	checkUnnecessaryParameters(data, observerPossibleParams)
+	checkUnnecessaryArguments(data, observerPossibleParams)
 
 	local metaTable = {__index = Observer_,__tostring = tostringTerraME}
 	setmetatable(data, metaTable)
@@ -1171,7 +1171,7 @@ function Observer(data)
 
 	subject = data.subject
 	if subject == nil then
-		customError("Parameter 'subject' is compulsory.", 3)
+		customError("Argument 'subject' is compulsory.", 3)
 	else
 		-- Checks the Lua subject type
 		if type(subject) == "table" and subject.cObj_ ~= nil then
@@ -1229,7 +1229,7 @@ function Observer(data)
 		end
 
 		if #data.attributes ~= 0 and not flagAttrsValid then
-			customError("Incompatible values. Parameter 'attributes' expected a set of valid object fields.", 3)
+			customError("Incompatible values. Argument 'attributes' expected a set of valid object fields.", 3)
 		elseif #data.attributes == 0 then
 			if data.type == "image" then
 				customError("Image observers must have exactly one or two attributes.", 3)

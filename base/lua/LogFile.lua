@@ -112,7 +112,7 @@ LogFile = function(data)
 		end
 	end
 
-	checkUnnecessaryParameters(data, {"subject", "select", "file", "separator"})
+	checkUnnecessaryArguments(data, {"subject", "select", "file", "separator"})
 
 	local observerType = TME_OBSERVERS.LOGFILE
 	local observerParams = {}
