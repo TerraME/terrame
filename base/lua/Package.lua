@@ -39,7 +39,7 @@ packageInfo = function(package)
 
 	local s = sessionInfo().separator
 	local pkgfile = sessionInfo().path..s.."packages"..s..package
-	if not isfile(pkgfile) then
+	if not isFile(pkgfile) then
 		customError("Package '"..package.."' is not installed.")
 	end
 	
@@ -69,7 +69,7 @@ function file(filename, package)
 
 	local s = sessionInfo().separator
 	local file = sessionInfo().path..s.."packages"..s..package..s.."data"..s..filename
-	if not isfile(file) then
+	if not isFile(file) then
 		customError("File '"..file.."' does not exist in package '"..package.."'.")
 	end
 	return file
@@ -161,8 +161,8 @@ function require(package)
 	local s = sessionInfo().separator
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
-	if not isfile(package_path) then
-		if isfile(package) then
+	if not isFile(package_path) then
+		if isFile(package) then
 			printWarning("Loading package '"..package.."' from a folder in the current directory")
 			package_path = package
 		else
@@ -174,7 +174,7 @@ function require(package)
 	local all_files = dir(package_path..s.."lua")
 	local load_sequence
 
-	if isfile(load_file) then
+	if isFile(load_file) then
 		xpcall(function() load_sequence = include(load_file) end, function(err)
 			printError("Package '"..package.."' could not be loaded.")
 			print(err)
@@ -206,7 +206,7 @@ function require(package)
 	if load_sequence then
 		for _, file in ipairs(load_sequence) do
 			local mfile = package_path..s.."lua"..s..file
-			if not isfile(mfile) then
+			if not isFile(mfile) then
 				printError("Cannot open "..mfile..". No such file.")
 				printError("Please check "..package_path..s.."load.lua")
 				os.exit()

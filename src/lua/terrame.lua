@@ -65,7 +65,7 @@ end
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
 function include(scriptfile)
 	local env = setmetatable({}, {__index = _G})
-	if not isfile(scriptfile) then
+	if not isFile(scriptfile) then
 		customError("File '"..scriptfile.."' does not exist.")
 	end
 	loadfile(scriptfile, 't', env)() 
@@ -151,7 +151,7 @@ local function exportDatabase(package)
 	forEachElement(files, function(_, mfile)
 		local database = string.sub(mfile, 1, string.len(mfile) - 4)
 
-		if isfile(sessionInfo().path..s.."packages"..s..package..s.."data"..s..mfile) then
+		if isFile(sessionInfo().path..s.."packages"..s..package..s.."data"..s..mfile) then
 			printWarning("File "..mfile.." already exists and will not be replaced")
 		else
 			printNote("Exporting database "..database)
@@ -464,7 +464,7 @@ local executeTests = function(package, fileName)
 			customError("'examples' should be boolean or nil, got "..type(data.examples)..".")
 		end
 
-		checkUnnecessaryParameters(data, {"folder", "file", "test", "sleep", "examples"})
+		checkUnnecessaryArguments(data, {"folder", "file", "test", "sleep", "examples"})
 	else
 		data = {}
 	end
@@ -503,14 +503,14 @@ local executeTests = function(package, fileName)
 	local baseDir = sessionInfo().path..s.."packages"..s..package
 	local srcDir = baseDir..s.."tests"
 
-	if not isfile(srcDir) then
+	if not isFile(srcDir) then
 		customError("Folder 'tests' does not exist in package '"..package.."'.")
 	end
 
 	load_file = baseDir..s.."load.lua"
 	local load_sequence
 
-	if isfile(load_file) then
+	if isFile(load_file) then
 		-- the 'include' below does not need to be inside a xpcall because 
 		-- the package was already loaded with success
 		load_sequence = include(load_file).files
@@ -988,7 +988,7 @@ buildPackage = function(package)
 	local packageDir = sessionInfo().path..s.."packages"
 	chdir(packageDir)
 	os.execute("zip -qr "..file.." "..package)
-	if isfile(file) then
+	if isFile(file) then
 		printNote("Package "..package.." successfully built")
 	end
 	chdir(currentDir)
@@ -999,7 +999,7 @@ local function installPackage(file)
 	if file == nil then
 		printError("You need to choose the file to be installed.")
 		return
-	elseif not isfile(file) then
+	elseif not isFile(file) then
 		printError("No such file: "..file)
 		return
 	end
@@ -1322,7 +1322,7 @@ execute = function(arguments) -- arguments is a vector of strings
 
 				if file then
 					arg = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..file
-					if not isfile(arg) then
+					if not isFile(arg) then
 						printError("Example '"..file.."' does not exist in package '"..package.."'.")
 						print("Please use one from the list below:")
 					end
@@ -1332,7 +1332,7 @@ execute = function(arguments) -- arguments is a vector of strings
 					print("Package '"..package.."' has the following examples:")
 				end
 
-				if file and isfile(arg) then
+				if file and isFile(arg) then
 					-- it only changes the file to point to the package and let it run as it
 					-- was a call such as "TerraME .../package/examples/example.lua"
 					arguments[argCount + 1] = arg
@@ -1357,7 +1357,7 @@ execute = function(arguments) -- arguments is a vector of strings
 			local cObj = TeVisualArrangement()
 			cObj:setFile(displayFile)
 
-			if isfile(displayFile) then
+			if isFile(displayFile) then
 				local display = dofile(displayFile)
 
 				forEachElement(display, function(idx, data)

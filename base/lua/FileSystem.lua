@@ -11,7 +11,7 @@
 -- related attributes use the same time reference of os.time.
 -- This function uses stat internally thus if the given filepath is a symbolic link, it is followed 
 -- (if it points to another link the chain is followed recursively) and the information is about the 
--- file it refers to. To obtain information about the link itself, see FileSystem:symlinkattributes().
+-- file it refers to. To obtain information about the link itself, see FileSystem:linkAttributes().
 -- @arg filepath A string with the file path.
 -- @arg attributename A string with the name of the attribute to be read.
 -- @tabular attributename
@@ -53,21 +53,21 @@ end
 --- Change the current working directory to the given path.
 -- Returns true in case of success or nil plus an error string.
 -- @arg path A string with the path.
--- @usage chdir("c:\\tests")
-chdir = function(path)
+-- @usage chDir("c:\\tests")
+chDir = function(path)
 	return lfs.chdir(path)
 end
 
 --- Return a string with the current working directory or nil plus an error string.
--- @usage currentdir()
-currentdir = function()
+-- @usage currentDir()
+currentDir = function()
 	return lfs.currentdir()
 end
 
 --- Return whether a given string represents a file stored in the computer.
 -- @arg file A string.
--- @usage isfile("C:\\file.txt")
-isfile = function(file)
+-- @usage isFile("C:\\file.txt")
+isFile = function(file)
 	return os.rename(file, file)
 end
 
@@ -120,8 +120,8 @@ end
 -- also iterate by calling dir_obj:next(), and explicitly close the directory before the iteration 
 -- finished with dir_obj:close(). Raises an error if path is not a directory.
 -- @arg path A string with the path.
--- @usage iter, dir_obj = lfsdir(path)
-lfsdir = function(path)
+-- @usage iter, dir_obj = lfsDir(path)
+lfsDir = function(path)
 	return lfs.dir(path)
 end
 
@@ -144,24 +144,24 @@ end
 -- In case of any errors it returns nil and the error message. In particular, if the lock exists and is 
 -- not stale it returns the "File exists" message.
 -- @arg path A string with the path.
--- @usage lock_dir(path)
-lock_dir = function(path)
+-- @usage lockDir(path)
+lockDir = function(path)
 	return lfs.lock_dir
 end
 
 --- Create a new directory. The argument is the name of the new directory.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 -- @arg path A string with the path.
--- @usage mkdir(dirname)
-mkdir = function(path)
+-- @usage mkDir(dirname)
+mkDir = function(path)
 	return lfs.mkdir(path)
 end
 
 --- Remove an existing directory. The argument is the name of the directory.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 -- @arg path A string with the path.
--- @usage rmdir(dirname)
-rmdir = function(path)
+-- @usage rmDir(dirname)
+rmDir = function(path)
 	return lfs.rmdir(path)
 end
 
@@ -171,8 +171,8 @@ end
 -- mode is always returned as binary.
 -- @arg filepath A string with the file path.
 -- @arg mode A string that can be either "binary" or "text". 
--- @usage setmode(file, "text")
-setmode = function(filepath, mode)
+-- @usage setMode(file, "text")
+setMode = function(filepath, mode)
 	return lfs.setmode(filepath, mode)
 end
 
@@ -180,8 +180,8 @@ end
 -- refers to). On Windows this function does not yet support links, and is identical to FileSystem:attributes().
 -- @arg filepath A string with the file path.
 -- @arg attributename A string with the name of the attribute to be read.
--- @usage symlinkattributes(filepath, "size")
-symlinkattributes = function(filepath, attributename)
+-- @usage linkAttributes(filepath, "size")
+linkAttributes = function(filepath, attributename)
 	return lfs.symlinkattributes(filepath, attributename)
 end
 

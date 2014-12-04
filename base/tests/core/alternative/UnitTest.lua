@@ -68,7 +68,7 @@ return{
 			u:assert_error(function() end, "aaa", false)
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number or nil", false))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number", false))
 	end,
 	assert_type = function(unitTest)
 		local u = UnitTest{}

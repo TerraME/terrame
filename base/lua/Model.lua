@@ -690,7 +690,6 @@ Model = function(attrTab)
 						customError("Attribute '"..name.."."..mname.."' does not exist in the Model.")
 					end
 				end)
-
 			elseif attrTab[name] == nil then
 				customError("Attribute '"..name.."' does not exist in the Model.")
 			end
@@ -727,9 +726,7 @@ Model = function(attrTab)
 			end
 		end)
 
-		if exec == nil then
-			customError("The object does not have a Timer.")
-		end
+		verify(exec, "The object does not have a Timer or an Environment with at least one Timer.")
 
 		argv.exec = exec
 		return argv

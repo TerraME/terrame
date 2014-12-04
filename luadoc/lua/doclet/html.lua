@@ -14,7 +14,7 @@
 
 local assert, getfenv, ipairs, loadstring, setfenv, tostring, tonumber, type = assert, getfenv, ipairs, loadstring, setfenv, tostring, tonumber, type
 local io, pairs, os = io, pairs, os
-local package, string, mkdir = package, string, mkdir
+local package, string, mkDir = package, string, mkDir
 local table = table
 local print =  print
 local printNote, printError, getn, belong = printNote, printError, getn, belong
@@ -398,6 +398,6 @@ function start (doc, doc_report)
 	f:close()
 
 	-- Copy logo
-	mkdir(doc.description.destination_logo)
+	mkDir(doc.description.destination_logo)
 	os.execute("cp "..doc.description.logo.." "..doc.description.destination_logo)
 end

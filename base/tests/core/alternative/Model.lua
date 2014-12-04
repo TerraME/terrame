@@ -46,7 +46,7 @@ return{
 		local error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "The object does not have a Timer.")
+		unitTest:assert_error(error_func, "The object does not have a Timer or an Environment with at least one Timer.")
 	
 		local Tube = Model{
 			setup = function(model)

@@ -66,9 +66,9 @@ UnitTest_ = {
 	assert = function(self, value)
 		self.test = self.test + 1
 
-		if type(value) ~= "boolean" then
-			incompatibleTypeError("#1", "boolean", value)
-		elseif value == true then
+		mandatoryArgument(1, "boolean", value)
+
+		if value == true then
 			self.success = self.success + 1
 		else
 			local msg
@@ -89,9 +89,9 @@ UnitTest_ = {
 	-- @usage unitTest:assert_type(2, "number")
 	assert_type = function (self, value, mtype)
 		self.test = self.test + 1
-		if type(mtype) ~= "string" then
-			incompatibleTypeError("#2", "string", mtype)
-		end
+
+		mandatoryArgument(2, "string", mtype)
+
 		if type(value) == mtype then
 			self.success = self.success + 1
 		else
@@ -139,9 +139,7 @@ UnitTest_ = {
 		end
 
 		if tol == nil then tol = 0 end
-		if type(tol) ~= "number" then
-			incompatibleTypeError("#3", "number", tol)
-		end
+		mandatoryArgument(3, "number", tol)
 
 		if type(v1) == "number" and type(v2) == "number" then
 			if v1 <= v2 + tol and v1 >= v2 - tol then
@@ -158,10 +156,10 @@ UnitTest_ = {
 				self.fail = self.fail + 1
 			end
 		elseif type(v1) ~= type(v2) then
-				self.fail = self.fail + 1
+			self.fail = self.fail + 1
 			print_error(self, "Values should be equal, but they have different types ("..type(v1).." and "..type(v2)..").")
 		elseif v1 ~= v2 then
-				self.fail = self.fail + 1
+			self.fail = self.fail + 1
 			print_error(self, "Values have the same type ("..type(v1)..") but different values.")
 		else
 			self.success = self.success + 1
@@ -178,13 +176,9 @@ UnitTest_ = {
 	-- @usage error_func = function() verify(2 > 3, "wrong operator") end
 	-- unitTest:assert_error(error_func, "wrong operator")
 	assert_error = function(self, my_function, error_message, max_error)
-		if type(my_function) ~= "function" then
-			incompatibleTypeError("#1", "function", my_function)
-		elseif type(error_message) ~= "string" then
-			incompatibleTypeError("#2", "string", error_message)
-		elseif max_error ~= nil and type(max_error) ~= "number" then
-			incompatibleTypeError("#3", "number or nil", max_error)
-		end
+		mandatoryArgument(1, "function", my_function)
+		mandatoryArgument(2, "string", error_message)
+		optionalArgument(3, "number", max_error)
 
 		local found_error = false
 		local _, err = xpcall(my_function, function(err)
@@ -226,7 +220,8 @@ UnitTest_ = {
 				local error_msg = "Test expected:\n  '"..error_message.."'\n  got:\n  '"..shortError.."'"
 
 				if max_error then
-					error_msg = error_msg.."\nIt would accept an error of at most "..max_error.." character(s), but got "..distance.."."
+					error_msg = error_msg.."\nIt would accept an error of at most "..max_error..
+						" character(s), but got "..distance.."."
 				end
 
 				print_error(self, error_msg)

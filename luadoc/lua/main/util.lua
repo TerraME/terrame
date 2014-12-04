@@ -5,7 +5,7 @@
 
 -- local lfs = require "lfs"
 local type, table, io, assert, tostring, setmetatable, pcall = type, table, io, assert, tostring, setmetatable, pcall
-local print, string, ipairs, mkdir, printNote, printError = print, string, ipairs, mkdir, printNote, printError
+local print, string, ipairs, mkDir, printNote, printError = print, string, ipairs, mkDir, printNote, printError
 
 -------------------------------------------------------------------------------
 -- Module with several utilities that could not fit in a specific module
@@ -153,7 +153,7 @@ function openFile (filename, mode)
 		local dir = ""
 		for d in string.gmatch(filename, ".-/") do
 			dir = dir .. d
-			mkdir(dir)
+			mkDir(dir)
 		end
 		f = io.open(filename, mode)
 	end
