@@ -128,6 +128,7 @@ metaTableGroup_ = {
 --- Type that defines an ordered selection over a Society. It inherits Society; therefore 
 -- it is possible to apply all functions of such type to a Group. For instance, calling 
 -- Utils:forEachAgent() also traverses Groups.
+-- @inherits Society
 -- @arg data.target The Society over which the Group will take place.
 -- @arg data.select A function(Agent)->boolean, to filter the Society. Note that, according 
 -- to Lua language, if this function returns anything but false or nil, the Agent will be added 

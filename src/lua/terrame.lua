@@ -290,7 +290,8 @@ local function executeDoc(package)
 		non_doc_functions = 0,
 		wrong_links = 0,
 		invalid_tags = 0,
-		problem_examples = 0, 
+		problem_examples = 0,
+		duplicated = 0,
 		undoc_examples = 0
 	}
 
@@ -310,7 +311,13 @@ local function executeDoc(package)
 	if doc_report.wrong_description == 0 then
 		printNote("All fields of 'description.lua' are correct.")
 	else
-		printError(doc_report.wrong_description.." problems were found in 'description.lua'")
+		printError(doc_report.wrong_description.." problems were found in 'description.lua'.")
+	end
+
+	if doc_report.duplicated == 0 then
+		printNote("All unique tags are not duplicated.")
+	else
+		printError(doc_report.duplicated.." tags should be unique and are duplicated.")
 	end
 
 	if doc_report.non_doc_functions == 0 then
@@ -389,7 +396,7 @@ local function executeDoc(package)
 				   doc_report.lack_usage + doc_report.no_call_itself_usage + doc_report.non_doc_functions +
 				   doc_report.block_name_conflict + doc_report.undefined_arg + doc_report.wrong_description + 
 				   doc_report.wrong_links + doc_report.problem_examples + doc_report.undoc_examples + 
-				   doc_report.unknown_arg
+				   doc_report.unknown_arg + doc_report.duplicated
 
 	if errors == 0 then
 		printNote("Summing up, all the documentation was successfully built.")

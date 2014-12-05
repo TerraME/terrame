@@ -176,6 +176,7 @@ metaTableTrajectory_ = {
 -- CellularSpace; therefore it is possible to use all functions of such type within a Trajectory. For 
 -- instance, calling Utils:forEachCell() also traverses Trajectories, and it is possible to create a 
 -- Trajectory from another Trajectory.
+-- @inherits CellularSpace
 -- @arg data.target The CellularSpace over which the Trajectory will take place.
 -- @arg data.select A function (Cell)->boolean to filter the CellularSpace, adding to the Trajectory
 -- only those Cells whose returning value is true. If this argument is missing, all Cells will be 

@@ -24,38 +24,37 @@ end
 -------------------------------------------------------------------------------
 -- Set the class of a comment block. Classes can be "module", "function", "table",
 -- "variable". The first two classes are automatic, extracted from the source code
-
 local function class (tag, block, text)
 	block[tag] = text
 end
 
 -------------------------------------------------------------------------------
-
 local function copyright (tag, block, text)
 	block[tag] = text
 end
 
 -------------------------------------------------------------------------------
-
 local function description (tag, block, text)
 	block[tag] = text
 end
 
 -------------------------------------------------------------------------------
-
-local function release (tag, block, text)
+local function release(tag, block, text)
 	block[tag] = text
 end
 
 -------------------------------------------------------------------------------
-
-local function inherits (tag, block, text)
-	block[tag] = text  
+local function inherits(tag, block, text, doc_report)
+	if block[tag] == nil then
+		block[tag] = text
+	else
+		printError("@inherits is used more than once and will be ignored in '"..text.."'")
+		doc_report.duplicated = doc_report.duplicated + 1
+	end
 end
 
 -------------------------------------------------------------------------------
-
-local function field (tag, block, text)
+local function field(tag, block, text)
 	if block["class"] ~= "table" then
 		printError("documenting 'field' for block that is not a 'table'")
 	end
@@ -181,8 +180,7 @@ end
 
 -------------------------------------------------------------------------------
 -- @see ret
-
-local function see (tag, block, text)
+local function see(tag, block, text)
 	-- see is always an array
 	block[tag] = block[tag] or {}
 	
@@ -198,20 +196,17 @@ end
 
 -------------------------------------------------------------------------------
 -- @see ret
-
-local function usage (tag, block, text)
+local function usage(tag, block, text, doc_report)
 	if type(block[tag]) == "string" then
-		block[tag] = { block[tag], text }
-	elseif type(block[tag]) == "table" then
-		table.insert(block[tag], text)
+		printError("@usage is used more than once and will be ignored in '"..text.."'")
+		doc_report.duplicated = doc_report.duplicated + 1
 	else
 		block[tag] = text
 	end
 end
 
 -------------------------------------------------------------------------------
-
-local function output (tag, block, text)
+local function output(tag, block, text)
 	block[tag] = block[tag] or {}
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
@@ -225,7 +220,6 @@ local function output (tag, block, text)
 end
 
 -------------------------------------------------------------------------------
-
 local function tab(tag, block, text)
 	block[tag] = block[tag] or {}
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
@@ -245,17 +239,22 @@ end
 
 -------------------------------------------------------------------------------
 
-local function deprecated(tag, block, text)
-	block[tag] = block[tag] or {}
-	table.insert(block[tag], true)
+local function deprecated(tag, block, text, doc_report)
+	if block[tag] ~= nil then
+		printError("@deprecated is used more than once and will be ignored in '"..text.."'")
+		doc_report.duplicated = doc_report.duplicated + 1
+	else
+		block[tag] = {}
+		table.insert(block[tag], true)
 
-	-- remove trailing "."
-	text = string.gsub(text, "(.*)%.$", "%1")
+		-- remove trailing "."
+		text = string.gsub(text, "(.*)%.$", "%1")
 	
-	local str = util.split("%s*,%s*", text)			
+		local str = util.split("%s*,%s*", text)			
 	
-	for _, v in ipairs(str) do
-		table.insert(block[tag], v)
+		for _, v in ipairs(str) do
+			table.insert(block[tag], v)
+		end
 	end
 end
 
@@ -280,7 +279,7 @@ handlers["deprecated"] = deprecated
 
 -------------------------------------------------------------------------------
 
-function handle (tag, block, text, doc_report)
+function handle(tag, block, text, doc_report)
 	if not handlers[tag] then
 		printError(string.format("Tag '%s' is invalid", tag))
 		doc_report.invalid_tags = doc_report.invalid_tags + 1
@@ -288,3 +287,4 @@ function handle (tag, block, text, doc_report)
 	end
 	return handlers[tag](tag, block, text, doc_report)
 end
+
