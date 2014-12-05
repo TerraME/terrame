@@ -32,6 +32,17 @@
 -- @arg data.yLabel Name of the y-axis. It does not show any label as default.
 -- @arg data.label Vector of the same size of select that indicates the labels for each
 -- line of a chart. Default is the name of the attributes.
+-- @arg data.width The width of the lines to be drawn. It can be a number, indicating that all lines
+-- will be drawn with the same width, or a vector describing each line. Default is width one 
+-- for all lines.
+-- @arg data.color An optional table where each position is a color for the respective attribute, 
+-- described as strings ("red", "green", "blue", "white", "black",
+-- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
+-- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
+-- representing RGB compositions.
+-- @arg data.style The style of each line to be drawn. It can be a string, indicating that all lines
+-- will have the same style, or a vector of strings describing each line. The possible values are:
+-- "lines", "dots", "steps", and "sticks". Default is "lines" for all lines.
 -- @arg data.xAxis Name of the attribute to be used as x axis (instead of time). In this case,
 -- notify() will not need the argument for plotting Charts.
 -- @usage Chart{subject = cs}
@@ -55,28 +66,28 @@ Chart = function(data)
 		data.select = {}
 
 		if type(data.subject) == "Cell" then
-			forEachElement(data.subject, function(idx, value, mtype)
+			forEachOrderedElement(data.subject, function(idx, value, mtype)
 				local size = string.len(idx)
 				if mtype == "number" and idx ~= "x" and idx ~= "y" and string.sub(idx, size, size) ~= "_" then
 					data.select[#data.select + 1] = idx
 				end
 			end)
 		elseif type(data.subject) == "Agent" then
-			forEachElement(data.subject, function(idx, value, mtype)
+			forEachOrderedElement(data.subject, function(idx, value, mtype)
 				local size = string.len(idx)
 				if mtype == "number" and string.sub(idx, size, size) ~= "_" then
 					data.select[#data.select + 1] = idx
 				end
 			end)
 		elseif type(data.subject) == "CellularSpace" then
-			forEachElement(data.subject, function(idx, value, mtype)
+			forEachOrderedElement(data.subject, function(idx, value, mtype)
 				local size = string.len(idx)
 				if mtype == "number" and not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, size, size) ~= "_" then
 					data.select[#data.select + 1] = idx
 				end
 			end)
 		elseif type(data.subject) == "Society" then
-			forEachElement(data.subject, function(idx, value, mtype)
+			forEachOrderedElement(data.subject, function(idx, value, mtype)
 				if mtype == "number" then
 					data.select[#data.select + 1] = idx
 				end
@@ -153,7 +164,7 @@ Chart = function(data)
 		end
 	end
 
-	checkUnnecessaryArguments(data, {"subject", "select", "yLabel", "xLabel", "title", "label"})
+	checkUnnecessaryArguments(data, {"subject", "select", "yLabel", "xLabel", "title", "label", "color", "xAxis", "width", "style"})
 
 	local observerType
 	if data.xAxis == nil then
@@ -194,6 +205,56 @@ Chart = function(data)
     end
 
 	table.insert(observerParams, label)
+
+	if type(data.width) == "number" then
+		local width = {}
+		forEachElement(data.select, function()
+			table.insert(width, data.width)
+		end)
+		data.width = width
+	end
+
+	if type(data.style) == "string" then
+		local style = {}
+		forEachElement(data.select, function()
+			table.insert(style, data.style)
+		end)
+		data.style = style
+	end
+
+	optionalTableArgument(data, "width", "table")
+	optionalTableArgument(data, "style", "table")
+	optionalTableArgument(data, "color", "table")
+
+	-- Legend
+	local defaultColors = {"red", "green", "blue", "black", "yellow", "pink", "brown", "gray", "magenta", "orange", "purple"}
+
+	if #data.select > 11 and not data.color then
+		customError("Argument color is compulsory when using more than 11 attributes.")
+	end
+
+	local i = 1
+	forEachElement(data.select, function()
+		local width = 1
+		if data.width then
+			width = data.width[i]
+		end
+
+		local style = "lines"
+		if data.style then
+			style = data.style[i]
+		end
+
+		local color = defaultColors[i]
+		if data.color then
+			color = data.color[i]
+		end
+
+		local l = Legend{type = "number", width = width, style = style, colorBar = {color = color, value = "-"}}
+
+		table.insert(observerParams, l)
+		i = i + 1
+	end)
 
 	local id
 
