@@ -459,8 +459,7 @@ function forEachCell(cs, f)
 	end
 
 	for i, cell in ipairs(cs.cells) do
-		result = f(cell, i)
-		if result == false then return false end
+		if f(cell, i) == false then return false end
 	end
 	return true
 end
@@ -491,8 +490,7 @@ function forEachCellPair(cs1, cs2, f)
 
 	for i, cell1 in ipairs(cs1.cells) do
 		local cell2 = cs2.cells[i]
-		result = f(cell1, cell2, i)
-		if result == false then return false end
+		if f(cell1, cell2, i) == false then return false end
 	end
 	return true
 end
@@ -540,8 +538,7 @@ function forEachNeighbor(cell, index, f)
 	while not neighborhood.cObj_:isLast() do
 		local neigh = neighborhood.cObj_:getNeighbor()
 		local weight = neighborhood.cObj_:getWeight()
-		local result = f(cell, neigh, weight)
-		if result == false then return false end
+		if f(cell, neigh, weight) == false then return false end
 		neighborhood.cObj_:next()
 	end
 	return true
@@ -564,8 +561,7 @@ function forEachNeighborhood(cell, f)
 	cell.cObj_:first()
 	while not cell.cObj_:isLast() do
 		local nh = cell.cObj_:getCurrentNeighborhood()
-		result = f(nh)
-		if result == false then return false end
+		if f(nh) == false then return false end
 		cell.cObj_:next()
 	end
 	return true
@@ -611,8 +607,7 @@ function forEachConnection(agent, index, f)
 	end
 	for index, connection in pairs(socialnetwork.connections) do
 		local weight = socialnetwork.weights[index]
-		local result = f(agent, connection, weight)
-		if result == false then return false end
+		if f(agent, connection, weight) == false then return false end
 	end
 	return true
 end

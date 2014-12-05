@@ -29,6 +29,7 @@ if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
 type__  = type
 print__ = print
+require__ = require
 
 local begin_red    = "\027[00;31m"
 local begin_yellow = "\027[00;33m"
@@ -402,7 +403,7 @@ end
 
 -- builds a table with zero counts for each element of the table gotten as argument
 local buildCountTable = function(mtable)
-	result = {}
+	local result = {}
 
 	forEachElement(mtable, function(idx, value, mtype)
 		if type__(value) == "table" then
@@ -559,9 +560,10 @@ local executeTests = function(package, fileName)
 	end
 
 	local global_variables = {}
-	local count_global = getn(_G)
-	forEachElement(_G, function(idx)
-		global_variables[idx] = true
+	local global_values = {}
+	forEachElement(_G, function(idx, value, mtype)
+		global_variables[idx] = mtype
+		global_values[idx] = value
 	end)
 
 	local myTests
@@ -672,18 +674,24 @@ local executeTests = function(package, fileName)
 					ut.functions_without_assert = ut.functions_without_assert + 1
 				end
 
-				if getn(_G) > count_global then
-					local variables = ""
-					local pvariables = {}
-					forEachElement(_G, function(idx, _, mtype)
-						if global_variables[idx] == nil then
-							variables = variables.."'"..idx.."' ("..mtype.."), "
-							pvariables[#pvariables + 1] = idx
-						end
-					end)
+				local variables = ""
+				local pvariables = {}
+				local rvariables = ""
+				local rpvariables = {}
+
+				forEachElement(_G, function(idx, _, mtype)
+					if global_variables[idx] == nil then
+						variables = variables.."'"..idx.."' ("..mtype.."), "
+						pvariables[#pvariables + 1] = idx
+					elseif global_variables[idx] ~= mtype then
+						rvariables = rvariables.."'"..idx.."' (changed from "..global_variables[idx].." to "..mtype.."), "
+						rpvariables[#rpvariables + 1] = idx
+					end
+				end)
+
+				if variables ~= "" then
 					variables = variables:sub(1, variables:len() - 2).."."
 					printError("Test creates global variable(s): "..variables)
-					ut.functions_with_global_variables = ut.functions_with_global_variables + 1
 
 					-- we need to delete the global variables created in order to ensure that a 
 					-- new error will be generated if this variable is found again. This need
@@ -692,8 +700,20 @@ local executeTests = function(package, fileName)
 					forEachElement(pvariables, function(_, value)
 						_G[value] = nil
 					end)
-				else
-					ut.success = ut.success + 1
+				end
+
+				if rvariables ~= "" then
+					rvariables = rvariables:sub(1, rvariables:len() - 2).."."
+					printError("Test updates global variable(s): "..rvariables)
+
+					-- same reason as above
+					forEachElement(rpvariables, function(_, value)
+						_G[value] = global_values[value]
+					end)
+				end
+
+				if variables ~= "" or rvariables ~= "" then
+					ut.functions_with_global_variables = ut.functions_with_global_variables + 1
 				end
 
 				if ut.count_last > 0 then
@@ -873,9 +893,9 @@ local executeTests = function(package, fileName)
 	end
 
 	if ut.functions_with_global_variables > 0 then
-		printError(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create some global variable.")
+		printError(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create or update some global variable.")
 	else
-		printNote("No tested function creates any global variable.")
+		printNote("No tested function creates or updates any global variable.")
 	end
 
 	if ut.print_calls > 0 then
@@ -1011,7 +1031,6 @@ local function installPackage(file)
 	chdir(currentDir)
 	os.execute("rm "..packageDir..s..file)
 end
-
 
 local versions = function()
 	print("\nTerraME - Terra Modeling Environment")

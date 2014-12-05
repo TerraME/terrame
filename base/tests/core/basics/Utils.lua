@@ -109,21 +109,12 @@ return{
 		forEachCell(cs, function(cell) cell.value = 2 end)
 		forEachCell(cs, function(cell) unitTest:assert_equal(cell.value, 2) end)
 
-		local count = 0
-		forEachCell(cs, function(cell)
-			count = count + 1
-			if count > 10 then return false end
-		end)
-		unitTest:assert_equal(count, 11)
-
-
 		local t = Trajectory{target = cs}
 		forEachCell(t, function(cell) cell.value = 4 end)
 		forEachCell(cs, function(cell) unitTest:assert_equal(cell.value, 4) end)
 
 		local a = Agent{}
 		local env = Environment{cs, a}
-
 		env:createPlacement{strategy = "void"}
 
 		a.placement:add(cs:sample())
@@ -131,6 +122,13 @@ return{
 		a.placement:add(cs:sample())
 
 		forEachCell(a, function(cell) unitTest:assert_equal(cell.value, 4) end)
+
+		local count = 0
+		forEachCell(cs, function(cell)
+			count = count + 1
+			if count > 10 then return false end
+		end)
+		unitTest:assert_equal(count, 11)
 	end,
 	forEachCellPair = function(unitTest)
 		local cs1 = CellularSpace{xdim = 10}
