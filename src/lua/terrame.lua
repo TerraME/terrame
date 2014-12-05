@@ -960,8 +960,8 @@ buildPackage = function(package)
 	xpcall(function() testErrors = executeTests(package) end, function(err)
 		printError(err)
 	end)
-	if testErrors > 0 then
-		printError("Build aborted due to the errors in the tests.")
+	if testErrors == nil or testErrors > 0 then
+		printError("Build aborted")
 		return
 	end
 
@@ -972,8 +972,14 @@ buildPackage = function(package)
 	end)
 
 	if docErrors > 0 then
-		printError("Build aborted due to the errors in the documentation.")
+		printError("Build aborted")
 		return
+	end
+
+	local packageDir = sessionInfo().path..s.."packages"
+	printNote("Checking license")
+	if not isFile(packageDir..s..package..s.."license.txt") then
+		printError("The package does not contain file license.txt")
 	end
 
 	printNote("Building package "..package)
@@ -981,7 +987,6 @@ buildPackage = function(package)
 	local file = package.."_"..info.version..".zip"
 	printNote("Creating file "..file)
 	local currentDir = currentdir()
-	local packageDir = sessionInfo().path..s.."packages"
 	chdir(packageDir)
 	os.execute("zip -qr "..file.." "..package)
 	if isFile(file) then

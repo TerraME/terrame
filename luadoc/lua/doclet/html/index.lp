@@ -23,32 +23,37 @@
 
 			<div id="main">
 				<div id="navigation">
-					<%=luadoc.include("menu.lp", { doc=doc, index = true })%>
+					<%=luadoc.include("menu.lp", {doc = doc, index = true})%>
 				</div> <!-- id="navigation" -->
 
 				<div id="content">
 					<div id="index-header">
-						<%if doc.description.title ~= "" then %> <h1><%=doc.description.title%></h1>
+						<center><%if doc.description.title ~= "" then %> <h1><%=doc.description.title%></h1>
 						<%else%> <h1><%=doc.description.package%></h1>
+						<%end%></center>
+						<br>
+
+						<b>Version: </b><%if doc.description.version ~= "Undefined version" then %><%= doc.description.version %><br>
+						<%else%> <font color="red"><b><%= doc.description.version %></b></font><br>
 						<%end%>
 
-						<%if doc.description.version ~= "Undefined version" then %>Version: <%= doc.description.version %><br>
-						<%else%> Version: <font color="red"><b><%= doc.description.version %></b></font><br>
+						<b>License: </b><%if doc.description.license ~= "Undefined license" then %><%= doc.description.license %><br>
+						<%else%><font color="red"><b><%= doc.description.license %></b></font><br>
 						<%end%>
 
-						<%if doc.description.date ~= "Undefined date" then %>Release: <%= doc.description.date %><br>
-						<%else%> Release: <font color="red"><b><%= doc.description.date %></b></font><br>
+						<b>Release: </b><%if doc.description.date ~= "Undefined date" then %><%= doc.description.date %><br>
+						<%else%><font color="red"><b><%= doc.description.date %></b></font><br>
 						<%end%>
 
-						<%if doc.description.authors ~= "Undefined authors" then %> <%= doc.description.authors %><br>
-						<%else%> <font color="red"><b><%= doc.description.authors %></b></font><br>
+						<b>Authors: </b><%if doc.description.authors ~= "Undefined authors" then %> <%= doc.description.authors %><br>
+						<%else%><font color="red"><b><%= doc.description.authors %></b></font><br>
 						<%end%>
 
-						<%if doc.description.url ~= "" then%>
+						<b>URL: </b><%if doc.description.url ~= "" then%>
 							<%= "<a href= \""..doc.description.url.."\">"..string.gsub(doc.description.url, "http:%/%/", "").."</a>" %><br>
 						<%end%>
 
-						<% if doc.description.contact ~= "Undefined contact" then %>
+						<b>Contact: </b><% if doc.description.contact ~= "Undefined contact" then %>
 							<% local emails = {}
 							local email_link = "<a href=\"mailto:%s\"> %s</a>"
 							for contact in string.gmatch(doc.description.contact, "[^@%s]+@[^,%s]+") do	
@@ -58,6 +63,7 @@
 						<%else%>
 							<font color="red"><b><%= doc.description.contact %></b></font><br>
 						<%end%>
+						<br>
 					</div>
 
 					<p> <%if doc.description.content ~= "Undefined content" then%> <%= doc.description.content %>
@@ -107,6 +113,7 @@
 						</table>
 					<%end%>
 
+<!-- TODO PEDRO -->
 					<%if not options.nofiles and #doc.examples > 0 then%>
 						<h2><a href="<%=luadoc.link("files/examples.html", from)%>">Examples</a></h2>
 						<table class="file_list">

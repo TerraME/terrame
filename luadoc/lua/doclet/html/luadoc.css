@@ -376,7 +376,7 @@ pre.example span.function{
 }
 
 #index-header {
-	text-align: center;
+/*	text-align: center;*/
 }
 
 #TODO: make module_list, file_list, function_list, table_list inherit from a list

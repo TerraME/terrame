@@ -6,8 +6,6 @@
 -- Adapted by Raian Vargas Maretto and Pedro Ribeiro de Andrade, october 2014
 -------------------------------------------------------------------------------
 
--- require "luadoc"
-
 -------------------------------------------------------------------------------
 -- Print version number.
 
@@ -46,7 +44,6 @@ end
 -- Process options. TODO: use getopts.
 -- @class table
 -- @name OPTIONS
-
 local OPTIONS = {
 	d = function (arg, i, options)
 		local dir = arg[i+1]
@@ -81,7 +78,6 @@ local OPTIONS = {
 }
 
 -------------------------------------------------------------------------------
-
 -- local function process_options (arg)
 	-- local files = {}
 	-- local options = require "luadoc.config"
@@ -130,3 +126,4 @@ function luadocMain(package_path, lua_files, example_files, package, doc_report)
 
 	startDoc(lua_files, example_files, options, package_path, doc_report)
 end
+

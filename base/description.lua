@@ -1,4 +1,5 @@
 version = "2.0"
+license = "LGPL-3"
 date = "17 October 2014"
 package = "base"
 title = "TerraME Types and Functions"

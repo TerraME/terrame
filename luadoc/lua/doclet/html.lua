@@ -30,7 +30,6 @@ local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s
 -- @arg name String with the name to look for.
 -- @return String with the complete path of the file found
 --	or nil in case the file is not found.
-
 local function search (path, name)
 	for c in string.gmatch(path, "[^;]+") do
 		c = string.gsub(c, "%?", name)
@@ -74,13 +73,14 @@ function includeMod (template, env)
 	env.util = util
 	env.hl = highlighting
 	-- Adding luadoc functions in the environment
-	env.luadoc = {}
-	env.luadoc.link = link
-	env.luadoc.include = includeMod
-	env.luadoc.file_link = file_link
-	env.luadoc.symbol_link = symbol_link
-	env.luadoc.link_description = link_description
-	env.luadoc.module_link = module_link
+	env.luadoc = {
+		link = link,
+		include = includeMod,
+		file_link = file_link,
+		symbol_link = symbol_link,
+		link_description = link_description,
+		module_link = module_link
+	}
 
 	return lp.include(templatepath, env)
 end
@@ -89,7 +89,6 @@ end
 -- Returns a link to a html file, appending "../" to the link to make it right.
 -- @arg html Name of the html file to link to
 -- @return link to the html file
-
 function link (html, from)
 	local h = html
 	from = from or ""
@@ -103,7 +102,6 @@ end
 -- @arg modulename Name of the module to be processed, may be a .lua file or
 -- a .luadoc file.
 -- @return name of the generated html file for the module
-
 function module_link (modulename, doc, from)
 	-- TODO: replace "." by "/" to create directories?
 	-- TODO: how to deal with module names with "/"?
@@ -135,7 +133,6 @@ function file_func_link (symbol, doc, file_doc, from, doc_report)
 		-- printError(string.format("Invalid link to '%s'", filename))
 		-- doc_report.wrong_links = doc_report.wrong_links + 1
 		return "unresolved"
-		-- return
 	end
 	
 	local functions = doc.files[filename..".lua"]["functions"]
@@ -160,8 +157,7 @@ end
 -- @arg from path of where am I, based on this we append ..'s to the
 -- beginning of path
 -- @return name of the generated html file
-
-function file_link (to, from)
+function file_link(to, from)
 	assert(to)
 	from = from or ""
 	
@@ -178,8 +174,7 @@ end
 -- @arg fname name of the function or table to link to.
 -- @arg doc documentation table
 -- @arg kind String specying the kinf of element to link ("functions" or "tables").
-
-function link_to (fname, doc, module_doc, file_doc, from, kind)
+function link_to(fname, doc, module_doc, file_doc, from, kind)
 	assert(fname)
 	assert(doc)
 	from = from or ""
@@ -218,8 +213,7 @@ end
 
 -------------------------------------------------------------------------------
 -- Make a link to a file, module or function
-
-function symbol_link (symbol, doc, module_doc, file_doc, from, doc_report)
+function symbol_link(symbol, doc, module_doc, file_doc, from, doc_report)
 	assert(symbol)
 	assert(doc)
 	doc_report.links = doc_report.links + 1
@@ -296,7 +290,7 @@ end
 -------------------------------------------------------------------------------
 -- Assembly the output filename for an input file.
 -- TODO: change the name of this function
-function out_file (filename)
+function out_file(filename)
 	local h = filename
 	h = string.gsub(h, "lua$", "html")
 	h = string.gsub(h, "luadoc$", "html")
@@ -311,7 +305,7 @@ end
 -------------------------------------------------------------------------------
 -- Assembly the output filename for a module.
 -- TODO: change the name of this function
-function out_module (modulename)
+function out_module(modulename)
 	local h = modulename .. ".html"
 	h = "modules/" .. h
 	h = options.output_dir .. h
@@ -321,8 +315,7 @@ end
 -----------------------------------------------------------------
 -- Generate the output.
 -- @arg doc Table with the structured documentation.
-
-function start (doc, doc_report)
+function start(doc, doc_report)
 	-- Reserveds words for parser
 	if doc.files then
 		highlighting.setWords(doc.files.funcnames)
@@ -401,3 +394,4 @@ function start (doc, doc_report)
 	mkDir(doc.description.destination_logo)
 	os.execute("cp "..doc.description.logo.." "..doc.description.destination_logo)
 end
+
