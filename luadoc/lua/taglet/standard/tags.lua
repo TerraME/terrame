@@ -45,6 +45,11 @@ end
 
 -------------------------------------------------------------------------------
 local function inherits(tag, block, text, doc_report)
+	if text == "" then
+		printError("@inherits should be folowed by a type")
+		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
+	end
+		
 	if block[tag] == nil then
 		block[tag] = text
 	else
@@ -240,6 +245,11 @@ end
 -------------------------------------------------------------------------------
 
 local function deprecated(tag, block, text, doc_report)
+	if text == "" then
+		printError("@deprecated should be folowed by a string with a description on what to do")
+		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
+	end
+	
 	if block[tag] ~= nil then
 		printError("@deprecated is used more than once and will be ignored in '"..text.."'")
 		doc_report.duplicated = doc_report.duplicated + 1

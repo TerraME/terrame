@@ -292,6 +292,7 @@ local function executeDoc(package)
 		invalid_tags = 0,
 		problem_examples = 0,
 		duplicated = 0,
+		compulsory_arguments = 0,
 		undoc_examples = 0
 	}
 
@@ -324,6 +325,12 @@ local function executeDoc(package)
 		printNote("All "..doc_report.functions.." functions of the package are documented.")
 	else
 		printError(doc_report.non_doc_functions.." out of "..doc_report.functions.." functions are not documented.")
+	end
+
+	if doc_report.compulsory_arguments == 0 then
+		printNote("All tags with compulsory arguments were correctly used.")
+	else
+		printError(doc_report.compulsory_arguments.." tags should use compulsory arguments.")
 	end
 
 	if doc_report.block_name_conflict == 0 then
