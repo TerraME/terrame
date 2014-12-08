@@ -5,7 +5,7 @@
 
 local assert, type, tostring, ipairs = assert, type, tostring, ipairs
 local string, table = string, table
-local printError = printError
+local printError, pairs = printError, pairs
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
@@ -46,14 +46,14 @@ end
 -------------------------------------------------------------------------------
 local function inherits(tag, block, text, doc_report)
 	if text == "" then
-		printError("@inherits should be folowed by a type")
+		printError("In "..block.name.."(), @inherits should be folowed by a type")
 		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
 	end
 		
 	if block[tag] == nil then
 		block[tag] = text
 	else
-		printError("@inherits is used more than once and will be ignored in '"..text.."'")
+		printError("In "..block.name.."(), @inherits is used more than once and will be ignored in '"..text.."'")
 		doc_report.duplicated = doc_report.duplicated + 1
 	end
 end
@@ -115,15 +115,22 @@ end
 -- @arg block Table with previous information about the block.
 -- @arg text String with the current line beeing processed.
 
-local function arg (tag, block, text, doc_report)
+local function arg(tag, block, text, doc_report)
 	block[tag] = block[tag] or {}
+	if text == "" then
+		printError("In "..block.name.."(), @arg should be folowed by an argument name")
+		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
+		return
+	end
+
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	if not name then
-		printError("argument 'name' not defined [["..text.."]]: skipping")
+		printError("In "..block.name.."(), could not infer argument and description of @arg from '"..text.."'")
+		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
 		return
 	end
- 
+
 	-- match table(dot)argument
 	local arg_tab, field = name:match("(.-)%.(.*)")
 	if arg_tab then
@@ -156,7 +163,7 @@ local function arg (tag, block, text, doc_report)
 	end
 	if i == nil then
 		if not arg_tab then
-			printError(string.format("Documenting undefined argument '%s' in function '%s'", name, block.name))
+			printError("In "..block.name.."(), undefined argument '"..name.."' is documented")
 			doc_report.undefined_arg = doc_report.undefined_arg + 1
 		end
 		table.insert(block[tag], name)
@@ -203,7 +210,7 @@ end
 -- @see ret
 local function usage(tag, block, text, doc_report)
 	if type(block[tag]) == "string" then
-		printError("@usage is used more than once and will be ignored in '"..text.."'")
+		printError("In "..block.name.."(), @usage is used more than once and will be ignored in '"..text.."'")
 		doc_report.duplicated = doc_report.duplicated + 1
 	else
 		block[tag] = text
@@ -234,8 +241,10 @@ local function tab(tag, block, text)
 		local row = {}
 		for item in line:gmatch("[^&]+") do
 			item = item:match("^%s*(.-)%s*$")
+
 			table.insert(row, item)
 		end
+
 		table.insert(rows, row)
 	end
 	table.insert(block[tag], name)
@@ -246,12 +255,12 @@ end
 
 local function deprecated(tag, block, text, doc_report)
 	if text == "" then
-		printError("@deprecated should be folowed by a string with a description on what to do")
+		printError("In "..block.name.."(), @deprecated should be folowed by a string with a description on what to do")
 		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
 	end
 	
 	if block[tag] ~= nil then
-		printError("@deprecated is used more than once and will be ignored in '"..text.."'")
+		printError("In "..block.name.."(), @deprecated is used more than once and will be ignored in '"..text.."'")
 		doc_report.duplicated = doc_report.duplicated + 1
 	else
 		block[tag] = {}
@@ -291,7 +300,7 @@ handlers["deprecated"] = deprecated
 
 function handle(tag, block, text, doc_report)
 	if not handlers[tag] then
-		printError(string.format("Tag '%s' is invalid", tag))
+		printError("In "..block.name.."(), Tag '@"..tag.."' is invalid")
 		doc_report.invalid_tags = doc_report.invalid_tags + 1
 		return
 	end
