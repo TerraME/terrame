@@ -250,6 +250,56 @@ local function testfolders(folder, ut)
 	return(result)
 end
 
+local function countTable(mtable)
+	local result = {}
+
+	forEachElement(mtable, function(idx, value, mtype)
+		if type__(value) == "table" then
+			forEachElement(value, function(midx, mvalue, mmtype)
+				if mmtype == "function" then
+					result[midx] = 0
+				end
+			end)
+		elseif mtype == "function" then
+			result[idx] = 0
+		end
+	end)
+	return result
+end
+
+-- builds a table with zero counts for each element of the table gotten as argument
+local function buildCountTable(package)
+	local s = sessionInfo().separator
+	local baseDir = sessionInfo().path..s.."packages"..s..package
+
+	load_file = baseDir..s.."load.lua"
+	local load_sequence
+
+	if isFile(load_file) then
+		-- the 'include' below does not need to be inside a xpcall because 
+		-- the package was already loaded with success
+		load_sequence = include(load_file).files
+	else
+		local dir = dir(baseDir..s.."lua")
+		load_sequence = {}
+		forEachElement(dir, function(_, mfile)
+			if string.endswith(mfile, ".lua") then
+				table.insert(load_sequence, mfile)
+			end
+		end)
+	end
+
+	local testfunctions = {} -- test functions store all the functions that need to be tested, extracted from the source code
+
+	for i, file in ipairs(load_sequence) do
+		-- the 'include' below does not need to be inside a xpcall because 
+		-- the package was already loaded with success
+		testfunctions[file] = countTable(include(baseDir..s.."lua"..s..file))
+	end
+
+	return testfunctions
+end
+
 local function executeDoc(package)
 	local initialTime = os.clock()
 
@@ -293,10 +343,26 @@ local function executeDoc(package)
 		problem_examples = 0,
 		duplicated = 0,
 		compulsory_arguments = 0,
+		undocumented_functions = 0,
 		undoc_examples = 0
 	}
 
-	luadocMain(package_path, lua_files, example_files, package, doc_report)
+	local result = luadocMain(package_path, lua_files, example_files, package, doc_report)
+
+	local all_functions = buildCountTable(package)
+
+	printNote("Checking if all functions are documented")
+	forEachOrderedElement(all_functions, function(idx, value)
+		printNote("Checking "..idx)
+		forEachElement(value, function(midx, mvalue)
+			if midx == "__len" or midx == "__tostring" then return end -- TODO: think about this kind of function
+
+			if not result.files[idx].functions[midx] then
+				printError("Function "..midx.." is not documented")
+				doc_report.undocumented_functions = doc_report.undocumented_functions + 1
+			end
+		end)
+	end)
 
 	local finalTime = os.clock()
 
@@ -313,6 +379,12 @@ local function executeDoc(package)
 		printNote("All fields of 'description.lua' are correct.")
 	else
 		printError(doc_report.wrong_description.." problems were found in 'description.lua'.")
+	end
+
+	if doc_report.undocumented_functions == 0 then
+		printNote("All global functions in the package are documented.")
+	else
+		printError(doc_report.undocumented_functions.." global functions are not documented.")
 	end
 
 	if doc_report.duplicated == 0 then
@@ -415,25 +487,7 @@ local function executeDoc(package)
 	return errors
 end
 
--- builds a table with zero counts for each element of the table gotten as argument
-local buildCountTable = function(mtable)
-	local result = {}
-
-	forEachElement(mtable, function(idx, value, mtype)
-		if type__(value) == "table" then
-			forEachElement(value, function(midx, mvalue, mmtype)
-				if mmtype == "function" then
-					result[midx] = 0
-				end
-			end)
-		elseif mtype == "function" then
-			result[idx] = 0
-		end
-	end)
-	return result
-end
-
-local executeTests = function(package, fileName)
+local function executeTests(package, fileName)
 	local initialTime = os.clock()
 
 	require("base")
@@ -516,30 +570,7 @@ local executeTests = function(package, fileName)
 		customError("Folder 'tests' does not exist in package '"..package.."'.")
 	end
 
-	load_file = baseDir..s.."load.lua"
-	local load_sequence
-
-	if isFile(load_file) then
-		-- the 'include' below does not need to be inside a xpcall because 
-		-- the package was already loaded with success
-		load_sequence = include(load_file).files
-	else
-		local dir = dir(baseDir..s.."lua")
-		load_sequence = {}
-		forEachElement(dir, function(_, mfile)
-			if string.endswith(mfile, ".lua") then
-				table.insert(load_sequence, mfile)
-			end
-		end)
-	end
-
-	local testfunctions = {} -- test functions store all the functions that need to be tested, extracted from the source code
-
-	for i, file in ipairs(load_sequence) do
-		-- the 'include' below does not need to be inside a xpcall because 
-		-- the package was already loaded with success
-		testfunctions[file] = buildCountTable(include(baseDir..s.."lua"..s..file))
-	end
+	local testfunctions = buildCountTable(package)
 
 	print = print__
 
