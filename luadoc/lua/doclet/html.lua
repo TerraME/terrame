@@ -246,7 +246,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 	for token, signature, te_type, func_name, braces in string.gmatch(description, "((([%u][%w_]-)[%.%:]([%a_][%w_]-))(%(.-%)))") do
 		local href = symbol_link(signature, doc, module_doc, file_doc, from, doc_report)
 		local anchor
-		if te_type == "Utils" then
+		if te_type == "Utils" or te_type == "Package" or te_type == "FileSystem" then
 			anchor = "<a href="..href..">"..func_name..braces.."</a>"
 		else
 			anchor = "<a href="..href..">"..token.."</a>"
