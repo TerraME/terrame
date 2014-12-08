@@ -276,7 +276,7 @@ end
 -- Convert the colorBar for a string
 -- Output format:
 --   colorBar = color table; value; label; distance;#color table; value; label; distance;
-function colorBarToString(colorBar)
+local function colorBarToString(colorBar)
 	local str = ""
 
 	if type(colorBar) ~= "table" then

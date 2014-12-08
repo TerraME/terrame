@@ -116,7 +116,7 @@ function round(num, idp)
 	return math.floor(num * mult + 0.5) / mult
 end
 
---- Implements the Heun (Euler Second Order) Method to integrate ordinary differential equations.
+-- Implements the Heun (Euler Second Order) Method to integrate ordinary differential equations.
 -- It is a method of type Predictor-Corrector.
 -- @arg df The differential equantion.
 -- @arg initCond The initial condition that must be satisfied.
@@ -125,7 +125,7 @@ end
 -- @arg delta The step of the independent variable.
 -- @usage f = function(x) return x^3 end
 -- v = integrationHeun(f, 0, 0, 3, 0.1)
-function integrationHeun(df, initCond, a, b, delta)
+local function integrationHeun(df, initCond, a, b, delta)
 	if type(df) == "function" then
 		local x = a
 		local y = initCond
@@ -164,7 +164,7 @@ function integrationHeun(df, initCond, a, b, delta)
 	end
 end
 
---- Implements the Runge-Kutta Method (Fourth Order) to integrate ordinary differential equations.
+-- Implements the Runge-Kutta Method (Fourth Order) to integrate ordinary differential equations.
 -- @arg df The differential equantion.
 -- @arg initCond The initial condition that must be satisfied.
 -- @arg a The value of 'a' in the interval [a,b[.
@@ -172,7 +172,7 @@ end
 -- @arg delta The step of the independent variable.
 -- @usage f = function(x) return x^3 end
 -- v = integrationRungeKutta(f, 0, 0, 3, 0.1)
-function integrationRungeKutta(df, initCond, a, b, delta)
+local function integrationRungeKutta(df, initCond, a, b, delta)
 	local i = 0
 	if type(df) == "function" then
 		local x = a
@@ -226,7 +226,7 @@ function integrationRungeKutta(df, initCond, a, b, delta)
 	end
 end
 
---- Implements the Euler (Euler-Cauchy) Method to integrate ordinary differential equations.
+-- Implements the Euler (Euler-Cauchy) Method to integrate ordinary differential equations.
 -- @arg df The differential equantion.
 -- @arg initCond The initial condition that must be satisfied.
 -- @arg a The value of 'a' in the interval [a,b[.
@@ -234,7 +234,7 @@ end
 -- @arg delta The step of the independent variable.
 -- @usage f = function(x) return x^3 end
 -- v = integrationEuler(f, 0, 0, 3, 0.1)
-function integrationEuler(df, initCond, a, b, delta)
+local function integrationEuler(df, initCond, a, b, delta)
 	if type(df) == "function" then
 		local y = initCond
 		local x = a
@@ -264,11 +264,11 @@ function integrationEuler(df, initCond, a, b, delta)
 end
 
 -- Global constant to define the used integration method & step size
-INTEGRATION_METHOD = integrationEuler
-DELTA = 0.2
+local INTEGRATION_METHOD = integrationEuler
+local DELTA = 0.2
 
 -- Constructor for an ordinary differential equation
-function d(data)
+local function d(data)
 	local result = 0
 	local delta = DELTA
 
@@ -811,14 +811,12 @@ function getn(t)
 	return n
 end
 
-csv = {}
-
 --- Parses a single CSV line. It returns a vector of strings with the individual values. 
 -- This function was taken from http://lua-users.org/wiki/LuaCsv.
 -- @arg line A string from the CSV file.
 -- @arg sep The value separator. Default is ','.
--- @usage csv.parseLine(line, ",")
-function csv.parseLine(line, sep)
+-- @usage CSVparseLine(line, ",")
+function CSVparseLine(line, sep)
 	local res = {}
 	local pos = 1
 	sep = sep or ','
@@ -865,8 +863,8 @@ end
 -- The first line of the file list the attributes of each table.
 -- @arg filename A string, adress of the CSV file.
 -- @arg sep The value separator. Default is ','
--- @usage mytable = csv.read("file.csv", ";")
-function csv.read(filename, sep)
+-- @usage mytable = CSVread("file.csv", ";")
+function CSVread(filename, sep)
 	local data = {}
 	local file = io.open(filename)
 
@@ -874,11 +872,11 @@ function csv.read(filename, sep)
 		resourceNotFoundError(1, filename)
 	end
 
-	local fields = csv.parseLine(file:read(), sep)
+	local fields = CSVparseLine(file:read(), sep)
 	local line = file:read()
 	while line do
 		local element = {}
-		local tuple = csv.parseLine(line, sep)
+		local tuple = CSVparseLine(line, sep)
 		if #tuple == #fields then
 			for k, v in ipairs(fields) do
 				element[v] = tonumber(tuple[k]) or tuple[k]
@@ -896,8 +894,8 @@ end
 -- @arg data A table to be saved.
 -- @arg filename A string, adress of the CSV file.
 -- @arg sep The value separator. Default is ','
--- @usage csv.write(mytable, "file.csv", ";")
-function csv.write(data, filename, sep)
+-- @usage CSVwrite(mytable, "file.csv", ";")
+function CSVwrite(data, filename, sep)
 	sep = sep or ","
 	local file = io.open(filename, "w")
 	local fields = {}

@@ -14,13 +14,31 @@ output = 0
 -- RULES
 for time = 0, 75, 1 do
     -- rain
-    input = d{ function() return C end, 0, 0, 1, dt }
+    input = integrate{
+		equation = function() return C end,
+		initial = 0,
+		a = 0,
+		b = 1,
+		step = dt
+	}
     -- soil water
-    q = d{ function( ) return input - output end, q, 0, 1, dt }
+    q = integrate{
+		equation = function() return input - output end,
+		initial = q,
+		a = 0,
+		b = 1,
+		step = dt
+	}
     -- drainage
-    output = d{ function( ) return K*q end, 0, 0, 1, dt }
+    output = integrate{
+		equation = function() return K*q end,
+		initial = 0,
+		a = 0,
+		b = 1,
+		step = dt
+	}
     -- report
---    print(time, input, output, q);
+    print(time.."\t"..input.."\t"..output.."\t"..q)
 end
 
 

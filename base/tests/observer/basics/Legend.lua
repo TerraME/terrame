@@ -27,9 +27,6 @@
 return{
 	Legend = function(unitTest)
 		unitTest:assert(true)
-	end,
-	colorBarToString = function(unitTest)
-		unitTest:assert(true)
 	end
 }
 

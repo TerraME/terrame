@@ -60,6 +60,7 @@ return{
 		event = Event{time = 0.5, period = 2, priority = "veryhigh", action = function(event) end}
 		unitTest:assert_equal(event[1]:getPriority(), -10)
 	end,
+--[[ #241
 	config = function(unitTest)
 		local event = Event{action = function(event) end}
 
@@ -75,6 +76,7 @@ return{
 		unitTest:assert_equal(event[1]:getPeriod(), 2)
 		unitTest:assert_equal(event[1]:getPriority(), 1)
 	end,
+--]]
 	getType = function(unitTest)
 		local event = Event{action = function() end}
 

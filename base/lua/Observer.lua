@@ -893,6 +893,7 @@ end
 -- Constructor for Observers
 Observer_ = {
 	type_ = "Observer",
+--[[
 	kill = function(self, func)
 		if self.subject.cObj_ then 
 			if self.type == TME_OBSERVERS.NEIGHBORHOOD or self.type == "neighborhood" then
@@ -914,10 +915,8 @@ Observer_ = {
 		else
 			customError("This function is not applicable to this type.", 3)
 		end
-	end,
-	getCurveLabels = function(self)
-		return self.curveLabels
 	end
+--]]
 }
 
 local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabel", "yLabel", "title", "curveLabels", "legends", "path", "location", "outfile", "separator", "prefix", "observer",--[["cellspace",]] "neighIndex", "neighType", "port", "hosts"}
@@ -1364,6 +1363,8 @@ function Observer(data)
 	return data
 end
 
+--- Kill all Observers of the simulation.
+-- @usage killAllObservers()
 killAllObservers = function()
 	forEachElement(createdObservers, function(idx, obs)
 		local self = obs

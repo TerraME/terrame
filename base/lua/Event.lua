@@ -245,7 +245,7 @@ Event_ = {
 	-- @usage event:config(1)
 	-- event:config(1, 0.05)
 	-- event:config(1, 0.05, -1)
-	config = function(self, time, period, priority) end,
+	--config = function(self, time, period, priority) end,
 	--- Return the period of the Event.
 	-- @usage period = event:getPeriod()
 	getPeriod = function(self) end,

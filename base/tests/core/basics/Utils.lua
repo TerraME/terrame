@@ -28,9 +28,6 @@ return{
 	integrate = function(unitTest)
 		unitTest:assert(true)
 	end,
-	INTEGRATION_METHOD = function(unitTest)
-		unitTest:assert(true)
-	end,
 	belong = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}
 
@@ -310,6 +307,7 @@ return{
 		gt = greaterByCoord(">")
 		unitTest:assert_type(gt, "function")
 	end,
+--[[
 	integrationEuler = function(unitTest)
 		local f = function(x) return x^3 end
 
@@ -378,6 +376,7 @@ return{
 		unitTest:assert_equal(5.23305, result1, 0.0001)
 		unitTest:assert_equal(result1, result2)
 	end,
+--]]
 	elapsedTime = function(unitTest)
 		unitTest:assert_type(elapsedTime(50), "string")
 	end,

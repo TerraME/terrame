@@ -80,6 +80,7 @@ return{
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("myaction", "action"))
 	end,
+--[[ #241
 	config = function(unitTest)
 		local event = Event{action = function(event) end}
 		local error_func = function()
@@ -105,5 +106,6 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number", "aa"))
 	end
+--]]
 }
 

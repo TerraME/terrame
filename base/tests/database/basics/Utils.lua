@@ -26,7 +26,7 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	write = function(unitTest)
+	CSVwrite = function(unitTest)
 		local example =
 		{
 			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
@@ -44,8 +44,8 @@ return{
 		local filename = "/tmp/" .. tostring(example):match("table: (.+)") .. ".csv"
 		-- #68 implement a function to handle tmp folders
 
-		csv.write(example, filename)
-		local data = csv.read(filename)
+		CSVwrite(example, filename)
+		local data = CSVread(filename)
 		unitTest:assert_not_nil(data)
 		unitTest:assert_equal(#example, #data)
 
@@ -55,16 +55,16 @@ return{
 			end
 		end
 	end,
-	read = function(unitTest)
+	CSVread = function(unitTest)
 		local mfile = file("agents.csv", "base")
 
-		local csv = csv.read(mfile)
+		local csv = CSVread(mfile)
 
 		unitTest:assert_equal(4, #csv)
 		unitTest:assert_equal(20, csv[1].age)
 	end,
-	parseLine = function(unitTest)
-		local line = csv.parseLine("2,5,aa", ",")
+	CSVparseLine = function(unitTest)
+		local line = CSVparseLine("2,5,aa", ",")
 		unitTest:assert_equal(line[1], "2")
 		unitTest:assert_equal(line[2], "5")
 		unitTest:assert_equal(line[3], "aa")

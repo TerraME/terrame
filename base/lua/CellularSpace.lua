@@ -199,7 +199,7 @@ local loadMap = function(self)
 	for line in io.lines(self.database) do
 		j = 0
 
-		local res = csv.parseLine(line, self.sep)
+		local res = CSVparseLine(line, self.sep)
 
 		forEachElement(res, function(_, value)
 			local p = Cell {x = j, y = i} 
@@ -245,7 +245,7 @@ local loadCsv = function(self)
 
 	self.cells = {}
 	self.cObj_:clear()
-	local data = csv.read(self.database, self.sep)
+	local data = CSVread(self.database, self.sep)
 	local cellIdCounter = 0
 	for i = 1, #data do
 		cellIdCounter = cellIdCounter + 1

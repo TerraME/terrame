@@ -687,7 +687,7 @@ function Society(data)
 				resourceNotFoundError("database", data.database)
 			end
 			f:close()
-			local csv = csv.read(data.database, data.sep)
+			local csv = CSVread(data.database, data.sep)
 			for i = 1, #csv do
 				data:add(csv[i])
 			end

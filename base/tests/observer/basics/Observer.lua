@@ -28,15 +28,6 @@ return{
 	Observer = function(unitTest)
 		unitTest:assert(true)
 	end,
-	kill = function(unitTest)
-		unitTest:assert(true)
-	end,
-	killAll = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getCurveLabels = function(unitTest)
-		unitTest:assert(true)
-	end,
 	killAllObservers = function(unitTest)
 		unitTest:assert(true)
 	end
