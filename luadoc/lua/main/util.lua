@@ -16,8 +16,7 @@ local print, string, ipairs, mkDir, printNote, printError = print, string, ipair
 -- Removes spaces from the begining and end of a given string
 -- @arg s string to be trimmed
 -- @return trimmed string
-
-function trim (s)
+function trim(s)
 	return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
 end
 
@@ -28,8 +27,7 @@ end
 -- @return trimmed string
 -- @see trim
 -- @see string.gsub
-
-function trim_comment (s)
+function trim_comment(s)
 	s = string.gsub(s, "%-%-+(.*)$", "%1")
 	return trim(s)
 end
@@ -38,8 +36,7 @@ end
 -- Checks if a given line is empty
 -- @arg line string with a line
 -- @return true if line is empty, false otherwise
-
-function line_empty (line)
+function line_empty(line)
 	return (string.len(trim(line)) == 0)
 end
 
@@ -48,8 +45,7 @@ end
 -- @arg str1 first string, can be nil
 -- @arg str2 second string
 -- @return str1 .. " " .. str2, or str2 if str1 is nil
-
-function concat (str1, str2)
+function concat(str1, str2)
 	if str1 == nil or string.len(str1) == 0 then
 		return str2
 	else
@@ -67,7 +63,6 @@ end
 -- @usage split("%s+"," x y") gives {"", "x","y"}
 -- @return array with strings
 -- @see table.concat
-
 function split(delim, text)
 	local list = {}
 	--if string.len(text) > 0 then
@@ -105,8 +100,7 @@ end
 -- Comments a paragraph.
 -- @arg text text to comment with "--", may contain several lines
 -- @return commented text
-
-function comment (text)
+function comment(text)
 	text = string.gsub(text, "\n", "\n-- ")
 	return "-- " .. text
 end
@@ -118,7 +112,6 @@ end
 -- @arg i1 indent of first line [0]
 -- @arg i2 indent of subsequent lines [0]
 -- @return wrapped paragraph
-
 function wrap(s, w, i1, i2)
 	w = w or 80
 	i1 = i1 or 0

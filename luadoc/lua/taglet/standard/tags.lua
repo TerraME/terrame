@@ -146,7 +146,7 @@ local function arg(tag, block, text, doc_report)
 
 		-- excludes table from the list of arguments
 		if i then
-			table.remove(block[tag],i)
+			table.remove(block[tag], i)
 			block[tag][arg_tab] = nil
 		end
 		-- set to print name of the arguments
@@ -168,18 +168,23 @@ local function arg(tag, block, text, doc_report)
 		end
 		table.insert(block[tag], name)
 	end
-	block[tag][name] = desc
+	if block[tag][name] then
+		printError("In "..block.name.."(), @arg '"..name.."' is used more than once and will be ignored in '"..text.."'")
+		doc_report.duplicated = doc_report.duplicated + 1
+	else
+		block[tag][name] = desc
+	end
 end
 
 -------------------------------------------------------------------------------
 
-local function release (tag, block, text)
+local function release(tag, block, text)
 	block[tag] = text
 end
 
 -------------------------------------------------------------------------------
 
-local function ret (tag, block, text)
+local function ret(tag, block, text)
 	tag = "ret"
 	if type(block[tag]) == "string" then
 		block[tag] = { block[tag], text }
