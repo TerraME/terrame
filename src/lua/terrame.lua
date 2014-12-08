@@ -351,6 +351,20 @@ local function executeDoc(package)
 
 	local all_functions = buildCountTable(package)
 
+	local all_doc_functions = {}
+
+	forEachElement(result.files, function(idx, value)
+		if type(idx) ~= "string" then return end
+		if not string.endswith(idx, ".lua") then return end
+
+		all_doc_functions[idx] = {}
+		forEachElement(value.functions, function(midx)
+			if type(midx) ~= "string" then return end
+			all_doc_functions[idx][midx] = 0
+		end)
+	end)
+
+
 	printNote("Checking if all functions are documented")
 	forEachOrderedElement(all_functions, function(idx, value)
 		printNote("Checking "..idx)
@@ -484,10 +498,10 @@ local function executeDoc(package)
 	else
 		printError("Summing up, "..errors.." problems were found in the documentation.")
 	end
-	return errors
+	return errors, all_doc_functions
 end
 
-local function executeTests(package, fileName)
+local function executeTests(package, fileName, doc_functions)
 	local initialTime = os.clock()
 
 	require("base")
@@ -570,7 +584,12 @@ local function executeTests(package, fileName)
 		customError("Folder 'tests' does not exist in package '"..package.."'.")
 	end
 
-	local testfunctions = buildCountTable(package)
+	local testfunctions = doc_functions
+
+	if not testfunctions then
+		printNote("Looking for package functions")
+		testfunctions = buildCountTable(package)
+	end
 
 	print = print__
 
@@ -681,7 +700,7 @@ local function executeTests(package, fileName)
 
 			for _, eachTest in ipairs(myTests) do
 				print("Testing "..eachTest)
-				io.flush()
+				if not doc_functions then io.flush() end -- theck why it is necessary to have the 'if'
 
 				if testfunctions[eachFile] then
 					if testfunctions[eachFile][eachTest] then
@@ -816,7 +835,7 @@ local function executeTests(package, fileName)
 		if dirFiles ~= nil then
 			forEachElement(dirFiles, function(idx, value)
 				print("Testing "..value)
-				io.flush()
+				if not doc_functions then io.flush() end -- theck why it is necessary to have the 'if'
 
 				local logfile = nil
 				local writing_log = false
@@ -999,24 +1018,26 @@ local function executeTests(package, fileName)
 end
 
 buildPackage = function(package)
-	printNote("Testing package "..package)
+	printNote("Building package "..package)
 	local s = sessionInfo().separator
-	local testErrors
-	xpcall(function() testErrors = executeTests(package) end, function(err)
-		printError(err)
-	end)
-	if testErrors == nil or testErrors > 0 then
-		printError("Build aborted")
-		return
-	end
-
-	printNote("Building documentation for "..package)
 	local docErrors
-	xpcall(function() docErrors = executeDoc(package) end, function(err)
+	local all_doc_functions
+	xpcall(function() docErrors, all_doc_functions = executeDoc(package) end, function(err)
 		printError(err)
 	end)
 
 	if docErrors > 0 then
+		printError("Build aborted")
+		return
+	end
+
+	printNote("\nTesting package "..package)
+
+	local testErrors
+	xpcall(function() testErrors = executeTests(package, nil, all_doc_functions) end, function(err)
+		printError(err)
+	end)
+	if testErrors == nil or testErrors > 0 then
 		printError("Build aborted")
 		return
 	end
@@ -1031,13 +1052,13 @@ buildPackage = function(package)
 	local info = packageInfo(package)
 	local file = package.."_"..info.version..".zip"
 	printNote("Creating file "..file)
-	local currentDir = currentdir()
-	chdir(packageDir)
+	local currentdir = currentDir()
+	chDir(packageDir)
 	os.execute("zip -qr "..file.." "..package)
 	if isFile(file) then
 		printNote("Package "..package.." successfully built")
 	end
-	chdir(currentDir)
+	chDir(currentdir)
 	os.execute("mv "..packageDir..s..file.." .")
 end
 
