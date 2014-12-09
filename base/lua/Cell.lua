@@ -273,8 +273,8 @@ function Cell(data)
 	end
 
 	--  The lines below were removed, but until now it does not produce any errors:
-	--data.cObj_:setID("C"..data.x.."L"..data.y)
-	--data.id = data.cObj_:getID()
+	-- data.cObj_:setID("C"..data.x.."L"..data.y)
+	-- data.id = data.cObj_:getID()
 
 	data.cObj_:setIndex(data.x, data.y)
 	return data

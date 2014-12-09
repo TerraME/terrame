@@ -2,12 +2,12 @@
 # (c) Gilberto Camara, Gilberto Ribeiro, Raian Maretto, Pedro Andrade june 2011
 # (c) Rodrigo Reis january 2012, febuary 2013
 # (c) Antônio José Rodrigues febuary 2013
-# (c) Raian Vargas Maretto january 2014, september 2014
+# (c) Raian Vargas Maretto january 2014, september 2014, december 2014
 
 cmake_minimum_required(VERSION 3.0)
 project( TerraME )
 
-set(ROOT ../..) # change this if TerraME is somewhere else
+set(ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 
 set(DEPS ${ROOT}/dependencies)
 set(SRCDIR ${ROOT}/src) # this is the directory where terralib sources will be located
@@ -312,7 +312,7 @@ else(PROTOBUF_FOUND)
 endif(PROTOBUF_FOUND)
 
 ### --------------
-#QT4
+#QT5
 #-- TODO: Vefify if it is all correct and how to check the version
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network REQUIRED)
@@ -323,6 +323,40 @@ find_package(Qt5Gui REQUIRED)
 set(LIBS ${LIBS} ${Qt5Network_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
 link_directories(${Qt5Network_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
 include_directories(${Qt5Network_INCLUDE_DIRS} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS})
+
+### --------------
+#QtLua
+find_package(QtLua REQUIRED)
+if(QTLUA_FOUND)
+	message("-- Found QtLua library ${QTLUA_LIBRARY} and include directories ${QTLUA_INCLUDE_DIR}")
+	# TODO: Vefify if it is realy necessary (TerraME needs to link to QtLua?)
+	# include_directories(${QTLUA_INCLUDE_DIR})
+	# link_directories(${QTLUA_LIBRARY})
+	# if(QTLUA_LIBRARY)
+	# 	set(LIBS ${LIBS} ${QTLUA_LIBRARY})
+	# else(QTLUA_LIBRARY)
+	# 	set(LIBS ${LIBS} ${QTLUA_LIBRARY})
+	# endif(QTLUA_LIBRARY)
+else(QTLUA_FOUND)
+	message( FATAL_ERROR "-- QtLua library was not found.")
+endif(QTLUA_FOUND)
+
+### --------------
+#QtLua-extras
+find_package(QtLua-extras REQUIRED)
+if(QTLUAEXTRAS_FOUND)
+	message("-- Found QtLua-extras library ${QTLUAEXTRAS_LIBRARY} and include directories ${QTLUAEXTRAS_INCLUDE_DIR}")
+	# TODO: Vefify if it is realy necessary (TerraME needs to link to QtLua-extras?)
+	# include_directories(${QTLUA_INCLUDE_DIR})
+	# link_directories(${QTLUAEXTRAS_LIBRARY})
+	# if(QTLUAEXTRAS_LIBRARY)
+	# 	set(LIBS ${LIBS} ${QTLUAEXTRAS_LIBRARY})
+	# else(QTLUAEXTRAS_LIBRARY)
+	# 	set(LIBS ${LIBS} ${QTLUAEXTRAS_LIBRARY})
+	# endif(QTLUAEXTRAS_LIBRARY)
+else(QTLUAEXTRAS_FOUND)
+	message( FATAL_ERROR "-- QtLua-extras library was not found.")
+endif(QTLUAEXTRAS_FOUND)
 
 ## ------------------------------------------------------------------------------------------------------------- ##
 # Set Qt moc parameters
@@ -732,7 +766,7 @@ set(CPACK_PACKAGEMAKER ON)
 set(CPACK_OSX_PACKAGE_VERSION "10.9")
 SET(CPACK_PACKAGE_VENDOR "TerraLAB")
 SET(CPACK_PACKAGE_NAME "TerraME")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_BINARY_DIR}/Description.txt")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/Description.txt")
 set(CPACK_RESOURCE_FILE_LICENSE "${ROOT}/licences/terrame-license-lgpl-3.0.txt")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "TerraME is a programming environment for spatial dynamical modelling")
 set(CPACK_PACKAGE_ICON "/Users/raian/Documents/INPE/TerraME/source_code/PackageInstaller/Logomarca/logo_canto.png")
