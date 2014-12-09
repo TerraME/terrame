@@ -371,7 +371,9 @@ local function executeDoc(package)
 		forEachElement(value, function(midx, mvalue)
 			if midx == "__len" or midx == "__tostring" then return end -- TODO: think about this kind of function
 
-			if not result.files[idx].functions[midx] then
+			if not result.files[idx] then
+				printWarning("File does not have any documentation")
+			elseif not result.files[idx].functions[midx] then
 				printError("Function "..midx.." is not documented")
 				doc_report.undocumented_functions = doc_report.undocumented_functions + 1
 			end

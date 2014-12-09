@@ -16,8 +16,7 @@ local tags = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s
 -- Creates an iterator for an array base on a class type.
 -- @arg t array to iterate over
 -- @arg class name of the class to iterate over
-
-function class_iterator (t, class)
+function class_iterator(t, class)
 	return function ()
 		local i = 1
 		return function ()
@@ -44,8 +43,7 @@ local function_patterns = {
 -- Checks if the line contains a function definition
 -- @arg line string with line text
 -- @return function information or nil if no function definition found
-
-local function check_function (line)
+local function check_function(line)
 	line = util.trim(line)
 
 	local info
@@ -102,8 +100,7 @@ end
 -- @arg currentmodule module already found, if any
 -- @return the name of the defined module, or nil if there is no module 
 -- definition
-
-local function check_module (line, currentmodule)
+local function check_module(line, currentmodule)
 	line = util.trim(line)
 	
 	-- module"x.y"
@@ -177,9 +174,7 @@ end
 -- Parses the information inside a block comment
 -- @arg block block with comment field
 -- @return block argument
-
-local function parse_comment (block, first_line, doc_report)
-
+local function parse_comment(block, first_line, doc_report)
 	-- get the first non-empty line of code
 	local code 
 	for _, line in ipairs(block.code) do
@@ -212,6 +207,7 @@ local function parse_comment (block, first_line, doc_report)
 			block.arg = {}
 		else
 			block.arg = {}
+			return
 		end
 	else
 		-- TODO: comment without any code. Does this means we are dealing
@@ -275,7 +271,7 @@ end
 -- @return line
 -- @return block parsed
 -- @return modulename if found
-local function parse_block (f, line, modulename, first, doc_report)
+local function parse_block(f, line, modulename, first, doc_report)
 	local block = {
 		comment = {},
 		code = {},
