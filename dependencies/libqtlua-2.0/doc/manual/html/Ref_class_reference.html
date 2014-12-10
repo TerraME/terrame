@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="QVectorProxyRo_QVectorProxy_Conf7dc2fe017af2a46b7ea9a8a39fea61e.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="Refobj_class_reference.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>Ref class reference<br /><span class="subtitle">
+[Base module]</span>
+</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+</div><h2>Declaration<a href="#_Declaration19" id="_Declaration19" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<div class="codebox"><code><span class="codedir">#include</span> &lt;QtLua/Ref&gt;<br /><br /><span class="codekw">namespace</span> QtLua {<br />  <span class="codekw">template</span> &lt;<span class="codekw">typename</span> X, <span class="codekw">typename</span> Xnoconst = X&gt; <span class="codekw">class</span> Ref;<br />};<br /></code></div><p> This class is a member of the <a href="QtLua_namespace_reference.html">QtLua</a> namespace.</p>
+</div><h2>Description<a href="#_Description20" id="_Description20" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p>This template class implements a smart pointer with reference counter. </p>
+<p>The <a href="UserData_class_reference.html">UserData</a> class and derived classes are commonly used with this smart pointer class in QtLua to take advantages of the lua garbage collector. This allows objects to be deleted when no reference are left in both C++ code and lua interpreter state.</p>
+<p>This smart pointer template class can be used as pointer to objects with class derived from the <a href="Refobj_class_reference.html">Refobj</a> class. Most of the time you need <a href="UserData_class_reference.html">UserData</a> based objects and you don't want to inherit from the <a href="Refobj_class_reference.html">Refobj</a> class directly.</p>
+<p>A <a href="Ref_class_reference.html">Ref</a> pointer object can be assigned with an object of type X or with an other <a href="Ref_class_reference.html">Ref</a> pointer object.</p>
+<p>The <a href="Ref_class_reference.html#__304">QTLUA_REFNEW</a> macro must be used to dynamically create new objects. Objects allocated with this macro will be deleted automatically when no more reference remains.</p>
+<p>Variable and member objects not allocated with the <a href="Ref_class_reference.html#__304">QTLUA_REFNEW</a> macro, can be handled too but they won't be automatically deleted. They will still be checked for remaining references when destroyed.</p>
+<p>Template parameters: </p>
+<ul><li>X: Pointed object type, may be const. </li>
+<li>Xnoconst: Bare pointed object type. This parameter is optional, default is same as X.</li>
+</ul>
+<p>Two shortcuts to <span class="tt">Ref&lt;X, X&gt;</span> and <span class="tt">Ref&lt;const X, X&gt;</span> types are provided for convenience, the <span class="tt">X::ptr</span> and <span class="tt">X::const_ptr</span> types can be defined with the <a href="Ref_class_reference.html#__305">QTLUA_REFTYPE</a> macro.</p>
+</div><h2>Members<a href="#_Members19" id="_Members19" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><h3>Functions<a href="#_Functions17" id="_Functions17" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__292">Ref</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__293">Ref</a></span>(<span class="member_params"><span class="member_param">const Ref&lt;Xnoconst, Xnoconst&gt; &amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__294">Ref</a></span>(<span class="member_params"><span class="member_param">const Ref&lt;const Xnoconst, Xnoconst&gt; &amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">template </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__295">Ref</a></span>(<span class="member_params"><span class="member_param">const Ref&lt;T, T&gt; &amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">template </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__296">Ref</a></span>(<span class="member_params"><span class="member_param">const Ref&lt;const T, T&gt; &amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__297">Ref</a></span>(<span class="member_params"><span class="member_param">Ref&lt;Xnoconst, Xnoconst&gt; &amp;&amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__298">Ref</a></span>(<span class="member_params"><span class="member_param">Ref&lt;const Xnoconst, Xnoconst&gt; &amp;&amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">template </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__299">Ref</a></span>(<span class="member_params"><span class="member_param">Ref&lt;T, T&gt; &amp;&amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">template </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__300">Ref</a></span>(<span class="member_params"><span class="member_param">Ref&lt;const T, T&gt; &amp;&amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__301">Ref</a></span>(<span class="member_params"><span class="member_param">X &amp;obj</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__303">~Ref</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">template Ref&lt;T, T&gt; </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__307">constcast</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">int </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__308">count</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">template Ref&lt;T, T&gt; </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__309">dynamiccast</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">template Ref&lt;const T, T&gt; </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__310">dynamiccast_const</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">void </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__311">invalidate</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__312">operator!=</a></span>(<span class="member_params"><span class="member_param">const Ref &amp;r</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">X &amp; </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__313">operator*</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">X * </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__314">operator-&gt;</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">Ref &amp; </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__315">operator=</a></span>(<span class="member_params"><span class="member_param">const Ref &amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">Ref &amp; </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__316">operator=</a></span>(<span class="member_params"><span class="member_param">Ref &amp;&amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">Ref &amp; </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__317">operator=</a></span>(<span class="member_params"><span class="member_param">X &amp;obj</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__318">operator==</a></span>(<span class="member_params"><span class="member_param">const Ref &amp;r</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">X * </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__319">ptr</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">template Ref&lt;T, T&gt; </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__320">staticcast</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">template Ref&lt;const T, T&gt; </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__321">staticcast_const</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__322">valid</a></span>(<span class="member_params">) const</span></span></span></li>
+</ul>
+</div><h3>Protected function<a href="#_Protected_function2" id="_Protected_function2" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__302">Ref</a></span>(<span class="member_params"><span class="member_param">X *obj</span>)</span></span></span></li>
+</ul>
+</div><h3>Protected field<a href="#_Protected_field2" id="_Protected_field2" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">X *</span><span class="member_signature"><span class="member_name"><a href="Ref_class_reference.html#__306">_obj</a></span></span></span></li>
+</ul>
+</div><h3>Macros<a href="#_Macros2" id="_Macros2" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><a href="Ref_class_reference.html#__304">QTLUA_REFNEW</a></span></li>
+<li><span class="listitem"><a href="Ref_class_reference.html#__305">QTLUA_REFTYPE</a></span></li>
+</ul>
+</div><h2>Members detail<a href="#_Members_detail19" id="_Members_detail19" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params">)</span></span><a href="#__292" id="__292" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Construct a null reference.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params"><span class="member_param">const <a href="Ref_class_reference.html">Ref</a>&lt;Xnoconst, Xnoconst&gt; &amp;r</span>)</span></span><a href="#__293" id="__293" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Construct a const Ref from non const Ref.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params"><span class="member_param">const <a href="Ref_class_reference.html">Ref</a>&lt;const Xnoconst, Xnoconst&gt; &amp;r</span>)</span></span><a href="#__294" id="__294" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Construct a const Ref from const Ref.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">template &lt;typename T&gt; </span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params"><span class="member_param">const <a href="Ref_class_reference.html">Ref</a>&lt;T, T&gt; &amp;r</span>)</span></span><a href="#__295" id="__295" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Construct a const Ref from derived class Ref.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">template &lt;typename T&gt; </span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params"><span class="member_param">const <a href="Ref_class_reference.html">Ref</a>&lt;const T, T&gt; &amp;r</span>)</span></span><a href="#__296" id="__296" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Construct a const Ref from derived class const Ref.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params"><span class="member_param"><a href="Ref_class_reference.html">Ref</a>&lt;Xnoconst, Xnoconst&gt; &amp;&amp;r</span>)</span></span><a href="#__297" id="__297" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Construct a const Ref from non const Ref.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params"><span class="member_param"><a href="Ref_class_reference.html">Ref</a>&lt;const Xnoconst, Xnoconst&gt; &amp;&amp;r</span>)</span></span><a href="#__298" id="__298" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Construct a const Ref from const Ref.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">template &lt;typename T&gt; </span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params"><span class="member_param"><a href="Ref_class_reference.html">Ref</a>&lt;T, T&gt; &amp;&amp;r</span>)</span></span><a href="#__299" id="__299" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Construct a const Ref from derived class Ref.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">template &lt;typename T&gt; </span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params"><span class="member_param"><a href="Ref_class_reference.html">Ref</a>&lt;const T, T&gt; &amp;&amp;r</span>)</span></span><a href="#__300" id="__300" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Construct a const Ref from derived class const Ref.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params"><span class="member_param">X &amp;obj</span>)</span></span><a href="#__301" id="__301" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Construct a Ref which points to specified object.</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">Ref</span>(<span class="member_params"><span class="member_param">X *obj</span>)</span></span><a href="#__302" id="__302" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">~Ref</span>(<span class="member_params">)</span></span><a href="#__303" id="__303" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Drop a Ref</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">#define </span><span class="member_signature"><span class="member_name">QTLUA_REFNEW</span>(X, ...)</span><a href="#__304" id="__304" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This macro dynamically allocate and construct an object of requested type with given constructor arguments and returns an associated <a href="Ref_class_reference.html">Ref</a> object.</p>
+<p>Parameters list:</p>
+<ul><li>X: object type to construct </li>
+<li>...: constructor arguments</li>
+</ul>
+<p>Usage example:</p>
+<div class="codebox"><code><span class="codecmt">// code from <a href="http://svn.savannah.gnu.org/viewvc/trunk/libqtlua/examples/cpp/userdata/ref.cc?root=libqtlua&amp;revision=218M&amp;view=annotate#l48">examples/cpp/userdata/ref.cc:48</a></span><br /><br />    <a class="coderef" href="UserData_class_reference.html#__438">QtLua::UserData::ptr</a> ud = <a class="coderef" href="Ref_class_reference.html#__304">QTLUA_REFNEW</a>(<a class="coderef" href="UserData_class_reference.html">QtLua::UserData</a>, );<br />    MyObject::ptr my = <a class="coderef" href="Ref_class_reference.html#__304">QTLUA_REFNEW</a>(MyObject, 42);<br /></code></div></div><div class="divmember public_member"><h3><span class="member_prefix">#define </span><span class="member_signature"><span class="member_name">QTLUA_REFTYPE</span>(X)</span><a href="#__305" id="__305" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This macro may be used to declare the X::ptr and X::const_ptr shortcuts to <a href="Ref_class_reference.html">Ref</a> types in class derived from <a href="Refobj_class_reference.html">Refobj</a>. It should be invoked from class body public part.</p>
+<p>Parameters list:</p>
+<ul><li>X: macro invocation class.</li>
+</ul>
+<p>Usage example:</p>
+<div class="codebox"><code><span class="codecmt">// code from <a href="http://svn.savannah.gnu.org/viewvc/trunk/libqtlua/examples/cpp/userdata/ref.cc?root=libqtlua&amp;revision=218M&amp;view=annotate#l26">examples/cpp/userdata/ref.cc:26</a></span><br /><br /><span class="codekw">class</span> MyObject : <span class="codekw">public</span> <a class="coderef" href="UserData_class_reference.html">QtLua::UserData</a><br />{<br /><span class="codekw">public</span>:<br />  <a class="coderef" href="Ref_class_reference.html#__305">QTLUA_REFTYPE</a>(MyObject);<br /><br />  MyObject(<span class="codetype">int</span> a)<br />  : a_(a) {}<br /><br /><span class="codekw">private</span>:<br />  <span class="codetype">int</span> a_;<br />};<br /><br />MyObject::ptr my;<br /></code></div><p>This macro expands to:</p>
+<div class="codebox"><code> <span class="codecmt">/** Shortcut for @ref QtLua::Ref smart pointer class to X type provided for convenience */</span> <br /> <span class="codekw">typedef</span> <a class="coderef" href="Ref_class_reference.html">QtLua::Ref</a>&lt;<span class="codekw">const</span> X, X&gt; const_ptr;                         <br /> <span class="codecmt">/** Shortcut for @ref QtLua::Ref smart pointer class to X type provided for convenience */</span> <br /> <span class="codekw">typedef</span> <a class="coderef" href="Ref_class_reference.html">QtLua::Ref</a>&lt;X, X&gt; <a class="coderef" href="Ref_class_reference.html#__319">ptr</a>;</code></div></div><div class="divmember protected_member"><h3><span class="member_prefix">X *</span><span class="member_signature"><span class="member_name">_obj</span></span><a href="#__306" id="__306" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">template &lt;typename T&gt; <a href="Ref_class_reference.html">Ref</a>&lt;T, T&gt; </span><span class="member_signature"><span class="member_name">constcast</span>(<span class="member_params">) const</span></span><a href="#__307" id="__307" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Const cast const Ref to Ref of given type</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">int </span><span class="member_signature"><span class="member_name">count</span>(<span class="member_params">) const</span></span><a href="#__308" id="__308" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Get object Reference count</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">template &lt;typename T&gt; <a href="Ref_class_reference.html">Ref</a>&lt;T, T&gt; </span><span class="member_signature"><span class="member_name">dynamiccast</span>(<span class="member_params">) const</span></span><a href="#__309" id="__309" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Dynamic cast Ref to Ref of given type</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">template &lt;typename T&gt; <a href="Ref_class_reference.html">Ref</a>&lt;const T, T&gt; </span><span class="member_signature"><span class="member_name">dynamiccast_const</span>(<span class="member_params">) const</span></span><a href="#__310" id="__310" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Dynamic cast Ref to const Ref of given type</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">invalidate</span>(<span class="member_params">)</span></span><a href="#__311" id="__311" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Invalidate Ref (set internal pointer to null)</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">operator!=</span>(<span class="member_params"><span class="member_param">const <a href="Ref_class_reference.html">Ref</a> &amp;r</span>) const</span></span><a href="#__312" id="__312" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Test if pointed ojects are not the same</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">X &amp; </span><span class="member_signature"><span class="member_name">operator*</span>(<span class="member_params">) const</span></span><a href="#__313" id="__313" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Access object</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">X * </span><span class="member_signature"><span class="member_name">operator-&gt;</span>(<span class="member_params">) const</span></span><a href="#__314" id="__314" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Access object</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="Ref_class_reference.html">Ref</a> &amp; </span><span class="member_signature"><span class="member_name">operator=</span>(<span class="member_params"><span class="member_param">const <a href="Ref_class_reference.html">Ref</a> &amp;r</span>)</span></span><a href="#__315" id="__315" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Initialize Ref from Ref</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="Ref_class_reference.html">Ref</a> &amp; </span><span class="member_signature"><span class="member_name">operator=</span>(<span class="member_params"><span class="member_param"><a href="Ref_class_reference.html">Ref</a> &amp;&amp;r</span>)</span></span><a href="#__316" id="__316" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="Ref_class_reference.html">Ref</a> &amp; </span><span class="member_signature"><span class="member_name">operator=</span>(<span class="member_params"><span class="member_param">X &amp;obj</span>)</span></span><a href="#__317" id="__317" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Initialize Ref from object Reference</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">operator==</span>(<span class="member_params"><span class="member_param">const <a href="Ref_class_reference.html">Ref</a> &amp;r</span>) const</span></span><a href="#__318" id="__318" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Test if pointed ojects are the same</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">X * </span><span class="member_signature"><span class="member_name">ptr</span>(<span class="member_params">) const</span></span><a href="#__319" id="__319" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Get Ref internal object pointer</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">template &lt;typename T&gt; <a href="Ref_class_reference.html">Ref</a>&lt;T, T&gt; </span><span class="member_signature"><span class="member_name">staticcast</span>(<span class="member_params">) const</span></span><a href="#__320" id="__320" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Static cast Ref to Ref of given type</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">template &lt;typename T&gt; <a href="Ref_class_reference.html">Ref</a>&lt;const T, T&gt; </span><span class="member_signature"><span class="member_name">staticcast_const</span>(<span class="member_params">) const</span></span><a href="#__321" id="__321" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Static cast Ref to const Ref of given type</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">valid</span>(<span class="member_params">) const</span></span><a href="#__322" id="__322" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Test if Ref is valid (check if internal pointer is not null)</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

@@ -1,0 +1,32 @@
+
+The QtLua library aims to make Qt4/Qt5 applications scriptable using
+the Lua scripting language.
+
+QtLua is released under the GNU LGPL v3 license.
+
+Project documentation can be found online:
+http://www.nongnu.org/libqtlua/
+
+Build and install
+=================
+
+GNU autotools
+-------------
+
+    cd libqtlua-x.x.x
+    mkdir bld
+    cd bld
+    ../configure
+    make
+    make install
+
+CMake
+-----
+
+    cd libqtlua-x.x.x
+    mkdir bld
+    cd bld
+    cmake ..
+    make
+    make install
+

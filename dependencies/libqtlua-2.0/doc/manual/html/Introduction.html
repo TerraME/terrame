@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="Table_of_contents.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="index.html#_index"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="Building_QtLua.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>1 Introduction</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+<p>The QtLua library aims to make Qt4 applications scriptable using the <span class="ext_link"><a href="http://www.lua.org/">Lua</a></span> scripting language. It is an alternative to the QtScript module.</p>
+<p>QtLua does not generate or use generated binding code for Qt. Instead it provides useful C++ wrapper classes to make C++ and lua objects accessible from both lua and C++. It takes advantages of the Qt meta object system to expose <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> members to lua scripts.</p>
+<p>QtLua is not designed to develop an application in pure Lua but rather to extend a Qt C++ application using Lua as scripting language.</p>
+</div><h2>List of features<a href="#_List_of_features" id="_List_of_features" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<ul><li><p>Basic features:</p>
+<ul><li><p>The Lua stack-based C API is not exposed, only C++ objects like <a href="State_class_reference.html">State</a> and <a href="Value_class_reference.html">Value</a> are manipulated from C++ code.</p>
+</li>
+<li><p>Lua values can be accessed from C++ with almost the same straightforward syntax as in Lua thanks to C++ operators overloading.</p>
+</li>
+<li><p>C++ objects can be exposed to Lua as userdata values by inheriting from the <a href="UserData_class_reference.html">UserData</a> class. All Lua meta operations can be redefined by overriding virtual functions, including iteration over userdata objects from Lua.</p>
+</li>
+<li><p>The <a href="Ref_class_reference.html">Ref</a> smart pointer class enables reference tracking of <a href="UserData_class_reference.html">UserData</a> based objects and can make these C++ objects garbage collectable.</p>
+</li>
+<li><p>The <a href="Iterator_class_reference.html">Iterator</a> wrapper class enables use of usual C++ iterators to traverse Lua table like values. Lua iterators can also be used to traverse <a href="UserData_class_reference.html">UserData</a> based C++ objects from Lua script. Qt template containers can be accessed directly from Lua by using one of the available container proxy classes.</p>
+</li>
+<li><p>The <a href="Function_class_reference.html">Function</a> class can be sub-classed to easily define C++ function objects callable from Lua. The <a href="Plugin_class_reference.html">Plugin</a> class allows writing of Qt plugins which may contains <a href="Function_class_reference.html">Function</a> objects.</p>
+</li>
+<li><p>Lua <a href="Coroutines.html">coroutines</a> are supported and can be used to control parallel jobs from Lua scripts in a Qt application.</p>
+</li>
+</ul>
+</li>
+<li><p><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> related features:</p>
+<ul><li><p>Qt <a href="QObject_wrapping.html">QObject wrapping</a> enables creation and manipulation of <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> objects from Lua.</p>
+</li>
+<li><p><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> properties, enumerations, slots and children objects can be accessed from Lua. Qt Signals can be connected directly to Lua functions.</p>
+</li>
+<li><p>A <span class="tt">qt</span> <a href="QtLua_lua_libraries.html#_Qt_related_functions">Lua library</a> is available and contains functions to create <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> and manage signal/slot connections from Lua.</p>
+</li>
+<li><p><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> based user classes can be registered in the QtLua meta objects list. This allows instantiating user classes and accessing enum values from Lua scripts and <span class="tt">.ui</span> files directly.</p>
+</li>
+<li><p>User defined Qt types can be registered along with user defined conversion functions. This allows QtLua to perform transparent conversion between Qt user types and Lua values when calling Qt slots or accessing <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> properties.</p>
+</li>
+</ul>
+</li>
+<li><p>Qt Widgets and user interface features:</p>
+<ul><li><p>The <a href="The_qtlua_uic_user_interface_compiler.html">qtLua_uic</a> tool can be used compile Qt <span class="tt">.ui</span> user interface files to Lua scripts. Some Qt functions are also wrapped to enable loading of <span class="tt">.ui</span> files directly from Lua.</p>
+</li>
+<li><p>The Qt <a href="Console_class_reference.html">Console</a> widget is a console widget with history and Lua table completion capabilities. The <a href="The_qtlua_interpreter.html">qtLua</a> tool is based on this widget and provides a Lua based shell for experimentation.</p>
+</li>
+<li><p>The <span class="tt">qt</span> <a href="QtLua_lua_libraries.html#_Qt_related_functions">Lua library</a> wraps some important user interface functions which are not directly available through the Qt meta object system.</p>
+</li>
+</ul>
+</li>
+<li><p>Qt Model/view related features:</p>
+<ul><li><p>The <a href="UserItemModel_class_reference.html">UserItemModel</a> class enables development of hierarchical C++ data structures editable from both Lua script and Qt view widgets.</p>
+</li>
+<li><p>The <a href="TableTreeModel_class_reference.html">TableTreeModel</a> and <a href="TableGridModel_class_reference.html">TableGridModel</a> classes can be used to expose Lua tables to Qt views.</p>
+</li>
+<li><p>The <a href="LuaModel_class_reference.html">LuaModel</a> class enables implementation of a Qt model in pure Lua.</p>
+</li>
+<li><p>The <a href="ItemViewDialog_class_reference.html">ItemViewDialog</a> class provides a generic dialog for model data displaying and editing. It can be used with various views and has customizable edit buttons.</p>
+</li>
+<li><p>The <span class="tt">qt</span> <a href="QtLua_lua_libraries.html#_Qt_related_functions">Lua library</a> contains some functions to allow instantiating MVC related models and dialogs from Lua.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>QtLua 2.0 has been tested with Lua versions 5.0, 5.1 and 5.2 and with Qt versions 4.8 and 5.0.</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

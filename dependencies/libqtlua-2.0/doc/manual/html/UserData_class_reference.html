@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="TableTreeModel_class_reference.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="UserItem_class_reference.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>UserData class reference<br /><span class="subtitle">
+[Base module]</span>
+</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+<div class="tree_frame" style="width:200px;"><div class="tree_row"><div style="width:10px;" class="tree_pad"></div><div style="width:180px;" class="tree_public"><a href="Refobj_class_reference.html">Refobj</a>&lt;<a href="UserData_class_reference.html">UserData</a>&gt;</div
+></div><br/><div style="width:100px;" class="tree_connect_1">&nbsp;</div
+><div style="width:100px;" class="tree_connect_4">&nbsp;</div><br/><div style="width:100px;" class="tree_connect_1">&nbsp;</div
+><div style="width:100px;" class="tree_connect_4">&nbsp;</div><br/><div class="tree_row"><div style="width:50px;" class="tree_pad"></div><div style="width:100px;" class="tree_this"><a href="UserData_class_reference.html">UserData</a></div
+></div><br/></div>
+</div><h2>Declaration<a href="#_Declaration25" id="_Declaration25" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<div class="codebox"><code><span class="codedir">#include</span> &lt;QtLua/UserData&gt;<br /><br /><span class="codekw">namespace</span> QtLua {<br />  <span class="codekw">class</span> UserData;<br />};<br /></code></div><p> This class is a member of the <a href="QtLua_namespace_reference.html">QtLua</a> namespace.</p>
+</div><h2>Description<a href="#_Description26" id="_Description26" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p>This class is the base class for C++ objects which may be exposed to lua script as a lua userdata value.</p>
+<p>All lua meta operations on userdata values are mapped to virtual functions in this class which may be reimplemented in derived classes. Lua errors can be raised from these functions by throwing a <a href="String_class_reference.html">String</a> type exception. See <a href="Error_handling_and_exceptions.html">Error handling and exceptions</a>.</p>
+<p>Objects derived from this class are subject to lua garbage collection and must be handled by the <a href="Ref_class_reference.html">Ref</a> smart pointer class in C++ code.</p>
+<p><a href="UserData_class_reference.html">UserData</a> base class declaration example:</p>
+<div class="codebox"><code><span class="codecmt">// code from <a href="http://svn.savannah.gnu.org/viewvc/trunk/libqtlua/examples/cpp/userdata/ref.cc?root=libqtlua&amp;revision=218M&amp;view=annotate#l26">examples/cpp/userdata/ref.cc:26</a></span><br /><br /><span class="codekw">class</span> MyObject : <span class="codekw">public</span> <a class="coderef" href="UserData_class_reference.html">QtLua::UserData</a><br />{<br /><span class="codekw">public</span>:<br />  <a class="coderef" href="Ref_class_reference.html#__305">QTLUA_REFTYPE</a>(MyObject);<br /><br />  MyObject(<span class="codetype">int</span> a)<br />  : a_(a) {}<br /><br /><span class="codekw">private</span>:<br />  <span class="codetype">int</span> a_;<br />};<br /><br /></code></div><p> <a href="UserData_class_reference.html">UserData</a> objects allocation examples:</p>
+<div class="codebox"><code><span class="codecmt">// code from <a href="http://svn.savannah.gnu.org/viewvc/trunk/libqtlua/examples/cpp/userdata/ref.cc?root=libqtlua&amp;revision=218M&amp;view=annotate#l48">examples/cpp/userdata/ref.cc:48</a></span><br /><br />    <a class="coderef" href="UserData_class_reference.html#__438">QtLua::UserData::ptr</a> ud = <a class="coderef" href="Ref_class_reference.html#__304">QTLUA_REFNEW</a>(<a class="coderef" href="UserData_class_reference.html">QtLua::UserData</a>, );<br />    MyObject::ptr my = <a class="coderef" href="Ref_class_reference.html#__304">QTLUA_REFNEW</a>(MyObject, 42);<br /></code></div></div><h2>Members<a href="#_Members25" id="_Members25" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><h3>Inherited members<a href="#_Inherited_members13" id="_Inherited_members13" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li>11 members inherited from <a href="Refobj_class_reference.html">Refobj</a>&lt;<a href="UserData_class_reference.html">UserData</a>&gt;</li>
+</ul>
+</div><h3>Types<a href="#_Types17" id="_Types17" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">typedef <em> [...] </em> </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__426">const_ptr</a></span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">typedef <em> [...] </em> </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__438">ptr</a></span></span></span></li>
+</ul>
+</div><h3>Functions<a href="#_Functions23" id="_Functions23" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">virtual </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__424">~UserData</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual String </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__427">get_type_name</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual String </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__428">get_value_str</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual ValueBase::List </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__429">meta_call</a></span>(<span class="member_params"><span class="member_param">State *ls, </span><span class="member_param">const ValueBase::List &amp;args</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__431">meta_contains</a></span>(<span class="member_params"><span class="member_param">State *ls, </span><span class="member_param">const Value &amp;key</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual Value </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__432">meta_index</a></span>(<span class="member_params"><span class="member_param">State *ls, </span><span class="member_param">const Value &amp;key</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual void </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__433">meta_newindex</a></span>(<span class="member_params"><span class="member_param">State *ls, </span><span class="member_param">const Value &amp;key, </span><span class="member_param">const Value &amp;value</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual Value </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__434">meta_operation</a></span>(<span class="member_params"><span class="member_param">State *ls, </span><span class="member_param">ValueBase::Operation op, </span><span class="member_param">const Value &amp;a, </span><span class="member_param">const Value &amp;b</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual Ref&lt;Iterator&gt; </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__435">new_iterator</a></span>(<span class="member_params"><span class="member_param">State *ls</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__436">operator&lt;</a></span>(<span class="member_params"><span class="member_param">const UserData &amp;ud</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__437">operator==</a></span>(<span class="member_params"><span class="member_param">const UserData &amp;ud</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__439">support</a></span>(<span class="member_params"><span class="member_param">ValueBase::Operation c</span>) const</span></span></span></li>
+</ul>
+</div><h3>Protected functions<a href="#_Protected_functions4" id="_Protected_functions4" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">virtual void </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__425">completion_patch</a></span>(<span class="member_params"><span class="member_param">String &amp;path, </span><span class="member_param">String &amp;entry, </span><span class="member_param">int &amp;offset</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">Value </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__441">yield</a></span>(<span class="member_params"><span class="member_param">State *ls</span>) const</span></span></span></li>
+</ul>
+</div><h3>Static functions<a href="#_Static_functions2" id="_Static_functions2" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">static void </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__430">meta_call_check_args</a></span>(<span class="member_params"><span class="member_param">const ValueBase::List &amp;args, </span><span class="member_param">int min_count, </span><span class="member_param">int max_count, </span><span class="member_param">...</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">static template String </span><span class="member_signature"><span class="member_name"><a href="UserData_class_reference.html#__440">type_name</a></span>(<span class="member_params">)</span></span></span></li>
+</ul>
+</div><h2>Members detail<a href="#_Members_detail25" id="_Members_detail25" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual </span><span class="member_signature"><span class="member_name">~UserData</span>(<span class="member_params">)</span></span><a href="#__424" id="__424" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix">virtual void </span><span class="member_signature"><span class="member_name">completion_patch</span>(<span class="member_params"><span class="member_param"><a href="String_class_reference.html">String</a> &amp;path, </span><span class="member_param"><a href="String_class_reference.html">String</a> &amp;entry, </span><span class="member_param">int &amp;offset</span>)</span></span><a href="#__425" id="__425" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+<p>This function may be reimplemented to further modify completion result on console line when completed to a <a href="UserData_class_reference.html">UserData</a> value. This is usefull to append a dot or a pair of brackets access operator to the userdata value name for instance.</p>
+<p>Parameters list:</p>
+<ul><li>path: Completion result tables path to userdata value. </li>
+<li>entry: Completion result userdata name. May append to this string directly. </li>
+<li>offset: Cursor offset. May be decreased to place cursor between inserted brackets for instance.</li>
+</ul>
+</div><div class="divmember public_member"><h3><span class="member_prefix">typedef <a href="Ref_class_reference.html">Ref</a>&lt;const <a href="UserData_class_reference.html">UserData</a>, <a href="UserData_class_reference.html">UserData</a>&gt; </span><span class="member_signature"><span class="member_name">const_ptr</span></span><a href="#__426" id="__426" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Shortcut for <a href="Ref_class_reference.html">Ref</a> smart pointer class to UserData type provided for convenience</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual <a href="String_class_reference.html">String</a> </span><span class="member_signature"><span class="member_name">get_type_name</span>(<span class="member_params">) const</span></span><a href="#__427" id="__427" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This function returns an object type name. The default implementation returns the C++ object type name. This is used for error messages and pretty printing.</p>
+<p>The return value is Pretty print object type.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual <a href="String_class_reference.html">String</a> </span><span class="member_signature"><span class="member_name">get_value_str</span>(<span class="member_params">) const</span></span><a href="#__428" id="__428" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This function returns an string value describing object value or content. The default implementation returns an hexadecimal object pointer. This is used for mainly for pretty printing.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual ValueBase::<a href="ValueBase_List_struct_reference.html">List</a> </span><span class="member_signature"><span class="member_name">meta_call</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const ValueBase::<a href="ValueBase_List_struct_reference.html">List</a> &amp;args</span>)</span></span><a href="#__429" id="__429" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This function is called when a function invokation operation is performed on a userdata object. The default implementation throws an error message. The UserData::<a href="UserData_class_reference.html#__439">support</a> function must be reimplemented along with this function to report ValueBase::<a href="ValueBase_internal_class_members.html#__698">OpCall</a> as supported.</p>
+<p>Parameters list:</p>
+<ul><li>args: List of passed arguments. </li>
+</ul>
+<p>The return value is List of returned values.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">static void </span><span class="member_signature"><span class="member_name">meta_call_check_args</span>(<span class="member_params"><span class="member_param">const ValueBase::<a href="ValueBase_List_struct_reference.html">List</a> &amp;args, </span><span class="member_param">int min_count, </span><span class="member_param">int max_count, </span><span class="member_param">...</span>)</span></span><a href="#__430" id="__430" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This helper function can be used to check arguments types passed to the UserData::<a href="UserData_class_reference.html#__429">meta_call</a> functions. This function throw an error message if checking fails.</p>
+<p>More advanced arguments checking and conversion features are available in the <a href="Function_class_reference.html">Function</a> base class which may be more appropriate when a userdata object is to be used as a function.</p>
+<p>Parameters list:</p>
+<ul><li>args: list of passed arguments. </li>
+<li>min_count: Minimum expected arguments count. </li>
+<li>max_count: Maximum expected arguments count or 0 if no limit. </li>
+<li>...: List of ValueBase::<a href="ValueBase_internal_class_members.html#__700">ValueType</a> matching expected arguments type. At least <span class="tt">max(min_count, abs(max_count))</span> types must be passed. ValueBase::<a href="ValueBase_internal_class_members.html#__700">TNone</a> may be used as wildcard. A negative value can be used for <span class="tt">max_count</span> to indicate a unlimited number of lua arguments with a type list longer than <span class="tt">min_count.</span> Last specified type is expected for all arguments above <span class="tt">max(min_count, -max_count)</span>.</li>
+</ul>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name">meta_contains</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;key</span>)</span></span><a href="#__431" id="__431" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This function returns <span class="tt">true</span> if either the ValueBase::<a href="ValueBase_internal_class_members.html#__698">OpIndex</a> operation or the ValueBase::<a href="ValueBase_internal_class_members.html#__698">OpNewindex</a> operation is supported and an entry is associated to the given key.</p>
+<p>The default implementation returns <span class="tt">!meta_index(ls, key).is_nil()</span> or <span class="tt">false</span> if UserData::<a href="UserData_class_reference.html#__432">meta_index</a> throws.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual <a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">meta_index</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;key</span>)</span></span><a href="#__432" id="__432" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This function is called when a table read access operation is attempted on a userdata object. The default implementation throws an error message. The UserData::<a href="UserData_class_reference.html#__439">support</a> function must be reimplemented along with this function to report ValueBase::<a href="ValueBase_internal_class_members.html#__698">OpIndex</a> as supported.</p>
+<p>Parameters list:</p>
+<ul><li>key: Value used as table index. </li>
+</ul>
+<p>The return value is Table access result value.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual void </span><span class="member_signature"><span class="member_name">meta_newindex</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;key, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;value</span>)</span></span><a href="#__433" id="__433" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This function is called when a table write access operation is attempted on a userdata object. The default implementation throws an error message. The UserData::<a href="UserData_class_reference.html#__439">support</a> function must be reimplemented along with this function to report ValueBase::<a href="ValueBase_internal_class_members.html#__698">OpNewindex</a> as supported.</p>
+<p>Parameters list:</p>
+<ul><li>key: Value used as table index. </li>
+<li>value: Value to put in table.</li>
+</ul>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual <a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">meta_operation</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">ValueBase::<a href="ValueBase_internal_class_members.html#__698">Operation</a> op, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;a, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;b</span>)</span></span><a href="#__434" id="__434" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This function is called when a lua operator is used with a <a href="UserData_class_reference.html">UserData</a> object. The default implementation throws an error message. The UserData::<a href="UserData_class_reference.html#__439">support</a> function must be reimplemented along with this function.</p>
+<p>Parameters list:</p>
+<ul><li>op: Specify invoked lua operator (see ValueBase::<a href="ValueBase_internal_class_members.html#__698">Operation</a>). </li>
+<li>a: First value involved in operation. </li>
+<li>b: Second value involved in operation for binary operators. </li>
+</ul>
+<p>The return value is Operation result value.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual <a href="Ref_class_reference.html">Ref</a>&lt;<a href="Iterator_class_reference.html">Iterator</a>&gt; </span><span class="member_signature"><span class="member_name">new_iterator</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls</span>)</span></span><a href="#__435" id="__435" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This function may return an <a href="Iterator_class_reference.html">Iterator</a> object used to iterate over an userdata object. The default implementation throws an error message. The UserData::<a href="UserData_class_reference.html#__439">support</a> function must be reimplemented along with this function to report ValueBase::<a href="ValueBase_internal_class_members.html#__698">OpIterate</a> as supported.</p>
+<p>The return value is an <a href="Iterator_class_reference.html">Iterator</a> based iterator object.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name">operator&lt;</span>(<span class="member_params"><span class="member_param">const <a href="UserData_class_reference.html">UserData</a> &amp;ud</span>)</span></span><a href="#__436" id="__436" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Userdata compare less than, default implementation compares the <span class="tt">this</span> pointers</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name">operator==</span>(<span class="member_params"><span class="member_param">const <a href="UserData_class_reference.html">UserData</a> &amp;ud</span>)</span></span><a href="#__437" id="__437" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Userdata compare for equality, default implementation compares the <span class="tt">this</span> pointers</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">typedef <a href="Ref_class_reference.html">Ref</a>&lt;<a href="UserData_class_reference.html">UserData</a>, <a href="UserData_class_reference.html">UserData</a>&gt; </span><span class="member_signature"><span class="member_name">ptr</span></span><a href="#__438" id="__438" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Shortcut for <a href="Ref_class_reference.html">Ref</a> smart pointer class to UserData type provided for convenience</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name">support</span>(<span class="member_params"><span class="member_param">ValueBase::<a href="ValueBase_internal_class_members.html#__698">Operation</a> c</span>) const</span></span><a href="#__439" id="__439" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Check given operation support. </p>
+<p>See also ValueBase::<a href="ValueBase_internal_class_members.html#__755">support</a> function.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">static template &lt;typename X&gt; <a href="String_class_reference.html">String</a> </span><span class="member_signature"><span class="member_name">type_name</span>(<span class="member_params">)</span></span><a href="#__440" id="__440" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Get a bare C++ typename from type</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix"><a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">yield</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls</span>) const</span></span><a href="#__441" id="__441" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+<p>When this function is invoked from the UserData::<a href="UserData_class_reference.html#__429">meta_call</a> function, QtLua will request lua to <em>yield</em> when the UserData::<a href="UserData_class_reference.html#__429">meta_call</a> function returns.</p>
+<p>The current lua thread value is returned. The Value::call family of functions can be used on a lua thread value to resume the coroutine from C++ code. The <span class="tt">nil</span> value is returned if not currently running inside a coroutine.</p>
+<p>When the State::<a href="State_class_reference.html#__348">lua_version</a> function returns a value less than 501, this function is not able to return the current thread value if it has not been created using the Value::<a href="Value_class_reference.html#__560">new_thread</a> function. If the current thread has been created by any other mean (like call to the <span class="tt">coroutine.create</span> lua 5.0 function) a boolean <span class="tt">true</span> value is returned instead of the thread value.</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:55 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

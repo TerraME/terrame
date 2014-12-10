@@ -1,0 +1,106 @@
+
+ @list
+
+   @item Basic features:
+     @list
+       @item The Lua stack-based C API is not exposed, only C++
+         objects like @ref QtLua::State and @ref QtLua::Value are
+         manipulated from C++ code.
+
+       @item Lua values can be accessed from C++ with almost the same
+         straightforward syntax as in Lua thanks to C++ operators
+         overloading.
+
+       @item C++ objects can be exposed to Lua as userdata values by
+         inheriting from the @ref QtLua::UserData class. All Lua meta
+         operations can be redefined by overriding virtual functions,
+         including iteration over userdata objects from Lua.
+
+       @item The @ref QtLua::Ref smart pointer class enables reference
+         tracking of @ref QtLua::UserData based objects and can make
+         these C++ objects garbage collectable.
+
+       @item The @ref QtLua::Iterator wrapper class enables use of
+         usual C++ iterators to traverse Lua table like values. Lua
+         iterators can also be used to traverse @ref QtLua::UserData
+         based C++ objects from Lua script. Qt template containers can
+         be accessed directly from Lua by using one of the available
+         container proxy classes.
+
+       @item The @ref QtLua::Function class can be sub-classed to
+         easily define C++ function objects callable from Lua.  The
+         @ref QtLua::Plugin class allows writing of Qt plugins which
+         may contains @ref QtLua::Function objects.
+
+       @item Lua @xref {Coroutines} {coroutines} are supported and can
+         be used to control parallel jobs from Lua scripts in a Qt
+         application.
+     @end list
+
+   @item @ref QObject related features:
+     @list
+       @item Qt @xref{QObject wrapping} enables creation and
+         manipulation of @ref QObject objects from Lua.
+
+       @item @ref QObject properties, enumerations, slots and children
+         objects can be accessed from Lua. Qt Signals can be connected
+         directly to Lua functions.
+
+       @item A @tt qt @xref {Qt related functions} {Lua library} is
+         available and contains functions to create @ref QObject and
+         manage signal/slot connections from Lua.
+
+       @item @ref QObject based user classes can be registered in the
+         QtLua meta objects list. This allows instantiating user
+         classes and accessing enum values from Lua scripts and @tt .ui
+         files directly.
+
+       @item User defined Qt types can be registered along with
+         user defined conversion functions. This allows QtLua to
+         perform transparent conversion between Qt user types and Lua
+         values when calling Qt slots or accessing @ref QObject properties.
+     @end list
+
+   @item Qt Widgets and user interface features:
+     @list
+       @item The @xref{qtLua_uic}{qtLua_uic} tool can be used compile
+         Qt @tt .ui user interface files to Lua scripts. Some Qt
+         functions are also wrapped to enable loading of @tt .ui files
+         directly from Lua.
+
+       @item The Qt @ref QtLua::Console widget is a console widget
+         with history and Lua table completion capabilities. The
+         @xref{The qtLua interpreter}{qtLua} tool is based on this
+         widget and provides a Lua based shell for experimentation.
+
+       @item The @tt qt @xref {Qt related functions} {Lua
+         library} wraps some important user interface functions which
+         are not directly available through the Qt meta object system.
+     @end list
+
+   @item Qt Model/view related features:
+     @list
+       @item The @ref QtLua::UserItemModel class enables
+         development of hierarchical C++ data structures editable
+         from both Lua script and Qt view widgets.
+
+       @item The @ref QtLua::TableTreeModel and @ref QtLua::TableGridModel
+         classes can be used to expose Lua tables to Qt views.
+
+       @item The @ref QtLua::LuaModel class enables implementation of
+         a Qt model in pure Lua.
+
+       @item The @ref QtLua::ItemViewDialog class provides a generic
+         dialog for model data displaying and editing. It can be used
+         with various views and has customizable edit buttons.
+
+       @item The @tt qt @xref {Qt related functions} {Lua
+         library} contains some functions to allow instantiating MVC
+         related models and dialogs from Lua.
+     @end list
+
+ @end list
+
+ QtLua 2.0 has been tested with Lua versions 5.0, 5.1 and 5.2 and with
+ Qt versions 4.8 and 5.0.
+

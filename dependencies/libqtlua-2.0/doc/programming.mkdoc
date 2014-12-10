@@ -1,0 +1,239 @@
+
+@section TP {Programming with QtLua}
+
+  This section covers the following topics:
+  @insert localtoc
+
+  @section TP {QtLua lua libraries}
+    @include qtlib.mkdoc
+  @end section
+
+  @section TP {Error handling and exceptions}
+
+    Lua error handling is wrapped using C++ exceptions.
+
+    Any lua code raising an error will throw a @ref QtLua::String
+    exception in calling C++ code.
+
+    Any @ref QtLua::String exception thrown will be reported as an error
+    in calling lua code.
+
+  @end section
+
+  @section TP {Qt/Lua types conversion}
+
+    This section is about data types conversion between lua and Qt.
+
+    @section T {QtLua::Value types conversion}
+      Lua values are exposed to Qt by @ref QtLua::Value objects in C++
+      code. A @ref QtLua::Value object can be converted to or
+      get constructed from an equivalent C++ value:
+
+      @table 2
+        @item Lua type	
+        @item Qt/C++ type
+
+        @item boolean
+        @item @ref QtLua::Value::Bool
+
+        @item number
+        @item int, double
+
+        @item string
+        @item @ref QtLua::String, const char*
+
+        @item table
+        @item @ref QHash, @ref QMap, @ref QList, @ref QVector
+
+        @item userdata
+        @item Any @ref QtLua::UserData based class
+      @end table
+    @end section
+
+    @section T {Qt meta types conversion}
+      Types commonly used by the Qt meta object system are automatically
+      converted to and from lua values when needed. It occurs on slot invocation
+      for arguments and return values, on Qt enums and properties
+      values reading and writing, on lua function invocation from a Qt Signal...
+
+      The following table shows how types get converted:
+
+      @table 2
+        @item Lua type			
+        @item Qt meta type id
+
+        @item boolean
+        @item @tt QMetaType::Bool
+
+        @item number	
+        @item @tt QMetaType::Int
+
+        @item number	
+        @item @tt QMetaType::UInt
+
+        @item number	
+        @item @tt QMetaType::Long
+
+        @item number	
+        @item @tt QMetaType::LongLong
+
+        @item number	
+        @item @tt QMetaType::Short
+
+        @item number	
+        @item @tt QMetaType::Char
+
+        @item number	
+        @item @tt QMetaType::ULong
+
+        @item number	
+        @item @tt QMetaType::ULongLong
+
+        @item number	
+        @item @tt QMetaType::UShort
+
+        @item number	
+        @item @tt QMetaType::UChar
+
+        @item number	
+        @item @tt QMetaType::Double
+
+        @item number	
+        @item @tt QMetaType::Float
+
+        @item number	
+        @item @tt QMetaType::QChar
+
+        @item string	
+        @item @tt QMetaType::QString
+
+        @item string	
+        @item @tt QMetaType::QByteArray
+
+        @item table of strings indexed from 1
+        @item @tt QMetaType::QStringList
+
+        @item userdata (see @xref {QObject wrapping})
+        @item @tt QMetaType::QObjectStar
+
+        @item userdata (see @xref {QObject wrapping}) 
+        @item @tt QMetaType::QWidgetStar
+
+        @item table with @tt width and @tt height fields
+        @item @tt QMetaType::QSize
+
+        @item table with @tt width and @tt height fields
+        @item @tt QMetaType::QSizeF
+
+        @item table with @tt x and @tt y fields
+        @item @tt QMetaType::QPoint
+
+        @item table with @tt x and @tt y fields
+        @item @tt QMetaType::QPointF
+
+        @item table with @tt x, @tt y, @tt width and @tt height fields
+        @item @tt QMetaType::QRect
+
+        @item table with @tt x, @tt y, @tt width and @tt height fields
+        @item @tt QMetaType::QRectF
+
+        @item table with red, green and blue values
+        @item @tt QMetaType::QColor
+
+        @item image file name string
+        @item @tt QMetaType::QIcon
+
+        @item userdata (see @ref QtLua::UserData) 
+        @item @ref QtLua::Ref pointer to @ref QtLua::UserData type. Qt meta type name is @tt "QtLua::UserData::ptr" .
+
+        @item nil
+        @item Not handled Qt meta types
+      @end table
+
+      The @ref MetaType class enables registration of user defined
+      handlers to handle other types. Other types can be user defined
+      types or not yet handled Qt meta types.
+    @end section
+
+  @end section
+
+  @section TP {QObject wrapping}
+
+    Wrapping of @ref QObject objects allows use of Qt widgets and objects from lua.
+    
+    QtLua heavily takes advantage of the Qt meta object system to expose
+    all QObjects signals, slots, enums, properties and child objects to lua script.
+
+    See @xref{The qtlua interpreter} section for examples of @ref QObject manipulation from lua script.
+
+    @section T {QObject ownership}
+
+      Lua uses a garbage collector to track references to live values and
+      QtLua provides the @ref QtLua::Ref smart pointer class to track references
+      to @ref QtLua::UserData based objects, but Qt doesn't provide a way to track
+      every pointer to @ref QObject objects.
+
+      @ref QObject objects are seen from lua has an userdata value which
+      provides access to child objects and to Qt meta fields like methods,
+      properties... This userdata value is an internal @ref QtLua::UserData
+      based wrapper with a pointer to the actual @ref QObject.
+
+      We have no way to know if C++ pointers to the wrapped @ref QObject
+      exist or if the wrapper will be the single owner. Unfortunately we
+      still have to take the right action when the wrapper get garbage
+      collected.
+
+      The following rules apply:
+      @list
+        @item There is a single wrapper instance for a given @ref
+          QObject instance. This wrapper is created when the @ref
+          QObject is first exposed as a lua value through a @ref
+          QtLua::Value object. It lasts as long as the @ref QObject
+          exists or a lua @ref QtLua::Ref {reference} to the wrapper
+          exists. The wrapper will become void/empty if the associated
+          @ref QObject is deleted by C++ code.
+        @item A delete flag is carried by the wrapper. The wrapper
+          will delete the associated @ref QObject when no more
+          lua reference to the wrapper exist only if the delete flag is
+          set and the @ref QObject has no parent.
+        @item The delete flag is set on wrapper creation only if the
+          @ref QObject has a parent. The delete flag can be updated
+          from C++ code using the @ref QtLua::Value::__Value_qobject__
+          constructor.
+      @end list
+
+      New @ref QObject wrappers returned by the functions in the @tt
+      qt @xref {Predefined lua functions} {Lua library} have their
+      delete flag set.
+
+      A reparent flag is also available to allow or deny parent change
+      for a @ref QObject.
+
+      The example below shows how @ref QObject ownership is handled in C++ code:
+      @example examples/cpp/qobject/qobject_owner.cc:1
+
+    @end section
+
+  @end section
+
+  @section TP {Coroutines}
+
+    QtLua supports lua coroutines since version 2.
+
+    Coroutines can be created from C++ code using the @ref
+    Value::new_thread function.
+
+    C++ callable @ref UserData based classes can request yield on
+    return by invoking the @ref UserData::yield function from their
+    reimplementation of the @ref UserData::meta_call function.
+
+    Resuming a coroutines from C++ use the same method as function
+    call operation on the @ref Value object. 
+    This way you can use the @ref Value::call function and
+    related @tt () operators on a @ref Value object without first
+    checking if it is a regular lua function, a callable @ref UserData
+    based object or a lua coroutine to resume.
+
+  @end section
+
+@end section

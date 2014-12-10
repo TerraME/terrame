@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="State_class_reference.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="TableGridModel_class_reference.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>String class reference<br /><span class="subtitle">
+[Base module]</span>
+</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+<div class="tree_frame" style="width:140px;"><div class="tree_row"><div style="width:10px;" class="tree_pad"></div><div style="width:120px;" class="tree_public"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qbytearray.html">QByteArray</a></span></div
+></div><br/><div style="width:70px;" class="tree_connect_1">&nbsp;</div
+><div style="width:70px;" class="tree_connect_4">&nbsp;</div><br/><div style="width:70px;" class="tree_connect_1">&nbsp;</div
+><div style="width:70px;" class="tree_connect_4">&nbsp;</div><br/><div class="tree_row"><div style="width:20px;" class="tree_pad"></div><div style="width:100px;" class="tree_this"><a href="String_class_reference.html">String</a></div
+></div><br/></div>
+</div><h2>Declaration<a href="#_Declaration22" id="_Declaration22" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<div class="codebox"><code><span class="codedir">#include</span> &lt;QtLua/String&gt;<br /><br /><span class="codekw">namespace</span> QtLua {<br />  <span class="codekw">class</span> String;<br />};<br /></code></div><p> This class is a member of the <a href="QtLua_namespace_reference.html">QtLua</a> namespace.</p>
+</div><h2>Description<a href="#_Description23" id="_Description23" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p>Lua use 8 bits character strings so <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qstring.html">QString</a></span> is not suitable for QtLua.</p>
+<p>This class is used as string object in the QtLua project. It is based on <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qbytearray.html">QByteArray</a></span> with added conversion functions.</p>
+<p>This class is also used as exceptions type for exceptions associated with lua errors.</p>
+</div><h2>Members<a href="#_Members22" id="_Members22" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><h3>Functions<a href="#_Functions20" id="_Functions20" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__357">String</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__358">String</a></span>(<span class="member_params"><span class="member_param">const char *s</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__359">String</a></span>(<span class="member_params"><span class="member_param">const char *s, </span><span class="member_param">int size</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__360">String</a></span>(<span class="member_params"><span class="member_param">const QByteArray &amp;s</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__361">String</a></span>(<span class="member_params"><span class="member_param">const QString &amp;s</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">String &amp; </span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__362">arg</a></span>(<span class="member_params"><span class="member_param">const QByteArray &amp;arg</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">String &amp; </span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__363">arg</a></span>(<span class="member_params"><span class="member_param">const QString &amp;arg</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">String &amp; </span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__364">arg</a></span>(<span class="member_params"><span class="member_param">const char *arg</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">String &amp; </span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__365">arg</a></span>(<span class="member_params"><span class="member_param">int arg</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__366">operator const char*</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">QString </span><span class="member_signature"><span class="member_name"><a href="String_class_reference.html#__367">to_qstring</a></span>(<span class="member_params">) const</span></span></span></li>
+</ul>
+</div><h2>Members detail<a href="#_Members_detail22" id="_Members_detail22" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">String</span>(<span class="member_params">)</span></span><a href="#__357" id="__357" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Create an empty string</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">String</span>(<span class="member_params"><span class="member_param">const char *s</span>)</span></span><a href="#__358" id="__358" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Create a string from <span class="tt">const char *</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">String</span>(<span class="member_params"><span class="member_param">const char *s, </span><span class="member_param">int size</span>)</span></span><a href="#__359" id="__359" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Create a string from <span class="tt">const char *</span> with given length</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">String</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qbytearray.html">QByteArray</a></span> &amp;s</span>)</span></span><a href="#__360" id="__360" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Create a string from <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qbytearray.html">QByteArray</a></span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">String</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qstring.html">QString</a></span> &amp;s</span>)</span></span><a href="#__361" id="__361" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Copy constructor</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="String_class_reference.html">String</a> &amp; </span><span class="member_signature"><span class="member_name">arg</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qbytearray.html">QByteArray</a></span> &amp;arg</span>)</span></span><a href="#__362" id="__362" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Replace next <span class="tt">%</span> character in string with given string</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="String_class_reference.html">String</a> &amp; </span><span class="member_signature"><span class="member_name">arg</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qstring.html">QString</a></span> &amp;arg</span>)</span></span><a href="#__363" id="__363" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Replace next <span class="tt">%</span> character in string with given string</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="String_class_reference.html">String</a> &amp; </span><span class="member_signature"><span class="member_name">arg</span>(<span class="member_params"><span class="member_param">const char *arg</span>)</span></span><a href="#__364" id="__364" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Replace next <span class="tt">%</span> character in string with given integer</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="String_class_reference.html">String</a> &amp; </span><span class="member_signature"><span class="member_name">arg</span>(<span class="member_params"><span class="member_param">int arg</span>)</span></span><a href="#__365" id="__365" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Replace next <span class="tt">%</span> character in string with given integer</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">operator const char*</span>(<span class="member_params">) const</span></span><a href="#__366" id="__366" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="tt">const char *</span> cast operator</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qstring.html">QString</a></span> </span><span class="member_signature"><span class="member_name">to_qstring</span>(<span class="member_params">) const</span></span><a href="#__367" id="__367" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qstring.html">QString</a></span> cast operator</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

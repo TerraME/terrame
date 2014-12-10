@@ -1,0 +1,180 @@
+@c
+@c Default template.mkdoc file for C++ projects copied by mkdoc
+@c
+
+@c ===== member doc =====
+
+@macro _member_doc id
+  @insert {@id@} decl_warn_sentence
+  @ifnopt hide_internal
+    @insert {@id@} decl_location_sentence
+    @insert {@id@} decl_homonyms_sentence
+    @insert {@id@} decl_cpp_condition_sentence
+    @insert {@id@} decl_involved_macros_sentence
+  @end if
+  @insert {@id@} decl_access_sentence
+  @insert {@id@} decl_specialization_sentence
+  @insert {@id@} decl_override_sentence
+  @insert {@id@} decl_qt_sentence
+  @insert {@id@} decl_inline_doc
+  @insert {@id@} decl_content
+  @insert {@id@} see_related_typedefs
+  @insert {No documentation available} on_empty_section
+@end macro
+
+@c ===== members detail =====
+
+@macro _compound_details id
+
+  @foreach mid {visible typedef,enum,struct,function,variable,macro} {@id@} {1}
+    @section {} {@mid@}
+      @invoke {@mid@} _member_doc
+    @end section
+  @end foreach
+
+@end macro
+
+@c ===== compound documentation macro for internal use =====
+
+@macro _compound_doc id
+
+  @ifsymtype {@id@} {class|cxxstruct}    
+
+    @insert {@id@} {D} inheritance_diagram
+
+    @section e {Declaration}
+      @insert {@id@} decl_warn_sentence
+      @insert {@id@} decl_synopsis
+
+      @c declaration scope sentence
+      This @insert {@id@} symbol_type is a member of the @insert
+      {@id@} parent_name @_ @insert {@id@} parent_symbol_type.
+
+      @ifnopt hide_internal
+        @insert {@id@} decl_location_sentence
+        @insert {@id@} decl_cpp_condition_sentence
+        @insert {@id@} decl_involved_macros_sentence
+      @end if
+
+      @insert {@id@} decl_access_sentence
+      @insert {@id@} decl_specialization_sentence
+
+    @end section
+  @end if
+
+  @section e {Description}
+    @insert {@id@} decl_inline_doc
+    @insert {@id@} see_related_typedefs
+  @end section
+
+  @ifsymtype {@id@} {module}
+    @section e {Related headers}
+      @insert {header} {1} {@id@} compound_table 
+    @end section
+    @section e {Related classes}
+      @insert {class,cxxstruct} {1} {@id@} compound_table 
+    @end section
+  @end if
+
+  @ifsymtype {@id@} {header}
+    @section e {Inclusion list}
+      @insert {@id@} include_list
+    @end section
+  @end if
+
+  @ifsymtype {@id@} {class|cxxstruct}
+    @section e {Class specializations}
+      @insert {@id@} specializations_table
+    @end section
+  @end if
+
+  @section e {Members}
+    @ifsymtype {@id@} {class|cxxstruct}
+@c    @section e {Inherits}
+@c      @insert {@id@} ancestors_list
+@c    @end section
+@c
+@c    @section e {Inherited by}
+@c      @insert {@id@} derived_list
+@c    @end section
+
+      @insert {@id@} compound_inherited_members_count
+    @end if
+    @insert {@id@} compound_flat_member_list
+  @end section
+
+@end macro
+
+@c ===== compound section macro for internal use =====
+
+@macro _compound_section type id name
+
+  @section P {@name@ @type@ reference} {@id@}
+    @invoke {@id@} _compound_doc
+
+    @c change this to specify where member details must be written
+    @c @ifsymtype {@id@} {header|class|cxxstruct}
+    @ifsymtype {@id@} {namespace|class|cxxstruct}
+      @section e {Members detail}
+        @invoke {@id@} _compound_details
+      @end section
+    @end if
+  @end section
+
+@end macro
+
+@c ===== compound section with documentation and member details =====
+
+@macro member_section name
+
+  @lookup id {@name@}
+    @section {} {@id@}
+      @invoke {@id@} _member_doc
+    @end section
+  @end lookup
+
+@end macro
+
+@c ===== compound section with documentation and member details =====
+
+@macro compound_section name
+
+  @lookup id mname mtype {@name@}
+    @invoke {@mtype@} {@id@} {@mname@} _compound_section
+  @end lookup
+
+@end macro
+
+@c ===== global scope section with documentation and member details =====
+
+@macro global_scope_doc
+  @invoke {::} _compound_doc
+@end macro
+
+@c ===== documentation sections for all compounds of given types =====
+
+@macro all_compound_sections types scope
+
+  @c change this to use members of uninstanciated classes instead instantiated member doc
+  @c @foreach id name type {defined !template_instance @types@} {@scope@} {0}
+  @foreach id name type {defined @types@} {@scope@} {0}
+
+    @ifsymattr {@id@} {visible}
+      @c ===== regular compound reference section
+      @info Generating @name@ @type@ reference section
+      @invoke {@type@} {@id@} {@name@} _compound_section
+
+    @else
+      @c ===== hidden compound may contain visible (inherited) members,
+      @c       use a seperate page for visible members from such compound
+      @ifsymtype {@id@} {class|cxxstruct}
+        @section Pe {@name@ internal @type@ members}
+          @invoke {@id@} _compound_details
+        @end section
+      @end if
+    @end if
+
+  @end foreach
+
+@end macro
+

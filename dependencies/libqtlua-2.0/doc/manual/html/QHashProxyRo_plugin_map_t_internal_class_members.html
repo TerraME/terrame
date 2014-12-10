@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="QHashProxyRo_QHashProxy_Contain75adf3ee9d97de1150b0d7e872c63dc8.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="QHashProxyRo_plugin_map_t_ProxyIterator_internal_class_members.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>QHashProxyRo&lt;plugin_map_t&gt; internal class members</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+</div><div class="divmember public_member"><h2><span class="member_prefix"></span><span class="member_signature"><span class="member_name">QHashProxyRo</span>(<span class="member_params">)</span></span><a href="#__201" id="__201" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Create a <a href="QHashProxy_class_reference.html">QHashProxy</a> object with no attached container</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix"></span><span class="member_signature"><span class="member_name">QHashProxyRo</span>(<span class="member_params"><span class="member_param">Container &amp;hash</span>)</span></span><a href="#__202" id="__202" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Create a <a href="QHashProxy_class_reference.html">QHashProxy</a> object and attach given container</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">typedef <a href="Ref_class_reference.html">Ref</a>&lt;const <a href="QHashProxyRo_class_reference.html">QHashProxyRo</a>, <a href="QHashProxyRo_class_reference.html">QHashProxyRo</a>&gt; </span><span class="member_signature"><span class="member_name">const_ptr</span></span><a href="#__203" id="__203" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Shortcut for <a href="Ref_class_reference.html">Ref</a> smart pointer class to QHashProxyRo type provided for convenience</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name">meta_contains</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;key</span>)</span></span><a href="#__204" id="__204" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This virtual function overrides the <code><a href="UserData_class_reference.html#__431">meta_contains</a></code> virtual function defined in the <code><a href="UserData_class_reference.html">UserData</a></code> base class.</p>
+<p><span class="nodoc">Documentation inherited from base class:</span></p>
+<p>This function returns <span class="tt">true</span> if either the ValueBase::<a href="ValueBase_internal_class_members.html#__698">OpIndex</a> operation or the ValueBase::<a href="ValueBase_internal_class_members.html#__698">OpNewindex</a> operation is supported and an entry is associated to the given key.</p>
+<p>The default implementation returns <span class="tt">!meta_index(ls, key).is_nil()</span> or <span class="tt">false</span> if UserData::<a href="UserData_class_reference.html#__432">meta_index</a> throws.</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual <a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">meta_index</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;key</span>)</span></span><a href="#__205" id="__205" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This virtual function overrides the <code><a href="UserData_class_reference.html#__432">meta_index</a></code> virtual function defined in the <code><a href="UserData_class_reference.html">UserData</a></code> base class.</p>
+<p><span class="nodoc">Documentation inherited from base class:</span></p>
+<p>This function is called when a table read access operation is attempted on a userdata object. The default implementation throws an error message. The UserData::<a href="UserData_class_reference.html#__439">support</a> function must be reimplemented along with this function to report ValueBase::<a href="ValueBase_internal_class_members.html#__698">OpIndex</a> as supported.</p>
+<p>Parameters list:</p>
+<ul><li>key: Value used as table index. </li>
+</ul>
+<p>The return value is Table access result value.</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual <a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">meta_operation</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">ValueBase::<a href="ValueBase_internal_class_members.html#__698">Operation</a> op, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;a, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;b</span>)</span></span><a href="#__206" id="__206" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This virtual function overrides the <code><a href="UserData_class_reference.html#__434">meta_operation</a></code> virtual function defined in the <code><a href="UserData_class_reference.html">UserData</a></code> base class.</p>
+<p><span class="nodoc">Documentation inherited from base class:</span></p>
+<p>This function is called when a lua operator is used with a <a href="UserData_class_reference.html">UserData</a> object. The default implementation throws an error message. The UserData::<a href="UserData_class_reference.html#__439">support</a> function must be reimplemented along with this function.</p>
+<p>Parameters list:</p>
+<ul><li>op: Specify invoked lua operator (see ValueBase::<a href="ValueBase_internal_class_members.html#__698">Operation</a>). </li>
+<li>a: First value involved in operation. </li>
+<li>b: Second value involved in operation for binary operators. </li>
+</ul>
+<p>The return value is Operation result value.</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual <a href="Ref_class_reference.html">Ref</a>&lt;<a href="Iterator_class_reference.html">Iterator</a>&gt; </span><span class="member_signature"><span class="member_name">new_iterator</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls</span>)</span></span><a href="#__207" id="__207" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This virtual function overrides the <code><a href="UserData_class_reference.html#__435">new_iterator</a></code> virtual function defined in the <code><a href="UserData_class_reference.html">UserData</a></code> base class.</p>
+<p><span class="nodoc">Documentation inherited from base class:</span></p>
+<p>This function may return an <a href="Iterator_class_reference.html">Iterator</a> object used to iterate over an userdata object. The default implementation throws an error message. The UserData::<a href="UserData_class_reference.html#__439">support</a> function must be reimplemented along with this function to report ValueBase::<a href="ValueBase_internal_class_members.html#__698">OpIterate</a> as supported.</p>
+<p>The return value is an <a href="Iterator_class_reference.html">Iterator</a> based iterator object.</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">typedef <a href="Ref_class_reference.html">Ref</a>&lt;<a href="QHashProxyRo_class_reference.html">QHashProxyRo</a>, <a href="QHashProxyRo_class_reference.html">QHashProxyRo</a>&gt; </span><span class="member_signature"><span class="member_name">ptr</span></span><a href="#__208" id="__208" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Shortcut for <a href="Ref_class_reference.html">Ref</a> smart pointer class to QHashProxyRo type provided for convenience</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">set_container</span>(<span class="member_params"><span class="member_param">Container *hash</span>)</span></span><a href="#__209" id="__209" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Attach or detach container. argument may be NULL</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name">support</span>(<span class="member_params"><span class="member_param">ValueBase::<a href="ValueBase_internal_class_members.html#__698">Operation</a> c</span>) const</span></span><a href="#__210" id="__210" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This virtual function overrides the <code><a href="UserData_class_reference.html#__439">support</a></code> virtual function defined in the <code><a href="UserData_class_reference.html">UserData</a></code> base class.</p>
+<p><span class="nodoc">Documentation inherited from base class:</span></p>
+<p>Check given operation support. </p>
+<p>See also ValueBase::<a href="ValueBase_internal_class_members.html#__755">support</a> function.</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="MetaType_class_reference.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="MetaTypeQObjectStar_internal_class_members.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>MetaType&lt;MetaTypeQObjectStar::X*&gt; internal class members</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+</div><div class="divmember protected_member"><h2><span class="member_prefix"></span><span class="member_signature"><span class="member_name">MetaType</span>(<span class="member_params"><span class="member_param">int type</span>)</span></span><a href="#__134" id="__134" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This member access is protected.</p>
+<p>Register a conversion handler for an already registered Qt meta type.</p>
+</div><div class="divmember protected_member"><h2><span class="member_prefix"></span><span class="member_signature"><span class="member_name">MetaType</span>(<span class="member_params"><span class="member_param">const char *type_name</span>)</span></span><a href="#__135" id="__135" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This member access is protected.</p>
+<p>Register a conversion handler <strong>and</strong> qt meta type (using the qRegisterMetaType function).</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">#define </span><span class="member_signature"><span class="member_name">QTLUA_METATYPE</span>(name, typename_)</span><a href="#__136" id="__136" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p> This macro defines a type conversion handler class. Class instantiation will also take care of registering the meta type to Qt. </p>
+<p>This macro expands to:</p>
+<div class="codebox"><code></code></div><p>See also <a href="MetaType_class_reference.html">MetaType</a> class.</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">#define </span><span class="member_signature"><span class="member_name">QTLUA_METATYPE_ID</span>(name, typename_, typeid_)</span><a href="#__137" id="__137" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p> This macro defines a type conversion handler class for an existing Qt meta type id. </p>
+<p>This macro expands to:</p>
+<div class="codebox"><code></code></div><p>See also <a href="MetaType_class_reference.html">MetaType</a> class.</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">#define </span><span class="member_signature"><span class="member_name">QTLUA_METATYPE_QOBJECT</span>(name, class_)</span><a href="#__138" id="__138" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This macro defines a type conversion class along with its handler functions able to convert <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> pointers values. The <span class="tt">class_</span> parameter is the bare class name without star. </p>
+<p>See also <a href="MetaType_class_reference.html">MetaType</a> class.</p>
+</div><div class="divmember protected_member"><h2><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name">lua2qt</span>(<span class="member_params"><span class="member_param">X *qtvalue, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;luavalue</span>) = 0;</span></span><a href="#__139" id="__139" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This member access is protected.</p>
+<p>This function must be implemented to converts a lua value to a C++ value. </p>
+<p>The return value is true on success.</p>
+</div><div class="divmember protected_member"><h2><span class="member_prefix">virtual <a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">qt2lua</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const X *qtvalue</span>) = 0;</span></span><a href="#__140" id="__140" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This member access is protected.</p>
+<p>This function must be implemented to converts a C++ value to a lua value.</p>
+</div><div class="divmember protected_member"><h2><span class="member_prefix"></span><span class="member_signature"><span class="member_name">~MetaType</span>(<span class="member_params">)</span></span><a href="#__141" id="__141" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>This member access is protected.</p>
+<p>Unregister conversion handler</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

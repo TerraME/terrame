@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="Iterator_class_reference.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="MetaType_class_reference.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>LuaModel class reference<br /><span class="subtitle">
+[Model/View module]</span>
+</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+<div class="tree_frame" style="width:220px;"><div class="tree_row"><div style="width:10px;" class="tree_pad"></div><div style="width:200px;" class="tree_public"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qabstractitemmodel.html">QAbstractItemModel</a></span></div
+></div><br/><div style="width:110px;" class="tree_connect_1">&nbsp;</div
+><div style="width:110px;" class="tree_connect_4">&nbsp;</div><br/><div style="width:110px;" class="tree_connect_1">&nbsp;</div
+><div style="width:110px;" class="tree_connect_4">&nbsp;</div><br/><div class="tree_row"><div style="width:60px;" class="tree_pad"></div><div style="width:100px;" class="tree_this"><a href="LuaModel_class_reference.html">LuaModel</a></div
+></div><br/></div>
+</div><h2>Declaration<a href="#_Declaration7" id="_Declaration7" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<div class="codebox"><code><span class="codedir">#include</span> &lt;QtLua/UserItemModel&gt;<br /><br /><span class="codekw">namespace</span> QtLua {<br />  <span class="codekw">class</span> LuaModel;<br />};<br /></code></div><p> This class is a member of the <a href="QtLua_namespace_reference.html">QtLua</a> namespace.</p>
+</div><h2>Description<a href="#_Description8" id="_Description8" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p>This class allows defining a Qt model using lua code. Lua functions must be provided to the C++ model wrapper in order to implement the model.</p>
+<p>The <a href="QtLua_lua_libraries.html#_qt_mvc_new_lua_model_function">qt.mvc.new_lua_model function</a> lua function can be used to create such a model from lua script.</p>
+</div><h3>read-only lua model<a href="#_read_only_lua_model" id="_read_only_lua_model" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<p>At least one lua function must be provided to implement a read-only model. This mandatory function is responsible for exposing the model layout and data:</p>
+<div class="codebox"><code>function get(role, item_id, child_row, child_col)</code></div><p>The get function may be first called multiple times by the wrapper with a <span class="tt">nil</span> value in the <span class="tt">role</span> parameter. In this case, the lua code must expose the data layout:</p>
+<ul><li><p><span class="tt">role</span> is a <span class="tt">nil</span> value.</p>
+</li>
+<li><p><span class="tt">item_id</span> is the numerical id of the queried item. 0 is reserved for root.</p>
+</li>
+<li><p><span class="tt">child_row</span> and <span class="tt">child_col</span> are the row and column of a child item under the queried item, starting at 1.</p>
+</li>
+</ul>
+<p>The lua code must then return at least 3 values. This is enough if the queried item has no parent:</p>
+<div class="codebox"><code><span class="codekw">return</span> (item_rows, item_cols, child_id, parent_id, item_row, item_col, flags)</code></div><ul><li><p><span class="tt">item_rows</span> and <span class="tt">item_cols</span> are the number of rows and columns under the item specified by item_id.</p>
+</li>
+<li><p><span class="tt">child_id</span> is a numerical id for the child item at position specified by <span class="tt">child_row</span> and <span class="tt">child_col</span> under the queried item. A positive id must provided by the lua code and will be used to refer to this item later.</p>
+</li>
+<li><p><span class="tt">parent_id</span> is the numerical id of the parent of the item specified by item_id. <span class="tt">nil</span> or 0 can be returned for root.</p>
+</li>
+<li><p><span class="tt">item_row</span> and <span class="tt">item_col</span> give the position of the item specified by <span class="tt">item_id</span> in its parent, starting at 1. This is not used if <span class="tt">parent_id</span> is <span class="tt">nil</span> or 0.</p>
+</li>
+<li><p><span class="tt">flags</span> is the Qt::<span class="ext_link"><a href="http://doc.trolltech.com/4.5/qt.html#ItemFlag-enum">ItemFlag</a></span> value to use for the queried item. A default value is used if <span class="tt">nil.</span></p>
+</li>
+</ul>
+<p>If the <span class="tt">role</span> parameter is not a <span class="tt">nil</span> value, the <span class="tt">get</span> function must instead return the data associated with the specified the display role:</p>
+<div class="codebox"><code><span class="codekw">return</span> (item_data, data_type)</code></div><p>If the lua code returns two values, the second value is a numeric Qt type handle which is used to perform the type conversion from the lua the value (see <a href="QtLua_lua_libraries.html#_qt_meta_type_function">qt.meta_type function</a>). The simple ValueBase::<a href="ValueBase_internal_class_members.html#__770">to_qvariant</a> function is used to perform conversion when this hint is not present.</p>
+</div><h3>editable lua model<a href="#_editable_lua_model" id="_editable_lua_model" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<p>Five other functions may be provided to implement an editable model.</p>
+<p>The <span class="tt">set</span> function is responsible for updating the data of an item; it must return <span class="tt">true</span> if the update was successful:</p>
+<div class="codebox"><code>function set(role, item_id, value)</code></div><p>Four more function can be provided to support insertion and removal of items in the model:</p>
+<div class="codebox"><code>function insert_rows(check, parent_id, pos, count)<br />function insert_cols(check, parent_id, pos, count)<br />function remove_rows(check, parent_id, pos, count)<br />function remove_cols(check, parent_id, pos, count)</code></div><p>When the <span class="tt">check</span> parameter value is <span class="tt">true,</span> the model must return a boolean value to indicate if the insert action is allowed. The insertion will takes place on the next call if the first call returns <span class="tt">true</span>.</p>
+</div><h3>Examples<a href="#_Examples" id="_Examples" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<p> Some examples of lua <span class="ext_link"><a href="http://svn.savannah.gnu.org/viewvc/trunk/libqtlua/examples/lua/mvc/lua_model_list.lua?root=libqtlua&amp;revision=218M&amp;view=annotate#l1">list model</a></span> and <span class="ext_link"><a href="http://svn.savannah.gnu.org/viewvc/trunk/libqtlua/examples/lua/mvc/lua_model_tree.lua?root=libqtlua&amp;revision=218M&amp;view=annotate#l1">tree model</a></span> are available in the QtLua tree.</p>
+</div><h2>Members<a href="#_Members7" id="_Members7" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><h3>Type<a href="#_Type" id="_Type" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">enum </span><span class="member_signature"><span class="member_name"><a href="LuaModel_class_reference.html#__125">ItemDataRole</a></span></span></span></li>
+</ul>
+</div><h3>Function<a href="#_Function" id="_Function" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="LuaModel_class_reference.html#__124">LuaModel</a></span>(<span class="member_params"><span class="member_param">const Value &amp;get_func, </span><span class="member_param">const Value &amp;set_func = <em>[...]</em>, </span><span class="member_param">const Value &amp;insert_rows_func = <em>[...]</em>, </span><span class="member_param">const Value &amp;remove_rows_func = <em>[...]</em>, </span><span class="member_param">const Value &amp;insert_cols_func = <em>[...]</em>, </span><span class="member_param">const Value &amp;remove_cols_func = <em>[...]</em>, </span><span class="member_param">QObject *parent = <em>[...]</em></span>)</span></span></span></li>
+</ul>
+</div><h2>Members detail<a href="#_Members_detail7" id="_Members_detail7" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">LuaModel</span>(<span class="member_params"><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;get_func, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;set_func = Value(), </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;insert_rows_func = Value(), </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;remove_rows_func = Value(), </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;insert_cols_func = Value(), </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;remove_cols_func = Value(), </span><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> *parent = 0</span>)</span></span><a href="#__124" id="__124" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">enum </span><span class="member_signature"><span class="member_name">ItemDataRole</span></span><a href="#__125" id="__125" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<div class="table_frame"><table class="table"><tr class="tr_head"><th style="width:30%;">Identifier</th><th style="width:70%;">Description</th></tr>
+<tr class="tr1"><td>DisplayRole</td><td></td></tr>
+<tr class="tr0"><td>DecorationRole</td><td></td></tr>
+<tr class="tr1"><td>EditRole</td><td></td></tr>
+<tr class="tr0"><td>ToolTipRole</td><td></td></tr>
+<tr class="tr1"><td>StatusTipRole</td><td></td></tr>
+<tr class="tr0"><td>WhatsThisRole</td><td></td></tr>
+<tr class="tr1"><td>FontRole</td><td></td></tr>
+<tr class="tr0"><td>TextAlignmentRole</td><td></td></tr>
+<tr class="tr1"><td>BackgroundColorRole</td><td></td></tr>
+<tr class="tr0"><td>BackgroundRole</td><td></td></tr>
+<tr class="tr1"><td>TextColorRole</td><td></td></tr>
+<tr class="tr0"><td>ForegroundRole</td><td></td></tr>
+<tr class="tr1"><td>CheckStateRole</td><td></td></tr>
+<tr class="tr0"><td>AccessibleTextRole</td><td></td></tr>
+<tr class="tr1"><td>AccessibleDescriptionRole</td><td></td></tr>
+<tr class="tr0"><td>SizeHintRole</td><td></td></tr>
+<tr class="tr1"><td>InitialSortOrderRole</td><td></td></tr>
+<tr class="tr0 tr_last"><td>UserRole</td><td></td></tr></table></div>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>
