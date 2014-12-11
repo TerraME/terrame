@@ -176,13 +176,11 @@ local function arg(tag, block, text, doc_report)
 end
 
 -------------------------------------------------------------------------------
-
 local function release(tag, block, text)
 	block[tag] = text
 end
 
 -------------------------------------------------------------------------------
-
 local function ret(tag, block, text)
 	tag = "ret"
 	if type(block[tag]) == "string" then
@@ -256,7 +254,6 @@ local function tab(tag, block, text)
 end
 
 -------------------------------------------------------------------------------
-
 local function deprecated(tag, block, text, doc_report)
 	if text == "" then
 		printError("In "..block.name.."(), @deprecated should be folowed by a string with a description on what to do")

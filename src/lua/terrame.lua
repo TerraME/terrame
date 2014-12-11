@@ -345,6 +345,7 @@ local function executeDoc(package)
 		html_files = 0,
 		global_functions = 0,
 		functions = 0,
+		models = 0,
 		variables = 0,
 		links = 0,
 		examples = 0,
@@ -482,7 +483,8 @@ local function executeDoc(package)
 
 			if not result.files[idx] then
 				printWarning("File does not have any documentation")
-			elseif not result.files[idx].functions[midx] then
+			elseif not result.files[idx].functions[midx] and 
+			  (not result.files[idx].models or not result.files[idx].models[midx]) then
 				printError("Function "..midx.." is not documented")
 				doc_report.undoc_functions = doc_report.undoc_functions + 1
 			end

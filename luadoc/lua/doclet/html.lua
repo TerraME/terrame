@@ -237,7 +237,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 	else
 		types_linked = types_linked or {}
 	end
-	local word_table = { }
+	local word_table = {}
 	local description_linked = description
 	local fname = string.match(file_doc.name, "(.-)%.lua")
 	
@@ -355,7 +355,7 @@ function start(doc, doc_report)
 	if not options.nofiles then
 		for _, filepath in ipairs(doc.files) do
 			local file_doc = doc.files[filepath]
-			if not belong(filepath, doc.examples) then
+			if not belong(filepath, doc.examples) and doc.files[filepath].type ~= "model" then
 				-- assembly the filename
 				local filepath, short_filepath = out_file(file_doc.name)
 				print(string.format("Building %s", short_filepath))
@@ -370,6 +370,7 @@ function start(doc, doc_report)
 		end
 	end
 
+	-- Process examples
 	if not options.nofiles and #doc.examples > 0 then
 		local filename = options.output_dir..s.."files"..s.."examples.html"
 		local short_fileName = options.short_output_path.."files"..s.."examples.html"
@@ -382,7 +383,44 @@ function start(doc, doc_report)
 		includeMod("examples.lp", { doc = doc })
 		f:close()
 	end
-	
+
+	if not options.nofiles and doc.mdata then
+		local filename = options.output_dir..s.."files"..s.."data.html"
+		local short_fileName = options.short_output_path.."files"..s.."data.html"
+		print(string.format("Building %s", short_fileName))
+
+		local f = util.openFile(filename, "w")
+		assert(f, string.format("Could not open %s for writing", filename))
+		io.output(f)
+
+		includeMod("data.lp", { doc = doc })
+		f:close()
+	end
+
+	-- Process models
+	if not options.nofiles then
+		local models = false
+		for _, filepath in ipairs(doc.files) do
+			if doc.files[filepath].type == "model" then
+				models = true
+			end
+		end	
+
+		if models then
+			local filename = options.output_dir..s.."files"..s.."models.html"
+			local short_fileName = options.short_output_path.."files"..s.."models.html"
+			print(string.format("Building %s", short_fileName))
+
+			local f = util.openFile(filename, "w")
+			assert(f, string.format("Could not open %s for writing", filename))
+			io.output(f)
+
+			file_doc = {name = "models"}
+			includeMod("models.lp", { doc = doc, file_doc = file_doc })
+			f:close()
+		end
+	end
+
 	-- copy extra files
 	local f = util.openFile(options.output_dir..  "luadoc.css", "w")
 	io.output(f)

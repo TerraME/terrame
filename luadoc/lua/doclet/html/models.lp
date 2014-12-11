@@ -23,31 +23,36 @@
 
 			<div id="main">
 				<div id="navigation">
-					<%=luadoc.include("menu.lp", { doc = doc, example = true })%>
+					<%=luadoc.include("menu.lp", { doc = doc, model = true })%>
 				</div> <!-- id="navigation" -->
 
 				<div id="content">
-					<h1>Examples</h1>
-					<%if not options.nofiles and #doc.examples > 0 then%>
-						<table class="file_list">
-							<!-- <tr><td colspan="2">Examples</td></tr> -->
-							<%for _, filepath in ipairs(doc.files) do%>
-								<%if doc.files[filepath].type == "example" then%>
-								<tr>
-									<!-- <td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td> -->
-									<td class="name"><a href = "#<%=filepath%>"><%=filepath%></a></td>
-									<td class="summary"><%= doc.files[filepath].description or "" %></td>
-								</tr>
-								<%end%>
+					<h1>Models</h1>
+					<table class="file_list">
+						<!-- <tr><td colspan="2">Examples</td></tr> -->
+						<%for _, filepath in ipairs(doc.files) do%>
+							<%if doc.files[filepath].type == "model" then%>
+							<tr>
+								<td class="name"><a href = "#<%=doc.files[filepath].doc[1].name%>"><%=doc.files[filepath].doc[1].name%></a></td>
+								<td class="summary"><%= doc.files[filepath].doc[1].summary or "" %></td>
+							</tr>
 							<%end%>
-						</table>
-					<%end%>
+						<%end%>
+					</table>
 					<dl class="function">
 						<%for _, filepath in ipairs(doc.files) do%>
-							<%if doc.files[filepath].type == "example" then%>
-								<dt><h2><%=filepath%><a name="<%=filepath%>"></h2></dt>
-									<%= doc.files[filepath].description%>
-								</dt>
+							<%if doc.files[filepath].type == "model" then%>
+								<dt><h2><%=doc.files[filepath].doc[1].name%><a name="<%=doc.files[filepath].doc[1].name%>"></h2></dt>
+									<%= doc.files[filepath].doc[1].description%>
+									<h3>Arguments</h3>
+									<%func = doc.files[filepath].doc[1]%>
+									<ul><span class="arg">
+									<%for i = 1, #func.arg do
+										local arg_desc = func.arg[func.arg[i]] or ""
+										local arg_name
+										arg_name = func.arg[i]%>
+									    <li><strong><%=arg_name%></strong>: <%= arg_desc%></li> 
+									<%end%>
 							<%end%>
 						<%end%>
 					</dl>

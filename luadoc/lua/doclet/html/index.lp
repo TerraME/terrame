@@ -83,8 +83,42 @@
 						</table>
 					<%end%>
 
+					<%if not options.nofiles and #doc.files > 0 then%>
+						<%local count_models = 0%>
+						<%for _, filepath in ipairs(doc.files) do%>
+							<%if doc.files[filepath].type == "model" then%>
+								<%count_models = count_models + 1%>
+							<%end%>
+						<%end%>
+
+						<%if count_models > 0 then%>
+							<h2><a href="<%=luadoc.link("files/models.html", from)%>">Models</a></h2>
+							<table class="file_list">
+
+							<%for _, filepath in ipairs(doc.files) do%>
+								<%if doc.files[filepath].type == "model" then%>
+									<tr>
+										<!-- <td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td> -->
+										<td class="name"><%=doc.files[filepath].doc[1].name%></td>
+										<td class="summary"><%= doc.files[filepath].doc[1].summary or "" %></td>
+									</tr>
+								<%end%>
+							<%end%>
+							</table>
+						<%end%>
+					<%end%>
+
 					<%if not options.nofiles and #doc.files> 0 then%>
-						<h2>Types</h2>
+						<%local count_types = 0%>
+						<%for _, filepath in ipairs(doc.files) do%>
+							<%if doc.files[filepath].type == "type" then%>
+								<%count_types = count_types + 1%>
+							<%end%>
+						<%end%>
+
+						<%if count_types > 0 then%>
+							<h2>Types</h2>
+						<%end%>
 						<table class="file_list">
 							<!--<tr><td colspan="2">Files</td></tr>-->
 							<%for _, filepath in ipairs(doc.files) do%>
@@ -99,7 +133,17 @@
 					<%end%>
 
 					<%if not options.nofiles and #doc.files > 0 then%>
-						<h2>Functions</h2>
+						<%local count_functions = 0%>
+						<%for _, filepath in ipairs(doc.files) do%>
+							<%if doc.files[filepath].type == "file" then%>
+								<%count_functions = count_functions + 1%>
+							<%end%>
+						<%end%>
+
+						<%if count_functions > 0 then%>
+							<h2>Functions</h2>
+						<%end%>
+	
 						<table class="file_list">
 							<!--<tr><td colspan="2">Files</td></tr>-->
 							<%for _, filepath in ipairs(doc.files) do%>
@@ -130,7 +174,7 @@
 						</table>
 					<%end%>
 
-					<%if not options.nofiles and doc.mdata then%>
+					<%if not options.nofiles and doc.mdata and #doc.mdata > 0 then%>
 						<h2><a href="<%=luadoc.link("files/data.html", from)%>">Data</a></h2>
 						<table class="file_list">
 							<!--<tr><td colspan="2">Examples</td></tr>-->

@@ -7,6 +7,7 @@ local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
 local printNote, printError, print, attributes = printNote, printError, print, attributes
 local sessionInfo, belong = sessionInfo, belong
+local printNote = printNote
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
@@ -37,6 +38,11 @@ local function_patterns = {
 	"^()%s*function%s*("..identifier_pattern..")%s*%("..identifiers_list_pattern.."%)",
 	"^%s*(local%s)%s*function%s*("..identifier_pattern..")%s*%("..identifiers_list_pattern.."%)",
 	"^()%s*("..identifier_pattern..")%s*%=%s*function%s*%("..identifiers_list_pattern.."%)",
+}
+
+-- Patterns for function recognition
+local model_patterns = {
+	"^()%s*("..identifier_pattern..")%s*%=%s*Model%s*%{" --..identifiers_list_pattern.."%)"
 }
 
 -------------------------------------------------------------------------------
@@ -86,6 +92,35 @@ local function check_function(line)
 	end
 
 	-- TODO: remove these assert's?
+	if info ~= nil then
+		assert(info.name, "function name undefined")
+		assert(info.arg, string.format("undefined argument list for function '%s'", info.name))
+	end
+
+	return info
+end
+
+-------------------------------------------------------------------------------
+-- Checks if the line contains a Model definition
+-- @arg line string with line text
+-- @return function information or nil if no function definition found
+local function check_model(line)
+	line = util.trim(line)
+
+	local info
+	for _, pattern in ipairs(model_patterns) do
+		local r, _, l, id, arg = string.find(line, pattern)
+		if r ~= nil then
+			info = {
+				name = id,
+				private = (l == "local"),
+				arg = ""
+			}
+
+			break
+		end
+	end
+
 	if info ~= nil then
 		assert(info.name, "function name undefined")
 		assert(info.arg, string.format("undefined argument list for function '%s'", info.name))
@@ -195,6 +230,7 @@ local function parse_comment(block, first_line, doc_report)
 	if code ~= nil then
 		local func_info = check_function(code)
 		local module_name = check_module(code)
+		local model_info = check_model(code)
 		if func_info then
 			block.class = "function"
 			block.name = func_info.name
@@ -204,6 +240,9 @@ local function parse_comment(block, first_line, doc_report)
 			block.class = "module"
 			block.name = module_name
 			block.arg = {}
+		elseif model_info then
+			block.class = "model"
+			block.name = model_info.name
 		else
 			block.arg = {}
 			return
@@ -427,6 +466,15 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 		table.insert(doc.files[fileName].functions, f.name)
 		doc.files[fileName].functions[f.name] = f
 	end
+
+	-- make models table
+	doc.files[fileName].models = {}
+	for f in class_iterator(blocks, "model")() do
+		doc_report.models = doc_report.models + 1
+		table.insert(doc.files[fileName].models, f.name)
+		doc.files[fileName].models[f.name] = f
+		doc.files[fileName].type = "model"
+	end
 	
 	-- make tables variables
 	doc.files[fileName].variables = {}
@@ -556,12 +604,12 @@ end
 local function exclude_undoc(tab, doc_report, doc)
 	printNote("Checking undocumented files")
 	for i = #tab, 1, -1 do
-		-- local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].tables + #tab[tab[i]].variables
 		local example = 0
 		if tab[tab[i]].type == "example" and tab[tab[i]].description ~= "" then
 			example = 1
 		end
-		local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].variables + example
+
+		local doc_blocs = #tab[tab[i]].functions + #tab[tab[i]].variables + example + #tab[tab[i]].models
 		if doc_blocs == 0 then
 			if tab[tab[i]].type == "example" then
 				printError("Example "..tab[tab[i]].name.." is not documented.")
@@ -785,12 +833,9 @@ function start(files, examples, package_path, short_lua_path, doc_report)
 		luapath = lua_path,
 		files = {},
 		modules = {},
+		models = {},
 		examples = examples
 	}
-	assert(doc.luapath, "undefined 'luapath' field")
-	assert(doc.files, "undefined 'files' field")
-	assert(doc.modules, "undefined 'modules' field")
-	assert(doc.modules, "undefined 'examples' field")
 	
 	printNote("Parsing lua files")
 	for _, file_ in ipairs(files) do

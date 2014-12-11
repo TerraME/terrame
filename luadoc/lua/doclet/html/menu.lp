@@ -14,7 +14,7 @@
 
 <h1><%=doc.description.package%></h1>
 <ul>
-	<%if not module_doc and not file_doc and not example and not mdata then%>
+	<%if not module_doc and not file_doc and not example and not mdata and not model then%>
 		<li><strong>Index</strong></li>
 	<%else%>
 		<li><a href="<%=luadoc.link("index.html", from)%>">Index</a></li>
@@ -37,6 +37,23 @@
 	</ul>
 <%end%>
 
+<!-- Models list -->
+<%if not options.nofiles and #doc.files > 0 then%>
+	<%local count_models = 0%>
+	<%for _, filepath in ipairs(doc.files) do%>
+		<%if doc.files[filepath].type == "model" then%>
+			<%count_models = count_models + 1%>
+		<%end%>
+	<%end%>
+
+	<%if count_models > 0 then%>
+		<%if not model then%>
+			<h1><a href="<%=luadoc.link("files/models.html", from)%>">Models</a></h1>
+		<%else%>
+			<h1>Models</h1>
+		<%end%>
+	<%end%>
+<%end%>
 
 <!-- Types list -->
 <%if not options.nofiles and #doc.files > 0 then%>
