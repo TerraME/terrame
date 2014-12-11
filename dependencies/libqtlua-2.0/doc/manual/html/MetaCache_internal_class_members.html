@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="Member_internal_class_members.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="Method_internal_class_members.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>MetaCache internal class members</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+</div><div class="divmember public_member"><h2><span class="member_prefix"></span><span class="member_signature"><span class="member_name">MetaCache</span>(<span class="member_params"><span class="member_param">const MetaCache &amp;mc</span>)</span></span><a href="#__628" id="__628" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Copy constructor</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">int </span><span class="member_signature"><span class="member_name">get_enum_value</span>(<span class="member_params"><span class="member_param">const <a href="String_class_reference.html">String</a> &amp;name</span>) const</span></span><a href="#__629" id="__629" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Recursively search for enum value in class and parent classes, return -1 if not found</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix"><a href="Ref_class_reference.html">Ref</a>&lt;Member&gt; </span><span class="member_signature"><span class="member_name">get_member</span>(<span class="member_params"><span class="member_param">const <a href="String_class_reference.html">String</a> &amp;name</span>) const</span></span><a href="#__630" id="__630" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Recursively search for memeber in class and parent classes</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">const <a href="QtLua_namespace_reference.html#__812">member_cache_t</a> &amp; </span><span class="member_signature"><span class="member_name">get_member_table</span>(<span class="member_params">) const</span></span><a href="#__631" id="__631" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Get member table</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix"><a href="Ref_class_reference.html">Ref</a>&lt;Member&gt; </span><span class="member_signature"><span class="member_name">get_member_throw</span>(<span class="member_params"><span class="member_param">const <a href="String_class_reference.html">String</a> &amp;name</span>) const</span></span><a href="#__632" id="__632" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Recursively search for memeber in class and parent classes, throw if not found</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">template &lt;typename X&gt; X::ptr </span><span class="member_signature"><span class="member_name">get_member_throw</span>(<span class="member_params"><span class="member_param">const <a href="String_class_reference.html">String</a> &amp;name</span>) const</span></span><a href="#__633" id="__633" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Recursively search for memeber in class and parent classes and try to cast to given type, throw if fail.</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">static MetaCache &amp; </span><span class="member_signature"><span class="member_name">get_meta</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> &amp;obj</span>)</span></span><a href="#__634" id="__634" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Get cache meta information for a QObject</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">static MetaCache &amp; </span><span class="member_signature"><span class="member_name">get_meta</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmetaobject.html">QMetaObject</a></span> *mo</span>)</span></span><a href="#__635" id="__635" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Get cache meta information for a QMetaObject</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmetaobject.html">QMetaObject</a></span> * </span><span class="member_signature"><span class="member_name">get_meta_object</span>(<span class="member_params">) const</span></span><a href="#__636" id="__636" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Get associated QMetaObject pointer</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:55 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

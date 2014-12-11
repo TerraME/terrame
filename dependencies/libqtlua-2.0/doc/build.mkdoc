@@ -1,0 +1,37 @@
+
+@section TP {Building QtLua}
+
+  @section {Using the autotools}
+    QtLua can be built using the autotools based build system. This is
+    the preferred approach on @em GNU/Linux systems:
+    @code R
+./configure
+make
+    @end code
+
+    This will build the library, the @tt qtlua tool and all example
+    applications.
+
+    Depending on your lua version and installation path, the configure
+    script may not find lua header files or library files. Passing
+    additional options to the configure script will fix this:
+    @code R
+./configure --with-lua-lib=lua5 --with-lualib-lib=lualib5 \
+            --with-lua-inc-dir=/usr/include/lua5
+make
+    @end code
+  @end section
+
+  @section {Using Cmake}
+    @url {http://www.cmake.org/} {Cmake} comes as an alternative build
+    system and can be used on platforms were the autotools do not
+    properly detect Qt. This approach requires Cmake installed on your
+    platform.
+    @code RS
+cmake -G "<cmake generator name>" .
+make
+    @end code
+    This will build the library and tools.
+  @end section
+
+@end section

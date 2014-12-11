@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="DispatchProxy_Target_internal_struct_members.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="Function_class_reference.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>DispatchProxy::TargetBase internal struct members</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+</div><div class="divmember public_member"><h2><span class="member_prefix"></span><span class="member_signature"><span class="member_name">TargetBase</span>(<span class="member_params"><span class="member_param"><a href="UserData_class_reference.html">UserData</a> *ud, </span><span class="member_param">ValueBase::<a href="ValueBase_internal_class_members.html#__699">Operations</a> ops, </span><span class="member_param">bool new_keys</span>)</span></span><a href="#__78" id="__78" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual </span><span class="member_signature"><span class="member_name">~TargetBase</span>(<span class="member_params">)</span></span><a href="#__79" id="__79" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual ValueBase::<a href="ValueBase_List_struct_reference.html">List</a> </span><span class="member_signature"><span class="member_name">_meta_call</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const ValueBase::<a href="ValueBase_List_struct_reference.html">List</a> &amp;args</span>) const = 0;</span></span><a href="#__80" id="__80" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name">_meta_contains</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;key</span>) const = 0;</span></span><a href="#__81" id="__81" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual <a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">_meta_index</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;key</span>) const = 0;</span></span><a href="#__82" id="__82" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual void </span><span class="member_signature"><span class="member_name">_meta_newindex</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;key, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;value</span>) const = 0;</span></span><a href="#__83" id="__83" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual <a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">_meta_operation</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls, </span><span class="member_param">ValueBase::<a href="ValueBase_internal_class_members.html#__698">Operation</a> op, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;a, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;b</span>) const = 0;</span></span><a href="#__84" id="__84" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual <a href="Ref_class_reference.html">Ref</a>&lt;<a href="Iterator_class_reference.html">Iterator</a>&gt; </span><span class="member_signature"><span class="member_name">_new_iterator</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *ls</span>) const = 0;</span></span><a href="#__85" id="__85" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">_new_keys</span></span><a href="#__86" id="__86" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">ValueBase::<a href="ValueBase_internal_class_members.html#__699">Operations</a> </span><span class="member_signature"><span class="member_name">_ops</span></span><a href="#__87" id="__87" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">virtual bool </span><span class="member_signature"><span class="member_name">_support</span>(<span class="member_params"><span class="member_param">ValueBase::<a href="ValueBase_internal_class_members.html#__698">Operation</a> c</span>) const = 0;</span></span><a href="#__88" id="__88" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix"><a href="UserData_class_reference.html">UserData</a> *</span><span class="member_signature"><span class="member_name">_ud</span></span><a href="#__89" id="__89" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

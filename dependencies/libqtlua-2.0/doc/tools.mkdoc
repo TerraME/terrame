@@ -1,0 +1,103 @@
+
+@section TP {QtLua tools}
+
+  This section covers the following topics:
+  @insert localtoc
+
+@section TP {The qtlua interpreter}
+
+  @section {Description}
+
+    The QtLua project comes with a simple tool to experiment Qt enabled lua scripts.
+    
+    Lua script files passed on command line are executed in left to
+    right order. Standard lua libraries are loaded along with the
+    @xref{QtLua lua libraries}. the lua global variable @tt app is
+    wrapping the @ref QApplication object.
+
+    This tool has an interactive mode which displays a @ref QtLua::Console window.
+    This is useful for script debugging and allows playing with Qt objects from lua.
+
+    The interactive mode is automatically started if no script are passed
+    on command line, it can also be invoked with the @tt -i option on
+    the command line and will start after scripts execution.
+
+    When in interactive mode, the @tt{list()} and @tt{help()} commands
+    are useful to get started.
+
+  @end section
+
+  @section {Example 1 : Hello world}
+
+    This simple example contains a lua script file and an user
+    interface file created with the Qt @tt designer tool:
+
+    @code R
+  $ cd examples/lua/hello_uic/
+  $ ls
+  hello.lua  hello.ui hello_ui.lua
+    @end code
+
+    The @tt hello_ui.lua has been generated from the hello.ui file by
+    using the @tt qtlua_uic tool.
+
+    The lua script file connect some signals and show the dialog:
+
+    @example examples/lua/hello_uic/hello.lua R
+    
+    This window is displayed when the script is executed with the @tt
+    qtlua interpreter tool:
+    
+    @image hello_ui.png
+
+  @end section
+
+  @section {Example 2 : Console use}
+
+    This example shows how the @tt qtlua interactive mode can be used to create widgets,
+    set properties and play with Qt objects.
+
+    The first screenshot partially shows the list of available fields in a newly created @ref QSpinBox widget:
+
+    @image qtlua_console_1.png
+
+    The second screenshot shows how to update the spinbox buttons style property using the right Qt enumeration value:
+
+    @image qtlua_console_2.png
+
+  @end section
+
+@end section
+
+@section TP {The qtlua_uic user interface compiler}
+  @label {qtlua_uic}
+  
+  This tool is able to compile @tt .ui user interface files produced
+  by the Qt designer tool to lua code.
+
+  @code R
+  $ cd examples/lua/hello_uic/
+  $ qtlua_uic hello.ui > hello_ui.lua
+  @end code
+
+  The generated file contains lua code to create widgets, layouts and
+  connect signals. It can be loaded as a lua module which returns the
+  root widget:
+
+  @code R
+ui = require("hello_ui")
+  @end code
+
+  Custom widget classes can be registered from the C++ code by calling
+  the @ref State::register_qobject_meta function before loading
+  interface scripts which require them.
+
+  QtLua before version 2 was able to load user interface files
+  directly by relying on the @ref QUiLoader Qt class. This feature is
+  still available but support for custom widget classes is more
+  complicated (see Qt doc).
+
+@end section
+
+@end section
+

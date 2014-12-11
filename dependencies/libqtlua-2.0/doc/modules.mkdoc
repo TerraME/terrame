@@ -1,0 +1,18 @@
+
+@moduledef {Base}
+ @short Lua base classes
+@end moduledef
+
+@moduledef {Model/View}
+ @short Lua / Qt model view hierarchic data structure classes
+@end moduledef
+
+@moduledef {Container proxies}
+ @short Lua / Qt containers wrapper classes
+@end moduledef
+
+@moduledef {QObject wrapping}
+ @short QObject meta wrapper classes
+ @internal
+@end moduledef
+

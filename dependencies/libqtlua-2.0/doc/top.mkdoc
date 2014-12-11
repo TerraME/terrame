@@ -1,0 +1,105 @@
+
+@include modules.mkdoc
+@include template.mkdoc
+
+@parse qt_4.5.mkdoclib
+
+@parse {
+  QtLua/qtluafunction.hh
+  QtLua/qtluaconsole.hh
+  QtLua/qtluauseritem.hh
+  QtLua/qtluatabletreemodel.hh
+  QtLua/qtluaitemviewdialog.hh
+  QtLua/qtluatablegridmodel.hh
+  QtLua/qtlualuamodel.hh
+  QtLua/qtluauseritemmodel.hh
+  QtLua/qtluauseritemselectionmodel.hh
+  QtLua/qtluaiterator.hh
+  QtLua/qtluauserlistitem.hh
+  QtLua/qtluaplugin.hh
+  QtLua/qtluastate.hh
+  QtLua/qtluauserdata.hh
+  QtLua/qtluauserobject.hh
+  QtLua/qtluavaluebase.hh
+  QtLua/qtluavalue.hh
+  QtLua/qtluavalueref.hh
+  QtLua/qtluaref.hh
+  QtLua/qtluastring.hh
+  QtLua/qtluaqhashproxy.hh
+  QtLua/qtluaqvectorproxy.hh
+  QtLua/qtluaqlistproxy.hh
+  QtLua/qtluaqlinkedlistproxy.hh
+  QtLua/qtluaarrayproxy.hh
+  QtLua/qtluametatype.hh
+  QtLua/qtluadispatchproxy.hh
+  internal/qtluaqmetavalue.hh
+  internal/qtluaenum.hh
+  internal/qtlualistiterator.hh
+  internal/qtluamember.hh
+  internal/qtluametacache.hh
+  internal/qtluamethod.hh
+  internal/qtluatableiterator.hh
+  internal/qtluaqobjectiterator.hh
+  internal/qtluaenumiterator.hh
+  internal/qtluaproperty.hh
+  internal/qtluaqmetaobjectwrapper.hh
+  internal/qtluaqobjectwrapper.hh
+  internal/qtluatabletreekeys.hh
+  internal/qtluapoolarray.hh
+  internal/qtluaenum.hh
+}
+
+@scope {QtLua}
+
+@insert title
+
+@section U {Copying this document}
+ Copyright (c) @insert author.  Permission is granted to copy,
+ distribute and/or modify this document under the terms of the GNU Free
+ Documentation License, Version 1.3 or any later version published by
+ the Free Software Foundation; with no Invariant Sections, no
+ Front-Cover Texts, and no Back-Cover Texts.  A copy of the license is
+ included in the section entitled @xref{GNU Free Documentation License}.
+@end section
+
+@section PHU {Table of contents}
+  @insert toc
+@end section
+
+@ifopt hide_internal
+  @section TP {Introduction}
+
+    @include description.mkdoc
+
+    @section {List of features}
+      @include features.mkdoc
+    @end section
+
+  @end section
+
+  @include build.mkdoc
+  @include programming.mkdoc
+  @include tools.mkdoc
+@end if
+
+@c @insert all_modules_sections
+
+@section TPH {API documentation}
+  All QtLua libray symbols are located in the @ref ::QtLua namespace.
+
+  @section {Modules list}
+    @insert {module} compound_table
+  @end section
+
+  @section {Classes list}
+    @insert {class,cxxstruct} {module} {1} grouped_compound_table
+  @end section
+
+  @insert {class,cxxstruct} all_compound_sections
+  @insert {QtLua} compound_section
+@end section
+
+@section TP {GNU Free Documentation License}
+ @include fdl-1.3.mkdoc
+@end section
+

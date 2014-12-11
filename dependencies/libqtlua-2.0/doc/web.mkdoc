@@ -1,0 +1,48 @@
+
+@insert title
+
+@section {Description}
+  @include description.mkdoc
+@end section
+
+@section {Features}
+  @include features.mkdoc
+@end section
+
+@section {Download}
+
+  Releases can be downloaded @url
+  {https://savannah.nongnu.org/files/?group=libqtlua} {here}.
+
+  The project is hosted at @url
+  {https://savannah.nongnu.org/projects/libqtlua}.
+  
+  Source code can be retrieved using subversion:
+  @tt {svn co svn://svn.savannah.nongnu.org/libqtlua/trunk/libqtlua}
+  
+@end section
+
+@section {Documentation}
+
+  The QtLua library comes with many examples and detailed
+  documentation.
+
+  The user manual is available @url
+  {http://www.nongnu.org/libqtlua/manual} {here}.
+
+  Library internal details documentation is available @url
+  {http://www.nongnu.org/libqtlua/internals} {here}.
+
+@end section
+
+@section {Contact}
+
+  The @url http://lists.nongnu.org/mailman/listinfo/libqtlua-list
+  {libqtlua-list} mailing list is available for discussing QtLua.
+
+  The QtLua library has been developed by Alexandre Becoulet. You can
+  contact the author at: @em{alexandre.becoulet (at) free.fr}. Don't
+  forget to include the @em "qtlua" string somewhere in your message to
+  avoid being filtered.
+
+@end section

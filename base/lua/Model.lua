@@ -216,7 +216,7 @@ local interface = function(self, ordering)
 	local pkgattrs, qtattrs, typeattrs, r = "", "", "", ""
 
 	r = r.."-- This file was created automatically from a TerraME Model ("..os.date("%c")..")\n\n"
-	r = r.."require(\"qtluae\")\n"
+	r = r.."require__(\"qtluae\")\n"
 	if ordering == nil then
 		ordering = create_ordering(self)
 	end
@@ -537,7 +537,7 @@ local interface = function(self, ordering)
 	end)
 
 	r = r.."..\"\\nreturn Tube(result)\""
-	r = r.."\ndofile(\"Tube.lua\")\n\n"
+	-- r = r.."\ndofile(\"Tube.lua\")\n\n"
 
 	r = r.."\n\nfile = io.open(\"model-instance.lua\", \"w\")\n"
 	r = r.."file:write(result)\n"

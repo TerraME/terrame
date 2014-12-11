@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="QObjectIterator_internal_class_members.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="QObjectWrapper_LuaSlot_internal_struct_members.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>QObjectWrapper internal class members</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+</div><div class="divmember public_member"><h2><span class="member_prefix"></span><span class="member_signature"><span class="member_name">~QObjectWrapper</span>(<span class="member_params">)</span></span><a href="#__661" id="__661" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">_lua_connect</span>(<span class="member_params"><span class="member_param">int sigindex, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;v</span>)</span></span><a href="#__662" id="__662" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">_lua_disconnect</span>(<span class="member_params"><span class="member_param">int sigindex, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;v</span>)</span></span><a href="#__663" id="__663" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">_lua_disconnect_all</span>(<span class="member_params"><span class="member_param">int sigindex</span>)</span></span><a href="#__664" id="__664" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">_lua_disconnect_all</span>(<span class="member_params">)</span></span><a href="#__665" id="__665" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">typedef <a href="Ref_class_reference.html">Ref</a>&lt;const QObjectWrapper, QObjectWrapper&gt; </span><span class="member_signature"><span class="member_name">const_ptr</span></span><a href="#__666" id="__666" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Shortcut for <a href="Ref_class_reference.html">Ref</a> smart pointer class to QObjectWrapper type provided for convenience</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">static <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> * </span><span class="member_signature"><span class="member_name">get_child</span>(<span class="member_params"><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> &amp;obj, </span><span class="member_param">const <a href="String_class_reference.html">String</a> &amp;name</span>)</span></span><a href="#__667" id="__667" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Find QObject child non-recursively</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> &amp; </span><span class="member_signature"><span class="member_name">get_object</span>(<span class="member_params">)</span></span><a href="#__668" id="__668" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Get reference to wrapped qobject. Throw if the internal <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qpointer.html">QPointer</a></span> has become null.</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix"><a href="State_class_reference.html">State</a> * </span><span class="member_signature"><span class="member_name">get_state</span>(<span class="member_params">)</span></span><a href="#__669" id="__669" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Get reference to state</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">static <a href="Ref_class_reference.html">Ref</a>&lt;QObjectWrapper&gt; </span><span class="member_signature"><span class="member_name">get_wrapper</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *st, </span><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> *obj</span>)</span></span><a href="#__670" id="__670" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Create or find existing QObjectWrapper associated with given QObject. QObject will be deleted when wrapper is destroyed only if it flagged as deletable and has no more parent. Deletable flag is set on wrapper creation if QObject has a parent.</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">static <a href="Ref_class_reference.html">Ref</a>&lt;QObjectWrapper&gt; </span><span class="member_signature"><span class="member_name">get_wrapper</span>(<span class="member_params"><span class="member_param"><a href="State_class_reference.html">State</a> *st, </span><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> *obj, </span><span class="member_param">bool reparent, </span><span class="member_param">bool delete_</span>)</span></span><a href="#__671" id="__671" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Same as get_wrapper() but specify if QObject parent change is allowed (default is true) and if QObject must be deleted when no references to wrapper remains and it has no parent (default is true if QObject had a parent on wrapper creation).</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">typedef <a href="Ref_class_reference.html">Ref</a>&lt;QObjectWrapper, QObjectWrapper&gt; </span><span class="member_signature"><span class="member_name">ptr</span></span><a href="#__672" id="__672" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Shortcut for <a href="Ref_class_reference.html">Ref</a> smart pointer class to QObjectWrapper type provided for convenience</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">static <a href="String_class_reference.html">String</a> </span><span class="member_signature"><span class="member_name">qobject_name</span>(<span class="member_params"><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> &amp;obj</span>)</span></span><a href="#__673" id="__673" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Return object name, forge a decent one if empty</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">int </span><span class="member_signature"><span class="member_name">qt_metacall</span>(<span class="member_params"><span class="member_param">QMetaObject::Call c, </span><span class="member_param">int id, </span><span class="member_param">void **args</span>)</span></span><a href="#__674" id="__674" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">set_delete</span>(<span class="member_params"><span class="member_param">bool delete_</span>)</span></span><a href="#__675" id="__675" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Specify if wrapped QObject must be deleted when no more refenrences to wrapper exists and it has no parent.</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">set_reparent</span>(<span class="member_params"><span class="member_param">bool reparent</span>)</span></span><a href="#__676" id="__676" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Specify if wrapped QObject parent change is allowed</p>
+</div><div class="divmember public_member"><h2><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">valid</span>(<span class="member_params">) const</span></span><a href="#__677" id="__677" class="hover_link">&nbsp;&nbsp;</a></h2></div><div class="sec_content2">
+<p>Check if wrapped qobject still exist</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:55 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

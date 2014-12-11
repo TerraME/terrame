@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="ValueBase_List_struct_reference.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="ValueBase_iterator_struct_reference.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>ValueBase::const_iterator struct reference<br /><span class="subtitle">
+[Base module]</span>
+</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+</div><h2>Declaration<a href="#_Declaration34" id="_Declaration34" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<div class="codebox"><code><span class="codedir">#include</span> &lt;QtLua/Value&gt;<br /><br /><span class="codekw">namespace</span> QtLua {<br />  <span class="codekw">class</span> ValueBase {<br />    <span class="codekw">struct</span> const_iterator;<br />  };<br />};<br /></code></div><p> This struct is a member of the ValueBase class.</p>
+</div><h2>Description<a href="#_Description35" id="_Description35" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p>This iterator class allow iteration through table like lua values directly from C++ code. Modification of <a href="Value_class_reference.html">Value</a> object returned by ValueBase::const_iterator::<a href="ValueBase_const_iterator_struct_reference.html#__800">value</a> <strong>doesn't modify</strong> traversed container.</p>
+<div class="codebox"><code><span class="codecmt">// code from <a href="http://svn.savannah.gnu.org/viewvc/trunk/libqtlua/examples/cpp/value/iterate.cc?root=libqtlua&amp;revision=218M&amp;view=annotate#l40">examples/cpp/value/iterate.cc:40</a></span><br /><br />    <span class="codecmt">// Iterate over lua table from C++ code</span><br />    <span class="codekw">for</span> (<a class="coderef" href="ValueBase_const_iterator_struct_reference.html">QtLua::Value::const_iterator</a> i = table.<a class="coderef" href="ValueBase_internal_class_members.html#__703">begin</a>(); i != table.<a class="coderef" href="ValueBase_internal_class_members.html#__710">end</a>(); i++)<br />      qDebug() &lt;&lt; i.<a class="coderef" href="ValueBase_iterator__internal_class_members.html#__806">key</a>().<a class="coderef" href="ValueBase_internal_class_members.html#__774">to_string_p</a>()<br />               &lt;&lt; i.<a class="coderef" href="ValueBase_const_iterator_struct_reference.html#__800">value</a>().<a class="coderef" href="ValueBase_internal_class_members.html#__774">to_string_p</a>();<br /></code></div><p>See also ValueBase::<a href="ValueBase_iterator_struct_reference.html">iterator</a> struct and <a href="Iterator_class_reference.html">Iterator</a> class.</p>
+</div><h2>Members<a href="#_Members34" id="_Members34" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><h3>Type<a href="#_Type1" id="_Type1" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">typedef <em> [...] </em> </span><span class="member_signature"><span class="member_name"><a href="ValueBase_iterator__internal_class_members.html#__805">iterator_category</a></span></span></span></li>
+</ul>
+</div><h3>Functions<a href="#_Functions32" id="_Functions32" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="ValueBase_const_iterator_struct_reference.html#__797">const_iterator</a></span>(<span class="member_params"><span class="member_param">const ValueBase::iterator &amp;i</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="ValueBase_const_iterator_struct_reference.html#__798">const_iterator</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">Value </span><span class="member_signature"><span class="member_name"><a href="ValueBase_iterator__internal_class_members.html#__806">key</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="ValueBase_iterator__internal_class_members.html#__807">operator!=</a></span>(<span class="member_params"><span class="member_param">const ValueBase::iterator_ &amp;i</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">Value </span><span class="member_signature"><span class="member_name"><a href="ValueBase_const_iterator_struct_reference.html#__799">operator*</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">ValueBase::iterator_ &amp; </span><span class="member_signature"><span class="member_name"><a href="ValueBase_iterator__internal_class_members.html#__808">operator++</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">ValueBase::iterator_ </span><span class="member_signature"><span class="member_name"><a href="ValueBase_iterator__internal_class_members.html#__809">operator++</a></span>(<span class="member_params"><span class="member_param">int </span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="ValueBase_iterator__internal_class_members.html#__810">operator==</a></span>(<span class="member_params"><span class="member_param">const ValueBase::iterator_ &amp;i</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">Value </span><span class="member_signature"><span class="member_name"><a href="ValueBase_const_iterator_struct_reference.html#__800">value</a></span>(<span class="member_params">) const</span></span></span></li>
+</ul>
+</div><h2>Members detail<a href="#_Members_detail34" id="_Members_detail34" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">const_iterator</span>(<span class="member_params"><span class="member_param">const ValueBase::<a href="ValueBase_iterator_struct_reference.html">iterator</a> &amp;i</span>)</span></span><a href="#__797" id="__797" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Create from non const iterator</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">const_iterator</span>(<span class="member_params">)</span></span><a href="#__798" id="__798" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Create a non uninitialized ValueBase::<a href="ValueBase_const_iterator_struct_reference.html">const_iterator</a>.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">operator*</span>(<span class="member_params">) const</span></span><a href="#__799" id="__799" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>See ValueBase::const_iterator::<a href="ValueBase_const_iterator_struct_reference.html#__800">value</a> function.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">value</span>(<span class="member_params">) const</span></span><a href="#__800" id="__800" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Get current entry value.</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:55 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

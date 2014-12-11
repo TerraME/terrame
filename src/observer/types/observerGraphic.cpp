@@ -507,7 +507,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 
                 // symbol
                 num = legAttribs.at(symbol).toInt();
-                QwtSymbol *qwtSymbol;
+                QwtSymbol *qwtSymbol = new QwtSymbol;
                 qwtSymbol->setStyle( (QwtSymbol::Style) num);
                 qwtSymbol->setPen(pen);
                 // increments the symbol size in two values

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="Ref_class_reference.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="Refobj_UserData_internal_class_members.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>Refobj class reference<br /><span class="subtitle">
+[Base module]</span>
+</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+</div><h2>Declaration<a href="#_Declaration20" id="_Declaration20" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<div class="codebox"><code><span class="codedir">#include</span> &lt;QtLua/Ref&gt;<br /><br /><span class="codekw">namespace</span> QtLua {<br />  <span class="codekw">template</span> &lt;<span class="codekw">typename</span> X&gt; <span class="codekw">class</span> Refobj;<br />};<br /></code></div><p> This class is a member of the <a href="QtLua_namespace_reference.html">QtLua</a> namespace.</p>
+</div><h2>Description<a href="#_Description21" id="_Description21" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p>This template class must be a base class for any class which may be referenced by the <a href="Ref_class_reference.html">Ref</a> smart pointer..</p>
+<p>See also <a href="UserData_class_reference.html">UserData</a> class.</p>
+</div><h2>Members<a href="#_Members20" id="_Members20" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><h3>Types<a href="#_Types14" id="_Types14" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">typedef <em> [...] </em> </span><span class="member_signature"><span class="member_name"><a href="Refobj_class_reference.html#__326">const_ptr</a></span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">typedef <em> [...] </em> </span><span class="member_signature"><span class="member_name"><a href="Refobj_class_reference.html#__328">ptr</a></span></span></span></li>
+</ul>
+</div><h3>Functions<a href="#_Functions18" id="_Functions18" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Refobj_class_reference.html#__323">Refobj</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Refobj_class_reference.html#__324">Refobj</a></span>(<span class="member_params"><span class="member_param">const Refobj &amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="Refobj_class_reference.html#__325">~Refobj</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">Refobj &amp; </span><span class="member_signature"><span class="member_name"><a href="Refobj_class_reference.html#__327">operator=</a></span>(<span class="member_params"><span class="member_param">const Refobj &amp;r</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">int </span><span class="member_signature"><span class="member_name"><a href="RefobjBase_internal_class_members.html#__684">ref_count</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">void </span><span class="member_signature"><span class="member_name"><a href="RefobjBase_internal_class_members.html#__685">ref_delegate</a></span>(<span class="member_params"><span class="member_param">RefobjBase *o</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="RefobjBase_internal_class_members.html#__686">ref_is_delegate</a></span>(<span class="member_params">) const</span></span></span></li>
+</ul>
+</div><h3>Protected functions<a href="#_Protected_functions1" id="_Protected_functions1" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">void </span><span class="member_signature"><span class="member_name"><a href="RefobjBase_internal_class_members.html#__683">ref_allocated</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">virtual void </span><span class="member_signature"><span class="member_name"><a href="RefobjBase_internal_class_members.html#__687">ref_single</a></span>(<span class="member_params">)</span></span></span></li>
+</ul>
+</div><h2>Members detail<a href="#_Members_detail20" id="_Members_detail20" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">Refobj</span>(<span class="member_params">)</span></span><a href="#__323" id="__323" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">Refobj</span>(<span class="member_params"><span class="member_param">const <a href="Refobj_class_reference.html">Refobj</a> &amp;r</span>)</span></span><a href="#__324" id="__324" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">~Refobj</span>(<span class="member_params">)</span></span><a href="#__325" id="__325" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">typedef <a href="Ref_class_reference.html">Ref</a>&lt;const X, X&gt; </span><span class="member_signature"><span class="member_name">const_ptr</span></span><a href="#__326" id="__326" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Shortcut for <a href="Ref_class_reference.html">Ref</a> smart pointer class to X type provided for convenience</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="Refobj_class_reference.html">Refobj</a> &amp; </span><span class="member_signature"><span class="member_name">operator=</span>(<span class="member_params"><span class="member_param">const <a href="Refobj_class_reference.html">Refobj</a> &amp;r</span>)</span></span><a href="#__327" id="__327" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">typedef <a href="Ref_class_reference.html">Ref</a>&lt;X, X&gt; </span><span class="member_signature"><span class="member_name">ptr</span></span><a href="#__328" id="__328" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Shortcut for <a href="Ref_class_reference.html">Ref</a> smart pointer class to X type provided for convenience</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

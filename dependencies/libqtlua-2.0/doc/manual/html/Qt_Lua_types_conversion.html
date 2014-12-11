@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="Error_handling_and_exceptions.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="Programming_with_QtLua.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="QObject_wrapping.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>3.3 Qt/Lua types conversion</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+<p>This section is about data types conversion between lua and Qt.</p>
+</div><h2>3.3.1 QtLua::Value types conversion<a href="#_QtLua_Value_types_conversion" id="_QtLua_Value_types_conversion" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p> Lua values are exposed to Qt by <a href="Value_class_reference.html">Value</a> objects in C++ code. A <a href="Value_class_reference.html">Value</a> object can be converted to or get constructed from an equivalent C++ value:</p>
+<div class="table_frame"><table class="table"><tr class="tr_head"><th>Lua type <br />
+</th><th>Qt/C++ type<br />
+</th></tr>
+<tr class="tr1"><td>boolean<br />
+</td><td>ValueBase::<a href="ValueBase_internal_class_members.html#__697">Bool</a><br />
+</td></tr>
+<tr class="tr0"><td>number<br />
+</td><td>int, double<br />
+</td></tr>
+<tr class="tr1"><td>string<br />
+</td><td><a href="String_class_reference.html">String</a>, const char*<br />
+</td></tr>
+<tr class="tr0"><td>table<br />
+</td><td><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qhash.html">QHash</a></span>, <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmap.html">QMap</a></span>, <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qlist.html">QList</a></span>, <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qvector.html">QVector</a></span><br />
+</td></tr>
+<tr class="tr1 tr_last"><td>userdata<br />
+</td><td>Any <a href="UserData_class_reference.html">UserData</a> based class<br />
+</td></tr></table></div>
+</div><h2>3.3.2 Qt meta types conversion<a href="#_Qt_meta_types_conversion" id="_Qt_meta_types_conversion" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p> Types commonly used by the Qt meta object system are automatically converted to and from lua values when needed. It occurs on slot invocation for arguments and return values, on Qt enums and properties values reading and writing, on lua function invocation from a Qt Signal...</p>
+<p>The following table shows how types get converted:</p>
+<div class="table_frame"><table class="table"><tr class="tr_head"><th>Lua type <br />
+</th><th>Qt meta type id<br />
+</th></tr>
+<tr class="tr1"><td>boolean<br />
+</td><td><span class="tt">QMetaType::Bool</span><br />
+</td></tr>
+<tr class="tr0"><td>number <br />
+</td><td><span class="tt">QMetaType::Int</span><br />
+</td></tr>
+<tr class="tr1"><td>number <br />
+</td><td><span class="tt">QMetaType::UInt</span><br />
+</td></tr>
+<tr class="tr0"><td>number <br />
+</td><td><span class="tt">QMetaType::Long</span><br />
+</td></tr>
+<tr class="tr1"><td>number <br />
+</td><td><span class="tt">QMetaType::LongLong</span><br />
+</td></tr>
+<tr class="tr0"><td>number <br />
+</td><td><span class="tt">QMetaType::Short</span><br />
+</td></tr>
+<tr class="tr1"><td>number <br />
+</td><td><span class="tt">QMetaType::Char</span><br />
+</td></tr>
+<tr class="tr0"><td>number <br />
+</td><td><span class="tt">QMetaType::ULong</span><br />
+</td></tr>
+<tr class="tr1"><td>number <br />
+</td><td><span class="tt">QMetaType::ULongLong</span><br />
+</td></tr>
+<tr class="tr0"><td>number <br />
+</td><td><span class="tt">QMetaType::UShort</span><br />
+</td></tr>
+<tr class="tr1"><td>number <br />
+</td><td><span class="tt">QMetaType::UChar</span><br />
+</td></tr>
+<tr class="tr0"><td>number <br />
+</td><td><span class="tt">QMetaType::Double</span><br />
+</td></tr>
+<tr class="tr1"><td>number <br />
+</td><td><span class="tt">QMetaType::Float</span><br />
+</td></tr>
+<tr class="tr0"><td>number <br />
+</td><td><span class="tt">QMetaType::QChar</span><br />
+</td></tr>
+<tr class="tr1"><td>string <br />
+</td><td><span class="tt">QMetaType::QString</span><br />
+</td></tr>
+<tr class="tr0"><td>string <br />
+</td><td><span class="tt">QMetaType::QByteArray</span><br />
+</td></tr>
+<tr class="tr1"><td>table of strings indexed from 1<br />
+</td><td><span class="tt">QMetaType::QStringList</span><br />
+</td></tr>
+<tr class="tr0"><td>userdata (see <a href="QObject_wrapping.html">QObject wrapping</a>)<br />
+</td><td><span class="tt">QMetaType::QObjectStar</span><br />
+</td></tr>
+<tr class="tr1"><td>userdata (see <a href="QObject_wrapping.html">QObject wrapping</a>) <br />
+</td><td><span class="tt">QMetaType::QWidgetStar</span><br />
+</td></tr>
+<tr class="tr0"><td>table with <span class="tt">width</span> and <span class="tt">height</span> fields<br />
+</td><td><span class="tt">QMetaType::QSize</span><br />
+</td></tr>
+<tr class="tr1"><td>table with <span class="tt">width</span> and <span class="tt">height</span> fields<br />
+</td><td><span class="tt">QMetaType::QSizeF</span><br />
+</td></tr>
+<tr class="tr0"><td>table with <span class="tt">x</span> and <span class="tt">y</span> fields<br />
+</td><td><span class="tt">QMetaType::QPoint</span><br />
+</td></tr>
+<tr class="tr1"><td>table with <span class="tt">x</span> and <span class="tt">y</span> fields<br />
+</td><td><span class="tt">QMetaType::QPointF</span><br />
+</td></tr>
+<tr class="tr0"><td>table with <span class="tt">x,</span> <span class="tt">y,</span> <span class="tt">width</span> and <span class="tt">height</span> fields<br />
+</td><td><span class="tt">QMetaType::QRect</span><br />
+</td></tr>
+<tr class="tr1"><td>table with <span class="tt">x,</span> <span class="tt">y,</span> <span class="tt">width</span> and <span class="tt">height</span> fields<br />
+</td><td><span class="tt">QMetaType::QRectF</span><br />
+</td></tr>
+<tr class="tr0"><td>table with red, green and blue values<br />
+</td><td><span class="tt">QMetaType::QColor</span><br />
+</td></tr>
+<tr class="tr1"><td>image file name string<br />
+</td><td><span class="tt">QMetaType::QIcon</span><br />
+</td></tr>
+<tr class="tr0"><td>userdata (see <a href="UserData_class_reference.html">UserData</a>) <br />
+</td><td><a href="Ref_class_reference.html">Ref</a> pointer to <a href="UserData_class_reference.html">UserData</a> type. Qt meta type name is <span class="tt">&quot;QtLua::UserData::ptr&quot;</span> .<br />
+</td></tr>
+<tr class="tr1 tr_last"><td>nil<br />
+</td><td>Not handled Qt meta types<br />
+</td></tr></table></div>
+<p>The <a href="MetaType_class_reference.html">MetaType</a> class enables registration of user defined handlers to handle other types. Other types can be user defined types or not yet handled Qt meta types.</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

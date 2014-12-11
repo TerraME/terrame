@@ -1,0 +1,5 @@
+Use the qtlua interpreter to run:
+$ qtlua hello.lua
+
+Use the qtlua_uic tool to recompile hello_ui.lua:
+$ qtlua_uic hello.ui > hello_ui.lua

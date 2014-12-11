@@ -1,5 +1,5 @@
 # Find the QWT installation.
-# (c) Raian Vargas Maretto, Pedro Ribeiro de Andrade 2011
+# (c) Raian Vargas Maretto, Pedro Ribeiro de Andrade 2011, December 2014
 # ----------------------------------------------------------------------------
 # Usage:
 # In your CMakeLists.txt file do something like this:

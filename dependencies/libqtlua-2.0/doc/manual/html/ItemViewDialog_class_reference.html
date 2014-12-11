@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="Function_class_reference.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="Iterator_class_reference.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>ItemViewDialog class reference<br /><span class="subtitle">
+[Model/View module]</span>
+</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+<div class="tree_frame" style="width:160px;"><div class="tree_row"><div style="width:30px;" class="tree_pad"></div><div style="width:100px;" class="tree_public"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qdialog.html">QDialog</a></span></div
+></div><br/><div style="width:80px;" class="tree_connect_1">&nbsp;</div
+><div style="width:80px;" class="tree_connect_4">&nbsp;</div><br/><div style="width:80px;" class="tree_connect_1">&nbsp;</div
+><div style="width:80px;" class="tree_connect_4">&nbsp;</div><br/><div class="tree_row"><div style="width:160px;" class="tree_this"><a href="ItemViewDialog_class_reference.html">ItemViewDialog</a></div
+></div><br/></div>
+</div><h2>Declaration<a href="#_Declaration5" id="_Declaration5" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<div class="codebox"><code><span class="codedir">#include</span> &lt;QtLua/ItemViewDialog&gt;<br /><br /><span class="codekw">namespace</span> QtLua {<br />  <span class="codekw">class</span> ItemViewDialog;<br />};<br /></code></div><p> This class is a member of the <a href="QtLua_namespace_reference.html">QtLua</a> namespace.</p>
+</div><h2>Description<a href="#_Description6" id="_Description6" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p>This class provides a generic dialog to view and edit data in a model.</p>
+<p>Some edit buttons can be made available depending on the value of the edit_actions attribute.</p>
+<p>Some <a href="QtLua_lua_libraries.html#_QObject_related_functions">lua functions</a> can be used to create and invoke these dialogs from lua script.</p>
+<p>See also <a href="TableTreeModel_class_reference.html">TableTreeModel</a> class and <a href="TableGridModel_class_reference.html">TableGridModel</a> class.</p>
+</div><h2>Members<a href="#_Members5" id="_Members5" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><h3>Types<a href="#_Types4" id="_Types4" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">enum </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__106">EditAction</a></span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">typedef <em> [...] </em> </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__107">EditActions</a></span></span></span></li>
+</ul>
+</div><h3>Functions<a href="#_Functions5" id="_Functions5" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__105">ItemViewDialog</a></span>(<span class="member_params"><span class="member_param">ItemViewDialog::EditActions edit, </span><span class="member_param">QAbstractItemModel *model, </span><span class="member_param">QAbstractItemView *view = <em>[...]</em>, </span><span class="member_param">QWidget *parent = <em>[...]</em></span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">float </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__108">get_column_margin_factor</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">ItemViewDialog::EditActions </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__109">get_edit_actions</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">QAbstractItemModel * </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__110">get_model</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__111">get_resize_on_expand</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">QAbstractItemView * </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__112">get_view</a></span>(<span class="member_params">) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">void </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__113">set_column_margin_factor</a></span>(<span class="member_params"><span class="member_param">float cmf</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">void </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__114">set_edit_actions</a></span>(<span class="member_params"><span class="member_param">ItemViewDialog::EditActions edit</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">void </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__115">set_resize_on_expand</a></span>(<span class="member_params"><span class="member_param">bool roe</span>)</span></span></span></li>
+</ul>
+</div><h3>Protected function<a href="#_Protected_function1" id="_Protected_function1" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">virtual QSize </span><span class="member_signature"><span class="member_name"><a href="ItemViewDialog_class_reference.html#__116">sizeHint</a></span>(<span class="member_params">) const</span></span></span></li>
+</ul>
+</div><h2>Members detail<a href="#_Members_detail5" id="_Members_detail5" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">ItemViewDialog</span>(<span class="member_params"><span class="member_param">ItemViewDialog::<a href="ItemViewDialog_class_reference.html#__107">EditActions</a> edit, </span><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qabstractitemmodel.html">QAbstractItemModel</a></span> *model, </span><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qabstractitemview.html">QAbstractItemView</a></span> *view = 0, </span><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qwidget.html">QWidget</a></span> *parent = 0</span>)</span></span><a href="#__105" id="__105" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Create a table dialog.</p>
+<p>Parameters list:</p>
+<ul><li>table: lua table to expose </li>
+<li>type: dialog type </li>
+<li>model: mvc model to use, a default model is created if <span class="tt">NULL.</span> </li>
+<li>attr: model attributes, control display and edit options</li>
+</ul>
+</div><div class="divmember public_member"><h3><span class="member_prefix">enum </span><span class="member_signature"><span class="member_name">EditAction</span></span><a href="#__106" id="__106" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<div class="table_frame"><table class="table"><tr class="tr_head"><th style="width:30%;">Identifier</th><th style="width:70%;">Description</th></tr>
+<tr class="tr1"><td>EditData</td><td></td></tr>
+<tr class="tr0"><td>EditDataOnNewRow</td><td></td></tr>
+<tr class="tr1"><td>EditAddChild</td><td></td></tr>
+<tr class="tr0"><td>EditInsertRow</td><td></td></tr>
+<tr class="tr1"><td>EditInsertRowAfter</td><td></td></tr>
+<tr class="tr0"><td>EditAddRow</td><td></td></tr>
+<tr class="tr1"><td>EditRemoveRow</td><td></td></tr>
+<tr class="tr0"><td>EditRowAll</td><td></td></tr>
+<tr class="tr1"><td>EditInsertColumn</td><td></td></tr>
+<tr class="tr0"><td>EditInsertColumnAfter</td><td></td></tr>
+<tr class="tr1"><td>EditAddColumn</td><td></td></tr>
+<tr class="tr0"><td>EditRemoveColumn</td><td></td></tr>
+<tr class="tr1 tr_last"><td>EditColumnAll</td><td></td></tr></table></div>
+<p>See also ItemViewDialog::<a href="ItemViewDialog_class_reference.html#__107">EditActions</a> typedef.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">typedef ItemViewDialog::<a href="ItemViewDialog_class_reference.html#__106">EditAction</a> </span><span class="member_signature"><span class="member_name">EditActions</span></span><a href="#__107" id="__107" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">float </span><span class="member_signature"><span class="member_name">get_column_margin_factor</span>(<span class="member_params">) const</span></span><a href="#__108" id="__108" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Get additionnal column width factor</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">ItemViewDialog::<a href="ItemViewDialog_class_reference.html#__107">EditActions</a> </span><span class="member_signature"><span class="member_name">get_edit_actions</span>(<span class="member_params">) const</span></span><a href="#__109" id="__109" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qabstractitemmodel.html">QAbstractItemModel</a></span> * </span><span class="member_signature"><span class="member_name">get_model</span>(<span class="member_params">) const</span></span><a href="#__110" id="__110" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Return pointer to model</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">get_resize_on_expand</span>(<span class="member_params">) const</span></span><a href="#__111" id="__111" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Get current resize on expand state</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qabstractitemview.html">QAbstractItemView</a></span> * </span><span class="member_signature"><span class="member_name">get_view</span>(<span class="member_params">) const</span></span><a href="#__112" id="__112" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Return pointer to view</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">set_column_margin_factor</span>(<span class="member_params"><span class="member_param">float cmf</span>)</span></span><a href="#__113" id="__113" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Set additionnal column width factor</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">set_edit_actions</span>(<span class="member_params"><span class="member_param">ItemViewDialog::<a href="ItemViewDialog_class_reference.html#__107">EditActions</a> edit</span>)</span></span><a href="#__114" id="__114" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">set_resize_on_expand</span>(<span class="member_params"><span class="member_param">bool roe</span>)</span></span><a href="#__115" id="__115" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Set keys column resize to content on node expand</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix">virtual <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qsize.html">QSize</a></span> </span><span class="member_signature"><span class="member_name">sizeHint</span>(<span class="member_params">) const</span></span><a href="#__116" id="__116" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

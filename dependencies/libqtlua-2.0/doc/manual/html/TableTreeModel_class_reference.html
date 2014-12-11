@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="TableGridModel_class_reference.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="API_documentation.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="UserData_class_reference.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>TableTreeModel class reference<br /><span class="subtitle">
+[Model/View module]</span>
+</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+<div class="tree_frame" style="width:220px;"><div class="tree_row"><div style="width:10px;" class="tree_pad"></div><div style="width:200px;" class="tree_public"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qabstractitemmodel.html">QAbstractItemModel</a></span></div
+></div><br/><div style="width:110px;" class="tree_connect_1">&nbsp;</div
+><div style="width:110px;" class="tree_connect_4">&nbsp;</div><br/><div style="width:110px;" class="tree_connect_1">&nbsp;</div
+><div style="width:110px;" class="tree_connect_4">&nbsp;</div><br/><div class="tree_row"><div style="width:30px;" class="tree_pad"></div><div style="width:160px;" class="tree_this"><a href="TableTreeModel_class_reference.html">TableTreeModel</a></div
+></div><br/></div>
+</div><h2>Declaration<a href="#_Declaration24" id="_Declaration24" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<div class="codebox"><code><span class="codedir">#include</span> &lt;QtLua/TableTreeModel&gt;<br /><br /><span class="codekw">namespace</span> QtLua {<br />  <span class="codekw">class</span> TableTreeModel;<br />};<br /></code></div><p> This class is a member of the <a href="QtLua_namespace_reference.html">QtLua</a> namespace.</p>
+</div><h2>Description<a href="#_Description25" id="_Description25" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p>This class can be used to expose lua tables content to Qt view widgets in a flat or hierarchical manner.</p>
+<p>Lua tables and <a href="UserData_class_reference.html">UserData</a> objects with valid table operations are handled.</p>
+<p>Lua tables can be edited from Qt views using this model. The TableTreeModel::<a href="TableTreeModel_class_reference.html#__405">Attribute</a> flags can be used to control which editing actions are allowed. User input may be evaluated as a lua expression when editing a table entry.</p>
+<p>Lua tables change may <strong>not</strong> update the model on the fly and the TableTreeModel::<a href="TableTreeModel_class_reference.html#__423">update</a> function must be called to refresh views on heavy modifications. This is partially due to lack of lua mechanism to implement efficient table change event. If you need to edit the underlying data from lua and have the views updated automatically, you might use the <a href="UserItemModel_class_reference.html">UserItemModel</a> approach instead.</p>
+<p>Usage example:</p>
+<div class="codebox"><code><span class="codecmt">// code from <a href="http://svn.savannah.gnu.org/viewvc/trunk/libqtlua/examples/cpp/mvc/tabletreeview.cc?root=libqtlua&amp;revision=218M&amp;view=annotate#l30">examples/cpp/mvc/tabletreeview.cc:30</a></span><br /><br />  state = <span class="codekw">new</span> <a class="coderef" href="State_class_reference.html">QtLua::State</a>();<br />  state-&gt;openlib(<a class="coderef" href="QtLua_namespace_reference.html#__811">QtLua::AllLibs</a>);<br /><br />  <span class="codecmt">// Create a new model and expose lua global table</span><br />  model = <span class="codekw">new</span> <a class="coderef" href="TableTreeModel_class_reference.html">QtLua::TableTreeModel</a>(state-&gt;at(<span class="codestr">&quot;_G&quot;</span>), <a class="coderef" href="TableTreeModel_class_reference.html#__405">QtLua::TableTreeModel::Recursive</a>);<br /><br />  <span class="codecmt">// Create Qt view widget</span><br />  treeview = <span class="codekw">new</span> <a class="coderef" href="http://doc.trolltech.com/4.5/qtreeview.html">QTreeView</a>(0);<br />  treeview-&gt;setModel(model);<br /><br />  setCentralWidget(treeview);<br /></code></div><div class="img_frame"><img src="qtlua_tabletreemodel.png" /></div><p>See also <a href="ItemViewDialog_class_reference.html">ItemViewDialog</a> class.</p>
+</div><h2>Members<a href="#_Members24" id="_Members24" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><h3>Types<a href="#_Types16" id="_Types16" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">enum </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__405">Attribute</a></span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">typedef <em> [...] </em> </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__406">Attributes</a></span></span></span></li>
+</ul>
+</div><h3>Functions<a href="#_Functions22" id="_Functions22" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__403">TableTreeModel</a></span>(<span class="member_params"><span class="member_param">const Value &amp;root, </span><span class="member_param">TableTreeModel::Attributes attr, </span><span class="member_param">QObject *parent = <em>[...]</em></span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix"></span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__404">~TableTreeModel</a></span>(<span class="member_params">)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">TableTreeModel::Attributes </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__412">get_attr</a></span>(<span class="member_params"><span class="member_param">const QModelIndex &amp;index</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">Value </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__413">get_value</a></span>(<span class="member_params"><span class="member_param">const QModelIndex &amp;index</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">void </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__423">update</a></span>(<span class="member_params">)</span></span></span></li>
+</ul>
+</div><h3>Protected functions<a href="#_Protected_functions3" id="_Protected_functions3" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">QModelIndex </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__407">buddy</a></span>(<span class="member_params"><span class="member_param">const QModelIndex &amp;index</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">int </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__408">columnCount</a></span>(<span class="member_params"><span class="member_param">const QModelIndex &amp;parent</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">QVariant </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__409">data</a></span>(<span class="member_params"><span class="member_param">const QModelIndex &amp;index, </span><span class="member_param">int role</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">Qt::ItemFlags </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__411">flags</a></span>(<span class="member_params"><span class="member_param">const QModelIndex &amp;index</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__414">hasChildren</a></span>(<span class="member_params"><span class="member_param">const QModelIndex &amp;parent</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">QVariant </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__415">headerData</a></span>(<span class="member_params"><span class="member_param">int section, </span><span class="member_param">Qt::Orientation orientation, </span><span class="member_param">int role</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__416">insertRows</a></span>(<span class="member_params"><span class="member_param">int row, </span><span class="member_param">int count, </span><span class="member_param">const QModelIndex &amp;parent</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">QModelIndex </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__417">parent</a></span>(<span class="member_params"><span class="member_param">const QModelIndex &amp;index</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__418">removeRows</a></span>(<span class="member_params"><span class="member_param">int row, </span><span class="member_param">int count, </span><span class="member_param">const QModelIndex &amp;parent</span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">int </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__419">rowCount</a></span>(<span class="member_params"><span class="member_param">const QModelIndex &amp;parent</span>) const</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__420">setData</a></span>(<span class="member_params"><span class="member_param">const QModelIndex &amp;index, </span><span class="member_param">const QVariant &amp;value, </span><span class="member_param">int role</span>)</span></span></span></li>
+</ul>
+</div><h3>Static functions<a href="#_Static_functions1" id="_Static_functions1" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">static void </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__421">table_dialog</a></span>(<span class="member_params"><span class="member_param">QWidget *parent, </span><span class="member_param">const QString &amp;title, </span><span class="member_param">const Value &amp;table, </span><span class="member_param">TableTreeModel::Attributes attr = <em>[...]</em></span>)</span></span></span></li>
+<li><span class="listitem"><span class="member_prefix">static void </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__422">tree_dialog</a></span>(<span class="member_params"><span class="member_param">QWidget *parent, </span><span class="member_param">const QString &amp;title, </span><span class="member_param">const Value &amp;table, </span><span class="member_param">TableTreeModel::Attributes attr = <em>[...]</em></span>)</span></span></span></li>
+</ul>
+</div><h3>Signal<a href="#_Signal2" id="_Signal2" class="hover_link">&nbsp;&nbsp;</a></h3><div class="sec_content3">
+<ul><li><span class="listitem"><span class="member_prefix">void </span><span class="member_signature"><span class="member_name"><a href="TableTreeModel_class_reference.html#__410">edit_error</a></span>(<span class="member_params"><span class="member_param">const QString &amp;message</span>)</span></span></span></li>
+</ul>
+</div><h2>Members detail<a href="#_Members_detail24" id="_Members_detail24" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">TableTreeModel</span>(<span class="member_params"><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;root, </span><span class="member_param">TableTreeModel::<a href="TableTreeModel_class_reference.html#__406">Attributes</a> attr, </span><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> *parent = 0</span>)</span></span><a href="#__403" id="__403" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Create a new lua table model.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"></span><span class="member_signature"><span class="member_name">~TableTreeModel</span>(<span class="member_params">)</span></span><a href="#__404" id="__404" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">enum </span><span class="member_signature"><span class="member_name">Attribute</span></span><a href="#__405" id="__405" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Specifies <a href="TableTreeModel_class_reference.html">TableTreeModel</a> behavior for a given lua table </p>
+<div class="table_frame"><table class="table"><tr class="tr_head"><th style="width:20%;">Identifier</th><th style="width:10%;">Value</th><th style="width:70%;">Description</th></tr>
+<tr class="tr1"><td>Recursive</td><td>0x00000001</td><td>Expose nested tables too.<br />
+</td></tr>
+<tr class="tr0"><td>UserDataIter</td><td>0x00000002</td><td>Iterate over UserData objects too.<br />
+</td></tr>
+<tr class="tr1"><td>HideKey</td><td>0x00000020</td><td>Do not show key column.<br />
+</td></tr>
+<tr class="tr0"><td>HideValue</td><td>0x00000040</td><td>Do not show value column.<br />
+</td></tr>
+<tr class="tr1"><td>HideType</td><td>0x00000004</td><td>Do not show value type column.<br />
+</td></tr>
+<tr class="tr0"><td>UnquoteKeys</td><td>0x00000008</td><td>Strip double quotes from string keys<br />
+</td></tr>
+<tr class="tr1"><td>UnquoteValues</td><td>0x00000010</td><td>Strip double quotes from string values<br />
+</td></tr>
+<tr class="tr0"><td>Editable</td><td>0x00001000</td><td>Allow editing exposed lua tables.<br />
+</td></tr>
+<tr class="tr1"><td>EditFixedType</td><td>0x00002000</td><td>Prevent value type change when editing.<br />
+</td></tr>
+<tr class="tr0"><td>EditLuaEval</td><td>0x00004000</td><td>Evaluate user input as a lua expression.<br />
+</td></tr>
+<tr class="tr1"><td>EditInsert</td><td>0x00008000</td><td>Allow insertion of new entries.<br />
+</td></tr>
+<tr class="tr0"><td>EditRemove</td><td>0x00010000</td><td>Allow deletion of existing entries.<br />
+</td></tr>
+<tr class="tr1"><td>EditKey</td><td>0x00020000</td><td>Allow entry key update.<br />
+</td></tr>
+<tr class="tr0 tr_last"><td>EditAll</td><td>0x00039000</td><td>Editable, EditInsert, EditRemove and EditKey allowed<br />
+</td></tr></table></div>
+<p>See also TableTreeModel::<a href="TableTreeModel_class_reference.html#__406">Attributes</a> typedef.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">typedef TableTreeModel::<a href="TableTreeModel_class_reference.html#__405">Attribute</a> </span><span class="member_signature"><span class="member_name">Attributes</span></span><a href="#__406" id="__406" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p><span class="nodoc">No documentation available</span></p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> </span><span class="member_signature"><span class="member_name">buddy</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;index</span>) const</span></span><a href="#__407" id="__407" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix">int </span><span class="member_signature"><span class="member_name">columnCount</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;parent</span>) const</span></span><a href="#__408" id="__408" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qvariant.html">QVariant</a></span> </span><span class="member_signature"><span class="member_name">data</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;index, </span><span class="member_param">int role</span>) const</span></span><a href="#__409" id="__409" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember signal_member"><h3><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">edit_error</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qstring.html">QString</a></span> &amp;message</span>)</span></span><a href="#__410" id="__410" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member is a Qt signal.</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix">Qt::<span class="ext_link"><a href="http://doc.trolltech.com/4.5/qt.html#ItemFlag-enum">ItemFlags</a></span> </span><span class="member_signature"><span class="member_name">flags</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;index</span>) const</span></span><a href="#__411" id="__411" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">TableTreeModel::<a href="TableTreeModel_class_reference.html#__406">Attributes</a> </span><span class="member_signature"><span class="member_name">get_attr</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;index</span>) const</span></span><a href="#__412" id="__412" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Get supported operations for entry at given <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span></p>
+</div><div class="divmember public_member"><h3><span class="member_prefix"><a href="Value_class_reference.html">Value</a> </span><span class="member_signature"><span class="member_name">get_value</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;index</span>) const</span></span><a href="#__413" id="__413" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Get lua value at given model index</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">hasChildren</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;parent</span>) const</span></span><a href="#__414" id="__414" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qvariant.html">QVariant</a></span> </span><span class="member_signature"><span class="member_name">headerData</span>(<span class="member_params"><span class="member_param">int section, </span><span class="member_param">Qt::<span class="ext_link"><a href="http://doc.trolltech.com/4.5/qt.html#Orientation-enum">Orientation</a></span> orientation, </span><span class="member_param">int role</span>) const</span></span><a href="#__415" id="__415" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">insertRows</span>(<span class="member_params"><span class="member_param">int row, </span><span class="member_param">int count, </span><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;parent</span>)</span></span><a href="#__416" id="__416" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> </span><span class="member_signature"><span class="member_name">parent</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;index</span>) const</span></span><a href="#__417" id="__417" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">removeRows</span>(<span class="member_params"><span class="member_param">int row, </span><span class="member_param">int count, </span><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;parent</span>)</span></span><a href="#__418" id="__418" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix">int </span><span class="member_signature"><span class="member_name">rowCount</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;parent</span>) const</span></span><a href="#__419" id="__419" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember protected_member"><h3><span class="member_prefix">bool </span><span class="member_signature"><span class="member_name">setData</span>(<span class="member_params"><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qmodelindex.html">QModelIndex</a></span> &amp;index, </span><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qvariant.html">QVariant</a></span> &amp;value, </span><span class="member_param">int role</span>)</span></span><a href="#__420" id="__420" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>This member access is protected.</p>
+</div><div class="divmember public_member"><h3><span class="member_prefix">static void </span><span class="member_signature"><span class="member_name">table_dialog</span>(<span class="member_params"><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qwidget.html">QWidget</a></span> *parent, </span><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qstring.html">QString</a></span> &amp;title, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;table, </span><span class="member_param">TableTreeModel::<a href="TableTreeModel_class_reference.html#__406">Attributes</a> attr = Recursive</span>)</span></span><a href="#__421" id="__421" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p> Shortcut function to display a modal lua table dialog.</p>
+<p>Parameters list:</p>
+<ul><li>parent: parent widget </li>
+<li>title: dialog window title </li>
+<li>table: lua table to expose </li>
+<li>attr: model attributes, control display and edit options</li>
+</ul>
+</div><div class="divmember public_member"><h3><span class="member_prefix">static void </span><span class="member_signature"><span class="member_name">tree_dialog</span>(<span class="member_params"><span class="member_param"><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qwidget.html">QWidget</a></span> *parent, </span><span class="member_param">const <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qstring.html">QString</a></span> &amp;title, </span><span class="member_param">const <a href="Value_class_reference.html">Value</a> &amp;table, </span><span class="member_param">TableTreeModel::<a href="TableTreeModel_class_reference.html#__406">Attributes</a> attr = Recursive</span>)</span></span><a href="#__422" id="__422" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p> Shortcut function to display a modal lua table dialog.</p>
+<p>Parameters list:</p>
+<ul><li>parent: parent widget </li>
+<li>title: dialog window title </li>
+<li>table: lua table to expose </li>
+<li>attr: model attributes, control display and edit options</li>
+</ul>
+</div><div class="divmember public_member"><h3><span class="member_prefix">void </span><span class="member_signature"><span class="member_name">update</span>(<span class="member_params">)</span></span><a href="#__423" id="__423" class="hover_link">&nbsp;&nbsp;</a></h3></div><div class="sec_content3">
+<p>Clear cached table content and reset model.</p>
+</div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>

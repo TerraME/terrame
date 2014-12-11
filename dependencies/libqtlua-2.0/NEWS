@@ -1,0 +1,15 @@
+
+1.4
+	added ArrayProxy class
+	added DispatchProxy class
+	reworked UserObject class
+	added more constructors and type conversion features to the Value class
+	added multi-column support to the ItemModel and related classes
+
+1.3:
+        added MetaType class
+        added Cmake support
+
+1.2:
+	License changed to LGPLv3
+	Added MVC lua table access model classes

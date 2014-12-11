@@ -243,9 +243,9 @@ int main(int argc, char *argv[])
 
     // runs the lua core files 
     int error = luaL_loadfile(L, tmePath.toLatin1().constData()) || lua_pcall(L, 0, 0, 0);
-    if (error)
+    if(error)
     {
-        fprintf(stderr, "\n%s", lua_tostring(L, -1));
+        fprintf(stderr, "\n%s\n", lua_tostring(L, -1));
         lua_pop(L, 1);  // pop error message from the stack
         lua_close(L);
         return -1;

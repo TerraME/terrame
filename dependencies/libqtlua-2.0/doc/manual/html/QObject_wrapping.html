@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta name="Generator" content="MKDOC " />
+ <title>QtLua library manual </title>
+ <link rel="stylesheet" href="mkdoc.css" />
+ <style type="text/css">
+
+  .sec_hidden { display: none; }
+  .sec_shown {}
+ </style>
+</head><body>
+<div class="page"><div class="head"><img class="headlogo" src="logo-small.png" alt="logo" /><div class="headlinks"><a href="Table_of_contents.html">Table of contents</a>
+ &nbsp; <a href="API_documentation.html">API documentation</a>
+</div><div class="navlinks"><a href="index.html" accesskey="t">Top</a> &nbsp; <a href="Qt_Lua_types_conversion.html"  accesskey="p" id="nav_prev">Previous </a> &nbsp; <a href="Programming_with_QtLua.html"  accesskey="u" id="nav_up"> Up </a> &nbsp; <a href="Coroutines.html"  accesskey="n" id="nav_next"> Next</a></div>
+</div><div class="content"><div style="clear: both; height:20px;"></div>
+<h1>3.4 QObject wrapping</h1><div class="sec_content1">
+<div style="clear: both; height:20px;"></div>
+<p>Wrapping of <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> objects allows use of Qt widgets and objects from lua.</p>
+<p>QtLua heavily takes advantage of the Qt meta object system to expose all QObjects signals, slots, enums, properties and child objects to lua script.</p>
+<p>See <a href="The_qtlua_interpreter.html">The qtlua interpreter</a> section for examples of <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> manipulation from lua script.</p>
+</div><h2>3.4.1 QObject ownership<a href="#_QObject_ownership" id="_QObject_ownership" class="hover_link">&nbsp;&nbsp;</a></h2><div class="sec_content2">
+<p>Lua uses a garbage collector to track references to live values and QtLua provides the <a href="Ref_class_reference.html">Ref</a> smart pointer class to track references to <a href="UserData_class_reference.html">UserData</a> based objects, but Qt doesn't provide a way to track every pointer to <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> objects.</p>
+<p><span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> objects are seen from lua has an userdata value which provides access to child objects and to Qt meta fields like methods, properties... This userdata value is an internal <a href="UserData_class_reference.html">UserData</a> based wrapper with a pointer to the actual <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span>.</p>
+<p>We have no way to know if C++ pointers to the wrapped <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> exist or if the wrapper will be the single owner. Unfortunately we still have to take the right action when the wrapper get garbage collected.</p>
+<p>The following rules apply:</p>
+<ul><li><p>There is a single wrapper instance for a given <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> instance. This wrapper is created when the <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> is first exposed as a lua value through a <a href="Value_class_reference.html">Value</a> object. It lasts as long as the <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> exists or a lua <a href="Ref_class_reference.html">reference</a> to the wrapper exists. The wrapper will become void/empty if the associated <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> is deleted by C++ code.</p>
+</li>
+<li><p>A delete flag is carried by the wrapper. The wrapper will delete the associated <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> when no more lua reference to the wrapper exist only if the delete flag is set and the <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> has no parent.</p>
+</li>
+<li><p>The delete flag is set on wrapper creation only if the <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> has a parent. The delete flag can be updated from C++ code using the Value::<a href="Value_class_reference.html#__547">Value</a> constructor.</p>
+</li>
+</ul>
+<p>New <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> wrappers returned by the functions in the <span class="tt">qt</span> <a href="QtLua_lua_libraries.html#_Predefined_lua_functions">Lua library</a> have their delete flag set.</p>
+<p>A reparent flag is also available to allow or deny parent change for a <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span>.</p>
+<p>The example below shows how <span class="ext_link"><a href="http://doc.trolltech.com/4.5/qobject.html">QObject</a></span> ownership is handled in C++ code:</p>
+<div class="codebox"><code><span class="codecmt">// code from <a href="http://svn.savannah.gnu.org/viewvc/trunk/libqtlua/examples/cpp/qobject/qobject_owner.cc?root=libqtlua&amp;revision=218M&amp;view=annotate#l30">examples/cpp/qobject/qobject_owner.cc:30</a></span><br /><br />  <a class="coderef" href="http://doc.trolltech.com/4.5/qapplication.html">QApplication</a> app(argc, argv);<br />  <a class="coderef" href="State_class_reference.html">QtLua::State</a> state;<br /><br />  <a class="coderef" href="http://doc.trolltech.com/4.5/qdialog.html">QDialog</a> *qd = <span class="codekw">new</span> <a class="coderef" href="http://doc.trolltech.com/4.5/qdialog.html">QDialog</a>();<br />  <span class="codecmt">// Assume C++ pointers to QDialog exist as it has no parents, do not take ownership</span><br />  state[<span class="codestr">&quot;dialog1&quot;</span>] = qd;<br /><br />  <span class="codecmt">// Explicitly take ownership of new QDialog</span><br />  state[<span class="codestr">&quot;dialog2&quot;</span>] = <a class="coderef" href="Value_class_reference.html">QtLua::Value</a>(&amp;state, <span class="codekw">new</span> <a class="coderef" href="http://doc.trolltech.com/4.5/qdialog.html">QDialog</a>(), <span class="codekw">true</span>, <span class="codekw">true</span>);<br /><br />  <span class="codecmt">// Reuse same wrapper as dialog1 and explicitly leave ownership</span><br />  state[<span class="codestr">&quot;dialog3&quot;</span>] = <a class="coderef" href="Value_class_reference.html">QtLua::Value</a>(&amp;state, qd, <span class="codekw">false</span>, <span class="codekw">true</span>);<br /><br />  <span class="codecmt">// Invoke QDialog show() methods from lua</span><br />  state.exec_statements(<span class="codestr">&quot;dialog1:show(); dialog2:show();&quot;</span>);<br /><br />  app.exec();<br /><br />  <span class="codecmt">// Delete qd QObject, dialog1 and dialog3 now refer to an empty wrapper</span><br />  <span class="codekw">delete</span> qd;<br />  <span class="codecmt">// Delete wrapper and associated QObject</span><br />  state.exec_statements(<span class="codestr">&quot;dialog2 = nil&quot;</span>);<br /></code></div></div></div></div><div class="foot"><p class="generated"><a style="float: right;" href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.0 Strict</a>Generated by diaxen on Sat Mar 30 15:29:54 2013 using <a href="http://www.nongnu.org/mkdoc/">MkDoc</a></p></div></body></html>
