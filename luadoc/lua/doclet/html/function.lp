@@ -38,6 +38,7 @@ end
 </h2></dt>
 <dd>
 <%end %>
+<%if func.deprecated then%><font color="gray"><%end%>
 <span class="description"><%=
 luadoc.link_description(func.description or "", doc, module_doc, file_doc, from, true, doc_report)%></span>
 
@@ -158,6 +159,7 @@ end %>
 	<%end%>
 </ul></code></pre>
 <%end%>
+<%if func.deprecated then%></font><%end%>
 
 <%if type(func.see) == "string" then %>
 <h3>See also</h3>
@@ -184,3 +186,4 @@ end %>
 </ul>
 <%end%>
 </dd>
+
