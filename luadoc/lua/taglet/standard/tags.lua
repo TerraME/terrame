@@ -114,7 +114,6 @@ end
 -- @arg tag String with the name of the tag (it must be "arg" always).
 -- @arg block Table with previous information about the block.
 -- @arg text String with the current line beeing processed.
-
 local function arg(tag, block, text, doc_report)
 	block[tag] = block[tag] or {}
 	if text == "" then
@@ -283,7 +282,6 @@ local function deprecated(tag, block, text, doc_report)
 end
 
 -------------------------------------------------------------------------------
-
 local handlers = {}
 handlers["author"] = author
 handlers["class"] = class
@@ -302,7 +300,6 @@ handlers["inherits"] = inherits
 handlers["deprecated"] = deprecated
 
 -------------------------------------------------------------------------------
-
 function handle(tag, block, text, doc_report)
 	if not handlers[tag] then
 		printError("In "..block.name.."(), Tag '@"..tag.."' is invalid")

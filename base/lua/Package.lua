@@ -272,11 +272,13 @@ end
 
 --- Verify whether the used has used only the allowed arguments for a functoin, generating
 -- a warning otherwise. The warning comes from Package:unnecessaryArgumentMsg().
+-- This function returns the number of unnecessary arguments found.
 -- @arg data The list of arguments used in the function call.
 -- @arg arguments The list of the allowed arguments.
 -- @usage t = {value = 2}
 -- checkUnnecessaryArguments(t, {"target", "select"})
 function checkUnnecessaryArguments(data, arguments)
+	local count = 0
 	forEachElement(data, function(value)
 		local notCorrectArguments = {}
 		local correctedSuggestions = {}
@@ -301,8 +303,10 @@ function checkUnnecessaryArguments(data, arguments)
 				msg = unnecessaryArgumentMsg(value, correctedSuggestions[i])
 			end
 			customWarning(msg)
+			count = count + 1
 		end
 	end)
+	return count
 end
 
 --- Return a message indicating that a given argument is unnecessary.
@@ -340,8 +344,8 @@ function customWarning(msg)
 	elseif sessionInfo().mode == "normal" then
 		local level = getLevel()
 		local info = debug.getinfo(level)
-		local str = string.match(info.short_src, "[^/]*$")
-		printWarning(str..":".. info.currentline ..": Warning: "..msg)
+	--	local str = string.match(info.short_src, "[^/]*$")
+		printWarning(info.short_src..":".. info.currentline ..": Warning: "..msg)
 	elseif sessionInfo().mode == "debug" then
 		customError(msg)
 	end

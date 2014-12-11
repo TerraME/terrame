@@ -13,7 +13,6 @@
 
 	<body>
 		<div id="container">
-
 			<div id="product">
 				<div id="product_logo">
 					<a href="<%="http://www.terrame.org"%>">
@@ -23,7 +22,6 @@
 			</div> <!-- id="product" -->
 
 			<div id="main">
-
 				<div id="navigation">
 					<%=luadoc.include("menu.lp", { doc=doc, file_doc=file_doc })%>
 				</div> <!-- id="navigation" -->
@@ -137,3 +135,4 @@
 		</div> <!-- id="container" -->	
 	</body>
 </html>
+

@@ -93,7 +93,25 @@ local function sqlFiles(package)
 	return files
 end
 
-local function examples(package)
+local function dataFiles(package)
+	local s = sessionInfo().separator
+	local datapath = sessionInfo().path..s.."packages"..s..package..s.."data"
+
+	if attributes(datapath, "mode") ~= "directory" then
+		return {}
+	end
+
+	local files = dir(datapath)
+	local result = {}
+
+	forEachElement(files, function(_, fname)
+		table.insert(result, fname)
+	end)
+	return result
+end
+
+
+local function exampleFiles(package)
 	local s = sessionInfo().separator
 	local examplespath = sessionInfo().path..s.."packages"..s..package..s.."examples"
 
@@ -306,9 +324,11 @@ local function executeDoc(package)
 	require("base")
 	require("luadoc")
 
+	printNote("Building documentation for package '"..package.."'")
 	local s = sessionInfo().separator
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
+	printNote("Loading package")
 	xpcall(function() require(package) end, function(err)
 		printError("Package could "..package.." not be loaded.")
 		printError(err)
@@ -317,7 +337,7 @@ local function executeDoc(package)
 
 	local lua_files = dir(package_path..s.."lua")
 
-	local example_files = examples(package)
+	local example_files = exampleFiles(package)
 
 	local doc_report = {
 		arguments = 0,
@@ -343,11 +363,101 @@ local function executeDoc(package)
 		problem_examples = 0,
 		duplicated = 0,
 		compulsory_arguments = 0,
-		undocumented_functions = 0,
-		undoc_examples = 0
+		undoc_functions = 0,
+		undoc_examples = 0,
+		undoc_data = 0,
+		wrong_data = 0
 	}
 
-	local result = luadocMain(package_path, lua_files, example_files, package, doc_report)
+	local mdata = {}
+	local filesdocumented = {}
+
+	if isFile(package_path..s.."data.lua") then
+		printNote("Parsing 'data.lua'")
+		data = function(tab)
+			local count = checkUnnecessaryArguments(tab, {"file", "summary", "source", "attributes", "types", "description", "reference"})
+			doc_report.wrong_data = doc_report.wrong_data + count
+
+			if type(tab.file)        == "string" then tab.file = {tab.file} end
+			if type(tab.attributes)  == "string" then tab.attributes = {tab.attributes} end
+			if type(tab.types)       == "string" then tab.types = {tab.types} end
+			if type(tab.description) == "string" then tab.description = {tab.description} end
+
+			local mverify = {
+				{"mandatoryTableArgument", "file",        "table"},
+				{"mandatoryTableArgument", "summary",     "string"},
+				{"mandatoryTableArgument", "source",      "string"},
+				{"optionalTableArgument",  "file",        "table"},
+				{"optionalTableArgument",  "attributes",  "table"},
+				{"optionalTableArgument",  "types",       "table"},
+				{"optionalTableArgument",  "description", "table"},
+				{"optionalTableArgument",  "reference",   "string"}
+			}
+
+			-- it is necessary to implement this way in order to get the line number of the error
+			for i = 1, #mverify do
+				local func = "return function(tab) "..mverify[i][1].."(tab, \""..mverify[i][2].."\", \""..mverify[i][3].."\") end"
+
+				xpcall(function() load(func)()(tab) end, function(err)
+					doc_report.wrong_data = doc_report.wrong_data + 1
+					printError(err)
+				end)
+			end
+
+			if tab.summary then
+				tab.shortsummary = string.match(tab.summary, "(.-%.)")
+			end
+
+			table.insert(mdata, tab)
+
+			forEachElement(tab.file, function(_, mvalue)
+				if filesdocumented[mvalue] then
+					printError("Data file '"..mvalue.."' is documented more than once")
+					doc_report.wrong_data = doc_report.wrong_data + 1
+				end
+				filesdocumented[mvalue] = 0
+			end)
+		end
+
+		xpcall(function() dofile(package_path..s.."data.lua") end, function(err)
+			printError("Could not load 'data.lua'")
+			printError(err)
+			os.exit()
+		end)
+
+		printNote("Checking folder 'data'")
+		local df = dataFiles(package)
+
+		forEachElement(df, function(_, mvalue)
+			if filesdocumented[mvalue] == nil then
+				printError("File '"..mvalue.."' is not documented")
+				doc_report.undoc_data = doc_report.undoc_data + 1
+			else
+				filesdocumented[mvalue] = filesdocumented[mvalue] + 1
+			end
+		end)
+
+		forEachElement(filesdocumented, function(midx, mvalue)
+			if mvalue == 0 then
+				printError("File '"..midx.."' is documented but does not exist in data folder")
+				doc_report.wrong_data = doc_report.wrong_data + 1
+			end
+		end)
+
+	else
+		local df = dataFiles(package)
+		if #df > 0 then
+			printNote("Checking folder 'data'")
+			printError("Package has data files but data.lua does not exist")
+			forEachElement(df, function(_, mvalue)
+				printError("File '"..mvalue.."' is not documented")
+				doc_report.undoc_data = doc_report.undoc_data + 1
+			end)
+
+		end
+	end
+
+	local result = luadocMain(package_path, lua_files, example_files, package, mdata, doc_report)
 
 	local all_functions = buildCountTable(package)
 
@@ -364,7 +474,6 @@ local function executeDoc(package)
 		end)
 	end)
 
-
 	printNote("Checking if all functions are documented")
 	forEachOrderedElement(all_functions, function(idx, value)
 		printNote("Checking "..idx)
@@ -375,7 +484,7 @@ local function executeDoc(package)
 				printWarning("File does not have any documentation")
 			elseif not result.files[idx].functions[midx] then
 				printError("Function "..midx.." is not documented")
-				doc_report.undocumented_functions = doc_report.undocumented_functions + 1
+				doc_report.undoc_functions = doc_report.undoc_functions + 1
 			end
 		end)
 	end)
@@ -397,10 +506,22 @@ local function executeDoc(package)
 		printError(doc_report.wrong_description.." problems were found in 'description.lua'.")
 	end
 
-	if doc_report.undocumented_functions == 0 then
+	if doc_report.wrong_data == 0 then
+		printNote("Data is correctly documented.")
+	else
+		printError(doc_report.wrong_data.." problems were found in 'data.lua'.")
+	end
+
+	if doc_report.undoc_data == 0 then
+		printNote("All data is documented.")
+	else
+		printError(doc_report.undoc_data.." data files are not documented.")
+	end
+
+	if doc_report.undoc_functions == 0 then
 		printNote("All global functions in the package are documented.")
 	else
-		printError(doc_report.undocumented_functions.." global functions are not documented.")
+		printError(doc_report.undoc_functions.." global functions are not documented.")
 	end
 
 	if doc_report.duplicated == 0 then
@@ -833,7 +954,7 @@ local function executeTests(package, fileName, doc_functions)
 	-- executing examples
 	if data.examples then
 		printNote("Testing examples")
-		local dirFiles = examples(package)
+		local dirFiles = exampleFiles(package)
 		if dirFiles ~= nil then
 			forEachElement(dirFiles, function(idx, value)
 				print("Testing "..value)
@@ -1172,7 +1293,8 @@ function getLevel()
 		end)
 
 		local m3 = string.match(info.short_src, "%[C%]")
-		if m1 or m2 or m3 then
+		local m4 = string.sub(info.short_src, 1, 1) == "["
+		if m1 or m2 or m3 or m4 then
 			level = level + 1
 		else
 			return level - 1 -- minus one because of getLevel()
@@ -1405,7 +1527,7 @@ execute = function(arguments) -- arguments is a vector of strings
 					-- was a call such as "TerraME .../package/examples/example.lua"
 					arguments[argCount + 1] = arg
 				else
-					files = examples(package)
+					files = exampleFiles(package)
 
 					forEachElement(files, function(_, value)
 						print(" - "..value)

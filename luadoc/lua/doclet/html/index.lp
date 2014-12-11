@@ -129,6 +129,19 @@
 							<%end%>
 						</table>
 					<%end%>
+
+					<%if not options.nofiles and doc.mdata then%>
+						<h2><a href="<%=luadoc.link("files/data.html", from)%>">Data</a></h2>
+						<table class="file_list">
+							<!--<tr><td colspan="2">Examples</td></tr>-->
+							<%for _, data in ipairs(doc.mdata) do%>
+								<tr>
+									<td class="name"><%=data.file[1] or ""%></td>
+									<td class="summary"><%= data.shortsummary or "" %></td>
+								</tr>
+							<%end%>
+						</table>
+					<%end%>
 				</div> <!-- id="content" -->
 			</div> <!-- id="main" -->
 

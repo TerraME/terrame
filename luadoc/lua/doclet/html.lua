@@ -30,7 +30,7 @@ local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s
 -- @arg name String with the name to look for.
 -- @return String with the complete path of the file found
 --	or nil in case the file is not found.
-local function search (path, name)
+local function search(path, name)
 	for c in string.gmatch(path, "[^;]+") do
 		c = string.gsub(c, "%?", name)
 		local f = io.open(c)
@@ -44,8 +44,7 @@ end
 
 -------------------------------------------------------------------------------
 -- Include the result of a lp template into the current stream.
-
-function includeMod (template, env)
+function includeMod(template, env)
 	-- template_dir is relative to package.path
 	local templatepath = options.template_dir .. template
 	

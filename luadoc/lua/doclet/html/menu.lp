@@ -1,3 +1,5 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <%
 	if module_doc then
 		from = "modules/"..module_doc.name
@@ -12,13 +14,12 @@
 
 <h1><%=doc.description.package%></h1>
 <ul>
-	<%if not module_doc and not file_doc and not example then%>
+	<%if not module_doc and not file_doc and not example and not mdata then%>
 		<li><strong>Index</strong></li>
 	<%else%>
 		<li><a href="<%=luadoc.link("index.html", from)%>">Index</a></li>
 	<%end%>
 </ul>
-
 
 <!-- Module list -->
 <%if not options.nomodules and #doc.modules > 0 then%>
@@ -83,3 +84,15 @@
 <%else%>
 	<h1><li><strong>Examples</strong></li></h1>
 <%end%>
+<%end%>
+
+<!-- Data -->
+<%if not options.nofiles and #doc.mdata > 0 then%>
+	<%if not mdata then%>
+		<h1><a href="<%=luadoc.link("files/data.html", from)%>">Data</a></h1>
+	<%else%>
+		<h1>Data</h1>
+	<%end%>
+
+<%end%>
+

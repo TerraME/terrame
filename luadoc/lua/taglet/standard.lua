@@ -151,8 +151,7 @@ end
 -- @return current line
 -- @return code block
 -- @return modulename if found
-
-local function parse_code (f, line, modulename)
+local function parse_code(f, line, modulename)
 	local code = {}
 	while line ~= nil do
 		if string.find(line, "^[\t ]*%-%-%-") then
@@ -305,8 +304,7 @@ end
 -- @arg filepath full path of file to parse
 -- @arg doc table with documentation
 -- @return table with documentation
-
-function parse_file (luapath, fileName, doc, doc_report, short_lua_path)
+function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 	local blocks = {}
 	local modulename = nil
 	fullpath = luapath..fileName
@@ -327,7 +325,6 @@ function parse_file (luapath, fileName, doc, doc_report, short_lua_path)
 			modulename = check_module(line, modulename)
 			
 			-- TODO: keep beginning of file somewhere
-			
 			line = f:read()
 		end
 		first = false
@@ -462,7 +459,7 @@ end
 -- @arg doc table with documentation
 -- @return table with documentation
 -- @see parse_file
-function file (lua_path, fileName, doc, short_lua_path, doc_report)
+function file(lua_path, fileName, doc, short_lua_path, doc_report)
 	local patterns = { "%.lua$", "%.luadoc$" }
 	local valid = false
 	for _, pattern in ipairs(patterns) do
@@ -505,7 +502,7 @@ end
 -- @arg path directory to search
 -- @arg doc table with documentation
 -- @return table with documentation
-function directory (lua_path, file_, doc, short_lua_path)
+function directory(lua_path, file_, doc, short_lua_path)
 	for f in lfsdir(lua_path) do
 		local fullpath = lua_path..f
 		local attr = attributes(fullpath)
@@ -522,8 +519,8 @@ function directory (lua_path, file_, doc, short_lua_path)
 end
 
 -- Sorts the documentation table
-local function sort_doc (files)
-	table.sort (files)
+local function sort_doc(files)
+	table.sort(files)
 	-- sort list of functions by name alphabetically
 	for f, doc in pairs(files) do
 		if doc.functions then
@@ -776,7 +773,7 @@ function check_example(filepath, doc, file_name, doc_report)
 end
 
 -------------------------------------------------------------------------------
-function start (files, examples, package_path, short_lua_path, doc_report)
+function start(files, examples, package_path, short_lua_path, doc_report)
 	local s = sessionInfo().separator
 	assert(files, "file list not specified")
 	local lua_path = package_path..s.."lua"..s

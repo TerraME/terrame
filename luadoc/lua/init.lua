@@ -91,7 +91,7 @@ end
 -- Main function
 -- @see luadoc.doclet.html, luadoc.doclet.formatter, luadoc.doclet.raw
 -- @see luadoc.taglet.standard
-function startDoc(files, examples, options, package_path, doc_report)
+function startDoc(files, examples, options, package_path, mdata, doc_report)
 	-- logger = util.loadlogengine(options)
 
 	-- load config file
@@ -115,6 +115,7 @@ function startDoc(files, examples, options, package_path, doc_report)
 	doc.description = description	
 	doclet.options = options
 	-- doclet.logger = logger
+	doc.mdata = mdata
 
 	doclet.start(doc, doc_report)
 
