@@ -4,7 +4,7 @@
 -- previous agent of the chain.
 -- There is a delay in the economic chain because beer takes three time steps to be
 -- delivered from one agent to the next agent in the chain.
--- @param NUMBER_OF_AGENTS Number of agents in the chain, excluding the producer and the consumer.
+-- @arg NUMBER_OF_AGENTS Number of agents in the chain, excluding the producer and the consumer.
 
 math.randomseed(os.time())
 

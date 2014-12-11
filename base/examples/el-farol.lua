@@ -2,10 +2,10 @@
 -- @example Implementation of el farol model.
 -- It is based on Brian Arthur's paper available at
 -- http://www.santafe.edu/~wbarthur/Papers/El_Farol.html
--- @param N Number of agents.
--- @param K number of strategies an agent have (if it is one the agents will never change their strategies).
--- @param MAX Maximum number of people in the bar.
--- @param LAST_TURNS
+-- @arg N Number of agents.
+-- @arg K number of strategies an agent have (if it is one the agents will never change their strategies).
+-- @arg MAX Maximum number of people in the bar.
+-- @arg LAST_TURNS
 
 N = 100
 K = 3

@@ -1,6 +1,6 @@
 -- @example Implementation of Conway's Game of Life.
 -- It creates the initial distribution of alive cells randomly.
--- @param PROBABILITY The probability of a Cell to be alive.
+-- @arg PROBABILITY The probability of a Cell to be alive.
 
 PROBABILITY = 0.15
 
