@@ -40,7 +40,17 @@
 
 <!-- Types list -->
 <%if not options.nofiles and #doc.files > 0 then%>
-	<h1>Types</h1>
+	<%local count_types = 0%>
+	<%for _, filepath in ipairs(doc.files) do%>
+		<%if doc.files[filepath].type == "type" then%>
+			<%count_types = count_types + 1%>
+		<%end%>
+	<%end%>
+
+	<%if count_types > 0 then%>
+		<h1>Types</h1>
+	<%end%>
+
 	<ul>
 		<%for _, filepath in ipairs(doc.files) do
 			if doc.files[filepath].type == "type" then
@@ -58,7 +68,17 @@
 
 <!-- Files list -->
 <%if not options.nofiles and #doc.files > 0 then%>
-	<h1>Functions</h1>
+	<%local count_functions = 0%>
+	<%for _, filepath in ipairs(doc.files) do%>
+		<%if doc.files[filepath].type == "file" then%>
+			<%count_functions = count_functions + 1%>
+		<%end%>
+	<%end%>
+
+	<%if count_functions > 0 then%>
+		<h1>Functions</h1>
+	<%end%>
+
 	<ul>
 		<%for _, filepath in ipairs(doc.files) do
 			if doc.files[filepath].type == "file" then
@@ -77,13 +97,11 @@
 <!-- Examples -->
 <%if not options.nofiles and #doc.examples > 0 then%>
 	<%if not example then%>
-		<h1><li><a href="<%=luadoc.link("files/examples.html", from)%>">Examples</a></li></h1>
+		<h1><a href="<%=luadoc.link("files/examples.html", from)%>">Examples</a></h1>
 	<%else%>
-		<h1><li><stong>Examples</strong></li></h1>
+		<h1>Examples</h1>
 	<%end%>
-<%else%>
-	<h1><li><strong>Examples</strong></li></h1>
-<%end%>
+
 <%end%>
 
 <!-- Data -->
