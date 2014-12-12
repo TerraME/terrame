@@ -36,7 +36,7 @@
 								<tr>
 									<!-- <td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td> -->
 									<td class="name"><a href = "#<%=filepath%>"><%=filepath%></a></td>
-									<td class="summary"><%= doc.files[filepath].description or "" %></td>
+									<td class="summary"><%= doc.files[filepath].summary or "" %></td>
 								</tr>
 								<%end%>
 							<%end%>
@@ -45,9 +45,17 @@
 					<dl class="function">
 						<%for _, filepath in ipairs(doc.files) do%>
 							<%if doc.files[filepath].type == "example" then%>
-								<dt><h2><%=filepath%><a name="<%=filepath%>"></h2></dt>
+								<dt><h2><%=filepath%><a name="<%=filepath%>"></h2>
 									<%= doc.files[filepath].description%>
 								</dt>
+							<%end%>
+							<%if doc.files[filepath].argnames and #doc.files[filepath].argnames > 0 then%>
+								<h3>Arguments (global variables)</h3>
+								<ul><span class="arg">
+								<%for pos, name in ipairs(doc.files[filepath].argnames) do%>
+									<li><strong><%=name%></strong>: <%=doc.files[filepath].argdescription[pos]%></li> 
+								<%end%>
+								</ul>
 							<%end%>
 						<%end%>
 					</dl>

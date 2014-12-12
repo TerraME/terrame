@@ -20,8 +20,7 @@ local compatmode = true
 -- @arg i Number with the initial position in the string.
 -- @arg f Number with the final position in the string (default == -1).
 -- @return String with the correspondent Lua code which outputs the part of the string.
---
-local function out (s, i, f)
+local function out(s, i, f)
 	s = strsub(s, i, f or -1)
 	if s == "" then return s end
 	-- we could use '%q' here, but this way we have better control
@@ -31,13 +30,12 @@ local function out (s, i, f)
 	return format(" %s('%s'); ", outfunc, s)
 end
 
-
 ----------------------------------------------------------------------------
 -- Translate the template to Lua code.
 -- @arg s String to translate.
 -- @return String with translated code.
 ----------------------------------------------------------------------------
-function translate (s)
+function translate(s)
 	if compatmode then
 		s = gsub(s, "$|(.-)|%$", "<?lua = %1 ?>")
 		s = gsub(s, "<!%-%-$$(.-)$$%-%->", "<?lua %1 ?>")

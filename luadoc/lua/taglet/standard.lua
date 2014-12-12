@@ -529,8 +529,10 @@ function file(lua_path, fileName, doc, short_lua_path, doc_report)
 				doc.files[file_].summary = parse_summary(description)
 			end
 		else
-			local description = check_example(doc.files[fileName].path..fileName, doc, fileName, doc_report)
+			local description, argnames, argdescr = check_example(doc.files[fileName].path..fileName, doc, fileName, doc_report)
 			doc.files[fileName].description = description
+			doc.files[fileName].argnames = argnames
+			doc.files[fileName].argdescription = argdescr
 			doc.files[fileName].summary = parse_summary(description)
 			doc.files[fileName].type = "example"
 			doc_report.examples = doc_report.examples + 1
@@ -803,6 +805,12 @@ function check_example(filepath, doc, file_name, doc_report)
 		return text
 	end
 
+	local argnames = {}
+	local argdescriptions = {}
+	local readingArg = false
+	local argName
+	local argDescription = ""
+
 	if text == "" then
 		printError("No description found on @example")
 		doc_report.problem_examples = doc_report.problem_examples + 1
@@ -811,13 +819,43 @@ function check_example(filepath, doc, file_name, doc_report)
 		line = f:read()
 		while line and line:match("^%s*%-%-") do
 			local next_text = line:match("%-%-(.*)")
+
+			if line:match("%-%-(.*)@arg(.*)") then
+				readingArg = true
+			end
+
 			next_text = util.trim(next_text)
-			text = text .. " " .. next_text
+			if readingArg then
+				local r, _, tag, text = string.find(next_text, "@([_%w%.]+)%s*(.*)")
+				if tag == nil then
+					argDescription = argDescription.." "..next_text
+				elseif tag == "arg" then
+					if argDescription ~= "" then
+						table.insert(argnames, argName)
+						table.insert(argdescriptions, argDescription)
+					end
+
+					local _a, _b, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
+					argName = name
+					argDescription = desc
+				else
+					printError("Invalid tag '@"..tag.."'. Examples can only have @arg.")
+					doc_report.invalid_tags = doc_report.invalid_tags + 1
+					argDescription = ""
+				end
+			else
+				text = text.." "..next_text
+			end
+			
 			line = f:read()
 		end
 	end
+	if argDescription ~= "" then
+		table.insert(argnames, argName)
+		table.insert(argdescriptions, argDescription)
+	end
 	f:close()
-	return text
+	return text, argnames, argdescriptions
 end
 
 -------------------------------------------------------------------------------

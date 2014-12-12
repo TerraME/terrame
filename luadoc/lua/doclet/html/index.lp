@@ -157,7 +157,6 @@
 						</table>
 					<%end%>
 
-<!-- TODO PEDRO -->
 					<%if not options.nofiles and #doc.examples > 0 then%>
 						<h2><a href="<%=luadoc.link("files/examples.html", from)%>">Examples</a></h2>
 						<table class="file_list">
