@@ -5,7 +5,7 @@
 -- @arg N Number of agents.
 -- @arg K number of strategies an agent have (if it is one the agents will never change their strategies).
 -- @arg MAX Maximum number of people in the bar.
--- @arg LAST_TURNS
+-- @arg LAST_TURNS number of turns 
 
 N = 100
 K = 3

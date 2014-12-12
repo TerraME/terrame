@@ -395,6 +395,27 @@ local function executeDoc(package)
 				{"optionalTableArgument",  "reference",   "string"}
 			}
 
+			if tab.attributes or tab.types or tab.description then
+				if tab.attributes  == nil then tab.attributes  = {} end
+				if tab.types       == nil then tab.types       = {} end
+				if tab.description == nil then tab.description = {} end
+
+				local verifySize = function()
+					if #tab.attributes ~= #tab.types then
+						customError("Different sizes in the documentation: attributes ("..#tab.attributes..") and types ("..#tab.types..").")
+					elseif #tab.attributes ~= #tab.description then
+						customError("Different sizes in the documentation: attributes ("..#tab.attributes..") and description ("..#tab.description..").")
+					end
+				end
+
+				xpcall(verifySize, function(err)
+					doc_report.wrong_data = doc_report.wrong_data + 1
+					tab.attributes = {"_incompatible_"}
+					printError(err)
+				end)
+
+			end
+
 			-- it is necessary to implement this way in order to get the line number of the error
 			for i = 1, #mverify do
 				local func = "return function(tab) "..mverify[i][1].."(tab, \""..mverify[i][2].."\", \""..mverify[i][3].."\") end"
@@ -428,6 +449,10 @@ local function executeDoc(package)
 
 		printNote("Checking folder 'data'")
 		local df = dataFiles(package)
+
+		table.sort(mdata, function(a,b)
+			return a.file[1] < b.file[1]
+		end)
 
 		forEachElement(df, function(_, mvalue)
 			if filesdocumented[mvalue] == nil then

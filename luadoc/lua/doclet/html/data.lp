@@ -72,12 +72,19 @@
 						<%if data.attributes then%>
 							<table class="arg_tab">
 							<tr><td><b>Attribute</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
-							<% for j = 1,#data.attributes do %>
-								<tr><td><%=data.attributes[j]%></td><td><%=data.types[j]%></td><td><%=data.description[j]%></td></tr>
-							<%end 
-						end%>
-						</table>
-
+							<%if data.attributes[1] == "_incompatible_" then%>
+								<tr>
+								<td><font color="red">Incompatible sizes</font></td>
+								<td><font color="red">Incompatible sizes</font></td>
+								<td><font color="red">Incompatible sizes</font></td>
+								</tr>
+							<%else%>
+								<% for j = 1,#data.attributes do %>
+									<tr><td><%=data.attributes[j]%></td><td><%=data.types[j]%></td><td><%=data.description[j]%></td></tr>
+								<%end%>
+							<%end%> 
+							</table>
+						<%end%>
 						</dd>
 					<%end%>
 					</dl>

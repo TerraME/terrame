@@ -7,7 +7,6 @@ local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
 local printNote, printError, print, attributes = printNote, printError, print, attributes
 local sessionInfo, belong = sessionInfo, belong
-local printNote = printNote
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
@@ -836,8 +835,15 @@ function check_example(filepath, doc, file_name, doc_report)
 					end
 
 					local _a, _b, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
-					argName = name
-					argDescription = desc
+
+					if desc == nil or name == nil then
+						printError("Could not infer argument and description of @arg from '"..text.."'")
+						doc_report.invalid_tags = doc_report.invalid_tags + 1	
+						argDescription = ""
+					else
+						argName = name
+						argDescription = desc
+					end
 				else
 					printError("Invalid tag '@"..tag.."'. Examples can only have @arg.")
 					doc_report.invalid_tags = doc_report.invalid_tags + 1

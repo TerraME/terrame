@@ -11,8 +11,7 @@ local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 
 -------------------------------------------------------------------------------
-
-local function author (tag, block, text)
+local function author(tag, block, text)
 	block[tag] = block[tag] or {}
 	if not text then
 		printError("Warning: author 'name' not defined [["..text.."]]: skipping")
@@ -24,17 +23,17 @@ end
 -------------------------------------------------------------------------------
 -- Set the class of a comment block. Classes can be "module", "function", "table",
 -- "variable". The first two classes are automatic, extracted from the source code
-local function class (tag, block, text)
+local function class(tag, block, text)
 	block[tag] = text
 end
 
 -------------------------------------------------------------------------------
-local function copyright (tag, block, text)
+local function copyright(tag, block, text)
 	block[tag] = text
 end
 
 -------------------------------------------------------------------------------
-local function description (tag, block, text)
+local function description(tag, block, text)
 	block[tag] = text
 end
 
@@ -211,7 +210,10 @@ end
 -------------------------------------------------------------------------------
 -- @see ret
 local function usage(tag, block, text, doc_report)
-	if type(block[tag]) == "string" then
+	if block.class == "model" then
+		printError("Models cannot have @usage")
+		doc_report.invalid_tags = doc_report.invalid_tags + 1
+	elseif type(block[tag]) == "string" then
 		printError("In "..block.name.."(), @usage is used more than once and will be ignored in '"..text.."'")
 		doc_report.duplicated = doc_report.duplicated + 1
 	else
