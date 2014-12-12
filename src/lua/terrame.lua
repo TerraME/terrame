@@ -588,15 +588,15 @@ local function executeDoc(package)
 	end
 
 	if doc_report.unused_arg == 0 then
-		printNote("All "..doc_report.arguments.." arguments are used in the HTML tables.")
+		printNote("All "..doc_report.arguments.." documented arguments are used in the HTML tables.")
 	else
-		printError(doc_report.unused_arg.." table arguments are not used in the HTML tables.")
+		printError(doc_report.unused_arg.." documented arguments are not used in the HTML tables.")
 	end
 
 	if doc_report.unknown_arg == 0 then
-		printNote("All "..doc_report.arguments.." arguments are used in the HTML tables.")
+		printNote("All "..doc_report.arguments.." arguments used in the HTML tables are documented.")
 	else
-		printError(doc_report.unknown_arg.." table arguments are unknown.")
+		printError(doc_report.unknown_arg.." arguments used in the HTML tables are not documented.")
 	end
 
 	if doc_report.lack_usage == 0 then
