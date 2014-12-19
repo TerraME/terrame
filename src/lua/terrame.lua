@@ -1410,7 +1410,8 @@ execute = function(arguments) -- arguments is a vector of strings
 		mode = "normal",
 		dbVersion = "1_3_1",
 		separator = package.config:sub(1, 1),
-		path = os.getenv("TME_PATH")
+		path = os.getenv("TME_PATH"), 
+		autoclose = false
 	}
 
 	if info_.path == nil or info_.path == "" then
@@ -1519,7 +1520,8 @@ execute = function(arguments) -- arguments is a vector of strings
 					printError(result)
 				end
 			elseif arg == "-autoclose" then
-				-- #77
+				argCount = argCount + 1
+				info_.autoclose = true
 			elseif arg == "-workers" then
 				-- #80
 			elseif arg == "-draw-all-higher" then

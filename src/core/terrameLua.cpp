@@ -215,7 +215,6 @@ int main(int argc, char *argv[])
 	WORKERS_NUMBER = 505;
 	paused = false;
 	step = false;
-	bool autoClose = false;
 
 	// Register the message handle of Observer Player
 	if((argc > 2) && (! strcmp(argv[1], "-gui")))
@@ -294,31 +293,7 @@ int main(int argc, char *argv[])
 #ifdef NOCPP_RAIAN
 		if ( argv[argument][0] == '-')
 		{
-//			if ( ! strcmp(argv[argument],"-version") )
-//			{
-//				versions();
-//			}
-//			else if( !strcmp(argv[argument], "-ide"))
-//			{
-//				createEmptyObserver(L);
-//			}
-//			else if ( ! strcmp(argv[argument],"-mode=quiet") )
-//			{
-//				execModes = Quiet;
-//			}
-//			else if(! strcmp(argv[argument],"-mode=normal"))
-//			{
-//				execModes = Normal;
-//			}
-//			else if(! strcmp(argv[argument],"-mode=debug"))
-//			{
-//				execModes = Debug;
-//			}
-			else if ( ! strcmp(argv[argument], "-autoclose") )
-			{
-				autoClose = true;
-			}
-			else if ( ! strcmp(argv[argument], "-draw-all-higher") )
+			if ( ! strcmp(argv[argument], "-draw-all-higher") )
 			{
 				bool ok = false;
 				double time = QString( argv[argument + 1] ).toDouble(&ok);
@@ -379,7 +354,7 @@ int main(int argc, char *argv[])
 		}
 		argument++;
 		
-#endif
+#endif //NOCPP_RAIAN
 	//// Lua interpreter line-by-line
 	//while (fgets(buff, sizeof(buff), stdin) != NULL)
 	//{
@@ -391,15 +366,14 @@ int main(int argc, char *argv[])
 	//}
 	//}
 
-	lua_close(L);
-
 	// Caso no exista nenhum janela entao finaliza
 	// a aplicacao
-	if (! existWindows())
-	{
-		app.exit();
-		return 0;
-	}
+//	if (! existWindows())
+//	{
+//		lua_close(L);
+//		app.exit();
+//		return 0;
+//	}
 
 	// Percorre uma lista fechando todos os widgets
 	//closeAllWidgets();
@@ -417,6 +391,19 @@ int main(int argc, char *argv[])
 
 	// exit(0);
 #endif
+	
+	bool autoClose = false;
+	lua_getglobal(L, "info_");
+	int top = lua_gettop(L);
+	if(lua_istable(L, top))
+	{
+		lua_getfield(L, top, "autoclose");
+		top = lua_gettop(L);
+		autoClose = lua_toboolean(L, top);
+		lua_pop(L, 2);
+	}
+	
+	lua_close(L);
 
 	if (autoClose)
 	{
