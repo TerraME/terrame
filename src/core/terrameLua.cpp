@@ -368,12 +368,12 @@ int main(int argc, char *argv[])
 
 	// Caso no exista nenhum janela entao finaliza
 	// a aplicacao
-//	if (! existWindows())
-//	{
-//		lua_close(L);
-//		app.exit();
-//		return 0;
-//	}
+	if (! existWindows())
+	{
+		lua_close(L);
+		app.exit();
+		return 0;
+	}
 
 	// Percorre uma lista fechando todos os widgets
 	//closeAllWidgets();
