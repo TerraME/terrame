@@ -160,6 +160,17 @@ void registerClasses()
 	Luna<luaSociety>::Register(L);
 }
 
+int cpp_informations(lua_State *L)
+{
+	lua_pushstring(L, LUA_RELEASE);
+	lua_pushstring(L, qVersion());
+	lua_pushstring(L, QWT_VERSION_STR);
+	lua_pushstring(L, TERRALIB_VERSION);
+	lua_pushstring(L, TeDBVERSION.c_str());
+	return 5;
+}
+
+
 extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
@@ -250,6 +261,9 @@ int main(int argc, char *argv[])
         lua_close(L);
         return -1;
     }
+	
+	lua_pushcfunction(L, cpp_informations);
+	lua_setglobal(L, "cpp_informations");
 
 	// Execute the lua files
 	if(argc < 2)

@@ -1258,7 +1258,13 @@ local versions = function()
 	print(" Version: ", sessionInfo().version)
 	print(" Location (TME_PATH): "..sessionInfo().path)
 
-	-- #203
+	local lua_release, qt_version, qwt_version, terralib_version, db_version = cpp_informations()
+
+	print("\nCompiled with:")
+	print("  "..lua_release)
+	print("  Qt "..qt_version)
+	print("  Qwt "..qwt_version)
+	print("  TerraLib "..terralib_version.." (Database version: "..db_version..")")
 
 	print("\nFor more information, please visit www.terrame.org\n")
 end
