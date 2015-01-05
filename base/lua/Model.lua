@@ -43,7 +43,21 @@ Model_ = {
 		elseif type(finalTime) ~= "number" then 
 			incompatibleTypeError(1, "number", finalTime)
 		end
-		self.exec:execute(finalTime)
+
+		forEachElement(self, function(name, value, mtype)
+			if mtype == "Timer" then
+				value:execute(finalTime)
+				return false
+			elseif mtype == "Environment" then
+				local found = false
+				forEachElement(value, function(mname, mvalue, mmtype)
+					mvalue:execute(finalTime)
+					found = true
+					return false
+				end)
+				if found then return false end
+			end
+		end)
 	end,
 	--- Defines the distribution of components in the graphical interface. If this function is not
 	-- implemented in the Model, the components will be distributed automatically. This function
@@ -615,12 +629,14 @@ Model = function(attrTab)
 	end)
 
 	local function model(argv)
+		local automaticallyBuilt = false
 		if argv == nil then
 			if attrTab.interface then
 				interface(attrTab, attrTab.interface())
 			else
 				interface(attrTab)
 			end
+			automaticallyBuilt = true
 			argv = dofile("model-instance.lua")
 		end
 
@@ -681,19 +697,21 @@ Model = function(attrTab)
 			end
 		end)
 
-		-- verify whether there are some arguments in the instance that does not belong to the Model
-		forEachElement(argv, function(name, value, mtype)
-			if type(value) == "table" then
-				local attrTabValue = attrTab[name]
-				forEachElement(value, function(mname, mvalue, mtype)
-					if attrTabValue[mname] == nil then
-						customError("Attribute '"..name.."."..mname.."' does not exist in the Model.")
-					end
-				end)
-			elseif attrTab[name] == nil then
-				customError("Attribute '"..name.."' does not exist in the Model.")
-			end
-		end)
+		-- verify whether there are some arguments in the instance that do not belong to the Model
+		if not automaticallyBuilt then
+			forEachElement(argv, function(name, value, mtype)
+				if type(value) == "table" then
+					local attrTabValue = attrTab[name]
+					forEachElement(value, function(mname, mvalue, mtype)
+						if attrTabValue[mname] == nil then
+							customError("Attribute '"..name.."."..mname.."' does not exist in the Model.")
+						end
+					end)
+				elseif attrTab[name] == nil then
+					customError("Attribute '"..name.."' does not exist in the Model.")
+				end
+			end)
+		end
 
 		setmetatable(argv, {__index = attrTab})
 		setmetatable(attrTab, {__index = Model_})
@@ -728,7 +746,6 @@ Model = function(attrTab)
 
 		verify(exec, "The object does not have a Timer or an Environment with at least one Timer.")
 
-		argv.exec = exec
 		return argv
 	end
 	return model
