@@ -37,7 +37,7 @@ find_library(QTLUAEXTRAS_LIBRARY
 # Export include and library path for linking with other libraries
 # Find path - tries to find *.h in paths hard-coded by the script
 find_path(QTLUAEXTRAS_INCLUDE_DIR qtluae_version.hpp
-	HINTS  /usr/include/QtLuaExtras /usr/local/qtlua-extras/include/QtLuaExtras/
+	HINTS  /usr/include/QtLuaExtras /usr/local/include/QtLuaExtras /usr/local/qtlua-extras/include/QtLuaExtras/
 )
 
 if(QTLUAEXTRAS_INCLUDE_DIR AND QTLUAEXTRAS_LIBRARY)
@@ -54,7 +54,7 @@ else(QTLUAEXTRAS_INCLUDE_DIR AND QTLUAEXTRAS_LIBRARY)
 	if(QTLUAEXTRAS_INCLUDE_DIR)
 		message("\tInclude dir of qtluae_version.hpp: ${QTLUAEXTRAS_INCLUDE_DIR}")
 	else(QTLUAEXTRAS_INCLUDE_DIR)
-		message("\tInflude dir of qtluae_version.hpp: -- NOT FOUND --")
+		message("\tInclude dir of qtluae_version.hpp: -- NOT FOUND --")
 	endif(QTLUAEXTRAS_INCLUDE_DIR)
 endif(QTLUAEXTRAS_INCLUDE_DIR AND QTLUAEXTRAS_LIBRARY)
 

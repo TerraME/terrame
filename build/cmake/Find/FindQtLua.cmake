@@ -37,7 +37,7 @@ find_library(QTLUA_LIBRARY
 # Export include and library path for linking with other libraries
 # Find path - tries to find *.h in paths hard-coded by the script
 find_path(QTLUA_INCLUDE_DIR qtluafunction.hh
-	HINTS  /usr/include/QtLua /usr/local/qtlua/include/QtLua/
+	HINTS  /usr/include/QtLua /usr/local/include/QtLua /usr/local/qtlua/include/QtLua/
 )
 
 if(QTLUA_INCLUDE_DIR AND QTLUA_LIBRARY)
@@ -54,7 +54,7 @@ else(QTLUA_INCLUDE_DIR AND QTLUA_LIBRARY)
 	if(QTLUA_INCLUDE_DIR)
 		message("\tInclude dir of qtluafunction.hh: ${QTLUA_INCLUDE_DIR}")
 	else(QTLUA_INCLUDE_DIR)
-		message("\tInflude dir of qtluafunction.hh: -- NOT FOUND --")
+		message("\tInclude dir of qtluafunction.hh: -- NOT FOUND --")
 	endif(QTLUA_INCLUDE_DIR)
 endif(QTLUA_INCLUDE_DIR AND QTLUA_LIBRARY)
 

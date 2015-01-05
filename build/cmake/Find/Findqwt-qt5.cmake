@@ -1,5 +1,5 @@
 # Find the QWT installation.
-# (c) Raian Vargas Maretto, Pedro Ribeiro de Andrade 2011, December 2014
+# (c) Raian Vargas Maretto, Pedro R. Andrade 2011, December 2014
 # ----------------------------------------------------------------------------
 # Usage:
 # In your CMakeLists.txt file do something like this:
@@ -39,14 +39,14 @@ find_library(QWT_LIBRARY
 if(QWTQT5_LIBRARY)
 	# Find path - tries to find *.h in paths hard-coded by the script
 	find_path(QWT_INCLUDE_DIR qwt.h
-		HINTS  /usr/include/qwt-qt4 ${DEPS}/qwt/src /usr/local/qwt-6.1.1/lib
+		HINTS /usr/local/qwt-6.1.1/lib/qwt.framework/Versions/6/Headers/ /usr/include/qwt-qt4 ${DEPS}/qwt/src /usr/local/qwt-6.1.1/lib
 		PATH_SUFFIXES Frameworks
 		NO_DEFAULT_PATH
 	)
 else(QWTQT5_LIBRARY)
 	# Find path - tries to find *.h in paths hard-coded by the script
 	find_path(QWT_INCLUDE_DIR qwt.h
-	HINTS  /usr/include/qwt-qt4 /opt/include /opt/include/qwt /opt/local/include /opt/local/include/qwt /usr/include /usr/include/qwt /usr/local/include /usr/local/include/qwt ${DEPS}/qwt/src /usr/local/qwt-6.1.1/lib
+	HINTS  /usr/local/qwt-6.1.1/lib/qwt.framework/Versions/6/Headers/ /usr/include/qwt-qt4 /opt/include /opt/include/qwt /opt/local/include /opt/local/include/qwt /usr/include /usr/include/qwt /usr/local/include /usr/local/include/qwt ${DEPS}/qwt/src /usr/local/qwt-6.1.1/lib
 	)
 endif(QWTQT5_LIBRARY)
 
@@ -68,5 +68,5 @@ else(QWT_INCLUDE_DIR AND (QWTQT5_LIBRARY OR QWT_LIBRARY))
 	endif(QWT_INCLUDE_DIR)
 endif(QWT_INCLUDE_DIR AND (QWTQT5_LIBRARY OR QWT_LIBRARY))
 
-mark_as_advanced(  QWT_LIBRARY QWTQT5_LIBRARY )
+mark_as_advanced(QWT_LIBRARY QWTQT5_LIBRARY)
  

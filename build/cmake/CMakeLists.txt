@@ -1,11 +1,11 @@
 # This script builds the TerraME
-# (c) Gilberto Camara, Gilberto Ribeiro, Raian Maretto, Pedro Andrade june 2011
+# (c) Gilberto Camara, Gilberto Ribeiro, Raian Maretto, Pedro R. Andrade june 2011
 # (c) Rodrigo Reis january 2012, febuary 2013
-# (c) Antônio José Rodrigues febuary 2013
+# (c) Antonio Jose Rodrigues febuary 2013
 # (c) Raian Vargas Maretto january 2014, september 2014, december 2014
 
 cmake_minimum_required(VERSION 3.0)
-project( TerraME )
+project(TerraME)
 
 set(ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 
@@ -233,16 +233,16 @@ if(MINGW)
 	set(QWT_LIBRARIES ${DEPS}/qwt/lib)
 	set(QWT_LIBRARY ${QWT_LIBRARIES}/libqwt5.a)
 	set(QWT_FOUND true)
-	if( QWT_FOUND )
-		message("-- Found qwt library ${QWT_LIBRARY} and include_dir ${QWT_INCLUDE_DIR}")
+	if(QWT_FOUND)
+		message("-- Found Qwt library ${QWT_LIBRARY} and include_dir ${QWT_INCLUDE_DIR}")
 		include_directories(${QWT_INCLUDE_DIR})
 		link_directories(${QWT_LIBRARIES})
 		set(LIBS ${LIBS} ${QWT_LIBRARY})
-	endif( QWT_FOUND )
+	endif(QWT_FOUND)
 else(MINGW)
 	find_package(qwt-qt5)
-	if( QWT_FOUND )
-		message("-- Found qwt library ${QWT_LIBRARY} and include directories ${QWT_INCLUDE_DIR}")
+	if(QWT_FOUND)
+		message("-- Found Qwt library ${QWT_LIBRARY} and include directories ${QWT_INCLUDE_DIR}")
 		include_directories(${QWT_INCLUDE_DIR})
 		link_directories(${QWT_LIBRARY_DIR})
 		if(QWTQT5_LIBRARY)
@@ -252,7 +252,6 @@ else(MINGW)
 		endif(QWTQT5_LIBRARY)
 	endif( QWT_FOUND )
 endif(MINGW)
-
 
 ### --------------
 #LUA52
@@ -767,7 +766,7 @@ set(CPACK_OSX_PACKAGE_VERSION "10.9")
 SET(CPACK_PACKAGE_VENDOR "TerraLAB")
 SET(CPACK_PACKAGE_NAME "TerraME")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/Description.txt")
-set(CPACK_RESOURCE_FILE_LICENSE "${ROOT}/licences/terrame-license-lgpl-3.0.txt")
+set(CPACK_RESOURCE_FILE_LICENSE "${ROOT}/licenses/terrame-license-lgpl-3.0.txt")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "TerraME is a programming environment for spatial dynamical modelling")
 set(CPACK_PACKAGE_ICON "/Users/raian/Documents/INPE/TerraME/source_code/PackageInstaller/Logomarca/logo_canto.png")
 set(CPACK_DMG_BACKGROUND_IMAGE "/Users/raian/Documents/INPE/TerraME/source_code/PackageInstaller/Logomarca/logo_canto.png")
@@ -781,7 +780,6 @@ set(CPACK_SYSTEM_NAME "Mac-OSX")
 
 # Environment Variables???? 
 set(CPACK_POSTFLIGHT_SCRIPT "${CMAKE_CUURENT_SOURCE_DIR}/setenv_install_MAC.sh" ) 
-
 
 include(CPack)
 

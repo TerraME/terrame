@@ -3,6 +3,7 @@
 *.swp
 .gitignore.swp
 bin/
+dependencies/
 __/
 clean_cmake.sh
 cmake_install.cmake
