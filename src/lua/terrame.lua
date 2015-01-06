@@ -1253,23 +1253,21 @@ local function installPackage(file)
 	os.execute("rm "..packageDir..s..file)
 end
 
-local versions = function()
-	print("\nTerraME - Terra Modeling Environment")
-	print(" Version: ", sessionInfo().version)
-	print(" Location (TME_PATH): "..sessionInfo().path)
+local function version()
+	print("TerraME - Terra Modeling Environment")
+	print("Version: "..sessionInfo().version)
+	print("Location (TME_PATH): "..sessionInfo().path)
 
 	local lua_release, qt_version, qwt_version, terralib_version, db_version = cpp_informations()
 
-	print("\nCompiled with:")
+	print("Compiled with:")
 	print("  "..lua_release)
 	print("  Qt "..qt_version)
 	print("  Qwt "..qwt_version)
 	print("  TerraLib "..terralib_version.." (Database version: "..db_version..")")
-
-	print("\nFor more information, please visit www.terrame.org\n")
 end
 
-local usage = function()
+local function usage()
 	print("")
 	print("Usage: TerraME [[-gui] | [-mode=normal|debug|quiet]] file1.lua file2.lua ...")
 	print("       or TerraME [-version]\n")
@@ -1290,9 +1288,10 @@ local usage = function()
 	print(" [-package pkg] -example    Run an example.")
 	print(" [-package pkg] -doc        Build the documentation.")
 	print(" -workers <value>           Sets the number of threads used for spatial observers.")
+	print("\nFor more information, please visit www.terrame.org\n")
 end
 
-replaceSpecialChars = function(pattern)
+function replaceSpecialChars(pattern)
 	local specialChars = {"%^", "%$", "%(", "%)", "%.", "%[", "%]", "%*", "%+", "%-", "%?"}
 
 	pattern = string.gsub(pattern, "%%", "%%%%")
@@ -1399,7 +1398,7 @@ function traceback()
 	return string.sub(str, 0, string.len(str) - 1)
 end
 
-execute = function(arguments) -- arguments is a vector of strings
+function execute(arguments) -- arguments is a vector of strings
 	if arguments == nil or #arguments < 1 then 
 		print("\nYou should provide, at least, a file as argument.")
 		usage()
@@ -1435,8 +1434,7 @@ execute = function(arguments) -- arguments is a vector of strings
 		arg = arguments[argCount]
 		if string.sub(arg, 1, 1) == "-" then
 			if arg == "-version" then
-				versions()
-				usage()
+				version()
 				os.exit()
 			elseif arg == "-ide" then
 				local __cellEmpty = Cell{attrib = 1}
