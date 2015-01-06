@@ -38,6 +38,10 @@ Model_ = {
 	-- @arg finalTime A number with the final time of the simulation.
 	-- @usage model:execute(20)
 	execute = function(self, finalTime)
+		if finalTime == nil and self.finalTime then
+			finalTime = self.finalTime
+		end
+
 		if finalTime == nil then
 			mandatoryArgumentError(1, 3)	
 		elseif type(finalTime) ~= "number" then 
@@ -556,7 +560,7 @@ interface = function(self, modelName, package)
 			end)
 		end
 	end)
-	r = r.."\tresult = result..\"\\n}\\n\\ninstance:execute(10)\\n\\n\"\n\n"
+	r = r.."\tresult = result..\"\\n}\\n\\ninstance:execute()\\n\\n\"\n\n"
 
 	r = r.."\tload(result)()"
 

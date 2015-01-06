@@ -1514,6 +1514,11 @@ function execute(arguments) -- arguments is a vector of strings
 					local data = include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..model..".lua")
 					Model = mModel
 
+					if attrTab.finalTime == nil then
+						printError("Models should have 'finalTime' as parameters to be configured using graphical interfaces.")
+						os.exit()
+					end
+
 					interface(attrTab, model, package)
 				else
 					printError("Model '"..model.."' does not exist in package '"..package.."'.")
