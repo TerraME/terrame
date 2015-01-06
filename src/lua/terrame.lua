@@ -1319,6 +1319,7 @@ local function usage()
 	print(" [-package pkg] -test       Execute tests.")
 	print(" [-package pkg] -example    Run an example.")
 	print(" [-package pkg] -doc        Build the documentation.")
+	print(" [-package pkg] -model      Configure and run a model.")
 	print(" -workers <value>           Sets the number of threads used for spatial observers.")
 	print("\nFor more information, please visit www.terrame.org\n")
 end
@@ -1496,6 +1497,29 @@ function execute(arguments) -- arguments is a vector of strings
 					files = exampleFiles(package)
 					print("Example(s):")
 					forEachElement(files, function(_, value)
+						print(" - "..value)
+					end)
+					os.exit()
+				end
+			elseif arg == "-model" then
+				argCount = argCount + 1
+				model = arguments[argCount]
+
+				models = findModels(package)
+				if belong(model, models) then
+					require("base")
+					local attrTab
+					local mModel = Model
+					Model = function(attr) attrTab = attr end
+					local data = include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..model..".lua")
+					Model = mModel
+
+					interface(attrTab, model, package)
+				else
+					printError("Model '"..model.."' does not exist in package '"..package.."'.")
+					print("Please use one from the list below:")
+
+					forEachElement(models, function(_, value)
 						print(" - "..value)
 					end)
 					os.exit()

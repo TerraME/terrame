@@ -66,7 +66,6 @@ Model_ = {
 	-- elements that do not belong to the table will not be shown in the graphical interface.
 	-- @usage model:interface()
 	interface = function(self)
-		return nil
 	end
 }
 
@@ -173,7 +172,9 @@ local create_ordering = function(self, max_buffer)
 	return ordering
 end
 
-local create_t = function(mtable, ordering)
+local create_t
+
+create_t = function(mtable, ordering)
 	local t = {}
 	forEachElement(ordering, function(column, elements)
 		forEachElement(elements, function(_, element)
@@ -185,9 +186,10 @@ local create_t = function(mtable, ordering)
 				elseif element == "boolean" and mtype == "boolean" then table.insert(mt, idx)
 				elseif element == "number"  and mtype == "number"  then table.insert(mt, idx)
 				elseif element == "table"   and mtype == "table" and #melement > 0 then table.insert(mt, idx)
-				elseif element == idx then 
-					local ordering = create_ordering(melement)
-					table.insert(mt, create_t(melement, ordering))
+				elseif element == idx then -- named table
+					printNote(idx)
+					--local ordering = create_ordering(melement)
+					--table.insert(mt, create_t(melement, ordering))
 				end
 			end)
 
@@ -225,13 +227,17 @@ local create_t = function(mtable, ordering)
 	return t
 end
 
-local interface = function(self, ordering)
+interface = function(self, modelName, package)
 	local quantity, count = 0, 0
 	local pkgattrs, qtattrs, typeattrs, r = "", "", "", ""
 
 	r = r.."-- This file was created automatically from a TerraME Model ("..os.date("%c")..")\n\n"
 	r = r.."require__(\"qtluae\")\n"
-	if ordering == nil then
+
+	local ordering
+	if type(self.interface) == "function" then
+		ordering = self.interface()
+	else
 		ordering = create_ordering(self)
 	end
 
@@ -370,7 +376,7 @@ local interface = function(self, ordering)
 			r = r.."TmpLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 			r = r.."qt.ui.layout_add(groupbox"..idx..", TmpLayout)\n"
 
-			forEachElement(melement[1], function(midx, mvalue)
+			forEachElement(melement, function(midx, mvalue)
 				if midx == "table" then
 					r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 					r = r.."qt.ui.layout_add(TmpLayout, TmpGridLayout, 1, 0)\n"
@@ -488,61 +494,63 @@ local interface = function(self, ordering)
 	r = r.."qt.ui.layout_add(ButtonsLayout, QuitButton)\n"
 	r = r.."qt.ui.layout_add(ExternalLayout, ButtonsLayout)\n"
 
-	r = r.."qt.connect(QuitButton, \"clicked()\", Dialog, \"close()\")\n"
+	r = r.."m2function = function() Dialog:reject() end\n"
+	r = r.."qt.connect(QuitButton, \"clicked()\", m2function)\n"
 
-	r = r.."\n\nmfunction = function()\n"
-	r = r.."result = \"result = {}\"".."\n"
+	r = r.."\nmfunction = function()\n"
+	r = r.."\tresult = \"require(\\\""..package.."\\\")\"\n"
+	r = r.."\tresult = result..\"\\\ninstance = {}\"".."\n"
 
 	-- create the function to be activated when the user pushes 'Run'
 	forEachElement(t, function(idx, melement)
 		if idx == "number" then
 			forEachElement(melement, function(_, value)
-				r = r.."if lineEdit"..value..".text == \"inf\" then\n"
-				r = r.."    result = result..\"\\nresult."..value.." = math.huge\"\n"
-				r = r.."else\n"
-				r = r.."    result = result..\"\\nresult."..value.." = \"..lineEdit"..value..".text\n"
-				r = r.."end"
-				r = r.."\nresult = result\n"
+				r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
+				r = r.."\t\tresult = result..\"\\ninstance."..value.." = math.huge\"\n"
+				r = r.."\telse\n"
+				r = r.."\t\tresult = result..\"\\ninstance."..value.." = \"..lineEdit"..value..".text\n"
+				r = r.."\tend"
+				r = r.."\n\tresult = result\n"
 			end)
 		elseif idx == "string" then
 			forEachElement(melement, function(_, value)
-				r = r.."..\"\\nresult."..value.." = \\\"\"..lineEdit"..value..".text..\"\\\"\"\n"
+				r = r.."\t..\"\\ninstance."..value.." = \\\"\"..lineEdit"..value..".text..\"\\\"\"\n"
 			end)
 		elseif idx == "boolean" then
 			forEachElement(melement, function(_, value)
-				r = r.."..\"\\nresult."..value.." = \"..tostring(checkBox"..value..".checked)\n"
+				r = r.."\t..\"\\ninstance."..value.." = \"..tostring(checkBox"..value..".checked)\n"
 			end)
 		elseif idx == "table" then
 			forEachElement(melement, function(_, value)
-				r = r.."..\"\\nresult."..value.." = \\\"\"..tvalue"..value.."[combobox"..value..".currentIndex + 1]..\"\\\"\"\n"
+				r = r.."\t..\"\\ninstance."..value.." = \\\"\"..tvalue"..value.."[combobox"..value..".currentIndex + 1]..\"\\\"\"\n"
 			end)
 		else -- named table
-			r = r.."..\"\\nresult."..idx.." = {}\"\n"
-			forEachElement(melement[1], function(midx, mvalue)
+			r = r.."\t..\"\\nresult."..idx.." = {}\"\n"
+			forEachElement(melement, function(midx, mvalue)
 				if midx == "number" then
 					forEachElement(mvalue, function(_, value)
-						r = r.."if lineEdit"..idx..value..".text == \"inf\" then\n"
-						r = r.."    result = result..\"\\nresult."..idx.."."..value.." = math.huge\"\n"
-						r = r.."else\n"
-						r = r.."    result = result..\"\\nresult."..idx.."."..value.." = \"..lineEdit"..idx..value..".text\n"
-						r = r.."end"
-						r = r.."\nresult = result\n"
+						r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
+						r = r.."\t\tresult = result..\"\\ninstance."..idx.."."..value.." = math.huge\"\n"
+						r = r.."\telse\n"
+						r = r.."\t\tresult = result..\"\\ninstance."..idx.."."..value.." = \"..lineEdit"..idx..value..".text\n"
+						r = r.."\tend"
+						r = r.."\n\tresult = result\n"
 					end)
 				elseif midx == "boolean" then
 					forEachElement(mvalue, function(_, value)
 						if value == "active" then
-							r = r.."..\"\\nresult."..idx.."."..value.." = \"..tostring(groupbox"..idx..".checked)\n"
+							r = r.."\t..\"\\ninstance."..idx.."."..value.." = \"..tostring(groupbox"..idx..".checked)\n"
 						else
-							r = r.."..\"\\nresult."..idx.."."..value.." = \"..tostring(checkBox"..idx..value..".checked)\n"
+							r = r.."\t..\"\\ninstance."..idx.."."..value.." = \"..tostring(checkBox"..idx..value..".checked)\n"
 						end
 					end)
 				elseif midx == "string" then
 					forEachElement(mvalue, function(_, value)
-						r = r.."..\"\\nresult."..idx.."."..value.." = \\\"\"..lineEdit"..idx..value..".text..\"\\\"\"\n"
+						r = r.."\t..\"\\ninstance."..idx.."."..value.." = \\\"\"..lineEdit"..idx..value..".text..\"\\\"\"\n"
 					end)
 				elseif midx == "table" then
 					forEachElement(mvalue, function(_, value)
-						r = r.."..\"\\nresult."..idx.."."..value.." = \\\"\"..tvalue"..idx..value..
+						r = r.."\t..\"\\ninstance."..idx.."."..value.." = \\\"\"..tvalue"..idx..value..
 							"[combobox"..idx..value..".currentIndex + 1]..\"\\\"\"\n"
 					end)
 				end
@@ -550,19 +558,21 @@ local interface = function(self, ordering)
 		end
 	end)
 
-	r = r.."..\"\\nreturn Tube(result)\""
-	-- r = r.."\ndofile(\"Tube.lua\")\n\n"
+	r = r.."\t..\"\\n"..modelName.."(instance):execute(10)\""
 
-	r = r.."\n\nfile = io.open(\"model-instance.lua\", \"w\")\n"
-	r = r.."file:write(result)\n"
-	r = r.."file:close()\n"
-	r = r.."Dialog:accept()\n"
+	r = r.."\tload(result)()"
+
+	r = r.."\n\n\tfile = io.open(\""..modelName.."-instance.lua\", \"w\")\n"
+	r = r.."\tfile:write(result)\n"
+	r = r.."\tfile:close()\n"
+	r = r.."\tDialog:accept()\n"
 	r = r.."end\n"
 	r = r.."qt.connect(RunButton, \"clicked()\", mfunction)\n\n"
 
-	r = r.."Dialog:exec()\n\n"
+	r = r.."local result = Dialog:exec()\n\n"
+	r = r.."print(result)"
 	
-	file = io.open("model-interface.lua", "w")
+	file = io.open(modelName.."-interface.lua", "w")
 	file:write(r)
 	file:close()
 	load(r)()
@@ -629,16 +639,7 @@ Model = function(attrTab)
 	end)
 
 	local function model(argv)
-		local automaticallyBuilt = false
-		if argv == nil then
-			if attrTab.interface then
-				interface(attrTab, attrTab.interface())
-			else
-				interface(attrTab)
-			end
-			automaticallyBuilt = true
-			argv = dofile("model-instance.lua")
-		end
+		if argv == nil then argv = {} end
 
 		-- set the default values
 		forEachElement(attrTab, function(name, value, mtype)
@@ -698,20 +699,18 @@ Model = function(attrTab)
 		end)
 
 		-- verify whether there are some arguments in the instance that do not belong to the Model
-		if not automaticallyBuilt then
-			forEachElement(argv, function(name, value, mtype)
-				if type(value) == "table" then
-					local attrTabValue = attrTab[name]
-					forEachElement(value, function(mname, mvalue, mtype)
-						if attrTabValue[mname] == nil then
-							customError("Attribute '"..name.."."..mname.."' does not exist in the Model.")
-						end
-					end)
-				elseif attrTab[name] == nil then
-					customError("Attribute '"..name.."' does not exist in the Model.")
-				end
-			end)
-		end
+		forEachElement(argv, function(name, value, mtype)
+			if type(value) == "table" then
+				local attrTabValue = attrTab[name]
+				forEachElement(value, function(mname, mvalue, mtype)
+					if attrTabValue[mname] == nil then
+						customError("Attribute '"..name.."."..mname.."' does not exist in the Model.")
+					end
+				end)
+			elseif attrTab[name] == nil then
+				customError("Attribute '"..name.."' does not exist in the Model.")
+			end
+		end)
 
 		setmetatable(argv, {__index = attrTab})
 		setmetatable(attrTab, {__index = Model_})
