@@ -385,7 +385,8 @@ void ObserverGraphic::setLegendPosition(QwtPlot::LegendPosition pos)
 {
     plotter->insertLegend(legend, pos);
 
-    connect(plotter, SIGNAL(legendClicked(QwtPlotItem *)), SLOT(colorChanged(QwtPlotItem *)));
+	// #253
+    //connect(plotter, SIGNAL(legendClicked(QwtPlotItem *)), SLOT(colorChanged(QwtPlotItem *)));
 }
 
 //void ObserverGraphic::setGrid()
