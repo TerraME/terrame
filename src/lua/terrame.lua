@@ -1307,19 +1307,24 @@ local function usage()
 	print(" -autoclose                 Automatically close the platform after simulation.")
 	print(" -draw-all-higher <value>   Draw all subjects when percentage of changes was higher")
 	print("                            than <value>. Value must be between interval [0, 1].")
-	print(" [-package pkg] -exportDb   Exports .sql files described in data.lua from MySQL to folder data.")
 	print(" -gui                       Show the player for the application (it works only ")
 	print("                            when an Environment and/or a Timer objects are used).")
 	print(" -ide                       Configure TerraME for running from IDEs in Windows systems.")
-	print(" [-package pkg] -importDb   Imports .sql files described in data.lua from folder data to MySQL.")
 	print(" -mode=normal (default)     Warnings enabled.")
 	print(" -mode=debug                Warnings treated as errors.")
 	print(" -mode=quiet                Warnings disabled.")
 	print(" -version                   TerraME general information.")
-	print(" [-package pkg] -test       Execute tests.")
-	print(" [-package pkg] -example    Run an example.")
-	print(" [-package pkg] -doc        Build the documentation.")
-	print(" [-package pkg] -model      Configure and run a model.")
+	print(" -package <pkg>             Select a given package. If used alone and the model has a")
+	print("                            single model than it runs the graphical interface")
+	print("                            creating an instance of such model.")
+	print(" [-package <pkg>] -test     Execute unit tests.")
+	print(" [-package <pkg>] -example  Run an example.")
+	print(" [-package <pkg>] -doc      Build the documentation.")
+	print(" [-package <pkg>] -model    Configure and run a model.")
+	print(" [-package <pkg>] -importDb Imports .sql files described in data.lua from folder data")
+	print("                            within the package to MySQL.")
+	print(" [-package <pkg>] -exportDb Exports .sql files described in data.lua from MySQL to folder")
+	print("                            data within the package.")
 	print(" -workers <value>           Sets the number of threads used for spatial observers.")
 	print("\nFor more information, please visit www.terrame.org\n")
 end
@@ -1365,6 +1370,24 @@ function getLevel()
 			return level - 1 -- minus one because of getLevel()
 		end
 	end
+end
+
+local function graphicalInterface(package, model)
+	require("base")
+	--require__("qtluae") -- TODO: try this to try to speedup the graphical interface
+	local attrTab
+	local mModel = Model
+	Model = function(attr) attrTab = attr end
+	local s = sessionInfo().separator
+	local data = include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..model..".lua")
+	Model = mModel
+
+	if attrTab.finalTime == nil then
+		printError("Models should have 'finalTime' as parameters to be configured using graphical interfaces.")
+		os.exit()
+	end
+
+	interface(attrTab, model, package)
 end
 
 function traceback()
@@ -1483,12 +1506,17 @@ function execute(arguments) -- arguments is a vector of strings
 				argCount = argCount + 1
 				package = arguments[argCount]
 				if #arguments <= argCount then
+					models = findModels(package)
+
+					if #models == 1 then
+						graphicalInterface(package, models[1])
+						os.exit()
+					end
+
 					local data = include(sessionInfo().path..s.."packages"..s..package..s.."description.lua")
 					print("Package '"..package.."'")
 					print(data.title)
 					print("Version "..data.version..", "..data.date)
-
-					models = findModels(package)
 					print("Model(s):")
 					forEachElement(models, function(_, value)
 						print(" - "..value)
@@ -1507,19 +1535,7 @@ function execute(arguments) -- arguments is a vector of strings
 
 				models = findModels(package)
 				if belong(model, models) then
-					require("base")
-					local attrTab
-					local mModel = Model
-					Model = function(attr) attrTab = attr end
-					local data = include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..model..".lua")
-					Model = mModel
-
-					if attrTab.finalTime == nil then
-						printError("Models should have 'finalTime' as parameters to be configured using graphical interfaces.")
-						os.exit()
-					end
-
-					interface(attrTab, model, package)
+					graphicalInterface(package, model)
 				else
 					printError("Model '"..model.."' does not exist in package '"..package.."'.")
 					print("Please use one from the list below:")

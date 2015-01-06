@@ -247,7 +247,7 @@ interface = function(self, modelName, package)
 	local t = create_t(self, ordering)
 
 	r = r.."Dialog = qt.new_qobject(qt.meta.QDialog)\n"
-	r = r.."Dialog.windowTitle = \"Create model instance\"\n\n"
+	r = r.."Dialog.windowTitle = \""..modelName.."\"\n\n"
 
 	-- the first layout will contain a layout with the arguments in the top 
 	-- and another with the buttons in the bottom
