@@ -191,9 +191,8 @@ create_t = function(mtable, ordering)
 				elseif element == "number"  and mtype == "number"  then table.insert(mt, idx)
 				elseif element == "table"   and mtype == "table" and #melement > 0 then table.insert(mt, idx)
 				elseif element == idx then -- named table
-					printNote(idx)
-					--local ordering = create_ordering(melement)
-					--table.insert(mt, create_t(melement, ordering))
+					local ordering = create_ordering(melement)
+					table.insert(mt, create_t(melement, ordering))
 				end
 			end)
 
@@ -380,7 +379,7 @@ interface = function(self, modelName, package)
 			r = r.."TmpLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 			r = r.."qt.ui.layout_add(groupbox"..idx..", TmpLayout)\n"
 
-			forEachElement(melement, function(midx, mvalue)
+			forEachElement(melement[1], function(midx, mvalue)
 				if midx == "table" then
 					r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 					r = r.."qt.ui.layout_add(TmpLayout, TmpGridLayout, 1, 0)\n"
@@ -529,44 +528,44 @@ interface = function(self, modelName, package)
 				r = r.."\tresult = result..\"\\n\t"..value.." = \\\"\"..tvalue"..value.."[combobox"..value..".currentIndex + 1]..\"\\\",\"\n"
 			end)
 		else -- named table
-			r = r.."\t..\"\\nresult."..idx.." = {}\"\n"
-			forEachOrderedElement(melement, function(midx, mvalue)
+			r = r.."\tresult = result..\"\\n\t"..idx.." = {\"\n"
+			forEachOrderedElement(melement[1], function(midx, mvalue)
 				if midx == "number" then
 					forEachOrderedElement(mvalue, function(_, value)
 						r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
-						r = r.."\t\tresult = result..\"\\ninstance."..idx.."."..value.." = math.huge\"\n"
+						r = r.."\t\tresult = result..\"\\n\t\t"..value.." = math.huge,\"\n"
 						r = r.."\telse\n"
-						r = r.."\t\tresult = result..\"\\ninstance."..idx.."."..value.." = \"..lineEdit"..idx..value..".text\n"
+						r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 						r = r.."\tend"
 					end)
 				elseif midx == "boolean" then
 					forEachOrderedElement(mvalue, function(_, value)
 						if value == "active" then
-							r = r.."\t..\"\\ninstance."..idx.."."..value.." = \"..tostring(groupbox"..idx..".checked)\n"
+							r = r.."\tresult = result..\"\\n\t\t"..value.." = \"..tostring(groupbox"..idx..".checked)..\",\"\n"
 						else
-							r = r.."\t..\"\\ninstance."..idx.."."..value.." = \"..tostring(checkBox"..idx..value..".checked)\n"
+							r = r.."\tresult = result..\"\\n\t\t"..value.." = \"..tostring(checkBox"..idx..value..".checked)..\",\"\n"
 						end
 					end)
 				elseif midx == "string" then
 					forEachOrderedElement(mvalue, function(_, value)
-						r = r.."\t..\"\\ninstance."..idx.."."..value.." = \\\"\"..lineEdit"..idx..value..".text..\"\\\"\"\n"
+						r = r.."\tresult = result..\"\\n\t\t"..value.." = \\\"\"..lineEdit"..idx..value..".text..\"\\\",\"\n"
 					end)
 				elseif midx == "table" then
 					forEachOrderedElement(mvalue, function(_, value)
-						r = r.."\t..\"\\ninstance."..idx.."."..value.." = \\\"\"..tvalue"..idx..value..
-							"[combobox"..idx..value..".currentIndex + 1]..\"\\\"\"\n"
+						r = r.."\tresult = result..\"\\n\t\t"..value.." = \\\"\"..tvalue"..idx..value..
+							"[combobox"..idx..value..".currentIndex + 1]..\"\\\",\"\n"
 					end)
 				end
 			end)
+			r = r.."\n\tresult = result..\"\\n\t},\"\n"
 		end
 	end)
 	r = r.."\tresult = result..\"\\n}\\n\\ninstance:execute()\\n\\n\"\n\n"
 
-	r = r.."\tload(result)()"
-
-	r = r.."\n\n\tfile = io.open(\""..modelName.."-instance.lua\", \"w\")\n"
+	r = r.."\tfile = io.open(\""..modelName.."-instance.lua\", \"w\")\n"
 	r = r.."\tfile:write(result)\n"
 	r = r.."\tfile:close()\n"
+	r = r.."\tload(result)()"
 	r = r.."\tDialog:accept()\n"
 	r = r.."end\n"
 	r = r.."qt.connect(RunButton, \"clicked()\", mfunction)\n\n"
