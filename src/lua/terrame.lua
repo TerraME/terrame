@@ -110,6 +110,40 @@ local function dataFiles(package)
 	return result
 end
 
+local function findModels(package)
+	local s = sessionInfo().separator
+	require("base")
+	models = {}
+	local found = false
+	local oldModel = Model
+	Model = function()
+		found = true
+		return "___123"
+	end
+
+	local srcpath = sessionInfo().path..s.."packages"..s..package..s.."lua"..s
+
+	if attributes(srcpath, "mode") ~= "directory" then
+		printError("src is not a directory")
+		os.exit()
+	end
+
+	local files = dir(srcpath)
+
+	forEachElement(files, function(_, fname)
+		found = false
+		local a = include(srcpath..fname)
+		if found then
+			forEachElement(a, function(idx, value)
+				if value == "___123" then
+					table.insert(models, idx)
+				end
+			end)
+		end
+	end)
+	Model = oldModel
+	return models
+end
 
 local function exampleFiles(package)
 	local s = sessionInfo().separator
@@ -469,7 +503,6 @@ local function executeDoc(package)
 				doc_report.wrong_data = doc_report.wrong_data + 1
 			end
 		end)
-
 	else
 		local df = dataFiles(package)
 		if #df > 0 then
@@ -479,7 +512,6 @@ local function executeDoc(package)
 				printError("File '"..mvalue.."' is not documented")
 				doc_report.undoc_data = doc_report.undoc_data + 1
 			end)
-
 		end
 	end
 
@@ -801,7 +833,7 @@ local function executeTests(package, fileName, doc_functions)
 				end
 			end)
 		else -- nil
-				forEachElement(dirFiles, function(_, value)
+			forEachElement(dirFiles, function(_, value)
 				myFiles[#myFiles + 1] = value
 			end)
 		end
@@ -1449,6 +1481,25 @@ function execute(arguments) -- arguments is a vector of strings
 			elseif arg == "-package" then
 				argCount = argCount + 1
 				package = arguments[argCount]
+				if #arguments <= argCount then
+					local data = include(sessionInfo().path..s.."packages"..s..package..s.."description.lua")
+					print("Package '"..package.."'")
+					print(data.title)
+					print("Version "..data.version..", "..data.date)
+
+					models = findModels(package)
+					print("Model(s):")
+					forEachElement(models, function(_, value)
+						print(" - "..value)
+					end)
+	
+					files = exampleFiles(package)
+					print("Example(s):")
+					forEachElement(files, function(_, value)
+						print(" - "..value)
+					end)
+					os.exit()
+				end
 			elseif arg == "-test" then
 				info_.mode = "debug"
 				argCount = argCount + 1
