@@ -498,46 +498,45 @@ interface = function(self, modelName, package)
 	r = r.."qt.connect(QuitButton, \"clicked()\", m2function)\n"
 
 	r = r.."\nmfunction = function()\n"
-	r = r.."\tresult = \"require(\\\""..package.."\\\")\"\n"
-	r = r.."\tresult = result..\"\\\ninstance = {}\"".."\n"
+	r = r.."\tresult = \"-- Model instance automatically built by TerraME (\"..os.date(\"%c\")..\")\"\n"
+	r = r.."\tresult = result..\"\\n\\nrequire(\\\""..package.."\\\")\"\n"
+	r = r.."\tresult = result..\"\\n\\ninstance = "..modelName.."{\"".."\n"
 
 	-- create the function to be activated when the user pushes 'Run'
-	forEachElement(t, function(idx, melement)
+	forEachOrderedElement(t, function(idx, melement)
 		if idx == "number" then
-			forEachElement(melement, function(_, value)
+			forEachOrderedElement(melement, function(_, value)
 				r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
-				r = r.."\t\tresult = result..\"\\ninstance."..value.." = math.huge\"\n"
+				r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
 				r = r.."\telse\n"
-				r = r.."\t\tresult = result..\"\\ninstance."..value.." = \"..lineEdit"..value..".text\n"
-				r = r.."\tend"
-				r = r.."\n\tresult = result\n"
+				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
+				r = r.."\tend\n"
 			end)
 		elseif idx == "string" then
-			forEachElement(melement, function(_, value)
-				r = r.."\t..\"\\ninstance."..value.." = \\\"\"..lineEdit"..value..".text..\"\\\"\"\n"
+			forEachOrderedElement(melement, function(_, value)
+				r = r.."\tresult = result..\"\\n\t"..value.." = \\\"\"..lineEdit"..value..".text..\"\\\",\"\n"
 			end)
 		elseif idx == "boolean" then
-			forEachElement(melement, function(_, value)
-				r = r.."\t..\"\\ninstance."..value.." = \"..tostring(checkBox"..value..".checked)\n"
+			forEachOrderedElement(melement, function(_, value)
+				r = r.."\tresult = result..\"\\n\t"..value.." = \"..tostring(checkBox"..value..".checked)..\",\"\n"
 			end)
 		elseif idx == "table" then
-			forEachElement(melement, function(_, value)
-				r = r.."\t..\"\\ninstance."..value.." = \\\"\"..tvalue"..value.."[combobox"..value..".currentIndex + 1]..\"\\\"\"\n"
+			forEachOrderedElement(melement, function(_, value)
+				r = r.."\tresult = result..\"\\n\t"..value.." = \\\"\"..tvalue"..value.."[combobox"..value..".currentIndex + 1]..\"\\\",\"\n"
 			end)
 		else -- named table
 			r = r.."\t..\"\\nresult."..idx.." = {}\"\n"
-			forEachElement(melement, function(midx, mvalue)
+			forEachOrderedElement(melement, function(midx, mvalue)
 				if midx == "number" then
-					forEachElement(mvalue, function(_, value)
+					forEachOrderedElement(mvalue, function(_, value)
 						r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
 						r = r.."\t\tresult = result..\"\\ninstance."..idx.."."..value.." = math.huge\"\n"
 						r = r.."\telse\n"
 						r = r.."\t\tresult = result..\"\\ninstance."..idx.."."..value.." = \"..lineEdit"..idx..value..".text\n"
 						r = r.."\tend"
-						r = r.."\n\tresult = result\n"
 					end)
 				elseif midx == "boolean" then
-					forEachElement(mvalue, function(_, value)
+					forEachOrderedElement(mvalue, function(_, value)
 						if value == "active" then
 							r = r.."\t..\"\\ninstance."..idx.."."..value.." = \"..tostring(groupbox"..idx..".checked)\n"
 						else
@@ -545,11 +544,11 @@ interface = function(self, modelName, package)
 						end
 					end)
 				elseif midx == "string" then
-					forEachElement(mvalue, function(_, value)
+					forEachOrderedElement(mvalue, function(_, value)
 						r = r.."\t..\"\\ninstance."..idx.."."..value.." = \\\"\"..lineEdit"..idx..value..".text..\"\\\"\"\n"
 					end)
 				elseif midx == "table" then
-					forEachElement(mvalue, function(_, value)
+					forEachOrderedElement(mvalue, function(_, value)
 						r = r.."\t..\"\\ninstance."..idx.."."..value.." = \\\"\"..tvalue"..idx..value..
 							"[combobox"..idx..value..".currentIndex + 1]..\"\\\"\"\n"
 					end)
@@ -557,8 +556,7 @@ interface = function(self, modelName, package)
 			end)
 		end
 	end)
-
-	r = r.."\t..\"\\n"..modelName.."(instance):execute(10)\""
+	r = r.."\tresult = result..\"\\n}\\n\\ninstance:execute(10)\\n\\n\"\n\n"
 
 	r = r.."\tload(result)()"
 
