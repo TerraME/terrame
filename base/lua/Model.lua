@@ -178,11 +178,12 @@ end
 
 local create_t
 
+-- Create a table with the order of the elements to be drawn on the screen
 create_t = function(mtable, ordering)
 	local t = {}
 	forEachElement(ordering, function(column, elements)
 		forEachElement(elements, function(_, element)
-			-- string, number, boolean, table, etc.
+			-- element \in {string, number, boolean, table, etc.}
 			local mt = {}
 
 			forEachElement(mtable, function(idx, melement, mtype)
@@ -225,7 +226,6 @@ create_t = function(mtable, ordering)
 
 			t[element] = mt
 		end)
-
 	end)
 	return t
 end
@@ -577,7 +577,6 @@ interface = function(self, modelName, package)
 	file:write(r)
 	file:close()
 	load(r)()
---	os.execute("terrame model-interface.lua")
 end
 
 --- Type that defines a model. Its constructor returns a constructor for the new type.

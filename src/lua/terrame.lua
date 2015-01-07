@@ -1509,7 +1509,10 @@ function execute(arguments) -- arguments is a vector of strings
 					models = findModels(package)
 
 					if #models == 1 then
-						graphicalInterface(package, models[1])
+						xpcall(function() graphicalInterface(package, models[1])end, function(err)
+							printError(err)
+							printError(traceback())
+						end)
 						os.exit()
 					end
 
