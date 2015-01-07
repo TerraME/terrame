@@ -75,7 +75,7 @@ bool existWindows()
 {
 	foreach(QWidget *widget, QApplication::allWidgets())
 	{
-		if (widget) // && widget->isVisible())
+		if (widget && widget->isVisible())
 			return true;
 	}
 	return false;

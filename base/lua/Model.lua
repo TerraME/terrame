@@ -507,7 +507,7 @@ interface = function(self, modelName, package)
 	r = r.."qt.ui.layout_add(ButtonsLayout, QuitButton)\n"
 	r = r.."qt.ui.layout_add(ExternalLayout, ButtonsLayout)\n"
 
-	r = r.."m2function = function() Dialog:reject() end\n"
+	r = r.."m2function = function() Dialog:done(0) end\n"
 	r = r.."qt.connect(QuitButton, \"clicked()\", m2function)\n"
 
 	r = r.."\nmfunction = function()\n"
@@ -523,7 +523,7 @@ interface = function(self, modelName, package)
 				r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
 				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
-				r = r.."\t\tmerr = \""..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a valid number.\"\n"
+				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a valid number.\"\n"
 				r = r.."\telse\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
@@ -548,7 +548,7 @@ interface = function(self, modelName, package)
 						r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
 						r = r.."\t\tresult = result..\"\\n\t\t"..value.." = math.huge,\"\n"
 						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
-						r = r.."\t\tmerr = \""..stringToLabel(value).." (\"..lineEdit"..idx..value..".text..\") is not a valid number.\"\n"
+						r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..idx..value..".text..\") is not a valid number.\"\n"
 						r = r.."\telse\n"
 						r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 						r = r.."\tend"
@@ -575,20 +575,31 @@ interface = function(self, modelName, package)
 			r = r.."\n\tresult = result..\"\\n\t},\"\n"
 		end
 	end)
-	r = r.."\tresult = result..\"\\n}\\n\\ninstance:execute()\\n\\n\"\n\n"
+	r = r.."\tresult = result..\"\\n}\\n\\n\"\n\n"
 
+	r = r.."\texecute = \"instance:execute()\"\n"
 	r = r.."\tfile = io.open(\""..modelName.."-instance.lua\", \"w\")\n"
-	r = r.."\tfile:write(result)\n"
+	r = r.."\tfile:write(result..execute)\n"
 	r = r.."\tfile:close()\n"
 	r = r..[[
-
 	if not merr then
+		-- BUG**: http://lists.gnu.org/archive/html/libqtlua-list/2013-05/msg00004.html
 		_, merr = pcall(function() load(result)() end)
+		if merr then
+			merr = string.match(merr, ":[0-9]*:.*")
+			merr = string.gsub(merr,":[0-9]*: ", "")
+		end
 	end
 
 	if merr then
 		qt.dialog.msg_critical(merr)
 	else
+		_, merr = pcall(function() load(execute)() end)
+		if merr then
+			merr = string.match(merr, ":[0-9]*:.*")
+			merr = string.gsub(merr,":[0-9]*: ", "")
+			qt.dialog.msg_critical(merr)
+		end
 		Dialog:accept()
 	end]]
 
@@ -596,13 +607,26 @@ interface = function(self, modelName, package)
 	r = r.."qt.connect(RunButton, \"clicked()\", mfunction)\n\n"
 
 	r = r.."local result = Dialog:exec()\n\n"
+	-- why not changing to Dialog:show()?
+	-- http://stackoverflow.com/questions/12068317/calling-qapplicationexec-after-qdialogexec
 	r = r.."print(result)"
 	
 	file = io.open(modelName.."-interface.lua", "w")
 	file:write(r)
 	file:close()
-	load(r)()
+	-- TODO: replace the line below by load(r)(). There is a problem with qtlua that crashes
+	-- the application when loading, but it works properly if we call terrame again.
+	os.execute("terrame "..modelName.."-interface.lua")
+	--load(r)()
 end
+
+-- ** Both Qt and Lua provide functions which may not be appropriate depending on 
+-- the situation. The os.exit Lua function is not appropriate here because it 
+-- calls the libc exit function which doesn't unwind the stack. The cleanup of 
+-- various C++ objects is not performed properly in this case. Use app:quit() 
+-- instead. You may want to drop the os.exit function and other such lua 
+-- functions to prevent their use if it's critical in your application.
+
 
 --- Type that defines a model. Its constructor returns a constructor for the new type.
 -- The idea is to take only strings, numbers, booleans, and vectors of these three types as the
