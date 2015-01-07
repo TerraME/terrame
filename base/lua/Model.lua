@@ -327,12 +327,16 @@ interface = function(self, modelName, package)
 					
 					r = r.."qt.connect(SelectButton, \"clicked()\", function()\n"..
 						"fname = qt.dialog.get_open_filename(\"Select File\", \"\", \""..ext.."\")\n"..
-						"lineEdit"..value..":setText(fname)\n"..
+						"if fname ~= \"\" then\n"..
+						"\tlineEdit"..value..":setText(fname)\n"..
+						"end\n"..
 					"end)\n"
 				else
 					r = r.."qt.connect(SelectButton, \"clicked()\", function()\n"..
 						"fname = qt.dialog.get_existing_directory(\"Select Directory\", \"\")\n"..
-						"lineEdit"..value..":setText(fname..\"/"..self[value].."\")\n"..
+						"if fname ~= \"\" then\n"..
+						"\tlineEdit"..value..":setText(fname..\"/"..self[value].."\")\n"..
+						"end\n"..
 					"end)\n"
 				end
 				count = count + 1
@@ -466,12 +470,16 @@ interface = function(self, modelName, package)
 					
 							r = r.."qt.connect(SelectButton, \"clicked()\", function()\n"..
 								"fname = qt.dialog.get_open_filename(\"Select File\", \"\", \""..ext.."\")\n"..
-								"lineEdit"..idx..value..":setText(fname)\n"..
+								"if fname ~= \"\" then\n"..
+								"\tlineEdit"..idx..value..":setText(fname)\n"..
+								"end\n"..
 							"end)\n"
 						else
 							r = r.."qt.connect(SelectButton, \"clicked()\", function()\n"..
 								"fname = qt.dialog.get_existing_directory(\"Select Directory\", \"\")\n"..
-								"lineEdit"..idx..value..":setText(fname..\"/"..self[idx][value].."\")\n"..
+								"if fname ~= \"\" then\n"..
+								"\nlineEdit"..idx..value..":setText(fname..\"/"..self[idx][value].."\")\n"..
+								"end\n"..
 							"end)\n"
 						end
 						count = count + 1
