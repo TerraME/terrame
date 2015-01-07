@@ -501,6 +501,7 @@ interface = function(self, modelName, package)
 	r = r.."qt.connect(QuitButton, \"clicked()\", m2function)\n"
 
 	r = r.."\nmfunction = function()\n"
+	r = r.."\tlocal merr\n"
 	r = r.."\tresult = \"-- Model instance automatically built by TerraME (\"..os.date(\"%c\")..\")\"\n"
 	r = r.."\tresult = result..\"\\n\\nrequire(\\\""..package.."\\\")\"\n"
 	r = r.."\tresult = result..\"\\n\\ninstance = "..modelName.."{\"".."\n"
@@ -511,6 +512,8 @@ interface = function(self, modelName, package)
 			forEachOrderedElement(melement, function(_, value)
 				r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
+				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
+				r = r.."\t\tmerr = \""..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a valid number.\"\n"
 				r = r.."\telse\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
@@ -534,6 +537,8 @@ interface = function(self, modelName, package)
 					forEachOrderedElement(mvalue, function(_, value)
 						r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
 						r = r.."\t\tresult = result..\"\\n\t\t"..value.." = math.huge,\"\n"
+						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
+						r = r.."\t\tmerr = \""..stringToLabel(value).." (\"..lineEdit"..idx..value..".text..\") is not a valid number.\"\n"
 						r = r.."\telse\n"
 						r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 						r = r.."\tend"
@@ -565,9 +570,19 @@ interface = function(self, modelName, package)
 	r = r.."\tfile = io.open(\""..modelName.."-instance.lua\", \"w\")\n"
 	r = r.."\tfile:write(result)\n"
 	r = r.."\tfile:close()\n"
-	r = r.."\tload(result)()"
-	r = r.."\tDialog:accept()\n"
-	r = r.."end\n"
+	r = r..[[
+
+	if not merr then
+		_, merr = pcall(function() load(result)() end)
+	end
+
+	if merr then
+		qt.dialog.msg_critical(merr)
+	else
+		Dialog:accept()
+	end]]
+
+	r = r.."\nend\n"
 	r = r.."qt.connect(RunButton, \"clicked()\", mfunction)\n\n"
 
 	r = r.."local result = Dialog:exec()\n\n"
