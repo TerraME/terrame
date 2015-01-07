@@ -62,9 +62,6 @@ return{
 		unitTest:assert_equal(t.block.level, 1)
 		unitTest:assert(t.checkZero)
 	end,
-	interface = function(unitTest)
-		unitTest:assert(true)
-	end,
 	check = function(unitTest)
 		unitTest:assert(true)
 	end,

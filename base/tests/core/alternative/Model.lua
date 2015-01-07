@@ -47,7 +47,7 @@ return{
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "The object does not have a Timer or an Environment with at least one Timer.")
-	
+
 		local Tube = Model{
 			setup = function(model)
 				model.t = Timer{}
@@ -59,7 +59,7 @@ return{
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "The object has two running objects: 't2' (Timer) and 't' (Timer).")
-	
+
 		local Tube = Model{
 			setup = function(model)
 				model.t = Timer{}
@@ -71,8 +71,8 @@ return{
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "The object has two running objects: 't' (Timer) and 'e' (Environment).")
-	
-		-- this test is necessary because it changes the searching order between the Timer and the Environment	
+
+		-- this test is necessary because it changes the searching order between the Timer and the Environment
 		local Tube = Model{
 			setup = function(model)
 				model.e = Timer{}
@@ -84,7 +84,7 @@ return{
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "The object has two running objects: 't' (Environment) and 'e' (Timer).")
-	
+
 		local Tube = Model{
 			simulationSteps = {10, 20, 30},
 			initialWater    = 200,
@@ -145,6 +145,108 @@ return{
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "Function 'setup' was not implemented by the Model.")
+	end,
+	interface = function(unitTest)
+		local error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				interface = function() return 2 end
+			}
+		end
+		unitTest:assert_error(error_func, "Models with graphical interfaces should have finalTime as argument.")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				interface = function() return 2 end
+			}
+		end
+		unitTest:assert_error(error_func, "The returning value of interface() should be a table, got number.")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				interface = function() return {2} end
+			}
+		end
+		unitTest:assert_error(error_func, "There is an element in the interface() that is not a table.")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				interface = function() return {{2}} end
+			}
+		end
+		unitTest:assert_error(error_func, "All the elements in each interface() vector should be string, got number.")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				interface = function() return {{"number", "number"}} end
+			}
+		end
+		unitTest:assert_error(error_func, "Argument 'number' cannot be displayed twice in the interface().")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				interface = function() return {{"number", "string"}} end
+			}
+		end
+		unitTest:assert_error(error_func, "There is no argument 'string' in the Model, although it is described in the interface().")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				interface = function() return {{"number", "table"}} end
+			}
+		end
+		unitTest:assert_error(error_func, "There is no non-named table parameter in the Model, but it is described in the interface().")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				interface = function() return {{"number", "aaa"}} end
+			}
+		end
+		unitTest:assert_error(error_func, "interface() element 'aaa' is not an argument of the Model.")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				aaa = 3,
+				interface = function() return {{"number", "aaa"}} end
+			}
+		end
+		unitTest:assert_error(error_func, "interface() element 'aaa' is not a table in the Model.")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				aaa = {1, 2, 3},
+				interface = function() return {{"number", "aaa"}} end
+			}
+		end
+		unitTest:assert_error(error_func, "interface() element 'aaa' is a non-named table in the Model.")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = 10,
+				finalTime = 5,
+				aaa = {},
+				interface = function() return {{"number", "aaa"}} end
+			}
+		end
+		unitTest:assert_error(error_func, "interface() element 'aaa' is empty in the Model.")
 	end
 }
 

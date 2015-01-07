@@ -638,6 +638,74 @@ Model = function(attrTab)
 		end
 	end)
 
+	if type(attrTab.interface) == "function" then
+		if attrTab.finalTime == nil then
+			customError("Models with graphical interfaces should have finalTime as argument.")
+		end
+
+		local minterface = attrTab.interface()
+		local elements = {}
+
+		if type(minterface) ~= "table" then
+			customError("The returning value of interface() should be a table, got "..type(minterface)..".")
+		end
+
+		forEachElement(minterface, function(_, value, mtype)
+			if mtype ~= "table" then
+				customError("There is an element in the interface() that is not a table.")
+			end
+
+			forEachElement(value, function(_, mvalue, mmtype)
+				if mmtype ~= "string" then
+					customError("All the elements in each interface() vector should be string, got "..mmtype..".")
+				end
+
+				if elements[mvalue] then
+					customError("Argument '"..mvalue.."' cannot be displayed twice in the interface().")
+				else
+					elements[mvalue] = true
+				end
+
+				if belong(mvalue, {"string", "number", "boolean"}) then
+					local found = false
+					forEachElement(attrTab, function(_, _, attrtype)
+						if attrtype == mvalue then
+							found = true
+							return false
+						end
+					end)
+
+					if not found then
+						customError("There is no argument '"..mvalue.."' in the Model, although it is described in the interface().")
+					end
+				elseif mvalue == "table" then
+					local found = false
+					forEachElement(attrTab, function(_, attrvalue, attrtype)
+						if type(attrtype) == mvalue and #attrvalue > 0 then
+							found = true
+							return false
+						end
+					end)
+
+					if not found then
+						customError("There is no non-named table parameter in the Model, but it is described in the interface().")
+					end
+	
+				else -- named table
+					if attrTab[mvalue] == nil then
+						customError("interface() element '"..mvalue.."' is not an argument of the Model.")
+					elseif type(attrTab[mvalue]) ~= "table" then
+						customError("interface() element '"..mvalue.."' is not a table in the Model.")
+					elseif #attrTab[mvalue] > 0 then
+						customError("interface() element '"..mvalue.."' is a non-named table in the Model.")
+					elseif getn(attrTab[mvalue]) == 0 then
+						customError("interface() element '"..mvalue.."' is empty in the Model.")
+					end
+				end
+			end)
+		end)
+	end
+
 	local function model(argv)
 		if argv == nil then argv = {} end
 
