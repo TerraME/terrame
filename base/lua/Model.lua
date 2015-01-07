@@ -315,8 +315,9 @@ interface = function(self, modelName, package)
 
 				r = r.."SelectButton = qt.new_qobject(qt.meta.QPushButton)\n"
 				r = r.."SelectButton.text = \"...\"\n"
-				r = r.."SelectButton.minimumSize = {20,28}\n"
-				r = r.."SelectButton.maximumSize = {20,28}\n"
+				r = r.."SelectButton:setStyleSheet('QPushButton {color: black;}')\n"
+				r = r.."SelectButton.minimumSize = {16, 18}\n"
+				r = r.."SelectButton.maximumSize = {16, 18}\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, SelectButton, "..count..", 2)\n\n"
 
 				local svalue = stringToLabel(value)
@@ -459,8 +460,9 @@ interface = function(self, modelName, package)
 
 						r = r.."SelectButton = qt.new_qobject(qt.meta.QPushButton)\n"
 						r = r.."SelectButton.text = \"...\"\n"
-						r = r.."SelectButton.minimumSize = {20,28}\n"
-						r = r.."SelectButton.maximumSize = {20,28}\n"
+						r = r.."SelectButton:setStyleSheet('QPushButton {color: black;}')\n"
+						r = r.."SelectButton.minimumSize = {16, 18}\n"
+						r = r.."SelectButton.maximumSize = {16, 18}\n"
 						r = r.."qt.ui.layout_add(TmpGridLayout, SelectButton, "..count..", 2)\n\n"
 
 						local ext = string.find(self[idx][value], "%.")
@@ -494,13 +496,13 @@ interface = function(self, modelName, package)
 
 	r = r.."RunButton = qt.new_qobject(qt.meta.QPushButton)\n"
 	r = r.."RunButton.text = \"Run\"\n"
-	r = r.."RunButton.minimumSize = {120,28}\n"
-	r = r.."RunButton.maximumSize = {120,28}\n"
+	r = r.."RunButton.minimumSize = {100, 28}\n"
+	r = r.."RunButton.maximumSize = {110, 28}\n"
 	r = r.."qt.ui.layout_add(ButtonsLayout, RunButton)\n\n"
 
 	r = r.."QuitButton = qt.new_qobject(qt.meta.QPushButton)\n"
-	r = r.."QuitButton.minimumSize = {120,28}\n"
-	r = r.."QuitButton.maximumSize = {120,28}\n"
+	r = r.."QuitButton.minimumSize = {100, 28}\n"
+	r = r.."QuitButton.maximumSize = {110, 28}\n"
 	r = r.."QuitButton.text = \"Quit\"\n"
 	r = r.."qt.ui.layout_add(ButtonsLayout, QuitButton)\n"
 	r = r.."qt.ui.layout_add(ExternalLayout, ButtonsLayout)\n"
