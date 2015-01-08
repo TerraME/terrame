@@ -146,6 +146,19 @@ return{
 		end
 		unitTest:assert_error(error_func, "Function 'setup' was not implemented by the Model.")
 	end,
+	execute = function(unitTest)
+		local Tube = Model{
+			finalTime = 10,
+			setup = function(m) m.t = Timer{} end
+		}
+	
+		local t = Tube{}
+
+		local error_func = function()
+			t:execute(5)
+		end
+		unitTest:assert_error(error_func, "execute() should not take any argument because the model already has a final time.")
+	end,
 	interface = function(unitTest)
 		local error_func = function()
 			local Tube = Model{

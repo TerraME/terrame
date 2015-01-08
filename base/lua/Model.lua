@@ -38,8 +38,12 @@ Model_ = {
 	-- @arg finalTime A number with the final time of the simulation.
 	-- @usage model:execute(20)
 	execute = function(self, finalTime)
-		if finalTime == nil and self.finalTime then
-			finalTime = self.finalTime
+		if self.finalTime then
+			if finalTime == nil then
+				finalTime = self.finalTime
+			else
+				customError("execute() should not take any argument because the model already has a final time.")
+			end
 		end
 
 		if finalTime == nil then

@@ -174,7 +174,8 @@ Environment_ = {
 	-- number of Cells. For example, placing a Society with four Agents in a CellularSpace of
 	-- three Cells will put two Agents in the first Cell and one in each other Cell. & name \
 	-- "void" & Create only the pointers for each object in each side, preparing the objects to
-	-- be manipulated by the modeler. & name \
+	-- be manipulated by the modeler. In this case, the agents cannot use Agent:move() or Agent:walk() 
+	-- before calling Agent:enter() explicitly. & name \
 	-- @usage environment = Environment{
 	--     society,
 	--     cellularSpace

@@ -243,7 +243,6 @@ private:
      */
     bool saveOccurrenceStatistic(const QString &prefix = "");
 
-
     QMap<QString, QVector<double> *> timeStatistics;
     QMap<QString, QVector<int> *> occurStatistics;
 
@@ -267,3 +266,4 @@ private:
 #endif // STATISTIC_H
 
 // #endif // TME_STATISTIC
+
