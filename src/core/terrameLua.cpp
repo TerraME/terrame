@@ -70,7 +70,6 @@ extern "C"
 //  }
 //}
 
-////////////////////////////////////////////////////////////////////////////
 bool existWindows()
 {
 	foreach(QWidget *widget, QApplication::allWidgets())
@@ -188,7 +187,7 @@ int main(int argc, char *argv[])
 	TME_VERSION = "2.0";
 	TME_PATH = "TME_PATH";
 
-	QApplication app(argc, argv);
+	QApplication app(argc, argv); // #79
 	//app.setQuitOnLastWindowClosed(true);
 
 #ifdef TME_STATISTIC
@@ -366,8 +365,6 @@ int main(int argc, char *argv[])
 	//}
 	//}
 
-	// Caso no exista nenhum janela entao finaliza
-	// a aplicacao
 	if (! existWindows())
 	{
 		lua_close(L);
@@ -375,7 +372,6 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	// Percorre uma lista fechando todos os widgets
 	//closeAllWidgets();
 
 	//int ret = app.exec();

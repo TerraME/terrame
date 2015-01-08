@@ -53,7 +53,6 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #include "observerUDPSender.h"
 #include "observerScheduler.h"
 
-
 extern "C"
 {
 	#include <lua.h>
@@ -61,7 +60,6 @@ extern "C"
 	#include <lualib.h>
 }
 #include "luna.h"
-
 
 static char* TME_VERSION;
 static char* TME_PATH;
@@ -97,12 +95,12 @@ bool step;
 
 class luaCell;
 
-void getReference( lua_State *L, luaCell *cell );
+void getReference(lua_State *L, luaCell *cell);
 
 class luaCell;
 class luaCellularSpace;
 
-luaCell * findCell( luaCellularSpace*, CellIndex& );
+luaCell * findCell(luaCellularSpace*, CellIndex&);
 
 // SPACE REPRESENATION
 #include "luaNeighborhood.h"

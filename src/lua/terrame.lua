@@ -1666,6 +1666,8 @@ function execute(arguments) -- arguments is a vector of strings
 					end)
 					os.exit()
 				end
+			else
+				-- #79
 			end
 		else
 			if package ~= "base" then
