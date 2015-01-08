@@ -165,7 +165,8 @@
 								<%if doc.files[filepath].type == "example" then%>
 									<tr>
 										<!-- <td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td> -->
-										<td class="name"><%=filepath%></td>
+										<%file = string.sub(filepath, 0, string.len(filepath) - 4)%>
+										<td class="name"><%=file%></td>
 										<td class="summary"><%= doc.files[filepath].summary or "" %></td>
 									</tr>
 								<%end%>

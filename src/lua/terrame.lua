@@ -1528,7 +1528,7 @@ function execute(arguments) -- arguments is a vector of strings
 					files = exampleFiles(package)
 					print("Example(s):")
 					forEachElement(files, function(_, value)
-						print(" - "..value)
+						print(" - "..string.sub(value, 0, string.len(value) - 4))
 					end)
 					os.exit()
 				end
@@ -1643,7 +1643,7 @@ function execute(arguments) -- arguments is a vector of strings
 				local file = arguments[argCount + 1]
 
 				if file then
-					arg = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..file
+					arg = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..file..".lua"
 					if not isFile(arg) then
 						printError("Example '"..file.."' does not exist in package '"..package.."'.")
 						print("Please use one from the list below:")
@@ -1662,7 +1662,7 @@ function execute(arguments) -- arguments is a vector of strings
 					files = exampleFiles(package)
 
 					forEachElement(files, function(_, value)
-						print(" - "..value)
+						print(" - "..string.sub(value, 0, string.len(value) - 4))
 					end)
 					os.exit()
 				end
