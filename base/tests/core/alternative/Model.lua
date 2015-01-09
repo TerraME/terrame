@@ -146,6 +146,48 @@ return{
 		end
 		unitTest:assert_error(error_func, "Function 'init' was not implemented by the Model.")
 	end,
+	choice = function(unitTest)
+		local error_func = function()
+			local c = choice{1, 2, "3"}
+		end
+		unitTest:assert_error(error_func, "All the elements should have the same type.")
+
+		error_func = function()
+			local c = choice{false, true}
+		end
+		unitTest:assert_error(error_func, "The elements should be number or string, got boolean.")
+
+		error_func = function()
+			local c = choice{min = false}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("min", "number", false))
+
+		error_func = function()
+			local c = choice{min = 2, max = false}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("max", "number", false))
+
+		error_func = function()
+			local c = choice{min = 2, max = 4, step = false}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("step", "number", false))
+
+		error_func = function()
+			local c = choice{min = 2, max = 4, w = false}
+		end
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("w"))
+	end,
+	compulsory = function(unitTest)
+		local error_func = function()
+			local c = compulsory(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+
+		error_func = function()
+			local c = compulsory("string")
+		end
+		unitTest:assert_error(error_func, "Value 'string' cannot be a compulsory argument.")
+	end,
 	execute = function(unitTest)
 		local Tube = Model{
 			finalTime = 10,
@@ -161,14 +203,6 @@ return{
 	end,
 	interface = function(unitTest)
 		local error_func = function()
-			local Tube = Model{
-				simulationSteps = 10,
-				interface = function() return 2 end
-			}
-		end
-		unitTest:assert_error(error_func, "Models with graphical interfaces should have finalTime as argument.")
-
-		error_func = function()
 			local Tube = Model{
 				simulationSteps = 10,
 				finalTime = 5,

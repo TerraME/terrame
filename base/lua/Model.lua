@@ -23,6 +23,65 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
+--- Function to define options to be used by the modeler. It can get a set of
+-- non-named values as arguments as well as named arguments as follows. This function
+-- can be used stand alone without having to instantiate a Model.
+-- @arg attrTab.min The minimum value.
+-- @arg attrTab.max The maximum value.
+-- @arg attrTab.step An optional argument with the possible steps from minimum to maximum.
+-- @usage choice{1, 2, 3}
+-- choice{"low", "medium", "high"}
+function choice(attrTab)
+	local result
+
+	if type(attrTab) ~= "table" then
+		customError(tableArgumentMsg())
+	elseif #attrTab > 0 then
+		if not belong(type(attrTab[1]), {"number", "string"}) then
+			customError("The elements should be number or string, got "..type(attrTab[1])..".")
+		end
+		local type1 = type(attrTab[1])
+
+		forEachElement(attrTab, function(_, _, mtype)
+			if type1 ~= mtype then
+				customError("All the elements should have the same type.")
+			end
+		end)
+
+		result = {values = attrTab}
+	elseif getn(attrTab) > 0 then
+		mandatoryTableArgument(attrTab, "min", "number")
+		mandatoryTableArgument(attrTab, "max", "number")
+
+		optionalTableArgument(attrTab, "step", "number")
+		checkUnnecessaryArguments(attrTab, {"min", "max", "step"})
+
+		result = attrTab
+	end
+
+	setmetatable(result, {__index = {type_ = "choice"}})
+	return result
+end
+
+--- Function to define a compulsory argument for a given Model. This function
+-- can be used stand alone without having to instantiate a Model.
+-- @arg value A string with the type of the argument. It cannot be boolean, string, nor userdata.
+-- If it is table, then all its elements should have the same type.
+-- @usage compulsory("number")
+function compulsory(value)
+	local result = {}
+
+	mandatoryArgument(1, "string", value)
+
+	if belong(value, {"boolean", "string", "userdata"}) then
+		customError("Value '"..value.."' cannot be a compulsory argument.")
+	end
+	result.value = value
+
+	setmetatable(result, {__index = {type_ = "compulsory"}})
+	return result
+end
+
 Model_ = {
 	--- Check whether the instance of the model has correct arguments. This function is optional
 	-- and it is called before creating internal objects.

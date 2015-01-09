@@ -65,6 +65,17 @@ return{
 	check = function(unitTest)
 		unitTest:assert(true)
 	end,
+	choice = function(unitTest)
+		local c = choice{1, 2, 3}
+
+		unitTest:assert_type(c, "choice")
+		unitTest:assert_equal(#c.values, 3)
+	end,
+	compulsory = function(unitTest)
+		local c = compulsory("number")
+		unitTest:assert_type(c, "compulsory")
+		unitTest:assert_equal(c.value, "number")
+	end,
 	init = function(unitTest)
 		unitTest:assert(true)
 	end,
