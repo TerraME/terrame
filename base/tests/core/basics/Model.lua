@@ -31,7 +31,7 @@ local Tube = Model{
 	observingStep   = 1,
 	checkZero       = false,
 	block = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, level = {1, 2, 3}},
-	setup = function(model)
+	init = function(model)
 		model.water = model.initialWater
 		model.timer = Timer{
 			Event{action = function()
@@ -65,7 +65,7 @@ return{
 	check = function(unitTest)
 		unitTest:assert(true)
 	end,
-	setup = function(unitTest)
+	init = function(unitTest)
 		unitTest:assert(true)
 	end,
 	execute = function(unitTest)

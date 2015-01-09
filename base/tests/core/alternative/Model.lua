@@ -40,7 +40,7 @@ return{
 		unitTest:assert_error(error_func, "All the elements of table 'simulationSteps.bb' should have the same type.")
 
 		local Tube = Model{
-			setup = function(model) end,
+			init = function(model) end,
 		}
 
 		local error_func = function()
@@ -49,7 +49,7 @@ return{
 		unitTest:assert_error(error_func, "The object does not have a Timer or an Environment with at least one Timer.")
 
 		local Tube = Model{
-			setup = function(model)
+			init = function(model)
 				model.t = Timer{}
 				model.t2 = Timer{}
 			end,
@@ -61,7 +61,7 @@ return{
 		unitTest:assert_error(error_func, "The object has two running objects: 't2' (Timer) and 't' (Timer).")
 
 		local Tube = Model{
-			setup = function(model)
+			init = function(model)
 				model.t = Timer{}
 				model.e = Environment{t2 = Timer{}}
 			end,
@@ -74,7 +74,7 @@ return{
 
 		-- this test is necessary because it changes the searching order between the Timer and the Environment
 		local Tube = Model{
-			setup = function(model)
+			init = function(model)
 				model.e = Timer{}
 				model.t = Environment{t2 = Timer{}}
 			end,
@@ -92,7 +92,7 @@ return{
 			observingStep   = 1,
 			checkZero       = false,
 			block           = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge},
-			setup = function(model) model.timer = Timer{} end,
+			init = function(model) model.timer = Timer{} end,
 			check = function(model)
 				verify(model.simulationSteps > 0, "Simulation steps should be greater than zero.")
 				verify(model.initialWater > 0, "Initial water should be greater than zero.")
@@ -144,12 +144,12 @@ return{
 		local error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "Function 'setup' was not implemented by the Model.")
+		unitTest:assert_error(error_func, "Function 'init' was not implemented by the Model.")
 	end,
 	execute = function(unitTest)
 		local Tube = Model{
 			finalTime = 10,
-			setup = function(m) m.t = Timer{} end
+			init = function(m) m.t = Timer{} end
 		}
 	
 		local t = Tube{}

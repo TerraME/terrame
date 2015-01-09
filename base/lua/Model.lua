@@ -30,9 +30,9 @@ Model_ = {
 	check = function(self)
 	end,
 	--- Creates the objects of the model. This function must be implemented by the derived type.
-	-- @usage model:setup()
-	setup = function(self)
-		customError("Function 'setup' was not implemented by the Model.")
+	-- @usage model:init()
+	init = function(self)
+		customError("Function 'init' was not implemented by the Model.")
 	end,
 	--- Run the model. It checks the arguments, create the objects, and then simulate until numRuns.
 	-- @arg finalTime A number with the final time of the simulation.
@@ -842,7 +842,7 @@ Model = function(attrTab)
 		setmetatable(argv, {__index = attrTab})
 		setmetatable(attrTab, {__index = Model_})
 		argv:check()
-		argv:setup()
+		argv:init()
 
 		-- check whether the model instance has a timer or an Environment with at least one Timer
 		local text = ""
