@@ -78,6 +78,10 @@ Model_ = {
 }
 
 local stringToLabel = function(mstring)
+	if type(mstring) == "number" then
+		return tostring(mstring)
+	end
+
 	local result = string.upper(string.sub(mstring, 1, 1))
 
 	local nextsub = string.match(mstring, "%u")
@@ -93,7 +97,7 @@ local stringToLabel = function(mstring)
 	return result
 end
 
-local create_ordering = function(self, max_buffer)
+local create_ordering = function(self)
 	local ordering = {}
 	local current_ordering = {}
 	local quantity = 0
@@ -102,10 +106,7 @@ local create_ordering = function(self, max_buffer)
 	local count_boolean = 0
 	local count_table   = 0
 	local named = {}
-
-	if max_buffer == nil then
-		max_buffer = 25
-	end
+	local max_buffer = 25
 
 	forEachElement(self, function(idx, element, mtype)
 		if     mtype == "string"  then                 count_string  = count_string  + 1
@@ -542,7 +543,12 @@ interface = function(self, modelName, package)
 			end)
 		elseif idx == "table" then
 			forEachOrderedElement(melement, function(_, value)
-				r = r.."\tresult = result..\"\\n\t"..value.." = \\\"\"..tvalue"..value.."[combobox"..value..".currentIndex + 1]..\"\\\",\"\n"
+				r = r.."\tmvalue = tvalue"..value.."[combobox"..value..".currentIndex + 1]\n"
+				r = r.."\tif tonumber(mvalue) then\n"
+				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..mvalue..".."\",\"\n"
+				r = r.."\telse\n"
+				r = r.."\t\tresult = result..\"\\n\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
+				r = r.."\tend\n"
 			end)
 		else -- named table
 			r = r.."\tresult = result..\"\\n\t"..idx.." = {\"\n"
