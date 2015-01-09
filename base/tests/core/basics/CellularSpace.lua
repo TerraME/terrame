@@ -800,7 +800,7 @@ return{
 		-- on the fly
 		local cs = CellularSpace{xdim = 10}
 
-		cs:createNeighborhood{onthefly = true}
+		cs:createNeighborhood{inmemory = false}
 
 		unitTest:assert_type(cs.cells[1].neighborhoods["1"], "function")
 		unitTest:assert_type(cs.cells[1]:getNeighborhood(), "Neighborhood")
@@ -837,7 +837,7 @@ return{
 
 		cs = CellularSpace{xdim = 10}
 
-		cs:createNeighborhood{strategy = "vonneumann", onthefly = true}
+		cs:createNeighborhood{strategy = "vonneumann", inmemory = false}
 
 		unitTest:assert_type(cs.cells[1].neighborhoods["1"], "function")
 		unitTest:assert_type(cs.cells[1]:getNeighborhood(), "Neighborhood")

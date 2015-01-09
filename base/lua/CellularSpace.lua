@@ -438,7 +438,7 @@ CellularSpace_ = {
 	--- Create a Neighborhood for each Cell of the CellularSpace. It gets a table as argument, with 
 	-- the following attributes:
 	-- @arg data A table
-	-- @arg data.onthefly If false (default), the Neighborhood will be built and stored in
+	-- @arg data.inmemory If true (default), the Neighborhood will be built and stored in
 	-- each Cell of the CelularSpace. If true, the Neighborhood will be
 	-- computed every time the simulation calls Cell:getNeighborhood.
 	-- A computational consequence of having on-the-fly Neighborhoods is that it saves
@@ -448,17 +448,17 @@ CellularSpace_ = {
 	-- See the table below.
 	-- @tabular strategy
 	-- Strategy & Description & Compulsory Arguments & Optional Arguments \
-	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight, onthefly \
+	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight, inmemory \
 	-- "coord" & A bidirected relation between two CellularSpaces connecting Cells with the same 
-	-- (x, y) coordinates. & target & name, onthefly\
+	-- (x, y) coordinates. & target & name, inmemory\
 	-- "function" & A Neighborhood based on a function where any other Cell can be a neighbor. & 
-	-- filter & name, weight, onthefly \
+	-- filter & name, weight, inmemory \
 	-- "moore"(default) & A Moore (queen) Neighborhood, connecting each Cell to its (at most) 
-	-- eight touching Cells. & & name, self, wrap, onthefly \
+	-- eight touching Cells. & & name, self, wrap, inmemory \
 	-- "mxn" & A m (columns) by n (rows) Neighborhood within the CellularSpace or between two
-	-- CellularSpaces if target is used. & m & name, n, filter, weight, target, onthefly \
+	-- CellularSpaces if target is used. & m & name, n, filter, weight, target, inmemory \
 	-- "vonneumann" & A von Neumann (rook) Neighborhood, connecting each Cell to its (at most)
-	-- four ortogonally surrounding Cells. & & name, self, wrap, onthefly
+	-- four ortogonally surrounding Cells. & & name, self, wrap, inmemory
 	-- @arg data.filter A function(Cell, Cell)->bool, where the first argument is the Cell itself
 	-- and the other represent a possible neighbor. It returns true when the neighbor will be
 	-- included in the relation. In the case of two CellularSpaces, this function is called twice
@@ -520,12 +520,12 @@ CellularSpace_ = {
 		end
 
 		defaultTableValue(data, "strategy", "moore")
-		defaultTableValue(data, "onthefly", false)
+		defaultTableValue(data, "inmemory", true)
 
 		switch(data, "strategy"):caseof{
 			["function"] = function() 
 				mandatoryTableArgument(data, "filter", "function")
-				checkUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "onthefly"})
+				checkUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "inmemory"})
 
 				defaultTableValue(data, "weight", function() return 1 end)
 
@@ -535,7 +535,7 @@ CellularSpace_ = {
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
 
-				checkUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "onthefly"})
+				checkUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "inmemory"})
 
 				data.func = getMooreNeighborhood
 			end,
@@ -564,14 +564,14 @@ CellularSpace_ = {
 					customWarning("Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 				end
 
-				checkUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "onthefly"})
+				checkUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "inmemory"})
 				data.func = getMxNNeighborhood
 			end,
 			vonneumann = function() 
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
 
-				checkUnnecessaryArguments(data, {"name", "strategy", "wrap", "self", "onthefly"})
+				checkUnnecessaryArguments(data, {"name", "strategy", "wrap", "self", "inmemory"})
 
 				data.func = getVonNeumannNeighborhood
 			end,
@@ -581,7 +581,7 @@ CellularSpace_ = {
 				defaultTableValue(data, "filter", function() return true end)
 				defaultTableValue(data, "weight", function() return 1 end)
 
-				checkUnnecessaryArguments(data, {"name", "strategy", "filter", "weight", "onthefly"})
+				checkUnnecessaryArguments(data, {"name", "strategy", "filter", "weight", "inmemory"})
 
 				data.target = self
 				data.m = 3
@@ -591,7 +591,7 @@ CellularSpace_ = {
 			coord = function() 
 				mandatoryTableArgument(data, "target", "CellularSpace")
 
-				checkUnnecessaryArguments(data, {"name", "strategy", "target", "onthefly"})
+				checkUnnecessaryArguments(data, {"name", "strategy", "target", "inmemory"})
 
 				data.func = getCoordCoupling
 			end
@@ -599,13 +599,13 @@ CellularSpace_ = {
 
 		local func = data.func(self, data)
 
-		if data.onthefly then
+		if data.inmemory then
 			forEachCell(self, function(cell)
-				cell:addNeighborhood(func, data.name)
+				cell:addNeighborhood(func(cell), data.name)
 			end)
 		else
 			forEachCell(self, function(cell)
-				cell:addNeighborhood(func(cell), data.name)
+				cell:addNeighborhood(func, data.name)
 			end)
 		end
 
@@ -616,13 +616,13 @@ CellularSpace_ = {
 
 			local func = data.func(mtarget, data)
 
-			if data.onthefly then
+			if data.inmemory then
 				forEachCell(mtarget, function(cell)
-					cell:addNeighborhood(func, data.name)
+					cell:addNeighborhood(func(cell), data.name)
 				end)
 			else
 				forEachCell(mtarget, function(cell)
-					cell:addNeighborhood(func(cell), data.name)
+					cell:addNeighborhood(func, data.name)
 				end)
 			end
 		end

@@ -401,9 +401,9 @@ return {
 			quantity = 100
 		}
 
-		predators:createSocialNetwork{probability = 0.5, name = "friends", onthefly = true}
-		predators:createSocialNetwork{quantity = 1, name = "boss", onthefly = true}
-		predators:createSocialNetwork{filter = function() return true end, name = "all", onthefly = true}
+		predators:createSocialNetwork{probability = 0.5, name = "friends", inmemory = false}
+		predators:createSocialNetwork{quantity = 1, name = "boss", inmemory = false}
+		predators:createSocialNetwork{filter = function() return true end, name = "all", inmemory = false}
 
 		local count_prob = 0
 		local count_quant = 0
@@ -439,8 +439,8 @@ return {
 		local env = Environment{cs, predators}
 		env:createPlacement()
 
-		predators:createSocialNetwork{strategy = "cell", name = "c", onthefly = true}
-		predators:createSocialNetwork{strategy = "neighbor", name = "n", onthefly = true}
+		predators:createSocialNetwork{strategy = "cell", name = "c", inmemory = false}
+		predators:createSocialNetwork{strategy = "neighbor", name = "n", inmemory = false}
 
 		local count_c = 0
 		local count_n = 0

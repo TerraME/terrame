@@ -155,7 +155,7 @@ Society_ = {
 	-- will have the second Agent in its SocialNetwork. When using this argument, the default
 	-- value of strategy becomes "function".
 	-- @arg data.name Name of the relation.
-	-- @arg data.onthefly If false (default), the SocialNetwork will be built and stored in
+	-- @arg data.inmemory If tru (default), the SocialNetwork will be built and stored in
 	-- each Agent of the Society. It means that the SocialNetwork will change only if the 
 	-- modeler explicitly add or remove connections. If true, the SocialNetwork will be
 	-- computed every time the simulation calls Agent:getSocialNetwork.
@@ -185,20 +185,20 @@ Society_ = {
 	-- "cell" &
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
 	-- same Cell the Agent belongs. & &
-	-- name, placement, self, onthefly \
+	-- name, placement, self, inmemory \
 	-- "function" &
 	-- Create a SocialNetwork according to a membership function. & filter &
-	-- name, onthefly \
+	-- name, inmemory \
 	-- "neighbor" &
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
 	-- neighbor Cells of the one the Agent belongs. &
-	-- & name, neighborhood, placement, onthefly \
+	-- & name, neighborhood, placement, inmemory \
 	-- "probability" &
 	-- Applies a probability for each pair of Agents (excluding the agent itself). &
-	-- probability & name, random, onthefly \
+	-- probability & name, random, inmemory \
 	-- "quantity" &
 	-- Number of connections randomly taken from the Society (excluding the agent itself). &
-	-- quantity & name, random, onthefly \
+	-- quantity & name, random, inmemory \
 	-- "void" &
 	-- Create an empty SocialNetwork for each Agent of the Society. &
 	-- & name \
@@ -234,7 +234,7 @@ Society_ = {
 		defaultTableValue(data, "name", "1")
 
 		if data.strategy ~= "void" then
-			defaultTableValue(data, "onthefly", false)
+			defaultTableValue(data, "inmemory", true)
 		end
 
 		if self.agents[1].socialnetworks[data.name] ~= nil then
@@ -243,7 +243,7 @@ Society_ = {
 
 		switch(data, "strategy"):caseof{
 			probability = function() 
-				checkUnnecessaryArguments(data, {"strategy", "probability", "name", "random", "onthefly"})
+				checkUnnecessaryArguments(data, {"strategy", "probability", "name", "random", "inmemory"})
 
 				mandatoryTableArgument(data, "probability", "number")
 
@@ -254,14 +254,14 @@ Society_ = {
 				data.mfunc = getSocialNetworkByProbability
 			end,
 			["function"] = function()
-				checkUnnecessaryArguments(data, {"strategy", "filter", "name", "onthefly"})
+				checkUnnecessaryArguments(data, {"strategy", "filter", "name", "inmemory"})
 
 				mandatoryTableArgument(data, "filter", "function")
 
 				data.mfunc = getSocialNetworkByFunction
 			end,
 			cell = function()
-				checkUnnecessaryArguments(data, {"strategy", "self", "name", "placement", "onthefly"})
+				checkUnnecessaryArguments(data, {"strategy", "self", "name", "placement", "inmemory"})
 
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "placement", "placement")
@@ -273,7 +273,7 @@ Society_ = {
 				data.mfunc = getSocialNetworkByCell
 			end,
 			neighbor = function()
-				checkUnnecessaryArguments(data, {"strategy", "neighborhood", "name", "placement", "onthefly"})
+				checkUnnecessaryArguments(data, {"strategy", "neighborhood", "name", "placement", "inmemory"})
 
 				defaultTableValue(data, "neighborhood", "1")
 				defaultTableValue(data, "placement", "placement")
@@ -287,7 +287,7 @@ Society_ = {
 				data.mfunc = getSocialNetworkByNeighbor
 			end,
 			quantity = function()
-				checkUnnecessaryArguments(data, {"strategy", "quantity", "name", "random", "onthefly"})
+				checkUnnecessaryArguments(data, {"strategy", "quantity", "name", "random", "inmemory"})
 
 				defaultTableValue(data, "quantity", 1)
 
@@ -308,13 +308,13 @@ Society_ = {
 
 		local func = data.mfunc(self, data)
 		local name = data.name
-		if data.onthefly then
+		if data.inmemory then
 			forEachAgent(self, function(agent)
-				agent:addSocialNetwork(func, name)
+				agent:addSocialNetwork(func(agent), name)
 			end)
 		else
 			forEachAgent(self, function(agent)
-				agent:addSocialNetwork(func(agent), name)
+				agent:addSocialNetwork(func, name)
 			end)
 		end
 	end,
