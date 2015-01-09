@@ -698,10 +698,6 @@ Model = function(attrTab)
 	end)
 
 	if type(attrTab.interface) == "function" then
-		if attrTab.finalTime == nil then
-			customError("Models with graphical interfaces should have finalTime as argument.")
-		end
-
 		local minterface = attrTab.interface()
 		local elements = {}
 
