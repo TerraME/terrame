@@ -1199,7 +1199,7 @@ local function executeTests(package, fileName, doc_functions)
 	return errors
 end
 
-buildPackage = function(package)
+local function buildPackage(package)
 	printNote("Building package "..package)
 	local s = sessionInfo().separator
 	local docErrors
@@ -1224,10 +1224,41 @@ buildPackage = function(package)
 		return
 	end
 
+	printNote("\nChecking Models")
+	local mModel = Model
+	local attrTab
+	Model = function(attr)
+		attrTab = attr
+		return attr
+	end
+	local s = sessionInfo().separator
+
+	local files = dir(sessionInfo().path..s.."packages"..s..package..s.."lua")
+	local result = {}
+
+	forEachElement(files, function(_, fname)
+		local data = include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..fname)
+		if attrTab ~= nil then
+			forEachElement(data, function(idx, value)
+				if value == attrTab then
+					if idx..".lua" == fname then
+						printNote("Model '"..idx.."' belongs to file '"..fname.."'")
+					else
+						printError("Model '"..idx.."' is wrongly put in file '"..fname.."'. It should be in file '"..idx..".lua'")
+					end
+				end
+			end)
+			attrTab = nil
+		end
+	end)
+
+	Model = mModel
+
+
 	local packageDir = sessionInfo().path..s.."packages"
 	printNote("Checking license")
 	if not isFile(packageDir..s..package..s.."license.txt") then
-		printError("The package does not contain file license.txt")
+		printError("The package does not contain file 'license.txt'")
 	end
 
 	printNote("Building package "..package)
