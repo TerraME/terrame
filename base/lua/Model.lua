@@ -596,8 +596,15 @@ interface = function(self, modelName, package)
 		-- BUG**: http://lists.gnu.org/archive/html/libqtlua-list/2013-05/msg00004.html
 		_, merr = pcall(function() load(result)() end)
 		if merr then
-			merr = string.match(merr, ":[0-9]*:.*")
-			merr = string.gsub(merr,":[0-9]*: ", "")
+			local merr2 = string.match(merr, ":[0-9]*:.*")
+			if merr2 then
+				local merr3 = string.gsub(merr,":[0-9]*: ", "")
+				if merr3 then
+					merr = merr3
+				else
+					merr = merr2
+				end
+			end	
 		end
 	end
 
