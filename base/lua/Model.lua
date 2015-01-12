@@ -65,22 +65,22 @@ function choice(attrTab)
 	return result
 end
 
---- Function to define a compulsory argument for a given Model. This function
+--- Function to define a mandatory argument for a given Model. This function
 -- can be used stand alone without having to instantiate a Model.
 -- @arg value A string with the type of the argument. It cannot be boolean, string, nor userdata.
 -- If it is table, then all its elements should have the same type.
--- @usage compulsory("number")
-function compulsory(value)
+-- @usage mandatory("number")
+function mandatory(value)
 	local result = {}
 
 	mandatoryArgument(1, "string", value)
 
 	if belong(value, {"boolean", "string", "userdata"}) then
-		customError("Value '"..value.."' cannot be a compulsory argument.")
+		customError("Value '"..value.."' cannot be a mandatory argument.")
 	end
 	result.value = value
 
-	setmetatable(result, {__index = {type_ = "compulsory"}})
+	setmetatable(result, {__index = {type_ = "mandatory"}})
 	return result
 end
 
@@ -726,7 +726,7 @@ end
 -- It is possible to define only part of the table in the instance, keeping the other default values. \
 -- empty table & It will verify whether the instance has a non-empty table as argument. It does not
 -- check any table values. The only requirement is that all them must have the same type. & None (the
--- argument is compulsory).
+-- argument is mandatory).
 -- @usage mymodel = Model{
 --     par1 = 3,
 --     par2 = {"low", "medium", "high"},
@@ -838,7 +838,7 @@ Model = function(attrTab)
 				if argv[name] == nil then
 					argv[name] = value.values[1]
 				end
-			elseif mtype == "compulsory" then
+			elseif mtype == "mandatory" then
 				if argv[name] == nil then
 					mandatoryArgumentError(name)
 				end
@@ -875,7 +875,7 @@ Model = function(attrTab)
 					str = string.sub(str, 1, str:len() - 2).."}"
 					incompatibleValueError(name, str, argv[name])
 				end
-			elseif mtype == "compulsory" then
+			elseif mtype == "mandatory" then
 				if type(argv[name]) ~= value.value then
 					incompatibleTypeError(name, value.value, argv[name])
 				end
@@ -897,7 +897,7 @@ Model = function(attrTab)
 						incompatibleTypeError(name.."."..iname, itype, iargv[iname])
 					end
 				end)
-			elseif mtype == "compulsory" then
+			elseif mtype == "mandatory" then
 				if type(argv[name]) ~= value.value then
 					incompatibletypeError(name, type(argv[name]), value.value)
 				end

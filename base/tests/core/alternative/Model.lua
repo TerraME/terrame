@@ -191,19 +191,19 @@ return{
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("w"))
 	end,
-	compulsory = function(unitTest)
+	mandatory = function(unitTest)
 		local error_func = function()
-			local c = compulsory(2)
+			local c = mandatory(2)
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
-			local c = compulsory("string")
+			local c = mandatory("string")
 		end
-		unitTest:assert_error(error_func, "Value 'string' cannot be a compulsory argument.")
+		unitTest:assert_error(error_func, "Value 'string' cannot be a mandatory argument.")
 
 		local M = Model{
-			value = compulsory("number")
+			value = mandatory("number")
 		}
 
 		error_func = function()

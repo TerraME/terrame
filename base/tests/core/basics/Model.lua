@@ -30,7 +30,7 @@ local Tube = Model{
 	flow            = 20,
 	observingStep   = 1,
 	checkZero       = false,
-	filter          = compulsory("function"),
+	filter          = mandatory("function"),
 	block = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, level = choice{1, 2, 3}},
 	init = function(model)
 		model.water = model.initialWater
@@ -73,9 +73,9 @@ return{
 		unitTest:assert_type(c, "choice")
 		unitTest:assert_equal(#c.values, 3)
 	end,
-	compulsory = function(unitTest)
-		local c = compulsory("number")
-		unitTest:assert_type(c, "compulsory")
+	mandatory = function(unitTest)
+		local c = mandatory("number")
+		unitTest:assert_type(c, "mandatory")
 		unitTest:assert_equal(c.value, "number")
 	end,
 	init = function(unitTest)
