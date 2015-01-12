@@ -25,12 +25,12 @@
 -------------------------------------------------------------------------------------------
 
 local Tube = Model{
-	simulationSteps = {10, 20, 30},
+	simulationSteps = choice{10, 20, 30},
 	initialWater    = 200,
 	flow            = 20,
 	observingStep   = 1,
 	checkZero       = false,
-	block = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, level = {1, 2, 3}},
+	block = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, level = choice{1, 2, 3}},
 	init = function(model)
 		model.water = model.initialWater
 		model.timer = Timer{

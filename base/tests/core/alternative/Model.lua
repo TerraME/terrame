@@ -27,17 +27,17 @@ return{
 	Model = function(unitTest)
 		local error_func = function()
 			local Tube = Model{
-				simulationSteps = {10, 20, "30"},
+				simulationSteps = choice{10, 20, "30"},
 			}
 		end
-		unitTest:assert_error(error_func, "All the elements of table 'simulationSteps' should have the same type.")
+		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
 
 		local error_func = function()
 			local Tube = Model{
-				simulationSteps = {aa = 3, bb = {10, 20, "30"}},
+				simulationSteps = {aa = 3, bb = choice{10, 20, "30"}},
 			}
 		end
-		unitTest:assert_error(error_func, "All the elements of table 'simulationSteps.bb' should have the same type.")
+		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
 
 		local Tube = Model{
 			init = function(model) end,
@@ -86,12 +86,12 @@ return{
 		unitTest:assert_error(error_func, "The object has two running objects: 't' (Environment) and 'e' (Timer).")
 
 		local Tube = Model{
-			simulationSteps = {10, 20, 30},
+			simulationSteps = choice{10, 20, 30},
 			initialWater    = 200,
 			flow            = 20,
 			observingStep   = 1,
 			checkZero       = false,
-			block           = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge},
+			block           = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, mblock = choice{1, 2, 3}},
 			init = function(model) model.timer = Timer{} end,
 			check = function(model)
 				verify(model.simulationSteps > 0, "Simulation steps should be greater than zero.")
@@ -104,53 +104,67 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("flow", "number", {a = 2}))
 
-		local error_func = function()
+		error_func = function()
 			local m = Tube{simulationSteps = 40}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("simulationSteps", "one of {10, 20, 30}", 40))
 
-		local error_func = function()
+		error_func = function()
+			local m = Tube{block = {mblock = 40}}
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg("block.mblock", "one of {1, 2, 3}", 40))
+
+
+		error_func = function()
 			local m = Tube{s = 3}
 		end
 		unitTest:assert_error(error_func, "Attribute 's' does not exist in the Model.")
 
-		local error_func = function()
+		error_func = function()
 			local m = Tube{checkZero = 3}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("checkZero", "boolean", 3))
 	
-		local error_func = function()
+		error_func = function()
 			local m = Tube{initialWater = -5}
 		end
 		unitTest:assert_error(error_func, "Initial water should be greater than zero.")
 
-		local error_func = function()
+		error_func = function()
 			local m = Tube{block = {xmix = 5}}
 		end
 		unitTest:assert_error(error_func, "Attribute 'block.xmix' does not exist in the Model.")
 
-		local error_func = function()
+		error_func = function()
 			local m = Tube{block = {xmin = false}}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("block.xmin", "number", false))
 			
-		local Tube = Model{simulationSteps = 10}
-
-		local Tube = Model{
+		Tube = Model{
 			simulationSteps = 10,
 			check = function() end
 		}
 
-		local error_func = function()
+		error_func = function()
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "Function 'init' was not implemented by the Model.")
 	end,
 	choice = function(unitTest)
 		local error_func = function()
+			local c = choice()
+		end
+		unitTest:assert_error(error_func, tableArgumentMsg())
+
+		error_func = function()
+			local c = choice{}
+		end
+		unitTest:assert_error(error_func, "There are no options for the choice (table is empty).")
+
+		error_func = function()
 			local c = choice{1, 2, "3"}
 		end
-		unitTest:assert_error(error_func, "All the elements should have the same type.")
+		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
 
 		error_func = function()
 			local c = choice{false, true}

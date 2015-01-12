@@ -44,7 +44,7 @@ function choice(attrTab)
 
 		forEachElement(attrTab, function(_, _, mtype)
 			if type1 ~= mtype then
-				customError("All the elements should have the same type.")
+				customError("All the elements of choice should have the same type.")
 			end
 		end)
 
@@ -57,6 +57,8 @@ function choice(attrTab)
 		checkUnnecessaryArguments(attrTab, {"min", "max", "step"})
 
 		result = attrTab
+	else
+		customError("There are no options for the choice (table is empty).")
 	end
 
 	setmetatable(result, {__index = {type_ = "choice"}})
@@ -832,9 +834,9 @@ Model = function(attrTab)
 
 		-- set the default values
 		forEachElement(attrTab, function(name, value, mtype)
-			if mtype == "table" and #value > 0 then
+			if mtype == "choice" then
 				if argv[name] == nil then
-					argv[name] = value[1]
+					argv[name] = value.values[1]
 				end
 			elseif mtype == "table" and #value == 0 then
 				if argv[name] == nil then
@@ -843,9 +845,9 @@ Model = function(attrTab)
 
 				local iargv = argv[name]
 				forEachElement(value, function(iname, ivalue, itype)
-					if type(ivalue) == "table" and #ivalue > 0 then
+					if itype == "choice" then
 						if iargv[iname] == nil then
-							iargv[iname] = ivalue[1]
+							iargv[iname] = ivalue.values[1]
 						end
 					elseif iargv[iname] == nil then
 						iargv[iname] = ivalue
@@ -858,12 +860,12 @@ Model = function(attrTab)
 
 		-- check types and values
 		forEachElement(attrTab, function(name, value, mtype)
-			if mtype == "table" and #value > 0 then
-				if type(argv[name]) ~= type(value[1]) then
-					incompatibleTypeError(name, type(value[1]), argv[name])
-				elseif not belong(argv[name], value) then
+			if mtype == "choice" then
+				if type(argv[name]) ~= type(value.values[1]) then
+					incompatibleTypeError(name, type(value.values[1]), argv[name])
+				elseif not belong(argv[name], value.values) then
 					local str = "one of {"
-					forEachElement(value, function(_, v)
+					forEachElement(value.values, function(_, v)
 						str = str..v..", "
 					end)
 					str = string.sub(str, 1, str:len() - 2).."}"
@@ -872,16 +874,25 @@ Model = function(attrTab)
 			elseif mtype == "table" and #value == 0 then
 				local iargv = argv[name]
 				forEachElement(value, function(iname, ivalue, itype)
-					if type(ivalue) == "table" and #ivalue > 0 then
-						if iargv[iname] == nil then
-							iargv[iname] = ivalue[1]
+					if itype == "choice" then
+						if type(iargv[iname]) ~= type(ivalue.values[1]) then
+							incompatibleTypeError(name, type(ivalue.values[1]), iargv[iname])
+						elseif not belong(iargv[iname], ivalue.values) then
+							local str = "one of {"
+							forEachElement(ivalue.values, function(_, v)
+								str = str..v..", "
+							end)
+							str = string.sub(str, 1, str:len() - 2).."}"
+							incompatibleValueError(name.."."..iname, str, iargv[iname])
 						end
-					elseif type(ivalue) == "table" and #ivalue == 0 then
-
 					elseif itype ~= type(iargv[iname]) then
 						incompatibleTypeError(name.."."..iname, itype, iargv[iname])
 					end
 				end)
+			elseif mtype == "compulsory" then
+				if type(argv[name]) ~= value.value then
+					incompatibletypeError(name, type(argv[name]), value.value)
+				end
 			elseif type(argv[name]) ~= mtype then
 				incompatibleTypeError(name, mtype, argv[name])
 			end
