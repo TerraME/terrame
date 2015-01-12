@@ -838,6 +838,10 @@ Model = function(attrTab)
 				if argv[name] == nil then
 					argv[name] = value.values[1]
 				end
+			elseif mtype == "compulsory" then
+				if argv[name] == nil then
+					mandatoryArgumentError(name)
+				end
 			elseif mtype == "table" and #value == 0 then
 				if argv[name] == nil then
 					argv[name] = {}
@@ -870,6 +874,10 @@ Model = function(attrTab)
 					end)
 					str = string.sub(str, 1, str:len() - 2).."}"
 					incompatibleValueError(name, str, argv[name])
+				end
+			elseif mtype == "compulsory" then
+				if type(argv[name]) ~= value.value then
+					incompatibleTypeError(name, value.value, argv[name])
 				end
 			elseif mtype == "table" and #value == 0 then
 				local iargv = argv[name]

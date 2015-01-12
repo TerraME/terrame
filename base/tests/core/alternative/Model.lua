@@ -201,6 +201,20 @@ return{
 			local c = compulsory("string")
 		end
 		unitTest:assert_error(error_func, "Value 'string' cannot be a compulsory argument.")
+
+		local M = Model{
+			value = compulsory("number")
+		}
+
+		error_func = function()
+			local m = M{}
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("value"))
+
+		error_func = function()
+			local m = M{value = false}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("value", "number", false))
 	end,
 	execute = function(unitTest)
 		local Tube = Model{

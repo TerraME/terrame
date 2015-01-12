@@ -30,6 +30,7 @@ local Tube = Model{
 	flow            = 20,
 	observingStep   = 1,
 	checkZero       = false,
+	filter          = compulsory("function"),
 	block = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, level = choice{1, 2, 3}},
 	init = function(model)
 		model.water = model.initialWater
@@ -47,14 +48,15 @@ local Tube = Model{
 
 return{
 	Model = function(unitTest)
-		local t = Tube{}
+		local t = Tube{filter = function() end}
 
 		unitTest:assert_equal(t.simulationSteps, 10)
 		unitTest:assert_equal(t.initialWater, 200)
 		unitTest:assert_equal(t.block.xmin, 0)
 		unitTest:assert_equal(t.block.level, 1)
+		unitTest:assert_type(t.filter, "function")
 
-		t = Tube{simulationSteps = 20, block = {xmax = 10}, checkZero = true}
+		t = Tube{simulationSteps = 20, block = {xmax = 10}, checkZero = true, filter = function() end}
 
 		unitTest:assert_equal(t.simulationSteps, 20)
 		unitTest:assert_equal(t.block.xmin, 0)
@@ -80,7 +82,7 @@ return{
 		unitTest:assert(true)
 	end,
 	execute = function(unitTest)
-		local t = Tube{block = {level = 2}}
+		local t = Tube{block = {level = 2}, filter = function() end}
 
 		unitTest:assert_equal(t.block.xmin, 0)
 		unitTest:assert_equal(t.block.level, 2)
