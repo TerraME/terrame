@@ -25,20 +25,6 @@
 
 return{
 	Model = function(unitTest)
-		local error_func = function()
-			local Tube = Model{
-				simulationSteps = choice{10, 20, "30"},
-			}
-		end
-		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
-
-		local error_func = function()
-			local Tube = Model{
-				simulationSteps = {aa = 3, bb = choice{10, 20, "30"}},
-			}
-		end
-		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
-
 		local Tube = Model{
 			init = function(model) end,
 		}
@@ -48,32 +34,32 @@ return{
 		end
 		unitTest:assert_error(error_func, "The object does not have a Timer or an Environment with at least one Timer.")
 
-		local Tube = Model{
+		Tube = Model{
 			init = function(model)
 				model.t = Timer{}
 				model.t2 = Timer{}
 			end,
 		}
 
-		local error_func = function()
+		error_func = function()
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "The object has two running objects: 't2' (Timer) and 't' (Timer).")
 
-		local Tube = Model{
+		Tube = Model{
 			init = function(model)
 				model.t = Timer{}
 				model.e = Environment{t2 = Timer{}}
 			end,
 		}
 
-		local error_func = function()
+		error_func = function()
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "The object has two running objects: 't' (Timer) and 'e' (Environment).")
 
 		-- this test is necessary because it changes the searching order between the Timer and the Environment
-		local Tube = Model{
+		Tube = Model{
 			init = function(model)
 				model.e = Timer{}
 				model.t = Environment{t2 = Timer{}}
@@ -190,6 +176,46 @@ return{
 			local c = choice{min = 2, max = 4, w = false}
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("w"))
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = choice{10, 20, "30"},
+			}
+		end
+		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
+
+		error_func = function()
+			local Tube = Model{
+				simulationSteps = {aa = 3, bb = choice{10, 20, "30"}},
+			}
+		end
+		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
+
+
+		local Tube = Model{
+			bb = choice{min = 10, max = 20, step = 1},
+			init = function() end
+		}
+		
+		error_func = function()
+			local T = Tube{bb = false}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("bb", "number", false))
+
+		error_func = function()
+			local T = Tube{bb = 10.5}
+		end
+		unitTest:assert_error(error_func, "Invalid value for argument 'bb'.")
+	
+		error_func = function()
+			local T = Tube{bb = 21.5}
+		end
+		unitTest:assert_error(error_func, "Argument 'bb' should be lower than 20.")
+
+		error_func = function()
+			local T = Tube{bb = 5}
+		end
+		unitTest:assert_error(error_func, "Argument 'bb' should be greater than 10.")
 	end,
 	mandatory = function(unitTest)
 		local error_func = function()

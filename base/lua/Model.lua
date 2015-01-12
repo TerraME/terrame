@@ -836,7 +836,11 @@ Model = function(attrTab)
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "choice" then
 				if argv[name] == nil then
-					argv[name] = value.values[1]
+					if value.values then
+						argv[name] = value.values[1]
+					else
+						argv[name] = value.min
+					end
 				end
 			elseif mtype == "mandatory" then
 				if argv[name] == nil then
@@ -865,15 +869,27 @@ Model = function(attrTab)
 		-- check types and values
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "choice" then
-				if type(argv[name]) ~= type(value.values[1]) then
-					incompatibleTypeError(name, type(value.values[1]), argv[name])
-				elseif not belong(argv[name], value.values) then
-					local str = "one of {"
-					forEachElement(value.values, function(_, v)
-						str = str..v..", "
-					end)
-					str = string.sub(str, 1, str:len() - 2).."}"
-					incompatibleValueError(name, str, argv[name])
+				if value.values then
+					if type(argv[name]) ~= type(value.values[1]) then
+						incompatibleTypeError(name, type(value.values[1]), argv[name])
+					elseif not belong(argv[name], value.values) then
+						local str = "one of {"
+						forEachElement(value.values, function(_, v)
+							str = str..v..", "
+						end)
+						str = string.sub(str, 1, str:len() - 2).."}"
+						incompatibleValueError(name, str, argv[name])
+					end
+				else
+					if type(argv[name]) ~= "number" then
+						incompatibleTypeError(name, "number", argv[name])
+					elseif argv[name] < value.min then
+						customError("Argument '"..name.."' should be greater than "..value.min..".")
+					elseif argv[name] > value.max then
+						customError("Argument '"..name.."' should be lower than "..value.max..".")
+					elseif (argv[name] - value.min) % value.step > 0.000001 then
+						customError("Invalid value for argument '"..name.."'.")
+					end
 				end
 			elseif mtype == "mandatory" then
 				if type(argv[name]) ~= value.value then
