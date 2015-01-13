@@ -199,22 +199,22 @@ local stringToLabel = function(mstring)
 end
 
 local create_ordering = function(self)
-	local ordering = {}
+	local ordering         = {}
 	local current_ordering = {}
-	local quantity = 0
-	local count_string  = 0
-	local count_number  = 0
-	local count_boolean = 0
-	local count_table   = 0
-	local named = {}
-	local max_buffer = 25
+	local quantity         = 0
+	local count_string     = 0
+	local count_number     = 0
+	local count_boolean    = 0
 	local count_mandatory  = 0
+	local count_table      = 0
+	local named            = {}
+	local max_buffer       = 25
 
 	forEachElement(self, function(idx, element, mtype)
 		if     mtype == "string"  then                 count_string  = count_string  + 1
 		elseif mtype == "number"  then                 count_number  = count_number  + 1
 		elseif mtype == "boolean" then                 count_boolean = count_boolean + 1
-		elseif mtype == "table" and #element > 1 then  count_table   = count_table   + 1
+		elseif mtype == "choice"  then                 count_table   = count_table   + 1
 		elseif mtype == "table" and #element == 0 then table.insert(named, idx)
 		elseif mtype == "mandatory" then
 			if element.value == "number" then
@@ -246,7 +246,7 @@ local create_ordering = function(self)
 			quantity = 0
 			current_ordering = {}
 		end
-		table.insert(current_ordering, "table")
+		table.insert(current_ordering, "choice")
 		quantity = quantity + count_table
 	end
 
@@ -311,10 +311,10 @@ create_t = function(mtable, ordering)
 			local mt = {}
 
 			forEachElement(mtable, function(idx, melement, mtype)
-					if element == "string"  and mtype == "string"  then table.insert(mt, idx)
-				elseif element == "boolean" and mtype == "boolean" then table.insert(mt, idx)
-				elseif element == "number"  and mtype == "number"  then table.insert(mt, idx)
-				elseif element == "table"   and mtype == "table" and #melement > 0 then table.insert(mt, idx)
+					if element == "string"    and mtype == "string"    then table.insert(mt, idx)
+				elseif element == "boolean"   and mtype == "boolean"   then table.insert(mt, idx)
+				elseif element == "number"    and mtype == "number"    then table.insert(mt, idx)
+				elseif element == "choice"    and mtype == "choice"    then table.insert(mt, idx)
 				elseif element == "mandatory" and mtype == "mandatory" then table.insert(mt, idx)
 				elseif element == idx then -- named table
 					local ordering = create_ordering(melement)
@@ -492,16 +492,62 @@ interface = function(self, modelName, package)
 
 				count = count + 1
 			end)
+		elseif idx == "choice" then
+			r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
+			r = r.."qt.ui.layout_add("..layout..", TmpGridLayout)\n"
+			count = 0
 
-				forEachElement(self[value], function(_, mstring)
-					r = r.."qt.combobox_add_item(combobox"..value..", \""..stringToLabel(mstring).."\")\n"
-					tvalue = tvalue.."\""..mstring.."\", "
-				end)
-				tvalue = tvalue.."}\n"
-				r = r..tvalue
+			forEachElement(melement, function(_, value)
+				r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
+				r = r.."label.text = \""..stringToLabel(value).."\"\n"
+				r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 
-				r = r.."qt.ui.layout_add(TmpGridLayout, combobox"..value..", "..count..", 1)\n\n"
+				if self[value].values then
+					r = r.."combobox"..value.." = qt.new_qobject(qt.meta.QComboBox)".."\n"
+
+					local tvalue = "\ntvalue"..value.." = {"
+					forEachElement(self[value].values, function(_, mstring)
+						r = r.."qt.combobox_add_item(combobox"..value..", \""..stringToLabel(mstring).."\")\n"
+						tvalue = tvalue.."\""..mstring.."\", "
+					end)
+					tvalue = tvalue.."}\n"
+					r = r..tvalue
+
+					r = r.."qt.ui.layout_add(TmpGridLayout, combobox"..value..", "..count..", 1)\n\n"
+				elseif self[value].step then
+					r = r.."lineEdit"..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
+					r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n"
+					r = r.."lineEdit"..value..".enabled = false\n"
+					r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n\n"
+
+					count = count + 1
+
+					local range = (self[value].max - self[value].min) / self[value].step
+
+					r = r.."slider"..value.." = qt.new_qobject(qt.meta.QSlider)".."\n"
+					r = r.."slider"..value..":setRange(0, "..range..")\n"
+					r = r.."qt.config_qslider(slider"..value..", 1)\n"
+
+					local default = (self[value].default - self[value].min) / self[value].step
+
+					r = r.."slider"..value..".value = "..default.."\n"
+
+					r = r.."qt.ui.layout_add(TmpGridLayout, slider"..value..", "..count..", 1)\n"
+					r = r.."lineEdit"..value..":setText(tostring("..self[value].default.."))\n"
+
+					r = r.."qt.connect(slider"..value..", \"valueChanged(int)\", function()\n"..
+						"lineEdit"..value..":setText(tostring("..self[value].min.. "+ slider"..value..".value * "..self[value].step.."))\n"..
+					"end)\n\n"
+				else -- no step
+					r = r.."lineEdit"..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
+					r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n"
+					r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n\n"
+					r = r.."lineEdit"..value..":setText(tostring("..self[value].default.."))\n"
+
+					count = count + 1
+				end
 				count = count + 1
+
 			end)
 		else -- named table (idx is the name of the table)
 			r = r.."groupbox"..idx.." = qt.new_qobject(qt.meta.QGroupBox)\n"
@@ -512,7 +558,7 @@ interface = function(self, modelName, package)
 			r = r.."qt.ui.layout_add(groupbox"..idx..", TmpLayout)\n"
 
 			forEachElement(melement[1], function(midx, mvalue)
-				if midx == "table" then
+				if midx == "choice" then
 					r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 					r = r.."qt.ui.layout_add(TmpLayout, TmpGridLayout, 1, 0)\n"
 					count = 0
@@ -522,17 +568,51 @@ interface = function(self, modelName, package)
 						r = r.."label.text = \""..stringToLabel(value).."\"\n"
 						r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 
-						r = r.."combobox"..idx..value.." = qt.new_qobject(qt.meta.QComboBox)".."\n"
+						if self[idx][value].values then
+							r = r.."combobox"..idx..value.." = qt.new_qobject(qt.meta.QComboBox)".."\n"
 
-						local tvalue = "\ntvalue"..idx..value.." = {"
-						forEachElement(self[idx][value], function(_, mstring)
-							r = r.."qt.combobox_add_item(combobox"..idx..value..", \""..stringToLabel(mstring).."\")\n"
-							tvalue = tvalue.."\""..mstring.."\", "
-						end)
-						tvalue = tvalue.."}\n"
-						r = r..tvalue
+							local tvalue = "\ntvalue"..idx..value.." = {"
+							forEachElement(self[idx][value].values, function(_, mstring)
+								r = r.."qt.combobox_add_item(combobox"..idx..value..", \""..stringToLabel(mstring).."\")\n"
+								tvalue = tvalue.."\""..mstring.."\", "
+							end)
+							tvalue = tvalue.."}\n"
+							r = r..tvalue
 
-						r = r.."qt.ui.layout_add(TmpGridLayout, combobox"..idx..value..", "..count..", 1)\n\n"
+							r = r.."qt.ui.layout_add(TmpGridLayout, combobox"..idx..value..", "..count..", 1)\n\n"
+							count = count + 1
+						elseif self[idx][value].step then
+							r = r.."lineEdit"..idx..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
+							r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..idx..value..", "..count..", 1)\n"
+							r = r.."lineEdit"..idx..value..".enabled = false\n"
+							r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..idx..value..", "..count..", 1)\n\n"
+
+							count = count + 1
+
+							local range = (self[idx][value].max - self[idx][value].min) / self[idx][value].step
+
+							r = r.."slider"..idx..value.." = qt.new_qobject(qt.meta.QSlider)".."\n"
+							r = r.."slider"..idx..value..":setRange(0, "..range..")\n"
+							r = r.."qt.config_qslider(slider"..idx..value..", 1)\n"
+
+							local default = (self[idx][value].default - self[idx][value].min) / self[idx][value].step
+
+							r = r.."slider"..idx..value..".value = "..default.."\n"
+
+							r = r.."qt.ui.layout_add(TmpGridLayout, slider"..idx..value..", "..count..", 1)\n"
+							r = r.."lineEdit"..idx..value..":setText(tostring("..self[idx][value].default.."))\n"
+
+							r = r.."qt.connect(slider"..idx..value..", \"valueChanged(int)\", function()\n"..
+								"lineEdit"..idx..value..":setText(tostring("..self[idx][value].min.. "+ slider"..idx..value..".value * "..self[idx][value].step.."))\n"..
+							"end)\n\n"
+						else -- no step
+							r = r.."lineEdit"..idx..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
+							r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..idx..value..", "..count..", 1)\n"
+							r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..idx..value..", "..count..", 1)\n\n"
+							r = r.."lineEdit"..idx..value..":setText(tostring("..self[idx][value].default.."))\n"
+
+							count = count + 1
+						end
 						count = count + 1
 					end)
 				elseif midx == "number" then
@@ -663,7 +743,28 @@ interface = function(self, modelName, package)
 			forEachOrderedElement(melement, function(_, value)
 				r = r.."\tresult = result..\"\\n\t"..value.." = \"..tostring(checkBox"..value..".checked)..\",\"\n"
 			end)
-		elseif idx == "table" then
+		elseif idx == "choice" then
+			forEachOrderedElement(melement, function(_, value)
+				if self[value].values then
+					r = r.."\tmvalue = tvalue"..value.."[combobox"..value..".currentIndex + 1]\n"
+					r = r.."\tif tonumber(mvalue) then\n"
+					r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..mvalue..".."\",\"\n"
+					r = r.."\telse\n"
+					r = r.."\t\tresult = result..\"\\n\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
+					r = r.."\tend\n"
+				elseif self[value].step then
+					r = r.."\tmvalue = tonumber(lineEdit"..value..".text)\n"
+					r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..mvalue..".."\",\"\n"
+				else
+					r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
+					r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
+					r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
+					r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a valid number.\"\n"
+					r = r.."\telse\n"
+					r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
+					r = r.."\tend\n"
+				end
+			end)
 		elseif idx == "mandatory" then
 			forEachOrderedElement(melement, function(_, value)
 				r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
@@ -699,10 +800,30 @@ interface = function(self, modelName, package)
 					forEachOrderedElement(mvalue, function(_, value)
 						r = r.."\tresult = result..\"\\n\t\t"..value.." = \\\"\"..lineEdit"..idx..value..".text..\"\\\",\"\n"
 					end)
-				elseif midx == "table" then
+				elseif midx == "choice" then
 					forEachOrderedElement(mvalue, function(_, value)
-						r = r.."\tresult = result..\"\\n\t\t"..value.." = \\\"\"..tvalue"..idx..value..
-							"[combobox"..idx..value..".currentIndex + 1]..\"\\\",\"\n"
+						if self[idx][value].values then
+							r = r.."\tmvalue = tvalue"..idx..value.."[combobox"..idx..value..".currentIndex + 1]\n"
+							r = r.."\tif tonumber(mvalue) then\n"
+							r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \"..mvalue..".."\",\"\n"
+							r = r.."\telse\n"
+							r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
+							r = r.."\tend\n"
+						elseif self[idx][value].step then
+							r = r.."\tmvalue = tonumber(lineEdit"..idx..value..".text)\n"
+							r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \"..mvalue..".."\",\"\n"
+						else
+							r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
+							r = r.."\t\tresult = result..\"\\n\t\t"..value.." = math.huge,\"\n"
+							r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
+							r = r.."\t\tmerr = \"Error: "..stringToLabel(idx..value).." (\"..lineEdit"..idx..value..".text..\") is not a valid number.\"\n"
+							r = r.."\telse\n"
+							r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
+							r = r.."\tend\n"
+						end
+
+				--		r = r.."\tresult = result..\"\\n\t\t"..value.." = \\\"\"..tvalue"..idx..value..
+				--			"[combobox"..idx..value..".currentIndex + 1]..\"\\\",\"\n"
 					end)
 				end
 			end)
@@ -864,17 +985,17 @@ Model = function(attrTab)
 					if not found then
 						customError("There is no argument '"..mvalue.."' in the Model, although it is described in the interface().")
 					end
-				elseif mvalue == "table" then
+				elseif belong(mvalue, {"choice", "mandatory"}) then
 					local found = false
 					forEachElement(attrTab, function(_, attrvalue, attrtype)
-						if type(attrtype) == mvalue and #attrvalue > 0 then
+						if attrtype == mvalue then
 							found = true
 							return false
 						end
 					end)
 
 					if not found then
-						customError("There is no non-named table parameter in the Model, but it is described in the interface().")
+						customError("There is no "..mvalue.." argument in the Model, but it is described within interface().")
 					end
 	
 				else -- named table

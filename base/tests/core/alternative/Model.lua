@@ -369,10 +369,10 @@ return{
 			local Tube = Model{
 				simulationSteps = 10,
 				finalTime = 5,
-				interface = function() return {{"number", "table"}} end
+				interface = function() return {{"number", "compulsory"}} end
 			}
 		end
-		unitTest:assert_error(error_func, "There is no non-named table parameter in the Model, but it is described in the interface().")
+		unitTest:assert_error(error_func, "interface() element 'compulsory' is not an argument of the Model.")
 
 		error_func = function()
 			local Tube = Model{
