@@ -73,11 +73,20 @@ return{
 
 		local Tube = Model{
 			simulationSteps = choice{10, 20, 30},
+			msleep = choice{min = 1, max = 2, step = 0.5, default = 2},
+			mvalue = choice{min = 5},
 			initialWater    = 200,
 			flow            = 20,
 			observingStep   = 1,
 			checkZero       = false,
-			block           = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, mblock = choice{1, 2, 3}},
+			block = {
+				xmin = 0,
+				xmax = math.huge,
+				ymin = 0,
+				ymax = math.huge,
+				level = choice{1, 2, 3},
+				sleep = choice{min = 1, max = 2, step = 0.5, default = 2}
+			},
 			init = function(model) model.timer = Timer{} end,
 			check = function(model)
 				verify(model.simulationSteps > 0, "Simulation steps should be greater than zero.")
@@ -91,15 +100,35 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg("flow", "number", {a = 2}))
 
 		error_func = function()
+			local m = Tube{msleep = 40}
+		end
+		unitTest:assert_error(error_func, "Argument 'msleep' should be less than or equal to 2.")
+
+		error_func = function()
+			local m = Tube{msleep = 0}
+		end
+		unitTest:assert_error(error_func, "Argument 'msleep' should be greater than or equal to 1.")
+
+		error_func = function()
+			local m = Tube{msleep = 1.25}
+		end
+		unitTest:assert_error(error_func, "Invalid value for argument 'msleep'.")
+
+		error_func = function()
 			local m = Tube{simulationSteps = 40}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("simulationSteps", "one of {10, 20, 30}", 40))
 
 		error_func = function()
+			local m = Tube{block = {level = 40}}
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg("block.level", "one of {1, 2, 3}", 40))
+
+
+		error_func = function()
 			local m = Tube{block = {mblock = 40}}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("block.mblock", "one of {1, 2, 3}", 40))
-
+		unitTest:assert_error(error_func, "Attribute 'block.mblock' does not exist in the Model.")
 
 		error_func = function()
 			local m = Tube{s = 3}
@@ -188,9 +217,39 @@ return{
 		unitTest:assert_error(error_func, defaultValueMsg("default", 1))
 
 		error_func = function()
+			local c = choice{min = 1, max = 10, step = 1, default = "a"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("default", "number", "a"))
+
+		error_func = function()
+			local c = choice{min = 1, max = 10, step = 1, default = 1.2}
+		end
+		unitTest:assert_error(error_func, "Invalid 'default' value (1.2). It could be 1 or 2.")
+
+		error_func = function()
+			local c = choice{min = 1, max = 10, step = 1, default = 11}
+		end
+		unitTest:assert_error(error_func, "Argument 'default' should be less than or equal to 'max'.")
+
+		error_func = function()
+			local c = choice{min = 1, max = 10, step = 1, default = 0}
+		end
+		unitTest:assert_error(error_func, "Argument 'default' should be greater than or equal to 'min'.")
+
+		error_func = function()
+			local c = choice{min = 1, max = 0}
+		end
+		unitTest:assert_error(error_func, "Argument 'max' should be greater than 'min'.")
+
+		error_func = function()
+			local c = choice{min = 1, max = 10, step = 1, default = 1}
+		end
+		unitTest:assert_error(error_func, defaultValueMsg("default", 1))
+
+		error_func = function()
 			local c = choice{min = 1, max = 10, step = 4}
 		end
-		unitTest:assert_error(error_func, "Invalid 'max' value (10). It should be 9 or 13.")
+		unitTest:assert_error(error_func, "Invalid 'max' value (10). It could be 9 or 13.")
 
 		error_func = function()
 			local c = choice{min = 1, step = 3}
@@ -215,12 +274,12 @@ return{
 		error_func = function()
 			local T = Tube{bb = 21.5}
 		end
-		unitTest:assert_error(error_func, "Argument 'bb' should be lower than 20.")
+		unitTest:assert_error(error_func, "Argument 'bb' should be less than or equal to 20.")
 
 		error_func = function()
 			local T = Tube{bb = 5}
 		end
-		unitTest:assert_error(error_func, "Argument 'bb' should be greater than 10.")
+		unitTest:assert_error(error_func, "Argument 'bb' should be greater than or equal to 10.")
 	end,
 	mandatory = function(unitTest)
 		local error_func = function()

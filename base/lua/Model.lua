@@ -55,11 +55,22 @@ function choice(attrTab)
 		optionalTableArgument(attrTab, "max", "number")
 		optionalTableArgument(attrTab, "step", "number")
 
+		defaultTableValue(attrTab, "default", attrTab.min)
+
+		if attrTab.max then
+			verify(attrTab.max > attrTab.min, "Argument 'max' should be greater than 'min'.")
+		end
+
+		if attrTab.default then
+			verify(attrTab.default >= attrTab.min, "Argument 'default' should be greater than or equal to 'min'.")
+			if attrTab.max then
+				verify(attrTab.default <= attrTab.max, "Argument 'default' should be less than or equal to 'max'.")
+			end
+		end
+
 		if attrTab.step and not attrTab.max then
 			customError("It is not possible to have 'step' and not 'max'.")
 		end
-
-		defaultTableValue(attrTab, "default", attrTab.min)
 
 		checkUnnecessaryArguments(attrTab, {"default", "min", "max", "step"})
 
@@ -70,7 +81,18 @@ function choice(attrTab)
 			if rest > 0.00001 then
 				local max1 = attrTab.min + (k - rest) * attrTab.step
 				local max2 = attrTab.min + (k - rest + 1) * attrTab.step
-				customError("Invalid 'max' value ("..attrTab.max.."). It should be "..max1.." or "..max2..".")
+				customError("Invalid 'max' value ("..attrTab.max.."). It could be "..max1.." or "..max2..".")
+			end
+
+			if attrTab.default then
+				local k = (attrTab.default - attrTab.min) / attrTab.step
+
+				local rest = k % 1
+				if rest > 0.00001 then
+					local def1 = attrTab.min + (k - rest) * attrTab.step
+					local def2 = attrTab.min + (k - rest + 1) * attrTab.step
+					customError("Invalid 'default' value ("..attrTab.default.."). It could be "..def1.." or "..def2..".")
+				end
 			end
 		end
 
@@ -894,9 +916,11 @@ Model = function(attrTab)
 
 				local iargv = argv[name]
 				forEachElement(value, function(iname, ivalue, itype)
-					if itype == "choice" then
-						if iargv[iname] == nil then
+					if itype == "choice" and iargv[iname] == nil then
+						if ivalue.values then
 							iargv[iname] = ivalue.values[1]
+						else
+							iargv[iname] = ivalue.default
 						end
 					elseif iargv[iname] == nil then
 						iargv[iname] = ivalue
@@ -925,10 +949,10 @@ Model = function(attrTab)
 					if type(argv[name]) ~= "number" then
 						incompatibleTypeError(name, "number", argv[name])
 					elseif argv[name] < value.min then
-						customError("Argument '"..name.."' should be greater than "..value.min..".")
-					elseif argv[name] > value.max then
-						customError("Argument '"..name.."' should be lower than "..value.max..".")
-					elseif (argv[name] - value.min) % value.step > 0.000001 then
+						customError("Argument '"..name.."' should be greater than or equal to "..value.min..".")
+					elseif value.max and argv[name] > value.max then
+						customError("Argument '"..name.."' should be less than or equal to "..value.max..".")
+					elseif value.step and (argv[name] - value.min) % value.step > 0.000001 then
 						customError("Invalid value for argument '"..name.."'.")
 					end
 				end
@@ -940,15 +964,27 @@ Model = function(attrTab)
 				local iargv = argv[name]
 				forEachElement(value, function(iname, ivalue, itype)
 					if itype == "choice" then
-						if type(iargv[iname]) ~= type(ivalue.values[1]) then
-							incompatibleTypeError(name, type(ivalue.values[1]), iargv[iname])
-						elseif not belong(iargv[iname], ivalue.values) then
-							local str = "one of {"
-							forEachElement(ivalue.values, function(_, v)
-								str = str..v..", "
-							end)
-							str = string.sub(str, 1, str:len() - 2).."}"
-							incompatibleValueError(name.."."..iname, str, iargv[iname])
+						if ivalue.values then
+							if type(iargv[iname]) ~= type(ivalue.values[1]) then
+								incompatibleTypeError(name, type(ivalue.values[1]), iargv[iname])
+							elseif not belong(iargv[iname], ivalue.values) then
+								local str = "one of {"
+								forEachElement(ivalue.values, function(_, v)
+									str = str..v..", "
+								end)
+								str = string.sub(str, 1, str:len() - 2).."}"
+								incompatibleValueError(name.."."..iname, str, iargv[iname])
+							end
+						else
+							if type(iargv[iname]) ~= "number" then
+								incompatibleTypeError(name.."."..iname, "number", iargv[iname])
+							elseif iargv[iname] < ivalue.min then
+								customError("Argument '"..name.."."..iname.."' should be greater than or equal to "..ivalue.min..".")
+							elseif ivalue.max and iargv[iname] > ivalue.max then
+								customError("Argument '"..name.."."..iname.."' should be less than or equal to "..ivalue.max..".")
+							elseif ivalue.step and (iargv[iname] - ivalue.min) % ivalue.step > 0.000001 then
+								customError("Invalid value for argument '"..name.."."..iname.."'.")
+							end
 						end
 					elseif itype ~= type(iargv[iname]) then
 						incompatibleTypeError(name.."."..iname, itype, iargv[iname])

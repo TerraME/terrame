@@ -31,7 +31,14 @@ local Tube = Model{
 	observingStep   = choice{min = 0, max = 1, step = 0.1, default = 1},
 	checkZero       = false,
 	filter          = mandatory("function"),
-	block = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, level = choice{1, 2, 3}},
+	block = {
+		xmin = 0,
+		xmax = math.huge,
+		ymin = 0,
+		ymax = math.huge,
+		level = choice{1, 2, 3},
+		sleep = choice{min = 1, max = 2, step = 0.5, default = 2}
+	},
 	init = function(model)
 		model.water = model.initialWater
 		model.timer = Timer{
@@ -69,6 +76,7 @@ return{
 		unitTest:assert_equal(t.block.xmin, 0)
 		unitTest:assert_equal(t.block.xmax, 10)
 		unitTest:assert_equal(t.block.level, 1)
+		unitTest:assert_equal(t.block.sleep, 2)
 		unitTest:assert(t.checkZero)
 	end,
 	check = function(unitTest)
