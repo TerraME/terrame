@@ -51,10 +51,28 @@ function choice(attrTab)
 		result = {values = attrTab}
 	elseif getn(attrTab) > 0 then
 		mandatoryTableArgument(attrTab, "min", "number")
-		mandatoryTableArgument(attrTab, "max", "number")
 
+		optionalTableArgument(attrTab, "max", "number")
 		optionalTableArgument(attrTab, "step", "number")
-		checkUnnecessaryArguments(attrTab, {"min", "max", "step"})
+
+		if attrTab.step and not attrTab.max then
+			customError("It is not possible to have 'step' and not 'max'.")
+		end
+
+		defaultTableValue(attrTab, "default", attrTab.min)
+
+		checkUnnecessaryArguments(attrTab, {"default", "min", "max", "step"})
+
+		if attrTab.step then
+			local k = (attrTab.max - attrTab.min) / attrTab.step
+
+			local rest = k % 1
+			if rest > 0.00001 then
+				local max1 = attrTab.min + (k - rest) * attrTab.step
+				local max2 = attrTab.min + (k - rest + 1) * attrTab.step
+				customError("Invalid 'max' value ("..attrTab.max.."). It should be "..max1.." or "..max2..".")
+			end
+		end
 
 		result = attrTab
 	else
@@ -839,7 +857,7 @@ Model = function(attrTab)
 					if value.values then
 						argv[name] = value.values[1]
 					else
-						argv[name] = value.min
+						argv[name] = value.default
 					end
 				end
 			elseif mtype == "mandatory" then

@@ -28,7 +28,7 @@ local Tube = Model{
 	simulationSteps = choice{10, 20, 30},
 	initialWater    = 200,
 	flow            = 20,
-	observingStep   = choice{min = 0, max = 1, step = 0.1},
+	observingStep   = choice{min = 0, max = 1, step = 0.1, default = 1},
 	checkZero       = false,
 	filter          = mandatory("function"),
 	block = {xmin = 0, xmax = math.huge, ymin = 0, ymax = math.huge, level = choice{1, 2, 3}},

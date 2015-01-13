@@ -178,19 +178,24 @@ return{
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("w"))
 
 		error_func = function()
-			local Tube = Model{
-				simulationSteps = choice{10, 20, "30"},
-			}
+			local c = choice{10, 20, "30"}
 		end
 		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
 
 		error_func = function()
-			local Tube = Model{
-				simulationSteps = {aa = 3, bb = choice{10, 20, "30"}},
-			}
+			local c = choice{min = 1, max = 10, step = 1, default = 1}
 		end
-		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
+		unitTest:assert_error(error_func, defaultValueMsg("default", 1))
 
+		error_func = function()
+			local c = choice{min = 1, max = 10, step = 4}
+		end
+		unitTest:assert_error(error_func, "Invalid 'max' value (10). It should be 9 or 13.")
+
+		error_func = function()
+			local c = choice{min = 1, step = 3}
+		end
+		unitTest:assert_error(error_func, "It is not possible to have 'step' and not 'max'.")
 
 		local Tube = Model{
 			bb = choice{min = 10, max = 20, step = 1},
