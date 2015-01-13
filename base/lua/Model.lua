@@ -186,6 +186,7 @@ local create_ordering = function(self)
 	local count_table   = 0
 	local named = {}
 	local max_buffer = 25
+	local count_mandatory  = 0
 
 	forEachElement(self, function(idx, element, mtype)
 		if     mtype == "string"  then                 count_string  = count_string  + 1
@@ -193,6 +194,12 @@ local create_ordering = function(self)
 		elseif mtype == "boolean" then                 count_boolean = count_boolean + 1
 		elseif mtype == "table" and #element > 1 then  count_table   = count_table   + 1
 		elseif mtype == "table" and #element == 0 then table.insert(named, idx)
+		elseif mtype == "mandatory" then
+			if element.value == "number" then
+				count_mandatory = count_mandatory + 1
+			else
+				customError("Automatic graphical interface does not support '"..element.value.."' as mandatory argument.")
+			end
 		end
 	end)
 
@@ -200,6 +207,17 @@ local create_ordering = function(self)
 		table.insert(current_ordering, "string") 
 		quantity = quantity + count_string
 	end
+
+	if count_mandatory > 0 then
+		if quantity + count_mandatory > max_buffer then
+			table.insert(ordering, current_ordering)
+			quantity = 0
+			current_ordering = {}
+		end
+		table.insert(current_ordering, "mandatory")
+		quantity = quantity + count_mandatory
+	end
+
 	if count_table > 0 then 
 		if quantity + count_table > max_buffer then
 			table.insert(ordering, current_ordering)
@@ -275,6 +293,7 @@ create_t = function(mtable, ordering)
 				elseif element == "boolean" and mtype == "boolean" then table.insert(mt, idx)
 				elseif element == "number"  and mtype == "number"  then table.insert(mt, idx)
 				elseif element == "table"   and mtype == "table" and #melement > 0 then table.insert(mt, idx)
+				elseif element == "mandatory" and mtype == "mandatory" then table.insert(mt, idx)
 				elseif element == idx then -- named table
 					local ordering = create_ordering(melement)
 					table.insert(mt, create_t(melement, ordering))
@@ -436,7 +455,7 @@ interface = function(self, modelName, package)
 				r = r.."checkBox"..value..".checked = "..tostring(self[value]).."\n"
 				r = r.."qt.ui.layout_add(TmpVBoxLayout, checkBox"..value..")\n\n"
 			end)
-		elseif idx == "table" then
+		elseif idx == "mandatory" then
 			r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 			r = r.."qt.ui.layout_add("..layout..", TmpGridLayout)\n"
 			count = 0
@@ -446,9 +465,11 @@ interface = function(self, modelName, package)
 				r = r.."label.text = \""..stringToLabel(value).."\"\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 	
-				r = r.."combobox"..value.." = qt.new_qobject(qt.meta.QComboBox)".."\n"
+				r = r.."lineEdit"..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
+				r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n"
 
-				local tvalue = "\ntvalue"..value.." = {"
+				count = count + 1
+			end)
 
 				forEachElement(self[value], function(_, mstring)
 					r = r.."qt.combobox_add_item(combobox"..value..", \""..stringToLabel(mstring).."\")\n"
@@ -621,12 +642,14 @@ interface = function(self, modelName, package)
 				r = r.."\tresult = result..\"\\n\t"..value.." = \"..tostring(checkBox"..value..".checked)..\",\"\n"
 			end)
 		elseif idx == "table" then
+		elseif idx == "mandatory" then
 			forEachOrderedElement(melement, function(_, value)
-				r = r.."\tmvalue = tvalue"..value.."[combobox"..value..".currentIndex + 1]\n"
-				r = r.."\tif tonumber(mvalue) then\n"
-				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..mvalue..".."\",\"\n"
+				r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
+				r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
+				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
+				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a valid number.\"\n"
 				r = r.."\telse\n"
-				r = r.."\t\tresult = result..\"\\n\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
+				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
 			end)
 		else -- named table
