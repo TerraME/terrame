@@ -51,7 +51,7 @@ return{
 		local t = Tube{filter = function() end}
 
 		unitTest:assert_equal(t.simulationSteps, 10)
-		unitTest:assert_equal(t.observingStep, 0)
+		unitTest:assert_equal(t.observingStep, 1)
 		unitTest:assert_equal(t.initialWater, 200)
 		unitTest:assert_equal(t.block.xmin, 0)
 		unitTest:assert_equal(t.block.level, 1)
@@ -84,7 +84,13 @@ return{
 		unitTest:assert_type(c, "choice")
 		unitTest:assert_equal(c.min, 2)
 		unitTest:assert_equal(c.max, 3)
+		unitTest:assert_equal(c.default, 2)
 		unitTest:assert_equal(c.step, 0.1)
+
+		c = choice{min = 5, default = 7}
+		unitTest:assert_type(c, "choice")
+		unitTest:assert_equal(c.min, 5)
+		unitTest:assert_equal(c.default, 7)
 	end,
 	mandatory = function(unitTest)
 		local c = mandatory("number")
