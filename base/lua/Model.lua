@@ -719,48 +719,60 @@ function interface(self, modelName, package)
 
 	r = r.."\nmfunction = function()\n"
 	r = r.."\tlocal merr\n"
-	r = r.."\tresult = \"-- Model instance automatically built by TerraME (\"..os.date(\"%c\")..\")\"\n"
-	r = r.."\tresult = result..\"\\n\\nrequire(\\\""..package.."\\\")\"\n"
-	r = r.."\tresult = result..\"\\n\\ninstance = "..modelName.."{\"".."\n"
+	r = r.."\tresult = \"\"\n"
 
 	-- create the function to be activated when the user pushes 'Run'
 	forEachOrderedElement(t, function(idx, melement)
 		if idx == "number" then
 			forEachOrderedElement(melement, function(_, value)
 				r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
-				r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
+				if self[value] ~= math.huge then
+					r = r.."\t\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
+				end
 				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
 				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a valid number.\"\n"
-				r = r.."\telse\n"
+				r = r.."\telseif tonumber(lineEdit"..value..".text) ~= "..self[value].." then\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
 			end)
 		elseif idx == "string" then
 			forEachOrderedElement(melement, function(_, value)
-				r = r.."\tresult = result..\"\\n\t"..value.." = \\\"\"..lineEdit"..value..".text..\"\\\",\"\n"
+				r = r.."\tif lineEdit"..value..".text ~= \""..self[value].."\" then\n"
+				r = r.."\t\tresult = result..\"\\n\t"..value.." = \\\"\"..lineEdit"..value..".text..\"\\\",\"\n"
+				r = r.."\tend\n"
 			end)
 		elseif idx == "boolean" then
 			forEachOrderedElement(melement, function(_, value)
-				r = r.."\tresult = result..\"\\n\t"..value.." = \"..tostring(checkBox"..value..".checked)..\",\"\n"
+				r = r.."\tmvalue = "..tostring(self[value])
+				r = r.."\tif checkBox"..value..".checked ~= mvalue then\n"
+				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..tostring(checkBox"..value..".checked)..\",\"\n"
+				r = r.."\tend\n"
 			end)
 		elseif idx == "choice" then
 			forEachOrderedElement(melement, function(_, value)
 				if self[value].values then
 					r = r.."\tmvalue = tvalue"..value.."[combobox"..value..".currentIndex + 1]\n"
 					r = r.."\tif tonumber(mvalue) then\n"
-					r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..mvalue..".."\",\"\n"
-					r = r.."\telse\n"
+					r = r.."\t\tmvalue = tonumber(mvalue)\n"
+					r = r.."\t\tif mvalue ~= "..self[value].values[1].." then \n"
+					r = r.."\t\t\tresult = result..\"\\n\t"..value.." = \"..mvalue..".."\",\"\n"
+					r = r.."\t\tend\n"
+					r = r.."\telseif mvalue ~= \""..self[value].values[1].."\" then \n"
 					r = r.."\t\tresult = result..\"\\n\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
 					r = r.."\tend\n"
 				elseif self[value].step then
 					r = r.."\tmvalue = tonumber(lineEdit"..value..".text)\n"
+					r = r.."\tif mvalue ~= "..self[value].default.. " then \n"
 					r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..mvalue..".."\",\"\n"
+					r = r.."\tend\n"
 				else
 					r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
-					r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
+					if self[value] ~= math.huge then
+						r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
+					end
 					r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
 					r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a valid number.\"\n"
-					r = r.."\telse\n"
+					r = r.."\telseif tonumber(lineEdit"..value..".text) ~= "..self[value].default.. " then \n"
 					r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 					r = r.."\tend\n"
 				end
@@ -776,65 +788,103 @@ function interface(self, modelName, package)
 				r = r.."\tend\n"
 			end)
 		else -- named table
-			r = r.."\tresult = result..\"\\n\t"..idx.." = {\"\n"
+			r = r.."local iresult = \"\"\n"
 			forEachOrderedElement(melement[1], function(midx, mvalue)
 				if midx == "number" then
 					forEachOrderedElement(mvalue, function(_, value)
 						r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
-						r = r.."\t\tresult = result..\"\\n\t\t"..value.." = math.huge,\"\n"
+						if self[idx][value] ~= math.huge then
+							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
+						end
 						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
 						r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..idx..value..".text..\") is not a valid number.\"\n"
-						r = r.."\telse\n"
-						r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
+						r = r.."\telseif tonumber(lineEdit"..idx..value..".text) ~= "..self[idx][value].." then\n"
+						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 						r = r.."\tend"
 					end)
 				elseif midx == "boolean" then
 					forEachOrderedElement(mvalue, function(_, value)
+						r = r.."\tmvalue = "..tostring(self[idx][value])
 						if value == "active" then
-							r = r.."\tresult = result..\"\\n\t\t"..value.." = \"..tostring(groupbox"..idx..".checked)..\",\"\n"
+
+							r = r.."\tif groupbox"..idx..".checked ~= mvalue then\n"
+							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..tostring(groupbox"..idx..".checked)..\",\"\n"
+							r = r.."\tend\n"
 						else
-							r = r.."\tresult = result..\"\\n\t\t"..value.." = \"..tostring(checkBox"..idx..value..".checked)..\",\"\n"
+							r = r.."\tif checkBox"..idx..value..".checked ~= mvalue then\n"
+							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..tostring(checkBox"..idx..value..".checked)..\",\"\n"
+							r = r.."\tend\n"
 						end
 					end)
 				elseif midx == "string" then
 					forEachOrderedElement(mvalue, function(_, value)
-						r = r.."\tresult = result..\"\\n\t\t"..value.." = \\\"\"..lineEdit"..idx..value..".text..\"\\\",\"\n"
+						r = r.."\tif lineEdit"..idx..value..".text ~= \""..self[idx][value].."\" then\n"
+						r = r.."\tiresult = iresult..\"\\n\t\t"..value.." = \\\"\"..lineEdit"..idx..value..".text..\"\\\",\"\n"
+						r = r.."\tend\n"
 					end)
 				elseif midx == "choice" then
 					forEachOrderedElement(mvalue, function(_, value)
 						if self[idx][value].values then
 							r = r.."\tmvalue = tvalue"..idx..value.."[combobox"..idx..value..".currentIndex + 1]\n"
 							r = r.."\tif tonumber(mvalue) then\n"
-							r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \"..mvalue..".."\",\"\n"
-							r = r.."\telse\n"
-							r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
+							r = r.."\t\tmvalue = tonumber(mvalue)\n"
+							r = r.."\t\tif mvalue ~= "..self[idx][value].values[1].." then \n"
+							r = r.."\t\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..mvalue..".."\",\"\n"
+							r = r.."\t\tend\n"
+							r = r.."\telseif mvalue ~= \""..self[idx][value].values[1].."\" then \n"
+							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
 							r = r.."\tend\n"
 						elseif self[idx][value].step then
 							r = r.."\tmvalue = tonumber(lineEdit"..idx..value..".text)\n"
-							r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \"..mvalue..".."\",\"\n"
+							r = r.."\tif mvalue ~= "..self[idx][value].default.. " then \n"
+							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..mvalue..".."\",\"\n"
+							r = r.."\tend\n"
 						else
 							r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
-							r = r.."\t\tresult = result..\"\\n\t\t"..value.." = math.huge,\"\n"
+							if self[idx][value] ~= math.huge then
+								r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
+							end
 							r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
 							r = r.."\t\tmerr = \"Error: "..stringToLabel(idx..value).." (\"..lineEdit"..idx..value..".text..\") is not a valid number.\"\n"
-							r = r.."\telse\n"
-							r = r.."\t\tresult = result..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
+							r = r.."\telseif tonumber(lineEdit"..idx..value..".text) ~= "..self[idx][value].default.. " then \n"
+							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 							r = r.."\tend\n"
 						end
-
-				--		r = r.."\tresult = result..\"\\n\t\t"..value.." = \\\"\"..tvalue"..idx..value..
-				--			"[combobox"..idx..value..".currentIndex + 1]..\"\\\",\"\n"
+					end)
+				elseif midx == "mandatory" then
+					forEachOrderedElement(mvalue, function(_, value)
+						r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
+						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
+						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
+						r = r.."\t\tmerr = \"Error: "..stringToLabel(idx..value).." (\"..lineEdit"..idx..value..".text..\") is not a valid number.\"\n"
+						r = r.."\telse\n"
+						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
+						r = r.."\tend\n"
 					end)
 				end
 			end)
-			r = r.."\n\tresult = result..\"\\n\t},\"\n"
+			r = r.."\tif iresult ~= \"\" then\n"
+			r = r.."\t\tiresult = string.sub(iresult, 0, string.len(iresult) - 1)\n"
+			r = r.."\t\tresult = result..\"\\n\t"..idx.." = {\"\n"
+			r = r.."\t\tresult = result..iresult\n"
+			r = r.."\t\tresult = result..\"\\n\t},\"\n"
+			r = r.."\tend\n"
 		end
 	end)
-	r = r.."\tresult = result..\"\\n}\\n\\n\"\n\n"
+	r = r.."\theader = \"-- Model instance automatically built by TerraME (\"..os.date(\"%c\")..\")\"\n"
+	r = r.."\theader = header..\"\\n\\nrequire(\\\""..package.."\\\")\"\n"
+
+	r = r.."\tif result ~= \"\" then\n"
+	r = r.."\t\tresult = \"\\n\\ninstance = "..modelName.."{\"..string.sub(result, 0, string.len(result) - 1)\n"
+	r = r.."\t\tresult = result..\"\\n}\\n\\n\"\n\n"
+	r = r.."\telse\n"
+	r = r.."\t\tresult = \"\\n\\ninstance = "..modelName.."{}\\n\\n\"\n"
+	r = r.."\tend\n"
 
 	r = r.."\texecute = \"instance:execute()\"\n"
 	r = r.."\tfile = io.open(\""..modelName.."-instance.lua\", \"w\")\n"
-	r = r.."\tfile:write(result..execute)\n"
+	r = r.."\tresult = header..result..execute\n"
+	r = r.."\tfile:write(result)\n"
 	r = r.."\tfile:close()\n"
 	r = r..[[
 	if not merr then
