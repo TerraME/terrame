@@ -198,7 +198,7 @@ Model_ = {
 	end
 }
 
-local function stringToLabel(mstring)
+local function stringToLabel(mstring, parent)
 	if type(mstring) == "number" then
 		return tostring(mstring)
 	end
@@ -215,7 +215,12 @@ local function stringToLabel(mstring)
 			result = result..nextchar
 		end
 	end
-	return result
+
+	if parent then
+		return result.." (in "..stringToLabel(parent)..")"
+	else
+		return result
+	end
 end
 
 local function create_ordering(self)
@@ -783,7 +788,7 @@ function interface(self, modelName, package)
 					r = r.."\t\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
 				end
 				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
-				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a valid number.\"\n"
+				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
 				r = r.."\telseif tonumber(lineEdit"..value..".text) ~= "..self[value].." then\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
@@ -824,7 +829,7 @@ function interface(self, modelName, package)
 						r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
 					end
 					r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
-					r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a valid number.\"\n"
+					r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
 					r = r.."\telseif tonumber(lineEdit"..value..".text) ~= "..self[value].default.. " then \n"
 					r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 					r = r.."\tend\n"
@@ -834,8 +839,10 @@ function interface(self, modelName, package)
 			forEachOrderedElement(melement, function(_, value)
 				r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
+				r = r.."\telseif lineEdit"..value..".text == \"\" then\n"
+				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." is a mandatory argument.\"\n"
 				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
-				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a valid number.\"\n"
+				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
 				r = r.."\telse\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
@@ -850,7 +857,7 @@ function interface(self, modelName, package)
 							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
 						end
 						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
-						r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..idx..value..".text..\") is not a valid number.\"\n"
+						r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..idx..value..".text..\") is not a number.\"\n"
 						r = r.."\telseif tonumber(lineEdit"..idx..value..".text) ~= "..self[idx][value].." then\n"
 						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 						r = r.."\tend"
@@ -898,7 +905,7 @@ function interface(self, modelName, package)
 								r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
 							end
 							r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
-							r = r.."\t\tmerr = \"Error: "..stringToLabel(idx..value).." (\"..lineEdit"..idx..value..".text..\") is not a valid number.\"\n"
+							r = r.."\t\tmerr = \"Error: "..stringToLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
 							r = r.."\telseif tonumber(lineEdit"..idx..value..".text) ~= "..self[idx][value].default.. " then \n"
 							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 							r = r.."\tend\n"
@@ -908,8 +915,10 @@ function interface(self, modelName, package)
 					forEachOrderedElement(mvalue, function(_, value)
 						r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
 						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
+						r = r.."\telseif lineEdit"..idx..value..".text == \"\" then\n"
+						r = r.."\t\tmerr = \"Error: "..stringToLabel(value, idx).." is a mandatory argument.\"\n"
 						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
-						r = r.."\t\tmerr = \"Error: "..stringToLabel(idx..value).." (\"..lineEdit"..idx..value..".text..\") is not a valid number.\"\n"
+						r = r.."\t\tmerr = \"Error: "..stringToLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
 						r = r.."\telse\n"
 						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 						r = r.."\tend\n"
@@ -936,17 +945,20 @@ function interface(self, modelName, package)
 
 	r = r.."\texecute = \"instance:execute()\"\n"
 	r = r.."\tfile = io.open(\""..modelName.."-instance.lua\", \"w\")\n"
-	r = r.."\tresult = header..result..execute\n"
-	r = r.."\tfile:write(result)\n"
+	r = r.."\tresult = header..result\n"
+	r = r.."\tfile:write(result..execute)\n"
 	r = r.."\tfile:close()\n"
 	r = r..[[
 	if not merr then
 		-- BUG**: http://lists.gnu.org/archive/html/libqtlua-list/2013-05/msg00004.html
 		_, merr = pcall(function() load(result)() end)
 		if merr then
+			printNote(merr)
 			local merr2 = string.match(merr, ":[0-9]*:.*")
+			printNote(merr2)
 			if merr2 then
-				local merr3 = string.gsub(merr,":[0-9]*: ", "")
+				local merr3 = string.gsub(merr2,":[0-9]*: ", "")
+				printNote(merr3)
 				if merr3 then
 					merr = merr3
 				else
@@ -961,9 +973,7 @@ function interface(self, modelName, package)
 	else
 		_, merr = pcall(function() load(execute)() end)
 		if merr then
-			merr = string.match(merr, ":[0-9]*:.*")
-			merr = string.gsub(merr,":[0-9]*: ", "")
-			qt.dialog.msg_critical(merr)
+			qt.dialog.msg_critical("The simulation stopped with an internal error: "..merr)
 		end
 		Dialog:accept()
 	end]]
