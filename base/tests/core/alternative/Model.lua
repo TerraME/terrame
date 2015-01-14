@@ -305,6 +305,22 @@ return{
 			local m = M{value = false}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("value", "number", false))
+
+		M = Model{
+			v = {value = mandatory("number")}
+		}
+
+		error_func = function()
+			local m = M{}
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("v.value"))
+
+		error_func = function()
+			local m = M{v = {value = false}}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("v.value", "number", false))
+	
+
 	end,
 	execute = function(unitTest)
 		local Tube = Model{

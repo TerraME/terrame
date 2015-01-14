@@ -1043,6 +1043,8 @@ function Model(attrTab)
 						else
 							iargv[iname] = ivalue.default
 						end
+					elseif itype == "mandatory" and iargv[iname] == nil then
+						mandatoryArgumentError(name.."."..iname)
 					elseif iargv[iname] == nil then
 						iargv[iname] = ivalue
 					end
@@ -1106,6 +1108,10 @@ function Model(attrTab)
 							elseif ivalue.step and (iargv[iname] - ivalue.min) % ivalue.step > 0.000001 then
 								customError("Invalid value for argument '"..name.."."..iname.."'.")
 							end
+						end
+					elseif itype == "mandatory" then
+						if type(iargv[iname]) ~= ivalue.value then
+							incompatibleTypeError(name.."."..iname, ivalue.value, iargv[iname])
 						end
 					elseif itype ~= type(iargv[iname]) then
 						incompatibleTypeError(name.."."..iname, itype, iargv[iname])
