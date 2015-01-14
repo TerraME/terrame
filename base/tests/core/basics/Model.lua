@@ -78,6 +78,12 @@ return{
 		unitTest:assert_equal(t.block.level, 1)
 		unitTest:assert_equal(t.block.sleep, 2)
 		unitTest:assert(t.checkZero)
+
+		t = Tube()
+
+		unitTest:assert_type(t, "table")
+		unitTest:assert_type(t.simulationSteps, "choice")
+		unitTest:assert_type(t.filter, "mandatory")
 	end,
 	check = function(unitTest)
 		unitTest:assert(true)

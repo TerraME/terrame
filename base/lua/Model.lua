@@ -178,7 +178,7 @@ Model_ = {
 	end
 }
 
-local stringToLabel = function(mstring)
+local function stringToLabel(mstring)
 	if type(mstring) == "number" then
 		return tostring(mstring)
 	end
@@ -198,7 +198,7 @@ local stringToLabel = function(mstring)
 	return result
 end
 
-local create_ordering = function(self)
+local function create_ordering(self)
 	local ordering         = {}
 	local current_ordering = {}
 	local quantity         = 0
@@ -303,7 +303,7 @@ end
 local create_t
 
 -- Create a table with the order of the elements to be drawn on the screen
-create_t = function(mtable, ordering)
+local function create_t(mtable, ordering)
 	local t = {}
 	forEachElement(ordering, function(column, elements)
 		forEachElement(elements, function(_, element)
@@ -355,7 +355,7 @@ create_t = function(mtable, ordering)
 	return t
 end
 
-interface = function(self, modelName, package)
+function interface(self, modelName, package)
 	local quantity, count = 0, 0
 	local pkgattrs, qtattrs, typeattrs, r = "", "", "", ""
 
@@ -925,7 +925,7 @@ end
 -- scenario3 = mymodel{par2 = "equal"} -- error: there is no such option in par2
 --
 -- scenario4 = mymodel{par3 = {average = 2}} -- error: there is no such name in par3
-Model = function(attrTab)
+function Model(attrTab)
 	-- check whether the elements of non-named vectors have the same type
 	forEachElement(attrTab, function(name, value, mtype)
 		if mtype == "table" and #value > 0 then
@@ -1014,7 +1014,7 @@ Model = function(attrTab)
 	end
 
 	local function model(argv)
-		if argv == nil then argv = {} end
+		if argv == nil then return attrTab end
 
 		-- set the default values
 		forEachElement(attrTab, function(name, value, mtype)
