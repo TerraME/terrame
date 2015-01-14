@@ -121,10 +121,17 @@ local function findModels(package)
 		return "___123"
 	end
 
+	local packagepath = sessionInfo().path..s.."packages"..s..package
+
+	if attributes(packagepath, "mode") ~= "directory" then
+		printError("Error: Package '"..package.."' is not installed.")
+		os.exit()
+	end
+
 	local srcpath = sessionInfo().path..s.."packages"..s..package..s.."lua"..s
 
 	if attributes(srcpath, "mode") ~= "directory" then
-		printError("src is not a directory")
+		printError("Error: Folder 'lua' from package '"..package.."' does not exist.")
 		os.exit()
 	end
 
