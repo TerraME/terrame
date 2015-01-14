@@ -48,7 +48,27 @@ function choice(attrTab)
 			end
 		end)
 
-		result = {values = attrTab}
+		local default
+		if attrTab.default == nil then
+			default = attrTab[1]
+		else
+			default = attrTab.default
+			attrTab.default = nil
+
+			if default == attrTab[1] then
+				customWarning(defaultValueWarning("default", default))
+			elseif not belong(default, attrTab) then
+				customError("Default value ("..default..") does not belong to choice.")
+			end
+		end
+
+		forEachElement(attrTab, function(idx)
+			if type(idx) == "string" then
+				customWarning(unnecessaryArgumentMsg(idx))
+			end
+		end)
+
+		result = {values = attrTab, default = default}
 	elseif getn(attrTab) > 0 then
 		mandatoryTableArgument(attrTab, "min", "number")
 
@@ -505,13 +525,23 @@ function interface(self, modelName, package)
 				if self[value].values then
 					r = r.."combobox"..value.." = qt.new_qobject(qt.meta.QComboBox)".."\n"
 
+					local pos = 0
+					local index
 					local tvalue = "\ntvalue"..value.." = {"
 					forEachElement(self[value].values, function(_, mstring)
 						r = r.."qt.combobox_add_item(combobox"..value..", \""..stringToLabel(mstring).."\")\n"
 						tvalue = tvalue.."\""..mstring.."\", "
+
+						if mstring == self[value].default then
+							index = pos
+						else
+							pos = pos + 1
+						end
 					end)
 					tvalue = tvalue.."}\n"
 					r = r..tvalue
+
+					r = r.."combobox"..value..":setCurrentIndex("..index..")\n"
 
 					r = r.."qt.ui.layout_add(TmpGridLayout, combobox"..value..", "..count..", 1)\n\n"
 				elseif self[value].step then
@@ -569,13 +599,23 @@ function interface(self, modelName, package)
 						if self[idx][value].values then
 							r = r.."combobox"..idx..value.." = qt.new_qobject(qt.meta.QComboBox)".."\n"
 
+							local pos = 0
+							local index
 							local tvalue = "\ntvalue"..idx..value.." = {"
 							forEachElement(self[idx][value].values, function(_, mstring)
 								r = r.."qt.combobox_add_item(combobox"..idx..value..", \""..stringToLabel(mstring).."\")\n"
 								tvalue = tvalue.."\""..mstring.."\", "
+
+								if mstring == self[idx][value].default then
+									index = pos
+								else
+									pos = pos + 1
+								end
 							end)
 							tvalue = tvalue.."}\n"
 							r = r..tvalue
+
+							r = r.."combobox"..idx..value..":setCurrentIndex("..index..")\n"
 
 							r = r.."qt.ui.layout_add(TmpGridLayout, combobox"..idx..value..", "..count..", 1)\n\n"
 							count = count + 1
@@ -767,10 +807,10 @@ function interface(self, modelName, package)
 					r = r.."\tmvalue = tvalue"..value.."[combobox"..value..".currentIndex + 1]\n"
 					r = r.."\tif tonumber(mvalue) then\n"
 					r = r.."\t\tmvalue = tonumber(mvalue)\n"
-					r = r.."\t\tif mvalue ~= "..self[value].values[1].." then \n"
+					r = r.."\t\tif mvalue ~= "..self[value].default.." then \n"
 					r = r.."\t\t\tresult = result..\"\\n\t"..value.." = \"..mvalue..".."\",\"\n"
 					r = r.."\t\tend\n"
-					r = r.."\telseif mvalue ~= \""..self[value].values[1].."\" then \n"
+					r = r.."\telseif mvalue ~= \""..self[value].default.."\" then \n"
 					r = r.."\t\tresult = result..\"\\n\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
 					r = r.."\tend\n"
 				elseif self[value].step then
@@ -841,10 +881,10 @@ function interface(self, modelName, package)
 							r = r.."\tmvalue = tvalue"..idx..value.."[combobox"..idx..value..".currentIndex + 1]\n"
 							r = r.."\tif tonumber(mvalue) then\n"
 							r = r.."\t\tmvalue = tonumber(mvalue)\n"
-							r = r.."\t\tif mvalue ~= "..self[idx][value].values[1].." then \n"
+							r = r.."\t\tif mvalue ~= "..self[idx][value].default.." then \n"
 							r = r.."\t\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..mvalue..".."\",\"\n"
 							r = r.."\t\tend\n"
-							r = r.."\telseif mvalue ~= \""..self[idx][value].values[1].."\" then \n"
+							r = r.."\telseif mvalue ~= \""..self[idx][value].default.."\" then \n"
 							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
 							r = r.."\tend\n"
 						elseif self[idx][value].step then
@@ -989,29 +1029,6 @@ end
 --
 -- scenario4 = mymodel{par3 = {average = 2}} -- error: there is no such name in par3
 function Model(attrTab)
-	-- check whether the elements of non-named vectors have the same type
-	forEachElement(attrTab, function(name, value, mtype)
-		if mtype == "table" and #value > 0 then
-			local ttype = type(value[1])
-			forEachElement(value, function(_, _, mttype)
-				if mttype ~= ttype then
-					customError("All the elements of table '"..name.."' should have the same type.")
-				end
-			end)
-		elseif mtype == "table" and #value == 0 then
-			forEachElement(value, function(mname, mvalue, mttype)
-				if mttype == "table" and #mvalue > 0 then
-					local ttype = type(mvalue[1])
-					forEachElement(mvalue, function(_, _, ittype)
-						if ittype ~= ttype then
-							customError("All the elements of table '"..name.."."..mname.."' should have the same type.")
-						end
-					end)
-				end
-			end)
-		end
-	end)
-
 	if type(attrTab.interface) == "function" then
 		local minterface = attrTab.interface()
 		local elements = {}
@@ -1083,11 +1100,7 @@ function Model(attrTab)
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "choice" then
 				if argv[name] == nil then
-					if value.values then
-						argv[name] = value.values[1]
-					else
-						argv[name] = value.default
-					end
+					argv[name] = value.default
 				end
 			elseif mtype == "mandatory" then
 				if argv[name] == nil then
@@ -1101,11 +1114,7 @@ function Model(attrTab)
 				local iargv = argv[name]
 				forEachElement(value, function(iname, ivalue, itype)
 					if itype == "choice" and iargv[iname] == nil then
-						if ivalue.values then
-							iargv[iname] = ivalue.values[1]
-						else
-							iargv[iname] = ivalue.default
-						end
+						iargv[iname] = ivalue.default
 					elseif itype == "mandatory" and iargv[iname] == nil then
 						mandatoryArgumentError(name.."."..iname)
 					elseif iargv[iname] == nil then
@@ -1121,8 +1130,8 @@ function Model(attrTab)
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "choice" then
 				if value.values then
-					if type(argv[name]) ~= type(value.values[1]) then
-						incompatibleTypeError(name, type(value.values[1]), argv[name])
+					if type(argv[name]) ~= type(value.default) then
+						incompatibleTypeError(name, type(value.default), argv[name])
 					elseif not belong(argv[name], value.values) then
 						local str = "one of {"
 						forEachElement(value.values, function(_, v)
@@ -1154,8 +1163,8 @@ function Model(attrTab)
 				forEachElement(value, function(iname, ivalue, itype)
 					if itype == "choice" then
 						if ivalue.values then
-							if type(iargv[iname]) ~= type(ivalue.values[1]) then
-								incompatibleTypeError(name, type(ivalue.values[1]), iargv[iname])
+							if type(iargv[iname]) ~= type(ivalue.default) then
+								incompatibleTypeError(name, type(ivalue.default), iargv[iname])
 							elseif not belong(iargv[iname], ivalue.values) then
 								local str = "one of {"
 								forEachElement(ivalue.values, function(_, v)

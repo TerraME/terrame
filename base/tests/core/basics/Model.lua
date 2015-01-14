@@ -26,6 +26,7 @@
 
 local Tube = Model{
 	simulationSteps = choice{10, 20, 30},
+	subwater           = choice{1, 2, 4, 5, default = 4},
 	initialWater    = 200,
 	flow            = 20,
 	observingStep   = choice{min = 0, max = 1, step = 0.1, default = 1},
@@ -60,6 +61,7 @@ return{
 		unitTest:assert_equal(t.simulationSteps, 10)
 		unitTest:assert_equal(t.observingStep, 1)
 		unitTest:assert_equal(t.initialWater, 200)
+		unitTest:assert_equal(t.subwater, 4)
 		unitTest:assert_equal(t.block.xmin, 0)
 		unitTest:assert_equal(t.block.level, 1)
 		unitTest:assert_type(t.filter, "function")
@@ -106,6 +108,10 @@ return{
 		unitTest:assert_type(c, "choice")
 		unitTest:assert_equal(c.min, 5)
 		unitTest:assert_equal(c.default, 7)
+
+		c = choice{1, 2, 3, 4, default = 3}
+		unitTest:assert_equal(#c.values, 4)
+		unitTest:assert_equal(c.default, 3)
 	end,
 	mandatory = function(unitTest)
 		local c = mandatory("number")

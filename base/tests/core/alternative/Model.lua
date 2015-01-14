@@ -181,6 +181,23 @@ return{
 		end
 		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
 
+---------------------
+		error_func = function()
+			local c = choice{1, 2, 3, default = 1}
+		end
+		unitTest:assert_error(error_func, defaultValueMsg("default", 1))
+
+		error_func = function()
+			local c = choice{1, 2, 3, default = 4}
+		end
+		unitTest:assert_error(error_func, "Default value (4) does not belong to choice.")
+
+		error_func = function()
+			local c = choice{1, 2, 3, max = 4}
+		end
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("max"))
+---------------------
+
 		error_func = function()
 			local c = choice{false, true}
 		end
@@ -319,8 +336,6 @@ return{
 			local m = M{v = {value = false}}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("v.value", "number", false))
-	
-
 	end,
 	execute = function(unitTest)
 		local Tube = Model{
