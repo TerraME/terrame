@@ -516,7 +516,6 @@ function interface(self, modelName, package)
 					r = r.."qt.ui.layout_add(TmpGridLayout, combobox"..value..", "..count..", 1)\n\n"
 				elseif self[value].step then
 					r = r.."lineEdit"..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
-					r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n"
 					r = r.."lineEdit"..value..".enabled = false\n"
 					r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n\n"
 
@@ -540,9 +539,8 @@ function interface(self, modelName, package)
 					"end)\n\n"
 				else -- no step
 					r = r.."lineEdit"..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
-					r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n"
 					r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..value..", "..count..", 1)\n\n"
-					r = r.."lineEdit"..value..":setText(tostring("..self[value].default.."))\n"
+					r = r.."lineEdit"..value..":setText("..self[value].default..")\n"
 
 					count = count + 1
 				end
@@ -615,9 +613,24 @@ function interface(self, modelName, package)
 						end
 						count = count + 1
 					end)
-				elseif midx == "number" then
+				elseif midx == "mandatory" then
 					r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 					r = r.."qt.ui.layout_add(TmpLayout, TmpGridLayout, 2, 0)\n"
+					count = 0
+
+					forEachElement(mvalue, function(_, value)
+						r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
+						r = r.."label.text = \""..stringToLabel(value).."\"\n"
+						r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
+	
+						r = r.."lineEdit"..idx..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
+						r = r.."qt.ui.layout_add(TmpGridLayout, lineEdit"..idx..value..", "..count..", 1)\n"
+
+						count = count + 1
+					end)
+				elseif midx == "number" then
+					r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
+					r = r.."qt.ui.layout_add(TmpLayout, TmpGridLayout, 3, 0)\n"
 					count = 0
 
 					forEachElement(mvalue, function(_, value)
@@ -637,7 +650,7 @@ function interface(self, modelName, package)
 					end)
 				elseif midx == "boolean" then
 					r = r.."TmpVBoxLayout = qt.new_qobject(qt.meta.QVBoxLayout)\n"
-					r = r.."qt.ui.layout_add(TmpLayout, TmpVBoxLayout, 3, 0)\n"
+					r = r.."qt.ui.layout_add(TmpLayout, TmpVBoxLayout, 4, 0)\n"
 
 					forEachElement(mvalue, function(_, value)
 						if value == "active" then
