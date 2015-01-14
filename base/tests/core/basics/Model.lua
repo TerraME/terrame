@@ -66,7 +66,7 @@ return{
 
 		t = Tube{
 			simulationSteps = 20,
-			observingStep = 0.5,
+			observingStep = 0.7,
 			block = {xmax = 10},
 			checkZero = true,
 			filter = function() end
@@ -77,6 +77,7 @@ return{
 		unitTest:assert_equal(t.block.xmax, 10)
 		unitTest:assert_equal(t.block.level, 1)
 		unitTest:assert_equal(t.block.sleep, 2)
+		unitTest:assert_equal(t.observingStep, 0.7)
 		unitTest:assert(t.checkZero)
 
 		t = Tube()

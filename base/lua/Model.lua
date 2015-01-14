@@ -1138,8 +1138,11 @@ function Model(attrTab)
 						customError("Argument '"..name.."' should be greater than or equal to "..value.min..".")
 					elseif value.max and argv[name] > value.max then
 						customError("Argument '"..name.."' should be less than or equal to "..value.max..".")
-					elseif value.step and (argv[name] - value.min) % value.step > 0.000001 then
-						customError("Invalid value for argument '"..name.."'.")
+					elseif value.step and (((argv[name] - value.min)) * 1000) % (value.step * 1000) > 0.000001 then
+						-- There is a small bug in Lua with operator % using numbers between 0 and 1
+						-- For example, 0.7 % 0.1 == 0.1, but should be 0.0. That's why we need
+						-- to multiplicate by 1000 above
+						customError("Invalid value for argument '"..name.."' ("..argv[name]..").")
 					end
 				end
 			elseif mtype == "mandatory" then
@@ -1169,7 +1172,7 @@ function Model(attrTab)
 							elseif ivalue.max and iargv[iname] > ivalue.max then
 								customError("Argument '"..name.."."..iname.."' should be less than or equal to "..ivalue.max..".")
 							elseif ivalue.step and (iargv[iname] - ivalue.min) % ivalue.step > 0.000001 then
-								customError("Invalid value for argument '"..name.."."..iname.."'.")
+								customError("Invalid value for argument '"..name.."."..iname.."' ("..iargv[iname]..").")
 							end
 						end
 					elseif itype == "mandatory" then

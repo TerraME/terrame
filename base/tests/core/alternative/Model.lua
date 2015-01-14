@@ -112,7 +112,7 @@ return{
 		error_func = function()
 			local m = Tube{msleep = 1.25}
 		end
-		unitTest:assert_error(error_func, "Invalid value for argument 'msleep'.")
+		unitTest:assert_error(error_func, "Invalid value for argument 'msleep' (1.25).")
 
 		error_func = function()
 			local m = Tube{simulationSteps = 40}
@@ -269,7 +269,7 @@ return{
 		error_func = function()
 			local T = Tube{bb = 10.5}
 		end
-		unitTest:assert_error(error_func, "Invalid value for argument 'bb'.")
+		unitTest:assert_error(error_func, "Invalid value for argument 'bb' (10.5).")
 	
 		error_func = function()
 			local T = Tube{bb = 21.5}
