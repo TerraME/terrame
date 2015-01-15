@@ -1261,7 +1261,6 @@ local function buildPackage(package)
 
 	Model = mModel
 
-
 	local packageDir = sessionInfo().path..s.."packages"
 	printNote("Checking license")
 	if not isFile(packageDir..s..package..s.."license.txt") then

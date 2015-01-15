@@ -397,8 +397,6 @@ return{
 			theme = "cells90x90"
 		}
 
-		-- #211 save is not working
-		--[[
 		for t = 1, 2 do
 			forEachCell(cs, function(cell)
 				cell.height_ = t
@@ -406,7 +404,6 @@ return{
 
 			cs:save(t, "themeName", "height_")
 		end
-		--]]
 		unitTest:assert(true)
 	end,
 	loadNeighborhood = function(unitTest)
