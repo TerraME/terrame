@@ -144,17 +144,16 @@ return {
 		unitTest:assert_equal(2, qt3)
 
 		-- different priorities
-
 		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
 		local timeMemory = 0 -- memory of time test variable 
 		unitTest:assert_equal(orderToken, 0)
 		local clock1 = Timer{
-			Event{time = 0, priority = 0, action = function(event)
+			Event{time = 0, action = function(event)
 				timeMemory = event:getTime()
 				unitTest:assert(orderToken <= 1)
 				orderToken = 1
 			end},
-			Event{time = 1, period = 1, priority = 1, action = function(event) 
+			Event{priority = 1, action = function(event) 
 				if event:getTime() == timeMemory then 
 					unitTest:assert_equal(1, orderToken)
 				else

@@ -13,7 +13,7 @@ o = Observer{
 }
 
 t = Timer {
-    Event {time = 1, period = 1, action = function()
+    Event {action = function()
         world.water = world.water - 5
     end},
     Event {time = 0, period = 0.25, action = function(e)

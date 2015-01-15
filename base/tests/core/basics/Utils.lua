@@ -99,6 +99,7 @@ return{
 		unitTest:assert_equal(count, 10)
 	end,
 	forEachCell = function(unitTest)
+		local randomObj = Random{seed = 0}
 		local cs = CellularSpace{xdim = 10}
 
 		forEachCell(cs, function(cell) unitTest:assert_type(cell, "Cell") end)

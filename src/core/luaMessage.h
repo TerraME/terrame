@@ -103,15 +103,21 @@ public:
 
         // builds the table parameter of the constructor
         lua_newtable(L);
-        lua_pushstring(L, "time");
-        lua_pushnumber(L, event.getTime() );
-        lua_settable(L, -3);
-        lua_pushstring(L, "period");
-        lua_pushnumber(L, event.getPeriod() );
-        lua_settable(L, -3);
-        lua_pushstring(L, "priority");
-        lua_pushnumber(L, event.getPriority() );
-        lua_settable(L, -3);
+		if(event.getTime() != 1){
+        	lua_pushstring(L, "time");
+        	lua_pushnumber(L, event.getTime() );
+        	lua_settable(L, -3);
+		}
+		if(event.getPeriod() != 1){
+        	lua_pushstring(L, "period");
+        	lua_pushnumber(L, event.getPeriod() );
+        	lua_settable(L, -3);
+		}
+		if(event.getPriority() != 0){
+        	lua_pushstring(L, "priority");
+        	lua_pushnumber(L, event.getPriority() );
+        	lua_settable(L, -3);
+		}
 
         // calls the event constructor
         if( lua_pcall( L, 1, 1, 0) != 0 )

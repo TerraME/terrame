@@ -375,7 +375,6 @@ return{
 		}
 		env:execute(6)
 
-		local PRIO0 = 0
 		local PRIO1 = 1
 		local PRIO2 = 2
 		local PRIO3 = 3
@@ -393,7 +392,7 @@ return{
 
 		local env = Environment{
 			clock1 = Timer{
-				Event{time = 0, priority = PRIO0, action = function(event) 
+				Event{time = 0, action = function(event) 
 					if event:getTime() == timeMemory then 
 						self:assert(-1 <= orderToken)
 					end

@@ -139,40 +139,14 @@ function Event(data)
 
 	checkUnnecessaryArguments(data, {"time", "action", "priority", "period"})
 
--- #83
---	defaultTableValue(data, "time", 1)
--- [[
-	if data.time == nil then
-		data.time = 1
-	elseif type(data.time) ~= "number" then
-		incompatibleTypeError("time", "number", data.time)
-	-- #83
-	--	elseif data.time == 1 then
-	--		defaultValueWarning("time", "1", 3)
-	end
---]]
+	defaultTableValue(data, "time", 1)
+	defaultTableValue(data, "period", 1)
 
---	defaultTableValue(data, "period", 1)
--- [[
-	if data.period == nil then
-		data.period = 1
-	elseif type(data.period) ~= "number" then
-		incompatibleTypeError("period", "number", data.period)
-	end
---]]
 	if data.period <= 0 then
 		incompatibleValueError("period", "positive number (except zero)", data.period)
-	--	elseif data.period == 1 then
-	--		defaultValueWarning("period", "1", 3)
 	end
---]]
 
---	defaultTableValue(data, "priority", 0)
-
--- [[
-	if data.priority == nil then
-		data.priority = 0
-	elseif type(data.priority) == "string" then
+	if type(data.priority) == "string" then
 		switch(data, "priority"):caseof{
 			verylow  = function() data.priority = 10  end,
 			low      = function() data.priority = 5   end,
@@ -180,12 +154,10 @@ function Event(data)
 			high     = function() data.priority = -5  end,
 			veryhigh = function() data.priority = -10 end
 		}
-	elseif type(data.priority) ~= "number" then
-		incompatibleTypeError("priority", "number", data.priority)
-	--	elseif data.priority == 0 then
-	--		defaultValueWarning("priority", "0", 3)
+	else
+		defaultTableValue(data, "priority", 0)
 	end
---]]
+
 	cObj:config(data.time, data.period, data.priority)
 	cObj:setReference(cObj)
 

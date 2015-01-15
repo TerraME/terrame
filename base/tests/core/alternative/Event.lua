@@ -79,6 +79,21 @@ return{
 			event = Event{myaction = function() end}
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("myaction", "action"))
+
+		error_func = function()
+			event = Event{period = 1, priority = 1, action = function(event) end}
+		end
+		unitTest:assert_error(error_func, defaultValueMsg("period", 1))
+
+		error_func = function()
+			event = Event{time = 1, priority = 1, action = function(event) end}
+		end
+		unitTest:assert_error(error_func, defaultValueMsg("time", 1))
+
+		error_func = function()
+			event = Event{priority = 0, action = function(event) end}
+		end
+		unitTest:assert_error(error_func, defaultValueMsg("priority", 0))
 	end,
 --[[ #241
 	config = function(unitTest)
