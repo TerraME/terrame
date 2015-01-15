@@ -272,13 +272,17 @@ function Cell(data)
 		incompatibleValueError("y", "positive integer number", data.y)
 	end
 
-	local id = "C"
-	if data.x < 10 then id = id.."0" end
-	id = id..data.x.."L"
-	if data.y < 10 then id = id.."0" end
-	id = id..data.y
+	if not data.id then
+		local id = "C"
+		if data.x < 10 then id = id.."0" end
+		id = id..data.x.."L"
+		if data.y < 10 then id = id.."0" end
+		id = id..data.y
+		data.id = id
+	end
 
-	data.cObj_:setID(id)
+	data.cObj_:setID(data.id)
+	data.id = nil
 --	data.id = data.cObj_:getID()
 
 	data.cObj_:setIndex(data.x, data.y)

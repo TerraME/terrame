@@ -611,7 +611,6 @@ return{
 
 		countTest = countTest + 1
 
--- [[
 		cs3:loadNeighborhood{
 			source = file("gpmdistanceDbEmasCells.gpm", "base"),
 			name = "my_neighborhood"..countTest
@@ -661,9 +660,7 @@ return{
 		unitTest:assert_equal(1243, sizes[8])
 
 		countTest = countTest + 1
---[[
-		-- TODO: emas-distance.gwt has a problem with the IDs. It uses 0, 1, 2..., while
-		-- the CellularSpace has C7975976L288149, C7976580L284735, C7976643L284863, etc.
+
 		cs2:loadNeighborhood{
 			source = file("emas-distance.gpm", "base"),
 			name = "my_neighborhood"..countTest
@@ -706,7 +703,7 @@ return{
 		unitTest:assert_equal(70.8015, minWeight, 0.00001)
 		unitTest:assert_equal(9999.513, maxWeight, 0.00001)
 		unitTest:assert_equal(84604261.93974, sumWeight, 0.00001)
---]]
+
 		-- .GAL Regular CS
 		countTest = countTest + 1
  
@@ -759,9 +756,6 @@ return{
 		-- .GAL Irregular CS
 		countTest = countTest + 1
 
---[[
-		-- TODO: emas-distance.gwt has a problem with the IDs. It uses 0, 1, 2..., while
-		-- the CellularSpace has C7975976L288149, C7976580L284735, C7976643L284863, etc.
 		cs2:loadNeighborhood{
 			source = file("emas-distance.gal", "base"),
 			name = "my_neighborhood"..countTest
@@ -777,8 +771,8 @@ return{
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert_gte(neighborhoodSize,5)
-			unitTest:assert_lte(neighborhoodSize,120)
+			unitTest:assert(neighborhoodSize >= 5)
+			unitTest:assert(neighborhoodSize <= 120)
 
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
@@ -798,7 +792,7 @@ return{
 
 		-- .GWT Regular CS
 		countTest = countTest + 1
---]]
+
 		cs1:loadNeighborhood{
 			source = file("cabecadeboi-neigh.gwt", "base"),
 			name = "my_neighborhood"..countTest
@@ -855,9 +849,6 @@ return{
 		-- .GWT Irregular CS
 		countTest = countTest + 1
 
-		-- TODO: emas-distance.gwt has a problem with the IDs. It uses 0, 1, 2..., while
-		-- the CellularSpace has C7975976L288149, C7976580L284735, C7976643L284863, etc.
---[[
 		cs2:loadNeighborhood{
 			source = file("emas-distance.gwt", "base"),
 			name = "my_neighborhood"..countTest
@@ -901,7 +892,6 @@ return{
 		unitTest:assert_equal(5, minSize)
 		unitTest:assert_equal(120, maxSize)
 		unitTest:assert_equal(84604261.93974, sumWeight, 0.00001)
---]]
 	end
 }
 
