@@ -636,7 +636,8 @@ CellularSpace_ = {
 		deprecatedFunctionWarning("getCell", "get")
 		return self:get(xIndex, yIndex)
 	end,
-	--- Retrieve a Cell from the CellularSpace, given its id or its x and y.
+	--- Retrieve a Cell from the CellularSpace, given its id or its x and y. If the Cell
+	-- does not belong to the CellularSpace then it will return nil.
 	-- @arg xIndex A number indicating x coord. It can also be a string with the object id.
 	-- @arg yIndex A number indicating y coord. This argument is unnecessary when the first 
 	-- argument is a string.

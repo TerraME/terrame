@@ -34,12 +34,12 @@ return{
 		error_func = function()
 			local cell = Cell{x = "2.22", y = 0}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("x", "number", "2.22"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("x", "number", "2.22"))
 
 		error_func = function()
 			local cell = Cell{x = -2, y = "1"}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("y", "number", "1"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("y", "number", "1"))
 
 		error_func = function()
 			local cell = Cell{x = 2.22, y = 0}

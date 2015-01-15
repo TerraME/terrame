@@ -194,6 +194,9 @@ return{
 
 		unitTest:assert_equal(8, it:get(8, 9).x)
 		unitTest:assert_equal(9, it:get(8, 9).y)
+
+		local c = it:get(100, 100)
+		unitTest:assert_nil(c)
 	end,
 	randomize = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

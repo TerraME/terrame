@@ -73,6 +73,13 @@ return{
 
 		unitTest:assert_equal(2, c.x)
 		unitTest:assert_equal(2, c.y)
+
+		local d = cs:get(c:getId())
+
+		unitTest:assert_equal(c, d)
+
+		local c = cs:get(100, 100)
+		unitTest:assert_nil(c)
 	end,
 	createNeighborhood = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

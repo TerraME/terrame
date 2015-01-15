@@ -32,8 +32,12 @@ return{
 		local error_func = function()
 			trajectory:add(2)
 		end
-
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 2))
+
+		error_func = function()
+			trajectory:add(cs.cells[1])
+		end
+		unitTest:assert_error(error_func, "Cell (0, 0) already belongs to the Trajectory.")
 	end,
 	addCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -42,7 +46,6 @@ return{
 		local error_func = function()
 			trajectory:addCell()
 		end
-
 		unitTest:assert_error(error_func, deprecatedFunctionMsg("addCell", "add"))
 	end,
 	filter = function(unitTest)
@@ -50,10 +53,36 @@ return{
 		local trajectory = Trajectory{
 			target = cs
 		}
+
 		local error_func = function()
 			trajectory:filter("filter")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", "filter"))
+	end,
+	get = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+		local trajectory = Trajectory{target = cs}
+
+		local error_func = function()
+			trajectory:get()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+
+		error_func = function()
+			trajectory:get(2)
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
+
+		error_func = function()
+			trajectory:get("a")
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "a"))
+	
+		local error_func = function()
+			trajectory:get(1, "a")
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "a"))
+	
 	end,
 	getCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -62,7 +91,6 @@ return{
 		local error_func = function()
 			trajectory:getCell()
 		end
-
 		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCell", "get"))
 	end,
 	sort = function(unitTest)
@@ -82,7 +110,7 @@ return{
 		end
 		unitTest:assert_error(error_func, tableArgumentMsg())
 
-		local error_func = function()
+		error_func = function()
 			trajectory = Trajectory(3)
 		end
 		unitTest:assert_error(error_func, namedArgumentsMsg())

@@ -40,7 +40,7 @@ Neighborhood_ = {
 			weight = 1
 		end
 
-		verify(not self:isNeighbor(cell), "Cell ("..cell.x..","..cell.y..") already belongs to the Neighborhood.")
+		verify(not self:isNeighbor(cell), "Cell ("..cell.x..", "..cell.y..") already belongs to the Neighborhood.")
 
 		return self.cObj_:addNeighbor(cell.x, cell.y, cell.cObj_, weight)
 	end,

@@ -50,7 +50,7 @@ return{
 			neigh:add(cell2)
 			neigh:add(cell2)
 		end
-		unitTest:assert_error(error_func, "Cell (0,1) already belongs to the Neighborhood.")
+		unitTest:assert_error(error_func, "Cell (0, 1) already belongs to the Neighborhood.")
 	end,
 	addCell = function(unitTest)
 		local neigh = Neighborhood()

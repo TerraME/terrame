@@ -33,8 +33,7 @@ Trajectory_ = {
 	add = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 
-		-- uncomment after solving #22
-		--	verify(not self:get(cell.x, cell.y), "Cell ("..cell.x..", "..cell.y..") already belongs to the Trajectory.")
+		verify(not self:get(cell.x, cell.y), "Cell ("..cell.x..", "..cell.y..") already belongs to the Trajectory.")
 		table.insert(self.cells, cell)
 		self.cObj_:add(#self, cell.cObj_)
 	end,
@@ -91,22 +90,23 @@ Trajectory_ = {
 			end
 		end
 	end,
-	--- Return a cell given its x and y locations.
-	-- @arg x The x location.
-	-- @arg y The y location.
+	--- Return a Cell from the Trajectory given its x and y locations.
+	-- If the Cell does not belong to the Trajectory then it will return nil.
+	-- @arg xIndex The x location.
+	-- @arg yIndex The y location.
 	-- @usage traj:get(1, 1)
-	get = function(self, x, y)
-		-- #22 change this - add will never work because the cell already belongs to the cellular space and then it will never add.
+	get = function(self, xIndex, yIndex)
+		mandatoryArgument(1, "number", xIndex)
+		mandatoryArgument(2, "number", yIndex)
 
-		-- The following does not work:
-		--[[
-		local data = {x = x, y = y}
-		local cObj_ = TeCoord(data)
-
-		return self.cObj_:getCell(cObj_)
-		--]]
-
-		return self.parent:get(x, y)
+		local result
+		forEachCell(self, function(cell)
+			if cell.x == xIndex and cell.y == yIndex then
+				result = cell
+				return false
+			end
+		end)
+		return result
 	end,
 	--- Return a cell given its x and y locations.
 	-- @arg index a Coord.
