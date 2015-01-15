@@ -227,7 +227,7 @@ return{
 			unitTest:assert_equal(valuesDefault[i], cs.cells[i].POPUL)
 		end
 
-		-- late autoload
+		-- late load
 		cs = CellularSpace{
 			dbType = mdbType,
 			host = mhost,
@@ -263,8 +263,29 @@ return{
 		cs:load()
 		unitTest:assert_equal(2500, #cs)
 
-		-- neighborhood between two cellular spaces
 		cs = CellularSpace{
+			database = file("simple.map", "base")
+		}
+
+		unitTest:assert_equal(#cs, 100)
+	end,
+	createNeighborhood = function(unitTest)
+		local config = getConfig()
+		local mdbType = config.dbType
+		local mhost = config.host
+		local muser = config.user
+		local mpassword = config.password
+		local mport = config.port
+		local mdatabase
+
+		if mdbType == "ado" then
+			mdatabase = file("cabecadeboi.mdb", "base")
+		else
+			mdatabase = "cabecadeboi"
+		end
+
+		-- neighborhood between two cellular spaces
+		local cs = CellularSpace{
 			dbType = mdbType,
 			host = mhost,
 			user = muser,
@@ -364,13 +385,6 @@ return{
 		end)
 		unitTest:assert_equal(18582, countNeigh)
 		unitTest:assert_equal(451.98359156683, sumWeight, 0.00001)
-
-		local cs = CellularSpace{
-			database = file("simple.map", "base")
-		}
-
-		unitTest:assert_equal(#cs, 100)
-
 	end,
 	save = function(unitTest)
 		local config = getConfig()
@@ -485,8 +499,6 @@ return{
 
 		local countTest = 1
 
-		-- #46 error here
---[[
 		cs1:loadNeighborhood{source = file("cabecadeboi-neigh.gpm", "base")}
 
 		local sizes = {}
@@ -521,7 +533,7 @@ return{
 				minWeight = math.min(weight, minWeight)
 				maxWeight = math.max(weight, maxWeight)
 
-				unitTest:assert_equal(weight, neighborhood:getNeighWeight(neigh))
+				unitTest:assert_equal(weight, neighborhood:getWeight(neigh))
 				sumWeight = sumWeight + weight
 			end)
 		end)
@@ -560,7 +572,7 @@ return{
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert(neighborhoodSize <= 5)
+			unitTest:assert(neighborhoodSize >= 5)
 			unitTest:assert(neighborhoodSize <= 12)
 
 			minSize = math.min(neighborhoodSize, minSize)
@@ -579,7 +591,7 @@ return{
 				minWeight = math.min(weight, minWeight)
 				maxWeight = math.max(weight, maxWeight)
 
-				unitTest:assert_equal(weight, neighborhood:getNeighWeight(neigh))
+				unitTest:assert_equal(weight, neighborhood:getWeight(neigh))
 				sumWeight = sumWeight + weight
 			end)
 		end)
@@ -599,6 +611,7 @@ return{
 
 		countTest = countTest + 1
 
+-- [[
 		cs3:loadNeighborhood{
 			source = file("gpmdistanceDbEmasCells.gpm", "base"),
 			name = "my_neighborhood"..countTest
@@ -631,7 +644,7 @@ return{
 
 				unitTest:assert_equal(weight,1)
 
-				unitTest:assert_equal(weight, neighborhood:getNeighWeight(neigh))
+				unitTest:assert_equal(weight, neighborhood:getWeight(neigh))
 				sumWeight = sumWeight + weight
 			end)
 		end)
@@ -648,9 +661,11 @@ return{
 		unitTest:assert_equal(1243, sizes[8])
 
 		countTest = countTest + 1
-
+--[[
+		-- TODO: emas-distance.gwt has a problem with the IDs. It uses 0, 1, 2..., while
+		-- the CellularSpace has C7975976L288149, C7976580L284735, C7976643L284863, etc.
 		cs2:loadNeighborhood{
-			source = file("gpmdistanceDbEmas.gpm", "base"),
+			source = file("emas-distance.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -691,12 +706,12 @@ return{
 		unitTest:assert_equal(70.8015, minWeight, 0.00001)
 		unitTest:assert_equal(9999.513, maxWeight, 0.00001)
 		unitTest:assert_equal(84604261.93974, sumWeight, 0.00001)
-
+--]]
 		-- .GAL Regular CS
 		countTest = countTest + 1
-
+ 
 		cs1:loadNeighborhood{
-			source = file("neighCabecaDeBoi900x900.GAL", "base"),
+			source = file("cabecadeboi-neigh.gal", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -744,8 +759,11 @@ return{
 		-- .GAL Irregular CS
 		countTest = countTest + 1
 
+--[[
+		-- TODO: emas-distance.gwt has a problem with the IDs. It uses 0, 1, 2..., while
+		-- the CellularSpace has C7975976L288149, C7976580L284735, C7976643L284863, etc.
 		cs2:loadNeighborhood{
-			source = file("gpmdistanceDbEmas.gal", "base"),
+			source = file("emas-distance.gal", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -780,9 +798,9 @@ return{
 
 		-- .GWT Regular CS
 		countTest = countTest + 1
-
+--]]
 		cs1:loadNeighborhood{
-			source = file("neighCabecaDeBoi900x900.GWT", "base"),
+			source = file("cabecadeboi-neigh.gwt", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -837,8 +855,11 @@ return{
 		-- .GWT Irregular CS
 		countTest = countTest + 1
 
+		-- TODO: emas-distance.gwt has a problem with the IDs. It uses 0, 1, 2..., while
+		-- the CellularSpace has C7975976L288149, C7976580L284735, C7976643L284863, etc.
+--[[
 		cs2:loadNeighborhood{
-			source = file("gpmdistanceDbEmas.gwt", "base"),
+			source = file("emas-distance.gwt", "base"),
 			name = "my_neighborhood"..countTest
 		}
 

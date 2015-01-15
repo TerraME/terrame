@@ -234,12 +234,12 @@ metaTableNeighborhood_ = {
 -- using CellularSpace:loadNeighborhood(). Calling Utils:forEachNeighbor()
 -- from a Cell traverses one of its Neighborhoods.
 -- @usage n = Neighborhood()
-function Neighborhood()
-	local data = {}
+function Neighborhood(data)
+	if data == nil then
+		data = {cObj_ = TeNeighborhood()}
+	end
 
-	data.cObj_ = TeNeighborhood()
 	data.cObj_:setReference(data)
-
 	setmetatable(data, metaTableNeighborhood_)
 	return data
 end

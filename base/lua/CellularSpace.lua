@@ -714,11 +714,7 @@ CellularSpace_ = {
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
 
-		if data.source == nil then
-			mandatoryArgumentError("source")
-		elseif type(data.source) ~= "string" then 
-			incompatibleTypeError("source", "string", data.source)
-		end
+		mandatoryTableArgument(data, "source", "string")
 
 		if data.source:endswith(".gal") or data.source:endswith(".gwt") or data.source:endswith(".gpm") then
 			if not io.open(data.source, "r") then
@@ -728,11 +724,7 @@ CellularSpace_ = {
 			invalidFileExtensionError("source", string.match(data.source, "%w+$"))
 		end
 
-		if data.name == nil then
-			data.name = "1"
-		elseif type(data.name) ~= "string" then 
-			incompatibleTypeError("name", "string", data.name)
-		end
+		defaultTableValue(data, "name", "1")
 
 		self.cObj_:loadNeighborhood(data.source, data.name)
 	end,

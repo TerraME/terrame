@@ -3084,8 +3084,6 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
         itCell++;
     }
 
-
-    if(execModes != Quiet ) qWarning("\tGPM sucessfuly loaded.\n");
     return 0;
 }
 
@@ -3098,12 +3096,6 @@ int luaCellularSpace::loadNeighborhood(lua_State *L){
     char aux[255], extension[255], shortFileName[255];
     char *auxExt;
     string wrngMsg = string();
-
-	/*
-    if(execModes != Quiet ){
-        wrngMsg = string("Loading neighborhood '" ) + string(neighName) + string("'");
-    }
-	*/
 
     strcpy(aux, const_cast<char*>(fileName));
     auxExt = strtok( aux, "." );
@@ -3402,13 +3394,6 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
     }
 
     file.close();
-    if( execModes != Quiet ){
-        string err_out = string("Neighborhood successfully loaded." );
-        lua_getglobal(L, "print");
-        lua_pushstring(L,err_out.c_str());
-        lua_call(L,1,0);
-    }
-
     return 0;
 }
 
@@ -3597,13 +3582,6 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
         return false;
     }
     file.close();
-    if( execModes != Quiet ){
-        string err_out = string("Neighborhood successfully loaded." );
-        lua_getglobal(L, "print");
-        lua_pushstring(L,err_out.c_str());
-        lua_call(L,1,0);
-    }
-    
     return 0;
 }
 
@@ -3801,13 +3779,6 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
         return false;
     }
     file.close();
-    if( execModes != Quiet ){
-        string err_out = string("Neighborhood successfully loaded." );
-        lua_getglobal(L, "print");
-        lua_pushstring(L,err_out.c_str());
-        lua_call(L,1,0);
-    }
-
     return 0;
 }
 
@@ -3964,13 +3935,6 @@ int luaCellularSpace::loadTXTNeighborhood( lua_State *L, const char* fileName, c
         return false;
     }
     file.close();
-    if( execModes != Quiet ){
-        string err_out = string("Neighborhood successfully loaded." );
-        lua_getglobal(L, "print");
-        lua_pushstring(L,err_out.c_str());
-        lua_call(L,1,0);
-    }
-
     return 0;
 }
 
