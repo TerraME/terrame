@@ -32,24 +32,34 @@ return{
 		unitTest:assert_error(error_func, namedArgumentsMsg())
 
 		error_func = function()
-			cell = Cell{x = 2.22, y = 0}
+			local cell = Cell{x = "2.22", y = 0}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("x", "positive integer number", 2.22))
+		unitTest:assert_error(error_func, incompatibleValueMsg("x", "number", "2.22"))
 
 		error_func = function()
-			cell = Cell{x = -2, y = 1}
+			local cell = Cell{x = -2, y = "1"}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("x", "positive integer number", -2))
+		unitTest:assert_error(error_func, incompatibleValueMsg("y", "number", "1"))
 
 		error_func = function()
-			cell = Cell{x = 1, y = 2.22}
+			local cell = Cell{x = 2.22, y = 0}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("y", "positive integer number", 2.22))
+		unitTest:assert_error(error_func, incompatibleValueMsg("x", "integer number", 2.22))
 
 		error_func = function()
-			cell = Cell{x = 1, y = -2}
+			local cell = Cell{x = -2.3, y = 1}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("y", "positive integer number", -2))
+		unitTest:assert_error(error_func, incompatibleValueMsg("x", "integer number", -2.3))
+
+		error_func = function()
+			local cell = Cell{x = 1, y = 2.22}
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg("y", "integer number", 2.22))
+
+		error_func = function()
+			local cell = Cell{x = 1, y = -2.3}
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg("y", "integer number", -2.3))
 	end,
 	addNeighborhood = function(unitTest)
 		local cell = Cell{x = 1, y = 1}

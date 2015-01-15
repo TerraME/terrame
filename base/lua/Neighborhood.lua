@@ -236,7 +236,11 @@ metaTableNeighborhood_ = {
 -- @usage n = Neighborhood()
 function Neighborhood(data)
 	if data == nil then
-		data = {cObj_ = TeNeighborhood()}
+		data = {}
+	end
+
+	if not data.cObj_ then
+		data.cObj_ = TeNeighborhood()
 	end
 
 	data.cObj_:setReference(data)

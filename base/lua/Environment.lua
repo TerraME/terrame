@@ -313,7 +313,7 @@ Environment_ = {
 		verify(layer1Id ~= layer2Id, "This function does not load neighborhoods between cells from the same "..
 			"CellularSpace. Use CellularSpace:loadNeighborhood() instead.") 
 
-		verify(numAttributes == 1, "This function does not support GPM with more than one attribute.")
+		verify(numAttributes < 2, "This function does not support GPM with more than one attribute.")
 
 		local beginName = layer2Idx
 		local attribNames = {}
@@ -353,7 +353,7 @@ Environment_ = {
 			local cellId = string.sub(line_cell, 1, (cellIdIdx - 1))
 			local numNeighbors = tonumber(string.sub(line_cell, (cellIdIdx + 1)))
 
-			local cell = cellSpaces[1]:getCellByID(cellId)
+			local cell = cellSpaces[1]:get(cellId)
 
 			local neighborhood = Neighborhood{id = data.name}
 			cell:addNeighborhood(neighborhood, data.name)
@@ -361,7 +361,7 @@ Environment_ = {
 			local weight
 
 			if numNeighbors > 0 then
-				line_neighbors = file:read()
+				local line_neighbors = file:read()
 
 				local neighIdEndIdx = string.find(line_neighbors, "%s")
 				local neighIdIdx = 1
@@ -372,7 +372,7 @@ Environment_ = {
 						neighIdEndIdx = string.find(line_neighbors, "%s", neighIdIdx)
 					end
 					local neighId = string.sub(line_neighbors, neighIdIdx, (neighIdEndIdx - 1))
-					local neighbor = cellSpaces[2]:getCellByID(neighId)
+					local neighbor = cellSpaces[2]:get(neighId)
 
 					-- Gets the weight
 					if numAttributes > 0 then
@@ -401,24 +401,24 @@ Environment_ = {
 						weight = 1
 					end
 
-					-- Adds the neighbor in the neighborhood
-					neighborhood:addNeighbor(neighbor, weight)
+					-- Adds the neighbor to the neighborhood
+					neighborhood:add(neighbor, weight)
 
 					if data.bidirect then 
 						local neighborhoodNeigh = neighbor:getNeighborhood(data.name)
 						if neighborhoodNeigh == nil then
-							neighborhoodNeigh = Neighborhood{id = data.name}
+							neighborhoodNeigh = Neighborhood()
 							neighbor:addNeighborhood(neighborhoodNeigh, data.name)
 						end
-						neighborhoodNeigh:addNeighbor(cell, weight)
+						neighborhoodNeigh:add(cell, weight)
 					end
 				end
 			end
 		until(line_cell == nil)
 
-		if data.bidirect == true then
+		if data.bidirect then
 			for i, cell2 in ipairs(cellSpaces[2].cells)do
-				neighborhoodNeigh = cell2:getNeighborhood(data.name)
+				local neighborhoodNeigh = cell2:getNeighborhood(data.name)
 				if neighborhoodNeigh == nil then
 					neighborhoodNeigh = Neighborhood()
 					cell2:addNeighborhood(neighborhoodNeigh, data.name)

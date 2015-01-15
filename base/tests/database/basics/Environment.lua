@@ -60,8 +60,7 @@ return{
 		}
 
 		unitTest:assert(true)
-		-- #46
---[[
+
 		local cs3 = CellularSpace{
 			host = mhost,
 			user = muser,
@@ -81,7 +80,7 @@ return{
 
 		-- .gpm Regular CS x Irregular CS - without weights
 		env:loadNeighborhood{
-			source = data("gpmlinesDbEmas.gpm", "base"),
+			source = file("gpmlinesDbEmas.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -97,8 +96,8 @@ return{
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert_gte(neighborhoodSize,0)
-			unitTest:assert_lte(neighborhoodSize,9)
+			unitTest:assert(neighborhoodSize >= 0)
+			unitTest:assert(neighborhoodSize <= 9)
 
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
@@ -130,7 +129,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = data("gpmAreaCellsPols.gpm", "base"),
+			source = file("gpmAreaCellsPols.gpm", "base"),
 			name = "my_neighborhood"..countTest
 		}
 
@@ -147,8 +146,8 @@ return{
 			unitTest:assert_equal(1, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_lte(weight, 1000000)
-				unitTest:assert_gte(weight, 304.628)
+				unitTest:assert(weight <= 1000000)
+				unitTest:assert(weight >= 304.628)
 
 				minWeight = math.min(weight, minWeight)
 				maxWeight = math.max(weight, maxWeight)
@@ -165,9 +164,8 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = data("gpmAreaCellsPols.gpm", "base"),
-			name = "my_neighborhood"..countTest,
-			bidirect = false
+			source = file("gpmAreaCellsPols.gpm", "base"),
+			name = "my_neighborhood"..countTest
 		}
 
 		minWeight = math.huge
@@ -199,7 +197,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = data("gpmAreaCellsPols.gpm", "base"),
+			source = file("gpmAreaCellsPols.gpm", "base"),
 			name = "my_neighborhood"..countTest,
 			bidirect = true
 		}
@@ -261,9 +259,8 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = data("gpmPolLinDbEmas.gpm", "base"),
-			name = "my_neighborhood"..countTest,
-			bidirect = false
+			source = file("emas-pollin.gpm", "base"),
+			name = "my_neighborhood"..countTest
 		}
 
 		sumWeight = 0
@@ -289,7 +286,7 @@ return{
 		countTest = countTest + 1
 
 		env:loadNeighborhood{
-			source = data("gpmPolLinDbEmas.gpm", "base"),
+			source = file("emas-pollin.gpm", "base"),
 			name = "my_neighborhood"..countTest,
 			bidirect = true
 		}
@@ -337,7 +334,6 @@ return{
 		unitTest:assert_equal(207, sumWeight)
 		unitTest:assert_equal(1, sizes[0])
 		unitTest:assert_equal(207, sizes[1])
---]]
 	end
 }
 
