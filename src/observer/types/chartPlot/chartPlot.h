@@ -41,7 +41,6 @@ namespace TerraMEObserver {
 
 class InternalCurve;
 
-
 class ChartPlot : public QwtPlot
 {
     Q_OBJECT
@@ -78,3 +77,4 @@ private:
 
 }
 #endif // CHART_PLOT_H
+

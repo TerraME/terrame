@@ -58,7 +58,8 @@ end)
 Observer{
 	subject = c,
 	type = "chart",
-	attributes = {"agents_in_the_bar"}
+	attributes = {"agents_in_the_bar"},
+	yLabel = "percentage"
 }
 
 Observer{

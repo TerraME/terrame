@@ -76,13 +76,12 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
 	plotter->id = getId();
     plotter->setAutoReplot(true);
     plotter->setStyleSheet("background-color: rgb(255, 255, 255);");
+	plotter->setStyleSheet("QwtPlot { padding: 8px }");
     plotter->setFrameShape(QFrame::Box);
     plotter->setFrameShadow(QFrame::Plain);
     plotter->setLineWidth(0);
     // TODO: Find an alternative solution to this. In qwt 6.1 setMargin does not exist for a QwtPlot. 
     // plotter->setMargin(10);
-    //plotter->resize(450, 350);
-    //plotter->setWindowTitle("TerraME Observer : Chart");
 
 	VisualArrangement* v = VisualArrangement::getInstance();
 

@@ -36,8 +36,8 @@ ChartPlot::ChartPlot(QWidget *parent) : QwtPlot(parent)
     ((QFrame*)canvas())->setFrameShadow(QFrame::Plain);
     ((QFrame*)canvas())->setLineWidth(0);
 
-	// QwtPlotLayout *layout = plotter->plotLayout();
-	// layout->setCanvasMargin(0);
+	QwtPlotLayout *layout = plotLayout();
+	layout->setCanvasMargin(0);
 	// layout->setAlignCanvasToScales(true);
     createPicker();
 
@@ -109,8 +109,6 @@ void ChartPlot::propertiesChart()
     
     // Creates chart objects back-up
 	QPalette plotterPalette = palette();
-	// TODO: Verify if it is necessary and put it back if yes
-//    int plotterMargin = margin();
     int plotterLWidth = lineWidth();
     QPalette canvasPalette = canvas()->palette();
     QFont titleFont = title().font(), axesFont = axisTitle(QwtPlot::xBottom).font();
@@ -128,10 +126,7 @@ void ChartPlot::propertiesChart()
     if (! plotPropGui->exec())
     {
         // Roll-backs plotter objects
-
         setPalette(plotterPalette);
-		// TODO: Verify if it is necessary and put it back if yes
-//        setMargin(plotterMargin);
         setLineWidth(plotterLWidth);
 
         // Title 
@@ -182,5 +177,4 @@ void ChartPlot::createPicker()
     picker->setRubberBand(QwtPicker::CrossRubberBand);
     picker->setTrackerPen( QColor(Qt::black) );
 }
-
 
