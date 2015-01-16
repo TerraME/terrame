@@ -341,17 +341,16 @@ int luaCell::createObserver(lua_State *)
 			string err_out = string("Attribute table not found. Incorrect sintax.");
 			lua_getglobal(L, "customError");
 			lua_pushstring(L,err_out.c_str());
-			//lua_pushnumber(L,3);
-			lua_call(L,1,0);
+			lua_call(L, 1, 0);
 			return -1;
 		}
 
 		bool attribTable = false;
 
 		lua_pushnil(luaL);
-		while(lua_next(luaL, top - 1 ) != 0)
+		while(lua_next(luaL, top - 1) != 0)
 		{
-			QString key( luaL_checkstring(luaL, -1) );
+			QString key(luaL_checkstring(luaL, -1));
 			attribTable = true;
 
 			// Verifica se o atributo informado nao existe deve ter sido digitado errado
@@ -364,19 +363,17 @@ int luaCell::createObserver(lua_State *)
 			}
 			else
 			{
-				if(! key.isNull() || ! key.isEmpty())
+				if(!key.isNull() || !key.isEmpty())
 				{
 					string err_out = string("Attribute '" + key.toStdString() + "' not found.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L,err_out.c_str());
-					//lua_pushnumber(L,3);
-					lua_call(L,1,0);
+					lua_call(L, 1, 0);
 					return -1;
 				}
 			}
 			lua_pop(luaL, 1);
 		}
-		//------------------------
 
 		if (obsAttribs.empty())
 		{
@@ -430,10 +427,10 @@ int luaCell::createObserver(lua_State *)
 				lua_pushnil(luaL);
 				while(lua_next(luaL, tableTop) != 0)
 				{
-					if (lua_type(luaL, -2) == LUA_TSTRING)
+					if(lua_type(luaL, -2) == LUA_TSTRING)
 						obsParams.append(luaL_checkstring(luaL, -2));
 
-					switch (lua_type(luaL, -1))
+					switch(lua_type(luaL, -1))
 					{
 					case LUA_TNUMBER:
 						cols.append(QString::number(luaL_checknumber(luaL, -1)) );
@@ -460,12 +457,11 @@ int luaCell::createObserver(lua_State *)
 		{
 			if (execModes != Quiet){
 				string err_out = string("Parameter table is empty.");
-				lua_getglobal(L, "customWarningMsg");
-				lua_pushstring(L,err_out.c_str());
-				lua_call(L,1,0);
+				lua_getglobal(L, "customWarning");
+				lua_pushstring(L, err_out.c_str());
+				lua_call(L, 1, 0);
 			}
 		}
-		//------------------------
 
 		ObserverTextScreen *obsText = 0;
 		ObserverTable *obsTable = 0;
@@ -480,49 +476,49 @@ int luaCell::createObserver(lua_State *)
 		{
 		case TObsTextScreen:
 			obsText = (ObserverTextScreen*)
-					CellSubjectInterf::createObserver(TObsTextScreen);
-			if (obsText)
+			CellSubjectInterf::createObserver(TObsTextScreen);
+			if(obsText)
 			{
 				obsId = obsText->getId();
 			}
 			else
 			{
-				if (execModes != Quiet)
+				if(execModes != Quiet)
 					qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
 			}
 			break;
 
 		case TObsLogFile:
 			obsLog = (ObserverLogFile*)
-					CellSubjectInterf::createObserver(TObsLogFile);
-			if (obsLog)
+			CellSubjectInterf::createObserver(TObsLogFile);
+			if(obsLog)
 			{
 				obsId = obsLog->getId();
 			}
 			else
 			{
-				if (execModes != Quiet)
+				if(execModes != Quiet)
 					qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
 			}
 			break;
 
 		case TObsTable:
 			obsTable = (ObserverTable *)
-					CellSubjectInterf::createObserver(TObsTable);
-			if (obsTable)
+			CellSubjectInterf::createObserver(TObsTable);
+			if(obsTable)
 			{
 				obsId = obsTable->getId();
 			}
 			else
 			{
-				if (execModes != Quiet)
+				if(execModes != Quiet)
 					qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
 			}
 			break;
 
 		case TObsDynamicGraphic:
 			obsGraphic = (ObserverGraphic *)
-					CellSubjectInterf::createObserver(TObsDynamicGraphic);
+			CellSubjectInterf::createObserver(TObsDynamicGraphic);
 			if (obsGraphic)
 			{
 				obsGraphic->setObserverType(TObsDynamicGraphic);
@@ -530,28 +526,28 @@ int luaCell::createObserver(lua_State *)
 			}
 			else
 			{
-				if (execModes != Quiet)
+				if(execModes != Quiet)
 					qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
 			}
 			break;
 
 		case TObsGraphic:
 			obsGraphic = (ObserverGraphic *)
-					CellSubjectInterf::createObserver(TObsGraphic);
-			if (obsGraphic)
+			CellSubjectInterf::createObserver(TObsGraphic);
+			if(obsGraphic)
 			{
 				obsId = obsGraphic->getId();
 			}
 			else
 			{
-				if (execModes != Quiet)
+				if(execModes != Quiet)
 					qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
 			}
 			break;
 
 		case TObsUDPSender:
 			obsUDPSender = (ObserverUDPSender *)
-					CellSubjectInterf::createObserver(TObsUDPSender);
+			CellSubjectInterf::createObserver(TObsUDPSender);
 			if (obsUDPSender)
 			{
 				obsId = obsUDPSender->getId();
@@ -569,7 +565,7 @@ int luaCell::createObserver(lua_State *)
 
 			case TObsTCPSender:
 				obsTCPSender = (ObserverTCPSender *) 
-					CellSubjectInterf::createObserver(TObsTCPSender);
+				CellSubjectInterf::createObserver(TObsTCPSender);
 				if (obsTCPSender)
 				{
 					obsId = obsTCPSender->getId();
@@ -580,12 +576,11 @@ int luaCell::createObserver(lua_State *)
 				}
 				else
 				{
-					if (execModes != Quiet ){
+					if (execModes != Quiet){
 						QString str = QString(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-						lua_getglobal(L, "customWarningMsg");
+						lua_getglobal(L, "customWarning");
 						lua_pushstring(L, str.toLatin1().constData());
-						//lua_pushnumber(L,5);
-						lua_call(L,1,0);
+						lua_call(L, 1, 0);
 					}
 				}
 				
@@ -593,13 +588,12 @@ int luaCell::createObserver(lua_State *)
 				
 		case TObsMap:
 		default:
-			if (execModes != Quiet )
+			if (execModes != Quiet)
 			{
 				string err_out = string("In this context, the code '") + string(getObserverName(typeObserver)) + string("' does not correspond to a valid type of Observer.");
-				lua_getglobal(L, "customWarningMsg");
-				lua_pushstring(L,err_out.c_str());
-				//lua_pushnumber(L,5);
-				lua_call(L,1,0);
+				lua_getglobal(L, "customWarning");
+				lua_pushstring(L, err_out.c_str());
+				lua_call(L, 1, 0);
 			}
 			return 0;
 		}
@@ -618,12 +612,10 @@ int luaCell::createObserver(lua_State *)
 	Statistic::getInstance().setObserverCount(obsId);
 #endif		
 
-		if (obsLog)
-		{
+		if (obsLog){
 			obsLog->setAttributes(obsAttribs);
 
-			if (cols.at(0).isNull() || cols.at(0).isEmpty())
-			{
+			if (cols.at(0).isNull() || cols.at(0).isEmpty()){
 				if (execModes != Quiet ){
 					string err_out = string("Filename was not specified, using a '") + string(DEFAULT_NAME.toStdString()) + string("'.");
 					lua_getglobal(L, "customWarningMsg");
@@ -634,48 +626,38 @@ int luaCell::createObserver(lua_State *)
 				obsLog->setFileName(DEFAULT_NAME + ".csv");
 			}
 			else
-			{
 				obsLog->setFileName(cols.at(0));
-			}
 
 			// caso nao seja definido, utiliza o default ";"
-			if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
-			{
+			if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty()){
 				if (execModes != Quiet ){
 					string err_out = string("Parameter 'separator' not defined, using ';'.");
-					lua_getglobal(L, "customWarningMsg");
-					lua_pushstring(L,err_out.c_str());
-					//lua_pushnumber(L,5);
-					lua_call(L,1,0);
+					lua_getglobal(L, "customWarning");
+					lua_pushstring(L, err_out.c_str());
+					lua_call(L, 1, 0);
 				}
 				obsLog->setSeparator();
 			}
 			else
-			{
 				obsLog->setSeparator(cols.at(1));
-			}
 
 			lua_pushnumber(luaL, obsId);
 			return 1;
 		}
 
-		if (obsText)
-		{
+		if (obsText){
 			obsText->setAttributes(obsAttribs);
 			lua_pushnumber(luaL, obsId);
 			return 1;
 		}
 
-		if (obsTable)
-		{
-			if ((cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
-					|| cols.at(1).isNull() || cols.at(1).isEmpty())
-			{
-				if (execModes != Quiet ){
+		if(obsTable){
+			if((cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
+					|| cols.at(1).isNull() || cols.at(1).isEmpty()){
+				if(execModes != Quiet){
 					string err_out = string("Column title not defined.");
-					lua_getglobal(L, "customWarningMsg");
+					lua_getglobal(L, "customWarning");
 					lua_pushstring(L,err_out.c_str());
-					//lua_pushnumber(L,5);
 					lua_call(L,1,0);
 				}
 			}
@@ -687,8 +669,7 @@ int luaCell::createObserver(lua_State *)
 			return 1;
 		}
 
-		if (obsGraphic)
-		{
+		if(obsGraphic){
 			obsGraphic->setLegendPosition();
 
 			// Takes titles of three first locations
@@ -705,18 +686,14 @@ int luaCell::createObserver(lua_State *)
 			return 1;
 		}
 
-		if(obsUDPSender)
-		{
+		if(obsUDPSender){
 			obsUDPSender->setAttributes(obsAttribs);
 
-			// if (cols.at(0).isEmpty())
-			if (cols.isEmpty())
-			{
+			if (cols.isEmpty()){
 				if (execModes != Quiet ){
 					string err_out = string("Parameter 'port' not defined.");
 					lua_getglobal(L, "customWarningMsg");
 					lua_pushstring(L,err_out.c_str());
-					//lua_pushnumber(L,5);
 					lua_call(L,1,0);
 				}
 			}
@@ -726,19 +703,16 @@ int luaCell::createObserver(lua_State *)
 			}
 
 			// broadcast
-			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
-			{
-				if (execModes != Quiet ){
+			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())){
+				if (execModes != Quiet){
 					string err_out = string("Observer will send broadcast.");
 					lua_getglobal(L, "customWarningMsg");
 					lua_pushstring(L,err_out.c_str());
-					//lua_pushnumber(L,5);
 					lua_call(L,1,0);
 				}
 				obsUDPSender->addHost(BROADCAST_HOST);
 			}
-			else
-			{
+			else{
 				// multicast or unicast
 				for(int i = 1; i < cols.size(); i++){
 					if (! cols.at(i).isEmpty())
@@ -749,47 +723,36 @@ int luaCell::createObserver(lua_State *)
 			return 1;
 		}
 
-		if(obsTCPSender)
-		{
+		if(obsTCPSender){
 			quint16 port = (quint16) DEFAULT_PORT;
 			obsTCPSender->setAttributes(obsAttribs);
 
-			// if (cols.at(0).isEmpty())
-			if (cols.isEmpty())
-			{
+			if (cols.isEmpty()){
 				if (execModes != Quiet ){
 					string err_out = string("Port not defined.");
 					lua_getglobal(L, "customWarningMsg");
 					lua_pushstring(L,err_out.c_str());
-					//lua_pushnumber(L,5);
 					lua_call(L,1,0);
 				}
 			}
 			else
-			{
 				port = (quint16) cols.at(0).toInt();
-			}
 
 			// broadcast
-			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
-			{
+			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())){
 				if (execModes != Quiet ){
 					string err_out = string("Observer will send to broadcast.");
 					lua_getglobal(L, "customWarningMsg");
 					lua_pushstring(L,err_out.c_str());
-					//lua_pushnumber(L,5);
 					lua_call(L,1,0);
 				}
 				obsTCPSender->addHost(LOCAL_HOST);
 			}
-			else
-			{
+			else{
 				// multicast or unicast
 				for(int i = 1; i < cols.size(); i++)
-				{
 					if (! cols.at(i).isEmpty())
 						obsTCPSender->addHost(cols.at(i));
-				}
 			}
 			obsTCPSender->connectTo(port);
 			lua_pushnumber(luaL, obsId);
@@ -797,11 +760,8 @@ int luaCell::createObserver(lua_State *)
 		}
 	}
 
-	//
 	// Comentado em 13/11/2013
 	// Remover na proxima iteracao
-	// 
-//	//@RAIAN
 //	// Comeca a criacao do Observer do tipo Neighborhood
 //	else
 //	{
@@ -921,7 +881,6 @@ int luaCell::createObserver(lua_State *)
 //			obsMap->setSubjectAttributes(neighIDs, className);
 //		}
 //	}
-//	//@RAIAN - FIM
 
 	return 0;
 }

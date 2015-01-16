@@ -162,11 +162,11 @@ TME_LEGEND_STDDEVIATION_USER = {
 -- Curve style -----------------------------------------------------------
 -- Based on Qwt library (see QwtPlotCurve::CurveStyle)
 TME_LEGEND_CURVE_STYLE = {
-	NOCURVE 	= 0,
-	LINES		= 1,
-	STICKS		= 2,
-	STEPS		= 3,
-	DOTS		= 4
+	NOCURVE 	= -1,
+	LINES		= 0,
+	STICKS		= 1,
+	STEPS		= 2,
+	DOTS		= 3
 }
 
 TME_LEGEND_CURVE_STYLE_USER = {

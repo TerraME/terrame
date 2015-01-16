@@ -243,7 +243,6 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 			incompatibleTypeError("xAxis", "string", datale.xAxis, 4)		
 		end	
 	end
-	
 
 	local chartTitle = datale.title or ""
 	local yLabel = datale.yLabel or ""

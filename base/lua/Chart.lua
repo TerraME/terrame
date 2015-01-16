@@ -28,7 +28,7 @@
 -- @arg data.subject An Agent, Cell, CellularSpace, Society.
 -- @arg data.select A vector of strings with the name of the attributes to be observed. If it is only a
 -- single value then it can also be described as a string. 
--- @arg data.xLabel Name of the x-axis. It does not show any label as default.
+-- @arg data.xLabel Name of the x-axis. It shows "Time" as default.
 -- @arg data.yLabel Name of the y-axis. It does not show any label as default.
 -- @arg data.label Vector of the same size of select that indicates the labels for each
 -- line of a chart. Default is the name of the attributes.
@@ -49,7 +49,7 @@
 Chart = function(data)
 	mandatoryTableArgument(data, "subject")
 	defaultTableValue(data, "yLabel", "")
-	defaultTableValue(data, "xLabel", "")
+	defaultTableValue(data, "xLabel", "Time")
 	defaultTableValue(data, "title",  "")
 
 	optionalTableArgument(data, "xAxis",  "string")

@@ -80,8 +80,6 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     plotter->setFrameShape(QFrame::Box);
     plotter->setFrameShadow(QFrame::Plain);
     plotter->setLineWidth(0);
-    // TODO: Find an alternative solution to this. In qwt 6.1 setMargin does not exist for a QwtPlot. 
-    // plotter->setMargin(10);
 
 	VisualArrangement* v = VisualArrangement::getInstance();
 
@@ -530,10 +528,10 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 			if (execModes != Quiet)
 			{
 				string str = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-				lua_getglobal(L, "customWarningMsg");
-				lua_pushstring(L,str.c_str());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				lua_getglobal(L, "customWarning");
+				lua_pushstring(L, str.c_str());
+				lua_pushnumber(L, 5);
+				lua_call(L, 2, 0);
 			}
         }
     }
