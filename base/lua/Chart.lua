@@ -87,11 +87,6 @@ Chart = function(data)
 				end
 			end)
 		elseif type(data.subject) == "Society" then
-			forEachOrderedElement(data.subject, function(idx, value, mtype)
-				if mtype == "number" then
-					data.select[#data.select + 1] = idx
-				end
-			end)
 			data.select[#data.select + 1] = "#"
 		else
 			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society.")
@@ -150,6 +145,8 @@ Chart = function(data)
 		for i = 1, #data.select do
 			if data.select[i] == "#" then
 				data.label[i] = "quantity"
+				data.select[i] = "quantity_"
+				data.subject.quantity_ = #data.subject
 			else
 				data.label[i] = data.select[i]
 			end

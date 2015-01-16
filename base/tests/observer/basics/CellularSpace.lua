@@ -26,7 +26,7 @@
 return{
 	CellularSpace = function(unitTest)
 -- FIXME: if the following lines were uncommented together with the next test, TerraME aborts
---[[
+-- [[
 		local unit = Cell{
 			count = 0
 		}
@@ -37,7 +37,7 @@ return{
 			instance = unit
 		}
 
-		local c = Chart{subject = world}
+		local c = Chart{subject = world, select = "count"}
 
 		unitTest:assert_type(c, "number")
 
@@ -53,10 +53,13 @@ return{
 			end}
 		}
 
+--[[
 		TextScreen{subject = world}
 		LogFile{subject = world}
 		VisualTable{subject = world}
+--]]
 		t:execute(30)
+		unitTest:delay()
 --]]
 
 		-- FIXME: this observer does not draw the cells in the screen here.
@@ -103,7 +106,6 @@ return{
 --[[
 		Map{
 			subject = world,
-			grouping = "uniquevalues",
 			select  = "value",
 			colors  = {{0, 0, 0}, {255, 255, 255}},
 			values = {0, 1}
@@ -111,7 +113,6 @@ return{
 
 		Map{
 			subject = world,
-			grouping = "uniquevalues",
 			select  = "value",
 			colors  = {"blue", "red"},
 			values = {0, 1}
@@ -123,6 +124,7 @@ return{
 			select  = "x",
 			colors  = {"blue", "red"},
 			min = 0,
+			slices = 10,
 			max = 10
 		}
 --]]

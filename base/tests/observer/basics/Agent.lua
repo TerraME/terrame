@@ -26,14 +26,27 @@
 return{
 	Agent = function(unitTest)
 		local world = Agent{
-		    count = 0
+		    count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
 		}
 
 		local c = Chart{subject = world}
 
+		local c = Chart{
+			subject = world,
+			select = "mcount"
+		}
+
 		unitTest:assert_type(c, "number")
 
 		world:notify(0)
+		world.count = world.count + 5
+		world:notify(1)
+		world.count = world.count + 5
+		world:notify(2)
+		unitTest:delay()
 
 		local t = Timer{
 		    Event{action = function(e)
@@ -46,6 +59,7 @@ return{
 		LogFile{subject = world}
 		VisualTable{subject = world}
 		t:execute(30)
+		unitTest:delay()
 	end
 }
 

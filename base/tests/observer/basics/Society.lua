@@ -38,13 +38,18 @@ return{
 			value = 5
 		}
 
-		--local c = Chart{subject = soc}
-		--unitTest:assert_type(c, "number")
+		local c = Chart{subject = soc}
+		unitTest:assert_type(c, "number")
 
-		local c = Chart{subject = soc, select = "value"}--{"height", "#"}}
+		local c = Chart{subject = soc, select = {"value", "height"}}
 		unitTest:assert_type(c, "number")
 
 		soc:notify(0)
+		soc:add()
+		soc:notify(1)
+		soc:add()
+		soc:notify(2)
+		unitTest:delay()
 
 		local t = Timer{
 		    Event{action = function(e)
