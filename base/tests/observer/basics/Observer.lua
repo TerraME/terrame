@@ -30,6 +30,12 @@ return{
 	end,
 	killAllObservers = function(unitTest)
 		unitTest:assert(true)
+	end,
+	kill = function(unitTest)
+		unitTest:assert(true)
+	end,
+	killAll = function(unitTest)
+		unitTest:assert(true)
 	end
 }
 

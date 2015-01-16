@@ -893,7 +893,6 @@ end
 -- Constructor for Observers
 Observer_ = {
 	type_ = "Observer",
---[[
 	kill = function(self, func)
 		if self.subject.cObj_ then 
 			if self.type == TME_OBSERVERS.NEIGHBORHOOD or self.type == "neighborhood" then
@@ -916,7 +915,6 @@ Observer_ = {
 			customError("This function is not applicable to this type.", 3)
 		end
 	end
---]]
 }
 
 local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabel", "yLabel", "title", "curveLabels", "legends", "path", "location", "outfile", "separator", "prefix", "observer",--[["cellspace",]] "neighIndex", "neighType", "port", "hosts"}
