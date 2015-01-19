@@ -356,7 +356,6 @@ local legendPossibleParams = {
 	"style"
 }
 
-
 Legend_ = {
 	type_ = "Legend"
 }
@@ -457,7 +456,6 @@ function Legend(data)
 		data.style = TME_LEGEND_CURVE_STYLE_USER[data.style]
 	end
 
-	-- LEGEND PRE-SETUP
 	if not data.colorBar or (type(data.colorBar) == "table" and #data.colorBar == 0) then
 		data.colorBar = nil
 	elseif type(data.colorBar) ~= "table" then
@@ -664,7 +662,7 @@ function Legend(data)
 	end
 
 	-- Verify if the number of slices is smaller than or equal the number of available colors
-	if type(data.colorBar) == "table" then
+	if type(data.colorBar) == "table" and data.slices > 1 then
 		local diffR = 0
 		local diffG = 0
 		local diffB = 0
@@ -672,9 +670,9 @@ function Legend(data)
 			local color = data.colorBar[k].color
 			local nextColor = data.colorBar[k + 1].color
 
-			diffR = diffR + math.abs(nextColor[1]-color[1])
-			diffG = diffG + math.abs(nextColor[2]-color[2])
-			diffB = diffB + math.abs(nextColor[3]-color[3])
+			diffR = diffR + math.abs(nextColor[1] - color[1])
+			diffG = diffG + math.abs(nextColor[2] - color[2])
+			diffB = diffB + math.abs(nextColor[3] - color[3])
 		end
 		local maxDiff = math.max(diffR, diffG, diffB)
 

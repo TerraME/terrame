@@ -247,7 +247,7 @@ Chart = function(data)
 			color = data.color[i]
 		end
 
-		local l = Legend{type = "number", width = width, style = style, colorBar = {color = color, value = "-"}}
+		local l = Legend{type = "number", width = width, style = style, slices = 1, colorBar = {{color = color, value = "-"}}}
 
 		table.insert(observerParams, l)
 		i = i + 1
