@@ -42,6 +42,7 @@ public:
         values = new QVector<double>();
 
         plotCurve = new QwtPlotCurve(name);
+		plotCurve->setSymbol(new QwtSymbol);
         plotCurve->setPaintAttribute(QwtPlotCurve::FilterPoints, true);
         plotCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
         plotCurve->attach(plotter);
@@ -50,6 +51,7 @@ public:
     virtual ~InternalCurve()
     {
         delete values;
+//		delete plotCurve->symbol();
         delete plotCurve;
     }
 
