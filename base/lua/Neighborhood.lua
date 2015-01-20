@@ -233,6 +233,7 @@ metaTableNeighborhood_ = {
 -- CellularSpace:createNeighborhood(). Neighborhoods can also be loaded from external soures
 -- using CellularSpace:loadNeighborhood(). Calling Utils:forEachNeighbor()
 -- from a Cell traverses one of its Neighborhoods.
+-- @arg data A table with only internal purposes. It should not be used explicitly by the user.
 -- @usage n = Neighborhood()
 function Neighborhood(data)
 	if data == nil then

@@ -892,6 +892,10 @@ end
 -- Constructor for Observers
 Observer_ = {
 	type_ = "Observer",
+	--- Kill the observer itself.
+	-- @arg func A function that can be used when observing a Society. It takes an Agent as 
+	-- argument and returns true if the Agent should not be observed anymore.
+	-- @usage observer:kill()
 	kill = function(self, func)
 		if self.subject.cObj_ then 
 			if self.type == TME_OBSERVERS.NEIGHBORHOOD or self.type == "neighborhood" then
@@ -907,11 +911,13 @@ Observer_ = {
 			end
 		end
 	end,
+	--- Kill all the observers connected to a Society.
+	-- @usage observer:killAll()
 	killAll = function(self)
 		if type(self.subject) == "Society" then
-			return self.subject:remove(function(ag) return true end)
+			return self.subject:remove(function() return true end)
 		else
-			customError("This function is not applicable to this type.", 3)
+			customError("This function is not applicable to this type.")
 		end
 	end
 }
