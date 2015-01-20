@@ -103,16 +103,37 @@ function switch(data, att)
 					customError("Case "..tostring(self.casevar).." should be a function.")
 				end
 			else
-				local sugg = suggestion(self.casevar, code)
-				if sugg then
-					customError(switchInvalidArgumentSuggestionMsg(self.casevar, att, sugg))
-				else
-					customError(switchInvalidArgumentMsg(self.casevar, att, code))
-				end
+				switchInvalidArgument(att, self.casevar, code)
+
 			end
 		end
 	}
 	return swtbl
+end
+
+--- Stops the simulation with an error because the used did not use a correct option.
+-- This function supposes that there is a set of available options described as
+-- string idexes of a table so it tries to find an approximate string to be shown as
+-- a suggestion. Otherwise, it shows all the available options.
+-- The error messages come from switchInvalidArgumentSuggestionMsg() and
+-- switchInvalidArgumentMsg().
+-- @arg att The attribute name (a string).
+-- @arg value The wrong value passed as argument.
+-- @arg suggestions A table with string indexes describing the available options.
+-- @usage t = {
+--     blue = true,
+--     red = true,
+--     green = true
+-- }
+--
+-- switchInvalidArgument("attribute", "gren", t) 
+function switchInvalidArgument(att, value, suggestions)
+	local sugg = suggestion(value, suggestions)
+	if sugg then
+		customError(switchInvalidArgumentSuggestionMsg(value, att, sugg))
+	else
+		customError(switchInvalidArgumentMsg(value, att, suggestions))
+	end
 end
 
 --- Return a suggestion for a wrong string value. The suggestion must have a 

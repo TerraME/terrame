@@ -92,10 +92,40 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("size", "positive number", -3))
 
+		local symbolTable = {
+			square = 1,
+			diamond = 2,
+			triangle = 3,
+			ltriangle = 4,
+			-- triangle = 5,
+			dtriangle = 6, -- downwards triangle
+			rtriangle = 7,
+			cross = 8,
+			vcross = 9, -- vertical cross
+			hline = 10,
+			vline = 11,
+			asterisk = 12,
+			star = 13,
+			hexagon = 14,
+			none = 15
+		}
+
+		local styleTable = {
+			lines = true,
+			dots = true,
+			steps = true,
+			sticks = true
+		}
+
 		local error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, style = "abc"}
 		end
-		unitTest:assert_error(error_func, "'abc' is an invalid value for argument 'style'. It must be a string from the set ['dots', 'lines', 'steps', 'sticks'].")
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("abc", "style", styleTable))
+
+		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, style = "line"}
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("line", "style", "lines"))
 
 		local error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, symbol = -3}
@@ -105,7 +135,12 @@ return{
 		local error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, symbol = "abc"}
 		end
-		unitTest:assert_error(error_func, "'abc' is an invalid value for argument 'symbol'. It must be a string from the set ['asterisk', 'cross', 'diamond', 'dtriangle', 'hexagon', 'hline', 'ltriangle', 'none', 'rtriangle', 'square', 'star', 'triangle', 'vcross', 'vline'].")
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("abc", "symbol", symbolTable))
+
+		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, symbol = "dyamond"}
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("dyamond", "symbol", "diamond"))
 
 		local unit = Cell{
 			count = 0

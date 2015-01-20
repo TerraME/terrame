@@ -299,7 +299,7 @@ Chart = function(data)
 		forEachElement(data.symbol, function(idx, value)
 			symbol[idx] = symbolTable[value]
 			if not symbol[idx] then
-				customError(switchInvalidArgumentMsg(value, "symbol", symbolTable))
+				switchInvalidArgument("symbol", value, symbolTable)
 			end
 		end)
 		data.symbol = symbol
@@ -308,7 +308,7 @@ Chart = function(data)
 	if data.style then
 		forEachElement(data.style, function(_, value)
 			if not styleTable[value] then
-				customError(switchInvalidArgumentMsg(value, "style", styleTable))
+				switchInvalidArgument("style", value, styleTable)
 			end
 		end)
 	end

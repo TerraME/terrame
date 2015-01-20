@@ -68,6 +68,24 @@ return{
 		unitTest:assert_equal(suggestion("aaaab", t), "aaaaa")
 		unitTest:assert_nil(suggestion("ddddd", t))
 	end,
+	switchInvalidArgument = function(unitTest)
+		local t = {
+			aaaaa = true,
+			bbbbb = true,
+			ccccc = true
+		}
+
+		local error_func = function()
+			switchInvalidArgument("arg", "aaaab", t)
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("aaaab", "arg", "aaaaa"))
+
+		local error_func = function()
+			switchInvalidArgument("arg", "ddddd", t)
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("ddddd", "arg", t))
+	end,
+
 	valueNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for argument 'aaa'.")
 	end,
