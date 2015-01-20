@@ -88,6 +88,11 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg("style", "table", 2))
 
 		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, width = -3}
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg("width", "greater than zero", -3))
+
+		local error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, size = -3}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("size", "positive number", -3))
@@ -117,6 +122,24 @@ return{
 			steps = true,
 			sticks = true
 		}
+
+		local penTable = {
+			solid = 1,
+			dash = 2,
+			dot = 3,
+			dashdot = 4,
+			dashdotdot = 5
+		}
+
+		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, pen = "abc"}
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("abc", "pen", penTable))
+
+		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, pen = "solyd"}
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("solyd", "pen", "solid"))
 
 		local error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, style = "abc"}

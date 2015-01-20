@@ -298,6 +298,14 @@ Chart = function(data)
 		end)
 	end
 
+	if data.width then
+		forEachElement(data.width, function(idx, value)
+			if value <= 0 then
+				incompatibleValueError("width", "greater than zero", value)
+			end
+		end)
+	end
+
 	if data.symbol then
 		local symbol = {}
 		forEachElement(data.symbol, function(idx, value)
