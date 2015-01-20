@@ -37,24 +37,17 @@ e = Environment {
 
 e:createPlacement{max = 1}
 
-c = Cell{quantity = 1}
-
-o = Observer{
-	subject = c,
-	type = "chart",
-	xLabel = "Time",
-	yLabel = "Number of Agents",
-	attributes = {"quantity"}
+Chart{
+	subject = soc
 }
 
-c:notify(0)
+soc:notify(0)
 
 t = Timer {
 	Event{action = soc},
 	Event{action = cs},
 	Event{action = function(e)
-		c.quantity = #soc
-		c:notify(e:getTime())
+		soc:notify(e)
 	end}
 }
 
@@ -82,5 +75,5 @@ Observer {
 }
 --]]
 
-t:execute(120)
+t:execute(5)
 

@@ -22,11 +22,11 @@ predator = Agent{
 	execute = function(self)
 		forEachAgent(self:getCell(), function(other)
 			if other.name == "prey" then
-				self.energy = self.energy + other.energy / 2
+				self.energy = self.energy + other.energy
 				other:die()
 				return false -- found a prey, stop forEachAgent
 			elseif other.name == "predator" and other ~= self and math.random() < 0.1 then
-				self.energy = self.energy + other.energy / 2
+				self.energy = self.energy + other.energy
 				other:die()
 				return false -- found a prey, stop forEachAgent
 			end
@@ -41,7 +41,7 @@ prey = Agent{
 	execute = function(self)
 		if self:getCell().cover == "pasture" then
 			self:getCell().cover = "soil"
-			self.energy = self.energy + 5
+			self.energy = self.energy + 20
 		end
 		commonActions(self)
 	end
@@ -49,16 +49,16 @@ prey = Agent{
 
 predators = Society{
 	instance = predator,
-	quantity = 2
+	quantity = 20
 }
 
 preys = Society{
 	instance = prey,
-	quantity = 2
+	quantity = 20
 }
 
 cs = CellularSpace{
-	xdim = 2
+	xdim = 20
 }
 cs:createNeighborhood()
 
@@ -96,15 +96,26 @@ function countAgents(cs)
 	return count
 end
 
--- TODO: implement charts
+c = Cell{
+	predators = function() return #predators end,
+	preys = function() return #preys end
+}
+
+Chart{
+	subject = c,
+	select = {"predators", "preys"}
+}
+
+c:notify(0)
 
 timer = Timer{
 	Event{action = function(event)
 		preys:execute()
 		predators:execute()
+		c:notify(event)
 		forEachCell(cs, regrowth)
 	end}
 }
 
-timer:execute(40)
+timer:execute(30)
 

@@ -55,17 +55,19 @@ forEachElement(NAMES_STRATEGIES, function(_, name)
 	list_attributes[#list_attributes + 1] = name
 end)
 
-Observer{
+Chart{
 	subject = c,
-	type = "chart",
-	attributes = {"agents_in_the_bar"},
+	select = {"agents_in_the_bar"},
+	symbol = "hexagon",
+	size = 7,
+	width = 2,
 	yLabel = "percentage"
 }
 
-Observer{
+Chart{
 	subject = c,
-	type = "chart",
-	attributes = list_attributes
+	width = 2,
+	select = list_attributes
 }
 
 function count_strategies(soc)

@@ -3,10 +3,9 @@
 
 world = Cell{water = 40}
 
-o = Observer{
+Chart{
     subject = world,
-    type = "chart",
-    attributes = {"water"}
+	pen = "dash"
 }
 
 t = Timer {

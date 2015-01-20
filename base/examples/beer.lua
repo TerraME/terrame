@@ -73,16 +73,17 @@ c = Cell{
 	total_cost = 0
 }
 
-Observer{
-	type = "chart",
+Chart{
 	subject = c,
-	attributes = {"beer_requested", "beer_delivered"}
+	select = {"beer_requested", "beer_delivered"},
+	color = {"red", "blue"}
 }
 
-Observer{
-	type = "chart",
+Chart{
 	subject = c,
-	attributes = {"total_cost"}
+	select = {"total_cost"},
+	color = "black",
+	style = "sticks"
 }
 
 consumer = Agent{
