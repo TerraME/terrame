@@ -37,7 +37,7 @@ return{
 			instance = unit
 		}
 
-		local c = Chart{subject = world, select = "count"}
+		local c = Chart{subject = world}
 
 		unitTest:assert_type(c, "number")
 

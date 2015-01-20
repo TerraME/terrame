@@ -166,14 +166,9 @@ return{
 		end
 		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("dyamond", "symbol", "diamond"))
 
-		local unit = Cell{
-			count = 0
-		}
-
 		local world = CellularSpace{
 			xdim = 10,
-			value = "aaa",
-			instance = unit
+			value = "aaa"
 		}
 
 		local error_func = function()

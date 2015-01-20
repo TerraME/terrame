@@ -130,7 +130,7 @@ Chart = function(data)
 				end
 			end)
 		elseif type(data.subject) == "Society" then
-			data.select[#data.select + 1] = "#"
+			data.select[1] = "#"
 		else
 			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society.")
 		end
@@ -142,43 +142,43 @@ Chart = function(data)
 		else
 			optionalTableArgument(data, "select", "table")
 		end
+	end
 
-		forEachElement(data.select, function(_, value)
-			if data.subject[value] == nil then
-				if  value == "#" then
-					if data.subject.obsattrs == nil then
-						data.subject.obsattrs = {}
-					end
-
-					data.subject.obsattrs["quantity_"] = true
-					data.subject.quantity_ = #data.subject
-				else
-					customError("Selected element '"..value.."' does not belong to the subject.")
-				end
-			elseif type(data.subject[value]) == "function" then
+	forEachElement(data.select, function(_, value)
+		if data.subject[value] == nil then
+			if  value == "#" then
 				if data.subject.obsattrs == nil then
 					data.subject.obsattrs = {}
 				end
 
-				data.subject.obsattrs[value] = true
+				data.subject.obsattrs["quantity_"] = true
+				data.subject.quantity_ = #data.subject
+			else
+				customError("Selected element '"..value.."' does not belong to the subject.")
+			end
+		elseif type(data.subject[value]) == "function" then
+			if data.subject.obsattrs == nil then
+				data.subject.obsattrs = {}
+			end
 
-			elseif type(data.subject[value]) ~= "number" then
-				incompatibleTypeError(value, "number or function", data.subject[value])
+			data.subject.obsattrs[value] = true
+
+		elseif type(data.subject[value]) ~= "number" then
+			incompatibleTypeError(value, "number or function", data.subject[value])
+		end
+	end)
+
+	if data.subject.obsattrs then
+		forEachElement(data.subject.obsattrs, function(idx)
+			for i = 1, #data.select do
+				if data.select[i] == idx then
+					data.select[i] = idx.."_"
+					local mvalue = data.subject[idx](data.subject)
+					verify(type(mvalue) == "number", "Function '"..idx.. "' returns a non-number value.")
+					data.subject[idx.."_"] = mvalue
+				end
 			end
 		end)
-
-		if data.subject.obsattrs then
-			forEachElement(data.subject.obsattrs, function(idx)
-				for i = 1, #data.select do
-					if data.select[i] == idx then
-						data.select[i] = idx.."_"
-						local mvalue = data.subject[idx](data.subject)
-						verify(type(mvalue) == "number", "Function "..idx.. "returns a non-number value.")
-						data.subject[idx.."_"] = mvalue
-					end
-				end
-			end)
-		end
 	end
 
 	verify(#data.select > 0, "Charts must select at least one attribute.")
@@ -282,6 +282,7 @@ Chart = function(data)
 	repeatAttribute("symbol", "string")
 	repeatAttribute("pen",    "string")
 	repeatAttribute("size",   "number")
+	repeatAttribute("color",  "string")
 
 	optionalTableArgument(data, "width",  "table")
 	optionalTableArgument(data, "style",  "table")
@@ -337,15 +338,15 @@ Chart = function(data)
 	end
 
 	-- Legend
-	local defaultColors = {"red", "green", "blue", "black", "yellow", "pink", "brown", "gray", "magenta", "orange", "purple"}
+	local defaultColors = {"red", "green", "blue", "yellow", "brown", "magenta", "orange", "purple", "cyan", "black"}
 
-	if #data.select > 11 and not data.color then
-		customError("Argument color is compulsory when using more than 11 attributes.")
+	if #data.select > 10 and not data.color then
+		customError("Argument color is compulsory when using more than 10 attributes.")
 	end
 
 	local i = 1
 	forEachElement(data.select, function()
-		local width = 1
+		local width = 2
 		if data.width then
 			width = data.width[i]
 		end
@@ -355,12 +356,12 @@ Chart = function(data)
 			style = data.style[i]
 		end
 
-		local symbol = symbolTable["none"]
+		local symbol = symbolTable.none
 		if data.symbol then
 			symbol = data.symbol[i]
 		end
 
-		local pen = penTable["solid"]
+		local pen = penTable.solid
 		if data.pen then
 			pen = data.pen[i]
 		end

@@ -52,6 +52,7 @@ return{
 			subject = world,
 			select = {"value", "sum"},
 			style = "sticks",
+			pen = {"dashdot", "dashdotdot"},
 			width = {1, 2}
 		}
 		unitTest:assert_type(c, "number")
@@ -61,6 +62,7 @@ return{
 			select = {"value", "sum"},
 			color = {"green", "yellow"},
 			size = 10,
+			pen = "dot",
 			symbol = "diamond"
 		}
 		unitTest:assert_type(c, "number")

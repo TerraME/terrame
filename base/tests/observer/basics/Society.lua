@@ -45,16 +45,14 @@ return{
 		unitTest:assert_type(c, "number")
 
 		soc:notify(0)
-		soc:add()
-		soc:notify(1)
-		soc:add()
-		soc:notify(2)
-		unitTest:delay()
 
 		local t = Timer{
 		    Event{action = function(e)
-				soc:grow()
-				soc.value = soc.value + 1
+				for i = 1, e:getTime() do
+					soc:grow()
+					soc:add()
+					soc.value = soc.value + 1
+				end
 		        soc:notify(e)
 		    end}
 		}
