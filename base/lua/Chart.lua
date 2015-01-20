@@ -49,7 +49,7 @@
 -- or a vector of numbers, describing the size for each line. Default is 7.
 -- @arg data.style The style of each line to be drawn. It can be a string, indicating that all lines
 -- will have the same style, or a vector of strings describing each line. The possible values are:
--- "lines", "dots", "steps", and "sticks". Default is "lines" for all lines.
+-- "lines", "dots", "none", "steps", and "sticks". Default is "lines" for all lines.
 -- @arg data.xAxis Name of the attribute to be used as x axis (instead of time). In this case,
 -- notify() will not need the argument for plotting Charts.
 -- @usage Chart{subject = cs}
@@ -75,6 +75,7 @@ Chart = function(data)
 	local styleTable = {
 		lines = true,
 		dots = true,
+		none = true,
 		steps = true,
 		sticks = true
 	}
