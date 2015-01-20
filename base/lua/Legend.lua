@@ -353,7 +353,8 @@ local legendPossibleParams = {
 	"font",
 	"fontSize",
 	"symbol",
-	"style"
+	"style",
+	"size"
 }
 
 Legend_ = {

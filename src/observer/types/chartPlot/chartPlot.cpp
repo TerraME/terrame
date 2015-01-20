@@ -100,10 +100,10 @@ void ChartPlot::exportChart()
 
 void ChartPlot::propertiesChart()
 {
-    if (! plotPropGui)
+    if (!plotPropGui)
     {
         plotPropGui = new PlotPropertiesGUI(this);
-        plotPropGui->consistGUI(( QList<InternalCurve *> *) &internalCurves);    
+        plotPropGui->consistGUI((QList<InternalCurve*>*) &internalCurves);    
     }
     
     // Creates chart objects back-up
@@ -113,7 +113,7 @@ void ChartPlot::propertiesChart()
     QFont titleFont = title().font(), axesFont = axisTitle(QwtPlot::xBottom).font();
     QFont scalesFont = axisFont(QwtPlot::xBottom), legendFont = legend()->font();
     QVector<CurveBkp> curvesBkp;
-    for (int i = 0; i < internalCurves.size(); i++)
+    for(int i = 0; i < internalCurves.size(); i++)
     {
         CurveBkp bkp;
         bkp.pen = internalCurves.at(i)->plotCurve->pen();

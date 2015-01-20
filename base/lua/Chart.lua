@@ -45,6 +45,8 @@
 -- values are: "square", "diamond", "triangle", "ltriangle" (left), "dtriangle" (downwards triangle), 
 -- "rtriangle" (right), "cross", "vcross" (vertical cross), "hline", "vline", "asterisk",
 -- "star", "hexagon", and "none" (default).
+-- @arg data.size The size of the symbol, in pixels. It can be a number to be used by all lines,
+-- or a vector of numbers, describing the size for each line. Default is 7.
 -- @arg data.style The style of each line to be drawn. It can be a string, indicating that all lines
 -- will have the same style, or a vector of strings describing each line. The possible values are:
 -- "lines", "dots", "steps", and "sticks". Default is "lines" for all lines.
@@ -203,6 +205,7 @@ Chart = function(data)
 		"width",
 		"symbol",
 		"style",
+		"size"
 	})
 
 	local observerType
@@ -269,10 +272,28 @@ Chart = function(data)
 		data.symbol = symbol
 	end
 
+	if type(data.size) == "number" then
+		local size = {}
+		forEachElement(data.select, function()
+			table.insert(size, data.size)
+		end)
+		data.size = size
+	end
+
 	optionalTableArgument(data, "width",  "table")
 	optionalTableArgument(data, "style",  "table")
 	optionalTableArgument(data, "symbol", "table")
+	optionalTableArgument(data, "size",   "table")
 	optionalTableArgument(data, "color",  "table")
+
+	if data.size then
+		forEachElement(data.size, function(idx, value)
+			if value < 0 then
+				incompatibleValueError("size", "positive number", value)
+			end
+		end)
+	end
+
 	if data.symbol then
 		local symbol = {}
 		forEachElement(data.symbol, function(idx, value)
@@ -315,6 +336,12 @@ Chart = function(data)
 		if data.symbol then
 			symbol = data.symbol[i]
 		end
+
+		local size = 7
+		if data.size then
+			size = data.size[i]
+		end
+
 		local color = defaultColors[i]
 		if data.color then
 			color = data.color[i]
@@ -324,6 +351,7 @@ Chart = function(data)
 			type = "number",
 			width = width,
 			style = style,
+			size = size,
 			slices = 1,
 			symbol = symbol,
 			colorBar = {{color = color, value = "-"}}

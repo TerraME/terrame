@@ -463,14 +463,15 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
             color = QColor::fromHsvF(hueValues[(int)(qrand() % HUE_COUNT)], 1, 1);
             interCurve->plotCurve->setPen(color);
 
-            int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0;
+            int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0, size;
 
             width = legKeys.indexOf(WIDTH);
             style = legKeys.indexOf(STYLE);
             symbol = legKeys.indexOf(SYMBOL);
+			size = legKeys.indexOf(SIZE);
             colorBar = legKeys.indexOf(COLOR_BAR);
 
-            if ((! legAttribs.isEmpty()) && (colorBar > -1))
+            if((!legAttribs.isEmpty()) && (colorBar > -1))
             {
                 QString aux;
                 QStringList colorStrList;
@@ -494,7 +495,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
                 // width
                 num = legAttribs.at(width).toInt();
                 pen = QPen(color);
-                pen.setWidth( (num > 0) ? num : 1);
+                pen.setWidth((num > 0) ? num : 1);
                 interCurve->plotCurve->setPen(pen);
 
                 // style
@@ -506,10 +507,12 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
                 QwtSymbol *qwtSymbol = new QwtSymbol;
                 qwtSymbol->setStyle((QwtSymbol::Style) num);
                 qwtSymbol->setPen(pen);
-                // increments the symbol size in two values
-                qwtSymbol->setSize(pen.width() + 2);
 
-                if (qwtSymbol->brush().style() != Qt::NoBrush)
+				//size
+                num = legAttribs.at(size).toInt();
+                qwtSymbol->setSize(num);
+
+                if(qwtSymbol->brush().style() != Qt::NoBrush)
                     qwtSymbol->setBrush(pen.color());
 
                 interCurve->plotCurve->setSymbol(qwtSymbol);

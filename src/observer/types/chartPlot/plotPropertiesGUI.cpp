@@ -113,8 +113,8 @@ void PlotPropertiesGUI::consistGUI(QList<InternalCurve *> *interCurves)
             .arg(plotter->canvas()->palette().color(QPalette::Background).name()));
 
     // Curves tab
-    ui->treeCurve->setCurrentItem(ui->treeCurve->topLevelItem(0));
-    consistCurveTab(ui->treeCurve->currentItem()->text(0));
+    //ui->treeCurve->setCurrentItem(ui->treeCurve->topLevelItem(0));
+    //consistCurveTab(ui->treeCurve->currentItem()->text(0));
 }
 
 void PlotPropertiesGUI::borderColorClicked()
@@ -207,13 +207,13 @@ void PlotPropertiesGUI::selectedSymbol(int value)
 {
     QwtPlotCurve* plotCurve = internalCurves.value(currentCurve)->plotCurve;
 
-	const QwtSymbol* const oldSym = plotCurve->symbol();
-	QwtSymbol * symbol;
+	//QwtSymbol* const oldSym = plotCurve->symbol();
+	QwtSymbol* symbol = new QwtSymbol;
 	symbol->setStyle((QwtSymbol::Style) (value - 1)); // starts in -1);
     symbol->setSize(ui->symbolSizeSpinBox->value());
-    symbol->setPen(oldSym->pen());
+    //symbol->setPen(oldSym->pen());
 
-    if (symbol->brush().style() != Qt::NoBrush)
+    if(symbol->brush().style() != Qt::NoBrush)
 	    // symbol.setBrush(QBrush(oldSym.pen().color()));
         symbol->setBrush(QBrush(plotCurve->pen().color()));
 
@@ -249,7 +249,7 @@ void PlotPropertiesGUI::symbolSizeValue(int value)
 
     // Changes only the symbol width
     const QwtSymbol * const oldSymbol = plotCurve->symbol();
-	QwtSymbol * symbol;
+	QwtSymbol* symbol = new QwtSymbol;
     symbol->setStyle((QwtSymbol::Style) (ui->curveSymbolCombo->currentIndex() - 1)); // starts in -1
 
     if (symbol->brush().style() != Qt::NoBrush)
@@ -328,7 +328,7 @@ void PlotPropertiesGUI::consistCurveTab(const QString &name)
     const QwtSymbol* const oldSymbol = plotCurve->symbol();
 	QwtSymbol *symbol = new QwtSymbol(oldSymbol->style(), oldSymbol->brush(), oldSymbol->pen(), oldSymbol->size());
     ui->symbolSizeSpinBox->setValue( symbol->size().width() );
-    ui->curveSymbolCombo->setCurrentIndex( (int)symbol->style() + 1); // Starts in -1
+    ui->curveSymbolCombo->setCurrentIndex((int)symbol->style() + 1); // Starts in -1
     // Fixes bug built when used 'plotCurve->symbol()'
     plotCurve->setSymbol(symbol);
 

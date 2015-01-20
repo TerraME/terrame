@@ -78,9 +78,19 @@ return{
 		}
 
 		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, size = "a"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("size", "table", "a"))
+
+		local error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, style = 2}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("style", "table", 2))
+
+		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, size = -3}
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg("size", "positive number", -3))
 
 		local error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, style = "abc"}

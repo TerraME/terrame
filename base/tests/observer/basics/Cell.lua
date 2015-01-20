@@ -41,14 +41,28 @@ return{
         c = Chart{subject = world, select = {"count", "value", "sum"}}
 		unitTest:assert_type(c, "number")
 
-        c = Chart{subject = world, style = "steps", width = 2}
+        c = Chart{
+			subject = world,
+			style = "steps",
+			width = 2
+		}
 		unitTest:assert_type(c, "number")
 
-        c = Chart{subject = world, select = {"value", "sum"}, width = {1, 2}}
+        c = Chart{
+			subject = world,
+			select = {"value", "sum"},
+			style = "sticks",
+			width = {1, 2}
+		}
 		unitTest:assert_type(c, "number")
 
-		-- FIXME colors do not work properly #230
-        c = Chart{subject = world, select = {"value", "sum"}, color = {"green", "yellow"}}
+        c = Chart{
+			subject = world,
+			select = {"value", "sum"},
+			color = {"green", "yellow"},
+			size = 10,
+			symbol = "diamond"
+		}
 		unitTest:assert_type(c, "number")
 
         world:notify(0)
