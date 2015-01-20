@@ -46,6 +46,8 @@
 -- "rtriangle" (right), "cross", "vcross" (vertical cross), "hline", "vline", "asterisk",
 -- "star", "hexagon", and "none" (default).
 -- @arg data.size The size of the symbol, in pixels. It can be a number to be used by all lines,
+-- @arg data.pen The pen style for drawing lines. It can be one of "solid" (default), "dash", 
+-- "dot", "dashdot", or "dashdotdot". It can be a vector or a single value.
 -- or a vector of numbers, describing the size for each line. Default is 7.
 -- @arg data.style The style of each line to be drawn. It can be a string, indicating that all lines
 -- will have the same style, or a vector of strings describing each line. The possible values are:
@@ -78,6 +80,14 @@ Chart = function(data)
 		none = true,
 		steps = true,
 		sticks = true
+	}
+
+	local penTable = {
+		solid = 1,
+		dash = 2,
+		dot = 3,
+		dashdot = 4,
+		dashdotdot = 5
 	}
 
 	mandatoryTableArgument(data, "subject")
@@ -201,6 +211,7 @@ Chart = function(data)
 		"xLabel",
 		"title",
 		"label",
+		"pen",
 		"color",
 		"xAxis",
 		"width",
@@ -257,33 +268,25 @@ Chart = function(data)
 		data.width = width
 	end
 
-	if type(data.style) == "string" then
-		local style = {}
-		forEachElement(data.select, function()
-			table.insert(style, data.style)
-		end)
-		data.style = style
+	local repeatAttribute = function(att, mtype)
+		if type(data[att]) == mtype then
+			local vatt = {}
+			forEachElement(data.select, function()
+				table.insert(vatt, data[att])
+			end)
+			data[att] = vatt
+		end
 	end
 
-	if type(data.symbol) == "string" then
-		local symbol = {}
-		forEachElement(data.select, function()
-			table.insert(symbol, data.symbol)
-		end)
-		data.symbol = symbol
-	end
-
-	if type(data.size) == "number" then
-		local size = {}
-		forEachElement(data.select, function()
-			table.insert(size, data.size)
-		end)
-		data.size = size
-	end
+	repeatAttribute("style",  "string")
+	repeatAttribute("symbol", "string")
+	repeatAttribute("pen",    "string")
+	repeatAttribute("size",   "number")
 
 	optionalTableArgument(data, "width",  "table")
 	optionalTableArgument(data, "style",  "table")
 	optionalTableArgument(data, "symbol", "table")
+	optionalTableArgument(data, "pen",    "table")
 	optionalTableArgument(data, "size",   "table")
 	optionalTableArgument(data, "color",  "table")
 
@@ -304,6 +307,17 @@ Chart = function(data)
 			end
 		end)
 		data.symbol = symbol
+	end
+
+	if data.pen then
+		local pen = {}
+		forEachElement(data.pen, function(idx, value)
+			pen[idx] = penTable[value]
+			if not pen[idx] then
+				switchInvalidArgument("pen", value, penTable)
+			end
+		end)
+		data.pen = pen
 	end
 
 	if data.style then
@@ -338,6 +352,11 @@ Chart = function(data)
 			symbol = data.symbol[i]
 		end
 
+		local pen = penTable["solid"]
+		if data.pen then
+			pen = data.pen[i]
+		end
+
 		local size = 7
 		if data.size then
 			size = data.size[i]
@@ -355,6 +374,7 @@ Chart = function(data)
 			size = size,
 			slices = 1,
 			symbol = symbol,
+			pen = pen,
 			colorBar = {{color = color, value = "-"}}
 		}
 

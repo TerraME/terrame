@@ -354,6 +354,7 @@ local legendPossibleParams = {
 	"fontSize",
 	"symbol",
 	"style",
+	"pen",
 	"size"
 }
 

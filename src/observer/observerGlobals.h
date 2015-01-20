@@ -74,6 +74,7 @@ static const QString SYMBOL = "symbol";
 static const QString WIDTH = "width";
 static const QString STYLE = "style";
 static const QString SIZE = "size";
+static const QString PENSTYLE = "pen";
 
 //// QByteArrays
 static const QByteArray COMPLETE_STATE = "COMPLETE_STATE";

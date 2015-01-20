@@ -53,7 +53,6 @@ PlotPropertiesGUI::PlotPropertiesGUI(ChartPlot *parent) : //, QWidget *parent) :
     connect(ui->titlesFontButton, SIGNAL(clicked()), this, SLOT(titlesFontClicked()));
     connect(ui->legendsFontButton, SIGNAL(clicked()), this, SLOT(legendFontClicked()));
 
-
     // curve tab
     connect(ui->curveStyleCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedStyle(int)));
     connect(ui->curveSymbolCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedSymbol(int)));

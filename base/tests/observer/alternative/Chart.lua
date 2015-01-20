@@ -113,6 +113,7 @@ return{
 		local styleTable = {
 			lines = true,
 			dots = true,
+			none = true,
 			steps = true,
 			sticks = true
 		}

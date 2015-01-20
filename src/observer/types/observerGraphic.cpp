@@ -463,12 +463,13 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
             color = QColor::fromHsvF(hueValues[(int)(qrand() % HUE_COUNT)], 1, 1);
             interCurve->plotCurve->setPen(color);
 
-            int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0, size;
+            int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0, size, penstyle = 0;
 
             width = legKeys.indexOf(WIDTH);
             style = legKeys.indexOf(STYLE);
             symbol = legKeys.indexOf(SYMBOL);
 			size = legKeys.indexOf(SIZE);
+			penstyle = legKeys.indexOf(PENSTYLE);
             colorBar = legKeys.indexOf(COLOR_BAR);
 
             if((!legAttribs.isEmpty()) && (colorBar > -1))
@@ -496,6 +497,10 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
                 num = legAttribs.at(width).toInt();
                 pen = QPen(color);
                 pen.setWidth((num > 0) ? num : 1);
+
+				// pen
+                num = legAttribs.at(penstyle).toInt();
+				pen.setStyle((Qt::PenStyle) num);
                 interCurve->plotCurve->setPen(pen);
 
                 // style
