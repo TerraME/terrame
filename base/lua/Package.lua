@@ -103,17 +103,9 @@ function switch(data, att)
 					customError("Case "..tostring(self.casevar).." should be a function.")
 				end
 			else
-				local distance = string.len(self.casevar)
-				local word
-				forEachElement(code, function(a)
-					local d = levenshtein(a, self.casevar) 
-					if d < distance then
-						distance = d
-						word = a
-					end
-				end)
-				if distance < string.len(self.casevar) * 0.6 then
-					customError(switchInvalidArgumentSuggestionMsg(self.casevar, att, word))
+				local sugg = suggestion(self.casevar, code)
+				if sugg then
+					customError(switchInvalidArgumentSuggestionMsg(self.casevar, att, sugg))
 				else
 					customError(switchInvalidArgumentMsg(self.casevar, att, code))
 				end
@@ -121,6 +113,40 @@ function switch(data, att)
 		end
 	}
 	return swtbl
+end
+
+--- Return a suggestion for a wrong string value. The suggestion must have a 
+-- Levenshtein's distance of less than 60% the size of the string, otherwise
+-- it returns nil.
+-- @arg value A string.
+-- @arg options A table with string indexes with the possible suggestions.
+-- @usage t = {
+--     blue = true,
+--     red = true,
+--     green = true
+-- }
+--
+-- suggestion("gren", t) -- "green"
+function suggestion(value, options)
+	mandatoryArgument(1, "string", value)
+	mandatoryArgument(2, "table", options)
+
+	local distance = string.len(value)
+	local word
+	forEachElement(options, function(a)
+		if type(a) ~= "string" then
+			customError("All the indexes in #2 should be string, got '"..type(a).."'.")
+		end
+
+		local d = levenshtein(a, value) 
+		if d < distance then
+			distance = d
+			word = a
+		end
+	end)
+	if distance < string.len(value) * 0.6 then
+		return word
+	end
 end
 
 --- Return a message for a wrong argument value showing the options.

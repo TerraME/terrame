@@ -58,6 +58,16 @@ return{
 	resourceNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for argument 'aaa'.")
 	end,
+	suggestion = function(unitTest)
+		local t = {
+			aaaaa = true,
+			bbbbb = true,
+			ccccc = true
+		}
+
+		unitTest:assert_equal(suggestion("aaaab", t), "aaaaa")
+		unitTest:assert_nil(suggestion("ddddd", t))
+	end,
 	valueNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for argument 'aaa'.")
 	end,

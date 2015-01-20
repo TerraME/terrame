@@ -77,6 +77,39 @@ return{
         	local r = packageInfo("asdfgh")
 		end
 		unitTest:assert_error(error_func, "Package 'asdfgh' is not installed.")
-	end
+	end,
+    suggestion = function(unitTest)
+        local t = {
+            "aaaaa",
+            "bbbbb",
+            "ccccc"
+        }
+
+		local error_func = function()
+        	suggestion()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+
+		local error_func = function()
+        	suggestion(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+
+		local error_func = function()
+        	suggestion("aaaab")
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
+
+		local error_func = function()
+        	suggestion("aaaab", 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "table", 2))
+
+		local error_func = function()
+        	suggestion("aaaab", t)
+		end
+		unitTest:assert_error(error_func, "All the indexes in #2 should be string, got 'number'.")
+	
+    end
 }
 
