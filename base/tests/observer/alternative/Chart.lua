@@ -72,6 +72,21 @@ return{
 		end
 		unitTest:assert_error(error_func, "Charts must select at least one attribute.")
 
+		local cell = Cell{
+			value1 = 2,
+			value2 = 3
+		}
+
+		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, style = 2}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("style", "table", 2))
+
+		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, style = "abc"}
+		end
+		unitTest:assert_error(error_func, "'abc' is an invalid value for argument 'style'. It must be a string from the set ['dots', 'lines', 'steps', 'sticks'].")
+
 		local unit = Cell{
 			count = 0
 		}

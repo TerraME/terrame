@@ -384,12 +384,6 @@ int luaCell::createObserver(lua_State *)
 				observedAttribs.insert(key, "");
 		}
 
-		//if(! lua_istable(luaL, top) )
-		//{
-		//	qWarning("Warning: Parameter table not found. Incorrect sintax.");
-		//	return 0;
-		//}
-
 		QStringList cols, obsParams;
 
 		// Recupera a tabela de parametros os observadores do tipo Table e Graphic
@@ -428,8 +422,9 @@ int luaCell::createObserver(lua_State *)
 				while(lua_next(luaL, tableTop) != 0)
 				{
 					if(lua_type(luaL, -2) == LUA_TSTRING)
+					{
 						obsParams.append(luaL_checkstring(luaL, -2));
-
+					}
 					switch(lua_type(luaL, -1))
 					{
 					case LUA_TNUMBER:
@@ -618,7 +613,7 @@ int luaCell::createObserver(lua_State *)
 			if (cols.at(0).isNull() || cols.at(0).isEmpty()){
 				if (execModes != Quiet ){
 					string err_out = string("Filename was not specified, using a '") + string(DEFAULT_NAME.toStdString()) + string("'.");
-					lua_getglobal(L, "customWarningMsg");
+					lua_getglobal(L, "customWarning");
 					lua_pushstring(L,err_out.c_str());
 					//lua_pushnumber(L,5);
 					lua_call(L,1,0);
@@ -692,7 +687,7 @@ int luaCell::createObserver(lua_State *)
 			if (cols.isEmpty()){
 				if (execModes != Quiet ){
 					string err_out = string("Parameter 'port' not defined.");
-					lua_getglobal(L, "customWarningMsg");
+					lua_getglobal(L, "customWarning");
 					lua_pushstring(L,err_out.c_str());
 					lua_call(L,1,0);
 				}
@@ -706,7 +701,7 @@ int luaCell::createObserver(lua_State *)
 			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())){
 				if (execModes != Quiet){
 					string err_out = string("Observer will send broadcast.");
-					lua_getglobal(L, "customWarningMsg");
+					lua_getglobal(L, "customWarning");
 					lua_pushstring(L,err_out.c_str());
 					lua_call(L,1,0);
 				}
@@ -730,7 +725,7 @@ int luaCell::createObserver(lua_State *)
 			if (cols.isEmpty()){
 				if (execModes != Quiet ){
 					string err_out = string("Port not defined.");
-					lua_getglobal(L, "customWarningMsg");
+					lua_getglobal(L, "customWarning");
 					lua_pushstring(L,err_out.c_str());
 					lua_call(L,1,0);
 				}
@@ -742,7 +737,7 @@ int luaCell::createObserver(lua_State *)
 			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())){
 				if (execModes != Quiet ){
 					string err_out = string("Observer will send to broadcast.");
-					lua_getglobal(L, "customWarningMsg");
+					lua_getglobal(L, "customWarning");
 					lua_pushstring(L,err_out.c_str());
 					lua_call(L,1,0);
 				}
@@ -1006,22 +1001,20 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 	else */
 	{
 		lua_pushnil(luaL);
-		while(lua_next(luaL, cellsPos ) != 0)
+		while(lua_next(luaL, cellsPos) != 0)
 		{
 			key = luaL_checkstring(luaL, -2);
 
-			if( attribs.contains(key) )
+			if(attribs.contains(key))
 			{
-				//qDebug() << "cell attribs: " << attribs << "\n";
-
-				switch( lua_type(luaL, -1) )
+				switch(lua_type(luaL, -1))
 				{
 				case LUA_TBOOLEAN:
 					valueTmp = QByteArray::number( lua_toboolean(luaL, -1) );
 
-					if (observedAttribs.value(key) != valueTmp)
+					if(observedAttribs.value(key) != valueTmp)
 					{					   
-						if ((parentSubj) && (! cellSubj))
+						if((parentSubj) && (! cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1037,7 +1030,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 					num = luaL_checknumber(luaL, -1);
 					doubleToText(num, valueTmp, 20);
 
-					if (observedAttribs.value(key) != valueTmp)
+					if(observedAttribs.value(key) != valueTmp)
 					{
 #ifdef DEBUG_OBSERVER
 						qDebug() << getId() << qPrintable(key) << ": " 
@@ -1059,9 +1052,9 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 				case LUA_TSTRING:
 					valueTmp = luaL_checkstring(luaL, -1);
 
-					if (observedAttribs.value(key) != valueTmp)
+					if(observedAttribs.value(key) != valueTmp)
 					{
-						if ((parentSubj) && (! cellSubj))
+						if((parentSubj) && (! cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1075,12 +1068,12 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 				case LUA_TTABLE:
 				{
-					sprintf( result, "%p", lua_topointer(luaL, -1) );
+						sprintf(result, "%p", lua_topointer(luaL, -1));
 						valueTmp = result;
 
-						if (observedAttribs.value(key) != valueTmp)
+						if(observedAttribs.value(key) != valueTmp)
 						{					
-							if ((parentSubj) && (! cellSubj))
+							if((parentSubj) && (! cellSubj))
 								cellSubj = parentSubj->add_internalsubject();
 
 							raw = cellSubj->add_rawattributes();
@@ -1096,12 +1089,12 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 				case LUA_TUSERDATA:
 				{
-					sprintf( result, "%p", lua_topointer(luaL, -1) );
+					sprintf(result, "%p", lua_topointer(luaL, -1));
 					valueTmp = result;
 
-					if (observedAttribs.value(key) != valueTmp)
+					if(observedAttribs.value(key) != valueTmp)
 					{					
-						if ((parentSubj) && (! cellSubj))
+						if((parentSubj) && (! cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1120,9 +1113,9 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 					sprintf(result, "%p", lua_topointer(luaL, -1) );
 					valueTmp = result;
 
-					if (observedAttribs.value(key) != valueTmp)
-					{					
-						if ((parentSubj) && (! cellSubj))
+					if(observedAttribs.value(key) != valueTmp)
+					{
+						if((parentSubj) && (! cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1141,9 +1134,9 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 					sprintf(result, "%p", lua_topointer(luaL, -1) );
 					valueTmp = result;
 
-					if (observedAttribs.value(key) != valueTmp)
+					if(observedAttribs.value(key) != valueTmp)
 					{					
-						if ((parentSubj) && (! cellSubj))
+						if((parentSubj) && (! cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1161,9 +1154,9 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 			lua_pop(luaL, 1);
 		}
 
-		if (valueChanged)
+		if(valueChanged)
 		{
-			if ((parentSubj) && (! cellSubj))
+			if((parentSubj) && (! cellSubj))
 				cellSubj = parentSubj->add_internalsubject();					
 
 			// id
@@ -1178,7 +1171,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 			// #elements
 			cellSubj->set_itemsnumber(cellSubj->internalsubject_size());
 
-			if (! parentSubj)
+			if(!parentSubj)
 			{
 				// QByteArray byteArray(cellSubj->SerializeAsString().c_str(), cellSubj->ByteSize());
 				// return byteArray;
@@ -1195,10 +1188,8 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 	return QByteArray();
 }
 
-//@RODRIGO
 QByteArray luaCell::getAll(QDataStream & /*in*/, const QStringList& attribs)
 {
-	// recupero a referencia na pilha lua
 	Reference<luaCell>::getReference(luaL);
 	ObserverDatagramPkg::SubjectAttribute cellSubj;
 	return pop(luaL, attribs, &cellSubj, 0);
@@ -1298,7 +1289,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 
 		msg.append(elements);
 		msg.append(PROTOCOL_SEPARATOR);
-	}// @RAIAN: FIM
+	}
 	else
 	{
 		bool valueChanged = false;
@@ -1306,36 +1297,33 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 		
 		msg = popLua(TObsCell, luaL, cellsPos, attribs, observerAttribs, valueChanged);
 	
-		if (valueChanged)
+		if(valueChanged)
 		{
 			// id
-			msg.append(QString::number( getId() ));
+			msg.append(QString::number(getId()));
 			msg.append(PROTOCOL_SEPARATOR);
 
 			// subjectType
 			msg.append("1"); // TObsCell as a char
 			msg.append(PROTOCOL_SEPARATOR);
 
-		//@RAIAN: Para uso na serializacao da Vizinhanca
 		if(attribs.contains("@getWeight"))
 		{
 			attrCounter++;
 			attrs.append("@getWeight");
 			attrs.append(PROTOCOL_SEPARATOR);
 		}
-		//@RAIAN: FIM
 
-		// #attrs
 		msg.append(QString::number(attrCounter));
 		msg.append(PROTOCOL_SEPARATOR );
 
 		// #elements
-			msg.append("0");
+		msg.append("0");
 		msg.append(PROTOCOL_SEPARATOR );
 
 		msg.append(attrs);
 
-	// TODO: Porque essa verificacao
+		// TODO: Porque essa verificacao
 		//@RAIAN: Para uso na serializacao da Vizinhanca
 		if(!attribs.contains("@getWeight"))
 			msg.append(PROTOCOL_SEPARATOR);
@@ -1369,9 +1357,7 @@ QByteArray luaCell::getChanges(QDataStream& in, int observerId, const QStringLis
 
 #endif // ifdef TME_PROTOCOL_BUFFERS
 
-
 #ifdef TME_BLACK_BOARD
-
 QDataStream& luaCell::getState(QDataStream& in, Subject *, int /*observerId*/, const QStringList & /* attribs */)
 {
 #ifdef DEBUG_OBSERVER
@@ -1395,7 +1381,6 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int /*observerId*/, c
 		// if (execModes == Quiet )
 		// qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
 		break;
-
 	case 1:
 #ifdef TME_PROTOCOL_BUFFERS
 			content = getChanges(in, (QStringList) observedAttribs.keys());
@@ -1417,7 +1402,7 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int /*observerId*/, c
 
 #else
 
-QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs )
+QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs)
 {
 #ifdef DEBUG_OBSERVER
 	printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
@@ -1436,7 +1421,6 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId, QStri
 			// if (! QUIET_MODE )
 			// qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
 			break;
-
 		case 1:
 			content = getChanges(in, observerId, attribs);
 
@@ -1452,7 +1436,6 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId, QStri
 	return in;
 }
 #endif
-
 
 int luaCell::kill(lua_State *luaL)
 {

@@ -31,7 +31,6 @@
 #ifndef OBSERVER_GLOBAL_ITEMS
 #define OBSERVER_GLOBAL_ITEMS
 
-
 #include <QString>
 #include <QSize>
 #include <QPoint>
@@ -89,22 +88,17 @@ static const QByteArray LUA_ADDRESS_USER_DATA = LUA_ADDRESS + "(UD): ";
 static const QByteArray LUA_ADDRESS_FUNCTION = LUA_ADDRESS + "(FT): ";
 static const QByteArray LUA_ADDRESS_OTHER = LUA_ADDRESS + "(O): ";
 
-
 //// Lists
 static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SLICES 
     << PRECISION << STD_DEV << MAX << MIN << COLOR_BAR << FONT_FAMILY << FONT_SIZE 
     << SYMBOL << WIDTH << STYLE; // << STD_COLOR_BAR; // is not a legend key
 
-
 //// Integers
 static const int LEGEND_ITENS = LEGEND_KEYS.size(); /// Number of items composing the legend of each attribute
 static const int ZOOM_MAX = 11;
 static const int ZOOM_MIN = -ZOOM_MAX;
-
 static const int DEFAULT_PORT = 456456;
-
 static const int NUMBERIC_PRECISION = 6; // sets decimal places
-
 
 //// Doubles
 const double MAX_FLOAT = 3.4E37;                  //!< Maximum float value
@@ -120,10 +114,8 @@ static const double KILOBYTE_DIV = 1 / KILOBYTE_VALUE;
 static const double MEGABYTE_VALUE = 1024*1024;
 static const double MEGABYTE_DIV = 1 / MEGABYTE_VALUE;
 
-
 //// QSize
 static const QSize ICON_SIZE(16, 16);
-
 
 //// QPoint
 static const QPoint ZERO_POINT(0, 0);
@@ -213,7 +205,6 @@ enum GroupingMode
 enum StdDev
 {
     TObsNone    = -1,   //!< None deviation
-
     TObsFull    =  0,   //!< Full deviation
     TObsHalf    =  1,   //!< Half deviation
     TObsQuarter =  2    //!< Quarter deviation

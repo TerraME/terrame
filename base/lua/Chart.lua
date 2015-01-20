@@ -47,12 +47,20 @@
 -- notify() will not need the argument for plotting Charts.
 -- @usage Chart{subject = cs}
 Chart = function(data)
+
+	local styleTable = {
+		lines = true,
+		dots = true,
+		steps = true,
+		sticks = true
+	}
+
 	mandatoryTableArgument(data, "subject")
 	defaultTableValue(data, "yLabel", "")
 	defaultTableValue(data, "xLabel", "Time")
 	defaultTableValue(data, "title",  "")
 
-	optionalTableArgument(data, "xAxis",  "string")
+	optionalTableArgument(data, "xAxis", "string")
 
 	if type(data.select) == "string" then data.select = {data.select} end
 	if type(data.label)  == "string" then data.label  = {data.label} end
@@ -223,6 +231,14 @@ Chart = function(data)
 	optionalTableArgument(data, "style", "table")
 	optionalTableArgument(data, "color", "table")
 
+	if data.style then
+		forEachElement(data.style, function(_, value)
+			if not styleTable[value] then
+				customError(switchInvalidArgumentMsg(value, "style", styleTable))
+			end
+		end)
+	end
+
 	-- Legend
 	local defaultColors = {"red", "green", "blue", "black", "yellow", "pink", "brown", "gray", "magenta", "orange", "purple"}
 
@@ -242,6 +258,10 @@ Chart = function(data)
 			style = data.style[i]
 		end
 
+		local symbol = symbolTable["none"]
+		if data.symbol then
+			symbol = data.symbol[i]
+		end
 		local color = defaultColors[i]
 		if data.color then
 			color = data.color[i]

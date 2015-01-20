@@ -93,13 +93,12 @@ void PlotPropertiesGUI::consistGUI(QList<InternalCurve *> *interCurves)
     ui->treeCurve->sortItems(0, Qt::AscendingOrder);
     ui->treeCurve->setSortingEnabled(true);
 
-
     // General tab
 	// TODO: Verify if it is necessary and put it back if yes
 //    ui->marginSpinBox->setValue(plotter->margin());
     ui->borderWidthSpinBox->setValue(plotter->lineWidth());
 
-    if (ui->borderColorButton->isEnabled())
+    if(ui->borderColorButton->isEnabled())
     {
         ui->borderColorButton->setStyleSheet(QString("border-radius: 4px; "
             "border: 1px solid rgb(0, 0, 0); background-color: %1")
@@ -177,7 +176,7 @@ void PlotPropertiesGUI::curveColorClicked()
     QColor color;
     color = QColorDialog::getColor(color, this, "TerraME Observer : Chart - Select color");
 
-    if (color.isValid())
+    if(color.isValid())
     {
         ui->curveColorButton->setStyleSheet(QString("  border-radius: 4px; "
             "border: 1px solid rgb(0, 0, 0);background-color: %1").arg(color.name()));
@@ -200,13 +199,13 @@ void PlotPropertiesGUI::marginValue(int value)
 void PlotPropertiesGUI::selectedStyle(int value)
 {
     internalCurves.value(currentCurve)->plotCurve
-        ->setStyle((QwtPlotCurve::CurveStyle) value);
+        ->setStyle((QwtPlotCurve::CurveStyle) (value - 1));
     plotter->replot();
 }
 
 void PlotPropertiesGUI::selectedSymbol(int value)
 {
-    QwtPlotCurve *plotCurve = internalCurves.value(currentCurve)->plotCurve;
+    QwtPlotCurve* plotCurve = internalCurves.value(currentCurve)->plotCurve;
 
 	const QwtSymbol* const oldSym = plotCurve->symbol();
 	QwtSymbol * symbol;

@@ -31,7 +31,6 @@
 #include <qwt_plot_curve.h>
 #include <qwt_symbol.h>
 
-
 namespace TerraMEObserver {
 
 class InternalCurve
@@ -56,8 +55,10 @@ public:
 
     QVector<double> *values;
     QwtPlotCurve* plotCurve;
+	
     // bool isAxisX;
 };
 
 }
 #endif // INTERNAL_CURVE_H
+

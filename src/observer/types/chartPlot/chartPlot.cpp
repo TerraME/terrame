@@ -96,7 +96,6 @@ void ChartPlot::moveEvent(QMoveEvent* q)
 
 void ChartPlot::exportChart()
 {
-
 }
 
 void ChartPlot::propertiesChart()
@@ -150,7 +149,7 @@ void ChartPlot::propertiesChart()
         legend()->setFont(legendFont);
         canvas()->setPalette(canvasPalette);
 
-        for (int i = 0; i < curvesBkp.size(); i++)
+        for(int i = 0; i < curvesBkp.size(); i++)
         {
             CurveBkp bkp = curvesBkp.at(i);
             internalCurves.at(i)->plotCurve->setPen(bkp.pen);

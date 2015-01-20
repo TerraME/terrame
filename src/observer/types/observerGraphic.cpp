@@ -46,7 +46,6 @@ static const double hueValues[] = {
 };
 const int HUE_COUNT = 12;
 
-
 ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent) 
     : ObserverInterf(sub) // , QThread()
 {
