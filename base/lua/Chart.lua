@@ -40,6 +40,11 @@
 -- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
 -- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
 -- representing RGB compositions.
+-- @arg data.symbol The symbol to be used to draw the points of the chart. It can be a string to
+-- be used by all lines, or a vector of strings, describing the symbol for each line. The available
+-- values are: "square", "diamond", "triangle", "ltriangle" (left), "dtriangle" (downwards triangle), 
+-- "rtriangle" (right), "cross", "vcross" (vertical cross), "hline", "vline", "asterisk",
+-- "star", "hexagon", and "none" (default).
 -- @arg data.style The style of each line to be drawn. It can be a string, indicating that all lines
 -- will have the same style, or a vector of strings describing each line. The possible values are:
 -- "lines", "dots", "steps", and "sticks". Default is "lines" for all lines.
@@ -47,6 +52,23 @@
 -- notify() will not need the argument for plotting Charts.
 -- @usage Chart{subject = cs}
 Chart = function(data)
+	local symbolTable = {
+		square = 1,
+		diamond = 2,
+		triangle = 3,
+		ltriangle = 4,
+		-- triangle = 5,
+		dtriangle = 6, -- downwards triangle
+		rtriangle = 7,
+		cross = 8,
+		vcross = 9, -- vertical cross
+		hline = 10,
+		vline = 11,
+		asterisk = 12,
+		star = 13,
+		hexagon = 14,
+		none = 15
+	}
 
 	local styleTable = {
 		lines = true,
@@ -169,7 +191,19 @@ Chart = function(data)
 		end
 	end
 
-	checkUnnecessaryArguments(data, {"subject", "select", "yLabel", "xLabel", "title", "label", "color", "xAxis", "width", "style"})
+	checkUnnecessaryArguments(data, {
+		"subject",
+		"select",
+		"yLabel",
+		"xLabel",
+		"title",
+		"label",
+		"color",
+		"xAxis",
+		"width",
+		"symbol",
+		"style",
+	})
 
 	local observerType
 	if data.xAxis == nil then
@@ -227,9 +261,28 @@ Chart = function(data)
 		data.style = style
 	end
 
-	optionalTableArgument(data, "width", "table")
-	optionalTableArgument(data, "style", "table")
-	optionalTableArgument(data, "color", "table")
+	if type(data.symbol) == "string" then
+		local symbol = {}
+		forEachElement(data.select, function()
+			table.insert(symbol, data.symbol)
+		end)
+		data.symbol = symbol
+	end
+
+	optionalTableArgument(data, "width",  "table")
+	optionalTableArgument(data, "style",  "table")
+	optionalTableArgument(data, "symbol", "table")
+	optionalTableArgument(data, "color",  "table")
+	if data.symbol then
+		local symbol = {}
+		forEachElement(data.symbol, function(idx, value)
+			symbol[idx] = symbolTable[value]
+			if not symbol[idx] then
+				customError(switchInvalidArgumentMsg(value, "symbol", symbolTable))
+			end
+		end)
+		data.symbol = symbol
+	end
 
 	if data.style then
 		forEachElement(data.style, function(_, value)
@@ -267,7 +320,14 @@ Chart = function(data)
 			color = data.color[i]
 		end
 
-		local l = Legend{type = "number", width = width, style = style, slices = 1, colorBar = {{color = color, value = "-"}}}
+		local l = Legend{
+			type = "number",
+			width = width,
+			style = style,
+			slices = 1,
+			symbol = symbol,
+			colorBar = {{color = color, value = "-"}}
+		}
 
 		table.insert(observerParams, l)
 		i = i + 1

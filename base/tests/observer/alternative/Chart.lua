@@ -87,6 +87,16 @@ return{
 		end
 		unitTest:assert_error(error_func, "'abc' is an invalid value for argument 'style'. It must be a string from the set ['dots', 'lines', 'steps', 'sticks'].")
 
+		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, symbol = -3}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("symbol", "table", -3))
+
+		local error_func = function()
+			Chart{subject = cell, select = {"value1", "value2"}, symbol = "abc"}
+		end
+		unitTest:assert_error(error_func, "'abc' is an invalid value for argument 'symbol'. It must be a string from the set ['asterisk', 'cross', 'diamond', 'dtriangle', 'hexagon', 'hline', 'ltriangle', 'none', 'rtriangle', 'square', 'star', 'triangle', 'vcross', 'vline'].")
+
 		local unit = Cell{
 			count = 0
 		}

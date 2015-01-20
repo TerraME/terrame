@@ -237,19 +237,18 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 				}
                 break;
 
-            case (TObsDateTime)	:
+            case(TObsDateTime)	:
                 //break;
 
-            case (TObsNumber):
-
-                if (contains)
+            case(TObsNumber):
+                if(contains)
                 {
 
 #ifdef TME_STATISTIC
                     // t = Statistic::getInstance().startMicroTime();
                     Statistic::getInstance().startVolatileMicroTime();
 #endif
-                    if (internalCurves->contains(key))
+                    if(internalCurves->contains(key))
                         internalCurves->value(key)->values->append( tokens.at(j).toDouble() );
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
@@ -281,10 +280,10 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 
             // case TObsText:
             default:
-                if (! contains)
+                if (!contains)
                     break;
 
-                if ( (subjectType == TObsAutomaton) || (subjectType == TObsAgent) )
+                if((subjectType == TObsAutomaton) || (subjectType == TObsAgent))
                 {
 
 #ifdef TME_STATISTIC
@@ -433,19 +432,19 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
     }
 
     // Ignores the attribute of the x axis 
-    if (observerType == TObsGraphic)
+    if(observerType == TObsGraphic)
         xAxisValues = attrib->getNumericValues(); // last attribute is used in X axis
 #endif
     
     // Ignores the attribute of the x axis 
-    if (observerType == TObsGraphic)
+    if(observerType == TObsGraphic)
         attrSize--;
 
     for(int i = 0; i < attrSize; i++)
     {
         interCurve = new InternalCurve(attribList.at(i), plotter);
 
-        if (interCurve)
+        if(interCurve)
         {
             internalCurves->insert(attribList.at(i), interCurve);
 
@@ -455,7 +454,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
             interCurve->values = hashAttributes->value(attribList.at(i))->getNumericValues();
 #endif
             
-            if (i < curveTitles.size())
+            if(i < curveTitles.size())
                 interCurve->plotCurve->setTitle(curveTitles.at(i));
             else
                 interCurve->plotCurve->setTitle(QString("$curve %1").arg(i + 1));
@@ -500,12 +499,12 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 
                 // style
                 num = legAttribs.at(style).toInt();
-                interCurve->plotCurve->setStyle( (QwtPlotCurve::CurveStyle) num);
+                interCurve->plotCurve->setStyle((QwtPlotCurve::CurveStyle) num);
 
                 // symbol
                 num = legAttribs.at(symbol).toInt();
                 QwtSymbol *qwtSymbol = new QwtSymbol;
-                qwtSymbol->setStyle( (QwtSymbol::Style) num);
+                qwtSymbol->setStyle((QwtSymbol::Style) num);
                 qwtSymbol->setPen(pen);
                 // increments the symbol size in two values
                 qwtSymbol->setSize(pen.width() + 2);
@@ -524,7 +523,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
         }
         else
         {
-			if (execModes != Quiet)
+			if(execModes != Quiet)
 			{
 				string str = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
 				lua_getglobal(L, "customWarning");

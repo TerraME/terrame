@@ -122,7 +122,7 @@ void ChartPlot::propertiesChart()
         curvesBkp.append(bkp);
     }
 
-    if (! plotPropGui->exec())
+    if(!plotPropGui->exec())
     {
         // Roll-backs plotter objects
         setPalette(plotterPalette);
