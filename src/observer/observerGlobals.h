@@ -92,7 +92,7 @@ static const QByteArray LUA_ADDRESS_OTHER = LUA_ADDRESS + "(O): ";
 //// Lists
 static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SLICES 
     << PRECISION << STD_DEV << MAX << MIN << COLOR_BAR << FONT_FAMILY << FONT_SIZE 
-    << SYMBOL << WIDTH << STYLE; // << STD_COLOR_BAR; // is not a legend key
+    << SYMBOL << WIDTH << STYLE << SIZE << PENSTYLE; // << STD_COLOR_BAR; // is not a legend key
 
 //// Integers
 static const int LEGEND_ITENS = LEGEND_KEYS.size(); /// Number of items composing the legend of each attribute
