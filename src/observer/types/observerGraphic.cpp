@@ -80,6 +80,14 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     plotter->setFrameShadow(QFrame::Plain);
     plotter->setLineWidth(0);
 
+    QPalette palette = plotter->canvas()->palette();
+    palette.setColor(QPalette::Background, Qt::white);
+    plotter->canvas()->setPalette(palette);
+
+    palette = plotter->palette();
+    palette.setColor(QPalette::Background, Qt::white);
+    plotter->setPalette(palette);
+
 	VisualArrangement* v = VisualArrangement::getInstance();
 
 	SizeVisualArrangement s = v->getSize(getId());
