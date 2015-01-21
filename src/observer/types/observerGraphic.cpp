@@ -259,7 +259,6 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                     decodeCount++;
 #endif
 
-                    // Gráfico Dinâmico: Tempo vs Y
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
