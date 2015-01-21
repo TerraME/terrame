@@ -63,6 +63,11 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg("xAxis", "string", 5))
 
 		local error_func = function()
+			Chart{subject = c, xAxis = "value"}
+		end
+		unitTest:assert_error(error_func, "The subject does not have at least one valid numeric attribute to be used.")
+
+		local error_func = function()
 			Chart{subject = c, xwc = 5}
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("xwc"))

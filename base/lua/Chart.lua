@@ -92,7 +92,6 @@ Chart = function(data)
 
 	mandatoryTableArgument(data, "subject")
 	defaultTableValue(data, "yLabel", "")
-	defaultTableValue(data, "xLabel", "Time")
 	defaultTableValue(data, "title",  "")
 
 	optionalTableArgument(data, "xAxis", "string")
@@ -112,21 +111,27 @@ Chart = function(data)
 			forEachOrderedElement(data.subject, function(idx, value, mtype)
 				local size = string.len(idx)
 				if mtype == "number" and idx ~= "x" and idx ~= "y" and string.sub(idx, size, size) ~= "_" then
-					data.select[#data.select + 1] = idx
+					if not data.xAxis or idx ~= data.xAxis then
+						data.select[#data.select + 1] = idx
+					end
 				end
 			end)
 		elseif type(data.subject) == "Agent" then
 			forEachOrderedElement(data.subject, function(idx, value, mtype)
 				local size = string.len(idx)
 				if mtype == "number" and string.sub(idx, size, size) ~= "_" then
-					data.select[#data.select + 1] = idx
+					if not data.xAxis or idx ~= data.xAxis then
+						data.select[#data.select + 1] = idx
+					end
 				end
 			end)
 		elseif type(data.subject) == "CellularSpace" then
 			forEachOrderedElement(data.subject, function(idx, value, mtype)
 				local size = string.len(idx)
 				if mtype == "number" and not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, size, size) ~= "_" then
-					data.select[#data.select + 1] = idx
+					if not data.xAxis or idx ~= data.xAxis then
+						data.select[#data.select + 1] = idx
+					end
 				end
 			end)
 		elseif type(data.subject) == "Society" then
@@ -219,6 +224,12 @@ Chart = function(data)
 		"style",
 		"size"
 	})
+
+	if data.xAxis then
+		defaultTableValue(data, "xLabel", data.xAxis)
+	else
+		defaultTableValue(data, "xLabel", "Time")
+	end
 
 	local observerType
 	if data.xAxis == nil then

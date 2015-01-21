@@ -60,6 +60,32 @@ return{
 		VisualTable{subject = world}
 		t:execute(30)
 		unitTest:delay()
+
+		local world = Agent{
+			probability = 0,
+			mx = 0
+		}
+
+		c = Chart{
+			subject = world,
+			xAxis = "probability"
+		}
+		unitTest:assert_type(c, "number")
+
+		local t = Timer{
+		    Event{action = function(e)
+				if e:getTime() < 100 then
+					world.probability = world.probability + 0.01
+				else
+					world.probability = world.probability - 0.01
+				end
+				world.mx = world.mx + world.probability ^ 2
+		        world:notify()
+		    end}
+		}
+
+		t:execute(200)
+		unitTest:delay()
 	end
 }
 
