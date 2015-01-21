@@ -41,8 +41,8 @@ ChartPlot::ChartPlot(QWidget *parent) : QwtPlot(parent)
 	// layout->setAlignCanvasToScales(true);
     createPicker();
 
-    connect(exportAct, SIGNAL(triggered()), this, SLOT(exportChart()));
-    connect(propertiesAct, SIGNAL(triggered()), this, SLOT(propertiesChart()));
+//    connect(exportAct, SIGNAL(triggered()), this, SLOT(exportChart()));
+//    connect(propertiesAct, SIGNAL(triggered()), this, SLOT(propertiesChart()));
 }
 
 ChartPlot::~ChartPlot()
@@ -67,7 +67,7 @@ void ChartPlot::contextMenuEvent(QContextMenuEvent *ev)
 
 void ChartPlot::mouseDoubleClickEvent(QMouseEvent * /*ev*/)
 {
-    propertiesChart();
+    //propertiesChart();
 }
 
 void ChartPlot::resizeEvent(QResizeEvent * q)
