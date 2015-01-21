@@ -514,7 +514,7 @@ int luaCell::createObserver(lua_State *)
 		case TObsDynamicGraphic:
 			obsGraphic = (ObserverGraphic *)
 			CellSubjectInterf::createObserver(TObsDynamicGraphic);
-			if (obsGraphic)
+			if(obsGraphic)
 			{
 				obsGraphic->setObserverType(TObsDynamicGraphic);
 				obsId = obsGraphic->getId();

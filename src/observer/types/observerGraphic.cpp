@@ -24,7 +24,6 @@ extern ExecutionModes execModes;
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    // Estatisticas de desempenho
     #include "statistic.h"
 #endif
 
@@ -38,19 +37,9 @@ extern ExecutionModes execModes;
 
 using namespace TerraMEObserver;
 
-// Hue component values contains 12 values and it is used
-// to compose a HSV color
-static const double hueValues[] = {
-    // 0, 30/360, 60/360, 90/360, 120/360, 150/360, 180/360, 210/360, 240/360, 270/360, 300/360, 330/360
-    0.000f, 0.083f, 0.167f, 0.250f, 0.333f, 0.417f, 0.500f, 0.583f, 0.667f, 0.750f, 0.833f, 0.917f
-};
-const int HUE_COUNT = 12;
-
 ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent) 
     : ObserverInterf(sub) // , QThread()
 {
-    qsrand(1);
-
     observerType = TObsGraphic;
     subjectType = sub->getType(); // TO_DO: Changes it to Observer pattern
 
@@ -133,7 +122,6 @@ ObserverGraphic::~ObserverGraphic()
     //legend = 0;
 }
 
-
 void ObserverGraphic::setObserverType(TypesOfObservers type)
 {
     observerType = type;
@@ -173,9 +161,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
     Statistic::getInstance().addElapsedTime(name, t);
 #endif
 
-
 #else // TME_BLACKBOARD
-
 
 #ifdef TME_STATISTIC
     double decodeSum = 0.0;
@@ -206,7 +192,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 
     int j = 4;
 
-    for (int i=0; i < qtdParametros; i++)
+    for(int i = 0; i < qtdParametros; i++)
     {
 
 #ifdef TME_STATISTIC 
@@ -227,31 +213,28 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 
         int idx = attribList.indexOf(key);
         // bool contains = itemList.contains(key);
-        bool contains = (idx != -1); // caso a chave não exista, idx == -1
+        bool contains = (idx != -1);
 
         switch (typeOfData)
         {
             case (TObsBool):
                 if (contains)
 				{
-					if (execModes != Quiet )
+					if (execModes != Quiet)
 					{
 						string str = string("Was expected a numeric parameter.");
-						lua_getglobal(L, "customWarningMsg");
+						lua_getglobal(L, "customWarning");
 						lua_pushstring(L,str.c_str());
-						lua_pushnumber(L,5);
-						lua_call(L,2,0);
+						lua_pushnumber(L, 5);
+						lua_call(L, 2, 0);
 					}
 				}
                 break;
-
-            case(TObsDateTime)	:
+            case(TObsDateTime):
                 //break;
-
             case(TObsNumber):
                 if(contains)
                 {
-
 #ifdef TME_STATISTIC
                     // t = Statistic::getInstance().startMicroTime();
                     Statistic::getInstance().startVolatileMicroTime();
@@ -466,9 +449,6 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
             else
                 interCurve->plotCurve->setTitle(QString("$curve %1").arg(i + 1));
 
-            // Sets a random color for the created curve 
-            color = QColor::fromHsvF(hueValues[(int)(qrand() % HUE_COUNT)], 1, 1);
-            interCurve->plotCurve->setPen(color);
 			interCurve->plotCurve->setLegendAttribute(QwtPlotCurve::LegendShowLine);
 
             int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0, size, penstyle = 0;
@@ -611,9 +591,6 @@ void ObserverGraphic::colorChanged(QwtPlotItem * /* item */)
 //    //while (!paused)
 //    //{
 //    //    QThread::exec();
-//
-//    //    //std::cout << "teste thread\n";
-//    //    //std::cout.flush();
 //    //}
     //    QThread::exec();
 //}

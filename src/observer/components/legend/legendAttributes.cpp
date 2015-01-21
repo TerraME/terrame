@@ -16,7 +16,7 @@ ObsLegend::ObsLegend() : color(Qt::white), from(""), to(""), label("")
 
 ObsLegend::ObsLegend(const ObsLegend &other)
 {
-    if (this != &other)
+    if(this != &other)
     {
         color = other.color;
         from = other.from;
@@ -32,7 +32,7 @@ ObsLegend::ObsLegend(const ObsLegend &other)
 
 ObsLegend & ObsLegend::operator=(const ObsLegend &other)
 {
-    if (this == &other)
+    if(this == &other)
         return *this;
 
     color = other.color;
@@ -50,7 +50,6 @@ ObsLegend & ObsLegend::operator=(const ObsLegend &other)
 
 ObsLegend::~ObsLegend()
 {
-
 }
 
 void ObsLegend::setColor(const QColor & c)
@@ -433,7 +432,6 @@ void Attributes::addValue(int id, double &value)
 { 
     numericValues->push_back(value);
 
-
     // With bug: This follow code does not work for all subject (e.g. cell) at
     // chart observer
 
@@ -475,7 +473,7 @@ void Attributes::addValue(/*int id,*/ const QString &value)
     //    textValues->replace(id - factor, value);
 }
 
-void Attributes::setLegend( QVector<ObsLegend>* l)
+void Attributes::setLegend(QVector<ObsLegend>* l)
 {
     legend = l;
 }
@@ -619,7 +617,7 @@ void Attributes::setValueList(const QStringList & values)
 
 int Attributes::addValueListItem(const QString &value)
 {
-    if (! valueList.contains(value))
+    if(! valueList.contains(value))
     {
         valueList.push_back(value);
         return valueList.size() - 1;
@@ -639,7 +637,7 @@ void Attributes::setLabelList(const QStringList & labels)
 
 int Attributes::addLabelListItem(const QString &label)
 {
-    if (! labelList.contains(label))
+    if(! labelList.contains(label))
     {
         labelList.push_back(label);
         return labelList.size() - 1;
@@ -654,12 +652,12 @@ QStringList * Attributes::getLabelList() const
 
 void  Attributes::setImageSize(int width, int height)
 {
-    setImageSize( QSize(width, height) );
+    setImageSize(QSize(width, height));
 }
 
 void  Attributes::setImageSize(const QSize &size)
 {
-    if ((attribType == TObsAgent) || (attribType == TObsSociety))
+    if(attribType == TObsAgent || attribType == TObsSociety)
         image = QImage(size, QImage::Format_ARGB32);
     else
         image = QImage(size, QImage::Format_ARGB32_Premultiplied);
@@ -867,33 +865,33 @@ double Attributes::getDirection(double x1, double y1)
 
     double angle = 0.0;
 
-    if (circularIdxVectorDirectionPos == CEILING)
+    if(circularIdxVectorDirectionPos == CEILING)
         circularIdxVectorDirectionPos = 0;
 
-    if (vectorDirectionPos.size() < CEILING)
+    if(vectorDirectionPos.size() < CEILING)
     {
-        if (vectorDirectionPos.size() == 0)
+        if(vectorDirectionPos.size() == 0)
         {
-            vectorDirectionPos.append( QPair<QPointF, double>(QPointF(x1, y1), 0.0) );
+            vectorDirectionPos.append(QPair<QPointF, double>(QPointF(x1, y1), 0.0));
     	}
     	else
     	{
-            QPointF position = vectorDirectionPos.at( circularIdxVectorDirectionPos - 1 ).first;
+            QPointF position = vectorDirectionPos.at(circularIdxVectorDirectionPos - 1).first;
             angle = calcAngleDirection(y1 - position.y(), x1 - position.x());
-            vectorDirectionPos.append( qMakePair<QPointF, double>(QPointF(x1, y1), angle) );
+            vectorDirectionPos.append(qMakePair<QPointF, double>(QPointF(x1, y1), angle));
         }
     }
     else
     {
         QPointF newPoint(x1, y1);
         
-        if (circularIdxVectorDirectionPos < vectorDirectionPos.size())
+        if(circularIdxVectorDirectionPos < vectorDirectionPos.size())
         {
             int last = circularIdxVectorDirectionPos - 1;
             last = (last < 0) ? CEILING - 1 : last;
             QPointF position = vectorDirectionPos.at(last).first;
         
-            if (position == newPoint)
+            if(position == newPoint)
             {
                 angle = vectorDirectionPos.at(last).second;
     		}
@@ -962,7 +960,6 @@ QDataStream & operator <<(QDataStream & out, const TerraMEObserver::Attributes &
 
 QDataStream & operator >>(QDataStream & in, TerraMEObserver::Attributes & /* attr */)
 {
-
     return in;
 }
 
@@ -1018,5 +1015,4 @@ QString Attributes::toString() const
     str +="\n\n";
     return str;
 }
-
 

@@ -100,7 +100,7 @@ void ChartPlot::exportChart()
 
 void ChartPlot::propertiesChart()
 {
-    if (!plotPropGui)
+    if(!plotPropGui)
     {
         plotPropGui = new PlotPropertiesGUI(this);
         plotPropGui->consistGUI((QList<InternalCurve*>*) &internalCurves);    
@@ -113,6 +113,7 @@ void ChartPlot::propertiesChart()
     QFont titleFont = title().font(), axesFont = axisTitle(QwtPlot::xBottom).font();
     QFont scalesFont = axisFont(QwtPlot::xBottom), legendFont = legend()->font();
     QVector<CurveBkp> curvesBkp;
+
     for(int i = 0; i < internalCurves.size(); i++)
     {
         CurveBkp bkp;
@@ -166,14 +167,13 @@ void ChartPlot::setInternalCurves(const QList<InternalCurve *> &interCurves)
 
 void ChartPlot::createPicker()
 {
-    // cria o objeto respons·vel por exibir as coordenadas do ponteiro do mouse na tela
     picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft,
         /*QwtPicker::PointSelection | QwtPicker::DragSelection,*/
         QwtPlotPicker::CrossRubberBand, QwtPicker::ActiveOnly, //AlwaysOn,
         canvas());
 
-    picker->setRubberBandPen( QColor(Qt::darkMagenta) );
+    picker->setRubberBandPen(QColor(Qt::darkMagenta));
     picker->setRubberBand(QwtPicker::CrossRubberBand);
-    picker->setTrackerPen( QColor(Qt::black) );
+    picker->setTrackerPen(QColor(Qt::black));
 }
 

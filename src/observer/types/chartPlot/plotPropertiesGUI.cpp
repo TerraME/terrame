@@ -141,7 +141,7 @@ void PlotPropertiesGUI::bckgrndColorClicked()
     color = QColorDialog::getColor(plotter->palette().color(QPalette::Background), 
         this, "Chart Properties - Select color");
 
-    if (color.isValid())
+    if(color.isValid())
     {
         ui->bckgrndColorButton->setStyleSheet(QString("  border-radius: 4px; "
             "border: 1px solid rgb(0, 0, 0);background-color: %1").arg(color.name()));
@@ -158,7 +158,7 @@ void PlotPropertiesGUI::canvasColorClicked()
     color = QColorDialog::getColor(plotter->canvas()->palette().color(QPalette::Background), 
         this, "Chart Properties - Select color");
 
-    if (color.isValid())
+    if(color.isValid())
     {
         ui->canvasColorButton->setStyleSheet(QString("  border-radius: 4px; "
             "border: 1px solid rgb(0, 0, 0);background-color: %1").arg(color.name()));
@@ -167,6 +167,7 @@ void PlotPropertiesGUI::canvasColorClicked()
         palette.setColor(QPalette::Background, color);
         plotter->canvas()->setPalette(palette);
         plotter->canvas()->update();
+    	plotter->replot();
     }
 }
 

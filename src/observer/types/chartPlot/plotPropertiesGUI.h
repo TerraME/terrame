@@ -31,8 +31,6 @@ public:
     virtual ~PlotPropertiesGUI();
 
     void consistGUI(QList<TerraMEObserver::InternalCurve *> *interCurves);
-
-    
 private slots:
     // general tab
     void borderColorClicked();
@@ -57,7 +55,6 @@ private slots:
     void curveColorClicked();
 
     void currentItemChanged (QTreeWidgetItem * current, QTreeWidgetItem * previous);
-
 private:
     void consistCurveTab(const QString &name);
 
@@ -72,3 +69,4 @@ private:
 };
 
 #endif // PLOTPROPERTIES_H
+
