@@ -10,26 +10,26 @@
 N = 100
 K = 3
 MAX = 60
-LAST_TURNS = {0,0,0,0,0,0,0,0,0,0}
+LAST_TURNS = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 update_last_turns = function(new_value)
 	for i = 9, 1, -1 do
-		LAST_TURNS[i+1] = LAST_TURNS[i]
+		LAST_TURNS[i + 1] = LAST_TURNS[i]
 	end
 	LAST_TURNS[1] = new_value
 end
 
 -- different strategies that can be adopted by the agents
-function d_same_last_week(t)	return t[1]                    end
-function d_same_plus_10(t)		return t[1]+10                 end
-function d_mirror_last_week(t)	return 100 - t[1]              end
-function d_67()             	return 67                      end
-function d_same_2_weeks(t)      return t[2]                    end
-function d_same_5_weeks(t)      return t[5]                    end
-function d_average_4_weeks(t)   return (t[1]+t[2]+t[3]+t[4])/4 end
-function d_average_2_weeks(t)   return (t[1]+t[2])/2           end
-function d_max_2_weeks(t)       return math.max(t[1],t[2])     end
-function d_min_2_weeks(t)       return math.min(t[1],t[2])     end
+function d_same_last_week(t)    return t[1]                            end
+function d_same_plus_10(t)      return t[1] + 10                       end
+function d_mirror_last_week(t)  return 100 - t[1]                      end
+function d_67()                 return 67                              end
+function d_same_2_weeks(t)      return t[2]                            end
+function d_same_5_weeks(t)      return t[5]                            end
+function d_average_4_weeks(t)   return (t[1] + t[2] + t[3] + t[4]) / 4 end
+function d_average_2_weeks(t)   return (t[1] + t[2]) / 2               end
+function d_max_2_weeks(t)       return math.max(t[1], t[2])            end
+function d_min_2_weeks(t)       return math.min(t[1], t[2])            end
 
 STRATEGIES = {d_same_last_week, d_same_plus_10, d_mirror_last_week, d_67, d_same_2_weeks,
               d_same_5_weeks, d_average_4_weeks, d_max_2_weeks, d_min_2_weeks}
@@ -60,13 +60,11 @@ Chart{
 	select = {"agents_in_the_bar"},
 	symbol = "hexagon",
 	size = 7,
-	width = 2,
 	yLabel = "percentage"
 }
 
 Chart{
 	subject = c,
-	width = 2,
 	select = list_attributes
 }
 
@@ -93,7 +91,7 @@ beerAgent = Agent{
 		ag.count_fails = {}
 
 		-- choose K different strategies
-		ag.chosen = {0,0,0,0,0,0,0,0,0}
+		ag.chosen = {0, 0, 0, 0, 0, 0, 0, 0, 0}
 		for i = 1, K do
 			ag.count_fails[i] = 0
 			p = 0
@@ -158,6 +156,4 @@ t = Timer{
 }
 
 t:execute(100)
-
-
 

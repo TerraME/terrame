@@ -35,11 +35,10 @@ LegendWindow::LegendWindow(QWidget *parent)
     rows = 5;
     teColorVec = 0;
 
-    setupUi();  // instancia todos os objetos da GUI
+    setupUi();
 
     //createView();
 
-    //********** Define valores inciais para a barra de gradiente **********
     std::string color = "W-Bl";
     frameTeQtStdColorBar->setColorBarFromNames(color);
     frameTeQtStdColorBar->setVerticalBar(false);

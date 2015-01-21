@@ -593,8 +593,6 @@ int luaCell::createObserver(lua_State *)
 			return 0;
 		}
 
-		/// Define alguns parametros do observador instanciado ---------------------------------------------------
-		
 #ifdef DEBUG_OBSERVER
 		qDebug() << "luaCell";
 		qDebug() << "obsParams: " << obsParams;
@@ -607,24 +605,24 @@ int luaCell::createObserver(lua_State *)
 	Statistic::getInstance().setObserverCount(obsId);
 #endif		
 
-		if (obsLog){
+		if(obsLog){
 			obsLog->setAttributes(obsAttribs);
 
-			if (cols.at(0).isNull() || cols.at(0).isEmpty()){
-				if (execModes != Quiet ){
+			if(cols.at(0).isNull() || cols.at(0).isEmpty())
+			{
+				if(execModes != Quiet)
+				{
 					string err_out = string("Filename was not specified, using a '") + string(DEFAULT_NAME.toStdString()) + string("'.");
 					lua_getglobal(L, "customWarning");
-					lua_pushstring(L,err_out.c_str());
-					//lua_pushnumber(L,5);
-					lua_call(L,1,0);
+					lua_pushstring(L, err_out.c_str());
+					lua_call(L, 1, 0);
 				}
 				obsLog->setFileName(DEFAULT_NAME + ".csv");
 			}
 			else
 				obsLog->setFileName(cols.at(0));
 
-			// caso nao seja definido, utiliza o default ";"
-			if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty()){
+			if((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty()){
 				if (execModes != Quiet ){
 					string err_out = string("Parameter 'separator' not defined, using ';'.");
 					lua_getglobal(L, "customWarning");

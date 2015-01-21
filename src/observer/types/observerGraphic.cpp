@@ -63,7 +63,7 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     plotter = new ChartPlot(parent);
 	plotter->id = getId();
     plotter->setAutoReplot(true);
-    plotter->setStyleSheet("background-color: rgb(255, 255, 255);");
+//    plotter->setStyleSheet("background-color: rgb(255, 255, 255);");
 	plotter->setStyleSheet("QwtPlot { padding: 8px }");
     plotter->setFrameShape(QFrame::Box);
     plotter->setFrameShadow(QFrame::Plain);

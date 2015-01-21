@@ -41,7 +41,9 @@ lifeLeg = Legend{
 	colorBar = {
 		{color = "black", value = ALIVE},
 		{color = "white", value = DEAD}
-	}
+	},
+	size = 1,
+	pen = 2
 }
 
 obs = Observer{
