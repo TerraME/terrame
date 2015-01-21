@@ -469,6 +469,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
             // Sets a random color for the created curve 
             color = QColor::fromHsvF(hueValues[(int)(qrand() % HUE_COUNT)], 1, 1);
             interCurve->plotCurve->setPen(color);
+			interCurve->plotCurve->setLegendAttribute(QwtPlotCurve::LegendShowLine);
 
             int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0, size, penstyle = 0;
 
@@ -519,6 +520,11 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
                 QwtSymbol *qwtSymbol = new QwtSymbol;
                 qwtSymbol->setStyle((QwtSymbol::Style) num);
                 qwtSymbol->setPen(pen);
+
+				if((QwtSymbol::Style) num != (QwtSymbol::Style) -1)
+				{
+					interCurve->plotCurve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol);
+				}
 
 				//size
                 num = legAttribs.at(size).toInt();
