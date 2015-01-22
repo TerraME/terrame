@@ -84,6 +84,40 @@ local ColorBrewer = {
 	Accent = { {242,242,242}, {127,201,127},{190,174,212},{253,192,134},{255,255,153},{56,108,176},{240,2,127},{191,91,23},{102,102,102}}
 }
 
+-- check colorbrewer descriptions
+forEachElement(brewerMatchNames, function(_, value)
+	if not brewerRGB[value] then
+		print("Color "..value.." does not have a description.")
+	end
+end)
+
+forEachElement(brewerRGB, function(idx, value)
+	forEachElement(value, function(midx, mvalue)
+		if type(midx) ~= "number" then return end
+
+		if midx ~= #mvalue then
+			print("Color description '"..idx.."' in position "..midx.." has "..#mvalue.." colors.")
+		end
+
+		forEachElement(mvalue, function(mmidx, mmvalue)
+			if #mmvalue ~= 3 then
+				print("Color description '"..idx.."' in position "..midx.."/"..mmidx.." does not have 3 numbers.")
+			end
+		end) 
+	end)
+
+	local found = false
+	forEachElement(brewerMatchNames, function(_, mvalue)	
+		if idx == mvalue then
+			found = true
+		end
+	end)
+
+	if not found then
+		print("Color description '"..idx.."' does not have a value in names.")
+	end
+end)
+
 local uniqueValueColorBar = function (values, colornames)
 	assert(values ~= nil, "Viewer: values for the color bar are empty")
 	assert(brew[colornames]  ~= nil, "Viewer: color names must exist in Color Brewer")
