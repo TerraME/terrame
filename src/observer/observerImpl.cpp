@@ -414,9 +414,9 @@ Observer * SubjectImpl::getObserverById(int id)
 {
     Observer *obs = 0;
 
-    for (ObsListIterator i (observers.begin()); i != observers.end(); ++i)
+    for(ObsListIterator i (observers.begin()); i != observers.end(); ++i)
     {
-        if ( (*i)->getId() == id)
+        if((*i)->getId() == id)
         {
             obs = *i;
             break;
@@ -429,13 +429,13 @@ void SubjectImpl::notifyObservers(double time)
 {
 #ifdef TME_BLACK_BOARD
     BlackBoard::getInstance().stopControl();
-    BlackBoard::getInstance().setDirtyBit( getId() );
+    BlackBoard::getInstance().setDirtyBit(getId());
 #endif
 
     ObsList detachList;
 
 #ifdef TME_STATISTIC
-    for (ObsListIterator i (observers.begin()); i != observers.end(); ++i)
+    for(ObsListIterator i (observers.begin()); i != observers.end(); ++i)
     {
 //#ifdef TME_BLACK_BOARD
 //        (*i)->setDirtyBit();
@@ -443,14 +443,14 @@ void SubjectImpl::notifyObservers(double time)
 
         double t = Statistic::getInstance().startMicroTime();
 
-        QString name = QString("Response Time (%1) %2").arg(getObserverName( (*i)->getType() )) .arg((*i)->getId());
+        QString name = QString("Response Time (%1) %2").arg(getObserverName((*i)->getType())).arg((*i)->getId());
 
-        if (! (*i)->update(time))
+        if(! (*i)->update(time))
         {
             detachList.push_back(*i);
         }
 
-        if ((time == -1) && ( ((*i)->getType() == TObsUDPSender) || ((*i)->getType() == TObsTCPSender)) )
+        if ((time == -1) && (((*i)->getType() == TObsUDPSender) || ((*i)->getType() == TObsTCPSender)))
         {
             delay(0.750);
             (*i)->setModelTime(time);
@@ -466,12 +466,13 @@ void SubjectImpl::notifyObservers(double time)
     Statistic::getInstance().addElapsedTime("Total Response Time Seq - cellspace", tt);
 
 #else
-    for (ObsListIterator i (observers.begin()); i != observers.end(); ++i)
+    for(ObsListIterator i (observers.begin()); i != observers.end(); ++i)
     {
 //#ifdef TME_BLACK_BOARD
 //        (*i)->setDirtyBit();
 //#endif
-        if (! (*i)->update(time))
+
+        if(!(*i)->update(time))
         {
             detachList.push_back(*i);
         }
@@ -481,9 +482,6 @@ void SubjectImpl::notifyObservers(double time)
 #ifdef TME_BLACK_BOARD
     BlackBoard::getInstance().startControl();
 #endif
-
-    // trata de alguma maneira os observers que não foram atualizados
-    // e estão presentes na lista detachList.
 }
 
 const TypesOfSubjects SubjectImpl::getSubjectType() const

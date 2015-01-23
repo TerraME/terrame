@@ -38,6 +38,7 @@ random(cs)
 cs:createNeighborhood()
 
 lifeLeg = Legend{
+	grouping = "uniquevalues",
 	colorBar = {
 		{color = "black", value = ALIVE},
 		{color = "white", value = DEAD}

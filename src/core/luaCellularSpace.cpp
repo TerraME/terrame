@@ -980,7 +980,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		else
 		{
 			if(imagePath.size() == 1)
-				obsImage->setPath( imagePath.at(0) );
+				obsImage->setPath(imagePath.at(0));
 			else
 				obsImage->setPath(imagePath.at(0), imagePath.at(1));
 		}
@@ -997,7 +997,7 @@ const TypesOfSubjects luaCellularSpace::getType() const
 }
 
 /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-int luaCellularSpace::notify(lua_State * )
+int luaCellularSpace::notify(lua_State *)
 {
 #ifdef TME_STATISTIC
    double t = Statistic::getInstance().startMicroTime();
@@ -1006,8 +1006,7 @@ int luaCellularSpace::notify(lua_State * )
    double time = luaL_checknumber(L, -1);
 	CellSpaceSubjectInterf::notify(time);
 
-   // Calcula o tempo total de resposta
-   t = Statistic::getInstance().endMicroTime() - t;
+	t = Statistic::getInstance().endMicroTime() - t;
 	Statistic::getInstance().addElapsedTime("Total Response Time - cellspace", t);
 
    // Statistic::getInstance().collectMemoryUsage();

@@ -1471,27 +1471,6 @@ forEachElement(brewerRGB, function(idx, value)
 	end
 end)
 
-local uniqueValueColorBar = function (values, colornames)
-	assert(values ~= nil, "Viewer: values for the color bar are empty")
-	assert(brew[colornames]  ~= nil, "Viewer: color names must exist in Color Brewer")
-
-	local colorBar = {}
-	n = #values
-	assert(n <= brew.MAX and n >= 1)
-	for i = 1, n do
-		table.insert (colorBar, {value = values[i], color = brew[colornames][i]})
-	end
-	return colorBar
-end
-
-local slicedColorBar = function (min, max, slices, colornames)
-	assert (slices <= brew.MAX)
-	local colorBar = {}
-	table.insert (colorBar, {value = min, color = brew[colornames][1]})
-	table.insert (colorBar, {value = max, color = brew[colornames][slices]})
-	return colorBar
-end
-
 --- Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
 -- or Society. It draws each element into the screen, according to some attribute
 -- @arg data.subject A CellularSpace, Trajectory, Agent, or Society.
@@ -1500,35 +1479,33 @@ end
 -- @arg data.labels A table with the labels for the attributes.
 -- @arg data.select The attribute to be used.
 -- @usage Map{subject = cs}
-Map = function(data)
+function Map(data)
 	mandatoryTableArgument(data, "subject", "CellularSpace")
 	optionalTableArgument(data, "values", "table")
 	optionalTableArgument(data, "labels", "table")
 	optionalTableArgument(data, "select", "string")
 
 	if data.grouping == nil then
-		if data.slices ~= nil then
-			data.grouping = "equalsteps"
-		elseif data.min and data.max then
+		if data.slices ~= nil or data.min ~= nil or data.max ~= nil then
 			data.grouping = "equalsteps"
 		elseif data.values ~= nil then
-			data.grouping = "uniquevalues"
-		elseif data.colors == nil and data.select == nil then
+			data.grouping = "uniquevalue"
+		elseif data.colors ~= nil and data.select == nil then
 			data.grouping = "background"
 		else
-			customError("It was not possible to infer argument grouping.")
+			customError("It was not possible to infer argument 'grouping'.")
 		end
 	end
 
 	switch(data, "grouping"):caseof{
 		equalsteps = function()
-			mandatoryTableArgument(data, "select")
-			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
-			mandatoryTableArgument(data, "slices")
-			mandatoryTableArgument(data, "colors")
+			mandatoryTableArgument(data, "select", "string")
 
-			--verify(#data.labels == 0 or #data.labels == data.slices, "There should exist labels for each value.")
-			--verify(type(data.colors) ~= "string" or #data.colors == 2, "There should exist two colors for each value.")
+			local sample = data.subject.cells[1][data.select]
+
+			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
+			verify(type(sample) == "number", "Selected element should be number, got "..type(sample)..".")
+
 			if data.min == nil or data.max == nil then
 				local min = math.huge
 				local max = -math.huge
@@ -1541,18 +1518,72 @@ Map = function(data)
 						max = mdata
 					end
 				end)
+
+				if data.min == nil then data.min = min end
+				if data.max == nil then data.max = max end
 			end
 
-			checkUnnecessaryArguments(data, {"subject", "select", "labels", "colors", "grouping", "min", "max", "slices"})
+			mandatoryTableArgument(data, "slices", "number")
+			mandatoryTableArgument(data, "min", "number")
+			mandatoryTableArgument(data, "max", "number")
+
+			if type(data.colors) == "string" then
+				local colors = brewerMatchNames[data.colors]
+
+				if not colors then
+					local s = suggestion(data.colors, brewerMatchNames)
+					if s then
+						customError(switchInvalidArgumentSuggestionMsg(data.colors, "colors", s))
+					else
+						customError("Invalid color '"..data.colors.."'.")
+					end
+				end
+
+				colors = brewerRGB[colors][data.slices]
+
+				if not colors then
+					customError("Color '"..data.colors.."' does not support "..data.slices.." slices.")
+				end
+
+				data.colors = {colors[1], colors[#colors]}
+			end
+
+			mandatoryTableArgument(data, "colors", "table")
+			verify(#data.colors == 2, "Strategy 'equalsteps' requires only two colors, got "..#data.colors..".")
+
+			checkUnnecessaryArguments(data, {"subject", "select", "colors", "grouping", "min", "max", "slices"})
 		end,
-		uniquevalues = function()
-			mandatoryTableArgument(data, "select")
+		uniquevalue = function()
+			mandatoryTableArgument(data, "select", "string")
 
-			verify(data.subject.cells[1][data.select] ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
+			local sample = data.subject.cells[1][data.select]
 
-			mandatoryTableArgument(data, "colors")
+			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
+			verify(belong(type(sample), {"string", "number"}), "Selected element should be string or number, got "..type(sample)..".")
 
-			verify(#data.colors == #data.values, "There should exist colors for each value.")
+			if type(data.colors) == "string" then
+				local colors = brewerMatchNames[data.colors]
+
+				if not colors then
+					local s = suggestion(data.colors, brewerMatchNames)
+					if s then
+						customError(switchInvalidArgumentSuggestionMsg(data.colors, "colors", s))
+					else
+						customError("Invalid color '"..data.colors.."'.")
+					end
+				end
+
+				colors = brewerRGB[colors][#data.values]
+				if not colors then
+					customError("Color '"..data.colors.."' does not support "..#data.values.." slices.")
+				end
+
+				data.colors = colors
+			end
+
+			mandatoryTableArgument(data, "colors", "table")
+
+			verify(#data.colors == #data.values, "There should exist colors for each value. Got "..#data.colors.." colors and "..#data.values.." values.")
 
 			if data.values == nil then
 				data.values = {}
@@ -1578,6 +1609,13 @@ Map = function(data)
 		background = function()
 			checkUnnecessaryArguments(data, {"subject", "colors", "grouping"})
 
+			if type(data.colors) == "string" then
+				data.colors = {data.colors}
+			end			
+
+			mandatoryTableArgument(data, "colors", "table")
+			verify(#data.colors == 1, "Strategy 'background' requires only one color, got "..#data.colors..".")
+
 			forEachCell(data.subject, function(cell)
 				cell.background_ = 0
 			end)
@@ -1600,7 +1638,13 @@ Map = function(data)
 				data.colors[i] = colors[colorName]
 	
 				if data.colors[i] == nil then
-					customError("Color '" .. colorName .. "' not found. Check the name or use a table with an RGB description.")
+				
+					local s = suggestion(colorName, colors)
+					if s then
+						customError(switchInvalidArgumentSuggestionMsg(colorName, "colors", s))
+					else
+						customError("Color '" .. colorName .. "' not found. Check the name or use a table with an RGB description.")
+					end
 				end
 			elseif type(data.colors[i]) ~= "table" then
 				customError("Invalid description for color in position "..i..". It should be a table or string, got "..type(data.colors[i])..".")
@@ -1616,26 +1660,40 @@ Map = function(data)
 	local observerParams = {}
 	local colorBar = {}
 
-	if data.grouping == "uniquevalues" then
-		for i = 1, #data.values do
-			table.insert(colorBar, {value = data.values[i],
-                                    color = data.colors[i],
-                                    label = data.labels[i]})
+	switch(data, "grouping"):caseof{
+		equalsteps = function()
+			colorBar = {
+				{value = data.min, color = data.colors[1]},
+				{value = data.max, color = data.colors[2]}
+			}
+		end,
+		uniquevalue = function()
+			for i = 1, #data.values do
+				table.insert(colorBar, {value = data.values[i],
+				                        color = data.colors[i],
+				                        label = data.labels[i]})
+			end
+		end,
+		background = function()
+			colorBar = {
+				{value = 0, color = data.colors[1]}
+			}
+			data.grouping = "uniquevalue"
 		end
-	end
+	}
 
 	local legend = Legend{
 			grouping = data.grouping,
 			colorBar = colorBar,
 			slices = data.slices,
-			max = data.max,
-			min = data.min
+			size = 1,
+			pen = 2
 	}
 
-	print(legend)
 	table.insert(observerParams, legend)
 
 	local idObs = data.subject.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.subject.cells)
-	print(idObs)
+	data.subject:notify()
+	data.subject:notify()
 end
 

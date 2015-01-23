@@ -25,8 +25,27 @@
 
 return{
 	CellularSpace = function(unitTest)
+		local cs = CellularSpace{
+		    xdim = 10
+		}
+
+		forEachCell(cs, function(cell)
+		    cell.value = math.random()
+		end)
+
+		Map{
+		    subject = cs,
+		    select = "value",
+		    min = 0,
+		    max = 1,
+		    slices = 10,
+		    colors = "Blues"
+		}
+
+		cs:notify()
+		cs:notify()
 -- FIXME: if the following lines were uncommented together with the next test, TerraME aborts
--- [[
+--[[
 		local unit = Cell{
 			count = 0
 		}
@@ -57,7 +76,7 @@ return{
 		TextScreen{subject = world}
 		LogFile{subject = world}
 		VisualTable{subject = world}
---]]
+-- 
 		t:execute(30)
 		unitTest:delay()
 --]]
@@ -69,7 +88,7 @@ return{
 
 	-- FIXME: because of this test, we get an internal error:
 	-- libc++abi.dylib: Pure virtual function called! -> TODO - RAIAN: I was not able to reproduce this error
---[[
+--  [[
 		local world = CellularSpace{
 			xdim = 10
 		}
@@ -82,12 +101,15 @@ return{
 			end
 		end)
 
+--[[
 		local l = Legend{
-            grouping = "equalsteps",
+            grouping = "uniquevalues",
             colorBar = {
 				{value = 0, color = "red"},
 				{value = 1, color = "blue"}
 			},
+			size = 1,
+			pen = 2
     	}
 
 		Observer{
@@ -103,19 +125,23 @@ return{
 
 --]]
 
---[[
+-- [[
 		Map{
 			subject = world,
 			select  = "value",
 			colors  = {{0, 0, 0}, {255, 255, 255}},
-			values = {0, 1}
+			min = 0,
+			max = 1,
+			slices = 2,
 		}
 
 		Map{
 			subject = world,
 			select  = "value",
 			colors  = {"blue", "red"},
-			values = {0, 1}
+			min = 0,
+			max = 1,
+			slices = 2,
 		}
 --]]
 --[[

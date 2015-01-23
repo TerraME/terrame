@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef CELLSPACE_CONCRET_SUBJECT_INTERF
 #define CELLSPACE_CONCRET_SUBJECT_INTERF
 
@@ -30,12 +29,11 @@
 #include "observerInterf.h"
 #include "terrameIncludes.h"
 
-
 /**
  * \brief CelluarSpace Concret Subject
  * \see SubjectInterf
  * \see CellularSpace
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \author Tiago Garcia de Senna Carneiro
  * \file cellSpaceSubjectInterf.h
  */
@@ -71,5 +69,5 @@ public:
     bool kill(int id);
 };
 
-
 #endif
+

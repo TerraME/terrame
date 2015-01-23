@@ -644,8 +644,7 @@ function Legend(data)
 	if data.slices == nil then
 		if data.grouping == TME_LEGEND_GROUPING.UNIQUEVALUE then
 			if data.colorBar ~= nil then data.slices = #data.colorBar end
-		end
-		if data.slices == nil then
+		else
 			data.slices = DEF_SLICES
 		end
 	else
@@ -679,7 +678,7 @@ function Legend(data)
 		local maxDiff = math.max(diffR, diffG, diffB)
 
 		if data.slices > maxDiff then
-			customError("Number of slices is larger than the number of available colors. Using these colors, you can define a maximum of "..maxDiff.." slices.", 3)
+			customError("Number of slices ("..data.slices..") is larger than the number of available colors. Using these colors, you can define a maximum of "..maxDiff.." slices.", 3)
 		end
 	end
 	-- precision setup
