@@ -1527,6 +1527,9 @@ function Map(data)
 			mandatoryTableArgument(data, "min", "number")
 			mandatoryTableArgument(data, "max", "number")
 
+			verify(data.min < data.max, "Argument 'min' ("..data.min..") should be less than 'max' ("..data.max..").")
+			verify(data.slices > 1, "Argument 'slices' ("..data.slices..") should be greater than one.")
+
 			if type(data.colors) == "string" then
 				local colors = brewerMatchNames[data.colors]
 

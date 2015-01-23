@@ -84,6 +84,11 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg("slices", "number", "abc"))
 
 		error_func = function()
+			Map{subject = c, select = "x", slices = 0, min = 5, max = 8, colors = {{1, 2}}}
+		end
+		unitTest:assert_error(error_func, "Argument 'slices' (0) should be greater than one.")
+
+		error_func = function()
 			Map{subject = c, select = "x", slices = 2, min = "abc", colors = {{1, 2}}}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("min", "number", "abc"))
@@ -92,6 +97,11 @@ return{
 			Map{subject = c, select = "x", slices = 2, min = 3, max = "abc", colors = {{1, 2}}}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("max", "number", "abc"))
+
+		error_func = function()
+			Map{subject = c, select = "x", slices = 2, min = 5, max = 3, colors = {{1, 2}}}
+		end
+		unitTest:assert_error(error_func, "Argument 'min' (5) should be less than 'max' (3).")
 
 		error_func = function()
 			Map{subject = c, select = "x", slices = 10, colors = {{1, 2}, "red"}}
