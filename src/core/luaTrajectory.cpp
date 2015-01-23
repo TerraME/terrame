@@ -436,13 +436,6 @@ int luaTrajectory::createObserver( lua_State *L )
 		    // broadcast
 		    if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
 		    {
-                if (execModes != Quiet ){
-                    string err_out = string("Observer will send broadcast.");
-                    lua_getglobal(L, "customWarningMsg");
-                    lua_pushstring(L,err_out.c_str());
-                    //lua_pushnumber(L,5);
-                    lua_call(L,1,0);
-                }
 		        obsUDPSender->addHost(BROADCAST_HOST);
 		    }
 		    else

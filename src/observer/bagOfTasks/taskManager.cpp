@@ -27,7 +27,7 @@ inline bool operator<(const QPair<Task *, int> &t, int priority)
 
 }  // using namespace BagOfTasks;
 
-TaskManager & TaskManager::getInstance()
+TaskManager& TaskManager::getInstance()
 {
     static TaskManager taskManager;
     return taskManager;
@@ -45,9 +45,9 @@ TaskManager::TaskManager()
 
     // Do not count the main process
     int workersCount = (threadCount > 1 ? threadCount-1 : 1);
-    if ((WORKERS_NUMBER > 0) && (WORKERS_NUMBER < workersCount))
+    if((WORKERS_NUMBER > 0) && (WORKERS_NUMBER < workersCount))
     {
-        if (WORKERS_NUMBER > 1)
+        if(WORKERS_NUMBER > 1)
             workersCount = WORKERS_NUMBER;
         else
             workersCount = 1;
@@ -55,7 +55,7 @@ TaskManager::TaskManager()
 
     // Starts workers for all cores identified (default) or 
     // the number setted by "-workers" flag at main function
-     while(workers.size() < workersCount)
+    while(workers.size() < workersCount)
         workers.append(new Worker(waitCondition, mutex));
 
 #ifdef DEBUG_OBSERVER
@@ -69,7 +69,7 @@ TaskManager::TaskManager(const TaskManager &)
 {
 }
 
-TaskManager & TaskManager::operator=(const TaskManager &)
+TaskManager& TaskManager::operator=(const TaskManager &)
 {
     return *this;
 }
@@ -86,7 +86,7 @@ TaskManager::~TaskManager()
     locker.unlock();
 
     // Destroys all tasks
-    for (QList<QPair<Task *, int> >::iterator it = bagOfTasks.begin(); 
+    for(QList<QPair<Task *, int> >::iterator it = bagOfTasks.begin(); 
         it != bagOfTasks.end(); ++it)
     {
         if (it->first)

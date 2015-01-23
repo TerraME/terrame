@@ -34,7 +34,7 @@ SenderGUI::~SenderGUI()
 
 void SenderGUI::setPort(int port)
 {
-    ui->lblPortStatus->setText( tr("Sending at Port: ").arg(port));
+    ui->lblPortStatus->setText( tr("Sending at Port: %1").arg(port));
 }
 
 void SenderGUI::setMessagesSent(int msgs)

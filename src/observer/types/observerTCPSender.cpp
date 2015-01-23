@@ -62,10 +62,9 @@ ObserverTCPSender::~ObserverTCPSender()
     delete addresses; addresses = 0;
 }
 
-bool ObserverTCPSender::draw(QDataStream & state)
+bool ObserverTCPSender::draw(QDataStream& state)
 {
 #ifdef TME_STATISTIC
-    // numero de bytes transmitidos 
     Statistic::getInstance().addOccurrence("z_bytes tcp map", state.device()->size());
 #endif
 
@@ -80,10 +79,10 @@ bool ObserverTCPSender::draw(QDataStream & state)
 
     // qDebug() << "stateAux.size(): " << stateAux.size();
 
-    if (! stateAux.isEmpty())
+    if(!stateAux.isEmpty())
     {
         static bool socket = false;
-        if (! socket)
+        if (!socket)
         {
             tcpSocketTask = new TcpSocketTask();
 
@@ -109,7 +108,7 @@ bool ObserverTCPSender::draw(QDataStream & state)
 
             // const BagOfTasks::Worker *w = tcpSocketTask->runExclusively();
             // tcpSocketTask->moveToThread( (QThread *) w);
-            tcpSocketTask->moveToThread( (QThread *) tcpSocketTask->runExclusively());
+            tcpSocketTask->moveToThread((QThread *) tcpSocketTask->runExclusively());
         
             socket = true;
         }
@@ -127,7 +126,7 @@ bool ObserverTCPSender::draw(QDataStream & state)
     }
     else
     {
-        senderGUI->appendMessage(tr("The retrieved state is empty. There are nothing to do."));
+        senderGUI->appendMessage(tr("The retrieved state is empty. There is nothing to do."));
     }
 
 //#ifdef TME_STATISTIC
@@ -261,3 +260,4 @@ void ObserverTCPSender::connected()
     // Used only for debugging
     senderGUI->appendMessage("conectou!!");
 }
+

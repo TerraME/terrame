@@ -295,13 +295,13 @@ SubjectAttributes * BlackBoard::addAttribute(int subjectId, const QString & name
 
 void BlackBoard::addSubject(int subjectId)
 {
-    if (! cache.contains(subjectId) )
+    if(!cache.contains(subjectId))
     {
         SubjectAttributes *subjAttr = new SubjectAttributes(subjectId);
 
-        // qDebug() << "deletedSubjects: " << deletedSubjects;
+        //qDebug() << "deletedSubjects: " << deletedSubjects;
 
-        if (deletedSubjects && deletedSubjects->contains(subjectId))
+        if(deletedSubjects && deletedSubjects->contains(subjectId))
         {
             QPair<double, double> coord = deletedSubjects->take(subjectId);
             subjAttr->setX(coord.first);
@@ -313,7 +313,6 @@ void BlackBoard::addSubject(int subjectId)
         locker->unlock();
     }
 }
-
 
 SubjectAttributes * BlackBoard::getSubject(int subjectId)
 {

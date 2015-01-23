@@ -118,14 +118,11 @@ bool ObserverUDPSender::draw(QDataStream &state)
     QString stateAux;
     state >> stateAux;
 
-    if (! stateAux.isEmpty())
+    if(!stateAux.isEmpty())
     {
-
         static bool created = false;
-
-        if (! created)
+        if(!created)
     	{
-
             UdpSocketTask *udpSocketTask = new UdpSocketTask();
             udpSocketTask->setPort(port);
             udpSocketTask->setHost(&addresses);
@@ -143,7 +140,7 @@ bool ObserverUDPSender::draw(QDataStream &state)
                     Qt::DirectConnection);
 
             const BagOfTasks::Worker *w = udpSocketTask->runExclusively();
-            udpSocketTask->moveToThread( (QThread *) w);
+            udpSocketTask->moveToThread((QThread *)w);
             BagOfTasks::TaskManager::getInstance().add(udpSocketTask);
 
             created = true;
@@ -154,7 +151,7 @@ bool ObserverUDPSender::draw(QDataStream &state)
 	}
     else
 	{
-        senderGUI->appendMessage(tr("The retrieved state is empty. There are nothing to do."));
+        senderGUI->appendMessage(tr("The retrieved state is empty. There is nothing to do."));
 	}
 
     return true;
@@ -171,13 +168,13 @@ void ObserverUDPSender::setAttributes(QStringList& attribs)
 
 #ifdef TME_BLACK_BOARD
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr) 
+    if(subjAttr) 
         subjAttr->setSubjectType(getSubjectType());
 #endif
 }
 
 bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
-        {
+{
 //#ifdef TME_STATISTIC
 //    // variaveis usadas no calculo de desempenho
 //    int datagramsCount = msgCount, compressionCount = 0, renderingCount = 0;

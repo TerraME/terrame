@@ -44,7 +44,6 @@ of this library and its documentation.
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-	// Estatisticas de desempenho
 	#include "statistic.h"
 #endif
 
@@ -84,9 +83,8 @@ int luaSociety::setID( lua_State *L )
 /// parameters: observer type, observeb attributes table, observer type parameters
 // verif. ref (endereco na pilha lua)
 // olhar a classe event
-int luaSociety::createObserver( lua_State * luaL)
+int luaSociety::createObserver(lua_State * luaL)
 {
-
 #ifdef DEBUG_OBSERVER
 	luaStackToQString(7);
 #endif
@@ -108,7 +106,7 @@ int luaSociety::createObserver( lua_State * luaL)
 	// do observer
 	TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, 1);
 
-	if ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
+	if((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
 	{
 		QStringList allAgentsAttribs, allSocietyAttribs, obsAttribs, obsParams, cols;
 		
@@ -121,18 +119,18 @@ int luaSociety::createObserver( lua_State * luaL)
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top) != 0)
 		{
-			if (lua_type(luaL, -2) == LUA_TSTRING)
+			if(lua_type(luaL, -2) == LUA_TSTRING)
 			{
 				QString key = luaL_checkstring(luaL, -2);
 				allSocietyAttribs.append(key);
 				
-				if (key == "agents")
+				if(key == "agents")
 				{
 					int agentstop = lua_gettop(luaL);
 					int stop = false;
 					
 					lua_pushnil(luaL);
-					while ((! stop) && (lua_next(luaL, agentstop) != 0))
+					while((! stop) && (lua_next(luaL, agentstop) != 0))
 					{
 						int agentTop = lua_gettop(luaL);
 						lua_pushnumber(luaL, 1);
@@ -141,7 +139,7 @@ int luaSociety::createObserver( lua_State * luaL)
 						lua_pushnil(luaL);
 						while(lua_next(luaL, agentTop) != 0)
 						{
-							if (lua_type(luaL, -2) == LUA_TSTRING)
+							if(lua_type(luaL, -2) == LUA_TSTRING)
 								allAgentsAttribs.append(luaL_checkstring(luaL, -2));
 							stop = true;
 							lua_pop(luaL, 1);
@@ -166,11 +164,11 @@ int luaSociety::createObserver( lua_State * luaL)
 		{
 			QString key;
 
-			if (lua_type(luaL, -2) == LUA_TSTRING)
+			if(lua_type(luaL, -2) == LUA_TSTRING)
 			{
 				key = luaL_checkstring(luaL, -2);
 			}
-			else if (lua_type(luaL, -2) == LUA_TNUMBER)
+			else if(lua_type(luaL, -2) == LUA_TNUMBER)
 			{
 				char aux[100];
 				double number = luaL_checknumber(luaL, -2);
@@ -178,7 +176,7 @@ int luaSociety::createObserver( lua_State * luaL)
 				key = aux;
 			}
 
-			switch (lua_type(luaL, -1))
+			switch(lua_type(luaL, -1))
 			{
 				case LUA_TBOOLEAN:
 				{
@@ -212,11 +210,10 @@ int luaSociety::createObserver( lua_State * luaL)
 
 						switch (lua_type(luaL, -1))
 						{
-						case LUA_TSTRING:
-							k = QString(luaL_checkstring(luaL, -1));
-							break;
-
-						case LUA_TNUMBER:
+							case LUA_TSTRING:
+								k = QString(luaL_checkstring(luaL, -1));
+								break;
+							case LUA_TNUMBER:
 							{
 								char aux[100];
 								double number = luaL_checknumber(luaL, -1);
@@ -224,8 +221,8 @@ int luaSociety::createObserver( lua_State * luaL)
 								k = QString(aux);
 								break;
 							}
-						default:
-							break;
+							default:
+								break;
 						}
 						cols.append(k);
 						lua_pop(luaL, 1);
@@ -253,7 +250,7 @@ int luaSociety::createObserver( lua_State * luaL)
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top) != 0)
 		{
-			if (obsAttribs.empty())
+			if(obsAttribs.empty())
 			{
 				obsAttribs = allSocietyAttribs;
 
@@ -263,17 +260,16 @@ int luaSociety::createObserver( lua_State * luaL)
 			else
 			{
 				// Verifica se o atributo informado realmente existe na celula
-				for (int i = 0; i < obsAttribs.size(); i++)
+				for(int i = 0; i < obsAttribs.size(); i++)
 				{
-					if (! observedAttribs.contains(obsAttribs.at(i)) )
+					if(!observedAttribs.contains(obsAttribs.at(i)) )
 						observedAttribs.insert(obsAttribs.at(i), "");
 
-					if (! allSocietyAttribs.contains(obsAttribs.at(i)))
+					if(!allSocietyAttribs.contains(obsAttribs.at(i)))
 					{
 						string errorMsg = string("Attribute name ") + string(obsAttribs.at(i).toLatin1().data()) + string(" not found.");
 						lua_getglobal(L, "customError");
 						lua_pushstring(L,errorMsg.c_str());
-						//lua_pushnumber(L,5);
 						lua_call(L,1,0);
 						return 0;
 					}
@@ -287,11 +283,11 @@ int luaSociety::createObserver( lua_State * luaL)
 			ObserverUDPSender *obsUDPSender = 0;
 			int obsId = -1;
 
-			switch (typeObserver)
+			switch(typeObserver)
 			{
 				case TObsTextScreen:
 					obsText = (ObserverTextScreen*)SocietySubjectInterf::createObserver(TObsTextScreen);
-					if (obsText)
+					if(obsText)
 					{
 						obsId = obsText->getId();
 					}
@@ -304,13 +300,13 @@ int luaSociety::createObserver( lua_State * luaL)
 
 				case TObsLogFile:
 					obsLog = (ObserverLogFile*) SocietySubjectInterf::createObserver(TObsLogFile);
-					if (obsLog)
+					if(obsLog)
 					{
 						obsId = obsLog->getId();
 					}
 					else
 					{
-						if (execModes != Quiet)
+						if(execModes != Quiet)
 							qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
 					}
 					break;
@@ -318,20 +314,20 @@ int luaSociety::createObserver( lua_State * luaL)
 				case TObsTable:
 					obsTable = (ObserverTable *)
 					SocietySubjectInterf::createObserver(TObsTable);
-					if (obsTable)
+					if(obsTable)
 					{
 						obsId = obsTable->getId();
 					}
 					else
 					{
-						if (execModes != Quiet)
+						if(execModes != Quiet)
 							qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
 					}
 					break;
 
 				case TObsDynamicGraphic:
 					obsGraphic = (ObserverGraphic *) SocietySubjectInterf::createObserver(TObsDynamicGraphic);
-					if (obsGraphic)
+					if(obsGraphic)
 					{
 						obsGraphic->setObserverType(TObsDynamicGraphic);
 						obsId = obsGraphic->getId();

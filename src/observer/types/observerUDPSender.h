@@ -44,7 +44,6 @@ class ObserverUDPSender : public QObject, public ObserverInterf
     Q_OBJECT
 
 public:
-
     /**
      * Constructor
      * \param subj a pointer to a Subject

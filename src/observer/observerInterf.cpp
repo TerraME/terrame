@@ -79,7 +79,6 @@ int ObserverInterf::close()
 
 SubjectInterf::~SubjectInterf()
 {
-
 }
 
 void SubjectInterf::attach(Observer* obs)
@@ -111,3 +110,4 @@ void SubjectInterf::setId(int id)
 {
     SubjectInterf::pImpl_->setId(id);
 }
+

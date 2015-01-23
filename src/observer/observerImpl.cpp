@@ -12,10 +12,7 @@
     #include "blackBoard.h"
 #endif
 
-#define TME_STATISTIC_UNDEF
-
 #ifdef TME_STATISTIC
-    // Performance analysis
     #include "statistic.h"
 #endif
 
@@ -108,9 +105,11 @@ void delay(double seconds)
 
 void TerraMEObserver::dumpRetrievedState(const QString & msg, const QString &name)
 {
-    static int asas = 0; asas++;
+    static int asas = 0;
+	asas++;
+
     QFile file(name + QString::number(asas) + ".txt");
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if(file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream out(&file);
 
@@ -123,18 +122,18 @@ void TerraMEObserver::formatSpeed(double speed, QString &strSpeed)
 {
     strSpeed = QObject::tr("Speed: ");
 
-    if (speed < 1024) {
-            strSpeed.append( QString("%1 bytes/s").arg(speed, 3, 'f', 1) );
-        }
+    if(speed < 1024)
+	{
+        strSpeed.append(QString("%1 bytes/s").arg(speed, 3, 'f', 1) );
+    }
+    else
+    {
+        if(speed < MEGABYTE_VALUE)
+            strSpeed.append(QString("%1 KB/s").arg(speed * KILOBYTE_DIV, 3, 'f', 1));
         else
-        {
-            if (speed < MEGABYTE_VALUE)
-                strSpeed.append( QString("%1 KB/s").arg(speed * KILOBYTE_DIV, 3, 'f', 1) );
-            else
-                strSpeed.append( QString("%1 MB/s").arg(speed * MEGABYTE_DIV, 3, 'f', 1) );
-        }
+            strSpeed.append(QString("%1 MB/s").arg(speed * MEGABYTE_DIV, 3, 'f', 1));
+    }
 }
-
 
 // store the number of observers created along the simulation
 static long int numObserverCreated = 0;
@@ -149,7 +148,7 @@ ObserverImpl::ObserverImpl() : visible(true)
 
 ObserverImpl::ObserverImpl(const ObserverImpl &other)
 {
-    if (this != &other)
+    if(this != &other)
     {
         observerID = other.observerID;
         visible = other.visible;
@@ -164,7 +163,7 @@ ObserverImpl::ObserverImpl(const ObserverImpl &other)
 
 ObserverImpl & ObserverImpl::operator=(ObserverImpl &other)
 {
-    if (this == &other)
+    if(this == &other)
         return *this;
 
     observerID = other.observerID;
@@ -184,31 +183,31 @@ ObserverImpl::~ObserverImpl()
     bool thereAreOpenWidgets = false;
     foreach (QWidget *widget, QApplication::allWidgets())
     {
-        if (widget)
+        if(widget)
             thereAreOpenWidgets = true;
     }
-    if(! thereAreOpenWidgets)
+    if(!thereAreOpenWidgets)
         QApplication::exit();
 }
 
-bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro aqui
+bool ObserverImpl::update(double time)
 {
 #ifdef TME_STATISTIC
     double t = 0;
     QString name;
 #endif
 
-    if (obsHandle_->getType() == TObsDynamicGraphic)
+    if(obsHandle_->getType() == TObsDynamicGraphic)
         obsHandle_->setModelTime(time);
 
     // TO-DO: Otimizar, retornar referencia ou ponteiro
-    // recupera a lista de atributos em observação
+    // recupera a lista de atributos em observacao
     QStringList attribList = obsHandle_->getAttributes();
 
 #ifdef TME_BLACK_BOARD
 
 #ifdef TME_STATISTIC
-    if ((time == -1) && (obsHandle_->getType() == TObsUDPSender))
+    if((time == -1) && (obsHandle_->getType() == TObsUDPSender))
     {
         obsHandle_->setModelTime(time);
     }
@@ -229,7 +228,7 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
         // Captura o tempo de espera para os observadores que tambem sao threads
         // Statistic::getInstance().startVolatileMicroTime();
 
-    	obsHandle_->draw( state );
+    	obsHandle_->draw(state);
         //state.device()->close();
 
         name = QString("Manager %1").arg(getId());
@@ -240,9 +239,8 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
     // getState via BlackBoard
     QDataStream& state = BlackBoard::getInstance().getState(subject_, obsHandle_->getId(), attribList);
 
-    obsHandle_->draw( state );
+    obsHandle_->draw(state);
     state.device()->close(); 
-
 #endif
 
 #else  // TME_BLACK_BOARD
@@ -254,7 +252,7 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
     buffer.open(QIODevice::WriteOnly);
     
 #ifdef TME_STATISTIC
-    if ((time == -1) && (obsHandle_->getType() == TObsUDPSender))
+    if((time == -1) && (obsHandle_->getType() == TObsUDPSender))
     {
         obsHandle_->setModelTime(time);
     }
@@ -282,7 +280,7 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
         // Captura o tempo de espera para os observadores que tambem sao threads
         Statistic::getInstance().startVolatileMicroTime();
 #endif
-    	obsHandle_->draw( state );
+    	obsHandle_->draw(state);
     	buffer.close();
 
 #ifdef TME_STATISTIC 
@@ -372,19 +370,19 @@ SubjectImpl::SubjectImpl()
 
 SubjectImpl::SubjectImpl(const SubjectImpl &other)
 {
-    if (this != &other)
+    if(this != &other)
     {
         observers.clear();
         ObsList &obs = (ObsList &) other.observers;
         ObsListIterator i = obs.begin();
-        for (; i != obs.end(); ++i)
+        for(; i != obs.end(); ++i)
             observers.push_back(*i);
     }
 }
 
 SubjectImpl & SubjectImpl::operator=(SubjectImpl &other)
 {
-    if (this == &other)
+    if(this == &other)
         return *this;
 
     observers.clear();
@@ -445,12 +443,12 @@ void SubjectImpl::notifyObservers(double time)
 
         QString name = QString("Response Time (%1) %2").arg(getObserverName((*i)->getType())).arg((*i)->getId());
 
-        if(! (*i)->update(time))
+        if(!(*i)->update(time))
         {
             detachList.push_back(*i);
         }
 
-        if ((time == -1) && (((*i)->getType() == TObsUDPSender) || ((*i)->getType() == TObsTCPSender)))
+        if((time == -1) && (((*i)->getType() == TObsUDPSender) || ((*i)->getType() == TObsTCPSender)))
         {
             delay(0.750);
             (*i)->setModelTime(time);
@@ -461,7 +459,7 @@ void SubjectImpl::notifyObservers(double time)
         Statistic::getInstance().addElapsedTime(name, t);
     }
 
-    // Calcula o tempo entre o código sequencial e paralelo
+    // Calcula o tempo entre o codigo sequencial e paralelo
     double tt = Statistic::getInstance().endMicroTime() - Statistic::getInstance().getIntermediateTime();
     Statistic::getInstance().addElapsedTime("Total Response Time Seq - cellspace", tt);
 

@@ -25,30 +25,31 @@
 
 return{
 	Cell = function(unitTest)
-        local world = Cell{
-            count = 0,
-            value = function(self)
-                return self.count + 2
-            end,
-            sum = function(self)
-                return self.count + 4
-            end
-        }
+--[[
+		local world = Cell{
+			count = 0,
+			value = function(self)
+				return self.count + 2
+			end,
+			sum = function(self)
+				return self.count + 4
+			end
+		}
 
-        local c = Chart{subject = world}
+		local c = Chart{subject = world}
 		unitTest:assert_type(c, "number")
 
-        c = Chart{subject = world, select = {"count", "value", "sum"}}
+		c = Chart{subject = world, select = {"count", "value", "sum"}}
 		unitTest:assert_type(c, "number")
 
-        c = Chart{
+		c = Chart{
 			subject = world,
 			style = "steps",
 			width = 2
 		}
 		unitTest:assert_type(c, "number")
 
-        c = Chart{
+		c = Chart{
 			subject = world,
 			select = {"value", "sum"},
 			style = "sticks",
@@ -57,7 +58,7 @@ return{
 		}
 		unitTest:assert_type(c, "number")
 
-        c = Chart{
+		c = Chart{
 			subject = world,
 			select = {"value", "sum"},
 			color = {"green", "yellow"},
@@ -67,27 +68,35 @@ return{
 		}
 		unitTest:assert_type(c, "number")
 
-        world:notify(0)
+		world:notify(0)
 
-        local t = Timer{
-            Event{action = function(e)
-                world.count = world.count + 1
-                world:notify(e)
-            end}
-        }
+		local t = Timer{
+			Event{action = function(e)
+				world.count = world.count + 1
+				world:notify(e)
+			end}
+		}
 
 		TextScreen{subject = world}
 		LogFile{subject = world}
 		VisualTable{subject = world}
-        t:execute(30)
+		t:execute(30)
 		unitTest:delay()
+--]]
 
 -- FIXME: bug below
---[[
-		world = Cell{value = 3}
+-- [[
+		world = Cell{value = 3, value2 = 5}
 
-		c = InternetSender{subject = world}
+		c = InternetSender{
+			subject = world,
+			select = {"value", "value2"},
+			protocol = "udp",
+			port = 11111
+		}
 		unitTest:assert_type(c, "number")
+		world:notify(1)
+		world:notify(2)
 		unitTest:delay()
 --]]
 	end

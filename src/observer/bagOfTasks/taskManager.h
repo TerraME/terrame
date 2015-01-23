@@ -32,9 +32,7 @@ public:
 
     bool join(int timeout = -1);
 
-
-    // TO-DO: Otimizar...
-    inline Task * getTask(int workerId) 
+    inline Task* getTask(int workerId) 
     {
         // QMutexLocker locker(&mutex);  // Movido para o Worker
 

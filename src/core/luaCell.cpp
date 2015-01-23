@@ -683,7 +683,7 @@ int luaCell::createObserver(lua_State *)
 			obsUDPSender->setAttributes(obsAttribs);
 
 			if (cols.isEmpty()){
-				if (execModes != Quiet ){
+				if (execModes != Quiet){
 					string err_out = string("Parameter 'port' not defined.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L,err_out.c_str());
@@ -692,17 +692,12 @@ int luaCell::createObserver(lua_State *)
 			}
 			else
 			{
+
 				obsUDPSender->setPort(cols.at(0).toInt());
 			}
 
 			// broadcast
 			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())){
-				if (execModes != Quiet){
-					string err_out = string("Observer will send broadcast.");
-					lua_getglobal(L, "customWarning");
-					lua_pushstring(L,err_out.c_str());
-					lua_call(L,1,0);
-				}
 				obsUDPSender->addHost(BROADCAST_HOST);
 			}
 			else{
@@ -733,12 +728,6 @@ int luaCell::createObserver(lua_State *)
 
 			// broadcast
 			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())){
-				if (execModes != Quiet ){
-					string err_out = string("Observer will send to broadcast.");
-					lua_getglobal(L, "customWarning");
-					lua_pushstring(L,err_out.c_str());
-					lua_call(L,1,0);
-				}
 				obsTCPSender->addHost(LOCAL_HOST);
 			}
 			else{

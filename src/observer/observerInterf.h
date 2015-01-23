@@ -25,7 +25,7 @@
 /*!
  * \file observerInterf.h
  * \brief Design Pattern Subject and Observer handles.
- * \author Antonio José da Cunha Rodrigues 
+ * \author Antonio Jose da Cunha Rodrigues 
  * \author Tiago Garcia de Senna Carneiro
 */
 
@@ -55,13 +55,11 @@ namespace ObserverDatagramPkg
 }
 #endif
 
-// mantem o numero de observer já criados
 //static long int numObserverCreated = 0;
 
 /**
 * \brief  
 *  Handle for a Observer object.
-*
 */
 class ObserverInterf :public Observer, public Interface<ObserverImpl>
 {
@@ -150,15 +148,11 @@ protected:
     // virtual void setId(int);
 };
 
-
-
 ////////////////////////////////////////////////////////////  Subject
 
-
 /*
-** \classe Subject
-** \author Antônio José da Cunha Rodrigues
-** Baseado no padrão Observer do livro "Padrões de Projeto"
+** \class SubjectInterf
+** \author Antonio Jose da Cunha Rodrigues
 */
 
 /**
@@ -187,7 +181,7 @@ public:
     /**
      * \copydoc TerraMEObserver::Subject::getObserverById
      */
-    Observer * getObserverById(int id);
+    Observer* getObserverById(int id);
 
     /**
      * \copydoc TerraMEObserver::Subject::notify
@@ -216,11 +210,11 @@ public:
      */
 #ifdef TME_PROTOCOL_BUFFERS
     virtual QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *subj,
-        ObserverDatagramPkg::SubjectAttribute *parentSubj) // = 0;
+        ObserverDatagramPkg::SubjectAttribute *parentSubj)
     {  Q_UNUSED(L); Q_UNUSED(attribs); Q_UNUSED(subj); Q_UNUSED(parentSubj);
         return ""; }
 #else
-    virtual QByteArray pop(lua_State *L, const QStringList& attribs) // = 0;
+    virtual QByteArray pop(lua_State *L, const QStringList& attribs)
     { Q_UNUSED(L); Q_UNUSED(attribs);
       return ""; }
 #endif
@@ -232,20 +226,20 @@ protected:
     virtual void setId(int);
 
 #ifdef TME_PROTOCOL_BUFFERS
-    virtual QByteArray getAll(QDataStream& in, const QStringList& attribs)// = 0;
+    virtual QByteArray getAll(QDataStream& in, const QStringList& attribs)
     { Q_UNUSED(in); Q_UNUSED(attribs); return ""; }
-    virtual QByteArray getChanges(QDataStream& in, const QStringList& attribs)// = 0;
+    virtual QByteArray getChanges(QDataStream& in, const QStringList& attribs)
     { Q_UNUSED(in); Q_UNUSED(attribs); return ""; }
 #else
-    virtual QByteArray getAll(QDataStream& in, int obsId, const QStringList& attribs)// = 0;
+    virtual QByteArray getAll(QDataStream& in, int obsId, const QStringList& attribs)
     {   Q_UNUSED(in); Q_UNUSED(obsId); Q_UNUSED(attribs);
         return ""; }
-    virtual QByteArray getChanges(QDataStream& in, int obsId, const QStringList& attribs)// = 0;
+    virtual QByteArray getChanges(QDataStream& in, int obsId, const QStringList& attribs)
     {   Q_UNUSED(in); Q_UNUSED(obsId); Q_UNUSED(attribs);
         return ""; }
 #endif
 
 };
 
-
 #endif
+
