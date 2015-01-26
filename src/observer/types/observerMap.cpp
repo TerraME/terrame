@@ -77,14 +77,14 @@ ObserverMap::ObserverMap(Subject *sub, QWidget *parent)
 		resize(s.width, s.height);
 	else
 		resize(450, 350);
-	
-	if(p.x > 0 && p.y > 0)
-		move(p.x, p.y);
-	else
-		move(50 + getId() * 50, 50 + getId() * 50);
 
     setupGUI();
     showNormal();
+
+	if(p.x > 0 && p.y > 0)
+		move(p.x, p.y - geometry().y() + y());
+	else
+		move(50 + getId() * 50, 50 + getId() * 50);
 }
 
 ObserverMap::~ObserverMap()
