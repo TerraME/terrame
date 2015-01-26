@@ -40,6 +40,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #include "scheduler.h"
 #include "region.h"
 #include "terrameGlobals.h"
+#include "imageCompare.h"
 
 #include <QtCore/QBuffer>
 #include <QtCore/QByteArray>

@@ -169,6 +169,17 @@ int cpp_informations(lua_State *L)
 	return 5;
 }
 
+int cpp_imagecompare(lua_State *L)
+{
+    const char* s1 = lua_tostring(L, -1);
+    const char* s2 = lua_tostring(L, -2);
+
+	cout << s1 << endl << s2 << endl;
+	bool result = comparePerPixel(s1, s2);
+
+	lua_pushboolean(L, result);
+	return 1;
+}
 
 extern ExecutionModes execModes;
 
@@ -192,6 +203,7 @@ int main(int argc, char *argv[])
 
 #ifdef TME_STATISTIC
 	{
+
 		Statistic::getInstance();
 
 		QFile statFile(app.applicationDirPath() + "/output_MemoryUsage.txt");
@@ -263,6 +275,8 @@ int main(int argc, char *argv[])
 	lua_pushcfunction(L, cpp_informations);
 	lua_setglobal(L, "cpp_informations");
 
+	lua_pushcfunction(L, cpp_imagecompare);
+	lua_setglobal(L, "cpp_imagecompare");
 	// Execute the lua files
 	if(argc < 2)
 	{

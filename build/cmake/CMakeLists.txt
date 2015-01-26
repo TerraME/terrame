@@ -483,6 +483,8 @@ source_group("core" FILES
 	${SRCDIR}/core/luaMessage.h
 	${SRCDIR}/core/luaNeighborhood.cpp
 	${SRCDIR}/core/luaNeighborhood.h
+	${SRCDIR}/core/imageCompare.h
+	${SRCDIR}/core/imageCompare.cpp
 	${SRCDIR}/core/luaRandomUtils.h
 	${SRCDIR}/core/luaRegion.h
 	${SRCDIR}/core/luaRule.h

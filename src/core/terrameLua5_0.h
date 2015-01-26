@@ -25,6 +25,7 @@ of this library and its documentation.
 #include "cellularSpace.h"
 #include "scheduler.h"
 #include "region.h"
+#include "imageCompare.h"
 
 extern "C"
 {
