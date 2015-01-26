@@ -25,7 +25,6 @@
 #ifndef OBSERVER_MAP_H
 #define OBSERVER_MAP_H
 
-
 #include <QDialog>
 #include <QString>
 #include <QTextEdit>
@@ -48,9 +47,7 @@ class QScrollArea;
 #include "../components/painter/painterWidget.h"
 
 namespace TerraMEObserver {
-
 class Decoder;
-
 
 /**
  * \brief Spatial visualization for cells and saved in the user interface
@@ -148,6 +145,8 @@ public:
      * \see QHash
      */
     void setAttributesHash(QHash<QString, Attributes *> *hash);
+
+	void moveEvent(QMoveEvent*);
 signals:
     /**
      * Triggers the grid draw
@@ -315,9 +314,8 @@ private:
     int numTiles;
     int rows, cols;  /// numero de linha e colunas
 
-
     QStringList attribList; /// lista de todas as chaves
-    QStringList obsAttrib;  /// lista de chaves em observação
+    QStringList obsAttrib;  /// lista de chaves em observacao
     QHash<QString, Attributes*> *mapAttributes;	/// map de todas as chaves
     QTreeWidget *treeLayers;
 
@@ -351,3 +349,4 @@ private:
 }
 
 #endif
+
