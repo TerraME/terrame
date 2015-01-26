@@ -25,7 +25,7 @@
 
 return{
 	Cell = function(unitTest)
---[[
+-- [[
 		local world = Cell{
 			count = 0,
 			value = function(self)
@@ -85,7 +85,7 @@ return{
 --]]
 
 -- FIXME: bug below
--- [[
+--[[
 		world = Cell{value = 3, value2 = 5}
 
 		c = InternetSender{

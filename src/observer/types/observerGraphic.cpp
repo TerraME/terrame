@@ -81,24 +81,23 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
 
 	SizeVisualArrangement s = v->getSize(getId());
 	PositionVisualArrangement p = v->getPosition(getId());
+    plotter->setWindowTitle("TerraME :: Chart");
 
 	if(s.width > 0 && s.height > 0)
 	    plotter->resize(s.width, s.height);
 	else
 	    plotter->resize(450, 350);
 
-	if(p.x > 0 && p.y > 0)
-		plotter->move(p.x, p.y);
-	else
-		plotter->move(50 + getId() * 50, 50 + getId() * 50);
-
-    plotter->setWindowTitle("TerraME :: Chart");
-
     plotter->showNormal();
 
     // prioridade da thread
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
     // start(QThread::IdlePriority);
+
+	if(p.x > 0 && p.y > 0)
+		plotter->move(p.x, p.y - plotter->geometry().y() + plotter->y());
+	else
+		plotter->move(50 + getId() * 50, 50 + getId() * 50);
 }
 
 ObserverGraphic::~ObserverGraphic()

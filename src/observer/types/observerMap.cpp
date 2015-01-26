@@ -1,4 +1,5 @@
 #include "observerMap.h"
+#include "visualArrangement.h"
 
 #include <QApplication>
 #include <QRect>
@@ -28,7 +29,6 @@
 
 using namespace TerraMEObserver;
 
-
 ObserverMap::ObserverMap(Subject *sub, QWidget *parent)	
     : ObserverInterf(sub), QDialog(parent)
 {
@@ -43,7 +43,7 @@ ObserverMap::ObserverMap(Subject *sub, QWidget *parent)
     subjectType = sub->getType(); // TO_DO: Changes it to Observer pattern
 
     //resize(1000, 900);
-    setWindowTitle("TerraME Observer : Map");
+    setWindowTitle("TerraME :: Map");
     setWindowFlags(Qt::Window);
 
     legendWindow = NULL;		// ponteiro para LegendWindow, instanciado no metodo setAttributes
@@ -68,8 +68,23 @@ ObserverMap::ObserverMap(Subject *sub, QWidget *parent)
     width = 0;
     height = 0;
 
+	VisualArrangement* v = VisualArrangement::getInstance();
+	
+	SizeVisualArrangement s = v->getSize(getId());
+	PositionVisualArrangement p = v->getPosition(getId());
+	
+	if(s.width > 0 && s.height > 0)
+		resize(s.width, s.height);
+	else
+		resize(450, 350);
+
     setupGUI();
     showNormal();
+
+	if(p.x > 0 && p.y > 0)
+		move(p.x, p.y - geometry().y() + y());
+	else
+		move(50 + getId() * 50, 50 + getId() * 50);
 }
 
 ObserverMap::~ObserverMap()
@@ -122,7 +137,6 @@ bool ObserverMap::draw(QDataStream & /*state*/)
 
     if (BlackBoard::getInstance().canDraw())
         decoded = painterWidget->draw();
-
 #else
     QString msg;
     state >> msg;
@@ -159,7 +173,7 @@ bool ObserverMap::draw(QDataStream & /*state*/)
             // }
 #else
             decoded = protocolDecoder->decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
-            if (decoded)
+            if(decoded)
                 painterWidget->plotMap(attrib);
 #endif
         }
@@ -172,7 +186,7 @@ bool ObserverMap::draw(QDataStream & /*state*/)
     qApp->processEvents();
 
     // cria a legenda e exibe na tela
-    if (/*decoded &&*/ legendWindow && (builtLegend < 1))
+    if(/*decoded &&*/ legendWindow && (builtLegend < 1))
     {
         treeLayers->blockSignals(true);
 
@@ -394,6 +408,17 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
     treeLayers->blockSignals(true);
 
     painterWidget->updateAttributeList();
+}
+
+void ObserverMap::moveEvent(QMoveEvent* q)
+{
+	VisualArrangement* v = VisualArrangement::getInstance();
+
+	PositionVisualArrangement s;
+	s.x = q->pos().x();
+	s.y = q->pos().y();
+
+	v->addPosition(getId(), s);
 }
 
 void ObserverMap::butLegend_Clicked()
@@ -738,11 +763,19 @@ QStringList ObserverMap::getAttributes()
     return attribList;
 }
 
-void ObserverMap::resizeEvent(QResizeEvent *)
+void ObserverMap::resizeEvent(QResizeEvent * q)
 {
     if (zoomComboBox->currentText() == WINDOW)
         zoomWindow();
     // painterWidget->calculateResult();
+
+	VisualArrangement* v = VisualArrangement::getInstance();
+	SizeVisualArrangement s;
+
+	s.height = q->size().height();
+	s.width = q->size().width();
+
+	v->addSize(getId(), s);
 }
 
 void ObserverMap::zoomWindow()
