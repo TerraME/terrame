@@ -125,7 +125,7 @@ return{
 
 --]]
 
--- [[
+--[[
 		Map{
 			subject = world,
 			select  = "value",
