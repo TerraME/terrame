@@ -311,7 +311,7 @@ int luaTrajectory::createObserver( lua_State *L )
                 char str[12];
                 sprintf(str, "%d", typeObserver);
                 string err_out = string("In this context, the code '") + string(str) + string("' does not correspond to a valid type of Observer.");
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 //lua_pushnumber(L,4);
                 lua_call(L,1,0);
@@ -334,7 +334,7 @@ int luaTrajectory::createObserver( lua_State *L )
 		    {
                 if (execModes != Quiet ){
                     string err_out = string("Filename was not specified, using a default '") + string(DEFAULT_NAME.toStdString()) + string("'.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                    // lua_pushnumber(L,4);
                     lua_call(L,1,0);
@@ -351,7 +351,7 @@ int luaTrajectory::createObserver( lua_State *L )
 		    {
                 if (execModes != Quiet ){
                     string err_out = string("Separator not defined, using ';'.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     //lua_pushnumber(L,4);
                     lua_call(L,1,0);
@@ -381,7 +381,7 @@ int luaTrajectory::createObserver( lua_State *L )
 		    {
                 if (execModes != Quiet ){
                     string err_out = string("Column title not defined.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     //lua_pushnumber(L,4);
                     lua_call(L,1,0);
@@ -422,7 +422,7 @@ int luaTrajectory::createObserver( lua_State *L )
 		    {
                 if (execModes != Quiet ){
                     string err_out = string("Port not defined.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     //lua_pushnumber(L,4);
                     lua_call(L,1,0);

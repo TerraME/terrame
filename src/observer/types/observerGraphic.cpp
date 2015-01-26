@@ -315,7 +315,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                     if (execModes != Quiet)
 					{
 						string str = string("Warnig: Was expected a numeric parameter not a string ") + string(tokens.at(j)) + string(".");
-						lua_getglobal(L, "customWarningMsg");
+						lua_getglobal(L, "customWarning");
 						lua_pushstring(L,str.c_str());
 						lua_pushnumber(L,5);
 						lua_call(L,2,0);

@@ -423,7 +423,7 @@ int luaLocalAgent::createObserver( lua_State *L )
         {
             if (execModes != Quiet ){
                 string err_out = string("The parameter table is empty.");
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 //lua_pushnumber(L,5);
                 lua_call(L,1,0);
@@ -1032,7 +1032,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
                     {
                         if (execModes != Quiet ){
                             QString str = QString("Could not find the Automaton inside an Environment object.");
-                            lua_getglobal(L, "customWarningMsg");
+                            lua_getglobal(L, "customWarning");
                             lua_pushstring(L,str.toLatin1().constData());
                             //lua_pushnumber(L,5);
                             lua_call(L,1,0);
@@ -1231,7 +1231,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
             {
                 if (execModes != Quiet ){
                     QString str = QString("Could not find the Automaton inside an Environment object.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,str.toLatin1().constData());
                     //lua_pushnumber(L,5);
                     lua_call(L,1,0);
@@ -1520,7 +1520,7 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
             {
                 if (execModes != Quiet){
                     string err_out = string("Could not find the Automaton inside an Environment object.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     //lua_pushnumber(L,5);
                     lua_call(L,1,0);

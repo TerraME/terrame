@@ -345,7 +345,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
     {
         if (execModes != Quiet ){
             QString str = QString("The parameter table is empty.");
-            lua_getglobal(L, "customWarningMsg");
+            lua_getglobal(L, "customWarning");
             lua_pushstring(L,str.toLatin1().constData());
             //lua_pushnumber(L,5);
             lua_call(L,1,0);
