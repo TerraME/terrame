@@ -496,6 +496,8 @@ source_group("core" FILES
 	${SRCDIR}/core/luaTrajectory.h
 	${SRCDIR}/core/luaVisualArrangement.cpp
 	${SRCDIR}/core/luaVisualArrangement.h
+	${SRCDIR}/core/luaChart.cpp
+	${SRCDIR}/core/luaChart.h
 	${SRCDIR}/core/luaUtils.cpp
 	${SRCDIR}/core/luaUtils.h
 	${SRCDIR}/core/luna.h

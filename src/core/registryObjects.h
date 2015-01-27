@@ -197,6 +197,7 @@ Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
 	method(luaCellularSpace, getCellByID),
 	{0,0}
 };
+
 //****************************** BEHAVIOR *******************************************//
 //----------------------------------------------------------------------------------------------
 const char luaJumpCondition::className[] = "TeJump";
@@ -290,6 +291,13 @@ Luna<luaVisualArrangement>::RegType luaVisualArrangement::methods[] = {
 	{0,0}
 };
 
+const char luaChart::className[] = "TeChart";
+
+Luna<luaChart>::RegType luaChart::methods[] = {
+	method(luaChart, save),
+	method(luaChart, setObserver),
+	{0,0}
+};
 
 //****************************** TIME ***********************************************//
 //----------------------------------------------------------------------------------------------
