@@ -1022,7 +1022,7 @@ local function executeTests(package, fileName, doc_functions)
 		printWarning("Skipping source code functions check")
 	end
 
-	if ut.snapshots > 0 and data.check_snapshots then
+	if ut.snapshots > 0 and check_snapshots then
 		printNote("Checking snapshots")
 		local mdir = dir(sessionInfo().path..s.."packages"..s..package..s.."snapshots")
 
