@@ -27,13 +27,14 @@ of this library and its documentation.
   \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined( TERRAME_LUA )
+#if !defined(TERRAME_LUA)
 
 #define TERRAME_LUA
-#if defined( TME_LUA_5_0 )
+#if defined(TME_LUA_5_0)
 	#include "terrameLua5_0.h"
 #else 
 	#include "terrameLua5_1.h"
 #endif
 
 #endif
+

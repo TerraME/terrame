@@ -29,16 +29,17 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined( LUA_UTILS_H )
+#if !defined(LUA_UTILS_H)
 #define LUA_UTILS_H
 
 extern "C"
 {
 	#include <lua.h>
 }
+
 #include "luna.h"
 
-#if defined( TME_MSVC ) && defined( TME_WIN32 )
+#if defined(TME_MSVC) && defined(TME_WIN32)
 	#include <TeAdoDB.h>
 #endif
 
@@ -55,7 +56,7 @@ void luaStackToQString(int size);
 
 int functionStackLevel(lua_State *L);
 
-void stackDump (lua_State *L);
+void stackDump(lua_State *L);
 
 /// UTILITARY FUNCTION - Checks if the value located at index "idx" in the Lua stack "L" is of the
 /// user defined type "name".
@@ -63,7 +64,7 @@ void stackDump (lua_State *L);
 /// \param idx is a Lua stack position index
 /// \param name is an user defined Lua type name
 /// \return A boolean value: true case positive, otherwise false.
-int isudatatype (lua_State *L, int idx, const char *name);
+int isudatatype(lua_State *L, int idx, const char *name);
 
 /// UTILITARY FUNCTION - Converts a TerraLib object ID to (x,y) coordinates
 /// \param objId is a "const char const *" containing the object ID
@@ -71,13 +72,13 @@ int isudatatype (lua_State *L, int idx, const char *name);
 /// \param y is a natural number returned by this fucntion
 // RODRIGO
 // void objectId2coords( const char const * objId, int &x, int &y);
-void objectId2coords( const char * objId, int &x, int &y);
+void objectId2coords(const char * objId, int &x, int &y);
 
 /// UTILIITARY FUNCTION - Deletes a table from a TerraLib geographical database.
 /// \param db is a pointer to a TerraLib database
 /// \param tableName is the name of the table being removed
 /// \return Return true in case of sucess, otherwise it returns false. 
-bool deleteLayerTableName ( TeDatabase *db, std::string &tableName );
+bool deleteLayerTableName(TeDatabase *db, std::string &tableName);
 
 /// UTILIITARY FUNCTION - Creates a new Theme a TerraLib geographical database
 /// \param attTable is a copy to the Theme new attriute table being created
@@ -89,8 +90,7 @@ bool deleteLayerTableName ( TeDatabase *db, std::string &tableName );
 /// \param layer is a pointer to the TerrraLib TeLayer object to which Theme will be attached
 /// \param db is a pointer to the TerrraLib database into which the Theme will be interted
 /// \param theme is a pointer to the TeTheme object being added to the geographical database
-bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, string inputThemeName, TeView *view, TeLayer *layer, TeDatabase *db, TeTheme *theme );
-
-
+bool createNewTheme(TeTable attTable, char outputTable[], string whereClause, string inputThemeName, TeView *view, TeLayer *layer, TeDatabase *db, TeTheme *theme);
 
 #endif
+

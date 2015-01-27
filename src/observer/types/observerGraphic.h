@@ -43,7 +43,7 @@ class ChartPlot;
  * \brief Plots a simple scatter plot graphic or a scatter plot over the time
  * \see ObserverInterf
  * \see QThread
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file observerGraphic.h
 */
 // class ObserverGraphic : public QThread, public ObserverInterf 

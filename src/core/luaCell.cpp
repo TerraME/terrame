@@ -43,7 +43,6 @@ of this library and its documentation.
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-	// Estatisticas de desempenho
 	#include "statistic.h"
 #endif
 
@@ -73,7 +72,6 @@ luaCell::luaCell(lua_State *L)
 	subjectType = TObsCell;
 	// observedAttribs.clear();
 
-	//@RODRIGO
 	// serverSession = new ServerSession();
 }
 

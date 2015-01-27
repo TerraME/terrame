@@ -22,9 +22,10 @@ of this library and its documentation.
 *************************************************************************************/
 /*! \file luaVisualArrangement.h
 \brief This file definitions for the luaVisualArrangement objects.
-\author Tiago Garcia de Senna Carneiro
+\author Pedro R. Andrade
+
 */
-#if ! defined( LUAVISUALARRANGEMENT_H )
+#if !defined(LUAVISUALARRANGEMENT_H)
 #define LUAVISUALARRANGEMENT_H
 
 #include "visualArrangement.h"
@@ -43,27 +44,27 @@ of this library and its documentation.
 */
 class luaVisualArrangement : public Reference<luaVisualArrangement>
 {
-    lua_State *luaL;
+	lua_State *luaL;
 
 public:
-    ///< Data structure issued by Luna<T>
-    static const char className[];
-    
-    ///< Data structure issued by Luna<T>
-    static Luna<luaVisualArrangement>::RegType methods[]; 
+	///< Data structure issued by Luna<T>
+	static const char className[];
+	
+	///< Data structure issued by Luna<T>
+	static Luna<luaVisualArrangement>::RegType methods[];
 
 public:
-    /// constructor
-    luaVisualArrangement(lua_State* L);
+	/// constructor
+	luaVisualArrangement(lua_State* L);
 
-    /// destructor
-    ~luaVisualArrangement(void);
+	/// destructor
+	~luaVisualArrangement(void);
 
-    int setFile(lua_State* L);
+	int setFile(lua_State* L);
 
-    int addPosition(lua_State* L);
+	int addPosition(lua_State* L);
 
-    int addSize(lua_State *L);
+	int addSize(lua_State *L);
 };
 
 #endif
