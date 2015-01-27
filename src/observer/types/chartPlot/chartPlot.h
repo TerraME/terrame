@@ -51,8 +51,8 @@ public:
 
     void setInternalCurves(const QList<TerraMEObserver::InternalCurve *> &internalCurves);
 	int id;
+    void exportChart(std::string, std::string);
 private slots:
-    void exportChart();
     void propertiesChart();
 
 protected:

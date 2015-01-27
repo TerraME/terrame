@@ -30,6 +30,7 @@ of this library and its documentation.
 #include "luaCellIndex.h"
 #include "luaCellularSpace.h"
 #include "luaNeighborhood.h"
+#include "luaChart.h"
 #include "terrameGlobals.h"
 
 #include "observerUDPSender.h"
@@ -49,7 +50,6 @@ of this library and its documentation.
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-	// Estatisticas de desempenho
 	#include "statistic.h"
 #endif
 
@@ -855,7 +855,9 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 								  .split(";", QString::SkipEmptyParts), obsParams, obsParamsAtribs);
 
 		lua_pushnumber(luaL, obsId);
-		return 1;
+		lua_pushlightuserdata(luaL, (void*) obsGraphic);
+
+		return 2;
 	}
 
 	if(obsMap)

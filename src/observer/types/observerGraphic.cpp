@@ -135,6 +135,11 @@ const TypesOfObservers ObserverGraphic::getType() const
     return observerType;
 }
 
+void ObserverGraphic::save(std::string file, std::string extension)
+{
+	plotter->exportChart(file, extension);
+}
+
 bool ObserverGraphic::draw(QDataStream &/*state*/)
 {
 #ifdef TME_STATISTIC

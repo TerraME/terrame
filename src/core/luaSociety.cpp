@@ -26,6 +26,7 @@ of this library and its documentation.
 */
 
 #include "luaSociety.h"
+#include "luaChart.h"
 
 #include "observerTextScreen.h"
 #include "observerGraphic.h"
@@ -455,7 +456,9 @@ int luaSociety::createObserver(lua_State * luaL)
 										  obsParams, cols);
 
 				lua_pushnumber(luaL, obsId);
-				return 1;
+				lua_pushlightuserdata(luaL, (void*) obsGraphic);
+
+				return 2;
 			}
 
 			if(obsUDPSender)

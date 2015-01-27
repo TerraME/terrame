@@ -2,6 +2,7 @@
 
 #include "luaControlMode.h"
 #include "luaCellularSpace.h"
+#include "luaChart.h"
 #include "terrameGlobals.h"
 
 #include "observerTextScreen.h"
@@ -639,7 +640,9 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 obsParams, obsParamsAtribs); // cols);
 
             lua_pushnumber(luaL, obsId);
-            return 1;
+			lua_pushlightuserdata(luaL, (void*) obsGraphic);
+
+			return 2;
         }
 
         ///////////////////////////////////////////

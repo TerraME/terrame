@@ -94,8 +94,10 @@ void ChartPlot::moveEvent(QMoveEvent* q)
 	v->addPosition(id, s);
 }
 
-void ChartPlot::exportChart()
+void ChartPlot::exportChart(string file, string extension)
 {
+	QPixmap pixmap = grab();
+	pixmap.save(file.c_str(), extension.c_str());
 }
 
 void ChartPlot::propertiesChart()

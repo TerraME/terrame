@@ -26,6 +26,7 @@ of this library and its documentation.
 */
 
 #include "luaCell.h"
+#include "luaChart.h"
 #include "luaNeighborhood.h"
 #include "terrameGlobals.h"
 
@@ -674,7 +675,9 @@ int luaCell::createObserver(lua_State *)
 									  obsParams, cols);
 
 			lua_pushnumber(luaL, obsId);
-			return 1;
+			lua_pushlightuserdata(luaL, (void*) obsGraphic);
+
+			return 2;
 		}
 
 		if(obsUDPSender){

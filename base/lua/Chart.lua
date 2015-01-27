@@ -23,6 +23,33 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
+Chart_ = {
+	type_ = "Chart",
+	--- Save a Chart into a file. Supported extensions are bmp, jpg, png, and tiff.
+	-- @arg file A string with the file name.
+	-- @usage chart:save("file.bmp")
+	save = function(self, file)
+		local _, extension = string.match(file, "(.-)([^%.]+)$")
+
+		local availableExtensions = {
+			bmp = true,
+			jpg = true,
+			png = true,
+			tiff = true
+		}
+
+		if not availableExtensions[extension] then
+			invalidFileExtensionError("#1", extension)	
+		end
+
+		extension = string.upper(extension)
+
+		self.cObj_:save(file, extension)
+	end
+}
+
+metaTableChart_ = {__index = Chart_}
+
 --- Create a line chart showing the variation of one or more attributes (y axis) of an
 -- object. X axis values come from the single argument of notify(). 
 -- @arg data.subject An Agent, Cell, CellularSpace, Society.
@@ -411,12 +438,17 @@ Chart = function(data)
 			if type(subject) == "Society" then
 				subject.observerId = 1 -- TODO: verify why this line is necessary
 			end
-			id = subject.cObj_:createObserver(observerType, data.select, observerParams)
+			id, obs = subject.cObj_:createObserver(observerType, data.select, observerParams)
 		end
 	else
 		id = subject:createObserver(observerType, data.select, observerParams)
 	end	
     table.insert(createdObservers, {subject = data.subject, id = id})
-	return id
+
+	local chart = TeChart()
+	chart:setObserver(obs)
+	local data = {cObj_ = chart}
+	setmetatable(data, metaTableChart_)
+	return data
 end
 
