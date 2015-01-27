@@ -24,73 +24,20 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	Agent = function(unitTest)
-		local world = Agent{
-		    count = 0,
-			mcount = function(self)
-				return self.count + 1
-			end
-		}
+	save = function(unitTest)
+		local c = Cell{value = 1}
 
-		local c1 = Chart{subject = world}
+		local ch = Chart{subject = c}
 
-		local c2 = Chart{
-			subject = world,
-			select = "mcount"
-		}
+		c:notify(1)
+		c:notify(2)
+		c:notify(3)
 
-		unitTest:assert_type(c1, "Chart")
+		local file = unitTest:tmpFolder()..sessionInfo().separator.."save_test.bmp"
 
-		world:notify(0)
-		world.count = world.count + 5
-		world:notify(1)
-		world.count = world.count + 5
-		world:notify(2)
-		unitTest:delay()
+		ch:save(file)
 
-		local t = Timer{
-		    Event{action = function(e)
-				world.count = world.count + 1
-		        world:notify(e)
-		    end}
-		}
-
-		TextScreen{subject = world}
-		LogFile{subject = world}
-		VisualTable{subject = world}
-		t:execute(30)
-		unitTest:assert_snapshot(c1, "chart_agent.bmp")
-		unitTest:assert_snapshot(c2, "chart_agent_select.bmp")
-		
-		unitTest:delay()
-
-		local world = Agent{
-			probability = 0,
-			mx = 0
-		}
-
-		local c3 = Chart{
-			subject = world,
-			xAxis = "probability"
-		}
-		unitTest:assert_type(c3, "Chart")
-
-		local t = Timer{
-		    Event{action = function(e)
-				if e:getTime() < 100 then
-					world.probability = world.probability + 0.01
-				else
-					world.probability = world.probability - 0.01
-				end
-				world.mx = world.mx + world.probability ^ 2
-		        world:notify()
-		    end}
-		}
-
-		t:execute(200)
-		-- FIXME: small bug here. this snapshot can produce two different files
-		-- unitTest:assert_snapshot(c3, "chart_agent_xaxis.bmp")
-		unitTest:delay()
+		unitTest:assert(isFile(file))
 	end
 }
 

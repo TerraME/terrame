@@ -58,7 +58,7 @@ return{
 
 		local c = Chart{subject = world}
 
-		unitTest:assert_type(c, "number")
+		unitTest:assert_type(c, "Chart")
 
 		world:notify(0)
 

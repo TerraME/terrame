@@ -236,6 +236,51 @@ UnitTest_ = {
 
 		self.test = self.test + 1
 	end,
+	--- Verify whether a Chart or a Map has a plot similar to the one defined by snapshot folder.
+	-- @arg observer A Chart or a Map.
+	-- @arg file A string with the file name in the snapshot folder. If the file does not exist then 
+	-- it will save the file in the snapshot folder.
+	-- @usage c = Chart{...}
+	-- unitTest:assert_snapshot(c, "test_chart.bmp")
+	assert_snapshot = function(self, observer, file)
+		self.snapshots = self.snapshots + 1
+		local s = sessionInfo().separator
+		if not self.imgFolder then
+			self.imgFolder = sessionInfo().path..s.."packages"..s..self.package..s.."snapshots"
+			if attributes(self.imgFolder, "mode") ~= "directory" then
+				customError("Folder '"..self.imgFolder.."' does not exist. Please create such folder in order to use assert_snapshot().")
+			end
+			self.tsnapshots = {}
+		end
+
+		if self.tsnapshots[file] then
+			print_error(self, "File '"..file.."' is used in more than one assert_shapshot().")
+			self.fail = self.fail + 1
+			return
+		end
+
+		self.tsnapshots[file] = true
+		local newImage = self:tmpFolder()..s..file
+		local oldImage = self.imgFolder..s..file
+
+		if not isFile(oldImage) then
+			observer:save(oldImage)
+			self.snapshot_files = self.snapshot_files + 1
+			printWarning("Creating 'snapshots"..s..file.."'.")
+			self.test = self.test + 1
+			self.success = self.success + 1
+		else
+			observer:save(newImage)
+
+			if cpp_imagecompare(newImage, oldImage) then
+				self.test = self.test + 1
+				self.success = self.success + 1
+			else
+				print_error(self, "Files \n  'snapshots"..s..file.."'\nand\n  '"..newImage.."'\nare different.")
+				self.fail = self.fail + 1
+			end
+		end
+	end,
 	--- Executes a delay in seconds during the test. Calling this function, the user can change the
 	-- delay when the UnitTest is built.
 	-- @usage unitTest:delay()
@@ -247,7 +292,7 @@ UnitTest_ = {
 	-- @usage tmpfolder = unitTest:tmpFolder()
 	tmpFolder = function(self)
 		if not self.tmpfolder then
-			self.tmpfolder = runCommand("mktemp -d .terrametmpXXXXX")[1]
+			self.tmpfolder = runCommand("mktemp -d .terrametmp_XXXXX")[1]
 		end
 		return self.tmpfolder
 	end

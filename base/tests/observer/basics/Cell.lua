@@ -36,29 +36,29 @@ return{
 			end
 		}
 
-		local c = Chart{subject = world}
-		unitTest:assert_type(c, "number")
+		local c1 = Chart{subject = world}
+		unitTest:assert_type(c1, "Chart")
 
-		c = Chart{subject = world, select = {"count", "value", "sum"}}
-		unitTest:assert_type(c, "number")
+		local c2 = Chart{subject = world, select = {"count", "value", "sum"}}
+		unitTest:assert_type(c2, "Chart")
 
-		c = Chart{
+		local c3 = Chart{
 			subject = world,
 			style = "steps",
 			width = 2
 		}
-		unitTest:assert_type(c, "number")
+		unitTest:assert_type(c3, "Chart")
 
-		c = Chart{
+		local c4 = Chart{
 			subject = world,
 			select = {"value", "sum"},
 			style = "sticks",
 			pen = {"dashdot", "dashdotdot"},
 			width = {1, 2}
 		}
-		unitTest:assert_type(c, "number")
+		unitTest:assert_type(c4, "Chart")
 
-		c = Chart{
+		local c5 = Chart{
 			subject = world,
 			select = {"value", "sum"},
 			color = {"green", "yellow"},
@@ -66,7 +66,7 @@ return{
 			pen = "dot",
 			symbol = "diamond"
 		}
-		unitTest:assert_type(c, "number")
+		unitTest:assert_type(c5, "Chart")
 
 		world:notify(0)
 
@@ -81,6 +81,11 @@ return{
 		LogFile{subject = world}
 		VisualTable{subject = world}
 		t:execute(30)
+		unitTest:assert_snapshot(c1, "chart_cell.bmp")
+		unitTest:assert_snapshot(c2, "chart_cell_select.bmp")
+		unitTest:assert_snapshot(c3, "chart_cell_style.bmp")
+		unitTest:assert_snapshot(c4, "chart_cell_select_pen.bmp")
+		unitTest:assert_snapshot(c5, "chart_cell_select_color.bmp")
 		unitTest:delay()
 --]]
 

@@ -192,6 +192,18 @@ return{
 			Chart{subject = world, select = "value"}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("value", "number or function", "value"))
+
+		local cell = Cell{
+			value = 3
+		}
+
+		local c = Chart{subject = cell}
+
+		local error_func = function()
+			c:save("file.wrongext")
+		end
+		unitTest:assert_error(error_func, invalidFileExtensionMsg("#1", "wrongext"))
+
 	end
 }
 

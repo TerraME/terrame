@@ -736,12 +736,14 @@ local function executeTests(package, fileName, doc_functions)
 	end
 
 	local check_functions = data.folder == nil and data.test == nil
+	local check_snapshots = data.folder == nil and data.test == nil and data.file == nil
 	if data.examples == nil then
 		data.examples = check_functions and data.file == nil
 	end
 
 	local ut = UnitTest{
 		sleep = data.sleep,
+		package = package,
 		package_functions = 0,
 		functions_not_exist = 0,
 		functions_not_tested = 0,
@@ -754,7 +756,10 @@ local function executeTests(package, fileName, doc_functions)
 		print_calls = 0,
 		log_files = 0,
 		invalid_test_file = 0,
-		print_when_loading = 0
+		print_when_loading = 0,
+		snapshots = 0,
+		snapshot_files = 0,
+		unused_snapshot_files = 0
 	}
 
 	printNote("Loading package "..package)
@@ -1017,6 +1022,20 @@ local function executeTests(package, fileName, doc_functions)
 		printWarning("Skipping source code functions check")
 	end
 
+	if ut.snapshots > 0 and data.check_snapshots then
+		printNote("Checking snapshots")
+		local mdir = dir(sessionInfo().path..s.."packages"..s..package..s.."snapshots")
+
+		forEachElement(mdir, function(_, value)
+			if not ut.tsnapshots[value] then
+				printError("File 'snapshot/"..value.."' was not used by any assert_snapshot().")
+				ut.unused_snapshot_files = ut.unused_snapshot_files + 1
+			end
+		end)
+	else
+		printWarning("Skipping snapthots check")
+	end
+
 	-- executing examples
 	if data.examples then
 		printNote("Testing examples")
@@ -1173,6 +1192,24 @@ local function executeTests(package, fileName, doc_functions)
 		printWarning("No source code functions were verified.")
 	end
 
+	if ut.snapshots > 0 then
+		printNote("Snapshots were saved in '"..ut:tmpFolder().."'.")
+		if ut.snapshot_files > 0 then
+			printError(ut.snapshot_files.." snapshots were created. Please run the tests again.")
+		else
+			printNote("No new snapshot was created.")
+		end
+
+		if ut.unused_snapshot_files > 0 then
+			printError(ut.unused_snapshot_files.." files from snapshot folder were not used.")
+		else
+			printNote("All snapshot files were used in the tests.")
+		end
+	else
+		printWarning("No snapshot test was executed.")
+	end
+
+
 	if data.examples then
 		if ut.examples == 0 then
 			printError("No examples were found.")
@@ -1193,7 +1230,8 @@ local function executeTests(package, fileName, doc_functions)
 
 	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error + 
 	               ut.wrong_file + ut.print_calls + ut.functions_with_global_variables + 
-	               ut.functions_with_error + ut.functions_without_assert
+	               ut.functions_with_error + ut.functions_without_assert + ut.snapshot_files +
+				   ut.unused_snapshot_files
 
 	if errors == 0 then
 		printNote("Summing up, all tests were successfully executed.")

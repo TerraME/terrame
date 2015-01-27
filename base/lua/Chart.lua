@@ -430,10 +430,11 @@ Chart = function(data)
 	end)
 
 	local id
+	local obs
 
 	if subject.cObj_ then
 		if type(subject) == "CellularSpace" then
-			id = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
+			id, obs = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
 		else
 			if type(subject) == "Society" then
 				subject.observerId = 1 -- TODO: verify why this line is necessary
@@ -441,7 +442,7 @@ Chart = function(data)
 			id, obs = subject.cObj_:createObserver(observerType, data.select, observerParams)
 		end
 	else
-		id = subject:createObserver(observerType, data.select, observerParams)
+		id, obs = subject:createObserver(observerType, data.select, observerParams)
 	end	
     table.insert(createdObservers, {subject = data.subject, id = id})
 
