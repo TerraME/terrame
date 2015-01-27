@@ -613,7 +613,7 @@ int luaNeighborhood::getParent( lua_State *L )
             {
                 if (execModes != Quiet){
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     //lua_pushnumber(L,5);
                     lua_call(L,1,0);
@@ -632,7 +632,7 @@ int luaNeighborhood::getParent( lua_State *L )
             {
                 if (execModes != Quiet){
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     //lua_pushnumber(L,5);
                     lua_call(L,1,0);
@@ -691,7 +691,7 @@ int luaNeighborhood::getParent( lua_State *L )
             {
                 if (execModes != Quiet){
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     //lua_pushnumber(L,5);
                     lua_call(L,1,0);
@@ -714,7 +714,7 @@ int luaNeighborhood::getParent( lua_State *L )
             {
                 if (execModes != Quiet){
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     //lua_pushnumber(L,5);
                     lua_call(L,1,0);
@@ -727,7 +727,7 @@ int luaNeighborhood::getParent( lua_State *L )
             {
                 string err_out = string("In this context, the code ") + getObserverName(typeObserver) + string(" does not "
                                         "correspond to a valid type of Observer.");
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 //lua_pushnumber(L,5);
                 lua_call(L,1,0);
@@ -744,7 +744,7 @@ int luaNeighborhood::getParent( lua_State *L )
                 if (execModes != Quiet)
                 {
                     string err_out = string("Filename was not specified. Using default '") + string(qPrintable(DEFAULT_NAME));
-                                            lua_getglobal(L, "customWarningMsg");
+                                            lua_getglobal(L, "customWarning");
                                             lua_pushstring(L,err_out.c_str());
                                             //lua_pushnumber(L,5);
                                             lua_call(L,1,0);
@@ -762,7 +762,7 @@ int luaNeighborhood::getParent( lua_State *L )
                 if (execModes != Quiet)
                 {
                     string err_out = string("Separator not defined, using \";\".");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     //lua_pushnumber(L,5);
                     lua_call(L,1,0);
@@ -793,7 +793,7 @@ int luaNeighborhood::getParent( lua_State *L )
                 if (execModes != Quiet)
                 {
                     string err_out = string("Column title not defined.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     //lua_pushnumber(L,5);
                     lua_call(L,1,0);

@@ -335,7 +335,7 @@ bool ObserverImage::save()
         {
 			string str = string("Unable to save the image."
 								"The path is incorrect or you do not have permission to perform this task.");
-			lua_getglobal(L, "customWarningMsg");
+			lua_getglobal(L, "customWarning");
 			lua_pushstring(L,str.c_str());
 			lua_pushnumber(L,5);
 			lua_call(L,2,0);

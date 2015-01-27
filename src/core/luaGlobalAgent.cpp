@@ -385,7 +385,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
         {
             if (execModes != Quiet ){
                 string err_out = string("The parameter table is empty.");
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 //lua_pushnumber(L,5);
                 lua_call(L,1,0);

@@ -389,7 +389,7 @@ void LegendWindow::applyPushButton_clicked()
         {
             if (execModes != Quiet){
                 string err_out = msg.toLatin1().constData();
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,4);
                 lua_call(L,2,0);
@@ -1142,7 +1142,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             if (execModes != Quiet )
             {
 				string str = msg.toLatin1().data();
-				lua_getglobal(L, "customWarningMsg");
+				lua_getglobal(L, "customWarning");
 				lua_pushstring(L,str.c_str());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);
@@ -1219,7 +1219,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
                     if (execModes != Quiet)
                     {
 						string str = msg.toLatin1().data();
-						lua_getglobal(L, "customWarningMsg");
+						lua_getglobal(L, "customWarning");
 						lua_pushstring(L,str.c_str());
 						lua_pushnumber(L,5);
 						lua_call(L,2,0);

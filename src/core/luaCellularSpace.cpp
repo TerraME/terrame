@@ -1535,7 +1535,7 @@ int luaCellularSpace::loadShape(lua_State *L)
 
 #else
 	string err_out = string("Failed on load shapefile: Method is disabled in compilation time.");
-	lua_getglobal(L, "customWarningMsg");
+	lua_getglobal(L, "customWarning");
 	lua_pushstring(L,err_out.c_str());
 	//lua_pushnumber(L,5);
 	lua_call(L,1,0);
