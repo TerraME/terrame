@@ -224,8 +224,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 						string str = string("Was expected a numeric parameter.");
 						lua_getglobal(L, "customWarning");
 						lua_pushstring(L,str.c_str());
-						lua_pushnumber(L, 5);
-						lua_call(L, 2, 0);
+						lua_call(L, 1, 0);
 					}
 				}
                 break;
@@ -316,8 +315,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 						string str = string("Warnig: Was expected a numeric parameter not a string ") + string(tokens.at(j)) + string(".");
 						lua_getglobal(L, "customWarning");
 						lua_pushstring(L,str.c_str());
-						lua_pushnumber(L,5);
-						lua_call(L,2,0);
+						lua_call(L,1,0);
 					}
                 }
                 break;
@@ -528,8 +526,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 				string str = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L, str.c_str());
-				lua_pushnumber(L, 5);
-				lua_call(L, 2, 0);
+				lua_call(L, 1, 0);
 			}
         }
     }

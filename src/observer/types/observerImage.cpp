@@ -337,8 +337,7 @@ bool ObserverImage::save()
 								"The path is incorrect or you do not have permission to perform this task.");
 			lua_getglobal(L, "customWarning");
 			lua_pushstring(L,str.c_str());
-			lua_pushnumber(L,5);
-			lua_call(L,2,0);
+			lua_call(L,1,0);
         }
     }
     return savingImages;
