@@ -1696,6 +1696,9 @@ function Map(data)
 	table.insert(observerParams, legend)
 
 	local idObs = data.subject.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.subject.cells)
+ 
+	table.insert(createdObservers, {subject = data.subject, id = idObs})
+
 	data.subject:notify()
 	data.subject:notify()
 end
