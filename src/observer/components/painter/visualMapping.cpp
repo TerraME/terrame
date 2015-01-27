@@ -12,6 +12,7 @@
 #ifdef TME_BLACK_BOARD
 #include "blackBoard.h"
 #include "subjectAttributes.h"
+#include "luaUtils.h"
 #endif
 
 #define TME_STATISTIC_UNDEF
@@ -432,8 +433,7 @@ void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
 										"maximum and the minimum values of the attribute ") + string(attrib->getName().toLatin1().data());
 							lua_getglobal(L, "customWarning");
 							lua_pushstring(L,str.c_str());
-							lua_pushnumber(L,5);
-							lua_call(L,2,0);
+							lua_call(L,1,0);
 						}
 						
                         reconfigMaxMin = true;
@@ -596,8 +596,7 @@ void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
 												"maximum and the minimum values of the attribute ") + string(attrib->getName().toLatin1().data());
 							lua_getglobal(L, "customWarning");
 							lua_pushstring(L,str.c_str());
-							lua_pushnumber(L,5);
-							lua_call(L,2,0);
+							lua_call(L,1,0);
 						}
 						
                         reconfigMaxMin = true;
@@ -1276,8 +1275,7 @@ void VisualMapping::mappingNeighborhood(Attributes *attrib, QPainter *p)
 												"maximum and the minimum values of the attribute") + string(attrib->getName().toLatin1().data());
 							lua_getglobal(L, "customWarning");
 							lua_pushstring(L,str.c_str());
-							lua_pushnumber(L,5);
-							lua_call(L,2,0);
+							lua_call(L,1,0);
 						}
 						
                         reconfigMaxMin = true;

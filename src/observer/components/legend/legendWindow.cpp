@@ -391,8 +391,7 @@ void LegendWindow::applyPushButton_clicked()
                 string err_out = msg.toLatin1().constData();
                 lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
+                lua_call(L,1,0);
             }
         }
         groupingModeComboBox->setCurrentIndex(attrib->getGroupMode());
@@ -1144,8 +1143,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 				string str = msg.toLatin1().data();
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L,str.c_str());
-				lua_pushnumber(L,5);
-				lua_call(L,2,0);
+				lua_call(L,1,0);
             }
         }
         // return;
@@ -1221,8 +1219,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 						string str = msg.toLatin1().data();
 						lua_getglobal(L, "customWarning");
 						lua_pushstring(L,str.c_str());
-						lua_pushnumber(L,5);
-						lua_call(L,2,0);
+						lua_call(L,1,0);
                     }
                 }
 
