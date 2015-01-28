@@ -33,7 +33,7 @@ return{
 		    cell.value = math.random()
 		end)
 
-		Map{
+		local m = Map{
 		    subject = cs,
 		    select = "value",
 		    min = 0,
@@ -41,6 +41,11 @@ return{
 		    slices = 10,
 		    colors = "Blues"
 		}
+
+		unitTest:assert_type(m, "Map")
+
+		-- #308
+		--unitTest:assert_snapshot(m, "map_slices.bmp")
 
 		cs:notify()
 		cs:notify()
