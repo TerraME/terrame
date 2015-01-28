@@ -137,7 +137,7 @@ bool PainterWidget::rescale(const QSize &newSize)
 
     if (img.isNull()) 
     {
-        QMessageBox::information(this, "TerraME Observer : Map",
+        QMessageBox::information(this, "TerraME :: Map",
                                  tr("This zoom level generated a null image."));
         return false;
     }
@@ -367,7 +367,6 @@ void PainterWidget::setExistAgent(bool exist)
 bool PainterWidget::draw()
 {
 #ifdef TME_STATISTIC
-    // Captura o tempo de espera para os observadores que tambem sao threads
     visualMapping->waitTime = Statistic::getInstance().startMicroTime();
 #endif
 
@@ -422,7 +421,6 @@ void PainterWidget::displayImage(const QImage &result)
     }
 #endif // TME_DRAW_VECTORIAL_AGENTS
 
-
     update(); 
 
     // It processes the update event
@@ -434,14 +432,11 @@ void PainterWidget::displayImage(const QImage &result)
     resultImage.save(QString("result_%1.png").arg(g), "png");
 #endif
 
-    // qDebug() << "PainterWidget::displayImage()"; std::cout.flush();
-
     name = QString("display %1").arg(block);
     t = Statistic::getInstance().endMicroTime() - t;
     Statistic::getInstance().addElapsedTime(name, t);
 
 #else
-
 
     resultImage = result;
     resultImageBkp = resultImage.scaled(size(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
@@ -479,7 +474,6 @@ void PainterWidget::displayImage(const QImage &result)
 
 #endif
 
-
 #ifdef DEBUG_OBSERVER
     if (result.isNull())
         qDebug() << ("result is NULL!!!"); 
@@ -491,3 +485,4 @@ void PainterWidget::displayImage(const QImage &result)
         qDebug() << ("resultImageBkp is NULL!!!");
 #endif
 }
+

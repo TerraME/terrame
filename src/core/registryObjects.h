@@ -299,6 +299,15 @@ Luna<luaChart>::RegType luaChart::methods[] = {
 	{0,0}
 };
 
+const char luaMap::className[] = "TeMap";
+
+Luna<luaMap>::RegType luaMap::methods[] = {
+	method(luaMap, save),
+	method(luaMap, setObserver),
+	{0,0}
+};
+
+
 //****************************** TIME ***********************************************//
 //----------------------------------------------------------------------------------------------
 const char luaMessage::className[] = "TeMessage";

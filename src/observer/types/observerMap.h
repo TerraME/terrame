@@ -53,7 +53,7 @@ class Decoder;
  * \brief Spatial visualization for cells and saved in the user interface
  * \see ObserverInterf
  * \see QDialog
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file observerMap.h
 */
 class ObserverMap :  public QDialog, public ObserverInterf
@@ -110,6 +110,8 @@ public:
      * \see QSize
      */
     const QSize & getCellSpaceSize() const;
+
+	void save(string, string);
 
     /**
      * Creates a color bar

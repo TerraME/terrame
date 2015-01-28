@@ -27,7 +27,6 @@ of this library and its documentation.
 #if ! defined( LUACELLULARSPACE_H )
 #define LUACELLULARSPACE_H
 
-
 extern "C"
 {
 #include <lua.h>
@@ -207,7 +206,6 @@ public:
     /// \param attribs the list of attributes observed
     QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
 
-
 	/**
 	 * Gets the attributes of Lua stack
 	 * \param attribs the list of attributes observed
@@ -257,3 +255,4 @@ void configureADO();
 #endif // TME_NO_TERRALIB
 
 #endif
+

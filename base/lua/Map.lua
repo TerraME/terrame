@@ -1471,6 +1471,33 @@ forEachElement(brewerRGB, function(idx, value)
 	end
 end)
 
+Map_ = {
+	type_ = "Map",
+	--- Save a Chart into a file. Supported extensions are bmp, jpg, png, and tiff.
+	-- @arg file A string with the file name.
+	-- @usage chart:save("file.bmp")
+	save = function(self, file)
+		local _, extension = string.match(file, "(.-)([^%.]+)$")
+
+		local availableExtensions = {
+			bmp = true,
+			jpg = true,
+			png = true,
+			tiff = true
+		}
+
+		if not availableExtensions[extension] then
+			invalidFileExtensionError("#1", extension)	
+		end
+
+		extension = string.upper(extension)
+
+		self.cObj_:save(file, extension)
+	end
+}
+
+metaTableMap_ = {__index = Map_}
+
 --- Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
 -- or Society. It draws each element into the screen, according to some attribute
 -- @arg data.subject A CellularSpace, Trajectory, Agent, or Society.
@@ -1695,11 +1722,19 @@ function Map(data)
 
 	table.insert(observerParams, legend)
 
-	local idObs = data.subject.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.subject.cells)
+	local idObs, obs = data.subject.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.subject.cells)
  
 	table.insert(createdObservers, {subject = data.subject, id = idObs})
 
+	local map = TeMap()
+	map:setObserver(obs)
+	local mdata = {cObj_ = map}
+	setmetatable(mdata, metaTableMap_)
+
+	-- TODO: change the lines below by data:notify()
 	data.subject:notify()
 	data.subject:notify()
+
+	return mdata
 end
 

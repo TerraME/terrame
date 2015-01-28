@@ -38,11 +38,10 @@
 
 namespace TerraMEObserver {
 
-
 /**
  * \brief Shows the cellular space state
  * \see QWidget
- * \author Antonio José da Cunha Rodrigues 
+ * \author Antonio Jose da Cunha Rodrigues 
  * \file painterWidget.h
  */
 class PainterWidget : public QWidget
@@ -220,14 +219,12 @@ private:
      */
     void drawAgent();
 
-
     double pixmapScale, curScale, scaleFactor;
     double heightProportion, widthProportion;
     QSize cellSize;
     
     QPainter::CompositionMode operatorMode;
 
-    // atributos em observação
     QImage resultImage;
     QImage resultImageBkp;
 
@@ -249,3 +246,4 @@ private:
 }
 
 #endif
+

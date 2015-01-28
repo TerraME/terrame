@@ -23,7 +23,6 @@
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    // Estatisticas de desempenho
     #include "statistic.h"
 #endif
 
@@ -115,6 +114,12 @@ ObserverMap::~ObserverMap()
 const TypesOfObservers ObserverMap::getType() const
 {
     return observerType;
+}
+
+void ObserverMap::save(string f, string e)
+{
+	QPixmap pixmap = painterWidget->grab();
+	pixmap.save(f.c_str(), e.c_str());
 }
 
 bool ObserverMap::draw(QDataStream & /*state*/)

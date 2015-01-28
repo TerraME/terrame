@@ -475,14 +475,10 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		lua_pop(luaL, 1); // lua_pushnil
 	}
 
-	//----------------------------------------------------------------
-	//------- RECUPERA A TABELA ATRIBUTOS
-
 #ifdef DEBUG_OBSERVER
 	qDebug("\npos table: %i\nRecuperando todos os atributos:\n", top);
 #endif
 
-	// Recupera a tabela de atributos
 	lua_pushnil(luaL);
 	while(lua_next(luaL, top - 3) != 0)
 	{
@@ -490,9 +486,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		obsAttribs.push_back(key);
 		lua_pop(luaL, 1);
 	}
-
-	//----------------------------------------------------------------
-	//------- RECUPERA A TABELA DIMENSAO
 
 #ifdef DEBUG_OBSERVER
 	printf("\npos table: %i\nRecuperando dimensoes:\n", top);
@@ -520,8 +513,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		if(( width > 0) && (height > 0))
 			getSpaceDimensions = true;
 	}
-
-	///////////////////////////--------------------------------------------
 
 #ifdef DEBUG_OBSERVER
 	qDebug() << "obsAttribs: "<< obsAttribs;
@@ -572,10 +563,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 	}
 	else
 	{
-
-		// qDebug() << "allCellSpaceAttribs: " << allCellSpaceAttribs;
-		// qDebug() << "allCellAttribs: " << allCellAttribs;
-
 		if(obsAttribs.isEmpty())
 		{
 			obsAttribs = allCellSpaceAttribs;
@@ -588,7 +575,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		{
 			for (int i = 0; i < obsAttribs.size(); i++)
 			{
-				// insere na lista de atributos do cellspace o atributo recuperado
 				if(! observedAttribs.contains(obsAttribs.at(i)) )
 					// observedAttribs.push_back(obsAttribs.at(i));
 					observedAttribs.insert(obsAttribs.at(i), "");			
@@ -868,7 +854,10 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		((ObserverMap *)obsMap)->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsCell);
 		observersHash.insert(obsMap->getId(), obsMap);
 		lua_pushnumber(luaL,  obsMap->getId());
-		return 1;
+
+		lua_pushlightuserdata(luaL, (void*) obsMap);
+
+		return 2;
 	}
 	
 	if(obsShape)
