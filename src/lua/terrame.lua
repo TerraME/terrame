@@ -397,9 +397,7 @@ local function executeDoc(package)
 		unknown_arg = 0,
 		undoc_files = 0,
 		lack_usage = 0,
-		block_name_conflict = 0,
 		no_call_itself_usage = 0,
-		non_doc_functions = 0,
 		wrong_links = 0,
 		invalid_tags = 0,
 		problem_examples = 0,
@@ -541,7 +539,7 @@ local function executeDoc(package)
 
 	printNote("Checking if all functions are documented")
 	forEachOrderedElement(all_functions, function(idx, value)
-		printNote("Checking "..idx)
+		print("Checking "..idx)
 		forEachElement(value, function(midx, mvalue)
 			if midx == "__len" or midx == "__tostring" then return end -- TODO: think about this kind of function
 
@@ -573,19 +571,19 @@ local function executeDoc(package)
 	end
 
 	if doc_report.wrong_data == 0 then
-		printNote("Data is correctly documented.")
+		printNote("All data files are correctly documented in 'data.lua'.")
 	else
 		printError(doc_report.wrong_data.." problems were found in 'data.lua'.")
 	end
 
 	if doc_report.undoc_data == 0 then
-		printNote("All data is documented.")
+		printNote("No undocumented data files were found.")
 	else
 		printError(doc_report.undoc_data.." data files are not documented.")
 	end
 
 	if doc_report.undoc_functions == 0 then
-		printNote("All global functions in the package are documented.")
+		printNote("All "..doc_report.functions.." global functions of the package are documented.")
 	else
 		printError(doc_report.undoc_functions.." global functions are not documented.")
 	end
@@ -596,28 +594,16 @@ local function executeDoc(package)
 		printError(doc_report.duplicated.." tags should be unique and are duplicated.")
 	end
 
-	if doc_report.non_doc_functions == 0 then
-		printNote("All "..doc_report.functions.." functions of the package are documented.")
-	else
-		printError(doc_report.non_doc_functions.." out of "..doc_report.functions.." functions are not documented.")
-	end
-
 	if doc_report.compulsory_arguments == 0 then
 		printNote("All tags with compulsory arguments were correctly used.")
 	else
 		printError(doc_report.compulsory_arguments.." tags should use compulsory arguments.")
 	end
 
-	if doc_report.block_name_conflict == 0 then
-		printNote("No block name conflicts were found.")
-	else
-		printError(doc_report.block_name_conflict.." functions were documented with a different name.")
-	end
-
 	if doc_report.undoc_arg == 0 then
-		printNote("All "..doc_report.arguments.." arguments are documented.")
+		printNote("All "..doc_report.arguments.." non-named arguments are documented.")
 	else
-		printError(doc_report.undoc_arg.." arguments are not documented.")
+		printError(doc_report.undoc_arg.." non-named arguments are not documented.")
 	end
 
 	if doc_report.undefined_arg == 0 then
@@ -627,25 +613,25 @@ local function executeDoc(package)
 	end
 
 	if doc_report.unused_arg == 0 then
-		printNote("All "..doc_report.arguments.." documented arguments are used in the HTML tables.")
+		printNote("All available arguments of functions are used in their HTML tables.")
 	else
 		printError(doc_report.unused_arg.." documented arguments are not used in the HTML tables.")
 	end
 
 	if doc_report.unknown_arg == 0 then
-		printNote("All "..doc_report.arguments.." arguments used in the HTML tables are documented.")
+		printNote("All arguments used in the HTML tables are documented.")
 	else
 		printError(doc_report.unknown_arg.." arguments used in the HTML tables are not documented.")
 	end
 
 	if doc_report.lack_usage == 0 then
-		printNote("All "..doc_report.functions.." have @usage field defined.")
+		printNote("All "..doc_report.functions.." function have @usage.")
 	else
 		printError(doc_report.lack_usage.." out of "..doc_report.functions.." functions do not have @usage.")
 	end
 
 	if doc_report.no_call_itself_usage == 0 then
-		printNote("All "..doc_report.functions.." documented functions call themselves in their @usage.")
+		printNote("All "..doc_report.functions.." functions call themselves in their @usage.")
 	else
 		printError(doc_report.no_call_itself_usage.." out of "..doc_report.functions.." documented functions do not call themselves in their @usage.")
 	end
@@ -669,14 +655,14 @@ local function executeDoc(package)
 	end
 
 	if doc_report.problem_examples == 0 then
-		printNote("All "..(doc_report.examples - doc_report.undoc_examples).." documented examples were correct.")
+		printNote("All "..doc_report.examples.." examples are correctly documented.")
 	else
-		printError(doc_report.problem_examples.." problems were found in the documentation of the examples.")
+		printError(doc_report.problem_examples.." problems were found in the documentation of examples.")
 	end
 
 	local errors = doc_report.undoc_arg + doc_report.unused_arg + doc_report.undoc_files +
-				   doc_report.lack_usage + doc_report.no_call_itself_usage + doc_report.non_doc_functions +
-				   doc_report.block_name_conflict + doc_report.undefined_arg + doc_report.wrong_description + 
+				   doc_report.lack_usage + doc_report.no_call_itself_usage +
+				   doc_report.undefined_arg + doc_report.wrong_description + 
 				   doc_report.wrong_links + doc_report.problem_examples + doc_report.undoc_examples + 
 				   doc_report.unknown_arg + doc_report.duplicated
 

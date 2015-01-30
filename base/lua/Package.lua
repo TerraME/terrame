@@ -594,16 +594,18 @@ end
 
 --- Stop the simulation with an error indicating that a given argument is mandatory.
 -- The error message comes from Package:mandatoryArgumentMsg().
--- @arg attr The name of the argument (a string).
+-- @arg attr The name of the argument (a string) or the position of the argument in the
+-- function signature (a number).
 -- @usage mandatoryArgumentError("target")
+-- mandatoryArgumentError(2)
 function mandatoryArgumentError(attr)
 	customError(mandatoryArgumentMsg(attr))
 end
 
 --- Return a message indicating that a given argument of a function is mandatory.
 -- @arg attr The name of the argument. It can be a string or a number.
--- @usage mandatoryArgumentMsg(2)
--- mandatoryArgumentMsg("target")
+-- @usage mandatoryArgumentMsg("target")
+-- mandatoryArgumentMsg(2)
 function mandatoryArgumentMsg(attr)
 	if type(attr) == "number" then
 		attr = "#"..attr

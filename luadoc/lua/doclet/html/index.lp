@@ -49,7 +49,8 @@
 						<%else%><font color="red"><b><%= doc.description.authors %></b></font><br>
 						<%end%>
 
-						<b>URL: </b><%if doc.description.url ~= "" then%>
+						<%if doc.description.url ~= "" then%>
+						<b>URL: </b>
 							<%= "<a href= \""..doc.description.url.."\">"..string.gsub(doc.description.url, "http:%/%/", "").."</a>" %><br>
 						<%end%>
 

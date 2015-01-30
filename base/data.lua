@@ -1,7 +1,7 @@
 
 data{
 	file = {"brazilstates.dbf", "brazilstates.shp", "brazilstates.shx"},
-	summary = "A shapefile desribing the 27 Brazilian states.",
+	summary = "A shapefile describing the 27 Brazilian states.",
 	source = "IBGE (www.ibge.br)"
 }
 

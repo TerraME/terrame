@@ -408,7 +408,7 @@ local metaTableLegend_ = {__index = Legend_, __tostring = tostringTerraME}
 -- "stdeviation" & Define slices according to the distribution of a given attribute. Values with
 -- similar positive or negative distances to the average will belong to the same slice. &
 -- colorBar, stdColorBar & stdDeviation, precision, type, width \
--- "uniquevalue" & Map each attribute value to a given color. Attributes with type string can
+-- "uniquevalue" & Associate each attribute value to a given color. Attributes with type string can
 -- only be sliced with this strategy. &colorBar & type, width
 --
 -- @usage coverLeg = Legend {
