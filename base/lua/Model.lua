@@ -1101,8 +1101,6 @@ function Model(attrTab)
 	end
 
 	local function model(argv)
-		if argv == nil then return attrTab end
-
 		-- set the default values
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "choice" then
@@ -1257,6 +1255,14 @@ function Model(attrTab)
 
 		return argv
 	end
-	return model
+
+	local mmodel = {type_ = "Model"}
+
+	setmetatable(mmodel, {__call = function(_, v)
+		if v == nil then return attrTab end
+ 		return model(v)
+	end})
+
+	return mmodel
 end
 
