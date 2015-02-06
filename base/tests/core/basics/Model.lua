@@ -58,6 +58,7 @@ return{
 	Model = function(unitTest)
 		unitTest:assert_type(Tube, "Model")
 		local t = Tube{filter = function() end}
+		unitTest:assert_type(t, "Tube")
 
 		unitTest:assert_equal(t.simulationSteps, 10)
 		unitTest:assert_equal(t.observingStep, 1)

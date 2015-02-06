@@ -1131,7 +1131,7 @@ function Model(attrTab)
 		end
 	end
 
-	local function model(argv)
+	local function model(argv, typename)
 		-- set the default values
 		optionalTableArgument(argv, "seed", "number")
 		optionalTableArgument(argv, "finalTime", "number")
@@ -1261,6 +1261,7 @@ function Model(attrTab)
 
 		setmetatable(argv, {__index = attrTab})
 		setmetatable(attrTab, {__index = Model_})
+		argv.type_ = typename
 		argv:check()
 		argv:init()
 
@@ -1299,7 +1300,7 @@ function Model(attrTab)
 
 	setmetatable(mmodel, {__call = function(_, v)
 		if v == nil then return attrTab end
- 		return model(v)
+ 		return model(v, debug.getinfo(1).name)
 	end})
 
 	return mmodel
