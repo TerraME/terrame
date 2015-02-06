@@ -777,7 +777,7 @@ function interface(self, modelName, package)
 
 	r = r.."\nmfunction = function()\n"
 	r = r.."\tlocal merr\n"
-	r = r.."\tresult = \"\"\n"
+	r = r.."\tlocal result = \"\"\n"
 
 	-- create the function to be activated when the user pushes 'Run'
 	forEachOrderedElement(t, function(idx, melement)
@@ -801,7 +801,7 @@ function interface(self, modelName, package)
 			end)
 		elseif idx == "boolean" then
 			forEachOrderedElement(melement, function(_, value)
-				r = r.."\tmvalue = "..tostring(self[value])
+				r = r.."\tlocal mvalue = "..tostring(self[value]).."\n"
 				r = r.."\tif checkBox"..value..".checked ~= mvalue then\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..tostring(checkBox"..value..".checked)..\",\"\n"
 				r = r.."\tend\n"
@@ -933,7 +933,7 @@ function interface(self, modelName, package)
 			r = r.."\tend\n"
 		end
 	end)
-	r = r.."\theader = \"-- Model instance automatically built by TerraME (\"..os.date(\"%c\")..\")\"\n"
+	r = r.."\tlocal header = \"-- Model instance automatically built by TerraME (\"..os.date(\"%c\")..\")\"\n"
 	r = r.."\theader = header..\"\\n\\nrequire(\\\""..package.."\\\")\"\n"
 
 	r = r.."\tif result ~= \"\" then\n"
@@ -951,7 +951,7 @@ function interface(self, modelName, package)
 	r = r..[[
 	if not merr then
 		-- BUG**: http://lists.gnu.org/archive/html/libqtlua-list/2013-05/msg00004.html
-		_, merr = pcall(function() load(result)() end)
+		local _, merr = pcall(function() load(result)() end)
 		if merr then
 			local merr2 = string.match(merr, ":[0-9]*:.*")
 			if merr2 then
@@ -968,7 +968,7 @@ function interface(self, modelName, package)
 	if merr then
 		qt.dialog.msg_critical(merr)
 	else
-		_, merr = pcall(function() load(execute)() end)
+		local _, merr = pcall(function() load(execute)() end)
 		if merr then
 			qt.dialog.msg_critical("The simulation stopped with an internal error: "..merr)
 		end
