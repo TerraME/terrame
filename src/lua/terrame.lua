@@ -71,6 +71,36 @@ function include(scriptfile)
 	return setmetatable(env, nil)
 end
 
+-- from http://metalua.luaforge.net/src/lib/strict.lua.html
+local function checkNilVariables()
+	local mt = getmetatable(_G)
+	if mt == nil then
+		mt = {}
+		setmetatable(_G, mt)
+	end
+
+	local __STRICT = true
+	mt.__declared = {}
+
+	mt.__newindex = function(t, n, v)
+		if __STRICT and not mt.__declared[n] then
+			local w = debug.getinfo(2, "S").what
+			if w ~= "main" and w ~= "C" then
+				customWarning("Assign to undeclared variable '"..n.."'.")
+			end
+			mt.__declared[n] = true
+		end
+		rawset(t, n, v)
+	end
+
+	mt.__index = function(t, n)
+		if not mt.__declared[n] and debug.getinfo(2, "S").what ~= "C" then
+			customWarning("Variable '"..n.."' is not declared.")
+		end
+		return rawget(t, n)
+	end
+end
+
 local function sqlFiles(package)
 	local s = sessionInfo().separator
 	local files = {}
@@ -1726,6 +1756,10 @@ function execute(arguments) -- arguments is a vector of strings
 				-- #79
 			end
 		else
+			if info_.mode ~= "quiet" then
+				checkNilVariables()
+			end
+
 			if package ~= "base" then
 				require("base")
 			end
