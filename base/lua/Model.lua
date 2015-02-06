@@ -1100,8 +1100,31 @@ function Model(attrTab)
 		end)
 	end
 
+	if attrTab.seed ~= nil then
+		local t = type(attrTab.seed)
+		if t == "choice" then
+			if type(attrTab.seed.default) ~= "number" then
+				customError("seed can only be a choice with 'number' values, got '"..type(attrTab.seed.default).."'.")
+			end
+		elseif t == "mandatory" then
+			if attrTab.seed.value ~= "number" then
+				customError("seed can only be mandatory('number'), got mandatory('"..attrTab.seed.value.."').")
+			end
+		else
+			optionalTableArgument(attrTab, "seed", "number")
+			verify(attrTab.seed >= 0, "Argument 'seed' should be positive, got "..attrTab.seed..".")
+		end
+	end
+
 	local function model(argv)
 		-- set the default values
+		optionalTableArgument(argv, "seed", "number")
+
+		if argv.seed == nil then
+			argv.seed = Random().seed
+		end
+		verify(argv.seed >= 0, "Argument 'seed' should be positive, got "..argv.seed..".")
+
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "choice" then
 				if argv[name] == nil then
@@ -1215,7 +1238,7 @@ function Model(attrTab)
 						customError("Attribute '"..name.."."..mname.."' does not exist in the Model.")
 					end
 				end)
-			elseif attrTab[name] == nil then
+			elseif attrTab[name] == nil and not belong(name, {"finalTime", "seed"}) then
 				customError("Attribute '"..name.."' does not exist in the Model.")
 			end
 		end)

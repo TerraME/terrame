@@ -25,6 +25,27 @@
 
 return{
 	Model = function(unitTest)
+
+		local error_func = function()
+			local Tube = Model{seed = "2"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("seed", "number", "2"))
+
+		local error_func = function()
+			local Tube = Model{seed = -2}
+		end
+		unitTest:assert_error(error_func, "Argument 'seed' should be positive, got -2.")
+
+		local error_func = function()
+			local Tube = Model{seed = mandatory("table")}
+		end
+		unitTest:assert_error(error_func, "seed can only be mandatory('number'), got mandatory('table').")
+
+		local error_func = function()
+			local Tube = Model{seed = choice{"1", "2"}}
+		end
+		unitTest:assert_error(error_func, "seed can only be a choice with 'number' values, got 'string'.")
+	
 		local Tube = Model{
 			init = function(model) end,
 		}
@@ -45,6 +66,17 @@ return{
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "The object has two running objects: 't2' (Timer) and 't' (Timer).")
+
+
+		error_func = function()
+			local m = Tube{seed = "2"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("seed", "number", "2"))
+
+		error_func = function()
+			local m = Tube{seed = -2}
+		end
+		unitTest:assert_error(error_func, "Argument 'seed' should be positive, got -2.")
 
 		Tube = Model{
 			init = function(model)
@@ -124,7 +156,6 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("block.level", "one of {1, 2, 3}", 40))
 
-
 		error_func = function()
 			local m = Tube{block = {mblock = 40}}
 		end
@@ -181,7 +212,6 @@ return{
 		end
 		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
 
----------------------
 		error_func = function()
 			local c = choice{1, 2, 3, default = 1}
 		end
@@ -196,7 +226,6 @@ return{
 			local c = choice{1, 2, 3, max = 4}
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("max"))
----------------------
 
 		error_func = function()
 			local c = choice{false, true}
