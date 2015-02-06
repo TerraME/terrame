@@ -109,7 +109,7 @@ TextScreen = function(data)
 
 	checkUnnecessaryArguments(data, {"subject", "select"})
 
-	local observerType = TME_OBSERVERS.TEXTSCREEN
+	local observerType = 1
 	local observerParams = {}
 	local subject = data.subject
 	local id

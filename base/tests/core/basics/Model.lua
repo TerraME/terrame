@@ -66,7 +66,7 @@ return{
 		unitTest:assert_equal(t.block.xmin, 0)
 		unitTest:assert_equal(t.block.level, 1)
 		unitTest:assert_type(t.filter, "function")
-		unitTest:assert(t.seed > 0)
+		unitTest:assert(t.seed >= 0)
 
 		t = Tube{
 			simulationSteps = 20,

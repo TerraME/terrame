@@ -31,7 +31,8 @@
 -- @arg data.host A string or a vector of strings with host names for udpsenders.
 -- @arg data.visible A boolean value indicating whether the InternetSender will create
 -- a window to display its data.
--- @arg data.protocol A string with the protocol to be used. It can be "tcp" or "udp".
+-- @arg data.protocol A string with the protocol to be used. It can be "tcp" (default)
+-- or "udp".
 -- @arg data.compress Compress the data to be transfered? It might be interesting not to 
 -- compress when the connection is on the localhost, or when there is a very fast connection,
 -- to make the simulation faster.
@@ -121,12 +122,6 @@ InternetSender = function(data)
 	checkUnnecessaryArguments(data, {"subject", "protocol", "select", "port", "host", "visible", "compress"})
 
 	local observerType
-	if data.xAxis == nil then
-		observerType = TME_OBSERVERS.DYNAMICGRAPHIC
-	else
-		observerType = TME_OBSERVERS.GRAPHIC
-		table.insert(data.select, data.xAxis)
-	end
 
 	local observerParams = {}
 
@@ -139,8 +134,8 @@ InternetSender = function(data)
 	local observerType
 
 	switch(data, "protocol"):caseof{
-		tcp = function() observerType = TME_OBSERVERS.TCPSENDER end,
-		udp = function() observerType = TME_OBSERVERS.UDPSENDER end
+		tcp = function() observerType = 13 end,
+		udp = function() observerType = 7 end
 	}
 
 	local id
