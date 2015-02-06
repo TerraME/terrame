@@ -1259,11 +1259,10 @@ function Model(attrTab)
 			end
 		end)
 
-		setmetatable(argv, {__index = attrTab})
-		setmetatable(attrTab, {__index = Model_})
+		argv.execute = attrTab.execute
 		argv.type_ = typename
-		argv:check()
-		argv:init()
+		attrTab.check(argv)
+		attrTab.init(argv)
 
 		-- check whether the model instance has a timer or an Environment with at least one Timer
 		local text = ""
@@ -1296,8 +1295,9 @@ function Model(attrTab)
 		return argv
 	end
 
-	local mmodel = {type_ = "Model"}
+	setmetatable(attrTab, {__index = Model_})
 
+	local mmodel = {type_ = "Model"}
 	setmetatable(mmodel, {__call = function(_, v)
 		if v == nil then return attrTab end
  		return model(v, debug.getinfo(1).name)
