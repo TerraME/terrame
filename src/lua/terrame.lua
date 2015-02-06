@@ -343,14 +343,14 @@ local function countTable(mtable)
 	local result = {}
 
 	forEachElement(mtable, function(idx, value, mtype)
-		if type__(value) == "table" then
+		if mtype == "function" or mtype == "Model" then
+			result[idx] = 0
+		elseif type__(value) == "table" then
 			forEachElement(value, function(midx, mvalue, mmtype)
-				if mmtype == "function" then
+				if mmtype == "function" or mmtype == "Model" then
 					result[midx] = 0
 				end
 			end)
-		elseif mtype == "function" then
-			result[idx] = 0
 		end
 	end)
 	return result
