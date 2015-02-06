@@ -118,6 +118,8 @@ const TypesOfObservers ObserverMap::getType() const
 
 void ObserverMap::save(string f, string e)
 {
+	//QDataStream d;
+	//draw(d);
 	QPixmap pixmap = painterWidget->grab();
 	pixmap.save(f.c_str(), e.c_str());
 }

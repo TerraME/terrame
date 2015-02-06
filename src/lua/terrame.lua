@@ -361,7 +361,7 @@ local function buildCountTable(package)
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s..package
 
-	load_file = baseDir..s.."load.lua"
+	local load_file = baseDir..s.."load.lua"
 	local load_sequence
 
 	if isFile(load_file) then
@@ -1479,8 +1479,7 @@ end
 function traceback()
 	local level = 1
 
-	local str = ""
-	str = str.."Stack traceback:\n"
+	local str = "Stack traceback:\n"
 
 	local last_function = ""
 	local found_function = false
@@ -1536,6 +1535,9 @@ function traceback()
 		end
 		level = level + 1
 		info = debug.getinfo(level)
+	end
+	if str == "Stack traceback:\n" then
+		return ""
 	end
 	return string.sub(str, 0, string.len(str) - 1)
 end

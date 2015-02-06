@@ -1643,6 +1643,7 @@ function Map(data)
 			end			
 
 			mandatoryTableArgument(data, "colors", "table")
+			data.select = {"background_"}
 			verify(#data.colors == 1, "Strategy 'background' requires only one color, got "..#data.colors..".")
 
 			forEachCell(data.subject, function(cell)

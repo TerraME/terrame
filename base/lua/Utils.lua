@@ -44,7 +44,7 @@ end
 -- print(type(c)) -- "Cell"
 function type(data)
 	local t = type__(data)
-	if t == "table" or t == "userdata" and getmetatable(data) then
+	if t == "table" or (t == "userdata" and getmetatable(data)) then
 		if data.type_ ~= nil then
 			return data.type_
 		end
