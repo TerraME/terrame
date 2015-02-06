@@ -163,7 +163,7 @@ Model_ = {
 			if finalTime == nil then
 				finalTime = self.finalTime
 			else
-				customError("execute() should not take any argument because the model already has a final time.")
+				customError("execute() should not take any argument because the model already has a final time ("..self.finalTime..").")
 			end
 		end
 
@@ -1100,6 +1100,21 @@ function Model(attrTab)
 		end)
 	end
 
+	if attrTab.finalTime ~= nil then
+		local t = type(attrTab.finalTime)
+		if t == "choice" then
+			if type(attrTab.finalTime.default) ~= "number" then
+				customError("finalTime can only be a choice with 'number' values, got '"..type(attrTab.finalTime.default).."'.")
+			end
+		elseif t == "mandatory" then
+			if attrTab.finalTime.value ~= "number" then
+				customError("finalTime can only be mandatory('number'), got mandatory('"..attrTab.finalTime.value.."').")
+			end
+		else
+			optionalTableArgument(attrTab, "finalTime", "number")
+		end
+	end
+
 	if attrTab.seed ~= nil then
 		local t = type(attrTab.seed)
 		if t == "choice" then
@@ -1119,6 +1134,7 @@ function Model(attrTab)
 	local function model(argv)
 		-- set the default values
 		optionalTableArgument(argv, "seed", "number")
+		optionalTableArgument(argv, "finalTime", "number")
 
 		if argv.seed == nil then
 			argv.seed = Random().seed

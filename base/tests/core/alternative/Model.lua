@@ -25,6 +25,20 @@
 
 return{
 	Model = function(unitTest)
+		local error_func = function()
+			local Tube = Model{finalTime = "2"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "2"))
+
+		local error_func = function()
+			local Tube = Model{finalTime = mandatory("table")}
+		end
+		unitTest:assert_error(error_func, "finalTime can only be mandatory('number'), got mandatory('table').")
+
+		local error_func = function()
+			local Tube = Model{finalTime = choice{"1", "2"}}
+		end
+		unitTest:assert_error(error_func, "finalTime can only be a choice with 'number' values, got 'string'.")
 
 		local error_func = function()
 			local Tube = Model{seed = "2"}
@@ -67,6 +81,10 @@ return{
 		end
 		unitTest:assert_error(error_func, "The object has two running objects: 't2' (Timer) and 't' (Timer).")
 
+		error_func = function()
+			local m = Tube{finalTime = "2"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "2"))
 
 		error_func = function()
 			local m = Tube{seed = "2"}
@@ -377,7 +395,7 @@ return{
 		local error_func = function()
 			t:execute(5)
 		end
-		unitTest:assert_error(error_func, "execute() should not take any argument because the model already has a final time.")
+		unitTest:assert_error(error_func, "execute() should not take any argument because the model already has a final time (10).")
 	end,
 	interface = function(unitTest)
 		local error_func = function()
