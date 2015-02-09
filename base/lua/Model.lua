@@ -477,14 +477,14 @@ function interface(self, modelName, package)
 					r = r.."lineEdit"..value..".enabled = false\n"
 					
 					r = r.."qt.connect(SelectButton, \"clicked()\", function()\n"..
-						"fname = qt.dialog.get_open_filename(\"Select File\", \"\", \""..ext.."\")\n"..
+						"local fname = qt.dialog.get_open_filename(\"Select File\", \"\", \""..ext.."\")\n"..
 						"if fname ~= \"\" then\n"..
 						"\tlineEdit"..value..":setText(fname)\n"..
 						"end\n"..
 					"end)\n"
 				else
 					r = r.."qt.connect(SelectButton, \"clicked()\", function()\n"..
-						"fname = qt.dialog.get_existing_directory(\"Select Directory\", \"\")\n"..
+						"local fname = qt.dialog.get_existing_directory(\"Select Directory\", \"\")\n"..
 						"if fname ~= \"\" then\n"..
 						"\tlineEdit"..value..":setText(fname..\"/"..self[value].."\")\n"..
 						"end\n"..
@@ -736,14 +736,14 @@ function interface(self, modelName, package)
 							r = r.."lineEdit"..idx..value..".enabled = false\n"
 					
 							r = r.."qt.connect(SelectButton, \"clicked()\", function()\n"..
-								"fname = qt.dialog.get_open_filename(\"Select File\", \"\", \""..ext.."\")\n"..
+								"local fname = qt.dialog.get_open_filename(\"Select File\", \"\", \""..ext.."\")\n"..
 								"if fname ~= \"\" then\n"..
 								"\tlineEdit"..idx..value..":setText(fname)\n"..
 								"end\n"..
 							"end)\n"
 						else
 							r = r.."qt.connect(SelectButton, \"clicked()\", function()\n"..
-								"fname = qt.dialog.get_existing_directory(\"Select Directory\", \"\")\n"..
+								"local fname = qt.dialog.get_existing_directory(\"Select Directory\", \"\")\n"..
 								"if fname ~= \"\" then\n"..
 								"\nlineEdit"..idx..value..":setText(fname..\"/"..self[idx][value].."\")\n"..
 								"end\n"..
