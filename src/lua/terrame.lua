@@ -169,7 +169,11 @@ local function findModels(package)
 
 	forEachElement(files, function(_, fname)
 		found = false
-		local a = include(srcpath..fname)
+		xpcall(function() a = include(srcpath..fname) end, function(err)
+			printError("Error: Could not load "..fname)
+			os.exit()
+		end)
+
 		if found then
 			forEachElement(a, function(idx, value)
 				if value == "___123" then
