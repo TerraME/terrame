@@ -809,7 +809,7 @@ function interface(self, modelName, package)
 		elseif idx == "choice" then
 			forEachOrderedElement(melement, function(_, value)
 				if self[value].values then
-					r = r.."\tmvalue = tvalue"..value.."[combobox"..value..".currentIndex + 1]\n"
+					r = r.."\tlocal mvalue = tvalue"..value.."[combobox"..value..".currentIndex + 1]\n"
 					r = r.."\tif tonumber(mvalue) then\n"
 					r = r.."\t\tmvalue = tonumber(mvalue)\n"
 					r = r.."\t\tif mvalue ~= "..self[value].default.." then \n"
@@ -819,7 +819,7 @@ function interface(self, modelName, package)
 					r = r.."\t\tresult = result..\"\\n\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
 					r = r.."\tend\n"
 				elseif self[value].step then
-					r = r.."\tmvalue = tonumber(lineEdit"..value..".text)\n"
+					r = r.."\tlocal mvalue = tonumber(lineEdit"..value..".text)\n"
 					r = r.."\tif mvalue ~= "..self[value].default.. " then \n"
 					r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..mvalue..".."\",\"\n"
 					r = r.."\tend\n"
@@ -864,7 +864,7 @@ function interface(self, modelName, package)
 					end)
 				elseif midx == "boolean" then
 					forEachOrderedElement(mvalue, function(_, value)
-						r = r.."\tmvalue = "..tostring(self[idx][value])
+						r = r.."\tlocal mvalue = "..tostring(self[idx][value])
 						if value == "active" then
 
 							r = r.."\tif groupbox"..idx..".checked ~= mvalue then\n"
@@ -885,7 +885,7 @@ function interface(self, modelName, package)
 				elseif midx == "choice" then
 					forEachOrderedElement(mvalue, function(_, value)
 						if self[idx][value].values then
-							r = r.."\tmvalue = tvalue"..idx..value.."[combobox"..idx..value..".currentIndex + 1]\n"
+							r = r.."\tlocal mvalue = tvalue"..idx..value.."[combobox"..idx..value..".currentIndex + 1]\n"
 							r = r.."\tif tonumber(mvalue) then\n"
 							r = r.."\t\tmvalue = tonumber(mvalue)\n"
 							r = r.."\t\tif mvalue ~= "..self[idx][value].default.." then \n"
@@ -895,7 +895,7 @@ function interface(self, modelName, package)
 							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \\\"\"..mvalue..".."\"\\\",\"\n"
 							r = r.."\tend\n"
 						elseif self[idx][value].step then
-							r = r.."\tmvalue = tonumber(lineEdit"..idx..value..".text)\n"
+							r = r.."\tlocal mvalue = tonumber(lineEdit"..idx..value..".text)\n"
 							r = r.."\tif mvalue ~= "..self[idx][value].default.. " then \n"
 							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..mvalue..".."\",\"\n"
 							r = r.."\tend\n"
