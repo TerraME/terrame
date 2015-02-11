@@ -23,108 +23,6 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
---- Function to define options to be used by the modeler. It can get a set of
--- non-named values as arguments as well as named arguments as follows. This function
--- can be used stand alone without having to instantiate a Model.
--- @arg attrTab.min The minimum value.
--- @arg attrTab.max The maximum value.
--- @arg attrTab.step An optional argument with the possible steps from minimum to maximum.
--- @usage choice{1, 2, 3}
--- choice{"low", "medium", "high"}
-function choice(attrTab)
-	local result
-
-	if type(attrTab) ~= "table" then
-		customError(tableArgumentMsg())
-	elseif #attrTab > 0 then
-		if not belong(type(attrTab[1]), {"number", "string"}) then
-			customError("The elements should be number or string, got "..type(attrTab[1])..".")
-		end
-		local type1 = type(attrTab[1])
-
-		forEachElement(attrTab, function(_, _, mtype)
-			if type1 ~= mtype then
-				customError("All the elements of choice should have the same type.")
-			end
-		end)
-
-		local default
-		if attrTab.default == nil then
-			default = attrTab[1]
-		else
-			default = attrTab.default
-			attrTab.default = nil
-
-			if default == attrTab[1] then
-				customWarning(defaultValueWarning("default", default))
-			elseif not belong(default, attrTab) then
-				customError("Default value ("..default..") does not belong to choice.")
-			end
-		end
-
-		forEachElement(attrTab, function(idx)
-			if type(idx) == "string" then
-				customWarning(unnecessaryArgumentMsg(idx))
-			end
-		end)
-
-		result = {values = attrTab, default = default}
-	elseif getn(attrTab) > 0 then
-		mandatoryTableArgument(attrTab, "min", "number")
-
-		optionalTableArgument(attrTab, "max", "number")
-		optionalTableArgument(attrTab, "step", "number")
-
-		defaultTableValue(attrTab, "default", attrTab.min)
-
-		if attrTab.max then
-			verify(attrTab.max > attrTab.min, "Argument 'max' should be greater than 'min'.")
-		end
-
-		if attrTab.default then
-			verify(attrTab.default >= attrTab.min, "Argument 'default' should be greater than or equal to 'min'.")
-			if attrTab.max then
-				verify(attrTab.default <= attrTab.max, "Argument 'default' should be less than or equal to 'max'.")
-			end
-		end
-
-		if attrTab.step and not attrTab.max then
-			customError("It is not possible to have 'step' and not 'max'.")
-		end
-
-		checkUnnecessaryArguments(attrTab, {"default", "min", "max", "step"})
-
-		if attrTab.step then
-			local k = (attrTab.max - attrTab.min) / attrTab.step
-
-			local rest = k % 1
-			if rest > 0.00001 then
-				local max1 = attrTab.min + (k - rest) * attrTab.step
-				local max2 = attrTab.min + (k - rest + 1) * attrTab.step
-				customError("Invalid 'max' value ("..attrTab.max.."). It could be "..max1.." or "..max2..".")
-			end
-
-			if attrTab.default then
-				local k = (attrTab.default - attrTab.min) / attrTab.step
-
-				local rest = k % 1
-				if rest > 0.00001 then
-					local def1 = attrTab.min + (k - rest) * attrTab.step
-					local def2 = attrTab.min + (k - rest + 1) * attrTab.step
-					customError("Invalid 'default' value ("..attrTab.default.."). It could be "..def1.." or "..def2..".")
-				end
-			end
-		end
-
-		result = attrTab
-	else
-		customError("There are no options for the choice (table is empty).")
-	end
-
-	setmetatable(result, {__index = {type_ = "choice"}})
-	return result
-end
-
 --- Function to define a mandatory argument for a given Model. This function
 -- can be used stand alone without having to instantiate a Model.
 -- @arg value A string with the type of the argument. It cannot be boolean, string, nor userdata.
@@ -239,7 +137,7 @@ local function create_ordering(self)
 		if     mtype == "string"  then                 count_string  = count_string  + 1
 		elseif mtype == "number"  then                 count_number  = count_number  + 1
 		elseif mtype == "boolean" then                 count_boolean = count_boolean + 1
-		elseif mtype == "choice"  then                 count_table   = count_table   + 1
+		elseif mtype == "Choice"  then                 count_table   = count_table   + 1
 		elseif mtype == "table" and #element == 0 then table.insert(named, idx)
 		elseif mtype == "mandatory" then
 			if element.value == "number" then
@@ -271,7 +169,7 @@ local function create_ordering(self)
 			quantity = 0
 			current_ordering = {}
 		end
-		table.insert(current_ordering, "choice")
+		table.insert(current_ordering, "Choice")
 		quantity = quantity + count_table
 	end
 
@@ -339,7 +237,7 @@ local function create_t(mtable, ordering)
 					if element == "string"    and mtype == "string"    then table.insert(mt, idx)
 				elseif element == "boolean"   and mtype == "boolean"   then table.insert(mt, idx)
 				elseif element == "number"    and mtype == "number"    then table.insert(mt, idx)
-				elseif element == "choice"    and mtype == "choice"    then table.insert(mt, idx)
+				elseif element == "Choice"    and mtype == "Choice"    then table.insert(mt, idx)
 				elseif element == "mandatory" and mtype == "mandatory" then table.insert(mt, idx)
 				elseif element == idx then -- named table
 					local ordering = create_ordering(melement)
@@ -517,7 +415,7 @@ function interface(self, modelName, package)
 
 				count = count + 1
 			end)
-		elseif idx == "choice" then
+		elseif idx == "Choice" then
 			r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 			r = r.."qt.ui.layout_add("..layout..", TmpGridLayout)\n"
 			count = 0
@@ -591,7 +489,7 @@ function interface(self, modelName, package)
 			r = r.."qt.ui.layout_add(groupbox"..idx..", TmpLayout)\n"
 
 			forEachElement(melement[1], function(midx, mvalue)
-				if midx == "choice" then
+				if midx == "Choice" then
 					r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 					r = r.."qt.ui.layout_add(TmpLayout, TmpGridLayout, 1, 0)\n"
 					count = 0
@@ -806,7 +704,7 @@ function interface(self, modelName, package)
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..tostring(checkBox"..value..".checked)..\",\"\n"
 				r = r.."\tend\n"
 			end)
-		elseif idx == "choice" then
+		elseif idx == "Choice" then
 			forEachOrderedElement(melement, function(_, value)
 				if self[value].values then
 					r = r.."\tlocal mvalue = tvalue"..value.."[combobox"..value..".currentIndex + 1]\n"
@@ -882,7 +780,7 @@ function interface(self, modelName, package)
 						r = r.."\tiresult = iresult..\"\\n\t\t"..value.." = \\\"\"..lineEdit"..idx..value..".text..\"\\\",\"\n"
 						r = r.."\tend\n"
 					end)
-				elseif midx == "choice" then
+				elseif midx == "Choice" then
 					forEachOrderedElement(mvalue, function(_, value)
 						if self[idx][value].values then
 							r = r.."\tlocal mvalue = tvalue"..idx..value.."[combobox"..idx..value..".currentIndex + 1]\n"
@@ -1070,9 +968,9 @@ function Model(attrTab)
 					end)
 
 					if not found then
-						customError("There is no argument '"..mvalue.."' in the Model, although it is described in the interface().")
+						customWarning("There is no argument '"..mvalue.."' in the Model, although it is described in the interface().")
 					end
-				elseif belong(mvalue, {"choice", "mandatory"}) then
+				elseif belong(mvalue, {"Choice", "mandatory"}) then
 					local found = false
 					forEachElement(attrTab, function(_, attrvalue, attrtype)
 						if attrtype == mvalue then
@@ -1102,9 +1000,9 @@ function Model(attrTab)
 
 	if attrTab.finalTime ~= nil then
 		local t = type(attrTab.finalTime)
-		if t == "choice" then
+		if t == "Choice" then
 			if type(attrTab.finalTime.default) ~= "number" then
-				customError("finalTime can only be a choice with 'number' values, got '"..type(attrTab.finalTime.default).."'.")
+				customError("finalTime can only be a Choice with 'number' values, got '"..type(attrTab.finalTime.default).."'.")
 			end
 		elseif t == "mandatory" then
 			if attrTab.finalTime.value ~= "number" then
@@ -1117,9 +1015,9 @@ function Model(attrTab)
 
 	if attrTab.seed ~= nil then
 		local t = type(attrTab.seed)
-		if t == "choice" then
+		if t == "Choice" then
 			if type(attrTab.seed.default) ~= "number" then
-				customError("seed can only be a choice with 'number' values, got '"..type(attrTab.seed.default).."'.")
+				customError("seed can only be a Choice with 'number' values, got '"..type(attrTab.seed.default).."'.")
 			end
 		elseif t == "mandatory" then
 			if attrTab.seed.value ~= "number" then
@@ -1142,7 +1040,7 @@ function Model(attrTab)
 		verify(argv.seed >= 0, "Argument 'seed' should be positive, got "..argv.seed..".")
 
 		forEachElement(attrTab, function(name, value, mtype)
-			if mtype == "choice" then
+			if mtype == "Choice" then
 				if argv[name] == nil then
 					argv[name] = value.default
 				end
@@ -1157,7 +1055,7 @@ function Model(attrTab)
 
 				local iargv = argv[name]
 				forEachElement(value, function(iname, ivalue, itype)
-					if itype == "choice" and iargv[iname] == nil then
+					if itype == "Choice" and iargv[iname] == nil then
 						iargv[iname] = ivalue.default
 					elseif itype == "mandatory" and iargv[iname] == nil then
 						mandatoryArgumentError(name.."."..iname)
@@ -1172,7 +1070,7 @@ function Model(attrTab)
 
 		-- check types and values
 		forEachElement(attrTab, function(name, value, mtype)
-			if mtype == "choice" then
+			if mtype == "Choice" then
 				if value.values then
 					if type(argv[name]) ~= type(value.default) then
 						incompatibleTypeError(name, type(value.default), argv[name])
@@ -1205,7 +1103,7 @@ function Model(attrTab)
 			elseif mtype == "table" and #value == 0 then
 				local iargv = argv[name]
 				forEachElement(value, function(iname, ivalue, itype)
-					if itype == "choice" then
+					if itype == "Choice" then
 						if ivalue.values then
 							if type(iargv[iname]) ~= type(ivalue.default) then
 								incompatibleTypeError(name, type(ivalue.default), iargv[iname])

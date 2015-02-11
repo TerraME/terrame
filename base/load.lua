@@ -1,5 +1,6 @@
 files = {
 	"Random.lua",
+	"Choice.lua",
 	"Package.lua",
 	"Utils.lua",
 	"UnitTest.lua",
