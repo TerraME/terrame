@@ -114,8 +114,10 @@ return {
 		local nonFooAgent = Agent{
 			name = "nonfoo",
 			init = function(self)
-				self.age = Random():integer(10)
+				self.money = 100
 			end,
+			age = Choice{min = 0, max = 10, step = 1},
+			gender = Choice{"male", "female"},
 			execute = function(self)
 				self.age = self.age + 1
 				self:walk()
@@ -127,7 +129,7 @@ return {
 			end
 		}
 
-		unitTest:assert_nil(nonFooAgent.age)
+		unitTest:assert_nil(nonFooAgent.money)
 
 		local nonFooSociety = Society{
 			instance = nonFooAgent,
@@ -136,13 +138,15 @@ return {
 
 		unitTest:assert_type(nonFooSociety, "Society")
 		unitTest:assert_equal(50, #nonFooSociety)
+		unitTest:assert_equal(nonFooSociety:gender().male, 23)
+		unitTest:assert_equal(nonFooSociety:sample().money, 100)
 
 		local sum = 0
 		forEachAgent(nonFooSociety, function(ag)
 			sum = sum + ag.age
 		end)
 
-		unitTest:assert_equal(239, sum)
+		unitTest:assert_equal(nonFooSociety:age(), sum)
 
 		local cs = CellularSpace{xdim = 20}
 
@@ -158,7 +162,7 @@ return {
 
 		t:execute(50)
 
-		unitTest:assert_equal(5, findCounter)
+		unitTest:assert_equal(4, findCounter)
 
 		local count1 = 0
 		local count2 = 0

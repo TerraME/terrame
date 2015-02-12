@@ -119,6 +119,12 @@ Society_ = {
 			local metaTable = {__index = self.instance, __tostring = tostringTerraME}
 			setmetatable(agent, metaTable)
 			agent:init()
+
+			forEachElement(self.instance, function(idx, value, mtype)
+				if mtype == "Choice" then
+					agent[idx] = value:sample()
+				end
+			end)
 		elseif mtype ~= "Agent" then
 			incompatibleTypeError(1, "Agent or table", agent)
 		end
@@ -552,7 +558,9 @@ metaTableSociety_ = {
 -- @arg data.id The unique identifier attribute used when reading the Society from a file.
 -- @arg data.instance An Agent with the description of attributes and functions. When using this
 -- argument, each Agent will have attributes and functions according to the instance. The Society
--- calls Agent:init() from the instance for each of its Agents. Additional functions are also
+-- calls Agent:init() from the instance for each of its Agents. 
+-- Every attribute from the Cell that is a Choice will be converted into a sample from the Choice.
+-- Additional functions are also
 -- created to the Society, according to the attributes of the instance. For each attribute of the
 -- instance, one function is created in the Society with the same name (note that attributes
 -- declared exclusively in Agent:init() will not be mapped, as they do not belong to the
@@ -643,7 +651,7 @@ function Society(data)
 					agent[attribute](agent, args)
 				end)
 			end
-		elseif mtype == "number" then
+		elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
 			data[attribute] = function(soc)
 				local quantity = 0
 				forEachAgent(soc, function(agent)
@@ -661,7 +669,7 @@ function Society(data)
 				end)
 				return quantity
 			end
-		elseif mtype == "string" then
+		elseif mtype == "string" or (mtype == "Choice" and value.values and type(value.values[1]) == "string") then
 			data[attribute] = function(soc)
 				local result = {}
 				forEachAgent(soc, function(agent)

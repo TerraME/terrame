@@ -40,6 +40,7 @@ return{
 		unitTest:assert_equal(cs.cells[101], c)
 	end,
 	CellularSpace = function(unitTest)
+		Random{seed = 12345}
 		local cs = CellularSpace{xdim = 10}
 
 		unitTest:assert_type(cs, "CellularSpace")
@@ -52,7 +53,8 @@ return{
 		local cell = Cell{
 			defor = 1,
 			road = true,
-			cover = "pasture"
+			cover = "pasture",
+			water = Choice{1, 2, 3}
 		}
 
 		local cs = CellularSpace{
@@ -60,11 +62,10 @@ return{
 			xdim = 10
 		}
 
-		unitTest:assert(cs:defor() == 100)
-
-		unitTest:assert(cs:road() == 100)
-		unitTest:assert(cs:cover().pasture == 100)
-
+		unitTest:assert_equal(cs:defor(), 100)
+		unitTest:assert_equal(cs:road(), 100)
+		unitTest:assert_equal(cs:cover().pasture, 100)
+		unitTest:assert_equal(cs:water(), 202)
 	end, 
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

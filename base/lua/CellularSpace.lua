@@ -979,6 +979,7 @@ metaTableCellularSpace_ = {
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
 -- instance. The CellularSpace calls Cell:init() from the instance for each of its Cells.
+-- Every attribute from the Cell that is a Choice will be converted into a sample from the Choice.
 -- Additional functions are also created to the CellularSpace, according to the attributes of the
 -- instance. For each attribute of the instance, one function is created in the CellularSpace with
 -- the same name (note that attributes declared exclusively in Cell:init() will not be mapped, as
@@ -1144,6 +1145,11 @@ function CellularSpace(data)
 				end
 			end)
 			cell:init()
+			forEachElement(data.instance, function(idx, value, mtype)
+				if mtype == "Choice" then
+					cell[idx] = value:sample()
+				end
+			end)
 		end)
 
 		forEachElement(data.instance, function(attribute, value, mtype)
@@ -1154,7 +1160,7 @@ function CellularSpace(data)
 						cell[attribute](cell, args)
 					end)
 				end
-			elseif mtype == "number" then
+			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
 				if attribute ~= "x" and attribute ~= "y" then
 					data[attribute] = function(cs)
 						local quantity = 0
@@ -1174,7 +1180,7 @@ function CellularSpace(data)
 					end)
 					return quantity
 				end
-			elseif mtype == "string" then
+			elseif mtype == "string" or (mtype == "Choice" and value.values and type(value.values[1]) == "string") then
 				data[attribute] = function(cs)
 					local result = {}
 					forEachCell(cs, function(cell)
