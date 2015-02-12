@@ -50,7 +50,7 @@ return{
 		Random{seed = 12345}
 		local c = Choice{1, 2, 3}
 
-		unitTest:assert_equal(c:sample(), 1)
+		unitTest:assert_equal(c:sample(), 2)
 		unitTest:assert_equal(c:sample(), 3)
 		unitTest:assert_equal(c:sample(), 1)
 		unitTest:assert_equal(c:sample(), 2)

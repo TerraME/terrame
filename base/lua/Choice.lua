@@ -30,7 +30,7 @@ Choice_ = {
 	sample = function(self)
 		local r = Random()
 		if self.values then
-			return self.values[r:integer(#self.values)]
+			return self.values[r:integer(#self.values - 1) + 1]
 		elseif self.step then
 			local quantity = (self.max - self.min) / self.step
 			return self.min + self.step * r:integer(0, quantity)
