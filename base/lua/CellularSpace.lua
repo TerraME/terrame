@@ -966,6 +966,7 @@ metaTableCellularSpace_ = {
 -- automatically (true, default value) or the user by herself will call load (false).
 -- @arg data.autoload A boolean value indicating whether the CellularSpace will be loaded
 -- automatically (true, default value) or the user by herself will call load (false).
+-- If false, TerraME will not create the automatic functions based on the attributes of the Cells.
 -- @arg data.select A table containing the names of the attributes to be retrieved (default is
 -- all attributes). When retrieving a single attribute, you can use select = "attribute" instead
 -- of select = {"attribute"}. It is possible to rename the attribute name using "as", for example,
@@ -1123,36 +1124,8 @@ function CellularSpace(data)
 	setmetatable(data, metaTableCellularSpace_)
 	cObj:setReference(data)
 
-	if data.autoload then
-		data:load()
-		-- needed for Environment's loadNeighborhood	
-		if data.database then
-			data.layer = data.cObj_:getLayerName()
-		end
-		data.autoload = nil
-	else
-		data.cells = {}
-	end
-
-	if data.instance ~= nil then
-		mandatoryTableArgument(data, "instance", "Cell")
-
-		forEachCell(data, function(cell)
-			setmetatable(cell, {__index = data.instance})
-			forEachElement(data.instance, function(attribute, value, mtype)
-				if not string.endswith(attribute, "_") and not belong(attribute, {"x", "id", "y", "past"}) then 
-					cell[attribute] = value
-				end
-			end)
-			cell:init()
-			forEachElement(data.instance, function(idx, value, mtype)
-				if mtype == "Choice" then
-					cell[idx] = value:sample()
-				end
-			end)
-		end)
-
-		forEachElement(data.instance, function(attribute, value, mtype)
+	local function createSummaryFunctions(cell)
+		forEachElement(cell, function(attribute, value, mtype)
 			if attribute == "id" or attribute == "parent" or string.endswith(attribute, "_") then return
 			elseif mtype == "function" then
 				data[attribute] = function(cs, args)
@@ -1195,6 +1168,39 @@ function CellularSpace(data)
 				end
 			end
 		end)
+	end
+
+	if data.autoload then
+		data:load()
+		-- needed for Environment's loadNeighborhood	
+		if data.database then
+			data.layer = data.cObj_:getLayerName()
+		end
+		data.autoload = nil
+		createSummaryFunctions(data.cells[1])
+	else
+		data.cells = {}
+	end
+
+	if data.instance ~= nil then
+		mandatoryTableArgument(data, "instance", "Cell")
+
+		forEachCell(data, function(cell)
+			setmetatable(cell, {__index = data.instance})
+			forEachElement(data.instance, function(attribute, value, mtype)
+				if not string.endswith(attribute, "_") and not belong(attribute, {"x", "id", "y", "past"}) then 
+					cell[attribute] = value
+				end
+			end)
+			cell:init()
+			forEachOrderedElement(data.instance, function(idx, value, mtype)
+				if mtype == "Choice" then
+					cell[idx] = value:sample()
+				end
+			end)
+		end)
+
+		createSummaryFunctions(data.instance)
 	end
 	return data
 end

@@ -120,7 +120,7 @@ Society_ = {
 			setmetatable(agent, metaTable)
 			agent:init()
 
-			forEachElement(self.instance, function(idx, value, mtype)
+			forEachOrderedElement(self.instance, function(idx, value, mtype)
 				if mtype == "Choice" then
 					agent[idx] = value:sample()
 				end
@@ -638,52 +638,55 @@ function Society(data)
 
 	mandatoryTableArgument(data, "instance", "Agent")
 
-	-- create functions for the society according to the attributes of its instance
-	forEachElement(data.instance, function(attribute, value, mtype)
-		if attribute == "id" or attribute == "parent" then return
-		elseif attribute == "messages" or attribute == "instance" or 
-               attribute == "autoincrement" or attribute == "placements" then
-			customWarning("Attribute '"..attribute.."' belong to both Society and Agent.")
-			return
-		elseif mtype == "function" then
-			data[attribute] = function(soc, args)
-				forEachAgent(soc, function(agent)
-					agent[attribute](agent, args)
-				end)
+	local function createSummaryFunctions(agent)
+		-- create functions for the society according to the attributes of its instance
+		forEachElement(agent, function(attribute, value, mtype)
+			if attribute == "id" or attribute == "parent" then return
+			elseif attribute == "messages" or attribute == "instance" or 
+	               attribute == "autoincrement" or attribute == "placements" then
+				customWarning("Attribute '"..attribute.."' belong to both Society and Agent.")
+				return
+			elseif mtype == "function" then
+				data[attribute] = function(soc, args)
+					forEachAgent(soc, function(agent)
+						agent[attribute](agent, args)
+					end)
+				end
+			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
+				data[attribute] = function(soc)
+					local quantity = 0
+					forEachAgent(soc, function(agent)
+						quantity = quantity + agent[attribute]
+					end)
+					return quantity
+				end
+			elseif mtype == "boolean" then
+				data[attribute] = function(soc)
+					local quantity = 0
+					forEachAgent(soc, function(agent)
+						if agent[attribute] then
+							quantity = quantity + 1
+						end
+					end)
+					return quantity
+				end
+			elseif mtype == "string" or (mtype == "Choice" and value.values and type(value.values[1]) == "string") then
+				data[attribute] = function(soc)
+					local result = {}
+					forEachAgent(soc, function(agent)
+						local value = agent[attribute]
+						if result[value] then
+							result[value] = result[value] + 1
+						else
+							result[value] = 1
+						end
+					end)
+					return result
+				end
 			end
-		elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
-			data[attribute] = function(soc)
-				local quantity = 0
-				forEachAgent(soc, function(agent)
-					quantity = quantity + agent[attribute]
-				end)
-				return quantity
-			end
-		elseif mtype == "boolean" then
-			data[attribute] = function(soc)
-				local quantity = 0
-				forEachAgent(soc, function(agent)
-					if agent[attribute] then
-						quantity = quantity + 1
-					end
-				end)
-				return quantity
-			end
-		elseif mtype == "string" or (mtype == "Choice" and value.values and type(value.values[1]) == "string") then
-			data[attribute] = function(soc)
-				local result = {}
-				forEachAgent(soc, function(agent)
-					local value = agent[attribute]
-					if result[value] then
-						result[value] = result[value] + 1
-					else
-						result[value] = 1
-					end
-				end)
-				return result
-			end
-		end
-	end)
+		end)
+	end
+	createSummaryFunctions(data.instance)
 
 	if type(data.database) == "string" then
 		if data.database:endswith(".csv") then
@@ -731,6 +734,7 @@ function Society(data)
 			data:add({})
 		end
 	end
+	createSummaryFunctions(data.agents[1])
 
 	return data
 end

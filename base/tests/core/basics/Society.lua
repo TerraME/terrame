@@ -99,7 +99,7 @@ return {
 		unitTest:assert_type(ag, "Agent")
 	end,
 	Society = function(unitTest)
-		Random{seed = 0}
+		local r = Random{seed = 0}
 
 		local singleFooAgent = Agent{
 			size = 10,
@@ -113,8 +113,9 @@ return {
 		local findCounter = 0
 		local nonFooAgent = Agent{
 			name = "nonfoo",
+			money = 100,
 			init = function(self)
-				self.money = 100
+				self.charge = 0
 			end,
 			age = Choice{min = 0, max = 10, step = 1},
 			gender = Choice{"male", "female"},
@@ -129,7 +130,7 @@ return {
 			end
 		}
 
-		unitTest:assert_nil(nonFooAgent.money)
+		unitTest:assert_nil(nonFooAgent.charge)
 
 		local nonFooSociety = Society{
 			instance = nonFooAgent,
@@ -138,8 +139,9 @@ return {
 
 		unitTest:assert_type(nonFooSociety, "Society")
 		unitTest:assert_equal(50, #nonFooSociety)
-		unitTest:assert_equal(nonFooSociety:gender().male, 23)
+		unitTest:assert_equal(nonFooSociety:gender().male, 26)
 		unitTest:assert_equal(nonFooSociety:sample().money, 100)
+		unitTest:assert_equal(nonFooSociety:money(), 100 * #nonFooSociety)
 
 		local sum = 0
 		forEachAgent(nonFooSociety, function(ag)
@@ -520,7 +522,8 @@ return {
 			instance = ag1,
 			quantity = 2
 		}
-		unitTest:assert_equal(tostring(soc1), [[agents         table of size 2
+		unitTest:assert_equal(tostring(soc1), [[age            function
+agents         table of size 2
 autoincrement  number [3]
 cObj_          userdata
 execute        function
