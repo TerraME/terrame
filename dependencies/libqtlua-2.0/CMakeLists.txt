@@ -26,7 +26,7 @@ SET(INSTALL_INC include CACHE PATH "Where to install headers to.")
 #	SET(CMAKE_AUTOMOC ON)
 
 # Find Lua 
-	FIND_PACKAGE (Lua51 REQUIRED)
+	FIND_PACKAGE (Lua REQUIRED)
 	INCLUDE_DIRECTORIES (${LUA_INCLUDE_DIR})	
 
 ###########################################################################
