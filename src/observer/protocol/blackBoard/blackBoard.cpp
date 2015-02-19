@@ -171,52 +171,18 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, const QStringL
     delete state;
     data = new QByteArray();
     state = new QDataStream(data, QIODevice::WriteOnly);
-    
-    // stream->device()->open(QIODevice::WriteOnly);
+	
     state = &subj->getState(*state, subj, observerId, attribs);
     state->device()->close();
 
-    // O estado j· esta disponÌvel
+    // O estado ja esta disponivel
     state->device()->open(QIODevice::ReadOnly);
 	
     QByteArray msg;
     (*state) >> msg;
 
     // canDrawState = false;
-    
-#ifdef TME_STATISTIC
-    if (! msg.isEmpty())
-    {
-        double t = Statistic::getInstance().startMicroTime();
-
-        canDrawState = protocolDecoder->decode(msg);
-
-#ifdef DEBUG_OBSERVER
-        qDebug() << "\nBlackBoard::getState()" <<
-            "\n\tmsg.size()" << msg.size() << "\n";
-#endif
-
-        t = Statistic::getInstance().endMicroTime() - t;
-        Statistic::getInstance().addElapsedTime("decoder bb", t);
-
-        if (! canDrawState)
-        {
-            if (! msg.isEmpty())
-                qWarning("Error: Failed on decode state. SubjectId: '%i'", subj->getId());
-            else
-                qWarning("Any state to decode. SubjectId: '%1'",subj->getId());
-		}
-
-        // TO-DO: Alterar a forma de transmiss„o de streams via rede
-        // Re-insere o string no dataStream para a transmiss„o via tcp/udp 
-        // t = Statistic::getInstance().startMicroTime();
-        state->device()->close();
-        state->device()->open(QIODevice::WriteOnly);
-        (*state) << msg;
-        state->device()->close();
-        state->device()->open(QIODevice::ReadOnly);
-    }
-#else
+	
     if (! msg.isEmpty())
     {
         canDrawState = protocolDecoder->decode(msg);
@@ -229,24 +195,10 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, const QStringL
                 qWarning("Any state to decode. SubjectId: '%1'",subj->getId());
         }
     }
-#endif
 
     subjAttr->setDirtyBit(false);
     
-#ifdef TME_STATISTIC
-    Statistic::getInstance().addOccurrence("cache size", cache.size());
-    
-    // numero de bytes serilizados
-    Statistic::getInstance().addOccurrence("bytes serialized", state->device()->size());
-    
-    // numero de bytes codificados
-    Statistic::getInstance().addOccurrence("z_bytes coded (protoBuffer->size)", protocolDecoder->getStateSize());    
-#endif
-
 #ifdef DEBUG_OBSERVER
-    // N„o funciona para o Protocol Buffers
-    // dumpRetrievedState(msg, "out_prot_");
-
     foreach(SubjectAttributes *attr, cache.values())
         qDebug() << attr->getId() << ": " << attr->toString();
 #endif

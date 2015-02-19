@@ -192,11 +192,6 @@ ObserverImpl::~ObserverImpl()
 
 bool ObserverImpl::update(double time)
 {
-#ifdef TME_STATISTIC
-    double t = 0;
-    QString name;
-#endif
-
     if(obsHandle_->getType() == TObsDynamicGraphic)
         obsHandle_->setModelTime(time);
 
@@ -204,93 +199,12 @@ bool ObserverImpl::update(double time)
     // recupera a lista de atributos em observacao
     QStringList attribList = obsHandle_->getAttributes();
 
-#ifdef TME_BLACK_BOARD
-
-#ifdef TME_STATISTIC
-    if((time == -1) && (obsHandle_->getType() == TObsUDPSender))
-    {
-        obsHandle_->setModelTime(time);
-    }
-    else
-    {
-        t = Statistic::getInstance().startMicroTime();
-
-   		// getState via BlackBoard
-    	QDataStream& state = BlackBoard::getInstance().getState(subject_, obsHandle_->getId(), attribList);
-
-        name = QString("Recovery with bb %1").arg(getId());
-    	t = Statistic::getInstance().endMicroTime() - t;
-        Statistic::getInstance().addElapsedTime(name, t);
-
-        // Captura o tempo do 'draw()'
-        t = Statistic::getInstance().startMicroTime();
-        
-        // Captura o tempo de espera para os observadores que tambem sao threads
-        // Statistic::getInstance().startVolatileMicroTime();
-
-    	obsHandle_->draw(state);
-        //state.device()->close();
-
-        name = QString("Manager %1").arg(getId());
-        t = Statistic::getInstance().endMicroTime() - t;
-        Statistic::getInstance().addElapsedTime(name, t);
-    }    
-#else
     // getState via BlackBoard
     QDataStream& state = BlackBoard::getInstance().getState(subject_, obsHandle_->getId(), attribList);
 
     obsHandle_->draw(state);
-    state.device()->close(); 
-#endif
+    state.device()->close();
 
-#else  // TME_BLACK_BOARD
-    // getState feito a partir do subject
-    QByteArray byteArray;
-    QBuffer buffer(&byteArray);
-    QDataStream out(&buffer);
-
-    buffer.open(QIODevice::WriteOnly);
-    
-#ifdef TME_STATISTIC
-    if((time == -1) && (obsHandle_->getType() == TObsUDPSender))
-    {
-        obsHandle_->setModelTime(time);
-    }
-    else
-    {
-        t = Statistic::getInstance().startMicroTime();
-#endif
-    	QDataStream& state = subject_->getState(out, subject_, obsHandle_->getId(), attribList);
-
-        // State is already available
-        buffer.close();
-        buffer.open(QIODevice::ReadOnly);
-
-#ifdef TME_STATISTIC 
-        // numero de bytes transmitidos
-        Statistic::getInstance().addOccurrence("bytes serialized", state.device()->size());
-
-        name = QString("Recovery without BB %1").arg(getId());
-    	t = Statistic::getInstance().endMicroTime() - t;
-        Statistic::getInstance().addElapsedTime(name, t);
-
-        // Captura o tempo do 'draw()'
-        t = Statistic::getInstance().startMicroTime();
-
-        // Captura o tempo de espera para os observadores que tambem sao threads
-        Statistic::getInstance().startVolatileMicroTime();
-#endif
-    	obsHandle_->draw(state);
-    	buffer.close();
-
-#ifdef TME_STATISTIC 
-        name = QString("Draw %1").arg(getId());
-        t = Statistic::getInstance().endMicroTime() - t;
-        Statistic::getInstance().addElapsedTime(name, t);
-    }
-#endif
-
-#endif  // TME_BLACK_BOARD
     return true;
 }
 

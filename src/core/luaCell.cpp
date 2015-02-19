@@ -600,10 +600,6 @@ int luaCell::createObserver(lua_State *)
 		qDebug() << "cols: " << cols;
 #endif
 
-#ifdef TME_STATISTIC
-	Statistic::getInstance().setObserverCount(obsId);
-#endif		
-
 		if(obsLog){
 			obsLog->setAttributes(obsAttribs);
 
@@ -876,20 +872,8 @@ const TypesOfSubjects luaCell::getType() const
 /// Notifies observers about changes in the luaCell internal state
 int luaCell::notify(lua_State *L )
 {
-#ifdef TME_STATISTIC
-	double t = Statistic::getInstance().startMicroTime();
-
 	double time = luaL_checknumber(L, -1);
 	CellSubjectInterf::notify(time);
-
-	t = Statistic::getInstance().endMicroTime() - t;
-	Statistic::getInstance().addElapsedTime("Total Response Time - cell", t);
-	Statistic::getInstance().collectMemoryUsage();
-
-#else
-	double time = luaL_checknumber(L, -1);
-	CellSubjectInterf::notify(time);
-#endif
 	return 0;
 }
 
@@ -899,10 +883,6 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 	ObserverDatagramPkg::SubjectAttribute *cellSubj, 
 	ObserverDatagramPkg::SubjectAttribute *parentSubj)
 {
-#ifdef TME_STATISTIC 
-	double t = Statistic::getInstance().startMicroTime();
-#endif 
-
 	QByteArray key, valueTmp;
 	bool valueChanged = false;
 	char result[20];
@@ -1067,7 +1047,6 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 							raw = cellSubj->add_rawattributes();
 							raw->set_key(key);
 							raw->set_text( LUA_ADDRESS_TABLE + static_cast<const char*>(result) );
-							// raw->set_text( "LUA_ADDRESS_TABLE" + std::string(result) );
 
 							valueChanged = true;
 							observedAttribs.insert(key, valueTmp);
@@ -1088,7 +1067,6 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 						raw = cellSubj->add_rawattributes();
 						raw->set_key(key);
 						raw->set_text(LUA_ADDRESS_USER_DATA + static_cast<const char*>(result));
-						// raw->set_text("LUA_ADDRESS_USER_DATA" + std::string(result));
 
 						valueChanged = true;
 						observedAttribs.insert(key, valueTmp);
@@ -1109,7 +1087,6 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 						raw = cellSubj->add_rawattributes();
 						raw->set_key(key);
 						raw->set_text(LUA_ADDRESS_FUNCTION + static_cast<const char*>(result));
-						// raw->set_text("LUA_ADDRESS_FUNCTION" + std::string(result));
 
 						valueChanged = true;
 						observedAttribs.insert(key, valueTmp);
@@ -1130,7 +1107,6 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 						raw = cellSubj->add_rawattributes();
 						raw->set_key(key);
 						raw->set_text(LUA_ADDRESS_OTHER + static_cast<const char*>(result));
-						// raw->set_text("LUA_ADDRESS_OTHER" + std::string(result));
 
 						valueChanged = true;
 						observedAttribs.insert(key, valueTmp);
@@ -1161,17 +1137,10 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 			if(!parentSubj)
 			{
-				// QByteArray byteArray(cellSubj->SerializeAsString().c_str(), cellSubj->ByteSize());
-				// return byteArray;
 				return QByteArray(cellSubj->SerializeAsString().c_str(), cellSubj->ByteSize());
 			}
 		}
 	}
-
-#ifdef TME_STATISTIC 
-	t = Statistic::getInstance().endMicroTime() - t;
-	Statistic::getInstance().addElapsedTime("pop lua - cell", t);
-#endif 
 
 	return QByteArray();
 }
@@ -1359,22 +1328,14 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int /*observerId*/, c
 	switch(obsCurrentState)
 	{
 	case 0:
-#ifdef TME_PROTOCOL_BUFFERS
 			content = getAll(in, (QStringList)observedAttribs.keys());
-#else
-			content = getAll(in, observerId, (QStringList)observedAttribs.keys());
-#endif
 
 		// serverSession->setState(observerId, 1);
 		// if (execModes == Quiet )
 		// qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
 		break;
 	case 1:
-#ifdef TME_PROTOCOL_BUFFERS
 			content = getChanges(in, (QStringList) observedAttribs.keys());
-#else
-			content = getChanges(in, observerId, (QStringList) observedAttribs.keys());
-#endif
 
 		// serverSession->setState(observerId, 0);
 		// if (execModes == Quiet )

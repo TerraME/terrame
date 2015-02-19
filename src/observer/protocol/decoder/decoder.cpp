@@ -5,10 +5,7 @@
 #include <QDebug>
 
 #include "blackBoard.h"
-
-#ifdef TME_PROTOCOL_BUFFERS
-	#include "protocol.pb.h"
-#endif
+#include "protocol.pb.h"
 
 using namespace TerraMEObserver;
 
@@ -43,16 +40,8 @@ void Decoder::setMapAttrbute(QHash<QString, Attributes*> *mapAttribs)
     mapAttributes = mapAttribs;
 }
 
-#ifdef TME_PROTOCOL_BUFFERS
-
 bool Decoder::decode(const QByteArray &state)
-{  
-#ifdef DEBUG_OBSERVER
-    // It was checked before the call
-    if (state.empty())
-        return false;
-#endif
-
+{
     ObserverDatagramPkg::SubjectAttribute subjDatagram;
     bool ret = subjDatagram.ParseFromArray(state.data(), state.size());
 
@@ -215,70 +204,6 @@ bool Decoder::decodeInternals(SubjectAttributes * /*subjAttr*/,
     return ret;
 }
 
-#else /// CODIGO ANTIGO DAQUI PRA BAIXO
-
-bool Decoder::decode(const QByteArray &protocol)
-{
-    QStringList tokens = QString(protocol).split(PROTOCOL_SEPARATOR,
-                                        QString::SkipEmptyParts);
-
-    if (tokens.isEmpty())
-        return false;
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << tokens;
-
-    // // parentID = tokens.at(0).toInt();
-    // parentSubjectType = (TypesOfSubjects) tokens.at(1).toInt();
-
-    // Cleans the set of nested subject
-    // int id = tokens.at(0).toInt();
-    // if (! cache->contains(id)) qDebug() << "subject removido";
-    // cache->value(id)->clearNestedSubjects();
-#endif
-
-    // Resets the counter of subjects changed
-    bb->resetCounterChangedSubjects();
-
-    SubjectAttributes *subjAttr = bb->getSubject(tokens.at(0).toInt());
-    if (subjAttr)
-    {
-        subjAttr->clearNestedSubjects();
-        subjAttr->setDirtyBit(false);
-    }
-
-    int idx = 0;
-    bool ret = interpret(tokens, idx);
-
-#ifdef DEBUG_OBSERVER
-    // qDebug() << tokens
-
-    // if (parentSubjectType == TObsAgent)
-    //    qDebug() << tokens.at(0);
-
-    qDebug() << "size: " << cache->size() << "\n";
-
-    foreach(const int &k, cache->keys())
-    {
-        qDebug() << "Id : " << k;
-        qDebug() << "attribName: " << cache->value(k)->getRawAttributes().keys();
-        qDebug() << "position: " << cache->value(k)->getCoordinates();
-
-        foreach(const RawAttribute *r, cache->value(k)->getRawAttributes())
-            qDebug() << "   AttrName: " << r->key << " AttrType: " << getDataName(r->type);
-        qDebug() << "";
-    }
-#endif
-
-    return ret;
-    
-    // qDebug() << "Deprecated, use: \n\t bool decode(const QByteArray &state) instead of";
-    // return false;
-}
-
-#endif
-
-
 bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID) 
 {
     bool ret = false;
@@ -345,7 +270,7 @@ bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID)
     return ret;
 }
 
-// transição 1-2: idenficação do objeto
+// transicao 1-2: idenficacao do objeto
 bool Decoder::consumeID(int &id, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)

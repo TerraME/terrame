@@ -48,7 +48,6 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     // legend->setItemMode(QwtLegend::ClickableItem);
     internalCurves = new QHash<QString, InternalCurve*>();
 
-#ifdef TME_BLACK_BOARD
     //hashAttributes = (QHash<QString, Attributes *> *) 
     //            &BlackBoard::getInstance().getAttributeHash(getSubjectId());
 
@@ -56,9 +55,6 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
 
     // This pointer will pointing to a attribute object
     xAxisValues = 0;
-#else
-    xAxisValues = new QVector<double>();
-#endif
     
     plotter = new ChartPlot(parent);
 	plotter->id = getId();
@@ -108,12 +104,8 @@ ObserverGraphic::~ObserverGraphic()
 
     delete plotter; plotter = 0;
 
-#ifdef TME_BLACK_BOARD
     if (observerType == TObsDynamicGraphic)
         delete xAxisValues;
-#else
-    delete xAxisValues;
-#endif
 
     //if (legend)
     //    delete legend;
@@ -124,10 +116,8 @@ void ObserverGraphic::setObserverType(TypesOfObservers type)
 {
     observerType = type;
 
-#ifdef TME_BLACK_BOARD
     if (observerType == TObsDynamicGraphic)
         xAxisValues = new QVector<double>();
-#endif
 }
 
 const TypesOfObservers ObserverGraphic::getType() const
@@ -142,33 +132,12 @@ void ObserverGraphic::save(std::string file, std::string extension)
 
 bool ObserverGraphic::draw(QDataStream &/*state*/)
 {
-#ifdef TME_STATISTIC
-    double t = Statistic::getInstance().endVolatileMicroTime();
-
-    QString name = QString("wait %1").arg(getId());
-	Statistic::getInstance().addElapsedTime(name, t);
-#endif
 
 #ifdef TME_BLACK_BOARD
 
-#ifdef TME_STATISTIC
-    t = Statistic::getInstance().startMicroTime();
-#endif
-
     draw();
 
-#ifdef TME_STATISTIC
-    name = QString("graphic Rendering %1").arg(getId());
-    t = Statistic::getInstance().endMicroTime() - t;
-    Statistic::getInstance().addElapsedTime(name, t);
-#endif
-
 #else // TME_BLACKBOARD
-
-#ifdef TME_STATISTIC
-    double decodeSum = 0.0;
-    int decodeCount = 0;
-#endif
 
     QString msg, key;
     state >> msg;
@@ -176,42 +145,19 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 
     QVector<double> *ord = 0, *abs = xAxisValues;
 
-#ifdef TME_STATISTIC 
-        // t = Statistic::getInstance().startMicroTime();
-        Statistic::getInstance().startVolatileMicroTime();
-#endif
-
     //QString subjectId = tokens.at(0);
     // subjectType = (TypesOfSubjects) tokens.at(1).toInt();
     int qtdParametros = tokens.at(2).toInt();
     //int numElems = tokens.at(3).toInt();
 
-#ifdef TME_STATISTIC 
-        // decodeSum += Statistic::getInstance().endMicroTime() - t;
-        decodeSum += Statistic::getInstance().endVolatileMicroTime();
-        decodeCount++;
-#endif
-
     int j = 4;
 
     for(int i = 0; i < qtdParametros; i++)
     {
-
-#ifdef TME_STATISTIC 
-        // t = Statistic::getInstance().startMicroTime();
-        Statistic::getInstance().startVolatileMicroTime();
-#endif
-
         key = tokens.at(j);
         j++;
         int typeOfData = tokens.at(j).toInt();
         j++;
-
-#ifdef TME_STATISTIC 
-        // decodeSum += Statistic::getInstance().endMicroTime() - t;
-        decodeSum += Statistic::getInstance().endVolatileMicroTime();
-        decodeCount++;
-#endif
 
         int idx = attribList.indexOf(key);
         // bool contains = itemList.contains(key);
@@ -236,20 +182,10 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
             case(TObsNumber):
                 if(contains)
                 {
-#ifdef TME_STATISTIC
-                    // t = Statistic::getInstance().startMicroTime();
-                    Statistic::getInstance().startVolatileMicroTime();
-#endif
                     if(internalCurves->contains(key))
                         internalCurves->value(key)->values->append( tokens.at(j).toDouble() );
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
-
-#ifdef TME_STATISTIC 
-                    // decodeSum += Statistic::getInstance().endMicroTime() - t;
-                    decodeSum += Statistic::getInstance().endVolatileMicroTime();
-                    decodeCount++;
-#endif
 
                     if (observerType == TObsDynamicGraphic)
                     {
@@ -276,12 +212,6 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 
                 if((subjectType == TObsAutomaton) || (subjectType == TObsAgent))
                 {
-
-#ifdef TME_STATISTIC
-                    // t = Statistic::getInstance().startMicroTime();
-                    Statistic::getInstance().startVolatileMicroTime();
-#endif
-
                     if (! states.contains(tokens.at(j)))
                         states.push_back(tokens.at(j));
 
@@ -289,12 +219,6 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                         internalCurves->value(key)->values->append( states.indexOf(tokens.at(j)) );
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
-
-#ifdef TME_STATISTIC
-                    // decodeSum += Statistic::getInstance().endMicroTime() - t;
-                    decodeSum += Statistic::getInstance().endVolatileMicroTime();
-                    decodeCount++;
-#endif
 
                     // Gráfico Dinâmico: Tempo vs Y
                     if (observerType == TObsDynamicGraphic)
@@ -325,10 +249,6 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
         }
         j++;
     }
-    
-#ifdef TME_STATISTIC
-    t = Statistic::getInstance().startMicroTime();
-#endif
 
     if (observerType == TObsGraphic)
     {
@@ -341,17 +261,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
         }
     }
     plotter->repaint();
-
-#ifdef TME_STATISTIC
-    name = QString("graphic Rendering %1").arg(getId());
-    t = Statistic::getInstance().endMicroTime() - t;
-    Statistic::getInstance().addElapsedTime(name, t);
-
-    name = QString("graphic Decoder %1").arg(getId());
-    if (decodeCount > 0)
-        Statistic::getInstance().addElapsedTime(name, decodeSum / decodeCount);
-#endif
-
+	
 #endif // TME_BLACKBOARD
 
     qApp->processEvents();
@@ -406,7 +316,6 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 
     int attrSize = attribList.size();
 
-#ifdef TME_BLACK_BOARD
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
     if (subjAttr) 
         subjAttr->setSubjectType(getSubjectType());
@@ -424,7 +333,6 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
     // Ignores the attribute of the x axis 
     if(observerType == TObsGraphic)
         xAxisValues = attrib->getNumericValues(); // last attribute is used in X axis
-#endif
     
     // Ignores the attribute of the x axis 
     if(observerType == TObsGraphic)
@@ -438,11 +346,9 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
         {
             internalCurves->insert(attribList.at(i), interCurve);
 
-#ifdef TME_BLACK_BOARD
             // resign the values vector a curve
             delete interCurve->values;
             interCurve->values = hashAttributes->value(attribList.at(i))->getNumericValues();
-#endif
             
             if(i < curveTitles.size())
                 interCurve->plotCurve->setTitle(curveTitles.at(i));

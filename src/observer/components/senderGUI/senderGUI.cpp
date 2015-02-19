@@ -44,7 +44,7 @@ void SenderGUI::setMessagesSent(int msgs)
 
 void SenderGUI::setStateSent(int states)
 {
-    ui->lblStatesSent->setText( tr("States sent: %1").arg(states));
+    ui->lblStatesSent->setText(tr("States sent: %1").arg(states));
 }
 
 void SenderGUI::setSpeed(const QString &speed)
@@ -60,7 +60,7 @@ void SenderGUI::appendMessage(const QString &message)
 {
     ui->logEdit->appendPlainText(tr("%1 %2")
         .arg(QDateTime::currentDateTime().toString("MM/dd/yyyy, hh:mm:ss:"))
-        .arg(message) );
+        .arg(message));
 }
 
 void SenderGUI::messageFailed(const QString &errorMsg)
@@ -71,14 +71,14 @@ void SenderGUI::messageFailed(const QString &errorMsg)
 	if (execModes != Quiet){
 		lua_getglobal(L, "customErrorMsg");
 		lua_pushstring(L,wng_msg.toLatin1().data());
-		lua_pushnumber(L,5);
-		lua_call(L,2,0);
+		lua_call(L,1,0);
 	}
 }
 
-void SenderGUI::statusMessages(int msgs)
+void SenderGUI::statusMessages(int msgs, int states)
 {
     setMessagesSent(msgs);
+	setStateSent(states);
 }
 
 void SenderGUI::statusStates(int states)

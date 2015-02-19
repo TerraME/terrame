@@ -31,13 +31,6 @@ using namespace TerraMEObserver;
 ObserverMap::ObserverMap(Subject *sub, QWidget *parent)	
     : ObserverInterf(sub), QDialog(parent)
 {
-#ifdef TME_STATISTIC
-    static bool showMsg = true;
-    if (showMsg)
-        qDebug() << "flag TME_STATISTIC enabled in the class ObserverMap";
-    showMsg = false;
-#endif
-
     observerType = TObsMap;
     subjectType = sub->getType(); // TO_DO: Changes it to Observer pattern
 
@@ -124,67 +117,17 @@ void ObserverMap::save(string f, string e)
 
 bool ObserverMap::draw(QDataStream & /*state*/)
 {
-#ifdef TME_STATISTIC 
-    double t = 0.0, mapSum = 0.0, decodeSum = 0.0;
-    int decodeCount = 0, mapCount = 0;
-    QString name;
-#endif
-
     bool decoded = false;
 
     treeLayers->blockSignals(true);
 
-#ifdef TME_BLACK_BOARD
-    // TO-DO: Impede que a mesma imagem seja redesenhada
+    // TODO: Impede que a mesma imagem seja redesenhada
     // if (state.device()->isOpen())
 
     // qDebug() << "BlackBoard::getInstance().canDraw(): " << BlackBoard::getInstance().canDraw();
 
     if (BlackBoard::getInstance().canDraw())
         decoded = painterWidget->draw();
-#else
-    QString msg;
-    state >> msg;
-
-    QList<Attributes *> listAttribs = mapAttributes->values();
-    Attributes * attrib = 0;
-
-    for (int i = 0; i < listAttribs.size(); i++)
-    {
-        attrib = listAttribs.at(i);
-        if (attrib->getType() == TObsCell)
-        {
-            attrib->clear();
-
-#ifdef TME_STATISTIC 
-            t = Statistic::getInstance().startMicroTime();
-
-        	decoded = protocolDecoder->decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
-
-            decodeSum += Statistic::getInstance().endMicroTime() - t;
-            decodeCount++;
-
-
-            // if (decoded)
-            // {
-                // t = Statistic::getInstance().startMicroTime();
-
-			    // // Captura o tempo de espera para os observadores que tambem sao threads
-			    // Statistic::getInstance().startVolatileMicroTime();			
-                // painterWidget->plotMap(attrib);
-
-                // mapSum += Statistic::getInstance().endMicroTime() - t;
-                // mapCount++;
-            // }
-#else
-            decoded = protocolDecoder->decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
-            if(decoded)
-                painterWidget->plotMap(attrib);
-#endif
-        }
-        qApp->processEvents();
-    }
-#endif
 
     // painterWidget->calculateResult();
     treeLayers->blockSignals(false);
@@ -214,15 +157,7 @@ bool ObserverMap::draw(QDataStream & /*state*/)
         builtLegend++;
         treeLayers->blockSignals(false);
     }
-
-//#ifdef TME_STATISTIC
-//    name = QString("map Rendering %1").arg(getId());
-//    Statistic::getInstance().addElapsedTime(name, ((mapCount > 0) ? mapSum / mapCount : 0)  );
-//   
-//    // Decodificação é feita no BB
-//    //name = QString("map Decoder %1").arg(getId());
-//    //Statistic::getInstance().addElapsedTime(name, ((decodeCount > 0) ? decodeSum / decodeCount : 0));
-//#endif
+	
     return decoded;
 }
 

@@ -71,7 +71,7 @@ public slots:
 
     void messageFailed(const QString &errorMsg);
 
-    void statusMessages(int msgs);
+    void statusMessages(int msgs, int states);
 
     void statusStates(int states);
 

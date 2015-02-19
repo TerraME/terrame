@@ -18,10 +18,8 @@
 	#include "statistic.h"
 #endif
 
-#ifdef TME_BLACK_BOARD
-	#include "blackBoard.h"
-	#include "subjectAttributes.h"
-#endif
+#include "blackBoard.h"
+#include "subjectAttributes.h"
 
 extern ExecutionModes execModes;
 
@@ -32,12 +30,6 @@ using namespace TerraMEObserver;
 ObserverUDPSender::ObserverUDPSender(Subject *subj, QObject *parent)
     : ObserverInterf(subj), QObject(parent)
 {
-#ifdef TME_STATISTIC
-    static bool showMsg = true;
-    if (showMsg)
-        qDebug() << "flag TME_STATISTIC enabled in the class ObserverUDPSender";
-    showMsg = false;
-#endif
     observerType = TObsUDPSender;
     subjectType = subj->getType(); // TO_DO: Changes it to Observer pattern
 
@@ -72,52 +64,9 @@ const TypesOfObservers ObserverUDPSender::getType() const
 
 bool ObserverUDPSender::draw(QDataStream &state)
 {
-//#ifdef TME_STATISTIC
-//	// Captura o tempo de espera para os observadores que tambem sao threads
-    //double t = Statistic::getInstance().endVolatileMicroTime();
-//	
-//	char pName[100];
-//    sprintf(pName, "%p", this );
-//    QString name = QString("wait %1").arg(getId());
-//	Statistic::getInstance().addElapsedTime(name, t);
-//#endif
-//
-//    if (failureToSend)
-//        return false;
-//
-//    QString msg;
-//    state >> msg;
-//
-//#ifndef DEBUG_OBSERVER
-//    dumpRetrievedState(msg, "out_protocol");
-//#endif
-//
-//    // TO-DO: Alterar a forma de transmiss„o de streams via rede
-//    if (! sendDatagram(msg))
-//    {
-//        datagramRatio *= 0.5;
-//        datagramSize = MINIMUM_DATAGRAM_SIZE * datagramRatio;
-//        QString str;
-//
-//        if (datagramSize < 32)
-//        {
-//            str = "Warning: The datagram's size is low that 32 bytes. "
-//                "The Udp Sender will stop to send datagrams.";
-//            senderGUI->appendMessage(str);
-//            failureToSend = true;
-//            return false;
-//        }
-//        str = QString("Warning: Reducing the datagram's size for %1 bytes.").arg(datagramSize);
-//        senderGUI->appendMessage(str);
-//
-//        if (! QUIET_MODE)
-//            qDebug("%s", qPrintable(str));
-//
-//    }
-
     QString stateAux;
     state >> stateAux;
-
+	
     if(!stateAux.isEmpty())
     {
         static bool created = false;
@@ -131,7 +80,7 @@ bool ObserverUDPSender::draw(QDataStream &state)
             connect(udpSocketTask, SIGNAL(messageSent(const QString &)), senderGUI, SLOT(appendMessage(const QString &)) );
                     // , Qt::DirectConnection);
             connect(udpSocketTask, SIGNAL(messageFailed(const QString &)), senderGUI, SLOT(messageFailed(const QString &)));
-            connect(udpSocketTask, SIGNAL(statusMessage(int, int)), senderGUI, SLOT(statusMessage(int, int)),
+            connect(udpSocketTask, SIGNAL(statusMessages(int, int)), senderGUI, SLOT(statusMessages(int, int)),
                     Qt::DirectConnection);
             connect(this, SIGNAL(addState(const QByteArray &)), udpSocketTask, SLOT(addState(const QByteArray &)),
                     Qt::DirectConnection);
@@ -166,20 +115,13 @@ void ObserverUDPSender::setAttributes(QStringList& attribs)
 {
     attribList = attribs;
 
-#ifdef TME_BLACK_BOARD
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
     if(subjAttr) 
         subjAttr->setSubjectType(getSubjectType());
-#endif
 }
 
 bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 {
-//#ifdef TME_STATISTIC
-//    // variaveis usadas no calculo de desempenho
-//    int datagramsCount = msgCount, compressionCount = 0, renderingCount = 0;
-//    double t = 0.0, compressionSum = 0.0, renderingSum = 0.0;
-//#endif
 //
 //    QByteArray data(msg.toLatin1().constData(), msg.size());
 //
@@ -200,47 +142,16 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //
 //        if (compressDatagram)
 //        {
-//#ifdef TME_STATISTIC 
-//            // t = Statistic::getInstance().startMicroTime();
-//            Statistic::getInstance().startVolatileMicroTime();
-//#endif
 //            out << qCompress( data.mid(pos, datagramSize), COMPRESS_RATIO);
-//
-//#ifdef TME_STATISTIC
-//            // compressionSum += (Statistic::getInstance().endMicroTime() - t);
-//            compressionSum += Statistic::getInstance().endVolatileMicroTime();
-//            compressionCount++;
-//#endif
 //        }
 //        else    
 //        {
-//#ifdef TME_STATISTIC 
-//            // t = Statistic::getInstance().startMicroTime();
-//            Statistic::getInstance().startVolatileMicroTime();
-//#endif
 //            out << data.mid(pos, datagramSize);
-//
-//#ifdef TME_STATISTIC
-//            // compressionSum += (Statistic::getInstance().endMicroTime() - t);
-//            compressionSum += Statistic::getInstance().endVolatileMicroTime();
-//            compressionCount++;
-//#endif
 //        }
 //
 //        for(int i = 0; i < hosts->size(); i++)
 //        {
-//
-//#ifdef TME_STATISTIC 
-//            // t = Statistic::getInstance().startMicroTime();
-//            Statistic::getInstance().startVolatileMicroTime();
-//#endif
-//            bytesWritten = udpSocket->writeDatagram(datagram, hosts->at(i), port);     
-//
-//#ifdef TME_STATISTIC
-//            // renderingSum += (Statistic::getInstance().endMicroTime() - t);
-//            renderingSum += Statistic::getInstance().endVolatileMicroTime();
-//            renderingCount++;
-//#endif
+//            bytesWritten = udpSocket->writeDatagram(datagram, hosts->at(i), port);
 //            udpSocket->flush();
 //            senderGUI->appendMessage( tr("Datagram sent for %1").arg(hosts->at(i).toString()) );
 //
@@ -295,19 +206,6 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 // 
 //    senderGUI->appendMessage(tr("States sent: %1.\n").arg(stateCount));
 //
-//#ifdef TME_STATISTIC 
-//    // Calcula a mÈdia de messagens e estados enviados
-//    datagramsCount = (msgCount - datagramsCount) / hosts->size();
-//    Statistic::getInstance().addOccurrence("Messages sent", datagramsCount);
-//    Statistic::getInstance().addOccurrence("States sent", stateCount);
-//    
-//    if (compressDatagram) 
-//        Statistic::getInstance().addElapsedTime("storage with Compress", compressionSum / compressionCount);
-//    else
-//        Statistic::getInstance().addElapsedTime("storage without Compress", compressionSum / compressionCount);
-//
-//    Statistic::getInstance().addElapsedTime("udp Rendering", renderingSum / renderingCount);
-//#endif
     
     return true;
 }

@@ -39,8 +39,6 @@ const TypesOfObservers ObserverTextScreen::getType() const
     return observerType;
 }
 
-#ifdef TME_BLACK_BOARD
-
 bool ObserverTextScreen::draw(QDataStream & /*state*/)
 {
     draw();
@@ -54,70 +52,11 @@ bool ObserverTextScreen::draw(QDataStream & /*state*/)
     return ret;
 }
 
-#else // TME_BLACKBOARD
-
-bool ObserverTextScreen::draw(QDataStream &state)
-{
-    QString msg;
-    state >> msg;
-    QStringList tokens = msg.split(PROTOCOL_SEPARATOR);
-
-    //double num;
-    //QString text;
-    //bool b;
-
-    //QString subjectId = tokens.at(0);
-    //int subType = tokens.at(1).toInt();
-    int qtdParametros = tokens.at(2).toInt();
-    //int nroElems = tokens.at(3).toInt();
-    int j = 4;
-
-    for (int i=0; i < qtdParametros; i++)
-    {
-        QString key = tokens.at(j);
-        j++;
-        int typeOfData = tokens.at(j).toInt();
-        j++;
-
-        bool contains = attribList.contains(key);
-
-        switch (typeOfData)
-        {
-            case (TObsBool)		:
-                if (contains)
-                    valuesList.replace(attribList.indexOf(key),
-                                       (tokens.at(j).toInt() ? "true" : "false"));
-                break;
-
-            case (TObsDateTime)	:
-                //break;
-
-            case (TObsNumber)		:
-                if (contains)
-                    valuesList.replace(attribList.indexOf(key), tokens.at(j));
-                break;
-
-            default							:
-                if (contains)
-                    valuesList.replace(attribList.indexOf(key), tokens.at(j));
-                break;
-        }
-        j++;
-    }
-
-    qApp->processEvents();
-    return write();
-}
-
-#endif // TME_PROTOCOL
-
 void ObserverTextScreen::setAttributes(QStringList &attribs)
 {
-#ifdef TME_BLACK_BOARD
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
     if (subjAttr) 
         subjAttr->setSubjectType(getSubjectType());
-#endif
 
     attribList = attribs;
     for (int i = 0; i < attribList.size(); i++)
@@ -132,7 +71,7 @@ bool ObserverTextScreen::headerDefined()
 
 bool ObserverTextScreen::write()
 {
-    // insere o cabeçalho do arquivo
+    // Write the header in the file
     if (! header)
     {
         QString headers;

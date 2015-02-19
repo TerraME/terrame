@@ -64,10 +64,6 @@ ObserverTCPSender::~ObserverTCPSender()
 
 bool ObserverTCPSender::draw(QDataStream& state)
 {
-#ifdef TME_STATISTIC
-    Statistic::getInstance().addOccurrence("z_bytes tcp map", state.device()->size());
-#endif
-
     bool drew = false;
 
     QByteArray stateAux;
@@ -113,11 +109,6 @@ bool ObserverTCPSender::draw(QDataStream& state)
             socket = true;
         }
 
-#ifdef TME_STATISTIC
-        // Calcula o tempo de espera para a tarefa começar a executar
-        tcpSocketTask->waitTime = Statistic::getInstance().startMicroTime();
-#endif
-
         BagOfTasks::TaskManager::getInstance().add(tcpSocketTask);
         emit addState(stateAux);
         qApp->processEvents();
@@ -128,45 +119,7 @@ bool ObserverTCPSender::draw(QDataStream& state)
     {
         senderGUI->appendMessage(tr("The retrieved state is empty. There is nothing to do."));
     }
-
-//#ifdef TME_STATISTIC
-//    // Captura o tempo de espera para os observadores que tambem sao threads
-//    double t = Statistic::getInstance().endVolatileMicroTime();
-//
-//    QString name = QString("wait %1").arg(getId());
-//    Statistic::getInstance().addElapsedTime(name, t);
-//#endif
-//
-//    QString msg;
-//    state >> msg;
-//
-//#ifdef DEBUG_OBSERVER
-//    dumpRetrievedState(msg);
-//#endif
-//
-//    // TO-DO: Alterar a forma de transmissão de streams via rede
-//    if (! send(msg))
-//    {
-//        //        datagramRatio *= 0.5;
-//        //        datagramSize = MINIMUM_DATAGRAM_SIZE * datagramRatio;
-//        //        QString str;
-//
-//        //        if (datagramSize < 32)
-//        //        {
-//        //            str = "Warning: The datagram's size is low that 32 bytes. "
-//        //                "The Udp Sender will stop to send datagrams.";
-//        //            //udpGUI->appendMessage(str);
-//        //            failureToSend = true;
-//        //            return false;
-//        //        }
-//        //        str = QString("Warning: Reducing the datagram's size for %1 bytes.").arg(datagramSize);
-//        //        // udpGUI->appendMessage(str);
-//
-//        //        if (! QUIET_MODE)
-//        //            qDebug("%s", qPrintable(str));
-//
-//    }
-
+	
     qApp->processEvents();
     return drew;
 }

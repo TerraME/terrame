@@ -363,13 +363,8 @@ void PainterWidget::setExistAgent(bool exist)
     existAgent = exist;
 }
 
-//#include "taskManager.h"
 bool PainterWidget::draw()
 {
-#ifdef TME_STATISTIC
-    visualMapping->waitTime = Statistic::getInstance().startMicroTime();
-#endif
-
     BagOfTasks::TaskManager::getInstance().add(visualMapping);
     return true;
 }

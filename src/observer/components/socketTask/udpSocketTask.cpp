@@ -48,24 +48,10 @@ bool UdpSocketTask::execute()
         return false;
     executing = true;
 
-
-#ifdef TME_STATISTIC
-    // char block[30];
-    // sprintf(block, "%p", this);
-    double t3 = 0, tt = 0, t = 0;
-    // bool erase = true;
-
-    // QString name = QString("wait_task VisualMapping");
-    QString name = QString("zz__wait_task UdpSocketTask %1").arg(getId());
-    t = Statistic::getInstance().startMicroTime();
-    waitTime = Statistic::getInstance().endMicroTime() - waitTime;
-    Statistic::getInstance().addElapsedTime(name, waitTime);
-#endif
-
     bool isEmpty = states.isEmpty();
     finished = false;
 
-    while (! finished)  // Tarefa fica ativa enquanto não finaliza a simulação. Talvez seja uma boa idéia!!
+    while (! finished)  // Tarefa fica ativa enquanto nao finaliza a simulacao. Talvez seja uma boa ideia!!
     {
         while (! isEmpty)
         {   
@@ -79,13 +65,6 @@ bool UdpSocketTask::execute()
     }
     
     executing = false;
-    
-#ifdef TME_STATISTIC
-    // name = QString("map Rendering %1").arg(block);
-    name = QString("map TcpSocketTask task %1").arg(getId());
-    t = Statistic::getInstance().startMicroTime() - t;
-    Statistic::getInstance().addElapsedTime(name, t);
-#endif    
     
     return true;
 }
@@ -163,7 +142,7 @@ bool UdpSocketTask::send(const QByteArray &data)
 
     stateCount++;
     
-    emit statusMessage(msgCount, stateCount);
+    emit statusMessages(msgCount, stateCount);
     emit messageSent( tr("States sent: %1.").arg(stateCount));
 
     return false;

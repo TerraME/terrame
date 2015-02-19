@@ -69,7 +69,7 @@ public:
 signals:
     void messageSent(const QString &);
     void messageFailed(const QString &);
-    void statusMessage(int msg, int states);
+    void statusMessages(int msg, int states);
 
 public slots:
     void addState(const QByteArray &);

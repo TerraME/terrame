@@ -34,13 +34,6 @@ using namespace TerraMEObserver;
 AgentObserverMap::AgentObserverMap(Subject * subj, QWidget *parent) 
     : ObserverMap(subj, parent)
 {
-#ifdef TME_STATISTIC
-    static bool showMsg = true;
-    if (showMsg)
-        qDebug() << "flag TME_STATISTIC enabled in the class AgentObserverMap";
-    showMsg = false;
-#endif
-
     subjectAttributes.clear();
     cleanImage = false;
 }
@@ -90,10 +83,6 @@ bool AgentObserverMap::draw(QDataStream & state)
 	
 	decoded = BlackBoard::getInstance().canDraw();
 
-    // if (decoded)
-    //    drw = getPainterWidget()->draw();
-   
-    // return drw && ObserverMap::draw(state);
     return decoded && ObserverMap::draw(state);
 }
 
@@ -133,12 +122,10 @@ bool AgentObserverMap::draw(QDataStream & state)
         //// attribListAux.push_back("@getLuaAgentState");
         //attribListAux << subjectAttributes;        
 
-		//@RAIAN: Solucao provisoria
 #ifndef TME_BLACK_BOARD
 		if(subj->getType() == TObsCell)
 			subjectAttributes.push_back("@getNeighborhoodState");
 #endif
-		//@RAIAN: FIM
 		
 //#ifdef TME_BLACK_BOARD
 //        QDataStream& state = BlackBoard::getInstance().getState(subj, getId(), subjectAttributes);
