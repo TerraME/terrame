@@ -68,7 +68,7 @@ void VisualArrangement::buildLuaCode()
 {
 	if(file == "" or myarrangement->position.size() == 0) return;
 
-	ofstream f(file);
+	ofstream f(file.c_str());
 
 	f << "return {" << endl;
 

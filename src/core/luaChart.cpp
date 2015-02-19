@@ -1,5 +1,5 @@
 #include "luaChart.h"
-#include "ObserverGraphic.h"
+#include "observerGraphic.h"
 #include "luna.h"
 #include "terrameGlobals.h"
 

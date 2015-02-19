@@ -28,7 +28,7 @@ of this library and its documentation.
 #if !defined(LUACHART_H)
 #define LUACHART_H
 
-#include "ObserverGraphic.h"
+#include "observerGraphic.h"
 #include "reference.h"
 #include "luna.h"
 
