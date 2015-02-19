@@ -1,5 +1,5 @@
 #include "luaMap.h"
-#include "ObserverMap.h"
+#include "observerMap.h"
 #include "luna.h"
 #include "terrameGlobals.h"
 

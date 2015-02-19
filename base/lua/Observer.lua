@@ -25,7 +25,7 @@
 --#########################################################################################
 
 -- Observer Types
-TME_OBSERVERS = {
+local TME_OBSERVERS = {
 	TEXTSCREEN         = 1,
 	LOGFILE            = 2,
 	TABLE              = 3,
@@ -42,7 +42,7 @@ TME_OBSERVERS = {
 	TCPSENDER          = 13
 }
 
-TME_OBSERVERS_USER = {
+local TME_OBSERVERS_USER = {
 	["textscreen"]   = TME_OBSERVERS.TEXTSCREEN,
 	["logfile"]      = TME_OBSERVERS.LOGFILE,
 	["table"]        = TME_OBSERVERS.TABLE,
@@ -58,7 +58,7 @@ TME_OBSERVERS_USER = {
 }
 
 -- Subject Types
-TME_TYPES = {
+local TME_TYPES = {
 	CELL            = 1,
 	CELLSPACE       = 2,
 	NEIGHBORHOOD    = 3,
@@ -75,7 +75,7 @@ TME_TYPES = {
 	-- FLOWCONDITION    -- it isn't a Subject
 }
 
-TME_TYPES_USER = {
+local TME_TYPES_USER = {
 	["Cell"]            = TME_TYPES.CELL,
 	["CellularSpace"]   = TME_TYPES.CELLSPACE,
 	["Neighborhood"]    = TME_TYPES.NEIGHBORHOOD,

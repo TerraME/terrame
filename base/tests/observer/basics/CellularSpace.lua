@@ -33,6 +33,7 @@ return{
 		    cell.value = math.random()
 		end)
 
+--[[
 		local m = Map{
 		    subject = cs,
 		    select = "value",
@@ -43,7 +44,7 @@ return{
 		}
 
 		unitTest:assert_type(m, "Map")
-
+--]]
 		-- #308
 		--unitTest:assert_snapshot(m, "map_slices.bmp")
 

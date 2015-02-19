@@ -28,7 +28,7 @@
 -- Colors --------------------------------------------------------------------------
 
 -- Based on color table at http://gucky.uni-muenster.de/cgi-bin/rgbtab-en
-TME_LEGEND_COLOR = {
+local TME_LEGEND_COLOR = {
 	BLACK           = {  0,   0,   0},
 	WHITE           = {255, 255, 255},	
 	LIGHTRED        = {255, 102, 102},
@@ -63,7 +63,7 @@ TME_LEGEND_COLOR = {
 	DARKPURPLE      = {085, 026, 139}
 }
 
-TME_LEGEND_COLOR_USER = {
+local TME_LEGEND_COLOR_USER = {
 	["black"]           = TME_LEGEND_COLOR.BLACK,
 	["white"]           = TME_LEGEND_COLOR.WHITE,	
 	["lightRed"]        = TME_LEGEND_COLOR.LIGHTRED,
@@ -99,14 +99,14 @@ TME_LEGEND_COLOR_USER = {
 }
 
 -- Data Types --------------------------------------------------------------------------
-TME_LEGEND_TYPE = {
+local TME_LEGEND_TYPE = {
 	BOOL     = 0,
 	NUMBER   = 1,
 	DATETIME = 2,
 	TEXT     = 3
 }
 
-TME_LEGEND_TYPE_USER = {
+local TME_LEGEND_TYPE_USER = {
 	["bool"]     = TME_LEGEND_TYPE.BOOL,
 	["number"]   = TME_LEGEND_TYPE.NUMBER,
 	["datetime"] = TME_LEGEND_TYPE.DATETIME,
@@ -114,14 +114,14 @@ TME_LEGEND_TYPE_USER = {
 }
 
 -- Groupping Types --------------------------------------------------------------------
-TME_LEGEND_GROUPING = {
+local TME_LEGEND_GROUPING = {
 	EQUALSTEPS   = 0,
 	QUANTIL      = 1,
 	STDDEVIATION = 2,
 	UNIQUEVALUE  = 3
 }
 
-TME_LEGEND_GROUPING_USER = {
+local TME_LEGEND_GROUPING_USER = {
 	["equalsteps"]   = TME_LEGEND_GROUPING.EQUALSTEPS,
 	["quantil"]      = TME_LEGEND_GROUPING.QUANTIL,
 	["stddeviation"] = TME_LEGEND_GROUPING.STDDEVIATION,
@@ -129,14 +129,14 @@ TME_LEGEND_GROUPING_USER = {
 }
 
 -- Standard Deviation Types -----------------------------------------------------------
-TME_LEGEND_STDDEVIATION = {
+local TME_LEGEND_STDDEVIATION = {
 	NONE    = -1,
 	FULL    =  0,
 	HALF    =  1,
 	QUARTER =  2
 }
 
-TME_LEGEND_STDDEVIATION_USER = {
+local TME_LEGEND_STDDEVIATION_USER = {
 	["none"]    = TME_LEGEND_STDDEVIATION.NONE,
 	["full"]    = TME_LEGEND_STDDEVIATION.FULL,
 	["half"]    = TME_LEGEND_STDDEVIATION.HALF,
@@ -161,7 +161,7 @@ TME_LEGEND_STDDEVIATION_USER = {
 
 -- Curve style -----------------------------------------------------------
 -- Based on Qwt library (see QwtPlotCurve::CurveStyle)
-TME_LEGEND_CURVE_STYLE = {
+local TME_LEGEND_CURVE_STYLE = {
 	NOCURVE 	= -1,
 	LINES		= 0,
 	STICKS		= 1,
@@ -169,7 +169,7 @@ TME_LEGEND_CURVE_STYLE = {
 	DOTS		= 3
 }
 
-TME_LEGEND_CURVE_STYLE_USER = {
+local TME_LEGEND_CURVE_STYLE_USER = {
 	["none"] 		= TME_LEGEND_CURVE_STYLE.NOCURVE,
 	["lines"]		= TME_LEGEND_CURVE_STYLE.LINES,
 	["sticks"]	= TME_LEGEND_CURVE_STYLE.STICKS,
@@ -179,7 +179,7 @@ TME_LEGEND_CURVE_STYLE_USER = {
 
 -- Curve symbol -----------------------------------------------------------
 -- Based on Qwt library (see QwtSymbol::Style)
-TME_LEGEND_CURVE_SYMBOL = {
+local TME_LEGEND_CURVE_SYMBOL = {
 	NOSYMBOL    = -1,
 	ELLIPSE     =  0,
 	RECT        =  1,
@@ -198,7 +198,7 @@ TME_LEGEND_CURVE_SYMBOL = {
 	HEXAGON     = 14 
 }
 
-TME_LEGEND_CURVE_SYMBOL_USER = {
+local TME_LEGEND_CURVE_SYMBOL_USER = {
 	["none"] 		= TME_LEGEND_CURVE_SYMBOL.NOSYMBOL,
 	["ellipse"]	= TME_LEGEND_CURVE_SYMBOL.ELLIPSE,
 	["rect"]		= TME_LEGEND_CURVE_SYMBOL.RECT,

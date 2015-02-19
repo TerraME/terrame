@@ -71,6 +71,36 @@ function include(scriptfile)
 	return setmetatable(env, nil)
 end
 
+-- from http://metalua.luaforge.net/src/lib/strict.lua.html
+local function checkNilVariables()
+	local mt = getmetatable(_G)
+	if mt == nil then
+		mt = {}
+		setmetatable(_G, mt)
+	end
+
+	local __STRICT = true
+	mt.__declared = {}
+
+	mt.__newindex = function(t, n, v)
+		if __STRICT and not mt.__declared[n] then
+			local w = debug.getinfo(2, "S").what
+			if w ~= "main" and w ~= "C" then
+				customWarning("Assign to undeclared variable '"..n.."'.")
+			end
+			mt.__declared[n] = true
+		end
+		rawset(t, n, v)
+	end
+
+	mt.__index = function(t, n)
+		if not mt.__declared[n] and debug.getinfo(2, "S").what ~= "C" then
+			customWarning("Variable '"..n.."' is not declared.")
+		end
+		return rawget(t, n)
+	end
+end
+
 local function sqlFiles(package)
 	local s = sessionInfo().separator
 	local files = {}
@@ -139,7 +169,11 @@ local function findModels(package)
 
 	forEachElement(files, function(_, fname)
 		found = false
-		local a = include(srcpath..fname)
+		xpcall(function() a = include(srcpath..fname) end, function(err)
+			printError("Error: Could not load "..fname)
+			os.exit()
+		end)
+
 		if found then
 			forEachElement(a, function(idx, value)
 				if value == "___123" then
@@ -313,14 +347,14 @@ local function countTable(mtable)
 	local result = {}
 
 	forEachElement(mtable, function(idx, value, mtype)
-		if type__(value) == "table" then
+		if mtype == "function" or mtype == "Model" then
+			result[idx] = 0
+		elseif type__(value) == "table" then
 			forEachElement(value, function(midx, mvalue, mmtype)
-				if mmtype == "function" then
+				if mmtype == "function" or mmtype == "Model" then
 					result[midx] = 0
 				end
 			end)
-		elseif mtype == "function" then
-			result[idx] = 0
 		end
 	end)
 	return result
@@ -331,7 +365,7 @@ local function buildCountTable(package)
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s..package
 
-	load_file = baseDir..s.."load.lua"
+	local load_file = baseDir..s.."load.lua"
 	local load_sequence
 
 	if isFile(load_file) then
@@ -1449,8 +1483,7 @@ end
 function traceback()
 	local level = 1
 
-	local str = ""
-	str = str.."Stack traceback:\n"
+	local str = "Stack traceback:\n"
 
 	local last_function = ""
 	local found_function = false
@@ -1506,6 +1539,9 @@ function traceback()
 		end
 		level = level + 1
 		info = debug.getinfo(level)
+	end
+	if str == "Stack traceback:\n" then
+		return ""
 	end
 	return string.sub(str, 0, string.len(str) - 1)
 end
@@ -1726,6 +1762,10 @@ function execute(arguments) -- arguments is a vector of strings
 				-- #79
 			end
 		else
+			if info_.mode ~= "quiet" then
+				checkNilVariables()
+			end
+
 			if package ~= "base" then
 				require("base")
 			end

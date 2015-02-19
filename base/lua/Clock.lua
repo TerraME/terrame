@@ -33,7 +33,7 @@ Clock = function(data)
 
 	local observerAttrs = {}
 	local observerParams = {"", ""}
-	local observerType = TME_OBSERVERS.SCHEDULER
+	local observerType = 8
 
 	local id
 	if data.subject.cObj_ then

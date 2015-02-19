@@ -64,7 +64,6 @@ local colors = {
 
 -- approximate equivalent names in ISCC-NBS system
 -- see http://en.wikipedia.org/wiki/ISCC-NBS_system
-
 local brewerMatchNames = {
 	BuGn = "BuGn",
 	BlueishGreens = "BuGn",
@@ -1644,6 +1643,7 @@ function Map(data)
 			end			
 
 			mandatoryTableArgument(data, "colors", "table")
+			data.select = {"background_"}
 			verify(#data.colors == 1, "Strategy 'background' requires only one color, got "..#data.colors..".")
 
 			forEachCell(data.subject, function(cell)
@@ -1684,7 +1684,7 @@ function Map(data)
 		end
 	end
 
-	local observerType = TME_OBSERVERS.MAP
+	local observerType = 6
 	local tbDimensions = {data.subject.maxCol - data.subject.minCol + 1, data.subject.maxRow - data.subject.minRow + 1}
 
 	local observerParams = {}

@@ -141,9 +141,9 @@ function Random(data)
 		Random_.seed = data.seed
 		data.seed = nil
 	elseif not Random_.cObj_ then
-		local sd = os.time()
-		Random_.seed = sd
-		Random_.cObj_ = RandomUtil(sd)
+		data.seed = os.time()
+		Random_.seed = data.seed
+		Random_.cObj_ = RandomUtil(data.seed)
 	end
 
 	setmetatable(data, metaTableRandom_)

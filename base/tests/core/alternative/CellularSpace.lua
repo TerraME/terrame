@@ -52,6 +52,13 @@ return{
 	CellularSpace = function(unitTest)
 		local error_func = function()
 			local cs = CellularSpace{
+				xdm = 0
+			}
+		end
+		unitTest:assert_error(error_func, "Not enough information to build the CellularSpace.")
+
+		local error_func = function()
+			local cs = CellularSpace{
 				xdim = 0,
 				ydim = 30
 			}

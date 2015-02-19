@@ -25,11 +25,11 @@
 -------------------------------------------------------------------------------------------
 
 local Tube = Model{
-	simulationSteps = choice{10, 20, 30},
-	subwater           = choice{1, 2, 4, 5, default = 4},
+	simulationSteps = Choice{10, 20, 30},
+	subwater        = Choice{1, 2, 4, 5, default = 4},
 	initialWater    = 200,
 	flow            = 20,
-	observingStep   = choice{min = 0, max = 1, step = 0.1, default = 1},
+	observingStep   = Choice{min = 0, max = 1, step = 0.1, default = 1},
 	checkZero       = false,
 	filter          = mandatory("function"),
 	block = {
@@ -37,8 +37,8 @@ local Tube = Model{
 		xmax = math.huge,
 		ymin = 0,
 		ymax = math.huge,
-		level = choice{1, 2, 3},
-		sleep = choice{min = 1, max = 2, step = 0.5, default = 2}
+		level = Choice{1, 2, 3},
+		sleep = Choice{min = 1, max = 2, step = 0.5, default = 2}
 	},
 	init = function(model)
 		model.water = model.initialWater
@@ -56,7 +56,9 @@ local Tube = Model{
 
 return{
 	Model = function(unitTest)
+		unitTest:assert_type(Tube, "Model")
 		local t = Tube{filter = function() end}
+		unitTest:assert_type(t, "Tube")
 
 		unitTest:assert_equal(t.simulationSteps, 10)
 		unitTest:assert_equal(t.observingStep, 1)
@@ -65,12 +67,15 @@ return{
 		unitTest:assert_equal(t.block.xmin, 0)
 		unitTest:assert_equal(t.block.level, 1)
 		unitTest:assert_type(t.filter, "function")
+		unitTest:assert(t.seed >= 0)
 
 		t = Tube{
 			simulationSteps = 20,
 			observingStep = 0.7,
 			block = {xmax = 10},
 			checkZero = true,
+			finalTime = 5,
+			seed = 12345,
 			filter = function() end
 		}
 
@@ -80,38 +85,18 @@ return{
 		unitTest:assert_equal(t.block.level, 1)
 		unitTest:assert_equal(t.block.sleep, 2)
 		unitTest:assert_equal(t.observingStep, 0.7)
+		unitTest:assert_equal(t.finalTime, 5)
+		unitTest:assert_equal(t.seed, 12345)
 		unitTest:assert(t.checkZero)
 
 		t = Tube()
 
 		unitTest:assert_type(t, "table")
-		unitTest:assert_type(t.simulationSteps, "choice")
+		unitTest:assert_type(t.simulationSteps, "Choice")
 		unitTest:assert_type(t.filter, "mandatory")
 	end,
 	check = function(unitTest)
 		unitTest:assert(true)
-	end,
-	choice = function(unitTest)
-		local c = choice{1, 2, 3}
-
-		unitTest:assert_type(c, "choice")
-		unitTest:assert_equal(#c.values, 3)
-
-		c = choice{min = 2, max = 3, step = 0.1}
-		unitTest:assert_type(c, "choice")
-		unitTest:assert_equal(c.min, 2)
-		unitTest:assert_equal(c.max, 3)
-		unitTest:assert_equal(c.default, 2)
-		unitTest:assert_equal(c.step, 0.1)
-
-		c = choice{min = 5, default = 7}
-		unitTest:assert_type(c, "choice")
-		unitTest:assert_equal(c.min, 5)
-		unitTest:assert_equal(c.default, 7)
-
-		c = choice{1, 2, 3, 4, default = 3}
-		unitTest:assert_equal(#c.values, 4)
-		unitTest:assert_equal(c.default, 3)
 	end,
 	mandatory = function(unitTest)
 		local c = mandatory("number")

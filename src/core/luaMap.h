@@ -28,7 +28,7 @@ of this library and its documentation.
 #if !defined(LUAMAP_H)
 #define LUAMAP_H
 
-#include "ObserverMap.h"
+#include "observerMap.h"
 #include "reference.h"
 #include "luna.h"
 

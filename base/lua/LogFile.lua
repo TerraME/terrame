@@ -114,7 +114,7 @@ LogFile = function(data)
 
 	checkUnnecessaryArguments(data, {"subject", "select", "file", "separator"})
 
-	local observerType = TME_OBSERVERS.LOGFILE
+	local observerType = 2
 	local observerParams = {}
 	local subject = data.subject
 	local id

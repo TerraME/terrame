@@ -32,21 +32,47 @@ cmake_minimum_required(VERSION 3.0)
 
 find_library(QWT_LIBRARY
    NAMES qwt qwt-qt5
-   PATHS /usr/lib /usr/local/lib /opt/lib /opt/local/lib ${DEPS}/qwt/lib /usr/local/qwt-6.1.1/lib
+   PATHS /usr/lib 
+	 /usr/local/lib 
+	 /opt/lib 
+	 /opt/local/lib 
+	 ${DEPS}/qwt/lib 
+	 /usr/local/qwt-6.1.1/lib 
+	 /usr/local/qwt-6.1.2/lib 	 
 )
 
 # Export include and library path for linking with other libraries
 if(QWTQT5_LIBRARY)
 	# Find path - tries to find *.h in paths hard-coded by the script
 	find_path(QWT_INCLUDE_DIR qwt.h
-		HINTS /usr/local/qwt-6.1.1/lib/qwt.framework/Versions/6/Headers/ /usr/include/qwt-qt4 ${DEPS}/qwt/src /usr/local/qwt-6.1.1/lib
+		HINTS /usr/local/qwt-6.1.1/lib/qwt.framework/Versions/6/Headers/ 
+		      /usr/local/qwt-6.1.2/lib/qwt.framework/Versions/6/Headers/ 
+		      ${DEPS}/qwt/src 
+		      /usr/local/qwt-6.1.1/lib 
+		      /usr/local/qwt-6.1.2/lib 
+		      /usr/local/qwt-6.1.1/include
+		      /usr/local/qwt-6.1.2/include
 		PATH_SUFFIXES Frameworks
 		NO_DEFAULT_PATH
 	)
 else(QWTQT5_LIBRARY)
 	# Find path - tries to find *.h in paths hard-coded by the script
 	find_path(QWT_INCLUDE_DIR qwt.h
-	HINTS  /usr/local/qwt-6.1.1/lib/qwt.framework/Versions/6/Headers/ /usr/include/qwt-qt4 /opt/include /opt/include/qwt /opt/local/include /opt/local/include/qwt /usr/include /usr/include/qwt /usr/local/include /usr/local/include/qwt ${DEPS}/qwt/src /usr/local/qwt-6.1.1/lib
+	HINTS   /usr/local/qwt-6.1.1/lib/qwt.framework/Versions/6/Headers/ 
+		/usr/local/qwt-6.1.2/lib/qwt.framework/Versions/6/Headers/ 
+		/opt/include 
+		/opt/include/qwt 
+		/opt/local/include 
+		/opt/local/include/qwt 
+		/usr/include 
+		/usr/include/qwt 
+		/usr/local/include 
+		/usr/local/include/qwt 
+		${DEPS}/qwt/src 
+		/usr/local/qwt-6.1.1/lib 
+		/usr/local/qwt-6.1.2/lib 
+		/usr/local/qwt-6.1.1/include
+		/usr/local/qwt-6.1.2/include
 	)
 endif(QWTQT5_LIBRARY)
 

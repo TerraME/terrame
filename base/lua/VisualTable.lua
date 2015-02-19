@@ -109,7 +109,7 @@ VisualTable = function(data)
 
 	checkUnnecessaryArguments(data, {"subject", "select"})
 
-	local observerType = TME_OBSERVERS.TABLE
+	local observerType = 3
 	local observerParams = {}
 	local id
 	local subject = data.subject

@@ -269,9 +269,6 @@ return{
 			return false
 		end)
 		unitTest:assert_equal(cont, 1)
-
-
-
 	end,
 	getExtension = function(unitTest)
 		unitTest:assert_equal(getExtension("file.txt"), "txt")

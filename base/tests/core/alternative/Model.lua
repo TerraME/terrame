@@ -25,6 +25,41 @@
 
 return{
 	Model = function(unitTest)
+		local error_func = function()
+			local Tube = Model{finalTime = "2"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "2"))
+
+		local error_func = function()
+			local Tube = Model{finalTime = mandatory("table")}
+		end
+		unitTest:assert_error(error_func, "finalTime can only be mandatory('number'), got mandatory('table').")
+
+		local error_func = function()
+			local Tube = Model{finalTime = Choice{"1", "2"}}
+		end
+		unitTest:assert_error(error_func, "finalTime can only be a Choice with 'number' values, got 'string'.")
+
+		local error_func = function()
+			local Tube = Model{seed = "2"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("seed", "number", "2"))
+
+		local error_func = function()
+			local Tube = Model{seed = -2}
+		end
+		unitTest:assert_error(error_func, "Argument 'seed' should be positive, got -2.")
+
+		local error_func = function()
+			local Tube = Model{seed = mandatory("table")}
+		end
+		unitTest:assert_error(error_func, "seed can only be mandatory('number'), got mandatory('table').")
+
+		local error_func = function()
+			local Tube = Model{seed = Choice{"1", "2"}}
+		end
+		unitTest:assert_error(error_func, "seed can only be a Choice with 'number' values, got 'string'.")
+	
 		local Tube = Model{
 			init = function(model) end,
 		}
@@ -45,6 +80,21 @@ return{
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "The object has two running objects: 't2' (Timer) and 't' (Timer).")
+
+		error_func = function()
+			local m = Tube{finalTime = "2"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "2"))
+
+		error_func = function()
+			local m = Tube{seed = "2"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("seed", "number", "2"))
+
+		error_func = function()
+			local m = Tube{seed = -2}
+		end
+		unitTest:assert_error(error_func, "Argument 'seed' should be positive, got -2.")
 
 		Tube = Model{
 			init = function(model)
@@ -72,9 +122,9 @@ return{
 		unitTest:assert_error(error_func, "The object has two running objects: 't' (Environment) and 'e' (Timer).")
 
 		local Tube = Model{
-			simulationSteps = choice{10, 20, 30},
-			msleep = choice{min = 1, max = 2, step = 0.5, default = 2},
-			mvalue = choice{min = 5},
+			simulationSteps = Choice{10, 20, 30},
+			msleep = Choice{min = 1, max = 2, step = 0.5, default = 2},
+			mvalue = Choice{min = 5},
 			initialWater    = 200,
 			flow            = 20,
 			observingStep   = 1,
@@ -84,8 +134,8 @@ return{
 				xmax = math.huge,
 				ymin = 0,
 				ymax = math.huge,
-				level = choice{1, 2, 3},
-				sleep = choice{min = 1, max = 2, step = 0.5, default = 2}
+				level = Choice{1, 2, 3},
+				sleep = Choice{min = 1, max = 2, step = 0.5, default = 2}
 			},
 			init = function(model) model.timer = Timer{} end,
 			check = function(model)
@@ -123,7 +173,6 @@ return{
 			local m = Tube{block = {level = 40}}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("block.level", "one of {1, 2, 3}", 40))
-
 
 		error_func = function()
 			local m = Tube{block = {mblock = 40}}
@@ -164,117 +213,9 @@ return{
 			local m = Tube{}
 		end
 		unitTest:assert_error(error_func, "Function 'init' was not implemented by the Model.")
-	end,
-	choice = function(unitTest)
-		local error_func = function()
-			local c = choice()
-		end
-		unitTest:assert_error(error_func, tableArgumentMsg())
-
-		error_func = function()
-			local c = choice{}
-		end
-		unitTest:assert_error(error_func, "There are no options for the choice (table is empty).")
-
-		error_func = function()
-			local c = choice{1, 2, "3"}
-		end
-		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
-
----------------------
-		error_func = function()
-			local c = choice{1, 2, 3, default = 1}
-		end
-		unitTest:assert_error(error_func, defaultValueMsg("default", 1))
-
-		error_func = function()
-			local c = choice{1, 2, 3, default = 4}
-		end
-		unitTest:assert_error(error_func, "Default value (4) does not belong to choice.")
-
-		error_func = function()
-			local c = choice{1, 2, 3, max = 4}
-		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("max"))
----------------------
-
-		error_func = function()
-			local c = choice{false, true}
-		end
-		unitTest:assert_error(error_func, "The elements should be number or string, got boolean.")
-
-		error_func = function()
-			local c = choice{min = false}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("min", "number", false))
-
-		error_func = function()
-			local c = choice{min = 2, max = false}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("max", "number", false))
-
-		error_func = function()
-			local c = choice{min = 2, max = 4, step = false}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("step", "number", false))
-
-		error_func = function()
-			local c = choice{min = 2, max = 4, w = false}
-		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("w"))
-
-		error_func = function()
-			local c = choice{10, 20, "30"}
-		end
-		unitTest:assert_error(error_func, "All the elements of choice should have the same type.")
-
-		error_func = function()
-			local c = choice{min = 1, max = 10, step = 1, default = 1}
-		end
-		unitTest:assert_error(error_func, defaultValueMsg("default", 1))
-
-		error_func = function()
-			local c = choice{min = 1, max = 10, step = 1, default = "a"}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("default", "number", "a"))
-
-		error_func = function()
-			local c = choice{min = 1, max = 10, step = 1, default = 1.2}
-		end
-		unitTest:assert_error(error_func, "Invalid 'default' value (1.2). It could be 1 or 2.")
-
-		error_func = function()
-			local c = choice{min = 1, max = 10, step = 1, default = 11}
-		end
-		unitTest:assert_error(error_func, "Argument 'default' should be less than or equal to 'max'.")
-
-		error_func = function()
-			local c = choice{min = 1, max = 10, step = 1, default = 0}
-		end
-		unitTest:assert_error(error_func, "Argument 'default' should be greater than or equal to 'min'.")
-
-		error_func = function()
-			local c = choice{min = 1, max = 0}
-		end
-		unitTest:assert_error(error_func, "Argument 'max' should be greater than 'min'.")
-
-		error_func = function()
-			local c = choice{min = 1, max = 10, step = 1, default = 1}
-		end
-		unitTest:assert_error(error_func, defaultValueMsg("default", 1))
-
-		error_func = function()
-			local c = choice{min = 1, max = 10, step = 4}
-		end
-		unitTest:assert_error(error_func, "Invalid 'max' value (10). It could be 9 or 13.")
-
-		error_func = function()
-			local c = choice{min = 1, step = 3}
-		end
-		unitTest:assert_error(error_func, "It is not possible to have 'step' and not 'max'.")
 
 		local Tube = Model{
-			bb = choice{min = 10, max = 20, step = 1},
+			bb = Choice{min = 10, max = 20, step = 1},
 			init = function() end
 		}
 		
@@ -348,7 +289,7 @@ return{
 		local error_func = function()
 			t:execute(5)
 		end
-		unitTest:assert_error(error_func, "execute() should not take any argument because the model already has a final time.")
+		unitTest:assert_error(error_func, "execute() should not take any argument because the model already has a final time (10).")
 	end,
 	interface = function(unitTest)
 		local error_func = function()

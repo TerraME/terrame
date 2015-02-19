@@ -260,9 +260,9 @@ Chart = function(data)
 
 	local observerType
 	if data.xAxis == nil then
-		observerType = TME_OBSERVERS.DYNAMICGRAPHIC
+		observerType = 5
 	else
-		observerType = TME_OBSERVERS.GRAPHIC
+		observerType = 4
 		table.insert(data.select, data.xAxis)
 	end
 

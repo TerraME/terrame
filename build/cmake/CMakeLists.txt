@@ -34,20 +34,20 @@ add_definitions(-w -DTME_LUA_5_2 -DTME_TERRALIB_RC3 -DQWT_DLL
 set(BINARY_DIR ${ROOT}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR})
 set(BASE_DIR ${ROOT}/base)
-
-# file(MAKE_DIRECTORY ${BINARY_DIR}/packages)
-
-# file(MAKE_DIRECTORY ${ROOT}/bin/lua)
+set(DOC_DIR ${ROOT}/luadoc)
 
 file(COPY
 	${BASE_DIR}/
-
 	DESTINATION ${BINARY_DIR}/packages/base/
 )
 
 file(COPY
-	${SRCDIR}/lua/
+	${DOC_DIR}/
+	DESTINATION ${BINARY_DIR}/packages/luadoc/
+)
 
+file(COPY
+	${SRCDIR}/lua/
 	DESTINATION ${BINARY_DIR}/lua/
 )
 

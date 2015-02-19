@@ -966,6 +966,7 @@ metaTableCellularSpace_ = {
 -- automatically (true, default value) or the user by herself will call load (false).
 -- @arg data.autoload A boolean value indicating whether the CellularSpace will be loaded
 -- automatically (true, default value) or the user by herself will call load (false).
+-- If false, TerraME will not create the automatic functions based on the attributes of the Cells.
 -- @arg data.select A table containing the names of the attributes to be retrieved (default is
 -- all attributes). When retrieving a single attribute, you can use select = "attribute" instead
 -- of select = {"attribute"}. It is possible to rename the attribute name using "as", for example,
@@ -979,6 +980,7 @@ metaTableCellularSpace_ = {
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
 -- instance. The CellularSpace calls Cell:init() from the instance for each of its Cells.
+-- Every attribute from the Cell that is a Choice will be converted into a sample from the Choice.
 -- Additional functions are also created to the CellularSpace, according to the attributes of the
 -- instance. For each attribute of the instance, one function is created in the CellularSpace with
 -- the same name (note that attributes declared exclusively in Cell:init() will not be mapped, as
@@ -1056,7 +1058,7 @@ function CellularSpace(data)
 			end)
 
 			if #candidates == 0 then
-				customError("Not enough information to infer how to build the Cellularspace.")
+				customError("Not enough information to build the CellularSpace.")
 			elseif #candidates == 1 then
 				data.dbType = candidates[1]
 			else
@@ -1122,31 +1124,8 @@ function CellularSpace(data)
 	setmetatable(data, metaTableCellularSpace_)
 	cObj:setReference(data)
 
-	if data.autoload then
-		data:load()
-		-- needed for Environment's loadNeighborhood	
-		if data.database then
-			data.layer = data.cObj_:getLayerName()
-		end
-		data.autoload = nil
-	else
-		data.cells = {}
-	end
-
-	if data.instance ~= nil then
-		mandatoryTableArgument(data, "instance", "Cell")
-
-		forEachCell(data, function(cell)
-			setmetatable(cell, {__index = data.instance})
-			forEachElement(data.instance, function(attribute, value, mtype)
-				if not string.endswith(attribute, "_") and not belong(attribute, {"x", "id", "y", "past"}) then 
-					cell[attribute] = value
-				end
-			end)
-			cell:init()
-		end)
-
-		forEachElement(data.instance, function(attribute, value, mtype)
+	local function createSummaryFunctions(cell)
+		forEachElement(cell, function(attribute, value, mtype)
 			if attribute == "id" or attribute == "parent" or string.endswith(attribute, "_") then return
 			elseif mtype == "function" then
 				data[attribute] = function(cs, args)
@@ -1154,7 +1133,7 @@ function CellularSpace(data)
 						cell[attribute](cell, args)
 					end)
 				end
-			elseif mtype == "number" then
+			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
 				if attribute ~= "x" and attribute ~= "y" then
 					data[attribute] = function(cs)
 						local quantity = 0
@@ -1174,7 +1153,7 @@ function CellularSpace(data)
 					end)
 					return quantity
 				end
-			elseif mtype == "string" then
+			elseif mtype == "string" or (mtype == "Choice" and value.values and type(value.values[1]) == "string") then
 				data[attribute] = function(cs)
 					local result = {}
 					forEachCell(cs, function(cell)
@@ -1189,6 +1168,39 @@ function CellularSpace(data)
 				end
 			end
 		end)
+	end
+
+	if data.autoload then
+		data:load()
+		-- needed for Environment's loadNeighborhood	
+		if data.database then
+			data.layer = data.cObj_:getLayerName()
+		end
+		data.autoload = nil
+		createSummaryFunctions(data.cells[1])
+	else
+		data.cells = {}
+	end
+
+	if data.instance ~= nil then
+		mandatoryTableArgument(data, "instance", "Cell")
+
+		forEachCell(data, function(cell)
+			setmetatable(cell, {__index = data.instance})
+			forEachElement(data.instance, function(attribute, value, mtype)
+				if not string.endswith(attribute, "_") and not belong(attribute, {"x", "id", "y", "past"}) then 
+					cell[attribute] = value
+				end
+			end)
+			cell:init()
+			forEachOrderedElement(data.instance, function(idx, value, mtype)
+				if mtype == "Choice" then
+					cell[idx] = value:sample()
+				end
+			end)
+		end)
+
+		createSummaryFunctions(data.instance)
 	end
 	return data
 end
