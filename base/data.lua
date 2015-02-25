@@ -21,6 +21,12 @@ data{
 }
 
 data{
+	file = {"brazil.gal"},
+	summary = "A small neighborhood file for brazilstates.shp.",
+	source = "TerraME team"
+}
+
+data{
 	file = {"emas-distance.gal", "emas-distance.gwt", "emas-distance.gpm", "emas-pollin.gpm", "gpmdistanceDbEmasCells.gpm", "gpmlinesDbEmas.gpm"},
 	summary = "Neighborhood files to be used with emas database.",
 	source = "TerraME team"

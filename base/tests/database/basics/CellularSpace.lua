@@ -892,6 +892,22 @@ return{
 		unitTest:assert_equal(5, minSize)
 		unitTest:assert_equal(120, maxSize)
 		unitTest:assert_equal(84604261.93974, sumWeight, 0.00001)
+
+		-- GAL from shapefile
+		local cs = CellularSpace{database = file("brazilstates.shp", "base")}
+
+		cs.cObj_:setLayer("mylayer")
+
+		cs:loadNeighborhood{
+		    source = file("brazil.gal", "base")
+		}
+
+		local count = 0
+		forEachCell(cs, function(cell)
+		    count = count + #cell:getNeighborhood()
+		end)
+
+		unitTest:assert_equal(count, 7)
 	end
 }
 
