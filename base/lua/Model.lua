@@ -53,32 +53,17 @@ Model_ = {
 	init = function(self)
 		customError("Function 'init' was not implemented by the Model.")
 	end,
-	--- Run the model. It checks the arguments, create the objects, and then simulate until numRuns.
-	-- @arg finalTime A number with the final time of the simulation.
-	-- @usage model:execute(20)
-	execute = function(self, finalTime)
-		if self.finalTime then
-			if finalTime == nil then
-				finalTime = self.finalTime
-			else
-				customError("execute() should not take any argument because the model already has a final time ("..self.finalTime..").")
-			end
-		end
-
-		if finalTime == nil then
-			mandatoryArgumentError(1, 3)	
-		elseif type(finalTime) ~= "number" then 
-			incompatibleTypeError(1, "number", finalTime)
-		end
-
+	--- Run the model. It requires that the model has attribute finalTime.
+	-- @usage model:execute()
+	execute = function(self)
 		forEachElement(self, function(name, value, mtype)
 			if mtype == "Timer" then
-				value:execute(finalTime)
+				value:execute(self.finalTime)
 				return false
 			elseif mtype == "Environment" then
 				local found = false
 				forEachElement(value, function(mname, mvalue, mmtype)
-					mvalue:execute(finalTime)
+					mvalue:execute(self.finalTime)
 					found = true
 					return false
 				end)
@@ -1034,11 +1019,6 @@ function Model(attrTab)
 		optionalTableArgument(argv, "seed", "number")
 		optionalTableArgument(argv, "finalTime", "number")
 
-		if argv.seed == nil then
-			argv.seed = Random().seed
-		end
-		verify(argv.seed >= 0, "Argument 'seed' should be positive, got "..argv.seed..".")
-
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "Choice" then
 				if argv[name] == nil then
@@ -1160,7 +1140,19 @@ function Model(attrTab)
 		argv.execute = attrTab.execute
 		argv.type_ = typename
 		attrTab.check(argv)
+
 		attrTab.init(argv)
+
+		if argv.seed ~= nil then
+			verify(argv.seed >= 0, "Argument 'seed' should be positive, got "..argv.seed..".")
+			Random{seed = argv.seed}
+		end
+
+		if argv.finalTime == nil then
+			customError("The Model instance does not have attribute 'finalTime'.")
+		elseif type(argv.finalTime) ~= "number" then 
+			incompatibleTypeError(1, "number", finalTime)
+		end
 
 		-- check whether the model instance has a timer or an Environment with at least one Timer
 		local text = ""

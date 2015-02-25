@@ -62,6 +62,7 @@ return{
 	
 		local Tube = Model{
 			init = function(model) end,
+			finalTime = 10
 		}
 
 		local error_func = function()
@@ -74,6 +75,7 @@ return{
 				model.t = Timer{}
 				model.t2 = Timer{}
 			end,
+			finalTime = 10
 		}
 
 		error_func = function()
@@ -85,6 +87,14 @@ return{
 			local m = Tube{finalTime = "2"}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "2"))
+
+		Tube = Model{
+			init = function(model)
+				model.t2 = Timer{}
+			end,
+			seed = 5,
+			finalTime = 10
+		}
 
 		error_func = function()
 			local m = Tube{seed = "2"}
@@ -101,6 +111,7 @@ return{
 				model.t = Timer{}
 				model.e = Environment{t2 = Timer{}}
 			end,
+			finalTime = 10
 		}
 
 		error_func = function()
@@ -114,6 +125,7 @@ return{
 				model.e = Timer{}
 				model.t = Environment{t2 = Timer{}}
 			end,
+			finalTime = 10
 		}
 
 		local error_func = function()
@@ -128,6 +140,7 @@ return{
 			initialWater    = 200,
 			flow            = 20,
 			observingStep   = 1,
+			finalTime       = 10,
 			checkZero       = false,
 			block = {
 				xmin = 0,
@@ -238,6 +251,15 @@ return{
 			local T = Tube{bb = 5}
 		end
 		unitTest:assert_error(error_func, "Argument 'bb' should be greater than or equal to 10.")
+
+		local Tube = Model{
+			init = function() end
+		}
+
+		error_func = function()
+			local T = Tube{}
+		end
+		unitTest:assert_error(error_func, "The Model instance does not have attribute 'finalTime'.")
 	end,
 	mandatory = function(unitTest)
 		local error_func = function()
@@ -277,19 +299,6 @@ return{
 			local m = M{v = {value = false}}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("v.value", "number", false))
-	end,
-	execute = function(unitTest)
-		local Tube = Model{
-			finalTime = 10,
-			init = function(m) m.t = Timer{} end
-		}
-	
-		local t = Tube{}
-
-		local error_func = function()
-			t:execute(5)
-		end
-		unitTest:assert_error(error_func, "execute() should not take any argument because the model already has a final time (10).")
 	end,
 	interface = function(unitTest)
 		local error_func = function()

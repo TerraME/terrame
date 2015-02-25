@@ -695,7 +695,10 @@ end
 
 --- Second order function to transverse a given object, applying a function to each of its
 -- elements. It can be used for instance to trasverse all the elements of an Agent or an
--- Environment. It returns true if no call to the function taken as argument returns false.
+-- Environment. According to the current Lua version, if one uses this function twice, Lua
+-- does not guarantee that the objects will be trasversed in the same order. If you need to
+-- guarantee this, it is recommended to use forEachOrderedElement() instead.
+-- This function returns true if no call to the function taken as argument returns false.
 -- @arg obj A TerraME object or a table.
 -- @arg func A user-defined function that takes three arguments: the index of the element,
 -- the element itself, and the type of the element. If some call to this function returns

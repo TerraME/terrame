@@ -465,9 +465,9 @@ CellularSpace_ = {
 	-- for e ach pair of Cells, first filter(c1, c2) and then filter(c2, c1), where c1 belongs to
 	-- cs1 and c2 belongs to cs2. The default is a function that returns true.
 	-- @arg data.m Number of columns. If m is even then it will be increased by one to keep the
-	-- Cell in the center of the Neighborhood.
+	-- Cell in the center of the Neighborhood. Default value is 3.
 	-- @arg data.n Number of rows. If n is even then it will be increased by one to keep the Cell
-	-- in the center of the Neighborhood.
+	-- in the center of the Neighborhood. Default value is m.
 	-- @arg data.name A string with the name of the Neighborhood to be created. 
 	-- The default is "1".
 	-- @arg data.self Add the Cell as neighbor of itself? Default is false. Note that the 

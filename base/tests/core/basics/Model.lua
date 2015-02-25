@@ -28,6 +28,7 @@ local Tube = Model{
 	simulationSteps = Choice{10, 20, 30},
 	subwater        = Choice{1, 2, 4, 5, default = 4},
 	initialWater    = 200,
+	finalTime       = 10,
 	flow            = 20,
 	observingStep   = Choice{min = 0, max = 1, step = 0.1, default = 1},
 	checkZero       = false,
@@ -67,7 +68,6 @@ return{
 		unitTest:assert_equal(t.block.xmin, 0)
 		unitTest:assert_equal(t.block.level, 1)
 		unitTest:assert_type(t.filter, "function")
-		unitTest:assert(t.seed >= 0)
 
 		t = Tube{
 			simulationSteps = 20,
@@ -113,7 +113,7 @@ return{
 		unitTest:assert_equal(t.block.level, 2)
 
 		unitTest:assert_equal(t.water, 200)
-		t:execute(10)
+		t:execute()
 		unitTest:assert_equal(t.water, 210)
 	end
 }
