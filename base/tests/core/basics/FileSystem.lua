@@ -27,7 +27,7 @@
 return{
 	dir = function(unitTest)
 		local d = dir(packageInfo().data)
-		unitTest:assert_equal(#d, 21) -- 21 files
+		unitTest:assert_equal(#d, 22) -- 22 files
 	end,
 	isFile = function(unitTest)
 		unitTest:assert(isFile(file("agents.csv")))
@@ -102,7 +102,7 @@ return{
 	end, 
 	runCommand = function(unitTest)
 		local d = runCommand("ls "..packageInfo().data)
-		unitTest:assert_equal(#d, 21) -- 21 files
+		unitTest:assert_equal(#d, 22) -- 22 files
 	end,
 	setMode = function(unitTest)
 		local pathdata = packageInfo().data
