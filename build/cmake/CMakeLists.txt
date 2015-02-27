@@ -733,37 +733,21 @@ install(TARGETS terrame
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib
-		#PERMITIONS GROUP_READ GROUP_EXECUTE
-		#COMPONENT Runtime
+		# COMPONENT Runtime
 )
 
 install(DIRECTORY ${SRCDIR}/lua/
-	DESTINATION bin/Lua/
-	PATTERN ".svn" EXCLUDE
+	DESTINATION bin/lua/
 )
 
-install(DIRECTORY ${ROOT}/demos
-		DESTINATION .
-		PATTERN ".svn" EXCLUDE
-		#COMPONENT Demos
+install(DIRECTORY ${ROOT}/base/
+		DESTINATION packages/base/
+		# COMPONENT Base_Package
 )
 
-install(DIRECTORY ${ROOT}/docs/docs_lua/
-		DESTINATION ./docs/
-		# RENAME docs
-		PATTERN ".svn" EXCLUDE
-		# PATTERN "doxygen" EXCLUDE
-		#COMPONENT Documentation
-)
-
-install(DIRECTORY ${ROOT}/database
-		DESTINATION .
-		# PATTERN ".svn" EXCLUDE
-		PATTERN "*.gpm" EXCLUDE
-		PATTERN "*.GAL" EXCLUDE
-		PATTERN "*.GWT" EXCLUDE
-		PATTERN "*.teste" EXCLUDE
-		PATTERN "*.csv" EXCLUDE
+install(DIRECTORY ${ROOT}/base/doc/
+		DESTINATION doc/
+		# COMPONENT Documentation
 )
 
 set(CPACK_GENERATOR "PackageMaker")
@@ -791,13 +775,14 @@ include(CPack)
 
 ########### Get dependencies ################
 # RAIAN: COMENTEI AQUI, pois e necessario resolver o problema do LOCATION. Ao resolver, remover comentarios
-# get_target_property(MY_BINARY_LOCATION terrame LOCATION)
-# configure_file(
-#    "${CMAKE_CURRENT_SOURCE_DIR}/dependencies.cmake.in"
-#    "${CMAKE_CURRENT_BINARY_DIR}/dependencies.cmake"
-#    @ONLY
-#  )
-# install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/dependencies.cmake")
+set(MY_BINARY_LOCATION ${BINARY_DIR}/terrame)
+
+configure_file(
+   "${CMAKE_CURRENT_SOURCE_DIR}/dependencies.cmake.in"
+   "${CMAKE_CURRENT_BINARY_DIR}/dependencies.cmake"
+   @ONLY
+ )
+install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/dependencies.cmake")
 #RAIAN: Retirar comentarios ate aqui.
 ######################################
 

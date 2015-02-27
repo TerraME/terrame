@@ -31,11 +31,6 @@ Author: Tiago Garcia de Senna Carneiro
 
 #define TME_STATISTIC_UNDEF
 
-#ifdef TME_STATISTIC
-	#include "statistic.h"
-	#include <QFile>
-#endif
-
 #include "blackBoard.h"
 
 #include "protocol.pb.h"
@@ -186,11 +181,9 @@ extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
 {
-#ifdef TME_PROTOCOL_BUFFERS
 	// Verify that the version of the library that we linked against is
 	// compatible with the version of the headers we compiled against.
-	GOOGLE_PROTOBUF_VERIFY_VERSION; 
-#endif
+	GOOGLE_PROTOBUF_VERIFY_VERSION;
 
 	Q_INIT_RESOURCE(observerResource);
 
@@ -201,26 +194,6 @@ int main(int argc, char *argv[])
 
 	QApplication app(argc, argv); // #79
 	//app.setQuitOnLastWindowClosed(true);
-
-#ifdef TME_STATISTIC
-	{
-
-		Statistic::getInstance();
-
-		QFile statFile(app.applicationDirPath() + "/output_MemoryUsage.txt");
-		if (statFile.open(QIODevice::WriteOnly | QIODevice::Text))
-		{
-			QTextStream out(&statFile);
-
-#ifdef TME_WIN32
-			out << "Name				Pid	  VM	  WS	Priv Priv Pk   Faults   NonP Page\n";
-#else
-			out << "Mem\n";
-#endif // TME_WIN32
-		}
-		statFile.close();
-	}
-#endif // TME_STATISTIC
 
 	execModes = Normal;
 	SHOW_GUI = false;
@@ -298,7 +271,7 @@ int main(int argc, char *argv[])
 			lua_pushstring(L, argv[argument]);
 			lua_settable(L, -3);
 			
-			argument++;		
+			argument++;
 		}
 		
 		lua_call(L, 1, 0);
@@ -344,19 +317,8 @@ int main(int argc, char *argv[])
 			lua_pushnumber(L, execModes);
 			lua_setglobal(L, "TME_MODE");
 
-#ifdef TME_STATISTIC
-			// double t = Statistic::getInstance().startMiliTime();
-			double t0 = Statistic::getInstance().startMiliTime(), t1 = 0.0;
-#endif
 			// runs the lua files received as paremeters
 			error =  luaL_loadfile(L, argv[argument] ) || lua_pcall(L, 0, 0, 0);
-
-#ifdef TME_STATISTIC
-			t1 = Statistic::getInstance().endMicroTime();
-			// t1 = Statistic::getInstance().endMiliTime();
-			qDebug() << "total simulation time - inicial: " << t0 
-				<< " final: " << t1 << " = " << t1 - t0 << " ms";
-#endif
 
 			if (error)
 			{
@@ -391,17 +353,6 @@ int main(int argc, char *argv[])
 
 	//int ret = app.exec();
 	//return ret;
-
-#ifdef TME_STATISTIC
-	Statistic::getInstance().collectMemoryUsage();
-	Statistic::getIn stance().saveData();
-	QFile::copy(app.applicationDirPath() + "/output_MemoryUsage.txt",
-		app.applicationDirPath() + "/memoryUsage_"
-						+ QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss")
-						+ "_.csv");
-
-	// exit(0);
-#endif
 	
 	bool autoClose = false;
 	lua_getglobal(L, "info_");
