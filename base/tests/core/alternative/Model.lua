@@ -26,6 +26,21 @@
 return{
 	Model = function(unitTest)
 		local error_func = function()
+			local Tube = Model{cs = CellularSpace{xdim = 10}}
+		end
+		unitTest:assert_error(error_func, "Type CellularSpace (parameter 'cs') is not supported as argument of Model.")
+
+		local error_func = function()
+			local Tube = Model{abc = {cs = CellularSpace{xdim = 10}}}
+		end
+		unitTest:assert_error(error_func, "Type CellularSpace (parameter 'abc.cs') is not supported as argument of Model.")
+
+		local error_func = function()
+			local Tube = Model{cs = {1, 2, 3, 4, 5}}
+		end
+		unitTest:assert_error(error_func, "It is not possible to use a non-named table in a Model (parameter 'cs').")
+
+		local error_func = function()
 			local Tube = Model{finalTime = "2"}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "2"))

@@ -1014,6 +1014,20 @@ function Model(attrTab)
 		end
 	end
 
+	forEachElement(attrTab, function(name, value, mtype)
+		if mtype == "table" and #value == 0 then
+			forEachElement(value, function(iname, ivalue, itype)
+				if not belong(itype, {"Choice", "mandatory", "number", "string", "function", "boolean"}) then
+					customError("Type "..itype.." (parameter '"..name.."."..iname.."') is not supported as argument of Model.")
+				end
+			end)
+		elseif mtype == "table" and #value > 0 then
+			customError("It is not possible to use a non-named table in a Model (parameter '"..name.."').")
+		elseif not belong(mtype, {"Choice", "mandatory", "number", "string", "function", "boolean"}) then
+			customError("Type "..mtype.." (parameter '"..name.."') is not supported as argument of Model.")
+		end
+	end)
+
 	local function model(argv, typename)
 		-- set the default values
 		optionalTableArgument(argv, "seed", "number")
