@@ -217,7 +217,7 @@ UnitTest_ = {
 			else
 				self.fail = self.fail + 1
 
-				local error_msg = "Test expected:\n  '"..error_message.."'\n  got:\n  '"..shortError.."'"
+				local error_msg = "Test expected:\n  \""..error_message.."\"\n  got:\n  \""..shortError.."\""
 
 				if max_error then
 					error_msg = error_msg.."\nIt would accept an error of at most "..max_error..
