@@ -346,20 +346,12 @@ void VisualMapping::renderingNeighbor(QPainter *p, const double &xCell, const do
     p->drawLine(xCell, yCell, (cellSize.width() * xNeigh) + cellSize.width() * 0.5,
         (cellSize.height() * yNeigh) + cellSize.height() * 0.5);
 
-    // TO DO: Desenhar a cabeca da seta
+    // TODO: Desenhar a cabeca da seta
 }
 
 
 void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
 {
-#ifdef TME_STATISTIC
-    double t = 0, renderCount = 0, renderSum = 0;
-    double t1 = 0, t2 = 0, t2Count = 0, t2Sum = 0;
-    QString name = QString("rendering %1").arg(getId());
-    QString name1 = QString("zzz__mappingChanges_Iterating_Cache %1").arg(getId());
-    QString name2 = QString("zzz__mappingChanges_Iterating_Iterating %1").arg(getId());
-#endif
-
     //if (attrib->getType() == TObsTrajectory)
     //    attrib->getImage()->fill(0);
 
@@ -378,19 +370,9 @@ void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
     const bool isVecLegendEmpty = vecLegend->isEmpty();
     SubjectAttributes *nestedSubj = 0;
 
-		 
-#ifdef TME_STATISTIC
-    t1 = Statistic::getInstance().startMicroTime();
-#endif
-
     // It is more efficient than use iterators
     for(int id = 0; id < subjectsIDs.size(); ++id)
     {
-
-#ifdef TME_STATISTIC
-        t2 = Statistic::getInstance().startMicroTime();
-#endif
-
 		nestedSubj = bb.getSubject(subjectsIDs.at(id));
 
 #ifdef DEBUG_OBSERVER
@@ -463,69 +445,25 @@ void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
                             break;
                         }
                     }
-                    else
-                    {
-                        if ((leg.getFromNumber() <= v) && (v < leg.getToNumber())) 
-                        {
-                            p->setBrush(leg.getColor());
-                            if (gridEnabled) 
-                                p->setPen(leg.getInvertedColor());
-                            break;
-                        }
-                    }
+                    else if ((leg.getFromNumber() <= v) && (v < leg.getToNumber()))
+					{
+						p->setBrush(leg.getColor());
+						if (gridEnabled) 
+							p->setPen(leg.getInvertedColor());
+						break;
+					}
                 }
             }
 
-#ifdef TME_STATISTIC
-            if ((x >= 0) && ( y >= 0))
-            {
-                t = Statistic::getInstance().startMicroTime();
-
-                rendering(p, attrib->getType(), x, y);
-
-                renderSum += Statistic::getInstance().endMicroTime() - t;
-                renderCount++;
-                
-            }
-#else
-
             if ((x >= 0) && ( y >= 0))
                 rendering(p, attrib->getType(), x, y);
-
-#endif
 
         } // nestedSubj != NULL
-        
-#ifdef TME_STATISTIC
-    t2Sum += Statistic::getInstance().endMicroTime() - t2;
-    t2Count++;
-#endif
-
-		
     } // loop for each subjectsIDs elements
-
-
-#ifdef TME_STATISTIC
-
-    t1 = Statistic::getInstance().endMicroTime() - t1;
-    Statistic::getInstance().addElapsedTime(name1, t1);
-
-    Statistic::getInstance().addElapsedTime(name2, (t2Count > 0 ? t2Sum/t2Count : -1));
-    Statistic::getInstance().addElapsedTime(name, (renderCount > 0 ? renderSum/renderCount : -1 ));
-#endif
-
 }
 
 void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
 {
-#ifdef TME_STATISTIC
-    double t = 0, renderCount = 0, renderSum = 0;
-    double t1 = 0, t2 = 0, t2Count = 0, t2Sum = 0;;
-    QString name = QString("rendering %1").arg(getId());
-    QString name1 = QString("zzz__mappingAll_Iterating_Cache %1").arg(getId());
-    QString name2 = QString("zzz__mappingAll_Iterating_Iterating %1").arg(getId());
-#endif
-
     // if (attrib->getType() == TObsTrajectory)
     //    attrib->getImage()->fill(0); 
 
@@ -543,21 +481,11 @@ void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
     BlackBoard &bb = BlackBoard::getInstance();
     const QHash<int, SubjectAttributes *> &cachedValues = bb.getCache();
     // SubjectAttributes *nestedSubj = 0;
-
-
-#ifdef TME_STATISTIC
-    t1 = Statistic::getInstance().startMicroTime();
-#endif
 		
     foreach(SubjectAttributes *nestedSubj, cachedValues)
     //for (QHash<int, SubjectAttributes *>::ConstIterator it = cachedValues.constBegin();
     //    it != cachedValues.constEnd(); ++it)
     {
-		
-#ifdef TME_STATISTIC
-        t2 = Statistic::getInstance().startMicroTime();
-#endif
-
         //nestedSubj = (*it);
 
 #ifdef DEBUG_OBSERVER
@@ -627,57 +555,26 @@ void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
                             break;
                         }
                     }
-                    else
-                    {
-                        if ((leg.getFromNumber() <= v) && (v < leg.getToNumber())) 
-                        {
-                            p->setBrush(leg.getColor());
-                            if (gridEnabled) 
-                                p->setPen(leg.getInvertedColor());
-                            break;
-                        }
-                    }
+                    else if ((leg.getFromNumber() <= v) && (v < leg.getToNumber()))
+					{
+						p->setBrush(leg.getColor());
+						if (gridEnabled) 
+							p->setPen(leg.getInvertedColor());
+						break;
+					}
                 }
             }
 
-#ifdef TME_STATISTIC
-            if ((x >= 0) && ( y >= 0))
-            {
-                t = Statistic::getInstance().startMicroTime();
-
-                rendering(p, attrib->getType(), x, y);
-
-                renderSum += Statistic::getInstance().endMicroTime() - t;
-                renderCount++;
-            }
-#else
-
             if ((x >= 0) && ( y >= 0))
                 rendering(p, attrib->getType(), x, y);
-
-#endif
 
         } // nestedSubj != NULL
         
 #ifdef DEBUG_OBSERVER
         else {qDebug() << "nestedSubj: " << nestedSubj; }
 #endif
-        
-
-#ifdef TME_STATISTIC
-    t2Sum += Statistic::getInstance().endMicroTime() - t2;
-    t2Count++;
-#endif
 
     } // foreach
-
-#ifdef TME_STATISTIC
-    t1 = Statistic::getInstance().endMicroTime() - t1;
-    Statistic::getInstance().addElapsedTime(name1, t1);
-    Statistic::getInstance().addElapsedTime(name2, (t2Count > 0 ? t2Sum/t2Count : -1));
-
-    Statistic::getInstance().addElapsedTime(name, (renderCount > 0 ? renderSum/renderCount : -1 ));
-#endif
 }
 
 void VisualMapping::mappingChangesText(Attributes *attrib, QPainter *p)
