@@ -1629,6 +1629,7 @@ function execute(arguments) -- arguments is a vector of strings
 				model = arguments[argCount]
 
 				models = findModels(package)
+				require(package)
 				if belong(model, models) then
 					graphicalInterface(package, model)
 				else
