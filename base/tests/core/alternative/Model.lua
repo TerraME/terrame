@@ -75,6 +75,21 @@ return{
 		end
 		unitTest:assert_error(error_func, "seed can only be a Choice with 'number' values, got 'string'.")
 	
+		local error_func = function()
+			local Tube = Model{seed = Choice{1, 2}}
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("init"))
+	
+		local error_func = function()
+			local Tube = Model{
+				seed = Choice{1, 2},
+				init = function() end,
+				check = 2
+			}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("check", "function", 2))
+
+
 		local Tube = Model{
 			init = function(model) end,
 			finalTime = 10
@@ -232,16 +247,6 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("block.xmin", "number", false))
 			
-		Tube = Model{
-			simulationSteps = 10,
-			check = function() end
-		}
-
-		error_func = function()
-			local m = Tube{}
-		end
-		unitTest:assert_error(error_func, "Function 'init' was not implemented by the Model.")
-
 		local Tube = Model{
 			bb = Choice{min = 10, max = 20, step = 1},
 			init = function() end
@@ -288,7 +293,8 @@ return{
 		unitTest:assert_error(error_func, "Value 'string' cannot be a mandatory argument.")
 
 		local M = Model{
-			value = mandatory("number")
+			value = mandatory("number"),
+			init = function() end
 		}
 
 		error_func = function()
@@ -302,7 +308,8 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg("value", "number", false))
 
 		M = Model{
-			v = {value = mandatory("number")}
+			v = {value = mandatory("number")},
+			init = function() end
 		}
 
 		error_func = function()

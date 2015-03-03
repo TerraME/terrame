@@ -51,7 +51,7 @@ Model_ = {
 	--- Creates the objects of the model. This function must be implemented by the derived type.
 	-- @usage model:init()
 	init = function(self)
-		customError("Function 'init' was not implemented by the Model.")
+		customError("Function 'init' was not implemented by the Model.") -- this line will never execute
 	end,
 	--- Run the model. It requires that the model has attribute finalTime.
 	-- @usage model:execute()
@@ -1027,6 +1027,9 @@ function Model(attrTab)
 			customError("Type "..mtype.." (parameter '"..name.."') is not supported as argument of Model.")
 		end
 	end)
+
+	mandatoryTableArgument(attrTab, "init", "function")
+	optionalTableArgument(attrTab, "check", "function")
 
 	local function model(argv, typename)
 		-- set the default values

@@ -143,6 +143,7 @@ end
 local function findModels(package)
 	local s = sessionInfo().separator
 	require("base")
+	require(package)
 	models = {}
 	local found = false
 	local oldModel = Model
