@@ -1447,17 +1447,7 @@ function getLevel()
 
 		local s = sessionInfo().separator
 		local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path..s.."lua"))
-
-		local packages = dir(sessionInfo().path..s.."packages")
-
-		local m2
-
-		forEachElement(packages, function(_, value)
-			if not m2 then
-				m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path..s.."packages"..s..value..s.."lua"))
-			end
-		end)
-
+		local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"..s.."lua"))
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4 = string.sub(info.short_src, 1, 1) == "["
 		if m1 or m2 or m3 or m4 then

@@ -8,7 +8,7 @@ return {
 			print([[
 ===============================================================
 Error: The environment was not correctly configured to execute
-database  tests. Please create file 'config.lua' in the current 
+database tests. Please create file 'config.lua' in the current 
 directory and set the database access variables. For example:
 
 user = "root"
