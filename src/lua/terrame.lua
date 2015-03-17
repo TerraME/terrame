@@ -711,6 +711,96 @@ local function executeDoc(package)
 	return errors, all_doc_functions
 end
 
+local function lineTable(filename)
+	local count = 0
+	local mtable = {}
+
+	local file = io.open(filename)
+
+	local line = file:read()
+	while line do
+		count = count + 1
+
+		local pos = 1
+
+		local state = "code"
+
+		while true do
+			local c = string.sub(line, pos, pos)
+
+			if string.match(line, "function") then break end
+			if string.match(line, "else")     then break end
+			if string.match(line, "end")      then break end
+
+			if state == "code" then
+				if c == "" then
+					break
+				elseif c == " " or c == "\t" then
+
+				elseif c == "-" then
+					state = "-"
+				else
+					mtable[count] = 0
+					break
+				end
+			elseif state == "-" then
+				if c == "-" then
+					state = "code"
+					break
+				else
+					mtable[count] = 0
+					break
+				end
+			end
+			pos = pos + 1
+		end
+
+		line = file:read()
+	end
+	file:close()
+	return mtable
+end
+
+local function buildLineTable(package)
+	local s = sessionInfo().separator
+	local baseDir = sessionInfo().path..s.."packages"..s..package
+
+	local load_file = baseDir..s.."load.lua"
+	local load_sequence
+
+	if isFile(load_file) then
+		-- the 'include' below does not need to be inside a xpcall because 
+		-- the package was already loaded with success
+		load_sequence = include(load_file).files
+	else
+		local dir = dir(baseDir..s.."lua")
+		load_sequence = {}
+		forEachElement(dir, function(_, mfile)
+			if string.endswith(mfile, ".lua") then
+				table.insert(load_sequence, mfile)
+			end
+		end)
+	end
+
+	local testlines = {} -- test functions store all the functions that need to be tested, extracted from the source code
+
+	for i, file in ipairs(load_sequence) do
+		-- the 'include' below does not need to be inside a xpcall because 
+		-- the package was already loaded with success
+		testlines[file] = lineTable(baseDir..s.."lua"..s..file)
+
+		local function trace(event, line)
+			testlines[file][line] = 1
+		end
+
+		debug.sethook(trace, "l")
+		dofile(baseDir..s.."lua"..s..file)
+		debug.sethook()
+	end
+
+	return testlines
+end
+
 local function executeTests(package, fileName, doc_functions)
 	local initialTime = os.clock()
 
@@ -780,6 +870,7 @@ local function executeTests(package, fileName, doc_functions)
 		print_when_loading = 0,
 		snapshots = 0,
 		snapshot_files = 0,
+		lines_not_executed = 0,
 		unused_snapshot_files = 0
 	}
 
@@ -805,6 +896,9 @@ local function executeTests(package, fileName, doc_functions)
 		printNote("Looking for package functions")
 		testfunctions = buildCountTable(package)
 	end
+
+	printNote("Looking for lines of source code")
+	local executionlines = buildLineTable(package)
 
 	print = print__
 
@@ -913,6 +1007,20 @@ local function executeTests(package, fileName, doc_functions)
 				printWarning("Skipping "..eachFolder..s..eachFile)
 			end
 
+			local function trace(event, line)
+				local s = debug.getinfo(2).short_src
+				local short = string.match(s, "([^/]-)$")
+				if short == eachFile and not string.match(s, "tests") then
+					if not executionlines[eachFile][line] then
+						--printNote(line)
+					else
+						executionlines[eachFile][line] = executionlines[eachFile][line] + 1
+					end
+				end
+			end
+
+			debug.sethook(trace, "l")
+
 			for _, eachTest in ipairs(myTests) do
 				print("Testing "..eachTest)
 				if not doc_functions then io.flush() end -- theck why it is necessary to have the 'if'
@@ -1001,6 +1109,7 @@ local function executeTests(package, fileName, doc_functions)
 					ut.last_error = ""
 				end
 			end
+			debug.sethook()
 		end
 	end) 
 
@@ -1039,8 +1148,40 @@ local function executeTests(package, fileName, doc_functions)
 				end)
 			end)
 		end
+
+		printNote("Checking lines of source code")
+		if type(data.file) == "string" then
+			print("Checking "..data.file)
+			forEachOrderedElement(executionlines[data.file], function(idx, value)
+				if value == 0 then
+					printError("Line "..idx.." was not executed.")
+					ut.lines_not_executed = ut.lines_not_executed + 1
+				end
+			end)
+		elseif type(data.file) == "table" then
+			forEachOrderedElement(data.file, function(idx, value)
+				print("Checking "..value)
+				forEachOrderedElement(executionlines[value], function(idx, value)
+					if value == 0 then
+						printError("Line "..idx.." was not executed.")
+						ut.lines_not_executed = ut.lines_not_executed + 1
+					end
+				end)
+			end)
+		else -- nil
+			forEachOrderedElement(executionlines, function(idx, mvalue)
+				print("Checking "..idx)
+				forEachOrderedElement(mvalue, function(idx, value)
+					if value == 0 then
+						printError("Line "..idx.." was not executed.")
+						ut.lines_not_executed = ut.lines_not_executed + 1
+					end
+				end)
+			end)
+		end
 	else
 		printWarning("Skipping source code functions check")
+		printWarning("Skipping lines of source code check")
 	end
 
 	if ut.snapshots > 0 and check_snapshots then
@@ -1209,8 +1350,15 @@ local function executeTests(package, fileName, doc_functions)
 		else
 			printNote("All "..ut.package_functions.." functions of the package were tested.")
 		end
+
+		if ut.lines_not_executed > 0 then
+			printError(ut.lines_not_executed.." lines of source code were not executed at least once.")
+		else
+			printNote("All lines of the source code were executed.")
+		end
 	else
 		printWarning("No source code functions were verified.")
+		printWarning("No lines of source code were verified.")
 	end
 
 	if ut.snapshots > 0 then
@@ -1252,7 +1400,7 @@ local function executeTests(package, fileName, doc_functions)
 	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error + 
 	               ut.wrong_file + ut.print_calls + ut.functions_with_global_variables + 
 	               ut.functions_with_error + ut.functions_without_assert + ut.snapshot_files +
-				   ut.unused_snapshot_files
+				   ut.unused_snapshot_files + ut.lines_not_executed
 
 	if errors == 0 then
 		printNote("Summing up, all tests were successfully executed.")
