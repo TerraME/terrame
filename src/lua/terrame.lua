@@ -1460,11 +1460,12 @@ end
 
 local function graphicalInterface(package, model)
 	require("base")
+	local s = sessionInfo().separator
+	dofile(sessionInfo().path..s.."lua"..s.."interface.lua")
 	--require__("qtluae") -- TODO: try this to try to speedup the graphical interface
 	local attrTab
 	local mModel = Model
 	Model = function(attr) attrTab = attr end
-	local s = sessionInfo().separator
 	local data = include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..model..".lua")
 	Model = mModel
 
