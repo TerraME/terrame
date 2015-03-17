@@ -27,6 +27,7 @@
 
 return{
 	Coord = function(unitTest)
+		debug.sethook()
 		collectgarbage("collect")
 
 		for i = 1, 100 do
@@ -73,6 +74,7 @@ return{
 		unitTest:assert_equal(0, countOutWT)
 	end,
 	Cell = function(unitTest)
+		debug.sethook()
 		collectgarbage("collect")
 
 		for i = 1, 100 do
@@ -118,6 +120,7 @@ return{
 		unitTest:assert_equal(0, countOutWT)
 	end,
 	CellularSpace = function(unitTest)
+		debug.sethook()
 		collectgarbage("collect")
 
 		for i = 1, 100 do
@@ -171,6 +174,7 @@ return{
 		unitTest:assert_equal(0, countOutWT)
 	end,
 	Trajectory = function(unitTest)
+		debug.sethook()
 		collectgarbage("collect")
 
 		for i = 1, 100 do
@@ -235,6 +239,7 @@ return{
 		unitTest:assert_equal(0, countOutWT)
 	end,
 	Neighborhood = function(unitTest)
+		debug.sethook()
 		collectgarbage("collect")
 
 		for i = 1, 100 do
@@ -299,6 +304,7 @@ return{
 		unitTest:assert_equal(0, countOutWT)
 	end,
 	Agent = function(unitTest)
+		debug.sethook()
 		collectgarbage("collect")
 
 		for i = 1, 100 do
@@ -348,6 +354,7 @@ return{
 		unitTest:assert_equal(0, countOutWT)
 	end,
 	Automaton = function(unitTest)
+		debug.sethook()
 		collectgarbage("collect")
 
 		for i = 1, 100 do
@@ -394,6 +401,7 @@ return{
 		unitTest:assert_equal(0, countOutWT)
 	end,
 	Environment = function(unitTest)
+		debug.sethook()
 		collectgarbage("collect")
 
 		for i = 1, 100 do
@@ -440,6 +448,7 @@ return{
 		unitTest:assert_equal(0, countOutWT)
 	end,
 	Event = function(unitTest)
+		debug.sethook()
 		local evt
 		collectgarbage("collect")
 
@@ -454,6 +463,7 @@ return{
 		collectgarbage("collect")
 	end,
 	Flow = function(unitTest)
+		debug.sethook()
 		local flw
 		collectgarbage("collect")
 
@@ -467,6 +477,7 @@ return{
 		collectgarbage("collect")
 	end,
 	Jump = function(unitTest)
+		debug.sethook()
 		local jmp
 		collectgarbage("collect")
 
@@ -482,6 +493,7 @@ return{
 		collectgarbage("collect")
 	end,
 	Timer = function(unitTest)
+		debug.sethook()
 		collectgarbage("collect")
 
 		for i = 1, 100 do

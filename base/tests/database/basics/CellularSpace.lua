@@ -27,6 +27,7 @@
 
 return{
 	CellularSpace = function(unitTest)
+		debug.sethook()
 		local config = getConfig()
 		local mdbType = config.dbType
 		local mhost = config.host
@@ -270,6 +271,7 @@ return{
 		unitTest:assert_equal(#cs, 100)
 	end,
 	createNeighborhood = function(unitTest)
+		debug.sethook()
 		local config = getConfig()
 		local mdbType = config.dbType
 		local mhost = config.host
@@ -421,6 +423,7 @@ return{
 		unitTest:assert(true)
 	end,
 	loadNeighborhood = function(unitTest)
+		debug.sethook()
 		local config = getConfig()
 		local mdbType = config.dbType
 		local mhost = config.host
