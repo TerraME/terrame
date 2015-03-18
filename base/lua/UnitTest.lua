@@ -39,15 +39,26 @@ local print_error = function(self, msg)
 	if self.last_error == str then
 		self.count_last = self.count_last + 1
 	elseif self.count_last > 0 then
-		printError("[The error above occurs more "..self.count_last.." times.]")
+		local count = self.count_last
 		self.count_last = 0
 		self.last_error = str
+		local func = printError
+		if self.unittest then
+			func = customError
+		end
+		func("[The error above occurs more "..count.." times.]")
 	else
 		self.last_error = str
 	end
 
 	if self.count_last == 0 then
-		printError(str)
+		local func = printError
+		local arg = str
+		if self.unittest then
+			func = customError
+			arg = msg
+		end
+		func(msg)
 	end
 end
 
@@ -68,19 +79,11 @@ UnitTest_ = {
 
 		mandatoryArgument(1, "boolean", value)
 
-		if value == true then
+		if value then
 			self.success = self.success + 1
 		else
-			local msg
-			local mtype = type(value)
-			if belong(mtype, {"number", "boolean", "string"}) then
-				msg = tostring(value).." (a "..mtype..")."
-			else
-				msg = " a "..mtype.."."
-			end
-
-			print_error(self, "Test should be true got "..msg)
 			self.fail = self.fail + 1
+			print_error(self, "Test should be true, got false.")
 		end
 	end,
 	--- Check if a value belongs to a given type. If not, it generates an error.
@@ -95,8 +98,8 @@ UnitTest_ = {
 		if type(value) == mtype then
 			self.success = self.success + 1
 		else
-			print_error(self, "Test should be "..mtype.." got "..type(value)..".")
 			self.fail = self.fail + 1
+			print_error(self, "Test should be "..mtype.." got "..type(value)..".")
 		end
 	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
@@ -107,8 +110,8 @@ UnitTest_ = {
 		if value == nil then
 			self.success = self.success + 1
 		else
-			print_error(self, "Test should be nil, got "..type(value)..".")
 			self.fail = self.fail + 1
+			print_error(self, "Test should be nil, got "..type(value)..".")
 		end
 	end,
 	--- Check if a given value is not nil. Otherwise it generates an error.
@@ -119,8 +122,8 @@ UnitTest_ = {
 		if value ~= nil then
 			self.success = self.success + 1
 		else
-			print_error(self, "Test should not be nil.")
 			self.fail = self.fail + 1
+			print_error(self, "Test should not be nil.")
 		end
 	end,
 	--- Check if two values are equal. In this function, two tables are equal only when they are the
@@ -145,15 +148,15 @@ UnitTest_ = {
 			if v1 <= v2 + tol and v1 >= v2 - tol then
 				self.success = self.success + 1
 			else 
-				print_error(self, "Values should be equal, but got '"..v1.."' and '"..v2.."'.")
 				self.fail = self.fail + 1
+				print_error(self, "Values should be equal, but got '"..v1.."' and '"..v2.."'.")
 			end
 		elseif type(v1) == "string" and type(v2) == "string" then
 			if v1 == v2 then
 				self.success = self.success + 1
 			else 
-				print_error(self, "Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'.")
 				self.fail = self.fail + 1
+				print_error(self, "Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'.")
 			end
 		elseif type(v1) ~= type(v2) then
 			self.fail = self.fail + 1
@@ -314,6 +317,8 @@ local metaTableUnitTest_ = {
 -- @usage unitTest = UnitTest{}
 function UnitTest(data)
 	setmetatable(data, metaTableUnitTest_)
+
+	defaultTableValue(data, "unittest", false)
 
 	if data.dbType ~= nil then
 		data.dbType = string.lower(data.dbType)
