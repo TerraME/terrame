@@ -251,7 +251,7 @@ return{
 	end,
 	forEachOrderedElement = function(unitTest)
 		local result = {1, 2, 3, "a", "b", "c"}
-		local list = {1, 2, 3, a = "a", b = "b", c = "c"}
+		local list = {[1] = 1, [3] = 3, [2] = 2, a = "a", b = "b", c = "c"}
 
 		local cont = 0
 		forEachOrderedElement(list, function(idx, value, mtype)

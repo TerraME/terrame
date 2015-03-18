@@ -742,18 +742,33 @@ function forEachOrderedElement(obj, func)
 
 	local strk
 
-	local order = {}
-	local reference = {}
+	local sorder = {}
+	local sreference = {}
+
+	local norder = {}
+	local nreference = {}
+
 	for k, ud in pairs(obj) do
-		strk = tostring(k)
-		order[#order + 1] = strk
-		reference[strk] = k
+		if type(k) == "number" then
+			norder[#norder + 1] = k
+			nreference[k] = k
+		else	
+			strk = tostring(k)
+			sorder[#sorder + 1] = strk
+			sreference[strk] = k
+		end
 	end
 
-	table.sort(order)
+	table.sort(norder)
+	table.sort(sorder)
 
-	for k = 1, #order do
-		local idx = reference[order[k]]
+	for k = 1, #norder do
+		local idx = nreference[norder[k]]
+		if func(idx, obj[idx], type(obj[idx])) == false then return false end
+	end
+
+	for k = 1, #sorder do
+		local idx = sreference[sorder[k]]
 		if func(idx, obj[idx], type(obj[idx])) == false then return false end
 	end
 end
