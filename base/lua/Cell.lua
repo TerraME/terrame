@@ -191,8 +191,7 @@ Cell_ = {
 	-- @usage size = #cell
 	-- @deprecated Cell:#
 	size = function(self)
-		deprecatedFunctionWarning("size", "operator #")
-		return #self
+		deprecatedFunction("size", "operator #")
 	end,
 	--- Synchronizes the Cell. TerraME can keep two copies of the attributes of a Cell in memory:
 	-- one stores the past values and the other stores the current (present) values. Synchronize

@@ -42,9 +42,8 @@ Trajectory_ = {
 	-- @usage traj:addCell(cell)
 	-- @deprecated Trajectory:add
 	addCell = function(self, cell)
-		deprecatedFunctionWarning("addCell", "add")
-		return self:add(cell)
-	end,	
+		deprecatedFunction("addCell", "add")
+	end,
 	--- Retrieve a copy of the Trajectory, with the same parent, select, greater, and Cells.
 	-- @usage copy = traj:clone()
 	clone = function(self)
@@ -113,8 +112,7 @@ Trajectory_ = {
 	-- @usage traj:getCell(index)
 	-- @deprecated Trajectory:get
 	getCell = function(self, index)
-		deprecatedFunctionWarning("getCell", "get")
-		return self:get(index:getX(), index:getY())
+		deprecatedFunction("getCell", "get")
 	end,
 	--- Randomize the Cells, changing their traversing order.
 	-- @usage traj:randomize()

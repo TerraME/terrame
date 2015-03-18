@@ -136,9 +136,9 @@ return{
 
 		unitTest:assert_equal(t.y, 8)
 	end,
-	deprecatedFunctionWarning = function(unitTest)
+	deprecatedFunction = function(unitTest)
 		local error_func = function()
-			deprecatedFunctionWarning("abc", "def")
+			deprecatedFunction("abc", "def")
 		end
 		unitTest:assert_error(error_func, deprecatedFunctionMsg("abc", "def"))
 	end,

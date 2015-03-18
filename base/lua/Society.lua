@@ -329,8 +329,7 @@ Society_ = {
 	-- @usage agent = soc:getAgent("1")
 	-- @deprecated Society:get
 	getAgent = function(self, index)
-		deprecatedFunctionWarning("getAgent", "get")
-		return self:get(index)
+		deprecatedFunction("getAgent", "get")
 	end,
 	--- Return a given Agent based on its index.
 	-- @arg index The index of the Agent that will be returned.
@@ -349,8 +348,7 @@ Society_ = {
 	-- @usage agent = soc:getAgents()[1]
 	-- @deprecated Society.agents
 	getAgents = function(self)
-		deprecatedFunctionWarning("getAgents", ".agents")
-		return self.agents
+		deprecatedFunction("getAgents", ".agents")
 	end,
 	--- Notify all the Agents of the Society.
 	-- @arg modelTime The notification time.
@@ -425,8 +423,7 @@ Society_ = {
 	-- @usage print(soc:size())
 	-- @deprecated Society:#
 	size = function(self)
-		deprecatedFunctionWarning("size", "operator #")
-		return #self
+		deprecatedFunction("size", "operator #")
 	end,
 	--- Split the Society into a set of Groups according to a classification strategy. The 
 	-- generated Groups have empty intersection and union equals to the whole 

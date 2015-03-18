@@ -55,14 +55,14 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
-	deprecatedFunctionWarning = function(unitTest)
+	deprecatedFunction = function(unitTest)
 		local error_func = function()
-			deprecatedFunctionWarning(2)
+			deprecatedFunction(2)
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
-			deprecatedFunctionWarning("test.", -1)
+			deprecatedFunction("test.", -1)
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", -1))
 	end,

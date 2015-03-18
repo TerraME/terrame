@@ -441,12 +441,12 @@ end
 -- comes from Package:deprecatedFunctionMsg().
 -- @arg functionName Name of the deprecated function.
 -- @arg functionExpected A string with the name of the function to be used instead of the deprecated function.
--- @usage deprecatedFunctionWarning("abc", "def")
-function deprecatedFunctionWarning(functionName, functionExpected)
+-- @usage deprecatedFunction("abc", "def")
+function deprecatedFunction(functionName, functionExpected)
 	mandatoryArgument(1, "string", functionName)
 	mandatoryArgument(2, "string", functionExpected)
 
-	customWarning(deprecatedFunctionMsg(functionName, functionExpected))
+	customError(deprecatedFunctionMsg(functionName, functionExpected))
 end
 
 --- Return a message indicating that a function is deprecated and must be replaced.

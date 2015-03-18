@@ -189,8 +189,7 @@ Agent_ = {
 	-- @usage id = agent:getId()
 	-- @deprecated Agent.id
 	getId = function(self)
-		deprecatedFunctionWarning("getId", ".id")
-		return self.id
+		deprecatedFunction("getId", ".id")
 	end,
 	--- Return the time when the machine executed the transition to the current state.
 	-- Before executing for the first time, the latency is zero. 
@@ -416,8 +415,7 @@ Agent_ = {
 	-- @usage agent:randomWalk()
 	-- @deprecated Agent:walk
 	randomWalk = function(self)
-		deprecatedFunctionWarning("randomWalk", "walk")
-		self:walk()
+		deprecatedFunction("randomWalk", "walk")
 	end,
 	--- Execute a random walk to a neighbor Cell.
 	-- @arg placement A string representing the index to be used. Default is "placement".
@@ -499,8 +497,7 @@ Agent_ = {
 	-- @usage agent:setId("newid")
 	-- @deprecated Agent.id
 	setId = function(self, name)
-		deprecatedFunctionWarning("setId", ".id")
-		self.id = name
+		deprecatedFunction("setId", ".id")
 	end,
 	--- Activate or not the trajectories defined for a given Agent.
 	-- @arg status Use or not the trajectories. As default, trajectories are turned off. If

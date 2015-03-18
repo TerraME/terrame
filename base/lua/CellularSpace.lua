@@ -576,17 +576,7 @@ CellularSpace_ = {
 				data.func = getVonNeumannNeighborhood
 			end,
 			["3x3"] = function() 
-				deprecatedFunctionWarning("createNeighborhood with strategy 3x3", "mxn")
-
-				defaultTableValue(data, "filter", function() return true end)
-				defaultTableValue(data, "weight", function() return 1 end)
-
-				checkUnnecessaryArguments(data, {"name", "strategy", "filter", "weight", "inmemory"})
-
-				data.target = self
-				data.m = 3
-				data.n = 3
-				data.func = getMxNNeighborhood
+				deprecatedFunction("createNeighborhood with strategy 3x3", "mxn")
 			end,
 			coord = function() 
 				mandatoryTableArgument(data, "target", "CellularSpace")
@@ -633,8 +623,7 @@ CellularSpace_ = {
 	-- @usage cs:getCell(2, 2)
 	-- @deprecated CellularSpace:get
 	getCell = function(self, xIndex, yIndex)
-		deprecatedFunctionWarning("getCell", "get")
-		return self:get(xIndex, yIndex)
+		deprecatedFunction("getCell", "get")
 	end,
 	--- Retrieve a Cell from the CellularSpace, given its id or its x and y. If the Cell
 	-- does not belong to the CellularSpace then it will return nil.
@@ -673,16 +662,14 @@ CellularSpace_ = {
 	-- @usage cs:getCells()
 	-- @deprecated CellularSpace.cells
 	getCells = function(self)
-		deprecatedFunctionWarning("getCells", ".cells")
-		return self.cells
+		deprecatedFunction("getCells", ".cells")
 	end,
 	--- Return a cell from the CellularSpace given its id.
 	-- @arg cellID A string with the unique identifier of the Cell to be returned.
 	-- @usage cs:getCellByID("2")
 	-- @deprecated CellularSpace:get
 	getCellByID = function(self, cellID)
-		deprecatedFunctionWarning("getCellByID", "get")
-		return self:get(cellID)
+		deprecatedFunction("getCellByID", "get")
 	end,	
 	--- Load the CellularSpace from the database. TerraME automatically executes this function when
 	-- the CellularSpace is created, but one can execute this to load the attributes again, erasing
@@ -831,8 +818,7 @@ CellularSpace_ = {
 	-- @usage print(cs:size())
 	-- @deprecated CellularSpace:#
 	size = function(self)
-		deprecatedFunctionWarning("size", "operator #")
-		return #self
+		deprecatedFunction("size", "operator #")
 	end,
 	--- Split the CellularSpace into a table of Trajectories according to a classification 
 	-- strategy. The generated Trajectories have empty intersection and union equals to the

@@ -67,6 +67,7 @@ metaTableChart_ = {__index = Chart_}
 -- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
 -- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
 -- representing RGB compositions.
+-- @arg data.title An overall title to the Chart.
 -- @arg data.symbol The symbol to be used to draw the points of the chart. It can be a string to
 -- be used by all lines, or a vector of strings, describing the symbol for each line. The available
 -- values are: "square", "diamond", "triangle", "ltriangle" (left), "dtriangle" (downwards triangle), 

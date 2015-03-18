@@ -44,6 +44,5 @@ Clock = function(data)
 
     table.insert(createdObservers, {subject = data.subject, id = id})
 	return id
-
 end
 

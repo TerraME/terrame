@@ -1338,9 +1338,7 @@ function Observer(data)
 	elseif observerType == TME_OBSERVERS.STATEMACHINE then
 		observerId = observerStateMachine(subjectType, cppSubject, data.attributes, data)
 	elseif observerType == TME_OBSERVERS.NEIGHBORHOOD then
-		--RAIAN: Substituindo o observer Neighborhood por Map
-		deprecatedFunctionWarning("Neighborhood Observer", "Map or Image Observer with Neighborhood object as subject", 3)
-		observerId = observerNeighborhood(cppSubject, neighborhoods, data)
+		deprecatedFunction("Neighborhood Observer", "Map or Image Observer with Neighborhood object as subject", 3)
 	elseif observerType == TME_OBSERVERS.SHAPEFILE then
 		local tbDimensions = {}
 		local cells = {}

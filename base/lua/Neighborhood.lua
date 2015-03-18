@@ -50,8 +50,7 @@ Neighborhood_ = {
 	-- @usage n:addNeighbor(cell, 0.7)
 	-- @deprecated Neighborhood:add
 	addNeighbor = function(self, cell, weight)
-		deprecatedFunctionWarning("addNeighbor", "add")
-		self:add(cell, weight)
+		deprecatedFunction("addNeighbor", "add")
 	end,
 	--- Add a new Cell to the Neighborhood.
 	-- @arg xIndex A number.
@@ -61,9 +60,7 @@ Neighborhood_ = {
 	-- @usage n:addCell(2, 2, cs, 0.5)
 	-- @deprecated Neighborhood:add
 	addCell = function(self, xIndex, yIndex, cellularSpace, weight)
-		deprecatedFunctionWarning("addCell", "add")
-		local cell = cellularSpace:getCell(xIndex, yIndex)
-		self:add(cell, weight)
+		deprecatedFunction("addCell", "add")
 	end,
 	--- Remove all Cells from the Neighborhood. In practice, it has almost the same behavior
 	-- as calling Neighborhood() again.
@@ -77,15 +74,14 @@ Neighborhood_ = {
 	-- @usage n:eraseCell(2, 2)
 	-- @deprecated Neighborhood:remove
 	eraseCell = function(self, xIndex, yIndex)
-		deprecatedFunctionWarning("eraseCell", "remove")
+		deprecatedFunction("eraseCell", "remove")
 	end,
 	--- Remove a Cell from the Neighborhood.
 	-- @arg cell A Cell.
 	-- @usage n:eraseNeighbor("2")
 	-- @deprecated Neighborhood:remove
 	eraseNeighbor = function(self, cell)
-		deprecatedFunctionWarning("eraseNeighbor", "remove")
-		self:remove(cell)
+		deprecatedFunction("eraseNeighbor", "remove")
 	end,
 	--- Remove a Cell from the Neighborhood.
 	-- @arg cell A cell which will be removed.
@@ -104,7 +100,7 @@ Neighborhood_ = {
 	-- @usage n:setCellNeighbor(2, "2")
 	-- @deprecated Neighborhood:remove
 	setCellNeighbor = function(self, index, cell)
-		deprecatedFunctionWarning("setCellNeighbor", "remove and add")
+		deprecatedFunction("setCellNeighbor", "remove and add")
 	end,
 	--- Retrieve the weight of the connection to a given neighbour Cell.
 	-- @arg xIndex A number.
@@ -112,8 +108,7 @@ Neighborhood_ = {
 	-- @usage n:getCellWeight(2, 2)
 	-- @deprecated Neighborhood:getWeight
 	getCellWeight = function(self, xIndex, yIndex)
-		deprecatedFunctionWarning("getCellWeight", "getWeight")
-		return 0
+		deprecatedFunction("getCellWeight", "getWeight")
 	end,
 	--- Retrieve the weight of the connection to a given neighbour Cell. It returns nil when
 	-- the Cell is not a neighbor.
@@ -132,8 +127,7 @@ Neighborhood_ = {
 	-- @usage n:getNeighWeight(cell)
 	-- @deprecated Neighborhood:getWeight
 	getNeighWeight = function(self, cell)
-		deprecatedFunctionWarning("getNeighWeight", "getWeight")
-		return self:getWeight(cell)
+		deprecatedFunction("getNeighWeight", "getWeight")
 	end,
 	--- Return whether the Neighborhood does not contain any Cell.
 	-- @usage if n:isEmpty() then
@@ -189,8 +183,7 @@ Neighborhood_ = {
 	-- @usage n:setCellWeight(2, 2, 0.5)
 	-- @deprecated Neighborhood:setWeight
 	setCellWeight = function(self, xIndex, yIndex, weight)
-		deprecatedFunctionWarning("setCellWeight", "setWeight")
-		self:setWeight(xIndex, yIndex, weight)
+		deprecatedFunction("setCellWeight", "setWeight")
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
 	-- @arg cell A Cell.
@@ -198,15 +191,13 @@ Neighborhood_ = {
 	-- @usage n:setNeighWeight(cell, 0.3)
 	-- @deprecated Neighborhood:setWeight
 	setNeighWeight = function(self, cell, weight)
-		deprecatedFunctionWarning("setNeighWeight", "setWeight")
-		self:setWeight(xIndex, yIndex, weight)
+		deprecatedFunction("setNeighWeight", "setWeight")
 	end,
 	--- Retrieve the number of Cells of the Neighborhood.
 	-- @usage n:size()
 	-- @deprecated Neighborhood:#
 	size = function(self)
-		deprecatedFunctionWarning("size", "operator #")
-		return #self
+		deprecatedFunction("size", "operator #")
 	end,
 	--- Return the parent of the Neighborhood, which is the last Cell where the Neighborhood
 	-- was added.

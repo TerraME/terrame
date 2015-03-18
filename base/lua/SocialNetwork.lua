@@ -148,8 +148,7 @@ SocialNetwork_ = {
 	-- @usage sn:size()
 	-- @deprecated SocialNetwork:#
 	size = function(self)
-		deprecatedFunctionWarning("size", "operator #")
-		return #self
+		deprecatedFunction("size", "operator #")
 	end
 }
 
