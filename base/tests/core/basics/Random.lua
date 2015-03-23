@@ -30,6 +30,11 @@ return {
 		self:assert_equal(type(r), "Random")
 		self:assert_equal(type(r:integer()), "number")
 		self:assert_equal(type(r:number()), "number")
+
+		Random_.cObj_ = nil
+		r = Random()
+		self:assert_equal(type(r:integer()), "number")
+		self:assert_equal(type(r:number()), "number")
 	end,
 	integer = function(self)
 		local randomObj = Random{}
@@ -140,6 +145,15 @@ return {
 			local v = randomObj:number(-10.1, -10.1)
 			self:assert_equal(v, -10.1)
 		end
+
+		randomObj = Random{}
+		randomObj:reSeed(12345)
+		for i = 1, 10 do
+			local v = randomObj:number(10.1, -10.1)
+			self:assert(v <= 10.1)
+			self:assert(v >= -10.1)
+		end
+
 	end,
 	reSeed = function(self)
 		local randomObj = Random{}

@@ -99,15 +99,14 @@ end
 -- @usage dir("C:\\")
 dir = function(folder)
 	local s = sessionInfo().separator
-	local command
-	if s == "\\" then
-		command = "dir "..folder.." /b"
-	elseif s == "/" then
+	local command = "dir "..folder.." /b"
+
+	if s == "/" then
 		command = "ls -1 "..folder.." 2> /dev/null"
 	end
 
-	local result =  runCommand(command)
-	
+	local result = runCommand(command)
+
 	if not result or not result[1] then
 		customError(folder.." is not a folder or is empty or does not exist.")
 	else
