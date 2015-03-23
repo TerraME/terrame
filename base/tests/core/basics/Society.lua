@@ -46,6 +46,15 @@ return {
 		unitTest:assert_equal(21, #sc1)
 		unitTest:assert_type(agent, "Agent")
 		unitTest:assert_equal(agent.id, "21")
+
+		local cs = CellularSpace{xdim = 10}
+		local e = Environment{cs, sc1}
+
+		e:createPlacement{}
+		local ag2 = Agent{}
+
+		local agent = sc1:add(ag2)
+		unitTest:assert_equal(22, #sc1)
 	end,
 	clear = function(unitTest)
 		local agent1 = Agent{}
@@ -226,6 +235,7 @@ return {
 		randomObj:reSeed(0)
 
 		local received = 0
+		local sugar = 0
 		local nonFooAgent = Agent{
 			init = function(self)
 				self.age = randomObj:integer(10)
@@ -235,6 +245,9 @@ return {
 			end,
 			on_message = function(m)
 				received = received + 1
+			end,
+			on_sugar = function(m)
+				sugar = sugar + 1
 			end
 		}
 
@@ -279,12 +292,14 @@ return {
 			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
 			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
 			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
+			myself:message{subject = "sugar", receiver = friend, delay = 10}
 		end)
 
 		--[[
 		-- to verify the delayed messages
 		forEachElement(soc.messages, function(_, mes)
-		forEachElement(mes, print)
+			print(tostring(mes.subject))
+			print(tostring(mes.delay))
 		end)
 		--]]
 
@@ -297,6 +312,7 @@ return {
 
 		t:execute(8)
 		unitTest:assert_equal(14, received)
+		unitTest:assert_equal(0, sugar)
 
 		soc:synchronize(1.1)
 
@@ -304,6 +320,7 @@ return {
 
 		soc:synchronize(20)
 		unitTest:assert_equal(16, received)
+		unitTest:assert_equal(2, sugar)
 	end,
 	createSocialNetwork = function(unitTest)
 		Random{seed = 12345}
@@ -470,6 +487,16 @@ return {
 
 		unitTest:assert_equal(380, count_c)
 		unitTest:assert_equal(2094, count_n)
+	end,
+	get = function(unitTest)
+		local nonFooAgent = Agent{}
+
+		local soc = Society{
+			instance = nonFooAgent,
+			quantity = 10
+		}
+
+		unitTest:assert_type(soc:get(1), "Agent")
 	end,
 	split = function(unitTest)
 		local randomObj = Random{}

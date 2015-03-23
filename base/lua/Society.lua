@@ -338,9 +338,9 @@ Society_ = {
 		mandatoryArgument(1, "number", index)
 
 		if index < 0 then
-			incompatibleValueError("index", "positive integer number", "negative number")
+			incompatibleValueError(1, "positive number", index)
 		elseif math.floor(index) ~= index then
-			incompatibleValueError("index", "positive integer number", "float number")
+			incompatibleValueError(1, "integer number", index)
 		end
 		return self.agents[index]
 	end,
@@ -354,16 +354,14 @@ Society_ = {
 	-- @arg modelTime The notification time.
 	-- @usage society:notify()
 	notify = function (self, modelTime)
-		if modelTime == nil then
-			modelTime = 1
-		elseif type(modelTime) ~= "number" then
-			if type(modelTime) == "Event" then
-				modelTime = modelTime:getTime()
-			else
-				incompatibleTypeError(1, "Event or positive number", modelTime) 
-			end
-		elseif modelTime < 0 then
-			incompatibleValueError(1, "Event or positive number", modelTime)   
+		if type(modelTime) == "Event" then
+			modelTime = modelTime:getTime()
+		end
+
+		optionalArgument(1, "number", modelTime)
+
+		if modelTime < 0 then
+			incompatibleValueError(1, "positive number", modelTime)
 		end
 
 		if self.obsattrs then
@@ -626,23 +624,14 @@ function Society(data)
 	setmetatable(data, metaTableSociety_)
 	data.cObj_:setReference(data)
 
-	if type(data.id) ~= "string" then
-		if data.id == nil then
-		else
-			incompatibleTypeError("id", "string", data.id)
-		end
-	end
-
 	mandatoryTableArgument(data, "instance", "Agent")
 
 	local function createSummaryFunctions(agent)
 		-- create functions for the society according to the attributes of its instance
 		forEachElement(agent, function(attribute, value, mtype)
 			if attribute == "id" or attribute == "parent" then return
-			elseif attribute == "messages" or attribute == "instance" or 
-	               attribute == "autoincrement" or attribute == "placements" then
-				customWarning("Attribute '"..attribute.."' belong to both Society and Agent.")
-				return
+			elseif belong(attribute, {"messages", "instance", "autoincrement", "placements"}) then
+				customWarning("Attribute '"..attribute.."' belongs to both Society and Agent.")
 			elseif mtype == "function" then
 				data[attribute] = function(soc, args)
 					forEachAgent(soc, function(agent)

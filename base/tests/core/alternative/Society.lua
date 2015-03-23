@@ -34,12 +34,12 @@ return{
 		local error_func = function()
 			sc1:notify("not_int")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			sc1:notify(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
 	end,
 	remove = function(unitTest)
 		local agent1 = Agent{}
@@ -122,6 +122,16 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("quantity", "positive integer number (except zero)", -15))
+
+		ag1 = Agent{instance = 2}
+
+		local error_func = function()
+			sc2 = Society{
+				instance = ag1,
+				quantity = 20
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'instance' belongs to both Society and Agent.")
 	end,
 	add = function(unitTest)
 		local ag1 = Agent{}
@@ -144,6 +154,11 @@ return{
 			sc1:createSocialNetwork()
 		end
 		unitTest:assert_error(error_func, tableArgumentMsg())
+
+		local error_func = function()
+			sc1:createSocialNetwork{}
+		end
+		unitTest:assert_error(error_func, "It was not possible to infer a value for argument 'strategy'.")
 
 		error_func = function()
 			sc1:createSocialNetwork(15)
@@ -211,6 +226,15 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("quantity", "positive number (except zero)", 0))
+
+		error_func = function()
+			sc1:createSocialNetwork{
+				strategy = "quantity",
+				quantity = 2.2
+			}
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg("quantity", "integer number", 2.2))
+
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -354,6 +378,18 @@ return{
 			ag1 = sc1:get("asdfg")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "asdfg"))
+
+		error_func = function()
+			ag1 = sc1:get(-1)
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
+	
+		error_func = function()
+			ag1 = sc1:get(2.2)
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "integer number", 2.2))
+	
+
 	end,
 	getAgent = function(unitTest)
 		local ag1 = Agent{
