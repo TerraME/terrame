@@ -26,7 +26,11 @@
 
 return {
 	setId = function(unitTest)
-		unitTest:assert(true)
+		local c = Cell{id = "a"}
+
+		c:setId("b")
+
+		unitTest:assert_equal(c:getId(), "b")
 	end,
 	getId = function(unitTest)
 		unitTest:assert(true)
@@ -125,6 +129,19 @@ return {
 		n:add(cell2)
 		unitTest:assert_equal(1, #ng)
 		unitTest:assert_nil(cell:getNeighborhood("wrong_name"))
+
+		local cs = CellularSpace{xdim = 10}
+
+		local filterFunction = function(cell, neighbor)
+			return cell.x == neighbor.x and cell.y ~= neighbor.y
+		end
+
+		cs:createNeighborhood{
+			inmemory = false
+		}
+
+		unitTest:assert_type(cs:sample():getNeighborhood(), "Neighborhood")
+
 	end,
 	init = function(unitTest)
 		local c = Cell{

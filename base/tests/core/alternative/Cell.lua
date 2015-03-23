@@ -60,6 +60,12 @@ return{
 			local cell = Cell{x = 1, y = -2.3}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("y", "integer number", -2.3))
+
+		error_func = function()
+			local cell = Cell{id = 2.3}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("id", "string", 2.3))
+	
 	end,
 	addNeighborhood = function(unitTest)
 		local cell = Cell{x = 1, y = 1}
@@ -169,12 +175,12 @@ return{
 		local error_func = function()
 			cell:notify("not_int")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			cell:notify(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
 	end
 }
 

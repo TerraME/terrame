@@ -140,16 +140,14 @@ Cell_ = {
 	-- this value; therefore it can be left empty. See the Observer documentation for details.
 	-- @usage cell:notify()
 	notify = function (self, modelTime)
-		if modelTime == nil then
-			modelTime = 1
-		elseif type(modelTime) ~= "number" then
-			if type(modelTime) == "Event" then
-				modelTime = modelTime:getTime()
-			else
-				incompatibleTypeError(1, "Event or positive number", modelTime)
-			end
-		elseif modelTime < 0 then
-			incompatibleValueError(1, "Event or positive number", modelTime)
+		if type(modelTime) == "Event" then
+			modelTime = modelTime:getTime()
+		end
+
+		optionalArgument(1, "number", modelTime)
+
+		if modelTime < 0 then
+			incompatibleValueError(1, "positive number", modelTime)
 		end
 
 		if self.obsattrs then
@@ -184,7 +182,7 @@ Cell_ = {
 		mandatoryArgument(1, "string", id)
 		self.id = id
 		self.cObj_:setID(self.id)
-		self.objectId_ = data.cObj_:getID()
+		self.objectId_ = self.cObj_:getID()
 	end,
 	--- Retrieve the number of Neighborhoods of the Cell.
 	-- @return a positive integer number
@@ -245,9 +243,7 @@ function Cell(data)
  		end
 	end
 
-	if type(data.id) ~= "string" and data.id ~= nil then
-		incompatibleTypeError("id", "string or nil", data.id)
-	end
+	optionalTableArgument(data, "id", "string")
 
 	data.cObj_ = TeCell()
 	data.past = {}
