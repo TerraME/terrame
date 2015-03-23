@@ -44,12 +44,11 @@ SocialNetwork_ = {
 			customError("Agent should have an id in order to be added to a SocialNetwork.")
 		elseif self.connections[id] ~= nil then
 			customWarning("Agent '"..id.."' already belongs to the SocialNetwork.")
-			return false
+		else
+			self.connections[id] = connection
+			self.weights[id] = weight
+			self.count = self.count + 1
 		end
-		
-		self.connections[id] = connection
-		self.weights[id] = weight
-		self.count = self.count + 1
 	end,
 	--- Remove all Agents from the SocialNetwork. In practice, it has almost the same behavior
 	-- as calling SocialNetwork() again.
