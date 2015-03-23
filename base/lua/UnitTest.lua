@@ -58,7 +58,7 @@ local print_error = function(self, msg)
 			func = customError
 			arg = msg
 		end
-		func(msg)
+		func(arg)
 	end
 end
 
