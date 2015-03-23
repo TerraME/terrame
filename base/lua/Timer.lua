@@ -60,21 +60,9 @@ Timer_ = {
 		self.cObj_:execute(finalTime)
 	end,
 	--- Notify every Observer connected to the Timer.
-	-- @arg modelTime An positive integer number representing time to be used by the
-	-- Observer. Default is the current simulation time 'self:getTime()'.
 	-- @usage timer:notify()
-	notify = function (self, modelTime)
-		if modelTime == nil then
-			modelTime = self:getTime()
-   		elseif type(modelTime) ~= "number" then
-			if type(modelTime) == "Event" then
-				modelTime = modelTime:getTime()
-			else
-				incompatibleTypeError(1, "Event or positive number", modelTime) 
-			end
-		elseif modelTime < 0 then
-			incompatibleValueError(1, "Event or positive number", modelTime)   
-		end
+	notify = function (self)
+		local modelTime = self:getTime()
 		self.cObj_:notify(modelTime)
 	end,
 }

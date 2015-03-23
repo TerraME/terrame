@@ -38,6 +38,10 @@ return{
 
 		Clock{subject = timer}
 		timer:execute(50)
+		unitTest:assert(true)
+	end,
+	notify = function(unitTest)
+		local timer
 
 		timer = Timer{
 			ev1 = Event{priority =  1, action = function(event) timer:notify() end},
