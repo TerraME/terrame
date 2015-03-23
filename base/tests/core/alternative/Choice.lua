@@ -130,6 +130,15 @@ return{
 			local c = Choice{min = 1, step = 3}
 		end
 		unitTest:assert_error(error_func, "It is not possible to have 'step' and not 'max'.")
+	end,
+	sample = function(unitTest)
+		local c = Choice{min = 1}
+
+		local error_func = function()
+			c:sample()
+		end
+		unitTest:assert_error(error_func, "It is not possible to retrieve a sample from this Choice.")
+	
 	end
 }
 
