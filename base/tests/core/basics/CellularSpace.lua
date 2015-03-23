@@ -54,6 +54,7 @@ return{
 			defor = 1,
 			road = true,
 			cover = "pasture",
+			deforest = function(self) self.defor = self.defor + 1 end,
 			water = Choice{1, 2, 3}
 		}
 
@@ -66,6 +67,10 @@ return{
 		unitTest:assert_equal(cs:road(), 100)
 		unitTest:assert_equal(cs:cover().pasture, 100)
 		unitTest:assert_equal(cs:water(), 202)
+		unitTest:assert_equal(cs:water(), 202)
+
+		cs:deforest()
+		unitTest:assert_equal(cs:sample().defor, 2)
 	end, 
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

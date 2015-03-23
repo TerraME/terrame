@@ -1079,7 +1079,7 @@ function CellularSpace(data)
 				customError("dbType and file extension should be the same.")
 			end
 
-			local f = io.open(data.database, 'r') 
+			local f = io.open(data.database, "r") 
 			if not f then
 				resourceNotFoundError("database", data.database)
 			else
