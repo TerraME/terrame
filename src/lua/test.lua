@@ -82,6 +82,11 @@ local function lineTable(filename)
 			if string.match(line, "function") then break end
 			if string.match(line, "else")     then break end
 			if string.match(line, "end")      then break end
+			if string.match(line, "repeat")   then break end
+			if string.match(line, "break")    then break end
+			if string.match(line, "}")        then break end
+			if string.match(line, "local")    then break end
+			if string.match(line, "return")   then break end
 
 			if state == "code" then
 				if c == "" then
