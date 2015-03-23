@@ -55,6 +55,22 @@ local Tube = Model{
 	end
 }
 
+local Tube2 = Model{
+	initialWater    = 0,
+	finalTime       = 10,
+	init = function(model)
+		model.water = model.initialWater
+		model.env = Environment{
+			timer = Timer{
+				Event{action = function()
+					model.water = model.water + 1
+				end}
+			}
+		}
+	end
+}
+
+
 return{
 	Model = function(unitTest)
 		unitTest:assert_type(Tube, "Model")
@@ -115,6 +131,10 @@ return{
 		unitTest:assert_equal(t.water, 200)
 		t:execute()
 		unitTest:assert_equal(t.water, 210)
+
+		t = Tube2{}
+		t:execute()
+		unitTest:assert_equal(t.water, 10)
 	end
 }
 

@@ -51,23 +51,14 @@ Model_ = {
 	--- Creates the objects of the model. This function must be implemented by the derived type.
 	-- @usage model:init()
 	init = function(self)
-		customError("Function 'init' was not implemented by the Model.") -- this line will never execute
 	end,
 	--- Run the model. It requires that the model has attribute finalTime.
 	-- @usage model:execute()
 	execute = function(self)
 		forEachElement(self, function(name, value, mtype)
-			if mtype == "Timer" then
+			if belong(mtype, {"Timer", "Environment"}) then
 				value:execute(self.finalTime)
 				return false
-			elseif mtype == "Environment" then
-				local found = false
-				forEachElement(value, function(mname, mvalue, mmtype)
-					mvalue:execute(self.finalTime)
-					found = true
-					return false
-				end)
-				if found then return false end
 			end
 		end)
 	end,
@@ -141,7 +132,7 @@ function Model(attrTab)
 					elements[mvalue] = true
 				end
 
-				if belong(mvalue, {"string", "number", "boolean"}) then
+				if belong(mvalue, {"string", "number", "boolean", "Choice", "mandatory"}) then
 					local found = false
 					forEachElement(attrTab, function(_, _, attrtype)
 						if attrtype == mvalue then
@@ -153,19 +144,6 @@ function Model(attrTab)
 					if not found then
 						customWarning("There is no argument '"..mvalue.."' in the Model, although it is described in the interface().")
 					end
-				elseif belong(mvalue, {"Choice", "mandatory"}) then
-					local found = false
-					forEachElement(attrTab, function(_, attrvalue, attrtype)
-						if attrtype == mvalue then
-							found = true
-							return false
-						end
-					end)
-
-					if not found then
-						customError("There is no "..mvalue.." argument in the Model, but it is described within interface().")
-					end
-	
 				else -- named table
 					if attrTab[mvalue] == nil then
 						customError("interface() element '"..mvalue.."' is not an argument of the Model.")
@@ -301,7 +279,7 @@ function Model(attrTab)
 					if itype == "Choice" then
 						if ivalue.values then
 							if type(iargv[iname]) ~= type(ivalue.default) then
-								incompatibleTypeError(name, type(ivalue.default), iargv[iname])
+								incompatibleTypeError(name.."."..iname, type(ivalue.default), iargv[iname])
 							elseif not belong(iargv[iname], ivalue.values) then
 								local str = "one of {"
 								forEachElement(ivalue.values, function(_, v)
@@ -329,10 +307,6 @@ function Model(attrTab)
 						incompatibleTypeError(name.."."..iname, itype, iargv[iname])
 					end
 				end)
-			elseif mtype == "mandatory" then
-				if type(argv[name]) ~= value.value then
-					incompatibletypeError(name, type(argv[name]), value.value)
-				end
 			elseif type(argv[name]) ~= mtype then
 				incompatibleTypeError(name, mtype, argv[name])
 			end
@@ -363,11 +337,7 @@ function Model(attrTab)
 			Random{seed = argv.seed}
 		end
 
-		if argv.finalTime == nil then
-			customError("The Model instance does not have attribute 'finalTime'.")
-		elseif type(argv.finalTime) ~= "number" then 
-			incompatibleTypeError(1, "number", finalTime)
-		end
+		mandatoryTableArgument(argv, "finalTime", "number")
 
 		-- check whether the model instance has a timer or an Environment with at least one Timer
 		local text = ""

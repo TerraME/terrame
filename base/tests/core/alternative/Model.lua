@@ -89,7 +89,6 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("check", "function", 2))
 
-
 		local Tube = Model{
 			init = function(model) end,
 			finalTime = 10
@@ -163,6 +162,18 @@ return{
 		end
 		unitTest:assert_error(error_func, "The object has two running objects: 't' (Environment) and 'e' (Timer).")
 
+		Tube = Model{
+			init = function(model)
+				model.finalTime = "5"
+				model.t2 = Timer{}
+			end
+		}
+
+		error_func = function()
+			local m = Tube{}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "5"))
+
 		local Tube = Model{
 			simulationSteps = Choice{10, 20, 30},
 			msleep = Choice{min = 1, max = 2, step = 0.5, default = 2},
@@ -211,6 +222,11 @@ return{
 			local m = Tube{simulationSteps = 40}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("simulationSteps", "one of {10, 20, 30}", 40))
+
+		error_func = function()
+			local m = Tube{simulationSteps = "40"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("simulationSteps", "number", "40"))
 
 		error_func = function()
 			local m = Tube{block = {level = 40}}
@@ -279,7 +295,7 @@ return{
 		error_func = function()
 			local T = Tube{}
 		end
-		unitTest:assert_error(error_func, "The Model instance does not have attribute 'finalTime'.")
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("finalTime"))
 	end,
 	mandatory = function(unitTest)
 		local error_func = function()
@@ -321,6 +337,41 @@ return{
 			local m = M{v = {value = false}}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("v.value", "number", false))
+
+		M = Model{
+			v = {value = Choice{min = 1, max = 10, step = 0.5}},
+			init = function() end
+		}
+
+		error_func = function()
+			local m = M{v = {value = 1.4}}
+		end
+		unitTest:assert_error(error_func, "Invalid value for argument 'v.value' (1.4).")
+
+		error_func = function()
+			local m = M{v = {value = "1.4"}}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("v.value", "number", "1.4"))
+	
+		error_func = function()
+			local m = M{v = {value = 0}}
+		end
+		unitTest:assert_error(error_func, "Argument 'v.value' should be greater than or equal to 1.")
+	
+		error_func = function()
+			local m = M{v = {value = 11}}
+		end
+		unitTest:assert_error(error_func, "Argument 'v.value' should be less than or equal to 10.")
+
+		M = Model{
+			v = {value = Choice{1, 2, 4}},
+			init = function() end
+		}
+
+		error_func = function()
+			local m = M{v = {value = "1.4"}}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("v.value", "number", "1.4"))
 	end,
 	interface = function(unitTest)
 		local error_func = function()
