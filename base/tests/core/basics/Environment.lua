@@ -26,6 +26,7 @@
 
 return{
 	createPlacement = function(unitTest)
+		Random():reSeed(12345)
 		local predator = Agent{
 			energy = 40,
 			name = "predator",
@@ -36,26 +37,28 @@ return{
 
 		local predators = Society{
 			instance = predator,
-			quantity = 2
+			quantity = 10
 		}
+
+		local ag = Agent{}
 
 		local cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
 
-		local env = Environment{cs, predators}
+		local env = Environment{cs, predators = predators, zag = ag}
 		env:createPlacement{max = 1}
 
 		local cont = 0
 		forEachCell(cs, function(cell)
 			cont = cont + #cell.placement
 		end)
-		unitTest:assert_equal(2, cont)
+		unitTest:assert_equal(11, cont)
 
 		cont = 0
 		forEachAgent(predators, function(agent)
 			cont = cont + #agent.placement
 		end)
-		unitTest:assert_equal(2, cont)
+		unitTest:assert_equal(10, cont)
 
 		forEachAgent(predators, function(ag)
 			ag:reproduce{age = 0}
@@ -68,13 +71,33 @@ return{
 		forEachCell(cs, function(cell)
 			cont = cont + #cell.placement
 		end)
-		unitTest:assert_equal(4, cont)
+		unitTest:assert_equal(21, cont)
 
 		cont = 0
 		forEachAgent(predators, function(agent)
 			cont = cont + #agent.placement
 		end)
-		unitTest:assert_equal(4, cont)
+		unitTest:assert_equal(20, cont)
+
+		local predator = Agent{name = "predator"}
+		local ag = Agent{name = "ag"}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 199
+		}
+
+		local cs = CellularSpace{xdim = 10}
+
+		local env = Environment{cs, pred = predators, zag = ag}
+		env:createPlacement{strategy = "uniform"}
+
+		unitTest:assert_equal(#cs.cells[1]:getAgents(), 2)
+		unitTest:assert_equal(#cs.cells[2]:getAgents(), 2)
+		unitTest:assert_equal(#cs.cells[100]:getAgents(), 2)
+
+		unitTest:assert_equal(cs.cells[100]:getAgents()[1].name, "predator")
+		unitTest:assert_equal(cs.cells[100]:getAgents()[2].name, "ag")
 
 		Random():reSeed(12345)
 

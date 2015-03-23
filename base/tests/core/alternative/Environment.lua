@@ -93,16 +93,31 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("max", "positive integer number", -13))
 
-		local cs = CellularSpace{xdim = 10}
+		local cs = CellularSpace{xdim = 2}
 		local ag1 = Agent{}
-		local sc1 = Society {instance = ag1, quantity = 20}
+		local sc1 = Society{instance = ag1, quantity = 20}
+		local g1 = Group{target = sc1}
 
+		env = Environment{g1}
+
+		error_func = function()
+			env:createPlacement()
+		end
+		unitTest:assert_error(error_func, "Placements is still not implemented for groups.")
+	
 		env = Environment{sc1}
 
 		error_func = function()
 			env:createPlacement()
 		end
 		unitTest:assert_error(error_func, "The Environment does not contain a CellularSpace.")
+
+		env = Environment{cs = cs, cs2 = cs}
+
+		error_func = function()
+			env:createPlacement()
+		end
+		unitTest:assert_error(error_func, "Environment should contain only one CellularSpace or Trajectory.")
 
 		env = Environment{cs}
 
@@ -112,12 +127,20 @@ return{
 		unitTest:assert_error(error_func, "Could not find a behavioral entity (Society or Agent) within the Environment.")
 
 		env = Environment{cs, sc1}
+
+		error_func = function()
+			env:createPlacement{max = 1}
+		end
+		unitTest:assert_error(error_func, "It is not possible to put such amount of agents in space.")
+
+		env = Environment{cs, sc1}
 		env:createPlacement()
 
 		error_func = function()
 			env:createPlacement()
 		end
 		unitTest:assert_error(error_func, "There is a Society within this Environment that already has this placement.")
+
 	end,
 	execute = function(unitTest)
 		local env = Environment{}

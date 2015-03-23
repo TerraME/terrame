@@ -30,39 +30,26 @@ local function createRandomPlacement(environment, cs, max, placement)
 	if nplacement == nil then
 		nplacement = "placement"
 	end
-	if max == nil then
-		forEachElement(environment, function(_, element)
-			local t = type(element)
-			if t == "Society" then
-				element.placements[nplacement] = cs
-				forEachAgent(element, function(agent)
-					agent:enter(cs:sample(), placement)
-				end)
-			elseif t == "Agent" then
-				element:enter(cs:sample(), placement)
-			end 
-		end)
-	else -- max ~= nil
-		forEachElement(environment, function(_, element)
-			local t = type(element)
-			if t == "Society" then
-				element.placements[nplacement] = cs
-				forEachAgent(element, function(agent)
-					local cell = cs:sample()
-					while #cell[nplacement] >= max do
-						cell = cs:sample()
-					end
-					agent:enter(cell, placement)
-				end)
-			elseif t == "Agent" then
+
+	forEachOrderedElement(environment, function(_, element)
+		local t = type(element)
+		if t == "Society" then
+			element.placements[nplacement] = cs
+			forEachAgent(element, function(agent)
 				local cell = cs:sample()
 				while #cell[nplacement] >= max do
 					cell = cs:sample()
-				end 
-				element:enter(cell, placement)
+				end
+				agent:enter(cell, placement)
+			end)
+		elseif t == "Agent" then
+			local cell = cs:sample()
+			while #cell[nplacement] >= max do
+				cell = cs:sample()
 			end 
-		end)
-	end
+			element:enter(cell, placement)
+		end 
+	end)
 end
 
 local function createUniformPlacement(environment, cs, placement)
@@ -72,7 +59,7 @@ local function createUniformPlacement(environment, cs, placement)
 	end
 
 	local counter = 1 
-	forEachElement(environment, function(_, element, mtype)
+	forEachOrderedElement(environment, function(_, element, mtype)
 		if mtype == "Society" then
 			element.placements[nplacement] = cs
 			forEachAgent(element, function(agent)
@@ -83,7 +70,7 @@ local function createUniformPlacement(environment, cs, placement)
 				end 
 			end)
 		elseif mtype == "Agent" then
-			agent:enter(cs.cells[counter], placement)
+			element:enter(cs.cells[counter], placement)
 			counter = counter + 1 
 			if counter > #cs then
 				counter = 1 
@@ -242,7 +229,7 @@ Environment_ = {
 		verify(foundsoc, "Could not find a behavioral entity (Society or Agent) within the Environment.")
 
 		if data.strategy == "random" and data.max ~= nil and qty_agents > #mycs * data.max then
-			customError("It is not possible to put that amount of agents in space.")
+			customError("It is not possible to put such amount of agents in space.")
 		end
 
 		switch(data, "strategy"):caseof{
@@ -323,10 +310,10 @@ Environment_ = {
 
 			local endName = string.find(header, "%s", (beginName + 1))
 			
+			attribNames[i] = string.sub(header, (beginName + 1))
 			if endName ~= nil then
 				attribNames[i] = string.sub(header, (beginName + 1), (endName - 1))
 			else
-				attribNames[i] = string.sub(header, (beginName + 1))
 				break
 			end
 		end
@@ -336,13 +323,13 @@ Environment_ = {
 			if type(element) == "CellularSpace" then
 				local cellSpaceLayer = element.layer
 				
-				if (cellSpaceLayer == layer1Id) then cellSpaces[1] = element
-				elseif (cellSpaceLayer == layer2Id) then cellSpaces[2] = element end
+				if cellSpaceLayer == layer1Id then cellSpaces[1] = element
+				elseif cellSpaceLayer == layer2Id then cellSpaces[2] = element end
 			end
 		end
 		
 		if cellSpaces[1] == nil or cellSpaces[2] == nil then
-			customError("CellularSpaces were not found in the Environment.")
+			customError("CellularSpaces with layers '"..layer1Id.."' and '"..layer2Id.."' were not found in the Environment.")
 		end
 
 		repeat
@@ -470,8 +457,6 @@ function Environment(data)
  			customError(namedArgumentsMsg())
 		end
 	end
-
-	defaultTableValue(data, "id", "1")
 
 	local cObj = TeScale(data.id)
 	setmetatable(data, metaTableEnvironment_)

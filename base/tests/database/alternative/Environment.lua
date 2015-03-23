@@ -27,8 +27,44 @@
 
 return{
 	loadNeighborhood = function(unitTest)
-		local cs1 = CellularSpace{xdim = 10}
+		local config = getConfig()
+		local mdbType = config.dbType
+		local mhost = config.host
+		local muser = config.user
+		local mpassword = config.password
+		local mport = config.port
+		local mdatabase
+
+		if mdbType == "ado" then
+			mdatabase = data("emas.mdb", "base")
+		else
+			mdatabase = "emas"
+		end
+
+		local cs1 = CellularSpace{
+			host = mhost,
+			user = muser,
+			password = mpassword,
+			port = mport,
+			database = mdatabase,
+			theme = "cells1000x1000"
+		}
+
+		unitTest:assert(true)
+
 		local cs2 = CellularSpace{xdim = 10}
+
+		local env = Environment{cs1, cs2}
+
+		local error_func = function()
+			env:loadNeighborhood{
+				source = file("gpmAreaCellsPols.gpm", "base"),
+			}
+		end
+		unitTest:assert_error(error_func, "CellularSpaces with layers 'cells1000x1000' and 'Limit' were not found in the Environment.")
+
+		cs1 = CellularSpace{xdim = 10}
+		cs2 = CellularSpace{xdim = 10}
 
 		local env = Environment{cs1, cs2}
 
@@ -95,6 +131,14 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, "This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.")
+	
+		error_func = function()
+			env:loadNeighborhood{
+				source = "emas-distance-xxx.gpm",
+				name = "my_neighborhood"
+			}
+		end
+		unitTest:assert_error(error_func, resourceNotFoundMsg("source", "emas-distance-xxx.gpm"))
 		
 		error_func = function()
 			env:loadNeighborhood{
