@@ -87,6 +87,7 @@ local function lineTable(filename)
 			if string.match(line, "}")        then break end
 			if string.match(line, "local")    then break end
 			if string.match(line, "return")   then break end
+			if string.match(line, "do")       then break end
 
 			if state == "code" then
 				if c == "" then
