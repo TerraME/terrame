@@ -63,7 +63,10 @@ TextScreen = function(data)
 		elseif type(data.subject) == "Society" then
 			forEachElement(data.subject, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
-				table.insert(data.select, idx)
+				local size = string.len(idx)
+				if string.sub(idx, size, size) ~= "_" then
+					table.insert(data.select, idx)
+				end
 			end)
 		else
 			customError("Invalid type. TextScreen only works with Cell, CellularSpace, Agent, and Society.")
@@ -100,8 +103,10 @@ TextScreen = function(data)
 			for i = 1, #data.select do
 				if data.select[i] == idx then
 					data.select[i] = idx.."_"
-					local mvalue = data.subject[idx](data.subject)
-					data.subject[idx.."_"] = mvalue
+					if type(data.subject[idx]) == "function" then
+						local mvalue = data.subject[idx](data.subject)
+						data.subject[idx.."_"] = mvalue
+					end
 				end
 			end
 		end)

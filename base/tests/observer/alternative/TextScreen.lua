@@ -38,7 +38,6 @@ return{
 		end
 		unitTest:assert_error(error_func, "Invalid type. TextScreen only works with Cell, CellularSpace, Agent, and Society.")
 
-
 		error_func = function()
 			TextScreen{subject = c, select = 5}
 		end
