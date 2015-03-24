@@ -216,13 +216,18 @@ Chart = function(data)
 
 	verify(#data.select > 0, "Charts must select at least one attribute.")
 
+	for i = 1, #data.select do
+		if data.select[i] == "#" then
+			data.select[i] = "quantity_"
+			data.subject.quantity_ = #data.subject
+		end
+	end
+
 	if data.label == nil then
 		data.label = {}
 		for i = 1, #data.select do
-			if data.select[i] == "#" then
+			if data.select[i] == "quantity_" then
 				data.label[i] = "quantity"
-				data.select[i] = "quantity_"
-				data.subject.quantity_ = #data.subject
 			else
 				data.label[i] = data.select[i]
 			end
