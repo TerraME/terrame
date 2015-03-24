@@ -32,6 +32,12 @@ return{
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
 
+		local e = Event{action = function() end}
+		error_func = function()
+			Chart{subject = e}
+		end
+		unitTest:assert_error(error_func, "Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society.")
+
 		local error_func = function()
 			Chart{subject = c, select = 5}
 		end
@@ -204,6 +210,21 @@ return{
 		end
 		unitTest:assert_error(error_func, invalidFileExtensionMsg("#1", "wrongext"))
 
+		local cell = Cell{}
+
+		for i = 1, 15 do
+			cell["v"..i] = 5
+		end
+
+		local error_func = function()
+			Chart{subject = cell}
+		end
+		unitTest:assert_error(error_func, "Argument color is compulsory when using more than 10 attributes.")
+
+		local error_func = function()
+			Chart{subject = cell, select = {"v1", "v2", "v3"}, label = {"V1", "V2"}}
+		end
+		unitTest:assert_error(error_func, "Arguments 'select' and 'label' should have the same size.")
 	end
 }
 

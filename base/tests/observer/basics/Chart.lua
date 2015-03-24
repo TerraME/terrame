@@ -24,6 +24,47 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	Chart = function(unitTest)
+		local world = Agent{
+		    count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
+
+		local c1 = Chart{subject = world}
+
+		local c1 = Chart{
+			subject = world,
+			select = {"mcount"},
+			color = "green",
+			size = 5,
+			pen = "solid",
+			symbol = "square",
+			width = 3,
+			style = "lines"
+		}
+
+		local soc = Society{
+			instance = world,
+			quantity = 3
+		}
+
+		local c1 = Chart{subject = soc}
+
+		local world = CellularSpace{
+			xdim = 10,
+		    count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
+
+		local c1 = Chart{subject = world}
+		local c1 = Chart{subject = world, select = "mcount", xAxis = "count"}
+
+		unitTest:assert(true)
+	end,
 	save = function(unitTest)
 		local c = Cell{value = 1}
 

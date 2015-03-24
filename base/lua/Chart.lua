@@ -237,20 +237,12 @@ Chart = function(data)
 		end
 	end
 
+	verify(#data.select == #data.label, "Arguments 'select' and 'label' should have the same size.")
+
 	checkUnnecessaryArguments(data, {
-		"subject",
-		"select",
-		"yLabel",
-		"xLabel",
-		"title",
-		"label",
-		"pen",
-		"color",
-		"xAxis",
-		"width",
-		"symbol",
-		"style",
-		"size"
+		"subject", "select", "yLabel", "xLabel",
+		"title", "label", "pen", "color", "xAxis",
+		"width", "symbol", "style", "size"
 	})
 
 	if data.xAxis then
@@ -269,33 +261,12 @@ Chart = function(data)
 
 	local observerParams = {}
 	local subject = data.subject
-	if type(subject) == "Automaton" then
-		local locatedInCell = data.location
-		if type(locatedInCell) ~= "Cell" then
-			customError("Observing an Automaton requires argument 'location' to be a Cell, got "..type(locatedInCell)..".")
-		else
-			table.insert(observerParams, locatedInCell)
-		end
-	end
+
 	table.insert(observerParams, data.title)
 	table.insert(observerParams, data.xLabel)
 	table.insert(observerParams, data.yLabel)
 
-    local label = ""
-
-    if type(data.label) == "table" then
-        local labelCount = #data.label
-        local attrCount = #data.select
-
-        if labelCount < attrCount then
-            label = table.concat(data.label, ";")
-            for i = labelCount + 1, attrCount do
-                label = label..";"..tostring(i)..";"
-            end
-        else
-            label = table.concat(data.label, ";")
-        end
-    end
+    local label = table.concat(data.label, ";")
 
 	table.insert(observerParams, label)
 
@@ -433,18 +404,14 @@ Chart = function(data)
 	local id
 	local obs
 
-	if subject.cObj_ then
-		if type(subject) == "CellularSpace" then
-			id, obs = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
-		else
-			if type(subject) == "Society" then
-				subject.observerId = 1 -- TODO: verify why this line is necessary
-			end
-			id, obs = subject.cObj_:createObserver(observerType, data.select, observerParams)
-		end
+	if type(subject) == "CellularSpace" then
+		id, obs = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
 	else
-		id, obs = subject:createObserver(observerType, data.select, observerParams)
-	end	
+		if type(subject) == "Society" then
+			subject.observerId = 1 -- TODO: verify why this line is necessary
+		end
+		id, obs = subject.cObj_:createObserver(observerType, data.select, observerParams)
+	end
     table.insert(createdObservers, {subject = data.subject, id = id})
 
 	local chart = TeChart()
