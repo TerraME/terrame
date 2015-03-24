@@ -24,18 +24,172 @@
 --          Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
+local cs = CellularSpace{xdim = 10}
+
+local state1 = State{
+	id = "seco",
+	Jump{
+		function(event, agent, cell)
+			agent.acum = agent.acum + 1
+			if agent.cont < MAX_COUNT then 
+				agent.cont = agent.cont + 1
+				return true
+			end
+			if agent.cont == MAX_COUNT then agent.cont = 0 end
+			return false
+		end,
+		target = "molhado"
+	}
+}
+
+local state2 = State{
+	id = "molhado",
+	Jump{
+		function(event, agent, cell)
+			agent.acum = agent.acum + 1
+			if agent.cont < MAX_COUNT then 
+				agent.cont = agent.cont + 1
+				return true
+			end
+			if agent.cont == MAX_COUNT then agent.cont = 0 end
+			return false
+		end, 
+		target = "seco"
+	}
+}
+
+local ev = Event{action = function() return true end}
+
 return{
+	add = function(unitTest)
+		local at1 = Automaton{
+
+			acum = 0,
+			cont  = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
+
+		local it = Trajectory{
+			target = cs, 
+			select = function(cell)
+				local x = cell.x - 5
+				local y = cell.y - 5
+				return (x*x) + (y*y)  - 16 < 0.1
+			end
+		}
+		at1:add(it)
+		unitTest:assert(true)
+	end,
+	Automaton = function(unitTest)
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs, 
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x * x) + (y * y)  - 16 < 0.1
+				end
+			},
+			acum = 0,
+			cont  = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
+		unitTest:assert_equal(at1.id, "1")
+
+		at1 = Automaton{
+			it = Trajectory{
+				target = cs, 
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x * x) + (y * y)  - 16 < 0.1
+				end
+			},
+			acum = 0,
+			cont  = 0,
+			curve = 0
+		}
+
+		local count = 0
+		for k, v in pairs(at1) do
+			if type(v) == "State"	then
+				count = count + 1
+			end		
+		end
+		unitTest:assert_equal(0, count)
+	end,
 	getLatency = function(unitTest)
 		unitTest:assert(true)
 	end,
 	build = function(unitTest)
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs, 
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x * x) + (y * y)  - 16 < 0.1
+				end
+			},
+			acum = 0,
+			cont  = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
+	
+		at1:build()
+		unitTest:assert(true)
+	end,
+	execute = function(unitTest)
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs, 
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x * x) + (y * y)  - 16 < 0.1
+				end
+			},
+			acum = 0,
+			cont  = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
+
+		local t = Timer{
+			Event{action = function(ev)	at1:execute(ev) end}
+		}
+		t:execute(1)
 		unitTest:assert(true)
 	end,
 	getStateName = function(unitTest)
 		unitTest:assert(true)
 	end,
 	getStates = function(unitTest)
-		unitTest:assert(true)
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs, 
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x * x) + (y * y)  - 16 < 0.1
+				end
+			},
+			acum = 0,
+			cont  = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
+
+		local states = at1:getStates()
+		unitTest:assert_equal(getn(states), 0) -- TODO: should be 2, but type(state) is not "State"
 	end,
 	getState = function(unitTest)
 		unitTest:assert(true)
@@ -44,9 +198,48 @@ return{
 		unitTest:assert(true)
 	end,
 	setId = function(unitTest)
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs, 
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x * x) + (y * y)  - 16 < 0.1
+				end
+			},
+			acum = 0,
+			cont  = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
+
+		at1:setId("2")
+
 		unitTest:assert(true)
 	end,
 	notify = function(unitTest)
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs, 
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x * x) + (y * y)  - 16 < 0.1
+				end
+			},
+			acum = 0,
+			cont  = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
+
+		local t = Timer{
+			Event{action = function(ev)	at1:notify(ev) end}
+		}
+		t:execute(1)
+
 		unitTest:assert(true)
 	end,
 	__tostring = function(unitTest)

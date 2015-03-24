@@ -75,17 +75,16 @@ Automaton_ = {
 	-- @arg modelTime The time to be used by the Observer.
 	-- @usage automaton:notify()
 	notify = function (self, modelTime)
-		if modelTime == nil then
-			modelTime = 1
-		elseif type(modelTime) ~= "number" then
-			if type(modelTime) == "Event" then
-				modelTime = modelTime:getTime()
-			else
-				incompatibleTypeError(1, "Event or positive number", modelTime) 
-			end
-		elseif modelTime < 0 then
-			incompatibleValueError(1, "positive number", modelTime)   
+		if type(modelTime) == "Event" then
+			modelTime = modelTime:getTime()
 		end
+
+		optionalArgument(1, "number", modelTime)
+
+		if modelTime < 0 then
+			incompatibleValueError(1, "positive number", modelTime)
+		end
+
 		self.cObj_:notify(modelTime)
 	end,
 	--- Activate or not the Trajectories defined for the Automata. Returns whether the
@@ -104,10 +103,11 @@ Automaton_ = {
 	-- the id was changed correctly.
 	-- @arg id A string that names the Automaton.
 	-- @usage automaton:setId("newid")
-	setId = function(self,id)
+	setId = function(self, id)
 		if id == nil then
+			mandatoryArgument(1, "string", id)
 		elseif type(id) ~= "string" then
-			incompatibleTypeError("id", "string", id)
+			incompatibleTypeError(1, "string", id)
 		end
 		self.id = id
 	end,
@@ -131,11 +131,9 @@ Automaton_ = {
 	-- @arg index A number indicating the position of the State to be retrieved.
 	-- @usage state = automaton:getState(1)
 	getState = function(self, index)
-		if index == nil then
-			index = 1
-		elseif type(index) ~= "number" then
-			incompatibleTypeError(1, "positive integer number", index)
-		elseif index < 0 then
+		mandatoryArgument(1, "number", index)
+
+		if index < 0 then
 			incompatibleValueError(1, "positive integer number", index)
 		end
 		local statesVector = self:getStates()
@@ -160,7 +158,7 @@ function Automaton(data)
 		if data == nil then
  			customError(tableArgumentMsg())
 		else
- 			customError(namedParametersMsg())
+ 			customError(namedArgumentsMsg())
  		end
 	end
 

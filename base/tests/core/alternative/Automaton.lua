@@ -62,24 +62,6 @@ local ev = Event{action = function() return true end}
 
 return{
 	Automaton = function(unitTest)
-		local at1 = Automaton{
-			id = nil,
-			it = Trajectory{
-				target = cs, 
-				select = function(cell)
-					local x = cell.x - 5
-					local y = cell.y - 5
-					return (x * x) + (y * y)  - 16 < 0.1
-				end
-			},
-			acum = 0,
-			cont  = 0,
-			curve = 0,
-			st2 = state2,
-			st1 = state1
-		}
-		unitTest:assert_equal(at1.id, "1")
-
 		local error_func = function()
 			at1 = Automaton{
 				id = 15,
@@ -101,27 +83,15 @@ return{
 
 		unitTest:assert_error(error_func, incompatibleTypeMsg("id", "string", 15))
 
-		at1 = Automaton{
-			it = Trajectory{
-				target = cs, 
-				select = function(cell)
-					local x = cell.x - 5
-					local y = cell.y - 5
-					return (x * x) + (y * y)  - 16 < 0.1
-				end
-			},
-			acum = 0,
-			cont  = 0,
-			curve = 0
-		}
-
-		local count = 0
-		for k, v in pairs(at1) do
-			if type(v) == "State"	then
-				count = count + 1
-			end		
+		local error_func = function()
+			Automaton()
 		end
-		unitTest:assert_equal(0, count)
+		unitTest:assert_error(error_func, tableArgumentMsg())
+
+		local error_func = function()
+			Automaton(2)
+		end
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 	end,
 	add = function(unitTest)
 		local at1 = Automaton{
@@ -208,6 +178,69 @@ return{
 			at1:execute("notEvent")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event", "notEvent"))
+	end,
+	notify = function(unitTest)
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs, 
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x * x) + (y * y)  - 16 < 0.1
+				end
+			},
+			acum = 0,
+			cont  = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
+
+		local error_func = function()
+			at1:notify(-1)
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
+	end,
+	getState = function(unitTest)
+		local a = Automaton{}
+
+		local error_func = function()
+			a:getState("abc")
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "abc"))
+	
+		local error_func = function()
+			a:getState(-2)
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive integer number", -2))
+			
+	end,
+	setId = function(unitTest)
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs, 
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x * x) + (y * y)  - 16 < 0.1
+				end
+			},
+			acum = 0,
+			cont  = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
+
+		local error_func = function()
+			at1:setId()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+
+		local error_func = function()
+			at1:setId(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	setTrajectoryStatus = function(unitTest)	
 		local at1 = Automaton{
