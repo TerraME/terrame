@@ -25,7 +25,9 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	__tostring = function(unitTest)
+	State = function(unitTest)
+		local s = State()
+
 		local st1 = State{
 			id = "first"
 		}

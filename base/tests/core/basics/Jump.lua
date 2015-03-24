@@ -25,7 +25,7 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	__tostring = function(unitTest)
+	Jump = function(unitTest)
 		local j1 = Jump{
 			function(ev, unitTest)
 				if unitTest.x > 5 then 
@@ -35,8 +35,7 @@ return{
 			target = "go"
 		}
 		unitTest:assert_equal(string.sub(tostring(j1),1,8), "TeJump (")
-	end,
-	Jump = function(unitTest)
+
 		local jump = Jump{
 			function(cell, env, ag1)
 				return cell.water > ag1.energy

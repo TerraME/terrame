@@ -24,31 +24,6 @@
 --          Rodrigo Reis Pereira
 --#########################################################################################
 
---[[
-State_ = {
-	type_ = "State",
-	--#- Return a string with the id of the State.
-	getId = function(self) 
-		id = self.cObj_:getID()
-		return id
-	end,
-	--#- Change the id of the State. It returns a boolean value indicating whether the operation was succesfully executed.
-	-- @arg idValue A string that will be set as the id of the State.
-	setId = function(self, idValue)
-		local idOld = self.cObj_:getID()
-
-		if type(idValue) ~= "string" then
-			incompatibleTypeError(1, "string", idValue)
-		end	
-
-		self.id = idValue
-		self.cObj_:setid(idValue)
-	end
-}
---]]
-
---metaTableState_ = {__index = State_, __tostring = tostringTerraME}
-metaTableState_ = {__tostring = tostringTerraME}
 --- A container of Jumps and Flows. Every State also has an id to identify itself in the Jumps of
 -- other States within the same Agent or Automaton.
 -- @arg data A table that contains the State attributes.
@@ -74,14 +49,12 @@ function State(data)
 	elseif type(data.id) ~= "string" then
 		incompatibleTypeError("id", "string", data.id)
 	end
-	--data.__tostring = tostringTerraME
 	cObj:config(data.id)
 
 	for i, ud in pairs(data) do
 		if type(ud) == "table" then cObj:add(ud.cObj_) end
 		if type(ud) == "userdata" then cObj:add(ud) end
 	end
---	setmetatable(data, metaTableState_)
   
 	return cObj
 end

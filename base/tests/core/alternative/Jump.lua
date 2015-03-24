@@ -27,6 +27,10 @@
 return{
 	Jump = function(unitTest)
 		local error_func = function()
+			Jump(2)
+		end
+		unitTest:assert_error(error_func, tableArgumentMsg())
+		local error_func = function()
 			Jump{ 
 				target = "wet"
 			}

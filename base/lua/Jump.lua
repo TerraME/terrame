@@ -24,20 +24,6 @@
 --          Rodrigo Reis Pereira
 --#########################################################################################
 
-local Jump_ = {
-	setTarget = function(self, target)
-		if type(target) ~= "string" then
-			incompatibleTypeError(1, "string", target)
-		end
-		self.target = target
-	end,	
-	getTarget = function(self)
-		return self.target
-	end
-}
-
-metaTableJump_ = {__index = Jump_, __tostring = tostringTerraME}
-
 --- Control a discrete transition between States. If the method in the first argument returns true, the target becomes the new active State.
 -- @arg data.1st a function that returns a boolean value and takes as arguments an Event, an Agent or Automaton, and a Cell, respectively.
 -- @arg data.target a string with another State id.
@@ -63,7 +49,6 @@ function Jump(data)
 		data.target = "st1"
 	end  
 	cObj:setTargetControlModeName(data.target) 
-	setmetatable(data, metaTableJump_)
 	cObj:setReference(data)
 	return cObj
 end
