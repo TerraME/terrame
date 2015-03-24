@@ -458,6 +458,8 @@ function Environment(data)
 		end
 	end
 
+	defaultTableValue(data, "id", "1")
+
 	local cObj = TeScale(data.id)
 	setmetatable(data, metaTableEnvironment_)
 	cObj:setReference(data)
