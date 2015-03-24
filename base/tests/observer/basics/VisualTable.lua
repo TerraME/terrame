@@ -25,40 +25,49 @@
 
 return{
 	VisualTable = function(unitTest)
-		local c = Cell{value = 5}
+		local world = Cell{
+		    count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
 
-		local error_func = function()
-			VisualTable{}
-		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
+		local c1 = VisualTable{subject = world}
 
-		local e = Event{action = function() end}
-		error_func = function()
-			VisualTable{subject = e}
-		end
-		unitTest:assert_error(error_func, "Invalid type. VisualTable only works with Cell, CellularSpace, Agent, and Society.")
+		local world = Agent{
+		    count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
 
-		error_func = function()
-			VisualTable{subject = c, select = 5}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 5))
+		local c1 = VisualTable{subject = world}
 
-		error_func = function()
-			VisualTable{subject = c, select = "mvalue"}
-		end
-		unitTest:assert_error(error_func, "Selected element 'mvalue' does not belong to the subject.")
+		local c1 = VisualTable{
+			subject = world,
+			select = {"mcount"}
+		}
 
-		error_func = function()
-			VisualTable{subject = c, select = {}}
-		end
-		unitTest:assert_error(error_func, "VisualTable must select at least one attribute.")
+		local soc = Society{
+			instance = world,
+			quantity = 3
+		}
 
-		local unit = Cell{}
+		local c1 = VisualTable{subject = soc}
+		local c1 = VisualTable{subject = soc, select = "#"}
 
-		error_func = function()
-			VisualTable{subject = unit}
-		end
-		unitTest:assert_error(error_func, "The subject does not have at least one valid attribute to be used.")
+		local world = CellularSpace{
+			xdim = 10,
+		    count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
+
+		local c1 = VisualTable{subject = world}
+		local c1 = VisualTable{subject = world, select = "mcount"}
+
+		unitTest:assert(true)
 	end
 }
 
