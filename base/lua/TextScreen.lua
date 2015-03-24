@@ -70,59 +70,63 @@ TextScreen = function(data)
 		end
 
 		verify(#data.select > 0, "The subject does not have at least one valid attribute to be used.")
-	else
-		mandatoryTableArgument(data, "select", "table")
-		verify(#data.select > 0, "TextScreen must select at least one attribute.")
-		forEachElement(data.select, function(_, value)
-			if data.subject[value] == nil then
-				if  value == "#" then
-					if data.subject.obsattrs == nil then
-						data.subject.obsattrs = {}
-					end
+	end
 
-					data.subject.obsattrs["quantity_"] = true
-					data.subject.quantity_ = #data.subject
-				else
-					customError("Selected element '"..value.."' does not belong to the subject.")
-				end
-			elseif type(data.subject[value]) == "function" then
+	mandatoryTableArgument(data, "select", "table")
+	verify(#data.select > 0, "TextScreen must select at least one attribute.")
+	forEachElement(data.select, function(_, value)
+		if data.subject[value] == nil then
+			if  value == "#" then
 				if data.subject.obsattrs == nil then
 					data.subject.obsattrs = {}
 				end
 
-				data.subject.obsattrs[value] = true
+				data.subject.obsattrs["quantity_"] = true
+				data.subject.quantity_ = #data.subject
+			else
+				customError("Selected element '"..value.."' does not belong to the subject.")
+			end
+		elseif type(data.subject[value]) == "function" then
+			if data.subject.obsattrs == nil then
+				data.subject.obsattrs = {}
+			end
+
+			data.subject.obsattrs[value] = true
+		end
+	end)
+
+	if data.subject.obsattrs then
+		forEachElement(data.subject.obsattrs, function(idx)
+			for i = 1, #data.select do
+				if data.select[i] == idx then
+					data.select[i] = idx.."_"
+					local mvalue = data.subject[idx](data.subject)
+					data.subject[idx.."_"] = mvalue
+				end
 			end
 		end)
-
-		if data.subject.obsattrs then
-			forEachElement(data.subject.obsattrs, function(idx)
-				for i = 1, #data.select do
-					if data.select[i] == idx then
-						data.select[i] = idx.."_"
-						local mvalue = data.subject[idx](data.subject)
-						data.subject[idx.."_"] = mvalue
-					end
-				end
-			end)
-		end
 	end
 
 	checkUnnecessaryArguments(data, {"subject", "select"})
+
+	for i = 1, #data.select do
+		if data.select[i] == "#" then
+			data.select[i] = "quantity_"
+			data.subject.quantity_ = #data.subject
+		end
+	end
 
 	local observerType = 1
 	local observerParams = {}
 	local subject = data.subject
 	local id
 
-	if subject.cObj_ then
-		if type(subject) == "CellularSpace" then
-			id = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
-		else
-			id = subject.cObj_:createObserver(observerType, data.select, observerParams)
-		end
+	if type(subject) == "CellularSpace" then
+		id = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
 	else
-		id = subject:createObserver(observerType, data.select, observerParams)
+		id = subject.cObj_:createObserver(observerType, data.select, observerParams)
 	end
+
 	table.insert(createdObservers, {subject = data.subject, id = id})
 	return id
 end
