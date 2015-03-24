@@ -27,6 +27,11 @@
 return {
 	Agent = function(unitTest)
 		local error_func = function()
+			local ag1 = Agent(2)
+		end
+		unitTest:assert_error(error_func, tableArgumentMsg())
+	
+		local error_func = function()
 			local ag1 = Agent{id = 123}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("id", "string", 123))
@@ -98,6 +103,25 @@ return {
 			ag1:enter(cell, 123)
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
+
+		local predator = Agent{}
+
+		local predators = Society{
+			instance = predator, 
+			quantity = 5
+		}
+
+		local cs = CellularSpace{xdim = 5}
+
+		local e = Environment{predators, cs}
+		e:createPlacement()
+
+		local c = Cell{}
+
+		local error_func = function()
+			predators:sample():enter(c)
+		end
+		unitTest:assert_error(error_func, "Placement 'placement' was not found in the Cell.")
 	end,
 	execute = function(unitTest)
 		local ag1 = Agent{
@@ -121,6 +145,22 @@ return {
 			ag1:execute({})
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event", {}))
+	end,
+	getCell = function(unitTest)
+		local ag1 = Agent{pl = 2}
+		
+		local error_func = function()
+			ag1:getCell("pl")
+		end
+		unitTest:assert_error(error_func, "Placement 'pl' should be a Trajectory, got number.")
+	end,
+	getCells = function(unitTest)
+		local ag1 = Agent{pl = 2}
+		
+		local error_func = function()
+			ag1:getCells("pl")
+		end
+		unitTest:assert_error(error_func, "Placement 'pl' should be a Trajectory, got number.")
 	end,
 	getId = function(unitTest)
 		local ag1 = Agent{}
@@ -170,11 +210,20 @@ return {
 
 		myEnv:createPlacement{strategy = "void"}
 		local cell = cs.cells[1]
-		ag1:enter(cell,"placement")
+		ag1:enter(cell, "placement")
 		local error_func = function()
 			ag1:leave(cell,"notplacement")
 		end
 		unitTest:assert_error(error_func, valueNotFoundMsg(1, "notplacement"))
+
+		local ag1 = Agent{pl = 2}
+		local c = Cell{}
+
+		local error_func = function()
+			ag1:leave(c, "pl")
+		end
+		unitTest:assert_error(error_func, "Placement 'pl' should be a Trajectory, got number.")
+	
 	end,
 	message = function(unitTest)
 		local error_func = function()
@@ -232,6 +281,14 @@ return {
 			}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("delay", "positive integer number", -1))
+
+		local error_func = function()
+			ag1:message{
+				receiver = ag2,
+				subject = 2
+			}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("subject", "string", 2))
 	end,
 	move = function(unitTest)
 		local error_func = function()
@@ -271,7 +328,7 @@ return {
 		local error_func = function()
 			ag1:enter(c1)
 		end
-		unitTest:assert_error(error_func, "Placement 'placement' was not found.")
+		unitTest:assert_error(error_func, "Placement 'placement' was not found in the Agent.")
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -299,9 +356,16 @@ return {
 		c1 = cs.cells[4]
 
 		local error_func = function()
-			ag1:move(c1,"not_placement")
+			ag1:move(c1, "not_placement")
 		end
 		unitTest:assert_error(error_func, valueNotFoundMsg(2, "not_placement"))
+
+		ag1:leave(cs.cells[1], "renting")
+
+		local error_func = function()
+			ag1:move(c1, "renting")
+		end
+		unitTest:assert_error(error_func, "Agent is not inside of any Cell.")
 	end,
 	notify = function(unitTest)
 		local ag = Agent{x = 1, y = 1}
@@ -331,10 +395,20 @@ return {
 	end,
 	reproduce = function(unitTest)
 		local a = Agent{}
+		local s = Society{
+			instance = a,
+			quantity = 5
+		}
+
 		local error_func = function()
 			a:reproduce()
 		end
 		unitTest:assert_error(error_func, "Agent should belong to a Society to be able to reproduce.")
+
+		local error_func = function()
+			s:sample():reproduce(2)
+		end
+		unitTest:assert_error(error_func, namedArgumentsMsg())
 	end,
 	setId = function(unitTest)
 		local ag1 = Agent{}

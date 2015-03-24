@@ -25,10 +25,38 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	add = function(unitTest)
+		local ag = Agent{}
+		local cs = CellularSpace{xdim = 5}
+		local traj = Trajectory{target = cs}
+
+		ag:add(traj)
+
+		unitTest:assert(true)
+	end,
+	execute = function(unitTest)
+		local ag = Agent{
+			State{
+				id = "first",
+				Flow{function() end}
+			}
+		}
+
+		ag:build()
+		local t = Timer{
+			Event{action = function(ev)
+				ag:execute(ev)
+			end}
+		}
+		t:execute(1)
+		unitTest:assert(true)
+	end,
 	getLatency = function(unitTest)
 		unitTest:assert(true)
 	end,
 	build = function(unitTest)
+		local ag = Agent{}
+		ag:build()
 		unitTest:assert(true)
 	end,
 	getStateName = function(unitTest)
@@ -127,6 +155,16 @@ return{
 		ag1:addSocialNetwork(sn)
 		local sn2 = ag1:getSocialNetwork()
 		unitTest:assert_equal(sn2, sn)
+
+		local predator = Agent{}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 10
+		}
+
+		predators:createSocialNetwork{probability = 0.5, inmemory = false}
+		local sn = predators.agents[1]:getSocialNetwork()	
 	end,
 	init = function(unitTest)
 		local ag1 = Agent{
@@ -174,6 +212,11 @@ return{
 			quantity = 5
 		}
 
+		local cs = CellularSpace{xdim = 5}
+
+		local e = Environment{predators, cs}
+		e:createPlacement()
+
 		unitTest:assert_equal(5, #predators)
 		local dead = predators.agents[2]
 		predators.agents[2]:die()
@@ -195,6 +238,13 @@ return{
 			instance = predator, 
 			quantity = 5
 		}
+
+		local cs = CellularSpace{xdim = 10}
+
+		local env = Environment{predators, cs}
+
+		env:createPlacement{}
+		env:createPlacement{name = "house"}
 
 		predators.agents[2]:die()
 

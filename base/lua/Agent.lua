@@ -86,7 +86,7 @@ Agent_ = {
 		optionalArgument(1, "boolean", remove_placements)
 		if remove_placements == nil then remove_placements = true end
 
-		if remove_placements == true and not self.parent then
+		if remove_placements and not self.parent then
 			customError("Cannot remove the placements of an Agent that does not belong to a Society.")
 		end
 
@@ -129,12 +129,12 @@ Agent_ = {
 		if self[placement] then 
 			self[placement].cells[1] = cell
 		else
-			customError("Placement '"..placement.."' was not found.")
+			customError("Placement '"..placement.."' was not found in the Agent.")
 		end
 		if cell[placement] then
 			cell[placement]:add(self)
 		else
-			customError("Placement '"..placement.."' was not found.")
+			customError("Placement '"..placement.."' was not found in the Cell.")
 		end
 		self.cell = cell
 	end,
