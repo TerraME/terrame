@@ -34,6 +34,7 @@ return{
 	forEachAgent = function(unitTest)
 		local a = Agent{value = 2}
 		local soc = Society{instance = a, quantity = 10}
+		local c = Cell{}
 
 		local error_func = function()
 			forEachAgent(nil, function() end)
@@ -44,6 +45,11 @@ return{
 			forEachAgent(soc)
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function"))
+
+		error_func = function()
+			forEachAgent(c, function() end)
+		end
+		unitTest:assert_error(error_func, "Could not get agents from the Cell.")
 	end,
 	forEachCell = function(unitTest)
 		local error_func = function()

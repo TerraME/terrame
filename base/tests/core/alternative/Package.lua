@@ -109,7 +109,26 @@ return{
         	suggestion("aaaab", t)
 		end
 		unitTest:assert_error(error_func, "All the indexes in #2 should be string, got 'number'.")
+
+    end,
+	switch = function(unitTest)
+		local error_func = function()
+        	switch("aaaab")
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "table", "aaaab"))
+
+		local error_func = function()
+        	switch({}, 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
 	
-    end
+		local error_func = function()
+			local data = {att = "abd"}
+			switch(data, "att"):caseof{
+				abc = function() end
+			}
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("abd", "att", "abc"))
+	end
 }
 

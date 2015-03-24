@@ -35,12 +35,10 @@ return{
 			checkUnnecessaryArguments({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaaa", "aaab"))
-
 	end,
 	unnecessaryArgumentMsg = function(unitTest)
 		unitTest:assert_equal(unnecessaryArgumentMsg("aaa"), "Argument 'aaa' is unnecessary.")
 	end,
-
 	incompatibleTypeMsg = function(unitTest)
 		unitTest:assert_equal(incompatibleTypeMsg("aaa", "string", 2), "Incompatible types. Argument 'aaa' expected string, got number.")
 	end,
@@ -57,6 +55,7 @@ return{
 	end,
 	resourceNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for argument 'aaa'.")
+		unitTest:assert_equal(resourceNotFoundMsg(2, "bbb"), "Resource 'bbb' not found for argument '#2'.")
 	end,
 	suggestion = function(unitTest)
 		local t = {
@@ -88,6 +87,7 @@ return{
 
 	valueNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for argument 'aaa'.")
+		unitTest:assert_equal(valueNotFoundMsg(2, "bbb"), "Value 'bbb' not found for argument '#2'.")
 	end,
 	tableArgumentMsg = function(unitTest)
 		unitTest:assert_equal(tableArgumentMsg(), "Argument must be a table.")
@@ -165,6 +165,16 @@ return{
 			incompatibleValueError("position", "1, 2, or 3", "4")
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("position", "1, 2, or 3", "4"))
+
+		local error_func = function()
+			incompatibleValueError(1, "1, 2, or 3", "4")
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "1, 2, or 3", "4"))
+
+		local error_func = function()
+			incompatibleValueError(1, "1, 2, or 3")
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "1, 2, or 3"))
 	end,
 	incompatibleValueMsg = function(unitTest)
 		local str = incompatibleValueMsg("attr", "positive", -2)
@@ -226,7 +236,19 @@ return{
 		unitTest:assert_error(error_func, "All elements of the argument must be named.")
 	end,
 	switch = function(unitTest)
-		unitTest:assert(true)
+		local count = 0
+
+		local data = {att = "abc"}
+		switch(data, "att"):caseof{
+			abc = function() count = count + 1 end
+		}
+
+		local data = {}
+		switch(data, "att"):caseof{
+			missing = function() count = count + 1 end
+		}
+
+		unitTest:assert_equal(count, 2)
 	end,
 	valueNotFoundError = function(unitTest)
 		local error_func = function()

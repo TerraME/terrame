@@ -367,7 +367,7 @@ function integrate(attrs)
 	defaultTableValue(attrs, "step", 0.1)
 	defaultTableValue(attrs, "method", "euler")
 
-	local result = switch(attrs, "method"): caseof {
+	local result = switch(attrs, "method"):caseof {
 		euler = function() return integrationEuler(attrs.equation, attrs.initial, attrs.a, attrs.b, attrs.step) end,
 		rungekutta = function() return integrationRungeKutta(attrs.equation, attrs.initial, attrs.a, attrs.b, attrs.step) end,
 		heun = function() return integrationHeun(attrs.equation, attrs.initial, attrs.a, attrs.b, attrs.step) end

@@ -76,7 +76,8 @@ function file(filename, package)
 end
 
 --- Implement a switch case function, where options are given and there are functions
--- associated to them.
+-- associated to them. It can have a field "missing" in the caseof that is used when
+-- the first argument does not have an attribute whose name is the value of the second argument.
 -- @arg data A table.
 -- @arg att The chosen attribute.
 -- @usage switch(data, "protocol"):caseof{
@@ -349,8 +350,8 @@ function checkUnnecessaryArguments(data, arguments)
 			if dst < math.floor(#notCorrectArguments[i] * 0.6) and data[i] == nil then
 				msg = unnecessaryArgumentMsg(value, correctedSuggestions[i])
 			end
-			customWarning(msg)
 			count = count + 1
+			customWarning(msg)
 		end
 	end)
 	return count
