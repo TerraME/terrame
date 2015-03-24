@@ -26,13 +26,15 @@
 
 return{
 	Flow = function(unitTest)
-		unitTest:assert_error( function()
-			fl1 = Flow(nil)
-		end, "Flow constructor expected a function as argument.")
+		local error_func = function()
+			fl1 = Flow(2)
+		end
+		unitTest:assert_error(error_func, tableArgumentMsg())
 
-		unitTest:assert_error( function()
+		error_func = function()
 			fl1 = Flow{nil}
-		end, "Flow constructor expected a function as argument.")
+		end
+		unitTest:assert_error(error_func, "Flow constructor expected a function as argument.")
 	end
 }
 
