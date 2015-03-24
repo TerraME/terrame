@@ -85,8 +85,6 @@ return{
 	getTime = function(unitTest)
 		local event = Event{time = -10, action = function(event) end}
 		unitTest:assert_equal(event[1]:getTime(), -10)
-		event:config(0.5)
-		unitTest:assert_equal(event[1]:getTime(), 0.5)	
 	end,
 	getParent = function(unitTest)
 		unitTest:assert(true)
@@ -94,14 +92,10 @@ return{
 	getPeriod = function(unitTest)
 		local event = Event{period = 2, action = function(event) end}
 		unitTest:assert_equal(event[1]:getPeriod(), 2)
-		event:config(0, 3)
-		unitTest:assert_equal(event[1]:getPeriod(), 3)	
 	end,
 	getPriority = function(unitTest)
 		local event = Event{priority = -10, action = function(event) end}
 		unitTest:assert_equal(event[1]:getPriority(), -10)
-		event:config(0, 1, 2)
-		unitTest:assert_equal(event[1]:getPriority(), 2)	
 	end
 }
 

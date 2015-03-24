@@ -25,40 +25,6 @@
 --      Rodrigo Reis Pereira
 --#########################################################################################
 
-local Pair_ = {
-	--type_ = "Pair", 
-	notify = function(self, modelTime)
-		if modelTime == nil then 
-			modelTime = 0
-		end
-		if type(self.cObj_[1]) == 'userdata' then
-			self.cObj_[1]:notify(modelTime)
-		end
-	end,
-	config = function(self, time, period, priority)
-		optionalArgument(1, "number", time)
-		if time == nil then
-			time = self.cObj_[1]:getTime()
-		end
-
-		optionalArgument(2, "number", period)
-		if period == nil then
-			period = self.cObj_[1]:getPeriod()
-		elseif period <= 0 then
-			incompatibleValueError(2, "positive number", period)
-		end
-
-		optionalArgument(3, "number", priority)
-		if priority == nil then
-			priority = self.cObj_[1]:getPriority()
-		end
-
-		self.cObj_[1]:config(time, period, priority)
-	end
-}
-
-local metaTablePair_ = {__index = Pair_, __tostring = tostringTerraME}
-
 local function Pair(data)
 	if data == nil then data = {} end
 
@@ -66,7 +32,6 @@ local function Pair(data)
 		customError("A pair must have two attributes.")
 	end
 
-	setmetatable(data, metaTablePair_)
 	data.cObj_ = data	
 
 	return data
