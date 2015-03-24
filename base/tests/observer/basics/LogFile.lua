@@ -25,51 +25,49 @@
 
 return{
 	LogFile = function(unitTest)
-		local c = Cell{value = 5}
+		local world = Cell{
+		    count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
 
-		local error_func = function()
-			LogFile{}
-		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
+		local c1 = LogFile{subject = world}
 
-		local e = Event{action = function() end}
-		error_func = function()
-			LogFile{subject = e}
-		end
-		unitTest:assert_error(error_func, "Invalid type. LogFile only works with Cell, CellularSpace, Agent, and Society.")
+		local world = Agent{
+		    count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
 
-		error_func = function()
-			LogFile{subject = c, select = 5}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 5))
+		local c1 = LogFile{subject = world}
 
-		error_func = function()
-			LogFile{subject = c, select = "mvalue"}
-		end
-		unitTest:assert_error(error_func, "Selected element 'mvalue' does not belong to the subject.")
+		local c1 = LogFile{
+			subject = world,
+			select = {"mcount"}
+		}
 
-		error_func = function()
-			LogFile{subject = c, select = {}}
-		end
-		unitTest:assert_error(error_func, "LogFile must select at least one attribute.")
+		local soc = Society{
+			instance = world,
+			quantity = 3
+		}
 
-		error_func = function()
-			LogFile{subject = c, file = 2}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("file", "string", 2))
+		local c1 = LogFile{subject = soc}
+		local c1 = LogFile{subject = soc, select = "#"}
 
-		error_func = function()
-			LogFile{subject = c, separator = 2}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("separator", "string", 2))
+		local world = CellularSpace{
+			xdim = 10,
+		    count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
 
+		local c1 = LogFile{subject = world}
+		local c1 = LogFile{subject = world, select = "mcount"}
 
-		local unit = Cell{}
-
-		error_func = function()
-			LogFile{subject = unit}
-		end
-		unitTest:assert_error(error_func, "The subject does not have at least one valid attribute to be used.")
+		unitTest:assert(true)
 	end
 }
 
