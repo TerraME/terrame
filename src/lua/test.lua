@@ -174,7 +174,7 @@ function executeTests(package, fileName, doc_functions)
 		end)
 
 		if getn(data) == 0 then
-			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'folder', 'file', 'sleep', 'test'}.")
+			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'folder', 'file', 'lines', 'sleep', 'test'}.")
 			os.exit()
 		end
 
@@ -198,7 +198,15 @@ function executeTests(package, fileName, doc_functions)
 			customError("'examples' should be boolean or nil, got "..type(data.examples)..".")
 		end
 
-		checkUnnecessaryArguments(data, {"folder", "file", "test", "sleep", "examples"})
+		if data.lines ~= nil then
+			if type(data.lines) ~= "boolean" then
+				customError("'lines' should be boolean or nil, got "..type(data.lines)..".")
+			elseif data.test ~= nil or data.folder ~= nil then
+				customError("'lines' cannot be used with 'test' or 'folder'.")
+			end
+		end
+
+		checkUnnecessaryArguments(data, {"folder", "file", "test", "sleep", "examples", "lines"})
 	else
 		data = {}
 	end
@@ -254,8 +262,12 @@ function executeTests(package, fileName, doc_functions)
 		testfunctions = buildCountTable(package)
 	end
 
-	printNote("Looking for lines of source code")
-	local executionlines = buildLineTable(package)
+	local executionlines
+
+	if data.lines then
+		printNote("Looking for lines of source code")
+		executionlines = buildLineTable(package)
+	end
 
 	print = print__
 
@@ -367,7 +379,8 @@ function executeTests(package, fileName, doc_functions)
 			local function trace(event, line)
 				local s = debug.getinfo(2).short_src
 				local short = string.match(s, "([^/]-)$")
-				if short == eachFile and not string.match(s, "tests") then
+
+				if data.lines and short == eachFile and not string.match(s, "tests") then
 					if not executionlines[eachFile][line] then
 						--printNote(line)
 					else
@@ -505,7 +518,11 @@ function executeTests(package, fileName, doc_functions)
 				end)
 			end)
 		end
+	else
+		printWarning("Skipping source code functions check")
+	end
 
+	if data.lines then
 		printNote("Checking lines of source code")
 		if type(data.file) == "string" then
 			print("Checking "..data.file)
@@ -537,7 +554,6 @@ function executeTests(package, fileName, doc_functions)
 			end)
 		end
 	else
-		printWarning("Skipping source code functions check")
 		printWarning("Skipping lines of source code check")
 	end
 
@@ -707,14 +723,17 @@ function executeTests(package, fileName, doc_functions)
 		else
 			printNote("All "..ut.package_functions.." functions of the package were tested.")
 		end
+	else
+		printWarning("No source code functions were verified.")
+	end
 
+	if data.lines then
 		if ut.lines_not_executed > 0 then
 			printError(ut.lines_not_executed.." lines of source code were not executed at least once.")
 		else
 			printNote("All lines of the source code were executed.")
 		end
 	else
-		printWarning("No source code functions were verified.")
 		printWarning("No lines of source code were verified.")
 	end
 
