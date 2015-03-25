@@ -119,7 +119,7 @@ function assertError__(self, my_function, error_message, max_error)
 		local start = shortError:sub(1, 7)
 
 		if start ~= "Error: " then
-			print_error(self, "The error message does not start with \"Error:\": "..shortError)
+			self:print_error("The error message does not start with \"Error:\": "..shortError)
 		end
 
 		shortError = shortError:sub(8, shortError:len())
@@ -138,13 +138,13 @@ function assertError__(self, my_function, error_message, max_error)
 					" character(s), but got "..distance.."."
 			end
 
-			print_error(self, error_msg)
+			self:print_error(error_msg)
 			-- print(traceback())
 		end
 	end)
 
 	if not found_error then
-		print_error(self, "Test expected an error ('"..error_message.."'), but no error was found.", 2)
+		self:print_error("Test expected an error ('"..error_message.."'), but no error was found.", 2)
 		self.fail = self.fail + 1
 	end
 
@@ -163,7 +163,7 @@ function assertSnapshot__(self, observer, file)
 	end
 
 	if self.tsnapshots[file] then
-		print_error(self, "File '"..file.."' is used in more than one assert_shapshot().")
+		self:print_error("File '"..file.."' is used in more than one assert_shapshot().")
 		self.fail = self.fail + 1
 		return
 	end
@@ -185,7 +185,7 @@ function assertSnapshot__(self, observer, file)
 			self.test = self.test + 1
 			self.success = self.success + 1
 		else
-			print_error(self, "Files \n  'snapshots"..s..file.."'\nand\n  '"..newImage.."'\nare different.")
+			self:print_error("Files \n  'snapshots"..s..file.."'\nand\n  '"..newImage.."'\nare different.")
 			self.fail = self.fail + 1
 		end
 	end

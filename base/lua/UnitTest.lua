@@ -26,42 +26,6 @@
 --      Antonio Gomes de Oliveira Junior
 --#########################################################################################
 
-local print_error = function(self, msg)
-	local level = 1
-    local info = debug.getinfo(level)
-    while not string.match(info.source, "/tests/") do
-		level = level + 1
-    	info = debug.getinfo(level)
-	end
-
-	local str = info.short_src
-	str = str..":".. info.currentline ..": "..msg
-	if self.last_error == str then
-		self.count_last = self.count_last + 1
-	elseif self.count_last > 0 then
-		local count = self.count_last
-		self.count_last = 0
-		self.last_error = str
-		local func = printError
-		if self.unittest then
-			func = customError
-		end
-		func("[The error above occurs more "..count.." times.]")
-	else
-		self.last_error = str
-	end
-
-	if self.count_last == 0 then
-		local func = printError
-		local arg = str
-		if self.unittest then
-			func = customError
-			arg = msg
-		end
-		func(arg)
-	end
-end
-
 UnitTest_ = {
 	type_ = "UnitTest",
 	success = 0,
@@ -83,7 +47,7 @@ UnitTest_ = {
 			self.success = self.success + 1
 		else
 			self.fail = self.fail + 1
-			print_error(self, "Test should be true, got false.")
+			self:print_error("Test should be true, got false.")
 		end
 	end,
 	--- Check if a value belongs to a given type. If not, it generates an error.
@@ -99,7 +63,7 @@ UnitTest_ = {
 			self.success = self.success + 1
 		else
 			self.fail = self.fail + 1
-			print_error(self, "Test should be "..mtype.." got "..type(value)..".")
+			self:print_error("Test should be "..mtype.." got "..type(value)..".")
 		end
 	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
@@ -111,7 +75,7 @@ UnitTest_ = {
 			self.success = self.success + 1
 		else
 			self.fail = self.fail + 1
-			print_error(self, "Test should be nil, got "..type(value)..".")
+			self:print_error("Test should be nil, got "..type(value)..".")
 		end
 	end,
 	--- Check if a given value is not nil. Otherwise it generates an error.
@@ -123,7 +87,7 @@ UnitTest_ = {
 			self.success = self.success + 1
 		else
 			self.fail = self.fail + 1
-			print_error(self, "Test should not be nil.")
+			self:print_error("Test should not be nil.")
 		end
 	end,
 	--- Check if two values are equal. In this function, two tables are equal only when they are the
@@ -149,21 +113,21 @@ UnitTest_ = {
 				self.success = self.success + 1
 			else 
 				self.fail = self.fail + 1
-				print_error(self, "Values should be equal, but got '"..v1.."' and '"..v2.."'.")
+				self:print_error("Values should be equal, but got '"..v1.."' and '"..v2.."'.")
 			end
 		elseif type(v1) == "string" and type(v2) == "string" then
 			if v1 == v2 then
 				self.success = self.success + 1
 			else 
 				self.fail = self.fail + 1
-				print_error(self, "Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'.")
+				self:print_error("Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'.")
 			end
 		elseif type(v1) ~= type(v2) then
 			self.fail = self.fail + 1
-			print_error(self, "Values should be equal, but they have different types ("..type(v1).." and "..type(v2)..").")
+			self:print_error("Values should be equal, but they have different types ("..type(v1).." and "..type(v2)..").")
 		elseif v1 ~= v2 then
 			self.fail = self.fail + 1
-			print_error(self, "Values have the same type ("..type(v1)..") but different values.")
+			self:print_error("Values have the same type ("..type(v1)..") but different values.")
 		else
 			self.success = self.success + 1
 		end
@@ -194,6 +158,41 @@ UnitTest_ = {
 	-- delay when the UnitTest is built.
 	-- @usage unitTest:delay()
 	delay = function()
+	end,
+	print_error = function(self, msg)
+		local level = 1
+    	local info = debug.getinfo(level)
+    	while not string.match(info.source, "/tests/") do
+			level = level + 1
+    		info = debug.getinfo(level)
+		end
+
+		local str = info.short_src
+		str = str..":".. info.currentline ..": "..msg
+		if self.last_error == str then
+			self.count_last = self.count_last + 1
+		elseif self.count_last > 0 then
+			local count = self.count_last
+			self.count_last = 0
+			self.last_error = str
+			local func = printError
+			if self.unittest then
+				func = customError
+			end
+			func("[The error above occurs more "..count.." times.]")
+		else
+			self.last_error = str
+		end
+
+		if self.count_last == 0 then
+			local func = printError
+			local arg = str
+			if self.unittest then
+				func = customError
+				arg = msg
+			end
+			func(arg)
+		end
 	end,
 	--- Create a temporary folder in the current directory and return its name. Every time this function
 	-- is executed with the same instance of UnitTest it returns the same folder. This folder needs to
