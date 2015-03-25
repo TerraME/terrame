@@ -78,8 +78,6 @@ return{
 		}
 
 		t:execute(2)
-
-
 	end,
 --[[ #241
 	config = function(unitTest)
