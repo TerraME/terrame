@@ -315,7 +315,11 @@ function customWarning(msg)
 	local level = getLevel()
 	local info = debug.getinfo(level)
 	local func = printWarning
-	local arg = info.short_src..":".. info.currentline ..": Warning: "..msg
+	local arg
+
+	if info then
+		arg = info.short_src..":".. info.currentline ..": Warning: "..msg
+	end
 
 	if sessionInfo().mode == "debug" then
 		func = customError
