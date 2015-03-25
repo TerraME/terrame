@@ -197,6 +197,74 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg(1, "<, >, <=, or >=", "=="))
 	end,
+	integrate = function(unitTest)
+		local error_func = function()
+			local gt = integrate()
+		end
+		unitTest:assert_error(error_func, tableArgumentMsg())
+
+		local error_func = function()
+			local gt = integrate{step = "a", equation = function() end, initial = 0}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("step", "number", "a"))
+
+		local error_func = function()
+			local gt = integrate{step = -0.5, equation = function() end, initial = 0}
+		end
+		unitTest:assert_error(error_func, "Argument 'step' should be positive.")
+	
+		local error_func = function()
+			local gt = integrate{step = 0.1, method = "euler", equation = function() end, initial = 0}
+		end
+		unitTest:assert_error(error_func, defaultValueMsg("method", "euler"))
+	
+		local error_func = function()
+			local gt = integrate{step = 0.1, method = "eler", equation = function() end, initial = 0}
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("eler", "method", "euler"))
+
+		local error_func = function()
+			local gt = integrate{equation = 0.1}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("equation", "table", 0.1))
+
+		local error_func = function()
+			local gt = integrate{equation = function() end, initial = "aaa"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("initial", "table", "aaa"))
+
+		local error_func = function()
+			local gt = integrate{equation = {function() end, 2}}
+		end
+		unitTest:assert_error(error_func, "Table 'equation' should contain only functions, got number.")
+
+		local error_func = function()
+			local gt = integrate{equation = {function() end, function() end}, initial = {1, "b"}}
+		end
+		unitTest:assert_error(error_func, "Table 'initial' should contain only numbers, got string.")
+
+		local error_func = function()
+			local gt = integrate{equation = {function() end, function() end}, initial = {1, 2, 3}}
+		end
+		unitTest:assert_error(error_func, "Tables equation and initial shoud have the same size.")
+
+		local error_func = function()
+			local gt = integrate{equation = function() end, initial = 1, step = 5, metod = 3}
+		end
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("metod", "method"))
+
+		local event = Event{time = 0.5, period = 2, priority = 1, action = function(event) end}[1]
+
+		local error_func = function()
+			local gt = integrate{equation = function() end, initial = 1, event = event, a = 2}
+		end
+		unitTest:assert_error(error_func, "Argument 'a' should not be used together with argument 'event'.")
+
+		local error_func = function()
+			local gt = integrate{equation = function() end, initial = 1, event = event, b = 2}
+		end
+		unitTest:assert_error(error_func, "Argument 'b' should not be used together with argument 'event'.")
+	end,
 	levenshtein = function(unitTest)
 		local error_func = function()
 			local gt = levenshtein(2)

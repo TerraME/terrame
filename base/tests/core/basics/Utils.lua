@@ -26,7 +26,192 @@
 
 return{
 	integrate = function(unitTest)
-		unitTest:assert(true)
+		local f = function(x) return x^3 end
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			step = 0.1
+		}
+
+        unitTest:assert_equal(16.48360, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			step = 0.01
+		}
+
+        unitTest:assert_equal(20.11522, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			step = 0.001
+		}
+
+        unitTest:assert_equal(20.23650, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			step = 0.0001
+		}
+
+        unitTest:assert_equal(20.24595, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "rungekutta",
+			step = 0.1
+		}
+
+        unitTest:assert_equal(17.682025, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "rungekutta",
+			step = 0.01
+		}
+
+        unitTest:assert_equal(20.25, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "rungekutta",
+			step = 0.001
+		}
+
+        unitTest:assert_equal(20.25, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "rungekutta",
+			step = 0.0001
+		}
+
+        unitTest:assert_equal(20.24730, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "heun",
+			step = 0.1
+		}
+
+        unitTest:assert_equal(17.70305, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "heun",
+			step = 0.01
+		}
+
+        unitTest:assert_equal(20.250225, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "heun",
+			step = 0.001
+		}
+
+        unitTest:assert_equal(20.25, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "heun",
+			step = 0.0001
+		}
+
+        unitTest:assert_equal(20.24730, v, 0.0001)
+
+        local df = function(x, y) return y - x ^ 2 + 1 end
+		local v = integrate{
+			equation = df,
+			initial = 0.5,
+			a = 0,
+			b = 2,
+			method = "heun",
+			step = 0.2
+		}
+
+        unitTest:assert_equal(5.23305, v, 0.0001)
+
+		local eq1 = function(t, y)
+			return t - 0.1
+		end
+
+		local event = Event{time = 2, period = 2, priority = 1, action = function(event) end}[1]
+
+		local v = integrate{
+			equation = df,
+			method = "heun",
+			step = 0.2,
+			initial = 0.5,
+			event = event
+		}
+
+        unitTest:assert_equal(5.23305, v, 0.0001)
+
+		-- TODO: verify results using more than one equation
+		local v = integrate{
+			equation = {eq1, eq1},
+			initial = {0, 0},
+			a = 0,
+			b = 100,
+			step = 0.1
+		}
+
+		local v = integrate{
+			equation = {eq1, eq1},
+			method = "heun",
+			initial = {0, 0},
+			a = 0,
+			b = 100,
+			step = 0.1
+		}
+
+		local v = integrate{
+			equation = {eq1, eq1},
+			method = "rungekutta",
+			initial = {0, 0},
+			a = 0,
+			b = 100,
+			step = 0.1
+		}
+
+		unitTest:assert_type(v, "number")
 	end,
 	belong = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}

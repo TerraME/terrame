@@ -248,7 +248,7 @@ local function integrationEuler(df, initCond, a, b, delta)
 		local y = initCond
 		local x = a
 		local bb = b - delta
-		local values = {} -- each equation must ne computed from the same "past" value ==> o(n2), 
+		local values = {} -- each equation must be computed from the same "past" value ==> o(n2), 
 						  -- where n is the number of equations
 		for x = a, bb, delta do
 			for i = 1, #df do
@@ -259,54 +259,6 @@ local function integrationEuler(df, initCond, a, b, delta)
 			end
 		end
 
-		return y
-	end
-end
-
--- Global constant to define the used integration method & step size
-local INTEGRATION_METHOD = integrationEuler
-local DELTA = 0.2
-
--- Constructor for an ordinary differential equation
-local function d(data)
-	local result = 0
-	local delta = DELTA
-
-	if data == nil then data = {}; end
-
-	local sizedata = getn(data)
-	if sizedata < 4 then 
-		local str = "Error: bad arguments in diferential equation constructor \"d{arguments}\". "..
-		"TerraME has found ".. #data.." arguments.\n"..
-		" - the first attribute of a differential equantion must be a function which return a number. "..
-		"It can also be a table of functions like that,\n"..
-		" - the second one must be the initial condition value. "..
-		"It can also be a table of initial conditions,\n"..
-		" - the third one must be the lower integration limit value,\n"..
-		" - the fourth one must be the upper integration limit value, and\n"..
-		" - the fifth, OPTIONAL, must be the integration incretement value(default = "..DELTA.." ).\n"..
-		" - the fifth, OPTIONAL, must be the integration incretement value(default = "..DELTA.." ).\n"
-		error(str, 2)
-	end
-	if sizedata == 5 then
-		delta = data[5]
-	end
-
-	if type(data[1]) == "table" then
-		if #data[1] ~= #data[2] then 
-			customError("You should provide the same number of differential equations and initial conditions.")
-		end
-	end
-
-	local y = INTEGRATION_METHOD(data[1], data[2], data[3], data[4], delta)
-
-	if type(data[1]) == "table" then
-		local str = "return "..y[1]
-		for i = 2, #y do
-			str = str ..", "..y[i]
-		end
-		return load(str)()
-	else
 		return y
 	end
 end
@@ -348,24 +300,49 @@ end
 --     step = 0.1
 -- }
 function integrate(attrs)
+	verifyNamedTable(attrs)
+
 	if attrs.event ~= nil then
+		mandatoryTableArgument(attrs, "event", "Event")
+		verify(attrs.a == nil, "Argument 'a' should not be used together with argument 'event'.")
+		verify(attrs.b == nil, "Argument 'b' should not be used together with argument 'event'.")
 		attrs.a = attrs.event:getTime() - attrs.event:getPeriod() 
-		if attrs.a < 1 then attrs.a = 1 end
 		attrs.b = attrs.event:getTime()
 	end
 
-	if type(attrs.equation) == "table" then
-		if type(attrs.initial) == "table" then
-			if getn(attrs.equation) ~= getn(attrs.initial) then
-				customError("Tables equation and initial shoud have the same size.")
+	if type(attrs.equation) ~= "function" then
+		mandatoryTableArgument(attrs, "equation", "table")
+
+		forEachElement(attrs.equation, function(_, value)
+			if type(value) ~= "function" then
+				customError("Table 'equation' should contain only functions, got "..type(value)..".")
 			end
-		else
-			customError("As equation is a table, initial should also be a table, got "..type(attrs.initial)..".")
+		end)
+
+		mandatoryTableArgument(attrs, "initial", "table")
+	end
+
+	if type(attrs.initial) ~= "number" then
+		mandatoryTableArgument(attrs, "initial", "table")
+		mandatoryTableArgument(attrs, "equation", "table")
+
+		forEachElement(attrs.initial, function(_, value)
+			if type(value) ~= "number" then
+				customError("Table 'initial' should contain only numbers, got "..type(value)..".")
+			end
+		end)
+
+		if #attrs.equation ~= #attrs.initial then
+			customError("Tables equation and initial shoud have the same size.")
 		end
 	end
 
-	defaultTableValue(attrs, "step", 0.1)
+	mandatoryTableArgument(attrs, "step", "number")
+	verify(attrs.step > 0, "Argument 'step' should be positive.")
+
 	defaultTableValue(attrs, "method", "euler")
+
+	checkUnnecessaryArguments(attrs, {"a", "b", "event", "method", "initial", "equation", "step"})
 
 	local result = switch(attrs, "method"):caseof {
 		euler = function() return integrationEuler(attrs.equation, attrs.initial, attrs.a, attrs.b, attrs.step) end,
