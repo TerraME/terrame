@@ -120,9 +120,9 @@ Automaton_ = {
 	-- @usage state = automaton:getStates()[1]
 	getStates = function(self)
 		local statesVector = {}
-		for key, value in pairs(self) do
+		for _, value in pairs(self) do
 			if type(value) == "State" then
-				statesVector[key] = element
+				table.insert(statesVector, element)
 			end
 		end
 		return statesVector
@@ -134,8 +134,9 @@ Automaton_ = {
 		mandatoryArgument(1, "number", index)
 
 		if index < 0 then
-			incompatibleValueError(1, "positive integer number", index)
+			incompatibleValueError(1, "positive number", index)
 		end
+
 		local statesVector = self:getStates()
 		return statesVector[index]
 	end

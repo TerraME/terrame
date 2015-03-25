@@ -212,7 +212,7 @@ return{
 		local error_func = function()
 			a:getState(-2)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive integer number", -2))
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -2))
 			
 	end,
 	setId = function(unitTest)
