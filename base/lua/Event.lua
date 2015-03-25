@@ -28,12 +28,7 @@
 local function Pair(data)
 	if data == nil then data = {} end
 
-	if getn(data) ~= 2 then
-		customError("A pair must have two attributes.")
-	end
-
 	data.cObj_ = data	
-
 	return data
 end
 
@@ -94,7 +89,7 @@ function Event(data)
 	if data == nil then
 		data = {}
 	elseif type(data) ~= "table" then
-		namedArgumentsError("Event")
+		verifyNamedTable(data)
 	end
 
 	local cObj = TeEvent()

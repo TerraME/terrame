@@ -32,6 +32,12 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg("time", "number", "time"))
 
 		error_func = function()
+			event = Event(2)
+		end
+		unitTest:assert_error(error_func, namedArgumentsMsg())
+
+
+		error_func = function()
 			event = Event{period = "1", priority = 1, action = function(event) end}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("period", "number", "1"))

@@ -59,6 +59,27 @@ return{
 
 		event = Event{time = 0.5, period = 2, priority = "veryhigh", action = function(event) end}
 		unitTest:assert_equal(event[1]:getPriority(), -10)
+
+		local ag = Agent{execute = function() end}
+		local soc = Society{
+			instance = ag,
+			quantity = 5
+		}
+		local c = Cell{}
+		local cs = CellularSpace{xdim = 5}
+		local traj = Trajectory{target = cs}
+
+		local t = Timer{
+			Event{action = soc},
+			Event{action = c},
+			Event{action = cs},
+			Event{action = ag},
+			Event{action = traj}
+		}
+
+		t:execute(2)
+
+
 	end,
 --[[ #241
 	config = function(unitTest)
