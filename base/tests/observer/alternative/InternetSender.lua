@@ -32,6 +32,12 @@ return{
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
 
+		local e = Event{action = function() end}
+		error_func = function()
+			InternetSender{subject = e}
+		end
+		unitTest:assert_error(error_func, "Invalid type. InternetSender only works with Cell, CellularSpace, Agent, and Society.")
+
 		error_func = function()
 			InternetSender{subject = c, select = 5}
 		end
