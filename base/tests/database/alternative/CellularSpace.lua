@@ -600,7 +600,8 @@ return{
 		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste"))
 
 		error_func = function()
-			cs:loadNeighborhood{source = file("cabecadeboi-invalid-neigh.gpm", "base")}
+			local s = sessionInfo().separator
+			cs:loadNeighborhood{source = file("error"..s.."cabecadeboi-invalid-neigh.gpm", "base")}
 		end
 		unitTest:assert_error(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
 

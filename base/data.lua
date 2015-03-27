@@ -39,12 +39,6 @@ data{
 }
 
 data{
-	file = {"cabecadeboi-invalid-neigh.gpm"},
-	summary = "A wrong neighborhood file to be used with alternative tests within TerraME.",
-	source = "TerraME team"
-}
-
-data{
 	file = {"simple.map"},
 	summary = "A simple CellularSpace with one attribute for sugarscape model.",
 	source = "TerraME team"

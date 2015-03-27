@@ -177,6 +177,10 @@ function executeDoc(package)
 		end)
 
 		forEachElement(df, function(_, mvalue)
+			if attributes(package_path..s.."data"..s..mvalue, "mode") == "directory" then
+				return
+			end
+
 			if filesdocumented[mvalue] == nil then
 				printError("File '"..mvalue.."' is not documented")
 				doc_report.undoc_data = doc_report.undoc_data + 1

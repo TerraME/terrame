@@ -187,8 +187,8 @@ return{
 		local countTest = 1
 
 		-- .gpm Regular CS x Irregular CS - without weights
-
-		local mfile = file("gpmAreaCellsPols-error.gpm", "base")
+		local s = sessionInfo().separator
+		local mfile = file("error"..s.."gpmAreaCellsPols-error.gpm", "base")
 
 		error_func = function()
 	   		env:loadNeighborhood{
@@ -198,7 +198,7 @@ return{
 		end
 		unitTest:assert_error(error_func, "The string 'bb' found as weight in the file '"..mfile.."' could not be converted to a number.")
 
-		local mfile = file("gpmAreaCellsPols-error2.gpm", "base")
+		local mfile = file("error"..s.."gpmAreaCellsPols-error2.gpm", "base")
 
 		error_func = function()
 	   		env:loadNeighborhood{
