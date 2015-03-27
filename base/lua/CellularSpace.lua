@@ -548,7 +548,7 @@ CellularSpace_ = {
 				if data.m <= 0 then
 					incompatibleValueError("m", "positive integer number (greater than zero)", data.m)
 				elseif math.floor(data.m) ~= data.m then
-					incompatibleValueError("m", "positive integer number (greater than zero)", "real number")
+					incompatibleValueError("m", "positive integer number (greater than zero)", data.m)
 				elseif data.m % 2 == 0 then
 					data.m = data.m + 1
 					customWarning("Argument 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
@@ -558,7 +558,7 @@ CellularSpace_ = {
 				if data.n <= 0 then
 					incompatibleValueError("n", "positive integer number (greater than zero)", data.n)
 				elseif math.floor(data.n) ~= data.n then
-					incompatibleValueError("n", "positive integer number (greater than zero)", "real number")
+					incompatibleValueError("n", "positive integer number (greater than zero)", data.n)
 				elseif data.n % 2 == 0 then
 					data.n = data.n + 1
 					customWarning("Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
@@ -602,17 +602,23 @@ CellularSpace_ = {
 		local mtarget = data.target
 
 		if mtarget and mtarget ~= self then
-			data.target = self
+			local data2 = {}
 
-			local func = data.func(mtarget, data)
+			forEachElement(data, function(idx, value)
+				data2[idx] = value
+			end)
+
+			data2.target = self
+
+			local func = data.func(mtarget, data2)
 
 			if data.inmemory then
 				forEachCell(mtarget, function(cell)
-					cell:addNeighborhood(func(cell), data.name)
+					cell:addNeighborhood(func(cell), data2.name)
 				end)
 			else
 				forEachCell(mtarget, function(cell)
-					cell:addNeighborhood(func, data.name)
+					cell:addNeighborhood(func, data2.name)
 				end)
 			end
 		end
@@ -643,13 +649,13 @@ CellularSpace_ = {
 			if xIndex == nil then
 				mandatoryArgumentError(1)
 			else
-				incompatibleTypeError(1, "positive integer number", xIndex)
+				incompatibleValueError(1, "positive integer number", xIndex)
 			end
 		elseif type(yIndex) ~= "number" or math.floor(yIndex) ~= yIndex then
 			if yIndex == nil then
 				mandatoryArgumentError(2)
 			else
-				incompatibleTypeError(2, "positive integer number", yIndex)
+				incompatibleValueError(2, "positive integer number", yIndex)
 			end
 		end
 
@@ -722,16 +728,16 @@ CellularSpace_ = {
 	-- @usage cs:notify()
 	-- cs:notify(event:getTime())
 	notify = function(self, modelTime)
-		if modelTime == nil then
-			modelTime = 1
-		elseif type(modelTime) ~= "number" then
-			if type(modelTime) == "Event" then
-				modelTime = modelTime:getTime()
-			else
-				incompatibleTypeError(1, "Event or positive number", modelTime) 
-			end
-		elseif modelTime < 0 then
-			incompatibleValueError(1, "Event or positive number", modelTime)   
+		if type(modelTime) == "Event" then
+			modelTime = modelTime:getTime()
+		end
+
+		optionalArgument(1, "number", modelTime)
+
+		if modelTime == nil then modelTime = 1 end
+
+		if modelTime < 0 then
+			incompatibleValueError(1, "positive number", modelTime)
 		end
 
 		if self.obsattrs then
@@ -783,37 +789,6 @@ CellularSpace_ = {
 		end
 		local erros = self.cObj_:save(time, outputTableName, attrNames, self.cells)
 	end,
-	--#- Save the attributes of a shapefile into the same file it was retrieved.
-	-- @usage cs:saveShape()
---[[
-	saveShape = function(self)
-		local shapefileName = self.cObj_:getDBName()
-		if shapefileName == "" then
-			customError("Shapefile must be loaded before being saved.", 3)
-		end
-		local shapeExists = io.open(shapefileName, "r") and io.open(shapefileName:sub(1, #shapefileName - 3).."dbf")
-		if shapeExists == nil then
-			customError("Shapefile not found.", 3)
-		else
-			io.close(shapeExists)
-		end
-		local contCells = 0
-		forEachCell(self, function(cell)
-			for k, v in pairs(cell) do
-				local type_
-				if type(v) == "number" then
-					type_ = 1
-				elseif type(v) == "string" then
-					type_ = 2
-				else
-					type_ = 0
-				end
-				self.cObj_:saveShape(cell.objectId_, k, v, type_)
-			end
-			contCells = contCells + 1
-		end)
-	end,
---]]
 	--- Retrieve the number of Cells of the CellularSpace.
 	-- @usage print(cs:size())
 	-- @deprecated CellularSpace:#
@@ -1025,7 +1000,7 @@ function CellularSpace(data)
 	verifyNamedTable(data)
 
 	if data.dbType == nil then
-		if data.database == nil then
+		if data.database == nil then -- virtual cellular space
 			local candidates = {}
 			forEachElement(CellularSpaceDrivers, function(idx, value)
 				local all = true
@@ -1048,7 +1023,6 @@ function CellularSpace(data)
 			elseif #candidates == 1 then
 				data.dbType = candidates[1]
 			else
-				str = ""
 				-- TODO: unskip the lines below after updating to TerraLib 5
 				str = "" -- SKIP
 				forEachElement(candidates, function(idx, value)
@@ -1059,10 +1033,9 @@ function CellularSpace(data)
 		else
 			local ext = getExtension(data.database)
 
+			data.dbType = "mysql"
 			if CellularSpaceDrivers[ext] ~= nil then
 				data.dbType = ext
-			else
-				data.dbType = "mysql"
 			end
 		end
 	else

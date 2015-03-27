@@ -26,13 +26,15 @@
 return{
 	CellularSpace = function(unitTest)
 		local cs = CellularSpace{
-		    xdim = 10
+		    xdim = 10,
+			value = function() return 3 end
 		}
 
 		forEachCell(cs, function(cell)
 		    cell.value = math.random()
 		end)
 
+		local c = Chart{subject = cs, select = "value"}
 --[[
 		local m = Map{
 		    subject = cs,
@@ -48,7 +50,9 @@ return{
 		-- #308
 		--unitTest:assert_snapshot(m, "map_slices.bmp")
 
-		cs:notify()
+		local e = Event{action = function() end}[1]
+
+		cs:notify(e)
 		cs:notify()
 -- FIXME: if the following lines were uncommented together with the next test, TerraME aborts
 --[[

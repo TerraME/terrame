@@ -769,6 +769,7 @@ return{
 		cs:createNeighborhood{
 			strategy = "coord",
 			name = "my_neighborhood1",
+			inmemory = false,
 			target = cs2
 		}
 

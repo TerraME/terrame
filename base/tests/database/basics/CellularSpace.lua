@@ -27,7 +27,6 @@
 
 return{
 	CellularSpace = function(unitTest)
-		debug.sethook()
 		local config = getConfig()
 		local mdbType = config.dbType
 		local mhost = config.host
@@ -55,8 +54,8 @@ return{
 		unitTest:assert_equal("cells90x90", cs.layer)
 		unitTest:assert_equal(10201, #cs.cells)
 
-		cs:createNeighborhood{name = "moore1"}	
-		cs:createNeighborhood{name = "moore2"}
+		cs:createNeighborhood{name = "moore1"}
+		cs:createNeighborhood{name = "moore2", inmemory = false}
 
 		local countNeigh = 0
 		local sumWeight  = 0
@@ -193,6 +192,7 @@ return{
 		unitTest:assert_equal(5673, #cs)
 
 		-- csv file
+		cs = CellularSpace{database = file("simple-cs.csv", "base"), dbType = "csv", sep = ";"}
 		cs = CellularSpace{database = file("simple-cs.csv", "base"), sep = ";"}
 
 		unitTest:assert_type(cs, "CellularSpace")

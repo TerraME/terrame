@@ -117,6 +117,21 @@ return{
 			cs:get(2)
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
+
+		error_func = function()
+			cs:get(2.3, 4)
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive integer number", 2.3))
+
+		error_func = function()
+			cs:get(4, 2.3)
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive integer number", 2.3))
+
+		error_func = function()
+			cs:get("4", 2.3)
+		end
+		unitTest:assert_error(error_func, "As #1 is string, #2 should be nil, but got number.")	
 	end,
 	getCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -260,6 +275,15 @@ return{
 			cs:createNeighborhood{
 				strategy = "mxn",
 				name = "my_neighborhood",
+				m = 1.3
+			}
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg("m", "positive integer number (greater than zero)", 1.3))
+
+		error_func = function()
+			cs:createNeighborhood{
+				strategy = "mxn",
+				name = "my_neighborhood",
 				m = 5,
 				n = "teste",
 				filter = function() return true end,
@@ -287,6 +311,16 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", 0))
+
+		error_func = function()
+			cs:createNeighborhood{
+				strategy = "mxn",
+				name = "my_neighborhood",
+				m = 5,
+				n = 1.3
+			}
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", 1.3))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -466,6 +500,15 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("weight", "function", 3))
+
+		local cs = CellularSpace{xdim = 10}
+
+		cs:createNeighborhood{name = "abc"}
+
+		error_func = function()
+			cs:createNeighborhood{name = "abc"}
+		end
+		unitTest:assert_error(error_func, "Neighborhood 'abc' already exists.")
 	end,
 	notify = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -473,12 +516,12 @@ return{
 		local error_func = function()
 			cs:notify("not_int")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			cs:notify(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
 	end,
 	size = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

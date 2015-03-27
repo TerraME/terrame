@@ -311,6 +311,21 @@ return{
 		unitTest:assert_error(error_func, switchInvalidArgumentMsg("post", "dbType", options))
 
 		error_func = function()
+			cs = CellularSpace{database = file("simple-cs.csv", "base"), dbType = "map", sep = ";"}
+		end
+		unitTest:assert_error(error_func, "dbType and file extension should be the same.")
+
+		error_func = function()
+			cs = CellularSpace{database = 2, dbType = "map", sep = ";"}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("database", "string", 2))
+
+		error_func = function()
+			cs = CellularSpace{database = "abc123.map", dbType = "map", sep = ";"}
+		end
+		unitTest:assert_error(error_func, resourceNotFoundMsg("database", "abc123.map"))
+
+		error_func = function()
 			local cs = CellularSpace{
 				dbType = mdbType,
 				host = 34,
@@ -351,6 +366,20 @@ return{
 		}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("port", "positive integer number", 34.2))
+
+		error_func = function()
+			local cs = CellularSpace{
+				dbType = mdbType,
+				host = mhost,
+				user = muser,
+				password = mpassword,
+				port = 10,
+				theme = "cells90x90",
+				layer = "cells90x90",
+				database = "terralab"
+		}
+		end
+		unitTest:assert_error(error_func, "Argument 'port' should have values above 1023 to avoid using system reserved values.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -422,6 +451,13 @@ return{
 				}
 			end
 			unitTest:assert_error(error_func, "Can't connect to MySQL server on '321456' (XX).", 2)
+		
+			error_func = function()
+				local cs = CellularSpace{
+					database = "abc123.shp"
+				}
+			end
+			unitTest:assert_error(error_func, "File 'abc123.dbf' not found.")
 		end
 	end,
 	loadNeighborhood = function(unitTest)
@@ -488,15 +524,25 @@ return{
 		}
 
 		local error_func = function()
+			cs:save()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+
+		error_func = function()
 			cs:save("terralab", "themeName", "height_")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "positive integer number", "terralab"))
-	
+
 		error_func = function()
 			cs:save(-18, "themeName", "height_")
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive integer number", -18))
-	
+		
+		error_func = function()
+			cs:save(8.5, "themeName", "height_")
+		end
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive integer number", 8.5))
+
 		error_func = function()
 			cs:save(3, nil, "height_")
 		end
