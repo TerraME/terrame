@@ -1486,7 +1486,7 @@ Map_ = {
 		}
 
 		if not availableExtensions[extension] then
-			invalidFileExtensionError("#1", extension)	
+			invalidFileExtensionError(1, extension)	
 		end
 
 		extension = string.upper(extension)

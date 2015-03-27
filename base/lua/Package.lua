@@ -448,7 +448,7 @@ end
 
 --- Stop the simulation with an error indicating that the function does not support a given file extension.
 -- The error message comes from Package:invalidFileExtensionMsg().
--- @arg attr The attribute name (a string).
+-- @arg attr A string with an attribute name (for named-functions), or position (for non-named functions).
 -- @arg ext The file extension (a string).
 -- @usage invalidFileExtensionError("file", ".txt")
 function invalidFileExtensionError(attr, ext)
@@ -460,6 +460,10 @@ end
 -- @arg ext The incompatible file extension.
 -- @usage invalidFileExtensionMsg("file", "csv")
 function invalidFileExtensionMsg(attr, ext)
+	if type(attr) == "number" then
+		attr = "#"..attr
+	end
+
 	return "Argument '".. attr.."' does not support extension '"..ext.."'."
 end
 
