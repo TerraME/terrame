@@ -217,10 +217,10 @@ return{
 		unitTest:assert_error(error_func, namedArgumentsMsg())
 
 		local error_func = function()
-			envmt = Environment{at1, cs}
+			envmt = Environment{at1}
 		end
 
-		unitTest:assert_error(error_func, "CellularSpace must be added before any Automaton.")
+		unitTest:assert_error(error_func, "The Environment has an Automaton but not a CellularSpace.")
 	end,
 	notify = function(unitTest)
 		local env = Environment{}
@@ -228,12 +228,12 @@ return{
 		local error_func = function()
 			env:notify("not_int")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			env:notify(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
+		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
 	end
 
 }

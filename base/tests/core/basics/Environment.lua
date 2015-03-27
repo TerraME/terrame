@@ -200,6 +200,108 @@ return{
 		env:execute(10)
 		--assert_equal(11, env:getTime() ) -- #195
 		self:assert_equal(13, a.x)
+
+		local cellCont = 0
+		self:assert_equal(cellCont, 0)
+		local cs = CellularSpace{xdim = 2}
+		forEachCell(cs, function(cell)
+			cell.soilType = 0
+			cellCont = cellCont + 1
+		end)
+		self:assert_equal(cellCont, 4)
+
+		forEachCell(cs, function(cell, idx)
+			self:assert_equal(cell.soilType, 0)
+		end)
+
+		local cont = 0
+
+		local ag1 = Agent{
+			it = Trajectory{target = cs},
+			cont  = 0,
+
+			State{
+				id = "first",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "second"
+				}
+			},
+			State{
+				id = "second",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "first"
+				}
+			}
+		}
+
+		local at1 = Automaton{
+			it = Trajectory{target = cs},
+			cont  = 0,
+			State{
+				id = "first",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "second"
+				}
+			},
+
+			State{
+				id = "second",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "first"
+				}
+			}
+		}
+
+		local env = Environment{
+			cs, at1, ag1
+		}
+		env:add(cs)
+		env:add(at1)
+		local ev = Event{time = 0}
+		at1:setTrajectoryStatus(true)
+		at1:execute(ev)
+		self:assert_equal(44, cont)
+
+		ev = Event{time = 0}
+		ag1:setTrajectoryStatus(true)
+		ag1:execute(ev)
+		self:assert_equal(88, cont)
 	end,
 	execute = function(self)
 		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
@@ -545,7 +647,7 @@ return{
 		local cs1 = CellularSpace{xdim = 2}
 		local ag1 = Agent{}
 		local t1 = Timer{}
-		local env1 = Environment{id = "env", cs1, ag1, t1}    
+		local env1 = Environment{id = "env", cs1, ag1, t1}
 		unitTest:assert_equal(tostring(env1), [[1      CellularSpace
 2      Agent
 3      Timer

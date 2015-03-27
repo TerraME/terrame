@@ -147,6 +147,67 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste"))
+
+		local config = getConfig()
+		local mdbType = config.dbType
+		local mhost = config.host
+		local muser = config.user
+		local mpassword = config.password
+		local mport = config.port
+
+		local cs = CellularSpace{
+			host = mhost,
+			user = muser,
+			password = mpassword,
+			port = mport,
+			database = mdatabase,
+			theme = "River"
+		}
+
+		local cs2 = CellularSpace{
+			host = mhost,
+			user = muser,
+			password = mpassword,
+			port = mport,
+			database = mdatabase,
+			theme = "cells1000x1000"
+		}
+
+		local cs3 = CellularSpace{
+			host = mhost,
+			user = muser,
+			password = mpassword,
+			port = mport,
+			database = mdatabase,
+			theme = "Limit"
+		}
+
+		local env = Environment{cs, cs2, cs3}
+
+		local countTest = 1
+
+		-- .gpm Regular CS x Irregular CS - without weights
+
+		local mfile = file("gpmAreaCellsPols-error.gpm", "base")
+
+		error_func = function()
+	   		env:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"..countTest
+			}
+		end
+		unitTest:assert_error(error_func, "The string 'bb' found as weight in the file '"..mfile.."' could not be converted to a number.")
+
+		local mfile = file("gpmAreaCellsPols-error2.gpm", "base")
+
+		error_func = function()
+	   		env:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"..countTest
+			}
+		end
+		unitTest:assert_error(error_func, "The string '' found as weight in the file '"..mfile.."' could not be converted to a number.")
+	
 	end
 }
 

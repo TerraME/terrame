@@ -420,17 +420,16 @@ Environment_ = {
 	-- Most of the strategies available ignore this value, therefore it can be left empty.
 	-- @usage env:notify()
 	notify = function (self, modelTime)
-		if modelTime == nil then
-			modelTime = 1
-		elseif type(modelTime) ~= "number" then
-			if type(modelTime) == "Event" then
-				modelTime = modelTime:getTime()
-			else
-				incompatibleTypeError(1, "Event or positive number", modelTime)
-			end
-		elseif modelTime < 0 then
-			incompatibleValueError(1, "Event or positive number", modelTime)
+		if type(modelTime) == "Event" then
+			modelTime = modelTime:getTime()
 		end
+
+		optionalArgument(1, "number", modelTime)
+
+		if modelTime < 0 then
+			incompatibleValueError(1, "positive number", modelTime)
+		end
+
 		self.cObj_:notify(modelTime)
 	end
 }
@@ -464,27 +463,32 @@ function Environment(data)
 	setmetatable(data, metaTableEnvironment_)
 	cObj:setReference(data)
   	local flagAutomatons = false
-	for k, ud in pairs(data) do
-		local t = type(ud)
-		if t == "table" then
-			cObj:add(ud.cObj_)
-		elseif t == "userdata" then
-			cObj:add(ud)
-	    elseif t == "CellularSpace" and flagAutomatons then
-			customError("CellularSpace must be added before any Automaton.")
-	    elseif t == "Automaton" then
+	forEachElement(data, function(k, ud, t)
+	    if t == "Automaton" then
 			ud.parent = data
 			cObj:add(ud.cObj_)    
 			flagAutomatons = true  
 		elseif t == "CellularSpace" or t == "Society" or t == "Agent" then 
 			ud.parent = data
 			--cObj:add(ud.cObj_)
-	    end
-    
-		if t=="Timer" then
+	    elseif t == "Timer" then
 			cObj:add(ud.cObj_)
 		end
+	end)
+
+	if flagAutomatons then
+		local foundcs = false
+		forEachElement(data, function(k, ud, t)
+		    if t == "CellularSpace" then
+				foundcs = true
+			end
+		end)
+
+		if not foundcs then
+			customError("The Environment has an Automaton but not a CellularSpace.")
+		end
 	end
+
 	data.cObj_ = cObj
 	return data
 end
