@@ -141,22 +141,22 @@ local function getMxNNeighborhood(cs, data)
 end
 
 local checkMdb = function(self)
-	mandatoryTableArgument(self, "theme", "string")
-	defaultTableValue(self, "layer", "")
-	defaultTableValue(self, "where", "")
+	mandatoryTableArgument(self, "theme", "string") -- SKIP
+	defaultTableValue(self, "layer", "") -- SKIP
+	defaultTableValue(self, "where", "") -- SKIP
 
-	self.cObj_:setTheme(self.theme) 
-	self.cObj_:setLayer(self.layer)
-	self.cObj_:setWhereClause(self.where)
+	self.cObj_:setTheme(self.theme) -- SKIP
+	self.cObj_:setLayer(self.layer) -- SKIP
+	self.cObj_:setWhereClause(self.where) -- SKIP
 
-	if type(self.select) == "string" then
+	if type(self.select) == "string" then -- SKIP
 		self.select = {self.select}
 	end
 
 	defaultTableValue(self, "select", {})
 
-	for i in ipairs(self.select) do
-		self.cObj_:addAttrName(self.select[i])
+	for i in ipairs(self.select) do -- SKIP
+		self.cObj_:addAttrName(self.select[i]) -- SKIP
 	end
 end
 
@@ -334,7 +334,7 @@ local loadDb = function(self)
 	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:load()
 
 	if self.cells == nil then
-		customError("It was not possible to load the CellularSpace.")
+		customError("It was not possible to load the CellularSpace.") -- SKIP
 	end
 
 	table.sort(self.cells, function(a, b) 
@@ -1049,10 +1049,12 @@ function CellularSpace(data)
 				data.dbType = candidates[1]
 			else
 				str = ""
+				-- TODO: unskip the lines below after updating to TerraLib 5
+				str = "" -- SKIP
 				forEachElement(candidates, function(idx, value)
-					str = str..value..", "
+					str = str..value..", " -- SKIP
 				end)
-				customError("More than one candidate: "..str)
+				customError("More than one candidate: "..str) -- SKIP
 			end
 		else
 			local ext = getExtension(data.database)

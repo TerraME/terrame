@@ -143,7 +143,65 @@ UnitTest_ = {
 	-- @usage error_func = function() verify(2 > 3, "wrong operator") end
 	-- unitTest:assert_error(error_func, "wrong operator")
 	assert_error = function(self, my_function, error_message, max_error)
-		assertError__(self, my_function, error_message, max_error)
+		mandatoryArgument(1, "function", my_function)
+		mandatoryArgument(2, "string", error_message)
+		optionalArgument(3, "number", max_error)
+
+		local found_error = false
+		local _, err = xpcall(my_function, function(err)
+			found_error = true
+			if self.current_file then
+				local err2 = string.match(err, self.current_file)
+				if err2 ~= self.current_file then
+					printError("Error in wrong file (possibly wrong stack level). It should occur in '"..self.current_file.."', got '"..err.."'.")
+					printError(traceback())
+					self.wrong_file = self.wrong_file + 1
+					return
+				end
+			end
+			local shortError = string.match(err, ":[0-9]*:.*")
+
+			if shortError == nil then
+				self.wrong_file = self.wrong_file + 1 -- SKIP
+				printError("Error should contain line number (possibly wrong stack level), got: '"..err.."'.")
+				printError(traceback())
+				return
+			end
+
+			shortError = string.gsub(shortError,":[0-9]*: ", "")
+			local start = shortError:sub(1, 7)
+
+			if start ~= "Error: " then
+				self:print_error("The error message does not start with \"Error:\": "..shortError)
+			end
+
+			shortError = shortError:sub(8, shortError:len())
+
+			local distance = levenshtein(error_message, shortError)
+
+			if (distance == 0) or (max_error and distance <= max_error) then
+				self.success = self.success + 1
+			else
+				self.fail = self.fail + 1 -- SKIP
+
+				local error_msg = "Test expected:\n  \""..error_message.."\"\n  got:\n  \""..shortError.."\""
+
+				if max_error then -- SKIP
+					error_msg = error_msg.."\nIt would accept an error of at most "..max_error.. -- SKIP
+						" character(s), but got "..distance.."." -- SKIP
+				end
+
+				self:print_error(error_msg)
+				-- print(traceback())
+			end
+		end)
+
+		if not found_error then
+			self.fail = self.fail + 1 -- SKIP
+			self:print_error("Test expected an error ('"..error_message.."'), but no error was found.", 2)
+		end
+
+		self.test = self.test + 1
 	end,
 	--- Verify whether a Chart or a Map has a plot similar to the one defined by snapshot folder.
 	-- @arg observer A Chart or a Map.
@@ -152,7 +210,43 @@ UnitTest_ = {
 	-- @usage c = Chart{...}
 	-- unitTest:assert_snapshot(c, "test_chart.bmp")
 	assert_snapshot = function(self, observer, file)
-		assertSnapshot__(self, observer, file)
+		self.snapshots = self.snapshots + 1
+		local s = sessionInfo().separator
+		if not self.imgFolder then
+			self.imgFolder = sessionInfo().path..s.."packages"..s..self.package..s.."snapshots"
+			if attributes(self.imgFolder, "mode") ~= "directory" then
+				customError("Folder '"..self.imgFolder.."' does not exist. Please create such folder in order to use assert_snapshot().")
+			end
+			self.tsnapshots = {}
+		end
+
+		if self.tsnapshots[file] then
+			self.fail = self.fail + 1 -- SKIP
+			self:print_error("File '"..file.."' is used in more than one assert_shapshot().")
+			return
+		end
+
+		self.tsnapshots[file] = true
+		local newImage = self:tmpFolder()..s..file
+		local oldImage = self.imgFolder..s..file
+
+		if not isFile(oldImage) then
+			observer:save(oldImage) -- SKIP
+			self.snapshot_files = self.snapshot_files + 1 -- SKIP
+			printWarning("Creating 'snapshots"..s..file.."'.")
+			self.test = self.test + 1 -- SKIP
+			self.success = self.success + 1 -- SKIP
+		else
+			observer:save(newImage)
+
+			if cpp_imagecompare(newImage, oldImage) then
+				self.test = self.test + 1
+				self.success = self.success + 1
+			else
+				self:print_error("Files \n  'snapshots"..s..file.."'\nand\n  '"..newImage.."'\nare different.")
+				self.fail = self.fail + 1 -- SKIP
+			end
+		end
 	end,
 	--- Executes a delay in seconds during the test. Calling this function, the user can change the
 	-- delay when the UnitTest is built.
