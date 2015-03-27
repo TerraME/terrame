@@ -58,6 +58,15 @@ return{
 		unitTest:assert_equal(11, sum_vision)
 		unitTest:assert_equal(6, sum_metabolism)
 		unitTest:assert_equal(2, sum_immunes)
+
+		local nonFooAgent = Agent{}
+
+		local soc = Society {
+			instance = nonFooAgent,
+			database = file("brazilstates.shp", "base")
+		}
+
+		unitTest:assert_equal(#soc, 27)
 	end
 }
 
