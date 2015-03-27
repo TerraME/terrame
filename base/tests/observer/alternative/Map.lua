@@ -148,7 +148,18 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, "Invalid color 'xxx'.")
-	
+
+		error_func = function()
+			Map{
+				subject = c,
+				select = "x",
+				slices = 3,
+				colors = "Pastei1",
+				labels = {"1", "2", "3"}
+			}
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("Pastei1", "colors", "Pastel1"))
+
 		-- uniquevalue
 		error_func = function()
 			Map{subject = c, select = "mvalue", grouping = "uniquevalue"}
