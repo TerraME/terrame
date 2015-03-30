@@ -124,16 +124,17 @@ Environment_ = {
 	-- @arg object An Agent, Automaton, CellularSpace, Timer or Environment.
 	-- @usage environment:add(agent)
 	-- environment:add(cellularSpace)
-	add = function (self, object)
+	add = function(self, object)
 		local t = type(object)
 		if belong(t, {"CellularSpace", "Society", "Agent", "Automaton", "Timer", "Trajectory", "Cell"}) then
 			object.parent = self
 			table.insert(self, object)
+
+			if t == "Society" then return end
 		else
       		incompatibleTypeError(1, "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory", object)
     	end
-		object.parent = self
-		return self.cObj_:add(object.cObj_)
+		self.cObj_:add(object.cObj_)
 	end,
 	--- Create relations between behavioural entities (Agents) and spatial entities (Cells). The
 	-- Environment must have only one CellularSpace or Trajectory to place agents. It is possible
@@ -462,31 +463,27 @@ function Environment(data)
 	local cObj = TeScale(data.id)
 	setmetatable(data, metaTableEnvironment_)
 	cObj:setReference(data)
-  	local flagAutomatons = false
+  	local flagAutomaton = false
+  	local flagCellularSpace = false
 	forEachElement(data, function(k, ud, t)
 	    if t == "Automaton" then
 			ud.parent = data
 			cObj:add(ud.cObj_)    
-			flagAutomatons = true  
-		elseif t == "CellularSpace" or t == "Society" or t == "Agent" then 
+			flagAutomaton = true
+		elseif t == "CellularSpace" then
 			ud.parent = data
-			--cObj:add(ud.cObj_)
-	    elseif t == "Timer" then
+			flagCellularSpace = true
+			cObj:add(ud.cObj_)
+		elseif t == "Society" then
+			ud.parent = data
+	    elseif t == "Timer" or t == "Agent" then
+			ud.parent = data
 			cObj:add(ud.cObj_)
 		end
 	end)
 
-	if flagAutomatons then
-		local foundcs = false
-		forEachElement(data, function(k, ud, t)
-		    if t == "CellularSpace" then
-				foundcs = true
-			end
-		end)
-
-		if not foundcs then
-			customError("The Environment has an Automaton but not a CellularSpace.")
-		end
+	if flagAutomaton and not flagCellularSpace then
+		customError("The Environment has an Automaton but not a CellularSpace.")
 	end
 
 	data.cObj_ = cObj

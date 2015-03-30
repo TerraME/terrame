@@ -291,8 +291,7 @@ return{
 		local env = Environment{
 			cs, at1, ag1
 		}
-		env:add(cs)
-		env:add(at1)
+
 		local ev = Event{time = 0}
 		at1:setTrajectoryStatus(true)
 		at1:execute(ev)
