@@ -35,10 +35,11 @@ return{
 		unitTest:assert(true)
 	end,
 	execute = function(unitTest)
+		local count = 0
 		local ag = Agent{
 			State{
 				id = "first",
-				Flow{function() end}
+				Flow{function() count = count + 1 end}
 			}
 		}
 
@@ -49,10 +50,82 @@ return{
 			end}
 		}
 		t:execute(1)
-		unitTest:assert(true)
+		unitTest:assert_equal(count, 1)
 	end,
 	getLatency = function(unitTest)
-		unitTest:assert(true)
+		local jumps = 0
+		local flows = 0
+		local a = Agent{
+			x = 3,
+			State{
+				id = "stop",
+				Jump{
+					function(ev, self)
+						jumps = jumps + 1
+						if self.x > 5 then
+							unitTest:assert_equal(6, self.x)
+							unitTest:assert_equal(3, ev:getTime())
+							unitTest:assert_equal(0, self:getLatency())
+							return true
+						end
+					end,
+					target = "go"
+				},
+				Flow{function(ev, self)
+					flows = flows + 1
+					self.x = self.x + 1
+				end}
+			},
+			State{
+				id = "go",
+				Jump{
+					function(ev, self)
+						jumps = jumps + 1
+						if self.x < 3 then
+							unitTest:assert_equal(7, ev:getTime())
+							unitTest:assert_equal(2, self.x)
+							unitTest:assert_equal(3, self:getLatency() )
+							return true
+						end
+					end,
+					target = "stop"
+				},
+				Jump{
+					function(ev, self)
+						jumps = jumps + 1
+						return false
+					end,
+					target = "stop"
+				},
+				Flow{function(ev, self)
+					flows = flows + 1
+					self.x = self.x - 1
+				end},
+				Flow{function(ev, self)
+					flows = flows + 1
+				end}
+			}
+		}
+
+		unitTest:assert_equal(0, a:getLatency())
+
+		a:execute(Event{action = function() end}[1])
+		unitTest:assert_equal(0, a:getLatency() )
+		unitTest:assert_equal(4, a.x)
+
+		local t = Timer{
+			Event{action = function(ev)
+				a:execute(ev)
+			end}
+		}
+
+		t:execute(10)
+
+		unitTest:assert_equal(6, a.x)
+		unitTest:assert_equal(7, a:getLatency())
+
+		unitTest:assert_equal(15, flows)
+		unitTest:assert_equal(17, jumps)
 	end,
 	build = function(unitTest)
 		local ag = Agent{}
@@ -60,10 +133,110 @@ return{
 		unitTest:assert(true)
 	end,
 	getStateName = function(unitTest)
-		unitTest:assert(true)
+		local a = Agent{
+			x = 3,
+			State{
+				id = "stop",
+				Jump{
+					function(ev, self)
+						if self.x > 5 then
+							unitTest:assert_equal(6, self.x)
+							unitTest:assert_equal(3, ev:getTime())
+							unitTest:assert_equal(0, self:getLatency())
+							return true
+						end
+					end,
+					target = "go"
+				},
+				Flow{function(ev, self)
+					self.x = self.x + 1
+				end}
+			},
+			State{
+				id = "go",
+				Jump{
+					function(ev, self)
+						if self.x < 3 then
+							unitTest:assert_equal(7, ev:getTime())
+							unitTest:assert_equal(2, self.x)
+							unitTest:assert_equal(3, self:getLatency() )
+							return true
+						end
+					end,
+					target = "stop"
+				},
+				Flow{function(ev, self)
+					self.x = self.x - 1
+				end}
+			}
+		}
+
+		unitTest:assert_equal("stop", a:getStateName())
+
+		a:execute(Event{action = function() end}[1])
+		unitTest:assert_equal("stop", a:getStateName())
+
+		local t = Timer{
+			Event{action = function(ev)
+				a:execute(ev)
+			end}
+		}
+
+		t:execute(5)
+		unitTest:assert_equal("go", a:getStateName())
+		t:execute(10)
+		unitTest:assert_equal("stop", a:getStateName())
 	end,
 	getTrajectoryStatus = function(unitTest)
-		unitTest:assert(true)
+        local cs = CellularSpace{ xdim = 2}
+
+        local ag1 = Agent{
+            it = Trajectory{
+                target = cs
+            },
+            cont = 0,
+            State{
+                id = "first",
+                Jump{
+                    function(event, agent, cell)
+                        cont = cont + 1
+                        if agent.cont < 10 then
+                            agent.cont = agent.cont + 1
+                            return true
+                        end
+                        if agent.cont == 10 then agent.cont = 0 end
+                        return false
+                    end,
+                    target = "second"
+                }
+            },
+            State{
+                id = "second",
+                Jump{
+                    function(event, agent, cell)
+                        cont = cont + 1
+                        if agent.cont < 10 then
+                            agent.cont = agent.cont + 1
+                            return true
+                        end
+                        if agent.cont == 10 then agent.cont = 0 end
+                        return false
+                    end,
+                    target = "first"
+                }
+            }
+        }
+
+		unitTest:assert(not ag1:getTrajectoryStatus())
+
+		ag1:setTrajectoryStatus(true)
+		unitTest:assert(ag1:getTrajectoryStatus())
+
+		ag1:setTrajectoryStatus()
+		unitTest:assert(not ag1:getTrajectoryStatus())
+
+		ag1:setTrajectoryStatus(false)
+		unitTest:assert(not ag1:getTrajectoryStatus())
 	end,
 	Agent = function(unitTest)
 		local singleFooAgent = Agent{
@@ -325,38 +498,79 @@ return{
 		unitTest:assert_type(ag:sample(), "Agent")
 	end,
 	setTrajectoryStatus = function(unitTest)
-		local ag1 = Agent{
-			energy = 5,
-			hungry = false,
-			counter = 0,
-		}
-		local cs = CellularSpace{xdim = 3}
-		forEachCell(cs, function(cell) 
-			cell.soilType = 0 
-		end)
+        local cs = CellularSpace{ xdim = 2}
+		local cont = 0
 
-		local myEnv = Environment{cs, ag1}
-		myEnv:createPlacement{strategy = "void"}
-		local c1 = cs.cells[1]
-		ag1:enter(c1)
-		ag1:setTrajectoryStatus(nil)
+        local ag1 = Agent{
+            it = Trajectory{
+                target = cs
+            },
+            cont = 0,
+            State{
+                id = "first",
+                Jump{
+                    function(event, agent, cell)
+                        cont = cont + 1
+                        if agent.cont < 10 then
+                            agent.cont = agent.cont + 1
+                            return true
+                        end
+                        if agent.cont == 10 then agent.cont = 0 end
+                        return false
+                    end,
+                    target = "second"
+                }
+            },
+            State{
+                id = "second",
+                Jump{
+                    function(event, agent, cell)
+                        cont = cont + 1
+                        if agent.cont < 10 then
+                            agent.cont = agent.cont + 1
+                            return true
+                        end
+                        if agent.cont == 10 then agent.cont = 0 end
+                        return false
+                    end,
+                    target = "first"
+                }
+            }
+        }
 
-		ag1 = Agent{
-			energy = 5,
-			hungry = false,
-			counter = 0,
-		}
-		cs = CellularSpace{xdim = 3}
-		forEachCell(cs, function(cell) 
-			cell.soilType = 0 
-		end)
+		local ev = Event{action = function() end}[1]
 
-		local myEnv = Environment{cs, ag1}
-		myEnv:createPlacement{strategy = "void"}
-		local c1 = cs.cells[1]
-		ag1:enter(c1, "placement")
-		ag1:setTrajectoryStatus()
-		unitTest:assert(true)
+		ag1:setTrajectoryStatus(false)
+		ag1.it:sort(function(a, b) return a.x > b.x end)
+		cont = 0
+		ag1:execute(ev)
+		unitTest:assert_equal(11, cont)
+
+		ag1:setTrajectoryStatus(true)
+		ag1.it:sort(function(a, b) return a.x > b.x end)
+		cont = 0
+		ag1:execute(ev)
+		unitTest:assert_equal(44, cont)
+
+		ag1.it:sort(greaterByCoord(">"))
+		cont = 0
+		ag1:execute(ev)
+		unitTest:assert_equal(44, cont)
+
+		ag1.it:filter(function(cell) return cell.x ~= 1 end)
+		cont = 0
+		ag1:execute(ev)
+		unitTest:assert_equal(22, cont)
+
+		ag1.it:filter(function(cell) return true end)
+		cont = 0
+		ag1:execute(ev)
+		unitTest:assert_equal(44, cont)
+
+		ag1.it:rebuild()
+		cont = 0
+		ag1:execute(ev)
+		unitTest:assert_equal(44, cont)
 	end,
 	walk = function(unitTest)
 		local ag1 = Agent{}
