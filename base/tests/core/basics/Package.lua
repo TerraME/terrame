@@ -111,6 +111,7 @@ return{
 	end,
 	invalidFileExtensionMsg = function(unitTest)
 		unitTest:assert_equal(invalidFileExtensionMsg("aaa", "bbb"), "Argument 'aaa' does not support extension 'bbb'.")
+		unitTest:assert_equal(invalidFileExtensionMsg(1, "bbb"), "Argument '#1' does not support extension 'bbb'.")
 	end,
 	customError = function(unitTest)
 		local error_func = function()

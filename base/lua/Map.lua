@@ -1479,19 +1479,19 @@ Map_ = {
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 
 		local availableExtensions = {
-			bmp = true, -- SKIP
-			jpg = true, -- SKIP
-			png = true, -- SKIP
-			tiff = true -- SKIP
+			bmp = true,
+			jpg = true,
+			png = true,
+			tiff = true
 		}
 
-		if not availableExtensions[extension] then -- SKIP
-			invalidFileExtensionError(1, extension)	 -- SKIP
+		if not availableExtensions[extension] then
+			invalidFileExtensionError(1, extension)
 		end
 
-		extension = string.upper(extension) -- SKIP
+		extension = string.upper(extension)
 
-		self.cObj_:save(file, extension) -- SKIP
+		self.cObj_:save(file, extension)
 	end
 }
 
@@ -1517,7 +1517,7 @@ function Map(data)
 		elseif data.values ~= nil then
 			data.grouping = "uniquevalue"
 		elseif data.colors ~= nil and data.select == nil then
-			data.grouping = "background" -- SKIP
+			data.grouping = "background"
 		else
 			customError("It was not possible to infer argument 'grouping'.")
 		end

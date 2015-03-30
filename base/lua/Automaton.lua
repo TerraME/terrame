@@ -122,7 +122,7 @@ Automaton_ = {
 		local statesVector = {}
 		for _, value in pairs(self) do
 			if type(value) == "State" then
-				table.insert(statesVector, element) -- SKIP
+				table.insert(statesVector, element)
 			end
 		end
 		return statesVector

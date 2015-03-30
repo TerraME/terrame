@@ -213,8 +213,8 @@ UnitTest_ = {
 		self.snapshots = self.snapshots + 1
 		local s = sessionInfo().separator
 		if not self.imgFolder then
-			self.imgFolder = sessionInfo().path..s.."packages"..s..self.package..s.."snapshots"
-			if attributes(self.imgFolder, "mode") ~= "directory" then
+			self.imgFolder = sessionInfo().path..s.."packages"..s..self.package..s.."snapshots" -- SKIP
+			if attributes(self.imgFolder, "mode") ~= "directory" then -- SKIP
 				customError("Folder '"..self.imgFolder.."' does not exist. Please create such folder in order to use assert_snapshot().")
 			end
 			self.tsnapshots = {}
@@ -253,6 +253,9 @@ UnitTest_ = {
 	-- @usage unitTest:delay()
 	delay = function()
 	end,
+	--- Internal function to print error messages along the tests.
+	-- @arg msg A string with the error message.
+	-- @usage unitTest:print_error("msg")
 	print_error = function(self, msg)
 		local level = 1
     	local info = debug.getinfo(level)
