@@ -74,7 +74,7 @@ return{
 					end
 				},
 				acum = 0,
-				cont  = 0,
+				cont = 0,
 				curve = 0,
 				st2 = state2,
 				st1 = state1
@@ -104,7 +104,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -125,7 +125,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -147,7 +147,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -168,7 +168,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -190,7 +190,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -213,7 +213,6 @@ return{
 			a:getState(-2)
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -2))
-			
 	end,
 	setId = function(unitTest)
 		local at1 = Automaton{
@@ -222,11 +221,11 @@ return{
 				select = function(cell)
 					local x = cell.x - 5
 					local y = cell.y - 5
-					return (x * x) + (y * y)  - 16 < 0.1
+					return (x * x) + (y * y) - 16 < 0.1
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -252,27 +251,6 @@ return{
 					return (x * x) + (y * y) - 16 < 0.1
 				end
 			},
-			acum = 0,
-			cont  = 0,
-			curve = 0,
-			st2 = state2,
-			st1 = state1
-		}
-		at1:setTrajectoryStatus(nil)
-		unitTest:assert(true)
-
-		at1 = Automaton{
-			it = Trajectory{
-				target = cs, 
-				select = function(cell)
-					local x = cell.x - 5
-					local y = cell.y - 5
-					return (x * x) + (y * y) - 16 < 0.1
-				end
-			},
-			acum = 0,
-			cont  = 0,
-			curve = 0,
 			st2 = state2,
 			st1 = state1
 		}

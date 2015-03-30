@@ -87,8 +87,9 @@ Automaton_ = {
 
 		self.cObj_:notify(modelTime)
 	end,
-	--- Activate or not the Trajectories defined for the Automata. Returns whether the
-	-- change  was successfully executed.
+	--- Activate or not the Trajectories defined for the Automaton. Returns whether the
+	-- change was successfully executed. When the Automaton is built its status is
+	-- not activated.
 	-- @arg status A boolean that indicates if the Trajectories will be activated.
 	-- @usage automaton:setTrajectoryStatus(true)
 	setTrajectoryStatus = function(self, status)

@@ -65,7 +65,7 @@ return{
 		local at1 = Automaton{
 
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -93,7 +93,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -110,20 +110,79 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0
 		}
 
 		local count = 0
 		for k, v in pairs(at1) do
-			if type(v) == "State"	then
+			if type(v) == "State" then
 				count = count + 1
 			end		
 		end
 		unitTest:assert_equal(0, count)
 	end,
 	getLatency = function(unitTest)
-		unitTest:assert(true)
+		local cs = CellularSpace{xdim = 2}
+		local cont = 0
+
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs
+			},
+			cont = 0,
+			State{
+				id = "first",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return tru
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "second"
+				}
+			},
+			State{
+				id = "second",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "first"
+				}
+			}
+		}
+
+		local env = Environment{cs, at1}
+
+		local ev = Event{action = function() end}[1]
+
+		at1:setTrajectoryStatus(true)
+		at1:execute(ev)
+		unitTest:assert_equal(0, at1:getLatency())
+
+		local ev = Event{time = 4, action = function() end}[1]
+		at1.it:sort(greaterByCoord(">"))
+		at1:execute(ev)
+		unitTest:assert_equal(0, at1:getLatency())
+
+		at1.it:filter(function(cell) return cell.x == cell.y end)
+		at1:execute(ev)
+		unitTest:assert_equal(0, at1:getLatency())
+
+		at1.it:filter(function(cell) return true end)
+		at1:execute(ev)
+		unitTest:assert_equal(0, at1:getLatency())
 	end,
 	build = function(unitTest)
 		local at1 = Automaton{
@@ -136,7 +195,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -156,7 +215,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -167,6 +226,72 @@ return{
 		}
 		t:execute(1)
 		unitTest:assert(true)
+
+		local cs = CellularSpace{xdim = 2}
+		local cont = 0
+
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs
+			},
+			cont = 0,
+			State{
+				id = "first",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return tru
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "second"
+				}
+			},
+			State{
+				id = "second",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "first"
+				}
+			}
+		}
+
+		local env = Environment{cs, at1}
+
+		local ev = Event{action = function() end}[1]
+
+		at1:setTrajectoryStatus(true)
+		at1.it:sort(function(a,b) return a.x > b.x; end)
+		at1:execute(ev)
+		unitTest:assert_equal(4, at1.cont)
+		unitTest:assert_equal(4, cont)
+
+		local ev = Event{time = 4, action = function() end}[1]
+		at1.it:sort(greaterByCoord(">"))
+		at1:execute(ev)
+		unitTest:assert_equal(8, at1.cont)
+		unitTest:assert_equal(8, cont)
+
+		at1.it:filter(function(cell) return cell.x == cell.y end)
+		at1:execute(ev)
+		unitTest:assert_equal(10, at1.cont)
+		unitTest:assert_equal(10, at1.cont)
+
+		at1.it:filter(function(cell) return true end)
+		at1:execute(ev)
+		unitTest:assert_equal(3, at1.cont)
+		unitTest:assert_equal(14, cont)
 	end,
 	getStateName = function(unitTest)
 		unitTest:assert(true)
@@ -182,7 +307,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -208,7 +333,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -229,7 +354,7 @@ return{
 				end
 			},
 			acum = 0,
-			cont  = 0,
+			cont = 0,
 			curve = 0,
 			st2 = state2,
 			st1 = state1
@@ -241,6 +366,43 @@ return{
 		t:execute(1)
 
 		unitTest:assert(true)
+	end,
+	setTrajectoryStatus = function(unitTest)
+		local t = Trajectory{target = cs, select = function(cell)
+			local x = cell.x - 5
+			local y = cell.y - 5
+			return (x * x) + (y * y) - 16 < 0.1
+		end}
+
+		local count = 0
+		local at1 = Automaton{
+			it = t,
+			st = State{
+				id = "unique",
+				Flow{function()
+					count = count + 1
+				end},
+				Jump{
+					function() return false end, target = "unique"
+				}
+			}
+		}
+
+		local env = Environment{cs, at1}
+
+		local e = Event{action = function() end}[1]
+		at1:execute(e)
+		unitTest:assert_equal(count, 0)
+
+		at1:setTrajectoryStatus(true)
+		count = 0
+		at1:execute(e)
+		unitTest:assert_equal(count, 49)
+
+		at1:setTrajectoryStatus()
+		count = 0
+		at1:execute(e)
+		unitTest:assert_equal(count, 0)
 	end,
 	__tostring = function(unitTest)
 		local at1 = Automaton{
