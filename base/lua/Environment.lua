@@ -204,9 +204,9 @@ Environment_ = {
 
 		for k, ud in pairs(self) do
 			local t = type(ud)
-			if t == "CellularSpace" or t == "Trajectory" then
+			if belong(t, {"CellularSpace", "Trajectory", "Cell"}) then
 				if mycs ~= nil then
-					customError("Environment should contain only one CellularSpace or Trajectory.")
+					customError("Environment should contain only one CellularSpace, Trajectory, or Cell.")
 				end
 				mycs = ud
 			elseif t == "Society" then
@@ -228,6 +228,13 @@ Environment_ = {
 
 		verify(mycs, "The Environment does not contain a CellularSpace.")
 		verify(foundsoc, "Could not find a behavioral entity (Society or Agent) within the Environment.")
+
+		if type(mycs) == "Cell" then
+			local t = Trajectory{target = mycs.parent, build = false}
+			t:add(mycs)
+			mycs = t
+			table.insert(self, t)
+		end
 
 		if data.strategy == "random" and data.max ~= nil and qty_agents > #mycs * data.max then
 			customError("It is not possible to put such amount of agents in space.")

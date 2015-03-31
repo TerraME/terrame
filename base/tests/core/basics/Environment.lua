@@ -160,6 +160,20 @@ return{
 		unitTest:assert_equal(99, count_house)
 		unitTest:assert_equal(99, count_stay)
 		unitTest:assert_equal(0,  count_wplace)
+
+		local predator = Agent{name = "predator"}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 10
+		}
+
+		local cs = CellularSpace{xdim = 10}
+
+		local env = Environment{cs.cells[1], predators}
+		env:createPlacement()
+
+		unitTest:assert_equal(#cs.cells[1]:getAgents(), #predators)
 	end,
 	Environment = function(self)
 		local cs = CellularSpace{xdim = 10}

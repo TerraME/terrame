@@ -117,7 +117,7 @@ return{
 		error_func = function()
 			env:createPlacement()
 		end
-		unitTest:assert_error(error_func, "Environment should contain only one CellularSpace or Trajectory.")
+		unitTest:assert_error(error_func, "Environment should contain only one CellularSpace, Trajectory, or Cell.")
 
 		env = Environment{cs}
 
