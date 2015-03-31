@@ -534,7 +534,15 @@ function getLevel()
 		local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"..s.."lua"))
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4 = string.sub(info.short_src, 1, 1) == "["
-		if m1 or m2 or m3 or m4 then
+
+		local mpackage = false
+
+		local p = sessionInfo().package
+		if p then
+			mpackage = string.match(info.source, replaceSpecialChars(sessionInfo().path..s.."packages"..s..p..s.."lua"))
+		end
+
+		if m1 or m2 or m3 or m4 or mpackage then
 			level = level + 1
 		else
 			return level - 1 -- minus one because of getLevel()
@@ -740,57 +748,8 @@ function execute(arguments) -- arguments is a vector of strings
 			elseif arg == "-doc" then
 				local s = sessionInfo().separator
 				dofile(sessionInfo().path..s.."lua"..s.."doc.lua")
-				local success, result = xpcall(function() executeDoc(package) end, function(err)
-					local luaFolder = replaceSpecialChars(sessionInfo().path..s.."lua")
-					local baseLuaFolder = replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"..s.."lua")
-					local luadocLuaFolder = replaceSpecialChars(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua")
-					
-					local m1 = string.match(err, string.sub(luaFolder, string.len(luaFolder) - 25, string.len(luaFolder)))
-					local m2 = string.match(err, string.sub(baseLuaFolder, string.len(baseLuaFolder) - 25, string.len(baseLuaFolder)))
-					local m3 = string.match(err, string.sub(luadocLuaFolder, string.len(luadocLuaFolder) - 25, string.len(luadocLuaFolder)))
-					local m4 = string.match(err, "%[C%]")
+				local success, result = myxpcall(function() executeDoc(package) end)
 
-					if m1 or m2 or m3 or m4 then
-						local str = 
-								"*************************************************************\n"..
-								"UNEXPECTED TERRAME INTERNAL ERROR. PLEASE GIVE US A FEEDBACK.\n"..
-								"WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
-								"*************************************************************\n"..
-								err.."\nStack traceback:\n"
-
-						local level = 1
-						local info = debug.getinfo(level)
-						while info ~= nil do
-							local m1 = string.match(info.source, luaFolder)
-							local m2 = string.match(info.source, baseLuaFolder)
-							local m3 = string.match(info.source, luadocLuaFolder)
-							local m4 = string.match(info.short_src, "%[C%]")
-
-							if info.short_src == "[C]" then
-								str = str.."    Internal C file"
-							else
-								str = str.."    File "..info.short_src
-							end
-
-							if info.currentline > 0 then
-								str = str..", line "..info.currentline
-							end
-
-							if info.name then
-								str = str..", in function "..info.name
-							else
-								str = str..", in main chunk"
-							end
-							str = str.."\n"
-							level = level + 1
-							info = debug.getinfo(level)
-						end
-						return string.sub(str, 0, string.len(str) - 1)
-
-					else
-						return err.."\n"..getLevel()
-					end
-				end)
 				if not success then
 					printError(result)
 				end
@@ -873,63 +832,62 @@ function execute(arguments) -- arguments is a vector of strings
 				end)
 			end
 
-			local success, result = xpcall(function() dofile(arg) end, function(err)
-				local luaFolder = replaceSpecialChars(sessionInfo().path.."/lua")
-				local baseLuaFolder = replaceSpecialChars(sessionInfo().path.."/packages/base/lua")
-				
-				local m1 = string.match(err, string.sub(luaFolder, string.len(luaFolder) - 25, string.len(luaFolder)))
-				local m2 = string.match(err, string.sub(baseLuaFolder, string.len(baseLuaFolder) - 25, string.len(baseLuaFolder)))
-				local m3 = string.match(err, "%[C%]")
-
-				if m1 or m2 or m3 then
-					local str = 
-							"*************************************************************\n"..
-							"UNEXPECTED TERRAME INTERNAL ERROR. PLEASE GIVE US A FEEDBACK.\n"..
-							"WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
-							"*************************************************************\n"..
-							err.."\nStack traceback:\n"
-
-					local level = 1
-					local info = debug.getinfo(level)
-					while info ~= nil do
-						local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/lua"))
-						local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/packages/base/lua"))
-						local m3 = string.match(info.short_src, "%[C%]")
-
-						if info.short_src == "[C]" then
-							str = str.."    Internal C file"
-						else
-							str = str.."    File "..info.short_src
-						end
-
-						if info.currentline > 0 then
-							str = str..", line "..info.currentline
-						end
-
-						if info.name then
-							str = str..", in function "..info.name
-						else
-							str = str..", in main chunk"
-						end
-						str = str.."\n"
-						level = level + 1
-						info = debug.getinfo(level)
-					end
-					return string.sub(str, 0, string.len(str) - 1)
-
-				else
-					return err.."\n"..traceback()
-				end
-			end)
-
+			local success, result = myxpcall(function() dofile(arg) end) 
 			if not success then
 				printError(result)
 			end
 
-			return
 		end
 		argCount = argCount + 1
 	end
+	return true
+end
+
+function myxpcall(func)
+	return xpcall(func, function(err)
+		local luaFolder = replaceSpecialChars(sessionInfo().path.."/lua")
+		local baseLuaFolder = replaceSpecialChars(sessionInfo().path.."/packages/base/lua")
+				
+		local m1 = string.match(err, string.sub(luaFolder, string.len(luaFolder) - 25, string.len(luaFolder)))
+		local m2 = string.match(err, string.sub(baseLuaFolder, string.len(baseLuaFolder) - 25, string.len(baseLuaFolder)))
+		local m3 = string.match(err, string.sub(luadocLuaFolder, string.len(luadocLuaFolder) - 25, string.len(luadocLuaFolder)))
+		local m4 = string.match(err, "%[C%]")
+
+		if m1 or m2 or m3 or m4 then
+			local str = 
+				"*************************************************************\n"..
+				"UNEXPECTED TERRAME INTERNAL ERROR. PLEASE GIVE US A FEEDBACK.\n"..
+				"WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
+				"*************************************************************\n"..
+				err.."\nStack traceback:\n"
+
+			local level = 1
+			local info = debug.getinfo(level)
+			while info ~= nil do
+				if info.short_src == "[C]" then
+					str = str.."    Internal C file"
+				else
+					str = str.."    File "..info.short_src
+				end
+
+				if info.currentline > 0 then
+					str = str..", line "..info.currentline
+				end
+
+				if info.name then
+					str = str..", in function "..info.name
+				else
+					str = str..", in main chunk"
+				end
+				str = str.."\n"
+				level = level + 1
+				info = debug.getinfo(level)
+			end
+			return string.sub(str, 0, string.len(str) - 1)
+		else
+			return err.."\n"..traceback()
+		end
+	end)
 end
 
 tostringTerraME = function(self)

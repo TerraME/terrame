@@ -420,7 +420,10 @@ function executeTests(package, fileName, doc_functions)
 				xpcall(function() tests[eachTest](ut) end, function(err)
 					printError("Wrong execution, got error: '"..err.."'.")
 					ut.functions_with_error = ut.functions_with_error + 1
-					printError(traceback())
+					local tb = traceback()
+					if tb ~= "" then
+						printError(tb)
+					end
 					found_error = true
 				end)
 
