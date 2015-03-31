@@ -212,6 +212,10 @@ function Model(attrTab)
 		optionalTableArgument(argv, "seed", "number")
 		optionalTableArgument(argv, "finalTime", "number")
 
+		if #argv > 0 then
+			customError("All the arguments must be named.")
+		end
+
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "Choice" then
 				if argv[name] == nil then

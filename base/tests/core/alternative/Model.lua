@@ -126,6 +126,11 @@ return{
 		}
 
 		error_func = function()
+			local m = Tube{2}
+		end
+		unitTest:assert_error(error_func, "All the arguments must be named.")
+
+		error_func = function()
 			local m = Tube{seed = "2"}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("seed", "number", "2"))
