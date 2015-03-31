@@ -548,6 +548,11 @@ return{
 			cs:split({})
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string or function", {}))
+
+		error_func = function()
+			cs:split("abc")
+		end
+		unitTest:assert_error(error_func, "Attribute 'abc' does not exist.")
 	end,
 	synchronize = function(unitTest)
 		local cs = CellularSpace{xdim = 5}

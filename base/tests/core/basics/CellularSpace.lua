@@ -954,9 +954,6 @@ return{
 		t2 = cs:split(v)
 
 		unitTest:assert_equal(#t2.test, 3)
-
-		t2 = cs:split("terralab")
-		unitTest:assert_equal(#t2, 0)
 	end,
 	__tostring = function(unitTest)
 		local cs1 = CellularSpace{ 

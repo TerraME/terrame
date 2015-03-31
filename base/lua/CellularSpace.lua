@@ -831,6 +831,10 @@ CellularSpace_ = {
 		end
 
 		if type(argument) == "string" then
+			if self:sample()[argument] == nil then
+				customError("Attribute '"..argument.."' does not exist.")
+			end
+
 			local value = argument
 			argument = function(cell)
 				return cell[value]
