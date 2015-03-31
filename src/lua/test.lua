@@ -164,8 +164,6 @@ end
 function executeTests(package, fileName, doc_functions)
 	local initialTime = os.clock()
 
-	require("base")
-
 	local data
 
 	if type(fileName) == "string" then

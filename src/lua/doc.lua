@@ -45,7 +45,6 @@ end
 function executeDoc(package)
 	local initialTime = os.clock()
 
-	require("base")
 	require("luadoc")
 
 	printNote("Building documentation for package '"..package.."'")
@@ -54,7 +53,7 @@ function executeDoc(package)
 
 	printNote("Loading package")
 	xpcall(function() require(package) end, function(err)
-		printError("Package could "..package.." not be loaded.")
+		printError("Package "..package.." could not be loaded.")
 		printError(err)
 		os.exit()
 	end)

@@ -734,6 +734,7 @@ function execute(arguments) -- arguments is a vector of strings
 			elseif arg == "-test" then
 				info_.mode = "debug"
 				argCount = argCount + 1
+				dofile(path.."UnitTest.lua")
 
 				local s = sessionInfo().separator
 				dofile(sessionInfo().path..s.."lua"..s.."test.lua")
