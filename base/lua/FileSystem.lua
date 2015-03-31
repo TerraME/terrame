@@ -46,7 +46,7 @@
 -- "blksize" &
 -- optimal file system I/O blocksize; (Unix only)
 -- @usage attributes(filepath, "mode")
-attributes = function(filepath, attributename)
+function attributes(filepath, attributename)
 	return lfs.attributes(filepath, attributename)
 end
 
@@ -54,20 +54,20 @@ end
 -- Returns true in case of success or nil plus an error string.
 -- @arg path A string with the path.
 -- @usage chDir("c:\\tests")
-chDir = function(path)
+function chDir(path)
 	return lfs.chdir(path)
 end
 
 --- Return a string with the current working directory or nil plus an error string.
 -- @usage currentDir()
-currentDir = function()
+function currentDir()
 	return lfs.currentdir()
 end
 
 --- Return whether a given string represents a file stored in the computer.
 -- @arg file A string.
 -- @usage isFile("C:\\file.txt")
-isFile = function(file)
+function isFile(file)
 	return os.rename(file, file)
 end
 
@@ -97,7 +97,7 @@ end
 --- Return the files in a given directory.
 -- @arg folder A string describing a folder.
 -- @usage dir("C:\\")
-dir = function(folder)
+function dir(folder)
 	local s = sessionInfo().separator
 	local command = "dir "..folder.." /b"
 
@@ -114,16 +114,6 @@ dir = function(folder)
 	end
 end	
 
---- Lua iterator over the entries of a given directory. Each time the iterator is called with dir_obj 
--- it returns a directory entry's name as a string, or nil if there are no more entries. You can 
--- also iterate by calling dir_obj:next(), and explicitly close the directory before the iteration 
--- finished with dir_obj:close(). Raises an error if path is not a directory.
--- @arg path A string with the path.
--- @usage iter, dir_obj = lfsDir(path)
-lfsDir = function(path)
-	return lfs.dir(path)
-end
-
 --- Lock a file or a part of it. This function works on open files; the file handle should be 
 -- specified as the first argument. The optional arguments start and length can be used to specify a 
 -- starting point and its length; both should be numbers.
@@ -132,7 +122,7 @@ end
 -- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w 
 -- (for a write/exclusive lock).
 -- @usage lock(filehandle, "r")
-lock = function(fh, mode)
+function lock(fh, mode)
 	return lfs.lock(fh, mode)
 end
 
@@ -144,7 +134,7 @@ end
 -- not stale it returns the "File exists" message.
 -- @arg path A string with the path.
 -- @usage lockDir(path)
-lockDir = function(path)
+function lockDir(path)
 	return lfs.lock_dir
 end
 
@@ -152,7 +142,7 @@ end
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 -- @arg path A string with the path.
 -- @usage mkDir(dirname)
-mkDir = function(path)
+function mkDir(path)
 	return lfs.mkdir(path)
 end
 
@@ -160,7 +150,7 @@ end
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 -- @arg path A string with the path.
 -- @usage rmDir(dirname)
-rmDir = function(path)
+function rmDir(path)
 	return lfs.rmdir(path)
 end
 
@@ -171,7 +161,7 @@ end
 -- @arg filepath A string with the file path.
 -- @arg mode A string that can be either "binary" or "text". 
 -- @usage setMode(file, "text")
-setMode = function(filepath, mode)
+function setMode(filepath, mode)
 	return lfs.setmode(filepath, mode)
 end
 
@@ -180,7 +170,7 @@ end
 -- @arg filepath A string with the file path.
 -- @arg attributename A string with the name of the attribute to be read.
 -- @usage linkAttributes(filepath, "size")
-linkAttributes = function(filepath, attributename)
+function linkAttributes(filepath, attributename)
 	return lfs.symlinkattributes(filepath, attributename)
 end
 
@@ -193,7 +183,7 @@ end
 -- @arg atime The new access time (in seconds).
 -- @arg mtime The new modification time (in seconds).
 -- @usage touch(filepath)
-touch = function(filepath, atime, mtime)
+function touch(filepath, atime, mtime)
 	return lfs.touch(filepath, atime, mtime)
 end
 
@@ -203,7 +193,7 @@ end
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 -- @arg fh A string with the file path.
 -- @usage unlock(filehandle)
-unlock = function(fh)
+function unlock(fh)
 	return lfs.unlock(fh)
 end
 

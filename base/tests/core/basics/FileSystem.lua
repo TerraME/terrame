@@ -53,22 +53,6 @@ return{
 		unitTest:assert_equal(currentDir(), info.path)
 		chDir(cur_dir)
 	end,
-	lfsDir = function(unitTest)
-		local pathdata = packageInfo().data
-
-		local dirtab1 = dir(pathdata)
-
-		local dirtab2 = {}
-		for f in lfsDir(pathdata) do
-			if f ~= "." and f ~= "." then
-				table.insert(dirtab2, f)
-				local attr = attributes(pathdata..f, "mode")
-				unitTest:assert(attr == "file" or attr == "directory")
-			end
-		end
-
-		unitTest:assert(getn(dirtab1) <= getn(dirtab2))
-	end,
 	lock = function(unitTest)
 		local pathdata = packageInfo().data
 
