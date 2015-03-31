@@ -484,6 +484,8 @@ local function usage()
 	print(" -gui                       Show the player for the application (it works only ")
 	print("                            when an Environment and/or a Timer objects are used).")
 	print(" -ide                       Configure TerraME for running from IDEs in Windows systems.")
+	print(" -ft                        Show the full traceback in case of errors (including")
+	print("                            internal lines from TerraME and loaded packages).")
 	print(" -mode=normal (default)     Warnings enabled.")
 	print(" -mode=debug                Warnings treated as errors.")
 	print(" -mode=quiet                Warnings disabled.")
@@ -515,6 +517,10 @@ end
 
 function getLevel()
 	local level = 1
+
+	if sessionInfo().fullTraceback then
+		return 3
+	end
 
 	while true do
 		local info = debug.getinfo(level)
@@ -553,6 +559,7 @@ end
 function traceback()
 	local level = 1
 
+	local s = sessionInfo().separator
 	local str = "Stack traceback:\n"
 
 	local last_function = ""
@@ -560,19 +567,19 @@ function traceback()
 
 	local info = debug.getinfo(level)
 	while info ~= nil do
-		local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/lua"))
-		local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path.."/packages/base/lua"))
+		local m1 = string.match(info.source, replaceSpecialChars(sessionInfo().path..s.."lua"))
+		local m2 = string.match(info.source, replaceSpecialChars(sessionInfo().path..s.."packages"))
 		local m3 = string.match(info.short_src, "%[C%]")
+
 		if m1 or m2 or m3 then
 			last_function = info.name
 
-			-- add the lines below if you want to see all the traceback
-			--[[
-			if last_function then
-				str = str.. "\n    In "..last_function.."\n"
-				str = str.."    File "..info.short_src..", line "..info.currentline
+			if info.fullTraceback then
+				if last_function then
+					str = str.. "\n    In "..last_function.."\n"
+					str = str.."    File "..info.short_src..", line "..info.currentline
+				end
 			end
-			--]]
 		else
 			if not found_function then
 				if     last_function == "__add"      then last_function = "operator + (addition)"
@@ -628,6 +635,7 @@ function execute(arguments) -- arguments is a vector of strings
 		dbVersion = "1_3_1",
 		separator = package.config:sub(1, 1),
 		path = os.getenv("TME_PATH"), 
+		fullTraceback = false,
 		autoclose = false
 	}
 
@@ -659,6 +667,8 @@ function execute(arguments) -- arguments is a vector of strings
 				local __cellEmpty = Cell{attrib = 1}
 				local __obsEmpty = Observer{subject = __cellEmpty, type = "chart", attributes = {"attrib"}}
 				__obsEmpty:kill()
+			elseif arg == "-ft" then
+				info_.fullTraceback = true
 			elseif arg == "-mode=normal" then
 				info_.mode = "normal"
 			elseif arg == "-mode=debug" then
@@ -668,6 +678,7 @@ function execute(arguments) -- arguments is a vector of strings
 			elseif arg == "-package" then
 				argCount = argCount + 1
 				package = arguments[argCount]
+				info_.package = package
 				if #arguments <= argCount then
 					models = findModels(package)
 
@@ -845,6 +856,7 @@ function execute(arguments) -- arguments is a vector of strings
 				require("base")
 			end
 			require(package)
+
 			local s = sessionInfo().separator
 
 			local displayFile = string.sub(arg, 0, string.len(arg) - 3).."tme"
