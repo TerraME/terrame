@@ -97,7 +97,7 @@ function Timer(data)
 			cObj:add(ud.cObj_[1], ud.cObj_[2].cObj_) 
 			table.insert(eventTab, ud)
 		elseif type(ud) ~= "userdata" then
-			incompatibleTypeError(tostring(i), "Event, table, or userdata", ud)
+			incompatibleTypeError(i, "Event, table, or userdata", ud)
 		end
 	end
 
