@@ -42,6 +42,19 @@ return{
 		unitTest:assert_equal(c.min, 5)
 		unitTest:assert_equal(c.default, 7)
 
+		c = Choice{min = 5}
+		unitTest:assert_type(c, "Choice")
+		unitTest:assert_equal(c.default, 5)
+
+		c = Choice{max = 5, default = 3}
+		unitTest:assert_type(c, "Choice")
+		unitTest:assert_equal(c.max, 5)
+		unitTest:assert_equal(c.default, 3)
+
+		c = Choice{max = 5}
+		unitTest:assert_type(c, "Choice")
+		unitTest:assert_equal(c.default, 5)
+
 		c = Choice{1, 2, 3, 4, default = 3}
 		unitTest:assert_equal(#c.values, 4)
 		unitTest:assert_equal(c.default, 3)

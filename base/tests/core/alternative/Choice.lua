@@ -72,6 +72,21 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg("max", "number", false))
 
 		error_func = function()
+			local c = Choice{min = 2, default = 1}
+		end
+		unitTest:assert_error(error_func, "Argument 'default' should be greater than or equal to 'min'.")
+
+		error_func = function()
+			local c = Choice{max = false}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("max", "number", false))
+
+		error_func = function()
+			local c = Choice{max = 2, default = 3}
+		end
+		unitTest:assert_error(error_func, "Argument 'default' should be less than or equal to 'max'.")
+
+		error_func = function()
 			local c = Choice{min = 2, max = 4, step = false}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("step", "number", false))
@@ -129,7 +144,7 @@ return{
 		error_func = function()
 			local c = Choice{min = 1, step = 3}
 		end
-		unitTest:assert_error(error_func, "It is not possible to have 'step' and not 'max'.")
+		unitTest:assert_error(error_func, "Attribute 'step' requires 'max' and 'min'.")
 	end,
 	sample = function(unitTest)
 		local c = Choice{min = 1}
@@ -138,8 +153,6 @@ return{
 			c:sample()
 		end
 		unitTest:assert_error(error_func, "It is not possible to retrieve a sample from this Choice.")
-	
 	end
 }
-
 

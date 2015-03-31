@@ -94,26 +94,32 @@ function Choice(attrTab)
 
 		result = {values = attrTab, default = default}
 	elseif getn(attrTab) > 0 then
-		mandatoryTableArgument(attrTab, "min", "number")
-
+		optionalTableArgument(attrTab, "min", "number")
 		optionalTableArgument(attrTab, "max", "number")
 		optionalTableArgument(attrTab, "step", "number")
 
-		defaultTableValue(attrTab, "default", attrTab.min)
+		if attrTab.min then
+			defaultTableValue(attrTab, "default", attrTab.min)
+		elseif attrTab.max then
+			defaultTableValue(attrTab, "default", attrTab.max)
+		end
 
-		if attrTab.max then
+		if attrTab.max and attrTab.min then
 			verify(attrTab.max > attrTab.min, "Argument 'max' should be greater than 'min'.")
 		end
 
 		if attrTab.default then
-			verify(attrTab.default >= attrTab.min, "Argument 'default' should be greater than or equal to 'min'.")
+			if attrTab.min then
+				verify(attrTab.default >= attrTab.min, "Argument 'default' should be greater than or equal to 'min'.")
+			end
+
 			if attrTab.max then
 				verify(attrTab.default <= attrTab.max, "Argument 'default' should be less than or equal to 'max'.")
 			end
 		end
 
-		if attrTab.step and not attrTab.max then
-			customError("It is not possible to have 'step' and not 'max'.")
+		if attrTab.step and not (attrTab.max and attrTab.min) then
+			customError("Attribute 'step' requires 'max' and 'min'.")
 		end
 
 		checkUnnecessaryArguments(attrTab, {"default", "min", "max", "step"})
