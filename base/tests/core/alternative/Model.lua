@@ -236,12 +236,12 @@ return{
 		error_func = function()
 			local m = Tube{block = {mblock = 40}}
 		end
-		unitTest:assert_error(error_func, "Attribute 'block.mblock' does not exist in the Model.")
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("block.mblock"))
 
 		error_func = function()
 			local m = Tube{s = 3}
 		end
-		unitTest:assert_error(error_func, "Attribute 's' does not exist in the Model.")
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("s"))
 
 		error_func = function()
 			local m = Tube{checkZero = 3}
@@ -256,7 +256,7 @@ return{
 		error_func = function()
 			local m = Tube{block = {xmix = 5}}
 		end
-		unitTest:assert_error(error_func, "Attribute 'block.xmix' does not exist in the Model.")
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("block.xmix", "block.xmax"))
 
 		error_func = function()
 			local m = Tube{block = {xmin = false}}

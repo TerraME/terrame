@@ -313,16 +313,28 @@ function Model(attrTab)
 		end)
 
 		-- verify whether there are some arguments in the instance that do not belong to the Model
+		local names = {}
+		forEachElement(attrTab, function(name)
+			table.insert(names, name)
+		end)
+		checkUnnecessaryArguments(argv, names)
+
 		forEachElement(argv, function(name, value, mtype)
-			if type(value) == "table" then
+			if mtype == "table" then
 				local attrTabValue = attrTab[name]
 				forEachElement(value, function(mname, mvalue, mtype)
 					if attrTabValue[mname] == nil then
-						customError("Attribute '"..name.."."..mname.."' does not exist in the Model.")
+						
+						local msg = "Argument '"..name.."."..mname.."' is unnecessary."
+	
+						local s = suggestion(mname, attrTabValue)
+						if s then
+							msg = msg.." Do you mean '"..name.."."..s.."'?"
+						end
+
+						customWarning(msg)
 					end
 				end)
-			elseif attrTab[name] == nil and not belong(name, {"finalTime", "seed"}) then
-				customError("Attribute '"..name.."' does not exist in the Model.")
 			end
 		end)
 

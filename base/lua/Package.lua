@@ -147,7 +147,7 @@ function suggestion(value, options)
 
 	local distance = string.len(value)
 	local word
-	forEachElement(options, function(a)
+	forEachOrderedElement(options, function(a)
 		if type(a) ~= "string" then
 			customError("All the indexes in #2 should be string, got '"..type(a).."'.")
 		end
@@ -239,7 +239,7 @@ function namedArgumentsMsg()
 	return "Arguments must be named."
 end
 
---- Verify whether the used has used only the allowed arguments for a functoin, generating
+--- Verify whether the user has passed only the allowed arguments for a function, printing
 -- a warning otherwise. The warning comes from Package:unnecessaryArgumentMsg().
 -- This function returns the number of unnecessary arguments found.
 -- @arg data The list of arguments used in the function call.

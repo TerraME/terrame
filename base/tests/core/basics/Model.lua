@@ -91,7 +91,6 @@ return{
 			block = {xmax = 10},
 			checkZero = true,
 			finalTime = 5,
-			seed = 12345,
 			filter = function() end
 		}
 
@@ -102,7 +101,6 @@ return{
 		unitTest:assert_equal(t.block.sleep, 2)
 		unitTest:assert_equal(t.observingStep, 0.7)
 		unitTest:assert_equal(t.finalTime, 5)
-		unitTest:assert_equal(t.seed, 12345)
 		unitTest:assert(t.checkZero)
 
 		t = Tube()
