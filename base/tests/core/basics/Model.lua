@@ -70,7 +70,6 @@ local Tube2 = Model{
 	end
 }
 
-
 return{
 	Model = function(unitTest)
 		unitTest:assert_type(Tube, "Model")
@@ -102,6 +101,24 @@ return{
 		unitTest:assert_equal(t.observingStep, 0.7)
 		unitTest:assert_equal(t.finalTime, 5)
 		unitTest:assert(t.checkZero)
+
+		local Tube3 = Model{
+			initialWater    = 0,
+			finalTime       = 10,
+			tube            = mandatory("Tube"),
+			init = function(model)
+				model.water = model.initialWater
+				model.env = Environment{
+					timer = Timer{
+						Event{action = function()
+							model.water = model.water + 1
+						end}
+					}
+				}
+			end
+		}
+
+		local t3 = Tube3{tube = t}
 
 		t = Tube()
 
