@@ -536,14 +536,19 @@ return{
 		}
 
 		local error_func = function()
-			group = sc1:split(nil)
+			group = sc1:split()
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string or function"))
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			group = sc1:split(15)
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string or function", 15))
+
+		error_func = function()
+			group = sc1:split("abc")
+		end
+		unitTest:assert_error(error_func, "Attribute 'abc' does not exist.")
 	end,
 	synchronize = function(unitTest)
 		local ag1 = Agent{

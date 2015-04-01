@@ -453,19 +453,27 @@ Society_ = {
 	-- end)
 	-- print(#ts.old)
 	split = function(self, argument)
+		if type(argument) ~= "function" and type(argument) ~= "string" then
+			if argument == nil then
+				mandatoryArgumentError(1)
+			else
+				incompatibleTypeError(1, "string or function", argument)
+			end
+		end
+
 		if type(argument) == "string" then
+			if self:sample()[argument] == nil then
+				customError("Attribute '"..argument.."' does not exist.")
+			end
+
 			local value = argument
 			argument = function(agent)
-				if agent[value] then return agent[value] end
-				return nil
+				return agent[value]
 			end
-		elseif type(argument) ~= "function" then
-			incompatibleTypeError(1, "string or function", argument)
 		end
 
 		local result = {}
 		local class_
-		local i = 1
     
 		forEachAgent(self, function(agent)
 			class_ = argument(agent)
@@ -477,7 +485,6 @@ Society_ = {
 				}
 			end
 			table.insert(result[class_].agents, agent)
-			i = i + 1
 		end)
 		return result
 	end,
