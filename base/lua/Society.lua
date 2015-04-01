@@ -626,10 +626,14 @@ function Society(data)
 
 	mandatoryTableArgument(data, "instance", "Agent")
 
+	if data.instance.isinstance then
+		customError("The same instance cannot be used by two Societies.")
+	end
+
 	local function createSummaryFunctions(agent)
 		-- create functions for the society according to the attributes of its instance
 		forEachElement(agent, function(attribute, value, mtype)
-			if attribute == "id" or attribute == "parent" then return
+			if belong(attribute, {"id", "parent"}) then return
 			elseif belong(attribute, {"messages", "instance", "autoincrement", "placements"}) then
 				customWarning("Attribute '"..attribute.."' belongs to both Society and Agent.")
 			elseif mtype == "function" then
@@ -692,7 +696,6 @@ function Society(data)
 			end
 		end)
 	end
-	createSummaryFunctions(data.instance)
 
 	if type(data.database) == "string" then
 		if data.database:endswith(".csv") then
@@ -749,6 +752,35 @@ function Society(data)
 	end)
 
 	createSummaryFunctions(newAttTable)
+
+	setmetatable(data.instance, nil)
+	createSummaryFunctions(data.instance)
+
+	forEachElement(Agent_, function(idx, value)
+		if belong(idx, {"execute", "init", "on_message"}) then
+			if not data.instance[idx] then
+				data.instance[idx] = value
+			end
+			return
+		end
+
+		if data.instance[idx] then
+			if type(value) == "function" then
+				customWarning("Function '"..idx.."()' from Agent is replaced in the instance.")
+			end
+		else
+			data.instance[idx] = value
+		end
+	end)
+
+	local metaTableInstance = {__index = data.instance, __tostring = tostringTerraME}
+
+	data.instance.type_ = "Agent"
+	data.instance.isinstance = true
+
+	forEachAgent(data, function(agent)
+		setmetatable(agent, metaTableInstance)
+	end)
 
 	return data
 end

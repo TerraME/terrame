@@ -100,6 +100,7 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("instance", "Agent", "wrongType"))
 
+		ag1 = Agent{}
 		error_func = function()
 			sc2 = Society{
 				instance = ag1
@@ -133,12 +134,32 @@ return{
 		end
 		unitTest:assert_error(error_func, "Attribute 'instance' belongs to both Society and Agent.")
 
-		ag1 = Agent{
-			status = "alive",
-			male = true,
-			value = 4,
-			set = function() end
+		ag1 = Agent{}
+		
+		local sc2 = Society{
+			instance = ag1,
+			quantity = 20
 		}
+
+		local error_func = function()
+			sc3 = Society{
+				instance = ag1,
+				quantity = 20
+			}
+		end
+		unitTest:assert_error(error_func, "The same instance cannot be used by two Societies.")
+
+		ag1 = Agent{enter = function() end}
+		
+		local error_func = function()
+			sc3 = Society{
+				instance = ag1,
+				quantity = 20
+			}
+		end
+		unitTest:assert_error(error_func, "Function 'enter()' from Agent is replaced in the instance.")
+
+		ag1 = Agent{status = "alive"}
 
 		error_func = function()
 			sc2 = Society{
@@ -149,6 +170,8 @@ return{
 		end
 		unitTest:assert_error(error_func, "Attribute 'status' will not be replaced by a summary function.")
 
+		ag1 = Agent{male = true}
+
 		error_func = function()
 			sc2 = Society{
 				instance = ag1,
@@ -158,6 +181,8 @@ return{
 		end
 		unitTest:assert_error(error_func, "Attribute 'male' will not be replaced by a summary function.")
 
+		ag1 = Agent{value = 4}
+
 		error_func = function()
 			sc2 = Society{
 				instance = ag1,
@@ -166,6 +191,8 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, "Attribute 'value' will not be replaced by a summary function.")
+
+		ag1 = Agent{set = function() end}
 
 		error_func = function()
 			sc2 = Society{

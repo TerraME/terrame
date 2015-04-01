@@ -1173,6 +1173,10 @@ function CellularSpace(data)
 
 		mandatoryTableArgument(data, "instance", "Cell")
 
+		if data.instance.isinstance then
+			customError("The same instance cannot be used in two CellularSpaces.")
+		end
+
 		forEachCell(data, function(cell)
 			setmetatable(cell, {__index = data.instance})
 			forEachElement(data.instance, function(attribute, value, mtype)
@@ -1197,7 +1201,34 @@ function CellularSpace(data)
 			end
 		end)
 
+		setmetatable(data.instance, nil)
 		createSummaryFunctions(newAttTable)
+
+		forEachElement(Cell_, function(idx, value)
+			if idx == "init" then
+				if not data.instance[idx] then
+					data.instance[idx] = value
+				end
+				return
+			end
+
+			if data.instance[idx] then
+				if type(value) == "function" then
+					customWarning("Function '"..idx.."()' from Cell is replaced in the instance.")
+				end
+			else
+				data.instance[idx] = value
+			end
+		end)
+
+		local metaTableInstance = {__index = data.instance, __tostring = tostringTerraME}
+
+		data.instance.type_ = "Cell"
+		data.instance.isinstance = true
+
+		forEachCell(data, function(cell)
+			setmetatable(cell, metaTableInstance)
+		end)
 	end
 	return data
 end

@@ -105,7 +105,32 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("ydim", "positive integer number", -123))
 
-		local c1 = Cell{
+		local c1 = Cell{}
+
+		local cs = CellularSpace{
+			xdim = 10,
+			instance = c1
+		}
+	
+		error_func = function()
+			local cs = CellularSpace{
+				xdim = 10,
+				instance = c1
+			}
+		end
+		unitTest:assert_error(error_func, "The same instance cannot be used in two CellularSpaces.")
+
+		c1 = Cell{getNeighborhood = function() end}
+
+		error_func = function()
+			local cs = CellularSpace{
+				xdim = 10,
+				instance = c1
+			}
+		end
+		unitTest:assert_error(error_func, "Function 'getNeighborhood()' from Cell is replaced in the instance.")
+
+		c1 = Cell{
 			status = "forest",
 			alive = true,
 			value = 4,
