@@ -132,6 +132,64 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, "Attribute 'instance' belongs to both Society and Agent.")
+
+		ag1 = Agent{
+			status = "alive",
+			male = true,
+			value = 4,
+			set = function() end
+		}
+
+		error_func = function()
+			sc2 = Society{
+				instance = ag1,
+				quantity = 20,
+				status = 5
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'status' will not be replaced by a summary function.")
+
+		error_func = function()
+			sc2 = Society{
+				instance = ag1,
+				quantity = 20,
+				male = 4
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'male' will not be replaced by a summary function.")
+
+		error_func = function()
+			sc2 = Society{
+				instance = ag1,
+				quantity = 20,
+				value = 5
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'value' will not be replaced by a summary function.")
+
+		error_func = function()
+			sc2 = Society{
+				instance = ag1,
+				quantity = 20,
+				set = 5
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'set' will not be replaced by a summary function.")
+
+		ag1 = Agent{
+			init = function(self)
+				self.male = true
+			end
+		}
+
+		error_func = function()
+			sc2 = Society{
+				instance = ag1,
+				quantity = 20,
+				male = 5
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'male' will not be replaced by a summary function.")
 	end,
 	add = function(unitTest)
 		local ag1 = Agent{}

@@ -633,12 +633,22 @@ function Society(data)
 			elseif belong(attribute, {"messages", "instance", "autoincrement", "placements"}) then
 				customWarning("Attribute '"..attribute.."' belongs to both Society and Agent.")
 			elseif mtype == "function" then
+				if data[attribute] then
+					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
+					return
+				end
+
 				data[attribute] = function(soc, args)
 					forEachAgent(soc, function(agent)
 						agent[attribute](agent, args)
 					end)
 				end
 			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
+				if data[attribute] then
+					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
+					return
+				end
+
 				data[attribute] = function(soc)
 					local quantity = 0
 					forEachAgent(soc, function(agent)
@@ -647,6 +657,11 @@ function Society(data)
 					return quantity
 				end
 			elseif mtype == "boolean" then
+				if data[attribute] then
+					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
+					return
+				end
+
 				data[attribute] = function(soc)
 					local quantity = 0
 					forEachAgent(soc, function(agent)
@@ -657,6 +672,11 @@ function Society(data)
 					return quantity
 				end
 			elseif mtype == "string" or (mtype == "Choice" and value.values and type(value.values[1]) == "string") then
+				if data[attribute] then
+					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
+					return
+				end
+
 				data[attribute] = function(soc)
 					local result = {}
 					forEachAgent(soc, function(agent)
@@ -720,7 +740,15 @@ function Society(data)
 			data:add({})
 		end
 	end
-	createSummaryFunctions(data.agents[1])
+
+	local newAttTable = {}
+	forEachElement(data.agents[1], function(idx, value)
+		if data.instance[idx] == nil then
+			newAttTable[idx] = value
+		end
+	end)
+
+	createSummaryFunctions(newAttTable)
 
 	return data
 end

@@ -104,6 +104,81 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("ydim", "positive integer number", -123))
+
+		local c1 = Cell{
+			status = "forest",
+			alive = true,
+			value = 4,
+			set = function() end
+		}
+
+		error_func = function()
+			local cs = CellularSpace{
+				xdim = 10,
+				instance = 2
+			}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("instance", "Cell", 2))
+
+		error_func = function()
+			local cs = CellularSpace{
+				xdim = 10,
+				instance = c1,
+				autoload = false
+			}
+		end
+		unitTest:assert_error(error_func, "Parameter 'instance' can only be used with 'autoload = true'.")
+
+		error_func = function()
+			local cs = CellularSpace{
+				xdim = 10,
+				instance = c1,
+				status = 5
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'status' will not be replaced by a summary function.")
+
+		error_func = function()
+			local cs = CellularSpace{
+				xdim = 10,
+				instance = c1,
+				alive = 5
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'alive' will not be replaced by a summary function.")
+
+		error_func = function()
+			local cs = CellularSpace{
+				xdim = 10,
+				instance = c1,
+				value = 5
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'value' will not be replaced by a summary function.")
+
+		error_func = function()
+			local cs = CellularSpace{
+				xdim = 10,
+				instance = c1,
+				set = 5
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'set' will not be replaced by a summary function.")
+
+		c1 = Cell{
+			init = function(self)
+				self.status = "forest"
+			end
+		}
+
+		error_func = function()
+			local cs = CellularSpace{
+				xdim = 10,
+				instance = c1,
+				status = 5
+			}
+		end
+		unitTest:assert_error(error_func, "Attribute 'status' will not be replaced by a summary function.")
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

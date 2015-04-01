@@ -1093,12 +1093,22 @@ function CellularSpace(data)
 		forEachElement(cell, function(attribute, value, mtype)
 			if attribute == "id" or attribute == "parent" or string.endswith(attribute, "_") then return
 			elseif mtype == "function" then
+				if data[attribute] then
+					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
+					return
+				end
+
 				data[attribute] = function(cs, args)
 					forEachCell(cs, function(cell)
 						cell[attribute](cell, args)
 					end)
 				end
 			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
+				if data[attribute] then
+					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
+					return
+				end
+
 				if attribute ~= "x" and attribute ~= "y" then
 					data[attribute] = function(cs)
 						local quantity = 0
@@ -1109,6 +1119,11 @@ function CellularSpace(data)
 					end
 				end
 			elseif mtype == "boolean" then
+					if data[attribute] then
+					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
+					return
+				end
+
 				data[attribute] = function(cs)
 					local quantity = 0
 					forEachCell(cs, function(cell)
@@ -1119,6 +1134,11 @@ function CellularSpace(data)
 					return quantity
 				end
 			elseif mtype == "string" or (mtype == "Choice" and value.values and type(value.values[1]) == "string") then
+				if data[attribute] then
+					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
+					return
+				end
+
 				data[attribute] = function(cs)
 					local result = {}
 					forEachCell(cs, function(cell)
@@ -1142,12 +1162,15 @@ function CellularSpace(data)
 			data.layer = data.cObj_:getLayerName()
 		end
 		data.autoload = nil
-		createSummaryFunctions(data.cells[1])
 	else
 		data.cells = {}
 	end
 
 	if data.instance ~= nil then
+		if data.autoload == false then
+			customError("Parameter 'instance' can only be used with 'autoload = true'.")
+		end
+
 		mandatoryTableArgument(data, "instance", "Cell")
 
 		forEachCell(data, function(cell)
@@ -1166,6 +1189,15 @@ function CellularSpace(data)
 		end)
 
 		createSummaryFunctions(data.instance)
+
+		local newAttTable = {}
+		forEachElement(data.cells[1], function(idx, value)
+			if data.instance[idx] == nil then
+				newAttTable[idx] = value
+			end
+		end)
+
+		createSummaryFunctions(newAttTable)
 	end
 	return data
 end
