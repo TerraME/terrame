@@ -390,10 +390,9 @@ function executeTests(package, fileName, doc_functions)
 				end
 			end
 
-			debug.sethook(trace, "l")
-
 			for _, eachTest in ipairs(myTests) do
 				print("Testing "..eachTest)
+				debug.sethook(trace, "l")
 				if not doc_functions then io.flush() end -- theck why it is necessary to have the 'if'
 
 				if testfunctions[eachFile] then
