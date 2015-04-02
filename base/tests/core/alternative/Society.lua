@@ -114,7 +114,7 @@ return{
 				quantity = "wrongType"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("quantity", "positive integer number (except zero)", "wrongType"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg("quantity", "number", "wrongType"))
 
 		error_func = function()
 			sc2 = Society{
@@ -122,7 +122,7 @@ return{
 				quantity = -15
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("quantity", "positive integer number (except zero)", -15))
+		unitTest:assert_error(error_func, positiveArgumentMsg("quantity", -15))
 
 		ag1 = Agent{instance = 2}
 
@@ -318,8 +318,7 @@ return{
 				quantity = 2.2
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("quantity", "integer number", 2.2))
-
+		unitTest:assert_error(error_func, integerArgumentMsg("quantity", 2.2))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -467,14 +466,12 @@ return{
 		error_func = function()
 			ag1 = sc1:get(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1))
 	
 		error_func = function()
 			ag1 = sc1:get(2.2)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "integer number", 2.2))
-	
-
+		unitTest:assert_error(error_func, integerArgumentMsg(1, 2.2))
 	end,
 	getAgent = function(unitTest)
 		local ag1 = Agent{
@@ -571,7 +568,7 @@ return{
 		error_func = function()
 			sc1:synchronize(-13)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -13))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -13))
 	end
 }
 

@@ -91,7 +91,7 @@ return{
 		error_func = function()
 			env:createPlacement{max = -13}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("max", "positive integer number", -13))
+		unitTest:assert_error(error_func, positiveArgumentMsg("max", -13))
 
 		local cs = CellularSpace{xdim = 2}
 		local ag1 = Agent{}

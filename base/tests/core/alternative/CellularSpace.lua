@@ -63,7 +63,7 @@ return{
 				ydim = 30
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("xdim", "positive integer number", 0))
+		unitTest:assert_error(error_func, positiveArgumentMsg("xdim", 0))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -71,7 +71,7 @@ return{
 				ydim = 0
 			}
 		end
-		unitTest:assert_error(error_func,  incompatibleValueMsg("ydim", "positive integer number", 0))
+		unitTest:assert_error(error_func, positiveArgumentMsg("ydim", 0))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -83,11 +83,11 @@ return{
 
 		error_func = function()
 			local cs = CellularSpace{
-				xdim = -123,
+				xdim = 1.23,
 				ydim = 30
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("xdim", "positive integer number", -123))
+		unitTest:assert_error(error_func, integerArgumentMsg("xdim", 1.23))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -100,10 +100,10 @@ return{
 		error_func = function()
 			cs = CellularSpace{
 				xdim = 30,
-				ydim = -123
+				ydim = 1.23
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("ydim", "positive integer number", -123))
+		unitTest:assert_error(error_func, integerArgumentMsg("ydim", 1.23))
 
 		local c1 = Cell{}
 
@@ -221,12 +221,12 @@ return{
 		error_func = function()
 			cs:get(2.3, 4)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive integer number", 2.3))
+		unitTest:assert_error(error_func, integerArgumentMsg(1, 2.3))
 
 		error_func = function()
 			cs:get(4, 2.3)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive integer number", 2.3))
+		unitTest:assert_error(error_func, integerArgumentMsg(2, 2.3))
 
 		error_func = function()
 			cs:get("4", 2.3)
@@ -360,7 +360,7 @@ return{
 				m = -1
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("m", "positive integer number (greater than zero)", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg("m", -1))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -369,7 +369,7 @@ return{
 				m = 0
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("m", "positive integer number (greater than zero)", 0))
+		unitTest:assert_error(error_func, positiveArgumentMsg("m", 0))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -378,7 +378,7 @@ return{
 				m = 1.3
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("m", "positive integer number (greater than zero)", 1.3))
+		unitTest:assert_error(error_func, integerArgumentMsg("m", 1.3))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -400,7 +400,7 @@ return{
 				n = -1
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg("n", -1))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -410,7 +410,7 @@ return{
 				n = 0
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", 0))
+		unitTest:assert_error(error_func, positiveArgumentMsg("n", 0))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -420,7 +420,7 @@ return{
 				n = 1.3
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", 1.3))
+		unitTest:assert_error(error_func, integerArgumentMsg("n", 1.3))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -511,7 +511,7 @@ return{
 				m = -1
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("m", "positive integer number (greater than zero)", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg("m", -1))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -521,7 +521,18 @@ return{
 				m = 0
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("m", "positive integer number (greater than zero)", 0))
+		unitTest:assert_error(error_func, positiveArgumentMsg("m", 0))
+
+		error_func = function()
+			cs:createNeighborhood{
+				strategy = "mxn",
+				name = "my_neighborhood",
+				target = cs2,
+				m = 5.2, 
+				n = 1
+			}
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg("m", 5.2))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -545,7 +556,7 @@ return{
 				n = -1
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg("n", -1))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -556,7 +567,18 @@ return{
 				n = 0
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("n", "positive integer number (greater than zero)", 0))
+		unitTest:assert_error(error_func, positiveArgumentMsg("n", 0))
+
+		error_func = function()
+			cs:createNeighborhood{
+				strategy = "mxn",
+				name = "my_neighborhood",
+				target = cs2,
+				m = 5, 
+				n = 1.3
+			}
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg("n", 1.3))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -621,7 +643,7 @@ return{
 		error_func = function()
 			cs:notify(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1))
 	end,
 	size = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

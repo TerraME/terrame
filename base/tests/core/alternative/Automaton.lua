@@ -199,7 +199,7 @@ return{
 		local error_func = function()
 			at1:notify(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
 	end,
 	getState = function(unitTest)
 		local a = Automaton{}
@@ -212,7 +212,7 @@ return{
 		local error_func = function()
 			a:getState(-2)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -2))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2))
 	end,
 	setId = function(unitTest)
 		local at1 = Automaton{

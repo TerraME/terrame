@@ -84,10 +84,68 @@ return{
 		end
 		unitTest:assert_error(error_func, switchInvalidArgumentMsg("ddddd", "arg", t))
 	end,
-
 	valueNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for argument 'aaa'.")
 		unitTest:assert_equal(valueNotFoundMsg(2, "bbb"), "Value 'bbb' not found for argument '#2'.")
+	end,
+	integerArgument = function(unitTest)
+		local error_func = function()
+			integerArgument(1, 0.2)
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg(1, 0.2))
+	end,
+	integerTableArgument = function(unitTest)
+		local t = {x = 2.5}
+		local error_func = function()
+			integerTableArgument(t, "x")
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg("x", 2.5))
+	end,
+	integerArgumentMsg = function(unitTest)
+		local m = integerArgumentMsg("a", 2.3)
+		unitTest:assert_equal(m, "Incompatible values. Argument 'a' expected integer number, got 2.3.")
+	end,
+	positiveArgument = function(unitTest)
+		local error_func = function()
+			positiveArgument(1, 0)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, 0))
+
+		local error_func = function()
+			positiveArgument(1, -2)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2))
+
+		local error_func = function()
+			positiveArgument(1, -2, true)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2, true))
+	end,
+	positiveTableArgument = function(unitTest)
+		local t = {x = -2}
+		local error_func = function()
+			positiveTableArgument(t, "x")
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg("x", -2))
+
+		local t = {x = 0}
+		local error_func = function()
+			positiveTableArgument(t, "x")
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg("x", 0))
+
+		local t = {x = -1}
+		local error_func = function()
+			positiveTableArgument(t, "x", true)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg("x", -1, true))
+	end,
+	positiveArgumentMsg = function(unitTest)
+		local m = positiveArgumentMsg("a", -2)
+		unitTest:assert_equal(m, "Incompatible values. Argument 'a' expected positive number (except zero), got -2.")
+
+		m = positiveArgumentMsg(1, -2, true)
+		unitTest:assert_equal(m, "Incompatible values. Argument '#1' expected positive number (including zero), got -2.")
 	end,
 	tableArgumentMsg = function(unitTest)
 		unitTest:assert_equal(tableArgumentMsg(), "Argument must be a table.")

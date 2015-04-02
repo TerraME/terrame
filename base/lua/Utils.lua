@@ -338,7 +338,7 @@ function integrate(attrs)
 	end
 
 	mandatoryTableArgument(attrs, "step", "number")
-	verify(attrs.step > 0, "Argument 'step' should be positive.")
+	positiveTableArgument(attrs, "step")
 
 	defaultTableValue(attrs, "method", "euler")
 

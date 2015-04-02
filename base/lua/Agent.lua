@@ -311,12 +311,11 @@ Agent_ = {
 		mandatoryTableArgument(data, "receiver", "Agent")
 
 		defaultTableValue(data, "delay", 0)
+		positiveTableArgument(data, "delay", true)
 
 		verify(type(self.parent) == "Society", "Agent must be within a Society to send messages with delay.")
 
-		if data.delay < 0 then
-			incompatibleValueError("delay", "positive integer number", data.delay)
-		elseif data.delay == 0 then
+		if data.delay == 0 then
 			if data.subject then
 				if type(data.subject) ~= "string" then
 					incompatibleTypeError("subject", "string", data.subject)

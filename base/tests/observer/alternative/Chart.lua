@@ -106,7 +106,7 @@ return{
 		local error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, size = -3}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("size", "positive number", -3))
+		unitTest:assert_error(error_func, positiveArgumentMsg("size", -3))
 
 		local symbolTable = {
 			square = 1,

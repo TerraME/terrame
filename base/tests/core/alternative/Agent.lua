@@ -280,7 +280,7 @@ return {
 				content = "money"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("delay", "positive integer number", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg("delay", -1, true))
 
 		local error_func = function()
 			ag1:message{

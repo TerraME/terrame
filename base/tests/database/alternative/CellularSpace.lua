@@ -365,7 +365,7 @@ return{
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("port", "positive integer number", 34.2))
+		unitTest:assert_error(error_func, integerArgumentMsg("port", 34.2))
 
 		error_func = function()
 			local cs = CellularSpace{

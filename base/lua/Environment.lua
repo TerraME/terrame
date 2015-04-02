@@ -195,9 +195,7 @@ Environment_ = {
 		if data.strategy == "random" then
 			defaultTableValue(data, "max", math.huge)
 
-			if data.max <= 0 then
-				incompatibleValueError("max", "positive integer number", data.max)
-			end
+			positiveTableArgument(data, "max")
 		end
 
 		local qty_agents = 0

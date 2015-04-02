@@ -253,18 +253,16 @@ function Cell(data)
 
 	if data.x == nil then
 		data.x = 0 
-	elseif type(data.x) ~= "number" then
-		incompatibleTypeError("x", "number", data.x)
-	elseif math.floor(data.x) ~= data.x then
-		incompatibleValueError("x", "integer number", data.x)
+	else
+		mandatoryTableArgument(data, "x", "number")
+		integerTableArgument(data, "x")
 	end
 
 	if data.y == nil then
 		data.y = 0 
-	elseif type(data.y) ~= "number" then
-		incompatibleTypeError("y", "number", data.y)
-	elseif math.floor(data.y) ~= data.y then
-		incompatibleValueError("y", "integer number", data.y)
+	else
+		mandatoryTableArgument(data, "y", "number")
+		integerTableArgument(data, "y")
 	end
 
 	if not data.id then

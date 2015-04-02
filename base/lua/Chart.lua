@@ -309,7 +309,7 @@ Chart = function(data)
 	if data.size then
 		forEachElement(data.size, function(idx, value)
 			if value < 0 then
-				incompatibleValueError("size", "positive number", value)
+				customError(positiveArgumentMsg("size", value))
 			end
 		end)
 	end

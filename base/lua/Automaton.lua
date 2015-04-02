@@ -134,9 +134,8 @@ Automaton_ = {
 	getState = function(self, index)
 		mandatoryArgument(1, "number", index)
 
-		if index < 0 then
-			incompatibleValueError(1, "positive number", index)
-		end
+		integerArgument(1, index)
+		positiveArgument(1, index)
 
 		local statesVector = self:getStates()
 		return statesVector[index]

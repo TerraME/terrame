@@ -102,9 +102,7 @@ function Event(data)
 	defaultTableValue(data, "time", 1)
 	defaultTableValue(data, "period", 1)
 
-	if data.period <= 0 then
-		incompatibleValueError("period", "positive number (except zero)", data.period)
-	end
+	positiveTableArgument(data, "period")
 
 	if type(data.priority) == "string" then
 		switch(data, "priority"):caseof{

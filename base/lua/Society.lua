@@ -297,11 +297,8 @@ Society_ = {
 
 				defaultTableValue(data, "quantity", 1)
 
-				if data.quantity <= 0 then
-					incompatibleValueError("quantity", "positive number (except zero)", data.quantity)
-				elseif math.floor(data.quantity) ~= data.quantity then
-					incompatibleValueError("quantity", "integer number", data.quantity)
-				end
+				integerTableArgument(data, "quantity")
+				positiveTableArgument(data, "quantity")
 
 				data.mfunc = getSocialNetworkByQuantity
 			end,
@@ -337,11 +334,9 @@ Society_ = {
 	get = function(self, index)
 		mandatoryArgument(1, "number", index)
 
-		if index < 0 then
-			incompatibleValueError(1, "positive number", index)
-		elseif math.floor(index) ~= index then
-			incompatibleValueError(1, "integer number", index)
-		end
+		integerArgument(1, index)
+		positiveArgument(1, index)
+
 		return self.agents[index]
 	end,
 	--- Return a vector with the Agents of the Society.
@@ -498,9 +493,9 @@ Society_ = {
 		optionalArgument(1, "number", delay)
 
 		if delay == nil then
-				delay = 1
-		elseif delay <= 0 then
-			incompatibleValueError(1, "positive number", delay)
+			delay = 1
+		else
+			positiveArgument(1, delay)
 		end
 
 		local k = 1
@@ -734,15 +729,9 @@ function Society(data)
 			end)
 		end
 	else
-		if type(data.quantity) ~= "number" then
-			if data.quantity == nil then
-				mandatoryArgumentError("quantity")
-			else
-				incompatibleTypeError("quantity", "positive integer number (except zero)", data.quantity)
-			end
-		elseif data.quantity <= 0 or math.floor(data.quantity) ~= data.quantity then
-			incompatibleValueError("quantity", "positive integer number (except zero)", data.quantity)
-		end
+		mandatoryTableArgument(data, "quantity", "number")
+		integerTableArgument(data, "quantity")
+		positiveTableArgument(data, "quantity")
 	
 		local quantity = data.quantity
 		data.quantity = 0

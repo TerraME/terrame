@@ -261,13 +261,11 @@ local checkVirtual = function(self)
 	mandatoryTableArgument(self, "xdim", "number")
 	defaultTableValue(self, "ydim", self.xdim)
 
-	if self.xdim <= 0 or math.floor(self.xdim) ~= self.xdim then
-		incompatibleValueError("xdim", "positive integer number", self.xdim)
-	end
+	integerTableArgument(self, "xdim")
+	positiveTableArgument(self, "xdim")
 
-	if self.ydim <= 0 or math.floor(self.ydim) ~= self.ydim then
-		incompatibleValueError("ydim", "positive integer number", self.ydim)
-	end
+	integerTableArgument(self, "ydim")
+	positiveTableArgument(self, "ydim")
 end
 
 local loadVirtual = function(self)
@@ -300,9 +298,10 @@ local checkMySQL = function(self)
 
 	verify(self.database ~= "", "Invalid database name.")
 
-	if self.port ~= math.floor(self.port) or self.port < 0 then
-		incompatibleValueError("port", "positive integer number", self.port)
-	elseif self.port < 1024 then
+	integerTableArgument(self, "port")
+	positiveTableArgument(self, "port")
+
+	if self.port < 1024 then
 		customError("Argument 'port' should have values above 1023 to avoid using system reserved values.")
 	end
 
@@ -545,21 +544,18 @@ CellularSpace_ = {
 				defaultTableValue(data, "target", self)
 
 				defaultTableValue(data, "m", 3)
-				if data.m <= 0 then
-					incompatibleValueError("m", "positive integer number (greater than zero)", data.m)
-				elseif math.floor(data.m) ~= data.m then
-					incompatibleValueError("m", "positive integer number (greater than zero)", data.m)
-				elseif data.m % 2 == 0 then
+				integerTableArgument(data, "m")
+				positiveTableArgument(data, "m")
+
+				if data.m % 2 == 0 then
 					data.m = data.m + 1
 					customWarning("Argument 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 				end
 
 				defaultTableValue(data, "n", data.m)
-				if data.n <= 0 then
-					incompatibleValueError("n", "positive integer number (greater than zero)", data.n)
-				elseif math.floor(data.n) ~= data.n then
-					incompatibleValueError("n", "positive integer number (greater than zero)", data.n)
-				elseif data.n % 2 == 0 then
+				integerTableArgument(data, "n")
+				positiveTableArgument(data, "n")
+				if data.n % 2 == 0 then
 					data.n = data.n + 1
 					customWarning("Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 				end
@@ -645,19 +641,13 @@ CellularSpace_ = {
 			end
 
 			return self.cObj_:getCellByID(xIndex)
-		elseif type(xIndex) ~= "number" or math.floor(xIndex) ~= xIndex then
-			if xIndex == nil then
-				mandatoryArgumentError(1)
-			else
-				incompatibleValueError(1, "positive integer number", xIndex)
-			end
-		elseif type(yIndex) ~= "number" or math.floor(yIndex) ~= yIndex then
-			if yIndex == nil then
-				mandatoryArgumentError(2)
-			else
-				incompatibleValueError(2, "positive integer number", yIndex)
-			end
 		end
+
+		mandatoryArgument(1, "number", xIndex)
+		integerArgument(1, xIndex)
+
+		mandatoryArgument(2, "number", yIndex)
+		integerArgument(2, yIndex)
 
 		local data = {x = xIndex, y = yIndex}
 		local cObj_ = TeCoord(data)

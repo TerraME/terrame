@@ -63,7 +63,7 @@ return{
 		local error_func = function()
 			local Tube = Model{seed = -2}
 		end
-		unitTest:assert_error(error_func, "Argument 'seed' should be positive, got -2.")
+		unitTest:assert_error(error_func, positiveArgumentMsg("seed", -2, true))
 
 		local error_func = function()
 			local Tube = Model{seed = mandatory("table")}
@@ -138,7 +138,7 @@ return{
 		error_func = function()
 			local m = Tube{seed = -2}
 		end
-		unitTest:assert_error(error_func, "Argument 'seed' should be positive, got -2.")
+		unitTest:assert_error(error_func, positiveArgumentMsg("seed", -2, true))
 
 		Tube = Model{
 			init = function(model)

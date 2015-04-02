@@ -44,22 +44,22 @@ return{
 		error_func = function()
 			local cell = Cell{x = 2.22, y = 0}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("x", "integer number", 2.22))
+		unitTest:assert_error(error_func, integerArgumentMsg("x", 2.22))
 
 		error_func = function()
 			local cell = Cell{x = -2.3, y = 1}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("x", "integer number", -2.3))
+		unitTest:assert_error(error_func, integerArgumentMsg("x", -2.3))
 
 		error_func = function()
 			local cell = Cell{x = 1, y = 2.22}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("y", "integer number", 2.22))
+		unitTest:assert_error(error_func, integerArgumentMsg("y", 2.22))
 
 		error_func = function()
 			local cell = Cell{x = 1, y = -2.3}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("y", "integer number", -2.3))
+		unitTest:assert_error(error_func, integerArgumentMsg("y", -2.3))
 
 		error_func = function()
 			local cell = Cell{id = 2.3}
@@ -180,7 +180,7 @@ return{
 		error_func = function()
 			cell:notify(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
 	end
 }
 

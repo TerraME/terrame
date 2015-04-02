@@ -211,7 +211,7 @@ return{
 		local error_func = function()
 			local gt = integrate{step = -0.5, equation = function() end, initial = 0}
 		end
-		unitTest:assert_error(error_func, "Argument 'step' should be positive.")
+		unitTest:assert_error(error_func, positiveArgumentMsg("step", -0.5))
 	
 		local error_func = function()
 			local gt = integrate{step = 0.1, method = "euler", equation = function() end, initial = 0}

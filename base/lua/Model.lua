@@ -186,7 +186,7 @@ function Model(attrTab)
 			end
 		else
 			optionalTableArgument(attrTab, "seed", "number")
-			verify(attrTab.seed >= 0, "Argument 'seed' should be positive, got "..attrTab.seed..".")
+			positiveTableArgument(attrTab, "seed", true)
 		end
 	end
 
@@ -349,7 +349,7 @@ function Model(attrTab)
 		attrTab.init(argv)
 
 		if argv.seed ~= nil then
-			verify(argv.seed >= 0, "Argument 'seed' should be positive, got "..argv.seed..".")
+			positiveTableArgument(argv, "seed", true)
 			Random{seed = argv.seed}
 		end
 

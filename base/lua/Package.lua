@@ -510,6 +510,90 @@ function valueNotFoundMsg(attr, value)
 	return "Value '"..value.."' not found for argument '"..attr.."'."
 end
 
+--- Verify whether a given argument of a non-named function is integer.
+-- The error message comes from Package:integerArgumentMsg().
+-- @arg position The position of the argument in the function signature (a number).
+-- @arg value The valued used as argument to the function call.
+-- @usage integerArgument(1, 2.3)
+function integerArgument(position, value)
+	if type(value) ~= "number" then customError(type(value)) end
+	if math.floor(value) ~= value then
+		customError(integerArgumentMsg(position, value))
+	end
+end
+
+--- Return a message indicating that a given argument of a function should be integer.
+-- @arg attr The name of the argument. It can be a string or a number.
+-- @arg value The valued used as argument to the function call.
+-- @usage integerArgumentMsg("target", 7.4)
+-- integerArgumentMsg(2, 5.1)
+function integerArgumentMsg(attr, value, zero)
+	if type(attr) == "number" then
+		attr = "#"..attr
+	end
+
+	return incompatibleValueMsg(attr, "integer number", value)
+end
+
+--- Verify whether a given argument of a named function is integer.
+-- The error message comes from Package:integerArgumentMsg().
+-- @arg table A table.
+-- @arg attr The attribute name (a string).
+-- @usage mtable = {bbb = 2.3}
+-- integerTableArgument(table, "bbb")
+function integerTableArgument(table, attr)
+	if math.floor(table[attr]) ~= table[attr] then
+		customError(integerArgumentMsg(attr, table[attr]))
+	end
+end
+
+--- Verify whether a given argument of a non-named function is positive.
+-- The error message comes from Package:positiveArgumentMsg().
+-- @arg position The position of the argument in the function signature (a number).
+-- @arg value The valued used as argument to the function call.
+-- @arg zero A boolean value indicating whether zero should be included (default is false).
+-- @usage positiveArgument(1, -2)
+function positiveArgument(position, value, zero)
+	if not zero then
+		if value <= 0 then customError(positiveArgumentMsg(position, value, false)) end
+	else
+		if value < 0 then customError(positiveArgumentMsg(position, value, true)) end
+	end
+end
+
+--- Return a message indicating that a given argument of a function should be positive.
+-- @arg attr The name of the argument. It can be a string or a number.
+-- @arg value The valued used as argument to the function call.
+-- @arg zero A boolean value indicating whether zero should be included (default is false).
+-- @usage positiveArgumentMsg("target", -5)
+-- positiveArgumentMsg(2, -2, true)
+function positiveArgumentMsg(attr, value, zero)
+	if type(attr) == "number" then
+		attr = "#"..attr
+	end
+
+	if zero then
+		return incompatibleValueMsg(attr, "positive number (including zero)", value)
+	else
+		return incompatibleValueMsg(attr, "positive number (except zero)", value)
+	end
+end
+
+--- Verify whether a given argument of a named function is positive.
+-- The error message comes from Package:positiveArgumentMsg().
+-- @arg table A table.
+-- @arg attr The attribute name (a string).
+-- @arg zero A boolean value indicating whether zero should be included (default is false).
+-- @usage mtable = {bbb = -3}
+-- positiveTableArgument(table, "bbb")
+function positiveTableArgument(table, attr, zero)
+	if not zero then
+		if table[attr] <= 0 then customError(positiveArgumentMsg(attr, table[attr], false)) end
+	else
+		if table[attr] < 0 then customError(positiveArgumentMsg(attr, table[attr], true)) end
+	end
+end
+
 --- Verify whether a given argument of a non-named function belong to the correct type.
 -- The error message comes from Package:mandatoryArgumentMsg() and Package:incompatibleTypeMsg().
 -- @arg position The position of the argument in the function signature (a number).
@@ -557,7 +641,7 @@ end
 -- mandatoryTableArgument(mtable, "bbb", "string")
 function mandatoryTableArgument(table, attr, mtype)
 	if table[attr] == nil then
-		customError(mandatoryArgumentMsg(attr))
+		mandatoryArgumentError(attr)
 	elseif type(table[attr]) ~= mtype and mtype ~= nil then
 		incompatibleTypeError(attr, mtype, table[attr])
 	end
