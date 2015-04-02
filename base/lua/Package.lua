@@ -191,6 +191,14 @@ function switchInvalidArgumentSuggestionMsg(casevar, att, suggestion)
 	return "'"..casevar.."' is an invalid value for argument '"..att.."'. Do you mean '"..suggestion.."'?"
 end
 
+--- Return whether a given package is loaded.
+-- @arg package Name of the package
+-- @usage isLoaded("base")
+function isLoaded(package)
+	mandatoryArgument(1, "string", package)
+	return belong(package, loadedPackages__)
+end
+
 --- Load a given package. If the package is not installed, it tries to load from a folder in the
 -- current directory.
 -- @arg package A package name.

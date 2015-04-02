@@ -66,6 +66,12 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", -1))
 	end,
+	isLoaded = function(unitTest)
+		local error_func = function()
+			isLoaded()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+	end,
 	require = function(unitTest)
 		local error_func = function()
 			require("asdfgh")
