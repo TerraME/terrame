@@ -248,6 +248,15 @@ return{
 		end
 		unitTest:assert_error(error_func, resourceNotFoundMsg("file", "/usr/local/file.txt"))
 	end,
+	label = function(unitTest)
+		sessionInfo().interface = true
+		unitTest:assert_equal(label("maxValue"), "'Max Value'")
+		unitTest:assert_equal(label("maxValue", "tab"), "'Max Value' (in 'Tab')")
+
+		sessionInfo().interface = nil
+		unitTest:assert_equal(label("maxValue"), "'maxValue'")
+		unitTest:assert_equal(label("maxValue", "tab"), "'tab.maxValue'")
+	end,
 	mandatoryArgumentError = function(unitTest)
 		local error_func = function()
 			mandatoryArgumentError("neighborhood")

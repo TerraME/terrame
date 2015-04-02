@@ -769,3 +769,42 @@ function optionalTableArgument(table, attr, allowedType)
 	end
 end
 
+--- Return a string with a literal description of a parameter name. It is 
+-- useful to work with Model::check() when the model will be available through a graphical interface.
+-- When using graphical interfaces, it converts upper case characters into space and lower case
+-- characters and convert the first character of the string to uppercase. 
+-- Otherwise, it return the name of the parameter itself.
+-- @arg mstring A parameter name.
+-- @arg parent Used when the parameter belongs to a table parameter.
+-- @usage label("maxValue") --  'Max Value' (with graphical interface) or 'maxValue' (without)
+function label(mstring, parent)
+	if type(mstring) == "number" then
+		return tostring(mstring)
+	end
+
+	if sessionInfo().interface then
+		local result = string.upper(string.sub(mstring, 1, 1))
+
+		local nextsub = string.match(mstring, "%u")
+		for i = 2, mstring:len() do
+			local nextchar = string.sub(mstring, i, i)
+			if nextchar == nextsub then
+				result = result.." "..nextsub
+				nextsub = string.match(string.sub(mstring, i + 1, mstring:len()), "%u")
+			else
+				result = result..nextchar
+			end
+		end
+
+		if parent then
+			return "'"..result.."' (in "..label(parent)..")"
+		else
+			return "'"..result.."'"
+		end
+	elseif parent then
+		return "'"..parent.."."..mstring.."'"
+	else
+		return "'"..mstring.."'"
+	end
+end
+

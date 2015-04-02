@@ -44,7 +44,8 @@ end
 
 Model_ = {
 	--- Check whether the instance of the model has correct arguments. This function is optional
-	-- and it is called before creating internal objects.
+	-- and it is called before creating internal objects. See Package:label(), when building a
+	-- Model to work with graphical interfaces.
 	-- @usage model:check()
 	check = function(self)
 	end,

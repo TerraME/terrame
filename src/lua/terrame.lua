@@ -153,8 +153,6 @@ function buildCountTable(package)
 	return testfunctions
 end
 
-
-
 local function sqlFiles(package)
 	local s = sessionInfo().separator
 	local files = {}
@@ -557,6 +555,7 @@ end
 
 local function graphicalInterface(package, model)
 	local s = sessionInfo().separator
+	sessionInfo().interface = true
 	dofile(sessionInfo().path..s.."lua"..s.."interface.lua")
 	--require__("qtluae") -- TODO: try this to try to speedup the graphical interface
 	local attrTab
