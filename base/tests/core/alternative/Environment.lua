@@ -233,7 +233,7 @@ return{
 		error_func = function()
 			env:notify(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
 	end
 
 }

@@ -44,7 +44,7 @@ return{
 		local c2 = Chart{subject = soc, select = {"value", "height"}}
 		unitTest:assert_type(c2, "Chart")
 
-		soc:notify(0)
+		soc:notify()
 
 		local t = Timer{
 		    Event{action = function(e)

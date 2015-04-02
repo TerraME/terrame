@@ -531,17 +531,17 @@ return{
 		error_func = function()
 			cs:save("terralab", "themeName", "height_")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "positive integer number", "terralab"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "terralab"))
 
 		error_func = function()
 			cs:save(-18, "themeName", "height_")
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive integer number", -18))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -18, true))
 		
 		error_func = function()
 			cs:save(8.5, "themeName", "height_")
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive integer number", 8.5))
+		unitTest:assert_error(error_func, integerArgumentMsg(1, 8.5))
 
 		error_func = function()
 			cs:save(3, nil, "height_")

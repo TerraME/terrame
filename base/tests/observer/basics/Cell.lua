@@ -68,7 +68,7 @@ return{
 		}
 		unitTest:assert_type(c5, "Chart")
 
-		world:notify(0)
+		world:notify()
 
 		local t = Timer{
 			Event{action = function(e)

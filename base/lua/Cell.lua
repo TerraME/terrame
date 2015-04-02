@@ -136,18 +136,16 @@ Cell_ = {
 		return self.cObj_:getCurrentStateName(agent.cObj_)
 	end, 
 	--- Notify every Observer connected to the Cell.
-	-- @arg modelTime The time to be used by the Observer. Most of the strategies available ignore
-	-- this value; therefore it can be left empty. See the Observer documentation for details.
+	-- @arg modelTime An integer number representing the notification time. Default is zero.
 	-- @usage cell:notify()
-	notify = function (self, modelTime)
-		if type(modelTime) == "Event" then
+	notify = function(self, modelTime)
+		if modelTime == nil then
+			modelTime = 0
+		elseif type(modelTime) == "Event" then
 			modelTime = modelTime:getTime()
-		end
-
-		optionalArgument(1, "number", modelTime)
-
-		if modelTime < 0 then
-			incompatibleValueError(1, "positive number", modelTime)
+		else
+			optionalArgument(1, "number", modelTime)
+			positiveArgument(1, modelTime, true)
 		end
 
 		if self.obsattrs then

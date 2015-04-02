@@ -643,7 +643,7 @@ return{
 		error_func = function()
 			cs:notify(-1)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
 	end,
 	size = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

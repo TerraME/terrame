@@ -373,12 +373,12 @@ return {
 		local error_func = function()
 			ag:notify("not_int")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or positive number", "not_int"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			ag:notify(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "Event or positive number", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
 	end,
 	randomWalk = function(unitTest)
 		local ag1 = Agent{}

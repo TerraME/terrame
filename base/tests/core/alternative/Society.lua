@@ -39,7 +39,7 @@ return{
 		error_func = function()
 			sc1:notify(-1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "positive number", -1))
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
 	end,
 	remove = function(unitTest)
 		local agent1 = Agent{}

@@ -357,19 +357,16 @@ Agent_ = {
 		self:enter(newcell, placement)
 	end,
 	--- Notify the Observers of the Agent.
-	-- @arg modelTime An integer number representing the notification time.
+	-- @arg modelTime An integer number representing the notification time. Default is zero.
 	-- @usage agent:notify()
-	notify = function (self, modelTime)
+	notify = function(self, modelTime)
 		if modelTime == nil then
-			modelTime = 1
-		elseif type(modelTime) ~= "number" then
-			if type(modelTime) == "Event" then
-				modelTime = modelTime:getTime()
-			else
-				incompatibleTypeError(1, "Event or positive number", modelTime)
-			end
-		elseif modelTime < 0 then
-			incompatibleValueError(1, "Event or positive number", modelTime)
+			modelTime = 0
+		elseif type(modelTime) == "Event" then
+			modelTime = modelTime:getTime()
+		else
+			optionalArgument(1, "number", modelTime)
+			positiveArgument(1, modelTime, true)
 		end
 
         if self.obsattrs then

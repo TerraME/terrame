@@ -27,6 +27,7 @@ return{
 	notify = function(unitTest)
 		local e = Environment{}
 
+		e:notify()
 		e:notify(5)
 
 		local ev = Event{action = function() end}[1]

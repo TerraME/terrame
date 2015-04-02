@@ -360,6 +360,7 @@ return{
 			st1 = state1
 		}
 
+		at1:notify()
 		local t = Timer{
 			Event{action = function(ev)	at1:notify(ev) end}
 		}

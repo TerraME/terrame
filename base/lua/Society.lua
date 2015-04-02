@@ -346,17 +346,16 @@ Society_ = {
 		deprecatedFunction("getAgents", ".agents")
 	end,
 	--- Notify all the Agents of the Society.
-	-- @arg modelTime The notification time.
+	-- @arg modelTime An integer number representing the notification time. Default is 0.
 	-- @usage society:notify()
 	notify = function (self, modelTime)
-		if type(modelTime) == "Event" then
+		if modelTime == nil then
+			modelTime = 0
+		elseif type(modelTime) == "Event" then
 			modelTime = modelTime:getTime()
-		end
-
-		optionalArgument(1, "number", modelTime)
-
-		if modelTime < 0 then
-			incompatibleValueError(1, "positive number", modelTime)
+		else
+			optionalArgument(1, "number", modelTime)
+			positiveArgument(1, modelTime, true)
 		end
 
 		if self.obsattrs then

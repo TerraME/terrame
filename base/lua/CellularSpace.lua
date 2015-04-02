@@ -713,21 +713,17 @@ CellularSpace_ = {
 		self.cObj_:loadNeighborhood(data.source, data.name)
 	end,
 	--- Notify every Observer connected to the CellularSpace.
-	-- @arg modelTime The time to be used by the Observer. Most of the strategies available 
-	-- ignore this value. 
+	-- @arg modelTime An integer number representing the notification time. Default is zero.
 	-- @usage cs:notify()
-	-- cs:notify(event:getTime())
+	-- cs:notify(event)
 	notify = function(self, modelTime)
-		if type(modelTime) == "Event" then
+		if modelTime == nil then
+			modelTime = 0
+		elseif type(modelTime) == "Event" then
 			modelTime = modelTime:getTime()
-		end
-
-		optionalArgument(1, "number", modelTime)
-
-		if modelTime == nil then modelTime = 1 end
-
-		if modelTime < 0 then
-			incompatibleValueError(1, "positive number", modelTime)
+		else
+			optionalArgument(1, "number", modelTime)
+			positiveArgument(1, modelTime, true)
 		end
 
 		if self.obsattrs then
