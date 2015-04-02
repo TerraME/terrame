@@ -105,6 +105,9 @@ return{
 		local m = integerArgumentMsg("a", 2.3)
 		unitTest:assert_equal(m, "Incompatible values. Argument 'a' expected integer number, got 2.3.")
 	end,
+	isLoaded = function(unitTest)
+		unitTest:assert(isLoaded("base"))
+	end,
 	positiveArgument = function(unitTest)
 		local error_func = function()
 			positiveArgument(1, 0)

@@ -36,6 +36,8 @@ local begin_yellow = "\027[00;33m"
 local begin_green  = "\027[00;32m"
 local end_color    = "\027[00m"
 
+loadedPackages__ = {}
+
 function printError(value)
 	if sessionInfo().separator == "/" then
 		print__(begin_red..value..end_color)
