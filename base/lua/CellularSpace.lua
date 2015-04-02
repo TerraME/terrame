@@ -750,16 +750,12 @@ CellularSpace_ = {
 	--
 	-- cs:save(100, "ntab", "attr")
 	save = function(self, time, outputTableName, attrNames)
-		if type(time) ~= "number" then
-			if time == nil then
-				mandatoryArgumentError(1)
-			else
-				incompatibleTypeError(1, "positive integer number", time)
-			end
-		elseif time < 0 then
-			incompatibleValueError(1, "positive integer number", time)	  
-		elseif math.floor(time) ~= time then
-			incompatibleValueError(1, "positive integer number", time)
+		if type(time) == "Event" then
+			time = time:getTime()
+		else
+			mandatoryArgument(1, "number", time)
+			positiveArgument(1, time, true)
+			integerArgument(1, time)
 		end
 
 		mandatoryArgument(2, "string", outputTableName)

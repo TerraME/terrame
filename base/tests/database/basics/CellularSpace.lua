@@ -420,6 +420,9 @@ return{
 
 			cs:save(t, "themeName", "height_")
 		end
+
+		local ev = Event{time = 10, action = function() end}[1]
+		cs:save(ev, "themeName", "height_")
 		unitTest:assert(true)
 	end,
 	loadNeighborhood = function(unitTest)
