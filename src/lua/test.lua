@@ -486,6 +486,11 @@ function executeTests(package, fileName, doc_functions)
 		end
 	end) 
 
+	if ut.test == 0 and not data.examples then
+		printError("No test was executed. Aborting.")
+		os.exit()
+	end
+
 	-- checking if all source code functions were tested
 	if check_functions then
 		printNote("Checking if functions from source code were tested")
