@@ -179,8 +179,11 @@ end
 
 local function findModels(package)
 	local s = sessionInfo().separator
-	require("base")
-	require(package)
+	
+	if not isLoaded("base") then
+		require("base")
+	end
+
 	models = {}
 	local found = false
 	local oldModel = Model
@@ -553,7 +556,6 @@ function getLevel()
 end
 
 local function graphicalInterface(package, model)
-	require("base")
 	local s = sessionInfo().separator
 	dofile(sessionInfo().path..s.."lua"..s.."interface.lua")
 	--require__("qtluae") -- TODO: try this to try to speedup the graphical interface
@@ -657,7 +659,6 @@ function execute(arguments) -- arguments is a vector of strings
 	-- documented and availeble for the final users.
 	local s = info_.separator
 	local path = info_.path..s.."packages"..s.."base"..s.."lua"..s
-	dofile(info_.path..s.."lua"..s.."utils.lua")
 	dofile(path.."Package.lua")
 	dofile(path.."FileSystem.lua")
 	dofile(path.."Utils.lua")
@@ -720,8 +721,9 @@ function execute(arguments) -- arguments is a vector of strings
 				argCount = argCount + 1
 				model = arguments[argCount]
 
-				models = findModels(package)
+				require("base")
 				require(package)
+				models = findModels(package)
 				if belong(model, models) then
 					graphicalInterface(package, model)
 				else
@@ -814,10 +816,7 @@ function execute(arguments) -- arguments is a vector of strings
 				checkNilVariables()
 			end
 
-			if package ~= "base" then
-				require("base")
-			end
-			require(package)
+			require("base")
 
 			local s = sessionInfo().separator
 
