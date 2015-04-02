@@ -846,8 +846,10 @@ end
 
 function myxpcall(func)
 	return xpcall(func, function(err)
-		local luaFolder = replaceSpecialChars(sessionInfo().path.."/lua")
-		local baseLuaFolder = replaceSpecialChars(sessionInfo().path.."/packages/base/lua")
+		local s = sessionInfo().separator
+		local luaFolder = replaceSpecialChars(sessionInfo().path..s.."lua")
+		local baseLuaFolder = replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"..s.."lua")
+		local luadocLuaFolder = replaceSpecialChars(sessionInfo().path..s.."packages"..s.."luadoc")
 				
 		local m1 = string.match(err, string.sub(luaFolder, string.len(luaFolder) - 25, string.len(luaFolder)))
 		local m2 = string.match(err, string.sub(baseLuaFolder, string.len(baseLuaFolder) - 25, string.len(baseLuaFolder)))
