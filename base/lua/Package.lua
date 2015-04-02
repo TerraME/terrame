@@ -409,7 +409,7 @@ function customWarning(msg)
 	local level = getLevel()
 	local info = debug.getinfo(level)
 	local func = printWarning
-	local arg
+	local arg = msg
 
 	if info then
 		arg = info.short_src..":".. info.currentline ..": Warning: "..msg
@@ -621,7 +621,7 @@ end
 -- @arg value The valued used as argument to the function call.
 -- @usage integerArgumentMsg("target", 7.4)
 -- integerArgumentMsg(2, 5.1)
-function integerArgumentMsg(attr, value, zero)
+function integerArgumentMsg(attr, value)
 	if type(attr) == "number" then
 		attr = "#"..attr
 	end
