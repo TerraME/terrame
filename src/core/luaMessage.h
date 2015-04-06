@@ -72,7 +72,6 @@ public:
     /// Executes the luaMessage object
     /// \param event is the Event which has trigered this luaMessage
     bool execute( Event& event ) {
-
         // puts the message table on the top of the lua stack
         getReference(L);
         if( !lua_istable(L, -1) )
@@ -138,16 +137,7 @@ public:
     // qDebug() << "calls the function 'execute': lua_pcall( L, 1, 1, 0)"; 
     
     // calls the function 'execute'
-        if( lua_pcall( L, 1, 1, 0) != 0 )
-        {
-            string err_out = string (lua_tostring(L,-1)) + string("\n") +
-							 string("'action' function is missing or has failed during execution.\nStopping TerraME." );
-			lua_getglobal(L, "customError");
-			lua_pushstring(L,err_out.c_str());
-			//lua_pushnumber(L,5);
-			lua_call(L,1,0);
-            return 0;
-        }
+        lua_call( L, 1, 1) ;
 
         // retrieve the message result value from the lua stack
         int result = true;

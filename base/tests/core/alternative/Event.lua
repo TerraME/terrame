@@ -100,6 +100,17 @@ return{
 			event = Event{priority = 0, action = function(event) end}
 		end
 		unitTest:assert_error(error_func, defaultValueMsg("priority", 0))
+
+		local t = Timer{
+		        Event{action = function()
+					customError("aaa")
+		        end}
+		}
+
+		error_func = function()
+			t:execute(2)
+		end
+		unitTest:assert_error(error_func, "aaa")
 	end,
 --[[ #241
 	config = function(unitTest)
