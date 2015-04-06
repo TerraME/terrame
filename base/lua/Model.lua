@@ -264,14 +264,14 @@ function Model(attrTab)
 					if type(argv[name]) ~= "number" then
 						incompatibleTypeError(name, "number", argv[name])
 					elseif argv[name] < value.min then
-						customError("Argument '"..name.."' should be greater than or equal to "..value.min..".")
+						customError("Argument "..toLabel(name).." should be greater than or equal to "..value.min..".")
 					elseif value.max and argv[name] > value.max then
-						customError("Argument '"..name.."' should be less than or equal to "..value.max..".")
+						customError("Argument "..toLabel(name).." should be less than or equal to "..value.max..".")
 					elseif value.step and (((argv[name] - value.min)) * 1000) % (value.step * 1000) > 0.000001 then
 						-- There is a small bug in Lua with operator % using numbers between 0 and 1
 						-- For example, 0.7 % 0.1 == 0.1, but should be 0.0. That's why we need
 						-- to multiplicate by 1000 above
-						customError("Invalid value for argument '"..name.."' ("..argv[name]..").")
+						customError("Invalid value for argument "..toLabel(name).." ("..argv[name]..").")
 					end
 				end
 			elseif mtype == "mandatory" then
@@ -297,11 +297,11 @@ function Model(attrTab)
 							if type(iargv[iname]) ~= "number" then
 								incompatibleTypeError(name.."."..iname, "number", iargv[iname])
 							elseif iargv[iname] < ivalue.min then
-								customError("Argument '"..name.."."..iname.."' should be greater than or equal to "..ivalue.min..".")
+								customError("Argument "..toLabel(iname, name).." should be greater than or equal to "..ivalue.min..".")
 							elseif ivalue.max and iargv[iname] > ivalue.max then
-								customError("Argument '"..name.."."..iname.."' should be less than or equal to "..ivalue.max..".")
+								customError("Argument "..toLabel(iname, name).." should be less than or equal to "..ivalue.max..".")
 							elseif ivalue.step and (iargv[iname] - ivalue.min) % ivalue.step > 0.000001 then
-								customError("Invalid value for argument '"..name.."."..iname.."' ("..iargv[iname]..").")
+								customError("Invalid value for argument "..toLabel(iname, name).." ("..iargv[iname]..").")
 							end
 						end
 					elseif itype == "mandatory" then

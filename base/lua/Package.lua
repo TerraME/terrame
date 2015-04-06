@@ -776,8 +776,8 @@ end
 -- Otherwise, it return the name of the parameter itself.
 -- @arg mstring A parameter name.
 -- @arg parent Used when the parameter belongs to a table parameter.
--- @usage label("maxValue") --  'Max Value' (with graphical interface) or 'maxValue' (without)
-function label(mstring, parent)
+-- @usage toLabel("maxValue") --  'Max Value' (with graphical interface) or 'maxValue' (without)
+function toLabel(mstring, parent)
 	if type(mstring) == "number" then
 		return tostring(mstring)
 	end
@@ -797,7 +797,7 @@ function label(mstring, parent)
 		end
 
 		if parent then
-			return "'"..result.."' (in "..label(parent)..")"
+			return "'"..result.."' (in "..toLabel(parent)..")"
 		else
 			return "'"..result.."'"
 		end

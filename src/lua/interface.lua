@@ -213,6 +213,7 @@ function interface(self, modelName, package)
 
 	r = r.."-- This file was created automatically from a TerraME Model ("..os.date("%c")..")\n\n"
 	r = r.."require__(\"qtluae\")\n"
+	r = r.."sessionInfo().interface = true\n"
 
 	local ordering
 	if type(self.interface) == "function" then
@@ -615,7 +616,7 @@ function interface(self, modelName, package)
 					r = r.."\t\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
 				end
 				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
-				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
+				r = r.."\t\tmerr = \"Error: "..toLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
 				r = r.."\telseif tonumber(lineEdit"..value..".text) ~= "..self[value].." then\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
@@ -656,7 +657,7 @@ function interface(self, modelName, package)
 						r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
 					end
 					r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
-					r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
+					r = r.."\t\tmerr = \"Error: "..toLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
 					r = r.."\telseif tonumber(lineEdit"..value..".text) ~= "..self[value].default.. " then \n"
 					r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 					r = r.."\tend\n"
@@ -669,7 +670,7 @@ function interface(self, modelName, package)
 				r = r.."\telseif lineEdit"..value..".text == \"\" then\n"
 				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." is a mandatory argument.\"\n"
 				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
-				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
+				r = r.."\t\tmerr = \"Error: "..toLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
 				r = r.."\telse\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
@@ -684,7 +685,7 @@ function interface(self, modelName, package)
 							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
 						end
 						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
-						r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." (\"..lineEdit"..idx..value..".text..\") is not a number.\"\n"
+						r = r.."\t\tmerr = \"Error: "..toLabel(value).." (\"..lineEdit"..idx..value..".text..\") is not a number.\"\n"
 						r = r.."\telseif tonumber(lineEdit"..idx..value..".text) ~= "..self[idx][value].." then\n"
 						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 						r = r.."\tend"
@@ -732,7 +733,7 @@ function interface(self, modelName, package)
 								r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
 							end
 							r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
-							r = r.."\t\tmerr = \"Error: "..stringToLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
+							r = r.."\t\tmerr = \"Error: "..toLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
 							r = r.."\telseif tonumber(lineEdit"..idx..value..".text) ~= "..self[idx][value].default.. " then \n"
 							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 							r = r.."\tend\n"
@@ -745,7 +746,7 @@ function interface(self, modelName, package)
 						r = r.."\telseif lineEdit"..idx..value..".text == \"\" then\n"
 						r = r.."\t\tmerr = \"Error: "..stringToLabel(value, idx).." is a mandatory argument.\"\n"
 						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
-						r = r.."\t\tmerr = \"Error: "..stringToLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
+						r = r.."\t\tmerr = \"Error: "..toLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
 						r = r.."\telse\n"
 						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 						r = r.."\tend\n"
@@ -772,13 +773,15 @@ function interface(self, modelName, package)
 
 	r = r.."\texecute = \"instance:execute()\"\n"
 	r = r.."\tfile = io.open(\""..modelName.."-instance.lua\", \"w\")\n"
+	r = r.."\tfile:write(header..result..execute)\n"
+	r = r.."\theader = \"\\n\\nif not isLoaded(\\\""..package.."\\\") then  require(\\\""..package.."\\\") end\"\n"
 	r = r.."\tresult = header..result\n"
-	r = r.."\tfile:write(result..execute)\n"
 	r = r.."\tfile:close()\n"
 	r = r..[[
 	if not merr then
 		-- BUG**: http://lists.gnu.org/archive/html/libqtlua-list/2013-05/msg00004.html
-		local _, merr = pcall(function() load(result)() end)
+		local _
+		_, merr = pcall(function() load(result)() end)
 		if merr then
 			local merr2 = string.match(merr, ":[0-9]*:.*")
 			if merr2 then
