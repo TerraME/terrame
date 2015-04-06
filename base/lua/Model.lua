@@ -189,6 +189,27 @@ function Model(attrTab)
 	mandatoryTableArgument(attrTab, "init", "function")
 	optionalTableArgument(attrTab, "check", "function")
 
+	local function getExtensions(value)
+		local extensions = {}
+		local i = 1
+		while i <= value:len() do
+			if value:sub(i, i) == "." and value:sub(i - 1, i - 1) == "*" then
+				local j = i + 1
+				while value:sub(j, j) ~= ";" and j <= value:len() do
+					j = j + 1
+				end
+
+				if value:sub(j, j) == ";" then
+					table.insert(extensions, value:sub(i + 1, j - 1))
+				else
+					table.insert(extensions, value:sub(i + 1, j))
+				end
+			end
+			i = i + 1
+		end
+		return extensions
+	end
+
 	local function model(argv, typename)
 		-- set the default values
 		optionalTableArgument(argv, "seed", "number")
@@ -218,17 +239,17 @@ function Model(attrTab)
 						iargv[iname] = ivalue.default
 					elseif itype == "Mandatory" and iargv[iname] == nil then
 						mandatoryArgumentError(name.."."..iname)
-					elseif iargv[iname] == nil then
+					elseif iargv[iname] == nil and itype ~= "string" then
 						iargv[iname] = ivalue
 					end
 				end)
-			elseif argv[name] == nil then
+			elseif argv[name] == nil and mtype ~= "string" then
 				argv[name] = value
 			end
 		end)
 
 		-- check types and values
-		forEachElement(attrTab, function(name, value, mtype)
+		forEachOrderedElement(attrTab, function(name, value, mtype)
 			if mtype == "Choice" then
 				if value.values then
 					if type(argv[name]) ~= type(value.default) then
@@ -259,9 +280,26 @@ function Model(attrTab)
 				if type(argv[name]) ~= value.value then
 					incompatibleTypeError(name, value.value, argv[name])
 				end
+			elseif mtype == "string" then
+				local e = getExtensions(value)
+
+				if #e > 0 then
+					mandatoryTableArgument(argv, name, "string")
+					local ext = getExtension(argv[name])
+
+					if ext == "" then
+						customError("No file extension for parameter "..toLabel(name)..". It should be one of '"..value.."'.")
+					elseif not belong(ext, e) then
+						customError("Invalid file extension for parameter "..toLabel(name)..". It should be one of '"..value.."'.")
+					elseif not isFile(argv[name]) then
+						resourceNotFoundError(toLabel(name), argv[name])
+					end
+				elseif argv[name] == nil then
+					argv[name] = attrTab[name]
+				end
 			elseif mtype == "table" and #value == 0 then
 				local iargv = argv[name]
-				forEachElement(value, function(iname, ivalue, itype)
+				forEachOrderedElement(value, function(iname, ivalue, itype)
 					if itype == "Choice" then
 						if ivalue.values then
 							if type(iargv[iname]) ~= type(ivalue.default) then
@@ -288,6 +326,31 @@ function Model(attrTab)
 					elseif itype == "Mandatory" then
 						if type(iargv[iname]) ~= ivalue.value then
 							incompatibleTypeError(name.."."..iname, ivalue.value, iargv[iname])
+						end
+					elseif itype == "string" then
+						local e = getExtensions(ivalue)
+
+						if #e > 0 then
+							if type(iargv[iname]) ~= "string" then
+								if iargv[iname] == nil then
+									mandatoryArgumentError(toLabel(iname, name))
+								else
+									incompatibleTypeError(name.."."..iname, "string", iargv[iname])
+								end
+							end
+
+							mandatoryTableArgument(iargv, iname, "string")
+							local ext = getExtension(iargv[iname])
+
+							if ext == "" then
+								customError("No file extension for parameter "..toLabel(iname, name)..". It should be one of '"..ivalue.."'.")
+							elseif not belong(ext, e) then
+								customError("Invalid file extension for parameter "..toLabel(iname, name)..". It should be one of '"..ivalue.."'.")
+							elseif not isFile(iargv[iname]) then
+								resourceNotFoundError(toLabel(iname, name), iargv[iname])
+							end
+						elseif iargv[iname] == nil then
+							iargv[iname] = attrTab[name][iname]
 						end
 					elseif itype ~= type(iargv[iname]) then
 						incompatibleTypeError(name.."."..iname, itype, iargv[iname])

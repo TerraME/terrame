@@ -366,6 +366,69 @@ return{
 			local m = M{v = {value = "1.4"}}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("v.value", "number", "1.4"))
+
+		M = Model{
+			file1 = "*.csv",
+			file2 = "*.csv;*.lua",
+			init = function(model)
+				model.timer = Timer{Event{action = function() end}}
+			end
+		}
+
+		error_func = function()
+			local m = M{file1 = file("agents.csv", "base")}
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("file2"))
+
+		error_func = function()
+			local m = M{file1 = "agents"}
+		end
+		unitTest:assert_error(error_func, "No file extension for parameter 'file1'. It should be one of '*.csv'.")
+
+		error_func = function()
+			local m = M{file1 = file("brazil.gal", "base")}
+		end
+		unitTest:assert_error(error_func, "Invalid file extension for parameter 'file1'. It should be one of '*.csv'.")
+
+		error_func = function()
+			local m = M{file1 = "agxd.csv"}
+		end
+		unitTest:assert_error(error_func, resourceNotFoundMsg(toLabel("file1"), "agxd.csv"))
+
+		M = Model{
+			files = {
+				file1 = "*.csv",
+				file2 = "*.csv;*.lua"
+			},
+			init = function(model)
+				model.timer = Timer{Event{action = function() end}}
+			end
+		}
+
+		error_func = function()
+			local m = M{files = {file1 = file("agents.csv", "base")}}
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(toLabel("file2", "files")))
+
+		error_func = function()
+			local m = M{files = {file1 = 2}}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("files.file1", "string", 2))
+
+		error_func = function()
+			local m = M{files = {file1 = "agents"}}
+		end
+		unitTest:assert_error(error_func, "No file extension for parameter 'files.file1'. It should be one of '*.csv'.")
+
+		error_func = function()
+			local m = M{files = {file1 = file("brazil.gal", "base")}}
+		end
+		unitTest:assert_error(error_func, "Invalid file extension for parameter 'files.file1'. It should be one of '*.csv'.")
+
+		error_func = function()
+			local m = M{files = {file1 = "agxd.csv"}}
+		end
+		unitTest:assert_error(error_func, resourceNotFoundMsg(toLabel("file1", "files"), "agxd.csv"))
 	end,
 	interface = function(unitTest)
 		local error_func = function()

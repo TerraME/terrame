@@ -125,6 +125,29 @@ return{
 		unitTest:assert_type(t, "table")
 		unitTest:assert_type(t.simulationSteps, "Choice")
 		unitTest:assert_type(t.filter, "Mandatory")
+
+		local M = Model{
+			file0 = "def",
+			files = {
+				file1 = "*.csv",
+				file2 = "*.csv;*.lua",
+				file3 = "abc"
+			},
+			init = function(model)
+				model.finalTime = 3
+				model.timer = Timer{Event{action = function() end}}
+			end
+		}
+
+		local m = M{
+			files = {
+				file1 = file("agents.csv", "base"),
+				file2 = file("agents.csv", "base")
+			}
+		}
+
+		unitTest:assert_equal(m.file0, "def")
+		unitTest:assert_equal(m.files.file3, "abc")
 	end,
 	check = function(unitTest)
 		unitTest:assert(true)
