@@ -124,6 +124,26 @@ return{
 		end
 		unitTest:assert_error(error_func, positiveArgumentMsg("quantity", -15))
 
+		ag1 = Agent{id = "2"}
+
+		local error_func = function()
+			sc2 = Society{
+				instance = ag1,
+				quantity = 20
+			}
+		end
+		unitTest:assert_error(error_func, "Argument 'instance' should not have attribute 'id'.")
+
+		ag1 = Agent{parent = Cell{}}
+
+		local error_func = function()
+			sc2 = Society{
+				instance = ag1,
+				quantity = 20
+			}
+		end
+		unitTest:assert_error(error_func, "Argument 'instance' should not have attribute 'parent'.")
+
 		ag1 = Agent{instance = 2}
 
 		local error_func = function()

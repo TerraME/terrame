@@ -631,6 +631,14 @@ function Society(data)
 		customError("The same instance cannot be used by two Societies.")
 	end
 
+	if data.instance.id ~= nil then
+		customError("Argument 'instance' should not have attribute 'id'.")
+	end
+
+	if data.instance.parent ~= nil then
+		customError("Argument 'instance' should not have attribute 'parent'.")
+	end
+
 	local function createSummaryFunctions(agent)
 		-- create functions for the society according to the attributes of its instance
 		forEachElement(agent, function(attribute, value, mtype)
