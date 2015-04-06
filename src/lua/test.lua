@@ -183,7 +183,9 @@ function executeTests(package, fileName, doc_functions)
 			customError("'folder' should be string, table, or nil, got "..type(data.folder)..".")
 		end
 
-		if data.file ~= nil and type(data.file) ~= "string" and type(data.file) ~= "table" then
+		if type(data.file) == "string" then
+			data.file = {data.file}
+		elseif type(data.file) ~= "table" and data.file ~= nil then
 			customError("'file' should be string, table, or nil, got "..type(data.file)..".")
 		end
 
@@ -319,15 +321,13 @@ function executeTests(package, fileName, doc_functions)
 		if dirFiles == nil then return end
 
 		myFiles = {}
-		if type(data.file) == "string" then
-			if belong(data.file, dirFiles) then
-				myFiles = {data.file}
-			end
-		elseif type(data.file) == "table" then
+		if type(data.file) == "table" then
 			forEachElement(dirFiles, function(_, value)
-				if belong(value, data.file) then
-					myFiles[#myFiles + 1] = value
-				end
+				forEachElement(data.file, function(_, mfile)
+					if string.match(value, mfile) then
+						myFiles[#myFiles + 1] = value
+					end
+				end)
 			end)
 		else -- nil
 			forEachElement(dirFiles, function(_, value)
@@ -494,24 +494,19 @@ function executeTests(package, fileName, doc_functions)
 	-- checking if all source code functions were tested
 	if check_functions then
 		printNote("Checking if functions from source code were tested")
-		if type(data.file) == "string" then
-			print("Checking "..data.file)
-			forEachElement(testfunctions[data.file], function(idx, value)
-				ut.package_functions = ut.package_functions + 1
-				if value == 0 then
-					printError("Function '"..idx.."' was not tested.")
-					ut.functions_not_tested = ut.functions_not_tested + 1
-				end
-			end)
-		elseif type(data.file) == "table" then
+		if type(data.file) == "table" then
 			forEachOrderedElement(data.file, function(idx, value)
-				print("Checking "..value)
-				forEachElement(testfunctions[value], function(midx, mvalue)
-					ut.package_functions = ut.package_functions + 1
-					if mvalue == 0 then
-						printError("Function '"..midx.."' was not tested.")
-						ut.functions_not_tested = ut.functions_not_tested + 1
-					end
+				forEachElement(testfunctions, function(midx, mvalue)
+					if not string.match(midx, value) then return end
+
+					print("Checking "..midx)
+					forEachElement(mvalue, function(mmidx, mmvalue)
+						ut.package_functions = ut.package_functions + 1
+						if mmvalue == 0 then
+							printError("Function '"..mmidx.."' was not tested.")
+							ut.functions_not_tested = ut.functions_not_tested + 1
+						end
+					end)
 				end)
 			end)
 		else -- nil
@@ -532,22 +527,18 @@ function executeTests(package, fileName, doc_functions)
 
 	if data.lines then
 		printNote("Checking lines of source code")
-		if type(data.file) == "string" then
-			print("Checking "..data.file)
-			forEachOrderedElement(executionlines[data.file], function(idx, value)
-				if value == 0 then
-					printError("Line "..idx.." was not executed.")
-					ut.lines_not_executed = ut.lines_not_executed + 1
-				end
-			end)
-		elseif type(data.file) == "table" then
+		if type(data.file) == "table" then
 			forEachOrderedElement(data.file, function(idx, value)
-				print("Checking "..value)
-				forEachOrderedElement(executionlines[value], function(idx, value)
-					if value == 0 then
-						printError("Line "..idx.." was not executed.")
-						ut.lines_not_executed = ut.lines_not_executed + 1
-					end
+				forEachElement(executionlines, function(midx, mvalue)
+					if not string.match(midx, value) then return end
+
+					print("Checking "..midx)
+					forEachElement(mvalue, function(mmidx, mmvalue)
+						if mmvalue == 0 then
+							printError("Line "..mmidx.." was not executed.")
+							ut.lines_not_executed = ut.lines_not_executed + 1
+						end
+					end)
 				end)
 			end)
 		else -- nil
