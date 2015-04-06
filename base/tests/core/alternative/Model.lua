@@ -46,9 +46,9 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "2"))
 
 		local error_func = function()
-			local Tube = Model{finalTime = mandatory("table")}
+			local Tube = Model{finalTime = Mandatory("table")}
 		end
-		unitTest:assert_error(error_func, "finalTime can only be mandatory('number'), got mandatory('table').")
+		unitTest:assert_error(error_func, "finalTime can only be Mandatory('number'), got Mandatory('table').")
 
 		local error_func = function()
 			local Tube = Model{finalTime = Choice{"1", "2"}}
@@ -66,9 +66,9 @@ return{
 		unitTest:assert_error(error_func, positiveArgumentMsg("seed", -2, true))
 
 		local error_func = function()
-			local Tube = Model{seed = mandatory("table")}
+			local Tube = Model{seed = Mandatory("table")}
 		end
-		unitTest:assert_error(error_func, "seed can only be mandatory('number'), got mandatory('table').")
+		unitTest:assert_error(error_func, "seed can only be Mandatory('number'), got Mandatory('table').")
 
 		local error_func = function()
 			local Tube = Model{seed = Choice{"1", "2"}}
@@ -301,20 +301,9 @@ return{
 			local T = Tube{}
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg("finalTime"))
-	end,
-	mandatory = function(unitTest)
-		local error_func = function()
-			local c = mandatory(2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
-
-		error_func = function()
-			local c = mandatory("string")
-		end
-		unitTest:assert_error(error_func, "Value 'string' cannot be a mandatory argument.")
 
 		local M = Model{
-			value = mandatory("number"),
+			value = Mandatory("number"),
 			init = function() end
 		}
 
@@ -329,7 +318,7 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg("value", "number", false))
 
 		M = Model{
-			v = {value = mandatory("number")},
+			v = {value = Mandatory("number")},
 			init = function() end
 		}
 

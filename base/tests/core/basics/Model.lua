@@ -32,7 +32,7 @@ local Tube = Model{
 	flow            = 20,
 	observingStep   = Choice{min = 0, max = 1, step = 0.1, default = 1},
 	checkZero       = false,
-	filter          = mandatory("function"),
+	filter          = Mandatory("function"),
 	block = {
 		xmin = 0,
 		xmax = math.huge,
@@ -105,7 +105,7 @@ return{
 		local Tube3 = Model{
 			initialWater    = 0,
 			finalTime       = 10,
-			tube            = mandatory("Tube"),
+			tube            = Mandatory("Tube"),
 			init = function(model)
 				model.water = model.initialWater
 				model.env = Environment{
@@ -124,15 +124,10 @@ return{
 
 		unitTest:assert_type(t, "table")
 		unitTest:assert_type(t.simulationSteps, "Choice")
-		unitTest:assert_type(t.filter, "mandatory")
+		unitTest:assert_type(t.filter, "Mandatory")
 	end,
 	check = function(unitTest)
 		unitTest:assert(true)
-	end,
-	mandatory = function(unitTest)
-		local c = mandatory("number")
-		unitTest:assert_type(c, "mandatory")
-		unitTest:assert_equal(c.value, "number")
 	end,
 	init = function(unitTest)
 		unitTest:assert(true)

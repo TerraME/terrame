@@ -68,11 +68,11 @@ local function create_ordering(self)
 		elseif mtype == "boolean" then                 count_boolean = count_boolean + 1
 		elseif mtype == "Choice"  then                 count_table   = count_table   + 1
 		elseif mtype == "table" and #element == 0 then table.insert(named, idx)
-		elseif mtype == "mandatory" then
+		elseif mtype == "Mandatory" then
 			if element.value == "number" then
 				count_mandatory = count_mandatory + 1
 			else
-				customError("Automatic graphical interface does not support '"..element.value.."' as mandatory argument.")
+				customError("Automatic graphical interface does not support '"..element.value.."' as Mandatory argument.")
 			end
 		end
 	end)
@@ -88,7 +88,7 @@ local function create_ordering(self)
 			quantity = 0
 			current_ordering = {}
 		end
-		table.insert(current_ordering, "mandatory")
+		table.insert(current_ordering, "Mandatory")
 		quantity = quantity + count_mandatory
 	end
 
@@ -167,7 +167,7 @@ local function create_t(mtable, ordering)
 				elseif element == "boolean"   and mtype == "boolean"   then table.insert(mt, idx)
 				elseif element == "number"    and mtype == "number"    then table.insert(mt, idx)
 				elseif element == "Choice"    and mtype == "Choice"    then table.insert(mt, idx)
-				elseif element == "mandatory" and mtype == "mandatory" then table.insert(mt, idx)
+				elseif element == "Mandatory" and mtype == "Mandatory" then table.insert(mt, idx)
 				elseif element == idx then -- named table
 					local ordering = create_ordering(melement)
 					table.insert(mt, create_t(melement, ordering))
@@ -330,7 +330,7 @@ function interface(self, modelName, package)
 				r = r.."checkBox"..value..".checked = "..tostring(self[value]).."\n"
 				r = r.."qt.ui.layout_add(TmpVBoxLayout, checkBox"..value..")\n\n"
 			end)
-		elseif idx == "mandatory" then
+		elseif idx == "Mandatory" then
 			r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 			r = r.."qt.ui.layout_add("..layout..", TmpGridLayout)\n"
 			count = 0
@@ -486,7 +486,7 @@ function interface(self, modelName, package)
 						end
 						count = count + 1
 					end)
-				elseif midx == "mandatory" then
+				elseif midx == "Mandatory" then
 					r = r.."TmpGridLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 					r = r.."qt.ui.layout_add(TmpLayout, TmpGridLayout, 2, 0)\n"
 					count = 0
@@ -663,7 +663,7 @@ function interface(self, modelName, package)
 					r = r.."\tend\n"
 				end
 			end)
-		elseif idx == "mandatory" then
+		elseif idx == "Mandatory" then
 			forEachOrderedElement(melement, function(_, value)
 				r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
@@ -739,7 +739,7 @@ function interface(self, modelName, package)
 							r = r.."\tend\n"
 						end
 					end)
-				elseif midx == "mandatory" then
+				elseif midx == "Mandatory" then
 					forEachOrderedElement(mvalue, function(_, value)
 						r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
 						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"

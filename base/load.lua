@@ -4,6 +4,7 @@ files = {
 	"Package.lua",
 	"Utils.lua",
 	"UnitTest.lua",
+	"Mandatory.lua",
 	"Model.lua",
 	"Legend.lua",
 	"Observer.lua",

@@ -23,25 +23,6 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
---- Function to define a mandatory argument for a given Model. This function
--- can be used stand alone without having to instantiate a Model.
--- @arg value A string with the type of the argument. It cannot be boolean, string, nor userdata.
--- If it is table, then all its elements should have the same type.
--- @usage mandatory("number")
-function mandatory(value)
-	local result = {}
-
-	mandatoryArgument(1, "string", value)
-
-	if belong(value, {"boolean", "string", "userdata"}) then
-		customError("Value '"..value.."' cannot be a mandatory argument.")
-	end
-	result.value = value
-
-	setmetatable(result, {__index = {type_ = "mandatory"}})
-	return result
-end
-
 Model_ = {
 	--- Check whether the instance of the model has correct arguments. This function is optional
 	-- and it is called before creating internal objects. See Package:label(), when building a
@@ -133,7 +114,7 @@ function Model(attrTab)
 					elements[mvalue] = true
 				end
 
-				if belong(mvalue, {"string", "number", "boolean", "Choice", "mandatory"}) then
+				if belong(mvalue, {"string", "number", "boolean", "Choice", "Mandatory"}) then
 					local found = false
 					forEachElement(attrTab, function(_, _, attrtype)
 						if attrtype == mvalue then
@@ -166,9 +147,9 @@ function Model(attrTab)
 			if type(attrTab.finalTime.default) ~= "number" then
 				customError("finalTime can only be a Choice with 'number' values, got '"..type(attrTab.finalTime.default).."'.")
 			end
-		elseif t == "mandatory" then
+		elseif t == "Mandatory" then
 			if attrTab.finalTime.value ~= "number" then
-				customError("finalTime can only be mandatory('number'), got mandatory('"..attrTab.finalTime.value.."').")
+				customError("finalTime can only be Mandatory('number'), got Mandatory('"..attrTab.finalTime.value.."').")
 			end
 		else
 			optionalTableArgument(attrTab, "finalTime", "number")
@@ -181,9 +162,9 @@ function Model(attrTab)
 			if type(attrTab.seed.default) ~= "number" then
 				customError("seed can only be a Choice with 'number' values, got '"..type(attrTab.seed.default).."'.")
 			end
-		elseif t == "mandatory" then
+		elseif t == "Mandatory" then
 			if attrTab.seed.value ~= "number" then
-				customError("seed can only be mandatory('number'), got mandatory('"..attrTab.seed.value.."').")
+				customError("seed can only be Mandatory('number'), got Mandatory('"..attrTab.seed.value.."').")
 			end
 		else
 			optionalTableArgument(attrTab, "seed", "number")
@@ -194,13 +175,13 @@ function Model(attrTab)
 	forEachElement(attrTab, function(name, value, mtype)
 		if mtype == "table" and #value == 0 then
 			forEachElement(value, function(iname, ivalue, itype)
-				if not belong(itype, {"Choice", "mandatory", "number", "string", "function", "boolean"}) then
+				if not belong(itype, {"Choice", "Mandatory", "number", "string", "function", "boolean"}) then
 					customError("Type "..itype.." (parameter '"..name.."."..iname.."') is not supported as argument of Model.")
 				end
 			end)
 		elseif mtype == "table" and #value > 0 then
 			customError("It is not possible to use a non-named table in a Model (parameter '"..name.."').")
-		elseif not belong(mtype, {"Choice", "mandatory", "number", "string", "function", "boolean"}) then
+		elseif not belong(mtype, {"Choice", "Mandatory", "number", "string", "function", "boolean"}) then
 			customError("Type "..mtype.." (parameter '"..name.."') is not supported as argument of Model.")
 		end
 	end)
@@ -222,7 +203,7 @@ function Model(attrTab)
 				if argv[name] == nil then
 					argv[name] = value.default
 				end
-			elseif mtype == "mandatory" then
+			elseif mtype == "Mandatory" then
 				if argv[name] == nil then
 					mandatoryArgumentError(name)
 				end
@@ -235,7 +216,7 @@ function Model(attrTab)
 				forEachElement(value, function(iname, ivalue, itype)
 					if itype == "Choice" and iargv[iname] == nil then
 						iargv[iname] = ivalue.default
-					elseif itype == "mandatory" and iargv[iname] == nil then
+					elseif itype == "Mandatory" and iargv[iname] == nil then
 						mandatoryArgumentError(name.."."..iname)
 					elseif iargv[iname] == nil then
 						iargv[iname] = ivalue
@@ -274,7 +255,7 @@ function Model(attrTab)
 						customError("Invalid value for argument "..toLabel(name).." ("..argv[name]..").")
 					end
 				end
-			elseif mtype == "mandatory" then
+			elseif mtype == "Mandatory" then
 				if type(argv[name]) ~= value.value then
 					incompatibleTypeError(name, value.value, argv[name])
 				end
@@ -304,7 +285,7 @@ function Model(attrTab)
 								customError("Invalid value for argument "..toLabel(iname, name).." ("..iargv[iname]..").")
 							end
 						end
-					elseif itype == "mandatory" then
+					elseif itype == "Mandatory" then
 						if type(iargv[iname]) ~= ivalue.value then
 							incompatibleTypeError(name.."."..iname, ivalue.value, iargv[iname])
 						end
