@@ -263,6 +263,17 @@ return{
 			Map{
 				subject = c,
 				select = "x",
+				values = {1, 2, "3"},
+				colors = "Blues",
+				labels = {"1", "2", "3"}
+			}
+		end
+		unitTest:assert_error(error_func, "All values should have the same type, got number and string.")
+
+		error_func = function()
+			Map{
+				subject = c,
+				select = "x",
 				values = {1, 2, 1},
 				colors = "Blues",
 				labels = {"1", "2", "3"}

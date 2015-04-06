@@ -1478,12 +1478,7 @@ Map_ = {
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 
-		local availableExtensions = {
-			bmp = true,
-			jpg = true,
-			png = true,
-			tiff = true
-		}
+		local availableExtensions = {bmp = true, jpg = true, png = true, tiff = true}
 
 		if not availableExtensions[extension] then
 			invalidFileExtensionError(1, extension)
