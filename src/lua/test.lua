@@ -179,7 +179,9 @@ function executeTests(package, fileName, doc_functions)
 			os.exit()
 		end
 
-		if data.folder ~= nil and type(data.folder) ~= "string" and type(data.folder) ~= "table" then
+		if type(data.folder) == "string" then
+			data.folder = {data.folder}
+		elseif data.folder ~= nil and type(data.folder) ~= "table" then
 			customError("'folder' should be string, table, or nil, got "..type(data.folder)..".")
 		end
 
@@ -277,31 +279,38 @@ function executeTests(package, fileName, doc_functions)
 	local tf = testfolders(baseDir, ut)
 
 	-- Check every selected folder
-	if type(data.folder) == "string" then 
-		local mfolder = data.folder
-		data.folder = {}
-		forEachElement(tf, function(_, value)
-			if string.match(value, mfolder) then
-				table.insert(data.folder, value)
-			end
-		end)
-	elseif data.folder == nil then
+	if data.folder == nil then
 		data.folder = tf
 	else -- table
 		local mfolder = data.folder
 		data.folder = {}
+
+		local found = {}
+		forEachElement(mfolder, function(_, value)
+			found[value] = false
+		end)
+
 		forEachElement(tf, function(_, value)
 			forEachElement(mfolder, function(_, mvalue)
-				if string.match(value, mvalue) and not found then
+				if string.match(value, mvalue) then
 					table.insert(data.folder, value)
+					found[mvalue] = true
 					return false
 				end
 			end)
+		end)
+
+		forEachElement(mfolder, function(_, value)
+			if not found[value] then
+				printError("Could not find any folder for pattern '"..value.."'.")
+				os.exit()
+			end
 		end)
 	end
 
 	if #data.folder == 0 then
 		customError("Could not find any folder to be tested according to the value of 'folder'.")
+		os.exit()
 	end
 
 	local global_variables = {}
@@ -495,9 +504,16 @@ function executeTests(package, fileName, doc_functions)
 	if check_functions then
 		printNote("Checking if functions from source code were tested")
 		if type(data.file) == "table" then
+			local found = {}
+			forEachElement(data.file, function(_, value)
+				found[value] = false
+			end)
+
 			forEachOrderedElement(data.file, function(idx, value)
 				forEachElement(testfunctions, function(midx, mvalue)
 					if not string.match(midx, value) then return end
+
+					found[value] = true
 
 					print("Checking "..midx)
 					forEachElement(mvalue, function(mmidx, mmvalue)
@@ -508,6 +524,12 @@ function executeTests(package, fileName, doc_functions)
 						end
 					end)
 				end)
+			end)
+
+			forEachElement(data.file, function(_, value)
+				if not found[value] then
+					printError("Could not find any file for pattern '"..value.."'.")
+				end
 			end)
 		else -- nil
 			forEachOrderedElement(testfunctions, function(idx, value)
