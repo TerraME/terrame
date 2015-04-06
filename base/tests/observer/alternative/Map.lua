@@ -260,6 +260,17 @@ return{
 		unitTest:assert_error(error_func, "Invalid color 'xxx'.")
 
 		error_func = function()
+			Map{
+				subject = c,
+				select = "x",
+				values = {1, 2, 1},
+				colors = "Blues",
+				labels = {"1", "2", "3"}
+			}
+		end
+		unitTest:assert_error(error_func, "There should not exist repeated elements in 'values'.")
+
+		error_func = function()
 			Map{subject = c, select = "x", title = 5, values = {1, 2}, colors = {"blue", "red"}}
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("title"))

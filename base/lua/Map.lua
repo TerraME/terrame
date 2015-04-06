@@ -1623,8 +1623,16 @@ function Map(data)
 				end)
 			else
 				local theType = type(data.values[1])
-				forEachElement(data.values, function(_, _, mtype)
+				forEachElement(data.values, function(_, value, mtype)
 					verify(mtype == theType, "All values should have the same type, got "..theType.." and "..mtype..".")
+
+					local count = 0
+					forEachElement(data.values, function(_, mvalue)
+						if value == mvalue then
+							count = count + 1
+						end
+					end)
+					verify(count == 1, "There should not exist repeated elements in 'values'.")
 				end)
 			end
 
