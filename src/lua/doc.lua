@@ -77,6 +77,7 @@ function executeDoc(package)
 		wrong_description = 0,
 		undoc_arg = 0,
 		undefined_arg = 0,
+		duplicated_functions = 0,
 		unused_arg = 0,
 		unknown_arg = 0,
 		undoc_files = 0,
@@ -270,16 +271,26 @@ function executeDoc(package)
 		printError(doc_report.undoc_data.." data files are not documented.")
 	end
 
-	if doc_report.model_error == 0 then
-		printNote("All "..doc_report.models.." Models are correctly documented.")
+	if doc_report.models > 0 then
+		if doc_report.model_error == 0 then
+			printNote("All "..doc_report.models.." Models are correctly documented.")
+		else
+			printError("There are "..doc_report.model_error.." errors in the documentation of Models.")
+		end
 	else
-		printError("There are "..doc_report.model_error.." errors in the documentation of Models.")
+		printNote("There are no Models in the package.")
 	end
 
 	if doc_report.undoc_functions == 0 then
 		printNote("All "..doc_report.functions.." global functions of the package are documented.")
 	else
 		printError(doc_report.undoc_functions.." global functions are not documented.")
+	end
+
+	if doc_report.duplicated_functions == 0 then
+		printNote("All functions of each file are declared only once.")
+	else
+		printError("There are "..doc_report.duplicated_functions.." repeated functions in the source code.")
 	end
 
 	if doc_report.duplicated == 0 then

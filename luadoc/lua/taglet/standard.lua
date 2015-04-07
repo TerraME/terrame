@@ -448,6 +448,11 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 		doc.modules[modulename].functions = {}
 		for f in class_iterator(blocks, "function")() do
 			table.insert(doc.modules[modulename].functions, f.name)
+
+			if doc.modules[modulename].functions[f.name] then
+				printError("Function "..f.name.." was already declared.")
+				doc_report.duplicated_functions = doc_report.duplicated_functions + 1
+			end
 			doc.modules[modulename].functions[f.name] = f
 		end
 		
@@ -464,6 +469,11 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 	for f in class_iterator(blocks, "function")() do
 		doc_report.functions = doc_report.functions + 1
 		table.insert(doc.files[fileName].functions, f.name)
+
+		if doc.files[fileName].functions[f.name] then
+			printError("Function "..f.name.." was already declared.")
+			doc_report.duplicated_functions = doc_report.duplicated_functions + 1
+		end
 		doc.files[fileName].functions[f.name] = f
 	end
 
