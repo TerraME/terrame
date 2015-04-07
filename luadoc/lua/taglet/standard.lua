@@ -8,6 +8,8 @@ local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
 local printNote, printError, print, attributes = printNote, printError, print, attributes
 local sessionInfo, belong = sessionInfo, belong
 local include, getn = include, getn
+local forEachElement = forEachElement
+local belong = belong
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
@@ -359,6 +361,24 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 			local block
 			line, block, modulename = parse_block(f, line, modulename, first, doc_report)
 			table.insert(blocks, block)
+
+			if block then
+				if block.description:sub(block.description:len(), block.description:len()) ~= "." then
+					printError("Description of '"..block.name.."' does not end with '.'")
+					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
+				end
+
+				if block.arg then
+					forEachElement(block.arg, function(idx, value, mtype)
+						if mtype == "string" and idx ~= "named" and type(idx) ~= "number" then
+							if not belong(value:sub(value:len(), value:len()), {".", "?", ":"}) then
+								printError("Argument '"..idx.."' from '"..block.name.."' does end with '.', '?', nor ':'.")
+								doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
+							end
+						end
+					end)
+				end
+			end
 		else
 			-- look for a module definition
 			modulename = check_module(line, modulename)

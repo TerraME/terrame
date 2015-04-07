@@ -91,7 +91,8 @@ function executeDoc(package)
 		undoc_functions = 0,
 		undoc_examples = 0,
 		undoc_data = 0,
-		wrong_data = 0
+		wrong_data = 0,
+		wrong_descriptions = 0
 	}
 
 	local mdata = {}
@@ -291,6 +292,12 @@ function executeDoc(package)
 		printNote("All functions of each file are declared only once.")
 	else
 		printError("There are "..doc_report.duplicated_functions.." repeated functions in the source code.")
+	end
+
+	if doc_report.wrong_descriptions == 0 then
+		printNote("All descriptions end with a correct character.")
+	else
+		printError("There are "..doc_report.wrong_descriptions.." descriptions ending with wrong characters.")
 	end
 
 	if doc_report.duplicated == 0 then
