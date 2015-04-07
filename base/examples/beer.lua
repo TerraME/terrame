@@ -44,7 +44,7 @@ chainAgent = Agent{
 			agent.stock = 0
 		end
 
-		----- the overall decision
+		-- the overall decision
 		-- how many beers will I request according to my [stock] and the [ordered] amount of beer that I could not deliver? 
 		local requested = 0
 		if agent.stock <= 20 then
@@ -52,7 +52,7 @@ chainAgent = Agent{
 		end
 
 		RequestBeer(agent, requested)
-		----- end of the overall decision
+		-- end of the overall decision
 
 		agent:update_costs()
 	end,

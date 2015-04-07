@@ -92,6 +92,7 @@ function executeDoc(package)
 		undoc_examples = 0,
 		undoc_data = 0,
 		wrong_data = 0,
+		wrong_line = 0,
 		wrong_descriptions = 0
 	}
 
@@ -270,6 +271,12 @@ function executeDoc(package)
 		printNote("No undocumented data files were found.")
 	else
 		printError(doc_report.undoc_data.." data files are not documented.")
+	end
+
+	if doc_report.wrong_line == 0 then
+		printNote("All source code lines starting with --- are valid.")
+	else
+		printError(doc_report.wrong_line.." source code lines starting with --- are invalid.")
 	end
 
 	if doc_report.models > 0 then

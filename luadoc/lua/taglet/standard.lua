@@ -359,10 +359,11 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 		if string.find(line, "^[\t ]*%-%-%-") then
 			-- reached a luadoc block
 			local block
+			local mline = line
 			line, block, modulename = parse_block(f, line, modulename, first, doc_report)
 			table.insert(blocks, block)
 
-			if block then
+			if block and block.name then
 				if block.description:sub(block.description:len(), block.description:len()) ~= "." then
 					printError("Description of '"..block.name.."' does not end with '.'")
 					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
@@ -378,6 +379,9 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 						end
 					end)
 				end
+			elseif not string.find(mline, "^[\t ]*%-%-%-%-") then
+				printError("Invalid documentation line: "..mline)
+				doc_report.wrong_line = doc_report.wrong_line + 1
 			end
 		else
 			-- look for a module definition

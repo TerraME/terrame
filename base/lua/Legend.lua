@@ -217,7 +217,6 @@ local TME_LEGEND_CURVE_SYMBOL_USER = {
 	["hexagon"]   = TME_LEGEND_CURVE_SYMBOL.HEXAGON,  
 }
 
-----------------------------------------------------------------------------------------------
 -- Legend keys
 local LEG_KEYS = {
 	type = "type" ,
@@ -236,7 +235,6 @@ local LEG_KEYS = {
 	style = "style"
 }
 
-----------------------------------------------------------------------------------------------
 -- LEGEND CREATION FUNCTIONS
 local DEF_TYPE = TME_LEGEND_TYPE.NUMBER
 local DEF_GROUP = TME_LEGEND_GROUPING.EQUALSTEPS
