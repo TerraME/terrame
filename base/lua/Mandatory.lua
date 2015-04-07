@@ -23,11 +23,10 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
---- Type to define a mandatory argument for a given Model. It
--- can be used stand alone without having to instantiate a Model.
+--- Type to define a mandatory argument for a given Model.
 -- @arg value A string with the type of the argument. It cannot be boolean, string, nor userdata.
--- If it is table, then all its elements should have the same type.
--- @usage mandatory("number")
+-- Note that Mandatory does not get named arguments as the other TerraME types.
+-- @usage Mandatory("number")
 function Mandatory(value)
 	local result = {}
 

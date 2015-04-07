@@ -186,7 +186,6 @@ metaTableTrajectory_ = {
 -- predefined options to sort objects.
 -- @arg data.build A boolean value indicating whether the Trajectory will be computed or not when 
 -- created. Default is true.
---
 -- @output cells A vector of Cells pointed by the Trajectory.
 -- @output parent The CellularSpace where the Trajectory takes place.
 -- @output select The last function used to filter the Trajectory.

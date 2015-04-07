@@ -394,7 +394,6 @@ local metaTableLegend_ = {__index = Legend_, __tostring = tostringTerraME}
 -- interface describing the colors.
 -- @arg data.stdColorBar A table just as colorBar. It is needed only when standard deviation is
 -- the chosen strategy.
---
 -- @tabular grouping
 -- Grouping & Description & Compulsory arguments & Optional arguments\
 -- "equalsteps" &The values are divided into a set of slices with the same range. Each slice is

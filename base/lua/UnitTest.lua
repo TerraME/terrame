@@ -35,7 +35,7 @@ UnitTest_ = {
 	last_error = "",
 	count_last = 0,
 	delayed_time = 0,
-	--- Check if a given value is true. In any other case (number, string, false, or nil) it generates an error
+	--- Check if a given value is true. In any other case (number, string, false, or nil) it generates an error.
 	-- @arg value Any value.
 	-- @usage unitTest:assert(2 < 3)
 	assert = function(self, value)

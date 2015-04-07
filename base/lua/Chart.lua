@@ -73,7 +73,7 @@ metaTableChart_ = {__index = Chart_}
 -- values are: "square", "diamond", "triangle", "ltriangle" (left), "dtriangle" (downwards triangle), 
 -- "rtriangle" (right), "cross", "vcross" (vertical cross), "hline", "vline", "asterisk",
 -- "star", "hexagon", and "none" (default).
--- @arg data.size The size of the symbol, in pixels. It can be a number to be used by all lines,
+-- @arg data.size The size of the symbol, in pixels. It can be a number to be used by all lines.
 -- @arg data.pen The pen style for drawing lines. It can be one of "solid" (default), "dash", 
 -- "dot", "dashdot", or "dashdotdot". It can be a vector or a single value.
 -- or a vector of numbers, describing the size for each line. Default is 7.

@@ -156,7 +156,7 @@ Cell_ = {
 
 		self.cObj_:notify(modelTime)
 	end,
-	--- Returns a random Cell from a Neighborhood of this Cell
+	--- Returns a random Cell from a Neighborhood of this Cell.
 	-- @arg id A string with the neighborhood's name to be retrieved. Default is "1".
 	-- @usage cell_neighbor = cell:sample()
 	-- cell_neighbor = cell:sample("myneighborhood")

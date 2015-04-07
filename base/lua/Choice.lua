@@ -25,8 +25,12 @@
 
 Choice_ = {
 	type_ = "Choice",
-	--- Return a random element from the available options.
-	-- @usage c:sample()
+	--- Return a random element from the available options. If the Choice was built
+	-- from non-named arguments or it has a step, it returns a random value following a
+	-- discrete uniform distribution. If it has maximum and minimum then it returns a random
+	-- value using a continuous uniform distribution. It is not possible to sample from
+	-- Choices that have maximum but not minimum, or minimum but not maximum.
+	-- @usage c1:sample()
 	sample = function(self)
 		local r = Random()
 		if self.values then
@@ -48,13 +52,15 @@ metaTableChoice_ = {
 }
 
 --- Type to define options to be used by the modeler. It can get a set of
--- non-named values as arguments as well as named arguments as follows. This type
--- is particularly useful to define a Model.
--- @arg attrTab.min The minimum value.
--- @arg attrTab.max The maximum value.
+-- non-named values as arguments or the named arguments as follows. This type
+-- is particularly useful to define parameters of a Model.
+-- @arg attrTab.min The minimum value (optional).
+-- @arg attrTab.max The maximum value (optional).
 -- @arg attrTab.step An optional argument with the possible steps from minimum to maximum.
--- @usage Choice{1, 2, 3}
--- Choice{"low", "medium", "high"}
+-- When using this argument, min and max become mandatory.
+-- @usage c1 = Choice{1, 2, 3}
+-- c2 = Choice{"low", "medium", "high"}
+-- c3 = Choice{min = 2, max = 5, step = 0.1"}
 function Choice(attrTab)
 	local result
 

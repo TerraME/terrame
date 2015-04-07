@@ -957,7 +957,6 @@ local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabe
 -- @arg data.yLabel Name of the y-axis. It does not show any label as default.
 -- @arg data.curveLabels Vector of the same size of attributes that indicates the labels for each
 -- line of a chart. Default is the name of the attributes.
---
 -- @tabular type
 -- Type & Description & Compulsory arguments & Optional arguments \
 -- "chart" & Create a line chart showing the variation of one or more attributes (y axis) of an

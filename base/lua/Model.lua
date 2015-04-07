@@ -25,7 +25,7 @@
 
 Model_ = {
 	--- Check whether the instance of the model has correct arguments. This function is optional
-	-- and it is called before creating internal objects. See Package:label(), when building a
+	-- and it is called before creating internal objects. See Package:toLabel(), when building a
 	-- Model to work with graphical interfaces.
 	-- @usage model:check()
 	check = function(self)
@@ -54,10 +54,9 @@ Model_ = {
 	end
 }
 
---- Type that defines a model. Its constructor returns a constructor for the new type.
--- The idea is to take only strings, numbers, booleans, and vectors of these three types as the
--- only possible arguments to any Model. Functions can be mapped to the strings and then be
--- solved internally. 
+--- Type that defines a model. The user can use Model to describe the arguments of a model 
+-- and how it can be built.
+-- The returning value of a Model is an object that can be used to create instances of the model.
 -- @arg attrTab A table with the description of the type. Each named argument of this table
 -- will be considered as an argument of the constructor of the type. The values of each
 -- named argument have an associated semantinc, which means that they are not necessarially the
@@ -68,6 +67,10 @@ Model_ = {
 -- string & The instance has to belong to that type. If it is in the format "*.a;*.b;...", it 
 -- describes a file extension. The modeler then has to use a filename as argument with one of the
 -- extensions defined by this string. & The value itself. \
+-- Choice & 
+-- Mandatory & A mandatory argument, which means that the use must use a value witht the type
+-- defined in the Mandatory to build the model instance correctly. If Mandatory is "table", then
+-- the model instance must have all its elements belonging to the same type.
 -- table & The instance has to have a value belonging to the table (the table must have a single
 -- type). & The first position of the table.\ 
 -- named table & It will verify each attribute according to the rules above. & The table itself.

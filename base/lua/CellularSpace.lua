@@ -434,8 +434,7 @@ CellularSpace_ = {
 		self.maxRow = math.max(self.maxRow, cell.y)
 		self.maxCol = math.max(self.maxCol, cell.x)
 	end,
-	--- Create a Neighborhood for each Cell of the CellularSpace. It gets a table as argument, with 
-	-- the following attributes:
+	--- Create a Neighborhood for each Cell of the CellularSpace.
 	-- @arg data A table
 	-- @arg data.inmemory If true (default), the Neighborhood will be built and stored in
 	-- each Cell of the CelularSpace. If true, the Neighborhood will be
@@ -893,7 +892,6 @@ metaTableCellularSpace_ = {
 -- represents the upper left location.  Note that CellularSpaces loaded from
 -- databases might not have this cell, according to the original geometry that was used to
 -- create the CellularSpace. Calling Utils:forEachCell() traverses CellularSpaces.
---
 -- @arg data A table.
 -- @arg data.database Name of the database. It can also describe the location of a
 -- shapefile. In thiscase, the other arguments will be ignored.
@@ -943,7 +941,6 @@ metaTableCellularSpace_ = {
 -- load from a database.
 -- @arg data.ydim Number of lines, in the case of creating a CellularSpace without needing to
 -- load from a database. Default is equal to xdim.
---
 -- @tabular data.dbType
 -- dbType & Description & Compulsory arguments & Optional arguments\
 -- "mdb" & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer, select,

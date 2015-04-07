@@ -1493,7 +1493,7 @@ Map_ = {
 metaTableMap_ = {__index = Map_}
 
 --- Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
--- or Society. It draws each element into the screen, according to some attribute
+-- or Society. It draws each element into the screen, according a given attribute.
 -- @arg data.subject A CellularSpace, Trajectory, Agent, or Society.
 -- @arg data.values A table with the possible values for the selected attributes.
 -- @arg data.grouping A string with the strategy to slice and color the data. See below.

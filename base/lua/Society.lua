@@ -153,8 +153,7 @@ Society_ = {
 		self.agents = {}
 		self.autoincrement = 1
 	end,
-	--- Create a directed SocialNetwork for each Agent of the Society. The following arguments 
-	-- represent the strategies, which must be only one for call:
+	--- Create a directed SocialNetwork for each Agent of the Society.
 	-- @arg data.strategy A string with the strategy to be used for creating the SocialNetwork. 
 	-- See the table below.
 	-- @arg data.filter A function (Agent, Agent)->boolean that returns true if the first Agent 
@@ -437,9 +436,8 @@ Society_ = {
 	--- Split the Society into a set of Groups according to a classification strategy. The 
 	-- generated Groups have empty intersection and union equals to the whole 
 	-- CellularSpace (unless function below returns nil for some Agent). It works according 
-	-- to the type of its only and compulsory argument, that can be:
-	-- @arg argument string or function
-	--
+	-- to the type of its only and compulsory argument.
+	-- @arg argument A string or a function, working as follows:
 	-- @tabular argument
 	-- Type of argument &
 	-- Description \
@@ -595,7 +593,6 @@ metaTableSociety_ = {
 -- @arg data.where A SQL restriction on the properties of the Agents (default is "", applying
 -- no restriction. Only the Agents that reflect the established criteria will be loaded). This
 -- argument ignores the "as" flexibility of select. 
---
 -- @output agents A vector of Agents pointed by the Society.
 -- @output instance The Agent that describes attributes and functions of each Agent belonging to
 -- the Society. This Agent must not be executed.

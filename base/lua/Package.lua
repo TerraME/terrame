@@ -201,7 +201,7 @@ function switchInvalidArgumentSuggestionMsg(casevar, att, suggestion)
 end
 
 --- Return whether a given package is loaded.
--- @arg package Name of the package
+-- @arg package Name of the package.
 -- @usage isLoaded("base")
 function isLoaded(package)
 	mandatoryArgument(1, "string", package)

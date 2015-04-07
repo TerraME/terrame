@@ -857,7 +857,7 @@ end
 --- Read a CSV file and return an array of tables.
 -- The first line of the file list the attributes of each table.
 -- @arg filename A string, adress of the CSV file.
--- @arg sep The value separator. Default is ','
+-- @arg sep The value separator. Default is ','.
 -- @usage mytable = CSVread("file.csv", ";")
 function CSVread(filename, sep)
 	local data = {}
@@ -888,7 +888,7 @@ end
 -- The first line of the file will list the attributes of each table.
 -- @arg data A table to be saved.
 -- @arg filename A string, adress of the CSV file.
--- @arg sep The value separator. Default is ','
+-- @arg sep The value separator. Default is ','.
 -- @usage CSVwrite(mytable, "file.csv", ";")
 function CSVwrite(data, filename, sep)
 	sep = sep or ","
