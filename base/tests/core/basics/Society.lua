@@ -497,6 +497,18 @@ return {
 		}
 
 		unitTest:assert_type(soc:get(1), "Agent")
+
+		unitTest:assert_nil(soc.idindex)
+		
+		local ag = soc:get(1)
+		unitTest:assert_equal(soc:get(ag.id), ag)
+		unitTest:assert_equal(getn(soc.idindex), 10)
+
+		ag = soc:add()
+
+		unitTest:assert_equal(getn(soc.idindex), 10)
+		unitTest:assert_equal(soc:get(ag.id), ag)
+		unitTest:assert_equal(getn(soc.idindex), 11)
 	end,
 	split = function(unitTest)
 		local randomObj = Random{}

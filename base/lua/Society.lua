@@ -329,9 +329,26 @@ Society_ = {
 		deprecatedFunction("getAgent", "get")
 	end,
 	--- Return a given Agent based on its index.
-	-- @arg index The index of the Agent that will be returned.
+	-- @arg index The index of the Agent that will be returned. It can be a number
+	-- (with the position of the Agent in the vector of Agents) or a string (with the
+	-- id of the Agent).
 	-- @usage agent = soc:get("1")
 	get = function(self, index)
+		if type(index) == "string" then
+			if not self.idindex or not self.idindex[index] then
+				self.idindex = {}
+				forEachAgent(self, function(agent)
+					self.idindex[agent.id] = agent
+				end)
+			end
+
+			local result = self.idindex[index]
+			if not result then
+				customError("Agent '"..index.."' does not belong to the Society.")
+			end
+			return result
+		end
+
 		mandatoryArgument(1, "number", index)
 
 		integerArgument(1, index)

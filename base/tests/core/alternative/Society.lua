@@ -479,9 +479,14 @@ return{
 		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
+			ag1 = sc1:get(false)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", false))
+
+		error_func = function()
 			ag1 = sc1:get("asdfg")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "asdfg"))
+		unitTest:assert_error(error_func, "Agent 'asdfg' does not belong to the Society.")
 
 		error_func = function()
 			ag1 = sc1:get(-1)
