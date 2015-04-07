@@ -7,6 +7,7 @@ local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
 local printNote, printError, print, attributes = printNote, printError, print, attributes
 local sessionInfo, belong = sessionInfo, belong
+local include, getn = include, getn
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
@@ -470,6 +471,12 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 	doc.files[fileName].models = {}
 	for f in class_iterator(blocks, "model")() do
 		doc_report.models = doc_report.models + 1
+		local a = include(fullpath)
+		local quant = getn(a) - 1
+		if quant > 0 then
+			printError(fileName.." should contain only a Model, got "..quant.." additional object(s).")
+			doc_report.model_error = doc_report.model_error + quant
+		end
 		table.insert(doc.files[fileName].models, f.name)
 		doc.files[fileName].models[f.name] = f
 		doc.files[fileName].type = "model"

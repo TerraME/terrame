@@ -46,6 +46,7 @@ function executeDoc(package)
 	local initialTime = os.clock()
 
 	require("luadoc")
+	require("base")
 
 	printNote("Building documentation for package '"..package.."'")
 	local s = sessionInfo().separator
@@ -69,6 +70,7 @@ function executeDoc(package)
 		global_functions = 0,
 		functions = 0,
 		models = 0,
+		model_error = 0,
 		variables = 0,
 		links = 0,
 		examples = 0,
@@ -268,6 +270,12 @@ function executeDoc(package)
 		printError(doc_report.undoc_data.." data files are not documented.")
 	end
 
+	if doc_report.model_error == 0 then
+		printNote("All "..doc_report.models.." Models are correctly documented.")
+	else
+		printError("There are "..doc_report.model_error.." errors in the documentation of Models.")
+	end
+
 	if doc_report.undoc_functions == 0 then
 		printNote("All "..doc_report.functions.." global functions of the package are documented.")
 	else
@@ -311,7 +319,7 @@ function executeDoc(package)
 	end
 
 	if doc_report.lack_usage == 0 then
-		printNote("All "..doc_report.functions.." function have @usage.")
+		printNote("All "..doc_report.functions.." functions have @usage.")
 	else
 		printError(doc_report.lack_usage.." out of "..doc_report.functions.." functions do not have @usage.")
 	end
