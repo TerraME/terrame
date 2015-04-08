@@ -68,7 +68,14 @@ function include(scriptfile)
 	if not isFile(scriptfile) then
 		customError("File '"..scriptfile.."' does not exist.")
 	end
-	loadfile(scriptfile, 't', env)() 
+	local lf = loadfile(scriptfile, 't', env)
+
+	if lf == nil then
+		printError("Could not load file "..scriptfile..".")
+		dofile(scriptfile)
+	end
+
+	lf() 
 
 	return setmetatable(env, nil)
 end
@@ -699,16 +706,22 @@ function execute(arguments) -- arguments is a vector of strings
 					print("Package '"..package.."'")
 					print(data.title)
 					print("Version "..data.version..", "..data.date)
-					print("Model(s):")
-					forEachElement(models, function(_, value)
-						print(" - "..value)
-					end)
+
+					if #models > 0 then
+						print("Model(s):")
+						forEachElement(models, function(_, value)
+							print(" - "..value)
+						end)
+					end
 	
 					files = exampleFiles(package)
-					print("Example(s):")
-					forEachElement(files, function(_, value)
-						print(" - "..string.sub(value, 0, string.len(value) - 4))
-					end)
+
+					if #files > 0 then
+						print("Example(s):")
+						forEachElement(files, function(_, value)
+							print(" - "..string.sub(value, 0, string.len(value) - 4))
+						end)
+					end
 					os.exit()
 				end
 			elseif arg == "-model" then

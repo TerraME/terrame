@@ -155,7 +155,7 @@ UnitTest_ = {
 				if err2 ~= self.current_file then
 					printError("Error in wrong file (possibly wrong stack level). It should occur in '"..self.current_file.."', got '"..err.."'.")
 					printError(traceback())
-					self.wrong_file = self.wrong_file + 1
+					self.wrong_file = self.wrong_file + 1 -- SKIP
 					return
 				end
 			end
