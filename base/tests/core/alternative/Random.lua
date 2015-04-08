@@ -35,6 +35,11 @@ return{
 			local r = Random{x = 12345}
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("x"))
+
+		local error_func = function()
+			local r = Random{seed = 2.3}
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg("seed", 2.3))
 	end,
 	integer = function(unitTest)
 		local randomObj = Random{}
@@ -68,6 +73,11 @@ return{
 			randomObj:reSeed("terralab")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "terralab"))
+
+		error_func = function()
+			randomObj:reSeed(2.3)
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg(1, 2.3))
 	end,
 	sample = function(unitTest)
 		local randomObj = Random{}

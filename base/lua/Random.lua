@@ -33,6 +33,7 @@ Random_ = {
 		if seed == nil then seed = os.time() end
 
 		optionalArgument(1, "number", seed)
+		integerArgument(1, seed)
 
 		self.seed = seed
 		self.cObj_:reseed(seed)
@@ -137,6 +138,7 @@ function Random(data)
 	checkUnnecessaryArguments(data, {"seed"})
 
 	if data.seed then
+		integerTableArgument(data, "seed")
 		Random_.cObj_ = RandomUtil(data.seed)
 		Random_.seed = data.seed
 		data.seed = nil
