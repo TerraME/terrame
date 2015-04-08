@@ -36,7 +36,7 @@ local function testfolders(folder, ut)
 	lf = function(mfolder)
 		local found_file = false	
 		local found_folder = false	
-		forEachFile(folder..s..mfolder, function(idx, value)
+		forEachFile(folder..s..mfolder, function(value)
 			if string.endswith(value, ".lua") then
 				if not found_file then
 					found_file = true
@@ -275,6 +275,8 @@ function executeTests(package, fileName, doc_functions)
 	if data.lines then
 		printNote("Looking for lines of source code")
 		executionlines = buildLineTable(package)
+	else
+		printNote("Skip looking for lines of source code")
 	end
 
 	print = print__
