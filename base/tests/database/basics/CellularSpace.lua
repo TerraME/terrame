@@ -902,15 +902,14 @@ return{
 		-- GAL from shapefile
 		local cs = CellularSpace{database = file("brazilstates.shp", "base")}
 
-		cs.cObj_:setLayer("mylayer")
-
 		cs:loadNeighborhood{
-		    source = file("brazil.gal", "base")
+			source = file("brazil.gal", "base"),
+			check = false
 		}
 
 		local count = 0
 		forEachCell(cs, function(cell)
-		    count = count + #cell:getNeighborhood()
+			count = count + #cell:getNeighborhood()
 		end)
 
 		unitTest:assert_equal(count, 7)

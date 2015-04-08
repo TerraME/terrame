@@ -482,7 +482,7 @@ return{
 		local error_func = function()
 			cs:loadNeighborhood()
 		end
-		unitTest:assert_error(error_func, "Argument for 'loadNeighborhood' must be a table.")
+		unitTest:assert_error(error_func, tableArgumentMsg())
 	
 		error_func = function()
 			cs:loadNeighborhood{}
@@ -499,10 +499,86 @@ return{
 		end
 		unitTest:assert_error(error_func, resourceNotFoundMsg("source", "neighCabecaDeBoi900x900.gpm"))
 	
+		local mfile = file("cabecadeboi-neigh.gpm", "base")
+
 		error_func = function()
-			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm", name = 22}
+			cs:loadNeighborhood{source = mfile, name = 22}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 22))
+
+		-- GAL from shapefile
+		local cs = CellularSpace{database = file("brazilstates.shp", "base")}
+
+		error_func = function()
+			cs:loadNeighborhood{source = file("brazil.gal", "base"), che = false}
+		end
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("che"))
+	
+		mfile = file("brazil.gal", "base")
+
+		error_func = function()
+			cs:loadNeighborhood{source = mfile}
+		end
+		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'mylayer'.")
+
+		local cs = CellularSpace{
+			dbType = mdbType,
+			host = mhost,
+			user = muser,
+			password = mpassword,
+			port = mport,
+			theme = "cells90x90",
+			layer = "cells90x90",
+			database = "cabeca"
+		}
+
+		local cs2 = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:loadNeighborhood{source = "arquivo.gpm"}
+		end
+		unitTest:assert_error(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
+
+		error_func = function()
+			cs:loadNeighborhood{source = "gpmlinesDbEmas_invalid.teste"}
+		end
+		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste"))
+
+		error_func = function()
+			local s = sessionInfo().separator
+			cs:loadNeighborhood{source = file("error"..s.."cabecadeboi-invalid-neigh.gpm", "base")}
+		end
+		unitTest:assert_error(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
+
+		mfile = file("cabecadeboi-neigh.gpm", "base")
+
+		error_func = function()
+			cs2:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"
+			}
+		end
+		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cells900x900'.")
+
+		mfile = file("cabecadeboi-neigh.gal", "base")
+
+		error_func = function()
+			cs2:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"
+			}
+		end
+		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cells900x900'.")
+
+		mfile = file("cabecadeboi-neigh.gwt", "base")
+
+		error_func = function()
+			cs2:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"
+			}
+		end
+		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cells900x900'.")
 	end,
 	save = function(unitTest)
 		local config = getConfig()
@@ -567,73 +643,6 @@ return{
 			cs:save(18, "themeName", "terralab")
 		end
 		unitTest:assert_error(error_func, "Attribute 'terralab' does not exist in the CellularSpace.")
-	end,
-	loadNeighborhood = function(unitTest)	
-		local config = getConfig()
-		local mdbType = config.dbType
-		local mhost = config.host
-		local muser = config.user
-		local mpassword = config.password
-		local mport = config.port
-
-		local cs = CellularSpace{
-			dbType = mdbType,
-			host = mhost,
-			user = muser,
-			password = mpassword,
-			port = mport,
-			theme = "cells90x90",
-			layer = "cells90x90",
-			database = "cabeca"
-		}
-
-		local cs2 = CellularSpace{xdim = 10}
-
-		local error_func = function()
-			cs:loadNeighborhood{source = "arquivo.gpm"}
-		end
-		unitTest:assert_error(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
-
-		error_func = function()
-			cs:loadNeighborhood{source = "gpmlinesDbEmas_invalid.teste"}
-		end
-		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste"))
-
-		error_func = function()
-			local s = sessionInfo().separator
-			cs:loadNeighborhood{source = file("error"..s.."cabecadeboi-invalid-neigh.gpm", "base")}
-		end
-		unitTest:assert_error(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
-
-		local mfile = file("cabecadeboi-neigh.gpm", "base")
-
-		error_func = function()
-			cs2:loadNeighborhood{
-				source = mfile,
-				name = "my_neighborhood"
-			}
-		end
-		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cells900x900'.")
-
-		mfile = file("cabecadeboi-neigh.gal", "base")
-
-		error_func = function()
-			cs2:loadNeighborhood{
-				source = mfile,
-				name = "my_neighborhood"
-			}
-		end
-		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cells900x900'.")
-
-		mfile = file("cabecadeboi-neigh.gwt", "base")
-
-		error_func = function()
-			cs2:loadNeighborhood{
-				source = mfile,
-				name = "my_neighborhood"
-			}
-		end
-		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cells900x900'.")
 	end
 }
 

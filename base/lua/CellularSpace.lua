@@ -677,6 +677,8 @@ CellularSpace_ = {
 	-- neighbors.
 	-- @arg data.name A string with the location of the Neighborhood 
 	-- to be loaded. See below.
+	-- @arg data.check A boolean value indicating whether this function should match the
+	-- layer name of the CellularSpace with the one described in the source. Default is true.
 	-- @arg tbAttrLoad.source A string with the name of the Neighborhood
 	-- to be loaded within TerraME. Default is "1".
 	-- @tabular name
@@ -708,8 +710,11 @@ CellularSpace_ = {
 		end
 
 		defaultTableValue(data, "name", "1")
+		defaultTableValue(data, "check", true)
 
-		self.cObj_:loadNeighborhood(data.source, data.name)
+		checkUnnecessaryArguments(data, {"source", "name", "check"})
+
+		self.cObj_:loadNeighborhood(data.source, data.name, data.check)
 	end,
 	--- Notify every Observer connected to the CellularSpace.
 	-- @arg modelTime An integer number representing the notification time. Default is zero.
