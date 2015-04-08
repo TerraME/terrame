@@ -97,7 +97,14 @@ public:
 
     ///Sets the Scheduler simulation time
     /// \param time is a double value representing the current simulation time
-    void setTime( double time  ) { time_.setTime( time ); }
+    void setTime( double time  ) {
+		time_.setTime( time );
+	}
+
+    ///Gets the Scheduler simulation time
+    double getTime() {
+		return time_.getTime();
+	}
 
     /// Gets the Event object on the head of the Event-Message queue
     /// \return A copy to the Event object on Event-Message head
@@ -183,10 +190,12 @@ public:
             event = eventMessagePair.first = iterator->first;
             message = eventMessagePair.second = iterator->second;
 
+            if(event.getTime() > finalTime){
+				time_ = finalTime;
+				break;
+			}
+
             time_ = event.getTime();
-
-            if( time_.getTime() > finalTime ) break;
-
             Message msg = *message; // it's importante to keep the message implementation alive
             eventMessageQueue.erase(iterator);
 
@@ -200,13 +209,7 @@ public:
             if (step)
                 paused = true;
         }
-        double timeAux = time_.getTime();
-        if ( ! eventMessageQueue.empty() )
-        {
-            event = iterator->first;
-            timeAux = event.getTime();
-        }
-        return timeAux;
+		return finalTime;
     }
 
     /// Pauses the Scheduler. NOT IMPLEMENTED.
@@ -282,5 +285,8 @@ public:
     ///Sets the Scheduler simulation time
     /// \param time is a double value representing the current simulation time
     void setTime( double time ) { SchedulerInterf::pImpl_->setTime( time ); }
+
+    ///Gets the Scheduler simulation time
+    double getTime() { return SchedulerInterf::pImpl_->getTime(); }
 };  
 #endif

@@ -65,6 +65,11 @@ Timer_ = {
 		local modelTime = self:getTime()
 		self.cObj_:notify(modelTime)
 	end,
+	--- Reset the Timer to time minus infinite, keeping the same Event queue.
+	-- @usage timer:reset()
+	reset = function(self)
+		self.cObj_:reset()
+	end
 }
 
 metaTableTimer_ = {__index = Timer_, __tostring = tostringTerraME}

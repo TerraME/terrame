@@ -28,6 +28,7 @@ return {
 	Timer = function(unitTest)
 		local timer = Timer()
 		unitTest:assert_equal(type(timer), "Timer")
+		unitTest:assert_equal(tostring(timer:getTime()), tostring(-1.7976931348623e+308))
 
 		local cont1 = 0
 
@@ -78,46 +79,66 @@ return {
 	end,
 	add = function(unitTest)
 		local cont = 0
+		local timer2 = Timer{}
+
+		timer2:add(Event{action = function(event)
+			cont = cont + 1
+			unitTest:assert_not_nil(event)
+
+			-- configuring the current event does not affects the TerraME scheduler
+			local evTime = event:getTime() + 2
+			event:config(evTime, 2, 0) 
+			unitTest:assert_equal(evTime, event:getTime())
+			unitTest:assert_equal(2, event:getPeriod())
+		end})
+
+		timer2:add(Event{action = function(event)
+			cont = cont + 1
+			return false
+		end})
+
+		timer2:execute(6)
+		unitTest:assert_equal(6, timer2:getTime())
+		unitTest:assert_equal(7, cont)
+	end,
+	reset = function(unitTest)
+		local cont = 0
 		local timer2 = Timer{
 			Event{action = function(event)
 				cont = cont + 1
 				unitTest:assert_not_nil(event)
-
-				-- configuring the current event does not affects the TerraMEscheduler
+ 
+				-- configuring the current event does not affects the TerraME scheduler
 				local evTime = event:getTime() + 2
 				event:config(evTime , 2, 0) 
 				unitTest:assert_equal(evTime, event:getTime())
 				unitTest:assert_equal(2, event:getPeriod())
 			end},
-
 			Event{action = function(event)
 				cont = cont + 1
 				return false
 			end}
 		}
 
-		unitTest:assert_equal(1, timer2:getTime())
 		timer2:execute(6)
-		unitTest:assert_equal(7, timer2:getTime())
-		unitTest:assert_equal(7, cont) -- #193
+		unitTest:assert_equal(6, timer2:getTime())
+		unitTest:assert_equal(7, cont)
 
 		cont = 0
+		timer2:reset()
 		timer2:execute(4)
-		unitTest:assert_equal(7, timer2:getTime())
+		unitTest:assert_equal(4, timer2:getTime())
 		unitTest:assert_equal(0, cont)
 
 		cont = 0
-		--timer2:reset()
-		unitTest:assert_equal(7, timer2:getTime())
-		timer2:execute(4)
-		unitTest:assert_equal(7, timer2:getTime())
+		timer2:reset()
 		timer2:add(Event{ action = function(event)
 			cont = cont + 1
 		end})
 
 		cont = 0
 		timer2:execute(12)
-		unitTest:assert_equal(13, timer2:getTime())
+		unitTest:assert_equal(12, timer2:getTime())
 		unitTest:assert_equal(18, cont)
 	end,
 	execute = function(unitTest)
@@ -179,13 +200,13 @@ return {
 		--	time fraction
 		local cont = 0
 		local t = Timer{
-			Event{time = 0, period = 0.1, action = function(ev)
+			Event{time = 0.1, period = 0.1, action = function(ev)
 				cont = cont + 0.1
 			end}
 		}
 	
 		t:execute(10)
-		unitTest:assert_equal(cont, t:getTime())
+		unitTest:assert_equal(cont, t:getTime(), 0.0000000001)
 	end,
 	getTime = function(unitTest)
 		local cont1 = 0
