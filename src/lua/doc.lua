@@ -93,6 +93,7 @@ function executeDoc(package)
 		undoc_data = 0,
 		wrong_data = 0,
 		wrong_line = 0,
+		wrong_tabular = 0,
 		wrong_descriptions = 0
 	}
 
@@ -353,6 +354,12 @@ function executeDoc(package)
 		printNote("All "..doc_report.functions.." functions call themselves in their @usage.")
 	else
 		printError(doc_report.no_call_itself_usage.." out of "..doc_report.functions.." documented functions do not call themselves in their @usage.")
+	end
+
+	if doc_report.wrong_tabular == 0 then
+		printNote("All @tabular are correctly described.")
+	else
+		printError(doc_report.wrong_tabular.." problems were found in @tabular.")
 	end
 
 	if doc_report.invalid_tags == 0 then

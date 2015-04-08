@@ -236,7 +236,7 @@ local function output(tag, block, text)
 end
 
 -------------------------------------------------------------------------------
-local function tab(tag, block, text)
+local function tab(tag, block, text, doc_report)
 	block[tag] = block[tag] or {}
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	--desc = desc:gsub("%s*([&\\])%s*", "%1")
@@ -252,6 +252,20 @@ local function tab(tag, block, text)
 		table.insert(rows, row)
 	end
 	table.insert(block[tag], name)
+
+	if #rows < 2 then
+		printError("In "..block.name..", @tabular has only one row.")
+		doc_report.wrong_tabular = doc_report.wrong_tabular + 1
+	else
+		local size = #rows[1]
+		for i = 2, #rows do
+			if #rows[i] ~= size then
+				printError("In "..block.name..", row "..i.." of @tabular has size ("..#rows[i]..") different from the first one ("..size..").")
+				doc_report.wrong_tabular = doc_report.wrong_tabular + 1
+			end
+		end
+	end
+
 	block[tag][name] = rows
 end
 

@@ -67,10 +67,10 @@ Model_ = {
 -- string & The instance has to belong to that type. If it is in the format "*.a;*.b;...", it 
 -- describes a file extension. The modeler then has to use a filename as argument with one of the
 -- extensions defined by this string. & The value itself. \
--- Choice & 
+-- Choice & The instance must have a value that belongs to the Choice. & The default value of the Choice. \
 -- Mandatory & A mandatory argument, which means that the use must use a value witht the type
 -- defined in the Mandatory to build the model instance correctly. If Mandatory is "table", then
--- the model instance must have all its elements belonging to the same type.
+-- the model instance must have all its elements belonging to the same type. & No default value.\
 -- table & The instance has to have a value belonging to the table (the table must have a single
 -- type). & The first position of the table.\ 
 -- named table & It will verify each attribute according to the rules above. & The table itself.
