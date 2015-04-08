@@ -125,6 +125,27 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function", 12345))
 	end,
+	forEachFile = function(unitTest)
+		local error_func = function()
+			forEachFile()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+
+		local error_func = function()
+			forEachFile(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+
+		error_func = function()
+			forEachFile(file("", "base"))
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
+	
+		error_func = function()
+			forEachFile(file("", "base"), 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function", 2))
+	end,
 	forEachNeighbor = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 		cs:createNeighborhood()

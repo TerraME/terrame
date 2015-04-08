@@ -34,10 +34,9 @@ local function testfolders(folder, ut)
 
 	local lf 
 	lf = function(mfolder)
-		local parentFolders = dir(folder..s..mfolder)
 		local found_file = false	
 		local found_folder = false	
-		forEachElement(parentFolders, function(idx, value)
+		forEachFile(folder..s..mfolder, function(idx, value)
 			if string.endswith(value, ".lua") then
 				if not found_file then
 					found_file = true

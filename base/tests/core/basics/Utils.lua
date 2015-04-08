@@ -384,6 +384,15 @@ return{
 		end)
 		unitTest:assert_equal(count, 3)
 	end,
+	forEachFile = function(unitTest)
+		local count = 0
+		forEachFile(file("", "base"), function(file)
+			count = count + 1
+			unitTest:assert_type(file, "string")
+		end)
+
+		unitTest:assert_equal(count, 22)
+	end,
 	forEachNeighbor = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 		cs:createNeighborhood()

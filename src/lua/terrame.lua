@@ -133,9 +133,8 @@ function buildCountTable(package)
 		-- the package was already loaded with success
 		load_sequence = include(load_file).files
 	else
-		local dir = dir(baseDir..s.."lua")
 		load_sequence = {}
-		forEachElement(dir, function(_, mfile)
+		forEachFile(baseDir..s.."lua", function(mfile)
 			if string.endswith(mfile, ".lua") then
 				table.insert(load_sequence, mfile)
 			end
@@ -204,9 +203,7 @@ local function findModels(package)
 		os.exit()
 	end
 
-	local files = dir(srcpath)
-
-	forEachElement(files, function(_, fname)
+	forEachFile(srcpath, function(fname)
 		found = false
 		xpcall(function() a = include(srcpath..fname) end, function(err)
 			printError("Error: Could not load "..fname)
@@ -234,10 +231,9 @@ function exampleFiles(package)
 		os.exit()
 	end
 
-	local files = dir(examplespath)
 	local result = {}
 
-	forEachElement(files, function(_, fname)
+	forEachFile(examplespath, function(fname)
 		if string.endswith(fname, ".lua") then
 			table.insert(result, fname)
 		elseif not string.endswith(fname, ".tme") and not string.endswith(fname, ".log") then
@@ -380,10 +376,9 @@ local function buildPackage(package)
 	end
 	local s = sessionInfo().separator
 
-	local files = dir(sessionInfo().path..s.."packages"..s..package..s.."lua")
 	local result = {}
 
-	forEachElement(files, function(_, fname)
+	forEachFile(sessionInfo().path..s.."packages"..s..package..s.."lua", function(fname)
 		local data = include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..fname)
 		if attrTab ~= nil then
 			forEachElement(data, function(idx, value)

@@ -472,6 +472,26 @@ function forEachCellPair(cs1, cs2, f)
 	return true
 end
 
+--- Second order function to transverse a given folder,
+-- applying a given function on each of its files. If any of the function calls returns 
+-- false, forEachFile() stops and returns false, otherwise it returns true.
+-- @arg folder A string with the path to a folder.
+-- @arg f A user-defined function that takes a file name as argument. 
+-- @usage forEachFile("C:", function(file)
+--     print(file)
+-- end)
+function forEachFile(folder, f)
+	mandatoryArgument(1, "string", folder)
+	mandatoryArgument(2, "function", f)
+
+	local d = dir(folder)
+
+	for i = 1, #d do
+		if f(d[i]) == false then return false end
+	end
+	return true
+end
+
 --- Second order function to transverse a given Neighborhood of a Cell, applying a
 -- function in each of its neighbors. It returns true if no call to the function taken as
 -- argument returns false. There are two ways of using this function because the
