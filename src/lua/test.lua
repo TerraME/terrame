@@ -244,6 +244,10 @@ function executeTests(package, fileName, doc_functions)
 		unused_snapshot_files = 0
 	}
 
+	if (not isLoaded("base")) and sessionInfo().package then
+		require("base")
+	end
+
 	printNote("Loading package "..package)
 	print = function(...)
 		ut.print_when_loading = ut.print_when_loading + 1

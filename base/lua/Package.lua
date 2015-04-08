@@ -215,7 +215,7 @@ end
 function require(package)
 	mandatoryArgument(1, "string", package)
 
-	if isLoaded(package) then
+	if isLoaded(package) and sessionInfo().package == nil then
 		customWarning("Package '"..package.."' is already loaded.")
 	else
 		local s = sessionInfo().separator
