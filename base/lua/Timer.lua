@@ -35,6 +35,12 @@ Timer_ = {
 			if self.events == nil then self.events = {} end
 			table.insert(self.events, event)
 			self.cObj_:add(event.cObj_[1], event.cObj_[2].cObj_)
+
+			if event.cObj_[1]:getTime() < self:getTime() then
+				local msg = "Adding an Event with time ("..event.cObj_[1]:getTime()..
+					") before the current simulation time ("..self:getTime()..")."
+				customWarning(msg)
+			end
 		elseif event == nil then
 			mandatoryArgumentError(1)
 		else
@@ -57,6 +63,13 @@ Timer_ = {
 	-- @usage timer:execute(2013)
 	execute = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
+
+		if finalTime < self:getTime() then
+			local msg = "Simulating until a time ("..finalTime..
+				") before the current simulation time ("..self:getTime()..")."
+			customWarning(msg)
+		end
+
 		self.cObj_:execute(finalTime)
 	end,
 	--- Notify every Observer connected to the Timer.

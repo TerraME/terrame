@@ -54,17 +54,24 @@ return {
 		local error_func = function()
 			timer:add(nil)
 		end
-
 		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		timer = Timer{
 			Event{period = 2, action = function(event)
 			end}
 		}
+
 		error_func = function()
 			timer:add("ev")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event or table", "ev"))
+
+		timer:execute(10)
+
+		error_func = function()
+			timer:add(Event{period = 2, action = function(event) end})
+		end
+		unitTest:assert_error(error_func, "Adding an Event with time (1) before the current simulation time (10).")
 	end,
 	execute = function(unitTest)
 		local timer = Timer{
@@ -86,6 +93,17 @@ return {
 			timer:execute("2")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "2"))
+
+		timer = Timer{
+			Event{period = 2, action = function(event)
+			end}
+		}
+
+		timer:execute(10)
+		error_func = function()
+			timer:execute(2)
+		end
+		unitTest:assert_error(error_func, "Simulating until a time (2) before the current simulation time (10).")
 	end
 }
 
