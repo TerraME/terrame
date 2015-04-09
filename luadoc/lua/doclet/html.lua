@@ -18,6 +18,7 @@ local package, string, mkDir = package, string, mkDir
 local table = table
 local print =  print
 local printNote, printError, getn, belong = printNote, printError, getn, belong
+local belong = belong
 
 local s = sessionInfo().separator
 local lp = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."lp.lua")
@@ -247,11 +248,13 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 	for token, signature, te_type, func_name, braces in string.gmatch(description, "((([%u][%w_]-)[%.%:]([%a_][%w_]-))(%(.-%)))") do
 		local href = symbol_link(signature, doc, module_doc, file_doc, from, name, doc_report)
 		local anchor
-		if te_type == "Utils" or te_type == "Package" or te_type == "FileSystem" then
-			anchor = "<a href="..href..">"..func_name..braces.."</a>"
-		else
+
+		if belong(te_type, doc.files[te_type..".lua"].functions) then -- it is a type
 			anchor = "<a href="..href..">"..token.."</a>"
+		else -- it is a file of functions
+			anchor = "<a href="..href..">"..func_name..braces.."</a>"
 		end
+
 		table.insert(word_table, anchor)
 		token = string.gsub(token, "([%(%)])", "%%%1")
 		word_table[token] = #word_table
