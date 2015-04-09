@@ -212,7 +212,7 @@ end
 
 -------------------------------------------------------------------------------
 -- Make a link to a file, module or function
-function symbol_link(symbol, doc, module_doc, file_doc, from, doc_report)
+function symbol_link(symbol, doc, module_doc, file_doc, from, name, doc_report)
 	assert(symbol)
 	assert(doc)
 	doc_report.links = doc_report.links + 1
@@ -223,15 +223,17 @@ function symbol_link(symbol, doc, module_doc, file_doc, from, doc_report)
 		link_to(symbol, doc, module_doc, file_doc, from, "functions") or
 		link_to(symbol, doc, module_doc, file_doc, from, "tables")
 
-	if not href then
-		printError(string.format("Invalid link to '%s'", symbol))
+	if not href or (name == "inherits" and href == "unresolved") then
+		-- it is necessary to check inherits because there can exist
+		-- deprecated functions with unresolved links, which is ok
+		printError(string.format("In '%s()', invalid link to '%s'", name, symbol))
 		doc_report.wrong_links = doc_report.wrong_links + 1
 	end
 
 	return href or "unresolved"
 end
 
-function link_description(description, doc, module_doc, file_doc, from, new_tab, doc_report)
+function link_description(description, doc, module_doc, file_doc, from, new_tab, name, doc_report)
 	if new_tab then
 		types_linked = {}
 	else
@@ -243,7 +245,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 	
 	--for word in string.gmatch(description, "[%a_][%w_]-[%.%:][%a_][%w_]-%(%s-%)") do
 	for token, signature, te_type, func_name, braces in string.gmatch(description, "((([%u][%w_]-)[%.%:]([%a_][%w_]-))(%(.-%)))") do
-		local href = symbol_link(signature, doc, module_doc, file_doc, from, doc_report)
+		local href = symbol_link(signature, doc, module_doc, file_doc, from, name, doc_report)
 		local anchor
 		if te_type == "Utils" or te_type == "Package" or te_type == "FileSystem" then
 			anchor = "<a href="..href..">"..func_name..braces.."</a>"
@@ -269,7 +271,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 				if doc.files[file_name_link] then
 					href = file_link(file_name_link, from)
 				else
-					href = symbol_link (type_name, doc, module_doc, file_doc, from, doc_report)
+					href = symbol_link (type_name, doc, module_doc, file_doc, from, name, doc_report)
 				end
 				local anchor = "<a href="..href..">"..token.."</a>"
 				table.insert(word_table, anchor)

@@ -13,7 +13,7 @@ end
 <dt><h2><%=func.private and "local " or ""%><a name="<%=func.name%>">
 <%if func.deprecated and func.deprecated[1] then%>
 	<%if func.deprecated[2] then%>
-		<%local href = luadoc.symbol_link(func.deprecated[2], doc, module_doc, file_doc, from, doc_report)
+		<%local href = luadoc.symbol_link(func.deprecated[2], doc, module_doc, file_doc, from, func.name, doc_report)
 		local _,_,filename, funcname = string.find(func.deprecated[2], "^(.-)[%.%:]?([^%.%:]*)$")
 		local text
 		if filename ~= "" and filename ~= string.gsub(file_doc.name, "%.lua$", "") then 
@@ -40,7 +40,7 @@ end
 <%end %>
 <%if func.deprecated then%><font color="gray"><%end%>
 <span class="description"><%=
-luadoc.link_description(func.description or "", doc, module_doc, file_doc, from, true, doc_report)%></span>
+luadoc.link_description(func.description or "", doc, module_doc, file_doc, from, true, func.name, doc_report)%></span>
 
 <%if type(func.tabular) == "table" and #func.tabular > 0 then %>
 	<%for i = 1, #func.tabular do 
@@ -86,7 +86,7 @@ end %>
 		arg_name = i .. sufix
 	end %>
     <li>
-	  <strong><%=arg_name%></strong>: <%= luadoc.link_description(arg_desc or "", doc, module_doc, file_doc, from, nil, doc_report) %>
+	  <strong><%=arg_name%></strong>: <%= luadoc.link_description(arg_desc or "", doc, module_doc, file_doc, from, nil, func.name, doc_report) %>
     </li> 
     <% if type(func.tabular) == "table" and func.tabular[func.arg[i]] then %>
       </span>
@@ -107,7 +107,7 @@ end %>
           <% local td
           if j == 1 then td = "th" else td = "td"  end %>
             <<%=td%>>
-            <%= luadoc.link_description(data or "", doc, module_doc, file_doc, from, nil, doc_report) %>
+            <%= luadoc.link_description(data or "", doc, module_doc, file_doc, from, nil, func.name, doc_report) %>
             </<%=td%>>
           <% end %>
         <% end %>
@@ -127,7 +127,7 @@ end %>
 	<%for p = 1, #func.output do%>
 	<li>
 	  <strong><%=func.output[p]%></strong>: <%=
-	  luadoc.link_description(func.output[func.output[p]] or "", doc, module_doc, file_doc, from, nil, doc_report)%>
+	  luadoc.link_description(func.output[func.output[p]] or "", doc, module_doc, file_doc, from, nil, func.name, doc_report)%>
 	</li>
 	<%end%>
 </span>
@@ -169,7 +169,7 @@ end %>
 <ul>
 	<%for i = 1, #func.see do %>
 	<li>
-		<%local href = luadoc.symbol_link(func.see[i], doc, module_doc, file_doc, from, doc_report)
+		<%local href = luadoc.symbol_link(func.see[i], doc, module_doc, file_doc, from, func.name, doc_report)
 		local _,_,filename, funcname = string.find(func.see[i], "^(.-)[%.%:]?([^%.%:]*)$")
 		local text
 		if filename ~= "" and filename ~= string.gsub(file_doc.name, "%.lua$", "") then

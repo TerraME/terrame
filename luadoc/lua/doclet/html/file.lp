@@ -31,7 +31,7 @@
 					<% if #file_doc.functions > 0 then
 					  local constructor = file_doc.functions[file_doc.functions[1]]
 					  if constructor.inherits then%>
-					    (inherits <a href="<%=luadoc.symbol_link(constructor.inherits, doc, module_doc, file_doc, "files/.."..file_doc.name, doc_report)%>">
+					    (inherits <a href="<%=luadoc.symbol_link(constructor.inherits, doc, module_doc, file_doc, "files/.."..file_doc.name, "inherits", doc_report)%>">
 					      <%= constructor.inherits %></a>)
 					  <% end %>
 					<% end %>
