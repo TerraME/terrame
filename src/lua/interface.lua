@@ -772,7 +772,18 @@ function interface(self, modelName, package)
 	r = r.."\tend\n"
 
 	r = r.."\texecute = \"instance:execute()\"\n"
-	r = r.."\tfile = io.open(\""..modelName.."-instance.lua\", \"w\")\n"
+	r = r..[[
+	local getFile = function(prefix)
+		local fname = prefix.."-instance.lua"
+		local count = 0
+		while isFile(fname) do
+			count = count + 1
+			fname = prefix.."-instance-"..count..".lua"
+		end
+		return fname
+	end]]
+	r = r.."\n\n"
+	r = r.."\tfile = io.open(getFile(\""..modelName.."\"), \"w\")\n"
 	r = r.."\tfile:write(header..result..execute)\n"
 	r = r.."\theader = \"\\n\\nif not isLoaded(\\\""..package.."\\\") then  require(\\\""..package.."\\\") end\"\n"
 	r = r.."\tresult = header..result\n"
