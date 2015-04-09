@@ -803,7 +803,6 @@ function executeTests(package, fileName, doc_functions)
 
 	forEachElement(ut, function(_, value, mtype)
 		if mtype == "number" then
-			print(_.." "..value)
 			errors = errors + value
 		end
 	end)

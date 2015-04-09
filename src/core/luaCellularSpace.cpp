@@ -1875,18 +1875,8 @@ int luaCellularSpace::load(lua_State *L)
 		loadLegendsFromDatabase(db, inputTheme, dbLegend);
 		//qDebug() << dbLegend << "\n\n";
 
-		// debugging
-		//int response = -1;
-		if(! dbLegend.isEmpty()) {
-			//response = luaL_dostring(L, dbLegend.toLatin1().constData());
-			lua_pushstring(L, dbLegend.toLatin1().constData());
-		}
-		else {
-			lua_pushstring(L, "");
-		}
-
 		db->close();
-		return 6;
+		return 5;
 	}
 	catch(...){
 		string err_out = string("It is not possible to load the TerraLib database '") + string(db->errorMessage().c_str()) + string("'.");
