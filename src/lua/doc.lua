@@ -386,11 +386,12 @@ function executeDoc(package)
 		printError(doc_report.problem_examples.." problems were found in the documentation of examples.")
 	end
 
-	local errors = doc_report.undoc_arg + doc_report.unused_arg + doc_report.undoc_files +
-				   doc_report.lack_usage + doc_report.no_call_itself_usage +
-				   doc_report.undefined_arg + doc_report.wrong_description + 
-				   doc_report.wrong_links + doc_report.problem_examples + doc_report.undoc_examples + 
-				   doc_report.unknown_arg + doc_report.duplicated
+	local errors = -doc_report.examples -doc_report.arguments - doc_report.links -doc_report.functions -doc_report.models
+	               -doc_report.html_files - doc_report.lua_files
+
+	forEachElement(doc_report, function(_, value)
+		errors = errors + value
+	end)
 
 	if errors == 0 then
 		printNote("Summing up, all the documentation was successfully built.")

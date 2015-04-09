@@ -798,10 +798,17 @@ function executeTests(package, fileName, doc_functions)
 		printWarning("No examples were executed.")
 	end
 
-	local errors = ut.fail + ut.functions_not_exist + ut.functions_not_tested + ut.examples_error + 
-	               ut.wrong_file + ut.print_calls + ut.functions_with_global_variables + 
-	               ut.functions_with_error + ut.functions_without_assert + ut.snapshot_files +
-				   ut.unused_snapshot_files + ut.lines_not_executed
+	local errors = -ut.examples -ut.snapshot_files -ut.executed_functions -ut.test
+	               -ut.success -ut.snapshots - ut.package_functions
+
+	forEachElement(ut, function(_, value, mtype)
+		if mtype == "number" then
+			print(_.." "..value)
+			errors = errors + value
+		end
+	end)
+
+
 
 	if errors == 0 then
 		printNote("Summing up, all tests were successfully executed.")
