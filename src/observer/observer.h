@@ -50,15 +50,6 @@ namespace TerraMEObserver{
     class Attributes;
     class Subject;
 
-    inline static void doubleToQString(const double & number, QString & text,  //QByteArray & text, 
-        const int & precision = TerraMEObserver::NUMBERIC_PRECISION)
-    {
-        text = "";
-	    QTextStream textStream(&text);
-        textStream.setRealNumberPrecision(precision);
-        textStream << number;
-    }
-
     inline static void doubleToText(const double & number, QByteArray & text, 
         const int & precision = TerraMEObserver::NUMBERIC_PRECISION)
     {
