@@ -150,7 +150,7 @@ end %>
 
 <%if type(func.usage) == "string" then%>
 <h3>Usage</h3>
-<pre class="example"><code><%=hl.parse(func.usage)%></code></pre>
+<pre class="example"><code><%=hl.parse(func.usage, func.name)%></code></pre>
 <%elseif type(func.usage) == "table" then%>
 <h3>Usage</h3>
 <pre class="example"><code><ul>

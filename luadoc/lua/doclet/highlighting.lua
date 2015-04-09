@@ -25,7 +25,7 @@ for i,j in ipairs(reserved) do
 	reserved[j] = j
 end
 
-function parse(text)
+function parse(text, func)
 	local code = {}
 	while #text > 0 do
 		local start, ending, token
@@ -33,7 +33,10 @@ function parse(text)
 			start, ending, token = text:find(patterns[i][1])
 			if token then 
 				local class = patterns[i][2]
-				if class then
+
+				if func == "#" and token == "#" then
+					token = string.format("<span class=\"function\">#</span>")
+				elseif class then
 					if class == "id" then
 						if reserved[token] then
 							class = "reserved"
@@ -41,6 +44,11 @@ function parse(text)
 							class = "function"
 						end
 					end
+
+					if token == func then
+						class = "function"
+					end
+
 					token = string.format("<span class=\"%s\">%s</span>",
 																	class, token)
 				end
@@ -53,10 +61,10 @@ function parse(text)
 	return table.concat(code, "")
 end
 
-function setWords(words)
-	words = words or {}
+function setWords(lwords)
+	words = lwords or {}
+
 end
 
 -- return M
-
 

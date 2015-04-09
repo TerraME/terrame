@@ -18,6 +18,7 @@ local package, string, mkDir = package, string, mkDir
 local table = table
 local print =  print
 local printNote, printError, getn, belong = printNote, printError, getn, belong
+local forEachElement = forEachElement
 local belong = belong
 
 local s = sessionInfo().separator
@@ -329,9 +330,24 @@ end
 -- Generate the output.
 -- @arg doc Table with the structured documentation.
 function start(doc, doc_report)
-	-- Reserveds words for parser
+	-- Reserved words for parser
 	if doc.files then
-		highlighting.setWords(doc.files.funcnames)
+
+		if #doc.files.funcnames > 0 then
+			highlighting.setWords(doc.files.funcnames)
+		else
+			local funcnames = {}
+			forEachElement(doc.files, function(idx, value)
+				if type(idx) == "number" or value.functions == nil then return end
+
+				local func = idx:sub(1, -5)
+				if belong(func, value.functions) then
+					funcnames[func] = func
+				end
+			end)
+
+			highlighting.setWords(funcnames)
+		end
 	end
 
 	printNote("Building and checking HTML files")
