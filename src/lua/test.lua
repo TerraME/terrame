@@ -560,7 +560,7 @@ function executeTests(package, fileName, doc_functions)
 					if not string.match(midx, value) then return end
 
 					print("Checking "..midx)
-					forEachElement(mvalue, function(mmidx, mmvalue)
+					forEachOrderedElement(mvalue, function(mmidx, mmvalue)
 						if mmvalue == 0 then
 							printError("Line "..mmidx.." was not executed.")
 							ut.lines_not_executed = ut.lines_not_executed + 1
