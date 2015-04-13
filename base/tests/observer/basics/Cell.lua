@@ -71,9 +71,9 @@ return{
 		world:notify()
 
 		local t = Timer{
-			Event{action = function(e)
+			Event{action = function()
 				world.count = world.count + 1
-				world:notify(e)
+				world:notify()
 			end}
 		}
 
@@ -86,6 +86,9 @@ return{
 		unitTest:assert_snapshot(c3, "chart_cell_style.bmp")
 		unitTest:assert_snapshot(c4, "chart_cell_select_pen.bmp")
 		unitTest:assert_snapshot(c5, "chart_cell_select_color.bmp")
+
+		world:notify(Event{time = 31, action = function() end}[1])
+
 		unitTest:delay()
 --]]
 
