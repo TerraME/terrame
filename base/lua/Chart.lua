@@ -119,6 +119,11 @@ Chart = function(data)
 	}
 
 	mandatoryTableArgument(data, "subject")
+
+	if not belong(type(data.subject), {"Cell", "CellularSpace", "Agent", "Society"}) then 
+		customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society, got "..type(data.subject)..".")
+	end
+
 	defaultTableValue(data, "yLabel", "")
 	defaultTableValue(data, "title",  "")
 
@@ -164,8 +169,6 @@ Chart = function(data)
 			end)
 		elseif type(data.subject) == "Society" then
 			data.select[1] = "#"
-		else
-			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society.")
 		end
 
 		verify(#data.select > 0, "The subject does not have at least one valid numeric attribute to be used.")

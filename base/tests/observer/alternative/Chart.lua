@@ -32,11 +32,11 @@ return{
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
 
-		local e = Event{action = function() end}
+		local e = Event{action = function() end}[1]
 		error_func = function()
 			Chart{subject = e}
 		end
-		unitTest:assert_error(error_func, "Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society.")
+		unitTest:assert_error(error_func, "Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society, got Event.")
 
 		local error_func = function()
 			Chart{subject = c, select = 5}
