@@ -24,7 +24,7 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	Chart = function(unitTest)
+	Model = function(unitTest)
 		local Tube = Model{
 			init = function(model)
 				model.t = Timer{Event{action = function(ev)
@@ -32,6 +32,7 @@ return{
 					model:notify(ev)
 				end}}
 				model.v = 1
+				model.v2 = function() return model.v ^ 2 end
 			end,
 			finalTime = 10
 		}
@@ -42,62 +43,16 @@ return{
 			subject = tube
 		}
 
+		local c2 = Chart{
+			subject = tube,
+			select = "v2"
+		}
+
+		tube:notify()
 		tube:execute(10)
-
-		local world = Agent{
-		    count = 0,
-			mcount = function(self)
-				return self.count + 1
-			end
-		}
-
-		local c1 = Chart{subject = world}
-
-		local c1 = Chart{
-			subject = world,
-			select = {"mcount"},
-			color = "green",
-			size = 5,
-			pen = "solid",
-			symbol = "square",
-			width = 3,
-			style = "lines"
-		}
-
-		local soc = Society{
-			instance = world,
-			quantity = 3
-		}
-
-		local c1 = Chart{subject = soc}
-
-		local world = CellularSpace{
-			xdim = 10,
-		    count = 0,
-			mcount = function(self)
-				return self.count + 1
-			end
-		}
-
-		local c1 = Chart{subject = world}
-		local c1 = Chart{subject = world, select = "mcount", xAxis = "count"}
-
+		tube:notify(11)
 		unitTest:assert(true)
-	end,
-	save = function(unitTest)
-		local c = Cell{value = 1}
-
-		local ch = Chart{subject = c}
-
-		c:notify(1)
-		c:notify(2)
-		c:notify(3)
-
-		local file = unitTest:tmpFolder()..sessionInfo().separator.."save_test.bmp"
-
-		ch:save(file)
-
-		unitTest:assert(isFile(file))
+		unitTest:delay()
 	end
 }
 

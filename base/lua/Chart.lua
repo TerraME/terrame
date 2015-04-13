@@ -120,8 +120,10 @@ Chart = function(data)
 
 	mandatoryTableArgument(data, "subject")
 
-	if not belong(type(data.subject), {"Cell", "CellularSpace", "Agent", "Society"}) then 
-		customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, and Society, got "..type(data.subject)..".")
+	if not belong(type(data.subject), {"Cell", "CellularSpace", "Agent", "Society"}) then
+		if not (data.subject.parent and type(data.subject.parent) == "Model") then
+			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, and instance of Model, got "..type(data.subject)..".")
+		end
 	end
 
 	defaultTableValue(data, "yLabel", "")
@@ -142,8 +144,7 @@ Chart = function(data)
 
 		if type(data.subject) == "Cell" then
 			forEachOrderedElement(data.subject, function(idx, value, mtype)
-				local size = string.len(idx)
-				if mtype == "number" and idx ~= "x" and idx ~= "y" and string.sub(idx, size, size) ~= "_" then
+				if mtype == "number" and idx ~= "x" and idx ~= "y" and string.sub(idx, -1, -1) ~= "_" then
 					if not data.xAxis or idx ~= data.xAxis then
 						data.select[#data.select + 1] = idx
 					end
@@ -151,8 +152,7 @@ Chart = function(data)
 			end)
 		elseif type(data.subject) == "Agent" then
 			forEachOrderedElement(data.subject, function(idx, value, mtype)
-				local size = string.len(idx)
-				if mtype == "number" and string.sub(idx, size, size) ~= "_" then
+				if mtype == "number" and string.sub(idx, -1, -1) ~= "_" then
 					if not data.xAxis or idx ~= data.xAxis then
 						data.select[#data.select + 1] = idx
 					end
@@ -160,8 +160,7 @@ Chart = function(data)
 			end)
 		elseif type(data.subject) == "CellularSpace" then
 			forEachOrderedElement(data.subject, function(idx, value, mtype)
-				local size = string.len(idx)
-				if mtype == "number" and not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, size, size) ~= "_" then
+				if mtype == "number" and not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, -1, -1) ~= "_" then
 					if not data.xAxis or idx ~= data.xAxis then
 						data.select[#data.select + 1] = idx
 					end
@@ -169,6 +168,14 @@ Chart = function(data)
 			end)
 		elseif type(data.subject) == "Society" then
 			data.select[1] = "#"
+		else -- instance of model
+			forEachOrderedElement(data.subject, function(idx, value, mtype)
+				if mtype == "number" and not belong(idx, {"finalTime", "seed"}) and string.sub(idx, -1, -1) ~= "_" then
+					if not data.xAxis or idx ~= data.xAxis then
+						data.select[#data.select + 1] = idx
+					end
+				end
+			end)
 		end
 
 		verify(#data.select > 0, "The subject does not have at least one valid numeric attribute to be used.")

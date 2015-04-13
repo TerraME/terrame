@@ -213,7 +213,15 @@ function Model(attrTab)
 		return extensions
 	end
 
-	local function model(argv, typename)
+	local model
+
+	local mmodel = {type_ = "Model"}
+	setmetatable(mmodel, {__call = function(_, v)
+		if v == nil then return attrTab end
+ 		return model(v, debug.getinfo(1).name)
+	end})
+
+	model = function(argv, typename)
 		-- set the default values
 		optionalTableArgument(argv, "seed", "number")
 		optionalTableArgument(argv, "finalTime", "number")
@@ -392,6 +400,7 @@ function Model(attrTab)
 
 		argv.execute = attrTab.execute
 		argv.type_ = typename
+		argv.parent = mmodel
 		attrTab.check(argv)
 
 		attrTab.init(argv)
@@ -431,16 +440,32 @@ function Model(attrTab)
 
 		verify(exec, "The object does not have a Timer or an Environment with at least one Timer.")
 
+		argv.cObj_ = TeCell()
+		argv.cObj_:setReference(argv)
+
+		argv.notify = function(self, modelTime)
+			if modelTime == nil then
+				modelTime = 0
+			elseif type(modelTime) == "Event" then
+				modelTime = modelTime:getTime()
+			else
+				optionalArgument(1, "number", modelTime)
+				positiveArgument(1, modelTime, true)
+			end
+
+			if self.obsattrs then
+				forEachElement(self.obsattrs, function(idx)
+					self[idx.."_"] = self[idx](self)
+				end)
+			end
+
+			self.cObj_:notify(modelTime)
+		end
+
 		return argv
 	end
 
 	setmetatable(attrTab, {__index = Model_})
-
-	local mmodel = {type_ = "Model"}
-	setmetatable(mmodel, {__call = function(_, v)
-		if v == nil then return attrTab end
- 		return model(v, debug.getinfo(1).name)
-	end})
 
 	return mmodel
 end

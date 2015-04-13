@@ -160,13 +160,13 @@ function packageInfo(package)
 			return ""
 		end)
 
-		if s ~= "" then
+		if s ~= "" then -- SKIP
 			s = string.gsub(s, "%, ", function(v)
 				return ""
 			end)
 		end
 
-		if s ~= "" then
+		if s ~= "" then -- SKIP
 			customError("Wrong description of 'depends' in description.lua of package '"..package.."'. Unrecognized '"..s.."'.")
 		end
 
