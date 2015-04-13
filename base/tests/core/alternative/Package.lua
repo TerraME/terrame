@@ -25,6 +25,9 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	checkDepends = function(unitTest)
+		unitTest:assert(true)
+	end,
 	customError = function(unitTest)
 		local error_func = function()
 			customError(2)

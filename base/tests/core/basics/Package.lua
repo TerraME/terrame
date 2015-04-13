@@ -52,6 +52,12 @@ return{
 		unitTest:assert_equal(r.date, "17 October 2014")
 		unitTest:assert_equal(r.package, "base")
 		unitTest:assert_equal(r.url, "http://www.terrame.org")
+
+		r = packageInfo("terrame")
+		unitTest:assert_equal(r.package, "base")
+
+		r = packageInfo("TerraME")
+		unitTest:assert_equal(r.package, "base")
 	end,
 	resourceNotFoundMsg = function(unitTest)
 		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for argument 'aaa'.")

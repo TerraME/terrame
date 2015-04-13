@@ -30,6 +30,7 @@ local function ldescription(package_path, doc_report)
 		contact = "Undefined contact",
 		content = "Undefined content",
 		url     = "",
+		depends = "",
 		license = "Undefined license",
 		logo = sessionInfo().path..s.."packages"..s.."luadoc"..s.."logo"..s.."terrame.png",
 		destination_logo = package_path..s.."doc"..s.."img"..s
@@ -49,7 +50,7 @@ local function ldescription(package_path, doc_report)
 		return defaultFields
 	end
 
-	local allowedFields = {"license", "version", "date", "package", "title", "authors", "contact", "content", "url"}
+	local allowedFields = {"license", "version", "date", "package", "depends", "title", "authors", "contact", "content", "url"}
 		
 	for field, _ in pairs(script) do
 		if not belong(field, allowedFields) then

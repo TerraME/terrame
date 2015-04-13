@@ -28,6 +28,99 @@
 
 --@header Some basic and useful functions to develop packages.
 
+--- Check the dependencies of a package, showing warnings when the required
+-- version does not match with the current version.
+-- @arg package A string with the package name.
+-- @usage checkDepends("tube")
+function checkDepends(package)
+	local pinfo = packageInfo(package)
+
+	local function getVersion(str)
+		local version = {}
+
+		local function igetVersion(str)
+			if tonumber(str) and not string.match(str, "%.") then -- SKIP
+				table.insert(version, str) -- SKIP
+			else
+				local result = string.gsub(str, "(%d).", function(v)
+					table.insert(version, v) -- SKIP
+					return ""
+				end)
+				igetVersion(result) -- SKIP
+			end
+		end
+
+		igetVersion(str) -- SKIP
+		return version
+	end
+
+	local result = true
+
+	if not pinfo.tdepends then return end
+
+	forEachElement(pinfo.tdepends, function(_, dtable)
+		local currentInfo = packageInfo(dtable.package)
+		
+		if not isLoaded(dtable.package) then -- SKIP
+			require(dtable.package) -- SKIP
+		end
+
+		local currentVersion = getVersion(currentInfo.version)
+
+		local dstrversion = table.concat(dtable.version, ".")
+
+		if dtable.operator == "==" then -- SKIP
+			if dstrversion ~= currentInfo.version then -- SKIP
+				customWarning("Package '"..package.."' requires '"..dtable.package.."' version '".. -- SKIP
+					dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
+				result = false -- SKIP
+			end
+		elseif dtable.operator == ">=" then
+			local i = 1
+			local lresult = true
+
+			while i <= #dtable.version and i <= #currentVersion and dtable.version[i] == currentVersion[i] do
+				i = i + 1 -- SKIP
+			end
+
+			if i == #dtable.version and i == #currentVersion then -- SKIP
+				lresult = dtable.version[i] <= currentVersion[i] -- SKIP
+			elseif #dtable.version < #currentVersion then
+				lresult = false -- SKIP
+			end
+
+			if not lresult then -- SKIP
+				result = false -- SKIP
+				customWarning("Package '"..package.."' requires '"..dtable.package.."' version >= '".. -- SKIP
+					dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
+			end
+		elseif dtable.operator == "<=" then
+			local i = 1
+			local lresult = true
+
+			while i <= #dtable.version and i <= #currentVersion and dtable.version[i] == currentVersion[i] do
+				i = i + 1 -- SKIP
+			end
+
+			if i == #dtable.version and i == #currentVersion then -- SKIP
+				lresult = dtable.version[i] >= currentVersion[i] -- SKIP
+			elseif #dtable.version > #currentVersion then
+				lresult = false -- SKIP
+			end
+
+			if not lresult then -- SKIP
+				result = false -- SKIP
+				customWarning("Package '"..package.."' requires '"..dtable.package.."' version <= '".. -- SKIP
+					dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
+			end
+		else
+			customError("Wrong operator: "..dtable.operator) -- SKIP
+		end
+	end)
+
+	return result
+end
+
 --- Return the description of a package. It reads all the attributes from file 
 -- description.lua of the package and create an additional attribute data, with 
 -- the path to folder data in the package.
@@ -36,6 +129,10 @@
 -- @usage packageInfo().version
 function packageInfo(package)
 	if package == nil then package = "base" end
+
+	if belong(package, {"terrame", "TerraME"}) then
+		package = "base"
+	end
 
 	local s = sessionInfo().separator
 	local pkgfile = sessionInfo().path..s.."packages"..s..package
@@ -57,6 +154,47 @@ function packageInfo(package)
 	end
 
 	result.data = pkgfile..s.."data"..s
+
+	if result.depends then
+		local s = string.gsub(result.depends, "([%w]+ %(%g%g %d[.%d]+%))", function(v)
+			return ""
+		end)
+
+		if s ~= "" then
+			s = string.gsub(s, "%, ", function(v)
+				return ""
+			end)
+		end
+
+		if s ~= "" then
+			customError("Wrong description of 'depends' in description.lua of package '"..package.."'. Unrecognized '"..s.."'.")
+		end
+
+		local mversion
+
+		local function getVersion(str)
+			if tonumber(str) and not string.match(str, "%.") then -- SKIP
+				table.insert(mversion, str) -- SKIP
+			else
+				local result = string.gsub(str, "(%d).", function(v)
+					table.insert(mversion, v) -- SKIP
+					return ""
+				end)
+				getVersion(result) -- SKIP
+			end
+		end
+
+		local mdepends = {}
+		s = string.gsub(result.depends, "([%w]+) %((%g%g) (%d[.%d]+)%)",
+		function(value, v2, v3)
+			mversion = {}
+			getVersion(v3) -- SKIP
+			table.insert(mdepends, {package = value, operator = v2, version = mversion})
+		end)
+
+		result.tdepends = mdepends
+	end
+
 	return result
 end
 
@@ -215,6 +353,10 @@ end
 function require(package)
 	mandatoryArgument(1, "string", package)
 
+	if belong(package, {"terrame", "TerraME"}) then
+		return
+	end
+
 	if isLoaded(package) and sessionInfo().package == nil then
 		customWarning("Package '"..package.."' is already loaded.")
 	else
@@ -229,6 +371,8 @@ function require(package)
 				customError("Package '"..package.."' is not installed.")
 			end
 		end
+
+		checkDepends(package)
 
 		local load_file = package_path..s.."load.lua"
 		local all_files = dir(package_path..s.."lua")
