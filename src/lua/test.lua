@@ -196,6 +196,8 @@ function executeTests(package, fileName, doc_functions)
 
 		if data.sleep ~= nil and type(data.sleep) ~= "number"  then
 			customError("'sleep' should be number or nil, got "..type(data.sleep)..".")
+		elseif data.sleep == nil then
+			data.sleep = 0
 		end
 
 		if data.examples ~= nil and type(data.examples) ~= "boolean" then
@@ -799,7 +801,7 @@ function executeTests(package, fileName, doc_functions)
 	end
 
 	local errors = -ut.examples -ut.snapshot_files -ut.executed_functions -ut.test
-	               -ut.success -ut.snapshots - ut.package_functions
+	               -ut.success -ut.snapshots - ut.package_functions - ut.delayed_time -ut.sleep
 
 	forEachElement(ut, function(_, value, mtype)
 		if mtype == "number" then
