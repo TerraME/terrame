@@ -196,8 +196,6 @@ function executeTests(package, fileName, doc_functions)
 
 		if data.sleep ~= nil and type(data.sleep) ~= "number"  then
 			customError("'sleep' should be number or nil, got "..type(data.sleep)..".")
-		elseif data.sleep == nil then
-			data.sleep = 0
 		end
 
 		if data.examples ~= nil and type(data.examples) ~= "boolean" then
@@ -215,6 +213,10 @@ function executeTests(package, fileName, doc_functions)
 		checkUnnecessaryArguments(data, {"folder", "file", "test", "sleep", "examples", "lines"})
 	else
 		data = {}
+	end
+
+	if data.sleep == nil then
+		data.sleep = 0
 	end
 
 	local check_functions = data.folder == nil and data.test == nil
