@@ -38,47 +38,47 @@ return{
 		end
 		unitTest:assert_error(error_func, "Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, and instance of Model, got Event.")
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = c, select = 5}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 5))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = c, select = "mvalue"}
 		end
 		unitTest:assert_error(error_func, "Selected element 'mvalue' does not belong to the subject.")
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = c, xLabel = 5}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("xLabel", "string", 5))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = c, yLabel = 5}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("yLabel", "string", 5))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = c, title = 5}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("title", "string", 5))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = c, xAxis = 5}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("xAxis", "string", 5))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = c, xAxis = "value"}
 		end
 		unitTest:assert_error(error_func, "The subject does not have at least one valid numeric attribute to be used.")
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = c, xwc = 5}
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("xwc"))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = c, select = {}}
 		end
 		unitTest:assert_error(error_func, "Charts must select at least one attribute.")
@@ -88,22 +88,22 @@ return{
 			value2 = 3
 		}
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, size = "a"}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("size", "table", "a"))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, style = 2}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("style", "table", 2))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, width = -3}
 		end
 		unitTest:assert_error(error_func, incompatibleValueMsg("width", "greater than zero", -3))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, size = -3}
 		end
 		unitTest:assert_error(error_func, positiveArgumentMsg("size", -3))
@@ -142,37 +142,37 @@ return{
 			dashdotdot = 5
 		}
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, pen = "abc"}
 		end
 		unitTest:assert_error(error_func, switchInvalidArgumentMsg("abc", "pen", penTable))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, pen = "solyd"}
 		end
 		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("solyd", "pen", "solid"))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, style = "abc"}
 		end
 		unitTest:assert_error(error_func, switchInvalidArgumentMsg("abc", "style", styleTable))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, style = "line"}
 		end
 		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("line", "style", "lines"))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, symbol = -3}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("symbol", "table", -3))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, symbol = "abc"}
 		end
 		unitTest:assert_error(error_func, switchInvalidArgumentMsg("abc", "symbol", symbolTable))
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"value1", "value2"}, symbol = "dyamond"}
 		end
 		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("dyamond", "symbol", "diamond"))
@@ -182,19 +182,19 @@ return{
 			value = "aaa"
 		}
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = world}
 		end
 		unitTest:assert_error(error_func, "The subject does not have at least one valid numeric attribute to be used.")
 
 		world.msum = 5
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = world, label = {"sss"}}
 		end
 		unitTest:assert_error(error_func, "As select is nil, it is not possible to use label.")
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = world, select = "value"}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("value", "number or function", "value"))
@@ -205,7 +205,7 @@ return{
 
 		local c = Chart{subject = cell}
 
-		local error_func = function()
+		error_func = function()
 			c:save("file.wrongext")
 		end
 		unitTest:assert_error(error_func, invalidFileExtensionMsg("#1", "wrongext"))
@@ -216,15 +216,31 @@ return{
 			cell["v"..i] = 5
 		end
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell}
 		end
 		unitTest:assert_error(error_func, "Argument color is compulsory when using more than 10 attributes.")
 
-		local error_func = function()
+		error_func = function()
 			Chart{subject = cell, select = {"v1", "v2", "v3"}, label = {"V1", "V2"}}
 		end
-		unitTest:assert_error(error_func, "Arguments 'select' and 'label' should have the same size.")
+		unitTest:assert_error(error_func, "Arguments 'select' and 'label' should have the same size, got 3 and 2.")
+
+		error_func = function()
+			Chart{subject = cell, select = {"v1", "v2", "v3"}, color = {"red", "blue"}}
+		end
+		unitTest:assert_error(error_func, "Arguments 'select' and 'color' should have the same size, got 3 and 2.")
+
+		error_func = function()
+			Chart{subject = cell, select = {"v1", "v2", "v3"}, color = {"red", "blu", "green"}}
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("blu", "color", "blue"))
+
+		error_func = function()
+			Chart{subject = cell, select = {"v1", "v2", "v3"}, color = {"red", {0, 0}, "green"}}
+		end
+		unitTest:assert_error(error_func, "RGB composition should have 3 values, got 2 values in position 2.")
+	
 	end
 }
 

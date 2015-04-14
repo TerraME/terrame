@@ -23,6 +23,41 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
+local colors = {
+	black        = {  0,   0,   0},
+	white        = {255, 255, 255},
+	lightRed     = {255, 102, 102},
+	red          = {255,   0,   0},
+	darkRed      = {128,   0,   0},
+	lightYellow  = {255, 255, 153},
+	yellow       = {255, 255,   0},
+	darkYellow   = {255, 215,   0},
+	lightOrange  = {255, 180,   0},
+	orange       = {238, 154,   0},
+	darkOrange   = {205, 103,   0},
+	lightBrown   = {128,  85,  85},
+	brown        = {128,  64,  64},
+	darkBrown    = {108,  53,  53},
+	lightGreen   = {153, 255, 153},
+	green        = {  0, 255,   0},
+	darkGreen    = {  0, 128,   0},
+	lightCyan    = {128, 255, 255},
+	cyan         = {  0, 255, 255},
+	darkCyan     = {  0, 128, 128},
+	lightBlue    = {173, 216, 230},
+	blue         = {  0,   0, 255},
+	darkBlue     = {  0,   0, 128},
+	lightGray    = {200, 200, 200},
+	gray         = {160, 160, 160},
+	darkGray     = {128, 128, 128},
+	lightMagenta = {255, 128, 255},
+	magenta      = {255,   0, 255},
+	darkMagenta  = {139,   0, 139},
+	lightPurple  = {155,  48, 255},
+	purple       = {125,  38, 205},
+	darkPurple   = { 85,  26, 139}
+}
+
 Chart_ = {
 	type_ = "Chart",
 	--- Save a Chart into a file. Supported extensions are bmp, jpg, png, and tiff.
@@ -252,7 +287,32 @@ Chart = function(data)
 		end
 	end
 
-	verify(#data.select == #data.label, "Arguments 'select' and 'label' should have the same size.")
+	verify(#data.select == #data.label, "Arguments 'select' and 'label' should have the same size, got "..#data.select.." and "..#data.label..".")
+
+	if type(data.color) == "table" then
+		verify(#data.select == #data.color, "Arguments 'select' and 'color' should have the same size, got "..#data.select.." and "..#data.color..".")
+
+		forEachElement(data.color, function(idx, value)
+			if type(value) == "string" then
+				if not colors[value] then
+					local s = suggestion(value, colors)
+					if s then
+						customError(switchInvalidArgumentSuggestionMsg(value, "color", s))
+					else
+						customError("Color '"..value.."' not found. Check the name or use a table with an RGB description.")
+					end
+				end
+			elseif type(value) == "table" then
+				verify(#value == 3, "RGB composition should have 3 values, got "..#value.." values in position "..idx..".")
+
+				forEachElement(value, function(_, _, mtype)
+					if mtype ~= "number" then
+						customError("All the elements of an RGB composition should be numbers, got '"..mtype.."' in position "..idx..".")
+					end
+				end)
+			end
+		end)
+	end
 
 	checkUnnecessaryArguments(data, {
 		"subject", "select", "yLabel", "xLabel",
