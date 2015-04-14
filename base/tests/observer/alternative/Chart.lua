@@ -237,10 +237,19 @@ return{
 		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("blu", "color", "blue"))
 
 		error_func = function()
+			Chart{subject = cell, select = {"v1", "v2", "v3"}, color = {"red", "xxx", "green"}}
+		end
+		unitTest:assert_error(error_func, "Color 'xxx' not found. Check the name or use a table with an RGB description.")
+
+		error_func = function()
 			Chart{subject = cell, select = {"v1", "v2", "v3"}, color = {"red", {0, 0}, "green"}}
 		end
 		unitTest:assert_error(error_func, "RGB composition should have 3 values, got 2 values in position 2.")
-	
+
+		error_func = function()
+			Chart{subject = cell, select = {"v1", "v2", "v3"}, color = {"red", {0, 0, "red"}, "green"}}
+		end
+		unitTest:assert_error(error_func, "All the elements of an RGB composition should be numbers, got 'string' in position 2.")
 	end
 }
 
