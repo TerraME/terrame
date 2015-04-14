@@ -42,7 +42,7 @@ return{
 		    min = 0,
 		    max = 1,
 		    slices = 10,
-		    colors = "Blues"
+		    color = "Blues"
 		}
 
 		unitTest:assert_type(m, "Map")
@@ -139,7 +139,7 @@ return{
 		Map{
 			subject = world,
 			select  = "value",
-			colors  = {{0, 0, 0}, {255, 255, 255}},
+			color  = {{0, 0, 0}, {255, 255, 255}},
 			min = 0,
 			max = 1,
 			slices = 2,
@@ -148,7 +148,7 @@ return{
 		Map{
 			subject = world,
 			select  = "value",
-			colors  = {"blue", "red"},
+			color  = {"blue", "red"},
 			min = 0,
 			max = 1,
 			slices = 2,
@@ -158,7 +158,7 @@ return{
 		Map{
 			subject = world,
 			select  = "x",
-			colors  = {"blue", "red"},
+			color  = {"blue", "red"},
 			min = 0,
 			slices = 10,
 			max = 10

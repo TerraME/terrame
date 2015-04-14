@@ -57,9 +57,9 @@ local colors = {
 	lightMagenta = {255, 128, 255},
 	magenta      = {255,   0, 255},
 	darkMagenta  = {139,   0, 139},
-	lightPurple  = {155, 048, 255},
-	purple       = {125, 038, 205},
-	darkPurple   = {085, 026, 139}
+	lightPurple  = {155,  48, 255},
+	purple       = {125,  38, 205},
+	darkPurple   = { 85,  26, 139}
 }
 
 -- approximate equivalent names in ISCC-NBS system
@@ -1495,27 +1495,63 @@ metaTableMap_ = {__index = Map_}
 --- Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
 -- or Society. It draws each element into the screen, according a given attribute.
 -- @arg data.subject A CellularSpace, Trajectory, Agent, or Society.
--- @arg data.values A table with the possible values for the selected attributes.
+-- @arg data.value A table with the possible values for the selected attributes.
 -- @arg data.grouping A string with the strategy to slice and color the data. See below.
--- @arg data.labels A table with the labels for the attributes.
+-- @arg data.label A table with the labels for the attributes.
+-- @arg data.color A table with the colors for the attributes.
 -- @arg data.select The attribute to be used.
 -- @usage Map{subject = cs}
 function Map(data)
 	mandatoryTableArgument(data, "subject", "CellularSpace")
-	optionalTableArgument(data, "values", "table")
-	optionalTableArgument(data, "labels", "table")
+	optionalTableArgument(data, "value", "table")
+	optionalTableArgument(data, "label", "table")
 	optionalTableArgument(data, "select", "string")
 
 	if data.grouping == nil then
 		if data.slices ~= nil or data.min ~= nil or data.max ~= nil then
 			data.grouping = "equalsteps"
-		elseif data.values ~= nil then
+		elseif data.value ~= nil then
 			data.grouping = "uniquevalue"
-		elseif data.colors ~= nil and data.select == nil then
+		elseif data.color ~= nil and data.select == nil then
 			data.grouping = "background"
 		else
 			customError("It was not possible to infer argument 'grouping'.")
 		end
+	end
+
+	if type(data.color) == "string" and data.color:lower() == data.color then
+		data.color = {data.color}
+	end
+
+	if type(data.color) == "table" then
+		for i = 1, #data.color do
+			if type(data.color[i]) == "string" then
+				local colorName = data.color[i]
+				data.color[i] = colors[colorName]
+	
+				if data.color[i] == nil then
+					local s = suggestion(colorName, colors)
+					if s then
+						customError(switchInvalidArgumentSuggestionMsg(colorName, "color", s))
+					else
+						customError("Color '"..colorName.."' not found. Check the name or use a table with an RGB description.")
+					end
+				end
+			elseif type(data.color[i]) ~= "table" then
+				customError("Invalid description for color in position "..i..". It should be a table or string, got "..type(data.color[i])..".")
+			else
+				local value = data.color[i]
+				verify(#value == 3, "RGB composition should have 3 values, got "..#value.." values in position "..i..".")
+
+				forEachElement(value, function(_, _, mtype)
+					if mtype ~= "number" then
+						customError("All the elements of an RGB composition should be numbers, got '"..mtype.."' in position "..i..".")
+					end
+				end)
+			end
+		end
+	elseif not belong(type(data.color), {"string", "nil"}) then
+		customError(incompatibleTypeMsg("color", "string or table", data.color))
 	end
 
 	switch(data, "grouping"):caseof{
@@ -1551,31 +1587,31 @@ function Map(data)
 			verify(data.min < data.max, "Argument 'min' ("..data.min..") should be less than 'max' ("..data.max..").")
 			verify(data.slices > 1, "Argument 'slices' ("..data.slices..") should be greater than one.")
 
-			if type(data.colors) == "string" then
-				local colors = brewerMatchNames[data.colors]
+			if type(data.color) == "string" then
+				local colors = brewerMatchNames[data.color]
 
 				if not colors then
-					local s = suggestion(data.colors, brewerMatchNames)
+					local s = suggestion(data.color, brewerMatchNames)
 					if s then
-						customError(switchInvalidArgumentSuggestionMsg(data.colors, "colors", s))
+						customError(switchInvalidArgumentSuggestionMsg(data.color, "color", s))
 					else
-						customError("Invalid color '"..data.colors.."'.")
+						customError("Invalid color '"..data.color.."'.")
 					end
 				end
 
 				colors = brewerRGB[colors][data.slices]
 
 				if not colors then
-					customError("Color '"..data.colors.."' does not support "..data.slices.." slices.")
+					customError("Color '"..data.color.."' does not support "..data.slices.." slices.")
 				end
 
-				data.colors = {colors[1], colors[#colors]}
+				data.color = {colors[1], colors[#colors]}
 			end
 
-			mandatoryTableArgument(data, "colors", "table")
-			verify(#data.colors == 2, "Strategy 'equalsteps' requires only two colors, got "..#data.colors..".")
+			mandatoryTableArgument(data, "color", "table")
+			verify(#data.color == 2, "Strategy 'equalsteps' requires only two colors, got "..#data.color..".")
 
-			checkUnnecessaryArguments(data, {"subject", "select", "colors", "grouping", "min", "max", "slices"})
+			checkUnnecessaryArguments(data, {"subject", "select", "color", "grouping", "min", "max", "slices"})
 		end,
 		uniquevalue = function()
 			mandatoryTableArgument(data, "select", "string")
@@ -1585,69 +1621,69 @@ function Map(data)
 			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
 			verify(belong(type(sample), {"string", "number"}), "Selected element should be string or number, got "..type(sample)..".")
 
-			if type(data.colors) == "string" then
-				local colors = brewerMatchNames[data.colors]
+			if type(data.color) == "string" then
+				local colors = brewerMatchNames[data.color]
 
 				if not colors then
-					local s = suggestion(data.colors, brewerMatchNames)
+					local s = suggestion(data.color, brewerMatchNames)
 					if s then
-						customError(switchInvalidArgumentSuggestionMsg(data.colors, "colors", s))
+						customError(switchInvalidArgumentSuggestionMsg(data.color, "color", s))
 					else
-						customError("Invalid color '"..data.colors.."'.")
+						customError("Invalid color '"..data.color.."'.")
 					end
 				end
 
-				colors = brewerRGB[colors][#data.values]
+				colors = brewerRGB[colors][#data.value]
 				if not colors then
-					customError("Color '"..data.colors.."' does not support "..#data.values.." slices.")
+					customError("Color '"..data.color.."' does not support "..#data.value.." slices.")
 				end
 
-				data.colors = colors
+				data.color = colors
 			end
 
-			mandatoryTableArgument(data, "colors", "table")
+			mandatoryTableArgument(data, "color", "table")
 
-			verify(#data.colors == #data.values, "There should exist colors for each value. Got "..#data.colors.." colors and "..#data.values.." values.")
+			verify(#data.color == #data.value, "There should exist colors for each value. Got "..#data.color.." colors and "..#data.value.." values.")
 
-			if data.values == nil then
-				data.values = {}
+			if data.value == nil then
+				data.value = {}
 				forEachCell(data.subject, function(cell)
-					if not belong(cell[data.select], data.values) then
-						data.values[#data.values + 1] = cell[data.select]
+					if not belong(cell[data.select], data.value) then
+						data.value[#data.value + 1] = cell[data.select]
 					end
 				end)
 			else
-				local theType = type(data.values[1])
-				forEachElement(data.values, function(_, value, mtype)
+				local theType = type(data.value[1])
+				forEachElement(data.value, function(_, value, mtype)
 					verify(mtype == theType, "All values should have the same type, got "..theType.." and "..mtype..".")
 
 					local count = 0
-					forEachElement(data.values, function(_, mvalue)
+					forEachElement(data.value, function(_, mvalue)
 						if value == mvalue then
 							count = count + 1
 						end
 					end)
-					verify(count == 1, "There should not exist repeated elements in 'values'.")
+					verify(count == 1, "There should not exist repeated elements in 'value'.")
 				end)
 			end
 
-			if data.labels == nil then
-				data.labels = data.values
+			if data.label == nil then
+				data.label = data.value
 			end
-			verify(#data.labels == #data.values, "There should exist labels for each value.")
+			verify(#data.label == #data.value, "There should exist labels for each value. Got "..#data.label.." labels and "..#data.value.." values.")
 
-			checkUnnecessaryArguments(data, {"subject", "select", "values", "labels", "colors", "grouping"})
+			checkUnnecessaryArguments(data, {"subject", "select", "value", "label", "color", "grouping"})
 		end,
 		background = function()
-			checkUnnecessaryArguments(data, {"subject", "colors", "grouping"})
+			checkUnnecessaryArguments(data, {"subject", "color", "grouping"})
 
-			if type(data.colors) == "string" then
-				data.colors = {data.colors}
+			if type(data.color) == "string" then
+				customError("Strategy 'background' cannot use ColorBrewer.")
 			end			
 
-			mandatoryTableArgument(data, "colors", "table")
+			mandatoryTableArgument(data, "color", "table")
 			data.select = {"background_"}
-			verify(#data.colors == 1, "Strategy 'background' requires only one color, got "..#data.colors..".")
+			verify(#data.color == 1, "Strategy 'background' requires only one color, got "..#data.color..".")
 
 			forEachCell(data.subject, function(cell)
 				cell.background_ = 0
@@ -1664,29 +1700,6 @@ function Map(data)
 	--	verify(data.subject.cells[1][value] ~= nil, "Selected element '"..value.."' does not belong to the subject.")
 	--end)
 
-	if type(data.colors) == "table" then
-		for i = 1, #data.colors do
-			if type(data.colors[i]) == "string" then
-				local colorName = data.colors[i]
-				data.colors[i] = colors[colorName]
-	
-				if data.colors[i] == nil then
-				
-					local s = suggestion(colorName, colors)
-					if s then
-						customError(switchInvalidArgumentSuggestionMsg(colorName, "colors", s))
-					else
-						customError("Color '" .. colorName .. "' not found. Check the name or use a table with an RGB description.")
-					end
-				end
-			elseif type(data.colors[i]) ~= "table" then
-				customError("Invalid description for color in position "..i..". It should be a table or string, got "..type(data.colors[i])..".")
-			elseif #data.colors[i] ~= 3 then
-				customError("Invalid description for color in position "..i..". It should have 3 values, got "..#data.colors[i]..".")
-			end
-		end
-	end
-
 	local observerType = 6
 	local tbDimensions = {data.subject.maxCol - data.subject.minCol + 1, data.subject.maxRow - data.subject.minRow + 1}
 
@@ -1696,20 +1709,20 @@ function Map(data)
 	switch(data, "grouping"):caseof{
 		equalsteps = function()
 			colorBar = {
-				{value = data.min, color = data.colors[1]},
-				{value = data.max, color = data.colors[2]}
+				{value = data.min, color = data.color[1]},
+				{value = data.max, color = data.color[2]}
 			}
 		end,
 		uniquevalue = function()
-			for i = 1, #data.values do
-				table.insert(colorBar, {value = data.values[i],
-				                        color = data.colors[i],
-				                        label = data.labels[i]})
+			for i = 1, #data.value do
+				table.insert(colorBar, {value = data.value[i],
+				                        color = data.color[i],
+				                        label = data.label[i]})
 			end
 		end,
 		background = function()
 			colorBar = {
-				{value = 0, color = data.colors[1]}
+				{value = 0, color = data.color[1]}
 			}
 			data.grouping = "uniquevalue"
 		end
