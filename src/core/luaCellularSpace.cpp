@@ -3145,6 +3145,7 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 
 	// Gets the name of the two layers of the GPM
 	file >> layer1Id >> layer2Id;
+	//cout << "'" << layer1Id << "' '"<< layer2Id << "'" << endl;
 	if(strcmp(layer1Id, layer2Id) != 0)
 	{
 		file.close();
@@ -3204,8 +3205,8 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 			if(cell == NULL)
 			{
 				file.close();
-				string err_out = string("Cell '") + string(cellId) + string("' found in the file '" ) + string(fileName) +
-								 string("' was not found in the CellularSpace");
+				string err_out = string("Cell '") + string(cellId) + string("' in file '" ) + string(fileName) +
+								 string("' was not found in the CellularSpace.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L,err_out.c_str());
 				//lua_pushnumber(L,4);
