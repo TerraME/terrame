@@ -26,8 +26,12 @@
 
 return{
 	dir = function(unitTest)
+		local files = 22
 		local d = dir(packageInfo().data)
-		unitTest:assert_equal(#d, 22) -- 22 files
+		unitTest:assert_equal(#d, files)
+
+		d = dir(packageInfo().data, true)
+		unitTest:assert_equal(#d, files + 2)
 	end,
 	isFile = function(unitTest)
 		unitTest:assert(isFile(file("agents.csv")))

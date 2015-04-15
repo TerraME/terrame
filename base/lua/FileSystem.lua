@@ -80,29 +80,36 @@ end
 function runCommand(command, number)
 	if number == nil then number = 1 end
 	
-	command = command.." "..number.."> .aux.txt"
+	command = command.." "..number.."> zzzz999.txt"
 	
 	os.execute(command)
-	local file = io.open(".aux.txt", "r")
+	local file = io.open("zzzz999.txt", "r")
 	local fileTable = {}
 	for line in file:lines() do
 		fileTable[#fileTable + 1] = line
 	end
 
 	file:close()
-	os.execute("rm .aux.txt")
+	os.execute("rm zzzz999.txt")
 	return fileTable
 end
 
 --- Return the files in a given directory.
 -- @arg folder A string describing a folder.
+-- @arg all A boolean value indicating whether hidden files should be returned. Default is false.
 -- @usage dir("C:\\")
-function dir(folder)
+function dir(folder, all)
+	if all == nil then all = false end
+
 	local s = sessionInfo().separator
 	local command = "dir "..folder.." /b"
 
 	if s == "/" then
-		command = "ls -1 "..folder.." 2> /dev/null"
+		if all then
+			command = "ls -a1 "..folder.." 2> /dev/null"
+		else
+			command = "ls -1 "..folder.." 2> /dev/null"
+		end
 	end
 
 	local result = runCommand(command)
@@ -110,6 +117,9 @@ function dir(folder)
 	if not result or not result[1] then
 		customError(folder.." is not a folder or is empty or does not exist.")
 	else
+		if all and result[#result] == "zzzz999.txt" then
+			table.remove(result, #result)
+		end
 		return result
 	end
 end	
