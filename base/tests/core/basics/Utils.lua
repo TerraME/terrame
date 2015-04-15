@@ -232,10 +232,16 @@ return{
 	end,
 	delay = function(unitTest)
 		local t1 = os.time()
-		delay(1)
+		delay()
 		local t2 = os.time()
 
 		unitTest:assert(t2 - t1 >= 1)
+
+		local t1 = os.time()
+		delay(.5)
+		local t2 = os.time()
+
+		unitTest:assert(t2 - t1 >= .5)
 	end,
 	levenshtein = function(unitTest)
 		unitTest:assert_equal(levenshtein("abv", "abc"), 1)
@@ -487,6 +493,8 @@ return{
 
 		mvector = {}
 		unitTest:assert_equal(getn(mvector), 0)
+
+		unitTest:assert_equal(getn(Cell{}), 4)
 	end,
 	round = function(unitTest)
 		unitTest:assert_equal(round(5.22), 5)

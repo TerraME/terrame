@@ -31,6 +31,73 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "table", "2"))
 	end,
+	call = function(unitTest)
+		local error_func = function()
+			call(Cell{}, 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
+
+		local error_func = function()
+			call("value", "sum")
+		end
+		unitTest:assert_error(error_func, "Cannot access elements from an object of type 'string'.")
+	
+		local error_func = function()
+			call(Cell{}, "sum")
+		end
+		unitTest:assert_error(error_func, "Function 'sum' does not exist.")
+	
+	end,
+	CSVparseLine = function(unitTest)
+		local error_func = function()
+			CSVparseLine(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+
+		error_func = function()
+			CSVparseLine("abc", 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
+	end,
+	CSVread = function(unitTest)
+		local error_func = function()
+			CSVread(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+
+		error_func = function()
+			CSVread("abc", 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
+	end,
+	CSVwrite = function(unitTest)
+		local error_func = function()
+			CSVwrite(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "table", 2))
+
+		error_func = function()
+			CSVwrite({}, 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
+
+		error_func = function()
+			CSVwrite({}, "aaa", 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "string", 2))
+	end,
+	delay = function(unitTest)
+		local error_func = function()
+			delay("2")
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "2"))
+	end,
+	elapsedTime = function(unitTest)
+		local error_func = function()
+			elapsedTime("2")
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "2"))
+	end,
 	forEachAgent = function(unitTest)
 		local a = Agent{value = 2}
 		local soc = Society{instance = a, quantity = 10}
@@ -194,6 +261,12 @@ return{
 			forEachOrderedElement({1, 2, 3})
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function"))
+	end,
+	getExtension = function(unitTest)
+		local error_func = function()
+			getExtension(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	getn = function(unitTest)
 		local error_func = function()

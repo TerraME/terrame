@@ -89,6 +89,14 @@ end
 --
 -- t:execute(10)
 function call(obj, func)
+	mandatoryArgument(2, "string", func)
+
+	if type__(obj) ~= "table" then
+		customError("Cannot access elements from an object of type '"..type(obj).."'.")
+	elseif type(obj[func]) ~= "function" then
+		customError("Function '"..func.."' does not exist.")
+	end
+
 	return function(ev) obj[func](obj, ev) end
 end
 
@@ -106,13 +114,12 @@ end
 -- @arg idp The number of decimal places to be used. Default is zero.
 -- @usage round(2.34566, 3)
 function round(num, idp)
-	if type(num) ~= "number" then
-		incompatibleTypeError(1, "number", num)
-	elseif type(idp) ~= "number" and idp ~= nil then
-		incompatibleTypeError(2, "number", idp)
-	end
-		
-	local mult = 10 ^ (idp or 0)
+	mandatoryArgument(1, "number", num)
+	optionalArgument(2, "number", idp)
+
+	if not idp then idp = 0 end
+
+	local mult = 10 ^ idp
 	return math.floor(num * mult + 0.5) / mult
 end
 
@@ -364,7 +371,12 @@ end
 -- @arg delay_s A number indicating how long in seconds should the model pause. Default is one.
 -- @usage delay(2.5)
 function delay(delay_s)
-	delay_s = delay_s or 1
+	optionalArgument(1, "number", delay_s)
+
+	if not delay_s then
+		delay_s = 1
+	end
+
 	local time_to = os.time() + delay_s
 	while os.time() <= time_to do end
 end
@@ -778,6 +790,8 @@ end
 -- @arg s A number to be converted.
 -- @usage print(elapsedTime(100)) -- 00:01:40
 function elapsedTime(s)
+	mandatoryArgument(1, "number", s)
+
 	local floor = math.floor
 	local seconds = s
 	local minutes = floor(s / 60);     seconds = floor(seconds % 60)
@@ -805,6 +819,8 @@ end
 -- @arg filename A string with the file name.
 -- @usage getExtension("file.txt") -- ".txt"
 function getExtension(filename)
+	mandatoryArgument(1, "string", filename)
+
 	for i = 1, filename:len() do
 		if filename:sub(i, i) == "." then
 			return filename:sub(i + 1, filename:len())
@@ -818,7 +834,7 @@ end
 -- @arg t A table.
 -- @usage getn{name = "john", age = 20}
 function getn(t)
-	if type(t) ~= "table" then
+	if type__(t) ~= "table" then
 		incompatibleTypeError(1, "table", t)
 	end
 
@@ -835,6 +851,9 @@ end
 -- @arg sep The value separator. Default is ','.
 -- @usage CSVparseLine(line, ",")
 function CSVparseLine(line, sep)
+	mandatoryArgument(1, "string", line)
+	optionalArgument(2, "string", sep)
+
 	local res = {}
 	local pos = 1
 	sep = sep or ','
@@ -883,6 +902,9 @@ end
 -- @arg sep The value separator. Default is ','.
 -- @usage mytable = CSVread("file.csv", ";")
 function CSVread(filename, sep)
+	mandatoryArgument(1, "string", filename)
+	optionalArgument(2, "string", sep)
+
 	local data = {}
 	local file = io.open(filename)
 
@@ -914,6 +936,10 @@ end
 -- @arg sep The value separator. Default is ','.
 -- @usage CSVwrite(mytable, "file.csv", ";")
 function CSVwrite(data, filename, sep)
+	mandatoryArgument(1, "table", data)
+	mandatoryArgument(2, "string", filename)
+	optionalArgument(3, "string", sep)
+
 	sep = sep or ","
 	local file = io.open(filename, "w")
 	local fields = {}
