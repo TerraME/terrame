@@ -48,7 +48,7 @@
 -- @usage attributes(filepath, "mode")
 function attributes(filepath, attributename)
 	mandatoryArgument(1, "string", filepath)
-	mandatoryArgument(2, "string", attributename)
+	optionalArgument(2, "string", attributename)
 	
 	return lfs.attributes(filepath, attributename)
 end
@@ -208,7 +208,7 @@ end
 -- @usage linkAttributes(filepath, "size")
 function linkAttributes(filepath, attributename)
 	mandatoryArgument(1, "string", filepath)
-	mandatoryArgument(2, "string", attributename)
+	optionalArgument(2, "string", attributename)
 
 	return lfs.symlinkattributes(filepath, attributename)
 end

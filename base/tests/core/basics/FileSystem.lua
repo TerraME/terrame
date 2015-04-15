@@ -39,7 +39,12 @@ return{
 		unitTest:assert(isFile(file("agents.csv")))
 	end, 
 	attributes = function(unitTest)
-		local attr = attributes(file("agents.csv", "base"), "mode")
+		local attr = attributes(file("agents.csv", "base"))
+		unitTest:assert_equal(getn(attr), 14)
+		unitTest:assert_equal(attr.mode, "file")
+		unitTest:assert_equal(attr.size, 135)
+
+		attr = attributes(file("agents.csv", "base"), "mode")
 		unitTest:assert_equal(attr, "file")
 
 		attr = attributes(file("agents.csv", "base"), "size")
@@ -116,8 +121,13 @@ return{
 		local pathdata = packageInfo().data
 
 		os.execute("ln -s "..pathdata.."agents.csv "..pathdata.."agentslink")
+		local attr = linkAttributes(pathdata.."agentslink")
 
-		local attr = linkAttributes(pathdata.."agentslink", "mode")
+		unitTest:assert_equal(attr.mode, "link")
+		unitTest:assert_equal(attr.nlink, 1)
+		unitTest:assert(attr.size >= 61)
+
+		attr = linkAttributes(pathdata.."agentslink", "mode")
 		unitTest:assert_equal(attr, "link")
 
 		attr = linkAttributes(pathdata.."agentslink", "nlink")
