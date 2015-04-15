@@ -47,6 +47,9 @@
 -- optimal file system I/O blocksize; (Unix only)
 -- @usage attributes(filepath, "mode")
 function attributes(filepath, attributename)
+	mandatoryArgument(1, "string", filepath)
+	mandatoryArgument(2, "string", attributename)
+	
 	return lfs.attributes(filepath, attributename)
 end
 
@@ -55,6 +58,8 @@ end
 -- @arg path A string with the path.
 -- @usage chDir("c:\\tests")
 function chDir(path)
+	mandatoryArgument(1, "string", path)
+
 	return lfs.chdir(path)
 end
 
@@ -68,6 +73,8 @@ end
 -- @arg file A string.
 -- @usage isFile("C:\\file.txt")
 function isFile(file)
+	mandatoryArgument(1, "string", file)
+
 	return os.rename(file, file)
 end
 
@@ -78,6 +85,9 @@ end
 -- It is also possible to use 2, to capture the error output.
 -- @usage runCommand("dir")
 function runCommand(command, number)
+	mandatoryArgument(1, "string", command)
+	optionalArgument(2, "number", number)
+
 	if number == nil then number = 1 end
 	
 	command = command.." "..number.."> zzzz999.txt"
@@ -99,6 +109,9 @@ end
 -- @arg all A boolean value indicating whether hidden files should be returned. Default is false.
 -- @usage dir("C:\\")
 function dir(folder, all)
+	mandatoryArgument(1, "string", folder)
+	optionalArgument(2, "boolean", all)
+
 	if all == nil then all = false end
 
 	local s = sessionInfo().separator
@@ -128,11 +141,15 @@ end
 -- specified as the first argument. The optional arguments start and length can be used to specify a 
 -- starting point and its length; both should be numbers.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @arg fh A string with the file path.
+-- @arg fh A file handle with the file to be locked.
 -- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w 
 -- (for a write/exclusive lock).
--- @usage lock(filehandle, "r")
+-- @usage filehandle = io.open("test.txt", "w+")
+-- lock(filehandle, "r")
 function lock(fh, mode)
+	mandatoryArgument(1, "userdata", fh)
+	mandatoryArgument(2, "string", mode)
+
 	return lfs.lock(fh, mode)
 end
 
@@ -145,6 +162,8 @@ end
 -- @arg path A string with the path.
 -- @usage lockDir(path)
 function lockDir(path)
+	mandatoryArgument(1, "string", path)
+
 	return lfs.lock_dir
 end
 
@@ -153,6 +172,8 @@ end
 -- @arg path A string with the path.
 -- @usage mkDir(dirname)
 function mkDir(path)
+	mandatoryArgument(1, "string", path)
+
 	return lfs.mkdir(path)
 end
 
@@ -161,6 +182,8 @@ end
 -- @arg path A string with the path.
 -- @usage rmDir(dirname)
 function rmDir(path)
+	mandatoryArgument(1, "string", path)
+
 	return lfs.rmdir(path)
 end
 
@@ -168,10 +191,13 @@ end
 -- followed the previous mode string for the file, or nil followed by an error string in case of errors. 
 -- On non-Windows platforms, where the two modes are identical, setting the mode has no effect, and the 
 -- mode is always returned as binary.
--- @arg filepath A string with the file path.
+-- @arg filepath A file handle with the file to be locked.
 -- @arg mode A string that can be either "binary" or "text". 
 -- @usage setMode(file, "text")
 function setMode(filepath, mode)
+	mandatoryArgument(1, "userdata", filepath)
+	mandatoryArgument(2, "string", mode)
+
 	return lfs.setmode(filepath, mode)
 end
 
@@ -181,6 +207,9 @@ end
 -- @arg attributename A string with the name of the attribute to be read.
 -- @usage linkAttributes(filepath, "size")
 function linkAttributes(filepath, attributename)
+	mandatoryArgument(1, "string", filepath)
+	mandatoryArgument(2, "string", attributename)
+
 	return lfs.symlinkattributes(filepath, attributename)
 end
 
@@ -194,6 +223,10 @@ end
 -- @arg mtime The new modification time (in seconds).
 -- @usage touch(filepath)
 function touch(filepath, atime, mtime)
+	mandatoryArgument(1, "string", filepath)
+	mandatoryArgument(2, "number", atime)
+	mandatoryArgument(3, "number", mtime)
+
 	return lfs.touch(filepath, atime, mtime)
 end
 
@@ -201,9 +234,12 @@ end
 -- as the first argument. The optional arguments start and length can be used to specify a starting point 
 -- and its length; both should be numbers.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @arg fh A string with the file path.
--- @usage unlock(filehandle)
+-- @arg fh A file handle with the file to be locked.
+-- @usage filehandle = io.open("test.txt", "w+")
+-- unlock(filehandle)
 function unlock(fh)
+	mandatoryArgument(1, "userdata", fh)
+
 	return lfs.unlock(fh)
 end
 

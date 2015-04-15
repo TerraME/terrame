@@ -32,15 +32,18 @@ return{
 
 		d = dir(packageInfo().data, true)
 		unitTest:assert_equal(#d, files + 2)
+
+		d = dir(".", true)
 	end,
 	isFile = function(unitTest)
 		unitTest:assert(isFile(file("agents.csv")))
 	end, 
 	attributes = function(unitTest)
-		local attr = attributes(file("agents.csv", "base"))
-		unitTest:assert_equal(getn(attr), 14)
-		unitTest:assert_equal(attr.mode, "file")
-		unitTest:assert_equal(attr.size, 135)
+		local attr = attributes(file("agents.csv", "base"), "mode")
+		unitTest:assert_equal(attr, "file")
+
+		attr = attributes(file("agents.csv", "base"), "size")
+		unitTest:assert_equal(attr, 135)
 	end, 
 	chDir = function(unitTest)
 		local info = sessionInfo()
@@ -72,7 +75,6 @@ return{
 		unitTest:assert(mkDir(pathdata.."test"))
 
 		local attr = attributes(pathdata.."test", "mode")
-
 		unitTest:assert_equal(attr, "directory")
 
 		rmDir(pathdata.."test")
@@ -83,7 +85,6 @@ return{
 		unitTest:assert(mkDir(pathdata.."test"))
 
 		local attr = attributes(pathdata.."test", "mode")
-
 		unitTest:assert_equal(attr, "directory")
 
 		unitTest:assert(rmDir(pathdata.."test"))
@@ -115,11 +116,12 @@ return{
 		local pathdata = packageInfo().data
 
 		os.execute("ln -s "..pathdata.."agents.csv "..pathdata.."agentslink")
-		local attr = linkAttributes(pathdata.."agentslink")
 
-		unitTest:assert_equal(attr.mode, "link")
-		unitTest:assert_equal(attr.nlink, 1)
-		unitTest:assert(attr.size >= 61)
+		local attr = linkAttributes(pathdata.."agentslink", "mode")
+		unitTest:assert_equal(attr, "link")
+
+		attr = linkAttributes(pathdata.."agentslink", "nlink")
+		unitTest:assert_equal(attr, 1)
 
 		os.execute("rm "..pathdata.."agentslink")
 	end,
@@ -141,10 +143,12 @@ return{
 		f:close()
 
 		unitTest:assert(touch(pathdata.."testfile.txt", 10000, 10000))
-		local attr = attributes(pathdata.."testfile.txt")
 
-		unitTest:assert_equal(attr.access, 10000)
-		unitTest:assert_equal(attr.modification, 10000)
+		local attr = attributes(pathdata.."testfile.txt", "access")
+		unitTest:assert_equal(attr, 10000)
+
+		attr = attributes(pathdata.."testfile.txt", "modification")
+		unitTest:assert_equal(attr, 10000)
 
 		os.execute("rm "..pathdata.."testfile.txt")
 	end, 
