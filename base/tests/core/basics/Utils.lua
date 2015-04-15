@@ -392,6 +392,13 @@ return{
 		end)
 
 		unitTest:assert_equal(count, 22)
+
+		local count2 = 0
+		forEachFile(dir(file("", "base"), true), function(file)
+			count2 = count2 + 1
+		end)
+
+		unitTest:assert_equal(count2, count + 2)
 	end,
 	forEachNeighbor = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

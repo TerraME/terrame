@@ -134,7 +134,7 @@ return{
 		local error_func = function()
 			forEachFile(2)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "table", 2))
 
 		error_func = function()
 			forEachFile(file("", "base"))

@@ -475,19 +475,22 @@ end
 --- Second order function to transverse a given folder,
 -- applying a given function on each of its files. If any of the function calls returns 
 -- false, forEachFile() stops and returns false, otherwise it returns true.
--- @arg folder A string with the path to a folder.
--- @arg f A user-defined function that takes a file name as argument. 
+-- @arg folder A string with the path to a folder, or a vector of files.
+-- @arg f A user-defined function that takes a file name as argument.
 -- @usage forEachFile("C:", function(file)
 --     print(file)
 -- end)
+-- @see FileSystem dir
 function forEachFile(folder, f)
-	mandatoryArgument(1, "string", folder)
+	if type(folder) == "string" then
+		folder = dir(folder)
+	end
+
+	mandatoryArgument(1, "table", folder)
 	mandatoryArgument(2, "function", f)
 
-	local d = dir(folder)
-
-	for i = 1, #d do
-		if f(d[i]) == false then return false end
+	for i = 1, #folder do
+		if f(folder[i]) == false then return false end
 	end
 	return true
 end
