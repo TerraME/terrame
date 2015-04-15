@@ -348,81 +348,6 @@ local function importDatabase(package)
 	end)
 end
 
-local function buildPackage(package)
-	printNote("Building package "..package)
-	local s = sessionInfo().separator
-	local docErrors
-	local all_doc_functions
-	xpcall(function() docErrors, all_doc_functions = executeDoc(package) end, function(err)
-		printError(err)
-	end)
-
-	if docErrors > 0 then
-		printError("Build aborted")
-		return
-	end
-
-	printNote("\nTesting package "..package)
-
-	local testErrors
-	dofile(sessionInfo().path..s.."lua"..s.."test.lua")
-	xpcall(function() testErrors = executeTests(package, nil, all_doc_functions) end, function(err)
-		printError(err)
-	end)
-	if testErrors == nil or testErrors > 0 then
-		printError("Build aborted")
-		return
-	end
-
-	printNote("\nChecking Models")
-	local mModel = Model
-	local attrTab
-	Model = function(attr)
-		attrTab = attr
-		return attr
-	end
-	local s = sessionInfo().separator
-
-	local result = {}
-
-	forEachFile(sessionInfo().path..s.."packages"..s..package..s.."lua", function(fname)
-		local data = include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..fname)
-		if attrTab ~= nil then
-			forEachElement(data, function(idx, value)
-				if value == attrTab then
-					if idx..".lua" == fname then
-						printNote("Model '"..idx.."' belongs to file '"..fname.."'")
-					else
-						printError("Model '"..idx.."' is wrongly put in file '"..fname.."'. It should be in file '"..idx..".lua'")
-					end
-				end
-			end)
-			attrTab = nil
-		end
-	end)
-
-	Model = mModel
-
-	local packageDir = sessionInfo().path..s.."packages"
-	printNote("Checking license")
-	if not isFile(packageDir..s..package..s.."license.txt") then
-		printError("The package does not contain file 'license.txt'")
-	end
-
-	printNote("Building package "..package)
-	local info = packageInfo(package)
-	local file = package.."_"..info.version..".zip"
-	printNote("Creating file "..file)
-	local currentdir = currentDir()
-	chDir(packageDir)
-	os.execute("zip -qr "..file.." "..package)
-	if isFile(file) then
-		printNote("Package "..package.." successfully built")
-	end
-	chDir(currentdir)
-	os.execute("mv "..packageDir..s..file.." .")
-end
-
 local function installPackage(file)
 	if file == nil then
 		printError("You need to choose the file to be installed.")
@@ -776,6 +701,7 @@ function execute(arguments) -- arguments is a vector of strings
 				if package == "base" then
 					printError("TerraME cannot be built using -build.")
 				else
+					dofile(sessionInfo().path..s.."lua"..s.."build.lua")
 					buildPackage(package)
 				end
 				os.exit()

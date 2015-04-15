@@ -110,7 +110,6 @@ function Timer(data)
 	local eventTab = {}
 
 	for i, ud in pairs(data) do
-		io.flush()
 		if type(ud) == "table" then 
 			cObj:add(ud.cObj_[1], ud.cObj_[2].cObj_) 
 			table.insert(eventTab, ud)

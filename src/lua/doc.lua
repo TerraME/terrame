@@ -247,7 +247,7 @@ function executeDoc(package)
 
 	local finalTime = os.clock()
 
-	print("\nReport:")
+	print("\nDocumentation report:")
 	printNote("Documentation was built in "..round(finalTime - initialTime, 2).." seconds.")
 
 	if doc_report.undoc_files == 0 then

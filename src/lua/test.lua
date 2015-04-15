@@ -683,7 +683,7 @@ function executeTests(package, fileName, doc_functions)
 
 	local finalTime = os.clock()
 
-	print("\nReport:")
+	print("\nTest report:")
 
 	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds"
 	if ut.delayed_time > 0 then
@@ -810,8 +810,6 @@ function executeTests(package, fileName, doc_functions)
 			errors = errors + value
 		end
 	end)
-
-
 
 	if errors == 0 then
 		printNote("Summing up, all tests were successfully executed.")
