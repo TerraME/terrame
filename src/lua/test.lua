@@ -160,7 +160,7 @@ local function buildLineTable(package)
 	return testlines
 end
 
-function executeTests(package, fileName, doc_functions)
+function executeTests(package, fileName)
 	local initialTime = os.clock()
 
 	local data
@@ -259,19 +259,44 @@ function executeTests(package, fileName, doc_functions)
 
 	require(package)
 
+	printNote("Looking for documented functions")
+	require("luadoc")
+
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s..package
 	local srcDir = baseDir..s.."tests"
+
+	doc_functions = luadocMain(baseDir, dir(baseDir..s.."lua"), {}, package, {}, {}, true)
 
 	if not isFile(srcDir) then
 		customError("Folder 'tests' does not exist in package '"..package.."'.")
 	end
 
-	local testfunctions = doc_functions
+	printNote("Looking for package functions")
+	testfunctions = buildCountTable(package)
+	
+	local extra = 0
+	forEachElement(doc_functions.files, function(idx, value)
+		if type(idx) ~= "string" then return end
+		if not string.endswith(idx, ".lua") then return end
 
-	if not testfunctions then
-		printNote("Looking for package functions")
-		testfunctions = buildCountTable(package)
+		if testfunctions[idx] == nil then
+			testfunctions[idx] = {}
+		end
+		forEachElement(value.functions, function(midx)
+			if midx == "#" then midx = "__len" end
+
+
+			if type(midx) ~= "string" then return end
+			if testfunctions[idx][midx] == nil then
+				testfunctions[idx][midx] = 0
+				extra = extra + 1
+			end
+		end)
+	end)
+
+	if extra > 0 then
+		printNote("Found "..extra.." extra functions in the documentation")
 	end
 
 	local executionlines
@@ -280,7 +305,7 @@ function executeTests(package, fileName, doc_functions)
 		printNote("Looking for lines of source code")
 		executionlines = buildLineTable(package)
 	else
-		printNote("Skip looking for lines of source code")
+		printWarning("Skip looking for lines of source code")
 	end
 
 	print = print__

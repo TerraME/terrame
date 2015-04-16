@@ -52,12 +52,15 @@ function executeDoc(package)
 	local s = sessionInfo().separator
 	local package_path = sessionInfo().path..s.."packages"..s..package
 
-	printNote("Loading package")
-	xpcall(function() require(package) end, function(err)
-		printError("Package "..package.." could not be loaded.")
-		printError(err)
-		os.exit()
-	end)
+	printNote("Loading package '"..package.."'")
+
+	if not isLoaded(package) then
+		xpcall(function() require(package) end, function(err)
+			printError("Package "..package.." could not be loaded.")
+			printError(err)
+			os.exit()
+		end)
+	end
 
 	local lua_files = dir(package_path..s.."lua")
 
@@ -177,7 +180,7 @@ function executeDoc(package)
 		printNote("Checking folder 'data'")
 		local df = dataFiles(package)
 
-		table.sort(mdata, function(a,b)
+		table.sort(mdata, function(a, b)
 			return a.file[1] < b.file[1]
 		end)
 

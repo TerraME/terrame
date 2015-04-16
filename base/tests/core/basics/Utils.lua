@@ -219,6 +219,10 @@ return{
 		unitTest:assert(belong("b", mvector))
 		unitTest:assert(not belong("e", mvector))
 	end,
+	["string.endswith"] = function(unitTest)
+		unitTest:assert(string.endswith("abcdef", "def"))
+		unitTest:assert(not string.endswith("abcdef", "deef"))
+	end,
 	call = function(unitTest)
 		local cont = 0
 		local a = Agent{map = function(self, ev) cont = cont + 1 end}

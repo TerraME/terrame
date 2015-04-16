@@ -811,7 +811,7 @@ end
 -- @usage string.endswith("abcdef", "def")
 function string.endswith(str, send)
 	local send = send:lower().."$"
-	return str:lower():match(send)
+	return str:lower():match(send) ~= nil
 end
 
 --- Return the extension of a given file name. It returns the substring after the last dot.

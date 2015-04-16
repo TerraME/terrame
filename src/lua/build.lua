@@ -40,9 +40,8 @@ function buildPackage(package)
 	printNote("Building package "..package)
 	local s = sessionInfo().separator
 	local docErrors = 0
-	local all_doc_functions
 	dofile(sessionInfo().path..s.."lua"..s.."doc.lua")
-	xpcall(function() docErrors, all_doc_functions = executeDoc(package) end, function(err)
+	xpcall(function() docErrors = executeDoc(package) end, function(err)
 		printError(err)
 		report.doc_errors = 1
 	end)
@@ -99,7 +98,7 @@ function buildPackage(package)
 	info_.mode = "debug"
 	local testErrors = 0
 	dofile(sessionInfo().path..s.."lua"..s.."test.lua")
-	xpcall(function() testErrors = executeTests(package, nil, all_doc_functions) end, function(err)
+	xpcall(function() testErrors = executeTests(package) end, function(err)
 		printError(err)
 		report.test_errors = 1
 	end)
