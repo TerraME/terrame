@@ -92,7 +92,7 @@ end
 -- Main function
 -- @see luadoc.doclet.html, luadoc.doclet.formatter, luadoc.doclet.raw
 -- @see luadoc.taglet.standard
-function startDoc(files, examples, options, package_path, mdata, doc_report)
+function startDoc(files, examples, options, package_path, mdata, doc_report, silent)
 	-- logger = util.loadlogengine(options)
 
 	-- load config file
@@ -109,10 +109,12 @@ function startDoc(files, examples, options, package_path, mdata, doc_report)
 
 	-- analyze input
 	taglet.options = options
-	description = ldescription(package_path, doc_report)
 	-- taglet.logger = logger
-	local doc = taglet.start(files, examples, package_path, options.short_lua_path, doc_report)
+	local doc = taglet.start(files, examples, package_path, options.short_lua_path, doc_report, silent)
+
+	if silent then return doc end
 	
+	description = ldescription(package_path, doc_report)
 	doc.description = description	
 	doclet.options = options
 	-- doclet.logger = logger

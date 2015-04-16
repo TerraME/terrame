@@ -210,7 +210,7 @@ end
 -- Parses the information inside a block comment
 -- @arg block block with comment field
 -- @return block argument
-local function parse_comment(block, first_line, doc_report)
+local function parse_comment(block, first_line, doc_report, silent)
 	-- get the first non-empty line of code
 	local code 
 	for _, line in ipairs(block.code) do
@@ -267,7 +267,7 @@ local function parse_comment(block, first_line, doc_report)
 		if r ~= nil then
 			-- found new tag, add previous one, and start a new one
 			-- TODO: what to do with invalid tags? issue an error? or log a warning?
-			tags.handle(currenttag, block, currenttext, doc_report)
+			tags.handle(currenttag, block, currenttext, doc_report, silent)
 			
 			currenttag = tag
 			currenttext = text
@@ -282,7 +282,7 @@ local function parse_comment(block, first_line, doc_report)
 			assert(string.sub(currenttext, 1, 1) ~= " ", string.format("'%s', '%s'", currenttext, line))
 		end
 	end
-	tags.handle(currenttag, block, currenttext, doc_report)
+	tags.handle(currenttag, block, currenttext, doc_report, silent)
   
 	-- extracts summary information from the description
 	block.summary = parse_summary(block.description)
@@ -311,7 +311,7 @@ end
 -- @return line
 -- @return block parsed
 -- @return modulename if found
-local function parse_block(f, line, modulename, first, doc_report)
+local function parse_block(f, line, modulename, first, doc_report, silent)
 	local block = {
 		comment = {},
 		code = {},
@@ -324,7 +324,7 @@ local function parse_block(f, line, modulename, first, doc_report)
 			line, block.code, modulename = parse_code(f, line, modulename)
 
 			-- parse information in block comment
-			block = parse_comment(block, first, doc_report)
+			block = parse_comment(block, first, doc_report, silent)
 
 			return line, block, modulename
 		else
@@ -335,7 +335,7 @@ local function parse_block(f, line, modulename, first, doc_report)
 	-- reached end of file
 	
 	-- parse information in block comment
-	block = parse_comment(block, first, doc_report)
+	block = parse_comment(block, first, doc_report, silent)
 	
 	return line, block, modulename, header
 end
@@ -345,7 +345,7 @@ end
 -- @arg filepath full path of file to parse
 -- @arg doc table with documentation
 -- @return table with documentation
-function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
+function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 	local blocks = {}
 	local modulename = nil
 	fullpath = luapath..fileName
@@ -360,11 +360,11 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 			-- reached a luadoc block
 			local block
 			local mline = line
-			line, block, modulename = parse_block(f, line, modulename, first, doc_report)
+			line, block, modulename = parse_block(f, line, modulename, first, doc_report, silent)
 			table.insert(blocks, block)
 
 			if block and block.name then
-				if block.description:sub(block.description:len(), block.description:len()) ~= "." then
+				if block.description:sub(block.description:len(), block.description:len()) ~= "." and not silent then
 					printError("Description of '"..block.name.."' does not end with '.'")
 					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
 				end
@@ -372,14 +372,14 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 				if block.arg then
 					forEachElement(block.arg, function(idx, value, mtype)
 						if mtype == "string" and idx ~= "named" and type(idx) ~= "number" then
-							if not belong(value:sub(value:len(), value:len()), {".", "?", ":"}) then
+							if not belong(value:sub(value:len(), value:len()), {".", "?", ":"}) and not silent then
 								printError("Argument '"..idx.."' from '"..block.name.."' does end with '.', '?', nor ':'.")
 								doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
 							end
 						end
 					end)
 				end
-			elseif not string.find(mline, "^[\t ]*%-%-%-%-") then
+			elseif not string.find(mline, "^[\t ]*%-%-%-%-") and not silent then
 				printError("Invalid documentation line: "..mline)
 				doc_report.wrong_line = doc_report.wrong_line + 1
 			end
@@ -473,7 +473,7 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 		for f in class_iterator(blocks, "function")() do
 			table.insert(doc.modules[modulename].functions, f.name)
 
-			if doc.modules[modulename].functions[f.name] then
+			if doc.modules[modulename].functions[f.name] and not silent then
 				printError("Function "..f.name.." was already declared.")
 				doc_report.duplicated_functions = doc_report.duplicated_functions + 1
 			end
@@ -491,10 +491,12 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 	-- make functions table
 	doc.files[fileName].functions = {}
 	for f in class_iterator(blocks, "function")() do
-		doc_report.functions = doc_report.functions + 1
+		if not silent then
+			doc_report.functions = doc_report.functions + 1
+		end
 		table.insert(doc.files[fileName].functions, f.name)
 
-		if doc.files[fileName].functions[f.name] then
+		if doc.files[fileName].functions[f.name] and not silent then
 			printError("Function "..f.name.." was already declared.")
 			doc_report.duplicated_functions = doc_report.duplicated_functions + 1
 		end
@@ -504,10 +506,13 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 	-- make models table
 	doc.files[fileName].models = {}
 	for f in class_iterator(blocks, "model")() do
-		doc_report.models = doc_report.models + 1
+		if not silent then
+			doc_report.models = doc_report.models + 1
+		end
+
 		local a = include(fullpath)
 		local quant = getn(a) - 1
-		if quant > 0 then
+		if quant > 0 and not silent then
 			printError(fileName.." should contain only a Model, got "..quant.." additional object(s).")
 			doc_report.model_error = doc_report.model_error + quant
 		end
@@ -519,7 +524,10 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path)
 	-- make tables variables
 	doc.files[fileName].variables = {}
 	for t in class_iterator(blocks, "variable")() do
-		doc_report.variables = doc_report.variables + 1
+		if not silent then
+			doc_report.variables = doc_report.variables + 1
+		end
+
 		table.insert(doc.files[fileName].variables, t.name)
 		doc.files[fileName].variables[t.name] = t
 	end
@@ -547,7 +555,7 @@ end
 -- @arg doc table with documentation
 -- @return table with documentation
 -- @see parse_file
-function file(lua_path, fileName, doc, short_lua_path, doc_report)
+function file(lua_path, fileName, doc, short_lua_path, doc_report, silent)
 	local patterns = { "%.lua$", "%.luadoc$" }
 	local valid = false
 	for _, pattern in ipairs(patterns) do
@@ -558,9 +566,12 @@ function file(lua_path, fileName, doc, short_lua_path, doc_report)
 	end
 	
 	if valid then
-		print(string.format("Parsing %s", short_lua_path..fileName))
-		doc_report.lua_files = doc_report.lua_files + 1
-		doc = parse_file(lua_path, fileName, doc, doc_report, short_lua_path)
+		if not silent then
+			print(string.format("Parsing %s", short_lua_path..fileName))
+			doc_report.lua_files = doc_report.lua_files + 1
+		end
+
+		doc = parse_file(lua_path, fileName, doc, doc_report, short_lua_path, silent)
 
 		if string.find(short_lua_path, "examples") == nil then
 			for _, file_ in ipairs(doc.files) do
@@ -569,13 +580,16 @@ function file(lua_path, fileName, doc, short_lua_path, doc_report)
 				doc.files[file_].summary = parse_summary(description)
 			end
 		else
-			local description, argnames, argdescr = check_example(doc.files[fileName].path..fileName, doc, fileName, doc_report)
+			local description, argnames, argdescr = check_example(doc.files[fileName].path..fileName, doc, fileName, doc_report, silent)
 			doc.files[fileName].description = description
 			doc.files[fileName].argnames = argnames
 			doc.files[fileName].argdescription = argdescr
 			doc.files[fileName].summary = parse_summary(description)
 			doc.files[fileName].type = "example"
-			doc_report.examples = doc_report.examples + 1
+
+			if not silent then
+				doc_report.examples = doc_report.examples + 1
+			end
 		end
 	elseif not valid and belong(fileName, doc.examples) then
 		for i, j in ipairs(doc.examples) do
@@ -592,17 +606,17 @@ end
 -- @arg path directory to search
 -- @arg doc table with documentation
 -- @return table with documentation
-function directory(lua_path, file_, doc, short_lua_path)
+function directory(lua_path, file_, doc, short_lua_path, silent)
 	for f in lfsdir(lua_path) do
 		local fullpath = lua_path..f
 		local attr = attributes(fullpath)
 		assert(attr, string.format("error stating file '%s'", fullpath))
 		
 		if attr.mode == "file" then
-			doc = file(lua_path, f, doc, short_lua_path)
+			doc = file(lua_path, f, doc, short_lua_path, silent)
 		elseif attr.mode == "directory" and f ~= "." and f ~= ".." then
 			fullpath = fullpath..s
-			doc = directory(fullpath, f, doc, short_lua_path)
+			doc = directory(fullpath, f, doc, short_lua_path, silent)
 		end
 	end
 	return doc
@@ -829,7 +843,7 @@ function check_header(filepath)
 	return text
 end
 
-function check_example(filepath, doc, file_name, doc_report)
+function check_example(filepath, doc, file_name, doc_report, silent)
 	f = io.open(filepath)
 	local line
 
@@ -852,8 +866,10 @@ function check_example(filepath, doc, file_name, doc_report)
 	local argDescription = ""
 
 	if text == "" then
-		printError("No description found on @example")
-		doc_report.problem_examples = doc_report.problem_examples + 1
+		if not silent then
+			printError("No description found on @example")
+			doc_report.problem_examples = doc_report.problem_examples + 1
+		end
 		return text
 	else
 		line = f:read()
@@ -878,16 +894,20 @@ function check_example(filepath, doc, file_name, doc_report)
 					local _a, _b, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 
 					if desc == nil or name == nil then
-						printError("Could not infer argument and description of @arg from '"..text.."'")
-						doc_report.invalid_tags = doc_report.invalid_tags + 1	
+						if not silent then
+							printError("Could not infer argument and description of @arg from '"..text.."'")
+							doc_report.invalid_tags = doc_report.invalid_tags + 1	
+						end
 						argDescription = ""
 					else
 						argName = name
 						argDescription = desc
 					end
 				else
-					printError("Invalid tag '@"..tag.."'. Examples can only have @arg.")
-					doc_report.invalid_tags = doc_report.invalid_tags + 1
+					if not silent then
+						printError("Invalid tag '@"..tag.."'. Examples can only have @arg.")
+						doc_report.invalid_tags = doc_report.invalid_tags + 1
+					end
 					argDescription = ""
 				end
 			else
@@ -906,7 +926,7 @@ function check_example(filepath, doc, file_name, doc_report)
 end
 
 -------------------------------------------------------------------------------
-function start(files, examples, package_path, short_lua_path, doc_report)
+function start(files, examples, package_path, short_lua_path, doc_report, silent)
 	local s = sessionInfo().separator
 	assert(files, "file list not specified")
 	local lua_path = package_path..s.."lua"..s
@@ -922,35 +942,42 @@ function start(files, examples, package_path, short_lua_path, doc_report)
 		examples = examples
 	}
 	
-	printNote("Parsing lua files")
+	if not silent then
+		printNote("Parsing lua files")
+	end
+
 	for _, file_ in ipairs(files) do
 		local attr = attributes(lua_path..file_)
 		assert(attr, string.format("error stating path '%s'", lua_path..file_))
 		
 		if attr.mode == "file" then
-			doc = file(lua_path, file_, doc, short_lua_path, doc_report)
+			doc = file(lua_path, file_, doc, short_lua_path, doc_report, silent)
 		elseif attr.mode == "directory" then
 			local dir_path = lua_path..file_..s
 			local short_dir_path = short_lua_path..file_..s
-			doc = directory(dir_path, file_, doc, short_dir_path)
+			doc = directory(dir_path, file_, doc, short_dir_path, silent)
 		end
 	end
 
-	printNote("Parsing examples")
+	if not silent then
+		printNote("Parsing examples")
+	end
 	if #examples < 1 then
-		printError("No examples were found.")
-		doc_report.problem_examples = doc_report.problem_examples + 1
+		if not silent then
+			printError("No examples were found.")
+			doc_report.problem_examples = doc_report.problem_examples + 1
+		end
 	else
 		for _, file_ in ipairs(examples) do
 			local attr = attributes(examples_path..file_)
 			assert(attr, string.format("error stating path '%s'", examples_path..file_))
 			
 			if attr.mode == "file" then
-				doc = file(examples_path, file_, doc, short_examples_path, doc_report)
+				doc = file(examples_path, file_, doc, short_examples_path, doc_report, silent)
 			elseif attr.mode == "directory" then
 				local dir_path = examples_path..file_..s
 				local short_dir_path = short_examples_path..file_..s
-				doc = directory(dir_path, file_, doc, short_dir_path)
+				doc = directory(dir_path, file_, doc, short_dir_path, silent)
 			end
 		end
 	end
@@ -961,6 +988,8 @@ function start(files, examples, package_path, short_lua_path, doc_report)
 		end
 	end
 	
+	if silent then return doc end
+
 	-- exclude undocumented files
 	exclude_undoc(doc.files, doc_report, doc)
 
@@ -978,3 +1007,4 @@ function start(files, examples, package_path, short_lua_path, doc_report)
 	check_constructor_file(doc)
 	return doc
 end
+

@@ -11,9 +11,9 @@ local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 
 -------------------------------------------------------------------------------
-local function author(tag, block, text)
+local function author(tag, block, text, silent)
 	block[tag] = block[tag] or {}
-	if not text then
+	if not text and not silent then
 		printError("Warning: author 'name' not defined [["..text.."]]: skipping")
 		return
 	end
@@ -43,30 +43,33 @@ local function release(tag, block, text)
 end
 
 -------------------------------------------------------------------------------
-local function inherits(tag, block, text, doc_report)
-	if text == "" then
+local function inherits(tag, block, text, doc_report, silent)
+	if text == "" and not silent then
 		printError("In "..block.name.."(), @inherits should be folowed by a type")
 		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
 	end
 		
 	if block[tag] == nil then
 		block[tag] = text
-	else
+	elseif not silent then
 		printError("In "..block.name.."(), @inherits is used more than once and will be ignored in '"..text.."'")
 		doc_report.duplicated = doc_report.duplicated + 1
 	end
 end
 
 -------------------------------------------------------------------------------
-local function field(tag, block, text)
-	if block["class"] ~= "table" then
+local function field(tag, block, text, silent)
+	if block["class"] ~= "table" and not silent then
 		printError("documenting 'field' for block that is not a 'table'")
 	end
 	block[tag] = block[tag] or {}
 
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
-	assert(name, "field name not defined")
-	
+
+	if not silent then
+		assert(name, "field name not defined")
+	end	
+
 	table.insert(block[tag], name)
 	block[tag][name] = desc
 end
@@ -113,9 +116,9 @@ end
 -- @arg tag String with the name of the tag (it must be "arg" always).
 -- @arg block Table with previous information about the block.
 -- @arg text String with the current line beeing processed.
-local function arg(tag, block, text, doc_report)
+local function arg(tag, block, text, doc_report, silent)
 	block[tag] = block[tag] or {}
-	if text == "" then
+	if text == "" and not silent then
 		printError("In "..block.name.."(), @arg should be folowed by an argument name")
 		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
 		return
@@ -123,7 +126,7 @@ local function arg(tag, block, text, doc_report)
 
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
-	if not name then
+	if not name and not silent then
 		printError("In "..block.name.."(), could not infer argument and description of @arg from '"..text.."'")
 		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
 		return
@@ -160,13 +163,13 @@ local function arg(tag, block, text, doc_report)
 		end
 	end
 	if i == nil then
-		if not arg_tab then
+		if not arg_tab and not silent then
 			printError("In "..block.name.."(), undefined argument '"..name.."' is documented")
 			doc_report.undefined_arg = doc_report.undefined_arg + 1
 		end
 		table.insert(block[tag], name)
 	end
-	if block[tag][name] then
+	if block[tag][name] and not silent then
 		printError("In "..block.name.."(), @arg '"..name.."' is used more than once and will be ignored in '"..text.."'")
 		doc_report.duplicated = doc_report.duplicated + 1
 	else
@@ -209,11 +212,11 @@ end
 
 -------------------------------------------------------------------------------
 -- @see ret
-local function usage(tag, block, text, doc_report)
-	if block.class == "model" then
+local function usage(tag, block, text, doc_report, silent)
+	if block.class == "model" and not silent then
 		printError("Models cannot have @usage")
 		doc_report.invalid_tags = doc_report.invalid_tags + 1
-	elseif type(block[tag]) == "string" then
+	elseif type(block[tag]) == "string" and not silent then
 		printError("In "..block.name.."(), @usage is used more than once and will be ignored in '"..text.."'")
 		doc_report.duplicated = doc_report.duplicated + 1
 	else
@@ -222,11 +225,11 @@ local function usage(tag, block, text, doc_report)
 end
 
 -------------------------------------------------------------------------------
-local function output(tag, block, text)
+local function output(tag, block, text, silent)
 	block[tag] = block[tag] or {}
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
-	if not name then
+	if not name and not silent then
 		printError("output 'name' not defined [["..text.."]]: skipping")
 		return
 	end
@@ -236,7 +239,7 @@ local function output(tag, block, text)
 end
 
 -------------------------------------------------------------------------------
-local function tab(tag, block, text, doc_report)
+local function tab(tag, block, text, doc_report, silent)
 	block[tag] = block[tag] or {}
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	--desc = desc:gsub("%s*([&\\])%s*", "%1")
@@ -253,13 +256,13 @@ local function tab(tag, block, text, doc_report)
 	end
 	table.insert(block[tag], name)
 
-	if #rows < 2 then
+	if #rows < 2 and not silent then
 		printError("In "..block.name..", @tabular has only one row.")
 		doc_report.wrong_tabular = doc_report.wrong_tabular + 1
 	else
 		local size = #rows[1]
 		for i = 2, #rows do
-			if #rows[i] ~= size then
+			if #rows[i] ~= size and not silent then
 				printError("In "..block.name..", row "..i.." of @tabular has size ("..#rows[i]..") different from the first one ("..size..").")
 				doc_report.wrong_tabular = doc_report.wrong_tabular + 1
 			end
@@ -270,13 +273,13 @@ local function tab(tag, block, text, doc_report)
 end
 
 -------------------------------------------------------------------------------
-local function deprecated(tag, block, text, doc_report)
-	if text == "" then
+local function deprecated(tag, block, text, doc_report, silent)
+	if text == "" and not silent then
 		printError("In "..block.name.."(), @deprecated should be folowed by a string with a description on what to do")
 		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
 	end
 	
-	if block[tag] ~= nil then
+	if block[tag] ~= nil and not silent then
 		printError("In "..block.name.."(), @deprecated is used more than once and will be ignored in '"..text.."'")
 		doc_report.duplicated = doc_report.duplicated + 1
 	else
@@ -313,12 +316,14 @@ handlers["inherits"] = inherits
 handlers["deprecated"] = deprecated
 
 -------------------------------------------------------------------------------
-function handle(tag, block, text, doc_report)
+function handle(tag, block, text, doc_report, silent)
 	if not handlers[tag] then
-		printError("In "..block.name.."(), Tag '@"..tag.."' is invalid")
-		doc_report.invalid_tags = doc_report.invalid_tags + 1
+		if not silent then
+			printError("In "..block.name.."(), Tag '@"..tag.."' is invalid")
+			doc_report.invalid_tags = doc_report.invalid_tags + 1
+		end
 		return
 	end
-	return handlers[tag](tag, block, text, doc_report)
+	return handlers[tag](tag, block, text, doc_report, silent)
 end
 
