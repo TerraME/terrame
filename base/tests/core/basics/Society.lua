@@ -108,8 +108,6 @@ return {
 		unitTest:assert_type(ag, "Agent")
 	end,
 	Society = function(unitTest)
-		local r = Random{seed = 0}
-
 		local singleFooAgent = Agent{
 			size = 10,
 			name = "foo",

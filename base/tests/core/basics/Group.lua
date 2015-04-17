@@ -29,11 +29,9 @@ return{
 		local group1 = Group{}
 		unitTest:assert_type(group1, "Group")
 
-		local randomObj = Random{seed = 0}
-
 		local nonFooAgent = Agent{
 			init = function(self)
-				self.age = randomObj:integer(10)
+				self.age = Random():integer(10)
 			end,
 			w = 3,
 			p = 5,
@@ -186,11 +184,9 @@ return{
 		end)
 	end,
 	randomize = function(unitTest)
-		local randomObj = Random{seed = 0}
-
 		local nonFooAgent = Agent{
 			init = function(self)
-				self.age = randomObj:integer(10)
+				self.age = Random():integer(10)
 			end,
 			execute = function(self)
 				self.age = self.age + 1
@@ -215,11 +211,9 @@ return{
 		unitTest:assert_equal(0, g.agents[1].age)
 	end,
 	rebuild = function(unitTest)
-		local randomObj = Random{seed = 0}
-
 		local nonFooAgent = Agent{
 			init = function(self)
-				self.age = randomObj:integer(10)
+				self.age = Random():integer(10)
 			end,
 			execute = function(self)
 				self.age = self.age + 1

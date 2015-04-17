@@ -435,6 +435,7 @@ function executeTests(package, fileName)
 
 			for _, eachTest in ipairs(myTests) do
 				print("Testing "..eachTest)
+				Random{seed = 0}
 				debug.sethook(trace, "l")
 				if not doc_functions then io.flush() end -- theck why it is necessary to have the 'if'
 
