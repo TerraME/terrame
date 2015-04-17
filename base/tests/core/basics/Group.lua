@@ -209,9 +209,10 @@ return{
 			end
 		}
 
-		g:randomize(randomObj)
 		unitTest:assert_equal(#g, 6)
-		unitTest:assert_equal(3, g.agents[1].age)
+		g:randomize()
+		unitTest:assert_equal(#g, 6)
+		unitTest:assert_equal(0, g.agents[1].age)
 	end,
 	rebuild = function(unitTest)
 		local randomObj = Random{seed = 0}

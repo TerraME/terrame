@@ -81,12 +81,11 @@ Group_ = {
 		local randomObj = Random()
 
 		local numagents = #self
-		for i = 1, numagents do
-			local pos1 = randomObj:integer(1, numagents)
-			local pos2 = randomObj:integer(1, numagents)
-			local agent1 = self.agents[pos1]
-			self.agents[pos1] = self.agents[pos2]
-			self.agents[pos2] = agent1
+		local agents = self.agents
+
+		for i = numagents, 2, -1 do
+			local r = randomObj:integer(1, i)
+			agents[i], agents[r] = agents[r], agents[i]
 		end
 	end,
 	--- Rebuild the Group from the original data using the last filter and sort functions.

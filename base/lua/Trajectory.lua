@@ -120,12 +120,11 @@ Trajectory_ = {
 		local randomObj = Random()
 
 		local numcells = #self
-		for i = 1, numcells do
-			local pos1 = randomObj:integer(1, numcells)
-			local pos2 = randomObj:integer(1, numcells)
-			local cell1 = self.cells[pos1]
-			self.cells[pos1] = self.cells[pos2]
-			self.cells[pos2] = cell1
+		local cells = self.cells
+
+		for i = numcells, 2, -1 do
+			local r = randomObj:integer(1, i)
+			cells[i], cells[r] = cells[r], cells[i]
 		end
 	end,
 	--- Rebuild the Trajectory from the original data using the last filter and sort functions.
