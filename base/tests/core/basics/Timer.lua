@@ -61,7 +61,13 @@ return {
 		local ag2 = Agent{execute = function() count = count + 1 end}
 		local c = Cell{}
 		local cs = CellularSpace{xdim = 5}
-		local t = Trajectory{target = cs}
+
+		forEachCell(cs, function(cell)
+			cell.value = Random():integer(10)
+		end)
+
+		local traj = Trajectory{target = cs, greater = function(c1, c2) return c1.value > c2.value end}
+
 
 		local soc = Society{instance = ag2, quantity = 5}
 
@@ -70,7 +76,7 @@ return {
 			Event{action = soc},
 			Event{action = c},
 			Event{action = cs},
-			Event{action = t}
+			Event{action = traj}
 		}
 
 		t:execute(10)

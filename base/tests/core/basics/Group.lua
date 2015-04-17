@@ -64,7 +64,7 @@ return{
 		}
 		unitTest:assert_equal(0, #g)
 		
-		g:rebuild()
+		g:filter()
 		unitTest:assert_equal(#nonFooSociety, #g)
 
 		g = Group{

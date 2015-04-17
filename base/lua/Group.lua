@@ -109,6 +109,8 @@ Group_ = {
 
 		if type(self.greater) == "function" then
 			table.sort(self.agents, self.greater)
+		else
+			customWarning("Cannot sort the Group because there is no previous function.")
 		end
 	end
 }
@@ -185,7 +187,8 @@ function Group(data)
 	setmetatable(data, metaTableGroup_)
 
 	if data.build and data.parent then
-		data:rebuild()
+		data:filter()
+		if data.greater then data:sort() end
 		data.build = nil
 	end
 

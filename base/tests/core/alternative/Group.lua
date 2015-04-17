@@ -140,6 +140,11 @@ return{
 			group:sort("notFunction")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
+
+		error_func = function()
+			group:sort()
+		end
+		unitTest:assert_error(error_func, "Cannot sort the Group because there is no previous function.")
 	end
 }
 

@@ -155,6 +155,8 @@ Trajectory_ = {
 			for i, cell in ipairs(self.cells) do
 				self.cObj_:add(i, cell.cObj_)
 			end
+		else
+			customWarning("Cannot sort the Trajectory because there is no previous function.")
 		end
 	end
 }
@@ -246,7 +248,8 @@ function Trajectory(data)
 	setmetatable(data, metaTableTrajectory_)
 
 	if data.build then
-		data:rebuild()
+		data:filter()
+		if data.greater then data:sort() end
 		data.build = nil
 	end
 

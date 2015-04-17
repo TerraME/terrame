@@ -101,6 +101,11 @@ return{
 			trajectory:sort("func")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", "func"))
+
+		error_func = function()
+			trajectory:sort()
+		end
+		unitTest:assert_error(error_func, "Cannot sort the Trajectory because there is no previous function.")
 	end,
 	Trajectory = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
