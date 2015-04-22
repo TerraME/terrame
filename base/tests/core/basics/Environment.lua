@@ -190,7 +190,7 @@ return{
 					target = "stop"
 				},
 				Flow{function(ev, self)
-						self.x = self.x + 1
+					self.x = self.x + 1
 				end}
 			},
 		}
@@ -284,7 +284,6 @@ return{
 					target = "second"
 				}
 			},
-
 			State{
 				id = "second",
 				Jump{
@@ -332,31 +331,19 @@ return{
 				end},
 				Event{priority = 1, action = function(event)
 					timeMemory = event:getTime()
-					if event:getTime() == timeMemory then 
-						self:assert(1 <= orderToken)
-					else
-						error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-					end
+					self:assert(1 <= orderToken)
 					orderToken = 2
 				end}
 			},
 			clock2 = Timer{
 				Event{time = 0, period = 2 , priority = 2, action = function(event) 
 					timeMemory = event:getTime()	
-					if event:getTime() == timeMemory then 
-						self:assert(orderToken <= 2)
-					else
-						error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-					end
+					self:assert(orderToken <= 2)
 					orderToken = 3
 				end},
 				Event{priority = 3, action = function(event) 
-					if event:getTime() == timeMemory then
-						self:assert(orderToken <= 4)
-					else
-						error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-					end
-					timeMemory = event:getTime()
+					self:assert(orderToken <= 4)
+					self:assert_equal(event:getTime(), timeMemory)
 					orderToken = 0
 				end}
 			}
@@ -364,15 +351,14 @@ return{
 		env:execute(6)
 
 		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
-		local timeMemory = 0   -- memory of time test variable 
-		self:assert_equal(orderToken, 0)
+		local timeMemory = 0 -- memory of time test variable 
 
 		local env = Environment{
 			firstEnv = Environment{
 				clock1 = Timer{
 					Event{time = 0, action = function(event) 
 						if event:getTime() == timeMemory then 
-							self:assert(1 <= orderToken)
+							self:assert(1 >= orderToken)
 						end
 						timeMemory = event:getTime()
 						orderToken = 1
@@ -380,33 +366,20 @@ return{
 					Event{priority = 1, action = function(event) 
 						timeMemory = event:getTime()
 
-						if event:getTime() == timeMemory then 
-							self:assert(1 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(1 >= orderToken)
 						orderToken = 2
 					end}
 				}
 			},
 			secondEnv = Environment{
 				clock2 = Timer{
-					Event{time = 0, period = 2 , priority = 2, action = function(event) 
-						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(2 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+					Event{time = 0, period = 2, priority = 2, action = function(event) 
+						self:assert(2 >= orderToken)
 						orderToken = 3
 					end},
 					Event{priority = 3, action = function(event) 
-						if event:getTime() == timeMemory then 
-							self:assert(4 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
-						timeMemory = event:getTime()
+						self:assert(4 >= orderToken)
+						self:assert_equal(event:getTime(), timeMemory)
 						orderToken = 0
 					end}
 				}
@@ -432,38 +405,26 @@ return{
 				clock1 = Timer{
 					Event{time = 0, priority = PRIO1, action = function(event) 
 						if event:getTime() == timeMemory then 
-							self:assert(1 <= orderToken)
+							self:assert(1 >= orderToken)
 						end
 						timeMemory = event:getTime()
 						orderToken = 1
 					end},
 					Event{priority = PRIO2, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(1 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(1 >= orderToken)
 						orderToken = 2
 					end}
 				},
 				clock2 = Timer{
 					Event{time = 0, period = 2 , priority = PRIO3, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(2 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(2 >= orderToken)
 						orderToken = 3
 					end},
 					Event{priority = PRIO4, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(3 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(3 >= orderToken)
 						orderToken = 4
 					end}
 				}
@@ -472,40 +433,24 @@ return{
 				clock1 = Timer{
 					Event{time = 0, priority = PRIO5, action = function(event)
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(4 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(4 >= orderToken)
 						orderToken = 5
 					end},
 					Event{priority = PRIO6, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(5 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(5 >= orderToken)
 						orderToken = 6
 					end}
 				},
 				clock2 = Timer{
 					Event{time = 0, period = 2 , priority = PRIO7, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(6 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(6 >= orderToken)
 						orderToken = 7
 					end},
 					Event{priority = PRIO8, action = function(event) 
-						if event:getTime() == timeMemory then 
-							self:assert(8 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
-						timeMemory = event:getTime()
+						self:assert(8 >= orderToken)
+						self:assert_equal(event:getTime(), timeMemory)
 						orderToken = 0
 					end}
 				}
@@ -532,81 +477,51 @@ return{
 			clock1 = Timer{
 				Event{time = 0, action = function(event) 
 					if event:getTime() == timeMemory then 
-						self:assert(-1 <= orderToken)
+						self:assert(-1 >= orderToken)
 					end
 					timeMemory = event:getTime()
 					orderToken = 0
 				end},
 				Event{priority = PRIO1, action = function(event) 
 					timeMemory = event:getTime()
-					if event:getTime() == timeMemory then 
-						self:assert(0 <= orderToken)
-					else
-						error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-					end
+					self:assert(0 >= orderToken)
 					orderToken = 1
 				end}
 			},
-
 			clock2 = Timer{
 				Event{time = 0, period = 2 , priority = PRIO2, action = function(event)
 					timeMemory = event:getTime()
-					if event:getTime() == timeMemory then 
-						self:assert(orderToken <= 1)
-					else
-						error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-					end
+					self:assert(1 >= orderToken)
 					orderToken = 2
 				end},
 				Event{priority = PRIO3, action = function(event) 
 					timeMemory = event:getTime()
-					if event:getTime() == timeMemory then 
-						self:assert(orderToken <= 2)
-					else
-						error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-					end
+					self:assert(2 >= orderToken)
 					orderToken = 3
 				end}
 			},
-
 			firstEnv = Environment{
 				clock1 = Timer{
 					Event{time = 0, priority = PRIO4, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(3 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(3 >= orderToken)
 						orderToken = 4
 					end},
 					Event{priority = PRIO5, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(4 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(4 >= orderToken)
 						orderToken = 5
 					end}
 				},
 				clock2 = Timer{
 					Event{time = 0, period = 2, priority = PRIO6, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(5 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(5 >= orderToken)
 						orderToken = 6
 					end},
 					Event{priority = PRIO7, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(6 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(6 >= orderToken)
 						orderToken = 7
 					end}
 				}
@@ -615,40 +530,24 @@ return{
 				clock1 = Timer{
 					Event{time = 0, priority = PRIO8, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert_(7 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(7 >= orderToken)
 						orderToken = 8
 					end},
 					Event{priority = PRIO9, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(8 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(8 >= orderToken)
 						orderToken = 9
 					end}
 				},
 				clock2 = Timer{
 					Event{time = 0, period = 2 , priority = PRIO10, action = function(event) 
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(9 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(9 >= orderToken)
 						orderToken = 10
 					end},
 					Event{priority = PRIO11, action = function(event)
 						timeMemory = event:getTime()
-						if event:getTime() == timeMemory then 
-							self:assert(10 <= orderToken)
-						else
-							error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-						end
+						self:assert(10 >= orderToken)
 						orderToken = 0
 					end}
 				}
