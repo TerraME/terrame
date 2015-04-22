@@ -102,7 +102,7 @@ return{
 			protocol = "udp",
 			port = 11111
 		}
-		unitTest:assert_type(c, "number")
+		unitTest:assert_type(c, "number") -- SKIP
 		world:notify(1)
 		world:notify(2)
 		unitTest:delay()

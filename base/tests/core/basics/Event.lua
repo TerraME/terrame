@@ -90,15 +90,15 @@ return{
 
 		event:config(0.5, 2, 1)
 
-		unitTest:assert_equal(event[1]:getTime(), 0.5)
-		unitTest:assert_equal(event[1]:getPeriod(), 2)
-		unitTest:assert_equal(event[1]:getPriority(), 1)
+		unitTest:assert_equal(event[1]:getTime(), 0.5) -- SKIP
+		unitTest:assert_equal(event[1]:getPeriod(), 2) -- SKIP
+		unitTest:assert_equal(event[1]:getPriority(), 1) -- SKIP
 	
 		event:config(1)
 
-		unitTest:assert_equal(event[1]:getTime(), 1)
-		unitTest:assert_equal(event[1]:getPeriod(), 2)
-		unitTest:assert_equal(event[1]:getPriority(), 1)
+		unitTest:assert_equal(event[1]:getTime(), 1) -- SKIP
+		unitTest:assert_equal(event[1]:getPeriod(), 2) -- SKIP
+		unitTest:assert_equal(event[1]:getPriority(), 1) -- SKIP
 	end,
 --]]
 	getType = function(unitTest)

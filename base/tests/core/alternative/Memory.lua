@@ -48,10 +48,10 @@ return{
 					count = count + 1
 				end
 			end
-			unitTest:assert_equal(2, count)
+			unitTest:assert_equal(2, count) -- SKIP
 
-			unitTest:assert_not_nil(coord2)
-			unitTest:assert_not_nil(coord1)
+			unitTest:assert_not_nil(coord2) -- SKIP
+			unitTest:assert_not_nil(coord1) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -70,8 +70,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, count)
-		unitTest:assert_equal(0, countOutWT)
+		unitTest:assert_equal(0, count) -- SKIP
+		unitTest:assert_equal(0, countOutWT) -- SKIP
 	end,
 	Cell = function(unitTest)
 		debug.sethook()
@@ -80,7 +80,7 @@ return{
 		for i = 1, 100 do
 			collectgarbage("collect")
 			local cell = Cell{cover = "forest"}
-			unitTest:assert_not_nil(cell)
+			unitTest:assert_not_nil(cell) -- SKIP
 
 			local reg = debug.getregistry()
 			local count = 0
@@ -96,8 +96,8 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, count) 
-			unitTest:assert_equal(0, countOutWT)
+			unitTest:assert_equal(1, count) -- SKIP
+			unitTest:assert_equal(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -116,8 +116,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, count)
-		unitTest:assert_equal(0, countOutWT)
+		unitTest:assert_equal(0, count) -- SKIP
+		unitTest:assert_equal(0, countOutWT) -- SKIP
 	end,
 	CellularSpace = function(unitTest)
 		debug.sethook()
@@ -126,7 +126,7 @@ return{
 		for i = 1, 100 do
 			collectgarbage("collect")
 			local cs = CellularSpace{xdim = 200}
-			unitTest:assert_type(cs, "CellularSpace")
+			unitTest:assert_type(cs, "CellularSpace") -- SKIP
 
 			local reg = debug.getregistry()
 			local countCS = 0
@@ -145,9 +145,9 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countCS) 
-			unitTest:assert_equal(40000, countCell)
-			unitTest:assert_equal(0, countOutWT)
+			unitTest:assert_equal(1, countCS) -- SKIP
+			unitTest:assert_equal(40000, countCell) -- SKIP
+			unitTest:assert_equal(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -169,9 +169,9 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countCS)
-		unitTest:assert_equal(0, countCell)
-		unitTest:assert_equal(0, countOutWT)
+		unitTest:assert_equal(0, countCS) -- SKIP
+		unitTest:assert_equal(0, countCell) -- SKIP
+		unitTest:assert_equal(0, countOutWT) -- SKIP
 	end,
 	Trajectory = function(unitTest)
 		debug.sethook()
@@ -182,8 +182,8 @@ return{
 			local cs = CellularSpace{xdim = 10}
 			local traj = Trajectory{target = cs}
 
-			unitTest:assert_not_nil(cs)
-			unitTest:assert_not_nil(traj)
+			unitTest:assert_not_nil(cs) -- SKIP
+			unitTest:assert_not_nil(traj) -- SKIP
 
 			local reg = debug.getregistry()
 			local countTraj = 0
@@ -205,10 +205,10 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countTraj)
-			unitTest:assert_equal(1, countCS)
-			unitTest:assert_equal(100, countCell)
-			unitTest:assert_equal(0, countOutWT)
+			unitTest:assert_equal(1, countTraj) -- SKIP
+			unitTest:assert_equal(1, countCS) -- SKIP
+			unitTest:assert_equal(100, countCell) -- SKIP
+			unitTest:assert_equal(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -233,10 +233,10 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countTraj)
-		unitTest:assert_equal(0, countCS)
-		unitTest:assert_equal(0, countCell)
-		unitTest:assert_equal(0, countOutWT)
+		unitTest:assert_equal(0, countTraj) -- SKIP
+		unitTest:assert_equal(0, countCS) -- SKIP
+		unitTest:assert_equal(0, countCell) -- SKIP
+		unitTest:assert_equal(0, countOutWT) -- SKIP
 	end,
 	Neighborhood = function(unitTest)
 		debug.sethook()
@@ -246,7 +246,7 @@ return{
 			collectgarbage("collect")
 			local cs = CellularSpace{xdim = 50}
 
-			unitTest:assert_not_nil(cs)
+			unitTest:assert_not_nil(cs) -- SKIP
 
 			cs:createNeighborhood{name = "moore"}
 
@@ -270,10 +270,10 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(2500, countNeigh)
-			unitTest:assert_equal(2500, countCell)
-			unitTest:assert_equal(1, countCS)
-			unitTest:assert_equal(0, countOutWT)
+			unitTest:assert_equal(2500, countNeigh) -- SKIP
+			unitTest:assert_equal(2500, countCell) -- SKIP
+			unitTest:assert_equal(1, countCS) -- SKIP
+			unitTest:assert_equal(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -298,10 +298,10 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countNeigh)
-		unitTest:assert_equal(0, countCell)
-		unitTest:assert_equal(0, countCS)
-		unitTest:assert_equal(0, countOutWT)
+		unitTest:assert_equal(0, countNeigh) -- SKIP
+		unitTest:assert_equal(0, countCell) -- SKIP
+		unitTest:assert_equal(0, countCS) -- SKIP
+		unitTest:assert_equal(0, countOutWT) -- SKIP
 	end,
 	Agent = function(unitTest)
 		debug.sethook()
@@ -314,7 +314,7 @@ return{
 				class = "business",
 				money = 1000
 			}
-			unitTest:assert_not_nil(ag)
+			unitTest:assert_not_nil(ag) -- SKIP
 
 			local reg = debug.getregistry()
 			local countAg = 0
@@ -330,8 +330,8 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countAg)
-			unitTest:assert_equal(0, countOutWT)
+			unitTest:assert_equal(1, countAg) -- SKIP
+			unitTest:assert_equal(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -350,8 +350,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countAg)
-		unitTest:assert_equal(0, countOutWT)
+		unitTest:assert_equal(0, countAg) -- SKIP
+		unitTest:assert_equal(0, countOutWT) -- SKIP
 	end,
 	Automaton = function(unitTest)
 		debug.sethook()
@@ -361,7 +361,7 @@ return{
 			collectgarbage("collect")
 			local at = Automaton{id = "automaton"}
 
-			unitTest:assert_not_nil(at)
+			unitTest:assert_not_nil(at) -- SKIP
 
 			local reg = debug.getregistry()
 			local countAt = 0
@@ -377,8 +377,8 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countAt)
-			unitTest:assert_equal(0, countOutWT)
+			unitTest:assert_equal(1, countAt) -- SKIP
+			unitTest:assert_equal(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -397,8 +397,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countAt)
-		unitTest:assert_equal(0, countOutWT)
+		unitTest:assert_equal(0, countAt) -- SKIP
+		unitTest:assert_equal(0, countOutWT) -- SKIP
 	end,
 	Environment = function(unitTest)
 		debug.sethook()
@@ -408,7 +408,7 @@ return{
 			collectgarbage("collect")
 			local env = Environment{id = "environment"}
 
-			unitTest:assert_not_nil(env)
+			unitTest:assert_not_nil(env) -- SKIP
 
 			local reg = debug.getregistry()
 			local countEnv = 0
@@ -424,8 +424,8 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countEnv)
-			unitTest:assert_equal(0, countOutWT)
+			unitTest:assert_equal(1, countEnv) -- SKIP
+			unitTest:assert_equal(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -444,8 +444,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countEnv)
-		unitTest:assert_equal(0, countOutWT)
+		unitTest:assert_equal(0, countEnv) -- SKIP
+		unitTest:assert_equal(0, countOutWT) -- SKIP
 	end,
 	Event = function(unitTest)
 		debug.sethook()
@@ -457,7 +457,7 @@ return{
 			evt = Event{priority = 1, action = function(event)
 				time = event:getTime()
 			end}
-			unitTest:assert_not_nil(evt)
+			unitTest:assert_not_nil(evt) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -471,7 +471,7 @@ return{
 			collectgarbage("collect")
 			flw = Flow{function(event, agent, cell) end}
 
-			unitTest:assert_not_nil(flw)
+			unitTest:assert_not_nil(flw) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -487,7 +487,7 @@ return{
 				function(event, agent, c) return true end,
 				target = "wet"
 			}
-			unitTest:assert_not_nil(jmp)
+			unitTest:assert_not_nil(jmp) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -503,7 +503,7 @@ return{
 					time = event:getTime()
 				end}
 			}
-			unitTest:assert_not_nil(t)
+			unitTest:assert_not_nil(t) -- SKIP
 
 			local reg = debug.getregistry()
 			local countTimer = 0
@@ -519,8 +519,8 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countTimer)
-			unitTest:assert_equal(0, countOutWT)
+			unitTest:assert_equal(1, countTimer) -- SKIP
+			unitTest:assert_equal(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -539,8 +539,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countTimer)
-		unitTest:assert_equal(0, countOutWT)
+		unitTest:assert_equal(0, countTimer) -- SKIP
+		unitTest:assert_equal(0, countOutWT) -- SKIP
 	end
 }
 

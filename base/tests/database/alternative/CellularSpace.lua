@@ -80,7 +80,7 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Argument 'database' does not support 'terralab'.")
+			unitTest:assert_error(error_func, "Argument 'database' does not support 'terralab'.") -- SKIP
 		else
 			error_func = function()
 				local cs = CellularSpace{
@@ -207,7 +207,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Invalid 'select'...")
+		unitTest:assert_error(error_func, "Invalid 'select'...") -- SKIP
 		--]]
 
 		error_func = function()
@@ -240,7 +240,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "bad SCL command.")
+		unitTest:assert_error(error_func, "bad SCL command.") -- SKIP
 		--]]
 
 

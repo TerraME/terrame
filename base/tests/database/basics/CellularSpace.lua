@@ -326,8 +326,8 @@ return{
 				sumWeight = sumWeight + weight
 			end)
 		end)
-		unitTest:assert_equal(903, countNeigh)
-		unitTest:assert_equal(100.33333, sumWeight, 0.00001)
+		unitTest:assert_equal(903, countNeigh) -- SKIP
+		unitTest:assert_equal(100.33333, sumWeight, 0.00001) -- SKIP
 
 		countNeigh = 0
 		sumWeight  = 0
@@ -339,9 +339,9 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(10201, #cs)
-		unitTest:assert_equal(903, countNeigh)
-		unitTest:assert_equal(100.33333, sumWeight, 0.00001)
+		unitTest:assert_equal(10201, #cs) -- SKIP
+		unitTest:assert_equal(903, countNeigh) -- SKIP
+		unitTest:assert_equal(100.33333, sumWeight, 0.00001) -- SKIP
 
 		-- where plus createNeighborhood
 		cs = CellularSpace{
@@ -373,8 +373,8 @@ return{
 				sumWeight = sumWeight + weight
 			end)
 		end)
-		unitTest:assert_equal(49385, countNeigh)
-		unitTest:assert_equal(5673, sumWeight, 0.00001)
+		unitTest:assert_equal(49385, countNeigh) -- SKIP
+		unitTest:assert_equal(5673, sumWeight, 0.00001) -- SKIP
 
 		countNeigh = 0
 		sumWeight  = 0
@@ -385,8 +385,8 @@ return{
 				sumWeight = sumWeight + weight
 			end)
 		end)
-		unitTest:assert_equal(18582, countNeigh)
-		unitTest:assert_equal(451.98359156683, sumWeight, 0.00001)
+		unitTest:assert_equal(18582, countNeigh) -- SKIP
+		unitTest:assert_equal(451.98359156683, sumWeight, 0.00001) -- SKIP
 	end,
 	save = function(unitTest)
 		local config = getConfig()
@@ -463,14 +463,14 @@ return{
 		local sumWeight  = 0
 		forEachCell(cs, function(cell)
 			forEachNeighbor(cell, function(cell, neigh, weight)
-				unitTest:assert_not_nil(neigh)
-				unitTest:assert_not_nil(weight)
+				unitTest:assert_not_nil(neigh) -- SKIP
+				unitTest:assert_not_nil(weight) -- SKIP
 				countNeigh = countNeigh + 1
 				sumWeight = sumWeight + weight
 			end)
 		end)
-		unitTest:assert_equal(80400, countNeigh)
-		unitTest:assert_equal(10201.00000602, sumWeight, 0.00001)
+		unitTest:assert_equal(80400, countNeigh) -- SKIP
+		unitTest:assert_equal(10201.00000602, sumWeight, 0.00001) -- SKIP
 		--]]
 
 		local cs1 = CellularSpace{
@@ -500,8 +500,8 @@ return{
 			theme = "cells1000x1000"
 		}
 
-		unitTest:assert_type(cs1, "CellularSpace")
-		unitTest:assert_equal(121, #cs1)
+		unitTest:assert_type(cs1, "CellularSpace") -- SKIP
+		unitTest:assert_equal(121, #cs1) -- SKIP
 
 		local countTest = 1
 
@@ -516,12 +516,12 @@ return{
 
 		forEachCell(cs1, function(cell)
 			local neighborhood = cell:getNeighborhood()
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assert_not_nil(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert(neighborhoodSize >= 5)
-			unitTest:assert(neighborhoodSize <= 12)
+			unitTest:assert(neighborhoodSize >= 5) -- SKIP
+			unitTest:assert(neighborhoodSize <= 12) -- SKIP
 
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
@@ -530,32 +530,32 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, function(c, neigh, weight)
-				unitTest:assert_not_nil(c)
-				unitTest:assert_not_nil(neigh)
+				unitTest:assert_not_nil(c) -- SKIP
+				unitTest:assert_not_nil(neigh) -- SKIP
 
-				unitTest:assert(weight >= 900)
-				unitTest:assert(weight <= 1800)
+				unitTest:assert(weight >= 900) -- SKIP
+				unitTest:assert(weight <= 1800) -- SKIP
 
 				minWeight = math.min(weight, minWeight)
 				maxWeight = math.max(weight, maxWeight)
 
-				unitTest:assert_equal(weight, neighborhood:getWeight(neigh))
+				unitTest:assert_equal(weight, neighborhood:getWeight(neigh)) -- SKIP
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(5, minSize)
-		unitTest:assert_equal(12, maxSize)
-		unitTest:assert_equal(900, minWeight)
-		unitTest:assert_equal(1800, maxWeight)
-		unitTest:assert_equal(1617916.8, sumWeight, 0.00001)
+		unitTest:assert_equal(5, minSize) -- SKIP
+		unitTest:assert_equal(12, maxSize) -- SKIP
+		unitTest:assert_equal(900, minWeight) -- SKIP
+		unitTest:assert_equal(1800, maxWeight) -- SKIP
+		unitTest:assert_equal(1617916.8, sumWeight, 0.00001) -- SKIP
 
-		unitTest:assert_equal(28, sizes[11])
-		unitTest:assert_equal(8,  sizes[7])
-		unitTest:assert_equal(28, sizes[8])
-		unitTest:assert_equal(4,  sizes[10])
-		unitTest:assert_equal(49, sizes[12])
-		unitTest:assert_equal(4,  sizes[5])
+		unitTest:assert_equal(28, sizes[11]) -- SKIP
+		unitTest:assert_equal(8,  sizes[7]) -- SKIP
+		unitTest:assert_equal(28, sizes[8]) -- SKIP
+		unitTest:assert_equal(4,  sizes[10]) -- SKIP
+		unitTest:assert_equal(49, sizes[12]) -- SKIP
+		unitTest:assert_equal(4,  sizes[5]) -- SKIP
 
 		countTest = countTest + 1
 
@@ -574,12 +574,12 @@ return{
 
 		forEachCell(cs1, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assert_not_nil(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert(neighborhoodSize >= 5)
-			unitTest:assert(neighborhoodSize <= 12)
+			unitTest:assert(neighborhoodSize >= 5) -- SKIP
+			unitTest:assert(neighborhoodSize <= 12) -- SKIP
 
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
@@ -588,32 +588,32 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c)
-				unitTest:assert_not_nil(neigh)
+				unitTest:assert_not_nil(c) -- SKIP
+				unitTest:assert_not_nil(neigh) -- SKIP
 
-				unitTest:assert(weight >= 900)
-				unitTest:assert(weight <= 1800)
+				unitTest:assert(weight >= 900) -- SKIP
+				unitTest:assert(weight <= 1800) -- SKIP
 
 				minWeight = math.min(weight, minWeight)
 				maxWeight = math.max(weight, maxWeight)
 
-				unitTest:assert_equal(weight, neighborhood:getWeight(neigh))
+				unitTest:assert_equal(weight, neighborhood:getWeight(neigh)) -- SKIP
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(5, minSize)
-		unitTest:assert_equal(12, maxSize)
-		unitTest:assert_equal(900, minWeight)
-		unitTest:assert_equal(1800, maxWeight)
-		unitTest:assert_equal(1617916.8, sumWeight, 0.00001)
+		unitTest:assert_equal(5, minSize) -- SKIP
+		unitTest:assert_equal(12, maxSize) -- SKIP
+		unitTest:assert_equal(900, minWeight) -- SKIP
+		unitTest:assert_equal(1800, maxWeight) -- SKIP
+		unitTest:assert_equal(1617916.8, sumWeight, 0.00001) -- SKIP
 
-		unitTest:assert_equal(28, sizes[11])
-		unitTest:assert_equal(8, sizes[7])
-		unitTest:assert_equal(28, sizes[8])
-		unitTest:assert_equal(4, sizes[10])
-		unitTest:assert_equal(49, sizes[12])
-		unitTest:assert_equal(4, sizes[5])
+		unitTest:assert_equal(28, sizes[11]) -- SKIP
+		unitTest:assert_equal(8, sizes[7]) -- SKIP
+		unitTest:assert_equal(28, sizes[8]) -- SKIP
+		unitTest:assert_equal(4, sizes[10]) -- SKIP
+		unitTest:assert_equal(49, sizes[12]) -- SKIP
+		unitTest:assert_equal(4, sizes[5]) -- SKIP
 
 		countTest = countTest + 1
 
@@ -630,12 +630,12 @@ return{
 
 		forEachCell(cs3, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assert_not_nil(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert(neighborhoodSize >= 3)
-			unitTest:assert(neighborhoodSize <= 8)
+			unitTest:assert(neighborhoodSize >= 3) -- SKIP
+			unitTest:assert(neighborhoodSize <= 8) -- SKIP
 
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
@@ -644,26 +644,26 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c)
-				unitTest:assert_not_nil(neigh)
+				unitTest:assert_not_nil(c) -- SKIP
+				unitTest:assert_not_nil(neigh) -- SKIP
 
-				unitTest:assert_equal(weight,1)
+				unitTest:assert_equal(weight, 1) -- SKIP
 
-				unitTest:assert_equal(weight, neighborhood:getWeight(neigh))
+				unitTest:assert_equal(weight, neighborhood:getWeight(neigh)) -- SKIP
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(3, minSize)
-		unitTest:assert_equal(8, maxSize)
-		unitTest:assert_equal(10992, sumWeight)
+		unitTest:assert_equal(3, minSize) -- SKIP
+		unitTest:assert_equal(8, maxSize) -- SKIP
+		unitTest:assert_equal(10992, sumWeight) -- SKIP
 
-		unitTest:assert_equal(4, sizes[3])
-		unitTest:assert_equal(34, sizes[4])
-		unitTest:assert_equal(72, sizes[5])
-		unitTest:assert_equal(34, sizes[6])
-		unitTest:assert_equal(48, sizes[7])
-		unitTest:assert_equal(1243, sizes[8])
+		unitTest:assert_equal(4, sizes[3]) -- SKIP
+		unitTest:assert_equal(34, sizes[4]) -- SKIP
+		unitTest:assert_equal(72, sizes[5]) -- SKIP
+		unitTest:assert_equal(34, sizes[6]) -- SKIP
+		unitTest:assert_equal(48, sizes[7]) -- SKIP
+		unitTest:assert_equal(1243, sizes[8]) -- SKIP
 
 		countTest = countTest + 1
 
@@ -681,22 +681,22 @@ return{
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assert_not_nil(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert(neighborhoodSize >= 5)
-			unitTest:assert(neighborhoodSize <= 120)
+			unitTest:assert(neighborhoodSize >= 5) -- SKIP
+			unitTest:assert(neighborhoodSize <= 120) -- SKIP
 
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c)
-				unitTest:assert_not_nil(neigh)
+				unitTest:assert_not_nil(c) -- SKIP
+				unitTest:assert_not_nil(neigh) -- SKIP
 
-				unitTest:assert(weight >= 70.8015)
-				unitTest:assert(weight <= 9999.513)
+				unitTest:assert(weight >= 70.8015) -- SKIP
+				unitTest:assert(weight <= 9999.513) -- SKIP
 
 				minWeight = math.min(weight, minWeight)
 				maxWeight = math.max(weight, maxWeight)
@@ -704,11 +704,11 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(5, minSize)
-		unitTest:assert_equal(120, maxSize)
-		unitTest:assert_equal(70.8015, minWeight, 0.00001)
-		unitTest:assert_equal(9999.513, maxWeight, 0.00001)
-		unitTest:assert_equal(84604261.93974, sumWeight, 0.00001)
+		unitTest:assert_equal(5, minSize) -- SKIP
+		unitTest:assert_equal(120, maxSize) -- SKIP
+		unitTest:assert_equal(70.8015, minWeight, 0.00001) -- SKIP
+		unitTest:assert_equal(9999.513, maxWeight, 0.00001) -- SKIP
+		unitTest:assert_equal(84604261.93974, sumWeight, 0.00001) -- SKIP
 
 		-- .GAL Regular CS
 		countTest = countTest + 1
@@ -726,12 +726,12 @@ return{
 
 		forEachCell(cs1, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assert_not_nil(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert(neighborhoodSize >= 5)
-			unitTest:assert(neighborhoodSize <= 12)
+			unitTest:assert(neighborhoodSize >= 5) -- SKIP
+			unitTest:assert(neighborhoodSize <= 12) -- SKIP
 
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
@@ -740,24 +740,24 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c)
-				unitTest:assert_not_nil(neigh)
+				unitTest:assert_not_nil(c) -- SKIP
+				unitTest:assert_not_nil(neigh) -- SKIP
 
-				unitTest:assert_equal(1, weight)
+				unitTest:assert_equal(1, weight) -- SKIP
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(1236, sumWeight)
-		unitTest:assert_equal(5,    minSize)
-		unitTest:assert_equal(12,   maxSize)
+		unitTest:assert_equal(1236, sumWeight) -- SKIP
+		unitTest:assert_equal(5,    minSize) -- SKIP
+		unitTest:assert_equal(12,   maxSize) -- SKIP
 
-		unitTest:assert_equal(28, sizes[11])
-		unitTest:assert_equal(8,  sizes[7])
-		unitTest:assert_equal(28, sizes[8])
-		unitTest:assert_equal(4,  sizes[10])
-		unitTest:assert_equal(49, sizes[12])
-		unitTest:assert_equal(4,  sizes[5])
+		unitTest:assert_equal(28, sizes[11]) -- SKIP
+		unitTest:assert_equal(8,  sizes[7]) -- SKIP
+		unitTest:assert_equal(28, sizes[8]) -- SKIP
+		unitTest:assert_equal(4,  sizes[10]) -- SKIP
+		unitTest:assert_equal(49, sizes[12]) -- SKIP
+		unitTest:assert_equal(4,  sizes[5]) -- SKIP
 
 		-- .GAL Irregular CS
 		countTest = countTest + 1
@@ -773,28 +773,28 @@ return{
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assert_not_nil(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert(neighborhoodSize >= 5)
-			unitTest:assert(neighborhoodSize <= 120)
+			unitTest:assert(neighborhoodSize >= 5) -- SKIP
+			unitTest:assert(neighborhoodSize <= 120) -- SKIP
 
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c)
-				unitTest:assert_not_nil(neigh)
+				unitTest:assert_not_nil(c) -- SKIP
+				unitTest:assert_not_nil(neigh) -- SKIP
 
-				unitTest:assert_equal(1, weight)
+				unitTest:assert_equal(1, weight) -- SKIP
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(14688, sumWeight)
-		unitTest:assert_equal(5,     minSize)
-		unitTest:assert_equal(120,   maxSize)
+		unitTest:assert_equal(14688, sumWeight) -- SKIP
+		unitTest:assert_equal(5,     minSize) -- SKIP
+		unitTest:assert_equal(120,   maxSize) -- SKIP
 
 		-- .GWT Regular CS
 		countTest = countTest + 1
@@ -814,13 +814,13 @@ return{
 
 		forEachCell(cs1, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assert_not_nil(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_type(neighborhoodSize, "number")
+			unitTest:assert_type(neighborhoodSize, "number") -- SKIP
 
-			unitTest:assert(neighborhoodSize >= 5)
-			unitTest:assert(neighborhoodSize <= 12)
+			unitTest:assert(neighborhoodSize >= 5) -- SKIP
+			unitTest:assert(neighborhoodSize <= 12) -- SKIP
 
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
@@ -829,11 +829,11 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c)
-				unitTest:assert_not_nil(neigh)
+				unitTest:assert_not_nil(c) -- SKIP
+				unitTest:assert_not_nil(neigh) -- SKIP
 
-				unitTest:assert(weight >= 900)
-				unitTest:assert(weight <= 1800)
+				unitTest:assert(weight >= 900) -- SKIP
+				unitTest:assert(weight <= 1800) -- SKIP
 
 				minWeight = math.min(weight, minWeight)
 				maxWeight = math.max(weight, maxWeight)
@@ -841,16 +841,16 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(1800, maxWeight)
-		unitTest:assert_equal(900, minWeight)
-		unitTest:assert_equal(1617916.8, sumWeight, 0.00001)
+		unitTest:assert_equal(1800, maxWeight) -- SKIP
+		unitTest:assert_equal(900, minWeight) -- SKIP
+		unitTest:assert_equal(1617916.8, sumWeight, 0.00001) -- SKIP
 
-		unitTest:assert_equal(28, sizes[11])
-		unitTest:assert_equal(8,  sizes[7])
-		unitTest:assert_equal(28, sizes[8])
-		unitTest:assert_equal(4,  sizes[10])
-		unitTest:assert_equal(49, sizes[12])
-		unitTest:assert_equal(4,  sizes[5])
+		unitTest:assert_equal(28, sizes[11]) -- SKIP
+		unitTest:assert_equal(8,  sizes[7]) -- SKIP
+		unitTest:assert_equal(28, sizes[8]) -- SKIP
+		unitTest:assert_equal(4,  sizes[10]) -- SKIP
+		unitTest:assert_equal(49, sizes[12]) -- SKIP
+		unitTest:assert_equal(4,  sizes[5]) -- SKIP
 
 		-- .GWT Irregular CS
 		countTest = countTest + 1
@@ -868,24 +868,24 @@ return{
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assert_not_nil(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_type(neighborhoodSize, "number")
+			unitTest:assert_type(neighborhoodSize, "number") -- SKIP
 
-			unitTest:assert(neighborhoodSize >= 5)
-			unitTest:assert(neighborhoodSize <= 120)
+			unitTest:assert(neighborhoodSize >= 5) -- SKIP
+			unitTest:assert(neighborhoodSize <= 120) -- SKIP
 
 			minSize = math.min(neighborhoodSize, minSize)
 			maxSize = math.max(neighborhoodSize, maxSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c)
-				unitTest:assert_not_nil(neigh)
-				unitTest:assert_type(weight, "number")
+				unitTest:assert_not_nil(c) -- SKIP
+				unitTest:assert_not_nil(neigh) -- SKIP
+				unitTest:assert_type(weight, "number") -- SKIP
 
-				unitTest:assert(weight >= 70.8015)
-				unitTest:assert(weight <= 9999.513)
+				unitTest:assert(weight >= 70.8015) -- SKIP
+				unitTest:assert(weight <= 9999.513) -- SKIP
 
 				minWeight = math.min(weight, minWeight)
 				maxWeight = math.max(weight, maxWeight)
@@ -893,11 +893,11 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(9999.513, maxWeight)
-		unitTest:assert_equal(70.8015, minWeight)
-		unitTest:assert_equal(5, minSize)
-		unitTest:assert_equal(120, maxSize)
-		unitTest:assert_equal(84604261.93974, sumWeight, 0.00001)
+		unitTest:assert_equal(9999.513, maxWeight) -- SKIP
+		unitTest:assert_equal(70.8015, minWeight) -- SKIP
+		unitTest:assert_equal(5, minSize) -- SKIP
+		unitTest:assert_equal(120, maxSize) -- SKIP
+		unitTest:assert_equal(84604261.93974, sumWeight, 0.00001) -- SKIP
 
 		-- GAL from shapefile
 		local cs = CellularSpace{database = file("brazilstates.shp", "base")}
@@ -912,7 +912,7 @@ return{
 			count = count + #cell:getNeighborhood()
 		end)
 
-		unitTest:assert_equal(count, 7)
+		unitTest:assert_equal(count, 7) -- SKIP
 	end
 }
 

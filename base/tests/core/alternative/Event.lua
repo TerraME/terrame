@@ -118,25 +118,25 @@ return{
 		local error_func = function()
 			event:config(1, -2, 1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", -2))
+		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", -2)) -- SKIP
 
 		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, 0, 1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", 0))
+		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", 0)) -- SKIP
 
 		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, "5")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "5"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "5")) -- SKIP
 
 		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, 1, "aa")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number", "aa"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number", "aa")) -- SKIP
 	end
 --]]
 }
