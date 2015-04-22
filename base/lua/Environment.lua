@@ -482,6 +482,9 @@ function Environment(data)
 	    elseif t == "Timer" or t == "Agent" or t == "Environment" then
 			ud.parent = data
 			cObj:add(ud.cObj_)
+		elseif t == "Cell" or t == "Group" then
+		elseif k ~= "id" then
+			customError("Argument '"..k.."' (a '"..t.."') cannot be added to an Environment.")
 		end
 	end)
 

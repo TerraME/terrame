@@ -221,6 +221,12 @@ return{
 		end
 
 		unitTest:assert_error(error_func, "The Environment has an Automaton but not a CellularSpace.")
+
+		local error_func = function()
+			envmt = Environment{2}
+		end
+
+		unitTest:assert_error(error_func, "Argument '1' (a 'number') cannot be added to an Environment.")
 	end,
 	notify = function(unitTest)
 		local env = Environment{}
