@@ -373,7 +373,7 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 					forEachElement(block.arg, function(idx, value, mtype)
 						if mtype == "string" and idx ~= "named" and type(idx) ~= "number" then
 							if not belong(value:sub(value:len(), value:len()), {".", "?", ":"}) and not silent then
-								printError("Argument '"..idx.."' from '"..block.name.."' does end with '.', '?', nor ':'.")
+								printError("Description of argument '"..idx.."' in '"..block.name.."()' does end with '.', '?', nor ':'.")
 								doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
 							end
 						end

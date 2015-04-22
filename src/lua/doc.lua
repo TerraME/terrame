@@ -312,9 +312,9 @@ function executeDoc(package)
 	end
 
 	if doc_report.duplicated == 0 then
-		printNote("All unique tags are not duplicated.")
+		printNote("Tags are not duplicated.")
 	else
-		printError(doc_report.duplicated.." tags should be unique and are duplicated.")
+		printError(doc_report.duplicated.." tags are duplicated.")
 	end
 
 	if doc_report.compulsory_arguments == 0 then
