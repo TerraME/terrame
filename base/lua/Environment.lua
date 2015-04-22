@@ -479,7 +479,7 @@ function Environment(data)
 			cObj:add(ud.cObj_)
 		elseif t == "Society" then
 			ud.parent = data
-	    elseif t == "Timer" or t == "Agent" then
+	    elseif t == "Timer" or t == "Agent" or t == "Environment" then
 			ud.parent = data
 			cObj:add(ud.cObj_)
 		end
