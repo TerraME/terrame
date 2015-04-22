@@ -61,6 +61,28 @@ local function testfolders(folder, ut)
 	return(result)
 end
 
+local function assertTable(filename)
+	local count = 0
+	local mtable = {}
+
+	local file = io.open(filename)
+
+	local line = file:read()
+	while line do
+		count = count + 1
+
+		if string.match(line, ":assert") and not string.match(line, "SKIP") then
+			if string.match(line, "--*assert") == "assert" then
+				mtable[count] = 0
+			end
+		end
+
+		line = file:read()
+	end
+	file:close()
+	return mtable
+end
+
 local function lineTable(filename)
 	local count = 0
 	local mtable = {}
@@ -244,6 +266,7 @@ function executeTests(package, fileName)
 		snapshots = 0,
 		snapshot_files = 0,
 		lines_not_executed = 0,
+		asserts_not_executed = 0,
 		unused_snapshot_files = 0
 	}
 
@@ -391,6 +414,8 @@ function executeTests(package, fileName)
 				os.exit()
 			end)
 
+			local myAssertTable = assertTable(baseDir..s..eachFolder..s..eachFile)
+
 			if type(tests) ~= "table" or getn(tests) == 0 then
 				printNote("Testing "..eachFolder..s..eachFile)
 				printError("The file does not implement any test.")
@@ -423,6 +448,12 @@ function executeTests(package, fileName)
 			local function trace(event, line)
 				local s = debug.getinfo(2).short_src
 				local short = string.match(s, "([^/]-)$")
+
+				if short == eachFile and string.match(s, "tests") then
+					if myAssertTable[line] then
+						myAssertTable[line] = myAssertTable[line] + 1
+					end
+				end
 
 				if data.lines and short == eachFile and not string.match(s, "tests") then
 					if not executionlines[eachFile][line] then
@@ -527,6 +558,18 @@ function executeTests(package, fileName)
 				end
 			end
 			debug.sethook()
+
+			if data.test then
+				printWarning("Skip checking asserts")
+			else
+				print("Checking asserts")
+				forEachOrderedElement(myAssertTable, function(line, count)
+					if count == 0 then
+						printError("Assert in line "..line.." was not executed.")
+						ut.asserts_not_executed = ut.asserts_not_executed + 1
+					end
+				end)
+			end
 		end
 	end) 
 
@@ -729,6 +772,14 @@ function executeTests(package, fileName)
 		printError("There are "..ut.invalid_test_file.." invalid files or folders in folder 'test'.")
 	else
 		printNote("There are no invalid files or folders in folder 'tests'.")
+	end
+
+	if data.test then
+		printWarning("Execution of all asserts was not verified.")
+	elseif ut.asserts_not_executed > 0 then
+		printError(ut.asserts_not_executed.." asserts were not executed.")
+	else
+		printNote("All asserts were executed at least once.")
 	end
 
 	if ut.fail > 0 then
