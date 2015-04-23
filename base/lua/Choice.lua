@@ -161,4 +161,3 @@ function Choice(attrTab)
 	return result
 end
 
-

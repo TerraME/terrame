@@ -72,7 +72,7 @@ local function assertTable(filename)
 		count = count + 1
 
 		if string.match(line, ":assert") and not string.match(line, "SKIP") then
-			if string.match(line, "--*assert") == "assert" then
+			if string.match(line, "%-%-*assert") == "assert" then
 				mtable[count] = 0
 			end
 		end

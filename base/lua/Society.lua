@@ -115,7 +115,7 @@ Society_ = {
 		if mtype == "table" then
 			agent.state_ = State{id = "state"} -- remove this in the next version
 			agent.id = tostring(self.autoincrement)
-			agent = Agent(agent)            
+			agent = Agent(agent)
 			local metaTable = {__index = self.instance, __tostring = tostringTerraME}
 			setmetatable(agent, metaTable)
 			agent:init()
@@ -415,7 +415,7 @@ Society_ = {
 				end
 			end
 		else
-			incompatibleTypeError(1, "Agent or function", arg) 
+			incompatibleTypeError(1, "Agent or function", arg)
 		end
 	end,
 	--- Return a random Agent from the Society.
@@ -483,7 +483,7 @@ Society_ = {
 
 		local result = {}
 		local class_
-    
+
 		forEachAgent(self, function(agent)
 			class_ = argument(agent)
 
@@ -736,9 +736,9 @@ function Society(data)
 			end
 		else
 			local cs = CellularSpace{
-				database = data.database, 
-				port = data.port, 
-				user = data.user, 
+				database = data.database,
+				port = data.port,
+				user = data.user,
 				host = data.host,
 				dbType = data.dbType,
 				password = data.password

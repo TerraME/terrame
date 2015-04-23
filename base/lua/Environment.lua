@@ -58,22 +58,22 @@ local function createUniformPlacement(environment, cs, placement)
 		nplacement = "placement"
 	end
 
-	local counter = 1 
+	local counter = 1
 	forEachOrderedElement(environment, function(_, element, mtype)
 		if mtype == "Society" then
 			element.placements[nplacement] = cs
 			forEachAgent(element, function(agent)
 				agent:enter(cs.cells[counter], placement)
-				counter = counter + 1 
+				counter = counter + 1
 				if counter > #cs then
-					counter = 1 
+					counter = 1
 				end 
 			end)
 		elseif mtype == "Agent" then
 			element:enter(cs.cells[counter], placement)
-			counter = counter + 1 
+			counter = counter + 1
 			if counter > #cs then
-				counter = 1 
+				counter = 1
 			end 
 		end 
 	end)
@@ -118,7 +118,7 @@ local function createVoidPlacement(environment, cs, data)
 	end)
 end
 
-Environment_ = { 
+Environment_ = {
 	type_ = "Environment",
 	--- Add an element to the Environment.
 	-- @arg object An Agent, Automaton, CellularSpace, Timer or Environment.
@@ -126,14 +126,14 @@ Environment_ = {
 	-- environment:add(cellularSpace)
 	add = function(self, object)
 		local t = type(object)
-		if belong(t, {"CellularSpace", "Society", "Agent", "Automaton", "Timer", "Trajectory", "Cell"}) then
+		if belong(t, {"Cell", "CellularSpace", "Society", "Agent", "Automaton", "Timer", "Environment", "Trajectory", "Cell"}) then
 			object.parent = self
 			table.insert(self, object)
 
 			if t == "Society" then return end
 		else
-      		incompatibleTypeError(1, "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory", object)
-    	end
+			incompatibleTypeError(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory", object)
+		end
 		self.cObj_:add(object.cObj_)
 	end,
 	--- Create relations between behavioural entities (Agents) and spatial entities (Cells). The
@@ -239,19 +239,19 @@ Environment_ = {
 		end
 
 		switch(data, "strategy"):caseof{
-			random = function() 
+			random = function()
 				checkUnnecessaryArguments(data, {"strategy", "name", "max"})
-				createVoidPlacement(self, mycs, data) 
+				createVoidPlacement(self, mycs, data)
 				createRandomPlacement(self, mycs, data.max, data.name)
 			end,
 			uniform = function()
 				checkUnnecessaryArguments(data, {"strategy", "name"})
-				createVoidPlacement(self, mycs, data) 
+				createVoidPlacement(self, mycs, data)
 				createUniformPlacement(self, mycs, data.name)
 			end,
 			void = function()
 				checkUnnecessaryArguments(data, {"strategy", "name"})
-				createVoidPlacement(self, mycs, data) 
+				createVoidPlacement(self, mycs, data)
 			end
 		}
 	end,
@@ -260,7 +260,7 @@ Environment_ = {
 	-- @arg finalTime A positve integer number representing the time to stop the simulation.
 	-- Timers stop when there is no Event scheduled to a time less or equal to the final time.
 	-- @usage environment:execute(1000)
-	execute = function(self, finalTime) 
+	execute = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
 		self.cObj_:config(finalTime)
 		self.cObj_:execute()
@@ -285,7 +285,7 @@ Environment_ = {
 		if extension ~= "gpm" then
 			invalidFileExtensionError("source", extension)
 		end
-    
+
 		defaultTableValue(data, "bidirect", false)
 
 		local file = io.open(data.source, "r")
@@ -455,9 +455,9 @@ metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
 function Environment(data)
 	if type(data) ~= "table" then
 		if data == nil then
- 			customError(tableArgumentMsg())
+			customError(tableArgumentMsg())
 		else
- 			customError(namedArgumentsMsg())
+			customError(namedArgumentsMsg())
 		end
 	end
 
@@ -466,12 +466,12 @@ function Environment(data)
 	local cObj = TeScale(data.id)
 	setmetatable(data, metaTableEnvironment_)
 	cObj:setReference(data)
-  	local flagAutomaton = false
-  	local flagCellularSpace = false
+	local flagAutomaton = false
+	local flagCellularSpace = false
 	forEachElement(data, function(k, ud, t)
-	    if t == "Automaton" then
+		if t == "Automaton" then
 			ud.parent = data
-			cObj:add(ud.cObj_)    
+			cObj:add(ud.cObj_)
 			flagAutomaton = true
 		elseif t == "CellularSpace" then
 			ud.parent = data
@@ -479,10 +479,10 @@ function Environment(data)
 			cObj:add(ud.cObj_)
 		elseif t == "Society" then
 			ud.parent = data
-	    elseif t == "Timer" or t == "Agent" or t == "Environment" then
+		elseif t == "Timer" or t == "Agent" or t == "Environment" then
 			ud.parent = data
 			cObj:add(ud.cObj_)
-		elseif t == "Cell" or t == "Group" then
+		elseif t == "Cell" or t == "Group" or t == "Trajectory" then
 		elseif k ~= "id" then
 			customError("Argument '"..k.."' (a '"..t.."') cannot be added to an Environment.")
 		end

@@ -35,7 +35,7 @@
 -- }
 function Jump(data)
 	if type(data) ~= "table" then
- 		customError(tableArgumentMsg())
+		customError(tableArgumentMsg())
 	end
 
 	local cObj = TeJump()
@@ -45,10 +45,10 @@ function Jump(data)
 		customError("Jump constructor expected a function as first argument.")
 	end
 
-	if type(data.target) ~= "string" then 
+	if type(data.target) ~= "string" then
 		data.target = "st1"
-	end  
-	cObj:setTargetControlModeName(data.target) 
+	end
+	cObj:setTargetControlModeName(data.target)
 	cObj:setReference(data)
 	return cObj
 end

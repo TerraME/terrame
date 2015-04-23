@@ -35,7 +35,7 @@ Automaton_ = {
 		if type(object) == "Trajectory" or type(object) == "State" then
 			self.cObj_:add(object)
 		else
-			incompatibleTypeError(1, "State or Trajectory", object)  
+			incompatibleTypeError(1, "State or Trajectory", object)
 		end
 	end,
 	--- Check if the state machine was correctly defined. It verifies whether the targets of Jump 
@@ -63,7 +63,7 @@ Automaton_ = {
 	--- Retrieves the time when the machine executed the transition to the current state. Before
 	-- running, the latency is zero.
 	-- @usage latency = automaton:getLatency()
-	getLatency = function(self) 
+	getLatency = function(self)
 		return self.cObj_:getLatency()
 	end,
 	--- Retrieves the name of the current State.
@@ -156,10 +156,10 @@ metaTableAutomaton_ = {__index = Automaton_, __tostring = tostringTerraME}
 function Automaton(data)
 	if type(data) ~= "table" then
 		if data == nil then
- 			customError(tableArgumentMsg())
+			customError(tableArgumentMsg())
 		else
- 			customError(namedArgumentsMsg())
- 		end
+			customError(namedArgumentsMsg())
+		end
 	end
 
 	local cObj = TeLocalAutomaton()
@@ -172,7 +172,7 @@ function Automaton(data)
 
 	setmetatable(data, metaTableAutomaton_)
 	cObj:setReference(data)
-	for i, ud in pairs(data) do 
+	for i, ud in pairs(data) do
 		if type(ud) == "Trajectory" then cObj:add(ud.cObj_) end
 		if type(ud) == "userdata" then cObj:add(ud) end
 	end

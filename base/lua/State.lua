@@ -38,8 +38,8 @@ function State(data)
 		if data == nil then
 			data = {}
 		else
- 			customError(tableArgumentMsg())
- 		end
+			customError(tableArgumentMsg())
+		end
 	end
 
 	local cObj = TeState()
@@ -55,7 +55,7 @@ function State(data)
 		if type(ud) == "table" then cObj:add(ud.cObj_) end
 		if type(ud) == "userdata" then cObj:add(ud) end
 	end
-  
+
 	return cObj
 end
 

@@ -58,7 +58,7 @@ local state2 = State{
 	}
 }
 
-local ev = Event{action = function() return true end}
+local ev = Event{action = function() end}
 
 return{
 	add = function(unitTest)
@@ -294,7 +294,54 @@ return{
 		unitTest:assert_equal(14, cont)
 	end,
 	getStateName = function(unitTest)
-		unitTest:assert(true)
+		local cs = CellularSpace{xdim = 2}
+		local cont = 0
+
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs
+			},
+			cont = 0,
+			State{
+				id = "first",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return tru
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "second"
+				}
+			},
+			State{
+				id = "second",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "first"
+				}
+			}
+		}
+
+		local env = Environment{cs, at1}
+
+		local ev = Event{action = function() end}[1]
+
+		at1:setTrajectoryStatus(true)
+		at1:execute(ev)
+
+		unitTest:assert_equal(at1:getStateName(cs:sample()), "first")
 	end,
 	getStates = function(unitTest)
 		local at1 = Automaton{

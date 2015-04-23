@@ -50,9 +50,19 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "terralab"))
 
 		local error_func = function()
+			randomObj:integer(2.5)
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg(1, 2.5))
+
+		local error_func = function()
 			randomObj:integer(2, "terralab")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "terralab"))
+
+		local error_func = function()
+			randomObj:integer(1, 2.5)
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg(2, 2.5))	
 	end,
 	number = function(unitTest)
 		local randomObj = Random{}

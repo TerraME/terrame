@@ -36,7 +36,7 @@ Cell_ = {
 	addNeighborhood = function(self, neigh, id)
 		if neigh == nil then
 			mandatoryArgumentError(1)
-		elseif type(neigh) ~= "Neighborhood" and type(neigh)  ~= "function" then
+		elseif type(neigh) ~= "Neighborhood" and type(neigh) ~= "function" then
 			incompatibleTypeError(1, "Neighborhood", neigh)
 		end
 
@@ -92,12 +92,12 @@ Cell_ = {
 	getNeighborhood = function(self, index)
 		if index == nil then
 			index = "1"
-		elseif type(index) ~= "string" then 
+		elseif type(index) ~= "string" then
 			incompatibleTypeError(1, "string", index)
 		end
 
 		if self.neighborhoods then
-			local s = self.neighborhoods[index] 
+			local s = self.neighborhoods[index]
 			if type(s) == "function" then
 				return s(self)
 			end
@@ -129,12 +129,6 @@ Cell_ = {
 	isEmpty = function(self, placement)
 		return #self:getAgents(placement) == 0
 	end,
-	--- Retrieve the name of the current state of a given Agent.
-	-- @arg agent an Agent.
-	-- @usage name = cell:getStateName()
-	getStateName = function(self, agent)
-		return self.cObj_:getCurrentStateName(agent.cObj_)
-	end, 
 	--- Notify every Observer connected to the Cell.
 	-- @arg modelTime An integer number representing the notification time. Default is zero.
 	-- @usage cell:notify()
@@ -180,7 +174,6 @@ Cell_ = {
 		mandatoryArgument(1, "string", id)
 		self.id = id
 		self.cObj_:setID(self.id)
-		self.objectId_ = self.cObj_:getID()
 	end,
 	--- Retrieve the number of Neighborhoods of the Cell.
 	-- @return a positive integer number
@@ -194,9 +187,9 @@ Cell_ = {
 	-- copies the current values to a table named past, within the Cell.
 	-- @usage cell:synchronize()
 	-- @see CellularSpace:synchronize
-	synchronize = function(self) 
+	synchronize = function(self)
 		self.past = {}
-		for k, v in pairs(self) do 
+		for k, v in pairs(self) do
 			if k ~= "past" then
 				self.past[k] = v
 			end
@@ -238,7 +231,7 @@ function Cell(data)
 			data = {}
 		else
 			verifyNamedTable(data)
- 		end
+		end
 	end
 
 	optionalTableArgument(data, "id", "string")

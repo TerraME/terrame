@@ -37,7 +37,7 @@ Clock = function(data)
 
 	local id = data.subject.cObj_:createObserver(observerType, observerAttrs, observerParams)
 
-    table.insert(createdObservers, {subject = data.subject, id = id})
+	table.insert(createdObservers, {subject = data.subject, id = id})
 	return id
 end
 

@@ -206,7 +206,7 @@ Agent_ = {
 		optionalArgument(1, "string", id)
 		if id == nil then id = "1" end
 
-		local s = self.socialnetworks[id] 
+		local s = self.socialnetworks[id]
 		if type(s) == "function" then
 			s = s(self)
 		end
@@ -343,8 +343,8 @@ Agent_ = {
 	-- @see Environment:createPlacement
 	move = function(self, newcell, placement)
 		mandatoryArgument(1, "Cell", newcell)
-
 		optionalArgument(2, "string", placement)
+
 		if placement == nil then placement = "placement" end
 
 		if self[placement] == nil then
@@ -369,11 +369,11 @@ Agent_ = {
 			positiveArgument(1, modelTime, true)
 		end
 
-        if self.obsattrs then
-            forEachElement(self.obsattrs, function(idx)
-                self[idx.."_"] = self[idx](self)
-            end)
-        end
+		if self.obsattrs then
+			forEachElement(self.obsattrs, function(idx)
+				self[idx.."_"] = self[idx](self)
+			end)
+		end
 
 		self.cObj_:notify(modelTime)
 	end,
@@ -562,8 +562,8 @@ function Agent(data)
 		if data == nil then
 			data = {}
 		else
- 			customError(tableArgumentMsg())
- 		end
+			customError(tableArgumentMsg())
+		end
 	end
 
 	setmetatable(data, metaTableAgent_)

@@ -181,7 +181,7 @@ Event_ = {
 	getPeriod = function(self) end,
 	--- Return the priority of the Event.
 	-- @usage timer = event:getPriority()
-	getPriority = function(self) end,
+	getPriority = function(self) end
 	--#- Change the priority of the Event. This change will take place as soon as the Event
 	-- is rescheduled.
 	-- @arg period The new periodicity of the Event (default is 1).
@@ -190,8 +190,5 @@ Event_ = {
 	--#- Notify every Observer connected to the Event.
 	-- @usage event:notify()
 	-- notify = function() end,
-	--- Return "Event".
-	-- @usage mtype = event:getType()
-	getType = function() end
 }
 

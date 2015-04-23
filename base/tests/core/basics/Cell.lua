@@ -33,10 +33,9 @@ return {
 		unitTest:assert_equal(c:getId(), "b")
 	end,
 	getId = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getStateName = function(unitTest)
-		unitTest:assert(true)
+		local c = Cell{id = "a"}
+
+		unitTest:assert_equal(c:getId(), "a")
 	end,
 	__len = function(unitTest)
 		local c1 = Cell{}
@@ -157,7 +156,7 @@ return {
 	distance = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
-		unitTest:assert_equal(cs.cells[1]:distance(cs.cells[10]), 9) 
+		unitTest:assert_equal(cs.cells[1]:distance(cs.cells[10]), 9)
 		unitTest:assert_equal(cs.cells[1]:distance(cs.cells[91]), 9)
 	end,
 	isEmpty = function(unitTest)

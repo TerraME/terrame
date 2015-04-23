@@ -33,7 +33,10 @@ Trajectory_ = {
 	add = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 
-		verify(not self:get(cell.x, cell.y), "Cell ("..cell.x..", "..cell.y..") already belongs to the Trajectory.")
+		if self:get(cell.x, cell.y) then
+			customError("Cell ("..cell.x..", "..cell.y..") already belongs to the Trajectory.")
+		end
+
 		table.insert(self.cells, cell)
 		self.cObj_:add(#self, cell.cObj_)
 	end,

@@ -62,10 +62,13 @@ Random_ = {
 		optionalArgument(2, "number", v2)
 
 		if v2 then
+			integerArgument(2, v2)
 			if v1 then
+				integerArgument(1, v1)
 				return self.cObj_:randomInteger(v1, v2)
 			end
 		elseif v1 then
+			integerArgument(1, v1)
 			if v1 < 0 then
 				return self.cObj_:randomInteger(v1, 0)
 			else

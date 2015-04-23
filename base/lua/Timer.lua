@@ -101,8 +101,8 @@ function Timer(data)
 		if data == nil then
 			data = {}
 		else
- 			customError(tableArgumentMsg())
- 		end
+			customError(tableArgumentMsg())
+		end
 	end
 	
 	local cObj = TeTimer()
@@ -110,8 +110,8 @@ function Timer(data)
 	local eventTab = {}
 
 	for i, ud in pairs(data) do
-		if type(ud) == "table" then 
-			cObj:add(ud.cObj_[1], ud.cObj_[2].cObj_) 
+		if type(ud) == "table" then
+			cObj:add(ud.cObj_[1], ud.cObj_[2].cObj_)
 			table.insert(eventTab, ud)
 		elseif type(ud) ~= "userdata" then
 			incompatibleTypeError(i, "Event, table, or userdata", ud)

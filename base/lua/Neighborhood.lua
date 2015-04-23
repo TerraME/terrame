@@ -33,7 +33,6 @@ Neighborhood_ = {
 	-- @usage n:add(cell, 0.02)
 	add = function(self, cell, weight)
 		mandatoryArgument(1, "Cell", cell)
-
 		optionalArgument(2, "number", weight)
 
 		if weight == nil then

@@ -258,10 +258,10 @@ UnitTest_ = {
 	-- @usage unitTest:print_error("msg")
 	print_error = function(self, msg)
 		local level = 1
-    	local info = debug.getinfo(level)
-    	while not string.match(info.source, "/tests/") do
+		local info = debug.getinfo(level)
+		while not string.match(info.source, "/tests/") do
 			level = level + 1
-    		info = debug.getinfo(level)
+			info = debug.getinfo(level)
 		end
 
 		local str = info.short_src

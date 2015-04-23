@@ -31,12 +31,12 @@ return{
 		local error_func = function()
 			env:add(nil)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory"))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory"))
 
 		error_func = function()
 			env:add{}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Society, Timer or Trajectory", {}))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory", {}))
 	end,
 	createPlacement = function(unitTest)
 		local ag1 = Agent{}

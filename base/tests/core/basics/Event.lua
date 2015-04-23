@@ -101,11 +101,6 @@ return{
 		unitTest:assert_equal(event[1]:getPriority(), 1) -- SKIP
 	end,
 --]]
-	getType = function(unitTest)
-		local event = Event{action = function() end}
-
-		unitTest:assert_equal(type(event[1]), "Event")
-	end,
 	getTime = function(unitTest)
 		local event = Event{time = -10, action = function(event) end}
 		unitTest:assert_equal(event[1]:getTime(), -10)
