@@ -211,6 +211,12 @@ function parse_tab(tab, func, filename, doc_report)
 				local arg_list = tab[line][k]
 				local arg_tab = split(",%s*", arg_list)
 				table.sort(arg_tab)
+
+				if arg_tab[1] == "..." then
+					table.remove(arg_tab, 1)
+					table.insert(arg_tab, "...")
+				end
+
 				arg_list = table.concat(arg_tab, ", ")
 				tab[line][k] = arg_list
 				line = line + 1
@@ -227,7 +233,6 @@ function parse_tab(tab, func, filename, doc_report)
 	if is_strategy_table then
 		check_arguments(arguments, func, filename, doc_report)
 	end	
-	-- ordenar e adicionar a lista
 end
 
 function check_arguments(parsed_args, func, filename, doc_report)
@@ -235,14 +240,12 @@ function check_arguments(parsed_args, func, filename, doc_report)
 	local unused = {}
 	
 	for _, arg in ipairs(parsed_args) do
-		--print("\t", arg)
 		if not func.arg[arg] and not unknown[arg] then
 			unknown[arg] = arg
 			table.insert(unknown, arg)
 		end
 	end
 	for _, arg in ipairs(func.arg) do
-		--print("\t", arg)
 		if not parsed_args[arg] and not func.tabular[arg] and not unused[arg] then
 			unused[arg] = arg
 			table.insert(unused, arg)
@@ -259,3 +262,4 @@ function check_arguments(parsed_args, func, filename, doc_report)
 		doc_report.unused_arg = doc_report.unused_arg + 1
 	end
 end
+

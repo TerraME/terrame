@@ -560,13 +560,14 @@ metaTableSociety_ = {
 -- @tabular dbType
 -- dbType & Description & Compulsory arguments & Optional arguments \
 -- "volatile" & Create agents from scratch. This is the default value when using the argument
--- quantity. & quantity, instance & \
+-- quantity. & quantity, instance & ...\
 -- "database" & Load agents from a database. This is the default value when using the argument
--- theme. & theme, database, instance & layer, host, password, select, where, user, port \
+-- theme. & theme, database, instance & layer, host, password, select, where, user, port, ... \
 -- "csv" & Load agents from a csv file. This is the default value when value of argument
--- database ends with ".csv". & database, id, instance & sep
+-- database ends with ".csv". & database, id, instance & sep, ...
 -- @arg data.host Host where the database is stored (default is "localhost").
 -- @arg data.id The unique identifier attribute used when reading the Society from a file.
+-- @arg data.... Any other attribute or function for the Society.
 -- @arg data.instance An Agent with the description of attributes and functions. When using this
 -- argument, each Agent will have attributes and functions according to the instance. The Society
 -- calls Agent:init() from the instance for each of its Agents. 

@@ -927,6 +927,7 @@ metaTableCellularSpace_ = {
 -- restriction. Only the Cells that reflect the established criteria will be loaded). For example,
 -- the operator to compare value is "=" and not "==". This argument can only be used when reading
 -- data from a database.
+-- @arg data.... Any other attribute or function for the CellularSpace.
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
 -- instance. The CellularSpace calls Cell:init() from the instance for each of its Cells.
@@ -946,19 +947,19 @@ metaTableCellularSpace_ = {
 -- load from a database.
 -- @arg data.ydim Number of lines, in the case of creating a CellularSpace without needing to
 -- load from a database. Default is equal to xdim.
--- @tabular data.dbType
+-- @tabular dbType
 -- dbType & Description & Compulsory arguments & Optional arguments\
--- "mdb" & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer, select,
--- where \
+-- "mdb" & Load from a Microsoft Access database (.mdb)  file. & autoload, database, theme & layer,
+-- select, where, ... \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
--- requires at least two attributes: x and y. & database & sep\
+-- requires at least two attributes: x and y. & database & sep, autoload, ...\
 -- "mysql" & Load from a TerraLib database stored in a MySQL database. & database, theme & host, 
--- layer, password, port, select, user, where \
+-- layer, password, port, select, user, where, autoload, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and 
 -- different extensions: .shp, .shx, and .dbf. The argument database must contain the file with
--- extension .shp.& database & \
+-- extension .shp.& database & autoload, ... \
 -- "virtual" & Create a rectangular cellular space from scratch. Cells will be instantiated with
--- only two attributes: x and y. & xdim & ydim 
+-- only two attributes: x and y. & xdim & ydim, autoload, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.
 -- @output parent The Environment it belongs.
 --
