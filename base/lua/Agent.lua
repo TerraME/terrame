@@ -93,7 +93,9 @@ Agent_ = {
 		-- remove all the placements
 		if remove_placements and self.parent then
 			forEachElement(self.parent.placements, function(placement)
-				self:leave(nil, placement)
+				if #self[placement].cells > 0 then
+					self:leave(placement)
+				end
 			end)
 		end
 		self.execute = function() customWarning("Trying to execute a dead agent.") end
@@ -127,16 +129,19 @@ Agent_ = {
 		if placement == nil then placement = "placement" end
 
 		if self[placement] then 
+			if self[placement].cells[1] then
+				customWarning("Agent is already inside of a Cell. Use Agent:move() instead.")
+			end
 			self[placement].cells[1] = cell
 		else
 			customError("Placement '"..placement.."' was not found in the Agent.")
 		end
+
 		if cell[placement] then
 			cell[placement]:add(self)
 		else
 			customError("Placement '"..placement.."' was not found in the Cell.")
 		end
-		self.cell = cell
 	end,
 	--- The entry point for executing a given Agent. When the Agent is described as a state
 	-- machine, execute is automatically defined by TerraME. It activates the Jump of the
@@ -248,14 +253,12 @@ Agent_ = {
 	-- @see Environment:createPlacement
 	-- @usage agent:leave()
 	--
-	-- agent:leave(cell)
+	-- agent:leave()
 	--
-	-- agent:leave(cell, "renting")
-	leave = function(self, cell, placement)
-		optionalArgument(1, "Cell", cell)
-		if cell == nil then cell = self[placement].cells[1] end
-
-		optionalArgument(2, "string", placement)
+	-- agent:leave("renting")
+	-- @see Environment:createPlacement
+	leave = function(self, placement)
+		optionalArgument(1, "string", placement)
 		if placement == nil then placement = "placement" end
 
 		if self[placement] == nil then
@@ -264,23 +267,24 @@ Agent_ = {
 			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
 		end
 
-		self.cell = nil
-		if self[placement] then
-			self[placement].cells[1] = nil
+		local cell = self[placement].cells[1]
+
+		if cell == nil then
+			customError("Agent should belong to a Cell in order to leave().")
 		end
 
-		if cell and cell[placement] then
-			local ags = cell[placement].agents
+		self[placement].cells[1] = nil
 
-			if getn(ags) == 0 then
+		local ags = cell[placement].agents
+
+		if getn(ags) == 0 then
+			return true
+		end
+
+		for i = 1, #ags do
+			if self.id == ags[i].id and self.parent == ags[i].parent then
+				table.remove(ags, i)
 				return true
-			end
-
-			for i = 1, #ags do
-				if self.id == ags[i].id and self.parent == ags[i].parent then
-					table.remove(ags, i)
-					return true
-				end
 			end
 		end
 	end,
@@ -350,10 +354,10 @@ Agent_ = {
 		if self[placement] == nil then
 			valueNotFoundError(2, placement)
 		elseif not self[placement].cells[1] then 
-			customError("Agent is not inside of any Cell.")
+			customError("Agent should belong to a Cell in order to move().")
 		end
 
-		self:leave(self[placement].cells[1], placement)
+		self:leave(placement)
 		self:enter(newcell, placement)
 	end,
 	--- Notify the Observers of the Agent.

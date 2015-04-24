@@ -84,7 +84,7 @@ return{
 						if self.x < 3 then
 							unitTest:assert_equal(7, ev:getTime())
 							unitTest:assert_equal(2, self.x)
-							unitTest:assert_equal(3, self:getLatency() )
+							unitTest:assert_equal(3, self:getLatency())
 							return true
 						end
 					end,
@@ -110,7 +110,7 @@ return{
 		unitTest:assert_equal(0, a:getLatency())
 
 		a:execute(Event{action = function() end}[1])
-		unitTest:assert_equal(0, a:getLatency() )
+		unitTest:assert_equal(0, a:getLatency())
 		unitTest:assert_equal(4, a.x)
 
 		local t = Timer{
@@ -159,7 +159,7 @@ return{
 						if self.x < 3 then
 							unitTest:assert_equal(7, ev:getTime())
 							unitTest:assert_equal(2, self.x)
-							unitTest:assert_equal(3, self:getLatency() )
+							unitTest:assert_equal(3, self:getLatency())
 							return true
 						end
 					end,
@@ -188,44 +188,42 @@ return{
 		unitTest:assert_equal("stop", a:getStateName())
 	end,
 	getTrajectoryStatus = function(unitTest)
-        local cs = CellularSpace{ xdim = 2}
+		local cs = CellularSpace{xdim = 2}
 
-        local ag1 = Agent{
-            it = Trajectory{
-                target = cs
-            },
-            cont = 0,
-            State{
-                id = "first",
-                Jump{
-                    function(event, agent, cell)
-                        cont = cont + 1
-                        if agent.cont < 10 then
-                            agent.cont = agent.cont + 1
-                            return true
-                        end
-                        if agent.cont == 10 then agent.cont = 0 end
-                        return false
-                    end,
-                    target = "second"
-                }
-            },
-            State{
-                id = "second",
-                Jump{
-                    function(event, agent, cell)
-                        cont = cont + 1
-                        if agent.cont < 10 then
-                            agent.cont = agent.cont + 1
-                            return true
-                        end
-                        if agent.cont == 10 then agent.cont = 0 end
-                        return false
-                    end,
-                    target = "first"
-                }
-            }
-        }
+		local ag1 = Agent{
+			it = Trajectory{target = cs},
+			cont = 0,
+			State{
+				id = "first",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "second"
+				}
+			},
+			State{
+				id = "second",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "first"
+				}
+			}
+		}
 
 		unitTest:assert(not ag1:getTrajectoryStatus())
 
@@ -369,7 +367,7 @@ return{
 		myEnv:createPlacement{strategy = "void"}
 		cell = cs.cells[1]
 		ag1:enter(cell, "placement")
-		ag1:leave(cell, "placement")
+		ag1:leave("placement")
 
 		unitTest:assert_nil(ag1:getCell("placement"))
 	end,
@@ -498,45 +496,43 @@ return{
 		unitTest:assert_type(ag:sample(), "Agent")
 	end,
 	setTrajectoryStatus = function(unitTest)
-        local cs = CellularSpace{ xdim = 2}
+		local cs = CellularSpace{xdim = 2}
 		local cont = 0
 
-        local ag1 = Agent{
-            it = Trajectory{
-                target = cs
-            },
-            cont = 0,
-            State{
-                id = "first",
-                Jump{
-                    function(event, agent, cell)
-                        cont = cont + 1
-                        if agent.cont < 10 then
-                            agent.cont = agent.cont + 1
-                            return true
-                        end
-                        if agent.cont == 10 then agent.cont = 0 end
-                        return false
-                    end,
-                    target = "second"
-                }
-            },
-            State{
-                id = "second",
-                Jump{
-                    function(event, agent, cell)
-                        cont = cont + 1
-                        if agent.cont < 10 then
-                            agent.cont = agent.cont + 1
-                            return true
-                        end
-                        if agent.cont == 10 then agent.cont = 0 end
-                        return false
-                    end,
-                    target = "first"
-                }
-            }
-        }
+		local ag1 = Agent{
+			it = Trajectory{target = cs},
+			cont = 0,
+			State{
+				id = "first",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "second"
+				}
+			},
+			State{
+				id = "second",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "first"
+				}
+			}
+		}
 
 		local ev = Event{action = function() end}[1]
 

@@ -121,6 +121,15 @@ return {
 		local error_func = function()
 			predators:sample():enter(c)
 		end
+		unitTest:assert_error(error_func, "Agent is already inside of a Cell. Use Agent:move() instead.")
+
+		local ag = predators:sample()
+
+		ag:leave()
+
+		local error_func = function()
+			ag:enter(c)
+		end
 		unitTest:assert_error(error_func, "Placement 'placement' was not found in the Cell.")
 	end,
 	execute = function(unitTest)
@@ -188,11 +197,11 @@ return {
 			myEnv:createPlacement{strategy = "void"}
 			local cell = cs.cells[1]
 			ag1:enter(cell, "placement")
-			ag1:leave(cell, {})
+			ag1:leave({})
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", {}))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", {}))
 
-		local error_func = function()
+		error_func = function()
 			local ag1 = Agent{}
 			local cs = CellularSpace{xdim = 3}
 			local myEnv = Environment{cs, ag1}
@@ -200,9 +209,19 @@ return {
 			myEnv:createPlacement{strategy = "void"}
 			local cell = cs.cells[1]
 			ag1:enter(cell, "placement")
-			ag1:leave(cell, 123)
+			ag1:leave(123)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 123))
+
+		error_func = function()
+			local ag1 = Agent{}
+			local cs = CellularSpace{xdim = 3}
+			local myEnv = Environment{cs, ag1}
+
+			myEnv:createPlacement{strategy = "void"}
+			ag1:leave()
+		end
+		unitTest:assert_error(error_func, "Agent should belong to a Cell in order to leave().")
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -212,7 +231,7 @@ return {
 		local cell = cs.cells[1]
 		ag1:enter(cell, "placement")
 		local error_func = function()
-			ag1:leave(cell,"notplacement")
+			ag1:leave("notplacement")
 		end
 		unitTest:assert_error(error_func, valueNotFoundMsg(1, "notplacement"))
 
@@ -220,7 +239,7 @@ return {
 		local c = Cell{}
 
 		local error_func = function()
-			ag1:leave(c, "pl")
+			ag1:leave("pl")
 		end
 		unitTest:assert_error(error_func, "Placement 'pl' should be a Trajectory, got number.")
 	
@@ -360,12 +379,12 @@ return {
 		end
 		unitTest:assert_error(error_func, valueNotFoundMsg(2, "not_placement"))
 
-		ag1:leave(cs.cells[1], "renting")
+		ag1:leave("renting")
 
 		local error_func = function()
 			ag1:move(c1, "renting")
 		end
-		unitTest:assert_error(error_func, "Agent is not inside of any Cell.")
+		unitTest:assert_error(error_func, "Agent should belong to a Cell in order to move().")
 	end,
 	notify = function(unitTest)
 		local ag = Agent{x = 1, y = 1}
