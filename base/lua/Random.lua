@@ -27,7 +27,7 @@
 Random_ = {
 	type_ = "Random",
 	--- Reset the seed to generate random numbers.
-	-- @arg seed A positive integer number.
+	-- @arg seed An integer number with the new seed.
 	-- @usage value = random:reSeed(1)
 	reSeed = function(self, seed)
 		if seed == nil then seed = os.time() end
@@ -38,8 +38,8 @@ Random_ = {
 		self.seed = seed
 		self.cObj_:reseed(seed)
 	end,
-	--- Return a random element of a table.
-	-- @arg mtable A table with indexes as numbers.
+	--- Return a random element from a set of values using a discrete uniform distribution.
+	-- @arg mtable A non-named table with a set of values.
 	-- @usage random:sample{2, 3, 4, 6}
 	sample = function(self, mtable)
 		mandatoryArgument(1, "table", mtable)
@@ -47,10 +47,10 @@ Random_ = {
 		local int = self:integer(1, #mtable)
 		return mtable[int]
 	end,
-	--- Generate an integer random number.
-	-- @arg v1 An integer number. If abscent, integer() will generate numbers between zero and
-	-- one. If it is the only argument used, it will generate numbers from zero to this value.
-	-- @arg v2 An integer number. When used, integer() will generate numbers between the first
+	--- Return an integer random number. It uses a discrete uniform distribution.
+	-- @arg v1 An integer number. If abscent, integer() will return zero or one.
+	-- If it is the only argument, it will return a number between zero and this value.
+	-- @arg v2 An integer number. When used, integer() will return a number between the first
 	-- argument and the second, inclusive.
 	-- @usage value = random:integer() -- 0 or 1
 	--
@@ -78,10 +78,10 @@ Random_ = {
 			return round(self.cObj_:random(-1, -1), 0)
 		end
 	end,
-	--- Generate a real number randomly.
-	-- @arg v1 A number. If abscent, number() will generate numbers between zero and one. If
-	-- it is the only argument used, it will generate numbers from zero to this value.
-	-- @arg v2 A number. When used, number() will generate numbers between the first argument
+	--- Return a random real number. It uses a continuous uniform distribution.
+	-- @arg v1 A number. If abscent, number() will return a value between zero and one. If
+	-- it is the only argument used, it will return a number from zero to this value.
+	-- @arg v2 A number. When used, number() will return a number between the first argument
 	-- and the second.
 	-- @usage value = random:number() -- between 0 and 1
 	--
@@ -122,12 +122,18 @@ Random_ = {
 
 metaTableRandom_ = {__index = Random_, __tostring = tostringTerraME}
 
---- Type to generate random numbers. It uses RandomLib (http://randomlib.sourceforge.net), a C++ interface to the Mersenne Twister
+--- Type to generate random numbers. It uses RandomLib (http://randomlib.sourceforge.net),
+-- a C++ interface to the Mersenne Twister
 -- random number generator MT19937 and to the SIMD-oriented Fast Mersenne Twister random number
 -- generator, SFMT19937. Random is a singleton, which means that every copy of Random created
 -- by the user has the same seed.
 -- @arg data.seed A number to generate the pseudo-random numbers.
--- Default is the current time of the system.
+-- The default value is the current time of the system, which means that
+-- every simulation will use different random numbers.
+-- Choosing a seed in interesting when the modeler wants to have the same simulation outcomes
+-- despite using random numbers.
+-- It is a good programming practice to set
+-- the seed in the beginning of the simulation and only once.
 -- @usage random = Random()
 --
 -- random = Random{seed = 0}

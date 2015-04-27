@@ -27,7 +27,8 @@
 
 Timer_ = {
 	type_ = "Timer",
-	--- Add a new Event to the timer.
+	--- Add a new Event to the timer. If the Event has a start time less than the current
+	-- simulation time then add() will prompt a warning (but the Event will be added).
 	-- @arg event An Event.
 	-- @usage timer:add(Event{...})
 	add = function (self, event)
@@ -47,19 +48,18 @@ Timer_ = {
 			incompatibleTypeError(1, "Event or table", event)
 		end
 	end,
-	--- Retrieve the current simulation time.
-	-- @return A positve integer number.
+	--- Return the current simulation time.
 	-- @usage print(timer:getTime())
 	getTime = function(self)
 		return self.cObj_:getTime()
 	end,
-	--- Execute the Timer until a given time. Every event that does not return false is scheduled
-	-- to execute again according to its period. The Timer stops only when all its event are
-	-- scheduled to execute after the given time, or when there is no remaining events. It
-	-- returns whether the events were sucessfully executed.
-	-- @arg finalTime A  number representing the time to stop the simulation.
-	-- The timer will stop when there is no Event scheduled to a time less or equal to the
-	-- final time. This argument is mandatory.
+	--- Execute the Timer until a final time. It manages the Event queue according to their execution
+	-- time and priority. The Event that has lower execution time and lower priority is executed at
+	-- each step. It this Event does not return false it is scheduled to execute again according to
+	-- its period. The Timer then repeats its execution again and again. It stops only when all its
+	-- Events are scheduled to execute after the final time, or when there is no remaining Events.
+	-- @arg finalTime A number representing the final time of the simulation.
+	-- This argument is mandatory.
 	-- @usage timer:execute(2013)
 	execute = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
@@ -87,14 +87,16 @@ Timer_ = {
 
 metaTableTimer_ = {__index = Timer_, __tostring = tostringTerraME}
 
---- A Timer is an event-based scheduler that executes and controls the simulation. It contains a
--- set of Events. It allows the model to take into consideration processes that start
--- independently and act in different periodicities. It starts with time 0 and, once it is in a
--- given time, it ensures that all the Events before that time were already executed.
--- @arg data A table containing all Events of the Timer.
--- @usage timer = Timer {
---     Event {...},
---     Event {...}
+--- A Timer is an Event-based scheduler that executes and controls the simulation. It contains a
+-- set of Events, allowing the simulation to work with processes that start
+-- independently and act in different periodicities. Once it has a given simulation time,
+-- it ensures that all the Events before that time were already executed.
+-- @arg data.... A set of Events.
+-- @usage timer = Timer{
+--     Event{...},
+--     Event{...},
+--     -- ...
+--     Event{...}
 -- }
 function Timer(data)
 	if type(data) ~= "table" then

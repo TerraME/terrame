@@ -203,6 +203,8 @@ end
 -- @arg filename A string with the name of the file.
 -- @arg package A string with the name of the package.
 -- @usage file("cs.csv") 
+--
+-- cs = CellularSpace{database = file("simple.map")}
 function file(filename, package)
 	if package == nil then package = "base" end
 
@@ -914,7 +916,7 @@ function optionalTableArgument(table, attr, allowedType)
 end
 
 --- Return a string with a literal description of a parameter name. It is 
--- useful to work with Model::check() when the model will be available through a graphical interface.
+-- useful to work with Model:check() when the model will be available through a graphical interface.
 -- When using graphical interfaces, it converts upper case characters into space and lower case
 -- characters and convert the first character of the string to uppercase. 
 -- Otherwise, it return the name of the parameter itself.

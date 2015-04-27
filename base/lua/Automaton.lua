@@ -38,13 +38,13 @@ Automaton_ = {
 			incompatibleTypeError(1, "State or Trajectory", object)
 		end
 	end,
-	--- Check if the state machine was correctly defined. It verifies whether the targets of Jump 
+	--- Check if the State machine was correctly defined. It verifies whether the targets of Jump
 	-- rules match the ids of the States.
 	-- @usage automaton:build()
 	build = function(self)
 		self.cObj_:build()
 	end,
-	--- Execute the state machine. First, it executes the Jump of the current State while it
+	--- Execute the State machine. First, it executes the Jump of the current State while it
 	-- jumps from State to State. When the machine stops jumping, it executes all the Flows of
 	-- the current State. Usually, this function is called within an Event, thus the time of the
 	-- Event can be got from the Timer. It returns a boolean value indicating whether the Jumps
@@ -60,19 +60,24 @@ Automaton_ = {
 			incompatibleTypeError(1, "Event", event)
 		end
 	end,
-	--- Retrieves the time when the machine executed the transition to the current state. Before
+	--- Return the time when the machine executed the transition to the current state. Before
 	-- running, the latency is zero.
 	-- @usage latency = automaton:getLatency()
 	getLatency = function(self)
 		return self.cObj_:getLatency()
 	end,
-	--- Retrieves the name of the current State.
-	-- @usage id = automaton:getStateName()
-	getStateName = function(self)
-		return "Where?"
+	--- Return the name of the current State. As an Automaton has independent States in each Cell, 
+	-- it requires a location to return its State name.
+	-- @arg cell A Cell.
+	-- @usage id = automaton:getStateName(cell)
+	getStateName = function(self, cell)
+		mandatoryArgument(1, "Cell", cell)
+		return cell.cObj_:getCurrentStateName(self.cObj_)
 	end,
 	--- Notify every Observer connected to the Automaton.
-	-- @arg modelTime An integer number representing the notification time. Default is zero.
+	-- @arg modelTime An integer number representing the notification time. The default value is zero.
+	-- It is also possible to use an Event as argument. In this case, it will use the result of
+	-- Event:getTime().
 	-- @usage automaton:notify()
 	notify = function(self, modelTime)
 		if modelTime == nil then
@@ -111,7 +116,7 @@ Automaton_ = {
 		end
 		self.id = id
 	end,
-	--- Retrieves the unique identifier name of the Automaton.
+	--- Return the unique identifier name of the Automaton.
 	-- @usage automaton:getId()
 	getId = function(self)
 		return self.id
@@ -143,7 +148,7 @@ Automaton_ = {
 
 metaTableAutomaton_ = {__index = Automaton_, __tostring = tostringTerraME}
 
---- A hybrid state machine that needs to be located on a CellularSpace, and is replicated over 
+--- A hybrid state machine that needs to be located on a CellularSpace, and is replicated over
 -- each Cell of the space. It has independent States in each Cell.
 -- @arg data.id A string that names the Automanton.
 -- @output parent The Environment it belongs.

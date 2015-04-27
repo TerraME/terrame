@@ -1436,7 +1436,24 @@ local brewerRGB = {
 	}
 }
 
+-- to build the table of colors in the documentation of Map
+--[[
+local rgbMap = {}
+forEachOrderedElement(brewerRGB, function(idx, value)
+	local n = getn(value)
+	if not rgbMap[n] then
+		rgbMap[n] = {}
+	end
+	table.insert(rgbMap[n], idx)
+end)
+
 -- check colorbrewer descriptions
+forEachOrderedElement(rgbMap, function(idx, value)
+	local arg_list = table.concat(value, ", ")
+	print("-- "..arg_list.." & "..idx.." \\")
+end)
+--]]
+
 forEachElement(brewerMatchNames, function(_, value)
 	if not brewerRGB[value] then
 		print("Color "..value.." does not have a description.")
@@ -1472,9 +1489,9 @@ end)
 
 Map_ = {
 	type_ = "Map",
-	--- Save a Chart into a file. Supported extensions are bmp, jpg, png, and tiff.
+	--- Save a Map into a file. Supported extensions are bmp, jpg, png, and tiff.
 	-- @arg file A string with the file name.
-	-- @usage chart:save("file.bmp")
+	-- @usage map:save("file.bmp")
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 
@@ -1494,13 +1511,79 @@ metaTableMap_ = {__index = Map_}
 
 --- Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
 -- or Society. It draws each element into the screen, according a given attribute.
+-- Each notify() draws the Map again in the screen.
 -- @arg data.subject A CellularSpace, Trajectory, Agent, or Society.
 -- @arg data.value A table with the possible values for the selected attributes.
+-- @arg data.max The maximum value of the attribute (used only for numbers).
+-- @arg data.min The minimum value of the attribute (used only for numbers).
+-- @arg data.slices Number of colors to be used for plotting. It must be an integer
+-- number greater than one.
 -- @arg data.grouping A string with the strategy to slice and color the data. See below.
+-- @tabular grouping
+-- Grouping & Description & Compulsory arguments & Optional arguments\
+-- "equalsteps" &The values are divided into a set of slices with the same range. Each slice is
+-- associated to a given color. Equalsteps require only two colors in the argument color, one for
+-- the minimum and the other for the maximum value. The other colors are computed from a linear
+-- interpolation of the two colors. & color, slices, max, min, subject, select & precision, label \
+-- "quantil" & Aggregate the values into slices with approximately the same size. Values are
+-- ordered from lower to higher and then sliced. This strategy uses two colors in the same way
+-- of equalsteps. & color, slices, max, min, subject, select & precision, label \
+-- "stdeviation" & Define slices according to the distribution of a given attribute. Values with
+-- similar positive or negative distances to the average will belong to the same slice. &
+-- color, stdColor, subject, select & stdDeviation, precision, label \
+-- "uniquevalue" & Associate each attribute value to a given color. Attributes with type string can
+-- only be sliced with this strategy. & color, subject, select, value & label \
 -- @arg data.label A table with the labels for the attributes.
--- @arg data.color A table with the colors for the attributes.
--- @arg data.select The attribute to be used.
--- @usage Map{subject = cs}
+-- @arg data.stdDeviation When the grouping mode is stddeviation, it has to be one of "full",
+-- "half" "quarter", or "none".
+-- @arg data.precision The number of decimal digits for slicing. It must be an integer
+-- number greater than zero. It indicates that differences less than 10^(-digits) will
+-- not be considered. It means that, for instance, if a slice is in the interval [1.0, 2.0]
+-- and precision is 2 (0.01), a value 0.99 might belong to such slice.
+-- @arg data.color A table with the colors for the attributes. Colors can be described as strings 
+-- ("red", "green", "blue", "white", "black",
+-- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
+-- compositions, such as "lightGray" and "darkGray"), as tables with three integer numbers
+-- representing RGB compositions, such as {0, 0, 0}, or even as a string with a ColorBrewer format
+-- (see http://colorbrewer2.org/). The colors available and the maximum number of slices for each
+-- of them are:
+-- @tabular color
+-- Name & Max \
+-- Accent, Dark, Set2 & 7 \
+-- Pastel2, Set1 & 8 \
+-- Pastel1 & 9 \
+-- PRGn, RdYlGn, Spectral & 10 \
+-- BrBG, Paired, PiYG, PuOr, RdBu, RdGy, RdYlBu, Set3 & 11 \
+-- BuGn, BuPu, OrRd, PuBu & 19 \
+-- Blues, GnBu, Greens, Greys, Oranges, PuBuGn, PuRd, Purples, RdPu, Reds, YlGn, YlGnBu, YlOrBr, YlOrRd & 20 \
+-- @arg data.stdColor A table just as argument color. It is needed only when standard deviation is
+-- the chosen strategy.
+-- @arg data.select A string with the name of the attribute to be visualized.
+-- @usage Map{
+--     subject = cs,
+--     select = "temperature",
+--     min = 0,
+--     max = 50,
+--     slices = 10,
+--     colors = {"blue", "red"}
+-- }
+--
+-- Map{
+--     subject = cs,
+--     select = "seggregation",
+--     values = {0, 1, 2},
+--     colors = {"blue", "green", "red"},
+--     labels = {"low", "medium", "high"}
+-- }
+--
+-- Map{
+--     subject = world,
+--     select  = "forest",
+--     colors  = "RdYlGn",
+--     min = 0,
+--     max = 1,
+--     slices = 10
+-- }
 function Map(data)
 	mandatoryTableArgument(data, "subject", "CellularSpace")
 	optionalTableArgument(data, "value", "table")

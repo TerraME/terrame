@@ -23,22 +23,29 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
---- Creates an Internet connection to send observed attributes of an object through a 
---- TCP or UDP port of a given IP. 
--- @arg data.subject An Agent, Cell, CellularSpace, Society.
--- @arg data.port A string or a vector of strings with ports for the respective host 
--- names to be used by udpsenders.
--- @arg data.host A string or a vector of strings with host names for udpsenders.
--- @arg data.visible A boolean value indicating whether the InternetSender will create
--- a window to display its data.
+--- An Internet connection to send attribute values of an object through a 
+--- TCP or UDP protocol. Every call to notify (for example, Agent:notify()) in the subject
+-- activates the InternetSender.
+-- @arg data.subject An Agent, Cell, CellularSpace, or Society.
+-- @arg data.port A number indicating the port of the host to transfer the data. The
+-- default value is 456456.
+-- @arg data.host A string with the host name to transfer the data. The default value is
+-- "localhost".
+-- @arg data.visible A boolean value indicating whether InternetSender will create
+-- a window to display the transferred data. The default value is true.
 -- @arg data.protocol A string with the protocol to be used. It can be "tcp" (default)
 -- or "udp".
--- @arg data.compress Compress the data to be transfered? It might be interesting not to 
+-- @arg data.compress Compress the data to be transfered? It might be interesting not to
 -- compress when the connection is on the localhost, or when there is a very fast connection,
--- to make the simulation faster.
+-- to make the simulation faster. The default value is true.
 -- @arg data.select A vector of strings with the name of the attributes to be observed.
--- If it is only a single value then it can also be described as a string. 
--- @usage InternetSender{subject = cs}
+-- If it is a single value then it can also be described as a string. As default, it selects
+-- all the user-defined attributes of an object.
+-- @usage InternetSender{
+--     subject = cs,
+--     protocol = "udp",
+--     compress = false
+-- }
 InternetSender = function(data)
 	mandatoryTableArgument(data, "subject")
 	defaultTableValue(data, "host", "localhost")
@@ -157,7 +164,7 @@ InternetSender = function(data)
 		observerParams = {observerParams}
 		id = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
 	else
-    table.insert(createdObservers, {subject = data.subject, id = id})
+		table.insert(createdObservers, {subject = data.subject, id = id})
 		if type(subject) == "Society" then
 			subject.observerId = 1 -- TODO: verify why this line is necessary
 		end

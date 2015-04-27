@@ -35,7 +35,8 @@ UnitTest_ = {
 	last_error = "",
 	count_last = 0,
 	delayed_time = 0,
-	--- Check if a given value is true. In any other case (number, string, false, or nil) it generates an error.
+	--- Check if a given value is true. In any other case (number, string, false, or nil)
+	-- it generates an error.
 	-- @arg value Any value.
 	-- @usage unitTest:assert(2 < 3)
 	assert = function(self, value)
@@ -90,8 +91,9 @@ UnitTest_ = {
 			self:print_error("Test should not be nil.")
 		end
 	end,
-	--- Check if two values are equal. In this function, two tables are equal only when they are the
-	-- same object (if not, they would not be equal even if they share the same internal content).
+	--- Check if two values are equal. In this function, two tables are equal only when they are
+	-- the same object (if not, they would not be equal even if they share the same internal
+	-- content).
 	-- @arg v1 Any value.
 	-- @arg v2 Any value.
 	-- @arg tol A number indicating a maximum error tolerance. This argument is optional and can
@@ -132,13 +134,15 @@ UnitTest_ = {
 			self.success = self.success + 1
 		end
 	end,
-	--- Verify if a function produces an error.
+	--- Verify if a function produces an error. If there is no error in the function or the
+	-- error found is not the expected error then it generates an error.
 	-- @arg my_function A function.
 	-- @arg error_message A string describing the error message that the function should produce.
 	-- This string should contain only the error message, without the description of the file name
-	-- the error was produced.
-	-- @arg max_error A number indicating the maximum discrepance between the generated error and the
-	-- expected error. It is necessary in error messages that include information that can change
+	-- where the error was produced.
+	-- @arg max_error A number indicating the maximum number of characters that can be different
+	-- between the error produced by the error function and the expected error message.
+	-- This argument might be necessary in error messages that include information that can change
 	-- from machine to machine, such as an username. The default value is zero (no discrepance).
 	-- @usage error_func = function() verify(2 > 3, "wrong operator") end
 	-- unitTest:assert_error(error_func, "wrong operator")
@@ -205,8 +209,8 @@ UnitTest_ = {
 	end,
 	--- Verify whether a Chart or a Map has a plot similar to the one defined by snapshot folder.
 	-- @arg observer A Chart or a Map.
-	-- @arg file A string with the file name in the snapshot folder. If the file does not exist then 
-	-- it will save the file in the snapshot folder.
+	-- @arg file A string with the file name in the snapshot folder. If the file does not exist
+	-- then it will save the file in the snapshot folder.
 	-- @usage c = Chart{...}
 	-- unitTest:assert_snapshot(c, "test_chart.bmp")
 	assert_snapshot = function(self, observer, file)
@@ -248,8 +252,10 @@ UnitTest_ = {
 			end
 		end
 	end,
-	--- Executes a delay in seconds during the test. Calling this function, the user can change the
-	-- delay when the UnitTest is built.
+	--- Sleep the tests for some time. The sleeping time is the value of a variable named sleep
+	-- in the configuration file for the tests, or zero if it does not exist. Calling this
+	-- function is particularly useful when the user wants to visualize the graphics or maps
+	-- produced by a test before TerraME closes the windows and starts a new test.
 	-- @usage unitTest:delay()
 	delay = function()
 	end,
@@ -291,9 +297,11 @@ UnitTest_ = {
 			func(arg)
 		end
 	end,
-	--- Create a temporary folder in the current directory and return its name. Every time this function
-	-- is executed with the same instance of UnitTest it returns the same folder. This folder needs to
-	-- be removed manually in the end of the tests or in the end of the simulation.
+	--- Create a temporary folder in the directory TerraME was executed and return its name.
+	-- Every time this function is called with the same instance of UnitTest, it returns the
+	-- same folder (without deleting its internal files). This
+	-- folder needs to be removed manually after the end of the tests. The name of the folder
+	-- is shown in the tests report.
 	-- @usage tmpfolder = unitTest:tmpFolder()
 	tmpFolder = function(self)
 		if not self.tmpfolder then

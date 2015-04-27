@@ -25,16 +25,16 @@
 
 Group_ = {
 	type_ = "Group",
-	--- Add a new Agent to the Group. It returns a boolean value indicating whether the Agent was 
-	-- sucessfully added.
-	-- @arg agent The Agent to be added.
+	--- Add a new Agent to the Group. It will be added to the end of the list of Agents.
+	-- @arg agent An Agent.
 	-- @usage group:add(agent)
 	add = function(self, agent)
 		mandatoryArgument(1, "Agent", agent)
 
 		table.insert(self.agents, agent)
 	end,
-	--- Clone the Group. It returns a copy  with the same parent, select, greater and Agents.
+	--- Return a copy of the Group. It has the same parent, select, greater and Agents.
+	-- Any change in the cloned Group will not affect the original one.
 	-- @usage group:clone()
 	clone = function(self)
 		local cloneG = Group{
@@ -48,10 +48,15 @@ Group_ = {
 		end)
 		return cloneG
 	end,
-	--- Apply a filter over the original Society.
-	-- @arg f A function(agent)-> boolean, such as the argument select.
+	--- Apply a filter over the Society used as target for the Group. It replaces the previous
+	-- set of Agents belonging to the Group.
+	-- @arg f A function (Agent)->boolean, working in the same way of the argument select to
+	-- create the Group. If this argument is missing, this function
+	-- filters the Society with the function used as argument for the last call to filter itself,
+	-- or then the value of argument select used to build the Group. When it cannot find any
+	-- function to be used, this function will add all the Agents of the Society to the Group.
 	-- @usage group:filter(function(agent)
-	--     return agent.age > 18
+	--     return agent.age >= 18
 	-- end)
 	filter = function(self, f)
 		optionalArgument(1, "function", f)
@@ -75,7 +80,8 @@ Group_ = {
 			end)
 		end
 	end,
-	--- Randomizes the Agents, changing the traversing order.
+	--- Randomize the Agents of the Group. It will change the traversing order used by
+	-- Utils:forEachAgent().
 	-- @usage group:randomize()
 	randomize = function(self)
 		local randomObj = Random()
@@ -88,18 +94,22 @@ Group_ = {
 			agents[i], agents[r] = agents[r], agents[i]
 		end
 	end,
-	--- Rebuild the Group from the original data using the last filter and sort functions.
+	--- Rebuild the Group from the Society used as target.
+	-- It is a shortcut to Group:filter() and then Group:sort().
 	-- @usage group:rebuild()
 	rebuild = function(self)
 		self:filter()
 		self:sort()
 	end,
-	--- Sort the current Society subset. It returns whether the current Society was sorted.
-	-- @arg f A function(ag1, ag2)-> boolean, an ordering function with the same 
-	-- signature of argument greater.
+	--- Sort the current Society subset. It updates the traversing order of the Group.
+	-- @arg f An ordering function (Agent, Agent)->boolean, working in the same way of
+	-- argument greater to create the Group. If this argument is missing, this function
+	-- sorts the Group with the function used as argument for the last call to sort itself,
+	-- or then the value of argument greater used to build the Group. When it cannot find
+	-- any function to be used, it shows a warning.
 	-- @see Utils:greaterByAttribute
 	-- @usage group:sort(function(ag1, ag2)
-	--     return ag1.money > ag2.money
+	--     return ag1.age > ag2.age
 	-- end)
 	sort = function(self, f)
 		optionalArgument(1, "function", f)
@@ -118,7 +128,7 @@ setmetatable(Group_, metaTableSociety_)
 
 metaTableGroup_ = {
 	__index = Group_,
-	--- Return the number of Agents of the Group.
+	--- Return the number of Agents in the Group.
 	-- @usage print(#group)
 	__len = function(self)
 		return #self.agents
@@ -126,33 +136,38 @@ metaTableGroup_ = {
 	__tostring = tostringTerraME
 } 
 
---- Type that defines an ordered selection over a Society. It inherits Society; therefore 
--- it is possible to apply all functions of such type to a Group. For instance, calling 
+--- Type that defines an ordered selection over a Society. It inherits Society; therefore
+-- it is possible to apply all functions of such type to a Group. For instance, calling
 -- Utils:forEachAgent() also traverses Groups.
 -- @inherits Society
 -- @arg data.target The Society over which the Group will take place.
--- @arg data.select A function(Agent)->boolean, to filter the Society. Note that, according 
--- to Lua language, if this function returns anything but false or nil, the Agent will be added 
--- to the Group. If this argument is missing, all Agents will be included in the Group.
--- @arg data.greater A function(Agent, Agent)->boolean, to sort the generated subset of Agents. It 
--- returns true if the first one has priority over the second one. See Utils:greaterByAttribute() 
--- as a predefined option to sort objects. 
--- @arg data.build A boolean value indicating whether the Group will be computed or not when created.
--- @usage group = Group {
+-- @arg data.select A function (Agent)->boolean indicating whether an Agent of the Society should
+-- belong to the Group. If this function returns anything but false or nil for a given Agent, it
+-- will be added to the Group. If this argument is missing, all Agents will be included 
+-- in the Group.
+-- @arg data.greater A function (Agent, Agent)->boolean to sort the Group. Such function must
+-- return true if the first Agent has priority over the second one. When using this argument,
+-- Group compares each pair of Agents to establish an execution order to be used by
+-- Utils:forEachAgent(). As default, the Group will not be ordered and so Utils:forEachCell()
+-- will run in the order the Agents were pushed into the Society. See
+-- Utils:greaterByAttribute() for predefined options for this argument.
+-- @arg data.build A boolean value indicating whether the Group should be computed when created.
+-- The default value is true.
+-- @usage group = Group{
 --     target = society,
 --     select = function(agent)
---         return agent.money > 90
+--         return agent.size > 90
 --     end,
 --     greater = function(a, b)
---         return a.money > b.money
+--         return a.size > b.size
 --     end
 -- }
 --
--- groupBySize = Group {target = society, greater = function(a1, a2)
+-- groupBySize = Group{target = society, greater = function(a1, a2)
 --     return a1.size > a2.size
 -- end}
--- @output agents A vector of Agents pointed by the Group.
--- @output parent The Society where the Group takes place.
+-- @output agents A vector with Agents of the Group.
+-- @output parent The Society used by the Group (its target).
 -- @output select The last function used to filter the Group.
 -- @output greater The last function used to sort the Group.
 function Group(data)

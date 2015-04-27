@@ -86,38 +86,47 @@ Chart_ = {
 metaTableChart_ = {__index = Chart_}
 
 --- Create a line chart showing the variation of one or more attributes (y axis) of an
--- object. X axis values come from the single argument of notify(). 
+-- object. X axis values come from the single argument of notify().
 -- @arg data.subject An Agent, Cell, CellularSpace, Society.
 -- @arg data.select A vector of strings with the name of the attributes to be observed. If it is only a
 -- single value then it can also be described as a string. 
+-- As default, it selects all the user-defined number attributes of the subject.
 -- @arg data.xLabel Name of the x-axis. It shows "Time" as default.
 -- @arg data.yLabel Name of the y-axis. It does not show any label as default.
 -- @arg data.label Vector of the same size of select that indicates the labels for each
--- line of a chart. Default is the name of the attributes.
+-- line of the Chart. The default value is the name of the attributes.
 -- @arg data.width The width of the lines to be drawn. It can be a number, indicating that all lines
--- will be drawn with the same width, or a vector describing each line. Default is width one 
+-- will be drawn with the same width, or a vector describing each line. The default value is width one
 -- for all lines.
--- @arg data.color An optional table where each position is a color for the respective attribute, 
+-- @arg data.color An optional table where each position is a color for the respective attribute,
 -- described as strings ("red", "green", "blue", "white", "black",
 -- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
 -- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
 -- representing RGB compositions.
 -- @arg data.title An overall title to the Chart.
--- @arg data.symbol The symbol to be used to draw the points of the chart. It can be a string to
+-- @arg data.symbol The symbol to be used to draw the points of the Chart. It can be a string to
 -- be used by all lines, or a vector of strings, describing the symbol for each line. The available
--- values are: "square", "diamond", "triangle", "ltriangle" (left), "dtriangle" (downwards triangle), 
+-- values are: "square", "diamond", "triangle", "ltriangle" (left), "dtriangle" (downwards triangle),
 -- "rtriangle" (right), "cross", "vcross" (vertical cross), "hline", "vline", "asterisk",
 -- "star", "hexagon", and "none" (default).
 -- @arg data.size The size of the symbol, in pixels. It can be a number to be used by all lines.
--- @arg data.pen The pen style for drawing lines. It can be one of "solid" (default), "dash", 
+-- or a vector of numbers, describing the size for each line. The default value is 7.
+-- @arg data.pen The pen style for drawing lines. It can be one of "solid" (default), "dash",
 -- "dot", "dashdot", or "dashdotdot". It can be a vector or a single value.
--- or a vector of numbers, describing the size for each line. Default is 7.
 -- @arg data.style The style of each line to be drawn. It can be a string, indicating that all lines
 -- will have the same style, or a vector of strings describing each line. The possible values are:
--- "lines", "dots", "none", "steps", and "sticks". Default is "lines" for all lines.
+-- "lines", "dots", "none", "steps", and "sticks". The default value is "lines" for all lines.
 -- @arg data.xAxis Name of the attribute to be used as x axis (instead of time). In this case,
--- notify() will not need the argument for plotting Charts.
+-- notify() will not need its single argument for plotting Charts.
 -- @usage Chart{subject = cs}
+--
+-- Chart{
+--     subject = world,
+--     width = 2,
+--     select = {"susceptible", "infected", "recovered"},
+--     style = {"dots", "steps", "sticks"},
+--     color = {"red", "green", "blue"}
+-- }
 Chart = function(data)
 	local symbolTable = {
 		square = 1,

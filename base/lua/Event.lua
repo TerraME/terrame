@@ -47,15 +47,13 @@ end
 
 --- An Event represents a time instant when the simulation engine must execute some computation.
 -- In order to be executed, Events must belong to a Timer. An Event is usually rescheduled to be
--- executed again according to its period, unless its action returns false. The functions
--- available for Events can be used only along the simulation, when the Event is activated and
--- comes as a argument of an action.
--- @arg data.time A number representing the first instant of time when the
--- Event will occur. Default is 1.
--- @arg data.period A positive number representing the periodicity of the Event. 
--- Default is 1.
--- @arg data.priority A defining the priority of the Event over 
--- other Events. Smaller values have higher priority. Default is 0. Priorities can also be defined
+-- executed again according to its period, unless its action returns false.
+-- @arg data.time A number representing the time instant when the
+-- Event will occur for the first time. The default value is 1.
+-- @arg data.period A positive number representing the periodicity of the Event.
+-- The default value is 1.
+-- @arg data.priority The priority of the Event over 
+-- other Events. Smaller values have higher priority. The default value is 0. Priorities can also be defined
 -- as strings:
 -- @tabular priority
 -- Value & Priority\
@@ -64,13 +62,14 @@ end
 -- "medium" & 0 \
 -- "high" & -5 \
 -- "veryhigh" & -10
--- @arg data.action A function from where, in general, the simulation engine services are 
--- invoked. This function has one single argument, the Event itself. If the action returns false,
--- the Event is removed from the Timer and will not be executed again. Action can also be a TerraME
+-- @arg data.action A function that will be executed when the Event is activated.
+-- It has one single argument, the Event itself. If the action returns false,
+-- the Event is removed from the Timer and will not be executed again. When the action will execute
+-- a single function of a TerraME object, it is possible to use Utils:call(). Action can also be a TerraME
 -- object. In this case, each type has its own set of functions that will be activated by
 -- the Event. See below how the objects are activated. Arrows indicate the execution order:
 -- @tabular action
--- Object & Function(s) activated \
+-- Object & Function(s) activated by the Event \
 -- Agent/Automaton & execute -> notify \
 -- CellularSpace/Cell & synchronize -> notify \
 -- function & function\
@@ -81,7 +80,7 @@ end
 --     print(event:getTime())
 -- end}
 -- 
--- event2 = Event {
+-- event2 = Event{
 --     time = 2000,
 --     action = my_society
 -- }

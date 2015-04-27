@@ -88,7 +88,7 @@ function Choice(attrTab)
 			if default == attrTab[1] then
 				customWarning(defaultValueWarning("default", default))
 			elseif not belong(default, attrTab) then
-				customError("Default value ("..default..") does not belong to Choice.")
+				customError("The default value ("..default..") does not belong to Choice.")
 			end
 		end
 

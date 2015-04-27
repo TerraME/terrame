@@ -100,9 +100,10 @@ end
 
 Society_ = {
 	type_ = "Society",
-	--- Add a new Agent to the Society.
-	-- @arg agent The new Agent that will be added to the Society. If nil, the Society will add a 
-	-- copy of the instance used to build the Society. In this case, the Society executes 
+	--- Add a new Agent to the Society. It will be the last Agent of the Society when one
+	-- uses Utils:forEachAgent().
+	-- @arg agent The new Agent that will be added to the Society. If nil, the Society will add a
+	-- copy of its instance. In this case, the Society executes
 	-- Agent:init() after creating the copy.
 	-- @usage soc:add(agent)
 	-- @see Agent:init
@@ -154,26 +155,27 @@ Society_ = {
 		self.autoincrement = 1
 	end,
 	--- Create a directed SocialNetwork for each Agent of the Society.
-	-- @arg data.strategy A string with the strategy to be used for creating the SocialNetwork. 
+	-- @arg data.strategy A string with the strategy to be used for creating the SocialNetwork.
 	-- See the table below.
-	-- @arg data.filter A function (Agent, Agent)->boolean that returns true if the first Agent 
+	-- @arg data.filter A function (Agent, Agent)->boolean that returns true if the first Agent
 	-- will have the second Agent in its SocialNetwork. When using this argument, the default
 	-- value of strategy becomes "function".
 	-- @arg data.name Name of the relation.
-	-- @arg data.inmemory If tru (default), the SocialNetwork will be built and stored in
-	-- each Agent of the Society. It means that the SocialNetwork will change only if the 
-	-- modeler explicitly add or remove connections. If true, the SocialNetwork will be
-	-- computed every time the simulation calls Agent:getSocialNetwork.
-	-- It means that the SocialNetwork might change naturally along the simulation, according to 
+	-- @arg data.inmemory If true (default), the SocialNetwork will be built and stored for
+	-- each Agent of the Society. It means that the SocialNetwork will change only if the
+	-- modeler explicitly add or remove connections. If false, the SocialNetwork will be
+	-- computed every time the simulation needs it by calling Agent:getSocialNetwork(), for
+	-- example when using Utils:forEachConnection().
+	-- It means that the SocialNetwork might change naturally along the simulation, according to
 	-- the adopted strategy. For instance, if the SocialNetwork of an Agent is based on its
-	-- Neighborhood and the Agent walks to another Cell, an on-the-fly SocialNetwork will also be
-	-- updated. A computational consequence of having on-the-fly SocialNetworks is that it saves
-	-- memory (because the SocialNetworks are not explicitly represented), but it consumes more
-	-- time, as it needs to be built again even if no changes occur in the simulation.
+	-- Neighborhood and the Agent walks to another Cell, a SocialNetwork not in memory will also be
+	-- updated. SocialNetworks not in memory helps the simulation to run with larger datasets,
+	-- (because the SocialNetworks are not explicitly represented), but consume more
+	-- time, as they need to be built again even if no changes occur along the simulation.
 	-- @arg data.neighborhood A string with the name of the Neighborhood that will be used to
-	-- create the SocialNetwork. Default is "1".
-	-- @arg data.placement A string with the name of the Placement that will be used to
-	-- create the SocialNetwork. Default is "placement".
+	-- create the SocialNetwork. The default value is "1".
+	-- @arg data.placement A string with the name of the placement that will be used to
+	-- create the SocialNetwork. The default value is "placement".
 	-- @arg data.probability A number between 0 and 1 indicating the probability of each
 	-- connection. The probability is applied for each pair of Agents. When using this argument,
 	-- the default value of strategy becomes "probability".
@@ -181,8 +183,7 @@ Society_ = {
 	-- taking randomly from the whole Society. When using this argument, the default value of
 	-- strategy becomes "quantity".
 	-- @arg data.self A boolean value indicating whether the Agent can be connected to itself.
-	-- Default is false.
-	-- @arg data.random A Random object. Default is the internal random generator.
+	-- The default value is false.
 	-- @tabular strategy
 	-- Strategy &
 	-- Description &
@@ -192,7 +193,7 @@ Society_ = {
 	-- same Cell the Agent belongs. & &
 	-- name, placement, self, inmemory \
 	-- "function" &
-	-- Create a SocialNetwork according to a membership function. & filter &
+	-- Create a SocialNetwork according to a filter function. & filter &
 	-- name, inmemory \
 	-- "neighbor" &
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
@@ -200,23 +201,23 @@ Society_ = {
 	-- & name, neighborhood, placement, inmemory \
 	-- "probability" &
 	-- Applies a probability for each pair of Agents (excluding the agent itself). &
-	-- probability & name, random, inmemory \
+	-- probability & name, inmemory \
 	-- "quantity" &
 	-- Number of connections randomly taken from the Society (excluding the agent itself). &
-	-- quantity & name, random, inmemory \
+	-- quantity & name, inmemory \
 	-- "void" &
 	-- Create an empty SocialNetwork for each Agent of the Society. &
 	-- & name \
-	-- @usage soc:createSocialNetwork {
+	-- @usage soc:createSocialNetwork{
 	--     quantity = 2
 	-- }
 	--
-	-- soc:createSocialNetwork {
+	-- soc:createSocialNetwork{
 	--     probability = 0.15
 	--     name = "random"
 	-- }
 	--
-	-- soc:createSocialNetwork {
+	-- soc:createSocialNetwork{
 	--    neighbor = "1"
 	--    name = "byneighbor"
 	--}
@@ -248,7 +249,7 @@ Society_ = {
 
 		switch(data, "strategy"):caseof{
 			probability = function() 
-				checkUnnecessaryArguments(data, {"strategy", "probability", "name", "random", "inmemory"})
+				checkUnnecessaryArguments(data, {"strategy", "probability", "name", "inmemory"})
 
 				mandatoryTableArgument(data, "probability", "number")
 
@@ -292,7 +293,7 @@ Society_ = {
 				data.mfunc = getSocialNetworkByNeighbor
 			end,
 			quantity = function()
-				checkUnnecessaryArguments(data, {"strategy", "quantity", "name", "random", "inmemory"})
+				checkUnnecessaryArguments(data, {"strategy", "quantity", "name", "inmemory"})
 
 				defaultTableValue(data, "quantity", 1)
 
@@ -332,6 +333,7 @@ Society_ = {
 	-- (with the position of the Agent in the vector of Agents) or a string (with the
 	-- id of the Agent).
 	-- @usage agent = soc:get("1")
+	-- agent = soc:get(5)
 	get = function(self, index)
 		if type(index) == "string" then
 			if not self.idindex or not self.idindex[index] then
@@ -362,7 +364,9 @@ Society_ = {
 		deprecatedFunction("getAgents", ".agents")
 	end,
 	--- Notify all the Agents of the Society.
-	-- @arg modelTime An integer number representing the notification time. Default is 0.
+	-- @arg modelTime A positive number representing the notification time. The default value is 0.
+	-- It is also possible to use an Event as argument. In this case, it will use the result of
+	-- Event:getTime().
 	-- @usage society:notify()
 	notify = function (self, modelTime)
 		if modelTime == nil then
@@ -389,7 +393,7 @@ Society_ = {
 		end)
 		self.cObj_:notify(modelTime)
 	end,
-	--- Remove a given Agent from the Society. It returns whether the agent was sucessfully removed.
+	--- Remove a given Agent from the Society.
 	-- @usage soc:remove(agent)
 	-- @arg arg The Agent that will be removed, or a function that takes an Agent as argument and
 	-- returns true if the Agent must be removed.
@@ -427,27 +431,28 @@ Society_ = {
 			customError("Trying to sample an empty Society.")
 		end
 	end,
-	--- Return the number of Agents of the Society.
+	--- Return the number of Agents in the Society.
 	-- @usage print(soc:size())
 	-- @deprecated Society:#
 	size = function(self)
 		deprecatedFunction("size", "operator #")
 	end,
-	--- Split the Society into a set of Groups according to a classification strategy. The 
-	-- generated Groups have empty intersection and union equals to the whole 
-	-- CellularSpace (unless function below returns nil for some Agent). It works according 
+	--- Split the Society into a set of Groups according to a classification strategy. The
+	-- Groups will have empty intersection and union equal to the whole
+	-- Society (unless function below returns nil for some Agent). It works according
 	-- to the type of its only and compulsory argument.
 	-- @arg argument A string or a function, working as follows:
 	-- @tabular argument
 	-- Type of argument &
 	-- Description \
 	-- string &
-	-- The argument must represent the name of one attribute of the Agents of the Society. Split 
+	-- The argument must represent the name of one attribute of the Agents of the Society. Split
 	-- then creates one Group for each possible value of the attribute using the value as index
 	-- and fills them with the Agents that have the respective attribute value. \
 	-- function &
-	-- The argument is a function that receives an Agent as argument and returns a value with the
-	-- index that contains the Agent. Groups are then indexed according to the returning value.
+	-- The argument is a function that gets an Agent as argument and returns an
+	-- index for the Agent, which can be a number, string, or boolean value.
+	-- Groups are then indexed according to the returning value.
 	--
 	-- @usage gs = soc:split("gender")
 	-- print(#gs.male)
@@ -497,10 +502,10 @@ Society_ = {
 		end)
 		return result
 	end,
-	--- Activate each asynchronous message sent by Agents belonging to the Society.
+	--- Deliver asynchronous messages sent by Agents belonging to the Society.
 	-- @arg delay A number indicating the current delay to be delivered. Messages with delay less
 	-- or equal this value are sent, while the others have their delays reduced by this value.
-	-- Default is one.
+	-- The default value is one.
 	-- @usage soc:synchronize()
 	-- soc:synchronize(2)
 	synchronize = function(self, delay)
@@ -534,28 +539,26 @@ Society_ = {
 
 metaTableSociety_ = {
 	__index = Society_,
-	--- Return the number of Agents of the Society.
+	--- Return the number of Agents in the Society.
 	-- @usage print(#soc)
 	__len = function(self)
 		return #self.agents
 	end,
 	__tostring = tostringTerraME
 }
---- Type to create and manipulate a set of Agents. Each Agent within a Society has a 
--- unique id, which is initialized while creating the Society. There are different ways to 
+--- Type to create and manipulate a set of Agents. Each Agent within a Society has a
+-- unique id, which is initialized while creating the Society. There are different ways to
 -- create a Society. See the argument dbType for the options.
--- Calling Utils:forEachAgent() traverses Societies
--- Societies have additional functions related to its argument instance, according to the 
--- table below.
+-- Calling Utils:forEachAgent() traverses Societies.
 -- @tabular instance
--- Attribute of instance & Function within the Society \
+-- Type of attribute & Function within the Society \
 -- function & Call the function of each of its Agents. \
 -- number & Return the sum of the number in each of its Agents. \
--- boolean & Return the sum of true values in each of its Agents. \
+-- boolean & Return the quantity of true values in its Agents. \
 -- string & Return a table with positions equal to the unique strings and values equal to the
 -- number of occurrences in each of its Agents.
 -- @arg data.database Name of the database.
--- @arg data.dbType A string with the name of the source the Society will be read from. 
+-- @arg data.dbType A string with the name of the source the Society will be read from.
 -- TerraME always converts this string to lower case. See the table below:
 -- @tabular dbType
 -- dbType & Description & Compulsory arguments & Optional arguments \
@@ -569,14 +572,14 @@ metaTableSociety_ = {
 -- @arg data.id The unique identifier attribute used when reading the Society from a file.
 -- @arg data.... Any other attribute or function for the Society.
 -- @arg data.instance An Agent with the description of attributes and functions. When using this
--- argument, each Agent will have attributes and functions according to the instance. The Society
--- calls Agent:init() from the instance for each of its Agents. 
--- Every attribute from the Cell that is a Choice will be converted into a sample from the Choice.
--- Additional functions are also
--- created to the Society, according to the attributes of the instance. For each attribute of the
--- instance, one function is created in the Society with the same name (note that attributes
--- declared exclusively in Agent:init() will not be mapped, as they do not belong to the
--- instance). The table below describes how each attribute is mapped:
+-- argument, each Agent of the Society will have attributes and functions according to the
+-- instance. The attributes of the instance will be copyed to the Agent and Society 
+-- calls Agent:init() for each of its Agents.
+-- Every attribute from the Agent that is a Choice will be converted into a Choice:sample().
+-- When using this argument, additional functions are also
+-- created to the Society. For each attribute of the its Agents (after calling Agent:init()),
+-- one function is created in the Society with the same name. The table below describes how each
+-- attribute is mapped from the Agent to the Society:
 -- @arg data.layer Name of the layer the theme was created from. It must be used to solve a
 -- conflict when there are two themes with the same name (default is "").
 -- @arg data.password The password (default is "").
@@ -593,7 +596,7 @@ metaTableSociety_ = {
 -- @arg data.user Username (default is "").
 -- @arg data.where A SQL restriction on the properties of the Agents (default is "", applying
 -- no restriction. Only the Agents that reflect the established criteria will be loaded). This
--- argument ignores the "as" flexibility of select. 
+-- argument ignores the "as" flexibility of select.
 -- @output agents A vector of Agents pointed by the Society.
 -- @output instance The Agent that describes attributes and functions of each Agent belonging to
 -- the Society. This Agent must not be executed.
@@ -602,13 +605,13 @@ metaTableSociety_ = {
 -- @output messages A vector that contains the delayed messages.
 -- @output parent The Environment it belongs.
 --
--- @usage my_instance = Agent {
+-- @usage my_instance = Agent{
 --     execute = function(...),
 --     run = function(...),
 --     age = 0
 -- }
 -- 
--- s = Society {
+-- s = Society{
 --     instance = my_instance,
 --     quantity = 20
 -- }
@@ -617,13 +620,13 @@ metaTableSociety_ = {
 -- s:run() -- call run for each agent
 -- print(s:age()) -- sum of the ages of each agent
 --
--- s = Society {
+-- s = Society{
 --     instance = my_instance,
 --     database = "c:\\datab.mdb",
 --     layer = "farmers"
 -- }
 -- 
--- s = Society {
+-- s = Society{
 --     instance = my_instance,
 --     database = "file.csv"
 -- }

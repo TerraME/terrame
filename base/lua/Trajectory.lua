@@ -27,8 +27,8 @@
 
 Trajectory_ = {
 	type_ = "Trajectory",
-	--- Add a new Cell to the Trajectory.
-	-- @arg cell A Cell that will be added.
+	--- Add a new Cell to the Trajectory. It will be added to the end of the list of Cells.
+	-- @arg cell A Cell.
 	-- @usage traj:add(cell)
 	add = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
@@ -47,7 +47,8 @@ Trajectory_ = {
 	addCell = function(self, cell)
 		deprecatedFunction("addCell", "add")
 	end,
-	--- Retrieve a copy of the Trajectory, with the same parent, select, greater, and Cells.
+	--- Return a copy of the Trajectory. It has the same parent, select, greater and Cells.
+	-- Any change in the cloned Trajectory will not affect the original one.
 	-- @usage copy = traj:clone()
 	clone = function(self)
 		local cloneT = Trajectory{
@@ -62,11 +63,13 @@ Trajectory_ = {
 		end)
 		return cloneT
 	end,
-	--- Apply a filter over the original CellularSpace. It returns true if the function was applied 
-	-- sucessfully.
-	-- @arg f A function (Cell)->boolean to filter the CellularSpace, adding to the Trajectory 
-	-- only those Cells whose returning value is true. The default value is the previous filter 
-	-- applied to the Trajectory.  
+	--- Apply a filter over the CellularSpace used as target for the Trajectory. It replaces the
+	-- previous set of Cells belonging to the Trajectory.
+	-- @arg f A function (Cell)->boolean, working in the same way of the argument select to
+	-- create the Trajectory. If this argument is missing, this function filters the CellularSpace
+	-- with the function used as argument for the last call to filter itself, or then the value of
+	-- argument select used to build the Trajectory. When it cannot find any function to be used,
+	-- this function will add all the Cells of the CellularSpace to the Trajectory.
 	-- @usage traj:filter(function(cell)
 	--     return cell.cover = "forest"
 	-- end)
@@ -117,7 +120,8 @@ Trajectory_ = {
 	getCell = function(self, index)
 		deprecatedFunction("getCell", "get")
 	end,
-	--- Randomize the Cells, changing their traversing order.
+	--- Randomize the Cells of the Trajectory. It will change the traversing order used by
+	-- Utils:forEachCell().
 	-- @usage traj:randomize()
 	randomize = function(self)
 		local randomObj = Random()
@@ -130,17 +134,19 @@ Trajectory_ = {
 			cells[i], cells[r] = cells[r], cells[i]
 		end
 	end,
-	--- Rebuild the Trajectory from the original data using the last filter and sort functions.
+	--- Rebuild the Trajectory from the CellularSpace used as target.
+	-- It is a shortcut to Trajectory:filter() and then Trajectory:sort().
 	-- @usage traj:rebuild()
 	rebuild = function(self)
 		self:filter()
 		self:sort()
 	end,
-	--- Sort the current CellularSpace subset of the Trajectory. It returns a boolean value indicating
-	--  whether the Trajectory was sucessfully sorted.
-	-- @arg f A function (Cell, Cell)->boolean to sort the generated subset of Cells. It 
-	-- returns true if the first one has priority over the second one. Default: No sorting function 
-	-- will be applied.
+	--- Sort the current CellularSpace subset. It updates the traversing order of the Trajectory.
+	-- @arg f An ordering function (Cell, Cell)->boolean, working in the same way of
+	-- argument greater to create the Trajectory. If this argument is missing, this function
+	-- sorts the Trajectory with the function used as argument for the last call to sort itself,
+	-- or then the value of argument greater used to build the Trajectory. When it cannot find
+	-- any function to be used, it shows a warning.
 	-- @see Utils:greaterByAttribute
 	-- @see Utils:greaterByCoord
 	-- @usage traj:sort(function(c, d)
@@ -166,7 +172,7 @@ Trajectory_ = {
 setmetatable(Trajectory_, metaTableCellularSpace_)
 metaTableTrajectory_ = {
 	__index = Trajectory_,
-	--- Retrieve the number of Cells of the CellularSpace.
+	--- Retrieve the number of Cells in the Trajectory.
 	-- @usage print(#traj)
 	__len = function(self)
 		return #self.cells
@@ -174,28 +180,28 @@ metaTableTrajectory_ = {
 	__tostring = tostringTerraME
 }
 
---- Type that defines a spatial trajectory over the Cells of a CellularSpace. It inherits 
--- CellularSpace; therefore it is possible to use all functions of such type within a Trajectory. For 
--- instance, calling Utils:forEachCell() also traverses Trajectories, and it is possible to create a 
--- Trajectory from another Trajectory.
+--- Type that defines an ordered selection over a CellularSpace. It inherits CellularSpace;
+-- therefore it is possible to apply all functions of such type to a Trajectory. For instance,
+-- calling Utils:forEachCell() also traverses Trajectories.
 -- @inherits CellularSpace
 -- @arg data.target The CellularSpace over which the Trajectory will take place.
--- @arg data.select A function (Cell)->boolean to filter the CellularSpace, adding to the Trajectory
--- only those Cells whose returning value is true. If this argument is missing, all Cells will be 
--- included in the Trajectory. Note that, according to Lua language, if this function returns
--- anything but false or nil, the Cell will be added to the Trajectory.
--- @arg data.greater A function (Cell, Cell)->boolean to sort the generated subset of Cells. It 
--- returns true if the first one has priority over the second one. If this argument is missing, no 
--- sorting function will be applied. See Utils:greaterByAttribute() and Utils:greaterByCoord() as 
--- predefined options to sort objects.
--- @arg data.build A boolean value indicating whether the Trajectory will be computed or not when 
--- created. Default is true.
+-- @arg data.select A function (Cell)->boolean indicating whether an Cell of the CellularSpace
+-- should belong to the Trajectory. If this function returns anything but false or nil for a given
+-- Cell, it will be added to the Trajectory. If this argument is missing, all Cells will be
+-- included in the Trajectory.
+-- @arg data.greater A function (Cell, Cell)->boolean to sort the Trajectory. Such function must
+-- return true if the first Cell has priority over the second one. When using this argument,
+-- Trajectory compares each pair of Cells to establish an execution order to be used by
+-- Utils:forEachCell(). As default, the Trajectory will not be ordered and so Utils:forEachCell()
+-- will run in the order the Cells were pushed into the CellularSpace. See
+-- Utils:greaterByAttribute() for predefined options for this argument.
+-- @arg data.build A boolean value indicating whether the Trajectory should be computed when
+-- created. The default value is true.
 -- @output cells A vector of Cells pointed by the Trajectory.
 -- @output parent The CellularSpace where the Trajectory takes place.
 -- @output select The last function used to filter the Trajectory.
 -- @output greater The last function used to sort the Trajectory.
---
--- @usage traj = Trajectory {
+-- @usage traj = Trajectory{
 --     target = cs,
 --     select = function(c)
 --         return c.cover == "forest"
@@ -205,14 +211,14 @@ metaTableTrajectory_ = {
 --     end
 -- }
 -- 
--- traj = Trajectory {
+-- traj = Trajectory{
 --     target = cs,
 --     greater = function(c, d)
 --         return c.dist < d.dist
 --     end
 -- }
 -- 
--- traj = Trajectory {
+-- traj = Trajectory{
 --     target = cs,
 --     build = false
 -- }

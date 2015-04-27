@@ -24,20 +24,95 @@
 --#########################################################################################
 
 Model_ = {
-	--- Check whether the instance of the model has correct arguments. This function is optional
-	-- and it is called before creating internal objects. See Package:toLabel(), when building a
-	-- Model to work with graphical interfaces.
-	-- @usage model:check()
+	--- User-defined function to check whether the instance of the model has correct arguments.
+	-- This function is optional and it is automatically called after the internal verification
+	-- of arguments but before creating internal objects. The internal verification ensures that
+	-- the type of the arguments is valid, acording to the definition of the Model.
+	-- See Package:toLabel(), for using names of arguments
+	-- in error messages when building a Model to work with graphical interfaces.
+	-- @usage Tube = Model{
+	--     initialWater = 200,
+	--     flow = 20,
+	--     init = function(model)
+	--         -- ...
+	--     end,
+	--     check = function(model)
+	--         verify(model.flow < model.initialWater, toLabel("flow").." should be less than "..toLabel("initialWater")..".")
+	--         -- add any other verification
+	--     end
+	-- }
+	--
+	-- m = Tube{initialWater = 100, flow = 10} -- ok
+	-- m = Tube{initialWater = 100, flow = 100} -- "Flow should be less than initial water."
+	-- @see Package:verify
+	-- @see Package:customError
 	check = function(self)
 	end,
-	--- Creates the objects of the model. This function must be implemented by the derived type.
-	-- @usage model:init()
+	--- Notify the Observers of the Model instance.
+	-- @arg modelTime A number representing the notification time. The default value is zero.
+	-- It is also possible to use an Event as argument. In this case, it will use the result of
+	-- Event:getTime().
+	-- @usage Tube = Model{
+	--     water = 200,
+	--     init = function(model)
+	--         model.finalTime = 100
+	--         model.timer = Timer{
+	--             Event{action = function()
+	--                 model.water = model.water - 1
+	--                 model:notify()
+	--             end}
+	--         }
+	--     end
+	-- }
+	--
+	-- m = Tube{water = 100}
+	--
+	-- Chart{
+	--     subject = m,
+	--     select = "water"
+	-- }
+	--
+	-- m:execute()
 	notify = function(self, modelTime)
 	end,
+	--- User-defined function to create the objects of the Model. It is recommended that
+	-- all the created objects should be placed in the model instance itself, to guarantee
+	-- the content of the Model into a single object. This function is executed automatically
+	-- when one instantiates a given Model.
+	-- @usage usage Tube = Model{
+	--     initialWater = 200,
+	--     flow = 20,
+	--     init = function(model)
+	--         model.finalTime = 10
+	--         model.timer = Timer{
+	--             Event{action = function()
+	--                 -- ...
+	--             end}
+	--         }
+	--     end
+	-- }
+	--
+	-- m = Tube{initialWater = 100, flow = 10}
+	-- print(m.finalTime) -- 10
 	init = function(self)
 	end,
-	--- Run the model. It requires that the model has attribute finalTime.
-	-- @usage model:execute()
+	--- Run the Model instance. It requires that the Model instance has attribute finalTime.
+	-- @usage Tube = Model{
+	--     initialWater = 200,
+	--     flow = 20,
+	--     init = function(model)
+	--         model.finalTime = 10
+	--         model.timer = Timer{
+	--             Event{action = function()
+	--                 -- ...
+	--             end}
+	--         }
+	--     end
+	-- }
+	--
+	-- m = Tube{initialWater = 100, flow = 10}
+	--
+	-- m:execute()
 	execute = function(self)
 		forEachElement(self, function(name, value, mtype)
 			if belong(mtype, {"Timer", "Environment"}) then
@@ -46,12 +121,44 @@ Model_ = {
 			end
 		end)
 	end,
-	--- Defines the distribution of components in the graphical interface. If this function is not
+	--- User-defined function to define the distribution of components in the graphical
+	-- interface. If this function is not
 	-- implemented in the Model, the components will be distributed automatically. This function
 	-- should return a table with tables composed by strings. Each position of the table describes
-	-- a column of components in the interface. Note that if this function returns a table, the
-	-- elements that do not belong to the table will not be shown in the graphical interface.
-	-- @usage model:interface()
+	-- a column of components in the interface.
+	-- In the example below, the first column of the graphical interface will show the string
+	-- argument in the top ("mapFile") and the three arguments of "agents" in the bottom of the
+	-- first column. The second column will contain the arguments of "block" in the top and the
+	-- boolean argument ("showGraphics") in the bottom. The elements that do not belong to the 
+	-- table will not be shown in the graphical interface (in the example, "season").
+	-- Note that all Compulsory arguments must belong to the graphical interface to allow
+	-- instantiate Model instances properly.
+	-- @usage Sugarscape = Model{
+	--     mapFile        = "sugar-map.csv",
+	--     showGraphics   = true,
+	--     agents = {
+	--         quantity   = 10,
+	--         wealth     = Choice{min = 5, max = 25},
+	--         metabolism = Choice{min = 1, max = 4}
+	--     },
+	--     block = {
+	--         xmin       = 0,
+	--         xmax       = math.huge,
+	--         ymin       = 0,
+	--         ymax       = math.huge
+	--     },
+	--     season = {
+	--         summerGrowthRate = 1,
+	--         winterGrowthRate = 0.125
+	--     },
+	--     interface = function()
+	--         return {
+	--             {"string", "agents"},
+	--             {"block", "boolean"}
+	--         }
+	--     end,
+	--     -- ...
+	-- }
 	interface = function(self)
 	end
 }
@@ -59,27 +166,29 @@ Model_ = {
 --- Type that defines a model. The user can use Model to describe the arguments of a model 
 -- and how it can be built.
 -- The returning value of a Model is an object that can be used to create instances of the model.
--- @arg attrTab A table with the description of the type. Each named argument of this table
--- will be considered as an argument of the constructor of the type. The values of each
--- named argument have an associated semantinc, which means that they are not necessarially the
--- default value. [Note that some of these features were not implemented yet.] See the table below:
--- @tabular attrTab
+-- A tutorial about Models in TerraME is available at
+--  http://github.com/pedro-andrade-inpe/terrame/wiki/Models.
+-- @arg attrTab.finalTime A number with the final time of the simulation.
+-- @arg attrTab.seed A number with the initial seed for Random.
+-- @arg attrTab.init A mandatory function to describe how the model instance is created.
+-- See Model:init(). If the Model does not have argument finalTime, this function should
+-- create the attribute finalTime to allow the Model instance to be executed.
+-- @arg attrTab.check An optional function to check if the arguments of the model instance
+-- are valid. See Model:check().
+-- @arg attrTab.... Arguments of the Model. The values of each
+-- argument have an associated semantic. See the table below:
+-- @tabular ...
 -- Attribute type & Description & Default value \
--- number or bool & The instance has to belong to that type. & The value itself. \
--- string & The instance has to belong to that type. If it is in the format "*.a;*.b;...", it 
+-- number or bool & The instance has to belong to such type. & The value itself. \
+-- string & The instance has to be a string. If it is in the format "*.a;*.b;...", it 
 -- describes a file extension. The modeler then has to use a filename as argument with one of the
 -- extensions defined by this string. & The value itself. \
 -- Choice & The instance must have a value that belongs to the Choice. & The default value of the Choice. \
 -- Mandatory & A mandatory argument, which means that the use must use a value witht the type
 -- defined in the Mandatory to build the model instance correctly. If Mandatory is "table", then
 -- the model instance must have all its elements belonging to the same type. & No default value.\
--- table & The instance has to have a value belonging to the table (the table must have a single
--- type). & The first position of the table.\ 
 -- named table & It will verify each attribute according to the rules above. & The table itself.
 -- It is possible to define only part of the table in the instance, keeping the other default values. \
--- empty table & It will verify whether the instance has a non-empty table as argument. It does not
--- check any table values. The only requirement is that all them must have the same type. & None (the
--- argument is mandatory).
 -- @usage mymodel = Model{
 --     par1 = 3,
 --     par2 = {"low", "medium", "high"},
@@ -87,12 +196,14 @@ Model_ = {
 --     ...
 -- }
 --
+-- print(type(mymodel)) -- "Model"
+--
 -- scenario1 = mymodel() -- par1 = 3, par2 = "low", par3.min = 3, par3.max = 5
 --
+-- print(type(scenario1)) -- "mymodel"
+--
 -- scenario2 = mymodel{par2 = "medium", par3 = {max = 6}} -- par1 = 3, par3.min = 3
---
 -- scenario3 = mymodel{par2 = "equal"} -- error: there is no such option in par2
---
 -- scenario4 = mymodel{par3 = {average = 2}} -- error: there is no such name in par3
 function Model(attrTab)
 	if type(attrTab.interface) == "function" then

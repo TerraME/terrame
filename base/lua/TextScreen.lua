@@ -23,12 +23,16 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
---- Creates a window to output attributes of an object. Each call to notify() add one
--- more line to the content of the window.
+--- A window with a table to show the attributes of an object along the simulation.
+-- Each call to notify() add one more line to the content of the window.
 -- @arg data.subject An Agent, Cell, CellularSpace, Society.
 -- @arg data.select A vector of strings with the name of the attributes to be observed.
--- If it is only a single value then it can also be described as a string. 
--- @usage TextScreen{subject = cs}
+-- If it is only a single value then it can also be described as a string.
+-- As default, it selects all the user-defined attributes of an object.
+-- @usage TextScreen{
+--     subject = agent,
+--     select = {"size" , "age"}
+-- }
 TextScreen = function(data)
 	mandatoryTableArgument(data, "subject")
 

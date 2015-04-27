@@ -26,64 +26,62 @@
 
 Neighborhood_ = {
 	type_ = "Neighborhood",
-	--- Add a new Cell to the Neighborhood. 
-	-- It returns a boolean value indicating whether the Cell was correctly added.
+	--- Add a new Cell to the Neighborhood. If the Neighborhood already contains such Cell
+	-- then it will stop with an error.
 	-- @arg cell A Cell to be added.
-	-- @arg weight A number representing the weight of the connection. Default is zero.
+	-- @arg weight A number representing the weight of the connection. The default value is 1.
 	-- @usage n:add(cell, 0.02)
 	add = function(self, cell, weight)
 		mandatoryArgument(1, "Cell", cell)
 		optionalArgument(2, "number", weight)
 
-		if weight == nil then
-			weight = 1
-		end
+		if weight == nil then weight = 1 end
 
 		verify(not self:isNeighbor(cell), "Cell ("..cell.x..", "..cell.y..") already belongs to the Neighborhood.")
 
-		return self.cObj_:addNeighbor(cell.x, cell.y, cell.cObj_, weight)
+		self.cObj_:addNeighbor(cell.x, cell.y, cell.cObj_, weight)
 	end,
 	--- Add a new Cell to the Neighborhood.
 	-- @arg cell A Cell.
-	-- @arg weight A number representing the weight of the connection. Default is zero.
+	-- @arg weight A number representing the weight of the connection.
 	-- @usage n:addNeighbor(cell, 0.7)
 	-- @deprecated Neighborhood:add
 	addNeighbor = function(self, cell, weight)
 		deprecatedFunction("addNeighbor", "add")
 	end,
 	--- Add a new Cell to the Neighborhood.
-	-- @arg xIndex A number.
-	-- @arg yIndex A number.
+	-- @arg xIndex A number with the x value of the Cell.
+	-- @arg yIndex A number with the y value of the Cell.
 	-- @arg cellularSpace A CellularSpace.
-	-- @arg weight A number representing the weight of the connection. Default is zero.
+	-- @arg weight A number representing the weight of the connection.
 	-- @usage n:addCell(2, 2, cs, 0.5)
 	-- @deprecated Neighborhood:add
 	addCell = function(self, xIndex, yIndex, cellularSpace, weight)
 		deprecatedFunction("addCell", "add")
 	end,
-	--- Remove all Cells from the Neighborhood. In practice, it has almost the same behavior
-	-- as calling Neighborhood() again.
+	--- Remove all Cells from the Neighborhood. In practice, it has the same behavior
+	-- as calling Neighborhood() again if the Neighborhood was not added to any Cell.
 	-- @usage n:clear()
 	clear = function(self)
 		self.cObj_:clear()
 	end,
 	--- Remove a Cell from the Neighborhood.
-	-- @arg xIndex A number.
-	-- @arg yIndex A number.
+	-- @arg xIndex A number with the x value of the Cell.
+	-- @arg yIndex A number with the y value of the Cell.
 	-- @usage n:eraseCell(2, 2)
 	-- @deprecated Neighborhood:remove
 	eraseCell = function(self, xIndex, yIndex)
 		deprecatedFunction("eraseCell", "remove")
 	end,
 	--- Remove a Cell from the Neighborhood.
-	-- @arg cell A Cell.
+	-- @arg cell A string with the unique identifier of the Cell.
 	-- @usage n:eraseNeighbor("2")
 	-- @deprecated Neighborhood:remove
 	eraseNeighbor = function(self, cell)
 		deprecatedFunction("eraseNeighbor", "remove")
 	end,
 	--- Remove a Cell from the Neighborhood.
-	-- @arg cell A cell which will be removed.
+	-- @arg cell The Cell that is going to be removed.
 	-- @usage n:remove(cell)
 	remove = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
@@ -92,24 +90,23 @@ Neighborhood_ = {
 
 		local result = self.cObj_:eraseNeighbor(cell.x, cell.y, cell.cObj_)
 	end,
-	--- Remove a Cell from the Neighborhood.
-	-- Neighborhood:add instead.
-	-- @arg index A number.
-	-- @arg cell A Cell.
+	--- Remove a Cell from the Neighborhood replacing it by another Cell.
+	-- @arg index A positive integer number with the position of the Cell.
+	-- @arg cell The new Cell.
 	-- @usage n:setCellNeighbor(2, "2")
-	-- @deprecated Neighborhood:remove
+	-- @deprecated Neighborhood:remove() and Neighborhood:add()
 	setCellNeighbor = function(self, index, cell)
 		deprecatedFunction("setCellNeighbor", "remove and add")
 	end,
-	--- Retrieve the weight of the connection to a given neighbour Cell.
-	-- @arg xIndex A number.
-	-- @arg yIndex A number.
+	--- Return the weight of the connection to a given neighbor Cell.
+	-- @arg xIndex A number with the x value of the Cell.
+	-- @arg yIndex A number with the y value of the Cell.
 	-- @usage n:getCellWeight(2, 2)
 	-- @deprecated Neighborhood:getWeight
 	getCellWeight = function(self, xIndex, yIndex)
 		deprecatedFunction("getCellWeight", "getWeight")
 	end,
-	--- Retrieve the weight of the connection to a given neighbour Cell. It returns nil when
+	--- Return the weight of the connection to a given neighbor Cell. It returns nil when
 	-- the Cell is not a neighbor.
 	-- @arg cell A Cell.
 	-- @usage w = n:getWeight(cell)
@@ -121,7 +118,7 @@ Neighborhood_ = {
 
 		return result
 	end,
-	--- Retrieve the weight of the connection to a given neighbour Cell.
+	--- Return the weight of the connection to a given neighbor Cell.
 	-- @arg cell A Cell.
 	-- @usage n:getNeighWeight(cell)
 	-- @deprecated Neighborhood:getWeight
@@ -145,7 +142,7 @@ Neighborhood_ = {
 
 		return self.cObj_:isNeighbor(cell.x, cell.y, cell.cObj_)
 	end,
-	--- Retrieve a random Cell from the Neighborhood.
+	--- Return a random Cell from the Neighborhood.
 	-- @usage cell = n:sample()
 	sample = function(self)
 		if self:isEmpty() then
@@ -165,7 +162,7 @@ Neighborhood_ = {
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
 	-- @arg cell A Cell.
-	-- @arg weight The new weight.
+	-- @arg weight A number with the new weight.
 	-- @usage n:setWeight(cell, 0.01)
 	setWeight = function(self, cell, weight)
 		mandatoryArgument(1, "Cell", cell)
@@ -175,10 +172,10 @@ Neighborhood_ = {
 
 		verify(result, "Cell ("..cell.x..","..cell.y..") does not belong to the Neighborhood.")
 	end,
-	--- Update a weight of the connection to a given neighbor Cell.
-	-- @arg xIndex A number.
-	-- @arg yIndex A number.
-	-- @arg weight A number representing the weight of the connection. Default is zero.
+	--- Update the weight of a connection to a given neighbor Cell.
+	-- @arg xIndex A number with the x value of the Cell.
+	-- @arg yIndex A number with the y value of the Cell.
+	-- @arg weight A number representing the new weight of the connection.
 	-- @usage n:setCellWeight(2, 2, 0.5)
 	-- @deprecated Neighborhood:setWeight
 	setCellWeight = function(self, xIndex, yIndex, weight)
@@ -186,13 +183,13 @@ Neighborhood_ = {
 	end,
 	--- Update a weight of the connection to a given neighbor Cell.
 	-- @arg cell A Cell.
-	-- @arg weight A number representing the weight of the connection. Default is zero.
+	-- @arg weight A number representing the weight of the connection.
 	-- @usage n:setNeighWeight(cell, 0.3)
 	-- @deprecated Neighborhood:setWeight
 	setNeighWeight = function(self, cell, weight)
 		deprecatedFunction("setNeighWeight", "setWeight")
 	end,
-	--- Retrieve the number of Cells of the Neighborhood.
+	--- Return the number of Cells in the Neighborhood.
 	-- @usage n:size()
 	-- @deprecated Neighborhood:#
 	size = function(self)
@@ -208,7 +205,7 @@ Neighborhood_ = {
 
 metaTableNeighborhood_ = {
 	__index = Neighborhood_,
-	--- Retrieve the number of Cells of the Neighborhood.
+	--- Return the number of Cells in the Neighborhood.
 	-- @usage print(#n)
 	__len = function(self)
 		return self.cObj_:size()
@@ -216,15 +213,19 @@ metaTableNeighborhood_ = {
 	__tostring = tostringTerraME
 }
 
---- Each Cell has one or more Neighborhoods to represent proximity relations. A Neighborhood is a
--- set of pairs (cell, weight), where cell is a neighbor Cell and weight is a number storing the
--- relation's strength. This type is used to create Neighborhoods from scratch to be used by
--- Cell:addNeighborhood(). To create well established neighborhoods see
+--- A Neighborhood is a set of pairs (cell, weight), where cell is a neighbor Cell and weight 
+-- is a number storing the relation's strength.
+-- Each Cell can have one or more Neighborhoods to represent its proximity relations.
+-- This type is used to create Neighborhoods from scratch to be used by
+-- Cell:addNeighborhood(). To create well-established Neighborhoods see
 -- CellularSpace:createNeighborhood(). Neighborhoods can also be loaded from external soures
--- using CellularSpace:loadNeighborhood(). Calling Utils:forEachNeighbor()
--- from a Cell traverses one of its Neighborhoods.
--- @arg data A table with only internal purposes. It should not be used explicitly by the user.
+-- using CellularSpace:loadNeighborhood().
+-- It is recommended that a Neighborhood should contain only Cells that belong to the same
+-- CellularSpace, as it guarantees that all its Cells have unique identifiers.
+-- Calling Utils:forEachNeighbor() from a Cell traverses one of its Neighborhoods.
+-- @arg data.... Attributes with only internal purposes. They should not be used explicitly by the user.
 -- @usage n = Neighborhood()
+-- n = Neighborhood{}
 function Neighborhood(data)
 	if data == nil then
 		data = {}

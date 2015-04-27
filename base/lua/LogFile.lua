@@ -23,15 +23,20 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
---- Creates a log file to save attributes of an object. The saved file uses the csv
+--- A log file to save attributes of an object. The saved file uses the csv
 -- standard: The first line contains the attribute names and the following lines
 -- contains values according to the calls to notify().
 -- @arg data.subject An Agent, Cell, CellularSpace, Society.
--- @arg data.file A string with the file name to be saved. Default is "result.csv".
--- @arg data.separator A string with the separator. Default is ",".
+-- @arg data.file A string with the file name to be saved. The default value is "result.csv".
+-- @arg data.separator A string with the separator. The default value is ",".
 -- @arg data.select A vector of strings with the name of the attributes to be observed.
--- If it is only a single value then it can also be described as a string. 
--- @usage LogFile{subject = cs}
+-- If it is only a single value then it can also be described as a string.
+-- As default, it selects all the user-defined attributes of an object.
+-- @usage LogFile{
+--     subject = cs,
+--     file = "cs.csv",
+--     separator = ";"
+-- }
 LogFile = function(data)
 	mandatoryTableArgument(data, "subject")
 	defaultTableValue(data, "separator", ",")

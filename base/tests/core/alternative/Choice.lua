@@ -49,7 +49,7 @@ return{
 		error_func = function()
 			local c = Choice{1, 2, 3, default = 4}
 		end
-		unitTest:assert_error(error_func, "Default value (4) does not belong to Choice.")
+		unitTest:assert_error(error_func, "The default value (4) does not belong to Choice.")
 
 		error_func = function()
 			local c = Choice{1, 2, 3, max = 4}

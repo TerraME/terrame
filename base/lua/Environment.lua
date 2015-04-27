@@ -121,7 +121,7 @@ end
 Environment_ = {
 	type_ = "Environment",
 	--- Add an element to the Environment.
-	-- @arg object An Agent, Automaton, CellularSpace, Timer or Environment.
+	-- @arg object An Agent, Automaton, Cell, CellularSpace, Society, Trajectory, Group, Timer, or Environment.
 	-- @usage environment:add(agent)
 	-- environment:add(cellularSpace)
 	add = function(self, object)
@@ -136,33 +136,42 @@ Environment_ = {
 		end
 		self.cObj_:add(object.cObj_)
 	end,
-	--- Create relations between behavioural entities (Agents) and spatial entities (Cells). The
-	-- Environment must have only one CellularSpace or Trajectory to place agents. It is possible
-	-- to have more than one behavioural entity in the Environment. When distributing Agents over
-	-- a Trajectory, the Agents will be able to move over the whole CellularSpace.
-	-- @arg data.strategy A string containing the strategy to be used for creating a placement
+	--- Create relations between behavioural entities (Agents) and spatial entities (Cells). 
+	-- It is possible to have more than one behavioural entity within the Environment, but it must
+	-- have only one CellularSpace, Trajectory, or Cell.
+	-- When distributing Agents over
+	-- a Trajectory or a Cell, the Agents will be able to move over the whole CellularSpace.
+	-- Note that this function uses rules that will be used only to build the placement. It is up to
+	-- the modeler to implement such rules for the rest of the simulation if needed.
+	-- For example, one can use the parameter max = 1 to indicate
+	-- that the placement must have at most one Agent per Cell, but it works only to create the
+	-- placement, having no effect along the simulation.
+	-- @arg data.strategy A string containing the strategy to be used to create a placement
 	-- between Agents and Cells. See the options below:
-	-- @arg data.name A string representing the name of the relation in TerraME objects. Default
+	-- @arg data.name A string with the name of the relation. The default value
 	-- is "placement", which means that the modeler can use Agent:enter(), Agent:move(), and
-	-- Agent:leave() directly. If the name is different from the default value, the modeler will
-	-- have to use the last argument of these functions to indicate which relation they are
-	-- changing or perform changes on these relations manually.
+	-- Agent:leave() without needing to refer to the name of the placement. If the name is 
+	-- different from the default value, the modeler will
+	-- have to use the last argument of these functions with the name of the placement.
 	-- @arg data.max A number representing the maximum number of Agents that can enter in the
-	-- same Cell when creating the placement. Default is having no limit. Using max is
-	-- computationally efficient only when the number of Agents is considerably lower than the
-	-- number of Cells times max. Otherwise, it is better to consider using the uniform strategy.
-	-- Note that using this argument does not force the simulation to have a maximum number of
+	-- same Cell when creating the placement. As default it has no limit. Using this argument is
+	-- computationally efficient only when the number of Agents is considerably lower than max times
+	-- the number of Cells. Otherwise, it is better to consider using the uniform strategy.
+	-- Note that using this argument does not ensure a maximum number of
 	-- agents inside cells along the simulation - controlling the maximum is always up to
 	-- the modeler.
 	-- @tabular strategy Strategy & Description & Arguments \
-	-- "random"(default) & Create placements between Agents and Cells randomly, putting each Agent
-	-- in a Cell randomly chosen. & name, max \
-	-- "uniform" & Create placements uniformly. The first Agents enter in the first Cells. The
+	-- "random"(default) & Create placement by putting each Agent
+	-- in a randomly chosen Cell. & name, max \
+	-- "uniform" & Create placements uniformly. The first Agent enters in the first Cell, the second
+	-- one in the second Cell, and so on. If it reaches the last Cell of the CellularSpace or Trajectory
+	-- then it starts again in the first Cell. The
 	-- last Cells will contain fewer Agents if the number of Agents is not proportional to the
-	-- number of Cells. For example, placing a Society with four Agents in a CellularSpace of
-	-- three Cells will put two Agents in the first Cell and one in each other Cell. & name \
-	-- "void" & Create only the pointers for each object in each side, preparing the objects to
-	-- be manipulated by the modeler. In this case, the agents cannot use Agent:move() or Agent:walk() 
+	-- number of Cells. For example, placing a Society with four Agents into a CellularSpace of
+	-- three Cells will put two Agents in the first Cell and one in the other two Cells. & name \
+	-- "void" & This strategy creates an empty placement in each Cell and Agent. It is necessary to
+	-- use this strategy if the modeler needs to establish the relations between Agents and Cells by
+	-- himself/herself. In this case, Agents cannot use Agent:move() or Agent:walk()
 	-- before calling Agent:enter() explicitly. & name \
 	-- @usage environment = Environment{
 	--     society,
@@ -257,8 +266,8 @@ Environment_ = {
 	end,
 	--- Execute the Environment until a given time. It activates the Timers it contains, the Timers
 	-- of the Environments it contains, and so on.
-	-- @arg finalTime A positve integer number representing the time to stop the simulation.
-	-- Timers stop when there is no Event scheduled to a time less or equal to the final time.
+	-- @arg finalTime A number representing the final time. This funcion will stop when there is no
+	-- Event scheduled to a time less or equal to the final time.
 	-- @usage environment:execute(1000)
 	execute = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
@@ -267,14 +276,16 @@ Environment_ = {
 	end,
 	--- Load a Neighborhood between two different CellularSpaces.
 	-- @arg data.source A string representing the name of the file to be loaded.
-	-- @arg data.name A string representing the name of the relation to be created.
-	-- Default is '1'.
-	-- @arg data.bidirect If 'true' then for each relation from Cell a to Cell b, create
-	-- also a relation from b to a. Default is 'false'.
-	-- @usage environment:loadNeighborhood{  
+	-- @arg data.name A string with the name of the relation to be created.
+	-- The default value is "1".
+	-- @arg data.bidirect A boolean value. If true then, for each relation from Cell a
+	-- to Cell b loaded from the file, it will also create
+	-- a relation from b to a. The default value is false.
+	-- @usage environment:loadNeighborhood{
 	--     source = "file.gpm",
 	--     name = "newNeigh"
 	-- }
+	-- @see Package:file
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
 
@@ -422,7 +433,9 @@ Environment_ = {
 		file:close()
 	end,
 	--- Notify every Observer connected to the Environment.
-	-- @arg modelTime An integer number representing the notification time. Default is zero.
+	-- @arg modelTime A number representing the notification time. The default value is zero.
+	-- It is also possible to use an Event as argument. In this case, it will use the result of
+	-- Event:getTime().
 	-- @usage env:notify()
 	notify = function(self, modelTime)
 		if modelTime == nil then
@@ -440,12 +453,14 @@ Environment_ = {
 
 metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
 
---- A container that encapsulates space, time, behavior, and other environments. Objects can be
+--- A container that encapsulates space, time, behavior, and other Environments. Objects can be
 -- added directly when the Environment is declared or after it has been instantiated. It can
--- control the simulation engine, synchronizing all the Timers within it. Calling
+-- control the simulation engine, synchronizing all the Timers within it, or instantiate
+-- relations between sets of objects. Calling
 -- Utils:forEachElement() traverses each object of an Environment.
--- @arg data A table containing all the elements of the Environment to be created.
--- @usage environment = Environment {
+-- @arg data.... Agents, Automatons, Cells, CellularSpaces, Societies, Trajectories, Groups,
+-- Timers, or Environments.
+-- @usage environment = Environment{
 --     cs1 = CellularSpace{...},
 --     ag1 = Agent{...},
 --     aut2 = Automaton{...},

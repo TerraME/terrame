@@ -24,8 +24,10 @@
 --          Rodrigo Reis Pereira
 --#########################################################################################
 
---- Control a discrete transition between States. If the method in the first argument returns true, the target becomes the new active State.
--- @arg data.1st a function that returns a boolean value and takes as arguments an Event, an Agent or Automaton, and a Cell, respectively.
+--- Control a discrete transition between States. If the method in the first argument returns
+-- true, the target becomes the new active State.
+-- @arg data.1st a function that returns a boolean value and takes as arguments an Event,
+-- an Agent or Automaton, and a Cell, respectively.
 -- @arg data.target a string with another State id.
 -- @usage Jump {
 --     function(ev, agent, c)
