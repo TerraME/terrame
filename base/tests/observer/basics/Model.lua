@@ -53,6 +53,31 @@ return{
 		tube:notify(11)
 		unitTest:assert(true)
 		unitTest:delay()
+	end,
+	notify = function(unitTest)
+		local Tube = Model{
+			water = 200,
+			init = function(model)
+				model.finalTime = 100
+				model.timer = Timer{
+					Event{action = function(e)
+						model.water = model.water - 1
+						model:notify(e)
+					end}
+				}
+			end
+		}
+
+		local m = Tube{water = 100}
+
+		Chart{
+			subject = m,
+			select = "water"
+		}
+
+		m:execute()
+
+		unitTest:assert(true)
 	end
 }
 

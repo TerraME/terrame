@@ -32,6 +32,8 @@ Model_ = {
 	end,
 	--- Creates the objects of the model. This function must be implemented by the derived type.
 	-- @usage model:init()
+	notify = function(self, modelTime)
+	end,
 	init = function(self)
 	end,
 	--- Run the model. It requires that the model has attribute finalTime.
