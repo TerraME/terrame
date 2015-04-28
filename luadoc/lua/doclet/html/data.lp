@@ -60,6 +60,14 @@
 						<%end%>
 						<br><b>Source: </b>
 						<%if data.source then%>
+							<%data.source = string.gsub(data.source, "http://[%w%.]+[%/%w~%-_]*", function(value)
+								if value:sub(-1, -1) == "." then
+									value = value:sub(1, -2)
+									return "<a href=\""..value.."\">"..value.."</a>."
+								else
+									return "<a href=\""..value.."\">"..value.."</a>"
+								end
+							end)%>
 							<%=data.source%>
 						<%else%>
 							<font color="red"><%="undefined"%></font>

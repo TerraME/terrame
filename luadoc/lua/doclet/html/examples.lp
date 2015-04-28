@@ -48,7 +48,16 @@
 							<%if doc.files[filepath].type == "example" then%>
 								<%file = string.sub(filepath, 0, string.len(filepath) - 4)%>
 								<dt><h2><%=file%><a name="<%=file%>"></h2>
-									<%= doc.files[filepath].description%>
+									<%local description = string.gsub(doc.files[filepath].description, "http://[%w%.]+[%/%w~%-_]*", function(value)
+										if value:sub(-1, -1) == "." then
+											value = value:sub(1, -2)
+											return "<a href=\""..value.."\">"..value.."</a>."
+										else
+											return "<a href=\""..value.."\">"..value.."</a>"
+										end
+									end)%>
+
+									<%= description%>
 								</dt>
 							<%end%>
 							<%if doc.files[filepath].argnames and #doc.files[filepath].argnames > 0 then%>
