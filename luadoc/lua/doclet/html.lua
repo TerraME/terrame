@@ -120,13 +120,13 @@ function module_link (modulename, doc, from)
 	return href
 end
 
-function file_func_link (symbol, doc, file_doc, from, doc_report)
+function file_func_link(symbol, doc, file_doc, from, doc_report)
 	-- TODO: replace "." by "/" to create directories?
 	-- TODO: how to deal with module names with "/"?
 	assert(symbol)
 	assert(doc)
 	from = from or ""
-	local _,_,filename, funcname = string.find(symbol, "^(.-)[%.%:]?([^%:]*)$")
+	local _, _, filename, funcname = string.find(symbol, "^(.-)[%.%:]?([^%:]*)$")
 	funcname = string.gsub(funcname, "(%(.-%))", "")
 	funcname = string.gsub(funcname, "%s*$", "")
 	if filename == "" then filename = funcname end
@@ -253,7 +253,12 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 		local anchor
 
 		if belong(te_type, doc.files[te_type..".lua"].functions) then -- it is a type
-			anchor = "<a href="..href..">"..token.."</a>"
+			if te_type == name then
+				local mtoken = string.sub(token, string.len(name) + 2, string.len(token))
+				anchor = "<a href="..href..">"..mtoken.."</a>"
+			else
+				anchor = "<a href="..href..">"..token.."</a>"
+			end
 		else -- it is a file of functions
 			anchor = "<a href="..href..">"..func_name..braces.."</a>"
 		end
@@ -277,7 +282,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 				if doc.files[file_name_link] then
 					href = file_link(file_name_link, from)
 				else
-					href = symbol_link (type_name, doc, module_doc, file_doc, from, name, doc_report)
+					href = symbol_link(type_name, doc, module_doc, file_doc, from, name, doc_report)
 				end
 				local anchor = "<a href="..href..">"..token.."</a>"
 				table.insert(word_table, anchor)
@@ -291,7 +296,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 		return word_table[tonumber(key)]
 	end)
 	
-	description_linked = string.gsub(description_linked, "http://[%w%.]+[%/%w~%-]*", function(value)
+	description_linked = string.gsub(description_linked, "http://[%w%.]+[%/%w~%-_]*", function(value)
 		if value:sub(-1, -1) == "." then
 			value = value:sub(1, -2)
 			return "<a href=\""..value.."\">"..value.."</a>."
