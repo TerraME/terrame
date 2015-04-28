@@ -27,8 +27,7 @@
 
 return{
 	CSVwrite = function(unitTest)
-		local example =
-		{
+		local example = {
 			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
 			{age = 3, wealth =  8, vision = 1, metabolism = 1, test = "Foo;text"},
 			{age = 3, wealth = 15, vision = 2, metabolism = 1, test = "Foo,text"},
@@ -41,8 +40,7 @@ return{
 			{age = 1, wealth = 10, vision = 3, metabolism = 2, test = "Foo(text"}
 		}
 
-		local filename = "/tmp/" .. tostring(example):match("table: (.+)") .. ".csv"
-		-- #68 implement a function to handle tmp folders
+		local filename = unitTest:tmpFolder().."/csvwrite.csv"
 
 		CSVwrite(example, filename)
 		local data = CSVread(filename)

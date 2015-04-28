@@ -876,7 +876,7 @@ function CSVparseLine(line, sep)
 				-- value1,"blub""blip""boing",value3 will result in blub"blip"boing for the middle
 			until (c ~= '"')
 			table.insert(res, txt)
-			verify(c == sep or c == "", "Invalid csv file.")
+			verify(c == sep or c == "", "Invalid line: '"..line.."'.")
 			pos = pos + 1
 		else	
 			-- no quotes used, just look for the first separator
@@ -923,6 +923,8 @@ function CSVread(filename, sep)
 				element[v] = tonumber(tuple[k]) or tuple[k]
 			end
 			table.insert(data, element)
+		else
+			customError("Line '"..line.."' should contain "..#fields.." attributes but has "..#tuple..".") 
 		end
 		line = file:read()
 	end
@@ -944,7 +946,17 @@ function CSVwrite(data, filename, sep)
 	sep = sep or ","
 	local file = io.open(filename, "w")
 	local fields = {}
+
+	if data[1] == nil then
+		customError("#1 does not have position 1.")
+	elseif #data ~= getn(data) then
+		customError("#1 should have only numbers as indexes.")
+	end
+
 	for k in pairs(data[1]) do
+		if type(k) ~= "string" then
+			customError("All attributes should be string, got "..type(k)..".")
+		end
 		table.insert(fields, k)
 	end
 	file:write(table.concat(fields, sep))

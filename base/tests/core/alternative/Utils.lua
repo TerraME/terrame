@@ -48,44 +48,6 @@ return{
 		unitTest:assert_error(error_func, "Function 'sum' does not exist.")
 	
 	end,
-	CSVparseLine = function(unitTest)
-		local error_func = function()
-			CSVparseLine(2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
-
-		error_func = function()
-			CSVparseLine("abc", 2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
-	end,
-	CSVread = function(unitTest)
-		local error_func = function()
-			CSVread(2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
-
-		error_func = function()
-			CSVread("abc", 2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
-	end,
-	CSVwrite = function(unitTest)
-		local error_func = function()
-			CSVwrite(2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "table", 2))
-
-		error_func = function()
-			CSVwrite({}, 2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
-
-		error_func = function()
-			CSVwrite({}, "aaa", 2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "string", 2))
-	end,
 	delay = function(unitTest)
 		local error_func = function()
 			delay("2")
