@@ -28,16 +28,20 @@
 
 -- @header Some basic and useful functions for modeling.
 
---- Return information about the current simulation. The result is a table
--- with the following values: mode ("normal", "debug", or "quiet"), dbVersion (the
--- current TerraLib version for databases), separator (the directory separator),
--- path (the location of TerraME in the computer).
+--- Return information about the current execution. The result is a table
+-- with the following values.
+-- @tabular tab
+-- Attribute & Description \
+-- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
+-- dbVersion & A string with the current TerraLib version for databases. \
+-- separator & A string with the directory separator. \
+-- path & A string with the location of TerraME in the computer.
 -- @usage sessionInfo().version
 function sessionInfo()
 	return info_ -- this is a global variable created when TerraME is initialized
 end
 
---- Return the type of an object. It extends the original Lua type() to support TerraME objects, 
+--- Return the type of an object. It extends the original Lua type() to support TerraME objects,
 -- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
 -- @arg data Any object or value.
 -- @usage c = Cell{value = 3}
@@ -55,7 +59,7 @@ end
 -- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
 --- Function that returns a string describing the internal content of an object.
 -- @arg o The object to be converted into a string.
--- @arg indent A string with one level of indentation.
+-- @arg indent A string to be placed in the beginning of each line of the returning string.
 -- @usage vardump{name = "john", age = 20}
 function vardump(o, indent)
 	if indent == nil then indent = '' end
@@ -76,11 +80,10 @@ function vardump(o, indent)
 	end
 end
 
---- Return a function that executes a function of a given object when executed. 
--- The function takes as argument an It is useful to
--- be used as an action of an Event.
+--- Return a function that executes a given function of an object.
+-- It is particularly useful as argument action for an Event.
 -- @arg obj Any TerraME object.
--- @arg func A string with the function to be executed. 
+-- @arg func A string with the function to be executed.
 -- @usage a = Agent{exec = function(self, ev) print(ev:getTime()) end}
 --
 -- t = Timer{
@@ -102,16 +105,16 @@ end
 
 --- Return a table with the content of the file config.lua, stored in the directory where TerraME
 -- was executed. All the global variables of the file are elements of the returned table. 
--- Some packages require some variables in this file in order to be tested or executed.
+-- Some packages require specific variables in this file in order to be tested or executed.
 -- TerraME execution options -imporDb and -exportDb also use this file.
 -- @usage getConfig()
 function getConfig()
 	return include("config.lua")
 end
 
---- Round a number given its value and a precision.
+--- Round a number given a precision.
 -- @arg num A number.
--- @arg idp The number of decimal places to be used. Default is zero.
+-- @arg idp The number of decimal places to be used. The default value is zero.
 -- @usage round(2.34566, 3)
 function round(num, idp)
 	mandatoryArgument(1, "number", num)
@@ -255,7 +258,7 @@ local function integrationEuler(df, initCond, a, b, delta)
 		local y = initCond
 		local x = a
 		local bb = b - delta
-		local values = {} -- each equation must be computed from the same "past" value ==> o(n2), 
+		local values = {} -- each equation must be computed from the same "past" value ==> o(n2),
 						  -- where n is the number of equations
 		for x = a, bb, delta do
 			for i = 1, #df do
@@ -270,33 +273,33 @@ local function integrationEuler(df, initCond, a, b, delta)
 	end
 end
 
---- A second order function to numerically solve ordinary differential equations with a given 
+--- A second order function to numerically solve ordinary differential equations with a given
 -- initial value.
--- @arg attrs.method the name of a numeric algorithm to solve the ordinary differential 
--- equations in a given [a,b[ interval. See the options below.
+-- @arg attrs.method the name of a numeric algorithm to solve the ordinary differential
+-- equations. See the options below.
 -- @tabular method
 -- Method & Description \
--- "euler" (default) & Euler method \
+-- "euler" (default) & Euler integration method \
 -- "heun" & Heun (Second Order Euler) \
 -- "rungekutta" & Runge-Kutta Method (Fourth Order)
--- @arg attrs.equation A differential equation or a vector of differential equations. Each 
--- equation is described as a function of one or two arguments that returns a value of its 
+-- @arg attrs.equation A differential equation or a vector of differential equations. Each
+-- equation is described as a function of one or two arguments that returns a value of its
 -- derivative f(t, y), where t is the time instant, and y starts with the value of attribute
 -- initial and changes according to the result of f() and the chosen method. The calls to f
 -- will use the first argument (t) in the interval [a,b[, according to the argument step.
 -- @arg attrs.initial The initial condition, or a vector of initial conditions, which must be
 -- satisfied. Each initial condition represents the value of y when t (first argument of f)
 -- is equal to the value of argument a.
--- @arg attrs.a The beginning of the interval.
--- @arg attrs.b The end of the interval.
--- @arg attrs.step The step within the interval (optional, using 0.1 as default). It must
+-- @arg attrs.a A number with the beginning of the interval.
+-- @arg attrs.b A number with the end of the interval.
+-- @arg attrs.step A positive number with the step within the interval. It must
 -- satisfy the condition that (b - a) is a multiple of step.
--- @arg attrs.event An Event, that can be used to set arguments a and b with values
+-- @arg attrs.event An Event that can be used to set arguments a and b with values
 -- event:getTime() - event:getPeriodicity() and event:getTime(), respectively. The period of the
 -- event must be a multiple of step. Note that the first execution of the event will compute the
 -- equation relative to a time interval between event.time - event.period and event.time. Be
--- careful about that.
--- @usage v = integrate {
+-- careful about that, as it can start before the initial Event of the simulation.
+-- @usage v = integrate{
 --     equation = function(t, y)
 --         return t - 0.1 * y
 --     end,
@@ -368,7 +371,8 @@ function integrate(attrs)
 end
 
 --- Pause the simulation for a given time.
--- @arg delay_s A number indicating how long in seconds should the model pause. Default is one.
+-- @arg delay_s A number indicating how long in seconds should the model pause.
+-- The default value is 1.
 -- @usage delay(2.5)
 function delay(delay_s)
 	optionalArgument(1, "number", delay_s)
@@ -383,7 +387,7 @@ end
 
 --- Return whether a given value belong to a table.
 -- @arg value A value.
--- @arg values A table.
+-- @arg values A table with a set of values.
 -- @usage belong(2, {1, 2, 3})
 function belong(value, values)
 	if type__(values) ~= "table" then
@@ -402,6 +406,7 @@ function belong(value, values)
 end
 
 --- Return the Levenshtein's distance between two strings.
+-- See http://en.wikipedia.org/wiki/Levenshtein_distance for more details.
 -- @arg s A string.
 -- @arg t Another string.
 -- @usage levenshtein("abc", "abb")
@@ -422,14 +427,14 @@ function levenshtein(s, t)
 	return d[#d]
 end
 
---- Second order function to transverse a given CellularSpace, Trajectory, or Agent, 
--- applying a given function on each of its Cells. If any of the function calls returns 
+--- Second order function to transverse a given CellularSpace, Trajectory, or Agent,
+-- applying a given function to each of its Cells. If any of the function calls returns
 -- false, forEachCell() stops and returns false, otherwise it returns true.
--- @arg cs A CellularSpace, Trajectory, or Agent. Agents need to have a placement 
+-- @arg cs A CellularSpace, Trajectory, or Agent. Agents need to have a placement
 -- in order to execute this function.
--- @arg f A user-defined function that takes a Cell as argument. 
--- It can optionally have a second argument with a positive number representing the  position of
--- the Cell in the vector of Cells. If it returns false when processing a given Cell, 
+-- @arg f A user-defined function that takes a Cell as argument.
+-- It can optionally have a second argument with a positive number representing the position of
+-- the Cell in the vector of Cells. If it returns false when processing a given Cell,
 -- forEachCell() stops and does not process any other Cell.
 -- @usage forEachCell(cellularspace, function(cell)
 --     cell.water = cell.water + 1
@@ -454,13 +459,15 @@ function forEachCell(cs, f)
 end
 
 --- Second order function to transverse two CellularSpaces with the same resolution and
--- number of Cells. It applies a function that receives as argument two Cells, one from each
--- CellularSpace, that share the same (x, y). The cellular spaces must have the same size.
--- It returns true if no call to the function taken as argument returns false.
+-- size. It applies a function that gets two Cells as arguments, one from each
+-- CellularSpace. Both cells share the same (x, y) location.
+-- It returns true if no call to the function taken as argument returns false, otherwise
+-- it returns false.
 -- @arg cs1 A CellularSpace.
 -- @arg cs2 Another CellularSpace.
--- @arg f A user-defined function that takes two Cells as arguments, one coming from #1 
--- and the other from #2. If some call returns false, forEachCellPair() stops and does not 
+-- @arg f A user-defined function that takes two Cells as arguments, one coming from the
+-- first argument and the other from the second one.
+-- If some call returns false, forEachCellPair() stops and does not
 -- process any other pair of Cells.
 -- @usage forEachCellPair(cs1, cs2, function(cell1, cell2)
 --     cell1.water = cell1.water + cell2.water
@@ -485,14 +492,15 @@ function forEachCellPair(cs1, cs2, f)
 end
 
 --- Second order function to transverse a given folder,
--- applying a given function on each of its files. If any of the function calls returns 
+-- applying a given function on each of its files. If any of the function calls returns
 -- false, forEachFile() stops and returns false, otherwise it returns true.
 -- @arg folder A string with the path to a folder, or a vector of files.
--- @arg f A user-defined function that takes a file name as argument.
+-- @arg f A user-defined function that takes a file name as argument. Note that
+-- the name does not include the directory where the file is placed.
 -- @usage forEachFile("C:", function(file)
 --     print(file)
 -- end)
--- @see FileSystem dir
+-- @see FileSystem:dir
 function forEachFile(folder, f)
 	if type(folder) == "string" then
 		folder = dir(folder)
@@ -509,11 +517,11 @@ end
 
 --- Second order function to transverse a given Neighborhood of a Cell, applying a
 -- function in each of its neighbors. It returns true if no call to the function taken as
--- argument returns false. There are two ways of using this function because the
--- second argument is optional.
+-- argument returns false, otherwise it returns false.
+-- There are two ways of using this function because the second argument is optional.
 -- @arg cell A Cell.
 -- @arg index (Optional) A string with the name of the Neighborhood to be transversed.
--- Default is "1".
+-- The default value is "1".
 -- @arg f A user-defined function that takes three arguments: the Cell itself, the neighbor
 -- Cell, and the connection weight. If some call to it returns false, forEachNeighbor() stops
 -- and does not process any other neighbor. In the case where the second argument is missing,
@@ -557,7 +565,8 @@ function forEachNeighbor(cell, index, f)
 end
 
 --- Second order function to transverse all Neighborhoods of a Cell, applying a given function
--- on them. It returns true if no call to the function taken as argument returns false.
+-- on them. It returns true if no call to the function taken as argument returns false,
+-- otherwise it returns false.
 -- @arg cell A Cell.
 -- @arg f A function that receives a Neighborhood as argument.
 -- @usage forEachNeighborhood(cell, function(neighborhood)
@@ -580,10 +589,11 @@ function forEachNeighborhood(cell, f)
 end
 
 --- Second order function to transverse the connections of a given Agent, applying a function to
--- each of them. It returns true if no call to the function taken as argument returns false.
+-- each of them. It returns true if no call to the function taken as argument returns false,
+-- otherwise it returns false.
 -- There are two ways of using this function because the second argument is optional.
 -- @arg agent An Agent.
--- @arg index A string with the name of the SocialNetwork to be transversed. Default is "1".
+-- @arg index (Optional) A string with the name of the SocialNetwork to be transversed. The default value is "1".
 -- @arg f A function that takes three arguments: the Agent itself, its connection, and the
 -- connection weight. If some call to f returns false, forEachConnection() stops and does not
 -- process any other connection. In the case where the second argument is missing, this
@@ -625,13 +635,14 @@ function forEachConnection(agent, index, f)
 end
 
 --- Second order function to traverse a Society, Group, or Cell, applying a function to each of
--- its agents. It returns true if no call to the function taken as argument returns false.
+-- its Agents. It returns true if no call to the function taken as argument returns false,
+-- otherwise it returns false.
 -- @arg obj A Society, Group, or Cell. Cells need to have a placement in order to execute
 -- this function.
 -- @arg func A function that takes one single Agent as argument. If some call to it returns
 -- false, forEachAgent() stops and does not process any other Agent. 
 -- This function can optionally get a second argument with a positive number representing the
--- position of the agent in the vector of Agents.
+-- position of the Agent in the vector of Agents.
 -- @usage forEachAgent(group, function(agent)
 --     agent.age = agent.age + 1
 -- end)
@@ -663,13 +674,15 @@ end
 
 --- Return a function that compares two tables (which can be, for instance, Agents or Cells).
 -- The function returns which one has a priority over the other, according to an attribute of the
--- objects and a given operator. If the function was not built successfully it returns nil.
+-- objects and a given operator. If the function was not successfully built it returns nil.
 -- @arg attribute A string with the name of the attribute.
--- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=". Default is "<".
--- @usage t = Trajectory {
+-- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=". The default value is "<".
+-- @usage t = Trajectory{
 --     target = cs,
 --     sort = greaterByAttribute("cover")
 -- }
+-- @see Trajectory
+-- @see Group
 function greaterByAttribute(attribute, operator)
 	if type(attribute) ~= "string" then
 		incompatibleTypeError(1, "string", attribute)
@@ -686,11 +699,13 @@ end
 --- Return a function that compares two tables with x and y attributes (basically two regular
 -- Cells). The function returns which one has a priority over the other, according to a given
 -- operator.
--- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=". Default is "<".
--- @usage t = Trajectory {
+-- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=".
+-- The default value is "<".
+-- @usage t = Trajectory{
 --     target = cs,
 --     sort = greaterByCoord()
 -- }
+-- @see Trajectory
 function greaterByCoord(operator)
 	if operator == nil then
 		operator = "<"
@@ -698,7 +713,7 @@ function greaterByCoord(operator)
 		incompatibleValueError(1, "<, >, <=, or >=", operator)
 	end
 
-	local str = "return function(a,b)\n"
+	local str = "return function(a, b)\n"
 	str = str .. "if a.x"..operator.."b.x then return true end\n"
 	str = str .. "if a.x == b.x and a.y"..operator.."b.y then return true end\n"
 	str = str .. "return false end"	
@@ -706,11 +721,12 @@ function greaterByCoord(operator)
 end
 
 --- Second order function to transverse a given object, applying a function to each of its
--- elements. It can be used for instance to trasverse all the elements of an Agent or an
+-- elements. It can be used for instance to transverse all the elements of an Agent or an
 -- Environment. According to the current Lua version, if one uses this function twice, Lua
--- does not guarantee that the objects will be trasversed in the same order. If you need to
--- guarantee this, it is recommended to use forEachOrderedElement() instead.
--- This function returns true if no call to the function taken as argument returns false.
+-- does not guarantee that the objects will be transversed in the same order. If you need to
+-- guarantee this, it is recommended to use Utils:forEachOrderedElement() instead.
+-- This function returns true if no call to the function taken as argument returns false,
+-- otherwise it returns false.
 -- @arg obj A TerraME object or a table.
 -- @arg func A user-defined function that takes three arguments: the index of the element,
 -- the element itself, and the type of the element. If some call to this function returns
@@ -735,9 +751,12 @@ function forEachElement(obj, func)
 end
 
 --- Second order function to transverse a given object, applying a function to each of its
--- elements according to their alphabetical order. It can be used for instance to trasverse all 
+-- elements according to their alphabetical order. It can be used for instance to transverse all
 -- the elements of an Agent or an
--- Environment. It returns true if no call to the function taken as argument returns false.
+-- Environment. This function executes first the numeric indexes and then the string ones, with
+-- upper case characters having priority over lower case.
+-- This function returns true if no call to the function taken as argument returns false,
+-- otherwise it returns false.
 -- @arg obj A TerraME object or a table.
 -- @arg func A user-defined function that takes three arguments: the index of the element,
 -- the element itself, and the type of the element. If some call to this function returns
@@ -786,9 +805,10 @@ function forEachOrderedElement(obj, func)
 	return true
 end
 
---- Convert the time from the os library to a more readable value. It returns a string in the format 
--- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is more than one day.
--- @arg s A number to be converted.
+--- Convert the time in seconds to a more readable value. It returns a string in the format
+-- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is
+-- more than one day.
+-- @arg s A number.
 -- @usage print(elapsedTime(100)) -- 00:01:40
 function elapsedTime(s)
 	mandatoryArgument(1, "number", s)
@@ -808,7 +828,7 @@ end
 
 --- Return whether a string ends with a given substring (no case sensitive).
 -- @arg str A string.
--- @arg send A substring describing the end of #1.
+-- @arg send A substring describing the end of the first parameter.
 -- @usage string.endswith("abcdef", "def")
 function string.endswith(str, send)
 	local send = send:lower().."$"
@@ -830,8 +850,10 @@ function getExtension(filename)
 	return ""
 end
 
---- Return the number of elements of atable, be them named or not.
--- It is a substitute for the old Lua function table.getn.
+--- Return the number of elements of a table, be them named or not.
+-- It is a substitute for the old Lua function table.getn. It can
+-- also be used to compute the number of elements of any TerraME
+-- object, such as Agent or Environment.
 -- @arg t A table.
 -- @usage getn{name = "john", age = 20}
 function getn(t)
@@ -846,10 +868,10 @@ function getn(t)
 	return n
 end
 
---- Parses a single CSV line. It returns a vector of strings with the individual values. 
--- This function was taken from http://lua-users.org/wiki/LuaCsv.
--- @arg line A string from the CSV file.
--- @arg sep The value separator. Default is ','.
+--- Parses a single CSV line. It returns a vector of strings with the i-th value in the position i.
+-- This function was taken froom http://lua-users.org/wiki/LuaCsv.
+-- @arg line A string from a CSV file.
+-- @arg sep A string with the separator. The default value is ','.
 -- @usage CSVparseLine(line, ",")
 function CSVparseLine(line, sep)
 	mandatoryArgument(1, "string", line)
@@ -897,11 +919,20 @@ function CSVparseLine(line, sep)
 	return res
 end
 
---- Read a CSV file and return an array of tables.
--- The first line of the file list the attributes of each table.
--- @arg filename A string, adress of the CSV file.
--- @arg sep The value separator. Default is ','.
--- @usage mytable = CSVread("file.csv", ";")
+--- Read a CSV file. It returns a non-named table (indexed by the lines)
+-- containing named-tables (indexed by the attribute names).
+-- The first line of the file list the attribute names.
+-- @arg filename A string with the location of the CSV file.
+-- @arg sep A string with the separator. The default value is ','.
+-- @usage -- Given file.csv:
+-- -- attr1;attr2
+-- -- 11;12
+-- -- 21;22
+--
+-- mytable = CSVread("file.csv", ";")
+--
+-- print(mytable[1].attr1) -- 11
+-- print(mytable[2].attr2) -- 22
 function CSVread(filename, sep)
 	mandatoryArgument(1, "string", filename)
 	optionalArgument(2, "string", sep)
@@ -924,7 +955,7 @@ function CSVread(filename, sep)
 			end
 			table.insert(data, element)
 		else
-			customError("Line '"..line.."' should contain "..#fields.." attributes but has "..#tuple..".") 
+			customError("Line '"..line.."' should contain "..#fields.." attributes but has "..#tuple..".")
 		end
 		line = file:read()
 	end
@@ -932,12 +963,19 @@ function CSVread(filename, sep)
 	return data
 end
 
---- Write a given table into a  CSV file.
+--- Write a given table into a CSV file.
 -- The first line of the file will list the attributes of each table.
--- @arg data A table to be saved.
--- @arg filename A string, adress of the CSV file.
--- @arg sep The value separator. Default is ','.
--- @usage CSVwrite(mytable, "file.csv", ";")
+-- @arg data A table to be saved. It must be a non-named table (indexed by the lines)
+-- containing named-tables (indexed by the attribute names).
+-- @arg filename A string with the location of the CSV file.
+-- @arg sep A string with the separator. The default value is ','.
+-- @usage mytable = {
+--     {age = 1, wealth = 10, vision = 2},
+--     {age = 3, wealth =  8, vision = 1},
+--     {age = 3, wealth = 15, vision = 2}
+-- }
+--
+-- CSVwrite(mytable, "file.csv", ";")
 function CSVwrite(data, filename, sep)
 	mandatoryArgument(1, "table", data)
 	mandatoryArgument(2, "string", filename)

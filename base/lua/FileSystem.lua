@@ -1,28 +1,28 @@
 
---@header Functions to handle files and directories. 
+--@header Functions to handle files and directories.
 -- Most of the functions bellow are taken from LuaFileSystem 1.6.2.
 -- Copyright Kepler Project 2003 (http://www.keplerproject.org/luafilesystem).
 
---- Return a table with the file attributes corresponding to filepath (or nil followed by an error 
--- message in case of error). If the second optional argument is given, then only the value of the 
--- named attribute is returned (this use is equivalent to lfs.attributes(filepath).aname, but the 
--- table is not created and only one attribute is retrieved from the O.S.). The attributes are 
--- described as follows; attribute mode is a string, all the others are numbers, and the time 
+--- Return a table with the file attributes corresponding to filepath (or nil followed by an error
+-- message in case of error). If the second optional argument is given, then only the value of the
+-- named attribute is returned (this use is equivalent to lfs.attributes(filepath).aname, but the
+-- table is not created and only one attribute is retrieved from the O.S.). The attributes are
+-- described as follows; attribute mode is a string, all the others are numbers, and the time
 -- related attributes use the same time reference of os.time.
--- This function uses stat internally thus if the given filepath is a symbolic link, it is followed 
--- (if it points to another link the chain is followed recursively) and the information is about the 
+-- This function uses stat internally thus if the given filepath is a symbolic link, it is followed
+-- (if it points to another link the chain is followed recursively) and the information is about the
 -- file it refers to. To obtain information about the link itself, see FileSystem:linkAttributes().
 -- @arg filepath A string with the file path.
 -- @arg attributename A string with the name of the attribute to be read.
 -- @tabular attributename
 -- Attribute & Description \
 -- "dev" &
--- on Unix systems, this represents the device that the inode resides on. On Windows 
+-- on Unix systems, this represents the device that the inode resides on. On Windows
 -- systems, represents the drive number of the disk containing the file \
 -- "ino" &
 -- on Unix systems, this represents the inode number. On Windows systems this has no meaning \
 -- "mode" &
--- string representing the associated protection mode (the values could be file, directory, 
+-- string representing the associated protection mode (the values could be file, directory,
 -- link, socket, named pipe, char device, block device or other) \
 -- "nlink" &
 -- number of hard links to the file \
@@ -31,7 +31,7 @@
 -- "gid" &
 -- group-id of owner (Unix only, always 0 on Windows) \
 -- "rdev" &
--- on Unix systems, represents the device type, for special file inodes. On Windows systems 
+-- on Unix systems, represents the device type, for special file inodes. On Windows systems
 -- represents the same as dev \
 -- "access" &
 -- time of last access \
@@ -81,7 +81,7 @@ end
 --- Execute a system command and return its output. Each line of the output will be a position
 -- in the returned table.
 -- @arg command A command.
--- @arg number A number indicating the output to be captured. Default is 1 (standard output). 
+-- @arg number A number indicating the output to be captured. The default value is 1 (standard output).
 -- It is also possible to use 2, to capture the error output.
 -- @usage runCommand("dir")
 function runCommand(command, number)
@@ -106,7 +106,7 @@ end
 
 --- Return the files in a given directory.
 -- @arg folder A string describing a folder.
--- @arg all A boolean value indicating whether hidden files should be returned. Default is false.
+-- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
 -- @usage dir("C:\\")
 function dir(folder, all)
 	mandatoryArgument(1, "string", folder)
@@ -137,12 +137,12 @@ function dir(folder, all)
 	end
 end	
 
---- Lock a file or a part of it. This function works on open files; the file handle should be 
--- specified as the first argument. The optional arguments start and length can be used to specify a 
+--- Lock a file or a part of it. This function works on open files; the file handle should be
+-- specified as the first argument. The optional arguments start and length can be used to specify a
 -- starting point and its length; both should be numbers.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 -- @arg fh A file handle with the file to be locked.
--- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w 
+-- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w
 -- (for a write/exclusive lock).
 -- @usage filehandle = io.open("test.txt", "w+")
 -- lock(filehandle, "r")
@@ -153,11 +153,11 @@ function lock(fh, mode)
 	return lfs.lock(fh, mode)
 end
 
---- Create a lockfile (called lockfile.lfs) in path if it does not exist and returns the lock. If the 
--- lock already exists checks if it's stale, using the second argeter (default for the second 
--- argeter is INT_MAX, which in practice means the lock will never be stale. To free the the lock call 
--- lock:free(). 
--- In case of any errors it returns nil and the error message. In particular, if the lock exists and is 
+--- Create a lockfile (called lockfile.lfs) in path if it does not exist and returns the lock. If the
+-- lock already exists checks if it's stale, using the second argeter (default for the second
+-- argeter is INT_MAX, which in practice means the lock will never be stale. To free the the lock call
+-- lock:free().
+-- In case of any errors it returns nil and the error message. In particular, if the lock exists and is
 -- not stale it returns the "File exists" message.
 -- @arg path A string with the path.
 -- @usage lockDir(path)
@@ -187,12 +187,12 @@ function rmDir(path)
 	return lfs.rmdir(path)
 end
 
---- Set the writing mode for a file. Returns true 
--- followed the previous mode string for the file, or nil followed by an error string in case of errors. 
--- On non-Windows platforms, where the two modes are identical, setting the mode has no effect, and the 
+--- Set the writing mode for a file. Returns true
+-- followed the previous mode string for the file, or nil followed by an error string in case of errors.
+-- On non-Windows platforms, where the two modes are identical, setting the mode has no effect, and the
 -- mode is always returned as binary.
 -- @arg filepath A file handle with the file to be locked.
--- @arg mode A string that can be either "binary" or "text". 
+-- @arg mode A string that can be either "binary" or "text".
 -- @usage setMode(file, "text")
 function setMode(filepath, mode)
 	mandatoryArgument(1, "userdata", filepath)
@@ -201,8 +201,9 @@ function setMode(filepath, mode)
 	return lfs.setmode(filepath, mode)
 end
 
---- Identical to FileSystem:attributes() except that it obtains information about the link itself (not the file it 
--- refers to). On Windows this function does not yet support links, and is identical to FileSystem:attributes().
+--- Identical to FileSystem:attributes() except that it obtains information about the link itself
+-- (not the file it refers to). On Windows this function does not yet support links, and is identical
+-- to FileSystem:attributes().
 -- @arg filepath A string with the file path.
 -- @arg attributename A string with the name of the attribute to be read.
 -- @usage linkAttributes(filepath, "size")
@@ -214,8 +215,8 @@ function linkAttributes(filepath, attributename)
 end
 
 --- Set access and modification times of a file. This function is a bind to utime function.
--- Times are provided in seconds (which should be generated with Lua 
--- standard function os.time). If the modification time is omitted, the access time provided is used; 
+-- Times are provided in seconds (which should be generated with Lua
+-- standard function os.time). If the modification time is omitted, the access time provided is used;
 -- if both times are omitted, the current time is used.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 -- @arg filepath A string with the file name.
@@ -230,10 +231,10 @@ function touch(filepath, atime, mtime)
 	return lfs.touch(filepath, atime, mtime)
 end
 
---- Unlock a file or a part of it. This function works on open files; the file handle should be specified 
--- as the first argument. The optional arguments start and length can be used to specify a starting point 
--- and its length; both should be numbers.
--- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
+--- Unlock a file or a part of it. This function works on open files; the file handle should be
+-- specified as the first argument. The optional arguments start and length can be used to specify
+-- a starting point and its length; both should be numbers. It returns true if the operation was
+-- successful. In case of error, it returns nil plus an error string.
 -- @arg fh A file handle with the file to be locked.
 -- @usage filehandle = io.open("test.txt", "w+")
 -- unlock(filehandle)

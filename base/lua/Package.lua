@@ -117,10 +117,24 @@ local function verifyDepends(package)
 	return result
 end
 
---- Return the description of a package. It reads all the attributes from file 
--- description.lua of the package and create an additional attribute data, with 
--- the path to folder data in the package.
--- @arg package Name of the package. If nil, packageInfo will return
+--- Return the description of a package. It reads file
+-- description.lua and returns the following attributes.
+-- @tabular arg
+-- Attribute & Description \
+-- package & Name of the package.\
+-- title & Optional title for the HTML documentation of the package.\
+-- version & Current version of the package, in the form <number>[.<number>]*.
+-- For example: 1, 0.2, 2.5.2. \
+-- date & Date of the current version.\
+-- authors & Name of the author(s) of the package.\
+-- depends & A comma-separated list of package names which this package depends on.\
+-- contact & E-mail of one or more authors. \
+-- content & A description of the package. \
+-- license & Name of the package's license. \
+-- url & An optional variable with a webpage of the package.\
+-- data & The path to folder data of the package. This attribute is added
+-- by this function as it does not exist in description.lua.
+-- @arg package A string with the name of the package. If nil, packageInfo will return
 -- the description of TerraME.
 -- @usage packageInfo().version
 function packageInfo(package)
@@ -194,10 +208,10 @@ function packageInfo(package)
 	return result
 end
 
---- Return the path to a file of a given package. The file must be inside the data folder
--- of the package.
+--- Return the path to a file of a given package. The file must be inside the folder data
+-- within the package.
 -- @arg filename A string with the name of the file.
--- @arg package A string with the name of the package.
+-- @arg package A string with the name of the package. As default, it uses paciage base.
 -- @usage file("cs.csv") 
 --
 -- cs = CellularSpace{database = file("simple.map")}
@@ -212,12 +226,18 @@ function file(filename, package)
 	return file
 end
 
---- Implement a switch case function, where options are given and there are functions
--- associated to them. It can have a field "missing" in the caseof that is used when
+--- Implement a switch case function, where functions are associated to the available options.
+-- This function returns a table that contains a function called caseof, that gets a named
+-- table with functions describing what to do for each case (which is the index for the respective
+-- function). This table can have a field "missing" that is used when
 -- the first argument does not have an attribute whose name is the value of the second argument.
--- @arg data A table.
--- @arg att The chosen attribute.
--- @usage switch(data, "protocol"):caseof{
+-- The error messages of this function come from Package:switchInvalidArgumentMsg() and
+-- Package:switchInvalidArgumentSuggestionMsg().
+-- @arg data A named table.
+-- @arg att A string with the chosen attribute of the named table.
+-- @usage data = {protocol = "udp"}
+--
+-- switch(data, "protocol"):caseof{
 --     tcp = function() print("tcp") end,
 --     udp = function() print("udp") end
 -- }
@@ -250,14 +270,14 @@ function switch(data, att)
 	return swtbl
 end
 
---- Stops the simulation with an error because the used did not use a correct option.
+--- Stop the simulation with an error because the user did not choose a correct option.
 -- This function supposes that there is a set of available options described as
 -- string idexes of a table so it tries to find an approximate string to be shown as
 -- a suggestion. Otherwise, it shows all the available options.
--- The error messages come from switchInvalidArgumentSuggestionMsg() and
--- switchInvalidArgumentMsg().
--- @arg att The attribute name (a string).
--- @arg value The wrong value passed as argument.
+-- The error messages come from Package:switchInvalidArgumentSuggestionMsg() and
+-- Package:switchInvalidArgumentMsg().
+-- @arg att A string with the attribute name.
+-- @arg value A string with wrong value passed as argument.
 -- @arg suggestions A table with string indexes describing the available options.
 -- @usage t = {
 --     blue = true,
@@ -279,7 +299,7 @@ function switchInvalidArgument(att, value, suggestions)
 	end
 end
 
---- Return a suggestion for a wrong string value. The suggestion must have a 
+--- Return a suggestion for a wrong string value. The suggestion must have a
 -- Levenshtein's distance of less than 60% the size of the string, otherwise
 -- it returns nil.
 -- @arg value A string.
@@ -314,9 +334,9 @@ function suggestion(value, options)
 end
 
 --- Return a message for a wrong argument value showing the options.
--- @arg casevar Value of the attribute.
--- @arg att Name of the attribute.
--- @arg options A table with the available options.
+-- @arg casevar A string with the value of the attribute.
+-- @arg att A string with the name of the attribute.
+-- @arg options A table whose indexes indicate the available options.
 -- @usage local options = {
 --     aaa = true,
 --     bbb = true,
@@ -337,9 +357,9 @@ function switchInvalidArgumentMsg(casevar, att, options)
 end
 
 --- Return a message for a wrong argument value showing the most similar option.
--- @arg casevar Value of the attribute.
--- @arg att Name of the attribute.
--- @arg suggestion A suggestion for to replace the wrong value.
+-- @arg casevar A string with the value of the attribute.
+-- @arg att A string with the name of the attribute.
+-- @arg suggestion A string with a suggestion to replace the wrong value.
 -- @usage switchInvalidArgumentSuggestionMsg("aab", "attr", "aaa")
 function switchInvalidArgumentSuggestionMsg(casevar, att, suggestion)
 	mandatoryArgument(1, "string", casevar)
@@ -350,15 +370,15 @@ function switchInvalidArgumentSuggestionMsg(casevar, att, suggestion)
 end
 
 --- Return whether a given package is loaded.
--- @arg package Name of the package.
+-- @arg package A string with the name of the package.
 -- @usage isLoaded("base")
 function isLoaded(package)
 	mandatoryArgument(1, "string", package)
 	return belong(package, loadedPackages__)
 end
 
---- Load a given package. If the package is not installed, it tries to load from a folder in the
--- current directory.
+--- Load a given package. If the package is not installed, it tries to load from
+-- a folder in the current directory.
 -- @arg package A package name.
 -- @usage require("calibration")
 function require(package)
@@ -448,8 +468,8 @@ function require(package)
 	end
 end
 
---- Verify a given condition, otherwise stops the simulation with an error.
--- @arg condition A value of any type. If it is not true, the function generates an error.
+--- Verify a given condition, otherwise it stops the simulation with an error.
+-- @arg condition A value of any type. If it is false or nil, the function generates an error.
 -- @arg msg A string with the error to be displayed.
 -- @usage verify(2 < 3, "wrong operator")
 function verify(condition, msg)
@@ -458,7 +478,7 @@ function verify(condition, msg)
 	end
 end
 
---- Verify whether the table passed as argument is a named table. It generates errors if it is nil,
+--- Verify if a given object is a named table. It generates errors if it is nil,
 -- if it is not a table, or if it has numeric indexes. The error messages come from
 -- Package:tableArgumentMsg() and Package:namedArgumentsMsg().
 -- @arg data A value of any type.
@@ -488,11 +508,12 @@ function namedArgumentsMsg()
 	return "Arguments must be named."
 end
 
---- Verify whether the user has passed only the allowed arguments for a function, printing
+--- Verify whether the user has passed only the allowed arguments for a function, showing
 -- a warning otherwise. The warning comes from Package:unnecessaryArgumentMsg().
 -- This function returns the number of unnecessary arguments found.
--- @arg data The list of arguments used in the function call.
--- @arg arguments The list of the allowed arguments.
+-- @arg data A named table with the arguments used in the function call.
+-- The indexes of this table will be verified.
+-- @arg arguments A non-named table with the allowed arguments.
 -- @usage t = {value = 2}
 -- verifyUnnecessaryArguments(t, {"target", "select"})
 function verifyUnnecessaryArguments(data, arguments)
@@ -530,6 +551,7 @@ end
 --- Return a message indicating that a given argument is unnecessary.
 -- @arg value A string or number or boolean value.
 -- @arg suggestion A possible suggestion for the argument.
+-- This parameter is optional.
 -- @usage unnecessaryArgumentMsg("file")
 -- unnecessaryArgumentMsg("filf", "file")
 function unnecessaryArgumentMsg(value, suggestion)
@@ -542,7 +564,7 @@ function unnecessaryArgumentMsg(value, suggestion)
 end
 
 --- Stop the simulation with an error.
--- @arg msg A string describing the error.
+-- @arg msg A string describing the error message.
 -- @usage customError("error message")
 function customError(msg)
 	if type(msg) ~= "string" then
@@ -578,11 +600,13 @@ function customWarning(msg)
 	func(arg)
 end
 
---- Verifies the default value of a given element of a table. It puts the default value in the table if it does not
--- exist, stops with an error (Package:incompatibleTypeMsg()) if the value has a different type, or a 
+--- Verify the default value of a given attribute of a named table. It adds the attribute
+-- with the default value in the table if it does not exist, 
+-- stops with an error (Package:incompatibleTypeMsg()) if
+-- the value has a different type, or shows a
 -- warning (Package:defaultValueWarning()) if it is equal to the default value.
--- @arg data A table.
--- @arg idx The element of the table (a string).
+-- @arg data A named table.
+-- @arg idx A string with the name of the attribute.
 -- @arg value The default value (any type).
 -- @usage t = {x = 5}
 -- defaultTableValue(t, "y", 8)
@@ -596,9 +620,10 @@ function defaultTableValue(data, idx, value)
 	end
 end
 
---- Print a warning if the element of a table is the default value. If TerraME is running in the
--- debug mode, the simulation stops with an error. The warning message comes from Package:defaultValueMsg().
--- @arg argument The element.
+--- Show a warning if the attribute of a table has the default value. If TerraME is running
+-- in the debug mode, the simulation stops with an error. The warning message comes from
+-- Package:defaultValueMsg().
+-- @arg argument A string with the attribute name.
 -- @arg value The default value.
 -- @usage defaultValueWarning("size", 2)
 function defaultValueWarning(argument, value)
@@ -607,19 +632,20 @@ function defaultValueWarning(argument, value)
 	customWarning(defaultValueMsg(argument, value))
 end
 
---- Return a message indicating that the modeler is using the default value and therefore it could be removed.
--- @arg argument A string.
--- @arg value A number or string or boolean value.
+--- Return a message indicating that the modeler is using the default value for a
+-- given argument and therefore it could be removed.
+-- @arg argument A string with the name of the argument.
+-- @arg value A number or string or boolean value with the default value for the argument.
 -- @usage defaultValueMsg("dbtype", "mysql")
 function defaultValueMsg(argument, value)
 	return "Argument '"..argument.."' could be removed as it is the default value ("..tostring(value)..")."
 end
 
---- Pring a warning indicating a deprecated function. If TerraME is running in the
--- debug mode, the simulation stops with an error. The warning as well as the error
+--- Show an error indicating a deprecated function. The error
 -- comes from Package:deprecatedFunctionMsg().
--- @arg functionName Name of the deprecated function.
--- @arg functionExpected A string with the name of the function to be used instead of the deprecated function.
+-- @arg functionName A string with the name of the deprecated function.
+-- @arg functionExpected A string indicating hot to proceed to replace the
+-- deprecated function.
 -- @usage deprecatedFunction("abc", "def")
 function deprecatedFunction(functionName, functionExpected)
 	mandatoryArgument(1, "string", functionName)
@@ -629,16 +655,18 @@ function deprecatedFunction(functionName, functionExpected)
 end
 
 --- Return a message indicating that a function is deprecated and must be replaced.
--- @arg functionName A string with the deprecated function.
--- @arg functionExpected A string with a function or an object to replace the deprecated function.
+-- @arg functionName A string with the name of the deprecated function.
+-- @arg functionExpected A string indicating hot to proceed to replace the
+-- deprecated function.
 -- @usage deprecatedFunctionMsg("abc", "def")
 function deprecatedFunctionMsg(functionName, functionExpected)
 	return "Function '"..functionName.."' is deprecated. Use '"..functionExpected.."' instead."
 end
 
---- Stop the simulation with an error from a wrong type for a argument of a function.
+--- Stop the simulation with an error of a wrong type for an argument of a function.
 -- The error message is the return value of Package:incompatibleTypeMsg().
--- @arg attr A string with an attribute name, or position (such as #1).
+-- @arg attr A string with an attribute name, or a numeric position of the argument
+-- in a function with non-named arguments.
 -- @arg expectedTypesString A string with the possible type (or types).
 -- @arg gottenValue The value passed as argument with wrong type.
 -- @usage incompatibleTypeError("cell", "Cell", Agent{})
@@ -647,9 +675,10 @@ function incompatibleTypeError(attr, expectedTypesString, gottenValue)
 end
 
 --- Return an error message for incompatible types.
--- @arg attr Name of the attribute. It can be a number indicating the position of the argument in a non-named function.
--- @arg expectedTypesString The expected type.
--- @arg gottenValue The gotten value, that does not belong to the expected type.
+-- @arg attr A string with an attribute name, or a numeric position of the argument
+-- in a function with non-named arguments.
+-- @arg expectedTypesString A string with the possible type (or types).
+-- @arg gottenValue The value passed as argument with wrong type.
 -- @usage incompatibleTypeMsg("dbType", "string", 2)
 function incompatibleTypeMsg(attr, expectedTypesString, gottenValue)
 	if type(attr) == "number" then
@@ -662,20 +691,22 @@ function incompatibleTypeMsg(attr, expectedTypesString, gottenValue)
 		expectedTypesString..", got "..type(gottenValue).."."
 end
 
---- Stop the simulation with an error from a wrong value for a argument of a function.
+--- Stop the simulation with an error of a wrong value for an argument of a function.
 -- The error message comes from Package:incompatibleValueMsg().
--- @arg attr A string with an attribute name (for named-functions), or position (for non-named functions).
--- @arg expectedValues A string with the expected type values for the argument.
--- @arg gottenValue The value passed as argument with wrong value.
--- @usage incompatibleValueError("position", "1, 2, or 3", "4")
+-- @arg attr A string with an attribute name (for functions with named arguments),
+-- or position (otherwise).
+-- @arg expectedValues A string with the expected values for the argument.
+-- @arg gottenValue The wrong value passed as argument.
+-- @usage incompatibleValueError("position", "one of {1, 2, 3}", 4)
 function incompatibleValueError(attr, expectedValues, gottenValue)
 	customError(incompatibleValueMsg(attr, expectedValues, gottenValue))
 end
 
 --- Return an error message for incompatible values.
--- @arg attr Name of the attribute. It can be a number indicating the position of the argument in a non-named function.
--- @arg expectedValues The expected values.
--- @arg gottenValue The gotten value, that does not belong to the expected values.
+-- @arg attr A string with an attribute name (for functions with named arguments),
+-- or position (otherwise).
+-- @arg expectedValues A string with the expected values for the argument.
+-- @arg gottenValue The wrong value passed as argument.
 -- @usage incompatibleValueMsg("dbType", "one of {1, 3, 4}", 2)
 function incompatibleValueMsg(attr, expectedValues, gottenValue)
 	if expectedValues == nil then expectedValues = "nil" end
@@ -695,18 +726,21 @@ function incompatibleValueMsg(attr, expectedValues, gottenValue)
 	return msg
 end
 
---- Stop the simulation with an error indicating that the function does not support a given file extension.
+--- Stop the simulation with an error indicating that the function does not support
+-- a given file extension.
 -- The error message comes from Package:invalidFileExtensionMsg().
--- @arg attr A string with an attribute name (for named-functions), or position (for non-named functions).
--- @arg ext The file extension (a string).
+-- @arg attr A string with an attribute name (for functions with named arguments), or position
+-- (otherwise).
+-- @arg ext A string with the incompatible file extension.
 -- @usage invalidFileExtensionError("file", ".txt")
 function invalidFileExtensionError(attr, ext)
 	customError(invalidFileExtensionMsg(attr, ext))
 end
 
 --- Return a message indicating that a given file extension is incompatible.
--- @arg attr A string or a number with the argument of the function.
--- @arg ext The incompatible file extension.
+-- @arg attr A string with an attribute name (for functions with named arguments), or position
+-- (otherwise).
+-- @arg ext A string with the incompatible file extension.
 -- @usage invalidFileExtensionMsg("file", "csv")
 function invalidFileExtensionMsg(attr, ext)
 	if type(attr) == "number" then
@@ -718,16 +752,16 @@ end
 
 --- Stop the simulation with an error indicating that a given resource was not found.
 -- The error message comes from Package:resourceNotFoundMsg().
--- @arg attr The attribute name (a string).
--- @arg path The location of the resource, described as a string.
+-- @arg attr A string with the attribute name.
+-- @arg path A string with the location of the resource.
 -- @usage resourceNotFoundError("file", "/usr/local/file.txt")
 function resourceNotFoundError(attr, path)
 	customError(resourceNotFoundMsg(attr, path))
 end
 
 --- Return a message indicating that a given resource could not be found.
--- @arg attr Name of the argument. It can be a string or a number.
--- @arg path The location of the resource in the computer.
+-- @arg attr A string with the attribute name.
+-- @arg path A string with the location of the resource.
 -- @usage resourceNotFoundMsg("file", "c:\\myfiles\\file.csv")
 function resourceNotFoundMsg(attr, path)
 	if type(attr) == "number" then
@@ -737,19 +771,21 @@ function resourceNotFoundMsg(attr, path)
 	return "Resource '"..path.."' not found for argument '"..attr.."'."
 end
 
---- Stop the simulation with an error due to a wrong value for a argument.
+--- Stop the simulation with an error due to a wrong value for an argument.
 -- The error message comes from Package:valueNotFoundMsg().
--- @arg attr The argument name (a string).
--- @arg value The wrong value, which can belong to any type.
--- @usage valueNotFoundError("1", "neighborhood")
+-- @arg attr A string with an attribute name (for functions with named arguments), or position
+-- (otherwise).
+-- @arg value The valued used as argument to the function call.
+-- @usage valueNotFoundError(1, "neighborhood")
 function valueNotFoundError(attr, value)
 	customError(valueNotFoundMsg(attr, value))
 end
 
 --- Return a message indicating that a given argument of a function is mandatory.
--- @arg attr The name of the argument. It can be a string or a number.
--- @arg value The valued used as argument to the function.
--- @usage valueNotFoundMsg("1", "neighborhood")
+-- @arg attr A string with an attribute name (for functions with named arguments), or position
+-- (otherwise).
+-- @arg value The valued used as argument to the function call.
+-- @usage valueNotFoundMsg(1, "neighborhood")
 function valueNotFoundMsg(attr, value)
 	if type(value) == nil then value = "nil" end
 	if type(attr) == "number" then
@@ -761,7 +797,7 @@ end
 
 --- Verify whether a given argument of a non-named function is integer.
 -- The error message comes from Package:integerArgumentMsg().
--- @arg position The position of the argument in the function signature (a number).
+-- @arg position A number with the position of the argument in the function.
 -- @arg value The valued used as argument to the function call.
 -- @usage integerArgument(1, 2.3)
 function integerArgument(position, value)
@@ -786,8 +822,8 @@ end
 
 --- Verify whether a given argument of a named function is integer.
 -- The error message comes from Package:integerArgumentMsg().
--- @arg table A table.
--- @arg attr The attribute name (a string).
+-- @arg table A named table.
+-- @arg attr A string with the attribute name.
 -- @usage mtable = {bbb = 2.3}
 -- integerTableArgument(table, "bbb")
 function integerTableArgument(table, attr)
@@ -796,11 +832,12 @@ function integerTableArgument(table, attr)
 	end
 end
 
---- Verify whether a given argument of a non-named function is positive.
+--- Verify whether a given argument of a function with non-named arguments is positive.
 -- The error message comes from Package:positiveArgumentMsg().
--- @arg position The position of the argument in the function signature (a number).
--- @arg value The valued used as argument to the function call.
--- @arg zero A boolean value indicating whether zero should be included (default is false).
+-- @arg position A number with the position of the argument in the function.
+-- @arg value The value used as argument to the function call.
+-- @arg zero A boolean value indicating whether zero should be included
+-- (the default value is false).
 -- @usage positiveArgument(1, -2)
 function positiveArgument(position, value, zero)
 	if not zero then
@@ -812,8 +849,9 @@ end
 
 --- Return a message indicating that a given argument of a function should be positive.
 -- @arg attr The name of the argument. It can be a string or a number.
--- @arg value The valued used as argument to the function call.
--- @arg zero A boolean value indicating whether zero should be included (default is false).
+-- @arg value The value used as argument to the function call.
+-- @arg zero A boolean value indicating whether zero should be included
+-- (the default value is false).
 -- @usage positiveArgumentMsg("target", -5)
 -- positiveArgumentMsg(2, -2, true)
 function positiveArgumentMsg(attr, value, zero)
@@ -828,11 +866,12 @@ function positiveArgumentMsg(attr, value, zero)
 	end
 end
 
---- Verify whether a given argument of a named function is positive.
+--- Verify whether a given argument of a function with named arguments is positive.
 -- The error message comes from Package:positiveArgumentMsg().
--- @arg table A table.
--- @arg attr The attribute name (a string).
--- @arg zero A boolean value indicating whether zero should be included (default is false).
+-- @arg table A named table.
+-- @arg attr A string with the name of the argument.
+-- @arg zero A boolean value indicating whether zero should be included
+-- (the default value is false).
 -- @usage mtable = {bbb = -3}
 -- positiveTableArgument(table, "bbb")
 function positiveTableArgument(table, attr, zero)
@@ -843,11 +882,12 @@ function positiveTableArgument(table, attr, zero)
 	end
 end
 
---- Verify whether a given argument of a non-named function belong to the correct type.
--- The error message comes from Package:mandatoryArgumentMsg() and Package:incompatibleTypeMsg().
--- @arg position The position of the argument in the function signature (a number).
--- @arg mtype The required type for the argument.
--- @arg value The valued used as argument to the function call.
+--- Verify whether a given argument of a function with non-named arguments belongs
+--  to the correct type. The error message comes
+-- from Package:mandatoryArgumentMsg() and Package:incompatibleTypeMsg().
+-- @arg position A number wiht the position of the argument in the function.
+-- @arg mtype A string with the required type for the argument.
+-- @arg value The value used as argument to the function call.
 -- @usage mandatoryArgument(1, "string", argument)
 function mandatoryArgument(position, mtype, value)
 	if type(value) ~= mtype then
@@ -862,7 +902,7 @@ end
 --- Stop the simulation with an error indicating that a given argument is mandatory.
 -- The error message comes from Package:mandatoryArgumentMsg().
 -- @arg attr The name of the argument (a string) or the position of the argument in the
--- function signature (a number).
+-- function (a number).
 -- @usage mandatoryArgumentError("target")
 -- mandatoryArgumentError(2)
 function mandatoryArgumentError(attr)
@@ -880,12 +920,12 @@ function mandatoryArgumentMsg(attr)
 	return "Argument '"..attr.."' is mandatory."
 end
 
---- Verify whether the table contains a mandatory argument. It produces an error if the value is nil or
+--- Verify whether a named table contains a mandatory argument. It stops with an error
+-- if the value is nil or if it does not belong to the required type.
 -- The error message comes from Package:mandatoryArgumentMsg() or Package:incompatibleTypeMsg().
--- it has a type different from the required type.
--- @arg table A table.
--- @arg attr The attribute name (a string).
--- @arg mtype The required type for the attribute (a string).
+-- @arg table A named table.
+-- @arg attr A string with the attribute name.
+-- @arg mtype A string with the required type for the attribute.
 -- @usage mtable = {bbb = 3, ccc = "aaa"}
 -- mandatoryTableArgument(mtable, "bbb", "string")
 function mandatoryTableArgument(table, attr, mtype)
@@ -896,11 +936,12 @@ function mandatoryTableArgument(table, attr, mtype)
 	end
 end
 
---- Verify whether an optional argument of a non-named function belong to the correct type.
+--- Verify whether an optional argument of a function with non-named arguments
+-- belongs to the correct type.
 -- The error message comes from Package:incompatibleTypeMsg(), only if the argument is not nil.
--- @arg position The position of the argument in the function signature (a number).
--- @arg mtype The required type for the argument.
--- @arg value The valued used as argument to the function call.
+-- @arg position A number with the position of the argument in the function.
+-- @arg mtype A string with the required type for the argument.
+-- @arg value The value used as argument to the function call.
 -- @usage optionalArgument(1, "string", argument)
 function optionalArgument(position, mtype, value)
 	if value ~= nil and type(value) ~= mtype then
@@ -908,11 +949,12 @@ function optionalArgument(position, mtype, value)
 	end
 end
 
---- Verify whether the table contains an optional argument. It produces an error if the value is not nil and
--- it has a type different from the required type. The error comes from Package:incompatibleTypeError().
--- @arg table A table.
--- @arg attr The attribute name (a string).
--- @arg allowedType The required type for the attribute (a string).
+--- Verify whether a named table contains an optional argument. It stops with an
+-- error if the value is not nil and it has a type different from the required type.
+-- The error comes from Package:incompatibleTypeError().
+-- @arg table A named table.
+-- @arg attr A string with the argument name.
+-- @arg allowedType A string with the required type for the attribute.
 -- @usage mtable = {bbb = 3, ccc = "aaa"}
 -- optionalTableArgument(mtable, "bbb", "string")
 function optionalTableArgument(table, attr, allowedType)
@@ -924,13 +966,14 @@ function optionalTableArgument(table, attr, allowedType)
 	end
 end
 
---- Return a string with a literal description of a parameter name. It is 
--- useful to work with Model:check() when the model will be available through a graphical interface.
+--- Return a string with a literal description of a parameter name. It is useful to work
+-- with Model:check() when the model will be available through a graphical interface.
 -- When using graphical interfaces, it converts upper case characters into space and lower case
--- characters and convert the first character of the string to uppercase. 
--- Otherwise, it return the name of the parameter itself.
--- @arg mstring A parameter name.
--- @arg parent Used when the parameter belongs to a table parameter.
+-- characters and convert the first character of the string to uppercase.
+-- Otherwise, it returns the name of the parameter itself.
+-- @arg mstring A string with the parameter name.
+-- @arg parent A string with the name of the table the parameter belongs to.
+-- This parameter is optional.
 -- @usage toLabel("maxValue") --  'Max Value' (with graphical interface) or 'maxValue' (without)
 function toLabel(mstring, parent)
 	if type(mstring) == "number" then
