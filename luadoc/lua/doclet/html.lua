@@ -131,8 +131,10 @@ function file_func_link (symbol, doc, file_doc, from, doc_report)
 	funcname = string.gsub(funcname, "%s*$", "")
 	if filename == "" then filename = funcname end
 	if doc.files[filename .. ".lua"] == nil then
-		-- printError(string.format("Invalid link to '%s'", filename))
-		-- doc_report.wrong_links = doc_report.wrong_links + 1
+		if not string.match(symbol, "%.") and not string.match(symbol, "%(")then
+			printError(string.format("Invalid link to '%s'", filename))
+			doc_report.wrong_links = doc_report.wrong_links + 1
+		end
 		return "unresolved"
 	end
 	
