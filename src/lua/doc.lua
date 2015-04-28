@@ -106,7 +106,7 @@ function executeDoc(package)
 	if isFile(package_path..s.."data.lua") then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
-			local count = checkUnnecessaryArguments(tab, {"file", "summary", "source", "attributes", "types", "description", "reference"})
+			local count = verifyUnnecessaryArguments(tab, {"file", "summary", "source", "attributes", "types", "description", "reference"})
 			doc_report.wrong_data = doc_report.wrong_data + count
 
 			if type(tab.file)        == "string" then tab.file = {tab.file} end

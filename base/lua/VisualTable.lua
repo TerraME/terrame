@@ -113,7 +113,7 @@ VisualTable = function(data)
 		end)
 	end
 
-	checkUnnecessaryArguments(data, {"subject", "select"})
+	verifyUnnecessaryArguments(data, {"subject", "select"})
 
 	for i = 1, #data.select do
 		if data.select[i] == "#" then

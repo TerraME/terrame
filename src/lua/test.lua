@@ -232,7 +232,7 @@ function executeTests(package, fileName)
 			end
 		end
 
-		checkUnnecessaryArguments(data, {"folder", "file", "test", "sleep", "examples", "lines"})
+		verifyUnnecessaryArguments(data, {"folder", "file", "test", "sleep", "examples", "lines"})
 	else
 		data = {}
 	end

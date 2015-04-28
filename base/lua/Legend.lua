@@ -436,7 +436,7 @@ function Legend(data)
 
 	setmetatable(data, metaTableLegend_)
 
-	checkUnnecessaryArguments(data, legendPossibleParams)
+	verifyUnnecessaryArguments(data, legendPossibleParams)
 
 	-- conversion of string values from user layer
 	if type(data.type) == "string" then

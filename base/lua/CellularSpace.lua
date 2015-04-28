@@ -524,7 +524,7 @@ CellularSpace_ = {
 		switch(data, "strategy"):caseof{
 			["function"] = function() 
 				mandatoryTableArgument(data, "filter", "function")
-				checkUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "inmemory"})
+				verifyUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "inmemory"})
 
 				defaultTableValue(data, "weight", function() return 1 end)
 
@@ -534,7 +534,7 @@ CellularSpace_ = {
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
 
-				checkUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "inmemory"})
+				verifyUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "inmemory"})
 
 				data.func = getMooreNeighborhood
 			end,
@@ -560,14 +560,14 @@ CellularSpace_ = {
 					customWarning("Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 				end
 
-				checkUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "inmemory"})
+				verifyUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "inmemory"})
 				data.func = getMxNNeighborhood
 			end,
 			vonneumann = function() 
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
 
-				checkUnnecessaryArguments(data, {"name", "strategy", "wrap", "self", "inmemory"})
+				verifyUnnecessaryArguments(data, {"name", "strategy", "wrap", "self", "inmemory"})
 
 				data.func = getVonNeumannNeighborhood
 			end,
@@ -577,7 +577,7 @@ CellularSpace_ = {
 			coord = function() 
 				mandatoryTableArgument(data, "target", "CellularSpace")
 
-				checkUnnecessaryArguments(data, {"name", "strategy", "target", "inmemory"})
+				verifyUnnecessaryArguments(data, {"name", "strategy", "target", "inmemory"})
 
 				data.func = getCoordCoupling
 			end
@@ -713,7 +713,7 @@ CellularSpace_ = {
 		defaultTableValue(data, "name", "1")
 		defaultTableValue(data, "check", true)
 
-		checkUnnecessaryArguments(data, {"source", "name", "check"})
+		verifyUnnecessaryArguments(data, {"source", "name", "check"})
 
 		self.cObj_:loadNeighborhood(data.source, data.name, data.check)
 	end,

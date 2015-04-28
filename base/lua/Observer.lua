@@ -1161,7 +1161,7 @@ function Observer(data)
 		end
 	end
 
-	checkUnnecessaryArguments(data, observerPossibleParams)
+	verifyUnnecessaryArguments(data, observerPossibleParams)
 
 	local metaTable = {__index = Observer_,__tostring = tostringTerraME}
 	setmetatable(data, metaTable)

@@ -249,7 +249,7 @@ Society_ = {
 
 		switch(data, "strategy"):caseof{
 			probability = function() 
-				checkUnnecessaryArguments(data, {"strategy", "probability", "name", "inmemory"})
+				verifyUnnecessaryArguments(data, {"strategy", "probability", "name", "inmemory"})
 
 				mandatoryTableArgument(data, "probability", "number")
 
@@ -260,14 +260,14 @@ Society_ = {
 				data.mfunc = getSocialNetworkByProbability
 			end,
 			["function"] = function()
-				checkUnnecessaryArguments(data, {"strategy", "filter", "name", "inmemory"})
+				verifyUnnecessaryArguments(data, {"strategy", "filter", "name", "inmemory"})
 
 				mandatoryTableArgument(data, "filter", "function")
 
 				data.mfunc = getSocialNetworkByFunction
 			end,
 			cell = function()
-				checkUnnecessaryArguments(data, {"strategy", "self", "name", "placement", "inmemory"})
+				verifyUnnecessaryArguments(data, {"strategy", "self", "name", "placement", "inmemory"})
 
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "placement", "placement")
@@ -279,7 +279,7 @@ Society_ = {
 				data.mfunc = getSocialNetworkByCell
 			end,
 			neighbor = function()
-				checkUnnecessaryArguments(data, {"strategy", "neighborhood", "name", "placement", "inmemory"})
+				verifyUnnecessaryArguments(data, {"strategy", "neighborhood", "name", "placement", "inmemory"})
 
 				defaultTableValue(data, "neighborhood", "1")
 				defaultTableValue(data, "placement", "placement")
@@ -293,7 +293,7 @@ Society_ = {
 				data.mfunc = getSocialNetworkByNeighbor
 			end,
 			quantity = function()
-				checkUnnecessaryArguments(data, {"strategy", "quantity", "name", "inmemory"})
+				verifyUnnecessaryArguments(data, {"strategy", "quantity", "name", "inmemory"})
 
 				defaultTableValue(data, "quantity", 1)
 
@@ -303,7 +303,7 @@ Society_ = {
 				data.mfunc = getSocialNetworkByQuantity
 			end,
 			void = function()
-				checkUnnecessaryArguments(data, {"strategy", "name"})
+				verifyUnnecessaryArguments(data, {"strategy", "name"})
 
 				data.mfunc = getEmptySocialNetwork
 			end

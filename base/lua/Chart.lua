@@ -323,7 +323,7 @@ Chart = function(data)
 		end)
 	end
 
-	checkUnnecessaryArguments(data, {
+	verifyUnnecessaryArguments(data, {
 		"subject", "select", "yLabel", "xLabel",
 		"title", "label", "pen", "color", "xAxis",
 		"width", "symbol", "style", "size"

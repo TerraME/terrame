@@ -144,7 +144,7 @@ function Random(data)
 		verifyNamedTable(data)
 	end
 
-	checkUnnecessaryArguments(data, {"seed"})
+	verifyUnnecessaryArguments(data, {"seed"})
 
 	if data.seed then
 		integerTableArgument(data, "seed")

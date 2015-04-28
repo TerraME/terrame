@@ -25,14 +25,14 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	checkUnnecessaryArguments = function(unitTest)
+	verifyUnnecessaryArguments = function(unitTest)
 		local error_func = function(unitTest)
-			checkUnnecessaryArguments({aaa = "aaa"}, {"abc", "acd", "aab"})
+			verifyUnnecessaryArguments({aaa = "aaa"}, {"abc", "acd", "aab"})
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaa"))
 
 		local error_func = function(unitTest)
-			checkUnnecessaryArguments({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
+			verifyUnnecessaryArguments({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
 		end
 		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaaa", "aaab"))
 	end,

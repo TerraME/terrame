@@ -117,7 +117,7 @@ LogFile = function(data)
 		end)
 	end
 
-	checkUnnecessaryArguments(data, {"subject", "select", "file", "separator"})
+	verifyUnnecessaryArguments(data, {"subject", "select", "file", "separator"})
 
 	for i = 1, #data.select do
 		if data.select[i] == "#" then

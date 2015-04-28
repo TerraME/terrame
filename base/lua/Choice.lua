@@ -128,7 +128,7 @@ function Choice(attrTab)
 			customError("Attribute 'step' requires 'max' and 'min'.")
 		end
 
-		checkUnnecessaryArguments(attrTab, {"default", "min", "max", "step"})
+		verifyUnnecessaryArguments(attrTab, {"default", "min", "max", "step"})
 
 		if attrTab.step then
 			local k = (attrTab.max - attrTab.min) / attrTab.step

@@ -249,17 +249,17 @@ Environment_ = {
 
 		switch(data, "strategy"):caseof{
 			random = function()
-				checkUnnecessaryArguments(data, {"strategy", "name", "max"})
+				verifyUnnecessaryArguments(data, {"strategy", "name", "max"})
 				createVoidPlacement(self, mycs, data)
 				createRandomPlacement(self, mycs, data.max, data.name)
 			end,
 			uniform = function()
-				checkUnnecessaryArguments(data, {"strategy", "name"})
+				verifyUnnecessaryArguments(data, {"strategy", "name"})
 				createVoidPlacement(self, mycs, data)
 				createUniformPlacement(self, mycs, data.name)
 			end,
 			void = function()
-				checkUnnecessaryArguments(data, {"strategy", "name"})
+				verifyUnnecessaryArguments(data, {"strategy", "name"})
 				createVoidPlacement(self, mycs, data)
 			end
 		}

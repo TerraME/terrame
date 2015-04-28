@@ -29,7 +29,7 @@
 Clock = function(data)
 	mandatoryTableArgument(data, "subject", "Timer")
 
-	checkUnnecessaryArguments(data, {"subject"})
+	verifyUnnecessaryArguments(data, {"subject"})
 
 	local observerAttrs = {}
 	local observerParams = {"", ""}

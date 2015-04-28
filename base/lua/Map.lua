@@ -1694,7 +1694,7 @@ function Map(data)
 			mandatoryTableArgument(data, "color", "table")
 			verify(#data.color == 2, "Strategy 'equalsteps' requires only two colors, got "..#data.color..".")
 
-			checkUnnecessaryArguments(data, {"subject", "select", "color", "grouping", "min", "max", "slices"})
+			verifyUnnecessaryArguments(data, {"subject", "select", "color", "grouping", "min", "max", "slices"})
 		end,
 		uniquevalue = function()
 			mandatoryTableArgument(data, "select", "string")
@@ -1755,10 +1755,10 @@ function Map(data)
 			end
 			verify(#data.label == #data.value, "There should exist labels for each value. Got "..#data.label.." labels and "..#data.value.." values.")
 
-			checkUnnecessaryArguments(data, {"subject", "select", "value", "label", "color", "grouping"})
+			verifyUnnecessaryArguments(data, {"subject", "select", "value", "label", "color", "grouping"})
 		end,
 		background = function()
-			checkUnnecessaryArguments(data, {"subject", "color", "grouping"})
+			verifyUnnecessaryArguments(data, {"subject", "color", "grouping"})
 
 			if type(data.color) == "string" then
 				customError("Strategy 'background' cannot use ColorBrewer.")

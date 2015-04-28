@@ -96,7 +96,7 @@ function Event(data)
 		customError("Argument 'message' is deprecated, use 'action' instead.")
 	end
 
-	checkUnnecessaryArguments(data, {"time", "action", "priority", "period"})
+	verifyUnnecessaryArguments(data, {"time", "action", "priority", "period"})
 
 	defaultTableValue(data, "time", 1)
 	defaultTableValue(data, "period", 1)

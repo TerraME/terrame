@@ -349,7 +349,7 @@ function integrate(attrs)
 
 	defaultTableValue(attrs, "method", "euler")
 
-	checkUnnecessaryArguments(attrs, {"a", "b", "event", "method", "initial", "equation", "step"})
+	verifyUnnecessaryArguments(attrs, {"a", "b", "event", "method", "initial", "equation", "step"})
 
 	local result = switch(attrs, "method"):caseof {
 		euler = function() return integrationEuler(attrs.equation, attrs.initial, attrs.a, attrs.b, attrs.step) end,

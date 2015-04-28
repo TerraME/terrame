@@ -132,7 +132,7 @@ InternetSender = function(data)
 		end)
 	end
 
-	checkUnnecessaryArguments(data, {"subject", "protocol", "select", "port", "host", "visible", "compress"})
+	verifyUnnecessaryArguments(data, {"subject", "protocol", "select", "port", "host", "visible", "compress"})
 
 	for i = 1, #data.select do
 		if data.select[i] == "#" then

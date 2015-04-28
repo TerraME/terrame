@@ -28,11 +28,11 @@
 
 --@header Some basic and useful functions to develop packages.
 
---- Check the dependencies of a package, showing warnings when the required
+--- Verify the dependencies of a package, showing warnings when the required
 -- version does not match with the current version.
 -- @arg package A string with the package name.
--- @usage checkDepends("tube")
-function checkDepends(package)
+-- @usage verifyDepends("tube")
+function verifyDepends(package)
 	local pinfo = packageInfo(package)
 
 	local function getVersion(str)
@@ -374,7 +374,7 @@ function require(package)
 			end
 		end
 
-		checkDepends(package)
+		verifyDepends(package)
 
 		local load_file = package_path..s.."load.lua"
 		local all_files = dir(package_path..s.."lua")
@@ -386,7 +386,7 @@ function require(package)
 				print(err)
 			end)
 
-			checkUnnecessaryArguments(load_sequence, {"files"})
+			verifyUnnecessaryArguments(load_sequence, {"files"})
 
 			load_sequence = load_sequence.files -- SKIP
 			if load_sequence == nil then -- SKIP
@@ -485,8 +485,8 @@ end
 -- @arg data The list of arguments used in the function call.
 -- @arg arguments The list of the allowed arguments.
 -- @usage t = {value = 2}
--- checkUnnecessaryArguments(t, {"target", "select"})
-function checkUnnecessaryArguments(data, arguments)
+-- verifyUnnecessaryArguments(t, {"target", "select"})
+function verifyUnnecessaryArguments(data, arguments)
 	local count = 0
 	forEachElement(data, function(value)
 		local notCorrectArguments = {}

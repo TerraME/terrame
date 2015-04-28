@@ -490,7 +490,7 @@ function Model(attrTab)
 		forEachElement(attrTab, function(name)
 			table.insert(names, name)
 		end)
-		checkUnnecessaryArguments(argv, names)
+		verifyUnnecessaryArguments(argv, names)
 
 		forEachElement(argv, function(name, value, mtype)
 			if mtype == "table" then
