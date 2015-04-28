@@ -25,9 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	checkDepends = function(unitTest)
-		unitTest:assert(true)
-	end,
 	customError = function(unitTest)
 		local error_func = function()
 			customError(2)
@@ -93,6 +90,11 @@ return{
 	end,
 	packageInfo = function(unitTest)
 		local error_func = function()
+        	local r = packageInfo(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+	
+		error_func = function()
         	local r = packageInfo("asdfgh")
 		end
 		unitTest:assert_error(error_func, "Package 'asdfgh' is not installed.")
@@ -127,8 +129,7 @@ return{
 		local error_func = function()
         	suggestion("aaaab", t)
 		end
-		unitTest:assert_error(error_func, "All the indexes in #2 should be string, got 'number'.")
-
+		unitTest:assert_error(error_func, "All the indexes of second parameter should be string, got 'number'.")
     end,
 	switch = function(unitTest)
 		local error_func = function()
@@ -136,18 +137,93 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "table", "aaaab"))
 
-		local error_func = function()
+		error_func = function()
         	switch({}, 2)
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
 	
-		local error_func = function()
+		error_func = function()
 			local data = {att = "abd"}
 			switch(data, "att"):caseof{
 				abc = function() end
 			}
 		end
 		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("abd", "att", "abc"))
+	
+		local options = {
+			xxx = true
+		}
+
+		error_func = function()
+			local data = {att = "abd"}
+			switch(data, "att"):caseof{
+				xxx = function() end
+			}
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("abd", "att", options))
+	
+		error_func = function()
+			local data = {att = "abd"}
+			switch(data, "att"):caseof(2)
+		end
+		unitTest:assert_error(error_func, namedArgumentsMsg())
+
+		error_func = function()
+			local data = {att = "abd"}
+			switch(data, "att"):caseof{
+				abd = 2
+			}
+		end
+		unitTest:assert_error(error_func, "Case 'abd' should be a function, got number.")
+	end,
+	switchInvalidArgument = function(unitTest)
+		local error_func = function()
+			switchInvalidArgument()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1, "string"))
+
+		error_func = function()
+			switchInvalidArgument("abc")
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2, "string"))
+
+		error_func = function()
+			switchInvalidArgument("abc", "def")
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(3, "table"))
+	end,
+	switchInvalidArgumentMsg = function(unitTest)
+		local error_func = function()
+			switchInvalidArgumentMsg()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1, "string"))
+
+		error_func = function()
+			switchInvalidArgumentMsg("abc")
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2, "string"))
+
+		error_func = function()
+			switchInvalidArgumentMsg("abc", "def")
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(3, "table"))
+	end,
+	switchInvalidArgumentSuggestionMsg = function(unitTest)
+		local error_func = function()
+			switchInvalidArgumentSuggestionMsg()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1, "string"))
+
+		error_func = function()
+			switchInvalidArgumentSuggestionMsg("abc")
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2, "string"))
+
+		error_func = function()
+			switchInvalidArgumentSuggestionMsg("abc", "def")
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(3, "string"))
+	
 	end
 }
 

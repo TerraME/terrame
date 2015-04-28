@@ -28,11 +28,7 @@
 
 --@header Some basic and useful functions to develop packages.
 
---- Verify the dependencies of a package, showing warnings when the required
--- version does not match with the current version.
--- @arg package A string with the package name.
--- @usage verifyDepends("tube")
-function verifyDepends(package)
+local function verifyDepends(package)
 	local pinfo = packageInfo(package)
 
 	local function getVersion(str)
@@ -128,11 +124,11 @@ end
 -- the description of TerraME.
 -- @usage packageInfo().version
 function packageInfo(package)
-	if package == nil then package = "base" end
-
-	if belong(package, {"terrame", "TerraME"}) then
+	if package == nil or belong(package, {"terrame", "TerraME"}) then
 		package = "base"
 	end
+
+	mandatoryArgument(1, "string", package)
 
 	local s = sessionInfo().separator
 	local pkgfile = sessionInfo().path..s.."packages"..s..package
@@ -232,6 +228,7 @@ function switch(data, att)
 	local swtbl = {
 		casevar = data[att],
 		caseof = function(self, code)
+			verifyNamedTable(code)
 			local f
 			if self.casevar then
 				f = code[self.casevar] or code.default
@@ -242,7 +239,7 @@ function switch(data, att)
 				if type(f) == "function" then
 					return f(self.casevar,self)
 				else
-					customError("Case "..tostring(self.casevar).." should be a function.")
+					customError("Case '"..tostring(self.casevar).."' should be a function, got "..type(f)..".")
 				end
 			else
 				switchInvalidArgument(att, self.casevar, code)
@@ -270,6 +267,10 @@ end
 --
 -- switchInvalidArgument("attribute", "gren", t) 
 function switchInvalidArgument(att, value, suggestions)
+	mandatoryArgument(1, "string", att)
+	mandatoryArgument(2, "string", value)
+	mandatoryArgument(3, "table", suggestions)
+
 	local sugg = suggestion(value, suggestions)
 	if sugg then
 		customError(switchInvalidArgumentSuggestionMsg(value, att, sugg))
@@ -298,7 +299,7 @@ function suggestion(value, options)
 	local word
 	forEachOrderedElement(options, function(a)
 		if type(a) ~= "string" then
-			customError("All the indexes in #2 should be string, got '"..type(a).."'.")
+			customError("All the indexes of second parameter should be string, got '"..type(a).."'.")
 		end
 
 		local d = levenshtein(a, value) 
@@ -323,6 +324,10 @@ end
 -- }
 -- switchInvalidArgumentMsg("ddd", "attr", options)
 function switchInvalidArgumentMsg(casevar, att, options)
+	mandatoryArgument(1, "string", casevar)
+	mandatoryArgument(2, "string", att)
+	mandatoryArgument(3, "table", options)
+
 	local word = "It must be a string from the set ["
 	forEachOrderedElement(options, function(a)
 		word = word.."'"..a.."', "
@@ -337,6 +342,10 @@ end
 -- @arg suggestion A suggestion for to replace the wrong value.
 -- @usage switchInvalidArgumentSuggestionMsg("aab", "attr", "aaa")
 function switchInvalidArgumentSuggestionMsg(casevar, att, suggestion)
+	mandatoryArgument(1, "string", casevar)
+	mandatoryArgument(2, "string", att)
+	mandatoryArgument(3, "string", suggestion)
+
 	return "'"..casevar.."' is an invalid value for argument '"..att.."'. Do you mean '"..suggestion.."'?"
 end
 
@@ -580,10 +589,10 @@ end
 function defaultTableValue(data, idx, value)
 	if data[idx] == nil then
 		data[idx] = value
-	elseif type(data[idx]) ~= type(value) then
-		incompatibleTypeError(idx, type(value), data[idx])
 	elseif data[idx] == value then
 		defaultValueWarning(idx, value)
+	elseif type(data[idx]) ~= type(value) then
+		incompatibleTypeError(idx, type(value), data[idx])
 	end
 end
 
@@ -725,7 +734,7 @@ function resourceNotFoundMsg(attr, path)
 		attr = "#"..attr
 	end
 
-    return "Resource '"..path.."' not found for argument '"..attr.."'."
+	return "Resource '"..path.."' not found for argument '"..attr.."'."
 end
 
 --- Stop the simulation with an error due to a wrong value for a argument.
