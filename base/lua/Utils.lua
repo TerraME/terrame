@@ -783,6 +783,7 @@ function forEachOrderedElement(obj, func)
 		local idx = sreference[sorder[k]]
 		if func(idx, obj[idx], type(obj[idx])) == false then return false end
 	end
+	return true
 end
 
 --- Convert the time from the os library to a more readable value. It returns a string in the format 

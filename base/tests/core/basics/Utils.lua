@@ -372,31 +372,41 @@ return{
 		a.placement:add(cs:sample())
 		a.placement:add(cs:sample())
 
-		forEachCell(a, function(cell) unitTest:assert_equal(cell.value, 4) end)
+		local r
+
+		r = forEachCell(a, function(cell) unitTest:assert_equal(cell.value, 4) end)
+
+		unitTest:assert(r)
 
 		local count = 0
-		forEachCell(cs, function(cell)
+		r = forEachCell(cs, function(cell)
 			count = count + 1
 			if count > 10 then return false end
 		end)
+
+		unitTest:assert(not r)
 		unitTest:assert_equal(count, 11)
 	end,
 	forEachCellPair = function(unitTest)
 		local cs1 = CellularSpace{xdim = 10}
 		local cs2 = CellularSpace{xdim = 10}
-
 		local count = 0
-		forEachCellPair(cs1, cs2, function()
+		local r
+
+		r = forEachCellPair(cs1, cs2, function()
 			count = count + 1
 		end)
 
+		unitTest:assert(r)
 		unitTest:assert_equal(count, 100)
 
-		local count = 0
-		forEachCellPair(cs1, cs2, function()
+		count = 0
+		r = forEachCellPair(cs1, cs2, function()
 			count = count + 1
 			if count > 10 then return false end
 		end)
+
+		unitTest:assert(not r)
 		unitTest:assert_equal(count, 11)
 	end,
 	forEachConnection = function(unitTest)
@@ -405,28 +415,33 @@ return{
 
 		soc:createSocialNetwork{quantity = 3}
 
-		local cont = 0
+		local count = 0
+		local r
 		local s = soc:sample()
-		forEachConnection(s, function(ag1, ag2, w)
+
+		r = forEachConnection(s, function(ag1, ag2, w)
 			unitTest:assert_type(ag2, "Agent")
 			unitTest:assert_equal(ag1, s)
 			unitTest:assert_type(w, "number")
-			cont = cont + 1
+			count = count + 1
 		end)
 
-		unitTest:assert_equal(cont, 3)
+		unitTest:assert(r)
+		unitTest:assert_equal(count, 3)
 
-		local count = 0
-		forEachConnection(s, function()
+		count = 0
+		r = forEachConnection(s, function()
 			count = count + 1
 			return false
 		end)
+
+		unitTest:assert(not r)
 		unitTest:assert_equal(count, 1)
 	end,
 	forEachElement = function(unitTest)
 		local mvector = {a = "a", b = "b", c = "c", d = "d"}
-
 		local count = 0
+
 		forEachElement(mvector, function(idx, value, mtype)
 			unitTest:assert_type(idx, "string")
 			unitTest:assert_type(value, "string")
@@ -437,28 +452,37 @@ return{
 
 		mvector = {1, 2, 3, 4, 5}
 		count = 0
-		forEachElement(mvector, function(idx, value, mtype)
+		local r
+
+		r = forEachElement(mvector, function(idx, value, mtype)
 			unitTest:assert_type(idx, "number")
 			unitTest:assert_type(value, "number")
 			unitTest:assert_equal(mtype, "number")
 			count = count + 1
 		end)
+
+		unitTest:assert(r)
 		unitTest:assert_equal(count, 5)
 
 		count = 0
-		forEachElement(mvector, function()
+		r = forEachElement(mvector, function()
 			count = count + 1
 			if count > 2 then return false end
 		end)
+
+		unitTest:assert(not r)
 		unitTest:assert_equal(count, 3)
 	end,
 	forEachFile = function(unitTest)
 		local count = 0
-		forEachFile(file("", "base"), function(file)
+		local r
+
+		r = forEachFile(file("", "base"), function(file)
 			count = count + 1
 			unitTest:assert_type(file, "string")
 		end)
 
+		unitTest:assert(r)
 		unitTest:assert_equal(count, 22)
 
 		local count2 = 0
@@ -467,6 +491,16 @@ return{
 		end)
 
 		unitTest:assert_equal(count2, count + 2)
+
+		count = 0
+
+		r = forEachFile(file("", "base"), function(file)
+			count = count + 1
+			if count > 1 then return false end
+		end)
+
+		unitTest:assert(not r)
+		unitTest:assert_equal(count, 2)
 	end,
 	forEachNeighbor = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -474,19 +508,23 @@ return{
 
 		local count = 0
 		local c = cs.cells[1]
-		forEachNeighbor(c, function(cell1, cell2, w)
+		local r
+
+		r = forEachNeighbor(c, function(cell1, cell2, w)
 			unitTest:assert_type(cell2, "Cell")
 			unitTest:assert_equal(cell1, c)
 			unitTest:assert_type(w, "number")
 			count = count + 1
 		end)
+		unitTest:assert(r)
 		unitTest:assert_equal(count, 3)
 
 		count = 0
-		forEachNeighbor(c, function()
+		r = forEachNeighbor(c, function()
 			count = count + 1
 			if count > 1 then return false end
 		end)
+		unitTest:assert(not r)
 		unitTest:assert_equal(count, 2)
 	end,
 	forEachNeighborhood = function(unitTest)
@@ -506,16 +544,20 @@ return{
 		c1:addNeighborhood(n2, "2")
 
 		local count = 0
-		forEachNeighborhood(c1, function()
+		local r
+
+		r = forEachNeighborhood(c1, function()
 			count = count + 1
 		end)
+		unitTest:assert(r)
 		unitTest:assert_equal(count, 2)
 
 		local count = 0
-		forEachNeighborhood(c1, function()
+		r = forEachNeighborhood(c1, function()
 			count = count + 1
 			return false
 		end)
+		unitTest:assert(not r)
 		unitTest:assert_equal(count, 1)
 	end,
 	forEachOrderedElement = function(unitTest)
@@ -523,20 +565,23 @@ return{
 		local list = {[1] = 1, [3] = 3, [2] = 2, a = "a", b = "b", c = "c"}
 
 		local cont = 0
-		forEachOrderedElement(list, function(idx, value, mtype)
+		local r
+		r = forEachOrderedElement(list, function(idx, value, mtype)
 			cont = cont + 1
 			unitTest:assert_equal(mtype, type(result[cont]))
 
 			unitTest:assert_equal(idx, result[cont])
 			unitTest:assert_equal(value, result[cont])
 		end)
+		unitTest:assert(r)
 		unitTest:assert_equal(cont, 6)
 
 		local cont = 0
-		forEachOrderedElement(list, function()
+		r = forEachOrderedElement(list, function()
 			cont = cont + 1
 			return false
 		end)
+		unitTest:assert(not r)
 		unitTest:assert_equal(cont, 1)
 	end,
 	getExtension = function(unitTest)
