@@ -37,7 +37,7 @@
 --     file = "cs.csv",
 --     separator = ";"
 -- }
-LogFile = function(data)
+function LogFile(data)
 	mandatoryTableArgument(data, "subject")
 	defaultTableValue(data, "separator", ",")
 	defaultTableValue(data, "file", "result.csv")

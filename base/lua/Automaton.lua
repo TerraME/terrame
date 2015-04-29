@@ -60,11 +60,28 @@ Automaton_ = {
 			incompatibleTypeError(1, "Event", event)
 		end
 	end,
+	--- Return the unique identifier name of the Automaton.
+	-- @usage automaton:getId()
+	getId = function(self)
+		return self.id
+	end,
 	--- Return the time when the machine executed the transition to the current state. Before
 	-- running, the latency is zero.
 	-- @usage latency = automaton:getLatency()
 	getLatency = function(self)
 		return self.cObj_:getLatency()
+	end,
+	--- Get a State of the Automaton according to a given position.
+	-- @arg index A number indicating the position of the State to be retrieved.
+	-- @usage state = automaton:getState(1)
+	getState = function(self, index)
+		mandatoryArgument(1, "number", index)
+
+		integerArgument(1, index)
+		positiveArgument(1, index)
+
+		local statesVector = self:getStates()
+		return statesVector[index]
 	end,
 	--- Return the name of the current State. As an Automaton has independent States in each Cell, 
 	-- it requires a location to return its State name.
@@ -73,6 +90,17 @@ Automaton_ = {
 	getStateName = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 		return cell.cObj_:getCurrentStateName(self.cObj_)
+	end,
+	--- Get all the States inside the Automaton. It returns a vector indexed by numeric positions.
+	-- @usage state = automaton:getStates()[1]
+	getStates = function(self)
+		local statesVector = {}
+		for _, value in pairs(self) do
+			if type(value) == "State" then
+				table.insert(statesVector, element)
+			end
+		end
+		return statesVector
 	end,
 	--- Notify every Observer connected to the Automaton.
 	-- @arg modelTime An integer number representing the notification time. The default value is zero.
@@ -91,19 +119,6 @@ Automaton_ = {
 
 		self.cObj_:notify(modelTime)
 	end,
-	--- Activate or not the Trajectories defined for the Automaton. Returns whether the
-	-- change was successfully executed. When the Automaton is built its status is
-	-- not activated.
-	-- @arg status A boolean that indicates if the Trajectories will be activated.
-	-- @usage automaton:setTrajectoryStatus(true)
-	setTrajectoryStatus = function(self, status)
-		if status == nil then
-			status = false
-		elseif type(status) ~= "boolean" then
-			incompatibleTypeError(1, "boolean", status)
-		end
-		self.cObj_:setActionRegionStatus(status)
-	end,
 	--- Set the unique identifier of the Automaton. Return a boolean value indicating whether
 	-- the id was changed correctly.
 	-- @arg id A string that names the Automaton.
@@ -116,33 +131,18 @@ Automaton_ = {
 		end
 		self.id = id
 	end,
-	--- Return the unique identifier name of the Automaton.
-	-- @usage automaton:getId()
-	getId = function(self)
-		return self.id
-	end,
-	--- Get all the States inside the Automaton. It returns a vector indexed by numeric positions.
-	-- @usage state = automaton:getStates()[1]
-	getStates = function(self)
-		local statesVector = {}
-		for _, value in pairs(self) do
-			if type(value) == "State" then
-				table.insert(statesVector, element)
-			end
+	--- Activate or not the Trajectories defined for the Automaton. Returns whether the
+	-- change was successfully executed. When the Automaton is built its status is
+	-- not activated.
+	-- @arg status A boolean that indicates if the Trajectories will be activated.
+	-- @usage automaton:setTrajectoryStatus(true)
+	setTrajectoryStatus = function(self, status)
+		if status == nil then
+			status = false
+		elseif type(status) ~= "boolean" then
+			incompatibleTypeError(1, "boolean", status)
 		end
-		return statesVector
-	end,
-	--- Get a State of the Automaton according to a given position.
-	-- @arg index A number indicating the position of the State to be retrieved.
-	-- @usage state = automaton:getState(1)
-	getState = function(self, index)
-		mandatoryArgument(1, "number", index)
-
-		integerArgument(1, index)
-		positiveArgument(1, index)
-
-		local statesVector = self:getStates()
-		return statesVector[index]
+		self.cObj_:setActionRegionStatus(status)
 	end
 }
 

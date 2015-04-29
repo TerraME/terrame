@@ -48,54 +48,6 @@ Model_ = {
 	-- @see Package:customError
 	check = function(self)
 	end,
-	--- Notify the Observers of the Model instance.
-	-- @arg modelTime A number representing the notification time. The default value is zero.
-	-- It is also possible to use an Event as argument. In this case, it will use the result of
-	-- Event:getTime().
-	-- @usage Tube = Model{
-	--     water = 200,
-	--     init = function(model)
-	--         model.finalTime = 100
-	--         model.timer = Timer{
-	--             Event{action = function()
-	--                 model.water = model.water - 1
-	--                 model:notify()
-	--             end}
-	--         }
-	--     end
-	-- }
-	--
-	-- m = Tube{water = 100}
-	--
-	-- Chart{
-	--     subject = m,
-	--     select = "water"
-	-- }
-	--
-	-- m:execute()
-	notify = function(self, modelTime)
-	end,
-	--- User-defined function to create the objects of the Model. It is recommended that
-	-- all the created objects should be placed in the model instance itself, to guarantee
-	-- the content of the Model into a single object. This function is executed automatically
-	-- when one instantiates a given Model.
-	-- @usage usage Tube = Model{
-	--     initialWater = 200,
-	--     flow = 20,
-	--     init = function(model)
-	--         model.finalTime = 10
-	--         model.timer = Timer{
-	--             Event{action = function()
-	--                 -- ...
-	--             end}
-	--         }
-	--     end
-	-- }
-	--
-	-- m = Tube{initialWater = 100, flow = 10}
-	-- print(m.finalTime) -- 10
-	init = function(self)
-	end,
 	--- Run the Model instance. It requires that the Model instance has attribute finalTime.
 	-- @usage Tube = Model{
 	--     initialWater = 200,
@@ -120,6 +72,27 @@ Model_ = {
 				return false
 			end
 		end)
+	end,
+	--- User-defined function to create the objects of the Model. It is recommended that
+	-- all the created objects should be placed in the model instance itself, to guarantee
+	-- the content of the Model into a single object. This function is executed automatically
+	-- when one instantiates a given Model.
+	-- @usage usage Tube = Model{
+	--     initialWater = 200,
+	--     flow = 20,
+	--     init = function(model)
+	--         model.finalTime = 10
+	--         model.timer = Timer{
+	--             Event{action = function()
+	--                 -- ...
+	--             end}
+	--         }
+	--     end
+	-- }
+	--
+	-- m = Tube{initialWater = 100, flow = 10}
+	-- print(m.finalTime) -- 10
+	init = function(self)
 	end,
 	--- User-defined function to define the distribution of components in the graphical
 	-- interface. If this function is not
@@ -160,6 +133,33 @@ Model_ = {
 	--     -- ...
 	-- }
 	interface = function(self)
+	end,
+	--- Notify the Observers of the Model instance.
+	-- @arg modelTime A number representing the notification time. The default value is zero.
+	-- It is also possible to use an Event as argument. In this case, it will use the result of
+	-- Event:getTime().
+	-- @usage Tube = Model{
+	--     water = 200,
+	--     init = function(model)
+	--         model.finalTime = 100
+	--         model.timer = Timer{
+	--             Event{action = function()
+	--                 model.water = model.water - 1
+	--                 model:notify()
+	--             end}
+	--         }
+	--     end
+	-- }
+	--
+	-- m = Tube{water = 100}
+	--
+	-- Chart{
+	--     subject = m,
+	--     select = "water"
+	-- }
+	--
+	-- m:execute()
+	notify = function(self, modelTime)
 	end
 }
 

@@ -48,11 +48,6 @@ Timer_ = {
 			incompatibleTypeError(1, "Event or table", event)
 		end
 	end,
-	--- Return the current simulation time.
-	-- @usage print(timer:getTime())
-	getTime = function(self)
-		return self.cObj_:getTime()
-	end,
 	--- Execute the Timer until a final time. It manages the Event queue according to their execution
 	-- time and priority. The Event that has lower execution time and lower priority is executed at
 	-- each step. It this Event does not return false it is scheduled to execute again according to
@@ -71,6 +66,11 @@ Timer_ = {
 		end
 
 		self.cObj_:execute(finalTime)
+	end,
+	--- Return the current simulation time.
+	-- @usage print(timer:getTime())
+	getTime = function(self)
+		return self.cObj_:getTime()
 	end,
 	--- Notify every Observer connected to the Timer.
 	-- @usage timer:notify()

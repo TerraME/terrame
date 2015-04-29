@@ -1,4 +1,3 @@
-
 --@header Functions to handle files and directories.
 -- Most of the functions bellow are taken from LuaFileSystem 1.6.2.
 -- Copyright Kepler Project 2003 (http://www.keplerproject.org/luafilesystem).
@@ -69,41 +68,6 @@ function currentDir()
 	return lfs.currentdir()
 end
 
---- Return whether a given string represents a file stored in the computer.
--- @arg file A string.
--- @usage isFile("C:\\file.txt")
-function isFile(file)
-	mandatoryArgument(1, "string", file)
-
-	return os.rename(file, file)
-end
-
---- Execute a system command and return its output. Each line of the output will be a position
--- in the returned table.
--- @arg command A command.
--- @arg number A number indicating the output to be captured. The default value is 1 (standard output).
--- It is also possible to use 2, to capture the error output.
--- @usage runCommand("dir")
-function runCommand(command, number)
-	mandatoryArgument(1, "string", command)
-	optionalArgument(2, "number", number)
-
-	if number == nil then number = 1 end
-	
-	command = command.." "..number.."> zzzz999.txt"
-	
-	os.execute(command)
-	local file = io.open("zzzz999.txt", "r")
-	local fileTable = {}
-	for line in file:lines() do
-		fileTable[#fileTable + 1] = line
-	end
-
-	file:close()
-	os.execute("rm zzzz999.txt")
-	return fileTable
-end
-
 --- Return the files in a given directory.
 -- @arg folder A string describing a folder.
 -- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
@@ -136,6 +100,28 @@ function dir(folder, all)
 		return result
 	end
 end	
+
+--- Return whether a given string represents a file stored in the computer.
+-- @arg file A string.
+-- @usage isFile("C:\\file.txt")
+function isFile(file)
+	mandatoryArgument(1, "string", file)
+
+	return os.rename(file, file)
+end
+
+--- Identical to FileSystem:attributes() except that it obtains information about the link itself
+-- (not the file it refers to). On Windows this function does not yet support links, and is identical
+-- to FileSystem:attributes().
+-- @arg filepath A string with the file path.
+-- @arg attributename A string with the name of the attribute to be read.
+-- @usage linkAttributes(filepath, "size")
+function linkAttributes(filepath, attributename)
+	mandatoryArgument(1, "string", filepath)
+	optionalArgument(2, "string", attributename)
+
+	return lfs.symlinkattributes(filepath, attributename)
+end
 
 --- Lock a file or a part of it. This function works on open files; the file handle should be
 -- specified as the first argument. The optional arguments start and length can be used to specify a
@@ -187,6 +173,32 @@ function rmDir(path)
 	return lfs.rmdir(path)
 end
 
+--- Execute a system command and return its output. Each line of the output will be a position
+-- in the returned table.
+-- @arg command A command.
+-- @arg number A number indicating the output to be captured. The default value is 1 (standard output).
+-- It is also possible to use 2, to capture the error output.
+-- @usage runCommand("dir")
+function runCommand(command, number)
+	mandatoryArgument(1, "string", command)
+	optionalArgument(2, "number", number)
+
+	if number == nil then number = 1 end
+	
+	command = command.." "..number.."> zzzz999.txt"
+	
+	os.execute(command)
+	local file = io.open("zzzz999.txt", "r")
+	local fileTable = {}
+	for line in file:lines() do
+		fileTable[#fileTable + 1] = line
+	end
+
+	file:close()
+	os.execute("rm zzzz999.txt")
+	return fileTable
+end
+
 --- Set the writing mode for a file. Returns true
 -- followed the previous mode string for the file, or nil followed by an error string in case of errors.
 -- On non-Windows platforms, where the two modes are identical, setting the mode has no effect, and the
@@ -199,19 +211,6 @@ function setMode(filepath, mode)
 	mandatoryArgument(2, "string", mode)
 
 	return lfs.setmode(filepath, mode)
-end
-
---- Identical to FileSystem:attributes() except that it obtains information about the link itself
--- (not the file it refers to). On Windows this function does not yet support links, and is identical
--- to FileSystem:attributes().
--- @arg filepath A string with the file path.
--- @arg attributename A string with the name of the attribute to be read.
--- @usage linkAttributes(filepath, "size")
-function linkAttributes(filepath, attributename)
-	mandatoryArgument(1, "string", filepath)
-	optionalArgument(2, "string", attributename)
-
-	return lfs.symlinkattributes(filepath, attributename)
 end
 
 --- Set access and modification times of a file. This function is a bind to utime function.

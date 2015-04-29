@@ -24,24 +24,50 @@
 --          Rodrigo Reis Pereira
 --#########################################################################################
 
-local getSocialNetworkByQuantity = function(soc, data)
-	return function(agent)
-		local quant = 0
-		local rs = SocialNetwork()
-		local rand = Random()
+local function getEmptySocialNetwork()
+	return function()
+		return SocialNetwork()
+	end
+end
 
-		while quant < data.quantity do
-			local randomagent = soc:sample(rand)
-			if randomagent ~= agent and not rs:isConnection(randomagent) then
-				rs:add(randomagent, 1)
-				quant = quant + 1
+local function getSocialNetworkByCell(soc, data)
+	return function(agent)
+		local  rs = SocialNetwork()
+		forEachAgent(agent:getCell(data.placement), function(agentwithin)
+			if agent ~= agentwithin or data.self then
+				rs:add(agentwithin, 1)
 			end
-		end
+		end)
 		return rs
 	end
 end
 
-local getSocialNetworkByProbability = function(soc, data)
+local function getSocialNetworkByFunction(soc, data)
+	return function(agent)
+		local rs = SocialNetwork()
+
+		forEachAgent(soc, function(hint)
+			if data.filter(agent, hint) then
+				rs:add(hint, 1)
+			end
+		end)
+		return rs
+	end
+end
+
+local function getSocialNetworkByNeighbor(soc, data)
+	return function(agent)
+		local rs = SocialNetwork()
+		forEachNeighbor(agent:getCell(data.placement), data.neighborhood, function(cell, neigh)
+			forEachAgent(neigh, function(agentwithin)
+				rs:add(agentwithin, 1)
+			end)
+		end)
+		return rs
+	end
+end
+
+local function getSocialNetworkByProbability(soc, data)
 	return function(agent)
 		local rs = SocialNetwork()
 		local rand = Random()
@@ -55,45 +81,19 @@ local getSocialNetworkByProbability = function(soc, data)
 	end
 end
 
-local getEmptySocialNetwork = function()
-	return function()
-		return SocialNetwork()
-	end
-end
-
-local getSocialNetworkByFunction = function(soc, data)
+local function getSocialNetworkByQuantity(soc, data)
 	return function(agent)
+		local quant = 0
 		local rs = SocialNetwork()
+		local rand = Random()
 
-		forEachAgent(soc, function(hint)
-			if data.filter(agent, hint) then
-				rs:add(hint, 1)
+		while quant < data.quantity do
+			local randomagent = soc:sample(rand)
+			if randomagent ~= agent and not rs:isConnection(randomagent) then
+				rs:add(randomagent, 1)
+				quant = quant + 1
 			end
-		end)
-		return rs
-	end
-end
-
-local getSocialNetworkByCell = function(soc, data)
-	return function(agent)
-		local  rs = SocialNetwork()
-		forEachAgent(agent:getCell(data.placement), function(agentwithin)
-			if agent ~= agentwithin or data.self then
-				rs:add(agentwithin, 1)
-			end
-		end)
-		return rs
-	end
-end
-
-local getSocialNetworkByNeighbor = function(soc, data)
-	return function(agent)
-		local rs = SocialNetwork()
-		forEachNeighbor(agent:getCell(data.placement), data.neighborhood, function(cell, neigh)
-			forEachAgent(neigh, function(agentwithin)
-				rs:add(agentwithin, 1)
-			end)
-		end)
+		end
 		return rs
 	end
 end
@@ -322,13 +322,6 @@ Society_ = {
 		end
 	end,
 	--- Return a given Agent based on its index.
-	-- @arg index The index of the Agent that will be returned.
-	-- @usage agent = soc:getAgent("1")
-	-- @deprecated Society:get
-	getAgent = function(self, index)
-		deprecatedFunction("getAgent", "get")
-	end,
-	--- Return a given Agent based on its index.
 	-- @arg index The index of the Agent that will be returned. It can be a number
 	-- (with the position of the Agent in the vector of Agents) or a string (with the
 	-- id of the Agent).
@@ -356,6 +349,13 @@ Society_ = {
 		positiveArgument(1, index)
 
 		return self.agents[index]
+	end,
+	--- Return a given Agent based on its index.
+	-- @arg index The index of the Agent that will be returned.
+	-- @usage agent = soc:getAgent("1")
+	-- @deprecated Society:get
+	getAgent = function(self, index)
+		deprecatedFunction("getAgent", "get")
 	end,
 	--- Return a vector with the Agents of the Society.
 	-- @usage agent = soc:getAgents()[1]

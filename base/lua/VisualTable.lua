@@ -33,7 +33,7 @@
 --     subject = cell,
 --     select = {"temperature", "humidity"}
 -- }
-VisualTable = function(data)
+function VisualTable(data)
 	mandatoryTableArgument(data, "subject")
 
 	if type(data.select) == "string" then data.select = {data.select} end

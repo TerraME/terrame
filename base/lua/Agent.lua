@@ -426,35 +426,6 @@ Agent_ = {
 	randomWalk = function(self)
 		deprecatedFunction("randomWalk", "walk")
 	end,
-	--- Execute a random walk to a neighbor Cell. This function supposes that each Agent can be in
-	-- one and only one Cell along the simulation. The Agent needs to have a placement to be
-	-- able to use Agent:enter(), Agent:leave(), Agent:move(), and Agent:walk().
-	-- @arg placement A string representing the placement to be used. The default value
-	-- is "placement".
-	-- @arg neighborhood A string representing the Neighborhood to be used.
-	-- The default value is "1.
-	-- @usage agent:walk()
-	--
-	-- agent:walk("moore")
-	-- @see Environment:createPlacement
-	walk = function(self, placement, neighborhood)
-		optionalArgument(1, "string", placement)
-		if placement == nil then placement = "placement" end
-
-		optionalArgument(2, "string", neighborhood)
-		if neighborhood == nil then neighborhood = "1" end
-
-		if type(self[placement]) ~= "Trajectory" then
-			valueNotFoundError(1, placement)
-		end
-
-		local c1 = self:getCell(placement)
-		local c2 = c1:getNeighborhood(neighborhood)
-		if c2 == nil then
-			valueNotFoundError(2, neighborhood)
-		end
-		self:move(c2:sample(), placement)
-	end,
 	--- Create an Agent with the same behavior in the same Cell where the original Agent is
 	-- (according to its placement). The new Agent is pushed into the same Society the original
 	-- Agent belongs and placements created using the Society are instantiated with size zero if
@@ -529,6 +500,35 @@ Agent_ = {
 		if status == nil then status = false end
 
 		self.cObj_:setActionRegionStatus(status)
+	end,
+	--- Execute a random walk to a neighbor Cell. This function supposes that each Agent can be in
+	-- one and only one Cell along the simulation. The Agent needs to have a placement to be
+	-- able to use Agent:enter(), Agent:leave(), Agent:move(), and Agent:walk().
+	-- @arg placement A string representing the placement to be used. The default value
+	-- is "placement".
+	-- @arg neighborhood A string representing the Neighborhood to be used.
+	-- The default value is "1.
+	-- @usage agent:walk()
+	--
+	-- agent:walk("moore")
+	-- @see Environment:createPlacement
+	walk = function(self, placement, neighborhood)
+		optionalArgument(1, "string", placement)
+		if placement == nil then placement = "placement" end
+
+		optionalArgument(2, "string", neighborhood)
+		if neighborhood == nil then neighborhood = "1" end
+
+		if type(self[placement]) ~= "Trajectory" then
+			valueNotFoundError(1, placement)
+		end
+
+		local c1 = self:getCell(placement)
+		local c2 = c1:getNeighborhood(neighborhood)
+		if c2 == nil then
+			valueNotFoundError(2, neighborhood)
+		end
+		self:move(c2:sample(), placement)
 	end
 }
 

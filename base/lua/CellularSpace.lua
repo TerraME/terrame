@@ -26,6 +26,29 @@
 
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
+local function getCoordCoupling(cs, data)
+	return function(cell)
+		local neighborhood = Neighborhood()
+		local neighCell = data.target:get(cell.x, cell.y)
+		if neighCell then
+			neighborhood:add(neighCell, 1)
+		end
+		return neighborhood
+	end
+end
+
+local function getFunctionNeighborhood(cs, data)
+	return function(cell)
+		local neighborhood = Neighborhood()
+		forEachCell(cs, function(neighCell)
+			if data.filter(cell, neighCell) then
+				neighborhood:add(neighCell, data.weight(cell, neighCell))
+			end
+		end)
+		return neighborhood
+	end
+end
+
 local function getMooreNeighborhood(cs, data)
 	return function(cell)
 		local neigh = Neighborhood()
@@ -58,6 +81,26 @@ local function getMooreNeighborhood(cs, data)
 			neigh:add(index, weight)
 		end
 		return neigh
+	end
+end
+
+local function getMxNNeighborhood(cs, data)
+	local m = math.floor(data.m/2)
+	local n = math.floor(data.n/2)
+
+	return function(cell)
+		local neighborhood = Neighborhood()
+		for lin = -n, n do
+			for col = -m, m do
+				local neighCell = data.target:get(cell.x + col, cell.y + lin)
+				if neighCell then
+					if data.filter(cell, neighCell) then
+						neighborhood:add(neighCell, data.weight(cell, neighCell))
+					end
+				end
+			end
+		end
+		return neighborhood
 	end
 end
 
@@ -97,50 +140,26 @@ local function getVonNeumannNeighborhood(cs, data)
 	end
 end
 
-local function getFunctionNeighborhood(cs, data)
-	return function(cell)
-		local neighborhood = Neighborhood()
-		forEachCell(cs, function(neighCell)
-			if data.filter(cell, neighCell) then
-				neighborhood:add(neighCell, data.weight(cell, neighCell))
-			end
-		end)
-		return neighborhood
-	end
+local function checkCsv(self)
+	defaultTableValue(self, "sep", ",")
 end
 
-local function getCoordCoupling(cs, data)
-	return function(cell)
-		local neighborhood = Neighborhood()
-		local neighCell = data.target:get(cell.x, cell.y)
-		if neighCell then
-			neighborhood:add(neighCell, 1)
-		end
-		return neighborhood
-	end
-end
+local function checkMap(self)
+	defaultTableValue(self, "sep", " ")
 
-local function getMxNNeighborhood(cs, data)
-	local m = math.floor(data.m/2)
-	local n = math.floor(data.n/2)
-
-	return function(cell)
-		local neighborhood = Neighborhood()
-		for lin = -n, n do
-			for col = -m, m do
-				local neighCell = data.target:get(cell.x + col, cell.y + lin)
-				if neighCell then
-					if data.filter(cell, neighCell) then
-						neighborhood:add(neighCell, data.weight(cell, neighCell))
-					end
-				end
+	local getFileName = function(filename)
+		for i = 1, filename:len() do
+			if filename:sub(i, i) == "." then
+				return filename:sub(1, i - 1)
 			end
 		end
-		return neighborhood
+		return filename
 	end
+
+	defaultTableValue(self, "attrname", getFileName(self.database))
 end
 
-local checkMdb = function(self)
+local function checkMdb(self)
 	mandatoryTableArgument(self, "theme", "string") -- SKIP
 	defaultTableValue(self, "layer", "") -- SKIP
 	defaultTableValue(self, "where", "") -- SKIP
@@ -160,135 +179,7 @@ local checkMdb = function(self)
 	end
 end
 
-local checkShape = function(self)
-	local dbf = self.database:sub(1, self.database:len() - 3).."dbf"
-	local f = io.open(dbf)
-	if not f then
-		customError("File '"..dbf.."' not found.")
-	else
-		io.close(f)
-	end
-end
-
-local checkMap = function(self)
-	defaultTableValue(self, "sep", " ")
-
-	local getFileName = function(filename)
-		for i = 1, filename:len() do
-			if filename:sub(i, i) == "." then
-				return filename:sub(1, i - 1)
-			end
-		end
-		return filename
-	end
-
-	defaultTableValue(self, "attrname", getFileName(self.database))
-end
-
-local loadMap = function(self)
-	local i = 0
-	local j = 0
-
-	if self.minRow == nil then self.minRow = 100000 end
-	if self.minCol == nil then self.minCol = 100000 end
-	if self.maxRow == nil then self.maxRow = -self.minRow end
-	if self.maxCol == nil then self.maxCol = -self.minCol end
-
-	self.cells = {}
-	self.cObj_:clear()
-	for line in io.lines(self.database) do
-		j = 0
-
-		local res = CSVparseLine(line, self.sep)
-
-		forEachElement(res, function(_, value)
-			local p = Cell {x = j, y = i} 
-		 	p[self.attrname] = tonumber(value)
-			self:add(p)
-			self.cObj_:addCell(p.x, p.y, p.cObj_)
-			j = j + 1
-		end)
-		i = i + 1
-	end
-
-	self.xdim = self.maxRow
-	self.ydim = self.maxCol
-end
-
-local loadShape = function(self)
-	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:loadShape()
-
-	table.sort(self.cells, function(a, b) 
-		if a.x < b.x then return true; end
-		if a.x > b.x then return false; end
-		return a.y < b.y
-	end)
-
-	self.xdim = self.maxCol
-	self.ydim = self.maxRow
-	self.cObj_:clear()
-	for i, tab in pairs(self.cells) do
-		tab.parent = self
-		self.cObj_:addCell(tab.x, tab.y, tab.cObj_)
-	end
-end
-
-local checkCsv = function(self)
-	defaultTableValue(self, "sep", ",")
-end
-
-local loadCsv = function(self)
-	if self.minRow == nil then self.minRow = 100000 end
-	if self.minCol == nil then self.minCol = 100000 end
-	if self.maxRow == nil then self.maxRow = -self.minRow end
-	if self.maxCol == nil then self.maxCol = -self.minCol end
-
-	self.cells = {}
-	self.cObj_:clear()
-	local data = CSVread(self.database, self.sep)
-	local cellIdCounter = 0
-	for i = 1, #data do
-		cellIdCounter = cellIdCounter + 1
-		data[i].id = tostring(cellIdCounter)
-		local cell = Cell(data[i])
-		self:add(cell)
-		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
-	end
-	return 
-end
-
-local checkVirtual = function(self)
-	mandatoryTableArgument(self, "xdim", "number")
-	defaultTableValue(self, "ydim", self.xdim)
-
-	integerTableArgument(self, "xdim")
-	positiveTableArgument(self, "xdim")
-
-	integerTableArgument(self, "ydim")
-	positiveTableArgument(self, "ydim")
-end
-
-local loadVirtual = function(self)
-	self.minRow = 0
-	self.minCol = 0
-	self.maxRow = self.ydim - 1
-	self.maxCol = self.xdim - 1
-
-	self.cells = {}
-	self.cObj_:clear()
-	local cellIdCounter = 1
-	for i = 1, self.xdim do
-		for j = 1, self.ydim do
-			local c = Cell{id = tostring(cellIdCounter), x = i - 1, y = j - 1}
-			cellIdCounter = cellIdCounter + 1
-			c.parent = self
-			self.cObj_:addCell(c.x, c.y, c.cObj_)
-			table.insert(self.cells, c)
-		end
-	end
-end
-
-local checkMySQL = function(self)
+local function checkMySQL(self)
 	-- until 1024 also 65535
 	defaultTableValue(self, "port", 3306)
 	defaultTableValue(self, "host", "localhost")
@@ -329,7 +220,48 @@ local checkMySQL = function(self)
 	end
 end
 
-local loadDb = function(self)
+local function checkShape(self)
+	local dbf = self.database:sub(1, self.database:len() - 3).."dbf"
+	local f = io.open(dbf)
+	if not f then
+		customError("File '"..dbf.."' not found.")
+	else
+		io.close(f)
+	end
+end
+
+local function checkVirtual(self)
+	mandatoryTableArgument(self, "xdim", "number")
+	defaultTableValue(self, "ydim", self.xdim)
+
+	integerTableArgument(self, "xdim")
+	positiveTableArgument(self, "xdim")
+
+	integerTableArgument(self, "ydim")
+	positiveTableArgument(self, "ydim")
+end
+
+local function loadCsv(self)
+	if self.minRow == nil then self.minRow = 100000 end
+	if self.minCol == nil then self.minCol = 100000 end
+	if self.maxRow == nil then self.maxRow = -self.minRow end
+	if self.maxCol == nil then self.maxCol = -self.minCol end
+
+	self.cells = {}
+	self.cObj_:clear()
+	local data = CSVread(self.database, self.sep)
+	local cellIdCounter = 0
+	for i = 1, #data do
+		cellIdCounter = cellIdCounter + 1
+		data[i].id = tostring(cellIdCounter)
+		local cell = Cell(data[i])
+		self:add(cell)
+		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
+	end
+	return 
+end
+
+local function loadDb(self)
 	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:load()
 
 	if self.cells == nil then
@@ -351,9 +283,77 @@ local loadDb = function(self)
 	end
 end
 
+local function loadMap(self)
+	local i = 0
+	local j = 0
+
+	if self.minRow == nil then self.minRow = 100000 end
+	if self.minCol == nil then self.minCol = 100000 end
+	if self.maxRow == nil then self.maxRow = -self.minRow end
+	if self.maxCol == nil then self.maxCol = -self.minCol end
+
+	self.cells = {}
+	self.cObj_:clear()
+	for line in io.lines(self.database) do
+		j = 0
+
+		local res = CSVparseLine(line, self.sep)
+
+		forEachElement(res, function(_, value)
+			local p = Cell {x = j, y = i} 
+		 	p[self.attrname] = tonumber(value)
+			self:add(p)
+			self.cObj_:addCell(p.x, p.y, p.cObj_)
+			j = j + 1
+		end)
+		i = i + 1
+	end
+
+	self.xdim = self.maxRow
+	self.ydim = self.maxCol
+end
+
+local function loadShape(self)
+	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:loadShape()
+
+	table.sort(self.cells, function(a, b) 
+		if a.x < b.x then return true; end
+		if a.x > b.x then return false; end
+		return a.y < b.y
+	end)
+
+	self.xdim = self.maxCol
+	self.ydim = self.maxRow
+	self.cObj_:clear()
+	for i, tab in pairs(self.cells) do
+		tab.parent = self
+		self.cObj_:addCell(tab.x, tab.y, tab.cObj_)
+	end
+end
+
+local function loadVirtual(self)
+	self.minRow = 0
+	self.minCol = 0
+	self.maxRow = self.ydim - 1
+	self.maxCol = self.xdim - 1
+
+	self.cells = {}
+	self.cObj_:clear()
+	local cellIdCounter = 1
+	for i = 1, self.xdim do
+		for j = 1, self.ydim do
+			local c = Cell{id = tostring(cellIdCounter), x = i - 1, y = j - 1}
+			cellIdCounter = cellIdCounter + 1
+			c.parent = self
+			self.cObj_:addCell(c.x, c.y, c.cObj_)
+			table.insert(self.cells, c)
+		end
+	end
+end
+
 local CellularSpaceDrivers = {}
 
-local registerCellularSpaceDriver = function(data)
+local function registerCellularSpaceDriver(data)
 	if type(data.compulsory) == "string" then
 		data.compulsory = {data.compulsory}
 	end
@@ -619,14 +619,6 @@ CellularSpace_ = {
 			end
 		end
 	end,
-	--- Return a cell from the CellularSpace given its x and y location.
-	-- @arg xIndex A number with the x location of the cell to be returned.
-	-- @arg yIndex A number with the y location of the cell to be returned.
-	-- @usage cs:getCell(2, 2)
-	-- @deprecated CellularSpace:get
-	getCell = function(self, xIndex, yIndex)
-		deprecatedFunction("getCell", "get")
-	end,
 	--- Return a Cell from the CellularSpace, given its unique identifier or its location. If the Cell
 	-- does not belong to the CellularSpace then it will return nil.
 	-- @arg xIndex A number indicating an x coordinate. It can also be a string with the object id.
@@ -654,11 +646,13 @@ CellularSpace_ = {
 
 		return self.cObj_:getCell(cObj_)
 	end,
-	--- Return all the cells of the CellularSpace in a vector.
-	-- @usage cs:getCells()
-	-- @deprecated CellularSpace.cells
-	getCells = function(self)
-		deprecatedFunction("getCells", ".cells")
+	--- Return a cell from the CellularSpace given its x and y location.
+	-- @arg xIndex A number with the x location of the cell to be returned.
+	-- @arg yIndex A number with the y location of the cell to be returned.
+	-- @usage cs:getCell(2, 2)
+	-- @deprecated CellularSpace:get
+	getCell = function(self, xIndex, yIndex)
+		deprecatedFunction("getCell", "get")
 	end,
 	--- Return a cell from the CellularSpace given its id.
 	-- @arg cellID A string with the unique identifier of the Cell to be returned.
@@ -667,6 +661,12 @@ CellularSpace_ = {
 	getCellByID = function(self, cellID)
 		deprecatedFunction("getCellByID", "get")
 	end,	
+	--- Return all the cells of the CellularSpace in a vector.
+	-- @usage cs:getCells()
+	-- @deprecated CellularSpace.cells
+	getCells = function(self)
+		deprecatedFunction("getCells", ".cells")
+	end,
 	--- Load the CellularSpace from the database. TerraME automatically executes this function when
 	-- the CellularSpace is created, but one can execute this to load the attributes again, erasing
 	-- all attributes and relations created by the modeler.

@@ -46,7 +46,7 @@
 --     protocol = "udp",
 --     compress = false
 -- }
-InternetSender = function(data)
+function InternetSender(data)
 	mandatoryTableArgument(data, "subject")
 	defaultTableValue(data, "host", "localhost")
 	defaultTableValue(data, "port", 456456)

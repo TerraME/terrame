@@ -51,46 +51,6 @@ UnitTest_ = {
 			self:print_error("Test should be true, got false.")
 		end
 	end,
-	--- Check if a value belongs to a given type. If not, it generates an error.
-	-- @arg value Any value.
-	-- @arg mtype A string with the name of a type.
-	-- @usage unitTest:assert_type(2, "number")
-	assert_type = function (self, value, mtype)
-		self.test = self.test + 1
-
-		mandatoryArgument(2, "string", mtype)
-
-		if type(value) == mtype then
-			self.success = self.success + 1
-		else
-			self.fail = self.fail + 1
-			self:print_error("Test should be "..mtype.." got "..type(value)..".")
-		end
-	end,
-	--- Check if a given value is nil. Otherwise it generates an error.
-	-- @arg value Any value.
-	-- @usage unitTest:assert_nil()
-	assert_nil = function(self, value)
-		self.test = self.test + 1
-		if value == nil then
-			self.success = self.success + 1
-		else
-			self.fail = self.fail + 1
-			self:print_error("Test should be nil, got "..type(value)..".")
-		end
-	end,
-	--- Check if a given value is not nil. Otherwise it generates an error.
-	-- @arg value Any value.
-	-- @usage unitTest:assert_not_nil(2)
-	assert_not_nil = function (self, value)
-		self.test = self.test + 1
-		if value ~= nil then
-			self.success = self.success + 1
-		else
-			self.fail = self.fail + 1
-			self:print_error("Test should not be nil.")
-		end
-	end,
 	--- Check if two values are equal. In this function, two tables are equal only when they are
 	-- the same object (if not, they would not be equal even if they share the same internal
 	-- content).
@@ -207,6 +167,30 @@ UnitTest_ = {
 
 		self.test = self.test + 1
 	end,
+	--- Check if a given value is nil. Otherwise it generates an error.
+	-- @arg value Any value.
+	-- @usage unitTest:assert_nil()
+	assert_nil = function(self, value)
+		self.test = self.test + 1
+		if value == nil then
+			self.success = self.success + 1
+		else
+			self.fail = self.fail + 1
+			self:print_error("Test should be nil, got "..type(value)..".")
+		end
+	end,
+	--- Check if a given value is not nil. Otherwise it generates an error.
+	-- @arg value Any value.
+	-- @usage unitTest:assert_not_nil(2)
+	assert_not_nil = function (self, value)
+		self.test = self.test + 1
+		if value ~= nil then
+			self.success = self.success + 1
+		else
+			self.fail = self.fail + 1
+			self:print_error("Test should not be nil.")
+		end
+	end,
 	--- Verify whether a Chart or a Map has a plot similar to the one defined by snapshot folder.
 	-- @arg observer A Chart or a Map.
 	-- @arg file A string with the file name in the snapshot folder. If the file does not exist
@@ -250,6 +234,22 @@ UnitTest_ = {
 				self:print_error("Files \n  'snapshots"..s..file.."'\nand\n  '"..newImage.."'\nare different.")
 				self.fail = self.fail + 1 -- SKIP
 			end
+		end
+	end,
+	--- Check if a value belongs to a given type. If not, it generates an error.
+	-- @arg value Any value.
+	-- @arg mtype A string with the name of a type.
+	-- @usage unitTest:assert_type(2, "number")
+	assert_type = function(self, value, mtype)
+		self.test = self.test + 1
+
+		mandatoryArgument(2, "string", mtype)
+
+		if type(value) == mtype then
+			self.success = self.success + 1
+		else
+			self.fail = self.fail + 1
+			self:print_error("Test should be "..mtype.." got "..type(value)..".")
 		end
 	end,
 	--- Sleep the tests for some time. The sleeping time is the value of a variable named sleep

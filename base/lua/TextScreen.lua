@@ -33,7 +33,7 @@
 --     subject = agent,
 --     select = {"size" , "age"}
 -- }
-TextScreen = function(data)
+function TextScreen(data)
 	mandatoryTableArgument(data, "subject")
 
 	if type(data.select) == "string" then data.select = {data.select} end

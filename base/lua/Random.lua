@@ -26,27 +26,6 @@
 
 Random_ = {
 	type_ = "Random",
-	--- Reset the seed to generate random numbers.
-	-- @arg seed An integer number with the new seed.
-	-- @usage value = random:reSeed(1)
-	reSeed = function(self, seed)
-		if seed == nil then seed = os.time() end
-
-		optionalArgument(1, "number", seed)
-		integerArgument(1, seed)
-
-		self.seed = seed
-		self.cObj_:reseed(seed)
-	end,
-	--- Return a random element from a set of values using a discrete uniform distribution.
-	-- @arg mtable A non-named table with a set of values.
-	-- @usage random:sample{2, 3, 4, 6}
-	sample = function(self, mtable)
-		mandatoryArgument(1, "table", mtable)
-
-		local int = self:integer(1, #mtable)
-		return mtable[int]
-	end,
 	--- Return an integer random number. It uses a discrete uniform distribution.
 	-- @arg v1 An integer number. If abscent, integer() will return zero or one.
 	-- If it is the only argument, it will return a number between zero and this value.
@@ -117,6 +96,27 @@ Random_ = {
 			end
 			return self.cObj_:random(-1, -1) * (max - min) + min
 		end
+	end,
+	--- Reset the seed to generate random numbers.
+	-- @arg seed An integer number with the new seed.
+	-- @usage value = random:reSeed(1)
+	reSeed = function(self, seed)
+		if seed == nil then seed = os.time() end
+
+		optionalArgument(1, "number", seed)
+		integerArgument(1, seed)
+
+		self.seed = seed
+		self.cObj_:reseed(seed)
+	end,
+	--- Return a random element from a set of values using a discrete uniform distribution.
+	-- @arg mtable A non-named table with a set of values.
+	-- @usage random:sample{2, 3, 4, 6}
+	sample = function(self, mtable)
+		mandatoryArgument(1, "table", mtable)
+
+		local int = self:integer(1, #mtable)
+		return mtable[int]
 	end
 }
 

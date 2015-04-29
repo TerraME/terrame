@@ -127,7 +127,7 @@ metaTableChart_ = {__index = Chart_}
 --     style = {"dots", "steps", "sticks"},
 --     color = {"red", "green", "blue"}
 -- }
-Chart = function(data)
+function Chart(data)
 	local symbolTable = {
 		square = 1,
 		diamond = 2,
