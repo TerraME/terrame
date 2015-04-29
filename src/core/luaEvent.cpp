@@ -488,7 +488,7 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
 
 QByteArray luaEvent::getAll(QDataStream& /*in*/, int /*observerId*/, const QStringList& attribs)
 {
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
+    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recover the reference on the stack lua
     Reference<luaEvent>::getReference(luaL);
     return pop(luaL, attribs);
 }
