@@ -1,4 +1,3 @@
-
 -- @example A model that describes water flowing in and out of a tube.
 
 world = Cell{water = 40}
@@ -8,7 +7,7 @@ Chart{
 	pen = "dash"
 }
 
-t = Timer {
+t = Timer{
     Event{action = function()
     	if world.water > 5 then
 	        world.water = world.water - 5
@@ -25,3 +24,4 @@ t = Timer {
 }
 
 t:execute(40)
+

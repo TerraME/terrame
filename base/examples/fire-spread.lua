@@ -1,5 +1,7 @@
+-- @example A simple fire spread model.
+-- @arg finalTime The final simulation time. The default value is 20.
 
--- @example A fire spread model.
+STEPS = 20
 
 -- automaton states
 NO_DATA     = 0
@@ -12,10 +14,6 @@ RIVER       = 6
 FIREBREAK   = 7
 BURNING     = 8
 BURNED      = 9
-
--- global variables
-STEPS        = 20  -- numero de iteracoes do modelo
-burned_total = 0   -- estatistica
 
 -- Create a legend for Observer Map
 stateLeg = Legend{
@@ -40,7 +38,7 @@ stateLeg = Legend{
 	}
 }
 
--- matriz de probabilidades
+-- probability matrix
 I =	{{0.100, 0.250, 0.261, 0.273, 0.285},
 	 {0.113, 0.253, 0.264, 0.276, 0.288},
 	 {0.116, 0.256, 0.267, 0.279, 0.291},
@@ -49,6 +47,31 @@ I =	{{0.100, 0.250, 0.261, 0.273, 0.285},
 
 config = getConfig()
 
+cell = Cell{
+	execute = function(cell)
+		forEachNeighbor(cell, function(cell, neigh)
+			if neigh.state <= INACTIVE5 then
+				local p = randomObj:number()
+				if p < I[cell.accumulation][neigh.accumulation] then
+					neigh.state = BURNING
+				end
+			end
+		end)
+		cell.state = BURNED
+	end,
+	init = function(cell)
+		if cell.firebreak == 1 then
+			cell.state = FIREBREAK
+		elseif cell.river == 1 then
+			cell.state = RIVER
+		elseif cell.fire == 1 then
+			cell.state = BURNING
+		else
+			cell.state = cell.accumulation
+		end
+	end
+}
+
 cs = CellularSpace{
 	dbType = config.dbType,
 	host = config.host,
@@ -56,7 +79,8 @@ cs = CellularSpace{
 	user = config.user,
 	password = config.password,
 	theme = "cells1000x1000",
-	select = {"firebreak", "river", "accumulation", "fire", "state"}
+	select = {"firebreak", "river", "accumulation", "fire", "state"},
+	instance = cell
 }
 
 --[[
@@ -66,47 +90,25 @@ obs = Observer{
 	attributes = {"state"},
 	legends = {stateLeg}
 }
+--]]
 
 cs:createNeighborhood()
 
--- create and calculate the "state" cell's attribute
-forEachCell(cs, function(cell)
-	if cell.firebreak == 1 then
-		cell.state = FIREBREAK
-	elseif cell.river == 1 then
-		cell.state = RIVER
-	elseif cell.fire == 1 then
-		cell.state = BURNING
-	else
-		cell.state = cell.accumulation
-	end
-end)
+randomObj = Random{}
 
-local seed = os.time()
-seed = seed % 1000000
-
-local randomObj = Random { seed = seed }
+itF = Trajectory{
+	target = cs,
+	select = function(cell) return cell.state == BURNING end
+}
 
 -- model execution
-for t = 1, STEPS do
-	itF = Trajectory{
-		target = cs,
-		select = function(cell) return cell.state == BURNING end
-	}
+t = Timer{
+	Event{action = function()
+		itF:execute()
+		cs:notify()
+		itF:filter()
+	end}
+}
 
-	forEachCell(itF, function(cell)
-		forEachNeighbor(cell, function(cell,neigh)
-			if (neigh ~= cell and neigh.state <= INACTIVE5) then
-				p = randomObj:number()
-				if p < I[cell.accumulation][neigh.accumulation] then
-					neigh.state = BURNING
-				end
-			end
-		end)
-		cell.state = BURNED
-		burned_total = burned_total + 1
-	end)
-	cs:notify()
-end
---]]
+t:execute(STEPS)
 

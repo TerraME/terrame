@@ -1,12 +1,14 @@
 -- @example Implementation of Conway's Game of Life.
 -- It creates the initial distribution of alive cells randomly.
--- @arg PROBABILITY The probability of a Cell to be alive.
+-- @arg PROBABILITY The probability of a Cell to be alive in the
+-- beginning of the simulation. The default value is 0.15.
+-- @arg TURNS The number of simulation steps. The default value is 20.
 
 PROBABILITY = 0.15
+TURNS = 20
 
 ALIVE = 1
 DEAD  = 2
-TURNS = 20
 
 function random(cs)
 	forEachCell (cs, function (cell)
@@ -68,7 +70,7 @@ gameoflife = Automaton{
 		},
 		Flow{
 			function( event, agent, cell )
-				n = countAlive(cell)
+				local n = countAlive(cell)
 				if (n > 3) or (n < 2) then cell.state = DEAD end
 			end
 		}
@@ -83,7 +85,7 @@ gameoflife = Automaton{
 		},
 		Flow{
 			function(event, agent, cell)
-				n = countAlive(cell)
+				local n = countAlive(cell)
 				if n == 3 then cell.state = ALIVE end
 			end
 		}

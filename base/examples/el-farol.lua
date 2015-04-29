@@ -1,15 +1,15 @@
-
--- @example Implementation of el farol model.
+-- @example Implementation of El Farol model.
 -- It is based on Brian Arthur's paper available at
--- http://www.santafe.edu/~wbarthur/Papers/El_Farol.html
--- @arg N Number of agents.
+-- http://www.santafe.edu/~wbarthur/Papers/El_Farol.
+-- @arg N Number of agents. The default value is 100.
 -- @arg K number of strategies an agent have (if it is one the agents will never change their strategies).
--- @arg MAX Maximum number of people in the bar.
--- @arg LAST_TURNS number of turns 
+-- The default value is 3.
+-- @arg MAX Maximum number of people in the bar. The default value is 60.
 
 N = 100
 K = 3
 MAX = 60
+
 LAST_TURNS = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 update_last_turns = function(new_value)

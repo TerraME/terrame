@@ -1,12 +1,11 @@
-
 -- @example A model with 30 moving agents.
 
 EMPTY = 0
 FULL = 1
 
-singleFooAgent = Agent {
+singleFooAgent = Agent{
 	execute = function(self)
-		cell = self:getCell():getNeighborhood():sample()
+		local cell = self:getCell():getNeighborhood():sample()
 		if cell.state == EMPTY then
 			self:getCell().state = EMPTY
 			self:move(cell)
@@ -20,20 +19,20 @@ soc = Society{
 	quantity = 20
 }
 
-cs = CellularSpace {
+cs = CellularSpace{
 	xdim = 30
 }
 
 cs:createNeighborhood()
 
-e = Environment {
+e = Environment{
 	cs,
 	soc
 }
 
 e:createPlacement{max = 1}
 
-t = Timer {
+t = Timer{
 	Event{action = soc},
 	Event{action = cs}
 }

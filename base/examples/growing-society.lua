@@ -1,20 +1,15 @@
-
--- @example A model with static agents that can reproduce.
+-- @example A model with static agents that can reproduce to neighbor cells.
 
 EMPTY = 0
 FULL = 1
 
-singleFooAgent = Agent {
+singleFooAgent = Agent{
 	execute = function(self)
-		cell = self:getCell():getNeighborhood():sample()
+		local cell = self:getCell():getNeighborhood():sample()
 		if cell.state == EMPTY and math.random() < 0.3 then
-			child = self:reproduce()
+			local child = self:reproduce()
 			child:move(cell)
 			cell.state = FULL
-		end
-		cell = self:getCell():getNeighborhood():sample()
-		if cell.state == EMPTY then
-			self:move(cell)
 		end
 	end
 }
@@ -24,13 +19,13 @@ soc = Society{
 	quantity = 10
 }
 
-cs = CellularSpace {
+cs = CellularSpace{
 	xdim = 100
 }
 
 cs:createNeighborhood()
 
-e = Environment {
+e = Environment{
 	cs,
 	soc
 }
@@ -43,7 +38,7 @@ Chart{
 
 soc:notify(0)
 
-t = Timer {
+t = Timer{
 	Event{action = soc},
 	Event{action = cs},
 	Event{action = function(e)

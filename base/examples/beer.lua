@@ -5,6 +5,7 @@
 -- There is a delay in the economic chain because beer takes three time steps to be
 -- delivered from one agent to the next agent in the chain.
 -- @arg NUMBER_OF_AGENTS Number of agents in the chain, excluding the producer and the consumer.
+-- The default value is three.
 
 math.randomseed(os.time())
 
@@ -24,14 +25,14 @@ COUNTER = 1
 chainAgent = Agent{
 	init = function(agent)
 		agent.stock     = 20
-		agent.ordered = 0
+		agent.ordered   = 0
 		agent.costs     = 0
 		agent.received  = 0
 		agent.priority  = COUNTER
 		COUNTER = COUNTER + 1
 	end,
 	update_costs = function(agent)
-		agent.costs = agent.costs + math.floor(agent.stock/2) + agent.ordered
+		agent.costs = agent.costs + math.floor(agent.stock / 2) + agent.ordered
 	end,
 	execute = function(agent)
 		if agent.ordered <= agent.stock then
@@ -66,7 +67,6 @@ chainAgent = Agent{
 	end
 }
 
-
 c = Cell{
 	beer_requested = 0,
 	beer_delivered = 0,
@@ -81,7 +81,7 @@ Chart{
 
 Chart{
 	subject = c,
-	select = {"total_cost"},
+	select = "total_cost",
 	color = "black",
 	style = "sticks"
 }
@@ -89,7 +89,7 @@ Chart{
 consumer = Agent{
 	priority  = 0,
 	received  = 0,
-	ordered = 0,
+	ordered   = 0,
 	costs     = 0,
 	execute = function(agent)
 		local requested = math.random(30)
@@ -107,7 +107,7 @@ consumer = Agent{
 producer = Agent{
 	priority = NUMBER_OF_AGENTS + 1,
 	received  = 0,
-	ordered = 0,
+	ordered   = 0,
 	costs     = 0,
 	execute = function(agent)
 		SendBeer(agent, agent.ordered)
@@ -131,7 +131,7 @@ s:add(producer)
 -- defines the order to execute the agents
 g = Group{
 	target = s,
-    greater = function(a,b) return a.priority < b.priority end
+    greater = function(a, b) return a.priority < b.priority end
 }
  
 -- connects the i'th agent to the i+1'th
@@ -143,7 +143,7 @@ forEachAgent(g, function(ag)
 end)
 
 t = Timer{
-	Event{action = function(ev)
+	Event{action = function()
 		s:execute()
 		s:synchronize()
 		c.total_cost = 0
@@ -152,7 +152,7 @@ t = Timer{
 			c.total_cost = c.total_cost + agent.costs
 		end)
 
-		c:notify(ev:getTime())
+		c:notify()
 	end}
 }
 

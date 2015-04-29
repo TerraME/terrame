@@ -2,9 +2,9 @@
 -- @example Model to study scenarios for the economy of Southeast Para state. 
 -- Andrade et al. 2010 From input-output matrixes to agent-based models: A case study on 
 -- carbon credits in a local economy. BWSS 2010.
--- @arg scenario number of the scenario
+-- @arg scenario Number of the scenario. It can be an integer value between 1 and 5.
+-- The default value is 1.
 
--- (C) 2010 INPE AND UFOP
 M_NAMES    = 17
 M_SALARIES = 18
 M_TAXES = 19
@@ -29,10 +29,10 @@ m_csa[14] = { 0.0,  0.0,   0.0,  0.0,   0.0, 108.6,  69.6,  403.5,  0.0,   0.0, 
 m_csa[15] = { 0.0,  0.0, 526.6,  0.0,   0.0,   0.0, 297.9,  771.8,  0.0,   0.0, 156.8,    2.2,  91.9,  125.8,    6.8,   7.9,   41.0,   0.0,   0.0,   78.5}
 m_csa[16] = { 0.0,  0.0,   0.0,  0.0,   0.0,   0.0,   0.0,    0.0, 0.01,   0.0,   0.01,   0.0,   0.0,    0.0,    0.0,   0.0,    0.0,   0.0,   0.0,  443.3}
 
-m_csa[M_SALARIES] = {169.1,  72.9, 272.0, 2.3, 71.1, 73.3, 41.7, 366.0, 17.0, 24.9, 66.2, 60.5, 94.1, 288.6, 137.7, 54.1}
-m_csa[M_TAXES] = { 12.6,   0.9, 643.2, 3.5, 45.5, 12.7,  9.1, 103.1,  4.1,  4.4, 57.3, 37.2, 98.0, 146.5,  59.1, 38.0}
+m_csa[M_SALARIES]   = {169.1,  72.9, 272.0, 2.3, 71.1, 73.3, 41.7, 366.0, 17.0, 24.9, 66.2, 60.5, 94.1, 288.6, 137.7, 54.1}
+m_csa[M_TAXES]      = { 12.6,   0.9, 643.2, 3.5, 45.5, 12.7,  9.1, 103.1,  4.1,  4.4, 57.3, 37.2, 98.0, 146.5,  59.1, 38.0}
 m_csa[M_EMPLOYMENT] = { 50.7, 138.1,  13.9, 0.4, 12.0, 10.5,  7.5,  51.6,  2.2,  3.2, 11.1,  7.3, 12.6,  24.5,  17.6,  5.0}
-m_csa[M_EMISSION] = {217.8,  75.4,     0,    0,   0,    0,    0,     0,    0,    0,    0,    0,    0,     0,     0,    0}
+m_csa[M_EMISSION]   = {217.8,  75.4,     0,    0,   0,    0,    0,     0,    0,    0,    0,    0,    0,     0,     0,    0}
 
 m_csa[M_NAMES] = {	"Large farms         ", "Small farms            ", "Mining               ", "Intermediation     ",
 					"Local_processing    ", "Local_manufacturing    ", "Local_wholesaler     ", "Local_retailer     ",
@@ -41,7 +41,7 @@ m_csa[M_NAMES] = {	"Large farms         ", "Small farms            ", "Mining   
 
 function f(value) return string.format("%.2f", value) end
 
-scenario = scenario or 1 -- prompt argument
+scenario = 1
 
 family = Agent {
 	sum_vr = 0, 
@@ -85,7 +85,7 @@ government = Agent {
 	execute       = function() end
 }
 
-capital_formation = Agent {
+capital_formation = Agent{
 	sum_vr = 0, 
 	received = 0, 
 	name = "Capital formation",
@@ -110,7 +110,7 @@ capital_formation = Agent {
 }
 
 sum_demand = 0
-basicAgent = Agent {
+basicAgent = Agent{
 	sum_vr = 0, taxes = 0, sum_cost = 0, salary = 0, received = 0, name = "", 
 	family = 0, capital_formation = 0, employment = 0, sum_salary=0, sum_taxes=0, sum_employment=0, sum_r = 0,
 
@@ -120,13 +120,13 @@ basicAgent = Agent {
 	execute = function(ag)
 		if ag.received < 0.001 and ag.received > -0.001 then return end
 
-		vr = ag.received - ag.received * (ag.taxes + ag.salary + ag.costs)
-		cost       = ag.received * ag.costs
-		salary     = ag.received * ag.salary
-		taxes      = ag.received * ag.taxes
-		employment = ag.received * ag.employment
-		emissoes   = ag.received * ag.emissions
-		profit     = ag.received - cost - salary - taxes
+		local vr = ag.received - ag.received * (ag.taxes + ag.salary + ag.costs)
+		local cost       = ag.received * ag.costs
+		local salary     = ag.received * ag.salary
+		local taxes      = ag.received * ag.taxes
+		local employment = ag.received * ag.employment
+		local emissions  = ag.received * ag.emissions
+		local profit     = ag.received - cost - salary - taxes
 
 		ag.sum_salary = ag.sum_salary + salary
 		ag.sum_taxes = ag.sum_taxes + taxes
@@ -135,17 +135,16 @@ basicAgent = Agent {
 
 		ag.sum_vr = ag.sum_vr + profit + salary + taxes + cost
 
-		gastos_family = profit * 0.2818
-		gastos_capital = profit * 0.1114
-		acumulado = profit - gastos_family - gastos_capital
+		local profit_family = profit * 0.2818
+		local profit_capital = profit * 0.1114
 
-		ag:message{receiver = family,          subject = "money", value = salary + gastos_family}
-		ag:message{receiver = capital_formation, subject = "money", value = gastos_capital}
+		ag:message{receiver = family,            subject = "money", value = salary + profit_family}
+		ag:message{receiver = capital_formation, subject = "money", value = profit_capital}
 			
 		ag:message{receiver = government, subject = "money",      value = taxes}
 		ag:message{receiver = government, subject = "employment", value = employment}
 		ag:message{receiver = government, subject = "salary",     value = salary}
-		ag:message{receiver = government, subject = "carbon",     value = emissoes}
+		ag:message{receiver = government, subject = "carbon",     value = emissions}
 		ag:message{receiver = government, subject = "profit",     value = profit}
 --		ag:message{receiver = family,     subject = "money",      value = salary}
 
@@ -155,7 +154,7 @@ basicAgent = Agent {
 		ag.received = 0
 	end,
 	on_money = function(ag, mes)
-		value = mes.value
+		local value = mes.value
 		ag.received = ag.received + value
 		sum_demand = sum_demand + value
 		ag.sum_r = ag.sum_r + value
@@ -184,13 +183,13 @@ read_csa = function(society, matrix)
 			local value = matrix[i][idx]
 			sum = sum + value
 		end
-		a.costs   = sum / vbp
+		a.costs = sum / vbp
 
 		local sn = SocialNetwork()
 		for i = 1, 16 do
 			local value = matrix[i][idx]
 			if value > 0 then
-				sn:add(society:get(i), value/sum)
+				sn:add(society:get(i), value / sum)
 			end
 		end	
 	a:addSocialNetwork(sn)
@@ -198,7 +197,7 @@ read_csa = function(society, matrix)
 end
 
 read_csa_consumers = function(society, matrix)
-	vp = {family, capital_formation}
+	local vp = {family, capital_formation}
 	for idx = 1, getn(vp) do
 		local a = vp[idx]
 
@@ -212,7 +211,7 @@ read_csa_consumers = function(society, matrix)
 		for i = 1, 16 do
 			local value = matrix[i][16 + idx]
 			if value > 0 then
-				sn:add(society:get(i), value/sum)
+				sn:add(society:get(i), value / sum)
 			end
 		end
 		a:addSocialNetwork(sn)
@@ -222,7 +221,7 @@ end
 print_connections = function()
 	for idx = 1, s:getn() do
 		local a = s:get(idx)
-		print("\nIDX: "..a.id.. "  ".. a.name)
+		print("\nIDX: "..a.id.."  ".. a.name)
 	
 		local sum = 0
 		for i = 1, 16 do
@@ -250,7 +249,9 @@ s:add(exogenous_agent)
 
 default_scenario = function()
 	for i = 1, 16 do
-		for j = 19, 20 do exogenous_agent:message{receiver = s:get(i), value = m_csa[i][j], subject = "money"} end
+		for j = 19, 20 do
+			exogenous_agent:message{receiver = s:get(i), value = m_csa[i][j], subject = "money"}
+		end
 	end
 end
 
@@ -302,7 +303,7 @@ execute = function(time)
 	end
 end
 
-scenarios[scenario+1]()
+scenarios[scenario + 1]()
 execute(100)
 
 print("REPORT:")

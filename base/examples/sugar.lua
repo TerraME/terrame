@@ -1,4 +1,3 @@
-
 -- @example A simple implementation of Sugarscape model.
 -- It is based on Epstein and Axtell's book Growing Artificial Societies.
 
@@ -50,3 +49,4 @@ Map{
 	colors     = "Reds"
 }
 -]]
+

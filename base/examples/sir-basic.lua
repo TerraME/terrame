@@ -1,5 +1,5 @@
-
--- @example A simple Susceptible-Infected-Recovered (SIR) model.
+-- @example A simple Susceptible-Infected-Recovered (SIR) model. For a description
+-- of such model visit http://en.wikipedia.org/wiki/Epidemic_model.
 
 world = Cell{
 	susceptible = 9998,
@@ -9,18 +9,18 @@ world = Cell{
 
 Chart{subject = world}
 
-world:notify(0)
+world:notify()
 
 t = Timer{
-	Event{action = function(e)
+	Event{action = function()
 		world.recovered = world.recovered + world.infected / 2
-		new_infected = world.infected * 6 * 0.25
+		local new_infected = world.infected * 6 * 0.25
 		if new_infected > world.susceptible then
 			new_infected = world.susceptible
 		end
 		world.infected = world.infected / 2 + new_infected
 		world.susceptible = 10000 - world.infected - world.recovered
-		world:notify(e)
+		world:notify()
 	end}
 }
 

@@ -1,15 +1,13 @@
--- (C) 2010 INPE AND UFOP
--- @example Implementation of the predator-prey model.
+-- @example Implementation of a predator-prey model.
 
 PASTURE = 0
 SOIL = 1
 
 commonActions = function(ag)
 	ag.energy = ag.energy - 1
-	local cell = ag:getCell()
-	ag:move(ag:getCell():getNeighborhood():sample())
+	ag:walk()
 	if ag.energy >= 50 then
-		ag.energy = ag.energy/2
+		ag.energy = ag.energy / 2
 		ag:reproduce()
 	elseif ag.energy <= 0 then
 		ag:die()

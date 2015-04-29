@@ -1,4 +1,3 @@
-
 -- @example A Susceptible-Infected-Recovered (SIR) model with a public campaign. The
 -- campaign reduces the number of contacts by half whenever there are more than 1000
 -- infected individuous in the population.
@@ -15,12 +14,14 @@ world = Cell{
 
 Chart{subject = world}
 
-world:notify(0)
+world:notify()
 
 t = Timer{
-	Event{action = function(e)
+	Event{action = function()
 		world.recovered = world.recovered + world.infected / duration
 		
+		local new_infected
+
 		if world.infected >= 1000 then
 			new_infected = world.infected * (contacts / 2) * infections * world.susceptible / 10000
 		else
@@ -32,7 +33,7 @@ t = Timer{
 		end
 		world.infected = world.infected - world.infected / duration + new_infected
 		world.susceptible = 10000 - world.infected - world.recovered
-		world:notify(e)
+		world:notify()
 	end}
 }
 

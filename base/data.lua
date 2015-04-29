@@ -2,7 +2,7 @@
 data{
 	file = {"brazilstates.dbf", "brazilstates.shp", "brazilstates.shx"},
 	summary = "A shapefile describing the 27 Brazilian states.",
-	source = "IBGE (www.ibge.br)"
+	source = "IBGE (http://www.ibge.gov.br)"
 }
 
 data{
@@ -11,7 +11,7 @@ data{
 	source = "TerraME team",
 	attributes = {"name", "age", "wealth", "vision", "metabolism", "immune"},
 	types = {"string", "number", "number", "number", "number", "boolean"},
-	description = {"Name of the agents", "Age of the agent", "Amount of sugar the agent startw with", "Distance in cells the agent can see", "Energy consumed by time step", "Whether the agent is immune"}
+	description = {"Name of the agents", "Age of the agent", "Amount of sugar the agent starts with", "Distance in cells the agent can see", "Energy consumed by time step", "Whether the agent is immune"}
 }
 
 data{

@@ -1,12 +1,11 @@
-
 -- @example A simple example with one Agent that moves randomly in space.
 
 EMPTY = 0
 FULL = 1
 
-singleFooAgent = Agent {
+singleFooAgent = Agent{
 	execute = function(self)
-		cell = self:getCell():getNeighborhood():sample()
+		local cell = self:getCell():getNeighborhood():sample()
 		if cell.state == EMPTY then
 			self:getCell().state = EMPTY
 			self:move(cell)
@@ -15,20 +14,20 @@ singleFooAgent = Agent {
 	end
 }
 
-cs = CellularSpace {
+cs = CellularSpace{
 	xdim = 30
 }
 
 cs:createNeighborhood()
 
-e = Environment {
+e = Environment{
 	cs,
 	singleFooAgent
 }
 
 e:createPlacement()
 
-t = Timer {
+t = Timer{
 	Event{action = singleFooAgent},
 	Event{action = cs}
 }

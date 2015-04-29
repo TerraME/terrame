@@ -1,6 +1,5 @@
-
 -- @example A Susceptible-Infected-Recovered (SIR) model. In this model
--- the disease has a duration.
+-- the disease has a duration of 8 weeks.
 
 contacts = 6
 infections = 0.25
@@ -14,18 +13,18 @@ world = Cell{
 
 Chart{subject = world}
 
-world:notify(0)
+world:notify()
 
 t = Timer{
-	Event{action = function(e)
+	Event{action = function()
 		world.recovered = world.recovered + world.infected / duration
-		new_infected = world.infected * contacts * infections * world.susceptible / 10000
+		local new_infected = world.infected * contacts * infections * world.susceptible / 10000
 		if new_infected > world.susceptible then
 			new_infected = world.susceptible
 		end
 		world.infected = world.infected - world.infected / duration + new_infected
 		world.susceptible = 10000 - world.infected - world.recovered
-		world:notify(e)
+		world:notify()
 	end}
 }
 

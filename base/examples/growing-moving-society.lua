@@ -1,13 +1,16 @@
-
 -- @example A model with 100 moving and growing agents.
+-- @arg GROWTH_PROB The probability of an agent to reproduce in an
+-- empty neighbor cell. The default value is 0.3.
+
+GROWTH_PROB = 0.3
 
 EMPTY = 0
 FULL = 1
 
-singleFooAgent = Agent {
+singleFooAgent = Agent{
 	execute = function(self)
 		cell = self:getCell():getNeighborhood():sample()
-		if cell.state == EMPTY and math.random() < 0.3 then
+		if cell.state == EMPTY and math.random() < GROWTH_PROB then
 			child = self:reproduce()
 			child:move(cell)
 			cell.state = FULL
@@ -26,13 +29,13 @@ soc = Society{
 	quantity = 100
 }
 
-cs = CellularSpace {
+cs = CellularSpace{
 	xdim = 100
 }
 
 cs:createNeighborhood()
 
-e = Environment {
+e = Environment{
 	cs,
 	soc
 }
@@ -45,7 +48,7 @@ Chart{
 
 soc:notify(0)
 
-t = Timer {
+t = Timer{
 	Event{action = soc},
 	Event{action = cs},
 	Event{action = function(e)

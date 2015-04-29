@@ -6,7 +6,7 @@ math.randomseed(0)
 COOPERATE     = 1
 NOT_COOPERATE = 2
 
-TFT = Agent { -- TIT-FOR-TAT
+TFT = Agent{ -- TIT-FOR-TAT
 	name = "TFT",
 	prepare_for_championship = function(ag)
 		ag.last = COOPERATE
@@ -19,7 +19,7 @@ TFT = Agent { -- TIT-FOR-TAT
 	end
 }
 
-TF2T = Agent { -- TIT-FOR-TWO-TATS
+TF2T = Agent{ -- TIT-FOR-TWO-TATS
 	name = "TF2T", 
 	prepare_for_championship = function(ag)
 		ag.last = COOPERATE
@@ -41,7 +41,7 @@ TF2T = Agent { -- TIT-FOR-TWO-TATS
 	end
 }
 
-COOP1 = Agent { -- COOPERATE UNTIL THE OPPONENT DEFECTS ONCE
+COOP1 = Agent{ -- COOPERATE UNTIL THE OPPONENT DEFECTS ONCE
 	name = "COOP1",
 	action = COOPERATE,
 	prepare_for_championship = function(ag)
@@ -57,7 +57,7 @@ COOP1 = Agent { -- COOPERATE UNTIL THE OPPONENT DEFECTS ONCE
 	end
 }
 
-NTFT = Agent { -- NOT TIT-FOR-TAT
+NTFT = Agent{ -- NOT TIT-FOR-TAT
 	name = "NTFT",
 	action = NOT_COOPERATE,
 	prepare_for_championship = function(ag)
@@ -72,7 +72,7 @@ NTFT = Agent { -- NOT TIT-FOR-TAT
 	end
 }
 
-AD = Agent { -- ALWAYS DEFECT
+AD = Agent{ -- ALWAYS DEFECT
 	name = "AD",
 	play = function(ag)
 		return NOT_COOPERATE
@@ -81,7 +81,7 @@ AD = Agent { -- ALWAYS DEFECT
 	prepare_for_championship = function() end
 }
 
-AC = Agent { -- ALWAYS COOPERATE
+AC = Agent{ -- ALWAYS COOPERATE
 	name = "AC",
 	play = function(ag)
 		return COOPERATE
@@ -90,7 +90,7 @@ AC = Agent { -- ALWAYS COOPERATE
 	prepare_for_championship = function() end
 }
 
-RANDOM = Agent {
+RANDOM = Agent{
 	name = "RANDOM",
 	play = function(ag)
 		if math.random() > 0.5 then
@@ -103,7 +103,7 @@ RANDOM = Agent {
 	prepare_for_championship = function() end
 }
 
-PAVLOV = Agent { -- WIN-STAY-LOSE-SHIFT
+PAVLOV = Agent{ -- WIN-STAY-LOSE-SHIFT
 	name = "PAVLOV",
 	prepare_for_championship = function(ag) ag.action = COOPERATE end,
 	play = function(ag)
@@ -136,9 +136,9 @@ nplayers = getn(CHAMPIONSHIP)
 
 -- create a matrix with the results
 results = {}
-for i = 1,nplayers do
+for i = 1, nplayers do
 	results[i] = {}
-	for j = 1,nplayers do
+	for j = 1, nplayers do
 		results[i][j] = 0
 	end
 end
@@ -155,7 +155,7 @@ for i = 1, nplayers do
 		payoff1 = 0
 		payoff2 = 0
 
-		for k = 1,TURNS do
+		for k = 1, TURNS do
 			a1 = player1:play()
 			a2 = player2:play()
 
@@ -174,16 +174,16 @@ for i = 1, nplayers do
 end
 
 -- plot the results
-p="\t"
-for j = 1,nplayers do
-	p=p..CHAMPIONSHIP[j].name.."\t"
+p = "\t"
+for j = 1, nplayers do
+	p = p..CHAMPIONSHIP[j].name.."\t"
 end
 print(p.."_SUM_")
 
-for i = 1,nplayers do
+for i = 1, nplayers do
 	p = CHAMPIONSHIP[i].name.."\t"
 	sum = 0
-	for j = 1,nplayers do
+	for j = 1, nplayers do
 		p = p..results[i][j].."\t"
 		sum = sum + results[i][j]
 	end
