@@ -1294,7 +1294,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
 QByteArray luaLocalAgent::getAll(QDataStream& /*in*/, int /*observerId*/, const QStringList& attribs)
 {
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef());	// recupero a referencia na pilha lua
+    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef());	// recover the reference on the stack lua
 	Reference<luaAgent>::getReference(luaL);
     return pop(luaL, attribs);
 }

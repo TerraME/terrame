@@ -956,7 +956,7 @@ QDataStream& luaGlobalAgent::getState(QDataStream& in, Subject *, int observerId
 
 QByteArray luaGlobalAgent::getAll(QDataStream& /*in*/, const QStringList& attribs)
 {
-    //lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef());	// recupero a referencia na pilha lua
+    //lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef());	// recover the reference on the stack lua
 	Reference<luaAgent>::getReference(luaL);
     ObserverDatagramPkg::SubjectAttribute agSubj;
     return pop(luaL, attribs, &agSubj, 0);

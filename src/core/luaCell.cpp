@@ -318,7 +318,7 @@ int luaCell::createObserver(lua_State *)
 		//------------------------
 		QStringList allAttribs, obsAttribs;
 
-		// Runs the Moon stack recovering all the attributes cell
+		// Runs the Lua stack recovering all the attributes cell
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top) != 0)
 		{
@@ -329,7 +329,7 @@ int luaCell::createObserver(lua_State *)
 		}
 
 		//------------------------
-		// runs the moon stack recovering
+		// runs the Lua stack recovering
 		// the attributes cell needs to be observed
 		lua_settop(luaL, top - 1);
 		top = lua_gettop(luaL);
