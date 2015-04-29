@@ -85,7 +85,7 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
 
     plotter->showNormal();
 
-    // prioridade da thread
+    // thread priority
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
     // start(QThread::IdlePriority);
 
@@ -198,7 +198,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                     }
                     else
                     {
-                        // Gráfico: X vs Y
+                        // Graph: X vs Y
                         if (idx != attribList.size() - 1)
                             ord = internalCurves->value(key)->values; // y axis
                     }
@@ -220,7 +220,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
-                    // Gráfico Dinâmico: Tempo vs Y
+                    // Dynamic Graph: Time vs Y
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
@@ -228,7 +228,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                     }
                     else
                     {
-                        // Gráfico: X vs Y
+                        // Graph: X vs Y
                         if (idx != attribList.size() - 1)
                             ord = internalCurves->value(key)->values;
                         // else                     

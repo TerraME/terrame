@@ -120,11 +120,11 @@ public:
     inline int getId() const { return subjectId; }
 
     /**
-     * Adds and retrives an attribute
+     * Adds and retrieves an attribute
      * \param key, the key of an item (key = CellSpaceID + CellID)
      * \param attrName, the name of an item
      * \param value, the value for the item attrName (value = string or double)
-     * \return the retrived or inserted item
+     * \return the retrieved or inserted item
      */
     // template<class T>
     void addItem(const QString &attrName, const double &value = 0.0);
@@ -344,7 +344,7 @@ private:
     // Contains the nested subjects
     QVector<int> *nestedSubjectsID;
     
-    // 50% mais eficiente que o uso dos ID's mas, dá pau ao limpar o BB
+    // 50% mais eficiente que o uso dos ID's mas, dï¿½ pau ao limpar o BB
     // QVector<SubjectAttributes *> nestedSubjectsID;
 
     // Time of last update/acess

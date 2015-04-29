@@ -10,7 +10,7 @@
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    // Estatisticas de desempenho
+    // Performance Statistics
     #include "statistic.h"
 #endif
 
@@ -126,12 +126,12 @@ bool TcpSocketTask::execute()
     t = Statistic::getInstance().startMicroTime() - t;
     Statistic::getInstance().addElapsedTime(name, t);
     
-    // Calcula o tempo de espera para a tarefa começar a executar
+    // Calculates the waiting time for the task start running
     // waitTime = Statistic::getInstance().startMicroTime();
 
     qApp->processEvents();
 
-    // qDebug() << (BagOfTasks::TaskManager::getInstance().isEmpty() ? " bag vazio" : "bag não vazio");
+    // qDebug() << (BagOfTasks::TaskManager::getInstance().isEmpty() ? " bag empty" : "bag not empty");
 
     return true;
 
@@ -252,7 +252,7 @@ bool TcpSocketTask::send(const QByteArray &data)
         out.setVersion(QDataStream::Qt_4_6);
 
         out << (qint64) 0;              // Block size
-        out << (qint64) data.size();    // data sizze
+        out << (qint64) data.size();    // data size
         out << (qint64) pos;
         out << compressed;                // data sent is compressed?
 
@@ -282,7 +282,7 @@ bool TcpSocketTask::send(const QByteArray &data)
 
         out << dataAux;
 
-        // Tempo de rede
+        // Network Time
         out << QDateTime::currentMSecsSinceEpoch();
 
         out.device()->seek(0);
@@ -369,7 +369,7 @@ bool TcpSocketTask::send(const QByteArray &data)
         out.setVersion(QDataStream::Qt_4_6);
 
         out << (qint64) 0;              // Block size
-        out << (qint64) data.size();    // data sizze
+        out << (qint64) data.size();    // data size
         out << (qint64) pos;
         out << compressed;                // data sent is compressed?
         out << dataAux;
@@ -457,10 +457,10 @@ void TcpSocketTask::receive()
         
         qint64 dataSizeReceiver = -1.0, pos = -1.0;
 
-        in >> dataSizeReceiver;         // tamanho total do stream enviado
-        in >> pos;              // indice do dado recebido
-        in >> compressed;      // flag formato do datagrama transmitido
-        in >> auxData;          // dado recebido
+        in >> dataSizeReceiver;         // Total size of the uploaded stream
+        in >> pos;              // index of received data
+        in >> compressed;      // datagram format transmitted flag
+        in >> auxData;          // data received
 
         if (compressed)
             data = qUncompress(auxData);

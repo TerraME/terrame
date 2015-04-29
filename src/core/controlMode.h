@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 /**
  * \brief
  *  Implementation for a ControlMode object. A control mode is a representation for the Agent internal discrete
- *  state.It is necessary to implememt the agent hybrid and situated state machine.
+ *  state.It is necessary to implement the agent hybrid and situated state machine.
  *
  */
 class ControlModeImpl : public Implementation
@@ -69,14 +69,14 @@ private:
 
 /**
  * \brief
- *  ControlMode Handle Tyoe
+ *  ControlMode Handle Type
  *
  */
 typedef Interface<ControlModeImpl> ControlModeInterf;
 
 /**
  * \brief
- *  Vector Process ControlMode Handle Tyoe
+ *  Vector Process ControlMode Handle Type
  *
  */
 typedef CompositeInterface< vectorComposite<Process> > ProcessCompositeInterf;
@@ -84,8 +84,8 @@ typedef CompositeInterface< vectorComposite<Process> > ProcessCompositeInterf;
 /**
  * \brief
  *  Handle for a ControlMode object. A control mode is a representation for the Agent internal discrete
- *  state.It is necessary to implememt the agent hybrid and situated state machine.
- *  A ControlMode is vector composite of Process objects. Each process has several rules wainting to be executed.
+ *  state.It is necessary to implement the agent hybrid and situated state machine.
+ *  A ControlMode is vector composite of Process objects. Each process has several rules waiting to be executed.
  *  The Process objects are executed in the order they have been inserted into the ControlMode composite.
  *
  */
@@ -105,11 +105,11 @@ public:
         ControlModeInterf::pImpl_->setControlModeName( controlModeName );
     }
 
-    /// Executes the Process objets in the order they have been inserted into ControlMode composite.
+    /// Executes the Process objects in the order they have been inserted into ControlMode composite.
     /// \param event is a reference to the Event which linked message has triggered the agent control mode execution.
-    /// \param agent is a ponter to the Agent being executed
+    /// \param agent is a pointer to the Agent being executed
     /// \param cellIndexPair is a pair of CellIndex objects and Cell pointers. The formers are user defined
-    ///  n-dimensional coordenates for the latters.
+    ///  n-dimensional coordinates for the latters.
     bool execute( Event &event, class Agent *agent, pair<CellIndex, Cell*> &cellIndexPair )
     {
 

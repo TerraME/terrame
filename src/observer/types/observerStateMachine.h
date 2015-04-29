@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ class Canvas;
  * \brief Plots the state machine nodes and edges
  * \see ObserverInterf
  * \see QDialog
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file observerStateMachine.h
 */
 class ObserverStateMachine : public QDialog, public ObserverInterf
@@ -196,9 +196,9 @@ private:
     // void connectTreeLayer(bool );
 
     /**
-     * Converts a index from zoom comboBox to a interger
+     * Converts a index from zoom comboBox to a integer
      * \param in boolean, if \a true
-     * \return interger value of index
+     * \return integer value of index
      */
     int convertZoomIndex(bool in);
 
@@ -220,8 +220,8 @@ private:
 
     QHash<QString, Node *> *states;
     QStringList attribList;
-    QStringList obsAttrib;          // lista de chaves em observação
-    QHash<QString, Attributes *> *mapAttributes;  // map de todas as chaves
+    QStringList obsAttrib;          // key list under observation
+    QHash<QString, Attributes *> *mapAttributes;  // map of all keys
     
     QVector<int> zoomVec;
     int positionZoomVec;

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -96,7 +96,7 @@ public:
             lua_pop(L,1);
             count++;
         }
-        if( count ) // se a tabela recebida como parametro nao for vazia
+        if( count ) // if the table received as parameter is not empty
         {
             lua_pushstring(L, "cells");
             lua_gettable(L,-2);
@@ -852,7 +852,7 @@ public:
             luaEvent *ev = (luaEvent*)&event;
             luaCell  *cell = (luaCell*) cellIndexPair.second;
 
-            //puts the excute function of the rule on stack top
+            //puts the execute function of the rule on stack top
             luaRule::getReference(L);
             //lua_pushstring(L, "execute");
             lua_pushnumber(L, 1);
@@ -922,7 +922,7 @@ public:
             luaEvent *ev = (luaEvent*)&event;
             luaCell  *cell = (luaCell*) cellIndexPair.second;
 
-            //puts the excute function of the rule on stack top
+            //puts the execute function of the rule on stack top
             luaRule::getReference(L);
             //lua_pushstring(L, "execute");
             lua_pushnumber(L,1);

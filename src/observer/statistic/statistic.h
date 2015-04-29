@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ public:
     virtual ~Statistic();
 
     /**
-     * Gets the start time in miliseconds
+     * Gets the start time in milliseconds
      * \return double the start time
      */
     inline double startMiliTime()
@@ -67,7 +67,7 @@ public:
     }
 
     /**
-     * Gets the end time in miliseconds
+     * Gets the end time in milliseconds
      * \return double the end time
      */
     inline double endMiliTime()
@@ -130,7 +130,7 @@ public:
     //}
          
     /**
-     * Start the volatile time in miliseconds
+     * Start the volatile time in milliseconds
      */
     inline void startVolatileMiliTime()
     {
@@ -139,7 +139,7 @@ public:
     }
 
     /**
-     * Gets elapsed volatile time in miliseconds
+     * Gets elapsed volatile time in milliseconds
      * \return double the elapsed time
      */
     inline double endVolatileMiliTime()
@@ -212,17 +212,17 @@ public:
 
 
     /**
-     * Define o n˙mero de observadores criados
-     * Esta informaÁ„o È usada para remover as estatÌticas colhidas
-     * para o primiero notify que È usado apenas para a inicializaÁ„o 
-     * dos objetos
+     * Sets the number of observers created
+     * This information is used to remove the collected statistics
+     * This information is used to remove the statistics collected for
+     * the first notify which is used only for booting
      */
     void setObserverCount(int num = 1);
 
     void setDisableRemove(bool on = true);
 
     /**
-     * Captura o tempo intermediario entre o cÛdgio sequencial e paralelo
+     * Capture the intermediate time between sequential and parallel code
      */
     inline void setIntermediateTime() { intermediateTime_ = startMicroTime(); }
     inline double getIntermediateTime() { return intermediateTime_; }

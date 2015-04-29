@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ class LogFileTask;
  * \brief Saves the observed attributes in a log file
  * \see QObject
  * \see ObserverInterf
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file observerGraphic.h
 */
 class ObserverLogFile : public QObject, public ObserverInterf
@@ -164,7 +164,7 @@ protected:
 
 private:
     /**
-     * Initializes the commom object to the constructors
+     * Initializes the common object to the constructors
      */
     void init();
 

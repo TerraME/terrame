@@ -185,7 +185,7 @@ void ObserverMapSuperclass::setupGUI(){
     hLayoutZoom1->addWidget(butZoomOut);
     hLayoutZoom1->addWidget(butHand);
     hLayoutZoom2->addWidget(butZoomWindow);
-    hLayoutZoom2->addWidget(butZoomRestore);    // Exibe os layers de informação
+    hLayoutZoom2->addWidget(butZoomRestore);    // Displays information layers
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 150, 190, 310);
     treeLayers->setHeaderLabel(tr("Layers"));
@@ -254,7 +254,7 @@ void ObserverMapSuperclass::zoomChanged(const QRectF &zoomRect, double width,
     }
     else
     {
-        // FIX: a escala de zoom é sempre a mesma, pq o view não é rescalado
+        // FIX: the zoom scale is always the same, because the view is not rescaled
 
         zoomComboBox->setCurrentIndex(-1);
         //if (zoomComboBox->isEditable())
@@ -266,7 +266,7 @@ void ObserverMapSuperclass::zoomChanged(const QRectF &zoomRect, double width,
         positionZoomVec = zoomVecAux.indexOf(newZoom.toInt());
     }
 
-    // Rescala o view de acordo como o retangulo zoomRect
+    // Rescaling the view according to the rectangle zoomRect
     view->fitInView(zoomRect, Qt::KeepAspectRatio);
 }
 
@@ -297,7 +297,7 @@ int ObserverMapSuperclass::convertZoomIndex(bool in)
 void ObserverMapSuperclass::zoomWindow()
 {
 
-    //// Define o retangulo que envolve todos os objetos da cena
+    //// Sets the rectangle that surrounds all objects in the scene
     //double x = fstNode->pos().x() + fstNode->boundingRect().width() + 4;
     //double y = fstNode->pos().y() - offsetState * 0.25;
     //QSizeF size(lstNode->pos().x() + lstNode->boundingRect().right() - offsetState * 0.66, offsetState);
@@ -311,14 +311,14 @@ void ObserverMapSuperclass::zoomWindow()
     factWidth /= zoomRect.width() - 1;
     factHeight /= zoomRect.height() - 1;
 
-    // Define o maior zoom como sendo 3200%
+    // Sets the most zoom as 3200%
     factWidth = factWidth > 32.0 ? 32.0 : factWidth;
     factHeight = factHeight > 32.0 ? 32.0 : factHeight;
 
     zoomChanged(zoomRect, factWidth, factHeight);
-    //// view->centerOn(zoomRect.center());  // não fica centralizado
-    //// view->centerOn( scene->itemsBoundingRect().center() );  // não fica centralizado
-    // view->centerOn(scene->sceneRect().center()); // fica quase centralizado
+    //// view->centerOn(zoomRect.center());  // is not centered
+    //// view->centerOn( scene->itemsBoundingRect().center() );  // is not centered
+    // view->centerOn(scene->sceneRect().center()); // is almost centralized
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
 
@@ -475,7 +475,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
 
     bool complexMap = false;
 
-    // lista com os atributos que serão observados
+    // list of attributes that will be observed
     //itemList = headers;
     if (attribList.isEmpty())
     {
@@ -536,10 +536,10 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
                 && (attribList.at(i) == QString("objectId_"))))
         {
             obsAttrib.append(attribList.at(i));
-            attrib = new Attributes(attribList.at(i), 2, 2, TObsCell); // TO-DO: Deveria ser a dimensão do espaço
+            attrib = new Attributes(attribList.at(i), 2, 2, TObsCell); // TO-DO: Should be the dimension of space
             attrib->setVisible(true);
 
-            //------- Recupera a legenda do arquivo e cria o objeto attrib
+            //------- Retrieves the lengend from the file and creates the object attrib
             if (legKeys.size() > 0)
             {
                 attrib->setDataType( (TypesOfData) legAttribs.at(type).toInt());
@@ -550,11 +550,11 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());
 
-                //Fonte
+                //Font
                 attrib->setFontFamily(legAttribs.at(font));
                 attrib->setFontSize(legAttribs.at(fontSize).toInt());
 
-                //Converte o código ASCII do símbolo em caracter
+                // Converts the ASCII code of the symbol to character
                 bool ok = false;
                 int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
@@ -621,7 +621,7 @@ const TypesOfObservers ObserverMapSuperclass::getType() const
 
 void ObserverMapSuperclass::connectTreeLayerSlot(bool on)
 {
-    // conecta/disconecta o sinal do treeWidget com o slot
+    // connects/disconnects the treeWidget signal with the slot
     if (! on)
     {
         QWidget::disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),

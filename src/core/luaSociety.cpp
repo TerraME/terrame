@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ of this library and its documentation.
 	#include "statistic.h"
 #endif
 
-///< Gobal variabel: Lua stack used for comunication with C++ modules.
+///< Global variable: Lua stack used for communication with C++ modules.
 extern lua_State * L;
 extern ExecutionModes execModes;
 
@@ -81,9 +81,9 @@ int luaSociety::setID( lua_State *L )
 }
 
 /// Creates several types of observers
-/// parameters: observer type, observeb attributes table, observer type parameters
-// verif. ref (endereco na pilha lua)
-// olhar a classe event
+/// parameters: observer type, observer attributes table, observer type parameters
+// verif. ref (address in the lua stack)
+// see event class
 int luaSociety::createObserver(lua_State * luaL)
 {
 #ifdef DEBUG_OBSERVER
@@ -93,18 +93,17 @@ int luaSociety::createObserver(lua_State * luaL)
 	// retrieve Lua object reference
 	Reference<luaSociety>::getReference(luaL);
 
-	// flags para a definicao do uso de compressao
-	// na transmissao de datagramas e da visibilidade
-	// dos observadores Udp Sender
+    // flags for the definition of the use of compression
+    // in the datagram transmission and visibility
+    // of observers Udp Sender
 	bool compressDatagram = false, obsVisible = true;
 
-	// recupero a tabela de
-	// atributos da celula
+	// retrieve the attribute table of the cell
 	int top = lua_gettop(luaL);
 
-	// Nao modifica em nada a pilha
-	// recupera o enum referente ao tipo
-	// do observer
+    // In no way changes the stack
+    // retrieves the enum for the type
+    // of observer
 	TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, 1);
 
 	if((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
@@ -116,7 +115,7 @@ int luaSociety::createObserver(lua_State * luaL)
 		stackDump(luaL);
 #endif
 		
-		// Transverse the society and retrieve all its attribs and the attribs of the agents
+		// Runs the society and retrieve all its attribs and the attribs of the agents
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top) != 0)
 		{
@@ -159,7 +158,7 @@ int luaSociety::createObserver(lua_State * luaL)
 		qDebug() << "allAgentsAttribs: " << allAgentsAttribs;
 #endif
 
-		// qDebug() << "Recupera a tabela de parametros";
+		// qDebug() << "Retrieves the parameters table";
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top - 1 ) != 0)
 		{
@@ -236,7 +235,7 @@ int luaSociety::createObserver(lua_State * luaL)
 			lua_pop(luaL, 1);
 		}
 
-		// qDebug() << "Recupera a tabela de atributos";
+		// qDebug() << "Retrieves the attributes table";
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top - 2) != 0)
 		{
@@ -260,7 +259,7 @@ int luaSociety::createObserver(lua_State * luaL)
 			}
 			else
 			{
-				// Verifica se o atributo informado realmente existe na celula
+				// Checks if the given attribute really exists in the cell
 				for(int i = 0; i < obsAttribs.size(); i++)
 				{
 					if(!observedAttribs.contains(obsAttribs.at(i)) )
@@ -402,7 +401,7 @@ int luaSociety::createObserver(lua_State * luaL)
 					obsLog->setFileName(cols.at(0));
 				}
 
-				// caso nao seja definido, utiliza o default ";"
+				// if not defined, use the default ";"
 				if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
 				{
 					if (execModes != Quiet )
@@ -507,7 +506,7 @@ int luaSociety::createObserver(lua_State * luaL)
 	else
 	{
 		QStringList allAttribs, obsAttribs;
-		QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
+		QStringList obsParams, obsParamsAtribs; // parameters/attributes of the legend
 		QString key;
 
 		bool getObserverId = false, isLegend = false;
@@ -517,8 +516,8 @@ int luaSociety::createObserver(lua_State * luaL)
 		AgentObserverMap *obsMap = 0;
 		AgentObserverImage *obsImage = 0;
 
-		// Recupera todos os atributos do agente
-		// buscando apenas a classe do agente
+        // Retrieves all agent attributes
+        // seeking only the agent class
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top ) != 0)
 		{
@@ -537,11 +536,11 @@ int luaSociety::createObserver(lua_State * luaL)
 			lua_pop(luaL, 1);
 		}
 
-		// Recupera os parametros
+		// Retrieves the parameters
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top - 1) != 0)
 		{
-			// Recupera o ID do observer map
+			// Retrieves the observer map ID
 			if ( (lua_isnumber(luaL, -1) && (! getObserverId)) )
 			{
 				obsId = luaL_checknumber(luaL, -1);
@@ -549,7 +548,7 @@ int luaSociety::createObserver(lua_State * luaL)
 				isLegend = true;
 			}
 
-			// recupera o espao celular
+			// retrieves the celular space
 			if (lua_istable(luaL, -1))
 			{
 				int paramTop = lua_gettop(luaL);
@@ -643,7 +642,7 @@ int luaSociety::createObserver(lua_State * luaL)
 			obsImage->registry(this);
 		}
 
-		// Recupera os atributos
+		// Retrieves the attributes
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top - 2) != 0)
 		{
@@ -675,8 +674,8 @@ int luaSociety::createObserver(lua_State * luaL)
 
 		if (typeObserver == TObsMap)
 		{
-			// ao definir os valores dos atributos do agente,
-			// redefino o tipo do atributos na super classe ObserverMap
+            // to set the values of the agent attributes,
+        	// redefine the type of attributes in the super class ObserverMap
 			obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsSociety);
 			obsMap->setSubjectAttributes(obsAttribs, getId(), attrClassName);
 		}
@@ -728,7 +727,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/
 			
 		// serverSession->setState(observerId, 1);
 		//if (! QUIET_MODE )
-		// 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
+		// 	qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
 		break;
 
 	case 1:
@@ -736,7 +735,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/
 			
 		// serverSession->setState(observerId, 0);
 		//if (! QUIET_MODE )
-		// 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
+		// 	qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
 		break;
 	}
 	// cleans the stack
@@ -753,7 +752,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/
 
 QByteArray luaSociety::getAll(QDataStream& /*in*/, const QStringList &attribs)
 {
-	// recupero a referencia na pilha lua
+	// recover the reference on the lua stack
 	Reference<luaSociety>::getReference(luaL);
 	ObserverDatagramPkg::SubjectAttribute socSubj;
 	return pop(luaL, attribs, &socSubj, 0);
@@ -859,7 +858,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 					observedAttribs.insert(key, valueTmp);
 				}
 
-				// Recupera a tabela de agentes e delega a cada um sua serializacao
+				// Retrieves agents tables and delegates to each agent its serialization
 				if(key == "agents")
 				{
 					int top = lua_gettop(luaL);

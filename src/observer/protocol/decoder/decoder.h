@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -44,8 +44,8 @@ namespace TerraMEObserver {
 class BlackBoard;
 
 /**
- * \brief Decoder class for comunication protocol
- * \author Antonio José da Cunha Rodrigues
+ * \brief Decoder class for communication protocol
+ * \author Antonio Jose da Cunha Rodrigues
  * \file decoder.h
  */
 class Decoder
@@ -106,7 +106,7 @@ private:
 #endif
 
     /**
-     * Recursion method that start the interpertation of datagram
+     * Recursion method that start the interpretation of datagram
      * \param tokens reference to a list of attributes values splitted
      * \param idx index of a token under decodification
      * \see QStringList
@@ -114,7 +114,7 @@ private:
     bool interpret(QStringList &tokens, int &idx, int parentID = -1);
 
     /* *
-     * Recursion method that start the interpertation of datagram
+     * Recursion method that start the interpretation of datagram
      * \param tokens reference to a list of attributes values splitted
      * \param idx index of a token under decodification
      * \param xs reference to a doubles vector for x axis values
@@ -178,7 +178,7 @@ private:
      */
     inline bool consumeTriple(QStringList &tokens, int &idx, const int &subjID);
 
-	//@RAIAN: Decodifica a vizinhanca
+	//@RAIAN: Decode the neighborhood
 		/// \author Raian Vargas Maretto
     inline void consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID, 
         int &numElem, QMap<QString, QList<double> > &neighborhood);
@@ -188,7 +188,7 @@ private:
 
 		/// \author Raian Vargas Maretto
 		inline void consumeNeighborTriple(QStringList &tokens, int &idx, QList<double> &neighbor);
-	//@RAIAN: FIM
+	//@RAIAN: END
 
 
     QHash<QString, Attributes *> *mapAttributes;

@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -47,13 +47,13 @@ class Decoder;
 class Control;
 
 /**
- * \brief BlackBoard class for otimization of visualization.
+ * \brief BlackBoard class for optimization of visualization.
  *
- * The blackboard works like a cache memory and try to otimize the state
+ * The blackboard works like a cache memory and try to optimize the state
  * of a Subject.
  * References: Buschmann, F., Meunier, R., Rohnert, H., Sommerlad, P., and Stal, M. (1996).
  *    \a Pattern-oriented \a software \a architecture: \a a \a system \a of \a patterns. John Wiley & Sons, Inc.
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file blackBoard.h
 */
 class BlackBoard
@@ -117,7 +117,7 @@ public:
 	
     // bool removeAttribute(int subjectId, const QString & name);
 
-    // // TO-DO: Toninho - talvez remover...
+    // // TO-DO: Antonio - perhaps remove...
     // QHash<QString, Attributes *>& getAttributeHash(int subjectId);
 
     bool decode(const QByteArray &msg);

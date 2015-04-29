@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -259,7 +259,7 @@ protected:
 
 private:
     /**
-     * Initializes the commom object to the constructors
+     * Initializes the common object to the constructors
      */
     void init();
 
@@ -288,7 +288,7 @@ private:
 
     /**
      * Calculates the zoom level from the zoom comboBox
-     * \param in boolean, if \true caluculates the zoom in.
+     * \param in boolean, if \true calculates the zoom in.
      * Otherwise, calculates the zoom out.
      */
     void calculeZoom(bool in);
@@ -314,11 +314,11 @@ private:
 
     bool paused;
     int numTiles;
-    int rows, cols;  /// numero de linha e colunas
+    int rows, cols;  /// number of lines and columns
 
-    QStringList attribList; /// lista de todas as chaves
-    QStringList obsAttrib;  /// lista de chaves em observacao
-    QHash<QString, Attributes*> *mapAttributes;	/// map de todas as chaves
+    QStringList attribList; /// list of all keys
+    QStringList obsAttrib;  /// key list in observation
+    QHash<QString, Attributes*> *mapAttributes;	/// map of all keys
     QTreeWidget *treeLayers;
 
     QScrollArea *scrollArea;

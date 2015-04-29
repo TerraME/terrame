@@ -12,7 +12,7 @@ class legendGUI;
 /**
  * \brief User interface for build legend  
  * \see QDialog
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file .h
  */
 class LegendGUI : public QDialog

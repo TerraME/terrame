@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -127,14 +127,14 @@ public:
 
 /**
  * \brief
- * ControlMode Composite Handle Tyoe
+ * ControlMode Composite Handle Type
  *
  */
 typedef CompositeInterface< vectorComposite<ControlMode> > ControlModeCompositeInterf;
 
 /**
  * \brief
- *  Agent Handle Tyoe
+ *  Agent Handle Type
  *
  */
 typedef Interface<AgentImpl> AgentInterf;
@@ -142,9 +142,9 @@ typedef Interface<AgentImpl> AgentInterf;
 /**
  * \brief
  *
- * TerraME API interface for the Agent (GlobalAgent) or Automaton (LocalAgent) commun behavior.
+ * TerraME API interface for the Agent (GlobalAgent) or Automaton (LocalAgent) common behavior.
  */
-// classe abstrata
+// abstract class
 class Agent : public Model, public AgentInterf, public ControlModeCompositeInterf 
 {
 public:
@@ -158,10 +158,10 @@ public:
     void setActionRegions( ActionRegionCompositeInterf& actRgs  ) { AgentInterf::pImpl_->setActionRegions( actRgs ); }
 
     /// The modeler should override this method in order to implement the Agent's behavior.
-    /// The modeler invoques this method from the Message objects, which are associated to Event objects
-    /// and inserted into Timer objects. When the clock of a Timer object reachs the time of an inner Event occurs,
-    /// it dispathes the Message object associated to this Event, and then the
-    /// Agent's behavior is executed by the simlation engine.
+    /// The modeler invokes this method from the Message objects, which are associated to Event objects
+    /// and inserted into Timer objects. When the clock of a Timer object reaches the time of an inner Event occurs,
+    /// it dispatches the Message object associated to this Event, and then the
+    /// Agent's behavior is executed by the simulation engine.
     /// \return A boolean value:\n
     ///      true  - the execution was successful\n
     ///      false - the execution was interrupted in an abnormal situation. The simulation engine must also be halted.
@@ -177,7 +177,7 @@ public:
     void setLastChangeTime( double time ) { AgentInterf::pImpl_->setLastChangeTime(time); }
 
     /// Reset the latency counter for Agent's internal state to zero.
-    /// \return The period of simulation time elapsed since the laste time the
+    /// \return The period of simulation time elapsed since the last time the
     /// Agent's internal state has changed.
     double getLastChangeTime( void ) { return AgentInterf::pImpl_->getLastChangeTime(); }
 
@@ -190,13 +190,13 @@ public:
     /// Set Agent's action regions status to true or false.
     /// \param status is a boolean value: \n
     /// true  - the Agent's rules will be applied to all cells within the action regions.\n
-    /// false - the Agent is ignoring the actios regions,
+    /// false - the Agent is ignoring the actions regions,
     ///         the modeler rules must also define the iteration over the cellular space.
     void setActionRegionStatus( bool status ) { AgentInterf::pImpl_->setActionRegionStatus(status); }
 
     /// Builds a Agent checking if there are invalid ControlMode objects defined as target into the
     /// Agent internal data structure.
-    /// \return Returns true if all the target ControlMode ara valide, otherwise returns false.
+    /// \return Returns true if all the target ControlMode are valid, otherwise returns false.
     bool build( void ){
 
         ControlModeCompositeInterf::iterator itCtrl = ControlModeCompositeInterf::begin();
@@ -249,7 +249,7 @@ public:
 
 /**
  * \brief
- *  Local Agent Handle Tyoe
+ *  Local Agent Handle Type
  *
  */
 typedef Interface<AgentImpl> LocalAgentInterf;
@@ -310,7 +310,7 @@ public:
 
 /**
  * \brief
- * GlobalAgent Handle Tyoe
+ * GlobalAgent Handle Type
  *
  */
 typedef Interface<AgentImpl> GlobalAgentInterf;
@@ -326,7 +326,7 @@ class GlobalAgent : public Agent
 
 public:
 
-    /// Default contructor
+    /// Default constructor
     GlobalAgent( void ):currentControlMode( NULL ){	}
 
     /// Executes the LocalAgent (Finite Automata) object. If the AgentImpl::actionRegionStatus flag is true, the

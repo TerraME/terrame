@@ -16,7 +16,7 @@ class TcpSocketTask;
 /**
  * \brief Sends the attributes observed via TCP Protocol
  * \see ObserverInterf
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file observerTCPSender.h
  */
 class ObserverTCPSender : public QObject, public ObserverInterf

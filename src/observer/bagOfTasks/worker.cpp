@@ -27,7 +27,7 @@ Worker::~Worker()
 {
     QMutexLocker locker(&mutex);
     abort = true;
-    // waitCondition.wakeAll(); // feito pelo destrutor do TaskManager
+    // waitCondition.wakeAll(); // done by the destructor of TaskManager
     locker.unlock();
     if (! wait(1000))
     {
@@ -74,7 +74,7 @@ void Worker::run()
                   
                     switch (task->getType())
                     {
-                        // TODO: Causa problemas no 'join' do TaskManager?
+                        // TODO: This causes problems in 'join' of TaskManager?
 
                         // Re-inserts the task in the bag because
                         // TaskManager manages the task priority

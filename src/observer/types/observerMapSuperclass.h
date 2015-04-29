@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright  2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ class Decoder;
 class Canvas;
 
 /**
- * \brief Super Class from draw oberser in QGraphicsScene
+ * \brief Super Class from draw observer in QGraphicsScene
  * \see ObserverInterf
  * \see QDialog
  * \author Washington Sena de Franca e Silva
@@ -146,13 +146,13 @@ public slots:
 
     /**
      * Treats the selected scale of zoom in the zoom comboBox
-     * \param scale the selecte zoom scale
+     * \param scale the select zoom scale
      * \see QString
      */
 
     /**
     * Treats the selected scale of zoom in the zoom comboBox
-    * \param scale the selecte zoom scale
+    * \param scale the select zoom scale
     * \see QString
     */
     void zoomActivated(const QString &scale);
@@ -228,8 +228,8 @@ protected:
     QComboBox *zoomComboBox;
 
     QStringList attribList;
-    QStringList obsAttrib;          // lista de chaves em observação
-    QHash<QString, Attributes *> *mapAttributes;  // map de todas as chaves
+    QStringList obsAttrib;          // key list under observation
+    QHash<QString, Attributes *> *mapAttributes;  // map of all keys
 
     QToolButton *butLegend, *butGrid;
     QToolButton *butZoomIn, *butZoomOut;

@@ -16,7 +16,7 @@
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-	// Estatisticas de desempenho
+	// Performance Statistics
 	#include "statistic.h"
 #endif
 
@@ -30,7 +30,7 @@ ReceiverUDP::ReceiverUDP(QObject *parent)
     ui = new ReceiverGUI();
     ui->setWindowTitle(tr("Observer Client :: Receiver - mode UDP"));
 
-    ui->appendMessage("Não esta funcionando corretamente!!!\n\n");
+    ui->appendMessage("Nï¿½o esta funcionando corretamente!!!\n\n");
 
     udpSocket = new QUdpSocket(this);
     blind(DEFAULT_PORT);
@@ -140,11 +140,11 @@ void ReceiverUDP::processPendingDatagrams()
     QDataStream in(&datagram, QIODevice::ReadOnly);
     // in.setVersion(QDataStream::Qt_4_6);
 
-    // Reserva o espaço necessário para o stream transmitido
-    in >> dataSize;         // tamanho total do stream enviado
-    in >> pos;  // indice do dado recebido
-    in >> compressed; // flag formato do datagrama transmitido
-    in >> auxData; // dado recebido
+    // Reserve the space required for the stream transmitted
+    in >> dataSize;         // Total size of the uploaded stream
+    in >> pos;  // The index of received data
+    in >> compressed; // datagram format transmitted flag
+    in >> auxData; // data received
 
 
     // if ((completeData->isEmpty())){
@@ -164,7 +164,7 @@ void ReceiverUDP::processPendingDatagrams()
 
     if ((pos > -1)) // && (data != COMPLETE_STATE.toLatin1()))
     {
-        // redimensiona o objeto e insere lixo
+        // resizes the object and inserts garbage
         // msg.insert( (int)pos, data); 
         completeData->replace( (int)pos, data.size(), data);
 
@@ -274,17 +274,17 @@ void ReceiverUDP::createNotifyObserver(int subjId, int subjType)
 
                 //<< "1" << "0" << "50" << "6" << "-1" << "100" << "0" << "255,255,255;100;100;?;#0,0,255;0;0;?;#" 
                 //<< "Symbol" << "12" << "1" << "1" << "1" << "0" << "50" << "6" << "-1" << "255" << "0" << "0" 
-                //<< "0,0;0;0;?;#255,255,255;100;100;?;#" << "Symbol" << "12" << "«" << "1" << "1"
+                //<< "0,0;0;0;?;#255,255,255;100;100;?;#" << "Symbol" << "12" << "ï¿½" << "1" << "1"
 
 
                 //    << "0" << "1" << "-1" << "105" 
-                //    << "0" << "Symbol" << "50" << "-«" << "5" 
+                //    << "0" << "Symbol" << "50" << "-ï¿½" << "5" 
                 //    << "12" << "2" << "1"
                 //    << "255,255,255;?;?;0;#170,255,255;?;?;0.122991;#0,170,255;?;?;0.598131;#"
                 //        "0,85,255;?;?;3.02804;#0,0,255;?;?;5.45794;#0,0,127;?;?;10;#"
                 //    /////
                 //    << "0" << "1" << "-1" << "255" 
-                //    << "0" << "Symbol" << "50" << "-«" << "5" 
+                //    << "0" << "Symbol" << "50" << "-ï¿½" << "5" 
                 //    << "12" << "2" << "1"
                 //    << "0,0,0;0;0;?;#255,255,255;1;1;?;#"
                 ,

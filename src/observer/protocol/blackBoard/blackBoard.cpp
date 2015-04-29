@@ -20,7 +20,7 @@
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-	// Estatisticas de desempenho
+	// Performance Statistics
 	#include "statistic.h"
 #endif
 
@@ -112,11 +112,11 @@ BlackBoard::BlackBoard()
 
 BlackBoard::~BlackBoard()
 {
-	//@RAIAN: Comentei como solucao provisoria. Ponteiro esta sendo destruido tambem no destrutor do TaskManager,
-	// gerando um segmentation fault nesta linha, quando tenta destruir pela segunda vez. Uma possivel solucao e
-	// sobrecarregar o operador= da classe para que, ao atribuir, copie o objeto, nao apenas o ponteiro. TESTAR ESTA SOLUCAO.
+	//@RAIAN: Commented as temporary solution. Pointer is being destroyed also in the destructor of TaskManager,
+	// gerando um segmentation fault nesta linha quando tenta destruir pela segunda vez. A possible solution is
+	// to overload the 'operator =' of the class so that when assign, copy the object, not just the pointer. TEST THIS SOLUTION.
 //    if (control) { delete control; control = 0; }
-	//RAIAN: FIM
+	//RAIAN: END
 
     foreach(SubjectAttributes *c, cache)
     {
@@ -162,7 +162,7 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, const QStringL
 
     if (! subjAttr->getDirtyBit())
     {
-        // TO-DO: Impede que a mesma imagem seja redesenhada
+        // TO-DO: Prevents the same image to be redesigned
         // state->device()->close();
         return *state;
     }
@@ -175,7 +175,7 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, const QStringL
     state = &subj->getState(*state, subj, observerId, attribs);
     state->device()->close();
 
-    // O estado ja esta disponivel
+    // The state is now available
     state->device()->open(QIODevice::ReadOnly);
 	
     QByteArray msg;
@@ -338,8 +338,8 @@ void BlackBoard::stopControl()
 
 bool BlackBoard::renderingOnlyChanges() const
 {
-    // Desenha as mudanÁas somente se o n∫ de objetos
-    // alterados for inferior a X% do tamanho do cache
+    // Draw the changes only if the 'n∫' of changed objects
+    // is less than X% of the cache size
 
     // return countChangedSubjects < (cache.size() * ( 1 - PERCENT));
     return countChangedSubjects < (cache.size() * percent);

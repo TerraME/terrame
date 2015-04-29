@@ -23,7 +23,7 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
 
     paused = false;
 
-    resize(200, 140);  // feito no final
+    resize(200, 140);  // made at the end
     setWindowTitle("TerraME Observer : Scheduler");
 
     clockPanel = new QWidget(this);
@@ -39,7 +39,7 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
     butExpand->setObjectName(QString::fromUtf8("butExpand"));
     butExpand->setMinimumSize(QSize(20, 20));
     butExpand->setAutoRaise(true);
-    butExpand->setText("»");  // "«" "»"
+    butExpand->setText("ï¿½");  // "ï¿½" "ï¿½" << whats?
 
     QSpacerItem *horizSpacerItem = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -96,7 +96,7 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
 
     QDialog::connect(butExpand, SIGNAL(clicked()), (QDialog *)this, SLOT(on_butExpand_clicked()));
 
-    // prioridade da thread
+    // thread priority
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
     // start(QThread::IdlePriority);
 
@@ -179,17 +179,17 @@ bool ObserverScheduler::draw(QDataStream & state)
                 {
                     item = hashTreeItem.value( key );
 
-                    // recupera o eventTime
+                    // retrieves the eventtime
                     num = tokens.at(j).toDouble();
                     item->setText(Time,  number2String(num));
                     j += 3;
 
-                    // recupera o period
+                    // retrieves the period
                     num = tokens.at(j).toDouble();
                     item->setText(Periodicity,  number2String(num));
                     j += 3;
 
-                    // recupera o priority
+                    // retrieves the priority
                     num = tokens.at(j).toDouble();
                     item->setText(Priority, number2String(num));
 
@@ -234,7 +234,7 @@ void ObserverScheduler::setAttributes(QStringList &attribs)
     QTreeWidgetItem *item = 0;
     for(int i = 0; i < attribList.size(); i++)
     {
-        // o atributo TIMER_KEY é apresentado apenas na GUI do observer
+        // The attribute TIMER_KEY is displayed only in the GUI observer
         if ((attribList.at(i) != TIMER_KEY) && (attribList.at(i).contains("@")) )
         {
             evKey = attribList.at(i);
@@ -249,7 +249,7 @@ void ObserverScheduler::setAttributes(QStringList &attribs)
         }
     }
 
-    // redimensiona o tamanho da coluna
+    // resizes the column size
     pipelineWidget->resizeColumnToContents(Key);
     pipelineWidget->resizeColumnToContents(Time);
     pipelineWidget->resizeColumnToContents(Periodicity);
@@ -269,12 +269,12 @@ void ObserverScheduler::on_butExpand_clicked()
     if (pipelineWidget->isVisible())
     {
         resize(QSize(600, height()));
-        butExpand->setText("«");
+        butExpand->setText("ï¿½"); // << whats?
     }
     else
     {
         resize(QSize(50, height()));
-        butExpand->setText("»");  // "«" "»"
+        butExpand->setText("ï¿½");  // "ï¿½" "ï¿½" << whats?
     }
 }
 
@@ -283,8 +283,8 @@ void ObserverScheduler::setTimer(const QString &timer)
     lblClock->setText(timer);
 }
 
-// Verificar complexidade, pois para cada evento esse 
-// método é chamado 3 vezes.
+// Check complexity, because for each event this
+// method is called 3 times.
 const QString ObserverScheduler::number2String(double number)
 {
     static const QString COMPLEMENT("000000");

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -27,15 +27,15 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 \file scheduler.h
 \brief This file contains definitions about the Scheduler objects. Scheduler objects are
     discrete Event schedulers. The Scheduler implementation is based the version published in
-    [Jain, 1991]. In this kind of implementatiom, the Scheduler works serving Event object in its
-    Event-Message Pair ordered queue. Each Event occurs in a certain peridiocity. Events ara stimulus
+    [Jain, 1991]. In this kind of implementation, the Scheduler works serving Event object in its
+    Event-Message Pair ordered queue. Each Event occurs in a certain periodicity. Events are stimulus
     which must be answered by the simulation engine. For this reason, at each time a Scheduler is executed,
-    it consumes the pair Event-Message at the head of its queue. The simulation clock is set assingned with
-    the consumed Event time attribute value. The Message linked to the Event in the pair is dispached
+    it consumes the pair Event-Message at the head of its queue. The simulation clock is set assigned with
+    the consumed Event time attribute value. The Message linked to the Event in the pair is dispatched
     (or executed). The Event-Message pairs is re-inserted in the queue if the Message execution return true or
-    discarded otherwise. In general Message objects run Agent objects over the CellularSpace objets,
-    carry out the comunication between Agent objects, report model result, synchronze or load or save
-    CellularSpace objects in the geographical database. Event objectss are chronologically ordered in the
+    discarded otherwise. In general Message objects run Agent objects over the CellularSpace objects,
+    carry out the communication between Agent objects, report model result, synchronize or load or save
+    CellularSpace objects in the geographical database. Event objects are chronologically ordered in the
     Scheduler queue. Event objects with the same time instant to occur are ordered by their priority.
     Handles: Scheduler. A Scheduler object stops running when its Event-Message queue is empty or when the
     end simulation time has been reached.
@@ -121,9 +121,9 @@ public:
         return time_;
     }
 
-    // CORRIGIR ADD METHOD: carece de mudanca aqui, pois quando um evento e adicionado a um escalonador
-    // toda a estrutura de simulacao deve ser alterada: a arvore de escalonadores
-    // e a arvore de ambientes (escalas)
+    // TO CORRECT ADD METHOD: needs to change here, for when an event is added to a scheduler
+    // the whole simulation structure should be changed: the tree of schedulers and
+    // environments tree (scales)
 
     /// Adds a new pair Event-Messsage to the Scheduler queue.
     /// \param event is a reference to the Event being added
@@ -136,7 +136,7 @@ public:
     }
 
 
-    /// Executes the Scheduler object. Only one simualtion time step is executed.
+    /// Executes the Scheduler object. Only one simulation time step is executed.
     /// Therefore, just the Message on the head of the Scheduler queue is executed.
     /// \return A reference to Event object which has triggered the Message object
     Event& execute( ) {
@@ -151,7 +151,7 @@ public:
 
             time_ = event.getTime();
 
-            Message msg = *message; // it's importante to keep the message implementation alive
+            Message msg = *message; // it's Important to keep the message implementation alive
             eventMessageQueue.erase(iterator);
 
             if (message->execute( event )) {
@@ -196,7 +196,7 @@ public:
 			}
 
             time_ = event.getTime();
-            Message msg = *message; // it's importante to keep the message implementation alive
+            Message msg = *message; // it's Important to keep the message implementation alive
             eventMessageQueue.erase(iterator);
 
             if (message->execute( event )) {
@@ -215,7 +215,7 @@ public:
     /// Pauses the Scheduler. NOT IMPLEMENTED.
     void pause( ){}
 
-    /// Stops the Sheduler. NOT IMPLEMENTED
+    /// Stops the Scheduler. NOT IMPLEMENTED
     void stop( ) {}
 
     /// Return true if the Event-Message queue is empty.
@@ -253,7 +253,7 @@ public:
     /// \return A copy to the Event object on Event-Message head
     Event getEvent( ) { return SchedulerInterf::pImpl_->getEvent( );}
 
-    /// Executes the Scheduler object. Only one simualtion time step is executed.
+    /// Executes the Scheduler object. Only one simulation time step is executed.
     /// Therefore, just the Message on the head of the Scheduler queue is executed.
     /// \return A reference to Event object which has triggered the Message object
     Event& execute() { return SchedulerInterf::pImpl_->execute(); }
@@ -267,10 +267,10 @@ public:
     /// Pauses the Scheduler. NOT IMPLEMENTED.
     void pause( ){ SchedulerInterf::pImpl_->pause(); }
 
-    /// Stops the Sheduler. NOT IMPLEMENTED
+    /// Stops the Scheduler. NOT IMPLEMENTED
     void stop( ){ SchedulerInterf::pImpl_->stop(); }
 
-    /// Adds a new pair Event-Messsage to the Scheduler queue.
+    /// Adds a new pair Event-Message to the Scheduler queue.
     /// \param event is a reference to the Event being added
     /// \param message is a pointer to message being linked to the Event
     void add( Event& event, Message* message ){ SchedulerInterf::pImpl_->add(event, message); }

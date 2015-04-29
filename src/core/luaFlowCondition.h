@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@ public:
     /// \param event is the Event which has triggered this luaFlowCondition object
     /// \param agent is the Agent been executed
     /// \param cellIndexPair is the Cell - CellIndex pair where the luaJumpCondition is being executed
-    /// \return A booleand value: true if the rule does not throw a exception, otherwise false.
+    /// \return A boolean value: true if the rule does not throw a exception, otherwise false.
     bool execute ( Event &event, Agent *agent, pair<CellIndex,Cell*> &cellIndexPair )
     {
         try {
@@ -67,7 +67,7 @@ public:
             luaEvent *ev = (luaEvent*)&event;
             luaCell  *cell = (luaCell*) cellIndexPair.second;
 
-            //puts the excute function of the rule on stack top
+            //puts the execute function of the rule on stack top
             luaRule::getReference(L);
             //lua_pushstring(L, "execute");
             lua_pushnumber(L,1);

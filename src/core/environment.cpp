@@ -1,5 +1,5 @@
 #include "environment.h"
-/// Transits the Agent JumpCondition object to the tagert ControlMode
+/// Transit the Agent JumpCondition object to the target ControlMode
 /// \param event is the reference to the Event which has triggered this auxiliary function
 /// \param agent is a pointer to the LocalAgent object being executed
 /// \param targetControlMode is a pointer to the jump condition target ControlMode

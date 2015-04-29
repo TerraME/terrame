@@ -57,26 +57,27 @@ int luaTrajectory::createObserver( lua_State *L )
     luaStackToQString(7);
 #endif
 
-    // recupero a referencia da celula
+    // retrieve the reference of the cell
     Reference<luaTrajectory>::getReference(luaL);
 
-    // flags para a definicao do uso de compressao
-    // na transmissao de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // flags for the definition of the use of compression
+    // in the datagram transmission and visibility
+    // of observers Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
-    // recupero a tabela de atributos da celula
+    // retrieve the attribute table of the cell
     int top = lua_gettop(luaL);
 
-    // Nao modifica em nada a pilha recupera o enum referente ao tipo
-    // do observer
+    // In no way changes the stack
+    // retrieves the enum for the type
+    // of observer
     int typeObserver = (int)luaL_checkinteger(luaL, 1);
 
     if ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
     {
         QStringList allAttribs, obsAttribs, obsParams, cols;
 
-        // qDebug() << "Recupera a tabela de parametros";
+        // qDebug() << "Retrieves the parameters table";
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 1) != 0)
         {
@@ -157,7 +158,7 @@ int luaTrajectory::createObserver( lua_State *L )
             lua_pop(luaL, 1);
         }
 
-        // qDebug() << "Recupera a tabela de atributos";
+        // qDebug() << "Retrieves the attribute table";
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 2) != 0)
         {
@@ -188,7 +189,7 @@ int luaTrajectory::createObserver( lua_State *L )
         }
         else
         {
-            // Verifica se o atributo informado realmente existe na celula
+            // Checks if the given attribute really exists in the cell
             for (int i = 0; i < obsAttribs.size(); i++)
             {
                 if (! observedAttribs.contains(obsAttribs.at(i)) )
@@ -346,7 +347,7 @@ int luaTrajectory::createObserver( lua_State *L )
 		        obsLog->setFileName(cols.at(0));
 		    }
 
-            // caso nao seja definido, utiliza o default ";"
+            // if not defined, use the default ";"
 		    if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
 		    {
                 if (execModes != Quiet ){
@@ -455,7 +456,7 @@ int luaTrajectory::createObserver( lua_State *L )
     // Creation of spatial observers
     else
     {
-        QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
+        QStringList obsParams, obsParamsAtribs; // parameters/attributes of the legend
 
         bool getObserverId = false, isLegend = false;
         int obsId = -1;
@@ -463,11 +464,11 @@ int luaTrajectory::createObserver( lua_State *L )
         AgentObserverMap *obsMap = 0;
         AgentObserverImage *obsImage = 0;
 
-        // Recupera os parametros
+        // Retrieves the parameters
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 1) != 0)
         {
-            // Recupera o ID do observer map
+            // Retrieves the observer map ID
             if ( (lua_isnumber(luaL, -1) && (! getObserverId)) )
             {
                 obsId = luaL_checknumber(luaL, -1);
@@ -475,7 +476,7 @@ int luaTrajectory::createObserver( lua_State *L )
                 isLegend = true;
             }
 
-            // recupera o espao celular
+            // retrieves the celular space
             if (lua_istable(luaL, -1))
             {
                 int paramTop = lua_gettop(luaL);
@@ -571,7 +572,7 @@ int luaTrajectory::createObserver( lua_State *L )
 
         QStringList allAttribs, obsAttribs;
 
-        // Recupera os atributos
+        // Retrieves the attributes
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 2) != 0)
         {
@@ -589,8 +590,8 @@ int luaTrajectory::createObserver( lua_State *L )
 
         if (typeObserver == TObsMap)
         {
-            // ao definir os valores dos atributos do agente,
-            // redefino o tipo do atributos na super classe ObserverMap
+            // to set the values of the agent attributes,
+        	// redefine the type of attributes in the super class ObserverMap
             obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsTrajectory);
             obsMap->setSubjectAttributes(obsAttribs, getId());
         }
@@ -636,14 +637,14 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int /*observerI
         content = getAll(in, observedAttribs.keys());
         // serverSession->setState(observerId, 1);
         // if (! QUIET_MODE )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
+        // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
         content = getChanges(in, observedAttribs.keys());
         // serverSession->setState(observerId, 0);
         // if (! QUIET_MODE )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
+        // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
         break;
 	}
     // cleans the stack
@@ -672,14 +673,14 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId,
         content = getAll(in, observerId, attribs);
         // serverSession->setState(observerId, 1);
         // if (execModes == Quiet )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
+        // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
         content = getChanges(in, observerId, attribs);
         // serverSession->setState(observerId, 0);
         // if (execModes == Quiet )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
+        // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
         break;
     }
     // cleans the stack
@@ -695,7 +696,7 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId,
 
 QByteArray luaTrajectory::getAll(QDataStream& /*in*/, const QStringList &attribs)
 {
-    //lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
+    //lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recover the reference on the stack lua
 	Reference<luaTrajectory>::getReference(luaL);
     ObserverDatagramPkg::SubjectAttribute trajSubj;
     return pop(luaL, attribs, &trajSubj, 0);
@@ -716,7 +717,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
 	const QStringList coordList = QStringList() << "x" << "y";
 
-    // recupero a referencia na pilha lua
+    // recover the reference on the stack lua
     //lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
 	Reference<luaTrajectory>::getReference(luaL);
     int position = lua_gettop(luaL);
@@ -803,8 +804,8 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
                     observedAttribs.insert(key, valueTmp);
                 }
 
-                // Recupera a tabela de cells e pega o ID 
-                // de cada celula 
+                // Retrieves the cells table and picks up
+                // the ID of each cell
                 if (key == "cells")
                 {
                     int top = lua_gettop(luaL);
@@ -821,7 +822,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
                         cell = (luaCell*)Luna<luaCell>::check(luaL, -1);
                         lua_pop(luaL, 1);
 
-                        // luaCell->pop(...) requer uma celula no topo da pilha
+                        // luaCell->pop(...) requires a cell at the top of the stack
 
                         // // cellMsg = cell->pop(L, attribs);
                         // int internalCount = currSubj->internalsubject_size();
@@ -847,7 +848,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
                         raw->set_key("trajectory");
                         raw->set_number( trajCount );
 
-                        // Counts the occurence of cell into trajectory
+                        // Counts the occurrence of cell into trajectory
                         trajCount++;
 
                         cellSubj->set_id( cell->getId() );
@@ -968,7 +969,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
 QByteArray luaTrajectory::getAll(QDataStream& /*in*/, int /*observerId*/ , const QStringList &attribs)
 {
-    lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
+    lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recover the reference on the stack lua
     return pop(luaL, attribs);
 }
 
@@ -1066,8 +1067,8 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
                     attrs.append("Lua-Address(TB): " + QByteArray(result));
                     attrs.append(PROTOCOL_SEPARATOR);
 
-                    // Recupera a tabela de cells e delega a cada
-                    // celula sua serializao
+                    // Retrieves agents tables and delegates to
+                    // each agent its serialization
                     // if (key == "cells")
                     {
                         int top = lua_gettop(luaL);
@@ -1084,7 +1085,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
                             cell = (luaCell*)Luna<luaCell>::check(L, -1);
                             lua_pop(luaL, 1);
 
-                            // luaCell->popCell(...) requer uma celula no topo da pilha
+                            // luaCell->popCell(...) requires a cell at the top of the stack
 #ifdef TME_PROTOCOL_BUFFERS
                             QByteArray cellMsg = cell->pop(luaL, coordList, 0, 0);
 #else

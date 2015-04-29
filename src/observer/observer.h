@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 /*!
  * \file observer.h
  * \brief Design Pattern Subject and Observer interfaces
- * \author Antonio José da Cunha Rodrigues 
+ * \author Antonio Jose da Cunha Rodrigues
  * \author Tiago Garcia de Senna Carneiro
 */
 
@@ -133,36 +133,36 @@ bool sortByClassName(const QPair<TerraMEObserver::Subject *, QString> & pair1,
 
 /**
 * Converts the subject type for the name subject in string format
-* \param subject type enumarator
+* \param subject type enumerator
 * \return subject string name
 */
 const char *getSubjectName(int type);
 
 /**
 * Converts the observer type for a string format
-* \param observer type enumarator
+* \param observer type enumerator
 * \return observer string name
 */
 const char *getObserverName(int type);
 
 /**
 * Converts the data type for a string format
-* \param data type enumarator
+* \param data type enumerator
 * \return data string name
 */
 const char *getDataName(int type);
 
 /**
 * Converts the grouping type for a string format
-* \param grouping type enumarator
+* \param grouping type enumerator
 * \return grouping string name
 */
 const char *getGroupingName(int type);
 
 /**
 * Converts the standard deviation type for a string format
-* \param standard deviatio type enumarator
-* \return standard deviatio string name
+* \param standard deviation type enumerator
+* \return standard deviation string name
 */
 const char *getStdDevNames(int type);
 
@@ -200,7 +200,7 @@ public:
 
     /**
     * Sets the simulation time
-    * Used in the observer dinamic graphic
+    * Used in the observer dynamic graphic
     * \param time simulation time
     */ 
     virtual void setModelTime(double time) = 0;
@@ -255,8 +255,8 @@ public:
     // virtual void setAttributes(QStringList &) = 0;
     
     /**
-    * Recupera a lista de atributos em observação
-    * \return QStringList lista de atributtos
+    * Gets the list of attributes under observation
+    * \return QStringList the list of attributes
     */
     virtual QStringList getAttributes() = 0;
 
@@ -268,7 +268,7 @@ public:
 
     /**
      * Closes the observer
-     * Returns status equal 0 when executes correctely. Otherwise, returns status 1.
+     * Returns status equal 0 when executes correctly. Otherwise, returns status 1.
      */
     virtual int close() = 0;
 
@@ -316,7 +316,7 @@ public:
     virtual Observer * getObserverById(int id) = 0;
 
     /**
-     * Trigger the renderization process for every Oberver attached in a Subject
+     * Trigger the renderization process for every Observer attached in a Subject
      * \param time the simulation time
      */
     virtual void notify(double time = 0) = 0;

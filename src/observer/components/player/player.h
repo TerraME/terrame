@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -36,8 +36,8 @@ namespace TerraMEObserver {
 /**
  * \brief Handle simulation object
  * Only when used Environment and/or Timer object
- * \see Enviroment, \see Timer
- * \author Antonio José da Cunha Rodrigues
+ * \see Environment, \see Timer
+ * \author Antonio Jose da Cunha Rodrigues
  * \file player.h
  */
 class Player 
@@ -84,13 +84,13 @@ public:
 protected:
     /**
      * Sets the buttons state in the window
-     * \param active boolean, if \a true actives the buttons. Otherwise, desactives it.
+     * \param active boolean, if \a true active the buttons. Otherwise, disables it.
      */
     void setActiveButtons(bool active);
 
 private:
     /**
-     * Construtor
+     * Constructor
      */
     Player();
 

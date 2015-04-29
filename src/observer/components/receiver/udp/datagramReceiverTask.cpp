@@ -47,11 +47,11 @@ bool DatagramReceiverTask::execute()
             //QDataStream in(part, QIODevice::ReadOnly);
             //in.setVersion(QDataStream::Qt_4_6);
 
-            //// Reserva o espaço necessário para o stream transmitido
-            //in >> dataSize;         // tamanho total do stream enviado
-            //in >> pos;              // indice do dado recebido
-            //in >> compressed; // flag formato do datagrama transmitido
-            //in >> auxData;          // dado recebido
+            //// Reserve the space required for the stream transmitted
+            //in >> dataSize;         // Total size of the uploaded stream
+            //in >> pos;              // The index of received data
+            //in >> compressed; // datagram format transmitted flag
+            //in >> auxData;          // data received
 
             //if ((completeData.isEmpty()))
             //{
@@ -76,7 +76,7 @@ bool DatagramReceiverTask::execute()
             //    qDebug() << "completeData.replace() pos:" << pos << "size:" << data.size() 
             //        << "completeData.size" << completeData.size();
 
-            //    // redimensiona o objeto e insere lixo
+            //    // resizes the object and inserts garbage
             //    // msg.insert( (int)pos, data); 
             //    completeData.replace( (int)pos, data.size(), data);
 

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@ of this library and its documentation.
  */
 class SocietyImpl : public Implementation
 {
-    int latency; ///< simulation time slapsed since the last cell change
+    int latency; ///< simulation time elapsed since the last cell change
     NeighCmpstInterf neighborhoods_; ///< each cell may have many neighborhood graphs
     map<Agent*,ControlMode*> targetControlMode_; ///< each cell keeps track of the current state of each automaton whitin itself
 
@@ -98,7 +98,7 @@ public:
 
     /// Releases the tracked state (control mode) of a agent within the cell
     /// \param agent is a pointer to an agent within the cell
-    /// \return true - if sucess, false - otherwise
+    /// \return true - if success, false - otherwise
     bool detachControlMode(Agent *agent ){
         map<Agent*,ControlMode*>::iterator location = targetControlMode_.find( agent );
         if ( location != targetControlMode_.end())
@@ -110,9 +110,9 @@ public:
             return false;
     }
 
-    /// HANDLE - Returns the curret control model of a Automaton (Local Agent) within the cell
+    /// HANDLE - Returns the current control model of a Automaton (Local Agent) within the cell
     /// \param agent is a pointer to a local agent within the cell
-    /// \return true - if sucess, false - otherwise
+    /// \return true - if success, false - otherwise
     ControlMode* getControlMode( LocalAgent *agent ){
         map<Agent*,ControlMode*>::iterator location = targetControlMode_.find( (Agent*) agent );
         if ( location != targetControlMode_.end())
@@ -164,7 +164,7 @@ public:
 
 /**
  * \brief
- *  Society Handle Tyoe
+ *  Society Handle Type
  *
  */
 typedef Interface<SocietyImpl> SocietyInterf;
@@ -206,12 +206,12 @@ public:
 
     /// HANDLE - Releases the tracked state (control mode) of a agent within the cell
     /// \param agent is a pointer to an agent within the cell
-    /// \return true - if sucess, false - otherwise
+    /// \return true - if success, false - otherwise
     bool detachControlMode( Agent *agent ){ pImpl_->detachControlMode( agent ); return true; }
 
-    /// HANDLE - Returns the curret control model of a Automaton (Local Agent) within the cell
+    /// HANDLE - Returns the current control model of a Automaton (Local Agent) within the cell
     /// \param agent is a pointer to a local agent within the cell
-    /// \return true - if sucess, false - otherwise
+    /// \return true - if success, false - otherwise
     ControlMode* getControlMode( LocalAgent *agent ){ return pImpl_->getControlMode( agent ); }
 
     ///  HANDLE - Sets the Society's internal state latency counter to "value".
@@ -247,8 +247,8 @@ public:
     /// \return A pointer to the past of cell.
     Society * getPast( void ) { return past; }
 
-    /// Updates tha cell past copying the curret value of its attributes.
-    /// \param sizeMem is the size (in bytes) of the cell with al its attributes.
+    /// Updates tha cell past copying the current value of its attributes.
+    /// \param sizeMem is the size (in bytes) of the cell with all its attributes.
     void synchronize( unsigned int sizeMem )
     {
         SocietyImpl* p;

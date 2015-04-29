@@ -25,10 +25,10 @@ public:
     double mininum;
     QString fontFamily;
     int fontSize;
-    QString symbol;  // pode conter um caracter ou um enumerador QwtSymbol::Style
+    QString symbol;  // may contain a character or an enumerator QwtSymbol::Style
     int width;
-    int curveStyle; // refere-se à entrata 'style' da legenda (QwtPlotCurve::CurveStyle)
-    int lineStyle;  // ainda não utilizada na legenda e no ObsChart
+    int curveStyle; // refers to the 'style' of the legend (QwtPlotCurve::CurveStyle)
+    int lineStyle;  // not yet used in the legend and ObsChart
     QString colorBar;
     QString stdColorBar;
 
@@ -58,7 +58,7 @@ public:
             .arg(symbol)
             .arg(width)
             .arg(curveStyle)
-            // .arg(lineStyle) // ainda não utilizado no ObsChart e na legenda
+            // .arg(lineStyle) // not yet used in the legend and ObsChart
             .remove(QChar(' '), Qt::CaseInsensitive)
             // .split("$");
             .split("$", QString::SkipEmptyParts);
@@ -199,10 +199,10 @@ void ReceiverGUI::okButtonClicked()
             leg->mininum = 0.0;
             leg->fontFamily = "Symbol";
             leg->fontSize = 12;
-            leg->symbol = "®";
+            leg->symbol = "ï¿½";
             leg->width = 12;
             leg->curveStyle = 1; // see QwtPlotCurve::CurveStyle
-            leg->lineStyle = 0;  // ainda não utilizado no ObsChart e na legenda
+            leg->lineStyle = 0;  // ainda nï¿½o utilizado no ObsChart e na legenda
             leg->colorBar = "0,0,0;0;0;?;#255,255,255;100;100;?;#";
             leg->stdColorBar = "";
 
@@ -321,7 +321,7 @@ QStringList * ReceiverGUI::getAttributes(int pos) const
 
 QStringList * ReceiverGUI::getLegendKeys(int pos) const
 {
-    // qDebug() << "corrigir para mais de um observer ---------------\n" << keysList[pos];
+    // qDebug() << "fix for more than one observer ---------------\n" << keysList[pos];
 
     if ( (! keysList.isEmpty()) && (pos < keysList.size()) )
         return (QStringList *) &keysList[pos];
@@ -330,7 +330,7 @@ QStringList * ReceiverGUI::getLegendKeys(int pos) const
 
 const QStringList ReceiverGUI::getLegendValue(int obsPos) const
 {
-    // obsPos: posição do observador na lista
+    // obsPos: observer's position in the list
     const QStringList &attrList = attributesList[obsPos];
     QStringList ret;
     for(int i = 0; i < attrList.size(); i++)
@@ -505,7 +505,7 @@ void ReceiverGUI::setupGUI()
     // connect(ui->attribsPlainEdit, SIGNAL(textChanged(const QString &)), this, SLOT(consistButtons(const QString &)));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clearAll()));
 
-    // Mapea os radioBUttons no slot obsTypeSelected
+    // Maps radioBUttons in slot obsTypeSelected
     signalMapper = new QSignalMapper(this);
     signalMapper->setMapping(ui->logFileRadio, TObsLogFile);
     signalMapper->setMapping(ui->tableRadio, TObsTable);
@@ -536,7 +536,7 @@ void ReceiverGUI::setupGUI()
     connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(obsTypeSelected(int)));
 
 
-    // Mapea os radioBUttons no slot dataTypeSelected
+    // Maps radioBUttons in slot dataTypeSelected
     signalMapperAttrType = new QSignalMapper(this);
     signalMapperAttrType->setMapping(ui->boolRadio, TObsBool);
     signalMapperAttrType->setMapping(ui->dateTimeRadio, TObsDateTime);
@@ -551,7 +551,7 @@ void ReceiverGUI::setupGUI()
     connect(signalMapperAttrType, SIGNAL(mapped(int)), this, SLOT(dataTypeSelected(int)));
 
 
-    // Mapea os radioBUttons no slot grpTypeSelected
+    // Maps radioBUttons in slot grpTypeSelected
     signalMapperGrpType = new QSignalMapper(this);
     signalMapperGrpType->setMapping(ui->equalRadio, TObsEqualSteps);
     signalMapperGrpType->setMapping(ui->quantilRadio, TObsQuantil);
@@ -566,7 +566,7 @@ void ReceiverGUI::setupGUI()
     connect(signalMapperGrpType, SIGNAL(mapped(int)), this, SLOT(grpTypeSelected(int)));
 
 
-    // Mapea os radioBUttons no slot stdTypeSelected
+    // Maps radioBUttons in slot stdTypeSelected
     signalMapperStdType = new QSignalMapper(this);
     signalMapperStdType->setMapping(ui->noneRadio, TObsNone);
     signalMapperStdType->setMapping(ui->quarterRadio, TObsQuarter);

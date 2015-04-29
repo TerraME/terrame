@@ -17,7 +17,7 @@
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    // Estatisticas de desempenho
+    // Performance Statistics
     #include "statistic.h"
 #endif
 
@@ -85,7 +85,7 @@ void PainterWidget::plotMap(Attributes * /*attrib*/)
 {
     qWarning("\nPainterWidget::plotMap() deprecated!!\n");
 
-    // TO-DO: Verif., não funciona com o BlackBoard
+    // TO-DO: Verif., does not work with BlackBoard
 
     //if (! attrib)
     //    qFatal("\nErro: PainterWidget::plotMap - Invalid attribute!!\n");

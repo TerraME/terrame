@@ -297,22 +297,22 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
             {
                 attrib = new Attributes(attribs.at(i), 0, 0);
 
-            	//------- Recupera a legenda do arquivo e cria o objeto attrib
+            	//------- Retrieves the lengend from the file and creates the object attrib
             	if (legKeys.size() > 0)
             	{
                 	attrib->setDataType( (TypesOfData) legAttribs.at(type).toInt());
                 	attrib->setGroupMode( (GroupingMode) legAttribs.at(mode ).toInt());
-                	attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// conta com o zero
-                	attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// conta com o zero
+                	attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// count on zero
+                	attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// count on zero
                 	attrib->setStdDeviation( (StdDev) legAttribs.at(stdDeviation ).toInt());
                 	attrib->setMaxValue(legAttribs.at(max).toDouble());
                 	attrib->setMinValue(legAttribs.at(min).toDouble());
 
-                	//Fonte
+                	//Font
                 	attrib->setFontFamily(legAttribs.at(font));
                 	attrib->setFontSize(legAttribs.at(fontSize).toInt());
 
-                	//Converte o código ASCII do símbolo em caracter
+                	// Converts the ASCII code of the symbol to character
                 	bool ok = false;
                 	int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 	if (ok)
@@ -372,8 +372,8 @@ void ObserverStateMachine::addState(QList<QPair<QString, QString> > &allStates)
     Node *nodeSource = 0, *nodeDest = 0;
     offsetState = DIMENSION * 2;
 
-    // Valores para o posicionamento do estados
-    // no centro do objeto view
+    // Values for positioning of the state
+    // in the center of the object view
     int resizeHeight = allStates.size();
     if (allStates.size() % 2 == 0)
         resizeHeight = allStates.size() - 1;
@@ -390,10 +390,10 @@ void ObserverStateMachine::addState(QList<QPair<QString, QString> > &allStates)
         nodeSource = new Node(stateName);
         nodeSource->setPos(40 + offsetState * i, yPos);
 
-        // Adiciona  o nodo na cena
+        // Adds the node in the scene
         scene->addItem(nodeSource);
 
-        // Armazena no hash
+        // Stores in the hash
         states->insert(stateName, nodeSource);
     }
 
@@ -402,7 +402,7 @@ void ObserverStateMachine::addState(QList<QPair<QString, QString> > &allStates)
 
     for(int i = 0; i < allStates.size(); i++)
     {
-        // recupero novamente os estados já criados
+        // recover again states already created
         if (states->contains(allStates.at(i).first))
             nodeSource = states->value(allStates.at(i).first);
 
@@ -453,7 +453,7 @@ void ObserverStateMachine::showLayerLegend()
                 else
                     child->setData(0, Qt::DecorationRole, QString(""));
 
-                // Define as cores dos estados
+                // Sets the colors of the states
                 Node *node = states->value(leg->at(j).getLabel());
                 node->setColor(color);
                 node->update(node->boundingRect());
@@ -484,8 +484,8 @@ void ObserverStateMachine::scaleView(qreal newScale)
 
 void ObserverStateMachine::butZoomIn_Clicked()
 {
-    // currentIndex() < 0 : o indice não existe no comboBox
-    // currentIndex() > 22 : o indice é o zoom de janela
+    // currentIndex() < 0 : the index does not exist in comboBox
+    // currentIndex() > 22 : the index is the window zoom
     // if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
     if ((zoomComboBox->currentIndex() > 0)) // || (zoomComboBox->currentIndex() < 22))
     {
@@ -531,7 +531,7 @@ void ObserverStateMachine::butZoomWindow_Clicked()
 
 void ObserverStateMachine::butZoomRestore_Clicked()
 {
-    if (zoomComboBox->currentText() == WINDOW)		// zoom em Window
+    if (zoomComboBox->currentText() == WINDOW)		// zoom in Window
        return;
 
      zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
@@ -585,7 +585,7 @@ void ObserverStateMachine::zoomWindow()
     // Node *fstNode = items.first();
     // Node *lstNode = items.last();
 
-    //// Define o retangulo que envolve todos os objetos da cena
+    //// Sets the rectangle that surrounds all objects in the scene
     //double x = fstNode->pos().x() + fstNode->boundingRect().width() + 4;
     //double y = fstNode->pos().y() - offsetState * 0.25;
     //QSizeF size(lstNode->pos().x() + lstNode->boundingRect().right() - offsetState * 0.66, offsetState);
@@ -599,14 +599,14 @@ void ObserverStateMachine::zoomWindow()
     factWidth /= zoomRect.width() - 1;
     factHeight /= zoomRect.height() - 1;
 
-    // Define o maior zoom como sendo 3200%
+    // Sets the most zoom as 3200%
     factWidth = factWidth > 32.0 ? 32.0 : factWidth;
     factHeight = factHeight > 32.0 ? 32.0 : factHeight;
 
     zoomChanged(zoomRect, factWidth, factHeight);
-    //// view->centerOn(zoomRect.center());  // não fica centralizado
-    //// view->centerOn( scene->itemsBoundingRect().center() );  // não fica centralizado
-    // view->centerOn(scene->sceneRect().center()); // fica quase centralizado
+    //// view->centerOn(zoomRect.center());  // is not centered
+    //// view->centerOn( scene->itemsBoundingRect().center() );  // is not centered
+    // view->centerOn(scene->sceneRect().center()); // is almost centralized
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
 
@@ -690,7 +690,7 @@ void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, double width,
     }
     else
     {
-        // FIX: a escala de zoom é sempre a mesma, pq o view não é rescalado
+        // FIX: the zoom scale is always the same, because the view is not rescaled
 
         zoomComboBox->setCurrentIndex(-1);
         //if (zoomComboBox->isEditable())
@@ -702,7 +702,7 @@ void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, double width,
         positionZoomVec = zoomVecAux.indexOf(newZoom.toInt());
     }
 
-    // Rescala o view de acordo como o retangulo zoomRect
+    // Rescaling the view according to the rectangle zoomRect
     view->fitInView(zoomRect, Qt::KeepAspectRatio);
 }
 
@@ -738,7 +738,7 @@ void ObserverStateMachine::zoomOut()
 
 //void ObserverStateMachine::connectTreeLayer(bool connect)
 //{
-//    // conecta/disconecta o sinal do treeWidget com o slot
+//    // connects/disconnects the treeWidget signal with the slot
 //    if (! connect)
 //    {
 //        disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )), 
@@ -761,7 +761,7 @@ void ObserverStateMachine::setupGUI()
 
     view = new Canvas(scene, this);
     view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); // 
-    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); não existe na versão 4.3.4
+    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); nï¿½o existe na versï¿½o 4.3.4
     // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); 
     view->setRenderHint(QPainter::Antialiasing);
     // view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -852,7 +852,7 @@ void ObserverStateMachine::setupGUI()
     hLayoutZoom1->addWidget(butZoomOut);
     hLayoutZoom1->addWidget(butHand);
     hLayoutZoom2->addWidget(butZoomWindow);
-    hLayoutZoom2->addWidget(butZoomRestore);    // Exibe os layers de informação
+    hLayoutZoom2->addWidget(butZoomRestore);    // Exibe os layers de informaï¿½ï¿½o
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 150, 190, 310);
     treeLayers->setHeaderLabel(tr("Layers"));

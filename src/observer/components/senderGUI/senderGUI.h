@@ -10,7 +10,7 @@ class senderGUI;
 /**
  * \brief User interface for observer Udp Sender
  * \see QDialog
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Josï¿½ da Cunha Rodrigues
  * \file observerUDPSenderGUI.h
  */
 class SenderGUI : public QDialog
@@ -32,7 +32,7 @@ public:
     
     /**
      * Sets the communication port number
-     * \param port the communictation port
+     * \param port the communication port
      */
     void setPort(int port);
 

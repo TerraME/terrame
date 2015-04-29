@@ -13,7 +13,7 @@ using namespace BagOfTasks;
 #endif
 
 CalculateResult::CalculateResult(const QSize &size, const QList<Attributes *> &attribList, QObject *parent) 
-    : imageSize(size), attribList(attribList), QObject(parent), BagOfTasks::Task(Task::Hight)
+    : imageSize(size), attribList(attribList), QObject(parent), BagOfTasks::Task(Task::High)
 {
     setType(Task::Arbitrary);
 }

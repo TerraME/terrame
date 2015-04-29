@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -75,9 +75,9 @@ public:
 
     /// Executes a RuleStrategy object
     /// \param event is a reference to the Event which linked message has triggered the agent Rule execution.
-    /// \param agent is a ponter to the Agent being executed
+    /// \param agent is a pointer to the Agent being executed
     /// \param cellIndexPair is a pair of CellIndex objects and Cell pointers. The formers are user defined
-    ///  n-dimensional coordenates for the latters.
+    ///  n-dimensional coordinates for the latter.
     int execute( Event &event,class Agent *agent, pair<CellIndex,Cell*> &cellIndexPair) {
         return theStrategy_->execute(event, agent, cellIndexPair);
     }
@@ -120,7 +120,7 @@ public:
           targetControlModeName_(targetName ) { }
 
 
-    /// Transits the JumpCondition object to the tagert ControlMode
+    /// Transits the JumpCondition object to the target ControlMode
     /// \param agent is a pointer to the LocalAgent object being executed
     /// \param cell is a pointer to the Cell object where the Rule objects are being executed
     void jump(LocalAgent* const agent, Cell *cell){

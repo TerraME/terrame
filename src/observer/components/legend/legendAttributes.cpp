@@ -203,7 +203,7 @@ Attributes::Attributes(const QString &name, double width, double height, TypesOf
 	////@RAIAN
  //   neighValues = new QVector<QMap<QString, QList<double> > >;
  //   neighValues = 0;
-	////@RAIAN: FIM
+	////@RAIAN: END
 	
     valueList = QStringList();
     labelList = QStringList();
@@ -256,7 +256,7 @@ Attributes::Attributes(const Attributes &other)
 
 		////@RAIAN
 		//neighValues = other.neighValues;
-		////@RAIAN: FIM
+		////@RAIAN: END
 		
         colorBarVec = colorBarVec;
         stdColorBarVec = stdColorBarVec;
@@ -318,7 +318,7 @@ Attributes & Attributes::operator=(const Attributes &other)
 
 	////@RAIAN
 	//neighValues = other.neighValues;
-	////@RAIAN: FIM
+	////@RAIAN: END
 	
     colorBarVec = colorBarVec;
     stdColorBarVec = stdColorBarVec;
@@ -375,7 +375,7 @@ Attributes::~Attributes()
 	
 	////@RAIAN
 	//delete neighValues;
-	////@RAIAN: FIM
+	////@RAIAN: END
 }
 
 void Attributes::setParentSubjectID(int subjID)
@@ -729,7 +729,7 @@ double Attributes::getWidth()
 {
 	return width;
 }
-//@RAIAN: FIM
+//@RAIAN: END
 
 void Attributes::makeBkp()
 {
@@ -795,7 +795,7 @@ void Attributes::clear()
     boolValues->clear();
 	// //@RAIAN
 	// neighValues->clear();
-	// //@RAIAN: FIM
+	// //@RAIAN: END
 
 #ifdef TME_BLACK_BOARD
     if ((observerBy != TObsDynamicGraphic) && (observerBy != TObsGraphic))
@@ -980,9 +980,9 @@ QString Attributes::toString() const
     str += "numeric: "		+ QString::number(numericValues->size())+ "\n\t\t";
     str += "text: "			+ QString::number(textValues->size())	+ "\n\t\t";
     str += "bool: "			+ QString::number(boolValues->size())	+ "\n\t\t";
-	////@RAIAN: tamanho do vetor de vizinhancas
+	////@RAIAN: neighborhood vector size
 	//str += "neighborhood: " + QString::number(neighValues->size())	+ "\n\t\t";
-	////@RAIAN: FIM
+	////@RAIAN: END
     str += "legend: "		+ QString::number(legend->size())		+ "\n\t\t";
     str += "colorBarVec.size(): "	+ QString::number((int)colorBarVec.size()) + "\n\t\t";
 

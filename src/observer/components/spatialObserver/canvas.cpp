@@ -148,7 +148,7 @@ void Canvas::mouseMoveEvent(QMouseEvent *ev)
             QPointF delta = mapToScene(lastDragPos.toPoint()) - mapToScene(ev->pos());
             centerOn( mapToScene(viewport()->rect().center()) + delta);
 
-            // Causa bug ao arrastar
+            // Cause bug when dragging
             // lastDragPos = ev->pos();
         }
     }
@@ -179,8 +179,8 @@ void Canvas::mouseReleaseEvent(QMouseEvent *ev)
             factWidth = factWidth > 32.0 ? 32.0 : factWidth;
             factHeight = factHeight > 32.0 ? 32.0 : factHeight;
 
-            // emite o sinal informando o tamanho do retangulo de zoom e
-            // os fatores width e height
+            // outputs the signal informing the size of rectangle of zoom and
+            // the width and height factors
             emit zoomChanged(zoomRect, factWidth, factHeight);
 
             // scene()->removeItem(zoomRectItem);

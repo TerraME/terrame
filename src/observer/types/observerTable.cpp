@@ -15,7 +15,7 @@
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-	// Estatisticas de desempenho
+	// Performance Statistics
 	#include "statistic.h"
 #endif
 
@@ -41,9 +41,9 @@ ObserverTable::ObserverTable(Subject *subj, QWidget *parent)
 
     setLayout(vertLayout);
 
-    showNormal(); // tranferido para o metodo run()
+    showNormal(); // transferred to the run () method
 
-    // prioridade da thread
+    // thread priority
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
     // start(QThread::IdlePriority);
 }
@@ -94,7 +94,7 @@ void ObserverTable::setAttributes(QStringList &attribs)
         item = new QTreeWidgetItem(tableWidget);
         item->setText(0, attribs.at(i));
     }
-    // redimensiona o tamanho da coluna
+    // resizes the column size
     tableWidget->resizeColumnToContents(0);
 }
 
@@ -104,7 +104,6 @@ bool ObserverTable::draw(QDataStream & /*state*/)
 {
     bool ret = draw();
 
-    // redimensiona o tamanho da coluna
     tableWidget->resizeColumnToContents(1);
     qApp->processEvents();
     return ret;
@@ -115,11 +114,11 @@ bool ObserverTable::draw(QDataStream & /*state*/)
 bool ObserverTable::draw(QDataStream &state)
 {
 #ifdef TME_STATISTIC
-    // tempo gasto do 'pop()' ate aqui
+    // spent time 'pop ()' up here
     double t = Statistic::getInstance().endVolatileTime();
     Statistic::getInstance().addElapsedTime("comunicacao table", t);
 
-    // numero de bytes transmitidos
+    // number of bytes transmitted
     Statistic::getInstance().addOccurrence("bytes table", in.device()->size());
 #endif
 
@@ -179,7 +178,6 @@ bool ObserverTable::draw(QDataStream &state)
         Statistic::getInstance().addElapsedTime("rendering table", t);
 #endif
 
-    // redimensiona o tamanho da coluna
     tableWidget->resizeColumnToContents(1);
     qApp->processEvents();
     return true;

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@ extern bool step;
 
 /**
  * \brief
- *  Implementation for an Environmet object.
+ *  Implementation for an Environment object.
  *
  */
 class EnvironmentImpl :  public Implementation
@@ -81,7 +81,7 @@ public:
     }
 
     /// Gets the time instant when the Environment should stop to run.
-    /// \return A real number representing the time instant when the Environment should stopo to run
+    /// \return A real number representing the time instant when the Environment should stop to run
     double getFinalTime( ) { return finalTime_; }
 
 };
@@ -186,7 +186,7 @@ public:
     double getFinalTime( ) { return EnvironmentInterf::pImpl_->getFinalTime( ); }
 
 
-    /// Executes the Environment. The internal Scheduler data structrure is put to work.
+    /// Executes the Environment. The internal Scheduler data structure is put to work.
     /// \return Always returns true.
     virtual bool execute( void ) {
         double time = getInitialTime(), timeAux;
@@ -201,7 +201,7 @@ public:
             while (paused)
                 qApp->processEvents();
 
-            // Se nao ha nenhum ambiente interno: execute "meu" relogio
+            // If there is no any internal environment: run "my" clock
             if( TimeEnvironmentPairCompositeInterf::size() == 0 )
             {
                 run = executeScheduler(this);
@@ -261,8 +261,8 @@ public:
         return timeSch;
     }
 
-    /// Puts the Scheduler interator in the begning of the internal composite Scheduler data structure.
-    /// \return A iteratod to the internal composite Scheduler data structure.
+    /// Puts the Scheduler iterator in the begin of the internal composite Scheduler data structure.
+    /// \return A iterator to the internal composite Scheduler data structure.
     TimeSchedulerPairCompositeInterf::iterator firstScheduler( ){
         TimeSchedulerPairCompositeInterf::iterator iterator;
         iterator = TimeSchedulerPairCompositeInterf::pImpl_->begin();
@@ -326,7 +326,7 @@ public:
         GlobalAgentCompositeInterf::add ( agent );
     }
 
-    /// Removes a LocalAgent from the Environment. The LocalAgent is dettached from all CellularSpace
+    /// Removes a LocalAgent from the Environment. The LocalAgent is detached from all CellularSpace
     /// embedded in the Environment.
     /// \param agent is a reference to the LocalAgent being removed from the Environment.
     bool erase ( LocalAgent& agent)
@@ -341,7 +341,7 @@ public:
         return LocalAgentCompositeInterf::erase( agent );
     }
 
-    /// Removes a GlobalAgent from the Environment. The GlobalAgent is dettached from all CellularSpace
+    /// Removes a GlobalAgent from the Environment. The GlobalAgent is detached from all CellularSpace
     /// embedded in the Environment.
     /// \param agent is a reference to the GlobalAgent being removed from the Environment.
     bool erase ( GlobalAgent& agent)
@@ -407,7 +407,7 @@ private:
 
 };
 
-/// Transits the Agent JumpCondition object to the tagert ControlMode
+/// Transits the Agent JumpCondition object to the target ControlMode
 /// \param event is the reference to the Event which has triggered this auxiliary function
 /// \param agent is a pointer to the LocalAgent object being executed
 /// \param targetControlMode is a pointer to the jump condition target ControlMode

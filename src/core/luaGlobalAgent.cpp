@@ -17,7 +17,7 @@
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-	// Estatisticas de desempenho
+	// Performance Statistics
 	#include "statistic.h"
 #endif
 
@@ -118,20 +118,20 @@ int luaGlobalAgent::createObserver( lua_State *L )
     stackDump(luaL);
 #endif
 
-    // recupero a referencia da celula
+    // retrieve the reference of the cell
     Reference<luaAgent>::getReference(luaL);
         
-    // flags para a definicao do uso de compressao
-    // na transmissao de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // flags for the definition of the use of compression
+    // in the datagram transmissiao and visibility
+    // of observers Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
-    // recupero a tabela de
-    // atributos da celula
+    // retrieve the attribute
+    // table of the cell
     int top = lua_gettop(luaL);
 
-    // Nao modifica em nada a pilha recupera o enum referente ao tipo
-    // do observer
+    // Do not change or modify the stack  retrieves the enum for the
+    // type of observer
     int typeObserver = (int)luaL_checkinteger(luaL, 1);
 
     if ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
@@ -148,8 +148,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
         printf("\npos table: %i\nRecuperando todos os atributos:\n", top);
 #endif
 
-        // Pecorre a pilha lua recuperando
-        // todos os atributos
+        // Runs the Lua stack recovering
+        // all attributes
         lua_pushnil(luaL);
         while(lua_next(luaL, top ) != 0)
         {
@@ -173,7 +173,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 break;
             }
 
-            // Recupero os estados do TeState
+            // Recover the states of TeState
             if ( isudatatype(luaL, -1, "TeState") )
             {
                 ControlMode*  lcm = (ControlMode*)Luna<luaControlMode>::check(L, -1);
@@ -181,10 +181,10 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 QString state, transition;
                 state.append(lcm->getControlModeName().c_str());
 
-                // Adiciona o estado do atributo na lista de parametros
+                // Adds the state attribute in the parameter list
                 // allAttribs.push_back( state );
 
-                // Recupero a transicao dos estados
+                // Recover the transition of states
                 ProcessCompositeInterf::iterator prIt;
                 prIt = lcm->ProcessCompositeInterf::begin();
 
@@ -197,23 +197,23 @@ int luaGlobalAgent::createObserver( lua_State *L )
                     jIt++;
                 }
 
-                // cria um par (estado, transicao) e adiciona na lista de estados
+                // creates a pair (state, transition) and adds in the list of states
                 allStates.push_back(qMakePair(state, transition));
             }
             allAttribs.push_back(key);
             lua_pop(luaL, 1);
         }
 
-        // Adiciono o currentState no observador
+        // Add the currentState in observer
         allAttribs.push_back("currentState");
 
         //------------------------
-        // pecorre a pilha lua recuperando
-        // os atributos celula que se quer observar
+        // runs the lua stack recovering the
+        // attributes cell needs to be observed
         lua_settop(luaL, top - 1);
         top = lua_gettop(luaL);
 
-        // Verificacao da sintaxe da tabela Atributos
+        // Verification of Attributes table syntax
         if(! lua_istable(luaL, top) )
         {
             string err_out = string("Attributes table not found. Incorrect sintax");
@@ -233,8 +233,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
         {
             QString key(luaL_checkstring(luaL, -1));
 
-            // Verifica se o atributo informado existe
-            // ou pode ter sido digitado errado
+            // Checks if the given attribute exists
+            // or may have been mistyped
             if (allAttribs.contains(key))
             {
                 obsAttribs.push_back(key);
@@ -274,16 +274,16 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 qWarning("Warning: Parameter table not found. Incorrect sintax.");
         }
 
-        QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
+        QStringList obsParams, obsParamsAtribs; // parameters/attributes of the legend
         QStringList cols;
 
 #ifdef DEBUG_OBSERVER
-        printf("\n*pos table: %i\nRecuperando a tabela Parametros\n", top);
+        printf("\n*pos table: %i\nRecovering table Parameters\n", top);
         stackDump(luaL);
 #endif
 
-        // Recupera a tabela de parametros dos observadores do tipo table e Graphic
-        // caso nao seja um tabela a sintaxe do metodo esta incorreta
+        // Retrieves from parameters table the observers Table and Graphic type
+        // case not be a table the syntax of the method is incorrect
         lua_pushnil(luaL);
         while(lua_next(luaL, top) != 0)
         {
@@ -317,7 +317,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
                     break;
                 }               
 
-            // percorre a tabela de parametros
+            // runs the parameter table
             case LUA_TTABLE:
                 {
                     int legTop = lua_gettop(luaL);
@@ -380,8 +380,9 @@ int luaGlobalAgent::createObserver( lua_State *L )
             lua_pop(luaL, 1);
         }
 
-        // Caso nao seja definido nenhum parametro e o observador nao e 
-        // TextScreen entao lanca um warning
+        // If not set any parameters and the
+        // observer are not TextScreen then
+        // launches a warning
         if ((cols.isEmpty()) && (typeObserver !=  TObsTextScreen))
         {
             if (execModes != Quiet ){
@@ -531,7 +532,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
             return 0;
         }
 
-        /// Define alguns parametros do observador instanciado ---------------------------------------------------
+        /// Defines some parameters of the instantiated observer ---------------------------------------------------
         if (obsLog)
         {
             obsLog->setAttributes(obsAttribs);
@@ -550,7 +551,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 obsLog->setFileName(cols.at(0));
             }
 
-            // caso nao seja definido, utiliza o default ";"
+            // if not defined, use the default ";"
             if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
             {
                 if (execModes != Quiet)
@@ -667,11 +668,11 @@ int luaGlobalAgent::createObserver( lua_State *L )
         AgentObserverMap *obsMap = 0;
         AgentObserverImage *obsImage = 0;
 
-        // Recupera os parametros
+        // Retrieves the parameters
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 1) != 0)
         {
-            // Recupera o ID do observer map
+            // Retrieves the observer map ID
             if ( (lua_isnumber(luaL, -1) && (! getObserverID)) )
             {
                 // obsID = lua_tonumber(luaL, paramTop - 1);
@@ -680,7 +681,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 isLegend = true;
             }
 
-            // recupera o espaco celular
+            // retrieves the cellular space
             if (lua_istable(luaL, -1))
             {
                 int paramTop = lua_gettop(luaL);
@@ -749,8 +750,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
         QStringList allAttribs, obsAttribs;
         QString key;
 
-        // Recupera todos os atributos do agente
-        // buscando apenas a classe do agente
+        // Retrieves all agent attributes just
+        // looking the agent class
         lua_pushnil(luaL);
         while(lua_next(luaL, top ) != 0)
         {
@@ -800,10 +801,10 @@ int luaGlobalAgent::createObserver( lua_State *L )
             obsImage->registry(this, attrClassName);
         }
         
-        // Adiciono o currentState no observador
+        // Add the currentState in observer
         allAttribs.push_back("currentState" + attrClassName);
 
-        // Recupera os atributos
+        //Retrieves the attributes
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 2) != 0)
         {
@@ -833,8 +834,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
         
         if (typeObserver == TObsMap)
         {
-            // ao definir os valores dos atributos do agente,
-            // redefino o tipo do atributos na super classe ObserverMap
+            // to set the values of the agent attributes, redefine the type of
+        	//attributes in the super class ObserverMap
             obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsAgent);
             obsMap->setSubjectAttributes(obsAttribs, getId(), attrClassName);
         }
@@ -897,14 +898,14 @@ QDataStream& luaGlobalAgent::getState(QDataStream& in, Subject *, int /*observer
         content = getAll(in, observedAttribs.keys());
         // serverSession->setState(observerId, 1);
         // if (! QUIET_MODE )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
+        // qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
         content = getChanges(in, observedAttribs.keys());
         // serverSession->setState(observerId, 0);
         // if (! QUIET_MODE )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
+        // qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(0).toLatin1().constData());
         break;
     }
     // cleans the stack
@@ -932,14 +933,14 @@ QDataStream& luaGlobalAgent::getState(QDataStream& in, Subject *, int observerId
         content = getAll(in, observerId, attribs);
         // serverSession->setState(observerId, 1);
         // if (! QUIET_MODE )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
+        // qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
         content = getChanges(in, observerId, attribs);
         // serverSession->setState(observerId, 0);
         // if (! QUIET_MODE )
-        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
+        // qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(0).toLatin1().constData());
         break;
     }
     // cleans the stack
@@ -974,7 +975,7 @@ QByteArray luaGlobalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
     char result[20];
     double num = 0.0;
 
-    // recupero a referencia na pilha lua
+    // recover the reference on the stack lua
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     int position = lua_gettop(luaL);
  
@@ -1034,7 +1035,7 @@ QByteArray luaGlobalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
             cell = (luaCell*)Luna<luaCell>::check(luaL, -1);
             lua_pop(luaL, 1); // lua_pushstring
 
-            //// luaCell->popCell(...) requer uma celula no topo da pilha
+            //// luaCell->popCell(...) requires a cell at the top of the stack
             //int internalCount = currSubj->internalsubject_size();
             //cell->pop(luaL, attribs, 0, currSubj);
 
@@ -1042,7 +1043,7 @@ QByteArray luaGlobalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
             // qDebug() << cell->getId() << idx.first << ", " << idx.second;
 
 
-            // Location in the spacial where we found the agent
+            // Location in the spatial where we found the agent
             valueTmp = QByteArray::number( cell->getId() );
             if (observedAttribs.value("location") != valueTmp)
             {
@@ -1155,7 +1156,7 @@ QByteArray luaGlobalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
                     observedAttribs.insert(key, valueTmp);
                 }
 
-                //// Recupera os valores dos estados
+                //// Retrieves the values of the states
                 //if ( isudatatype(luaL, -1, "TeState"))
                 //{
                 //    ControlMode*  lcm = (ControlMode*)Luna<luaControlMode>::check(L, -1);
@@ -1163,8 +1164,8 @@ QByteArray luaGlobalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
                 //    bool containState = attribs.contains(state);
 
-                //    // Apresenta no observador o nome do atributo e o valor como sendo
-                //    // mesma coisa
+                //    // Presents the observer the attribute name and the value
+                //    // to be the same thing
                 //    if (containState)
                 //    {
                 //        attrCounter++;
@@ -1435,7 +1436,7 @@ QByteArray luaGlobalAgent::pop(lua_State *luaL, const QStringList& attribs)
                     attrs.append("Lua-Address(UD): " + QByteArray(result));
                     attrs.append(PROTOCOL_SEPARATOR);
 
-                    //// Recupera os valores dos estados
+                    //// Retrieves the values of the states
                     //if ( isudatatype(luaL, -1, "TeState"))
                     //{
                     //    ControlMode*  lcm = (ControlMode*)Luna<luaControlMode>::check(L, -1);
@@ -1443,8 +1444,8 @@ QByteArray luaGlobalAgent::pop(lua_State *luaL, const QStringList& attribs)
 
                     //    bool containState = attribs.contains(state);
 
-                    //    // Apresenta no observador o nome do atributo e o valor como sendo
-                    //    // mesma coisa
+                    //    // Presents the observer the attribute name and the value
+                    //	  // to be the same thing
                     //    if (containState)
                     //    {
                     //        attrCounter++;

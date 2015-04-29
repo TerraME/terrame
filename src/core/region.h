@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ class Cell;
 /**
  * \brief
  *  Handle for a Region object. The Region object implements the TerraME Trajectory (or SpatialIterator) in C++
- *  programming language. It is implemented as a multimap composite of indexes into cells. This concept is completly
+ *  programming language. It is implemented as a multimap composite of indexes into cells. This concept is completely
  *  re-implemented in Lua software layer
  *
  */
@@ -53,8 +53,8 @@ class Region_ : public CompositeInterface< multimapComposite<Indx,Cell*> >
 public:
 
     /// Add a cell to the Region
-    /// \param indx is a generic index representing the n-dimensional cell coordenate
-    /// \param cell is a pointer tho the cell being inserted into the Region
+    /// \param indx is a generic index representing the n-dimensional cell coordinate
+    /// \param cell is a pointer to the cell being inserted into the Region
     void add(Indx indx, Cell* cell)
     {
         pair<Indx, Cell*>  indexCellPair;
@@ -65,7 +65,7 @@ public:
         CompositeInterface< multimapComposite<Indx,Cell*> >::add( indexCellPair );
     }
 
-    /// Seraches for a cell into the region
+    /// Searches for a cell into the region
     /// \return a Cell pointer is the cell has been found, otherwise returns a NULL pointer
     Cell* operator [] (Indx indx)
     {

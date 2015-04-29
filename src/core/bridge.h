@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
  \file bridge.h
  \brief The classes Interface and Implementation implements "bridge" design pattern (also known as
         "handle/body idiom").The class Implementation was implemented based on the class teCounted
-        writed by Ricardo Cartaxo and Gilberto Camara and founded in the geographic library TerraLib.
+        written by Ricardo Cartaxo and Gilberto Camara and founded in the geographic library TerraLib.
  \author Tiago Garcia de Senna Carneiro
 */
 
@@ -45,7 +45,7 @@ static int numImplementationDeleted = 0;
 /** 
  * \brief
  *
- * The classes Interface and Implementatio implements "bridge" design pattern (also known as
+ * The classes Interface and Implementation implements "bridge" design pattern (also known as
  * "handle/body idiom").
  */
 template <class T> 
@@ -92,14 +92,14 @@ public:
 
 protected:
 
-    /// referencia para a implementacao
+    /// reference for the implementation
     T *pImpl_;
 };
 
 /**
  * \brief
  *
- * The class Implementation was implemented based on the class teCounted writed by Ricardo Cartaxo
+ * The class Implementation was implemented based on the class teCounted written by Ricardo Cartaxo
  * and Gilberto Camara and founded in the geographic library TerraLib.
  */
 

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -77,13 +77,13 @@ void objectId2coords(const char * objId, int &x, int &y);
 /// UTILIITARY FUNCTION - Deletes a table from a TerraLib geographical database.
 /// \param db is a pointer to a TerraLib database
 /// \param tableName is the name of the table being removed
-/// \return Return true in case of sucess, otherwise it returns false. 
+/// \return Return true in case of success, otherwise it returns false.
 bool deleteLayerTableName(TeDatabase *db, std::string &tableName);
 
 /// UTILIITARY FUNCTION - Creates a new Theme a TerraLib geographical database
-/// \param attTable is a copy to the Theme new attriute table being created
+/// \param attTable is a copy to the Theme new attribute table being created
 /// \param outputTable is the new Theme table name
-/// \param whereClause is a SQL WHERE CLAUSE like string used to querie the TerraLib database
+/// \param whereClause is a SQL WHERE CLAUSE like string used to query the TerraLib database
 /// \param inputThemeName is a string containing the inputTheme that serves as information 
 ///        source for the Theme being created
 /// \param view is a pointer to the TerrraLib TeView object to which Theme will be attached

@@ -99,10 +99,10 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
 
     gpm = new TeGeneralizedProxMatrix<set>(gpmId, table, impl, ws);
 
-    // Eu estava tentando utilizar a API da GPM, mas e dificil construir uma GPM a partir da
-    // do banco, falta na API metodos para carregar os metadados como estrategias de construcao,
-    // estrategia de slicing etc. Desisti e pus metodos parametros por referencia para retornar
-    // as os metadados que eu preciso
+    // I was trying to use the API GPM, but it is difficult to build a GPM from
+    // the database, lack the API methods to load the metadata as building strategies,
+    // slicing strategy etc. I gave up and put methods parameters by reference to return
+    // the metadata that I need
 
     //load  and set the construction strategy parameters
     //TeProxMatrixConstructionStrategy<set>* constStrategy;
@@ -226,19 +226,19 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
 
     gpm = new TeGeneralizedProxMatrix<set>(gpmId, table, impl, ws);
 
-    // Eu estava tentando utilizar a API da GPM, mas e dificil construir uma GPM a partir da
-    // do banco, falta na API metodos para carregar os metadados como estrategias de construcao,
-    // estrategia de slicing etc. Desisti e pus metodos parametros por referencia para retornar
-    // as os metadados que eu preciso
+    // I was trying to use the API GPM, but it is difficult to build a GPM from
+    // the database, lack the API methods to load the metadata as building strategies,
+    // slicing strategy etc. I gave up and put methods parameters by reference to return
+    // the metadata that I need
 
     //load  and set the construction strategy parameters
     //TeProxMatrixConstructionStrategy<set>* constStrategy;
     //int strategy = portal->getInt(9);
-    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy )  //adjacencia
+    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy )  //adjacency
     //{
     //	constStrategy = TeProxMatrixLocalAdjacencyStrategy();
     //}
-    //else if( (TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distancia
+    //else if( (TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distance
     //{
     //	constStrategy = TeProxMatrixLocalDistanceStrategy();
     //}

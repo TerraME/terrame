@@ -5,7 +5,7 @@
 
 /// Class responsible for creating and manipulating references on the Lua Registry table
 // @DANIEL
-// Baseado em Curiously recurring template pattern - class Derived : public Reference<Derived>
+// Based on Curiously recurring template pattern - class Derived : public Reference<Derived>
 template <class T>
 class Reference
 {

@@ -86,7 +86,7 @@ bool ObserverShapefile::draw(QDataStream &state)
         painter->replotMap();
         connectTreeLayerSlot(true);
 
-        // exibe o zoom de janela
+        // displays the window zoom
         zoomWindow();
         buildLegend++;
     }

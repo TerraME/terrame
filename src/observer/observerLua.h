@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -61,21 +61,19 @@ using namespace TerraMEObserver;
  */
  #ifdef TME_PROTOCOL_BUFFERS
 
- // Exemplo
+ // Example
  // QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs, 
 	// ObserverDatagramPkg::SubjectAttribute *currSubj,
 	// ObserverDatagramPkg::SubjectAttribute *parentSubj)
 // {
 	// bool valueChanged = false;
 	
-	// // recupero a referencia na pilha lua
+	// // get the reference in lua stack
 	// lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
 	// int cellSpacePos = lua_gettop(luaL);
 	
-	// // TO-DO: Insere o objeto previamente como um 
-	// // subject interno. Isso evita um bug quando o 
-	// // método popLua retorna mas define o objeto csSubj
-	// // como NULL 
+	// // TO-DO: insert the object previously as an internal subject.
+	// // This prevents an error when the popLua method returns but sets the csSubj object to null
 	// if ((parentSubj) && (! currSubj))
 		// currSubj = parentSubj->add_internalsubject();
 
@@ -84,10 +82,10 @@ using namespace TerraMEObserver;
 	
 	// if (valueChanged)
 	// {
-		// // TO-DO: melhor solução mas não esta funcionando.
-		// // O objeto cellSubj é instanciado no metodo popLua
-		// // mas quanda ela retorna, o csSubj esta com valor NULL
-		// // Somente insere o objeto se ele contém alterações
+		// // TO-DO: best solution but not working.
+		// // The object cellSubj is instantiated in popLua method,
+		// // but when it returns, csSubj is with the null value.
+		// // Only insert the object if it contains changes
 		// // if ((parentSubj) && (! currSubj))
 		// //	currSubj = parentSubj->add_internalsubject();
 

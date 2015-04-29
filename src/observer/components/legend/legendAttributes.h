@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ namespace TerraMEObserver {
  * \brief Item of observer legend.
  * This object represents each item that composes the observer
  * legend for the ObserverMap, ObserverImage and ObserverStateMachine
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file legendAttributes.h
  */
 class ObsLegend
@@ -173,7 +173,7 @@ private:
     QString to;
     QString label;
     int occurrence;
-    unsigned int idxColor; // indice da cor no vetor de cores
+    unsigned int idxColor; // Index of color from the color vector
 
     double fromNumber;
     double toNumber;
@@ -182,14 +182,14 @@ private:
 
 /**
  * \file legendAttributes.h
- * \brief Attributes of observation in the spacial observers
- * \author Antonio José da Cunha Rodrigues
+ * \brief Attributes of observation in the spatial observers
+ * \author Antonio Jose da Cunha Rodrigues
  */
 class Attributes
 {
 public:
     /**
-     * Attriubtes Contructor
+     * Attriubtes Constructor
      * \param name attribute name
      * \param width of cellular space
      * \param height of cellular space
@@ -591,7 +591,7 @@ public:
 
     /**
      * Sets the class name for the attribute
-     * Only for an Agent attribue
+     * Only for an Agent attribute
      * \param name of class
      * \see QString
      */
@@ -611,7 +611,7 @@ public:
     
     /**
      * Gets the direction of the attribute using the
-     * coordanate (x,y) of the map
+     * coordinate (x,y) of the map
      * \param pos position of the attribute in the values list
      * \param x axis position
      * \param y axis position
@@ -625,7 +625,7 @@ public:
     friend QDataStream & operator >>(QDataStream & in, Attributes & attr);
     
     
-	//@RAIAN: Acrescentando e manipulando a vizinhanca
+	//@RAIAN: Adding and manipulating the neighborhood
 		/// Gets neighborhood values
 		/// \author Raian Vargas Maretto
                 QVector<QMap<QString, QList<double> > >* getNeighValues();
@@ -645,7 +645,7 @@ public:
 		/// Gets the width of the line used to draw the Neighborhood
 		/// \author Raian Vargas Maretto
 		double getWidth();
-	//@RAIAN: FIM
+	//@RAIAN: END
 
 
 protected:
@@ -663,24 +663,24 @@ private:
     Attributes & operator=(const Attributes &);
 
     QVector<double> *xs, *ys;
-    QVector<double> *numericValues; //modificar para template
-    QVector<QString> *textValues; //modificar para template
-    QVector<bool> *boolValues; //modificar para template
+    QVector<double> *numericValues; //modify this to template
+    QVector<QString> *textValues; //modify this to template
+    QVector<bool> *boolValues; //modify this to template
     QVector<ObsLegend> *legend;
     std::vector<ColorBar> colorBarVec;
     std::vector<ColorBar> stdColorBarVec;
     QStringList labelList, valueList;
-	//@RAIAN: Vizinhanca
+	//@RAIAN: neighborhood
         QVector<QMap<QString, QList<double> > > *neighValues;
 	double width; 
-	//@RAIAN: FIM
+	//@RAIAN: END
 
     QString attribName;
     double maxValue;
     double minValue;
-    double val2Color;	//conversão do valor observado em cor
+    double val2Color;	//conversion value observed in color
 
-    // indice nos comboBoxes
+    // index in comboBoxes
     int slicesNumber, precNumber;
     int parentSubjectID;
 

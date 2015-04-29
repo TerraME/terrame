@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -34,10 +34,10 @@
 //class Society;
 
 /**
- * \brief Society Concret Subject
+ * \brief Society Concrete Subject
  * \see SubjectInterf,
  * \see Society
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \author Tiago Garcia de Senna Carneiro
  * \file societySubjectInterf.h
  */

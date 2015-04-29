@@ -48,7 +48,7 @@ ObserverImage::ObserverImage (Subject *sub) : ObserverInterf(sub)
     height = 0;
 
     builtLegend = 0;
-    legendWindow = 0;		// ponteiro para LegendWindow
+    legendWindow = 0;		// pointer for LegendWindow
     path = DEFAULT_NAME;
 
     disableSaveImage = false;
@@ -116,9 +116,9 @@ bool ObserverImage::draw(QDataStream &state)
     {
         legendWindow->makeLegend();
 
-        // Verificar porque a primeira invocação do método plotMap
-        // gera a imagem foreground totalmente preta. Assim, é preciso
-        // repetir essa chamada aqui!
+        // Check because the first invocation of plotMap
+        // method generates the solid black foreground image. Thus, it is necessary
+        // to repeat that call here!
         painterWidget->replotMap();
 
         builtLegend++;
@@ -156,7 +156,7 @@ void ObserverImage::setPath(const QString & pth, const QString & prefix)
 void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
     QStringList legAttribs, TypesOfSubjects type)
 {
-    // lista com os atributos que serão observados
+    // list of attributes that will be observed
     //itemList = headers;
     if (attribList.isEmpty())
     {
@@ -225,7 +225,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
             obsAttrib.append(attribList.at(i));
             attrib->setVisible(true);
 
-            //------- Recupera a legenda do arquivo e cria o objeto attrib
+            //------- Retrieves the legend of file and creates the object attrib
             if (! legKeys.isEmpty())
             {
                 dataType = legKeys.indexOf(TYPE);
@@ -260,7 +260,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
                 else
                     attrib->setFontSize(12);
 
-                //Converte o código ASCII do símbolo em caracter
+                // Converts the ASCII code of the symbol to character
                 ok = false;
                 value = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)

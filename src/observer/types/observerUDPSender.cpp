@@ -14,7 +14,7 @@
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-	// Estatisticas de desempenho
+	// Performance Statistics
 	#include "statistic.h"
 #endif
 

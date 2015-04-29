@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@
 /**
  * TME_DRAW_VECTORIAL_AGENTS flag enables the VisualMapping and
  * PainterWidget object draw the Agents and Society as a vector
- * image. So, when the user actives Zoom in or Zoom out that subjects
+ * image. So, when the user active Zoom in or Zoom out that subjects
  * are not changed but it are re-drawn.
  */
 #define TME_DRAW_VECTORIAL_AGENTS
@@ -52,7 +52,7 @@ class SubjectAttributes;
 /**
  * \brief Auxiliary class to draws the cellular space state
  * \see QThread
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file painterThread.h
  */
 class VisualMapping : public QObject, public BagOfTasks::Task

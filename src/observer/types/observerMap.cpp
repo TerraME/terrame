@@ -38,7 +38,7 @@ ObserverMap::ObserverMap(Subject *sub, QWidget *parent)
     setWindowTitle("TerraME :: Map");
     setWindowFlags(Qt::Window);
 
-    legendWindow = NULL;		// ponteiro para LegendWindow, instanciado no metodo setAttributes
+    legendWindow = NULL;		// pointer for LegendWindow, instantiated in method setAttributes
 
     mapAttributes = new QHash<QString, Attributes*>();
 
@@ -53,7 +53,7 @@ ObserverMap::ObserverMap(Subject *sub, QWidget *parent)
     zoomIdx = 11;
     actualZoom = 1.;
     needResizeImage = false;
-    zoomCount = 0;  // indice do 100% no comboBox
+    zoomCount = 0;  // index of 100% in comboBox
     paused = false;
     numTiles = -1;
     
@@ -123,7 +123,7 @@ bool ObserverMap::draw(QDataStream & /*state*/)
 
     treeLayers->blockSignals(true);
 
-    // TODO: Impede que a mesma imagem seja redesenhada
+    // TODO: Prevents the same image to be redesigned
     // if (state.device()->isOpen())
 
     // qDebug() << "BlackBoard::getInstance().canDraw(): " << BlackBoard::getInstance().canDraw();
@@ -135,13 +135,13 @@ bool ObserverMap::draw(QDataStream & /*state*/)
     treeLayers->blockSignals(false);
     qApp->processEvents();
 
-    // cria a legenda e exibe na tela
+    // creates and displays the legend on the screen
     if(/*decoded &&*/ legendWindow && (builtLegend < 1))
     {
         treeLayers->blockSignals(true);
 
-        // TO-DO: Verif. necessidade
-// Interfere nos testes de desempenho
+        // TO-DO: Checking the necessity
+// Interferes with the performance tests
 #ifndef TME_STATISTIC
         // painterWidget->replotMap();
         // painterWidget->calculateResult();
@@ -154,7 +154,7 @@ bool ObserverMap::draw(QDataStream & /*state*/)
         legendWindow->makeLegend();
         showLayerLegend();
 
-        // exibe o zoom de janela
+        // displays the window zoom
         zoomWindow();
         builtLegend++;
         treeLayers->blockSignals(false);
@@ -170,7 +170,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
     
     bool complexMap = false; 
 
-    // lista com os atributos que serão observados
+    // list of attributes that will be observed
     if (attribList.isEmpty())
     {
         attribList << attribs;
@@ -232,7 +232,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
             attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(), 
                 cellularSpaceSize.height(), type);
 
-            // TO-DO: Modificar código
+            // TO-DO: Modificar cï¿½digo
 #ifdef TME_BLACK_BOARD
             //SubjectAttributes *subjAttr = BlackBoard::getInstance()
             //    .addAttribute(getSubjectId(), attribList.at(i)); 
@@ -248,7 +248,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
             obsAttrib.append(attribList.at(i));
             attrib->setVisible(true);
 
-            //------- Recupera a legenda do arquivo e cria o objeto attrib
+            //------- Retrieves the legend file and creates the object attrib
             if (! legKeys.isEmpty())
             {
                 dataType = legKeys.indexOf(TYPE);
@@ -283,7 +283,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                 else
                     attrib->setFontSize(12);
 
-                //Converte o codigo ASCII do símbolo em caracter
+                // Converts the ASCII code of the symbol to character
                 ok = false;
                 value = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
@@ -341,10 +341,10 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
     
     legendWindow->setValues(mapAttributes, obsAttrib);   
 
-    // // TONINHO - 10/09
+    // // ANTONIO - 10/09
     // showLayerLegend();
 
-    // Atualiza o zoom de janela
+    // Updates the window zoom
     zoomWindow();
 
     treeLayers->blockSignals(true);
@@ -383,8 +383,8 @@ void ObserverMap::butLegend_Clicked()
 
 void ObserverMap::butZoomIn_Clicked()
 {
-    // currentIndex() < 0 : o indice não existe no comboBox
-    // currentIndex() > 22 : o indice é o zoom de janela
+    // currentIndex() < 0 : o indice nï¿½o existe no comboBox
+    // currentIndex() > 22 : o indice ï¿½ o zoom de janela
     if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
         zoomComboBox->setCurrentIndex(positionZoomVec);
     calculeZoom(true);
@@ -540,7 +540,7 @@ void ObserverMap::showLayerLegend()
 			}
         }
 
-        // Apresenta o item "does not belong" na arvore de layers
+        // Displays the item "does not belong" in the tree of layers
         //if (attrib->getType() == TObsTrajectory)
         //{
         //    child = new QTreeWidgetItem(parent);
@@ -655,8 +655,8 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
     scrollArea->setUpdatesEnabled(false);
     painterWidget->QWidget::resize(imgSize);
 
-    // reposiciona as barras de rolagem no ponto onde
-    // foi selecionado
+    // repositions the scroll bars at the point where it
+    // was selected
     scrollArea->horizontalScrollBar()->setValue(xScroll);
     scrollArea->verticalScrollBar()->setValue(yScroll);
 
@@ -689,7 +689,7 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
         QVector<int> zoomVecAux(zoomVec);
         zoomVecAux.push_back(newZoom.toInt());
         qStableSort(zoomVecAux.begin(), zoomVecAux.end(), qGreater<int>());
-        positionZoomVec = zoomVecAux.indexOf(newZoom.toInt()); // armazena a posição do novo valor de zoom
+        positionZoomVec = zoomVecAux.indexOf(newZoom.toInt()); // armazena a posiï¿½ï¿½o do novo valor de zoom
     }
 }
 
@@ -730,7 +730,7 @@ void ObserverMap::zoomWindow()
     factWidth /= zoomRect.width() - 1;
     factHeight /= zoomRect.height() - 1;
 
-    // Define o maior zoom como sendo 3200%
+    // Sets the most far as 3200%
     factWidth = factWidth > 32.0 ? 32.0 : factWidth;
     factHeight = factHeight > 32.0 ? 32.0 : factHeight;
 
@@ -853,7 +853,7 @@ ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
                "Please, check the 'colorBar' item in the legend.");
     }
 
-    // Caso a distancia seja informada
+    // If the distance is informed
     if (colorattribList.at(DISTANCE_) != ITEM_NULL)
         b.distance_ = colorattribList.at(DISTANCE_).toDouble();
     else
@@ -870,7 +870,7 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
     valueList.clear();
     labelList.clear();
 
-    int pos = colors.indexOf(COLOR_BAR_SEP); // separa a colorBar e o stdColorBar
+    int pos = colors.indexOf(COLOR_BAR_SEP); // separates colorBar and stdColorBar
     QString colorBarStr = colors.mid(0, pos);
     QStringList colorBarList = colorBarStr.split(COLORS_SEP, QString::SkipEmptyParts);
 
@@ -881,7 +881,7 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
         qDebug() << "colorList: " << colorBarList;
 #endif
 
-    // cria a colorBar1 do atributo
+    // create colorBar1 of attribute
     for (int i = 0; i < colorBarList.size(); i++)
     {
         ColorBar b = makeColorBarStruct(i, colorBarList.at(i), value, label);
@@ -890,8 +890,8 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
         labelList.append( (label.isEmpty() || label.isNull()) ? QString::number(i) : label );
     }
 
-    // Desvio padrão -----------------------
-    // cria a stdColorBar do atributo
+    // Standard deviation -----------------------
+    // create stdColorBar of attribute
     if (pos > -1)
     {
         value.clear();
@@ -1039,7 +1039,7 @@ void ObserverMap::setupGUI()
     hLayoutZoom2->addWidget(butZoomWindow);
     hLayoutZoom2->addWidget(butZoomRestore);
 
-    // Exibe os layers de informação
+    // Displays information layers
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 150, 190, 310);
     treeLayers->setHeaderLabel(tr("Layers"));

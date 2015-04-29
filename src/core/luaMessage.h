@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -37,12 +37,12 @@ of this library and its documentation.
 *  Implementation for a luaMessage object.
 *
 */
-extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
+extern lua_State * L; ///< Global variable: Lua stack used for communication with C++ modules.
 
 class luaMessage : public Message, public Reference<luaMessage>
 {
     TypesOfSubjects subjectType;
-    string msg;  ///< The message indentifier
+    string msg;  ///< The message identifier
 
 public:
     ///< Data structure issued by Luna<T>

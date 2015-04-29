@@ -131,7 +131,7 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
             QGraphicsPathItem *item = shapes->at(ids.at(pos));
             const QString & v = values->at(pos);
 
-            // Corrige o bug gerando quando um agente morre
+            // Fixes the bug when an agent dies
             if (attrib->getXsValue()->isEmpty() || attrib->getXsValue()->size() == pos)
                 break;
 

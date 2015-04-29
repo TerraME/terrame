@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -46,32 +46,20 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 using namespace std;
 
 typedef string ModelID;
-// Classe Model: define a interface para um modelo de uso geral. Suas interfaces
-// derivadas poderiam modelar regioes, relogios, as leis que governam o comportamento 
-// de algum fenomeno ou as interferencias resultantes da cooperacao de comunidades de 
-// individuos autonomos sobre um determinado ambiente.
-// Para implementar essas subclasses o programador poderia lancar mao de modelos 
-// matematicos como, por exemplo, celulas que modelam regioes, geralmente, retangulares 
-// ou hexagonais do espaco. Algoritmos de simulacao, como simulacao de Monte Carlo ou 
-// simulacao dirigia por evetos poderiam ser utilizados para se implementar os relogios. 
-// Maquinas de estados como os automatos de estados finitos ou automantos de pilha 
-// poderiam ser utilizadas para modelar o comportamento de fenomenos. Tecnicas de 
-// inteligencia artificial como agentes poderiam ser utilizadas para simular 
-// individuos autonomos. 
-//
 
 /**
- * \brief Define a interface para um modelo de uso geral.
+ * \brief Defines the interface for a general purpose model.
  *
- * Suas interfaces derivadas poderiam modelar regioes, relogios, as leis que governam o comportamento
- * de algum fenomeno ou as interferencias resultantes da cooperacao de comunidades de individuos
- * autonomos sobre um determinado ambiente.
- * Para implementar essas subclasses o programador poderia lancar mao de modelos matematicos como, por exemplo,
- * celulas que modelam regioes, geralmente, retangulares ou hexagonais do espaco. Algoritmos de simulacao,
- * como simulacao de Monte Carlo ou simulacao dirigia por evetos poderiam ser utilizados para se implementar
- * os relogios. Maquinas de estados como os automatos de estados finitos ou automantos de pilha poderiam ser
- * utilizadas para modelar o comportamento de fenomenos. Tecnicas de inteligencia artificial como agentes
- * poderiam ser utilizadas para simular individuos autonomos.
+ * Model Class: defines the interface for a general purpose model. Its derivatives interfaces
+ * could model regions, watches, the laws that govern the behavior of some phenomenon
+ * or interference resulting from the co-operation of autonomous individuals communities
+ * over a given environment.
+ * To implement these subclasses the programmer could make use of mathematical models,
+ * for example, cells that model regions generally rectangular or hexagonal of space.
+ * Simulation algorithms such as Monte Carlo simulation or simulation ran for events
+ * could be used to implement the clocks. State machines like finite state automata or
+ * stack of automaton could be utilized to model the behavior of phenomena. Artificial
+ * intelligence techniques as agents could be utilized to simulate autonomous individuals.
  */
 
 /**
@@ -82,12 +70,12 @@ typedef string ModelID;
 class ModelImpl : public Implementation
 {
 public:
-    /// Construtor
+    /// Constructor
     ModelImpl( void ) {
         char strNum[255];
         //	char ch;
 
-        //#if defined ( TME_WIN32 ) //Raian: Comentei pq o ostringstream estava gerando um segmentation fault no linux
+        //#if defined ( TME_WIN32 ) //Raian: I commented because ostringstream was generating a segmentation fault on Linux
         sprintf (strNum, "%ld", modelCounter);
         //#else
         //ostringstream strStream( (string &) strNum );
@@ -122,6 +110,6 @@ public:
 
 #endif
 
-// Metodo abstrato que deve ser implementado pelo programador para definir 
-// os objetos que compilem uma instancia de um modelo.
+// Abstract method to be implemented by the programmer to
+// define the objects to compile an instance of a model.
 ///virtual void modelDefinition( )  = 0;

@@ -17,7 +17,7 @@ public:
      *
      * @value Arbitrary its execution is arbitrarily and
      * may be executed again.
-     * @value Continuous it is executated continuously
+     * @value Continuous it is executed continuously
      *
      */
     enum Type {Once, Arbitrary, Continuous};
@@ -27,15 +27,15 @@ public:
      * a task will execute
      *
      * @value Highest scheduled as the first one task that will be executed
-     * @value Hight  scheduled more often than Normal
+     * @value High  scheduled more often than Normal
      * @value Normal scheduled with default priority
      */
 
     /*
      * @value Low scheduled less often than Lowest
-     * @value Lowest scheuled with minimum priority, may be not executed (Needs improvements)
+     * @value Lowest scheduled with minimum priority, may be not executed (Needs improvements)
      */
-    enum Priority {Normal, Hight, Highest}; //, Low, Lowest};
+    enum Priority {Normal, High, Highest}; //, Low, Lowest};
 
     Task(Priority priority = Normal);
     virtual ~Task();

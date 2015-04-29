@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -75,7 +75,7 @@ static char* TME_PATH;
 * a TerraME Cell.
 */
 
-lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
+lua_State * L; ///< Global variable: Lua stack used for communication with C++ modules.
 
 ExecutionModes execModes;
 

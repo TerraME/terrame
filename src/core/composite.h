@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -403,7 +403,7 @@ public:
     reverse_iterator rend(void) { return (CompositeInterface::pImpl_)->rend(); }
 
     // Operator ==
-    // A compiste is igual to another if and only if they have the same elements
+    // A composite is equal to another if and only if they have the same elements
 
     /**
          * \brief Operator ==

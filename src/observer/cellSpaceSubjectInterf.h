@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 #include "terrameIncludes.h"
 
 /**
- * \brief CelluarSpace Concret Subject
+ * \brief CelluarSpace Concrete Subject
  * \see SubjectInterf
  * \see CellularSpace
  * \author Antonio Jose da Cunha Rodrigues

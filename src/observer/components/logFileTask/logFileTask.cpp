@@ -75,7 +75,7 @@ void LogFileTask::createHeader(const QStringList &attribs)
     attribList = attribs;
 
     for (int i = 0; i < attribs.size(); i++)
-        valuesList.insert(i, ""); // lista dos itens na ordem em que aparecem
+        valuesList.insert(i, ""); // list of items in the order they appear
     header = true;
 }
 
@@ -83,20 +83,20 @@ bool LogFileTask::rendering()
 {
     QFile file(filename);
 
-    // Caso já exista o arquivo, os novos valores são inseridos ao final do arquivo
-    // Caso contrário, cria o arquivo com o nome passado.
+    // Case already there is the file, the new values are inserted at the end of it
+    // Otherwise, it creates the file with the name sent.
     //if (!QFile::exists(filename)){
     //	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
-    //		QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
-    // QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+    //		QMessageBox::information(0, QObject::tr("Error opening file"),
+    // QObject::tr("Could not open the log file \"%1\".\n%2")
     //			.arg(filename).arg(file.errorString()	));
     //		return false;
     //	}
     //}
     //else{
     //	if (!file.open(QIODevice::Append | QIODevice::Text)){
-    //		QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
-    // QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+    //		QMessageBox::information(0, QObject::tr("Error opening file"),
+    // QObject::tr("Could not open the log file \"%1\".\n%2")
     //			.arg(filename).arg(file.errorString()	));
     //		return false;
     //	}
@@ -107,8 +107,8 @@ bool LogFileTask::rendering()
     {
         if (! file.open(QIODevice::WriteOnly | QIODevice::Text))
         {
-            QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
-                                     QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+            QMessageBox::information(0, QObject::tr("Error opening file"),
+                                     QObject::tr("Could not open the log file \"%1\".\n%2")
                                      .arg(filename).arg(file.errorString()	));
             return false;
         }
@@ -118,14 +118,14 @@ bool LogFileTask::rendering()
     {
         if (!file.open(QIODevice::Append | QIODevice::Text))
         {
-            QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
-                                     QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+            QMessageBox::information(0, QObject::tr("Error opening file"),
+                                     QObject::tr("Could not open the log file \"%1\".\n%2")
                                      .arg(filename).arg(file.errorString()	));
             return false;
         }
     }
 
-    // insere o cabeçalho do arquivo
+    // insert the file header
     if (header)
     {
         QString headers;

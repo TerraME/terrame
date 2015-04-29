@@ -86,7 +86,7 @@ bool UdpSocketTask::send(const QByteArray &data)
 
         out << (qint64) data.size();
         out << (qint64) pos;
-        out << compressed; // flag formato do datagrama transmitido
+        out << compressed; // datagram format transmitted flag
 
         // This header uses 17 bytes: 'data.size() + pos + compressed'
 

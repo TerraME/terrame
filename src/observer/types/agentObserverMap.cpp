@@ -16,7 +16,7 @@
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    // Estatisticas de desempenho
+    // Performance Statistics
     #include "statistic.h"
 #endif
 
@@ -92,13 +92,13 @@ bool AgentObserverMap::draw(QDataStream & state)
 bool AgentObserverMap::draw(QDataStream & state)
 {
 #ifdef TME_STATISTIC
-    //// tempo gasto do 'getState' ate aqui
+    // time spent in the 'getState' until here
     //double decodeSum = 0.0, t = Statistic::getInstance().endVolatileTime();
-    //Statistic::getInstance().addElapsedTime("comunicação map", t);
+    //Statistic::getInstance().addElapsedTime("communication map", t);
 
     int decodeCount = 0;
 
-    // numero de bytes transmitidos
+    // number of bytes transmitted
     Statistic::getInstance().addOccurrence("bytes map", in.device()->size());
 #endif
 
@@ -138,7 +138,7 @@ bool AgentObserverMap::draw(QDataStream & state)
         buffer.open(QIODevice::ReadOnly);
 
         //-----
-		// @RAIAN: Acrescentei a celula na comparacao, para o observer do tipo Neighborhood
+		// @RAIAN: I added the cell in comparison to the observer Neighborhood subtype
         if ((subj->getType() == TObsAgent) || (subj->getType() == TObsAutomaton) 
             || (subj->getType() == TObsCell))
         {
@@ -301,7 +301,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
             break;
         }
             /*
-             // Remove apenas o atributo que não possui valores
+             //Remove only the attribute that has no values
              if (subj->getSubjectType() == attrib->getType())
              {
              qDebug() << "\nclassName " << className;
@@ -313,7 +313,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
              {
              //for (int j = 0; j < treeLayers->topLevelItemCount(); j++)
              //{
-             //    // Remove o atributo da árvore de layers
+             //    // Remove the attribute from the tree of layers
              //    if ( treeLayers->topLevelItem(j)->text(0) == attrib->getName())
              //    {
              //        QTreeWidgetItem *treeItem = treeLayers->takeTopLevelItem(j);
@@ -322,7 +322,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
              //    }
              //}
              
-             // Remove o atributo do mapa de atributos
+             // Remove the attributes of map attribute
              getMapAttributes()->take(attrib->getName());
              getPainterWidget()->setExistAgent(false);
              subjectAttributes.removeAt( subjectAttributes.indexOf(attrib->getName()) );
@@ -366,7 +366,7 @@ bool AgentObserverMap::decode(QDataStream &in, TypesOfSubjects subject)
 		{
 			attrib = getMapAttributes()->value(className);
 		}
-		//@RAIAN: FIM
+		//@RAIAN: END
 		else
 		{
             // // ((subjectType == TObsAgent) || (subjectType == TObsAutomaton))

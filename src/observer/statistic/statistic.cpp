@@ -173,7 +173,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
 
         out << keys.join(";") << "\n";
 
-        // remove o primeiro e o ˙ltimo elemento, se n„o È o modo receiver
+        // removes the first and the last elements, if this not to be receiver mode
         if (! disableRemove)
         {
             foreach(QString key, keys)
@@ -234,7 +234,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
             }
         }
 
-        // Salva no arquivo de analise   
+        // Saved in the analysis file
         name = QString("%1analized_timeStatistic_").arg(prefix);
         QFile fileAnalysis(name
             + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss")
@@ -253,7 +253,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
             double sum = 0, value = 0;
             sum = diffSquare.value(key).second;
 
-            // soma dos quadrados das diferenÁas
+            // summing the squares of the differences
             for (int i = 0; i < diffSquare.value(key).first->size(); i++)
                 value += diffSquare.value(key).first->at(i);
 
@@ -299,7 +299,7 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
         const QStringList &keys = occurStatistics.keys();
         out << keys.join(";") << ";\n";
 
-        // remove o primeiro e o ˙ltimo elemento, se n„o È o modo receiver
+        // removing the first and last elements, if this not to be receiver mode
         if (! disableRemove)
         {
             foreach(QString key, keys)
@@ -373,7 +373,7 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
         }
 
         
-        // Salva no arquivo de analise
+        // Saved in the analysis file
         name = QString("%1analized_occurrences_").arg(prefix);
         QFile fileAnalysis(name
             + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss")
@@ -393,8 +393,8 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
             int i = 0;
             sum = diffSquare.value(key).second;
 
-            // soma dos quadrados das diferenÁas
-            // ignora o primeiro resultado (notify de inicializaÁ„o)
+            // summing the squares of the differences
+            // ignores the first result (notify of startup)
             for (i = 0; i < diffSquare.value(key).first->size(); i++)
                 value += diffSquare.value(key).first->at(i);
 

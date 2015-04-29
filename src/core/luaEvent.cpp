@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ of this library and its documentation.
 
 #include "protocol.pb.h"
 
-///< Gobal variabel: Lua stack used for comunication with C++ modules.
+///< Global variable: Lua stack used for communication with C++ modules.
 extern lua_State * L; 
 
 ///< true - TerrME runs in verbose mode and warning messages to the user; 
@@ -113,13 +113,13 @@ int luaEvent::createObserver(lua_State *luaL)
     stackDump(luaL);
 #endif
 
-    // recupero a referencia da celula
+    // retrieve the reference of the cell
     Reference<luaEvent>::getReference(luaL);
 
     
-    // flags para a definicao do uso de compressao
-    // na transmissao de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // flags for the definition of the use of compression
+    // in the datagram transmission and visibility
+    // of observers Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
     int top = lua_gettop(luaL);
@@ -131,7 +131,7 @@ int luaEvent::createObserver(lua_State *luaL)
     allAttribs.push_back("Periodicity");
     allAttribs.push_back("Priority");
 
-    // Recupera a tabela de parametros
+    // Retrieves the parameters table
     //if(! lua_istable(luaL, top - 1) )
     //{
     //    if (execModes == Quiet )
@@ -262,7 +262,7 @@ int luaEvent::createObserver(lua_State *luaL)
     foreach(const QString &key, allAttribs)
         observedAttribs.insert(key, 0.0);
 
-    /// Define alguns parametros do observador instanciado ---------------------------------------------------
+    /// Defines some parameters of the instantiated observer ---------------------------------------------------
 
     if (obsLog)
     {
@@ -282,7 +282,7 @@ int luaEvent::createObserver(lua_State *luaL)
             obsLog->setFileName(cols.at(0));
         }
 
-        // caso nao seja definido, utiliza o default ";"
+        // if not defined, use the default ";"
         if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
             if (execModes != Quiet )
@@ -382,7 +382,7 @@ int luaEvent::notify(lua_State *luaL )
 
 QByteArray luaEvent::getAll(QDataStream& /*in*/, const QStringList& attribs)
 {
-//    lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
+//    lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// I retrieve the reference in the stack lua
     Reference<luaEvent>::getReference(luaL);
     ObserverDatagramPkg::SubjectAttribute evSubj;
     return pop(luaL, attribs, &evSubj, 0);
@@ -605,14 +605,14 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, cons
         content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
+            // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
         content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
+            // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack
@@ -626,15 +626,15 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, cons
 
 int luaEvent::kill(lua_State *luaL)
 {
-    // recupero a referencia da celula
+    // retrieve the reference of the cell
     Reference<luaEvent>::getReference(luaL);
 
     int top = lua_gettop(luaL);;
     int id = -1;
     bool result = false;
 
-    // Verifica se o parametro e uma tabela
-    // ou o proprio id do Observer
+    // checks if the parameter is a table
+    // or own id Observer
     if (! lua_istable(luaL, top - 1))
     {
         id = luaL_checknumber(luaL, top - 1);

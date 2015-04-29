@@ -201,7 +201,7 @@ bool AgentObserverImage::unregistry(Subject *subj, const QString & className)
             break;
         }
 
-        //// Remove apenas o atributo que não possui valores
+        //// Remove only the attribute that has no values
         //if (subj->getSubjectType() == attrib->getType())
         //{
         //        if ( (attrib->getType() != TObsAgent) 

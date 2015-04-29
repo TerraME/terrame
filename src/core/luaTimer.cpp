@@ -11,7 +11,7 @@
 
 #include "protocol.pb.h"
 
-///< Global variable: Lua stack used for comunication with C++ modules.
+///< Global variable: Lua stack used for communication with C++ modules.
 extern lua_State * L; 
 
 ///< true - TerrME runs in verbose mode and warning messages to the user; 
@@ -97,7 +97,7 @@ int luaTimer::createObserver(lua_State *luaL)
 	// int eventsCount = 0;
 
 #ifdef DEBUG_OBSERVER
-	printf("\npos table: %i\nRecuperando todos os atributos:\n", top);
+	printf("\npos table: %i\nRetrieving all attributes:\n", top);
 	stackDump(luaL);
 #endif
 
@@ -123,7 +123,7 @@ int luaTimer::createObserver(lua_State *luaL)
 		}
 
 		//---------------------------------------------------------------------------------------
-		// recuperando o tipo Event que esta em uma subtabela
+		// retrieving the Event type this in a subtable Pair
 		// de Pair
 		if (lua_type(luaL, -1) == LUA_TTABLE)
 		{
@@ -174,12 +174,12 @@ int luaTimer::createObserver(lua_State *luaL)
 	}
 
 	//------------------------
-	// pecorre a pilha lua recuperando
-	// os atributos celula que se quer observar
+	// runs the moon stack recovering the
+	// attributes cell needs to be observed
 	//lua_settop(luaL, top - 1);
 	//top = lua_gettop(luaL);
 
-	// Verificacao da sintaxe da tabela Atributos
+	// Verification of Attributes table syntax
 	if(! lua_istable(luaL, top) )
 	{
 		string err_out = string("Attribute table not found. Incorrect sintax.");
@@ -205,7 +205,8 @@ int luaTimer::createObserver(lua_State *luaL)
 		printf("\t%s \n", qPrintable(key));
 #endif
 
-		// Verifica se o atributo informado nao existe deve ter sido digitado errado
+        // Checks if the given attribute exists or
+        // may have been mistyped
 		if (allAttribs.contains(key))
 		{
 			obsAttribs.push_back(key);
@@ -271,8 +272,8 @@ int luaTimer::createObserver(lua_State *luaL)
 	printf("\n*pos table: %i\nRecuperando a tabela Parametros\n", top);
 #endif
 
-	// Recupera a tabela de parametros os observadores do tipo Table e Graphic
-	// caso nao seja um tabela a sintaxe do metodo esta incorreta
+    // Retrieves from parameters table the observers Table and Graphic type
+    // case not be a table the syntax of the method is incorrect
 	lua_pushnil(luaL);
 	while(lua_next(luaL, top - 1) != 0)
 	{   
@@ -303,9 +304,9 @@ int luaTimer::createObserver(lua_State *luaL)
 		lua_pop(luaL, 1);
 	}
 
-	// Caso nao seja definido nenhum parametro,
-	// e o observador nao e TextScreen entao
-	// lanca um warning
+    // If not set any parameters and the
+    // observer are not TextScreen then
+    // launches a warning
 	if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
 	{
 		if (execModes != Quiet ){
@@ -414,7 +415,7 @@ int luaTimer::createObserver(lua_State *luaL)
 			return 0;
 	}
 
-	/// Define alguns parametros do observador instanciado ---------------------------------------------------
+	/// Defines some parameters of the observer instantiated ---------------------------------------------------
 
 	if (obsLog)
 	{
@@ -437,7 +438,7 @@ int luaTimer::createObserver(lua_State *luaL)
 			obsLog->setFileName(cols.at(0));
 		}
 
-		// caso nao seja definido, utiliza o default ";"
+		// if not defined, use the default ";"
 		if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
 		{
 			if (execModes != Quiet )
@@ -575,14 +576,14 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int /*observerId*/, 
             content = getAll(in, observedAttribs.keys());
             // serverSession->setState(observerId, 1);
             //if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
+            // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observedAttribs.keys());
             // serverSession->setState(observerId, 0);
             //if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
+            // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack
@@ -611,14 +612,14 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId, cons
             content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
             //if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
+            // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
             //if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
+            // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack
@@ -634,7 +635,7 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId, cons
 
 QByteArray luaTimer::getAll(QDataStream& /*in*/, const QStringList& attribs)
 {
-	//lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
+	//lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recover the reference on the stack lua
 	Reference<luaTimer>::getReference(luaL);
 	ObserverDatagramPkg::SubjectAttribute timeSubj;
 	return pop(luaL, attribs, &timeSubj, 0);
@@ -660,7 +661,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 	double num = 0.0;
 	double minTime = (double) MAX_FLOAT;
 
-	// recupero a referencia na pilha lua
+	// recover the reference on the stack lua
 	int position = lua_gettop(luaL);
 
 	QByteArray key, valueTmp;
@@ -669,7 +670,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 	lua_pushnil(luaL);
 	while(lua_next(luaL, position ) != 0)
 	{
-		// Caso o indice nao seja um string causava erro
+		// If the index not be a string caused error
 		if (lua_type(luaL, -2) == LUA_TSTRING)
 		{
 			key = luaL_checkstring(luaL, -2);
@@ -764,7 +765,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 						observedAttribs.insert(key, valueTmp);
 					}
 
-					// Recuperando o objeto TeEvent
+					// Recovering TeEvent object
 					//{
 					int top = lua_gettop(luaL);
 					QByteArray eventKey;
@@ -928,7 +929,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 
 QByteArray luaTimer::getAll(QDataStream& /*in*/, int /*observerId*/, const QStringList& attribs)
 {
-	// recupero a referencia na pilha lua
+	// recover the reference on the stack lua
 	Reference<luaTimer>::getReference(luaL);
 	return pop(luaL, attribs);
 }
@@ -968,7 +969,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs)
 	lua_pushnil(luaL);
 	while(lua_next(luaL, position ) != 0)
 	{
-		// Caso o indice nao seja um string causava erro
+		// If the index not be a string caused error
 		if (lua_type(luaL, -2) == LUA_TSTRING)
 		{
 			key = luaL_checkstring(luaL, -2);
@@ -1027,7 +1028,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs)
 					attrs.append("Lua-Address(TB): " + QByteArray(result));
 					attrs.append(PROTOCOL_SEPARATOR);
 
-					// Recuperando o objeto TeEvent
+					// Recovering TeEvent object
 					//{
 					int top = lua_gettop(luaL);
 

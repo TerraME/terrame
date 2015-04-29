@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 /*!
  * \file observer.h
  * \brief Global items of observer layer
- * \author Antonio José da Cunha Rodrigues 
+ * \author Antonio Jose da Cunha Rodrigues
 */
 
 #ifndef OBSERVER_GLOBAL_ITEMS
@@ -44,13 +44,13 @@ static const QString BROADCAST_HOST = "255.255.255.255";
 static const QString LOCAL_HOST = "127.0.0.1";
 static const QString DEFAULT_NAME = "result_";
 
-static const QString PROTOCOL_SEPARATOR = "‡";
+static const QString PROTOCOL_SEPARATOR = "ï¿½";
 static const QString COMP_COLOR_SEP = ",";
 static const QString ITEM_SEP = ";";
 static const QString ITEM_NULL = "?";
 static const QString COLORS_SEP = "#";
 static const QString COLOR_BAR_SEP= "|";
-static const QString SYMBOL_CHAR = "®";
+static const QString SYMBOL_CHAR = "ï¿½";
 
 static const QString WINDOW = "Window";
 static const QString TRAJECTORY_LABEL = "does not belong";
@@ -200,7 +200,7 @@ enum GroupingMode
 
 /**
 * \enum TerraMEObserver::StdDev
-* \brief TerraME Standard Deviation Groupping Type.
+* \brief TerraME Standard Deviation Grouping Type.
 *
 */
 enum StdDev

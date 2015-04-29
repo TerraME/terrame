@@ -122,21 +122,21 @@ int luaEnvironment::createObserver( lua_State *luaL )
     stackDump(luaL);
 #endif
 
-    // recupero a referencia da celula
+    // retrieve the reference of the cell
     Reference<luaEnvironment>::getReference(luaL);
 
-    // flags para a definicao do uso de compressao
-    // na transmissiao de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // flags for the definition of the use of compression
+    // in the datagram transmission and visibility
+    // of observers Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
-    // recupero a tabela de
-    // atributos da celula
+    // retrieve the attribute
+    // table of the cell
     int top = lua_gettop(luaL);
 
-    // Nao modifica em nada a pilha
-    // recupera o enum referente ao tipo
-    // do observer
+    // In no way changes the stack
+    // retrieves the enum for the type
+    // of observer
     TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, -4);
     bool isGraphicType = (typeObserver == TObsDynamicGraphic) || (typeObserver == TObsGraphic);
 
@@ -144,10 +144,10 @@ int luaEnvironment::createObserver( lua_State *luaL )
     QStringList allAttribs, obsAttribs;
 
 #ifdef DEBUG_OBSERVER
-    qDebug("\npos table: %i\nRecuperando todos os atributos:\n", top);
+    qDebug("\npos table: %i\nRetrieving all attributes:\n", top);
 #endif
 
-    // Pecorre a pilha lua recuperando todos os atributos celula
+    // Runs the Lua stack recovering all cell attributes
     lua_pushnil(luaL);
     while(lua_next(luaL, top) != 0)
     {
@@ -177,12 +177,12 @@ int luaEnvironment::createObserver( lua_State *luaL )
     }
 
     //------------------------
-    // pecorre a pilha lua recuperando
-    // os atributos celula que se quer observar
+    // Runs the Lua stack recovering
+    // all attributes cell needs to be observed
     lua_settop(luaL, top - 1);
     top = lua_gettop(luaL);
 
-    // Verificacao da sintaxe da tabela Atributos
+    // Syntax checking Attributes table
     if(! lua_istable(luaL, top) )
     {
         string errorMsg = string("Attributes table not found. Incorrect sintax.");
@@ -221,7 +221,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
         qDebug("\t%s \n", qPrintable(key));
 #endif
 
-        // Verifica se o atributo informado nao existe deve ter sido digitado errado
+        // Checks if the given attribute does not exist must have been mistyped
         if (allAttribs.contains(key))
         {
             obsAttribs.push_back(key);
@@ -281,8 +281,8 @@ int luaEnvironment::createObserver( lua_State *luaL )
     qDebug() << "Recuperando a tabela Parametros\n" << "top: " << top;
 #endif
 
-    // Recupera a tabela de parametros os observadores do tipo Table e Graphic
-    // caso nao seja um tabela a sintaxe do metodo esta incorreta
+    // Retrieves from parameters table the observers Table and Graphic type
+    // case not be a table the syntax of the method is incorrect
     lua_pushnil(luaL);
     while(lua_next(luaL, top) != 0)
     {   
@@ -338,9 +338,9 @@ int luaEnvironment::createObserver( lua_State *luaL )
         lua_pop(luaL, 1);
     }
 
-    // Caso nao seja definido nenhum parametro,
-    // e o observador nao e TextScreen entao
-    // lanca um warning
+    // If not set any parameters and the
+    // observer are not TextScreen then
+    // launches a warning
     if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
     {
         if (execModes != Quiet ){
@@ -461,7 +461,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
             return 0;
     }
 
-    /// Define alguns parametros do observador instanciado ------------------------------------------
+    /// Defines some parameters of the instantiated observer ------------------------------------------
     if (obsLog)
     {
         obsLog->setAttributes(obsAttribs);
@@ -480,7 +480,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
             obsLog->setFileName(cols.at(0));
         }
 
-        // caso nao seja definido, utiliza o default ";"
+        // if not defined, use the default ";"
         if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
             if (execModes != Quiet )
@@ -649,14 +649,14 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int observerId
             content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
+            // qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
             // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
+            // qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
     // cleans the stack
@@ -672,7 +672,7 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int observerId
 
 QByteArray luaEnvironment::getAll(QDataStream& /*in*/, const QStringList &attribs)
 {
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
+    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recover the reference on the Lua stack
 	Reference<luaEnvironment>::getReference(luaL);
     ObserverDatagramPkg::SubjectAttribute envSubj;
     return pop(luaL, attribs, &envSubj, 0);
@@ -691,7 +691,7 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
     char result[20];
     double num = 0.0;
 
-    // recupero a referencia na pilha lua
+    // recover the reference on the Lua stack
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
 	Reference<luaEnvironment>::getReference(luaL);
     int position = lua_gettop(luaL);
@@ -778,8 +778,8 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
                     observedAttribs.insert(key, valueTmp);
                 }
 
-                // Recupera a tabela de cells e delega a cada
-                // celula sua serializacao
+                // Retrieves the table cells and delegates to
+                // each cell its serialization
                 if(key == "cells")
                 {
                     int top = lua_gettop(luaL);

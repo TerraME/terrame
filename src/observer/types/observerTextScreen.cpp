@@ -24,7 +24,7 @@ ObserverTextScreen::ObserverTextScreen(Subject *subj, QWidget *parent)
     show();
     resize(600, 480);
 
-    // prioridade da thread
+    // thread
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
     // start(QThread::IdlePriority);
 }
@@ -60,7 +60,7 @@ void ObserverTextScreen::setAttributes(QStringList &attribs)
 
     attribList = attribs;
     for (int i = 0; i < attribList.size(); i++)
-        valuesList.insert(i, ""); // lista dos itens na ordem em que aparecem
+        valuesList.insert(i, ""); // list of items in the order they appear
     header = false;
 }
 

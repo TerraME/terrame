@@ -18,7 +18,7 @@
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    // Estatisticas de desempenho
+    // Performance Statistics
     #include "statistic.h"
 #endif
 
@@ -37,7 +37,7 @@ using namespace TerraMEObserver;
 using namespace BagOfTasks;
 
 VisualMapping::VisualMapping(TypesOfObservers observerType, QObject *parent)
-    : observerType(observerType), QObject(parent), Task(Task::Hight)
+    : observerType(observerType), QObject(parent), Task(Task::High)
 {
     setType(Task::Arbitrary);
 
@@ -49,9 +49,9 @@ VisualMapping::VisualMapping(TypesOfObservers observerType, QObject *parent)
 
     agentAttribPositions = new QVector<int>();
 
-    //posicionar randomicamente os agentes na célula
-    // para que seja possível visualizar mais agentes
-    // dentro da mesma célular
+    // position randomly agents in cell
+    // position randomly agents in the cell so that you can view more agents
+    // within the same cell
     //qsrand(time(NULL));
     qsrand(1);
 }
@@ -392,11 +392,11 @@ void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
             const double &x = nestedSubj->getX();
             const double &y = nestedSubj->getY();
 
-            //// TO-DO: Código irá falhar qdo o id do subject não for 
-            //// condizente com a posição no vetor de valores do atributo
+            //// TO-DO: Code will fail when the id of the subject is not
+            //// consistent with the position vector of attribute values
             // attrib->addValue(id, v);
 
-            // Primeiro draw() irá gerar imagens em escala de cinza
+            // First draw() will generate images in grayscale
             if (isVecLegendEmpty)
             {
                 v = v - attrib->getMinValue();
@@ -505,7 +505,7 @@ void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
 
             // attrib->addValue(id, v);
 
-            // Primeiro draw() irá gerar imagens em escala de cinza
+            // First draw() will generate images in grayscale
             if (isVecLegendEmpty)
             {
                 v = v - attrib->getMinValue();
@@ -782,7 +782,7 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
     QString v;
     double num, x, y;
 
-    for(int id = 0; id < subjectsIDs.size(); ++id)  // Opção simples e eficiente
+    for(int id = 0; id < subjectsIDs.size(); ++id)  // Simple and efficient option
     {
         nestedSubj = bb.getSubject(subjectsIDs.at(id));
         
@@ -859,7 +859,7 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
 
                 // p.drawText(RECT_CELL, align[qrand() % ALIGN_FLAGS], attrib->getSymbol());
 
-                // Delimita a area que o simbolo podera ocupar
+                // Delimits the area that the symbol may occupy
                 int xPos = (int) RECT_CELL.x() + RECT_CELL.width() * 0.07;
                 int yPos = (int) RECT_CELL.y() + RECT_CELL.height() * 0.07;
 
@@ -1149,11 +1149,11 @@ void VisualMapping::mappingNeighborhood(Attributes *attrib, QPainter *p)
             const double &x = nestedSubj->getX();
             const double &y = nestedSubj->getY();
 
-            //// TO-DO: Código irá falhar qdo o id do subject não for 
-            //// condizente com a posição no vetor de valores do atributo
+            //// TO-DO: Code will fail when the id of the subject is not
+            //// consistent with the position vector of attribute values
             // attrib->addValue(id, v);
 
-            // Primeiro draw() irá gerar imagens em escala de cinza
+            // First draw() will generate images in grayscale
             if (isVecLegendEmpty)
             {
                 v = v - attrib->getMinValue();

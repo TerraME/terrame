@@ -20,7 +20,7 @@ using namespace TerraMEObserver;
 /**
  * \brief User interface for Udp Receiver  
  * \see QDialog
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file observerUDPSenderGUI.h
  */
 class ReceiverGUI : public QDialog
@@ -43,7 +43,7 @@ public:
     /**
      * Sets the receiver state and the port number
      * \param state the receiver state
-     * \param port the communictation port
+     * \param port the communication port
      */
     void setStatusAndPort(const QString &state, int port);
 

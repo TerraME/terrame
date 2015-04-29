@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -95,7 +95,7 @@ of this library and its documentation.
 #define strnicmp strncasecmp
 #endif
 
-///< Gobal variabel: Lua stack used for comunication with C++ modules.
+///< Gobal variabel: Lua stack used for communication with C++ modules.
 extern lua_State * L; 
 
 ///< true - TerrME runs in verbose mode and warning messages to the user; 
@@ -234,7 +234,7 @@ int luaCellularSpace::addCell( lua_State *L)
 	return 0;
 }
 
-/// Gets the luaCell object within the CellularSpace identified by the coordenates received as parameter
+/// Gets the luaCell object within the CellularSpace identified by the coordinates received as parameter
 /// parameters: cell index
 int luaCellularSpace::getCell(lua_State *L)
 {  
@@ -282,7 +282,7 @@ int luaCellularSpace::getLayerName( lua_State *L )
 }
 
 /// Creates several types of observers to the luaCellularSpace object
-/// parameters: observer type, observeb attributes table, observer type parameters
+/// parameters: observer type, observer attributes table, observer type parameters
 int luaCellularSpace::createObserver(lua_State * luaL)
 {
 	// Gets the reference to the Cellular Space object in the Lua stack
@@ -293,22 +293,21 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 #ifdef DEBUG_OBSERVER
 	luaStackToQString(12);
 #endif
-
-	// flags para a definicao do uso de compressao
-	// na transmissao de datagramas e da visibilidade
-	// dos observadores Udp Sender e Image
+	// flags for the use of compression setting
+	// in datagram transmission and visibility of
+	// Udp Sender observers and Image
 	bool compressDatagram = false, obsVisible = true;
 
-	// recupero a tabela de atributos da celula
+	// retrieve the attribute table cell
 	int top = lua_gettop(luaL);
 
-	// Nao modifica em nada a pilha recupera o enum referente ao tipo
-	// do observer
+	// In no way changes the stack, retrieves the enum for the type
+	// of observer
 	TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, top - 5);
 	
 	QStringList allCellSpaceAttribs, allCellAttribs, obsAttribs;
-	QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
-	QStringList imagePath; //diretorio onde as imagens do ObsImage serao salvas
+	QStringList obsParams, obsParamsAtribs; // parameters / attributes of the legend
+	QStringList imagePath; // directory where the images from the ObsImage will be saved
 	
 	const char *strAux;
 	double numAux = -1;
@@ -316,19 +315,19 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 	bool boolAux = false;
 
 #ifdef DEBUG_OBSERVER
-	qDebug("\npos table: %i\nRecuperando os parametros:\n", top);
+	qDebug("\npos table: %i\nRecovering the parameters:\n", top);
 #endif
 
 	//----------------------------------------------------------------
-	//------- RECUPERA A TABELA PARAMETROS
+	//------- RECOVERING THE PARAMETERS TABLE
 
 #ifdef DEBUG_OBSERVER
 	luaStackToQString(12);
 	stackDump(luaL);
 #endif
 
-	// Pecorre o espaco celular e tambem
-	// recupera o atributos de uma celula
+	// Runs the cell space and
+	// also retrieves the attributes of a cell
 	lua_pushnil(luaL);
 	while(lua_next(luaL, top) != 0)
 	{
@@ -372,7 +371,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 	qDebug() << "allCellAttribs: " << allCellAttribs;
 #endif
 
-	// Recupera a tabela de parametros
+	// Retrieves the parameters table
 	lua_pushnil(luaL);
 	while(lua_next(luaL, top - 2) != 0)
 	{
@@ -388,17 +387,17 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		int firstLegPos = lua_gettop(luaL);
 		int iAux = 1;
 
-		// percorre cada item da tabela parametros
+		// Runs each item in the table parameters
 		lua_pushnil(luaL);
 
 		if(! lua_istable(luaL, firstLegPos - 1) )
 		{
-			// ---- Observer Image: Recupera o path/nome dos arquivos de imagem
+			// ---- Observer Image: Retrieves the path/name of the image files
 			if(typeObserver == TObsImage)
 			{
 				if(lua_type(luaL, firstLegPos - 1) == LUA_TSTRING)
 				{
-					// recupera o path para o arquivo
+					// retrieves the path to the file
 					QString k( luaL_checkstring(luaL, firstLegPos - 1));
 					imagePath.push_back(k);
 				}
@@ -411,7 +410,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 			}
 			else
 			{
-				// Recupera os valores da tabela parametros
+				// Retrieves the values of the parameters table
 				if(lua_type(luaL, firstLegPos - 1) == LUA_TSTRING)
 					obsParamsAtribs.append( luaL_checkstring(luaL, firstLegPos - 1) );
 			}
@@ -446,11 +445,11 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 					case LUA_TBOOLEAN:
 						boolAux = lua_toboolean(luaL, -1);
 						//obsParamsAtribs.push_back(boolAux ? "true" : "false");
-						// Recupera o valor do paramentro
+						// Retrieves the value of the parameter
 						if(key == "compress")
 							compressDatagram = boolAux;
 
-						// Recupera o valor do paramentro
+						// Retrieves the value of the parameter
 						if(key == "visible")
 							obsVisible = boolAux;
 						break;
@@ -480,7 +479,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 	}
 
 #ifdef DEBUG_OBSERVER
-	qDebug("\npos table: %i\nRecuperando todos os atributos:\n", top);
+	qDebug("\npos table: %i\nRetrieving all attributes:\n", top);
 #endif
 
 	lua_pushnil(luaL);
@@ -492,11 +491,11 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 	}
 
 #ifdef DEBUG_OBSERVER
-	printf("\npos table: %i\nRecuperando dimensoes:\n", top);
+	printf("\npos table: %i\nRetrieving dimensions:\n", top);
 #endif
 	QList<int> obsDim;
 
-	// Recupera a tabela de dimensoes
+	// Retrieves the dimensions of table
 	lua_pushnil(luaL);
 	while(lua_next(luaL, top - 4) != 0)
 	{
@@ -538,17 +537,17 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		}
 		else
 		{
-			// posicao da celula no espaco celular
+			// position of the cell in the cellular space
 			obsAttribs.push_back("x");
 			obsAttribs.push_back("y");
 
 			if(typeObserver == TObsShapefile) 
 				obsAttribs.push_back("objectId_");
 
-			// Verifica se o atributo informado realmente existe na celula
+			// Checks if the given attribute actually exists in the cell
 			for (int i = 0; i < obsAttribs.size(); i++)
 			{
-				// insere na lista de atributos do cellspace o atributo recuperado
+				// inserted in the cellular space attribute list the recovered attribute
 				if(! observedAttribs.contains(obsAttribs.at(i)) )
 					// observedAttribs.push_back(obsAttribs.at(i));
 					observedAttribs.insert(obsAttribs.at(i), "");			
@@ -1030,7 +1029,7 @@ QDataStream& luaCellularSpace::getState(QDataStream& in, Subject *, int /*observ
 			
 		// serverSession->setState(observerId, 1);
 		//if(! QUIET_MODE )
-		// 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
+		// 	qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(1).toLatin1().constData());
 		break;
 
 	case 1:
@@ -1038,7 +1037,7 @@ QDataStream& luaCellularSpace::getState(QDataStream& in, Subject *, int /*observ
 			
 		// serverSession->setState(observerId, 0);
 		//if(! QUIET_MODE )
-		// 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
+		// 	qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(0).toLatin1().constData());
 		break;
 	}
 	// cleans the stack
@@ -1050,7 +1049,7 @@ QDataStream& luaCellularSpace::getState(QDataStream& in, Subject *, int /*observ
 
 QByteArray luaCellularSpace::getAll(QDataStream& /*in*/, const QStringList &attribs)
 {
-	// recupero a referencia na pilha lua
+	// recover the reference on the stack Lua
 	Reference<luaCellularSpace>::getReference(luaL);
 	ObserverDatagramPkg::SubjectAttribute csSubj;
 	return pop(luaL, attribs, &csSubj, 0);
@@ -1073,7 +1072,7 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 	char result[20];
 	double num = 0.0;
 
-	// recupero a referencia na pilha lua
+	// recover the reference on the stack Lua
 	Reference<luaCellularSpace>::getReference(luaL);
 	int cellSpacePos = lua_gettop(luaL);
 
@@ -1160,8 +1159,8 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 					observedAttribs.insert(key, valueTmp);
 				}
 
-				// Recupera a tabela de cells e delega a cada
-				// celula sua serializacao
+				// Retrieves the table cells and delegates to each cell
+				// its serialization
 				if(key == "cells")
 				{
 					int top = lua_gettop(luaL);
@@ -1177,8 +1176,7 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 						cell = (luaCell*)Luna<luaCell>::check(luaL, -1);
 						lua_pop(luaL, 1);
 
-						// luaCell->pop(...) requer uma celula no topo da pilha
-
+						// luaCell->pop(...) requires a cell at the top of the stack
 						// cellMsg = cell->pop(L, attribs);
 						int internalCount = csSubj->internalsubject_size();
 						cell->pop(luaL, attribs, 0, csSubj);
@@ -1645,7 +1643,7 @@ int luaCellularSpace::load(lua_State *L)
 			}
 			// Load input theme
 			inputTheme = new TeTheme(inputThemeName, inputLayer );
-			if(!db->loadTheme (inputTheme)){ // erro, tiago: parece que a terralib carrega um thema com mesmo nome, mas de outro layer, pois
+			if(!db->loadTheme (inputTheme)){ // erro, tiago: it seems that terralib carries a thema with same name, mas de outro layer, pois
 				// esta funcao nao falha, caso o tema "inputTheme" nao pertenca ao layer (inputLayer), quando deveria
 				// assim, o proximo acesso ao aobjeto inputTheme procara uma excecao
 				// Alem disso, quando dois temas possuem o mesmo nomemem layers diferentes, esta funcao falha
@@ -1677,8 +1675,8 @@ int luaCellularSpace::load(lua_State *L)
 			temporaryTheme.attributeRest(whereClause);
 			temporaryTheme.setAttTables(inputTheme->attrTables());
 
-			// Configura o mecanismo para buscar geometrias (loadGeometries = true), e tambem
-			// buscar todos os atributos da celula (true )
+			// Set the engine to check geometries (loadGeometries = true), and also
+			// check all the attributes of the cell (true)
 			if(attrNames.empty())
 			{
 				querierParams = new TeQuerierParams(loadGeometries, true);
@@ -1692,8 +1690,8 @@ int luaCellularSpace::load(lua_State *L)
 		}
 		else
 		{
-			// Configura o mecanismo para buscar geometrias (loadGeometries = true), e tambem
-			// buscar todos os atributos da celula (true )
+			// Set the engine to check geometries (loadGeometries = true), and also
+			// check all the attributes of the cell (true)
 			if(attrNames.empty())
 			{
 				querierParams = new TeQuerierParams(loadGeometries, true);
@@ -1705,7 +1703,7 @@ int luaCellularSpace::load(lua_State *L)
 				querierParams->setParams(inputTheme);
 			}
 		}
-		// Cria uma consulta e a executa
+		// Creates a query and run
 		TeQuerier query(*querierParams);
 		query.loadInstances();
 
@@ -1720,15 +1718,15 @@ int luaCellularSpace::load(lua_State *L)
 		string luaCmd;
 		//int  colAnt = -1;
 		long int cont = 0;
-		// Calcula quais s"o os indices minimos para a coluna e para a linha
+		// Calculates what are the minimum indices for the column and the line
 
 		while(query.fetchInstance(element))
 		{
 			//TePropertyVector& properties = element.getPropertyVector();
 			const TePropertyVector& properties = element.getPropertyVector();
 
-			// Obtem o identificador do objeto espaco-temporal associado a celula
-			// e obtem coordenadas da celula
+			// Gets the spatiotemporal object identifier associated with the cell
+			// and get coordinates of the cell
 			int lin, col;
 			char cellId[20];
 
@@ -1863,14 +1861,13 @@ int luaCellularSpace::load(lua_State *L)
 		delete querierParams;
 
 		/* TODO
-		  - transformar dbLegend em membro da classe
-		  - criar metodo  exportado ... para verificar a existencia de legenda
-		  - criar metodo exportado para Lua para conter o resultado (legenda vinda do banco)
-		  - antes inferir legenda para observer verifica se existe legenda disponivel no espaco celular carregado
-
+		  - turn dbLegend class member
+		  - create exported method ... to check legend exists
+		  - create exported method for Lua to contain the result (legend coming from database)
+		  - before infer caption for observer, check for available legend in cellular space loaded
 		*/
 
-		// carrega legendas do banco
+		// loads legend from database
 		QString dbLegend;
 		loadLegendsFromDatabase(db, inputTheme, dbLegend);
 		//qDebug() << dbLegend << "\n\n";
@@ -2111,14 +2108,14 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 			.arg(inputTheme->id());
 	if( portal->query(colorBarsQuery.toLatin1().constData()) )
 	{
-		// esta string recebe o conteudo bruto recuperado do banco de dados
+		// is string receives the recovered raw content from database
 		QString auxColorBar;
-		// na verdade existe uma unica linha na tabela (uma grande string)
+		// there is actually one line in the table (one big string)
 		while(portal->fetchRow())
 			auxColorBar = QString("%1").arg(portal->getData(0));
 
 		if(auxColorBar.length() > 0){
-			// Caso nao exista legenda no banco ou ela esteja incorreta, aborta a recuperacao
+			// If there is no legend in the database or it is incorrect, aborts the recovery
 			if(! auxColorBar.contains("-"))
 			{
 				if(execModes != Quiet) {
@@ -2128,8 +2125,8 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 				return colorBarList;
 			}
 			else {
-				// substitiu separadores toscos do TerraView, que usa o caracter '-'
-				// mesmo quando ha numero negativos na string
+				// substitiu tabs TerraView, which uses the character '-'
+				// even when there are negative numbers in the string
 				string colorBarStr(auxColorBar.toLatin1().constData());
 				char previousChar = '#';
 				for(int i = 0; i < auxColorBar.size(); i++ ){
@@ -2139,16 +2136,16 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 				}
 				auxColorBar = QString(colorBarStr.c_str());
 
-				// Cada cor do objeto ColorBar e separado por "#"
+				// Each object color of ColorBar is separated by "#"
 				QStringList colorBarRawItems = auxColorBar.split("#", QString::SkipEmptyParts);
 
-				// Legendas STD_DEVIATION
+				// Legends STD_DEVIATION
 				if(grouping->groupMode_ == TeStdDeviation){
 					return retrieveStdDeviationColorBar(colorBarRawItems);
 				}
-				// Legendas que nao sao STD_DEVIATION (UniqueValue, EqualSteps)
+				// Legends that are not STD_DEVIATION (UniqueValue, EqualSteps)
 				else {
-					// Legendas UniqueValue e EqualSteps
+					// Legends UniqueValue and EqualSteps
 					return retrieveUniqueValueColorBar(inputTheme);
 				}
 
@@ -2467,7 +2464,7 @@ int luaCellularSpace::save(lua_State *L)
 		strcpy( attName, key );
 		attNameList.push_back( key);
 
-		//strcat( attName, aux ); // Raian: Comentei para colocar o nome da coluna sem o tempo.
+		//strcat( attName, aux ); // Raian: I commented to put the column name without the time.
 		column.rep_.name_  = attName;
 		column.rep_.isPrimaryKey_ = false;
 
@@ -2909,11 +2906,11 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 		luaNeighborhood* neighborhood = new luaNeighborhood( L );
 		pair< string, CellNeighborhood*> pStrNeigh;
 		//string matrix;
-		//if( strategy == TeAdjacencyStrategy )  //adjacencia
+		//if( strategy == TeAdjacencyStrategy )  //adjacency
 		//{
 		//	matrix = string("Contiguity");
 		//}
-		//else if( strategy == TeDistanceStrategy)  //distancia
+		//else if( strategy == TeDistanceStrategy)  //distance
 		//{
 		//	matrix = string("Distance: ") + Te2String( max_distance, 6);
 		//}
@@ -3224,7 +3221,7 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 			neighborhoods.erase( neighName );
 			//@RAIAN
 			neighborhood->setParent(cell);
-			//@RAIAN: FIM
+			//@RAIAN: END
 			neighborhoods.add( pairStrNeigh );
 
 			lua_getglobal(L, "Neighborhood");
@@ -3410,7 +3407,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 			neighborhoods.erase( neighName );
 			//@RAIAN
 			neighborhood->setParent(cell);
-			//@RAIAN: FIM
+			//@RAIAN: END
 			neighborhoods.add( pairStrNeigh );
 
 			lua_getglobal( L, "Neighborhood" );

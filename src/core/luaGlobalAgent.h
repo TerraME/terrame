@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ of this library and its documentation.
 #include <QMutex>
 #include <QHash>
 
-//extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
+//extern lua_State * L; ///< Global variable: Lua stack used for communication with C++ modules.
 
 class luaControlMode;
 class luaCellularSpace;
@@ -96,12 +96,12 @@ public:
     /// parameter: luaControlMode
     int add(lua_State *L);
 
-    /// Sets the luaGlobalAgent "Acttion Region" status to true. The luaGlobalAgent
+    /// Sets the luaGlobalAgent "Action Region" status to true. The luaGlobalAgent
     ///  will traverse its internal luaTrajectory objects.
     /// parameter: boolean
     int setActionRegionStatus( lua_State* L);
 
-    /// Gets the luaLocalAgent "Action Region" status to true, tha luaLocalAgent object will traverse its internal
+    /// Gets the luaLocalAgent "Action Region" status to true, that luaLocalAgent object will traverse its internal
     /// luaTrajectory objects
     /// parameter: boolean
     int getActionRegionStatus( lua_State* L);
@@ -113,11 +113,11 @@ public:
     /// Builds the luaGlobalAgent object
     int build( lua_State* L);
 
-    /// Gtes the luaGlobalAgent current active luaControlMode name
+    /// Gets the luaGlobalAgent current active luaControlMode name
     int getControlModeName( lua_State* L);
 
     /// Creates several types of observers to the luaCellularSpace object
-    /// parameters: observer type, observeb attributes table, observer type parameters
+    /// parameters: observer type, observer attributes table, observer type parameters
     int createObserver( lua_State *L );
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
@@ -127,7 +127,7 @@ public:
     const TypesOfSubjects getType() const;
 
     /// Gets the object's internal state (serialization)
-    /// \param in the serializated object that contains the data that will be observed in the observer
+    /// \param in the serialized object that contains the data that will be observed in the observer
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed

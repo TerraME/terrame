@@ -14,7 +14,7 @@ namespace TerraMEObserver {
  * \brief The Receiver class is used to receive visualizations
  * in a remote machine. It works with ObserverUDPSender
  * \see QDialog
- * \author Antônio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file ReceiverUDP.h
  */
 class ReceiverUDP : public QObject

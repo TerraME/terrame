@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ of this library and its documentation.
 #include "protocol.pb.h"
 #endif
 
-///< Gobal variabel: Lua stack used for comunication with C++ modules.
+///< Global variable: Lua stack used for communication with C++ modules.
 extern lua_State * L;
 
 extern ExecutionModes execModes;
@@ -184,7 +184,7 @@ int luaCell::getCurrentNeighborhood(lua_State *L) {
 	return 1;
 }
 
-/// Returns the Neihborhood graph which name has been received as a parameter
+/// Returns the Neighborhood graph which name has been received as a parameter
 int luaCell::getNeighborhood(lua_State *L) {
 	NeighCmpstInterf& neighs = Cell::getNeighborhoods();
 
@@ -299,9 +299,9 @@ int luaCell::createObserver(lua_State *)
 	// Gets cell reference
 	Reference<luaCell>::getReference(luaL);
 
-	// flags para a definicao do uso de compressao
-	// na transmissao de datagramas e da visibilidade
-	// dos observadores Udp Sender
+	// flags to define the use of compression
+	// in the datagram transmission and visibility
+	// of UDP Sender observers
 	bool compressDatagram = false, obsVisible = true;
 
 	// Getting the attribute table of the cell
@@ -318,7 +318,7 @@ int luaCell::createObserver(lua_State *)
 		//------------------------
 		QStringList allAttribs, obsAttribs;
 
-		// Pecorre a pilha lua recuperando todos os atributos celula
+		// Runs the Moon stack recovering all the attributes cell
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top) != 0)
 		{
@@ -329,12 +329,12 @@ int luaCell::createObserver(lua_State *)
 		}
 
 		//------------------------
-		// pecorre a pilha lua recuperando
-		// os atributos celula que se quer observar
+		// runs the moon stack recovering
+		// the attributes cell needs to be observed
 		lua_settop(luaL, top - 1);
 		top = lua_gettop(luaL);
 
-		// Verificacao da sintaxe da tabela Atributos
+		// Syntax checking of the table of attributes
 		if(! lua_istable(luaL, top))
 		{
 			string err_out = string("Attribute table not found. Incorrect sintax.");
@@ -352,7 +352,7 @@ int luaCell::createObserver(lua_State *)
 			QString key(luaL_checkstring(luaL, -1));
 			attribTable = true;
 
-			// Verifica se o atributo informado nao existe deve ter sido digitado errado
+			// Checks if the given attribute does not exist must have been mistyped
 			if(allAttribs.contains(key))
 			{
 				obsAttribs.push_back(key);
@@ -385,8 +385,8 @@ int luaCell::createObserver(lua_State *)
 
 		QStringList cols, obsParams;
 
-		// Recupera a tabela de parametros os observadores do tipo Table e Graphic
-		// caso nao seja um tabela a sintaxe do metodo esta incorreta
+		// Retrieves the parameter table observers of Table type and Graphic
+		// case is not a table, the syntax of the method is incorrect
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top) != 0)
 		{
@@ -443,10 +443,9 @@ int luaCell::createObserver(lua_State *)
 			}
 			lua_pop(luaL, 1);
 		}
-
-		// Caso nao seja definido nenhum parametro,
-		// e o observador nao e TextScreen entao
-		// lanca um warning
+		// If none is not defined parameter
+		// and the observer is not TextScreen,
+		// then launches a warning
 		if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
 		{
 			if (execModes != Quiet){
@@ -739,9 +738,9 @@ int luaCell::createObserver(lua_State *)
 		}
 	}
 
-	// Comentado em 13/11/2013
-	// Remover na proxima iteracao
-//	// Comeca a criacao do Observer do tipo Neighborhood
+	// Reviewed 13/11/2013
+	// Remove the next iteration
+//	// Observer create starts of type Neighborhood
 //	else
 //	{
 //		QStringList obsParams, obsParamsAtribs;
@@ -752,11 +751,11 @@ int luaCell::createObserver(lua_State *)
 //		AgentObserverMap *obsMap = 0;
 //		luaCellularSpace *cellSpace = 0;
 //
-//		// Recupera os parametros
+//		// Retrieves the parameters
 //		lua_pushnil(luaL);
 //		while(lua_next(luaL, top - 1) != 0)
 //		{
-//			// Recupera o ID do observer map
+//			// Retrieves the ID from observer map
 //			if( lua_isnumber(luaL, -1) && (!getObserverID) )
 //			{
 //				obsID = luaL_checknumber(luaL, -1);
@@ -764,7 +763,7 @@ int luaCell::createObserver(lua_State *)
 //				isLegend = true;
 //			}
 //
-//			//Recupera o espaco celular e a legenda
+//			//Retrieves the cellular space and the legend
 //			if(lua_istable(luaL, -1))
 //			{
 //				int paramTop = lua_gettop(luaL);
@@ -824,7 +823,7 @@ int luaCell::createObserver(lua_State *)
 //		QStringList neighIDs;
 //		QString className;
 //
-//		// Recupera os IDs das Vizinhancas a serem observadas
+//		// Retrieves the IDs of Neighborhoods to be observed
 //		lua_pushnil(luaL);
 //		while(lua_next(luaL, top - 2) != 0)
 //		{
@@ -837,7 +836,7 @@ int luaCell::createObserver(lua_State *)
 //			// observedAttribs.push_back(QString("neighborhood") + className);
 //			observedAttribs.insert("neighborhood" + className, "");
 //#ifdef TME_BLACK_BOARD
-//			// Solucao provisoria para o observer do tipo Neighbohrood
+//			// Interim solution for the observer type Neighbohrood
 //			// observedAttribs.push_front("@getNeighborhoodState");
 //			observedAttribs.insert("@getNeighborhoodState", "");
 //#endif
@@ -851,8 +850,8 @@ int luaCell::createObserver(lua_State *)
 //				qFatal("%s", qPrintable(errorMsg));
 //			obsMap->registry(this, QString("neighborhood") + className);
 //		
-//		// TODO: Remocao Antonio
-//		// o teste ja havia sido feito
+//		// TODO: Antonio Removal
+//		// the test had already been done
 //		// }
 //		// if(typeObserver == TObsNeigh)
 //		// {
@@ -892,12 +891,12 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 	ObserverDatagramPkg::RawAttribute *raw = 0;
 	
-/*	// @RAIAN: Serializa a vizinhanca
+/*	// @RAIAN: Serializes the neighborhood
 	if(attribs.contains("@getNeighborhoodState"))
 	{
 / *
 #ifndef TME_BLACK_BOARD
-		// solucao provisoria
+		// provisional solution
 		attribs.pop_back();
 #endif
 
@@ -920,7 +919,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 				msg.append(QString::number(TObsNeighborhood));
 				msg.append(PROTOCOL_SEPARATOR);
 
-				// Pega as informacoe da celula central (this)
+				// Takes the information from the central cell (this)
 				QString cellMsg = this->pop(luaL, QStringList() << "x" << "y");
 
 				elements.append(cellMsg);
@@ -929,7 +928,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 				CellNeighborhood::iterator itNeigh = neigh->begin();
 				int neighSize = neigh->size();
 
-				//Number of Attributes - VARIFICAR SE ESTA CERTO
+				//Number of Attributes - CHECK THAT IS RIGHT
 				msg.append(QString::number(0));
 				msg.append(PROTOCOL_SEPARATOR);
 
@@ -965,7 +964,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 		msg.append(elements);
 		msg.append(PROTOCOL_SEPARATOR);
 		* /
-	}// @RAIAN: FIM
+	}// @RAIAN: END
 	else */
 	{
 		lua_pushnil(luaL);
@@ -1170,11 +1169,11 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 	int attrCounter = 0;
 	int cellsPos = lua_gettop(luaL);
 	
-	// @RAIAN: Serializa a vizinhanca
+	// @RAIAN: Serializes the neighborhood
 	if(attribs.contains("@getNeighborhoodState"))
 	{
 #ifndef TME_BLACK_BOARD
-		// solucao provisoria
+		// provisional solution
 		attribs.pop_back();
 #endif
 
@@ -1208,14 +1207,14 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 				CellNeighborhood::iterator itNeigh = neigh->begin();
 				int neighSize = neigh->size();
 
-				//Number of Attributes - VARIFICAR SE ESTA CERTO
+				//Number of Attributes - CHECK THAT IS RIGHT
 				msg.append("0"); // QString::number(0));
 				msg.append(PROTOCOL_SEPARATOR);
 
 				// Number of internal subjects
 				msg.append(QString::number(neighSize + 1));
 				msg.append(PROTOCOL_SEPARATOR);
-				 // TODO: pq dois separadores em sequencia?
+				 // TODO: why two tabs in sequence?
 				msg.append(PROTOCOL_SEPARATOR); 
 
 				while(itNeigh != neigh->end())
@@ -1224,7 +1223,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 					CellIndex neighIdx = (CellIndex)itNeigh->first;
 					double weight = neigh->getWeight(neighIdx);
 
-								// TODO:  Raian, verif. se hia necessidade desta chamada
+								// TODO:  Raian, check for need for this call
 					// int ref = neighbor->getReference(luaL);
 					neighbor->getReference(luaL);
 					cellMsg = neighbor->pop(luaL, QStringList() << "x" << "y" << "@getWeight");
@@ -1280,11 +1279,11 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 
 		msg.append(attrs);
 
-		// TODO: Porque essa verificacao
-		//@RAIAN: Para uso na serializacao da Vizinhanca
+		// TODO: Why this check?
+		//@RAIAN: For use in the serialization Neighborhood
 		if(!attribs.contains("@getWeight"))
 			msg.append(PROTOCOL_SEPARATOR);
-		//@RAIAN: FIM
+		//@RAIAN: END
 	}
 		else
 		{
@@ -1302,7 +1301,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 
 QByteArray luaCell::getAll(QDataStream & /*in*/, int /*observerId*/, const QStringList& attribs)
 {
-	// recupero a referencia na pilha lua
+	// recover the reference on the stack Lua
 	Reference<luaCell>::getReference(luaL);
 	return pop(luaL, attribs);
 }

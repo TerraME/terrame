@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ namespace ObserverDatagramPkg
 */
 class luaNeighborhood : public NeighborhoodSubjectInterf, public Reference<luaNeighborhood>
 {
-    CellNeighborhood::iterator it; ///< luaNeighboorhood interator
+    CellNeighborhood::iterator it; ///< luaNeighboorhood iterator
     bool itNext; ///< auxliary variable used to avoid iterator problems that occurs when the erase() method is called
 
 #ifdef TME_PROTOCOL_BUFFERS
@@ -106,22 +106,22 @@ public:
     int eraseCell(lua_State *L);
 
     /// Gets the luaNeighborhood relationship weight value for the luaNeighbor 
-    /// idexed by the 2D coordenates received as parameter
+    /// idexed by the 2D coordinates received as parameter
     /// parameters: cell index
     /// return weight
     int getCellWeight(lua_State *L);
 
-    /// Gets the luaNeighbor cell idexed by the 2D coordenates received as parameter
+    /// Gets the luaNeighbor cell indexed by the 2D coordinates received as parameter
     /// parameters: cell index,
     /// return luaCell
     int getCellNeighbor(lua_State *L);
 
     /// Gets the luaNeighborhood relationship weight value for the luaNeighbor 
-    /// indexed by the 2D coordenates received as parameter.
+    /// indexed by the 2D coordinates received as parameter.
     /// no parameters
     int getWeight( lua_State *L );
     
-    /// Gets the luaNeighbor cell pointed by the Nieghborhood interator.
+    /// Gets the luaNeighbor cell pointed by the Neighborhood iterator.
     /// no parameters
     int getNeighbor( lua_State *L );
 
@@ -140,7 +140,7 @@ public:
 	/// \author Raian Vargas Maretto
 		int getNeighWeight(lua_State *L);
 		
-    /// Sets the weight for the neighborhood relationship with the cell indexed by the coordenates
+    /// Sets the weight for the neighborhood relationship with the cell indexed by the coordinates
     /// received as parameter.
     // parameters: cell index, weight
     int setCellWeight(lua_State *L);
@@ -170,24 +170,24 @@ public:
 	/// \author Raian Vargas Maretto
 		int isNeighbor( lua_State *L );
 	
-    /// Fowards the Neighborhood iterator to the next Neighbor cell
+    /// Forwards the Neighborhood iterator to the next Neighbor cell
     /// no parameters
     int next( lua_State *L );
 
-    /// Fowards the Neighborhood iterator to the previous Neighbor cell
+    /// Forwards the Neighborhood iterator to the previous Neighbor cell
     /// no parameters
     ///\author Raian Vargas Maretto
     int previous( lua_State *L );
 
-    /// Gets the X coordinate of the Neighbor cell pointed by the Neighborhood interator
+    /// Gets the X coordinate of the Neighbor cell pointed by the Neighborhood iterator
     /// no parameters
     int getX( lua_State *L );
 
-    /// Gets the Y coordinate of the Neighbor cell pointed by the Neighborhood interator
+    /// Gets the Y coordinate of the Neighbor cell pointed by the Neighborhood iterator
     /// no parameters
     int getY( lua_State *L );
 
-    /// Gets the coordenates of the Neighbor cell pointed by the Neighborhood interator
+    /// Gets the coordenates of the Neighbor cell pointed by the Neighborhood iterator
     /// no parameters
     int getCoord( lua_State *L );
 
@@ -209,7 +209,7 @@ public:
         int getParent( lua_State *L );
     
     /// Creates several types of observers to the luaCellularSpace object
-    /// parameters: observer type, observeb attributes table, observer type parameters
+    /// parameters: observer type, observer attributes table, observer type parameters
     int createObserver( lua_State *L );
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
@@ -219,7 +219,7 @@ public:
     const TypesOfSubjects getType() const;
 
     /// Gets the object's internal state (serialization)
-    /// \param in the serializated object that contains the data that will be observed in the observer
+    /// \param in the serialized object that contains the data that will be observed in the observer
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed

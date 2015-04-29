@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ class PlayerGUI;
 /**
  * \brief User interface for simulation controller (Player)
  * \see QDialog
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file privatePlayerGUI.h
  */
 class PlayerGUI : public QDialog
@@ -44,7 +44,7 @@ class PlayerGUI : public QDialog
 
 public:
     /**
-     * Contructor
+     * Constructor
      * \param parent a pointer to a QWidget object
      * \see QWidget
      */
@@ -64,7 +64,7 @@ public:
 
     /**
      * Activates the buttons states
-     * \param active boolean, if \a true actives the buttons. Otherwise, desactives it.
+     * \param active boolean, if \a true active the buttons. Otherwise, disables it.
      */
     void setActiveButtons(bool active);
 
@@ -80,7 +80,7 @@ public slots:
     void stepClicked();
 
     /**
-     * Treats the click in the \a stop button and finishs the simulation
+     * Treats the click in the \a stop button and finishes the simulation
      */
     void stopClicked();
 

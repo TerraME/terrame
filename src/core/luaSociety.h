@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ extern "C"
 /**
 * \brief 
 *
-* Represents a set of Societys in the Lua runtime environment. 
+* Represents a set of Society in the Lua runtime environment.
 *
 */
 //class SocietySubjectInterf;
@@ -79,7 +79,7 @@ public:
 	int setID(lua_State *L);
 	
 	/// Creates several types of observers
-	/// parameters: observer type, observeb attributes table, observer type parameters
+	/// parameters: observer type, observer attributes table, observer type parameters
 	int createObserver(lua_State *L);
 
 	/// Notifies observers about changes in the luaSociety internal state
@@ -89,7 +89,7 @@ public:
 	const TypesOfSubjects getType() const;
 
 	/// Gets the object's internal state (serialization)
-	/// \param in the serializated object that contains the data that will be observed in the observer
+	/// \param in the serialized object that contains the data that will be observed in the observer
 	/// \param subject a pointer to a observed subject
 	/// \param observerId the id of the observer
 	/// \param attribs the list of attributes observed

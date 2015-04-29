@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ of this library and its documentation.
 
 #include "protocol.pb.h"
 
-extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
+extern lua_State * L; ///< Global variable: Lua stack used for communication with C++ modules.
 extern ExecutionModes execModes;
 
 using namespace TerraMEObserver;
@@ -134,7 +134,7 @@ int luaNeighborhood::eraseCell(lua_State *L) {
     return 0;
 }
 
-/// Gets the luaNeighborhood relationship weight value for the luaNeighbor idexed by the 2D coordenates received 
+/// Gets the luaNeighborhood relationship weight value for the luaNeighbor indexed by the 2D coordinates received
 /// as parameter
 /// parameters: cell index 
 /// return weight
@@ -145,7 +145,7 @@ int luaNeighborhood::getCellWeight(lua_State *L) {
     return 1;
 }
 
-/// Gets the luaNeighbor cell idexed by the 2D coordenates received as parameter
+/// Gets the luaNeighbor cell indexed by the 2D coordinates received as parameter
 /// parameters: cell index, 
 /// return luaCell
 int luaNeighborhood::getCellNeighbor(lua_State *L) {  
@@ -157,7 +157,7 @@ int luaNeighborhood::getCellNeighbor(lua_State *L) {
     return 1;
 }
 
-/// Gets the luaNeighborhood relationship weight value for the luaNeighbor idexed by the 2D coordenates received 
+/// Gets the luaNeighborhood relationship weight value for the luaNeighbor indexed by the 2D coordinates received
 /// as parameter.
 /// no parameters
 int luaNeighborhood::getWeight( lua_State *L )
@@ -172,7 +172,7 @@ int luaNeighborhood::getWeight( lua_State *L )
     return 0;
 }
 
-/// Gets the luaNeighbor cell pointed by the Nieghborhood interator.
+/// Gets the luaNeighbor cell pointed by the Neighborhood iterator.
 /// no parameters
 int luaNeighborhood::getNeighbor( lua_State *L )
 {
@@ -242,7 +242,7 @@ int luaNeighborhood::getNeighWeight(lua_State *L) {
 	return 0;
 }
 
-/// Sets the weight for the neighborhood relationship with the cell indexed by the coordenates 
+/// Sets the weight for the neighborhood relationship with the cell indexed by the coordinates
 /// received as parameter.
 /// parameters: cell index, weight
 int luaNeighborhood::setCellWeight(lua_State *L) {  
@@ -348,7 +348,7 @@ int luaNeighborhood::previous( lua_State *)
 }
 //@RAIAN: FIM
 
-/// Gets the X coordinate of the Neighbor cell pointed by the Neighborhood interator
+/// Gets the X coordinate of the Neighbor cell pointed by the Neighborhood iterator
 /// no parameters
 int luaNeighborhood::getX( lua_State *L )
 {
@@ -361,7 +361,7 @@ int luaNeighborhood::getX( lua_State *L )
     return 1;
 }
 
-/// Gets the Y coordinate of the Neighbor cell pointed by the Neighborhood interator
+/// Gets the Y coordinate of the Neighbor cell pointed by the Neighborhood iterator
 /// no parameters
 int luaNeighborhood::getY( lua_State *L )
 {
@@ -374,7 +374,7 @@ int luaNeighborhood::getY( lua_State *L )
     return 1;
 }
 
-/// Gets the coordenates of the Neighbor cell pointed by the Neighborhood interator
+/// Gets the coordenates of the Neighbor cell pointed by the Neighborhood iterator
 /// no parameters
 int luaNeighborhood::getCoord( lua_State *L )
 {
@@ -433,18 +433,18 @@ int luaNeighborhood::getParent( lua_State *L )
     stackDump(luaL);
 #endif
 
-     // recupero a referencia da celula
+     // retrieve the reference of the cell
 	Reference<luaNeighborhood>::getReference(luaL);
             
-    // flags para a definicao do uso de compressao
-    // na transmissao de datagramas e da visibilidade
-    // dos observadores Udp Sender 
+    // flags for the definition of the use of compression
+    // in the datagram transmission and visibility
+    // of observers Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
-    // recupero a tabela de atributos
+    // retrieve the attribute table
     int top = lua_gettop(luaL);
     
-    // Recupera o enum referente ao tipo do observer
+    // Retrieves the enum for the type of observer
     TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, -4);
 
 #ifdef DEBUG_OBSERVER
@@ -495,7 +495,7 @@ int luaNeighborhood::getParent( lua_State *L )
         //    lua_pop(luaL, 1);
 		// }
 
-        // qDebug() << "Recupera a tabela de parametros";
+        // qDebug() << "Retrieves the parameters table";
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 1) != 0)
         {
@@ -578,7 +578,7 @@ int luaNeighborhood::getParent( lua_State *L )
         qDebug() << obsParamsAtribs;
 #endif
 
-        // Percorre a tabela de atributos
+        // Runs the attribute table
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 2 ) != 0)
         {
@@ -898,7 +898,7 @@ int luaNeighborhood::getParent( lua_State *L )
     }
     else //     if ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
     {
-        QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
+        QStringList obsParams, obsParamsAtribs; // parameters/attributes of the legend
 
         bool getObserverId = false, isLegend = false;
         int obsId = -1;
@@ -906,11 +906,11 @@ int luaNeighborhood::getParent( lua_State *L )
         AgentObserverMap *obsMap = 0;
         AgentObserverImage *obsImage = 0;    
 
-        // Recupera os parametros
+        // Retrieves the parameters
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 1) != 0)
         {
-            // Recupera o ID do observer map
+            // Retrieves the observer map ID
             if ( (lua_isnumber(luaL, -1) && (! getObserverId)) )
             {
                 obsId = luaL_checknumber(luaL, -1);
@@ -918,7 +918,7 @@ int luaNeighborhood::getParent( lua_State *L )
                 isLegend = true;
             }
 
-            // recupera o espao celular
+            // retrieves the celular space
             if (lua_istable(luaL, -1))
             {
                 int paramTop = lua_gettop(luaL);
@@ -1014,7 +1014,7 @@ int luaNeighborhood::getParent( lua_State *L )
         neighName.append(CellNeighborhood::getID().c_str());
         neighName.append(")");
 
-        // Recupera os atributos
+        // Retrieves the attributes
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 2) != 0)
         {
@@ -1032,8 +1032,8 @@ int luaNeighborhood::getParent( lua_State *L )
 
         if (typeObserver == TObsMap)
         {
-            // ao definir os valores dos atributos do agente,
-            // redefino o tipo do atributos na super classe ObserverMap
+            // to set the values of the agent attributes,
+        	// redefine the type of attributes in the super class ObserverMap
             obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsNeighborhood);
             obsMap->setSubjectAttributes(obsAttribs, getId());
         }

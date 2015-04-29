@@ -135,8 +135,8 @@ bool Decoder::decodeAttributes(SubjectAttributes *subjAttr,
 				
 					if (attrib)
 					{
-						// TODO: Codigo ira falhar qdo o id do subject nao for
-						// condizente com a posicao no vetor de valores do atributo
+						// TODO: Code will fail when the id of the subject is not
+						// consistent with the position in the vector of attributes values
 						double d = raw.number();
 						attrib->addValue(subjAttr->getId(), d);
 					}
@@ -226,7 +226,7 @@ bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID)
         if (subjAttr)
             subjAttr->addNestedSubject(subID);
 
-        // 50% mais eficiente usando ponteiros ao invés dos ID's
+        // 50% more efficient using pointers instead of IDs
         //SubjectAttributes *subjAttr = bb->getSubject(parentSubjID);
         //SubjectAttributes *nestedSubj = bb->getSubject(subID);
         //if (subjAttr && nestedSubj)
@@ -235,7 +235,7 @@ bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID)
         // Increments the counter of subjects changed
          bb->incrementCounterChangedSubjects();
     }
-	////@RAIAN: Decodificando a Vizinhanca
+	////@RAIAN: Decoding the neighborhood
 	//if(subjectType == TObsNeighborhood)
 	//{
 	//	if(cache->contains(subID))
@@ -243,7 +243,7 @@ bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID)
 	//		Attributes *attrib = 0;
  //           QMap<QString, QList<double> > neighborhood; // = QMap<QString, QList<double> >();
 
-	//		ret = interpret(tokens, idx, xs, ys); // Pega as informações da célula central da vizinhanca
+	//		ret = interpret(tokens, idx, xs, ys); // Takes the information from the central cell of the neighborhood
 
 	//		consumeNeighborhood(tokens, idx, subID, numElem, neighborhood);
 	//		attrib = cache->value(id);
@@ -257,7 +257,7 @@ bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID)
 	//		attrib->addValue(neighborhood);
 	//	}
 	//}
-	////@RAIAN: FIM
+	////@RAIAN: END
 	// else
 	{
 		int i = 4;
@@ -270,7 +270,7 @@ bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID)
     return ret;
 }
 
-// transicao 1-2: idenficacao do objeto
+// transicao 1-2: ID of the object
 bool Decoder::consumeID(int &id, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
@@ -297,7 +297,7 @@ bool Decoder::consumeID(int &id, QStringList &tokens, int &idx)
     return ok;
 }
 
-// transição 2-3: definicao do tipo de subject
+// transition 2-3: definition of the type of subject
 bool Decoder::consumeSubjectType(TypesOfSubjects &type, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
@@ -308,7 +308,7 @@ bool Decoder::consumeSubjectType(TypesOfSubjects &type, QStringList &tokens, int
     return true;
 }
 
-// transição 3-4: número de atributos
+// transition 3-4: number of attributes
 bool Decoder::consumeAttribNumber(int &value, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
@@ -319,7 +319,7 @@ bool Decoder::consumeAttribNumber(int &value, QStringList &tokens, int &idx)
     return true;
 }
 
-// transição 4-5: número de elementos
+// transition 4-5: number of elements
 bool Decoder::consumeElementNumber(int &value, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
@@ -330,7 +330,7 @@ bool Decoder::consumeElementNumber(int &value, QStringList &tokens, int &idx)
     return true;
 }
 
-// transição 5-[6-7-8]*: chave, tipo, valor
+// transition 5- [6-7-8] *: key, type, value
 bool Decoder::consumeTriple(QStringList &tokens, int &idx, const int &subjID)
 {
     if (tokens.size() <= idx + 2)
@@ -381,8 +381,8 @@ bool Decoder::consumeTriple(QStringList &tokens, int &idx, const int &subjID)
                     //
                     //    if (attrib)
                     //    {
-                    //        // TO-DO: Código irá falhar qdo o id do subject não for 
-                    //        // condizente com a posição no vetor de valores do atributo
+                    //        // TO-DO: Code will fail when the id of the subject is not
+                    //        // consistent with the position in the vector of attributes values
                     //        attrib->addValue(subjID, tmpNumber);
                     //    }
                     //}
@@ -404,7 +404,7 @@ bool Decoder::consumeTriple(QStringList &tokens, int &idx, const int &subjID)
     return true;
 }
 
-//@RAIAN: Metodos para decodificar a vizinhanca
+//@RAIAN: Methods to decode the neighborhood
 void Decoder::consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID, 
     int &numElem, QMap<QString, QList<double> > &neighborhood)
 {
@@ -457,4 +457,4 @@ void Decoder::consumeNeighborTriple(QStringList &tokens, int &idx, QList<double>
 
 	idx += 3;
 }
-//@RAIAN: FIM
+//@RAIAN: END

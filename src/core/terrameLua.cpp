@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -52,8 +52,8 @@ extern "C"
 }
 
 //////////////////////////////////////////////////////////////////////////////
-//// Percorre a lista de widget fechando cada um deles
-//// Metodo responsavel por evitar a mensagem abaixo na tela
+//// Runs through the widget list closing each
+//// Method responsible for avoiding the below message on the screen
 //// "QObject::killTimers: timers cannot be stopped from another thread"
 //void closeAllWidgets()
 //{
@@ -111,7 +111,7 @@ void outputHandle(QtMsgType type, const QMessageLogContext &context, const QStri
 /// Opens Lua environment and Lua libraries 
 void openLuaEnvironment()
 {
-	// tentando utilizar um tipo meu em lua
+	// trying to use one of my type in lua
 	//L = lua_open();
 	L = luaL_newstate();
 
@@ -317,7 +317,7 @@ int main(int argc, char *argv[])
 			lua_pushnumber(L, execModes);
 			lua_setglobal(L, "TME_MODE");
 
-			// runs the lua files received as paremeters
+			// runs the lua files received as parameters
 			error =  luaL_loadfile(L, argv[argument] ) || lua_pcall(L, 0, 0, 0);
 
 			if (error)

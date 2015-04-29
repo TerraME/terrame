@@ -1,6 +1,6 @@
 package ObserverDatagramPkg;
 
-// Chamada do compilador do Protocol Buffer
+// Call of the Protocol Buffer compiler
 // ..\..\..\..\dependencies\protobuf\Release\protoc.exe --cpp_out=. protocol.proto
 
 enum TypesOfSubjects 

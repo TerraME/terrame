@@ -1,6 +1,6 @@
 /****************************************************
- Baseado no objeto Arrow do exemplo DiagramScene
- do framework Qt 4.7.1
+ Based on the Arrow object example DiagramScene
+ the framework Qt 4.7.1
 ****************************************************/
 
 #include "edge.h"
@@ -67,7 +67,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->setBrush(Qt::NoBrush);
 
-    // Correção da borda
+    // Edge correction
     QPointF mediumPointDest = destiny->pos() + destiny->boundingRect().center();
     QPointF mediumPointOrig = origin->pos() + origin->boundingRect().center();
     qreal hip = destiny->boundingRect().width() * 0.5;
@@ -93,7 +93,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         intersectPointOrig -= QPointF(cos(-angle) * hip, sin(angle) * hip);
     }
 
-    // Desenha os pontos de interseção na origem e no destino
+    // Draws the intersection points in the origin and destination
     //    painter->setPen(QPen(Qt::red, 4));
     //    painter->drawPoint(intersectPointOrig);
     //    painter->drawPoint(intersectPointDest);
@@ -105,7 +105,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QPen pen = painter->pen();
 
-    //    // Desenha a area entre origem e destino
+    //    // Draws the area between source and destination
     //    painter->setBrush(Qt::NoBrush);
     //    QRectF rec(intersectPointDest, QSizeF(base.dx(), base.dy()));
     //    painter->drawRect(rec);

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -99,7 +99,7 @@ public:
     int getPeriod( lua_State *L ) ;
 
     /// Creates several types of observers to the luaCellularSpace object
-    /// parameters: observer type, observeb attributes table, observer type parameters
+    /// parameters: observer type, observer attributes table, observer type parameters
     int createObserver( lua_State *L );
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
@@ -111,7 +111,7 @@ public:
     int getType(lua_State *L );
 
     /// Gets the object's internal state (serialization)
-    /// \param in the serializated object that contains the data that will be observed in the observer
+    /// \param in the serialized object that contains the data that will be observed in the observer
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed
