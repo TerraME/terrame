@@ -61,27 +61,6 @@ local state2 = State{
 local ev = Event{action = function() end}
 
 return{
-	add = function(unitTest)
-		local at1 = Automaton{
-
-			acum = 0,
-			cont = 0,
-			curve = 0,
-			st2 = state2,
-			st1 = state1
-		}
-
-		local it = Trajectory{
-			target = cs, 
-			select = function(cell)
-				local x = cell.x - 5
-				local y = cell.y - 5
-				return (x*x) + (y*y)  - 16 < 0.1
-			end
-		}
-		at1:add(it)
-		unitTest:assert(true)
-	end,
 	Automaton = function(unitTest)
 		local at1 = Automaton{
 			it = Trajectory{
@@ -122,67 +101,38 @@ return{
 		end
 		unitTest:assert_equal(0, count)
 	end,
-	getLatency = function(unitTest)
-		local cs = CellularSpace{xdim = 2}
-		local cont = 0
-
+	__tostring = function(unitTest)
 		local at1 = Automaton{
-			it = Trajectory{
-				target = cs
-			},
-			cont = 0,
+			id = "MyAutomaton",
 			State{
-				id = "first",
-				Jump{
-					function(event, agent, cell)
-						cont = cont + 1
-						if agent.cont < 10 then
-							agent.cont = agent.cont + 1
-							return tru
-						end
-						if agent.cont == 10 then agent.cont = 0 end
-						return false
-					end,
-					target = "second"
-				}
-			},
-			State{
-				id = "second",
-				Jump{
-					function(event, agent, cell)
-						cont = cont + 1
-						if agent.cont < 10 then
-							agent.cont = agent.cont + 1
-							return true
-						end
-						if agent.cont == 10 then agent.cont = 0 end
-						return false
-					end,
-					target = "first"
-				}
+				id = "second"
 			}
 		}
+		unitTest:assert_equal(tostring(at1), [[1      userdata
+cObj_  userdata
+id     string [MyAutomaton]
+]])
+	end,
+	add = function(unitTest)
+		local at1 = Automaton{
 
-		local env = Environment{cs, at1}
+			acum = 0,
+			cont = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
 
-		local ev = Event{action = function() end}[1]
-
-		at1:setTrajectoryStatus(true)
-		at1:execute(ev)
-		unitTest:assert_equal(0, at1:getLatency())
-
-		local ev = Event{time = 4, action = function() end}[1]
-		at1.it:sort(greaterByCoord(">"))
-		at1:execute(ev)
-		unitTest:assert_equal(0, at1:getLatency())
-
-		at1.it:filter(function(cell) return cell.x == cell.y end)
-		at1:execute(ev)
-		unitTest:assert_equal(0, at1:getLatency())
-
-		at1.it:filter(function(cell) return true end)
-		at1:execute(ev)
-		unitTest:assert_equal(0, at1:getLatency())
+		local it = Trajectory{
+			target = cs, 
+			select = function(cell)
+				local x = cell.x - 5
+				local y = cell.y - 5
+				return (x*x) + (y*y)  - 16 < 0.1
+			end
+		}
+		at1:add(it)
+		unitTest:assert(true)
 	end,
 	build = function(unitTest)
 		local at1 = Automaton{
@@ -293,6 +243,74 @@ return{
 		unitTest:assert_equal(3, at1.cont)
 		unitTest:assert_equal(14, cont)
 	end,
+	getId = function(unitTest)
+		unitTest:assert(true)
+	end,
+	getLatency = function(unitTest)
+		local cs = CellularSpace{xdim = 2}
+		local cont = 0
+
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs
+			},
+			cont = 0,
+			State{
+				id = "first",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return tru
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "second"
+				}
+			},
+			State{
+				id = "second",
+				Jump{
+					function(event, agent, cell)
+						cont = cont + 1
+						if agent.cont < 10 then
+							agent.cont = agent.cont + 1
+							return true
+						end
+						if agent.cont == 10 then agent.cont = 0 end
+						return false
+					end,
+					target = "first"
+				}
+			}
+		}
+
+		local env = Environment{cs, at1}
+
+		local ev = Event{action = function() end}[1]
+
+		at1:setTrajectoryStatus(true)
+		at1:execute(ev)
+		unitTest:assert_equal(0, at1:getLatency())
+
+		local ev = Event{time = 4, action = function() end}[1]
+		at1.it:sort(greaterByCoord(">"))
+		at1:execute(ev)
+		unitTest:assert_equal(0, at1:getLatency())
+
+		at1.it:filter(function(cell) return cell.x == cell.y end)
+		at1:execute(ev)
+		unitTest:assert_equal(0, at1:getLatency())
+
+		at1.it:filter(function(cell) return true end)
+		at1:execute(ev)
+		unitTest:assert_equal(0, at1:getLatency())
+	end,
+	getState = function(unitTest)
+		unitTest:assert(true)
+	end,
 	getStateName = function(unitTest)
 		local cs = CellularSpace{xdim = 2}
 		local cont = 0
@@ -363,33 +381,6 @@ return{
 		local states = at1:getStates()
 		unitTest:assert_equal(getn(states), 0) -- TODO: should be 2, but type(state) is not "State"
 	end,
-	getState = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getId = function(unitTest)
-		unitTest:assert(true)
-	end,
-	setId = function(unitTest)
-		local at1 = Automaton{
-			it = Trajectory{
-				target = cs, 
-				select = function(cell)
-					local x = cell.x - 5
-					local y = cell.y - 5
-					return (x * x) + (y * y)  - 16 < 0.1
-				end
-			},
-			acum = 0,
-			cont = 0,
-			curve = 0,
-			st2 = state2,
-			st1 = state1
-		}
-
-		at1:setId("2")
-
-		unitTest:assert(true)
-	end,
 	notify = function(unitTest)
 		local at1 = Automaton{
 			it = Trajectory{
@@ -412,6 +403,27 @@ return{
 			Event{action = function(ev)	at1:notify(ev) end}
 		}
 		t:execute(1)
+
+		unitTest:assert(true)
+	end,
+	setId = function(unitTest)
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs, 
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x * x) + (y * y)  - 16 < 0.1
+				end
+			},
+			acum = 0,
+			cont = 0,
+			curve = 0,
+			st2 = state2,
+			st1 = state1
+		}
+
+		at1:setId("2")
 
 		unitTest:assert(true)
 	end,
@@ -451,18 +463,6 @@ return{
 		count = 0
 		at1:execute(e)
 		unitTest:assert_equal(count, 0)
-	end,
-	__tostring = function(unitTest)
-		local at1 = Automaton{
-			id = "MyAutomaton",
-			State{
-				id = "second"
-			}
-		}
-		unitTest:assert_equal(tostring(at1), [[1      userdata
-cObj_  userdata
-id     string [MyAutomaton]
-]])
 	end
 }
 

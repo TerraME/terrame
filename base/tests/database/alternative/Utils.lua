@@ -26,6 +26,22 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	CSVparseLine = function(unitTest)
+		local error_func = function()
+			CSVparseLine(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+
+		error_func = function()
+			CSVparseLine("abc", 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
+
+		error_func = function()
+			CSVparseLine("\"ab\"c", ",")
+		end
+		unitTest:assert_error(error_func, "Invalid line: '\"ab\"c'.")
+	end,
 	CSVread = function(unitTest)
 		local error_func = function()
 			local csv = CSVread("asdfgh.csv")
@@ -104,22 +120,6 @@ return{
 			CSVwrite(example, filename)
 		end
 		unitTest:assert_error(error_func, "All attributes should be string, got number.")
-	end,
-	CSVparseLine = function(unitTest)
-		local error_func = function()
-			CSVparseLine(2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
-
-		error_func = function()
-			CSVparseLine("abc", 2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
-
-		error_func = function()
-			CSVparseLine("\"ab\"c", ",")
-		end
-		unitTest:assert_error(error_func, "Invalid line: '\"ab\"c'.")
 	end
 }
 

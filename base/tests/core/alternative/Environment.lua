@@ -26,6 +26,83 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	Environment = function(unitTest)
+		local state1 = State{
+			id = "seco",
+			Jump{
+				function( event, agent, cell )
+					agent.acum = agent.acum + 1
+					if (agent.cont < MAX_COUNT) then
+						agent.cont = agent.cont + 1
+						return true
+					end
+					if agent.cont == MAX_COUNT then agent.cont = 0 end
+					return false
+				end,
+				target = "molhado"
+			}
+		}
+
+		local state2 = State{
+			id = "molhado",
+			Jump{
+				function(event, agent, cell)
+					agent.acum = agent.acum + 1
+					if agent.cont < MAX_COUNT then
+						agent.cont = agent.cont + 1
+						return true
+					end
+					if agent.cont == MAX_COUNT then agent.cont = 0 end
+					return false
+				end, 
+				target = "seco"
+			}
+		}
+
+		local cs = CellularSpace{xdim = 20}
+
+		local at1 = Automaton{
+			it = Trajectory{
+				target = cs,
+				select = function(cell)
+					local x = cell.x - 5
+					local y = cell.y - 5
+					return (x*x) + (y*y) - 16 < 0.1
+				end,
+				greater = function(cell1, cell2)
+					return cell1.x < cell2.x
+				end
+			},
+			acum = 0,
+			cont = 0,
+			st2 = state2,
+			st1 = state1
+		}
+
+		local error_func = function()
+			envmt = Environment()
+		end
+
+		unitTest:assert_error(error_func, tableArgumentMsg())
+
+		local error_func = function()
+			envmt = Environment(2)
+		end
+
+		unitTest:assert_error(error_func, namedArgumentsMsg())
+
+		local error_func = function()
+			envmt = Environment{at1}
+		end
+
+		unitTest:assert_error(error_func, "The Environment has an Automaton but not a CellularSpace.")
+
+		local error_func = function()
+			envmt = Environment{2}
+		end
+
+		unitTest:assert_error(error_func, "Argument '1' (a 'number') cannot be added to an Environment.")
+	end,
 	add = function(unitTest)
 		local env = Environment{}
 		local error_func = function()
@@ -47,7 +124,6 @@ return{
 		}
 
 		local cs = CellularSpace{xdim = 5}
-
 		local env = Environment{cs, sc1}
 
 		local error_func = function()
@@ -151,83 +227,6 @@ return{
 
 		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 	end,
-	Environment = function(unitTest)
-		local state1 = State{
-			id = "seco",
-			Jump{
-				function( event, agent, cell )
-					agent.acum = agent.acum + 1
-					if (agent.cont < MAX_COUNT) then
-						agent.cont = agent.cont + 1
-						return true
-					end
-					if agent.cont == MAX_COUNT then agent.cont = 0 end
-					return false
-				end,
-				target = "molhado"
-			}
-		}
-
-		local state2 = State{
-			id = "molhado",
-			Jump{
-				function(event, agent, cell)
-					agent.acum = agent.acum + 1
-					if agent.cont < MAX_COUNT then
-						agent.cont = agent.cont + 1
-						return true
-					end
-					if agent.cont == MAX_COUNT then agent.cont = 0 end
-					return false
-				end, 
-				target = "seco"
-			}
-		}
-
-		local cs = CellularSpace{xdim = 20}
-
-		local at1 = Automaton{
-			it = Trajectory{
-				target = cs,
-				select = function(cell)
-					local x = cell.x - 5
-					local y = cell.y - 5
-					return (x*x) + (y*y) - 16 < 0.1
-				end,
-				greater = function(cell1, cell2)
-					return cell1.x < cell2.x
-				end
-			},
-			acum = 0,
-			cont = 0,
-			st2 = state2,
-			st1 = state1
-		}
-
-		local error_func = function()
-			envmt = Environment()
-		end
-
-		unitTest:assert_error(error_func, tableArgumentMsg())
-
-		local error_func = function()
-			envmt = Environment(2)
-		end
-
-		unitTest:assert_error(error_func, namedArgumentsMsg())
-
-		local error_func = function()
-			envmt = Environment{at1}
-		end
-
-		unitTest:assert_error(error_func, "The Environment has an Automaton but not a CellularSpace.")
-
-		local error_func = function()
-			envmt = Environment{2}
-		end
-
-		unitTest:assert_error(error_func, "Argument '1' (a 'number') cannot be added to an Environment.")
-	end,
 	notify = function(unitTest)
 		local env = Environment{}
 
@@ -241,6 +240,5 @@ return{
 		end
 		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
 	end
-
 }
 

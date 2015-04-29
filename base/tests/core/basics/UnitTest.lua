@@ -25,6 +25,20 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	UnitTest = function(unitTest)
+		local u = UnitTest{sleep = 0.1, dbType = "Test"}
+
+		unitTest:assert_type(u, "UnitTest")
+		unitTest:assert_equal(u.success, 0)
+		unitTest:assert_equal(u.fail, 0)
+		unitTest:assert_equal(u.test, 0)
+		unitTest:assert_equal(u.last_error, "")
+		unitTest:assert_equal(u.count_last, 0)
+		unitTest:assert_equal(u.sleep, 0.1)
+		unitTest:assert_equal(u.dbType, "test")
+
+		u:delay()
+	end,
 	assert = function(unitTest)
 		local u = UnitTest{}
 
@@ -84,20 +98,6 @@ return{
 		unitTest:assert_equal(f, g)
 		unitTest:assert_type(f, "string")
 		os.execute("rm -rf "..f)
-	end,
-	UnitTest = function(unitTest)
-		local u = UnitTest{sleep = 0.1, dbType = "Test"}
-
-		unitTest:assert_type(u, "UnitTest")
-		unitTest:assert_equal(u.success, 0)
-		unitTest:assert_equal(u.fail, 0)
-		unitTest:assert_equal(u.test, 0)
-		unitTest:assert_equal(u.last_error, "")
-		unitTest:assert_equal(u.count_last, 0)
-		unitTest:assert_equal(u.sleep, 0.1)
-		unitTest:assert_equal(u.dbType, "test")
-
-		u:delay()
 	end
 }
 

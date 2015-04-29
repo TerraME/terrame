@@ -33,6 +33,23 @@ return{
 		local neigh = Neighborhood()
 		unitTest:assert_type(neigh, "Neighborhood")
 	end,
+	__len = function(unitTest)
+		local neigh = Neighborhood()
+		local cell1 = Cell{}
+
+		unitTest:assert_equal(#neigh, 0)
+		neigh:add(cell1)
+		unitTest:assert_equal(#neigh, 1)
+
+		neigh:remove(cell1)
+		unitTest:assert_equal(#neigh, 0)
+	end,
+	__tostring = function(unitTest)
+		local neigh = Neighborhood()
+
+		unitTest:assert_equal(tostring(neigh),[[cObj_  userdata
+]])
+	end,
 	add = function(unitTest)
 		local neigh = Neighborhood()
 		local cell1 = Cell{}
@@ -87,6 +104,17 @@ return{
 		unitTest:assert_equal(0.3, neigh:getWeight(cell2))
 		unitTest:assert_equal(0.2, neigh:getWeight(cell3))
 	end,
+	isEmpty = function(unitTest)
+		local neigh = Neighborhood()
+		local cell1 = Cell{}
+
+		unitTest:assert(neigh:isEmpty())
+		neigh:add(cell1)
+		unitTest:assert(not neigh:isEmpty())
+
+		neigh:remove(cell1)
+		unitTest:assert(neigh:isEmpty())
+	end,
 	isNeighbor = function(unitTest)
 		local neigh = Neighborhood()
 		local cell1 = Cell{}
@@ -99,17 +127,6 @@ return{
 		unitTest:assert(neigh:isNeighbor(cell1))
 		unitTest:assert(neigh:isNeighbor(cell2))
 		unitTest:assert(not neigh:isNeighbor(cell3))
-	end,
-	isEmpty = function(unitTest)
-		local neigh = Neighborhood()
-		local cell1 = Cell{}
-
-		unitTest:assert(neigh:isEmpty())
-		neigh:add(cell1)
-		unitTest:assert(not neigh:isEmpty())
-
-		neigh:remove(cell1)
-		unitTest:assert(neigh:isEmpty())
 	end,
 	remove = function(unitTest)
 		local neigh = Neighborhood()
@@ -166,23 +183,6 @@ return{
 		unitTest:assert_equal(0.0, neigh:getWeight(cell1))
 		unitTest:assert_equal(0.1, neigh:getWeight(cell2))
 		unitTest:assert_equal(0.9, neigh:getWeight(cell3))
-	end,
-	__len = function(unitTest)
-		local neigh = Neighborhood()
-		local cell1 = Cell{}
-
-		unitTest:assert_equal(#neigh, 0)
-		neigh:add(cell1)
-		unitTest:assert_equal(#neigh, 1)
-
-		neigh:remove(cell1)
-		unitTest:assert_equal(#neigh, 0)
-	end,
-	__tostring = function(unitTest)
-		local neigh = Neighborhood()
-
-		unitTest:assert_equal(tostring(neigh),[[cObj_  userdata
-]])
 	end
 }
 

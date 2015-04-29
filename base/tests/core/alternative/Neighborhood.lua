@@ -169,14 +169,6 @@ return{
 
 		neigh:add(c)
 	end,
-	setCellWeight = function(unitTest)
-		local neigh = Neighborhood()
-
-		local error_func = function()
-			neigh:setCellWeight()
-		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("setCellWeight", "setWeight"))
-	end,
 	setCellNeighbor = function(unitTest)
 		local neigh = Neighborhood()
 
@@ -184,6 +176,14 @@ return{
 			neigh:setCellNeighbor()
 		end
 		unitTest:assert_error(error_func, deprecatedFunctionMsg("setCellNeighbor", "remove and add"))
+	end,
+	setCellWeight = function(unitTest)
+		local neigh = Neighborhood()
+
+		local error_func = function()
+			neigh:setCellWeight()
+		end
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("setCellWeight", "setWeight"))
 	end,
 	setNeighWeight = function(unitTest)
 		local neigh = Neighborhood()

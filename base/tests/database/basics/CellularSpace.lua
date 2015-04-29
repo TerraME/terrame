@@ -388,43 +388,6 @@ return{
 		unitTest:assert_equal(18582, countNeigh) -- SKIP
 		unitTest:assert_equal(451.98359156683, sumWeight, 0.00001) -- SKIP
 	end,
-	save = function(unitTest)
-		local config = getConfig()
-		local mdbType = config.dbType
-		local mhost = config.host
-		local muser = config.user
-		local mpassword = config.password
-		local mport = config.port
-		local mdatabase
-
-		if mdbType == "ado" then
-			mdatabase = file("cabecadeboi.mdb", "base")
-		else
-			mdatabase = "cabecadeboi"
-		end
-
-		local cs = CellularSpace{
-			dbType = mdbType,
-			host = mhost,
-			user = muser,
-			password = mpassword,
-			port = mport,
-			database = mdatabase,
-			theme = "cells90x90"
-		}
-
-		for t = 1, 2 do
-			forEachCell(cs, function(cell)
-				cell.height_ = t
-			end)
-
-			cs:save(t, "themeName", "height_")
-		end
-
-		local ev = Event{time = 10, action = function() end}[1]
-		cs:save(ev, "themeName", "height_")
-		unitTest:assert(true)
-	end,
 	loadNeighborhood = function(unitTest)
 		debug.sethook()
 		local config = getConfig()
@@ -913,6 +876,43 @@ return{
 		end)
 
 		unitTest:assert_equal(count, 7) -- SKIP
+	end,
+	save = function(unitTest)
+		local config = getConfig()
+		local mdbType = config.dbType
+		local mhost = config.host
+		local muser = config.user
+		local mpassword = config.password
+		local mport = config.port
+		local mdatabase
+
+		if mdbType == "ado" then
+			mdatabase = file("cabecadeboi.mdb", "base")
+		else
+			mdatabase = "cabecadeboi"
+		end
+
+		local cs = CellularSpace{
+			dbType = mdbType,
+			host = mhost,
+			user = muser,
+			password = mpassword,
+			port = mport,
+			database = mdatabase,
+			theme = "cells90x90"
+		}
+
+		for t = 1, 2 do
+			forEachCell(cs, function(cell)
+				cell.height_ = t
+			end)
+
+			cs:save(t, "themeName", "height_")
+		end
+
+		local ev = Event{time = 10, action = function() end}[1]
+		cs:save(ev, "themeName", "height_")
+		unitTest:assert(true)
 	end
 }
 

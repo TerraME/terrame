@@ -26,6 +26,24 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	getConfig = function(unitTest)
+		local cf = getConfig()
+		unitTest:assert_nil(cf.qwertyuiop)
+	end,
+	CSVparseLine = function(unitTest)
+		local line = CSVparseLine("2,5,aa", ",")
+		unitTest:assert_equal(line[1], "2")
+		unitTest:assert_equal(line[2], "5")
+		unitTest:assert_equal(line[3], "aa")
+	end,
+	CSVread = function(unitTest)
+		local mfile = file("agents.csv", "base")
+
+		local csv = CSVread(mfile)
+
+		unitTest:assert_equal(4, #csv)
+		unitTest:assert_equal(20, csv[1].age)
+	end,
 	CSVwrite = function(unitTest)
 		local example = {
 			{age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},
@@ -52,24 +70,6 @@ return{
 				unitTest:assert_equal(example[i][k], data[i][k])
 			end
 		end
-	end,
-	CSVread = function(unitTest)
-		local mfile = file("agents.csv", "base")
-
-		local csv = CSVread(mfile)
-
-		unitTest:assert_equal(4, #csv)
-		unitTest:assert_equal(20, csv[1].age)
-	end,
-	CSVparseLine = function(unitTest)
-		local line = CSVparseLine("2,5,aa", ",")
-		unitTest:assert_equal(line[1], "2")
-		unitTest:assert_equal(line[2], "5")
-		unitTest:assert_equal(line[3], "aa")
-	end,
-	getConfig = function(unitTest)
-		local cf = getConfig()
-		unitTest:assert_nil(cf.qwertyuiop)
 	end
 }
 

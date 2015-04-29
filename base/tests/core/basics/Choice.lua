@@ -59,6 +59,15 @@ return{
 		unitTest:assert_equal(#c.values, 4)
 		unitTest:assert_equal(c.default, 3)
 	end,
+	__tostring = function(unitTest)
+		local c = Choice{min = 2, max = 3, step = 0.1}
+
+		unitTest:assert_equal(tostring(c), [[default  number [2]
+max      number [3]
+min      number [2]
+step     number [0.1]
+]])
+	end,
 	sample = function(unitTest)
 		Random{seed = 12345}
 		local c = Choice{1, 2, 3}
@@ -77,15 +86,6 @@ return{
 		unitTest:assert_equal(c:sample(), 2.1551348191386, 0.01)
 		unitTest:assert_equal(c:sample(), 1.4584970893453, 0.01)
 		unitTest:assert_equal(c:sample(), 1.3813645669887, 0.01)
-	end,
-	__tostring = function(unitTest)
-		local c = Choice{min = 2, max = 3, step = 0.1}
-
-		unitTest:assert_equal(tostring(c), [[default  number [2]
-max      number [3]
-min      number [2]
-step     number [0.1]
-]])
 	end
 }
 

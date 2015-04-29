@@ -25,262 +25,11 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	integrate = function(unitTest)
-		local f = function(x) return x^3 end
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			step = 0.1
-		}
-
-		unitTest:assert_equal(16.48360, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			step = 0.01
-		}
-
-		unitTest:assert_equal(20.11522, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			step = 0.001
-		}
-
-		unitTest:assert_equal(20.23650, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			step = 0.0001
-		}
-
-		unitTest:assert_equal(20.24595, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			method = "rungekutta",
-			step = 0.1
-		}
-
-		unitTest:assert_equal(17.682025, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			method = "rungekutta",
-			step = 0.01
-		}
-
-		unitTest:assert_equal(20.25, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			method = "rungekutta",
-			step = 0.001
-		}
-
-		unitTest:assert_equal(20.25, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			method = "rungekutta",
-			step = 0.0001
-		}
-
-		unitTest:assert_equal(20.24730, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			method = "heun",
-			step = 0.1
-		}
-
-		unitTest:assert_equal(17.70305, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			method = "heun",
-			step = 0.01
-		}
-
-		unitTest:assert_equal(20.250225, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			method = "heun",
-			step = 0.001
-		}
-
-		unitTest:assert_equal(20.25, v, 0.0001)
-
-		local v = integrate{
-			equation = f,
-			initial = 0,
-			a = 0,
-			b = 3,
-			method = "heun",
-			step = 0.0001
-		}
-
-		unitTest:assert_equal(20.24730, v, 0.0001)
-
-		local df = function(x, y) return y - x ^ 2 + 1 end
-		local v = integrate{
-			equation = df,
-			initial = 0.5,
-			a = 0,
-			b = 2,
-			method = "heun",
-			step = 0.2
-		}
-
-		unitTest:assert_equal(5.23305, v, 0.0001)
-
-		local eq1 = function(t, y)
-			return t - 0.1
-		end
-
-		local event = Event{time = 2, period = 2, priority = 1, action = function(event) end}[1]
-
-		local v = integrate{
-			equation = df,
-			method = "heun",
-			step = 0.2,
-			initial = 0.5,
-			event = event
-		}
-
-		unitTest:assert_equal(5.23305, v, 0.0001)
-
-		-- TODO: verify results using more than one equation
-		local v = integrate{
-			equation = {eq1, eq1},
-			initial = {0, 0},
-			a = 0,
-			b = 100,
-			step = 0.1
-		}
-
-		local v = integrate{
-			equation = {eq1, eq1},
-			method = "heun",
-			initial = {0, 0},
-			a = 0,
-			b = 100,
-			step = 0.1
-		}
-
-		local v = integrate{
-			equation = {eq1, eq1},
-			method = "rungekutta",
-			initial = {0, 0},
-			a = 0,
-			b = 100,
-			step = 0.1
-		}
-
-		unitTest:assert_type(v, "number")
-	
-		-- integrate with a set of functions
-		local timeStep = 0.5
-		local birthPreyRate = 0.2
-		local predationRate = 0.01 -- death prey rate
-		local birthPredatorPerPreyRate = 0.01 -- birth predator rate
-		local deathPredatorRate = 0.1
-
-		local preyFunc = function(t, q)
-			return q[1] * birthPreyRate - q[1] * q[2] * predationRate
-		end
-		
-		local predatorFunc = function(t, q)
-			return q[2] * q[1] * birthPredatorPerPreyRate - q[2] * deathPredatorRate
-		end
-
-		local ag = Agent{preys = 100, predators = 10}
-		for t = 0, 10, timeStep do
-			ag.preys, ag.predators = integrate{
-				equation = {preyFunc, predatorFunc},
-				initial = {ag.preys, ag.predators},
-				a = 0,
-				b = timeStep, 
-				step = 0.03125
-			}
-		end
-
-		unitTest:assert_equal(ag.preys, 0.056344145404554)
-		unitTest:assert_equal(ag.predators, 77.830055916773)
-
-		ag = Agent{preys = 100, predators = 10}
-		for t = 0, 10, timeStep do
-			ag.preys, ag.predators = integrate{
-				equation = {preyFunc, predatorFunc},
-				initial = {ag.preys, ag.predators},
-				a = 0,
-				b = timeStep, 
-				method = "heun",
-				step = 0.03125
-			}
-		end
-
-		unitTest:assert_equal(ag.preys, 0.064490405763652)
-		unitTest:assert_equal(ag.predators, 77.393465378403)
-
-		ag = Agent{preys = 100, predators = 10}
-		for t = 0, 10, timeStep do
-			ag.preys, ag.predators = integrate{
-				equation = {preyFunc, predatorFunc},
-				initial = {ag.preys, ag.predators},
-				a = 0,
-				b = timeStep, 
-				method = "rungekutta",
-				step = 0.03125
-			}
-		end
-
-		unitTest:assert_equal(ag.preys, 0.062817338900899)
-		unitTest:assert_equal(ag.predators, 77.645421917421)
-	end,
 	belong = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}
 
 		unitTest:assert(belong("b", mvector))
 		unitTest:assert(not belong("e", mvector))
-	end,
-	["string.endswith"] = function(unitTest)
-		unitTest:assert(string.endswith("abcdef", "def"))
-		unitTest:assert(not string.endswith("abcdef", "deef"))
 	end,
 	call = function(unitTest)
 		local cont = 0
@@ -305,11 +54,6 @@ return{
 		local t2 = os.time()
 
 		unitTest:assert(t2 - t1 >= .5)
-	end,
-	levenshtein = function(unitTest)
-		unitTest:assert_equal(levenshtein("abv", "abc"), 1)
-		unitTest:assert_equal(levenshtein("abvaacc", "abcaacac"), 2)
-		unitTest:assert_equal(levenshtein("abvxwtaacc", "abcaacac"), 5)
 	end,
 	forEachAgent = function(unitTest)
 		local a = Agent{value = 2}
@@ -603,9 +347,8 @@ return{
 
 		unitTest:assert_equal(getn(Cell{}), 4)
 	end,
-	round = function(unitTest)
-		unitTest:assert_equal(round(5.22), 5)
-		unitTest:assert_equal(round(5.2235, 3), 5.224)
+	elapsedTime = function(unitTest)
+		unitTest:assert_type(elapsedTime(50), "string")
 	end,
 	greaterByAttribute = function(unitTest)
 		local gt = greaterByAttribute("cover")
@@ -621,14 +364,270 @@ return{
 		gt = greaterByCoord(">")
 		unitTest:assert_type(gt, "function")
 	end,
-	elapsedTime = function(unitTest)
-		unitTest:assert_type(elapsedTime(50), "string")
+	integrate = function(unitTest)
+		local f = function(x) return x^3 end
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			step = 0.1
+		}
+
+		unitTest:assert_equal(16.48360, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			step = 0.01
+		}
+
+		unitTest:assert_equal(20.11522, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			step = 0.001
+		}
+
+		unitTest:assert_equal(20.23650, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			step = 0.0001
+		}
+
+		unitTest:assert_equal(20.24595, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "rungekutta",
+			step = 0.1
+		}
+
+		unitTest:assert_equal(17.682025, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "rungekutta",
+			step = 0.01
+		}
+
+		unitTest:assert_equal(20.25, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "rungekutta",
+			step = 0.001
+		}
+
+		unitTest:assert_equal(20.25, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "rungekutta",
+			step = 0.0001
+		}
+
+		unitTest:assert_equal(20.24730, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "heun",
+			step = 0.1
+		}
+
+		unitTest:assert_equal(17.70305, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "heun",
+			step = 0.01
+		}
+
+		unitTest:assert_equal(20.250225, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "heun",
+			step = 0.001
+		}
+
+		unitTest:assert_equal(20.25, v, 0.0001)
+
+		local v = integrate{
+			equation = f,
+			initial = 0,
+			a = 0,
+			b = 3,
+			method = "heun",
+			step = 0.0001
+		}
+
+		unitTest:assert_equal(20.24730, v, 0.0001)
+
+		local df = function(x, y) return y - x ^ 2 + 1 end
+		local v = integrate{
+			equation = df,
+			initial = 0.5,
+			a = 0,
+			b = 2,
+			method = "heun",
+			step = 0.2
+		}
+
+		unitTest:assert_equal(5.23305, v, 0.0001)
+
+		local eq1 = function(t, y)
+			return t - 0.1
+		end
+
+		local event = Event{time = 2, period = 2, priority = 1, action = function(event) end}[1]
+
+		local v = integrate{
+			equation = df,
+			method = "heun",
+			step = 0.2,
+			initial = 0.5,
+			event = event
+		}
+
+		unitTest:assert_equal(5.23305, v, 0.0001)
+
+		local v = integrate{
+			equation = {eq1, eq1},
+			initial = {0, 0},
+			a = 0,
+			b = 100,
+			step = 0.1
+		}
+
+		local v = integrate{
+			equation = {eq1, eq1},
+			method = "heun",
+			initial = {0, 0},
+			a = 0,
+			b = 100,
+			step = 0.1
+		}
+
+		local v = integrate{
+			equation = {eq1, eq1},
+			method = "rungekutta",
+			initial = {0, 0},
+			a = 0,
+			b = 100,
+			step = 0.1
+		}
+
+		unitTest:assert_type(v, "number")
+	
+		-- integrate with a set of functions
+		local timeStep = 0.5
+		local birthPreyRate = 0.2
+		local predationRate = 0.01 -- death prey rate
+		local birthPredatorPerPreyRate = 0.01 -- birth predator rate
+		local deathPredatorRate = 0.1
+
+		local preyFunc = function(t, q)
+			return q[1] * birthPreyRate - q[1] * q[2] * predationRate
+		end
+		
+		local predatorFunc = function(t, q)
+			return q[2] * q[1] * birthPredatorPerPreyRate - q[2] * deathPredatorRate
+		end
+
+		local ag = Agent{preys = 100, predators = 10}
+		for t = 0, 10, timeStep do
+			ag.preys, ag.predators = integrate{
+				equation = {preyFunc, predatorFunc},
+				initial = {ag.preys, ag.predators},
+				a = 0,
+				b = timeStep, 
+				step = 0.03125
+			}
+		end
+
+		unitTest:assert_equal(ag.preys, 0.056344145404554)
+		unitTest:assert_equal(ag.predators, 77.830055916773)
+
+		ag = Agent{preys = 100, predators = 10}
+		for t = 0, 10, timeStep do
+			ag.preys, ag.predators = integrate{
+				equation = {preyFunc, predatorFunc},
+				initial = {ag.preys, ag.predators},
+				a = 0,
+				b = timeStep, 
+				method = "heun",
+				step = 0.03125
+			}
+		end
+
+		unitTest:assert_equal(ag.preys, 0.064490405763652)
+		unitTest:assert_equal(ag.predators, 77.393465378403)
+
+		ag = Agent{preys = 100, predators = 10}
+		for t = 0, 10, timeStep do
+			ag.preys, ag.predators = integrate{
+				equation = {preyFunc, predatorFunc},
+				initial = {ag.preys, ag.predators},
+				a = 0,
+				b = timeStep, 
+				method = "rungekutta",
+				step = 0.03125
+			}
+		end
+
+		unitTest:assert_equal(ag.preys, 0.062817338900899)
+		unitTest:assert_equal(ag.predators, 77.645421917421)
+	end,
+	levenshtein = function(unitTest)
+		unitTest:assert_equal(levenshtein("abv", "abc"), 1)
+		unitTest:assert_equal(levenshtein("abvaacc", "abcaacac"), 2)
+		unitTest:assert_equal(levenshtein("abvxwtaacc", "abcaacac"), 5)
+	end,
+	round = function(unitTest)
+		unitTest:assert_equal(round(5.22), 5)
+		unitTest:assert_equal(round(5.2235, 3), 5.224)
 	end,
 	sessionInfo = function(unitTest)
 		local s = sessionInfo()
 
 		unitTest:assert_equal(s.mode, "debug")
 		unitTest:assert_equal(s.version, packageInfo().version)
+	end,
+	["string.endswith"] = function(unitTest)
+		unitTest:assert(string.endswith("abcdef", "def"))
+		unitTest:assert(not string.endswith("abcdef", "deef"))
 	end,
 	type = function(unitTest)
 		local c = Cell{}

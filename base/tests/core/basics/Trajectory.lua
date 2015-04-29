@@ -135,6 +135,35 @@ return{
 		unitTest:assert(t:k() == 20)
 		unitTest:assert(t:w() == 40)
 	end,
+	__len = function(unitTest)
+		local cs1 = CellularSpace{
+			xdim = 10,
+			ydim = 20
+		}
+
+		local tr1 = Trajectory{target = cs1}
+
+		unitTest:assert_equal(#tr1, 200)
+	end,
+	__tostring = function(unitTest)
+		local cs1 = CellularSpace{
+			xdim = 10,
+			ydim = 20,
+			xyz = function() end,
+			vvv = 333}
+
+		local tr1 = Trajectory{
+			target = cs1,
+			select = function() return true end
+		}
+		unitTest:assert_equal(tostring(tr1), [[cObj_   userdata
+cells   table of size 200
+load    function
+parent  CellularSpace
+select  function
+xyz     function
+]])
+	end,
 	add = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
@@ -210,35 +239,6 @@ return{
 
 		unitTest:assert_equal(100, #it)
 	end,
-	sort = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-		local it = Trajectory{target = cs}
-
-		it:sort(function(a, b)
-			return a.y > b.y
-		end)
-
-		local orderMemory = 10e10
-		forEachCell(it, function(cell)
-			unitTest:assert(cell.y <= orderMemory)
-			orderMemory = cell.y
-		end)
-
-		local xMemory = 0
-		local yMemory = 0
-		local cont = 0
-		it:sort(greaterByCoord("<"))
-		forEachCell(it, function(cell)
-			unitTest:assert(cell.x >= xMemory)
-			if cell.x == xMemory then
-				unitTest:assert(cell.y >= yMemory)
-			end
-			xMemory = cell.x
-			yMemory = cell.y
-			cont = cont + 1
-		end)
-		unitTest:assert_equal(100, cont)
-	end,
 	rebuild = function(unitTest) 
 		local cs = CellularSpace{xdim = 5}
 
@@ -289,34 +289,34 @@ return{
 
 		unitTest:assert_equal(#tr, 10)
 	end,
-	__len = function(unitTest)
-		local cs1 = CellularSpace{
-			xdim = 10,
-			ydim = 20
-		}
+	sort = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+		local it = Trajectory{target = cs}
 
-		local tr1 = Trajectory{target = cs1}
+		it:sort(function(a, b)
+			return a.y > b.y
+		end)
 
-		unitTest:assert_equal(#tr1, 200)
-	end,
-	__tostring = function(unitTest)
-		local cs1 = CellularSpace{
-			xdim = 10,
-			ydim = 20,
-			xyz = function() end,
-			vvv = 333}
+		local orderMemory = 10e10
+		forEachCell(it, function(cell)
+			unitTest:assert(cell.y <= orderMemory)
+			orderMemory = cell.y
+		end)
 
-		local tr1 = Trajectory{
-			target = cs1,
-			select = function() return true end
-		}
-		unitTest:assert_equal(tostring(tr1), [[cObj_   userdata
-cells   table of size 200
-load    function
-parent  CellularSpace
-select  function
-xyz     function
-]])
-	end
+		local xMemory = 0
+		local yMemory = 0
+		local cont = 0
+		it:sort(greaterByCoord("<"))
+		forEachCell(it, function(cell)
+			unitTest:assert(cell.x >= xMemory)
+			if cell.x == xMemory then
+				unitTest:assert(cell.y >= yMemory)
+			end
+			xMemory = cell.x
+			yMemory = cell.y
+			cont = cont + 1
+		end)
+		unitTest:assert_equal(100, cont)
+	end	
 }
 

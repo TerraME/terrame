@@ -63,7 +63,6 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("separator", "string", 2))
 
-
 		local unit = Cell{}
 
 		error_func = function()

@@ -26,7 +26,7 @@
 return{
 	Agent = function(unitTest)
 		local world = Agent{
-		    count = 0,
+			count = 0,
 			mcount = function(self)
 				return self.count + 1
 			end
@@ -49,10 +49,10 @@ return{
 		unitTest:delay()
 
 		local t = Timer{
-		    Event{action = function(e)
+			Event{action = function(e)
 				world.count = world.count + 1
-		        world:notify(e)
-		    end}
+				world:notify(e)
+			end}
 		}
 
 		TextScreen{subject = world}
@@ -76,15 +76,15 @@ return{
 		unitTest:assert_type(c3, "Chart")
 
 		local t = Timer{
-		    Event{action = function(e)
+			Event{action = function(e)
 				if e:getTime() < 100 then
 					world.probability = world.probability + 0.01
 				else
 					world.probability = world.probability - 0.01
 				end
 				world.mx = world.mx + world.probability ^ 2
-		        world:notify()
-		    end}
+				world:notify()
+			end}
 		}
 
 		t:execute(200)

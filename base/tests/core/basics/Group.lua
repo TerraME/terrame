@@ -100,6 +100,37 @@ return{
 		unitTest:assert_equal(10, g.agents[1].age)
 		unitTest:assert_equal(0, g.agents[10].age)
 	end,
+	__len = function(unitTest)
+		local ag1 = Agent{age = 8}
+		local soc1 = Society{
+			instance = ag1,
+			quantity = 2
+		}
+
+		local g1 = Group{
+			target = soc1,
+			select = function(ag) return ag.age > 5 end
+		}
+	
+		unitTest:assert(#g1 == 2)
+	end,
+	__tostring = function(unitTest)
+		local ag1 = Agent{age = 8}
+		local soc1 = Society{
+			instance = ag1,
+			quantity = 2
+		}
+
+		local g1 = Group{
+			target = soc1,
+			select = function(ag) return ag.age > 5 end
+		}
+		unitTest:assert_equal(tostring(g1), [[age     function
+agents  table of size 2
+parent  Society
+select  function
+]])
+	end,
 	add = function(unitTest)
 		local nonFooAgent = Agent{}
 
@@ -280,37 +311,6 @@ return{
 			unitTest:assert(agent.age >= lastAge)
 			lastAge = agent.age
 		end)
-	end,
-	__len = function(unitTest)
-		local ag1 = Agent{age = 8}
-		local soc1 = Society{
-			instance = ag1,
-			quantity = 2
-		}
-
-		local g1 = Group{
-			target = soc1,
-			select = function(ag) return ag.age > 5 end
-		}
-	
-		unitTest:assert(#g1 == 2)
-	end,
-	__tostring = function(unitTest)
-		local ag1 = Agent{age = 8}
-		local soc1 = Society{
-			instance = ag1,
-			quantity = 2
-		}
-
-		local g1 = Group{
-			target = soc1,
-			select = function(ag) return ag.age > 5 end
-		}
-		unitTest:assert_equal(tostring(g1), [[age     function
-agents  table of size 2
-parent  Society
-select  function
-]])
 	end
 }
 

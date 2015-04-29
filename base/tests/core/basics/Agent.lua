@@ -25,6 +25,61 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	Agent = function(unitTest)
+		local singleFooAgent = Agent{
+			id = "singleFoo",
+			size = 10,
+			execute = function(self)
+				self.size = self.size + 1	
+				self:walk()
+			end}
+
+		unitTest:assert_type(singleFooAgent, "Agent")
+		unitTest:assert_equal(10, singleFooAgent.size)
+		unitTest:assert_equal("singleFoo", singleFooAgent.id)
+
+		local cs = CellularSpace{xdim = 10}
+
+		cs:createNeighborhood()
+
+		local e = Environment{
+			cs,
+			singleFooAgent
+		}
+
+		e:createPlacement()
+		unitTest:assert_type(singleFooAgent:getCell(), "Cell")
+		unitTest:assert_equal(1, #singleFooAgent:getCell().placement)
+
+		local t = Timer{
+			Event{action = singleFooAgent}
+		}
+
+		t:execute(10)
+		unitTest:assert_equal(20,singleFooAgent.size)
+
+		unitTest:assert_type(singleFooAgent:getCell(), "Cell")
+		unitTest:assert_equal(1, #singleFooAgent:getCell().placement)
+
+		local count = 0
+		forEachCell(cs, function(cell)
+			count = count + #cell.placement
+		end)
+		unitTest:assert_equal(1, count)
+	end,
+	__tostring = function(unitTest)
+		local ag1 = Agent{
+			name = "nonfoo",
+			init = function() end,
+			execute = function() end
+		}
+		unitTest:assert_equal(tostring(ag1), [[cObj_           userdata
+execute         function
+init            function
+name            string [nonfoo]
+socialnetworks  table of size 0
+]])
+	end,
 	add = function(unitTest)
 		local ag = Agent{}
 		local cs = CellularSpace{xdim = 5}
@@ -33,6 +88,59 @@ return{
 		ag:add(traj)
 
 		unitTest:assert(true)
+	end,
+	addSocialNetwork = function(unitTest)
+		local ag1 = Agent{}
+		unitTest:assert_nil(ag1:getSocialNetwork("notfriends"))	
+
+		local sn = SocialNetwork()
+		ag1:addSocialNetwork(sn)
+		unitTest:assert_type(ag1:getSocialNetwork(), "SocialNetwork")
+		unitTest:assert_equal(#ag1:getSocialNetwork(), 0)
+
+		local ag = Agent{}
+
+		local sc = Society{instance = ag, quantity = 5}
+
+		sn = SocialNetwork()
+		forEachAgent(sc, function(agent)
+			sn:add(agent)
+		end)
+
+		ag:addSocialNetwork(sn)
+		unitTest:assert(#ag:getSocialNetwork() == 5)
+	end,
+	build = function(unitTest)
+		local ag = Agent{}
+		ag:build()
+		unitTest:assert(true)
+	end,
+	die = function(unitTest)
+		local predator = Agent{
+			energy = 40,
+			name = "predator",
+			execute = function(self) return self.energy end
+		}
+
+		local predators = Society{
+			instance = predator, 
+			quantity = 5
+		}
+
+		local cs = CellularSpace{xdim = 5}
+
+		local e = Environment{predators, cs}
+		e:createPlacement()
+
+		unitTest:assert_equal(5, #predators)
+		local dead = predators.agents[2]
+		predators.agents[2]:die()
+		unitTest:assert_equal(4, #predators)
+
+		local test_function = function()
+			print(dead.a)
+		end
+		unitTest:assert_error(test_function, "Trying to use a function or an attribute of a dead Agent.")
 	end,
 	execute = function(unitTest)
 		local count = 0
@@ -51,6 +159,27 @@ return{
 		}
 		t:execute(1)
 		unitTest:assert_equal(count, 1)
+	end,
+	getCell = function(unitTest)
+		local ag1 = Agent{}
+		local cs = CellularSpace{xdim = 3}
+		cs:createNeighborhood()
+		local myEnv = Environment{cs, ag1}
+
+		myEnv:createPlacement{}
+
+		unitTest:assert_type(ag1:getCell(), "Cell")
+	end,
+	getCells = function(unitTest)
+		local ag1 = Agent{}
+		local cs = CellularSpace{xdim = 3}
+		cs:createNeighborhood()
+		local myEnv = Environment{cs, ag1}
+
+		myEnv:createPlacement{}
+
+		unitTest:assert_type(ag1:getCells(), "table")
+		unitTest:assert_type(ag1:getCells()[1], "Cell")
 	end,
 	getLatency = function(unitTest)
 		local jumps = 0
@@ -127,10 +256,22 @@ return{
 		unitTest:assert_equal(15, flows)
 		unitTest:assert_equal(17, jumps)
 	end,
-	build = function(unitTest)
-		local ag = Agent{}
-		ag:build()
-		unitTest:assert(true)
+	getSocialNetwork = function(unitTest)
+		local ag1 = Agent{}
+		local sn = SocialNetwork()
+		ag1:addSocialNetwork(sn)
+		local sn2 = ag1:getSocialNetwork()
+		unitTest:assert_equal(sn2, sn)
+
+		local predator = Agent{}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 10
+		}
+
+		predators:createSocialNetwork{probability = 0.5, inmemory = false}
+		local sn = predators.agents[1]:getSocialNetwork()	
 	end,
 	getStateName = function(unitTest)
 		local a = Agent{
@@ -236,107 +377,6 @@ return{
 		ag1:setTrajectoryStatus(false)
 		unitTest:assert(not ag1:getTrajectoryStatus())
 	end,
-	Agent = function(unitTest)
-		local singleFooAgent = Agent{
-			id = "singleFoo",
-			size = 10,
-			execute = function(self)
-				self.size = self.size + 1	
-				self:walk()
-			end}
-
-		unitTest:assert_type(singleFooAgent, "Agent")
-		unitTest:assert_equal(10, singleFooAgent.size)
-		unitTest:assert_equal("singleFoo", singleFooAgent.id)
-
-		local cs = CellularSpace{xdim = 10}
-
-		cs:createNeighborhood()
-
-		local e = Environment{
-			cs,
-			singleFooAgent
-		}
-
-		e:createPlacement()
-		unitTest:assert_type(singleFooAgent:getCell(), "Cell")
-		unitTest:assert_equal(1, #singleFooAgent:getCell().placement)
-
-		local t = Timer{
-			Event{action = singleFooAgent}
-		}
-
-		t:execute(10)
-		unitTest:assert_equal(20,singleFooAgent.size)
-
-		unitTest:assert_type(singleFooAgent:getCell(), "Cell")
-		unitTest:assert_equal(1, #singleFooAgent:getCell().placement)
-
-		local count = 0
-		forEachCell(cs, function(cell)
-			count = count + #cell.placement
-		end)
-		unitTest:assert_equal(1, count)
-	end,
-	addSocialNetwork = function(unitTest)
-		local ag1 = Agent{}
-		unitTest:assert_nil(ag1:getSocialNetwork("notfriends"))	
-
-		local sn = SocialNetwork()
-		ag1:addSocialNetwork(sn)
-		unitTest:assert_type(ag1:getSocialNetwork(), "SocialNetwork")
-		unitTest:assert_equal(#ag1:getSocialNetwork(), 0)
-
-		local ag = Agent{}
-
-		local sc = Society{instance = ag, quantity = 5}
-
-		sn = SocialNetwork()
-		forEachAgent(sc, function(agent)
-			sn:add(agent)
-		end)
-
-		ag:addSocialNetwork(sn)
-		unitTest:assert(#ag:getSocialNetwork() == 5)
-	end,
-	getCell = function(unitTest)
-		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3}
-		cs:createNeighborhood()
-		local myEnv = Environment{cs, ag1}
-
-		myEnv:createPlacement{}
-
-		unitTest:assert_type(ag1:getCell(), "Cell")
-	end,
-	getCells = function(unitTest)
-		local ag1 = Agent{}
-		local cs = CellularSpace{xdim = 3}
-		cs:createNeighborhood()
-		local myEnv = Environment{cs, ag1}
-
-		myEnv:createPlacement{}
-
-		unitTest:assert_type(ag1:getCells(), "table")
-		unitTest:assert_type(ag1:getCells()[1], "Cell")
-	end,
-	getSocialNetwork = function(unitTest)
-		local ag1 = Agent{}
-		local sn = SocialNetwork()
-		ag1:addSocialNetwork(sn)
-		local sn2 = ag1:getSocialNetwork()
-		unitTest:assert_equal(sn2, sn)
-
-		local predator = Agent{}
-
-		local predators = Society{
-			instance = predator,
-			quantity = 10
-		}
-
-		predators:createSocialNetwork{probability = 0.5, inmemory = false}
-		local sn = predators.agents[1]:getSocialNetwork()	
-	end,
 	init = function(unitTest)
 		local ag1 = Agent{
 			init = function(self)
@@ -370,75 +410,6 @@ return{
 		ag1:leave("placement")
 
 		unitTest:assert_nil(ag1:getCell("placement"))
-	end,
-	die = function(unitTest)
-		local predator = Agent{
-			energy = 40,
-			name = "predator",
-			execute = function(self) return self.energy end
-		}
-
-		local predators = Society{
-			instance = predator, 
-			quantity = 5
-		}
-
-		local cs = CellularSpace{xdim = 5}
-
-		local e = Environment{predators, cs}
-		e:createPlacement()
-
-		unitTest:assert_equal(5, #predators)
-		local dead = predators.agents[2]
-		predators.agents[2]:die()
-		unitTest:assert_equal(4, #predators)
-
-		local test_function = function()
-			print(dead.a)
-		end
-		unitTest:assert_error(test_function, "Trying to use a function or an attribute of a dead Agent.")
-	end,
-	reproduce = function(unitTest)
-		local predator = Agent{
-			energy = 40,
-			name = "predator",
-			execute = function(self) return self.energy end
-		}
-
-		local predators = Society{
-			instance = predator, 
-			quantity = 5
-		}
-
-		local cs = CellularSpace{xdim = 10}
-
-		local env = Environment{predators, cs}
-
-		env:createPlacement{}
-		env:createPlacement{name = "house"}
-
-		predators.agents[2]:die()
-
-		predators.agents[4]:reproduce()
-
-		predators.agents[4]:reproduce{age = 0}
-		unitTest:assert_equal(6, #predators)
-
-		local cont = 3
-		local sum = 0
-		forEachAgent(predators, function(agent)
-			sum = sum + agent:execute()
-			if cont == 3 then predators.agents[3]:die() end
-			if cont == 1 then predators.agents[4]:die() end
-			cont = cont - 1
-		end)
-		unitTest:assert_equal(160, sum)
-		unitTest:assert_equal(4, #predators)
-
-		forEachAgent(predators, function(agent)
-			agent:reproduce{age = 0}
-		end)
-		unitTest:assert_equal(8, #predators)
 	end,
 	message = function(unitTest)
 		local ag = Agent{
@@ -482,6 +453,48 @@ return{
 		unitTest:assert(ag2.money == 0)
 		sc:synchronize(1)
 		unitTest:assert(ag2.money == 5)
+	end,
+	reproduce = function(unitTest)
+		local predator = Agent{
+			energy = 40,
+			name = "predator",
+			execute = function(self) return self.energy end
+		}
+
+		local predators = Society{
+			instance = predator, 
+			quantity = 5
+		}
+
+		local cs = CellularSpace{xdim = 10}
+
+		local env = Environment{predators, cs}
+
+		env:createPlacement{}
+		env:createPlacement{name = "house"}
+
+		predators.agents[2]:die()
+
+		predators.agents[4]:reproduce()
+
+		predators.agents[4]:reproduce{age = 0}
+		unitTest:assert_equal(6, #predators)
+
+		local cont = 3
+		local sum = 0
+		forEachAgent(predators, function(agent)
+			sum = sum + agent:execute()
+			if cont == 3 then predators.agents[3]:die() end
+			if cont == 1 then predators.agents[4]:die() end
+			cont = cont - 1
+		end)
+		unitTest:assert_equal(160, sum)
+		unitTest:assert_equal(4, #predators)
+
+		forEachAgent(predators, function(agent)
+			agent:reproduce{age = 0}
+		end)
+		unitTest:assert_equal(8, #predators)
 	end,
 	sample = function(unitTest)
 		local ag = Agent{}
@@ -580,19 +593,6 @@ return{
 
 		ag1:walk()
 		unitTest:assert_type(ag1:getCell(), "Cell")
-	end,
-	__tostring = function(unitTest)
-		local ag1 = Agent{
-			name = "nonfoo",
-			init = function() end,
-			execute = function() end
-		}
-		unitTest:assert_equal(tostring(ag1), [[cObj_           userdata
-execute         function
-init            function
-name            string [nonfoo]
-socialnetworks  table of size 0
-]])
 	end
 }
 

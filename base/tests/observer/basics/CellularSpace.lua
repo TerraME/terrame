@@ -26,23 +26,23 @@
 return{
 	CellularSpace = function(unitTest)
 		local cs = CellularSpace{
-		    xdim = 10,
+			xdim = 10,
 			value = function() return 3 end
 		}
 
 		forEachCell(cs, function(cell)
-		    cell.value = math.random()
+			cell.value = math.random()
 		end)
 
 		local c = Chart{subject = cs, select = "value"}
 --[[
 		local m = Map{
-		    subject = cs,
-		    select = "value",
-		    min = 0,
-		    max = 1,
-		    slices = 10,
-		    color = "Blues"
+			subject = cs,
+			select = "value",
+			min = 0,
+			max = 1,
+			slices = 10,
+			color = "Blues"
 		}
 
 		unitTest:assert_type(m, "Map") -- SKIP
@@ -113,14 +113,14 @@ return{
 
 --[[
 		local l = Legend{
-            grouping = "uniquevalues",
-            colorBar = {
+			grouping = "uniquevalues",
+			colorBar = {
 				{value = 0, color = "red"},
 				{value = 1, color = "blue"}
 			},
 			size = 1,
 			pen = 2
-    	}
+		}
 
 		Observer{
 			type = "map",

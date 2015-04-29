@@ -25,58 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	notify = function(unitTest)
-		local sc1 = Society{
-			instance = Agent{},
-			quantity = 20
-		}
-
-		local error_func = function()
-			sc1:notify("not_int")
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
-
-		error_func = function()
-			sc1:notify(-1)
-		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
-	end,
-	remove = function(unitTest)
-		local agent1 = Agent{}
-
-		local soc1 = Society{
-			instance = agent1,
-			quantity = 1
-		}
-
-		local ag = soc1:sample()
-		soc1:remove(ag)
-
-		local error_func = function()
-			soc1:remove()
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent or function"))
-	
-		local error_func = function()
-			soc1:remove(ag)
-		end
-		unitTest:assert_error(error_func, "Could not remove the Agent (id = '1').")
-	end,
-	sample = function(unitTest)
-		local agent1 = Agent{}
-
-		local soc1 = Society{
-			instance = agent1,
-			quantity = 1
-		}
-
-		soc1:remove(soc1:sample())
-
-		local error_func = function()
-			soc1:sample()
-		end
-		unitTest:assert_error(error_func, "Trying to sample an empty Society.")
-	end,
 	Society = function(unitTest)
 		local ag1 = Agent{}
 
@@ -529,6 +477,58 @@ return{
 			sc1:getAgents()
 		end
 		unitTest:assert_error(error_func, deprecatedFunctionMsg("getAgents", ".agents"))
+	end,
+	notify = function(unitTest)
+		local sc1 = Society{
+			instance = Agent{},
+			quantity = 20
+		}
+
+		local error_func = function()
+			sc1:notify("not_int")
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
+
+		error_func = function()
+			sc1:notify(-1)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
+	end,
+	remove = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 1
+		}
+
+		local ag = soc1:sample()
+		soc1:remove(ag)
+
+		local error_func = function()
+			soc1:remove()
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent or function"))
+	
+		local error_func = function()
+			soc1:remove(ag)
+		end
+		unitTest:assert_error(error_func, "Could not remove the Agent (id = '1').")
+	end,
+	sample = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 1
+		}
+
+		soc1:remove(soc1:sample())
+
+		local error_func = function()
+			soc1:sample()
+		end
+		unitTest:assert_error(error_func, "Trying to sample an empty Society.")
 	end,
 	size = function(unitTest)
 		local ag1 = Agent{

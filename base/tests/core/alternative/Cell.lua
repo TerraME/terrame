@@ -87,6 +87,17 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
 	end,
 	distance = function(unitTest)
+		local c = Cell{}
+
+		local error_func = function()
+			c:distance()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+
+		local error_func = function()
+			c:distance(12345)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 12345))
 	end,
 	getAgent = function(unitTest)
 		local c = Cell{}
@@ -116,18 +127,15 @@ return{
 		end
 		unitTest:assert_error(error_func, "Placement 'friends' should be a Group, got number.")
 	end,
-	distance = function(unitTest)
-		local c = Cell{}
+	getNeighborhood = function(unitTest)
+		local cell = Cell{x = 1, y = 1}
+		local n = Neighborhood()
+		cell:addNeighborhood(n, "name")
 
 		local error_func = function()
-			c:distance()
+			n1 = cell:getNeighborhood(1)
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
-
-		local error_func = function()
-			c:distance(12345)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 12345))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
 	isEmpty = function(unitTest)
 		local c = Cell{}
@@ -142,6 +150,19 @@ return{
 			c:isEmpty("friends")
 		end
 		unitTest:assert_error(error_func, "Placement 'friends' should be a Group, got number.")
+	end,
+	notify = function(unitTest)
+		local cell = Cell{x = 1, y = 1}
+
+		local error_func = function()
+			cell:notify("not_int")
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
+
+		error_func = function()
+			cell:notify(-1)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
 	end,
 	sample = function(unitTest)
 		local c = Cell{}
@@ -158,29 +179,6 @@ return{
 			c:size()
 		end
 		unitTest:assert_error(error_func, deprecatedFunctionMsg("size", "operator #"))
-	end,
-	getNeighborhood = function(unitTest)
-		local cell = Cell{x = 1, y = 1}
-		local n = Neighborhood()
-		cell:addNeighborhood(n, "name")
-
-		local error_func = function()
-			n1 = cell:getNeighborhood(1)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 1))
-	end,
-	notify = function(unitTest)
-		local cell = Cell{x = 1, y = 1}
-
-		local error_func = function()
-			cell:notify("not_int")
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
-
-		error_func = function()
-			cell:notify(-1)
-		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
 	end
 }
 

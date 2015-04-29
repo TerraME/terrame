@@ -25,7 +25,6 @@
 
 return{
 	Cell = function(unitTest)
--- [[
 		local world = Cell{
 			count = 0,
 			value = function(self)
@@ -90,7 +89,6 @@ return{
 		world:notify(Event{time = 31, action = function() end}[1])
 
 		unitTest:delay()
---]]
 
 -- FIXME: bug below
 --[[

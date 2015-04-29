@@ -25,20 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	__len = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		unitTest:assert_equal(#cs, 100)
-	end,
-	add = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		local c = Cell{x = 20, y = 20}
-
-		cs:add(c)
-		unitTest:assert_equal(#cs, 101)
-		unitTest:assert_equal(cs.cells[101], c)
-	end,
 	CellularSpace = function(unitTest)
 		Random{seed = 12345}
 		local cs = CellularSpace{xdim = 10}
@@ -72,20 +58,39 @@ return{
 		cs:deforest()
 		unitTest:assert_equal(cs:sample().defor, 2)
 	end, 
-	get = function(unitTest)
+	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
-		local c = cs:get(2, 2)
+		unitTest:assert_equal(#cs, 100)
+	end,
+	__tostring = function(unitTest)
+		local cs1 = CellularSpace{ 
+			xdim = 10,
+			ydim = 20,
+			xyz = function() end,
+			vvv = 333}
+		unitTest:assert_equal(tostring(cs1), [[cObj_   userdata
+cells   table of size 200
+dbType  string [virtual]
+load    function
+maxCol  number [9]
+maxRow  number [19]
+minCol  number [0]
+minRow  number [0]
+vvv     number [333]
+xdim    number [10]
+xyz     function
+ydim    number [20]
+]])
+	end,
+	add = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
 
-		unitTest:assert_equal(2, c.x)
-		unitTest:assert_equal(2, c.y)
+		local c = Cell{x = 20, y = 20}
 
-		local d = cs:get(c:getId())
-
-		unitTest:assert_equal(c, d)
-
-		local c = cs:get(100, 100)
-		unitTest:assert_nil(c)
+		cs:add(c)
+		unitTest:assert_equal(#cs, 101)
+		unitTest:assert_equal(cs.cells[101], c)
 	end,
 	createNeighborhood = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -882,6 +887,21 @@ return{
 		unitTest:assert_equal(32, sizes[3])
 		unitTest:assert_equal(64, sizes[4])
 	end,
+	get = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local c = cs:get(2, 2)
+
+		unitTest:assert_equal(2, c.x)
+		unitTest:assert_equal(2, c.y)
+
+		local d = cs:get(c:getId())
+
+		unitTest:assert_equal(c, d)
+
+		local c = cs:get(100, 100)
+		unitTest:assert_nil(c)
+	end,
 	load = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
 
@@ -892,20 +912,6 @@ return{
 		cs:load()
 
 		unitTest:assert_nil(cs:sample().w)
-	end,
-	synchronize = function(unitTest)
-		local cs = CellularSpace{xdim = 5}
-
-		forEachCell(cs, function(cell) unitTest:assert_not_nil(cell) end)
-		forEachCell(cs, function(cell) unitTest:assert_not_nil(cell.past) end)
-		forEachCell(cs, function(cell) cell.cover = "forest" end)
-
-		cs:synchronize()
-		forEachCell(cs, function(cell) unitTest:assert_not_nil(cell.past.cover) end)
-		forEachCell(cs, function(cell) unitTest:assert_equal("forest", cell.past.cover) end)
-
-		forEachElement(cs.cells[1], function(el) unitTest:assert_not_nil(el) end)
-		forEachElement(cs.cells[1].past, function(el) unitTest:assert_not_nil(el) end)
 	end,
 	sample = function(unitTest)
 		local cs = CellularSpace{xdim = 3}
@@ -955,25 +961,19 @@ return{
 
 		unitTest:assert_equal(#t2.test, 3)
 	end,
-	__tostring = function(unitTest)
-		local cs1 = CellularSpace{ 
-			xdim = 10,
-			ydim = 20,
-			xyz = function() end,
-			vvv = 333}
-		unitTest:assert_equal(tostring(cs1), [[cObj_   userdata
-cells   table of size 200
-dbType  string [virtual]
-load    function
-maxCol  number [9]
-maxRow  number [19]
-minCol  number [0]
-minRow  number [0]
-vvv     number [333]
-xdim    number [10]
-xyz     function
-ydim    number [20]
-]])
+	synchronize = function(unitTest)
+		local cs = CellularSpace{xdim = 5}
+
+		forEachCell(cs, function(cell) unitTest:assert_not_nil(cell) end)
+		forEachCell(cs, function(cell) unitTest:assert_not_nil(cell.past) end)
+		forEachCell(cs, function(cell) cell.cover = "forest" end)
+
+		cs:synchronize()
+		forEachCell(cs, function(cell) unitTest:assert_not_nil(cell.past.cover) end)
+		forEachCell(cs, function(cell) unitTest:assert_equal("forest", cell.past.cover) end)
+
+		forEachElement(cs.cells[1], function(el) unitTest:assert_not_nil(el) end)
+		forEachElement(cs.cells[1].past, function(el) unitTest:assert_not_nil(el) end)
 	end
 }
 

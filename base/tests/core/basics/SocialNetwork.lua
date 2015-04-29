@@ -36,6 +36,27 @@ return{
 		unitTest:assert_equal(#sntw.connections, 0)
 		unitTest:assert_equal(#sntw.weights, 0)
 	end,
+	__len = function(unitTest)
+		local sntw = SocialNetwork()
+		local ag1 = Agent{id = "1"}
+
+		unitTest:assert_equal(#sntw, 0)
+		sntw:add(ag1)
+		unitTest:assert_equal(#sntw, 1)
+
+		sntw:remove(ag1)
+		unitTest:assert_equal(#sntw, 0)
+	end,
+	__tostring = function(unitTest)
+		local sntw = SocialNetwork()
+		local ag1 = Agent{id = "1"}
+
+		sntw:add(ag1)
+		unitTest:assert_equal(tostring(sntw), [[connections  table of size 0
+count        number [1]
+weights      table of size 0
+]])
+	end,
 	add = function(unitTest)
 		local sntw = SocialNetwork()
 		local ag1 = Agent{id = "1"}
@@ -164,27 +185,6 @@ return{
 		unitTest:assert_equal(0.0, sntw:getWeight(ag1))
 		unitTest:assert_equal(0.1, sntw:getWeight(ag2))
 		unitTest:assert_equal(0.9, sntw:getWeight(ag3))
-	end,
-	__len = function(unitTest)
-		local sntw = SocialNetwork()
-		local ag1 = Agent{id = "1"}
-
-		unitTest:assert_equal(#sntw, 0)
-		sntw:add(ag1)
-		unitTest:assert_equal(#sntw, 1)
-
-		sntw:remove(ag1)
-		unitTest:assert_equal(#sntw, 0)
-	end,
-	__tostring = function(unitTest)
-		local sntw = SocialNetwork()
-		local ag1 = Agent{id = "1"}
-
-		sntw:add(ag1)
-		unitTest:assert_equal(tostring(sntw), [[connections  table of size 0
-count        number [1]
-weights      table of size 0
-]])
 	end
 }
 

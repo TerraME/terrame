@@ -207,7 +207,6 @@ return{
 			}
 		end
 		unitTest:assert_error(error_func, "The string '' found as weight in the file '"..mfile.."' could not be converted to a number.")
-	
 	end
 }
 

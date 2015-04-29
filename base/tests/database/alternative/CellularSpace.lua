@@ -243,7 +243,6 @@ return{
 		unitTest:assert_error(error_func, "bad SCL command.") -- SKIP
 		--]]
 
-
 		error_func = function()
 			local cs = CellularSpace{
 				dbType = mdbType,

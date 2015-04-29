@@ -24,7 +24,6 @@
 --          Rodrigo Reis Pereira
 -------------------------------------------------------------------------------------------
 
-
 return{
 	Society = function(unitTest)
 		local agents_csv = file("agents.csv", "base")

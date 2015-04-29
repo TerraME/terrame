@@ -25,30 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	add = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-		local cs2 = CellularSpace{xdim = 10}
-
-		local error_func = function()
-			cs:add(2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 2))
-
-		error_func = function()
-			cs:add(cs2:sample())
-		end
-		unitTest:assert_error(error_func, "The cell already has a parent.")
-
-		local c = Cell{x = 30, y = 30}
-		local c2 = Cell{x = 30, y = 30}
-
-		cs:add(c)
-
-		error_func = function()
-			cs:add(c2)
-		end
-		unitTest:assert_error(error_func, "Cell (30, 30) already belongs to the CellularSpace.")
-	end,
 	CellularSpace = function(unitTest)
 		local error_func = function()
 			local cs = CellularSpace{
@@ -205,57 +181,29 @@ return{
 		end
 		unitTest:assert_error(error_func, "Attribute 'status' will not be replaced by a summary function.")
 	end,
-	get = function(unitTest)
+	add = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
+		local cs2 = CellularSpace{xdim = 10}
 
 		local error_func = function()
-			cs:get()
+			cs:add(2)
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 2))
 
 		error_func = function()
-			cs:get(2)
+			cs:add(cs2:sample())
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
+		unitTest:assert_error(error_func, "The cell already has a parent.")
+
+		local c = Cell{x = 30, y = 30}
+		local c2 = Cell{x = 30, y = 30}
+
+		cs:add(c)
 
 		error_func = function()
-			cs:get(2.3, 4)
+			cs:add(c2)
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg(1, 2.3))
-
-		error_func = function()
-			cs:get(4, 2.3)
-		end
-		unitTest:assert_error(error_func, integerArgumentMsg(2, 2.3))
-
-		error_func = function()
-			cs:get("4", 2.3)
-		end
-		unitTest:assert_error(error_func, "As #1 is string, #2 should be nil, but got number.")	
-	end,
-	getCell = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		local error_func = function()
-			cs:getCell(1, 2)
-		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCell", "get"))
-	end,
-	getCells = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		local error_func = function()
-			cs:getCells()
-		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCells", ".cells"))
-	end,
-	getCellByID = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		local error_func = function()
-			cs:getCellByID("C0L0")
-		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCellByID", "get"))
+		unitTest:assert_error(error_func, "Cell (30, 30) already belongs to the CellularSpace.")
 	end,
 	createNeighborhood = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -631,6 +579,58 @@ return{
 			cs:createNeighborhood{name = "abc"}
 		end
 		unitTest:assert_error(error_func, "Neighborhood 'abc' already exists.")
+	end,
+	get = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:get()
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+
+		error_func = function()
+			cs:get(2)
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
+
+		error_func = function()
+			cs:get(2.3, 4)
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg(1, 2.3))
+
+		error_func = function()
+			cs:get(4, 2.3)
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg(2, 2.3))
+
+		error_func = function()
+			cs:get("4", 2.3)
+		end
+		unitTest:assert_error(error_func, "As #1 is string, #2 should be nil, but got number.")	
+	end,
+	getCell = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:getCell(1, 2)
+		end
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCell", "get"))
+	end,
+	getCellByID = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:getCellByID("C0L0")
+		end
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCellByID", "get"))
+	end,
+	getCells = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:getCells()
+		end
+		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCells", ".cells"))
 	end,
 	notify = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

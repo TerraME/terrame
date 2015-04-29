@@ -102,9 +102,9 @@ return{
 		unitTest:assert_error(error_func, defaultValueMsg("priority", 0))
 
 		local t = Timer{
-		        Event{action = function()
-					customError("aaa")
-		        end}
+			Event{action = function()
+				customError("aaa")
+			end}
 		}
 
 		error_func = function()

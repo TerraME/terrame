@@ -64,6 +64,17 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
+	linkAttributes = function(unitTest)
+		local error_func = function()
+			linkAttributes(1)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 1))
+
+		error_func = function()
+			linkAttributes("path", 1)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 1))
+	end,
 	lock = function(unitTest)
 		local error_func = function()
 			lock(1)
@@ -124,17 +135,6 @@ return{
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 1))
 	
 		os.execute("rm "..pathdata.."testfile.txt")
-	end,
-	linkAttributes = function(unitTest)
-		local error_func = function()
-			linkAttributes(1)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 1))
-
-		error_func = function()
-			linkAttributes("path", 1)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 1))
 	end,
 	touch = function(unitTest)
 		local error_func = function()

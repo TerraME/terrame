@@ -72,6 +72,17 @@ return{
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 	end,
+	packageInfo = function(unitTest)
+		local error_func = function()
+			local r = packageInfo(2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+	
+		error_func = function()
+			local r = packageInfo("asdfgh")
+		end
+		unitTest:assert_error(error_func, "Package 'asdfgh' is not installed.")
+	end,
 	require = function(unitTest)
 		local error_func = function()
 			require()
@@ -88,57 +99,46 @@ return{
 		end
 		unitTest:assert_error(error_func, "Package 'base' is already loaded.")
 	end,
-	packageInfo = function(unitTest)
-		local error_func = function()
-        	local r = packageInfo(2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
-	
-		error_func = function()
-        	local r = packageInfo("asdfgh")
-		end
-		unitTest:assert_error(error_func, "Package 'asdfgh' is not installed.")
-	end,
-    suggestion = function(unitTest)
-        local t = {
-            "aaaaa",
-            "bbbbb",
-            "ccccc"
-        }
+	suggestion = function(unitTest)
+		local t = {
+			"aaaaa",
+			"bbbbb",
+			"ccccc"
+		}
 
 		local error_func = function()
-        	suggestion()
+			suggestion()
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
-        	suggestion(2)
+			suggestion(2)
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		local error_func = function()
-        	suggestion("aaaab")
+			suggestion("aaaab")
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
 
 		local error_func = function()
-        	suggestion("aaaab", 2)
+			suggestion("aaaab", 2)
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "table", 2))
 
 		local error_func = function()
-        	suggestion("aaaab", t)
+			suggestion("aaaab", t)
 		end
 		unitTest:assert_error(error_func, "All the indexes of second parameter should be string, got 'number'.")
-    end,
+	end,
 	switch = function(unitTest)
 		local error_func = function()
-        	switch("aaaab")
+			switch("aaaab")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "table", "aaaab"))
 
 		error_func = function()
-        	switch({}, 2)
+			switch({}, 2)
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
 	
@@ -223,7 +223,6 @@ return{
 			switchInvalidArgumentSuggestionMsg("abc", "def")
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg(3, "string"))
-	
 	end
 }
 

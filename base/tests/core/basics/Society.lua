@@ -25,88 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	__len = function(unitTest)
-		local sc1 = Society{
-			instance = Agent{},
-			quantity = 10
-		}
-
-		unitTest:assert_equal(10, #sc1)
-	end,
-	add = function(unitTest)
-		local ag1 = Agent{}
-
-		local sc1 = Society{
-			instance = ag1,
-			quantity = 20
-		}
-
-		unitTest:assert_equal(20, #sc1)
-		local agent = sc1:add()
-		unitTest:assert_equal(21, #sc1)
-		unitTest:assert_type(agent, "Agent")
-		unitTest:assert_equal(agent.id, "21")
-
-		local cs = CellularSpace{xdim = 10}
-		local e = Environment{cs, sc1}
-
-		e:createPlacement{}
-		local ag2 = Agent{}
-
-		local agent = sc1:add(ag2)
-		unitTest:assert_equal(22, #sc1)
-	end,
-	clear = function(unitTest)
-		local agent1 = Agent{}
-
-		local soc1 = Society{
-			instance = agent1,
-			quantity = 10
-		}
-
-		soc1:clear()
-		unitTest:assert_equal(0, #soc1)
-	end,
-	remove = function(unitTest)
-		local agent1 = Agent{}
-
-		local soc1 = Society{
-			instance = agent1,
-			quantity = 10
-		}
-
-		soc1:remove(soc1:sample())
-		unitTest:assert_equal(9, #soc1)
-
-		local ag1 = Agent{
-			name = "nonfoo",
-			init = function(self)
-				self.age = Random():integer(10)
-			end
-		}
-
-		local sc = Society{
-			instance = ag1,
-			quantity = 10
-		}
-
-		sc:remove(function(ag)
-			return ag.age > 5
-		end)
-
-		unitTest:assert_equal(9, #soc1)
-	end,
-	sample = function(unitTest)
-		local agent1 = Agent{}
-
-		local soc1 = Society{
-			instance = agent1,
-			quantity = 10
-		}
-
-		local ag = soc1:sample()
-		unitTest:assert_type(ag, "Agent")
-	end,
 	Society = function(unitTest)
 		local singleFooAgent = Agent{
 			size = 10,
@@ -228,97 +146,72 @@ return {
 		unitTest:assert_equal(soc:human(), 10)
 		unitTest:assert_equal(soc:gender().male, 10)
 	end,
-	synchronize = function(unitTest)
-		local randomObj = Random{}
-		randomObj:reSeed(0)
-
-		local received = 0
-		local sugar = 0
-		local nonFooAgent = Agent{
-			init = function(self)
-				self.age = randomObj:integer(10)
-			end,
-			execute = function(self)
-				self.age = self.age + 1
-			end,
-			on_message = function(m)
-				received = received + 1
-			end,
-			on_sugar = function(m)
-				sugar = sugar + 1
-			end
+	__len = function(unitTest)
+		local sc1 = Society{
+			instance = Agent{},
+			quantity = 10
 		}
 
-		local soc = Society{
-			instance = nonFooAgent,
-			quantity = 3
+		unitTest:assert_equal(10, #sc1)
+	end,
+	__tostring = function(unitTest)
+		local ag1 = Agent{
+			name = "nonfoo",
+			init = function(unitTest)
+				unitTest.age = 8
+			end,
+			execute = function(unitTest) end
 		}
 
-		local ags = soc.agents
-		local john = ags[1] -- get a randomize agent from the society
-		john.name = "john"
-		local mary = ags[2]
-		mary.name = "mary"
-		local myself = ags[3]
+		local soc1 = Society{
+			instance = ag1,
+			quantity = 2
+		}
+		unitTest:assert_equal(tostring(soc1), [[age            function
+agents         table of size 2
+autoincrement  number [3]
+cObj_          userdata
+execute        function
+init           function
+instance       Agent
+messages       table of size 0
+name           function
+observerId     number [-1]
+placements     table of size 0
+quantity       number [0]
+]])
 
-		unitTest:assert_equal(3, #soc)
+		local aa = soc1.agents[2]
+		unitTest:assert_equal(tostring(aa), [[age             number [8]
+cObj_           userdata
+id              string [2]
+parent          Society
+socialnetworks  table of size 0
+state_          userdata
+]])
+	end,
+	add = function(unitTest)
+		local ag1 = Agent{}
 
-		local friends = SocialNetwork()
-		friends:add(john)
-		friends:add(mary)
-
-		myself:addSocialNetwork(friends) -- adding two connections to myself
-		unitTest:assert_equal(2, #myself:getSocialNetwork())
-
-		local sum = 0
-		forEachConnection(myself, function(self, friend)
-			sum = sum + friend.age
-		end)
-
-		unitTest:assert_equal(12, sum)
-
-		forEachConnection(myself, function(self, friend)
-			myself:message{receiver = friend}
-		end)
-		unitTest:assert_equal(2, received)
-
-		forEachConnection(myself, function(self, friend)
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{subject = "sugar", receiver = friend, delay = 10}
-		end)
-
-		--[[
-		-- to verify the delayed messages
-		forEachElement(soc.messages, function(_, mes)
-			print(tostring(mes.subject))
-			print(tostring(mes.delay))
-		end)
-		--]]
-
-		soc:synchronize()
-		unitTest:assert_equal(5, received)
-
-		local t = Timer{
-			Event{period = 4, action = soc}
+		local sc1 = Society{
+			instance = ag1,
+			quantity = 20
 		}
 
-		t:execute(8)
-		unitTest:assert_equal(14, received)
-		unitTest:assert_equal(0, sugar)
+		unitTest:assert_equal(20, #sc1)
+		local agent = sc1:add()
+		unitTest:assert_equal(21, #sc1)
+		unitTest:assert_type(agent, "Agent")
+		unitTest:assert_equal(agent.id, "21")
 
-		soc:synchronize(1.1)
+		local cs = CellularSpace{xdim = 10}
+		local e = Environment{cs, sc1}
 
-		unitTest:assert_equal(16, received)
+		e:createPlacement{}
+		local ag2 = Agent{}
 
-		soc:synchronize(20)
-		unitTest:assert_equal(16, received)
-		unitTest:assert_equal(2, sugar)
+		local agent = sc1:add(ag2)
+		unitTest:assert_equal(22, #sc1)
 	end,
 	createSocialNetwork = function(unitTest)
 		Random{seed = 12345}
@@ -486,6 +379,17 @@ return {
 		unitTest:assert_equal(380, count_c)
 		unitTest:assert_equal(2094, count_n)
 	end,
+	clear = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 10
+		}
+
+		soc1:clear()
+		unitTest:assert_equal(0, #soc1)
+	end,
 	get = function(unitTest)
 		local nonFooAgent = Agent{}
 
@@ -507,6 +411,138 @@ return {
 		unitTest:assert_equal(getn(soc.idindex), 10)
 		unitTest:assert_equal(soc:get(ag.id), ag)
 		unitTest:assert_equal(getn(soc.idindex), 11)
+	end,
+	remove = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 10
+		}
+
+		soc1:remove(soc1:sample())
+		unitTest:assert_equal(9, #soc1)
+
+		local ag1 = Agent{
+			name = "nonfoo",
+			init = function(self)
+				self.age = Random():integer(10)
+			end
+		}
+
+		local sc = Society{
+			instance = ag1,
+			quantity = 10
+		}
+
+		sc:remove(function(ag)
+			return ag.age > 5
+		end)
+
+		unitTest:assert_equal(9, #soc1)
+	end,
+	sample = function(unitTest)
+		local agent1 = Agent{}
+
+		local soc1 = Society{
+			instance = agent1,
+			quantity = 10
+		}
+
+		local ag = soc1:sample()
+		unitTest:assert_type(ag, "Agent")
+	end,
+	synchronize = function(unitTest)
+		local randomObj = Random{}
+		randomObj:reSeed(0)
+
+		local received = 0
+		local sugar = 0
+		local nonFooAgent = Agent{
+			init = function(self)
+				self.age = randomObj:integer(10)
+			end,
+			execute = function(self)
+				self.age = self.age + 1
+			end,
+			on_message = function(m)
+				received = received + 1
+			end,
+			on_sugar = function(m)
+				sugar = sugar + 1
+			end
+		}
+
+		local soc = Society{
+			instance = nonFooAgent,
+			quantity = 3
+		}
+
+		local ags = soc.agents
+		local john = ags[1] -- get a randomize agent from the society
+		john.name = "john"
+		local mary = ags[2]
+		mary.name = "mary"
+		local myself = ags[3]
+
+		unitTest:assert_equal(3, #soc)
+
+		local friends = SocialNetwork()
+		friends:add(john)
+		friends:add(mary)
+
+		myself:addSocialNetwork(friends) -- adding two connections to myself
+		unitTest:assert_equal(2, #myself:getSocialNetwork())
+
+		local sum = 0
+		forEachConnection(myself, function(self, friend)
+			sum = sum + friend.age
+		end)
+
+		unitTest:assert_equal(12, sum)
+
+		forEachConnection(myself, function(self, friend)
+			myself:message{receiver = friend}
+		end)
+		unitTest:assert_equal(2, received)
+
+		forEachConnection(myself, function(self, friend)
+			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
+			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
+			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
+			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
+			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
+			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
+			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
+			myself:message{subject = "sugar", receiver = friend, delay = 10}
+		end)
+
+		--[[
+		-- to verify the delayed messages
+		forEachElement(soc.messages, function(_, mes)
+			print(tostring(mes.subject))
+			print(tostring(mes.delay))
+		end)
+		--]]
+
+		soc:synchronize()
+		unitTest:assert_equal(5, received)
+
+		local t = Timer{
+			Event{period = 4, action = soc}
+		}
+
+		t:execute(8)
+		unitTest:assert_equal(14, received)
+		unitTest:assert_equal(0, sugar)
+
+		soc:synchronize(1.1)
+
+		unitTest:assert_equal(16, received)
+
+		soc:synchronize(20)
+		unitTest:assert_equal(16, received)
+		unitTest:assert_equal(2, sugar)
 	end,
 	split = function(unitTest)
 		local randomObj = Random{}
@@ -545,42 +581,6 @@ return {
 
 		unitTest:assert_equal(4, #g3[2])
 		unitTest:assert_equal(10, #g3[1] + #g3[2] + #g3[3])
-	end,
-	__tostring = function(unitTest)
-		local ag1 = Agent{
-			name = "nonfoo",
-			init = function(unitTest)
-				unitTest.age = 8
-			end,
-			execute = function(unitTest) end
-		}
-
-		local soc1 = Society{
-			instance = ag1,
-			quantity = 2
-		}
-		unitTest:assert_equal(tostring(soc1), [[age            function
-agents         table of size 2
-autoincrement  number [3]
-cObj_          userdata
-execute        function
-init           function
-instance       Agent
-messages       table of size 0
-name           function
-observerId     number [-1]
-placements     table of size 0
-quantity       number [0]
-]])
-
-		local aa = soc1.agents[2]
-		unitTest:assert_equal(tostring(aa), [[age             number [8]
-cObj_           userdata
-id              string [2]
-parent          Society
-socialnetworks  table of size 0
-state_          userdata
-]])
 	end
 }
 

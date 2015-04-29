@@ -26,7 +26,7 @@
 return{
 	LogFile = function(unitTest)
 		local world = Cell{
-		    count = 0,
+			count = 0,
 			mcount = function(self)
 				return self.count + 1
 			end
@@ -35,7 +35,7 @@ return{
 		local c1 = LogFile{subject = world}
 
 		local world = Agent{
-		    count = 0,
+			count = 0,
 			mcount = function(self)
 				return self.count + 1
 			end
@@ -58,7 +58,7 @@ return{
 
 		local world = CellularSpace{
 			xdim = 10,
-		    count = 0,
+			count = 0,
 			mcount = function(self)
 				return self.count + 1
 			end

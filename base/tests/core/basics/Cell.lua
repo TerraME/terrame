@@ -25,23 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return {
-	setId = function(unitTest)
-		local c = Cell{id = "a"}
-
-		c:setId("b")
-
-		unitTest:assert_equal(c:getId(), "b")
-	end,
-	getId = function(unitTest)
-		local c = Cell{id = "a"}
-
-		unitTest:assert_equal(c:getId(), "a")
-	end,
-	__len = function(unitTest)
-		local c1 = Cell{}
-
-		unitTest:assert_equal(0, #c1)
-	end,
 	Cell = function(unitTest)
 		local cell = Cell{
 			cover = "forest",
@@ -54,6 +37,25 @@ return {
 		unitTest:assert_equal(cell.soilWater, 0)
 		unitTest:assert_equal(cell.cover, "forest")
 		unitTest:assert_equal(#cell, 0)
+	end,
+	__len = function(unitTest)
+		local c1 = Cell{}
+
+		unitTest:assert_equal(0, #c1)
+	end,
+	__tostring = function(unitTest)
+		local c1 = Cell{w = 3, t = 4, s = "alguem", twr = false, dfg = Cell()}
+
+		unitTest:assert_equal(tostring(c1), [[cObj_  userdata
+dfg    Cell
+past   table of size 0
+s      string [alguem]
+t      number [4]
+twr    boolean [false]
+w      number [3]
+x      number [0]
+y      number [0]
+]])
 	end,
 	addNeighborhood = function(unitTest)
 		local c1 = Cell{}
@@ -69,6 +71,12 @@ return {
 		unitTest:assert_equal(1, #c1)
 		
 		unitTest:assert_type(c1:getNeighborhood(), "Neighborhood")
+	end,
+	distance = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		unitTest:assert_equal(cs.cells[1]:distance(cs.cells[10]), 9)
+		unitTest:assert_equal(cs.cells[1]:distance(cs.cells[91]), 9)
 	end,
 	getAgent = function(unitTest)
 		local ag = Agent{}
@@ -109,6 +117,11 @@ return {
 		unitTest:assert_equal(#c:getAgents(), 0)
 		unitTest:assert_equal(#c:getAgents("friends"), 0)
 	end,
+	getId = function(unitTest)
+		local c = Cell{id = "a"}
+
+		unitTest:assert_equal(c:getId(), "a")
+	end,
 	getNeighborhood = function(unitTest)
 		local cell = Cell{x = 1, y = 1}
 		local cell2 = Cell{x = 1, y = 1}
@@ -140,7 +153,6 @@ return {
 		}
 
 		unitTest:assert_type(cs:sample():getNeighborhood(), "Neighborhood")
-
 	end,
 	init = function(unitTest)
 		local c = Cell{
@@ -152,12 +164,6 @@ return {
 		unitTest:assert_nil(c.value)
 		c:init()
 		unitTest:assert_equal(2, c.value)
-	end,
-	distance = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		unitTest:assert_equal(cs.cells[1]:distance(cs.cells[10]), 9)
-		unitTest:assert_equal(cs.cells[1]:distance(cs.cells[91]), 9)
 	end,
 	isEmpty = function(unitTest)
 		local ag = Agent{}
@@ -185,6 +191,13 @@ return {
 
 		unitTest:assert_type(c:sample(), "Cell")
 	end,
+	setId = function(unitTest)
+		local c = Cell{id = "a"}
+
+		c:setId("b")
+
+		unitTest:assert_equal(c:getId(), "b")
+	end,
 	synchronize = function(unitTest)
 		local cell = Cell{
 			cover = "forest",
@@ -200,20 +213,6 @@ return {
 		unitTest:assert_equal(cell.cover,"forest")
 		unitTest:assert_equal(cell.cover, cell.past.cover)
 		unitTest:assert_nil(cell.past.past)
-	end,
-	__tostring = function(unitTest)
-		local c1 = Cell{w = 3, t = 4, s = "alguem", twr = false, dfg = Cell()}
-
-		unitTest:assert_equal(tostring(c1), [[cObj_  userdata
-dfg    Cell
-past   table of size 0
-s      string [alguem]
-t      number [4]
-twr    boolean [false]
-w      number [3]
-x      number [0]
-y      number [0]
-]])
 	end
 }
 

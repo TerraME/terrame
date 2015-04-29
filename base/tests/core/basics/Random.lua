@@ -36,6 +36,10 @@ return {
 		self:assert_equal(type(r:integer()), "number")
 		self:assert_equal(type(r:number()), "number")
 	end,
+	__tostring = function(unitTest)
+		local randomObj = Random{seed = 12345}
+		unitTest:assert_equal(tostring(randomObj), "")
+	end,
 	integer = function(self)
 		local randomObj = Random{}
 		randomObj:reSeed(12345)
@@ -153,7 +157,6 @@ return {
 			self:assert(v <= 10.1)
 			self:assert(v >= -10.1)
 		end
-
 	end,
 	reSeed = function(self)
 		local randomObj = Random{}
@@ -193,10 +196,6 @@ return {
 		unitTest:assert_equal(r:sample(vector), "a")
 		unitTest:assert_equal(r:sample(vector), "b")
 		unitTest:assert_equal(r:sample(vector), "a")
-	end,
-	__tostring = function(unitTest)
-		local randomObj = Random{seed = 12345}
-		unitTest:assert_equal(tostring(randomObj), "")
 	end
 }
 

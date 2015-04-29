@@ -101,10 +101,6 @@ return{
 		unitTest:assert_equal(event[1]:getPriority(), 1) -- SKIP
 	end,
 --]]
-	getTime = function(unitTest)
-		local event = Event{time = -10, action = function(event) end}
-		unitTest:assert_equal(event[1]:getTime(), -10)
-	end,
 	getParent = function(unitTest)
 		unitTest:assert(true)
 	end,
@@ -115,6 +111,10 @@ return{
 	getPriority = function(unitTest)
 		local event = Event{priority = -10, action = function(event) end}
 		unitTest:assert_equal(event[1]:getPriority(), -10)
+	end,
+	getTime = function(unitTest)
+		local event = Event{time = -10, action = function(event) end}
+		unitTest:assert_equal(event[1]:getTime(), -10)
 	end
 }
 

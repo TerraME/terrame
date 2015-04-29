@@ -83,6 +83,18 @@ return {
 
 		unitTest:assert_equal(60, count)
 	end,
+	__tostring = function(unitTest)
+		local t1 = Timer{
+			Event{priority = 1, action = function(ev)
+				ag1:execute(ev)
+			end}
+		}
+
+		unitTest:assert_equal(tostring(t1), [[1       table of size 2
+cObj_   userdata
+events  table of size 1
+]])
+	end,
 	add = function(unitTest)
 		local cont = 0
 		local timer2 = Timer{}
@@ -106,46 +118,6 @@ return {
 		timer2:execute(6)
 		unitTest:assert_equal(6, timer2:getTime())
 		unitTest:assert_equal(7, cont)
-	end,
-	reset = function(unitTest)
-		local cont = 0
-		local timer2 = Timer{
-			Event{action = function(event)
-				cont = cont + 1
-				unitTest:assert_not_nil(event)
- 
-				-- configuring the current event does not affects the TerraME scheduler
-				local evTime = event:getTime() + 2
-				event:config(evTime , 2, 0) 
-				unitTest:assert_equal(evTime, event:getTime())
-				unitTest:assert_equal(2, event:getPeriod())
-			end},
-			Event{action = function(event)
-				cont = cont + 1
-				return false
-			end}
-		}
-
-		timer2:execute(6)
-		unitTest:assert_equal(6, timer2:getTime())
-		unitTest:assert_equal(7, cont)
-
-		cont = 0
-		timer2:reset()
-		timer2:execute(4)
-		unitTest:assert_equal(4, timer2:getTime())
-		unitTest:assert_equal(0, cont)
-
-		cont = 0
-		timer2:reset()
-		timer2:add(Event{ action = function(event)
-			cont = cont + 1
-		end})
-
-		cont = 0
-		timer2:execute(12)
-		unitTest:assert_equal(12, timer2:getTime())
-		unitTest:assert_equal(18, cont)
 	end,
 	execute = function(unitTest)
 		local qt1 = 0
@@ -238,17 +210,45 @@ return {
 		unitTest:assert_equal(cont1, 105)
 		unitTest:assert_equal(cont2, 60)
 	end,
-	__tostring = function(unitTest)
-		local t1 = Timer{
-			Event{priority = 1, action = function(ev)
-				ag1:execute(ev)
+	reset = function(unitTest)
+		local cont = 0
+		local timer2 = Timer{
+			Event{action = function(event)
+				cont = cont + 1
+				unitTest:assert_not_nil(event)
+ 
+				-- configuring the current event does not affects the TerraME scheduler
+				local evTime = event:getTime() + 2
+				event:config(evTime , 2, 0) 
+				unitTest:assert_equal(evTime, event:getTime())
+				unitTest:assert_equal(2, event:getPeriod())
+			end},
+			Event{action = function(event)
+				cont = cont + 1
+				return false
 			end}
 		}
 
-		unitTest:assert_equal(tostring(t1), [[1       table of size 2
-cObj_   userdata
-events  table of size 1
-]])
+		timer2:execute(6)
+		unitTest:assert_equal(6, timer2:getTime())
+		unitTest:assert_equal(7, cont)
+
+		cont = 0
+		timer2:reset()
+		timer2:execute(4)
+		unitTest:assert_equal(4, timer2:getTime())
+		unitTest:assert_equal(0, cont)
+
+		cont = 0
+		timer2:reset()
+		timer2:add(Event{ action = function(event)
+			cont = cont + 1
+		end})
+
+		cont = 0
+		timer2:execute(12)
+		unitTest:assert_equal(12, timer2:getTime())
+		unitTest:assert_equal(18, cont)
 	end
 }
 

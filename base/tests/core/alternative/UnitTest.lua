@@ -91,8 +91,6 @@ return{
 		end
 
 		unitTest:assert_error(error_func, "Values have the same type (boolean) but different values.")
-	
-
 	end,
 	assert_error = function(unitTest)
 		local u = UnitTest{unittest = true}

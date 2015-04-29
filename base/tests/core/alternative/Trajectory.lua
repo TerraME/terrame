@@ -25,6 +25,74 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	Trajectory = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			trajectory = Trajectory()
+		end
+		unitTest:assert_error(error_func, tableArgumentMsg())
+
+		error_func = function()
+			trajectory = Trajectory(3)
+		end
+		unitTest:assert_error(error_func, namedArgumentsMsg())
+
+		error_func = function()
+ 			local traj = Trajectory{
+ 				target = cs,
+ 				selection = function() return true end
+ 			}
+ 		end
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("selection", "select"))
+
+		local error_func = function()
+			trajectory = Trajectory{}
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg("target"))
+
+		error_func = function()
+			trajectory = Trajectory{
+				target = "cs"
+			}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("target", "CellularSpace or Trajectory", "cs"))
+
+		-- build
+		error_func = function()
+			trajectory = Trajectory{
+				target = cs,
+				build = "build"
+			}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("build", "boolean", "build"))
+
+		error_func = function()
+			local traj = Trajectory{
+				target = cs,
+				build = true
+			}
+		end
+		unitTest:assert_error(error_func, defaultValueMsg("build", true))
+
+		-- greater
+		error_func = function()
+			trajectory = Trajectory{
+				target = cs,
+				greater = "func"
+			}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("greater", "function", "func"))
+
+		-- select
+		error_func = function()
+			trajectory = Trajectory{
+				target = cs,
+				select = "func"
+			}
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "function", "func"))
+	end,
 	add = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 		local trajectory = Trajectory{target = cs}
@@ -106,74 +174,6 @@ return{
 			trajectory:sort()
 		end
 		unitTest:assert_error(error_func, "Cannot sort the Trajectory because there is no previous function.")
-	end,
-	Trajectory = function(unitTest)
-		local cs = CellularSpace{xdim = 10}
-
-		local error_func = function()
-			trajectory = Trajectory()
-		end
-		unitTest:assert_error(error_func, tableArgumentMsg())
-
-		error_func = function()
-			trajectory = Trajectory(3)
-		end
-		unitTest:assert_error(error_func, namedArgumentsMsg())
-
-		error_func = function()
- 			local traj = Trajectory{
- 				target = cs,
- 				selection = function() return true end
- 			}
- 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("selection", "select"))
-
-		local error_func = function()
-			trajectory = Trajectory{}
-		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("target"))
-
-		error_func = function()
-			trajectory = Trajectory{
-				target = "cs"
-			}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("target", "CellularSpace or Trajectory", "cs"))
-
-		-- build
-		error_func = function()
-			trajectory = Trajectory{
-				target = cs,
-				build = "build"
-			}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("build", "boolean", "build"))
-
-		error_func = function()
-			local traj = Trajectory{
-				target = cs,
-				build = true
-			}
-		end
-		unitTest:assert_error(error_func, defaultValueMsg("build", true))
-
-		-- greater
-		error_func = function()
-			trajectory = Trajectory{
-				target = cs,
-				greater = "func"
-			}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("greater", "function", "func"))
-
-		-- select
-		error_func = function()
-			trajectory = Trajectory{
-				target = cs,
-				select = "func"
-			}
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "function", "func"))
 	end
 }
 

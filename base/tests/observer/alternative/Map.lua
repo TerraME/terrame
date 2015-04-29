@@ -342,7 +342,6 @@ return{
 			Map{subject = c, grouping = "background", color = "Blues"}
 		end
 		unitTest:assert_error(error_func, "Strategy 'background' cannot use ColorBrewer.")
-	
 	end
 }
 

@@ -26,7 +26,7 @@
 return{
 	Society = function(unitTest)
 		local ag = Agent{
-		    height = 1,
+			height = 1,
 			grow = function(self)
 				self.height = self.height + 1
 			end
@@ -47,14 +47,14 @@ return{
 		soc:notify()
 
 		local t = Timer{
-		    Event{action = function(e)
+			Event{action = function(e)
 				for i = 1, e:getTime() do
 					soc:grow()
 					soc:add()
 					soc.value = soc.value + 1
 				end
-		        soc:notify(e)
-		    end}
+				soc:notify(e)
+			end}
 		}
 
 		TextScreen{subject = soc}

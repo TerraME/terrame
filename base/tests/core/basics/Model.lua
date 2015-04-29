@@ -152,9 +152,6 @@ return{
 	check = function(unitTest)
 		unitTest:assert(true)
 	end,
-	init = function(unitTest)
-		unitTest:assert(true)
-	end,
 	execute = function(unitTest)
 		local t = Tube{block = {level = 2}, filter = function() end}
 
@@ -168,6 +165,9 @@ return{
 		t = Tube2{}
 		t:execute()
 		unitTest:assert_equal(t.water, 10)
+	end,
+	init = function(unitTest)
+		unitTest:assert(true)
 	end
 }
 

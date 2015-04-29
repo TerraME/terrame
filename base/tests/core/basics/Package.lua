@@ -25,161 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	verifyUnnecessaryArguments = function(unitTest)
-		local error_func = function(unitTest)
-			verifyUnnecessaryArguments({aaa = "aaa"}, {"abc", "acd", "aab"})
-		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaa"))
-
-		local error_func = function(unitTest)
-			verifyUnnecessaryArguments({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
-		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaaa", "aaab"))
-	end,
-	unnecessaryArgumentMsg = function(unitTest)
-		unitTest:assert_equal(unnecessaryArgumentMsg("aaa"), "Argument 'aaa' is unnecessary.")
-	end,
-	incompatibleTypeMsg = function(unitTest)
-		unitTest:assert_equal(incompatibleTypeMsg("aaa", "string", 2), "Incompatible types. Argument 'aaa' expected string, got number.")
-	end,
-	defaultValueMsg = function(unitTest)
-		unitTest:assert_equal(defaultValueMsg("aaa", 2), "Argument 'aaa' could be removed as it is the default value (2).")
-	end,
-	packageInfo = function(unitTest)
-		local r = packageInfo()
-
-		unitTest:assert_equal(r.version, "2.0")
-		unitTest:assert_equal(r.date, "17 October 2014")
-		unitTest:assert_equal(r.package, "base")
-		unitTest:assert_equal(r.url, "http://www.terrame.org")
-
-		r = packageInfo("terrame")
-		unitTest:assert_equal(r.package, "base")
-
-		r = packageInfo("TerraME")
-		unitTest:assert_equal(r.package, "base")
-	end,
-	resourceNotFoundMsg = function(unitTest)
-		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for argument 'aaa'.")
-		unitTest:assert_equal(resourceNotFoundMsg(2, "bbb"), "Resource 'bbb' not found for argument '#2'.")
-	end,
-	suggestion = function(unitTest)
-		local t = {
-			aaaaa = true,
-			bbbbb = true,
-			ccccc = true
-		}
-
-		unitTest:assert_equal(suggestion("aaaab", t), "aaaaa")
-		unitTest:assert_nil(suggestion("ddddd", t))
-	end,
-	switchInvalidArgument = function(unitTest)
-		local t = {
-			aaaaa = true,
-			bbbbb = true,
-			ccccc = true
-		}
-
-		local error_func = function()
-			switchInvalidArgument("arg", "aaaab", t)
-		end
-		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("aaaab", "arg", "aaaaa"))
-
-		local error_func = function()
-			switchInvalidArgument("arg", "ddddd", t)
-		end
-		unitTest:assert_error(error_func, switchInvalidArgumentMsg("ddddd", "arg", t))
-	end,
-	valueNotFoundMsg = function(unitTest)
-		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for argument 'aaa'.")
-		unitTest:assert_equal(valueNotFoundMsg(2, "bbb"), "Value 'bbb' not found for argument '#2'.")
-	end,
-	integerArgument = function(unitTest)
-		local error_func = function()
-			integerArgument(1, 0.2)
-		end
-		unitTest:assert_error(error_func, integerArgumentMsg(1, 0.2))
-	end,
-	integerTableArgument = function(unitTest)
-		local t = {x = 2.5}
-		local error_func = function()
-			integerTableArgument(t, "x")
-		end
-		unitTest:assert_error(error_func, integerArgumentMsg("x", 2.5))
-	end,
-	integerArgumentMsg = function(unitTest)
-		local m = integerArgumentMsg("a", 2.3)
-		unitTest:assert_equal(m, "Incompatible values. Argument 'a' expected integer number, got 2.3.")
-	end,
-	isLoaded = function(unitTest)
-		unitTest:assert(isLoaded("base"))
-	end,
-	positiveArgument = function(unitTest)
-		local error_func = function()
-			positiveArgument(1, 0)
-		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, 0))
-
-		local error_func = function()
-			positiveArgument(1, -2)
-		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2))
-
-		local error_func = function()
-			positiveArgument(1, -2, true)
-		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2, true))
-	end,
-	positiveTableArgument = function(unitTest)
-		local t = {x = -2}
-		local error_func = function()
-			positiveTableArgument(t, "x")
-		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("x", -2))
-
-		local t = {x = 0}
-		local error_func = function()
-			positiveTableArgument(t, "x")
-		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("x", 0))
-
-		local t = {x = -1}
-		local error_func = function()
-			positiveTableArgument(t, "x", true)
-		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("x", -1, true))
-	end,
-	positiveArgumentMsg = function(unitTest)
-		local m = positiveArgumentMsg("a", -2)
-		unitTest:assert_equal(m, "Incompatible values. Argument 'a' expected positive number (except zero), got -2.")
-
-		m = positiveArgumentMsg(1, -2, true)
-		unitTest:assert_equal(m, "Incompatible values. Argument '#1' expected positive number (including zero), got -2.")
-	end,
-	tableArgumentMsg = function(unitTest)
-		unitTest:assert_equal(tableArgumentMsg(), "Argument must be a table.")
-	end,
-	mandatoryArgument = function(unitTest)
-		local error_func = function()
-			mandatoryArgument(1, "string")
-		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
-
-		local error_func = function()
-			mandatoryArgument(1, "string", 2)
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
-	end,
-	mandatoryArgumentMsg = function(unitTest)
-		unitTest:assert_equal(mandatoryArgumentMsg("aaa"), "Argument 'aaa' is mandatory.")
-	end,
-	namedArgumentsMsg = function(unitTest)
-		unitTest:assert_equal(namedArgumentsMsg(), "Arguments must be named.")
-	end,
-	invalidFileExtensionMsg = function(unitTest)
-		unitTest:assert_equal(invalidFileExtensionMsg("aaa", "bbb"), "Argument 'aaa' does not support extension 'bbb'.")
-		unitTest:assert_equal(invalidFileExtensionMsg(1, "bbb"), "Argument '#1' does not support extension 'bbb'.")
-	end,
 	customError = function(unitTest)
 		local error_func = function()
 			customError("test.")
@@ -192,17 +37,20 @@ return{
 		end
 		unitTest:assert_error(error_func, "test.")
 	end,
-	defaultValueWarning = function(unitTest)
-		local error_func = function()
-			defaultValueWarning("size", 2)
-		end
-		unitTest:assert_error(error_func, defaultValueMsg("size", 2))
-	end,
 	defaultTableValue = function(unitTest)
 		local t = {x = 5}
 		defaultTableValue(t, "y", 8)
 
 		unitTest:assert_equal(t.y, 8)
+	end,
+	defaultValueMsg = function(unitTest)
+		unitTest:assert_equal(defaultValueMsg("aaa", 2), "Argument 'aaa' could be removed as it is the default value (2).")
+	end,
+	defaultValueWarning = function(unitTest)
+		local error_func = function()
+			defaultValueWarning("size", 2)
+		end
+		unitTest:assert_error(error_func, defaultValueMsg("size", 2))
 	end,
 	deprecatedFunction = function(unitTest)
 		local error_func = function()
@@ -216,17 +64,14 @@ return{
 	file = function(unitTest)
 		unitTest:assert_type(file("simple-cs.csv"), "string")
 	end,
-	invalidFileExtensionError = function(unitTest)
-		local error_func = function()
-			invalidFileExtensionError("file", ".txt")
-		end
-		unitTest:assert_error(error_func, invalidFileExtensionMsg("file", ".txt"))
-	end,
 	incompatibleTypeError = function(unitTest)
 		local error_func = function()
 			incompatibleTypeError("cell", "Cell", Agent{})
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("cell", "Cell", Agent{}))
+	end,
+	incompatibleTypeMsg = function(unitTest)
+		unitTest:assert_equal(incompatibleTypeMsg("aaa", "string", 2), "Incompatible types. Argument 'aaa' expected string, got number.")
 	end,
 	incompatibleValueError = function(unitTest)
 		local error_func = function()
@@ -248,26 +93,55 @@ return{
 		local str = incompatibleValueMsg("attr", "positive", -2)
 		unitTest:assert_equal(str, "Incompatible values. Argument 'attr' expected positive, got -2.")
 	end,
-	resourceNotFoundError = function(unitTest)
+	integerArgument = function(unitTest)
 		local error_func = function()
-			resourceNotFoundError("file", "/usr/local/file.txt")
+			integerArgument(1, 0.2)
 		end
-		unitTest:assert_error(error_func, resourceNotFoundMsg("file", "/usr/local/file.txt"))
+		unitTest:assert_error(error_func, integerArgumentMsg(1, 0.2))
 	end,
-	toLabel = function(unitTest)
-		sessionInfo().interface = true
-		unitTest:assert_equal(toLabel("maxValue"), "'Max Value'")
-		unitTest:assert_equal(toLabel("maxValue", "tab"), "'Max Value' (in 'Tab')")
+	integerArgumentMsg = function(unitTest)
+		local m = integerArgumentMsg("a", 2.3)
+		unitTest:assert_equal(m, "Incompatible values. Argument 'a' expected integer number, got 2.3.")
+	end,
+	integerTableArgument = function(unitTest)
+		local t = {x = 2.5}
+		local error_func = function()
+			integerTableArgument(t, "x")
+		end
+		unitTest:assert_error(error_func, integerArgumentMsg("x", 2.5))
+	end,
+	invalidFileExtensionError = function(unitTest)
+		local error_func = function()
+			invalidFileExtensionError("file", ".txt")
+		end
+		unitTest:assert_error(error_func, invalidFileExtensionMsg("file", ".txt"))
+	end,
+	invalidFileExtensionMsg = function(unitTest)
+		unitTest:assert_equal(invalidFileExtensionMsg("aaa", "bbb"), "Argument 'aaa' does not support extension 'bbb'.")
+		unitTest:assert_equal(invalidFileExtensionMsg(1, "bbb"), "Argument '#1' does not support extension 'bbb'.")
+	end,
+	isLoaded = function(unitTest)
+		unitTest:assert(isLoaded("base"))
+	end,
+	mandatoryArgument = function(unitTest)
+		local error_func = function()
+			mandatoryArgument(1, "string")
+		end
+		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
 
-		sessionInfo().interface = nil
-		unitTest:assert_equal(toLabel("maxValue"), "'maxValue'")
-		unitTest:assert_equal(toLabel("maxValue", "tab"), "'tab.maxValue'")
+		local error_func = function()
+			mandatoryArgument(1, "string", 2)
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	mandatoryArgumentError = function(unitTest)
 		local error_func = function()
 			mandatoryArgumentError("neighborhood")
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg("neighborhood"))
+	end,
+	mandatoryArgumentMsg = function(unitTest)
+		unitTest:assert_equal(mandatoryArgumentMsg("aaa"), "Argument 'aaa' is mandatory.")
 	end,
 	mandatoryTableArgument = function(unitTest)
 		local mtable = {bbb = 3, ccc = "aaa"}
@@ -282,6 +156,9 @@ return{
 		end
 		unitTest:assert_error(error_func, mandatoryArgumentMsg("ddd", "string"))
 	end,
+	namedArgumentsMsg = function(unitTest)
+		unitTest:assert_equal(namedArgumentsMsg(), "Arguments must be named.")
+	end,
 	optionalArgument = function(unitTest)
 		local error_func = function()
 			optionalArgument(1, "string", 2)
@@ -295,6 +172,158 @@ return{
 			optionalTableArgument(mtable, "bbb", "string")
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("bbb", "string", 3))
+	end,
+	packageInfo = function(unitTest)
+		local r = packageInfo()
+
+		unitTest:assert_equal(r.version, "2.0")
+		unitTest:assert_equal(r.date, "17 October 2014")
+		unitTest:assert_equal(r.package, "base")
+		unitTest:assert_equal(r.url, "http://www.terrame.org")
+
+		r = packageInfo("terrame")
+		unitTest:assert_equal(r.package, "base")
+
+		r = packageInfo("TerraME")
+		unitTest:assert_equal(r.package, "base")
+	end,
+	positiveArgument = function(unitTest)
+		local error_func = function()
+			positiveArgument(1, 0)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, 0))
+
+		local error_func = function()
+			positiveArgument(1, -2)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2))
+
+		local error_func = function()
+			positiveArgument(1, -2, true)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2, true))
+	end,
+	positiveArgumentMsg = function(unitTest)
+		local m = positiveArgumentMsg("a", -2)
+		unitTest:assert_equal(m, "Incompatible values. Argument 'a' expected positive number (except zero), got -2.")
+
+		m = positiveArgumentMsg(1, -2, true)
+		unitTest:assert_equal(m, "Incompatible values. Argument '#1' expected positive number (including zero), got -2.")
+	end,
+	positiveTableArgument = function(unitTest)
+		local t = {x = -2}
+		local error_func = function()
+			positiveTableArgument(t, "x")
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg("x", -2))
+
+		local t = {x = 0}
+		local error_func = function()
+			positiveTableArgument(t, "x")
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg("x", 0))
+
+		local t = {x = -1}
+		local error_func = function()
+			positiveTableArgument(t, "x", true)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg("x", -1, true))
+	end,
+	resourceNotFoundError = function(unitTest)
+		local error_func = function()
+			resourceNotFoundError("file", "/usr/local/file.txt")
+		end
+		unitTest:assert_error(error_func, resourceNotFoundMsg("file", "/usr/local/file.txt"))
+	end,
+	resourceNotFoundMsg = function(unitTest)
+		unitTest:assert_equal(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for argument 'aaa'.")
+		unitTest:assert_equal(resourceNotFoundMsg(2, "bbb"), "Resource 'bbb' not found for argument '#2'.")
+	end,
+	suggestion = function(unitTest)
+		local t = {
+			aaaaa = true,
+			bbbbb = true,
+			ccccc = true
+		}
+
+		unitTest:assert_equal(suggestion("aaaab", t), "aaaaa")
+		unitTest:assert_nil(suggestion("ddddd", t))
+	end,
+	switch = function(unitTest)
+		local count = 0
+
+		local data = {att = "abc"}
+		switch(data, "att"):caseof{
+			abc = function() count = count + 1 end
+		}
+
+		local data = {}
+		switch(data, "att"):caseof{
+			missing = function() count = count + 1 end
+		}
+
+		unitTest:assert_equal(count, 2)
+	end,
+	switchInvalidArgument = function(unitTest)
+		local t = {
+			aaaaa = true,
+			bbbbb = true,
+			ccccc = true
+		}
+
+		local error_func = function()
+			switchInvalidArgument("arg", "aaaab", t)
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("aaaab", "arg", "aaaaa"))
+
+		local error_func = function()
+			switchInvalidArgument("arg", "ddddd", t)
+		end
+		unitTest:assert_error(error_func, switchInvalidArgumentMsg("ddddd", "arg", t))
+	end,
+	switchInvalidArgumentMsg = function(unitTest)
+		local options = {
+			aaa = true,
+			bbb = true,
+			ccc = true
+		}
+		local str = switchInvalidArgumentMsg("ddd", "attr", options)
+		unitTest:assert_equal(str, "'ddd' is an invalid value for argument 'attr'. It must be a string from the set ['aaa', 'bbb', 'ccc'].")
+
+	end,
+	switchInvalidArgumentSuggestionMsg = function(unitTest)
+		local str = switchInvalidArgumentSuggestionMsg("aab", "attr", "aaa")
+		unitTest:assert_equal(str, "'aab' is an invalid value for argument 'attr'. Do you mean 'aaa'?")
+	end,
+	tableArgumentMsg = function(unitTest)
+		unitTest:assert_equal(tableArgumentMsg(), "Argument must be a table.")
+	end,
+	toLabel = function(unitTest)
+		sessionInfo().interface = true
+		unitTest:assert_equal(toLabel("maxValue"), "'Max Value'")
+		unitTest:assert_equal(toLabel("maxValue", "tab"), "'Max Value' (in 'Tab')")
+
+		sessionInfo().interface = nil
+		unitTest:assert_equal(toLabel("maxValue"), "'maxValue'")
+		unitTest:assert_equal(toLabel("maxValue", "tab"), "'tab.maxValue'")
+	end,
+	unnecessaryArgumentMsg = function(unitTest)
+		unitTest:assert_equal(unnecessaryArgumentMsg("aaa"), "Argument 'aaa' is unnecessary.")
+	end,
+	valueNotFoundMsg = function(unitTest)
+		unitTest:assert_equal(valueNotFoundMsg("aaa", "bbb"), "Value 'bbb' not found for argument 'aaa'.")
+		unitTest:assert_equal(valueNotFoundMsg(2, "bbb"), "Value 'bbb' not found for argument '#2'.")
+	end,
+	verifyUnnecessaryArguments = function(unitTest)
+		local error_func = function(unitTest)
+			verifyUnnecessaryArguments({aaa = "aaa"}, {"abc", "acd", "aab"})
+		end
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaa"))
+
+		local error_func = function(unitTest)
+			verifyUnnecessaryArguments({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
+		end
+		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaaa", "aaab"))
 	end,
 	verifyNamedTable = function(unitTest)
 		local error_func = function()
@@ -312,21 +341,6 @@ return{
 		end
 		unitTest:assert_error(error_func, "All elements of the argument must be named.")
 	end,
-	switch = function(unitTest)
-		local count = 0
-
-		local data = {att = "abc"}
-		switch(data, "att"):caseof{
-			abc = function() count = count + 1 end
-		}
-
-		local data = {}
-		switch(data, "att"):caseof{
-			missing = function() count = count + 1 end
-		}
-
-		unitTest:assert_equal(count, 2)
-	end,
 	valueNotFoundError = function(unitTest)
 		local error_func = function()
 			valueNotFoundError("1", "neighborhood")
@@ -338,20 +352,6 @@ return{
 			verify(false, "error")
 		end
 		unitTest:assert_error(error_func, "error")
-	end,
-	switchInvalidArgumentMsg = function(unitTest)
-		local options = {
-			aaa = true,
-			bbb = true,
-			ccc = true
-		}
-		local str = switchInvalidArgumentMsg("ddd", "attr", options)
-		unitTest:assert_equal(str, "'ddd' is an invalid value for argument 'attr'. It must be a string from the set ['aaa', 'bbb', 'ccc'].")
-
-	end,
-	switchInvalidArgumentSuggestionMsg = function(unitTest)
-		local str = switchInvalidArgumentSuggestionMsg("aab", "attr", "aaa")
-		unitTest:assert_equal(str, "'aab' is an invalid value for argument 'attr'. Do you mean 'aaa'?")
 	end
 }
 

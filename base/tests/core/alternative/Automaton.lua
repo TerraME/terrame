@@ -179,6 +179,19 @@ return{
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event", "notEvent"))
 	end,
+	getState = function(unitTest)
+		local a = Automaton{}
+
+		local error_func = function()
+			a:getState("abc")
+		end
+		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "abc"))
+	
+		local error_func = function()
+			a:getState(-2)
+		end
+		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2))
+	end,
 	notify = function(unitTest)
 		local at1 = Automaton{
 			it = Trajectory{
@@ -200,19 +213,6 @@ return{
 			at1:notify(-1)
 		end
 		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
-	end,
-	getState = function(unitTest)
-		local a = Automaton{}
-
-		local error_func = function()
-			a:getState("abc")
-		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "abc"))
-	
-		local error_func = function()
-			a:getState(-2)
-		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2))
 	end,
 	setId = function(unitTest)
 		local at1 = Automaton{

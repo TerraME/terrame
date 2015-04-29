@@ -25,19 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	dir = function(unitTest)
-		local files = 22
-		local d = dir(packageInfo().data)
-		unitTest:assert_equal(#d, files)
-
-		d = dir(packageInfo().data, true)
-		unitTest:assert_equal(#d, files + 2)
-
-		d = dir(".", true)
-	end,
-	isFile = function(unitTest)
-		unitTest:assert(isFile(file("agents.csv")))
-	end, 
 	attributes = function(unitTest)
 		local attr = attributes(file("agents.csv", "base"))
 		unitTest:assert_equal(getn(attr), 14)
@@ -65,6 +52,37 @@ return{
 		unitTest:assert_equal(currentDir(), info.path)
 		chDir(cur_dir)
 	end,
+	dir = function(unitTest)
+		local files = 22
+		local d = dir(packageInfo().data)
+		unitTest:assert_equal(#d, files)
+
+		d = dir(packageInfo().data, true)
+		unitTest:assert_equal(#d, files + 2)
+
+		d = dir(".", true)
+	end,
+	isFile = function(unitTest)
+		unitTest:assert(isFile(file("agents.csv")))
+	end, 
+	linkAttributes = function(unitTest)
+		local pathdata = packageInfo().data
+
+		os.execute("ln -s "..pathdata.."agents.csv "..pathdata.."agentslink")
+		local attr = linkAttributes(pathdata.."agentslink")
+
+		unitTest:assert_equal(attr.mode, "link")
+		unitTest:assert_equal(attr.nlink, 1)
+		unitTest:assert(attr.size >= 61)
+
+		attr = linkAttributes(pathdata.."agentslink", "mode")
+		unitTest:assert_equal(attr, "link")
+
+		attr = linkAttributes(pathdata.."agentslink", "nlink")
+		unitTest:assert_equal(attr, 1)
+
+		os.execute("rm "..pathdata.."agentslink")
+	end,
 	lock = function(unitTest)
 		local pathdata = packageInfo().data
 
@@ -73,6 +91,16 @@ return{
 		unitTest:assert(lock(f, "w"))
 
 		os.execute("rm "..pathdata.."test.txt")
+	end,
+	lockDir = function(unitTest)
+		local pathdata = packageInfo().data
+
+		mkDir(pathdata.."test")
+
+		local f = lockDir(pathdata.."test")
+		unitTest:assert_not_nil(f)
+
+		rmDir(pathdata.."test")
 	end,
 	mkDir = function(unitTest)
 		local pathdata = packageInfo().data
@@ -116,34 +144,6 @@ return{
 
 		f:close()
 		os.execute("rm "..pathdata.."testfile.txt")
-	end,
-	linkAttributes = function(unitTest)
-		local pathdata = packageInfo().data
-
-		os.execute("ln -s "..pathdata.."agents.csv "..pathdata.."agentslink")
-		local attr = linkAttributes(pathdata.."agentslink")
-
-		unitTest:assert_equal(attr.mode, "link")
-		unitTest:assert_equal(attr.nlink, 1)
-		unitTest:assert(attr.size >= 61)
-
-		attr = linkAttributes(pathdata.."agentslink", "mode")
-		unitTest:assert_equal(attr, "link")
-
-		attr = linkAttributes(pathdata.."agentslink", "nlink")
-		unitTest:assert_equal(attr, 1)
-
-		os.execute("rm "..pathdata.."agentslink")
-	end,
-	lockDir = function(unitTest)
-		local pathdata = packageInfo().data
-
-		mkDir(pathdata.."test")
-
-		local f = lockDir(pathdata.."test")
-		unitTest:assert_not_nil(f)
-
-		rmDir(pathdata.."test")
 	end,
 	touch = function(unitTest)
 		local pathdata = packageInfo().data
