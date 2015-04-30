@@ -30,7 +30,7 @@ ReceiverUDP::ReceiverUDP(QObject *parent)
     ui = new ReceiverGUI();
     ui->setWindowTitle(tr("Observer Client :: Receiver - mode UDP"));
 
-    ui->appendMessage("N�o esta funcionando corretamente!!!\n\n");
+    ui->appendMessage("This not working correctly!!!\n\n");
 
     udpSocket = new QUdpSocket(this);
     blind(DEFAULT_PORT);

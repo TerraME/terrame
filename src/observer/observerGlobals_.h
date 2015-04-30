@@ -22,44 +22,26 @@
 *
 *************************************************************************************/
 
-#ifndef CONCRET_SUBJECT_INTERF
-#define CONCRET_SUBJECT_INTERF
-
-#include <QtCore/QStringList>
-#include "observerInterf.h"
-#include "terrameIncludes.h"
-
-/**
- * \brief Cell Concrete Subject
- * \see SubjectInterf,
- * \see Cell
+/*!
+ * \file observer.h
+ * \brief Global items of observer layer
  * \author Antonio Jose da Cunha Rodrigues
- * \author Tiago Garcia de Senna Carneiro
- * \file cellSubjectInterf.h
- */
-class CellSubjectInterf : public SubjectInterf, public Cell
-{
-public:
-    /**
-     * \copydoc TerraMEObserver::Subject::getState
-     */
-    virtual QDataStream& getState(QDataStream &state, Subject *subj,
-                                  int observerId, const QStringList &attribs) = 0;
+*/
 
-    /**
-     * Factory of Observer
-     * \param type the type of the Observer that will be created
-     * \return a pointer to an Observer or a null pointer
-     * \see TypesOfObservers
-     */
-    Observer* createObserver(TypesOfObservers type);
+#ifndef OBSERVER_GLOBAL_ITEMS
+#define OBSERVER_GLOBAL_ITEMS
 
-    /**
-     * Kills an Observer
-     * \param id the unique identifier of an Observer
-     */
-    bool kill(int id);
-};
+#include <QString>
+#include <QSize>
+#include <QPoint>
+#include <QStringList>
 
-#endif
+namespace TerraMEObserver{
 
+//////////////////// CONSTANTS
+//// QStrings 
+static const QString BROADCAST_HOST = "255.255.255.255";
+static const QString LOCAL_HOST = "127.0.0.1";
+static const QString DEFAULT_NAME = "result_";
+
+static const QString PROTOCOL_SEPARATOR = "

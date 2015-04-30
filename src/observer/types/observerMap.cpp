@@ -232,7 +232,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
             attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(), 
                 cellularSpaceSize.height(), type);
 
-            // TO-DO: Modificar c�digo
+            // TO-DO: Modify code
 #ifdef TME_BLACK_BOARD
             //SubjectAttributes *subjAttr = BlackBoard::getInstance()
             //    .addAttribute(getSubjectId(), attribList.at(i)); 
@@ -267,15 +267,15 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
 
                 attrib->setDataType( (TypesOfData) legAttribs.at(dataType).toInt());
                 attrib->setGroupMode( (GroupingMode) legAttribs.at(mode).toInt());
-                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// conta com o zero
-                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// conta com o zero
+                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// zero counts
+                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// zero counts
                 attrib->setStdDeviation( (StdDev) legAttribs.at(stdDeviation).toInt());
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());
 
                 bool ok = false;
                 int value = 0;
-                //Fonte
+                //Font
                 attrib->setFontFamily(legAttribs.at(font));
                 value = legAttribs.at(fontSize).toInt(&ok, false);
                 if (ok)
@@ -383,8 +383,8 @@ void ObserverMap::butLegend_Clicked()
 
 void ObserverMap::butZoomIn_Clicked()
 {
-    // currentIndex() < 0 : o indice n�o existe no comboBox
-    // currentIndex() > 22 : o indice � o zoom de janela
+    // currentIndex() < 0 : the index not exists in comboBox
+    // currentIndex() > 22 : the index is the zoom of the window
     if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
         zoomComboBox->setCurrentIndex(positionZoomVec);
     calculeZoom(true);
@@ -412,7 +412,7 @@ void ObserverMap::butZoomWindow_Clicked()
 
 void ObserverMap::butZoomRestore_Clicked()
 {
-    if (zoomComboBox->currentText() == WINDOW)		// zoom em Window
+    if (zoomComboBox->currentText() == WINDOW)		// zoom in Window
         return;
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
     zoomActivated(WINDOW);
@@ -689,7 +689,7 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
         QVector<int> zoomVecAux(zoomVec);
         zoomVecAux.push_back(newZoom.toInt());
         qStableSort(zoomVecAux.begin(), zoomVecAux.end(), qGreater<int>());
-        positionZoomVec = zoomVecAux.indexOf(newZoom.toInt()); // armazena a posi��o do novo valor de zoom
+        positionZoomVec = zoomVecAux.indexOf(newZoom.toInt()); // stores the position of the new value of zoom
     }
 }
 
@@ -791,7 +791,7 @@ const QSize & ObserverMap::getCellSpaceSize() const
 //{
 //    treeLayers->blockSignals(value);
 //
-//    //// conecta/disconecta o sinal do treeWidget com o slot
+//    //// connect/disconnect signal of treeWidget with the slot
 //    //if (! on)
 //    //{
 //    //    disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
@@ -822,7 +822,7 @@ ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
     const int COLOR_ = 0, VALUE_ = 1, LABEL_ = 2, DISTANCE_ = 3;
 
     QStringList colorattribList = strColorBar.split(ITEM_SEP, QString::SkipEmptyParts);
-    QStringList teColorList = colorattribList.at(COLOR_).split(COMP_COLOR_SEP); //, QString::SkipEmptyParts); // lista com os componentes r, g, b
+    QStringList teColorList = colorattribList.at(COLOR_).split(COMP_COLOR_SEP); //, QString::SkipEmptyParts); // list of components r, g, b
 
 #ifdef DEBUG_OBSERVER
     qDebug() << "colorList.size(): " <<  colorattribList.size();

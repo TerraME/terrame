@@ -297,7 +297,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
             {
                 attrib = new Attributes(attribs.at(i), 0, 0);
 
-            	//------- Retrieves the lengend from the file and creates the object attrib
+            	//------- Retrieves the legend from the file and creates the object attrib
             	if (legKeys.size() > 0)
             	{
                 	attrib->setDataType( (TypesOfData) legAttribs.at(type).toInt());
@@ -761,7 +761,7 @@ void ObserverStateMachine::setupGUI()
 
     view = new Canvas(scene, this);
     view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); // 
-    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); n�o existe na vers�o 4.3.4
+    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); does not exist in version 4.3.4
     // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); 
     view->setRenderHint(QPainter::Antialiasing);
     // view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -852,7 +852,7 @@ void ObserverStateMachine::setupGUI()
     hLayoutZoom1->addWidget(butZoomOut);
     hLayoutZoom1->addWidget(butHand);
     hLayoutZoom2->addWidget(butZoomWindow);
-    hLayoutZoom2->addWidget(butZoomRestore);    // Exibe os layers de informa��o
+    hLayoutZoom2->addWidget(butZoomRestore);    // Show information layers
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 150, 190, 310);
     treeLayers->setHeaderLabel(tr("Layers"));

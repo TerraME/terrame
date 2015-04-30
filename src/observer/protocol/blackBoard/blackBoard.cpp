@@ -338,7 +338,7 @@ void BlackBoard::stopControl()
 
 bool BlackBoard::renderingOnlyChanges() const
 {
-    // Draw the changes only if the 'n∫' of changed objects
+    // Draw the changes only if the 'n' of changed objects
     // is less than X% of the cache size
 
     // return countChangedSubjects < (cache.size() * ( 1 - PERCENT));

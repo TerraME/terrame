@@ -143,7 +143,7 @@ private:
 
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
-    bool paused;		// ref. � Thread
+    bool paused;		// ref. Thread
 
     QTreeWidget* pipelineWidget;
     QLabel *lblClock;

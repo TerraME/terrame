@@ -600,7 +600,7 @@ void VisualMapping::mappingChangesText(Attributes *attrib, QPainter *p)
     subjAttr->setTime(time + 1);
     SubjectAttributes *nestedSubj = 0;
 
-    for(int id = 0; id < subjectsIDs.size(); ++id)  // Opção simples e eficiente
+    for(int id = 0; id < subjectsIDs.size(); ++id)  // Simple and efficient option
     {
         nestedSubj = bb.getSubject(subjectsIDs.at(id));
 
@@ -987,7 +987,7 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
 
             
             // From an agent gets the cell where this agent are in
-            for(int id = 0; id < subjectsIDs.size(); ++id)  // Opção simples e eficiente
+            for(int id = 0; id < subjectsIDs.size(); ++id)  // Simple and efficient option
             {
                 nestedSubj = bb.getSubject(subjectsIDs.at(id));
                 

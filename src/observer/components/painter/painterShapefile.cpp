@@ -94,7 +94,7 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
                     //setColor(item,Qt::white);
 
                     const ObsLegend &leg = vecLegend->at(j);
-                    if (attrib->getGroupMode() == TObsUniqueValue) // valor único 3
+                    if (attrib->getGroupMode() == TObsUniqueValue) // single value 3
                     {
                         if (v == leg.getToNumber())
                         {

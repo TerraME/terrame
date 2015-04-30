@@ -326,7 +326,7 @@ void LegendWindow::groupingModeComboBox_activated(int idx)
 {
     Attributes *attrib = mapAttributes->value(attributesComboBox->currentText());
 
-    if (idx == TObsStdDeviation)	 // desvio padr�o
+    if (idx == TObsStdDeviation)	 // standard deviation
     {
         frameTeQtStdColorBar->setVisible(true);
         //frameBTeQtColorBar->setColorBar(frameBTeQtColorBar->getInputColorVec());
@@ -1342,7 +1342,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         model->setData(model->index(i, 2, QModelIndex()), leg.getLabel(),
                        Qt::DisplayRole);		// label
 
-        // // Oculta a exibi��o de contagem
+        // // Hides the count display
         // model->setData(model->index(i, 3, QModelIndex()), leg.getOccurrence(),
         //               Qt::DisplayRole);	// count
 
@@ -1477,7 +1477,7 @@ void LegendWindow::connectSlots(bool con)
         connect(attributesComboBox, SIGNAL(activated(QString)), this,
                 SLOT(attributesComboBox_activated(QString)));
         connect(attributesComboBox, SIGNAL(activated(QString)), this,
-                SLOT(applyPushButton_clicked())); // Executa o slot relacionado ao clique do bot�o Ok
+                SLOT(applyPushButton_clicked())); // Performs related slot to click the Ok button
         connect(functionComboBox, SIGNAL(activated(int)), this,
                 SLOT(functionComboBox_activated(int)));
 
@@ -1514,7 +1514,7 @@ void LegendWindow::connectSlots(bool con)
         connect(frameTeQtStdColorBar, SIGNAL(colorChangedSignal()), this,
                 SLOT(colorChangedSlot()));
 
-        // Verifica��es de mudan�a nos valores dos objetos da GUI
+        // Change checks the values of GUI objects
         //connect(attributesComboBox, SIGNAL(currentIndexChanged(int)), this,
         //        SLOT(valueChanged()));
         connect(functionComboBox, SIGNAL(currentIndexChanged(int)), this,
@@ -1538,7 +1538,7 @@ void LegendWindow::connectSlots(bool con)
         disconnect(attributesComboBox, SIGNAL(activated(QString)), this,
                 SLOT(attributesComboBox_activated(QString)));
         disconnect(attributesComboBox, SIGNAL(activated(QString)), this,
-                SLOT(applyPushButton_clicked())); // Executa o slot relacionado ao clique do bot�o Ok
+                SLOT(applyPushButton_clicked())); // Performs related slot to click the Ok button
         connect(functionComboBox, SIGNAL(activated(int)), this,
                 SLOT(functionComboBox_activated(int)));
 
@@ -1575,7 +1575,7 @@ void LegendWindow::connectSlots(bool con)
         connect(frameTeQtStdColorBar, SIGNAL(colorChangedSignal()), this,
                 SLOT(colorChangedSlot()));
 
-        // Verifica��es de mudan�a nos valores dos objetos da GUI
+        // Change checks the values of GUI objects
         //disconnect(attributesComboBox, SIGNAL(currentIndexChanged(int)), this,
         //        SLOT(valueChanged()));
         disconnect(functionComboBox, SIGNAL(currentIndexChanged(int)), this,

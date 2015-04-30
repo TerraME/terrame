@@ -344,10 +344,10 @@ private:
     // Contains the nested subjects
     QVector<int> *nestedSubjectsID;
     
-    // 50% mais eficiente que o uso dos ID's mas, d� pau ao limpar o BB
+    // 50% more efficient than the use of IDs, but crashes when cleaning the BD
     // QVector<SubjectAttributes *> nestedSubjectsID;
 
-    // Time of last update/acess
+    // Time of last update/access
     long time;
 };
 

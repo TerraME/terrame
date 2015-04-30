@@ -202,7 +202,7 @@ void ReceiverGUI::okButtonClicked()
             leg->symbol = "�";
             leg->width = 12;
             leg->curveStyle = 1; // see QwtPlotCurve::CurveStyle
-            leg->lineStyle = 0;  // ainda n�o utilizado no ObsChart e na legenda
+            leg->lineStyle = 0;  // not yet used in ObsChart and legend
             leg->colorBar = "0,0,0;0;0;?;#255,255,255;100;100;?;#";
             leg->stdColorBar = "";
 
