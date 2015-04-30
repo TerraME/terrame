@@ -161,7 +161,7 @@ local function integrationEuler(df, initCond, a, b, delta)
 		local x = a
 		local bb = b - delta
 		local values = {} -- each equation must be computed from the same "past" value ==> o(n2),
-						  -- where n is the number of equations
+		                  -- where n is the number of equations
 		for x = a, bb, delta do
 			for i = 1, #df do
 				values[i] = df[i](x, y)
@@ -207,7 +207,7 @@ function CSVparseLine(line, sep)
 			table.insert(res, txt)
 			verify(c == sep or c == "", "Invalid line: '"..line.."'.")
 			pos = pos + 1
-		else	
+		else
 			-- no quotes used, just look for the first separator
 			local startp, endp = string.find(line, sep, pos)
 			if startp then 
@@ -817,7 +817,7 @@ function greaterByCoord(operator)
 	local str = "return function(a, b)\n"
 	str = str .. "if a.x"..operator.."b.x then return true end\n"
 	str = str .. "if a.x == b.x and a.y"..operator.."b.y then return true end\n"
-	str = str .. "return false end"	
+	str = str .. "return false end"
 	return load(str)()
 end
 

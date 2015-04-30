@@ -331,7 +331,7 @@ function Model(attrTab)
 	local mmodel = {type_ = "Model"}
 	setmetatable(mmodel, {__call = function(_, v)
 		if v == nil then return attrTab end
- 		return model(v, debug.getinfo(1).name)
+		return model(v, debug.getinfo(1).name)
 	end})
 
 	model = function(argv, typename)
@@ -497,9 +497,8 @@ function Model(attrTab)
 				local attrTabValue = attrTab[name]
 				forEachElement(value, function(mname, mvalue, mtype)
 					if attrTabValue[mname] == nil then
-						
 						local msg = "Argument '"..name.."."..mname.."' is unnecessary."
-	
+
 						local s = suggestion(mname, attrTabValue)
 						if s then
 							msg = msg.." Do you mean '"..name.."."..s.."'?"

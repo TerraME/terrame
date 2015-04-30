@@ -1476,7 +1476,7 @@ forEachElement(brewerRGB, function(idx, value)
 	end)
 
 	local found = false
-	forEachElement(brewerMatchNames, function(_, mvalue)	
+	forEachElement(brewerMatchNames, function(_, mvalue)
 		if idx == mvalue then
 			found = true
 		end
@@ -1762,7 +1762,7 @@ function Map(data)
 
 			if type(data.color) == "string" then
 				customError("Strategy 'background' cannot use ColorBrewer.")
-			end			
+			end
 
 			mandatoryTableArgument(data, "color", "table")
 			data.select = {"background_"}

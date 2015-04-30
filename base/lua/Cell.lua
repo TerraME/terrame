@@ -58,7 +58,7 @@ Cell_ = {
 		mandatoryArgument(1, "Cell", cell)
 
 		return math.sqrt((self.x - cell.x) ^ 2 + (self.y - cell.y) ^ 2)
-	end,	
+	end,
 	--- Return an Agent that belongs to the Cell. It assumes that there is at most one Agent per Cell.
 	-- If there is no Agent within the cell then it returns nil.
 	-- @arg placement A string with the name of the placement. The default value is "placement".

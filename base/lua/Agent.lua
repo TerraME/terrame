@@ -177,7 +177,7 @@ Agent_ = {
 		if type(self[placement]) ~= "Trajectory" then
 			customError("Placement '".. placement.. "' should be a Trajectory, got "..type(self[placement])..".")
 		end
-		return self[placement].cells[1]		
+		return self[placement].cells[1]
 	end,
 	--- Return a vector with the Cells pointed by the Agent.
 	-- @arg placement A string representing the index to be used. The default value is "placement".

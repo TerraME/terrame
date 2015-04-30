@@ -30,34 +30,34 @@
 -- Based on color table at http://gucky.uni-muenster.de/cgi-bin/rgbtab-en
 local TME_LEGEND_COLOR = {
 	BLACK           = {  0,   0,   0},
-	WHITE           = {255, 255, 255},	
+	WHITE           = {255, 255, 255},
 	LIGHTRED        = {255, 102, 102},
 	RED             = {255,   0,   0},
-	DARKRED         = {128,   0,   0},	
+	DARKRED         = {128,   0,   0},
 	LIGHTYELLOW     = {255, 255, 153},
 	YELLOW          = {255, 255,   0},
-	DARKYELLOW      = {255, 215,   0},	
+	DARKYELLOW      = {255, 215,   0},
 	LIGHTORANGE     = {255, 180,   0},
 	ORANGE          = {238, 154,   0},
-	DARKORANGE      = {205, 103,   0},	
+	DARKORANGE      = {205, 103,   0},
 	LIGHTBROWN      = {128,  85,  85},
 	BROWN           = {128,  64,  64},
-	DARKBROWN       = {108,  53,  53},	
+	DARKBROWN       = {108,  53,  53},
 	LIGHTGREEN      = {153, 255, 153},
 	GREEN           = {  0, 255,   0},
-	DARKGREEN       = {  0, 128,   0},	
+	DARKGREEN       = {  0, 128,   0},
 	LIGHTCYAN       = {128, 255, 255},
 	CYAN            = {  0, 255, 255},
-	DARKCYAN        = {  0, 128, 128},	
+	DARKCYAN        = {  0, 128, 128},
 	LIGHTBLUE       = {173, 216, 230},
 	BLUE            = {  0,   0, 255},
-	DARKBLUE        = {  0,   0, 128},	
+	DARKBLUE        = {  0,   0, 128},
 	LIGHTGRAY       = {200, 200, 200},
 	GRAY            = {160, 160, 160},
-	DARKGRAY        = {128, 128, 128},	
+	DARKGRAY        = {128, 128, 128},
 	LIGHTMAGENTA    = {255, 128, 255},
 	MAGENTA         = {255,   0, 255},
-	DARKMAGENTA     = {139,   0, 139},	
+	DARKMAGENTA     = {139,   0, 139},
 	LIGHTPURPLE     = {155, 048, 255},
 	PURPLE          = {125, 038, 205},
 	DARKPURPLE      = {085, 026, 139}
@@ -65,34 +65,34 @@ local TME_LEGEND_COLOR = {
 
 local TME_LEGEND_COLOR_USER = {
 	["black"]           = TME_LEGEND_COLOR.BLACK,
-	["white"]           = TME_LEGEND_COLOR.WHITE,	
+	["white"]           = TME_LEGEND_COLOR.WHITE,
 	["lightRed"]        = TME_LEGEND_COLOR.LIGHTRED,
 	["red"]             = TME_LEGEND_COLOR.RED,
-	["darkRed"]         = TME_LEGEND_COLOR.DARKRED,	
-	["lightYellow"]     = TME_LEGEND_COLOR.LIGHTYELLOW,	
+	["darkRed"]         = TME_LEGEND_COLOR.DARKRED,
+	["lightYellow"]     = TME_LEGEND_COLOR.LIGHTYELLOW,
 	["yellow"]          = TME_LEGEND_COLOR.YELLOW,
-	["darkyellow"]      = TME_LEGEND_COLOR.DARKYELLOW,	
+	["darkyellow"]      = TME_LEGEND_COLOR.DARKYELLOW,
 	["lightOrange"]     = TME_LEGEND_COLOR.LIGHTORANGE,
 	["orange"]          = TME_LEGEND_COLOR.ORANGE,
-	["darkOrange"]      = TME_LEGEND_COLOR.DARKORANGE,	
+	["darkOrange"]      = TME_LEGEND_COLOR.DARKORANGE,
 	["lightBrown"]      = TME_LEGEND_COLOR.LIGHTBROWN,
 	["brown"]           = TME_LEGEND_COLOR.BROWN,
-	["darkBrown"]       = TME_LEGEND_COLOR.DARKBROWN,		
+	["darkBrown"]       = TME_LEGEND_COLOR.DARKBROWN,
 	["lightGreen"]      = TME_LEGEND_COLOR.LIGHTGREEN,
 	["green"]           = TME_LEGEND_COLOR.GREEN,
-	["darkGreen"]       = TME_LEGEND_COLOR.DARKGREEN,	
+	["darkGreen"]       = TME_LEGEND_COLOR.DARKGREEN,
 	["lightCyan"]       = TME_LEGEND_COLOR.LIGHTCYAN,
 	["cyan"]            = TME_LEGEND_COLOR.CYAN,
-	["darkCyan"]        = TME_LEGEND_COLOR.DARKCYAN,	
+	["darkCyan"]        = TME_LEGEND_COLOR.DARKCYAN,
 	["lighBlue"]        = TME_LEGEND_COLOR.LIGHTBLUE,
 	["blue"]            = TME_LEGEND_COLOR.BLUE,
-	["darkBlue"]        = TME_LEGEND_COLOR.DARKBLUE,	
+	["darkBlue"]        = TME_LEGEND_COLOR.DARKBLUE,
 	["lightGray"]       = TME_LEGEND_COLOR.LIGHTGRAY,
 	["gray"]            = TME_LEGEND_COLOR.GRAY,
-	["darkGray"]        = TME_LEGEND_COLOR.DARKGRAY,	
+	["darkGray"]        = TME_LEGEND_COLOR.DARKGRAY,
 	["lightMagenta"]    = TME_LEGEND_COLOR.LIGHTMAGENTA,
 	["magenta"]         = TME_LEGEND_COLOR.MAGENTA,
-	["darkMagenta"]     = TME_LEGEND_COLOR.DARKMAGENTA,	
+	["darkMagenta"]     = TME_LEGEND_COLOR.DARKMAGENTA,
 	["lightPurple"]     = TME_LEGEND_COLOR.LIGHTPURPLE,
 	["purple"]          = TME_LEGEND_COLOR.PURPLE,
 	["darkPurple"]      = TME_LEGEND_COLOR.DARKPURPLE
@@ -162,19 +162,19 @@ local TME_LEGEND_STDDEVIATION_USER = {
 -- Curve style -----------------------------------------------------------
 -- Based on Qwt library (see QwtPlotCurve::CurveStyle)
 local TME_LEGEND_CURVE_STYLE = {
-	NOCURVE 	= -1,
-	LINES		= 0,
-	STICKS		= 1,
-	STEPS		= 2,
-	DOTS		= 3
+	NOCURVE = -1,
+	LINES   = 0,
+	STICKS  = 1,
+	STEPS   = 2,
+	DOTS    = 3
 }
 
 local TME_LEGEND_CURVE_STYLE_USER = {
-	["none"] 		= TME_LEGEND_CURVE_STYLE.NOCURVE,
-	["lines"]		= TME_LEGEND_CURVE_STYLE.LINES,
-	["sticks"]	= TME_LEGEND_CURVE_STYLE.STICKS,
-	["steps"]		= TME_LEGEND_CURVE_STYLE.STEPS,
-	["dots"]		= TME_LEGEND_CURVE_STYLE.DOTS
+	["none"]   = TME_LEGEND_CURVE_STYLE.NOCURVE,
+	["lines"]  = TME_LEGEND_CURVE_STYLE.LINES,
+	["sticks"] = TME_LEGEND_CURVE_STYLE.STICKS,
+	["steps"]  = TME_LEGEND_CURVE_STYLE.STEPS,
+	["dots"]   = TME_LEGEND_CURVE_STYLE.DOTS
 }
 
 -- Curve symbol -----------------------------------------------------------
@@ -199,21 +199,21 @@ local TME_LEGEND_CURVE_SYMBOL = {
 }
 
 local TME_LEGEND_CURVE_SYMBOL_USER = {
-	["none"] 		= TME_LEGEND_CURVE_SYMBOL.NOSYMBOL,
-	["ellipse"]	= TME_LEGEND_CURVE_SYMBOL.ELLIPSE,
-	["rect"]		= TME_LEGEND_CURVE_SYMBOL.RECT,
-	["diamond"]	= TME_LEGEND_CURVE_SYMBOL.DIAMOND,
-	["triangle"]	= TME_LEGEND_CURVE_SYMBOL.TRIANGLE,
-	["dtriangle"]	= TME_LEGEND_CURVE_SYMBOL.DTRIANGLE,
-	["utriangle"]	= TME_LEGEND_CURVE_SYMBOL.UTRIANGLE,
-	["ltriangle"]	= TME_LEGEND_CURVE_SYMBOL.LTRIANGLE,
-	["rtriangle"]	= TME_LEGEND_CURVE_SYMBOL.RTRIANGLE,
-	["cross"]		= TME_LEGEND_CURVE_SYMBOL.CROSS,
-	["xcross"]	= TME_LEGEND_CURVE_SYMBOL.XCROSS,
-	["hline"]		= TME_LEGEND_CURVE_SYMBOL.HLINE,
-	["vline"]		= TME_LEGEND_CURVE_SYMBOL.VLINE,
-	["asterisk"]	= TME_LEGEND_CURVE_SYMBOL.ASTERISK,
-	["star"]		= TME_LEGEND_CURVE_SYMBOL.STAR2,
+	["none"]      = TME_LEGEND_CURVE_SYMBOL.NOSYMBOL,
+	["ellipse"]   = TME_LEGEND_CURVE_SYMBOL.ELLIPSE,
+	["rect"]      = TME_LEGEND_CURVE_SYMBOL.RECT,
+	["diamond"]   = TME_LEGEND_CURVE_SYMBOL.DIAMOND,
+	["triangle"]  = TME_LEGEND_CURVE_SYMBOL.TRIANGLE,
+	["dtriangle"] = TME_LEGEND_CURVE_SYMBOL.DTRIANGLE,
+	["utriangle"] = TME_LEGEND_CURVE_SYMBOL.UTRIANGLE,
+	["ltriangle"] = TME_LEGEND_CURVE_SYMBOL.LTRIANGLE,
+	["rtriangle"] = TME_LEGEND_CURVE_SYMBOL.RTRIANGLE,
+	["cross"]     = TME_LEGEND_CURVE_SYMBOL.CROSS,
+	["xcross"]    = TME_LEGEND_CURVE_SYMBOL.XCROSS,
+	["hline"]     = TME_LEGEND_CURVE_SYMBOL.HLINE,
+	["vline"]     = TME_LEGEND_CURVE_SYMBOL.VLINE,
+	["asterisk"]  = TME_LEGEND_CURVE_SYMBOL.ASTERISK,
+	["star"]      = TME_LEGEND_CURVE_SYMBOL.STAR2,
 	["hexagon"]   = TME_LEGEND_CURVE_SYMBOL.HEXAGON,  
 }
 
@@ -344,7 +344,7 @@ local legendPossibleParams = {
 	"precision",
 	"stdDeviation",
 	"maximum",
-    "minimum",
+	"minimum",
 	"width",
 	"colorBar",
 	"stdColorBar",
@@ -414,7 +414,7 @@ local metaTableLegend_ = {__index = Legend_, __tostring = tostringTerraME}
 --         {value = 0, color = "white"},
 --         {value = 1, color = "red"},
 --         {value = 2, color = "green"}
---     }		
+--     }
 -- }
 -- 
 -- deforLeg = Legend {
@@ -430,7 +430,7 @@ function Legend(data)
 		if data == nil then
 			tableArgumentError("Legend", 3)
 		else
- 			namedArgumentsError("Legend", 3)
+			namedArgumentsError("Legend", 3)
 		end
 	end
 
@@ -560,7 +560,7 @@ function Legend(data)
 				end
 
 				if #colorBarValues > 0 and type(colorBarValues[1]) == "number" then
-					-- returns 'too many results to unpack' when colorBarValues is a big set					
+					-- returns 'too many results to unpack' when colorBarValues is a big set
 					-- data.maximum = math.max(unpack(colorBarValues))
 					local auxMax = -9999999999999         
 					for i = 1, #colorBarValues do
@@ -589,8 +589,8 @@ function Legend(data)
 				table.insert(colorBarValues, data.colorBar[i].value)
 			end
 
-			if #colorBarValues > 0 and type(colorBarValues[1]) == "number" then				
-				-- returns 'too many results to unpack' when colorBarValues is a big set					
+			if #colorBarValues > 0 and type(colorBarValues[1]) == "number" then
+				-- returns 'too many results to unpack' when colorBarValues is a big set
 				-- .minimum = math.min(unpack(colorBarValues))
 				local auxMin = 9999999999999         
 				for i = 1, #colorBarValues do

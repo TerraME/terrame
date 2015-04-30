@@ -414,7 +414,7 @@ function interface(self, modelName, package)
 			r = r.."groupbox"..idx.." = qt.new_qobject(qt.meta.QGroupBox)\n"
 			r = r.."groupbox"..idx..".title = \""..stringToLabel(idx).."\"\n"
 			r = r.."groupbox"..idx..".flat = false\n"
-			r = r.."qt.ui.layout_add("..layout..", groupbox"..idx..")\n"	
+			r = r.."qt.ui.layout_add("..layout..", groupbox"..idx..")\n"
 			r = r.."TmpLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
 			r = r.."qt.ui.layout_add(groupbox"..idx..", TmpLayout)\n"
 

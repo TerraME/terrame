@@ -34,8 +34,8 @@ local function testfolders(folder, ut)
 
 	local lf 
 	lf = function(mfolder)
-		local found_file = false	
-		local found_folder = false	
+		local found_file = false
+		local found_folder = false
 		forEachFile(folder..s..mfolder, function(value)
 			if string.endswith(value, ".lua") then
 				if not found_file then
@@ -150,7 +150,7 @@ local function buildLineTable(package)
 	local load_sequence
 
 	if isFile(load_file) then
-		-- the 'include' below does not need to be inside a xpcall because 
+		-- the 'include' below does not need to be inside a xpcall because
 		-- the package was already loaded with success
 		load_sequence = include(load_file).files
 	else
@@ -166,7 +166,7 @@ local function buildLineTable(package)
 	local testlines = {} -- test functions store all the functions that need to be tested, extracted from the source code
 
 	for i, file in ipairs(load_sequence) do
-		-- the 'include' below does not need to be inside a xpcall because 
+		-- the 'include' below does not need to be inside a xpcall because
 		-- the package was already loaded with success
 		testlines[file] = lineTable(baseDir..s.."lua"..s..file)
 
@@ -429,7 +429,7 @@ function executeTests(package, fileName)
 				end
 			elseif data.test == nil then
 				forEachOrderedElement(tests, function(index, value, mtype)
-					myTests[#myTests + 1] = index 					
+					myTests[#myTests + 1] = index
 				end)
 			else -- table
 				forEachElement(data.test, function(_, value)
@@ -528,7 +528,7 @@ function executeTests(package, fileName)
 					variables = variables:sub(1, variables:len() - 2).."."
 					printError("Test creates global variable(s): "..variables)
 
-					-- we need to delete the global variables created in order to ensure that a 
+					-- we need to delete the global variables created in order to ensure that a
 					-- new error will be generated if this variable is found again. This need
 					-- to be done here because we cannot change _G inside a forEachElement
 					-- traversing _G

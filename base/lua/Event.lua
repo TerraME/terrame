@@ -28,7 +28,7 @@
 local function Pair(data)
 	if data == nil then data = {} end
 
-	data.cObj_ = data	
+	data.cObj_ = data
 	return data
 end
 

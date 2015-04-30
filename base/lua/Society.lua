@@ -728,7 +728,7 @@ function Society(data)
 		if data.database:endswith(".csv") then
 			if data.sep and type(data.sep) ~= "string" then
 				incompatibleTypeError("sep", "string", data.sep)
-			end			
+			end
 			local f = io.open(data.database)
 			if not f then
 				resourceNotFoundError("database", data.database)

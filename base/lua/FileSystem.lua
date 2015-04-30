@@ -48,7 +48,7 @@
 function attributes(filepath, attributename)
 	mandatoryArgument(1, "string", filepath)
 	optionalArgument(2, "string", attributename)
-	
+
 	return lfs.attributes(filepath, attributename)
 end
 

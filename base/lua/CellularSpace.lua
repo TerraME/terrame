@@ -199,7 +199,7 @@ local function checkMySQL(self)
 	self.cObj_:setUser(self.user)
 	self.cObj_:setHostName(self.host)
 	self.cObj_:setPassword(self.password)
-	self.cObj_:setPort(self.port)	
+	self.cObj_:setPort(self.port)
 
 	mandatoryTableArgument(self, "theme", "string")
 	defaultTableValue(self, "layer", "")
@@ -660,7 +660,7 @@ CellularSpace_ = {
 	-- @deprecated CellularSpace:get
 	getCellByID = function(self, cellID)
 		deprecatedFunction("getCellByID", "get")
-	end,	
+	end,
 	--- Return all the cells of the CellularSpace in a vector.
 	-- @usage cs:getCells()
 	-- @deprecated CellularSpace.cells
@@ -1059,12 +1059,12 @@ function CellularSpace(data)
 	local cObj = TeCellularSpace()
 	data.cObj_= cObj
 
-	cObj:setDBType(data.dbType)	
+	cObj:setDBType(data.dbType)
 
 	if data.database then 
 		mandatoryTableArgument(data, "database", "string")
 		verify(data.database ~= "", "Empty database name.")
-		cObj:setDBName(data.database)		
+		cObj:setDBName(data.database)
 	end
 
 	if CellularSpaceDrivers[data.dbType].check then
@@ -1144,7 +1144,7 @@ function CellularSpace(data)
 
 	if data.autoload then
 		data:load()
-		-- needed for Environment's loadNeighborhood	
+		-- needed for Environment's loadNeighborhood
 		if data.database then
 			data.layer = data.cObj_:getLayerName()
 		end

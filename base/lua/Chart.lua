@@ -74,7 +74,7 @@ Chart_ = {
 		}
 
 		if not availableExtensions[extension] then
-			invalidFileExtensionError(1, extension)	
+			invalidFileExtensionError(1, extension)
 		end
 
 		extension = string.upper(extension)
@@ -350,7 +350,7 @@ function Chart(data)
 	table.insert(observerParams, data.xLabel)
 	table.insert(observerParams, data.yLabel)
 
-    local label = table.concat(data.label, ";")
+	local label = table.concat(data.label, ";")
 
 	table.insert(observerParams, label)
 
