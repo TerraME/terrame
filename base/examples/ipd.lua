@@ -1,6 +1,6 @@
 -- @example Iterated Prisoner's dilemma model.
 
-math.randomseed(0)
+Random{seed = 0}
 
 -- STRATEGIES AND META-STRATEGIES
 COOPERATE     = 1
@@ -93,7 +93,7 @@ AC = Agent{ -- ALWAYS COOPERATE
 RANDOM = Agent{
 	name = "RANDOM",
 	play = function(ag)
-		if math.random() > 0.5 then
+		if Random():number() > 0.5 then
 			return COOPERATE
 		else
 			return NOT_COOPERATE

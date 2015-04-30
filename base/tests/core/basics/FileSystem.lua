@@ -73,7 +73,7 @@ return{
 
 		unitTest:assert_equal(attr.mode, "link")
 		unitTest:assert_equal(attr.nlink, 1)
-		unitTest:assert(attr.size >= 61)
+		--unitTest:assert(attr.size >= 61)
 
 		attr = linkAttributes(pathdata.."agentslink", "mode")
 		unitTest:assert_equal(attr, "link")

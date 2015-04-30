@@ -156,8 +156,8 @@ return{
 			target = cs1,
 			select = function() return true end
 		}
-		unitTest:assert_equal(tostring(tr1), [[cObj_   userdata
-cells   table of size 200
+		unitTest:assert_equal(tostring(tr1), [[cells   table of size 200
+cObj_   userdata
 load    function
 parent  CellularSpace
 select  function
@@ -243,7 +243,7 @@ xyz     function
 		local cs = CellularSpace{xdim = 5}
 
 		forEachCell(cs, function(cell)
-			cell.value = math.random(12)
+			cell.value = Random():integer(12)
 		end)
 
 		local g = function(a, b)
@@ -263,7 +263,7 @@ xyz     function
 		unitTest:assert_equal(tr.parent, cs)
 		unitTest:assert_equal(tr.select, s)
 		unitTest:assert_equal(tr.greater, g)
-		unitTest:assert_equal(#tr, 15)
+		unitTest:assert_equal(#tr, 12)
 
 		forEachCell(cs, function(cell)
 			cell.value = cell.value + 10

@@ -35,9 +35,9 @@ return{
 		local mdatabase
 
 		if mdbType == "ado" then
-			mdatabase = data("cabecaDeBoi.mdb", "base")
+			mdatabase = data("cabecadeboi.mdb", "base")
 		else
-			mdatabase = "cabeca"
+			mdatabase = "cabecadeboi"
 		end
 
 		local error_func = function()
@@ -405,10 +405,10 @@ return{
 					port = mport,
 					theme = "cells90x90",
 					layer = "cells90x90",
-					database = "cabeca"
+					database = "cabecadeboi"
 				}
 			end
-			unitTest:assert_error(error_func, "Access denied for user ''@'localhost' to database 'cabeca'.", 24)
+			unitTest:assert_error(error_func, "Access denied for user ''@'localhost' to database 'cabecadeboi'.", 24)
 
 			error_func = function()
 				local cs = CellularSpace{
@@ -475,7 +475,7 @@ return{
 			port = mport,
 			theme = "cells90x90",
 			layer = "cells90x90",
-			database = "cabeca"
+			database = "cabecadeboi"
 		}
 
 		local error_func = function()
@@ -528,7 +528,7 @@ return{
 			port = mport,
 			theme = "cells90x90",
 			layer = "cells90x90",
-			database = "cabeca"
+			database = "cabecadeboi"
 		}
 
 		local cs2 = CellularSpace{xdim = 10}
@@ -595,7 +595,7 @@ return{
 			port = mport,
 			theme = "cells90x90",
 			layer = "cells90x90",
-			database = "cabeca"
+			database = "cabecadeboi"
 		}
 
 		local error_func = function()

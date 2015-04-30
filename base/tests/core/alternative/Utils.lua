@@ -223,6 +223,11 @@ return{
 			forEachOrderedElement({1, 2, 3})
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "function"))
+
+		error_func = function()
+			forEachOrderedElement({aaa = 2, aaA = 3}, function() end)
+		end
+		unitTest:assert_error(error_func, "forEachOrderedElement() cannot work with two indexes having the same lower case.")
 	end,
 	getExtension = function(unitTest)
 		local error_func = function()

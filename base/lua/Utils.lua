@@ -709,9 +709,14 @@ function forEachOrderedElement(obj, func)
 		if type(k) == "number" then
 			norder[#norder + 1] = k
 			nreference[k] = k
-		else	
-			strk = tostring(k)
+		else
+			strk = string.lower(tostring(k))
 			sorder[#sorder + 1] = strk
+
+			if sreference[strk] then
+				customError("forEachOrderedElement() cannot work with two indexes having the same lower case.")
+			end
+
 			sreference[strk] = k
 		end
 	end
