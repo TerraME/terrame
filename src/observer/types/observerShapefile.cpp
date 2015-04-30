@@ -13,7 +13,7 @@ using namespace TerraMEObserver;
 using namespace std;
 
 ObserverShapefile::ObserverShapefile(Subject *subj, QWidget *parent) :
-    ObserverMapSuperclass(subj,TObsShapefile, QString("TerraME Observer : Shapefile"), parent)
+    ObserverMapSuperclass(subj, TObsShapefile, QString("TerraME Observer : Shapefile"), parent)
 {
 }
 
@@ -40,7 +40,7 @@ bool ObserverShapefile::draw(QDataStream &state)
     
     QVector<double> xs, ys;
 
-    // protocolDecoder->decode(msg, xs,ys);
+    // protocolDecoder->decode(msg, xs, ys);
     
     QList<Attributes *> listAttribs = mapAttributes->values();
 
@@ -52,7 +52,7 @@ bool ObserverShapefile::draw(QDataStream &state)
             for(; j < tokens.size(); j++){
                 if(tokens.at(j) == "objectId_"){
                     j+=2;
-                    ids->insert(i,tokens.at(j).toInt());
+                    ids->insert(i, tokens.at(j).toInt());
                     break;
                 }
             }
@@ -147,7 +147,7 @@ void ObserverShapefile::showLayerLegend()
 
 void ObserverShapefile::loadShape(const string &filename)
 {
-    SHPHandle hSHP = SHPOpen(filename.c_str(),"r");
+    SHPHandle hSHP = SHPOpen(filename.c_str(), "r");
     //cout<<(char*)filename.constData()<<endl;
     //qDebug()<<hSHP;
     int n;
@@ -159,12 +159,12 @@ void ObserverShapefile::loadShape(const string &filename)
     double sx = scene->sceneRect().width()/w;
     double sy = scene->sceneRect().height()/h;
 
-    double s = max(sx,sy);
+    double s = max(sx, sy);
 
     double dx = minBound[0]*-1;
     double dy = minBound[1]*-1;
 
-    scene->setSceneRect(scene->sceneRect().x(),scene->sceneRect().y(),w*s, h*s);
+    scene->setSceneRect(scene->sceneRect().x(), scene->sceneRect().y(), w*s, h*s);
 
     nshapes = n;
 
@@ -177,8 +177,8 @@ void ObserverShapefile::loadShape(const string &filename)
     for(int i = 0; i < nshapes; i++)
     {
         SHPObject *obj = SHPReadObject(hSHP, i);
-        //QGraphicsItem *item = createItem(obj,center.x(), center.y(),dx, dy);
-        QGraphicsPathItem *item = createItem(obj,0, 0,dx, dy,s,s);
+        //QGraphicsItem *item = createItem(obj, center.x(), center.y(), dx, dy);
+        QGraphicsPathItem *item = createItem(obj, 0, 0, dx, dy, s, s);
         shapes[obj->nShapeId] = item;
         scene->addItem(item);
         SHPDestroyObject(obj);
@@ -189,28 +189,28 @@ void ObserverShapefile::loadShape(const string &filename)
 
 }
 
-QGraphicsPathItem* ObserverShapefile::createItem(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
+QGraphicsPathItem* ObserverShapefile::createItem(SHPObject *obj, int x, int y, double dx, double dy, double sx, double sy)
 {
     switch(shapeType){
         case SHPT_POLYGONZ:
         case SHPT_POLYGON: 
-            return createItemPolygon(obj,x,y,dx,dy,sx,sy);// polygon
+            return createItemPolygon(obj, x, y, dx, dy, sx, sy);// polygon
         case SHPT_ARC:
         case SHPT_ARCZ:{
-            return createItemPolyline(obj,x,y,dx,dy,sx,sy);//polyline
+            return createItemPolyline(obj, x, y, dx, dy, sx, sy);//polyline
         }
         case SHPT_POINT:
         case SHPT_POINTZ:
-            return createItemPoint(obj,x,y,dx,dy,sx,sy);//points
+            return createItemPoint(obj, x, y, dx, dy, sx, sy);//points
         default :
-            return createItemPoint(obj,x,y,dx,dy,sx,sy);//default
+            return createItemPoint(obj, x, y, dx, dy, sx, sy);//default
     }
 }
 
-QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, int y,double dx, double dy, double sx,double sy)
+QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, int y, double dx, double dy, double sx, double sy)
 {
     QGraphicsPathItem *item = new QGraphicsPathItem;
-    item->setPos(x,y);
+    item->setPos(x, y);
 
     vector<list<QPointF> > points(obj->nParts);
 
@@ -221,7 +221,7 @@ QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, i
     while(j < obj->nVertices && i < obj->nParts){
         i++;
         while(j < obj->panPartStart[i] || (obj->nParts  == 1 && j < obj->nVertices)){
-            points[i-1].push_back(QPointF((obj->padfX[j]+dx),(obj->padfY[j]+dy)));
+            points[i-1].push_back(QPointF((obj->padfX[j]+dx), (obj->padfY[j]+dy)));
             j++;
         }
     }
@@ -240,16 +240,16 @@ QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, i
     return item;
 }
 
-QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
+QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int y, double dx, double dy, double sx, double sy)
 {
     QGraphicsPathItem *item = new QGraphicsPathItem;
-    item->setPos(x,y);
+    item->setPos(x, y);
     
     //qDebug()<<x<<", "<<y;
     
     QPainterPath path;
     for(int i = 0; i < obj->nVertices; i++)
-        path.addRoundRect(obj->padfX[i]+dx,obj->padfY[i]+dy,1,1,90);
+        path.addRoundRect(obj->padfX[i]+dx, obj->padfY[i]+dy, 1, 1, 90);
 
     item->setPath(path);
     item->setBrush(Qt::black);
@@ -257,14 +257,14 @@ QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int
 
     return item;
 }
-QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
+QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, int y, double dx, double dy, double sx, double sy)
 {
     QGraphicsPathItem *item = new QGraphicsPathItem;
-    item->setPos(x,y);
+    item->setPos(x, y);
     
     vector<list<QPointF> > points(obj->nParts);
 
-    int iPart,j=0,nextStart=0; 
+    int iPart, j=0, nextStart=0; 
 	for (iPart = 0; iPart < obj->nParts; iPart++)
 	{
 		if (iPart == obj->nParts-1)

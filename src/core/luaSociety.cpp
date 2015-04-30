@@ -269,8 +269,8 @@ int luaSociety::createObserver(lua_State * luaL)
 					{
 						string errorMsg = string("Attribute name ") + string(obsAttribs.at(i).toLatin1().data()) + string(" not found.");
 						lua_getglobal(L, "customError");
-						lua_pushstring(L,errorMsg.c_str());
-						lua_call(L,1,0);
+						lua_pushstring(L, errorMsg.c_str());
+						lua_call(L, 1, 0);
 						return 0;
 					}
 				}
@@ -481,9 +481,9 @@ int luaSociety::createObserver(lua_State * luaL)
 					{
 						string err_out = string("Observer will send to broadcast.");
 						lua_getglobal(L, "customWarning");
-						lua_pushstring(L,err_out.c_str());
-						//lua_pushnumber(L,5);
-						lua_call(L,1,0);
+						lua_pushstring(L, err_out.c_str());
+						//lua_pushnumber(L, 5);
+						lua_call(L, 1, 0);
 					}
 					obsUDPSender->addHost(BROADCAST_HOST);
 				}
@@ -605,9 +605,9 @@ int luaSociety::createObserver(lua_State * luaL)
 		if (! cellSpace)
 		{
 			lua_getglobal(L, "customError");
-			lua_pushstring(L,errorMsg.toLatin1().data());
-			//lua_pushnumber(L,5);
-			lua_call(L,1,0);
+			lua_pushstring(L, errorMsg.toLatin1().data());
+			//lua_pushnumber(L, 5);
+			lua_call(L, 1, 0);
 			return 0;
 		}
 
@@ -618,9 +618,9 @@ int luaSociety::createObserver(lua_State * luaL)
 			if (! obsMap)
 			{
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,errorMsg.toLatin1().data());
-				//lua_pushnumber(L,5);
-				lua_call(L,1,0);
+				lua_pushstring(L, errorMsg.toLatin1().data());
+				//lua_pushnumber(L, 5);
+				lua_call(L, 1, 0);
 				return 0;
 			}
 
@@ -633,9 +633,9 @@ int luaSociety::createObserver(lua_State * luaL)
 			if (! obsImage)
 			{
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,errorMsg.toLatin1().data());
-				//lua_pushnumber(L,5);
-				lua_call(L,1,0);
+				lua_pushstring(L, errorMsg.toLatin1().data());
+				//lua_pushnumber(L, 5);
+				lua_call(L, 1, 0);
 				return 0;
 			}
 

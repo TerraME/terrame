@@ -153,21 +153,21 @@ class mapComposite : public Implementation
 {
 public:
 
-    typedef pair<TIndx,TElmnt>  T;
+    typedef pair<TIndx, TElmnt>  T;
     typedef TIndx				TKey;
-    typedef typename map<TKey,TElmnt, less<TKey> >::iterator iterator;
-    typedef typename map<TKey,TElmnt, less<TKey> >::reverse_iterator reverse_iterator;
+    typedef typename map<TKey, TElmnt, less<TKey> >::iterator iterator;
+    typedef typename map<TKey, TElmnt, less<TKey> >::reverse_iterator reverse_iterator;
 
     /// Add a new component
     void add ( const T& comp )
     {
-        components_.insert( typename map<TKey,TElmnt>::value_type(comp.first, comp.second) );
+        components_.insert( typename map<TKey, TElmnt>::value_type(comp.first, comp.second) );
     }
 
     /// Remove the i-th component
     bool erase ( TKey k )
     {
-        typename map< TKey,TElmnt,less<TKey> >::iterator location = components_.find( k );
+        typename map< TKey, TElmnt, less<TKey> >::iterator location = components_.find( k );
         if ( location != components_.end())
         {
             components_.erase(k);
@@ -179,7 +179,7 @@ public:
     /// Remove a component
     bool erase ( T& comp )
     {
-        typename map< TKey,TElmnt,less<TKey> >::iterator location = components_.find( comp.first );
+        typename map< TKey, TElmnt, less<TKey> >::iterator location = components_.find( comp.first );
         if ( location != components_.end())
         {
             components_.erase(comp.first);
@@ -189,7 +189,7 @@ public:
     }
 
     iterator erase( iterator itr) {
-        typename map<TKey,TElmnt,less<TKey> >::iterator location = components_.find( itr->first );
+        typename map<TKey, TElmnt, less<TKey> >::iterator location = components_.find( itr->first );
         if ( location != components_.end())
         {
             components_.erase(location);
@@ -208,13 +208,13 @@ public:
 
     /// Return the i-th component
     T& operator [] ( TKey k ){
-        typename map<TKey,TElmnt,less<TKey> >::iterator location = components_.find( k );
+        typename map<TKey, TElmnt, less<TKey> >::iterator location = components_.find( k );
         return (T&)(*location);
     }
 
     /// Find a component and return its iterator
     iterator find( TKey k ) {
-        typename map<TKey,TElmnt,less<TKey> >::iterator location = components_.find( k );
+        typename map<TKey, TElmnt, less<TKey> >::iterator location = components_.find( k );
         return location;
     }
 
@@ -248,7 +248,7 @@ public:
 
 protected:
 
-    map<TKey, TElmnt,less<TKey> >	components_;
+    map<TKey, TElmnt, less<TKey> >	components_;
 };
 //////////////////////////////////////////////////////////////////////////////////////
 template <class TIndx, class TElmnt >
@@ -256,19 +256,19 @@ class multimapComposite : public Implementation
 {
 public:
 
-    typedef pair<TIndx,TElmnt>	T;
+    typedef pair<TIndx, TElmnt>	T;
     typedef TIndx				TKey;
-    typedef typename multimap<TKey,TElmnt,less<TKey> >::iterator iterator;
-    typedef typename multimap<TKey,TElmnt,less<TKey> >::reverse_iterator reverse_iterator;
+    typedef typename multimap<TKey, TElmnt, less<TKey> >::iterator iterator;
+    typedef typename multimap<TKey, TElmnt, less<TKey> >::reverse_iterator reverse_iterator;
 
     /// Add a new component
     void add ( const T& comp )
-    { components_.insert( typename multimap<TKey,TElmnt,less<TKey> >::value_type(comp.first, comp.second) ); }
+    { components_.insert( typename multimap<TKey, TElmnt, less<TKey> >::value_type(comp.first, comp.second) ); }
 
     /// Remove the i-th component
     bool erase ( TKey k )
     {
-        typename multimap<TKey,TElmnt,less<TKey> >::iterator location = components_.find( k );
+        typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find( k );
         if ( location != components_.end())
         {
             components_.erase(k);
@@ -280,7 +280,7 @@ public:
     /// Remove a component
     bool erase ( T& comp )
     {
-        typename multimap<TKey,TElmnt,less<TKey> >::iterator location = components_.find( comp.first );
+        typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find( comp.first );
         if ( location != components_.end())
         {
             components_.erase(comp.first);
@@ -290,7 +290,7 @@ public:
     }
 
     iterator erase( iterator itr) {
-        typename multimap<TKey,TElmnt,less<TKey> >::iterator location = components_.find( itr->first );
+        typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find( itr->first );
         if ( location != components_.end())
         {
             components_.erase(location);
@@ -310,13 +310,13 @@ public:
 
     /// Return the i-th component
     T& operator [] ( TKey k ){
-        typename multimap<TKey,TElmnt,less<TKey> >::iterator location = components_.find( k );
+        typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find( k );
         return (T&)(*location);
     }
 
     /// Find a component and return its iterator
     iterator find( TKey k ) {
-        typename multimap<TKey,TElmnt,less<TKey> >::iterator location = components_.find( k );
+        typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find( k );
         return location;
     }
 

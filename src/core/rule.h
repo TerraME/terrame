@@ -51,7 +51,7 @@ class GlobalAgent;
 class RuleStrategy {
 public:
     RuleStrategy( void ){}
-    virtual bool execute ( Event & /*event*/, Agent * /*agent*/, pair<CellIndex,Cell*> & /*cellIndexPair*/ ) { return true; }
+    virtual bool execute ( Event & /*event*/, Agent * /*agent*/, pair<CellIndex, Cell*> & /*cellIndexPair*/ ) { return true; }
 };
 
 
@@ -78,7 +78,7 @@ public:
     /// \param agent is a pointer to the Agent being executed
     /// \param cellIndexPair is a pair of CellIndex objects and Cell pointers. The formers are user defined
     ///  n-dimensional coordinates for the latter.
-    int execute( Event &event,class Agent *agent, pair<CellIndex,Cell*> &cellIndexPair) {
+    int execute( Event &event, class Agent *agent, pair<CellIndex, Cell*> &cellIndexPair) {
         return theStrategy_->execute(event, agent, cellIndexPair);
     }
 
@@ -110,7 +110,7 @@ class JumpCondition : public RuleStrategy
 public:
 
     /// Default constructor
-    JumpCondition( void ):targetControlMode_( NULL ),targetControlModeName_("") { }
+    JumpCondition( void ):targetControlMode_( NULL ), targetControlModeName_("") { }
 
     /// Constructor
     /// \param target is a pointer to a the JumpCondtion target ControleMode

@@ -46,7 +46,7 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
 
     else if((TeGPMWeightsStrategy)weightStrategy==TeConnectionStrenghtStrategy)
         ws = new TeProxMatrixConnectionStrenghtStrategy(portal->getDouble(8), portal->getDouble(9),
-                                                        portal->getDouble(7),(bool)portal->getInt(3));
+                                                        portal->getDouble(7), (bool)portal->getInt(3));
 
     portal->freeResult();
 
@@ -173,7 +173,7 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
 
     else if((TeGPMWeightsStrategy)weightStrategy==TeConnectionStrenghtStrategy)
         ws = new TeProxMatrixConnectionStrenghtStrategy(portal->getDouble(8), portal->getDouble(9),
-                                                        portal->getDouble(7),(bool)portal->getInt(3));
+                                                        portal->getDouble(7), (bool)portal->getInt(3));
 
     portal->freeResult();
 

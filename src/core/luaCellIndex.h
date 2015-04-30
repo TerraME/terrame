@@ -57,7 +57,7 @@ public:
     luaCellIndex(lua_State *L) 
     {
         x = y = 0;
-        if( lua_istable(L,-1) )
+        if( lua_istable(L, -1) )
         {
             lua_pushstring(L, "x"); lua_gettable(L, -2); 
             x = (int) luaL_checknumber(L, -1); lua_pop(L, 1);

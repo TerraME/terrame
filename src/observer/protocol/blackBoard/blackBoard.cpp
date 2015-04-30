@@ -192,7 +192,7 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, const QStringL
             if (! msg.isEmpty())
                 qWarning("Failed on decode state. SubjectId: '%i'", subj->getId());
             else
-                qWarning("Any state to decode. SubjectId: '%1'",subj->getId());
+                qWarning("Any state to decode. SubjectId: '%1'", subj->getId());
         }
     }
 

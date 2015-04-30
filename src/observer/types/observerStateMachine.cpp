@@ -260,9 +260,9 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
 			string err_out = string("Error: Parameter legend") + LEGEND_KEYS.at(j).toLatin1().data() + string(" not found. ") +
 							 string("Please check it in the model.");
 			lua_getglobal(L, "customErrorMsg");
-			lua_pushstring(L,err_out.c_str());
-			lua_pushnumber(L,5);
-			lua_call(L,2,0);
+			lua_pushstring(L, err_out.c_str());
+			lua_pushnumber(L, 5);
+			lua_call(L, 2, 0);
 			//return 0;
 			break;
         }

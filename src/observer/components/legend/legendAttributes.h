@@ -270,7 +270,7 @@ public:
      * \param txt a string value
      * \see QString
      */
-    void addValue(/*int subjID,*/ const QString &value);
+    void addValue(/*int subjID, */ const QString &value);
 
     /**
     * Sets a legend vector to this attribute
@@ -611,7 +611,7 @@ public:
     
     /**
      * Gets the direction of the attribute using the
-     * coordinate (x,y) of the map
+     * coordinate (x, y) of the map
      * \param pos position of the attribute in the values list
      * \param x axis position
      * \param y axis position

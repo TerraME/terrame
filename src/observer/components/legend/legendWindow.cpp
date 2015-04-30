@@ -390,8 +390,8 @@ void LegendWindow::applyPushButton_clicked()
             if (execModes != Quiet){
                 string err_out = msg.toLatin1().constData();
                 lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_call(L,1,0);
+                lua_pushstring(L, err_out.c_str());
+                lua_call(L, 1, 0);
             }
         }
         groupingModeComboBox->setCurrentIndex(attrib->getGroupMode());
@@ -1142,8 +1142,8 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             {
 				string str = msg.toLatin1().data();
 				lua_getglobal(L, "customWarning");
-				lua_pushstring(L,str.c_str());
-				lua_call(L,1,0);
+				lua_pushstring(L, str.c_str());
+				lua_call(L, 1, 0);
             }
         }
         // return;
@@ -1218,8 +1218,8 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
                     {
 						string str = msg.toLatin1().data();
 						lua_getglobal(L, "customWarning");
-						lua_pushstring(L,str.c_str());
-						lua_call(L,1,0);
+						lua_pushstring(L, str.c_str());
+						lua_call(L, 1, 0);
                     }
                 }
 
@@ -1428,7 +1428,7 @@ QPixmap LegendWindow::color2PixmapLine(const QColor &color, double width, const 
 	pen.setWidth(width);
 
 	p.setPen(pen);
-	p.drawLine( QLine( QPoint(0,(size.height() * 0.5)), 
+	p.drawLine( QLine( QPoint(0, (size.height() * 0.5)), 
         QPoint(size.width(), (size.height() * 0.5)) ) );
 	p.end();
 
@@ -1506,7 +1506,7 @@ void LegendWindow::connectSlots(bool con)
 
         connect(applyPushButton, SIGNAL(clicked()), this,
                 SLOT(applyPushButton_clicked()));
-        connect(legendTable, SIGNAL(cellDoubleClicked(int,int)), this,
+        connect(legendTable, SIGNAL(cellDoubleClicked(int, int)), this,
                 SLOT(legendTable_doubleClicked(int, int)));
 
         connect(frameTeQtColorBar, SIGNAL(colorChangedSignal()), this,
@@ -1567,7 +1567,7 @@ void LegendWindow::connectSlots(bool con)
 
         disconnect(applyPushButton, SIGNAL(clicked()), this,
                 SLOT(applyPushButton_clicked()));
-        disconnect(legendTable, SIGNAL(cellDoubleClicked(int,int)), this,
+        disconnect(legendTable, SIGNAL(cellDoubleClicked(int, int)), this,
                 SLOT(legendTable_doubleClicked(int, int)));
 
         disconnect(frameTeQtColorBar, SIGNAL(colorChangedSignal()), this,
@@ -1712,20 +1712,20 @@ void LegendWindow::commitFile()
 
         out << tabulation << "-- Attribute: " << attrib->getName() << "\n";
 
-        legAttribs.push_back(enumToString("TypesOfData", attrib->getDataType()) + ",");     // type
+        legAttribs.push_back(enumToString("TypesOfData", attrib->getDataType()) + ", ");     // type
 
-        legAttribs.push_back(enumToString("GroupingMode", attrib->getGroupMode()) + ",");   // grouping
-        legAttribs.push_back(QString::number(attrib->getSlices() + 1) + ",");		// slices
-        legAttribs.push_back(QString::number(attrib->getPrecisionNumber() + 1) + ",");	// precision
-        legAttribs.push_back(enumToString("StdDev", attrib->getStdDeviation()) + ",");      // standard deviation %
-        legAttribs.push_back(QString::number(attrib->getMaxValue()) + ",");	// max value
-        legAttribs.push_back(QString::number(attrib->getMinValue()) + ",");		// min value
+        legAttribs.push_back(enumToString("GroupingMode", attrib->getGroupMode()) + ", ");   // grouping
+        legAttribs.push_back(QString::number(attrib->getSlices() + 1) + ", ");		// slices
+        legAttribs.push_back(QString::number(attrib->getPrecisionNumber() + 1) + ", ");	// precision
+        legAttribs.push_back(enumToString("StdDev", attrib->getStdDeviation()) + ", ");      // standard deviation %
+        legAttribs.push_back(QString::number(attrib->getMaxValue()) + ", ");	// max value
+        legAttribs.push_back(QString::number(attrib->getMinValue()) + ", ");		// min value
 
-        legAttribs.push_back(QString("\"%1\"").arg(attrib->getSymbol()) + ",");             // symbol
-        legAttribs.push_back(QString("\"%1\"").arg(attrib->getFont().family()) + ",");      // font
-        legAttribs.push_back(QString::number(attrib->getFont().pointSize()) + ",");		// font size
+        legAttribs.push_back(QString("\"%1\"").arg(attrib->getSymbol()) + ", ");             // symbol
+        legAttribs.push_back(QString("\"%1\"").arg(attrib->getFont().family()) + ", ");      // font
+        legAttribs.push_back(QString::number(attrib->getFont().pointSize()) + ", ");		// font size
 
-        legAttribs.push_back(QString::number(attrib->getWidth()) + ",");                    // width
+        legAttribs.push_back(QString::number(attrib->getWidth()) + ", ");                    // width
 
         // stdDevComboBox	// not used
         // functionComboBox	// not used
@@ -1747,16 +1747,16 @@ void LegendWindow::commitFile()
                         .arg(QString::number(colorBarVec.at(j).distance_));
 
                 if (j < (int)colorBarVec.size() - 1)
-                    color.append(",\n" + tabulation + tabulation);
+                    color.append(", \n" + tabulation + tabulation);
                 else
                     color.append("\n");
                 
                 colors.append(color);
             }
-            colors.append(tabulation + "},");
+            colors.append(tabulation + "}, ");
         }
         else{
-            colors = "{},";
+            colors = "{}, ";
         }
 
         legAttribs.push_back(colors);
@@ -1779,7 +1779,7 @@ void LegendWindow::commitFile()
                             .arg(QString::number(colorBarVec.at(j).distance_));
 
                     if (j < (int)colorBarVec.size() - 1)
-                        color.append(",\n" + tabulation + tabulation);
+                        color.append(", \n" + tabulation + tabulation);
                     else
                         color.append("\n");
                     colors.append(color);
@@ -1807,7 +1807,7 @@ void LegendWindow::commitFile()
             out << tabulation << legendKeys.at(k) << " = " << legAttribs.at(k) << "\n";
 
 #ifdef DEBUG_OBSERVER	
-            printf("k: %i\t %s = %s\n",k, qPrintable(legendKeys.at(k)),
+            printf("k: %i\t %s = %s\n", k, qPrintable(legendKeys.at(k)),
             qPrintable(legAttribs.at(k));
 #endif
         }

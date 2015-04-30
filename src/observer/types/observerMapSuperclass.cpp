@@ -383,14 +383,14 @@ void ObserverMapSuperclass::butLegend_Clicked()
 
 void ObserverMapSuperclass::butZoomIn_Clicked()
 {
-    positionZoomVec = max(positionZoomVec-1,0);
+    positionZoomVec = max(positionZoomVec-1, 0);
     zoomComboBox->setCurrentIndex(positionZoomVec);
     zoomActivated(zoomComboBox->currentText());
 }
 
 void ObserverMapSuperclass::butZoomOut_Clicked()
 {
-    positionZoomVec = min(positionZoomVec+1,22);
+    positionZoomVec = min(positionZoomVec+1, 22);
     zoomComboBox->setCurrentIndex(positionZoomVec);
     zoomActivated(zoomComboBox->currentText());
 }
@@ -500,9 +500,9 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
 			string err_out = string("Error: Parameter legend") + LEGEND_KEYS.at(j).toLatin1().data() + string(" not found. ") +
 							 string("Please check it in the model.");
 			lua_getglobal(L, "customErrorMsg");
-			lua_pushstring(L,err_out.c_str());
-			lua_pushnumber(L,5);
-			lua_call(L,2,0);
+			lua_pushstring(L, err_out.c_str());
+			lua_pushnumber(L, 5);
+			lua_call(L, 2, 0);
 			//return 0;
 			break;
         }

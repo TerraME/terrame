@@ -71,7 +71,7 @@ extern bool step;
 *  Event-Message Pair Composite Handle Type.
 *
 */
-typedef CompositeInterface< multimapComposite<Event,Message*> > EventMessagePairCompositeInterf;
+typedef CompositeInterface< multimapComposite<Event, Message*> > EventMessagePairCompositeInterf;
 
 /**
 * \brief

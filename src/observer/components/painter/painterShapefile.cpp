@@ -47,7 +47,7 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
         QVector<double> *values = attrib->getNumericValues();
         QVector<ObsLegend> *vecLegend = attrib->getLegend();
 
-        double /*x = -1.0, y = -1.0,*/ v = 0.0;
+        double /*x = -1.0, y = -1.0, */ v = 0.0;
 
         int vSize = values->size();
         //int xSize = attrib->getXsValue()->size();
@@ -85,20 +85,20 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
                     }
                     color.setRgb(255, 255, 255);
                 }
-                setColor(item,color);
+                setColor(item, color);
             }
             else
             {
                 for(int j = 0; j < vecLegend->size(); j++)
                 {
-                    //setColor(item,Qt::white);
+                    //setColor(item, Qt::white);
 
                     const ObsLegend &leg = vecLegend->at(j);
                     if (attrib->getGroupMode() == TObsUniqueValue) // single value 3
                     {
                         if (v == leg.getToNumber())
                         {
-                            setColor(item,leg.getColor());
+                            setColor(item, leg.getColor());
                             break;
                         }
                     }
@@ -106,7 +106,7 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
                     {
                         if ((leg.getFromNumber() <= v) && (v < leg.getToNumber()))
                         {
-                            setColor(item,leg.getColor());
+                            setColor(item, leg.getColor());
                             break;
                         }
                     }
@@ -140,17 +140,17 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
 
             if (vecLegend->isEmpty())
             {
-                setColor(item,QColor(random, random, random));
+                setColor(item, QColor(random, random, random));
             }
             else
             {
-                //setColor(item,Qt::white);
+                //setColor(item, Qt::white);
                 for(int j = 0; j < vecLegend->size(); j++)
                 {
                     const ObsLegend &leg = vecLegend->at(j);
                     if (v == leg.getFrom())
                     {
-                        setColor(item,leg.getColor());
+                        setColor(item, leg.getColor());
                         break;
                     }
                 }
@@ -167,9 +167,9 @@ void PainterShapefile::plotMap(Attributes *attrib)
 	{
 		string err_out = string("Erro: PainterWidget::plotMap - Invalid attribute!!");
 		lua_getglobal(L, "customErrorMsg");
-		lua_pushstring(L,err_out.c_str());
-		lua_pushnumber(L,5);
-		lua_call(L,2,0);
+		lua_pushstring(L, err_out.c_str());
+		lua_pushnumber(L, 5);
+		lua_call(L, 2, 0);
 		//return 0;
 	}
 
@@ -183,5 +183,5 @@ void PainterShapefile::replotMap()
 
     for (int i = 0; i < listAttribs.size(); i++)
         plotMap(listAttribs.at(i));
-    if(turn_allWhite == listAttribs.size()) for(int i = 0; i < shapes->size(); i++) setColor(shapes->at(i),Qt::white);
+    if(turn_allWhite == listAttribs.size()) for(int i = 0; i < shapes->size(); i++) setColor(shapes->at(i), Qt::white);
 }

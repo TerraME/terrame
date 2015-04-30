@@ -70,8 +70,8 @@ void SenderGUI::messageFailed(const QString &errorMsg)
 	
 	if (execModes != Quiet){
 		lua_getglobal(L, "customErrorMsg");
-		lua_pushstring(L,wng_msg.toLatin1().data());
-		lua_call(L,1,0);
+		lua_pushstring(L, wng_msg.toLatin1().data());
+		lua_call(L, 1, 0);
 	}
 }
 

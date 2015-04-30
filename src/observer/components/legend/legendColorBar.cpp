@@ -516,7 +516,7 @@ void TeQtColorBar::paintEvent(QPaintEvent *)
                     {
                         //painter.lineTo(0, h-j);
                         //painter.moveTo(w-7, h-j);
-                        painter.drawLine(0, h-j, w-7,h-j);
+                        painter.drawLine(0, h-j, w-7, h-j);
                     }
                 }
                 else
@@ -1058,7 +1058,7 @@ void TeQtColorBar::changeAllBrightness()
 
         QColor cor;
         cor.setHsv(cb.h_, cb.s_, cb.v_);
-        TeColor tc(cor.red(), cor.green(),cor.blue());
+        TeColor tc(cor.red(), cor.green(), cor.blue());
         cb.color(tc);
     }
     generateColorMap();
@@ -1097,7 +1097,7 @@ void TeQtColorBar::changeBrightness()
 
     QColor cor;
     cor.setHsv(cb.h_, cb.s_, cb.v_);
-    TeColor tc(cor.red(), cor.green(),cor.blue());
+    TeColor tc(cor.red(), cor.green(), cor.blue());
     cb.color(tc);
 
     generateColorMap();
@@ -1163,7 +1163,7 @@ void TeQtColorBar::changeAllSaturation()
 
         QColor cor;
         cor.setHsv(cb.h_, cb.s_, cb.v_);
-        TeColor tc(cor.red(), cor.green(),cor.blue());
+        TeColor tc(cor.red(), cor.green(), cor.blue());
         cb.color(tc);
     }
     generateColorMap();
@@ -1208,7 +1208,7 @@ void TeQtColorBar::changeSaturation()
 
     QColor cor;
     cor.setHsv(cb.h_, cb.s_, cb.v_);
-    TeColor tc(cor.red(), cor.green(),cor.blue());
+    TeColor tc(cor.red(), cor.green(), cor.blue());
     cb.color(tc);
 
     generateColorMap();
@@ -1250,7 +1250,7 @@ void TeQtColorBar::changeHue()
 
     QColor cor;
     cor.setHsv(cb.h_, cb.s_, cb.v_);
-    TeColor tc(cor.red(), cor.green(),cor.blue());
+    TeColor tc(cor.red(), cor.green(), cor.blue());
     cb.color(tc);
 
     generateColorMap();

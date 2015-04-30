@@ -109,7 +109,7 @@ int luaNeighborhood::eraseNeighbor(lua_State *L) {
 /// return luaCell
 int luaNeighborhood::addCell(lua_State *L) {  
     double weight = luaL_checknumber(L, -1);
-    luaCellularSpace *cs = Luna<luaCellularSpace>::check(L,-2);
+    luaCellularSpace *cs = Luna<luaCellularSpace>::check(L, -2);
     luaCellIndex *cI = Luna<luaCellIndex>::check(L, -3);
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
     luaCell *cell = ::findCell( cs, cellIndex );
@@ -406,7 +406,7 @@ int luaNeighborhood::clear(lua_State *) {
 /// Returns the number of Neighbors cells in the Neighborhood
 /// no parameters
 int luaNeighborhood::size(lua_State *L) {  
-    lua_pushnumber(L,CellNeighborhood::size( ));
+    lua_pushnumber(L, CellNeighborhood::size( ));
     return 1;
 }
 
@@ -614,9 +614,9 @@ int luaNeighborhood::getParent( lua_State *L )
                 if (execModes != Quiet){
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
                     lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    //lua_pushnumber(L,5);
-                    lua_call(L,1,0);
+                    lua_pushstring(L, err_out.c_str());
+                    //lua_pushnumber(L, 5);
+                    lua_call(L, 1, 0);
                 }
             }
             break;
@@ -633,9 +633,9 @@ int luaNeighborhood::getParent( lua_State *L )
                 if (execModes != Quiet){
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
                     lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    //lua_pushnumber(L,5);
-                    lua_call(L,1,0);
+                    lua_pushstring(L, err_out.c_str());
+                    //lua_pushnumber(L, 5);
+                    lua_call(L, 1, 0);
                 }
             }
             break;
@@ -692,9 +692,9 @@ int luaNeighborhood::getParent( lua_State *L )
                 if (execModes != Quiet){
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
                     lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    //lua_pushnumber(L,5);
-                    lua_call(L,1,0);
+                    lua_pushstring(L, err_out.c_str());
+                    //lua_pushnumber(L, 5);
+                    lua_call(L, 1, 0);
                 }
             }
             break;
@@ -715,9 +715,9 @@ int luaNeighborhood::getParent( lua_State *L )
                 if (execModes != Quiet){
                     string err_out = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
                     lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    //lua_pushnumber(L,5);
-                    lua_call(L,1,0);
+                    lua_pushstring(L, err_out.c_str());
+                    //lua_pushnumber(L, 5);
+                    lua_call(L, 1, 0);
                 }
             }
             break;
@@ -728,9 +728,9 @@ int luaNeighborhood::getParent( lua_State *L )
                 string err_out = string("In this context, the code ") + getObserverName(typeObserver) + string(" does not "
                                         "correspond to a valid type of Observer.");
                 lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                //lua_pushnumber(L,5);
-                lua_call(L,1,0);
+                lua_pushstring(L, err_out.c_str());
+                //lua_pushnumber(L, 5);
+                lua_call(L, 1, 0);
             }
             return 0;
         }
@@ -745,9 +745,9 @@ int luaNeighborhood::getParent( lua_State *L )
                 {
                     string err_out = string("Filename was not specified. Using default '") + string(qPrintable(DEFAULT_NAME));
                                             lua_getglobal(L, "customWarning");
-                                            lua_pushstring(L,err_out.c_str());
-                                            //lua_pushnumber(L,5);
-                                            lua_call(L,1,0);
+                                            lua_pushstring(L, err_out.c_str());
+                                            //lua_pushnumber(L, 5);
+                                            lua_call(L, 1, 0);
                 }
                 obsLog->setFileName(DEFAULT_NAME + ".csv");
             }
@@ -763,9 +763,9 @@ int luaNeighborhood::getParent( lua_State *L )
                 {
                     string err_out = string("Separator not defined, using \";\".");
                     lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    //lua_pushnumber(L,5);
-                    lua_call(L,1,0);
+                    lua_pushstring(L, err_out.c_str());
+                    //lua_pushnumber(L, 5);
+                    lua_call(L, 1, 0);
                 }
                 obsLog->setSeparator();
             }
@@ -794,9 +794,9 @@ int luaNeighborhood::getParent( lua_State *L )
                 {
                     string err_out = string("Column title not defined.");
                     lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    //lua_pushnumber(L,5);
-                    lua_call(L,1,0);
+                    lua_pushstring(L, err_out.c_str());
+                    //lua_pushnumber(L, 5);
+                    lua_call(L, 1, 0);
                 }
             }
 
@@ -975,9 +975,9 @@ int luaNeighborhood::getParent( lua_State *L )
         if (! cellSpace)
         {
             lua_getglobal(L, "customError");
-            lua_pushstring(L,errorMsg.toLatin1().data());
-            //lua_pushnumber(L,5);
-            lua_call(L,1,0);
+            lua_pushstring(L, errorMsg.toLatin1().data());
+            //lua_pushnumber(L, 5);
+            lua_call(L, 1, 0);
         }
 
         if (typeObserver == TObsMap)
@@ -987,9 +987,9 @@ int luaNeighborhood::getParent( lua_State *L )
             if (! obsMap)
             {
                 lua_getglobal(L, "customError");
-                lua_pushstring(L,errorMsg.toLatin1().data());
-                //lua_pushnumber(L,5);
-                lua_call(L,1,0);
+                lua_pushstring(L, errorMsg.toLatin1().data());
+                //lua_pushnumber(L, 5);
+                lua_call(L, 1, 0);
             }
 
             obsMap->registry(this);
@@ -1001,9 +1001,9 @@ int luaNeighborhood::getParent( lua_State *L )
             if (! obsImage)
             {
                 lua_getglobal(L, "customError");
-                lua_pushstring(L,errorMsg.toLatin1().data());
-                //lua_pushnumber(L,5);
-                lua_call(L,1,0);
+                lua_pushstring(L, errorMsg.toLatin1().data());
+                //lua_pushnumber(L, 5);
+                lua_call(L, 1, 0);
             }
 
             obsImage->registry(this);
@@ -1253,7 +1253,7 @@ QByteArray luaNeighborhood::getAll(QDataStream& /*in*/, int /*observerId*/, cons
 
 QByteArray luaNeighborhood::getChanges(QDataStream& in, int observerId, const QStringList& attribs)
 {
-    return getAll(in,observerId,attribs);
+    return getAll(in, observerId, attribs);
 }
 
 #endif

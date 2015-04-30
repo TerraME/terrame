@@ -85,8 +85,8 @@ class luaCellularSpace : public CellSpaceSubjectInterf, public Reference<luaCell
 	QStringList retrieveColorBar(TeDatabasePortal *portal, TeTheme *inputTheme, TeGrouping *grouping);
 
 	QString retrieveLegendType(int attrType);
-	QString retrieveMaxValue(TeDatabasePortal *portal, TeTheme *inputTheme,QString attrName ,int attrType);
-	QString retrieveMinValue(TeDatabasePortal *portal, TeTheme *inputTheme,QString attrName ,int attrType);
+	QString retrieveMaxValue(TeDatabasePortal *portal, TeTheme *inputTheme, QString attrName , int attrType);
+	QString retrieveMinValue(TeDatabasePortal *portal, TeTheme *inputTheme, QString attrName , int attrType);
 	QString retrieveStdMode(int attrType, TeGrouping grouping);
 
 #endif // TME_NO_TERRALIB

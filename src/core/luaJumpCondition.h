@@ -71,7 +71,7 @@ public:
     /// \param agent is the Agent been executed
     /// \param cellIndexPair is the Cell - CellIndex pair where the luaJumpCondition is being executed
     /// \return A booleand value: true if the rule transit, otherwise false.
-    bool execute ( Event &event, Agent *agent, pair<CellIndex,Cell*> &cellIndexPair )
+    bool execute ( Event &event, Agent *agent, pair<CellIndex, Cell*> &cellIndexPair )
     {
         try {
 
@@ -112,7 +112,7 @@ public:
             // calls the "execute" function of the rule
             if( lua_pcall( L, 3, 1, 0) != 0 )
             {
-                cout << " Error: rule can not be executed: " << lua_tostring(L,-1) << endl;
+                cout << " Error: rule can not be executed: " << lua_tostring(L, -1) << endl;
 
                 return 0;
             }

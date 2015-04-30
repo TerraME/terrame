@@ -129,15 +129,15 @@ void stackDump (lua_State *L) {
 int isudatatype (lua_State *L, int idx, const char *name)
 { // returns true if a userdata is of a certain type
     int res;
-    if (lua_type(L,idx)!=LUA_TUSERDATA) return 0;
-    lua_getmetatable(L,idx);
+    if (lua_type(L, idx)!=LUA_TUSERDATA) return 0;
+    lua_getmetatable(L, idx);
     luaL_newmetatable (L, name);
-    res = lua_compare(L,-2,-1,LUA_OPEQ);
-    lua_pop(L,2); // pop both tables (metatables) off
+    res = lua_compare(L, -2, -1, LUA_OPEQ);
+    lua_pop(L, 2); // pop both tables (metatables) off
     return res;
 } 
 
-/// UTILITARY FUNCTION - Converts a TerraLib object ID to (x,y) coordinates
+/// UTILITARY FUNCTION - Converts a TerraLib object ID to (x, y) coordinates
 /// \param objId is a "const char const *" containing the object ID
 /// \param x is a natural number returned by this function
 /// \param y is a natural number returned by this function
@@ -152,7 +152,7 @@ void objectId2coords( const char * objId, int &x, int &y)
     strncpy(aux, objId, strlen(objId));
     strcpy( col, strtok( (char*)aux, seps ));
     strcpy( lin,  strtok( NULL, seps ) );
-    //cout << "{" << col <<","<< lin <<"}" << endl;
+    //cout << "{" << col <<", "<< lin <<"}" << endl;
     x = atoi(col);
     y = atoi(lin);
 }
@@ -251,12 +251,12 @@ bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, s
     // Set a default visual for the geometries of the objects of the layer
     // Polygons will be set with the blue color
     TeVisual polygonVisual(TePOLYGONS);
-    TeColor azul(0,0,255); // Raian: polygonVisual.color(TeColor(0,0,255));
+    TeColor azul(0, 0, 255); // Raian: polygonVisual.color(TeColor(0, 0, 255));
     polygonVisual.color(azul);
 
     // Points will be set with the red color
     TeVisual pointVisual(TePOINTS);
-    TeColor vermelho(255,0,0); // Raian: pointVisual.color(TeColor(255,0,0));
+    TeColor vermelho(255, 0, 0); // Raian: pointVisual.color(TeColor(255, 0, 0));
     pointVisual.color(vermelho);
     pointVisual.style(TePtTypeX);
 
@@ -350,7 +350,7 @@ std::string TeGetExtension ( const char* value )
 	if( ( ip == (int)std::string::npos ) || ( ip == -1 ) )
 		return "";
 	else
-		return name.substr(ip+1,len-1);
+		return name.substr(ip+1, len-1);
 }
 
 // Copied from TeUtils class
@@ -362,10 +362,10 @@ std::string TeGetName ( const char* value )
 	int len = strlen ( value );
 
 	int sp = name.rfind('\\')+1;
-	int ip = (name.substr(sp,len-1)).rfind('.');
-	int bp = (name.substr(sp,len-1)).rfind('/');
+	int ip = (name.substr(sp, len-1)).rfind('.');
+	int bp = (name.substr(sp, len-1)).rfind('/');
 	if ((ip>0)&& (ip > bp))
-		return name.substr(0,sp+ip);
+		return name.substr(0, sp+ip);
 	else 
 		return name;
 }

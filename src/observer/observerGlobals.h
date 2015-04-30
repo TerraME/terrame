@@ -45,7 +45,7 @@ static const QString LOCAL_HOST = "127.0.0.1";
 static const QString DEFAULT_NAME = "result_";
 
 static const QString PROTOCOL_SEPARATOR = ":"; // changed value of the original (#90)
-static const QString COMP_COLOR_SEP = ",";
+static const QString COMP_COLOR_SEP = ", ";
 static const QString ITEM_SEP = ";";
 static const QString ITEM_NULL = "?";
 static const QString COLORS_SEP = "#";

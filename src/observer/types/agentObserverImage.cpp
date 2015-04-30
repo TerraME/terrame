@@ -129,8 +129,8 @@ void AgentObserverImage::setSubjectAttributes(const QStringList & attribs,
             {
 				string str = string("The attribute called ") + attribs.at(i).toLatin1().data() + string(" was not found.");
 				lua_getglobal(L, "customWarning");
-				lua_pushstring(L,str.c_str());
-				lua_call(L,1,0);
+				lua_pushstring(L, str.c_str());
+				lua_call(L, 1, 0);
             }
         }
         else

@@ -61,7 +61,7 @@ PainterWidget::PainterWidget(QHash<QString, Attributes*> *mapAttrib,
 
     qRegisterMetaType<QImage>("QImage");
     //connect(&visualMapping, SIGNAL(displayImage(QImage)), this, SLOT(displayImage(QImage)), Qt::DirectConnection);
-    //connect(&visualMapping, SIGNAL(update()),this, SLOT(update()), Qt::QueuedConnection);
+    //connect(&visualMapping, SIGNAL(update()), this, SLOT(update()), Qt::QueuedConnection);
     
     visualMapping = new VisualMapping(observerType);
     connect(visualMapping, SIGNAL(displayImage(QImage)), 

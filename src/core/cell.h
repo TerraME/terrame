@@ -58,7 +58,7 @@ class CellImpl : public Implementation
 {
 	int latency; ///< simulation time elapsed since the last cell change
 	NeighCmpstInterf neighborhoods_; ///< each cell may have many neighborhood graphs
-	map<Agent*,ControlMode*> targetControlMode_; ///< each cell keeps track of the current state of each automaton whitin itself
+	map<Agent*, ControlMode*> targetControlMode_; ///< each cell keeps track of the current state of each automaton whitin itself
 
 public:
 	/// Copies the block of memory used by the implementation of cell.
@@ -84,13 +84,13 @@ public:
 	void attachControlMode(Agent *agent, ControlMode *controlMode ) {
 
 		// improve here
-		map<Agent*,ControlMode*>::iterator location = targetControlMode_.find( agent );
+		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find( agent );
 		if( location != targetControlMode_.end() )
 		{
 			targetControlMode_.erase(agent);
-			targetControlMode_.insert(map<Agent*,ControlMode*>::value_type(agent, controlMode));
+			targetControlMode_.insert(map<Agent*, ControlMode*>::value_type(agent, controlMode));
 		}
-		else targetControlMode_.insert(map<Agent*,ControlMode*>::value_type(agent, controlMode));
+		else targetControlMode_.insert(map<Agent*, ControlMode*>::value_type(agent, controlMode));
 
 	}
 
@@ -98,7 +98,7 @@ public:
 	/// \param agent is a pointer to an agent within the cell
 	/// \return true - if success, false - otherwise
 	bool detachControlMode(Agent *agent ){
-		map<Agent*,ControlMode*>::iterator location = targetControlMode_.find( agent );
+		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find( agent );
 		if ( location != targetControlMode_.end())
 		{
 			targetControlMode_.erase(agent);
@@ -112,7 +112,7 @@ public:
 	/// \param agent is a pointer to a local agent within the cell
 	/// \return true - if success, false - otherwise
 	ControlMode* getControlMode(LocalAgent *agent){
-		map<Agent*,ControlMode*>::iterator location = targetControlMode_.find((Agent*)agent);
+		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find((Agent*)agent);
 		if(location != targetControlMode_.end())
 		{
 			return location->second;
@@ -126,7 +126,7 @@ public:
 	/// \param agent is a pointer to the agent being executed
 	/// \return A pointer to the agent active control mode (discrete state).
 	ControlMode* execute(Event &/*event*/, class Agent *agent){
-		map<Agent*,ControlMode*>::iterator location = targetControlMode_.find(agent);
+		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
 		if(location != targetControlMode_.end())
 		{
 			return location->second;
@@ -223,7 +223,7 @@ public:
 	/// \param agent is a pointer to the agent being executed
 	/// \return A pointer to the agent active control mode (discrete state).
 	ControlMode* execute(Event &event, class Agent *agent) {
-		return pImpl_->execute(event,agent);
+		return pImpl_->execute(event, agent);
 	}
 
 	/// Copy constructor

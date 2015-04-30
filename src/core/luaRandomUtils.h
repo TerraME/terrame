@@ -76,7 +76,7 @@ public:
 
     // random()
     // random(a)
-    // random(a,b)
+    // random(a, b)
     int random(lua_State *L){
 
         // int arg2 = (int)luaL_checkinteger(L, top - 1);
@@ -99,13 +99,13 @@ public:
             }
         }
         else
-            v = this->r.IntegerC(arg,arg2);
+            v = this->r.IntegerC(arg, arg2);
         lua_pushnumber(L, v);
         return 1;
     }
 
     // random(a)
-    // random(a,b)
+    // random(a, b)
     int randomInteger(lua_State *L){
 
         // int arg2 = (int)luaL_checkinteger(L, top - 1);
@@ -113,7 +113,7 @@ public:
         int arg2 = (int)luaL_checkinteger(L, -1);
         int arg = (int)luaL_checkinteger(L, -2);
         int v;
-                v = this->r.IntegerC(arg,arg2);
+                v = this->r.IntegerC(arg, arg2);
         lua_pushnumber(L, v);
         return 1;
     }

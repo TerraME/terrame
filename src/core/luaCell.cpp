@@ -137,7 +137,7 @@ int luaCell::clear(lua_State *) {
 /// Returns the number of Neighbors cells in the Neighborhood
 int luaCell::size(lua_State *) {
 	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
-	lua_pushnumber(L,nhgs.size( ));
+	lua_pushnumber(L, nhgs.size( ));
 	return 1;
 }
 
@@ -261,7 +261,7 @@ int luaCell::setID( lua_State *L )
 	return 0;
 }
 
-/// Sets the cell index (x,y)
+/// Sets the cell index (x, y)
 /// Parameters: cell.x, cell.y
 /// \author Raian Vargas Maretto
 int luaCell::setIndex(lua_State *L)
@@ -278,7 +278,7 @@ void luaCell::setIndex(const CellIndex& index)
 	//return 0;
 }
 
-/// Gets the cell index (x,y)
+/// Gets the cell index (x, y)
 /// \author Raian Vargas Maretto
 const CellIndex & luaCell::getIndex() const
 {
@@ -339,7 +339,7 @@ int luaCell::createObserver(lua_State *)
 		{
 			string err_out = string("Attribute table not found. Incorrect sintax.");
 			lua_getglobal(L, "customError");
-			lua_pushstring(L,err_out.c_str());
+			lua_pushstring(L, err_out.c_str());
 			lua_call(L, 1, 0);
 			return -1;
 		}
@@ -366,7 +366,7 @@ int luaCell::createObserver(lua_State *)
 				{
 					string err_out = string("Attribute '" + key.toStdString() + "' not found.");
 					lua_getglobal(L, "customError");
-					lua_pushstring(L,err_out.c_str());
+					lua_pushstring(L, err_out.c_str());
 					lua_call(L, 1, 0);
 					return -1;
 				}
@@ -644,8 +644,8 @@ int luaCell::createObserver(lua_State *)
 				if(execModes != Quiet){
 					string err_out = string("Column title not defined.");
 					lua_getglobal(L, "customWarning");
-					lua_pushstring(L,err_out.c_str());
-					lua_call(L,1,0);
+					lua_pushstring(L, err_out.c_str());
+					lua_call(L, 1, 0);
 				}
 			}
 
@@ -682,8 +682,8 @@ int luaCell::createObserver(lua_State *)
 				if (execModes != Quiet){
 					string err_out = string("Parameter 'port' not defined.");
 					lua_getglobal(L, "customWarning");
-					lua_pushstring(L,err_out.c_str());
-					lua_call(L,1,0);
+					lua_pushstring(L, err_out.c_str());
+					lua_call(L, 1, 0);
 				}
 			}
 			else
@@ -715,8 +715,8 @@ int luaCell::createObserver(lua_State *)
 				if (execModes != Quiet ){
 					string err_out = string("Port not defined.");
 					lua_getglobal(L, "customWarning");
-					lua_pushstring(L,err_out.c_str());
-					lua_call(L,1,0);
+					lua_pushstring(L, err_out.c_str());
+					lua_call(L, 1, 0);
 				}
 			}
 			else

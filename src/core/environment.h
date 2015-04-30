@@ -121,14 +121,14 @@ typedef CompositeInterface< vectorComposite<CellularSpace> > CellularSpaceCompos
  *  Time-Environment Pair Multimap Composite Handle Type.
  *
  */
-typedef CompositeInterface< multimapComposite<Event,Environment> > TimeEnvironmentPairCompositeInterf;
+typedef CompositeInterface< multimapComposite<Event, Environment> > TimeEnvironmentPairCompositeInterf;
 
 /**
  * \brief
  *  Time-Scheduler Pair Multimap Composite Handle Type.
  *
  */
-typedef CompositeInterface< multimapComposite<Event,Scheduler> > TimeSchedulerPairCompositeInterf;
+typedef CompositeInterface< multimapComposite<Event, Scheduler> > TimeSchedulerPairCompositeInterf;
 
 /**
  * \brief
@@ -351,25 +351,25 @@ public:
 
     /// Adds a new Time-Scheduler pair to the internal Scheduler synchronization data structure
     /// \param timeSchedulerPair is a reference to a Time-Scheduler pair being added.
-    void add ( const pair<Event,Scheduler>  &timeSchedulerPair ){
+    void add ( const pair<Event, Scheduler>  &timeSchedulerPair ){
         TimeSchedulerPairCompositeInterf::add ( timeSchedulerPair );
     }
 
     /// Removes the Time-Scheduler pair from the Environment Scheduler data structure
     /// \param timeSchedulerPair is a reference to a Time-Scheduler pair being removed.
-    void erase ( pair<Event,Scheduler>  &timeSchedulerPair ){
+    void erase ( pair<Event, Scheduler>  &timeSchedulerPair ){
         TimeSchedulerPairCompositeInterf::erase (timeSchedulerPair.first);
     }
 
     /// Adds a new Event-Environment pair to the internal Environment synchronization data structure
     /// \param timeEnvironmentPair is a reference to a Event-Environment pair being added.
-    void add ( const pair<Event,Environment> &timeEnvironmentPair ){
+    void add ( const pair<Event, Environment> &timeEnvironmentPair ){
         TimeEnvironmentPairCompositeInterf::add ( timeEnvironmentPair );
     }
 
     /// Removes the Event-Environment pair from the internal Environment synchronization data structure
     /// \param timeEnvironmentPair is a reference to a Event-Environment pair being added.
-    void erase ( pair<Event,Environment> &timeEnvironmentPair ){
+    void erase ( pair<Event, Environment> &timeEnvironmentPair ){
         TimeEnvironmentPairCompositeInterf::erase ( timeEnvironmentPair.first );
     }
 
@@ -380,7 +380,7 @@ private:
     bool executeScheduler( Environment *environment) {
         Event time;
         TimeSchedulerPairCompositeInterf::iterator theIterator;
-        pair<Event,Scheduler> timeSchedulerPair;
+        pair<Event, Scheduler> timeSchedulerPair;
         theIterator = environment->firstScheduler();
 
 

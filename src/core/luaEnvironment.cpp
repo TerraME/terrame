@@ -16,7 +16,7 @@ extern ExecutionModes execModes;
 
 luaEnvironment::luaEnvironment(lua_State *L)
 {
-    id = lua_tostring(L,-1);
+    id = lua_tostring(L, -1);
     Environment::envId = id;
     
     luaL = L;
@@ -29,7 +29,7 @@ int luaEnvironment::add(lua_State *L)
     void *ud;
     if( isudatatype(L, -1, "TeTimer") )
     {
-        pair<Event,Scheduler>  timeSchedulerPair;
+        pair<Event, Scheduler>  timeSchedulerPair;
         Scheduler* pTimer = Luna<luaTimer>::check(L, -1);
 
         timeSchedulerPair.first = pTimer->getEvent();
@@ -42,7 +42,7 @@ int luaEnvironment::add(lua_State *L)
         CellularSpace* pCS = Luna<luaCellularSpace>::check(L, -1);
         Environment::add( *pCS);
     }
-    else if( isudatatype(L, -1,"TeLocalAutomaton") )
+    else if( isudatatype(L, -1, "TeLocalAutomaton") )
     {
         LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
         Environment::add( *pAg);
@@ -54,7 +54,7 @@ int luaEnvironment::add(lua_State *L)
     }
     else if( (ud = luaL_checkudata(L, -1, "TeScale")) != NULL )
     {
-        pair<Event,Environment>  timeEnvPair;
+        pair<Event, Environment>  timeEnvPair;
         Environment* pEnv = Luna<luaEnvironment>::check(L, -1);
 
         timeEnvPair.first = pEnv->getEvent();
@@ -67,7 +67,7 @@ int luaEnvironment::add(lua_State *L)
 
 int luaEnvironment::addTimer(lua_State *L)
 {
-    pair<Event,Scheduler>  timeSchedulerPair;
+    pair<Event, Scheduler>  timeSchedulerPair;
     Scheduler* pTimer = Luna<luaTimer>::check(L, -1);
 
     timeSchedulerPair.first = lua_tonumber(L, -2);
@@ -187,9 +187,9 @@ int luaEnvironment::createObserver( lua_State *luaL )
     {
         string errorMsg = string("Attributes table not found. Incorrect sintax.");
 		lua_getglobal(L, "customError");
-        lua_pushstring(L,errorMsg.c_str());
-		//lua_pushnumber(L,5);
-		lua_call(L,1,0);
+        lua_pushstring(L, errorMsg.c_str());
+		//lua_pushnumber(L, 5);
+		lua_call(L, 1, 0);
 		return 0;
     }
 
@@ -236,9 +236,9 @@ int luaEnvironment::createObserver( lua_State *luaL )
                 
                 string err_out = string("Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
-				lua_pushstring(L,err_out.c_str());
-				//lua_pushnumber(L,5);
-				lua_call(L,1,0);
+				lua_pushstring(L, err_out.c_str());
+				//lua_pushnumber(L, 5);
+				lua_call(L, 1, 0);
                 return -1;
             }
         }
@@ -268,10 +268,10 @@ int luaEnvironment::createObserver( lua_State *luaL )
     if(! lua_istable(luaL, top) )
     {
 		string errorMsg = string("Attributes table not found. Incorrect sintax.");
-		lua_pushstring(L,errorMsg.c_str());
+		lua_pushstring(L, errorMsg.c_str());
 		//TODO: there is something wrong here.. which function will be called?
-		//lua_pushnumber(L,5);
-		lua_call(L,1,0);
+		//lua_pushnumber(L, 5);
+		lua_call(L, 1, 0);
 		return 0;
     }
 
@@ -346,9 +346,9 @@ int luaEnvironment::createObserver( lua_State *luaL )
         if (execModes != Quiet ){
             QString str = QString("The parameter table is empty.");
             lua_getglobal(L, "customWarning");
-            lua_pushstring(L,str.toLatin1().constData());
-            //lua_pushnumber(L,5);
-            lua_call(L,1,0);
+            lua_pushstring(L, str.toLatin1().constData());
+            //lua_pushnumber(L, 5);
+            lua_call(L, 1, 0);
         }
     }
     //------------------------

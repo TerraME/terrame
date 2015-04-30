@@ -296,7 +296,7 @@ public:
                     controlMode = cellIndexPair.second->execute(event, this);
                     if (! controlMode) break;
                 }
-                while ( ! controlMode->execute(event,this,cellIndexPair ) );
+                while ( ! controlMode->execute(event, this, cellIndexPair ) );
 
                 cellIterator++;
             }
@@ -337,7 +337,7 @@ public:
     bool execute(Event &event ){
 
         if(currentControlMode == NULL) currentControlMode = &(*ControlModeCompositeInterf::pImpl_)[0];
-        CompositeInterface< multimapComposite<CellIndex,Cell*> >::iterator cellIterator;
+        CompositeInterface< multimapComposite<CellIndex, Cell*> >::iterator cellIterator;
         pair<CellIndex, Cell*> cellIndexPair;
 
         // for each agent action region
@@ -347,7 +347,7 @@ public:
         {
             cellIndexPair.first.first = -1; cellIndexPair.first.second = -1;
             cellIndexPair.second = NULL;
-            while(! currentControlMode->execute(event,this,cellIndexPair ) );
+            while(! currentControlMode->execute(event, this, cellIndexPair ) );
             return true;
         }
 
@@ -361,7 +361,7 @@ public:
                 cellIndexPair.second = cellIterator->second;
 
                 // execute the control mode
-                while( ! currentControlMode->execute(event,this,cellIndexPair )  );
+                while( ! currentControlMode->execute(event, this, cellIndexPair )  );
 
                 cellIterator++;
             }

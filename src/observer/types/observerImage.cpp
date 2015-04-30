@@ -190,11 +190,11 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
             //qFatal("Error: Parameter legend \"%s\" not found. Please check it in the model.", qPrintable( LEGEND_KEYS.at(j) ) );
             //string err_out = string("Neighborhood '" ) + string (index) + string("' not found");
             lua_getglobal(L, "incompatibleTypesErrorMsg");
-            lua_pushstring(L,LEGEND_KEYS.at(j).toLatin1().constData());
-            lua_pushstring(L,"string");
-            lua_pushstring(L,"nil");
-            lua_pushnumber(L,3);
-            lua_call(L,4,0);
+            lua_pushstring(L, LEGEND_KEYS.at(j).toLatin1().constData());
+            lua_pushstring(L, "string");
+            lua_pushstring(L, "nil");
+            lua_pushnumber(L, 3);
+            lua_call(L, 4, 0);
         }
     }
     int dataType = 0, mode = 0, slices = 0, precision = 0, stdDeviation = 0, max = 0;
@@ -336,8 +336,8 @@ bool ObserverImage::save()
 			string str = string("Unable to save the image."
 								"The path is incorrect or you do not have permission to perform this task.");
 			lua_getglobal(L, "customWarning");
-			lua_pushstring(L,str.c_str());
-			lua_call(L,1,0);
+			lua_pushstring(L, str.c_str());
+			lua_call(L, 1, 0);
         }
     }
     return savingImages;

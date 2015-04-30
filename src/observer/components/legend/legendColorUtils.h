@@ -58,13 +58,13 @@ struct TeColor
     std::string name_;
 
     //! Empty constructor
-    TeColor () : red_(0),green_(0),blue_(0), name_("") {}
+    TeColor () : red_(0), green_(0), blue_(0), name_("") {}
 
     //! Constructor with parameters
-    TeColor (int r, int g, int b, const std::string& name="") : red_(r),green_(g),blue_(b), name_(name) {}
+    TeColor (int r, int g, int b, const std::string& name="") : red_(r), green_(g), blue_(b), name_(name) {}
 
     //! Set parameters of colors
-    void init (int r, int g, int b, const std::string& name="") {red_=r,green_=g,blue_=b;name_=name; }
+    void init (int r, int g, int b, const std::string& name="") {red_=r, green_=g, blue_=b;name_=name; }
 
 
     //! Returns TRUE if color1 is equal to color2 or FALSE if they are different.
@@ -182,7 +182,7 @@ std::vector<TeColor> getColors(std::vector<ColorBar>& iVec, int ncores);
 std::string getColors(std::vector<ColorBar>& aVec, std::vector<ColorBar>& bVec, int groupingMode);
 void generateColorBarMap(std::vector<ColorBar>& inputColorVec, int ncores, std::map<int, std::vector<TeColor> >& colorMap);
 std::vector<ColorBar> getColorBarVector(std::string& scores, const bool& first);
-//unsigned int  TeReadColorRampTextFile(const string& fileName, map<string,string>& colorRamps);
+//unsigned int  TeReadColorRampTextFile(const string& fileName, map<string, string>& colorRamps);
 
 
 

@@ -461,7 +461,7 @@ void Attributes::addValue(int id, bool &value)
     //    boolValues->replace(id - factor, value);
 }
 
-void Attributes::addValue(/*int id,*/ const QString &value)
+void Attributes::addValue(/*int id, */ const QString &value)
 {
     textValues->push_back(value);
 

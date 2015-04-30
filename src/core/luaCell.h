@@ -167,7 +167,7 @@ public:
 
     void setIndex(const CellIndex& index);
 
-	/// Gets the cell index (x,y)
+	/// Gets the cell index (x, y)
 	/// \author Raian Vargas Maretto
     const CellIndex & getIndex() const;
 		

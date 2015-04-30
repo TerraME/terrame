@@ -175,8 +175,8 @@ int luaEvent::createObserver(lua_State *luaL)
         if (execModes != Quiet ){
             string err_out = string("The parameter table is empty.");
             lua_getglobal(L, "customWarning");
-            lua_pushstring(L,err_out.c_str());
-            lua_call(L,1,0);
+            lua_pushstring(L, err_out.c_str());
+            lua_call(L, 1, 0);
         }
         cols << "" << "";
     }

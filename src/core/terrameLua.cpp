@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
 
 				argument++;
 			}
-			else if(strcmp(argv[argument],"-gui"))
+			else if(strcmp(argv[argument], "-gui"))
 			{
 				qWarning("\nInvalid arguments.");
 				usage();

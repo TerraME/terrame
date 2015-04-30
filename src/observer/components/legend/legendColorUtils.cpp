@@ -72,7 +72,7 @@ inline std::string number2String( const double value, int precision )
 	sprintf(name, "%.*f", precision, value );
 
 	std::string strOut(name);
-	size_t found = strOut.find(',');
+	size_t found = strOut.find(', ');
 	if(found != std::string::npos)
 	{
 		strOut[(int)found] = '.';
@@ -366,8 +366,8 @@ void generateColorBarMap(std::vector<ColorBar>& inputColorVec, int ncores, std::
     {
         nc = ROUND(dd * (fabs(inputColorVec[i+1].distance_) - fabs(inputColorVec[i].distance_)));
         TeColor corFrom, corTo;
-        ::hsv2Rgb(corFrom,inputColorVec[i].h_, inputColorVec[i].s_, inputColorVec[i].v_);
-        ::hsv2Rgb(corTo,inputColorVec[i+1].h_, inputColorVec[i+1].s_, inputColorVec[i+1].v_);
+        ::hsv2Rgb(corFrom, inputColorVec[i].h_, inputColorVec[i].s_, inputColorVec[i].v_);
+        ::hsv2Rgb(corTo, inputColorVec[i+1].h_, inputColorVec[i+1].s_, inputColorVec[i+1].v_);
         //		TeColor corFrom = inputColorVec[i].cor_;
         //		TeColor corTo = inputColorVec[i+1].cor_;
         colorMap[i] = ::getColors(corFrom, corTo, nc);
@@ -654,8 +654,8 @@ void rgb2Hsv(const TeColor& c, int& h, int& s, int& v)
     v = ROUND(255. * vv);
 }
 
-// r,g,b values are from 0 to 1
-// h = [0,360], s = [0,1], v = [0,1]
+// r, g, b values are from 0 to 1
+// h = [0, 360], s = [0, 1], v = [0, 1]
 //		if s == 0, then h = -1 (undefined)
 
 void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v )
@@ -767,7 +767,7 @@ void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s
 }
 
 
-//unsigned int  TeReadColorRampTextFile(const string& fileName, map<string,string>& colorRamps)
+//unsigned int  TeReadColorRampTextFile(const string& fileName, map<string, string>& colorRamps)
 //{
 //	string name;
 //	string rgb;
@@ -791,7 +791,7 @@ void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s
 //				{
 //					rgb = file.readLine();
 //					aux.clear();
-//					TeSplitString(rgb, ",", aux);
+//					TeSplitString(rgb, ", ", aux);
 //					TeTrim(aux[0]);
 //					TeTrim(aux[1]);
 //					TeTrim(aux[2]);
@@ -807,7 +807,7 @@ void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s
 //				}
 //				rgb = file.readLine();
 //				aux.clear();
-//				TeSplitString(rgb, ",", aux);
+//				TeSplitString(rgb, ", ", aux);
 //				TeTrim(aux[0]);
 //				TeTrim(aux[1]);
 //				TeTrim(aux[2]);

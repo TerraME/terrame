@@ -78,15 +78,15 @@ public:
         {
             string err_out = string("Action function " ) + string (msg) + string(" not defined!");
 			lua_getglobal(L, "customError");
-			lua_pushstring(L,err_out.c_str());
-			//lua_pushnumber(L,5);
-			lua_call(L,1,0);
+			lua_pushstring(L, err_out.c_str());
+			//lua_pushnumber(L, 5);
+			lua_call(L, 1, 0);
             return 0;
         };
 
         // puts the Lua function 'message:execute()' on the top of the stack
         lua_pushnumber(L, 1);
-        lua_gettable(L,-2);
+        lua_gettable(L, -2);
 
         // puts the Event constructor on the top of the lua stack
         lua_getglobal(L, "Event" );
@@ -94,9 +94,9 @@ public:
         {
 			string err_out = string("Event constructor not found.");
 			lua_getglobal(L, "customError");
-			lua_pushstring(L,err_out.c_str());
-			//lua_pushnumber(L,5);
-			lua_call(L,1,0);
+			lua_pushstring(L, err_out.c_str());
+			//lua_pushnumber(L, 5);
+			lua_call(L, 1, 0);
             return 0;
         };
 
@@ -123,9 +123,9 @@ public:
         {
             string err_out = string("Event constructor not found in the stack.");
 			lua_getglobal(L, "customError");
-			lua_pushstring(L,err_out.c_str());
-			//lua_pushnumber(L,5);
-			lua_call(L,1,0);
+			lua_pushstring(L, err_out.c_str());
+			//lua_pushnumber(L, 5);
+			lua_call(L, 1, 0);
             return 0;
         }
 

@@ -170,7 +170,7 @@ void ChartPlot::setInternalCurves(const QList<InternalCurve *> &interCurves)
 void ChartPlot::createPicker()
 {
     picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft,
-        /*QwtPicker::PointSelection | QwtPicker::DragSelection,*/
+        /*QwtPicker::PointSelection | QwtPicker::DragSelection, */
         QwtPlotPicker::CrossRubberBand, QwtPicker::ActiveOnly, //AlwaysOn,
         canvas());
 

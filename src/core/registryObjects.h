@@ -62,7 +62,7 @@ Luna<LuaRandomUtil>::RegType LuaRandomUtil::methods[] = {
 	method(LuaRandomUtil, reseed),
 	method(LuaRandomUtil, getReference),
 	method(LuaRandomUtil, setReference),
-	{0,0}
+	{0, 0}
 };
 
 //****************************** SPACE **********************************************//
@@ -74,7 +74,7 @@ Luna<luaCellIndex>::RegType luaCellIndex::methods[] = {
 	method(luaCellIndex, set),
 	method(luaCellIndex, getReference),
 	method(luaCellIndex, setReference),
-	{0,0}
+	{0, 0}
 };
 
 //----------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ Luna<luaNeighborhood>::RegType luaNeighborhood::methods[] = {
 	method(luaNeighborhood, createObserver),
 	method(luaNeighborhood, notify),
 	method(luaNeighborhood, kill),
-	{0,0}
+	{0, 0}
 };
 //----------------------------------------------------------------------------------------------
 const char luaSociety::className[] = "TeSociety";
@@ -125,7 +125,7 @@ Luna<luaSociety>::RegType luaSociety::methods[] = {
 	method(luaSociety, createObserver),
 	method(luaSociety, notify),
 	method(luaSociety, kill),
-	{0,0}
+	{0, 0}
 };
 
 //----------------------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ Luna<luaCell>::RegType luaCell::methods[] = {
 	method(luaCell, createObserver),
 	method(luaCell, notify),
 	method(luaCell, kill),
-	{0,0}
+	{0, 0}
 };
 //----------------------------------------------------------------------------------------------//////////////////////////////
 const char luaCellularSpace::className[] = "TeCellularSpace";
@@ -195,7 +195,7 @@ Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
 
 	method(luaCellularSpace, getLayerName),
 	method(luaCellularSpace, getCellByID),
-	{0,0}
+	{0, 0}
 };
 
 //****************************** BEHAVIOR *******************************************//
@@ -206,7 +206,7 @@ Luna<luaJumpCondition>::RegType luaJumpCondition::methods[] = {
 	method(luaJumpCondition, setTargetControlModeName),
 	method(luaJumpCondition, getReference),
 	method(luaJumpCondition, setReference),
-	{0,0}
+	{0, 0}
 };
 //----------------------------------------------------------------------------------------------
 const char luaFlowCondition::className[] = "TeFlow";
@@ -214,7 +214,7 @@ const char luaFlowCondition::className[] = "TeFlow";
 Luna<luaFlowCondition>::RegType luaFlowCondition::methods[] = {
 	method(luaFlowCondition, getReference),
 	method(luaFlowCondition, setReference),
-	{0,0}
+	{0, 0}
 };
 //----------------------------------------------------------------------------------------------
 const char luaControlMode::className[] = "TeState";
@@ -225,7 +225,7 @@ Luna<luaControlMode>::RegType luaControlMode::methods[] = {
 	method(luaControlMode, addJump),
 	method(luaControlMode, getName),
 	method(luaControlMode, config),
-	{0,0}
+	{0, 0}
 };
 
 //----------------------------------------------------------------------------------------------
@@ -246,7 +246,7 @@ Luna<luaGlobalAgent>::RegType luaGlobalAgent::methods[] =
 	method(luaGlobalAgent, createObserver),
 	method(luaGlobalAgent, notify),
 	method(luaGlobalAgent, kill),
-	{0,0}
+	{0, 0}
 };
 //----------------------------------------------------------------------------------------------
 const char luaLocalAgent::className[] = "TeLocalAutomaton";
@@ -264,7 +264,7 @@ Luna<luaLocalAgent>::RegType luaLocalAgent::methods[] =
 	method(luaLocalAgent, createObserver),
 	method(luaLocalAgent, notify),
 	method(luaLocalAgent, kill),
-	{0,0}
+	{0, 0}
 };
 
 //----------------------------------------------------------------------------------------------
@@ -279,7 +279,7 @@ Luna<luaTrajectory>::RegType luaTrajectory::methods[] = {
 	method(luaTrajectory, createObserver),
 	method(luaTrajectory, notify),
 	method(luaTrajectory, kill),
-	{0,0}
+	{0, 0}
 };
 
 const char luaVisualArrangement::className[] = "TeVisualArrangement";
@@ -288,7 +288,7 @@ Luna<luaVisualArrangement>::RegType luaVisualArrangement::methods[] = {
 	method(luaVisualArrangement, setFile),
 	method(luaVisualArrangement, addPosition),
 	method(luaVisualArrangement, addSize),
-	{0,0}
+	{0, 0}
 };
 
 const char luaChart::className[] = "TeChart";
@@ -296,7 +296,7 @@ const char luaChart::className[] = "TeChart";
 Luna<luaChart>::RegType luaChart::methods[] = {
 	method(luaChart, save),
 	method(luaChart, setObserver),
-	{0,0}
+	{0, 0}
 };
 
 const char luaMap::className[] = "TeMap";
@@ -304,7 +304,7 @@ const char luaMap::className[] = "TeMap";
 Luna<luaMap>::RegType luaMap::methods[] = {
 	method(luaMap, save),
 	method(luaMap, setObserver),
-	{0,0}
+	{0, 0}
 };
 
 
@@ -316,7 +316,7 @@ Luna<luaMessage>::RegType luaMessage::methods[] = {
 	method(luaMessage, config),
 	method(luaMessage, getReference),
 	method(luaMessage, setReference),
-	{0,0}
+	{0, 0}
 };
 
 //----------------------------------------------------------------------------------------------
@@ -336,7 +336,7 @@ Luna<luaEvent>::RegType luaEvent::methods[] =
 	method(luaEvent, notify),
 	method(luaEvent, getType),
 	method(luaEvent, kill),
-	{0,0}
+	{0, 0}
 };
 
 //----------------------------------------------------------------------------------------------
@@ -355,7 +355,7 @@ Luna<luaTimer>::RegType luaTimer::methods[] =
 	method(luaTimer, createObserver),
 	method(luaTimer, notify),
 	method(luaTimer, kill),
-	{0,0}
+	{0, 0}
 };
 //****************************** ENVIRONMENT ****************************************//
 //----------------------------------------------------------------------------------------------
@@ -376,7 +376,7 @@ Luna<luaEnvironment>::RegType luaEnvironment::methods[] =
 	method(luaEnvironment, createObserver),
 	method(luaEnvironment, notify),
 	method(luaEnvironment, kill),
-	{0,0}
+	{0, 0}
 };
 
 #endif // REGISTRY_OBJECT_H

@@ -180,7 +180,7 @@ void ReceiverGUI::okButtonClicked()
 
     for (int i = 0; i < attrsList.size(); i++)
     {
-        QStringList keys, attrs = attrsList.at(i).split(",", QString::SkipEmptyParts);
+        QStringList keys, attrs = attrsList.at(i).split(", ", QString::SkipEmptyParts);
         attributesList.append(attrs);
 
         LuaLegend *leg = 0;
@@ -203,7 +203,7 @@ void ReceiverGUI::okButtonClicked()
             leg->width = 12;
             leg->curveStyle = 1; // see QwtPlotCurve::CurveStyle
             leg->lineStyle = 0;  // not yet used in ObsChart and legend
-            leg->colorBar = "0,0,0;0;0;?;#255,255,255;100;100;?;#";
+            leg->colorBar = "0, 0, 0;0;0;?;#255, 255, 255;100;100;?;#";
             leg->stdColorBar = "";
 
             QListWidgetItem *item = new QListWidgetItem(ui->listWidget);

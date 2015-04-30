@@ -66,7 +66,7 @@ void stackDump(lua_State *L);
 /// \return A boolean value: true case positive, otherwise false.
 int isudatatype(lua_State *L, int idx, const char *name);
 
-/// UTILITARY FUNCTION - Converts a TerraLib object ID to (x,y) coordinates
+/// UTILITARY FUNCTION - Converts a TerraLib object ID to (x, y) coordinates
 /// \param objId is a "const char const *" containing the object ID
 /// \param x is a natural number returned by this function
 /// \param y is a natural number returned by this fucntion

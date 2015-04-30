@@ -48,7 +48,7 @@ class Cell;
  *
  */
 template <class Indx>
-class Region_ : public CompositeInterface< multimapComposite<Indx,Cell*> >
+class Region_ : public CompositeInterface< multimapComposite<Indx, Cell*> >
 {
 public:
 
@@ -62,7 +62,7 @@ public:
         indexCellPair.first = indx;
         indexCellPair.second = cell;
 
-        CompositeInterface< multimapComposite<Indx,Cell*> >::add( indexCellPair );
+        CompositeInterface< multimapComposite<Indx, Cell*> >::add( indexCellPair );
     }
 
     /// Searches for a cell into the region
@@ -71,7 +71,7 @@ public:
     {
         pair<Indx, Cell*>  indexCellPair;
 
-        indexCellPair = CompositeInterface< multimapComposite<Indx,Cell*> >::operator [](indx);
+        indexCellPair = CompositeInterface< multimapComposite<Indx, Cell*> >::operator [](indx);
 
         return indexCellPair.second;
     }

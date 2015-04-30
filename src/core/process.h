@@ -90,7 +90,7 @@ public:
     /// \param agent is a pointer to the Agent being executed
     /// \param cellIndexPair is a pair of CellIndex objects and Cell pointers. The formers are user defined
     ///  n-dimensional coordinates for the latter.
-    bool execute( Event &event, class Agent *agent, pair<CellIndex,Cell*> &cellIndexPair )
+    bool execute( Event &event, class Agent *agent, pair<CellIndex, Cell*> &cellIndexPair )
     {
         try
         {

@@ -172,7 +172,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 					{
 						string str = string("Was expected a numeric parameter.");
 						lua_getglobal(L, "customWarning");
-						lua_pushstring(L,str.c_str());
+						lua_pushstring(L, str.c_str());
 						lua_call(L, 1, 0);
 					}
 				}
@@ -241,8 +241,8 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 					{
 						string str = string("Warnig: Was expected a numeric parameter not a string ") + string(tokens.at(j)) + string(".");
 						lua_getglobal(L, "customWarning");
-						lua_pushstring(L,str.c_str());
-						lua_call(L,1,0);
+						lua_pushstring(L, str.c_str());
+						lua_call(L, 1, 0);
 					}
                 }
                 break;

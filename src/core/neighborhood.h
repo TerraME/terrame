@@ -47,7 +47,7 @@ class Cell;
  *  CellIndex Type
  *
  */
-typedef pair<int,int> CellIndex;
+typedef pair<int, int> CellIndex;
 
 /**
  * \brief
