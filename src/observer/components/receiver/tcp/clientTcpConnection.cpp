@@ -306,7 +306,7 @@ void ClientTcpConnection::process(const QByteArray &state)
 
 
 #ifdef DEBUG_OBSERVER
-    qDebug() << (decoded ? "decodificou!!!" : "falha da decodificação");
+    qDebug() << (decoded ? "decoded!!!" : "decoding failure");
 #endif
     
     for(int i = 0; i < cSubjects.size(); i++)

@@ -61,8 +61,8 @@ void SubjectAttributes::setSubjectType(const TypesOfSubjects &type)
     subjectType = type;
 
     if ( (subjectType != TObsCell) 
-        // && (subjectType != TObsAgent)         // Quem sabe a localização no espaço é a célula.
-        // && (subjectType != TObsAutomaton)     // Logo, um agente é composto por uma célula
+        // && (subjectType != TObsAgent)         // Who knows the location in space is the cell.
+        // && (subjectType != TObsAutomaton)     // Therefore, an agent is composed of a cell
         )
     {
         if (! xs) xs = new QVector<double>();    

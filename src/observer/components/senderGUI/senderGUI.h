@@ -10,7 +10,7 @@ class senderGUI;
 /**
  * \brief User interface for observer Udp Sender
  * \see QDialog
- * \author Antonio Jos� da Cunha Rodrigues
+ * \author Antonio Jose da Cunha Rodrigues
  * \file observerUDPSenderGUI.h
  */
 class SenderGUI : public QDialog

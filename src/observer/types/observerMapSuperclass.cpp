@@ -94,7 +94,7 @@ void ObserverMapSuperclass::setupGUI(){
 
     view = new Canvas(scene, this);
     view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); //
-    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); não existe na versão 4.3.4
+    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); does not exist in version 4.3.4
     // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     view->setRenderHint(QPainter::Antialiasing);
     // view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -407,7 +407,7 @@ void ObserverMapSuperclass::butZoomWindow_Clicked()
 
 void ObserverMapSuperclass::butZoomRestore_Clicked()
 {
-    if (zoomComboBox->currentText() == WINDOW)		// zoom em Window
+    if (zoomComboBox->currentText() == WINDOW)		// zoom in Window
        return;
 
      zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
@@ -539,7 +539,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
             attrib = new Attributes(attribList.at(i), 2, 2, TObsCell); // TO-DO: Should be the dimension of space
             attrib->setVisible(true);
 
-            //------- Retrieves the lengend from the file and creates the object attrib
+            //------- Retrieves the legend from the file and creates the object attrib
             if (legKeys.size() > 0)
             {
                 attrib->setDataType( (TypesOfData) legAttribs.at(type).toInt());
