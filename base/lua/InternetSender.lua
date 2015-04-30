@@ -27,8 +27,8 @@
 --- TCP or UDP protocol. Every call to notify (for example, Agent:notify()) in the subject
 -- activates the InternetSender.
 -- @arg data.subject An Agent, Cell, CellularSpace, or Society.
--- @arg data.port A number indicating the port of the host to transfer the data. The
--- default value is 456456.
+-- @arg data.port A number greater or equal to 50000 indicating the port of the host to transfer
+-- the data. The default value is 456456.
 -- @arg data.host A string with the host name to transfer the data. The default value is
 -- "localhost".
 -- @arg data.visible A boolean value indicating whether InternetSender will create
@@ -133,7 +133,9 @@ function InternetSender(data)
 	end
 
 	verifyUnnecessaryArguments(data, {"subject", "protocol", "select", "port", "host", "visible", "compress"})
-
+  
+  verify(data.port >= 50000, "Argument 'port' should be greater or equal to 50000, got "..data.port..".")
+  
 	for i = 1, #data.select do
 		if data.select[i] == "#" then
 			data.select[i] = "quantity_"

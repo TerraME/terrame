@@ -62,6 +62,11 @@ return{
 			InternetSender{subject = c, port = "5"}
 		end
 		unitTest:assert_error(error_func, incompatibleTypeMsg("port", "number", "5"))
+		
+		error_func = function()
+      InternetSender{subject = c, port = 49999}
+    end
+    unitTest:assert_error(error_func, "Argument 'port' should be greater or equal to 50000, got 49999.")
 
 		error_func = function()
 			InternetSender{subject = c, port = 456456}
