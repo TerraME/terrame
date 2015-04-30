@@ -34,7 +34,7 @@ return{
 			end,
 			target = "go"
 		}
-		unitTest:assert_equal(string.sub(tostring(j1),1,8), "TeJump (")
+		unitTest:assertEquals(string.sub(tostring(j1),1,8), "TeJump (")
 
 		local jump = Jump{
 			function(cell, env, ag1)

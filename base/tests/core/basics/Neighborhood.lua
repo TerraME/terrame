@@ -37,17 +37,17 @@ return{
 		local neigh = Neighborhood()
 		local cell1 = Cell{}
 
-		unitTest:assert_equal(#neigh, 0)
+		unitTest:assertEquals(#neigh, 0)
 		neigh:add(cell1)
-		unitTest:assert_equal(#neigh, 1)
+		unitTest:assertEquals(#neigh, 1)
 
 		neigh:remove(cell1)
-		unitTest:assert_equal(#neigh, 0)
+		unitTest:assertEquals(#neigh, 0)
 	end,
 	__tostring = function(unitTest)
 		local neigh = Neighborhood()
 
-		unitTest:assert_equal(tostring(neigh),[[cObj_  userdata
+		unitTest:assertEquals(tostring(neigh),[[cObj_  userdata
 ]])
 	end,
 	add = function(unitTest)
@@ -57,15 +57,15 @@ return{
 
 		neigh:add(cell1)
 		unitTest:assert(neigh:isNeighbor(cell1))
-		unitTest:assert_equal(neigh:getWeight(cell1), 1)
-		unitTest:assert_equal(#neigh, 1)
+		unitTest:assertEquals(neigh:getWeight(cell1), 1)
+		unitTest:assertEquals(#neigh, 1)
 
 		neigh:add(cell2, 0.5)
 		unitTest:assert(neigh:isNeighbor(cell1))
-		unitTest:assert_equal(neigh:getWeight(cell1), 1)
+		unitTest:assertEquals(neigh:getWeight(cell1), 1)
 		unitTest:assert(neigh:isNeighbor(cell2))
-		unitTest:assert_equal(neigh:getWeight(cell2), 0.5)
-		unitTest:assert_equal(#neigh, 2)
+		unitTest:assertEquals(neigh:getWeight(cell2), 0.5)
+		unitTest:assertEquals(#neigh, 2)
 	end,
 	clear = function(unitTest)
 		local neigh = Neighborhood()
@@ -88,7 +88,7 @@ return{
 
 		neigh:add(cell1, 0.5)
 		cell2:addNeighborhood(neigh)
-		unitTest:assert_equal(cell2, neigh:getParent())
+		unitTest:assertEquals(cell2, neigh:getParent())
 	end,	
 	getWeight = function(unitTest)
 		local neigh = Neighborhood()
@@ -100,9 +100,9 @@ return{
 		neigh:add(cell2, 0.3)
 		neigh:add(cell3, 0.2)
 
-		unitTest:assert_equal(0.5, neigh:getWeight(cell1))
-		unitTest:assert_equal(0.3, neigh:getWeight(cell2))
-		unitTest:assert_equal(0.2, neigh:getWeight(cell3))
+		unitTest:assertEquals(0.5, neigh:getWeight(cell1))
+		unitTest:assertEquals(0.3, neigh:getWeight(cell2))
+		unitTest:assertEquals(0.2, neigh:getWeight(cell3))
 	end,
 	isEmpty = function(unitTest)
 		local neigh = Neighborhood()
@@ -139,15 +139,15 @@ return{
 		neigh:add(cell3)
 
 		neigh:remove(cell1)
-		unitTest:assert_equal(#neigh, 2)
+		unitTest:assertEquals(#neigh, 2)
 		unitTest:assert(not neigh:isNeighbor(cell1))
 
 		neigh:remove(cell2)
-		unitTest:assert_equal(#neigh, 1)
+		unitTest:assertEquals(#neigh, 1)
 		unitTest:assert(not neigh:isNeighbor(cell2))
 
 		neigh:remove(cell3)
-		unitTest:assert_equal(#neigh, 0)
+		unitTest:assertEquals(#neigh, 0)
 		unitTest:assert(not neigh:isNeighbor(cell3))
 	end,
 	sample = function(unitTest)
@@ -158,13 +158,13 @@ return{
 		local cell3 = Cell{x = 1, y = 1}
 
 		neigh:add(cell1)
-		unitTest:assert_equal(type(neigh:sample()), type(cell1))
+		unitTest:assertEquals(type(neigh:sample()), type(cell1))
 
 		neigh:add(cell2)
-		unitTest:assert_equal(type(neigh:sample()), type(cell2))
+		unitTest:assertEquals(type(neigh:sample()), type(cell2))
 
 		neigh:add(cell3)
-		unitTest:assert_equal(type(neigh:sample()), type(cell1))
+		unitTest:assertEquals(type(neigh:sample()), type(cell1))
 	end,
 	setWeight = function(unitTest)
 		local neigh = Neighborhood()
@@ -180,9 +180,9 @@ return{
 		neigh:setWeight(cell2, 0.1)
 		neigh:setWeight(cell3, 0.9)
 
-		unitTest:assert_equal(0.0, neigh:getWeight(cell1))
-		unitTest:assert_equal(0.1, neigh:getWeight(cell2))
-		unitTest:assert_equal(0.9, neigh:getWeight(cell3))
+		unitTest:assertEquals(0.0, neigh:getWeight(cell1))
+		unitTest:assertEquals(0.1, neigh:getWeight(cell2))
+		unitTest:assertEquals(0.9, neigh:getWeight(cell3))
 	end
 }
 

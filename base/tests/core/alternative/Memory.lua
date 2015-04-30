@@ -53,8 +53,8 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countAg) -- SKIP
-			unitTest:assert_equal(0, countOutWT) -- SKIP
+			unitTest:assertEquals(1, countAg) -- SKIP
+			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -73,8 +73,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countAg) -- SKIP
-		unitTest:assert_equal(0, countOutWT) -- SKIP
+		unitTest:assertEquals(0, countAg) -- SKIP
+		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
 	Automaton = function(unitTest)
 		debug.sethook()
@@ -100,8 +100,8 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countAt) -- SKIP
-			unitTest:assert_equal(0, countOutWT) -- SKIP
+			unitTest:assertEquals(1, countAt) -- SKIP
+			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -120,8 +120,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countAt) -- SKIP
-		unitTest:assert_equal(0, countOutWT) -- SKIP
+		unitTest:assertEquals(0, countAt) -- SKIP
+		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
 	Cell = function(unitTest)
 		debug.sethook()
@@ -146,8 +146,8 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, count) -- SKIP
-			unitTest:assert_equal(0, countOutWT) -- SKIP
+			unitTest:assertEquals(1, count) -- SKIP
+			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -166,8 +166,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, count) -- SKIP
-		unitTest:assert_equal(0, countOutWT) -- SKIP
+		unitTest:assertEquals(0, count) -- SKIP
+		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
 	CellularSpace = function(unitTest)
 		debug.sethook()
@@ -195,9 +195,9 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countCS) -- SKIP
-			unitTest:assert_equal(40000, countCell) -- SKIP
-			unitTest:assert_equal(0, countOutWT) -- SKIP
+			unitTest:assertEquals(1, countCS) -- SKIP
+			unitTest:assertEquals(40000, countCell) -- SKIP
+			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -219,9 +219,9 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countCS) -- SKIP
-		unitTest:assert_equal(0, countCell) -- SKIP
-		unitTest:assert_equal(0, countOutWT) -- SKIP
+		unitTest:assertEquals(0, countCS) -- SKIP
+		unitTest:assertEquals(0, countCell) -- SKIP
+		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
 	Coord = function(unitTest)
 		debug.sethook()
@@ -245,7 +245,7 @@ return{
 					count = count + 1
 				end
 			end
-			unitTest:assert_equal(2, count) -- SKIP
+			unitTest:assertEquals(2, count) -- SKIP
 
 			unitTest:assert_not_nil(coord2) -- SKIP
 			unitTest:assert_not_nil(coord1) -- SKIP
@@ -267,8 +267,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, count) -- SKIP
-		unitTest:assert_equal(0, countOutWT) -- SKIP
+		unitTest:assertEquals(0, count) -- SKIP
+		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
 	Environment = function(unitTest)
 		debug.sethook()
@@ -294,8 +294,8 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countEnv) -- SKIP
-			unitTest:assert_equal(0, countOutWT) -- SKIP
+			unitTest:assertEquals(1, countEnv) -- SKIP
+			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -314,8 +314,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countEnv) -- SKIP
-		unitTest:assert_equal(0, countOutWT) -- SKIP
+		unitTest:assertEquals(0, countEnv) -- SKIP
+		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
 	Event = function(unitTest)
 		debug.sethook()
@@ -394,10 +394,10 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(2500, countNeigh) -- SKIP
-			unitTest:assert_equal(2500, countCell) -- SKIP
-			unitTest:assert_equal(1, countCS) -- SKIP
-			unitTest:assert_equal(0, countOutWT) -- SKIP
+			unitTest:assertEquals(2500, countNeigh) -- SKIP
+			unitTest:assertEquals(2500, countCell) -- SKIP
+			unitTest:assertEquals(1, countCS) -- SKIP
+			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -422,10 +422,10 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countNeigh) -- SKIP
-		unitTest:assert_equal(0, countCell) -- SKIP
-		unitTest:assert_equal(0, countCS) -- SKIP
-		unitTest:assert_equal(0, countOutWT) -- SKIP
+		unitTest:assertEquals(0, countNeigh) -- SKIP
+		unitTest:assertEquals(0, countCell) -- SKIP
+		unitTest:assertEquals(0, countCS) -- SKIP
+		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
 	Timer = function(unitTest)
 		debug.sethook()
@@ -454,8 +454,8 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countTimer) -- SKIP
-			unitTest:assert_equal(0, countOutWT) -- SKIP
+			unitTest:assertEquals(1, countTimer) -- SKIP
+			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -474,8 +474,8 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countTimer) -- SKIP
-		unitTest:assert_equal(0, countOutWT) -- SKIP
+		unitTest:assertEquals(0, countTimer) -- SKIP
+		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
 	Trajectory = function(unitTest)
 		debug.sethook()
@@ -509,10 +509,10 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assert_equal(1, countTraj) -- SKIP
-			unitTest:assert_equal(1, countCS) -- SKIP
-			unitTest:assert_equal(100, countCell) -- SKIP
-			unitTest:assert_equal(0, countOutWT) -- SKIP
+			unitTest:assertEquals(1, countTraj) -- SKIP
+			unitTest:assertEquals(1, countCS) -- SKIP
+			unitTest:assertEquals(100, countCell) -- SKIP
+			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -537,10 +537,10 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assert_equal(0, countTraj) -- SKIP
-		unitTest:assert_equal(0, countCS) -- SKIP
-		unitTest:assert_equal(0, countCell) -- SKIP
-		unitTest:assert_equal(0, countOutWT) -- SKIP
+		unitTest:assertEquals(0, countTraj) -- SKIP
+		unitTest:assertEquals(0, countCS) -- SKIP
+		unitTest:assertEquals(0, countCell) -- SKIP
+		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end
 }
 

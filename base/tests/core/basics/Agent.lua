@@ -35,8 +35,8 @@ return{
 			end}
 
 		unitTest:assert_type(singleFooAgent, "Agent")
-		unitTest:assert_equal(10, singleFooAgent.size)
-		unitTest:assert_equal("singleFoo", singleFooAgent.id)
+		unitTest:assertEquals(10, singleFooAgent.size)
+		unitTest:assertEquals("singleFoo", singleFooAgent.id)
 
 		local cs = CellularSpace{xdim = 10}
 
@@ -49,23 +49,23 @@ return{
 
 		e:createPlacement()
 		unitTest:assert_type(singleFooAgent:getCell(), "Cell")
-		unitTest:assert_equal(1, #singleFooAgent:getCell().placement)
+		unitTest:assertEquals(1, #singleFooAgent:getCell().placement)
 
 		local t = Timer{
 			Event{action = singleFooAgent}
 		}
 
 		t:execute(10)
-		unitTest:assert_equal(20,singleFooAgent.size)
+		unitTest:assertEquals(20,singleFooAgent.size)
 
 		unitTest:assert_type(singleFooAgent:getCell(), "Cell")
-		unitTest:assert_equal(1, #singleFooAgent:getCell().placement)
+		unitTest:assertEquals(1, #singleFooAgent:getCell().placement)
 
 		local count = 0
 		forEachCell(cs, function(cell)
 			count = count + #cell.placement
 		end)
-		unitTest:assert_equal(1, count)
+		unitTest:assertEquals(1, count)
 	end,
 	__tostring = function(unitTest)
 		local ag1 = Agent{
@@ -73,7 +73,7 @@ return{
 			init = function() end,
 			execute = function() end
 		}
-		unitTest:assert_equal(tostring(ag1), [[cObj_           userdata
+		unitTest:assertEquals(tostring(ag1), [[cObj_           userdata
 execute         function
 init            function
 name            string [nonfoo]
@@ -96,7 +96,7 @@ socialnetworks  table of size 0
 		local sn = SocialNetwork()
 		ag1:addSocialNetwork(sn)
 		unitTest:assert_type(ag1:getSocialNetwork(), "SocialNetwork")
-		unitTest:assert_equal(#ag1:getSocialNetwork(), 0)
+		unitTest:assertEquals(#ag1:getSocialNetwork(), 0)
 
 		local ag = Agent{}
 
@@ -132,10 +132,10 @@ socialnetworks  table of size 0
 		local e = Environment{predators, cs}
 		e:createPlacement()
 
-		unitTest:assert_equal(5, #predators)
+		unitTest:assertEquals(5, #predators)
 		local dead = predators.agents[2]
 		predators.agents[2]:die()
-		unitTest:assert_equal(4, #predators)
+		unitTest:assertEquals(4, #predators)
 
 		local test_function = function()
 			print(dead.a)
@@ -158,7 +158,7 @@ socialnetworks  table of size 0
 			end}
 		}
 		t:execute(1)
-		unitTest:assert_equal(count, 1)
+		unitTest:assertEquals(count, 1)
 	end,
 	getCell = function(unitTest)
 		local ag1 = Agent{}
@@ -192,9 +192,9 @@ socialnetworks  table of size 0
 					function(ev, self)
 						jumps = jumps + 1
 						if self.x > 5 then
-							unitTest:assert_equal(6, self.x)
-							unitTest:assert_equal(3, ev:getTime())
-							unitTest:assert_equal(0, self:getLatency())
+							unitTest:assertEquals(6, self.x)
+							unitTest:assertEquals(3, ev:getTime())
+							unitTest:assertEquals(0, self:getLatency())
 							return true
 						end
 					end,
@@ -211,9 +211,9 @@ socialnetworks  table of size 0
 					function(ev, self)
 						jumps = jumps + 1
 						if self.x < 3 then
-							unitTest:assert_equal(7, ev:getTime())
-							unitTest:assert_equal(2, self.x)
-							unitTest:assert_equal(3, self:getLatency())
+							unitTest:assertEquals(7, ev:getTime())
+							unitTest:assertEquals(2, self.x)
+							unitTest:assertEquals(3, self:getLatency())
 							return true
 						end
 					end,
@@ -236,11 +236,11 @@ socialnetworks  table of size 0
 			}
 		}
 
-		unitTest:assert_equal(0, a:getLatency())
+		unitTest:assertEquals(0, a:getLatency())
 
 		a:execute(Event{action = function() end}[1])
-		unitTest:assert_equal(0, a:getLatency())
-		unitTest:assert_equal(4, a.x)
+		unitTest:assertEquals(0, a:getLatency())
+		unitTest:assertEquals(4, a.x)
 
 		local t = Timer{
 			Event{action = function(ev)
@@ -250,18 +250,18 @@ socialnetworks  table of size 0
 
 		t:execute(10)
 
-		unitTest:assert_equal(6, a.x)
-		unitTest:assert_equal(7, a:getLatency())
+		unitTest:assertEquals(6, a.x)
+		unitTest:assertEquals(7, a:getLatency())
 
-		unitTest:assert_equal(15, flows)
-		unitTest:assert_equal(17, jumps)
+		unitTest:assertEquals(15, flows)
+		unitTest:assertEquals(17, jumps)
 	end,
 	getSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
 		local sn = SocialNetwork()
 		ag1:addSocialNetwork(sn)
 		local sn2 = ag1:getSocialNetwork()
-		unitTest:assert_equal(sn2, sn)
+		unitTest:assertEquals(sn2, sn)
 
 		local predator = Agent{}
 
@@ -281,9 +281,9 @@ socialnetworks  table of size 0
 				Jump{
 					function(ev, self)
 						if self.x > 5 then
-							unitTest:assert_equal(6, self.x)
-							unitTest:assert_equal(3, ev:getTime())
-							unitTest:assert_equal(0, self:getLatency())
+							unitTest:assertEquals(6, self.x)
+							unitTest:assertEquals(3, ev:getTime())
+							unitTest:assertEquals(0, self:getLatency())
 							return true
 						end
 					end,
@@ -298,9 +298,9 @@ socialnetworks  table of size 0
 				Jump{
 					function(ev, self)
 						if self.x < 3 then
-							unitTest:assert_equal(7, ev:getTime())
-							unitTest:assert_equal(2, self.x)
-							unitTest:assert_equal(3, self:getLatency())
+							unitTest:assertEquals(7, ev:getTime())
+							unitTest:assertEquals(2, self.x)
+							unitTest:assertEquals(3, self:getLatency())
 							return true
 						end
 					end,
@@ -312,10 +312,10 @@ socialnetworks  table of size 0
 			}
 		}
 
-		unitTest:assert_equal("stop", a:getStateName())
+		unitTest:assertEquals("stop", a:getStateName())
 
 		a:execute(Event{action = function() end}[1])
-		unitTest:assert_equal("stop", a:getStateName())
+		unitTest:assertEquals("stop", a:getStateName())
 
 		local t = Timer{
 			Event{action = function(ev)
@@ -324,9 +324,9 @@ socialnetworks  table of size 0
 		}
 
 		t:execute(5)
-		unitTest:assert_equal("go", a:getStateName())
+		unitTest:assertEquals("go", a:getStateName())
 		t:execute(10)
-		unitTest:assert_equal("stop", a:getStateName())
+		unitTest:assertEquals("stop", a:getStateName())
 	end,
 	getTrajectoryStatus = function(unitTest)
 		local cs = CellularSpace{xdim = 2}
@@ -386,7 +386,7 @@ socialnetworks  table of size 0
 
 		unitTest:assert_nil(ag1.value)
 		ag1:init()
-		unitTest:assert_equal(2, ag1.value)
+		unitTest:assertEquals(2, ag1.value)
 	end,
 	leave = function(unitTest)
 		local ag1 = Agent{}
@@ -478,7 +478,7 @@ socialnetworks  table of size 0
 		predators.agents[4]:reproduce()
 
 		predators.agents[4]:reproduce{age = 0}
-		unitTest:assert_equal(6, #predators)
+		unitTest:assertEquals(6, #predators)
 
 		local cont = 3
 		local sum = 0
@@ -488,13 +488,13 @@ socialnetworks  table of size 0
 			if cont == 1 then predators.agents[4]:die() end
 			cont = cont - 1
 		end)
-		unitTest:assert_equal(160, sum)
-		unitTest:assert_equal(4, #predators)
+		unitTest:assertEquals(160, sum)
+		unitTest:assertEquals(4, #predators)
 
 		forEachAgent(predators, function(agent)
 			agent:reproduce{age = 0}
 		end)
-		unitTest:assert_equal(8, #predators)
+		unitTest:assertEquals(8, #predators)
 	end,
 	sample = function(unitTest)
 		local ag = Agent{}
@@ -553,33 +553,33 @@ socialnetworks  table of size 0
 		ag1.it:sort(function(a, b) return a.x > b.x end)
 		cont = 0
 		ag1:execute(ev)
-		unitTest:assert_equal(11, cont)
+		unitTest:assertEquals(11, cont)
 
 		ag1:setTrajectoryStatus(true)
 		ag1.it:sort(function(a, b) return a.x > b.x end)
 		cont = 0
 		ag1:execute(ev)
-		unitTest:assert_equal(44, cont)
+		unitTest:assertEquals(44, cont)
 
 		ag1.it:sort(greaterByCoord(">"))
 		cont = 0
 		ag1:execute(ev)
-		unitTest:assert_equal(44, cont)
+		unitTest:assertEquals(44, cont)
 
 		ag1.it:filter(function(cell) return cell.x ~= 1 end)
 		cont = 0
 		ag1:execute(ev)
-		unitTest:assert_equal(22, cont)
+		unitTest:assertEquals(22, cont)
 
 		ag1.it:filter(function(cell) return true end)
 		cont = 0
 		ag1:execute(ev)
-		unitTest:assert_equal(44, cont)
+		unitTest:assertEquals(44, cont)
 
 		ag1.it:rebuild()
 		cont = 0
 		ag1:execute(ev)
-		unitTest:assert_equal(44, cont)
+		unitTest:assertEquals(44, cont)
 	end,
 	walk = function(unitTest)
 		local ag1 = Agent{}

@@ -43,20 +43,20 @@ return{
 		unitTest:assert_nil(it.greater)
 
 		cont = 0
-		unitTest:assert_equal(100, #it)
+		unitTest:assertEquals(100, #it)
 		forEachCell(it, function(cell)
 			cont = cont + 1
 			unitTest:assert_type(cell, "Cell")
 		end)
 
-		unitTest:assert_equal(100, cont)
+		unitTest:assertEquals(100, cont)
 
 		local tr = Trajectory{
 			target = cs,
 			build = false
 		}
 
-		unitTest:assert_equal(#tr, 0)
+		unitTest:assertEquals(#tr, 0)
 
 		local t = Trajectory{
 			target = cs,
@@ -79,7 +79,7 @@ return{
 			unitTest:assert(cell.y <= orderMemory)
 			orderMemory = cell.y 
 		end)
-		unitTest:assert_equal(8, cont)
+		unitTest:assertEquals(8, cont)
 
 		-- Trajectory inside of another trajectory
 		local cellSpace = CellularSpace{xdim = 5}
@@ -105,14 +105,14 @@ return{
 			end
 		}
 
-		unitTest:assert_equal(#trajectoryAll, 15)
-		unitTest:assert_equal(#trajectoryInner, 4)
+		unitTest:assertEquals(#trajectoryAll, 15)
+		unitTest:assertEquals(#trajectoryInner, 4)
 
 		local resultInner = {11, 12, 13, 14}
 
 		cont = 1
 		forEachCell(trajectoryInner,function(cell)
-			unitTest:assert_equal(cell.value,resultInner[cont])
+			unitTest:assertEquals(cell.value,resultInner[cont])
 			cont = cont + 1
 		end)
 
@@ -143,7 +143,7 @@ return{
 
 		local tr1 = Trajectory{target = cs1}
 
-		unitTest:assert_equal(#tr1, 200)
+		unitTest:assertEquals(#tr1, 200)
 	end,
 	__tostring = function(unitTest)
 		local cs1 = CellularSpace{
@@ -156,7 +156,7 @@ return{
 			target = cs1,
 			select = function() return true end
 		}
-		unitTest:assert_equal(tostring(tr1), [[cells   table of size 200
+		unitTest:assertEquals(tostring(tr1), [[cells   table of size 200
 cObj_   userdata
 load    function
 parent  CellularSpace
@@ -215,14 +215,14 @@ xyz     function
 			unitTest:assert(cell.x > 7)
 			unitTest:assert(cell.y > 5)
 		end)
-		unitTest:assert_equal(4, #it)
+		unitTest:assertEquals(4, #it)
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 		local it = Trajectory{target = cs}
 
-		unitTest:assert_equal(8, it:get(8, 9).x)
-		unitTest:assert_equal(9, it:get(8, 9).y)
+		unitTest:assertEquals(8, it:get(8, 9).x)
+		unitTest:assertEquals(9, it:get(8, 9).y)
 
 		local c = it:get(100, 100)
 		unitTest:assert_nil(c)
@@ -237,7 +237,7 @@ xyz     function
 			unitTest:assert_type(cell, "Cell")
 		end)
 
-		unitTest:assert_equal(100, #it)
+		unitTest:assertEquals(100, #it)
 	end,
 	rebuild = function(unitTest) 
 		local cs = CellularSpace{xdim = 5}
@@ -260,10 +260,10 @@ xyz     function
 			select = s
 		}
 
-		unitTest:assert_equal(tr.parent, cs)
-		unitTest:assert_equal(tr.select, s)
-		unitTest:assert_equal(tr.greater, g)
-		unitTest:assert_equal(#tr, 12)
+		unitTest:assertEquals(tr.parent, cs)
+		unitTest:assertEquals(tr.select, s)
+		unitTest:assertEquals(tr.greater, g)
+		unitTest:assertEquals(#tr, 12)
 
 		forEachCell(cs, function(cell)
 			cell.value = cell.value + 10
@@ -271,23 +271,23 @@ xyz     function
 
 		tr:rebuild()
 
-		unitTest:assert_equal(tr.parent, cs)
-		unitTest:assert_equal(tr.select, s)
-		unitTest:assert_equal(tr.greater, g)
-		unitTest:assert_equal(#tr, 25)
+		unitTest:assertEquals(tr.parent, cs)
+		unitTest:assertEquals(tr.select, s)
+		unitTest:assertEquals(tr.greater, g)
+		unitTest:assertEquals(#tr, 25)
 
 		tr.select = function(cell)
 			return cell.x > 2
 		end
 
-		unitTest:assert_equal(#tr, 25)
+		unitTest:assertEquals(#tr, 25)
 
 		tr:rebuild()
 		forEachCell(tr, function(cell)
 			unitTest:assert(cell.x > 2)
 		end)
 
-		unitTest:assert_equal(#tr, 10)
+		unitTest:assertEquals(#tr, 10)
 	end,
 	sort = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -316,7 +316,7 @@ xyz     function
 			yMemory = cell.y
 			cont = cont + 1
 		end)
-		unitTest:assert_equal(100, cont)
+		unitTest:assertEquals(100, cont)
 	end	
 }
 

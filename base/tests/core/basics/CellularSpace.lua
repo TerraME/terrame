@@ -30,9 +30,9 @@ return{
 		local cs = CellularSpace{xdim = 10}
 
 		unitTest:assert_type(cs, "CellularSpace")
-		unitTest:assert_equal(#cs, 100)
-		unitTest:assert_equal(10, cs.xdim)
-		unitTest:assert_equal(10, cs.ydim)
+		unitTest:assertEquals(#cs, 100)
+		unitTest:assertEquals(10, cs.xdim)
+		unitTest:assertEquals(10, cs.ydim)
 		unitTest:assert_type(cs:sample(), "Cell")
 		unitTest:assert_type(cs.cells, "table")
 
@@ -49,19 +49,19 @@ return{
 			xdim = 10
 		}
 
-		unitTest:assert_equal(cs:defor(), 100)
-		unitTest:assert_equal(cs:road(), 100)
-		unitTest:assert_equal(cs:cover().pasture, 100)
-		unitTest:assert_equal(cs:water(), 202)
-		unitTest:assert_equal(cs:water(), 202)
+		unitTest:assertEquals(cs:defor(), 100)
+		unitTest:assertEquals(cs:road(), 100)
+		unitTest:assertEquals(cs:cover().pasture, 100)
+		unitTest:assertEquals(cs:water(), 202)
+		unitTest:assertEquals(cs:water(), 202)
 
 		cs:deforest()
-		unitTest:assert_equal(cs:sample().defor, 2)
+		unitTest:assertEquals(cs:sample().defor, 2)
 	end, 
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
-		unitTest:assert_equal(#cs, 100)
+		unitTest:assertEquals(#cs, 100)
 	end,
 	__tostring = function(unitTest)
 		local cs1 = CellularSpace{ 
@@ -69,7 +69,7 @@ return{
 			ydim = 20,
 			xyz = function() end,
 			vvv = 333}
-		unitTest:assert_equal(tostring(cs1), [[cells   table of size 200
+		unitTest:assertEquals(tostring(cs1), [[cells   table of size 200
 cObj_   userdata
 dbType  string [virtual]
 load    function
@@ -89,8 +89,8 @@ ydim    number [20]
 		local c = Cell{x = 20, y = 20}
 
 		cs:add(c)
-		unitTest:assert_equal(#cs, 101)
-		unitTest:assert_equal(cs.cells[101], c)
+		unitTest:assertEquals(#cs, 101)
+		unitTest:assertEquals(cs.cells[101], c)
 	end,
 	createNeighborhood = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -120,12 +120,12 @@ ydim    number [20]
 				sumWeight = sumWeight + weight
 			end)
 
-			unitTest:assert_equal(1, sumWeight, 0.00001)
+			unitTest:assertEquals(1, sumWeight, 0.00001)
 		end)
 
-		unitTest:assert_equal(4, sizes[3])
-		unitTest:assert_equal(32, sizes[5])
-		unitTest:assert_equal(64, sizes[8])
+		unitTest:assertEquals(4, sizes[3])
+		unitTest:assertEquals(32, sizes[5])
+		unitTest:assertEquals(64, sizes[8])
 
 		cs:createNeighborhood{name = "neigh2"}
 
@@ -159,9 +159,9 @@ ydim    number [20]
 			end)
 		end)
 
-		unitTest:assert_equal(4, sizes[4])
-		unitTest:assert_equal(32, sizes[6])
-		unitTest:assert_equal(64, sizes[9])
+		unitTest:assertEquals(4, sizes[4])
+		unitTest:assertEquals(32, sizes[6])
+		unitTest:assertEquals(64, sizes[9])
 
 		local verifyWrapX = function(xCell, xNeigh)
 			return xNeigh == (((xCell - 1) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol)
@@ -181,7 +181,7 @@ ydim    number [20]
 			local neighborhood = cell:getNeighborhood("my_neighborhood3")
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(8, neighborhoodSize)
+			unitTest:assertEquals(8, neighborhoodSize)
 
 			unitTest:assert(not neighborhood:isNeighbor(cell))
 		end)
@@ -196,7 +196,7 @@ ydim    number [20]
 			local neighborhood = cell:getNeighborhood("my_neighborhood4")
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(9, neighborhoodSize)
+			unitTest:assertEquals(9, neighborhoodSize)
 
 			unitTest:assert(neighborhood:isNeighbor(cell))
 		end)
@@ -223,14 +223,14 @@ ydim    number [20]
 				sumWeight = sumWeight + weight
 			end)
 
-			unitTest:assert_equal(1, sumWeight, 0.00001)
+			unitTest:assertEquals(1, sumWeight, 0.00001)
 
 			unitTest:assert(not neighborhood:isNeighbor(cell))
 		end)
 
-		unitTest:assert_equal(4, sizes[2])
-		unitTest:assert_equal(32, sizes[3])
-		unitTest:assert_equal(64, sizes[4])
+		unitTest:assertEquals(4, sizes[2])
+		unitTest:assertEquals(32, sizes[3])
+		unitTest:assertEquals(64, sizes[4])
 
 		cs:createNeighborhood{ 
 			strategy = "vonneumann",
@@ -250,7 +250,7 @@ ydim    number [20]
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
-				unitTest:assert_equal((1/neighborhoodSize), weight, 0.00001)
+				unitTest:assertEquals((1/neighborhoodSize), weight, 0.00001)
 
 				unitTest:assert(neigh.x == c.x or neigh.y == c.y)
 
@@ -260,9 +260,9 @@ ydim    number [20]
 			unitTest:assert(neighborhood:isNeighbor(cell))
 		end)
 
-		unitTest:assert_equal(4, sizes[3])
-		unitTest:assert_equal(32, sizes[4])
-		unitTest:assert_equal(64, sizes[5])
+		unitTest:assertEquals(4, sizes[3])
+		unitTest:assertEquals(32, sizes[4])
+		unitTest:assertEquals(64, sizes[5])
 
 		cs:createNeighborhood{ 
 			strategy = "vonneumann",
@@ -286,12 +286,12 @@ ydim    number [20]
 			local neighborhood = cell:getNeighborhood("my_neighborhood2")
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(4, neighborhoodSize)
+			unitTest:assertEquals(4, neighborhoodSize)
 
 			local sumWeight = 0
 
 			forEachNeighbor(cell, "my_neighborhood2", function(c, neigh, weight)
-				unitTest:assert_equal((1/neighborhoodSize), weight, 0.00001)
+				unitTest:assertEquals((1/neighborhoodSize), weight, 0.00001)
 
 				unitTest:assert(c ~= neigh)
 
@@ -300,7 +300,7 @@ ydim    number [20]
 				sumWeight = sumWeight + weight
 			end)
 
-			unitTest:assert_equal(1, sumWeight, 0.00001)
+			unitTest:assertEquals(1, sumWeight, 0.00001)
 
 			unitTest:assert(not neighborhood:isNeighbor(cell))
 		end)
@@ -316,12 +316,12 @@ ydim    number [20]
 			local neighborhood = cell:getNeighborhood("my_neighborhood3")
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(5, neighborhoodSize)
+			unitTest:assertEquals(5, neighborhoodSize)
 
 			local sumWeight = 0
 
 			forEachNeighbor(cell, "my_neighborhood3", function(c, neigh, weight)
-				unitTest:assert_equal((1/neighborhoodSize), weight, 0.00001)
+				unitTest:assertEquals((1/neighborhoodSize), weight, 0.00001)
 
 				unitTest:assert(neigh.x == c.x or neigh.y == c.y)
 			end)
@@ -351,13 +351,13 @@ ydim    number [20]
 				unitTest:assert(neigh.y >= c.y - 1)
 				unitTest:assert(neigh.y <= c.y + 1)
 
-				unitTest:assert_equal(1, weight)
+				unitTest:assertEquals(1, weight)
 			end)
 		end)
 
-		unitTest:assert_equal(4, sizes[4])
-		unitTest:assert_equal(32, sizes[6])
-		unitTest:assert_equal(64, sizes[9])
+		unitTest:assertEquals(4, sizes[4])
+		unitTest:assertEquals(32, sizes[6])
+		unitTest:assertEquals(64, sizes[9])
 
 		local filterFunction = function(cell, neighbor)
 			return neighbor.y > cell.y
@@ -389,9 +389,9 @@ ydim    number [20]
 			end)
 		end)
 
-		unitTest:assert_equal(10, sizes[0])
-		unitTest:assert_equal(18, sizes[2])
-		unitTest:assert_equal(72, sizes[3])
+		unitTest:assertEquals(10, sizes[0])
+		unitTest:assertEquals(18, sizes[2])
+		unitTest:assertEquals(72, sizes[3])
 
 		local weightFunction = function(cell, neighbor)
 			return (neighbor.y - cell.y) / (neighbor.y + cell.y)
@@ -422,13 +422,13 @@ ydim    number [20]
 
 				unitTest:assert(filterFunction(c, neigh))
 
-				unitTest:assert_equal(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
+				unitTest:assertEquals(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
 			end)
 		end)
 
-		unitTest:assert_equal(10, sizes[0])
-		unitTest:assert_equal(18, sizes[2])
-		unitTest:assert_equal(72, sizes[3])
+		unitTest:assertEquals(10, sizes[0])
+		unitTest:assertEquals(18, sizes[2])
+		unitTest:assertEquals(72, sizes[3])
 
 		local cs = CellularSpace{xdim = 10}
 		local cs2 = CellularSpace{xdim = 10}
@@ -456,16 +456,16 @@ ydim    number [20]
 				unitTest:assert(neigh.y >= c.y - 2)
 				unitTest:assert(neigh.y <= c.y + 2)
 
-				unitTest:assert_equal(1, weight)
+				unitTest:assertEquals(1, weight)
 			end)
 		end)
 
-		unitTest:assert_equal(36, sizes[25])
-		unitTest:assert_equal(4,  sizes[9])
-		unitTest:assert_equal(24, sizes[20])
-		unitTest:assert_equal(4,  sizes[16])
-		unitTest:assert_equal(8,  sizes[12])
-		unitTest:assert_equal(24, sizes[15])
+		unitTest:assertEquals(36, sizes[25])
+		unitTest:assertEquals(4,  sizes[9])
+		unitTest:assertEquals(24, sizes[20])
+		unitTest:assertEquals(4,  sizes[16])
+		unitTest:assertEquals(8,  sizes[12])
+		unitTest:assertEquals(24, sizes[15])
 
 		cs:createNeighborhood{
 			strategy = "mxn",
@@ -489,16 +489,16 @@ ydim    number [20]
 				unitTest:assert(neigh.y >= c.y - 2)
 				unitTest:assert(neigh.y <= c.y + 2)
 
-				unitTest:assert_equal(1, weight)
+				unitTest:assertEquals(1, weight)
 			end)
 		end)
 
-		unitTest:assert_equal(36, sizes[25])
-		unitTest:assert_equal(4,  sizes[9])
-		unitTest:assert_equal(24, sizes[20])
-		unitTest:assert_equal(4,  sizes[16])
-		unitTest:assert_equal(8,  sizes[12])
-		unitTest:assert_equal(24, sizes[15])
+		unitTest:assertEquals(36, sizes[25])
+		unitTest:assertEquals(4,  sizes[9])
+		unitTest:assertEquals(24, sizes[20])
+		unitTest:assertEquals(4,  sizes[16])
+		unitTest:assertEquals(8,  sizes[12])
+		unitTest:assertEquals(24, sizes[15])
 
 		local filterFunction = function(cell, neighbor)
 			return neighbor.y > cell.y
@@ -530,15 +530,15 @@ ydim    number [20]
 
 				unitTest:assert(filterFunction(c, neigh))
 
-				unitTest:assert_equal(1, weight)
+				unitTest:assertEquals(1, weight)
 			end)
 		end)
 
-		unitTest:assert_equal(10, sizes[0])
-		unitTest:assert_equal(2,  sizes[2])
-		unitTest:assert_equal(8,  sizes[3])
-		unitTest:assert_equal(16, sizes[4])
-		unitTest:assert_equal(64, sizes[6])
+		unitTest:assertEquals(10, sizes[0])
+		unitTest:assertEquals(2,  sizes[2])
+		unitTest:assertEquals(8,  sizes[3])
+		unitTest:assertEquals(16, sizes[4])
+		unitTest:assertEquals(64, sizes[6])
 
 		local weightFunction = function(cell, neighbor)
 			return (neighbor.y - cell.y) / (neighbor.y + cell.y)
@@ -571,17 +571,17 @@ ydim    number [20]
 
 				unitTest:assert(filterFunction(c, neigh))
 
-				unitTest:assert_equal(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
+				unitTest:assertEquals(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
 			end)
 		end)
 
-		unitTest:assert_equal(10, sizes[0])
-		unitTest:assert_equal(2,  sizes[3])
-		unitTest:assert_equal(2,  sizes[4])
-		unitTest:assert_equal(6,  sizes[5])
-		unitTest:assert_equal(16, sizes[6])
-		unitTest:assert_equal(16, sizes[8])
-		unitTest:assert_equal(48, sizes[10])
+		unitTest:assertEquals(10, sizes[0])
+		unitTest:assertEquals(2,  sizes[3])
+		unitTest:assertEquals(2,  sizes[4])
+		unitTest:assertEquals(6,  sizes[5])
+		unitTest:assertEquals(16, sizes[6])
+		unitTest:assertEquals(16, sizes[8])
+		unitTest:assertEquals(48, sizes[10])
 
 		cs:createNeighborhood{
 			strategy = "mxn",
@@ -610,15 +610,15 @@ ydim    number [20]
 
 				unitTest:assert(filterFunction(c, neigh))
 
-				unitTest:assert_equal(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
+				unitTest:assertEquals(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)
 			end)
 		end)
 
-		unitTest:assert_equal(10, sizes[0])
-		unitTest:assert_equal(2,  sizes[2])
-		unitTest:assert_equal(8,  sizes[3])
-		unitTest:assert_equal(16, sizes[4])
-		unitTest:assert_equal(64, sizes[6])
+		unitTest:assertEquals(10, sizes[0])
+		unitTest:assertEquals(2,  sizes[2])
+		unitTest:assertEquals(8,  sizes[3])
+		unitTest:assertEquals(16, sizes[4])
+		unitTest:assertEquals(64, sizes[6])
 
 		local weightFunction = function(cell, neighbor)
 			if neighbor.x + cell.x == 0 then
@@ -653,17 +653,17 @@ ydim    number [20]
 				unitTest:assert(neigh.x <= c.x + 2)
 
 				unitTest:assert(filterFunction(c, neigh))
-				unitTest:assert_equal(weightFunction(c, neigh), weight, 0.00001)
+				unitTest:assertEquals(weightFunction(c, neigh), weight, 0.00001)
 			end)
 		end)
 
-		unitTest:assert_equal(10, sizes[0])
-		unitTest:assert_equal(2,  sizes[3])
-		unitTest:assert_equal(2,  sizes[4])
-		unitTest:assert_equal(6,  sizes[5])
-		unitTest:assert_equal(16, sizes[6])
-		unitTest:assert_equal(16, sizes[8])
-		unitTest:assert_equal(48, sizes[10])
+		unitTest:assertEquals(10, sizes[0])
+		unitTest:assertEquals(2,  sizes[3])
+		unitTest:assertEquals(2,  sizes[4])
+		unitTest:assertEquals(6,  sizes[5])
+		unitTest:assertEquals(16, sizes[6])
+		unitTest:assertEquals(16, sizes[8])
+		unitTest:assertEquals(48, sizes[10])
 
 		-- Tests the bilaterality (From cs2 to cs)
 		local sizes = {}
@@ -683,17 +683,17 @@ ydim    number [20]
 
 				unitTest:assert(filterFunction(c, neigh))
 
-				unitTest:assert_equal(weightFunction(c, neigh), weight, 0.00001)
+				unitTest:assertEquals(weightFunction(c, neigh), weight, 0.00001)
 			end)
 		end)
 
-		unitTest:assert_equal(10, sizes[0])
-		unitTest:assert_equal(2,  sizes[3])
-		unitTest:assert_equal(2,  sizes[4])
-		unitTest:assert_equal(6,  sizes[5])
-		unitTest:assert_equal(16, sizes[6])
-		unitTest:assert_equal(16, sizes[8])
-		unitTest:assert_equal(48, sizes[10])
+		unitTest:assertEquals(10, sizes[0])
+		unitTest:assertEquals(2,  sizes[3])
+		unitTest:assertEquals(2,  sizes[4])
+		unitTest:assertEquals(6,  sizes[5])
+		unitTest:assertEquals(16, sizes[6])
+		unitTest:assertEquals(16, sizes[8])
+		unitTest:assertEquals(48, sizes[10])
 
 		-- filter
 		local cs = CellularSpace{xdim = 10}
@@ -712,15 +712,15 @@ ydim    number [20]
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(9, neighborhoodSize)
+			unitTest:assertEquals(9, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
-				unitTest:assert_equal(neigh.x, cell.x)
+				unitTest:assertEquals(neigh.x, cell.x)
 				unitTest:assert(neigh.y ~= cell.y)
 
 				unitTest:assert(filterFunction(c, neigh))
 
-				unitTest:assert_equal(1, weight)
+				unitTest:assertEquals(1, weight)
 			end
 			)
 		end)
@@ -742,17 +742,17 @@ ydim    number [20]
 			local neighborhood = cell:getNeighborhood("my_neighborhood2")
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(9, neighborhoodSize)
+			unitTest:assertEquals(9, neighborhoodSize)
 
 			local sumWeight = 0
 
 			forEachNeighbor(cell, "my_neighborhood2", function(c, neigh, weight)
-				unitTest:assert_equal(neigh.x, cell.x)
+				unitTest:assertEquals(neigh.x, cell.x)
 				unitTest:assert(neigh.y ~= cell.y)
 
 				unitTest:assert(filterFunction(c, neigh))
 
-				unitTest:assert_equal(math.abs(neigh.y - c.y), weight)
+				unitTest:assertEquals(math.abs(neigh.y - c.y), weight)
 
 				sumWeight = sumWeight + weight
 			end)
@@ -761,11 +761,11 @@ ydim    number [20]
 			sumWeightVec[sumWeight] = sumWeightVec[sumWeight] + 1
 		end)
 
-		unitTest:assert_equal(20, sumWeightVec[25])
-		unitTest:assert_equal(20, sumWeightVec[31])
-		unitTest:assert_equal(20, sumWeightVec[45])
-		unitTest:assert_equal(20, sumWeightVec[37])
-		unitTest:assert_equal(20, sumWeightVec[27])
+		unitTest:assertEquals(20, sumWeightVec[25])
+		unitTest:assertEquals(20, sumWeightVec[31])
+		unitTest:assertEquals(20, sumWeightVec[45])
+		unitTest:assertEquals(20, sumWeightVec[37])
+		unitTest:assertEquals(20, sumWeightVec[27])
 
 		--  coord
 		local cs = CellularSpace{xdim = 10}
@@ -782,14 +782,14 @@ ydim    number [20]
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(1, neighborhoodSize)
+			unitTest:assertEquals(1, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
-				unitTest:assert_equal(neigh.x, c.x)
-				unitTest:assert_equal(neigh.y, c.y)
+				unitTest:assertEquals(neigh.x, c.x)
+				unitTest:assertEquals(neigh.y, c.y)
 				unitTest:assert(neigh ~= c)
 
-				unitTest:assert_equal(1, weight)
+				unitTest:assertEquals(1, weight)
 			end)
 		end)
 	
@@ -797,14 +797,14 @@ ydim    number [20]
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(1, neighborhoodSize)
+			unitTest:assertEquals(1, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood1", function(c, neigh, weight)
-				unitTest:assert_equal(neigh.x, c.x)
-				unitTest:assert_equal(neigh.y, c.y)
+				unitTest:assertEquals(neigh.x, c.x)
+				unitTest:assertEquals(neigh.y, c.y)
 				unitTest:assert(neigh ~= c)
 
-				unitTest:assert_equal(1, weight)
+				unitTest:assertEquals(1, weight)
 			end)
 		end)
 	
@@ -847,12 +847,12 @@ ydim    number [20]
 				sumWeight = sumWeight + weight
 			end)
 
-			unitTest:assert_equal(1, sumWeight, 0.00001)
+			unitTest:assertEquals(1, sumWeight, 0.00001)
 		end)
 
-		unitTest:assert_equal(4, sizes[3])
-		unitTest:assert_equal(32, sizes[5])
-		unitTest:assert_equal(64, sizes[8])
+		unitTest:assertEquals(4, sizes[3])
+		unitTest:assertEquals(32, sizes[5])
+		unitTest:assertEquals(64, sizes[8])
 
 		cs = CellularSpace{xdim = 10}
 
@@ -878,26 +878,26 @@ ydim    number [20]
 				sumWeight = sumWeight + weight
 			end)
 
-			unitTest:assert_equal(1, sumWeight, 0.00001)
+			unitTest:assertEquals(1, sumWeight, 0.00001)
 
 			unitTest:assert(not neighborhood:isNeighbor(cell))
 		end)
 
-		unitTest:assert_equal(4, sizes[2])
-		unitTest:assert_equal(32, sizes[3])
-		unitTest:assert_equal(64, sizes[4])
+		unitTest:assertEquals(4, sizes[2])
+		unitTest:assertEquals(32, sizes[3])
+		unitTest:assertEquals(64, sizes[4])
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
 		local c = cs:get(2, 2)
 
-		unitTest:assert_equal(2, c.x)
-		unitTest:assert_equal(2, c.y)
+		unitTest:assertEquals(2, c.x)
+		unitTest:assertEquals(2, c.y)
 
 		local d = cs:get(c:getId())
 
-		unitTest:assert_equal(c, d)
+		unitTest:assertEquals(c, d)
 
 		local c = cs:get(100, 100)
 		unitTest:assert_nil(c)
@@ -937,16 +937,16 @@ ydim    number [20]
 		local t2 = ts["forest"]
 
 		unitTest:assert_type(t1, "Trajectory")
-		unitTest:assert_equal(#t1, 3)
-		unitTest:assert_equal(#t2, 6)
+		unitTest:assertEquals(#t1, 3)
+		unitTest:assertEquals(#t2, 6)
 
 		t2 = cs:split(function(cell)
 			return "test"
 		end)
 
 		unitTest:assert_type(t2.test, "Trajectory")
-		unitTest:assert_equal(#cs.cells, 9)
-		unitTest:assert_equal(#cs.cells, #t2.test)
+		unitTest:assertEquals(#cs.cells, 9)
+		unitTest:assertEquals(#cs.cells, #t2.test)
 		unitTest:assert_type(cs:sample(), "Cell")
 
 		local v = function(cell)
@@ -959,7 +959,7 @@ ydim    number [20]
 		
 		t2 = cs:split(v)
 
-		unitTest:assert_equal(#t2.test, 3)
+		unitTest:assertEquals(#t2.test, 3)
 	end,
 	synchronize = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
@@ -970,7 +970,7 @@ ydim    number [20]
 
 		cs:synchronize()
 		forEachCell(cs, function(cell) unitTest:assert_not_nil(cell.past.cover) end)
-		forEachCell(cs, function(cell) unitTest:assert_equal("forest", cell.past.cover) end)
+		forEachCell(cs, function(cell) unitTest:assertEquals("forest", cell.past.cover) end)
 
 		forEachElement(cs.cells[1], function(el) unitTest:assert_not_nil(el) end)
 		forEachElement(cs.cells[1].past, function(el) unitTest:assert_not_nil(el) end)

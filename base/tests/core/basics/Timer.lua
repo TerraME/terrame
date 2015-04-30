@@ -27,14 +27,14 @@
 return {
 	Timer = function(unitTest)
 		local timer = Timer()
-		unitTest:assert_equal(type(timer), "Timer")
-		unitTest:assert_equal(tostring(timer:getTime()), tostring(-1.7976931348623e+308))
+		unitTest:assertEquals(type(timer), "Timer")
+		unitTest:assertEquals(tostring(timer:getTime()), tostring(-1.7976931348623e+308))
 
 		local cont1 = 0
 
 		local ev1 = Event {priority = 1, period = 5, time = 0, action = function(event)
-			unitTest:assert_equal(event:getTime(), cont1)
-			unitTest:assert_equal(event:getPriority(), 1)
+			unitTest:assertEquals(event:getTime(), cont1)
+			unitTest:assertEquals(event:getPriority(), 1)
 			cont1 = cont1 + event:getPeriod()
 		end}
 
@@ -54,7 +54,7 @@ return {
 
 		clock1:execute(10)
 
-		unitTest:assert_equal(countEvent, 11)
+		unitTest:assertEquals(countEvent, 11)
 
 		local count = 0
 		local ag1 = Agent{execute = function() count = count + 1 end}
@@ -81,7 +81,7 @@ return {
 
 		t:execute(10)
 
-		unitTest:assert_equal(60, count)
+		unitTest:assertEquals(60, count)
 	end,
 	__tostring = function(unitTest)
 		local t1 = Timer{
@@ -90,7 +90,7 @@ return {
 			end}
 		}
 
-		unitTest:assert_equal(tostring(t1), [[1       table of size 2
+		unitTest:assertEquals(tostring(t1), [[1       table of size 2
 cObj_   userdata
 events  table of size 1
 ]])
@@ -106,8 +106,8 @@ events  table of size 1
 			-- configuring the current event does not affects the TerraME scheduler
 			local evTime = event:getTime() + 2
 			event:config(evTime, 2, 0) 
-			unitTest:assert_equal(evTime, event:getTime())
-			unitTest:assert_equal(2, event:getPeriod())
+			unitTest:assertEquals(evTime, event:getTime())
+			unitTest:assertEquals(2, event:getPeriod())
 		end})
 
 		timer2:add(Event{action = function(event)
@@ -116,8 +116,8 @@ events  table of size 1
 		end})
 
 		timer2:execute(6)
-		unitTest:assert_equal(6, timer2:getTime())
-		unitTest:assert_equal(7, cont)
+		unitTest:assertEquals(6, timer2:getTime())
+		unitTest:assertEquals(7, cont)
 	end,
 	execute = function(unitTest)
 		local qt1 = 0
@@ -138,14 +138,14 @@ events  table of size 1
 
 		timer:execute(4)
 
-		unitTest:assert_equal(4, qt1)
-		unitTest:assert_equal(3, qt2)
-		unitTest:assert_equal(2, qt3)
+		unitTest:assertEquals(4, qt1)
+		unitTest:assertEquals(3, qt2)
+		unitTest:assertEquals(2, qt3)
 
 		-- different priorities
 		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
 		local timeMemory = 0 -- memory of time test variable 
-		unitTest:assert_equal(orderToken, 0)
+		unitTest:assertEquals(orderToken, 0)
 		local clock1 = Timer{
 			Event{time = 0, action = function(event)
 				timeMemory = event:getTime()
@@ -154,7 +154,7 @@ events  table of size 1
 			end},
 			Event{priority = 1, action = function(event) 
 				if event:getTime() == timeMemory then 
-					unitTest:assert_equal(1, orderToken)
+					unitTest:assertEquals(1, orderToken)
 				else
 					error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
 				end
@@ -173,7 +173,7 @@ events  table of size 1
 		}
 	
 		t:execute(-5)
-		unitTest:assert_equal(cont, 6)
+		unitTest:assertEquals(cont, 6)
 
 		--	time fraction
 		local cont = 0
@@ -184,22 +184,22 @@ events  table of size 1
 		}
 	
 		t:execute(10)
-		unitTest:assert_equal(cont, t:getTime(), 0.0000000001)
+		unitTest:assertEquals(cont, t:getTime(), 0.0000000001)
 	end,
 	getTime = function(unitTest)
 		local cont1 = 0
 
 		local ev1 = Event{priority = 1, period = 5, time = 0, action = function(event)
-			unitTest:assert_equal(event:getTime(), cont1)
-			unitTest:assert_equal(event:getPriority(), 1)
+			unitTest:assertEquals(event:getTime(), cont1)
+			unitTest:assertEquals(event:getPriority(), 1)
 			cont1 = cont1 + event:getPeriod()
 		end}
 
 		local cont2 = 50
 
 		local ev2 = Event{period = 5, time = 50, action = function(event)
-			unitTest:assert_equal(event:getPriority(), 0)
-			unitTest:assert_equal(event:getTime(), cont2)
+			unitTest:assertEquals(event:getPriority(), 0)
+			unitTest:assertEquals(event:getTime(), cont2)
 			cont2 = cont2 + event:getPeriod()
 			if event:getTime() > 50 then return false end
 		end}
@@ -207,8 +207,8 @@ events  table of size 1
 		local t = Timer{ev1, ev2}
 
 		t:execute(100)
-		unitTest:assert_equal(cont1, 105)
-		unitTest:assert_equal(cont2, 60)
+		unitTest:assertEquals(cont1, 105)
+		unitTest:assertEquals(cont2, 60)
 	end,
 	reset = function(unitTest)
 		local cont = 0
@@ -220,8 +220,8 @@ events  table of size 1
 				-- configuring the current event does not affects the TerraME scheduler
 				local evTime = event:getTime() + 2
 				event:config(evTime , 2, 0) 
-				unitTest:assert_equal(evTime, event:getTime())
-				unitTest:assert_equal(2, event:getPeriod())
+				unitTest:assertEquals(evTime, event:getTime())
+				unitTest:assertEquals(2, event:getPeriod())
 			end},
 			Event{action = function(event)
 				cont = cont + 1
@@ -230,14 +230,14 @@ events  table of size 1
 		}
 
 		timer2:execute(6)
-		unitTest:assert_equal(6, timer2:getTime())
-		unitTest:assert_equal(7, cont)
+		unitTest:assertEquals(6, timer2:getTime())
+		unitTest:assertEquals(7, cont)
 
 		cont = 0
 		timer2:reset()
 		timer2:execute(4)
-		unitTest:assert_equal(4, timer2:getTime())
-		unitTest:assert_equal(0, cont)
+		unitTest:assertEquals(4, timer2:getTime())
+		unitTest:assertEquals(0, cont)
 
 		cont = 0
 		timer2:reset()
@@ -247,8 +247,8 @@ events  table of size 1
 
 		cont = 0
 		timer2:execute(12)
-		unitTest:assert_equal(12, timer2:getTime())
-		unitTest:assert_equal(18, cont)
+		unitTest:assertEquals(12, timer2:getTime())
+		unitTest:assertEquals(18, cont)
 	end
 }
 

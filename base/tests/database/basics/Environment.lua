@@ -70,9 +70,9 @@ return{
 			theme = "Limit"
 		}
 
-		unitTest:assert_equal(208, #cs)
-		unitTest:assert_equal(1435, #cs2)
-		unitTest:assert_equal(1, #cs3)
+		unitTest:assertEquals(208, #cs)
+		unitTest:assertEquals(1435, #cs2)
+		unitTest:assertEquals(1, #cs3)
 
 		local env = Environment{cs, cs2, cs3}
 
@@ -106,24 +106,24 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_equal(1, weight)
+				unitTest:assertEquals(1, weight)
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(623, sumWeight)
-		unitTest:assert_equal(0, minSize)
-		unitTest:assert_equal(9, maxSize)
+		unitTest:assertEquals(623, sumWeight)
+		unitTest:assertEquals(0, minSize)
+		unitTest:assertEquals(9, maxSize)
 
-		unitTest:assert_equal(242, sizes[1])
-		unitTest:assert_equal(28, sizes[2])
-		unitTest:assert_equal(60, sizes[3])
-		unitTest:assert_equal(11, sizes[4])
-		unitTest:assert_equal(8, sizes[5])
-		unitTest:assert_equal(4, sizes[6])
-		unitTest:assert_equal(4, sizes[7])
-		unitTest:assert_equal(1, sizes[9])
-		unitTest:assert_equal(1077, sizes[0])
+		unitTest:assertEquals(242, sizes[1])
+		unitTest:assertEquals(28, sizes[2])
+		unitTest:assertEquals(60, sizes[3])
+		unitTest:assertEquals(11, sizes[4])
+		unitTest:assertEquals(8, sizes[5])
+		unitTest:assertEquals(4, sizes[6])
+		unitTest:assertEquals(4, sizes[7])
+		unitTest:assertEquals(1, sizes[9])
+		unitTest:assertEquals(1077, sizes[0])
 
 		-- .gpm Regular CS x Irregular CS - file with weight
 		countTest = countTest + 1
@@ -143,7 +143,7 @@ return{
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert_equal(1, neighborhoodSize)
+			unitTest:assertEquals(1, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
 				unitTest:assert(weight <= 1000000)
@@ -156,9 +156,9 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(1326705357.3888, sumWeight, 0.00001)
-		unitTest:assert_equal(304.628, minWeight, 0.00001)
-		unitTest:assert_equal(1000000, maxWeight)
+		unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001)
+		unitTest:assertEquals(304.628, minWeight, 0.00001)
+		unitTest:assertEquals(1000000, maxWeight)
 
 		-- .gpm Regular CS x Irregular CS - using 'bidirect' = false
 		countTest = countTest + 1
@@ -176,7 +176,7 @@ return{
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(1, neighborhoodSize)
+			unitTest:assertEquals(1, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
 				unitTest:assert(weight <= 1000000)
@@ -189,9 +189,9 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(1326705357.3888, sumWeight, 0.00001)
-		unitTest:assert_equal(304.628, minWeight, 0.00001)
-		unitTest:assert_equal(1000000, maxWeight)
+		unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001)
+		unitTest:assertEquals(304.628, minWeight, 0.00001)
+		unitTest:assertEquals(1000000, maxWeight)
 
 		-- .gpm Reg CS x Irreg CS - using 'bidirect' = true
 		countTest = countTest + 1
@@ -211,7 +211,7 @@ return{
 			unitTest:assert_not_nil(neighborhood)
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(1, neighborhoodSize)
+			unitTest:assertEquals(1, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
 				unitTest:assert(weight <= 1000000)
@@ -224,9 +224,9 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(1326705357.3888, sumWeight, 0.00001)
-		unitTest:assert_equal(304.628, minWeight, 0.00001)
-		unitTest:assert_equal(1000000, maxWeight)
+		unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001)
+		unitTest:assertEquals(304.628, minWeight, 0.00001)
+		unitTest:assertEquals(1000000, maxWeight)
 
 		-- Verifying the other side
 		minWeight = math.huge
@@ -238,7 +238,7 @@ return{
 			unitTest:assert_not_nil(neighborhood)
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(1435, neighborhoodSize)
+			unitTest:assertEquals(1435, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
 				unitTest:assert(1000000 >= weight)
@@ -251,9 +251,9 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(1326705357.3888, sumWeight, 0.00001)
-		unitTest:assert_equal(304.628, minWeight, 0.00001)
-		unitTest:assert_equal(1000000, maxWeight)
+		unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001)
+		unitTest:assertEquals(304.628, minWeight, 0.00001)
+		unitTest:assertEquals(1000000, maxWeight)
 
 		-- .gpm Irregular CS x Irregular CS - using bidirect = false
 		countTest = countTest + 1
@@ -271,16 +271,16 @@ return{
 
 			local neighborhoodSize = #neighborhood
 
-			unitTest:assert_equal(207, neighborhoodSize)
+			unitTest:assertEquals(207, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_equal(weight, 1)
+				unitTest:assertEquals(weight, 1)
 
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(207, sumWeight)
+		unitTest:assertEquals(207, sumWeight)
 
 		-- .gpm Irregular CS x Irregular CS - using bidirect = true
 		countTest = countTest + 1
@@ -298,17 +298,17 @@ return{
 			unitTest:assert_not_nil(neighborhood)
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_equal(207, neighborhoodSize)
+			unitTest:assertEquals(207, neighborhoodSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_equal(weight, 1)
+				unitTest:assertEquals(weight, 1)
 				unitTest:assert(neigh:getNeighborhood("my_neighborhood"..countTest):isNeighbor(c))
 
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(207, sumWeight)
+		unitTest:assertEquals(207, sumWeight)
 
 		-- the other side
 		sizes = {}
@@ -324,16 +324,16 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_equal(weight, 1)
+				unitTest:assertEquals(weight, 1)
 				unitTest:assert(neigh:getNeighborhood("my_neighborhood"..countTest):isNeighbor(c))
 
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(207, sumWeight)
-		unitTest:assert_equal(1, sizes[0])
-		unitTest:assert_equal(207, sizes[1])
+		unitTest:assertEquals(207, sumWeight)
+		unitTest:assertEquals(1, sizes[0])
+		unitTest:assertEquals(207, sizes[1])
 	end
 }
 

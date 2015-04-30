@@ -28,41 +28,41 @@ return{
 		local c = Choice{1, 2, 3}
 
 		unitTest:assert_type(c, "Choice")
-		unitTest:assert_equal(#c.values, 3)
+		unitTest:assertEquals(#c.values, 3)
 
 		c = Choice{min = 2, max = 3, step = 0.1}
 		unitTest:assert_type(c, "Choice")
-		unitTest:assert_equal(c.min, 2)
-		unitTest:assert_equal(c.max, 3)
-		unitTest:assert_equal(c.default, 2)
-		unitTest:assert_equal(c.step, 0.1)
+		unitTest:assertEquals(c.min, 2)
+		unitTest:assertEquals(c.max, 3)
+		unitTest:assertEquals(c.default, 2)
+		unitTest:assertEquals(c.step, 0.1)
 
 		c = Choice{min = 5, default = 7}
 		unitTest:assert_type(c, "Choice")
-		unitTest:assert_equal(c.min, 5)
-		unitTest:assert_equal(c.default, 7)
+		unitTest:assertEquals(c.min, 5)
+		unitTest:assertEquals(c.default, 7)
 
 		c = Choice{min = 5}
 		unitTest:assert_type(c, "Choice")
-		unitTest:assert_equal(c.default, 5)
+		unitTest:assertEquals(c.default, 5)
 
 		c = Choice{max = 5, default = 3}
 		unitTest:assert_type(c, "Choice")
-		unitTest:assert_equal(c.max, 5)
-		unitTest:assert_equal(c.default, 3)
+		unitTest:assertEquals(c.max, 5)
+		unitTest:assertEquals(c.default, 3)
 
 		c = Choice{max = 5}
 		unitTest:assert_type(c, "Choice")
-		unitTest:assert_equal(c.default, 5)
+		unitTest:assertEquals(c.default, 5)
 
 		c = Choice{1, 2, 3, 4, default = 3}
-		unitTest:assert_equal(#c.values, 4)
-		unitTest:assert_equal(c.default, 3)
+		unitTest:assertEquals(#c.values, 4)
+		unitTest:assertEquals(c.default, 3)
 	end,
 	__tostring = function(unitTest)
 		local c = Choice{min = 2, max = 3, step = 0.1}
 
-		unitTest:assert_equal(tostring(c), [[default  number [2]
+		unitTest:assertEquals(tostring(c), [[default  number [2]
 max      number [3]
 min      number [2]
 step     number [0.1]
@@ -72,20 +72,20 @@ step     number [0.1]
 		Random{seed = 12345}
 		local c = Choice{1, 2, 3}
 
-		unitTest:assert_equal(c:sample(), 2)
-		unitTest:assert_equal(c:sample(), 3)
-		unitTest:assert_equal(c:sample(), 1)
-		unitTest:assert_equal(c:sample(), 2)
+		unitTest:assertEquals(c:sample(), 2)
+		unitTest:assertEquals(c:sample(), 3)
+		unitTest:assertEquals(c:sample(), 1)
+		unitTest:assertEquals(c:sample(), 2)
 
 		c = Choice{min = 2, max = 3, step = 0.1}
-		unitTest:assert_equal(c:sample(), 2)
-		unitTest:assert_equal(c:sample(), 2.6)
-		unitTest:assert_equal(c:sample(), 2.2)
+		unitTest:assertEquals(c:sample(), 2)
+		unitTest:assertEquals(c:sample(), 2.6)
+		unitTest:assertEquals(c:sample(), 2.2)
 
 		c = Choice{min = 1, max = 3}
-		unitTest:assert_equal(c:sample(), 2.1551348191386, 0.01)
-		unitTest:assert_equal(c:sample(), 1.4584970893453, 0.01)
-		unitTest:assert_equal(c:sample(), 1.3813645669887, 0.01)
+		unitTest:assertEquals(c:sample(), 2.1551348191386, 0.01)
+		unitTest:assertEquals(c:sample(), 1.4584970893453, 0.01)
+		unitTest:assertEquals(c:sample(), 1.3813645669887, 0.01)
 	end
 }
 

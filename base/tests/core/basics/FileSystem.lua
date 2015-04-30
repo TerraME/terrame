@@ -27,38 +27,38 @@
 return{
 	attributes = function(unitTest)
 		local attr = attributes(file("agents.csv", "base"))
-		unitTest:assert_equal(getn(attr), 14)
-		unitTest:assert_equal(attr.mode, "file")
-		unitTest:assert_equal(attr.size, 135)
+		unitTest:assertEquals(getn(attr), 14)
+		unitTest:assertEquals(attr.mode, "file")
+		unitTest:assertEquals(attr.size, 135)
 
 		attr = attributes(file("agents.csv", "base"), "mode")
-		unitTest:assert_equal(attr, "file")
+		unitTest:assertEquals(attr, "file")
 
 		attr = attributes(file("agents.csv", "base"), "size")
-		unitTest:assert_equal(attr, 135)
+		unitTest:assertEquals(attr, 135)
 	end, 
 	chDir = function(unitTest)
 		local info = sessionInfo()
 		local s = info.separator
 		local cur_dir = currentDir()
 		chDir(info.path..s.."packages")
-		unitTest:assert_equal(currentDir(), info.path..s.."packages")
+		unitTest:assertEquals(currentDir(), info.path..s.."packages")
 		chDir(cur_dir)
 	end, 
 	currentDir = function(unitTest)
 		local info = sessionInfo()
 		local cur_dir = currentDir()
 		chDir(info.path)
-		unitTest:assert_equal(currentDir(), info.path)
+		unitTest:assertEquals(currentDir(), info.path)
 		chDir(cur_dir)
 	end,
 	dir = function(unitTest)
 		local files = 22
 		local d = dir(packageInfo().data)
-		unitTest:assert_equal(#d, files)
+		unitTest:assertEquals(#d, files)
 
 		d = dir(packageInfo().data, true)
-		unitTest:assert_equal(#d, files + 2)
+		unitTest:assertEquals(#d, files + 2)
 
 		d = dir(".", true)
 	end,
@@ -71,15 +71,15 @@ return{
 		os.execute("ln -s "..pathdata.."agents.csv "..pathdata.."agentslink")
 		local attr = linkAttributes(pathdata.."agentslink")
 
-		unitTest:assert_equal(attr.mode, "link")
-		unitTest:assert_equal(attr.nlink, 1)
+		unitTest:assertEquals(attr.mode, "link")
+		unitTest:assertEquals(attr.nlink, 1)
 		--unitTest:assert(attr.size >= 61)
 
 		attr = linkAttributes(pathdata.."agentslink", "mode")
-		unitTest:assert_equal(attr, "link")
+		unitTest:assertEquals(attr, "link")
 
 		attr = linkAttributes(pathdata.."agentslink", "nlink")
-		unitTest:assert_equal(attr, 1)
+		unitTest:assertEquals(attr, 1)
 
 		os.execute("rm "..pathdata.."agentslink")
 	end,
@@ -108,7 +108,7 @@ return{
 		unitTest:assert(mkDir(pathdata.."test"))
 
 		local attr = attributes(pathdata.."test", "mode")
-		unitTest:assert_equal(attr, "directory")
+		unitTest:assertEquals(attr, "directory")
 
 		rmDir(pathdata.."test")
 	end,
@@ -118,13 +118,13 @@ return{
 		unitTest:assert(mkDir(pathdata.."test"))
 
 		local attr = attributes(pathdata.."test", "mode")
-		unitTest:assert_equal(attr, "directory")
+		unitTest:assertEquals(attr, "directory")
 
 		unitTest:assert(rmDir(pathdata.."test"))
 	end, 
 	runCommand = function(unitTest)
 		local d = runCommand("ls "..packageInfo().data)
-		unitTest:assert_equal(#d, 22) -- 22 files
+		unitTest:assertEquals(#d, 22) -- 22 files
 	end,
 	setMode = function(unitTest)
 		local pathdata = packageInfo().data
@@ -135,12 +135,12 @@ return{
 
 		unitTest:assert(success)
 	
-		unitTest:assert_equal(mode, "binary")
+		unitTest:assertEquals(mode, "binary")
 
 		success, mode = setMode(f, "text")
 
 		unitTest:assert(success)
-		unitTest:assert_equal(mode, "binary") -- #199
+		unitTest:assertEquals(mode, "binary") -- #199
 
 		f:close()
 		os.execute("rm "..pathdata.."testfile.txt")
@@ -155,10 +155,10 @@ return{
 		unitTest:assert(touch(pathdata.."testfile.txt", 10000, 10000))
 
 		local attr = attributes(pathdata.."testfile.txt", "access")
-		unitTest:assert_equal(attr, 10000)
+		unitTest:assertEquals(attr, 10000)
 
 		attr = attributes(pathdata.."testfile.txt", "modification")
-		unitTest:assert_equal(attr, 10000)
+		unitTest:assertEquals(attr, 10000)
 
 		os.execute("rm "..pathdata.."testfile.txt")
 	end, 

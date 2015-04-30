@@ -29,13 +29,13 @@ return{
 		local u = UnitTest{sleep = 0.1, dbType = "Test"}
 
 		unitTest:assert_type(u, "UnitTest")
-		unitTest:assert_equal(u.success, 0)
-		unitTest:assert_equal(u.fail, 0)
-		unitTest:assert_equal(u.test, 0)
-		unitTest:assert_equal(u.last_error, "")
-		unitTest:assert_equal(u.count_last, 0)
-		unitTest:assert_equal(u.sleep, 0.1)
-		unitTest:assert_equal(u.dbType, "test")
+		unitTest:assertEquals(u.success, 0)
+		unitTest:assertEquals(u.fail, 0)
+		unitTest:assertEquals(u.test, 0)
+		unitTest:assertEquals(u.last_error, "")
+		unitTest:assertEquals(u.count_last, 0)
+		unitTest:assertEquals(u.sleep, 0.1)
+		unitTest:assertEquals(u.dbType, "test")
 
 		u:delay()
 	end,
@@ -44,13 +44,13 @@ return{
 
 		u:assert(true)
 
-		unitTest:assert_equal(u.success, 1)
+		unitTest:assertEquals(u.success, 1)
 	end,
-	assert_equal = function(unitTest)
+	assertEquals = function(unitTest)
 		local u = UnitTest{}
-		u:assert_equal(true, true)
+		u:assertEquals(true, true)
 
-		unitTest:assert_equal(u.success, 1)
+		unitTest:assertEquals(u.success, 1)
 	end,
 	assert_error = function(unitTest)
 		local u = UnitTest{}
@@ -61,26 +61,26 @@ return{
 		local error_func = function() CellularSpace{xdim = "a"} end
 		u:assert_error(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
 
-		unitTest:assert_equal(u.success, 2)
+		unitTest:assertEquals(u.success, 2)
 	end,
 	assert_nil = function(unitTest)
 		local u = UnitTest{}
 		u:assert_nil()
 
-		unitTest:assert_equal(u.success, 1)
+		unitTest:assertEquals(u.success, 1)
 	end,
 	assert_not_nil = function(unitTest)
 		local u = UnitTest{}
 		u:assert_not_nil(true)
 
-		unitTest:assert_equal(u.success, 1)
+		unitTest:assertEquals(u.success, 1)
 	end,
 	assert_type = function(unitTest)
 		local u = UnitTest{}
 
 		u:assert_type(2, "number")
 
-		unitTest:assert_equal(u.success, 1)
+		unitTest:assertEquals(u.success, 1)
 	end,
 	delay = function(unitTest)
 		local u = UnitTest{sleep = 1}
@@ -95,7 +95,7 @@ return{
 		local f = u:tmpFolder()
 		local g = u:tmpFolder()
 
-		unitTest:assert_equal(f, g)
+		unitTest:assertEquals(f, g)
 		unitTest:assert_type(f, "string")
 		os.execute("rm -rf "..f)
 	end

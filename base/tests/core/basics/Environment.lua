@@ -53,7 +53,7 @@ return{
 
 		local env = Environment{cs, a, t}
 		env:execute(10)
-		self:assert_equal(13, a.x)
+		self:assertEquals(13, a.x)
 
 		env = Environment{}
 
@@ -62,20 +62,20 @@ return{
 		env:add(t)
 
 		env:execute(10)
-		--assert_equal(11, env:getTime() ) -- #195
-		self:assert_equal(13, a.x)
+		--assertEquals(11, env:getTime() ) -- #195
+		self:assertEquals(13, a.x)
 
 		local cellCont = 0
-		self:assert_equal(cellCont, 0)
+		self:assertEquals(cellCont, 0)
 		local cs = CellularSpace{xdim = 2}
 		forEachCell(cs, function(cell)
 			cell.soilType = 0
 			cellCont = cellCont + 1
 		end)
-		self:assert_equal(cellCont, 4)
+		self:assertEquals(cellCont, 4)
 
 		forEachCell(cs, function(cell, idx)
-			self:assert_equal(cell.soilType, 0)
+			self:assertEquals(cell.soilType, 0)
 		end)
 
 		local cont = 0
@@ -158,19 +158,19 @@ return{
 		local ev = Event{time = 0}
 		at1:setTrajectoryStatus(true)
 		at1:execute(ev)
-		self:assert_equal(44, cont)
+		self:assertEquals(44, cont)
 
 		ev = Event{time = 0}
 		ag1:setTrajectoryStatus(true)
 		ag1:execute(ev)
-		self:assert_equal(88, cont)
+		self:assertEquals(88, cont)
 	end,
 	__tostring = function(unitTest)
 		local cs1 = CellularSpace{xdim = 2}
 		local ag1 = Agent{}
 		local t1 = Timer{}
 		local env1 = Environment{id = "env", cs1, ag1, t1}
-		unitTest:assert_equal(tostring(env1), [[1      CellularSpace
+		unitTest:assertEquals(tostring(env1), [[1      CellularSpace
 2      Agent
 3      Timer
 cObj_  userdata
@@ -204,13 +204,13 @@ id     string [env]
 		forEachCell(cs, function(cell)
 			cont = cont + #cell.placement
 		end)
-		unitTest:assert_equal(11, cont)
+		unitTest:assertEquals(11, cont)
 
 		cont = 0
 		forEachAgent(predators, function(agent)
 			cont = cont + #agent.placement
 		end)
-		unitTest:assert_equal(10, cont)
+		unitTest:assertEquals(10, cont)
 
 		forEachAgent(predators, function(ag)
 			ag:reproduce{age = 0}
@@ -223,13 +223,13 @@ id     string [env]
 		forEachCell(cs, function(cell)
 			cont = cont + #cell.placement
 		end)
-		unitTest:assert_equal(21, cont)
+		unitTest:assertEquals(21, cont)
 
 		cont = 0
 		forEachAgent(predators, function(agent)
 			cont = cont + #agent.placement
 		end)
-		unitTest:assert_equal(20, cont)
+		unitTest:assertEquals(20, cont)
 
 		local predator = Agent{name = "predator"}
 		local ag = Agent{name = "ag"}
@@ -244,12 +244,12 @@ id     string [env]
 		local env = Environment{cs, pred = predators, zag = ag}
 		env:createPlacement{strategy = "uniform"}
 
-		unitTest:assert_equal(#cs.cells[1]:getAgents(), 2)
-		unitTest:assert_equal(#cs.cells[2]:getAgents(), 2)
-		unitTest:assert_equal(#cs.cells[100]:getAgents(), 2)
+		unitTest:assertEquals(#cs.cells[1]:getAgents(), 2)
+		unitTest:assertEquals(#cs.cells[2]:getAgents(), 2)
+		unitTest:assertEquals(#cs.cells[100]:getAgents(), 2)
 
-		unitTest:assert_equal(cs.cells[100]:getAgents()[1].name, "predator")
-		unitTest:assert_equal(cs.cells[100]:getAgents()[2].name, "ag")
+		unitTest:assertEquals(cs.cells[100]:getAgents()[1].name, "predator")
+		unitTest:assertEquals(cs.cells[100]:getAgents()[2].name, "ag")
 
 		Random():reSeed(12345)
 
@@ -284,9 +284,9 @@ id     string [env]
 			count_stay   = count_stay   + #cell.stay
 			count_wplace = count_wplace + #cell.workingplace
 		end)
-		unitTest:assert_equal(100, count_house)
-		unitTest:assert_equal(100, count_stay)
-		unitTest:assert_equal(0,   count_wplace)
+		unitTest:assertEquals(100, count_house)
+		unitTest:assertEquals(100, count_stay)
+		unitTest:assertEquals(0,   count_wplace)
 
 		local max = 0
 		forEachCell(cs, function(cell)
@@ -294,9 +294,9 @@ id     string [env]
 				max = #cell.house
 			end
 		end)
-		unitTest:assert_equal(1, max)
-		unitTest:assert_equal(1, #cs.cells[100].stay)
-		unitTest:assert_equal(0, #cs.cells[101].stay)
+		unitTest:assertEquals(1, max)
+		unitTest:assertEquals(1, #cs.cells[100].stay)
+		unitTest:assertEquals(0, #cs.cells[101].stay)
 
 		predators:execute()
 		predators:sample():die()
@@ -309,9 +309,9 @@ id     string [env]
 			count_stay   = count_stay   + #cell.stay
 			count_wplace = count_wplace + #cell.workingplace
 		end)
-		unitTest:assert_equal(99, count_house)
-		unitTest:assert_equal(99, count_stay)
-		unitTest:assert_equal(0,  count_wplace)
+		unitTest:assertEquals(99, count_house)
+		unitTest:assertEquals(99, count_stay)
+		unitTest:assertEquals(0,  count_wplace)
 
 		local predator = Agent{name = "predator"}
 
@@ -325,12 +325,12 @@ id     string [env]
 		local env = Environment{cs.cells[1], predators}
 		env:createPlacement()
 
-		unitTest:assert_equal(#cs.cells[1]:getAgents(), #predators)
+		unitTest:assertEquals(#cs.cells[1]:getAgents(), #predators)
 	end,
 	execute = function(self)
 		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
 		local timeMemory = 0   -- memory of time test variable 
-		self:assert_equal(orderToken, 0)
+		self:assertEquals(orderToken, 0)
 
 		local env = Environment{
 			clock1 = Timer{
@@ -355,7 +355,7 @@ id     string [env]
 				end},
 				Event{priority = 3, action = function(event) 
 					self:assert(orderToken <= 4)
-					self:assert_equal(event:getTime(), timeMemory)
+					self:assertEquals(event:getTime(), timeMemory)
 					orderToken = 0
 				end}
 			}
@@ -391,7 +391,7 @@ id     string [env]
 					end},
 					Event{priority = 3, action = function(event) 
 						self:assert(4 >= orderToken)
-						self:assert_equal(event:getTime(), timeMemory)
+						self:assertEquals(event:getTime(), timeMemory)
 						orderToken = 0
 					end}
 				}
@@ -410,7 +410,7 @@ id     string [env]
 
 		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
 		local timeMemory = 0   -- memory of time test variable 
-		self:assert_equal(orderToken, 0)
+		self:assertEquals(orderToken, 0)
 
 		local env = Environment{
 			firstEnv = Environment{
@@ -462,7 +462,7 @@ id     string [env]
 					end},
 					Event{priority = PRIO8, action = function(event) 
 						self:assert(8 >= orderToken)
-						self:assert_equal(event:getTime(), timeMemory)
+						self:assertEquals(event:getTime(), timeMemory)
 						orderToken = 0
 					end}
 				}

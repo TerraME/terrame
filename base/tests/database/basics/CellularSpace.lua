@@ -51,8 +51,8 @@ return{
 			theme = "cells90x90"
 		}
 
-		unitTest:assert_equal("cells90x90", cs.layer)
-		unitTest:assert_equal(10201, #cs.cells)
+		unitTest:assertEquals("cells90x90", cs.layer)
+		unitTest:assertEquals(10201, #cs.cells)
 
 		cs:createNeighborhood{name = "moore1"}
 		cs:createNeighborhood{name = "moore2", inmemory = false}
@@ -78,40 +78,40 @@ return{
 			end)						
 		end)
 
-		unitTest:assert_equal(160800, countNeigh)
-		unitTest:assert_equal(20402, sumWeight, 0.00001)
+		unitTest:assertEquals(160800, countNeigh)
+		unitTest:assertEquals(20402, sumWeight, 0.00001)
 
 		local cell = cs:get(0, 0)
-		unitTest:assert_equal(0, cell.x)
-		unitTest:assert_equal(0, cell.y)
+		unitTest:assertEquals(0, cell.x)
+		unitTest:assertEquals(0, cell.y)
 		
 		cell = cs.cells[1]
-		unitTest:assert_equal(0, cell.x)
-		unitTest:assert_equal(0, cell.y)
+		unitTest:assertEquals(0, cell.x)
+		unitTest:assertEquals(0, cell.y)
 
 		cell = cs:get(0, 1)
-		unitTest:assert_equal(0, cell.x)
-		unitTest:assert_equal(1, cell.y)
+		unitTest:assertEquals(0, cell.x)
+		unitTest:assertEquals(1, cell.y)
 		
 		cell = cs.cells[2]
-		unitTest:assert_equal(0, cell.x)
-		unitTest:assert_equal(1, cell.y)
+		unitTest:assertEquals(0, cell.x)
+		unitTest:assertEquals(1, cell.y)
 
 		cell = cs:get(0, 99)
-		unitTest:assert_equal(0, cell.x)
-		unitTest:assert_equal(99, cell.y)
+		unitTest:assertEquals(0, cell.x)
+		unitTest:assertEquals(99, cell.y)
 		
 		cell = cs.cells[100]
-		unitTest:assert_equal(0, cell.x)
-		unitTest:assert_equal(99, cell.y)
+		unitTest:assertEquals(0, cell.x)
+		unitTest:assertEquals(99, cell.y)
 
 		cell = cs:get(0, 100)
-		unitTest:assert_equal(0, cell.x)
-		unitTest:assert_equal(100, cell.y)
+		unitTest:assertEquals(0, cell.x)
+		unitTest:assertEquals(100, cell.y)
 		
 		cell = cs.cells[101]
-		unitTest:assert_equal(0, cell.x)
-		unitTest:assert_equal(100, cell.y)
+		unitTest:assertEquals(0, cell.x)
+		unitTest:assertEquals(100, cell.y)
 
 		-- no dbType
 		cs = CellularSpace{
@@ -122,7 +122,7 @@ return{
 			database = mdatabase,
 			theme = "cells90x90"
 		}
-		unitTest:assert_equal(mdbType, cs.dbType)
+		unitTest:assertEquals(mdbType, cs.dbType)
 
 		-- no port
 		cs = CellularSpace{
@@ -133,7 +133,7 @@ return{
 			theme = "cells90x90",
 			autoload = false
 		}
-		unitTest:assert_equal(3306, cs.port)
+		unitTest:assertEquals(3306, cs.port)
 
 		-- no user
 		cs = CellularSpace{
@@ -144,7 +144,7 @@ return{
 			theme = "cells90x90",
 			autoload = false
 		}
-		unitTest:assert_equal("root", cs.user)
+		unitTest:assertEquals("root", cs.user)
 
 		-- with select
 		cs = CellularSpace{
@@ -166,7 +166,7 @@ return{
 			unitTest:assert_not_nil(cell.soilWater)
 			unitTest:assert_nil(cell.umatributoquenaofoiselecionado)
 		end)
-		unitTest:assert_equal(10201, #cs)
+		unitTest:assertEquals(10201, #cs)
 
 		-- with where
 		cs = CellularSpace{
@@ -189,14 +189,14 @@ return{
 			unitTest:assert_not_nil(cell.soilWater)
 		end)
 
-		unitTest:assert_equal(5673, #cs)
+		unitTest:assertEquals(5673, #cs)
 
 		-- csv file
 		cs = CellularSpace{database = file("simple-cs.csv", "base"), dbType = "csv", sep = ";"}
 		cs = CellularSpace{database = file("simple-cs.csv", "base"), sep = ";"}
 
 		unitTest:assert_type(cs, "CellularSpace")
-		unitTest:assert_equal(2500, #cs)
+		unitTest:assertEquals(2500, #cs)
 
 		forEachCell(cs, function(cell)
 			unitTest:assert_type(cell.maxSugar, "number")
@@ -206,14 +206,14 @@ return{
 		cs = CellularSpace{database = file("brazilstates.shp", "base")}
 
 		unitTest:assert_not_nil(cs.cells[1])
-		unitTest:assert_equal(#cs.cells, 27)
+		unitTest:assertEquals(#cs.cells, 27)
 		unitTest:assert_type(cs.cells[1], "Cell")
 
-		unitTest:assert_equal(cs.minRow, 0)
-		unitTest:assert_equal(cs.maxRow, 5256115)
+		unitTest:assertEquals(cs.minRow, 0)
+		unitTest:assertEquals(cs.maxRow, 5256115)
 
-		unitTest:assert_equal(cs.minCol, 0)
-		unitTest:assert_equal(cs.maxCol, 5380443)
+		unitTest:assertEquals(cs.minCol, 0)
+		unitTest:assertEquals(cs.maxCol, 5380443)
 
 		local valuesDefault = {
 			  500000,  2300000, 1300000,  300000,  2300000,
@@ -225,7 +225,7 @@ return{
 		}
 
 		for i = 1, 27 do
-			unitTest:assert_equal(valuesDefault[i], cs.cells[i].POPUL)
+			unitTest:assertEquals(valuesDefault[i], cs.cells[i].POPUL)
 		end
 
 		-- late load
@@ -241,34 +241,34 @@ return{
 		}
 		
 		unitTest:assert_nil(cs.cells[1])
-		unitTest:assert_equal(#cs.cells, 0)
+		unitTest:assertEquals(#cs.cells, 0)
 
 		cs:load()
 		unitTest:assert_not_nil(cs.cells[1])
-		unitTest:assert_equal(#cs.cells, 10201)
+		unitTest:assertEquals(#cs.cells, 10201)
 		unitTest:assert_type(cs.cells[1], "Cell")
 
 		cs = CellularSpace{database = file("brazilstates.shp", "base"), autoload = false}
 		unitTest:assert_nil(cs.cells[1])
-		unitTest:assert_equal(#cs.cells, 0)
+		unitTest:assertEquals(#cs.cells, 0)
 
 		cs:load()
 		unitTest:assert_not_nil(cs.cells[1])
-		unitTest:assert_equal(#cs.cells, 27)
+		unitTest:assertEquals(#cs.cells, 27)
 		unitTest:assert_type(cs.cells[1], "Cell")
 
 		cs = CellularSpace{database = file("simple-cs.csv", "base"), sep = ";", autoload = false}
 		unitTest:assert_type(cs, "CellularSpace")
-		unitTest:assert_equal(0, #cs)
+		unitTest:assertEquals(0, #cs)
 
 		cs:load()
-		unitTest:assert_equal(2500, #cs)
+		unitTest:assertEquals(2500, #cs)
 
 		cs = CellularSpace{
 			database = file("simple.map", "base")
 		}
 
-		unitTest:assert_equal(#cs, 100)
+		unitTest:assertEquals(#cs, 100)
 	end,
 	createNeighborhood = function(unitTest)
 		debug.sethook()
@@ -326,8 +326,8 @@ return{
 				sumWeight = sumWeight + weight
 			end)
 		end)
-		unitTest:assert_equal(903, countNeigh) -- SKIP
-		unitTest:assert_equal(100.33333, sumWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(903, countNeigh) -- SKIP
+		unitTest:assertEquals(100.33333, sumWeight, 0.00001) -- SKIP
 
 		countNeigh = 0
 		sumWeight  = 0
@@ -339,9 +339,9 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(10201, #cs) -- SKIP
-		unitTest:assert_equal(903, countNeigh) -- SKIP
-		unitTest:assert_equal(100.33333, sumWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(10201, #cs) -- SKIP
+		unitTest:assertEquals(903, countNeigh) -- SKIP
+		unitTest:assertEquals(100.33333, sumWeight, 0.00001) -- SKIP
 
 		-- where plus createNeighborhood
 		cs = CellularSpace{
@@ -373,8 +373,8 @@ return{
 				sumWeight = sumWeight + weight
 			end)
 		end)
-		unitTest:assert_equal(49385, countNeigh) -- SKIP
-		unitTest:assert_equal(5673, sumWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(49385, countNeigh) -- SKIP
+		unitTest:assertEquals(5673, sumWeight, 0.00001) -- SKIP
 
 		countNeigh = 0
 		sumWeight  = 0
@@ -385,8 +385,8 @@ return{
 				sumWeight = sumWeight + weight
 			end)
 		end)
-		unitTest:assert_equal(18582, countNeigh) -- SKIP
-		unitTest:assert_equal(451.98359156683, sumWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(18582, countNeigh) -- SKIP
+		unitTest:assertEquals(451.98359156683, sumWeight, 0.00001) -- SKIP
 	end,
 	loadNeighborhood = function(unitTest)
 		debug.sethook()
@@ -432,8 +432,8 @@ return{
 				sumWeight = sumWeight + weight
 			end)
 		end)
-		unitTest:assert_equal(80400, countNeigh) -- SKIP
-		unitTest:assert_equal(10201.00000602, sumWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(80400, countNeigh) -- SKIP
+		unitTest:assertEquals(10201.00000602, sumWeight, 0.00001) -- SKIP
 		--]]
 
 		local cs1 = CellularSpace{
@@ -464,7 +464,7 @@ return{
 		}
 
 		unitTest:assert_type(cs1, "CellularSpace") -- SKIP
-		unitTest:assert_equal(121, #cs1) -- SKIP
+		unitTest:assertEquals(121, #cs1) -- SKIP
 
 		local countTest = 1
 
@@ -502,23 +502,23 @@ return{
 				minWeight = math.min(weight, minWeight)
 				maxWeight = math.max(weight, maxWeight)
 
-				unitTest:assert_equal(weight, neighborhood:getWeight(neigh)) -- SKIP
+				unitTest:assertEquals(weight, neighborhood:getWeight(neigh)) -- SKIP
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(5, minSize) -- SKIP
-		unitTest:assert_equal(12, maxSize) -- SKIP
-		unitTest:assert_equal(900, minWeight) -- SKIP
-		unitTest:assert_equal(1800, maxWeight) -- SKIP
-		unitTest:assert_equal(1617916.8, sumWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(5, minSize) -- SKIP
+		unitTest:assertEquals(12, maxSize) -- SKIP
+		unitTest:assertEquals(900, minWeight) -- SKIP
+		unitTest:assertEquals(1800, maxWeight) -- SKIP
+		unitTest:assertEquals(1617916.8, sumWeight, 0.00001) -- SKIP
 
-		unitTest:assert_equal(28, sizes[11]) -- SKIP
-		unitTest:assert_equal(8,  sizes[7]) -- SKIP
-		unitTest:assert_equal(28, sizes[8]) -- SKIP
-		unitTest:assert_equal(4,  sizes[10]) -- SKIP
-		unitTest:assert_equal(49, sizes[12]) -- SKIP
-		unitTest:assert_equal(4,  sizes[5]) -- SKIP
+		unitTest:assertEquals(28, sizes[11]) -- SKIP
+		unitTest:assertEquals(8,  sizes[7]) -- SKIP
+		unitTest:assertEquals(28, sizes[8]) -- SKIP
+		unitTest:assertEquals(4,  sizes[10]) -- SKIP
+		unitTest:assertEquals(49, sizes[12]) -- SKIP
+		unitTest:assertEquals(4,  sizes[5]) -- SKIP
 
 		countTest = countTest + 1
 
@@ -560,23 +560,23 @@ return{
 				minWeight = math.min(weight, minWeight)
 				maxWeight = math.max(weight, maxWeight)
 
-				unitTest:assert_equal(weight, neighborhood:getWeight(neigh)) -- SKIP
+				unitTest:assertEquals(weight, neighborhood:getWeight(neigh)) -- SKIP
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(5, minSize) -- SKIP
-		unitTest:assert_equal(12, maxSize) -- SKIP
-		unitTest:assert_equal(900, minWeight) -- SKIP
-		unitTest:assert_equal(1800, maxWeight) -- SKIP
-		unitTest:assert_equal(1617916.8, sumWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(5, minSize) -- SKIP
+		unitTest:assertEquals(12, maxSize) -- SKIP
+		unitTest:assertEquals(900, minWeight) -- SKIP
+		unitTest:assertEquals(1800, maxWeight) -- SKIP
+		unitTest:assertEquals(1617916.8, sumWeight, 0.00001) -- SKIP
 
-		unitTest:assert_equal(28, sizes[11]) -- SKIP
-		unitTest:assert_equal(8, sizes[7]) -- SKIP
-		unitTest:assert_equal(28, sizes[8]) -- SKIP
-		unitTest:assert_equal(4, sizes[10]) -- SKIP
-		unitTest:assert_equal(49, sizes[12]) -- SKIP
-		unitTest:assert_equal(4, sizes[5]) -- SKIP
+		unitTest:assertEquals(28, sizes[11]) -- SKIP
+		unitTest:assertEquals(8, sizes[7]) -- SKIP
+		unitTest:assertEquals(28, sizes[8]) -- SKIP
+		unitTest:assertEquals(4, sizes[10]) -- SKIP
+		unitTest:assertEquals(49, sizes[12]) -- SKIP
+		unitTest:assertEquals(4, sizes[5]) -- SKIP
 
 		countTest = countTest + 1
 
@@ -610,23 +610,23 @@ return{
 				unitTest:assert_not_nil(c) -- SKIP
 				unitTest:assert_not_nil(neigh) -- SKIP
 
-				unitTest:assert_equal(weight, 1) -- SKIP
+				unitTest:assertEquals(weight, 1) -- SKIP
 
-				unitTest:assert_equal(weight, neighborhood:getWeight(neigh)) -- SKIP
+				unitTest:assertEquals(weight, neighborhood:getWeight(neigh)) -- SKIP
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(3, minSize) -- SKIP
-		unitTest:assert_equal(8, maxSize) -- SKIP
-		unitTest:assert_equal(10992, sumWeight) -- SKIP
+		unitTest:assertEquals(3, minSize) -- SKIP
+		unitTest:assertEquals(8, maxSize) -- SKIP
+		unitTest:assertEquals(10992, sumWeight) -- SKIP
 
-		unitTest:assert_equal(4, sizes[3]) -- SKIP
-		unitTest:assert_equal(34, sizes[4]) -- SKIP
-		unitTest:assert_equal(72, sizes[5]) -- SKIP
-		unitTest:assert_equal(34, sizes[6]) -- SKIP
-		unitTest:assert_equal(48, sizes[7]) -- SKIP
-		unitTest:assert_equal(1243, sizes[8]) -- SKIP
+		unitTest:assertEquals(4, sizes[3]) -- SKIP
+		unitTest:assertEquals(34, sizes[4]) -- SKIP
+		unitTest:assertEquals(72, sizes[5]) -- SKIP
+		unitTest:assertEquals(34, sizes[6]) -- SKIP
+		unitTest:assertEquals(48, sizes[7]) -- SKIP
+		unitTest:assertEquals(1243, sizes[8]) -- SKIP
 
 		countTest = countTest + 1
 
@@ -667,11 +667,11 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(5, minSize) -- SKIP
-		unitTest:assert_equal(120, maxSize) -- SKIP
-		unitTest:assert_equal(70.8015, minWeight, 0.00001) -- SKIP
-		unitTest:assert_equal(9999.513, maxWeight, 0.00001) -- SKIP
-		unitTest:assert_equal(84604261.93974, sumWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(5, minSize) -- SKIP
+		unitTest:assertEquals(120, maxSize) -- SKIP
+		unitTest:assertEquals(70.8015, minWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(9999.513, maxWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(84604261.93974, sumWeight, 0.00001) -- SKIP
 
 		-- .GAL Regular CS
 		countTest = countTest + 1
@@ -706,21 +706,21 @@ return{
 				unitTest:assert_not_nil(c) -- SKIP
 				unitTest:assert_not_nil(neigh) -- SKIP
 
-				unitTest:assert_equal(1, weight) -- SKIP
+				unitTest:assertEquals(1, weight) -- SKIP
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(1236, sumWeight) -- SKIP
-		unitTest:assert_equal(5,    minSize) -- SKIP
-		unitTest:assert_equal(12,   maxSize) -- SKIP
+		unitTest:assertEquals(1236, sumWeight) -- SKIP
+		unitTest:assertEquals(5,    minSize) -- SKIP
+		unitTest:assertEquals(12,   maxSize) -- SKIP
 
-		unitTest:assert_equal(28, sizes[11]) -- SKIP
-		unitTest:assert_equal(8,  sizes[7]) -- SKIP
-		unitTest:assert_equal(28, sizes[8]) -- SKIP
-		unitTest:assert_equal(4,  sizes[10]) -- SKIP
-		unitTest:assert_equal(49, sizes[12]) -- SKIP
-		unitTest:assert_equal(4,  sizes[5]) -- SKIP
+		unitTest:assertEquals(28, sizes[11]) -- SKIP
+		unitTest:assertEquals(8,  sizes[7]) -- SKIP
+		unitTest:assertEquals(28, sizes[8]) -- SKIP
+		unitTest:assertEquals(4,  sizes[10]) -- SKIP
+		unitTest:assertEquals(49, sizes[12]) -- SKIP
+		unitTest:assertEquals(4,  sizes[5]) -- SKIP
 
 		-- .GAL Irregular CS
 		countTest = countTest + 1
@@ -750,14 +750,14 @@ return{
 				unitTest:assert_not_nil(c) -- SKIP
 				unitTest:assert_not_nil(neigh) -- SKIP
 
-				unitTest:assert_equal(1, weight) -- SKIP
+				unitTest:assertEquals(1, weight) -- SKIP
 				sumWeight = sumWeight + weight
 			end)
 		end)
 
-		unitTest:assert_equal(14688, sumWeight) -- SKIP
-		unitTest:assert_equal(5,     minSize) -- SKIP
-		unitTest:assert_equal(120,   maxSize) -- SKIP
+		unitTest:assertEquals(14688, sumWeight) -- SKIP
+		unitTest:assertEquals(5,     minSize) -- SKIP
+		unitTest:assertEquals(120,   maxSize) -- SKIP
 
 		-- .GWT Regular CS
 		countTest = countTest + 1
@@ -804,16 +804,16 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(1800, maxWeight) -- SKIP
-		unitTest:assert_equal(900, minWeight) -- SKIP
-		unitTest:assert_equal(1617916.8, sumWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(1800, maxWeight) -- SKIP
+		unitTest:assertEquals(900, minWeight) -- SKIP
+		unitTest:assertEquals(1617916.8, sumWeight, 0.00001) -- SKIP
 
-		unitTest:assert_equal(28, sizes[11]) -- SKIP
-		unitTest:assert_equal(8,  sizes[7]) -- SKIP
-		unitTest:assert_equal(28, sizes[8]) -- SKIP
-		unitTest:assert_equal(4,  sizes[10]) -- SKIP
-		unitTest:assert_equal(49, sizes[12]) -- SKIP
-		unitTest:assert_equal(4,  sizes[5]) -- SKIP
+		unitTest:assertEquals(28, sizes[11]) -- SKIP
+		unitTest:assertEquals(8,  sizes[7]) -- SKIP
+		unitTest:assertEquals(28, sizes[8]) -- SKIP
+		unitTest:assertEquals(4,  sizes[10]) -- SKIP
+		unitTest:assertEquals(49, sizes[12]) -- SKIP
+		unitTest:assertEquals(4,  sizes[5]) -- SKIP
 
 		-- .GWT Irregular CS
 		countTest = countTest + 1
@@ -856,11 +856,11 @@ return{
 			end)
 		end)
 
-		unitTest:assert_equal(9999.513, maxWeight) -- SKIP
-		unitTest:assert_equal(70.8015, minWeight) -- SKIP
-		unitTest:assert_equal(5, minSize) -- SKIP
-		unitTest:assert_equal(120, maxSize) -- SKIP
-		unitTest:assert_equal(84604261.93974, sumWeight, 0.00001) -- SKIP
+		unitTest:assertEquals(9999.513, maxWeight) -- SKIP
+		unitTest:assertEquals(70.8015, minWeight) -- SKIP
+		unitTest:assertEquals(5, minSize) -- SKIP
+		unitTest:assertEquals(120, maxSize) -- SKIP
+		unitTest:assertEquals(84604261.93974, sumWeight, 0.00001) -- SKIP
 
 		-- GAL from shapefile
 		local cs = CellularSpace{database = file("brazilstates.shp", "base")}
@@ -875,7 +875,7 @@ return{
 			count = count + #cell:getNeighborhood()
 		end)
 
-		unitTest:assert_equal(count, 7) -- SKIP
+		unitTest:assertEquals(count, 7) -- SKIP
 	end,
 	save = function(unitTest)
 		local config = getConfig()

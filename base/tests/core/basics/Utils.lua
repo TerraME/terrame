@@ -40,7 +40,7 @@ return{
 		}
 
 		t:execute(10)
-		unitTest:assert_equal(cont, 10)
+		unitTest:assertEquals(cont, 10)
 	end,
 	delay = function(unitTest)
 		local t1 = os.time()
@@ -61,26 +61,26 @@ return{
 
 		local count = 0
 		forEachAgent(soc, function(ag)
-			unitTest:assert_equal(ag.value, 2)
+			unitTest:assertEquals(ag.value, 2)
 			count = count + 1
 		end)
-		unitTest:assert_equal(count, 10)
+		unitTest:assertEquals(count, 10)
 
 		count = 0
 		forEachAgent(soc, function(ag)
 			count = count + 1
 			if count > 5 then return false end
 		end)
-		unitTest:assert_equal(count, 6)
+		unitTest:assertEquals(count, 6)
 
 		local g = Group{target = soc}
 
 		count = 0
 		forEachAgent(g, function(ag)
-			unitTest:assert_equal(ag.value, 2)
+			unitTest:assertEquals(ag.value, 2)
 			count = count + 1
 		end)
-		unitTest:assert_equal(count, 10)
+		unitTest:assertEquals(count, 10)
 
 		local cs = CellularSpace{xdim = 2}
 		local e = Environment{soc, cs}
@@ -90,11 +90,11 @@ return{
 		count = 0
 		forEachCell(cs, function(cell)
 			forEachAgent(cell, function(ag)
-				unitTest:assert_equal(ag.value, 2)
+				unitTest:assertEquals(ag.value, 2)
 				count = count + 1
 			end)
 		end)
-		unitTest:assert_equal(count, 10)
+		unitTest:assertEquals(count, 10)
 	end,
 	forEachCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -102,11 +102,11 @@ return{
 		forEachCell(cs, function(cell) unitTest:assert_type(cell, "Cell") end)
 
 		forEachCell(cs, function(cell) cell.value = 2 end)
-		forEachCell(cs, function(cell) unitTest:assert_equal(cell.value, 2) end)
+		forEachCell(cs, function(cell) unitTest:assertEquals(cell.value, 2) end)
 
 		local t = Trajectory{target = cs}
 		forEachCell(t, function(cell) cell.value = 4 end)
-		forEachCell(cs, function(cell) unitTest:assert_equal(cell.value, 4) end)
+		forEachCell(cs, function(cell) unitTest:assertEquals(cell.value, 4) end)
 
 		local a = Agent{}
 		local env = Environment{cs, a}
@@ -118,7 +118,7 @@ return{
 
 		local r
 
-		r = forEachCell(a, function(cell) unitTest:assert_equal(cell.value, 4) end)
+		r = forEachCell(a, function(cell) unitTest:assertEquals(cell.value, 4) end)
 
 		unitTest:assert(r)
 
@@ -129,7 +129,7 @@ return{
 		end)
 
 		unitTest:assert(not r)
-		unitTest:assert_equal(count, 11)
+		unitTest:assertEquals(count, 11)
 	end,
 	forEachCellPair = function(unitTest)
 		local cs1 = CellularSpace{xdim = 10}
@@ -142,7 +142,7 @@ return{
 		end)
 
 		unitTest:assert(r)
-		unitTest:assert_equal(count, 100)
+		unitTest:assertEquals(count, 100)
 
 		count = 0
 		r = forEachCellPair(cs1, cs2, function()
@@ -151,7 +151,7 @@ return{
 		end)
 
 		unitTest:assert(not r)
-		unitTest:assert_equal(count, 11)
+		unitTest:assertEquals(count, 11)
 	end,
 	forEachConnection = function(unitTest)
 		local a = Agent{value = 2}
@@ -165,13 +165,13 @@ return{
 
 		r = forEachConnection(s, function(ag1, ag2, w)
 			unitTest:assert_type(ag2, "Agent")
-			unitTest:assert_equal(ag1, s)
+			unitTest:assertEquals(ag1, s)
 			unitTest:assert_type(w, "number")
 			count = count + 1
 		end)
 
 		unitTest:assert(r)
-		unitTest:assert_equal(count, 3)
+		unitTest:assertEquals(count, 3)
 
 		count = 0
 		r = forEachConnection(s, function()
@@ -180,7 +180,7 @@ return{
 		end)
 
 		unitTest:assert(not r)
-		unitTest:assert_equal(count, 1)
+		unitTest:assertEquals(count, 1)
 	end,
 	forEachElement = function(unitTest)
 		local mvector = {a = "a", b = "b", c = "c", d = "d"}
@@ -189,10 +189,10 @@ return{
 		forEachElement(mvector, function(idx, value, mtype)
 			unitTest:assert_type(idx, "string")
 			unitTest:assert_type(value, "string")
-			unitTest:assert_equal(mtype, "string")
+			unitTest:assertEquals(mtype, "string")
 			count = count + 1
 		end)
-		unitTest:assert_equal(count, 4)
+		unitTest:assertEquals(count, 4)
 
 		mvector = {1, 2, 3, 4, 5}
 		count = 0
@@ -201,12 +201,12 @@ return{
 		r = forEachElement(mvector, function(idx, value, mtype)
 			unitTest:assert_type(idx, "number")
 			unitTest:assert_type(value, "number")
-			unitTest:assert_equal(mtype, "number")
+			unitTest:assertEquals(mtype, "number")
 			count = count + 1
 		end)
 
 		unitTest:assert(r)
-		unitTest:assert_equal(count, 5)
+		unitTest:assertEquals(count, 5)
 
 		count = 0
 		r = forEachElement(mvector, function()
@@ -215,7 +215,7 @@ return{
 		end)
 
 		unitTest:assert(not r)
-		unitTest:assert_equal(count, 3)
+		unitTest:assertEquals(count, 3)
 	end,
 	forEachFile = function(unitTest)
 		local count = 0
@@ -227,14 +227,14 @@ return{
 		end)
 
 		unitTest:assert(r)
-		unitTest:assert_equal(count, 22)
+		unitTest:assertEquals(count, 22)
 
 		local count2 = 0
 		forEachFile(dir(file("", "base"), true), function(file)
 			count2 = count2 + 1
 		end)
 
-		unitTest:assert_equal(count2, count + 2)
+		unitTest:assertEquals(count2, count + 2)
 
 		count = 0
 
@@ -244,7 +244,7 @@ return{
 		end)
 
 		unitTest:assert(not r)
-		unitTest:assert_equal(count, 2)
+		unitTest:assertEquals(count, 2)
 	end,
 	forEachNeighbor = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -256,12 +256,12 @@ return{
 
 		r = forEachNeighbor(c, function(cell1, cell2, w)
 			unitTest:assert_type(cell2, "Cell")
-			unitTest:assert_equal(cell1, c)
+			unitTest:assertEquals(cell1, c)
 			unitTest:assert_type(w, "number")
 			count = count + 1
 		end)
 		unitTest:assert(r)
-		unitTest:assert_equal(count, 3)
+		unitTest:assertEquals(count, 3)
 
 		count = 0
 		r = forEachNeighbor(c, function()
@@ -269,7 +269,7 @@ return{
 			if count > 1 then return false end
 		end)
 		unitTest:assert(not r)
-		unitTest:assert_equal(count, 2)
+		unitTest:assertEquals(count, 2)
 	end,
 	forEachNeighborhood = function(unitTest)
 		local c1 = Cell{}
@@ -294,7 +294,7 @@ return{
 			count = count + 1
 		end)
 		unitTest:assert(r)
-		unitTest:assert_equal(count, 2)
+		unitTest:assertEquals(count, 2)
 
 		local count = 0
 		r = forEachNeighborhood(c1, function()
@@ -302,7 +302,7 @@ return{
 			return false
 		end)
 		unitTest:assert(not r)
-		unitTest:assert_equal(count, 1)
+		unitTest:assertEquals(count, 1)
 	end,
 	forEachOrderedElement = function(unitTest)
 		local result = {1, 2, 3, "a", "b", "c"}
@@ -312,13 +312,13 @@ return{
 		local r
 		r = forEachOrderedElement(list, function(idx, value, mtype)
 			cont = cont + 1
-			unitTest:assert_equal(mtype, type(result[cont]))
+			unitTest:assertEquals(mtype, type(result[cont]))
 
-			unitTest:assert_equal(idx, result[cont])
-			unitTest:assert_equal(value, result[cont])
+			unitTest:assertEquals(idx, result[cont])
+			unitTest:assertEquals(value, result[cont])
 		end)
 		unitTest:assert(r)
-		unitTest:assert_equal(cont, 6)
+		unitTest:assertEquals(cont, 6)
 
 		local cont = 0
 		r = forEachOrderedElement(list, function()
@@ -326,26 +326,26 @@ return{
 			return false
 		end)
 		unitTest:assert(not r)
-		unitTest:assert_equal(cont, 1)
+		unitTest:assertEquals(cont, 1)
 	end,
 	getExtension = function(unitTest)
-		unitTest:assert_equal(getExtension("file.txt"), "txt")
+		unitTest:assertEquals(getExtension("file.txt"), "txt")
 	end,
 	getn = function(unitTest)
 		local mvector = {"a", "b", "c", "d"}
 
-		unitTest:assert_equal(getn(mvector), 4)
+		unitTest:assertEquals(getn(mvector), 4)
 
 		mvector = {a = "a", b = "b", c = "c", d = "d"}
-		unitTest:assert_equal(getn(mvector), 4)
+		unitTest:assertEquals(getn(mvector), 4)
 
 		mvector = {a = "a", b = "b", "c", "d"}
-		unitTest:assert_equal(getn(mvector), 4)
+		unitTest:assertEquals(getn(mvector), 4)
 
 		mvector = {}
-		unitTest:assert_equal(getn(mvector), 0)
+		unitTest:assertEquals(getn(mvector), 0)
 
-		unitTest:assert_equal(getn(Cell{}), 4)
+		unitTest:assertEquals(getn(Cell{}), 4)
 	end,
 	elapsedTime = function(unitTest)
 		unitTest:assert_type(elapsedTime(50), "string")
@@ -375,7 +375,7 @@ return{
 			step = 0.1
 		}
 
-		unitTest:assert_equal(16.48360, v, 0.0001)
+		unitTest:assertEquals(16.48360, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -385,7 +385,7 @@ return{
 			step = 0.01
 		}
 
-		unitTest:assert_equal(20.11522, v, 0.0001)
+		unitTest:assertEquals(20.11522, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -395,7 +395,7 @@ return{
 			step = 0.001
 		}
 
-		unitTest:assert_equal(20.23650, v, 0.0001)
+		unitTest:assertEquals(20.23650, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -405,7 +405,7 @@ return{
 			step = 0.0001
 		}
 
-		unitTest:assert_equal(20.24595, v, 0.0001)
+		unitTest:assertEquals(20.24595, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -416,7 +416,7 @@ return{
 			step = 0.1
 		}
 
-		unitTest:assert_equal(17.682025, v, 0.0001)
+		unitTest:assertEquals(17.682025, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -427,7 +427,7 @@ return{
 			step = 0.01
 		}
 
-		unitTest:assert_equal(20.25, v, 0.0001)
+		unitTest:assertEquals(20.25, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -438,7 +438,7 @@ return{
 			step = 0.001
 		}
 
-		unitTest:assert_equal(20.25, v, 0.0001)
+		unitTest:assertEquals(20.25, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -449,7 +449,7 @@ return{
 			step = 0.0001
 		}
 
-		unitTest:assert_equal(20.24730, v, 0.0001)
+		unitTest:assertEquals(20.24730, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -460,7 +460,7 @@ return{
 			step = 0.1
 		}
 
-		unitTest:assert_equal(17.70305, v, 0.0001)
+		unitTest:assertEquals(17.70305, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -471,7 +471,7 @@ return{
 			step = 0.01
 		}
 
-		unitTest:assert_equal(20.250225, v, 0.0001)
+		unitTest:assertEquals(20.250225, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -482,7 +482,7 @@ return{
 			step = 0.001
 		}
 
-		unitTest:assert_equal(20.25, v, 0.0001)
+		unitTest:assertEquals(20.25, v, 0.0001)
 
 		local v = integrate{
 			equation = f,
@@ -493,7 +493,7 @@ return{
 			step = 0.0001
 		}
 
-		unitTest:assert_equal(20.24730, v, 0.0001)
+		unitTest:assertEquals(20.24730, v, 0.0001)
 
 		local df = function(x, y) return y - x ^ 2 + 1 end
 		local v = integrate{
@@ -505,7 +505,7 @@ return{
 			step = 0.2
 		}
 
-		unitTest:assert_equal(5.23305, v, 0.0001)
+		unitTest:assertEquals(5.23305, v, 0.0001)
 
 		local eq1 = function(t, y)
 			return t - 0.1
@@ -521,7 +521,7 @@ return{
 			event = event
 		}
 
-		unitTest:assert_equal(5.23305, v, 0.0001)
+		unitTest:assertEquals(5.23305, v, 0.0001)
 
 		local v = integrate{
 			equation = {eq1, eq1},
@@ -577,8 +577,8 @@ return{
 			}
 		end
 
-		unitTest:assert_equal(ag.preys, 0.056344145404554)
-		unitTest:assert_equal(ag.predators, 77.830055916773)
+		unitTest:assertEquals(ag.preys, 0.056344145404554)
+		unitTest:assertEquals(ag.predators, 77.830055916773)
 
 		ag = Agent{preys = 100, predators = 10}
 		for t = 0, 10, timeStep do
@@ -592,8 +592,8 @@ return{
 			}
 		end
 
-		unitTest:assert_equal(ag.preys, 0.064490405763652)
-		unitTest:assert_equal(ag.predators, 77.393465378403)
+		unitTest:assertEquals(ag.preys, 0.064490405763652)
+		unitTest:assertEquals(ag.predators, 77.393465378403)
 
 		ag = Agent{preys = 100, predators = 10}
 		for t = 0, 10, timeStep do
@@ -607,23 +607,23 @@ return{
 			}
 		end
 
-		unitTest:assert_equal(ag.preys, 0.062817338900899)
-		unitTest:assert_equal(ag.predators, 77.645421917421)
+		unitTest:assertEquals(ag.preys, 0.062817338900899)
+		unitTest:assertEquals(ag.predators, 77.645421917421)
 	end,
 	levenshtein = function(unitTest)
-		unitTest:assert_equal(levenshtein("abv", "abc"), 1)
-		unitTest:assert_equal(levenshtein("abvaacc", "abcaacac"), 2)
-		unitTest:assert_equal(levenshtein("abvxwtaacc", "abcaacac"), 5)
+		unitTest:assertEquals(levenshtein("abv", "abc"), 1)
+		unitTest:assertEquals(levenshtein("abvaacc", "abcaacac"), 2)
+		unitTest:assertEquals(levenshtein("abvxwtaacc", "abcaacac"), 5)
 	end,
 	round = function(unitTest)
-		unitTest:assert_equal(round(5.22), 5)
-		unitTest:assert_equal(round(5.2235, 3), 5.224)
+		unitTest:assertEquals(round(5.22), 5)
+		unitTest:assertEquals(round(5.2235, 3), 5.224)
 	end,
 	sessionInfo = function(unitTest)
 		local s = sessionInfo()
 
-		unitTest:assert_equal(s.mode, "debug")
-		unitTest:assert_equal(s.version, packageInfo().version)
+		unitTest:assertEquals(s.mode, "debug")
+		unitTest:assertEquals(s.version, packageInfo().version)
 	end,
 	["string.endswith"] = function(unitTest)
 		unitTest:assert(string.endswith("abcdef", "def"))
@@ -632,12 +632,12 @@ return{
 	type = function(unitTest)
 		local c = Cell{}
 
-		unitTest:assert_equal(type(c), "Cell")
+		unitTest:assertEquals(type(c), "Cell")
 	end,
 	vardump = function(unitTest)
 		local x = {a = 2, b = 3, w = {2, 3, 4}}
 
-		unitTest:assert_equal(vardump(x), [[{
+		unitTest:assertEquals(vardump(x), [[{
     ['a'] = '2', 
     ['b'] = '3', 
     ['w'] =     {

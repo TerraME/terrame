@@ -58,9 +58,9 @@ UnitTest_ = {
 	-- @arg v2 Any value.
 	-- @arg tol A number indicating a maximum error tolerance. This argument is optional and can
 	-- be used only with numeric values. The default tolerance is zero.
-	-- @usage unitTest:assert_equal(3, 3)
-	-- unitTest:assert_equal(2, 2.1, 0.2)
-	assert_equal = function (self, v1, v2, tol)
+	-- @usage unitTest:assertEquals(3, 3)
+	-- unitTest:assertEquals(2, 2.1, 0.2)
+	assertEquals = function (self, v1, v2, tol)
 		self.test = self.test + 1
 
 		if tol ~= nil and type(v1) ~= "number" then

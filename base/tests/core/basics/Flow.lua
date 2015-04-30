@@ -29,7 +29,7 @@ return{
 		local f1 = Flow { function(ev, agent, cell) 
 			agent.value = agent.value + 2 
 		end}
-		unitTest:assert_equal(string.sub(tostring(f1),1,8), "TeFlow (")
+		unitTest:assertEquals(string.sub(tostring(f1),1,8), "TeFlow (")
 	end
 }
 

@@ -77,7 +77,7 @@ return{
 			st2 = state2,
 			st1 = state1
 		}
-		unitTest:assert_equal(at1.id, "1")
+		unitTest:assertEquals(at1.id, "1")
 
 		at1 = Automaton{
 			it = Trajectory{
@@ -99,7 +99,7 @@ return{
 				count = count + 1
 			end		
 		end
-		unitTest:assert_equal(0, count)
+		unitTest:assertEquals(0, count)
 	end,
 	__tostring = function(unitTest)
 		local at1 = Automaton{
@@ -108,7 +108,7 @@ return{
 				id = "second"
 			}
 		}
-		unitTest:assert_equal(tostring(at1), [[1      userdata
+		unitTest:assertEquals(tostring(at1), [[1      userdata
 cObj_  userdata
 id     string [MyAutomaton]
 ]])
@@ -224,24 +224,24 @@ id     string [MyAutomaton]
 		at1:setTrajectoryStatus(true)
 		at1.it:sort(function(a,b) return a.x > b.x; end)
 		at1:execute(ev)
-		unitTest:assert_equal(4, at1.cont)
-		unitTest:assert_equal(4, cont)
+		unitTest:assertEquals(4, at1.cont)
+		unitTest:assertEquals(4, cont)
 
 		local ev = Event{time = 4, action = function() end}[1]
 		at1.it:sort(greaterByCoord(">"))
 		at1:execute(ev)
-		unitTest:assert_equal(8, at1.cont)
-		unitTest:assert_equal(8, cont)
+		unitTest:assertEquals(8, at1.cont)
+		unitTest:assertEquals(8, cont)
 
 		at1.it:filter(function(cell) return cell.x == cell.y end)
 		at1:execute(ev)
-		unitTest:assert_equal(10, at1.cont)
-		unitTest:assert_equal(10, at1.cont)
+		unitTest:assertEquals(10, at1.cont)
+		unitTest:assertEquals(10, at1.cont)
 
 		at1.it:filter(function(cell) return true end)
 		at1:execute(ev)
-		unitTest:assert_equal(3, at1.cont)
-		unitTest:assert_equal(14, cont)
+		unitTest:assertEquals(3, at1.cont)
+		unitTest:assertEquals(14, cont)
 	end,
 	getId = function(unitTest)
 		unitTest:assert(true)
@@ -293,20 +293,20 @@ id     string [MyAutomaton]
 
 		at1:setTrajectoryStatus(true)
 		at1:execute(ev)
-		unitTest:assert_equal(0, at1:getLatency())
+		unitTest:assertEquals(0, at1:getLatency())
 
 		local ev = Event{time = 4, action = function() end}[1]
 		at1.it:sort(greaterByCoord(">"))
 		at1:execute(ev)
-		unitTest:assert_equal(0, at1:getLatency())
+		unitTest:assertEquals(0, at1:getLatency())
 
 		at1.it:filter(function(cell) return cell.x == cell.y end)
 		at1:execute(ev)
-		unitTest:assert_equal(0, at1:getLatency())
+		unitTest:assertEquals(0, at1:getLatency())
 
 		at1.it:filter(function(cell) return true end)
 		at1:execute(ev)
-		unitTest:assert_equal(0, at1:getLatency())
+		unitTest:assertEquals(0, at1:getLatency())
 	end,
 	getState = function(unitTest)
 		unitTest:assert(true)
@@ -359,7 +359,7 @@ id     string [MyAutomaton]
 		at1:setTrajectoryStatus(true)
 		at1:execute(ev)
 
-		unitTest:assert_equal(at1:getStateName(cs:sample()), "first")
+		unitTest:assertEquals(at1:getStateName(cs:sample()), "first")
 	end,
 	getStates = function(unitTest)
 		local at1 = Automaton{
@@ -379,7 +379,7 @@ id     string [MyAutomaton]
 		}
 
 		local states = at1:getStates()
-		unitTest:assert_equal(getn(states), 0) -- TODO: should be 2, but type(state) is not "State"
+		unitTest:assertEquals(getn(states), 0) -- TODO: should be 2, but type(state) is not "State"
 	end,
 	notify = function(unitTest)
 		local at1 = Automaton{
@@ -452,17 +452,17 @@ id     string [MyAutomaton]
 
 		local e = Event{action = function() end}[1]
 		at1:execute(e)
-		unitTest:assert_equal(count, 0)
+		unitTest:assertEquals(count, 0)
 
 		at1:setTrajectoryStatus(true)
 		count = 0
 		at1:execute(e)
-		unitTest:assert_equal(count, 49)
+		unitTest:assertEquals(count, 49)
 
 		at1:setTrajectoryStatus()
 		count = 0
 		at1:execute(e)
-		unitTest:assert_equal(count, 0)
+		unitTest:assertEquals(count, 0)
 	end
 }
 

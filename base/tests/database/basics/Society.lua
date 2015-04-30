@@ -37,7 +37,7 @@ return{
 			database = file("agents.csv", "base")
 		}
 		
-		unitTest:assert_equal(4, #soc)
+		unitTest:assertEquals(4, #soc)
 
 		local sum_age = 0
 		local sum_wealth = 0
@@ -53,11 +53,11 @@ return{
 				sum_immunes = sum_immunes + 1
 			end
 		end)
-		unitTest:assert_equal(105, sum_age)
-		unitTest:assert_equal(1000, sum_wealth)
-		unitTest:assert_equal(11, sum_vision)
-		unitTest:assert_equal(6, sum_metabolism)
-		unitTest:assert_equal(2, sum_immunes)
+		unitTest:assertEquals(105, sum_age)
+		unitTest:assertEquals(1000, sum_wealth)
+		unitTest:assertEquals(11, sum_vision)
+		unitTest:assertEquals(6, sum_metabolism)
+		unitTest:assertEquals(2, sum_immunes)
 
 		local nonFooAgent = Agent{}
 
@@ -66,7 +66,7 @@ return{
 			database = file("brazilstates.shp", "base")
 		}
 
-		unitTest:assert_equal(#soc, 27)
+		unitTest:assertEquals(#soc, 27)
 	end
 }
 

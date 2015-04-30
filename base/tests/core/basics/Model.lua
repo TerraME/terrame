@@ -76,12 +76,12 @@ return{
 		local t = Tube{filter = function() end}
 		unitTest:assert_type(t, "Tube")
 
-		unitTest:assert_equal(t.simulationSteps, 10)
-		unitTest:assert_equal(t.observingStep, 1)
-		unitTest:assert_equal(t.initialWater, 200)
-		unitTest:assert_equal(t.subwater, 4)
-		unitTest:assert_equal(t.block.xmin, 0)
-		unitTest:assert_equal(t.block.level, 1)
+		unitTest:assertEquals(t.simulationSteps, 10)
+		unitTest:assertEquals(t.observingStep, 1)
+		unitTest:assertEquals(t.initialWater, 200)
+		unitTest:assertEquals(t.subwater, 4)
+		unitTest:assertEquals(t.block.xmin, 0)
+		unitTest:assertEquals(t.block.level, 1)
 		unitTest:assert_type(t.filter, "function")
 
 		t = Tube{
@@ -93,13 +93,13 @@ return{
 			filter = function() end
 		}
 
-		unitTest:assert_equal(t.simulationSteps, 20)
-		unitTest:assert_equal(t.block.xmin, 0)
-		unitTest:assert_equal(t.block.xmax, 10)
-		unitTest:assert_equal(t.block.level, 1)
-		unitTest:assert_equal(t.block.sleep, 2)
-		unitTest:assert_equal(t.observingStep, 0.7)
-		unitTest:assert_equal(t.finalTime, 5)
+		unitTest:assertEquals(t.simulationSteps, 20)
+		unitTest:assertEquals(t.block.xmin, 0)
+		unitTest:assertEquals(t.block.xmax, 10)
+		unitTest:assertEquals(t.block.level, 1)
+		unitTest:assertEquals(t.block.sleep, 2)
+		unitTest:assertEquals(t.observingStep, 0.7)
+		unitTest:assertEquals(t.finalTime, 5)
 		unitTest:assert(t.checkZero)
 
 		local Tube3 = Model{
@@ -146,8 +146,8 @@ return{
 			}
 		}
 
-		unitTest:assert_equal(m.file0, "def")
-		unitTest:assert_equal(m.files.file3, "abc")
+		unitTest:assertEquals(m.file0, "def")
+		unitTest:assertEquals(m.files.file3, "abc")
 	end,
 	check = function(unitTest)
 		unitTest:assert(true)
@@ -155,16 +155,16 @@ return{
 	execute = function(unitTest)
 		local t = Tube{block = {level = 2}, filter = function() end}
 
-		unitTest:assert_equal(t.block.xmin, 0)
-		unitTest:assert_equal(t.block.level, 2)
+		unitTest:assertEquals(t.block.xmin, 0)
+		unitTest:assertEquals(t.block.level, 2)
 
-		unitTest:assert_equal(t.water, 200)
+		unitTest:assertEquals(t.water, 200)
 		t:execute()
-		unitTest:assert_equal(t.water, 210)
+		unitTest:assertEquals(t.water, 210)
 
 		t = Tube2{}
 		t:execute()
-		unitTest:assert_equal(t.water, 10)
+		unitTest:assertEquals(t.water, 10)
 	end,
 	init = function(unitTest)
 		unitTest:assert(true)

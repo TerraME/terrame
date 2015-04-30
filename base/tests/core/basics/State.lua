@@ -31,7 +31,7 @@ return{
 		local st1 = State{
 			id = "first"
 		}
-		unitTest:assert_equal(string.sub(tostring(st1),1,9), "TeState (")
+		unitTest:assertEquals(string.sub(tostring(st1),1,9), "TeState (")
 	end
 }
 

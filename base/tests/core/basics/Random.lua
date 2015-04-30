@@ -27,18 +27,18 @@
 return {
 	Random = function(self)
 		local r = Random()
-		self:assert_equal(type(r), "Random")
-		self:assert_equal(type(r:integer()), "number")
-		self:assert_equal(type(r:number()), "number")
+		self:assertEquals(type(r), "Random")
+		self:assertEquals(type(r:integer()), "number")
+		self:assertEquals(type(r:number()), "number")
 
 		Random_.cObj_ = nil
 		r = Random()
-		self:assert_equal(type(r:integer()), "number")
-		self:assert_equal(type(r:number()), "number")
+		self:assertEquals(type(r:integer()), "number")
+		self:assertEquals(type(r:number()), "number")
 	end,
 	__tostring = function(unitTest)
 		local randomObj = Random{seed = 12345}
-		unitTest:assert_equal(tostring(randomObj), "")
+		unitTest:assertEquals(tostring(randomObj), "")
 	end,
 	integer = function(self)
 		local randomObj = Random{}
@@ -77,7 +77,7 @@ return {
 		randomObj:reSeed(12345)
 		for i = 1, 10 do
 			local v = randomObj:integer(10, 10)
-			self:assert_equal(v, 10)
+			self:assertEquals(v, 10)
 		end
 
 		local randomObj = Random{}
@@ -92,7 +92,7 @@ return {
 		randomObj:reSeed(12345)
 		for i = 1, 10 do
 			local v = randomObj:integer(-10, -10)
-			self:assert_equal(v, -10)
+			self:assertEquals(v, -10)
 		end
 	end,
 	number = function(self)
@@ -132,7 +132,7 @@ return {
 		randomObj:reSeed(12345)
 		for i = 1, 10 do
 			local v = randomObj:number(10.1, 10.1)
-			self:assert_equal(v, 10.1)
+			self:assertEquals(v, 10.1)
 		end
 
 		local randomObj = Random{}
@@ -147,7 +147,7 @@ return {
 		randomObj:reSeed(12345)
 		for i = 1, 10 do
 			local v = randomObj:number(-10.1, -10.1)
-			self:assert_equal(v, -10.1)
+			self:assertEquals(v, -10.1)
 		end
 
 		randomObj = Random{}
@@ -161,41 +161,41 @@ return {
 	reSeed = function(self)
 		local randomObj = Random{}
 		randomObj:reSeed(98765)
-		self:assert_equal(randomObj:integer(3), 1)
-		self:assert_equal(randomObj:integer(3), 3)
-		self:assert_equal(randomObj:integer(3), 3)
+		self:assertEquals(randomObj:integer(3), 1)
+		self:assertEquals(randomObj:integer(3), 3)
+		self:assertEquals(randomObj:integer(3), 3)
 
-		self:assert_equal(randomObj:integer(33, 45), 45)
-		self:assert_equal(randomObj:integer(33, 45), 34)
-		self:assert_equal(randomObj:integer(33, 45), 44)
+		self:assertEquals(randomObj:integer(33, 45), 45)
+		self:assertEquals(randomObj:integer(33, 45), 34)
+		self:assertEquals(randomObj:integer(33, 45), 44)
 
 		randomObj:reSeed(56789)
 
-		self:assert_equal(randomObj:integer(3), 3)
-		self:assert_equal(randomObj:integer(3), 1)
-		self:assert_equal(randomObj:integer(3), 1)
+		self:assertEquals(randomObj:integer(3), 3)
+		self:assertEquals(randomObj:integer(3), 1)
+		self:assertEquals(randomObj:integer(3), 1)
 
-		self:assert_equal(randomObj:integer(33, 45), 38)
-		self:assert_equal(randomObj:integer(33, 45), 36)
-		self:assert_equal(randomObj:integer(33, 45), 40)
+		self:assertEquals(randomObj:integer(33, 45), 38)
+		self:assertEquals(randomObj:integer(33, 45), 36)
+		self:assertEquals(randomObj:integer(33, 45), 40)
 
 		randomObj = Random{seed = 10}
-		self:assert_equal(10, randomObj.seed)
+		self:assertEquals(10, randomObj.seed)
 		randomObj:reSeed(12345)
-		self:assert_equal(randomObj.seed, 12345)
+		self:assertEquals(randomObj.seed, 12345)
 	end,
 	sample = function(unitTest)
 		local r = Random{seed = 12345}
 
 		local vector = {1, 4, 5, 6}
 
-		unitTest:assert_equal(r:sample(vector), 4)
-		unitTest:assert_equal(r:sample(vector), 6)
+		unitTest:assertEquals(r:sample(vector), 4)
+		unitTest:assertEquals(r:sample(vector), 6)
 
 		vector = {"a", "b", "c"}
-		unitTest:assert_equal(r:sample(vector), "a")
-		unitTest:assert_equal(r:sample(vector), "b")
-		unitTest:assert_equal(r:sample(vector), "a")
+		unitTest:assertEquals(r:sample(vector), "a")
+		unitTest:assertEquals(r:sample(vector), "b")
+		unitTest:assertEquals(r:sample(vector), "a")
 	end
 }
 

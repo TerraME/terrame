@@ -63,17 +63,17 @@ return {
 		}
 
 		unitTest:assert_type(nonFooSociety, "Society")
-		unitTest:assert_equal(50, #nonFooSociety)
-		unitTest:assert_equal(nonFooSociety:gender().male, 26)
-		unitTest:assert_equal(nonFooSociety:sample().money, 100)
-		unitTest:assert_equal(nonFooSociety:money(), 100 * #nonFooSociety)
+		unitTest:assertEquals(50, #nonFooSociety)
+		unitTest:assertEquals(nonFooSociety:gender().male, 26)
+		unitTest:assertEquals(nonFooSociety:sample().money, 100)
+		unitTest:assertEquals(nonFooSociety:money(), 100 * #nonFooSociety)
 
 		local sum = 0
 		forEachAgent(nonFooSociety, function(ag)
 			sum = sum + ag.age
 		end)
 
-		unitTest:assert_equal(nonFooSociety:age(), sum)
+		unitTest:assertEquals(nonFooSociety:age(), sum)
 
 		local cs = CellularSpace{xdim = 20}
 
@@ -89,7 +89,7 @@ return {
 
 		t:execute(50)
 
-		unitTest:assert_equal(4, findCounter)
+		unitTest:assertEquals(4, findCounter)
 
 		local count1 = 0
 		local count2 = 0
@@ -97,8 +97,8 @@ return {
 			count1 = count1 + #cell.placement
 			if not cell:isEmpty() then count2 = count2 + 1 end
 		end)
-		unitTest:assert_equal(51, count1)
-		unitTest:assert_equal(47, count2)
+		unitTest:assertEquals(51, count1)
+		unitTest:assertEquals(47, count2)
 
 		local agent1 = Agent{}
 
@@ -106,7 +106,7 @@ return {
 			instance = agent1,
 			quantity = 10
 		}
-		unitTest:assert_equal(10, #soc1)
+		unitTest:assertEquals(10, #soc1)
 
 		local counter = 1
 		forEachAgent(soc1, function(a)
@@ -120,8 +120,8 @@ return {
 		end)
 
 		local groups = soc1:split("gender")
-		unitTest:assert_equal(5, #groups.male)
-		unitTest:assert_equal(5, #groups.female)
+		unitTest:assertEquals(5, #groups.male)
+		unitTest:assertEquals(5, #groups.female)
 
 		local ag = soc1:sample()
 		unitTest:assert_type(ag, "Agent")
@@ -129,7 +129,7 @@ return {
 		ag:execute(ev)
 
 		ag:die()
-		unitTest:assert_equal(9, #soc1)
+		unitTest:assertEquals(9, #soc1)
 
 		local ag = Agent{
 			age = 0,
@@ -142,9 +142,9 @@ return {
 			quantity = 10
 		}
 
-		unitTest:assert_equal(soc:age(), 0)
-		unitTest:assert_equal(soc:human(), 10)
-		unitTest:assert_equal(soc:gender().male, 10)
+		unitTest:assertEquals(soc:age(), 0)
+		unitTest:assertEquals(soc:human(), 10)
+		unitTest:assertEquals(soc:gender().male, 10)
 	end,
 	__len = function(unitTest)
 		local sc1 = Society{
@@ -152,7 +152,7 @@ return {
 			quantity = 10
 		}
 
-		unitTest:assert_equal(10, #sc1)
+		unitTest:assertEquals(10, #sc1)
 	end,
 	__tostring = function(unitTest)
 		local ag1 = Agent{
@@ -167,7 +167,7 @@ return {
 			instance = ag1,
 			quantity = 2
 		}
-		unitTest:assert_equal(tostring(soc1), [[age            function
+		unitTest:assertEquals(tostring(soc1), [[age            function
 agents         table of size 2
 autoincrement  number [3]
 cObj_          userdata
@@ -182,7 +182,7 @@ quantity       number [0]
 ]])
 
 		local aa = soc1.agents[2]
-		unitTest:assert_equal(tostring(aa), [[age             number [8]
+		unitTest:assertEquals(tostring(aa), [[age             number [8]
 cObj_           userdata
 id              string [2]
 parent          Society
@@ -198,11 +198,11 @@ state_          userdata
 			quantity = 20
 		}
 
-		unitTest:assert_equal(20, #sc1)
+		unitTest:assertEquals(20, #sc1)
 		local agent = sc1:add()
-		unitTest:assert_equal(21, #sc1)
+		unitTest:assertEquals(21, #sc1)
 		unitTest:assert_type(agent, "Agent")
-		unitTest:assert_equal(agent.id, "21")
+		unitTest:assertEquals(agent.id, "21")
 
 		local cs = CellularSpace{xdim = 10}
 		local e = Environment{cs, sc1}
@@ -211,7 +211,7 @@ state_          userdata
 		local ag2 = Agent{}
 
 		local agent = sc1:add(ag2)
-		unitTest:assert_equal(22, #sc1)
+		unitTest:assertEquals(22, #sc1)
 	end,
 	createSocialNetwork = function(unitTest)
 		Random{seed = 12345}
@@ -249,9 +249,9 @@ state_          userdata
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assert_equal(5046,  count_prob)
-		unitTest:assert_equal(100,   count_quant)
-		unitTest:assert_equal(10000, count_all)
+		unitTest:assertEquals(5046,  count_prob)
+		unitTest:assertEquals(100,   count_quant)
+		unitTest:assertEquals(10000, count_all)
 
 		local cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
@@ -269,8 +269,8 @@ state_          userdata
 			count_n  = count_n + #ag:getSocialNetwork("n")
 		end)
 
-		unitTest:assert_equal(370, count_c)
-		unitTest:assert_equal(2356, count_n)
+		unitTest:assertEquals(370, count_c)
+		unitTest:assertEquals(2356, count_n)
 
 		local ag1 = Agent{
 			name = "nonfoo",
@@ -297,7 +297,7 @@ state_          userdata
 			strategy = "void",
 			name = "void"
 		}
-		unitTest:assert_equal(0, #sc:sample():getSocialNetwork("void"))
+		unitTest:assertEquals(0, #sc:sample():getSocialNetwork("void"))
 
 		-- on the fly social networks
 		local predator = Agent{
@@ -329,9 +329,9 @@ state_          userdata
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assert_equal(4943,  count_prob)
-		unitTest:assert_equal(100,   count_quant)
-		unitTest:assert_equal(10000, count_all)
+		unitTest:assertEquals(4943,  count_prob)
+		unitTest:assertEquals(100,   count_quant)
+		unitTest:assertEquals(10000, count_all)
 
 		local count_prob = 0
 		local count_quant = 0
@@ -343,9 +343,9 @@ state_          userdata
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assert_equal(5019,  count_prob)
-		unitTest:assert_equal(100,   count_quant)
-		unitTest:assert_equal(10000, count_all)
+		unitTest:assertEquals(5019,  count_prob)
+		unitTest:assertEquals(100,   count_quant)
+		unitTest:assertEquals(10000, count_all)
 
 		local cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
@@ -363,8 +363,8 @@ state_          userdata
 			count_n  = count_n + #ag:getSocialNetwork("n")
 		end)
 
-		unitTest:assert_equal(384, count_c)
-		unitTest:assert_equal(2168, count_n)
+		unitTest:assertEquals(384, count_c)
+		unitTest:assertEquals(2168, count_n)
 
 		predators:sample():die()
 
@@ -376,8 +376,8 @@ state_          userdata
 		end)
 
 
-		unitTest:assert_equal(380, count_c)
-		unitTest:assert_equal(2094, count_n)
+		unitTest:assertEquals(380, count_c)
+		unitTest:assertEquals(2094, count_n)
 	end,
 	clear = function(unitTest)
 		local agent1 = Agent{}
@@ -388,7 +388,7 @@ state_          userdata
 		}
 
 		soc1:clear()
-		unitTest:assert_equal(0, #soc1)
+		unitTest:assertEquals(0, #soc1)
 	end,
 	get = function(unitTest)
 		local nonFooAgent = Agent{}
@@ -403,14 +403,14 @@ state_          userdata
 		unitTest:assert_nil(soc.idindex)
 		
 		local ag = soc:get(1)
-		unitTest:assert_equal(soc:get(ag.id), ag)
-		unitTest:assert_equal(getn(soc.idindex), 10)
+		unitTest:assertEquals(soc:get(ag.id), ag)
+		unitTest:assertEquals(getn(soc.idindex), 10)
 
 		ag = soc:add()
 
-		unitTest:assert_equal(getn(soc.idindex), 10)
-		unitTest:assert_equal(soc:get(ag.id), ag)
-		unitTest:assert_equal(getn(soc.idindex), 11)
+		unitTest:assertEquals(getn(soc.idindex), 10)
+		unitTest:assertEquals(soc:get(ag.id), ag)
+		unitTest:assertEquals(getn(soc.idindex), 11)
 	end,
 	remove = function(unitTest)
 		local agent1 = Agent{}
@@ -421,7 +421,7 @@ state_          userdata
 		}
 
 		soc1:remove(soc1:sample())
-		unitTest:assert_equal(9, #soc1)
+		unitTest:assertEquals(9, #soc1)
 
 		local ag1 = Agent{
 			name = "nonfoo",
@@ -439,7 +439,7 @@ state_          userdata
 			return ag.age > 5
 		end)
 
-		unitTest:assert_equal(9, #soc1)
+		unitTest:assertEquals(9, #soc1)
 	end,
 	sample = function(unitTest)
 		local agent1 = Agent{}
@@ -485,26 +485,26 @@ state_          userdata
 		mary.name = "mary"
 		local myself = ags[3]
 
-		unitTest:assert_equal(3, #soc)
+		unitTest:assertEquals(3, #soc)
 
 		local friends = SocialNetwork()
 		friends:add(john)
 		friends:add(mary)
 
 		myself:addSocialNetwork(friends) -- adding two connections to myself
-		unitTest:assert_equal(2, #myself:getSocialNetwork())
+		unitTest:assertEquals(2, #myself:getSocialNetwork())
 
 		local sum = 0
 		forEachConnection(myself, function(self, friend)
 			sum = sum + friend.age
 		end)
 
-		unitTest:assert_equal(12, sum)
+		unitTest:assertEquals(12, sum)
 
 		forEachConnection(myself, function(self, friend)
 			myself:message{receiver = friend}
 		end)
-		unitTest:assert_equal(2, received)
+		unitTest:assertEquals(2, received)
 
 		forEachConnection(myself, function(self, friend)
 			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
@@ -526,23 +526,23 @@ state_          userdata
 		--]]
 
 		soc:synchronize()
-		unitTest:assert_equal(5, received)
+		unitTest:assertEquals(5, received)
 
 		local t = Timer{
 			Event{period = 4, action = soc}
 		}
 
 		t:execute(8)
-		unitTest:assert_equal(14, received)
-		unitTest:assert_equal(0, sugar)
+		unitTest:assertEquals(14, received)
+		unitTest:assertEquals(0, sugar)
 
 		soc:synchronize(1.1)
 
-		unitTest:assert_equal(16, received)
+		unitTest:assertEquals(16, received)
 
 		soc:synchronize(20)
-		unitTest:assert_equal(16, received)
-		unitTest:assert_equal(2, sugar)
+		unitTest:assertEquals(16, received)
+		unitTest:assertEquals(2, sugar)
 	end,
 	split = function(unitTest)
 		local randomObj = Random{}
@@ -569,8 +569,8 @@ state_          userdata
 
 		local g = soc:split("name")
 
-		unitTest:assert_equal(4,#g.foo)
-		unitTest:assert_equal(10,#g.foo + #g.nonfoo)
+		unitTest:assertEquals(4,#g.foo)
+		unitTest:assertEquals(10,#g.foo + #g.nonfoo)
 
 		local g3 = soc:split(function(ag)
 			if ag.age < 3 then return 1
@@ -579,8 +579,8 @@ state_          userdata
 			end
 		end)
 
-		unitTest:assert_equal(4, #g3[2])
-		unitTest:assert_equal(10, #g3[1] + #g3[2] + #g3[3])
+		unitTest:assertEquals(4, #g3[2])
+		unitTest:assertEquals(10, #g3[1] + #g3[2] + #g3[3])
 	end
 }
 

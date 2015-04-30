@@ -28,7 +28,7 @@ return{
 	Mandatory = function(unitTest)
 		local c = Mandatory("number")
 		unitTest:assert_type(c, "Mandatory")
-		unitTest:assert_equal(c.value, "number")
+		unitTest:assertEquals(c.value, "number")
 	end
 }
 

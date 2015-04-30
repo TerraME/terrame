@@ -32,17 +32,17 @@ return{
 	end,
 	CSVparseLine = function(unitTest)
 		local line = CSVparseLine("2,5,aa", ",")
-		unitTest:assert_equal(line[1], "2")
-		unitTest:assert_equal(line[2], "5")
-		unitTest:assert_equal(line[3], "aa")
+		unitTest:assertEquals(line[1], "2")
+		unitTest:assertEquals(line[2], "5")
+		unitTest:assertEquals(line[3], "aa")
 	end,
 	CSVread = function(unitTest)
 		local mfile = file("agents.csv", "base")
 
 		local csv = CSVread(mfile)
 
-		unitTest:assert_equal(4, #csv)
-		unitTest:assert_equal(20, csv[1].age)
+		unitTest:assertEquals(4, #csv)
+		unitTest:assertEquals(20, csv[1].age)
 	end,
 	CSVwrite = function(unitTest)
 		local example = {
@@ -63,11 +63,11 @@ return{
 		CSVwrite(example, filename)
 		local data = CSVread(filename)
 		unitTest:assert_not_nil(data)
-		unitTest:assert_equal(#example, #data)
+		unitTest:assertEquals(#example, #data)
 
 		for i = 1, #example do
 			for k in pairs(example[i]) do
-				unitTest:assert_equal(example[i][k], data[i][k])
+				unitTest:assertEquals(example[i][k], data[i][k])
 			end
 		end
 	end

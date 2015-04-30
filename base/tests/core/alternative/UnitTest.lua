@@ -53,41 +53,41 @@ return{
 
 		unitTest:assert_error(error_func, "[The error above occurs more 4 times.]")
 	end,
-	assert_equal = function(unitTest)
+	assertEquals = function(unitTest)
 		local u = UnitTest{unittest = true}
 
 		local error_func = function()
-			u:assert_equal(2, 2, "a")
+			u:assertEquals(2, 2, "a")
 		end
 
 		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number", "a"))
 
 		local error_func = function()
-			u:assert_equal("abc", "abc", 2)
+			u:assertEquals("abc", "abc", 2)
 		end
 
 		unitTest:assert_error(error_func, "#3 should be used only when comparing numbers (#1 is string).")
 
 		local error_func = function()
-			u:assert_equal(2, 3)
+			u:assertEquals(2, 3)
 		end
 
 		unitTest:assert_error(error_func, "Values should be equal, but got '2' and '3'.")
 
 		local error_func = function()
-			u:assert_equal("2", "3")
+			u:assertEquals("2", "3")
 		end
 
 		unitTest:assert_error(error_func, "Values should be equal, but got \n'2' and \n'3'.")
 
 		local error_func = function()
-			u:assert_equal("2", 3)
+			u:assertEquals("2", 3)
 		end
 
 		unitTest:assert_error(error_func, "Values should be equal, but they have different types (string and number).")
 	
 		local error_func = function()
-			u:assert_equal(true, false)
+			u:assertEquals(true, false)
 		end
 
 		unitTest:assert_error(error_func, "Values have the same type (boolean) but different values.")

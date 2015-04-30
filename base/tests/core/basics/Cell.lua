@@ -34,19 +34,19 @@ return {
 
 		unitTest:assert_type(cell, "Cell")
 		unitTest:assert_type(cell.sum, "function")
-		unitTest:assert_equal(cell.soilWater, 0)
-		unitTest:assert_equal(cell.cover, "forest")
-		unitTest:assert_equal(#cell, 0)
+		unitTest:assertEquals(cell.soilWater, 0)
+		unitTest:assertEquals(cell.cover, "forest")
+		unitTest:assertEquals(#cell, 0)
 	end,
 	__len = function(unitTest)
 		local c1 = Cell{}
 
-		unitTest:assert_equal(0, #c1)
+		unitTest:assertEquals(0, #c1)
 	end,
 	__tostring = function(unitTest)
 		local c1 = Cell{w = 3, t = 4, s = "alguem", twr = false, dfg = Cell()}
 
-		unitTest:assert_equal(tostring(c1), [[cObj_  userdata
+		unitTest:assertEquals(tostring(c1), [[cObj_  userdata
 dfg    Cell
 past   table of size 0
 s      string [alguem]
@@ -66,17 +66,17 @@ y      number [0]
 		n:add(c2)
 		n:add(c3)
 
-		unitTest:assert_equal(0, #c1)
+		unitTest:assertEquals(0, #c1)
 		c1:addNeighborhood(n)
-		unitTest:assert_equal(1, #c1)
+		unitTest:assertEquals(1, #c1)
 		
 		unitTest:assert_type(c1:getNeighborhood(), "Neighborhood")
 	end,
 	distance = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
-		unitTest:assert_equal(cs.cells[1]:distance(cs.cells[10]), 9)
-		unitTest:assert_equal(cs.cells[1]:distance(cs.cells[91]), 9)
+		unitTest:assertEquals(cs.cells[1]:distance(cs.cells[10]), 9)
+		unitTest:assertEquals(cs.cells[1]:distance(cs.cells[91]), 9)
 	end,
 	getAgent = function(unitTest)
 		local ag = Agent{}
@@ -93,8 +93,8 @@ y      number [0]
 		local c = cs.cells[1]
 		ag1:enter(c)
 		ag1:enter(c, "friends")
-		unitTest:assert_equal(c:getAgent(), ag1)
-		unitTest:assert_equal(c:getAgent("friends"), ag1)
+		unitTest:assertEquals(c:getAgent(), ag1)
+		unitTest:assertEquals(c:getAgent("friends"), ag1)
 	end,
 	getAgents = function(unitTest)
 		local ag = Agent{}
@@ -111,16 +111,16 @@ y      number [0]
 		local c = cs.cells[1]
 		ag1:enter(c)
 		unitTest:assert_type(c:getAgents(), "table")
-		unitTest:assert_equal(#c:getAgents(), 1)
+		unitTest:assertEquals(#c:getAgents(), 1)
 
 		c = cs.cells[2]
-		unitTest:assert_equal(#c:getAgents(), 0)
-		unitTest:assert_equal(#c:getAgents("friends"), 0)
+		unitTest:assertEquals(#c:getAgents(), 0)
+		unitTest:assertEquals(#c:getAgents("friends"), 0)
 	end,
 	getId = function(unitTest)
 		local c = Cell{id = "a"}
 
-		unitTest:assert_equal(c:getId(), "a")
+		unitTest:assertEquals(c:getId(), "a")
 	end,
 	getNeighborhood = function(unitTest)
 		local cell = Cell{x = 1, y = 1}
@@ -133,13 +133,13 @@ y      number [0]
 
 		local ng = cell:getNeighborhood()
 		unitTest:assert_type(ng, "Neighborhood")
-		unitTest:assert_equal(0, #ng)
+		unitTest:assertEquals(0, #ng)
 
 		cell:addNeighborhood(n, "neigh2")
 		ng = cell:getNeighborhood("neigh2")
 
 		n:add(cell2)
-		unitTest:assert_equal(1, #ng)
+		unitTest:assertEquals(1, #ng)
 		unitTest:assert_nil(cell:getNeighborhood("wrong_name"))
 
 		local cs = CellularSpace{xdim = 10}
@@ -163,7 +163,7 @@ y      number [0]
 
 		unitTest:assert_nil(c.value)
 		c:init()
-		unitTest:assert_equal(2, c.value)
+		unitTest:assertEquals(2, c.value)
 	end,
 	isEmpty = function(unitTest)
 		local ag = Agent{}
@@ -196,7 +196,7 @@ y      number [0]
 
 		c:setId("b")
 
-		unitTest:assert_equal(c:getId(), "b")
+		unitTest:assertEquals(c:getId(), "b")
 	end,
 	synchronize = function(unitTest)
 		local cell = Cell{
@@ -210,8 +210,8 @@ y      number [0]
 		cell:synchronize()
 
 		unitTest:assert_not_nil(cell.past)
-		unitTest:assert_equal(cell.cover,"forest")
-		unitTest:assert_equal(cell.cover, cell.past.cover)
+		unitTest:assertEquals(cell.cover,"forest")
+		unitTest:assertEquals(cell.cover, cell.past.cover)
 		unitTest:assert_nil(cell.past.past)
 	end
 }
