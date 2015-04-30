@@ -199,7 +199,7 @@ void ReceiverGUI::okButtonClicked()
             leg->mininum = 0.0;
             leg->fontFamily = "Symbol";
             leg->fontSize = 12;
-            leg->symbol = "�";
+            leg->symbol = "#";
             leg->width = 12;
             leg->curveStyle = 1; // see QwtPlotCurve::CurveStyle
             leg->lineStyle = 0;  // not yet used in ObsChart and legend

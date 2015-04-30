@@ -44,13 +44,13 @@ static const QString BROADCAST_HOST = "255.255.255.255";
 static const QString LOCAL_HOST = "127.0.0.1";
 static const QString DEFAULT_NAME = "result_";
 
-static const QString PROTOCOL_SEPARATOR = "�";
+static const QString PROTOCOL_SEPARATOR = ":"; // changed value of the original (#90)
 static const QString COMP_COLOR_SEP = ",";
 static const QString ITEM_SEP = ";";
 static const QString ITEM_NULL = "?";
 static const QString COLORS_SEP = "#";
 static const QString COLOR_BAR_SEP= "|";
-static const QString SYMBOL_CHAR = "�";
+static const QString SYMBOL_CHAR = "!"; //changed value of the original (#90)
 
 static const QString WINDOW = "Window";
 static const QString TRAJECTORY_LABEL = "does not belong";

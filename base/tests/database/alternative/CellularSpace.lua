@@ -408,7 +408,7 @@ return{
 					database = "cabecadeboi"
 				}
 			end
-			unitTest:assert_error(error_func, "Access denied for user ''@'localhost' to database 'cabecadeboi'.", 24)
+			unitTest:assert_error(error_func, "Access denied for user 'terra'@'localhost' to database 'cabecadeboi'.", 24)
 
 			error_func = function()
 				local cs = CellularSpace{
@@ -435,7 +435,7 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Access denied for user 'root'@'localhost' (using password: YES).")
+			unitTest:assert_error(error_func, "Access denied for user 'root'@'localhost' (using password: YES).", 8)
 		
 			error_func = function()
 				local cs = CellularSpace{

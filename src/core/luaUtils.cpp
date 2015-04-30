@@ -272,8 +272,8 @@ bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, s
     // Save the theme in the database
     if (!theme->save())
     {
-        cout << "Error: fail to save the theme \"" << outputTable << "\" in the database: "
-             << db->errorMessage() << endl;
+        //cout << "Error: fail to save the theme \"" << outputTable << "\" in the database: "
+        //     << db->errorMessage() << endl;
         db->close();
         return false;
     }

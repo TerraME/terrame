@@ -39,7 +39,7 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
     butExpand->setObjectName(QString::fromUtf8("butExpand"));
     butExpand->setMinimumSize(QSize(20, 20));
     butExpand->setAutoRaise(true);
-    butExpand->setText("�");  // "�" "�" << whats?
+    butExpand->setText("#");  // there was a symbol utf8
 
     QSpacerItem *horizSpacerItem = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -269,12 +269,12 @@ void ObserverScheduler::on_butExpand_clicked()
     if (pipelineWidget->isVisible())
     {
         resize(QSize(600, height()));
-        butExpand->setText("�"); // << whats?
+        butExpand->setText("#"); // there was a symbol
     }
     else
     {
         resize(QSize(50, height()));
-        butExpand->setText("�");  // "�" "�" << whats?
+        butExpand->setText("#");  // there was a symbol
     }
 }
 
