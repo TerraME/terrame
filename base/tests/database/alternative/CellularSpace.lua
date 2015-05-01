@@ -51,7 +51,7 @@ return{
 				layer = "cells90x90"
 			}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("database"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("database"))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -65,7 +65,7 @@ return{
 				database = {}
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("database", "string", {}))
+		unitTest:assertError(error_func, incompatibleTypeMsg("database", "string", {}))
 
 		if dbType == "ado" then
 			error_func = function()
@@ -80,7 +80,7 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Argument 'database' does not support 'terralab'.") -- SKIP
+			unitTest:assertError(error_func, "Argument 'database' does not support 'terralab'.") -- SKIP
 		else
 			error_func = function()
 				local cs = CellularSpace{
@@ -94,7 +94,7 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Unknown database 'terralab'.")
+			unitTest:assertError(error_func, "Unknown database 'terralab'.")
 
 			error_func = function()
 				local cs = CellularSpace{
@@ -108,7 +108,7 @@ return{
 					database = ""
 				}
 			end
-			unitTest:assert_error(error_func, "Empty database name.")
+			unitTest:assertError(error_func, "Empty database name.")
 		end
 
 		error_func = function()
@@ -123,7 +123,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("layer", "string", 3))
+		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 3))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -137,7 +137,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Can't open input layer 'terralab'.")
+		unitTest:assertError(error_func, "Can't open input layer 'terralab'.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -150,7 +150,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("theme"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("theme"))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -164,7 +164,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("theme", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("theme", "string", 2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -177,7 +177,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Can't open input theme 'terralab'.")
+		unitTest:assertError(error_func, "Can't open input theme 'terralab'.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -191,7 +191,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 34))
+		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 34))
 
 		--#46  add this error
 		--[[
@@ -207,7 +207,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "Invalid 'select'...") -- SKIP
+		unitTest:assertError(error_func, "Invalid 'select'...") -- SKIP
 		--]]
 
 		error_func = function()
@@ -223,7 +223,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("where", "string", 34))
+		unitTest:assertError(error_func, incompatibleTypeMsg("where", "string", 34))
 
 		-- #46 add the error below
 		--[[
@@ -240,7 +240,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assert_error(error_func, "bad SCL command.") -- SKIP
+		unitTest:assertError(error_func, "bad SCL command.") -- SKIP
 		--]]
 
 		error_func = function()
@@ -255,7 +255,7 @@ return{
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("user", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("user", "string", 2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -269,7 +269,7 @@ return{
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("password", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("password", "string", 2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -283,7 +283,7 @@ return{
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("dbType", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("dbType", "string", 2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -307,22 +307,22 @@ return{
 			virtual = true
 		}
 
-		unitTest:assert_error(error_func, switchInvalidArgumentMsg("post", "dbType", options))
+		unitTest:assertError(error_func, switchInvalidArgumentMsg("post", "dbType", options))
 
 		error_func = function()
 			cs = CellularSpace{database = file("simple-cs.csv", "base"), dbType = "map", sep = ";"}
 		end
-		unitTest:assert_error(error_func, "dbType and file extension should be the same.")
+		unitTest:assertError(error_func, "dbType and file extension should be the same.")
 
 		error_func = function()
 			cs = CellularSpace{database = 2, dbType = "map", sep = ";"}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("database", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("database", "string", 2))
 
 		error_func = function()
 			cs = CellularSpace{database = "abc123.map", dbType = "map", sep = ";"}
 		end
-		unitTest:assert_error(error_func, resourceNotFoundMsg("database", "abc123.map"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("database", "abc123.map"))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -336,7 +336,7 @@ return{
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("host", "string", 34))
+		unitTest:assertError(error_func, incompatibleTypeMsg("host", "string", 34))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -350,7 +350,7 @@ return{
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("port", "number", {}))
+		unitTest:assertError(error_func, incompatibleTypeMsg("port", "number", {}))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -364,7 +364,7 @@ return{
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("port", 34.2))
+		unitTest:assertError(error_func, integerArgumentMsg("port", 34.2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -378,7 +378,7 @@ return{
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, "Argument 'port' should have values above 1023 to avoid using system reserved values.")
+		unitTest:assertError(error_func, "Argument 'port' should have values above 1023 to avoid using system reserved values.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -393,7 +393,7 @@ return{
 				database = "terralab"
 		}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("autoload", "boolean", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg("autoload", "boolean", 123))
 
 		if mdbType ~= "ado" then
 			error_func = function()
@@ -408,7 +408,7 @@ return{
 					database = "cabecadeboi"
 				}
 			end
-			unitTest:assert_error(error_func, "Access denied for user 'terra'@'localhost' to database 'cabecadeboi'.", 24)
+			unitTest:assertError(error_func, "Access denied for user 'terra'@'localhost' to database 'cabecadeboi'.", 24)
 
 			error_func = function()
 				local cs = CellularSpace{
@@ -421,7 +421,7 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, mandatoryArgumentMsg("password"))
+			unitTest:assertError(error_func, mandatoryArgumentMsg("password"))
 
 			error_func = function()
 				local cs = CellularSpace{
@@ -435,7 +435,7 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Access denied for user 'root'@'localhost' (using password: YES).", 8)
+			unitTest:assertError(error_func, "Access denied for user 'root'@'localhost' (using password: YES).", 8)
 		
 			error_func = function()
 				local cs = CellularSpace{
@@ -449,14 +449,14 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assert_error(error_func, "Can't connect to MySQL server on '321456' (XX).", 2)
+			unitTest:assertError(error_func, "Can't connect to MySQL server on '321456' (XX).", 2)
 		
 			error_func = function()
 				local cs = CellularSpace{
 					database = "abc123.shp"
 				}
 			end
-			unitTest:assert_error(error_func, "File 'abc123.dbf' not found.")
+			unitTest:assertError(error_func, "File 'abc123.dbf' not found.")
 		end
 	end,
 	loadNeighborhood = function(unitTest)
@@ -481,29 +481,29 @@ return{
 		local error_func = function()
 			cs:loadNeighborhood()
 		end
-		unitTest:assert_error(error_func, tableArgumentMsg())
+		unitTest:assertError(error_func, tableArgumentMsg())
 	
 		error_func = function()
 			cs:loadNeighborhood{}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("source"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("source"))
 		
 		error_func = function()
 			cs:loadNeighborhood{source = 123}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("source", "string", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg("source", "string", 123))
 
 		error_func = function()
 			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm"}
 		end
-		unitTest:assert_error(error_func, resourceNotFoundMsg("source", "neighCabecaDeBoi900x900.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", "neighCabecaDeBoi900x900.gpm"))
 	
 		local mfile = file("cabecadeboi-neigh.gpm", "base")
 
 		error_func = function()
 			cs:loadNeighborhood{source = mfile, name = 22}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 22))
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
 		-- GAL from shapefile
 		local cs = CellularSpace{database = file("brazilstates.shp", "base")}
@@ -511,14 +511,14 @@ return{
 		error_func = function()
 			cs:loadNeighborhood{source = file("brazil.gal", "base"), che = false}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("che"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("che"))
 	
 		mfile = file("brazil.gal", "base")
 
 		error_func = function()
 			cs:loadNeighborhood{source = mfile}
 		end
-		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'mylayer'.")
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'mylayer'.")
 
 		local cs = CellularSpace{
 			dbType = mdbType,
@@ -536,18 +536,18 @@ return{
 		local error_func = function()
 			cs:loadNeighborhood{source = "arquivo.gpm"}
 		end
-		unitTest:assert_error(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
 
 		error_func = function()
 			cs:loadNeighborhood{source = "gpmlinesDbEmas_invalid.teste"}
 		end
-		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste"))
+		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))
 
 		error_func = function()
 			local s = sessionInfo().separator
 			cs:loadNeighborhood{source = file("error"..s.."cabecadeboi-invalid-neigh.gpm", "base")}
 		end
-		unitTest:assert_error(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
+		unitTest:assertError(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
 
 		mfile = file("cabecadeboi-neigh.gpm", "base")
 
@@ -557,7 +557,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cells900x900'.")
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cells900x900'.")
 
 		mfile = file("cabecadeboi-neigh.gal", "base")
 
@@ -567,7 +567,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cells900x900'.")
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cells900x900'.")
 
 		mfile = file("cabecadeboi-neigh.gwt", "base")
 
@@ -577,7 +577,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cells900x900'.")
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cells900x900'.")
 	end,
 	save = function(unitTest)
 		local config = getConfig()
@@ -601,47 +601,47 @@ return{
 		local error_func = function()
 			cs:save()
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			cs:save("terralab", "themeName", "height_")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "terralab"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "terralab"))
 
 		error_func = function()
 			cs:save(-18, "themeName", "height_")
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -18, true))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, -18, true))
 		
 		error_func = function()
 			cs:save(8.5, "themeName", "height_")
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg(1, 8.5))
+		unitTest:assertError(error_func, integerArgumentMsg(1, 8.5))
 
 		error_func = function()
 			cs:save(3, nil, "height_")
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 	
 		error_func = function()
 			cs:save(3, 2, "height_")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		error_func = function()
 			cs:save(18, "themeName")
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(3))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(3))
 	
 		error_func = function()
 			cs:save(18, "themeName", 3)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "table", 3))
+		unitTest:assertError(error_func, incompatibleTypeMsg(3, "table", 3))
 		
 		error_func = function()
 			cs:save(18, "themeName", "terralab")
 		end
-		unitTest:assert_error(error_func, "Attribute 'terralab' does not exist in the CellularSpace.")
+		unitTest:assertError(error_func, "Attribute 'terralab' does not exist in the CellularSpace.")
 	end
 }
 

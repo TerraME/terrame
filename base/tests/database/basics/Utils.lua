@@ -28,7 +28,7 @@
 return{
 	getConfig = function(unitTest)
 		local cf = getConfig()
-		unitTest:assert_nil(cf.qwertyuiop)
+		unitTest:assertNull(cf.qwertyuiop)
 	end,
 	CSVparseLine = function(unitTest)
 		local line = CSVparseLine("2,5,aa", ",")
@@ -62,7 +62,7 @@ return{
 
 		CSVwrite(example, filename)
 		local data = CSVread(filename)
-		unitTest:assert_not_nil(data)
+		unitTest:assertNotNull(data)
 		unitTest:assertEquals(#example, #data)
 
 		for i = 1, #example do

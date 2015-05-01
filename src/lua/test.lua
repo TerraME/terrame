@@ -662,7 +662,7 @@ function executeTests(package, fileName)
 
 		forEachElement(mdir, function(_, value)
 			if not ut.tsnapshots[value] then
-				printError("File 'snapshot/"..value.."' was not used by any assert_snapshot().")
+				printError("File 'snapshot/"..value.."' was not used by any assertSnapshot().")
 				ut.unused_snapshot_files = ut.unused_snapshot_files + 1
 			end
 		end)
@@ -819,9 +819,9 @@ function executeTests(package, fileName)
 	end
 
 	if ut.wrong_file > 0 then
-		printError(ut.wrong_file.." assert_error calls found an error message pointing to an internal file (wrong level).")
+		printError(ut.wrong_file.." assertError calls found an error message pointing to an internal file (wrong level).")
 	else
-		printNote("No assert_error calls had error messages pointing to internal files.")
+		printNote("No assertError calls had error messages pointing to internal files.")
 	end
 
 	if check_functions then

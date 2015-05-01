@@ -29,12 +29,12 @@ return{
 		local error_func = function()
 			fl1 = Flow(2)
 		end
-		unitTest:assert_error(error_func, tableArgumentMsg())
+		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			fl1 = Flow{nil}
 		end
-		unitTest:assert_error(error_func, "Flow constructor expected a function as argument.")
+		unitTest:assertError(error_func, "Flow constructor expected a function as argument.")
 	end
 }
 

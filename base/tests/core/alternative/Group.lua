@@ -43,12 +43,12 @@ return{
 		local error_func = function()
 			group1 = Group()
 		end
-		unitTest:assert_error(error_func, tableArgumentMsg())
+		unitTest:assertError(error_func, tableArgumentMsg())
 
 		error_func = function()
 			group1 = Group(3)
 		end
-		unitTest:assert_error(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
  			local gr = Group{
@@ -56,7 +56,7 @@ return{
  				selection = function() return true end
  			}
  		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("selection", "select"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("selection", "select"))
 
 		error_func = function()
 			group1 = Group{
@@ -69,7 +69,7 @@ return{
 				end
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("target", "Society, Group, or nil", cs))
+		unitTest:assertError(error_func, incompatibleTypeMsg("target", "Society, Group, or nil", cs))
 
 		error_func = function()
 			group1 = Group{
@@ -77,7 +77,7 @@ return{
 				build = 15
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("build", "boolean", 15))
+		unitTest:assertError(error_func, incompatibleTypeMsg("build", "boolean", 15))
 
 		error_func = function()
 			group1 = Group{
@@ -85,7 +85,7 @@ return{
 				build = true
 			}
 		end
-		unitTest:assert_error(error_func, defaultValueMsg("build", true))
+		unitTest:assertError(error_func, defaultValueMsg("build", true))
 
 		error_func = function()
 			group1 = Group{
@@ -96,7 +96,7 @@ return{
 				end
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "function", 12))
+		unitTest:assertError(error_func, incompatibleTypeMsg("select", "function", 12))
 
 		error_func = function()
 			group1 = Group{
@@ -107,7 +107,7 @@ return{
 				greater = 12
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("greater", "function", 12))
+		unitTest:assertError(error_func, incompatibleTypeMsg("greater", "function", 12))
 	end,
 	add = function(unitTest)
 		local group = Group{}
@@ -115,36 +115,36 @@ return{
 		local error_func = function()
 			group:add()
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			group:add("wrongType")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent", "wrongType"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent", "wrongType"))
 	end,
 	filter = function(unitTest)
 		local group = Group{}
 		local error_func = function()
 			group:filter("notFunction")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
 
 		error_func = function()
 			group:filter(function() return true end)
 		end
-		unitTest:assert_error(error_func, "It is not possible to filter a Group without a parent.")
+		unitTest:assertError(error_func, "It is not possible to filter a Group without a parent.")
 	end,
 	sort = function(unitTest)
 		local group = Group{}
 		local error_func = function()
 			group:sort("notFunction")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", "notFunction"))
 
 		error_func = function()
 			group:sort()
 		end
-		unitTest:assert_error(error_func, "Cannot sort the Group because there is no previous function.")
+		unitTest:assertError(error_func, "Cannot sort the Group because there is no previous function.")
 	end
 }
 

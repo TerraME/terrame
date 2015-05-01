@@ -99,7 +99,7 @@ return{
 	forEachCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
-		forEachCell(cs, function(cell) unitTest:assert_type(cell, "Cell") end)
+		forEachCell(cs, function(cell) unitTest:assertType(cell, "Cell") end)
 
 		forEachCell(cs, function(cell) cell.value = 2 end)
 		forEachCell(cs, function(cell) unitTest:assertEquals(cell.value, 2) end)
@@ -164,9 +164,9 @@ return{
 		local s = soc:sample()
 
 		r = forEachConnection(s, function(ag1, ag2, w)
-			unitTest:assert_type(ag2, "Agent")
+			unitTest:assertType(ag2, "Agent")
 			unitTest:assertEquals(ag1, s)
-			unitTest:assert_type(w, "number")
+			unitTest:assertType(w, "number")
 			count = count + 1
 		end)
 
@@ -187,8 +187,8 @@ return{
 		local count = 0
 
 		forEachElement(mvector, function(idx, value, mtype)
-			unitTest:assert_type(idx, "string")
-			unitTest:assert_type(value, "string")
+			unitTest:assertType(idx, "string")
+			unitTest:assertType(value, "string")
 			unitTest:assertEquals(mtype, "string")
 			count = count + 1
 		end)
@@ -199,8 +199,8 @@ return{
 		local r
 
 		r = forEachElement(mvector, function(idx, value, mtype)
-			unitTest:assert_type(idx, "number")
-			unitTest:assert_type(value, "number")
+			unitTest:assertType(idx, "number")
+			unitTest:assertType(value, "number")
 			unitTest:assertEquals(mtype, "number")
 			count = count + 1
 		end)
@@ -223,7 +223,7 @@ return{
 
 		r = forEachFile(file("", "base"), function(file)
 			count = count + 1
-			unitTest:assert_type(file, "string")
+			unitTest:assertType(file, "string")
 		end)
 
 		unitTest:assert(r)
@@ -255,9 +255,9 @@ return{
 		local r
 
 		r = forEachNeighbor(c, function(cell1, cell2, w)
-			unitTest:assert_type(cell2, "Cell")
+			unitTest:assertType(cell2, "Cell")
 			unitTest:assertEquals(cell1, c)
-			unitTest:assert_type(w, "number")
+			unitTest:assertType(w, "number")
 			count = count + 1
 		end)
 		unitTest:assert(r)
@@ -348,21 +348,21 @@ return{
 		unitTest:assertEquals(getn(Cell{}), 4)
 	end,
 	elapsedTime = function(unitTest)
-		unitTest:assert_type(elapsedTime(50), "string")
+		unitTest:assertType(elapsedTime(50), "string")
 	end,
 	greaterByAttribute = function(unitTest)
 		local gt = greaterByAttribute("cover")
-		unitTest:assert_type(gt, "function")
+		unitTest:assertType(gt, "function")
 
 		gt = greaterByAttribute("cover", ">")
-		unitTest:assert_type(gt, "function")
+		unitTest:assertType(gt, "function")
 	end,
 	greaterByCoord = function(unitTest)
 		local gt = greaterByCoord()
-		unitTest:assert_type(gt, "function")
+		unitTest:assertType(gt, "function")
 
 		gt = greaterByCoord(">")
-		unitTest:assert_type(gt, "function")
+		unitTest:assertType(gt, "function")
 	end,
 	integrate = function(unitTest)
 		local f = function(x) return x^3 end
@@ -549,7 +549,7 @@ return{
 			step = 0.1
 		}
 
-		unitTest:assert_type(v, "number")
+		unitTest:assertType(v, "number")
 	
 		-- integrate with a set of functions
 		local timeStep = 0.5

@@ -45,10 +45,10 @@ return{
 			color = "Blues"
 		}
 
-		unitTest:assert_type(m, "Map") -- SKIP
+		unitTest:assertType(m, "Map") -- SKIP
 --]]
 		-- #308
-		--unitTest:assert_snapshot(m, "map_slices.bmp") -- SKIP
+		--unitTest:assertSnapshot(m, "map_slices.bmp") -- SKIP
 
 		local e = Event{action = function() end}[1]
 
@@ -68,7 +68,7 @@ return{
 
 		local c = Chart{subject = world}
 
-		unitTest:assert_type(c, "Chart") -- SKIP
+		unitTest:assertType(c, "Chart") -- SKIP
 
 		world:notify(0)
 

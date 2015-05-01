@@ -32,7 +32,7 @@ return{
 			u:assert(2)
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "boolean", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "boolean", 2))
 
 		for i = 1, 5 do
 
@@ -41,7 +41,7 @@ return{
 			end
 
 			if i == 1 then
-				unitTest:assert_error(error_func, "Test should be true, got false.")
+				unitTest:assertError(error_func, "Test should be true, got false.")
 			else
 				error_func()
 			end
@@ -51,7 +51,7 @@ return{
 			u:assert(false)
 		end
 
-		unitTest:assert_error(error_func, "[The error above occurs more 4 times.]")
+		unitTest:assertError(error_func, "[The error above occurs more 4 times.]")
 	end,
 	assertEquals = function(unitTest)
 		local u = UnitTest{unittest = true}
@@ -60,91 +60,91 @@ return{
 			u:assertEquals(2, 2, "a")
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number", "a"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "a"))
 
 		local error_func = function()
 			u:assertEquals("abc", "abc", 2)
 		end
 
-		unitTest:assert_error(error_func, "#3 should be used only when comparing numbers (#1 is string).")
+		unitTest:assertError(error_func, "#3 should be used only when comparing numbers (#1 is string).")
 
 		local error_func = function()
 			u:assertEquals(2, 3)
 		end
 
-		unitTest:assert_error(error_func, "Values should be equal, but got '2' and '3'.")
+		unitTest:assertError(error_func, "Values should be equal, but got '2' and '3'.")
 
 		local error_func = function()
 			u:assertEquals("2", "3")
 		end
 
-		unitTest:assert_error(error_func, "Values should be equal, but got \n'2' and \n'3'.")
+		unitTest:assertError(error_func, "Values should be equal, but got \n'2' and \n'3'.")
 
 		local error_func = function()
 			u:assertEquals("2", 3)
 		end
 
-		unitTest:assert_error(error_func, "Values should be equal, but they have different types (string and number).")
+		unitTest:assertError(error_func, "Values should be equal, but they have different types (string and number).")
 	
 		local error_func = function()
 			u:assertEquals(true, false)
 		end
 
-		unitTest:assert_error(error_func, "Values have the same type (boolean) but different values.")
+		unitTest:assertError(error_func, "Values have the same type (boolean) but different values.")
 	end,
-	assert_error = function(unitTest)
+	assertError = function(unitTest)
 		local u = UnitTest{unittest = true}
 
 		local error_func = function()
-			u:assert_error(2)
+			u:assertError(2)
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "function", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "function", 2))
 
 		local error_func = function()
-			u:assert_error(function() end, 2)
+			u:assertError(function() end, 2)
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		local error_func = function()
-			u:assert_error(function() end, "aaa", false)
+			u:assertError(function() end, "aaa", false)
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number", false))
+		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", false))
 	end,
-	assert_nil = function(unitTest)
+	assertNull = function(unitTest)
 		local u = UnitTest{unittest = true}
 
 		local error_func = function()
-			u:assert_nil(2)
+			u:assertNull(2)
 		end
 
-		unitTest:assert_error(error_func, "Test should be nil, got number.")
+		unitTest:assertError(error_func, "Test should be nil, got number.")
 	end,
-	assert_not_nil = function(unitTest)
+	assertNotNull = function(unitTest)
 		local u = UnitTest{unittest = true}
 
 		local error_func = function()
-			u:assert_not_nil()
+			u:assertNotNull()
 		end
 
-		unitTest:assert_error(error_func, "Test should not be nil.")
+		unitTest:assertError(error_func, "Test should not be nil.")
 	end,
-	assert_type = function(unitTest)
+	assertType = function(unitTest)
 		local u = UnitTest{unittest = true}
 
 		local error_func = function()
-			u:assert_type(2, 2)
+			u:assertType(2, 2)
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		local error_func = function()
-			u:assert_type(2, "string")
+			u:assertType(2, "string")
 		end
 
-		unitTest:assert_error(error_func, "Test should be string got number.")
+		unitTest:assertError(error_func, "Test should be string got number.")
 	end
 }
 

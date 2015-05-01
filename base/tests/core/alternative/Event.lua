@@ -29,28 +29,28 @@ return{
 		local error_func = function()
 			event = Event{time = "time", period = 2, priority = -1, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("time", "number", "time"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("time", "number", "time"))
 
 		error_func = function()
 			event = Event(2)
 		end
-		unitTest:assert_error(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, namedArgumentsMsg())
 
 
 		error_func = function()
 			event = Event{period = "1", priority = 1, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("period", "number", "1"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("period", "number", "1"))
 
 		error_func = function()
 			event = Event{period = -1, priority = 1, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("period", "positive number (except zero)", -1))
+		unitTest:assertError(error_func, incompatibleValueMsg("period", "positive number (except zero)", -1))
 
 		error_func = function()
 			event = Event{period = 2, priority = true, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("priority", "number", true))
+		unitTest:assertError(error_func, incompatibleTypeMsg("priority", "number", true))
 
 		error_func = function()
 			event = Event{period = 2, priority = "aaa", action = function(event) end}
@@ -64,42 +64,42 @@ return{
 			verylow = true
 		}
 
-		unitTest:assert_error(error_func, switchInvalidArgumentMsg("aaa", "priority", options))
+		unitTest:assertError(error_func, switchInvalidArgumentMsg("aaa", "priority", options))
 
 		error_func = function()
 			event = Event{period = 0, priority = 1, action = function() end}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("period", "positive number (except zero)", 0))
+		unitTest:assertError(error_func, incompatibleValueMsg("period", "positive number (except zero)", 0))
 
 		error_func = function()
 			event = Event{period = 2, priority = 1, action = -5.5}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", -5.5))
+		unitTest:assertError(error_func, incompatibleTypeMsg("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", -5.5))
 
 		error_func = function()
 			event = Event{message = function() end}
 		end
-		unitTest:assert_error(error_func, "Argument 'message' is deprecated, use 'action' instead.")
+		unitTest:assertError(error_func, "Argument 'message' is deprecated, use 'action' instead.")
 
 		error_func = function()
 			event = Event{myaction = function() end}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("myaction", "action"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("myaction", "action"))
 
 		error_func = function()
 			event = Event{period = 1, priority = 1, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, defaultValueMsg("period", 1))
+		unitTest:assertError(error_func, defaultValueMsg("period", 1))
 
 		error_func = function()
 			event = Event{time = 1, priority = 1, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, defaultValueMsg("time", 1))
+		unitTest:assertError(error_func, defaultValueMsg("time", 1))
 
 		error_func = function()
 			event = Event{priority = 0, action = function(event) end}
 		end
-		unitTest:assert_error(error_func, defaultValueMsg("priority", 0))
+		unitTest:assertError(error_func, defaultValueMsg("priority", 0))
 
 		local t = Timer{
 			Event{action = function()
@@ -110,7 +110,7 @@ return{
 		error_func = function()
 			t:execute(2)
 		end
-		unitTest:assert_error(error_func, "aaa")
+		unitTest:assertError(error_func, "aaa")
 	end,
 --[[ #241
 	config = function(unitTest)
@@ -118,25 +118,25 @@ return{
 		local error_func = function()
 			event:config(1, -2, 1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", -2)) -- SKIP
+		unitTest:assertError(error_func, incompatibleValueMsg(2, "positive number", -2)) -- SKIP
 
 		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, 0, 1)
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(2, "positive number", 0)) -- SKIP
+		unitTest:assertError(error_func, incompatibleValueMsg(2, "positive number", 0)) -- SKIP
 
 		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, "5")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "number", "5")) -- SKIP
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "5")) -- SKIP
 
 		event = Event{action = function(event) end}
 		error_func = function()
 			event:config(1, 1, "aa")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(3, "number", "aa")) -- SKIP
+		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "aa")) -- SKIP
 	end
 --]]
 }

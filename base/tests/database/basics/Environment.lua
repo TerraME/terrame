@@ -92,7 +92,7 @@ return{
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assertNotNull(neighborhood)
 
 			local neighborhoodSize = #neighborhood
 
@@ -139,7 +139,7 @@ return{
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assertNotNull(neighborhood)
 
 			local neighborhoodSize = #neighborhood
 
@@ -208,7 +208,7 @@ return{
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assertNotNull(neighborhood)
 
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(1, neighborhoodSize)
@@ -235,7 +235,7 @@ return{
 
 		forEachCell(cs3, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assertNotNull(neighborhood)
 
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(1435, neighborhoodSize)
@@ -267,7 +267,7 @@ return{
 
 		forEachCell(cs3, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assertNotNull(neighborhood)
 
 			local neighborhoodSize = #neighborhood
 
@@ -295,7 +295,7 @@ return{
 
 		forEachCell(cs3, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assertNotNull(neighborhood)
 
 			local neighborhoodSize = #neighborhood
 			unitTest:assertEquals(207, neighborhoodSize)
@@ -316,7 +316,7 @@ return{
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assertNotNull(neighborhood)
 
 			local neighborhoodSize = #neighborhood
 

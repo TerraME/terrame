@@ -34,7 +34,7 @@ return{
 				self:walk()
 			end}
 
-		unitTest:assert_type(singleFooAgent, "Agent")
+		unitTest:assertType(singleFooAgent, "Agent")
 		unitTest:assertEquals(10, singleFooAgent.size)
 		unitTest:assertEquals("singleFoo", singleFooAgent.id)
 
@@ -48,7 +48,7 @@ return{
 		}
 
 		e:createPlacement()
-		unitTest:assert_type(singleFooAgent:getCell(), "Cell")
+		unitTest:assertType(singleFooAgent:getCell(), "Cell")
 		unitTest:assertEquals(1, #singleFooAgent:getCell().placement)
 
 		local t = Timer{
@@ -58,7 +58,7 @@ return{
 		t:execute(10)
 		unitTest:assertEquals(20,singleFooAgent.size)
 
-		unitTest:assert_type(singleFooAgent:getCell(), "Cell")
+		unitTest:assertType(singleFooAgent:getCell(), "Cell")
 		unitTest:assertEquals(1, #singleFooAgent:getCell().placement)
 
 		local count = 0
@@ -91,11 +91,11 @@ socialnetworks  table of size 0
 	end,
 	addSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
-		unitTest:assert_nil(ag1:getSocialNetwork("notfriends"))	
+		unitTest:assertNull(ag1:getSocialNetwork("notfriends"))	
 
 		local sn = SocialNetwork()
 		ag1:addSocialNetwork(sn)
-		unitTest:assert_type(ag1:getSocialNetwork(), "SocialNetwork")
+		unitTest:assertType(ag1:getSocialNetwork(), "SocialNetwork")
 		unitTest:assertEquals(#ag1:getSocialNetwork(), 0)
 
 		local ag = Agent{}
@@ -140,7 +140,7 @@ socialnetworks  table of size 0
 		local test_function = function()
 			print(dead.a)
 		end
-		unitTest:assert_error(test_function, "Trying to use a function or an attribute of a dead Agent.")
+		unitTest:assertError(test_function, "Trying to use a function or an attribute of a dead Agent.")
 	end,
 	execute = function(unitTest)
 		local count = 0
@@ -168,7 +168,7 @@ socialnetworks  table of size 0
 
 		myEnv:createPlacement{}
 
-		unitTest:assert_type(ag1:getCell(), "Cell")
+		unitTest:assertType(ag1:getCell(), "Cell")
 	end,
 	getCells = function(unitTest)
 		local ag1 = Agent{}
@@ -178,8 +178,8 @@ socialnetworks  table of size 0
 
 		myEnv:createPlacement{}
 
-		unitTest:assert_type(ag1:getCells(), "table")
-		unitTest:assert_type(ag1:getCells()[1], "Cell")
+		unitTest:assertType(ag1:getCells(), "table")
+		unitTest:assertType(ag1:getCells()[1], "Cell")
 	end,
 	getLatency = function(unitTest)
 		local jumps = 0
@@ -384,7 +384,7 @@ socialnetworks  table of size 0
 			end
 		}
 
-		unitTest:assert_nil(ag1.value)
+		unitTest:assertNull(ag1.value)
 		ag1:init()
 		unitTest:assertEquals(2, ag1.value)
 	end,
@@ -398,7 +398,7 @@ socialnetworks  table of size 0
 		ag1:enter(cell, "placement")
 		ag1:leave(nil, "placement")
 
-		unitTest:assert_nil(ag1:getCell("placement"))
+		unitTest:assertNull(ag1:getCell("placement"))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -409,7 +409,7 @@ socialnetworks  table of size 0
 		ag1:enter(cell, "placement")
 		ag1:leave("placement")
 
-		unitTest:assert_nil(ag1:getCell("placement"))
+		unitTest:assertNull(ag1:getCell("placement"))
 	end,
 	message = function(unitTest)
 		local ag = Agent{
@@ -506,7 +506,7 @@ socialnetworks  table of size 0
 		end)
 
 		ag:addSocialNetwork(sn)
-		unitTest:assert_type(ag:sample(), "Agent")
+		unitTest:assertType(ag:sample(), "Agent")
 	end,
 	setTrajectoryStatus = function(unitTest)
 		local cs = CellularSpace{xdim = 2}
@@ -592,7 +592,7 @@ socialnetworks  table of size 0
 		ag1:enter(c1,"placement")
 
 		ag1:walk()
-		unitTest:assert_type(ag1:getCell(), "Cell")
+		unitTest:assertType(ag1:getCell(), "Cell")
 	end
 }
 

@@ -27,7 +27,7 @@
 return{
 	Group = function(unitTest)
 		local group1 = Group{}
-		unitTest:assert_type(group1, "Group")
+		unitTest:assertType(group1, "Group")
 
 		local nonFooAgent = Agent{
 			init = function(self)
@@ -48,11 +48,11 @@ return{
 		local g = Group{
 			target = nonFooSociety
 		}
-		unitTest:assert_type(g, "Group")
+		unitTest:assertType(g, "Group")
 		unitTest:assertEquals(#g, #nonFooSociety)
 		unitTest:assertEquals(g.agents[1], nonFooSociety.agents[1])
-		unitTest:assert_nil(g.select)
-		unitTest:assert_nil(g.greater)
+		unitTest:assertNull(g.select)
+		unitTest:assertNull(g.greater)
 		unitTest:assertEquals(g:w(), 30)
 		unitTest:assertEquals(g:p(), 50)
 
@@ -176,11 +176,11 @@ select  function
 			target = soc,
 			select = function(ag) return ag.age > 5 end
 		}
-		unitTest:assert_type(g, "Group")
+		unitTest:assertType(g, "Group")
 		unitTest:assertEquals(6, #g)
 
 		local g2 = g:clone()
-		unitTest:assert_type(g2, "Group")
+		unitTest:assertType(g2, "Group")
 		unitTest:assertEquals(#g, #g2)
 		unitTest:assert(g.select == g2.select)
 		unitTest:assert(g.greater == g2.greater)

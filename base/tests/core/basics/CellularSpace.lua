@@ -29,12 +29,12 @@ return{
 		Random{seed = 12345}
 		local cs = CellularSpace{xdim = 10}
 
-		unitTest:assert_type(cs, "CellularSpace")
+		unitTest:assertType(cs, "CellularSpace")
 		unitTest:assertEquals(#cs, 100)
 		unitTest:assertEquals(10, cs.xdim)
 		unitTest:assertEquals(10, cs.ydim)
-		unitTest:assert_type(cs:sample(), "Cell")
-		unitTest:assert_type(cs.cells, "table")
+		unitTest:assertType(cs:sample(), "Cell")
+		unitTest:assertType(cs.cells, "table")
 
 		local cell = Cell{
 			defor = 1,
@@ -443,7 +443,7 @@ ydim    number [20]
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
-			unitTest:assert_not_nil(neighborhood)
+			unitTest:assertNotNull(neighborhood)
 
 			local neighborhoodSize = #neighborhood
 
@@ -813,7 +813,7 @@ ydim    number [20]
 		cs:createNeighborhood()
 
 		forEachCell(cs, function(cell)
-			unitTest:assert_type(cell:getNeighborhood(), "Neighborhood")
+			unitTest:assertType(cell:getNeighborhood(), "Neighborhood")
 		end)
 
 		-- on the fly
@@ -821,8 +821,8 @@ ydim    number [20]
 
 		cs:createNeighborhood{inmemory = false}
 
-		unitTest:assert_type(cs.cells[1].neighborhoods["1"], "function")
-		unitTest:assert_type(cs.cells[1]:getNeighborhood(), "Neighborhood")
+		unitTest:assertType(cs.cells[1].neighborhoods["1"], "function")
+		unitTest:assertType(cs.cells[1]:getNeighborhood(), "Neighborhood")
 
 		-- Vector of size counters - Used to verify the size of the neighborhoods
 		local sizes = {}
@@ -858,8 +858,8 @@ ydim    number [20]
 
 		cs:createNeighborhood{strategy = "vonneumann", inmemory = false}
 
-		unitTest:assert_type(cs.cells[1].neighborhoods["1"], "function")
-		unitTest:assert_type(cs.cells[1]:getNeighborhood(), "Neighborhood")
+		unitTest:assertType(cs.cells[1].neighborhoods["1"], "function")
+		unitTest:assertType(cs.cells[1]:getNeighborhood(), "Neighborhood")
 		local sizes = {}
 
 		forEachCell(cs, function(cell)
@@ -900,7 +900,7 @@ ydim    number [20]
 		unitTest:assertEquals(c, d)
 
 		local c = cs:get(100, 100)
-		unitTest:assert_nil(c)
+		unitTest:assertNull(c)
 	end,
 	load = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
@@ -911,12 +911,12 @@ ydim    number [20]
 
 		cs:load()
 
-		unitTest:assert_nil(cs:sample().w)
+		unitTest:assertNull(cs:sample().w)
 	end,
 	sample = function(unitTest)
 		local cs = CellularSpace{xdim = 3}
 
-		unitTest:assert_type(cs:sample(), "Cell")
+		unitTest:assertType(cs:sample(), "Cell")
 	end,
 	split = function(unitTest)
 		local cs = CellularSpace{xdim = 3}
@@ -936,7 +936,7 @@ ydim    number [20]
 		local t1 = ts["pasture"]
 		local t2 = ts["forest"]
 
-		unitTest:assert_type(t1, "Trajectory")
+		unitTest:assertType(t1, "Trajectory")
 		unitTest:assertEquals(#t1, 3)
 		unitTest:assertEquals(#t2, 6)
 
@@ -944,10 +944,10 @@ ydim    number [20]
 			return "test"
 		end)
 
-		unitTest:assert_type(t2.test, "Trajectory")
+		unitTest:assertType(t2.test, "Trajectory")
 		unitTest:assertEquals(#cs.cells, 9)
 		unitTest:assertEquals(#cs.cells, #t2.test)
-		unitTest:assert_type(cs:sample(), "Cell")
+		unitTest:assertType(cs:sample(), "Cell")
 
 		local v = function(cell)
 			if cell.x > 1 then
@@ -964,16 +964,16 @@ ydim    number [20]
 	synchronize = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
 
-		forEachCell(cs, function(cell) unitTest:assert_not_nil(cell) end)
-		forEachCell(cs, function(cell) unitTest:assert_not_nil(cell.past) end)
+		forEachCell(cs, function(cell) unitTest:assertNotNull(cell) end)
+		forEachCell(cs, function(cell) unitTest:assertNotNull(cell.past) end)
 		forEachCell(cs, function(cell) cell.cover = "forest" end)
 
 		cs:synchronize()
-		forEachCell(cs, function(cell) unitTest:assert_not_nil(cell.past.cover) end)
+		forEachCell(cs, function(cell) unitTest:assertNotNull(cell.past.cover) end)
 		forEachCell(cs, function(cell) unitTest:assertEquals("forest", cell.past.cover) end)
 
-		forEachElement(cs.cells[1], function(el) unitTest:assert_not_nil(el) end)
-		forEachElement(cs.cells[1].past, function(el) unitTest:assert_not_nil(el) end)
+		forEachElement(cs.cells[1], function(el) unitTest:assertNotNull(el) end)
+		forEachElement(cs.cells[1].past, function(el) unitTest:assertNotNull(el) end)
 	end
 }
 

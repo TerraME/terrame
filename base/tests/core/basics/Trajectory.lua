@@ -38,15 +38,15 @@ return{
 			unitTest:assert(cell.id == it.cells[cont].id)
 		end)
 
-		unitTest:assert_type(it, "Trajectory")
-		unitTest:assert_nil(it.select)
-		unitTest:assert_nil(it.greater)
+		unitTest:assertType(it, "Trajectory")
+		unitTest:assertNull(it.select)
+		unitTest:assertNull(it.greater)
 
 		cont = 0
 		unitTest:assertEquals(100, #it)
 		forEachCell(it, function(cell)
 			cont = cont + 1
-			unitTest:assert_type(cell, "Cell")
+			unitTest:assertType(cell, "Cell")
 		end)
 
 		unitTest:assertEquals(100, cont)
@@ -73,7 +73,7 @@ return{
 
 		forEachCell(t, function(cell)
 			cont = cont + 1
-			unitTest:assert_type(cell, "Cell")
+			unitTest:assertType(cell, "Cell")
 			unitTest:assert(cell.x > 7)
 			unitTest:assert(cell.y > 5)
 			unitTest:assert(cell.y <= orderMemory)
@@ -225,7 +225,7 @@ xyz     function
 		unitTest:assertEquals(9, it:get(8, 9).y)
 
 		local c = it:get(100, 100)
-		unitTest:assert_nil(c)
+		unitTest:assertNull(c)
 	end,
 	randomize = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -234,7 +234,7 @@ xyz     function
 		it:randomize()
 
 		forEachCell(it, function(cell)
-			unitTest:assert_type(cell, "Cell")
+			unitTest:assertType(cell, "Cell")
 		end)
 
 		unitTest:assertEquals(100, #it)

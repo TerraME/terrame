@@ -29,7 +29,7 @@ return{
 		local error_func = function()
 			local s = State(2)
 		end
-		unitTest:assert_error(error_func, tableArgumentMsg())
+		unitTest:assertError(error_func, tableArgumentMsg())
 
 		local s = State{
 			Jump{
@@ -44,7 +44,7 @@ return{
 		}
 		unitTest:assert(true)
 
-		unitTest:assert_error(function()
+		unitTest:assertError(function()
 			State{
 				id = {},
 				Jump{
@@ -61,7 +61,7 @@ return{
 			}
 		end, incompatibleTypeMsg("id", "string", {}))
 
-		unitTest:assert_error(function()
+		unitTest:assertError(function()
 			State{
 				id = 123,
 				Jump{ function(ev, self)

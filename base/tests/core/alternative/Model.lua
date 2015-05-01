@@ -28,57 +28,57 @@ return{
 		local error_func = function()
 			local Tube = Model{cs = CellularSpace{xdim = 10}}
 		end
-		unitTest:assert_error(error_func, "Type CellularSpace (parameter 'cs') is not supported as argument of Model.")
+		unitTest:assertError(error_func, "Type CellularSpace (parameter 'cs') is not supported as argument of Model.")
 
 		local error_func = function()
 			local Tube = Model{abc = {cs = CellularSpace{xdim = 10}}}
 		end
-		unitTest:assert_error(error_func, "Type CellularSpace (parameter 'abc.cs') is not supported as argument of Model.")
+		unitTest:assertError(error_func, "Type CellularSpace (parameter 'abc.cs') is not supported as argument of Model.")
 
 		local error_func = function()
 			local Tube = Model{cs = {1, 2, 3, 4, 5}}
 		end
-		unitTest:assert_error(error_func, "It is not possible to use a non-named table in a Model (parameter 'cs').")
+		unitTest:assertError(error_func, "It is not possible to use a non-named table in a Model (parameter 'cs').")
 
 		local error_func = function()
 			local Tube = Model{finalTime = "2"}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "2"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("finalTime", "number", "2"))
 
 		local error_func = function()
 			local Tube = Model{finalTime = Mandatory("table")}
 		end
-		unitTest:assert_error(error_func, "finalTime can only be Mandatory('number'), got Mandatory('table').")
+		unitTest:assertError(error_func, "finalTime can only be Mandatory('number'), got Mandatory('table').")
 
 		local error_func = function()
 			local Tube = Model{finalTime = Choice{"1", "2"}}
 		end
-		unitTest:assert_error(error_func, "finalTime can only be a Choice with 'number' values, got 'string'.")
+		unitTest:assertError(error_func, "finalTime can only be a Choice with 'number' values, got 'string'.")
 
 		local error_func = function()
 			local Tube = Model{seed = "2"}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("seed", "number", "2"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("seed", "number", "2"))
 
 		local error_func = function()
 			local Tube = Model{seed = -2}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("seed", -2, true))
+		unitTest:assertError(error_func, positiveArgumentMsg("seed", -2, true))
 
 		local error_func = function()
 			local Tube = Model{seed = Mandatory("table")}
 		end
-		unitTest:assert_error(error_func, "seed can only be Mandatory('number'), got Mandatory('table').")
+		unitTest:assertError(error_func, "seed can only be Mandatory('number'), got Mandatory('table').")
 
 		local error_func = function()
 			local Tube = Model{seed = Choice{"1", "2"}}
 		end
-		unitTest:assert_error(error_func, "seed can only be a Choice with 'number' values, got 'string'.")
+		unitTest:assertError(error_func, "seed can only be a Choice with 'number' values, got 'string'.")
 	
 		local error_func = function()
 			local Tube = Model{seed = Choice{1, 2}}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("init"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("init"))
 	
 		local error_func = function()
 			local Tube = Model{
@@ -87,7 +87,7 @@ return{
 				check = 2
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("check", "function", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("check", "function", 2))
 
 		local Tube = Model{
 			init = function(model) end,
@@ -97,7 +97,7 @@ return{
 		local error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "The object does not have a Timer or an Environment with at least one Timer.")
+		unitTest:assertError(error_func, "The object does not have a Timer or an Environment with at least one Timer.")
 
 		Tube = Model{
 			init = function(model)
@@ -110,12 +110,12 @@ return{
 		error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "The object has two running objects: 't2' (Timer) and 't' (Timer).")
+		unitTest:assertError(error_func, "The object has two running objects: 't2' (Timer) and 't' (Timer).")
 
 		error_func = function()
 			local m = Tube{finalTime = "2"}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "2"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("finalTime", "number", "2"))
 
 		Tube = Model{
 			init = function(model)
@@ -128,17 +128,17 @@ return{
 		error_func = function()
 			local m = Tube{2}
 		end
-		unitTest:assert_error(error_func, "All the arguments must be named.")
+		unitTest:assertError(error_func, "All the arguments must be named.")
 
 		error_func = function()
 			local m = Tube{seed = "2"}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("seed", "number", "2"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("seed", "number", "2"))
 
 		error_func = function()
 			local m = Tube{seed = -2}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("seed", -2, true))
+		unitTest:assertError(error_func, positiveArgumentMsg("seed", -2, true))
 
 		Tube = Model{
 			init = function(model)
@@ -151,7 +151,7 @@ return{
 		error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "The object has two running objects: 't' (Timer) and 'e' (Environment).")
+		unitTest:assertError(error_func, "The object has two running objects: 't' (Timer) and 'e' (Environment).")
 
 		-- this test is necessary because it changes the searching order between the Timer and the Environment
 		Tube = Model{
@@ -165,7 +165,7 @@ return{
 		local error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, "The object has two running objects: 't' (Environment) and 'e' (Timer).")
+		unitTest:assertError(error_func, "The object has two running objects: 't' (Environment) and 'e' (Timer).")
 
 		Tube = Model{
 			init = function(model)
@@ -177,7 +177,7 @@ return{
 		error_func = function()
 			local m = Tube{}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("finalTime", "number", "5"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("finalTime", "number", "5"))
 
 		local Tube = Model{
 			simulationSteps = Choice{10, 20, 30},
@@ -206,67 +206,67 @@ return{
 		local error_func = function()
 			local m = Tube{flow = {a = 2}}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("flow", "number", {a = 2}))
+		unitTest:assertError(error_func, incompatibleTypeMsg("flow", "number", {a = 2}))
 
 		error_func = function()
 			local m = Tube{msleep = 40}
 		end
-		unitTest:assert_error(error_func, "Argument 'msleep' should be less than or equal to 2.")
+		unitTest:assertError(error_func, "Argument 'msleep' should be less than or equal to 2.")
 
 		error_func = function()
 			local m = Tube{msleep = 0}
 		end
-		unitTest:assert_error(error_func, "Argument 'msleep' should be greater than or equal to 1.")
+		unitTest:assertError(error_func, "Argument 'msleep' should be greater than or equal to 1.")
 
 		error_func = function()
 			local m = Tube{msleep = 1.25}
 		end
-		unitTest:assert_error(error_func, "Invalid value for argument 'msleep' (1.25).")
+		unitTest:assertError(error_func, "Invalid value for argument 'msleep' (1.25).")
 
 		error_func = function()
 			local m = Tube{simulationSteps = 40}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("simulationSteps", "one of {10, 20, 30}", 40))
+		unitTest:assertError(error_func, incompatibleValueMsg("simulationSteps", "one of {10, 20, 30}", 40))
 
 		error_func = function()
 			local m = Tube{simulationSteps = "40"}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("simulationSteps", "number", "40"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("simulationSteps", "number", "40"))
 
 		error_func = function()
 			local m = Tube{block = {level = 40}}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("block.level", "one of {1, 2, 3}", 40))
+		unitTest:assertError(error_func, incompatibleValueMsg("block.level", "one of {1, 2, 3}", 40))
 
 		error_func = function()
 			local m = Tube{block = {mblock = 40}}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("block.mblock"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("block.mblock"))
 
 		error_func = function()
 			local m = Tube{s = 3}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("s"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("s"))
 
 		error_func = function()
 			local m = Tube{checkZero = 3}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("checkZero", "boolean", 3))
+		unitTest:assertError(error_func, incompatibleTypeMsg("checkZero", "boolean", 3))
 	
 		error_func = function()
 			local m = Tube{initialWater = -5}
 		end
-		unitTest:assert_error(error_func, "Initial water should be greater than zero.")
+		unitTest:assertError(error_func, "Initial water should be greater than zero.")
 
 		error_func = function()
 			local m = Tube{block = {xmix = 5}}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("block.xmix", "block.xmax"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("block.xmix", "block.xmax"))
 
 		error_func = function()
 			local m = Tube{block = {xmin = false}}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("block.xmin", "number", false))
+		unitTest:assertError(error_func, incompatibleTypeMsg("block.xmin", "number", false))
 			
 		local Tube = Model{
 			bb = Choice{min = 10, max = 20, step = 1},
@@ -276,22 +276,22 @@ return{
 		error_func = function()
 			local T = Tube{bb = false}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("bb", "number", false))
+		unitTest:assertError(error_func, incompatibleTypeMsg("bb", "number", false))
 
 		error_func = function()
 			local T = Tube{bb = 10.5}
 		end
-		unitTest:assert_error(error_func, "Invalid value for argument 'bb' (10.5).")
+		unitTest:assertError(error_func, "Invalid value for argument 'bb' (10.5).")
 	
 		error_func = function()
 			local T = Tube{bb = 21.5}
 		end
-		unitTest:assert_error(error_func, "Argument 'bb' should be less than or equal to 20.")
+		unitTest:assertError(error_func, "Argument 'bb' should be less than or equal to 20.")
 
 		error_func = function()
 			local T = Tube{bb = 5}
 		end
-		unitTest:assert_error(error_func, "Argument 'bb' should be greater than or equal to 10.")
+		unitTest:assertError(error_func, "Argument 'bb' should be greater than or equal to 10.")
 
 		local Tube = Model{
 			init = function() end
@@ -300,7 +300,7 @@ return{
 		error_func = function()
 			local T = Tube{}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("finalTime"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("finalTime"))
 
 		local M = Model{
 			value = Mandatory("number"),
@@ -310,12 +310,12 @@ return{
 		error_func = function()
 			local m = M{}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("value"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("value"))
 
 		error_func = function()
 			local m = M{value = false}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("value", "number", false))
+		unitTest:assertError(error_func, incompatibleTypeMsg("value", "number", false))
 
 		M = Model{
 			v = {value = Mandatory("number")},
@@ -325,12 +325,12 @@ return{
 		error_func = function()
 			local m = M{}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("v.value"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("v.value"))
 
 		error_func = function()
 			local m = M{v = {value = false}}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("v.value", "number", false))
+		unitTest:assertError(error_func, incompatibleTypeMsg("v.value", "number", false))
 
 		M = Model{
 			v = {value = Choice{min = 1, max = 10, step = 0.5}},
@@ -340,22 +340,22 @@ return{
 		error_func = function()
 			local m = M{v = {value = 1.4}}
 		end
-		unitTest:assert_error(error_func, "Invalid value for argument 'v.value' (1.4).")
+		unitTest:assertError(error_func, "Invalid value for argument 'v.value' (1.4).")
 
 		error_func = function()
 			local m = M{v = {value = "1.4"}}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("v.value", "number", "1.4"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("v.value", "number", "1.4"))
 	
 		error_func = function()
 			local m = M{v = {value = 0}}
 		end
-		unitTest:assert_error(error_func, "Argument 'v.value' should be greater than or equal to 1.")
+		unitTest:assertError(error_func, "Argument 'v.value' should be greater than or equal to 1.")
 	
 		error_func = function()
 			local m = M{v = {value = 11}}
 		end
-		unitTest:assert_error(error_func, "Argument 'v.value' should be less than or equal to 10.")
+		unitTest:assertError(error_func, "Argument 'v.value' should be less than or equal to 10.")
 
 		M = Model{
 			v = {value = Choice{1, 2, 4}},
@@ -365,7 +365,7 @@ return{
 		error_func = function()
 			local m = M{v = {value = "1.4"}}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("v.value", "number", "1.4"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("v.value", "number", "1.4"))
 
 		M = Model{
 			file1 = "*.csv",
@@ -378,22 +378,22 @@ return{
 		error_func = function()
 			local m = M{file1 = file("agents.csv", "base")}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("file2"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("file2"))
 
 		error_func = function()
 			local m = M{file1 = "agents"}
 		end
-		unitTest:assert_error(error_func, "No file extension for parameter 'file1'. It should be one of '*.csv'.")
+		unitTest:assertError(error_func, "No file extension for parameter 'file1'. It should be one of '*.csv'.")
 
 		error_func = function()
 			local m = M{file1 = file("brazil.gal", "base")}
 		end
-		unitTest:assert_error(error_func, "Invalid file extension for parameter 'file1'. It should be one of '*.csv'.")
+		unitTest:assertError(error_func, "Invalid file extension for parameter 'file1'. It should be one of '*.csv'.")
 
 		error_func = function()
 			local m = M{file1 = "agxd.csv"}
 		end
-		unitTest:assert_error(error_func, resourceNotFoundMsg(toLabel("file1"), "agxd.csv"))
+		unitTest:assertError(error_func, resourceNotFoundMsg(toLabel("file1"), "agxd.csv"))
 
 		M = Model{
 			files = {
@@ -408,27 +408,27 @@ return{
 		error_func = function()
 			local m = M{files = {file1 = file("agents.csv", "base")}}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(toLabel("file2", "files")))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(toLabel("file2", "files")))
 
 		error_func = function()
 			local m = M{files = {file1 = 2}}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("files.file1", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("files.file1", "string", 2))
 
 		error_func = function()
 			local m = M{files = {file1 = "agents"}}
 		end
-		unitTest:assert_error(error_func, "No file extension for parameter 'files.file1'. It should be one of '*.csv'.")
+		unitTest:assertError(error_func, "No file extension for parameter 'files.file1'. It should be one of '*.csv'.")
 
 		error_func = function()
 			local m = M{files = {file1 = file("brazil.gal", "base")}}
 		end
-		unitTest:assert_error(error_func, "Invalid file extension for parameter 'files.file1'. It should be one of '*.csv'.")
+		unitTest:assertError(error_func, "Invalid file extension for parameter 'files.file1'. It should be one of '*.csv'.")
 
 		error_func = function()
 			local m = M{files = {file1 = "agxd.csv"}}
 		end
-		unitTest:assert_error(error_func, resourceNotFoundMsg(toLabel("file1", "files"), "agxd.csv"))
+		unitTest:assertError(error_func, resourceNotFoundMsg(toLabel("file1", "files"), "agxd.csv"))
 	end,
 	interface = function(unitTest)
 		local error_func = function()
@@ -438,7 +438,7 @@ return{
 				interface = function() return 2 end
 			}
 		end
-		unitTest:assert_error(error_func, "The returning value of interface() should be a table, got number.")
+		unitTest:assertError(error_func, "The returning value of interface() should be a table, got number.")
 
 		error_func = function()
 			local Tube = Model{
@@ -447,7 +447,7 @@ return{
 				interface = function() return {2} end
 			}
 		end
-		unitTest:assert_error(error_func, "There is an element in the interface() that is not a table.")
+		unitTest:assertError(error_func, "There is an element in the interface() that is not a table.")
 
 		error_func = function()
 			local Tube = Model{
@@ -456,7 +456,7 @@ return{
 				interface = function() return {{2}} end
 			}
 		end
-		unitTest:assert_error(error_func, "All the elements in each interface() vector should be string, got number.")
+		unitTest:assertError(error_func, "All the elements in each interface() vector should be string, got number.")
 
 		error_func = function()
 			local Tube = Model{
@@ -465,7 +465,7 @@ return{
 				interface = function() return {{"number", "number"}} end
 			}
 		end
-		unitTest:assert_error(error_func, "Argument 'number' cannot be displayed twice in the interface().")
+		unitTest:assertError(error_func, "Argument 'number' cannot be displayed twice in the interface().")
 
 		error_func = function()
 			local Tube = Model{
@@ -474,7 +474,7 @@ return{
 				interface = function() return {{"number", "string"}} end
 			}
 		end
-		unitTest:assert_error(error_func, "There is no argument 'string' in the Model, although it is described in the interface().")
+		unitTest:assertError(error_func, "There is no argument 'string' in the Model, although it is described in the interface().")
 
 		error_func = function()
 			local Tube = Model{
@@ -483,7 +483,7 @@ return{
 				interface = function() return {{"number", "compulsory"}} end
 			}
 		end
-		unitTest:assert_error(error_func, "interface() element 'compulsory' is not an argument of the Model.")
+		unitTest:assertError(error_func, "interface() element 'compulsory' is not an argument of the Model.")
 
 		error_func = function()
 			local Tube = Model{
@@ -492,7 +492,7 @@ return{
 				interface = function() return {{"number", "aaa"}} end
 			}
 		end
-		unitTest:assert_error(error_func, "interface() element 'aaa' is not an argument of the Model.")
+		unitTest:assertError(error_func, "interface() element 'aaa' is not an argument of the Model.")
 
 		error_func = function()
 			local Tube = Model{
@@ -502,7 +502,7 @@ return{
 				interface = function() return {{"number", "aaa"}} end
 			}
 		end
-		unitTest:assert_error(error_func, "interface() element 'aaa' is not a table in the Model.")
+		unitTest:assertError(error_func, "interface() element 'aaa' is not a table in the Model.")
 
 		error_func = function()
 			local Tube = Model{
@@ -512,7 +512,7 @@ return{
 				interface = function() return {{"number", "aaa"}} end
 			}
 		end
-		unitTest:assert_error(error_func, "interface() element 'aaa' is a non-named table in the Model.")
+		unitTest:assertError(error_func, "interface() element 'aaa' is a non-named table in the Model.")
 
 		error_func = function()
 			local Tube = Model{
@@ -522,7 +522,7 @@ return{
 				interface = function() return {{"number", "aaa"}} end
 			}
 		end
-		unitTest:assert_error(error_func, "interface() element 'aaa' is empty in the Model.")
+		unitTest:assertError(error_func, "interface() element 'aaa' is empty in the Model.")
 	end
 }
 

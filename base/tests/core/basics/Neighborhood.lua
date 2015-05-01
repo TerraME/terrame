@@ -28,10 +28,10 @@
 return{
 	Neighborhood = function(unitTest)
 		local neigh = Neighborhood()
-		unitTest:assert_type(neigh, "Neighborhood")
+		unitTest:assertType(neigh, "Neighborhood")
 
 		local neigh = Neighborhood()
-		unitTest:assert_type(neigh, "Neighborhood")
+		unitTest:assertType(neigh, "Neighborhood")
 	end,
 	__len = function(unitTest)
 		local neigh = Neighborhood()

@@ -72,9 +72,9 @@ local Tube2 = Model{
 
 return{
 	Model = function(unitTest)
-		unitTest:assert_type(Tube, "Model")
+		unitTest:assertType(Tube, "Model")
 		local t = Tube{filter = function() end}
-		unitTest:assert_type(t, "Tube")
+		unitTest:assertType(t, "Tube")
 
 		unitTest:assertEquals(t.simulationSteps, 10)
 		unitTest:assertEquals(t.observingStep, 1)
@@ -82,7 +82,7 @@ return{
 		unitTest:assertEquals(t.subwater, 4)
 		unitTest:assertEquals(t.block.xmin, 0)
 		unitTest:assertEquals(t.block.level, 1)
-		unitTest:assert_type(t.filter, "function")
+		unitTest:assertType(t.filter, "function")
 
 		t = Tube{
 			simulationSteps = 20,
@@ -122,9 +122,9 @@ return{
 
 		t = Tube()
 
-		unitTest:assert_type(t, "table")
-		unitTest:assert_type(t.simulationSteps, "Choice")
-		unitTest:assert_type(t.filter, "Mandatory")
+		unitTest:assertType(t, "table")
+		unitTest:assertType(t.simulationSteps, "Choice")
+		unitTest:assertType(t.filter, "Mandatory")
 
 		local M = Model{
 			file0 = "def",

@@ -61,11 +61,11 @@ return{
 		local sumWeight  = 0
 
 		forEachCell(cs, function(cell)
-			unitTest:assert_type(cell.object_id0, "string")
-			unitTest:assert_type(cell.x, "number")
-			unitTest:assert_type(cell.y, "number")
-			unitTest:assert_not_nil(cell.height_)
-			unitTest:assert_not_nil(cell.soilWater)
+			unitTest:assertType(cell.object_id0, "string")
+			unitTest:assertType(cell.x, "number")
+			unitTest:assertType(cell.y, "number")
+			unitTest:assertNotNull(cell.height_)
+			unitTest:assertNotNull(cell.soilWater)
 
 			forEachNeighbor(cell, "moore1", function(cell, neigh, weight)
 				countNeigh = countNeigh + 1
@@ -159,12 +159,12 @@ return{
 		}
 
 		forEachCell(cs, function(cell) 
-			unitTest:assert_type(cell.objectId_, "string")
-			unitTest:assert_type(cell.x, "number")
-			unitTest:assert_type(cell.y, "number")
-			unitTest:assert_not_nil(cell.height_)
-			unitTest:assert_not_nil(cell.soilWater)
-			unitTest:assert_nil(cell.umatributoquenaofoiselecionado)
+			unitTest:assertType(cell.objectId_, "string")
+			unitTest:assertType(cell.x, "number")
+			unitTest:assertType(cell.y, "number")
+			unitTest:assertNotNull(cell.height_)
+			unitTest:assertNotNull(cell.soilWater)
+			unitTest:assertNull(cell.umatributoquenaofoiselecionado)
 		end)
 		unitTest:assertEquals(10201, #cs)
 
@@ -182,11 +182,11 @@ return{
 		}
 
 		forEachCell(cs, function(cell) 
-			unitTest:assert_type(cell.objectId_, "string")
-			unitTest:assert_type(cell.x, "number")
-			unitTest:assert_type(cell.y, "number")
+			unitTest:assertType(cell.objectId_, "string")
+			unitTest:assertType(cell.x, "number")
+			unitTest:assertType(cell.y, "number")
 			unitTest:assert(cell.height_ > 100)		
-			unitTest:assert_not_nil(cell.soilWater)
+			unitTest:assertNotNull(cell.soilWater)
 		end)
 
 		unitTest:assertEquals(5673, #cs)
@@ -195,19 +195,19 @@ return{
 		cs = CellularSpace{database = file("simple-cs.csv", "base"), dbType = "csv", sep = ";"}
 		cs = CellularSpace{database = file("simple-cs.csv", "base"), sep = ";"}
 
-		unitTest:assert_type(cs, "CellularSpace")
+		unitTest:assertType(cs, "CellularSpace")
 		unitTest:assertEquals(2500, #cs)
 
 		forEachCell(cs, function(cell)
-			unitTest:assert_type(cell.maxSugar, "number")
+			unitTest:assertType(cell.maxSugar, "number")
 		end)
 
 		-- shp file
 		cs = CellularSpace{database = file("brazilstates.shp", "base")}
 
-		unitTest:assert_not_nil(cs.cells[1])
+		unitTest:assertNotNull(cs.cells[1])
 		unitTest:assertEquals(#cs.cells, 27)
-		unitTest:assert_type(cs.cells[1], "Cell")
+		unitTest:assertType(cs.cells[1], "Cell")
 
 		unitTest:assertEquals(cs.minRow, 0)
 		unitTest:assertEquals(cs.maxRow, 5256115)
@@ -240,25 +240,25 @@ return{
 			autoload = false
 		}
 		
-		unitTest:assert_nil(cs.cells[1])
+		unitTest:assertNull(cs.cells[1])
 		unitTest:assertEquals(#cs.cells, 0)
 
 		cs:load()
-		unitTest:assert_not_nil(cs.cells[1])
+		unitTest:assertNotNull(cs.cells[1])
 		unitTest:assertEquals(#cs.cells, 10201)
-		unitTest:assert_type(cs.cells[1], "Cell")
+		unitTest:assertType(cs.cells[1], "Cell")
 
 		cs = CellularSpace{database = file("brazilstates.shp", "base"), autoload = false}
-		unitTest:assert_nil(cs.cells[1])
+		unitTest:assertNull(cs.cells[1])
 		unitTest:assertEquals(#cs.cells, 0)
 
 		cs:load()
-		unitTest:assert_not_nil(cs.cells[1])
+		unitTest:assertNotNull(cs.cells[1])
 		unitTest:assertEquals(#cs.cells, 27)
-		unitTest:assert_type(cs.cells[1], "Cell")
+		unitTest:assertType(cs.cells[1], "Cell")
 
 		cs = CellularSpace{database = file("simple-cs.csv", "base"), sep = ";", autoload = false}
-		unitTest:assert_type(cs, "CellularSpace")
+		unitTest:assertType(cs, "CellularSpace")
 		unitTest:assertEquals(0, #cs)
 
 		cs:load()
@@ -426,8 +426,8 @@ return{
 		local sumWeight  = 0
 		forEachCell(cs, function(cell)
 			forEachNeighbor(cell, function(cell, neigh, weight)
-				unitTest:assert_not_nil(neigh) -- SKIP
-				unitTest:assert_not_nil(weight) -- SKIP
+				unitTest:assertNotNull(neigh) -- SKIP
+				unitTest:assertNotNull(weight) -- SKIP
 				countNeigh = countNeigh + 1
 				sumWeight = sumWeight + weight
 			end)
@@ -463,7 +463,7 @@ return{
 			theme = "cells1000x1000"
 		}
 
-		unitTest:assert_type(cs1, "CellularSpace") -- SKIP
+		unitTest:assertType(cs1, "CellularSpace") -- SKIP
 		unitTest:assertEquals(121, #cs1) -- SKIP
 
 		local countTest = 1
@@ -479,7 +479,7 @@ return{
 
 		forEachCell(cs1, function(cell)
 			local neighborhood = cell:getNeighborhood()
-			unitTest:assert_not_nil(neighborhood) -- SKIP
+			unitTest:assertNotNull(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
@@ -493,8 +493,8 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, function(c, neigh, weight)
-				unitTest:assert_not_nil(c) -- SKIP
-				unitTest:assert_not_nil(neigh) -- SKIP
+				unitTest:assertNotNull(c) -- SKIP
+				unitTest:assertNotNull(neigh) -- SKIP
 
 				unitTest:assert(weight >= 900) -- SKIP
 				unitTest:assert(weight <= 1800) -- SKIP
@@ -537,7 +537,7 @@ return{
 
 		forEachCell(cs1, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood) -- SKIP
+			unitTest:assertNotNull(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
@@ -551,8 +551,8 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c) -- SKIP
-				unitTest:assert_not_nil(neigh) -- SKIP
+				unitTest:assertNotNull(c) -- SKIP
+				unitTest:assertNotNull(neigh) -- SKIP
 
 				unitTest:assert(weight >= 900) -- SKIP
 				unitTest:assert(weight <= 1800) -- SKIP
@@ -593,7 +593,7 @@ return{
 
 		forEachCell(cs3, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood) -- SKIP
+			unitTest:assertNotNull(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
@@ -607,8 +607,8 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c) -- SKIP
-				unitTest:assert_not_nil(neigh) -- SKIP
+				unitTest:assertNotNull(c) -- SKIP
+				unitTest:assertNotNull(neigh) -- SKIP
 
 				unitTest:assertEquals(weight, 1) -- SKIP
 
@@ -644,7 +644,7 @@ return{
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood) -- SKIP
+			unitTest:assertNotNull(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
@@ -655,8 +655,8 @@ return{
 			maxSize = math.max(neighborhoodSize, maxSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c) -- SKIP
-				unitTest:assert_not_nil(neigh) -- SKIP
+				unitTest:assertNotNull(c) -- SKIP
+				unitTest:assertNotNull(neigh) -- SKIP
 
 				unitTest:assert(weight >= 70.8015) -- SKIP
 				unitTest:assert(weight <= 9999.513) -- SKIP
@@ -689,7 +689,7 @@ return{
 
 		forEachCell(cs1, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood) -- SKIP
+			unitTest:assertNotNull(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
@@ -703,8 +703,8 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c) -- SKIP
-				unitTest:assert_not_nil(neigh) -- SKIP
+				unitTest:assertNotNull(c) -- SKIP
+				unitTest:assertNotNull(neigh) -- SKIP
 
 				unitTest:assertEquals(1, weight) -- SKIP
 				sumWeight = sumWeight + weight
@@ -736,7 +736,7 @@ return{
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood) -- SKIP
+			unitTest:assertNotNull(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
 
@@ -747,8 +747,8 @@ return{
 			maxSize = math.max(neighborhoodSize, maxSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c) -- SKIP
-				unitTest:assert_not_nil(neigh) -- SKIP
+				unitTest:assertNotNull(c) -- SKIP
+				unitTest:assertNotNull(neigh) -- SKIP
 
 				unitTest:assertEquals(1, weight) -- SKIP
 				sumWeight = sumWeight + weight
@@ -777,10 +777,10 @@ return{
 
 		forEachCell(cs1, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood) -- SKIP
+			unitTest:assertNotNull(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_type(neighborhoodSize, "number") -- SKIP
+			unitTest:assertType(neighborhoodSize, "number") -- SKIP
 
 			unitTest:assert(neighborhoodSize >= 5) -- SKIP
 			unitTest:assert(neighborhoodSize <= 12) -- SKIP
@@ -792,8 +792,8 @@ return{
 			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c) -- SKIP
-				unitTest:assert_not_nil(neigh) -- SKIP
+				unitTest:assertNotNull(c) -- SKIP
+				unitTest:assertNotNull(neigh) -- SKIP
 
 				unitTest:assert(weight >= 900) -- SKIP
 				unitTest:assert(weight <= 1800) -- SKIP
@@ -831,10 +831,10 @@ return{
 
 		forEachCell(cs2, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			unitTest:assert_not_nil(neighborhood) -- SKIP
+			unitTest:assertNotNull(neighborhood) -- SKIP
 
 			local neighborhoodSize = #neighborhood
-			unitTest:assert_type(neighborhoodSize, "number") -- SKIP
+			unitTest:assertType(neighborhoodSize, "number") -- SKIP
 
 			unitTest:assert(neighborhoodSize >= 5) -- SKIP
 			unitTest:assert(neighborhoodSize <= 120) -- SKIP
@@ -843,9 +843,9 @@ return{
 			maxSize = math.max(neighborhoodSize, maxSize)
 
 			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				unitTest:assert_not_nil(c) -- SKIP
-				unitTest:assert_not_nil(neigh) -- SKIP
-				unitTest:assert_type(weight, "number") -- SKIP
+				unitTest:assertNotNull(c) -- SKIP
+				unitTest:assertNotNull(neigh) -- SKIP
+				unitTest:assertType(weight, "number") -- SKIP
 
 				unitTest:assert(weight >= 70.8015) -- SKIP
 				unitTest:assert(weight <= 9999.513) -- SKIP

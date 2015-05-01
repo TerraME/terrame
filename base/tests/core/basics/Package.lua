@@ -29,13 +29,13 @@ return{
 		local error_func = function()
 			customError("test.")
 		end
-		unitTest:assert_error(error_func, "test.")
+		unitTest:assertError(error_func, "test.")
 	end,
 	customWarning = function(unitTest)
 		local error_func = function()
 			customWarning("test.")
 		end
-		unitTest:assert_error(error_func, "test.")
+		unitTest:assertError(error_func, "test.")
 	end,
 	defaultTableValue = function(unitTest)
 		local t = {x = 5}
@@ -50,25 +50,25 @@ return{
 		local error_func = function()
 			defaultValueWarning("size", 2)
 		end
-		unitTest:assert_error(error_func, defaultValueMsg("size", 2))
+		unitTest:assertError(error_func, defaultValueMsg("size", 2))
 	end,
 	deprecatedFunction = function(unitTest)
 		local error_func = function()
 			deprecatedFunction("abc", "def")
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("abc", "def"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("abc", "def"))
 	end,
 	deprecatedFunctionMsg = function(unitTest)
 		unitTest:assertEquals(deprecatedFunctionMsg("aaa", "bbb"), "Function 'aaa' is deprecated. Use 'bbb' instead.")
 	end,
 	file = function(unitTest)
-		unitTest:assert_type(file("simple-cs.csv"), "string")
+		unitTest:assertType(file("simple-cs.csv"), "string")
 	end,
 	incompatibleTypeError = function(unitTest)
 		local error_func = function()
 			incompatibleTypeError("cell", "Cell", Agent{})
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("cell", "Cell", Agent{}))
+		unitTest:assertError(error_func, incompatibleTypeMsg("cell", "Cell", Agent{}))
 	end,
 	incompatibleTypeMsg = function(unitTest)
 		unitTest:assertEquals(incompatibleTypeMsg("aaa", "string", 2), "Incompatible types. Argument 'aaa' expected string, got number.")
@@ -77,17 +77,17 @@ return{
 		local error_func = function()
 			incompatibleValueError("position", "1, 2, or 3", "4")
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("position", "1, 2, or 3", "4"))
+		unitTest:assertError(error_func, incompatibleValueMsg("position", "1, 2, or 3", "4"))
 
 		local error_func = function()
 			incompatibleValueError(1, "1, 2, or 3", "4")
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "1, 2, or 3", "4"))
+		unitTest:assertError(error_func, incompatibleValueMsg(1, "1, 2, or 3", "4"))
 
 		local error_func = function()
 			incompatibleValueError(1, "1, 2, or 3")
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg(1, "1, 2, or 3"))
+		unitTest:assertError(error_func, incompatibleValueMsg(1, "1, 2, or 3"))
 	end,
 	incompatibleValueMsg = function(unitTest)
 		local str = incompatibleValueMsg("attr", "positive", -2)
@@ -97,7 +97,7 @@ return{
 		local error_func = function()
 			integerArgument(1, 0.2)
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg(1, 0.2))
+		unitTest:assertError(error_func, integerArgumentMsg(1, 0.2))
 	end,
 	integerArgumentMsg = function(unitTest)
 		local m = integerArgumentMsg("a", 2.3)
@@ -108,13 +108,13 @@ return{
 		local error_func = function()
 			integerTableArgument(t, "x")
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("x", 2.5))
+		unitTest:assertError(error_func, integerArgumentMsg("x", 2.5))
 	end,
 	invalidFileExtensionError = function(unitTest)
 		local error_func = function()
 			invalidFileExtensionError("file", ".txt")
 		end
-		unitTest:assert_error(error_func, invalidFileExtensionMsg("file", ".txt"))
+		unitTest:assertError(error_func, invalidFileExtensionMsg("file", ".txt"))
 	end,
 	invalidFileExtensionMsg = function(unitTest)
 		unitTest:assertEquals(invalidFileExtensionMsg("aaa", "bbb"), "Argument 'aaa' does not support extension 'bbb'.")
@@ -127,18 +127,18 @@ return{
 		local error_func = function()
 			mandatoryArgument(1, "string")
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
 			mandatoryArgument(1, "string", 2)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	mandatoryArgumentError = function(unitTest)
 		local error_func = function()
 			mandatoryArgumentError("neighborhood")
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("neighborhood"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("neighborhood"))
 	end,
 	mandatoryArgumentMsg = function(unitTest)
 		unitTest:assertEquals(mandatoryArgumentMsg("aaa"), "Argument 'aaa' is mandatory.")
@@ -149,12 +149,12 @@ return{
 		local error_func = function()
 			mandatoryTableArgument(mtable, "bbb", "string")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("bbb", "string", 3))
+		unitTest:assertError(error_func, incompatibleTypeMsg("bbb", "string", 3))
 
 		error_func = function()
 			mandatoryTableArgument(mtable, "ddd", "string")
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("ddd", "string"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("ddd", "string"))
 	end,
 	namedArgumentsMsg = function(unitTest)
 		unitTest:assertEquals(namedArgumentsMsg(), "Arguments must be named.")
@@ -163,7 +163,7 @@ return{
 		local error_func = function()
 			optionalArgument(1, "string", 2)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 	end,
 	optionalTableArgument = function(unitTest)
 		local mtable = {bbb = 3, ccc = "aaa"}
@@ -171,7 +171,7 @@ return{
 		local error_func = function()
 			optionalTableArgument(mtable, "bbb", "string")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("bbb", "string", 3))
+		unitTest:assertError(error_func, incompatibleTypeMsg("bbb", "string", 3))
 	end,
 	packageInfo = function(unitTest)
 		local r = packageInfo()
@@ -191,17 +191,17 @@ return{
 		local error_func = function()
 			positiveArgument(1, 0)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, 0))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, 0))
 
 		local error_func = function()
 			positiveArgument(1, -2)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, -2))
 
 		local error_func = function()
 			positiveArgument(1, -2, true)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -2, true))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, -2, true))
 	end,
 	positiveArgumentMsg = function(unitTest)
 		local m = positiveArgumentMsg("a", -2)
@@ -215,25 +215,25 @@ return{
 		local error_func = function()
 			positiveTableArgument(t, "x")
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("x", -2))
+		unitTest:assertError(error_func, positiveArgumentMsg("x", -2))
 
 		local t = {x = 0}
 		local error_func = function()
 			positiveTableArgument(t, "x")
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("x", 0))
+		unitTest:assertError(error_func, positiveArgumentMsg("x", 0))
 
 		local t = {x = -1}
 		local error_func = function()
 			positiveTableArgument(t, "x", true)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("x", -1, true))
+		unitTest:assertError(error_func, positiveArgumentMsg("x", -1, true))
 	end,
 	resourceNotFoundError = function(unitTest)
 		local error_func = function()
 			resourceNotFoundError("file", "/usr/local/file.txt")
 		end
-		unitTest:assert_error(error_func, resourceNotFoundMsg("file", "/usr/local/file.txt"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "/usr/local/file.txt"))
 	end,
 	resourceNotFoundMsg = function(unitTest)
 		unitTest:assertEquals(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for argument 'aaa'.")
@@ -247,7 +247,7 @@ return{
 		}
 
 		unitTest:assertEquals(suggestion("aaaab", t), "aaaaa")
-		unitTest:assert_nil(suggestion("ddddd", t))
+		unitTest:assertNull(suggestion("ddddd", t))
 	end,
 	switch = function(unitTest)
 		local count = 0
@@ -274,12 +274,12 @@ return{
 		local error_func = function()
 			switchInvalidArgument("arg", "aaaab", t)
 		end
-		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("aaaab", "arg", "aaaaa"))
+		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("aaaab", "arg", "aaaaa"))
 
 		local error_func = function()
 			switchInvalidArgument("arg", "ddddd", t)
 		end
-		unitTest:assert_error(error_func, switchInvalidArgumentMsg("ddddd", "arg", t))
+		unitTest:assertError(error_func, switchInvalidArgumentMsg("ddddd", "arg", t))
 	end,
 	switchInvalidArgumentMsg = function(unitTest)
 		local options = {
@@ -318,40 +318,40 @@ return{
 		local error_func = function(unitTest)
 			verifyUnnecessaryArguments({aaa = "aaa"}, {"abc", "acd", "aab"})
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaa"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("aaa"))
 
 		local error_func = function(unitTest)
 			verifyUnnecessaryArguments({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("aaaa", "aaab"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("aaaa", "aaab"))
 	end,
 	verifyNamedTable = function(unitTest)
 		local error_func = function()
 			verifyNamedTable()
 		end
-		unitTest:assert_error(error_func, tableArgumentMsg())
+		unitTest:assertError(error_func, tableArgumentMsg())
 
 		local error_func = function()
 			verifyNamedTable(123)
 		end
-		unitTest:assert_error(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		local error_func = function()
 			verifyNamedTable{x = 3, 3, 4}
 		end
-		unitTest:assert_error(error_func, "All elements of the argument must be named.")
+		unitTest:assertError(error_func, "All elements of the argument must be named.")
 	end,
 	valueNotFoundError = function(unitTest)
 		local error_func = function()
 			valueNotFoundError("1", "neighborhood")
 		end
-		unitTest:assert_error(error_func, "Value 'neighborhood' not found for argument '1'.")
+		unitTest:assertError(error_func, "Value 'neighborhood' not found for argument '1'.")
 	end,
 	verify = function(unitTest)
 		local error_func = function(unitTest)
 			verify(false, "error")
 		end
-		unitTest:assert_error(error_func, "error")
+		unitTest:assertError(error_func, "error")
 	end
 }
 

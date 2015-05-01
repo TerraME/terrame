@@ -83,37 +83,37 @@ return{
 			envmt = Environment()
 		end
 
-		unitTest:assert_error(error_func, tableArgumentMsg())
+		unitTest:assertError(error_func, tableArgumentMsg())
 
 		local error_func = function()
 			envmt = Environment(2)
 		end
 
-		unitTest:assert_error(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		local error_func = function()
 			envmt = Environment{at1}
 		end
 
-		unitTest:assert_error(error_func, "The Environment has an Automaton but not a CellularSpace.")
+		unitTest:assertError(error_func, "The Environment has an Automaton but not a CellularSpace.")
 
 		local error_func = function()
 			envmt = Environment{2}
 		end
 
-		unitTest:assert_error(error_func, "Argument '1' (a 'number') cannot be added to an Environment.")
+		unitTest:assertError(error_func, "Argument '1' (a 'number') cannot be added to an Environment.")
 	end,
 	add = function(unitTest)
 		local env = Environment{}
 		local error_func = function()
 			env:add(nil)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory"))
 
 		error_func = function()
 			env:add{}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory", {}))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent, Automaton, Cell, CellularSpace, Environment, Group, Society, Timer or Trajectory", {}))
 	end,
 	createPlacement = function(unitTest)
 		local ag1 = Agent{}
@@ -129,18 +129,18 @@ return{
 		local error_func = function()
 			env:createPlacement(2)
 		end
-		unitTest:assert_error(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, namedArgumentsMsg())
 
 
 		error_func = function()
 			env:createPlacement{max = "13"}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("max", "number", "13"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("max", "number", "13"))
 
 		error_func = function()
 			env:createPlacement{strategy = 15, max = 13}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("strategy", "string", 13))
+		unitTest:assertError(error_func, incompatibleTypeMsg("strategy", "string", 13))
 
 		error_func = function()
 			env:createPlacement{strategy = "teste1", max = 13}
@@ -152,22 +152,22 @@ return{
 			void = true
 		}
 
-		unitTest:assert_error(error_func, switchInvalidArgumentMsg("teste1", "strategy", options))
+		unitTest:assertError(error_func, switchInvalidArgumentMsg("teste1", "strategy", options))
 
 		error_func = function()
 			env:createPlacement{strategy = "unifor", max = 13}
 		end
-		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("unifor", "strategy", "uniform"))
+		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("unifor", "strategy", "uniform"))
 
 		error_func = function()
 			env:createPlacement{name = 15, max = 13}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 13))
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 13))
 
 		error_func = function()
 			env:createPlacement{max = -13}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("max", -13))
+		unitTest:assertError(error_func, positiveArgumentMsg("max", -13))
 
 		local cs = CellularSpace{xdim = 2}
 		local ag1 = Agent{}
@@ -179,35 +179,35 @@ return{
 		error_func = function()
 			env:createPlacement()
 		end
-		unitTest:assert_error(error_func, "Placements is still not implemented for groups.")
+		unitTest:assertError(error_func, "Placements is still not implemented for groups.")
 	
 		env = Environment{sc1}
 
 		error_func = function()
 			env:createPlacement()
 		end
-		unitTest:assert_error(error_func, "The Environment does not contain a CellularSpace.")
+		unitTest:assertError(error_func, "The Environment does not contain a CellularSpace.")
 
 		env = Environment{cs = cs, cs2 = cs}
 
 		error_func = function()
 			env:createPlacement()
 		end
-		unitTest:assert_error(error_func, "Environment should contain only one CellularSpace, Trajectory, or Cell.")
+		unitTest:assertError(error_func, "Environment should contain only one CellularSpace, Trajectory, or Cell.")
 
 		env = Environment{cs}
 
 		error_func = function()
 			env:createPlacement()
 		end
-		unitTest:assert_error(error_func, "Could not find a behavioral entity (Society or Agent) within the Environment.")
+		unitTest:assertError(error_func, "Could not find a behavioral entity (Society or Agent) within the Environment.")
 
 		env = Environment{cs, sc1}
 
 		error_func = function()
 			env:createPlacement{max = 1}
 		end
-		unitTest:assert_error(error_func, "It is not possible to put such amount of agents in space.")
+		unitTest:assertError(error_func, "It is not possible to put such amount of agents in space.")
 
 		env = Environment{cs, sc1}
 		env:createPlacement()
@@ -215,7 +215,7 @@ return{
 		error_func = function()
 			env:createPlacement()
 		end
-		unitTest:assert_error(error_func, "There is a Society within this Environment that already has this placement.")
+		unitTest:assertError(error_func, "There is a Society within this Environment that already has this placement.")
 
 	end,
 	execute = function(unitTest)
@@ -225,7 +225,7 @@ return{
 			env:execute()
 		end
 
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 	end,
 	notify = function(unitTest)
 		local env = Environment{}
@@ -233,12 +233,12 @@ return{
 		local error_func = function()
 			env:notify("not_int")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			env:notify(-1)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, -1, true))
 	end
 }
 

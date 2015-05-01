@@ -61,7 +61,7 @@ return{
 				source = file("gpmAreaCellsPols.gpm", "base"),
 			}
 		end
-		unitTest:assert_error(error_func, "CellularSpaces with layers 'cells1000x1000' and 'Limit' were not found in the Environment.")
+		unitTest:assertError(error_func, "CellularSpaces with layers 'cells1000x1000' and 'Limit' were not found in the Environment.")
 
 		cs1 = CellularSpace{xdim = 10}
 		cs2 = CellularSpace{xdim = 10}
@@ -77,7 +77,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("source"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("source"))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -86,7 +86,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("source", "string", 5))
+		unitTest:assertError(error_func, incompatibleTypeMsg("source", "string", 5))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -95,7 +95,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste1"))
+		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste1"))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -104,7 +104,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "abc"))
+		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "abc"))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -113,7 +113,7 @@ return{
 				bidirect = true
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 6))
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 6))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -122,7 +122,7 @@ return{
 				bidirect = 13
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("bidirect", "boolean", 13))
+		unitTest:assertError(error_func, incompatibleTypeMsg("bidirect", "boolean", 13))
 
 		error_func = function()
 			env:loadNeighborhood{
@@ -130,7 +130,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, "This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.")
+		unitTest:assertError(error_func, "This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.")
 	
 		error_func = function()
 			env:loadNeighborhood{
@@ -138,7 +138,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, resourceNotFoundMsg("source", "emas-distance-xxx.gpm"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", "emas-distance-xxx.gpm"))
 		
 		error_func = function()
 			env:loadNeighborhood{
@@ -146,7 +146,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, invalidFileExtensionMsg("source", "teste"))
+		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))
 
 		local config = getConfig()
 		local mdbType = config.dbType
@@ -196,7 +196,7 @@ return{
 				name = "my_neighborhood"..countTest
 			}
 		end
-		unitTest:assert_error(error_func, "The string 'bb' found as weight in the file '"..mfile.."' could not be converted to a number.")
+		unitTest:assertError(error_func, "The string 'bb' found as weight in the file '"..mfile.."' could not be converted to a number.")
 
 		local mfile = file("error"..s.."gpmAreaCellsPols-error2.gpm", "base")
 
@@ -206,7 +206,7 @@ return{
 				name = "my_neighborhood"..countTest
 			}
 		end
-		unitTest:assert_error(error_func, "The string '' found as weight in the file '"..mfile.."' could not be converted to a number.")
+		unitTest:assertError(error_func, "The string '' found as weight in the file '"..mfile.."' could not be converted to a number.")
 	end
 }
 

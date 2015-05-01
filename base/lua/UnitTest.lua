@@ -105,8 +105,8 @@ UnitTest_ = {
 	-- This argument might be necessary in error messages that include information that can change
 	-- from machine to machine, such as an username. The default value is zero (no discrepance).
 	-- @usage error_func = function() verify(2 > 3, "wrong operator") end
-	-- unitTest:assert_error(error_func, "wrong operator")
-	assert_error = function(self, my_function, error_message, max_error)
+	-- unitTest:assertError(error_func, "wrong operator")
+	assertError = function(self, my_function, error_message, max_error)
 		mandatoryArgument(1, "function", my_function)
 		mandatoryArgument(2, "string", error_message)
 		optionalArgument(3, "number", max_error)
@@ -169,8 +169,8 @@ UnitTest_ = {
 	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
 	-- @arg value Any value.
-	-- @usage unitTest:assert_nil()
-	assert_nil = function(self, value)
+	-- @usage unitTest:assertNull()
+	assertNull = function(self, value)
 		self.test = self.test + 1
 		if value == nil then
 			self.success = self.success + 1
@@ -181,8 +181,8 @@ UnitTest_ = {
 	end,
 	--- Check if a given value is not nil. Otherwise it generates an error.
 	-- @arg value Any value.
-	-- @usage unitTest:assert_not_nil(2)
-	assert_not_nil = function (self, value)
+	-- @usage unitTest:assertNotNull(2)
+	assertNotNull = function (self, value)
 		self.test = self.test + 1
 		if value ~= nil then
 			self.success = self.success + 1
@@ -196,14 +196,14 @@ UnitTest_ = {
 	-- @arg file A string with the file name in the snapshot folder. If the file does not exist
 	-- then it will save the file in the snapshot folder.
 	-- @usage c = Chart{...}
-	-- unitTest:assert_snapshot(c, "test_chart.bmp")
-	assert_snapshot = function(self, observer, file)
+	-- unitTest:assertSnapshot(c, "test_chart.bmp")
+	assertSnapshot = function(self, observer, file)
 		self.snapshots = self.snapshots + 1
 		local s = sessionInfo().separator
 		if not self.imgFolder then
 			self.imgFolder = sessionInfo().path..s.."packages"..s..self.package..s.."snapshots" -- SKIP
 			if attributes(self.imgFolder, "mode") ~= "directory" then -- SKIP
-				customError("Folder '"..self.imgFolder.."' does not exist. Please create such folder in order to use assert_snapshot().")
+				customError("Folder '"..self.imgFolder.."' does not exist. Please create such folder in order to use assertSnapshot().")
 			end
 			self.tsnapshots = {}
 		end
@@ -239,8 +239,8 @@ UnitTest_ = {
 	--- Check if a value belongs to a given type. If not, it generates an error.
 	-- @arg value Any value.
 	-- @arg mtype A string with the name of a type.
-	-- @usage unitTest:assert_type(2, "number")
-	assert_type = function(self, value, mtype)
+	-- @usage unitTest:assertType(2, "number")
+	assertType = function(self, value, mtype)
 		self.test = self.test + 1
 
 		mandatoryArgument(2, "string", mtype)

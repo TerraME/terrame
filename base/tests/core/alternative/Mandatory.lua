@@ -28,12 +28,12 @@ return{
 		local error_func = function()
 			local c = Mandatory(2)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
 
 		error_func = function()
 			local c = Mandatory("string")
 		end
-		unitTest:assert_error(error_func, "Value 'string' cannot be a mandatory argument.")
+		unitTest:assertError(error_func, "Value 'string' cannot be a mandatory argument.")
 	end
 }
 

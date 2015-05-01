@@ -37,7 +37,7 @@ return{
 				class = "business",
 				money = 1000
 			}
-			unitTest:assert_not_nil(ag) -- SKIP
+			unitTest:assertNotNull(ag) -- SKIP
 
 			local reg = debug.getregistry()
 			local countAg = 0
@@ -84,7 +84,7 @@ return{
 			collectgarbage("collect")
 			local at = Automaton{id = "automaton"}
 
-			unitTest:assert_not_nil(at) -- SKIP
+			unitTest:assertNotNull(at) -- SKIP
 
 			local reg = debug.getregistry()
 			local countAt = 0
@@ -130,7 +130,7 @@ return{
 		for i = 1, 100 do
 			collectgarbage("collect")
 			local cell = Cell{cover = "forest"}
-			unitTest:assert_not_nil(cell) -- SKIP
+			unitTest:assertNotNull(cell) -- SKIP
 
 			local reg = debug.getregistry()
 			local count = 0
@@ -176,7 +176,7 @@ return{
 		for i = 1, 100 do
 			collectgarbage("collect")
 			local cs = CellularSpace{xdim = 200}
-			unitTest:assert_type(cs, "CellularSpace") -- SKIP
+			unitTest:assertType(cs, "CellularSpace") -- SKIP
 
 			local reg = debug.getregistry()
 			local countCS = 0
@@ -247,8 +247,8 @@ return{
 			end
 			unitTest:assertEquals(2, count) -- SKIP
 
-			unitTest:assert_not_nil(coord2) -- SKIP
-			unitTest:assert_not_nil(coord1) -- SKIP
+			unitTest:assertNotNull(coord2) -- SKIP
+			unitTest:assertNotNull(coord1) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -278,7 +278,7 @@ return{
 			collectgarbage("collect")
 			local env = Environment{id = "environment"}
 
-			unitTest:assert_not_nil(env) -- SKIP
+			unitTest:assertNotNull(env) -- SKIP
 
 			local reg = debug.getregistry()
 			local countEnv = 0
@@ -327,7 +327,7 @@ return{
 			evt = Event{priority = 1, action = function(event)
 				time = event:getTime()
 			end}
-			unitTest:assert_not_nil(evt) -- SKIP
+			unitTest:assertNotNull(evt) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -341,7 +341,7 @@ return{
 			collectgarbage("collect")
 			flw = Flow{function(event, agent, cell) end}
 
-			unitTest:assert_not_nil(flw) -- SKIP
+			unitTest:assertNotNull(flw) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -357,7 +357,7 @@ return{
 				function(event, agent, c) return true end,
 				target = "wet"
 			}
-			unitTest:assert_not_nil(jmp) -- SKIP
+			unitTest:assertNotNull(jmp) -- SKIP
 		end
 
 		collectgarbage("collect")
@@ -370,7 +370,7 @@ return{
 			collectgarbage("collect")
 			local cs = CellularSpace{xdim = 50}
 
-			unitTest:assert_not_nil(cs) -- SKIP
+			unitTest:assertNotNull(cs) -- SKIP
 
 			cs:createNeighborhood{name = "moore"}
 
@@ -438,7 +438,7 @@ return{
 					time = event:getTime()
 				end}
 			}
-			unitTest:assert_not_nil(t) -- SKIP
+			unitTest:assertNotNull(t) -- SKIP
 
 			local reg = debug.getregistry()
 			local countTimer = 0
@@ -486,8 +486,8 @@ return{
 			local cs = CellularSpace{xdim = 10}
 			local traj = Trajectory{target = cs}
 
-			unitTest:assert_not_nil(cs) -- SKIP
-			unitTest:assert_not_nil(traj) -- SKIP
+			unitTest:assertNotNull(cs) -- SKIP
+			unitTest:assertNotNull(traj) -- SKIP
 
 			local reg = debug.getregistry()
 			local countTraj = 0

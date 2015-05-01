@@ -36,17 +36,17 @@ return{
 		}
 
 		local c1 = Chart{subject = world}
-		unitTest:assert_type(c1, "Chart")
+		unitTest:assertType(c1, "Chart")
 
 		local c2 = Chart{subject = world, select = {"count", "value", "sum"}}
-		unitTest:assert_type(c2, "Chart")
+		unitTest:assertType(c2, "Chart")
 
 		local c3 = Chart{
 			subject = world,
 			style = "steps",
 			width = 2
 		}
-		unitTest:assert_type(c3, "Chart")
+		unitTest:assertType(c3, "Chart")
 
 		local c4 = Chart{
 			subject = world,
@@ -55,7 +55,7 @@ return{
 			pen = {"dashdot", "dashdotdot"},
 			width = {1, 2}
 		}
-		unitTest:assert_type(c4, "Chart")
+		unitTest:assertType(c4, "Chart")
 
 		local c5 = Chart{
 			subject = world,
@@ -65,7 +65,7 @@ return{
 			pen = "dot",
 			symbol = "diamond"
 		}
-		unitTest:assert_type(c5, "Chart")
+		unitTest:assertType(c5, "Chart")
 
 		world:notify()
 
@@ -80,11 +80,11 @@ return{
 		LogFile{subject = world}
 		VisualTable{subject = world}
 		t:execute(30)
-		unitTest:assert_snapshot(c1, "chart_cell.bmp")
-		unitTest:assert_snapshot(c2, "chart_cell_select.bmp")
-		unitTest:assert_snapshot(c3, "chart_cell_style.bmp")
-		unitTest:assert_snapshot(c4, "chart_cell_select_pen.bmp")
-		unitTest:assert_snapshot(c5, "chart_cell_select_color.bmp")
+		unitTest:assertSnapshot(c1, "chart_cell.bmp")
+		unitTest:assertSnapshot(c2, "chart_cell_select.bmp")
+		unitTest:assertSnapshot(c3, "chart_cell_style.bmp")
+		unitTest:assertSnapshot(c4, "chart_cell_select_pen.bmp")
+		unitTest:assertSnapshot(c5, "chart_cell_select_color.bmp")
 
 		world:notify(Event{time = 31, action = function() end}[1])
 
@@ -100,7 +100,7 @@ return{
 			protocol = "udp",
 			port = 11111
 		}
-		unitTest:assert_type(c, "number") -- SKIP
+		unitTest:assertType(c, "number") -- SKIP
 		world:notify(1)
 		world:notify(2)
 		unitTest:delay()

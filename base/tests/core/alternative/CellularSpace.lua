@@ -31,7 +31,7 @@ return{
 				xdm = 0
 			}
 		end
-		unitTest:assert_error(error_func, "Not enough information to build the CellularSpace.")
+		unitTest:assertError(error_func, "Not enough information to build the CellularSpace.")
 
 		local error_func = function()
 			local cs = CellularSpace{
@@ -39,7 +39,7 @@ return{
 				ydim = 30
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("xdim", 0))
+		unitTest:assertError(error_func, positiveArgumentMsg("xdim", 0))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -47,7 +47,7 @@ return{
 				ydim = 0
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("ydim", 0))
+		unitTest:assertError(error_func, positiveArgumentMsg("ydim", 0))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -55,7 +55,7 @@ return{
 				ydim = 30
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("xdim", "number", "terralab"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("xdim", "number", "terralab"))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -63,7 +63,7 @@ return{
 				ydim = 30
 			}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("xdim", 1.23))
+		unitTest:assertError(error_func, integerArgumentMsg("xdim", 1.23))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -71,7 +71,7 @@ return{
 				ydim = "terralab"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("ydim", "number", "terralab"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("ydim", "number", "terralab"))
 
 		error_func = function()
 			cs = CellularSpace{
@@ -79,7 +79,7 @@ return{
 				ydim = 1.23
 			}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("ydim", 1.23))
+		unitTest:assertError(error_func, integerArgumentMsg("ydim", 1.23))
 
 		local c1 = Cell{}
 
@@ -94,7 +94,7 @@ return{
 				instance = c1
 			}
 		end
-		unitTest:assert_error(error_func, "The same instance cannot be used in two CellularSpaces.")
+		unitTest:assertError(error_func, "The same instance cannot be used in two CellularSpaces.")
 
 		c1 = Cell{getNeighborhood = function() end}
 
@@ -104,7 +104,7 @@ return{
 				instance = c1
 			}
 		end
-		unitTest:assert_error(error_func, "Function 'getNeighborhood()' from Cell is replaced in the instance.")
+		unitTest:assertError(error_func, "Function 'getNeighborhood()' from Cell is replaced in the instance.")
 
 		c1 = Cell{
 			status = "forest",
@@ -119,7 +119,7 @@ return{
 				instance = 2
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("instance", "Cell", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("instance", "Cell", 2))
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -128,7 +128,7 @@ return{
 				autoload = false
 			}
 		end
-		unitTest:assert_error(error_func, "Parameter 'instance' can only be used with 'autoload = true'.")
+		unitTest:assertError(error_func, "Parameter 'instance' can only be used with 'autoload = true'.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -137,7 +137,7 @@ return{
 				status = 5
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'status' will not be replaced by a summary function.")
+		unitTest:assertError(error_func, "Attribute 'status' will not be replaced by a summary function.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -146,7 +146,7 @@ return{
 				alive = 5
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'alive' will not be replaced by a summary function.")
+		unitTest:assertError(error_func, "Attribute 'alive' will not be replaced by a summary function.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -155,7 +155,7 @@ return{
 				value = 5
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'value' will not be replaced by a summary function.")
+		unitTest:assertError(error_func, "Attribute 'value' will not be replaced by a summary function.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -164,7 +164,7 @@ return{
 				set = 5
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'set' will not be replaced by a summary function.")
+		unitTest:assertError(error_func, "Attribute 'set' will not be replaced by a summary function.")
 
 		c1 = Cell{
 			init = function(self)
@@ -179,7 +179,7 @@ return{
 				status = 5
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'status' will not be replaced by a summary function.")
+		unitTest:assertError(error_func, "Attribute 'status' will not be replaced by a summary function.")
 	end,
 	add = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -188,12 +188,12 @@ return{
 		local error_func = function()
 			cs:add(2)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 2))
 
 		error_func = function()
 			cs:add(cs2:sample())
 		end
-		unitTest:assert_error(error_func, "The cell already has a parent.")
+		unitTest:assertError(error_func, "The cell already has a parent.")
 
 		local c = Cell{x = 30, y = 30}
 		local c2 = Cell{x = 30, y = 30}
@@ -203,7 +203,7 @@ return{
 		error_func = function()
 			cs:add(c2)
 		end
-		unitTest:assert_error(error_func, "Cell (30, 30) already belongs to the CellularSpace.")
+		unitTest:assertError(error_func, "Cell (30, 30) already belongs to the CellularSpace.")
 	end,
 	createNeighborhood = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -212,7 +212,7 @@ return{
 		local error_func = function()
 			cs:createNeighborhood("dataTest")
 		end
-		unitTest:assert_error(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, namedArgumentsMsg())
 	
 		error_func = function()
 			cs:createNeighborhood{strategy = "teste"}
@@ -227,24 +227,24 @@ return{
 			vonneumann = true
 		}
 
-		unitTest:assert_error(error_func, switchInvalidArgumentMsg("teste", "strategy", options))
+		unitTest:assertError(error_func, switchInvalidArgumentMsg("teste", "strategy", options))
 
 		error_func = function()
 			cs:createNeighborhood{strategy = 50}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("strategy", "string", 50))
+		unitTest:assertError(error_func, incompatibleTypeMsg("strategy", "string", 50))
 
 		error_func = function()
 			cs:createNeighborhood{name = 50}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 50))
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 50))
 
 		error_func = function()
 			cs:createNeighborhood{
 				name = {}
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", {}))
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", {}))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -252,7 +252,7 @@ return{
 				self = "true"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("self", "boolean", "true"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("self", "boolean", "true"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -260,7 +260,7 @@ return{
 				wrap = "true"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("wrap", "boolean", "true"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("wrap", "boolean", "true"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -269,7 +269,7 @@ return{
 				self = "true"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("self", "boolean", "true"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("self", "boolean", "true"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -278,7 +278,7 @@ return{
 				wrap = "true"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("wrap", "boolean", "true"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("wrap", "boolean", "true"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -287,7 +287,7 @@ return{
 				filter = "teste"
 			}
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("createNeighborhood with strategy 3x3", "mxn"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("createNeighborhood with strategy 3x3", "mxn"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -299,7 +299,7 @@ return{
 				weight = function() return 1 end
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("m", "number", "teste"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("m", "number", "teste"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -308,7 +308,7 @@ return{
 				m = -1
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("m", -1))
+		unitTest:assertError(error_func, positiveArgumentMsg("m", -1))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -317,7 +317,7 @@ return{
 				m = 0
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("m", 0))
+		unitTest:assertError(error_func, positiveArgumentMsg("m", 0))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -326,7 +326,7 @@ return{
 				m = 1.3
 			}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("m", 1.3))
+		unitTest:assertError(error_func, integerArgumentMsg("m", 1.3))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -338,7 +338,7 @@ return{
 				weight = function() return 1 end
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("n", "number", "teste"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("n", "number", "teste"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -348,7 +348,7 @@ return{
 				n = -1
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("n", -1))
+		unitTest:assertError(error_func, positiveArgumentMsg("n", -1))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -358,7 +358,7 @@ return{
 				n = 0
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("n", 0))
+		unitTest:assertError(error_func, positiveArgumentMsg("n", 0))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -368,7 +368,7 @@ return{
 				n = 1.3
 			}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("n", 1.3))
+		unitTest:assertError(error_func, integerArgumentMsg("n", 1.3))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -378,7 +378,7 @@ return{
 				filter = true
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("filter", "function", true))
+		unitTest:assertError(error_func, incompatibleTypeMsg("filter", "function", true))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -389,7 +389,7 @@ return{
 				weight = true
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("weight", "function", true))
+		unitTest:assertError(error_func, incompatibleTypeMsg("weight", "function", true))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -401,7 +401,7 @@ return{
 				weight = function() end
 			}
 		end
-		unitTest:assert_error(error_func, defaultValueMsg("n", 5))
+		unitTest:assertError(error_func, defaultValueMsg("n", 5))
 		
 		error_func = function()
 			cs:createNeighborhood{
@@ -413,7 +413,7 @@ return{
 				weight = function() end
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("target", "CellularSpace", "teste"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("target", "CellularSpace", "teste"))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -422,7 +422,7 @@ return{
 				m = 4
 			}
 		end
-		unitTest:assert_error(error_func, "Argument 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
+		unitTest:assertError(error_func, "Argument 'm' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -432,7 +432,7 @@ return{
 				n = 4
 			}
 		end
-		unitTest:assert_error(error_func, "Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
+		unitTest:assertError(error_func, "Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -449,7 +449,7 @@ return{
 				end
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("m", "number", "teste"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("m", "number", "teste"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -459,7 +459,7 @@ return{
 				m = -1
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("m", -1))
+		unitTest:assertError(error_func, positiveArgumentMsg("m", -1))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -469,7 +469,7 @@ return{
 				m = 0
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("m", 0))
+		unitTest:assertError(error_func, positiveArgumentMsg("m", 0))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -480,7 +480,7 @@ return{
 				n = 1
 			}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("m", 5.2))
+		unitTest:assertError(error_func, integerArgumentMsg("m", 5.2))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -493,7 +493,7 @@ return{
 				weight = function() return 1 end
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("n", "number", "teste"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("n", "number", "teste"))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -504,7 +504,7 @@ return{
 				n = -1
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("n", -1))
+		unitTest:assertError(error_func, positiveArgumentMsg("n", -1))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -515,7 +515,7 @@ return{
 				n = 0
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("n", 0))
+		unitTest:assertError(error_func, positiveArgumentMsg("n", 0))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -526,14 +526,14 @@ return{
 				n = 1.3
 			}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("n", 1.3))
+		unitTest:assertError(error_func, integerArgumentMsg("n", 1.3))
 
 		error_func = function()
 			cs:createNeighborhood{
 				strategy = "function"
 			}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("filter"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("filter"))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -541,7 +541,7 @@ return{
 				name = "my_neighborhood"
 			}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("filter"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("filter"))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -550,7 +550,7 @@ return{
 				filter = true
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("filter", "function", true))
+		unitTest:assertError(error_func, incompatibleTypeMsg("filter", "function", true))
 	
 		error_func = function()
 			cs:createNeighborhood{
@@ -559,7 +559,7 @@ return{
 				weight = weightFunction
 			}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("filter"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("filter"))
 
 		error_func = function()
 			cs:createNeighborhood{
@@ -569,7 +569,7 @@ return{
 				weight = 3
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("weight", "function", 3))
+		unitTest:assertError(error_func, incompatibleTypeMsg("weight", "function", 3))
 
 		local cs = CellularSpace{xdim = 10}
 
@@ -578,7 +578,7 @@ return{
 		error_func = function()
 			cs:createNeighborhood{name = "abc"}
 		end
-		unitTest:assert_error(error_func, "Neighborhood 'abc' already exists.")
+		unitTest:assertError(error_func, "Neighborhood 'abc' already exists.")
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -586,27 +586,27 @@ return{
 		local error_func = function()
 			cs:get()
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			cs:get(2)
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(2))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 
 		error_func = function()
 			cs:get(2.3, 4)
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg(1, 2.3))
+		unitTest:assertError(error_func, integerArgumentMsg(1, 2.3))
 
 		error_func = function()
 			cs:get(4, 2.3)
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg(2, 2.3))
+		unitTest:assertError(error_func, integerArgumentMsg(2, 2.3))
 
 		error_func = function()
 			cs:get("4", 2.3)
 		end
-		unitTest:assert_error(error_func, "As #1 is string, #2 should be nil, but got number.")	
+		unitTest:assertError(error_func, "As #1 is string, #2 should be nil, but got number.")	
 	end,
 	getCell = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -614,7 +614,7 @@ return{
 		local error_func = function()
 			cs:getCell(1, 2)
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCell", "get"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("getCell", "get"))
 	end,
 	getCellByID = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -622,7 +622,7 @@ return{
 		local error_func = function()
 			cs:getCellByID("C0L0")
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCellByID", "get"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("getCellByID", "get"))
 	end,
 	getCells = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -630,7 +630,7 @@ return{
 		local error_func = function()
 			cs:getCells()
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("getCells", ".cells"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("getCells", ".cells"))
 	end,
 	notify = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -638,12 +638,12 @@ return{
 		local error_func = function()
 			cs:notify("not_int")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			cs:notify(-1)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, -1, true))
 	end,
 	size = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -651,7 +651,7 @@ return{
 		local error_func = function()
 			cs:size()
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("size", "operator #"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end,
 	split = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -659,22 +659,22 @@ return{
 		local error_func = function()
 			cs:split()
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			cs:split(34)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string or function", 34))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string or function", 34))
 
 		error_func = function()
 			cs:split({})
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string or function", {}))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string or function", {}))
 
 		error_func = function()
 			cs:split("abc")
 		end
-		unitTest:assert_error(error_func, "Attribute 'abc' does not exist.")
+		unitTest:assertError(error_func, "Attribute 'abc' does not exist.")
 	end,
 	synchronize = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
@@ -682,12 +682,12 @@ return{
 		local error_func = function()
 			cs:synchronize(true)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string, table or nil", true))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string, table or nil", true))
 
 		error_func = function()
 			cs:synchronize{123, "height_"}
 		end
-		unitTest:assert_error(error_func, "Argument 'values' should contain only strings.")
+		unitTest:assertError(error_func, "Argument 'values' should contain only strings.")
 	end
 }
 

@@ -39,7 +39,7 @@ return{
 			select = "mcount"
 		}
 
-		unitTest:assert_type(c1, "Chart")
+		unitTest:assertType(c1, "Chart")
 
 		world:notify(0)
 		world.count = world.count + 5
@@ -59,8 +59,8 @@ return{
 		LogFile{subject = world}
 		VisualTable{subject = world}
 		t:execute(30)
-		unitTest:assert_snapshot(c1, "chart_agent.bmp")
-		unitTest:assert_snapshot(c2, "chart_agent_select.bmp")
+		unitTest:assertSnapshot(c1, "chart_agent.bmp")
+		unitTest:assertSnapshot(c2, "chart_agent_select.bmp")
 		
 		unitTest:delay()
 
@@ -73,7 +73,7 @@ return{
 			subject = world,
 			xAxis = "probability"
 		}
-		unitTest:assert_type(c3, "Chart")
+		unitTest:assertType(c3, "Chart")
 
 		local t = Timer{
 			Event{action = function(e)
@@ -89,7 +89,7 @@ return{
 
 		t:execute(200)
 		-- FIXME: small bug here. this snapshot can produce two different files
-		-- unitTest:assert_snapshot(c3, "chart_agent_xaxis.bmp")
+		-- unitTest:assertSnapshot(c3, "chart_agent_xaxis.bmp")
 		unitTest:delay()
 	end
 }

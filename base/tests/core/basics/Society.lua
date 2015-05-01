@@ -55,14 +55,14 @@ return {
 			end
 		}
 
-		unitTest:assert_nil(nonFooAgent.charge)
+		unitTest:assertNull(nonFooAgent.charge)
 
 		local nonFooSociety = Society{
 			instance = nonFooAgent,
 			quantity = 50
 		}
 
-		unitTest:assert_type(nonFooSociety, "Society")
+		unitTest:assertType(nonFooSociety, "Society")
 		unitTest:assertEquals(50, #nonFooSociety)
 		unitTest:assertEquals(nonFooSociety:gender().male, 26)
 		unitTest:assertEquals(nonFooSociety:sample().money, 100)
@@ -116,7 +116,7 @@ return {
 				a.gender = "female"
 			end
 			counter = counter + 1
-			unitTest:assert_type(a, "Agent")
+			unitTest:assertType(a, "Agent")
 		end)
 
 		local groups = soc1:split("gender")
@@ -124,7 +124,7 @@ return {
 		unitTest:assertEquals(5, #groups.female)
 
 		local ag = soc1:sample()
-		unitTest:assert_type(ag, "Agent")
+		unitTest:assertType(ag, "Agent")
 		local ev = Event{}
 		ag:execute(ev)
 
@@ -201,7 +201,7 @@ state_          userdata
 		unitTest:assertEquals(20, #sc1)
 		local agent = sc1:add()
 		unitTest:assertEquals(21, #sc1)
-		unitTest:assert_type(agent, "Agent")
+		unitTest:assertType(agent, "Agent")
 		unitTest:assertEquals(agent.id, "21")
 
 		local cs = CellularSpace{xdim = 10}
@@ -232,7 +232,7 @@ state_          userdata
 		}
 	
 		forEachAgent(predators, function(ag)
-			unitTest:assert_nil(ag:getSocialNetwork())
+			unitTest:assertNull(ag:getSocialNetwork())
 		end)
 
 		predators:createSocialNetwork{probability = 0.5, name = "friends"}
@@ -398,9 +398,9 @@ state_          userdata
 			quantity = 10
 		}
 
-		unitTest:assert_type(soc:get(1), "Agent")
+		unitTest:assertType(soc:get(1), "Agent")
 
-		unitTest:assert_nil(soc.idindex)
+		unitTest:assertNull(soc.idindex)
 		
 		local ag = soc:get(1)
 		unitTest:assertEquals(soc:get(ag.id), ag)
@@ -450,7 +450,7 @@ state_          userdata
 		}
 
 		local ag = soc1:sample()
-		unitTest:assert_type(ag, "Agent")
+		unitTest:assertType(ag, "Agent")
 	end,
 	synchronize = function(unitTest)
 		local randomObj = Random{}

@@ -29,42 +29,42 @@ return{
 		local error_func = function()
 			local cell = Cell(2)
 		end
-		unitTest:assert_error(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
 			local cell = Cell{x = "2.22", y = 0}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("x", "number", "2.22"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("x", "number", "2.22"))
 
 		error_func = function()
 			local cell = Cell{x = -2, y = "1"}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("y", "number", "1"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("y", "number", "1"))
 
 		error_func = function()
 			local cell = Cell{x = 2.22, y = 0}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("x", 2.22))
+		unitTest:assertError(error_func, integerArgumentMsg("x", 2.22))
 
 		error_func = function()
 			local cell = Cell{x = -2.3, y = 1}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("x", -2.3))
+		unitTest:assertError(error_func, integerArgumentMsg("x", -2.3))
 
 		error_func = function()
 			local cell = Cell{x = 1, y = 2.22}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("y", 2.22))
+		unitTest:assertError(error_func, integerArgumentMsg("y", 2.22))
 
 		error_func = function()
 			local cell = Cell{x = 1, y = -2.3}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("y", -2.3))
+		unitTest:assertError(error_func, integerArgumentMsg("y", -2.3))
 
 		error_func = function()
 			local cell = Cell{id = 2.3}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("id", "string", 2.3))
+		unitTest:assertError(error_func, incompatibleTypeMsg("id", "string", 2.3))
 	
 	end,
 	addNeighborhood = function(unitTest)
@@ -74,17 +74,17 @@ return{
 		local error_func = function()
 			cell:addNeighborhood()
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			cell:addNeighborhood(123)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Neighborhood", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Neighborhood", 123))
 
 		error_func = function()
 			cell:addNeighborhood(n, 123)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 123))
 	end,
 	distance = function(unitTest)
 		local c = Cell{}
@@ -92,12 +92,12 @@ return{
 		local error_func = function()
 			c:distance()
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
 			c:distance(12345)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", 12345))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", 12345))
 	end,
 	getAgent = function(unitTest)
 		local c = Cell{}
@@ -106,12 +106,12 @@ return{
 		local error_func = function()
 			c:getAgent()
 		end
-		unitTest:assert_error(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
+		unitTest:assertError(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
 
 		local error_func = function()
 			c:getAgent("friends")
 		end
-		unitTest:assert_error(error_func, "Placement 'friends' should be a Group, got number.")
+		unitTest:assertError(error_func, "Placement 'friends' should be a Group, got number.")
 	end,			
 	getAgents = function(unitTest)
 		local c = Cell{}
@@ -120,12 +120,12 @@ return{
 		local error_func = function()
 			c:getAgents()
 		end
-		unitTest:assert_error(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
+		unitTest:assertError(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
 
 		local error_func = function()
 			c:getAgents("friends")
 		end
-		unitTest:assert_error(error_func, "Placement 'friends' should be a Group, got number.")
+		unitTest:assertError(error_func, "Placement 'friends' should be a Group, got number.")
 	end,
 	getNeighborhood = function(unitTest)
 		local cell = Cell{x = 1, y = 1}
@@ -135,7 +135,7 @@ return{
 		local error_func = function()
 			n1 = cell:getNeighborhood(1)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 1))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
 	isEmpty = function(unitTest)
 		local c = Cell{}
@@ -144,12 +144,12 @@ return{
 		local error_func = function()
 			c:isEmpty()
 		end
-		unitTest:assert_error(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
+		unitTest:assertError(error_func, "Placement 'placement' does not exist. Use Environment:createPlacement first.")
 
 		local error_func = function()
 			c:isEmpty("friends")
 		end
-		unitTest:assert_error(error_func, "Placement 'friends' should be a Group, got number.")
+		unitTest:assertError(error_func, "Placement 'friends' should be a Group, got number.")
 	end,
 	notify = function(unitTest)
 		local cell = Cell{x = 1, y = 1}
@@ -157,12 +157,12 @@ return{
 		local error_func = function()
 			cell:notify("not_int")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			cell:notify(-1)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, -1, true))
 	end,
 	sample = function(unitTest)
 		local c = Cell{}
@@ -170,7 +170,7 @@ return{
 		local error_func = function()
 			c:sample()
 		end
-		unitTest:assert_error(error_func, "Cell does not have a Neighborhood named '1'.")
+		unitTest:assertError(error_func, "Cell does not have a Neighborhood named '1'.")
 	end,
 	size = function(unitTest)
 		local c = Cell{}
@@ -178,7 +178,7 @@ return{
 		local error_func = function()
 			c:size()
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("size", "operator #"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end
 }
 

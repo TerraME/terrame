@@ -28,7 +28,7 @@ return{
 	UnitTest = function(unitTest)
 		local u = UnitTest{sleep = 0.1, dbType = "Test"}
 
-		unitTest:assert_type(u, "UnitTest")
+		unitTest:assertType(u, "UnitTest")
 		unitTest:assertEquals(u.success, 0)
 		unitTest:assertEquals(u.fail, 0)
 		unitTest:assertEquals(u.test, 0)
@@ -52,33 +52,33 @@ return{
 
 		unitTest:assertEquals(u.success, 1)
 	end,
-	assert_error = function(unitTest)
+	assertError = function(unitTest)
 		local u = UnitTest{}
 
 		local error_func = function() CellularSpace{xdim = "a"} end
-		u:assert_error(error_func, "Incompatible types. Argument 'xdim' expected number, got string.")
+		u:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got string.")
 
 		local error_func = function() CellularSpace{xdim = "a"} end
-		u:assert_error(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
+		u:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
 
 		unitTest:assertEquals(u.success, 2)
 	end,
-	assert_nil = function(unitTest)
+	assertNull = function(unitTest)
 		local u = UnitTest{}
-		u:assert_nil()
+		u:assertNull()
 
 		unitTest:assertEquals(u.success, 1)
 	end,
-	assert_not_nil = function(unitTest)
+	assertNotNull = function(unitTest)
 		local u = UnitTest{}
-		u:assert_not_nil(true)
+		u:assertNotNull(true)
 
 		unitTest:assertEquals(u.success, 1)
 	end,
-	assert_type = function(unitTest)
+	assertType = function(unitTest)
 		local u = UnitTest{}
 
-		u:assert_type(2, "number")
+		u:assertType(2, "number")
 
 		unitTest:assertEquals(u.success, 1)
 	end,
@@ -96,7 +96,7 @@ return{
 		local g = u:tmpFolder()
 
 		unitTest:assertEquals(f, g)
-		unitTest:assert_type(f, "string")
+		unitTest:assertType(f, "string")
 		os.execute("rm -rf "..f)
 	end
 }

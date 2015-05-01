@@ -32,17 +32,17 @@ return{
 		local error_func = function()
 			Clock{}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("subject"))
 
 		local error_func = function()
 			Clock{subject = Cell{}}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("subject", "Timer", Cell{}))
+		unitTest:assertError(error_func, incompatibleTypeMsg("subject", "Timer", Cell{}))
 
 		local error_func = function()
 			Clock{subject = t, xwc = 5}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("xwc"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("xwc"))
 	end
 }
 

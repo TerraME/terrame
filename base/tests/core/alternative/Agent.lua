@@ -29,12 +29,12 @@ return {
 		local error_func = function()
 			local ag1 = Agent(2)
 		end
-		unitTest:assert_error(error_func, tableArgumentMsg())
+		unitTest:assertError(error_func, tableArgumentMsg())
 	
 		local error_func = function()
 			local ag1 = Agent{id = 123}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("id", "string", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg("id", "string", 123))
 	end,
 	add = function(unitTest)
 		local ag1 = Agent{}
@@ -42,12 +42,12 @@ return {
 		local error_func = function()
 			ag1:add()
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "State or Trajectory", nil))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "State or Trajectory", nil))
 
 		error_func = function()
 			ag1:add(123)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "State or Trajectory", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "State or Trajectory", 123))
 	end,
 	addSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
@@ -55,20 +55,20 @@ return {
 		local error_func = function()
 			ag1:addSocialNetwork(nil, "friends")
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
 			local ag1 = Agent{}
 			ag1:addSocialNetwork({}, "friends")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "SocialNetwork", {}))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "SocialNetwork", {}))
 
 		local ag1 = Agent{}
 		local sn = SocialNetwork()
 		local error_func = function()
 			ag1:addSocialNetwork(sn, 123)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 123))
 	end,
 	enter = function(unitTest)
 		local ag1 = Agent{}
@@ -80,7 +80,7 @@ return {
 		local error_func = function()
 			ag1:enter(nil, "placement")
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
 			local ag1 = Agent{}
@@ -91,7 +91,7 @@ return {
 			cell = cs.cells[1]
 			ag1:enter({}, "placement")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", {}))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", {}))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -102,7 +102,7 @@ return {
 		local error_func = function()
 			ag1:enter(cell, 123)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 123))
 
 		local predator = Agent{}
 
@@ -121,7 +121,7 @@ return {
 		local error_func = function()
 			predators:sample():enter(c)
 		end
-		unitTest:assert_error(error_func, "Agent is already inside of a Cell. Use Agent:move() instead.")
+		unitTest:assertError(error_func, "Agent is already inside of a Cell. Use Agent:move() instead.")
 
 		local ag = predators:sample()
 
@@ -130,7 +130,7 @@ return {
 		local error_func = function()
 			ag:enter(c)
 		end
-		unitTest:assert_error(error_func, "Placement 'placement' was not found in the Cell.")
+		unitTest:assertError(error_func, "Placement 'placement' was not found in the Cell.")
 	end,
 	execute = function(unitTest)
 		local ag1 = Agent{
@@ -142,7 +142,7 @@ return {
 		local error_func = function()
 			ag1:execute()
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
 			ag1 = Agent{
@@ -153,7 +153,7 @@ return {
 			}
 			ag1:execute({})
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Event", {}))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event", {}))
 	end,
 	getCell = function(unitTest)
 		local ag1 = Agent{pl = 2}
@@ -161,7 +161,7 @@ return {
 		local error_func = function()
 			ag1:getCell("pl")
 		end
-		unitTest:assert_error(error_func, "Placement 'pl' should be a Trajectory, got number.")
+		unitTest:assertError(error_func, "Placement 'pl' should be a Trajectory, got number.")
 	end,
 	getCells = function(unitTest)
 		local ag1 = Agent{pl = 2}
@@ -169,14 +169,14 @@ return {
 		local error_func = function()
 			ag1:getCells("pl")
 		end
-		unitTest:assert_error(error_func, "Placement 'pl' should be a Trajectory, got number.")
+		unitTest:assertError(error_func, "Placement 'pl' should be a Trajectory, got number.")
 	end,
 	getId = function(unitTest)
 		local ag1 = Agent{}
 		local error_func = function()
 			ag1:getId()
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("getId", ".id"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("getId", ".id"))
 	end,
 	getSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
@@ -186,7 +186,7 @@ return {
 		local error_func = function()
 			sn2 = ag1:getSocialNetwork{}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", {}))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
 	end,
 	leave = function(unitTest)
 		local error_func = function()
@@ -199,7 +199,7 @@ return {
 			ag1:enter(cell, "placement")
 			ag1:leave({})
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", {}))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", {}))
 
 		error_func = function()
 			local ag1 = Agent{}
@@ -211,7 +211,7 @@ return {
 			ag1:enter(cell, "placement")
 			ag1:leave(123)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
 
 		error_func = function()
 			local ag1 = Agent{}
@@ -221,7 +221,7 @@ return {
 			myEnv:createPlacement{strategy = "void"}
 			ag1:leave()
 		end
-		unitTest:assert_error(error_func, "Agent should belong to a Cell in order to leave().")
+		unitTest:assertError(error_func, "Agent should belong to a Cell in order to leave().")
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -233,7 +233,7 @@ return {
 		local error_func = function()
 			ag1:leave("notplacement")
 		end
-		unitTest:assert_error(error_func, valueNotFoundMsg(1, "notplacement"))
+		unitTest:assertError(error_func, valueNotFoundMsg(1, "notplacement"))
 
 		local ag1 = Agent{pl = 2}
 		local c = Cell{}
@@ -241,7 +241,7 @@ return {
 		local error_func = function()
 			ag1:leave("pl")
 		end
-		unitTest:assert_error(error_func, "Placement 'pl' should be a Trajectory, got number.")
+		unitTest:assertError(error_func, "Placement 'pl' should be a Trajectory, got number.")
 	
 	end,
 	message = function(unitTest)
@@ -253,7 +253,7 @@ return {
 
 			ag1:message()
 		end
-		unitTest:assert_error(error_func, tableArgumentMsg())
+		unitTest:assertError(error_func, tableArgumentMsg())
 
 		local error_func = function()
 			local ag = Agent{}
@@ -263,7 +263,7 @@ return {
 
 			ag1:message(123)
 		end
-		unitTest:assert_error(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		local ag = Agent{}
 		local sc = Society{instance = ag, quantity = 2}
@@ -271,7 +271,7 @@ return {
 		local error_func = function()
 			ag1:message{}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("receiver"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("receiver"))
 
 		local ag = Agent{}	
 		local sc = Society{instance = ag, quantity = 2}
@@ -285,7 +285,7 @@ return {
 			}
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg("delay", "number", "money"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("delay", "number", "money"))
 
 		local ag = Agent{}
 
@@ -299,7 +299,7 @@ return {
 				content = "money"
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("delay", -1, true))
+		unitTest:assertError(error_func, positiveArgumentMsg("delay", -1, true))
 
 		local error_func = function()
 			ag1:message{
@@ -307,7 +307,7 @@ return {
 				subject = 2
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("subject", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("subject", "string", 2))
 	end,
 	move = function(unitTest)
 		local error_func = function()
@@ -321,7 +321,7 @@ return {
 			local c1 = cs.cells[4]
 			ag1:move()
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		local ag1 = Agent{}
 		local ag2 = Agent{}
@@ -335,7 +335,7 @@ return {
 		local error_func = function()
 			ag1:move(ag2, "renting")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Cell", ag2))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Cell", ag2))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -347,7 +347,7 @@ return {
 		local error_func = function()
 			ag1:enter(c1)
 		end
-		unitTest:assert_error(error_func, "Placement 'placement' was not found in the Agent.")
+		unitTest:assertError(error_func, "Placement 'placement' was not found in the Agent.")
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -363,7 +363,7 @@ return {
 			ag1:move(c1, 123)
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(2, "string", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 123))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -377,14 +377,14 @@ return {
 		local error_func = function()
 			ag1:move(c1, "not_placement")
 		end
-		unitTest:assert_error(error_func, valueNotFoundMsg(2, "not_placement"))
+		unitTest:assertError(error_func, valueNotFoundMsg(2, "not_placement"))
 
 		ag1:leave("renting")
 
 		local error_func = function()
 			ag1:move(c1, "renting")
 		end
-		unitTest:assert_error(error_func, "Agent should belong to a Cell in order to move().")
+		unitTest:assertError(error_func, "Agent should belong to a Cell in order to move().")
 	end,
 	notify = function(unitTest)
 		local ag = Agent{x = 1, y = 1}
@@ -392,12 +392,12 @@ return {
 		local error_func = function()
 			ag:notify("not_int")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			ag:notify(-1)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, -1, true))
 	end,
 	randomWalk = function(unitTest)
 		local ag1 = Agent{}
@@ -410,7 +410,7 @@ return {
 		local error_func = function()
 			ag1:randomWalk()
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("randomWalk", "walk"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("randomWalk", "walk"))
 	end,
 	reproduce = function(unitTest)
 		local a = Agent{}
@@ -422,19 +422,19 @@ return {
 		local error_func = function()
 			a:reproduce()
 		end
-		unitTest:assert_error(error_func, "Agent should belong to a Society to be able to reproduce.")
+		unitTest:assertError(error_func, "Agent should belong to a Society to be able to reproduce.")
 
 		local error_func = function()
 			s:sample():reproduce(2)
 		end
-		unitTest:assert_error(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, namedArgumentsMsg())
 	end,
 	setId = function(unitTest)
 		local ag1 = Agent{}
 		local error_func = function()
 			ag1:setId("aa")
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("setId", ".id"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("setId", ".id"))
 	end,
 	walk = function(unitTest)
 		local ag1 = Agent{}
@@ -447,7 +447,7 @@ return {
 		local error_func = function()
 			ag1:walk()
 		end
-		unitTest:assert_error(error_func, valueNotFoundMsg(2, "1"))
+		unitTest:assertError(error_func, valueNotFoundMsg(2, "1"))
 
 		local error_func = function()
 			local ag1 = Agent{}
@@ -460,7 +460,7 @@ return {
 			ag1:walk(123)
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string", 123))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 123))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -472,7 +472,7 @@ return {
 		local error_func = function()
 			ag1:walk("123")
 		end
-		unitTest:assert_error(error_func, valueNotFoundMsg(1, "123"))
+		unitTest:assertError(error_func, valueNotFoundMsg(1, "123"))
 	end
 }
 

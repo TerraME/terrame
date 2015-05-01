@@ -27,32 +27,32 @@ return{
 	Choice = function(unitTest)
 		local c = Choice{1, 2, 3}
 
-		unitTest:assert_type(c, "Choice")
+		unitTest:assertType(c, "Choice")
 		unitTest:assertEquals(#c.values, 3)
 
 		c = Choice{min = 2, max = 3, step = 0.1}
-		unitTest:assert_type(c, "Choice")
+		unitTest:assertType(c, "Choice")
 		unitTest:assertEquals(c.min, 2)
 		unitTest:assertEquals(c.max, 3)
 		unitTest:assertEquals(c.default, 2)
 		unitTest:assertEquals(c.step, 0.1)
 
 		c = Choice{min = 5, default = 7}
-		unitTest:assert_type(c, "Choice")
+		unitTest:assertType(c, "Choice")
 		unitTest:assertEquals(c.min, 5)
 		unitTest:assertEquals(c.default, 7)
 
 		c = Choice{min = 5}
-		unitTest:assert_type(c, "Choice")
+		unitTest:assertType(c, "Choice")
 		unitTest:assertEquals(c.default, 5)
 
 		c = Choice{max = 5, default = 3}
-		unitTest:assert_type(c, "Choice")
+		unitTest:assertType(c, "Choice")
 		unitTest:assertEquals(c.max, 5)
 		unitTest:assertEquals(c.default, 3)
 
 		c = Choice{max = 5}
-		unitTest:assert_type(c, "Choice")
+		unitTest:assertType(c, "Choice")
 		unitTest:assertEquals(c.default, 5)
 
 		c = Choice{1, 2, 3, 4, default = 3}

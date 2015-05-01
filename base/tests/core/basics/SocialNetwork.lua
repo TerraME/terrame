@@ -27,10 +27,10 @@
 return{
 	SocialNetwork = function(unitTest)
 		local sntw = SocialNetwork()
-		unitTest:assert_type(sntw, "SocialNetwork")
+		unitTest:assertType(sntw, "SocialNetwork")
 
 		local sntw = SocialNetwork()
-		unitTest:assert_type(sntw, "SocialNetwork")
+		unitTest:assertType(sntw, "SocialNetwork")
 
 		unitTest:assertEquals(sntw.count, 0)
 		unitTest:assertEquals(#sntw.connections, 0)

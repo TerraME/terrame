@@ -38,7 +38,7 @@ return{
 				quantity = 20
 			}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("instance"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("instance"))
 
 		error_func = function()
 			sc2 = Society{
@@ -46,7 +46,7 @@ return{
 				quantity = 20
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("instance", "Agent", "wrongType"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("instance", "Agent", "wrongType"))
 
 		ag1 = Agent{}
 		error_func = function()
@@ -54,7 +54,7 @@ return{
 				instance = ag1
 			}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("quantity"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("quantity"))
 
 		error_func = function()
 			sc2 = Society{
@@ -62,7 +62,7 @@ return{
 				quantity = "wrongType"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("quantity", "number", "wrongType"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("quantity", "number", "wrongType"))
 
 		error_func = function()
 			sc2 = Society{
@@ -70,7 +70,7 @@ return{
 				quantity = -15
 			}
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg("quantity", -15))
+		unitTest:assertError(error_func, positiveArgumentMsg("quantity", -15))
 
 		ag1 = Agent{id = "2"}
 
@@ -80,7 +80,7 @@ return{
 				quantity = 20
 			}
 		end
-		unitTest:assert_error(error_func, "Argument 'instance' should not have attribute 'id'.")
+		unitTest:assertError(error_func, "Argument 'instance' should not have attribute 'id'.")
 
 		ag1 = Agent{parent = Cell{}}
 
@@ -90,7 +90,7 @@ return{
 				quantity = 20
 			}
 		end
-		unitTest:assert_error(error_func, "Argument 'instance' should not have attribute 'parent'.")
+		unitTest:assertError(error_func, "Argument 'instance' should not have attribute 'parent'.")
 
 		ag1 = Agent{instance = 2}
 
@@ -100,7 +100,7 @@ return{
 				quantity = 20
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'instance' belongs to both Society and Agent.")
+		unitTest:assertError(error_func, "Attribute 'instance' belongs to both Society and Agent.")
 
 		ag1 = Agent{}
 		
@@ -115,7 +115,7 @@ return{
 				quantity = 20
 			}
 		end
-		unitTest:assert_error(error_func, "The same instance cannot be used by two Societies.")
+		unitTest:assertError(error_func, "The same instance cannot be used by two Societies.")
 
 		ag1 = Agent{enter = function() end}
 		
@@ -125,7 +125,7 @@ return{
 				quantity = 20
 			}
 		end
-		unitTest:assert_error(error_func, "Function 'enter()' from Agent is replaced in the instance.")
+		unitTest:assertError(error_func, "Function 'enter()' from Agent is replaced in the instance.")
 
 		ag1 = Agent{status = "alive"}
 
@@ -136,7 +136,7 @@ return{
 				status = 5
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'status' will not be replaced by a summary function.")
+		unitTest:assertError(error_func, "Attribute 'status' will not be replaced by a summary function.")
 
 		ag1 = Agent{male = true}
 
@@ -147,7 +147,7 @@ return{
 				male = 4
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'male' will not be replaced by a summary function.")
+		unitTest:assertError(error_func, "Attribute 'male' will not be replaced by a summary function.")
 
 		ag1 = Agent{value = 4}
 
@@ -158,7 +158,7 @@ return{
 				value = 5
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'value' will not be replaced by a summary function.")
+		unitTest:assertError(error_func, "Attribute 'value' will not be replaced by a summary function.")
 
 		ag1 = Agent{set = function() end}
 
@@ -169,7 +169,7 @@ return{
 				set = 5
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'set' will not be replaced by a summary function.")
+		unitTest:assertError(error_func, "Attribute 'set' will not be replaced by a summary function.")
 
 		ag1 = Agent{
 			init = function(self)
@@ -184,7 +184,7 @@ return{
 				male = 5
 			}
 		end
-		unitTest:assert_error(error_func, "Attribute 'male' will not be replaced by a summary function.")
+		unitTest:assertError(error_func, "Attribute 'male' will not be replaced by a summary function.")
 	end,
 	add = function(unitTest)
 		local ag1 = Agent{}
@@ -197,7 +197,7 @@ return{
 		local error_func = function()
 			sc1:add("wrongType")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent or table", "wrongType"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent or table", "wrongType"))
 	end,
 	createSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
@@ -206,24 +206,24 @@ return{
 		local error_func = function()
 			sc1:createSocialNetwork()
 		end
-		unitTest:assert_error(error_func, tableArgumentMsg())
+		unitTest:assertError(error_func, tableArgumentMsg())
 
 		local error_func = function()
 			sc1:createSocialNetwork{}
 		end
-		unitTest:assert_error(error_func, "It was not possible to infer a value for argument 'strategy'.")
+		unitTest:assertError(error_func, "It was not possible to infer a value for argument 'strategy'.")
 
 		error_func = function()
 			sc1:createSocialNetwork(15)
 		end
-		unitTest:assert_error(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
 			sc1:createSocialNetwork{
 				strategy = "voi"
 			}
 		end
-		unitTest:assert_error(error_func, switchInvalidArgumentSuggestionMsg("voi", "strategy", "void"))
+		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("voi", "strategy", "void"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -240,7 +240,7 @@ return{
 			void = true
 		}
 			
-		unitTest:assert_error(error_func, switchInvalidArgumentMsg("terralab", "strategy", options))
+		unitTest:assertError(error_func, switchInvalidArgumentMsg("terralab", "strategy", options))
 
 		sc1:createSocialNetwork{
 			strategy = "void",
@@ -253,7 +253,7 @@ return{
 				name = "void"
 			}
 		end
-		unitTest:assert_error(error_func, "SocialNetwork 'void' already exists in the Society.")
+		unitTest:assertError(error_func, "SocialNetwork 'void' already exists in the Society.")
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -262,7 +262,7 @@ return{
 				probability = 0.5
 			}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("probability"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("probability"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -270,7 +270,7 @@ return{
 				quantity = "terralab"
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("quantity", "number", "terralab"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("quantity", "number", "terralab"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -278,7 +278,7 @@ return{
 				quantity = 0
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("quantity", "positive number (except zero)", 0))
+		unitTest:assertError(error_func, incompatibleValueMsg("quantity", "positive number (except zero)", 0))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -286,7 +286,7 @@ return{
 				quantity = 2.2
 			}
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg("quantity", 2.2))
+		unitTest:assertError(error_func, integerArgumentMsg("quantity", 2.2))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -295,7 +295,7 @@ return{
 				probability = 0.2
 			}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("probability"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("probability"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -304,7 +304,7 @@ return{
 			}
 		end
 
-		unitTest:assert_error(error_func, incompatibleTypeMsg("probability", "number", "wrongValue"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("probability", "number", "wrongValue"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -312,7 +312,7 @@ return{
 				probability = 0
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("probability", "a number between 0 and 1", 0))
+		unitTest:assertError(error_func, incompatibleValueMsg("probability", "a number between 0 and 1", 0))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -321,7 +321,7 @@ return{
 				quantity = 5	
 			}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("quantity"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("quantity"))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -329,7 +329,7 @@ return{
 				probability = 1.5,
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleValueMsg("probability", "a number between 0 and 1", 1.5))
+		unitTest:assertError(error_func, incompatibleValueMsg("probability", "a number between 0 and 1", 1.5))
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -338,13 +338,13 @@ return{
 				name = 2
 			}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 2))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "cell", name = "c"}
 		end
 
-		unitTest:assert_error(error_func, "Society has no placement. Use Environment:createPlacement() first.")
+		unitTest:assertError(error_func, "Society has no placement. Use Environment:createPlacement() first.")
 
 		local cs = CellularSpace{xdim = 5}
 		local ag1 = Agent{}
@@ -355,7 +355,7 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = "c"}
 		end
-		unitTest:assert_error(error_func, "CellularSpace has no Neighborhood named '1'. Use CellularSpace:createNeighborhood() first.")
+		unitTest:assertError(error_func, "CellularSpace has no Neighborhood named '1'. Use CellularSpace:createNeighborhood() first.")
 
 		local ag1 = Agent{}
 		local sc1 = Society{instance = ag1, quantity = 20}
@@ -366,33 +366,33 @@ return{
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = "c"}
 		end
-		unitTest:assert_error(error_func, "Society has no placement. Use Environment:createPlacement() first.")
+		unitTest:assertError(error_func, "Society has no placement. Use Environment:createPlacement() first.")
 
 		env:createPlacement()
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "cell", name = "c", quantity = 5}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("quantity"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("quantity"))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", name = 22}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("name", "string", 22))
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "neighbor", quantity = 1}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("quantity"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("quantity"))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "function", name = "c", filter = 3}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("filter", "function", 3))
+		unitTest:assertError(error_func, incompatibleTypeMsg("filter", "function", 3))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "function", name = "c", filter = function(ag) return true end, quantity = 1}
 		end
-		unitTest:assert_error(error_func, unnecessaryArgumentMsg("quantity"))
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("quantity"))
 
 		local ag1 = Agent{
 			name = "nonfoo",
@@ -424,27 +424,27 @@ return{
 		local error_func = function()
 			ag1 = sc1:get(nil)
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			ag1 = sc1:get(false)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", false))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", false))
 
 		error_func = function()
 			ag1 = sc1:get("asdfg")
 		end
-		unitTest:assert_error(error_func, "Agent 'asdfg' does not belong to the Society.")
+		unitTest:assertError(error_func, "Agent 'asdfg' does not belong to the Society.")
 
 		error_func = function()
 			ag1 = sc1:get(-1)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, -1))
 	
 		error_func = function()
 			ag1 = sc1:get(2.2)
 		end
-		unitTest:assert_error(error_func, integerArgumentMsg(1, 2.2))
+		unitTest:assertError(error_func, integerArgumentMsg(1, 2.2))
 	end,
 	getAgent = function(unitTest)
 		local ag1 = Agent{
@@ -460,7 +460,7 @@ return{
 		local error_func = function()
 			sc1:getAgent("1")
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("getAgent", "get"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("getAgent", "get"))
 	end,
 	getAgents = function(unitTest)
 		local ag1 = Agent{
@@ -476,7 +476,7 @@ return{
 		local error_func = function()
 			sc1:getAgents()
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("getAgents", ".agents"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("getAgents", ".agents"))
 	end,
 	notify = function(unitTest)
 		local sc1 = Society{
@@ -487,12 +487,12 @@ return{
 		local error_func = function()
 			sc1:notify("not_int")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "not_int"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "not_int"))
 
 		error_func = function()
 			sc1:notify(-1)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -1, true))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, -1, true))
 	end,
 	remove = function(unitTest)
 		local agent1 = Agent{}
@@ -508,12 +508,12 @@ return{
 		local error_func = function()
 			soc1:remove()
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "Agent or function"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent or function"))
 	
 		local error_func = function()
 			soc1:remove(ag)
 		end
-		unitTest:assert_error(error_func, "Could not remove the Agent (id = '1').")
+		unitTest:assertError(error_func, "Could not remove the Agent (id = '1').")
 	end,
 	sample = function(unitTest)
 		local agent1 = Agent{}
@@ -528,7 +528,7 @@ return{
 		local error_func = function()
 			soc1:sample()
 		end
-		unitTest:assert_error(error_func, "Trying to sample an empty Society.")
+		unitTest:assertError(error_func, "Trying to sample an empty Society.")
 	end,
 	size = function(unitTest)
 		local ag1 = Agent{
@@ -544,7 +544,7 @@ return{
 		local error_func = function()
 			sc1:size()
 		end
-		unitTest:assert_error(error_func, deprecatedFunctionMsg("size", "operator #"))
+		unitTest:assertError(error_func, deprecatedFunctionMsg("size", "operator #"))
 	end,
 	split = function(unitTest)
 		local ag1 = Agent{
@@ -560,17 +560,17 @@ return{
 		local error_func = function()
 			group = sc1:split()
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg(1))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
 			group = sc1:split(15)
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "string or function", 15))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string or function", 15))
 
 		error_func = function()
 			group = sc1:split("abc")
 		end
-		unitTest:assert_error(error_func, "Attribute 'abc' does not exist.")
+		unitTest:assertError(error_func, "Attribute 'abc' does not exist.")
 	end,
 	synchronize = function(unitTest)
 		local ag1 = Agent{
@@ -588,12 +588,12 @@ return{
 		local error_func = function()
 			sc1:synchronize("test")
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg(1, "number", "test"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "test"))
 
 		error_func = function()
 			sc1:synchronize(-13)
 		end
-		unitTest:assert_error(error_func, positiveArgumentMsg(1, -13))
+		unitTest:assertError(error_func, positiveArgumentMsg(1, -13))
 	end
 }
 

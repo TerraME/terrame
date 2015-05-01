@@ -24,7 +24,7 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	assert_snapshot = function(unitTest)
+	assertSnapshot = function(unitTest)
 		local c = Cell{value = 1}
 
 		local ch = Chart{subject = c}
@@ -33,7 +33,7 @@ return{
 		c:notify(2)
 		c:notify(3)
 
-		unitTest:assert_snapshot(ch, "chart_snapshot_test.bmp")
+		unitTest:assertSnapshot(ch, "chart_snapshot_test.bmp")
 	end
 }
 

@@ -32,8 +32,8 @@ return {
 			sum = function() return 2 end
 		}
 
-		unitTest:assert_type(cell, "Cell")
-		unitTest:assert_type(cell.sum, "function")
+		unitTest:assertType(cell, "Cell")
+		unitTest:assertType(cell.sum, "function")
 		unitTest:assertEquals(cell.soilWater, 0)
 		unitTest:assertEquals(cell.cover, "forest")
 		unitTest:assertEquals(#cell, 0)
@@ -70,7 +70,7 @@ y      number [0]
 		c1:addNeighborhood(n)
 		unitTest:assertEquals(1, #c1)
 		
-		unitTest:assert_type(c1:getNeighborhood(), "Neighborhood")
+		unitTest:assertType(c1:getNeighborhood(), "Neighborhood")
 	end,
 	distance = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -110,7 +110,7 @@ y      number [0]
 
 		local c = cs.cells[1]
 		ag1:enter(c)
-		unitTest:assert_type(c:getAgents(), "table")
+		unitTest:assertType(c:getAgents(), "table")
 		unitTest:assertEquals(#c:getAgents(), 1)
 
 		c = cs.cells[2]
@@ -127,12 +127,12 @@ y      number [0]
 		local cell2 = Cell{x = 1, y = 1}
 		local n = Neighborhood()
 
-		unitTest:assert_nil(cell:getNeighborhood())
+		unitTest:assertNull(cell:getNeighborhood())
 
 		cell:addNeighborhood(n)
 
 		local ng = cell:getNeighborhood()
-		unitTest:assert_type(ng, "Neighborhood")
+		unitTest:assertType(ng, "Neighborhood")
 		unitTest:assertEquals(0, #ng)
 
 		cell:addNeighborhood(n, "neigh2")
@@ -140,7 +140,7 @@ y      number [0]
 
 		n:add(cell2)
 		unitTest:assertEquals(1, #ng)
-		unitTest:assert_nil(cell:getNeighborhood("wrong_name"))
+		unitTest:assertNull(cell:getNeighborhood("wrong_name"))
 
 		local cs = CellularSpace{xdim = 10}
 
@@ -152,7 +152,7 @@ y      number [0]
 			inmemory = false
 		}
 
-		unitTest:assert_type(cs:sample():getNeighborhood(), "Neighborhood")
+		unitTest:assertType(cs:sample():getNeighborhood(), "Neighborhood")
 	end,
 	init = function(unitTest)
 		local c = Cell{
@@ -161,7 +161,7 @@ y      number [0]
 			end
 		}
 
-		unitTest:assert_nil(c.value)
+		unitTest:assertNull(c.value)
 		c:init()
 		unitTest:assertEquals(2, c.value)
 	end,
@@ -189,7 +189,7 @@ y      number [0]
 
 		cs:createNeighborhood()
 
-		unitTest:assert_type(c:sample(), "Cell")
+		unitTest:assertType(c:sample(), "Cell")
 	end,
 	setId = function(unitTest)
 		local c = Cell{id = "a"}
@@ -204,15 +204,15 @@ y      number [0]
 			soilWater = 0
 		}
 
-		unitTest:assert_not_nil(cell.past)
-		unitTest:assert_nil(cell.past.cover)
+		unitTest:assertNotNull(cell.past)
+		unitTest:assertNull(cell.past.cover)
 
 		cell:synchronize()
 
-		unitTest:assert_not_nil(cell.past)
+		unitTest:assertNotNull(cell.past)
 		unitTest:assertEquals(cell.cover,"forest")
 		unitTest:assertEquals(cell.cover, cell.past.cover)
-		unitTest:assert_nil(cell.past.past)
+		unitTest:assertNull(cell.past.past)
 	end
 }
 

@@ -30,45 +30,45 @@ return{
 		local error_func = function()
 			LogFile{}
 		end
-		unitTest:assert_error(error_func, mandatoryArgumentMsg("subject"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("subject"))
 
 		local e = Event{action = function() end}
 		error_func = function()
 			LogFile{subject = e}
 		end
-		unitTest:assert_error(error_func, "Invalid type. LogFile only works with Cell, CellularSpace, Agent, and Society.")
+		unitTest:assertError(error_func, "Invalid type. LogFile only works with Cell, CellularSpace, Agent, and Society.")
 
 		error_func = function()
 			LogFile{subject = c, select = 5}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("select", "table", 5))
+		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 5))
 
 		error_func = function()
 			LogFile{subject = c, select = "mvalue"}
 		end
-		unitTest:assert_error(error_func, "Selected element 'mvalue' does not belong to the subject.")
+		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the subject.")
 
 		error_func = function()
 			LogFile{subject = c, select = {}}
 		end
-		unitTest:assert_error(error_func, "LogFile must select at least one attribute.")
+		unitTest:assertError(error_func, "LogFile must select at least one attribute.")
 
 		error_func = function()
 			LogFile{subject = c, file = 2}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("file", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
 
 		error_func = function()
 			LogFile{subject = c, separator = 2}
 		end
-		unitTest:assert_error(error_func, incompatibleTypeMsg("separator", "string", 2))
+		unitTest:assertError(error_func, incompatibleTypeMsg("separator", "string", 2))
 
 		local unit = Cell{}
 
 		error_func = function()
 			LogFile{subject = unit}
 		end
-		unitTest:assert_error(error_func, "The subject does not have at least one valid attribute to be used.")
+		unitTest:assertError(error_func, "The subject does not have at least one valid attribute to be used.")
 	end
 }
 
