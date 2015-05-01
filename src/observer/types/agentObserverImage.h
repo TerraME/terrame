@@ -96,7 +96,7 @@ public:
      * \see QString, \see QStringList
      */
     void setSubjectAttributes(const QStringList & attribs, 
-        int nestedSubjID, const QString & className = "" );
+        int nestedSubjID, const QString & className = "");
     
     /**
      * Gets a reference to the list of subject attributes

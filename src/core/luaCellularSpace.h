@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaCellularSpace objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUACELLULARSPACE_H )
+#if ! defined(LUACELLULARSPACE_H)
 #define LUACELLULARSPACE_H
 
 extern "C"
@@ -103,36 +103,36 @@ public:
     luaCellularSpace(lua_State *L);
 
     /// Sets the database type: MySQL, ADO, etc.
-    int setDBType(lua_State *L );
+    int setDBType(lua_State *L);
 
     /// Sets the host name.
-    int setHostName(lua_State *L );
+    int setHostName(lua_State *L);
 
     /// Sets the database name.
-    int setDBName(lua_State *L );
+    int setDBName(lua_State *L);
 
     int getDBName(lua_State *L);
 
     /// Sets the user name.
-    int setUser(lua_State *L );
+    int setUser(lua_State *L);
 
     /// Sets the password name.
-    int setPassword(lua_State *L );
+    int setPassword(lua_State *L);
 
     /// Sets the geographical database layer name
-    int setLayer(lua_State *L );
+    int setLayer(lua_State *L);
 
     /// Sets the geographical database theme name
-    int setTheme(lua_State *L );
+    int setTheme(lua_State *L);
 
     /// Clears the cellular space attributes names
     int clearAttrName(lua_State *L) ;
 
     /// Adds a new attribute name to the CellularSpace attributes table used in the load function
-    int addAttrName( lua_State *L);
+    int addAttrName(lua_State *L);
 
     /// Sets the SQL WHERE CLAUSE to the string received as parameter
-    int setWhereClause(lua_State *L );
+    int setWhereClause(lua_State *L);
 
     /// Load the luaCellularSpace object from the TerraLib geographic database
     int load(lua_State *L);
@@ -155,12 +155,12 @@ public:
 
 #ifndef TME_NO_TERRALIB
     /// Loads a luaNeighborhood from a GPM matrix stored into a TerraLib database
-    int loadTerraLibGPM( lua_State *L);
+    int loadTerraLibGPM(lua_State *L);
 #endif
 
     /// Adds a the luaCell received as parameter to the luaCellularSpace object
     /// parameters: x, y, luaCell
-    int addCell( lua_State *L);
+    int addCell(lua_State *L);
 
     /// Gets the luaCell object within the CellularSpace identified by the coordenates received as parameter
     /// parameters: cell index
@@ -174,7 +174,7 @@ public:
 
 	/// Gets the name of the layer
 	/// \author Raian Vargas Maretto
-	void setLayerName( string layerName );
+	void setLayerName(string layerName);
 
 	/// Sets the name of the layer
 	/// \author Raian Vargas Maretto
@@ -182,14 +182,14 @@ public:
 
 	/// Sets the name of the layer
 	/// \author Raian Vargas Maretto
-	string getLayerName( );
+	string getLayerName();
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observer attributes table, observer type parameters
-    int createObserver( lua_State *L );
+    int createObserver(lua_State *L);
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-    int notify(lua_State *L );
+    int notify(lua_State *L);
     
     /// Returns the Agent Map Observers linked to this cellular space
     /// \param observerId the id of observer
@@ -246,10 +246,10 @@ public:
 };
 
 /// Find a cell given a luaCellularSpace object and a luaCellIndex object
-luaCell * findCell( luaCellularSpace* cs, CellIndex& cellIndex);
+luaCell * findCell(luaCellularSpace* cs, CellIndex& cellIndex);
 
 #ifndef TME_NO_TERRALIB
-#if defined( TME_MSVC ) && defined( TME_WIN32 )
+#if defined(TME_MSVC) && defined(TME_WIN32)
 void configureADO();
 #endif
 #endif // TME_NO_TERRALIB

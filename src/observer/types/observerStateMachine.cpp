@@ -50,7 +50,7 @@ extern lua_State * L;
 //#include <QApplication>
 //#include <time.h>
 //
-//void wait ( int seconds )
+//void wait (int seconds)
 //{
 //    clock_t endwait;
 //    endwait = clock () + seconds * CLOCKS_PER_SEC ;
@@ -194,7 +194,7 @@ bool ObserverStateMachine::draw(QDataStream &state)
 
 #endif
 
-    if ((legendWindow) && (buildLegend <= 2 )) // (buildLegend <= states->size() )) //
+    if ((legendWindow) && (buildLegend <= 2)) // (buildLegend <= states->size())) //
     {
         legendWindow->makeLegend();
         showLayerLegend();
@@ -289,22 +289,22 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
 
     QTreeWidgetItem *item = 0;
     Attributes *attrib = 0;
-    for( int i = 0; i < attribs.size(); i++)
+    for(int i = 0; i < attribs.size(); i++)
     {
         if ((attribList.at(i) != QString("x")) && (attribList.at(i) != QString("y")))
         {
-            if (! mapAttributes->contains(attribList.at(i)) )
+            if (! mapAttributes->contains(attribList.at(i)))
             {
                 attrib = new Attributes(attribs.at(i), 0, 0);
 
             	//------- Retrieves the legend from the file and creates the object attrib
             	if (legKeys.size() > 0)
             	{
-                	attrib->setDataType( (TypesOfData) legAttribs.at(type).toInt());
-                	attrib->setGroupMode( (GroupingMode) legAttribs.at(mode ).toInt());
+                	attrib->setDataType((TypesOfData) legAttribs.at(type).toInt());
+                	attrib->setGroupMode((GroupingMode) legAttribs.at(mode).toInt());
                 	attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// count on zero
                 	attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// count on zero
-                	attrib->setStdDeviation( (StdDev) legAttribs.at(stdDeviation ).toInt());
+                	attrib->setStdDeviation((StdDev) legAttribs.at(stdDeviation).toInt());
                 	attrib->setMaxValue(legAttribs.at(max).toDouble());
                 	attrib->setMinValue(legAttribs.at(min).toDouble());
 
@@ -316,7 +316,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
                 	bool ok = false;
                 	int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 	if (ok)
-                	    attrib->setSymbol( QString( QChar(asciiCode) ));
+                	    attrib->setSymbol(QString(QChar(asciiCode)));
                 	else
                 	    attrib->setSymbol(legAttribs.at(symbol));
 
@@ -440,9 +440,9 @@ void ObserverStateMachine::showLayerLegend()
 
         for(int j = 0; j < leg->size(); j++)
         {
-            if (states->contains(leg->at(j).getLabel()) )
+            if (states->contains(leg->at(j).getLabel()))
             {
-                child = new QTreeWidgetItem( parent);
+                child = new QTreeWidgetItem(parent);
                 child->setSizeHint(0, ICON_SIZE);
                 child->setText(0, leg->at(j).getLabel());
                 QColor color = leg->at(j).getColor();
@@ -605,7 +605,7 @@ void ObserverStateMachine::zoomWindow()
 
     zoomChanged(zoomRect, factWidth, factHeight);
     //// view->centerOn(zoomRect.center());  // is not centered
-    //// view->centerOn( scene->itemsBoundingRect().center() );  // is not centered
+    //// view->centerOn(scene->itemsBoundingRect().center());  // is not centered
     // view->centerOn(scene->sceneRect().center()); // is almost centralized
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
@@ -639,7 +639,7 @@ void ObserverStateMachine::zoomWindow()
         criado = true;
         RectItemDebug *rectItem = 0;
         
-        // scene->setSceneRect(QRectF(zoomRect.topLeft() + QPoint(-1, -1), zoomRect.bottomRight() + QPoint(2, 1)) );
+        // scene->setSceneRect(QRectF(zoomRect.topLeft() + QPoint(-1, -1), zoomRect.bottomRight() + QPoint(2, 1)));
         // scene->setSceneRect(scene->sceneRect());
 
         rectItem = new RectItemDebug(zoomRect);
@@ -741,13 +741,13 @@ void ObserverStateMachine::zoomOut()
 //    // connects/disconnects the treeWidget signal with the slot
 //    if (! connect)
 //    {
-//        disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )), 
-//            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+//        disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)), 
+//            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 //    }
 //    else
 //    {
-//        QWidget::connect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )), 
-//            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+//        QWidget::connect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)), 
+//            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 //    }
 //}
 
@@ -829,7 +829,7 @@ void ObserverStateMachine::setupGUI()
     QStringList zoomList;
 
     for (int i = 0; i < zoomVec.size(); i++)
-        zoomList.append( QString::number(zoomVec.at(i)) + "%");
+        zoomList.append(QString::number(zoomVec.at(i)) + "%");
 
     zoomList.append(WINDOW);
 
@@ -840,7 +840,7 @@ void ObserverStateMachine::setupGUI()
     zoomComboBox->setCurrentIndex(23); // window  //zoomIdx); //11);
     //zoomComboBox->setCurrentIndex(zoomIdx); //11);
     zoomComboBox->setEditable(true);
-    connect(zoomComboBox, SIGNAL(activated(const QString & )), this, SLOT(zoomActivated(const QString &)));
+    connect(zoomComboBox, SIGNAL(activated(const QString &)), this, SLOT(zoomActivated(const QString &)));
 
     QHBoxLayout *hLayoutZoom1 = new QHBoxLayout();
     hLayoutZoom1->setMargin(5);
@@ -900,7 +900,7 @@ public:
         setFlag(QGraphicsItem::ItemIsMovable);
     }
 
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 )
+    void paint (QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0)
     {
         painter->setPen(QPen(color, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter->setBrush(Qt::NoBrush);
@@ -922,7 +922,7 @@ public:
         return path;
     }
 
-    void dragMoveEvent (QGraphicsSceneDragDropEvent * ev )
+    void dragMoveEvent (QGraphicsSceneDragDropEvent * ev)
     {
         
         QGraphicsRectItem::dragMoveEvent(ev);

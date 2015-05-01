@@ -24,7 +24,7 @@ of this library and its documentation.
 \brief This file definitions for the luaTrajectory objects.
 \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUATRAJECTORY_H )
+#if ! defined(LUATRAJECTORY_H)
 #define LUATRAJECTORY_H
 
 #include "trajectorySubjectInterf.h"
@@ -91,12 +91,12 @@ public:
     /// Registers the luaTrajectory object in the Lua stack
     // @DANIEL
     // Moved to Reference class
-    // int setReference( lua_State* L);
+    // int setReference(lua_State* L);
 
     /// Gets the luaTrajectory object reference
     // @DANIEL
     // Moved to Reference class
-    // int getReference( lua_State *L );
+    // int getReference(lua_State *L);
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observer attributes table, observer type parameters

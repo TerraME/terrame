@@ -25,7 +25,7 @@ of this library and its documentation.
         \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined( LUAENVIRONMENT_H )
+#if ! defined(LUAENVIRONMENT_H)
 #define LUAENVIRONMENT_H
 
 #include "environmentSubjectInterf.h"
@@ -98,17 +98,17 @@ public:
 
     /// Configures the luaEnvironment object
     /// parameter: finalTime
-    int config( lua_State *L );
+    int config(lua_State *L);
 
     /// Executes the luaEnvironment object
-    int execute( lua_State *L);
+    int execute(lua_State *L);
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observer attributes table, observer type parameters
-    int createObserver( lua_State *L );
+    int createObserver(lua_State *L);
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-    int notify(lua_State *L );
+    int notify(lua_State *L);
     
     /// Gets the subject's type
     const TypesOfSubjects getType() const;

@@ -32,7 +32,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-#if ! defined( PROCESS_H )
+#if ! defined(PROCESS_H)
 #define PROCESS_H
 
 #include "bridge.h"
@@ -90,7 +90,7 @@ public:
     /// \param agent is a pointer to the Agent being executed
     /// \param cellIndexPair is a pair of CellIndex objects and Cell pointers. The formers are user defined
     ///  n-dimensional coordinates for the latter.
-    bool execute( Event &event, class Agent *agent, pair<CellIndex, Cell*> &cellIndexPair )
+    bool execute(Event &event, class Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
     {
         try
         {
@@ -98,7 +98,7 @@ public:
 
             JumpCompositeInterf::iterator jIt;
             jIt = JumpCompositeInterf::pImpl_->begin();
-            while( jIt != JumpCompositeInterf::pImpl_->end() )
+            while(jIt != JumpCompositeInterf::pImpl_->end())
             {
                 if((*jIt)->execute(event, agent, cellIndexPair))
                 {
@@ -108,11 +108,11 @@ public:
                 jIt++;
             }
 
-            if( ! jumped )
+            if(! jumped)
             {
                 FlowCompositeInterf::iterator fIt;
                 fIt = FlowCompositeInterf::pImpl_->begin();
-                while( fIt != FlowCompositeInterf::pImpl_->end() )
+                while(fIt != FlowCompositeInterf::pImpl_->end())
                 {
                     (*fIt)->execute(event, agent, cellIndexPair);
                     fIt++;

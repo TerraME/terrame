@@ -12,7 +12,7 @@ PlayerGUI::PlayerGUI(QWidget *parent)
     : QDialog(parent), ui(new Ui::PlayerGUI)
 {
     ui->setupUi(this);
-    // ui->mainVLayout->addWidget( &ModelConsole::getInstance() );
+    // ui->mainVLayout->addWidget(&ModelConsole::getInstance());
     resize(400, 300);
 
     ui->textMessage->append("TerraME started!");

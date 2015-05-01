@@ -82,14 +82,14 @@ bool ObserverTCPSender::draw(QDataStream& state)
         {
             tcpSocketTask = new TcpSocketTask();
 
-            connect(tcpSocketTask, SIGNAL(messageSent(const QString &)), senderGUI, SLOT(appendMessage(const QString &)) );
+            connect(tcpSocketTask, SIGNAL(messageSent(const QString &)), senderGUI, SLOT(appendMessage(const QString &)));
                 // , Qt::DirectConnection);
             connect(tcpSocketTask, SIGNAL(messageFailed(const QString &)), senderGUI, SLOT(messageFailed(const QString &)));
-            connect(tcpSocketTask, SIGNAL(statusMessages(int)), senderGUI, SLOT(statusMessages(int)) /*, Qt::DirectConnection*/ );
-            connect(tcpSocketTask, SIGNAL(statusStates(int)), senderGUI, SLOT(statusStates(int)) /*, Qt::DirectConnection*/ );
+            connect(tcpSocketTask, SIGNAL(statusMessages(int)), senderGUI, SLOT(statusMessages(int)) /*, Qt::DirectConnection*/);
+            connect(tcpSocketTask, SIGNAL(statusStates(int)), senderGUI, SLOT(statusStates(int)) /*, Qt::DirectConnection*/);
             // connect(tcpSocketTask, SIGNAL(disconnected()), this, SLOT(deleteLater()));
             connect(tcpSocketTask, SIGNAL(connected()), this, SLOT(connected()));
-            connect(tcpSocketTask, SIGNAL(speed(const QString &)), senderGUI, SLOT(setSpeed(const QString &)) /*, Qt::DirectConnection*/ );
+            connect(tcpSocketTask, SIGNAL(speed(const QString &)), senderGUI, SLOT(setSpeed(const QString &)) /*, Qt::DirectConnection*/);
 
             connect(this, SIGNAL(addState(const QByteArray &)), tcpSocketTask, SLOT(addState(const QByteArray &)),
                 Qt::DirectConnection);
@@ -103,7 +103,7 @@ bool ObserverTCPSender::draw(QDataStream& state)
             tcpSocketTask->connectToHost(addresses->first(), port);
 
             // const BagOfTasks::Worker *w = tcpSocketTask->runExclusively();
-            // tcpSocketTask->moveToThread( (QThread *) w);
+            // tcpSocketTask->moveToThread((QThread *) w);
             tcpSocketTask->moveToThread((QThread *) tcpSocketTask->runExclusively());
         
             socket = true;
@@ -201,10 +201,10 @@ bool ObserverTCPSender::connectTo(quint16 prt)
     //{
     //    senderGUI->appendMessage(SenderGUI::tr("Connected on %1:%2 ")
     //        .arg(addresses->first().toString())
-    //        .arg(port) );
+    //        .arg(port));
     //    return true;
     //}
-    //senderGUI->appendMessage(SenderGUI::tr("Conection fail: '%1'").arg(tcpSocketTask->errorString()) );
+    //senderGUI->appendMessage(SenderGUI::tr("Conection fail: '%1'").arg(tcpSocketTask->errorString()));
     return false;
 }
 

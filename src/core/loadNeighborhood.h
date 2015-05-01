@@ -1,6 +1,6 @@
 #ifndef TME_NO_TERRALIB
 
-#if ! defined( LOAD_NEIGHBORHOOD_H ) 
+#if ! defined(LOAD_NEIGHBORHOOD_H) 
 #define LOAD_NEIGHBORHOOD_H
 
 #include <TeProgress.h>
@@ -107,11 +107,11 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
     //load  and set the construction strategy parameters
     //TeProxMatrixConstructionStrategy<set>* constStrategy;
     //int strategy = portal->getInt(9);
-    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy )  //adjacencia
+    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy)  //adjacencia
     //{
     //	constStrategy = TeProxMatrixLocalAdjacencyStrategy();
     //}
-    //else if( (TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distancia
+    //else if((TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distancia
     //{
     //	constStrategy = TeProxMatrixLocalDistanceStrategy();
     //}
@@ -119,9 +119,9 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
     //{
     //	constStrategy =	TeProxMatrixNearestNeighbourStrategy();
     //}
-    //gpm = new TeGeneralizedProxMatrix (constStrategy,  ws, 0, TeGraphBreymann, gpmId, false,  table, 1 );
+    //gpm = new TeGeneralizedProxMatrix (constStrategy,  ws, 0, TeGraphBreymann, gpmId, false,  table, 1);
     //gpm->impl_strategy_ = impl;
-    //gpm->setCurrentConstructionStrategy(constStrategy );
+    //gpm->setCurrentConstructionStrategy(constStrategy);
     //constStrategy->
     //TeProxMatrixConstructionParams* constParams = new TeProxMatrixConstructionParams();
     strategy = (TeGPMConstructionStrategy)portal->getInt(10);
@@ -234,11 +234,11 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
     //load  and set the construction strategy parameters
     //TeProxMatrixConstructionStrategy<set>* constStrategy;
     //int strategy = portal->getInt(9);
-    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy )  //adjacency
+    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy)  //adjacency
     //{
     //	constStrategy = TeProxMatrixLocalAdjacencyStrategy();
     //}
-    //else if( (TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distance
+    //else if((TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distance
     //{
     //	constStrategy = TeProxMatrixLocalDistanceStrategy();
     //}
@@ -246,9 +246,9 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
     //{
     //	constStrategy =	TeProxMatrixNearestNeighbourStrategy();
     //}
-    //gpm = new TeGeneralizedProxMatrix (constStrategy,  ws, 0, TeGraphBreymann, gpmId, false,  table, 1 );
+    //gpm = new TeGeneralizedProxMatrix (constStrategy,  ws, 0, TeGraphBreymann, gpmId, false,  table, 1);
     //gpm->impl_strategy_ = impl;
-    //gpm->setCurrentConstructionStrategy(constStrategy );
+    //gpm->setCurrentConstructionStrategy(constStrategy);
     //constStrategy->
     //TeProxMatrixConstructionParams* constParams = new TeProxMatrixConstructionParams();
     strategy = (TeGPMConstructionStrategy)portal->getInt(10);

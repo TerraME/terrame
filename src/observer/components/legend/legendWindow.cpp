@@ -196,25 +196,25 @@ void LegendWindow::legendTable_doubleClicked(int /*row*/, int col)
     }
 }
 
-void LegendWindow::slicesComboBox_activated( const QString & )
+void LegendWindow::slicesComboBox_activated(const QString &)
 {
     applyPushButton->setEnabled(true);
     okPushButton->setEnabled(false);
 }
 
-void LegendWindow::stdDevComboBox_activated( const QString & )
+void LegendWindow::stdDevComboBox_activated(const QString &)
 {
     applyPushButton->setEnabled(true);
     okPushButton->setEnabled(false);
 }
 
-void LegendWindow::precisionComboBox_activated( const QString & )
+void LegendWindow::precisionComboBox_activated(const QString &)
 {
     applyPushButton->setEnabled(true);
     okPushButton->setEnabled(false);
 }
 
-void LegendWindow::functionComboBox_activated( int )
+void LegendWindow::functionComboBox_activated(int)
 {
     applyPushButton->setEnabled(true);
     okPushButton->setEnabled(false);
@@ -1006,9 +1006,9 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
         double v = val - slice;
 
         ObsLegend leg;
-        leg.setFrom( QString("%1").arg(v, 0, 'f', precision) );
-        leg.setTo( QString("%1").arg(val, 0, 'f', precision) );
-        leg.setLabel( QString("%1 ~ %2").arg(leg.getFrom()).arg(leg.getTo()) );
+        leg.setFrom(QString("%1").arg(v, 0, 'f', precision));
+        leg.setTo(QString("%1").arg(val, 0, 'f', precision));
+        leg.setLabel(QString("%1 ~ %2").arg(leg.getFrom()).arg(leg.getTo()));
 
         auxVecLegend->append(leg);
         val = v;
@@ -1044,10 +1044,10 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
         double v = val + slice;
 
         ObsLegend leg;
-        leg.setFrom( QString("%1").arg(val, 0, 'f', precision) );
-        leg.setTo( QString("%1").arg(v, 0, 'f', precision) );
-        leg.setLabel( QString("%1 ~ %2")
-                      .arg(leg.getFrom()).arg(leg.getTo()) );
+        leg.setFrom(QString("%1").arg(val, 0, 'f', precision));
+        leg.setTo(QString("%1").arg(v, 0, 'f', precision));
+        leg.setLabel(QString("%1 ~ %2")
+                      .arg(leg.getFrom()).arg(leg.getTo()));
 
         leg.setIdxColor(idxColor);
         idxColor++;
@@ -1060,23 +1060,23 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
     {
         // Corrige o valor minimo
         ObsLegend leg = vecLegend->at(0);
-        leg.setFrom( QString("%1").arg(min - fix, 0, 'f', precision) );
+        leg.setFrom(QString("%1").arg(min - fix, 0, 'f', precision));
 
         if (! leg.getFrom().contains(MEAN))
         {
-            leg.setLabel( QString("%1 ~ %2")
-                          .arg(leg.getFrom()).arg(leg.getTo()) );
+            leg.setLabel(QString("%1 ~ %2")
+                          .arg(leg.getFrom()).arg(leg.getTo()));
         }
         vecLegend->replace(0, leg);
 
         // Corrige o valor maximo
         leg = vecLegend->at(vecLegend->size() - 1);
-        leg.setTo( QString("%1").arg(max + fix, 0, 'f', precision) );
+        leg.setTo(QString("%1").arg(max + fix, 0, 'f', precision));
 
         if (! leg.getFrom().contains(MEAN))
         {
-            leg.setLabel( QString("%1 ~ %2")
-                          .arg(leg.getFrom()).arg(leg.getTo()) );
+            leg.setLabel(QString("%1 ~ %2")
+                          .arg(leg.getFrom()).arg(leg.getTo()));
         }
         vecLegend->replace(vecLegend->size() - 1, leg);
     }
@@ -1125,7 +1125,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             && (attrib->getType() != TObsSociety)
             && (attrib->getType() != TObsAutomaton) 
             && (attrib->getType() != TObsTrajectory) 
-        )
+      )
     {
         QString msg;
         msg = tr("The \"%1\" attribute has been configured incorrectly. An error might "
@@ -1138,7 +1138,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         }
         else
         {
-            if (execModes != Quiet )
+            if (execModes != Quiet)
             {
 				string str = msg.toLatin1().data();
 				lua_getglobal(L, "customWarning");
@@ -1162,9 +1162,9 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         from = QString::number(i);
 
         leg.setIdxColor(i);
-        leg.setFrom( from );
-        leg.setLabel( from );
-        leg.setTo( from );
+        leg.setFrom(from);
+        leg.setLabel(from);
+        leg.setTo(from);
         leg.setOccurrence(0);
         vecLegend->append(leg);
 
@@ -1228,9 +1228,9 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             
             ObsLegend leg;
             leg.setIdxColor(vecLegendPos);
-            leg.setFrom( from );
-            leg.setLabel( from );
-            leg.setTo( from );
+            leg.setFrom(from);
+            leg.setLabel(from);
+            leg.setTo(from);
             leg.setOccurrence(count);
 
             vecLegend->replace(vecLegendPos, leg);
@@ -1240,16 +1240,16 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 
     if (! txtValues.empty())
     {
-        if ( (i > 1) && (txtValues.at(i - 2) == txtValues.at(i - 1)) )
+        if ((i > 1) && (txtValues.at(i - 2) == txtValues.at(i - 1)))
         {
             from = txtValues.at(i - 1);
             vecLegendPos = attrib->addValueListItem(from);
 
             ObsLegend leg;
             leg.setIdxColor(vecLegendPos);
-            leg.setFrom( from );
-            leg.setLabel( from );
-            leg.setTo( from );
+            leg.setFrom(from);
+            leg.setLabel(from);
+            leg.setTo(from);
             leg.setOccurrence(count);
             
             if (vecLegendPos < vecLegend->size())
@@ -1262,9 +1262,9 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 
             ObsLegend leg;
             leg.setIdxColor(vecLegendPos);
-            leg.setFrom( from );
+            leg.setFrom(from);
 
-            leg.setTo( from );
+            leg.setTo(from);
             leg.setOccurrence(1);
             
             if (vecLegendPos < vecLegend->size())
@@ -1301,8 +1301,8 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         // Retrieves the label on the labels list
         if ((labels->size() == vecLegend->size()) && (values->size() == vecLegend->size()))
         {            
-            leg.setLabel( labels->at(i) );
-            leg.setFrom( values->at(i) );
+            leg.setLabel(labels->at(i));
+            leg.setFrom(values->at(i));
             leg.setIdxColor(i);
         }
 
@@ -1428,8 +1428,8 @@ QPixmap LegendWindow::color2PixmapLine(const QColor &color, double width, const 
 	pen.setWidth(width);
 
 	p.setPen(pen);
-	p.drawLine( QLine( QPoint(0, (size.height() * 0.5)), 
-        QPoint(size.width(), (size.height() * 0.5)) ) );
+	p.drawLine(QLine(QPoint(0, (size.height() * 0.5)), 
+        QPoint(size.width(), (size.height() * 0.5))));
 	p.end();
 
     return QPixmap::fromImage(img);
@@ -1473,7 +1473,7 @@ void LegendWindow::connectSlots(bool con)
     if (con)
     {
         connect(cancelPushButton, SIGNAL(clicked()), this,
-                SLOT( rejectWindow() )); //SLOT(reject()));
+                SLOT(rejectWindow())); //SLOT(reject()));
         connect(attributesComboBox, SIGNAL(activated(QString)), this,
                 SLOT(attributesComboBox_activated(QString)));
         connect(attributesComboBox, SIGNAL(activated(QString)), this,
@@ -1534,7 +1534,7 @@ void LegendWindow::connectSlots(bool con)
     else
     {
         disconnect(cancelPushButton, SIGNAL(clicked()), this,
-                SLOT( rejectWindow() )); //SLOT(reject()));
+                SLOT(rejectWindow())); //SLOT(reject()));
         disconnect(attributesComboBox, SIGNAL(activated(QString)), this,
                 SLOT(attributesComboBox_activated(QString)));
         disconnect(attributesComboBox, SIGNAL(activated(QString)), this,
@@ -2161,7 +2161,7 @@ void LegendWindow::retranslateUi()
     loadNamesComboBox->clear();
     loadNamesComboBox->insertItems(0, QStringList()
                                    << QApplication::translate("LegendWindow", "      -------------------------------------", 0)
-                                   );
+                                 );
     saveColorPushButton->setText(QApplication::translate("LegendWindow", "Save...", 0));
     okPushButton->setText(QApplication::translate("LegendWindow", "&OK", 0));
     okPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+O", 0));

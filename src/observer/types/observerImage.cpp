@@ -187,8 +187,8 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
         {
-            //qFatal("Error: Parameter legend \"%s\" not found. Please check it in the model.", qPrintable( LEGEND_KEYS.at(j) ) );
-            //string err_out = string("Neighborhood '" ) + string (index) + string("' not found");
+            //qFatal("Error: Parameter legend \"%s\" not found. Please check it in the model.", qPrintable(LEGEND_KEYS.at(j)));
+            //string err_out = string("Neighborhood '") + string (index) + string("' not found");
             lua_getglobal(L, "incompatibleTypesErrorMsg");
             lua_pushstring(L, LEGEND_KEYS.at(j).toLatin1().constData());
             lua_pushstring(L, "string");
@@ -208,10 +208,10 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
 #endif
 
     Attributes *attrib = 0;
-    for( int i = 0; i < attribList.size(); i++)
+    for(int i = 0; i < attribList.size(); i++)
     {
         if ((attribList.at(i) != "x") && (attribList.at(i) != "y")
-            && (! mapAttributes->contains(attribList.at(i)) ) )
+            && (! mapAttributes->contains(attribList.at(i))))
         {
             attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(), 
                 cellularSpaceSize.height(), type);
@@ -242,11 +242,11 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
                 width = legKeys.indexOf(WIDTH);
                 // style = legKeys.indexOf(STYLE);
 
-                attrib->setDataType( (TypesOfData) legAttribs.at(dataType).toInt());
-                attrib->setGroupMode( (GroupingMode) legAttribs.at(mode).toInt());
+                attrib->setDataType((TypesOfData) legAttribs.at(dataType).toInt());
+                attrib->setGroupMode((GroupingMode) legAttribs.at(mode).toInt());
                 attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// conta com o zero
                 attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// conta com o zero
-                attrib->setStdDeviation( (StdDev) legAttribs.at(stdDeviation).toInt());
+                attrib->setStdDeviation((StdDev) legAttribs.at(stdDeviation).toInt());
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());
 
@@ -264,7 +264,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
                 ok = false;
                 value = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
-                    attrib->setSymbol( QString( QChar(value) ));
+                    attrib->setSymbol(QString(QChar(value)));
                 else
                     attrib->setSymbol(legAttribs.at(symbol));
                 
@@ -331,7 +331,7 @@ bool ObserverImage::save()
     if (! savingImages)
     {
         obsImgGUI->setStatusMessage("Unable to save the image.");
-        if (execModes != Quiet )
+        if (execModes != Quiet)
         {
 			string str = string("Unable to save the image."
 								"The path is incorrect or you do not have permission to perform this task.");

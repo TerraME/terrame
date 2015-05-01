@@ -466,7 +466,7 @@ void TeQtColorBar::paintEvent(QPaintEvent *)
             //            int g = colorVec[i].green_;
             //            int b = colorVec[i].blue_;
             //
-            //            cor.setRgb(r, g, b );
+            //            cor.setRgb(r, g, b);
 
             cor.setRgb(colorVec[i].red_, colorVec[i].green_, colorVec[i].blue_);
             painter.setPen(cor);

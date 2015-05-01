@@ -77,7 +77,7 @@ bool ObserverUDPSender::draw(QDataStream &state)
             udpSocketTask->setHost(&addresses);
             udpSocketTask->setCompress(compressed);
 
-            connect(udpSocketTask, SIGNAL(messageSent(const QString &)), senderGUI, SLOT(appendMessage(const QString &)) );
+            connect(udpSocketTask, SIGNAL(messageSent(const QString &)), senderGUI, SLOT(appendMessage(const QString &)));
                     // , Qt::DirectConnection);
             connect(udpSocketTask, SIGNAL(messageFailed(const QString &)), senderGUI, SLOT(messageFailed(const QString &)));
             connect(udpSocketTask, SIGNAL(statusMessages(int, int)), senderGUI, SLOT(statusMessages(int, int)),
@@ -142,7 +142,7 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //
 //        if (compressDatagram)
 //        {
-//            out << qCompress( data.mid(pos, datagramSize), COMPRESS_RATIO);
+//            out << qCompress(data.mid(pos, datagramSize), COMPRESS_RATIO);
 //        }
 //        else    
 //        {
@@ -153,9 +153,9 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //        {
 //            bytesWritten = udpSocket->writeDatagram(datagram, hosts->at(i), port);
 //            udpSocket->flush();
-//            senderGUI->appendMessage( tr("Datagram sent for %1").arg(hosts->at(i).toString()) );
+//            senderGUI->appendMessage(tr("Datagram sent for %1").arg(hosts->at(i).toString()));
 //
-//            senderGUI->setWindowTitle(tr("datagram size: %1 -- %2").arg(datagram.size()).arg((qint64)(datagram.size() - sizeof(qint64)) ));
+//            senderGUI->setWindowTitle(tr("datagram size: %1 -- %2").arg(datagram.size()).arg((qint64)(datagram.size() - sizeof(qint64))));
 //
 //            if (bytesWritten == -1)
 //            {
@@ -184,8 +184,8 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //        msgCount++;
 //
 //        // faz um pausa antes de continuar a enviar
-//        // delay( (double) 0.01); // 0.0125);
-//        // delay( (double) 0.0125);
+//        // delay((double) 0.01); // 0.0125);
+//        // delay((double) 0.0125);
 //        qApp->processEvents();
 //    }
 //
@@ -255,7 +255,7 @@ bool ObserverUDPSender::completeState(const QByteArray & /*flag*/)
     //out << compressDatagram;
 
     //if (compressDatagram)
-    //   out << qCompress( data, 1);
+    //   out << qCompress(data, 1);
     //else    
     //    out << data;
 

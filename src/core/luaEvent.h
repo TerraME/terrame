@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaEvent objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUAEVENT_H )
+#if ! defined(LUAEVENT_H)
 #define LUAEVENT_H
 
 #include "eventSubjectInterf.h"
@@ -83,32 +83,32 @@ public:
 
     /// Configures the luaEvent object
     /// Configures the luaEvent object
-    int config( lua_State *L );
+    int config(lua_State *L);
 
     /// Gets the luaEvent time
-    int getTime( lua_State *L );
+    int getTime(lua_State *L);
 
     /// Gets the luaEvent priority
-    int getPriority( lua_State *L );
+    int getPriority(lua_State *L);
 
     /// Sets the luaEvent priority
     /// parameters: number
-    int setPriority( lua_State *L ) ;
+    int setPriority(lua_State *L) ;
 
     /// Gets the luaEvent periodicity
-    int getPeriod( lua_State *L ) ;
+    int getPeriod(lua_State *L) ;
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observer attributes table, observer type parameters
-    int createObserver( lua_State *L );
+    int createObserver(lua_State *L);
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-    int notify(lua_State *L );
+    int notify(lua_State *L);
 
     /// Gets the subject type
     const TypesOfSubjects getType() const;
 
-    int getType(lua_State *L );
+    int getType(lua_State *L);
 
     /// Gets the object's internal state (serialization)
     /// \param in the serialized object that contains the data that will be observed in the observer

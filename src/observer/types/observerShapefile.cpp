@@ -126,7 +126,7 @@ void ObserverShapefile::showLayerLegend()
 
         for(int j = 0; j < leg->size(); j++)
         {
-            child = new QTreeWidgetItem( parent);
+            child = new QTreeWidgetItem(parent);
             child->setSizeHint(0, ICON_SIZE);
             child->setText(0, leg->at(j).getLabel());
             QColor color = leg->at(j).getColor();
@@ -316,7 +316,7 @@ void ObserverShapefile::treeLayers_itemChanged(QTreeWidgetItem * item, int /*col
     Attributes * attrib = mapAttributes->value(item->text(0));
     if (attrib)
     {
-        attrib->setVisible( (item->checkState(0) == Qt::Checked) ? true : false );
+        attrib->setVisible((item->checkState(0) == Qt::Checked) ? true : false);
         painter->replotMap();
     }
 }

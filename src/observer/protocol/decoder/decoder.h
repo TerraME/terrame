@@ -132,7 +132,7 @@ private:
      * \param idx index of a token under decodification
      * \see QStringList
      */
-    inline bool consumeID(int &id, QStringList &tokens, int &idx );
+    inline bool consumeID(int &id, QStringList &tokens, int &idx);
 
     /**
      * Identification of the subject type

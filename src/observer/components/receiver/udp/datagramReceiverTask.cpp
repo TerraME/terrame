@@ -42,7 +42,7 @@ bool DatagramReceiverTask::execute()
 
         if (state)
         {
-            process( QString(*state));
+            process(QString(*state));
 
             //QDataStream in(part, QIODevice::ReadOnly);
             //in.setVersion(QDataStream::Qt_4_6);
@@ -77,11 +77,11 @@ bool DatagramReceiverTask::execute()
             //        << "completeData.size" << completeData.size();
 
             //    // resizes the object and inserts garbage
-            //    // msg.insert( (int)pos, data); 
-            //    completeData.replace( (int)pos, data.size(), data);
+            //    // msg.insert((int)pos, data); 
+            //    completeData.replace((int)pos, data.size(), data);
 
             //    // ui->appendMessage(tr("Messages received: %1. From: %2, Port: %3")
-            //    //    .arg(msgReceiver).arg(hostSender.toString()).arg(port) );
+            //    //    .arg(msgReceiver).arg(hostSender.toString()).arg(port));
             //}
             //else
             //{
@@ -89,7 +89,7 @@ bool DatagramReceiverTask::execute()
             //    {
             //        qDebug() << COMPLETE_STATE << "completeData: " << completeData.size();
 
-            //        process( QString(completeData) );
+            //        process(QString(completeData));
             //        
             //        completeData.clear();
             //        //statesReceiver++;
@@ -170,7 +170,7 @@ void DatagramReceiverTask::process(const QString & /*state*/)
 //
 //        BlackBoard &bb = BlackBoard::getInstance();
 //        SubjectAttributes *subjAttr = bb.insertSubject(id);
-//        subjAttr->setSubjectType( (TypesOfSubjects) type);
+//        subjAttr->setSubjectType((TypesOfSubjects) type);
 //      
 //#ifdef TME_PROTOCOL_BUFFERS
 //        // bool dec = bb.decode(id, state.toLatin1());

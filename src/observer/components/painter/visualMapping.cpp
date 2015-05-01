@@ -83,7 +83,7 @@ bool VisualMapping::execute()
     for (int i = 0 ; i < attribList.size(); ++i)
     {
         Attributes *attrib = attribList.at(i);
-        qDebug() << "\n   type: " << getSubjectName( attrib->getType() ) 
+        qDebug() << "\n   type: " << getSubjectName(attrib->getType()) 
             << "::: " << attribList.size();
     }
     std::cout.flush();
@@ -139,19 +139,19 @@ bool VisualMapping::execute()
             {
                 connect(&calculateResult, SIGNAL(displayImage(QImage)), 
                     this, SIGNAL(displayImage(QImage)) 
-                    // ); 
+                    //); 
                     , Qt::DirectConnection);
                     // , Qt::QueuedConnection); 
-                    // , BlockingQueuedConnection );
+                    // , BlockingQueuedConnection);
             }
             else
             {
                 connect(&calculateResult, SIGNAL(displayImage(QImage)), 
                     this, SLOT(save(QImage)) 
-                    // ); 
+                    //); 
                      , Qt::DirectConnection);
                     // , Qt::QueuedConnection); 
-                    //, Qt::BlockingQueuedConnection );
+                    //, Qt::BlockingQueuedConnection);
             }
 #else
 
@@ -161,29 +161,29 @@ bool VisualMapping::execute()
             {
                 connect(&calculateResult, SIGNAL(displayImage(QImage)), 
                     this, SIGNAL(displayImage(QImage)) 
-                    // ); 
+                    //); 
                     , Qt::DirectConnection);
                     // , Qt::QueuedConnection); 
-                    // , BlockingQueuedConnection );
+                    // , BlockingQueuedConnection);
             }
             else
             {
                 connect(&calculateResult, SIGNAL(displayImage(QImage)), 
                     this, SLOT(save(QImage)) 
-                    // ); 
+                    //); 
                      , Qt::DirectConnection);
                     // , Qt::QueuedConnection); 
-                    //, Qt::BlockingQueuedConnection );
+                    //, Qt::BlockingQueuedConnection);
             }
         }
         else // ! agentAttribPositions->isEmpty()
         {
             connect(&calculateResult, SIGNAL(displayImage(QImage)), 
                 this, SLOT(drawAgent(QImage)) 
-                // ); 
+                //); 
                 , Qt::DirectConnection); 
                 // , Qt::QueuedConnection); 
-                //, Qt::BlockingQueuedConnection );
+                //, Qt::BlockingQueuedConnection);
         } 
 
 #endif // TME_DRAW_VECTORIAL_AGENTS
@@ -386,7 +386,7 @@ void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
 
         // Checks if the nestedSubj is valid and gets their value
         if (nestedSubj //&& (nestedSubj->getType() == attrib->getType())
-            && (nestedSubj->getNumericValue(attrib->getName(), v)) )
+            && (nestedSubj->getNumericValue(attrib->getName(), v)))
         {
             // nestedSubj->setTime(time);
             const double &x = nestedSubj->getX();
@@ -455,7 +455,7 @@ void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
                 }
             }
 
-            if ((x >= 0) && ( y >= 0))
+            if ((x >= 0) && (y >= 0))
                 rendering(p, attrib->getType(), x, y);
 
         } // nestedSubj != NULL
@@ -565,7 +565,7 @@ void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
                 }
             }
 
-            if ((x >= 0) && ( y >= 0))
+            if ((x >= 0) && (y >= 0))
                 rendering(p, attrib->getType(), x, y);
 
         } // nestedSubj != NULL
@@ -637,7 +637,7 @@ void VisualMapping::mappingChangesText(Attributes *attrib, QPainter *p)
                 }
             }
             
-            if ((x >= 0) && ( y >= 0))
+            if ((x >= 0) && (y >= 0))
                 rendering(p, attrib->getType(), x, y);
         }
     }
@@ -668,7 +668,7 @@ void VisualMapping::mappingAllText(Attributes *attrib, QPainter *p)
 
         // Checks if the nestedSubj is valid and gets their value
         if (nestedSubj // && (nestedSubj->getType() == attrib->getType())
-            && (nestedSubj->getTextValue(attrib->getName(), v)) )
+            && (nestedSubj->getTextValue(attrib->getName(), v)))
         {
             p->setPen(Qt::NoPen);
 
@@ -697,7 +697,7 @@ void VisualMapping::mappingAllText(Attributes *attrib, QPainter *p)
                     }
                 }
             }
-            if ((x >= 0) && ( y >= 0))
+            if ((x >= 0) && (y >= 0))
                 rendering(p, attrib->getType(), x, y);
         }
     }
@@ -798,8 +798,8 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
             qDebug() << ">>>>>>>>>>>>>>>>>>>>>" << nestedSubj->toString() 
                 ; // << "\n------" << attrib->getName() << "\n" << v << parentSubjAttr->toString() << "\n";
 
-            qDebug() << "nestedSubj->getType()" << getSubjectName( nestedSubj->getType() )
-                << "attrib->getType()" << getSubjectName( attrib->getType() );
+            qDebug() << "nestedSubj->getType()" << getSubjectName(nestedSubj->getType())
+                << "attrib->getType()" << getSubjectName(attrib->getType());
 #endif
 
             if (exist) // && (nestedSubj->getType() == attrib->getType()))
@@ -821,7 +821,7 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
                 }
 
                 // nestedSubj->setTime(time);
-                rec = QRectF( x * ORIG_TO_DEST_W , y * ORIG_TO_DEST_H, 
+                rec = QRectF(x * ORIG_TO_DEST_W , y * ORIG_TO_DEST_H, 
                     SIZE_CELL_PROPORT_W, SIZE_CELL_PROPORT_H);
 
                 p->save();
@@ -831,7 +831,7 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
                 {
                     const ObsLegend &leg = vecLegend->at(j);
 
-                    if ((isTextual) && (v == leg.getFrom()) )
+                    if ((isTextual) && (v == leg.getFrom()))
                     {
                         p->setPen(leg.getColor());
                         break;
@@ -849,7 +849,7 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
                 // p->drawRect(rec);
 
                 p->drawRect(RECT_CELL); 
-                // p->rotate((qreal) (qrand() % 360) );
+                // p->rotate((qreal) (qrand() % 360));
                 qreal a = attrib->getDirection(x, y);
                 p->rotate(a);
                 p->drawText(RECT_CELL, Qt::AlignCenter, attrib->getSymbol());
@@ -938,12 +938,12 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
     // Gets the Attribute that is an Agent
     for (int i = 0; i < agentAttribPositions->size(); i++)
     { 
-        Attributes *attrib = attribList.at( agentAttribPositions->at(i) );
+        Attributes *attrib = attribList.at(agentAttribPositions->at(i));
 
         if (attrib->getVisible())
         {
 #ifdef TME_DRAW_VECTORIAL_AGENTS
-            QPainter p( (QImage *) &result );
+            QPainter p((QImage *) &result);
 #else
             img = attrib->getImage();
             img->fill(0);
@@ -1002,7 +1002,7 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
                     // nestedSubj->setTime(time);
                     x = nestedSubj->getX() * WIDTH_CELL;
                     y = nestedSubj->getY() * HEIGHT_CELL;
-                    rec = QRectF( x * ORIG_TO_DEST_W , y * ORIG_TO_DEST_H, 
+                    rec = QRectF(x * ORIG_TO_DEST_W , y * ORIG_TO_DEST_H, 
                         SIZE_CELL_PROPORT_W, SIZE_CELL_PROPORT_H);
 
                     p.setPen(Qt::white);
@@ -1012,7 +1012,7 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
                     {
                         const ObsLegend &leg = vecLegend->at(j);
 
-                        if ((isTextual) && (v == leg.getFrom()) )
+                        if ((isTextual) && (v == leg.getFrom()))
                         {
                             p.setPen(leg.getColor());
                             break;
@@ -1030,7 +1030,7 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
                     // p.drawRect(rec);
                     
                     p.drawRect(RECT_CELL); 
-                    // p.rotate((qreal) (qrand() % 360) );
+                    // p.rotate((qreal) (qrand() % 360));
                     qreal a = attrib->getDirection(x, y);
                     p.rotate(a);
                     p.drawText(RECT_CELL, Qt::AlignCenter, attrib->getSymbol());
@@ -1142,8 +1142,8 @@ void VisualMapping::mappingNeighborhood(Attributes *attrib, QPainter *p)
 
         // Checks if the nestedSubj is valid and gets their value
         if ((nestedSubj)
-            // && (nestedSubj->getNumericValue(attrib->getName(), v)  ))
-            && (nestedSubj->getNumericValue("weight", v)  ))
+            // && (nestedSubj->getNumericValue(attrib->getName(), v)))
+            && (nestedSubj->getNumericValue("weight", v)))
         {
             // nestedSubj->setTime(time);
             const double &x = nestedSubj->getX();
@@ -1200,7 +1200,7 @@ void VisualMapping::mappingNeighborhood(Attributes *attrib, QPainter *p)
                     }
                     else
                     {
-                        if ((leg.getFromNumber() <= v) && (v < leg.getToNumber()) )
+                        if ((leg.getFromNumber() <= v) && (v < leg.getToNumber()))
                         {
                             pen.setColor(leg.getColor());
                             break;
@@ -1213,7 +1213,7 @@ void VisualMapping::mappingNeighborhood(Attributes *attrib, QPainter *p)
             if (nestedSubj->getId() == nestedSubjParentCell->getId())
                 selfNeighPen = pen;
 
-            if ((x >= 0) && ( y >= 0))
+            if ((x >= 0) && (y >= 0))
                 renderingNeighbor(p, xParentCell, yParentCell, x, y);
 
         } // nestedSubj != NULL
@@ -1224,7 +1224,7 @@ void VisualMapping::mappingNeighborhood(Attributes *attrib, QPainter *p)
     pen = p->pen();
 
     if (selfNeighIdx > 0)
-        p->setBrush( selfNeighPen.color() );
+        p->setBrush(selfNeighPen.color());
     else
         p->setBrush(Qt::white);
 
@@ -1310,8 +1310,8 @@ void VisualMapping::save(const QImage &result)
     //    // imgTeste.save(path + "teste.png");
 
     //    QImage retImg(imgTeste.width(), imgTeste.height(), QImage::Format_Indexed8);
-    //    QVector<QRgb> table( 256 );
-    //    for( int i = 0; i < 256; ++i )
+    //    QVector<QRgb> table(256);
+    //    for(int i = 0; i < 256; ++i)
     //        table[i] = qRgb(i, i, i);
 
     //    retImg.setColorTable(table);

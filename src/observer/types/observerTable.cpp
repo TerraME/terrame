@@ -21,7 +21,7 @@
 
 
 ObserverTable::ObserverTable(Subject *subj, QWidget *parent)
-    : QDialog(parent), ObserverInterf( subj ) //, QThread()
+    : QDialog(parent), ObserverInterf(subj) //, QThread()
 {
     observerType = TObsTable;
     subjectType = subj->getType(); // TO_DO: Changes it to Observer pattern
@@ -263,13 +263,13 @@ bool ObserverTable::draw()
 
             for(int id = 0; id < subjectsIDs.size(); ++id)
             {
-                nestedSubj = bb.getSubject( subjectsIDs.at(id) );
+                nestedSubj = bb.getSubject(subjectsIDs.at(id));
 
                 // if (nestedSubj && nestedSubj->getNumericValue(attribList.first(), weight))
                 if (nestedSubj && nestedSubj->getNumericValue("weight", weight))
                 {
                     item = new QTreeWidgetItem(tableWidget);
-                    doubleToText( nestedSubj->getId(), tmpValue);
+                    doubleToText(nestedSubj->getId(), tmpValue);
                     item->setText(0, tmpValue);
 
                     doubleToText(weight, tmpValue);

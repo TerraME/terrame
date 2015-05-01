@@ -129,7 +129,7 @@ bool AgentObserverMap::draw(QDataStream & state)
 		
 //#ifdef TME_BLACK_BOARD
 //        QDataStream& state = BlackBoard::getInstance().getState(subj, getId(), subjectAttributes);
-//        BlackBoard::getInstance().setDirtyBit(subj->getId() );
+//        BlackBoard::getInstance().setDirtyBit(subj->getId());
 //#else
         QDataStream& state = subj->getState(out, subj, getId(), subjectAttributes);
 //#endif
@@ -211,7 +211,7 @@ void AgentObserverMap::setSubjectAttributes(const QStringList & attribs,
 
     for (int i = 0; i < attribs.size(); i++)
     {
-        if (! subjectAttributes.contains(attribs.at(i)) )
+        if (! subjectAttributes.contains(attribs.at(i)))
             subjectAttributes.push_back(attribs.at(i));
  
         if (! mapAttributes->contains(attribs.at(i)))
@@ -246,7 +246,7 @@ QStringList & AgentObserverMap::getSubjectAttributes()
 
 void AgentObserverMap::registry(Subject *subj, const QString & className)
 {
-    if (! constainsItem(nestedSubjects, subj) )
+    if (! constainsItem(nestedSubjects, subj))
     {
 #ifdef TME_BLACK_BOARD
     	SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(subj->getId());
@@ -288,9 +288,9 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
     {
         Attributes *attrib = getMapAttributes()->value(subjectAttributes.at(i), 0);
             
-        if (attrib && (className == attrib->getClassName()) )
+        if (attrib && (className == attrib->getClassName()))
         {
-            getMapAttributes()->remove( subjectAttributes.at(i) );
+            getMapAttributes()->remove(subjectAttributes.at(i));
             
             // Updates de copies of attributes lists
             getPainterWidget()->updateAttributeList();
@@ -307,14 +307,14 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
              qDebug() << "\nclassName " << className;
              qDebug() << "attrib->getExhibitionName() " << attrib->getExhibitionName();
              
-             if ( (attrib->getType() != TObsAgent)
+             if ((attrib->getType() != TObsAgent)
              || ((className == attrib->getExhibitionName()) &&
-        	 (! ObserverMap::existAgents(nestedSubjects)) ) )
+        	 (! ObserverMap::existAgents(nestedSubjects))))
              {
              //for (int j = 0; j < treeLayers->topLevelItemCount(); j++)
              //{
              //    // Remove the attribute from the tree of layers
-             //    if ( treeLayers->topLevelItem(j)->text(0) == attrib->getName())
+             //    if (treeLayers->topLevelItem(j)->text(0) == attrib->getName())
              //    {
              //        QTreeWidgetItem *treeItem = treeLayers->takeTopLevelItem(j);
              //        delete treeItem;
@@ -325,7 +325,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
              // Remove the attributes of map attribute
              getMapAttributes()->take(attrib->getName());
              getPainterWidget()->setExistAgent(false);
-             subjectAttributes.removeAt( subjectAttributes.indexOf(attrib->getName()) );
+             subjectAttributes.removeAt(subjectAttributes.indexOf(attrib->getName()));
              delete attrib;
              return true;
              }
@@ -405,8 +405,8 @@ bool AgentObserverMap::draw()
     //{
     //    attrib = attribList.at(i);
 
-    //    if ( (attrib->getType() != TObsCell)
-    //          && (attrib->getType() != TObsAgent) )
+    //    if ((attrib->getType() != TObsCell)
+    //          && (attrib->getType() != TObsAgent))
     //        getPainterWidget()->draw();
     //}
 
@@ -414,8 +414,8 @@ bool AgentObserverMap::draw()
     //for(int i = 0; i < attribList.size(); i++)
     //{
     //    //attrib = attribList.at(i);
-    //    //if ( (attrib->getType() != TObsCell)
-    //    //       && (attrib->getType() != TObsAgent) )
+    //    //if ((attrib->getType() != TObsCell)
+    //    //       && (attrib->getType() != TObsAgent))
     //    //       attrib->getImage()->save("imgs/" + attrib->getName() + QString::number(ss) + ".png");
 
     //    qDebug() << attrib->getName() << ": " << getSubjectName(attrib->getType());

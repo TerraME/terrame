@@ -208,7 +208,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
         {
             qFatal("Error: Parameter legend \"%s\" not found. Please check it in the model.",
-                qPrintable( LEGEND_KEYS.at(j) ) );
+                qPrintable(LEGEND_KEYS.at(j)));
         }
     }
     int dataType = 0, mode = 0, slices = 0, precision = 0, stdDeviation = 0, max = 0;
@@ -223,10 +223,10 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
 
     QTreeWidgetItem *item = 0;
     Attributes *attrib = 0;
-    for( int i = 0; i < attribList.size(); i++)
+    for(int i = 0; i < attribList.size(); i++)
     {
-        if ( (attribList.at(i) != "x") && (attribList.at(i) != "y") 
-            && (! mapAttributes->contains(attribList.at(i)) ) )
+        if ((attribList.at(i) != "x") && (attribList.at(i) != "y") 
+            && (! mapAttributes->contains(attribList.at(i))))
         {
 
             attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(), 
@@ -265,11 +265,11 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                 width = legKeys.indexOf(WIDTH);
                 // style = legKeys.indexOf(STYLE);
 
-                attrib->setDataType( (TypesOfData) legAttribs.at(dataType).toInt());
-                attrib->setGroupMode( (GroupingMode) legAttribs.at(mode).toInt());
+                attrib->setDataType((TypesOfData) legAttribs.at(dataType).toInt());
+                attrib->setGroupMode((GroupingMode) legAttribs.at(mode).toInt());
                 attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// zero counts
                 attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// zero counts
-                attrib->setStdDeviation( (StdDev) legAttribs.at(stdDeviation).toInt());
+                attrib->setStdDeviation((StdDev) legAttribs.at(stdDeviation).toInt());
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());
 
@@ -287,7 +287,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                 ok = false;
                 value = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
-                    attrib->setSymbol( QString( QChar(value) ));
+                    attrib->setSymbol(QString(QChar(value)));
                 else
                     attrib->setSymbol(legAttribs.at(symbol));
                 
@@ -434,7 +434,7 @@ void ObserverMap::treeLayers_itemChanged(QTreeWidgetItem * item, int /*column*/)
     Attributes * attrib = mapAttributes->value(item->text(0));
     if (attrib)
     {
-        attrib->setVisible( (item->checkState(0) == Qt::Checked) ? true : false );
+        attrib->setVisible((item->checkState(0) == Qt::Checked) ? true : false);
         // painterWidget->calculateResult();
     }
 }
@@ -509,7 +509,7 @@ void ObserverMap::showLayerLegend()
 
         for(int j = 0; j < leg->size(); j++)
         {
-            child = new QTreeWidgetItem( parent);
+            child = new QTreeWidgetItem(parent);
             child->setSizeHint(0, ICON_SIZE);
             child->setText(0, leg->at(j).getLabel());
             QColor color = leg->at(j).getColor();
@@ -521,7 +521,7 @@ void ObserverMap::showLayerLegend()
                     child->setData(0, Qt::DecorationRole, 
                         legendWindow->symbol2Pixmap(color, 
                             attrib->getFont(), attrib->getSymbol()) 
-                        );
+                     	 	 	 );
                 	break;
 
             	case TObsNeighborhood:
@@ -553,7 +553,7 @@ void ObserverMap::showLayerLegend()
     treeLayers->resizeColumnToContents(0);
 }
 
-void ObserverMap::zoomActivated(const QString &scale )
+void ObserverMap::zoomActivated(const QString &scale)
 {
     if (scale == WINDOW)
     {
@@ -794,13 +794,13 @@ const QSize & ObserverMap::getCellSpaceSize() const
 //    //// connect/disconnect signal of treeWidget with the slot
 //    //if (! on)
 //    //{
-//    //    disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
-//    //        this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+//    //    disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
+//    //        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 //    //}
 //    //else
 //    //{
-//    //    QWidget::connect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
-//    //        this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+//    //    QWidget::connect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
+//    //        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 //    //}
 //}
 
@@ -886,8 +886,8 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
     {
         ColorBar b = makeColorBarStruct(i, colorBarList.at(i), value, label);
         colorBarVec.push_back(b);
-        valueList.append( (value.isEmpty() || value.isNull()) ? QString::number(i) : value );
-        labelList.append( (label.isEmpty() || label.isNull()) ? QString::number(i) : label );
+        valueList.append((value.isEmpty() || value.isNull()) ? QString::number(i) : value);
+        labelList.append((label.isEmpty() || label.isNull()) ? QString::number(i) : label);
     }
 
     // Standard deviation -----------------------
@@ -909,8 +909,8 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
         {
             ColorBar b = makeColorBarStruct(i, stdColorBarList.at(i), value, label);
             stdColorBarVec.push_back(b);
-            valueList.append( (value.isEmpty() || value.isNull()) ? QString::number(i) : value );
-            labelList.append( (label.isEmpty() || label.isNull()) ? QString::number(i) : label );
+            valueList.append((value.isEmpty() || value.isNull()) ? QString::number(i) : value);
+            labelList.append((label.isEmpty() || label.isNull()) ? QString::number(i) : label);
         }
     }
 }
@@ -934,9 +934,9 @@ void ObserverMap::setupGUI()
     scrollArea->setAlignment(Qt::AlignCenter);
 
     painterWidget = new PainterWidget(mapAttributes, observerType, this);
-    connect(painterWidget, SIGNAL(zoomOut()), this, SLOT(zoomOut() ));
-    connect(painterWidget, SIGNAL(zoomChanged(QRect, double, double) ),
-        this, SLOT(zoomChanged(QRect, double, double) ));
+    connect(painterWidget, SIGNAL(zoomOut()), this, SLOT(zoomOut()));
+    connect(painterWidget, SIGNAL(zoomChanged(QRect, double, double)),
+        this, SLOT(zoomChanged(QRect, double, double)));
 
     scrollArea->setWidget(painterWidget);
     painterWidget->setParentScroll(scrollArea);
@@ -1013,7 +1013,7 @@ void ObserverMap::setupGUI()
     QStringList zoomList;
 
     for (int i = 0; i < zoomVec.size(); i++)
-        zoomList.append( QString::number(zoomVec.at(i)) + "%");
+        zoomList.append(QString::number(zoomVec.at(i)) + "%");
 
     zoomList.append(WINDOW);
 
@@ -1024,7 +1024,7 @@ void ObserverMap::setupGUI()
     zoomComboBox->setCurrentIndex(23); // window  //zoomIdx); //11);
     //zoomComboBox->setCurrentIndex(zoomIdx); //11);
     zoomComboBox->setEditable(true);
-    connect(zoomComboBox, SIGNAL(activated(const QString & )),
+    connect(zoomComboBox, SIGNAL(activated(const QString &)),
         this, SLOT(zoomActivated(const QString &)));
 
     QHBoxLayout *hLayoutZoom1 = new QHBoxLayout();
@@ -1045,10 +1045,10 @@ void ObserverMap::setupGUI()
     treeLayers->setHeaderLabel(tr("Layers"));
     //treeLayers->setRootIsDecorated(false);
     //treeLayers->setAlternatingRowColors(true);
-    connect(treeLayers, SIGNAL(itemClicked( QTreeWidgetItem *, int )),
-        this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
-    connect(treeLayers, SIGNAL(itemActivated( QTreeWidgetItem *, int )),
-        this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+    connect(treeLayers, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
+        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
+    connect(treeLayers, SIGNAL(itemActivated(QTreeWidgetItem *, int)),
+        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 
     // lblOperator = new QLabel(tr("Operations: "), frameTools);
     // lblOperator->setGeometry(10, 95, 150, 20);

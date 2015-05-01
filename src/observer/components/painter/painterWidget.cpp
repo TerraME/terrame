@@ -65,9 +65,9 @@ PainterWidget::PainterWidget(QHash<QString, Attributes*> *mapAttrib,
     
     visualMapping = new VisualMapping(observerType);
     connect(visualMapping, SIGNAL(displayImage(QImage)), 
-        this, SLOT(displayImage(QImage)) , Qt::QueuedConnection ); // DirectConnection); // 
+        this, SLOT(displayImage(QImage)) , Qt::QueuedConnection); // DirectConnection); // 
     connect(this, SIGNAL(enableGrid(bool)), 
-        visualMapping, SLOT(enableGrid(bool)) );
+        visualMapping, SLOT(enableGrid(bool)));
 }
 
 PainterWidget::~PainterWidget()
@@ -96,7 +96,7 @@ void PainterWidget::plotMap(Attributes * /*attrib*/)
     //    visualMapping.drawAttrib(&p, attrib);
 
     //    //static int aa = 1;
-    //    //attrib->getImage()->save( QString("%1_%2.png").arg(attrib->getName()).arg(aa) );
+    //    //attrib->getImage()->save(QString("%1_%2.png").arg(attrib->getName()).arg(aa));
     //    //aa++;
 
     //    // movido para o 'draw()'
@@ -221,7 +221,7 @@ void PainterWidget::mouseMoveEvent(QMouseEvent *event)
         if (zoomWindow)
         {
             // Define as coordenadas do retangulo de zoom
-            if (! rect().contains( QRect(imageOffset, event->pos()) ))
+            if (! rect().contains(QRect(imageOffset, event->pos())))
             {
                 bool right = event->pos().x() > rect().right();
                 bool left = event->pos().x() < rect().left();

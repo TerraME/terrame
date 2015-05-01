@@ -167,8 +167,8 @@ QDataStream & operator >>(QDataStream & in, TerraMEObserver::ObsLegend & obsLeg)
     obsLeg.setFrom(from);
     obsLeg.setTo(to);
     obsLeg.setLabel(label);
-    obsLeg.setOccurrence( (int)occurrence);
-    obsLeg.setIdxColor( (unsigned int) idxColor);
+    obsLeg.setOccurrence((int)occurrence);
+    obsLeg.setIdxColor((unsigned int) idxColor);
 
     // obsLeg.setFrom = fromNumber;
     // obsLeg.toNumber = toNumber;
@@ -401,12 +401,12 @@ void Attributes::setValues(QVector<double>* v)
 
 QVector<double>* Attributes::getNumericValues() const
 {
-    // Q_ASSERT_X( numericValues, "Attributes::getNumericValues()", "Vector of values is NULL");
+    // Q_ASSERT_X(numericValues, "Attributes::getNumericValues()", "Vector of values is NULL");
 
     return numericValues;
 }
 
-void Attributes::setValues( QVector<QString>* s)
+void Attributes::setValues(QVector<QString>* s)
 {
     if (textValues) delete textValues;
     textValues = s;
@@ -418,7 +418,7 @@ QVector<QString>* Attributes::getTextValues() const
     return textValues;
 }
 
-void Attributes::setValues( QVector<bool>* b)
+void Attributes::setValues(QVector<bool>* b)
 {
     boolValues = b;
 }
@@ -856,7 +856,7 @@ void Attributes::appendLastPos(double x, double y)
 
     //// QPair<QPointF, qreal> p;
     //QPointF point(x, y);
-    //lastPos.append( QPair<QPointF, qreal>(point, 0) );
+    //lastPos.append(QPair<QPointF, qreal>(point, 0));
 }
 
 double Attributes::getDirection(double x1, double y1)
@@ -987,13 +987,13 @@ QString Attributes::toString() const
     str += "colorBarVec.size(): "	+ QString::number((int)colorBarVec.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)colorBarVec.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(colorBarVec.at(i).cor_.red_).arg(colorBarVec.at(i).cor_.green_).arg(colorBarVec.at(i).cor_.blue_);
+        str += QString("(%1, %2, %3)\n\t\t").arg(colorBarVec.at(i).cor_.red_).arg(colorBarVec.at(i).cor_.green_).arg(colorBarVec.at(i).cor_.blue_);
 
     str +="\n\t\t";
     str += "colorBarVecB.size(): "	+ QString::number((int)stdColorBarVec.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)stdColorBarVec.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(stdColorBarVec.at(i).cor_.red_).arg(stdColorBarVec.at(i).cor_.green_).arg(stdColorBarVec.at(i).cor_.blue_);
+        str += QString("(%1, %2, %3)\n\t\t").arg(stdColorBarVec.at(i).cor_.red_).arg(stdColorBarVec.at(i).cor_.green_).arg(stdColorBarVec.at(i).cor_.blue_);
 
     str +="\n\t";
     str += "slicesNumber_bkp: "	+ QString::number(slicesNumberBkp) + "\n\t";
@@ -1004,13 +1004,13 @@ QString Attributes::toString() const
     str += "colorBarVec_bkp.size(): "	+ QString::number((int)colorBarVecBkp.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)colorBarVecBkp.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(colorBarVecBkp.at(i).cor_.red_).arg(colorBarVecBkp.at(i).cor_.green_).arg(colorBarVecBkp.at(i).cor_.blue_);
+        str += QString("(%1, %2, %3)\n\t\t").arg(colorBarVecBkp.at(i).cor_.red_).arg(colorBarVecBkp.at(i).cor_.green_).arg(colorBarVecBkp.at(i).cor_.blue_);
 
     str +="\n\t";
     str += "colorBarVecB_bkp.size(): "	+ QString::number((int)stdColorBarVecBkp.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)stdColorBarVecBkp.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(stdColorBarVecBkp.at(i).cor_.red_).arg(stdColorBarVecBkp.at(i).cor_.green_).arg(stdColorBarVecBkp.at(i).cor_.blue_);
+        str += QString("(%1, %2, %3)\n\t\t").arg(stdColorBarVecBkp.at(i).cor_.red_).arg(stdColorBarVecBkp.at(i).cor_.green_).arg(stdColorBarVecBkp.at(i).cor_.blue_);
 
     str +="\n\n";
     return str;

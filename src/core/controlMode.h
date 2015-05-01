@@ -33,7 +33,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
 
-#if ! defined( CONTROL_MODE_H )
+#if ! defined(CONTROL_MODE_H)
 #define CONTROL_MODE_H
 
 #include "bridge.h"
@@ -53,13 +53,13 @@ public:
 
     /// Sets the control mode name (identifier)
     /// \param controlModeName is a control mode identifier
-    void setControlModeName(string &controlModeName ) {
+    void setControlModeName(string &controlModeName) {
         name = controlModeName;
     }
 
     /// Gets the control mode name (identifier)
     /// \return Return the control mode identifier
-    string getControlModeName( void ){
+    string getControlModeName(void){
         return name;
     }
 private:
@@ -94,15 +94,15 @@ class ControlMode : public ControlModeInterf, public ProcessCompositeInterf
 public:
 
     /// Default constructor
-    ControlMode( void ){
-        string strTemp = ""; // Raian: ControlModeInterf::pImpl_->setControlModeName( string(""));
-        ControlModeInterf::pImpl_->setControlModeName( strTemp );
+    ControlMode(void){
+        string strTemp = ""; // Raian: ControlModeInterf::pImpl_->setControlModeName(string(""));
+        ControlModeInterf::pImpl_->setControlModeName(strTemp);
     }
 
     /// Constructor
     /// \param controlModeName is the control mode identifier
-    ControlMode(string &controlModeName ) {
-        ControlModeInterf::pImpl_->setControlModeName( controlModeName );
+    ControlMode(string &controlModeName) {
+        ControlModeInterf::pImpl_->setControlModeName(controlModeName);
     }
 
     /// Executes the Process objects in the order they have been inserted into ControlMode composite.
@@ -110,14 +110,14 @@ public:
     /// \param agent is a pointer to the Agent being executed
     /// \param cellIndexPair is a pair of CellIndex objects and Cell pointers. The formers are user defined
     ///  n-dimensional coordinates for the latters.
-    bool execute( Event &event, class Agent *agent, pair<CellIndex, Cell*> &cellIndexPair )
+    bool execute(Event &event, class Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
     {
 
         try
         {
             ProcessCompositeInterf::iterator iterator;
             iterator = ProcessCompositeInterf::pImpl_->begin();
-            while( iterator != ProcessCompositeInterf::pImpl_->end() )
+            while(iterator != ProcessCompositeInterf::pImpl_->end())
             {
 
                 if(!iterator->execute(event, agent, cellIndexPair)) return false;
@@ -130,13 +130,13 @@ public:
 
     /// HANDLE - Gets the ControMode name (identifier)
     /// \return a string containing the control mode identifier
-    string getControlModeName( void ) {
+    string getControlModeName(void) {
         return ControlModeInterf::pImpl_->getControlModeName();
     }
 
     /// HANDLE - Sets the ControMode name (identifier)
     /// \param controlModeName is a string containing the control mode identifier
-    void setControlModeName( string &controlModeName ) { ControlModeInterf::pImpl_->setControlModeName(controlModeName); }
+    void setControlModeName(string &controlModeName) { ControlModeInterf::pImpl_->setControlModeName(controlModeName); }
 };
 
 

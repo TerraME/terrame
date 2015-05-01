@@ -66,7 +66,7 @@ of this library and its documentation.
 
 #ifndef TME_NO_TERRALIB
 
-#if defined( TME_MSVC ) && defined( TME_WIN32 )
+#if defined(TME_MSVC) && defined(TME_WIN32)
 	#include <TeAdoDB.h>
 	#include <windows.h>
 #endif
@@ -136,21 +136,21 @@ int luaCellularSpace::setPort(lua_State *L){
 }
 
 /// Sets the database type: MySQL, ADO, etc.
-int luaCellularSpace::setDBType(lua_State *L )
+int luaCellularSpace::setDBType(lua_State *L)
 {
 	dbType =  string(lua_tostring(L, -1));
 	return 0;
 }
 
 /// Sets the host name.
-int luaCellularSpace::setHostName(lua_State *L )
+int luaCellularSpace::setHostName(lua_State *L)
 {
 	host =  string(lua_tostring(L, -1));
 	return 0;
 }
 
 /// Sets the database name.
-int luaCellularSpace::setDBName(lua_State *L )
+int luaCellularSpace::setDBName(lua_State *L)
 {
 	dbName =  string(lua_tostring(L, -1));
 	return 0;
@@ -164,21 +164,21 @@ int luaCellularSpace::getDBName(lua_State *L)
 }
 
 /// Sets the user name.
-int luaCellularSpace::setUser(lua_State *L )
+int luaCellularSpace::setUser(lua_State *L)
 {
 	user = string(lua_tostring(L, -1));
 	return 0;
 }
 
 /// Sets the password name.
-int luaCellularSpace::setPassword(lua_State *L )
+int luaCellularSpace::setPassword(lua_State *L)
 {
 	pass =  string(lua_tostring(L, -1));
 	return 0;
 }
 
 /// Sets the geographical database layer name 
-int luaCellularSpace::setLayer(lua_State *L )
+int luaCellularSpace::setLayer(lua_State *L)
 {
 	inputLayerName = string(lua_tostring(L, -1));
 	return 0;
@@ -201,7 +201,7 @@ int luaCellularSpace::clearAttrName(lua_State *)
 /// Adds a new attribute name to the CellularSpace attributes table used in the load function
 int luaCellularSpace::addAttrName(lua_State *L)
 {
-	attrNames.push_back( lua_tostring(L, -1) );
+	attrNames.push_back(lua_tostring(L, -1));
 	return 0;
 }
 
@@ -221,7 +221,7 @@ int luaCellularSpace::clear(lua_State *)
 
 /// Adds a the luaCell received as parameter to the luaCellularSpace object
 /// parameters: x, y, luaCell
-int luaCellularSpace::addCell( lua_State *L)	 
+int luaCellularSpace::addCell(lua_State *L)	 
 { 
 	CellIndex indx;
 	indx.second = luaL_checknumber(L, -2);
@@ -229,7 +229,7 @@ int luaCellularSpace::addCell( lua_State *L)
 
 	luaCell *cell = Luna<luaCell>::check(L, -1);
 	cell->setIndex(indx);
-	CellularSpace::add( indx, cell);
+	CellularSpace::add(indx, cell);
 
 	return 0;
 }
@@ -240,11 +240,11 @@ int luaCellularSpace::getCell(lua_State *L)
 {  
 	luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
 	CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
-	luaCell *cell = ::findCell( this, cellIndex );
-	if( cell != NULL )
+	luaCell *cell = ::findCell(this, cellIndex);
+	if(cell != NULL)
 		cell->getReference(L);
 	else
-		lua_pushnil( L );
+		lua_pushnil(L);
 	return 1;
 }
 
@@ -259,7 +259,7 @@ int luaCellularSpace::size(lua_State* L)
 /// Sets the name of the TerraLib layer related to the CellularSpace object
 /// parameter: layerName is a string containing the new layerName
 /// \author Raian Vargas Maretto
-void luaCellularSpace::setLayerName( string layerName )
+void luaCellularSpace::setLayerName(string layerName)
 {
 	this->inputLayerName = layerName;
 }
@@ -267,7 +267,7 @@ void luaCellularSpace::setLayerName( string layerName )
 /// Gets the name of the TerraLib layer related to the CellularSpace object
 /// no parameters
 /// \author Raian Vargas Maretto
-string luaCellularSpace::getLayerName( )
+string luaCellularSpace::getLayerName()
 {
 	return this->inputLayerName;
 }
@@ -275,7 +275,7 @@ string luaCellularSpace::getLayerName( )
 /// Gets the name of the TerraLib layer related to the CellularSpace object
 /// parameter: a pointer to the Lua Stack
 /// \author Raian Vargas Maretto
-int luaCellularSpace::getLayerName( lua_State *L )
+int luaCellularSpace::getLayerName(lua_State *L)
 {
 	lua_pushstring(L, this->inputLayerName.c_str());
 	return 1;
@@ -390,7 +390,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		// Runs each item in the table parameters
 		lua_pushnil(luaL);
 
-		if(! lua_istable(luaL, firstLegPos - 1) )
+		if(! lua_istable(luaL, firstLegPos - 1))
 		{
 			// ---- Observer Image: Retrieves the path/name of the image files
 			if(typeObserver == TObsImage)
@@ -398,7 +398,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 				if(lua_type(luaL, firstLegPos - 1) == LUA_TSTRING)
 				{
 					// retrieves the path to the file
-					QString k( luaL_checkstring(luaL, firstLegPos - 1));
+					QString k(luaL_checkstring(luaL, firstLegPos - 1));
 					imagePath.push_back(k);
 				}
 				else
@@ -412,7 +412,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 			{
 				// Retrieves the values of the parameters table
 				if(lua_type(luaL, firstLegPos - 1) == LUA_TSTRING)
-					obsParamsAtribs.append( luaL_checkstring(luaL, firstLegPos - 1) );
+					obsParamsAtribs.append(luaL_checkstring(luaL, firstLegPos - 1));
 			}
 			lua_pop(luaL, 1); // lua_pushnil
 		}
@@ -440,7 +440,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 				}
 				obsParams.push_back(key);
 
-				switch( lua_type(luaL, -1) )
+				switch(lua_type(luaL, -1))
 				{
 					case LUA_TBOOLEAN:
 						boolAux = lua_toboolean(luaL, -1);
@@ -485,7 +485,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 	lua_pushnil(luaL);
 	while(lua_next(luaL, top - 3) != 0)
 	{
-		QString key( luaL_checkstring(luaL, -1) );
+		QString key(luaL_checkstring(luaL, -1));
 		obsAttribs.push_back(key);
 		lua_pop(luaL, 1);
 	}
@@ -513,7 +513,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 	{
 		width = obsDim.at(0);
 		height = obsDim.at(1);
-		if(( width > 0) && (height > 0))
+		if((width > 0) && (height > 0))
 			getSpaceDimensions = true;
 	}
 
@@ -548,14 +548,14 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 			for (int i = 0; i < obsAttribs.size(); i++)
 			{
 				// inserted in the cellular space attribute list the recovered attribute
-				if(! observedAttribs.contains(obsAttribs.at(i)) )
+				if(! observedAttribs.contains(obsAttribs.at(i)))
 					// observedAttribs.push_back(obsAttribs.at(i));
 					observedAttribs.insert(obsAttribs.at(i), "");			
 
-				if(! allCellAttribs.contains(obsAttribs.at(i)) )
+				if(! allCellAttribs.contains(obsAttribs.at(i)))
 				{
 				  
-					string err_out = string("Attribute name '" ) + string (qPrintable(obsAttribs.at(i))) + string("' not found.");
+					string err_out = string("Attribute name '") + string (qPrintable(obsAttribs.at(i))) + string("' not found.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L, err_out.c_str());
 					lua_call(L, 1, 0);
@@ -578,11 +578,11 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		{
 			for (int i = 0; i < obsAttribs.size(); i++)
 			{
-				if(! observedAttribs.contains(obsAttribs.at(i)) )
+				if(! observedAttribs.contains(obsAttribs.at(i)))
 					// observedAttribs.push_back(obsAttribs.at(i));
 					observedAttribs.insert(obsAttribs.at(i), "");			
 				
-				if(! allCellSpaceAttribs.contains(obsAttribs.at(i)) )
+				if(! allCellSpaceAttribs.contains(obsAttribs.at(i)))
 				{
 					string err_out = string("Attribute name '") + string(qPrintable(obsAttribs.at(i))) + string("' not found or does not belong to this subject.");
 					lua_getglobal(L, "customError");
@@ -759,10 +759,10 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		break;
 
 	default:
-		if(execModes != Quiet )
+		if(execModes != Quiet)
 		{
 			qWarning("Warning: In this context, the code '%s' does not "
-					 "correspond to a valid type of Observer.",  getObserverName(typeObserver) );
+					 "correspond to a valid type of Observer.",  getObserverName(typeObserver));
 		}
 		return 0;
 	}
@@ -779,7 +779,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 
 		if(obsParamsAtribs.at(0).isNull() || obsParamsAtribs.at(0).isEmpty())
 		{
-			if(execModes != Quiet )
+			if(execModes != Quiet)
 				qWarning("Warning: Filename was not specified, using a "
 						 "default \"%s\".", qPrintable(DEFAULT_NAME));
 			obsLog->setFileName(DEFAULT_NAME + ".csv");
@@ -793,7 +793,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		if((obsParamsAtribs.size() < 2) || obsParamsAtribs.at(1).isNull()
 				|| obsParamsAtribs.at(1).isEmpty())
 		{
-			if(execModes != Quiet )
+			if(execModes != Quiet)
 				qWarning("Warning: Separator not defined, using \";\".");
 			obsLog->setSeparator();
 		}
@@ -818,7 +818,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		if((obsParamsAtribs.size() < 2) || obsParamsAtribs.at(0).isNull() || obsParamsAtribs.at(0).isEmpty()
 				|| obsParamsAtribs.at(1).isNull() || obsParamsAtribs.at(1).isEmpty())
 		{
-			if(execModes != Quiet )
+			if(execModes != Quiet)
 				qWarning("Warning: Column title not defined.");
 		}
 
@@ -878,7 +878,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		// if(obsParamsAtribs.at(0).isEmpty())
 		if(obsParamsAtribs.isEmpty())
 		{
-			if(execModes != Quiet )
+			if(execModes != Quiet)
 				qWarning("Warning: Port not defined.");
 		}
 		else
@@ -888,7 +888,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 
 		// broadcast
 		if((obsParamsAtribs.size() == 1)
-				|| ((obsParamsAtribs.size() == 2) && obsParamsAtribs.at(1).isEmpty()) )
+				|| ((obsParamsAtribs.size() == 2) && obsParamsAtribs.at(1).isEmpty()))
 		{
 			obsUDPSender->addHost(BROADCAST_HOST);
 		}
@@ -913,7 +913,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 
 		if(obsParamsAtribs.isEmpty())
 		{
-			if(execModes != Quiet ){
+			if(execModes != Quiet){
 				string err_out = string("Port not defined.");
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L, err_out.c_str());
@@ -927,9 +927,9 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 
 		// broadcast
 		if((obsParamsAtribs.size() == 1)
-			|| ((obsParamsAtribs.size() == 2) && obsParamsAtribs.at(1).isEmpty()) )
+			|| ((obsParamsAtribs.size() == 2) && obsParamsAtribs.at(1).isEmpty()))
 		{
-			if(execModes != Quiet ){
+			if(execModes != Quiet){
 				string err_out = string("Observer will send to local host.");
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L, err_out.c_str());
@@ -1028,7 +1028,7 @@ QDataStream& luaCellularSpace::getState(QDataStream& in, Subject *, int /*observ
 		content = getAll(in, (QStringList)observedAttribs.keys());
 			
 		// serverSession->setState(observerId, 1);
-		//if(! QUIET_MODE )
+		//if(! QUIET_MODE)
 		// 	qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(1).toLatin1().constData());
 		break;
 
@@ -1036,7 +1036,7 @@ QDataStream& luaCellularSpace::getState(QDataStream& in, Subject *, int /*observ
 		content = getChanges(in, (QStringList) observedAttribs.keys());
 			
 		// serverSession->setState(observerId, 0);
-		//if(! QUIET_MODE )
+		//if(! QUIET_MODE)
 		// 	qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(0).toLatin1().constData());
 		break;
 	}
@@ -1080,16 +1080,16 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 	ObserverDatagramPkg::RawAttribute *raw = 0;
 
 	lua_pushnil(luaL);
-	while(lua_next(luaL, cellSpacePos ) != 0)
+	while(lua_next(luaL, cellSpacePos) != 0)
 	{
 		key = luaL_checkstring(luaL, -2);
 
 		if((attribs.contains(key)) || (key == "cells"))
 		{
-			switch( lua_type(luaL, -1) )
+			switch(lua_type(luaL, -1))
 			{
 			case LUA_TBOOLEAN:
-				valueTmp = QByteArray::number( lua_toboolean(luaL, -1) );
+				valueTmp = QByteArray::number(lua_toboolean(luaL, -1));
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
@@ -1441,8 +1441,8 @@ int luaCellularSpace::loadShape(lua_State *L)
 		lua_pushnumber(L, cont + 1);
 
 		// puts the Cell constructor on the top of the lua stack
-		lua_getglobal(L, "Cell" );
-		if( !lua_isfunction(L, -1))
+		lua_getglobal(L, "Cell");
+		if(!lua_isfunction(L, -1))
 		{
 			string err_out = string("It was not possible to open the shapefile ") + dbName + string(".");
 			// TODO: there is something wrong here
@@ -1457,20 +1457,20 @@ int luaCellularSpace::loadShape(lua_State *L)
 
 		// puts the cell's coords on the table
 		lua_pushstring(L, "x");
-		lua_pushnumber(L, col );
+		lua_pushnumber(L, col);
 		lua_settable(L, -3);
 		lua_pushstring(L, "y");
-		lua_pushnumber(L, lin );
+		lua_pushnumber(L, lin);
 		lua_settable(L, -3);
 
 		// puts id
 		lua_pushstring(L, "id");
-		lua_pushstring(L, cellId );
+		lua_pushstring(L, cellId);
 		lua_settable(L, -3);
 		
 		// puts the cell's objectId'
 		lua_pushstring(L, "objectId_");
-		lua_pushstring(L, cellId );
+		lua_pushstring(L, cellId);
 		lua_settable(L, -3);
 		
 		for(int j = 0; j < fieldCount; j++){
@@ -1488,7 +1488,7 @@ int luaCellularSpace::loadShape(lua_State *L)
 		
 		// calls the Cell constructor
 		
-		if( lua_pcall( L, 1, 1, 0) != 0 )
+		if(lua_pcall(L, 1, 1, 0) != 0)
 		{
 			cont++;
 			return 0;
@@ -1501,7 +1501,7 @@ int luaCellularSpace::loadShape(lua_State *L)
 	}
    
 	/* 
-	if(execModes != Quiet ){
+	if(execModes != Quiet){
 		char aux[100];
 		sprintf(aux, "%i", cont);
 		string err_out = string("Number of read cells: ") + string(aux) + string(".");
@@ -1511,10 +1511,10 @@ int luaCellularSpace::loadShape(lua_State *L)
 	}
 	*/
 
-	lua_pushnumber( L, minCol );
-	lua_pushnumber( L, minLin );
-	lua_pushnumber( L, maxCol );
-	lua_pushnumber( L, maxLin );
+	lua_pushnumber(L, minCol);
+	lua_pushnumber(L, minLin);
+	lua_pushnumber(L, maxCol);
+	lua_pushnumber(L, maxLin);
 	
 	//put default legend
 	
@@ -1573,7 +1573,7 @@ int luaCellularSpace::load(lua_State *L)
 		// Opens a connection to a database accessible
 		if(dbType == "mysql")
 			db = new TeMySQL();
-#if defined( TME_MSVC ) && defined( TME_TERRALIB_RC3 )
+#if defined(TME_MSVC) && defined(TME_TERRALIB_RC3)
 		else{
 			::configureADO();
 			db = new TeAdo();
@@ -1642,7 +1642,7 @@ int luaCellularSpace::load(lua_State *L)
 				return 0;
 			}
 			// Load input theme
-			inputTheme = new TeTheme(inputThemeName, inputLayer );
+			inputTheme = new TeTheme(inputThemeName, inputLayer);
 			if(!db->loadTheme (inputTheme)){ // erro, tiago: it seems that terralib carries a thema with same name, mas de outro layer, pois
 				// esta funcao nao falha, caso o tema "inputTheme" nao pertenca ao layer (inputLayer), quando deveria
 				// assim, o proximo acesso ao aobjeto inputTheme procara uma excecao
@@ -1775,21 +1775,21 @@ int luaCellularSpace::load(lua_State *L)
 
 			// puts the cell's coords on the table
 			lua_pushstring(L, "x");
-			lua_pushnumber(L, col );
+			lua_pushnumber(L, col);
 			lua_settable(L, -3);
 			lua_pushstring(L, "y");
-			lua_pushnumber(L, lin );
+			lua_pushnumber(L, lin);
 			lua_settable(L, -3);
 
 			// TODO: why two attributes with the same value (below)?
 			// puts the cell's id on the table
 			lua_pushstring(L, "id");
-			lua_pushstring(L, cellId );
+			lua_pushstring(L, cellId);
 			lua_settable(L, -3);
 
 			// puts the cell's id on the table
 			lua_pushstring(L, "objectId_");
-			lua_pushstring(L, cellId );
+			lua_pushstring(L, cellId);
 			lua_settable(L, -3);
 
 			// puts the others cell's attributes on the table
@@ -1800,27 +1800,27 @@ int luaCellularSpace::load(lua_State *L)
 
 				lua_pushstring(L, prop.attr_.rep_.name_.c_str());
 				element.getPropertyValue(aux, i);
-				switch(prop.attr_.rep_.type_ )
+				switch(prop.attr_.rep_.type_)
 				{
 				case TeSTRING:
 				case TeDATETIME:
 				case TeCHARACTER:
-					lua_pushstring(L, aux.c_str() );
+					lua_pushstring(L, aux.c_str());
 					break;
 
 				case TeREAL:
-					lua_pushnumber( L, atof( aux.c_str() ) );
+					lua_pushnumber(L, atof(aux.c_str()));
 					break;
 
 				case TeINT:
-					lua_pushnumber( L, atoi( aux.c_str() ) );
+					lua_pushnumber(L, atoi(aux.c_str()));
 					break;
 
 				case TeBLOB:
 				case TeOBJECT:
 				case TeUNKNOWN:
 				default:
-					lua_pushstring(L, aux.c_str() );
+					lua_pushstring(L, aux.c_str());
 				}
 
 				lua_settable(L, -3);
@@ -1841,7 +1841,7 @@ int luaCellularSpace::load(lua_State *L)
 			element.clear();
 		}
 		/*
-		if(execModes != Quiet ){
+		if(execModes != Quiet){
 
 			char aux[100];
 			sprintf(aux, "%i", cont);
@@ -2086,13 +2086,13 @@ QStringList luaCellularSpace::retrieveUniqueValueColorBar(TeTheme *inputTheme){
 		}
 		else
 		{
-			colorStr.append( QString("{ color = {%1, %2, %3}, value='%4', distance=%5}")
+			colorStr.append(QString("{ color = {%1, %2, %3}, value='%4', distance=%5}")
 				.arg(tcolor.red_)
 				.arg(tcolor.green_)
 				.arg(tcolor.blue_)
 				.arg(legEntry.from().c_str())
 				.arg(i)
-			);
+				);
 		}
 	}
 	colorStr.append("}");
@@ -2106,7 +2106,7 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 	QStringList colorBarList;
 	QString colorBarsQuery = QString("SELECT grouping_color FROM te_theme_application WHERE theme_id=%1")
 			.arg(inputTheme->id());
-	if( portal->query(colorBarsQuery.toLatin1().constData()) )
+	if(portal->query(colorBarsQuery.toLatin1().constData()))
 	{
 		// is string receives the recovered raw content from database
 		QString auxColorBar;
@@ -2129,8 +2129,8 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 				// even when there are negative numbers in the string
 				string colorBarStr(auxColorBar.toLatin1().constData());
 				char previousChar = '#';
-				for(int i = 0; i < auxColorBar.size(); i++ ){
-					if(( colorBarStr[i] == '-') && (previousChar != '#'))
+				for(int i = 0; i < auxColorBar.size(); i++){
+					if((colorBarStr[i] == '-') && (previousChar != '#'))
 						colorBarStr[i] = '#';
 					previousChar = colorBarStr[i];
 				}
@@ -2176,7 +2176,7 @@ QString luaCellularSpace::retrieveMaxValue(TeDatabasePortal *portal, TeTheme *in
 			.arg(inputTheme->id());
 	if(attrType != TObsNumber)
 	{
-		if( portal->query(maxValueQuery.toLatin1().constData()) )
+		if(portal->query(maxValueQuery.toLatin1().constData()))
 		{
 			while(portal->fetchRow())
 			{
@@ -2190,7 +2190,7 @@ QString luaCellularSpace::retrieveMaxValue(TeDatabasePortal *portal, TeTheme *in
 		maxValueQuery = QString("SELECT %1 FROM %2")
 				.arg(attrName).arg(inputTheme->layer()->name().c_str());
 
-		if( portal->query(maxValueQuery.toLatin1().constData()) )
+		if(portal->query(maxValueQuery.toLatin1().constData()))
 		{
 			while(portal->fetchRow())
 			{
@@ -2218,7 +2218,7 @@ QString luaCellularSpace::retrieveMinValue(TeDatabasePortal *portal, TeTheme *in
 			.arg(inputTheme->id());
 	if(attrType != TObsNumber)
 	{
-		if( portal->query(minValueQuery.toLatin1().constData()) )
+		if(portal->query(minValueQuery.toLatin1().constData()))
 		{
 			while(portal->fetchRow())
 			{
@@ -2231,7 +2231,7 @@ QString luaCellularSpace::retrieveMinValue(TeDatabasePortal *portal, TeTheme *in
 	{
 		minValueQuery = QString("SELECT %1 FROM %2")
 				.arg(attrName).arg(inputTheme->layer()->name().c_str());
-		if( portal->query(minValueQuery.toLatin1().constData()) )
+		if(portal->query(minValueQuery.toLatin1().constData()))
 		{
 			while(portal->fetchRow())
 			{
@@ -2316,14 +2316,14 @@ int luaCellularSpace::save(lua_State *L)
 	// Convert time value to string ********
 	const double time = luaL_checknumber(L, -4);
 	char aux[100], *ch;
-	if( (time - floor(time)) > 0 ) sprintf(aux, "%f", time); else sprintf(aux, "%.0f", time);
+	if((time - floor(time)) > 0) sprintf(aux, "%f", time); else sprintf(aux, "%.0f", time);
 	ch = aux;
-	for( unsigned int i= 0; i < strlen(aux); i++) { if( ch[i] == '.' || ch[i] ==', ' ) ch[i] = '_'; }
+	for(unsigned int i= 0; i < strlen(aux); i++) { if(ch[i] == '.' || ch[i] ==', ') ch[i] = '_'; }
 
 	strcpy(outputTable, outputTableName);
 	strcat(outputTable, aux);
 
-	if( ! lua_istable(L, -2) )
+	if(! lua_istable(L, -2))
 	{
 		string err_out = string("Attribute names table not found.");
 		lua_getglobal(L, "customError");
@@ -2333,7 +2333,7 @@ int luaCellularSpace::save(lua_State *L)
 		return false;
 	}
 
-	if( ! lua_istable(L, -1) )
+	if(! lua_istable(L, -1))
 	{
 		string err_out = string("Cells not found.");
 		lua_getglobal(L, "customError");
@@ -2348,11 +2348,11 @@ int luaCellularSpace::save(lua_State *L)
 
 	// Opens a connection to a database accessible *******
 	TeDatabase * db;
-	if( dbType == "mysql")
+	if(dbType == "mysql")
 		db = new TeMySQL();
 	// RODRIGO
-	//#if defined ( TME_WIN32 )
-#if defined( TME_MSVC ) && defined( TME_TERRALIB_RC3 )
+	//#if defined (TME_WIN32)
+#if defined(TME_MSVC) && defined(TME_TERRALIB_RC3)
 	else {
 		::configureADO();
 		db = new TeAdo();
@@ -2370,10 +2370,10 @@ int luaCellularSpace::save(lua_State *L)
 
 	// Load the layer ******
 	TeLayer *layer;
-	if( inputLayerName == "")
+	if(inputLayerName == "")
 	{
 		// Load input theme
-		TeTheme *inputTheme = new TeTheme(inputThemeName );
+		TeTheme *inputTheme = new TeTheme(inputThemeName);
 		if(!db->loadTheme (inputTheme))
 		{
 			string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
@@ -2415,7 +2415,7 @@ int luaCellularSpace::save(lua_State *L)
 	}
 
 	/*
-	if(execModes != Quiet )
+	if(execModes != Quiet)
 	{
 		string err_out = string("Saving cellular space '") + string(inputThemeName.c_str()) + string("' into '") + string(outputTable) + string("' table...");
 		lua_getglobal(L, "print");
@@ -2425,10 +2425,10 @@ int luaCellularSpace::save(lua_State *L)
 	*/
 
 	// Delete the new attribute table whether it already exist *********
-	if( db->tableExist( string( outputTable ) ) )
+	if(db->tableExist(string(outputTable)))
 	{
-		//if( !deleteLayerTableName( db, string ( outputTable ) ) )
-		if( !deleteLayerTableName( db, (string&)(string const&)string( outputTable ) ) )
+		//if(!deleteLayerTableName(db, string (outputTable)))
+		if(!deleteLayerTableName(db, (string&)(string const&)string(outputTable)))
 		{
 			/*cout << "Error: fail to delete table \"" << outputTable
 			<< db->errorMessage() << endl;
@@ -2442,7 +2442,7 @@ int luaCellularSpace::save(lua_State *L)
 	// Get the first cell of the cellular space (cells)
 	// "index" is at index -2 and "value(cell)" at index -1
 	lua_pushnumber(L, 1);
-	lua_gettable(L, cellsPos );
+	lua_gettable(L, cellsPos);
 	int firstCellPos = lua_gettop(L);
 
 	// Create the new attribute table **********
@@ -2453,24 +2453,24 @@ int luaCellularSpace::save(lua_State *L)
 	column.rep_.numChar_ = 255;
 	attList.push_back(column);
 
-	// tranverse the table( attribute names )
+	// tranverse the table(attribute names)
 	int count = 0;
 	lua_pushnil(L);
-	while(lua_next(L, cellsPos - 1 ) != 0)
+	while(lua_next(L, cellsPos - 1) != 0)
 	{
 		// "index" is at index -2 and "value(attribute name)" at index -1
 		key = luaL_checkstring(L, -1); // gets the cell attribute name
 
-		strcpy( attName, key );
-		attNameList.push_back( key);
+		strcpy(attName, key);
+		attNameList.push_back(key);
 
-		//strcat( attName, aux ); // Raian: I commented to put the column name without the time.
+		//strcat(attName, aux); // Raian: I commented to put the column name without the time.
 		column.rep_.name_  = attName;
 		column.rep_.isPrimaryKey_ = false;
 
 		lua_pushstring(L, key);
 		lua_gettable(L, firstCellPos);
-		switch( lua_type(L, -1) )
+		switch(lua_type(L, -1))
 		{
 		case LUA_TNUMBER:
 		case LUA_TBOOLEAN:
@@ -2498,24 +2498,24 @@ int luaCellularSpace::save(lua_State *L)
 	}
 	// there are no attributes name in the table (count ==0),
 	// then save all cells attributes
-	if( !count )
+	if(!count)
 	{
 		// tranverse the table (cell)
 		lua_pushnil(L);
-		while(lua_next(L, -2 ) != 0)
+		while(lua_next(L, -2) != 0)
 		{
 			// "index" is at index -2 and "value(attribute name)" at index -1
 			key = luaL_checkstring(L, -2);
-			if( strcmp(key, "x") && strcmp(key, "y") )
+			if(strcmp(key, "x") && strcmp(key, "y"))
 			{
-				strcpy( attName, key );
-				attNameList.push_back( key );
+				strcpy(attName, key);
+				attNameList.push_back(key);
 
-				strcat( attName, aux );
+				strcat(attName, aux);
 				column.rep_.name_  = attName;
 				column.rep_.isPrimaryKey_ = false;
 
-				switch( lua_type(L, -1) )
+				switch(lua_type(L, -1))
 				{
 				case LUA_TNUMBER:
 				case LUA_TBOOLEAN:
@@ -2542,8 +2542,8 @@ int luaCellularSpace::save(lua_State *L)
 		}
 
 	}
-	TeTable attTable( string( outputTable ), attList, "object_id_", "object_id_", TeAttrStatic);
-	if( !layer->createAttributeTable(attTable) )
+	TeTable attTable(string(outputTable), attList, "object_id_", "object_id_", TeAttrStatic);
+	if(!layer->createAttributeTable(attTable))
 	{
 		string err_out = string("Failed to create table '") + string(outputTable) + string("' in the TerraLib database.");
 		lua_getglobal(L, "customError");
@@ -2567,29 +2567,29 @@ int luaCellularSpace::save(lua_State *L)
 
 		// Raian: Gets the cell's Id
 		lua_pushstring(L, "objectId_");
-		lua_gettable( L, -2);
+		lua_gettable(L, -2);
 		objId = luaL_checkstring(L, -1);
 		lua_pop(L, 1);
-		tableRow.push_back( objId );
+		tableRow.push_back(objId);
 
 		// tranverse the attribute names list
 		TeAttributeList::iterator it = attList.begin();
 		vector<string>::iterator itName = attNameList.begin();
 		it++; // skip the field "object_id_"
-		while ( it != attList.end() )
+		while (it != attList.end())
 		{
 			column = *it;
 
-			//printf("%s, %s\n", itName->c_str(), column.rep_.name_.c_str() );
+			//printf("%s, %s\n", itName->c_str(), column.rep_.name_.c_str());
 
-			lua_pushstring(L, itName->c_str() );
-			lua_gettable( L, -2 );
-			switch(  column.rep_.type_ )
+			lua_pushstring(L, itName->c_str());
+			lua_gettable(L, -2);
+			switch(column.rep_.type_)
 			{
 			case TeREAL:
 				// always save numbers as double
 				v = lua_tonumber(L, -1);
-				sprintf( val, "%f", v);
+				sprintf(val, "%f", v);
 				value = val;
 				break;
 
@@ -2602,14 +2602,14 @@ int luaCellularSpace::save(lua_State *L)
 				break;
 
 			}
-			tableRow.push_back( value );
+			tableRow.push_back(value);
 
 			lua_pop(L, 1); // removes the cell attribute value
 			it++;
 			itName++;
 		}
 
-		attTable.add( tableRow );
+		attTable.add(tableRow);
 		lua_pop(L, 1); // removes "value (cell)"; keeps "key" for next iteration
 		contCells++;
 	}
@@ -2637,7 +2637,7 @@ int luaCellularSpace::save(lua_State *L)
 	if(db->viewExist(viewName))
 	{
 		// loads the existing view
-		if( !db->loadView( view ) )
+		if(!db->loadView(view))
 		{
 			string err_out = string("Fail to load view \"") + string(viewName) + string("\" - ")+ db->errorMessage()  + string("\n");
 
@@ -2673,11 +2673,11 @@ int luaCellularSpace::save(lua_State *L)
 	TeTheme* theme;
 	theme = new TeTheme(string(outputTable), layer);
 	// Check whether there is a theme with this name in the datatabse
-	if( db->themeExist( string(outputTable)) )
+	if(db->themeExist(string(outputTable)))
 	{
 		/// load the inputTheme properties
 		// loads the existing view
-		if( !db->loadTheme( theme ) )
+		if(!db->loadTheme(theme))
 		{
 			string err_out = string("Fail to load theme \"") + string(outputTable) + string("\" - ")+ db->errorMessage()  + string("\n");
 			
@@ -2691,7 +2691,7 @@ int luaCellularSpace::save(lua_State *L)
 		}
 		// delete the existing theme
 		int themeId = theme->id();
-		if( !db->deleteTheme( themeId ) )
+		if(!db->deleteTheme(themeId))
 		{
 			string err_out = string("Fail to delete theme \"") + string(outputTable) + string("\" - ")+ db->errorMessage()  + string("\n");
 
@@ -2706,7 +2706,7 @@ int luaCellularSpace::save(lua_State *L)
 		// BEGIN: Raian
 		theme = new TeTheme(string(outputTable), layer);
 
-		if( !createNewTheme( attTable, outputTable, whereClause, inputThemeName, view, layer, db, theme ) )
+		if(!createNewTheme(attTable, outputTable, whereClause, inputThemeName, view, layer, db, theme))
 		{
 			string err_out = string("Fail to create theme \"") + string(inputThemeName) + string("\" - ")+ db->errorMessage()  + string("\n");
 			lua_getglobal(L, "customError");
@@ -2719,7 +2719,7 @@ int luaCellularSpace::save(lua_State *L)
 	}
 	else
 	{
-		if( !createNewTheme( attTable, outputTable, whereClause, inputThemeName, view, layer, db, theme ) )
+		if(!createNewTheme(attTable, outputTable, whereClause, inputThemeName, view, layer, db, theme))
 		{
 			string err_out = string("Fail to create theme \"") + string(inputThemeName) + string("\" - ")+ db->errorMessage()  + string("\n");
 			lua_getglobal(L, "customError");
@@ -2732,7 +2732,7 @@ int luaCellularSpace::save(lua_State *L)
 	}
 	// END: Raian
 	/*
-	if(execModes != Quiet ) {
+	if(execModes != Quiet) {
 		char aux[100];
 		sprintf(aux, "%i", contCells);
 		string err_out = string("Number of saved cells: ") + string(aux) + string(".");
@@ -2767,15 +2767,15 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 
 	// Opens a connection to a database accessible
 	TeDatabase * db;
-	if( dbType == "mysql")
+	if(dbType == "mysql")
 		db = new TeMySQL();
-#if defined( TME_MSVC ) && defined( TME_TERRALIB_RC3 )
+#if defined(TME_MSVC) && defined(TME_TERRALIB_RC3)
 	else
 		db = new TeAdo();
 #endif
 	if(!db->connect(host, user, pass, dbName, 0))
 	{
-		string err_out = db->errorMessage().c_str() + string( "\n");
+		string err_out = db->errorMessage().c_str() + string("\n");
 		lua_getglobal(L, "customError");
 		lua_pushstring(L, err_out.c_str());
 		//lua_pushnumber(L, 5);
@@ -2785,13 +2785,13 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 
 	TeTheme *inputTheme;
 	TeLayer *inputLayer;
-	if( inputLayerName == "")
+	if(inputLayerName == "")
 	{
 		// Load input theme
-		inputTheme = new TeTheme(inputThemeName );
+		inputTheme = new TeTheme(inputThemeName);
 		if(!db->loadTheme (inputTheme))
 		{
-			string err_out = string("\tCan't open input theme: ") + string(inputThemeName) + string( "\n");
+			string err_out = string("\tCan't open input theme: ") + string(inputThemeName) + string("\n");
 			
 			db->close();
 			
@@ -2805,7 +2805,7 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 		inputLayer = inputTheme->layer();
 		if(!db->loadLayer (inputLayer))
 		{
-			string err_out = string("\tCan't open input layer: ") + string(inputLayerName) + string( "\n");
+			string err_out = string("\tCan't open input layer: ") + string(inputLayerName) + string("\n");
 
 			db->close();
 			
@@ -2823,7 +2823,7 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 		inputLayer = new TeLayer (inputLayerName);
 		if(!db->loadLayer (inputLayer))
 		{
-			string err_out = string("\tCan't open input layer: ") + string(inputLayerName) + string( "\n");
+			string err_out = string("\tCan't open input layer: ") + string(inputLayerName) + string("\n");
 
 			db->close();
 			
@@ -2834,7 +2834,7 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 			return 0;
 		}
 		// Load input theme
-		inputTheme = new TeTheme(inputThemeName, inputLayer );
+		inputTheme = new TeTheme(inputThemeName, inputLayer);
 		if(!db->loadTheme (inputTheme)) // erro, tiago: parece que a terralib carrega um thema com mesmo nome, mas de outro layer, pois
 			// esta funcao nao falha, caso o tema "inputTheme" nao pertenca ao layer (inputLayer), quando deveria
 			// assim, o proximo acesso ao aobjeto inputTheme procara uma excecao
@@ -2848,7 +2848,7 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 			//	Entretanto, as tabelas de resultados nao sao criadas em ambos os bancos.
 		{
 
-			string err_out = string("\tCan't open input theme: ") + string(inputThemeName) + string( "\n");
+			string err_out = string("\tCan't open input theme: ") + string(inputThemeName) + string("\n");
 
 			db->close();
 			
@@ -2860,7 +2860,7 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 		}
 	}
 
-	//if(execModes != Quiet ) qWarning( "Loading default TerraLib GPM (Generalized Proximity Matrix). Please, wait...");
+	//if(execModes != Quiet) qWarning("Loading default TerraLib GPM (Generalized Proximity Matrix). Please, wait...");
 	//  Load an existing proximity matrix or create a new one
 	double tol = TeGetPrecision(inputLayer->projection());
 	TePrecision::instance().setPrecision(tol);
@@ -2870,10 +2870,10 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 	double max_distance;
 	double num_neighbours;
 	// RODRIGO
-	//if(!loadGPM(db, inputTheme->id(), proxMat, string( neighName ), strategy, max_distance, num_neighbours)){
+	//if(!loadGPM(db, inputTheme->id(), proxMat, string(neighName), strategy, max_distance, num_neighbours)){
 	if(!loadGPM(db, inputTheme->id(), proxMat, (string&)(string const&)string(neighName), strategy, max_distance, num_neighbours)){
-		string err_out = string("\tCan't load the \"") + string(neighName) + string( "\" TerraLib GPM.\n");
-		qFatal( "%s", err_out.c_str() );
+		string err_out = string("\tCan't load the \"") + string(neighName) + string("\" TerraLib GPM.\n");
+		qFatal("%s", err_out.c_str());
 
 		db->close();
 		return false;
@@ -2886,7 +2886,7 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 	CellularSpace::iterator itCell;
 	unsigned long int cont = 0;
 
-#if defined( DEBUG_NEIGH )	
+#if defined(DEBUG_NEIGH)	
 	cout << endl;
 #endif
 
@@ -2898,23 +2898,23 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 		cellIndex.second = itCell->first.second; // cell.y
 		cell = (luaCell*) itCell->second;
 
-#if defined( DEBUG_NEIGH )
+#if defined(DEBUG_NEIGH)
 		cout << "C++, Cell: " << cell << endl;
 #endif
 		// adds a new TerraME Neighborhood structure to the each cell in the CellularSpace
-		NeighCmpstInterf* neighborhoods = &cell->getNeighborhoods( );
-		luaNeighborhood* neighborhood = new luaNeighborhood( L );
+		NeighCmpstInterf* neighborhoods = &cell->getNeighborhoods();
+		luaNeighborhood* neighborhood = new luaNeighborhood(L);
 		pair< string, CellNeighborhood*> pStrNeigh;
 		//string matrix;
-		//if( strategy == TeAdjacencyStrategy )  //adjacency
+		//if(strategy == TeAdjacencyStrategy)  //adjacency
 		//{
 		//	matrix = string("Contiguity");
 		//}
-		//else if( strategy == TeDistanceStrategy)  //distance
+		//else if(strategy == TeDistanceStrategy)  //distance
 		//{
-		//	matrix = string("Distance: ") + Te2String( max_distance, 6);
+		//	matrix = string("Distance: ") + Te2String(max_distance, 6);
 		//}
-		//else if( strategy == TeNearestNeighboursStrategy)  //nn
+		//else if(strategy == TeNearestNeighboursStrategy)  //nn
 		//{
 		//	matrix = string("Nearest neighbours: ")+ Te2String(num_neighbours);
 		//}
@@ -2922,20 +2922,20 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 		pStrNeigh.first = neighName;
 		pStrNeigh.second = neighborhood;
 		// RODRIGO
-		//neighborhood->setID( string(neighName) );
-		neighborhood->setID( (string&)(string const&)string(neighName) );
-		neighborhoods->erase( neighName );
-		neighborhoods->add( pStrNeigh );
+		//neighborhood->setID(string(neighName));
+		neighborhood->setID((string&)(string const&)string(neighName));
+		neighborhoods->erase(neighName);
+		neighborhoods->add(pStrNeigh);
 		cont ++;
 
-#if defined( DEBUG_NEIGH )
+#if defined(DEBUG_NEIGH)
 		cout << "C++, Neighs: " << neighborhoods << ", ";
 		cout.flush();
 		cout << neighborhoods->size() << endl;
 		cout << "C++, Neigh: " << neighborhood << ", "<< neighborhood->CellNeighborhood::size() << endl;
 #endif
-		lua_getglobal(L, "Neighborhood" );
-		if( !lua_isfunction(L, -1))
+		lua_getglobal(L, "Neighborhood");
+		if(!lua_isfunction(L, -1))
 		{
 			qFatal("Error: Neighborhood constructor not found!");
 
@@ -2954,29 +2954,29 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 		lua_settable(L, -3);
 
 		// calls the Neighborhood constructor
-		if( lua_pcall( L, 1, 1, 0) != 0 )
+		if(lua_pcall(L, 1, 1, 0) != 0)
 		{
 			qFatal(" Error: Neighborhood constructor not found in the stack");
 			db->close();
 			return 0;
 		}
 
-#if defined( DEBUG_NEIGH )
+#if defined(DEBUG_NEIGH)
 		//break;
 #endif
 		//  fullfil the cell Neighborhood structure, e. g. adds neighbours to the cell
 		char xx[20], yy[20];
-		sprintf(xx, "%02d", cellIndex.first );
-		sprintf(yy, "%02d", cellIndex.second );
-		string object_id = "C" + string( xx ) + "L" + string( yy );
+		sprintf(xx, "%02d", cellIndex.first);
+		sprintf(yy, "%02d", cellIndex.second);
+		string object_id = "C" + string(xx) + "L" + string(yy);
 
-#if defined( DEBUG_NEIGH )
+#if defined(DEBUG_NEIGH)
 		cout << object_id << "........................................................" << endl;
 		cout.flush();
 #endif
 		// RODRIGO
-		//TeNeighbours& neigh = proxMat->getNeighbours(object_id );
-		TeNeighbours neigh = proxMat->getNeighbours(object_id );
+		//TeNeighbours& neigh = proxMat->getNeighbours(object_id);
+		TeNeighbours neigh = proxMat->getNeighbours(object_id);
 		TeNeighbours::iterator itNeigh = neigh.begin();
 
 		while (itNeigh != neigh.end())
@@ -2989,14 +2989,14 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 			int neighX, neighY;
 			objectId2coords(str, neighX, neighY);
 
-#if defined( DEBUG_NEIGH )
+#if defined(DEBUG_NEIGH)
 			cout << neighId << "\t" << proxMatrixAttr.Weight() << "\t" << neighX << "\t" << neighY << endl;
 #endif
 
 			// insert the new neighbor in the cell neighborhood
 			cellIndex.first = neighX;
 			cellIndex.second = neighY;
-			viz = (luaCell * ) CellularSpace::operator [](cellIndex);
+			viz = (luaCell *) CellularSpace::operator [](cellIndex);
 			double peso = (double) proxMatrixAttr.Weight();
 			neighborhood->add(cellIndex, viz, peso);
 
@@ -3022,35 +3022,35 @@ int luaCellularSpace::loadNeighborhood(lua_State *L){
 	string wrngMsg = string();
 
 	strcpy(aux, const_cast<char*>(fileName));
-	auxExt = strtok( aux, "." );
+	auxExt = strtok(aux, ".");
 
-	while( auxExt != NULL )
+	while(auxExt != NULL)
 	{
 		strcpy(extension, auxExt);
-		auxExt = strtok( NULL, "." );
+		auxExt = strtok(NULL, ".");
 	}
 
 	strcpy(aux, const_cast<char*>(fileName));
-#if defined ( TME_WIN32 )
+#if defined (TME_WIN32)
 	auxExt = strtok(aux, "\\");
 #else
 	auxExt = strtok(aux, "/");
 #endif
 	
-	while( auxExt != NULL )
+	while(auxExt != NULL)
 	{
 		strcpy(shortFileName, auxExt);
-#if defined ( TME_WIN32 )
+#if defined (TME_WIN32)
 		auxExt = strtok(NULL, "\\");
 #else
 		auxExt = strtok(NULL, "/");
 #endif
 	}
 
-	if( strcmp( extension, "gpm" ) == 0 )
+	if(strcmp(extension, "gpm") == 0)
 	{
 		/*
-		if(execModes != Quiet ){
+		if(execModes != Quiet){
 			wrngMsg += string("from the GPM file '") +  string(shortFileName) + string("'...");
 			lua_getglobal(L, "print");
 			lua_pushstring(L, wrngMsg.c_str());
@@ -3061,10 +3061,10 @@ int luaCellularSpace::loadNeighborhood(lua_State *L){
 	}
 	else
 	{
-		if( stricmp( extension, "gal" ) == 0 )
+		if(stricmp(extension, "gal") == 0)
 		{
 			/*
-			if(execModes != Quiet ){
+			if(execModes != Quiet){
 				wrngMsg += string("from the GAL file '") +  string(shortFileName) + string("'...");
 				lua_getglobal(L, "print");
 				lua_pushstring(L, wrngMsg.c_str());
@@ -3075,10 +3075,10 @@ int luaCellularSpace::loadNeighborhood(lua_State *L){
 		}
 		else
 		{
-			if( stricmp( extension, "gwt" ) == 0 )
+			if(stricmp(extension, "gwt") == 0)
 			{
 				/*
-				if(execModes != Quiet ){
+				if(execModes != Quiet){
 					wrngMsg += string("from the GWT file '") +  string(shortFileName) + string("'...");
 					lua_getglobal(L, "print");
 					lua_pushstring(L, wrngMsg.c_str());
@@ -3089,9 +3089,9 @@ int luaCellularSpace::loadNeighborhood(lua_State *L){
 			}
 			else
 			{
-				if( stricmp( extension, "txt" ) == 0 )
+				if(stricmp(extension, "txt") == 0)
 				{
-					if(execModes != Quiet ){
+					if(execModes != Quiet){
 						wrngMsg += string(" from the TXT file '") +  string(shortFileName) + string("'...");
 						lua_getglobal(L, "print");
 						lua_pushstring(L, wrngMsg.c_str());
@@ -3101,7 +3101,7 @@ int luaCellularSpace::loadNeighborhood(lua_State *L){
 				}
 				else
 				{
-					string err_out = string("The file extension '" ) + string(extension) + string("' is not suported.");
+					string err_out = string("The file extension '") + string(extension) + string("' is not suported.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L, err_out.c_str());
 					//lua_pushnumber(L, 4);
@@ -3128,7 +3128,7 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 
 	if(!file.is_open())
 	{
-		string err_out = string("Failed to open neighborhood file '" ) + string(fileName) + string("'.");
+		string err_out = string("Failed to open neighborhood file '") + string(fileName) + string("'.");
 		lua_getglobal(L, "customError");
 		lua_pushstring(L, err_out.c_str());
 		//lua_pushnumber(L, 4);
@@ -3168,7 +3168,7 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 	}
 
 	// Gets the name of the attribute used as weight
-	if( numAttributes > 1 )
+	if(numAttributes > 1)
 	{
 		file.close();
 		string err_out = string("The GPM must have exatly zero or one attributes. Currently, TerraME does not support neighborhoods with more than one attribute.");
@@ -3202,7 +3202,7 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 			if(cell == NULL)
 			{
 				file.close();
-				string err_out = string("Cell '") + string(cellId) + string("' in file '" ) + string(fileName) +
+				string err_out = string("Cell '") + string(cellId) + string("' in file '") + string(fileName) +
 								 string("' was not found in the CellularSpace.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
@@ -3212,23 +3212,23 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 
 			// creates the neighborhood and adds it to the cell's set of neighborhoods
 			NeighCmpstInterf& neighborhoods = cell->getNeighborhoods();
-			luaNeighborhood* neighborhood = new luaNeighborhood( L );
+			luaNeighborhood* neighborhood = new luaNeighborhood(L);
 			pair<string, CellNeighborhood*> pairStrNeigh;
 			pairStrNeigh.first = neighName;
 			pairStrNeigh.second = neighborhood;
 			string strNeighName = string(neighName);
 			neighborhood->setID(strNeighName);
-			neighborhoods.erase( neighName );
+			neighborhoods.erase(neighName);
 			//@RAIAN
 			neighborhood->setParent(cell);
 			//@RAIAN: END
-			neighborhoods.add( pairStrNeigh );
+			neighborhoods.add(pairStrNeigh);
 
 			lua_getglobal(L, "Neighborhood");
-			if( !lua_isfunction(L, -1) )
+			if(!lua_isfunction(L, -1))
 			{
 				file.close();
-				string err_out = string("Neighborhood constructor not found." );
+				string err_out = string("Neighborhood constructor not found.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
 				//lua_pushnumber(L, 4);
@@ -3251,10 +3251,10 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 			lua_settable(L, -3);
 
 			// Calls the Neighborhood constructor
-			if( lua_pcall(L, 1, 1, 0) != 0 )
+			if(lua_pcall(L, 1, 1, 0) != 0)
 			{
 				file.close();
-				string err_out = string("Neighborhood constructor was not found in the stack." );
+				string err_out = string("Neighborhood constructor was not found in the stack.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
 				//lua_pushnumber(L, 4);
@@ -3270,17 +3270,17 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 				if(neighbor == NULL)
 				{
 					file.close();
-					string err_out = string("Cell Id '") + string(neighId) + string("' found in the file '" ) + string(fileName) +
+					string err_out = string("Cell Id '") + string(neighId) + string("' found in the file '") + string(fileName) +
 									 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L, err_out.c_str());
 					//lua_pushnumber(L, 4);
 					lua_call(L, 1, 0);
-					lua_pushnil( L );
+					lua_pushnil(L);
 					return 1;
 				}
 
-				if( numAttributes == 1 )
+				if(numAttributes == 1)
 					file >> weight;
 				else
 					weight = defaultWeight;
@@ -3333,9 +3333,9 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 	ifstream file;
 	file.open(fileName, ios::in);
 
-	if( !file.is_open() )
+	if(!file.is_open())
 	{
-		string err_out = string("Failed to open neighborhood file '" ) + string(fileName) + string("'");
+		string err_out = string("Failed to open neighborhood file '") + string(fileName) + string("'");
 		lua_getglobal(L, "customError");
 		lua_pushstring(L, err_out.c_str());
 		//lua_pushnumber(L, 4);
@@ -3371,7 +3371,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 	file >> aux;
 
 	int numCell = 1;
-	for(; numCell <= cellQtde && !file.eof(); numCell++ )
+	for(; numCell <= cellQtde && !file.eof(); numCell++)
 	{
 		char cellId[20];
 		int numNeigh;
@@ -3381,14 +3381,14 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 		file >> cellId >> numNeigh;
 
 		// creates the neighborhood
-		if( strcmp(cellId, "") != 0 && !file.eof())
+		if(strcmp(cellId, "") != 0 && !file.eof())
 		{
 			// gets the cell
 			cell = findCellByID(cellId);
 			if(cell == NULL)
 			{
 				file.close();
-				string err_out = string("Cell Id '") + string(cellId) + string("' found in the file '" ) + string(fileName) +
+				string err_out = string("Cell Id '") + string(cellId) + string("' found in the file '") + string(fileName) +
 								 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
@@ -3398,20 +3398,20 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 
 			// creates the neighborhood and add it to the cell's set of neighborhoods
 			NeighCmpstInterf& neighborhoods = cell->getNeighborhoods();
-			luaNeighborhood* neighborhood = new luaNeighborhood( L );
+			luaNeighborhood* neighborhood = new luaNeighborhood(L);
 			pair< string, CellNeighborhood* > pairStrNeigh;
 			pairStrNeigh.first = neighName;
 			pairStrNeigh.second = neighborhood;
 			string strNeighName = string(neighName);
-			neighborhood->setID( strNeighName );
-			neighborhoods.erase( neighName );
+			neighborhood->setID(strNeighName);
+			neighborhoods.erase(neighName);
 			//@RAIAN
 			neighborhood->setParent(cell);
 			//@RAIAN: END
-			neighborhoods.add( pairStrNeigh );
+			neighborhoods.add(pairStrNeigh);
 
-			lua_getglobal( L, "Neighborhood" );
-			if( !lua_isfunction(L, -1))
+			lua_getglobal(L, "Neighborhood");
+			if(!lua_isfunction(L, -1))
 			{
 				file.close();
 				string err_out = string("Neighborhood constructor not found.");
@@ -3438,7 +3438,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 			lua_settable(L, -3);
 
 			// Calls the Neighborhood constructor
-			if( lua_pcall(L, 1, 1, 0) != 0 )
+			if(lua_pcall(L, 1, 1, 0) != 0)
 			{
 				file.close();
 				string err_out = string("Neighborhood constructor not found in the stack.");
@@ -3450,7 +3450,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 			}
 
 			// get the neighbors and add them to the neighborhood
-			for( int countNeigh = 1; countNeigh <= numNeigh; countNeigh++ )
+			for(int countNeigh = 1; countNeigh <= numNeigh; countNeigh++)
 			{
 				char neighId[20];
 				luaCell *neighbor;
@@ -3460,7 +3460,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 				if(neighbor == NULL)
 				{
 					file.close();
-					string err_out = string("Cell Id '") + string(neighId) + string("' found in the file '" ) + string(fileName) +
+					string err_out = string("Cell Id '") + string(neighId) + string("' found in the file '") + string(fileName) +
 									 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L, err_out.c_str());
@@ -3470,7 +3470,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 
 				// Add the new neighbor to the neighborhood
 				CellIndex auxIndex = neighbor->getIndex();
-				neighborhood->add( auxIndex, neighbor, defaultWeight );
+				neighborhood->add(auxIndex, neighbor, defaultWeight);
 				
 				int top = lua_gettop(L);
 				cell->getReference(L);
@@ -3496,7 +3496,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 		}
 	}
 	// The file ends before it was expected
-	if( (numCell-1) != cellQtde )
+	if((numCell-1) != cellQtde)
 	{
 		file.close();
 		string err_out = string("Unexpected end of file! Probably it is corrupted.");
@@ -3522,7 +3522,7 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
 
 	file.open(fileName, ios::in);
 
-	if( !file.is_open() )
+	if(!file.is_open())
 	{
 		string err_out = string("Failed to open neighborhood file '") + string(fileName) + string("'.");
 		lua_getglobal(L, "customError");
@@ -3571,13 +3571,13 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
 		}
 
 
-		if( strcmp(cellId, "") != 0 )
+		if(strcmp(cellId, "") != 0)
 		{
 			luaCell *cell = findCellByID(cellId);
 			if(cell == NULL)
 			{
 				file.close();
-				string err_out = string("Cell Id '") + string(cellId) + string("' found in the file '" ) + string(fileName) +
+				string err_out = string("Cell Id '") + string(cellId) + string("' found in the file '") + string(fileName) +
 								 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
@@ -3651,7 +3651,7 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
 				if(neighbor == NULL)
 				{
 					file.close();
-					string err_out = string("Cell Id '") + string(neighId) + string("' found in the file '" ) + string(fileName) +
+					string err_out = string("Cell Id '") + string(neighId) + string("' found in the file '") + string(fileName) +
 									 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L, err_out.c_str());
@@ -3690,7 +3690,7 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
 
 	}
 	// The file ends before it was expected
-	if( (numCell-1) != cellQtde )
+	if((numCell-1) != cellQtde)
 	{
 		file.close();
 		
@@ -3740,7 +3740,7 @@ int luaCellularSpace::loadTXTNeighborhood(lua_State *L, const char* fileName, co
 	{
 		if(count ==0)
 			strcpy(aux1, aux2);
-		aux2 = strtok( NULL, " \t\n" );
+		aux2 = strtok(NULL, " \t\n");
 		count++;
 	}
 	cellQtde = atoi(aux1);
@@ -3896,7 +3896,7 @@ int luaCellularSpace::getCellByID(lua_State *L)
 		}
 		it++;
 	}
-	lua_pushnil( L );
+	lua_pushnil(L);
 	return 1;
 }
 

@@ -86,7 +86,7 @@ public:
 
 //#ifdef _MSC_VER
 //        __int64 time;
-//        QueryPerformanceCounter( (LARGE_INTEGER*)(&time ) );
+//        QueryPerformanceCounter((LARGE_INTEGER*)(&time));
 //        return ((double)time * MICRO_DIV);
 //#else
 //        // Not tested
@@ -107,7 +107,7 @@ public:
 
 //#ifdef _MSC_VER
 //        __int64 time;
-//        QueryPerformanceCounter( (LARGE_INTEGER*) (&time ) );
+//        QueryPerformanceCounter((LARGE_INTEGER*) (&time));
 //        return ((double)time * MICRO_DIV);
 //#else
 //        // Not tested
@@ -157,7 +157,7 @@ public:
         startTimeMicro_ = startMicroTime();
 
 //#ifdef _MSC_VER
-//        QueryPerformanceCounter( (LARGE_INTEGER*)(&startMicroTime_ ) );
+//        QueryPerformanceCounter((LARGE_INTEGER*)(&startMicroTime_));
 //#else
 //        gettimeofday(&startMicroTime_, NULL);
 //#endif
@@ -173,7 +173,7 @@ public:
         return endTimeMicro_ - startTimeMicro_;
 
 //#ifdef _MSC_VER
-//        QueryPerformanceCounter( (LARGE_INTEGER*)(&endMicroTime_ ) );
+//        QueryPerformanceCounter((LARGE_INTEGER*)(&endMicroTime_));
 //        return (double) ((double)endMicroTime_ * MICRO_DIV - (double)startMicroTime_ * MICRO_DIV);
 //#else
 //        return (double) (endMicroTime_.tv_sec * MICRO_DIV + endMicroTime_.tv_usec) -

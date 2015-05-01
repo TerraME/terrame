@@ -15,8 +15,8 @@ ImageGUI::~ImageGUI()
 
 void ImageGUI::setPath(const QString &path, const QString &prefix)
 {
-    ui->editPrefix->setText( prefix );
-    ui->editPath->setText( path );
+    ui->editPrefix->setText(prefix);
+    ui->editPath->setText(path);
 }
 
 void ImageGUI::setStatusMessage(const QString &msg)

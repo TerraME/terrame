@@ -70,7 +70,7 @@ bool CalculateResult::execute()
 #endif
 
         if ((attrib && attrib->getVisible()) && 
-            ((attrib->getType() != TObsAgent) || ((attrib->getType() != TObsSociety))) )
+            ((attrib->getType() != TObsAgent) || ((attrib->getType() != TObsSociety))))
         {
             switch(attrib->getType())
             {

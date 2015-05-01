@@ -93,13 +93,13 @@ using namespace TerraMEObserver;
 		// currSubj->set_id(getId());
 
 		// // subjectType
-		// currSubj->set_type( ObserverDatagramPkg::TObsCellularSpace );
+		// currSubj->set_type(ObserverDatagramPkg::TObsCellularSpace);
 
 		// // #attrs
-		// currSubj->set_attribsnumber( currSubj->rawattributes_size() );
+		// currSubj->set_attribsnumber(currSubj->rawattributes_size());
 
 		// // #elements
-		// currSubj->set_itemsnumber( currSubj->internalsubject_size() );
+		// currSubj->set_itemsnumber(currSubj->internalsubject_size());
 	// }
 	// else
 	// {
@@ -223,7 +223,7 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 			
 				case LUA_TTABLE:
 				{
-					sprintf(result, "%p", lua_topointer(luaL, -1) );
+					sprintf(result, "%p", lua_topointer(luaL, -1));
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
@@ -242,7 +242,7 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 					if ((subjectType == TObsCellularSpace)
 						// || (subjectType == TObsTrajectory)
 						// || (subjectType == TObsSociety)
-					)
+						)
 					{
 						int top = lua_gettop(luaL);
 
@@ -350,7 +350,7 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 	double num = 0.0;
 
 	lua_pushnil(luaL);
-	while(lua_next(luaL, stackPosition ) != 0)
+	while(lua_next(luaL, stackPosition) != 0)
 	{
 		if(lua_type(luaL, -2) == LUA_TSTRING)
 		{
@@ -368,7 +368,7 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 			{
 				case LUA_TBOOLEAN:
 				{
-					valueTmp = QByteArray::number( lua_toboolean(luaL, -1));
+					valueTmp = QByteArray::number(lua_toboolean(luaL, -1));
 
 					if(observedAttribs.value(key) != valueTmp)
 					{

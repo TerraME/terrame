@@ -265,7 +265,7 @@ void PlotPropertiesGUI::titlesFontClicked()
     bool ok;
     QFont newFont = QFontDialog::getFont(&ok, plotter->title().font(),
                                          this, "TerraME Observer : Chart - Select Font");
-    if ((ok) && (newFont != plotter->title().font()) )
+    if ((ok) && (newFont != plotter->title().font()))
     {
         QwtText text = plotter->title();
         text.setFont(newFont);
@@ -278,7 +278,7 @@ void PlotPropertiesGUI::labelsFontClicked()
     bool ok;
     QFont newFont = QFontDialog::getFont(&ok, plotter->axisTitle(QwtPlot::xBottom).font(),
                                          this, "TerraME Observer : Chart - Select Font");
-    if ((ok) && (newFont != plotter->axisTitle(QwtPlot::xBottom).font()) )
+    if ((ok) && (newFont != plotter->axisTitle(QwtPlot::xBottom).font()))
     {
         QwtText text = plotter->axisTitle(QwtPlot::xBottom);
         text.setFont(newFont);
@@ -295,7 +295,7 @@ void PlotPropertiesGUI::scalesFontClicked()
     bool ok;
     QFont newFont = QFontDialog::getFont(&ok, plotter->axisFont(QwtPlot::xBottom),
                                          this, "TerraME Observer : Chart - Select Font");
-    if ((ok) && (newFont != plotter->axisFont(QwtPlot::xBottom)) )
+    if ((ok) && (newFont != plotter->axisFont(QwtPlot::xBottom)))
     {
         plotter->setAxisFont(QwtPlot::xBottom, newFont);
         plotter->setAxisFont(QwtPlot::yLeft, newFont);
@@ -308,7 +308,7 @@ void PlotPropertiesGUI::legendFontClicked()
 
     QFont newFont = QFontDialog::getFont(&ok, plotter->legend()->font(),
                                          this, "TerraME Observer : Chart - Select Font");
-    if ((ok) && (newFont != plotter->legend()->font()) )
+    if ((ok) && (newFont != plotter->legend()->font()))
     {
         plotter->legend()->setFont(newFont);
     }
@@ -327,14 +327,14 @@ void PlotPropertiesGUI::consistCurveTab(const QString &name)
 
     const QwtSymbol* const oldSymbol = plotCurve->symbol();
 	QwtSymbol *symbol = new QwtSymbol(oldSymbol->style(), oldSymbol->brush(), oldSymbol->pen(), oldSymbol->size());
-    ui->symbolSizeSpinBox->setValue( symbol->size().width() );
+    ui->symbolSizeSpinBox->setValue(symbol->size().width());
     ui->curveSymbolCombo->setCurrentIndex((int)symbol->style() + 1); // Starts in -1
     // Fixes bug built when used 'plotCurve->symbol()'
     plotCurve->setSymbol(symbol);
 
-    ui->curveWidthSpinBox->setValue( plotCurve->pen().width() );
-    ui->curveStyleCombo->setCurrentIndex( (int)plotCurve->style() );
-    ui->lineStylecombo->setCurrentIndex( (int)plotCurve->pen().style() );
+    ui->curveWidthSpinBox->setValue(plotCurve->pen().width());
+    ui->curveStyleCombo->setCurrentIndex((int)plotCurve->style());
+    ui->lineStylecombo->setCurrentIndex((int)plotCurve->pen().style());
 
     ui->curveColorButton->setStyleSheet(QString("  border-radius: 4px; "
             "border: 1px solid rgb(0, 0, 0); background-color: %1")

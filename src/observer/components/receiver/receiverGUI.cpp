@@ -52,7 +52,7 @@ public:
             .arg(stdDev)
             .arg(maximum)
             .arg(mininum)
-            .arg( (stdColorBar.isEmpty() ? colorBar : colorBar + COLOR_BAR_SEP + stdColorBar) )
+            .arg((stdColorBar.isEmpty() ? colorBar : colorBar + COLOR_BAR_SEP + stdColorBar))
             .arg(fontFamily)
             .arg(fontSize)
             .arg(symbol)
@@ -117,8 +117,8 @@ void ReceiverGUI::appendMessage(const QString &message)
 {
     // ui->logEdit->appendPlainText(tr("%1 %2")
     ui->logEdit->appendHtml(tr("<p>%1 %2</p>")
-        .arg( QDateTime::currentDateTime().toString("MM/dd/yyyy, hh:mm:ss:") )
-        .arg(message) );
+        .arg(QDateTime::currentDateTime().toString("MM/dd/yyyy, hh:mm:ss:"))
+        .arg(message));
 }
 
 void ReceiverGUI::setCompression(bool compress)
@@ -219,7 +219,7 @@ void ReceiverGUI::okButtonClicked()
 
     // qDebug() << attributesList; //keysList;
 
-    ui->listWidget->setCurrentItem( ui->listWidget->item(0) );
+    ui->listWidget->setCurrentItem(ui->listWidget->item(0));
     consistGUI(0);
     // ui->okButton->setEnabled(false);
     // ui->clearButton->setEnabled(true);
@@ -281,7 +281,7 @@ void ReceiverGUI::consistGUI(int listRow)
         
         ui->lineStylecombo->setCurrentIndex(leg->lineStyle); // ui->lineStylecombo->findText(leg->lineStyle));
         ui->curveStyleCombo->setCurrentIndex(leg->curveStyle); // ui->curveStyleCombo->findText(leg->curveStyle));
-        ui->curveSymbolCombo->setCurrentIndex( (symbolPos < 0 ? 0 : symbolPos ) );
+        ui->curveSymbolCombo->setCurrentIndex((symbolPos < 0 ? 0 : symbolPos));
         ui->fontComboBox->setCurrentIndex(ui->fontComboBox->findText(leg->fontFamily));
         
         // ui->lineStylecombo->setCurrentIndex(ui->lineStylecombo->findText(leg->style));
@@ -293,8 +293,8 @@ void ReceiverGUI::consistGUI(int listRow)
 
 void ReceiverGUI::consistButtons(const QString & /*value*/)
 {
-    // ui->okButton->setEnabled( ! value.isEmpty() );
-    // ui->clearButton->setEnabled( ! value.isEmpty() );
+    // ui->okButton->setEnabled(! value.isEmpty());
+    // ui->clearButton->setEnabled(! value.isEmpty());
 }
 
 void ReceiverGUI::clearAll()
@@ -314,7 +314,7 @@ void ReceiverGUI::clearAll()
 
 QStringList * ReceiverGUI::getAttributes(int pos) const
 {
-    if ( (! attributesList.isEmpty()) && (pos < attributesList.size()) )
+    if ((! attributesList.isEmpty()) && (pos < attributesList.size()))
         return (QStringList *) &attributesList[pos];
     return 0;
 }
@@ -323,7 +323,7 @@ QStringList * ReceiverGUI::getLegendKeys(int pos) const
 {
     // qDebug() << "fix for more than one observer ---------------\n" << keysList[pos];
 
-    if ( (! keysList.isEmpty()) && (pos < keysList.size()) )
+    if ((! keysList.isEmpty()) && (pos < keysList.size()))
         return (QStringList *) &keysList[pos];
     return 0;
 }
@@ -335,12 +335,12 @@ const QStringList ReceiverGUI::getLegendValue(int obsPos) const
     QStringList ret;
     for(int i = 0; i < attrList.size(); i++)
     {
-        LuaLegend *leg = luaLegendHash.value( attrList.at(i) );
-        ret.append( leg->valuesToString() );
+        LuaLegend *leg = luaLegendHash.value(attrList.at(i));
+        ret.append(leg->valuesToString());
     }
     return ret;
 
-    //if ( (! attributesList.isEmpty()) && (pos < attributesList.at(pos).size()) )
+    //if ((! attributesList.isEmpty()) && (pos < attributesList.at(pos).size()))
     //{
     //    QStringList ret;
     //    LuaLegend *leg = 0;
@@ -433,7 +433,7 @@ void ReceiverGUI::on_precisionSpin_valueChanged(int value)
         leg->precision = value;
 }
 
-void ReceiverGUI::on_fontComboBox_currentFontChanged(const QFont & font )
+void ReceiverGUI::on_fontComboBox_currentFontChanged(const QFont & font)
 {
     LuaLegend *leg = luaLegendHash.value(activeItemName);
     // LuaLegend *leg = (luaLegends.size() > activeItem) ? luaLegends.at(activeItem) : 0;
@@ -606,10 +606,10 @@ void ReceiverGUI::setupGUI()
      settings.beginGroup("RemoteVisualizations");
      
      settings.beginGroup("Attributes");
-     ui->attribsPlainEdit->setPlainText( settings.value("attributes").toString() );
-     ui->colorBarLine->setText( settings.value("colorBar").toString() );
-     ui->stdColorBarLine->setText( settings.value("stdColorBar").toString() );
-     ui->autoCreateCheck->setChecked( settings.value("autoCreate").toBool() );
+     ui->attribsPlainEdit->setPlainText(settings.value("attributes").toString());
+     ui->colorBarLine->setText(settings.value("colorBar").toString());
+     ui->stdColorBarLine->setText(settings.value("stdColorBar").toString());
+     ui->autoCreateCheck->setChecked(settings.value("autoCreate").toBool());
      settings.endGroup();
 
      settings.endGroup();

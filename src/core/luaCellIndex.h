@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaCellIndex objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUACELLINDEX_H )
+#if ! defined(LUACELLINDEX_H)
 #define LUACELLINDEX_H
 
 extern "C" 
@@ -57,7 +57,7 @@ public:
     luaCellIndex(lua_State *L) 
     {
         x = y = 0;
-        if( lua_istable(L, -1) )
+        if(lua_istable(L, -1))
         {
             lua_pushstring(L, "x"); lua_gettable(L, -2); 
             x = (int) luaL_checknumber(L, -1); lua_pop(L, 1);
@@ -71,7 +71,7 @@ public:
     int set(lua_State *L)
     {
         x = (int)luaL_checknumber(L, -2);  
-        y = (int) luaL_checknumber(L, -1 ); 
+        y = (int) luaL_checknumber(L, -1); 
         return 0;
         }
 

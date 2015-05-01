@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaMessage objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUAMESSAGE_H )
+#if ! defined(LUAMESSAGE_H)
 #define LUAMESSAGE_H
 
 #include "reference.h"
@@ -53,7 +53,7 @@ public:
     
 public:
     /// Constructor
-    luaMessage( lua_State *)
+    luaMessage(lua_State *)
     {
         subjectType = TObsUnknown;
     }
@@ -64,19 +64,19 @@ public:
 
     /// Configures the luaMessage object
     /// parameter: identifier
-    int config( lua_State *L ) {
+    int config(lua_State *L) {
         msg = lua_tostring(L, -1);
         return 0;
     }
 
     /// Executes the luaMessage object
     /// \param event is the Event which has trigered this luaMessage
-    bool execute( Event& event ) {
+    bool execute(Event& event) {
         // puts the message table on the top of the lua stack
         getReference(L);
-        if( !lua_istable(L, -1) )
+        if(!lua_istable(L, -1))
         {
-            string err_out = string("Action function " ) + string (msg) + string(" not defined!");
+            string err_out = string("Action function ") + string (msg) + string(" not defined!");
 			lua_getglobal(L, "customError");
 			lua_pushstring(L, err_out.c_str());
 			//lua_pushnumber(L, 5);
@@ -89,8 +89,8 @@ public:
         lua_gettable(L, -2);
 
         // puts the Event constructor on the top of the lua stack
-        lua_getglobal(L, "Event" );
-        if( !lua_isfunction(L, -1))
+        lua_getglobal(L, "Event");
+        if(!lua_isfunction(L, -1))
         {
 			string err_out = string("Event constructor not found.");
 			lua_getglobal(L, "customError");
@@ -104,22 +104,22 @@ public:
         lua_newtable(L);
 		if(event.getTime() != 1){
         	lua_pushstring(L, "time");
-        	lua_pushnumber(L, event.getTime() );
+        	lua_pushnumber(L, event.getTime());
         	lua_settable(L, -3);
 		}
 		if(event.getPeriod() != 1){
         	lua_pushstring(L, "period");
-        	lua_pushnumber(L, event.getPeriod() );
+        	lua_pushnumber(L, event.getPeriod());
         	lua_settable(L, -3);
 		}
 		if(event.getPriority() != 0){
         	lua_pushstring(L, "priority");
-        	lua_pushnumber(L, event.getPriority() );
+        	lua_pushnumber(L, event.getPriority());
         	lua_settable(L, -3);
 		}
 
         // calls the event constructor
-        if( lua_pcall( L, 1, 1, 0) != 0 )
+        if(lua_pcall(L, 1, 1, 0) != 0)
         {
             string err_out = string("Event constructor not found in the stack.");
 			lua_getglobal(L, "customError");
@@ -134,16 +134,16 @@ public:
         //ev->getReference(L);
 
     // Bug agentes
-    // qDebug() << "calls the function 'execute': lua_pcall( L, 1, 1, 0)"; 
+    // qDebug() << "calls the function 'execute': lua_pcall(L, 1, 1, 0)"; 
     
     // calls the function 'execute'
-        lua_call( L, 1, 1) ;
+        lua_call(L, 1, 1) ;
 
         // retrieve the message result value from the lua stack
         int result = true;
-        if( lua_type(L, -1 ) == LUA_TBOOLEAN )
+        if(lua_type(L, -1) == LUA_TBOOLEAN)
         {
-            result = lua_toboolean( L, -1);
+            result = lua_toboolean(L, -1);
             lua_pop(L, 1);  // pop returned value
         }
         //else

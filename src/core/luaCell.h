@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaCell objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUACELL_H )
+#if ! defined(LUACELL_H)
 #define LUACELL_H
 
 #include "../observer/cellSubjectInterf.h"
@@ -95,7 +95,7 @@ public:
     luaCell(lua_State *L) ;
 
     /// Returns the current internal state of the LocalAgent (Automaton) within the cell and received as parameter
-    int getCurrentStateName( lua_State *L );
+    int getCurrentStateName(lua_State *L);
 
     /// Puts the iterator in the beginning of the luaNeighborhood composite.
     int first(lua_State *L);
@@ -124,10 +124,10 @@ public:
 
     /// Fowards the Neighborhood iterator to the next Neighbor cell
     // no parameters
-    int next( lua_State *L );
+    int next(lua_State *L);
 
     /// destructor
-    ~luaCell( void );
+    ~luaCell(void);
 
     /// Sets the Cell latency
     int setLatency(lua_State *L);
@@ -146,16 +146,16 @@ public:
 
     /// Adds a new luaNeighborhood graph to the Cell
     /// parameters: identifier, luaNeighborhood
-    int addNeighborhood( lua_State *L );
+    int addNeighborhood(lua_State *L);
 
     /// Synchronizes the luaCell
     int synchronize(lua_State *L);
 
     /// Gets the luaCell identifier
-    int getID( lua_State *L );
+    int getID(lua_State *L);
 
     /// Sets the luaCell identifier
-    int setID( lua_State *L );
+    int setID(lua_State *L);
 
 	/// Gets the luaCell identifier
 	/// \author Raian Vargas Maretto
@@ -173,10 +173,10 @@ public:
 		
     /// Creates several types of observers
     /// parameters: observer type, observeb attributes table, observer type parameters
-    int createObserver( lua_State *L );
+    int createObserver(lua_State *L);
 
     /// Notifies observers about changes in the luaCell internal state
-    int notify(lua_State *L );
+    int notify(lua_State *L);
 
     /// Gets the subject's type
     const TypesOfSubjects getType() const;

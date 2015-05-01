@@ -89,7 +89,7 @@ bool LogFileTask::rendering()
     //	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
     //		QMessageBox::information(0, QObject::tr("Error opening file"),
     // QObject::tr("Could not open the log file \"%1\".\n%2")
-    //			.arg(filename).arg(file.errorString()	));
+    //			.arg(filename).arg(file.errorString()));
     //		return false;
     //	}
     //}
@@ -97,7 +97,7 @@ bool LogFileTask::rendering()
     //	if (!file.open(QIODevice::Append | QIODevice::Text)){
     //		QMessageBox::information(0, QObject::tr("Error opening file"),
     // QObject::tr("Could not open the log file \"%1\".\n%2")
-    //			.arg(filename).arg(file.errorString()	));
+    //			.arg(filename).arg(file.errorString()));
     //		return false;
     //	}
     //}
@@ -109,7 +109,7 @@ bool LogFileTask::rendering()
         {
             QMessageBox::information(0, QObject::tr("Error opening file"),
                                      QObject::tr("Could not open the log file \"%1\".\n%2")
-                                     .arg(filename).arg(file.errorString()	));
+                                     .arg(filename).arg(file.errorString()));
             return false;
         }
         mode = "w+";
@@ -120,7 +120,7 @@ bool LogFileTask::rendering()
         {
             QMessageBox::information(0, QObject::tr("Error opening file"),
                                      QObject::tr("Could not open the log file \"%1\".\n%2")
-                                     .arg(filename).arg(file.errorString()	));
+                                     .arg(filename).arg(file.errorString()));
             return false;
         }
     }
@@ -138,7 +138,7 @@ bool LogFileTask::rendering()
         }
         header = false;
         headers += "\n";
-        file.write(headers.toLatin1().data(),  qstrlen( headers.toLatin1().data() ));
+        file.write(headers.toLatin1().data(),  qstrlen(headers.toLatin1().data()));
     }
 
     QString text;
@@ -151,7 +151,7 @@ bool LogFileTask::rendering()
     }
 
     text.append("\n");
-    file.write(text.toLatin1().data(), qstrlen( text.toLatin1().data() ));
+    file.write(text.toLatin1().data(), qstrlen(text.toLatin1().data()));
     file.close();
 
     return true;
@@ -213,11 +213,11 @@ bool LogFileTask::draw()
 
             for(int id = 0; id < subjectsIDs.size(); ++id)
             {
-                nestedSubj = bb.getSubject( subjectsIDs.at(id) );
+                nestedSubj = bb.getSubject(subjectsIDs.at(id));
 
                 if (nestedSubj && nestedSubj->getNumericValue("weight", weight))
                 {
-                    doubleToText( nestedSubj->getId(), tmpValue);
+                    doubleToText(nestedSubj->getId(), tmpValue);
                     attribList.append("neighbor");
                     valuesList.append(tmpValue);
 

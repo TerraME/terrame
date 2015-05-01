@@ -89,7 +89,7 @@ void SpatialObserverGUI::setupToolBars()
 
     QStringList zoomList;
     for (int i = 0; i < zoomVec.size(); i++)
-        zoomList.append( QString::number(zoomVec.at(i)) + "%");
+        zoomList.append(QString::number(zoomVec.at(i)) + "%");
     zoomList.append(WINDOW);
 
     zoomComboBox = new QComboBox(this);
@@ -118,11 +118,11 @@ void SpatialObserverGUI::setupToolBars()
     actionGroup->addAction(actZoomOut);
     actHand->setChecked(true);
 
-    connect(actLegend, SIGNAL(triggered()), this, SLOT(legendClicked()) );
-    connect(actGrid, SIGNAL(triggered()), this, SLOT(gridClicked()) );
+    connect(actLegend, SIGNAL(triggered()), this, SLOT(legendClicked()));
+    connect(actGrid, SIGNAL(triggered()), this, SLOT(gridClicked()));
 
-    connect(actHand, SIGNAL(triggered()), ui->canvas, SLOT(setPanCursor()) );
-    connect(actZoomWindow, SIGNAL(triggered()), ui->canvas, SLOT(setWindowCursor()) );
+    connect(actHand, SIGNAL(triggered()), ui->canvas, SLOT(setPanCursor()));
+    connect(actZoomWindow, SIGNAL(triggered()), ui->canvas, SLOT(setWindowCursor()));
 
     connect(actZoomIn, SIGNAL(triggered()), this, SLOT(zoomInClicked()));
     connect(actZoomOut, SIGNAL(triggered()), this, SLOT(zoomOutClicked()));

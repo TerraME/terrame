@@ -155,9 +155,9 @@ void ClientTcpConnection::receive()
         qDebug() << "auxData.size():" << auxData.size() << "\n";
 
         QString str;
-        str.append( tr("\ndataSize: %1\n").arg((int) dataSize));
-        str.append( tr("pos: %1\n").arg((int) pos));
-        str.append( tr("compressDatagram: %1\n").arg(compressMsg ? "true" : "false"));
+        str.append(tr("\ndataSize: %1\n").arg((int) dataSize));
+        str.append(tr("pos: %1\n").arg((int) pos));
+        str.append(tr("compressDatagram: %1\n").arg(compressMsg ? "true" : "false"));
         // qWarning() << "auxData: " << auxData;
         ui->appendMessage(str);
 #endif
@@ -206,10 +206,10 @@ void ClientTcpConnection::receive()
 
         if (pos > -1)
         {
-            completeState.replace( (int)pos, data.size(), data);
+            completeState.replace((int)pos, data.size(), data);
 
             ui->appendMessage(tr("Messages received: %1. From: %2")
-                .arg(msgReceiver).arg(peerAddress().toString()) );
+                .arg(msgReceiver).arg(peerAddress().toString()));
 
             blockSize = 0;
         }
@@ -354,7 +354,7 @@ bool ClientTcpConnection::send(const QByteArray &data)
         out << compressed;                // data sent is compressed?
 
         if (compressed)
-            out << qCompress( data, 6); //COMPRESS_RATIO);
+            out << qCompress(data, 6); //COMPRESS_RATIO);
         else
             out << data; // data.mid(pos, (int)SocketSenderTask::dataSize);
 
@@ -366,7 +366,7 @@ bool ClientTcpConnection::send(const QByteArray &data)
 
         if (bytesWritten == -1)
         {
-            ui->appendMessage( tr("Failed on the send message: ") + errorString() );
+            ui->appendMessage(tr("Failed on the send message: ") + errorString());
             return false;
         }
 
@@ -381,16 +381,16 @@ bool ClientTcpConnection::send(const QByteArray &data)
             pos += bytesWritten;
         }
 
-        // senderGUI->appendMessage(SenderGUI::tr("Message sent for %1").arg(address.toString()) );
-        // qDebug("Message sent for %s", qPrintable(address.toString()) );
+        // senderGUI->appendMessage(SenderGUI::tr("Message sent for %1").arg(address.toString()));
+        // qDebug("Message sent for %s", qPrintable(address.toString()));
         
-        // // emit messageSent( tr("Message sent for %1").arg(address.toString()) );
+        // // emit messageSent(tr("Message sent for %1").arg(address.toString()));
         // //emit statusMessage(msgCount, stateCount);
         // msgCount++;
         // statesReceiver, msgReceiver
     }
 
-    ui->appendMessage( tr("Negotiating closing connection...") );
+    ui->appendMessage(tr("Negotiating closing connection..."));
 
     return true;
 }

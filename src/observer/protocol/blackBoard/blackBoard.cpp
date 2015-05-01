@@ -158,7 +158,7 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, const QStringL
 
     if (! subjAttr)
         qFatal("BlackBoard::getState() - Error: The Subject '%i' (%s) not found in BlackBoard", 
-            subj->getId(), getSubjectName(subj->getType()) );
+            subj->getId(), getSubjectName(subj->getType()));
 
     if (! subjAttr->getDirtyBit())
     {
@@ -210,7 +210,7 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, const QStringL
 //{
 //    SubjectAttributes *subjAttr = 0;
 //
-//    if (! cache.contains(subjectId) )
+//    if (! cache.contains(subjectId))
 //    {
 //        subjAttr = new SubjectAttributes(subjectId);
 //        cache.insert(subjectId, subjAttr);
@@ -270,7 +270,7 @@ SubjectAttributes * BlackBoard::getSubject(int subjectId)
 {
     SubjectAttributes *subjAttr = 0;
 
-    if (cache.contains(subjectId) )
+    if (cache.contains(subjectId))
         subjAttr = cache.value(subjectId);
     return subjAttr;
 }
@@ -284,7 +284,7 @@ bool BlackBoard::removeSubject(int subjectId)
         if (! deletedSubjects)
             deletedSubjects = new QHash<int, QPair<double, double> >();
 
-        deletedSubjects->insert(subjectId, qMakePair(subjAttr->getX(), subjAttr->getY()) );
+        deletedSubjects->insert(subjectId, qMakePair(subjAttr->getX(), subjAttr->getY()));
         delete subjAttr; subjAttr = 0;
 
         return true;
@@ -341,7 +341,7 @@ bool BlackBoard::renderingOnlyChanges() const
     // Draw the changes only if the 'n' of changed objects
     // is less than X% of the cache size
 
-    // return countChangedSubjects < (cache.size() * ( 1 - PERCENT));
+    // return countChangedSubjects < (cache.size() * (1 - PERCENT));
     return countChangedSubjects < (cache.size() * percent);
 }
 

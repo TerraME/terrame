@@ -56,7 +56,7 @@ void ReceiverTcpServer::listenning(quint16 port)
         return;
     }
 
-    ui->appendMessage(tr("The server is running on port: %1\n").arg( (int)port ));
+    ui->appendMessage(tr("The server is running on port: %1\n").arg((int)port));
     ui->setStatusAndPort("Listening", (int)port);
 }
 

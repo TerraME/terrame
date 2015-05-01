@@ -16,7 +16,7 @@
 using namespace TerraMEObserver;
 
 ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
-    : ObserverInterf( s ), QDialog(parent) // , QThread()
+    : ObserverInterf(s), QDialog(parent) // , QThread()
 {
     observerType = TObsScheduler;
     subjectType = s->getType(); // TO_DO: Changes it to Observer pattern
@@ -177,7 +177,7 @@ bool ObserverScheduler::draw(QDataStream & state)
             case (TObsNumber):
                 if (key.contains("@"))
                 {
-                    item = hashTreeItem.value( key );
+                    item = hashTreeItem.value(key);
 
                     // retrieves the eventtime
                     num = tokens.at(j).toDouble();
@@ -235,15 +235,15 @@ void ObserverScheduler::setAttributes(QStringList &attribs)
     for(int i = 0; i < attribList.size(); i++)
     {
         // The attribute TIMER_KEY is displayed only in the GUI observer
-        if ((attribList.at(i) != TIMER_KEY) && (attribList.at(i).contains("@")) )
+        if ((attribList.at(i) != TIMER_KEY) && (attribList.at(i).contains("@")))
         {
             evKey = attribList.at(i);
             item = new QTreeWidgetItem(pipelineWidget);
-            item->setText(Key, evKey.remove(0, 1) );
+            item->setText(Key, evKey.remove(0, 1));
 
-            item->setText(Time, QString::number(0) );
-            item->setText(Periodicity, QString::number(0) );
-            item->setText(Priority, QString::number(0) );
+            item->setText(Time, QString::number(0));
+            item->setText(Periodicity, QString::number(0));
+            item->setText(Priority, QString::number(0));
 
             hashTreeItem.insert(attribList.at(i), item);
         }
@@ -323,7 +323,7 @@ bool ObserverScheduler::draw()
         if (raw)
         {
             int id = (int) raw->number;
-            item = hashTreeItem.value( raw->key );
+            item = hashTreeItem.value(raw->key);
             
             SubjectAttributes *innerSubjAttr = BlackBoard::getInstance().getSubject(id);
 
@@ -346,6 +346,6 @@ bool ObserverScheduler::draw()
         }
 #endif
     }
-    setTimer(QString::number( subjAttr->getRawAttribute(TIMER_KEY)->number ));
+    setTimer(QString::number(subjAttr->getRawAttribute(TIMER_KEY)->number));
     return true;
 }

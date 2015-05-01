@@ -52,7 +52,7 @@ public:
      * \param parent a pointer to a QWidget
      * \see QFrame, \see QWidget
      */
-    TeQtColorBar( QWidget* parent);
+    TeQtColorBar(QWidget* parent);
 
     /**
      * Destructor
@@ -166,7 +166,7 @@ protected:
      * Catchs the mouse double click event inside the user interface object
      * \see QMouseEvent
      */
-    void mouseDoubleClickEvent(QMouseEvent* );
+    void mouseDoubleClickEvent(QMouseEvent*);
 
     /**
      * Catchs the leave event

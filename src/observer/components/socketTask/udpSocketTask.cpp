@@ -92,7 +92,7 @@ bool UdpSocketTask::send(const QByteArray &data)
 
         if (compressed)
         {
-            out << qCompress(data); //qCompress( data.mid(pos, dataSize), COMPRESS_RATIO);
+            out << qCompress(data); //qCompress(data.mid(pos, dataSize), COMPRESS_RATIO);
         }
         else    
         {
@@ -106,10 +106,10 @@ bool UdpSocketTask::send(const QByteArray &data)
             bytesWritten = writeDatagram(datagram, addresses->at(i), port);     
             flush();
 
-            // emit messageSent( tr("Datagram sent for %1").arg(addresses->at(i).toString()) );
+            // emit messageSent(tr("Datagram sent for %1").arg(addresses->at(i).toString()));
 
             emit messageSent (tr("Datagram sent for %1. Bytes sent: %2").arg(addresses->at(i).toString())
-                .arg(bytesWritten) );
+                .arg(bytesWritten));
 
             if (bytesWritten == -1)
             {
@@ -143,7 +143,7 @@ bool UdpSocketTask::send(const QByteArray &data)
     stateCount++;
     
     emit statusMessages(msgCount, stateCount);
-    emit messageSent( tr("States sent: %1.").arg(stateCount));
+    emit messageSent(tr("States sent: %1.").arg(stateCount));
 
     return false;
 }

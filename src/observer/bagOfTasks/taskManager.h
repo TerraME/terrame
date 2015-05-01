@@ -54,7 +54,7 @@ public:
             //    QList<QPair<Task *, int> >::iterator it = bagOfTasks.begin();
             //    for (; it != bagOfTasks.end(); ++it)
             //    {
-            //        if( (*it).first->getWorkerId() == workerId)
+            //        if((*it).first->getWorkerId() == workerId)
             //        {
             //            task = *it;
             //            break;

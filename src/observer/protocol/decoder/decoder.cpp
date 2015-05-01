@@ -56,8 +56,8 @@ bool Decoder::decode(const QByteArray &state)
 
     if (ret)
     {
-        SubjectAttributes *subjAttr = bb->insertSubject( subjDatagram.id() );
-        subjAttr->setSubjectType( (TypesOfSubjects) subjDatagram.type() );
+        SubjectAttributes *subjAttr = bb->insertSubject(subjDatagram.id());
+        subjAttr->setSubjectType((TypesOfSubjects) subjDatagram.type());
         subjAttr->setDirtyBit(false);
         subjAttr->clearNestedSubjects();
 
@@ -163,8 +163,8 @@ bool Decoder::decodeInternals(SubjectAttributes * /*subjAttr*/,
     {
         const ObserverDatagramPkg::SubjectAttribute &interSubjDatagram = subjDatagram.internalsubject(i);
 
-        SubjectAttributes *interSubjAttr = bb->insertSubject( interSubjDatagram.id() );
-        interSubjAttr->setSubjectType( (TypesOfSubjects) interSubjDatagram.type() ); 
+        SubjectAttributes *interSubjAttr = bb->insertSubject(interSubjDatagram.id());
+        interSubjAttr->setSubjectType((TypesOfSubjects) interSubjDatagram.type()); 
         interSubjAttr->clearNestedSubjects();
 
         if (parentSubjAttr)
@@ -352,7 +352,7 @@ bool Decoder::consumeTriple(QStringList &tokens, int &idx, const int &subjID)
             //if ((parentSubjectType == TObsTrajectory) && (cache->contains("trajectory")))
             //{
             //    rawAttrib = cache->value("trajectory");
-            //    rawAttrib->setValue<double>("trajectory", TObsNumber, attrib->getXsValue()->size() );
+            //    rawAttrib->setValue<double>("trajectory", TObsNumber, attrib->getXsValue()->size());
             //}
         }
     else

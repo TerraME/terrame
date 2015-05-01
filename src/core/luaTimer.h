@@ -24,7 +24,7 @@ of this library and its documentation.
 \brief This file definitions for the luaTimer objects.
 \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUATIMER_H )
+#if ! defined(LUATIMER_H)
 #define LUATIMER_H
 
 #include "schedulerSubjectInterf.h"
@@ -92,10 +92,10 @@ public:
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observer attributes table, observer type parameters
-    int createObserver( lua_State *L );
+    int createObserver(lua_State *L);
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-    int notify(lua_State *L );
+    int notify(lua_State *L);
 
     /// Gets the subject's type
     const TypesOfSubjects getType() const;

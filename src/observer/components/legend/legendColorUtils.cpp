@@ -31,45 +31,45 @@ const int NAME_LENGTH = 200;
 
 using namespace std;
 
-inline std::string number2String( const int value )
+inline std::string number2String(const int value)
 {
 	char name [ NAME_LENGTH ];
-	sprintf ( name, "%d", value );
+	sprintf (name, "%d", value);
 	return name;
 }
 
-inline std::string number2String ( const unsigned int value )
+inline std::string number2String (const unsigned int value)
 {
 	char name [ NAME_LENGTH ];
-	sprintf ( name, "%u", value );
+	sprintf (name, "%u", value);
 	return name;
 }
 
-inline std::string number2String ( const long value )
+inline std::string number2String (const long value)
 {
 	char name [ NAME_LENGTH ];
-	sprintf ( name, "%ld", value );
+	sprintf (name, "%ld", value);
 	return name;
 }
 
-inline std::string number2String ( const long long int value )
+inline std::string number2String (const long long int value)
 {
   char name [ NAME_LENGTH ];
-  sprintf ( name, "%lld", value );
+  sprintf (name, "%lld", value);
   return name;
 }
 
-inline std::string number2String( const unsigned long value )
+inline std::string number2String(const unsigned long value)
 {
 	char name [ NAME_LENGTH ];
-	sprintf ( name, "%lu", value );
+	sprintf (name, "%lu", value);
 	return name;
 }
 
-inline std::string number2String( const double value, int precision )
+inline std::string number2String(const double value, int precision)
 {
 	char name [ NAME_LENGTH ];
-	sprintf(name, "%.*f", precision, value );
+	sprintf(name, "%.*f", precision, value);
 
 	std::string strOut(name);
 	size_t found = strOut.find(', ');
@@ -658,7 +658,7 @@ void rgb2Hsv(const TeColor& c, int& h, int& s, int& v)
 // h = [0, 360], s = [0, 1], v = [0, 1]
 //		if s == 0, then h = -1 (undefined)
 
-void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v )
+void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v)
 {
     if(r == g && g == b) // achromatic (grey)
     {
@@ -678,7 +678,7 @@ void RGBtoHSV(const double& r, const double& g, const double& b, double& h, doub
 
     delta = max - min;
 
-    if( max != 0 )
+    if(max != 0)
         s = delta / max;		// s
     else {
         // r = g = b = 0		// s = 0, v is undefined
@@ -687,15 +687,15 @@ void RGBtoHSV(const double& r, const double& g, const double& b, double& h, doub
         return;
     }
 
-    if( r == max )
-        h = ( g - b ) / delta;		// between yellow & magenta
-    else if( g == max )
-        h = 2 + ( b - r ) / delta;	// between cyan & yellow
+    if(r == max)
+        h = (g - b) / delta;		// between yellow & magenta
+    else if(g == max)
+        h = 2 + (b - r) / delta;	// between cyan & yellow
     else
-        h = 4 + ( r - g ) / delta;	// between magenta & cyan
+        h = 4 + (r - g) / delta;	// between magenta & cyan
 
     h *= 60;				// degrees
-    if( h < 0 )
+    if(h < 0)
         h += 360;
 
 }
@@ -714,12 +714,12 @@ void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v)
     c.blue_ = ROUND(b * 255.);
 }
 
-void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s, const double& v )
+void HSVtoRGB(double& r, double& g, double& b, const double& h, const double& s, const double& v)
 {
     int i;
     double f, p, q, t, hh = h;
 
-    if( s == 0 || h == -1) {
+    if(s == 0 || h == -1) {
         // achromatic (grey)
         r = g = b = v;
         return;
@@ -728,11 +728,11 @@ void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s
     hh /= 60;			// sector 0 to 5
     i = ROUND(floor(hh));
     f = hh - i;			// factorial part of h
-    p = v * ( 1 - s );
-    q = v * ( 1 - s * f );
-    t = v * ( 1 - s * ( 1 - f ) );
+    p = v * (1 - s);
+    q = v * (1 - s * f);
+    t = v * (1 - s * (1 - f));
 
-    switch( i ) {
+    switch(i) {
         case 0:
             r = v;
             g = t;

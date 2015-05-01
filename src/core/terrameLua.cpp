@@ -115,7 +115,7 @@ void openLuaEnvironment()
 	//L = lua_open();
 	L = luaL_newstate();
 
-#if defined( TME_LUA_5_0 )
+#if defined(TME_LUA_5_0)
 	luaopen_base(L);			 // opens the basic library
 	luaopen_table(L);			// opens the table library
 	luaopen_io(L);			   // opens the I/O library
@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
 	// Loads lfs functions
 	luaopen_lfs(L);
 
-#if defined ( TME_WIN32 )
+#if defined (TME_WIN32)
 	tmePath.append("\\lua\\terrame.lua");
 #else
 	tmePath.append("/lua/terrame.lua");
@@ -278,12 +278,12 @@ int main(int argc, char *argv[])
 	}
 		
 #ifdef NOCPP_RAIAN
-		if ( argv[argument][0] == '-')
+		if (argv[argument][0] == '-')
 		{
-			if ( ! strcmp(argv[argument], "-draw-all-higher") )
+			if (! strcmp(argv[argument], "-draw-all-higher"))
 			{
 				bool ok = false;
-				double time = QString( argv[argument + 1] ).toDouble(&ok);
+				double time = QString(argv[argument + 1]).toDouble(&ok);
 				if (ok) //  && (time >= 0 && time <= 100))
 					BlackBoard::getInstance().setPercent(time * 0.01);
 				else
@@ -294,7 +294,7 @@ int main(int argc, char *argv[])
 			else if (! strcmp(argv[argument], "-workers"))
 			{
 				bool ok = false;
-				int number = QString( argv[argument + 1] ).toInt(&ok);
+				int number = QString(argv[argument + 1]).toInt(&ok);
 				if(ok) WORKERS_NUMBER = number;
 
 				argument++;
@@ -318,13 +318,13 @@ int main(int argc, char *argv[])
 			lua_setglobal(L, "TME_MODE");
 
 			// runs the lua files received as parameters
-			error =  luaL_loadfile(L, argv[argument] ) || lua_pcall(L, 0, 0, 0);
+			error =  luaL_loadfile(L, argv[argument]) || lua_pcall(L, 0, 0, 0);
 
 			if (error)
 			{
 				fprintf(stderr, "\n%s\n", lua_tostring(L, -1));
 				lua_pop(L, 1);  // pop error message from the stack
-				lua_close( L );
+				lua_close(L);
 				return false;
 			}
 		}

@@ -32,25 +32,25 @@ luaTrajectory::~luaTrajectory(void)
     luaRegion::clear();
 }
 
-int luaTrajectory::add( lua_State* L)
+int luaTrajectory::add(lua_State* L)
 {
     int i = luaL_checknumber(L, -2);
     luaCell *cell = (luaCell*)Luna<luaCell>::check(L, -1);
     CellIndex idx;
     idx.first = i;
     idx.second = 0;
-    luaRegion::add( idx, cell);
+    luaRegion::add(idx, cell);
 
     return 0;
 }
 
-int luaTrajectory::clear( lua_State *)
+int luaTrajectory::clear(lua_State *)
 {
     luaRegion::clear();
     return 0;
 }
 
-int luaTrajectory::createObserver( lua_State *L )
+int luaTrajectory::createObserver(lua_State *L)
 {
 
 #ifdef DEBUG_OBSERVER
@@ -127,7 +127,7 @@ int luaTrajectory::createObserver( lua_State *L )
 
                         if (lua_type(luaL, -2) == LUA_TSTRING)
                         {
-                            obsParams.append( luaL_checkstring(luaL, -2) );
+                            obsParams.append(luaL_checkstring(luaL, -2));
                         }
 
                         switch (lua_type(luaL, -1))
@@ -164,7 +164,7 @@ int luaTrajectory::createObserver( lua_State *L )
         {
             if (lua_type(luaL, -1) == LUA_TSTRING)
             {
-                // QString key( luaL_checkstring(luaL, -1) );
+                // QString key(luaL_checkstring(luaL, -1));
                 obsAttribs.push_back(luaL_checkstring(luaL, -1));
             }
             lua_pop(luaL, 1);
@@ -175,7 +175,7 @@ int luaTrajectory::createObserver( lua_State *L )
         while(lua_next(luaL, top) != 0)
         {
             if (lua_type(luaL, -2) == LUA_TSTRING)
-                allAttribs.append( luaL_checkstring(luaL, -2) );
+                allAttribs.append(luaL_checkstring(luaL, -2));
             lua_pop(luaL, 1);
         }
 
@@ -192,13 +192,13 @@ int luaTrajectory::createObserver( lua_State *L )
             // Checks if the given attribute really exists in the cell
             for (int i = 0; i < obsAttribs.size(); i++)
             {
-                if (! observedAttribs.contains(obsAttribs.at(i)) )
+                if (! observedAttribs.contains(obsAttribs.at(i)))
                     // observedAttribs.push_back(obsAttribs.at(i));
                     observedAttribs.insert(obsAttribs.at(i), "");
         
                 if (! allAttribs.contains(obsAttribs.at(i)))
                 {
-					string err_out = string("Attribute name '" ) + string (qPrintable(obsAttribs.at(i))) + string("' not found.");
+					string err_out = string("Attribute name '") + string (qPrintable(obsAttribs.at(i))) + string("' not found.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L, err_out.c_str());
 					//lua_pushnumber(L, 5);
@@ -307,7 +307,7 @@ int luaTrajectory::createObserver( lua_State *L )
             break;
 
         default:
-            if (execModes != Quiet )
+            if (execModes != Quiet)
             {
                 char str[12];
                 sprintf(str, "%d", typeObserver);
@@ -333,7 +333,7 @@ int luaTrajectory::createObserver( lua_State *L )
 
 		    if (cols.at(0).isNull() || cols.at(0).isEmpty())
 		    {
-                if (execModes != Quiet ){
+                if (execModes != Quiet){
                     string err_out = string("Filename was not specified, using a default '") + string(DEFAULT_NAME.toStdString()) + string("'.");
                     lua_getglobal(L, "customWarning");
                     lua_pushstring(L, err_out.c_str());
@@ -350,7 +350,7 @@ int luaTrajectory::createObserver( lua_State *L )
             // if not defined, use the default ";"
 		    if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
 		    {
-                if (execModes != Quiet ){
+                if (execModes != Quiet){
                     string err_out = string("Separator not defined, using ';'.");
                     lua_getglobal(L, "customWarning");
                     lua_pushstring(L, err_out.c_str());
@@ -380,7 +380,7 @@ int luaTrajectory::createObserver( lua_State *L )
 		    if ((cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
 		            || cols.at(1).isNull() || cols.at(1).isEmpty())
 		    {
-                if (execModes != Quiet ){
+                if (execModes != Quiet){
                     string err_out = string("Column title not defined.");
                     lua_getglobal(L, "customWarning");
                     lua_pushstring(L, err_out.c_str());
@@ -421,7 +421,7 @@ int luaTrajectory::createObserver( lua_State *L )
 		    // if (cols.at(0).isEmpty())
 		    if (cols.isEmpty())
 		    {
-                if (execModes != Quiet ){
+                if (execModes != Quiet){
                     string err_out = string("Port not defined.");
                     lua_getglobal(L, "customWarning");
                     lua_pushstring(L, err_out.c_str());
@@ -435,7 +435,7 @@ int luaTrajectory::createObserver( lua_State *L )
 		    }
 
 		    // broadcast
-		    if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
+		    if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()))
 		    {
 		        obsUDPSender->addHost(BROADCAST_HOST);
 		    }
@@ -469,7 +469,7 @@ int luaTrajectory::createObserver( lua_State *L )
         while(lua_next(luaL, top - 1) != 0)
         {
             // Retrieves the observer map ID
-            if ( (lua_isnumber(luaL, -1) && (! getObserverId)) )
+            if ((lua_isnumber(luaL, -1) && (! getObserverId)))
             {
                 obsId = luaL_checknumber(luaL, -1);
                 getObserverId = true;
@@ -500,7 +500,7 @@ int luaTrajectory::createObserver( lua_State *L )
                             double numAux;
                             QString strAux;
 
-                            switch( lua_type(luaL, -1) )
+                            switch(lua_type(luaL, -1))
                             {
                             case LUA_TBOOLEAN:
                                 boolAux = lua_toboolean(luaL, -1);
@@ -583,7 +583,7 @@ int luaTrajectory::createObserver( lua_State *L )
         
         for(int i = 0; i < obsAttribs.size(); i++)
         {
-            if (! observedAttribs.contains(obsAttribs.at(i)) )
+            if (! observedAttribs.contains(obsAttribs.at(i)))
                 // observedAttribs.push_back(obsAttribs.at(i));
                 observedAttribs.insert(obsAttribs.at(i), "");
         }
@@ -612,7 +612,7 @@ const TypesOfSubjects luaTrajectory::getType() const
     return subjectType;
 }
 
-int luaTrajectory::notify(lua_State *L )
+int luaTrajectory::notify(lua_State *L)
 {
     double time = luaL_checknumber(L, -1);
     TrajectorySubjectInterf::notify(time);
@@ -636,14 +636,14 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int /*observerI
     case 0:
         content = getAll(in, observedAttribs.keys());
         // serverSession->setState(observerId, 1);
-        // if (! QUIET_MODE )
+        // if (! QUIET_MODE)
         // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
         content = getChanges(in, observedAttribs.keys());
         // serverSession->setState(observerId, 0);
-        // if (! QUIET_MODE )
+        // if (! QUIET_MODE)
         // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
         break;
 	}
@@ -656,7 +656,7 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int /*observerI
 
 #else // TME_BLACK_BOARD
 
-QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId, const QStringList &  attribs )
+QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId, const QStringList &  attribs)
 {
 
 #ifdef DEBUG_OBSERVER
@@ -672,14 +672,14 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId,
     case 0:
         content = getAll(in, observerId, attribs);
         // serverSession->setState(observerId, 1);
-        // if (execModes == Quiet )
+        // if (execModes == Quiet)
         // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
         content = getChanges(in, observerId, attribs);
         // serverSession->setState(observerId, 0);
-        // if (execModes == Quiet )
+        // if (execModes == Quiet)
         // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
         break;
     }
@@ -726,16 +726,16 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
     ObserverDatagramPkg::RawAttribute *raw = 0;
 
     lua_pushnil(luaL);
-    while(lua_next(luaL, position ) != 0)
+    while(lua_next(luaL, position) != 0)
     {
         key = luaL_checkstring(luaL, -2);
 
         if ((attribs.contains(key)) || (key == "cells"))
         {
-            switch( lua_type(luaL, -1) )
+            switch(lua_type(luaL, -1))
             {
             case LUA_TBOOLEAN:
-                valueTmp = QByteArray::number( lua_toboolean(luaL, -1) );
+                valueTmp = QByteArray::number(lua_toboolean(luaL, -1));
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
@@ -788,7 +788,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
             case LUA_TTABLE:
             {
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
                 valueTmp = result;
 
                 if (observedAttribs.value(key) != valueTmp)
@@ -846,15 +846,15 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
                         raw = cellSubj->add_rawattributes();
                         raw->set_key("trajectory");
-                        raw->set_number( trajCount );
+                        raw->set_number(trajCount);
 
                         // Counts the occurrence of cell into trajectory
                         trajCount++;
 
-                        cellSubj->set_id( cell->getId() );
-                        cellSubj->set_type( ObserverDatagramPkg::TObsCell ); 
-                        cellSubj->set_attribsnumber( cellSubj->rawattributes_size() );
-                        cellSubj->set_itemsnumber( cellSubj->internalsubject_size() );
+                        cellSubj->set_id(cell->getId());
+                        cellSubj->set_type(ObserverDatagramPkg::TObsCell); 
+                        cellSubj->set_attribsnumber(cellSubj->rawattributes_size());
+                        cellSubj->set_itemsnumber(cellSubj->internalsubject_size());
                         valueChanged = true;
 
 
@@ -866,7 +866,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
             case LUA_TUSERDATA:
             {
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
                 valueTmp = result;
 
                 if (observedAttribs.value(key) != valueTmp)
@@ -886,7 +886,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
             case LUA_TFUNCTION:
             {
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
                 valueTmp = result;
 
                 if (observedAttribs.value(key) != valueTmp)
@@ -906,7 +906,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
             default:
             {
-                sprintf(result, "%p", lua_topointer(luaL, -1) );
+                sprintf(result, "%p", lua_topointer(luaL, -1));
                 valueTmp = result;
 
                 if (observedAttribs.value(key) != valueTmp)
@@ -940,10 +940,10 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
         currSubj->set_type(ObserverDatagramPkg::TObsTrajectory);
 
         // #attrs
-        currSubj->set_attribsnumber( currSubj->rawattributes_size() );
+        currSubj->set_attribsnumber(currSubj->rawattributes_size());
 
         // #elements
-        currSubj->set_itemsnumber( currSubj->internalsubject_size() );
+        currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
 #ifdef DEBUG_OBSERVER	
             std::cout << currSubj->DebugString();
@@ -1009,7 +1009,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
     QByteArray text, key, attrs, elements;
 
     lua_pushnil(luaL);
-    while(lua_next(luaL, pos ) != 0)
+    while(lua_next(luaL, pos) != 0)
     {
         if (lua_type(luaL, -2) == LUA_TSTRING)
         {
@@ -1032,12 +1032,12 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
             attrs.append(key);
             attrs.append(PROTOCOL_SEPARATOR);
 
-            switch( lua_type(luaL, -1) )
+            switch(lua_type(luaL, -1))
             {
             case LUA_TBOOLEAN:
                 attrs.append(QByteArray::number(TObsBool));
                 attrs.append(PROTOCOL_SEPARATOR);
-                attrs.append(QByteArray::number( lua_toboolean(luaL, -1)));
+                attrs.append(QByteArray::number(lua_toboolean(luaL, -1)));
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
@@ -1052,17 +1052,17 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
 
             case LUA_TSTRING:
                 text = QString(luaL_checkstring(luaL, -1));
-                attrs.append(QByteArray::number(TObsText) );
+                attrs.append(QByteArray::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
-                attrs.append( (text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text) );
+                attrs.append((text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text));
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
             case LUA_TTABLE:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1) );
-                    attrs.append(QByteArray::number(TObsText) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    attrs.append(QByteArray::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append("Lua-Address(TB): " + QByteArray(result));
                     attrs.append(PROTOCOL_SEPARATOR);
@@ -1103,8 +1103,8 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
             case LUA_TUSERDATA	:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1) );
-                    attrs.append(QByteArray::number(TObsText) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    attrs.append(QByteArray::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append("Lua-Address(UD): " + QByteArray(result));
                     attrs.append(PROTOCOL_SEPARATOR);
@@ -1114,8 +1114,8 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
             case LUA_TFUNCTION:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1) );
-                    attrs.append(QByteArray::number(TObsText) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    attrs.append(QByteArray::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append("Lua-Address(FT): " + QByteArray(result));
                     attrs.append(PROTOCOL_SEPARATOR);
@@ -1125,8 +1125,8 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
             default:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1) );
-                    attrs.append(QByteArray::number(TObsText) );
+                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    attrs.append(QByteArray::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
                     attrs.append("Lua-Address(O): " + QByteArray(result));
                     attrs.append(PROTOCOL_SEPARATOR);
@@ -1139,11 +1139,11 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
 
     // #attrs
     msg.append(QByteArray::number(attrCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
 
     // #elements
     msg.append(QByteArray::number(elementCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
     msg.append(attrs);
 
     msg.append(PROTOCOL_SEPARATOR);

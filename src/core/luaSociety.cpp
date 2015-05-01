@@ -63,20 +63,20 @@ luaSociety::luaSociety(lua_State *L)
 }
 
 /// destructor
-luaSociety::~luaSociety( void ) { }
+luaSociety::~luaSociety(void) { }
 
 /// Gets the luaSociety identifier
-int luaSociety::getID( lua_State *L )
+int luaSociety::getID(lua_State *L)
 {
-	lua_pushstring(L, objectId_.c_str() );
+	lua_pushstring(L, objectId_.c_str());
 	return 1;
 }
 
 /// Sets the luaSociety identifier
-int luaSociety::setID( lua_State *L )
+int luaSociety::setID(lua_State *L)
 {
-	const char* id = luaL_checkstring( L , -1);
-	objectId_ = string( id );
+	const char* id = luaL_checkstring(L , -1);
+	objectId_ = string(id);
 	return 0;
 }
 
@@ -160,7 +160,7 @@ int luaSociety::createObserver(lua_State * luaL)
 
 		// qDebug() << "Retrieves the parameters table";
 		lua_pushnil(luaL);
-		while(lua_next(luaL, top - 1 ) != 0)
+		while(lua_next(luaL, top - 1) != 0)
 		{
 			QString key;
 
@@ -262,7 +262,7 @@ int luaSociety::createObserver(lua_State * luaL)
 				// Checks if the given attribute really exists in the cell
 				for(int i = 0; i < obsAttribs.size(); i++)
 				{
-					if(!observedAttribs.contains(obsAttribs.at(i)) )
+					if(!observedAttribs.contains(obsAttribs.at(i)))
 						observedAttribs.insert(obsAttribs.at(i), "");
 
 					if(!allSocietyAttribs.contains(obsAttribs.at(i)))
@@ -370,10 +370,10 @@ int luaSociety::createObserver(lua_State * luaL)
 					break;
 
 				default:
-					if (execModes != Quiet )
+					if (execModes != Quiet)
 					{
 						qWarning("In this context, the code '%s' does not correspond to a "
-								 "valid type of Observer.",  getObserverName(typeObserver) );
+								 "valid type of Observer.",  getObserverName(typeObserver));
 					}
 					return 0;
 			}
@@ -391,7 +391,7 @@ int luaSociety::createObserver(lua_State * luaL)
 
 				if (cols.at(0).isNull() || cols.at(0).isEmpty())
 				{
-					if (execModes != Quiet )
+					if (execModes != Quiet)
 						qWarning("Filename was not specified, using a "
 								 "default \"%s\".", qPrintable(DEFAULT_NAME));
 					obsLog->setFileName(DEFAULT_NAME + ".csv");
@@ -404,7 +404,7 @@ int luaSociety::createObserver(lua_State * luaL)
 				// if not defined, use the default ";"
 				if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
 				{
-					if (execModes != Quiet )
+					if (execModes != Quiet)
 						qWarning("Separator not defined, using \";\".");
 					obsLog->setSeparator();
 				}
@@ -429,7 +429,7 @@ int luaSociety::createObserver(lua_State * luaL)
 				if ((cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
 					|| cols.at(1).isNull() || cols.at(1).isEmpty())
 				{
-					if (execModes != Quiet )
+					if (execModes != Quiet)
 						qWarning("Column title not defined.");
 				}
 
@@ -466,7 +466,7 @@ int luaSociety::createObserver(lua_State * luaL)
 
 				if (cols.isEmpty())
 				{
-					if (execModes != Quiet )
+					if (execModes != Quiet)
 						qWarning("Port not defined.");
 				}
 				else
@@ -475,9 +475,9 @@ int luaSociety::createObserver(lua_State * luaL)
 				}
 
 				// broadcast
-				if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
+				if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()))
 				{
-					if (execModes != Quiet )
+					if (execModes != Quiet)
 					{
 						string err_out = string("Observer will send to broadcast.");
 						lua_getglobal(L, "customWarning");
@@ -519,7 +519,7 @@ int luaSociety::createObserver(lua_State * luaL)
         // Retrieves all agent attributes
         // seeking only the agent class
 		lua_pushnil(luaL);
-		while(lua_next(luaL, top ) != 0)
+		while(lua_next(luaL, top) != 0)
 		{
 			if (lua_type(luaL, -2) == LUA_TSTRING)
 			{
@@ -529,7 +529,7 @@ int luaSociety::createObserver(lua_State * luaL)
 				if (key == "class")
 				{
 					attrClassName.append(" (");
-					attrClassName.append( luaL_checkstring(luaL, -1) );
+					attrClassName.append(luaL_checkstring(luaL, -1));
 					attrClassName.append(")");
 				}
 			}
@@ -541,7 +541,7 @@ int luaSociety::createObserver(lua_State * luaL)
 		while(lua_next(luaL, top - 1) != 0)
 		{
 			// Retrieves the observer map ID
-			if ( (lua_isnumber(luaL, -1) && (! getObserverId)) )
+			if ((lua_isnumber(luaL, -1) && (! getObserverId)))
 			{
 				obsId = luaL_checknumber(luaL, -1);
 				getObserverId = true;
@@ -572,7 +572,7 @@ int luaSociety::createObserver(lua_State * luaL)
 							double numAux;
 							QString strAux;
 
-							switch( lua_type(luaL, -1) )
+							switch(lua_type(luaL, -1))
 							{
 							case LUA_TBOOLEAN:
 								boolAux = lua_toboolean(luaL, -1);
@@ -657,7 +657,7 @@ int luaSociety::createObserver(lua_State * luaL)
 		
 		for(int i = 0; i < obsAttribs.size(); i++)
 		{
-			if (! observedAttribs.contains(obsAttribs.at(i)) )
+			if (! observedAttribs.contains(obsAttribs.at(i)))
 				// observedAttribs.push_back(obsAttribs.at(i));
 				observedAttribs.insert(obsAttribs.at(i), "");
 		}
@@ -697,7 +697,7 @@ const TypesOfSubjects luaSociety::getType() const
 }
 
 /// Notifies observers about changes in the luaSociety internal state
-int luaSociety::notify(lua_State *L )
+int luaSociety::notify(lua_State *L)
 {
 #ifdef TME_STATISTIC
 	double t = Statistic::getInstance().startTime();
@@ -726,7 +726,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/
 		content = getAll(in, (QStringList)observedAttribs.keys());
 			
 		// serverSession->setState(observerId, 1);
-		//if (! QUIET_MODE )
+		//if (! QUIET_MODE)
 		// 	qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
 		break;
 
@@ -734,7 +734,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/
 		content = getChanges(in, (QStringList) observedAttribs.keys());
 			
 		// serverSession->setState(observerId, 0);
-		//if (! QUIET_MODE )
+		//if (! QUIET_MODE)
 		// 	qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
 		break;
 	}
@@ -842,7 +842,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 				break;
 			case LUA_TTABLE:
 			{
-				sprintf(result, "%p", lua_topointer(luaL, -1) );
+				sprintf(result, "%p", lua_topointer(luaL, -1));
 				valueTmp = result;
 
 				if(observedAttribs.value(key) != valueTmp)
@@ -890,7 +890,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 			}
 			case LUA_TUSERDATA:
 			{
-				sprintf(result, "%p", lua_topointer(luaL, -1) );
+				sprintf(result, "%p", lua_topointer(luaL, -1));
 				valueTmp = result;
 
 				if(observedAttribs.value(key) != valueTmp)
@@ -909,7 +909,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 			}
 			case LUA_TFUNCTION:
 			{
-				sprintf(result, "%p", lua_topointer(luaL, -1) );
+				sprintf(result, "%p", lua_topointer(luaL, -1));
 				valueTmp = result;
 
 				if(observedAttribs.value(key) != valueTmp)
@@ -929,7 +929,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 			default:
 			{
-				sprintf(result, "%p", lua_topointer(luaL, -1) );
+				sprintf(result, "%p", lua_topointer(luaL, -1));
 				valueTmp = result;
 
 				if(observedAttribs.value(key) != valueTmp)
@@ -1057,7 +1057,7 @@ int luaSociety::kill(lua_State *luaL)
 /// Gets the luaSociety position of the luaSociety in the Lua stack
 /// \param L is a pointer to the Lua stack
 /// \param cell is a pointer to the cell within the Lua stack
-void getReference( lua_State *L, luaSociety *cell )
+void getReference(lua_State *L, luaSociety *cell)
 {
 	cell->getReference(L);
 }

@@ -63,10 +63,10 @@ class CellImpl : public Implementation
 public:
 	/// Copies the block of memory used by the implementation of cell.
 	/// \return A pointer to the copied block of memory (the cells implementation).
-	CellImpl* clone( void )
+	CellImpl* clone(void)
 	{
 		CellImpl *copy = (CellImpl*) new char[sizeof(CellImpl)];
-		memcpy( copy, this, sizeof(CellImpl) );
+		memcpy(copy, this, sizeof(CellImpl));
 		return copy;
 	}
 
@@ -81,11 +81,11 @@ public:
 	/// Updates the tracked state (control mode) of a certain agent within the cell.
 	/// \param  agent is a pointer to an agent within the cell.
 	/// \param controlMode is a pointer to the new agent tracked control mode (discrete state).
-	void attachControlMode(Agent *agent, ControlMode *controlMode ) {
+	void attachControlMode(Agent *agent, ControlMode *controlMode) {
 
 		// improve here
-		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find( agent );
-		if( location != targetControlMode_.end() )
+		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
+		if(location != targetControlMode_.end())
 		{
 			targetControlMode_.erase(agent);
 			targetControlMode_.insert(map<Agent*, ControlMode*>::value_type(agent, controlMode));
@@ -97,9 +97,9 @@ public:
 	/// Releases the tracked state (control mode) of a agent within the cell
 	/// \param agent is a pointer to an agent within the cell
 	/// \return true - if success, false - otherwise
-	bool detachControlMode(Agent *agent ){
-		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find( agent );
-		if ( location != targetControlMode_.end())
+	bool detachControlMode(Agent *agent){
+		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
+		if (location != targetControlMode_.end())
 		{
 			targetControlMode_.erase(agent);
 			return true;
@@ -140,13 +140,13 @@ public:
 
 	///  Sets the Cell's internal state latency counter to "value".
 	/// \param value is a positive number (next version this should be checked).
-	void setLatency(int value) { if( value >= 0 ) latency = value; }
+	void setLatency(int value) { if(value >= 0) latency = value; }
 
 	/// Gets the list of neighborhood graphs from the cell
 	/// \return A reference to the list of neighborhoods.
 	NeighCmpstInterf& getNeighborhoods(void) {
 
-#if defined( DEBUG_NEIGH )
+#if defined(DEBUG_NEIGH)
 		cout << "C++, interno cell: "<< &neighborhoods_ << endl;
 #endif
 
@@ -203,16 +203,16 @@ public:
 	/// HANDLE - Releases the tracked state (control mode) of a agent within the cell
 	/// \param agent is a pointer to an agent within the cell
 	/// \return true - if success, false - otherwise
-	bool detachControlMode(Agent *agent){ pImpl_->detachControlMode( agent ); return true; }
+	bool detachControlMode(Agent *agent){ pImpl_->detachControlMode(agent); return true; }
 
 	/// HANDLE - Returns the current control model of a Automaton (Local Agent) within the cell
 	/// \param agent is a pointer to a local agent within the cell
 	/// \return true - if success, false - otherwise
-	ControlMode* getControlMode(LocalAgent *agent){ return pImpl_->getControlMode( agent ); }
+	ControlMode* getControlMode(LocalAgent *agent){ return pImpl_->getControlMode(agent); }
 
 	///  HANDLE - Sets the Cell's internal state latency counter to "value".
 	/// \param value is a positive number (next version this should be checked).
-	void setLatency(int value) { pImpl_->setLatency( value ); }
+	void setLatency(int value) { pImpl_->setLatency(value); }
 
 	/// HANDLE - Gets the simulation ticks elapsed since the last change in the cell
 	/// \return A integer representing the time elapsed (next version this should be checked).

@@ -66,7 +66,7 @@ luaCell::luaCell(lua_State *L)
 	msgShow = false;
 #endif
 
-	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
+	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
 	it = nhgs.begin();
 
 	luaL = L;
@@ -77,12 +77,12 @@ luaCell::luaCell(lua_State *L)
 }
 
 /// Returns the current internal state of the LocalAgent (Automaton) within the cell and received as parameter
-int luaCell::getCurrentStateName( lua_State *L )
+int luaCell::getCurrentStateName(lua_State *L)
 {
 	luaLocalAgent *agent = Luna<luaLocalAgent>::check(L, -1);
 	ControlMode* controlMode = getControlMode((LocalAgent*)agent);
 
-	if( controlMode) lua_pushstring( L, controlMode->getControlModeName( ).c_str() );
+	if(controlMode) lua_pushstring(L, controlMode->getControlModeName().c_str());
 	else lua_pushnil(L);
 
 	return 1;
@@ -90,14 +90,14 @@ int luaCell::getCurrentStateName( lua_State *L )
 
 /// Puts the iterator in the beginning of the luaNeighborhood composite.
 int luaCell::first(lua_State *){
-	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
+	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
 	it = nhgs.begin();
 	return 0;
 }
 
 /// Puts the iterator in the end of the luaNeighborhood composite.
 int luaCell::last(lua_State *) {
-	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
+	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
 	it = nhgs.end();
 	return 1;
 }
@@ -105,7 +105,7 @@ int luaCell::last(lua_State *) {
 /// Returns true if the Neighborhood iterator is in the beginning of the Neighbor composite data structure
 /// no parameters
 int luaCell::isFirst(lua_State *L) {
-	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
+	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
 	lua_pushboolean(L, it == nhgs.begin());
 	return  1;
 }
@@ -113,7 +113,7 @@ int luaCell::isFirst(lua_State *L) {
 /// Returns true if the Neighborhood iterator is in the end of the Neighbor composite data structure
 /// no parameters
 int luaCell::isLast(lua_State *L) {
-	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
+	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
 	lua_pushboolean(L, it == nhgs.end());
 	return  1;
 }
@@ -121,37 +121,37 @@ int luaCell::isLast(lua_State *L) {
 /// Returns true if the Neighborhood is empty.
 /// no parameters
 int luaCell::isEmpty(lua_State *L) {
-	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
-	lua_pushboolean(L, nhgs.empty() );
+	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
+	lua_pushboolean(L, nhgs.empty());
 	return 1;
 }
 
 /// Clears all the Neighborhood content
 /// no parameters
 int luaCell::clear(lua_State *) {
-	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
-	nhgs.clear( );
+	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
+	nhgs.clear();
 	return 0;
 }
 
 /// Returns the number of Neighbors cells in the Neighborhood
 int luaCell::size(lua_State *) {
-	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
-	lua_pushnumber(L, nhgs.size( ));
+	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
+	lua_pushnumber(L, nhgs.size());
 	return 1;
 }
 
 /// Fowards the Neighborhood iterator to the next Neighbor cell
 // no parameters
-int luaCell::next( lua_State * )
+int luaCell::next(lua_State *)
 {
-	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
-	if( it != nhgs.end() ) it++;
+	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
+	if(it != nhgs.end()) it++;
 	return 0;
 }
 
 /// destructor
-luaCell::~luaCell( void ) { }
+luaCell::~luaCell(void) { }
 
 /// Sets the Cell latency
 int luaCell::setLatency(lua_State *L) { Cell::setLatency(luaL_checknumber(L, 1)); return 0; }
@@ -167,19 +167,19 @@ int luaCell::setNeighborhood(lua_State *) {
 
 /// Gets the current active luaNeighboorhood
 int luaCell::getCurrentNeighborhood(lua_State *L) {
-	NeighCmpstInterf& nhgs = Cell::getNeighborhoods( );
-	if( it !=  nhgs.end() )
+	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
+	if(it !=  nhgs.end())
 	{
 		luaNeighborhood* neigh = (luaNeighborhood*) it->second;
 
-		if( neigh != NULL )
+		if(neigh != NULL)
 			neigh->getReference(L);
 		else
-			lua_pushnil( L );
+			lua_pushnil(L);
 
 	}
 	else
-		lua_pushnil( L );
+		lua_pushnil(L);
 
 	return 1;
 }
@@ -190,23 +190,23 @@ int luaCell::getNeighborhood(lua_State *L) {
 
 	// Get and test parameters
 	const char* charIndex = luaL_checkstring(L, -1);
-	string index = string( charIndex );
-	if( neighs.empty() ) lua_pushnil(L); // return nil
+	string index = string(charIndex);
+	if(neighs.empty()) lua_pushnil(L); // return nil
 	else
 	{
 		// Get the cell	neighborhood
-		NeighCmpstInterf::iterator location = neighs.find( index );
-		if ( location == neighs.end())
+		NeighCmpstInterf::iterator location = neighs.find(index);
+		if (location == neighs.end())
 		{
-			lua_pushnil( L );
+			lua_pushnil(L);
 			return 1;
 		}
 		luaNeighborhood* neigh = (luaNeighborhood*) location->second;
 
-		if( neigh != NULL )
+		if(neigh != NULL)
 			neigh->getReference(L);
 		else
-			lua_pushnil( L );
+			lua_pushnil(L);
 	}
 
 	return 1;
@@ -214,9 +214,9 @@ int luaCell::getNeighborhood(lua_State *L) {
 
 /// Adds a new luaNeighborhood graph to the Cell
 /// parameters: identifier, luaNeighborhood
-int luaCell::addNeighborhood( lua_State *L )
+int luaCell::addNeighborhood(lua_State *L)
 {
-	string id = string( luaL_checkstring(L, -2) );
+	string id = string(luaL_checkstring(L, -2));
 	luaNeighborhood* neigh = Luna<luaNeighborhood>::check(L, -1);
 	NeighCmpstInterf& neighs = Cell::getNeighborhoods();
 	pair< string, CellNeighborhood*> pStrNeigh;
@@ -227,37 +227,37 @@ int luaCell::addNeighborhood( lua_State *L )
 
 	pStrNeigh.first = id;
 	pStrNeigh.second = neigh;
-	neighs.erase(id );
-	neighs.add( pStrNeigh );
+	neighs.erase(id);
+	neighs.add(pStrNeigh);
 	it = neighs.begin();
 	return 0;
 }
 
 /// Synchronizes the luaCell
 int luaCell::synchronize(lua_State *) {
-	Cell::synchronize( sizeof(luaCell) ); // parametro nao testado
+	Cell::synchronize(sizeof(luaCell)); // parametro nao testado
 	return 0;
 }
 
 /// Gets the luaCell identifier
-int luaCell::getID( lua_State *L )
+int luaCell::getID(lua_State *L)
 {
-	lua_pushstring(L, objectId_.c_str() );
+	lua_pushstring(L, objectId_.c_str());
 	return 1;
 }
 
 /// Gets the luaCell identifier
 /// \author Raian Vargas Maretto
-const char* luaCell::getID( )
+const char* luaCell::getID()
 {
 	return this->objectId_.c_str();
 }
 
 /// Sets the luaCell identifier
-int luaCell::setID( lua_State *L )
+int luaCell::setID(lua_State *L)
 {
-	const char* id = luaL_checkstring( L , -1);
-	objectId_ = string( id );
+	const char* id = luaL_checkstring(L , -1);
+	objectId_ = string(id);
 	return 0;
 }
 
@@ -322,7 +322,7 @@ int luaCell::createObserver(lua_State *)
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top) != 0)
 		{
-			QString key( luaL_checkstring(luaL, -2) );
+			QString key(luaL_checkstring(luaL, -2));
 
 			allAttribs.push_back(key);
 			lua_pop(luaL, 1);
@@ -427,7 +427,7 @@ int luaCell::createObserver(lua_State *)
 					switch(lua_type(luaL, -1))
 					{
 					case LUA_TNUMBER:
-						cols.append(QString::number(luaL_checknumber(luaL, -1)) );
+						cols.append(QString::number(luaL_checknumber(luaL, -1)));
 						break;
 
 					case LUA_TSTRING:
@@ -617,7 +617,7 @@ int luaCell::createObserver(lua_State *)
 				obsLog->setFileName(cols.at(0));
 
 			if((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty()){
-				if (execModes != Quiet ){
+				if (execModes != Quiet){
 					string err_out = string("Parameter 'separator' not defined, using ';'.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
@@ -712,7 +712,7 @@ int luaCell::createObserver(lua_State *)
 			obsTCPSender->setAttributes(obsAttribs);
 
 			if (cols.isEmpty()){
-				if (execModes != Quiet ){
+				if (execModes != Quiet){
 					string err_out = string("Port not defined.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
@@ -756,7 +756,7 @@ int luaCell::createObserver(lua_State *)
 //		while(lua_next(luaL, top - 1) != 0)
 //		{
 //			// Retrieves the ID from observer map
-//			if( lua_isnumber(luaL, -1) && (!getObserverID) )
+//			if(lua_isnumber(luaL, -1) && (!getObserverID))
 //			{
 //				obsID = luaL_checknumber(luaL, -1);
 //				getObserverID = true;
@@ -869,7 +869,7 @@ const TypesOfSubjects luaCell::getType() const
 }
 
 /// Notifies observers about changes in the luaCell internal state
-int luaCell::notify(lua_State *L )
+int luaCell::notify(lua_State *L)
 {
 	double time = luaL_checknumber(L, -1);
 	CellSubjectInterf::notify(time);
@@ -977,7 +977,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 				switch(lua_type(luaL, -1))
 				{
 				case LUA_TBOOLEAN:
-					valueTmp = QByteArray::number( lua_toboolean(luaL, -1) );
+					valueTmp = QByteArray::number(lua_toboolean(luaL, -1));
 
 					if(observedAttribs.value(key) != valueTmp)
 					{					   
@@ -1045,7 +1045,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 							raw = cellSubj->add_rawattributes();
 							raw->set_key(key);
-							raw->set_text( LUA_ADDRESS_TABLE + static_cast<const char*>(result) );
+							raw->set_text(LUA_ADDRESS_TABLE + static_cast<const char*>(result));
 
 							valueChanged = true;
 							observedAttribs.insert(key, valueTmp);
@@ -1075,7 +1075,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 				case LUA_TFUNCTION:
 				{
-					sprintf(result, "%p", lua_topointer(luaL, -1) );
+					sprintf(result, "%p", lua_topointer(luaL, -1));
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
@@ -1095,7 +1095,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 				default:
 				{
-					sprintf(result, "%p", lua_topointer(luaL, -1) );
+					sprintf(result, "%p", lua_topointer(luaL, -1));
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
@@ -1123,7 +1123,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 				cellSubj = parentSubj->add_internalsubject();					
 
 			// id
-			cellSubj->set_id( getId() );
+			cellSubj->set_id(getId());
 
 			// subjectType
 			cellSubj->set_type(ObserverDatagramPkg::TObsCell);
@@ -1271,11 +1271,11 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 		}
 
 		msg.append(QString::number(attrCounter));
-		msg.append(PROTOCOL_SEPARATOR );
+		msg.append(PROTOCOL_SEPARATOR);
 
 		// #elements
 		msg.append("0");
-		msg.append(PROTOCOL_SEPARATOR );
+		msg.append(PROTOCOL_SEPARATOR);
 
 		msg.append(attrs);
 
@@ -1330,14 +1330,14 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int /*observerId*/, c
 			content = getAll(in, (QStringList)observedAttribs.keys());
 
 		// serverSession->setState(observerId, 1);
-		// if (execModes == Quiet )
+		// if (execModes == Quiet)
 		// qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
 		break;
 	case 1:
 			content = getChanges(in, (QStringList) observedAttribs.keys());
 
 		// serverSession->setState(observerId, 0);
-		// if (execModes == Quiet )
+		// if (execModes == Quiet)
 		// qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
 		break;
 	}
@@ -1366,14 +1366,14 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId, QStri
 			content = getAll(in, observerId, attribs);
 
 			// serverSession->setState(observerId, 1);
-			// if (! QUIET_MODE )
+			// if (! QUIET_MODE)
 			// qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
 			break;
 		case 1:
 			content = getChanges(in, observerId, attribs);
 
 			// serverSession->setState(observerId, 0);
-			// if (! QUIET_MODE )
+			// if (! QUIET_MODE)
 			// qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
 			break;
 	}

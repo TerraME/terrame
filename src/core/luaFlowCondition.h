@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaFlowCondition objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined( LUAFLOWCONDITION_H )
+#if ! defined(LUAFLOWCONDITION_H)
 #define LUAFLOWCONDITION_H
 
 #include "luaRule.h"
@@ -49,7 +49,7 @@ public:
     
 public:
     /// Constructor
-    luaFlowCondition( lua_State *)
+    luaFlowCondition(lua_State *)
     {
         subjectType = TObsUnknown;
     }
@@ -59,7 +59,7 @@ public:
     /// \param agent is the Agent been executed
     /// \param cellIndexPair is the Cell - CellIndex pair where the luaJumpCondition is being executed
     /// \return A boolean value: true if the rule does not throw a exception, otherwise false.
-    bool execute ( Event &event, Agent *agent, pair<CellIndex, Cell*> &cellIndexPair )
+    bool execute (Event &event, Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
     {
         try {
 
@@ -75,25 +75,25 @@ public:
 
             // puts the rule parameters on stack top
             ev->getReference(L);
-            if( dynamic_cast<luaGlobalAgent*>(agent) )
+            if(dynamic_cast<luaGlobalAgent*>(agent))
             {
                 luaGlobalAgent* ag = (luaGlobalAgent*) agent;
                 ag->getReference(L);
-                if( cell != NULL ) cell->getReference(L);
+                if(cell != NULL) cell->getReference(L);
                 else lua_pushnil(L);
             }
             else
             {
                 luaLocalAgent* ag = (luaLocalAgent*) agent;
                 ag->getReference(L);
-                if( cell != NULL ) cell->getReference(L);
+                if(cell != NULL) cell->getReference(L);
                 else lua_pushnil(L);
             }
 
             // calls the "execute" function of the rule
-            if( lua_pcall( L, 3, 1, 0) != 0 )
+            if(lua_pcall(L, 3, 1, 0) != 0)
             {
-                string err_out = string(" Error: rule can not be executed " ) + string (lua_tostring(L, -1)) + string("\".\n");
+                string err_out = string(" Error: rule can not be executed ") + string (lua_tostring(L, -1)) + string("\".\n");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L, err_out.c_str());
                 //lua_pushnumber(L, 4);
@@ -101,7 +101,7 @@ public:
                 return 0;
             }
 
-            result = lua_tonumber( L, -1);
+            result = lua_tonumber(L, -1);
             lua_pop(L, 1);  // pop returned value
 
             return result;

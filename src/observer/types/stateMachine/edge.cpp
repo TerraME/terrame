@@ -56,7 +56,7 @@ void Edge::updatePosition()
     //                mapFromItem((QGraphicsItem *) origin, QPointF(0, 0)));
     //    setLine(line);
     // update();
-    // update( boundingRect() );
+    // update(boundingRect());
 }
 
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

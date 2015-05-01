@@ -44,8 +44,8 @@ void luaStackToQString(int size)
     printf("\n");
     for (int i = 0; i < size; i++)
     {
-        printf("%i - %s \t %p\n", i, lua_typename(luaL, lua_type(luaL, (i * -1) )),
-               lua_topointer(luaL,  (i * -1) ));
+        printf("%i - %s \t %p\n", i, lua_typename(luaL, lua_type(luaL, (i * -1))),
+               lua_topointer(luaL,  (i * -1)));
     }
     printf("\n");
 }
@@ -142,16 +142,16 @@ int isudatatype (lua_State *L, int idx, const char *name)
 /// \param x is a natural number returned by this function
 /// \param y is a natural number returned by this function
 // RODRIGO
-//void objectId2coords( const char const * objId, int &x, int &y)
-void objectId2coords( const char * objId, int &x, int &y)
+//void objectId2coords(const char const * objId, int &x, int &y)
+void objectId2coords(const char * objId, int &x, int &y)
 {
     char lin[32], col[32];
     char seps[] = "CL";
     char aux[255]="";
 
     strncpy(aux, objId, strlen(objId));
-    strcpy( col, strtok( (char*)aux, seps ));
-    strcpy( lin,  strtok( NULL, seps ) );
+    strcpy(col, strtok((char*)aux, seps));
+    strcpy(lin,  strtok(NULL, seps));
     //cout << "{" << col <<", "<< lin <<"}" << endl;
     x = atoi(col);
     y = atoi(lin);
@@ -168,16 +168,16 @@ void objectId2coords( const char * objId, int &x, int &y)
 /// \param db is a pointer to a TerraLib database
 /// \param tableName is the name of the table being removed
 /// \return Return true in case of success, otherwise it returns false.
-bool deleteLayerTableName ( TeDatabase *db, std::string &tableName )
+bool deleteLayerTableName (TeDatabase *db, std::string &tableName)
 {
     TeDatabasePortal* portal = db->getPortal();
 
-    if( !portal )
+    if(!portal)
         return false;
 
     string query = "SELECT attr_table, table_id FROM te_layer_table WHERE attr_table = '" + tableName + "'";
 
-    if( !portal->query( query ) )
+    if(!portal->query(query))
     {
         delete portal;
         return false;
@@ -187,14 +187,14 @@ bool deleteLayerTableName ( TeDatabase *db, std::string &tableName )
     string attrTable;
     string tableId;
     string drop;
-    while ( portal->fetchRow() )
+    while (portal->fetchRow())
     {
         attrTable = portal->getData(0);
         tableId = portal->getData(1);
         //drop = "DROP TABLE " + attrTable;
-        if( db->tableExist( attrTable ) )
+        if(db->tableExist(attrTable))
         {
-            if( !db->deleteTable( attrTable ) ) //if( !db->execute( drop ) )
+            if(!db->deleteTable(attrTable)) //if(!db->execute(drop))
             {
                 cout << "Error: fail to delete table \"" << attrTable
                      << db->errorMessage() << endl;
@@ -203,7 +203,7 @@ bool deleteLayerTableName ( TeDatabase *db, std::string &tableName )
                 return false;
             }
         }
-        tableIds.push_back( atoi ( tableId.c_str() ) );
+        tableIds.push_back(atoi (tableId.c_str()));
 
         string del = "DELETE FROM te_layer_table WHERE table_id = "+ tableId;
         db->execute(del);
@@ -212,7 +212,7 @@ bool deleteLayerTableName ( TeDatabase *db, std::string &tableName )
     delete portal;
     string del;
     del = "DELETE FROM te_layer_table WHERE attr_table = '" + tableName + "'";
-    if ( !db->execute ( del ) )
+    if (!db->execute (del))
         return false;
     return true;
 } 
@@ -231,12 +231,12 @@ bool deleteLayerTableName ( TeDatabase *db, std::string &tableName )
 /// \param layer is a pointer to the TerrraLib TeLayer object to which Theme will be attached
 /// \param db is a pointer to the TerrraLib database into which the Theme will be inserted
 /// \param theme is a pointer to the TeTheme object being added to the geographical database
-bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, string inputThemeName, TeView *view, TeLayer *layer, TeDatabase *db, TeTheme *theme )
+bool createNewTheme(TeTable attTable, char outputTable[], string whereClause, string inputThemeName, TeView *view, TeLayer *layer, TeDatabase *db, TeTheme *theme)
 {
-    TeTheme inputTheme( inputThemeName, layer); // Raian
+    TeTheme inputTheme(inputThemeName, layer); // Raian
     /// load the inputTheme properties
     // loads the existing view
-    if( !db->loadTheme( &inputTheme ) )
+    if(!db->loadTheme(&inputTheme))
     {
         cout << "Error: fail to load theme \"" << inputThemeName
              << db->errorMessage() << endl;
@@ -246,7 +246,7 @@ bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, s
 
     view->add(theme);
 
-    if( ! whereClause. empty() ) theme->attributeRest(whereClause);
+    if(! whereClause. empty()) theme->attributeRest(whereClause);
 
     // Set a default visual for the geometries of the objects of the layer
     // Polygons will be set with the blue color
@@ -266,8 +266,8 @@ bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, s
 
     // Select all the attribute tables of the inputTheme
     // and add the new attribute table
-    theme->setAttTables( inputTheme.attrTables() );
-    theme->addThemeTable( attTable );
+    theme->setAttTables(inputTheme.attrTables());
+    theme->addThemeTable(attTable);
 
     // Save the theme in the database
     if (!theme->save())
@@ -306,7 +306,7 @@ bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, s
         return false;
     }
     // ------------------------ collection aux
-    if( !attrsDim.empty() && attrsDim[0].name() != "" ){
+    if(!attrsDim.empty() && attrsDim[0].name() != ""){
         string ins = "INSERT INTO "+ colAuxTable +" (object_id, aux0, grid_status) ";
         ins += " SELECT "+ string(outputTable) +".object_id_, "+ attrsDim[0].name() +".attr_id, 0";
         ins += " FROM "+ string(outputTable)+" LEFT JOIN "+ attrsDim[0].name() +" ON ";
@@ -340,26 +340,26 @@ bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, s
 using namespace std;
 
 // Copied from TeUtils class
-std::string TeGetExtension ( const char* value )
+std::string TeGetExtension (const char* value)
 {
 	if (!value)
 		return std::string("");
 	std::string name = std::string(value);
-	int len = strlen ( value );
+	int len = strlen (value);
 	int ip = name.rfind('.');
-	if( ( ip == (int)std::string::npos ) || ( ip == -1 ) )
+	if((ip == (int)std::string::npos) || (ip == -1))
 		return "";
 	else
 		return name.substr(ip+1, len-1);
 }
 
 // Copied from TeUtils class
-std::string TeGetName ( const char* value )
+std::string TeGetName (const char* value)
 {
 	if (!value)
 		return std::string("");
 	string name = string(value);
-	int len = strlen ( value );
+	int len = strlen (value);
 
 	int sp = name.rfind('\\')+1;
 	int ip = (name.substr(sp, len-1)).rfind('.');

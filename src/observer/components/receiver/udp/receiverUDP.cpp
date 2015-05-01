@@ -44,8 +44,7 @@ ReceiverUDP::ReceiverUDP(QObject *parent)
     
     connect(ui, SIGNAL(blindListenPort(int)), this, SLOT(blind(int)));
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
-    connect(datagramReceiverTask, SIGNAL(notify(int, int)), this, SLOT(createNotifyObserver(int, int))
-        ); 
+    connect(datagramReceiverTask, SIGNAL(notify(int, int)), this, SLOT(createNotifyObserver(int, int)));
         // , Qt::DirectConnection);
         // , Qt::BlockingQueuedConnection);
 
@@ -165,8 +164,8 @@ void ReceiverUDP::processPendingDatagrams()
     if ((pos > -1)) // && (data != COMPLETE_STATE.toLatin1()))
     {
         // resizes the object and inserts garbage
-        // msg.insert( (int)pos, data); 
-        completeData->replace( (int)pos, data.size(), data);
+        // msg.insert((int)pos, data); 
+        completeData->replace((int)pos, data.size(), data);
 
         message = tr("Messages received: %1. From: %2, Port: %3")
             .arg(msgReceiver).arg(hostSender.toString()).arg(port);
@@ -232,7 +231,7 @@ void ReceiverUDP::createNotifyObserver(int subjId, int subjType)
     //int id = state.mid(0, pos).toInt(); 
 
     //SubjectAttributes *subjAttr = bb.insertSubject(id);
-    //subjAttr->setSubjectType( (TypesOfSubjects) state.mid(pos + 1, 1).toInt());
+    //subjAttr->setSubjectType((TypesOfSubjects) state.mid(pos + 1, 1).toInt());
     //bool dec = bb.decode(id, state);
 
     //if (! dec)
@@ -289,7 +288,7 @@ void ReceiverUDP::createNotifyObserver(int subjId, int subjType)
                 //    << "0, 0, 0;0;0;?;#255, 255, 255;1;1;?;#"
                 ,
                 TObsCell
-                );
+             );
 
 
 

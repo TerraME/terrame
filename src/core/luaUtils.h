@@ -71,7 +71,7 @@ int isudatatype(lua_State *L, int idx, const char *name);
 /// \param x is a natural number returned by this function
 /// \param y is a natural number returned by this fucntion
 // RODRIGO
-// void objectId2coords( const char const * objId, int &x, int &y);
+// void objectId2coords(const char const * objId, int &x, int &y);
 void objectId2coords(const char * objId, int &x, int &y);
 
 /// UTILIITARY FUNCTION - Deletes a table from a TerraLib geographical database.

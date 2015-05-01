@@ -28,7 +28,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
  * \author Tiago Garcia de Senna Carneiro
  */
 
-#if ! defined( MODEL )
+#if ! defined(MODEL)
 #define MODEL
 
 #include "bridge.h"
@@ -37,7 +37,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #include <sstream>
 #include <stdio.h>
 
-#if defined ( TME_WIN32 )
+#if defined (TME_WIN32)
 #include <iostream>
 #else
 //#include <iostream.h>
@@ -71,22 +71,22 @@ class ModelImpl : public Implementation
 {
 public:
     /// Constructor
-    ModelImpl( void ) {
+    ModelImpl(void) {
         char strNum[255];
         //	char ch;
 
-        //#if defined ( TME_WIN32 ) //Raian: I commented because ostringstream was generating a segmentation fault on Linux
+        //#if defined (TME_WIN32) //Raian: I commented because ostringstream was generating a segmentation fault on Linux
         sprintf (strNum, "%ld", modelCounter);
         //#else
-        //ostringstream strStream( (string &) strNum );
+        //ostringstream strStream((string &) strNum);
         //strStream << modelCounter;
         //#endif
 
-        setID( string( "model")+ strNum ); modelCounter++;
+        setID(string("model")+ strNum); modelCounter++;
     }
-    void setID( ModelID id ) { modelID = id; }
-    ModelID getID( void ) { return modelID; }
-    ModelID setId( ModelID id ) { modelID = modelID + ":" + id; return modelID; }
+    void setID(ModelID id) { modelID = id; }
+    ModelID getID(void) { return modelID; }
+    ModelID setId(ModelID id) { modelID = modelID + ":" + id; return modelID; }
 private:
     ModelID modelID;
     static long int modelCounter;
@@ -102,14 +102,14 @@ private:
 class Model : public Interface<ModelImpl>
 {
 public:
-    ModelID getID( void ) { return pImpl_->getID(); }
-    virtual void update( void ) { }
+    ModelID getID(void) { return pImpl_->getID(); }
+    virtual void update(void) { }
 
-    ModelID setId( ModelID id ){ return pImpl_->setId(id); }
+    ModelID setId(ModelID id){ return pImpl_->setId(id); }
 };
 
 #endif
 
 // Abstract method to be implemented by the programmer to
 // define the objects to compile an instance of a model.
-///virtual void modelDefinition( )  = 0;
+///virtual void modelDefinition()  = 0;

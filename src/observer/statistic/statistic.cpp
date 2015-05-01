@@ -33,7 +33,7 @@ Statistic::Statistic() : QObject()
 
 //
 //#ifdef _MSC_VER
-//    // QueryPerformanceCounter ( (LARGE_INTEGER*)(&startMicroTime_ ) );
+//    // QueryPerformanceCounter ((LARGE_INTEGER*)(&startMicroTime_));
 //    // endMicroTime_ = startMicroTime_;
 //#else
 //    // gettimeofday(&startMicroTime_, NULL);
@@ -166,7 +166,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
         for (int i = 0; i < keys.size(); i++)
         {
             diffSquare.insert(keys.at(i), 
-                qMakePair<QVector<double> *, double>(new QVector<double>(), 0) );
+                qMakePair<QVector<double> *, double>(new QVector<double>(), 0));
         }
 
         QTextStream out(&file);
@@ -229,7 +229,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
                 if (timeStatistics.value(key)->size() > i)
                 {
                     value = timeStatistics.value(key)->at(i)- diffSquare.value(key).second;
-                    diffSquare[key].first->append( pow(value, 2) ); 
+                    diffSquare[key].first->append(pow(value, 2)); 
                 }
             }
         }
@@ -262,9 +262,9 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
             else
                 value = -1;
 
-            line1.append( QString::number(sum) );
+            line1.append(QString::number(sum));
             line1.append(";");
-            line2.append( QString::number( sqrt(value), 'g', 6));
+            line2.append(QString::number(sqrt(value), 'g', 6));
             line2.append(";");
         }
 
@@ -327,7 +327,7 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
         for (int i = 0; i < keys.size(); i++)
         {
             diffSquare.insert(keys.at(i), 
-                qMakePair<QVector<int> *, double>(new QVector<int>(), 0) );
+                qMakePair<QVector<int> *, double>(new QVector<int>(), 0));
         }        
         
         int size = -1;
@@ -367,7 +367,7 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
                 if (occurStatistics.value(key)->size() > i)
                 {
                     value = occurStatistics.value(key)->at(i) - diffSquare.value(key).second;
-                    diffSquare[key].first->append( pow(value, 2) ); 
+                    diffSquare[key].first->append(pow(value, 2)); 
                 }
             }
         }
@@ -403,9 +403,9 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
             else
                 value = -1;
 
-            line1.append( QString::number(sum) );
+            line1.append(QString::number(sum));
             line1.append(";");
-            line2.append( QString::number( sqrt(value), 'g', 6));
+            line2.append(QString::number(sqrt(value), 'g', 6));
             line2.append(";");
         }
 

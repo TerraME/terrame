@@ -183,7 +183,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                 if(contains)
                 {
                     if(internalCurves->contains(key))
-                        internalCurves->value(key)->values->append( tokens.at(j).toDouble() );
+                        internalCurves->value(key)->values->append(tokens.at(j).toDouble());
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
@@ -216,7 +216,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                         states.push_back(tokens.at(j));
 
                     if (internalCurves->contains(key))
-                        internalCurves->value(key)->values->append( states.indexOf(tokens.at(j)) );
+                        internalCurves->value(key)->values->append(states.indexOf(tokens.at(j)));
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
@@ -256,8 +256,8 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 
         for (int i = 0; i < internalCurves->keys().size(); i++)
         {
-            curve = internalCurves->value( internalCurves->keys().at(i) );
-            curve->plotCurve->setData(*abs, *internalCurves->value( internalCurves->keys().at(i) )->values); 
+            curve = internalCurves->value(internalCurves->keys().at(i));
+            curve->plotCurve->setData(*abs, *internalCurves->value(internalCurves->keys().at(i))->values); 
         }
     }
     plotter->repaint();
@@ -475,12 +475,12 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 void ObserverGraphic::colorChanged(QwtPlotItem * /* item */)
 {
     //QWidget *w = plotter->legend()->find(item);
-    //if ( w && w->inherits("QwtLegendItem") )
+    //if (w && w->inherits("QwtLegendItem"))
     //{
     //    QColor color = ((QwtLegendItem *)w)->curvePen().color();
     //    color = QColorDialog::getColor(color);
 
-    //    if ((color.isValid()) && (color != ((QwtLegendItem *)w)->curvePen().color()) )
+    //    if ((color.isValid()) && (color != ((QwtLegendItem *)w)->curvePen().color()))
     //    {
     //        ((QwtLegendItem *)w)->setCurvePen(QPen(color));
     //        
@@ -549,7 +549,7 @@ void ObserverGraphic::draw()
 
             if (internalCurves->contains(attrib->getName()))
             {
-                curve = internalCurves->value( attrib->getName() );
+                curve = internalCurves->value(attrib->getName());
                 curve->plotCurve->setSamples(*xAxisValues, *curve->values); 
             }
         }

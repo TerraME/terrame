@@ -77,9 +77,8 @@ public:
         return QString("%1 (%2): %3")
             .arg(key)
             .arg(getDataName(type))
-            .arg( ((type == TObsNumber) ? 
-                    QString("%1").arg(number) : QString("\"%1\"").arg(text)) 
-                );
+            .arg(((type == TObsNumber) ? 
+                    QString("%1").arg(number) : QString("\"%1\"").arg(text)));
     }
 
 // private:

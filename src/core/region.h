@@ -29,7 +29,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
                  Handles: Region
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
-#if !defined( REGION_H)
+#if !defined(REGION_H)
 #define REGION_H
 
 #include <map>
@@ -62,7 +62,7 @@ public:
         indexCellPair.first = indx;
         indexCellPair.second = cell;
 
-        CompositeInterface< multimapComposite<Indx, Cell*> >::add( indexCellPair );
+        CompositeInterface< multimapComposite<Indx, Cell*> >::add(indexCellPair);
     }
 
     /// Searches for a cell into the region

@@ -64,31 +64,31 @@ class EventImpl : public Implementation
 public:
 
     /// Default constructor
-    EventImpl( void ) { time_ = -DBL_MAX, period_ = 1, priority_ = 0; }
+    EventImpl(void) { time_ = -DBL_MAX, period_ = 1, priority_ = 0; }
 
     /// Sets the Event instant to occur
     /// \param eventTime is the moment to the Event happens
-    void setTime( double eventTime ) { time_ = eventTime; }
+    void setTime(double eventTime) { time_ = eventTime; }
 
     /// Gets the instant the Event is programmed to happen
     /// \return  A double value representing the next instant the Event will happen
-    double getTime( ) { return time_; }
+    double getTime() { return time_; }
 
     /// Sets the Event priority.
     /// \param priority is a double value. Higher numbers means lower  priority. The normal priority is 0(zero).
-    void setPriority(double priority ) { priority_ = priority; }
+    void setPriority(double priority) { priority_ = priority; }
 
     /// Gets the Event priority
     /// \return A double value representing the Event priority.  Higher numbers means lower  priority. The normal
     /// priority is 0(zero).
-    double getPriority( void ) { return priority_; }
+    double getPriority(void) { return priority_; }
 
     /// Configures the Event.
     /// \param eventTime is the time instant in which the Event must occurs
     /// \param eventFrequency is the periodicity in which the Event must occurs
     /// \param priority is the priority in which the event must occurs
     ///        Higher numbers means lower  priority. The normal priority is 0(zero).
-    void config( double eventTime, double eventFrequency, double priority ) {
+    void config(double eventTime, double eventFrequency, double priority) {
         period_ = eventFrequency > 0 ? eventFrequency : 0;
         time_      = eventTime;// > 0 ? eventTime : 0;
         priority_ = priority;
@@ -96,11 +96,11 @@ public:
 
     /// Gets the peridiocity in which the Event is programmed to happens
     /// \return A double number representing the Event periodicity in time
-    double getPeriod( ) { return period_; }
+    double getPeriod() { return period_; }
 
     /// Sets the periodicity in which the Event must occurs in time
     /// \param period is the real number representing the periodicity in which the Event must occurs
-    void setPeriod( double period ) { period_ = period; }
+    void setPeriod(double period) { period_ = period; }
 
 };
 
@@ -127,42 +127,42 @@ public:
     /// \param priority is the priority in which the event must occurs
     ///        Higher numbers means lower  priority. The normal priority is 0(zero).
     Event(double time = -DBL_MAX, double period = 1, double priority = 0){
-        EventInterf::pImpl_->setTime( time );
-        EventInterf::pImpl_->setPeriod( period );
-        EventInterf::pImpl_->setPriority(  priority );
+        EventInterf::pImpl_->setTime(time);
+        EventInterf::pImpl_->setPeriod(period);
+        EventInterf::pImpl_->setPriority(priority);
     }
 
     /// HANDLE - Gets the instant the Event is programmed to happen
     /// \return  A double value representing the next instant the Event will happen
-    double getTime( ) { return EventInterf::pImpl_->getTime(); }
+    double getTime() { return EventInterf::pImpl_->getTime(); }
 
     /// HANDLE - Configures the Event object.
     /// \param time is the time instant in which the Event must occurs
     /// \param frequency is the periodicity in which the Event must occurs
     /// \param priority is the priority in which the event must occurs
     ///        Higher numbers means lower  priority. The normal priority is 0(zero).
-    void config( double time, double frequency, double priority ) { EventInterf::pImpl_->config( time, frequency, priority ); }
+    void config(double time, double frequency, double priority) { EventInterf::pImpl_->config(time, frequency, priority); }
 
     /// HANDLE - Gets the periodicity in which the Event is programmed to happens
     /// \return A double number representing the Event periodicity in time
-    double getPeriod( ) { return EventInterf::pImpl_->getPeriod(); }
+    double getPeriod() { return EventInterf::pImpl_->getPeriod(); }
 
     /// HANDLE - Gets the instant the Event is programmed to happen
     /// \return  A double value representing the next instant the Event will happen
-    void setTime( double time ) { EventInterf::pImpl_->setTime( time ); }
+    void setTime(double time) { EventInterf::pImpl_->setTime(time); }
 
     /// HANDLE - Sets the periodicity in which the Event must occurs in time
     /// \param period is the real number representing the periodicity in which the Event must occurs
-    void setPeriod( double period ) { EventInterf::pImpl_->setPeriod( period ); }
+    void setPeriod(double period) { EventInterf::pImpl_->setPeriod(period); }
 
     /// HANDLE - Sets the Event priority.
     /// \param priority is a double number. Higher numbers means lower  priority. The default priority is 0(zero).
-    void setPriority(double priority ) {  EventInterf::pImpl_->setPriority(priority); }
+    void setPriority(double priority) {  EventInterf::pImpl_->setPriority(priority); }
 
     /// HANDLE - Gets the Event priority
     /// \return A double value representing the Event priority. Higher numbers means lower  priority. The default
     /// priority is 0(zero).
-    double getPriority( void ) { return EventInterf::pImpl_->getPriority(); }
+    double getPriority(void) { return EventInterf::pImpl_->getPriority(); }
 
 };
 
@@ -170,6 +170,6 @@ public:
 /// \param e1 is a Event object
 /// \param e2 is a Event object
 /// \return A boolean value:  true if e1 must occur earlier than e2, false otherwise.
-bool operator<(Event e1, Event e2 );
+bool operator<(Event e1, Event e2);
 
 #endif

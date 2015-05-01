@@ -27,7 +27,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
  * \author Tiago Garcia de Senna Carneiro
  */
 
-#if ! defined( STRATEGY )
+#if ! defined(STRATEGY)
 #define STRATEGY
 
 
@@ -46,7 +46,7 @@ private:
 class Strategy
 {
 
-    int execute( Cell& cell) = 0;
+    int execute(Cell& cell) = 0;
 }
 
 #endif

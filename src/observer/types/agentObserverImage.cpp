@@ -120,12 +120,12 @@ void AgentObserverImage::setSubjectAttributes(const QStringList & attribs,
 
     for (int i = 0; i < attribs.size(); i++)
     {
-        if (! subjectAttributes.contains(attribs.at(i)) )
+        if (! subjectAttributes.contains(attribs.at(i)))
             subjectAttributes.push_back(attribs.at(i));
 
         if (! mapAttributes->contains(attribs.at(i)))
          {
-            if (execModes != Quiet )
+            if (execModes != Quiet)
             {
 				string str = string("The attribute called ") + attribs.at(i).toLatin1().data() + string(" was not found.");
 				lua_getglobal(L, "customWarning");
@@ -153,7 +153,7 @@ QStringList & AgentObserverImage::getSubjectAttributes()
 
 void AgentObserverImage::registry(Subject *subj, const QString & className)
 {
-    if (! ObserverMap::constainsItem(nestedSubjects, subj) )
+    if (! ObserverMap::constainsItem(nestedSubjects, subj))
     {
 #ifdef TME_BLACK_BOARD
     	SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(subj->getId());
@@ -188,9 +188,9 @@ bool AgentObserverImage::unregistry(Subject *subj, const QString & className)
     {
         Attributes *attrib = getMapAttributes()->value(subjectAttributes.at(i), 0);
 
-        if (attrib && (className == attrib->getClassName()) )
+        if (attrib && (className == attrib->getClassName()))
         {
-            getMapAttributes()->remove( subjectAttributes.at(i) );
+            getMapAttributes()->remove(subjectAttributes.at(i));
 
             // Updates de copies of attributes lists
             getPainterWidget()->updateAttributeList();
@@ -204,13 +204,13 @@ bool AgentObserverImage::unregistry(Subject *subj, const QString & className)
         //// Remove only the attribute that has no values
         //if (subj->getSubjectType() == attrib->getType())
         //{
-        //        if ( (attrib->getType() != TObsAgent) 
+        //        if ((attrib->getType() != TObsAgent) 
         //            || ((className == attrib->getExhibitionName()) 
-        //                 && (! ObserverMap::existAgents(nestedSubjects)) ) )
+        //                 && (! ObserverMap::existAgents(nestedSubjects))))
         //    {
         //        getMapAttributes()->take(attrib->getName());
         //        getPainterWidget()->setExistAgent(false);
-        //        subjectAttributes.removeAt( subjectAttributes.indexOf(attrib->getName()) );
+        //        subjectAttributes.removeAt(subjectAttributes.indexOf(attrib->getName()));
         //        delete attrib;
         //        return true;
         //    }
@@ -277,8 +277,8 @@ bool AgentObserverImage::draw()
     //for(int i = 0; i < attribList.size(); i++)
     //{
     //    attrib = attribList.at(i);
-    //    if ( (attrib->getType() != TObsCell)
-    //         ) // && (attrib->getType() != TObsAgent) )
+    //    if ((attrib->getType() != TObsCell)
+    //      ) // && (attrib->getType() != TObsAgent))
     //        getPainterWidget()->plotMap(attrib);
     //}
     return true;

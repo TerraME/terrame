@@ -120,7 +120,7 @@ public slots:
     /** 
      * Treats of any change in the \a slice comboBox
      */
-    void slicesComboBox_activated( const QString & );
+    void slicesComboBox_activated(const QString &);
 
     /** 
      * Treats of any change in the \a attributes comboBox

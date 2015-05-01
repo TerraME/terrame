@@ -75,10 +75,10 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
                     if (! reconfigMaxMin)
                     {
                         /*
-                        if (! QUIET_MODE )
+                        if (! QUIET_MODE)
                             qWarning("Warning: Invalid color. You need to reconfigure the "
                                      "maximum and the minimum values of the attribute \"%s\".",
-                                     qPrintable(attrib->getName()) );
+                                     qPrintable(attrib->getName()));
                         */
 
                         reconfigMaxMin = true;

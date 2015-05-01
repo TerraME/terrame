@@ -33,7 +33,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
 
-#if ! defined( CELLULAR_SPACE_H )
+#if ! defined(CELLULAR_SPACE_H)
 #define CELLULAR_SPACE_H
 
 #include <vector>
@@ -77,26 +77,26 @@ public:
 
     /// Attaches agent to all cellular space cell.
     /// \param agent is new agent being inserted into the cellular space
-    void attachAgent( class LocalAgent *agent ){
+    void attachAgent(class LocalAgent *agent){
         ControlMode& controlMode = (*agent)[0];
-        attachControlModeToCells(agent, &controlMode );
+        attachControlModeToCells(agent, &controlMode);
     }
 
     /// Detaches the agent from the cellular space
     /// \param agent being remove from the cellular space
-    void detachAgent( LocalAgent *agent ){
-        detachControlModeFromCells( agent );
+    void detachAgent(LocalAgent *agent){
+        detachControlModeFromCells(agent);
     }
 
     /// Updates than cellular space past copying the current value of all cells attributes over the past values.
     /// \param sizeMem is the size (in bytes) of the cell with all its attributes, including the ones defined
     /// in TerraME framework application layer.
-    void synchronize( unsigned int  sizeMem ) {
+    void synchronize(unsigned int  sizeMem) {
         Region_<CellIndex>::iterator theIterator;
         theIterator = Region_<CellIndex>::pImpl_->begin();
-        while( theIterator != Region_<CellIndex>::pImpl_->end() )
+        while(theIterator != Region_<CellIndex>::pImpl_->end())
         {
-            theIterator->second->synchronize( sizeMem );
+            theIterator->second->synchronize(sizeMem);
             theIterator++;
         }
     }
@@ -111,13 +111,13 @@ private:
     /// Using this method, the cell can keep track of the agents active control mode (or discrete state).
     /// \param agent is a pointer to a agent attached to the cellular space.
     /// \param controlMode is pointer to the agents control mode.
-    void attachControlModeToCells( LocalAgent *agent, ControlMode *controlMode ) {
+    void attachControlModeToCells(LocalAgent *agent, ControlMode *controlMode) {
         Region_<CellIndex>::iterator theIterator;
 
         theIterator = Region_<CellIndex>::pImpl_->begin();
-        while( theIterator != Region_<CellIndex>::pImpl_->end() )
+        while(theIterator != Region_<CellIndex>::pImpl_->end())
         {
-            theIterator->second->attachControlMode( agent, controlMode );
+            theIterator->second->attachControlMode(agent, controlMode);
             theIterator++;
         }
     }
@@ -125,12 +125,12 @@ private:
     /// Detaches the control model of a agent from the cells.
     /// Using this method, the cells stop to keep track of the agents active control mode (or discrete state).
     /// \param agent is a pointer to a agent attached to the cellular space.
-    void detachControlModeFromCells( LocalAgent *agent ) {
+    void detachControlModeFromCells(LocalAgent *agent) {
         Region_<CellIndex>::iterator theIterator;
         theIterator = Region_<CellIndex>::pImpl_->begin();
-        while( theIterator != Region_<CellIndex>::pImpl_->end() )
+        while(theIterator != Region_<CellIndex>::pImpl_->end())
         {
-            theIterator->second->detachControlMode( agent );
+            theIterator->second->detachControlMode(agent);
             theIterator++;
         }
     }

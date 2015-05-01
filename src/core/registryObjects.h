@@ -87,9 +87,9 @@ Luna<luaNeighborhood>::RegType luaNeighborhood::methods[] = {
 	method(luaNeighborhood, setCellWeight),
 	method(luaNeighborhood, getWeight),
 	method(luaNeighborhood, setWeight),
-	method(luaNeighborhood, getCellNeighbor ),
-	method(luaNeighborhood, getNeighbor ),
-	//method(luaNeighborhood, getNeighbor_ ), // for debugging
+	method(luaNeighborhood, getCellNeighbor),
+	method(luaNeighborhood, getNeighbor),
+	//method(luaNeighborhood, getNeighbor_), // for debugging
 	method(luaNeighborhood, first),
 	method(luaNeighborhood, last),
 	method(luaNeighborhood, isFirst),
@@ -160,28 +160,28 @@ Luna<luaCell>::RegType luaCell::methods[] = {
 const char luaCellularSpace::className[] = "TeCellularSpace";
 
 Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
-	method(luaCellularSpace, setDBType ),
-	method(luaCellularSpace, setHostName ),
-	method(luaCellularSpace, setDBName ),
-	method(luaCellularSpace, getDBName ),
-	method(luaCellularSpace, setUser ),
-	method(luaCellularSpace, setPassword ),
-	method(luaCellularSpace, setLayer ),
-	method(luaCellularSpace, setTheme ),
-	method(luaCellularSpace, clearAttrName ),
-	method(luaCellularSpace, addAttrName ),
-	method(luaCellularSpace, load ),
-	method(luaCellularSpace, loadShape ),
-	method(luaCellularSpace, saveShape ),
-	method(luaCellularSpace, clear ),
-	method(luaCellularSpace, size ),
-	method(luaCellularSpace, addCell ),
-	method(luaCellularSpace, setWhereClause ),
-	method(luaCellularSpace, loadNeighborhood ),
+	method(luaCellularSpace, setDBType),
+	method(luaCellularSpace, setHostName),
+	method(luaCellularSpace, setDBName),
+	method(luaCellularSpace, getDBName),
+	method(luaCellularSpace, setUser),
+	method(luaCellularSpace, setPassword),
+	method(luaCellularSpace, setLayer),
+	method(luaCellularSpace, setTheme),
+	method(luaCellularSpace, clearAttrName),
+	method(luaCellularSpace, addAttrName),
+	method(luaCellularSpace, load),
+	method(luaCellularSpace, loadShape),
+	method(luaCellularSpace, saveShape),
+	method(luaCellularSpace, clear),
+	method(luaCellularSpace, size),
+	method(luaCellularSpace, addCell),
+	method(luaCellularSpace, setWhereClause),
+	method(luaCellularSpace, loadNeighborhood),
 
 #ifndef TME_NO_TERRALIB
-	method(luaCellularSpace, save ),
-	method(luaCellularSpace, loadTerraLibGPM ),
+	method(luaCellularSpace, save),
+	method(luaCellularSpace, loadTerraLibGPM),
 #endif #ifndef TME_NO_TERRALIB
 
 	method(luaCellularSpace, getReference),
@@ -234,7 +234,7 @@ const char luaGlobalAgent::className[] = "TeGlobalAutomaton";
 Luna<luaGlobalAgent>::RegType luaGlobalAgent::methods[] =
 {
 	method(luaGlobalAgent, add),
-	method(luaGlobalAgent, getLatency ),
+	method(luaGlobalAgent, getLatency),
 	method(luaGlobalAgent, build),
 	method(luaGlobalAgent, setActionRegionStatus),
 	method(luaGlobalAgent, getActionRegionStatus),

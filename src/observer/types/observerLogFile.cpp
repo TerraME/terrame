@@ -14,7 +14,7 @@
 #endif
 
 ObserverLogFile::ObserverLogFile(Subject *subj, QObject *parent)
-    : QObject(parent), ObserverInterf( subj ) 
+    : QObject(parent), ObserverInterf(subj) 
 {
     observerType = TObsLogFile;
     subjectType = subj->getType(); // TO_DO: Changes it to Observer pattern
@@ -41,7 +41,7 @@ const TypesOfObservers ObserverLogFile::getType() const
 
 bool ObserverLogFile::draw(QDataStream & /*state*/)
 {
-    BagOfTasks::TaskManager::getInstance().add( logTask );
+    BagOfTasks::TaskManager::getInstance().add(logTask);
 
     // qApp->processEvents();
     return (BlackBoard::getInstance().canDraw());

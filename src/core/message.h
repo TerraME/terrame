@@ -53,7 +53,7 @@ public:
     /// \param event is the reference to the Event which has triggered this Message
     /// \return A boolean value: true if the Message object must be re-inserted in the simulation
     ////        engine Scheduler, otherwise false.
-    virtual bool execute( Event& /*event*/ ) { return false;}
+    virtual bool execute(Event& /*event*/) { return false;}
 
 };
 

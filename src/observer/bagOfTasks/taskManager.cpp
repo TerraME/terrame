@@ -114,7 +114,7 @@ void TaskManager::add(Task *task)
     QList<QPair<Task *, int> >::iterator pos =
             qUpperBound(bagOfTasks.begin(), bagOfTasks.end(), (int)task->getPriority());
 
-    bagOfTasks.insert(pos, qMakePair(task, (int)task->getPriority()) );
+    bagOfTasks.insert(pos, qMakePair(task, (int)task->getPriority()));
 
     // waitCondition.wakeOne();
     if (! sync)
@@ -150,6 +150,6 @@ const Worker * TaskManager::getWorker()
 {
     requestedWorkerPos = (requestedWorkerPos < workers.size() ?
         requestedWorkerPos + 1 : 0);
-    return workers.at( requestedWorkerPos );
+    return workers.at(requestedWorkerPos);
 }
 

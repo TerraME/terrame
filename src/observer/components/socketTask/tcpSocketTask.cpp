@@ -192,7 +192,7 @@ void TcpSocketTask::setModelTime(double /*time*/)
 {
     // setType(Task::Once);
     sendCompleteStateInfo(COMPLETE_SIMULATION);
-    emit messageSent(tr("Simulation finished!!\n") );
+    emit messageSent(tr("Simulation finished!!\n"));
 
 #ifdef DEBUG_OBSERVERS
     qDebug() << "\nTcpSocketTask::setModelTime(double time): " << COMPLETE_SIMULATION;
@@ -220,7 +220,7 @@ bool TcpSocketTask::send(const QByteArray &data)
 
             t = Statistic::getInstance().startMicroTime();
 
-            dataAux = qCompress(data, COMPRESS_RATIO); //qCompress( data, COMPRESS_RATIO);
+            dataAux = qCompress(data, COMPRESS_RATIO); //qCompress(data, COMPRESS_RATIO);
 
             insertSum += Statistic::getInstance().startMicroTime() - t;
             insertCount++;
@@ -262,7 +262,7 @@ bool TcpSocketTask::send(const QByteArray &data)
 
         //    t = Statistic::getInstance().startMicroTime();
 
-        //    out << qCompress(data, COMPRESS_RATIO); //qCompress( data, COMPRESS_RATIO);
+        //    out << qCompress(data, COMPRESS_RATIO); //qCompress(data, COMPRESS_RATIO);
 
         //    insertSum += Statistic::getInstance().startMicroTime() - t;
         //    insertCount++;
@@ -315,7 +315,7 @@ bool TcpSocketTask::send(const QByteArray &data)
         emit speed(strSpeed);
 
         msgCount++;
-        emit messageSent( tr("Message sent: %1. From %2").arg(msgCount).arg(address.toString()) );
+        emit messageSent(tr("Message sent: %1. From %2").arg(msgCount).arg(address.toString()));
         emit statusMessages(msgCount);        
 
         Statistic::getInstance().addOccurrence("Bytes written", bytesWritten);
@@ -327,7 +327,7 @@ bool TcpSocketTask::send(const QByteArray &data)
         if (! sendCompleteStateInfo(COMPLETE_STATE))
             return false;
         
-        emit messageSent(tr("States sent: %1. From %2\n").arg(stateCount).arg(address.toString()) );
+        emit messageSent(tr("States sent: %1. From %2\n").arg(stateCount).arg(address.toString()));
         emit statusStates(stateCount);
     }
 
@@ -402,7 +402,7 @@ bool TcpSocketTask::send(const QByteArray &data)
         formatSpeed(speed_, strSpeed);
 
         msgCount++;
-        emit messageSent( tr("Message sent: %1. From %2").arg(msgCount).arg(address.toString()) );
+        emit messageSent(tr("Message sent: %1. From %2").arg(msgCount).arg(address.toString()));
         emit statusMessages(msgCount);
     }
 
@@ -412,7 +412,7 @@ bool TcpSocketTask::send(const QByteArray &data)
         if (! sendCompleteStateInfo(COMPLETE_STATE))
             return false;
         
-        emit messageSent(tr("States sent: %1. From %2\n").arg(stateCount).arg(address.toString()) );
+        emit messageSent(tr("States sent: %1. From %2\n").arg(stateCount).arg(address.toString()));
         emit statusStates(stateCount);
     }
 

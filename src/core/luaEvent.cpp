@@ -44,7 +44,7 @@ extern lua_State * L;
 extern ExecutionModes execModes;
 
 /// constructor
-luaEvent::luaEvent( lua_State *L )
+luaEvent::luaEvent(lua_State *L)
 {
     subjectType = TObsEvent;
     luaL = L;
@@ -52,29 +52,29 @@ luaEvent::luaEvent( lua_State *L )
 }
 
 /// destructor
-luaEvent::~luaEvent( void )
+luaEvent::~luaEvent(void)
 {
 }
 
 /// Constructor - creates a luaEvent object from a Event object
 /// \param event is the copied Event object
-luaEvent::luaEvent( Event &event )
+luaEvent::luaEvent(Event &event)
 {
-    Event::config( event.getTime(), event.getPeriod(), event.getPriority() );
+    Event::config(event.getTime(), event.getPeriod(), event.getPriority());
 }
 
 /// Configures the luaEvent object
-int luaEvent::config( lua_State *L )
+int luaEvent::config(lua_State *L)
 {
     double time = luaL_checknumber(L, -3);
     double period = luaL_checknumber(L, -2);
     double priority = luaL_checknumber(L, -1);
-    Event::config( time, period, priority  );
+    Event::config(time, period, priority);
     return 0;
 }
 
 /// Gets the luaEvent time
-int luaEvent::getTime( lua_State *L )
+int luaEvent::getTime(lua_State *L)
 { 
     double time = Event::getTime();
     lua_pushnumber(L, time);
@@ -132,9 +132,9 @@ int luaEvent::createObserver(lua_State *luaL)
     allAttribs.push_back("Priority");
 
     // Retrieves the parameters table
-    //if(! lua_istable(luaL, top - 1) )
+    //if(! lua_istable(luaL, top - 1))
     //{
-    //    if (execModes == Quiet )
+    //    if (execModes == Quiet)
     //        qWarning("Warning: Parameter table not found.");
     //}
     //else
@@ -144,13 +144,13 @@ int luaEvent::createObserver(lua_State *luaL)
     {   
         QString key;
         if (lua_type(luaL, -2) == LUA_TSTRING)
-            key = QString( luaL_checkstring(luaL, -2));
+            key = QString(luaL_checkstring(luaL, -2));
 
         switch (lua_type(luaL, -1))
         {
         case LUA_TSTRING:
             {
-                QString value( luaL_checkstring(luaL, -1));
+                QString value(luaL_checkstring(luaL, -1));
                 cols.push_back(value);
                 break;
             }
@@ -172,7 +172,7 @@ int luaEvent::createObserver(lua_State *luaL)
 
     if (cols.isEmpty())
     {
-        if (execModes != Quiet ){
+        if (execModes != Quiet){
             string err_out = string("The parameter table is empty.");
             lua_getglobal(L, "customWarning");
             lua_pushstring(L, err_out.c_str());
@@ -247,10 +247,10 @@ int luaEvent::createObserver(lua_State *luaL)
             break;
 
         default:
-            if (execModes != Quiet )
+            if (execModes != Quiet)
             {
                 qWarning("Error: In this context, the code '%s' does not "
-                    "correspond to a valid type of Observer.",  getObserverName(typeObserver) );
+                    "correspond to a valid type of Observer.",  getObserverName(typeObserver));
             }
             return 0;
     }
@@ -270,7 +270,7 @@ int luaEvent::createObserver(lua_State *luaL)
 
         if (cols.at(0).isNull() || cols.at(0).isEmpty())
         {
-            if (execModes != Quiet )
+            if (execModes != Quiet)
             {
                 qWarning("Warning: Filename was not specified, using a "
                     "default \"%s\".", qPrintable(DEFAULT_NAME));
@@ -285,7 +285,7 @@ int luaEvent::createObserver(lua_State *luaL)
         // if not defined, use the default ";"
         if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
-            if (execModes != Quiet )
+            if (execModes != Quiet)
                 qWarning("Warning: Separator not defined, using \";\".");
             obsLog->setSeparator();
         }
@@ -310,7 +310,7 @@ int luaEvent::createObserver(lua_State *luaL)
         if ((cols.size() < 1) || (cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
                 || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
-            if (execModes != Quiet )
+            if (execModes != Quiet)
                 qWarning("Warning: Column title not defined.");
         }
         obsTable->setColumnHeaders(cols);
@@ -326,7 +326,7 @@ int luaEvent::createObserver(lua_State *luaL)
 
         if (cols.isEmpty())
         {
-            if (execModes != Quiet )
+            if (execModes != Quiet)
                 qWarning("Warning: Port not defined.");
         }
         else
@@ -335,7 +335,7 @@ int luaEvent::createObserver(lua_State *luaL)
         }
 
         // broadcast
-        if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
+        if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()))
         {
             obsUDPSender->addHost(BROADCAST_HOST);
         }
@@ -358,14 +358,14 @@ const TypesOfSubjects luaEvent::getType() const
     return subjectType;
 }
 
-int luaEvent::getType(lua_State *L )
+int luaEvent::getType(lua_State *L)
 {
     lua_pushnumber(L, subjectType);
     return 1;
 }
 
 /// Notifies observers
-int luaEvent::notify(lua_State *luaL )
+int luaEvent::notify(lua_State *luaL)
 {
 #ifdef DEBUG_OBSERVER
     printf("\nevent::notifyObservers\n");
@@ -463,10 +463,10 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
         currSubj->set_type(ObserverDatagramPkg::TObsEvent);
 
         // #attrs
-        currSubj->set_attribsnumber( currSubj->rawattributes_size() );
+        currSubj->set_attribsnumber(currSubj->rawattributes_size());
 
         // #elements
-        currSubj->set_itemsnumber( currSubj->internalsubject_size() );
+        currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
         if (! parentSubj)
         {
@@ -536,11 +536,11 @@ QByteArray luaEvent::pop(lua_State *, const QStringList &)
 
     // #attrs
     msg.append(QByteArray::number(attrCounter));
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
 
     // #elements
     msg.append("0");
-    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(PROTOCOL_SEPARATOR);
 
     msg.append(attrs);
     msg.append(PROTOCOL_SEPARATOR);
@@ -569,14 +569,14 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int /*observerId*/, 
         case 0:
             content = getAll(in, observedAttribs.keys());
             // serverSession->setState(observerId, 1);
-            // if (! QUIET_MODE )
+            // if (! QUIET_MODE)
             // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observedAttribs.keys());
             // serverSession->setState(observerId, 0);
-            // if (! QUIET_MODE )
+            // if (! QUIET_MODE)
             // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
 	}
@@ -589,7 +589,7 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int /*observerId*/, 
 
 #else
 
-QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, const QStringList &  attribs )
+QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, const QStringList &  attribs)
 {
 #ifdef DEBUG_OBSERVER
     printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
@@ -604,14 +604,14 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, cons
         case 0:
         content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
-            // if (! QUIET_MODE )
+            // if (! QUIET_MODE)
             // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
         content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
-            // if (! QUIET_MODE )
+            // if (! QUIET_MODE)
             // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
@@ -646,7 +646,7 @@ int luaEvent::kill(lua_State *luaL)
     {
         QString key;
         lua_pushnil(luaL);
-        while(lua_next(luaL, top - 1 ) != 0)
+        while(lua_next(luaL, top - 1) != 0)
         {
             if (lua_type(luaL, -2) == LUA_TSTRING)
             {

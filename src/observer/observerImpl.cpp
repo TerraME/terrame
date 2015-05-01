@@ -124,7 +124,7 @@ void TerraMEObserver::formatSpeed(double speed, QString &strSpeed)
 
     if(speed < 1024)
 	{
-        strSpeed.append(QString("%1 bytes/s").arg(speed, 3, 'f', 1) );
+        strSpeed.append(QString("%1 bytes/s").arg(speed, 3, 'f', 1));
     }
     else
     {

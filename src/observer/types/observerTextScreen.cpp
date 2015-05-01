@@ -182,11 +182,11 @@ bool ObserverTextScreen::draw()
 
             for(int id = 0; id < subjectsIDs.size(); ++id)
             {
-                nestedSubj = bb.getSubject( subjectsIDs.at(id) );
+                nestedSubj = bb.getSubject(subjectsIDs.at(id));
 
                 if (nestedSubj && nestedSubj->getNumericValue("weight", weight))
                 {
-                    doubleToText( nestedSubj->getId(), tmpValue);
+                    doubleToText(nestedSubj->getId(), tmpValue);
                     attribList.append("neighbor");
                     valuesList.append(tmpValue);
 

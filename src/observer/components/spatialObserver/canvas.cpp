@@ -65,7 +65,7 @@ void Canvas::paintEvent(QPaintEvent * ev)
         // painter.drawRect(QRect(imageOffset, lastDragPos));
 
         zoomRectItem = scene()->addRect(QRectF(mapToScene(imageOffset.x(), imageOffset.y()), 
-            mapToScene(lastDragPos.x(), lastDragPos.y()) ), pen, brush);
+            mapToScene(lastDragPos.x(), lastDragPos.y())), pen, brush);
     }
     QGraphicsView::paintEvent(ev);
 }
@@ -75,7 +75,7 @@ void Canvas::mousePressEvent(QMouseEvent *ev)
 {
     if (ev->button() == Qt::LeftButton)
     {
-        imageOffset = mapToScene( ev->pos() );
+        imageOffset = mapToScene(ev->pos());
 
         if (zoomWindow)
         {
@@ -103,7 +103,7 @@ void Canvas::mouseMoveEvent(QMouseEvent *ev)
         if (zoomWindow)
         {
             // Define as coordenadas do retangulo de zoom
-            if (! sceneRect().contains( QRectF(imageOffset, ev->pos()) ))
+            if (! sceneRect().contains(QRectF(imageOffset, ev->pos())))
             {
 
                 bool right = ev->pos().x() > rect().right();
@@ -146,7 +146,7 @@ void Canvas::mouseMoveEvent(QMouseEvent *ev)
         {
             setCursor(Qt::ClosedHandCursor);
             QPointF delta = mapToScene(lastDragPos.toPoint()) - mapToScene(ev->pos());
-            centerOn( mapToScene(viewport()->rect().center()) + delta);
+            centerOn(mapToScene(viewport()->rect().center()) + delta);
 
             // Cause bug when dragging
             // lastDragPos = ev->pos();

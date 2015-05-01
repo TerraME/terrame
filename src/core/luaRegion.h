@@ -25,7 +25,7 @@ of this library and its documentation.
         \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined( LUAREGION_H )
+#if ! defined(LUAREGION_H)
 #define LUAREGION_H
 
 #include "region.h"

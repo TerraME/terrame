@@ -33,7 +33,7 @@ of this library and its documentation.
 #include <QDataStream>
 
 #define ROUND(__val) \
-    ( (__val)>=(0.0) ? ((int)((__val)+0.5)) : ((int)((__val)-0.5)) ) ;
+    ((__val)>=(0.0) ? ((int)((__val)+0.5)) : ((int)((__val)-0.5))) ;
 
 #if ! defined (TME_OBSERVER_CLIENT_MODE) && ! defined (TME_NO_TERRALIB)
 
@@ -74,9 +74,9 @@ struct TeColor
     }
 
     //! Assignment operator
-    TeColor& operator= ( const TeColor& color )
+    TeColor& operator= (const TeColor& color)
     {
-        if ( this != &color )
+        if (this != &color)
         {
             red_ = color.red_;
             green_ = color.green_;
@@ -89,9 +89,9 @@ struct TeColor
 #endif
 
 void rgb2Hsv(const TeColor& c, int& h, int& s, int& v);
-void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v );
+void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v);
 void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v);
-void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s, const double& v );
+void HSVtoRGB(double& r, double& g, double& b, const double& h, const double& s, const double& v);
 
 struct ColorBar {
     TeColor cor_;

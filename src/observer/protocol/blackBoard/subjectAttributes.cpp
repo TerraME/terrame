@@ -50,7 +50,7 @@ const QString SubjectAttributes::toString() const
     if (attribHash->size() > 0)
     {
         foreach(RawAttribute *raw, attribHash->values())
-            ret.append( QString("  %1;\n").arg(raw->toString()) );
+            ret.append(QString("  %1;\n").arg(raw->toString()));
     }
     ret.append("}\n");
     return ret;
@@ -60,10 +60,10 @@ void SubjectAttributes::setSubjectType(const TypesOfSubjects &type)
 {
     subjectType = type;
 
-    if ( (subjectType != TObsCell) 
+    if ((subjectType != TObsCell) 
         // && (subjectType != TObsAgent)         // Who knows the location in space is the cell.
         // && (subjectType != TObsAutomaton)     // Therefore, an agent is composed of a cell
-        )
+      )
     {
         if (! xs) xs = new QVector<double>();    
         if (! ys) ys = new QVector<double>();
