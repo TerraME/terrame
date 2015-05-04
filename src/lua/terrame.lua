@@ -181,7 +181,7 @@ local function sqlFiles(package)
 	return files
 end
 
-local function findModels(package)
+function findModels(package)
 	local s = sessionInfo().separator
 	
 	if not isLoaded("base") then
@@ -229,20 +229,19 @@ local function findModels(package)
 	return models
 end
 
-function exampleFiles(package)
+function findExamples(package)
 	local s = sessionInfo().separator
 	local examplespath = sessionInfo().path..s.."packages"..s..package..s.."examples"
 
 	if attributes(examplespath, "mode") ~= "directory" then
-		printError("examples is not a directory")
-		os.exit()
+		return {}
 	end
 
 	local result = {}
 
 	forEachFile(examplespath, function(fname)
 		if string.endswith(fname, ".lua") then
-			table.insert(result, fname)
+			table.insert(result, string.sub(fname, 0, string.len(fname) - 4))
 		elseif not string.endswith(fname, ".tme") and not string.endswith(fname, ".log") then
 			printWarning("Test file '"..fname.."' does not have a valid extension")
 		end
@@ -639,12 +638,12 @@ function execute(arguments) -- arguments is a vector of strings
 						end)
 					end
 	
-					files = exampleFiles(package)
+					files = findExamples(package)
 
 					if #files > 0 then
 						print("Example(s):")
 						forEachElement(files, function(_, value)
-							print(" - "..string.sub(value, 0, string.len(value) - 4))
+							print(" - "..value)
 						end)
 					end
 					os.exit()
@@ -734,10 +733,10 @@ function execute(arguments) -- arguments is a vector of strings
 					-- was a call such as "TerraME .../package/examples/example.lua"
 					arguments[argCount + 1] = arg
 				else
-					files = exampleFiles(package)
+					files = findExamples(package)
 
 					forEachElement(files, function(_, value)
-						print(" - "..string.sub(value, 0, string.len(value) - 4))
+						print(" - "..value)
 					end)
 					os.exit()
 				end
