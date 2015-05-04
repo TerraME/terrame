@@ -578,12 +578,6 @@ function traceback()
 end
 
 function execute(arguments) -- arguments is a vector of strings
-	if arguments == nil or #arguments < 1 then 
-		print("\nYou should provide, at least, a file as argument.")
-		usage()
-		os.exit()
-	end
-
 	info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
 		dbVersion = "1_3_1",
@@ -606,6 +600,12 @@ function execute(arguments) -- arguments is a vector of strings
 	dofile(path.."Utils.lua")
 
 	info_.version = packageInfo().version
+
+	if arguments == nil or #arguments < 1 then 
+		dofile(info_.path..s.."lua"..s.."pmanager.lua")
+		packageManager()
+		return
+	end
 
 	local package = "base"
 
