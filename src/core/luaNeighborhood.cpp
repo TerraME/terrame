@@ -151,7 +151,7 @@ int luaNeighborhood::getCellWeight(lua_State *L) {
 int luaNeighborhood::getCellNeighbor(lua_State *L) {  
     luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
-    luaCell *cell = (luaCell*)(*CellNeighborhood::pImpl_)[ cellIndex ];
+    luaCell *cell = (luaCell*)(*CellNeighborhood::pImpl_)[cellIndex];
     if(cell) cell->getReference(L);
     else lua_pushnil(L);
     return 1;
