@@ -39,8 +39,8 @@ return{
 		end)
 
 		unitTest:assertType(it, "Trajectory")
-		unitTest:assertNull(it.select)
-		unitTest:assertNull(it.greater)
+		unitTest:assertNil(it.select)
+		unitTest:assertNil(it.greater)
 
 		cont = 0
 		unitTest:assertEquals(100, #it)
@@ -225,7 +225,7 @@ xyz     function
 		unitTest:assertEquals(9, it:get(8, 9).y)
 
 		local c = it:get(100, 100)
-		unitTest:assertNull(c)
+		unitTest:assertNil(c)
 	end,
 	randomize = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

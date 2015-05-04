@@ -43,8 +43,8 @@ dbType = "mysql"
 ===============================================================]])
 			os.exit()
 		else
-			unitTest:assertNotNull(cf.dbType)
-			unitTest:assertNotNull(cf.password)
+			unitTest:assertNotNil(cf.dbType)
+			unitTest:assertNotNil(cf.password)
 		end
 	end
 }

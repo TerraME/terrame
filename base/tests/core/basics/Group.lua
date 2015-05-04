@@ -51,8 +51,8 @@ return{
 		unitTest:assertType(g, "Group")
 		unitTest:assertEquals(#g, #nonFooSociety)
 		unitTest:assertEquals(g.agents[1], nonFooSociety.agents[1])
-		unitTest:assertNull(g.select)
-		unitTest:assertNull(g.greater)
+		unitTest:assertNil(g.select)
+		unitTest:assertNil(g.greater)
 		unitTest:assertEquals(g:w(), 30)
 		unitTest:assertEquals(g:p(), 50)
 

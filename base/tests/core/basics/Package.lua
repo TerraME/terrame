@@ -247,7 +247,7 @@ return{
 		}
 
 		unitTest:assertEquals(suggestion("aaaab", t), "aaaaa")
-		unitTest:assertNull(suggestion("ddddd", t))
+		unitTest:assertNil(suggestion("ddddd", t))
 	end,
 	switch = function(unitTest)
 		local count = 0

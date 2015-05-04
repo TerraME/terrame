@@ -113,20 +113,20 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", false))
 	end,
-	assertNull = function(unitTest)
+	assertNil = function(unitTest)
 		local u = UnitTest{unittest = true}
 
 		local error_func = function()
-			u:assertNull(2)
+			u:assertNil(2)
 		end
 
 		unitTest:assertError(error_func, "Test should be nil, got number.")
 	end,
-	assertNotNull = function(unitTest)
+	assertNotNil = function(unitTest)
 		local u = UnitTest{unittest = true}
 
 		local error_func = function()
-			u:assertNotNull()
+			u:assertNotNil()
 		end
 
 		unitTest:assertError(error_func, "Test should not be nil.")

@@ -98,7 +98,7 @@ return{
 		mkDir(pathdata.."test")
 
 		local f = lockDir(pathdata.."test")
-		unitTest:assertNotNull(f)
+		unitTest:assertNotNil(f)
 
 		rmDir(pathdata.."test")
 	end,

@@ -91,7 +91,7 @@ socialnetworks  table of size 0
 	end,
 	addSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
-		unitTest:assertNull(ag1:getSocialNetwork("notfriends"))	
+		unitTest:assertNil(ag1:getSocialNetwork("notfriends"))	
 
 		local sn = SocialNetwork()
 		ag1:addSocialNetwork(sn)
@@ -384,7 +384,7 @@ socialnetworks  table of size 0
 			end
 		}
 
-		unitTest:assertNull(ag1.value)
+		unitTest:assertNil(ag1.value)
 		ag1:init()
 		unitTest:assertEquals(2, ag1.value)
 	end,
@@ -398,7 +398,7 @@ socialnetworks  table of size 0
 		ag1:enter(cell, "placement")
 		ag1:leave(nil, "placement")
 
-		unitTest:assertNull(ag1:getCell("placement"))
+		unitTest:assertNil(ag1:getCell("placement"))
 
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
@@ -409,7 +409,7 @@ socialnetworks  table of size 0
 		ag1:enter(cell, "placement")
 		ag1:leave("placement")
 
-		unitTest:assertNull(ag1:getCell("placement"))
+		unitTest:assertNil(ag1:getCell("placement"))
 	end,
 	message = function(unitTest)
 		local ag = Agent{

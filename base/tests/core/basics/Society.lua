@@ -55,7 +55,7 @@ return {
 			end
 		}
 
-		unitTest:assertNull(nonFooAgent.charge)
+		unitTest:assertNil(nonFooAgent.charge)
 
 		local nonFooSociety = Society{
 			instance = nonFooAgent,
@@ -232,7 +232,7 @@ state_          userdata
 		}
 	
 		forEachAgent(predators, function(ag)
-			unitTest:assertNull(ag:getSocialNetwork())
+			unitTest:assertNil(ag:getSocialNetwork())
 		end)
 
 		predators:createSocialNetwork{probability = 0.5, name = "friends"}
@@ -400,7 +400,7 @@ state_          userdata
 
 		unitTest:assertType(soc:get(1), "Agent")
 
-		unitTest:assertNull(soc.idindex)
+		unitTest:assertNil(soc.idindex)
 		
 		local ag = soc:get(1)
 		unitTest:assertEquals(soc:get(ag.id), ag)

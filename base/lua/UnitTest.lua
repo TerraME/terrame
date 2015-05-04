@@ -48,7 +48,7 @@ UnitTest_ = {
 			self.success = self.success + 1
 		else
 			self.fail = self.fail + 1
-			self:print_error("Test should be true, got false.")
+			self:printError("Test should be true, got false.")
 		end
 	end,
 	--- Check if two values are equal. In this function, two tables are equal only when they are
@@ -75,21 +75,21 @@ UnitTest_ = {
 				self.success = self.success + 1
 			else 
 				self.fail = self.fail + 1
-				self:print_error("Values should be equal, but got '"..v1.."' and '"..v2.."'.")
+				self:printError("Values should be equal, but got '"..v1.."' and '"..v2.."'.")
 			end
 		elseif type(v1) == "string" and type(v2) == "string" then
 			if v1 == v2 then
 				self.success = self.success + 1
 			else 
 				self.fail = self.fail + 1
-				self:print_error("Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'.")
+				self:printError("Values should be equal, but got \n'"..v1.."' and \n'"..v2.."'.")
 			end
 		elseif type(v1) ~= type(v2) then
 			self.fail = self.fail + 1
-			self:print_error("Values should be equal, but they have different types ("..type(v1).." and "..type(v2)..").")
+			self:printError("Values should be equal, but they have different types ("..type(v1).." and "..type(v2)..").")
 		elseif v1 ~= v2 then
 			self.fail = self.fail + 1
-			self:print_error("Values have the same type ("..type(v1)..") but different values.")
+			self:printError("Values have the same type ("..type(v1)..") but different values.")
 		else
 			self.success = self.success + 1
 		end
@@ -136,7 +136,7 @@ UnitTest_ = {
 			local start = shortError:sub(1, 7)
 
 			if start ~= "Error: " then
-				self:print_error("The error message does not start with \"Error:\": "..shortError)
+				self:printError("The error message does not start with \"Error:\": "..shortError)
 			end
 
 			shortError = shortError:sub(8, shortError:len())
@@ -155,40 +155,40 @@ UnitTest_ = {
 						" character(s), but got "..distance.."." -- SKIP
 				end
 
-				self:print_error(error_msg)
+				self:printError(error_msg)
 				-- print(traceback())
 			end
 		end)
 
 		if not found_error then
 			self.fail = self.fail + 1 -- SKIP
-			self:print_error("Test expected an error ('"..error_message.."'), but no error was found.", 2)
+			self:printError("Test expected an error ('"..error_message.."'), but no error was found.", 2)
 		end
 
 		self.test = self.test + 1
 	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
 	-- @arg value Any value.
-	-- @usage unitTest:assertNull()
-	assertNull = function(self, value)
+	-- @usage unitTest:assertNil()
+	assertNil = function(self, value)
 		self.test = self.test + 1
 		if value == nil then
 			self.success = self.success + 1
 		else
 			self.fail = self.fail + 1
-			self:print_error("Test should be nil, got "..type(value)..".")
+			self:printError("Test should be nil, got "..type(value)..".")
 		end
 	end,
 	--- Check if a given value is not nil. Otherwise it generates an error.
 	-- @arg value Any value.
-	-- @usage unitTest:assertNotNull(2)
-	assertNotNull = function (self, value)
+	-- @usage unitTest:assertNotNil(2)
+	assertNotNil = function (self, value)
 		self.test = self.test + 1
 		if value ~= nil then
 			self.success = self.success + 1
 		else
 			self.fail = self.fail + 1
-			self:print_error("Test should not be nil.")
+			self:printError("Test should not be nil.")
 		end
 	end,
 	--- Verify whether a Chart or a Map has a plot similar to the one defined by snapshot folder.
@@ -210,7 +210,7 @@ UnitTest_ = {
 
 		if self.tsnapshots[file] then
 			self.fail = self.fail + 1 -- SKIP
-			self:print_error("File '"..file.."' is used in more than one assert_shapshot().")
+			self:printError("File '"..file.."' is used in more than one assert_shapshot().")
 			return
 		end
 
@@ -231,7 +231,7 @@ UnitTest_ = {
 				self.test = self.test + 1
 				self.success = self.success + 1
 			else
-				self:print_error("Files \n  'snapshots"..s..file.."'\nand\n  '"..newImage.."'\nare different.")
+				self:printError("Files \n  'snapshots"..s..file.."'\nand\n  '"..newImage.."'\nare different.")
 				self.fail = self.fail + 1 -- SKIP
 			end
 		end
@@ -249,7 +249,7 @@ UnitTest_ = {
 			self.success = self.success + 1
 		else
 			self.fail = self.fail + 1
-			self:print_error("Test should be "..mtype.." got "..type(value)..".")
+			self:printError("Test should be "..mtype.." got "..type(value)..".")
 		end
 	end,
 	--- Sleep the tests for some time. The sleeping time is the value of a variable named sleep
@@ -261,8 +261,8 @@ UnitTest_ = {
 	end,
 	--- Internal function to print error messages along the tests.
 	-- @arg msg A string with the error message.
-	-- @usage unitTest:print_error("msg")
-	print_error = function(self, msg)
+	-- @usage unitTest:printError("msg")
+	printError = function(self, msg)
 		local level = 1
 		local info = debug.getinfo(level)
 		while not string.match(info.source, "/tests/") do

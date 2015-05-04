@@ -63,15 +63,15 @@ return{
 
 		unitTest:assertEquals(u.success, 2)
 	end,
-	assertNull = function(unitTest)
+	assertNil = function(unitTest)
 		local u = UnitTest{}
-		u:assertNull()
+		u:assertNil()
 
 		unitTest:assertEquals(u.success, 1)
 	end,
-	assertNotNull = function(unitTest)
+	assertNotNil = function(unitTest)
 		local u = UnitTest{}
-		u:assertNotNull(true)
+		u:assertNotNil(true)
 
 		unitTest:assertEquals(u.success, 1)
 	end,
@@ -86,7 +86,7 @@ return{
 		local u = UnitTest{sleep = 1}
 		unitTest:assert(true)
 	end,
-	print_error = function(unitTest)
+	printError = function(unitTest)
 		unitTest:assert(true)
 	end,
 	tmpFolder = function(unitTest)

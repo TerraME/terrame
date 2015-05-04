@@ -443,7 +443,7 @@ ydim    number [20]
 
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood1")
-			unitTest:assertNotNull(neighborhood)
+			unitTest:assertNotNil(neighborhood)
 
 			local neighborhoodSize = #neighborhood
 
@@ -900,7 +900,7 @@ ydim    number [20]
 		unitTest:assertEquals(c, d)
 
 		local c = cs:get(100, 100)
-		unitTest:assertNull(c)
+		unitTest:assertNil(c)
 	end,
 	load = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
@@ -911,7 +911,7 @@ ydim    number [20]
 
 		cs:load()
 
-		unitTest:assertNull(cs:sample().w)
+		unitTest:assertNil(cs:sample().w)
 	end,
 	sample = function(unitTest)
 		local cs = CellularSpace{xdim = 3}
@@ -964,16 +964,16 @@ ydim    number [20]
 	synchronize = function(unitTest)
 		local cs = CellularSpace{xdim = 5}
 
-		forEachCell(cs, function(cell) unitTest:assertNotNull(cell) end)
-		forEachCell(cs, function(cell) unitTest:assertNotNull(cell.past) end)
+		forEachCell(cs, function(cell) unitTest:assertNotNil(cell) end)
+		forEachCell(cs, function(cell) unitTest:assertNotNil(cell.past) end)
 		forEachCell(cs, function(cell) cell.cover = "forest" end)
 
 		cs:synchronize()
-		forEachCell(cs, function(cell) unitTest:assertNotNull(cell.past.cover) end)
+		forEachCell(cs, function(cell) unitTest:assertNotNil(cell.past.cover) end)
 		forEachCell(cs, function(cell) unitTest:assertEquals("forest", cell.past.cover) end)
 
-		forEachElement(cs.cells[1], function(el) unitTest:assertNotNull(el) end)
-		forEachElement(cs.cells[1].past, function(el) unitTest:assertNotNull(el) end)
+		forEachElement(cs.cells[1], function(el) unitTest:assertNotNil(el) end)
+		forEachElement(cs.cells[1].past, function(el) unitTest:assertNotNil(el) end)
 	end
 }
 

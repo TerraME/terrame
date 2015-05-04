@@ -127,7 +127,7 @@ y      number [0]
 		local cell2 = Cell{x = 1, y = 1}
 		local n = Neighborhood()
 
-		unitTest:assertNull(cell:getNeighborhood())
+		unitTest:assertNil(cell:getNeighborhood())
 
 		cell:addNeighborhood(n)
 
@@ -140,7 +140,7 @@ y      number [0]
 
 		n:add(cell2)
 		unitTest:assertEquals(1, #ng)
-		unitTest:assertNull(cell:getNeighborhood("wrong_name"))
+		unitTest:assertNil(cell:getNeighborhood("wrong_name"))
 
 		local cs = CellularSpace{xdim = 10}
 
@@ -161,7 +161,7 @@ y      number [0]
 			end
 		}
 
-		unitTest:assertNull(c.value)
+		unitTest:assertNil(c.value)
 		c:init()
 		unitTest:assertEquals(2, c.value)
 	end,
@@ -204,15 +204,15 @@ y      number [0]
 			soilWater = 0
 		}
 
-		unitTest:assertNotNull(cell.past)
-		unitTest:assertNull(cell.past.cover)
+		unitTest:assertNotNil(cell.past)
+		unitTest:assertNil(cell.past.cover)
 
 		cell:synchronize()
 
-		unitTest:assertNotNull(cell.past)
+		unitTest:assertNotNil(cell.past)
 		unitTest:assertEquals(cell.cover,"forest")
 		unitTest:assertEquals(cell.cover, cell.past.cover)
-		unitTest:assertNull(cell.past.past)
+		unitTest:assertNil(cell.past.past)
 	end
 }
 

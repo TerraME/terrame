@@ -101,7 +101,7 @@ events  table of size 1
 
 		timer2:add(Event{action = function(event)
 			cont = cont + 1
-			unitTest:assertNotNull(event)
+			unitTest:assertNotNil(event)
 
 			-- configuring the current event does not affects the TerraME scheduler
 			local evTime = event:getTime() + 2
@@ -215,7 +215,7 @@ events  table of size 1
 		local timer2 = Timer{
 			Event{action = function(event)
 				cont = cont + 1
-				unitTest:assertNotNull(event)
+				unitTest:assertNotNil(event)
  
 				-- configuring the current event does not affects the TerraME scheduler
 				local evTime = event:getTime() + 2
