@@ -141,7 +141,7 @@ int luaCell::size(lua_State *) {
 	return 1;
 }
 
-/// Fowards the Neighborhood iterator to the next Neighbor cell
+/// Forwards the Neighborhood iterator to the next Neighbor cell
 // no parameters
 int luaCell::next(lua_State *)
 {
@@ -235,7 +235,7 @@ int luaCell::addNeighborhood(lua_State *L)
 
 /// Synchronizes the luaCell
 int luaCell::synchronize(lua_State *) {
-	Cell::synchronize(sizeof(luaCell)); // parametro nao testado
+	Cell::synchronize(sizeof(luaCell)); // parameter not tested
 	return 0;
 }
 
@@ -286,9 +286,9 @@ const CellIndex & luaCell::getIndex() const
 }
 
 /// Creates several types of observers
-/// parameters: observer type, observeb attributes table, observer type parameters
-// verif. ref (endereco na pilha lua)
-// olhar a classe event
+/// parameters: observer type, observer attributes table, observer type parameters
+// verif. ref (address on the stack lua)
+// see event class
 int luaCell::createObserver(lua_State *)
 {
 #ifdef DEBUG_OBSERVER
@@ -667,7 +667,7 @@ int luaCell::createObserver(lua_State *)
 
 			// Splits the attribute labels in the cols list
 			obsGraphic->setAttributes(obsAttribs, cols.takeFirst().split(";", QString::SkipEmptyParts),
-									  obsParams, cols);
+									obsParams, cols);
 
 			lua_pushnumber(luaL, obsId);
 			lua_pushlightuserdata(luaL, (void*) obsGraphic);
@@ -1214,7 +1214,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 				// Number of internal subjects
 				msg.append(QString::number(neighSize + 1));
 				msg.append(PROTOCOL_SEPARATOR);
-				 // TODO: why two tabs in sequence?
+				// TODO: why two tabs in sequence?
 				msg.append(PROTOCOL_SEPARATOR); 
 
 				while(itNeigh != neigh->end())

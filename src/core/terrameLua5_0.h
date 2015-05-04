@@ -1035,7 +1035,7 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////////
 class luaEnvironment : public Environment
 {
-    string id;
+	string id;
 public:
     // Lua interface
     luaEnvironment(lua_State *L) {

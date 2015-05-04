@@ -139,7 +139,7 @@ int luaLocalAgent::build(lua_State *){
     if(! Agent::build())
     {
 		string errorMsg = string("You must add a state to the agent before use "
-								 "it as a jump condition targert...");
+				"it as a jump condition targert...");
 		lua_getglobal(L, "customError");
 		lua_pushstring(L, errorMsg.c_str());
 		//lua_pushnumber(L, 5);

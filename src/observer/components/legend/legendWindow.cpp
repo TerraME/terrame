@@ -749,7 +749,7 @@ void LegendWindow::countElementsBySlices()
                 case TObsSociety:
                     model->setData(model->index(i, 0, QModelIndex()), 
                         symbol2Pixmap(leg.getColor(), attrib->getFont(), attrib->getSymbol()),
-							   Qt::DecorationRole);
+						Qt::DecorationRole);
                     break;
 
                 case TObsNeighborhood:
@@ -767,11 +767,11 @@ void LegendWindow::countElementsBySlices()
             }
 
 			model->setData(model->index(i, 1, QModelIndex()), leg.getFrom(),
-						   Qt::DisplayRole);
+					Qt::DisplayRole);
 			model->setData(model->index(i, 2, QModelIndex()), leg.getTo(),
-						   Qt::DisplayRole);
+					Qt::DisplayRole);
 			model->setData(model->index(i, 3, QModelIndex()), leg.getLabel(),
-						   Qt::DisplayRole);
+					Qt::DisplayRole);
 
             // // Hide the count display
             // model->setData(model->index(i, 4, QModelIndex()), leg.getOccurrence(),
@@ -1316,24 +1316,24 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 
         switch (attrib->getType())
         {
-	        case TObsAgent:
-	        case TObsSociety:
-		        model->setData(model->index(i, 0, QModelIndex()), 
-			        symbol2Pixmap(leg.getColor(), attrib->getFont(), attrib->getSymbol()),
-				        Qt::DecorationRole);
-		        break;
+        	case TObsAgent:
+        	case TObsSociety:
+        		model->setData(model->index(i, 0, QModelIndex()),
+        				symbol2Pixmap(leg.getColor(), attrib->getFont(), attrib->getSymbol()),
+						Qt::DecorationRole);
+        		break;
 
-	        case TObsNeighborhood:
-			        model->setData(model->index(i, 0, QModelIndex()), 
-				        color2PixmapLine(leg.getColor(), attrib->getWidth()), 
-				        Qt::DecorationRole);
-		        break;
+        	case TObsNeighborhood:
+        		model->setData(model->index(i, 0, QModelIndex()),
+        				color2PixmapLine(leg.getColor(), attrib->getWidth()),
+						Qt::DecorationRole);
+        		break;
 
-	        default:
-			        model->setData(model->index(i, 0, QModelIndex()), 
-				        color2Pixmap(leg.getColor()), 
-				        Qt::DecorationRole);
-		        break;
+        	default:
+        		model->setData(model->index(i, 0, QModelIndex()),
+        				color2Pixmap(leg.getColor()),
+						Qt::DecorationRole);
+        		break;
 
         }
 
@@ -1683,7 +1683,7 @@ QString LegendWindow::stdDevToString(int e)
 
 void LegendWindow::commitFile()
 {
-    QFile file("legend.tol"); // tol -> TerraObserver Legend
+	QFile file("legend.tol"); // tol -> TerraObserver Legend
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
@@ -2160,8 +2160,7 @@ void LegendWindow::retranslateUi()
     loadGroupBox->setTitle(QApplication::translate("LegendWindow", "Load Color Bar", 0));
     loadNamesComboBox->clear();
     loadNamesComboBox->insertItems(0, QStringList()
-                                   << QApplication::translate("LegendWindow", "      -------------------------------------", 0)
-                                 );
+                                   << QApplication::translate("LegendWindow", "      -------------------------------------", 0));
     saveColorPushButton->setText(QApplication::translate("LegendWindow", "Save...", 0));
     okPushButton->setText(QApplication::translate("LegendWindow", "&OK", 0));
     okPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+O", 0));

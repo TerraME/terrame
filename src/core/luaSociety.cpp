@@ -373,7 +373,7 @@ int luaSociety::createObserver(lua_State * luaL)
 					if (execModes != Quiet)
 					{
 						qWarning("In this context, the code '%s' does not correspond to a "
-								 "valid type of Observer.",  getObserverName(typeObserver));
+								"valid type of Observer.",  getObserverName(typeObserver));
 					}
 					return 0;
 			}
@@ -393,7 +393,7 @@ int luaSociety::createObserver(lua_State * luaL)
 				{
 					if (execModes != Quiet)
 						qWarning("Filename was not specified, using a "
-								 "default \"%s\".", qPrintable(DEFAULT_NAME));
+								"default \"%s\".", qPrintable(DEFAULT_NAME));
 					obsLog->setFileName(DEFAULT_NAME + ".csv");
 				}
 				else
@@ -953,7 +953,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 	
 	if(valueChanged)
 	{
-		 if((parentSubj) && (! currSubj))
+		if((parentSubj) && (! currSubj))
 			currSubj = parentSubj->add_internalsubject();
 
 		// id

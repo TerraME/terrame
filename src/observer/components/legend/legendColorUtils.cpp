@@ -54,9 +54,9 @@ inline std::string number2String (const long value)
 
 inline std::string number2String (const long long int value)
 {
-  char name [ NAME_LENGTH ];
-  sprintf (name, "%lld", value);
-  return name;
+	char name [ NAME_LENGTH ];
+	sprintf (name, "%lld", value);
+	return name;
 }
 
 inline std::string number2String(const unsigned long value)

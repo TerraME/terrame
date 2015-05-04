@@ -426,7 +426,7 @@ int luaNeighborhood::getParent(lua_State *L)
 
 #include <QDebug>
 
- int luaNeighborhood::createObserver(lua_State *)
+int luaNeighborhood::createObserver(lua_State *)
  {
 #ifdef DEBUG_OBSERVER
     // luaStackToQString(7);
@@ -1048,14 +1048,14 @@ int luaNeighborhood::getParent(lua_State *L)
 
     // qFatal(".......");
     return 0;
- }
+}
 
- int luaNeighborhood::notify(lua_State *)
- {
-    double time = luaL_checknumber(luaL, -1);
-    NeighborhoodSubjectInterf::notify(time);
-    return 0;
- }
+int luaNeighborhood::notify(lua_State *)
+{
+	double time = luaL_checknumber(luaL, -1);
+	NeighborhoodSubjectInterf::notify(time);
+	return 0;
+}
   
 const TypesOfSubjects luaNeighborhood::getType() const
 {

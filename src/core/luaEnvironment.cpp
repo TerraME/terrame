@@ -309,28 +309,28 @@ int luaEnvironment::createObserver(lua_State *luaL)
             }
 
 		case LUA_TTABLE:
-		    {
-                int tableTop = lua_gettop(luaL);
-                                           
-		        lua_pushnil(luaL);
-		        while(lua_next(luaL, tableTop) != 0)
-                {
-		            if (lua_type(luaL, -2) == LUA_TSTRING)
-		                obsParams.append(luaL_checkstring(luaL, -2));
+		{
+			int tableTop = lua_gettop(luaL);
 
-		            switch (lua_type(luaL, -1))
-                    {
-                        case LUA_TNUMBER:
-                            cols.append(QString::number(luaL_checknumber(luaL, -1)));
-                            break;
-                            
-                        case LUA_TSTRING:
-		                    cols.append(luaL_checkstring(luaL, -1));
-                            break;
-                    }
-            		lua_pop(luaL, 1);
-                }
-            }
+			lua_pushnil(luaL);
+			while(lua_next(luaL, tableTop) != 0)
+			{
+				if (lua_type(luaL, -2) == LUA_TSTRING)
+					obsParams.append(luaL_checkstring(luaL, -2));
+
+				switch (lua_type(luaL, -1))
+				{
+				case LUA_TNUMBER:
+					cols.append(QString::number(luaL_checknumber(luaL, -1)));
+					break;
+
+				case LUA_TSTRING:
+					cols.append(luaL_checkstring(luaL, -1));
+					break;
+				}
+				lua_pop(luaL, 1);
+			}
+		}
 
         default:
             break;

@@ -98,7 +98,7 @@ public:
 	/**
 	 * Gets the attributes of Lua stack
 	 * \param attribs the list of attributes observed
-	 */
+	*/
 	QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
 		ObserverDatagramPkg::SubjectAttribute *parentSubj);
 

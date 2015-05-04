@@ -79,9 +79,9 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     plotter->setWindowTitle("TerraME :: Chart");
 
 	if(s.width > 0 && s.height > 0)
-	    plotter->resize(s.width, s.height);
+		plotter->resize(s.width, s.height);
 	else
-	    plotter->resize(450, 350);
+		plotter->resize(450, 350);
 
     plotter->showNormal();
 
