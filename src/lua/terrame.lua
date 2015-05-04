@@ -249,6 +249,22 @@ function findExamples(package)
 	return result
 end
 
+function showDoc(package)
+	local s = sessionInfo().separator
+	local docpath = sessionInfo().path..s.."packages"..s..package..s.."doc"..s.."index.html"
+
+	if s == "/" then
+		if runCommand("uname")[1] == "Darwin" then
+			runCommand("open "..docpath)
+		else
+			runCommand("xdg-open "..docpath)
+		end
+	else
+		print("This functionality is still not implemented in Windows.")
+	end
+	os.exit()
+end
+
 local function exportDatabase(package)
 	local s = sessionInfo().separator
 
@@ -425,6 +441,7 @@ local function usage()
 	print(" [-package <pkg>] -test     Execute unit tests.")
 	print(" [-package <pkg>] -example  Run an example.")
 	print(" [-package <pkg>] -doc      Build the documentation.")
+	print(" [-package <pkg>] -showdoc  Show the documentation in the default browser.")
 	print(" [-package <pkg>] -model    Configure and run a model.")
 	print(" [-package <pkg>] -importDb Import .sql files described in data.lua from folder data")
 	print("                            within the package to MySQL.")
@@ -681,6 +698,8 @@ function execute(arguments) -- arguments is a vector of strings
 			elseif arg == "-help" then 
 				usage()
 				os.exit()
+			elseif arg == "-showdoc" then
+				showDoc(package)
 			elseif arg == "-doc" then
 				local s = sessionInfo().separator
 				dofile(sessionInfo().path..s.."lua"..s.."doc.lua")
