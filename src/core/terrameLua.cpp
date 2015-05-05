@@ -257,7 +257,6 @@ int main(int argc, char *argv[])
 		lua_getglobal(L, "execute");
 		lua_pushnil(L);
 		lua_call(L, 1, 0);
-		return -1;
 	}
 	else
 	{

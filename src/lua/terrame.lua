@@ -188,7 +188,7 @@ function findModels(package)
 		require("base")
 	end
 
-	models = {}
+	local models = {}
 	local found = false
 	local oldModel = Model
 	Model = function()
@@ -212,6 +212,7 @@ function findModels(package)
 
 	forEachFile(srcpath, function(fname)
 		found = false
+		local a
 		xpcall(function() a = include(srcpath..fname) end, function(err)
 			printError("Error: Could not load "..fname)
 			os.exit()
@@ -262,7 +263,6 @@ function showDoc(package)
 	else
 		print("This functionality is still not implemented in Windows.")
 	end
-	os.exit()
 end
 
 local function exportDatabase(package)
@@ -619,7 +619,7 @@ function execute(arguments) -- arguments is a vector of strings
 	if arguments == nil or #arguments < 1 then 
 		dofile(info_.path..s.."lua"..s.."pmanager.lua")
 		packageManager()
-		return
+		return true
 	end
 
 	local package = "base"
@@ -651,7 +651,7 @@ function execute(arguments) -- arguments is a vector of strings
 				package = arguments[argCount]
 				info_.package = package
 				if #arguments <= argCount then
-					models = findModels(package)
+					local models = findModels(package)
 
 					if #models == 1 then
 						xpcall(function() graphicalInterface(package, models[1]) end, function(err)
@@ -689,7 +689,7 @@ function execute(arguments) -- arguments is a vector of strings
 
 				require("base")
 				require(package)
-				models = findModels(package)
+				local models = findModels(package)
 				if belong(model, models) then
 					graphicalInterface(package, model)
 				else
@@ -718,6 +718,7 @@ function execute(arguments) -- arguments is a vector of strings
 				os.exit()
 			elseif arg == "-showdoc" then
 				showDoc(package)
+				os.exit()
 			elseif arg == "-doc" then
 				local s = sessionInfo().separator
 				dofile(sessionInfo().path..s.."lua"..s.."doc.lua")

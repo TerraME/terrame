@@ -26,36 +26,44 @@
 function packageManager()
 	require__("qtluae")
 
-	local Dialog = qt.new_qobject(qt.meta.QDialog)
-	Dialog.windowTitle = "TerraME"
+	local dialog = qt.new_qobject(qt.meta.QDialog)
+	dialog.windowTitle = "TerraME"
 
-	local ExternalLayout = qt.new_qobject(qt.meta.QGridLayout)
-	ExternalLayout.spacing = 8
+	local externalLayout = qt.new_qobject(qt.meta.QVBoxLayout)
 
-	qt.ui.layout_add(Dialog, ExternalLayout)
+	local internalLayout = qt.new_qobject(qt.meta.QGridLayout)
+	internalLayout.spacing = 8
+
+	qt.ui.layout_add(dialog, externalLayout)
 
 	-- packages list
 	comboboxPackages = qt.new_qobject(qt.meta.QComboBox)
 
 	local s = sessionInfo().separator
 
-	local index
-	local pos = 0
-	forEachFile(sessionInfo().path..s.."packages", function(file)
-		if file == "luadoc" then return end
+	local function buildComboboxPackages(default)
+		comboboxPackages:clear()
+		local pos = 0
+		local index = 0
+		forEachFile(sessionInfo().path..s.."packages", function(file)
+			if file == "luadoc" then return end
+	
+			qt.combobox_add_item(comboboxPackages, file)
+	
+			if file == default then
+				index = pos
+			else
+				pos = pos + 1
+			end
+		end)
+		return index
+	end
 
-		qt.combobox_add_item(comboboxPackages, file)
+	local index = buildComboboxPackages("base")
 
-		if file == "base" then
-			index = pos
-		else
-			pos = pos + 1
-		end
-	end)
-
-	AboutButton = qt.new_qobject(qt.meta.QPushButton)
-	AboutButton.text = "About"
-	qt.connect(AboutButton, "clicked()", function()
+	aboutButton = qt.new_qobject(qt.meta.QPushButton)
+	aboutButton.text = "About"
+	qt.connect(aboutButton, "clicked()", function()
 		local msg = "Package "..comboboxPackages.currentText
 		local info = packageInfo(comboboxPackages.currentText)
 
@@ -79,10 +87,10 @@ function packageManager()
 
 	label = qt.new_qobject(qt.meta.QLabel)
 	label.text = "Package:"
-	qt.ui.layout_add(ExternalLayout, label, 0, 0)
-	qt.ui.layout_add(ExternalLayout, comboboxPackages, 0, 1)
-	qt.ui.layout_add(ExternalLayout, AboutButton, 0, 2)
-	qt.ui.layout_add(ExternalLayout, docButton, 0, 3)
+	qt.ui.layout_add(internalLayout, label, 0, 0)
+	qt.ui.layout_add(internalLayout, comboboxPackages, 0, 1)
+	qt.ui.layout_add(internalLayout, aboutButton, 0, 2)
+	qt.ui.layout_add(internalLayout, docButton, 0, 3)
 
 	-- models list + execute button
 	comboboxModels = qt.new_qobject(qt.meta.QComboBox)
@@ -90,17 +98,17 @@ function packageManager()
 	label = qt.new_qobject(qt.meta.QLabel)
 	label.text = "Model:"
 
-	BuildButton = qt.new_qobject(qt.meta.QPushButton)
-	BuildButton.text = "Build"
-	qt.connect(BuildButton, "clicked()", function()
+	buildButton = qt.new_qobject(qt.meta.QPushButton)
+	buildButton.text = "Build"
+	qt.connect(buildButton, "clicked()", function()
 		local msg = "terrame -package "..comboboxPackages.currentText..
 		            " -model "..comboboxModels.currentText
 		os.execute(msg)
 	end)
 
-	qt.ui.layout_add(ExternalLayout, label, 1, 0)
-	qt.ui.layout_add(ExternalLayout, comboboxModels, 1, 1)
-	qt.ui.layout_add(ExternalLayout, BuildButton, 1, 2)
+	qt.ui.layout_add(internalLayout, label, 1, 0)
+	qt.ui.layout_add(internalLayout, comboboxModels, 1, 1)
+	qt.ui.layout_add(internalLayout, buildButton, 1, 2)
 
 	-- examples list + execute button
 	comboboxExamples = qt.new_qobject(qt.meta.QComboBox)
@@ -108,27 +116,27 @@ function packageManager()
 	label = qt.new_qobject(qt.meta.QLabel)
 	label.text = "Example:"
 
-	RunButton = qt.new_qobject(qt.meta.QPushButton)
-	RunButton.text = "Run"
-	qt.connect(RunButton, "clicked()", function()
+	runButton = qt.new_qobject(qt.meta.QPushButton)
+	runButton.text = "Run"
+	qt.connect(runButton, "clicked()", function()
 		local msg = "terrame -package "..comboboxPackages.currentText..
 		            " -example "..comboboxExamples.currentText
 		os.execute(msg)
 	end)
 
-	qt.ui.layout_add(ExternalLayout, label, 2, 0)
-	qt.ui.layout_add(ExternalLayout, comboboxExamples, 2, 1)
-	qt.ui.layout_add(ExternalLayout, RunButton, 2, 2)
+	qt.ui.layout_add(internalLayout, label, 2, 0)
+	qt.ui.layout_add(internalLayout, comboboxExamples, 2, 1)
+	qt.ui.layout_add(internalLayout, runButton, 2, 2)
 
 	-- what to do when a new package is selected
-	qt.connect(comboboxPackages, "activated(int)", function(_, value)
+	local function selectPackage()
 		comboboxExamples:clear()
 		comboboxModels:clear()
 
 		local models = findModels(comboboxPackages.currentText)
 
 		comboboxModels.enabled = #models > 1
-		BuildButton.enabled = #models > 0
+		buildButton.enabled = #models > 0
 
 		forEachElement(models, function(_, value)
 			qt.combobox_add_item(comboboxModels, value)
@@ -137,31 +145,55 @@ function packageManager()
 		local ex = findExamples(comboboxPackages.currentText)
 
 		comboboxExamples.enabled = #ex > 1
-		RunButton.enabled = #ex > 0
+		runButton.enabled = #ex > 0
 
 		forEachElement(ex, function(_, value)
 			qt.combobox_add_item(comboboxExamples, value)
 		end)
-	end)
+	end
 
 	comboboxPackages:setCurrentIndex(index)
 
-	-- quit button
-	ButtonsLayout = qt.new_qobject(qt.meta.QHBoxLayout)
-	QuitButton = qt.new_qobject(qt.meta.QPushButton)
-	QuitButton.minimumSize = {100, 28}
-	QuitButton.maximumSize = {110, 28}
-	QuitButton.text = "Quit"
-	qt.ui.layout_add(ButtonsLayout, QuitButton)
+	qt.connect(comboboxPackages, "activated(int)", selectPackage)
+	-- bottom buttons
+	buttonsLayout = qt.new_qobject(qt.meta.QHBoxLayout)
 
-	local m2function = function() Dialog:done(0) end
-	qt.connect(QuitButton, "clicked()", m2function)
+	installButton = qt.new_qobject(qt.meta.QPushButton)
+	installButton.minimumSize = {100, 28}
+	installButton.maximumSize = {110, 28}
+	installButton.text = "Install"
+	qt.ui.layout_add(buttonsLayout, installButton)
 
-	ListView = qt.new_qobject(qt.meta.QListView)
+	local m2function = function()
+		local fname = qt.dialog.get_open_filename("Select Package", "", "*.zip")
+		if fname ~= "" then
+			local pkg = installPackage(fname)
 
-	--qt.ui.layout_add(ExternalLayout, ListView)
-	qt.ui.layout_add(ExternalLayout, ButtonsLayout, 3, 0)
+			if type(pkg) == "string" then
+				qt.dialog.msg_information("Package '"..pkg.."' successfully installed.")
+				local index = buildComboboxPackages(pkg)
+				comboboxPackages:setCurrentIndex(index)
+				selectPackage()
+			else
+				qt.dialog.msg_critical("File "..fname.." could not be installed.")
+			end
+		end
+	end
+	qt.connect(installButton, "clicked()", m2function)
 
-	Dialog:exec()
+	quitButton = qt.new_qobject(qt.meta.QPushButton)
+	quitButton.minimumSize = {100, 28}
+	quitButton.maximumSize = {110, 28}
+	quitButton.text = "Quit"
+	qt.ui.layout_add(buttonsLayout, quitButton)
+
+	local m2function = function() dialog:done(0) end
+	qt.connect(quitButton, "clicked()", m2function)
+
+	qt.ui.layout_add(externalLayout, internalLayout)
+	qt.ui.layout_add(externalLayout, buttonsLayout, 3, 0)
+
+	selectPackage()
+	local result = dialog:exec()
 end
 
