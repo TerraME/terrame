@@ -363,7 +363,7 @@ local function importDatabase(package)
 	end)
 end
 
-local function installPackage(file)
+function installPackage(file)
 	if file == nil then
 		printError("You need to choose the file to be installed.")
 		return
@@ -376,23 +376,35 @@ local function installPackage(file)
 
 	local s = sessionInfo().separator
 	local package
-	xpcall(function() package = string.sub(file, 1, string.find(file, "_") - 1) end, function(err)
+	local result = xpcall(function() package = string.sub(file, 1, string.find(file, "_") - 1) end, function(err)
 		printError(file.." is not a valid file name for a TerraME package")
-		os.exit()
 	end)
+
+	if not result then return end
 
 	local arg = sessionInfo().path..s.."packages"..s..package
 
-	local currentDir = currentdir()
+	local currentDir = currentDir()
 	local packageDir = sessionInfo().path..s.."packages"
 
 	os.execute("cp "..file.." "..packageDir)
-	chdir(packageDir)
+	chDir(packageDir)
 
 	os.execute("unzip -q "..file)
 
-	printNote("Trying to load package "..package)
-	xpcall(function() require(package) end, function(err)
+	local lastSep = string.find(package, s, string.len(package) / 2)
+	local name = package
+
+	if lastSep then
+		name = string.sub(package, lastSep + 1)
+	end
+
+	if not isLoaded("base") then
+		require("base")
+	end
+
+	printNote("Trying to load package "..name)
+	xpcall(function() require(name) end, function(err)
 		printError("Package could not be loaded:")
 		printError(err)
 
@@ -400,8 +412,10 @@ local function installPackage(file)
 		os.exit()
 	end)
 	printNote("Package successfully installed")
-	chdir(currentDir)
-	os.execute("rm "..packageDir..s..file)
+	chDir(currentDir)
+
+	os.execute("rm "..packageDir..s.."*.zip")
+	return name
 end
 
 local function version()
@@ -438,6 +452,7 @@ local function usage()
 	print(" -package <pkg>             Select a given package. If used alone and the model has a")
 	print("                            single model than it runs the graphical interface")
 	print("                            creating an instance of such model.")
+	print(" -install <file>            Install a package stored in a given file.")
 	print(" [-package <pkg>] -test     Execute unit tests.")
 	print(" [-package <pkg>] -example  Run an example.")
 	print(" [-package <pkg>] -doc      Build the documentation.")
