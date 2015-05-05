@@ -69,10 +69,12 @@ Chart{
 }
 
 function count_strategies(soc)
-	tot = {}
+	local tot = {}
 	for i = 1, #STRATEGIES do
 		tot[STRATEGIES[i]] = 0
 	end
+
+	local strat
 
 	forEachAgent(soc, function(agent)
 		strat = agent.strategies[agent.last_strategy]
@@ -94,7 +96,7 @@ beerAgent = Agent{
 		ag.chosen = {0, 0, 0, 0, 0, 0, 0, 0, 0}
 		for i = 1, K do
 			ag.count_fails[i] = 0
-			p = 0
+			local p = 0
 			repeat
 				p = math.random(1, #STRATEGIES)
 			until ag.chosen[p] == 0
@@ -105,7 +107,7 @@ beerAgent = Agent{
 		ag.last_strategy = 1
 	end,
 	execute = function(ag)
-		best = 1
+		local best = 1
 		for i = 2, K do
 			if ag.count_fails[best] > ag.count_fails[i] then
 				best = i
@@ -114,7 +116,7 @@ beerAgent = Agent{
 
 		ag.last_strategy = best
 
-		last = ag.strategies[best](LAST_TURNS)
+		local last = ag.strategies[best](LAST_TURNS)
 		if last < 60 then
 			ag.last_choose = 1
 		else
@@ -126,7 +128,7 @@ beerAgent = Agent{
 		for i = 1, K do
 			-- punishment is equal to the difference btw the predicted value
 			-- and the number of attendances
-			diff = ag.strategies[i](LAST_TURNS) - quantity
+			local diff = ag.strategies[i](LAST_TURNS) - quantity
 			ag.count_fails[i] = ag.count_fails[i] + math.abs(diff)
 		end
 	end
@@ -139,7 +141,7 @@ s = Society{
 
 t = Timer{
 	Event{action = function(ev)
-		quant = 0
+		local quant = 0
 		forEachAgent(s, function(ag)
 			quant = quant + ag:execute()
 		end)
