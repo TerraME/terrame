@@ -762,7 +762,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		if(execModes != Quiet)
 		{
 			qWarning("Warning: In this context, the code '%s' does not "
-					 "correspond to a valid type of Observer.",  getObserverName(typeObserver));
+					"correspond to a valid type of Observer.",  getObserverName(typeObserver));
 		}
 		return 0;
 	}
@@ -781,7 +781,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		{
 			if(execModes != Quiet)
 				qWarning("Warning: Filename was not specified, using a "
-						 "default \"%s\".", qPrintable(DEFAULT_NAME));
+						"default \"%s\".", qPrintable(DEFAULT_NAME));
 			obsLog->setFileName(DEFAULT_NAME + ".csv");
 		}
 		else
@@ -841,7 +841,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		
 		// Splits the attribute labels in the cols list
 		obsGraphic->setAttributes(obsAttribs, obsParamsAtribs.takeFirst()
-								  .split(";", QString::SkipEmptyParts), obsParams, obsParamsAtribs);
+				.split(";", QString::SkipEmptyParts), obsParams, obsParamsAtribs);
 
 		lua_pushnumber(luaL, obsId);
 		lua_pushlightuserdata(luaL, (void*) obsGraphic);
@@ -987,10 +987,10 @@ const TypesOfSubjects luaCellularSpace::getType() const
 int luaCellularSpace::notify(lua_State *)
 {
 #ifdef TME_STATISTIC
-   double t = Statistic::getInstance().startMicroTime();
-   Statistic::getInstance().setIntermediateTime();
+	double t = Statistic::getInstance().startMicroTime();
+	Statistic::getInstance().setIntermediateTime();
 
-   double time = luaL_checknumber(L, -1);
+	double time = luaL_checknumber(L, -1);
 	CellSpaceSubjectInterf::notify(time);
 
 	t = Statistic::getInstance().endMicroTime() - t;
@@ -1865,7 +1865,7 @@ int luaCellularSpace::load(lua_State *L)
 		  - create exported method ... to check legend exists
 		  - create exported method for Lua to contain the result (legend coming from database)
 		  - before infer caption for observer, check for available legend in cellular space loaded
-		*/
+		 */
 
 		// loads legend from database
 		QString dbLegend;
@@ -3203,7 +3203,7 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 			{
 				file.close();
 				string err_out = string("Cell '") + string(cellId) + string("' in file '") + string(fileName) +
-								 string("' was not found in the CellularSpace.");
+						string("' was not found in the CellularSpace.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
 				//lua_pushnumber(L, 4);
@@ -3271,7 +3271,7 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 				{
 					file.close();
 					string err_out = string("Cell Id '") + string(neighId) + string("' found in the file '") + string(fileName) +
-									 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
+							string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L, err_out.c_str());
 					//lua_pushnumber(L, 4);
@@ -3389,7 +3389,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 			{
 				file.close();
 				string err_out = string("Cell Id '") + string(cellId) + string("' found in the file '") + string(fileName) +
-								 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
+						string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
 				//lua_pushnumber(L, 4);
@@ -3461,7 +3461,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 				{
 					file.close();
 					string err_out = string("Cell Id '") + string(neighId) + string("' found in the file '") + string(fileName) +
-									 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
+							string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L, err_out.c_str());
 					//lua_pushnumber(L, 4);
@@ -3578,7 +3578,7 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
 			{
 				file.close();
 				string err_out = string("Cell Id '") + string(cellId) + string("' found in the file '") + string(fileName) +
-								 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
+						string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
 				//lua_pushnumber(L, 4);
@@ -3652,7 +3652,7 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
 				{
 					file.close();
 					string err_out = string("Cell Id '") + string(neighId) + string("' found in the file '") + string(fileName) +
-									 string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
+							string("' was not found in the Cellular Space. Probably the file is corrupted or was made for another Cellular Space.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L, err_out.c_str());
 					lua_call(L, 1, 0);

@@ -581,7 +581,7 @@ void ReceiverGUI::setupGUI()
     connect(signalMapperStdType, SIGNAL(mapped(int)), this, SLOT(stdTypeSelected(int)));
 }
 
- void ReceiverGUI::writeSettings()
+void ReceiverGUI::writeSettings()
  {
      QSettings settings(QSettings::IniFormat, QSettings::UserScope, "TerraME", "ObserverClient");
 
@@ -595,9 +595,9 @@ void ReceiverGUI::setupGUI()
      settings.endGroup();
 
      settings.endGroup();
- }
+}
 
- void ReceiverGUI::readSettings()
+void ReceiverGUI::readSettings()
  {
      ui->frame->blockSignals(true);
 
@@ -616,15 +616,15 @@ void ReceiverGUI::setupGUI()
 
 
      ui->frame->blockSignals(false);
- }
+}
 
- void ReceiverGUI::closeEvent(QCloseEvent *event)
+void ReceiverGUI::closeEvent(QCloseEvent *event)
  {
     writeSettings();
     event->accept();
- }
+}
 
- void ReceiverGUI::clearLog()
+void ReceiverGUI::clearLog()
 {
     ui->logEdit->clear();
 }

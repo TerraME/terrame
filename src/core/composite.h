@@ -106,7 +106,7 @@ public:
 
     /// Return the i-th component
     T& operator [] (int i)
-    { return components_[ i ]; }
+    { return components_[i]; }
 
     /// Find a component and return its iterator
     iterator find(TKey k) {
@@ -382,7 +382,7 @@ public:
     int size(){ return (CompositeInterface::pImpl_)->size(); }
 
     /// Return the i-th component
-    TElemnt& operator [] (Indx i) { return (*(CompositeInterface::pImpl_))[ i ]; }
+    TElemnt& operator [] (Indx i) { return (*(CompositeInterface::pImpl_))[i]; }
 
     /// Return the i-th component
     iterator find (Indx i) { return (CompositeInterface::pImpl_)->find(i); }

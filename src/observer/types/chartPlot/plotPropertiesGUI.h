@@ -16,7 +16,7 @@ class plotPropertiesGUI;
 }
 
 namespace TerraMEObserver {
- class InternalCurve;
+	class InternalCurve;
 }
 
 // #include "internalCurve.h"

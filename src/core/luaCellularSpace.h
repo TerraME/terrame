@@ -206,10 +206,10 @@ public:
     /// \param attribs the list of attributes observed
     QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
 
-	/**
-	 * Gets the attributes of Lua stack
-	 * \param attribs the list of attributes observed
-	 */
+    /**
+     * Gets the attributes of Lua stack
+     * \param attribs the list of attributes observed
+     */
     QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
         ObserverDatagramPkg::SubjectAttribute *parentSubj);
 

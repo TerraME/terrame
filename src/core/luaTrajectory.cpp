@@ -181,8 +181,8 @@ int luaTrajectory::createObserver(lua_State *L)
 
         if (obsAttribs.empty())
         {
-		    obsAttribs = allAttribs;
-		    // observedAttribs = allAttribs;
+        	obsAttribs = allAttribs;
+        	// observedAttribs = allAttribs;
 
             foreach(const QString &key, allAttribs)
                 observedAttribs.insert(key, "");
@@ -329,279 +329,279 @@ int luaTrajectory::createObserver(lua_State *L)
 
 		if (obsLog)
 		{
-		    obsLog->setAttributes(obsAttribs);
+			obsLog->setAttributes(obsAttribs);
 
-		    if (cols.at(0).isNull() || cols.at(0).isEmpty())
-		    {
-                if (execModes != Quiet){
-                    string err_out = string("Filename was not specified, using a default '") + string(DEFAULT_NAME.toStdString()) + string("'.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L, err_out.c_str());
-                   // lua_pushnumber(L, 4);
-                    lua_call(L, 1, 0);
-                }
-		        obsLog->setFileName(DEFAULT_NAME + ".csv");
-		    }
-		    else
-		    {
-		        obsLog->setFileName(cols.at(0));
-		    }
+			if (cols.at(0).isNull() || cols.at(0).isEmpty())
+			{
+				if (execModes != Quiet){
+					string err_out = string("Filename was not specified, using a default '") + string(DEFAULT_NAME.toStdString()) + string("'.");
+					lua_getglobal(L, "customWarning");
+					lua_pushstring(L, err_out.c_str());
+					// lua_pushnumber(L, 4);
+					lua_call(L, 1, 0);
+				}
+				obsLog->setFileName(DEFAULT_NAME + ".csv");
+			}
+			else
+			{
+				obsLog->setFileName(cols.at(0));
+			}
 
-            // if not defined, use the default ";"
-		    if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
-		    {
-                if (execModes != Quiet){
-                    string err_out = string("Separator not defined, using ';'.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L, err_out.c_str());
-                    //lua_pushnumber(L, 4);
-                    lua_call(L, 1, 0);
-                }
-		        obsLog->setSeparator();
-		    }
-		    else
-		    {
-		        obsLog->setSeparator(cols.at(1));
-		    }
+			// if not defined, use the default ";"
+			if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
+			{
+				if (execModes != Quiet){
+					string err_out = string("Separator not defined, using ';'.");
+					lua_getglobal(L, "customWarning");
+					lua_pushstring(L, err_out.c_str());
+					//lua_pushnumber(L, 4);
+					lua_call(L, 1, 0);
+				}
+				obsLog->setSeparator();
+			}
+			else
+			{
+				obsLog->setSeparator(cols.at(1));
+			}
 
-		    lua_pushnumber(luaL, obsId);
-		    return 1;
+			lua_pushnumber(luaL, obsId);
+			return 1;
 		}
 
 		if (obsText)
 		{
-		    obsText->setAttributes(obsAttribs);
-		    lua_pushnumber(luaL, obsId);
-		    return 1;
+			obsText->setAttributes(obsAttribs);
+			lua_pushnumber(luaL, obsId);
+			return 1;
 		}
 
 		if (obsTable)
 		{
-		    if ((cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
-		            || cols.at(1).isNull() || cols.at(1).isEmpty())
-		    {
-                if (execModes != Quiet){
-                    string err_out = string("Column title not defined.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L, err_out.c_str());
-                    //lua_pushnumber(L, 4);
-                    lua_call(L, 1, 0);
-                }
-		    }
+			if ((cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
+					|| cols.at(1).isNull() || cols.at(1).isEmpty())
+			{
+				if (execModes != Quiet){
+					string err_out = string("Column title not defined.");
+					lua_getglobal(L, "customWarning");
+					lua_pushstring(L, err_out.c_str());
+					//lua_pushnumber(L, 4);
+					lua_call(L, 1, 0);
+				}
+			}
 
-		    obsTable->setColumnHeaders(cols);
-		    obsTable->setAttributes(obsAttribs);
+			obsTable->setColumnHeaders(cols);
+			obsTable->setAttributes(obsAttribs);
 
-		    lua_pushnumber(luaL, obsId);
-		    return 1;
+			lua_pushnumber(luaL, obsId);
+			return 1;
 		}
 
 		if (obsGraphic)
 		{
-            obsGraphic->setLegendPosition();
+			obsGraphic->setLegendPosition();
 
-            // Takes titles of three first locations
-            obsGraphic->setTitles(cols.at(0), cols.at(1), cols.at(2));   
-            cols.removeFirst(); // remove graphic title
-            cols.removeFirst(); // remove axis x title
-            cols.removeFirst(); // remove axis y title
+			// Takes titles of three first locations
+			obsGraphic->setTitles(cols.at(0), cols.at(1), cols.at(2));
+			cols.removeFirst(); // remove graphic title
+			cols.removeFirst(); // remove axis x title
+			cols.removeFirst(); // remove axis y title
 
-            // Splits the attribute labels in the cols list
-            obsGraphic->setAttributes(obsAttribs, cols.takeFirst().split(";", QString::SkipEmptyParts),
-                obsParams, cols);
+			// Splits the attribute labels in the cols list
+			obsGraphic->setAttributes(obsAttribs, cols.takeFirst().split(";", QString::SkipEmptyParts),
+					obsParams, cols);
 
-		    lua_pushnumber(luaL, obsId);
-		    return 1;
+			lua_pushnumber(luaL, obsId);
+			return 1;
 		}
 
 		if(obsUDPSender)
 		{
-		    obsUDPSender->setAttributes(obsAttribs);
+			obsUDPSender->setAttributes(obsAttribs);
 
-		    // if (cols.at(0).isEmpty())
-		    if (cols.isEmpty())
-		    {
-                if (execModes != Quiet){
-                    string err_out = string("Port not defined.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L, err_out.c_str());
-                    //lua_pushnumber(L, 4);
-                    lua_call(L, 1, 0);
-                }
-		    }
-		    else
-		    {
-		        obsUDPSender->setPort(cols.at(0).toInt());
-		    }
+			// if (cols.at(0).isEmpty())
+			if (cols.isEmpty())
+			{
+				if (execModes != Quiet){
+					string err_out = string("Port not defined.");
+					lua_getglobal(L, "customWarning");
+					lua_pushstring(L, err_out.c_str());
+					//lua_pushnumber(L, 4);
+					lua_call(L, 1, 0);
+				}
+			}
+			else
+			{
+				obsUDPSender->setPort(cols.at(0).toInt());
+			}
 
-		    // broadcast
-		    if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()))
-		    {
-		        obsUDPSender->addHost(BROADCAST_HOST);
-		    }
-		    else
-		    {
-		        // multicast or unicast
-		        for(int i = 1; i < cols.size(); i++)
-                {
-		            if (! cols.at(i).isEmpty())
-		                obsUDPSender->addHost(cols.at(i));
-		        }
-		    }
-		    lua_pushnumber(luaL, obsId);
-		    return 1;
+			// broadcast
+			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()))
+			{
+				obsUDPSender->addHost(BROADCAST_HOST);
+			}
+			else
+			{
+				// multicast or unicast
+				for(int i = 1; i < cols.size(); i++)
+				{
+					if (! cols.at(i).isEmpty())
+						obsUDPSender->addHost(cols.at(i));
+				}
+			}
+			lua_pushnumber(luaL, obsId);
+			return 1;
 		}
     }  
     //   ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
     // Creation of spatial observers
     else
     {
-        QStringList obsParams, obsParamsAtribs; // parameters/attributes of the legend
+    	QStringList obsParams, obsParamsAtribs; // parameters/attributes of the legend
 
-        bool getObserverId = false, isLegend = false;
-        int obsId = -1;
+    	bool getObserverId = false, isLegend = false;
+    	int obsId = -1;
 
-        AgentObserverMap *obsMap = 0;
-        AgentObserverImage *obsImage = 0;
+    	AgentObserverMap *obsMap = 0;
+    	AgentObserverImage *obsImage = 0;
 
-        // Retrieves the parameters
-        lua_pushnil(luaL);
-        while(lua_next(luaL, top - 1) != 0)
-        {
-            // Retrieves the observer map ID
-            if ((lua_isnumber(luaL, -1) && (! getObserverId)))
-            {
-                obsId = luaL_checknumber(luaL, -1);
-                getObserverId = true;
-                isLegend = true;
-            }
+    	// Retrieves the parameters
+    	lua_pushnil(luaL);
+    	while(lua_next(luaL, top - 1) != 0)
+    	{
+    		// Retrieves the observer map ID
+    		if ((lua_isnumber(luaL, -1) && (! getObserverId)))
+    		{
+    			obsId = luaL_checknumber(luaL, -1);
+    			getObserverId = true;
+    			isLegend = true;
+    		}
 
-            // retrieves the celular space
-            if (lua_istable(luaL, -1))
-            {
-                int paramTop = lua_gettop(luaL);
+    		// retrieves the celular space
+    		if (lua_istable(luaL, -1))
+    		{
+    			int paramTop = lua_gettop(luaL);
 
-                lua_pushnil(luaL);
-                while(lua_next(luaL, paramTop) != 0)
-                {
-                    if (isudatatype(luaL, -1, "TeCellularSpace"))
-                    {
-                        cellSpace = Luna<luaCellularSpace>::check(L, -1);
-                    }
-                    else
-                    {
-                        if (isLegend)
-                        {
-                            QString key = luaL_checkstring(luaL, -2);
+    			lua_pushnil(luaL);
+    			while(lua_next(luaL, paramTop) != 0)
+    			{
+    				if (isudatatype(luaL, -1, "TeCellularSpace"))
+    				{
+    					cellSpace = Luna<luaCellularSpace>::check(L, -1);
+    				}
+    				else
+    				{
+    					if (isLegend)
+    					{
+    						QString key = luaL_checkstring(luaL, -2);
 
-                            obsParams.push_back(key);
+    						obsParams.push_back(key);
 
-                            bool boolAux;
-                            double numAux;
-                            QString strAux;
+    						bool boolAux;
+    						double numAux;
+    						QString strAux;
 
-                            switch(lua_type(luaL, -1))
-                            {
-                            case LUA_TBOOLEAN:
-                                boolAux = lua_toboolean(luaL, -1);
-                                break;
+    						switch(lua_type(luaL, -1))
+    						{
+    						case LUA_TBOOLEAN:
+    							boolAux = lua_toboolean(luaL, -1);
+    							break;
 
-                            case LUA_TNUMBER:
-                                numAux = luaL_checknumber(luaL, -1);
-                                obsParamsAtribs.push_back(QString::number(numAux));
-                                break;
+    						case LUA_TNUMBER:
+    							numAux = luaL_checknumber(luaL, -1);
+    							obsParamsAtribs.push_back(QString::number(numAux));
+    							break;
 
-                            case LUA_TSTRING:
-                                strAux = luaL_checkstring(luaL, -1);
-                                obsParamsAtribs.push_back(QString(strAux));
-                                break;
+    						case LUA_TSTRING:
+    							strAux = luaL_checkstring(luaL, -1);
+    							obsParamsAtribs.push_back(QString(strAux));
+    							break;
 
-                            default:
-                                break;
-                            }
-                        } // isLegend
-                    }
-                    lua_pop(luaL, 1);
-                }
-            }
-            lua_pop(luaL, 1);
-        }
+    						default:
+    							break;
+    						}
+    					} // isLegend
+    				}
+    				lua_pop(luaL, 1);
+    			}
+    		}
+    		lua_pop(luaL, 1);
+    	}
 
-        QString errorMsg = QString("\nThe Observer ID \"%1\" was not found. "
-            "Check the declaration of this observer.\n").arg(obsId);
+    	QString errorMsg = QString("\nThe Observer ID \"%1\" was not found. "
+    			"Check the declaration of this observer.\n").arg(obsId);
 
-        if (! cellSpace)
-		{
-			lua_getglobal(L, "customError");
-			lua_pushstring(L, errorMsg.toLatin1().data());
-			//lua_pushnumber(L, 5);
-			lua_call(L, 1, 0);
-			return 0;
-		}
+    	if (! cellSpace)
+    	{
+    		lua_getglobal(L, "customError");
+    		lua_pushstring(L, errorMsg.toLatin1().data());
+    		//lua_pushnumber(L, 5);
+    		lua_call(L, 1, 0);
+    		return 0;
+    	}
 
-        if (typeObserver == TObsMap)
-        {
-            obsMap = (AgentObserverMap *)cellSpace->getObserver(obsId);
+    	if (typeObserver == TObsMap)
+    	{
+    		obsMap = (AgentObserverMap *)cellSpace->getObserver(obsId);
 
-            if (! obsMap)
-			{
-				lua_getglobal(L, "customError");
-				lua_pushstring(L, errorMsg.toLatin1().data());
-				//lua_pushnumber(L, 5);
-				lua_call(L, 1, 0);
-				return 0;
-			}
+    		if (! obsMap)
+    		{
+    			lua_getglobal(L, "customError");
+    			lua_pushstring(L, errorMsg.toLatin1().data());
+    			//lua_pushnumber(L, 5);
+    			lua_call(L, 1, 0);
+    			return 0;
+    		}
 
-            obsMap->registry(this);
-        }
-        else
-        {
-            obsImage = (AgentObserverImage *)cellSpace->getObserver(obsId);
+    		obsMap->registry(this);
+    	}
+    	else
+    	{
+    		obsImage = (AgentObserverImage *)cellSpace->getObserver(obsId);
 
-            if (! obsImage)
-			{
-				lua_getglobal(L, "customError");
-				lua_pushstring(L, errorMsg.toLatin1().data());
-				//lua_pushnumber(L, 5);
-				lua_call(L, 1, 0);
-				return 0;
-			}
+    		if (! obsImage)
+    		{
+    			lua_getglobal(L, "customError");
+    			lua_pushstring(L, errorMsg.toLatin1().data());
+    			//lua_pushnumber(L, 5);
+    			lua_call(L, 1, 0);
+    			return 0;
+    		}
 
-            obsImage->registry(this);
-        }
+    		obsImage->registry(this);
+    	}
 
-        QStringList allAttribs, obsAttribs;
+    	QStringList allAttribs, obsAttribs;
 
-        // Retrieves the attributes
-        lua_pushnil(luaL);
-        while(lua_next(luaL, top - 2) != 0)
-        {
-            const char * key = luaL_checkstring(luaL, -1);
-            obsAttribs.push_back(key);
-            lua_pop(luaL, 1);
-        }
-        
-        for(int i = 0; i < obsAttribs.size(); i++)
-        {
-            if (! observedAttribs.contains(obsAttribs.at(i)))
-                // observedAttribs.push_back(obsAttribs.at(i));
-                observedAttribs.insert(obsAttribs.at(i), "");
-        }
+    	// Retrieves the attributes
+    	lua_pushnil(luaL);
+    	while(lua_next(luaL, top - 2) != 0)
+    	{
+    		const char * key = luaL_checkstring(luaL, -1);
+    		obsAttribs.push_back(key);
+    		lua_pop(luaL, 1);
+    	}
 
-        if (typeObserver == TObsMap)
-        {
-            // to set the values of the agent attributes,
-        	// redefine the type of attributes in the super class ObserverMap
-            obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsTrajectory);
-            obsMap->setSubjectAttributes(obsAttribs, getId());
-        }
-        else
-        {
-            obsImage->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsTrajectory);
-            obsImage->setSubjectAttributes(obsAttribs, getId());
-        }
-        lua_pushnumber(luaL, obsId);
-        return 1;
+    	for(int i = 0; i < obsAttribs.size(); i++)
+    	{
+    		if (! observedAttribs.contains(obsAttribs.at(i)))
+    			// observedAttribs.push_back(obsAttribs.at(i));
+    			observedAttribs.insert(obsAttribs.at(i), "");
+    	}
+
+    	if (typeObserver == TObsMap)
+    	{
+    		// to set the values of the agent attributes,
+    		// redefine the type of attributes in the super class ObserverMap
+    		obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsTrajectory);
+    		obsMap->setSubjectAttributes(obsAttribs, getId());
+    	}
+    	else
+    	{
+    		obsImage->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsTrajectory);
+    		obsImage->setSubjectAttributes(obsAttribs, getId());
+    	}
+    	lua_pushnumber(luaL, obsId);
+    	return 1;
     }
 
     return 0;

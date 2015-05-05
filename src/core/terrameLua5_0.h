@@ -143,7 +143,7 @@ public:
     int getCellNeighbor(lua_State *L) {
         luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
         CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
-        luaCell *cell = (luaCell*)(*CellNeighborhood::pImpl_)[ cellIndex ];
+        luaCell *cell = (luaCell*)(*CellNeighborhood::pImpl_)[cellIndex];
         if(cell) ::getReference(L, cell);
         else lua_pushnil(L);
         return 1;
@@ -1035,7 +1035,7 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////////
 class luaEnvironment : public Environment
 {
-    string id;
+	string id;
 public:
     // Lua interface
     luaEnvironment(lua_State *L) {

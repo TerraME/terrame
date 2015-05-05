@@ -23,7 +23,7 @@ of this library and its documentation.
 /*!
   \file terrameLua.h
   \brief This file contains definitions about the TerraME API for Lua programmers.
-   It contains definitions about the Lua Integration TerraME software layer
+  \ It contains definitions about the Lua Integration TerraME software layer
   \author Tiago Garcia de Senna Carneiro
 */
 

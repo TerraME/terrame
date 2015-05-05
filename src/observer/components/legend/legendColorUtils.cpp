@@ -33,42 +33,42 @@ using namespace std;
 
 inline std::string number2String(const int value)
 {
-	char name [ NAME_LENGTH ];
+	char name [NAME_LENGTH];
 	sprintf (name, "%d", value);
 	return name;
 }
 
 inline std::string number2String (const unsigned int value)
 {
-	char name [ NAME_LENGTH ];
+	char name [NAME_LENGTH];
 	sprintf (name, "%u", value);
 	return name;
 }
 
 inline std::string number2String (const long value)
 {
-	char name [ NAME_LENGTH ];
+	char name [NAME_LENGTH];
 	sprintf (name, "%ld", value);
 	return name;
 }
 
 inline std::string number2String (const long long int value)
 {
-  char name [ NAME_LENGTH ];
-  sprintf (name, "%lld", value);
-  return name;
+	char name [NAME_LENGTH];
+	sprintf (name, "%lld", value);
+	return name;
 }
 
 inline std::string number2String(const unsigned long value)
 {
-	char name [ NAME_LENGTH ];
+	char name [NAME_LENGTH];
 	sprintf (name, "%lu", value);
 	return name;
 }
 
 inline std::string number2String(const double value, int precision)
 {
-	char name [ NAME_LENGTH ];
+	char name [NAME_LENGTH];
 	sprintf(name, "%.*f", precision, value);
 
 	std::string strOut(name);

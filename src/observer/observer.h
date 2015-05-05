@@ -54,7 +54,7 @@ namespace TerraMEObserver{
         const int & precision = TerraMEObserver::NUMBERIC_PRECISION)
     {
         text = "";
-	    QTextStream textStream(&text);
+        QTextStream textStream(&text);
         textStream.setRealNumberPrecision(precision);
         textStream << number;
     }
@@ -63,7 +63,7 @@ namespace TerraMEObserver{
         const int & precision = TerraMEObserver::NUMBERIC_PRECISION)
     {
         text = "";
-	    QTextStream textStream(&text);
+        QTextStream textStream(&text);
         textStream.setRealNumberPrecision(precision);
         textStream << number;
 	}

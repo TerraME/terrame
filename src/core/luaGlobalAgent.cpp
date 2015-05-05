@@ -865,13 +865,13 @@ int luaGlobalAgent::notify(lua_State *luaL)
 #endif
 
 #ifdef TME_STATISTIC
-   double t = Statistic::getInstance().startTime();
+    double t = Statistic::getInstance().startTime();
 
-   GlobalAgentSubjectInterf::notify(time);
+    GlobalAgentSubjectInterf::notify(time);
    
-   t = Statistic::getInstance().endTime() - t;
-   Statistic::getInstance().addElapsedTime("resposta total agent", t);
-   Statistic::getInstance().collectMemoryUsage();
+    t = Statistic::getInstance().endTime() - t;
+    Statistic::getInstance().addElapsedTime("resposta total agent", t);
+    Statistic::getInstance().collectMemoryUsage();
 #else
     GlobalAgentSubjectInterf::notify(time);
 #endif

@@ -129,8 +129,8 @@ void PlotPropertiesGUI::borderColorClicked()
             "border: 1px solid rgb(0, 0, 0); background-color: %1").arg(color.name()));
 
      //   QPalette plotterPalette = plotter->palette(); //, palette = plotter->axisWidget(QwtPlot::xBottom)->palette();
-	    //plotterPalette.setColor(QPalette::Foreground, color);
-	    //plotter->setPalette(plotterPalette);
+        //plotterPalette.setColor(QPalette::Foreground, color);
+        //plotter->setPalette(plotterPalette);
      //   // plotter->axisWidget(QwtPlot::xBottom)->setPalette(palette);
     }
 }
@@ -214,7 +214,7 @@ void PlotPropertiesGUI::selectedSymbol(int value)
     //symbol->setPen(oldSym->pen());
 
     if(symbol->brush().style() != Qt::NoBrush)
-	    // symbol.setBrush(QBrush(oldSym.pen().color()));
+    	// symbol.setBrush(QBrush(oldSym.pen().color()));
         symbol->setBrush(QBrush(plotCurve->pen().color()));
 
     plotCurve->setSymbol(symbol);

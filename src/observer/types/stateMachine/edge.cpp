@@ -1,6 +1,6 @@
 /****************************************************
- Based on the Arrow object example DiagramScene
- the framework Qt 4.7.1
+* Based on the Arrow object example DiagramScene
+* the framework Qt 4.7.1
 ****************************************************/
 
 #include "edge.h"
