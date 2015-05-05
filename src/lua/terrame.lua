@@ -628,6 +628,9 @@ function execute(arguments) -- arguments is a vector of strings
 				info_.mode = "debug"
 			elseif arg == "-mode=quiet" then
 				info_.mode = "quiet"
+			elseif string.sub(arg, 1, 6) == "-mode=" then
+				printError("Invalid mode '"..string.sub(arg, 7).."'.")
+				os.exit()
 			elseif arg == "-package" then
 				argCount = argCount + 1
 				package = arguments[argCount]
