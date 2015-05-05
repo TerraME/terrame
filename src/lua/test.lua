@@ -673,7 +673,7 @@ function executeTests(package, fileName)
 	-- executing examples
 	if data.examples then
 		printNote("Testing examples")
-		local dirFiles = exampleFiles(package)
+		local dirFiles = findExamples(package)
 		if dirFiles ~= nil then
 			forEachElement(dirFiles, function(idx, value)
 				print("Testing "..value)
@@ -683,7 +683,7 @@ function executeTests(package, fileName)
 				local writing_log = false
 				print = function(x)
 					if not logfile then
-						local lfilename = string.sub(value, 0, string.len(value) - 3).."log"
+						local lfilename = value..".log"
 
 						logfile = io.open(baseDir..s.."examples"..s..lfilename, "r")
 						if logfile == nil then
@@ -719,7 +719,7 @@ function executeTests(package, fileName)
 					local env = setmetatable({}, {__index = _G})
 					-- loadfile is necessary to avoid any global variable from one
 					-- example affect another example
-					loadfile(baseDir..s.."examples"..s..value, 't', env)()
+					loadfile(baseDir..s.."examples"..s..value..".lua", 't', env)()
 				end
 				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1

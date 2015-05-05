@@ -64,7 +64,7 @@ function executeDoc(package)
 
 	local lua_files = dir(package_path..s.."lua")
 
-	local example_files = exampleFiles(package)
+	local example_files = findExamples(package)
 
 	local doc_report = {
 		arguments = 0,

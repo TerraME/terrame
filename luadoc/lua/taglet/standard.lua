@@ -969,15 +969,16 @@ function start(files, examples, package_path, short_lua_path, doc_report, silent
 		end
 	else
 		for _, file_ in ipairs(examples) do
-			local attr = attributes(examples_path..file_)
+			local mfile = file_..".lua"
+			local attr = attributes(examples_path..mfile)
 			assert(attr, string.format("error stating path '%s'", examples_path..file_))
 			
 			if attr.mode == "file" then
-				doc = file(examples_path, file_, doc, short_examples_path, doc_report, silent)
+				doc = file(examples_path, mfile, doc, short_examples_path, doc_report, silent)
 			elseif attr.mode == "directory" then
-				local dir_path = examples_path..file_..s
-				local short_dir_path = short_examples_path..file_..s
-				doc = directory(dir_path, file_, doc, short_dir_path, silent)
+				local dir_path = examples_path..mfile..s
+				local short_dir_path = short_examples_path..mfile..s
+				doc = directory(dir_path, mfile, doc, short_dir_path, silent)
 			end
 		end
 	end
