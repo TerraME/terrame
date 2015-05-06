@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef EDGE_H
 #define EDGE_H
 
@@ -42,7 +41,6 @@ namespace TerraMEObserver
 {
 
 class Node;
-
 
 /**
  * \brief State machine edge
@@ -98,7 +96,6 @@ public slots:
     void updatePosition();
 
 private:
-
 
     Node *origin, *destiny;
     QPolygonF arrowHead;

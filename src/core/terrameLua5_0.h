@@ -36,7 +36,6 @@ extern "C"
 
 #include "luna.h"
 
-
 lua_State * L;
 class luaCell;
 void getReference(lua_State *L, luaCell *cell);
@@ -310,7 +309,6 @@ public:
             lua_pushlightuserdata(L, (void*) neigh);
             lua_settable(L, -3);
 
-
             // calls the Neighborhood constructor
             if(lua_pcall(L, 1, 1, 0) != 0)
             {
@@ -451,7 +449,6 @@ luaCell * findCell(luaCellularSpace* cs, CellIndex& cellIndex)
     if(it != cs->end()) return (luaCell*)it->second;
     return (luaCell*)0;
 }
-
 
 //****************************** TIMER **********************************************//
 class luaEvent : public Event
@@ -878,7 +875,6 @@ public:
                 agL = ag;
             }
 
-
             // calls the "execute" function of the rule
             if(lua_pcall(L, 3, 1, 0) != 0)
             {
@@ -1011,7 +1007,6 @@ public:
         uniqueProcess.JumpCompositeInterf::add(jump);
         return 0;
     }
-
 
     int addFlow(lua_State* L)
     {

@@ -29,7 +29,6 @@
 
 using namespace TerraMEObserver;
 
-
 class TerraMEObserver::Control : public BagOfTasks::Task
 {
 public:

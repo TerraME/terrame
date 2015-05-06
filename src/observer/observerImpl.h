@@ -235,7 +235,6 @@ private:
      */
     SubjectImpl & operator=(SubjectImpl &);
 
-
     ObsList observers;
     int subjectID;
 };

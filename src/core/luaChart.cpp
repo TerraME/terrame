@@ -8,7 +8,6 @@ luaChart::luaChart(lua_State* L)
 	luaL = L;
 }
 
-
 int luaChart::setObserver(lua_State* L)
 {
 	ObserverGraphic * obsg = (ObserverGraphic*) lua_touserdata(L, -1);

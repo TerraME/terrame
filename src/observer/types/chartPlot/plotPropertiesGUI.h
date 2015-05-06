@@ -21,7 +21,6 @@ namespace TerraMEObserver {
 
 // #include "internalCurve.h"
 
-
 class PlotPropertiesGUI : public QDialog
 {
     Q_OBJECT

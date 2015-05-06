@@ -32,14 +32,12 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-
 #if ! defined(CONTROL_MODE_H)
 #define CONTROL_MODE_H
 
 #include "bridge.h"
 #include "composite.h"
 #include "process.h"
-
 
 /**
  * \brief
@@ -65,7 +63,6 @@ public:
 private:
     string name; ///< control mode identifier
 };
-
 
 /**
  * \brief
@@ -138,6 +135,5 @@ public:
     /// \param controlModeName is a string containing the control mode identifier
     void setControlModeName(string &controlModeName) { ControlModeInterf::pImpl_->setControlModeName(controlModeName); }
 };
-
 
 #endif

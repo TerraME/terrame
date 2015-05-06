@@ -112,7 +112,6 @@ void ObserverMapSuperclass::setupGUI(){
     butLegend->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     connect(butLegend, SIGNAL(clicked()), this, SLOT(butLegend_Clicked()));
 
-
     butZoomIn = new QToolButton(frameTools);
     butZoomIn->setText("In");
     butZoomIn->setIcon(QIcon(QPixmap(":/icons/zoomIn.png")));
@@ -270,7 +269,6 @@ void ObserverMapSuperclass::zoomChanged(const QRectF &zoomRect, double width,
     view->fitInView(zoomRect, Qt::KeepAspectRatio);
 }
 
-
 int ObserverMapSuperclass::convertZoomIndex(bool in)
 {
     int idx = zoomComboBox->currentIndex();
@@ -321,7 +319,6 @@ void ObserverMapSuperclass::zoomWindow()
     // view->centerOn(scene->sceneRect().center()); // is almost centralized
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
-
 
 #ifdef OBSEVER_DEBUG
     //qDebug() << "\nx: " << x << " y: " << y << " size: " << size;
@@ -422,7 +419,6 @@ void ObserverMapSuperclass::butHand_Clicked()
     butHand->setChecked(true);
     butZoomWindow->setChecked(false);
 }
-
 
 void ObserverMapSuperclass::zoomOut()
 {

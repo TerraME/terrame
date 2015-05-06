@@ -30,7 +30,6 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #if ! defined(STRATEGY)
 #define STRATEGY
 
-
 template <T>
 class StrategyContext 
 {
@@ -41,7 +40,6 @@ private:
 
     T theStrategy;
 }
-
 
 class Strategy
 {

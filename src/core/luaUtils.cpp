@@ -50,7 +50,6 @@ void luaStackToQString(int size)
     printf("\n");
 }
 
-
 int functionStackLevel(lua_State *L) {
     int i;
     int top = lua_gettop(L);
@@ -156,7 +155,6 @@ void objectId2coords(const char * objId, int &x, int &y)
     x = atoi(col);
     y = atoi(lin);
 }
-
 
 #if ! defined (TME_NO_TERRALIB)
 
@@ -369,6 +367,5 @@ std::string TeGetName (const char* value)
 	else 
 		return name;
 }
-
 
 #endif // TME_NO_TERRALIB

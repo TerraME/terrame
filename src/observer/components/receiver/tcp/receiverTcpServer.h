@@ -29,5 +29,4 @@ private:
     ReceiverGUI *ui;
 };
 
-
 #endif // RECEIVER_TCP_SERVER_H

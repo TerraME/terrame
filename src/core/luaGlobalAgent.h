@@ -133,7 +133,6 @@ public:
     /// \param attribs the list of attributes observed
     QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
 
-
 #ifdef TME_PROTOCOL_BUFFERS
     QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
         ObserverDatagramPkg::SubjectAttribute *parentSubj);

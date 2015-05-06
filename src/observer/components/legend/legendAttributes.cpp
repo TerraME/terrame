@@ -441,7 +441,6 @@ void Attributes::addValue(int id, double &value)
     // else
     //    numericValues->replace(id - factor, value);
 
-
 #ifdef DEBUG_OBSERVER
     qDebug() << "factor: " << factor;
     qDebug() << "id: " << id;

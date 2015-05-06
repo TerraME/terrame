@@ -61,8 +61,6 @@ private:
     Ui::ImageGUI *ui;
 };
 
-
-
 //    class ObserverImageGUI;
 //}
 

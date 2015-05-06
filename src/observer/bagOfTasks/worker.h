@@ -44,7 +44,6 @@ private:
     bool abort, reset;
     // Status status;
 
-
 #ifdef UNIT_TME_TEST
     friend class BagOfTaskTest;
 #endif

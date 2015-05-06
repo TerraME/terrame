@@ -43,7 +43,6 @@ AgentObserverMap::~AgentObserverMap()
     unregistryAll();
 }
 
-
 #ifdef TME_BLACK_BOARD
 
 bool AgentObserverMap::draw(QDataStream & state)
@@ -85,7 +84,6 @@ bool AgentObserverMap::draw(QDataStream & state)
 
     return decoded && ObserverMap::draw(state);
 }
-
 
 #else // TME_BLACK_BOARD
 
@@ -171,7 +169,6 @@ bool AgentObserverMap::draw(QDataStream & state)
     }
     //bool drw = true;
 
-
 #ifdef TME_STATISTIC
 
     if (decoded)
@@ -197,7 +194,6 @@ bool AgentObserverMap::draw(QDataStream & state)
 #endif
 }
 #endif // TME_BLACK_BOARD
-
 
 void AgentObserverMap::setSubjectAttributes(const QStringList & attribs, 
     int nestedSubjID, const QString & className)

@@ -114,14 +114,12 @@ namespace TerraMEObserver{
 
 }
 
-
 /// Auxiliary Function for sorting objects Attributes by the type.
 bool sortAttribByType(TerraMEObserver::Attributes *a, TerraMEObserver::Attributes *b);
 
 /// Auxiliary Function for sorting objects Subjects by the class name.
 bool sortByClassName(const QPair<TerraMEObserver::Subject *, QString> & pair1, 
     const QPair<TerraMEObserver::Subject *, QString> & pair2);
-
 
 // ---------------------- 
 
@@ -171,7 +169,6 @@ const char *getStdDevNames(int type);
 * \param seconds double
 */
 void delay(double seconds);
-
 
 namespace TerraMEObserver{
 
@@ -259,7 +256,6 @@ public:
     * \return QStringList the list of attributes
     */
     virtual QStringList getAttributes() = 0;
-
 
     /**
      * Sets the \a dirty-bit for the Observer internal state

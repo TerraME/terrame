@@ -115,7 +115,6 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     QPointF m = (base.p1() + base.p2()) * 0.5 ;
     QLineF normal = QLineF(m, base.p2()).normalVector();
 
-
     QPainterPath path;
     path.moveTo(intersectPointDest);
     path.cubicTo(base.p1(), normal.p2(), base.p2());

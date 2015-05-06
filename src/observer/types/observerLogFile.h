@@ -58,7 +58,6 @@ public:
     // // WriteMode == w+ -> append
     //};
 
-
     /**
      * Default constructor
      */

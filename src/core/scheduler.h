@@ -47,7 +47,6 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
     \author Tiago Garcia de Senna Carneiro
 */
 
-
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
@@ -134,7 +133,6 @@ public:
         eventMessagePair.second = message;
         eventMessageQueue.add(eventMessagePair);
     }
-
 
     /// Executes the Scheduler object. Only one simulation time step is executed.
     /// Therefore, just the Message on the head of the Scheduler queue is executed.

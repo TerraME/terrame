@@ -190,7 +190,6 @@ private:
 		inline void consumeNeighborTriple(QStringList &tokens, int &idx, QList<double> &neighbor);
 	//@RAIAN: END
 
-
     QHash<QString, Attributes *> *mapAttributes;
     BlackBoard *bb;
     // TypesOfSubjects parentSubjectType;

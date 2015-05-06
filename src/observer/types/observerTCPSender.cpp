@@ -45,7 +45,6 @@ ObserverTCPSender::ObserverTCPSender(Subject *subj, QObject *parent)
     //connect(tcpSocketTask, SIGNAL(statusMessage(int, int)), this, SLOT(statusMessage(int, int)));
     //// connect(tcpSocketTask, SIGNAL(connected()), this, SLOT(connected()));
 
-
     senderGUI = new SenderGUI();
     senderGUI->setWindowTitle("TerraME Observer :: TCP Sender");
 

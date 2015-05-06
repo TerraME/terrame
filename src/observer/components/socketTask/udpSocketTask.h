@@ -54,7 +54,6 @@ public:
      */
     bool execute();
 
-
     void setHost(QList<QHostAddress> *hosts);
 
     /**
@@ -81,7 +80,6 @@ public slots:
 
     void receive();
 
-
 private slots:
     void error(QAbstractSocket::SocketError socketError);
     //void timeout(); 
@@ -92,7 +90,6 @@ protected:
      * \param data a QByteArray  
      */
     bool sendCompleteStateInfo(const QByteArray &data);
-
 
     //bool compress;
     //quint64 dataSize;   // size of data

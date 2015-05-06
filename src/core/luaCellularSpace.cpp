@@ -741,7 +741,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		}
 		break;
 
-
 	case TObsImage:
 		obsImage = (AgentObserverImage *) CellSpaceSubjectInterf::createObserver(TObsImage);
 		if(obsImage)
@@ -2072,8 +2071,6 @@ QStringList luaCellularSpace::retrieveUniqueValueColorBar(TeTheme *inputTheme){
 			// << QColor::fromHsv(tcolor.red_, tcolor.green_, tcolor.blue_).toRgb();
 			//<< "("<< tcolor.red_ << tcolor.green_ << tcolor.blue_ <<")";
 
-
-
 		if(i < (int)legEntryVec.size() - 1)
 		{
 			colorStr.append(QString("{ color = {%1, %2, %3}, value='%4', distance=%5}, ")
@@ -2436,7 +2433,6 @@ int luaCellularSpace::save(lua_State *L)
 			return false;
 		}
 
-
 	}
 
 	// Get the first cell of the cellular space (cells)
@@ -2554,7 +2550,6 @@ int luaCellularSpace::save(lua_State *L)
 		return false;
 	}
 
-
 	// Save data on the attribute table *****************
 	// tranverse the table(cells)
 	lua_pushnil(L); // first key
@@ -2563,7 +2558,6 @@ int luaCellularSpace::save(lua_State *L)
 
 		// build a table row for the cell at the top of the lua stack
 		tableRow.clear();
-
 
 		// Raian: Gets the cell's Id
 		lua_pushstring(L, "objectId_");
@@ -2627,7 +2621,6 @@ int luaCellularSpace::save(lua_State *L)
 			return 0;
 		}
 	}
-
 
 	// Create a view to show the saved results *****************
 	TeProjection* proj = layer->projection();
@@ -2745,7 +2738,6 @@ int luaCellularSpace::save(lua_State *L)
 	db->close();
 	return 0;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // A funcao abaixo recebe um o nome da GPM (campo "gmp_id" nda tabela "te_gmp")
@@ -3510,7 +3502,6 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 	return 0;
 }
 
-
 /// Loads GWT Neighborhood files
 /// \author Raian Vargas Maretto
 int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName, const char* neighName, bool check)
@@ -3569,7 +3560,6 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
 		{
 			strcpy(cellId, aux);
 		}
-
 
 		if(strcmp(cellId, "") != 0)
 		{

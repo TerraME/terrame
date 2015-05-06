@@ -210,7 +210,6 @@ public:
      */
     bool saveData(const QString &prefix = "");
 
-
     /**
      * Sets the number of observers created
      * This information is used to remove the collected statistics

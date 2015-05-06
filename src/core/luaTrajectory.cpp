@@ -857,7 +857,6 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
                         cellSubj->set_itemsnumber(cellSubj->internalsubject_size());
                         valueChanged = true;
 
-
                         lua_pop(luaL, 1);
                     }
                 }
@@ -963,7 +962,6 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
     return QByteArray();
 }
-
 
 #else // TME_PROTOCOL_BUFFERS
 
@@ -1160,7 +1158,6 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
 
 #endif // ifdef TME_PROTOCOL_BUFFERS
 
-
 int luaTrajectory::kill(lua_State *luaL)
 {
     int id = luaL_checknumber(luaL, 1);
@@ -1186,7 +1183,6 @@ int luaTrajectory::kill(lua_State *luaL)
     lua_pushboolean(luaL, result);
     return 1;
 }
-
 
 //#include <QFile>
 //#include <QTextStream>

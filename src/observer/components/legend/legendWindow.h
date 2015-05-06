@@ -54,7 +54,6 @@
 
 namespace TerraMEObserver {
 
-
 /**
  * \brief User interface for legend
  * \see QDialog
@@ -327,8 +326,6 @@ private:
      * \see StdDev
      */
     QString stdDevToString(int item);
-
-
 
     QGridLayout *gridLayout, *gridLayout1;
     QGridLayout *gridLayout2, *gridLayout3;

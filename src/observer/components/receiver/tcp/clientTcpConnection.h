@@ -16,7 +16,6 @@ class Subject;
 class Observer;
 class ConcretSubject;
 
-
 class ClientTcpConnection : public QTcpSocket
 {
     Q_OBJECT
@@ -34,7 +33,6 @@ private:
     void process(const QByteArray &data);
     bool send(const QByteArray &data);
 
-
     qint64 blockSize;
     QByteArray completeState;
     QTime time;
@@ -46,7 +44,6 @@ private:
 
     int statesReceiver, msgReceiver;
     bool compressed;
-    
 
 // #ifdef TME_STATISTIC
     int statMsgCount;

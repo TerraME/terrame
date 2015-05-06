@@ -10,7 +10,6 @@
 class QCloseEvent;
 class LuaLegend;
 
-
 namespace Ui {
 class receiverGUI;
 }
@@ -78,7 +77,6 @@ public:
      * Otherwise, message is not compressed.
      */
     void setCompression(bool compress);
-
 
     // const QString * getAttributes(int pos) const;
     // inline int getAttributesSize() { return attributes.size(); }

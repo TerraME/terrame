@@ -119,11 +119,9 @@ public:
      */
     void addHost(const QString & host);
 
-
 signals:
     void addState(const QByteArray &);
     void setModelTimeSignal(double);
-
 
 protected:
 

@@ -179,7 +179,6 @@ private:
     double toNumber;
 };
 
-
 /**
  * \file legendAttributes.h
  * \brief Attributes of observation in the spatial observers
@@ -647,7 +646,6 @@ public:
 		double getWidth();
 	//@RAIAN: END
 
-
 protected:
     
     
@@ -710,7 +708,6 @@ private:
     std::vector<ColorBar> colorBarVecBkp;
     std::vector<ColorBar> stdColorBarVecBkp; 
 };
-
 
 }
 

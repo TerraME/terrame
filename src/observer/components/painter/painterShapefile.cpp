@@ -159,8 +159,6 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
     }
 }
 
-
-
 void PainterShapefile::plotMap(Attributes *attrib)
 {
     if (! attrib)

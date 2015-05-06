@@ -8,7 +8,6 @@
 
 using namespace TerraMEObserver;
 
-
 class LuaLegend 
 {
 public:
@@ -64,7 +63,6 @@ public:
             .split("$", QString::SkipEmptyParts);
     }
 };
-
 
 ReceiverGUI::ReceiverGUI(QWidget *parent) :
     QDialog(parent),
@@ -481,7 +479,6 @@ void ReceiverGUI::on_colorBarLine_textChanged(const QString &value)
         leg->colorBar = value;
 }
 
-
 void ReceiverGUI::on_stdColorBarLine_textChanged(const QString &value)
 {
     LuaLegend *leg = luaLegendHash.value(activeItemName);
@@ -535,7 +532,6 @@ void ReceiverGUI::setupGUI()
 
     connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(obsTypeSelected(int)));
 
-
     // Maps radioBUttons in slot dataTypeSelected
     signalMapperAttrType = new QSignalMapper(this);
     signalMapperAttrType->setMapping(ui->boolRadio, TObsBool);
@@ -550,7 +546,6 @@ void ReceiverGUI::setupGUI()
 
     connect(signalMapperAttrType, SIGNAL(mapped(int)), this, SLOT(dataTypeSelected(int)));
 
-
     // Maps radioBUttons in slot grpTypeSelected
     signalMapperGrpType = new QSignalMapper(this);
     signalMapperGrpType->setMapping(ui->equalRadio, TObsEqualSteps);
@@ -564,7 +559,6 @@ void ReceiverGUI::setupGUI()
     connect(ui->uniqueRadio, SIGNAL(clicked()), signalMapperGrpType, SLOT(map()));
 
     connect(signalMapperGrpType, SIGNAL(mapped(int)), this, SLOT(grpTypeSelected(int)));
-
 
     // Maps radioBUttons in slot stdTypeSelected
     signalMapperStdType = new QSignalMapper(this);
@@ -613,7 +607,6 @@ void ReceiverGUI::readSettings()
      settings.endGroup();
 
      settings.endGroup();
-
 
      ui->frame->blockSignals(false);
 }

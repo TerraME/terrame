@@ -48,7 +48,6 @@ ReceiverUDP::ReceiverUDP(QObject *parent)
         // , Qt::DirectConnection);
         // , Qt::BlockingQueuedConnection);
 
-
 #ifdef TME_STATISTIC
     Statistic::getInstance();
     Statistic::getInstance().setDisableRemove(true);
@@ -130,7 +129,6 @@ void ReceiverUDP::processPendingDatagrams()
 
     } while (udpSocket->hasPendingDatagrams());
 
-
     compressed = false;
     dataSize = -1.0;
     pos = 0;
@@ -144,7 +142,6 @@ void ReceiverUDP::processPendingDatagrams()
     in >> pos;  // The index of received data
     in >> compressed; // datagram format transmitted flag
     in >> auxData; // data received
-
 
     // if ((completeData->isEmpty())){
     if (cleanCompleteStateReceived)
@@ -275,7 +272,6 @@ void ReceiverUDP::createNotifyObserver(int subjId, int subjType)
                 //<< "Symbol" << "12" << "1" << "1" << "1" << "0" << "50" << "6" << "-1" << "255" << "0" << "0" 
                 //<< "0, 0;0;0;?;#255, 255, 255;100;100;?;#" << "Symbol" << "12" << ":" << "1" << "1"
 
-
                 //    << "0" << "1" << "-1" << "105" 
                 //    << "0" << "Symbol" << "50" << ":" << "5"
                 //    << "12" << "2" << "1"
@@ -289,8 +285,6 @@ void ReceiverUDP::createNotifyObserver(int subjId, int subjType)
                 ,
                 TObsCell
              );
-
-
 
         created = true;
     }

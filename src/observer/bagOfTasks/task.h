@@ -69,7 +69,6 @@ public:
     // inline bool lessPriority(const Task &a, const Task& b) const { return a.priority < b.priority; }
     // inline bool operator<(const Task &other) const { return priority < other.priority; }
 
-
 protected:
     /* * 
      * Identify what worker must be execute this task
@@ -79,11 +78,9 @@ protected:
      */
     // inline void setWorkerId(int workerId = -1) { this->workerId = workerId; }
 
-
     Type type;
     Priority priority;
     int workerId;
-
 
 private:
     int id;

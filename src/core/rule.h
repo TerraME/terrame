@@ -54,7 +54,6 @@ public:
     virtual bool execute (Event & /*event*/, Agent * /*agent*/, pair<CellIndex, Cell*> & /*cellIndexPair*/) { return true; }
 };
 
-
 /**
  * \brief
  *  Implementation of a Rule object.
@@ -88,7 +87,6 @@ private:
 
 };
 
-
 /**
  * \brief
  *  Implementation of a FlowCondition object.
@@ -118,7 +116,6 @@ public:
     JumpCondition(ControlMode *target, string &targetName)
         :targetControlMode_ (target),
           targetControlModeName_(targetName) { }
-
 
     /// Transits the JumpCondition object to the target ControlMode
     /// \param agent is a pointer to the LocalAgent object being executed

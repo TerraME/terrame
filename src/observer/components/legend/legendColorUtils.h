@@ -66,7 +66,6 @@ struct TeColor
     //! Set parameters of colors
     void init (int r, int g, int b, const std::string& name="") {red_ = r, green_ = g, blue_ = b;name_ = name; }
 
-
     //! Returns TRUE if color1 is equal to color2 or FALSE if they are different.
     bool operator== (const TeColor& color)
     {
@@ -184,9 +183,5 @@ void generateColorBarMap(std::vector<ColorBar>& inputColorVec, int ncores, std::
 std::vector<ColorBar> getColorBarVector(std::string& scores, const bool& first);
 //unsigned int  TeReadColorRampTextFile(const string& fileName, map<string, string>& colorRamps);
 
-
-
 #endif
-
-
 

@@ -122,5 +122,4 @@ public:
     int kill(lua_State *L);
 };
 
-
 #endif

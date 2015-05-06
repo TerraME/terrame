@@ -98,7 +98,6 @@ public:
     ///         the modeler rules must also define the iteration over the cellular space.
 	void setActionRegionStatus(bool status) { actionRegionStatus = status; }
 
-
 };
 
 /**
@@ -289,7 +288,6 @@ public:
 				// gets the agent active control mode
 				cellIndexPair.first = cellIterator->first;
 				cellIndexPair.second = cellIterator->second;
-
 
 				// execute the control mode
 				do {

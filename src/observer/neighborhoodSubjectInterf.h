@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef NEIGHBORHOOD_CONCRET_SUBJECT_INTERF
 #define NEIGHBORHOOD_CONCRET_SUBJECT_INTERF
 
@@ -63,6 +62,5 @@ public:
      */
     bool kill(int id);
 };
-
 
 #endif // NEIGHBORHOOD_CONCRET_SUBJECT_INTERF

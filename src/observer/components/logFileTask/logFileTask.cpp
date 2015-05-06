@@ -3,7 +3,6 @@
 #include <QFile>
 #include <QMessageBox>
 
-
 #ifdef TME_BLACK_BOARD
     #include "blackBoard.h"
     #include "subjectAttributes.h"
@@ -156,7 +155,6 @@ bool LogFileTask::rendering()
 
     return true;
 }
-
 
 bool LogFileTask::draw()
 {

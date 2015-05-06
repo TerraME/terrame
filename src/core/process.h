@@ -72,7 +72,6 @@ typedef CompositeInterface< vectorComposite< JumpCondition*> > JumpCompositeInte
  */
 typedef CompositeInterface< vectorComposite<FlowCondition*> > FlowCompositeInterf;
 
-
 /**
  * \brief
  *  Handle for a Process object.

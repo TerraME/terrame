@@ -52,7 +52,6 @@ public slots:
 
 private:
 
-
     int msgReceiver, statesReceiver;
     QByteArray *completeData;
     QString message;

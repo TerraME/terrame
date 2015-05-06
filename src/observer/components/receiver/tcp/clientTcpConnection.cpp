@@ -17,13 +17,11 @@
 	#include "statistic.h"
 #endif
 
-
 #ifdef TME_BLACK_BOARD
 	#include "blackBoard.h"
 #endif
 
 using namespace TerraMEObserver;
-
 
 ClientTcpConnection::ClientTcpConnection(ReceiverGUI *ui, QObject *parent)
     : ui(ui), QTcpSocket(parent)
@@ -140,7 +138,6 @@ void ClientTcpConnection::receive()
         in >> pos;              // indice do dado recebido
         in >> compressed;      // flag formato do datagrama transmitido
         in >> auxData;          // dado recebido
-
 
 #ifdef TME_STATISTIC
         // Tempo de rede
@@ -304,7 +301,6 @@ void ClientTcpConnection::process(const QByteArray &state)
     t = Statistic::getInstance().endMicroTime() - t;
     Statistic::getInstance().addElapsedTime("decoder bb", t);
 
-
 #ifdef DEBUG_OBSERVER
     qDebug() << (decoded ? "decoded!!!" : "decoding failure");
 #endif
@@ -362,7 +358,6 @@ bool ClientTcpConnection::send(const QByteArray &data)
         out << (qint64)(datagram.size() - sizeof(qint64));
         bytesWritten = write(datagram);
         flush();
-
 
         if (bytesWritten == -1)
         {

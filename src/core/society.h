@@ -28,7 +28,6 @@ of this library and its documentation.
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-
 #ifndef SOCIETY_H
 #define SOCIETY_H
 
@@ -198,7 +197,6 @@ public:
     ///
     Society():duplicated(false) {  past = (Society*) &clone(); }
 
-
     /// HANDLE - Updates the tracked state (control mode) of a certain agent within the cell.
     /// \param  agent is a pointer to an agent within the cell.
     /// \param target is a pointer to the new agent tracked control mode (discrete state).
@@ -233,7 +231,6 @@ public:
     /// Copy constructor
     //
     bool operator==(Society & cell) { return pImpl_ == cell.pImpl_; }
-
 
     /// HANDLE - Gets the list of neighborhood graphs from the cell
     /// \return A reference to the list of neighborhoods.

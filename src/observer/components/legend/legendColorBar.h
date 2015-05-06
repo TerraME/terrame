@@ -231,7 +231,6 @@ protected:
      */
     void sortByDistance();
 
-
     ColorBar* colorEdit_;
     //	std::vector<TeColor>	getColors(TeColor, TeColor, int);
 
@@ -239,7 +238,6 @@ protected:
     QAction *addColor;
     QAction *removeColor;
     QAction *changeColor;
-
 
     QPoint	p_;
     QPoint	pa_;

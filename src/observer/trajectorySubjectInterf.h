@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef TRAJECTORY_CONCRET_SUBJECT_INTERF
 #define TRAJECTORY_CONCRET_SUBJECT_INTERF
 
@@ -32,7 +31,6 @@
 #include "luaCell.h"
 #include "luaCellIndex.h"
 #include "luaRegion.h"
-
 
 /**
  * \brief Trajectory Concrete Subject
@@ -65,6 +63,5 @@ public:
      */
     bool kill(int id);
 };
-
 
 #endif

@@ -77,7 +77,6 @@ bool VisualMapping::execute()
     // double t3 = 0, tt = 0;    
 #endif
 
-
 #ifdef DEBUG_OBSERVER
     qDebug() << "VisualMapping::execute()"; 
     for (int i = 0 ; i < attribList.size(); ++i)
@@ -348,7 +347,6 @@ void VisualMapping::renderingNeighbor(QPainter *p, const double &xCell, const do
 
     // TODO: Desenhar a cabeca da seta
 }
-
 
 void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
 {
@@ -731,7 +729,6 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
     const double SIZE_CELL_PROPORT_W = ORIG_TO_DEST_W * WIDTH_CELL;
     const double SIZE_CELL_PROPORT_H = ORIG_TO_DEST_H * HEIGHT_CELL;
 
-
 #ifdef DEBUG_OBSERVER
     qDebug() << "VisualMapping::mappingSociety()";
 
@@ -971,7 +968,6 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
 #ifdef DEBUG_OBSERVER
             qDebug() << subjAttr->toString() << subjectsIDs.size();
 #endif
-
 
 #ifdef TME_DRAW_VECTORIAL_AGENTS
             p.setFont(attrib->getFont());
@@ -1270,7 +1266,6 @@ void VisualMapping::enableGrid(bool state)
 {
     gridEnabled = state;
 }
-
 
 void VisualMapping::setPath(const QString & pth)
 {

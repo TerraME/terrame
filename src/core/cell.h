@@ -194,7 +194,6 @@ public:
 	///
 	Cell():duplicated(false) { past = (Cell*) &clone(); }
 
-
 	/// HANDLE - Updates the tracked state (control mode) of a certain agent within the cell.
 	/// \param  agent is a pointer to an agent within the cell.
 	/// \param target is a pointer to the new agent tracked control mode (discrete state).
@@ -264,4 +263,3 @@ public:
 	}
 };
 #endif
-

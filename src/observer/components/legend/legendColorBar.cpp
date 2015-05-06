@@ -53,7 +53,6 @@ TeQtColorBar::TeQtColorBar(QWidget* parent) : QFrame(parent)
     changeColor = popupMenu_.addAction(tr("Remove Color"), this, SLOT(removeColorSlot()));
 }
 
-
 TeQtColorBar::~TeQtColorBar()
 {
     //delete addColor;
@@ -1025,7 +1024,6 @@ void TeQtColorBar::changeAllBrightness()
         dif = 6.*(double)(p_.x() - b_);
     else
         dif = 6.*(double)(p_.y() - b_);
-
 
     for(ind = 0; ind < (int)inputColorVec_.size(); ++ind)
     {

@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef NODE_H
 #define NODE_H
 
@@ -33,12 +32,10 @@ class QPainter;
 class QStyleOptionGraphicsItem;
 class QWidget;
 
-
 namespace TerraMEObserver
 {
 
 class Edge;
-
 
 /**
  * \brief State machine node

@@ -34,7 +34,6 @@
 
 namespace TerraMEObserver {
 
-
 /**
  * \brief Shows in tabular form attributes observed
  * \see ObserverInterf
