@@ -103,7 +103,6 @@ int luaNeighborhood::eraseNeighbor(lua_State *L) {
 	}
 }
 
-
 /// Adds a new luaNeighbor cell into the luaNeighborhood
 /// parameters: cell index,  cell, weight
 /// return luaCell
@@ -186,7 +185,6 @@ int luaNeighborhood::getNeighbor(lua_State *L)
     lua_pushnil(L);
     return 1;
 }
-
 
 /// Gets luaNeighbor identifier
 /// no parameters
@@ -468,7 +466,6 @@ int luaNeighborhood::createObserver(lua_State *)
     if (lua_type(luaL, top -1) == LUA_TSTRING) qDebug() << -1 << "string"; else qDebug() << -1 << "not string";
 #endif
 
-
     if ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
     {
         QStringList obsAttribs, obsParams, obsParamsAtribs;
@@ -489,7 +486,6 @@ int luaNeighborhood::createObserver(lua_State *)
         //        qDebug() << "lua_type(luaL, -2)" << luaL_checkstring(luaL, -2);
         //    else if (lua_type(luaL, -2) == LUA_TNUMBER)
         //        qDebug() << "lua_type(luaL, -2)"<< luaL_checknumber(luaL, -2);
-
 
         //    // allAttribs.push_back(key);
         //    lua_pop(luaL, 1);
@@ -1095,7 +1091,6 @@ QDataStream& luaNeighborhood::getState(QDataStream& in, Subject *, int /*observe
     return in;
 }
 
-
 #else // TME_BLACK_BOARD
 
 QDataStream& luaNeighborhood::getState(QDataStream& in, Subject *, int observerId, const QStringList &attribs)
@@ -1173,7 +1168,6 @@ QByteArray luaNeighborhood::pop(lua_State *, const QStringList &attribs,
 
             raw = cellNeighborSubj->add_rawattributes();
 
-
             raw->set_key("weight");
             // raw->set_key(attribs.first().toLatin1().constData());
             raw->set_number(num);
@@ -1237,7 +1231,6 @@ QByteArray luaNeighborhood::getChanges(QDataStream& in, const QStringList& attri
 {
     return getAll(in, attribs);
 }
-
 
 #else
 

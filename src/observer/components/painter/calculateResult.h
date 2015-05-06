@@ -25,7 +25,6 @@
 #ifndef CALCULATE_RESULT_H
 #define CALCULATE_RESULT_H
 
-
 // #include <QtCore/QMutex>
 // #include <QtCore/QSize>
 // #include <QtCore/QWaitCondition>

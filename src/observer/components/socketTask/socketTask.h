@@ -93,7 +93,6 @@ public:
      */
     virtual void setModelTime(double time) = 0;
 
-
     virtual void addState(const QByteArray &state);
 
     virtual QString errorString() const = 0;
@@ -117,7 +116,6 @@ protected:
      * Receives a message by socket
      */
     virtual void receive() = 0;
-
 
     QList<QByteArray> states;
     QReadWriteLock lock;

@@ -39,7 +39,6 @@ namespace TerraMEObserver {
 
 class Decoder;
 
-
 /**
  * \brief Spatial visualization for cells and saved in a png image file
  * \author Antonio Jose da Cunha Rodrigues
@@ -183,7 +182,6 @@ private:
     QHash<QString, Attributes*> *mapAttributes;
     Decoder *protocolDecoder;
 };
-
 
 }
 

@@ -120,7 +120,6 @@ class Event : public Model, public EventInterf
 {
 public:
 
-
     /// Constructor.
     /// \param time is the time instant in which the Event must occurs
     /// \param period is the periodicity in which the Event must occurs

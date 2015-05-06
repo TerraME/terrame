@@ -29,7 +29,6 @@ of this library and its documentation.
 
 #include "luaRule.h"
 
-
 /**
 * \brief  
 *  Implementation for a FlowCondition object.
@@ -112,9 +111,7 @@ public:
         }
 
     }
- 
 
 };
-
 
 #endif

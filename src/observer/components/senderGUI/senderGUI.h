@@ -75,7 +75,6 @@ public slots:
 
     void statusStates(int states);
 
-
 private:
     Ui::senderGUI *ui;
 };

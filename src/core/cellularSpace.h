@@ -32,7 +32,6 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-
 #if ! defined(CELLULAR_SPACE_H)
 #define CELLULAR_SPACE_H
 
@@ -46,7 +45,6 @@ using namespace std;
 #include "cell.h"
 #include "controlMode.h"
 #include "agent.h"
-
 
 /**
  * \brief
@@ -101,11 +99,7 @@ public:
         }
     }
 
-
-
-
 private:
-
 
     /// Attaches a control model of a agent attached to the cellular space to each cell.
     /// Using this method, the cell can keep track of the agents active control mode (or discrete state).

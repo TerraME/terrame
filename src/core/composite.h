@@ -95,7 +95,6 @@ public:
         return itr;
     }
 
-
     /// Remove all components
     void clear ()
     {	components_.clear (); }
@@ -205,7 +204,6 @@ public:
     int size()
     { return components_.size(); }
 
-
     /// Return the i-th component
     T& operator [] (TKey k){
         typename map<TKey, TElmnt, less<TKey> >::iterator location = components_.find(k);
@@ -307,7 +305,6 @@ public:
     int size()
     { return components_.size(); }
 
-
     /// Return the i-th component
     T& operator [] (TKey k){
         typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find(k);
@@ -347,7 +344,6 @@ public:
     {
         return components_.rend();
     }
-
 
 protected:
 

@@ -41,7 +41,6 @@ static int numImplementationCreated = 0;
 static int numImplementationDeleted = 0;
 #endif
 
-
 /** 
  * \brief
  *
@@ -112,7 +111,6 @@ public:
         numImplementationCreated++;
 #endif
     }
-
 
     /// Increases the number of references to this object
     void attach ()	{ refCount_++; }

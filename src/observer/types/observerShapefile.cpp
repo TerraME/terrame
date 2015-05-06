@@ -100,11 +100,8 @@ bool ObserverShapefile::draw(QDataStream &state)
     //scene->render(&painter);
     //image.save("file_name.png");
 
-
     return decoded;
 }
-
-
 
 void ObserverShapefile::showLayerLegend()
 {
@@ -143,7 +140,6 @@ void ObserverShapefile::showLayerLegend()
     scene->update();
     treeLayers->resizeColumnToContents(0);
 }
-
 
 void ObserverShapefile::loadShape(const string &filename)
 {
@@ -326,5 +322,4 @@ int ObserverShapefile::close()
     ObserverMapSuperclass::close();
     return 0;
 }
-
 

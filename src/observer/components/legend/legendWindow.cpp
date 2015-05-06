@@ -157,11 +157,9 @@ void LegendWindow::setupComboBoxes()
     groupingModeComboBox->insertItems(0, groups);
     groupingModeComboBox->setEditable(false);
 
-
     //***********
     attributesComboBox->clear();
     attributesComboBox->insertItem(0, "-"); // attributes that are being observed
-
 
     //*********** Slices *******************************************
     // Fill the slices combobox according to the grouping mode
@@ -1119,7 +1117,6 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         << "  txtValues.size()" << txtValues.size() << "\n";
 #endif
 
-
     if ((txtValues.empty()) 
             && (attrib->getType() != TObsAgent)
             && (attrib->getType() != TObsSociety)
@@ -1939,7 +1936,6 @@ void LegendWindow::setupUi()
 
     hboxlayout_3->addItem(spacer14_2);
 
-
     gridLayout1->addLayout(hboxlayout_3, 3, 0, 1, 8);
 
     groupingModeComboBox = new QComboBox(groupingParamsGroupBox);
@@ -2003,7 +1999,6 @@ void LegendWindow::setupUi()
 
     gridLayout1->addWidget(attributesComboBox, 1, 1, 1, 3);
 
-
     vboxlayout_1->addWidget(groupingParamsGroupBox);
 
     colorGroupBox = new QGroupBox(this);
@@ -2061,7 +2056,6 @@ void LegendWindow::setupUi()
 
     gridLayout3->addWidget(loadNamesComboBox, 0, 0, 1, 1);
 
-
     hboxlayout_2->addWidget(loadGroupBox);
 
     saveColorPushButton = new QPushButton(colorGroupBox);
@@ -2070,9 +2064,7 @@ void LegendWindow::setupUi()
 
     hboxlayout_2->addWidget(saveColorPushButton);
 
-
     gridLayout2->addLayout(hboxlayout_2, 2, 0, 1, 1);
-
 
     vboxlayout_1->addWidget(colorGroupBox);
 
@@ -2117,9 +2109,7 @@ void LegendWindow::setupUi()
 
     hboxlayout_1->addItem(spacer23);
 
-
     vboxlayout_1->addLayout(hboxlayout_1);
-
 
     gridLayout->addLayout(vboxlayout_1, 0, 0, 1, 1);
 
@@ -2170,5 +2160,4 @@ void LegendWindow::retranslateUi()
     helpPushButton->setShortcut(QApplication::translate("LegendWindow", "Alt+H", 0));
 
 } // retranslateUi
-
 

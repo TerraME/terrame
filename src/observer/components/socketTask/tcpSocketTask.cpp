@@ -14,12 +14,10 @@
     #include "statistic.h"
 #endif
 
-
 using namespace TerraMEObserver;
 using namespace BagOfTasks;
 
 static const int TIME_OUT = 10000;
-
 
 TcpSocketTask::TcpSocketTask(QObject * parent) 
     : QTcpSocket(parent), SocketTask()
@@ -290,7 +288,6 @@ bool TcpSocketTask::send(const QByteArray &data)
         bytesWritten = write(datagram);
         flush();
 
-
         if (bytesWritten == -1)
         {
             emit messageFailed(errorString());
@@ -361,7 +358,6 @@ bool TcpSocketTask::send(const QByteArray &data)
     if ((data == COMPLETE_STATE) || (data == COMPLETE_SIMULATION))
         pos = -1;
 
-
     while(bytesRead > 0)
     {
         QByteArray datagram;
@@ -374,12 +370,10 @@ bool TcpSocketTask::send(const QByteArray &data)
         out << compressed;                // data sent is compressed?
         out << dataAux;
 
-
         out.device()->seek(0);
         out << (qint64)(datagram.size() - sizeof(qint64));
         bytesWritten = write(datagram);
         flush();
-
 
         if (bytesWritten == -1)
         {
@@ -415,7 +409,6 @@ bool TcpSocketTask::send(const QByteArray &data)
         emit messageSent(tr("States sent: %1. From %2\n").arg(stateCount).arg(address.toString()));
         emit statusStates(stateCount);
     }
-
 
     return true;
 #endif

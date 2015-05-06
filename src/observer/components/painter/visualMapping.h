@@ -25,7 +25,6 @@
 #ifndef OBESERVERMAP_RENDERTHREAD_H
 #define OBESERVERMAP_RENDERTHREAD_H
 
-
 #include <QtCore/QMutex>
 #include <QtCore/QSize>
 #include <QtCore/QWaitCondition>
@@ -93,7 +92,6 @@ public:
 
     void setPath(const QString & path);
 
-
 // #ifdef TME_STATISTIC
     // Statistic variable. It should be deleted soon
     double waitTime;
@@ -144,7 +142,6 @@ private:
      */
 	void renderingNeighbor(QPainter *p, const double &xCell, const double &yCell, 
         const double &xNeigh, const double &yNeigh);
-
 
     void drawGrid();
     // inline void calculateResult();

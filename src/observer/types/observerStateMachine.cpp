@@ -46,7 +46,6 @@ extern "C"
 
 extern lua_State * L;
 
-
 //#include <QApplication>
 //#include <time.h>
 //
@@ -202,7 +201,6 @@ bool ObserverStateMachine::draw(QDataStream &state)
         zoomWindow();
         buildLegend++;
     }
-
 
     scene->update(scene->sceneRect());
     qApp->processEvents();
@@ -610,7 +608,6 @@ void ObserverStateMachine::zoomWindow()
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
 
-
 #ifdef OBSEVER_DEBUG
     //qDebug() << "\nx: " << x << " y: " << y << " size: " << size;
     qDebug() << "\nscene->sceneRect(): " << scene->sceneRect() 
@@ -779,7 +776,6 @@ void ObserverStateMachine::setupGUI()
     butLegend->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     connect(butLegend, SIGNAL(clicked()), this, SLOT(butLegend_Clicked()));
 
-
     butZoomIn = new QToolButton(frameTools);
     butZoomIn->setText("In");
     butZoomIn->setIcon(QIcon(QPixmap(":/icons/zoomIn.png")));
@@ -887,7 +883,6 @@ void ObserverStateMachine::setupGUI()
     layoutDefault->addWidget(splitter);
     setLayout(layoutDefault);
 }
-
 
 #ifdef OBSERVER_DEBUG
 

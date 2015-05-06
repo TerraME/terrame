@@ -110,7 +110,6 @@ int luaGlobalAgent::getControlModeName(lua_State* L)
     return 1;
 }
 
-
 int luaGlobalAgent::createObserver(lua_State *L)
 {
 #ifdef DEBUG_OBSERVER
@@ -1041,7 +1040,6 @@ QByteArray luaGlobalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
             // const CellIndex &idx = cell->getIndex();
             // qDebug() << cell->getId() << idx.first << ", " << idx.second;
-
 
             // Location in the spatial where we found the agent
             valueTmp = QByteArray::number(cell->getId());

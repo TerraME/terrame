@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef OBSERVERSTATEMACHINE_H
 #define OBSERVERSTATEMACHINE_H
 
@@ -49,7 +48,6 @@ namespace TerraMEObserver
 class Decoder;
 class Node;
 class Canvas;
-
 
 /**
  * \brief Plots the state machine nodes and edges
@@ -205,7 +203,6 @@ private:
     void zoomWindow();
 
     bool draw();
-
 
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;

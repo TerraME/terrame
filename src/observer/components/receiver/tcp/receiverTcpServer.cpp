@@ -8,9 +8,7 @@
 #include "clientTcpConnection.h"
 #include "receiverGUI.h"
 
-
 using namespace TerraMEObserver;
-
 
 ReceiverTcpServer::ReceiverTcpServer(QObject *parent)
     :   QTcpServer(parent)

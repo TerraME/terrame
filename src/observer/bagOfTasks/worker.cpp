@@ -50,7 +50,6 @@ void Worker::run()
     Task *task = 0;
     TaskManager &manager = TaskManager::getInstance();
 
-
 #ifdef UNIT_TME_TEST_PRINT
     qDebug() << "worker" << id << "started"; std::cout.flush();
 #endif

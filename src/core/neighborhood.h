@@ -34,7 +34,6 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-
 #if ! defined(NEIGHBOURHOOD_H)
 #define NEIGHBOURHOOD_H
 
@@ -142,7 +141,6 @@ public:
     /// \return a pointer to Cell if it has been found, otherwise a NULL pointer.
     Cell* getNeighbor(CellIndex& cI) { return neighs[cI]; }
 
-
     /// Gets the Neighborhood identifier
     /// \return a string reference to the identifier
     string& getID (void) { return ID; }
@@ -181,7 +179,6 @@ class CellNeighborhood : public CellNeighInterf
 public:
 
     typedef CellNeighborhoodImpl::iterator iterator;
-
 
     /// HANDLE - Adds a new neighbor cell to the cells neighborhood map
     /// \param cellIndex is a reference to "CellIndex" with the possible n-dimensional coordenate of the cell

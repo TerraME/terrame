@@ -6,7 +6,6 @@ extern "C" {
 #include "lauxlib.h"
 }
 
-
 template <typename T> class Luna {
     typedef struct { T *pT; } userdataType;
 public:

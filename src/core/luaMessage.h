@@ -61,7 +61,6 @@ public:
     /// Destructor
     ~luaMessage(void){}
 
-
     /// Configures the luaMessage object
     /// parameter: identifier
     int config(lua_State *L) {
@@ -156,6 +155,5 @@ public:
         return result;
     }
 };
-
 
 #endif

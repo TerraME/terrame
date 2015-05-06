@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef OBSERVERSUPERCLASS_H
 #define OBSERVERSUPERCLASS_H
 

@@ -7,7 +7,6 @@
 
 using namespace TerraMEObserver;
 
-
 Canvas::Canvas(QWidget *parent)
     : QGraphicsView(parent)
 {
@@ -69,7 +68,6 @@ void Canvas::paintEvent(QPaintEvent * ev)
     }
     QGraphicsView::paintEvent(ev);
 }
-
 
 void Canvas::mousePressEvent(QMouseEvent *ev)
 {
@@ -238,5 +236,4 @@ void Canvas::contextMenuEvent(QContextMenuEvent *event)
         contextMenu.exec(event->globalPos());
     }
 }
-
 

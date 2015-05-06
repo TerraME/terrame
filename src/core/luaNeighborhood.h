@@ -27,7 +27,6 @@ of this library and its documentation.
 #if ! defined(LUANEIGHBORHOOD_H)
 #define LUANEIGHBORHOOD_H
 
-
 extern "C" 
 {
 #include <lua.h>
@@ -78,7 +77,6 @@ public:
     
     ///< Data structure issued by Luna<T>
     static Luna<luaNeighborhood>::RegType methods[]; 
-
 
 public:
     /// constructor
@@ -238,7 +236,6 @@ public:
 
     /// Destroys the observer object instance
     int kill(lua_State *L);
-
 
 };
 

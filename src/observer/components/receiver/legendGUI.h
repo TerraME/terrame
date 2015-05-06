@@ -4,7 +4,6 @@
 #include <QDialog>
 #include <QSignalMapper>
 
-
 namespace Ui {
 class legendGUI;
 }

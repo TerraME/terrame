@@ -376,7 +376,6 @@ void generateColorBarMap(std::vector<ColorBar>& inputColorVec, int ncores, std::
     colorMap[i] = vv;
 }
 
-
 bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor> &colors)
 {
     if (ramps.empty())
@@ -499,7 +498,6 @@ bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor> &co
     return true;
 }
 
-
 std::vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc)
 {
     int n = 255, i, j;
@@ -531,7 +529,6 @@ std::vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc)
     allColors.clear();
     return colorVec;
 }
-
 
 std::vector<TeColor> getColors(std::vector<ColorBar>& iVec, int ncores)
 {
@@ -765,7 +762,6 @@ void HSVtoRGB(double& r, double& g, double& b, const double& h, const double& s,
             break;
     }
 }
-
 
 //unsigned int  TeReadColorRampTextFile(const string& fileName, map<string, string>& colorRamps)
 //{

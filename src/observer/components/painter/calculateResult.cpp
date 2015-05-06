@@ -112,7 +112,6 @@ bool CalculateResult::execute()
             //    attrib->getImage()->save(QString("cs_%1.png").arg(o), "png");
 #endif
 
-
 #endif
 
         }

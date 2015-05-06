@@ -89,7 +89,6 @@ bool Decoder::decode(const QByteArray &state)
 
 #endif
 
-
     }
 
     return ret;
@@ -285,7 +284,6 @@ bool Decoder::consumeID(int &id, QStringList &tokens, int &idx)
 #ifdef DEBUG_OBSERVER
         qDebug() << "Decoder::consumeID - inserted Id: " << id;
 #endif
-
 
 #ifdef DEBUG_OBSERVER
     else

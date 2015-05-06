@@ -30,7 +30,6 @@
 
 #include "socketTask.h"
 
-
 namespace TerraMEObserver {
 
 class Attributes;
@@ -82,7 +81,6 @@ public:
     // */
     //virtual quint16 getPort();
 
-
     /**
      * Connects to a host
      * \param host the ip host 
@@ -104,7 +102,6 @@ public:
     bool setupStatistics;
 // #endif
 
-
 signals:
     void messageSent(const QString &);
     void messageFailed(const QString &);
@@ -122,7 +119,6 @@ public slots:
     void setModelTime(double time);
 
     void receive();
-
 
 private slots:
     void error(QAbstractSocket::SocketError socketError);
@@ -151,7 +147,6 @@ protected:
      * Gets the ratio of data compression 
      */
     // inline double getDataRatio() { return dataRatio; }
-
 
     //bool compress;
     //quint64 dataSize;   // size of data

@@ -29,7 +29,6 @@
 #include "observerInterf.h"
 #include "terrameIncludes.h"
 
-
 /**
  * \brief Environment Concrete Subject
  * \see SubjectInterf
@@ -61,6 +60,5 @@ public:
      */
     bool kill(int id);
 };
-
 
 #endif

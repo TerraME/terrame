@@ -31,7 +31,6 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
   \author Tiago Garcia de Senna Carneiro
 */
 
-
 #if ! defined (ENVIRONMENT_H)
 #define ENVIRONMENT_H
 
@@ -184,7 +183,6 @@ public:
     /// Gets the time instant when the Environment should stop to run.
     /// \return A real number representing the time instant when the Environment should stopo to run
     double getFinalTime() { return EnvironmentInterf::pImpl_->getFinalTime(); }
-
 
     /// Executes the Environment. The internal Scheduler data structure is put to work.
     /// \return Always returns true.
@@ -383,7 +381,6 @@ private:
         pair<Event, Scheduler> timeSchedulerPair;
         theIterator = environment->firstScheduler();
 
-
         if (theIterator != environment->TimeSchedulerPairCompositeInterf::end())
         {
             Scheduler scheduler = theIterator->second;
@@ -403,7 +400,6 @@ private:
 
         return false;
     }
-
 
 };
 

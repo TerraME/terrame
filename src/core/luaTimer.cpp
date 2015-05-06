@@ -163,7 +163,6 @@ int luaTimer::createObserver(lua_State *luaL)
 		}
 		//---------------------------------------------------------------------------------------
 
-
 #ifdef DEBUG_OBSERVER
 		printf("\t%s \n", qPrintable(key));
 #endif

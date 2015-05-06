@@ -24,7 +24,6 @@ UdpSocketTask::UdpSocketTask(QObject * parent)
     connect(this, SIGNAL(readyRead()), this, SLOT(receive()));
 }
 
-
 UdpSocketTask::~UdpSocketTask()
 {
     // abort();

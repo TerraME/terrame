@@ -29,7 +29,6 @@
 #include "observerInterf.h"
 #include "terrameIncludes.h"
 
-
 /**
  * \file localAgentSubjectInterf.h
  * \see SubjectInterf
@@ -61,6 +60,5 @@ public:
      */
     bool kill(int id);
 };
-
 
 #endif

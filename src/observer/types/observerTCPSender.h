@@ -53,13 +53,10 @@ public:
      */
     const TypesOfObservers getType() const;
 
-
     /**
      * \copydoc SenderTask::setCompress
      */
     void setCompress(bool on);
-
-
 
     /**
      * Closes the window and stops the thread execution
@@ -78,7 +75,6 @@ signals:
 
 public slots:
     void connected();
-
 
 protected:
     /**

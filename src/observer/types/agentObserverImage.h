@@ -104,7 +104,6 @@ public:
      */
     QStringList & getSubjectAttributes();
 
-
 private:
     /**
      * Decodes a internal subject state

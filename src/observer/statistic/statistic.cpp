@@ -11,7 +11,6 @@
 
 #include <math.h>
 
-
 Statistic &Statistic::getInstance()
 {
     static Statistic stat;
@@ -220,7 +219,6 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
             else
                 diffSquare[key].second = -1;
         }
-
 
         for (int i = 0; i < size; i++)
         {

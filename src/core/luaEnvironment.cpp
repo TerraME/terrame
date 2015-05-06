@@ -1076,7 +1076,6 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& /*attribs*/)
         lua_pop(luaL, 1);
     }
 
-
     // #attrs
     msg.append(QByteArray::number(attrCounter));
     msg.append(PROTOCOL_SEPARATOR);

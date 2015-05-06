@@ -93,7 +93,6 @@ signals:
      */
     void zoomOut();
 
-
 protected:
     /**
      * Paints event of the user interface object

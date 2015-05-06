@@ -108,7 +108,6 @@ public:
                 agL = ag;
             }
 
-
             // calls the "execute" function of the rule
             if(lua_pcall(L, 3, 1, 0) != 0)
             {
@@ -135,6 +134,5 @@ public:
     }
 
 };
-
 
 #endif

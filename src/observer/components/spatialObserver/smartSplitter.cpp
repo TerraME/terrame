@@ -2,7 +2,6 @@
 
 #include <QSplitterHandle>
 
-
 using namespace TerraMEObserver;
 
 SmartSplitterHandle::SmartSplitterHandle(Qt::Orientation orientation, QSplitter *parent)
@@ -43,7 +42,6 @@ void SmartSplitterHandle::mouseDoubleClickEvent(QMouseEvent * /*e*/)
         moveSplitter(0);
     }
 }
-
 
 SmartSplitter::SmartSplitter(QWidget *parent)
     : QSplitter(parent)

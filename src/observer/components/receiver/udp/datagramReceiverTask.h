@@ -31,7 +31,6 @@
 
 #include "task.h"
 
-
 class QByteArray;
 
 namespace TerraMEObserver {
@@ -78,7 +77,6 @@ private:
      */
     // void process(const QByteArray &msg);
     void process(const QString &msg);
-
 
     QByteArray completeData;
     QList<QByteArray *> partialData;

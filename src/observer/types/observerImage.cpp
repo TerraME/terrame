@@ -18,7 +18,6 @@ extern "C"
 }
 #include "luna.h"
 
-
 extern lua_State * L;
 extern ExecutionModes execModes;
 

@@ -23,9 +23,7 @@
 
 extern ExecutionModes execModes;
 
-
 using namespace TerraMEObserver;
-
 
 ObserverUDPSender::ObserverUDPSender(Subject *subj, QObject *parent)
     : ObserverInterf(subj), QObject(parent)
@@ -44,7 +42,6 @@ ObserverUDPSender::ObserverUDPSender(Subject *subj, QObject *parent)
     //setCompress(compressDatagram);
     //// default port
     //port = DEFAULT_PORT;
-
 
 }
 

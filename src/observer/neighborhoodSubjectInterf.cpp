@@ -9,7 +9,6 @@
 #include "agentObserverMap.h"
 #include "agentObserverImage.h"
 
-
 Observer * NeighborhoodSubjectInterf::createObserver(TypesOfObservers type)
 {
     Observer* obs = 0;

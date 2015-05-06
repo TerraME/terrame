@@ -482,9 +482,7 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
     return QByteArray();
 }
 
-
 #else
-
 
 QByteArray luaEvent::getAll(QDataStream& /*in*/, int /*observerId*/, const QStringList& attribs)
 {
@@ -549,7 +547,6 @@ QByteArray luaEvent::pop(lua_State *, const QStringList &)
 }
 
 #endif
-
 
 #ifdef TME_BLACK_BOARD
 

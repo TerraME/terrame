@@ -19,7 +19,6 @@
 	#include "statistic.h"
 #endif
 
-
 ObserverTable::ObserverTable(Subject *subj, QWidget *parent)
     : QDialog(parent), ObserverInterf(subj) //, QThread()
 {

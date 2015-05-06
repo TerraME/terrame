@@ -5,7 +5,6 @@
 
 class QSplitterHandle;
 
-
 namespace TerraMEObserver
 {
 
@@ -22,7 +21,6 @@ private:
     int lastUncollapsedSize;
 
 };
-
 
 class SmartSplitter : public QSplitter
 {

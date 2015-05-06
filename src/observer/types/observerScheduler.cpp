@@ -103,7 +103,6 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
     on_butExpand_clicked();
 }
 
-
 ObserverScheduler::~ObserverScheduler(void)
 {
     // wait();

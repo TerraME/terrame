@@ -92,7 +92,6 @@ private:
     static long int modelCounter;
 };
 
-
 /**
  * \brief
  *  Handle for a Model object.

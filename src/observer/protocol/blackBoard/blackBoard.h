@@ -38,7 +38,6 @@
 class QDataStream;
 class QByteArray;
 
-
 namespace TerraMEObserver{
 
 class Subject;
