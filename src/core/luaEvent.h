@@ -40,11 +40,11 @@ extern "C"
 
 namespace ObserverDatagramPkg
 {
-    class SubjectAttribute; 
+    class SubjectAttribute;
 }
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaEvent object.
 *
 */
@@ -53,7 +53,7 @@ class luaEvent : public EventSubjectInterf, public Reference<luaEvent>
     lua_State *luaL;
     TypesOfSubjects subjectType;
     QHash<QString, double> observedAttribs;
-    
+
 #ifdef TME_PROTOCOL_BUFFERS
     QByteArray getAll(QDataStream& in, const QStringList& attribs);
     QByteArray getChanges(QDataStream& in, const QStringList& attribs);
@@ -65,10 +65,10 @@ class luaEvent : public EventSubjectInterf, public Reference<luaEvent>
 public:
 
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaEvent>::RegType methods[]; 
+    static Luna<luaEvent>::RegType methods[];
 
 public:
     /// constructor
@@ -115,10 +115,12 @@ public:
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed
-    QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
+    QDataStream& getState(QDataStream& in, Subject *subject,
+    					int observerID, const QStringList& attribs);
 
 #ifdef TME_PROTOCOL_BUFFERS
-    QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *currSubj,
+    QByteArray pop(lua_State *L, const QStringList& attribs,
+    			ObserverDatagramPkg::SubjectAttribute *currSubj,
         ObserverDatagramPkg::SubjectAttribute *parentSubj);
 #else
     /**

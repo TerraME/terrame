@@ -73,11 +73,11 @@ bool DatagramReceiverTask::execute()
 
             //if ((pos > -1)) // && (data != COMPLETE_STATE.toLatin1()))
             //{
-            //    qDebug() << "completeData.replace() pos:" << pos << "size:" << data.size() 
+            //    qDebug() << "completeData.replace() pos:" << pos << "size:" << data.size()
             //        << "completeData.size" << completeData.size();
 
             //    // resizes the object and inserts garbage
-            //    // msg.insert((int)pos, data); 
+            //    // msg.insert((int)pos, data);
             //    completeData.replace((int)pos, data.size(), data);
 
             //    // ui->appendMessage(tr("Messages received: %1. From: %2, Port: %3")
@@ -90,7 +90,7 @@ bool DatagramReceiverTask::execute()
             //        qDebug() << COMPLETE_STATE << "completeData: " << completeData.size();
 
             //        process(QString(completeData));
-            //        
+            //
             //        completeData.clear();
             //        //statesReceiver++;
 
@@ -99,7 +99,7 @@ bool DatagramReceiverTask::execute()
             //        //ui->appendMessage(tr("States received: %1. From: %2, Port: %3\n")
             //        //    .arg(statesReceiver).arg(hostSender.toString()).arg(port));
 
-            //        
+            //
             //    }
             //    else
             //    {
@@ -155,7 +155,7 @@ void DatagramReceiverTask::process(const QString & /*state*/)
 //    bool ok = false;
 //
 //    int id = state.mid(0, pos).toInt(&ok);
-//    
+//
 //    // qDebug() << "state.mid: " << state.mid(0, 10).toLatin1().constData();
 //
 //    if (ok)
@@ -171,7 +171,7 @@ void DatagramReceiverTask::process(const QString & /*state*/)
 //        BlackBoard &bb = BlackBoard::getInstance();
 //        SubjectAttributes *subjAttr = bb.insertSubject(id);
 //        subjAttr->setSubjectType((TypesOfSubjects) type);
-//      
+//
 //#ifdef TME_PROTOCOL_BUFFERS
 //        // bool dec = bb.decode(id, state.toLatin1());
 //        bool decoded = bb.decode(state.toLatin1());

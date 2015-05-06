@@ -202,7 +202,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
 
 #ifdef TME_BLACK_BOARD
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr) 
+    if (subjAttr)
         subjAttr->setSubjectType(getSubjectType());
 #endif
 
@@ -212,7 +212,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
         if ((attribList.at(i) != "x") && (attribList.at(i) != "y")
             && (! mapAttributes->contains(attribList.at(i))))
         {
-            attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(), 
+            attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(),
                 cellularSpaceSize.height(), type);
 
 #ifdef TME_BLACK_BOARD
@@ -220,7 +220,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
             attrib->setXsValue(subjAttr->getXs());
             attrib->setYsValue(subjAttr->getYs());
 #endif
-            
+
             obsAttrib.append(attribList.at(i));
             attrib->setVisible(true);
 
@@ -243,15 +243,15 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
 
                 attrib->setDataType((TypesOfData) legAttribs.at(dataType).toInt());
                 attrib->setGroupMode((GroupingMode) legAttribs.at(mode).toInt());
-                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// conta com o zero
-                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// conta com o zero
+                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// count on zero
+                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// count on zero
                 attrib->setStdDeviation((StdDev) legAttribs.at(stdDeviation).toInt());
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());
 
                 bool ok = false;
                 int value = 0;
-                //Fonte
+                //Font
                 attrib->setFontFamily(legAttribs.at(font));
                 value = legAttribs.at(fontSize).toInt(&ok, false);
                 if (ok)
@@ -266,7 +266,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
                     attrib->setSymbol(QString(QChar(value)));
                 else
                     attrib->setSymbol(legAttribs.at(symbol));
-                
+
 				attrib->setWidth(legAttribs.at(width).toDouble());
 
                 std::vector<ColorBar> colorBarVec;
@@ -303,7 +303,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
 
     if (! legendWindow)
         legendWindow = new LegendWindow();
-		
+
     legendWindow->setValues(mapAttributes, obsAttrib);
 	painterWidget->updateAttributeList();
 }
@@ -311,10 +311,10 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
 void ObserverImage::setCellSpaceSize(int w, int h)
 {
     QRect deskRect = qApp->desktop()->screenGeometry(obsImgGUI);
-    
+
     double widthAux = deskRect.width() / w;
     double heightAux = deskRect.height() / h;
-    
+
     width = w;
     height = h;
 

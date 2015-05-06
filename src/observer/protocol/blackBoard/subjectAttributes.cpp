@@ -29,9 +29,9 @@ SubjectAttributes::SubjectAttributes(int id)
 
 SubjectAttributes::~SubjectAttributes()
 {
-    foreach(RawAttribute *raw,  attribHash->values())
+    foreach(RawAttribute *raw, attribHash->values())
         delete raw;
-    
+
     delete attribHash; attribHash = 0;
 
     delete xs; xs = 0;
@@ -41,7 +41,7 @@ SubjectAttributes::~SubjectAttributes()
 
 const QString SubjectAttributes::toString() const
 {
-    QString ret = QString("id: %1 (%2){\n  x: %3, y: %4;\n")
+    QString ret = QString("id: %1 (%2) {\n  x: %3, y: %4;\n")
             .arg(subjectId)
             .arg(getSubjectName((int) subjectType))
             .arg(x)
@@ -60,12 +60,12 @@ void SubjectAttributes::setSubjectType(const TypesOfSubjects &type)
 {
     subjectType = type;
 
-    if ((subjectType != TObsCell) 
+    if ((subjectType != TObsCell)
         // && (subjectType != TObsAgent)         // Who knows the location in space is the cell.
         // && (subjectType != TObsAutomaton)     // Therefore, an agent is composed of a cell
       )
     {
-        if (! xs) xs = new QVector<double>();    
+        if (! xs) xs = new QVector<double>();
         if (! ys) ys = new QVector<double>();
         if (! nestedSubjectsID) nestedSubjectsID = new QVector<int>();
     }
@@ -87,7 +87,7 @@ void SubjectAttributes::addItem(const QString &attrName, const QString &value)
         attribHash->value(attrName)->setValue(attrName, TObsText, value);
     else
         attribHash->insert(attrName, new RawAttribute(attrName, TObsText, value));
-    
+
     // time = clock();
 }
 

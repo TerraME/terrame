@@ -24,7 +24,7 @@ const char *const observersTypesNames[] =
 {
     "", "TextScreen", "LogFile", "Table", "Graphic",
     "DynamicGraphic", "Map", "UDPSender", "Scheduler",
-    "Image", "StateMachine", "Neigh", "Shapefile", 
+    "Image", "StateMachine", "Neigh", "Shapefile",
     "TCPSender"
 };
 
@@ -33,7 +33,7 @@ const char *const subjectTypesNames[] =
     "", "Cell", "CellularSpace", "Neighborhood", "Timer",
     "Event", "Trajectory", "Automaton", "Agent", "Environment",
     "Society"
-    /* "Message", "State", "JumpCondition", "FlowCondition" */ 
+    /* "Message", "State", "JumpCondition", "FlowCondition" */
 };
 
 const char *const dataTypesNames[] =
@@ -86,8 +86,8 @@ bool sortAttribByType(Attributes *a, Attributes *b)
     return a->getType() < b->getType();
 }
 
-bool sortByClassName(const QPair<Subject *, QString> & pair1, 
-    const QPair<Subject *, QString> & pair2) 
+bool sortByClassName(const QPair<Subject *, QString> & pair1,
+    const QPair<Subject *, QString> & pair2)
 {
     return pair1.second.toLower() < pair2.second.toLower();
 }
@@ -141,7 +141,7 @@ static long int numSubjectCreated = 0;
 
 //////////////////////////////////////////////////////////// Observer
 ObserverImpl::ObserverImpl() : visible(true)
-{ 
+{
     numObserverCreated++;
     observerID = numObserverCreated;
 }
@@ -200,7 +200,8 @@ bool ObserverImpl::update(double time)
     QStringList attribList = obsHandle_->getAttributes();
 
     // getState via BlackBoard
-    QDataStream& state = BlackBoard::getInstance().getState(subject_, obsHandle_->getId(), attribList);
+    QDataStream& state = BlackBoard::getInstance()
+    					.getState(subject_, obsHandle_->getId(), attribList);
 
     obsHandle_->draw(state);
     state.device()->close();
@@ -337,7 +338,7 @@ Observer * SubjectImpl::getObserverById(int id)
     return obs;
 }
 
-void SubjectImpl::notifyObservers(double time) 
+void SubjectImpl::notifyObservers(double time)
 {
 #ifdef TME_BLACK_BOARD
     BlackBoard::getInstance().stopControl();
@@ -355,14 +356,16 @@ void SubjectImpl::notifyObservers(double time)
 
         double t = Statistic::getInstance().startMicroTime();
 
-        QString name = QString("Response Time (%1) %2").arg(getObserverName((*i)->getType())).arg((*i)->getId());
+        QString name = QString("Response Time (%1) %2")
+        		.arg(getObserverName((*i)->getType())).arg((*i)->getId());
 
         if(!(*i)->update(time))
         {
             detachList.push_back(*i);
         }
 
-        if((time == -1) && (((*i)->getType() == TObsUDPSender) || ((*i)->getType() == TObsTCPSender)))
+        if((time == -1) && (((*i)->getType() == TObsUDPSender)
+        		|| ((*i)->getType() == TObsTCPSender)))
         {
             delay(0.750);
             (*i)->setModelTime(time);
@@ -374,7 +377,8 @@ void SubjectImpl::notifyObservers(double time)
     }
 
     // Calcula o tempo entre o codigo sequencial e paralelo
-    double tt = Statistic::getInstance().endMicroTime() - Statistic::getInstance().getIntermediateTime();
+    double tt = Statistic::getInstance().endMicroTime()
+    		- Statistic::getInstance().getIntermediateTime();
     Statistic::getInstance().addElapsedTime("Total Response Time Seq - cellspace", tt);
 
 #else
@@ -401,8 +405,8 @@ const TypesOfSubjects SubjectImpl::getSubjectType() const
     return TObsUnknown;
 }
 
-int SubjectImpl::getId() const 
-{ 
+int SubjectImpl::getId() const
+{
     return subjectID;
 }
 

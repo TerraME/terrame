@@ -31,7 +31,7 @@ extern ExecutionModes execModes;
 
 using namespace TerraMEObserver;
 
-AgentObserverMap::AgentObserverMap(Subject * subj, QWidget *parent) 
+AgentObserverMap::AgentObserverMap(Subject * subj, QWidget *parent)
     : ObserverMap(subj, parent)
 {
     subjectAttributes.clear();
@@ -53,7 +53,8 @@ bool AgentObserverMap::draw(QDataStream & state)
 
 #ifdef DEBUG_OBSERVER
     qDebug() << "\nAgentObserverMap::draw()";
-    qDebug() << "nestedSubjects.size():" << nestedSubjects.size() << "\n" << nestedSubjects;
+    qDebug() << "nestedSubjects.size():" << nestedSubjects.size()
+    		<< "\n" << nestedSubjects;
     qDebug() << "subjectAttributes:" << subjectAttributes << "\n";
 #endif
 
@@ -79,7 +80,7 @@ bool AgentObserverMap::draw(QDataStream & state)
 #endif
 
     }
-	
+
 	decoded = BlackBoard::getInstance().canDraw();
 
     return decoded && ObserverMap::draw(state);
@@ -118,13 +119,13 @@ bool AgentObserverMap::draw(QDataStream & state)
 
         //QStringList attribListAux;
         //// attribListAux.push_back("@getLuaAgentState");
-        //attribListAux << subjectAttributes;        
+        //attribListAux << subjectAttributes;
 
 #ifndef TME_BLACK_BOARD
 		if(subj->getType() == TObsCell)
 			subjectAttributes.push_back("@getNeighborhoodState");
 #endif
-		
+
 //#ifdef TME_BLACK_BOARD
 //        QDataStream& state = BlackBoard::getInstance().getState(subj, getId(), subjectAttributes);
 //        BlackBoard::getInstance().setDirtyBit(subj->getId());
@@ -137,12 +138,12 @@ bool AgentObserverMap::draw(QDataStream & state)
 
         //-----
 		// @RAIAN: I added the cell in comparison to the observer Neighborhood subtype
-        if ((subj->getType() == TObsAgent) || (subj->getType() == TObsAutomaton) 
+        if ((subj->getType() == TObsAgent) || (subj->getType() == TObsAutomaton)
             || (subj->getType() == TObsCell))
         {
             if (className != nestedSubjects.at(i).second)
                 cleanImage = true;
-            
+
             // if (className != attribListAux.first())
             //    cleanImage = true;
 
@@ -151,13 +152,13 @@ bool AgentObserverMap::draw(QDataStream & state)
         }
         //-----
 
-#ifdef TME_STATISTIC 
+#ifdef TME_STATISTIC
         t = Statistic::getInstance().startTime();
 #endif
         ///////////////////////////////////////////// DRAW AGENT
         decoded = decode(state, subj->getType());
 
-#ifdef TME_STATISTIC 
+#ifdef TME_STATISTIC
         decodeSum += Statistic::getInstance().endTime() - t;
         decodeCount++;
 #endif
@@ -181,10 +182,11 @@ bool AgentObserverMap::draw(QDataStream & state)
         Statistic::getInstance().addElapsedTime("Map-Complex Rendering", t);
 
     	if (decodeCount > 0)
-        	Statistic::getInstance().addElapsedTime("Map-Complex Decoder", decodeSum / decodeCount);
+        	Statistic::getInstance().addElapsedTime(
+        			"Map-Complex Decoder", decodeSum / decodeCount);
     }
     return drw && ObserverMap::draw(state);
-    
+
 #else
     if (decoded)
         drw = draw();
@@ -195,7 +197,7 @@ bool AgentObserverMap::draw(QDataStream & state)
 }
 #endif // TME_BLACK_BOARD
 
-void AgentObserverMap::setSubjectAttributes(const QStringList & attribs, 
+void AgentObserverMap::setSubjectAttributes(const QStringList & attribs,
     int nestedSubjID, const QString & className)
 {
 #ifdef DEBUG_OBSERVER
@@ -209,12 +211,14 @@ void AgentObserverMap::setSubjectAttributes(const QStringList & attribs,
     {
         if (! subjectAttributes.contains(attribs.at(i)))
             subjectAttributes.push_back(attribs.at(i));
- 
+
         if (! mapAttributes->contains(attribs.at(i)))
         {
             if (execModes != Quiet)
             {
-				string str = string("The attribute called ") + attribs.at(i).toLatin1().data() + string(" was not found.");
+				string str = string("The attribute called ")
+						+ attribs.at(i).toLatin1().data()
+						+ string(" was not found.");
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L, str.c_str());
 				lua_call(L, 1, 0);
@@ -246,7 +250,7 @@ void AgentObserverMap::registry(Subject *subj, const QString & className)
     {
 #ifdef TME_BLACK_BOARD
     	SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(subj->getId());
-    	if (subjAttr) 
+    	if (subjAttr)
         	subjAttr->setSubjectType(subj->getType());
 #endif
 
@@ -283,14 +287,14 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
     for (int i = 0; i < subjectAttributes.size(); i++)
     {
         Attributes *attrib = getMapAttributes()->value(subjectAttributes.at(i), 0);
-            
+
         if (attrib && (className == attrib->getClassName()))
         {
             getMapAttributes()->remove(subjectAttributes.at(i));
-            
+
             // Updates de copies of attributes lists
             getPainterWidget()->updateAttributeList();
-            attrib->clear();            
+            attrib->clear();
 
             // Deletes the Attribute
             delete attrib; attrib = 0;
@@ -302,7 +306,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
              {
              qDebug() << "\nclassName " << className;
              qDebug() << "attrib->getExhibitionName() " << attrib->getExhibitionName();
-             
+
              if ((attrib->getType() != TObsAgent)
              || ((className == attrib->getExhibitionName()) &&
         	 (! ObserverMap::existAgents(nestedSubjects))))
@@ -317,7 +321,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
              //        break;
              //    }
              //}
-             
+
              // Remove the attributes of map attribute
              getMapAttributes()->take(attrib->getName());
              getPainterWidget()->setExistAgent(false);
@@ -350,7 +354,7 @@ bool AgentObserverMap::decode(QDataStream &in, TypesOfSubjects subject)
     // qDebug() << msg.split(PROTOCOL_SEPARATOR, QString::SkipEmptyParts);
 
     Attributes * attrib = 0;
-    
+
     if (subject == TObsTrajectory)
     {
         attrib = getMapAttributes()->value("trajectory");

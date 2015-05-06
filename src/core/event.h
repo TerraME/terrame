@@ -34,7 +34,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 //   called to treat him. Every event must register the moment in which will
 //   occur.
 
-/*! 
+/*!
   \file event.h
   \brief This file contains definitions about the Event objects. Events are stimulus to which
                  the simulation engine should respond and carry out control actions. These stimulus trigger
@@ -125,7 +125,7 @@ public:
     /// \param period is the periodicity in which the Event must occurs
     /// \param priority is the priority in which the event must occurs
     ///        Higher numbers means lower  priority. The normal priority is 0(zero).
-    Event(double time = -DBL_MAX, double period = 1, double priority = 0){
+    Event(double time = -DBL_MAX, double period = 1, double priority = 0) {
         EventInterf::pImpl_->setTime(time);
         EventInterf::pImpl_->setPeriod(period);
         EventInterf::pImpl_->setPriority(priority);
@@ -140,7 +140,10 @@ public:
     /// \param frequency is the periodicity in which the Event must occurs
     /// \param priority is the priority in which the event must occurs
     ///        Higher numbers means lower  priority. The normal priority is 0(zero).
-    void config(double time, double frequency, double priority) { EventInterf::pImpl_->config(time, frequency, priority); }
+    void config(double time, double frequency, double priority)
+    {
+    	EventInterf::pImpl_->config(time, frequency, priority);
+    }
 
     /// HANDLE - Gets the periodicity in which the Event is programmed to happens
     /// \return A double number representing the Event periodicity in time
@@ -156,7 +159,7 @@ public:
 
     /// HANDLE - Sets the Event priority.
     /// \param priority is a double number. Higher numbers means lower  priority. The default priority is 0(zero).
-    void setPriority(double priority) {  EventInterf::pImpl_->setPriority(priority); }
+    void setPriority(double priority) { EventInterf::pImpl_->setPriority(priority); }
 
     /// HANDLE - Gets the Event priority
     /// \return A double value representing the Event priority. Higher numbers means lower  priority. The default
@@ -165,7 +168,7 @@ public:
 
 };
 
-/// Compares Event objects. 
+/// Compares Event objects.
 /// \param e1 is a Event object
 /// \param e2 is a Event object
 /// \return A boolean value:  true if e1 must occur earlier than e2, false otherwise.

@@ -16,7 +16,7 @@ class senderGUI;
 class SenderGUI : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     /**
      * Constructor
@@ -29,7 +29,7 @@ public:
      * Destructor
      */
     virtual ~SenderGUI();
-    
+
     /**
      * Sets the communication port number
      * \param port the communication port

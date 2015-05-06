@@ -31,7 +31,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #define STRATEGY
 
 template <T>
-class StrategyContext 
+class StrategyContext
 {
 
     int execute() { return theStrategy.execute() }

@@ -95,7 +95,7 @@ public:
 //        return (double) time.tv_sec * MICRO_DIV + (time.tv_usec);
 //        // return (double) (time->tv_sec * 1000000000) + time->tv_nsec)
 //#endif
-    }   
+    }
 
     /**
      * Gets the end time in microseconds
@@ -118,7 +118,7 @@ public:
 //#endif
     }
 
-    ///** 
+    ///**
     // * Gets the start time in nanoseconds
     // * \return double the start time
     // */
@@ -128,7 +128,7 @@ public:
     //    gettimeofday(&time, NULL);
     //    return time.tv_sec + (time.tv_usec / 1000000.0);
     //}
-         
+
     /**
      * Start the volatile time in milliseconds
      */

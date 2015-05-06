@@ -61,10 +61,14 @@ struct TeColor
     TeColor () : red_(0), green_(0), blue_(0), name_("") {}
 
     //! Constructor with parameters
-    TeColor (int r, int g, int b, const std::string& name="") : red_(r), green_(g), blue_(b), name_(name) {}
+    TeColor (int r, int g, int b, const std::string& name="")
+    	: red_(r), green_(g), blue_(b), name_(name) {}
 
     //! Set parameters of colors
-    void init (int r, int g, int b, const std::string& name="") {red_ = r, green_ = g, blue_ = b;name_ = name; }
+    void init (int r, int g, int b, const std::string& name="")
+    {
+    	red_ = r, green_ = g, blue_ = b;name_ = name;
+    }
 
     //! Returns TRUE if color1 is equal to color2 or FALSE if they are different.
     bool operator== (const TeColor& color)
@@ -88,9 +92,11 @@ struct TeColor
 #endif
 
 void rgb2Hsv(const TeColor& c, int& h, int& s, int& v);
-void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v);
+void RGBtoHSV(const double& r, const double& g, const double& b,
+		double& h, double& s, double& v);
 void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v);
-void HSVtoRGB(double& r, double& g, double& b, const double& h, const double& s, const double& v);
+void HSVtoRGB(double& r, double& g, double& b, const double& h,
+		const double& s, const double& v);
 
 struct ColorBar {
     TeColor cor_;
@@ -99,7 +105,7 @@ struct ColorBar {
     int		v_;
     double	distance_;
 
-    void color(const TeColor& c){cor_ = c; rgb2Hsv(cor_, h_, s_, v_);}
+    void color(const TeColor& c) {cor_ = c; rgb2Hsv(cor_, h_, s_, v_);}
 
     ColorBar& operator= (const ColorBar& cb)
     {
@@ -135,7 +141,7 @@ struct ColorBar {
         out << (qint8)cb.h_ << (qint8)cb.s_ << (qint8)cb.v_;
         out << cb.distance_;
 
-        out << (qint8)cb.cor_.red_ << (qint8)cb.cor_.green_ << (qint8)cb.cor_.blue_;	
+        out << (qint8)cb.cor_.red_ << (qint8)cb.cor_.green_ << (qint8)cb.cor_.blue_;
         out << QByteArray(cb.cor_.name_.c_str());
 
         return out;
@@ -150,7 +156,7 @@ struct ColorBar {
         in >> h >> s >> v;
         in >> distance;
 
-        in >> r >> g >> b;	
+        in >> r >> g >> b;
         in >> name;
 
         cb.h_ = (int)h;
@@ -178,8 +184,10 @@ struct ColorBar {
 bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor>& colors);
 std::vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc);
 std::vector<TeColor> getColors(std::vector<ColorBar>& iVec, int ncores);
-std::string getColors(std::vector<ColorBar>& aVec, std::vector<ColorBar>& bVec, int groupingMode);
-void generateColorBarMap(std::vector<ColorBar>& inputColorVec, int ncores, std::map<int, std::vector<TeColor> >& colorMap);
+std::string getColors(std::vector<ColorBar>& aVec,
+		std::vector<ColorBar>& bVec, int groupingMode);
+void generateColorBarMap(std::vector<ColorBar>& inputColorVec,
+		int ncores, std::map<int, std::vector<TeColor> >& colorMap);
 std::vector<ColorBar> getColorBarVector(std::string& scores, const bool& first);
 //unsigned int  TeReadColorRampTextFile(const string& fileName, map<string, string>& colorRamps);
 

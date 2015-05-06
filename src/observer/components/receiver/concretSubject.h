@@ -3,12 +3,12 @@
 
 #include "observerInterf.h"
 
-namespace TerraMEObserver{
+namespace TerraMEObserver {
 
 class ConcretSubject : public SubjectInterf
 {
 public:
-    ConcretSubject(int id, TypesOfSubjects type) 
+    ConcretSubject(int id, TypesOfSubjects type)
     {
         setId(id);
         this->type = type;
@@ -18,12 +18,12 @@ public:
 
     virtual QDataStream& getState(QDataStream &state, Subject * /* subj */,
         int /*observerId*/, const QStringList &/*attribs */)
-    { 
-        return state; 
+    {
+        return state;
     }
 
     const TypesOfSubjects getType() const
-    { 
+    {
         return type;
     }
 
@@ -32,7 +32,8 @@ private:
 
 private:
 #ifdef TME_PROTOCOL_BUFFERS
-    QByteArray pop(lua_State *, const QStringList& , ObserverDatagramPkg::SubjectAttribute *,
+    QByteArray pop(lua_State *, const QStringList& ,
+    		ObserverDatagramPkg::SubjectAttribute *,
         ObserverDatagramPkg::SubjectAttribute *) { return ""; }
     QByteArray getAll(QDataStream& , const QStringList&) { return ""; }
     QByteArray getChanges(QDataStream& , const QStringList&) { return ""; };

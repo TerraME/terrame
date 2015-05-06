@@ -12,9 +12,10 @@ public:
     typedef int (T::*mfp)(lua_State *L);
     typedef struct { const char *name; mfp mfunc; } RegType;
 
-	static int t_error (lua_State *L, int narg, const char *tname) 
+	static int t_error (lua_State *L, int narg, const char *tname)
     {
-      const char *msg = lua_pushfstring(L, "%s expected, got %s", tname, luaL_typename(L, narg));
+      const char *msg = lua_pushfstring(
+    		  L, "%s expected, got %s", tname, luaL_typename(L, narg));
       return luaL_argerror(L, narg, msg);
     }
 
@@ -26,9 +27,9 @@ public:
         int metatable = lua_gettop(L);
 
 		//
-		//lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);		
+		//lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
 		//lua_pushglobaltable(L);
-      
+
 		// store method table in globals so that
         // scripts can add functions written in Lua.
         //lua_pushstring(L, T::className);

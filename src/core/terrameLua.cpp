@@ -58,7 +58,7 @@ extern "C"
 //void closeAllWidgets()
 //{
 //  int i = 0;
-//  foreach (QWidget *widget, QApplication::allWidgets()){
+//  foreach (QWidget *widget, QApplication::allWidgets()) {
 //	widget->close();
 //	i++;
 //	printf("%i", i);
@@ -108,7 +108,7 @@ void outputHandle(QtMsgType type, const QMessageLogContext &context, const QStri
     }
 }
 
-/// Opens Lua environment and Lua libraries 
+/// Opens Lua environment and Lua libraries
 void openLuaEnvironment()
 {
 	// trying to use one of my type in lua
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
 		qWarning("Warning: The TerraME Player will be able to execute only when "
 			"an Environment and/or a Timer object are used in the model file.");
 		app.processEvents();
-	}	
+	}
 
 	// Loads the TerrME constructors for LUA
 	QString tmePath(getenv(TME_PATH));
@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
 
 	openLuaEnvironment();  // Opens Lua environment and libraries
 	registerClasses();	  // records TerraME Classes in Lua environment
-	
+
 	// Loads lfs functions
 	luaopen_lfs(L);
 
@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
 	tmePath.append("/lua/terrame.lua");
 #endif
 
-    // runs the lua core files 
+    // runs the lua core files
     int error = luaL_loadfile(L, tmePath.toLatin1().constData()) || lua_pcall(L, 0, 0, 0);
     if(error)
     {
@@ -245,7 +245,7 @@ int main(int argc, char *argv[])
         lua_close(L);
         return -1;
     }
-	
+
 	lua_pushcfunction(L, cpp_informations);
 	lua_setglobal(L, "cpp_informations");
 
@@ -269,13 +269,13 @@ int main(int argc, char *argv[])
 			lua_pushnumber(L, argument);
 			lua_pushstring(L, argv[argument]);
 			lua_settable(L, -3);
-			
+
 			argument++;
 		}
-		
+
 		lua_call(L, 1, 0);
 	}
-		
+
 #ifdef NOCPP_RAIAN
 		if (argv[argument][0] == '-')
 		{
@@ -287,7 +287,7 @@ int main(int argc, char *argv[])
 					BlackBoard::getInstance().setPercent(time * 0.01);
 				else
 					BlackBoard::getInstance().setPercent((double) 0.8);
-			
+
 				argument++;
 			}
 			else if (! strcmp(argv[argument], "-workers"))
@@ -328,7 +328,7 @@ int main(int argc, char *argv[])
 			}
 		}
 		argument++;
-		
+
 #endif //NOCPP_RAIAN
 	//// Lua interpreter line-by-line
 	//while (fgets(buff, sizeof(buff), stdin) != NULL)
@@ -352,7 +352,7 @@ int main(int argc, char *argv[])
 
 	//int ret = app.exec();
 	//return ret;
-	
+
 	bool autoClose = false;
 	lua_getglobal(L, "info_");
 	int top = lua_gettop(L);
@@ -363,7 +363,7 @@ int main(int argc, char *argv[])
 		autoClose = lua_toboolean(L, top);
 		lua_pop(L, 2);
 	}
-	
+
 	lua_close(L);
 
 	if (autoClose)
@@ -395,7 +395,7 @@ void receiverUsage()
 	qWarning() << "   terrame -help				   \t Show this help and exit";
 	qWarning() << "   terrame ";
 	qWarning() << "   terrame -workers <value> [option] \t Show this helps";
-	qWarning() << "\nOption";   
+	qWarning() << "\nOption";
 	qWarning() << "	-tcp			  \t Receiver in mode TCP (default mode)";
 	qWarning() << "	-udp			  \t Receiver in mode UDP";
 	qWarning() << "";
@@ -406,8 +406,8 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(observerResource);
 	QApplication app(argc, argv);
 
-	int ret = -1;	
-	
+	int ret = -1;
+
 	if(argc < 2)
 	{
 		qWarning() << "Running in receiver in mode TCP..";
@@ -444,7 +444,7 @@ int main(int argc, char *argv[])
 			ret = app.exec();
 			// return app.exec();
 		}
-		
+
 		index = argsList.indexOf("-udp");
 		if(index > 1)
 		{
@@ -456,13 +456,13 @@ int main(int argc, char *argv[])
 			// return app.exec();
 		}
 	}
-	
+
 #ifdef TME_STATISTIC
 	Statistic::getInstance().collectMemoryUsage();
 	Statistic::getInstance().saveData("client_");
 #endif
 	return ret;
-}	
+}
 
 #endif
 

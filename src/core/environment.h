@@ -22,7 +22,7 @@ of this library and its documentation.
 
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
-/*! 
+/*!
   \file environment.h
   \brief This file contains definitions about the Environment objects. Messages are virtual worlds where
                  the Agent actions take place.
@@ -120,21 +120,23 @@ typedef CompositeInterface< vectorComposite<CellularSpace> > CellularSpaceCompos
  *  Time-Environment Pair Multimap Composite Handle Type.
  *
  */
-typedef CompositeInterface< multimapComposite<Event, Environment> > TimeEnvironmentPairCompositeInterf;
+typedef CompositeInterface< multimapComposite<Event, Environment> >
+									TimeEnvironmentPairCompositeInterf;
 
 /**
  * \brief
  *  Time-Scheduler Pair Multimap Composite Handle Type.
  *
  */
-typedef CompositeInterface< multimapComposite<Event, Scheduler> > TimeSchedulerPairCompositeInterf;
+typedef CompositeInterface< multimapComposite<Event, Scheduler> >
+									TimeSchedulerPairCompositeInterf;
 
 /**
  * \brief
  *  Handle for an Environment object.
  *
  */
-class Environment :	public Model, 
+class Environment :	public Model,
         public EnvironmentInterf,
         public CellularSpaceCompositeInterf,
         public LocalAgentCompositeInterf,
@@ -172,8 +174,10 @@ public:
         TimeEnvironmentPairCompositeInterf::iterator itEnv;
         itSch = TimeSchedulerPairCompositeInterf::pImpl_->begin();
         itEnv = TimeEnvironmentPairCompositeInterf::pImpl_->begin();
-        if (itEnv != TimeEnvironmentPairCompositeInterf::pImpl_->end()) timeEnv = itEnv->second.getEvent().getTime();
-        if(itSch != TimeSchedulerPairCompositeInterf::pImpl_->end()) timeSch = itSch->second.getEvent().getTime();
+        if (itEnv != TimeEnvironmentPairCompositeInterf::pImpl_->end())
+        	timeEnv = itEnv->second.getEvent().getTime();
+        if(itSch != TimeSchedulerPairCompositeInterf::pImpl_->end())
+        	timeSch = itSch->second.getEvent().getTime();
         if((timeSch >= 0) & (timeEnv >= 0)) return MIN(timeSch, timeEnv);
         if(timeSch >= 0) return timeSch;
         if(timeEnv >= 0) return timeEnv;
@@ -251,24 +255,25 @@ public:
 
     /// Gets the Event on the head of the Scheduler data structure
     /// \return A copy of Event on the next Event that will occur.
-    Event getEvent(){
+    Event getEvent() {
         Event timeSch;
         TimeSchedulerPairCompositeInterf::iterator itSch;
         itSch = TimeSchedulerPairCompositeInterf::pImpl_->begin();
-        if(itSch != TimeSchedulerPairCompositeInterf::pImpl_->end()) timeSch = itSch->second.getEvent();
+        if(itSch != TimeSchedulerPairCompositeInterf::pImpl_->end())
+        	timeSch = itSch->second.getEvent();
         return timeSch;
     }
 
     /// Puts the Scheduler iterator in the begin of the internal composite Scheduler data structure.
     /// \return A iterator to the internal composite Scheduler data structure.
-    TimeSchedulerPairCompositeInterf::iterator firstScheduler(){
+    TimeSchedulerPairCompositeInterf::iterator firstScheduler() {
         TimeSchedulerPairCompositeInterf::iterator iterator;
         iterator = TimeSchedulerPairCompositeInterf::pImpl_->begin();
         return iterator;
     }
 
     /// Synchronizes all CellularSpace objects within the Environment
-    void synchronize(void){
+    void synchronize(void) {
         CellularSpaceCompositeInterf::iterator iterator;
         iterator = CellularSpaceCompositeInterf::pImpl_->begin();
         while(iterator != CellularSpaceCompositeInterf::pImpl_->end())
@@ -280,10 +285,10 @@ public:
 
     /// Adds a new CellularSpace object to the Environment
     /// \param cs is a reference to the CellularSpace being inserted in the Environment
-    void add (CellularSpace &cs){
+    void add (CellularSpace &cs) {
         LocalAgentCompositeInterf::iterator iterator;
         iterator = LocalAgentCompositeInterf::pImpl_->begin();
-        while(iterator != LocalAgentCompositeInterf::pImpl_->end()){
+        while(iterator != LocalAgentCompositeInterf::pImpl_->end()) {
             cs.attachAgent(&(*iterator));
             iterator++;
         }
@@ -296,7 +301,7 @@ public:
     {
         LocalAgentCompositeInterf::iterator iterator;
         iterator = LocalAgentCompositeInterf::pImpl_->begin();
-        while(iterator != LocalAgentCompositeInterf::pImpl_->end()){
+        while(iterator != LocalAgentCompositeInterf::pImpl_->end()) {
             cs.detachAgent(&(*iterator));
             iterator++;
         }
@@ -307,10 +312,10 @@ public:
     /// Inserts a new LocalAgent into the Environment. The LocalAgent is attached to each CellularSpace already
     /// embedded in the Environment.
     /// \param agent is a reference to the LocalAgent being inserted into the Environment.
-    void add (LocalAgent &agent){
+    void add (LocalAgent &agent) {
         CellularSpaceCompositeInterf::iterator iterator;
         iterator = CellularSpaceCompositeInterf::pImpl_->begin();
-        while(iterator != CellularSpaceCompositeInterf::pImpl_->end()){
+        while(iterator != CellularSpaceCompositeInterf::pImpl_->end()) {
             iterator->attachAgent(&agent);
             iterator++;
         }
@@ -320,7 +325,7 @@ public:
     /// Inserts a new GlobalAgent into the Environment. The GlobalAgent is attached to each CellularSpace already
     /// embedded in the Environment.
     /// \param agent is a reference to the LocalAgent being inserted into the Environment.
-    void add (GlobalAgent &agent){
+    void add (GlobalAgent &agent) {
         GlobalAgentCompositeInterf::add (agent);
     }
 
@@ -331,7 +336,7 @@ public:
     {
         CellularSpaceCompositeInterf::iterator iterator;
         iterator = CellularSpaceCompositeInterf::pImpl_->begin();
-        while(iterator != CellularSpaceCompositeInterf::pImpl_->end()){
+        while(iterator != CellularSpaceCompositeInterf::pImpl_->end()) {
             iterator->detachAgent(&agent);
             iterator++;
         }
@@ -349,25 +354,25 @@ public:
 
     /// Adds a new Time-Scheduler pair to the internal Scheduler synchronization data structure
     /// \param timeSchedulerPair is a reference to a Time-Scheduler pair being added.
-    void add (const pair<Event, Scheduler>  &timeSchedulerPair){
+    void add (const pair<Event, Scheduler>  &timeSchedulerPair) {
         TimeSchedulerPairCompositeInterf::add (timeSchedulerPair);
     }
 
     /// Removes the Time-Scheduler pair from the Environment Scheduler data structure
     /// \param timeSchedulerPair is a reference to a Time-Scheduler pair being removed.
-    void erase (pair<Event, Scheduler>  &timeSchedulerPair){
+    void erase (pair<Event, Scheduler>  &timeSchedulerPair) {
         TimeSchedulerPairCompositeInterf::erase (timeSchedulerPair.first);
     }
 
     /// Adds a new Event-Environment pair to the internal Environment synchronization data structure
     /// \param timeEnvironmentPair is a reference to a Event-Environment pair being added.
-    void add (const pair<Event, Environment> &timeEnvironmentPair){
+    void add (const pair<Event, Environment> &timeEnvironmentPair) {
         TimeEnvironmentPairCompositeInterf::add (timeEnvironmentPair);
     }
 
     /// Removes the Event-Environment pair from the internal Environment synchronization data structure
     /// \param timeEnvironmentPair is a reference to a Event-Environment pair being added.
-    void erase (pair<Event, Environment> &timeEnvironmentPair){
+    void erase (pair<Event, Environment> &timeEnvironmentPair) {
         TimeEnvironmentPairCompositeInterf::erase (timeEnvironmentPair.first);
     }
 

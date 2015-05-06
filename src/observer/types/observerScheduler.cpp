@@ -41,7 +41,8 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
     butExpand->setAutoRaise(true);
     butExpand->setText("#");  // there was a symbol utf8
 
-    QSpacerItem *horizSpacerItem = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    QSpacerItem *horizSpacerItem = new QSpacerItem(40, 20,
+    		QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     hboxLayout1->addItem(horizSpacerItem);
     hboxLayout1->addWidget(butExpand);
@@ -66,13 +67,14 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
     vboxLayout->addLayout(hboxLayout1);
     vboxLayout->addWidget(lblClock);
 
-    QSpacerItem *vertSpacerItem = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    QSpacerItem *vertSpacerItem = new QSpacerItem(20, 40,
+    		QSizePolicy::Minimum, QSizePolicy::Expanding);
     vboxLayout->addItem(vertSpacerItem);
 
     QStringList headers;
-    headers << "Event Key   " 
-            << "Time        " 
-            << "Peridiocity " 
+    headers << "Event Key   "
+            << "Time        "
+            << "Peridiocity "
             << "Priority    ";
 
     pipelineWidget = new QTreeWidget(this);
@@ -94,7 +96,8 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
     setLayout(hboxLayout);
     showNormal();
 
-    QDialog::connect(butExpand, SIGNAL(clicked()), (QDialog *)this, SLOT(on_butExpand_clicked()));
+    QDialog::connect(butExpand, SIGNAL(clicked()),
+    		(QDialog *)this, SLOT(on_butExpand_clicked()));
 
     // thread priority
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
@@ -180,12 +183,12 @@ bool ObserverScheduler::draw(QDataStream & state)
 
                     // retrieves the eventtime
                     num = tokens.at(j).toDouble();
-                    item->setText(Time,  number2String(num));
+                    item->setText(Time, number2String(num));
                     j += 3;
 
                     // retrieves the period
                     num = tokens.at(j).toDouble();
-                    item->setText(Periodicity,  number2String(num));
+                    item->setText(Periodicity, number2String(num));
                     j += 3;
 
                     // retrieves the priority
@@ -318,22 +321,22 @@ bool ObserverScheduler::draw()
     {
         // Gets the name of the event
         const RawAttribute *raw = subjAttr->getRawAttribute(attribList.at(i));
-            
+
         if (raw)
         {
             int id = (int) raw->number;
             item = hashTreeItem.value(raw->key);
-            
+
             SubjectAttributes *innerSubjAttr = BlackBoard::getInstance().getSubject(id);
 
             innerSubjAttr->getNumericValue("Time", num);
-            item->setText(Time,  number2String(num));
+            item->setText(Time, number2String(num));
 
             innerSubjAttr->getNumericValue("Periodicity", num);
-            item->setText(Periodicity,  number2String(num));
+            item->setText(Periodicity, number2String(num));
 
             innerSubjAttr->getNumericValue("Priority", num);
-            item->setText(Priority,  number2String(num));
+            item->setText(Priority, number2String(num));
 
             //qDebug() << item->text(0) << item->text(Time) << item->text(Periodicity) << item->text(Priority);
         }

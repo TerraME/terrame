@@ -11,9 +11,9 @@ public:
 	virtual ~Coordinate();
 
 	void clear();
-    
+
     void setValue(double x, double y, double z = 0.0);
-    
+
     inline double getX() { return x; }
     inline double getY() { return y; }
     inline double getZ() { return z; }

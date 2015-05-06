@@ -24,7 +24,7 @@ namespace TerraMEObserver {
 class PlotPropertiesGUI : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     PlotPropertiesGUI(TerraMEObserver::ChartPlot *plot); //, QWidget *parent = 0);
     virtual ~PlotPropertiesGUI();

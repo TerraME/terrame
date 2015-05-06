@@ -23,7 +23,7 @@ of this library and its documentation.
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
 
-/*! 
+/*!
   \file process.h
   \brief This file contains definitions about the TerraME model for representing spatial dynamic processes: Process class.
              It is a empty class!
@@ -77,7 +77,8 @@ typedef CompositeInterface< vectorComposite<FlowCondition*> > FlowCompositeInter
  *  Handle for a Process object.
  *
  */
-class Process : public ProcessInterf, public JumpCompositeInterf, public FlowCompositeInterf
+class Process : public ProcessInterf,
+				public JumpCompositeInterf, public FlowCompositeInterf
 {
 public:
 
@@ -121,7 +122,7 @@ public:
 
             return true;
         }
-        catch(...){ return true; }
+        catch(...) { return true; }
     }
 };
 

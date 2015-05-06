@@ -11,7 +11,7 @@
 using namespace TerraMEObserver;
 using namespace BagOfTasks;
 
-LogFileTask::LogFileTask(int subjID, TypesOfSubjects type) 
+LogFileTask::LogFileTask(int subjID, TypesOfSubjects type)
     : Task(), subjectId(subjID), subjectType(type)
 {
     setType(Task::Arbitrary);
@@ -42,7 +42,8 @@ bool LogFileTask::execute()
     return ret;
 }
 
-void LogFileTask::setProperties(const QString &filename, const QString &separator, const QString &mode)
+void LogFileTask::setProperties(const QString &filename,
+		const QString &separator, const QString &mode)
 {
     this->filename = filename;
     this->separator = separator;
@@ -84,8 +85,8 @@ bool LogFileTask::rendering()
 
     // Case already there is the file, the new values are inserted at the end of it
     // Otherwise, it creates the file with the name sent.
-    //if (!QFile::exists(filename)){
-    //	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+    //if (!QFile::exists(filename)) {
+    //	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     //		QMessageBox::information(0, QObject::tr("Error opening file"),
     // QObject::tr("Could not open the log file \"%1\".\n%2")
     //			.arg(filename).arg(file.errorString()));
@@ -93,7 +94,7 @@ bool LogFileTask::rendering()
     //	}
     //}
     //else{
-    //	if (!file.open(QIODevice::Append | QIODevice::Text)){
+    //	if (!file.open(QIODevice::Append | QIODevice::Text)) {
     //		QMessageBox::information(0, QObject::tr("Error opening file"),
     // QObject::tr("Could not open the log file \"%1\".\n%2")
     //			.arg(filename).arg(file.errorString()));
@@ -101,14 +102,14 @@ bool LogFileTask::rendering()
     //	}
     //}
 
-    //if (!QFile::exists(fileName)){
+    //if (!QFile::exists(fileName)) {
     if (mode == "w")
     {
         if (! file.open(QIODevice::WriteOnly | QIODevice::Text))
         {
             QMessageBox::information(0, QObject::tr("Error opening file"),
-                                     QObject::tr("Could not open the log file \"%1\".\n%2")
-                                     .arg(filename).arg(file.errorString()));
+            			QObject::tr("Could not open the log file \"%1\".\n%2")
+            			.arg(filename).arg(file.errorString()));
             return false;
         }
         mode = "w+";
@@ -118,8 +119,8 @@ bool LogFileTask::rendering()
         if (!file.open(QIODevice::Append | QIODevice::Text))
         {
             QMessageBox::information(0, QObject::tr("Error opening file"),
-                                     QObject::tr("Could not open the log file \"%1\".\n%2")
-                                     .arg(filename).arg(file.errorString()));
+            				QObject::tr("Could not open the log file \"%1\".\n%2")
+                      	  	  .arg(filename).arg(file.errorString()));
             return false;
         }
     }
@@ -131,13 +132,13 @@ bool LogFileTask::rendering()
         for (int i = 0; i < attribList.size(); ++i)
         {
             headers += attribList.at(i);
-            
+
             if (i < attribList.size() - 1)
                 headers += separator;
         }
         header = false;
         headers += "\n";
-        file.write(headers.toLatin1().data(),  qstrlen(headers.toLatin1().data()));
+        file.write(headers.toLatin1().data(), qstrlen(headers.toLatin1().data()));
     }
 
     QString text;

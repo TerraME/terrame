@@ -39,7 +39,7 @@ extern "C"
 extern lua_State * L; ///< Global variable: Lua stack used for communication with C++ modules.
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaAgent object.
 *
 */
@@ -52,7 +52,7 @@ protected:
 public:
 
     ///  Destructor
-    virtual ~luaAgent(void){ }
+    virtual ~luaAgent(void) { }
 };
 
 #endif

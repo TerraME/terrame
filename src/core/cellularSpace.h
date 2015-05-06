@@ -23,7 +23,7 @@ of this library and its documentation.
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
 
-/*! 
+/*!
   \file cellularSpace.h
   \brief This file contains definitions about the TerraME model for space representation: CellularSpace class.
                  A CellularSpace is defined as a Region of indexes for "Cell" objects.
@@ -51,7 +51,7 @@ using namespace std;
  *  Implementation for a CellularSpace object.
  *  For while, CellularSpace class has a empty implementation!
  */
-class CellularSpaceImpl : public Implementation 
+class CellularSpaceImpl : public Implementation
 {
 public:
 
@@ -69,20 +69,21 @@ typedef Interface<CellularSpaceImpl> CellularSpaceInterf;
  *  Handle for a CellularSpace object.
  *
  */
-class CellularSpace : public Model, public CellularSpaceInterf, public Cell, public Region_<CellIndex>
+class CellularSpace : public Model, public CellularSpaceInterf, public Cell,
+					public Region_<CellIndex>
 {
 public:
 
     /// Attaches agent to all cellular space cell.
     /// \param agent is new agent being inserted into the cellular space
-    void attachAgent(class LocalAgent *agent){
+    void attachAgent(class LocalAgent *agent) {
         ControlMode& controlMode = (*agent)[0];
         attachControlModeToCells(agent, &controlMode);
     }
 
     /// Detaches the agent from the cellular space
     /// \param agent being remove from the cellular space
-    void detachAgent(LocalAgent *agent){
+    void detachAgent(LocalAgent *agent) {
         detachControlModeFromCells(agent);
     }
 

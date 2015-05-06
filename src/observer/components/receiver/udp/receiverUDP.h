@@ -20,7 +20,7 @@ namespace TerraMEObserver {
 class ReceiverUDP : public QObject
 {
     Q_OBJECT
-    
+
 public:
     /**
      * Constructor
@@ -34,9 +34,9 @@ public:
      */
     virtual ~ReceiverUDP();
 
-    
+
     void show();
-    
+
 public slots:
     /**
      * Treats the signal from GUI that contains the port nu

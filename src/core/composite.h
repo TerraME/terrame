@@ -37,19 +37,19 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 using namespace std;
 
 // This file defines a generic class to implement the composite design pattern.
-// This class generalizes the source code found in the TerraLib library, whose 
-// authors are Dr Ricardo Cartaxo and Dr Gilberto Camara.  
+// This class generalizes the source code found in the TerraLib library, whose
+// authors are Dr Ricardo Cartaxo and Dr Gilberto Camara.
 
 //////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * \brief Defines a generic class to implement the Composite Design Pattern.
  *
- * This class generalizes the source code found in the TerraLib library, whose 
+ * This class generalizes the source code found in the TerraLib library, whose
  * authors are Dr Ricardo Cartaxo and Dr Gilberto Camara.
  */
 template <class TElemnt>
-class vectorComposite : public Implementation 
+class vectorComposite : public Implementation
 {
 public:
 
@@ -97,7 +97,7 @@ public:
 
     /// Remove all components
     void clear ()
-    {	components_.clear (); }
+    { components_.clear (); }
 
     /// Return the composite size
     int size()
@@ -148,7 +148,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////////////////
 template <class TIndx, class TElmnt >
-class mapComposite : public Implementation 
+class mapComposite : public Implementation
 {
 public:
 
@@ -160,7 +160,8 @@ public:
     /// Add a new component
     void add (const T& comp)
     {
-        components_.insert(typename map<TKey, TElmnt>::value_type(comp.first, comp.second));
+        components_.insert(typename map<TKey, TElmnt>::value_type(
+        		comp.first, comp.second));
     }
 
     /// Remove the i-th component
@@ -178,7 +179,8 @@ public:
     /// Remove a component
     bool erase (T& comp)
     {
-        typename map< TKey, TElmnt, less<TKey> >::iterator location = components_.find(comp.first);
+        typename map< TKey, TElmnt, less<TKey> >::iterator location =
+        		components_.find(comp.first);
         if (location != components_.end())
         {
             components_.erase(comp.first);
@@ -188,7 +190,8 @@ public:
     }
 
     iterator erase(iterator itr) {
-        typename map<TKey, TElmnt, less<TKey> >::iterator location = components_.find(itr->first);
+        typename map<TKey, TElmnt, less<TKey> >::iterator location =
+        		components_.find(itr->first);
         if (location != components_.end())
         {
             components_.erase(location);
@@ -198,14 +201,14 @@ public:
     }
     /// Remove all components
     void clear ()
-    {	components_.clear (); }
+    { components_.clear (); }
 
     /// Return the composite size
     int size()
     { return components_.size(); }
 
     /// Return the i-th component
-    T& operator [] (TKey k){
+    T& operator [] (TKey k) {
         typename map<TKey, TElmnt, less<TKey> >::iterator location = components_.find(k);
         return (T&)(*location);
     }
@@ -250,7 +253,7 @@ protected:
 };
 //////////////////////////////////////////////////////////////////////////////////////
 template <class TIndx, class TElmnt >
-class multimapComposite : public Implementation 
+class multimapComposite : public Implementation
 {
 public:
 
@@ -261,12 +264,16 @@ public:
 
     /// Add a new component
     void add (const T& comp)
-    { components_.insert(typename multimap<TKey, TElmnt, less<TKey> >::value_type(comp.first, comp.second)); }
+    {
+    	components_.insert(typename multimap<TKey, TElmnt, less<TKey> >::value_type(
+    			comp.first, comp.second));
+    }
 
     /// Remove the i-th component
     bool erase (TKey k)
     {
-        typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find(k);
+        typename multimap<TKey, TElmnt, less<TKey> >::iterator location =
+        		components_.find(k);
         if (location != components_.end())
         {
             components_.erase(k);
@@ -278,7 +285,8 @@ public:
     /// Remove a component
     bool erase (T& comp)
     {
-        typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find(comp.first);
+        typename multimap<TKey, TElmnt, less<TKey> >::iterator location =
+        		components_.find(comp.first);
         if (location != components_.end())
         {
             components_.erase(comp.first);
@@ -288,7 +296,8 @@ public:
     }
 
     iterator erase(iterator itr) {
-        typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find(itr->first);
+        typename multimap<TKey, TElmnt, less<TKey> >::iterator location =
+        		components_.find(itr->first);
         if (location != components_.end())
         {
             components_.erase(location);
@@ -299,21 +308,23 @@ public:
 
     /// Remove all components
     void clear ()
-    {	components_.clear (); }
+    { components_.clear (); }
 
     /// Return the composite size
     int size()
     { return components_.size(); }
 
     /// Return the i-th component
-    T& operator [] (TKey k){
-        typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find(k);
+    T& operator [] (TKey k) {
+        typename multimap<TKey, TElmnt, less<TKey> >::iterator location =
+        		components_.find(k);
         return (T&)(*location);
     }
 
     /// Find a component and return its iterator
     iterator find(TKey k) {
-        typename multimap<TKey, TElmnt, less<TKey> >::iterator location = components_.find(k);
+        typename multimap<TKey, TElmnt, less<TKey> >::iterator location =
+        		components_.find(k);
         return location;
     }
 
@@ -361,10 +372,10 @@ public:
     typedef typename CpstImpl::reverse_iterator reverse_iterator; // Element reverse_iterator
 
     /// Add a new component
-    void add (const TElemnt& comp){ (CompositeInterface::pImpl_)->add(comp); }
+    void add (const TElemnt& comp) { (CompositeInterface::pImpl_)->add(comp); }
 
     /// Remove the i-th component
-    bool erase (Indx i) {  return	(CompositeInterface::pImpl_)->erase(i); }
+    bool erase (Indx i) { return	(CompositeInterface::pImpl_)->erase(i); }
 
     /// Remove a component
     bool erase (TElemnt& /*comp*/) { return false; }//return (CompositeInterface::pImpl_)->erase(comp); }
@@ -375,7 +386,7 @@ public:
     void clear () { (CompositeInterface::pImpl_)->clear(); }
 
     /// Return the composite size
-    int size(){ return (CompositeInterface::pImpl_)->size(); }
+    int size() { return (CompositeInterface::pImpl_)->size(); }
 
     /// Return the i-th component
     TElemnt& operator [] (Indx i) { return (*(CompositeInterface::pImpl_))[i]; }
@@ -387,7 +398,7 @@ public:
     bool empty()	{ return (CompositeInterface::pImpl_)->empty(); }
 
     /// Points to the iterator to the composite first element
-    iterator begin(void) { 	return (CompositeInterface::pImpl_)->begin(); }
+    iterator begin(void) { return (CompositeInterface::pImpl_)->begin(); }
 
     /// Points to the iterator to the composite last plus one element
     iterator end(void) { return (CompositeInterface::pImpl_)->end(); }

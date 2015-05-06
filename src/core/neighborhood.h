@@ -23,7 +23,7 @@ of this library and its documentation.
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
 
-/*! 
+/*!
   \file neighborhood.h
   \brief This file contains definitions about the TerraME model for complex networks: CellularSpace class.
                  A Neighborhood object is a weighted directed graph of cells. It has been implemented as composite of cells.
@@ -149,7 +149,7 @@ public:
     /// \param id is a reference to a string containing the cell identifier.
     void setID(string &id) { ID = id; }
 
-	//@RAIAN 
+	//@RAIAN
 		/// Gets the Neighborhood Parent, i. e., the "central" cell in the neighborhood graph.
 		/// \return a pointer to the cell which is neighborhood parent
 		/// \author Raian Vargas Maretto
@@ -199,8 +199,11 @@ public:
     /// HANDLE - Sets the weigth of a neighboring relationship.
     /// \param cI is the CellIndex reference representing a n-dimensional coordinate
     /// \param weight is a double number
-    void setWeight(CellIndex& cI, double weight = 0) { CellNeighInterf::pImpl_->setWeight(cI, weight); }
-    
+    void setWeight(CellIndex& cI, double weight = 0)
+    {
+    	CellNeighInterf::pImpl_->setWeight(cI, weight);
+    }
+
     /// HANDLE - Searches for a cell in the neighborhood composite.
     /// \param cI is a CellIndex representing a n-dimensional coordinate
     /// \return a pointer to Cell if it has been found, otherwise a NULL pointer.

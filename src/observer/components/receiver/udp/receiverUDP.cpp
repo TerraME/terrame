@@ -20,7 +20,7 @@
 	#include "statistic.h"
 #endif
 
-ReceiverUDP::ReceiverUDP(QObject *parent) 
+ReceiverUDP::ReceiverUDP(QObject *parent)
     : QObject (parent)
 {
     msgReceiver = 0;
@@ -38,13 +38,14 @@ ReceiverUDP::ReceiverUDP(QObject *parent)
     cleanCompleteStateReceived = true;
 
     datagramReceiverTask = new DatagramReceiverTask(0);
-    datagramReceiverTask->setType(BagOfTasks::Task::Arbitrary); 
+    datagramReceiverTask->setType(BagOfTasks::Task::Arbitrary);
     // datagramReceiverTask->setType(BagOfTasks::Task::Continuous);
     // datagramReceiverTask->setDataContainer(&completeData);
-    
+
     connect(ui, SIGNAL(blindListenPort(int)), this, SLOT(blind(int)));
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
-    connect(datagramReceiverTask, SIGNAL(notify(int, int)), this, SLOT(createNotifyObserver(int, int)));
+    connect(datagramReceiverTask, SIGNAL(notify(int, int)), this,
+    		SLOT(createNotifyObserver(int, int)));
         // , Qt::DirectConnection);
         // , Qt::BlockingQueuedConnection);
 
@@ -108,7 +109,7 @@ void ReceiverUDP::blind(int port)
 void ReceiverUDP::processPendingDatagrams()
 {
     //static bool c = false;
-    //if (!c){
+    //if (!c) {
     //createNotifyObserver(1, (int) TypesOfSubjects::TObsCellularSpace);
     //c = !c;
     //}
@@ -143,7 +144,7 @@ void ReceiverUDP::processPendingDatagrams()
     in >> compressed; // datagram format transmitted flag
     in >> auxData; // data received
 
-    // if ((completeData->isEmpty())){
+    // if ((completeData->isEmpty())) {
     if (cleanCompleteStateReceived)
     {
         completeData = new QByteArray('\0', dataSize);
@@ -161,13 +162,13 @@ void ReceiverUDP::processPendingDatagrams()
     if ((pos > -1)) // && (data != COMPLETE_STATE.toLatin1()))
     {
         // resizes the object and inserts garbage
-        // msg.insert((int)pos, data); 
+        // msg.insert((int)pos, data);
         completeData->replace((int)pos, data.size(), data);
 
         message = tr("Messages received: %1. From: %2, Port: %3")
             .arg(msgReceiver).arg(hostSender.toString()).arg(port);
 
-        ui->appendMessage(QDateTime::currentDateTime().toString("MM/dd/yyyy, hh:mm:ss: ") 
+        ui->appendMessage(QDateTime::currentDateTime().toString("MM/dd/yyyy, hh:mm:ss: ")
             + message);
     }
     else
@@ -191,7 +192,8 @@ void ReceiverUDP::processPendingDatagrams()
                 .arg(statesReceiver).arg(hostSender.toString()).arg(port);
 
             ui->appendMessage(
-                QDateTime::currentDateTime().toString("MM/dd/yyyy, hh:mm:ss: ") + message);
+                QDateTime::currentDateTime()
+            	.toString("MM/dd/yyyy, hh:mm:ss: ") + message);
         }
         else
         {
@@ -220,12 +222,12 @@ void ReceiverUDP::processPendingDatagrams()
 }
 
 void ReceiverUDP::createNotifyObserver(int subjId, int subjType)
-{ 
+{
     //BlackBoard &bb = BlackBoard::getInstance();
 
     //QString state(msg);
     //int pos = state.indexOf(PROTOCOL_SEPARATOR);
-    //int id = state.mid(0, pos).toInt(); 
+    //int id = state.mid(0, pos).toInt();
 
     //SubjectAttributes *subjAttr = bb.insertSubject(id);
     //subjAttr->setSubjectType((TypesOfSubjects) state.mid(pos + 1, 1).toInt());
@@ -247,38 +249,38 @@ void ReceiverUDP::createNotifyObserver(int subjId, int subjType)
         //qFatal("LLLL");
 
         map->setAttributes(*ui->getAttributes(0)
-                // QStringList() << "soilWater" << "height"  
-                    // << "x" << "y" 
+                // QStringList() << "soilWater" << "height"
+                    // << "x" << "y"
                     // << "attr1" // << "attr2" << "attr3" << "attr4"
                     //<< "attr5" << "attr6" << "attr7" << "attr8"
                     //<< "attr9" << "attr10" << "attr11"
-                ,            
+                ,
                 *ui->getLegendKeys(0)
-                //QStringList() 
-                //    << "minimum" << "type" << "stdDeviation" << "maximum" 
-                //    << "grouping" << "font" << "slices" << "symbol" << "precision" 
+                //QStringList()
+                //    << "minimum" << "type" << "stdDeviation" << "maximum"
+                //    << "grouping" << "font" << "slices" << "symbol" << "precision"
                 //    << "fontSize" << "width" << "style"
                 //    << "colorBar"
                 //    ////
-                //    << "minimum" << "type" << "stdDeviation" << "maximum" 
-                //    << "grouping" << "font" << "slices" << "symbol" << "precision" 
+                //    << "minimum" << "type" << "stdDeviation" << "maximum"
+                //    << "grouping" << "font" << "slices" << "symbol" << "precision"
                 //    << "fontSize" << "width" << "style"
                 //    << "colorBar"
-                    , 
+                    ,
                     ui->getLegendValue(0)
-                //QStringList() 
+                //QStringList()
 
-                //<< "1" << "0" << "50" << "6" << "-1" << "100" << "0" << "255, 255, 255;100;100;?;#0, 0, 255;0;0;?;#" 
-                //<< "Symbol" << "12" << "1" << "1" << "1" << "0" << "50" << "6" << "-1" << "255" << "0" << "0" 
+                //<< "1" << "0" << "50" << "6" << "-1" << "100" << "0" << "255, 255, 255;100;100;?;#0, 0, 255;0;0;?;#"
+                //<< "Symbol" << "12" << "1" << "1" << "1" << "0" << "50" << "6" << "-1" << "255" << "0" << "0"
                 //<< "0, 0;0;0;?;#255, 255, 255;100;100;?;#" << "Symbol" << "12" << ":" << "1" << "1"
 
-                //    << "0" << "1" << "-1" << "105" 
+                //    << "0" << "1" << "-1" << "105"
                 //    << "0" << "Symbol" << "50" << ":" << "5"
                 //    << "12" << "2" << "1"
                 //    << "255, 255, 255;?;?;0;#170, 255, 255;?;?;0.122991;#0, 170, 255;?;?;0.598131;#"
                 //        "0, 85, 255;?;?;3.02804;#0, 0, 255;?;?;5.45794;#0, 0, 127;?;?;10;#"
                 //    /////
-                //    << "0" << "1" << "-1" << "255" 
+                //    << "0" << "1" << "-1" << "255"
                 //    << "0" << "Symbol" << "50" << ":" << "5"
                 //    << "12" << "2" << "1"
                 //    << "0, 0, 0;0;0;?;#255, 255, 255;1;1;?;#"

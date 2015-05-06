@@ -22,7 +22,7 @@
 
 using namespace TerraMEObserver;
 
-ObserverTCPSender::ObserverTCPSender(Subject *subj, QObject *parent) 
+ObserverTCPSender::ObserverTCPSender(Subject *subj, QObject *parent)
     : QObject(parent), ObserverInterf(subj)
 {
 
@@ -81,22 +81,29 @@ bool ObserverTCPSender::draw(QDataStream& state)
         {
             tcpSocketTask = new TcpSocketTask();
 
-            connect(tcpSocketTask, SIGNAL(messageSent(const QString &)), senderGUI, SLOT(appendMessage(const QString &)));
+            connect(tcpSocketTask, SIGNAL(messageSent(const QString &)),
+            		senderGUI, SLOT(appendMessage(const QString &)));
                 // , Qt::DirectConnection);
-            connect(tcpSocketTask, SIGNAL(messageFailed(const QString &)), senderGUI, SLOT(messageFailed(const QString &)));
-            connect(tcpSocketTask, SIGNAL(statusMessages(int)), senderGUI, SLOT(statusMessages(int)) /*, Qt::DirectConnection*/);
-            connect(tcpSocketTask, SIGNAL(statusStates(int)), senderGUI, SLOT(statusStates(int)) /*, Qt::DirectConnection*/);
+            connect(tcpSocketTask, SIGNAL(messageFailed(const QString &)),
+            		senderGUI, SLOT(messageFailed(const QString &)));
+            connect(tcpSocketTask, SIGNAL(statusMessages(int)),
+            		senderGUI, SLOT(statusMessages(int)) /*, Qt::DirectConnection*/);
+            connect(tcpSocketTask, SIGNAL(statusStates(int)),
+            		senderGUI, SLOT(statusStates(int)) /*, Qt::DirectConnection*/);
             // connect(tcpSocketTask, SIGNAL(disconnected()), this, SLOT(deleteLater()));
             connect(tcpSocketTask, SIGNAL(connected()), this, SLOT(connected()));
-            connect(tcpSocketTask, SIGNAL(speed(const QString &)), senderGUI, SLOT(setSpeed(const QString &)) /*, Qt::DirectConnection*/);
+            connect(tcpSocketTask, SIGNAL(speed(const QString &)),
+            		senderGUI, SLOT(setSpeed(const QString &)) /*, Qt::DirectConnection*/);
 
-            connect(this, SIGNAL(addState(const QByteArray &)), tcpSocketTask, SLOT(addState(const QByteArray &)),
+            connect(this, SIGNAL(addState(const QByteArray &)),
+            		tcpSocketTask, SLOT(addState(const QByteArray &)),
                 Qt::DirectConnection);
                 // Qt::QueuedConnection);
-            connect(this, SIGNAL(setModelTimeSignal(double)), tcpSocketTask, SLOT(setModelTime(double)),
-                Qt::DirectConnection); 
-            connect(this, SIGNAL(abort()), tcpSocketTask, SLOT(abort()), 
-                Qt::DirectConnection); 
+            connect(this, SIGNAL(setModelTimeSignal(double)),
+            		tcpSocketTask, SLOT(setModelTime(double)),
+                Qt::DirectConnection);
+            connect(this, SIGNAL(abort()), tcpSocketTask, SLOT(abort()),
+                Qt::DirectConnection);
 
             tcpSocketTask->setCompress(compressed);
             tcpSocketTask->connectToHost(addresses->first(), port);
@@ -104,7 +111,7 @@ bool ObserverTCPSender::draw(QDataStream& state)
             // const BagOfTasks::Worker *w = tcpSocketTask->runExclusively();
             // tcpSocketTask->moveToThread((QThread *) w);
             tcpSocketTask->moveToThread((QThread *) tcpSocketTask->runExclusively());
-        
+
             socket = true;
         }
 
@@ -116,9 +123,10 @@ bool ObserverTCPSender::draw(QDataStream& state)
     }
     else
     {
-        senderGUI->appendMessage(tr("The retrieved state is empty. There is nothing to do."));
+        senderGUI->appendMessage(
+        		tr("The retrieved state is empty. There is nothing to do."));
     }
-	
+
     qApp->processEvents();
     return drew;
 }
@@ -129,7 +137,7 @@ void ObserverTCPSender::setAttributes(QStringList &attribs)
 
 #ifdef TME_BLACK_BOARD
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr) 
+    if (subjAttr)
         subjAttr->setSubjectType(getSubjectType());
 #endif
 

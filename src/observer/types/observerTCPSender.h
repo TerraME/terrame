@@ -83,7 +83,7 @@ protected:
     void setModelTime(double time);
 
 private:
-    quint16 port; 
+    quint16 port;
     int stateCount, msgCount;
     int datagramSize;
     double datagramRatio;
@@ -91,7 +91,7 @@ private:
 
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
-    
+
     TcpSocketTask *tcpSocketTask;
 
     QStringList attribList;

@@ -66,11 +66,11 @@ static char* TME_VERSION;
 static char* TME_PATH;
 
 /**
-* \brief 
+* \brief
 * luaCellIndex
 *
 * Represents an Index for a Cell. A TerraME Cell may have any representation in a geographic
-* database. In raster data, each pixel is loaded as one Cell. In vector data, each geometry (point, 
+* database. In raster data, each pixel is loaded as one Cell. In vector data, each geometry (point,
 * polyline, or polygon is one Cell. In cellular spaces from TerraLib database, each cell is
 * a TerraME Cell.
 */
@@ -85,13 +85,13 @@ bool SHOW_GUI;
 int WORKERS_NUMBER;
 
 /// Pause the simulation execution
-/// false - (default) the simulation executes without pauses; 
+/// false - (default) the simulation executes without pauses;
 /// true - pause the simulation until the user press play on de Observer Player
-bool paused; 
+bool paused;
 
 /// Execute step by step the simulation
 /// false - (default)
-/// true - 
+/// true -
 bool step;
 
 class luaCell;

@@ -16,11 +16,11 @@ class spatialObserverGUI;
 class SpatialObserverGUI : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     explicit SpatialObserverGUI(QWidget *parent = 0);
     ~SpatialObserverGUI();
-    
+
 signals:
 
 public slots:

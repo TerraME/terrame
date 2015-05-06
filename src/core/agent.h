@@ -20,9 +20,10 @@ In no event shall INPE and TerraLAB / UFOP be held liable to any party for direc
 indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
-/*! 
+/*!
   \file agent.h
-  \brief This file contains definitions about the TerraME model for behavior representation: GlobalAgent, LocalAgent and
+  \brief This file contains definitions about the TerraME model for behavior
+  	  representation: GlobalAgent, LocalAgent and
          Agent class.
                  Handles: Agent, LocalAgent, GlobalAgent
                  Implementations: AgentImpl, LocalAgentImpl, GlobalAgentImpl
@@ -46,27 +47,31 @@ of this library and its documentation.
  *  Action Region Vector Composite Handle Type
  *
  */
-typedef CompositeInterface< vectorComposite< Region_<CellIndex> > > ActionRegionCompositeInterf;
+typedef CompositeInterface< vectorComposite< Region_<CellIndex> > >
+											ActionRegionCompositeInterf;
 
 /**
  * \brief
  *
- * Implements the TerraME Agent (GlobaAgent) and Automaton (LocalAgent) types common behavior.
+ * Implements the TerraME Agent (GlobaAgent) and Automaton (LocalAgent) types
+ * common behavior.
  */
 class AgentImpl : public Implementation
 {
-	ActionRegionCompositeInterf actionRegions;	///< each agents has a set of Region objects which are used to traverse the cells
+	///< each agents has a set of Region objects which are used to traverse the cells
+	ActionRegionCompositeInterf actionRegions;
 	bool actionRegionStatus;  ///< true = action regions ON, false = action regions OFF
-	double lastChangeTime; ///< time elapsed since the last change in the agent intern discrete state (ControlMode)
+	///< time elapsed since the last change in the agent intern discrete state (ControlMode)
+	double lastChangeTime;
 public:
 
     /// constructor
     ///
-	AgentImpl(void): actionRegionStatus(false), lastChangeTime(0.0){ }
+	AgentImpl(void): actionRegionStatus(false), lastChangeTime(0.0) { }
 
     /// Get the Agent's "regions of action".
     /// \return The composite of action regions.
-	ActionRegionCompositeInterf& getActionRegions(void) {  return actionRegions; };
+	ActionRegionCompositeInterf& getActionRegions(void) { return actionRegions; };
 
     /// Set the Agent's regions of action to that in the composite "actRgs".
     /// \param actRgs is a composite of ActionRegion objects.
@@ -93,7 +98,8 @@ public:
 
     /// Set Agent's action regions status to true or false.
     /// \param status is a boolean value: \n
-    /// true  - the Agent's rules will be applied to all cells within the action regions.\n
+    /// true  - the Agent's rules will be applied to all cells within the
+	///			action regions.\n
     /// false - the Agent's is ignoring the actions regions,
     ///         the modeler rules must also define the iteration over the cellular space.
 	void setActionRegionStatus(bool status) { actionRegionStatus = status; }
@@ -141,20 +147,27 @@ typedef Interface<AgentImpl> AgentInterf;
 /**
  * \brief
  *
- * TerraME API interface for the Agent (GlobalAgent) or Automaton (LocalAgent) common behavior.
+ * TerraME API interface for the Agent (GlobalAgent) or Automaton (LocalAgent)
+ * common behavior.
  */
 // abstract class
-class Agent : public Model, public AgentInterf, public ControlModeCompositeInterf 
+class Agent : public Model, public AgentInterf, public ControlModeCompositeInterf
 {
 public:
 
     /// Gets an interface for the Agent's list of the action regions.
     /// \return A action region composite interface.
-	ActionRegionCompositeInterf& getActionRegions(void) {  return AgentInterf::pImpl_->getActionRegions(); };
+	ActionRegionCompositeInterf& getActionRegions(void)
+	{
+		return AgentInterf::pImpl_->getActionRegions();
+	};
 
     /// Gets an interface for the Agent's list of the action regions.
     /// \param actRgs is a composite interface of action regions.
-	void setActionRegions(ActionRegionCompositeInterf& actRgs) { AgentInterf::pImpl_->setActionRegions(actRgs); }
+	void setActionRegions(ActionRegionCompositeInterf& actRgs)
+	{
+		AgentInterf::pImpl_->setActionRegions(actRgs);
+	}
 
     /// The modeler should override this method in order to implement the Agent's behavior.
     /// The modeler invokes this method from the Message objects, which are associated to Event objects
@@ -191,12 +204,15 @@ public:
     /// true  - the Agent's rules will be applied to all cells within the action regions.\n
     /// false - the Agent is ignoring the actions regions,
     ///         the modeler rules must also define the iteration over the cellular space.
-	void setActionRegionStatus(bool status) { AgentInterf::pImpl_->setActionRegionStatus(status); }
+	void setActionRegionStatus(bool status)
+	{
+		AgentInterf::pImpl_->setActionRegionStatus(status);
+	}
 
     /// Builds a Agent checking if there are invalid ControlMode objects defined as target into the
     /// Agent internal data structure.
     /// \return Returns true if all the target ControlMode are valid, otherwise returns false.
-	bool build(void){
+	bool build(void) {
 
 		ControlModeCompositeInterf::iterator itCtrl = ControlModeCompositeInterf::begin();
 		while(itCtrl != ControlModeCompositeInterf::end())
@@ -270,7 +286,7 @@ public:
     /// nothing. If there are no Action Region objects defined for the LocalAgent, or if the Local Region objects are
     /// empty, the LocalAgent will also do nothing.
     /// \param event is a reference to the Event which linked message has triggered the agent control mode execution.
-	bool execute(Event &event){
+	bool execute(Event &event) {
 
 		Region_<CellIndex>::iterator cellIterator;
 		pair<CellIndex, Cell*> cellIndexPair;
@@ -304,7 +320,7 @@ public:
 		return true;
 	}
 
-}; 
+};
 
 /**
  * \brief
@@ -325,16 +341,17 @@ class GlobalAgent : public Agent
 public:
 
     /// Default constructor
-	GlobalAgent(void):currentControlMode(NULL){	}
+	GlobalAgent(void):currentControlMode(NULL) {}
 
     /// Executes the LocalAgent (Finite Automata) object. If the AgentImpl::actionRegionStatus flag is true, the
     /// LocalAgent will use these Region objects to traverse the cellular spaces. Otherwise, the LocalAgent will do
     /// nothing. If there are no Action Region objects defined for the LocalAgent, or if the Local Region objects are
     /// empty, the LocalAgent will also do nothing.
     /// \param event is a reference to the Event which linked message has triggered the agent control mode execution.
-	bool execute(Event &event){
+	bool execute(Event &event) {
 
-		if(currentControlMode == NULL) currentControlMode = &(*ControlModeCompositeInterf::pImpl_)[0];
+		if(currentControlMode == NULL)
+			currentControlMode = &(*ControlModeCompositeInterf::pImpl_)[0];
 		CompositeInterface< multimapComposite<CellIndex, Cell*> >::iterator cellIterator;
 		pair<CellIndex, Cell*> cellIndexPair;
 
@@ -371,18 +388,22 @@ public:
 
     /// Carries out the GlobalAgent discrete state transition
     /// \param targetControlMode is a pointer to the next GlobalAgent control mode (internal discrete state)
-	void jump(ControlMode* const targetControlMode)  { currentControlMode = targetControlMode; }
+	void jump(ControlMode* const targetControlMode)
+	{
+		currentControlMode = targetControlMode;
+	}
 
     ///  Gets the current (or active) ControlMode name
     /// \return Returns a pointer to the current control mode (discrete internal state)
-	ControlMode* getControlMode(){ return currentControlMode; }
+	ControlMode* getControlMode() { return currentControlMode; }
 
     /// Gets the current (or active) ControlMode name
     /// \return Returns the identifier to the current control mode (discrete internal state)
 	string getControlModeName() {
-        if(currentControlMode == NULL) currentControlMode = &(*ControlModeCompositeInterf::pImpl_)[0];
+        if(currentControlMode == NULL)
+        	currentControlMode = &(*ControlModeCompositeInterf::pImpl_)[0];
         return currentControlMode->getControlModeName();
 	}
-}; 
+};
 
 #endif

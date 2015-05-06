@@ -32,7 +32,7 @@ Observer * TrajectorySubjectInterf::createObserver(TypesOfObservers typeObserver
         case TObsUDPSender:
             obs = new ObserverUDPSender(this);
             break;
-            
+
         //case TObsMap:
         //    obs = new AgentObserverMap(this);
         //    break;
@@ -56,7 +56,7 @@ bool TrajectorySubjectInterf::kill(int id)
     if (! obs)
         return false;
 
-    // if ((obs->getObserverType() != TObsMap) && (obs->getObserverType() != TObsImage)) 
+    // if ((obs->getObserverType() != TObsMap) && (obs->getObserverType() != TObsImage))
     //     detachObserver(obs);
 
     switch (obs->getType())
@@ -81,7 +81,7 @@ bool TrajectorySubjectInterf::kill(int id)
             ((ObserverTextScreen *)obs)->close();
             delete (ObserverTextScreen *)obs;
             break;
-            
+
         case TObsUDPSender:
             ((ObserverUDPSender *)obs)->close();
             delete (ObserverUDPSender *)obs;

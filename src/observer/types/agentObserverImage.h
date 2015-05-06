@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 * Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*  
+*
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-* 
+*
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-* 
+*
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -42,7 +42,7 @@ class AgentObserverImage : public ObserverImage
 {
 
 public:
-    /** 
+    /**
      * Constructor
      * \param parent a pointer to a QWidget
      */
@@ -82,7 +82,7 @@ public:
      */
     bool unregistry(Subject * subj, const QString & className = "");
 
-    /** 
+    /**
      * Unregisters all subject under observation
      */
     void unregistryAll();
@@ -95,9 +95,9 @@ public:
      * \see TypesOfSubjects
      * \see QString, \see QStringList
      */
-    void setSubjectAttributes(const QStringList & attribs, 
+    void setSubjectAttributes(const QStringList & attribs,
         int nestedSubjID, const QString & className = "");
-    
+
     /**
      * Gets a reference to the list of subject attributes
      * \see QStringList

@@ -82,7 +82,7 @@ int luaTrajectory::createObserver(lua_State *L)
         while(lua_next(luaL, top - 1) != 0)
         {
             QString key;
-            
+
             if (lua_type(luaL, -2) == LUA_TSTRING)
             {
                 key = luaL_checkstring(luaL, -2);
@@ -97,7 +97,7 @@ int luaTrajectory::createObserver(lua_State *L)
             //        key = aux;
             //    }
             //}
-            
+
             switch (lua_type(luaL, -1))
             {
             case LUA_TBOOLEAN:
@@ -195,10 +195,12 @@ int luaTrajectory::createObserver(lua_State *L)
                 if (! observedAttribs.contains(obsAttribs.at(i)))
                     // observedAttribs.push_back(obsAttribs.at(i));
                     observedAttribs.insert(obsAttribs.at(i), "");
-        
+
                 if (! allAttribs.contains(obsAttribs.at(i)))
                 {
-					string err_out = string("Attribute name '") + string (qPrintable(obsAttribs.at(i))) + string("' not found.");
+					string err_out = string("Attribute name '")
+							+ string (qPrintable(obsAttribs.at(i)))
+							+ string("' not found.");
 					lua_getglobal(L, "customError");
 					lua_pushstring(L, err_out.c_str());
 					//lua_pushnumber(L, 5);
@@ -218,7 +220,7 @@ int luaTrajectory::createObserver(lua_State *L)
         switch (typeObserver)
         {
         case TObsTextScreen:
-            obsText = (ObserverTextScreen*) 
+            obsText = (ObserverTextScreen*)
                 TrajectorySubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
             {
@@ -232,7 +234,7 @@ int luaTrajectory::createObserver(lua_State *L)
             break;
 
         case TObsLogFile:
-            obsLog = (ObserverLogFile*) 
+            obsLog = (ObserverLogFile*)
                 TrajectorySubjectInterf::createObserver(TObsLogFile);
             if (obsLog)
             {
@@ -246,7 +248,7 @@ int luaTrajectory::createObserver(lua_State *L)
             break;
 
         case TObsTable:
-            obsTable = (ObserverTable *) 
+            obsTable = (ObserverTable *)
                 TrajectorySubjectInterf::createObserver(TObsTable);
             if (obsTable)
             {
@@ -260,7 +262,7 @@ int luaTrajectory::createObserver(lua_State *L)
             break;
 
         case TObsDynamicGraphic:
-            obsGraphic = (ObserverGraphic *) 
+            obsGraphic = (ObserverGraphic *)
                 TrajectorySubjectInterf::createObserver(TObsDynamicGraphic);
             if (obsGraphic)
             {
@@ -275,7 +277,7 @@ int luaTrajectory::createObserver(lua_State *L)
             break;
 
         case TObsGraphic:
-            obsGraphic = (ObserverGraphic *) 
+            obsGraphic = (ObserverGraphic *)
                 TrajectorySubjectInterf::createObserver(TObsGraphic);
             if (obsGraphic)
             {
@@ -289,7 +291,7 @@ int luaTrajectory::createObserver(lua_State *L)
             break;
 
         case TObsUDPSender:
-            obsUDPSender = (ObserverUDPSender *) 
+            obsUDPSender = (ObserverUDPSender *)
                 TrajectorySubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
             {
@@ -311,13 +313,15 @@ int luaTrajectory::createObserver(lua_State *L)
             {
                 char str[12];
                 sprintf(str, "%d", typeObserver);
-                string err_out = string("In this context, the code '") + string(str) + string("' does not correspond to a valid type of Observer.");
+                string err_out = string("In this context, the code '")
+                		+ string(str)
+						+ string("' does not correspond to a valid type of Observer.");
                 lua_getglobal(L, "customWarning");
                 lua_pushstring(L, err_out.c_str());
                 //lua_pushnumber(L, 4);
                 lua_call(L, 1, 0);
             }
-            return 0; 
+            return 0;
         }
 
 #ifdef DEBUG_OBSERVER
@@ -333,8 +337,9 @@ int luaTrajectory::createObserver(lua_State *L)
 
 			if (cols.at(0).isNull() || cols.at(0).isEmpty())
 			{
-				if (execModes != Quiet){
-					string err_out = string("Filename was not specified, using a default '") + string(DEFAULT_NAME.toStdString()) + string("'.");
+				if (execModes != Quiet) {
+					string err_out = string("Filename was not specified, using a default '")
+							+ string(DEFAULT_NAME.toStdString()) + string("'.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
 					// lua_pushnumber(L, 4);
@@ -350,7 +355,7 @@ int luaTrajectory::createObserver(lua_State *L)
 			// if not defined, use the default ";"
 			if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
 			{
-				if (execModes != Quiet){
+				if (execModes != Quiet) {
 					string err_out = string("Separator not defined, using ';'.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
@@ -380,7 +385,7 @@ int luaTrajectory::createObserver(lua_State *L)
 			if ((cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
 					|| cols.at(1).isNull() || cols.at(1).isEmpty())
 			{
-				if (execModes != Quiet){
+				if (execModes != Quiet) {
 					string err_out = string("Column title not defined.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
@@ -407,7 +412,8 @@ int luaTrajectory::createObserver(lua_State *L)
 			cols.removeFirst(); // remove axis y title
 
 			// Splits the attribute labels in the cols list
-			obsGraphic->setAttributes(obsAttribs, cols.takeFirst().split(";", QString::SkipEmptyParts),
+			obsGraphic->setAttributes(obsAttribs, cols.takeFirst()
+					.split(";", QString::SkipEmptyParts),
 					obsParams, cols);
 
 			lua_pushnumber(luaL, obsId);
@@ -421,7 +427,7 @@ int luaTrajectory::createObserver(lua_State *L)
 			// if (cols.at(0).isEmpty())
 			if (cols.isEmpty())
 			{
-				if (execModes != Quiet){
+				if (execModes != Quiet) {
 					string err_out = string("Port not defined.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
@@ -451,7 +457,7 @@ int luaTrajectory::createObserver(lua_State *L)
 			lua_pushnumber(luaL, obsId);
 			return 1;
 		}
-    }  
+    }
     //   ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
     // Creation of spatial observers
     else
@@ -621,7 +627,8 @@ int luaTrajectory::notify(lua_State *L)
 
 #ifdef TME_BLACK_BOARD
 
-QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int /*observerId*/, const QStringList & /* attribs */)
+QDataStream& luaTrajectory::getState(QDataStream& in, Subject *,
+		int /*observerId*/, const QStringList & /* attribs */)
 {
 #ifdef DEBUG_OBSERVER
     printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
@@ -656,7 +663,8 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int /*observerI
 
 #else // TME_BLACK_BOARD
 
-QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId, const QStringList &  attribs)
+QDataStream& luaTrajectory::getState(QDataStream& in, Subject *,
+		int observerId, const QStringList &  attribs)
 {
 
 #ifdef DEBUG_OBSERVER
@@ -707,7 +715,7 @@ QByteArray luaTrajectory::getChanges(QDataStream& in , const QStringList &attrib
     return getAll(in, attribs);
 }
 
-QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs, 
+QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
     ObserverDatagramPkg::SubjectAttribute *currSubj,
     ObserverDatagramPkg::SubjectAttribute *parentSubj)
 {
@@ -831,8 +839,9 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
                         // if (currSubj->internalsubject_size() > internalCount)
                         //    valueChanged = true;
 
-                        ObserverDatagramPkg::SubjectAttribute *cellSubj = currSubj->add_internalsubject();
-                        
+                        ObserverDatagramPkg::SubjectAttribute *cellSubj =
+                        		currSubj->add_internalsubject();
+
                         // // Coordinate of cell
                         // const CellIndex &idx = cell->getIndex();
 
@@ -852,7 +861,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
                         trajCount++;
 
                         cellSubj->set_id(cell->getId());
-                        cellSubj->set_type(ObserverDatagramPkg::TObsCell); 
+                        cellSubj->set_type(ObserverDatagramPkg::TObsCell);
                         cellSubj->set_attribsnumber(cellSubj->rawattributes_size());
                         cellSubj->set_itemsnumber(cellSubj->internalsubject_size());
                         valueChanged = true;
@@ -875,7 +884,8 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
                     raw = currSubj->add_rawattributes();
                     raw->set_key(key);
-                    raw->set_text(LUA_ADDRESS_USER_DATA + static_cast<const char*>(result));
+                    raw->set_text(LUA_ADDRESS_USER_DATA
+                    		+ static_cast<const char*>(result));
 
                     valueChanged = true;
                     observedAttribs.insert(key, valueTmp);
@@ -895,7 +905,8 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
                     raw = currSubj->add_rawattributes();
                     raw->set_key(key);
-                    raw->set_text(LUA_ADDRESS_FUNCTION + static_cast<const char*>(result));
+                    raw->set_text(LUA_ADDRESS_FUNCTION
+                    		+ static_cast<const char*>(result));
 
                     valueChanged = true;
                     observedAttribs.insert(key, valueTmp);
@@ -926,7 +937,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
         }
         lua_pop(luaL, 1);
     }
-    
+
     if (valueChanged)
     {
         if ((parentSubj) && (! currSubj))
@@ -944,14 +955,15 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
         // #elements
         currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
-#ifdef DEBUG_OBSERVER	
+#ifdef DEBUG_OBSERVER
             std::cout << currSubj->DebugString();
             std::cout.flush();
 #endif
 
         if (! parentSubj)
         {
-            QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
+            QByteArray byteArray(currSubj->SerializeAsString().c_str(),
+            		currSubj->ByteSize());
             return byteArray;
         }
     }
@@ -965,20 +977,22 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
 #else // TME_PROTOCOL_BUFFERS
 
-QByteArray luaTrajectory::getAll(QDataStream& /*in*/, int /*observerId*/ , const QStringList &attribs)
+QByteArray luaTrajectory::getAll(QDataStream& /*in*/, int /*observerId*/ ,
+		const QStringList &attribs)
 {
     lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recover the reference on the stack lua
     return pop(luaL, attribs);
 }
 
-QByteArray luaTrajectory::getChanges(QDataStream& in, int observerId , const QStringList &attribs)
+QByteArray luaTrajectory::getChanges(QDataStream& in, int observerId ,
+		const QStringList &attribs)
 {
     return getAll(in, observerId, attribs);
 }
 
 QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
 {
-#ifdef DEBUG_OBSERVER	
+#ifdef DEBUG_OBSERVER
     printf("\ngetState - Trajectory\n\n");
     luaStackToQString(12);
 
@@ -1052,7 +1066,8 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
                 text = QString(luaL_checkstring(luaL, -1));
                 attrs.append(QByteArray::number(TObsText));
                 attrs.append(PROTOCOL_SEPARATOR);
-                attrs.append((text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text));
+                attrs.append((text.isEmpty()
+                		|| text.isNull() ? VALUE_NOT_INFORMED : text));
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
@@ -1172,7 +1187,7 @@ int luaTrajectory::kill(lua_State *luaL)
             Observer *obs = cellSpace->getObserverById(id);
 
             if (obs)
-            {        
+            {
                 if (obs->getType() == TObsMap)
                     result = ((AgentObserverMap *)obs)->unregistry(this);
                 else

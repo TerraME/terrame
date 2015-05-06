@@ -8,7 +8,7 @@
 
 using namespace TerraMEObserver;
 
-LegendGUI::LegendGUI(QWidget *parent) 
+LegendGUI::LegendGUI(QWidget *parent)
     : QDialog(parent), ui(new Ui::legendGUI)
 {
     ui->setupUi(this);

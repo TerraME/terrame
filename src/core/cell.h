@@ -20,7 +20,7 @@ In no event shall INPE and TerraLAB / UFOP be held liable to any party for direc
 indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
-/*! 
+/*!
   \file cell.h
   \brief This file contains definitions about the TerraME model for location representation: Cell class.
 				 Handles: Cell
@@ -28,7 +28,7 @@ of this library and its documentation.
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-#ifndef CELL_H 
+#ifndef CELL_H
 #define CELL_H
 
 #include <cstring>
@@ -72,11 +72,11 @@ public:
 
 	/// Default constructor
 	///
-	CellImpl(){}
+	CellImpl() {}
 
 	/// Destructor
 	///
-	virtual ~CellImpl(){}
+	virtual ~CellImpl() {}
 
 	/// Updates the tracked state (control mode) of a certain agent within the cell.
 	/// \param  agent is a pointer to an agent within the cell.
@@ -90,14 +90,15 @@ public:
 			targetControlMode_.erase(agent);
 			targetControlMode_.insert(map<Agent*, ControlMode*>::value_type(agent, controlMode));
 		}
-		else targetControlMode_.insert(map<Agent*, ControlMode*>::value_type(agent, controlMode));
+		else targetControlMode_.insert(
+				map<Agent*, ControlMode*>::value_type(agent, controlMode));
 
 	}
 
 	/// Releases the tracked state (control mode) of a agent within the cell
 	/// \param agent is a pointer to an agent within the cell
 	/// \return true - if success, false - otherwise
-	bool detachControlMode(Agent *agent){
+	bool detachControlMode(Agent *agent) {
 		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
 		if (location != targetControlMode_.end())
 		{
@@ -111,7 +112,7 @@ public:
 	/// HANDLE - Returns the current control model of a Automaton (Local Agent) within the cell
 	/// \param agent is a pointer to a local agent within the cell
 	/// \return true - if success, false - otherwise
-	ControlMode* getControlMode(LocalAgent *agent){
+	ControlMode* getControlMode(LocalAgent *agent) {
 		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find((Agent*)agent);
 		if(location != targetControlMode_.end())
 		{
@@ -125,7 +126,7 @@ public:
 	/// \param event being executed by the simulation engine, whose attached message has called the agent::execute() method
 	/// \param agent is a pointer to the agent being executed
 	/// \return A pointer to the agent active control mode (discrete state).
-	ControlMode* execute(Event &/*event*/, class Agent *agent){
+	ControlMode* execute(Event &/*event*/, class Agent *agent) {
 		map<Agent*, ControlMode*>::iterator location = targetControlMode_.find(agent);
 		if(location != targetControlMode_.end())
 		{
@@ -147,7 +148,7 @@ public:
 	NeighCmpstInterf& getNeighborhoods(void) {
 
 #if defined(DEBUG_NEIGH)
-		cout << "C++, interno cell: "<< &neighborhoods_ << endl;
+		cout << "C++, interno cell: " << &neighborhoods_ << endl;
 #endif
 
 		return neighborhoods_;
@@ -197,17 +198,20 @@ public:
 	/// HANDLE - Updates the tracked state (control mode) of a certain agent within the cell.
 	/// \param  agent is a pointer to an agent within the cell.
 	/// \param target is a pointer to the new agent tracked control mode (discrete state).
-	void attachControlMode(Agent *agent, ControlMode *target) { pImpl_->attachControlMode(agent, target); }
+	void attachControlMode(Agent *agent, ControlMode *target)
+	{
+		pImpl_->attachControlMode(agent, target);
+	}
 
 	/// HANDLE - Releases the tracked state (control mode) of a agent within the cell
 	/// \param agent is a pointer to an agent within the cell
 	/// \return true - if success, false - otherwise
-	bool detachControlMode(Agent *agent){ pImpl_->detachControlMode(agent); return true; }
+	bool detachControlMode(Agent *agent) { pImpl_->detachControlMode(agent); return true; }
 
 	/// HANDLE - Returns the current control model of a Automaton (Local Agent) within the cell
 	/// \param agent is a pointer to a local agent within the cell
 	/// \return true - if success, false - otherwise
-	ControlMode* getControlMode(LocalAgent *agent){ return pImpl_->getControlMode(agent); }
+	ControlMode* getControlMode(LocalAgent *agent) { return pImpl_->getControlMode(agent); }
 
 	///  HANDLE - Sets the Cell's internal state latency counter to "value".
 	/// \param value is a positive number (next version this should be checked).

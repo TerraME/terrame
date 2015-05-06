@@ -19,7 +19,7 @@ PlayerGUI::PlayerGUI(QWidget *parent)
     // The simulation will be launched in pause mode, so
     // the GUI must be similar
     playPauseClicked();
-    
+
     connect(ui->btPlayPause, SIGNAL(clicked()), this, SLOT(playPauseClicked()));
     connect(ui->btStep, SIGNAL(clicked()), this, SLOT(stepClicked()));
     connect(ui->btStop, SIGNAL(clicked()), this, SLOT(stopClicked()));
@@ -48,7 +48,8 @@ void PlayerGUI::playPauseClicked()
         ui->textMessage->append("Simulation paused!\n");
 
         ui->btPlayPause->setText("Play");
-        icon.addFile(QString::fromUtf8(":/icons/play.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/icons/play.png"),
+        		QSize(), QIcon::Normal, QIcon::Off);
         ui->btPlayPause->setIcon(icon);
         paused = true;
     }
@@ -58,7 +59,8 @@ void PlayerGUI::playPauseClicked()
         ui->textMessage->append("Simulation running...\n");
 
         ui->btPlayPause->setText("Pause");
-        icon.addFile(QString::fromUtf8(":/icons/pause.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/icons/pause.png"),
+        		QSize(), QIcon::Normal, QIcon::Off);
         ui->btPlayPause->setIcon(icon);
         paused = false;
         step = false;
@@ -71,13 +73,14 @@ void PlayerGUI::stepClicked()
     {
         // ModelConsole::getInstance().appendMessage("Step by step running...\n");
         ui->textMessage->append("Step by step running...\n");
-        
+
         QIcon icon;
         ui->btPlayPause->setText("Play");
-        icon.addFile(QString::fromUtf8(":/icons/play.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/icons/play.png"),
+        		QSize(), QIcon::Normal, QIcon::Off);
         ui->btPlayPause->setIcon(icon);
     }
-    
+
     step = true;
     paused = false;
 }

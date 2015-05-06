@@ -51,9 +51,9 @@ public:
 
     inline bool operator<(const Task &other) const { return priority < other.priority; }
 
-    /** 
+    /**
      * Identify what worker must be execute this task
-     * Use it only when is necessary define what worker must be treat 
+     * Use it only when is necessary define what worker must be treat
      * this task such as you are working with Sockets (TCP and UDP)
      * \param id of worker
      */
@@ -70,9 +70,9 @@ public:
     // inline bool operator<(const Task &other) const { return priority < other.priority; }
 
 protected:
-    /* * 
+    /* *
      * Identify what worker must be execute this task
-     * Use it only when is necessary define what worker must be treat 
+     * Use it only when is necessary define what worker must be treat
      * this task such as you are working with Sockets (TCP and UDP)
      * \param id of worker
      */

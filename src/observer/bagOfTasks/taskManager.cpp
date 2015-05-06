@@ -35,12 +35,12 @@ TaskManager& TaskManager::getInstance()
 
 TaskManager::TaskManager()
 {
-    // Marks the position of worker that was requested 
+    // Marks the position of worker that was requested
     // by user and make a uniform distribution among them
     requestedWorkerPos = -1;
 
     sync = false;
-    
+
     int threadCount = QThread::idealThreadCount();
 
     // Do not count the main process
@@ -53,7 +53,7 @@ TaskManager::TaskManager()
             workersCount = 1;
     }
 
-    // Starts workers for all cores identified (default) or 
+    // Starts workers for all cores identified (default) or
     // the number setted by "-workers" flag at main function
     while(workers.size() < workersCount)
         workers.append(new Worker(waitCondition, mutex));
@@ -86,7 +86,7 @@ TaskManager::~TaskManager()
     locker.unlock();
 
     // Destroys all tasks
-    for(QList<QPair<Task *, int> >::iterator it = bagOfTasks.begin(); 
+    for(QList<QPair<Task *, int> >::iterator it = bagOfTasks.begin();
         it != bagOfTasks.end(); ++it)
     {
         if (it->first)
@@ -96,7 +96,7 @@ TaskManager::~TaskManager()
 
     for(int i = 0; i < workers.size(); i++)
         delete workers.at(i);
-  */  
+  */
 #ifdef UNIT_TME_TEST_PRINT
     qDebug() << "bagOfTasks.size()" << bagOfTasks.size();
     qDebug() << "~TaskManager()"; std::cout.flush();

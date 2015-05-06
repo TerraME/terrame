@@ -9,7 +9,7 @@ using namespace BagOfTasks;
 
 static const int TIME_OUT = 10000;
 
-UdpSocketTask::UdpSocketTask(QObject * parent) 
+UdpSocketTask::UdpSocketTask(QObject * parent)
     : QUdpSocket(parent), SocketTask()
 {
     // setType(Task::Continuous);
@@ -20,7 +20,7 @@ UdpSocketTask::UdpSocketTask(QObject * parent)
     finished = false;
     stateCount = 0;
     msgCount = 0;
-    
+
     connect(this, SIGNAL(readyRead()), this, SLOT(receive()));
 }
 
@@ -50,10 +50,10 @@ bool UdpSocketTask::execute()
     bool isEmpty = states.isEmpty();
     finished = false;
 
-    while (! finished)  // Tarefa fica ativa enquanto nao finaliza a simulacao. Talvez seja uma boa ideia!!
+    while (! finished)  // Task is active while not finish the simulation. It might be a good idea !!
     {
         while (! isEmpty)
-        {   
+        {
             lock.lockForWrite();
             const QByteArray state = states.takeFirst();
             isEmpty = state.isEmpty();
@@ -62,9 +62,9 @@ bool UdpSocketTask::execute()
             send(state);
         }
     }
-    
+
     executing = false;
-    
+
     return true;
 }
 
@@ -72,7 +72,7 @@ bool UdpSocketTask::send(const QByteArray &data)
 {
     qint64 bytesWritten = 0, bytesRead = data.size();
     int pos = 0;
-    
+
     if ((data == COMPLETE_STATE) || (data == COMPLETE_SIMULATION))
         pos = -1;
 
@@ -93,7 +93,7 @@ bool UdpSocketTask::send(const QByteArray &data)
         {
             out << qCompress(data); //qCompress(data.mid(pos, dataSize), COMPRESS_RATIO);
         }
-        else    
+        else
         {
             // qDebug() << "datagram size: " << datagram.size() << "dataSize:" << dataSize << "pos:" << pos;
             out << data.mid(pos, dataSize);
@@ -102,12 +102,13 @@ bool UdpSocketTask::send(const QByteArray &data)
 
         for(int i = 0; i < addresses->size(); i++)
         {
-            bytesWritten = writeDatagram(datagram, addresses->at(i), port);     
+            bytesWritten = writeDatagram(datagram, addresses->at(i), port);
             flush();
 
             // emit messageSent(tr("Datagram sent for %1").arg(addresses->at(i).toString()));
 
-            emit messageSent (tr("Datagram sent for %1. Bytes sent: %2").arg(addresses->at(i).toString())
+            emit messageSent (tr("Datagram sent for %1. Bytes sent: %2")
+            		.arg(addresses->at(i).toString())
                 .arg(bytesWritten));
 
             if (bytesWritten == -1)
@@ -120,7 +121,7 @@ bool UdpSocketTask::send(const QByteArray &data)
         //if (compressed)
         //{
         //    bytesRead -= datagramSize;
-        //    pos += datagramSize;        
+        //    pos += datagramSize;
         //}
         //else
         {
@@ -140,7 +141,7 @@ bool UdpSocketTask::send(const QByteArray &data)
     }
 
     stateCount++;
-    
+
     emit statusMessages(msgCount, stateCount);
     emit messageSent(tr("States sent: %1.").arg(stateCount));
 
@@ -175,11 +176,11 @@ bool UdpSocketTask::sendCompleteStateInfo(const QByteArray &data)
 {
     bool ret = send(data);
 
-    if (data == COMPLETE_SIMULATION){
+    if (data == COMPLETE_SIMULATION) {
         // waitForDisconnected(2000);
         qDebug("COMPLETE_SIMULATION States sent: %i. Msgs: %i", stateCount, msgCount);
     }
-    return ret; 
+    return ret;
 }
 
 void UdpSocketTask::addState(const QByteArray &state)
@@ -200,7 +201,7 @@ void UdpSocketTask::receive()
     {
 
     }
-    finished = false;    
+    finished = false;
 }
 
 void UdpSocketTask::process(const QByteArray & /*data*/)

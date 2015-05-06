@@ -76,7 +76,7 @@ void ChartPlot::resizeEvent(QResizeEvent * q)
 
 	SizeVisualArrangement s;
 	s.height = q->size().height();
-	s.width = q->size().width();	
+	s.width = q->size().width();
 
 	v->addSize(id, s);
 
@@ -89,7 +89,7 @@ void ChartPlot::moveEvent(QMoveEvent* q)
 
 	PositionVisualArrangement s;
 	s.x = q->pos().x();
-	s.y = q->pos().y();	
+	s.y = q->pos().y();
 
 	v->addPosition(id, s);
 }
@@ -105,9 +105,9 @@ void ChartPlot::propertiesChart()
     if(!plotPropGui)
     {
         plotPropGui = new PlotPropertiesGUI(this);
-        plotPropGui->consistGUI((QList<InternalCurve*>*) &internalCurves);    
+        plotPropGui->consistGUI((QList<InternalCurve*>*) &internalCurves);
     }
-    
+
     // Creates chart objects back-up
 	QPalette plotterPalette = palette();
     int plotterLWidth = lineWidth();
@@ -131,7 +131,7 @@ void ChartPlot::propertiesChart()
         setPalette(plotterPalette);
         setLineWidth(plotterLWidth);
 
-        // Title 
+        // Title
         QwtText text = title();
         text.setFont(titleFont);
         setTitle(text);

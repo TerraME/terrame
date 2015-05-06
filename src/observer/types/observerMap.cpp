@@ -10,7 +10,7 @@
 #include <QScrollBar>
 #include <QLabel>
 #include <QToolButton>
-#include <QDebug> 
+#include <QDebug>
 #include <QDesktopWidget>
 
 #include <cmath>
@@ -28,7 +28,7 @@
 
 using namespace TerraMEObserver;
 
-ObserverMap::ObserverMap(Subject *sub, QWidget *parent)	
+ObserverMap::ObserverMap(Subject *sub, QWidget *parent)
     : ObserverInterf(sub), QDialog(parent)
 {
     observerType = TObsMap;
@@ -47,7 +47,7 @@ ObserverMap::ObserverMap(Subject *sub, QWidget *parent)
 #else
     protocolDecoder = new Decoder();
 #endif
-    
+
     builtLegend = 0;
     positionZoomVec = -1;
     zoomIdx = 11;
@@ -56,15 +56,15 @@ ObserverMap::ObserverMap(Subject *sub, QWidget *parent)
     zoomCount = 0;  // index of 100% in comboBox
     paused = false;
     numTiles = -1;
-    
+
     width = 0;
     height = 0;
 
 	VisualArrangement* v = VisualArrangement::getInstance();
-	
+
 	SizeVisualArrangement s = v->getSize(getId());
 	PositionVisualArrangement p = v->getPosition(getId());
-	
+
 	if(s.width > 0 && s.height > 0)
 		resize(s.width, s.height);
 	else
@@ -101,7 +101,7 @@ ObserverMap::~ObserverMap()
     delete scrollArea;
     //delete lblOperator;
     //delete operatorComboBox;
-    delete frameTools; 	
+    delete frameTools;
 }
 
 const TypesOfObservers ObserverMap::getType() const
@@ -167,8 +167,8 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                                 QStringList legAttribs, TypesOfSubjects type)
 {
     treeLayers->blockSignals(false);
-    
-    bool complexMap = false; 
+
+    bool complexMap = false;
 
     // list of attributes that will be observed
     if (attribList.isEmpty())
@@ -217,7 +217,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
 
 #ifdef TME_BLACK_BOARD
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr) 
+    if (subjAttr)
         subjAttr->setSubjectType(getSubjectType());
 #endif
 
@@ -225,17 +225,17 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
     Attributes *attrib = 0;
     for(int i = 0; i < attribList.size(); i++)
     {
-        if ((attribList.at(i) != "x") && (attribList.at(i) != "y") 
+        if ((attribList.at(i) != "x") && (attribList.at(i) != "y")
             && (! mapAttributes->contains(attribList.at(i))))
         {
 
-            attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(), 
+            attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(),
                 cellularSpaceSize.height(), type);
 
             // TO-DO: Modify code
 #ifdef TME_BLACK_BOARD
             //SubjectAttributes *subjAttr = BlackBoard::getInstance()
-            //    .addAttribute(getSubjectId(), attribList.at(i)); 
+            //    .addAttribute(getSubjectId(), attribList.at(i));
 
             attrib->setParentSubjectID(getSubjectId());
             attrib->setXsValue(subjAttr->getXs());
@@ -290,7 +290,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                     attrib->setSymbol(QString(QChar(value)));
                 else
                     attrib->setSymbol(legAttribs.at(symbol));
-                
+
 				attrib->setWidth(legAttribs.at(width).toDouble());
 
                 std::vector<ColorBar> colorBarVec;
@@ -338,8 +338,8 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
 
     if (! legendWindow)
         legendWindow = new LegendWindow(this);
-    
-    legendWindow->setValues(mapAttributes, obsAttrib);   
+
+    legendWindow->setValues(mapAttributes, obsAttrib);
 
     // // ANTONIO - 10/09
     // showLayerLegend();
@@ -518,14 +518,14 @@ void ObserverMap::showLayerLegend()
 			{
             	case TObsAgent:
             	case TObsSociety:
-                    child->setData(0, Qt::DecorationRole, 
-                        legendWindow->symbol2Pixmap(color, 
-                            attrib->getFont(), attrib->getSymbol()) 
+                    child->setData(0, Qt::DecorationRole,
+                        legendWindow->symbol2Pixmap(color,
+                            attrib->getFont(), attrib->getSymbol())
                      	 	 	 );
                 	break;
 
             	case TObsNeighborhood:
-					child->setData(0, Qt::DecorationRole, 
+					child->setData(0, Qt::DecorationRole,
                     	legendWindow->color2PixmapLine(color, attrib->getWidth()));
                 	break;
 
@@ -562,7 +562,7 @@ void ObserverMap::zoomActivated(const QString &scale)
     }
 
     double newScale = scale.left(scale.indexOf(tr("%"))).toDouble() * 0.01;
-    QSize imgActual(cellularSpaceSize.width() * newScale, 
+    QSize imgActual(cellularSpaceSize.width() * newScale,
         cellularSpaceSize.height() * newScale);
 
     if (painterWidget->rescale(imgActual))
@@ -599,7 +599,7 @@ void ObserverMap::calculeZoom(bool in)
     QString scale = zoomComboBox->itemText(idx);
     double newScale = scale.left(scale.indexOf(tr("%"))).toDouble() * 0.01;
 
-    QSize imgActual(cellularSpaceSize.width() * newScale, 
+    QSize imgActual(cellularSpaceSize.width() * newScale,
         cellularSpaceSize.height() * newScale);
 
     foreach(Attributes *attrib, mapAttributes->values())
@@ -662,7 +662,7 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
 
     scrollArea->setUpdatesEnabled(true);
 
-    double ratio = (cellularSpaceSize.width() / cellularSpaceSize.height()) 
+    double ratio = (cellularSpaceSize.width() / cellularSpaceSize.height())
         * cellularSpaceSize.width();
     double percent = (imgSize.width() / ratio);// - 1.0;
 
@@ -742,16 +742,16 @@ void ObserverMap::zoomWindow()
 void ObserverMap::setCellSpaceSize(int w, int h)
 {
     QRect deskRect = qApp->desktop()->screenGeometry(this);
-    
+
     double widthAux = deskRect.width() / w;
     double heightAux = deskRect.height() / h;
-    
+
     width = w;
     height = h;
 
     // cellularSpaceSize = QSize(width * widthAux, height * heightAux);
     cellularSpaceSize = QSize(width * widthAux, height * widthAux);
-    
+
     // painterWidget->resize(cellularSpaceSize, QSize(widthAux, heightAux));
     painterWidget->resize(cellularSpaceSize, QSize(widthAux, widthAux));
     needResizeImage = true;
@@ -886,8 +886,10 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
     {
         ColorBar b = makeColorBarStruct(i, colorBarList.at(i), value, label);
         colorBarVec.push_back(b);
-        valueList.append((value.isEmpty() || value.isNull()) ? QString::number(i) : value);
-        labelList.append((label.isEmpty() || label.isNull()) ? QString::number(i) : label);
+        valueList.append((value.isEmpty()
+        		|| value.isNull()) ? QString::number(i) : value);
+        labelList.append((label.isEmpty()
+        		|| label.isNull()) ? QString::number(i) : label);
     }
 
     // Standard deviation -----------------------
@@ -898,7 +900,8 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
         label.clear();
 
         QString stdColorBarStr = colors.mid(pos + 1);
-        QStringList stdColorBarList = stdColorBarStr.split(COLORS_SEP, QString::SkipEmptyParts);
+        QStringList stdColorBarList = stdColorBarStr.split(
+        		COLORS_SEP, QString::SkipEmptyParts);
 
 #ifdef DEBUG_OBSERVER
         qDebug() << "\nstdColorBarStr: " << stdColorBarStr;
@@ -909,13 +912,15 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
         {
             ColorBar b = makeColorBarStruct(i, stdColorBarList.at(i), value, label);
             stdColorBarVec.push_back(b);
-            valueList.append((value.isEmpty() || value.isNull()) ? QString::number(i) : value);
-            labelList.append((label.isEmpty() || label.isNull()) ? QString::number(i) : label);
+            valueList.append((value.isEmpty()
+            		|| value.isNull()) ? QString::number(i) : value);
+            labelList.append((label.isEmpty()
+            		|| label.isNull()) ? QString::number(i) : label);
         }
     }
 }
 
-bool ObserverMap::constainsItem(const QVector<QPair<Subject *, QString> > &linkedSubjects, 
+bool ObserverMap::constainsItem(const QVector<QPair<Subject *, QString> > &linkedSubjects,
         const Subject *subj)
 {
     for (int i = 0; i < linkedSubjects.size(); i++)
@@ -1007,9 +1012,9 @@ void ObserverMap::setupGUI()
     //butZoomRestore->setCheckable(true);
     connect(butZoomRestore, SIGNAL(clicked()), this, SLOT(butZoomRestore_Clicked()));
 
-    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300 
+    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300
         << 200 << 100 << 66 << 50 << 33 << 25 << 16  << 12 << 8 << 5 << 3 << 2 << 1;
-    
+
     QStringList zoomList;
 
     for (int i = 0; i < zoomVec.size(); i++)
@@ -1054,7 +1059,7 @@ void ObserverMap::setupGUI()
     // lblOperator->setGeometry(10, 95, 150, 20);
     createOperatorComboBox();
 
-    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50,  QSizePolicy::Minimum,
+    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50, QSizePolicy::Minimum,
         QSizePolicy::Preferred);
 
     //--------------------------
@@ -1075,7 +1080,8 @@ void ObserverMap::setupGUI()
     //-------------------------
 
     QSplitter *splitter = new QSplitter(this);
-    splitter->setStyleSheet("QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
+    splitter->setStyleSheet(
+    		"QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
     splitter->addWidget(frameTools);
     splitter->addWidget(scrollArea);
     splitter->setStretchFactor(0, 0);

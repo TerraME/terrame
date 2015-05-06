@@ -23,7 +23,7 @@ of this library and its documentation.
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
 
-/*! 
+/*!
   \file region.h
   \brief Region is an indexed set of cells implemented as a map composite of generic indexes into cell pointers.
                  Handles: Region
@@ -38,7 +38,7 @@ using namespace std;
 #include "composite.h"
 #include "cell.h"
 
-class Cell; 
+class Cell;
 
 /**
  * \brief
@@ -71,7 +71,8 @@ public:
     {
         pair<Indx, Cell*>  indexCellPair;
 
-        indexCellPair = CompositeInterface< multimapComposite<Indx, Cell*> >::operator [](indx);
+        indexCellPair =
+        		CompositeInterface< multimapComposite<Indx, Cell*> >::operator [](indx);
 
         return indexCellPair.second;
     }

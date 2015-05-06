@@ -8,7 +8,7 @@
 
 class ReceiverGUI;
 
-namespace TerraMEObserver{
+namespace TerraMEObserver {
 
 class AgentObserverMap;
 class ObserverGraphic;

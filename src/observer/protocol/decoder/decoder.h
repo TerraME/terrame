@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 * Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*  
+*
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-* 
+*
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-* 
+*
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -33,7 +33,7 @@
 
 #ifdef TME_PROTOCOL_BUFFERS
 
-namespace ObserverDatagramPkg{
+namespace ObserverDatagramPkg {
     class SubjectAttribute;
 }
 
@@ -98,10 +98,10 @@ private:
     Decoder& operator=(Decoder &);
 
 #ifdef TME_PROTOCOL_BUFFERS
-    inline bool decodeAttributes(SubjectAttributes *subjAttr, 
+    inline bool decodeAttributes(SubjectAttributes *subjAttr,
         const ObserverDatagramPkg::SubjectAttribute &subjDatagram);
-    inline bool decodeInternals(SubjectAttributes *subjAttr, 
-        const ObserverDatagramPkg::SubjectAttribute &subjDatagram, 
+    inline bool decodeInternals(SubjectAttributes *subjAttr,
+        const ObserverDatagramPkg::SubjectAttribute &subjDatagram,
         SubjectAttributes *compositeSubjAttr = 0);
 #endif
 
@@ -180,14 +180,16 @@ private:
 
 	//@RAIAN: Decode the neighborhood
 		/// \author Raian Vargas Maretto
-    inline void consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID, 
+    inline void consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID,
         int &numElem, QMap<QString, QList<double> > &neighborhood);
 
 		/// \author Raian Vargas Maretto
-                inline void consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList<double> > &neighborhood);
+                inline void consumeNeighbor(QStringList &tokens,
+                		int &idx, QMap<QString, QList<double> > &neighborhood);
 
 		/// \author Raian Vargas Maretto
-		inline void consumeNeighborTriple(QStringList &tokens, int &idx, QList<double> &neighbor);
+		inline void consumeNeighborTriple(QStringList &tokens,
+				int &idx, QList<double> &neighbor);
 	//@RAIAN: END
 
     QHash<QString, Attributes *> *mapAttributes;

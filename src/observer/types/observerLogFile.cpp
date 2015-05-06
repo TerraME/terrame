@@ -14,7 +14,7 @@
 #endif
 
 ObserverLogFile::ObserverLogFile(Subject *subj, QObject *parent)
-    : QObject(parent), ObserverInterf(subj) 
+    : QObject(parent), ObserverInterf(subj)
 {
     observerType = TObsLogFile;
     subjectType = subj->getType(); // TO_DO: Changes it to Observer pattern
@@ -104,7 +104,8 @@ bool ObserverLogFile::draw(QDataStream &state)
 
 #endif
 
-void ObserverLogFile::setProperties(const QString &filename, const QString &separator, const QString &mode)
+void ObserverLogFile::setProperties(const QString &filename,
+		const QString &separator, const QString &mode)
 {
     if (logTask)
         logTask->setProperties(filename, separator, mode);
@@ -140,7 +141,7 @@ void ObserverLogFile::setAttributes(QStringList &attribs)
 {
 #ifdef TME_BLACK_BOARD
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr) 
+    if (subjAttr)
         subjAttr->setSubjectType(getSubjectType());
 #endif
 

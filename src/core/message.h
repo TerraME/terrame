@@ -23,7 +23,7 @@ of this library and its documentation.
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
 
-/*! 
+/*!
   \file message.h
   \brief This file contains definitions about the Message objects. Messages are dispatched by the
                  simulation engine Event objects. In general, a message is, a function with several
@@ -57,4 +57,4 @@ public:
 
 };
 
-#endif 
+#endif

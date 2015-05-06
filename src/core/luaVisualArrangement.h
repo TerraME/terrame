@@ -38,7 +38,7 @@ of this library and its documentation.
 //#include <QHash>
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaVisualArrangement object.
 *
 */
@@ -49,7 +49,7 @@ class luaVisualArrangement : public Reference<luaVisualArrangement>
 public:
 	///< Data structure issued by Luna<T>
 	static const char className[];
-	
+
 	///< Data structure issued by Luna<T>
 	static Luna<luaVisualArrangement>::RegType methods[];
 

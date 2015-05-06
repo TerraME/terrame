@@ -35,11 +35,11 @@ of this library and its documentation.
 
 namespace ObserverDatagramPkg
 {
-    class SubjectAttribute; 
+    class SubjectAttribute;
 }
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaTimer object.
 *
 */
@@ -50,7 +50,7 @@ private:
 
     TypesOfSubjects subjectType;
     QHash<QString, QString> observedAttribs;
-    
+
 #ifdef TME_PROTOCOL_BUFFERS
     QByteArray getAll(QDataStream& in, const QStringList& attribs);
     QByteArray getChanges(QDataStream& in, const QStringList& attribs);
@@ -62,10 +62,10 @@ private:
 public:
     ///< Data structure issued by Luna<T>
     static const char className[];
-    
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaTimer>::RegType methods[]; 
-    
+    static Luna<luaTimer>::RegType methods[];
+
 public:
     /// Constructor
     luaTimer(lua_State *L);
@@ -105,10 +105,12 @@ public:
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed
-    QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
+    QDataStream& getState(QDataStream& in, Subject *subject, int observerID,
+    		const QStringList& attribs);
 
 #ifdef TME_PROTOCOL_BUFFERS
-    QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *currSubj,
+    QByteArray pop(lua_State *L, const QStringList& attribs,
+    		ObserverDatagramPkg::SubjectAttribute *currSubj,
         ObserverDatagramPkg::SubjectAttribute *parentSubj);
 #else
     /**

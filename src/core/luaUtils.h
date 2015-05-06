@@ -84,13 +84,14 @@ bool deleteLayerTableName(TeDatabase *db, std::string &tableName);
 /// \param attTable is a copy to the Theme new attribute table being created
 /// \param outputTable is the new Theme table name
 /// \param whereClause is a SQL WHERE CLAUSE like string used to query the TerraLib database
-/// \param inputThemeName is a string containing the inputTheme that serves as information 
+/// \param inputThemeName is a string containing the inputTheme that serves as information
 ///        source for the Theme being created
 /// \param view is a pointer to the TerrraLib TeView object to which Theme will be attached
 /// \param layer is a pointer to the TerrraLib TeLayer object to which Theme will be attached
 /// \param db is a pointer to the TerrraLib database into which the Theme will be interted
 /// \param theme is a pointer to the TeTheme object being added to the geographical database
-bool createNewTheme(TeTable attTable, char outputTable[], string whereClause, string inputThemeName, TeView *view, TeLayer *layer, TeDatabase *db, TeTheme *theme);
+bool createNewTheme(TeTable attTable, char outputTable[], string whereClause,
+		string inputThemeName, TeView *view, TeLayer *layer, TeDatabase *db, TeTheme *theme);
 
 #endif
 

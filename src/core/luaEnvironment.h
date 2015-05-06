@@ -36,11 +36,11 @@ of this library and its documentation.
 
 namespace ObserverDatagramPkg
 {
-    class SubjectAttribute; 
+    class SubjectAttribute;
 }
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaEnvironment object.
 *
 */
@@ -52,7 +52,7 @@ private:
     lua_State *luaL;
     TypesOfSubjects subjectType;
     QHash<QString, QString> observedAttribs;
-    
+
 #ifdef TME_PROTOCOL_BUFFERS
     QByteArray getAll(QDataStream& in, const QStringList& attribs);
     QByteArray getChanges(QDataStream& in, const QStringList& attribs);
@@ -63,18 +63,18 @@ private:
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaEnvironment>::RegType methods[]; 
-    
+    static Luna<luaEnvironment>::RegType methods[];
+
 public:
     /// Constructor
     luaEnvironment(lua_State *L);
 
     /// Destructor
     ~luaEnvironment(void);
-    
+
     /// Adds new luaTimer, luaCellularSpace, luaGlobalAgent, luaLocalAgent and luaEnvironment to
     /// the luaEnvironment object
     /// parameter luaTimer, luaCellularSpace, luaGlobalAgent, luaLocalAgent and luaEnvironment
@@ -109,7 +109,7 @@ public:
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     int notify(lua_State *L);
-    
+
     /// Gets the subject's type
     const TypesOfSubjects getType() const;
 
@@ -118,11 +118,13 @@ public:
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed
-    QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
+    QDataStream& getState(QDataStream& in, Subject *subject, int observerID,
+    					const QStringList& attribs);
 
 #ifdef TME_PROTOCOL_BUFFERS
-    QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
-        ObserverDatagramPkg::SubjectAttribute *parentSubj);
+    QByteArray pop(lua_State *L, const QStringList& attribs,
+    			ObserverDatagramPkg::SubjectAttribute *csSubj,
+				ObserverDatagramPkg::SubjectAttribute *parentSubj);
 #else
     /**
      * Gets the attributes of Lua stack

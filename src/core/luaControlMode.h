@@ -32,7 +32,7 @@ of this library and its documentation.
 #include "luaUtils.h"
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaControlMode object.
 *
 */
@@ -44,11 +44,11 @@ class luaControlMode : public ControlMode
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
     static Luna<luaControlMode>::RegType methods[];
-    
+
 public:
     /// constructor
     luaControlMode(lua_State *)

@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 * Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*  
+*
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-* 
+*
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-* 
+*
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -36,7 +36,7 @@
 #include <string.h>
 #include <list>
 #include <iterator>
-#include <math.h> 
+#include <math.h>
 
 #include <QDataStream>
 #include <QStringList>
@@ -46,11 +46,11 @@
 
 #include "observerGlobals.h"
 
-namespace TerraMEObserver{
+namespace TerraMEObserver {
     class Attributes;
     class Subject;
 
-    inline static void doubleToText(const double & number, QByteArray & text, 
+    inline static void doubleToText(const double & number, QByteArray & text,
         const int & precision = TerraMEObserver::NUMBERIC_PRECISION)
     {
         text = "";
@@ -59,18 +59,18 @@ namespace TerraMEObserver{
         textStream << number;
     }
 
-    inline static void doubleToText(const int & number, QByteArray & text, 
+    inline static void doubleToText(const int & number, QByteArray & text,
         const int & precision = TerraMEObserver::NUMBERIC_PRECISION)
     {
         text = "";
         QTextStream textStream(&text);
         textStream.setRealNumberPrecision(precision);
         textStream << number;
-	}
+    }
 
-    /** 
+    /**
     * Calculate an angle of vector of an agent has been following
-    * \param numerator 
+    * \param numerator
     * \param denominator
     */
     inline static double calcAngleDirection(double numerator, double denominator)
@@ -88,7 +88,7 @@ namespace TerraMEObserver{
             else
                 if ((numerator != 0) && (denominator == 0)) // movimento na vertical
                     angle = (numerator > 0) ? 90 : 270;
-        
+
             return angle;
         }
 
@@ -103,7 +103,7 @@ namespace TerraMEObserver{
 
     /**
      * Saves in the file filename the state retrieved from a subject
-     * Implemented into observerImpl.cpp 
+     * Implemented into observerImpl.cpp
      */
     void dumpRetrievedState(const QString & msg, const QString &filename = "out_");
 
@@ -118,10 +118,10 @@ namespace TerraMEObserver{
 bool sortAttribByType(TerraMEObserver::Attributes *a, TerraMEObserver::Attributes *b);
 
 /// Auxiliary Function for sorting objects Subjects by the class name.
-bool sortByClassName(const QPair<TerraMEObserver::Subject *, QString> & pair1, 
+bool sortByClassName(const QPair<TerraMEObserver::Subject *, QString> & pair1,
     const QPair<TerraMEObserver::Subject *, QString> & pair2);
 
-// ---------------------- 
+// ----------------------
 
 //const char *getSubjectName(TypesOfSubjects type);
 //const char *getObserverName(TypesOfObservers type);
@@ -170,7 +170,7 @@ const char *getStdDevNames(int type);
 */
 void delay(double seconds);
 
-namespace TerraMEObserver{
+namespace TerraMEObserver {
 
 class Subject;
 
@@ -199,7 +199,7 @@ public:
     * Sets the simulation time
     * Used in the observer dynamic graphic
     * \param time simulation time
-    */ 
+    */
     virtual void setModelTime(double time) = 0;
 
     /**
@@ -244,13 +244,13 @@ public:
      * \see TypesOfSubjects
      */
     virtual const TypesOfSubjects getSubjectType() const = 0;
-    
+
     /* *
      * Sets the attributes for observation in the observer
      * \param attribs a list of attributes under observation
      */
     // virtual void setAttributes(QStringList &) = 0;
-    
+
     /**
     * Gets the list of attributes under observation
     * \return QStringList the list of attributes
@@ -269,7 +269,7 @@ public:
     virtual int close() = 0;
 
 protected:
-    /* * 
+    /* *
      * Used only for Remote Visualization
      * Sets in remote observer the same id of local observer
      */
@@ -329,7 +329,7 @@ public:
     */
     virtual QDataStream& getState(QDataStream &state, Subject *subj,
                                   int observerId, const QStringList &attribs) = 0;
-    
+
     /**
     * Gets the type of Subject
     * \see TypesOfSubjects
@@ -342,7 +342,7 @@ public:
     virtual int getId() const = 0;
 
 protected:
-    /** 
+    /**
      * Used only for Remote Visualization
      * Sets in remote subject the same id of local subject
      */

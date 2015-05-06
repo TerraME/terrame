@@ -30,11 +30,11 @@ Observer * CellSubjectInterf::createObserver(TypesOfObservers type)
         case TObsUDPSender:
             obs = new ObserverUDPSender(this);
             break;
-			
+
         case TObsTCPSender:
             obs = new ObserverTCPSender(this);
 			break;
-		
+
 		//case TObsNeigh:
 		//	obs = new AgentObserverMap(this);
 		//	break;
@@ -80,13 +80,13 @@ bool CellSubjectInterf::kill(int id)
         case TObsTCPSender:
             ((ObserverTCPSender *)obs)->close();
             delete (ObserverTCPSender *)obs;
-            break;           
-            
+            break;
+
         case TObsTextScreen:
             ((ObserverTextScreen *)obs)->close();
             delete (ObserverTextScreen *)obs;
             break;
-            
+
         default:
             delete obs;
             break;

@@ -35,8 +35,8 @@ PlotPropertiesGUI::PlotPropertiesGUI(ChartPlot *parent) : //, QWidget *parent) :
 
     labelsFontAct = axesContextMenu->addAction("Labels...");
     scalesFontAct = axesContextMenu->addAction("Scales...");
-    
-    // Connecting slots 
+
+    // Connecting slots
     // general tab
     ui->borderColorButton->setEnabled(false);
     ui->borderColorButton->setFlat(false);
@@ -44,7 +44,8 @@ PlotPropertiesGUI::PlotPropertiesGUI(ChartPlot *parent) : //, QWidget *parent) :
     connect(ui->bckgrndColorButton, SIGNAL(clicked()), this, SLOT(bckgrndColorClicked()));
     connect(ui->canvasColorButton, SIGNAL(clicked()), this, SLOT(canvasColorClicked()));
 
-    connect(ui->borderWidthSpinBox, SIGNAL(valueChanged(int)), this, SLOT(borderWidthValue(int)));
+    connect(ui->borderWidthSpinBox, SIGNAL(valueChanged(int)),
+    		this, SLOT(borderWidthValue(int)));
     connect(ui->marginSpinBox, SIGNAL(valueChanged(int)), this, SLOT(marginValue(int)));
 
     // fonts
@@ -54,16 +55,22 @@ PlotPropertiesGUI::PlotPropertiesGUI(ChartPlot *parent) : //, QWidget *parent) :
     connect(ui->legendsFontButton, SIGNAL(clicked()), this, SLOT(legendFontClicked()));
 
     // curve tab
-    connect(ui->curveStyleCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedStyle(int)));
-    connect(ui->curveSymbolCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedSymbol(int)));
-    connect(ui->lineStylecombo, SIGNAL(currentIndexChanged(int)), this, SLOT(selectedLine(int)));
+    connect(ui->curveStyleCombo, SIGNAL(currentIndexChanged(int)),
+    		this, SLOT(selectedStyle(int)));
+    connect(ui->curveSymbolCombo, SIGNAL(currentIndexChanged(int)),
+    		this, SLOT(selectedSymbol(int)));
+    connect(ui->lineStylecombo, SIGNAL(currentIndexChanged(int)),
+    		this, SLOT(selectedLine(int)));
 
-    connect(ui->curveWidthSpinBox, SIGNAL(valueChanged(int)), this, SLOT(curveWidthValue(int)));
-    connect(ui->symbolSizeSpinBox, SIGNAL(valueChanged(int)), this, SLOT(symbolSizeValue(int)));
+    connect(ui->curveWidthSpinBox, SIGNAL(valueChanged(int)),
+    		this, SLOT(curveWidthValue(int)));
+    connect(ui->symbolSizeSpinBox, SIGNAL(valueChanged(int)),
+    		this, SLOT(symbolSizeValue(int)));
 
     connect(ui->curveColorButton, SIGNAL(clicked()), this, SLOT(curveColorClicked()));
-    connect(ui->treeCurve, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this,
-        SLOT(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)));
+    connect(ui->treeCurve, SIGNAL(
+    		currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this,
+    		SLOT(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)));
 }
 
 PlotPropertiesGUI::~PlotPropertiesGUI()
@@ -119,9 +126,10 @@ void PlotPropertiesGUI::consistGUI(QList<InternalCurve *> *interCurves)
 void PlotPropertiesGUI::borderColorClicked()
 {
     // borderColorButton is disabled
-    
+
     QColor color;
-    color = QColorDialog::getColor(color, this, "TerraME Observer : Chart - Select color");
+    color = QColorDialog::getColor(color, this,
+    		"TerraME Observer : Chart - Select color");
 
     if (color.isValid())
     {
@@ -138,7 +146,7 @@ void PlotPropertiesGUI::borderColorClicked()
 void PlotPropertiesGUI::bckgrndColorClicked()
 {
     QColor color;
-    color = QColorDialog::getColor(plotter->palette().color(QPalette::Background), 
+    color = QColorDialog::getColor(plotter->palette().color(QPalette::Background),
         this, "Chart Properties - Select color");
 
     if(color.isValid())
@@ -155,7 +163,8 @@ void PlotPropertiesGUI::bckgrndColorClicked()
 void PlotPropertiesGUI::canvasColorClicked()
 {
     QColor color;
-    color = QColorDialog::getColor(plotter->canvas()->palette().color(QPalette::Background), 
+    color = QColorDialog::getColor(
+    		plotter->canvas()->palette().color(QPalette::Background),
         this, "Chart Properties - Select color");
 
     if(color.isValid())
@@ -174,7 +183,8 @@ void PlotPropertiesGUI::canvasColorClicked()
 void PlotPropertiesGUI::curveColorClicked()
 {
     QColor color;
-    color = QColorDialog::getColor(color, this, "TerraME Observer : Chart - Select color");
+    color = QColorDialog::getColor(color, this,
+    		"TerraME Observer : Chart - Select color");
 
     if(color.isValid())
     {
@@ -250,7 +260,8 @@ void PlotPropertiesGUI::symbolSizeValue(int value)
     // Changes only the symbol width
     const QwtSymbol * const oldSymbol = plotCurve->symbol();
 	QwtSymbol* symbol = new QwtSymbol;
-    symbol->setStyle((QwtSymbol::Style) (ui->curveSymbolCombo->currentIndex() - 1)); // starts in -1
+    symbol->setStyle(
+    		(QwtSymbol::Style) (ui->curveSymbolCombo->currentIndex() - 1)); // starts in -1
 
     if (symbol->brush().style() != Qt::NoBrush)
         symbol->setBrush(QBrush(plotCurve->pen().color()));
@@ -326,7 +337,8 @@ void PlotPropertiesGUI::consistCurveTab(const QString &name)
     QwtPlotCurve *plotCurve = internalCurves.value(name)->plotCurve;
 
     const QwtSymbol* const oldSymbol = plotCurve->symbol();
-	QwtSymbol *symbol = new QwtSymbol(oldSymbol->style(), oldSymbol->brush(), oldSymbol->pen(), oldSymbol->size());
+	QwtSymbol *symbol = new QwtSymbol(oldSymbol->style(),
+			oldSymbol->brush(), oldSymbol->pen(), oldSymbol->size());
     ui->symbolSizeSpinBox->setValue(symbol->size().width());
     ui->curveSymbolCombo->setCurrentIndex((int)symbol->style() + 1); // Starts in -1
     // Fixes bug built when used 'plotCurve->symbol()'

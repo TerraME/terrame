@@ -49,12 +49,12 @@ ClientTcpConnection::ClientTcpConnection(ReceiverGUI *ui, QObject *parent)
 
 ClientTcpConnection::~ClientTcpConnection()
 {
-    ui->appendMessage("Client disconnected by server.");    
+    ui->appendMessage("Client disconnected by server.");
     // waitForDisconnected(2000);
     // disconnectFromHost();
 
     // Se esta vazio, todos os estados foram recebidos
-    if (! observers.isEmpty()) 
+    if (! observers.isEmpty())
     {
 #ifdef TME_STATISTIC
         Statistic::getInstance().collectMemoryUsage();
@@ -123,7 +123,7 @@ void ClientTcpConnection::receive()
         //    << "in.device()->size()" << in.device()->size();
 
         formatSpeed(speed, strSpeed);
-        ui->setSpeed(strSpeed);   
+        ui->setSpeed(strSpeed);
 
 #ifdef TME_STATISTIC
         streamReceived = in.device()->size();
@@ -143,7 +143,7 @@ void ClientTcpConnection::receive()
         // Tempo de rede
         qint64 networkTime;
         in >> networkTime;
-        Statistic::getInstance().addElapsedTime("z_network time", 
+        Statistic::getInstance().addElapsedTime("z_network time",
             (double) (QDateTime::currentMSecsSinceEpoch() - networkTime));
 #endif
 
@@ -159,8 +159,8 @@ void ClientTcpConnection::receive()
         ui->appendMessage(str);
 #endif
 
-#ifdef TME_STATISTIC 
-        
+#ifdef TME_STATISTIC
+
         if (compressed)
         {
             t = Statistic::getInstance().startMicroTime();
@@ -179,7 +179,7 @@ void ClientTcpConnection::receive()
             t = Statistic::getInstance().endMicroTime() - t;
             Statistic::getInstance().addElapsedTime("z_uncomp without compress", t);
         }
-        
+
 #else
 
         if (compressed)
@@ -198,7 +198,8 @@ void ClientTcpConnection::receive()
 #ifdef TME_STATISTIC
         statMsgCount++;
         // statMsgCount = msgReceiver - statMsgCount;
-        Statistic::getInstance().addOccurrence("z_tcp - bytes received", (int) streamReceived);
+        Statistic::getInstance().addOccurrence(
+        		"z_tcp - bytes received", (int) streamReceived);
 #endif
 
         if (pos > -1)
@@ -231,7 +232,7 @@ void ClientTcpConnection::receive()
 
 #ifdef TME_STATISTIC
 
-                // statStateCount++; 
+                // statStateCount++;
                 statStateCount = statesReceiver - statStateCount;
                 Statistic::getInstance().addOccurrence("Received Messages", statMsgCount);
                 Statistic::getInstance().addOccurrence("Received States", statStateCount);
@@ -288,7 +289,7 @@ void ClientTcpConnection::process(const QByteArray &state)
 #ifdef TME_STATISTIC
     Statistic::getInstance().setIntermediateTime();
     double t = 0;
-    
+
     if (cSubjects.isEmpty())
     {
         createObserver();
@@ -304,7 +305,7 @@ void ClientTcpConnection::process(const QByteArray &state)
 #ifdef DEBUG_OBSERVER
     qDebug() << (decoded ? "decoded!!!" : "decoding failure");
 #endif
-    
+
     for(int i = 0; i < cSubjects.size(); i++)
     {
            t = Statistic::getInstance().startMicroTime();
@@ -320,7 +321,7 @@ void ClientTcpConnection::process(const QByteArray &state)
         createObserver();
 
     bool decoded = BlackBoard::getInstance().decode(state);
-    
+
     // cSubj->notify();
     for(int i = 0; i < cSubjects.size(); i++)
         cSubjects.at(i)->notify();
@@ -378,7 +379,7 @@ bool ClientTcpConnection::send(const QByteArray &data)
 
         // senderGUI->appendMessage(SenderGUI::tr("Message sent for %1").arg(address.toString()));
         // qDebug("Message sent for %s", qPrintable(address.toString()));
-        
+
         // // emit messageSent(tr("Message sent for %1").arg(address.toString()));
         // //emit statusMessage(msgCount, stateCount);
         // msgCount++;
@@ -409,7 +410,7 @@ void ClientTcpConnection::createObserver()
         AgentObserverMap *obsMap = new AgentObserverMap(cSubj);
         obsMap->setCellSpaceSize(ui->getDimX(), ui->getDimY());
 
-        obsMap->setAttributes(*ui->getAttributes(i), *ui->getLegendKeys(i), 
+        obsMap->setAttributes(*ui->getAttributes(i), *ui->getLegendKeys(i),
             ui->getLegendValue(i), TObsCell);
 
         cSubjects.append(cSubj);

@@ -130,7 +130,7 @@ bool ObserverStateMachine::draw(QDataStream &state)
 
     if (BlackBoard::getInstance().canDraw())
         decoded = draw();
-    
+
 #else
 
     QString msg;
@@ -210,7 +210,7 @@ bool ObserverStateMachine::draw(QDataStream &state)
 
 bool ObserverStateMachine::draw()
 {
-    SubjectAttributes *subjAttr = BlackBoard::getInstance().getSubject(getSubjectId());    
+    SubjectAttributes *subjAttr = BlackBoard::getInstance().getSubject(getSubjectId());
     QStringList stateKeys = states->keys();
 
     for(int i = 0; i < attribList.size(); i++)
@@ -255,7 +255,8 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
         {
-			string err_out = string("Error: Parameter legend") + LEGEND_KEYS.at(j).toLatin1().data() + string(" not found. ") +
+			string err_out = string("Error: Parameter legend")
+					+ LEGEND_KEYS.at(j).toLatin1().data() + string(" not found. ") +
 					string("Please check it in the model.");
 			lua_getglobal(L, "customErrorMsg");
 			lua_pushstring(L, err_out.c_str());
@@ -321,7 +322,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
                 	std::vector<ColorBar> colorBarVec;
     	            std::vector<ColorBar> stdColorBarVec;
         	        QStringList labelList, valueList;
-	
+
     	            ObserverMap::createColorsBar(legAttribs.at(colorBar),
         	            colorBarVec, stdColorBarVec, valueList, labelList);
 
@@ -610,7 +611,7 @@ void ObserverStateMachine::zoomWindow()
 
 #ifdef OBSEVER_DEBUG
     //qDebug() << "\nx: " << x << " y: " << y << " size: " << size;
-    qDebug() << "\nscene->sceneRect(): " << scene->sceneRect() 
+    qDebug() << "\nscene->sceneRect(): " << scene->sceneRect()
         << " == view->sceneRect(): " << view->sceneRect();
 
     qDebug() << "view->viewport(): " << view->viewport()->rect();
@@ -620,9 +621,10 @@ void ObserverStateMachine::zoomWindow()
     qDebug() << "offsetState: " << offsetState;
     qDebug() << "lstNode->boundingRect().height(): " << lstNode->boundingRect().height();
     qDebug() << "center: " << center;
-    qDebug() << "node: " << lstNode->pos().x() + lstNode->boundingRect().width() 
+    qDebug() << "node: " << lstNode->pos().x() + lstNode->boundingRect().width()
         << "; " << fstNode->pos().x() + fstNode->boundingRect().width();
-    qDebug() << "center 2: " << lstNode->pos().x() << " + " <<  lstNode->boundingRect().width() 
+    qDebug() << "center 2: " << lstNode->pos().x()
+    		<< " + " <<  lstNode->boundingRect().width()
          << " - " <<  fstNode->pos().x() << " + " <<  fstNode->boundingRect().height()
          << " = " << (lstNode->pos().x() + lstNode->boundingRect().width())
          - (fstNode->pos().x() + fstNode->boundingRect().height());
@@ -632,21 +634,21 @@ void ObserverStateMachine::zoomWindow()
     //qDebug() << "scrollH: " << view->horizontalScrollBar()->value();
 
     static bool criado = false;
-    if (!criado){
+    if (!criado) {
         criado = true;
         RectItemDebug *rectItem = 0;
-        
+
         // scene->setSceneRect(QRectF(zoomRect.topLeft() + QPoint(-1, -1), zoomRect.bottomRight() + QPoint(2, 1)));
         // scene->setSceneRect(scene->sceneRect());
 
         rectItem = new RectItemDebug(zoomRect);
         scene->addItem(rectItem);
-        
-        //rectItem = new RectItemDebug(QRectF(center + QPointF(-1, -1), 
+
+        //rectItem = new RectItemDebug(QRectF(center + QPointF(-1, -1),
         //    center + QPointF(1, 1)), Qt::darkCyan);
         //scene->addItem(rectItem);
 
-        //rectItem = new RectItemDebug(QRectF(scene->itemsBoundingRect().center() + QPointF(-1, -1), 
+        //rectItem = new RectItemDebug(QRectF(scene->itemsBoundingRect().center() + QPointF(-1, -1),
         //    scene->itemsBoundingRect().center() + QPointF(1, 1)), Qt::red);
         //scene->addItem(rectItem);
 
@@ -656,7 +658,7 @@ void ObserverStateMachine::zoomWindow()
         rectItem = new RectItemDebug(scene->sceneRect(), Qt::darkGray);
         scene->addItem(rectItem);
     }
-#endif 
+#endif
 }
 
 void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, double width,
@@ -665,7 +667,7 @@ void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, double width,
     double ratio = scene->sceneRect().width() / scene->sceneRect().height();
     ratio *= scene->sceneRect().width();
     double percent = 0.0;
-    
+
     if (width < height)
         percent = zoomRect.width() / ratio;
     else
@@ -738,12 +740,12 @@ void ObserverStateMachine::zoomOut()
 //    // connects/disconnects the treeWidget signal with the slot
 //    if (! connect)
 //    {
-//        disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)), 
+//        disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
 //            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 //    }
 //    else
 //    {
-//        QWidget::connect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)), 
+//        QWidget::connect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
 //            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
 //    }
 //}
@@ -757,9 +759,9 @@ void ObserverStateMachine::setupGUI()
     scene->setSceneRect(0, 0, 100, 200);
 
     view = new Canvas(scene, this);
-    view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); // 
+    view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); //
     // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); does not exist in version 4.3.4
-    // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); 
+    // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     view->setRenderHint(QPainter::Antialiasing);
     // view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     // view->setFrameShape(QFrame::WinPanel);
@@ -819,7 +821,7 @@ void ObserverStateMachine::setupGUI()
     //butZoomRestore->setCheckable(true);
     connect(butZoomRestore, SIGNAL(clicked()), this, SLOT(butZoomRestore_Clicked()));
 
-    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300 
+    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300
         << 200 << 100 << 66 << 50 << 33 << 25 << 16  << 12 << 8 << 5 << 3 << 2 << 1;
 
     QStringList zoomList;
@@ -836,7 +838,8 @@ void ObserverStateMachine::setupGUI()
     zoomComboBox->setCurrentIndex(23); // window  //zoomIdx); //11);
     //zoomComboBox->setCurrentIndex(zoomIdx); //11);
     zoomComboBox->setEditable(true);
-    connect(zoomComboBox, SIGNAL(activated(const QString &)), this, SLOT(zoomActivated(const QString &)));
+    connect(zoomComboBox, SIGNAL(activated(const QString &)),
+    		this, SLOT(zoomActivated(const QString &)));
 
     QHBoxLayout *hLayoutZoom1 = new QHBoxLayout();
     hLayoutZoom1->setMargin(5);
@@ -859,7 +862,8 @@ void ObserverStateMachine::setupGUI()
     QVBoxLayout *layoutTools = new QVBoxLayout(frameTools);
     layoutTools->setMargin(5);
 
-    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50,  QSizePolicy::Minimum, QSizePolicy::Fixed);
+    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50,
+    		QSizePolicy::Minimum, QSizePolicy::Fixed);
 
     layoutTools->addWidget(butLegend);
     layoutTools->addItem(verticalSpacer);
@@ -871,7 +875,8 @@ void ObserverStateMachine::setupGUI()
     layoutTools->addWidget(treeLayers);
 
     QSplitter *splitter = new QSplitter(this);
-    splitter->setStyleSheet("QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
+    splitter->setStyleSheet(
+    		"QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
     splitter->addWidget(frameTools);
     splitter->addWidget(view);
     splitter->setStretchFactor(0, 0);
@@ -889,13 +894,14 @@ void ObserverStateMachine::setupGUI()
 class RectItemDebug : public QGraphicsRectItem
 {
 public:
-    RectItemDebug(const QRectF r, Qt::GlobalColor c = Qt::red) 
+    RectItemDebug(const QRectF r, Qt::GlobalColor c = Qt::red)
         : rect(r), color(c), QGraphicsRectItem(0)
     {
         setFlag(QGraphicsItem::ItemIsMovable);
     }
 
-    void paint (QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0)
+    void paint (QPainter * painter,
+    		const QStyleOptionGraphicsItem * option, QWidget * widget = 0)
     {
         painter->setPen(QPen(color, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter->setBrush(Qt::NoBrush);
@@ -919,7 +925,7 @@ public:
 
     void dragMoveEvent (QGraphicsSceneDragDropEvent * ev)
     {
-        
+
         QGraphicsRectItem::dragMoveEvent(ev);
     }
 

@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 * Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*  
+*
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-* 
+*
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-* 
+*
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -129,14 +129,14 @@ public:
      * Gets the maximum value in numeric format
      */
     inline double getToNumber() const { return toNumber; }
-    
+
     /**
      * Sets the label for this object
      * \param l label value for this object
      * \see QString
      */
     void setLabel(const QString & l);
-    
+
     /**
      * Gets the label of this object
      */
@@ -157,7 +157,7 @@ public:
      * \param i unsigned integer that indexing a color
      */
     void setIdxColor(unsigned int i);
-    
+
     /**
      * Gets the index of color
      */
@@ -193,7 +193,8 @@ public:
      * \param width of cellular space
      * \param height of cellular space
      */
-    Attributes(const QString &name, double width, double height, TypesOfSubjects type = TObsCell);
+    Attributes(const QString &name, double width, double height,
+    		TypesOfSubjects type = TObsCell);
 
     /**
      * Destructor
@@ -447,7 +448,7 @@ public:
      * \see QStringList
      */
     void setLabelList(const QStringList & labels);
-    
+
     /**
      * Adds a label into the labels list
      * \param value a QString label
@@ -455,7 +456,7 @@ public:
      * \see QString
      */
     int addLabelListItem(const QString &value);
-    
+
     /**
      * Gets the labels list
      */
@@ -497,7 +498,7 @@ public:
      * Otherwise, hides it.
      */
     void setVisible(bool visible);
-    
+
     /**
      * Gets the visibility
      */
@@ -509,7 +510,7 @@ public:
      * Otherwise, is clean.
      */
     void setDirtyBit(bool dirty);
-    
+
     /**
      * Gets the state of attribute
      */
@@ -560,7 +561,7 @@ public:
      * \see QString
      */
     void setFontFamily(const QString &family);
-    
+
     /**
      * Sets a font
      * Only used for an Agent attribute.
@@ -568,7 +569,7 @@ public:
      * \see QFont
      */
     void setFont(const QFont &font);
-    
+
     /**
      * Gets the font object
      */
@@ -595,7 +596,7 @@ public:
      * \see QString
      */
     void setClassName(const QString &name);
-    
+
     /**
      * Gets the class name
      */
@@ -607,7 +608,7 @@ public:
      * \param y axis position
      */
     void appendLastPos(double x, double y);
-    
+
     /**
      * Gets the direction of the attribute using the
      * coordinate (x, y) of the map
@@ -617,13 +618,13 @@ public:
      * \return angle of direction
      */
     double getDirection(double x, double y);
-    
+
     const QList<QPair<QPointF, double> >& getLastPositions() const;
-    
+
     friend QDataStream & operator <<(QDataStream & out, const Attributes & attr);
     friend QDataStream & operator >>(QDataStream & in, Attributes & attr);
-    
-    
+
+
 	//@RAIAN: Adding and manipulating the neighborhood
 		/// Gets neighborhood values
 		/// \author Raian Vargas Maretto
@@ -633,7 +634,7 @@ public:
 		/// \author Raian Vargas Maretto
                 void setValues(QVector<QMap<QString, QList<double> > >* n);
 
-		/// Adds a neighborhood to the attribute 
+		/// Adds a neighborhood to the attribute
 		/// \author Raian Vargas Maretto
                 void addValue(QMap<QString, QList<double> > n);
 
@@ -647,14 +648,14 @@ public:
 	//@RAIAN: END
 
 protected:
-    
-    
+
+
 private:
     /**
      * Copy constructor
      */
     Attributes(const Attributes &);
-    
+
     /**
      * Assign operator
      */
@@ -670,7 +671,7 @@ private:
     QStringList labelList, valueList;
 	//@RAIAN: neighborhood
         QVector<QMap<QString, QList<double> > > *neighValues;
-	double width; 
+	double width;
 	//@RAIAN: END
 
     QString attribName;
@@ -706,7 +707,7 @@ private:
     GroupingMode groupModeBkp;
     StdDev stdDevBkp;
     std::vector<ColorBar> colorBarVecBkp;
-    std::vector<ColorBar> stdColorBarVecBkp; 
+    std::vector<ColorBar> stdColorBarVecBkp;
 };
 
 }

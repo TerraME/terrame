@@ -7,7 +7,7 @@ using namespace BagOfTasks;
 const int TerraMEObserver::SocketTask::MINIMUM_DATA_SIZE = 1024;
 const qreal TerraMEObserver::SocketTask::COMPRESS_RATIO = 6.0;
 
-SocketTask::SocketTask() 
+SocketTask::SocketTask()
     : Task()
 {
     executing = false;

@@ -2,7 +2,7 @@
 TerraView - visualization and exploration of geographical databases
 using TerraLib.
 Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
-This file is part of TerraView. TerraView is free software; you can redistribute it 
+This file is part of TerraView. TerraView is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
@@ -49,8 +49,10 @@ TeQtColorBar::TeQtColorBar(QWidget* parent) : QFrame(parent)
     //popupMenu_.insertItem(tr("Help..."), this, SLOT(helpSlot()));
 
     addColor = popupMenu_.addAction(tr("Add Color..."), this, SLOT(addColorSlot()));
-    removeColor = popupMenu_.addAction(tr("Change Color..."), this, SLOT(changeColorSlot()));
-    changeColor = popupMenu_.addAction(tr("Remove Color"), this, SLOT(removeColorSlot()));
+    removeColor = popupMenu_.addAction(tr("Change Color..."), this,
+    		SLOT(changeColorSlot()));
+    changeColor = popupMenu_.addAction(tr("Remove Color"), this,
+    		SLOT(removeColorSlot()));
 }
 
 TeQtColorBar::~TeQtColorBar()
@@ -223,7 +225,7 @@ void TeQtColorBar::setColorBarFromNames(string colors)
         cbVec.push_back(cb);
     }
 
-    if(inputColorVec_.size() == 1){
+    if(inputColorVec_.size() == 1) {
         ColorBar cb;
         TeColor c = inputColorVec_[0].cor_;
 
@@ -250,7 +252,7 @@ void TeQtColorBar::generateColorMap()
     generateColorBarMap(inputColorVec_, ftam_, colorMap_);
     totalDistance_ = 1.;
     if(inputColorVec_.empty() == false)
-        totalDistance_ = inputColorVec_[inputColorVec_.size()-1].distance_;
+        totalDistance_ = inputColorVec_[inputColorVec_.size() - 1].distance_;
 }
 
 void TeQtColorBar::drawColorBar()
@@ -597,18 +599,18 @@ void TeQtColorBar::paintEvent(QPaintEvent *)
 
     double pd = (double)tsize / 10.;
     int	t;
-    for(i = 0; i < 10; ++i){
+    for(i = 0; i < 10; ++i) {
         t = 5;
         if(i % 2)
             t = 3;
 
         int a = ROUND((double)i * pd);
-        if(vertical_){
+        if(vertical_) {
             //painterPath.moveTo(0, a);
             //painterPath.lineTo(t, a);
             painter.drawLine(0, a, t, a);
         }
-        else{
+        else {
             //painterPath.moveTo(a, h);
             //painterPath.lineTo(a, h-t);
             painter.drawLine(a, h, a, h - t);
@@ -665,7 +667,7 @@ void TeQtColorBar::mouseDoubleClickEvent(QMouseEvent* e)
     {
         if(vertical_)
         {
-            if(e->pos().x() >= frameRect().width()-7)
+            if(e->pos().x() >= frameRect().width() - 7)
                 changeColorSlot();
             else
                 removeColorSlot();
@@ -810,7 +812,7 @@ void TeQtColorBar::removeColorSlot()
 {
     int i;
 
-    if(ind_ == 0 || ind_ == (int)inputColorVec_.size()-1)
+    if(ind_ == 0 || ind_ == (int)inputColorVec_.size() - 1)
         return;
 
     vector<ColorBar> bcor = inputColorVec_;
@@ -856,7 +858,7 @@ int TeQtColorBar::getColorIndiceToChange()
 
     if(ind == 0)
     {
-        for(i = 1; i < (int)changeVec_.size()-1; ++i)
+        for(i = 1; i < (int)changeVec_.size() - 1; ++i)
         {
             j = changeVec_[i];
             if((a_ >= j - 2) && (a_ <= j + 2))
@@ -898,8 +900,8 @@ int TeQtColorBar::getColorIndiceToChange()
 
     if(ind < 0)
         ind = 0;
-    else if(ind > (int)inputColorVec_.size()-1)
-        ind = (int)inputColorVec_.size()-1;
+    else if(ind > (int)inputColorVec_.size() - 1)
+        ind = (int)inputColorVec_.size() - 1;
 
     return ind;
 }
@@ -939,7 +941,7 @@ void TeQtColorBar::fitMousePosition(QPoint point)
 void TeQtColorBar::changeDistance()
 {
     fitMousePosition(pa_);
-    int nc = changeVec_[changeVec_.size()-1];
+    int nc = changeVec_[changeVec_.size() - 1];
 
     if(colorEdit_ && a_ >= nc) // end of bar
     {
@@ -1301,8 +1303,8 @@ void TeQtColorBar::setEqualSpace()
     for(i = 0; i < (int)inputColorVec_.size(); ++i)
         inputColorVec_[i].distance_ = (double)i;
 
-    if((int)inputColorVec_.size()-1 >= 0)
-        totalDistance_ = inputColorVec_[inputColorVec_.size()-1].distance_;
+    if((int)inputColorVec_.size() - 1 >= 0)
+        totalDistance_ = inputColorVec_[inputColorVec_.size() - 1].distance_;
     generateColorMap();
     drawColorBar();
 

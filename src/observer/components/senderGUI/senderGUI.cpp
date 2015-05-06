@@ -13,7 +13,7 @@ extern "C"
 extern lua_State * L;
 extern ExecutionModes execModes;
 
-SenderGUI::SenderGUI(QWidget *parent) 
+SenderGUI::SenderGUI(QWidget *parent)
     : QDialog(parent), ui(new Ui::senderGUI)
 {
     ui->setupUi(this);
@@ -65,10 +65,11 @@ void SenderGUI::appendMessage(const QString &message)
 
 void SenderGUI::messageFailed(const QString &errorMsg)
 {
-    QString wng_msg = SenderGUI::tr("Failed on send message. Socket Error: %1").arg(errorMsg);
+    QString wng_msg = SenderGUI::tr(
+    		"Failed on send message. Socket Error: %1").arg(errorMsg);
     appendMessage(wng_msg);
-	
-	if (execModes != Quiet){
+
+	if (execModes != Quiet) {
 		lua_getglobal(L, "customErrorMsg");
 		lua_pushstring(L, wng_msg.toLatin1().data());
 		lua_call(L, 1, 0);
