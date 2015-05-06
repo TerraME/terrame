@@ -1334,19 +1334,19 @@ int luaCellularSpace::kill(lua_State *luaL)
 	if(hDBF != NULL)
 	{
 		int top = lua_gettop(L);
-		int cellId = lua_tonumber(L, top-3);
-		string cellAttrName = lua_tostring(L, top-2);
+		int cellId = lua_tonumber(L, top - 3);
+		string cellAttrName = lua_tostring(L, top - 2);
 		int index = DBFGetFieldIndex(hDBF, cellAttrName.c_str());
 		if(index !=-1) // attribute unknown
 		{
-			int cellAttrType = lua_tonumber(L, top-4);
-			if(cellAttrType==1){
-				double cellAttrValue = lua_tonumber(L, top-1);
+			int cellAttrType = lua_tonumber(L, top - 4);
+			if(cellAttrType == 1){
+				double cellAttrValue = lua_tonumber(L, top - 1);
 				DBFWriteDoubleAttribute(hDBF, cellId, index, cellAttrValue);
 			}
-			else if(cellAttrType==2){
-				string cellAttrValue = lua_tostring(L, top-1);
-				DBFWriteStringAttribute(hDBF, cellId-1, index, cellAttrValue.c_str());
+			else if(cellAttrType == 2){
+				string cellAttrValue = lua_tostring(L, top - 1);
+				DBFWriteStringAttribute(hDBF, cellId - 1, index, cellAttrValue.c_str());
 			}
 		}
 
@@ -1545,18 +1545,18 @@ int luaCellularSpace::saveShape(lua_State *L)
 	DBFHandle hDBF = DBFOpen(dbfFileN.c_str(), "rb+");
 	if(hDBF == NULL) return 0;
 	int top = lua_gettop(L);
-	int cellId = lua_tonumber(L, top-3);
-	string cellAttrName = lua_tostring(L, top-2);
+	int cellId = lua_tonumber(L, top - 3);
+	string cellAttrName = lua_tostring(L, top - 2);
 	int index = DBFGetFieldIndex(hDBF, cellAttrName.c_str());
-	if(index==-1) return 0; // attribute unknow
-	int cellAttrType = lua_tonumber(L, top-4);
-	if(cellAttrType==1){
-		double cellAttrValue = lua_tonumber(L, top-1);
+	if(index == -1) return 0; // attribute unknow
+	int cellAttrType = lua_tonumber(L, top - 4);
+	if(cellAttrType == 1){
+		double cellAttrValue = lua_tonumber(L, top - 1);
 		DBFWriteDoubleAttribute(hDBF, cellId, index, cellAttrValue);
 	}
-	else if(cellAttrType==2){
-		string cellAttrValue = lua_tostring(L, top-1);
-		DBFWriteStringAttribute(hDBF, cellId-1, index, cellAttrValue.c_str());
+	else if(cellAttrType == 2){
+		string cellAttrValue = lua_tostring(L, top - 1);
+		DBFWriteStringAttribute(hDBF, cellId - 1, index, cellAttrValue.c_str());
 	}
 
 	DBFClose(hDBF);
@@ -2022,7 +2022,7 @@ QStringList luaCellularSpace::retrieveStdDeviationColorBar(QStringList colorBarR
 				.arg(color.green())
 				.arg(color.blue())
 				.arg(auxList.at(3));
-			if(i+1 < colorBarItems.size()) 
+			if(i + 1 < colorBarItems.size())
 				colorStr.append(", ");
 			colorBar.append(colorStr);
 		}
@@ -2031,7 +2031,7 @@ QStringList luaCellularSpace::retrieveStdDeviationColorBar(QStringList colorBarR
 
 		if(stdColorBarItems.size() > 0) stdColorBar.append(" { ");
 
-		for(int i=0;i<stdColorBarItems.size();i++){
+		for(int i = 0;i<stdColorBarItems.size();i++){
 			QStringList auxList = colorBarItems.at(i).split(";");
 			color = QColor::fromHsv(auxList.at(0).toInt(),
 								auxList.at(1).toInt(),
@@ -2042,7 +2042,7 @@ QStringList luaCellularSpace::retrieveStdDeviationColorBar(QStringList colorBarR
 				.arg(color.green())
 				.arg(color.blue())									
 				.arg(auxList.at(3));
-			if(i+1 < stdColorBarItems.size()) colorStr.append(", ");
+			if(i + 1 < stdColorBarItems.size()) colorStr.append(", ");
 			stdColorBar.append(colorStr);
 		}
 
@@ -2318,7 +2318,7 @@ int luaCellularSpace::save(lua_State *L)
 	char aux[100], *ch;
 	if((time - floor(time)) > 0) sprintf(aux, "%f", time); else sprintf(aux, "%.0f", time);
 	ch = aux;
-	for(unsigned int i= 0; i < strlen(aux); i++) { if(ch[i] == '.' || ch[i] ==', ') ch[i] = '_'; }
+	for(unsigned int i= 0; i < strlen(aux); i++) { if(ch[i] == '.' || ch[i] == ', ') ch[i] = '_'; }
 
 	strcpy(outputTable, outputTableName);
 	strcat(outputTable, aux);
@@ -2865,7 +2865,7 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 	double tol = TeGetPrecision(inputLayer->projection());
 	TePrecision::instance().setPrecision(tol);
 	//TeProxMatrixConstructionStrategy<TeSTElementSet>*   constStrategy=0;
-	TeGeneralizedProxMatrix<TeSTElementSet>* proxMat=0;
+	TeGeneralizedProxMatrix<TeSTElementSet>* proxMat = 0;
 	TeGPMConstructionStrategy strategy;
 	double max_distance;
 	double num_neighbours;
@@ -2879,7 +2879,7 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 		return false;
 	}
 
-	// NOW that the teGeneralizedProxMatrix is loaded, the neighbours will be added to the TerraME CellularSpace
+	// NOW that the teGeneralizedProxMatrix is loaded, the neighbors will be added to the TerraME CellularSpace
 	// neighborhood structure
 	CellIndex cellIndex;
 	luaCell *cell, *viz;
@@ -3327,7 +3327,7 @@ int luaCellularSpace::loadNeighborhoodGPMFile(lua_State *L, const char* fileName
 int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName, const char* neighName, bool check){
 	char aux[255], layerId[50];
 	int cellQtde;
-	double defaultWeight=1;
+	double defaultWeight = 1;
 	CellularSpace::iterator itAux;
 
 	ifstream file;
@@ -3496,7 +3496,7 @@ int luaCellularSpace::loadNeighborhoodGALFile(lua_State *L, const char* fileName
 		}
 	}
 	// The file ends before it was expected
-	if((numCell-1) != cellQtde)
+	if((numCell - 1) != cellQtde)
 	{
 		file.close();
 		string err_out = string("Unexpected end of file! Probably it is corrupted.");
@@ -3690,7 +3690,7 @@ int luaCellularSpace::loadNeighborhoodGWTFile(lua_State *L, const char* fileName
 
 	}
 	// The file ends before it was expected
-	if((numCell-1) != cellQtde)
+	if((numCell - 1) != cellQtde)
 	{
 		file.close();
 		
@@ -3715,7 +3715,7 @@ int luaCellularSpace::loadTXTNeighborhood(lua_State *L, const char* fileName, co
 	char cellId[20], neighId[20];
 	int cellQtde, neighQtde, numCell, numNeigh;
 	int cellX, cellY, neighX, neighY;
-	int weight, defaultWeight=1;
+	int weight, defaultWeight = 1;
 	CellIndex cellIndx, neighIndx;
 	luaCell *cell, *neighbor;
 	CellularSpace::iterator itAux;
@@ -3745,7 +3745,7 @@ int luaCellularSpace::loadTXTNeighborhood(lua_State *L, const char* fileName, co
 	}
 	cellQtde = atoi(aux1);
 
-	for(numCell = 1; numCell<=cellQtde && !file.eof(); numCell++)
+	for(numCell = 1; numCell <= cellQtde && !file.eof(); numCell++)
 	{
 		file.getline(aux, 500);
 		aux2 = strtok(aux, " \t\n");
@@ -3838,7 +3838,7 @@ int luaCellularSpace::loadTXTNeighborhood(lua_State *L, const char* fileName, co
 	}
 
 	// The file ends before it was expected
-	if((numCell-1) != cellQtde)
+	if((numCell - 1) != cellQtde)
 	{
 		file.close();
 		string err_out = string("Unexpected end of file! Probably it is corrupted.");

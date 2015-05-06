@@ -33,18 +33,18 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
 
     //load weight strategy
     TeProxMatrixWeightsStrategy* ws = 0;
-    if((TeGPMWeightsStrategy)weightStrategy==TeNoWeightsStrategy)
+    if((TeGPMWeightsStrategy)weightStrategy == TeNoWeightsStrategy)
         ws = new TeProxMatrixNoWeightsStrategy((bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeInverseDistanceStrategy)
+    else if((TeGPMWeightsStrategy)weightStrategy == TeInverseDistanceStrategy)
         ws = new TeProxMatrixInverseDistanceStrategy (portal->getDouble(4), portal->getDouble(5),
                                                       portal->getDouble(6), portal->getDouble(7), (bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeSquaredInverseDistStrategy)
+    else if((TeGPMWeightsStrategy)weightStrategy == TeSquaredInverseDistStrategy)
         ws = new TeProxMatrixSquaredInverseDistanceStrategy (portal->getDouble(4), portal->getDouble(5),
                                                              portal->getDouble(6), portal->getDouble(7), (bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeConnectionStrenghtStrategy)
+    else if((TeGPMWeightsStrategy)weightStrategy == TeConnectionStrenghtStrategy)
         ws = new TeProxMatrixConnectionStrenghtStrategy(portal->getDouble(8), portal->getDouble(9),
                                                         portal->getDouble(7), (bool)portal->getInt(3));
 
@@ -107,11 +107,11 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
     //load  and set the construction strategy parameters
     //TeProxMatrixConstructionStrategy<set>* constStrategy;
     //int strategy = portal->getInt(9);
-    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy)  //adjacencia
+    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy)  //adjacency
     //{
     //	constStrategy = TeProxMatrixLocalAdjacencyStrategy();
     //}
-    //else if((TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distancia
+    //else if((TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distance
     //{
     //	constStrategy = TeProxMatrixLocalDistanceStrategy();
     //}
@@ -160,18 +160,18 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
 
     //load weight strategy
     TeProxMatrixWeightsStrategy* ws = 0;
-    if((TeGPMWeightsStrategy)weightStrategy==TeNoWeightsStrategy)
+    if((TeGPMWeightsStrategy)weightStrategy == TeNoWeightsStrategy)
         ws = new TeProxMatrixNoWeightsStrategy((bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeInverseDistanceStrategy)
+    else if((TeGPMWeightsStrategy)weightStrategy == TeInverseDistanceStrategy)
         ws = new TeProxMatrixInverseDistanceStrategy (portal->getDouble(4), portal->getDouble(5),
                                                       portal->getDouble(6), portal->getDouble(7), (bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeSquaredInverseDistStrategy)
+    else if((TeGPMWeightsStrategy)weightStrategy == TeSquaredInverseDistStrategy)
         ws = new TeProxMatrixSquaredInverseDistanceStrategy (portal->getDouble(4), portal->getDouble(5),
                                                              portal->getDouble(6), portal->getDouble(7), (bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeConnectionStrenghtStrategy)
+    else if((TeGPMWeightsStrategy)weightStrategy == TeConnectionStrenghtStrategy)
         ws = new TeProxMatrixConnectionStrenghtStrategy(portal->getDouble(8), portal->getDouble(9),
                                                         portal->getDouble(7), (bool)portal->getInt(3));
 

@@ -451,21 +451,21 @@ int luaNeighborhood::createObserver(lua_State *)
     qDebug() << "typeObserver" << getObserverName(typeObserver);
     luaStackToQString(12);
 
-    if (lua_type(luaL, top -3)== LUA_TTABLE) qDebug() << -3 << "table"; else qDebug() << -3 << "not table";
-    if (lua_type(luaL, top -2)== LUA_TTABLE) qDebug() << -2 << "table"; else qDebug() << -2 << "not table";
-    if (lua_type(luaL, top -1)== LUA_TTABLE) qDebug() << -1 << "table"; else qDebug() << -1 << "not table";
+    if (lua_type(luaL, top -3) == LUA_TTABLE) qDebug() << -3 << "table"; else qDebug() << -3 << "not table";
+    if (lua_type(luaL, top -2) == LUA_TTABLE) qDebug() << -2 << "table"; else qDebug() << -2 << "not table";
+    if (lua_type(luaL, top -1) == LUA_TTABLE) qDebug() << -1 << "table"; else qDebug() << -1 << "not table";
 
     qDebug() << "\n";
 
-    if (lua_type(luaL, top -3)== LUA_TNUMBER) qDebug() << -3 << "number"; else qDebug() << -3 << "not number";
-    if (lua_type(luaL, top -2)== LUA_TNUMBER) qDebug() << -2 << "number"; else qDebug() << -2 << "not number";
-    if (lua_type(luaL, top -1)== LUA_TNUMBER) qDebug() << -1 << "number"; else qDebug() << -1 << "not number";
+    if (lua_type(luaL, top -3) == LUA_TNUMBER) qDebug() << -3 << "number"; else qDebug() << -3 << "not number";
+    if (lua_type(luaL, top -2) == LUA_TNUMBER) qDebug() << -2 << "number"; else qDebug() << -2 << "not number";
+    if (lua_type(luaL, top -1) == LUA_TNUMBER) qDebug() << -1 << "number"; else qDebug() << -1 << "not number";
 
     qDebug() << "\n";
 
-    if (lua_type(luaL, top -3)== LUA_TSTRING) qDebug() << -3 << "string"; else qDebug() << -3 << "not string";
-    if (lua_type(luaL, top -2)== LUA_TSTRING) qDebug() << -2 << "string"; else qDebug() << -2 << "not string";
-    if (lua_type(luaL, top -1)== LUA_TSTRING) qDebug() << -1 << "string"; else qDebug() << -1 << "not string";
+    if (lua_type(luaL, top -3) == LUA_TSTRING) qDebug() << -3 << "string"; else qDebug() << -3 << "not string";
+    if (lua_type(luaL, top -2) == LUA_TSTRING) qDebug() << -2 << "string"; else qDebug() << -2 << "not string";
+    if (lua_type(luaL, top -1) == LUA_TSTRING) qDebug() << -1 << "string"; else qDebug() << -1 << "not string";
 #endif
 
 

@@ -170,7 +170,7 @@ std::vector<ColorBar>  getColorBarVector(std::string& groupingColors, const bool
         }
         if(cbVec.size() == 1)
         {
-            cor.init(cor.red_/5, cor.green_/5, cor.blue_/5);
+            cor.init(cor.red_ / 5, cor.green_ / 5, cor.blue_ / 5);
             ColorBar cb;
             cb.color(cor);
             dist += 1.;
@@ -195,7 +195,7 @@ std::vector<ColorBar>  getColorBarVector(std::string& groupingColors, const bool
             if(t != string::npos)
             {
                 memset(buf, '\0', 1000);
-                s.copy(buf, s.size()-t-1, t+1);
+                s.copy(buf, s.size() - t - 1, t + 1);
                 s = buf;
             }
             else // error
@@ -362,12 +362,12 @@ void generateColorBarMap(std::vector<ColorBar>& inputColorVec, int ncores, std::
     double dd = (double)ncores / totalDistance;
 
     colorMap.clear();
-    for(i=0; i<(int)inputColorVec.size()-1; ++i)
+    for(i = 0; i < (int)inputColorVec.size()-1; ++i)
     {
-        nc = ROUND(dd * (fabs(inputColorVec[i+1].distance_) - fabs(inputColorVec[i].distance_)));
+        nc = ROUND(dd * (fabs(inputColorVec[i + 1].distance_) - fabs(inputColorVec[i].distance_)));
         TeColor corFrom, corTo;
         ::hsv2Rgb(corFrom, inputColorVec[i].h_, inputColorVec[i].s_, inputColorVec[i].v_);
-        ::hsv2Rgb(corTo, inputColorVec[i+1].h_, inputColorVec[i+1].s_, inputColorVec[i+1].v_);
+        ::hsv2Rgb(corTo, inputColorVec[i + 1].h_, inputColorVec[i + 1].s_, inputColorVec[i + 1].v_);
         //		TeColor corFrom = inputColorVec[i].cor_;
         //		TeColor corTo = inputColorVec[i+1].cor_;
         colorMap[i] = ::getColors(corFrom, corTo, nc);
@@ -455,7 +455,7 @@ bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor> &co
         double dg = (double)(cto.green_ - cfrom.green_) / (double)n;
         double db = (double)(cto.blue_ - cfrom.blue_) / (double)n;
 
-        for(jj=0; jj<n; jj++)
+        for(jj = 0; jj<n; jj++)
         {
             cor.red_ = cfrom.red_ + (int)(dr * (double)jj);
             cor.green_ = cfrom.green_ + (int)(dg * (double)jj);
@@ -474,7 +474,7 @@ bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor> &co
             double dg = (double)(cto.green_ - cfrom.green_) / (double)n;
             double db = (double)(cto.blue_ - cfrom.blue_) / (double)n;
 
-            for(jj=0; jj<n; jj++)
+            for(jj = 0; jj<n; jj++)
             {
                 cor.red_ = cfrom.red_ + (int)(dr * (double)jj);
                 cor.green_ = cfrom.green_ + (int)(dg * (double)jj);
@@ -487,8 +487,8 @@ bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor> &co
     }
     double step = 0.;
     if (nc > 1)
-        step = (double)(allColors.size()) / (double)(nc-1);
-    for (int i=0; i<nc; i++)
+        step = (double)(allColors.size()) / (double)(nc - 1);
+    for (int i = 0; i<nc; i++)
     {
         int ind = (int)(step * (double)i + .5);
         if (ind > (int)(allColors.size() - 1))
@@ -511,7 +511,7 @@ std::vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc)
     double dg = (double)(cto.green_ - cfrom.green_) / (double)n;
     double db = (double)(cto.blue_ - cfrom.blue_) / (double)n;
 
-    for(j=0; j<n; j++)
+    for(j = 0; j<n; j++)
     {
         cor.red_ = cfrom.red_ + (int)(dr * (double)j);
         cor.green_ = cfrom.green_ + (int)(dg * (double)j);
@@ -520,8 +520,8 @@ std::vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc)
     }
     double step = 0.;
     if (nc > 1)
-        step = (double)(allColors.size()) / (double)(nc-1);
-    for (i=0; i<nc; ++i)
+        step = (double)(allColors.size()) / (double)(nc - 1);
+    for (i = 0; i<nc; ++i)
     {
         int ind = (int)(step * (double)i + .5);
         if (ind > (int)(allColors.size() - 1))
@@ -557,7 +557,7 @@ std::vector<TeColor> getColors(std::vector<ColorBar>& iVec, int ncores)
     }
 
     int s = (int)cVec.size();
-    double d, dd = (double)s /(double)(ncores-1);
+    double d, dd = (double)s /(double)(ncores - 1);
     int	i = 0, j;
 
     while(i < ncores)
@@ -818,7 +818,7 @@ void HSVtoRGB(double& r, double& g, double& b, const double& h, const double& s,
 //
 //				ramp += Te2String(int(h)) + ";";
 //				ramp += Te2String(int(s*255.)) + ";";
-//				ramp += Te2String(int(v))+ ";";
+//				ramp += Te2String(int(v)) + ";";
 //				ramp += Te2String(n);
 //				++ncolors;
 //				TeTrim(name);

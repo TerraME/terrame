@@ -72,7 +72,7 @@ void VisualArrangement::buildLuaCode()
 
 	f << "return {" << endl;
 
-	for(std::map<int, PositionVisualArrangement>::iterator it=myarrangement->position.begin(); it!=myarrangement->position.end(); ++it)
+	for(std::map<int, PositionVisualArrangement>::iterator it = myarrangement->position.begin(); it != myarrangement->position.end(); ++it)
 	{
 		f << "\t[" << it->first << "] = {" << endl;
 		f << "\t\tx = " << it->second.x << ", \n";

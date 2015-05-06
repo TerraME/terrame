@@ -383,14 +383,14 @@ void ObserverMapSuperclass::butLegend_Clicked()
 
 void ObserverMapSuperclass::butZoomIn_Clicked()
 {
-    positionZoomVec = max(positionZoomVec-1, 0);
+    positionZoomVec = max(positionZoomVec - 1, 0);
     zoomComboBox->setCurrentIndex(positionZoomVec);
     zoomActivated(zoomComboBox->currentText());
 }
 
 void ObserverMapSuperclass::butZoomOut_Clicked()
 {
-    positionZoomVec = min(positionZoomVec+1, 22);
+    positionZoomVec = min(positionZoomVec + 1, 22);
     zoomComboBox->setCurrentIndex(positionZoomVec);
     zoomActivated(zoomComboBox->currentText());
 }

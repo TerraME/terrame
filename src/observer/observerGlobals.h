@@ -112,7 +112,7 @@ const double PI_DIV = 1 / PI;
 //static const double INV_SIZE_AUTOMATON = 1 / SIZE_AUTOMATON;
 static const double KILOBYTE_VALUE = 1024;
 static const double KILOBYTE_DIV = 1 / KILOBYTE_VALUE;
-static const double MEGABYTE_VALUE = 1024*1024;
+static const double MEGABYTE_VALUE = 1024 * 1024;
 static const double MEGABYTE_DIV = 1 / MEGABYTE_VALUE;
 
 //// QSize

@@ -129,7 +129,7 @@ bool CalculateResult::execute()
 
 #ifdef TME_STATISTIC 
     Statistic::getInstance().addElapsedTime("rendering calculateResult", 
-        (renderCount > 0 ? renderSum/renderCount : -1));
+        (renderCount > 0 ? renderSum / renderCount : -1));
 
     t = Statistic::getInstance().endMicroTime() - t;
     Statistic::getInstance().addElapsedTime("zz_calculateResult::execute", t); 

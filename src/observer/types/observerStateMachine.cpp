@@ -151,7 +151,7 @@ bool ObserverStateMachine::draw(QDataStream &state)
 
     decoded = true;
 
-    for (int i=0; i < qtdParametros; i++)
+    for (int i = 0; i < qtdParametros; i++)
     {
         key = tokens.at(j);
         j++;

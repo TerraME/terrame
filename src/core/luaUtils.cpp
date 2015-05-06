@@ -129,7 +129,7 @@ void stackDump (lua_State *L) {
 int isudatatype (lua_State *L, int idx, const char *name)
 { // returns true if a userdata is of a certain type
     int res;
-    if (lua_type(L, idx)!=LUA_TUSERDATA) return 0;
+    if (lua_type(L, idx) != LUA_TUSERDATA) return 0;
     lua_getmetatable(L, idx);
     luaL_newmetatable (L, name);
     res = lua_compare(L, -2, -1, LUA_OPEQ);
@@ -350,7 +350,7 @@ std::string TeGetExtension (const char* value)
 	if((ip == (int)std::string::npos) || (ip == -1))
 		return "";
 	else
-		return name.substr(ip+1, len-1);
+		return name.substr(ip + 1, len - 1);
 }
 
 // Copied from TeUtils class
@@ -361,11 +361,11 @@ std::string TeGetName (const char* value)
 	string name = string(value);
 	int len = strlen (value);
 
-	int sp = name.rfind('\\')+1;
-	int ip = (name.substr(sp, len-1)).rfind('.');
-	int bp = (name.substr(sp, len-1)).rfind('/');
+	int sp = name.rfind('\\') + 1;
+	int ip = (name.substr(sp, len - 1)).rfind('.');
+	int bp = (name.substr(sp, len - 1)).rfind('/');
 	if ((ip>0)&& (ip > bp))
-		return name.substr(0, sp+ip);
+		return name.substr(0, sp + ip);
 	else 
 		return name;
 }

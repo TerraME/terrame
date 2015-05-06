@@ -33,7 +33,7 @@ of this library and its documentation.
 #include <QDataStream>
 
 #define ROUND(__val) \
-    ((__val)>=(0.0) ? ((int)((__val)+0.5)) : ((int)((__val)-0.5))) ;
+    ((__val) >= (0.0) ? ((int)((__val) + 0.5)) : ((int)((__val) - 0.5))) ;
 
 #if ! defined (TME_OBSERVER_CLIENT_MODE) && ! defined (TME_NO_TERRALIB)
 
@@ -64,13 +64,13 @@ struct TeColor
     TeColor (int r, int g, int b, const std::string& name="") : red_(r), green_(g), blue_(b), name_(name) {}
 
     //! Set parameters of colors
-    void init (int r, int g, int b, const std::string& name="") {red_=r, green_=g, blue_=b;name_=name; }
+    void init (int r, int g, int b, const std::string& name="") {red_ = r, green_ = g, blue_ = b;name_ = name; }
 
 
     //! Returns TRUE if color1 is equal to color2 or FALSE if they are different.
     bool operator== (const TeColor& color)
     {
-        return (red_==color.red_ && green_==color.green_ && blue_==color.blue_);
+        return (red_ == color.red_ && green_ == color.green_ && blue_ == color.blue_);
     }
 
     //! Assignment operator

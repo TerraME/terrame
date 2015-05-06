@@ -31,7 +31,7 @@ void SmartSplitterHandle::mouseDoubleClickEvent(QMouseEvent * /*e*/)
             lastUncollapsedSize = w->sizeHint().height();
     }
 
-    int currSize = splitter->sizes().value(pos-1);
+    int currSize = splitter->sizes().value(pos - 1);
 
     if (currSize == 0)
     {

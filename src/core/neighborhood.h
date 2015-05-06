@@ -69,7 +69,7 @@ public:
 
     //@RAIAN: I created a constructor to set the parent to NULL
     /// Default constructor
-    CellNeighborhoodImpl(Cell* parent=0) : parent(parent) {} 
+    CellNeighborhoodImpl(Cell* parent = 0) : parent(parent) {}
     //@RAIAN: END
 
     /// Adds a new neighbor cell to the cells neighborhood map

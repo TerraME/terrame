@@ -977,7 +977,7 @@ QString Attributes::toString() const
     str += "minValue: "		+ QString::number(minValue)		+ "\n\t";
     str += "val2Color: "	+ QString::number(val2Color)	+ "\n\t";
     str += "vectors size: \n\t\t";
-    str += "numeric: "		+ QString::number(numericValues->size())+ "\n\t\t";
+    str += "numeric: "		+ QString::number(numericValues->size()) + "\n\t\t";
     str += "text: "			+ QString::number(textValues->size())	+ "\n\t\t";
     str += "bool: "			+ QString::number(boolValues->size())	+ "\n\t\t";
 	////@RAIAN: neighborhood vector size

@@ -82,7 +82,7 @@ public:
         //strStream << modelCounter;
         //#endif
 
-        setID(string("model")+ strNum); modelCounter++;
+        setID(string("model") + strNum); modelCounter++;
     }
     void setID(ModelID id) { modelID = id; }
     ModelID getID(void) { return modelID; }

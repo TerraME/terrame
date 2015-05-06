@@ -44,7 +44,7 @@ TaskManager::TaskManager()
     int threadCount = QThread::idealThreadCount();
 
     // Do not count the main process
-    int workersCount = (threadCount > 1 ? threadCount-1 : 1);
+    int workersCount = (threadCount > 1 ? threadCount - 1 : 1);
     if((WORKERS_NUMBER > 0) && (WORKERS_NUMBER < workersCount))
     {
         if(WORKERS_NUMBER > 1)

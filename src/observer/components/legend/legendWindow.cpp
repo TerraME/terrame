@@ -579,7 +579,7 @@ void LegendWindow::createColorVector()
             teColorVec->push_back(leftColorVec.at(ui));
 
         // if (ui > 0)
-            teColorVec->push_back(leftColorVec.at(ui-1));
+            teColorVec->push_back(leftColorVec.at(ui - 1));
 
         for (ui = 0; ui < rightColorVec.size(); ++ui)
             teColorVec->push_back(rightColorVec.at(ui));
@@ -940,9 +940,9 @@ void LegendWindow::groupByQuantil(double fix, Attributes *attrib)
         else
         {
             if (it != values.end())
-                to = QString("%1").arg(*(it-1), 0, 'f', precision);
+                to = QString("%1").arg(*(it - 1), 0, 'f', precision);
             else
-                to = QString("%1").arg(*(it-1) + fix , 0, 'f', precision);
+                to = QString("%1").arg(*(it - 1) + fix , 0, 'f', precision);
         }
 
         QString label = QString("%1 ~ %2").arg(from).arg(to);

@@ -51,7 +51,7 @@ bool ObserverShapefile::draw(QDataStream &state)
         for(int i = 0; i < nshapes; i++){
             for(; j < tokens.size(); j++){
                 if(tokens.at(j) == "objectId_"){
-                    j+=2;
+                    j += 2;
                     ids->insert(i, tokens.at(j).toInt());
                     break;
                 }
@@ -156,15 +156,15 @@ void ObserverShapefile::loadShape(const string &filename)
     double w = fabs(maxBound[0] - minBound[0]);
     double h = fabs(maxBound[1] - minBound[1]);
     
-    double sx = scene->sceneRect().width()/w;
-    double sy = scene->sceneRect().height()/h;
+    double sx = scene->sceneRect().width() / w;
+    double sy = scene->sceneRect().height() / h;
 
     double s = max(sx, sy);
 
     double dx = minBound[0]*-1;
     double dy = minBound[1]*-1;
 
-    scene->setSceneRect(scene->sceneRect().x(), scene->sceneRect().y(), w*s, h*s);
+    scene->setSceneRect(scene->sceneRect().x(), scene->sceneRect().y(), w * s, h * s);
 
     nshapes = n;
 
@@ -221,7 +221,7 @@ QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, i
     while(j < obj->nVertices && i < obj->nParts){
         i++;
         while(j < obj->panPartStart[i] || (obj->nParts  == 1 && j < obj->nVertices)){
-            points[i-1].push_back(QPointF((obj->padfX[j]+dx), (obj->padfY[j]+dy)));
+            points[i - 1].push_back(QPointF((obj->padfX[j]+dx), (obj->padfY[j]+dy)));
             j++;
         }
     }
@@ -264,13 +264,13 @@ QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, 
     
     vector<list<QPointF> > points(obj->nParts);
 
-    int iPart, j=0, nextStart=0; 
+    int iPart, j = 0, nextStart = 0;
 	for (iPart = 0; iPart < obj->nParts; iPart++)
 	{
-		if (iPart == obj->nParts-1)
+		if (iPart == obj->nParts - 1)
 			nextStart = obj->nVertices;
 		else 
-			nextStart = obj->panPartStart[iPart+1];
+			nextStart = obj->panPartStart[iPart + 1];
 
 		list<QPointF> line;
 		while (j<nextStart)
@@ -305,7 +305,7 @@ void ObserverShapefile::scaleView(qreal newScale)
     QMatrix oldMatrix = view->matrix();
     view->resetMatrix();
     view->translate(oldMatrix.dx(), oldMatrix.dy());
-    view->scale(newScale, newScale*-1);
+    view->scale(newScale, newScale * -1);
 }
 
 void ObserverShapefile::treeLayers_itemChanged(QTreeWidgetItem * item, int /*column*/)
