@@ -619,6 +619,37 @@ CellularSpace_ = {
 			end
 		end
 	end,
+	--- Cut the CellularSpace according to maximum and minimum coordinates.
+	-- It returns a Trajectory with the selected Cells.
+	-- @arg data.xmin A number with the minimum value of x.
+	-- @arg data.xmax A number with the maximum value of x.
+	-- @arg data.ymin A number with the minimum value of y.
+	-- @arg data.ymax A number with the maximum value of y.
+	-- @usage cs:cut{xmin = 3, ymax = 8}
+	cut = function(self, data)
+		if data == nil then
+			data = {}
+		else
+			verifyNamedTable(data)
+		end
+
+		defaultTableValue(data, "xmin", self.minCol)
+		defaultTableValue(data, "xmax", self.maxCol)
+		defaultTableValue(data, "ymin", self.minRow)
+		defaultTableValue(data, "ymax", self.maxRow)
+
+		verifyUnnecessaryArguments(data, {"xmin", "xmax", "ymin", "ymax"})
+
+		local result = Trajectory{target = self, build = false}
+
+		forEachCell(self, function(cell)
+			if cell.x >= data.xmin and cell.x <= data.xmax and
+			   cell.y >= data.ymin and cell.y <= data.ymax then
+				result:add(cell)
+			end
+		end)
+		return result
+	end,
 	--- Return a Cell from the CellularSpace, given its unique identifier or its location. If the Cell
 	-- does not belong to the CellularSpace then it will return nil.
 	-- @arg xIndex A number indicating an x coordinate. It can also be a string with the object id.

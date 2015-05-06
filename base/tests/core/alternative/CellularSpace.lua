@@ -579,6 +579,49 @@ return{
 			cs:createNeighborhood{name = "abc"}
 		end
 		unitTest:assertError(error_func, "Neighborhood 'abc' already exists.")
+
+		error_func = function()
+			cs:createNeighborhood{namen = "abc"}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("namen", "name"))
+	end,
+	cut = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs:cut(2)
+		end
+		unitTest:assertError(error_func, namedArgumentsMsg())
+
+		local error_func = function()
+			cs:cut{xmin = false}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("xmin", "number", false))
+
+		error_func = function()
+			cs:cut{xmin = 0}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("xmin", 0))
+
+		error_func = function()
+			cs:cut{xmax = false}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("xmax", "number", false))
+
+		error_func = function()
+			cs:cut{ymin = false}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("ymin", "number", false))
+
+		error_func = function()
+			cs:cut{ymax = false}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("ymax", "number", false))
+
+		error_func = function()
+			cs:cut{xmox = 5}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("xmox", "xmax"))
 	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

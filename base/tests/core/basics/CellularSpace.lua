@@ -887,6 +887,21 @@ ydim    number [20]
 		unitTest:assertEquals(32, sizes[3])
 		unitTest:assertEquals(64, sizes[4])
 	end,
+	cut = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local region = cs:cut()
+		unitTest:assertEquals(#region, #cs)
+
+		region = cs:cut{xmin = 3, xmax = 7}
+		unitTest:assertEquals(#region, 50)
+
+		region = cs:cut{xmin = 5}
+		unitTest:assertEquals(#region, 50)
+
+		region = cs:cut{xmin = 1, xmax = 5, ymin = 3, ymax = 7}
+		unitTest:assertEquals(#region, 25)
+	end,
 	get = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
