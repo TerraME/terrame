@@ -137,7 +137,7 @@ private:
         Time,            /*!< a column of the time in treeWidget component  */
         Periodicity,     /*!< a column of the periodicity in treeWidget component  */
         Priority         /*!< a column of the priority in treeWidget component  */
-    }
+    };
 
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
