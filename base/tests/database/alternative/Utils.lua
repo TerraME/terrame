@@ -38,9 +38,19 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 
 		error_func = function()
+			CSVparseLine("\"ab\"c", ",", "abc")
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "abc"))
+
+		error_func = function()
 			CSVparseLine("\"ab\"c", ",")
 		end
-		unitTest:assertError(error_func, "Invalid line: '\"ab\"c'.")
+		unitTest:assertError(error_func, "Line 0 ('\"ab\"c') is invalid.")
+	
+		error_func = function()
+			CSVparseLine("\"ab\"c", ",", 1)
+		end
+		unitTest:assertError(error_func, "Line 1 ('\"ab\"c') is invalid.")
 	end,
 	CSVread = function(unitTest)
 		local error_func = function()
@@ -64,7 +74,7 @@ return{
 		error_func = function()
 			CSVread(file("error"..s.."csv-error.csv"))
 		end
-		unitTest:assertError(error_func, "Line '\"mary\",18,100,3,1' should contain 6 attributes but has 5.")
+		unitTest:assertError(error_func, "Line 2 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
 	end,
 	CSVwrite = function(unitTest)
 		local error_func = function()

@@ -179,10 +179,14 @@ end
 -- This function was taken froom http://lua-users.org/wiki/LuaCsv.
 -- @arg line A string from a CSV file.
 -- @arg sep A string with the separator. The default value is ','.
+-- @arg cline A number with the position of the line in the file. The default value is zero.
 -- @usage CSVparseLine(line, ",")
-function CSVparseLine(line, sep)
+function CSVparseLine(line, sep, cline)
 	mandatoryArgument(1, "string", line)
 	optionalArgument(2, "string", sep)
+	optionalArgument(3, "number", cline)
+
+	if cline == nil then cline = 0 end
 
 	local res = {}
 	local pos = 1
@@ -205,7 +209,7 @@ function CSVparseLine(line, sep)
 				-- value1,"blub""blip""boing",value3 will result in blub"blip"boing for the middle
 			until (c ~= '"')
 			table.insert(res, txt)
-			verify(c == sep or c == "", "Invalid line: '"..line.."'.")
+			verify(c == sep or c == "", "Line "..cline.." ('"..line.."') is invalid.")
 			pos = pos + 1
 		else
 			-- no quotes used, just look for the first separator
@@ -220,9 +224,11 @@ function CSVparseLine(line, sep)
 			end 
 		end
 	end
+
 	for i = 1, #res do
 		res[i] = res[i]:match("^%s*(.-)%s*$")
 	end
+
 	return res
 end
 
@@ -253,6 +259,7 @@ function CSVread(filename, sep)
 
 	local fields = CSVparseLine(file:read(), sep)
 	local line = file:read()
+	local cline = 1
 	while line do
 		local element = {}
 		local tuple = CSVparseLine(line, sep)
@@ -262,9 +269,10 @@ function CSVread(filename, sep)
 			end
 			table.insert(data, element)
 		else
-			customError("Line '"..line.."' should contain "..#fields.." attributes but has "..#tuple..".")
+			customError("Line "..cline.." ('"..line.."') should contain "..#fields.." attributes but has "..#tuple..".")
 		end
 		line = file:read()
+		cline = cline + 1
 	end
 	file:close()
 	return data
