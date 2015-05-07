@@ -41,28 +41,28 @@ static int numImplementationCreated = 0;
 static int numImplementationDeleted = 0;
 #endif
 
-/** 
+/**
  * \brief
  *
  * The classes Interface and Implementation implements "bridge" design pattern (also known as
  * "handle/body idiom").
  */
-template <class T> 
+template <class T>
 class Interface
 {
 
-public:	
+public:
 
     /// constructor
-    Interface<T>(){
+    Interface<T>() {
         pImpl_ = new T; pImpl_->attach();
 #ifdef DEBUGING
         numInterfaceCreated++;
-#endif	
+#endif
     }
 
     /// Destructor
-    virtual ~Interface<T>(){
+    virtual ~Interface<T>() {
         pImpl_->detach();
 #ifdef DEBUGING
         numInterfaceDeleted++;
@@ -74,7 +74,7 @@ public:
         pImpl_->attach();
 #ifdef DEBUGING
         numInterfaceCreated++;
-#endif	
+#endif
 
     }
 
@@ -103,11 +103,11 @@ protected:
  */
 
 class Implementation
-{	
+{
 public:
     /// Constructor: zero references when the object is being built
-    Implementation(): refCount_ (0){
-#ifdef DEBUGING		
+    Implementation(): refCount_ (0) {
+#ifdef DEBUGING
         numImplementationCreated++;
 #endif
     }
@@ -117,7 +117,7 @@ public:
 
     /// Decreases the number of references to this object.
     /// Destroy it if there are no more references to it
-    void detach (){
+    void detach () {
         if (--refCount_ == 0)	{
             delete this;
 #ifdef DEBUGING
@@ -127,10 +127,10 @@ public:
     }
 
     /// Returns the number of references to this object
-    int refCount(){ return refCount_; }
+    int refCount() { return refCount_; }
 
     /// Destructor
-    virtual ~Implementation(){}
+    virtual ~Implementation() {}
 
 private:
 
@@ -138,7 +138,7 @@ private:
     Implementation(const Implementation&);
 
     /// Implementation
-    Implementation& operator=(const Implementation&){return *this;}
+    Implementation& operator=(const Implementation&) {return *this;}
 
     int refCount_; 	/// the number of references to this class
 

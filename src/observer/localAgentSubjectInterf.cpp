@@ -54,7 +54,7 @@ bool LocalAgentSubjectInterf::kill(int id)
     if (! obs)
         return false;
 
-    //if ((obs->getObserverType() != TObsMap) && (obs->getObserverType() != TObsImage)) 
+    //if ((obs->getObserverType() != TObsMap) && (obs->getObserverType() != TObsImage))
     //    detachObserver(obs);
 
     switch (obs->getType())

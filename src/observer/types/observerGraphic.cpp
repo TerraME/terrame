@@ -37,7 +37,7 @@ extern ExecutionModes execModes;
 
 using namespace TerraMEObserver;
 
-ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent) 
+ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     : ObserverInterf(sub) // , QThread()
 {
     observerType = TObsGraphic;
@@ -48,14 +48,14 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     // legend->setItemMode(QwtLegend::ClickableItem);
     internalCurves = new QHash<QString, InternalCurve*>();
 
-    //hashAttributes = (QHash<QString, Attributes *> *) 
+    //hashAttributes = (QHash<QString, Attributes *> *)
     //            &BlackBoard::getInstance().getAttributeHash(getSubjectId());
 
     hashAttributes = new QHash<QString, Attributes*>();
 
     // This pointer will pointing to a attribute object
     xAxisValues = 0;
-    
+
     plotter = new ChartPlot(parent);
 	plotter->id = getId();
     plotter->setAutoReplot(true);
@@ -183,14 +183,15 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                 if(contains)
                 {
                     if(internalCurves->contains(key))
-                        internalCurves->value(key)->values->append(tokens.at(j).toDouble());
+                        internalCurves->value(key)->values->append(
+                        		tokens.at(j).toDouble());
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
-                        internalCurves->value(key)->plotCurve->setData(*abs, *ord); 
+                        internalCurves->value(key)->plotCurve->setData(*abs, *ord);
 
                         //qDebug() << "key: " << key;
                         //qDebug() << *ord;
@@ -216,7 +217,8 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                         states.push_back(tokens.at(j));
 
                     if (internalCurves->contains(key))
-                        internalCurves->value(key)->values->append(states.indexOf(tokens.at(j)));
+                        internalCurves->value(key)->values->append(
+                        		states.indexOf(tokens.at(j)));
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
@@ -224,14 +226,14 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
-                        internalCurves->value(key)->plotCurve->setData(*abs, *ord); 
+                        internalCurves->value(key)->plotCurve->setData(*abs, *ord);
                     }
                     else
                     {
                         // Graph: X vs Y
                         if (idx != attribList.size() - 1)
                             ord = internalCurves->value(key)->values;
-                        // else                     
+                        // else
                         //     abs = xAxisValues; // internalCurves->value(key)->values;
                     }
                 }
@@ -239,7 +241,8 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                 {
                     if (execModes != Quiet)
 					{
-						string str = string("Warnig: Was expected a numeric parameter not a string ") + string(tokens.at(j)) + string(".");
+						string str = string("Warnig: Was expected a numeric parameter not a string ")
+								+ string(tokens.at(j)) + string(".");
 						lua_getglobal(L, "customWarning");
 						lua_pushstring(L, str.c_str());
 						lua_call(L, 1, 0);
@@ -257,18 +260,20 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
         for (int i = 0; i < internalCurves->keys().size(); i++)
         {
             curve = internalCurves->value(internalCurves->keys().at(i));
-            curve->plotCurve->setData(*abs, *internalCurves->value(internalCurves->keys().at(i))->values); 
+            curve->plotCurve->setData(*abs, *internalCurves->value(
+            		internalCurves->keys().at(i))->values);
         }
     }
     plotter->repaint();
-	
+
 #endif // TME_BLACKBOARD
 
     qApp->processEvents();
     return true;
 }
 
-void ObserverGraphic::setTitles(const QString &title, const QString &xTitle, const QString &yTitle)
+void ObserverGraphic::setTitles(const QString &title,
+		const QString &xTitle, const QString &yTitle)
 {
     plotter->setTitle(title);
 
@@ -293,7 +298,8 @@ void ObserverGraphic::setLegendPosition(QwtPlot::LegendPosition pos)
 //    plotGrid->attach(this);
 //}
 
-void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringList &curveTitles,
+void ObserverGraphic::setAttributes(const QStringList &attribs,
+		const QStringList &curveTitles,
         /*const*/ QStringList &legKeys, /*const*/ QStringList &legAttribs)
 {
 #ifdef DEBUG_OBSERVER
@@ -317,7 +323,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
     int attrSize = attribList.size();
 
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr) 
+    if (subjAttr)
         subjAttr->setSubjectType(getSubjectType());
 
     Attributes *attrib = 0;
@@ -327,14 +333,14 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
         attrib = new Attributes(attribList.at(i), 0, 0);
         hashAttributes->insert(attribList.at(i), attrib);
 
-        attrib->setParentSubjectID(getSubjectId());            
+        attrib->setParentSubjectID(getSubjectId());
     }
 
-    // Ignores the attribute of the x axis 
+    // Ignores the attribute of the x axis
     if(observerType == TObsGraphic)
         xAxisValues = attrib->getNumericValues(); // last attribute is used in X axis
-    
-    // Ignores the attribute of the x axis 
+
+    // Ignores the attribute of the x axis
     if(observerType == TObsGraphic)
         attrSize--;
 
@@ -348,8 +354,9 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 
             // resign the values vector a curve
             delete interCurve->values;
-            interCurve->values = hashAttributes->value(attribList.at(i))->getNumericValues();
-            
+            interCurve->values = hashAttributes->value(
+            		attribList.at(i))->getNumericValues();
+
             if(i < curveTitles.size())
                 interCurve->plotCurve->setTitle(curveTitles.at(i));
             else
@@ -357,7 +364,8 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 
 			interCurve->plotCurve->setLegendAttribute(QwtPlotCurve::LegendShowLine);
 
-            int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0, size, penstyle = 0;
+            int width = 0, style = 0, symbol = 0,
+            		colorBar = 0, num = 0, size, penstyle = 0;
 
             width = legKeys.indexOf(WIDTH);
             style = legKeys.indexOf(STYLE);
@@ -372,13 +380,14 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
                 QStringList colorStrList;
                 QPen pen;
 
-                aux = legAttribs.at(colorBar).mid(0, legAttribs.at(colorBar).indexOf(COLOR_BAR_SEP));
-                
-                // Retrieves the first colorBar value 
-                colorStrList = aux.split(COLORS_SEP, QString::SkipEmptyParts)
-                    .first().split(ITEM_SEP).first().split(COMP_COLOR_SEP);          
+                aux = legAttribs.at(colorBar).mid(0,
+                		legAttribs.at(colorBar).indexOf(COLOR_BAR_SEP));
 
-                // Retrieves the last colorBar value 
+                // Retrieves the first colorBar value
+                colorStrList = aux.split(COLORS_SEP, QString::SkipEmptyParts)
+                    .first().split(ITEM_SEP).first().split(COMP_COLOR_SEP);
+
+                // Retrieves the last colorBar value
                 // colorStrList = aux.split(COLORS_SEP, QString::SkipEmptyParts)
                 //      .last().split(ITEM_SEP).first().split(COMP_COLOR_SEP);
 
@@ -455,7 +464,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 //
 //    if (observerType == TObsGraphic)
 //        xAxisValues = attrib->getNumericValues(); // last attribute is used in X axis
-//    
+//
 //    for (int i = 0; i < internalCurves->keys().size(); i++)
 //    {
 //        interCurve = internalCurves->value(internalCurves->keys().at(i));
@@ -463,10 +472,10 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 //        attrib = (Attributes *) &BlackBoard::getInstance()
 //            .addAttribute(getSubjectId(), attribList.at(i));
 //
-//        // Frees memory of curve values 
+//        // Frees memory of curve values
 //        delete interCurve->values;
 //        interCurve->values = attrib->getNumericValues();
-//        
+//
 //        interCurve->plotCurve->setData(*xAxisValues, *interCurve->values);
 //    }
 //#endif
@@ -483,8 +492,8 @@ void ObserverGraphic::colorChanged(QwtPlotItem * /* item */)
     //    if ((color.isValid()) && (color != ((QwtLegendItem *)w)->curvePen().color()))
     //    {
     //        ((QwtLegendItem *)w)->setCurvePen(QPen(color));
-    //        
-    //        // in this context, pointer item is QwtPlotItem son 
+    //
+    //        // in this context, pointer item is QwtPlotItem son
     //        ((QwtPlotCurve *)item)->setPen(QPen(color));
     //    }
     //}
@@ -512,9 +521,10 @@ QStringList ObserverGraphic::getAttributes()
 
 void ObserverGraphic::setModelTime(double time)
 {
-	if(xAxisValues->size() > 0 && time == (*xAxisValues)[0] && (*xAxisValues)[xAxisValues->size() - 1] == (xAxisValues->size() - 1))
+	if(xAxisValues->size() > 0 && time == (*xAxisValues)[0]
+		&& (*xAxisValues)[xAxisValues->size() - 1] == (xAxisValues->size() - 1))
 		time = xAxisValues->size();
-	
+
     if (observerType == TObsDynamicGraphic)
         xAxisValues->push_back(time);
 }
@@ -537,12 +547,12 @@ void ObserverGraphic::draw()
     InternalCurve *curve = 0;
     SubjectAttributes *subjAttr = 0;
     int id = getSubjectId();
-    double v = 0; 
+    double v = 0;
 
     foreach(Attributes *attrib, hashAttributes->values())
     {
         subjAttr = BlackBoard::getInstance().getSubject(id);
-        
+
         if (subjAttr && subjAttr->getNumericValue(attrib->getName(), v))
         {
             attrib->addValue(id, v);
@@ -550,16 +560,18 @@ void ObserverGraphic::draw()
             if (internalCurves->contains(attrib->getName()))
             {
                 curve = internalCurves->value(attrib->getName());
-                curve->plotCurve->setSamples(*xAxisValues, *curve->values); 
+                curve->plotCurve->setSamples(*xAxisValues, *curve->values);
             }
         }
     }
     plotter->repaint();
-    
+
 #ifdef DEBUG_OBSERVER
         qDebug() << "internalCurves->keys().at(i): " << internalCurves->keys().at(i);
-        qDebug() << "\nxAxisValues->size() - " << xAxisValues->size() << ": " << *xAxisValues;
-        qDebug() << "curve->values->size() - " << curve->values->size() << ": " << *curve->values;
+        qDebug() << "\nxAxisValues->size() - "
+        		<< xAxisValues->size() << ": " << *xAxisValues;
+        qDebug() << "curve->values->size() - "
+        		<< curve->values->size() << ": " << *curve->values;
 #endif
 }
 

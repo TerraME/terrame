@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 * Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*  
+*
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-* 
+*
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-* 
+*
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -62,24 +62,24 @@ using namespace TerraMEObserver;
  #ifdef TME_PROTOCOL_BUFFERS
 
  // Example
- // QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs, 
+ // QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 	// ObserverDatagramPkg::SubjectAttribute *currSubj,
 	// ObserverDatagramPkg::SubjectAttribute *parentSubj)
 // {
 	// bool valueChanged = false;
-	
+
 	// // get the reference in lua stack
 	// lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
 	// int cellSpacePos = lua_gettop(luaL);
-	
+
 	// // TO-DO: insert the object previously as an internal subject.
 	// // This prevents an error when the popLua method returns but sets the csSubj object to null
 	// if ((parentSubj) && (! currSubj))
 		// currSubj = parentSubj->add_internalsubject();
 
 	// popLua(TObsCellularSpace, luaL, cellSpacePos, attribs, observedAttribs, valueChanged,
-		// currSubj, parentSubj);  
-	
+		// currSubj, parentSubj);
+
 	// if (valueChanged)
 	// {
 		// // TO-DO: best solution but not working.
@@ -103,7 +103,7 @@ using namespace TerraMEObserver;
 	// }
 	// else
 	// {
-// #ifdef DEBUG_OBSERVER			
+// #ifdef DEBUG_OBSERVER
 			// qDebug() << "luaCellularSpace removeLast()";
 // #endif
 
@@ -112,9 +112,9 @@ using namespace TerraMEObserver;
 	// }
 
    // if (! parentSubj)
-	// { 
+	// {
 		// QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
-		
+
 // #ifdef DEBUG_OBSERVER
 		// qDebug() << "\nluaCellularSpace:pop - size:" << currSubj->internalsubject_size();
 		// std::cout << currSubj->DebugString();
@@ -128,16 +128,19 @@ using namespace TerraMEObserver;
 
 	// return QByteArray();
 // }
- 
-inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &stackPosition, 
-	const QStringList &attribs, QHash<QString, QString>& observedAttribs, bool &valueChanged,
-	ObserverDatagramPkg::SubjectAttribute *currSubj, ObserverDatagramPkg::SubjectAttribute *parentSubj)
+
+inline void popLua(const TypesOfSubjects &subjectType,
+		lua_State *luaL, int &stackPosition,
+		const QStringList &attribs, QHash<QString,
+		QString>& observedAttribs, bool &valueChanged,
+		ObserverDatagramPkg::SubjectAttribute *currSubj,
+		ObserverDatagramPkg::SubjectAttribute *parentSubj)
 {
 	QByteArray key, valueTmp;
 	char result[20];
-	
+
 	double num = 0.0;
-		
+
 	ObserverDatagramPkg::RawAttribute *raw = 0;
 
 	lua_pushnil(luaL);
@@ -182,10 +185,10 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 					if(observedAttribs.value(key) != valueTmp)
 					{
 // #ifdef DEBUG_OBSERVER
-						// qDebug() << getId() << qPrintable(key) << ": " 
+						// qDebug() << getId() << qPrintable(key) << ": "
 							// << qPrintable(observedAttribs.value(key)) << " == " << qPrintable(valueTmp);
 // #endif
-					
+
 						if((parentSubj) && (! currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
@@ -210,7 +213,7 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 
 						raw = currSubj->add_rawattributes();
 						// raw->set_key(key.constData());
-						raw->set_key((valueTmp.isEmpty() || valueTmp.isNull() ? 
+						raw->set_key((valueTmp.isEmpty() || valueTmp.isNull() ?
 							VALUE_NOT_INFORMED : valueTmp));
 
 						raw->set_text(valueTmp);
@@ -220,14 +223,14 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 					}
 					break;
 				}
-			
+
 				case LUA_TTABLE:
 				{
 					sprintf(result, "%p", lua_topointer(luaL, -1));
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
-					{					
+					{
 						if((parentSubj) && (! currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
@@ -238,7 +241,7 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 						valueChanged = true;
 						observedAttribs.insert(key, valueTmp);
 					}
-					
+
 					if ((subjectType == TObsCellularSpace)
 						// || (subjectType == TObsTrajectory)
 						// || (subjectType == TObsSociety)
@@ -265,7 +268,7 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 
 							if(currSubj->internalsubject_size() > internalCount)
 								valueChanged = true;
-							
+
 							lua_pop(luaL, 1);
 						}
 					}
@@ -278,7 +281,7 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
-					{					
+					{
 						if((parentSubj) && (! currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
@@ -298,7 +301,7 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
-					{					
+					{
 						if((parentSubj) && (! currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
@@ -318,7 +321,7 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
-					{					
+					{
 						if((parentSubj) && (! currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
@@ -339,8 +342,9 @@ inline void popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &sta
 
 #else
 
-inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *luaL, int &stackPosition, const QStringList &attribs,
-			QHash<QString, QString>& observedAttribs, bool &valueChanged, int &attrCounter, 
+inline static QByteArray popLua(const TypesOfSubjects &subjectType,
+		lua_State *luaL, int &stackPosition, const QStringList &attribs,
+			QHash<QString, QString>& observedAttribs, bool &valueChanged, int &attrCounter,
 			QByteArray &elements = "", int &elementCounter = 0)
 {
 	QByteArray msg, attrs, key, valueTmp; //, text;
@@ -361,7 +365,7 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 			if(lua_type(luaL, -2) == LUA_TNUMBER)
 				key = QByteArray::number(luaL_checknumber(luaL, -2));
 		}
-		
+
 		if (attribs.contains(key) || (key == "cells"))
 		{
 			switch(lua_type(luaL, -1))
@@ -390,8 +394,8 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 				case LUA_TNUMBER:
 				{
 					num = luaL_checknumber(luaL, -1);
-					doubleToText(num, valueTmp, 20);		 
-					
+					doubleToText(num, valueTmp, 20);
+
 					if(observedAttribs.value(key) != valueTmp)
 					{
 						attrCounter++;
@@ -424,7 +428,8 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 
 						attrs.append("3"); // QString::number(TObsText)
 						attrs.append(PROTOCOL_SEPARATOR);
-						attrs.append((valueTmp.isEmpty() || valueTmp.isNull() ? VALUE_NOT_INFORMED : valueTmp));
+						attrs.append((valueTmp.isEmpty()
+								|| valueTmp.isNull() ? VALUE_NOT_INFORMED : valueTmp));
 						// attrs.append(valueTmp);
 						attrs.append(PROTOCOL_SEPARATOR);
 					}
@@ -437,7 +442,7 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 					valueTmp = result;
 
 					if (observedAttribs.value(key) != valueTmp)
-					{					
+					{
 						attrCounter++;
 						attrs.append(key);
 						attrs.append(PROTOCOL_SEPARATOR);
@@ -451,9 +456,9 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 						attrs.append(result);
 						attrs.append(PROTOCOL_SEPARATOR);
 					}
-					
+
 					if((subjectType == TObsCellularSpace)
-						|| (subjectType == TObsTrajectory) 
+						|| (subjectType == TObsTrajectory)
 						|| (subjectType == TObsSociety))
 					{
 						int top = lua_gettop(luaL);
@@ -480,7 +485,7 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 							lua_pop(luaL, 1);
 						}
 					}
-					
+
 					break;
 				}
 
@@ -490,7 +495,7 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
-					{					
+					{
 						attrCounter++;
 						attrs.append(key);
 						attrs.append(PROTOCOL_SEPARATOR);
@@ -515,7 +520,7 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
-					{					
+					{
 						attrCounter++;
 						attrs.append(key);
 						attrs.append(PROTOCOL_SEPARATOR);
@@ -539,7 +544,7 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
-					{					
+					{
 						attrCounter++;
 						attrs.append(key);
 						attrs.append(PROTOCOL_SEPARATOR);
@@ -559,7 +564,7 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType, lua_State *l
 		}
 		lua_pop(luaL, 1);
 	}
-  
+
 	return msg;
 }
 

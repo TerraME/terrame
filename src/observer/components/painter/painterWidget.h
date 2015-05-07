@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 * Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*  
+*
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-* 
+*
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-* 
+*
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -41,7 +41,7 @@ namespace TerraMEObserver {
 /**
  * \brief Shows the cellular space state
  * \see QWidget
- * \author Antonio Jose da Cunha Rodrigues 
+ * \author Antonio Jose da Cunha Rodrigues
  * \file painterWidget.h
  */
 class PainterWidget : public QWidget
@@ -57,7 +57,7 @@ public:
      */
     PainterWidget(QHash<QString, Attributes*> *mapAttributes,
         TypesOfObservers observerType = TerraMEObserver::TObsMap, QWidget *parent = 0);
-    
+
     /**
      * Destructor
      */
@@ -70,7 +70,7 @@ public:
      */
     void setOperatorMode(QPainter::CompositionMode mode);
 
-    /* * 
+    /* *
      * Plots a attribute
      * \param attrib a pointer to a attribute
      * \see Attributes
@@ -92,9 +92,9 @@ public:
      * \param size new size of the object
      * \see QSize
      */
-    bool rescale(const QSize & size); 
+    bool rescale(const QSize & size);
 
-    /** 
+    /**
      * Rescale the image according the CellularSpace dimension
      * \param size new sise of the image/space
      * \param cellSize calculate size of cells
@@ -102,10 +102,10 @@ public:
      */
     void resize(const QSize &spaceSize, const QSize &cellSize);
 
-    // / Gets the original size of 
+    // / Gets the original size of
     // QSize getOriginalSize();
 
-    /** 
+    /**
      * Sets a pointer to a QScrollArea object
      * \param scrollArea a pointer to a QScrollArea
      */
@@ -121,13 +121,13 @@ public:
      */
     void setHandTool();
 
-    /** 
+    /**
      * Defines the mouse cursor
      * \param cursor a reference to a QCursor
      * \see QCursor
      */
     void defineCursor(QCursor &cursor);
-    
+
     /**
      * Sets the existence of an agent
      * \param exist true exist an agent. Otherwise, false.
@@ -199,13 +199,13 @@ protected:
      * \see QMouseEvent
      */
     void mouseReleaseEvent(QMouseEvent *);
-        
+
     /**
      * Catchs the resize event inside the user interface object
      * \see QResizeEvent
      */
     void resizeEvent(QResizeEvent *);
-    
+
     //void wheelEvent(QWheelEvent *);
 
 private:
@@ -222,7 +222,7 @@ private:
     double pixmapScale, curScale, scaleFactor;
     double heightProportion, widthProportion;
     QSize cellSize;
-    
+
     QPainter::CompositionMode operatorMode;
 
     QImage resultImage;

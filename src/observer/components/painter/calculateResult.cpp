@@ -12,8 +12,10 @@ using namespace BagOfTasks;
 	#include "statistic.h"
 #endif
 
-CalculateResult::CalculateResult(const QSize &size, const QList<Attributes *> &attribList, QObject *parent) 
-    : imageSize(size), attribList(attribList), QObject(parent), BagOfTasks::Task(Task::High)
+CalculateResult::CalculateResult(const QSize &size,
+		const QList<Attributes *> &attribList, QObject *parent)
+    : imageSize(size), attribList(attribList),
+	  QObject(parent), BagOfTasks::Task(Task::High)
 {
     setType(Task::Arbitrary);
 }
@@ -26,7 +28,7 @@ void CalculateResult::setAttributeList(const QList<Attributes *> &attribs)
 {
     attribList = attribs;
 }
-    
+
 void CalculateResult::setWidgetSize(const QSize &size)
 {
     imageSize = size;
@@ -42,21 +44,21 @@ bool CalculateResult::execute()
     QString name = QString("zz__wait_task calculateResult %1").arg(getId());
     t = Statistic::getInstance().startMicroTime();
     waitTime = Statistic::getInstance().endMicroTime() - waitTime;
-    Statistic::getInstance().addElapsedTime(name, waitTime); 
+    Statistic::getInstance().addElapsedTime(name, waitTime);
 #endif
-    
+
     result = QImage(imageSize, QImage::Format_ARGB32_Premultiplied);
     /// result.fill(Qt::white);
 	result.fill(0);
     // result.fill(Qt::darkBlue);
-    
+
     QPainter painter(&result);
     //// painter.fillRect(result.rect(), Qt::transparent); // Qt::white);
     //// painter.fillRect(result.rect(), QColor(255, 255, 255, 127));  // Qt::white);
     //painter.setPen(Qt::black);
     //painter.drawRect(result.rect());
 
-    
+
     Attributes * attrib = 0;
     for (int i = 0; i < attribList.size(); i++)
     {
@@ -69,7 +71,7 @@ bool CalculateResult::execute()
         qDebug() << "CalculateResult::execute()" << attrib->getName();  std::cout.flush();
 #endif
 
-        if ((attrib && attrib->getVisible()) && 
+        if ((attrib && attrib->getVisible()) &&
             ((attrib->getType() != TObsAgent) || ((attrib->getType() != TObsSociety))))
         {
             switch(attrib->getType())
@@ -84,14 +86,14 @@ bool CalculateResult::execute()
                 painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
                 break;
 
-            //case TObsTrajectory: 
+            //case TObsTrajectory:
             default:
                 painter.setCompositionMode(QPainter::CompositionMode_HardLight);
                 // // painter.setCompositionMode(QPainter::CompositionMode_Difference);
                 break;
             }
 
-#ifdef TME_STATISTIC 
+#ifdef TME_STATISTIC
             tt = Statistic::getInstance().startMicroTime();
 
             painter.drawImage(POINT, *attrib->getImage());
@@ -106,7 +108,7 @@ bool CalculateResult::execute()
 #ifdef DEBUG_OBSERVER
             static int o = 0;
             o++;
-            if (attrib->getType() == TObsAutomaton) // TObsTrajectory)               
+            if (attrib->getType() == TObsAutomaton) // TObsTrajectory)
                 attrib->getImage()->save(QString("obj_%1.png").arg(o), "png");
             //else
             //    attrib->getImage()->save(QString("cs_%1.png").arg(o), "png");
@@ -126,13 +128,13 @@ bool CalculateResult::execute()
     result.save(QString("result_%1.png").arg(g), "png");
 #endif
 
-#ifdef TME_STATISTIC 
-    Statistic::getInstance().addElapsedTime("rendering calculateResult", 
+#ifdef TME_STATISTIC
+    Statistic::getInstance().addElapsedTime("rendering calculateResult",
         (renderCount > 0 ? renderSum / renderCount : -1));
 
     t = Statistic::getInstance().endMicroTime() - t;
-    Statistic::getInstance().addElapsedTime("zz_calculateResult::execute", t); 
-#endif 
+    Statistic::getInstance().addElapsedTime("zz_calculateResult::execute", t);
+#endif
 
     return true;
 }

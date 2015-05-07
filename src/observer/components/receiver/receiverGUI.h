@@ -17,7 +17,7 @@ class receiverGUI;
 using namespace TerraMEObserver;
 
 /**
- * \brief User interface for Udp Receiver  
+ * \brief User interface for Udp Receiver
  * \see QDialog
  * \author Antonio Jose da Cunha Rodrigues
  * \file observerUDPSenderGUI.h
@@ -25,7 +25,7 @@ using namespace TerraMEObserver;
 class ReceiverGUI : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     /**
      * Constructor
@@ -38,7 +38,7 @@ public:
      * Destructor
      */
     virtual ~ReceiverGUI();
-    
+
     /**
      * Sets the receiver state and the port number
      * \param state the receiver state
@@ -96,7 +96,7 @@ public:
 signals:
     void blindListenPort(quint16);
     void createObserver();
-    
+
 private slots:
     /**
      * Treats the click in the blindListen button

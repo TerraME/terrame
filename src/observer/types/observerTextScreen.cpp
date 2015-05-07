@@ -55,7 +55,7 @@ bool ObserverTextScreen::draw(QDataStream & /*state*/)
 void ObserverTextScreen::setAttributes(QStringList &attribs)
 {
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr) 
+    if (subjAttr)
         subjAttr->setSubjectType(getSubjectType());
 
     attribList = attribs;

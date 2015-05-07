@@ -47,7 +47,7 @@ bool Decoder::decode(const QByteArray &state)
 
     stateSize = subjDatagram.ByteSize();
 
-#ifdef DEBUG_OBSERVER 
+#ifdef DEBUG_OBSERVER
     qDebug() << "ret: " << (ret ? "true" : "false");
     // std::cout << subjDatagram.DebugString();
 
@@ -68,7 +68,8 @@ bool Decoder::decode(const QByteArray &state)
 #ifdef DEBUG_OBSERVER
         else
         {
-            qDebug() << "Fail in decodeAttributes of subjDatagram - " << subjDatagram.id();
+            qDebug() << "Fail in decodeAttributes of subjDatagram - "
+            		<< subjDatagram.id();
         }
 #endif
 
@@ -84,8 +85,8 @@ bool Decoder::decode(const QByteArray &state)
         else
             qDebug() << "Fail in decodeInternals of subjDatagram - " << subjDatagram.id();
 
-        qDebug() << "inter. subjDatagram: "<< subjDatagram.internalsubject_size();
-        qDebug() << "inter. subj: "<< subjAttr->getNestedSubjects().size();
+        qDebug() << "inter. subjDatagram: " << subjDatagram.internalsubject_size();
+        qDebug() << "inter. subj: " << subjAttr->getNestedSubjects().size();
 
 #endif
 
@@ -94,19 +95,19 @@ bool Decoder::decode(const QByteArray &state)
     return ret;
 }
 
-bool Decoder::decodeAttributes(SubjectAttributes *subjAttr, 
+bool Decoder::decodeAttributes(SubjectAttributes *subjAttr,
     const ObserverDatagramPkg::SubjectAttribute &subjDatagram)
 {
     // int attrNumber = subjDatagram.rawattributes_size();
     int attrNumber = subjDatagram.attribsnumber();
     // QString key;
 
-    // Gets attributes 
+    // Gets attributes
     for (int i = 0; i < attrNumber; ++i)
     {
         const ObserverDatagramPkg::RawAttribute &raw = subjDatagram.rawattributes(i);
 
-        // Textual 
+        // Textual
         if (raw.has_text())
         {
             subjAttr->addItem(raw.key().c_str(), raw.text().c_str());
@@ -131,7 +132,7 @@ bool Decoder::decodeAttributes(SubjectAttributes *subjAttr,
 				if (mapAttributes)
 				{
 					Attributes *attrib = mapAttributes->value(raw.key().c_str());
-				
+
 					if (attrib)
 					{
 						// TODO: Code will fail when the id of the subject is not
@@ -149,8 +150,9 @@ bool Decoder::decodeAttributes(SubjectAttributes *subjAttr,
     return true;
 }
 
-bool Decoder::decodeInternals(SubjectAttributes * /*subjAttr*/, 
-    const ObserverDatagramPkg::SubjectAttribute &subjDatagram, SubjectAttributes *parentSubjAttr)
+bool Decoder::decodeInternals(SubjectAttributes * /*subjAttr*/,
+    const ObserverDatagramPkg::SubjectAttribute &subjDatagram,
+	SubjectAttributes *parentSubjAttr)
 {
     int itemsNumber = subjDatagram.itemsnumber();
     // int itemsNumber = subjDatagram.internalsubject_size()
@@ -160,10 +162,11 @@ bool Decoder::decodeInternals(SubjectAttributes * /*subjAttr*/,
     // Gets internals subjects
     for (int i = 0; i < itemsNumber; ++i)
     {
-        const ObserverDatagramPkg::SubjectAttribute &interSubjDatagram = subjDatagram.internalsubject(i);
+        const ObserverDatagramPkg::SubjectAttribute &interSubjDatagram =
+        		subjDatagram.internalsubject(i);
 
         SubjectAttributes *interSubjAttr = bb->insertSubject(interSubjDatagram.id());
-        interSubjAttr->setSubjectType((TypesOfSubjects) interSubjDatagram.type()); 
+        interSubjAttr->setSubjectType((TypesOfSubjects) interSubjDatagram.type());
         interSubjAttr->clearNestedSubjects();
 
         if (parentSubjAttr)
@@ -181,7 +184,8 @@ bool Decoder::decodeInternals(SubjectAttributes * /*subjAttr*/,
 #ifdef DEBUG_OBSERVER
         else
         {
-            qDebug() << "Fail in decodeAttributes of subjDatagram - " << interSubjDatagram.id();
+            qDebug() << "Fail in decodeAttributes of subjDatagram - "
+            		<< interSubjDatagram.id();
         }
 #endif
 
@@ -196,20 +200,21 @@ bool Decoder::decodeInternals(SubjectAttributes * /*subjAttr*/,
 #ifdef DEBUG_OBSERVER
         else
         {
-            qDebug() << "Fail in decodeInternals of subjDatagram - " << interSubjDatagram.id();
+            qDebug() << "Fail in decodeInternals of subjDatagram - "
+            		<< interSubjDatagram.id();
         }
 #endif
     }
     return ret;
 }
 
-bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID) 
+bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID)
 {
     bool ret = false;
     int subID;
     TypesOfSubjects subjectType = TObsUnknown;
     int numAttrib = 0, numElem = 0;
-    
+
     ret = consumeID(subID, tokens, idx);
     ret = ret && consumeSubjectType(subjectType, tokens, idx);
     ret = ret && consumeAttribNumber(numAttrib, tokens, idx);
@@ -274,7 +279,7 @@ bool Decoder::consumeID(int &id, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
         return false;
-        
+
     ok = false;
     id = tokens.at(idx).toInt(&ok);
     idx++;
@@ -300,7 +305,7 @@ bool Decoder::consumeSubjectType(TypesOfSubjects &type, QStringList &tokens, int
 {
     if (tokens.size() <= idx)
         return false;
-        
+
     type = (TypesOfSubjects) tokens.at(idx).toInt();
     idx++;
     return true;
@@ -311,7 +316,7 @@ bool Decoder::consumeAttribNumber(int &value, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
         return false;
-        
+
     value = tokens.at(idx).toInt();
     idx++;
     return true;
@@ -322,7 +327,7 @@ bool Decoder::consumeElementNumber(int &value, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
         return false;
-        
+
     value = tokens.at(idx).toInt();
     idx++;
     return true;
@@ -343,10 +348,10 @@ bool Decoder::consumeTriple(QStringList &tokens, int &idx, const int &subjID)
     if (attrName == "x")
     {
             subjAttr = bb->getSubject(subjID);
-            
+
             if (subjAttr)
                 subjAttr->setX(tokens.at(idx + 2).toDouble());
-            
+
             //if ((parentSubjectType == TObsTrajectory) && (cache->contains("trajectory")))
             //{
             //    rawAttrib = cache->value("trajectory");
@@ -403,21 +408,22 @@ bool Decoder::consumeTriple(QStringList &tokens, int &idx, const int &subjID)
 }
 
 //@RAIAN: Methods to decode the neighborhood
-void Decoder::consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID, 
+void Decoder::consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID,
     int &numElem, QMap<QString, QList<double> > &neighborhood)
 {
 	for(int i = 0; (i < (numElem - 3)) && idx < tokens.size(); i += 3)
 	{
 		consumeNeighbor(tokens, idx, neighborhood);
-	}	
+	}
 }
 
-void Decoder::consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList<double> > &neighborhood)
+void Decoder::consumeNeighbor(QStringList &tokens, int &idx,
+		QMap<QString, QList<double> > &neighborhood)
 {
 	int id;
 	TypesOfSubjects subjectType = TObsUnknown;
 	int numAttrib = 0, numElem = 0;
-	
+
 	consumeID(id, tokens, idx);
 	consumeSubjectType(subjectType, tokens, idx);
 	consumeAttribNumber(numAttrib, tokens, idx);
@@ -427,7 +433,7 @@ void Decoder::consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList
 	numElem *= 3;
 
 	QList<double> neighbor = QList<double>();
-	
+
 	for(int i = 0; i < numAttrib; i += 3)
 	{
 		consumeNeighborTriple(tokens, idx, neighbor);
@@ -435,11 +441,12 @@ void Decoder::consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList
 	}
 }
 
-void Decoder::consumeNeighborTriple(QStringList &tokens, int &idx, QList<double> &neighbor)
+void Decoder::consumeNeighborTriple(QStringList &tokens,
+		int &idx, QList<double> &neighbor)
 {
 	QString key = tokens.at(idx);
 	// TypesOfData type = (TypesOfData) tokens.at(idx + 1).toInt();
-	
+
 	if(key == "x")
 		neighbor.insert(0, tokens.at(idx + 2).toDouble());
 	else

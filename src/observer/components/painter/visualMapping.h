@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 * Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*  
+*
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-* 
+*
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-* 
+*
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -65,16 +65,16 @@ public:
      * \param parent a pointer to a QObject
      * \see QObject
      */
-    VisualMapping(TypesOfObservers observerType = TerraMEObserver::TObsMap, 
+    VisualMapping(TypesOfObservers observerType = TerraMEObserver::TObsMap,
         QObject *parent = 0);
-    
+
     /**
      * Destructor
      */
     virtual ~VisualMapping();
 
     // void setVectorPos(QVector<double> *xs, QVector<double> *ys);
-   
+
     // void addTask(ExecMode mode, int priority = 1);
     void setAttributeList(const QList<Attributes *> &attribs);
     void setSize(const QSize & spaceSize, const QSize &cellSize);
@@ -106,7 +106,7 @@ public slots:
     void enableGrid(bool);
     void drawAgent(const QImage &result, const QSize &size = QSize());
     void save(const QImage &result);
-    /*inline*/ void mappingSociety(Attributes *attrib, QPainter *p, 
+    /*inline*/ void mappingSociety(Attributes *attrib, QPainter *p,
         const QImage &result = QImage(), const QSize &size = QSize());
 
 protected:
@@ -133,21 +133,21 @@ private:
      * \param x axis position
      * \param y axis position
      */
-    inline void rendering(QPainter *p, const TypesOfSubjects &subjType , 
+    inline void rendering(QPainter *p, const TypesOfSubjects &subjType ,
         const double &x, const double &y);
-	
+
 	/**
      * Draws a Neighborhood object
-     * 
+     *
      */
-	void renderingNeighbor(QPainter *p, const double &xCell, const double &yCell, 
+	void renderingNeighbor(QPainter *p, const double &xCell, const double &yCell,
         const double &xNeigh, const double &yNeigh);
 
     void drawGrid();
     // inline void calculateResult();
     inline void mappingChanges(Attributes *attrib, QPainter *p);
     inline void mappingAll(Attributes *attrib, QPainter *p);
-    
+
     inline void mappingChangesText(Attributes *attrib, QPainter *p);
     inline void mappingAllText(Attributes *attrib, QPainter *p);
 
@@ -160,14 +160,14 @@ private:
 
     // data for draw agents
     double propWidthCell, propHeightCell;
-    
-    QSize spaceSize, cellSize; 
+
+    QSize spaceSize, cellSize;
 
     QVector<int> *agentAttribPositions;
     QList<Attributes *> attribList;
     QImage *gridImage;
     TypesOfObservers observerType;
-    
+
     int countSave;
     QString path;
     // QImage resultImage;

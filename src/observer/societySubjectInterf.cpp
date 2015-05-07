@@ -33,11 +33,11 @@ Observer * SocietySubjectInterf::createObserver(TypesOfObservers type)
         case TObsUDPSender:
             obs = new ObserverUDPSender(this);
             break;
-			
+
 		//case TObsNeigh:
 		//	obs = new AgentObserverMap(this);
 		//	break;
-		
+
         default:
             obs = new ObserverTextScreen(this);
             break;
@@ -80,7 +80,7 @@ bool SocietySubjectInterf::kill(int id)
             ((ObserverTextScreen *)obs)->close();
             delete (ObserverTextScreen *)obs;
             break;
-            
+
         default:
             delete obs;
             break;

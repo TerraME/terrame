@@ -9,7 +9,7 @@ class legendGUI;
 }
 
 /**
- * \brief User interface for build legend  
+ * \brief User interface for build legend
  * \see QDialog
  * \author Antonio Jose da Cunha Rodrigues
  * \file .h
@@ -17,7 +17,7 @@ class legendGUI;
 class LegendGUI : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     /**
      * Constructor
@@ -30,11 +30,11 @@ public:
      * Destructor
      */
     virtual ~LegendGUI();
-    
-    
+
+
 signals:
 
-    
+
 private slots:
 
 private:

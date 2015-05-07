@@ -23,7 +23,7 @@ of this library and its documentation.
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
 
-/*! 
+/*!
   \file controlMode.h
   \brief This file contains definitions about the TerraME model for representing agent's finite state machine.
          A ControlMode is a model to the agent's internal discrete state.
@@ -57,7 +57,7 @@ public:
 
     /// Gets the control mode name (identifier)
     /// \return Return the control mode identifier
-    string getControlModeName(void){
+    string getControlModeName(void) {
         return name;
     }
 private:
@@ -91,7 +91,7 @@ class ControlMode : public ControlModeInterf, public ProcessCompositeInterf
 public:
 
     /// Default constructor
-    ControlMode(void){
+    ControlMode(void) {
         string strTemp = ""; // Raian: ControlModeInterf::pImpl_->setControlModeName(string(""));
         ControlModeInterf::pImpl_->setControlModeName(strTemp);
     }
@@ -122,7 +122,7 @@ public:
             }
             return true;
         }
-        catch(...){ return true; }
+        catch(...) { return true; }
     }
 
     /// HANDLE - Gets the ControMode name (identifier)
@@ -133,7 +133,10 @@ public:
 
     /// HANDLE - Sets the ControMode name (identifier)
     /// \param controlModeName is a string containing the control mode identifier
-    void setControlModeName(string &controlModeName) { ControlModeInterf::pImpl_->setControlModeName(controlModeName); }
+    void setControlModeName(string &controlModeName)
+    {
+    	ControlModeInterf::pImpl_->setControlModeName(controlModeName);
+    }
 };
 
 #endif

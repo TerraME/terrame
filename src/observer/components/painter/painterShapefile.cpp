@@ -13,8 +13,8 @@ extern lua_State * L;
 
 using namespace TerraMEObserver;
 
-PainterShapefile::PainterShapefile(QVector<QGraphicsPathItem*> *vshapes, 
-    const QVector<int> &idsShapes, int shapetype, QHash<QString, Attributes*> *attributes) 
+PainterShapefile::PainterShapefile(QVector<QGraphicsPathItem*> *vshapes,
+    const QVector<int> &idsShapes, int shapetype, QHash<QString, Attributes*> *attributes)
     : shapes(vshapes), ids(idsShapes), shapeType(shapetype), mapAttributes(attributes)
 {
     reconfigMaxMin = false;
@@ -22,19 +22,19 @@ PainterShapefile::PainterShapefile(QVector<QGraphicsPathItem*> *vshapes,
 
 void PainterShapefile::drawShapefile(Attributes *attrib)
 {
-    if(attrib->getVisible()){
+    if(attrib->getVisible()) {
         drawAttrib(attrib);
     }
     else turn_allWhite++;
 }
 
-void PainterShapefile::setColor(QGraphicsPathItem *item, const QColor &color){
-    if(shapeType == SHPT_ARC || shapeType == SHPT_ARCZ){
+void PainterShapefile::setColor(QGraphicsPathItem *item, const QColor &color) {
+    if(shapeType == SHPT_ARC || shapeType == SHPT_ARCZ) {
         QPen pen;
         pen.setColor(color);
         item->setPen(pen);
     }
-    else{
+    else {
         item->setBrush(color);
     }
 }
@@ -181,5 +181,7 @@ void PainterShapefile::replotMap()
 
     for (int i = 0; i < listAttribs.size(); i++)
         plotMap(listAttribs.at(i));
-    if(turn_allWhite == listAttribs.size()) for(int i = 0; i < shapes->size(); i++) setColor(shapes->at(i), Qt::white);
+    if(turn_allWhite == listAttribs.size())
+    	for(int i = 0; i < shapes->size(); i++)
+    		setColor(shapes->at(i), Qt::white);
 }

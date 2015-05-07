@@ -38,7 +38,7 @@ extern "C"
 #include "reference.h"
 
 /**
-* \brief 
+* \brief
 *
 * Represents a set of Society in the Lua runtime environment.
 *
@@ -48,7 +48,7 @@ extern "C"
 class luaSociety : public SocietySubjectInterf, public Reference<luaSociety>
 {
 	string objectId_; ///< luaSociety identifier
-	
+
 	TypesOfSubjects subjectType;
 	lua_State *luaL; ///< Stores locally the lua stack location in memory
 	QHash<QString, QString> observedAttribs;
@@ -60,10 +60,10 @@ class luaSociety : public SocietySubjectInterf, public Reference<luaSociety>
 	QByteArray getChanges(QDataStream& in, const QStringList& attribs);
 public:
 	///< Data structure issued by Luna<T>
-	static const char className[]; 
+	static const char className[];
 
 	///< Data structure issued by Luna<T>
-	static Luna<luaSociety>::RegType methods[]; 
+	static Luna<luaSociety>::RegType methods[];
 
 public:
 	/// Constructor
@@ -77,7 +77,7 @@ public:
 
 	/// Sets the luaSociety identifier
 	int setID(lua_State *L);
-	
+
 	/// Creates several types of observers
 	/// parameters: observer type, observer attributes table, observer type parameters
 	int createObserver(lua_State *L);
@@ -93,13 +93,15 @@ public:
 	/// \param subject a pointer to a observed subject
 	/// \param observerId the id of the observer
 	/// \param attribs the list of attributes observed
-	QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
+	QDataStream& getState(QDataStream& in, Subject *subject, int observerID,
+			const QStringList& attribs);
 
 	/**
 	 * Gets the attributes of Lua stack
 	 * \param attribs the list of attributes observed
 	*/
-	QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
+	QByteArray pop(lua_State *L, const QStringList& attribs,
+			ObserverDatagramPkg::SubjectAttribute *csSubj,
 		ObserverDatagramPkg::SubjectAttribute *parentSubj);
 
 	/// Destroys the observer object instance

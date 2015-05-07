@@ -32,7 +32,7 @@ using namespace TerraMEObserver;
 class TerraMEObserver::Control : public BagOfTasks::Task
 {
 public:
-    Control(QHash<int, SubjectAttributes *> &cache) 
+    Control(QHash<int, SubjectAttributes *> &cache)
         : cache(cache), BagOfTasks::Task()
     {
         abort = false;
@@ -144,19 +144,20 @@ void BlackBoard::setDirtyBit(int subjectId)
     // cache.insert(subjectId, new PrivateCache());
 }
 
-bool BlackBoard::getDirtyBit(int subjectId) const 
+bool BlackBoard::getDirtyBit(int subjectId) const
 {
     if (cache.contains(subjectId))
         return cache.value(subjectId)->getDirtyBit();
     return false;
 }
 
-QDataStream & BlackBoard::getState(Subject *subj, int observerId, const QStringList &attribs)
+QDataStream & BlackBoard::getState(Subject *subj, int observerId,
+		const QStringList &attribs)
 {
     SubjectAttributes *subjAttr = cache.value(subj->getId());
 
     if (! subjAttr)
-        qFatal("BlackBoard::getState() - Error: The Subject '%i' (%s) not found in BlackBoard", 
+        qFatal("BlackBoard::getState() - Error: The Subject '%i' (%s) not found in BlackBoard",
             subj->getId(), getSubjectName(subj->getType()));
 
     if (! subjAttr->getDirtyBit())
@@ -170,22 +171,22 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, const QStringL
     delete state;
     data = new QByteArray();
     state = new QDataStream(data, QIODevice::WriteOnly);
-	
+
     state = &subj->getState(*state, subj, observerId, attribs);
     state->device()->close();
 
     // The state is now available
     state->device()->open(QIODevice::ReadOnly);
-	
+
     QByteArray msg;
     (*state) >> msg;
 
     // canDrawState = false;
-	
+
     if (! msg.isEmpty())
     {
         canDrawState = protocolDecoder->decode(msg);
-        
+
         if (! canDrawState)
         {
             if (! msg.isEmpty())
@@ -196,7 +197,7 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId, const QStringL
     }
 
     subjAttr->setDirtyBit(false);
-    
+
 #ifdef DEBUG_OBSERVER
     foreach(SubjectAttributes *attr, cache.values())
         qDebug() << attr->getId() << ": " << attr->toString();
@@ -313,10 +314,10 @@ bool BlackBoard::decode(const QByteArray &msg)
 //    qDebug() << "BlackBoard::serialize(int subjectId, QByteArray &data, const QStringList &attributes)";
 //
 //    return (QByteArray &)*(new QByteArray);
-//} 
+//}
 
 void BlackBoard::startControl()
-{ 
+{
 #ifdef TME_STATISTIC
     Statistic::getInstance().addOccurrence("countChangedSubjects", countChangedSubjects);
 #endif
@@ -355,7 +356,7 @@ void BlackBoard::clear()
 
     foreach(SubjectAttributes *c, cache)
     {
-        delete c; 
+        delete c;
         c = 0;
     }
     cache.clear();

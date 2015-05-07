@@ -43,7 +43,7 @@ extern "C"
 // Protocol Buffers
 namespace ObserverDatagramPkg
 {
-    class SubjectAttribute; 
+    class SubjectAttribute;
 }
 
 class TeDatabase;
@@ -52,7 +52,7 @@ class TeDatabasePortal;
 struct TeGrouping;
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaCellularSpace object. It is integrated with TerraLib geographical databases.
 *
 */
@@ -82,21 +82,24 @@ class luaCellularSpace : public CellSpaceSubjectInterf, public Reference<luaCell
     void loadLegendsFromDatabase(TeDatabase *db, TeTheme *inputTheme, QString& luaLegend);
 	QStringList retrieveStdDeviationColorBar(QStringList colorBarRawItems);
 	QStringList retrieveUniqueValueColorBar(TeTheme *inputTheme);
-	QStringList retrieveColorBar(TeDatabasePortal *portal, TeTheme *inputTheme, TeGrouping *grouping);
+	QStringList retrieveColorBar(TeDatabasePortal *portal, TeTheme *inputTheme,
+								TeGrouping *grouping);
 
 	QString retrieveLegendType(int attrType);
-	QString retrieveMaxValue(TeDatabasePortal *portal, TeTheme *inputTheme, QString attrName , int attrType);
-	QString retrieveMinValue(TeDatabasePortal *portal, TeTheme *inputTheme, QString attrName , int attrType);
+	QString retrieveMaxValue(TeDatabasePortal *portal, TeTheme *inputTheme,
+							QString attrName , int attrType);
+	QString retrieveMinValue(TeDatabasePortal *portal, TeTheme *inputTheme,
+							QString attrName , int attrType);
 	QString retrieveStdMode(int attrType, TeGrouping grouping);
 
 #endif // TME_NO_TERRALIB
-    
+
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
+    static const char className[];
 
     ///< Data structure issued by Luna<T>
-    static Luna<luaCellularSpace>::RegType methods[]; 
+    static Luna<luaCellularSpace>::RegType methods[];
 
 public:
     /// constructor
@@ -136,7 +139,7 @@ public:
 
     /// Load the luaCellularSpace object from the TerraLib geographic database
     int load(lua_State *L);
-    
+
     /// Load the luaCellularSpace object from the Shapefile
     int loadShape(lua_State *L);
 
@@ -190,7 +193,7 @@ public:
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     int notify(lua_State *L);
-    
+
     /// Returns the Agent Map Observers linked to this cellular space
     /// \param observerId the id of observer
     // \return a pointer for an observer if the id exists. Otherwise, returns a NULL pointer
@@ -204,13 +207,15 @@ public:
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed
-    QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
+    QDataStream& getState(QDataStream& in, Subject *subject,
+    					int observerID, const QStringList& attribs);
 
     /**
      * Gets the attributes of Lua stack
      * \param attribs the list of attributes observed
      */
-    QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
+    QByteArray pop(lua_State *L, const QStringList& attribs,
+    			ObserverDatagramPkg::SubjectAttribute *csSubj,
         ObserverDatagramPkg::SubjectAttribute *parentSubj);
 
     /// Destroys the observer object instance
@@ -222,19 +227,23 @@ public:
 
 	/// Loads a neighborhood from a .gpm file.
 	/// \author  Raian Vargas Maretto
-	int loadNeighborhoodGPMFile(lua_State *L, const char* fileName, const char* neighName, bool check);
-	
+	int loadNeighborhoodGPMFile(lua_State *L, const char* fileName,
+								const char* neighName, bool check);
+
 	/// Loads GAL Neighborhood files
 	/// \author Raian Vargas Maretto
-    int loadNeighborhoodGALFile(lua_State *L, const char* fileName, const char* neighName, bool check);
+    int loadNeighborhoodGALFile(lua_State *L, const char* fileName,
+    							const char* neighName, bool check);
 
 	/// Loads GWT Neighborhood files
 	/// \author Raian Vargas Maretto
-    int loadNeighborhoodGWTFile(lua_State *L, const char* fileName, const char* neighName, bool check);
+    int loadNeighborhoodGWTFile(lua_State *L, const char* fileName,
+    							const char* neighName, bool check);
 
 	/// Loads TXT Neighborhood file.
 	/// \author Raian Vargas Maretto
-    int loadTXTNeighborhood(lua_State *L, const char* fileName, const char* neighName, bool check);
+    int loadTXTNeighborhood(lua_State *L, const char* fileName,
+    						const char* neighName, bool check);
 
 	/// Find a cell given a cell ID
 	/// \author Raian Vargas Maretto

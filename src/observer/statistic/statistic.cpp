@@ -24,10 +24,10 @@ Statistic::Statistic() : QObject()
 
     timeStatistics.clear();
     occurStatistics.clear();
-    
+
     disableRemove = false;
     observerCount = -1;
-    
+
     //elapsedTimer->start();
 
 //
@@ -146,7 +146,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
         int size = -1;
         for (int i = 0; i < timeStatistics.values().size(); i++)
             size = qMax(timeStatistics.values().at(i)->size(), size);
-        
+
         QString name ("timeStatistic_");
         name.prepend(prefix);
 
@@ -164,7 +164,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
         double value = 0;
         for (int i = 0; i < keys.size(); i++)
         {
-            diffSquare.insert(keys.at(i), 
+            diffSquare.insert(keys.at(i),
                 qMakePair<QVector<double> *, double>(new QVector<double>(), 0));
         }
 
@@ -182,12 +182,13 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
 
                 if (! timeStatistics.value(key)->isEmpty())
                     timeStatistics.value(key)->pop_back();
-                        
+
                 if (key.toLower().contains("pop lua"))
                 {
-                    for (int i = 0; (i < observerCount - 1) && (i < timeStatistics.value(key)->size()); i++)
+                    for (int i = 0; (i < observerCount - 1)
+                    	&& (i < timeStatistics.value(key)->size()); i++)
                     {
-                        timeStatistics.value(key)->pop_front(); 
+                        timeStatistics.value(key)->pop_front();
                         timeStatistics.value(key)->pop_back();
                     }
                 }
@@ -211,7 +212,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
             out << "\n";
         }
         file.close();
- 
+
         foreach(QString key, keys)
         {
             if (timeStatistics.value(key)->size() > 1)
@@ -226,8 +227,8 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
             {
                 if (timeStatistics.value(key)->size() > i)
                 {
-                    value = timeStatistics.value(key)->at(i)- diffSquare.value(key).second;
-                    diffSquare[key].first->append(pow(value, 2)); 
+                    value = timeStatistics.value(key)->at(i) - diffSquare.value(key).second;
+                    diffSquare[key].first->append(pow(value, 2));
                 }
             }
         }
@@ -307,10 +308,11 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
 
                 if (! occurStatistics.value(key)->isEmpty())
                     occurStatistics.value(key)->pop_back();
-                        
+
                 if (key.toLower().contains("bytes sent"))
                 {
-                    for (int i = 0; (i < observerCount - 1) && (i < occurStatistics.value(key)->size()); i++)
+                    for (int i = 0; (i < observerCount - 1)
+                    	&& (i < occurStatistics.value(key)->size()); i++)
                     {
                         occurStatistics.value(key)->pop_front();
                         occurStatistics.value(key)->pop_back();
@@ -324,10 +326,10 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
 
         for (int i = 0; i < keys.size(); i++)
         {
-            diffSquare.insert(keys.at(i), 
+            diffSquare.insert(keys.at(i),
                 qMakePair<QVector<int> *, double>(new QVector<int>(), 0));
-        }        
-        
+        }
+
         int size = -1;
         for (int i = 0; i < occurStatistics.values().size(); i++)
             size = qMax(occurStatistics.values().at(i)->size(), size);
@@ -349,7 +351,7 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
             out << "\n";
         }
         file.close();
- 
+
         foreach(QString key, keys)
         {
             if (occurStatistics.value(key)->size() > 1)
@@ -364,13 +366,14 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
             {
                 if (occurStatistics.value(key)->size() > i)
                 {
-                    value = occurStatistics.value(key)->at(i) - diffSquare.value(key).second;
-                    diffSquare[key].first->append(pow(value, 2)); 
+                    value = occurStatistics.value(key)->at(i)
+                    		- diffSquare.value(key).second;
+                    diffSquare[key].first->append(pow(value, 2));
                 }
             }
         }
 
-        
+
         // Saved in the analysis file
         name = QString("%1analized_occurrences_").arg(prefix);
         QFile fileAnalysis(name
@@ -381,7 +384,7 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
             return false;
 
         QTextStream outAnalysis(&fileAnalysis);
-        
+
         outAnalysis << keys.join(";") << ";\n";
 
         QString line1("media;"), line2("desvio padrao;");
@@ -422,7 +425,7 @@ bool Statistic::saveData(const QString &prefix)
 
     if (! timeStatistics.isEmpty())
         ret = saveTimeStatistic(prefix);
-    
+
     if (ret)
     {
         qDebug() << "Time Statistics saved!";

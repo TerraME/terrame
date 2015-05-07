@@ -137,7 +137,7 @@ QDataStream & operator <<(QDataStream & out, const TerraMEObserver::ObsLegend & 
     out << obsLeg.getTo();
     out << obsLeg.getLabel();
     out << (qint8) obsLeg.getOccurrence();
-    out << (quint8) obsLeg.getIdxColor(); 
+    out << (quint8) obsLeg.getIdxColor();
 
     // out << obsLeg.fromNumber;
     // out << obsLeg.toNumber;
@@ -178,9 +178,10 @@ QDataStream & operator >>(QDataStream & in, TerraMEObserver::ObsLegend & obsLeg)
 
 //////////////////////////////////////////////////////////////////////////////////////////// ATTRIBUTES
 
-Attributes::Attributes(const QString &name, double width, double height, TypesOfSubjects type) 
-    : attribName(name), attribType(type) 
-{	
+Attributes::Attributes(const QString &name, double width,
+					double height, TypesOfSubjects type)
+    : attribName(name), attribType(type)
+{
     attribDataType = TObsUnknownData;
     observerBy = TObsUndefined;
     className = "";
@@ -204,7 +205,7 @@ Attributes::Attributes(const QString &name, double width, double height, TypesOf
  //   neighValues = new QVector<QMap<QString, QList<double> > >;
  //   neighValues = 0;
 	////@RAIAN: END
-	
+
     valueList = QStringList();
     labelList = QStringList();
 
@@ -257,7 +258,7 @@ Attributes::Attributes(const Attributes &other)
 		////@RAIAN
 		//neighValues = other.neighValues;
 		////@RAIAN: END
-		
+
         colorBarVec = colorBarVec;
         stdColorBarVec = stdColorBarVec;
         valueList = valueList;
@@ -319,7 +320,7 @@ Attributes & Attributes::operator=(const Attributes &other)
 	////@RAIAN
 	//neighValues = other.neighValues;
 	////@RAIAN: END
-	
+
     colorBarVec = colorBarVec;
     stdColorBarVec = stdColorBarVec;
     valueList = valueList;
@@ -372,7 +373,7 @@ Attributes::~Attributes()
     delete xs; xs = 0;
     delete ys; ys = 0;
 #endif
-	
+
 	////@RAIAN
 	//delete neighValues;
 	////@RAIAN: END
@@ -429,7 +430,7 @@ QVector<bool>* Attributes::getBoolValues() const
 }
 
 void Attributes::addValue(int id, double &value)
-{ 
+{
     numericValues->push_back(value);
 
     // With bug: This follow code does not work for all subject (e.g. cell) at
@@ -449,7 +450,7 @@ void Attributes::addValue(int id, double &value)
 }
 
 void Attributes::addValue(int id, bool &value)
-{ 
+{
     boolValues->push_back(value);
 
     //static int factor = id - boolValues->size();
@@ -673,7 +674,7 @@ void Attributes::setVisible(bool visible)
     this->visible = visible;
 }
 
-void Attributes::setDirtyBit(bool dirty) 
+void Attributes::setDirtyBit(bool dirty)
 {
     dirtyBit = dirty;
 }
@@ -721,7 +722,7 @@ void Attributes::addValue(QMap<QString, QList<double> > n)
 
 void Attributes::setWidth(double w)
 {
-	width = w;	
+	width = w;
 }
 
 double Attributes::getWidth()
@@ -875,7 +876,8 @@ double Attributes::getDirection(double x1, double y1)
     	}
     	else
     	{
-            QPointF position = vectorDirectionPos.at(circularIdxVectorDirectionPos - 1).first;
+            QPointF position = vectorDirectionPos.at(
+            		circularIdxVectorDirectionPos - 1).first;
             angle = calcAngleDirection(y1 - position.y(), x1 - position.x());
             vectorDirectionPos.append(qMakePair<QPointF, double>(QPointF(x1, y1), angle));
         }
@@ -883,13 +885,13 @@ double Attributes::getDirection(double x1, double y1)
     else
     {
         QPointF newPoint(x1, y1);
-        
+
         if(circularIdxVectorDirectionPos < vectorDirectionPos.size())
         {
             int last = circularIdxVectorDirectionPos - 1;
             last = (last < 0) ? CEILING - 1 : last;
             QPointF position = vectorDirectionPos.at(last).first;
-        
+
             if(position == newPoint)
             {
                 angle = vectorDirectionPos.at(last).second;
@@ -916,7 +918,8 @@ const QList<QPair<QPointF, double> >& Attributes::getLastPositions() const
     return vectorDirectionPos;
 }
 
-QDataStream & operator <<(QDataStream & out, const TerraMEObserver::Attributes & /* attr */)
+QDataStream & operator <<(QDataStream & out,
+		const TerraMEObserver::Attributes & /* attr */)
 {
     //// *xs, *ys;
     //out << attr.getNumericValues();
@@ -986,13 +989,18 @@ QString Attributes::toString() const
     str += "colorBarVec.size(): "	+ QString::number((int)colorBarVec.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)colorBarVec.size(); i++)
-        str += QString("(%1, %2, %3)\n\t\t").arg(colorBarVec.at(i).cor_.red_).arg(colorBarVec.at(i).cor_.green_).arg(colorBarVec.at(i).cor_.blue_);
+        str += QString("(%1, %2, %3)\n\t\t").arg(colorBarVec.at(i).cor_.red_)
+			.arg(colorBarVec.at(i).cor_.green_).arg(colorBarVec.at(i).cor_.blue_);
 
     str +="\n\t\t";
-    str += "colorBarVecB.size(): "	+ QString::number((int)stdColorBarVec.size()) + "\n\t\t";
+    str += "colorBarVecB.size(): "
+    		+ QString::number((int)stdColorBarVec.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)stdColorBarVec.size(); i++)
-        str += QString("(%1, %2, %3)\n\t\t").arg(stdColorBarVec.at(i).cor_.red_).arg(stdColorBarVec.at(i).cor_.green_).arg(stdColorBarVec.at(i).cor_.blue_);
+        str += QString("(%1, %2, %3)\n\t\t")
+			.arg(stdColorBarVec.at(i).cor_.red_)
+			.arg(stdColorBarVec.at(i).cor_.green_)
+			.arg(stdColorBarVec.at(i).cor_.blue_);
 
     str +="\n\t";
     str += "slicesNumber_bkp: "	+ QString::number(slicesNumberBkp) + "\n\t";
@@ -1000,16 +1008,24 @@ QString Attributes::toString() const
     str += "attribDataType_bkp: "	+ QString::number(attribDataTypeBkp) + "\n\t";
     str += "groupMode_bkp: "	+ QString::number(groupModeBkp) + "\n\t";
     str += "stdDev_bkp: "	+ QString::number(stdDevBkp) + "\n\t";
-    str += "colorBarVec_bkp.size(): "	+ QString::number((int)colorBarVecBkp.size()) + "\n\t\t";
+    str += "colorBarVec_bkp.size(): "
+    		+ QString::number((int)colorBarVecBkp.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)colorBarVecBkp.size(); i++)
-        str += QString("(%1, %2, %3)\n\t\t").arg(colorBarVecBkp.at(i).cor_.red_).arg(colorBarVecBkp.at(i).cor_.green_).arg(colorBarVecBkp.at(i).cor_.blue_);
+        str += QString("(%1, %2, %3)\n\t\t")
+			.arg(colorBarVecBkp.at(i).cor_.red_)
+			.arg(colorBarVecBkp.at(i).cor_.green_)
+			.arg(colorBarVecBkp.at(i).cor_.blue_);
 
     str +="\n\t";
-    str += "colorBarVecB_bkp.size(): "	+ QString::number((int)stdColorBarVecBkp.size()) + "\n\t\t";
+    str += "colorBarVecB_bkp.size(): "
+    		+ QString::number((int)stdColorBarVecBkp.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)stdColorBarVecBkp.size(); i++)
-        str += QString("(%1, %2, %3)\n\t\t").arg(stdColorBarVecBkp.at(i).cor_.red_).arg(stdColorBarVecBkp.at(i).cor_.green_).arg(stdColorBarVecBkp.at(i).cor_.blue_);
+        str += QString("(%1, %2, %3)\n\t\t")
+			.arg(stdColorBarVecBkp.at(i).cor_.red_)
+			.arg(stdColorBarVecBkp.at(i).cor_.green_)
+			.arg(stdColorBarVecBkp.at(i).cor_.blue_);
 
     str +="\n\n";
     return str;

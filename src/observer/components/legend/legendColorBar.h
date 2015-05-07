@@ -58,7 +58,7 @@ public:
      * Destructor
      */
     virtual ~TeQtColorBar();
-    
+
     /**
      * Sets a vector of \a TeColor
      * \param colorVec a reference to a \a TeColor vector
@@ -83,7 +83,7 @@ public:
      * Draws the colors in the colorBar object
      */
     void drawColorBar();
- 
+
     /**
      * Sets the orientation
      * \param b boolean, \a True to vertical orientation.
@@ -92,12 +92,12 @@ public:
     void setVerticalBar(bool b);
 
     void setUpDownBar(bool b) {upDown_ = b;}
-    
+
     /**
      * Inverts the color sequence
      */
     void invertColorBar();
-    
+
     /**
      * Cleans the color bar
      */
@@ -114,7 +114,7 @@ public:
     std::vector<ColorBar> getInputColorVec() {return inputColorVec_;}
 
     // / Gets the color vector as a QVector
-    // QVector<QColor> getQVectColor(){ return qvecColor;}
+    // QVector<QColor> getQVectColor() { return qvecColor;}
 
 public slots:
     /**

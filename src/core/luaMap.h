@@ -33,7 +33,7 @@ of this library and its documentation.
 #include "luna.h"
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaMap object.
 *
 */
@@ -44,7 +44,7 @@ class luaMap : public Reference<luaMap>
 public:
 	///< Data structure issued by Luna<T>
 	static const char className[];
-	
+
 	///< Data structure issued by Luna<T>
 	static Luna<luaMap>::RegType methods[];
 

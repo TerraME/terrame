@@ -27,7 +27,7 @@ of this library and its documentation.
 #if ! defined(LUANEIGHBORHOOD_H)
 #define LUANEIGHBORHOOD_H
 
-extern "C" 
+extern "C"
 {
 #include <lua.h>
 }
@@ -45,15 +45,16 @@ class luaCellularSpace;
 
 namespace ObserverDatagramPkg
 {
-    class SubjectAttribute; 
+    class SubjectAttribute;
 }
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaNeighborhood object.
 *
 */
-class luaNeighborhood : public NeighborhoodSubjectInterf, public Reference<luaNeighborhood>
+class luaNeighborhood : public NeighborhoodSubjectInterf,
+						public Reference<luaNeighborhood>
 {
     CellNeighborhood::iterator it; ///< luaNeighboorhood iterator
     bool itNext; ///< auxliary variable used to avoid iterator problems that occurs when the erase() method is called
@@ -70,13 +71,13 @@ class luaNeighborhood : public NeighborhoodSubjectInterf, public Reference<luaNe
     lua_State *luaL;
     luaCellularSpace* cellSpace;
     QHash<QString, QString> observedAttribs;
-    
+
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaNeighborhood>::RegType methods[]; 
+    static Luna<luaNeighborhood>::RegType methods[];
 
 public:
     /// constructor
@@ -89,7 +90,7 @@ public:
     /// parameters: cell.y, cell.x,  cell, weight
     int addNeighbor(lua_State *L);
 
-	/// Removes the luaNeighbor cell from the luaNeighborhood 
+	/// Removes the luaNeighbor cell from the luaNeighborhood
 	/// parameters: cell.x, cell.y
 	/// \author Raian Vargas Maretto
 	int eraseNeighbor(lua_State *L);
@@ -103,7 +104,7 @@ public:
     /// parameters: cell index
     int eraseCell(lua_State *L);
 
-    /// Gets the luaNeighborhood relationship weight value for the luaNeighbor 
+    /// Gets the luaNeighborhood relationship weight value for the luaNeighbor
     /// idexed by the 2D coordinates received as parameter
     /// parameters: cell index
     /// return weight
@@ -114,11 +115,11 @@ public:
     /// return luaCell
     int getCellNeighbor(lua_State *L);
 
-    /// Gets the luaNeighborhood relationship weight value for the luaNeighbor 
+    /// Gets the luaNeighborhood relationship weight value for the luaNeighbor
     /// indexed by the 2D coordinates received as parameter.
     /// no parameters
     int getWeight(lua_State *L);
-    
+
     /// Gets the luaNeighbor cell pointed by the Neighborhood iterator.
     /// no parameters
     int getNeighbor(lua_State *L);
@@ -137,7 +138,7 @@ public:
 	/// parameters: cell.x, cell.y
 	/// \author Raian Vargas Maretto
 		int getNeighWeight(lua_State *L);
-		
+
     /// Sets the weight for the neighborhood relationship with the cell indexed by the coordinates
     /// received as parameter.
     // parameters: cell index, weight
@@ -167,7 +168,7 @@ public:
 	/// parameters: cell
 	/// \author Raian Vargas Maretto
 		int isNeighbor(lua_State *L);
-	
+
     /// Forwards the Neighborhood iterator to the next Neighbor cell
     /// no parameters
     int next(lua_State *L);
@@ -205,14 +206,14 @@ public:
         /// no parameters
         /// \author Raian Vargas Maretto
         int getParent(lua_State *L);
-    
+
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observer attributes table, observer type parameters
     int createObserver(lua_State *L);
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     int notify(lua_State *L);
-    
+
     /// Gets the subject's type
     const TypesOfSubjects getType() const;
 
@@ -221,11 +222,13 @@ public:
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed
-    QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
+    QDataStream& getState(QDataStream& in, Subject *subject, int observerID,
+    		const QStringList& attribs);
 
 #ifdef TME_PROTOCOL_BUFFERS
-    QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
-        ObserverDatagramPkg::SubjectAttribute *parentSubj);
+    QByteArray pop(lua_State *L, const QStringList& attribs,
+    		ObserverDatagramPkg::SubjectAttribute *csSubj,
+			ObserverDatagramPkg::SubjectAttribute *parentSubj);
 #else
     /**
      * Gets the attributes of Lua stack

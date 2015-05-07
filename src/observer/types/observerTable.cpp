@@ -81,7 +81,7 @@ void ObserverTable::setAttributes(QStringList &attribs)
 {
 #ifdef TME_BLACK_BOARD
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr) 
+    if (subjAttr)
         subjAttr->setSubjectType(getSubjectType());
 #endif
 
@@ -124,7 +124,7 @@ bool ObserverTable::draw(QDataStream &state)
     QString msg;
     state >> msg;
 
-#ifdef TME_STATISTIC 
+#ifdef TME_STATISTIC
         t = Statistic::getInstance().startMicroTime();
 #endif
 
@@ -272,7 +272,7 @@ bool ObserverTable::draw()
                     item->setText(0, tmpValue);
 
                     doubleToText(weight, tmpValue);
-                    item->setText(1, tmpValue); 
+                    item->setText(1, tmpValue);
                 }
             }
             bb.getLocker()->unlock();

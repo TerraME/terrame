@@ -30,7 +30,7 @@ of this library and its documentation.
 #include "luaRule.h"
 
 /**
-* \brief  
+* \brief
 *  Implementation for a FlowCondition object.
 *
 */
@@ -41,11 +41,11 @@ private:
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
     static Luna<luaFlowCondition>::RegType methods[];
-    
+
 public:
     /// Constructor
     luaFlowCondition(lua_State *)
@@ -92,11 +92,12 @@ public:
             // calls the "execute" function of the rule
             if(lua_pcall(L, 3, 1, 0) != 0)
             {
-                string err_out = string(" Error: rule can not be executed ") + string (lua_tostring(L, -1)) + string("\".\n");
+                string err_out = string(" Error: rule can not be executed ")
+                				+ string (lua_tostring(L, -1)) + string("\".\n");
                 lua_getglobal(L, "customError");
                 lua_pushstring(L, err_out.c_str());
                 //lua_pushnumber(L, 4);
-                lua_call(L, 1, 0);             
+                lua_call(L, 1, 0);
                 return 0;
             }
 

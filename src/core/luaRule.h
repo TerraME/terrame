@@ -28,15 +28,15 @@ of this library and its documentation.
 #define LUARULE_H
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaRule object.
 *
 */
-class luaRule 
+class luaRule
 {
 protected:
     int ref; ///< The position of the object in the Lua stack
-    
+
 public:
 
     /// Destructor

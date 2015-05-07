@@ -54,9 +54,9 @@ namespace ObserverDatagramPkg
 
 //////////////////////////////////////////////////////////////////////////////////////
 /**
-* \brief 
+* \brief
 *
-* Represents a set of Cells in the Lua runtime environment. 
+* Represents a set of Cells in the Lua runtime environment.
 *
 */
 class luaCell : public CellSubjectInterf, public Reference<luaCell>
@@ -186,13 +186,15 @@ public:
 	/// \param subject a pointer to a observed subject
 	/// \param observerId the id of the observer
 	/// \param attribs the list of attributes observed
-	QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
+	QDataStream& getState(QDataStream& in, Subject *subject, int observerID,
+						const QStringList& attribs);
 
 	/// Gets the attributes of Lua stack
 	/// \param attribs the list of attributes observed
 #ifdef TME_PROTOCOL_BUFFERS
-	QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *cellSubj,
-			ObserverDatagramPkg::SubjectAttribute *parentSubj);
+	QByteArray pop(lua_State *L, const QStringList& attribs,
+				ObserverDatagramPkg::SubjectAttribute *cellSubj,
+				ObserverDatagramPkg::SubjectAttribute *parentSubj);
 #else
 	QByteArray pop(lua_State *L, const QStringList& attribs);
 #endif

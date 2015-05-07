@@ -40,7 +40,7 @@ Observer * CellSpaceSubjectInterf::createObserver(TypesOfObservers type)
         case TObsTCPSender:
             obs = new ObserverTCPSender(this);
             break;
-            
+
         case TObsMap:
             obs = new AgentObserverMap(this);
             break;
@@ -48,11 +48,11 @@ Observer * CellSpaceSubjectInterf::createObserver(TypesOfObservers type)
         case TObsImage:
             obs = new AgentObserverImage(this);
             break;
-            
+
         case TObsShapefile:
             obs = new ObserverShapefile(this);
             break;
-    
+
         case TObsTextScreen:
         default:
             obs = new ObserverTextScreen(this);
@@ -101,7 +101,7 @@ bool CellSpaceSubjectInterf::kill(int id)
             ((ObserverTCPSender *)obs)->close();
             delete (ObserverTCPSender *)obs;
             break;
-            
+
         case TObsMap:
             ((AgentObserverMap *)obs)->close();
             delete (AgentObserverMap *)obs;
@@ -116,7 +116,7 @@ bool CellSpaceSubjectInterf::kill(int id)
             ((ObserverShapefile *)obs)->close();
             delete (ObserverShapefile *)obs;
             break;
-            
+
         default:
             delete obs;
             break;

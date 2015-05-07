@@ -45,7 +45,7 @@ void luaStackToQString(int size)
     for (int i = 0; i < size; i++)
     {
         printf("%i - %s \t %p\n", i, lua_typename(luaL, lua_type(luaL, (i * -1))),
-               lua_topointer(luaL,  (i * -1)));
+               lua_topointer(luaL, (i * -1)));
     }
     printf("\n");
 }
@@ -74,7 +74,8 @@ int functionStackLevel(lua_State *L) {
                 break;
             }
             default: { /* other values */
-                printf("idx: %i others: %s \t %p\n", i, lua_typename(L, t), lua_topointer(L, i));
+                printf("idx: %i others: %s \t %p\n", i, lua_typename(L, t),
+                		lua_topointer(L, i));
                 //std::cout << lua_typename(L, t) << std::endl;
                 break;
             }
@@ -104,12 +105,14 @@ void stackDump (lua_State *L) {
                 break;
             }
             case LUA_TNUMBER: { /* numbers */
-                printf("idx: %i number: %g \t %p\n", i, lua_tonumber(L, i), lua_topointer(L, i));
+                printf("idx: %i number: %g \t %p\n", i, lua_tonumber(L, i),
+                		lua_topointer(L, i));
                 //std::cout << lua_tonumber(L, i) << std::endl;
                 break;
             }
             default: { /* other values */
-                printf("idx: %i others: %s \t %p\n", i, lua_typename(L, t), lua_topointer(L, i));
+                printf("idx: %i others: %s \t %p\n", i, lua_typename(L, t),
+                		lua_topointer(L, i));
                 //std::cout << lua_typename(L, t) << std::endl;
                 break;
             }
@@ -119,7 +122,7 @@ void stackDump (lua_State *L) {
     printf("\n\n"); /* end the listing */
 }
 
-/// UTILIITARY FUNCTION - Checks if the value located at index "idx" in the Lua stack "L" is of the 
+/// UTILIITARY FUNCTION - Checks if the value located at index "idx" in the Lua stack "L" is of the
 /// user defined type "name".
 /// \param L is a Lua stack
 /// \param idx is a Lua stack position index
@@ -134,7 +137,7 @@ int isudatatype (lua_State *L, int idx, const char *name)
     res = lua_compare(L, -2, -1, LUA_OPEQ);
     lua_pop(L, 2); // pop both tables (metatables) off
     return res;
-} 
+}
 
 /// UTILITARY FUNCTION - Converts a TerraLib object ID to (x, y) coordinates
 /// \param objId is a "const char const *" containing the object ID
@@ -150,7 +153,7 @@ void objectId2coords(const char * objId, int &x, int &y)
 
     strncpy(aux, objId, strlen(objId));
     strcpy(col, strtok((char*)aux, seps));
-    strcpy(lin,  strtok(NULL, seps));
+    strcpy(lin, strtok(NULL, seps));
     //cout << "{" << col <<", "<< lin <<"}" << endl;
     x = atoi(col);
     y = atoi(lin);
@@ -159,7 +162,7 @@ void objectId2coords(const char * objId, int &x, int &y)
 #if ! defined (TME_NO_TERRALIB)
 
 //-------------------------------------------------------------------------------------
-//----------------------- AUXILIARY FUNCTION TO DELETE TABLES -------------------------  
+//----------------------- AUXILIARY FUNCTION TO DELETE TABLES -------------------------
 //-------------------------------------------------------------------------------------
 
 /// UTILIITARY FUNCTION - Deletes a table from a TerraLib geographical database.
@@ -213,7 +216,7 @@ bool deleteLayerTableName (TeDatabase *db, std::string &tableName)
     if (!db->execute (del))
         return false;
     return true;
-} 
+}
 
 //-------------------------------------------------------------------------------------
 //--------------------------- AUXILIARY FUNCTION TO CREATE THEMES ---------------------
@@ -223,13 +226,14 @@ bool deleteLayerTableName (TeDatabase *db, std::string &tableName)
 /// \param attTable is a copy to the Theme new attribute table being created
 /// \param outputTable is the new Theme table name
 /// \param whereClause is a SQL WHERE CLAUSE like string used to query the TerraLib database
-/// \param inputThemeName is a string containing the inputTheme that serves as information 
+/// \param inputThemeName is a string containing the inputTheme that serves as information
 ///        source for the Theme being created
 /// \param view is a pointer to the TerrraLib TeView object to which Theme will be attached
 /// \param layer is a pointer to the TerrraLib TeLayer object to which Theme will be attached
 /// \param db is a pointer to the TerrraLib database into which the Theme will be inserted
 /// \param theme is a pointer to the TeTheme object being added to the geographical database
-bool createNewTheme(TeTable attTable, char outputTable[], string whereClause, string inputThemeName, TeView *view, TeLayer *layer, TeDatabase *db, TeTheme *theme)
+bool createNewTheme(TeTable attTable, char outputTable[], string whereClause,
+		string inputThemeName, TeView *view, TeLayer *layer, TeDatabase *db, TeTheme *theme)
 {
     TeTheme inputTheme(inputThemeName, layer); // Raian
     /// load the inputTheme properties
@@ -289,8 +293,8 @@ bool createNewTheme(TeTable attTable, char outputTable[], string whereClause, st
     popule += " SELECT object_id_ FROM "+ string(outputTable);
     if (!db->execute(popule))
     {
-        cout << "Error: fail to build the theme collection\""<< outputTable << "\": " << db->errorMessage()
-             << endl;
+        cout << "Error: fail to build the theme collection\""
+        		<< outputTable << "\": " << db->errorMessage() << endl;
         db->close();
         return false;
     }
@@ -298,21 +302,21 @@ bool createNewTheme(TeTable attTable, char outputTable[], string whereClause, st
     popule += " SET c_legend_id=0, c_legend_own=0, c_object_status=0 ";
     if (!db->execute(popule))
     {
-        cout << "Error: fail to build the theme collection\""<< outputTable << "\": " << db->errorMessage()
-             << endl;
+        cout << "Error: fail to build the theme collection\""
+        		<< outputTable << "\": " << db->errorMessage() << endl;
         db->close();
         return false;
     }
     // ------------------------ collection aux
-    if(!attrsDim.empty() && attrsDim[0].name() != ""){
+    if(!attrsDim.empty() && attrsDim[0].name() != "") {
         string ins = "INSERT INTO "+ colAuxTable +" (object_id, aux0, grid_status) ";
         ins += " SELECT "+ string(outputTable) +".object_id_, "+ attrsDim[0].name() +".attr_id, 0";
         ins += " FROM "+ string(outputTable)+" LEFT JOIN "+ attrsDim[0].name() +" ON ";
         ins += string(outputTable)+".object_id_ = "+ attrsDim[0].name() +".object_id_";
         if (!db->execute(ins))
         {
-            cout << "Error: fail to build the theme collection\""<< outputTable << "\": " << db->errorMessage()
-                 << endl;
+            cout << "Error: fail to build the theme collection\""
+            		<< outputTable << "\": " << db->errorMessage() << endl;
             db->close();
             return false;
         }
@@ -323,8 +327,8 @@ bool createNewTheme(TeTable attTable, char outputTable[], string whereClause, st
         ins += " FROM "+ string(outputTable);
         if (!db->execute(ins))
         {
-            cout << "Error: fail to build the theme collection\""<< outputTable << "\": " << db->errorMessage()
-                 << endl;
+            cout << "Error: fail to build the theme collection\""
+            		<< outputTable << "\": " << db->errorMessage() << endl;
             db->close();
             return false;
         }
@@ -364,7 +368,7 @@ std::string TeGetName (const char* value)
 	int bp = (name.substr(sp, len - 1)).rfind('/');
 	if ((ip>0)&& (ip > bp))
 		return name.substr(0, sp + ip);
-	else 
+	else
 		return name;
 }
 

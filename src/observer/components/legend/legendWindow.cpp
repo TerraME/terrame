@@ -111,7 +111,8 @@ void LegendWindow::createView(int rowsNum)
     if (groupingModeComboBox->currentIndex() == TObsUniqueValue)
         colTitle << tr("Color") << tr("Value") << tr("Label"); // << tr("Count");
     else
-        colTitle << tr("Color") << tr("From") << tr("To") << tr("Label"); //  << tr("Count");
+        colTitle << tr("Color") << tr("From") << tr("To")
+			<< tr("Label"); //  << tr("Count");
 
     legendTable->clear();
     //legendTable->setAlternatingRowColors(true);
@@ -119,7 +120,7 @@ void LegendWindow::createView(int rowsNum)
     legendTable->setColumnCount(colTitle.size());
 
     QTableWidgetItem *item;
-    for (int i = 0; i < colTitle.size(); i++){
+    for (int i = 0; i < colTitle.size(); i++) {
         item = new QTableWidgetItem();
         item->setText(colTitle.at(i));
         legendTable->setHorizontalHeaderItem(i, item);
@@ -188,7 +189,7 @@ void LegendWindow::setupComboBoxes()
 
 void LegendWindow::legendTable_doubleClicked(int /*row*/, int col)
 {
-    if (col == 0){
+    if (col == 0) {
         QMessageBox::information(this, "LegendWindow", "Do not implemented!");
         return;
     }
@@ -250,7 +251,8 @@ void LegendWindow::attributesComboBox_activated(const QString &selected)
     if (! attrib)
         return;
 #ifdef DEBUG_OBSERVER
-    printf("attributesComboBox_activated:\n %s\n", attrib->toQString().toLatin1().constData());
+    printf("attributesComboBox_activated:\n %s\n",
+    		attrib->toQString().toLatin1().constData());
 #endif
 
     if (attributesActive != selected)
@@ -258,7 +260,7 @@ void LegendWindow::attributesComboBox_activated(const QString &selected)
         if (isVisible() && attrValuesChanged)
         {
             attrValuesChanged = false;
-            
+
              QMessageBox msgBox(this);
              msgBox.setWindowTitle("TerraME Observer : Map");
              msgBox.setText(tr("The attribute value has been modified.\n"
@@ -370,7 +372,7 @@ void LegendWindow::applyPushButton_clicked()
 {
     if (! mapAttributes->contains(attributesComboBox->currentText()))
         return;
-        
+
     Attributes *attrib = mapAttributes->value(attributesComboBox->currentText());
 
     if ((attrib->getDataType() == TObsText)
@@ -385,7 +387,7 @@ void LegendWindow::applyPushButton_clicked()
         }
         else
         {
-            if (execModes != Quiet){
+            if (execModes != Quiet) {
                 string err_out = msg.toLatin1().constData();
                 lua_getglobal(L, "customWarning");
                 lua_pushstring(L, err_out.c_str());
@@ -475,7 +477,8 @@ void LegendWindow::rejectWindow()
     QDialog::reject();
 }
 
-void LegendWindow::setValues(QHash<QString, Attributes*> *mapAttribs, const QStringList &attribs)
+void LegendWindow::setValues(QHash<QString, Attributes*> *mapAttribs,
+		const QStringList &attribs)
 {
     mapAttributes = mapAttribs;
     makeAttribsBkp();
@@ -486,7 +489,7 @@ void LegendWindow::setValues(QHash<QString, Attributes*> *mapAttribs, const QStr
 void LegendWindow::setAndAdjustTableColumns()
 {
     //    legendTable->horizontalHeader()->setLabel(0, tr("Color"));
-    //    if (groupingMode_ == TeUniqueValue){
+    //    if (groupingMode_ == TeUniqueValue) {
     //        legendTable->horizontalHeader()->setLabel(1, tr("Value"));
     //        legendTable->horizontalHeader()->setLabel(2, tr("Label"));
     //        legendTable->horizontalHeader()->setLabel(3, tr("Count"));
@@ -539,7 +542,7 @@ void LegendWindow::createColorVector()
     if (rows == 1)
         rows++;
 
-    if (groupingModeComboBox->currentIndex() != TObsStdDeviation) 
+    if (groupingModeComboBox->currentIndex() != TObsStdDeviation)
     {
         leftColorVec = getColors(colorVec, rows);
 
@@ -636,7 +639,7 @@ void LegendWindow::countElementsBySlices()
                     {
                         occurrence++;
                         leg.setOccurrence(occurrence);
-                        leg.setColor(teColorVec->at(leg.getIdxColor()).red_, 
+                        leg.setColor(teColorVec->at(leg.getIdxColor()).red_,
                                 teColorVec->at(leg.getIdxColor()).green_,
                                 teColorVec->at(leg.getIdxColor()).blue_);
                         vecLegend->replace(i, leg);
@@ -647,20 +650,21 @@ void LegendWindow::countElementsBySlices()
                 {
                     case TObsAgent:
                     case TObsSociety:
-                        model->setData(model->index(i, 0, QModelIndex()), 
-                            symbol2Pixmap(leg.getColor(), attrib->getFont(), attrib->getSymbol()),
+                        model->setData(model->index(i, 0, QModelIndex()),
+                            symbol2Pixmap(leg.getColor(), attrib->getFont(),
+                            		attrib->getSymbol()),
                             Qt::DecorationRole);
                         break;
 
                     case TObsNeighborhood:
-                            model->setData(model->index(i, 0, QModelIndex()), 
-                                color2PixmapLine(leg.getColor(), attrib->getWidth()), 
+                            model->setData(model->index(i, 0, QModelIndex()),
+                                color2PixmapLine(leg.getColor(), attrib->getWidth()),
                                 Qt::DecorationRole);
                         break;
 
                     default:
-                            model->setData(model->index(i, 0, QModelIndex()), 
-                                color2Pixmap(leg.getColor()), 
+                            model->setData(model->index(i, 0, QModelIndex()),
+                                color2Pixmap(leg.getColor()),
                                 Qt::DecorationRole);
                         break;
 
@@ -710,20 +714,21 @@ void LegendWindow::countElementsBySlices()
             {
                 case TObsAgent:
                 case TObsSociety:
-                    model->setData(model->index(i, 0, QModelIndex()), 
-                        symbol2Pixmap(leg.getColor(), attrib->getFont(), attrib->getSymbol()),
+                    model->setData(model->index(i, 0, QModelIndex()),
+                        symbol2Pixmap(leg.getColor(), attrib->getFont(),
+                        		attrib->getSymbol()),
 					Qt::DecorationRole);
                     break;
 
                 case TObsNeighborhood:
-                        model->setData(model->index(i, 0, QModelIndex()), 
-                            color2PixmapLine(leg.getColor(), attrib->getWidth()), 
+                        model->setData(model->index(i, 0, QModelIndex()),
+                            color2PixmapLine(leg.getColor(), attrib->getWidth()),
                             Qt::DecorationRole);
                     break;
 
                 default:
-                        model->setData(model->index(i, 0, QModelIndex()), 
-                            color2Pixmap(leg.getColor()), 
+                        model->setData(model->index(i, 0, QModelIndex()),
+                            color2Pixmap(leg.getColor()),
                             Qt::DecorationRole);
                     break;
 
@@ -745,20 +750,21 @@ void LegendWindow::countElementsBySlices()
             {
                 case TObsAgent:
                 case TObsSociety:
-                    model->setData(model->index(i, 0, QModelIndex()), 
-                        symbol2Pixmap(leg.getColor(), attrib->getFont(), attrib->getSymbol()),
+                    model->setData(model->index(i, 0, QModelIndex()),
+                        symbol2Pixmap(leg.getColor(), attrib->getFont(),
+                        		attrib->getSymbol()),
 						Qt::DecorationRole);
                     break;
 
                 case TObsNeighborhood:
-                        model->setData(model->index(i, 0, QModelIndex()), 
-                            color2PixmapLine(leg.getColor(), attrib->getWidth()), 
+                        model->setData(model->index(i, 0, QModelIndex()),
+                            color2PixmapLine(leg.getColor(), attrib->getWidth()),
                             Qt::DecorationRole);
                     break;
 
                 default:
-                        model->setData(model->index(i, 0, QModelIndex()), 
-                            color2Pixmap(leg.getColor()), 
+                        model->setData(model->index(i, 0, QModelIndex()),
+                            color2Pixmap(leg.getColor()),
                             Qt::DecorationRole);
                     break;
 
@@ -944,7 +950,7 @@ void LegendWindow::groupByQuantil(double fix, Attributes *attrib)
         }
 
         QString label = QString("%1 ~ %2").arg(from).arg(to);
-        
+
         ObsLegend leg;
         leg.setFrom(from);
         leg.setTo(to);
@@ -953,7 +959,7 @@ void LegendWindow::groupByQuantil(double fix, Attributes *attrib)
 
         // retrieves the color already divided into slices
         // n - 1 because the "n" is pre incremented (++n)
-        leg.setColor(teColorVec->at(n - 1).red_, 
+        leg.setColor(teColorVec->at(n - 1).red_,
                 teColorVec->at(n - 1).green_,
                 teColorVec->at(n - 1).blue_);
 
@@ -1113,20 +1119,20 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 
 #ifdef DEBUG_OBSERVER
     qDebug() << "\n\nLegendWindow::groupByUniqueValue()\n"
-        << "attrib->getType()" << getSubjectName((int) attrib->getType()) 
+        << "attrib->getType()" << getSubjectName((int) attrib->getType())
         << "  txtValues.size()" << txtValues.size() << "\n";
 #endif
 
-    if ((txtValues.empty()) 
+    if ((txtValues.empty())
             && (attrib->getType() != TObsAgent)
             && (attrib->getType() != TObsSociety)
-            && (attrib->getType() != TObsAutomaton) 
-            && (attrib->getType() != TObsTrajectory) 
+            && (attrib->getType() != TObsAutomaton)
+            && (attrib->getType() != TObsTrajectory)
       )
     {
         QString msg;
         msg = tr("The \"%1\" attribute has been configured incorrectly. An error might "
-                    "have occurred when this attribute was defined in the legend.") 
+                    "have occurred when this attribute was defined in the legend.")
                     .arg(attrib->getName());
 
         if (isVisible())
@@ -1204,7 +1210,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
                 msg = tr("Was found more values in the model than those reported in the legend for the "
                     "attribute \"%1\". Please, check the maximum and mininum value for this attribute.")
                     .arg(attrib->getName());
-                
+
                 if (isVisible())
                 {
                     QMessageBox::information(this, windowTitle(), msg);
@@ -1222,7 +1228,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 
                 break;
             }
-            
+
             ObsLegend leg;
             leg.setIdxColor(vecLegendPos);
             leg.setFrom(from);
@@ -1248,7 +1254,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             leg.setLabel(from);
             leg.setTo(from);
             leg.setOccurrence(count);
-            
+
             if (vecLegendPos < vecLegend->size())
                 vecLegend->replace(vecLegendPos, leg);
         }
@@ -1263,14 +1269,14 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 
             leg.setTo(from);
             leg.setOccurrence(1);
-            
+
             if (vecLegendPos < vecLegend->size())
             {
                 vecLegend->replace(vecLegendPos, leg);
             }
             //else
             //{
-            //    // qWarning() << "out of range -- " << from; 
+            //    // qWarning() << "out of range -- " << from;
             //    leg.setLabel("out of range");
 
             //    vecLegend->push_back(leg);
@@ -1279,7 +1285,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             //}
         }
     }
-    
+
     QAbstractItemModel *model = legendTable->model();
 
 #ifdef DEBUG_OBSERVER
@@ -1296,8 +1302,9 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         QColor color;
 
         // Retrieves the label on the labels list
-        if ((labels->size() == vecLegend->size()) && (values->size() == vecLegend->size()))
-        {            
+        if ((labels->size() == vecLegend->size())
+        		&& (values->size() == vecLegend->size()))
+        {
             leg.setLabel(labels->at(i));
             leg.setFrom(values->at(i));
             leg.setIdxColor(i);
@@ -1375,7 +1382,8 @@ void LegendWindow::rollbackChanges(const QString & name)
 void LegendWindow::makeLegend()
 {
 #ifdef DEBUG_OBSERVER
-    qDebug() << "LegendWindow::makeLegend() - keys.size(): " << mapAttributes->keys().size();
+    qDebug() << "LegendWindow::makeLegend() - keys.size(): "
+    		<< mapAttributes->keys().size();
     qDebug() << "LegendWindow::makeLegend() - attribList: " << attribList;
 #endif
 
@@ -1397,11 +1405,11 @@ QPixmap LegendWindow::color2Pixmap(const QColor &color, const QSize size)
     p.fillRect(img.rect(), Qt::white);
 
     // QPen pen(Qt::darkGray, 0.1);
-    
+
     // Draws the border
     // p.setPen(Qt::black);
     p.setPen(Qt::NoPen);
-    
+
     p.setBrush(color);
     p.drawRect(QRect(QPoint(0, 0), itemSize));
     p.end();
@@ -1409,12 +1417,13 @@ QPixmap LegendWindow::color2Pixmap(const QColor &color, const QSize size)
     return QPixmap::fromImage(img);
 }
 
-QPixmap LegendWindow::color2PixmapLine(const QColor &color, double width, const QSize size)
+QPixmap LegendWindow::color2PixmapLine(const QColor &color,
+		double width, const QSize size)
 {
 	QImage img(size, QImage::Format_RGB32);
     QPainter p(&img);
 	p.fillRect(img.rect(), Qt::white);
-    
+
     //// Draws the border
     //p.setPen(Qt::black);
     //p.setBrush(Qt::white);
@@ -1425,14 +1434,15 @@ QPixmap LegendWindow::color2PixmapLine(const QColor &color, double width, const 
 	pen.setWidth(width);
 
 	p.setPen(pen);
-	p.drawLine(QLine(QPoint(0, (size.height() * 0.5)), 
+	p.drawLine(QLine(QPoint(0, (size.height() * 0.5)),
         QPoint(size.width(), (size.height() * 0.5))));
 	p.end();
 
     return QPixmap::fromImage(img);
 }
 
-QPixmap LegendWindow::symbol2Pixmap(const QColor& color, const QFont &font, const QString symbol,
+QPixmap LegendWindow::symbol2Pixmap(const QColor& color,
+		const QFont &font, const QString symbol,
     const QSize size)
 {
     QSize itemSize = size - QSize(1, 1);
@@ -1694,8 +1704,8 @@ void LegendWindow::commitFile()
 
     keys = mapAttributes->keys();
 
-    legendKeys << TYPE << GROUP_MODE << SLICES << PRECISION 
-            << STD_DEV << MAX << MIN 
+    legendKeys << TYPE << GROUP_MODE << SLICES << PRECISION
+            << STD_DEV << MAX << MIN
             << SYMBOL << FONT_FAMILY << FONT_SIZE     // special attributes for agents
             << WIDTH /*<< STYLE*/                         // special attributes to the neighborhood and graphic
             << COLOR_BAR << STD_COLOR_BAR;          // color tables
@@ -1709,20 +1719,28 @@ void LegendWindow::commitFile()
 
         out << tabulation << "-- Attribute: " << attrib->getName() << "\n";
 
-        legAttribs.push_back(enumToString("TypesOfData", attrib->getDataType()) + ", ");     // type
+        legAttribs.push_back(enumToString("TypesOfData",
+        		attrib->getDataType()) + ", ");     // type
 
-        legAttribs.push_back(enumToString("GroupingMode", attrib->getGroupMode()) + ", ");   // grouping
+        legAttribs.push_back(enumToString("GroupingMode",
+        		attrib->getGroupMode()) + ", ");   // grouping
         legAttribs.push_back(QString::number(attrib->getSlices() + 1) + ", ");		// slices
-        legAttribs.push_back(QString::number(attrib->getPrecisionNumber() + 1) + ", ");	// precision
-        legAttribs.push_back(enumToString("StdDev", attrib->getStdDeviation()) + ", ");      // standard deviation %
+        legAttribs.push_back(QString::number(
+        		attrib->getPrecisionNumber() + 1) + ", ");	// precision
+        legAttribs.push_back(enumToString(
+        		"StdDev", attrib->getStdDeviation()) + ", ");      // standard deviation %
         legAttribs.push_back(QString::number(attrib->getMaxValue()) + ", ");	// max value
         legAttribs.push_back(QString::number(attrib->getMinValue()) + ", ");		// min value
 
-        legAttribs.push_back(QString("\"%1\"").arg(attrib->getSymbol()) + ", ");             // symbol
-        legAttribs.push_back(QString("\"%1\"").arg(attrib->getFont().family()) + ", ");      // font
-        legAttribs.push_back(QString::number(attrib->getFont().pointSize()) + ", ");		// font size
+        legAttribs.push_back(QString("\"%1\"")
+        		.arg(attrib->getSymbol()) + ", ");             // symbol
+        legAttribs.push_back(QString("\"%1\"")
+        		.arg(attrib->getFont().family()) + ", ");      // font
+        legAttribs.push_back(QString::number(
+        		attrib->getFont().pointSize()) + ", ");		// font size
 
-        legAttribs.push_back(QString::number(attrib->getWidth()) + ", ");                    // width
+        legAttribs.push_back(QString::number(
+        		attrib->getWidth()) + ", ");                    // width
 
         // stdDevComboBox	// not used
         // functionComboBox	// not used
@@ -1734,7 +1752,7 @@ void LegendWindow::commitFile()
         if ((int)colorBarVec.size() > 0)
         {
             colors = "{\n" + tabulation + tabulation;
-            
+
             for (int j = 0; j < (int)colorBarVec.size(); j++)
             {
                 QString color = QString("{color = {%1, %2, %3}, distance = %4}")    // formatting: "r g b dist; "
@@ -1747,12 +1765,12 @@ void LegendWindow::commitFile()
                     color.append(", \n" + tabulation + tabulation);
                 else
                     color.append("\n");
-                
+
                 colors.append(color);
             }
             colors.append(tabulation + "}, ");
         }
-        else{
+        else {
             colors = "{}, ";
         }
 
@@ -1765,7 +1783,7 @@ void LegendWindow::commitFile()
         {
             std::vector<ColorBar> colorBarVec = attrib->getStdColorBar();
 
-            if ((int)colorBarVec.size() > 0){
+            if ((int)colorBarVec.size() > 0) {
                 for (int j = 0; j < (int)colorBarVec.size(); j++)
                 {
                     // formatting: "r g b dist; "
@@ -1797,13 +1815,13 @@ void LegendWindow::commitFile()
         }
 
         legAttribs.push_back(colors);
-    
+
         // dump in the file
         for (int k = 0; k < legendKeys.size(); k++)
         {
             out << tabulation << legendKeys.at(k) << " = " << legAttribs.at(k) << "\n";
 
-#ifdef DEBUG_OBSERVER	
+#ifdef DEBUG_OBSERVER
             printf("k: %i\t %s = %s\n", k, qPrintable(legendKeys.at(k)),
             qPrintable(legAttribs.at(k));
 #endif
@@ -1819,7 +1837,7 @@ void LegendWindow::commitFile()
         else
             out << "};\n";
 
-#ifdef DEBUG_OBSERVER	
+#ifdef DEBUG_OBSERVER
         printf("\n\n");
 #endif
     }
@@ -1846,7 +1864,8 @@ void LegendWindow::setupUi()
     QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
-    sizePolicy.setHeightForWidth(groupingParamsGroupBox->sizePolicy().hasHeightForWidth());
+    sizePolicy.setHeightForWidth(
+    		groupingParamsGroupBox->sizePolicy().hasHeightForWidth());
     groupingParamsGroupBox->setSizePolicy(sizePolicy);
     gridLayout1 = new QGridLayout(groupingParamsGroupBox);
     gridLayout1->setSpacing(6);
@@ -1866,7 +1885,8 @@ void LegendWindow::setupUi()
 
     groupingModeTextLabel = new QLabel(groupingParamsGroupBox);
     groupingModeTextLabel->setObjectName(QString::fromUtf8("groupingModeTextLabel"));
-    groupingModeTextLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+    groupingModeTextLabel->setAlignment(
+    		Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
     groupingModeTextLabel->setWordWrap(false);
 
     gridLayout1->addWidget(groupingModeTextLabel, 0, 0, 1, 1);
@@ -2133,12 +2153,14 @@ void LegendWindow::setupUi()
 void LegendWindow::retranslateUi()
 {
     this->setWindowTitle(QApplication::translate("LegendWindow", "Legend Editor", 0));
-    groupingParamsGroupBox->setTitle(QApplication::translate("LegendWindow", "Grouping Parameters", 0));
+    groupingParamsGroupBox->setTitle(
+    		QApplication::translate("LegendWindow", "Grouping Parameters", 0));
     attributeTextLabel->setText(QApplication::translate("LegendWindow", "Attribute:", 0));
     groupingModeTextLabel->setText(QApplication::translate("LegendWindow", "Mode:", 0));
     precisionTextLabel->setText(QApplication::translate("LegendWindow", "Precision:", 0));
     slicesTextLabel->setText(QApplication::translate("LegendWindow", "Slices:", 0));
-    stdDevTextLabel->setText(QApplication::translate("LegendWindow", "Standard Deviation:", 0));
+    stdDevTextLabel->setText(
+    		QApplication::translate("LegendWindow", "Standard Deviation:", 0));
     functionTextLabel->setText(QApplication::translate("LegendWindow", "Function:", 0));
     chrononTextLabel->setText(QApplication::translate("LegendWindow", "Chronon:", 0));
     applyPushButton->setText(QApplication::translate("LegendWindow", "&Apply", 0));
@@ -2146,7 +2168,8 @@ void LegendWindow::retranslateUi()
     colorGroupBox->setTitle(QApplication::translate("LegendWindow", "Colors", 0));
     clearColorsPushButton->setText(QApplication::translate("LegendWindow", "Clear", 0));
     invertColorsPushButton->setText(QApplication::translate("LegendWindow", "Invert", 0));
-    equalSpacePushButton->setText(QApplication::translate("LegendWindow", "Equal Space", 0));
+    equalSpacePushButton->setText(
+    		QApplication::translate("LegendWindow", "Equal Space", 0));
     loadGroupBox->setTitle(QApplication::translate("LegendWindow", "Load Color Bar", 0));
     loadNamesComboBox->clear();
     loadNamesComboBox->insertItems(0, QStringList()

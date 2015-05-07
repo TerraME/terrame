@@ -89,7 +89,7 @@ int luaCell::getCurrentStateName(lua_State *L)
 }
 
 /// Puts the iterator in the beginning of the luaNeighborhood composite.
-int luaCell::first(lua_State *){
+int luaCell::first(lua_State *) {
 	NeighCmpstInterf& nhgs = Cell::getNeighborhoods();
 	it = nhgs.begin();
 	return 0;
@@ -154,7 +154,11 @@ int luaCell::next(lua_State *)
 luaCell::~luaCell(void) { }
 
 /// Sets the Cell latency
-int luaCell::setLatency(lua_State *L) { Cell::setLatency(luaL_checknumber(L, 1)); return 0; }
+int luaCell::setLatency(lua_State *L)
+{
+	Cell::setLatency(luaL_checknumber(L, 1));
+	return 0;
+}
 
 /// Gets the Cell latency
 int luaCell::getLatency(lua_State *L) { lua_pushnumber(L, Cell::getLatency()); return 1; }
@@ -378,7 +382,7 @@ int luaCell::createObserver(lua_State *)
 		{
 			obsAttribs = allAttribs;
 			// observedAttribs = allAttribs;
-			
+
 			foreach(const QString &key, allAttribs)
 				observedAttribs.insert(key, "");
 		}
@@ -448,7 +452,7 @@ int luaCell::createObserver(lua_State *)
 		// then launches a warning
 		if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
 		{
-			if (execModes != Quiet){
+			if (execModes != Quiet) {
 				string err_out = string("Parameter table is empty.");
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L, err_out.c_str());
@@ -557,7 +561,7 @@ int luaCell::createObserver(lua_State *)
 			break;
 
 			case TObsTCPSender:
-				obsTCPSender = (ObserverTCPSender *) 
+				obsTCPSender = (ObserverTCPSender *)
 				CellSubjectInterf::createObserver(TObsTCPSender);
 				if (obsTCPSender)
 				{
@@ -569,21 +573,23 @@ int luaCell::createObserver(lua_State *)
 				}
 				else
 				{
-					if (execModes != Quiet){
+					if (execModes != Quiet) {
 						QString str = QString(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
 						lua_getglobal(L, "customWarning");
 						lua_pushstring(L, str.toLatin1().constData());
 						lua_call(L, 1, 0);
 					}
 				}
-				
+
 				break;
-				
+
 		case TObsMap:
 		default:
 			if (execModes != Quiet)
 			{
-				string err_out = string("In this context, the code '") + string(getObserverName(typeObserver)) + string("' does not correspond to a valid type of Observer.");
+				string err_out = string("In this context, the code '") +
+								string(getObserverName(typeObserver)) +
+								string("' does not correspond to a valid type of Observer.");
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L, err_out.c_str());
 				lua_call(L, 1, 0);
@@ -599,14 +605,15 @@ int luaCell::createObserver(lua_State *)
 		qDebug() << "cols: " << cols;
 #endif
 
-		if(obsLog){
+		if(obsLog) {
 			obsLog->setAttributes(obsAttribs);
 
 			if(cols.at(0).isNull() || cols.at(0).isEmpty())
 			{
 				if(execModes != Quiet)
 				{
-					string err_out = string("Filename was not specified, using a '") + string(DEFAULT_NAME.toStdString()) + string("'.");
+					string err_out = string("Filename was not specified, using a '") +
+									string(DEFAULT_NAME.toStdString()) + string("'.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
 					lua_call(L, 1, 0);
@@ -616,8 +623,8 @@ int luaCell::createObserver(lua_State *)
 			else
 				obsLog->setFileName(cols.at(0));
 
-			if((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty()){
-				if (execModes != Quiet){
+			if((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty()) {
+				if (execModes != Quiet) {
 					string err_out = string("Parameter 'separator' not defined, using ';'.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
@@ -632,16 +639,16 @@ int luaCell::createObserver(lua_State *)
 			return 1;
 		}
 
-		if (obsText){
+		if (obsText) {
 			obsText->setAttributes(obsAttribs);
 			lua_pushnumber(luaL, obsId);
 			return 1;
 		}
 
-		if(obsTable){
+		if(obsTable) {
 			if((cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
-					|| cols.at(1).isNull() || cols.at(1).isEmpty()){
-				if(execModes != Quiet){
+					|| cols.at(1).isNull() || cols.at(1).isEmpty()) {
+				if(execModes != Quiet) {
 					string err_out = string("Column title not defined.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
@@ -656,7 +663,7 @@ int luaCell::createObserver(lua_State *)
 			return 1;
 		}
 
-		if(obsGraphic){
+		if(obsGraphic) {
 			obsGraphic->setLegendPosition();
 
 			// Takes titles of three first locations
@@ -666,8 +673,9 @@ int luaCell::createObserver(lua_State *)
 			cols.removeFirst(); // remove axis y title
 
 			// Splits the attribute labels in the cols list
-			obsGraphic->setAttributes(obsAttribs, cols.takeFirst().split(";", QString::SkipEmptyParts),
-									obsParams, cols);
+			obsGraphic->setAttributes(obsAttribs,
+					cols.takeFirst().split(";", QString::SkipEmptyParts),
+										obsParams, cols);
 
 			lua_pushnumber(luaL, obsId);
 			lua_pushlightuserdata(luaL, (void*) obsGraphic);
@@ -675,11 +683,11 @@ int luaCell::createObserver(lua_State *)
 			return 2;
 		}
 
-		if(obsUDPSender){
+		if(obsUDPSender) {
 			obsUDPSender->setAttributes(obsAttribs);
 
-			if (cols.isEmpty()){
-				if (execModes != Quiet){
+			if (cols.isEmpty()) {
+				if (execModes != Quiet) {
 					string err_out = string("Parameter 'port' not defined.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
@@ -693,12 +701,12 @@ int luaCell::createObserver(lua_State *)
 			}
 
 			// broadcast
-			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())){
+			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())) {
 				obsUDPSender->addHost(BROADCAST_HOST);
 			}
-			else{
+			else {
 				// multicast or unicast
-				for(int i = 1; i < cols.size(); i++){
+				for(int i = 1; i < cols.size(); i++) {
 					if (! cols.at(i).isEmpty())
 						obsUDPSender->addHost(cols.at(i));
 				}
@@ -707,12 +715,12 @@ int luaCell::createObserver(lua_State *)
 			return 1;
 		}
 
-		if(obsTCPSender){
+		if(obsTCPSender) {
 			quint16 port = (quint16) DEFAULT_PORT;
 			obsTCPSender->setAttributes(obsAttribs);
 
-			if (cols.isEmpty()){
-				if (execModes != Quiet){
+			if (cols.isEmpty()) {
+				if (execModes != Quiet) {
 					string err_out = string("Port not defined.");
 					lua_getglobal(L, "customWarning");
 					lua_pushstring(L, err_out.c_str());
@@ -723,10 +731,10 @@ int luaCell::createObserver(lua_State *)
 				port = (quint16) cols.at(0).toInt();
 
 			// broadcast
-			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())){
+			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())) {
 				obsTCPSender->addHost(LOCAL_HOST);
 			}
-			else{
+			else {
 				// multicast or unicast
 				for(int i = 1; i < cols.size(); i++)
 					if (! cols.at(i).isEmpty())
@@ -849,7 +857,7 @@ int luaCell::createObserver(lua_State *)
 //			if(!obsMap)
 //				qFatal("%s", qPrintable(errorMsg));
 //			obsMap->registry(this, QString("neighborhood") + className);
-//		
+//
 //		// TODO: Antonio Removal
 //		// the test had already been done
 //		// }
@@ -878,8 +886,8 @@ int luaCell::notify(lua_State *L)
 
 #ifdef TME_PROTOCOL_BUFFERS
 
-QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs, 
-	ObserverDatagramPkg::SubjectAttribute *cellSubj, 
+QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
+	ObserverDatagramPkg::SubjectAttribute *cellSubj,
 	ObserverDatagramPkg::SubjectAttribute *parentSubj)
 {
 	QByteArray key, valueTmp;
@@ -890,7 +898,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 	int cellsPos = lua_gettop(luaL);
 
 	ObserverDatagramPkg::RawAttribute *raw = 0;
-	
+
 /*	// @RAIAN: Serializes the neighborhood
 	if(attribs.contains("@getNeighborhoodState"))
 	{
@@ -980,7 +988,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 					valueTmp = QByteArray::number(lua_toboolean(luaL, -1));
 
 					if(observedAttribs.value(key) != valueTmp)
-					{					   
+					{
 						if((parentSubj) && (! cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
@@ -1000,10 +1008,10 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 					if(observedAttribs.value(key) != valueTmp)
 					{
 #ifdef DEBUG_OBSERVER
-						qDebug() << getId() << qPrintable(key) << ": " 
+						qDebug() << getId() << qPrintable(key) << ": "
 							<< qPrintable(observedAttribs.value(key)) << " == " << qPrintable(valueTmp);
 #endif
-					
+
 						if ((parentSubj) && (! cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
@@ -1039,7 +1047,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 						valueTmp = result;
 
 						if(observedAttribs.value(key) != valueTmp)
-						{					
+						{
 							if((parentSubj) && (! cellSubj))
 								cellSubj = parentSubj->add_internalsubject();
 
@@ -1059,7 +1067,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
-					{					
+					{
 						if((parentSubj) && (! cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
@@ -1099,7 +1107,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 					valueTmp = result;
 
 					if(observedAttribs.value(key) != valueTmp)
-					{					
+					{
 						if((parentSubj) && (! cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
@@ -1120,7 +1128,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 		if(valueChanged)
 		{
 			if((parentSubj) && (! cellSubj))
-				cellSubj = parentSubj->add_internalsubject();					
+				cellSubj = parentSubj->add_internalsubject();
 
 			// id
 			cellSubj->set_id(getId());
@@ -1160,15 +1168,15 @@ QByteArray luaCell::getChanges(QDataStream& in, const QStringList& attribs)
 
 QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 {
-#ifdef TME_STATISTIC 
+#ifdef TME_STATISTIC
 	double t = Statistic::getInstance().startMicroTime();
-#endif 
+#endif
 
 	QByteArray msg, attrs, key, text;
-	
+
 	int attrCounter = 0;
 	int cellsPos = lua_gettop(luaL);
-	
+
 	// @RAIAN: Serializes the neighborhood
 	if(attribs.contains("@getNeighborhoodState"))
 	{
@@ -1198,7 +1206,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 				msg.append(QString::number(TObsNeighborhood));
 				msg.append(PROTOCOL_SEPARATOR);
 
-				// Retrieve information about the central cell (this) 
+				// Retrieve information about the central cell (this)
 				cellMsg = this->pop(luaL, QStringList() << "x" << "y");
 
 				elements.append(cellMsg);
@@ -1215,7 +1223,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 				msg.append(QString::number(neighSize + 1));
 				msg.append(PROTOCOL_SEPARATOR);
 				// TODO: why two tabs in sequence?
-				msg.append(PROTOCOL_SEPARATOR); 
+				msg.append(PROTOCOL_SEPARATOR);
 
 				while(itNeigh != neigh->end())
 				{
@@ -1250,9 +1258,9 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 	{
 		bool valueChanged = false;
 		QByteArray valueTmp;
-		
+
 		msg = popLua(TObsCell, luaL, cellsPos, attribs, observerAttribs, valueChanged);
-	
+
 		if(valueChanged)
 		{
 			// id
@@ -1291,22 +1299,24 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs)
 		}
 	}
 
-#ifdef TME_STATISTIC 
+#ifdef TME_STATISTIC
 	t = Statistic::getInstance().endMicroTime() - t;
 	Statistic::getInstance().addElapsedTime("pop lua - cell", t);
-#endif 
+#endif
 
 	return msg;
 }
 
-QByteArray luaCell::getAll(QDataStream & /*in*/, int /*observerId*/, const QStringList& attribs)
+QByteArray luaCell::getAll(QDataStream & /*in*/, int /*observerId*/,
+						const QStringList& attribs)
 {
 	// recover the reference on the stack Lua
 	Reference<luaCell>::getReference(luaL);
 	return pop(luaL, attribs);
 }
 
-QByteArray luaCell::getChanges(QDataStream& in, int observerId, const QStringList& attribs)
+QByteArray luaCell::getChanges(QDataStream& in, int observerId,
+							const QStringList& attribs)
 {
 	return getAll(in, observerId, attribs);
 }
@@ -1314,7 +1324,8 @@ QByteArray luaCell::getChanges(QDataStream& in, int observerId, const QStringLis
 #endif // ifdef TME_PROTOCOL_BUFFERS
 
 #ifdef TME_BLACK_BOARD
-QDataStream& luaCell::getState(QDataStream& in, Subject *, int /*observerId*/, const QStringList & /* attribs */)
+QDataStream& luaCell::getState(QDataStream& in, Subject *, int /*observerId*/,
+							const QStringList & /* attribs */)
 {
 #ifdef DEBUG_OBSERVER
 	printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
@@ -1350,7 +1361,8 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int /*observerId*/, c
 
 #else
 
-QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs)
+QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId,
+							QStringList &  attribs)
 {
 #ifdef DEBUG_OBSERVER
 	printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());

@@ -20,9 +20,9 @@ In no event shall INPE and TerraLAB / UFOP be held liable to any party for direc
 indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
-/*! 
+/*!
   \file randomUtils.h
-  \brief 
+  \brief
   \author
 */
 
@@ -53,12 +53,12 @@ public:
 
     // redistribute(string s)
 /*
-    int redistribute(lua_State *L){
+    int redistribute(lua_State *L) {
         lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
         int top = lua_gettop(L);
         QString distribution = luaL_checkstring(L, top - 1);
 
-        if(distribution == "normal"){
+        if(distribution == "normal") {
             qDebug() << "-->> normal";
         }
         else {
@@ -68,7 +68,7 @@ public:
     }
 */
     // reseed(int v)
-    int reseed(lua_State *L){
+    int reseed(lua_State *L) {
         int v = (int)luaL_checkinteger(L, -1);
         this->r.Reseed(v);
         return 1;
@@ -77,18 +77,18 @@ public:
     // random()
     // random(a)
     // random(a, b)
-    int random(lua_State *L){
+    int random(lua_State *L) {
 
         // int arg2 = (int)luaL_checkinteger(L, top - 1);
         // int arg = (int)luaL_checkinteger(L, top - 2);
         int arg2 = (int)luaL_checkinteger(L, -1);
         int arg = (int)luaL_checkinteger(L, -2);
-        
+
         int v;
         double dV;
-        if(arg < 0){
+        if(arg < 0) {
             // condition arg < 0 and arg2 < 0 with random() semantics
-            if(arg2 < 0){
+            if(arg2 < 0) {
                 dV = this->r.Float();
 
                 lua_pushnumber(L, dV);
@@ -106,7 +106,7 @@ public:
 
     // random(a)
     // random(a, b)
-    int randomInteger(lua_State *L){
+    int randomInteger(lua_State *L) {
 
         // int arg2 = (int)luaL_checkinteger(L, top - 1);
         // int arg = (int)luaL_checkinteger(L, top - 2);

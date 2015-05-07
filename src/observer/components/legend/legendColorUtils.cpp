@@ -109,7 +109,7 @@ std::vector<ColorBar>  getColorBarVector(std::string& groupingColors, const bool
 
             a++;
             memset(buf, '\0', 1000);
-            s.copy(buf, s.size()-a, a);
+            s.copy(buf, s.size() - a, a);
             s = buf;
             a = s.find("-");
 
@@ -228,7 +228,7 @@ std::vector<ColorBar>  getColorBarVector(std::string& groupingColors, const bool
 
             a++;
             memset(buf, '\0', 1000);
-            s.copy(buf, s.size()-a, a);
+            s.copy(buf, s.size() - a, a);
             s = buf;
             a = s.find("-");
             if(a == 0) // hue = -1
@@ -248,7 +248,7 @@ std::vector<ColorBar>  getColorBarVector(std::string& groupingColors, const bool
 
                 aa++;
                 memset(buf, '\0', 1000);
-                ss.copy(buf, ss.size()-aa, aa);
+                ss.copy(buf, ss.size() - aa, aa);
                 ss = buf;
                 aa = ss.find(";");
             }
@@ -337,7 +337,8 @@ std::vector<ColorBar>  getColorBarVector(std::string& groupingColors, const bool
     return cbVec;
 }
 
-void generateColorBarMap(std::vector<ColorBar>& inputColorVec, int ncores, std::map<int, std::vector<TeColor> >& colorMap)
+void generateColorBarMap(std::vector<ColorBar>& inputColorVec, int ncores,
+		std::map<int, std::vector<TeColor> >& colorMap)
 {
     if(inputColorVec.empty())
     {
@@ -358,16 +359,17 @@ void generateColorBarMap(std::vector<ColorBar>& inputColorVec, int ncores, std::
     if(inputColorVec.empty())
         return;
 
-    double totalDistance = inputColorVec[inputColorVec.size()-1].distance_;
+    double totalDistance = inputColorVec[inputColorVec.size() - 1].distance_;
     double dd = (double)ncores / totalDistance;
 
     colorMap.clear();
-    for(i = 0; i < (int)inputColorVec.size()-1; ++i)
+    for(i = 0; i < (int)inputColorVec.size() - 1; ++i)
     {
         nc = ROUND(dd * (fabs(inputColorVec[i + 1].distance_) - fabs(inputColorVec[i].distance_)));
         TeColor corFrom, corTo;
         ::hsv2Rgb(corFrom, inputColorVec[i].h_, inputColorVec[i].s_, inputColorVec[i].v_);
-        ::hsv2Rgb(corTo, inputColorVec[i + 1].h_, inputColorVec[i + 1].s_, inputColorVec[i + 1].v_);
+        ::hsv2Rgb(corTo, inputColorVec[i + 1].h_, inputColorVec[i + 1].s_,
+        		inputColorVec[i + 1].v_);
         //		TeColor corFrom = inputColorVec[i].cor_;
         //		TeColor corTo = inputColorVec[i+1].cor_;
         colorMap[i] = ::getColors(corFrom, corTo, nc);
@@ -570,7 +572,8 @@ std::vector<TeColor> getColors(std::vector<ColorBar>& iVec, int ncores)
     return outVec;
 }
 
-std::string getColors(std::vector<ColorBar>& aVec, std::vector<ColorBar>& bVec, int groupingMode)
+std::string getColors(std::vector<ColorBar>& aVec,
+		std::vector<ColorBar>& bVec, int groupingMode)
 {
     string s, ss;
     vector<ColorBar> colorBarVec = aVec;
@@ -591,7 +594,8 @@ std::string getColors(std::vector<ColorBar>& aVec, std::vector<ColorBar>& bVec, 
         b = cor.blue_;
         d = cb.distance_;
 
-        s += number2String(cb.h_) + ";" + number2String(cb.s_) + ";" + number2String(cb.v_) + ";" + number2String(d, 2);
+        s += number2String(cb.h_) + ";" + number2String(cb.s_) + ";"
+        		+ number2String(cb.v_) + ";" + number2String(d, 2);
         if(s.size() > 255)
         {
             s = ss;
@@ -620,7 +624,8 @@ std::string getColors(std::vector<ColorBar>& aVec, std::vector<ColorBar>& bVec, 
             b = cor.blue_;
             d = cb.distance_;
 
-            s += number2String(cb.h_) + ";" + number2String(cb.s_) + ";" + number2String(cb.v_) + ";" + number2String(d, 2);
+            s += number2String(cb.h_) + ";" + number2String(cb.s_) + ";"
+            		+ number2String(cb.v_) + ";" + number2String(d, 2);
             if(s.size() > 255)
             {
                 s = ss;
@@ -655,7 +660,8 @@ void rgb2Hsv(const TeColor& c, int& h, int& s, int& v)
 // h = [0, 360], s = [0, 1], v = [0, 1]
 //		if s == 0, then h = -1 (undefined)
 
-void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v)
+void RGBtoHSV(const double& r, const double& g,
+		const double& b, double& h, double& s, double& v)
 {
     if(r == g && g == b) // achromatic (grey)
     {
@@ -711,7 +717,8 @@ void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v)
     c.blue_ = ROUND(b * 255.);
 }
 
-void HSVtoRGB(double& r, double& g, double& b, const double& h, const double& s, const double& v)
+void HSVtoRGB(double& r, double& g, double& b,
+		const double& h, const double& s, const double& v)
 {
     int i;
     double f, p, q, t, hh = h;

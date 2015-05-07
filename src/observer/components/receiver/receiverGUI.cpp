@@ -8,7 +8,7 @@
 
 using namespace TerraMEObserver;
 
-class LuaLegend 
+class LuaLegend
 {
 public:
     LuaLegend() {}
@@ -31,12 +31,12 @@ public:
     QString colorBar;
     QString stdColorBar;
 
-    const QStringList & keysToString() const 
+    const QStringList & keysToString() const
     {
         return LEGEND_KEYS;
     }
 
-    QStringList valuesToString() const 
+    QStringList valuesToString() const
     {
 #ifndef DEBUG_OBSERVER
         return QString("%1$ %2$ %3$ %4$ %5$ %6$ %7$ %8$ %9$ %10$ %11$ %12$ %13$") // %14")
@@ -51,7 +51,8 @@ public:
             .arg(stdDev)
             .arg(maximum)
             .arg(mininum)
-            .arg((stdColorBar.isEmpty() ? colorBar : colorBar + COLOR_BAR_SEP + stdColorBar))
+            .arg((stdColorBar.isEmpty() ? colorBar : colorBar
+            		+ COLOR_BAR_SEP + stdColorBar))
             .arg(fontFamily)
             .arg(fontSize)
             .arg(symbol)
@@ -89,7 +90,8 @@ ReceiverGUI::~ReceiverGUI()
 
 void ReceiverGUI::setStatusAndPort(const QString &state, int port)
 {
-    ui->lblReceiverStatus->setText(QString("State: '%1' @ Port: %2").arg(state).arg(port));
+    ui->lblReceiverStatus->setText(
+    		QString("State: '%1' @ Port: %2").arg(state).arg(port));
 }
 
 void ReceiverGUI::setMessagesStatus(int msg)
@@ -144,23 +146,24 @@ void ReceiverGUI::blindListenButtonClicked()
     emit blindListenPort(port);
 }
 
-    
-int ReceiverGUI::getDimX() const 
-{ 
-    return ui->xDimSpin->value(); 
+
+int ReceiverGUI::getDimX() const
+{
+    return ui->xDimSpin->value();
 }
-    
-int ReceiverGUI::getDimY() const 
-{ 
-    return ui->yDimSpin->value(); 
+
+int ReceiverGUI::getDimY() const
+{
+    return ui->yDimSpin->value();
 }
 
 void ReceiverGUI::okButtonClicked()
 {
     // remove white space
-    QString part = ui->attribsPlainEdit->toPlainText().remove(QChar(' '), Qt::CaseInsensitive);
+    QString part = ui->attribsPlainEdit->toPlainText()
+    		.remove(QChar(' '), Qt::CaseInsensitive);
     QStringList attrsList = part.split(";", QString::SkipEmptyParts);
-    
+
     if (attrsList.isEmpty())
     {
         clearAll();
@@ -206,7 +209,7 @@ void ReceiverGUI::okButtonClicked()
 
             QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
             item->setText(leg->name);
-            
+
             keys.append(leg->keysToString());
 
             luaLegendHash.insert(leg->name, leg);
@@ -248,7 +251,7 @@ void ReceiverGUI::consistGUI(int listRow)
             case TObsBool: ui->boolRadio->setChecked(true); break;
             case TObsDateTime: ui->dateTimeRadio->setChecked(true); break;
             case TObsNumber: ui->numberRadio->setChecked(true); break;
-            case TObsText: 
+            case TObsText:
             default: ui->stringRadio->setChecked(true); break;
         }
 
@@ -257,7 +260,7 @@ void ReceiverGUI::consistGUI(int listRow)
             case TObsEqualSteps: ui->equalRadio->setChecked(true); break;
             case TObsQuantil: ui->quantilRadio->setChecked(true); break;
             case TObsStdDeviation: ui->stdDevRadio->setChecked(true); break;
-            case TObsUniqueValue: 
+            case TObsUniqueValue:
             default: ui->uniqueRadio->setChecked(true); break;
         }
 
@@ -266,7 +269,7 @@ void ReceiverGUI::consistGUI(int listRow)
             case TObsNone: ui->noneRadio->setChecked(true); break;
             case TObsQuarter: ui->quarterRadio->setChecked(true); break;
             case TObsHalf: ui->halfRadio->setChecked(true); break;
-            case TObsFull: 
+            case TObsFull:
             default: ui->fullRadio->setChecked(true); break;
         }
 
@@ -276,14 +279,14 @@ void ReceiverGUI::consistGUI(int listRow)
         ui->widthSpin->setValue(leg->width);
 
         int symbolPos = ui->curveSymbolCombo->findText(leg->symbol);
-        
+
         ui->lineStylecombo->setCurrentIndex(leg->lineStyle); // ui->lineStylecombo->findText(leg->lineStyle));
         ui->curveStyleCombo->setCurrentIndex(leg->curveStyle); // ui->curveStyleCombo->findText(leg->curveStyle));
         ui->curveSymbolCombo->setCurrentIndex((symbolPos < 0 ? 0 : symbolPos));
         ui->fontComboBox->setCurrentIndex(ui->fontComboBox->findText(leg->fontFamily));
-        
+
         // ui->lineStylecombo->setCurrentIndex(ui->lineStylecombo->findText(leg->style));
-        
+
         ui->colorBarLine->setText(leg->colorBar);
         ui->stdColorBarLine->setText(leg->stdColorBar);
     }
@@ -494,9 +497,10 @@ void ReceiverGUI::setupGUI()
     // ui->lblCompressIcon->setPixmap(QPixmap(":/icons/compress.png"));
     ui->lblCompress->setText("Compress: Off");
     ui->lblCompress->setToolTip("The send compressed is disabled.");
-    
+
     connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(closeButtonClicked()));
-    connect(ui->blindListenButton, SIGNAL(clicked()), this, SLOT(blindListenButtonClicked()));
+    connect(ui->blindListenButton, SIGNAL(clicked()), this,
+    		SLOT(blindListenButtonClicked()));
     connect(ui->okButton, SIGNAL(clicked()), this, SLOT(okButtonClicked()));
     connect(ui->listWidget, SIGNAL(currentRowChanged(int)), this, SLOT(consistGUI(int)));
     // connect(ui->attribsPlainEdit, SIGNAL(textChanged(const QString &)), this, SLOT(consistButtons(const QString &)));
@@ -516,7 +520,7 @@ void ReceiverGUI::setupGUI()
     signalMapper->setMapping(ui->neighborRadio, TObsNeigh);
     signalMapper->setMapping(ui->udpSenderRadio, TObsUDPSender);
     signalMapper->setMapping(ui->tcpSenderRadio, TObsTCPSender);
-    
+
     connect(ui->logFileRadio, SIGNAL(clicked()), signalMapper, SLOT(map()));
     connect(ui->tableRadio, SIGNAL(clicked()), signalMapper, SLOT(map()));
     connect(ui->textScreenRadio, SIGNAL(clicked()), signalMapper, SLOT(map()));
@@ -577,7 +581,8 @@ void ReceiverGUI::setupGUI()
 
 void ReceiverGUI::writeSettings()
  {
-     QSettings settings(QSettings::IniFormat, QSettings::UserScope, "TerraME", "ObserverClient");
+     QSettings settings(QSettings::IniFormat,
+    		 QSettings::UserScope, "TerraME", "ObserverClient");
 
      settings.beginGroup("RemoteVisualizations");
 
@@ -595,10 +600,11 @@ void ReceiverGUI::readSettings()
  {
      ui->frame->blockSignals(true);
 
-     QSettings settings(QSettings::IniFormat, QSettings::UserScope, "TerraME", "ObserverClient");
+     QSettings settings(QSettings::IniFormat,
+    		 QSettings::UserScope, "TerraME", "ObserverClient");
 
      settings.beginGroup("RemoteVisualizations");
-     
+
      settings.beginGroup("Attributes");
      ui->attribsPlainEdit->setPlainText(settings.value("attributes").toString());
      ui->colorBarLine->setText(settings.value("colorBar").toString());

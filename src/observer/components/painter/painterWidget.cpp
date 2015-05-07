@@ -62,11 +62,11 @@ PainterWidget::PainterWidget(QHash<QString, Attributes*> *mapAttrib,
     qRegisterMetaType<QImage>("QImage");
     //connect(&visualMapping, SIGNAL(displayImage(QImage)), this, SLOT(displayImage(QImage)), Qt::DirectConnection);
     //connect(&visualMapping, SIGNAL(update()), this, SLOT(update()), Qt::QueuedConnection);
-    
+
     visualMapping = new VisualMapping(observerType);
-    connect(visualMapping, SIGNAL(displayImage(QImage)), 
-        this, SLOT(displayImage(QImage)) , Qt::QueuedConnection); // DirectConnection); // 
-    connect(this, SIGNAL(enableGrid(bool)), 
+    connect(visualMapping, SIGNAL(displayImage(QImage)),
+        this, SLOT(displayImage(QImage)) , Qt::QueuedConnection); // DirectConnection); //
+    connect(this, SIGNAL(enableGrid(bool)),
         visualMapping, SLOT(enableGrid(bool)));
 }
 
@@ -113,13 +113,13 @@ void PainterWidget::replotMap()
 
     /*
     QPainter p;
-    
+
     foreach (Attributes *attrib, mapAttributes->values())
     {
         if (attrib->getType() != TObsAgent)
             visualMapping.drawAttrib(&p, attrib);
     }
-    
+
     // movido para o 'draw()'
     // calculateResult();
 
@@ -133,9 +133,10 @@ void PainterWidget::replotMap()
 
 bool PainterWidget::rescale(const QSize &newSize)
 {
-    QImage img = QImage(resultImage.scaled(newSize/*, Qt::IgnoreAspectRatio, Qt::SmoothTransformation*/));
+    QImage img = QImage(resultImage.scaled(newSize/*,
+    	Qt::IgnoreAspectRatio, Qt::SmoothTransformation*/));
 
-    if (img.isNull()) 
+    if (img.isNull())
     {
         QMessageBox::information(this, "TerraME :: Map",
                                  tr("This zoom level generated a null image."));
@@ -149,14 +150,14 @@ bool PainterWidget::rescale(const QSize &newSize)
 }
 
 void PainterWidget::paintEvent(QPaintEvent * /* event */)
-{	
+{
     // if (resultImageBkp.isNull())
     //    return;
 
     QPainter painter(this);
     // painter.drawPixmap(QPoint(0, 0), QPixmap::fromImage(resultImageBkp));
     painter.drawImage(ZERO_POINT, resultImageBkp);
-    
+
     if (! showRectZoom)
         return;
 
@@ -385,13 +386,14 @@ void PainterWidget::displayImage(const QImage &result)
     t = Statistic::getInstance().startMicroTime();
 
     resultImage = result; //.copy();
-    resultImageBkp = resultImage.scaled(size(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
+    resultImageBkp = resultImage.scaled(size(),
+    		Qt::IgnoreAspectRatio, Qt::FastTransformation);
 
 // see more information about this flag in VisualMapping.h
 #ifdef TME_DRAW_VECTORIAL_AGENTS
     if (existAgent && visualMapping)
     {
-        // qDebug() << "resultImageBkp.size() " << resultImageBkp.size() 
+        // qDebug() << "resultImageBkp.size() " << resultImageBkp.size()
         //      << "resultImage.size()" << resultImage.size();
         const QSize origSize = resultImage.size();
         visualMapping->drawAgent(resultImageBkp, origSize);
@@ -416,7 +418,7 @@ void PainterWidget::displayImage(const QImage &result)
     }
 #endif // TME_DRAW_VECTORIAL_AGENTS
 
-    update(); 
+    update();
 
     // It processes the update event
     qApp->processEvents();
@@ -434,8 +436,9 @@ void PainterWidget::displayImage(const QImage &result)
 #else
 
     resultImage = result;
-    resultImageBkp = resultImage.scaled(size(), Qt::IgnoreAspectRatio, Qt::FastTransformation);
-        
+    resultImageBkp = resultImage.scaled(size(),
+    		Qt::IgnoreAspectRatio, Qt::FastTransformation);
+
 // see more information about this flag in VisualMapping.h
 #ifdef TME_DRAW_VECTORIAL_AGENTS
     if (existAgent && visualMapping)
@@ -471,7 +474,7 @@ void PainterWidget::displayImage(const QImage &result)
 
 #ifdef DEBUG_OBSERVER
     if (result.isNull())
-        qDebug() << ("result is NULL!!!"); 
+        qDebug() << ("result is NULL!!!");
 
     if (resultImage.isNull())
         qDebug() << ("resultImage is NULL!!!");

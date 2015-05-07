@@ -70,7 +70,7 @@ void Worker::run()
                 try
                 {
                     task->execute();
-                  
+
                     switch (task->getType())
                     {
                         // TODO: This causes problems in 'join' of TaskManager?

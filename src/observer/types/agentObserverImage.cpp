@@ -54,10 +54,10 @@ bool AgentObserverImage::draw(QDataStream & state)
 	// decoded = BlackBoard::getInstance().canDraw();
 	//if (decoded)
     //    drw = drw && draw();
-    
+
     // return drw && ObserverImage::save();
     return BlackBoard::getInstance().canDraw() && ObserverImage::draw(state);
-	
+
 #else
 
     bool drw = false, decoded = false;
@@ -87,7 +87,7 @@ bool AgentObserverImage::draw(QDataStream & state)
         {
             if (className != nestedSubjects.at(i).second)
                 cleanImage = true;
-            
+
             // if (className != attribListAux.first())
             //    cleanImage = true;
 
@@ -103,17 +103,17 @@ bool AgentObserverImage::draw(QDataStream & state)
 
         buffer.close();
     }
-   
+
     if (decoded)
         drw = drw && draw();
 
     return drw && ObserverImage::save();
 
 #endif // TME_BLACK_BOARD
-  
+
 }
 
-void AgentObserverImage::setSubjectAttributes(const QStringList & attribs, 
+void AgentObserverImage::setSubjectAttributes(const QStringList & attribs,
     int nestedSubjID, const QString & className)
 {
     QHash<QString, Attributes*> * mapAttributes = getMapAttributes();
@@ -127,7 +127,9 @@ void AgentObserverImage::setSubjectAttributes(const QStringList & attribs,
          {
             if (execModes != Quiet)
             {
-				string str = string("The attribute called ") + attribs.at(i).toLatin1().data() + string(" was not found.");
+				string str = string("The attribute called ")
+						+ attribs.at(i).toLatin1().data()
+						+ string(" was not found.");
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L, str.c_str());
 				lua_call(L, 1, 0);
@@ -157,7 +159,7 @@ void AgentObserverImage::registry(Subject *subj, const QString & className)
     {
 #ifdef TME_BLACK_BOARD
     	SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(subj->getId());
-    	if (subjAttr) 
+    	if (subjAttr)
         	subjAttr->setSubjectType(subj->getType());
 #endif
 
@@ -204,8 +206,8 @@ bool AgentObserverImage::unregistry(Subject *subj, const QString & className)
         //// Remove only the attribute that has no values
         //if (subj->getSubjectType() == attrib->getType())
         //{
-        //        if ((attrib->getType() != TObsAgent) 
-        //            || ((className == attrib->getExhibitionName()) 
+        //        if ((attrib->getType() != TObsAgent)
+        //            || ((className == attrib->getExhibitionName())
         //                 && (! ObserverMap::existAgents(nestedSubjects))))
         //    {
         //        getMapAttributes()->take(attrib->getName());
@@ -236,7 +238,7 @@ bool AgentObserverImage::decode(QDataStream &in, TypesOfSubjects subject)
     // qDebug() << msg.split(PROTOCOL_SEPARATOR, QString::SkipEmptyParts);
 
     Attributes * attrib = 0;
-    
+
     if (subject == TObsTrajectory)
         attrib = getMapAttributes()->value("trajectory");
     else

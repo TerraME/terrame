@@ -29,16 +29,18 @@ ReceiverTcpServer::~ReceiverTcpServer()
 
 void ReceiverTcpServer::incomingConnection(int socketDescriptor)
 {
-    ui->appendMessage(tr("Incoming connection for socket descriptor %1.").arg(socketDescriptor));
+    ui->appendMessage(tr("Incoming connection for socket descriptor %1.")
+    		.arg(socketDescriptor));
 
     //if (connectionCount >= ui->getAttributesSize())
     //    connectionCount = 0;
 
     ClientTcpConnection *clientConnection = new ClientTcpConnection(ui, this);
-    // clientConnection->createItens((TypesOfObservers) ui->getTypeSelected(), *ui->getAttributes(connectionCount));
+    // clientConnection->createItens((TypesOfObservers) ui->getTypeSelected(),*ui->getAttributes(connectionCount));
 
     clientConnection->setSocketDescriptor(socketDescriptor);
-    QObject::connect(clientConnection, SIGNAL(disconnected()), clientConnection, SLOT(deleteLater()));
+    QObject::connect(clientConnection, SIGNAL(disconnected()),
+    		clientConnection, SLOT(deleteLater()));
 
     //connectionCount++;
 }

@@ -35,7 +35,7 @@ Observer * NeighborhoodSubjectInterf::createObserver(TypesOfObservers type)
         case TObsTCPSender:
             obs = new ObserverTCPSender(this);
             break;
-			
+
         case TObsMap:
             obs = new AgentObserverMap(this);
             break;
@@ -43,7 +43,7 @@ Observer * NeighborhoodSubjectInterf::createObserver(TypesOfObservers type)
         case TObsImage:
             obs = new AgentObserverImage(this);
             break;
-		
+
         default:
             obs = new ObserverTextScreen(this);
             break;
@@ -85,13 +85,13 @@ bool NeighborhoodSubjectInterf::kill(int id)
         case TObsTCPSender:
             ((ObserverTCPSender *)obs)->close();
             delete (ObserverTCPSender *)obs;
-            break;           
-            
+            break;
+
         case TObsTextScreen:
             ((ObserverTextScreen *)obs)->close();
             delete (ObserverTextScreen *)obs;
             break;
-       
+
         //case TObsMap:
         //    ((AgentObserverMap *)obs)->close();
         //    delete (AgentObserverMap *)obs;
@@ -101,7 +101,7 @@ bool NeighborhoodSubjectInterf::kill(int id)
         //    ((AgentObserverImage *)obs)->close();
         //    delete (AgentObserverImage *)obs;
         //    break;
-            
+
         default:
             delete obs;
             break;

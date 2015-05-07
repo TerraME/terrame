@@ -39,8 +39,10 @@ extern "C"
 
 extern lua_State * L;
 
-ObserverMapSuperclass::ObserverMapSuperclass(Subject *subj, const TypesOfObservers &obsType,
-                                       const QString &windowTitle, QWidget *parent) : ObserverInterf(subj), QDialog(parent)
+ObserverMapSuperclass::ObserverMapSuperclass(Subject *subj,
+		const TypesOfObservers &obsType,
+		const QString &windowTitle, QWidget *parent)
+		: ObserverInterf(subj), QDialog(parent)
 {
     observerType = obsType;
     subjectType = subj->getType(); // TO_DO: Changes it to Observer pattern
@@ -85,7 +87,7 @@ ObserverMapSuperclass::~ObserverMapSuperclass()
     delete scene;
 }
 
-void ObserverMapSuperclass::setupGUI(){
+void ObserverMapSuperclass::setupGUI() {
     resize(600, 400);
 
     scene = new QGraphicsScene(this);
@@ -172,7 +174,8 @@ void ObserverMapSuperclass::setupGUI(){
     zoomComboBox->setCurrentIndex(23); // window  //zoomIdx); //11);
     //zoomComboBox->setCurrentIndex(zoomIdx); //11);
     zoomComboBox->setEditable(true);
-    connect(zoomComboBox, SIGNAL(activated(const QString &)), this, SLOT(zoomActivated(const QString &)));
+    connect(zoomComboBox, SIGNAL(activated(const QString &)),
+    		this, SLOT(zoomActivated(const QString &)));
 
     QHBoxLayout *hLayoutZoom1 = new QHBoxLayout();
     hLayoutZoom1->setMargin(5);
@@ -200,7 +203,8 @@ void ObserverMapSuperclass::setupGUI(){
     QVBoxLayout *layoutTools = new QVBoxLayout(frameTools);
     layoutTools->setMargin(5);
 
-    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50,  QSizePolicy::Minimum, QSizePolicy::Fixed);
+    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50,
+    		QSizePolicy::Minimum, QSizePolicy::Fixed);
 
     layoutTools->addWidget(butLegend);
     layoutTools->addItem(verticalSpacer);
@@ -212,7 +216,8 @@ void ObserverMapSuperclass::setupGUI(){
     layoutTools->addWidget(treeLayers);
 
     QSplitter *splitter = new QSplitter(this);
-    splitter->setStyleSheet("QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
+    splitter->setStyleSheet(
+    		"QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
     splitter->addWidget(frameTools);
     splitter->addWidget(view);
     splitter->setStretchFactor(0, 0);
@@ -334,7 +339,8 @@ void ObserverMapSuperclass::zoomWindow()
     qDebug() << "center: " << center;
     qDebug() << "node: " << lstNode->pos().x() + lstNode->boundingRect().width()
         << "; " << fstNode->pos().x() + fstNode->boundingRect().width();
-    qDebug() << "center 2: " << lstNode->pos().x() << " + " <<  lstNode->boundingRect().width()
+    qDebug() << "center 2: " << lstNode->pos().x()
+    		<< " + " <<  lstNode->boundingRect().width()
          << " - " <<  fstNode->pos().x() << " + " <<  fstNode->boundingRect().height()
          << " = " << (lstNode->pos().x() + lstNode->boundingRect().width())
          - (fstNode->pos().x() + fstNode->boundingRect().height());
@@ -344,7 +350,7 @@ void ObserverMapSuperclass::zoomWindow()
     //qDebug() << "scrollH: " << view->horizontalScrollBar()->value();
 
     static bool criado = false;
-    if (!criado){
+    if (!criado) {
         criado = true;
         RectItemDebug *rectItem = 0;
 
@@ -493,7 +499,9 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
         {
-			string err_out = string("Error: Parameter legend") + LEGEND_KEYS.at(j).toLatin1().data() + string(" not found. ") +
+			string err_out = string("Error: Parameter legend")
+					+ LEGEND_KEYS.at(j).toLatin1().data()
+					+ string(" not found. ") +
 					string("Please check it in the model.");
 			lua_getglobal(L, "customErrorMsg");
 			lua_pushstring(L, err_out.c_str());
@@ -540,8 +548,8 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
             {
                 attrib->setDataType((TypesOfData) legAttribs.at(type).toInt());
                 attrib->setGroupMode((GroupingMode) legAttribs.at(mode).toInt());
-                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// conta com o zero
-                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// conta com o zero
+                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// count on zero
+                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// count on zero
                 attrib->setStdDeviation((StdDev) legAttribs.at(stdDeviation).toInt());
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());

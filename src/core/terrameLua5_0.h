@@ -45,7 +45,7 @@ luaCell * findCell(luaCellularSpace*, CellIndex&);
 
 //****************************** SPACE **********************************************//
 ///////////////////////////////////////////////////////////////////////////////////////
-class luaCellIndex 
+class luaCellIndex
 {
     int ref;
 public:
@@ -54,11 +54,14 @@ public:
         x = y = 0;
         if(lua_istable(L, -1))
         {
-            lua_pushstring(L, "x"); lua_gettable(L, -2); x = (int) luaL_checknumber(L, -1); lua_pop(L, 1);
-            lua_pushstring(L, "y"); lua_gettable(L, -2); y = (int) luaL_checknumber(L, -1); lua_pop(L, 1);
+            lua_pushstring(L, "x"); lua_gettable(L, -2); x =
+            		(int) luaL_checknumber(L, -1); lua_pop(L, 1);
+            lua_pushstring(L, "y"); lua_gettable(L, -2); y =
+            		(int) luaL_checknumber(L, -1); lua_pop(L, 1);
         }
     }
-    int set(lua_State *L) { x = (int)luaL_checknumber(L, -2);  y = (int) luaL_checknumber(L, -1); return 0;}
+    int set(lua_State *L) { x = (int)luaL_checknumber(L, -2);  y =
+    		(int) luaL_checknumber(L, -1); return 0;}
     int get(lua_State *L) { lua_pushnumber(L, x); lua_pushnumber(L, y); return 2;}
 
     int setReference(lua_State* L)
@@ -75,7 +78,7 @@ public:
 
     static const char className[];
     static Luna<luaCellIndex>::RegType methods[];
-}; 
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////
 class luaCell;
@@ -153,7 +156,7 @@ public:
     {
         double weight = 0;
         CellIndex cellIndex;
-        if(it != CellNeighborhood::end()){
+        if(it != CellNeighborhood::end()) {
             cellIndex = it->first;
             weight = CellNeighborhood::getWeight(cellIndex);
         }
@@ -165,7 +168,7 @@ public:
     int getNeighbor(lua_State *L)
     {
         CellIndex cellIndex;
-        if(it != CellNeighborhood::end()){
+        if(it != CellNeighborhood::end()) {
             cellIndex = it->first;
             luaCell *cell = (luaCell*) it->second;
             ::getReference(L, cell);
@@ -188,7 +191,7 @@ public:
     int setWeight(lua_State *L) {
         double weight = luaL_checknumber(L, -1);
         CellIndex cellIndex;
-        if(it != CellNeighborhood::end()){
+        if(it != CellNeighborhood::end()) {
             cellIndex = it->first;
             CellNeighborhood::setWeight(cellIndex, weight);
         }
@@ -335,7 +338,7 @@ public:
     }
 
     int synchronize(lua_State *L) {
-        Cell::synchronize(sizeof(luaCell)); 
+        Cell::synchronize(sizeof(luaCell));
         return 0;
     }
 
@@ -388,16 +391,28 @@ public:
         inputThemeName = "";
     }
 
-    int setDBType(lua_State *L)   { 	dbType =  string(lua_tostring(L, -1)); return 0; }
-    int setHostName(lua_State *L) { 	host =  string(lua_tostring(L, -1));  return 0; }
-    int setDBName(lua_State *L)   { 	dbName =  string(lua_tostring(L, -1)); return 0; }
-    int setUser(lua_State *L)     { 	user =  string(lua_tostring(L, -1)); return 0; }
-    int setPassword(lua_State *L) { 	pass =  string(lua_tostring(L, -1)); return 0; }
-    int setLayer(lua_State *L)    { 	inputLayerName =  string(lua_tostring(L, -1)); return 0; }
-    int setTheme(lua_State *L)	 { 	inputThemeName  =  string(lua_tostring(L, -1)); return 0; }
+    int setDBType(lua_State *L)   { dbType =  string(lua_tostring(L, -1)); return 0; }
+    int setHostName(lua_State *L) { host =  string(lua_tostring(L, -1));  return 0; }
+    int setDBName(lua_State *L)   { dbName =  string(lua_tostring(L, -1)); return 0; }
+    int setUser(lua_State *L)     { user =  string(lua_tostring(L, -1)); return 0; }
+    int setPassword(lua_State *L) { pass =  string(lua_tostring(L, -1)); return 0; }
+    int setLayer(lua_State *L)
+    {
+    	inputLayerName =  string(lua_tostring(L, -1));
+    	return 0;
+    }
+    int setTheme(lua_State *L)
+    {
+    	inputThemeName  =  string(lua_tostring(L, -1));
+    	return 0;
+    }
     int clearAttrName(lua_State *L) { attrNames.clear(); return 0; }
-    int addAttrName(lua_State *L)  {  attrNames.push_back(lua_tostring(L, -1)); return 0; }
-    int setWhereClause(lua_State *L) { whereClause =  string(lua_tostring(L, -1)); return 0; }
+    int addAttrName(lua_State *L)  { attrNames.push_back(lua_tostring(L, -1)); return 0; }
+    int setWhereClause(lua_State *L)
+    {
+    	whereClause =  string(lua_tostring(L, -1));
+    	return 0;
+    }
     int load(lua_State *L);
     int save(lua_State *L);
     int clear(lua_State *L)		 { CellularSpace::clear(); return 0; }
@@ -567,7 +582,8 @@ public:
         // calls the function 'execute'
         if(lua_pcall(L, 1, 1, 0) != 0)
         {
-            cout << " Error: message function not found in the stack: " << lua_tostring(L, -1) << endl;
+            cout << " Error: message function not found in the stack: "
+            		<< lua_tostring(L, -1) << endl;
             return 0;
         }
 
@@ -607,7 +623,7 @@ class luaTimer : public Scheduler
 {
 public:
     // Lua interface
-    luaTimer(lua_State *L) {  }
+    luaTimer(lua_State *L) { }
     int getTime(lua_State *L) { lua_pushnumber(L, Scheduler::getTime()); return 1; }
     int isEmpty(lua_State *L) { lua_pushnumber(L, Scheduler::empty()); return 1; }
     //  int execute(lua_State *L) { Scheduler::execute(); return 0; }
@@ -630,7 +646,7 @@ class luaAgent
 {
     int ref;
 public:
-    //luAgent(lua_State* L){ }
+    //luAgent(lua_State* L) { }
     ~luaAgent(void) { luaL_unref(L, LUA_REGISTRYINDEX, ref); }
 
     int setReference(lua_State* L)
@@ -688,10 +704,11 @@ public:
                     indx.first++;
                     lua_pop(L, 2);
                 }
-                ActionRegionCompositeInterf& actRegions = luaGlobalAgent::getActionRegions();
+                ActionRegionCompositeInterf& actRegions =
+                		luaGlobalAgent::getActionRegions();
                 actRegions.add(actRegion);
             }
-            catch(...){ cout << "Warning: ivalid spatial iterator!" << endl; return 0; }
+            catch(...) { cout << "Warning: ivalid spatial iterator!" << endl; return 0; }
         }
         return 0;
     }
@@ -703,13 +720,13 @@ public:
         return 0;
     }
 
-    int execute(lua_State* L){
+    int execute(lua_State* L) {
         luaEvent* ev = Luna<luaEvent>::check(L, -1);
         GlobalAgent::execute(*ev);
         return 0;
     }
 
-    int build(lua_State* L){
+    int build(lua_State* L) {
         if(! Agent::build())
         {
             cout << "Error: a control mode must be added to the agent before use it as a jump condition target...";
@@ -718,7 +735,7 @@ public:
         return 0;
     }
 
-    int getControlModeName(lua_State* L){
+    int getControlModeName(lua_State* L) {
         lua_pushstring(L, GlobalAgent::getControlModeName().c_str());
         return 1;
     }
@@ -769,15 +786,16 @@ public:
                     indx.first++;
                     lua_pop(L, 2);
                 }
-                ActionRegionCompositeInterf& actRegions = luaLocalAgent::getActionRegions();
+                ActionRegionCompositeInterf& actRegions =
+                		luaLocalAgent::getActionRegions();
                 actRegions.add(actRegion);
             }
-            catch(...){ cout << "Warning: ivalid spatial iterator!" << endl; return 0; }
+            catch(...) { cout << "Warning: ivalid spatial iterator!" << endl; return 0; }
         }
         return 0;
     }
 
-    int execute(lua_State* L){
+    int execute(lua_State* L) {
         luaEvent* ev = Luna<luaEvent>::check(L, -1);
         LocalAgent::execute(*ev);
         return 0;
@@ -790,7 +808,7 @@ public:
         return 0;
     }
 
-    int build(lua_State* L){
+    int build(lua_State* L) {
         if(! Agent::build())
         {
             cout << "Error: you must add a control mode to the agent before use it as a jump condition targert...";
@@ -804,7 +822,7 @@ public:
 
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-class luaRule 
+class luaRule
 {
 protected:
     int ref;
@@ -831,7 +849,7 @@ class luaJumpCondition : public JumpCondition, public luaRule
 public:
     luaJumpCondition(lua_State* L) { }
 
-    int setTargetControlModeName(lua_State* L){
+    int setTargetControlModeName(lua_State* L) {
 
         const char* ctrlName = luaL_checkstring(L , -1);
         JumpCondition::setTargetControlModeName(string(ctrlName));
@@ -878,14 +896,15 @@ public:
             // calls the "execute" function of the rule
             if(lua_pcall(L, 3, 1, 0) != 0)
             {
-                cout << " Error: rule can not be executed: " << lua_tostring(L, -1) << endl;
+                cout << " Error: rule can not be executed: "
+                		<< lua_tostring(L, -1) << endl;
                 return 0;
             }
 
             result = lua_toboolean(L, -1);
             lua_pop(L, 1);  // pop returned value
 
-            if(result){
+            if(result) {
                 if(isGlobalAgent) { ::jump(event, agG, JumpCondition::getTarget());	}
                 else { JumpCondition::jump(agL, cell); }
             }
@@ -944,7 +963,8 @@ public:
             // calls the "execute" function of the rule
             if(lua_pcall(L, 3, 1, 0) != 0)
             {
-                cout << " Error: rule can not be executed: " << lua_tostring(L, -1) << endl;
+                cout << " Error: rule can not be executed: "
+                		<< lua_tostring(L, -1) << endl;
                 return 0;
             }
 
@@ -1036,7 +1056,7 @@ public:
     luaEnvironment(lua_State *L) {
         id = lua_tostring(L, -1);
         Environment::envId = id;
-        cout << "Scale: "<< id << endl;
+        cout << "Scale: " << id << endl;
     }
 
     int add(lua_State *L) {

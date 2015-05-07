@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
 * Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*  
+*
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-* 
+*
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-* 
+*
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -36,10 +36,10 @@
 #include <QPoint>
 #include <QStringList>
 
-namespace TerraMEObserver{
+namespace TerraMEObserver {
 
 //////////////////// CONSTANTS
-//// QStrings 
+//// QStrings
 static const QString BROADCAST_HOST = "255.255.255.255";
 static const QString LOCAL_HOST = "127.0.0.1";
 static const QString DEFAULT_NAME = "result_";
@@ -80,7 +80,7 @@ static const QString PENSTYLE = "pen";
 static const QByteArray COMPLETE_STATE = "COMPLETE_STATE";
 static const QByteArray COMPLETE_SIMULATION = "COMPLETE_SIMUL";
 static const QByteArray DISCONNECT_FROM_CLIENT = "DISCONNECT";
-static const QByteArray VALUE_NOT_INFORMED = "not informed"; 
+static const QByteArray VALUE_NOT_INFORMED = "not informed";
 static const QByteArray TIMER_KEY = "@time";
 static const QByteArray EVENT_KEY = "@event";
 static const QByteArray LUA_ADDRESS = "Lua-Address";
@@ -90,8 +90,8 @@ static const QByteArray LUA_ADDRESS_FUNCTION = LUA_ADDRESS + "(FT): ";
 static const QByteArray LUA_ADDRESS_OTHER = LUA_ADDRESS + "(O): ";
 
 //// Lists
-static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SLICES 
-    << PRECISION << STD_DEV << MAX << MIN << COLOR_BAR << FONT_FAMILY << FONT_SIZE 
+static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SLICES
+    << PRECISION << STD_DEV << MAX << MIN << COLOR_BAR << FONT_FAMILY << FONT_SIZE
     << SYMBOL << WIDTH << STYLE << SIZE << PENSTYLE; // << STD_COLOR_BAR; // is not a legend key
 
 //// Integers
@@ -126,9 +126,9 @@ static const QPoint ZERO_POINT(0, 0);
 /**
 * \enum TerraMEObserver::TypesOfSubjects
 * \brief TerraME Subject Types.
-* 
+*
 */
-enum TypesOfSubjects 
+enum TypesOfSubjects
 {
     TObsUnknown         = 0,   //!< Type unknown
     TObsCell,                  //!< Cell type
@@ -168,7 +168,7 @@ enum TypesOfObservers
     TObsStateMachine    = 10,    //!< Observes the states and transitions of a State Machine type
     TObsNeigh			= 11,	//!< Observes the Neighborhood type
 	TObsShapefile       = 12,    //!< Observes the Shapefile type
-    TObsTCPSender       = 13    //!< Sends the attributes via TCP protocol  
+    TObsTCPSender       = 13    //!< Sends the attributes via TCP protocol
 };
 
 /**
@@ -179,8 +179,8 @@ enum TypesOfObservers
 enum TypesOfData
 {
     TObsBool,                   //!< Boolean type
-    TObsNumber,                 //!< Numeric type 
-    TObsDateTime,               //!< Time stamp type 
+    TObsNumber,                 //!< Numeric type
+    TObsDateTime,               //!< Time stamp type
     TObsText,                   //!< Textual type
     TObsUnknownData     = 100   //!< Unknown type
 };

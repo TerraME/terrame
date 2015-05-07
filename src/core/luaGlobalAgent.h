@@ -47,7 +47,7 @@ class luaCellularSpace;
 
 namespace ObserverDatagramPkg
 {
-    class SubjectAttribute; 
+    class SubjectAttribute;
 }
 
 /**
@@ -76,11 +76,11 @@ private:
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
     static Luna<luaGlobalAgent>::RegType methods[];
-    
+
 public:
     /// Constructor
     luaGlobalAgent(lua_State *L);
@@ -88,7 +88,7 @@ public:
     /// Desctructor
     ~luaGlobalAgent(void);
 
-    /// Gets the simulation time elapsed since the last change in the luaGlobalAgent 
+    /// Gets the simulation time elapsed since the last change in the luaGlobalAgent
     /// internal discrete state
     int getLatency(lua_State *L);
 
@@ -122,7 +122,7 @@ public:
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     int notify(lua_State *L);
-    
+
     /// Gets the subject's type
     const TypesOfSubjects getType() const;
 
@@ -131,10 +131,12 @@ public:
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed
-    QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
+    QDataStream& getState(QDataStream& in, Subject *subject, int observerID,
+    		const QStringList& attribs);
 
 #ifdef TME_PROTOCOL_BUFFERS
-    QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
+    QByteArray pop(lua_State *L, const QStringList& attribs,
+    		ObserverDatagramPkg::SubjectAttribute *csSubj,
         ObserverDatagramPkg::SubjectAttribute *parentSubj);
 #else
     /**
@@ -146,7 +148,7 @@ public:
 
     /// Destroys the observer object instance
     int kill(lua_State *L);
- 
+
 };
 
 #endif

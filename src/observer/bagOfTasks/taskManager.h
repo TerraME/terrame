@@ -16,7 +16,7 @@ class Worker;
 
 class TaskManager
 {
-public:    
+public:
     static TaskManager & getInstance();
     virtual ~TaskManager();
 
@@ -32,7 +32,7 @@ public:
 
     bool join(int timeout = -1);
 
-    inline Task* getTask(int workerId) 
+    inline Task* getTask(int workerId)
     {
         // QMutexLocker locker(&mutex);  // Movido para o Worker
 
@@ -41,15 +41,15 @@ public:
         if (! bagOfTasks.isEmpty())
         {
             // Task may be executed by any worker
-            if (bagOfTasks.first().first->getWorkerId() < 0) 
-                return bagOfTasks.takeFirst().first; 
+            if (bagOfTasks.first().first->getWorkerId() < 0)
+                return bagOfTasks.takeFirst().first;
 
             // Task can only be executed by the same worker
             if (bagOfTasks.first().first->getWorkerId() == workerId)
             {
-                return bagOfTasks.takeFirst().first; 
+                return bagOfTasks.takeFirst().first;
             }
-            //else 
+            //else
             //{
             //    QList<QPair<Task *, int> >::iterator it = bagOfTasks.begin();
             //    for (; it != bagOfTasks.end(); ++it)
@@ -68,7 +68,7 @@ public:
 
     const Worker * getWorker();
 
-    inline bool isEmpty() 
+    inline bool isEmpty()
     {
         // QMutexLocker locker(&mutex);  // Movido para o Worker
         return bagOfTasks.isEmpty();

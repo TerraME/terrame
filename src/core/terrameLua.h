@@ -32,7 +32,7 @@ of this library and its documentation.
 #define TERRAME_LUA
 #if defined(TME_LUA_5_0)
 	#include "terrameLua5_0.h"
-#else 
+#else
 	#include "terrameLua5_1.h"
 #endif
 

@@ -38,11 +38,11 @@ class luaCellularSpace;
 
 namespace ObserverDatagramPkg
 {
-    class SubjectAttribute; 
+    class SubjectAttribute;
 }
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaTrajectory object.
 *
 */
@@ -70,9 +70,9 @@ protected:
 public:
     ///< Data structure issued by Luna<T>
     static const char className[];
-    
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaTrajectory>::RegType methods[]; 
+    static Luna<luaTrajectory>::RegType methods[];
 
 public:
     /// constructor
@@ -104,7 +104,7 @@ public:
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
     int notify(lua_State *L);
-    
+
     /// Returns the Agent Map Observers linked to this cellular space
     /// \param observerId the id of observer
     // \return a pointer for an observer if the id exists. Otherwise, returns a NULL pointer
@@ -118,10 +118,12 @@ public:
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed
-    QDataStream& getState(QDataStream& in, Subject *subject, int observerID, const QStringList& attribs);
+    QDataStream& getState(QDataStream& in, Subject *subject, int observerID,
+    		const QStringList& attribs);
 
 #ifdef TME_PROTOCOL_BUFFERS
-    QByteArray pop(lua_State *L, const QStringList& attribs, ObserverDatagramPkg::SubjectAttribute *csSubj,
+    QByteArray pop(lua_State *L, const QStringList& attribs,
+    		ObserverDatagramPkg::SubjectAttribute *csSubj,
         ObserverDatagramPkg::SubjectAttribute *parentSubj);
 #else
     /**

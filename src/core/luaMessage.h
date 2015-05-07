@@ -33,7 +33,7 @@ of this library and its documentation.
 
 //////////////////////
 /**
-* \brief  
+* \brief
 *  Implementation for a luaMessage object.
 *
 */
@@ -46,11 +46,11 @@ class luaMessage : public Message, public Reference<luaMessage>
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
-    
+    static const char className[];
+
     ///< Data structure issued by Luna<T>
-    static Luna<luaMessage>::RegType methods[]; 
-    
+    static Luna<luaMessage>::RegType methods[];
+
 public:
     /// Constructor
     luaMessage(lua_State *)
@@ -59,7 +59,7 @@ public:
     }
 
     /// Destructor
-    ~luaMessage(void){}
+    ~luaMessage(void) {}
 
     /// Configures the luaMessage object
     /// parameter: identifier
@@ -75,7 +75,8 @@ public:
         getReference(L);
         if(!lua_istable(L, -1))
         {
-            string err_out = string("Action function ") + string (msg) + string(" not defined!");
+            string err_out = string("Action function ") + string (msg)
+            				+ string(" not defined!");
 			lua_getglobal(L, "customError");
 			lua_pushstring(L, err_out.c_str());
 			//lua_pushnumber(L, 5);
@@ -101,17 +102,17 @@ public:
 
         // builds the table parameter of the constructor
         lua_newtable(L);
-		if(event.getTime() != 1){
+		if(event.getTime() != 1) {
         	lua_pushstring(L, "time");
         	lua_pushnumber(L, event.getTime());
         	lua_settable(L, -3);
 		}
-		if(event.getPeriod() != 1){
+		if(event.getPeriod() != 1) {
         	lua_pushstring(L, "period");
         	lua_pushnumber(L, event.getPeriod());
         	lua_settable(L, -3);
 		}
-		if(event.getPriority() != 0){
+		if(event.getPriority() != 0) {
         	lua_pushstring(L, "priority");
         	lua_pushnumber(L, event.getPriority());
         	lua_settable(L, -3);
@@ -133,8 +134,8 @@ public:
         //ev->getReference(L);
 
     // Bug agentes
-    // qDebug() << "calls the function 'execute': lua_pcall(L, 1, 1, 0)"; 
-    
+    // qDebug() << "calls the function 'execute': lua_pcall(L, 1, 1, 0)";
+
     // calls the function 'execute'
         lua_call(L, 1, 1) ;
 

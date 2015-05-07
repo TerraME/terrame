@@ -20,7 +20,7 @@ In no event shall INPE and TerraLAB / UFOP be held liable to any party for direc
 indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
-/*! 
+/*!
   \file registryObjects.h
   \brief Registry objects in Lua environment
   \author
@@ -187,7 +187,7 @@ Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
 	method(luaCellularSpace, setReference),
 	method(luaCellularSpace, getCell),
 	method(luaCellularSpace, setPort),
-	
+
 	method(luaCellularSpace, createObserver),
 	method(luaCellularSpace, notify),
 	method(luaCellularSpace, kill),
@@ -241,7 +241,7 @@ Luna<luaGlobalAgent>::RegType luaGlobalAgent::methods[] =
 	method(luaGlobalAgent, getControlModeName),
 	method(luaGlobalAgent, getReference),
 	method(luaGlobalAgent, setReference),
-	
+
 	method(luaGlobalAgent, createObserver),
 	method(luaGlobalAgent, notify),
 	method(luaGlobalAgent, kill),
@@ -259,7 +259,7 @@ Luna<luaLocalAgent>::RegType luaLocalAgent::methods[] =
 	method(luaLocalAgent, execute),
 	method(luaLocalAgent, getReference),
 	method(luaLocalAgent, setReference),
-	
+
 	method(luaLocalAgent, createObserver),
 	method(luaLocalAgent, notify),
 	method(luaLocalAgent, kill),
@@ -274,7 +274,7 @@ Luna<luaTrajectory>::RegType luaTrajectory::methods[] = {
 	method(luaTrajectory, clear),
 	method(luaTrajectory, getReference),
 	method(luaTrajectory, setReference),
-	
+
 	method(luaTrajectory, createObserver),
 	method(luaTrajectory, notify),
 	method(luaTrajectory, kill),
@@ -329,7 +329,7 @@ Luna<luaEvent>::RegType luaEvent::methods[] =
 	method(luaEvent, getPriority),
 	method(luaEvent, getReference),
 	method(luaEvent, setReference),
-	
+
 	method(luaEvent, createObserver),
 	method(luaEvent, notify),
 	method(luaEvent, getType),
@@ -347,7 +347,7 @@ Luna<luaTimer>::RegType luaTimer::methods[] =
 	method(luaTimer, isEmpty),
 	method(luaTimer, reset),
 	method(luaTimer, execute),
-	
+
 	method(luaTimer, getReference),
 	method(luaTimer, setReference),
 	method(luaTimer, createObserver),
@@ -368,7 +368,7 @@ Luna<luaEnvironment>::RegType luaEnvironment::methods[] =
 	method(luaEnvironment, addCellularSpace),
 	method(luaEnvironment, addGlobalAgent),
 	method(luaEnvironment, addLocalAgent),
-	
+
 	method(luaEnvironment, getReference),
 	method(luaEnvironment, setReference),
 	method(luaEnvironment, createObserver),

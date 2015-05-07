@@ -12,9 +12,11 @@ namespace TerraMEObserver {
 class Attributes;
 class PainterWidget;
 
-class PainterShapefile{
+class PainterShapefile {
 public:
-    PainterShapefile(QVector<QGraphicsPathItem*> *vshapes, const QVector<int> &idsShapes, int shapetype, QHash<QString, Attributes*> *attributes);
+    PainterShapefile(QVector<QGraphicsPathItem*> *vshapes,
+    		const QVector<int> &idsShapes, int shapetype,
+			QHash<QString, Attributes*> *attributes);
     void drawShapefile(Attributes *attrib);
     void drawAttrib(Attributes *attrib);
     void plotMap(Attributes *attrib);

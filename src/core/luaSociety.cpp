@@ -109,12 +109,12 @@ int luaSociety::createObserver(lua_State * luaL)
 	if((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
 	{
 		QStringList allAgentsAttribs, allSocietyAttribs, obsAttribs, obsParams, cols;
-		
+
 #ifdef DEBUG_OBSERVER
 		luaStackToQString(12);
 		stackDump(luaL);
 #endif
-		
+
 		// Runs the society and retrieve all its attribs and the attribs of the agents
 		lua_pushnil(luaL);
 		while(lua_next(luaL, top) != 0)
@@ -123,19 +123,19 @@ int luaSociety::createObserver(lua_State * luaL)
 			{
 				QString key = luaL_checkstring(luaL, -2);
 				allSocietyAttribs.append(key);
-				
+
 				if(key == "agents")
 				{
 					int agentstop = lua_gettop(luaL);
 					int stop = false;
-					
+
 					lua_pushnil(luaL);
 					while((! stop) && (lua_next(luaL, agentstop) != 0))
 					{
 						int agentTop = lua_gettop(luaL);
 						lua_pushnumber(luaL, 1);
 						lua_gettable(luaL, agentTop);
-						
+
 						lua_pushnil(luaL);
 						while(lua_next(luaL, agentTop) != 0)
 						{
@@ -152,7 +152,7 @@ int luaSociety::createObserver(lua_State * luaL)
 			} // lua_type == LUA_TSTRING
 			lua_pop(luaL, 1);
 		}
-		
+
 #ifdef DEBUG_OBSERVER
 		qDebug() << "allSocietyAttribs: " << allSocietyAttribs;
 		qDebug() << "allAgentsAttribs: " << allAgentsAttribs;
@@ -183,7 +183,7 @@ int luaSociety::createObserver(lua_State * luaL)
 					bool val = lua_toboolean(luaL, -1);
 					if (key == "visible")
 						obsVisible = val;
-					
+
 					if (key == "compress")
 						compressDatagram = val;
 					break;
@@ -267,7 +267,9 @@ int luaSociety::createObserver(lua_State * luaL)
 
 					if(!allSocietyAttribs.contains(obsAttribs.at(i)))
 					{
-						string errorMsg = string("Attribute name ") + string(obsAttribs.at(i).toLatin1().data()) + string(" not found.");
+						string errorMsg = string("Attribute name ")
+										+ string(obsAttribs.at(i).toLatin1().data())
+										+ string(" not found.");
 						lua_getglobal(L, "customError");
 						lua_pushstring(L, errorMsg.c_str());
 						lua_call(L, 1, 0);
@@ -326,7 +328,8 @@ int luaSociety::createObserver(lua_State * luaL)
 					break;
 
 				case TObsDynamicGraphic:
-					obsGraphic = (ObserverGraphic *) SocietySubjectInterf::createObserver(TObsDynamicGraphic);
+					obsGraphic = (ObserverGraphic *)
+								SocietySubjectInterf::createObserver(TObsDynamicGraphic);
 					if(obsGraphic)
 					{
 						obsGraphic->setObserverType(TObsDynamicGraphic);
@@ -353,7 +356,8 @@ int luaSociety::createObserver(lua_State * luaL)
 					break;
 
 				case TObsUDPSender:
-					obsUDPSender = (ObserverUDPSender *) SocietySubjectInterf::createObserver(TObsUDPSender);
+					obsUDPSender = (ObserverUDPSender *)
+								SocietySubjectInterf::createObserver(TObsUDPSender);
 					if (obsUDPSender)
 					{
 						obsId = obsUDPSender->getId();
@@ -373,7 +377,7 @@ int luaSociety::createObserver(lua_State * luaL)
 					if (execModes != Quiet)
 					{
 						qWarning("In this context, the code '%s' does not correspond to a "
-								"valid type of Observer.",  getObserverName(typeObserver));
+								"valid type of Observer.", getObserverName(typeObserver));
 					}
 					return 0;
 			}
@@ -451,7 +455,8 @@ int luaSociety::createObserver(lua_State * luaL)
 				cols.removeFirst(); // remove axis y title
 
 				// Splits the attribute labels in the cols list
-				obsGraphic->setAttributes(obsAttribs, cols.takeFirst().split(";", QString::SkipEmptyParts),
+				obsGraphic->setAttributes(obsAttribs, cols.takeFirst()
+						.split(";", QString::SkipEmptyParts),
 										  obsParams, cols);
 
 				lua_pushnumber(luaL, obsId);
@@ -654,7 +659,7 @@ int luaSociety::createObserver(lua_State * luaL)
 			obsAttribs.push_back(key);
 			lua_pop(luaL, 1);
 		}
-		
+
 		for(int i = 0; i < obsAttribs.size(); i++)
 		{
 			if (! observedAttribs.contains(obsAttribs.at(i)))
@@ -663,7 +668,8 @@ int luaSociety::createObserver(lua_State * luaL)
 		}
 
 #ifdef DEBUG_OBSERVER
-		qDebug() << "\n\nluaSociety::createObserver()" << getId() << "attrClassName" << attrClassName;
+		qDebug() << "\n\nluaSociety::createObserver()" << getId()
+				<< "attrClassName" << attrClassName;
 		// qDebug() << "\nobsParamsLeg: " << obsParams;
 		// qDebug() << "\nobsParamsAtribs: " << obsParamsAtribs;
 		qDebug() << "\n-- obsAttribs: " << obsAttribs;
@@ -715,7 +721,8 @@ int luaSociety::notify(lua_State *L)
 	return 0;
 }
 
-QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/, const QStringList & /* attribs */)
+QDataStream& luaSociety::getState(QDataStream& in, Subject *,
+		int /*observerId*/, const QStringList & /* attribs */)
 {
 	int obsCurrentState = 0; //serverSession->getState(observerId);
 	QByteArray content;
@@ -724,7 +731,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/
 	{
 	case 0:
 		content = getAll(in, (QStringList)observedAttribs.keys());
-			
+
 		// serverSession->setState(observerId, 1);
 		//if (! QUIET_MODE)
 		// 	qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
@@ -732,7 +739,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int /*observerId*/
 
 	case 1:
 		content = getChanges(in, (QStringList) observedAttribs.keys());
-			
+
 		// serverSession->setState(observerId, 0);
 		//if (! QUIET_MODE)
 		// 	qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
@@ -763,13 +770,13 @@ QByteArray luaSociety::getChanges(QDataStream& in, const QStringList &attribs)
 	return getAll(in, attribs);
 }
 
-QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs, 
+QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 	ObserverDatagramPkg::SubjectAttribute *currSubj,
 	ObserverDatagramPkg::SubjectAttribute *parentSubj)
 {
-#ifdef TME_STATISTIC 
+#ifdef TME_STATISTIC
 	double t = Statistic::getInstance().startMicroTime();
-#endif 
+#endif
 
 	bool valueChanged = false;
 	char result[20];
@@ -777,7 +784,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 	Reference<luaSociety>::getReference(luaL);
 	int position = lua_gettop(luaL);
-	
+
 	QByteArray key, valueTmp;
 	ObserverDatagramPkg::RawAttribute *raw = 0;
 
@@ -809,8 +816,8 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 			case LUA_TNUMBER:
 				num = luaL_checknumber(luaL, -1);
 				doubleToText(num, valueTmp, 20);
-					
-				
+
+
 				if(observedAttribs.value(key) != valueTmp)
 				{
 					if((parentSubj) && (! currSubj))
@@ -863,7 +870,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 				{
 					int top = lua_gettop(luaL);
 
-					//qDebug() << "\n --- key:" << key  
+					//qDebug() << "\n --- key:" << key
 					//	<< "attribs" << attribs << "\n";
 
 					lua_pushnil(luaL);
@@ -882,7 +889,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 						if (currSubj->internalsubject_size() != internalCount)
 							valueChanged = true;
-					
+
 						lua_pop(luaL, 1);
 					}
 				}
@@ -950,7 +957,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 		}
 		lua_pop(luaL, 1);
 	}
-	
+
 	if(valueChanged)
 	{
 		if((parentSubj) && (! currSubj))
@@ -967,13 +974,13 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 		// #elements
 		currSubj->set_itemsnumber(currSubj->internalsubject_size());
-	
+
 #ifdef TME_STATISTIC
 		if (! parentSubj)
 		{
 			t = Statistic::getInstance().endMicroTime() - t;
 			Statistic::getInstance().addElapsedTime("pop lua", t);
- 
+
 			// std::string serialized;
 			// csSubj->SerializeToString(&serialized);
 			// QString serialized;
@@ -999,9 +1006,9 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 			QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
 
 #ifdef DEBUG_OBSERVER
-			qDebug() << "\n\nluaSociety::pop()" 
-				<< "\n\tByteSize()" << currSubj->ByteSize() 
-				<< "\n\tbyteArray.size()" << byteArray.size() 
+			qDebug() << "\n\nluaSociety::pop()"
+				<< "\n\tByteSize()" << currSubj->ByteSize()
+				<< "\n\tbyteArray.size()" << byteArray.size()
 				<< "\ncurrSubj->DebugString()\n";
 
 			std::cout << currSubj->DebugString() << "\n";

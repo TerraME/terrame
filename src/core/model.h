@@ -104,7 +104,7 @@ public:
     ModelID getID(void) { return pImpl_->getID(); }
     virtual void update(void) { }
 
-    ModelID setId(ModelID id){ return pImpl_->setId(id); }
+    ModelID setId(ModelID id) { return pImpl_->setId(id); }
 };
 
 #endif

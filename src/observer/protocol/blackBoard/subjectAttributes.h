@@ -77,7 +77,7 @@ public:
         return QString("%1 (%2): %3")
             .arg(key)
             .arg(getDataName(type))
-            .arg(((type == TObsNumber) ? 
+            .arg(((type == TObsNumber) ?
                     QString("%1").arg(number) : QString("\"%1\"").arg(text)));
     }
 
@@ -151,12 +151,12 @@ public:
      * \param value, returned value of the attribute
      * \return bool, true if the attribute was found
      */
-    inline bool getNumericValue(const QString &key, double &value) const 
-    { 
+    inline bool getNumericValue(const QString &key, double &value) const
+    {
         if (! attribHash->contains(key))
             return false;
 
-        value = attribHash->value(key)->number; 
+        value = attribHash->value(key)->number;
         return true;
     }
 
@@ -166,8 +166,8 @@ public:
      * \param value, returned value of the attribute
      * \param bool, true if the attribute was found
      */
-    inline bool getTextValue(const QString &key, QString & value) const 
-    { 
+    inline bool getTextValue(const QString &key, QString & value) const
+    {
         if (! attribHash->contains(key))
             return false;
 
@@ -200,7 +200,7 @@ public:
      * \param x, the x coordinate of the item
      */
     inline void setX(const double &x) { this->x = x; }
-    
+
     /**
      * Sets the attribute coordinate
      * \param y, the y coordinate of the item
@@ -208,20 +208,20 @@ public:
     inline void setY(const double &y) { this->y = y; }
 
     /**
-     * Gets the x axis value of a attribute 
+     * Gets the x axis value of a attribute
      */
     inline const double & getX() const { return x; }
-    
+
     /**
-     * Gets the y axis value of a attribute 
+     * Gets the y axis value of a attribute
      */
     inline const double & getY() const { return y; }
-    
+
     /**
      * Gets all x axis values
      */
     inline QVector<double> * getXs() const { return xs; }
-    
+
     /**
      * Gets all y axis values
      */
@@ -232,63 +232,63 @@ public:
      */
     const QString toString() const;
 
-    /** 
+    /**
      * Maintains a list of nested subject that had been changed
      */
-    inline void addNestedSubject(int subjId) 
+    inline void addNestedSubject(int subjId)
     {
-		Q_ASSERT_X(nestedSubjectsID, "SubjectAttribute::getNestedSubjects", 
+		Q_ASSERT_X(nestedSubjectsID, "SubjectAttribute::getNestedSubjects",
             "The 'nestedSubjectsID' object was not instantiated. It was "
             "defined as no TerraME compose object.\n"
             "Please check the SubjectAttributes::setSubjectType() method.\n");
-        nestedSubjectsID->append(subjId); 
+        nestedSubjectsID->append(subjId);
     }
 
-    /** 
+    /**
      * Cleans the nested subject list
      */
     inline void clearNestedSubjects()
     {
-        time = clock(); 
+        time = clock();
         if (nestedSubjectsID)
             nestedSubjectsID->clear();
     }
-    
+
     /**
-     * Returns true if it contains some nested subject 
+     * Returns true if it contains some nested subject
      */
-    inline bool hasNestedSubjects() const 
-    { 
-        return (nestedSubjectsID) && (nestedSubjectsID->size() != 0); 
+    inline bool hasNestedSubjects() const
+    {
+        return (nestedSubjectsID) && (nestedSubjectsID->size() != 0);
     }
 
     /**
      * Gets the constant reference for nested subject list
      */
-    inline const QVector<int>& getNestedSubjects() const 
-	{ 
-		Q_ASSERT_X(nestedSubjectsID, "SubjectAttribute::getNestedSubjects", 
+    inline const QVector<int>& getNestedSubjects() const
+	{
+		Q_ASSERT_X(nestedSubjectsID, "SubjectAttribute::getNestedSubjects",
             "The 'nestedSubjectsID' object was not instantiated. It was "
             "defined as no TerraME compose object.\n");
 		return *nestedSubjectsID;
 	}
-    
+
     /**
      * For debugging
      * \copydoc TerraMEObserver::RawAttribute::getNestedSubjects
      */
     // inline QVector<int> getNestedSubjectsCopy() const { return nestedSubjectsID; }
-    
+
     // 50% mais eficiente que o uso dos ID's
     // inline void addNestedSubject(SubjectAttributes* subj) { nestedSubjectsID.append(subj); }
     // inline const QVector<SubjectAttributes *>& getNestedSubjects() const { return nestedSubjectsID; }
     // inline QVector<SubjectAttributes *> getNestedSubjectsCopy() const { return nestedSubjectsID; }
 
-    inline void clear() 
-    { 
-        foreach(RawAttribute *raw, attribHash->values()) 
-            { delete raw; raw = 0; } 
-        
+    inline void clear()
+    {
+        foreach(RawAttribute *raw, attribHash->values())
+            { delete raw; raw = 0; }
+
         attribHash->clear();
     }
 
@@ -296,12 +296,12 @@ public:
      * Sets the time of last update
      */
     inline void setTime(const long &time) { this->time = time; }
-    
+
     /**
      * Gets the time of last update
      */
     inline long getTime() const { return time; }
-    
+
     /**
      * Overload of less operator
      */
@@ -336,12 +336,12 @@ private:
     bool dirtyBit;
     int subjectId;
     TypesOfSubjects subjectType;
-    double x, y;    
+    double x, y;
     QVector<double> *xs, *ys;
 
     // Contains the nested subjects
     QVector<int> *nestedSubjectsID;
-    
+
     // 50% more efficient than the use of IDs, but crashes when cleaning the BD
     // QVector<SubjectAttributes *> nestedSubjectsID;
 

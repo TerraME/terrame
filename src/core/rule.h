@@ -22,7 +22,7 @@ of this library and its documentation.
 
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
-/*! 
+/*!
   \file rule.h
   \brief This file contains definitions about the JumpCondition and FlowCondition classes.
                  Interfaces: RuleStrategy, Rule
@@ -50,8 +50,12 @@ class GlobalAgent;
  */
 class RuleStrategy {
 public:
-    RuleStrategy(void){}
-    virtual bool execute (Event & /*event*/, Agent * /*agent*/, pair<CellIndex, Cell*> & /*cellIndexPair*/) { return true; }
+    RuleStrategy(void) {}
+    virtual bool execute (Event & /*event*/, Agent * /*agent*/,
+    		pair<CellIndex, Cell*> & /*cellIndexPair*/)
+    {
+    	return true;
+    }
 };
 
 /**
@@ -65,7 +69,7 @@ class Rule
 public:
 
     /// Copy constructor
-    Rule(RuleStrategy *strategy):theStrategy_(strategy){
+    Rule(RuleStrategy *strategy):theStrategy_(strategy) {
     }
 
     /// Configures the strategy to be used.
@@ -120,7 +124,7 @@ public:
     /// Transits the JumpCondition object to the target ControlMode
     /// \param agent is a pointer to the LocalAgent object being executed
     /// \param cell is a pointer to the Cell object where the Rule objects are being executed
-    void jump(LocalAgent* const agent, Cell *cell){
+    void jump(LocalAgent* const agent, Cell *cell) {
         cell->attachControlMode((Agent*)agent, targetControlMode_);
     }
 
@@ -138,7 +142,10 @@ public:
 
     /// Sets the JumpCondition target ControlMode name.
     /// \param ctrlModeName is the target ControlMode name (identifier)
-    void setTargetControlModeName(string ctrlModeName) { targetControlModeName_ = ctrlModeName; }
+    void setTargetControlModeName(string ctrlModeName)
+    {
+    	targetControlModeName_ = ctrlModeName;
+    }
 
     /// Gets the JumpCondition target ControlMode name.
     /// \returns A string with the JumpCondition targe ControlMode name (identifier)

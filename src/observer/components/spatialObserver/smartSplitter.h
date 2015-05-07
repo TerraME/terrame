@@ -34,7 +34,7 @@ public:
 
 protected:
     QSplitterHandle * createHandle();
-    
+
 };
 
 } // namespace TerraMEObserver

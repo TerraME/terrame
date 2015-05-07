@@ -33,7 +33,7 @@ of this library and its documentation.
 #include "luaEvent.h"
 
 /**
-* \brief  
+* \brief
 *  Implementation for a luaJumpCondition object.
 *
 */
@@ -45,10 +45,10 @@ private:
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[]; 
+    static const char className[];
 
     ///< Data structure issued by Luna<T>
-    static Luna<luaJumpCondition>::RegType methods[]; 
+    static Luna<luaJumpCondition>::RegType methods[];
 
 public:
     /// Constructor
@@ -59,7 +59,7 @@ public:
 
     /// Sets luaJumpCondition object target luaControlMode
     /// parameter: luaControlMode identifier
-    int setTargetControlModeName(lua_State* L){
+    int setTargetControlModeName(lua_State* L) {
 
         const char* ctrlName = luaL_checkstring(L , -1);
         JumpCondition::setTargetControlModeName(string(ctrlName));
@@ -111,7 +111,8 @@ public:
             // calls the "execute" function of the rule
             if(lua_pcall(L, 3, 1, 0) != 0)
             {
-                cout << " Error: rule can not be executed: " << lua_tostring(L, -1) << endl;
+                cout << " Error: rule can not be executed: "
+                		<< lua_tostring(L, -1) << endl;
 
                 return 0;
             }
@@ -119,7 +120,7 @@ public:
             result = lua_toboolean(L, -1);
             lua_pop(L, 1);  // pop returned value
 
-            if(result){
+            if(result) {
                 if(isGlobalAgent) { ::jump(event, agG, JumpCondition::getTarget());	}
                 else { JumpCondition::jump(agL, cell); }
             }

@@ -31,7 +31,7 @@ private:
      * Stops the thread execution
      */
     void stop();
-	
+
 	/**
      * Kills the thread
      */

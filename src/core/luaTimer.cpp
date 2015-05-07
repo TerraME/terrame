@@ -12,9 +12,9 @@
 #include "protocol.pb.h"
 
 ///< Global variable: Lua stack used for communication with C++ modules.
-extern lua_State * L; 
+extern lua_State * L;
 
-///< true - TerrME runs in verbose mode and warning messages to the user; 
+///< true - TerrME runs in verbose mode and warning messages to the user;
 /// false - it runs in quite node and no messages are shown to the user.
 extern ExecutionModes execModes;
 
@@ -168,7 +168,7 @@ int luaTimer::createObserver(lua_State *luaL)
 #endif
 		if (! isSchedulerObserver)
 			allAttribs.push_back(key);
-		
+
 		lua_pop(luaL, 1);
 	}
 
@@ -217,7 +217,8 @@ int luaTimer::createObserver(lua_State *luaL)
 		{
 			if (! key.isNull() || ! key.isEmpty())
 			{
-				string err_out = string("Attribute name '") + string (qPrintable(key)) + string("' not found.");
+				string err_out = string("Attribute name '")
+								+ string (qPrintable(key)) + string("' not found.");
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, err_out.c_str());
 				//lua_pushnumber(L, 4);
@@ -233,11 +234,11 @@ int luaTimer::createObserver(lua_State *luaL)
 	{
 		obsAttribs = allAttribs;
 		// observedAttribs = allAttribs;
-					
+
 		foreach(const QString &key, allAttribs)
 			observedAttribs.insert(key, "");
 	}
-		
+
 #ifdef DEBUG_OBSERVER
     printf("\n----\n");
     printf("obsAttribs.size(): %i\n", obsAttribs.size());
@@ -275,7 +276,7 @@ int luaTimer::createObserver(lua_State *luaL)
     // case not be a table the syntax of the method is incorrect
 	lua_pushnil(luaL);
 	while(lua_next(luaL, top - 1) != 0)
-	{   
+	{
 		QString key;
 		if (lua_type(luaL, -2) == LUA_TSTRING)
 			key = QString(luaL_checkstring(luaL, -2));
@@ -308,7 +309,7 @@ int luaTimer::createObserver(lua_State *luaL)
     // launches a warning
 	if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
 	{
-		if (execModes != Quiet){
+		if (execModes != Quiet) {
 			string err_out = string("Attribute table not found. Incorrect sintax.");
 			lua_getglobal(L, "customWarning");
 			lua_pushstring(L, err_out.c_str());
@@ -329,7 +330,7 @@ int luaTimer::createObserver(lua_State *luaL)
 	switch (typeObserver)
 	{
 		case TObsTextScreen			:
-			obsText = (ObserverTextScreen*) 
+			obsText = (ObserverTextScreen*)
 				SchedulerSubjectInterf::createObserver(TObsTextScreen);
 			if (obsText)
 			{
@@ -343,7 +344,7 @@ int luaTimer::createObserver(lua_State *luaL)
 			break;
 
 		case TObsLogFile:
-			obsLog = (ObserverLogFile*) 
+			obsLog = (ObserverLogFile*)
 				SchedulerSubjectInterf::createObserver(TObsLogFile);
 			if (obsLog)
 			{
@@ -357,7 +358,7 @@ int luaTimer::createObserver(lua_State *luaL)
 			break;
 
 		case TObsTable:
-			obsTable = (ObserverTable *) 
+			obsTable = (ObserverTable *)
 				SchedulerSubjectInterf::createObserver(TObsTable);
 			if (obsTable)
 			{
@@ -371,7 +372,7 @@ int luaTimer::createObserver(lua_State *luaL)
 			break;
 
 		case TObsUDPSender			:
-			obsUDPSender = (ObserverUDPSender *) 
+			obsUDPSender = (ObserverUDPSender *)
 				SchedulerSubjectInterf::createObserver(TObsUDPSender);
 			if (obsUDPSender)
 			{
@@ -389,7 +390,7 @@ int luaTimer::createObserver(lua_State *luaL)
 			break;
 
 		case TObsScheduler			:
-			obsScheduler = (ObserverScheduler *) 
+			obsScheduler = (ObserverScheduler *)
 				SchedulerSubjectInterf::createObserver(TObsScheduler);
 			if (obsScheduler)
 			{
@@ -405,7 +406,8 @@ int luaTimer::createObserver(lua_State *luaL)
 		default:
 			if (execModes != Quiet)
 			{
-				string err_out = string("In this context, the code '") + string(getObserverName(typeObserver)) + string("' does not correspond to a valid type of Observer.");
+				string err_out = string("In this context, the code '")
+								+ string(getObserverName(typeObserver)) + string("' does not correspond to a valid type of Observer.");
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L, err_out.c_str());
 				//lua_pushnumber(L, 4);
@@ -424,7 +426,8 @@ int luaTimer::createObserver(lua_State *luaL)
 		{
 			if (execModes != Quiet)
 			{
-				string err_out = string("Filename was not specified, using a default '") + string(qPrintable(DEFAULT_NAME)) + string("'");
+				string err_out = string("Filename was not specified, using a default '")
+								+ string(qPrintable(DEFAULT_NAME)) + string("'");
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L, err_out.c_str());
 				//lua_pushnumber(L, 4);
@@ -468,7 +471,8 @@ int luaTimer::createObserver(lua_State *luaL)
 
 	if (obsTable)
 	{
-		if ((cols.size() < 1) || (cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
+		if ((cols.size() < 1) || (cols.size() < 2)
+				|| cols.at(0).isNull() || cols.at(0).isEmpty()
 				|| cols.at(1).isNull() || cols.at(1).isEmpty())
 		{
 			if (execModes != Quiet)
@@ -559,7 +563,8 @@ int luaTimer::notify(lua_State *luaL)
 
 #ifdef TME_BLACK_BOARD
 
-QDataStream& luaTimer::getState(QDataStream& in, Subject *, int /*observerId*/, const QStringList & /* attribs */)
+QDataStream& luaTimer::getState(QDataStream& in, Subject *, int /*observerId*/,
+		const QStringList & /* attribs */)
 {
 #ifdef DEBUG_OBSERVER
 	printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
@@ -594,7 +599,8 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int /*observerId*/, 
 
 #else
 
-QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId, const QStringList &  attribs)
+QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId,
+		const QStringList &  attribs)
 {
 
 #ifdef DEBUG_OBSERVER
@@ -645,7 +651,7 @@ QByteArray luaTimer::getChanges(QDataStream& in, const QStringList& attribs)
 	return getAll(in, attribs);
 }
 
-QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs, 
+QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 	ObserverDatagramPkg::SubjectAttribute *currSubj,
 	ObserverDatagramPkg::SubjectAttribute *parentSubj)
 {
@@ -926,14 +932,16 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 
 #else // TME_PROTOCOL_BUFFERS
 
-QByteArray luaTimer::getAll(QDataStream& /*in*/, int /*observerId*/, const QStringList& attribs)
+QByteArray luaTimer::getAll(QDataStream& /*in*/, int /*observerId*/,
+		const QStringList& attribs)
 {
 	// recover the reference on the stack lua
 	Reference<luaTimer>::getReference(luaL);
 	return pop(luaL, attribs);
 }
 
-QByteArray luaTimer::getChanges(QDataStream& in, int observerId, const QStringList& attribs)
+QByteArray luaTimer::getChanges(QDataStream& in, int observerId,
+		const QStringList& attribs)
 {
 	return getAll(in, observerId, attribs);
 }
@@ -952,7 +960,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs)
 	bool boolAux = false;
 
 	QByteArray msg, attrs, key, text;
-	
+
 	// id
 	msg.append(QByteArray::number(getId()));
 	msg.append(PROTOCOL_SEPARATOR);

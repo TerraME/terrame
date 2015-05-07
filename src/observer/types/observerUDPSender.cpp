@@ -38,7 +38,7 @@ ObserverUDPSender::ObserverUDPSender(Subject *subj, QObject *parent)
 
     //paused = false;
     //failureToSend = false;
-    //compressDatagram = true;   //  //  false; 
+    //compressDatagram = true;   //  //  false;
     //setCompress(compressDatagram);
     //// default port
     //port = DEFAULT_PORT;
@@ -63,7 +63,7 @@ bool ObserverUDPSender::draw(QDataStream &state)
 {
     QString stateAux;
     state >> stateAux;
-	
+
     if(!stateAux.isEmpty())
     {
         static bool created = false;
@@ -74,15 +74,20 @@ bool ObserverUDPSender::draw(QDataStream &state)
             udpSocketTask->setHost(&addresses);
             udpSocketTask->setCompress(compressed);
 
-            connect(udpSocketTask, SIGNAL(messageSent(const QString &)), senderGUI, SLOT(appendMessage(const QString &)));
+            connect(udpSocketTask, SIGNAL(messageSent(const QString &)),
+            		senderGUI, SLOT(appendMessage(const QString &)));
                     // , Qt::DirectConnection);
-            connect(udpSocketTask, SIGNAL(messageFailed(const QString &)), senderGUI, SLOT(messageFailed(const QString &)));
-            connect(udpSocketTask, SIGNAL(statusMessages(int, int)), senderGUI, SLOT(statusMessages(int, int)),
+            connect(udpSocketTask, SIGNAL(messageFailed(const QString &)),
+            		senderGUI, SLOT(messageFailed(const QString &)));
+            connect(udpSocketTask, SIGNAL(statusMessages(int, int)),
+            		senderGUI, SLOT(statusMessages(int, int)),
                     Qt::DirectConnection);
-            connect(this, SIGNAL(addState(const QByteArray &)), udpSocketTask, SLOT(addState(const QByteArray &)),
+            connect(this, SIGNAL(addState(const QByteArray &)),
+            		udpSocketTask, SLOT(addState(const QByteArray &)),
                     Qt::DirectConnection);
                     // Qt::QueuedConnection);
-            connect(this, SIGNAL(setModelTimeSignal(double)), udpSocketTask, SLOT(setModelTime(double)),
+            connect(this, SIGNAL(setModelTimeSignal(double)),
+            		udpSocketTask, SLOT(setModelTime(double)),
                     Qt::DirectConnection);
 
             const BagOfTasks::Worker *w = udpSocketTask->runExclusively();
@@ -97,7 +102,8 @@ bool ObserverUDPSender::draw(QDataStream &state)
 	}
     else
 	{
-        senderGUI->appendMessage(tr("The retrieved state is empty. There is nothing to do."));
+        senderGUI->appendMessage(
+        		tr("The retrieved state is empty. There is nothing to do."));
 	}
 
     return true;
@@ -113,7 +119,7 @@ void ObserverUDPSender::setAttributes(QStringList& attribs)
     attribList = attribs;
 
     SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if(subjAttr) 
+    if(subjAttr)
         subjAttr->setSubjectType(getSubjectType());
 }
 
@@ -141,7 +147,7 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //        {
 //            out << qCompress(data.mid(pos, datagramSize), COMPRESS_RATIO);
 //        }
-//        else    
+//        else
 //        {
 //            out << data.mid(pos, datagramSize);
 //        }
@@ -171,7 +177,7 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //        if (compressDatagram)
 //        {
 //            bytesRead -= datagramSize;
-//            pos += datagramSize;        
+//            pos += datagramSize;
 //        }
 //        else
 //        {
@@ -193,17 +199,17 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //
 //    senderGUI->setMessagesSent(msgCount);
 //    senderGUI->setStateSent(stateCount);
-//    
+//
 //#ifdef DEBUG_OBSERVER
 //    senderGUI->appendMessage(tr("compressionSum: %1 / %2 = %3")
     //    .arg(compressionSum).arg(compressionCount).arg(compressionSum / compressionCount));
 //    senderGUI->appendMessage(tr("renderingSum: %1 / %2 = %3")
     //    .arg(renderingSum).arg(renderingCount).arg(renderingSum / renderingCount));
 //#endif
-// 
+//
 //    senderGUI->appendMessage(tr("States sent: %1.\n").arg(stateCount));
 //
-    
+
     return true;
 }
 
@@ -253,7 +259,7 @@ bool ObserverUDPSender::completeState(const QByteArray & /*flag*/)
 
     //if (compressDatagram)
     //   out << qCompress(data, 1);
-    //else    
+    //else
     //    out << data;
 
     //for(int i = 0; i < hosts->size(); i++)

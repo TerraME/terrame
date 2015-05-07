@@ -19,7 +19,7 @@ using namespace BagOfTasks;
 
 static const int TIME_OUT = 10000;
 
-TcpSocketTask::TcpSocketTask(QObject * parent) 
+TcpSocketTask::TcpSocketTask(QObject * parent)
     : QTcpSocket(parent), SocketTask()
 {
     setType(Task::Arbitrary);
@@ -29,13 +29,13 @@ TcpSocketTask::TcpSocketTask(QObject * parent)
     compressed = false;
     stateCount = 0;
     msgCount = 0;
-    
-    
+
+
 #ifdef TME_STATISTIC
     waitTime = 0.0;
     setupStatistics = false;
 #endif
-    
+
     connect(this, SIGNAL(readyRead()), this, SLOT(receive()));
 }
 
@@ -60,7 +60,7 @@ TcpSocketTask::~TcpSocketTask()
 //}
 //
 //
-//    
+//
 //void TcpSocketTask::setPort(quint16 prt)
 //{
 //    port = prt;
@@ -68,7 +68,7 @@ TcpSocketTask::~TcpSocketTask()
 
 bool TcpSocketTask::execute()
 {
-#ifdef TME_STATISTIC 
+#ifdef TME_STATISTIC
     if (executing || states.isEmpty())
         return false;
     executing = true;
@@ -79,9 +79,9 @@ bool TcpSocketTask::execute()
 
     double t = 0, tt = 0, sum = 0;
     int count = 0;
-    
+
     t = Statistic::getInstance().startMicroTime();
-    
+
     if (! setupStatistics)
     {
         name = QString("map TcpSocketTask task %1").arg(getId());
@@ -98,7 +98,7 @@ bool TcpSocketTask::execute()
     bool isEmpty = states.isEmpty();
 
     while (! isEmpty)
-    {  
+    {
         lock.lockForWrite();
         const QByteArray curState = states.takeFirst();
         isEmpty = states.isEmpty();
@@ -106,7 +106,7 @@ bool TcpSocketTask::execute()
 
         tt = Statistic::getInstance().startMicroTime();
 
-        send(curState); 
+        send(curState);
 
         sum += Statistic::getInstance().endMicroTime() - tt;
         count++;
@@ -115,15 +115,15 @@ bool TcpSocketTask::execute()
     executing = false;
 
     name = QString("z_send TcpSocketTask task %1").arg(getId());
-    if (count > 0) 
+    if (count > 0)
         Statistic::getInstance().addElapsedTime(name, sum / count);
     else
         Statistic::getInstance().addElapsedTime(name, 0);
-    
+
     name = QString("map TcpSocketTask task %1").arg(getId());
     t = Statistic::getInstance().startMicroTime() - t;
     Statistic::getInstance().addElapsedTime(name, t);
-    
+
     // Calculates the waiting time for the task start running
     // waitTime = Statistic::getInstance().startMicroTime();
 
@@ -141,7 +141,7 @@ bool TcpSocketTask::execute()
     executing = true;
 
     while (! isEmpty)
-    {   
+    {
         lock.lockForWrite();
         const QByteArray curState = states.takeFirst();
         isEmpty = states.isEmpty();
@@ -152,11 +152,11 @@ bool TcpSocketTask::execute()
 
     // timer->start(TIME_OUT);
     // timer.start(TIME_OUT);
-    
+
     executing = false;
     qApp->processEvents();
     return true;
-#endif    
+#endif
 }
 
 bool TcpSocketTask::connectToHost(const QHostAddress &host, quint16 prt)
@@ -235,8 +235,8 @@ bool TcpSocketTask::send(const QByteArray &data)
             insertSum += Statistic::getInstance().startMicroTime() - t;
             insertCount++;
         }
-     
-    qint64 bytesWritten = 0, bytesRead = dataAux.size(); 
+
+    qint64 bytesWritten = 0, bytesRead = dataAux.size();
     // qint64 bytesWritten = 0, bytesRead = data.size();
     int pos = 0;
 
@@ -312,8 +312,9 @@ bool TcpSocketTask::send(const QByteArray &data)
         emit speed(strSpeed);
 
         msgCount++;
-        emit messageSent(tr("Message sent: %1. From %2").arg(msgCount).arg(address.toString()));
-        emit statusMessages(msgCount);        
+        emit messageSent(tr("Message sent: %1. From %2")
+        		.arg(msgCount).arg(address.toString()));
+        emit statusMessages(msgCount);
 
         Statistic::getInstance().addOccurrence("Bytes written", bytesWritten);
     }
@@ -323,8 +324,9 @@ bool TcpSocketTask::send(const QByteArray &data)
         stateCount++;
         if (! sendCompleteStateInfo(COMPLETE_STATE))
             return false;
-        
-        emit messageSent(tr("States sent: %1. From %2\n").arg(stateCount).arg(address.toString()));
+
+        emit messageSent(tr("States sent: %1. From %2\n")
+        		.arg(stateCount).arg(address.toString()));
         emit statusStates(stateCount);
     }
 
@@ -396,7 +398,8 @@ bool TcpSocketTask::send(const QByteArray &data)
         formatSpeed(speed_, strSpeed);
 
         msgCount++;
-        emit messageSent(tr("Message sent: %1. From %2").arg(msgCount).arg(address.toString()));
+        emit messageSent(tr("Message sent: %1. From %2")
+        		.arg(msgCount).arg(address.toString()));
         emit statusMessages(msgCount);
     }
 
@@ -405,8 +408,9 @@ bool TcpSocketTask::send(const QByteArray &data)
         stateCount++;
         if (! sendCompleteStateInfo(COMPLETE_STATE))
             return false;
-        
-        emit messageSent(tr("States sent: %1. From %2\n").arg(stateCount).arg(address.toString()));
+
+        emit messageSent(tr("States sent: %1. From %2\n")
+        		.arg(stateCount).arg(address.toString()));
         emit statusStates(stateCount);
     }
 
@@ -447,7 +451,7 @@ void TcpSocketTask::receive()
             break;
 
         QByteArray data, auxData;
-        
+
         qint64 dataSizeReceiver = -1.0, pos = -1.0;
 
         in >> dataSizeReceiver;         // Total size of the uploaded stream
@@ -475,7 +479,7 @@ void TcpSocketTask::receive()
 void TcpSocketTask::timeout()
 {
     //const QString msg = tr("Time out! Disconnecting from client.");
-    //if (QUIET_MODE)    
+    //if (QUIET_MODE)
     //    qWarning("%s", qPrintable(msg));
 
     //emit messageSent(msg);

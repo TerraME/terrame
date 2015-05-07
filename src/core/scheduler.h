@@ -23,7 +23,7 @@ of this library and its documentation.
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
 
-/*! 
+/*!
 \file scheduler.h
 \brief This file contains definitions about the Scheduler objects. Scheduler objects are
     discrete Event schedulers. The Scheduler implementation is based the version published in
@@ -70,7 +70,8 @@ extern bool step;
 *  Event-Message Pair Composite Handle Type.
 *
 */
-typedef CompositeInterface< multimapComposite<Event, Message*> > EventMessagePairCompositeInterf;
+typedef CompositeInterface< multimapComposite<Event, Message*> >
+				EventMessagePairCompositeInterf;
 
 /**
 * \brief
@@ -81,7 +82,7 @@ class SchedulerImpl : public Implementation
 {
     Event time_; ///< Scheduler simulation timer
 
-public:	
+public:
 
     /// Default constructor
     SchedulerImpl(void)
@@ -127,7 +128,7 @@ public:
     /// Adds a new pair Event-Messsage to the Scheduler queue.
     /// \param event is a reference to the Event being added
     /// \param message is a pointer to message being linked to the Event
-    void add(Event& event, Message* message){
+    void add(Event& event, Message* message) {
         pair<Event, Message*> eventMessagePair;
         eventMessagePair.first = event;
         eventMessagePair.second = message;
@@ -153,7 +154,8 @@ public:
             eventMessageQueue.erase(iterator);
 
             if (message->execute(event)) {
-                eventMessagePair.first.setTime(double(time_.getTime() + event.getPeriod()));
+                eventMessagePair.first.setTime(double(time_.getTime()
+                		+ event.getPeriod()));
                 eventMessageQueue.add(eventMessagePair);
             }
 
@@ -188,7 +190,7 @@ public:
             event = eventMessagePair.first = iterator->first;
             message = eventMessagePair.second = iterator->second;
 
-            if(event.getTime() > finalTime){
+            if(event.getTime() > finalTime) {
 				time_ = finalTime;
 				break;
 			}
@@ -198,7 +200,8 @@ public:
             eventMessageQueue.erase(iterator);
 
             if (message->execute(event)) {
-                eventMessagePair.first.setTime(double(time_.getTime() + event.getPeriod()));
+                eventMessagePair.first.setTime(double(time_.getTime()
+                		+ event.getPeriod()));
                 eventMessageQueue.add(eventMessagePair);
             }
 
@@ -211,7 +214,7 @@ public:
     }
 
     /// Pauses the Scheduler. NOT IMPLEMENTED.
-    void pause(){}
+    void pause() {}
 
     /// Stops the Scheduler. NOT IMPLEMENTED
     void stop() {}
@@ -245,7 +248,7 @@ public:
 
     /// Default constructor
     ///
-    Scheduler(void){}
+    Scheduler(void) {}
 
     /// Gets the Event object on the head of the Event-Message queue
     /// \return A copy to the Event object on Event-Message head
@@ -260,18 +263,24 @@ public:
     /// until the Event-Message queue becomes empty.
     /// \param finalTime is a real number representing the end simulation time
     /// \return A real number meaning the Scheduler internal clock
-    double execute(double& finalTime) { return SchedulerInterf::pImpl_->execute(finalTime); }
+    double execute(double& finalTime)
+    {
+    	return SchedulerInterf::pImpl_->execute(finalTime);
+    }
 
     /// Pauses the Scheduler. NOT IMPLEMENTED.
-    void pause(){ SchedulerInterf::pImpl_->pause(); }
+    void pause() { SchedulerInterf::pImpl_->pause(); }
 
     /// Stops the Scheduler. NOT IMPLEMENTED
-    void stop(){ SchedulerInterf::pImpl_->stop(); }
+    void stop() { SchedulerInterf::pImpl_->stop(); }
 
     /// Adds a new pair Event-Message to the Scheduler queue.
     /// \param event is a reference to the Event being added
     /// \param message is a pointer to message being linked to the Event
-    void add(Event& event, Message* message){ SchedulerInterf::pImpl_->add(event, message); }
+    void add(Event& event, Message* message)
+    {
+    	SchedulerInterf::pImpl_->add(event, message);
+    }
 
     /// Return true if the Event-Message queue is empty.
     /// \return A boolean value: returns true if the Scheduler queue is empty, otherwise returns false.
@@ -286,5 +295,5 @@ public:
 
     ///Gets the Scheduler simulation time
     double getTime() { return SchedulerInterf::pImpl_->getTime(); }
-};  
+};
 #endif

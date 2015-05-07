@@ -37,9 +37,9 @@ of this library and its documentation.
 #include "protocol.pb.h"
 
 ///< Global variable: Lua stack used for communication with C++ modules.
-extern lua_State * L; 
+extern lua_State * L;
 
-///< true - TerrME runs in verbose mode and warning messages to the user; 
+///< true - TerrME runs in verbose mode and warning messages to the user;
 /// false - it runs in quite node and no messages are shown to the user.
 extern ExecutionModes execModes;
 
@@ -75,7 +75,7 @@ int luaEvent::config(lua_State *L)
 
 /// Gets the luaEvent time
 int luaEvent::getTime(lua_State *L)
-{ 
+{
     double time = Event::getTime();
     lua_pushnumber(L, time);
     return 1;
@@ -83,7 +83,7 @@ int luaEvent::getTime(lua_State *L)
 
 /// Gets the luaEvent priority
 int luaEvent::getPriority(lua_State *L)
-{ 
+{
     double priority = Event::getPriority();
     lua_pushnumber(L, priority);
     return 1;
@@ -92,7 +92,7 @@ int luaEvent::getPriority(lua_State *L)
 /// Sets the luaEvent priority
 /// parameters: number
 int luaEvent::setPriority(lua_State *L)
-{ 
+{
     double priority = luaL_checknumber(L, -1);
     Event::setPriority(priority);
     return 0;
@@ -100,7 +100,7 @@ int luaEvent::setPriority(lua_State *L)
 
 /// Gets the luaEvent periodicity
 int luaEvent::getPeriod(lua_State *L)
-{ 
+{
     double time = Event::getPeriod();
     lua_pushnumber(L, time);
     return 1;
@@ -116,7 +116,7 @@ int luaEvent::createObserver(lua_State *luaL)
     // retrieve the reference of the cell
     Reference<luaEvent>::getReference(luaL);
 
-    
+
     // flags for the definition of the use of compression
     // in the datagram transmission and visibility
     // of observers Udp Sender
@@ -141,7 +141,7 @@ int luaEvent::createObserver(lua_State *luaL)
     //{
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 1) != 0)
-    {   
+    {
         QString key;
         if (lua_type(luaL, -2) == LUA_TSTRING)
             key = QString(luaL_checkstring(luaL, -2));
@@ -172,7 +172,7 @@ int luaEvent::createObserver(lua_State *luaL)
 
     if (cols.isEmpty())
     {
-        if (execModes != Quiet){
+        if (execModes != Quiet) {
             string err_out = string("The parameter table is empty.");
             lua_getglobal(L, "customWarning");
             lua_pushstring(L, err_out.c_str());
@@ -191,7 +191,8 @@ int luaEvent::createObserver(lua_State *luaL)
     switch (typeObserver)
     {
         case TObsTextScreen:
-            obsText = (ObserverTextScreen*) EventSubjectInterf::createObserver(TObsTextScreen);
+            obsText = (ObserverTextScreen*)
+					EventSubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
             {
                 obsId = obsText->getId();
@@ -230,7 +231,8 @@ int luaEvent::createObserver(lua_State *luaL)
             break;
 
         case TObsUDPSender:
-            obsUDPSender = (ObserverUDPSender *) EventSubjectInterf::createObserver(TObsUDPSender);
+            obsUDPSender = (ObserverUDPSender *)
+						EventSubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
             {
                 obsId = obsUDPSender->getId();
@@ -250,7 +252,8 @@ int luaEvent::createObserver(lua_State *luaL)
             if (execModes != Quiet)
             {
                 qWarning("Error: In this context, the code '%s' does not "
-                    "correspond to a valid type of Observer.",  getObserverName(typeObserver));
+                    "correspond to a valid type of Observer.",
+					getObserverName(typeObserver));
             }
             return 0;
     }
@@ -307,7 +310,8 @@ int luaEvent::createObserver(lua_State *luaL)
 
     if (obsTable)
     {
-        if ((cols.size() < 1) || (cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
+        if ((cols.size() < 1) || (cols.size() < 2) || cols.at(0).isNull()
+        		|| cols.at(0).isEmpty()
                 || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
             if (execModes != Quiet)
@@ -342,7 +346,7 @@ int luaEvent::createObserver(lua_State *luaL)
         else
         {
             // multicast or unicast
-            for(int i = 1; i < cols.size(); i++){
+            for(int i = 1; i < cols.size(); i++) {
                 if (! cols.at(i).isEmpty())
                     obsUDPSender->addHost(cols.at(i));
             }
@@ -372,7 +376,7 @@ int luaEvent::notify(lua_State *luaL)
     luaStackToQString(12);
     stackDump(luaL);
 #endif
-    
+
     double time = luaL_checknumber(luaL, -1);
     EventSubjectInterf::notify(time);
     return 0;
@@ -393,7 +397,7 @@ QByteArray luaEvent::getChanges(QDataStream& in, const QStringList& attribs)
     return getAll(in, attribs);
 }
 
-QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/, 
+QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
     ObserverDatagramPkg::SubjectAttribute *currSubj,
     ObserverDatagramPkg::SubjectAttribute *parentSubj)
 {
@@ -450,7 +454,7 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
         valueChanged = true;
         observedAttribs.insert(key, valueTmp);
     }
-            
+
     if (valueChanged)
     {
         if ((parentSubj) && (! currSubj))
@@ -470,7 +474,8 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
 
         if (! parentSubj)
         {
-            QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
+            QByteArray byteArray(currSubj->SerializeAsString().c_str(),
+            					currSubj->ByteSize());
 
 #ifdef DEBUG_OBSERVER
             std::cout << currSubj->DebugString();
@@ -484,14 +489,16 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
 
 #else
 
-QByteArray luaEvent::getAll(QDataStream& /*in*/, int /*observerId*/, const QStringList& attribs)
+QByteArray luaEvent::getAll(QDataStream& /*in*/, int /*observerId*/,
+						const QStringList& attribs)
 {
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recover the reference on the stack lua
     Reference<luaEvent>::getReference(luaL);
     return pop(luaL, attribs);
 }
 
-QByteArray luaEvent::getChanges(QDataStream& in, int observerId, const QStringList& attribs)
+QByteArray luaEvent::getChanges(QDataStream& in, int observerId,
+							const QStringList& attribs)
 {
     return getAll(in, observerId, attribs);
 }
@@ -550,7 +557,8 @@ QByteArray luaEvent::pop(lua_State *, const QStringList &)
 
 #ifdef TME_BLACK_BOARD
 
-QDataStream& luaEvent::getState(QDataStream& in, Subject *, int /*observerId*/, const QStringList & /* attribs */)
+QDataStream& luaEvent::getState(QDataStream& in, Subject *,
+							int /*observerId*/, const QStringList & /* attribs */)
 {
 
 #ifdef DEBUG_OBSERVER
@@ -586,7 +594,8 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int /*observerId*/, 
 
 #else
 
-QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, const QStringList &  attribs)
+QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId,
+							const QStringList &  attribs)
 {
 #ifdef DEBUG_OBSERVER
     printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
@@ -652,7 +661,7 @@ int luaEvent::kill(lua_State *luaL)
                 if (key == "id")
                 {
                     id = luaL_checknumber(luaL, -1);
-                    result = EventSubjectInterf::kill(id); 
+                    result = EventSubjectInterf::kill(id);
                     // break;
 
                     lua_pushboolean(luaL, result);
