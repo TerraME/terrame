@@ -265,7 +265,7 @@ QStringList ObserverScheduler::getAttributes()
 
 void ObserverScheduler::on_butExpand_clicked()
 {
-    pipelineWidget->setVisible(! pipelineWidget->isVisible());
+    pipelineWidget->setVisible(!pipelineWidget->isVisible());
     pipelineWidget->resize(400, clockPanel->height());
 
     if (pipelineWidget->isVisible())

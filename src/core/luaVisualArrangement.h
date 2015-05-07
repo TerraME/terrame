@@ -25,7 +25,7 @@ of this library and its documentation.
 \author Pedro R. Andrade
 
 */
-#if !defined(LUAVISUALARRANGEMENT_H)
+#ifndef LUAVISUALARRANGEMENT_H
 #define LUAVISUALARRANGEMENT_H
 
 #include "visualArrangement.h"

@@ -139,7 +139,7 @@ public:
       */
     inline const RawAttribute * getRawAttribute(const QString &key)
      {
-        if (! attribHash->contains(key))
+        if (!attribHash->contains(key))
             return 0;
 
         return (const RawAttribute *)attribHash->operator[](key);
@@ -153,7 +153,7 @@ public:
      */
     inline bool getNumericValue(const QString &key, double &value) const
     {
-        if (! attribHash->contains(key))
+        if (!attribHash->contains(key))
             return false;
 
         value = attribHash->value(key)->number;
@@ -168,7 +168,7 @@ public:
      */
     inline bool getTextValue(const QString &key, QString & value) const
     {
-        if (! attribHash->contains(key))
+        if (!attribHash->contains(key))
             return false;
 
         value = attribHash->value(key)->text;

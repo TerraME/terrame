@@ -72,7 +72,7 @@ bool ObserverTextScreen::headerDefined()
 bool ObserverTextScreen::write()
 {
     // Write the header in the file
-    if (! header)
+    if (!header)
     {
         QString headers;
         for (int i = 0; i < attribList.size(); ++i)

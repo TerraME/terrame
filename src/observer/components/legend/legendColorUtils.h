@@ -33,7 +33,7 @@ of this library and its documentation.
 #include <QDataStream>
 
 #define ROUND(__val) \
-    ((__val) >= (0.0) ? ((int)((__val) + 0.5)) : ((int)((__val) - 0.5))) ;
+    ((__val) >= (0.0) ? ((int)((__val) + 0.5)) : ((int)((__val) - 0.5)));
 
 #if ! defined (TME_OBSERVER_CLIENT_MODE) && ! defined (TME_NO_TERRALIB)
 
@@ -61,11 +61,11 @@ struct TeColor
     TeColor () : red_(0), green_(0), blue_(0), name_("") {}
 
     //! Constructor with parameters
-    TeColor (int r, int g, int b, const std::string& name="")
+    TeColor (int r, int g, int b, const std::string& name = "")
     	: red_(r), green_(g), blue_(b), name_(name) {}
 
     //! Set parameters of colors
-    void init (int r, int g, int b, const std::string& name="")
+    void init (int r, int g, int b, const std::string& name = "")
     {
     	red_ = r, green_ = g, blue_ = b;name_ = name;
     }

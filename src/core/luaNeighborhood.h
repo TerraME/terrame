@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaNeighborhood objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUANEIGHBORHOOD_H)
+#ifndef LUANEIGHBORHOOD_H
 #define LUANEIGHBORHOOD_H
 
 extern "C"

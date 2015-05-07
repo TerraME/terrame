@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaMessage objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUAMESSAGE_H)
+#ifndef LUAMESSAGE_H
 #define LUAMESSAGE_H
 
 #include "reference.h"
@@ -82,7 +82,7 @@ public:
 			//lua_pushnumber(L, 5);
 			lua_call(L, 1, 0);
             return 0;
-        };
+        }
 
         // puts the Lua function 'message:execute()' on the top of the stack
         lua_pushnumber(L, 1);
@@ -98,7 +98,7 @@ public:
 			//lua_pushnumber(L, 5);
 			lua_call(L, 1, 0);
             return 0;
-        };
+        }
 
         // builds the table parameter of the constructor
         lua_newtable(L);
@@ -137,7 +137,7 @@ public:
     // qDebug() << "calls the function 'execute': lua_pcall(L, 1, 1, 0)";
 
     // calls the function 'execute'
-        lua_call(L, 1, 1) ;
+        lua_call(L, 1, 1);
 
         // retrieve the message result value from the lua stack
         int result = true;

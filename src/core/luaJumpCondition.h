@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaJumpCondition objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUAJUMPCONDITION_H)
+#ifndef LUAJUMPCONDITION_H
 #define LUAJUMPCONDITION_H
 
 #include "luaCell.h"

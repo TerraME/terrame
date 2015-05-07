@@ -29,7 +29,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
                  Handles: Region
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
-#if !defined(REGION_H)
+#ifndef REGION_H
 #define REGION_H
 
 #include <map>

@@ -29,9 +29,9 @@ Worker::~Worker()
     abort = true;
     // waitCondition.wakeAll(); // done by the destructor of TaskManager
     locker.unlock();
-    if (! wait(1000))
+    if (!wait(1000))
     {
-        if(! wait(3000))
+        if(!wait(3000))
         {
             terminate();
             qWarning("Wait time of thread exceeded. This may occur when \"autoclose\"\n"
@@ -55,9 +55,9 @@ void Worker::run()
 #endif
 
     QMutexLocker locker(&mutex);
-    while(! abort)
+    while(!abort)
     {
-        while(! empty)
+        while(!empty)
         {
             task = manager.getTask(id);
             locker.unlock();
@@ -78,7 +78,7 @@ void Worker::run()
                         // Re-inserts the task in the bag because
                         // TaskManager manages the task priority
                          case Task::Continuous:
-                            // qDebug() << this << "====" ;
+                            // qDebug() << this << "====";
                             TaskManager::getInstance().add(task);
                             // qDebug() << "\n TaskManager::getInstance().add(task); <<<<<<<<<<<<<<<<<<<\n";
                             break;

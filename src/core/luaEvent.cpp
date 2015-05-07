@@ -132,7 +132,7 @@ int luaEvent::createObserver(lua_State *luaL)
     allAttribs.push_back("Priority");
 
     // Retrieves the parameters table
-    //if(! lua_istable(luaL, top - 1))
+    //if(!lua_istable(luaL, top - 1))
     //{
     //    if (execModes == Quiet)
     //        qWarning("Warning: Parameter table not found.");
@@ -347,7 +347,7 @@ int luaEvent::createObserver(lua_State *luaL)
         {
             // multicast or unicast
             for(int i = 1; i < cols.size(); i++) {
-                if (! cols.at(i).isEmpty())
+                if (!cols.at(i).isEmpty())
                     obsUDPSender->addHost(cols.at(i));
             }
         }
@@ -412,7 +412,7 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
     valueTmp = Event::getTime();
     if (observedAttribs.value(key) != valueTmp)
     {
-        if ((parentSubj) && (! currSubj))
+        if ((parentSubj) && (!currSubj))
             currSubj = parentSubj->add_internalsubject();
 
         raw = currSubj->add_rawattributes();
@@ -428,7 +428,7 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
     valueTmp = Event::getPeriod();
     if (observedAttribs.value(key) != valueTmp)
     {
-        if ((parentSubj) && (! currSubj))
+        if ((parentSubj) && (!currSubj))
             currSubj = parentSubj->add_internalsubject();
 
         raw = currSubj->add_rawattributes();
@@ -444,7 +444,7 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
     valueTmp = (double) Event::getPriority();
     if (observedAttribs.value(key) != valueTmp)
     {
-        if ((parentSubj) && (! currSubj))
+        if ((parentSubj) && (!currSubj))
             currSubj = parentSubj->add_internalsubject();
 
         raw = currSubj->add_rawattributes();
@@ -457,7 +457,7 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
 
     if (valueChanged)
     {
-        if ((parentSubj) && (! currSubj))
+        if ((parentSubj) && (!currSubj))
             currSubj = parentSubj->add_internalsubject();
 
     	// id
@@ -472,7 +472,7 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
         // #elements
         currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
-        if (! parentSubj)
+        if (!parentSubj)
         {
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
             					currSubj->ByteSize());
@@ -574,14 +574,14 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *,
         case 0:
             content = getAll(in, observedAttribs.keys());
             // serverSession->setState(observerId, 1);
-            // if (! QUIET_MODE)
+            // if (!QUIET_MODE)
             // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observedAttribs.keys());
             // serverSession->setState(observerId, 0);
-            // if (! QUIET_MODE)
+            // if (!QUIET_MODE)
             // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
 	}
@@ -610,14 +610,14 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId,
         case 0:
         content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
-            // if (! QUIET_MODE)
+            // if (!QUIET_MODE)
             // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
         content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
-            // if (! QUIET_MODE)
+            // if (!QUIET_MODE)
             // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
@@ -641,7 +641,7 @@ int luaEvent::kill(lua_State *luaL)
 
     // checks if the parameter is a table
     // or own id Observer
-    if (! lua_istable(luaL, top - 1))
+    if (!lua_istable(luaL, top - 1))
     {
         id = luaL_checknumber(luaL, top - 1);
         result = EventSubjectInterf::kill(id);

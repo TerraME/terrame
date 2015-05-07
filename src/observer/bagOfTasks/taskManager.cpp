@@ -117,7 +117,7 @@ void TaskManager::add(Task *task)
     bagOfTasks.insert(pos, qMakePair(task, (int)task->getPriority()));
 
     // waitCondition.wakeOne();
-    if (! sync)
+    if (!sync)
         waitCondition.wakeOne();
     // //    waitCondition.wakeAll();
 }

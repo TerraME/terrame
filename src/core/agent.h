@@ -71,7 +71,7 @@ public:
 
     /// Get the Agent's "regions of action".
     /// \return The composite of action regions.
-	ActionRegionCompositeInterf& getActionRegions(void) { return actionRegions; };
+	ActionRegionCompositeInterf& getActionRegions(void) { return actionRegions; }
 
     /// Set the Agent's regions of action to that in the composite "actRgs".
     /// \param actRgs is a composite of ActionRegion objects.
@@ -247,7 +247,7 @@ public:
 
 						itCtrl++;
 					}
-					if(! found) return false;
+					if(!found) return false;
 
 					itJump++;
 				}
@@ -308,9 +308,9 @@ public:
 				// execute the control mode
 				do {
 					controlMode = cellIndexPair.second->execute(event, this);
-					if (! controlMode) break;
+					if (!controlMode) break;
 				}
-				while (! controlMode->execute(event, this, cellIndexPair));
+				while (!controlMode->execute(event, this, cellIndexPair));
 
 				cellIterator++;
 			}
@@ -362,7 +362,7 @@ public:
 		{
 			cellIndexPair.first.first = -1; cellIndexPair.first.second = -1;
 			cellIndexPair.second = NULL;
-			while(! currentControlMode->execute(event, this, cellIndexPair));
+			while(!currentControlMode->execute(event, this, cellIndexPair));
 			return true;
 		}
 
@@ -376,7 +376,7 @@ public:
 				cellIndexPair.second = cellIterator->second;
 
 				// execute the control mode
-				while(! currentControlMode->execute(event, this, cellIndexPair));
+				while(!currentControlMode->execute(event, this, cellIndexPair));
 
 				cellIterator++;
 			}

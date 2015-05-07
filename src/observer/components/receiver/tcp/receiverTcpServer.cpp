@@ -49,7 +49,7 @@ void ReceiverTcpServer::listenning(quint16 port)
 {
     this->port = port;
 
-    if (! listen(QHostAddress::Any, port))
+    if (!listen(QHostAddress::Any, port))
     {
         ui->appendMessage(tr("Error: Unable to start the server: %1").arg(errorString()));
         //close();

@@ -342,7 +342,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 				int stop = false;
 
 				lua_pushnil(luaL);
-				while ((! stop) && (lua_next(luaL, cellstop) != 0))
+				while ((!stop) && (lua_next(luaL, cellstop) != 0))
 				{
 					int cellTop = lua_gettop(luaL);
 					// lua_pushstring(luaL, "cObj_");
@@ -390,7 +390,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		// Runs each item in the table parameters
 		lua_pushnil(luaL);
 
-		if(! lua_istable(luaL, firstLegPos - 1))
+		if(!lua_istable(luaL, firstLegPos - 1))
 		{
 			// ---- Observer Image: Retrieves the path/name of the image files
 			if(typeObserver == TObsImage)
@@ -509,7 +509,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 	}
 
 	int width, height;
-	if(! obsDim.isEmpty())
+	if(!obsDim.isEmpty())
 	{
 		width = obsDim.at(0);
 		height = obsDim.at(1);
@@ -550,11 +550,11 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 			for (int i = 0; i < obsAttribs.size(); i++)
 			{
 				// inserted in the cellular space attribute list the recovered attribute
-				if(! observedAttribs.contains(obsAttribs.at(i)))
+				if(!observedAttribs.contains(obsAttribs.at(i)))
 					// observedAttribs.push_back(obsAttribs.at(i));
 					observedAttribs.insert(obsAttribs.at(i), "");
 
-				if(! allCellAttribs.contains(obsAttribs.at(i)))
+				if(!allCellAttribs.contains(obsAttribs.at(i)))
 				{
 
 					string err_out = string("Attribute name '") +
@@ -582,11 +582,11 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		{
 			for (int i = 0; i < obsAttribs.size(); i++)
 			{
-				if(! observedAttribs.contains(obsAttribs.at(i)))
+				if(!observedAttribs.contains(obsAttribs.at(i)))
 					// observedAttribs.push_back(obsAttribs.at(i));
 					observedAttribs.insert(obsAttribs.at(i), "");
 
-				if(! allCellSpaceAttribs.contains(obsAttribs.at(i)))
+				if(!allCellSpaceAttribs.contains(obsAttribs.at(i)))
 				{
 					string err_out = string("Attribute name '") +
 										string(qPrintable(obsAttribs.at(i))) +
@@ -906,7 +906,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 			// multicast or unicast
 			for(int i = 1; i < obsParamsAtribs.size(); i++)
 			{
-				if(! obsParamsAtribs.at(i).isEmpty())
+				if(!obsParamsAtribs.at(i).isEmpty())
 					obsUDPSender->addHost(obsParamsAtribs.at(i));
 			}
 		}
@@ -951,7 +951,7 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 			// multicast or unicast
 			for(int i = 1; i < obsParamsAtribs.size(); i++)
 			{
-				if(! obsParamsAtribs.at(i).isEmpty())
+				if(!obsParamsAtribs.at(i).isEmpty())
 					obsTCPSender->addHost(obsParamsAtribs.at(i));
 			}
 		}
@@ -1039,7 +1039,7 @@ QDataStream& luaCellularSpace::getState(QDataStream& in, Subject *,
 		content = getAll(in, (QStringList)observedAttribs.keys());
 
 		// serverSession->setState(observerId, 1);
-		//if(! QUIET_MODE)
+		//if(!QUIET_MODE)
 		// 	qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(1).toLatin1().constData());
 		break;
 
@@ -1047,7 +1047,7 @@ QDataStream& luaCellularSpace::getState(QDataStream& in, Subject *,
 		content = getChanges(in, (QStringList) observedAttribs.keys());
 
 		// serverSession->setState(observerId, 0);
-		//if(! QUIET_MODE)
+		//if(!QUIET_MODE)
 		// 	qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(0).toLatin1().constData());
 		break;
 	}
@@ -1104,7 +1104,7 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! csSubj))
+					if((parentSubj) && (!csSubj))
 						csSubj = parentSubj->add_internalsubject();
 
 					raw = csSubj->add_rawattributes();
@@ -1122,7 +1122,7 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! csSubj))
+					if((parentSubj) && (!csSubj))
 						csSubj = parentSubj->add_internalsubject();
 
 					raw = csSubj->add_rawattributes();
@@ -1139,7 +1139,7 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! csSubj))
+					if((parentSubj) && (!csSubj))
 						csSubj = parentSubj->add_internalsubject();
 
 					raw = csSubj->add_rawattributes();
@@ -1158,7 +1158,7 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! csSubj))
+					if((parentSubj) && (!csSubj))
 						csSubj = parentSubj->add_internalsubject();
 
 					raw = csSubj->add_rawattributes();
@@ -1208,7 +1208,7 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! csSubj))
+					if((parentSubj) && (!csSubj))
 						csSubj = parentSubj->add_internalsubject();
 
 					raw = csSubj->add_rawattributes();
@@ -1229,7 +1229,7 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! csSubj))
+					if((parentSubj) && (!csSubj))
 						csSubj = parentSubj->add_internalsubject();
 
 					raw = csSubj->add_rawattributes();
@@ -1250,7 +1250,7 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! csSubj))
+					if((parentSubj) && (!csSubj))
 						csSubj = parentSubj->add_internalsubject();
 
 					raw = csSubj->add_rawattributes();
@@ -1270,7 +1270,7 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 
 	if(valueChanged)
 	{
-		if((parentSubj) && (! csSubj))
+		if((parentSubj) && (!csSubj))
 			csSubj = parentSubj->add_internalsubject();
 
 		// id
@@ -1302,13 +1302,13 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 			std::cout.flush();
 
 			std::string parseCheck;
-			if(! csSubj->SerializeToString(&parseCheck))
+			if(!csSubj->SerializeToString(&parseCheck))
 			{
 				qDebug() << "\n\n SerializeToString FALHOU !!! \n\n";
 				std::abort();
 			}
 
-			if(! csSubj->ParseFromString(parseCheck))
+			if(!csSubj->ParseFromString(parseCheck))
 			{
 				qDebug() << "\n\n ParseFromString FALHOU !!! \n\n";
 				std::abort();
@@ -2055,7 +2055,7 @@ QStringList luaCellularSpace::retrieveStdDeviationColorBar(QStringList colorBarR
 
 		if(stdColorBarItems.size() > 0) stdColorBar.append(" { ");
 
-		for(int i = 0;i<stdColorBarItems.size();i++) {
+		for(int i = 0 ; i < stdColorBarItems.size(); i++) {
 			QStringList auxList = colorBarItems.at(i).split(";");
 			color = QColor::fromHsv(auxList.at(0).toInt(),
 								auxList.at(1).toInt(),
@@ -2138,7 +2138,7 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 
 		if(auxColorBar.length() > 0) {
 			// If there is no legend in the database or it is incorrect, aborts the recovery
-			if(! auxColorBar.contains("-"))
+			if(!auxColorBar.contains("-"))
 			{
 				if(execModes != Quiet) {
 					QString msg = QString(
@@ -2346,7 +2346,7 @@ int luaCellularSpace::save(lua_State *L)
 	char aux[100], *ch;
 	if((time - floor(time)) > 0) sprintf(aux, "%f", time); else sprintf(aux, "%.0f", time);
 	ch = aux;
-	for(unsigned int i= 0; i < strlen(aux); i++)
+	for(unsigned int i = 0; i < strlen(aux); i++)
 	{
 		if(ch[i] == '.' || ch[i] == ', ')
 			ch[i] = '_';
@@ -2355,7 +2355,7 @@ int luaCellularSpace::save(lua_State *L)
 	strcpy(outputTable, outputTableName);
 	strcat(outputTable, aux);
 
-	if(! lua_istable(L, -2))
+	if(!lua_istable(L, -2))
 	{
 		string err_out = string("Attribute names table not found.");
 		lua_getglobal(L, "customError");
@@ -2365,7 +2365,7 @@ int luaCellularSpace::save(lua_State *L)
 		return false;
 	}
 
-	if(! lua_istable(L, -1))
+	if(!lua_istable(L, -1))
 	{
 		string err_out = string("Cells not found.");
 		lua_getglobal(L, "customError");
@@ -2977,7 +2977,7 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L) {
 		neighborhood->setID((string&)(string const&)string(neighName));
 		neighborhoods->erase(neighName);
 		neighborhoods->add(pStrNeigh);
-		cont ++;
+		cont++;
 
 #if defined(DEBUG_NEIGH)
 		cout << "C++, Neighs: " << neighborhoods << ", ";
@@ -3817,7 +3817,7 @@ int luaCellularSpace::loadTXTNeighborhood(lua_State *L, const char* fileName,
 	int count = 0;
 	while(aux2 != NULL)
 	{
-		if(count ==0)
+		if(count == 0)
 			strcpy(aux1, aux2);
 		aux2 = strtok(NULL, " \t\n");
 		count++;
@@ -4014,7 +4014,7 @@ void configureADO() {
 		RegCloseKey (hk);
 	}
 
-	if((!sepDecimalResult.empty()) && (sepDecimalResult==", "))
+	if((!sepDecimalResult.empty()) && (sepDecimalResult == ", "))
 	{
 		if(RegOpenKeyExA(HKEY_CURRENT_USER, key.c_str(), 0,
 				KEY_SET_VALUE, &hk) == ERROR_SUCCESS)

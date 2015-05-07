@@ -82,7 +82,7 @@ bool TcpSocketTask::execute()
 
     t = Statistic::getInstance().startMicroTime();
 
-    if (! setupStatistics)
+    if (!setupStatistics)
     {
         name = QString("map TcpSocketTask task %1").arg(getId());
         Statistic::getInstance().addElapsedTime(name, 0);
@@ -97,7 +97,7 @@ bool TcpSocketTask::execute()
 
     bool isEmpty = states.isEmpty();
 
-    while (! isEmpty)
+    while (!isEmpty)
     {
         lock.lockForWrite();
         const QByteArray curState = states.takeFirst();
@@ -140,7 +140,7 @@ bool TcpSocketTask::execute()
         return false;
     executing = true;
 
-    while (! isEmpty)
+    while (!isEmpty)
     {
         lock.lockForWrite();
         const QByteArray curState = states.takeFirst();
@@ -322,7 +322,7 @@ bool TcpSocketTask::send(const QByteArray &data)
     if ((data != COMPLETE_STATE) && (data != COMPLETE_SIMULATION))
     {
         stateCount++;
-        if (! sendCompleteStateInfo(COMPLETE_STATE))
+        if (!sendCompleteStateInfo(COMPLETE_STATE))
             return false;
 
         emit messageSent(tr("States sent: %1. From %2\n")
@@ -406,7 +406,7 @@ bool TcpSocketTask::send(const QByteArray &data)
     if ((data != COMPLETE_STATE) && (data != COMPLETE_SIMULATION))
     {
         stateCount++;
-        if (! sendCompleteStateInfo(COMPLETE_STATE))
+        if (!sendCompleteStateInfo(COMPLETE_STATE))
             return false;
 
         emit messageSent(tr("States sent: %1. From %2\n")

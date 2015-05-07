@@ -113,7 +113,7 @@ void Edge::paint(QPainter *painter,
     //    painter->setPen(QPen(Qt::blue, 4));
     //    painter->drawPoint(intersectPointDest);
 
-    QPointF m = (base.p1() + base.p2()) * 0.5 ;
+    QPointF m = (base.p1() + base.p2()) * 0.5;
     QLineF normal = QLineF(m, base.p2()).normalVector();
 
     QPainterPath path;

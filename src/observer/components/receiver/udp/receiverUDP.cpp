@@ -178,7 +178,7 @@ void ReceiverUDP::processPendingDatagrams()
 
             datagramReceiverTask->addPartialState(completeData);
 
-            if (! datagramReceiverTask->isPartialStateEmpty())
+            if (!datagramReceiverTask->isPartialStateEmpty())
                 BagOfTasks::TaskManager::getInstance().add(datagramReceiverTask);
 
             // processDatagram(completeData);
@@ -233,13 +233,13 @@ void ReceiverUDP::createNotifyObserver(int subjId, int subjType)
     //subjAttr->setSubjectType((TypesOfSubjects) state.mid(pos + 1, 1).toInt());
     //bool dec = bb.decode(id, state);
 
-    //if (! dec)
+    //if (!dec)
     //    qDebug() << "Failed on decoding state.";
 
     static bool created = false;
     // static ConcretSubject *cSubj = new ConcretSubject(id, (TypesOfSubjects) state.mid(pos + 1, 1).toInt());
     static ConcretSubject *cSubj = new ConcretSubject(subjId, (TypesOfSubjects) subjType);
-    if (! created)
+    if (!created)
     {
         AgentObserverMap *map = new AgentObserverMap(cSubj);
         map->setCellSpaceSize(ui->getDimX(), ui->getDimY());

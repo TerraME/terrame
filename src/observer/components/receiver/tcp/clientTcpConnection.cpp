@@ -54,7 +54,7 @@ ClientTcpConnection::~ClientTcpConnection()
     // disconnectFromHost();
 
     // Se esta vazio, todos os estados foram recebidos
-    if (! observers.isEmpty())
+    if (!observers.isEmpty())
     {
 #ifdef TME_STATISTIC
         Statistic::getInstance().collectMemoryUsage();

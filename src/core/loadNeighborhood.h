@@ -1,6 +1,6 @@
 #ifndef TME_NO_TERRALIB
 
-#if ! defined(LOAD_NEIGHBORHOOD_H)
+#ifndef LOAD_NEIGHBORHOOD_H
 #define LOAD_NEIGHBORHOOD_H
 
 #include <TeProgress.h>
@@ -60,7 +60,7 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId,
 
     portal->freeResult();
 
-    sql= " SELECT count(*) FROM "+ table;
+    sql = " SELECT count(*) FROM "+ table;
     if(!portal->query(sql))
     {
         delete portal;
@@ -73,7 +73,7 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId,
 
     portal->freeResult();
 
-    sql= " SELECT object_id1, object_id2, centroid_distance, weight, ";
+    sql = " SELECT object_id1, object_id2, centroid_distance, weight, ";
     sql += " slice, order_neig, borders_length, net_objects_distance, ";
     sql += " net_minimum_path FROM "+ table;
     if(!portal->query(sql))
@@ -200,7 +200,7 @@ bool loadGPM(TeDatabase* db, const int& themeId,
 
     portal->freeResult();
 
-    sql= " SELECT count(*) FROM "+ table;
+    sql = " SELECT count(*) FROM "+ table;
     if(!portal->query(sql))
     {
         delete portal;
@@ -213,7 +213,7 @@ bool loadGPM(TeDatabase* db, const int& themeId,
 
     portal->freeResult();
 
-    sql= " SELECT object_id1, object_id2, centroid_distance, weight, ";
+    sql = " SELECT object_id1, object_id2, centroid_distance, weight, ";
     sql += " slice, order_neig, borders_length, net_objects_distance, ";
     sql += " net_minimum_path FROM "+ table;
     if(!portal->query(sql))

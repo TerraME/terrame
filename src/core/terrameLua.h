@@ -27,7 +27,7 @@ of this library and its documentation.
   \author Tiago Garcia de Senna Carneiro
 */
 
-#if !defined(TERRAME_LUA)
+#ifndef TERRAME_LUA
 
 #define TERRAME_LUA
 #if defined(TME_LUA_5_0)

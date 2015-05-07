@@ -27,7 +27,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
  * \author Tiago Garcia de Senna Carneiro
  */
 
-#if ! defined(STRATEGY)
+#ifndef STRATEGY
 #define STRATEGY
 
 template <T>

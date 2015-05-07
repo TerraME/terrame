@@ -162,7 +162,7 @@ public:
             iterator = eventMessageQueue.begin();
         }
 
-        if (! eventMessageQueue.empty())
+        if (!eventMessageQueue.empty())
         {
             Event& event = (Event&)iterator->first;
             return event;

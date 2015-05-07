@@ -1,4 +1,4 @@
-#if !defined(LUNA_H)
+#ifndef LUNA_H
 #define LUNA_H
 
 extern "C" {

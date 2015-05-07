@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaCell objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUACELL_H)
+#ifndef LUACELL_H
 #define LUACELL_H
 
 #include "../observer/cellSubjectInterf.h"
@@ -92,7 +92,7 @@ public:
 
 public:
 	/// Constructor
-	luaCell(lua_State *L) ;
+	luaCell(lua_State *L);
 
 	/// Returns the current internal state of the LocalAgent (Automaton) within the cell and received as parameter
 	int getCurrentStateName(lua_State *L);

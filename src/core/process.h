@@ -32,7 +32,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-#if ! defined(PROCESS_H)
+#ifndef PROCESS_H
 #define PROCESS_H
 
 #include "bridge.h"
@@ -108,7 +108,7 @@ public:
                 jIt++;
             }
 
-            if(! jumped)
+            if(!jumped)
             {
                 FlowCompositeInterf::iterator fIt;
                 fIt = FlowCompositeInterf::pImpl_->begin();

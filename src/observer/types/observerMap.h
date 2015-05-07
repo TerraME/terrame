@@ -243,7 +243,7 @@ protected:
      * \see Attributes
      * \see QHash, \see QString
      */
-    QHash<QString, Attributes*> * getMapAttributes() const ;
+    QHash<QString, Attributes*> * getMapAttributes() const;
 
     /**
      * Gets a reference to the docoder object

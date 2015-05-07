@@ -72,10 +72,10 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
                 }
                 else
                 {
-                    if (! reconfigMaxMin)
+                    if (!reconfigMaxMin)
                     {
                         /*
-                        if (! QUIET_MODE)
+                        if (!QUIET_MODE)
                             qWarning("Warning: Invalid color. You need to reconfigure the "
                                      "maximum and the minimum values of the attribute \"%s\".",
                                      qPrintable(attrib->getName()));
@@ -161,7 +161,7 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
 
 void PainterShapefile::plotMap(Attributes *attrib)
 {
-    if (! attrib)
+    if (!attrib)
 	{
 		string err_out = string("Erro: PainterWidget::plotMap - Invalid attribute!!");
 		lua_getglobal(L, "customErrorMsg");

@@ -35,7 +35,7 @@ bool DatagramReceiverTask::execute()
     QByteArray *state;
     QMutexLocker locker(&mutex);
 
-    while (! partialData.isEmpty())
+    while (!partialData.isEmpty())
     {
         state = partialData.takeFirst();
         locker.unlock();
@@ -162,7 +162,7 @@ void DatagramReceiverTask::process(const QString & /*state*/)
 //    {
 //        int type = state.mid(pos + 1, 1).toInt(&ok);
 //
-//        if (! ok)
+//        if (!ok)
 //        {
 //            qDebug() << "Failed on convert QString to int. ID and/or Type incorrect!";
 //            return;

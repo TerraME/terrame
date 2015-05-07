@@ -25,7 +25,7 @@ of this library and its documentation.
         \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined(LUAENVIRONMENT_H)
+#ifndef LUAENVIRONMENT_H
 #define LUAENVIRONMENT_H
 
 #include "environmentSubjectInterf.h"

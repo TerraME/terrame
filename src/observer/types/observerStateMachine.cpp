@@ -52,7 +52,7 @@ extern lua_State * L;
 //void wait (int seconds)
 //{
 //    clock_t endwait;
-//    endwait = clock () + seconds * CLOCKS_PER_SEC ;
+//    endwait = clock () + seconds * CLOCKS_PER_SEC;
 //    while (clock() < endwait)
 //        qApp->processEvents();
 //}
@@ -292,7 +292,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
     {
         if ((attribList.at(i) != QString("x")) && (attribList.at(i) != QString("y")))
         {
-            if (! mapAttributes->contains(attribList.at(i)))
+            if (!mapAttributes->contains(attribList.at(i)))
             {
                 attrib = new Attributes(attribs.at(i), 0, 0);
 
@@ -351,7 +351,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
     	}
     }
 
-    if (! legendWindow)
+    if (!legendWindow)
        	legendWindow = new LegendWindow(this);
     legendWindow->setValues(mapAttributes, obsAttrib);
 }
@@ -446,7 +446,7 @@ void ObserverStateMachine::showLayerLegend()
                 child->setText(0, leg->at(j).getLabel());
                 QColor color = leg->at(j).getColor();
 
-                if (! leg->at(j).getLabel().contains("mean"))
+                if (!leg->at(j).getLabel().contains("mean"))
                     child->setData(0, Qt::DecorationRole,
                     legendWindow->color2Pixmap(color, ICON_SIZE));
                 else
@@ -738,7 +738,7 @@ void ObserverStateMachine::zoomOut()
 //void ObserverStateMachine::connectTreeLayer(bool connect)
 //{
 //    // connects/disconnects the treeWidget signal with the slot
-//    if (! connect)
+//    if (!connect)
 //    {
 //        disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
 //            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
@@ -760,7 +760,7 @@ void ObserverStateMachine::setupGUI()
 
     view = new Canvas(scene, this);
     view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); //
-    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); does not exist in version 4.3.4
+    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate); // FullViewportUpdate); does not exist in version 4.3.4
     // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     view->setRenderHint(QPainter::Antialiasing);
     // view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);

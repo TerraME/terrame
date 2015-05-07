@@ -79,7 +79,7 @@ bool VisualMapping::execute()
 
 #ifdef DEBUG_OBSERVER
     qDebug() << "VisualMapping::execute()";
-    for (int i = 0 ; i < attribList.size(); ++i)
+    for (int i = 0; i < attribList.size(); ++i)
     {
         Attributes *attrib = attribList.at(i);
         qDebug() << "\n   type: " << getSubjectName(attrib->getType())
@@ -94,7 +94,7 @@ bool VisualMapping::execute()
     bool isAgentOrSociety = false;
 #endif
 
-    for (int i = 0 ; i < attribList.size(); ++i)
+    for (int i = 0; i < attribList.size(); ++i)
     {
         Attributes *attrib = attribList.at(i);
 
@@ -410,7 +410,7 @@ void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
                 }
                 else
                 {
-                    if (! reconfigMaxMin)
+                    if (!reconfigMaxMin)
                     {
 						if (execModes != Quiet) {
 							string str = string("Invalid color. You need to reconfigure the "
@@ -522,7 +522,7 @@ void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
                 }
                 else
                 {
-                    if (! reconfigMaxMin)
+                    if (!reconfigMaxMin)
                     {
 						if (execModes != Quiet) {
 							string str =
@@ -715,7 +715,7 @@ void VisualMapping::mappingAllText(Attributes *attrib, QPainter *p)
 void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
     const QImage &result, const QSize &size)
 {
-    if (! attrib->getVisible())
+    if (!attrib->getVisible())
         return;
 
 #ifndef TME_DRAW_VECTORIAL_AGENTS
@@ -750,7 +750,7 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
         << "WIDTH_CELL" << WIDTH_CELL;
     qDebug() << "SIZE_CELL_PROPORT_H" << SIZE_CELL_PROPORT_H
     		<< "ORIG_TO_DEST_H" << ORIG_TO_DEST_H
-        << "HEIGHT_CELL" << HEIGHT_CELL<< " cellSize" << cellSize ;
+        << "HEIGHT_CELL" << HEIGHT_CELL<< " cellSize" << cellSize;
 #endif
 
     QRectF rec;
@@ -759,7 +759,7 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
 
     BlackBoard &bb = BlackBoard::getInstance();
 
-    //if (! attrib)
+    //if (!attrib)
     //    return;
 
     QVector<ObsLegend> *vecLegend = attrib->getLegend();
@@ -805,8 +805,8 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
                 exist = nestedSubj->getNumericValue(attrib->getName(), num);
 
 #ifdef DEBUG_OBSERVER
-            qDebug() << ">>>>>>>>>>>>>>>>>>>>>" << nestedSubj->toString()
-                ; // << "\n------" << attrib->getName() << "\n" << v << parentSubjAttr->toString() << "\n";
+            qDebug() << ">>>>>>>>>>>>>>>>>>>>>" << nestedSubj->toString();
+            // << "\n------" << attrib->getName() << "\n" << v << parentSubjAttr->toString() << "\n";
 
             qDebug() << "nestedSubj->getType()" << getSubjectName(nestedSubj->getType())
                 << "attrib->getType()" << getSubjectName(attrib->getType());
@@ -823,7 +823,7 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
 
                     // An agent is in only one place on space
                     // So, we get the first id of vector of sub-nested subject
-                    if (! subNestedSujectsIDs.isEmpty())
+                    if (!subNestedSujectsIDs.isEmpty())
                     {
                         SubjectAttributes *subNestedSuj =
                         		bb.getSubject(subNestedSujectsIDs.at(0));
@@ -934,7 +934,7 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
     std::cout << "\nSIZE_CELL_PROPORT_H: " << SIZE_CELL_PROPORT_H
     		<< ", ORIG_TO_DEST_H: " << ORIG_TO_DEST_H
 			<< ", HEIGHT_CELL: " << HEIGHT_CELL;
-    qDebug() << " cellSize" << cellSize ;
+    qDebug() << " cellSize" << cellSize;
 #endif
 
     QRectF rec;
@@ -1178,7 +1178,7 @@ void VisualMapping::mappingNeighborhood(Attributes *attrib, QPainter *p)
                 }
                 else
                 {
-                    if (! reconfigMaxMin)
+                    if (!reconfigMaxMin)
                     {
 						if (execModes != Quiet) {
 							string str =

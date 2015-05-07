@@ -120,10 +120,10 @@ void AgentObserverImage::setSubjectAttributes(const QStringList & attribs,
 
     for (int i = 0; i < attribs.size(); i++)
     {
-        if (! subjectAttributes.contains(attribs.at(i)))
+        if (!subjectAttributes.contains(attribs.at(i)))
             subjectAttributes.push_back(attribs.at(i));
 
-        if (! mapAttributes->contains(attribs.at(i)))
+        if (!mapAttributes->contains(attribs.at(i)))
          {
             if (execModes != Quiet)
             {
@@ -155,7 +155,7 @@ QStringList & AgentObserverImage::getSubjectAttributes()
 
 void AgentObserverImage::registry(Subject *subj, const QString & className)
 {
-    if (! ObserverMap::constainsItem(nestedSubjects, subj))
+    if (!ObserverMap::constainsItem(nestedSubjects, subj))
     {
 #ifdef TME_BLACK_BOARD
     	SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(subj->getId());
@@ -172,7 +172,7 @@ void AgentObserverImage::registry(Subject *subj, const QString & className)
 
 bool AgentObserverImage::unregistry(Subject *subj, const QString & className)
 {
-    if (! ObserverMap::constainsItem(nestedSubjects, subj))
+    if (!ObserverMap::constainsItem(nestedSubjects, subj))
         return false;
 
     int idxItem = -1;
@@ -208,7 +208,7 @@ bool AgentObserverImage::unregistry(Subject *subj, const QString & className)
         //{
         //        if ((attrib->getType() != TObsAgent)
         //            || ((className == attrib->getExhibitionName())
-        //                 && (! ObserverMap::existAgents(nestedSubjects))))
+        //                 && (!ObserverMap::existAgents(nestedSubjects))))
         //    {
         //        getMapAttributes()->take(attrib->getName());
         //        getPainterWidget()->setExistAgent(false);

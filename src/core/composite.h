@@ -67,7 +67,7 @@ public:
     {
         if (components_.size() < i)
             return false;
-        return ! (components_.erase (components_.begin() + i) == components_.end());
+        return !(components_.erase (components_.begin() + i) == components_.end());
     }
 
     /// Remove a component

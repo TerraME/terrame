@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaControlMode objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUACONTROLMODE_H)
+#ifndef LUACONTROLMODE_H
 #define LUACONTROLMODE_H
 
 #include "luaJumpCondition.h"

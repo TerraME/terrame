@@ -159,7 +159,7 @@ void objectId2coords(const char * objId, int &x, int &y)
     y = atoi(lin);
 }
 
-#if ! defined (TME_NO_TERRALIB)
+#ifndef TME_NO_TERRALIB
 
 //-------------------------------------------------------------------------------------
 //----------------------- AUXILIARY FUNCTION TO DELETE TABLES -------------------------
@@ -248,7 +248,7 @@ bool createNewTheme(TeTable attTable, char outputTable[], string whereClause,
 
     view->add(theme);
 
-    if(! whereClause. empty()) theme->attributeRest(whereClause);
+    if(!whereClause. empty()) theme->attributeRest(whereClause);
 
     // Set a default visual for the geometries of the objects of the layer
     // Polygons will be set with the blue color
@@ -332,7 +332,7 @@ bool createNewTheme(TeTable attTable, char outputTable[], string whereClause,
             db->close();
             return false;
         }
-    };
+    }
     return true;
 
 }
@@ -366,7 +366,7 @@ std::string TeGetName (const char* value)
 	int sp = name.rfind('\\') + 1;
 	int ip = (name.substr(sp, len - 1)).rfind('.');
 	int bp = (name.substr(sp, len - 1)).rfind('/');
-	if ((ip>0)&& (ip > bp))
+	if ((ip > 0) && (ip > bp))
 		return name.substr(0, sp + ip);
 	else
 		return name;

@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaFlowCondition objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUAFLOWCONDITION_H)
+#ifndef LUAFLOWCONDITION_H
 #define LUAFLOWCONDITION_H
 
 #include "luaRule.h"

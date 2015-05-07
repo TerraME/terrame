@@ -260,7 +260,7 @@ public:
         SocietyImpl* p;
 
         if(sizeMem <= 0) return;
-        if(! duplicated) {
+        if(!duplicated) {
 
             past = (Society*)new unsigned char[sizeMem];
             past->pImpl_ = new SocietyImpl();

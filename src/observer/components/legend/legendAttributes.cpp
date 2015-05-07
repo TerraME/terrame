@@ -415,7 +415,7 @@ void Attributes::setValues(QVector<QString>* s)
 
 QVector<QString>* Attributes::getTextValues() const
 {
-    // Q_ASSERT_X(! textValues, "Attributes::getTextValues()", "Vector of values is NULL");
+    // Q_ASSERT_X(!textValues, "Attributes::getTextValues()", "Vector of values is NULL");
     return textValues;
 }
 
@@ -617,7 +617,7 @@ void Attributes::setValueList(const QStringList & values)
 
 int Attributes::addValueListItem(const QString &value)
 {
-    if(! valueList.contains(value))
+    if(!valueList.contains(value))
     {
         valueList.push_back(value);
         return valueList.size() - 1;
@@ -637,7 +637,7 @@ void Attributes::setLabelList(const QStringList & labels)
 
 int Attributes::addLabelListItem(const QString &label)
 {
-    if(! labelList.contains(label))
+    if(!labelList.contains(label))
     {
         labelList.push_back(label);
         return labelList.size() - 1;

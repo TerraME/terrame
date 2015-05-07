@@ -130,7 +130,7 @@ int luaSociety::createObserver(lua_State * luaL)
 					int stop = false;
 
 					lua_pushnil(luaL);
-					while((! stop) && (lua_next(luaL, agentstop) != 0))
+					while((!stop) && (lua_next(luaL, agentstop) != 0))
 					{
 						int agentTop = lua_gettop(luaL);
 						lua_pushnumber(luaL, 1);
@@ -497,7 +497,7 @@ int luaSociety::createObserver(lua_State * luaL)
 					// multicast or unicast
 					for(int i = 1; i < cols.size(); i++)
 					{
-						if (! cols.at(i).isEmpty())
+						if (!cols.at(i).isEmpty())
 							obsUDPSender->addHost(cols.at(i));
 					}
 				}
@@ -546,7 +546,7 @@ int luaSociety::createObserver(lua_State * luaL)
 		while(lua_next(luaL, top - 1) != 0)
 		{
 			// Retrieves the observer map ID
-			if ((lua_isnumber(luaL, -1) && (! getObserverId)))
+			if ((lua_isnumber(luaL, -1) && (!getObserverId)))
 			{
 				obsId = luaL_checknumber(luaL, -1);
 				getObserverId = true;
@@ -607,7 +607,7 @@ int luaSociety::createObserver(lua_State * luaL)
 		QString errorMsg = QString("\nError: The Observer ID \"%1\" was not found. "
 			"Check the declaration of this observer.\n").arg(obsId);
 
-		if (! cellSpace)
+		if (!cellSpace)
 		{
 			lua_getglobal(L, "customError");
 			lua_pushstring(L, errorMsg.toLatin1().data());
@@ -620,7 +620,7 @@ int luaSociety::createObserver(lua_State * luaL)
 		{
 			obsMap = (AgentObserverMap *)cellSpace->getObserver(obsId);
 
-			if (! obsMap)
+			if (!obsMap)
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, errorMsg.toLatin1().data());
@@ -635,7 +635,7 @@ int luaSociety::createObserver(lua_State * luaL)
 		{
 			obsImage = (AgentObserverImage *)cellSpace->getObserver(obsId);
 
-			if (! obsImage)
+			if (!obsImage)
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, errorMsg.toLatin1().data());
@@ -662,7 +662,7 @@ int luaSociety::createObserver(lua_State * luaL)
 
 		for(int i = 0; i < obsAttribs.size(); i++)
 		{
-			if (! observedAttribs.contains(obsAttribs.at(i)))
+			if (!observedAttribs.contains(obsAttribs.at(i)))
 				// observedAttribs.push_back(obsAttribs.at(i));
 				observedAttribs.insert(obsAttribs.at(i), "");
 		}
@@ -733,7 +733,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *,
 		content = getAll(in, (QStringList)observedAttribs.keys());
 
 		// serverSession->setState(observerId, 1);
-		//if (! QUIET_MODE)
+		//if (!QUIET_MODE)
 		// 	qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
 		break;
 
@@ -741,7 +741,7 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *,
 		content = getChanges(in, (QStringList) observedAttribs.keys());
 
 		// serverSession->setState(observerId, 0);
-		//if (! QUIET_MODE)
+		//if (!QUIET_MODE)
 		// 	qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
 		break;
 	}
@@ -802,7 +802,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! currSubj))
+					if((parentSubj) && (!currSubj))
 						currSubj = parentSubj->add_internalsubject();
 
 					raw = currSubj->add_rawattributes();
@@ -820,7 +820,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! currSubj))
+					if((parentSubj) && (!currSubj))
 						currSubj = parentSubj->add_internalsubject();
 
 					raw = currSubj->add_rawattributes();
@@ -836,7 +836,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! currSubj))
+					if((parentSubj) && (!currSubj))
 						currSubj = parentSubj->add_internalsubject();
 
 					raw = currSubj->add_rawattributes();
@@ -854,7 +854,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! currSubj))
+					if((parentSubj) && (!currSubj))
 						currSubj = parentSubj->add_internalsubject();
 
 					raw = currSubj->add_rawattributes();
@@ -902,7 +902,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! currSubj))
+					if((parentSubj) && (!currSubj))
 						currSubj = parentSubj->add_internalsubject();
 
 					raw = currSubj->add_rawattributes();
@@ -921,7 +921,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! currSubj))
+					if((parentSubj) && (!currSubj))
 						currSubj = parentSubj->add_internalsubject();
 
 					raw = currSubj->add_rawattributes();
@@ -941,7 +941,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! currSubj))
+					if((parentSubj) && (!currSubj))
 						currSubj = parentSubj->add_internalsubject();
 
 					raw = currSubj->add_rawattributes();
@@ -960,7 +960,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 	if(valueChanged)
 	{
-		if((parentSubj) && (! currSubj))
+		if((parentSubj) && (!currSubj))
 			currSubj = parentSubj->add_internalsubject();
 
 		// id
@@ -976,7 +976,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 		currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
 #ifdef TME_STATISTIC
-		if (! parentSubj)
+		if (!parentSubj)
 		{
 			t = Statistic::getInstance().endMicroTime() - t;
 			Statistic::getInstance().addElapsedTime("pop lua", t);
@@ -1001,7 +1001,7 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 
 #else
 
-		if (! parentSubj)
+		if (!parentSubj)
 		{
 			QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
 
@@ -1015,13 +1015,13 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 			std::cout.flush();
 
 			std::string parseCheck;
-			if (! currSubj->SerializeToString(&parseCheck))
+			if (!currSubj->SerializeToString(&parseCheck))
 			{
 				qDebug() << "\n\n SerializeToString FALHOU !!! \n\n";
 				std::abort();
 			}
 
-			if (! currSubj->ParseFromString(parseCheck))
+			if (!currSubj->ParseFromString(parseCheck))
 			{
 				qDebug() << "\n\n ParseFromString FALHOU !!! \n\n";
 				std::abort();
@@ -1042,7 +1042,7 @@ int luaSociety::kill(lua_State *luaL)
 	int id = luaL_checknumber(luaL, 1);
 
 	bool result = SocietySubjectInterf::kill(id);
-	if (! result)
+	if (!result)
 	{
 		if (cellSpace)
 		{

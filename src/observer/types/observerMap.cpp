@@ -181,7 +181,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
 
         foreach(const QString & str, attribs)
         {
-            if (! attribList.contains(str))
+            if (!attribList.contains(str))
                 attribList.append(str);
         }
     }
@@ -226,7 +226,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
     for(int i = 0; i < attribList.size(); i++)
     {
         if ((attribList.at(i) != "x") && (attribList.at(i) != "y")
-            && (! mapAttributes->contains(attribList.at(i))))
+            && (!mapAttributes->contains(attribList.at(i))))
         {
 
             attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(),
@@ -249,7 +249,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
             attrib->setVisible(true);
 
             //------- Retrieves the legend file and creates the object attrib
-            if (! legKeys.isEmpty())
+            if (!legKeys.isEmpty())
             {
                 dataType = legKeys.indexOf(TYPE);
                 mode = legKeys.indexOf(GROUP_MODE);
@@ -336,7 +336,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
         }
     }
 
-    if (! legendWindow)
+    if (!legendWindow)
         legendWindow = new LegendWindow(this);
 
     legendWindow->setValues(mapAttributes, obsAttrib);
@@ -530,7 +530,7 @@ void ObserverMap::showLayerLegend()
                 	break;
 
             	default:
-					if (! leg->at(j).getLabel().contains("mean"))
+					if (!leg->at(j).getLabel().contains("mean"))
 						child->setData(0, Qt::DecorationRole,
 							legendWindow->color2Pixmap(color, ICON_SIZE));
 					else
@@ -637,7 +637,7 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
 
     QSize imgSize(painterWidget->size() * zoom);
 
-    if (! painterWidget->rescale(imgSize))
+    if (!painterWidget->rescale(imgSize))
     {
         //printf("\nzoomChanged:> painterWidget->rescale() FALSO\n\n");
         return;
@@ -792,7 +792,7 @@ const QSize & ObserverMap::getCellSpaceSize() const
 //    treeLayers->blockSignals(value);
 //
 //    //// connect/disconnect signal of treeWidget with the slot
-//    //if (! on)
+//    //if (!on)
 //    //{
 //    //    disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
 //    //        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));

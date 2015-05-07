@@ -25,7 +25,7 @@ of this library and its documentation.
 \author Pedro R. Andrade
 
 */
-#if !defined(LUAMAP_H)
+#ifndef LUAMAP_H
 #define LUAMAP_H
 
 #include "observerMap.h"

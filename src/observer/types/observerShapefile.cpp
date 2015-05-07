@@ -70,7 +70,7 @@ bool ObserverShapefile::draw(QDataStream &state)
             attrib->clear();
             qWarning() << "nao decodificou!!!!";
             // decoded = protocolDecoder->decode(msg, xs, ys);
-            //qDebug()<<msg;
+            //qDebug() << msg;
             painter->plotMap(attrib);
         }
         qApp->processEvents();
@@ -129,7 +129,7 @@ void ObserverShapefile::showLayerLegend()
             child->setText(0, leg->at(j).getLabel());
             QColor color = leg->at(j).getColor();
 
-            if (! leg->at(j).getLabel().contains("mean"))
+            if (!leg->at(j).getLabel().contains("mean"))
                 child->setData(0, Qt::DecorationRole,
                 legendWindow->color2Pixmap(color, ICON_SIZE));
             else
@@ -274,7 +274,7 @@ QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj,
 			nextStart = obj->panPartStart[iPart + 1];
 
 		list<QPointF> line;
-		while (j<nextStart)
+		while (j < nextStart)
 		{
 			line.push_back(QPointF(obj->padfX[j]+dx, obj->padfY[j]+dy));
 			j++;

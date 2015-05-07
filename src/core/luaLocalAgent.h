@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaLocalAgent objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUALOCALAGENT_H)
+#ifndef LUALOCALAGENT_H
 #define LUALOCALAGENT_H
 
 #include "luaAgent.h"

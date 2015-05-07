@@ -31,7 +31,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
   \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined (ENVIRONMENT_H)
+#ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
 #if defined (MSDEV)
@@ -392,7 +392,7 @@ private:
             environment->TimeSchedulerPairCompositeInterf::erase(theIterator);
 
             time = scheduler.execute();
-            if(! scheduler.empty()) timeSchedulerPair.first = time;
+            if(!scheduler.empty()) timeSchedulerPair.first = time;
             else {
                 timeSchedulerPair.first.setTime(DBL_MAX);
                 scheduler.setTime(DBL_MAX);

@@ -50,9 +50,9 @@ bool UdpSocketTask::execute()
     bool isEmpty = states.isEmpty();
     finished = false;
 
-    while (! finished)  // Task is active while not finish the simulation. It might be a good idea !!
+    while (!finished)  // Task is active while not finish the simulation. It might be a good idea !!
     {
-        while (! isEmpty)
+        while (!isEmpty)
         {
             lock.lockForWrite();
             const QByteArray state = states.takeFirst();
@@ -136,7 +136,7 @@ bool UdpSocketTask::send(const QByteArray &data)
         qDebug() << "sendCompleteStateInfo(COMPLETE_STATE)";
         // finished = true;
 
-        if (! sendCompleteStateInfo(COMPLETE_STATE))
+        if (!sendCompleteStateInfo(COMPLETE_STATE))
             return false;
     }
 
