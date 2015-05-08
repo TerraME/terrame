@@ -484,11 +484,11 @@ int luaSociety::createObserver(lua_State * luaL)
 				{
 					if (execModes != Quiet)
 					{
-						string err_out = string("Observer will send to broadcast.");
-						lua_getglobal(L, "customWarning");
-						lua_pushstring(L, err_out.c_str());
+						//string err_out = string("Observer will send to broadcast.");
+						//lua_getglobal(L, "customWarning");
+						//lua_pushstring(L, err_out.c_str());
 						//lua_pushnumber(L, 5);
-						lua_call(L, 1, 0);
+						//lua_call(L, 1, 0);
 					}
 					obsUDPSender->addHost(BROADCAST_HOST);
 				}
