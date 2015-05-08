@@ -76,7 +76,7 @@ TaskManager& TaskManager::operator=(const TaskManager &)
 
 TaskManager::~TaskManager()
 {
-/*
+
     // Stops all workers execution
     for(int i = 0; i < workers.size(); i++)
         workers.at(i)->stop();
@@ -96,7 +96,7 @@ TaskManager::~TaskManager()
 
     for(int i = 0; i < workers.size(); i++)
         delete workers.at(i);
-  */
+
 #ifdef UNIT_TME_TEST_PRINT
     qDebug() << "bagOfTasks.size()" << bagOfTasks.size();
     qDebug() << "~TaskManager()"; std::cout.flush();
