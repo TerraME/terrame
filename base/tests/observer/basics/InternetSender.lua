@@ -32,7 +32,7 @@ return{
 			end
 		}
 
-	--	local c1 = InternetSender{subject = world}
+		local c1 = InternetSender{subject = world}
 
 		local world = Agent{
 			count = 0,
@@ -41,33 +41,31 @@ return{
 			end
 		}
 
-	--	local c1 = InternetSender{subject = world}
+		local c1 = InternetSender{subject = world, protocol = "udp"}
 
---[[
 		local c1 = InternetSender{
 			subject = world,
-			select = {"mcount"}
+			select = {"mcount"},
+			protocol = "udp"
 		}
---]]
 
 		local soc = Society{
 			instance = world,
 			quantity = 3
 		}
 
-	--	local c1 = InternetSender{subject = soc}
-		--local c1 = InternetSender{subject = soc, select = "#"}
+		local c1 = InternetSender{subject = soc, protocol = "udp"}
+		local c1 = InternetSender{subject = soc, select = "#", protocol = "udp"}
 
-		local world = CellularSpace{
-			xdim = 10,
-			count = 0,
+		local world = Cell{
+			vcount = 0,
 			mcount = function(self)
-				return self.count + 1
+				return self.vcount + 1
 			end
 		}
 
-	--	local c1 = InternetSender{subject = world}
-		--local c1 = InternetSender{subject = world, select = "mcount"}
+		local c1 = InternetSender{subject = world, protocol = "udp"}
+		local c1 = InternetSender{subject = world, select = "mcount", protocol = "udp"}
 
 		unitTest:assert(true)
 	end

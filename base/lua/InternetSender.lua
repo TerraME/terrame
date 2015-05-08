@@ -60,23 +60,26 @@ function InternetSender(data)
 		data.select = {}
 		if type(data.subject) == "Cell" then
 			forEachElement(data.subject, function(idx, value, mtype)
+				if not belong(mtype, {"number", "string", "boolean"}) then return end
 				local size = string.len(idx)
-				if idx ~= "x" and idx ~= "y" and idx ~= "past" and string.sub(idx, size, size) ~= "_" then
-					data.select[#data.select + 1] = idx
+				if not belong(idx, {"x", "y", "past"}) and string.sub(idx, size, size) ~= "_" then
+					table.insert(data.select, idx)
 				end
 			end)
 		elseif type(data.subject) == "Agent" then
 			forEachElement(data.subject, function(idx, value, mtype)
+				if not belong(mtype, {"number", "string", "boolean"}) then return end
 				local size = string.len(idx)
 				if string.sub(idx, size, size) ~= "_" then
-					data.select[#data.select + 1] = idx
+					table.insert(data.select, idx)
 				end
 			end)
 		elseif type(data.subject) == "CellularSpace" then
 			forEachElement(data.subject, function(idx, value, mtype)
+				if not belong(mtype, {"number", "string", "boolean"}) then return end
 				local size = string.len(idx)
 				if not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, size, size) ~= "_" then
-					data.select[#data.select + 1] = idx
+					table.insert(data.select, idx)
 				end
 			end)
 		elseif type(data.subject) == "Society" then
@@ -84,10 +87,9 @@ function InternetSender(data)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 				local size = string.len(idx)
 				if string.sub(idx, size, size) ~= "_" then
-					data.select[#data.select + 1] = idx
+					table.insert(data.select, idx)
 				end
 			end)
-			data.select[#data.select + 1] = "#"
 		else
 			customError("Invalid type. InternetSender only works with Cell, CellularSpace, Agent, and Society.")
 		end
@@ -134,7 +136,7 @@ function InternetSender(data)
 
 	verifyUnnecessaryArguments(data, {"subject", "protocol", "select", "port", "host", "visible", "compress"})
   
-  verify(data.port >= 50000, "Argument 'port' should be greater or equal to 50000, got "..data.port..".")
+	verify(data.port >= 50000, "Argument 'port' should be greater or equal to 50000, got "..data.port..".")
   
 	for i = 1, #data.select do
 		if data.select[i] == "#" then
@@ -166,12 +168,15 @@ function InternetSender(data)
 		observerParams = {observerParams}
 		id = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
 	else
-		table.insert(createdObservers, {subject = data.subject, id = id})
 		if type(subject) == "Society" then
 			subject.observerId = 1 -- TODO: verify why this line is necessary
 		end
 		id = subject.cObj_:createObserver(observerType, data.select, observerParams)
 	end
+
+	verify(id, "The observer could not be created.")
+
+	table.insert(createdObservers, {subject = data.subject, id = id})
 
 	return id
 end
