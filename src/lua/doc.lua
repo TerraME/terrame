@@ -45,8 +45,8 @@ end
 function executeDoc(package)
 	local initialTime = os.clock()
 
-	require("luadoc")
-	require("base")
+	import("luadoc")
+	import("base")
 
 	printNote("Building documentation for package '"..package.."'")
 	local s = sessionInfo().separator
@@ -55,7 +55,7 @@ function executeDoc(package)
 	printNote("Loading package '"..package.."'")
 
 	if not isLoaded(package) then
-		xpcall(function() require(package) end, function(err)
+		xpcall(function() import(package) end, function(err)
 			printError("Package "..package.." could not be loaded.")
 			printError(err)
 			os.exit()

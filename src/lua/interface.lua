@@ -212,7 +212,7 @@ function interface(self, modelName, package)
 	local pkgattrs, qtattrs, typeattrs, r = "", "", "", ""
 
 	r = r.."-- This file was created automatically from a TerraME Model ("..os.date("%c")..")\n\n"
-	r = r.."require__(\"qtluae\")\n"
+	r = r.."require(\"qtluae\")\n"
 	r = r.."sessionInfo().interface = true\n"
 
 	local ordering
@@ -762,7 +762,7 @@ function interface(self, modelName, package)
 		end
 	end)
 	r = r.."\tlocal header = \"-- Model instance automatically built by TerraME (\"..os.date(\"%c\")..\")\"\n"
-	r = r.."\theader = header..\"\\n\\nrequire(\\\""..package.."\\\")\"\n"
+	r = r.."\theader = header..\"\\n\\nimport(\\\""..package.."\\\")\"\n"
 
 	r = r.."\tif result ~= \"\" then\n"
 	r = r.."\t\tresult = \"\\n\\ninstance = "..modelName.."{\"..string.sub(result, 0, string.len(result) - 1)\n"
@@ -785,7 +785,7 @@ function interface(self, modelName, package)
 	r = r.."\n\n"
 	r = r.."\tfile = io.open(getFile(\""..modelName.."\"), \"w\")\n"
 	r = r.."\tfile:write(header..result..execute)\n"
-	r = r.."\theader = \"\\n\\nif not isLoaded(\\\""..package.."\\\") then  require(\\\""..package.."\\\") end\"\n"
+	r = r.."\theader = \"\\n\\nif not isLoaded(\\\""..package.."\\\") then  import(\\\""..package.."\\\") end\"\n"
 	r = r.."\tresult = header..result\n"
 	r = r.."\tfile:close()\n"
 	r = r..[[

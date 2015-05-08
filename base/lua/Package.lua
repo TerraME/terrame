@@ -58,7 +58,7 @@ local function verifyDepends(package)
 		local currentInfo = packageInfo(dtable.package)
 		
 		if not isLoaded(dtable.package) then -- SKIP
-			require(dtable.package) -- SKIP
+			import(dtable.package) -- SKIP
 		end
 
 		local currentVersion = getVersion(currentInfo.version)
@@ -601,8 +601,8 @@ end
 --- Load a given package. If the package is not installed, it tries to load from
 -- a folder in the current directory.
 -- @arg package A package name.
--- @usage require("calibration")
-function require(package)
+-- @usage import("calibration")
+function import(package)
 	mandatoryArgument(1, "string", package)
 
 	if belong(package, {"terrame", "TerraME"}) then

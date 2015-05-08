@@ -83,19 +83,19 @@ return{
 		end
 		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
 	end,
-	require = function(unitTest)
+	import = function(unitTest)
 		local error_func = function()
-			require()
+			import()
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
-			require("asdfgh")
+			import("asdfgh")
 		end
 		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
 
 		local error_func = function()
-			require("base")
+			import("base")
 		end
 		unitTest:assertError(error_func, "Package 'base' is already loaded.")
 	end,

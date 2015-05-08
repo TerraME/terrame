@@ -271,7 +271,7 @@ function executeTests(package, fileName)
 	}
 
 	if (not isLoaded("base")) and sessionInfo().package then
-		require("base")
+		import("base")
 	end
 
 	printNote("Loading package "..package)
@@ -280,10 +280,10 @@ function executeTests(package, fileName)
 		printError(...)
 	end
 
-	require(package)
+	import(package)
 
 	printNote("Looking for documented functions")
-	require("luadoc")
+	import("luadoc")
 
 	local s = sessionInfo().separator
 	local baseDir = sessionInfo().path..s.."packages"..s..package

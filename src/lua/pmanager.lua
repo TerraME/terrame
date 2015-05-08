@@ -24,7 +24,7 @@
 --#########################################################################################
 
 function packageManager()
-	require__("qtluae")
+	require("qtluae")
 
 	local dialog = qt.new_qobject(qt.meta.QDialog)
 	dialog.windowTitle = "TerraME"
@@ -159,9 +159,9 @@ function packageManager()
 	buttonsLayout = qt.new_qobject(qt.meta.QHBoxLayout)
 
 	installButton = qt.new_qobject(qt.meta.QPushButton)
-	installButton.minimumSize = {100, 28}
-	installButton.maximumSize = {110, 28}
-	installButton.text = "Install"
+	installButton.minimumSize = {150, 28}
+	installButton.maximumSize = {160, 28}
+	installButton.text = "Install new package"
 	qt.ui.layout_add(buttonsLayout, installButton)
 
 	local m2function = function()

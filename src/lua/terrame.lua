@@ -29,7 +29,6 @@ if os.setlocale(nil, "all") ~= "C" then os.setlocale("C", "numeric") end
 
 type__  = type
 print__ = print
-require__ = require
 
 local begin_red    = "\027[00;31m"
 local begin_yellow = "\027[00;33m"
@@ -185,7 +184,7 @@ function findModels(package)
 	local s = sessionInfo().separator
 	
 	if not isLoaded("base") then
-		require("base")
+		import("base")
 	end
 
 	local models = {}
@@ -400,11 +399,11 @@ function installPackage(file)
 	end
 
 	if not isLoaded("base") then
-		require("base")
+		import("base")
 	end
 
 	printNote("Trying to load package "..name)
-	xpcall(function() require(name) end, function(err)
+	xpcall(function() import(name) end, function(err)
 		printError("Package could not be loaded:")
 		printError(err)
 
@@ -515,7 +514,6 @@ local function graphicalInterface(package, model)
 	local s = sessionInfo().separator
 	sessionInfo().interface = true
 	dofile(sessionInfo().path..s.."lua"..s.."interface.lua")
-	--require__("qtluae") -- TODO: try this to try to speedup the graphical interface
 	local attrTab
 	local mModel = Model
 	Model = function(attr) attrTab = attr end
@@ -687,8 +685,8 @@ function execute(arguments) -- arguments is a vector of strings
 				argCount = argCount + 1
 				model = arguments[argCount]
 
-				require("base")
-				require(package)
+				import("base")
+				import(package)
 				local models = findModels(package)
 				if belong(model, models) then
 					graphicalInterface(package, model)
@@ -786,7 +784,7 @@ function execute(arguments) -- arguments is a vector of strings
 				checkNilVariables()
 			end
 
-			require("base")
+			import("base")
 
 			local s = sessionInfo().separator
 

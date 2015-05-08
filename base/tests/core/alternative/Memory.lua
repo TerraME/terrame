@@ -276,7 +276,7 @@ return{
 
 		for i = 1, 100 do
 			collectgarbage("collect")
-			local env = Environment{id = "environment"}
+			local env = Environment{}
 
 			unitTest:assertNotNil(env) -- SKIP
 
