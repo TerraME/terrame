@@ -54,8 +54,7 @@ return{
 
 		cs:notify(e)
 		cs:notify()
--- FIXME: if the following lines were uncommented together with the next test, TerraME aborts
---[[
+
 		local unit = Cell{
 			count = 0
 		}
@@ -68,7 +67,7 @@ return{
 
 		local c = Chart{subject = world}
 
-		unitTest:assertType(c, "Chart") -- SKIP
+		unitTest:assertType(c, "Chart")
 
 		world:notify(0)
 
@@ -82,14 +81,11 @@ return{
 			end}
 		}
 
---[[
 		TextScreen{subject = world}
 		LogFile{subject = world}
 		VisualTable{subject = world}
--- 
+
 		t:execute(30)
-		unitTest:delay()
---]]
 
 		-- FIXME: this observer does not draw the cells in the screen here.
 		-- If one copies the script below to a separate file it works.
@@ -115,15 +111,14 @@ return{
 		local l = Legend{
 			grouping = "uniquevalues",
 			colorBar = {
-				{value = 0, color = "red"},
-				{value = 1, color = "blue"}
+				{value = 0, color = "black"},
+				{value = 1, color = "white"}
 			},
 			size = 1,
 			pen = 2
 		}
 
 		Observer{
-			type = "map",
 			subject = world,
 			attributes = {"value"},
 			legends = {l}

@@ -9,9 +9,9 @@ FULL = 1
 
 singleFooAgent = Agent{
 	execute = function(self)
-		cell = self:getCell():getNeighborhood():sample()
+		local cell = self:getCell():getNeighborhood():sample()
 		if cell.state == EMPTY and math.random() < GROWTH_PROB then
-			child = self:reproduce()
+			local child = self:reproduce()
 			child:move(cell)
 			cell.state = FULL
 		end

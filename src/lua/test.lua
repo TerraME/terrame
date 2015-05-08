@@ -562,7 +562,7 @@ function executeTests(package, fileName)
 			if data.test then
 				printWarning("Skip checking asserts")
 			else
-				print("Checking asserts")
+				print("Checking if all asserts were executed")
 				forEachOrderedElement(myAssertTable, function(line, count)
 					if count == 0 then
 						printError("Assert in line "..line.." was not executed.")
