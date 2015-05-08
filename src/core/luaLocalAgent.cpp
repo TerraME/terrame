@@ -43,6 +43,7 @@ of this library and its documentation.
 #include "observerLogFile.h"
 #include "observerTable.h"
 #include "observerUDPSender.h"
+#include "observerTCPSender.h"
 #include "agentObserverMap.h"
 #include "agentObserverImage.h"
 #include "observerStateMachine.h"
@@ -438,6 +439,7 @@ int luaLocalAgent::createObserver(lua_State *L)
         ObserverGraphic *obsGraphic = 0;
         ObserverLogFile *obsLog = 0;
         ObserverUDPSender *obsUDPSender = 0;
+		ObserverTCPSender *obsTCPSender = 0;
         ObserverStateMachine *obsStateMachine = 0;
 
         int obsId = -1;
@@ -486,7 +488,28 @@ int luaLocalAgent::createObserver(lua_State *L)
                     qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
             }
             break;
+		case TObsTCPSender:
+			obsTCPSender = (ObserverTCPSender *)
+				LocalAgentSubjectInterf::createObserver(TObsTCPSender);
+			if (obsTCPSender)
+			{
+				obsId = obsTCPSender->getId();
+				obsTCPSender->setCompress(compressDatagram);
 
+				if (obsVisible)
+					obsTCPSender->show();
+			}
+			else
+			{
+				if (execModes != Quiet) {
+					QString str = QString(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
+					lua_getglobal(L, "customWarning");
+					lua_pushstring(L, str.toLatin1().constData());
+					lua_call(L, 1, 0);
+				}
+			}
+
+			break;
         case TObsUDPSender:
             obsUDPSender = (ObserverUDPSender *)
                 LocalAgentSubjectInterf::createObserver(TObsUDPSender);
@@ -646,6 +669,36 @@ int luaLocalAgent::createObserver(lua_State *L)
             lua_pushnumber(luaL, obsId);
             return 1;
         }
+
+		if(obsTCPSender) {
+			quint16 port = (quint16) DEFAULT_PORT;
+			obsTCPSender->setAttributes(obsAttribs);
+
+			if (cols.isEmpty()) {
+				if (execModes != Quiet) {
+					string err_out = string("Port not defined.");
+					lua_getglobal(L, "customWarning");
+					lua_pushstring(L, err_out.c_str());
+					lua_call(L, 1, 0);
+				}
+			}
+			else
+				port = (quint16) cols.at(0).toInt();
+
+			// broadcast
+			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())) {
+				obsTCPSender->addHost(LOCAL_HOST);
+			}
+			else {
+				// multicast or unicast
+				for(int i = 1; i < cols.size(); i++)
+					if (!cols.at(i).isEmpty())
+						obsTCPSender->addHost(cols.at(i));
+			}
+			obsTCPSender->connectTo(port);
+			lua_pushnumber(luaL, obsId);
+			return 1;
+		}
 
         if (obsGraphic)
         {
