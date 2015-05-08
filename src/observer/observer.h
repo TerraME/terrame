@@ -185,7 +185,7 @@ public:
     /**
      * Destructor
      */
-    virtual ~Observer() { };
+    virtual ~Observer() { }
 
     /**
     * Triggers the observer process
@@ -288,7 +288,7 @@ public:
     /**
      * Destructor
      */
-    virtual ~Subject() { };
+    virtual ~Subject() { }
 
     /**
      * Attachs a Observer \a obs to a Subject

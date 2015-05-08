@@ -24,7 +24,7 @@ of this library and its documentation.
 	\brief This file definitions for the luaSociety objects.
 		\author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUASOCIETY_H)
+#ifndef LUASOCIETY_H
 #define LUASOCIETY_H
 
 #include "societySubjectInterf.h"

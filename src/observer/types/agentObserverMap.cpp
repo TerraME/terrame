@@ -209,10 +209,10 @@ void AgentObserverMap::setSubjectAttributes(const QStringList & attribs,
 
     for (int i = 0; i < attribs.size(); i++)
     {
-        if (! subjectAttributes.contains(attribs.at(i)))
+        if (!subjectAttributes.contains(attribs.at(i)))
             subjectAttributes.push_back(attribs.at(i));
 
-        if (! mapAttributes->contains(attribs.at(i)))
+        if (!mapAttributes->contains(attribs.at(i)))
         {
             if (execModes != Quiet)
             {
@@ -246,7 +246,7 @@ QStringList & AgentObserverMap::getSubjectAttributes()
 
 void AgentObserverMap::registry(Subject *subj, const QString & className)
 {
-    if (! constainsItem(nestedSubjects, subj))
+    if (!constainsItem(nestedSubjects, subj))
     {
 #ifdef TME_BLACK_BOARD
     	SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(subj->getId());
@@ -263,7 +263,7 @@ void AgentObserverMap::registry(Subject *subj, const QString & className)
 
 bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
 {
-    if (! constainsItem(nestedSubjects, subj))
+    if (!constainsItem(nestedSubjects, subj))
         return false;
 
 #ifdef DEGUB_OBSERVER
@@ -309,7 +309,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
 
              if ((attrib->getType() != TObsAgent)
              || ((className == attrib->getExhibitionName()) &&
-        	 (! ObserverMap::existAgents(nestedSubjects))))
+        	 (!ObserverMap::existAgents(nestedSubjects))))
              {
              //for (int j = 0; j < treeLayers->topLevelItemCount(); j++)
              //{

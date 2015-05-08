@@ -104,9 +104,9 @@ void Statistic::collectMemoryUsage()
 #else
     bool exec = QProcess::startDetached(qApp->applicationDirPath() + "/./mem.sh");
 #endif
-    // qDebug() << qApp->applicationDirPath() ;
+    // qDebug() << qApp->applicationDirPath();
 
-    if (! exec)
+    if (!exec)
         qDebug("Memory Collector was not found in the application path.");
 }
 
@@ -114,13 +114,13 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
 {
     bool ret = false;
 
-    //// if (! timeStatistics.isEmpty())
+    //// if (!timeStatistics.isEmpty())
     //{
     //    QFile file("timeStatistic_"
     //               + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss")
     //               + "_.csv");
 
-    //    if (! file.open(QIODevice::WriteOnly | QIODevice::Text))
+    //    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     //        return false;
 
     //    QTextStream out(&file);
@@ -141,7 +141,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
     //    ret = true;
     //}
 
-    // if (! timeStatistics.isEmpty())
+    // if (!timeStatistics.isEmpty())
     {
         int size = -1;
         for (int i = 0; i < timeStatistics.values().size(); i++)
@@ -154,7 +154,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
                    + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss")
                    + "_.csv");
 
-        if (! file.open(QIODevice::WriteOnly | QIODevice::Text))
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             return false;
 
         const QStringList &keys = timeStatistics.keys();
@@ -173,14 +173,14 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
         out << keys.join(";") << "\n";
 
         // removes the first and the last elements, if this not to be receiver mode
-        if (! disableRemove)
+        if (!disableRemove)
         {
             foreach(QString key, keys)
             {
-                if (! timeStatistics.value(key)->isEmpty())
+                if (!timeStatistics.value(key)->isEmpty())
                     timeStatistics.value(key)->pop_front();
 
-                if (! timeStatistics.value(key)->isEmpty())
+                if (!timeStatistics.value(key)->isEmpty())
                     timeStatistics.value(key)->pop_back();
 
                 if (key.toLower().contains("pop lua"))
@@ -239,7 +239,7 @@ bool Statistic::saveTimeStatistic(const QString &prefix)
             + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss")
             + "_.csv");
 
-        if (! fileAnalysis.open(QIODevice::WriteOnly | QIODevice::Text))
+        if (!fileAnalysis.open(QIODevice::WriteOnly | QIODevice::Text))
             return false;
 
         QTextStream outAnalysis(&fileAnalysis);
@@ -281,7 +281,7 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
 {
     bool ret = false;
 
-    // if (! occurStatistics.isEmpty())
+    // if (!occurStatistics.isEmpty())
     {
         QString name("occurrences_");
         name.prepend(prefix);
@@ -290,7 +290,7 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
             + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss")
             + "_.csv");
 
-        if (! file.open(QIODevice::WriteOnly | QIODevice::Text))
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             return false;
 
         QTextStream out(&file);
@@ -299,14 +299,14 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
         out << keys.join(";") << ";\n";
 
         // removing the first and last elements, if this not to be receiver mode
-        if (! disableRemove)
+        if (!disableRemove)
         {
             foreach(QString key, keys)
             {
-                if (! occurStatistics.value(key)->isEmpty())
+                if (!occurStatistics.value(key)->isEmpty())
                     occurStatistics.value(key)->pop_front();
 
-                if (! occurStatistics.value(key)->isEmpty())
+                if (!occurStatistics.value(key)->isEmpty())
                     occurStatistics.value(key)->pop_back();
 
                 if (key.toLower().contains("bytes sent"))
@@ -380,7 +380,7 @@ bool Statistic::saveOccurrenceStatistic(const QString &prefix)
             + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss")
             + "_.csv");
 
-        if (! fileAnalysis.open(QIODevice::WriteOnly | QIODevice::Text))
+        if (!fileAnalysis.open(QIODevice::WriteOnly | QIODevice::Text))
             return false;
 
         QTextStream outAnalysis(&fileAnalysis);
@@ -423,7 +423,7 @@ bool Statistic::saveData(const QString &prefix)
 {
     bool ret = false;
 
-    if (! timeStatistics.isEmpty())
+    if (!timeStatistics.isEmpty())
         ret = saveTimeStatistic(prefix);
 
     if (ret)
@@ -436,7 +436,7 @@ bool Statistic::saveData(const QString &prefix)
         qDebug() << "Time Statistics was not saved!";
     }
 
-    if (! occurStatistics.isEmpty())
+    if (!occurStatistics.isEmpty())
         ret = saveOccurrenceStatistic(prefix);
 
     if (ret)

@@ -248,7 +248,7 @@ void LegendWindow::attributesComboBox_activated(const QString &selected)
 {
     Attributes *attrib = mapAttributes->value(selected);
 
-    if (! attrib)
+    if (!attrib)
         return;
 #ifdef DEBUG_OBSERVER
     printf("attributesComboBox_activated:\n %s\n",
@@ -370,7 +370,7 @@ void LegendWindow::groupingModeComboBox_activated(int idx)
 
 void LegendWindow::applyPushButton_clicked()
 {
-    if (! mapAttributes->contains(attributesComboBox->currentText()))
+    if (!mapAttributes->contains(attributesComboBox->currentText()))
         return;
 
     Attributes *attrib = mapAttributes->value(attributesComboBox->currentText());
@@ -630,7 +630,7 @@ void LegendWindow::countElementsBySlices()
             from = leg.getFromNumber();
             to = leg.getToNumber();
 
-            if (! leg.getLabel().contains(MEAN))
+            if (!leg.getLabel().contains(MEAN))
             {
                 // counting the occurrence of repeated values
                 for (it = values->begin(); it != values->end(); ++it)
@@ -1066,7 +1066,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
         ObsLegend leg = vecLegend->at(0);
         leg.setFrom(QString("%1").arg(min - fix, 0, 'f', precision));
 
-        if (! leg.getFrom().contains(MEAN))
+        if (!leg.getFrom().contains(MEAN))
         {
             leg.setLabel(QString("%1 ~ %2")
                           .arg(leg.getFrom()).arg(leg.getTo()));
@@ -1077,7 +1077,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
         leg = vecLegend->at(vecLegend->size() - 1);
         leg.setTo(QString("%1").arg(max + fix, 0, 'f', precision));
 
-        if (! leg.getFrom().contains(MEAN))
+        if (!leg.getFrom().contains(MEAN))
         {
             leg.setLabel(QString("%1 ~ %2")
                           .arg(leg.getFrom()).arg(leg.getTo()));
@@ -1241,7 +1241,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         }
     }
 
-    if (! txtValues.empty())
+    if (!txtValues.empty())
     {
         if ((i > 1) && (txtValues.at(i - 2) == txtValues.at(i - 1)))
         {

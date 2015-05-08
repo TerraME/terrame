@@ -65,7 +65,7 @@ bool ObserverLogFile::draw(QDataStream &state)
     //int nroElems = tokens.at(3).toInt();
     int j = 4;
 
-    for (int i = 0; i < qtdParametros;i++)
+    for (int i = 0; i < qtdParametros; i++)
     {
         QString key = tokens.at(j);
         j++;

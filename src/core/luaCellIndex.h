@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaCellIndex objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUACELLINDEX_H)
+#ifndef LUACELLINDEX_H
 #define LUACELLINDEX_H
 
 extern "C"

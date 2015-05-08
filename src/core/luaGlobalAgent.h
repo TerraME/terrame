@@ -24,7 +24,7 @@ of this library and its documentation.
 \brief This file definitions for the luaGlobalAgent objects.
 \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUAGLOBALAGENT_H)
+#ifndef LUAGLOBALAGENT_H
 #define LUAGLOBALAGENT_H
 
 #include "globalAgentSubjectInterf.h"

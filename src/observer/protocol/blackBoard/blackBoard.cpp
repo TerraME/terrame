@@ -55,7 +55,7 @@ public:
         int removed = 0;
         const int PERC = (int)(subjAttrList.size() * 0.1);
 
-        while (! abort)
+        while (!abort)
         {
             SubjectAttributes *subjAttr = subjAttrList.takeLast(); // gets item from heap
             count++;
@@ -156,11 +156,11 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId,
 {
     SubjectAttributes *subjAttr = cache.value(subj->getId());
 
-    if (! subjAttr)
+    if (!subjAttr)
         qFatal("BlackBoard::getState() - Error: The Subject '%i' (%s) not found in BlackBoard",
             subj->getId(), getSubjectName(subj->getType()));
 
-    if (! subjAttr->getDirtyBit())
+    if (!subjAttr->getDirtyBit())
     {
         // TO-DO: Prevents the same image to be redesigned
         // state->device()->close();
@@ -183,13 +183,13 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId,
 
     // canDrawState = false;
 
-    if (! msg.isEmpty())
+    if (!msg.isEmpty())
     {
         canDrawState = protocolDecoder->decode(msg);
 
-        if (! canDrawState)
+        if (!canDrawState)
         {
-            if (! msg.isEmpty())
+            if (!msg.isEmpty())
                 qWarning("Failed on decode state. SubjectId: '%i'", subj->getId());
             else
                 qWarning("Any state to decode. SubjectId: '%1'", subj->getId());
@@ -210,7 +210,7 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId,
 //{
 //    SubjectAttributes *subjAttr = 0;
 //
-//    if (! cache.contains(subjectId))
+//    if (!cache.contains(subjectId))
 //    {
 //        subjAttr = new SubjectAttributes(subjectId);
 //        cache.insert(subjectId, subjAttr);
@@ -281,7 +281,7 @@ bool BlackBoard::removeSubject(int subjectId)
     {
         SubjectAttributes *subjAttr = cache.take(subjectId);
 
-        if (! deletedSubjects)
+        if (!deletedSubjects)
             deletedSubjects = new QHash<int, QPair<double, double> >();
 
         deletedSubjects->insert(subjectId, qMakePair(subjAttr->getX(), subjAttr->getY()));

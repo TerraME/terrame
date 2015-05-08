@@ -41,7 +41,7 @@ bool EventSubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (! obs)
+    if (!obs)
         return false;
 
     switch (obs->getType())

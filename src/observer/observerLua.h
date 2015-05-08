@@ -74,7 +74,7 @@ using namespace TerraMEObserver;
 
 	// // TO-DO: insert the object previously as an internal subject.
 	// // This prevents an error when the popLua method returns but sets the csSubj object to null
-	// if ((parentSubj) && (! currSubj))
+	// if ((parentSubj) && (!currSubj))
 		// currSubj = parentSubj->add_internalsubject();
 
 	// popLua(TObsCellularSpace, luaL, cellSpacePos, attribs, observedAttribs, valueChanged,
@@ -86,7 +86,7 @@ using namespace TerraMEObserver;
 		// // The object cellSubj is instantiated in popLua method,
 		// // but when it returns, csSubj is with the null value.
 		// // Only insert the object if it contains changes
-		// // if ((parentSubj) && (! currSubj))
+		// // if ((parentSubj) && (!currSubj))
 		// //	currSubj = parentSubj->add_internalsubject();
 
 		// // id
@@ -111,7 +111,7 @@ using namespace TerraMEObserver;
 			// parentSubj->mutable_internalsubject()->RemoveLast();
 	// }
 
-   // if (! parentSubj)
+   // if (!parentSubj)
 	// {
 		// QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
 
@@ -165,7 +165,7 @@ inline void popLua(const TypesOfSubjects &subjectType,
 
 				if(observedAttribs.value(key) != valueTmp)
 				{
-					if((parentSubj) && (! currSubj))
+					if((parentSubj) && (!currSubj))
 						currSubj = parentSubj->add_internalsubject();
 
 					raw = currSubj->add_rawattributes();
@@ -189,7 +189,7 @@ inline void popLua(const TypesOfSubjects &subjectType,
 							// << qPrintable(observedAttribs.value(key)) << " == " << qPrintable(valueTmp);
 // #endif
 
-						if((parentSubj) && (! currSubj))
+						if((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -208,7 +208,7 @@ inline void popLua(const TypesOfSubjects &subjectType,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-						if((parentSubj) && (! currSubj))
+						if((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -231,7 +231,7 @@ inline void popLua(const TypesOfSubjects &subjectType,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-						if((parentSubj) && (! currSubj))
+						if((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -282,7 +282,7 @@ inline void popLua(const TypesOfSubjects &subjectType,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-						if((parentSubj) && (! currSubj))
+						if((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -302,7 +302,7 @@ inline void popLua(const TypesOfSubjects &subjectType,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-						if((parentSubj) && (! currSubj))
+						if((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -322,7 +322,7 @@ inline void popLua(const TypesOfSubjects &subjectType,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-						if((parentSubj) && (! currSubj))
+						if((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -476,7 +476,7 @@ inline static QByteArray popLua(const TypesOfSubjects &subjectType,
 
 							// luaCell->pop(...) requer uma celula no topo da pilha
 							cellMsg = cell->pop(L, attribs);
-							if(! cellMsg.isEmpty())
+							if(!cellMsg.isEmpty())
 							{
 								// valueChanged = true;
 								elements.append(cellMsg);

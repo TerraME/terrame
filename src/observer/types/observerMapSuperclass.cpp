@@ -96,7 +96,7 @@ void ObserverMapSuperclass::setupGUI() {
 
     view = new Canvas(scene, this);
     view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); //
-    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); does not exist in version 4.3.4
+    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate); // FullViewportUpdate); does not exist in version 4.3.4
     // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     view->setRenderHint(QPainter::Antialiasing);
     // view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -489,7 +489,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
 
         foreach(const QString & str, attribs)
         {
-            if (! attribList.contains(str))
+            if (!attribList.contains(str))
                 attribList.append(str);
         }
     }
@@ -531,7 +531,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
     {
         if(attribList.at(i) == QString("objectId_")) hasObjectId++;
         //qDebug() << "------------------" << attribList.at(i) << " " << hasObjectId;
-        if (((! mapAttributes->contains(attribs.at(i)))
+        if (((!mapAttributes->contains(attribs.at(i)))
                 && (attribList.at(i) != QString("x"))
                 && (attribList.at(i) != QString("y"))
                 && (attribList.at(i) != QString("objectId_")))
@@ -604,7 +604,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
 
     //if(!hasObsId) obsAttrib.append("objectId_");
 
-    if (! legendWindow)
+    if (!legendWindow)
         legendWindow = new LegendWindow(this);
     legendWindow->setValues(mapAttributes, obsAttrib);
 
@@ -626,7 +626,7 @@ const TypesOfObservers ObserverMapSuperclass::getType() const
 void ObserverMapSuperclass::connectTreeLayerSlot(bool on)
 {
     // connects/disconnects the treeWidget signal with the slot
-    if (! on)
+    if (!on)
     {
         QWidget::disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
             this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));

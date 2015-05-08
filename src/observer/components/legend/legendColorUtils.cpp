@@ -456,7 +456,7 @@ bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor> &co
         double dg = (double)(cto.green_ - cfrom.green_) / (double)n;
         double db = (double)(cto.blue_ - cfrom.blue_) / (double)n;
 
-        for(jj = 0; jj<n; jj++)
+        for(jj = 0; jj < n; jj++)
         {
             cor.red_ = cfrom.red_ + (int)(dr * (double)jj);
             cor.green_ = cfrom.green_ + (int)(dg * (double)jj);
@@ -475,7 +475,7 @@ bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor> &co
             double dg = (double)(cto.green_ - cfrom.green_) / (double)n;
             double db = (double)(cto.blue_ - cfrom.blue_) / (double)n;
 
-            for(jj = 0; jj<n; jj++)
+            for(jj = 0; jj < n; jj++)
             {
                 cor.red_ = cfrom.red_ + (int)(dr * (double)jj);
                 cor.green_ = cfrom.green_ + (int)(dg * (double)jj);
@@ -489,7 +489,7 @@ bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor> &co
     double step = 0.;
     if (nc > 1)
         step = (double)(allColors.size()) / (double)(nc - 1);
-    for (int i = 0; i<nc; i++)
+    for (int i = 0; i < nc; i++)
     {
         int ind = (int)(step * (double)i + .5);
         if (ind > (int)(allColors.size() - 1))
@@ -511,7 +511,7 @@ std::vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc)
     double dg = (double)(cto.green_ - cfrom.green_) / (double)n;
     double db = (double)(cto.blue_ - cfrom.blue_) / (double)n;
 
-    for(j = 0; j<n; j++)
+    for(j = 0; j < n; j++)
     {
         cor.red_ = cfrom.red_ + (int)(dr * (double)j);
         cor.green_ = cfrom.green_ + (int)(dg * (double)j);
@@ -521,7 +521,7 @@ std::vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc)
     double step = 0.;
     if (nc > 1)
         step = (double)(allColors.size()) / (double)(nc - 1);
-    for (i = 0; i<nc; ++i)
+    for (i = 0; i < nc; ++i)
     {
         int ind = (int)(step * (double)i + .5);
         if (ind > (int)(allColors.size() - 1))

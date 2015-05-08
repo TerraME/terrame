@@ -25,7 +25,7 @@ of this library and its documentation.
         \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined (TME_OBSERVER_CLIENT_MODE)
+#ifndef TME_OBSERVER_CLIENT_MODE
 
 #ifndef LUAAGENT_H
 #define LUAAGENT_H

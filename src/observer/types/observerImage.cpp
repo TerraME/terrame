@@ -123,7 +123,7 @@ bool ObserverImage::draw(QDataStream &state)
         builtLegend++;
     }
 
-    //if (! disableSaveImage)
+    //if (!disableSaveImage)
     //    return save();
 
     return decoded;
@@ -165,7 +165,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
     {
         foreach(const QString & str, attribs)
         {
-            if (! attribList.contains(str))
+            if (!attribList.contains(str))
                 attribList.append(str);
         }
     }
@@ -210,7 +210,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
     for(int i = 0; i < attribList.size(); i++)
     {
         if ((attribList.at(i) != "x") && (attribList.at(i) != "y")
-            && (! mapAttributes->contains(attribList.at(i))))
+            && (!mapAttributes->contains(attribList.at(i))))
         {
             attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(),
                 cellularSpaceSize.height(), type);
@@ -225,7 +225,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
             attrib->setVisible(true);
 
             //------- Retrieves the legend of file and creates the object attrib
-            if (! legKeys.isEmpty())
+            if (!legKeys.isEmpty())
             {
                 dataType = legKeys.indexOf(TYPE);
                 mode = legKeys.indexOf(GROUP_MODE);
@@ -301,7 +301,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
         }
     }
 
-    if (! legendWindow)
+    if (!legendWindow)
         legendWindow = new LegendWindow();
 
     legendWindow->setValues(mapAttributes, obsAttrib);
@@ -327,7 +327,7 @@ bool ObserverImage::save()
 {
     bool savingImages = false; //painterWidget->save(path);
 
-    if (! savingImages)
+    if (!savingImages)
     {
         obsImgGUI->setStatusMessage("Unable to save the image.");
         if (execModes != Quiet)

@@ -34,7 +34,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-#if ! defined(NEIGHBOURHOOD_H)
+#ifndef NEIGHBOURHOOD_H
 #define NEIGHBOURHOOD_H
 
 #include "region.h"

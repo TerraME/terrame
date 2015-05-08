@@ -87,7 +87,7 @@ void PainterWidget::plotMap(Attributes * /*attrib*/)
 
     // TO-DO: Verif., does not work with BlackBoard
 
-    //if (! attrib)
+    //if (!attrib)
     //    qFatal("\nErro: PainterWidget::plotMap - Invalid attribute!!\n");
 
     //if (attrib->getType() != TObsAgent)
@@ -158,7 +158,7 @@ void PainterWidget::paintEvent(QPaintEvent * /* event */)
     // painter.drawPixmap(QPoint(0, 0), QPixmap::fromImage(resultImageBkp));
     painter.drawImage(ZERO_POINT, resultImageBkp);
 
-    if (! showRectZoom)
+    if (!showRectZoom)
         return;
 
     //---- Desenha o retangulo de zoom
@@ -222,7 +222,7 @@ void PainterWidget::mouseMoveEvent(QMouseEvent *event)
         if (zoomWindow)
         {
             // Define as coordenadas do retangulo de zoom
-            if (! rect().contains(QRect(imageOffset, event->pos())))
+            if (!rect().contains(QRect(imageOffset, event->pos())))
             {
                 bool right = event->pos().x() > rect().right();
                 bool left = event->pos().x() < rect().left();

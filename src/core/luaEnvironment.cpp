@@ -184,7 +184,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
     top = lua_gettop(luaL);
 
     // Syntax checking Attributes table
-    if(! lua_istable(luaL, top))
+    if(!lua_istable(luaL, top))
     {
         string errorMsg = string("Attributes table not found. Incorrect sintax.");
 		lua_getglobal(L, "customError");
@@ -226,13 +226,13 @@ int luaEnvironment::createObserver(lua_State *luaL)
         if (allAttribs.contains(key))
         {
             obsAttribs.push_back(key);
-            if (! observedAttribs.contains(key))
+            if (!observedAttribs.contains(key))
                 // observedAttribs.push_back(key);
                 observedAttribs.insert(key, "");
         }
         else
         {
-            if (! key.isNull() || ! key.isEmpty())
+            if (!key.isNull() || !key.isEmpty())
             {
 
                 string err_out = string("Attribute name '")
@@ -248,7 +248,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
     }
     //------------------------
 
-    if ((obsAttribs.empty()) && (! isGraphicType))
+    if ((obsAttribs.empty()) && (!isGraphicType))
     {
         obsAttribs = allAttribs;
         // observedAttribs = allAttribs;
@@ -267,7 +267,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
 #endif
 
     //------------------------
-    if(! lua_istable(luaL, top))
+    if(!lua_istable(luaL, top))
     {
 		string errorMsg = string("Attributes table not found. Incorrect sintax.");
 		lua_pushstring(L, errorMsg.c_str());
@@ -564,7 +564,7 @@ int luaEnvironment::createObserver(lua_State *luaL)
             // multicast or unicast
             for(int i = 1; i < cols.size(); i++)
             {
-                if (! cols.at(i).isEmpty())
+                if (!cols.at(i).isEmpty())
                     obsUDPSender->addHost(cols.at(i));
             }
         }
@@ -618,14 +618,14 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *,
         case 0:
             content = getAll(in, observedAttribs.keys());
             // serverSession->setState(observerId, 1);
-            // if (! QUIET_MODE)
+            // if (!QUIET_MODE)
             // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observedAttribs.keys());
             // serverSession->setState(observerId, 0);
-            // if (! QUIET_MODE)
+            // if (!QUIET_MODE)
             // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
@@ -655,14 +655,14 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *,
         case 0:
             content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
-            // if (! QUIET_MODE)
+            // if (!QUIET_MODE)
             // qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
-            // if (! QUIET_MODE)
+            // if (!QUIET_MODE)
             // qWarning(QString("Observer %1 passed the state %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
@@ -720,7 +720,7 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -738,7 +738,7 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -755,7 +755,7 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -774,7 +774,7 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -825,7 +825,7 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -846,7 +846,7 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -867,7 +867,7 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -886,7 +886,7 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
 
     if (valueChanged)
     {
-        if ((parentSubj) && (! currSubj))
+        if ((parentSubj) && (!currSubj))
             currSubj = parentSubj->add_internalsubject();
 
    		// id
@@ -901,7 +901,7 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
         // #elements
         currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
-        if (! parentSubj)
+        if (!parentSubj)
         {
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
             					currSubj->ByteSize());

@@ -24,7 +24,7 @@ of this library and its documentation.
 \brief This file definitions for the luaTimer objects.
 \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUATIMER_H)
+#ifndef LUATIMER_H
 #define LUATIMER_H
 
 #include "schedulerSubjectInterf.h"

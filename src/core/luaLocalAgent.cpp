@@ -136,7 +136,7 @@ int luaLocalAgent::getActionRegionStatus(lua_State* L)
 }
 /// Builds the luaLocalAgent object
 int luaLocalAgent::build(lua_State *) {
-    if(! Agent::build())
+    if(!Agent::build())
     {
 		string errorMsg = string("You must add a state to the agent before use "
 				"it as a jump condition targert...");
@@ -251,7 +251,7 @@ int luaLocalAgent::createObserver(lua_State *L)
         top = lua_gettop(luaL);
 
         // Syntax checking Attributes table
-        if(! lua_istable(luaL, top))
+        if(!lua_istable(luaL, top))
         {
             string errorMsg = string("Attributes table not found. Incorrect sintax.");
 			lua_getglobal(L, "customError");
@@ -276,13 +276,13 @@ int luaLocalAgent::createObserver(lua_State *L)
             if (allAttribs.contains(key))
             {
                 obsAttribs.push_back(key);
-                if (! observedAttribs.contains(key))
+                if (!observedAttribs.contains(key))
                     // observedAttribs.push_back(key);
                     observedAttribs.insert(key, "");
             }
             else
             {
-                if (! key.isNull() || ! key.isEmpty())
+                if (!key.isNull() || !key.isEmpty())
                 {
 					string err_out = string("Attribute name '")
 									+ string (qPrintable(key)) + string("' not found.");
@@ -298,7 +298,7 @@ int luaLocalAgent::createObserver(lua_State *L)
         //------------------------
 
         // Add the currentState in the observer
-        if ((obsAttribs.empty()) && (! isGraphicType))
+        if ((obsAttribs.empty()) && (!isGraphicType))
         {
             obsAttribs = allAttribs;
             // observedAttribs = allAttribs;
@@ -308,7 +308,7 @@ int luaLocalAgent::createObserver(lua_State *L)
         }
 
         //------------------------
-        if(! lua_istable(luaL, top))
+        if(!lua_istable(luaL, top))
         {
             string errorMsg = string("Parameter table not found. Incorrect sintax.");
 			lua_getglobal(L, "customError");
@@ -639,7 +639,7 @@ int luaLocalAgent::createObserver(lua_State *L)
             {
                 // multicast or unicast
                 for(int i = 1; i < cols.size(); i++) {
-                    if (! cols.at(i).isEmpty())
+                    if (!cols.at(i).isEmpty())
                         obsUDPSender->addHost(cols.at(i));
                 }
             }
@@ -695,7 +695,7 @@ int luaLocalAgent::createObserver(lua_State *L)
         while(lua_next(luaL, top - 1) != 0)
         {
             // Retrieves the observer map ID
-            if ((lua_isnumber(luaL, -1) && (! getObserverID)))
+            if ((lua_isnumber(luaL, -1) && (!getObserverID)))
             {
                 // obsID = lua_tonumber(luaL, paramTop - 1);
                 obsID = luaL_checknumber(luaL, -1);
@@ -757,7 +757,7 @@ int luaLocalAgent::createObserver(lua_State *L)
         QString errorMsg = QString("The Observer ID \"%1\" was not found. "
             "Check the declaration of this observer.\n").arg(obsID);
 
-        if (! cellSpace)
+        if (!cellSpace)
 		{
 			lua_getglobal(L, "customError");
 			lua_pushstring(L, errorMsg.toLatin1().data());
@@ -791,7 +791,7 @@ int luaLocalAgent::createObserver(lua_State *L)
         {
             obsMap = (AgentObserverMap *)cellSpace->getObserver(obsID);
 
-            if (! obsMap)
+            if (!obsMap)
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, errorMsg.toLatin1().data());
@@ -806,7 +806,7 @@ int luaLocalAgent::createObserver(lua_State *L)
         {
             obsImage = (AgentObserverImage *)cellSpace->getObserver(obsID);
 
-            if (! obsImage)
+            if (!obsImage)
 			{
 				lua_getglobal(L, "customError");
 				lua_pushstring(L, errorMsg.toLatin1().data());
@@ -834,7 +834,7 @@ int luaLocalAgent::createObserver(lua_State *L)
 
         for(int i = 0; i < obsAttribs.size(); i++)
         {
-            if (! observedAttribs.contains(obsAttribs.at(i)))
+            if (!observedAttribs.contains(obsAttribs.at(i)))
                 // observedAttribs.push_back(obsAttribs.at(i));
                 observedAttribs.insert(obsAttribs.at(i), "");
         }
@@ -888,14 +888,14 @@ QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *,
     case 0:
         content = getAll(in, observedAttribs.keys());
         // serverSession->setState(observerId, 1);
-        // if (! QUIET_MODE)
+        // if (!QUIET_MODE)
         // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
         content = getChanges(in, observedAttribs.keys());
         // serverSession->setState(observerId, 0);
-        // if (! QUIET_MODE)
+        // if (!QUIET_MODE)
         // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(0).toLatin1().constData());
         break;
     }
@@ -1017,7 +1017,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
                         // if (observedAttribs.value(currState) != valueTmp)
                         {
-                            if ((parentSubj) && (! currSubj))
+                            if ((parentSubj) && (!currSubj))
                                 currSubj = parentSubj->add_internalsubject();
 
                             ObserverDatagramPkg::SubjectAttribute *cellSubj =
@@ -1079,7 +1079,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -1097,7 +1097,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -1114,7 +1114,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -1133,7 +1133,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -1153,7 +1153,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -1187,7 +1187,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -1207,7 +1207,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -1249,7 +1249,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
         if (observedAttribs.value(key) != valueTmp)
         {
-            if ((parentSubj) && (! currSubj))
+            if ((parentSubj) && (!currSubj))
                 currSubj = parentSubj->add_internalsubject();
 
             raw = currSubj->add_rawattributes();
@@ -1263,7 +1263,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
 
     if (valueChanged)
     {
-        if ((parentSubj) && (! currSubj))
+        if ((parentSubj) && (!currSubj))
             currSubj = parentSubj->add_internalsubject();
 
         // id
@@ -1283,7 +1283,7 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
             std::cout.flush();
 #endif
 
-        if (! parentSubj)
+        if (!parentSubj)
         {
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
             		currSubj->ByteSize());
@@ -1526,7 +1526,7 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
             ControlMode *cm = whereCell->getControlMode(this);
             if (cm)
             {
-                currState= cm->getControlModeName().c_str();
+                currState = cm->getControlModeName().c_str();
             }
             else
             {
@@ -1565,7 +1565,7 @@ int luaLocalAgent::kill(lua_State *luaL)
 
     result = LocalAgentSubjectInterf::kill(id);
 
-    if (! result)
+    if (!result)
     {
         if (cellSpace)
         {

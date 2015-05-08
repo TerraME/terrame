@@ -192,11 +192,11 @@ int luaTrajectory::createObserver(lua_State *L)
             // Checks if the given attribute really exists in the cell
             for (int i = 0; i < obsAttribs.size(); i++)
             {
-                if (! observedAttribs.contains(obsAttribs.at(i)))
+                if (!observedAttribs.contains(obsAttribs.at(i)))
                     // observedAttribs.push_back(obsAttribs.at(i));
                     observedAttribs.insert(obsAttribs.at(i), "");
 
-                if (! allAttribs.contains(obsAttribs.at(i)))
+                if (!allAttribs.contains(obsAttribs.at(i)))
                 {
 					string err_out = string("Attribute name '")
 							+ string (qPrintable(obsAttribs.at(i)))
@@ -450,7 +450,7 @@ int luaTrajectory::createObserver(lua_State *L)
 				// multicast or unicast
 				for(int i = 1; i < cols.size(); i++)
 				{
-					if (! cols.at(i).isEmpty())
+					if (!cols.at(i).isEmpty())
 						obsUDPSender->addHost(cols.at(i));
 				}
 			}
@@ -475,7 +475,7 @@ int luaTrajectory::createObserver(lua_State *L)
     	while(lua_next(luaL, top - 1) != 0)
     	{
     		// Retrieves the observer map ID
-    		if ((lua_isnumber(luaL, -1) && (! getObserverId)))
+    		if ((lua_isnumber(luaL, -1) && (!getObserverId)))
     		{
     			obsId = luaL_checknumber(luaL, -1);
     			getObserverId = true;
@@ -536,7 +536,7 @@ int luaTrajectory::createObserver(lua_State *L)
     	QString errorMsg = QString("\nThe Observer ID \"%1\" was not found. "
     			"Check the declaration of this observer.\n").arg(obsId);
 
-    	if (! cellSpace)
+    	if (!cellSpace)
     	{
     		lua_getglobal(L, "customError");
     		lua_pushstring(L, errorMsg.toLatin1().data());
@@ -549,7 +549,7 @@ int luaTrajectory::createObserver(lua_State *L)
     	{
     		obsMap = (AgentObserverMap *)cellSpace->getObserver(obsId);
 
-    		if (! obsMap)
+    		if (!obsMap)
     		{
     			lua_getglobal(L, "customError");
     			lua_pushstring(L, errorMsg.toLatin1().data());
@@ -564,7 +564,7 @@ int luaTrajectory::createObserver(lua_State *L)
     	{
     		obsImage = (AgentObserverImage *)cellSpace->getObserver(obsId);
 
-    		if (! obsImage)
+    		if (!obsImage)
     		{
     			lua_getglobal(L, "customError");
     			lua_pushstring(L, errorMsg.toLatin1().data());
@@ -589,7 +589,7 @@ int luaTrajectory::createObserver(lua_State *L)
 
     	for(int i = 0; i < obsAttribs.size(); i++)
     	{
-    		if (! observedAttribs.contains(obsAttribs.at(i)))
+    		if (!observedAttribs.contains(obsAttribs.at(i)))
     			// observedAttribs.push_back(obsAttribs.at(i));
     			observedAttribs.insert(obsAttribs.at(i), "");
     	}
@@ -643,14 +643,14 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *,
     case 0:
         content = getAll(in, observedAttribs.keys());
         // serverSession->setState(observerId, 1);
-        // if (! QUIET_MODE)
+        // if (!QUIET_MODE)
         // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
         content = getChanges(in, observedAttribs.keys());
         // serverSession->setState(observerId, 0);
-        // if (! QUIET_MODE)
+        // if (!QUIET_MODE)
         // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
         break;
 	}
@@ -747,7 +747,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -765,7 +765,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -782,7 +782,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -801,7 +801,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -879,7 +879,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -900,7 +900,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -921,7 +921,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
                 if (observedAttribs.value(key) != valueTmp)
                 {
-                    if ((parentSubj) && (! currSubj))
+                    if ((parentSubj) && (!currSubj))
                         currSubj = parentSubj->add_internalsubject();
 
                     raw = currSubj->add_rawattributes();
@@ -940,7 +940,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
 
     if (valueChanged)
     {
-        if ((parentSubj) && (! currSubj))
+        if ((parentSubj) && (!currSubj))
             currSubj = parentSubj->add_internalsubject();
 
         // id
@@ -960,7 +960,7 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
             std::cout.flush();
 #endif
 
-        if (! parentSubj)
+        if (!parentSubj)
         {
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
             		currSubj->ByteSize());
@@ -1180,7 +1180,7 @@ int luaTrajectory::kill(lua_State *luaL)
 
     result = TrajectorySubjectInterf::kill(id);
 
-    if (! result)
+    if (!result)
     {
         if (cellSpace)
         {

@@ -32,7 +32,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-#if ! defined(CONTROL_MODE_H)
+#ifndef CONTROL_MODE_H
 #define CONTROL_MODE_H
 
 #include "bridge.h"

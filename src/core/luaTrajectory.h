@@ -24,7 +24,7 @@ of this library and its documentation.
 \brief This file definitions for the luaTrajectory objects.
 \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUATRAJECTORY_H)
+#ifndef LUATRAJECTORY_H
 #define LUATRAJECTORY_H
 
 #include "trajectorySubjectInterf.h"

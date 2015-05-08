@@ -170,10 +170,10 @@ void ReceiverGUI::okButtonClicked()
         return;
     }
 
-    //if (! attrs.contains("x"))
+    //if (!attrs.contains("x"))
     //    attributes.append("x");
 
-    //if (! attrs.contains("y"))
+    //if (!attrs.contains("y"))
     //    attributes.append("y");
 
   //  for (int i = 0; i < attrs.size(); i++)
@@ -294,8 +294,8 @@ void ReceiverGUI::consistGUI(int listRow)
 
 void ReceiverGUI::consistButtons(const QString & /*value*/)
 {
-    // ui->okButton->setEnabled(! value.isEmpty());
-    // ui->clearButton->setEnabled(! value.isEmpty());
+    // ui->okButton->setEnabled(!value.isEmpty());
+    // ui->clearButton->setEnabled(!value.isEmpty());
 }
 
 void ReceiverGUI::clearAll()
@@ -315,7 +315,7 @@ void ReceiverGUI::clearAll()
 
 QStringList * ReceiverGUI::getAttributes(int pos) const
 {
-    if ((! attributesList.isEmpty()) && (pos < attributesList.size()))
+    if ((!attributesList.isEmpty()) && (pos < attributesList.size()))
         return (QStringList *) &attributesList[pos];
     return 0;
 }
@@ -324,7 +324,7 @@ QStringList * ReceiverGUI::getLegendKeys(int pos) const
 {
     // qDebug() << "fix for more than one observer ---------------\n" << keysList[pos];
 
-    if ((! keysList.isEmpty()) && (pos < keysList.size()))
+    if ((!keysList.isEmpty()) && (pos < keysList.size()))
         return (QStringList *) &keysList[pos];
     return 0;
 }
@@ -341,7 +341,7 @@ const QStringList ReceiverGUI::getLegendValue(int obsPos) const
     }
     return ret;
 
-    //if ((! attributesList.isEmpty()) && (pos < attributesList.at(pos).size()))
+    //if ((!attributesList.isEmpty()) && (pos < attributesList.at(pos).size()))
     //{
     //    QStringList ret;
     //    LuaLegend *leg = 0;

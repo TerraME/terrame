@@ -95,7 +95,7 @@ bool sortByClassName(const QPair<Subject *, QString> & pair1,
 void delay(double seconds)
 {
     clock_t endwait;
-    endwait = clock() + seconds * CLOCKS_PER_SEC ;
+    endwait = clock() + seconds * CLOCKS_PER_SEC;
     while (clock() < endwait)
         qApp->processEvents();
 }
@@ -369,26 +369,26 @@ void SubjectImpl::notifyObservers(double time)
         {
             delay(0.750);
             (*i)->setModelTime(time);
-            t -=750.0; // remove o tempo de delay
+            t -= 750.0; // remove delay time
         }
 
         t = Statistic::getInstance().endMicroTime() - t;
         Statistic::getInstance().addElapsedTime(name, t);
     }
 
-    // Calcula o tempo entre o codigo sequencial e paralelo
+    // Calculates the time between sequential and parallel code
     double tt = Statistic::getInstance().endMicroTime()
     		- Statistic::getInstance().getIntermediateTime();
     Statistic::getInstance().addElapsedTime("Total Response Time Seq - cellspace", tt);
 
 #else
-    for(ObsListIterator i (observers.begin()); i != observers.end(); ++i)
+    for (ObsListIterator i (observers.begin()); i != observers.end(); ++i)
     {
 //#ifdef TME_BLACK_BOARD
 //        (*i)->setDirtyBit();
 //#endif
 
-        if(!(*i)->update(time))
+        if (!(*i)->update(time))
         {
             detachList.push_back(*i);
         }

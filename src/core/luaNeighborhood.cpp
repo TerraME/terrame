@@ -596,7 +596,7 @@ int luaNeighborhood::createObserver(lua_State *)
             lua_pop(luaL, 1);
         }
 
-        if (! obsAttribs.contains("weight"))
+        if (!obsAttribs.contains("weight"))
             obsAttribs.append("weight");
 
         ObserverUDPSender *obsUDPSender = 0;
@@ -667,7 +667,7 @@ int luaNeighborhood::createObserver(lua_State *)
         //    }
         //    else
         //    {
-        //        if (! QUIET_MODE)
+        //        if (!QUIET_MODE)
         //            qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
         //    }
         //    break;
@@ -681,7 +681,7 @@ int luaNeighborhood::createObserver(lua_State *)
         //    }
         //    else
         //    {
-        //        if (! QUIET_MODE)
+        //        if (!QUIET_MODE)
         //            qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
         //    }
         //    break;
@@ -846,7 +846,7 @@ int luaNeighborhood::createObserver(lua_State *)
         //    // if (cols.at(0).isEmpty())
         //    if (cols.isEmpty())
         //    {
-        //        if (! QUIET_MODE)
+        //        if (!QUIET_MODE)
         //            qWarning("Warning: Port not defined.");
         //    }
         //    else
@@ -857,7 +857,7 @@ int luaNeighborhood::createObserver(lua_State *)
         //    // broadcast
         //    if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()))
         //    {
-        //        if (! QUIET_MODE)
+        //        if (!QUIET_MODE)
         //            qWarning("Warning: Observer will send to broadcast.");
         //        obsUDPSender->addHost(BROADCAST_HOST);
         //    }
@@ -865,7 +865,7 @@ int luaNeighborhood::createObserver(lua_State *)
         //    {
         //        // multicast or unicast
         //        for(int i = 1; i < cols.size(); i++) {
-        //            if (! cols.at(i).isEmpty())
+        //            if (!cols.at(i).isEmpty())
         //                obsUDPSender->addHost(cols.at(i));
         //        }
         //    }
@@ -881,7 +881,7 @@ int luaNeighborhood::createObserver(lua_State *)
         //    // if (cols.at(0).isEmpty())
         //    if (cols.isEmpty())
         //    {
-        //        if (! QUIET_MODE)
+        //        if (!QUIET_MODE)
         //            qWarning("Warning: Port not defined.");
         //    }
         //    else
@@ -892,7 +892,7 @@ int luaNeighborhood::createObserver(lua_State *)
         //    // broadcast
         //    if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()))
         //    {
-        //        if (! QUIET_MODE)
+        //        if (!QUIET_MODE)
         //            qWarning("Warning: Observer will send to broadcast.");
         //        obsTCPSender->addHost(LOCAL_HOST);
         //    }
@@ -901,7 +901,7 @@ int luaNeighborhood::createObserver(lua_State *)
         //        // multicast or unicast
         //        for(int i = 1; i < cols.size(); i++)
         //        {
-        //            if (! cols.at(i).isEmpty())
+        //            if (!cols.at(i).isEmpty())
         //                obsTCPSender->addHost(cols.at(i));
         //        }
         //    }
@@ -925,7 +925,7 @@ int luaNeighborhood::createObserver(lua_State *)
         while(lua_next(luaL, top - 1) != 0)
         {
             // Retrieves the observer map ID
-            if ((lua_isnumber(luaL, -1) && (! getObserverId)))
+            if ((lua_isnumber(luaL, -1) && (!getObserverId)))
             {
                 obsId = luaL_checknumber(luaL, -1);
                 getObserverId = true;
@@ -987,7 +987,7 @@ int luaNeighborhood::createObserver(lua_State *)
         				+ QString(obsId) + QString(" was not found. ")
 						+ QString("Check the declaration of this observer.");
 
-        if (! cellSpace)
+        if (!cellSpace)
         {
             lua_getglobal(L, "customError");
             lua_pushstring(L, errorMsg.toLatin1().data());
@@ -999,7 +999,7 @@ int luaNeighborhood::createObserver(lua_State *)
         {
             obsMap = (AgentObserverMap *)cellSpace->getObserver(obsId);
 
-            if (! obsMap)
+            if (!obsMap)
             {
                 lua_getglobal(L, "customError");
                 lua_pushstring(L, errorMsg.toLatin1().data());
@@ -1013,7 +1013,7 @@ int luaNeighborhood::createObserver(lua_State *)
         {
             obsImage = (AgentObserverImage *)cellSpace->getObserver(obsId);
 
-            if (! obsImage)
+            if (!obsImage)
             {
                 lua_getglobal(L, "customError");
                 lua_pushstring(L, errorMsg.toLatin1().data());
@@ -1040,7 +1040,7 @@ int luaNeighborhood::createObserver(lua_State *)
 
         for(int i = 0; i < obsAttribs.size(); i++)
         {
-            if (! observedAttribs.contains(obsAttribs.at(i)))
+            if (!observedAttribs.contains(obsAttribs.at(i)))
                 // observedAttribs.push_back(obsAttribs.at(i));
                 observedAttribs.insert(obsAttribs.at(i), "");
         }
@@ -1163,7 +1163,7 @@ QByteArray luaNeighborhood::pop(lua_State *, const QStringList &attribs,
     luaCell *cell = (luaCell *) CellNeighborhood::getParent();
     if (cell)
     {
-        if ((parentSubj) && (! currSubj))
+        if ((parentSubj) && (!currSubj))
             currSubj = parentSubj->add_internalsubject();
 
         ObserverDatagramPkg::SubjectAttribute *cellSubj = currSubj->add_internalsubject();
@@ -1184,7 +1184,7 @@ QByteArray luaNeighborhood::pop(lua_State *, const QStringList &attribs,
 
         if (neighbor) // (observedAttribs.value(key) != valueTmp)
         {
-            if ((parentSubj) && (! currSubj))
+            if ((parentSubj) && (!currSubj))
                 currSubj = parentSubj->add_internalsubject();
 
             ObserverDatagramPkg::SubjectAttribute *cellNeighborSubj =
@@ -1210,7 +1210,7 @@ QByteArray luaNeighborhood::pop(lua_State *, const QStringList &attribs,
 
     if (valueChanged)
 	{
-        if ((parentSubj) && (! currSubj))
+        if ((parentSubj) && (!currSubj))
             currSubj = parentSubj->add_internalsubject();
 
         // id
@@ -1230,7 +1230,7 @@ QByteArray luaNeighborhood::pop(lua_State *, const QStringList &attribs,
             std::cout.flush();
 #endif
 
-        if (! parentSubj)
+        if (!parentSubj)
         {
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
             		currSubj->ByteSize());
@@ -1283,7 +1283,7 @@ int luaNeighborhood::kill(lua_State *)
     int id = luaL_checknumber(luaL, 1);
 
     bool result = NeighborhoodSubjectInterf::kill(id);
-    if (! result)
+    if (!result)
     {
         if (cellSpace)
         {

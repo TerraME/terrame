@@ -31,7 +31,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
  \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined(HANDLE_BODY)
+#ifndef HANDLE_BODY
 #define HANDLE_BODY
 
 #ifdef DEBUGING

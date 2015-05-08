@@ -105,7 +105,7 @@ bool LogFileTask::rendering()
     //if (!QFile::exists(fileName)) {
     if (mode == "w")
     {
-        if (! file.open(QIODevice::WriteOnly | QIODevice::Text))
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         {
             QMessageBox::information(0, QObject::tr("Error opening file"),
             			QObject::tr("Could not open the log file \"%1\".\n%2")

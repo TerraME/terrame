@@ -49,7 +49,7 @@ static const QString COMP_COLOR_SEP = ",";
 static const QString ITEM_SEP = ";";
 static const QString ITEM_NULL = "?";
 static const QString COLORS_SEP = "#";
-static const QString COLOR_BAR_SEP= "|";
+static const QString COLOR_BAR_SEP = "|";
 static const QString SYMBOL_CHAR = "-";
 
 static const QString WINDOW = "Window";
@@ -103,7 +103,7 @@ static const int NUMBERIC_PRECISION = 6; // sets decimal places
 
 //// Doubles
 const double MAX_FLOAT = 3.4E37;                  //!< Maximum float value
-const double MIN_FLOAT = 3.4E-37;		         //!< Minimum float value
+const double MIN_FLOAT = 3.4E-37;				//!< Minimum float value
 const double PI = 3.14159265358979323846;		//!< The ratio of the circumference to the diameter of a circle
 const double PI_DIV = 1 / PI;
 

@@ -32,7 +32,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-#if ! defined(CELLULAR_SPACE_H)
+#ifndef CELLULAR_SPACE_H
 #define CELLULAR_SPACE_H
 
 #include <vector>

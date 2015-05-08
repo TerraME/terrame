@@ -38,7 +38,7 @@ public:
 
         Task * task = 0;
 
-        if (! bagOfTasks.isEmpty())
+        if (!bagOfTasks.isEmpty())
         {
             // Task may be executed by any worker
             if (bagOfTasks.first().first->getWorkerId() < 0)

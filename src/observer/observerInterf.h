@@ -162,6 +162,7 @@ protected:
 */
 class SubjectInterf : public Subject, public Interface<SubjectImpl>
 {
+
 public:
     /**
      * Destructor

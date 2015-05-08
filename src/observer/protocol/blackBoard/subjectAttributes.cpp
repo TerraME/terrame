@@ -65,9 +65,9 @@ void SubjectAttributes::setSubjectType(const TypesOfSubjects &type)
         // && (subjectType != TObsAutomaton)     // Therefore, an agent is composed of a cell
       )
     {
-        if (! xs) xs = new QVector<double>();
-        if (! ys) ys = new QVector<double>();
-        if (! nestedSubjectsID) nestedSubjectsID = new QVector<int>();
+        if (!xs) xs = new QVector<double>();
+        if (!ys) ys = new QVector<double>();
+        if (!nestedSubjectsID) nestedSubjectsID = new QVector<int>();
     }
 }
 

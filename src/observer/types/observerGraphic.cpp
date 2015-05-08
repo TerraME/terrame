@@ -213,7 +213,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 
                 if((subjectType == TObsAutomaton) || (subjectType == TObsAgent))
                 {
-                    if (! states.contains(tokens.at(j)))
+                    if (!states.contains(tokens.at(j)))
                         states.push_back(tokens.at(j));
 
                     if (internalCurves->contains(key))

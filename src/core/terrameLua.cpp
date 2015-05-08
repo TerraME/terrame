@@ -78,7 +78,7 @@ bool existWindows()
 void outputHandle(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
 	// ModelConsole &console = ModelConsole::getInstance();
-	//if(! console.isVisible())
+	//if(!console.isVisible())
 	//	console.show();
 
 	Player &player = Player::getInstance();
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
 	step = false;
 
 	// Register the message handle of Observer Player
-	if((argc > 2) && (! strcmp(argv[1], "-gui")))
+	if((argc > 2) && (!strcmp(argv[1], "-gui")))
 	{
 		SHOW_GUI = true;
 
@@ -279,7 +279,7 @@ int main(int argc, char *argv[])
 #ifdef NOCPP_RAIAN
 		if (argv[argument][0] == '-')
 		{
-			if (! strcmp(argv[argument], "-draw-all-higher"))
+			if (!strcmp(argv[argument], "-draw-all-higher"))
 			{
 				bool ok = false;
 				double time = QString(argv[argument + 1]).toDouble(&ok);
@@ -290,7 +290,7 @@ int main(int argc, char *argv[])
 
 				argument++;
 			}
-			else if (! strcmp(argv[argument], "-workers"))
+			else if (!strcmp(argv[argument], "-workers"))
 			{
 				bool ok = false;
 				int number = QString(argv[argument + 1]).toInt(&ok);
@@ -341,7 +341,7 @@ int main(int argc, char *argv[])
 	//}
 	//}
 
-	if (! existWindows())
+	if (!existWindows())
 	{
 		lua_close(L);
 		app.exit();

@@ -42,7 +42,7 @@ void PlayerGUI::playPauseClicked()
 {
     QIcon icon;
 
-    if (! paused)
+    if (!paused)
     {
         // ModelConsole::getInstance().appendMessage("Simulation paused!\n");
         ui->textMessage->append("Simulation paused!\n");
@@ -69,7 +69,7 @@ void PlayerGUI::playPauseClicked()
 
 void PlayerGUI::stepClicked()
 {
-    if (! step)
+    if (!step)
     {
         // ModelConsole::getInstance().appendMessage("Step by step running...\n");
         ui->textMessage->append("Step by step running...\n");

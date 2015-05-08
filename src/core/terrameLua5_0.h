@@ -299,7 +299,7 @@ public:
             {
                 cout << "Error: Event constructor not found!"  << endl;
                 return 0;
-            };
+            }
 
             // puts the neighborhood on the stack top
             lua_newtable(L);
@@ -495,7 +495,7 @@ public:
     }
 
     int setPriority(lua_State *L) {
-        int priority= luaL_checknumber(L, -1);
+        int priority = luaL_checknumber(L, -1);
         Event::setPriority(priority);
         return 0;
     }
@@ -544,7 +544,7 @@ public:
         {
             cout << "Error: message " << msg << " not defined!"  << endl;
             return 0;
-        };
+        }
 
         // puts the function 'execute' on the top of the stack
         //--lua_pushstring(L, "execute");
@@ -561,7 +561,7 @@ public:
         {
             cout << "Error: Event constructor not found!"  << endl;
             return 0;
-        };
+        }
 
         // builds the table parameter of the constructor
         lua_newtable(L);
@@ -727,7 +727,7 @@ public:
     }
 
     int build(lua_State* L) {
-        if(! Agent::build())
+        if(!Agent::build())
         {
             cout << "Error: a control mode must be added to the agent before use it as a jump condition target...";
         }
@@ -809,7 +809,7 @@ public:
     }
 
     int build(lua_State* L) {
-        if(! Agent::build())
+        if(!Agent::build())
         {
             cout << "Error: you must add a control mode to the agent before use it as a jump condition targert...";
             return 0;
@@ -1121,21 +1121,21 @@ public:
         Environment::add(*pCS);
 
         return 0;
-    };
+    }
 
     int addLocalAgent(lua_State *L) {
         LocalAgent* pAg = Luna<luaLocalAgent>::check(L, -1);
         Environment::add(*pAg);
 
         return 0;
-    };
+    }
 
     int addGlobalAgent(lua_State *L) {
         GlobalAgent* pAg = Luna<luaGlobalAgent>::check(L, -1);
         Environment::add(*pAg);
 
         return 0;
-    };
+    }
 
     int config(lua_State *L)
     {
@@ -1176,6 +1176,5 @@ public:
   */
     static const char className[];
     static Luna<luaEnvironment>::RegType methods[];
-
 };
 

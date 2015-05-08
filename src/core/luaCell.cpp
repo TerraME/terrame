@@ -339,7 +339,7 @@ int luaCell::createObserver(lua_State *)
 		top = lua_gettop(luaL);
 
 		// Syntax checking of the table of attributes
-		if(! lua_istable(luaL, top))
+		if(!lua_istable(luaL, top))
 		{
 			string err_out = string("Attribute table not found. Incorrect sintax.");
 			lua_getglobal(L, "customError");
@@ -360,7 +360,7 @@ int luaCell::createObserver(lua_State *)
 			if(allAttribs.contains(key))
 			{
 				obsAttribs.push_back(key);
-				// if (! observedAttribs.contains(key))
+				// if (!observedAttribs.contains(key))
 				//	observedAttribs.push_back(key);
 				observedAttribs.insert(key, "");
 			}
@@ -707,7 +707,7 @@ int luaCell::createObserver(lua_State *)
 			else {
 				// multicast or unicast
 				for(int i = 1; i < cols.size(); i++) {
-					if (! cols.at(i).isEmpty())
+					if (!cols.at(i).isEmpty())
 						obsUDPSender->addHost(cols.at(i));
 				}
 			}
@@ -737,7 +737,7 @@ int luaCell::createObserver(lua_State *)
 			else {
 				// multicast or unicast
 				for(int i = 1; i < cols.size(); i++)
-					if (! cols.at(i).isEmpty())
+					if (!cols.at(i).isEmpty())
 						obsTCPSender->addHost(cols.at(i));
 			}
 			obsTCPSender->connectTo(port);
@@ -989,7 +989,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-						if((parentSubj) && (! cellSubj))
+						if((parentSubj) && (!cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1012,7 +1012,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 							<< qPrintable(observedAttribs.value(key)) << " == " << qPrintable(valueTmp);
 #endif
 
-						if ((parentSubj) && (! cellSubj))
+						if ((parentSubj) && (!cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1029,7 +1029,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-						if((parentSubj) && (! cellSubj))
+						if((parentSubj) && (!cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1048,7 +1048,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 						if(observedAttribs.value(key) != valueTmp)
 						{
-							if((parentSubj) && (! cellSubj))
+							if((parentSubj) && (!cellSubj))
 								cellSubj = parentSubj->add_internalsubject();
 
 							raw = cellSubj->add_rawattributes();
@@ -1068,7 +1068,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-						if((parentSubj) && (! cellSubj))
+						if((parentSubj) && (!cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1088,7 +1088,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-						if((parentSubj) && (! cellSubj))
+						if((parentSubj) && (!cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1108,7 +1108,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-						if((parentSubj) && (! cellSubj))
+						if((parentSubj) && (!cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
 
 						raw = cellSubj->add_rawattributes();
@@ -1127,7 +1127,7 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 		if(valueChanged)
 		{
-			if((parentSubj) && (! cellSubj))
+			if((parentSubj) && (!cellSubj))
 				cellSubj = parentSubj->add_internalsubject();
 
 			// id
@@ -1378,14 +1378,14 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId,
 			content = getAll(in, observerId, attribs);
 
 			// serverSession->setState(observerId, 1);
-			// if (! QUIET_MODE)
+			// if (!QUIET_MODE)
 			// qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
 			break;
 		case 1:
 			content = getChanges(in, observerId, attribs);
 
 			// serverSession->setState(observerId, 0);
-			// if (! QUIET_MODE)
+			// if (!QUIET_MODE)
 			// qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
 			break;
 	}

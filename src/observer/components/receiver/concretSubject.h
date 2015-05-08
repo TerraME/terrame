@@ -36,7 +36,7 @@ private:
     		ObserverDatagramPkg::SubjectAttribute *,
         ObserverDatagramPkg::SubjectAttribute *) { return ""; }
     QByteArray getAll(QDataStream& , const QStringList&) { return ""; }
-    QByteArray getChanges(QDataStream& , const QStringList&) { return ""; };
+    QByteArray getChanges(QDataStream& , const QStringList&) { return ""; }
 #else
     QByteArray pop(lua_State *, const QStringList&) { return ""; }
     QByteArray getAll(QDataStream& , int , const QStringList&) { return ""; }

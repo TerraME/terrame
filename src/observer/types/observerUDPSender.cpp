@@ -167,7 +167,7 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //                    .arg(udpSocket->errorString());
 //                senderGUI->appendMessage(error);
 //
-//                if (! QUIET_MODE)
+//                if (!QUIET_MODE)
 //                    qWarning("%s", qPrintable(error));
 //
 //                return false;

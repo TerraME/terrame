@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaRule objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUARULE_H)
+#ifndef LUARULE_H
 #define LUARULE_H
 
 /**

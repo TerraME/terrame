@@ -166,7 +166,7 @@ int luaTimer::createObserver(lua_State *luaL)
 #ifdef DEBUG_OBSERVER
 		printf("\t%s \n", qPrintable(key));
 #endif
-		if (! isSchedulerObserver)
+		if (!isSchedulerObserver)
 			allAttribs.push_back(key);
 
 		lua_pop(luaL, 1);
@@ -179,7 +179,7 @@ int luaTimer::createObserver(lua_State *luaL)
 	//top = lua_gettop(luaL);
 
 	// Verification of Attributes table syntax
-	if(! lua_istable(luaL, top))
+	if(!lua_istable(luaL, top))
 	{
 		string err_out = string("Attribute table not found. Incorrect sintax.");
 		lua_getglobal(L, "customError");
@@ -209,13 +209,13 @@ int luaTimer::createObserver(lua_State *luaL)
 		if (allAttribs.contains(key))
 		{
 			obsAttribs.push_back(key);
-			if (! observedAttribs.contains(key))
+			if (!observedAttribs.contains(key))
 				// observedAttribs.push_back(key);
 				observedAttribs.insert(key, "");
 		}
 		else
 		{
-			if (! key.isNull() || ! key.isEmpty())
+			if (!key.isNull() || !key.isEmpty())
 			{
 				string err_out = string("Attribute name '")
 								+ string (qPrintable(key)) + string("' not found.");
@@ -230,7 +230,7 @@ int luaTimer::createObserver(lua_State *luaL)
 	}
 	//------------------------
 
-	if ((obsAttribs.empty()) && (! isGraphicType))
+	if ((obsAttribs.empty()) && (!isGraphicType))
 	{
 		obsAttribs = allAttribs;
 		// observedAttribs = allAttribs;
@@ -256,7 +256,7 @@ int luaTimer::createObserver(lua_State *luaL)
 
 	//------------------------
 
-	if(! lua_istable(luaL, top))
+	if(!lua_istable(luaL, top))
 	{
 		string err_out = string("Attribute table not found. Incorrect sintax.");
 		lua_getglobal(L, "customError");
@@ -522,7 +522,7 @@ int luaTimer::createObserver(lua_State *luaL)
 			// multicast or unicast
 			for(int i = 1; i < cols.size(); i++)
 			{
-				if (! cols.at(i).isEmpty())
+				if (!cols.at(i).isEmpty())
 					obsUDPSender->addHost(cols.at(i));
 			}
 		}
@@ -579,14 +579,14 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int /*observerId*/,
         case 0:
             content = getAll(in, observedAttribs.keys());
             // serverSession->setState(observerId, 1);
-            //if (! QUIET_MODE)
+            //if (!QUIET_MODE)
             // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observedAttribs.keys());
             // serverSession->setState(observerId, 0);
-            //if (! QUIET_MODE)
+            //if (!QUIET_MODE)
             // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
@@ -616,14 +616,14 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId,
         case 0:
             content = getAll(in, observerId, attribs);
             // serverSession->setState(observerId, 1);
-            //if (! QUIET_MODE)
+            //if (!QUIET_MODE)
             // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(1).toLatin1().constData());
             break;
 
         case 1:
             content = getChanges(in, observerId, attribs);
             // serverSession->setState(observerId, 0);
-            //if (! QUIET_MODE)
+            //if (!QUIET_MODE)
             // qWarning(QString("Observer %1 passed to state %2").arg(observerId).arg(0).toLatin1().constData());
             break;
     }
@@ -700,7 +700,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 
 					if (observedAttribs.value(key) != valueTmp)
 					{
-						if ((parentSubj) && (! currSubj))
+						if ((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -720,7 +720,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 
 					if (observedAttribs.value(key) != valueTmp)
 					{
-						if ((parentSubj) && (! currSubj))
+						if ((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -739,7 +739,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 
 					if (observedAttribs.value(key) != valueTmp)
 					{
-						if ((parentSubj) && (! currSubj))
+						if ((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -759,7 +759,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 
 					if (observedAttribs.value(key) != valueTmp)
 					{
-						if ((parentSubj) && (! currSubj))
+						if ((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -827,7 +827,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 
 					if (observedAttribs.value(key) != valueTmp)
 					{
-						if ((parentSubj) && (! currSubj))
+						if ((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -847,7 +847,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 
 					if (observedAttribs.value(key) != valueTmp)
 					{
-						if ((parentSubj) && (! currSubj))
+						if ((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -867,7 +867,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 
 					if (observedAttribs.value(key) != valueTmp)
 					{
-						if ((parentSubj) && (! currSubj))
+						if ((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 
 						raw = currSubj->add_rawattributes();
@@ -888,7 +888,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 	doubleToText(minTime, valueTmp, 6);
 	if (observedAttribs.value(key) != valueTmp)
 	{
-		if ((parentSubj) && (! currSubj))
+		if ((parentSubj) && (!currSubj))
 			currSubj = parentSubj->add_internalsubject();
 
 		raw = currSubj->add_rawattributes();
@@ -901,7 +901,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 
 	if (valueChanged)
 	{
-		if ((parentSubj) && (! currSubj))
+		if ((parentSubj) && (!currSubj))
 			currSubj = parentSubj->add_internalsubject();
 
 		// id
@@ -916,7 +916,7 @@ QByteArray luaTimer::pop(lua_State *luaL, const QStringList& attribs,
 		// #elements
 		currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
-		if (! parentSubj)
+		if (!parentSubj)
 		{
 			QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
 

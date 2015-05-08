@@ -25,7 +25,7 @@ of this library and its documentation.
 \author Pedro R. Andrade
 
 */
-#if !defined(LUACHART_H)
+#ifndef LUACHART_H
 #define LUACHART_H
 
 #include "observerGraphic.h"

@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaEvent objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#if ! defined(LUAEVENT_H)
+#ifndef LUAEVENT_H
 #define LUAEVENT_H
 
 #include "eventSubjectInterf.h"
@@ -93,10 +93,10 @@ public:
 
     /// Sets the luaEvent priority
     /// parameters: number
-    int setPriority(lua_State *L) ;
+    int setPriority(lua_State *L);
 
     /// Gets the luaEvent periodicity
-    int getPeriod(lua_State *L) ;
+    int getPeriod(lua_State *L);
 
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observer attributes table, observer type parameters

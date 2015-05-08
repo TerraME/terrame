@@ -29,7 +29,7 @@
  * \author Tiago Garcia de Senna Carneiro
 */
 
-// #if ! defined (TME_OBSERVER_CLIENT_MODE)
+// #ifndef TME_OBSERVER_CLIENT_MODE
 
 #ifndef TERRAME_INCLUDES_H
 #define TERRAME_INCLUDES_H
