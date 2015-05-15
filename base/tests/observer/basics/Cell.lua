@@ -86,7 +86,7 @@ return{
 		unitTest:assertSnapshot(c4, "chart_cell_select_pen.bmp")
 		unitTest:assertSnapshot(c5, "chart_cell_select_color.bmp")
 
-		world:notify(Event{time = 31, action = function() end}[1])
+		world:notify(Event{start = 31, action = function() end}[1])
 
 		unitTest:delay()
 

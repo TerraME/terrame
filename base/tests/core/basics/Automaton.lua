@@ -227,7 +227,7 @@ id     string [MyAutomaton]
 		unitTest:assertEquals(4, at1.cont)
 		unitTest:assertEquals(4, cont)
 
-		local ev = Event{time = 4, action = function() end}[1]
+		local ev = Event{start = 4, action = function() end}[1]
 		at1.it:sort(greaterByCoord(">"))
 		at1:execute(ev)
 		unitTest:assertEquals(8, at1.cont)
@@ -295,7 +295,7 @@ id     string [MyAutomaton]
 		at1:execute(ev)
 		unitTest:assertEquals(0, at1:getLatency())
 
-		local ev = Event{time = 4, action = function() end}[1]
+		local ev = Event{start = 4, action = function() end}[1]
 		at1.it:sort(greaterByCoord(">"))
 		at1:execute(ev)
 		unitTest:assertEquals(0, at1:getLatency())

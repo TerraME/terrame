@@ -103,7 +103,7 @@ public:
         // builds the table parameter of the constructor
         lua_newtable(L);
 		if(event.getTime() != 1) {
-        	lua_pushstring(L, "time");
+        	lua_pushstring(L, "start");
         	lua_pushnumber(L, event.getTime());
         	lua_settable(L, -3);
 		}

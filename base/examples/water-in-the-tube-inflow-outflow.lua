@@ -15,10 +15,10 @@ t = Timer{
 	    	world.water = 0
 	    end
     end},
-    Event{time = 10, period = 10, action = function()
+    Event{start = 10, period = 10, action = function()
     	world.water = world.water + 40 -- also try 60
     end},
-    Event{time = 0, action = function(e)
+    Event{start = 0, action = function(e)
     	world:notify(e:getTime())
     end}
 }

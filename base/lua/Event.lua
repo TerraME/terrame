@@ -48,7 +48,7 @@ end
 --- An Event represents a time instant when the simulation engine must execute some computation.
 -- In order to be executed, Events must belong to a Timer. An Event is usually rescheduled to be
 -- executed again according to its period, unless its action returns false.
--- @arg data.time A number representing the time instant when the
+-- @arg data.start A number representing the time instant when the
 -- Event will occur for the first time. The default value is 1.
 -- @arg data.period A positive number representing the periodicity of the Event.
 -- The default value is 1.
@@ -76,12 +76,12 @@ end
 -- Society & execute -> synchronize \
 -- Timer & notify \
 -- Trajectory/Group & rebuild -> notify \
--- @usage event = Event {time = 1985, period = 2, priority = -1, action = function(event)
+-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
 --     print(event:getTime())
 -- end}
 -- 
 -- event2 = Event{
---     time = 2000,
+--     start = 2000,
 --     action = my_society
 -- }
 function Event(data)
@@ -96,9 +96,9 @@ function Event(data)
 		customError("Argument 'message' is deprecated, use 'action' instead.")
 	end
 
-	verifyUnnecessaryArguments(data, {"time", "action", "priority", "period"})
+	verifyUnnecessaryArguments(data, {"start", "action", "priority", "period"})
 
-	defaultTableValue(data, "time", 1)
+	defaultTableValue(data, "start", 1)
 	defaultTableValue(data, "period", 1)
 
 	positiveTableArgument(data, "period")
@@ -115,7 +115,7 @@ function Event(data)
 		defaultTableValue(data, "priority", 0)
 	end
 
-	cObj:config(data.time, data.period, data.priority)
+	cObj:config(data.start, data.period, data.priority)
 	cObj:setReference(cObj)
 
 	if data.action ~= nil then

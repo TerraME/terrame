@@ -12,7 +12,7 @@ t = Timer{
     Event{action = function()
         world.water = world.water - 5
     end},
-    Event{time = 0, period = 0.25, action = function(e)
+    Event{start = 0, period = 0.25, action = function(e)
     	world:notify(e:getTime())
     end}
 }

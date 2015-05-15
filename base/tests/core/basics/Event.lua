@@ -33,31 +33,31 @@ return{
 		unitTest:assertEquals(event[1]:getPriority(), 0)
 		unitTest:assertEquals(type(event[1]), "Event")
 
-		event = Event{time = 0.5, period = 2, priority = 1, action = function(event) end}
+		event = Event{start = 0.5, period = 2, priority = 1, action = function(event) end}
 
 		unitTest:assertEquals(event[1]:getTime(), 0.5)
 		unitTest:assertEquals(event[1]:getPeriod(), 2)
 		unitTest:assertEquals(event[1]:getPriority(), 1)
 	
-		event = Event{time = -1, period = 2, priority = -5.2, action = function(event) end}
+		event = Event{start = -1, period = 2, priority = -5.2, action = function(event) end}
 
 		unitTest:assertEquals(event[1]:getTime(), -1)
 		unitTest:assertEquals(event[1]:getPeriod(), 2)
 		unitTest:assertEquals(event[1]:getPriority(), -5.2)
 
-		event = Event{time = 0.5, period = 2, priority = "verylow", action = function(event) end}
+		event = Event{start = 0.5, period = 2, priority = "verylow", action = function(event) end}
 		unitTest:assertEquals(event[1]:getPriority(), 10)
 
-		event = Event{time = 0.5, period = 2, priority = "low", action = function(event) end}
+		event = Event{start = 0.5, period = 2, priority = "low", action = function(event) end}
 		unitTest:assertEquals(event[1]:getPriority(), 5)
 
-		event = Event{time = 0.5, period = 2, priority = "medium", action = function(event) end}
+		event = Event{start = 0.5, period = 2, priority = "medium", action = function(event) end}
 		unitTest:assertEquals(event[1]:getPriority(), 0)
 
-		event = Event{time = 0.5, period = 2, priority = "high", action = function(event) end}
+		event = Event{start = 0.5, period = 2, priority = "high", action = function(event) end}
 		unitTest:assertEquals(event[1]:getPriority(), -5)
 
-		event = Event{time = 0.5, period = 2, priority = "veryhigh", action = function(event) end}
+		event = Event{start = 0.5, period = 2, priority = "veryhigh", action = function(event) end}
 		unitTest:assertEquals(event[1]:getPriority(), -10)
 
 		local ag = Agent{execute = function() end}
@@ -113,7 +113,7 @@ return{
 		unitTest:assertEquals(event[1]:getPriority(), -10)
 	end,
 	getTime = function(unitTest)
-		local event = Event{time = -10, action = function(event) end}
+		local event = Event{start = -10, action = function(event) end}
 		unitTest:assertEquals(event[1]:getTime(), -10)
 	end
 }

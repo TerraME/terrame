@@ -314,7 +314,7 @@ return{
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("metod", "method"))
 
-		local event = Event{time = 0.5, period = 2, priority = 1, action = function(event) end}[1]
+		local event = Event{start = 0.5, period = 2, priority = 1, action = function(event) end}[1]
 
 		local error_func = function()
 			local gt = integrate{equation = function() end, initial = 1, event = event, a = 2}

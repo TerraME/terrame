@@ -565,7 +565,7 @@ public:
 
         // builds the table parameter of the constructor
         lua_newtable(L);
-        lua_pushstring(L, "time");
+        lua_pushstring(L, "start");
         lua_pushnumber(L, event.getTime());
         lua_settable(L, -3);
         lua_pushstring(L, "period");

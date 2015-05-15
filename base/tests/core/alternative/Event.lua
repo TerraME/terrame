@@ -27,9 +27,9 @@
 return{
 	Event = function(unitTest)
 		local error_func = function()
-			event = Event{time = "time", period = 2, priority = -1, action = function(event) end}
+			event = Event{start = "time", period = 2, priority = -1, action = function(event) end}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("time", "number", "time"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("start", "number", "time"))
 
 		error_func = function()
 			event = Event(2)
@@ -92,9 +92,9 @@ return{
 		unitTest:assertError(error_func, defaultValueMsg("period", 1))
 
 		error_func = function()
-			event = Event{time = 1, priority = 1, action = function(event) end}
+			event = Event{start = 1, priority = 1, action = function(event) end}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("time", 1))
+		unitTest:assertError(error_func, defaultValueMsg("start", 1))
 
 		error_func = function()
 			event = Event{priority = 0, action = function(event) end}

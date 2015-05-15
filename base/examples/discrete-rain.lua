@@ -13,7 +13,7 @@ output = 0
 
 -- RULES
 t = Timer{
-	Event{time = 0, action = function(event)
+	Event{start = 0, action = function(event)
 		-- rain
 		input = C
 		-- soil water

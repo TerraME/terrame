@@ -32,7 +32,7 @@ return {
 
 		local cont1 = 0
 
-		local ev1 = Event {priority = 1, period = 5, time = 0, action = function(event)
+		local ev1 = Event {priority = 1, period = 5, start = 0, action = function(event)
 			unitTest:assertEquals(event:getTime(), cont1)
 			unitTest:assertEquals(event:getPriority(), 1)
 			cont1 = cont1 + event:getPeriod()
@@ -47,7 +47,7 @@ return {
 
 		local countEvent = 0
 		local clock1 = Timer{
-			Event{time = 0, action = function(event) 
+			Event{start = 0, action = function(event) 
 				countEvent = countEvent + 1
 			end}
 		}
@@ -128,10 +128,10 @@ events  table of size 1
 			Event{action = function()
 				qt1 = qt1 + 1
 			end},
-			Event{time = 2, action = function()
+			Event{start = 2, action = function()
 				qt2 = qt2 + 1
 			end},
-			Event{time = 3, action = function()
+			Event{start = 3, action = function()
 				qt3 = qt3 + 1
 			end}
 		}
@@ -147,7 +147,7 @@ events  table of size 1
 		local timeMemory = 0 -- memory of time test variable 
 		unitTest:assertEquals(orderToken, 0)
 		local clock1 = Timer{
-			Event{time = 0, action = function(event)
+			Event{start = 0, action = function(event)
 				timeMemory = event:getTime()
 				unitTest:assert(orderToken <= 1)
 				orderToken = 1
@@ -167,7 +167,7 @@ events  table of size 1
 		-- negative time
 		local cont = 0
 		local t = Timer{
-			Event{time = -10, action = function(ev)
+			Event{start = -10, action = function(ev)
 				cont = cont + 1
 			end}
 		}
@@ -178,7 +178,7 @@ events  table of size 1
 		--	time fraction
 		local cont = 0
 		local t = Timer{
-			Event{time = 0.1, period = 0.1, action = function(ev)
+			Event{start = 0.1, period = 0.1, action = function(ev)
 				cont = cont + 0.1
 			end}
 		}
@@ -189,7 +189,7 @@ events  table of size 1
 	getTime = function(unitTest)
 		local cont1 = 0
 
-		local ev1 = Event{priority = 1, period = 5, time = 0, action = function(event)
+		local ev1 = Event{priority = 1, period = 5, start = 0, action = function(event)
 			unitTest:assertEquals(event:getTime(), cont1)
 			unitTest:assertEquals(event:getPriority(), 1)
 			cont1 = cont1 + event:getPeriod()
@@ -197,7 +197,7 @@ events  table of size 1
 
 		local cont2 = 50
 
-		local ev2 = Event{period = 5, time = 50, action = function(event)
+		local ev2 = Event{period = 5, start = 50, action = function(event)
 			unitTest:assertEquals(event:getPriority(), 0)
 			unitTest:assertEquals(event:getTime(), cont2)
 			cont2 = cont2 + event:getPeriod()
