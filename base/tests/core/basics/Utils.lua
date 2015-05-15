@@ -629,6 +629,21 @@ return{
 		unitTest:assert(string.endswith("abcdef", "def"))
 		unitTest:assert(not string.endswith("abcdef", "deef"))
 	end,
+	switch = function(unitTest)
+		local count = 0
+
+		local data = {att = "abc"}
+		switch(data, "att"):caseof{
+			abc = function() count = count + 1 end
+		}
+
+		local data = {}
+		switch(data, "att"):caseof{
+			missing = function() count = count + 1 end
+		}
+
+		unitTest:assertEquals(count, 2)
+	end,
 	type = function(unitTest)
 		local c = Cell{}
 

@@ -131,51 +131,6 @@ return{
 		end
 		unitTest:assertError(error_func, "All the indexes of second parameter should be string, got 'number'.")
 	end,
-	switch = function(unitTest)
-		local error_func = function()
-			switch("aaaab")
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", "aaaab"))
-
-		error_func = function()
-			switch({}, 2)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
-	
-		error_func = function()
-			local data = {att = "abd"}
-			switch(data, "att"):caseof{
-				abc = function() end
-			}
-		end
-		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("abd", "att", "abc"))
-	
-		local options = {
-			xxx = true
-		}
-
-		error_func = function()
-			local data = {att = "abd"}
-			switch(data, "att"):caseof{
-				xxx = function() end
-			}
-		end
-		unitTest:assertError(error_func, switchInvalidArgumentMsg("abd", "att", options))
-	
-		error_func = function()
-			local data = {att = "abd"}
-			switch(data, "att"):caseof(2)
-		end
-		unitTest:assertError(error_func, namedArgumentsMsg())
-
-		error_func = function()
-			local data = {att = "abd"}
-			switch(data, "att"):caseof{
-				abd = 2
-			}
-		end
-		unitTest:assertError(error_func, "Case 'abd' should be a function, got number.")
-	end,
 	switchInvalidArgument = function(unitTest)
 		local error_func = function()
 			switchInvalidArgument()
