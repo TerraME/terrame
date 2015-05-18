@@ -664,9 +664,11 @@ end
 -- on them. It returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg cell A Cell.
--- @arg f A function that receives a Neighborhood as argument.
--- @usage forEachNeighborhood(cell, function(neighborhood)
---     print(neighborhood:getId())
+-- @arg f A function that receives a Neighborhood index as argument.
+-- @usage forEachNeighborhood(cell, function(idx)
+--     forEachNeighbor(cell, idx, function()
+--         -- ...
+--     end)
 -- end)
 function forEachNeighborhood(cell, f)
 	if type(cell) ~= "Cell" then
@@ -677,8 +679,8 @@ function forEachNeighborhood(cell, f)
 
 	cell.cObj_:first()
 	while not cell.cObj_:isLast() do
-		local nh = cell.cObj_:getCurrentNeighborhood()
-		if f(nh) == false then return false end
+		local idx = cell.cObj_:getCurrentNeighborhood():getID()
+		if f(idx) == false then return false end
 		cell.cObj_:next()
 	end
 	return true

@@ -88,6 +88,12 @@ Neighborhood_ = {
 	getCellWeight = function(self, xIndex, yIndex)
 		deprecatedFunction("getCellWeight", "getWeight")
 	end,
+	--- Return the unique identifier of the Neighborhood. It represents
+	-- the index if the Neighborhood in the Cell it was added.
+	-- @usage n:getID()
+	getID = function(self)
+		return self.cObj_:getID()
+	end,
 	--- Return the weight of the connection to a given neighbor Cell.
 	-- @arg cell A Cell.
 	-- @usage n:getNeighWeight(cell)

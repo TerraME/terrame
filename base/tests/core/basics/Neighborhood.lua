@@ -81,6 +81,12 @@ return{
 
 		unitTest:assert(neigh:isEmpty())
 	end,
+	getID = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+		cs:createNeighborhood()
+
+		unitTest:assertEquals(cs.cells[1]:getNeighborhood():getID(), "1")
+	end,
 	getParent = function(unitTest)
 		local neigh = Neighborhood()
 		local cell1 = Cell{}

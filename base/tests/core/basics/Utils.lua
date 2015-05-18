@@ -289,12 +289,19 @@ return{
 
 		local count = 0
 		local r
+		local neighbors = 0
 
-		r = forEachNeighborhood(c1, function()
+		r = forEachNeighborhood(c1, function(idx)
+			unitTest:assertType(idx, "string")
+			forEachNeighbor(c1, idx, function()
+				neighbors = neighbors + 1
+			end)
+
 			count = count + 1
 		end)
 		unitTest:assert(r)
 		unitTest:assertEquals(count, 2)
+		unitTest:assertEquals(neighbors, 4)
 
 		local count = 0
 		r = forEachNeighborhood(c1, function()
