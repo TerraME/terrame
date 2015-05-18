@@ -28,153 +28,6 @@
 
 -- @header Some basic and useful functions for modeling.
 
--- Implements the Heun (Euler Second Order) Method to integrate ordinary differential equations.
--- It is a method of type Predictor-Corrector.
--- @arg df The differential equantion.
--- @arg initCond The initial condition that must be satisfied.
--- @arg a The value of 'a' in the interval [a,b[.
--- @arg b The value of 'b' of in the interval [a,b[.
--- @arg delta The step of the independent variable.
--- @usage f = function(x) return x^3 end
--- v = integrationHeun(f, 0, 0, 3, 0.1)
-local function integrationHeun(df, initCond, a, b, delta)
-	if type(df) == "function" then
-		local x = a
-		local y = initCond
-		local y1 = 0
-		local val = 0
-		local bb = b - delta
-		for x = a, bb, delta do
-			val = df(x, y)
-			y1 = y + delta * val
-			y = y + 0.5 * delta * (val + df(x + delta, y1))
-		end
-		return y
-	else
-		local x = a
-		local y = initCond
-		local y1 = 0
-		local val = 0
-		local bb = b - delta
-		local sizeDF = #df
-		for x = a, bb, delta do
-			local val = {}
-			local y1 = {}
-			for i = 1, sizeDF do
-				val[i] = df[i](x, y)
-				y1[i] = y[i] + delta * val[i]
-			end
-			local values = {}
-			for i = 1, sizeDF do
-				values[i] = df[i](x + delta, y1)
-			end
-			for i = 1, sizeDF do
-				y[i] = y[i] + 0.5 * delta * (val[i] + values[i])
-			end
-		end
-		return y
-	end
-end
-
--- Implements the Runge-Kutta Method (Fourth Order) to integrate ordinary differential equations.
--- @arg df The differential equantion.
--- @arg initCond The initial condition that must be satisfied.
--- @arg a The value of 'a' in the interval [a,b[.
--- @arg b The value of 'b' of in the interval [a,b[.
--- @arg delta The step of the independent variable.
--- @usage f = function(x) return x^3 end
--- v = integrationRungeKutta(f, 0, 0, 3, 0.1)
-local function integrationRungeKutta(df, initCond, a, b, delta)
-	local i = 0
-	if type(df) == "function" then
-		local x = a
-		local y = initCond
-		local y1 = 0
-		local y2 = 0
-		local y3 = 0
-		local y4 = 0
-		local bb = b - delta
-		local midDelta = 0.5 * delta
-		for x = a, bb, delta do
-			y1 = df(x, y)
-			y2 = df(x + midDelta, y + midDelta * y1)
-			y3 = df(x + midDelta, y + midDelta * y2)
-			y4 = df(x + delta, y + delta* y3)
-			y = y + delta * (y1 + 2 * y2 + 2 * y3 + y4) / 6
-		end
-		return y
-	else
-		local x = a
-		local y = initCond
-		local y1 = 0
-		local y2 = 0
-		local y3 = 0
-		local y4 = 0
-		local bb = b - delta
-		local midDelta = 0.5 * delta
-		local sizeDF = #df
-		for x = a, bb, delta do
-			local yTemp = {}
-			local values = {}
-			for i = 1, sizeDF do
-				yTemp[i] = y[i]
-			end
-			for i = 1, sizeDF do
-				y1 = df[i](x, y)
-				yTemp[i] = y[i] + midDelta * y1
-				y2 = df[i](x + midDelta, yTemp )
-				yTemp[i] = y[i] + midDelta * y2
-				y3 = df[i](x + midDelta, yTemp )
-				yTemp[i] = y[i] + delta * y3
-				y4 = df[i](x + delta, yTemp)
-				values[i] = y[i] + delta * (y1 + 2 * y2 + 2 * y3 + y4) / 6
-			end
-			for i = 1, sizeDF do
-				y[i] = values[i]
-			end
-		end
-		return y
-
-	end
-end
-
--- Implements the Euler (Euler-Cauchy) Method to integrate ordinary differential equations.
--- @arg df The differential equantion.
--- @arg initCond The initial condition that must be satisfied.
--- @arg a The value of 'a' in the interval [a,b[.
--- @arg b The value of 'b' of in the interval [a,b[.
--- @arg delta The step of the independent variable.
--- @usage f = function(x) return x^3 end
--- v = integrationEuler(f, 0, 0, 3, 0.1)
-local function integrationEuler(df, initCond, a, b, delta)
-	if type(df) == "function" then
-		local y = initCond
-		local x = a
-		local bb = b - delta
-		for x = a, bb, delta do
-			y = y + delta * df(x, y)
-		end
-		return y
-	else
-		local i = 0
-		local y = initCond
-		local x = a
-		local bb = b - delta
-		local values = {} -- each equation must be computed from the same "past" value ==> o(n2),
-		                  -- where n is the number of equations
-		for x = a, bb, delta do
-			for i = 1, #df do
-				values[i] = df[i](x, y)
-			end
-			for i = 1, #df do
-				y[i] = y[i] + delta * values[i]
-			end
-		end
-
-		return y
-	end
-end
-
 --- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
 -- This function was taken froom http://lua-users.org/wiki/LuaCsv.
 -- @arg line A string from a CSV file.
@@ -371,6 +224,73 @@ function call(obj, func)
 	end
 
 	return function(ev) obj[func](obj, ev) end
+end
+
+--- Constructor for an ordinary differential equation. It works in the same way of Utils:integrate(),
+-- but it is more efficient as it does not get a table as argument. The default integration method
+-- is Euler but the modeler can declare a global variable INTEGRATION_METHOD to change the
+-- default method.
+-- @arg data.1 A differential equation or a vector of differential equations. Each
+-- equation is described as a function of one or two arguments that returns a value of its
+-- derivative f(t, y), where t is the time instant, and y starts with the value of attribute
+-- initial and changes according to the result of f() and the chosen method. The calls to f
+-- will use the first argument (t) in the interval [a,b[, according to the argument step.
+-- @arg data.2 The initial condition, or a vector of initial conditions, which must be
+-- satisfied. Each initial condition represents the value of y when t (first argument of f)
+-- is equal to the value of argument a.
+-- @arg data.3 A number with the beginning of the interval.
+-- @arg data.4 A number with the end of the interval.
+-- @arg data.5 A positive number with the step within the interval. The default value is
+-- 0.2, but the user can change it by declaring a global variable DELTA.
+-- @usage d{func, 0.1, 0, 10, 0.01}
+function d(data)
+	local result = 0
+	local delta = DELTA
+	if delta == nil then
+		delta = 0.2
+	end
+
+	if data == nil then data = {} end
+
+	local sizedata = getn(data)
+	if sizedata < 4 then 
+		local str = "Error: bad arguments in diferential equation constructor \"d{arguments}\". "..
+		"TerraME has found ".. #data.." arguments.\n"..
+		" - the first attribute of a differential equantion must be a function which return a number. "..
+		"It can also be a table of functions like that,\n"..
+		" - the second one must be the initial condition value. "..
+		"It can also be a table of initial conditions,\n"..
+		" - the third one must be the lower integration limit value,\n"..
+		" - the fourth one must be the upper integration limit value, and\n"..
+		" - the fifth, OPTIONAL, must be the integration increment value (default = 0.2).\n"
+		customError(str)
+	end
+	if sizedata == 5 then
+		delta = data[5]
+	end
+
+	if type(data[1]) == "table" then
+		if #data[1] ~= #data[2] then 
+			customError("You should provide the same number of differential equations and initial conditions.")
+		end
+	end
+
+	local method = INTEGRATION_METHOD
+	if method == nil then
+		method = integrationEuler
+	end
+
+	local y = method(data[1], data[2], data[3], data[4], delta)
+
+	if type(data[1]) == "table" then
+		local str = "return "..y[1]
+		for i = 2, #y do
+			str = str ..", "..y[i]
+		end
+		return load(str)()
+	else
+		return y
+	end
 end
 
 --- Pause the simulation for a given time.
@@ -954,6 +874,153 @@ function integrate(attrs)
 		return load(str)()
 	end
 	return result
+end
+
+--- Implements the Euler (Euler-Cauchy) Method to integrate ordinary differential equations.
+-- @arg df The differential equation.
+-- @arg initCond The initial condition that must be satisfied.
+-- @arg a The value of 'a' in the interval [a,b[.
+-- @arg b The value of 'b' of in the interval [a,b[.
+-- @arg delta The step of the independent variable.
+-- @usage f = function(x) return x^3 end
+-- v = integrationEuler(f, 0, 0, 3, 0.1)
+function integrationEuler(df, initCond, a, b, delta)
+	if type(df) == "function" then
+		local y = initCond
+		local x = a
+		local bb = b - delta
+		for x = a, bb, delta do
+			y = y + delta * df(x, y)
+		end
+		return y
+	else
+		local i = 0
+		local y = initCond
+		local x = a
+		local bb = b - delta
+		local values = {} -- each equation must be computed from the same "past" value ==> o(n2),
+		                  -- where n is the number of equations
+		for x = a, bb, delta do
+			for i = 1, #df do
+				values[i] = df[i](x, y)
+			end
+			for i = 1, #df do
+				y[i] = y[i] + delta * values[i]
+			end
+		end
+
+		return y
+	end
+end
+
+--- Implements the Heun (Euler Second Order) Method to integrate ordinary differential equations.
+-- It is a method of type Predictor-Corrector.
+-- @arg df The differential equation.
+-- @arg initCond The initial condition that must be satisfied.
+-- @arg a The value of 'a' in the interval [a,b[.
+-- @arg b The value of 'b' of in the interval [a,b[.
+-- @arg delta The step of the independent variable.
+-- @usage f = function(x) return x^3 end
+-- v = integrationHeun(f, 0, 0, 3, 0.1)
+function integrationHeun(df, initCond, a, b, delta)
+	if type(df) == "function" then
+		local x = a
+		local y = initCond
+		local y1 = 0
+		local val = 0
+		local bb = b - delta
+		for x = a, bb, delta do
+			val = df(x, y)
+			y1 = y + delta * val
+			y = y + 0.5 * delta * (val + df(x + delta, y1))
+		end
+		return y
+	else
+		local x = a
+		local y = initCond
+		local y1 = 0
+		local val = 0
+		local bb = b - delta
+		local sizeDF = #df
+		for x = a, bb, delta do
+			local val = {}
+			local y1 = {}
+			for i = 1, sizeDF do
+				val[i] = df[i](x, y)
+				y1[i] = y[i] + delta * val[i]
+			end
+			local values = {}
+			for i = 1, sizeDF do
+				values[i] = df[i](x + delta, y1)
+			end
+			for i = 1, sizeDF do
+				y[i] = y[i] + 0.5 * delta * (val[i] + values[i])
+			end
+		end
+		return y
+	end
+end
+
+--- Implements the Runge-Kutta Method (Fourth Order) to integrate ordinary differential equations.
+-- @arg df The differential equation.
+-- @arg initCond The initial condition that must be satisfied.
+-- @arg a The value of 'a' in the interval [a,b[.
+-- @arg b The value of 'b' of in the interval [a,b[.
+-- @arg delta The step of the independent variable.
+-- @usage f = function(x) return x^3 end
+-- v = integrationRungeKutta(f, 0, 0, 3, 0.1)
+function integrationRungeKutta(df, initCond, a, b, delta)
+	local i = 0
+	if type(df) == "function" then
+		local x = a
+		local y = initCond
+		local y1 = 0
+		local y2 = 0
+		local y3 = 0
+		local y4 = 0
+		local bb = b - delta
+		local midDelta = 0.5 * delta
+		for x = a, bb, delta do
+			y1 = df(x, y)
+			y2 = df(x + midDelta, y + midDelta * y1)
+			y3 = df(x + midDelta, y + midDelta * y2)
+			y4 = df(x + delta, y + delta* y3)
+			y = y + delta * (y1 + 2 * y2 + 2 * y3 + y4) / 6
+		end
+		return y
+	else
+		local x = a
+		local y = initCond
+		local y1 = 0
+		local y2 = 0
+		local y3 = 0
+		local y4 = 0
+		local bb = b - delta
+		local midDelta = 0.5 * delta
+		local sizeDF = #df
+		for x = a, bb, delta do
+			local yTemp = {}
+			local values = {}
+			for i = 1, sizeDF do
+				yTemp[i] = y[i]
+			end
+			for i = 1, sizeDF do
+				y1 = df[i](x, y)
+				yTemp[i] = y[i] + midDelta * y1
+				y2 = df[i](x + midDelta, yTemp)
+				yTemp[i] = y[i] + midDelta * y2
+				y3 = df[i](x + midDelta, yTemp)
+				yTemp[i] = y[i] + delta * y3
+				y4 = df[i](x + delta, yTemp)
+				values[i] = y[i] + delta * (y1 + 2 * y2 + 2 * y3 + y4) / 6
+			end
+			for i = 1, sizeDF do
+				y[i] = values[i]
+			end
+		end
+		return y
+
+	end
 end
 
 --- Return the Levenshtein's distance between two strings.

@@ -42,6 +42,64 @@ return{
 		t:execute(10)
 		unitTest:assertEquals(cont, 10)
 	end,
+	d = function(unitTest)
+		local df = function(x, y) return y - x ^ 2 + 1 end
+		local a = 0
+		local b = 2
+		local init = 0.5
+		local delta = 0.2
+		local x = 0
+		local y = 0
+
+		local result1 = integrationEuler(df, init, a, b, delta)
+		local result2 = d{df, init, a, b, delta}
+		unitTest:assertEquals(4.86578450432, result1, 0.0001)
+		unitTest:assertEquals(result1, result2)
+
+		INTEGRATION_METHOD = integrationHeun
+		local df = function(x, y) return y - x ^ 2 + 1 end
+		local a = 0
+		local b = 2
+		local init = 0.5
+		local delta = 0.2
+		local x = 0
+		local y = 0
+
+		result1 = integrationHeun(df, init, a, b, delta)
+		result2 = d{df, init, a, b, delta}
+		unitTest:assertEquals(5.23305, result1, 0.0001)
+		unitTest:assertEquals(result1, result2)
+
+		INTEGRATION_METHOD = nil
+
+		local timeStep = 0.5
+		local birthPreyRate = 0.2
+		local predationRate = 0.01 -- death prey rate
+		local birthPredatorPerPreyRate = 0.01 -- birth predator rate
+		local deathPredatorRate = 0.1
+
+		local preyFunc = function(t, q)
+			return q[1] * birthPreyRate - q[1] * q[2] * predationRate
+		end
+		
+		local predatorFunc = function(t, q)
+			return q[2] * q[1] * birthPredatorPerPreyRate - q[2] * deathPredatorRate
+		end
+
+		local ag = Agent{preys = 100, predators = 10}
+		for t = 0, 10, timeStep do
+			ag.preys, ag.predators = d{
+				{preyFunc, predatorFunc},
+				{ag.preys, ag.predators},
+				0,
+				timeStep, 
+				0.03125
+			}
+		end
+
+		unitTest:assertEquals(ag.preys, 0.056344145404554)
+		unitTest:assertEquals(ag.predators, 77.830055916773)
+	end,
 	delay = function(unitTest)
 		local t1 = os.time()
 		delay()
@@ -54,6 +112,9 @@ return{
 		local t2 = os.time()
 
 		unitTest:assert(t2 - t1 >= .5)
+	end,
+	elapsedTime = function(unitTest)
+		unitTest:assertType(elapsedTime(50), "string")
 	end,
 	forEachAgent = function(unitTest)
 		local a = Agent{value = 2}
@@ -394,9 +455,6 @@ return{
 
 		unitTest:assertEquals(getn(Cell{}), 4)
 	end,
-	elapsedTime = function(unitTest)
-		unitTest:assertType(elapsedTime(50), "string")
-	end,
 	greaterByAttribute = function(unitTest)
 		local gt = greaterByAttribute("cover")
 		unitTest:assertType(gt, "function")
@@ -578,6 +636,8 @@ return{
 			step = 0.1
 		}
 
+		unitTest:assertType(v, "number")
+
 		local v = integrate{
 			equation = {eq1, eq1},
 			method = "heun",
@@ -586,6 +646,8 @@ return{
 			b = 100,
 			step = 0.1
 		}
+
+		unitTest:assertType(v, "number")
 
 		local v = integrate{
 			equation = {eq1, eq1},
@@ -656,6 +718,15 @@ return{
 
 		unitTest:assertEquals(ag.preys, 0.062817338900899)
 		unitTest:assertEquals(ag.predators, 77.645421917421)
+	end,
+	integrationHeun = function(unitTest)
+		unitTest:assert(true)
+	end,
+	integrationEuler = function(unitTest)
+		unitTest:assert(true)
+	end,
+	integrationRungeKutta = function(unitTest)
+		unitTest:assert(true)
 	end,
 	levenshtein = function(unitTest)
 		unitTest:assertEquals(levenshtein("abv", "abc"), 1)

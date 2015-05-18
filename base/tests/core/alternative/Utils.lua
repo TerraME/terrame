@@ -46,13 +46,26 @@ return{
 			call(Cell{}, "sum")
 		end
 		unitTest:assertError(error_func, "Function 'sum' does not exist.")
-	
 	end,
-	delay = function(unitTest)
+	d = function(unitTest)
 		local error_func = function()
-			delay("2")
+			local gt = d()
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "2"))
+		unitTest:assertError(error_func, [[Error: bad arguments in diferential equation constructor "d{arguments}". TerraME has found 0 arguments.
+ - the first attribute of a differential equantion must be a function which return a number. It can also be a table of functions like that,
+ - the second one must be the initial condition value. It can also be a table of initial conditions,
+ - the third one must be the lower integration limit value,
+ - the fourth one must be the upper integration limit value, and
+ - the fifth, OPTIONAL, must be the integration increment value (default = 0.2).
+]])
+
+
+		local myf = function() end
+
+		error_func = function()
+			local gt = d{{myf, myf}, {1}, 0, 0, 10} 
+		end
+		unitTest:assertError(error_func, "You should provide the same number of differential equations and initial conditions.")
 	end,
 	elapsedTime = function(unitTest)
 		local error_func = function()
