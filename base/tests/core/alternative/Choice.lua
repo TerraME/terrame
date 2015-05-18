@@ -145,14 +145,6 @@ return{
 			local c = Choice{min = 1, step = 3}
 		end
 		unitTest:assertError(error_func, "Attribute 'step' requires 'max' and 'min'.")
-	end,
-	sample = function(unitTest)
-		local c = Choice{min = 1}
-
-		local error_func = function()
-			c:sample()
-		end
-		unitTest:assertError(error_func, "It is not possible to retrieve a sample from this Choice.")
 	end
 }
 

@@ -86,6 +86,16 @@ step     number [0.1]
 		unitTest:assertEquals(c:sample(), 2.1551348191386, 0.01)
 		unitTest:assertEquals(c:sample(), 1.4584970893453, 0.01)
 		unitTest:assertEquals(c:sample(), 1.3813645669887, 0.01)
+
+		c = Choice{min = 1}
+		unitTest:assertEquals(c:sample(), 8.9154393315407e+14, 100)
+		unitTest:assertEquals(c:sample(), 2.2675725759938e+15, 100)
+		unitTest:assertEquals(c:sample(), 1.6018419319141e+15, 100)
+
+		c = Choice{max = 1}
+		unitTest:assertEquals(c:sample(), -4.0177913715186e+15, 100)
+		unitTest:assertEquals(c:sample(), -37689686765332, 1)
+		unitTest:assertEquals(c:sample(), -2.9210200615381e+15, 100)
 	end
 }
 
