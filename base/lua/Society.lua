@@ -161,17 +161,17 @@ Society_ = {
 	-- will have the second Agent in its SocialNetwork. When using this argument, the default
 	-- value of strategy becomes "function".
 	-- @arg data.name Name of the relation.
-	-- @arg data.inmemory If true (default), the SocialNetwork will be built and stored for
-	-- each Agent of the Society. It means that the SocialNetwork will change only if the
-	-- modeler explicitly add or remove connections. If false, the SocialNetwork will be
-	-- computed every time the simulation needs it by calling Agent:getSocialNetwork(), for
-	-- example when using Utils:forEachConnection().
-	-- It means that the SocialNetwork might change naturally along the simulation, according to
-	-- the adopted strategy. For instance, if the SocialNetwork of an Agent is based on its
-	-- Neighborhood and the Agent walks to another Cell, a SocialNetwork not in memory will also be
-	-- updated. SocialNetworks not in memory helps the simulation to run with larger datasets,
-	-- (because the SocialNetworks are not explicitly represented), but consume more
-	-- time, as they need to be built again even if no changes occur along the simulation.
+	-- @arg data.inmemory If true (default), a SocialNetwork will be built and stored for
+	-- each Agent of the Society. The SocialNetworks will change only if the
+	-- modeler add or remove connections explicitly. If false, a SocialNetwork will be
+	-- computed every time the simulation calls Agent:getSocialNetwork(), for
+	-- example when using Utils:forEachConnection(). In this case, if any of the attributes 
+	-- the SocialNetwork is based on changes then the resulting SocialNetwork might be different.
+	-- For instance, if the SocialNetwork of an Agent is based on its Neighborhood and the Agent
+	-- walks to another Cell, a SocialNetwork not in memory will also be updated. 
+	-- SocialNetworks not in memory also help the simulation to run with larger datasets,
+	-- as they are not explicitly represented, but they consume more
+	-- time as they need to be built again and again along the simulation.
 	-- @arg data.neighborhood A string with the name of the Neighborhood that will be used to
 	-- create the SocialNetwork. The default value is "1".
 	-- @arg data.placement A string with the name of the placement that will be used to

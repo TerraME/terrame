@@ -199,7 +199,7 @@ function executeDoc(package)
 
 		forEachElement(filesdocumented, function(midx, mvalue)
 			if mvalue == 0 then
-				printError("File '"..midx.."' is documented but does not exist in data folder")
+				printError("File '"..midx.."' is documented but does not exist in folder 'data'")
 				doc_report.wrong_data = doc_report.wrong_data + 1
 			end
 		end)

@@ -435,14 +435,15 @@ CellularSpace_ = {
 		self.maxCol = math.max(self.maxCol, cell.x)
 	end,
 	--- Create a Neighborhood for each Cell of the CellularSpace.
-	-- @arg data.inmemory If true (default), the Neighborhood will be built and stored in
-	-- each Cell of the CellularSpace. It means that the Neighborhood will change only if the
-	-- modeler explicitly add or remove connections. If false, the Neoghborhood will be
-	-- computed every time the simulation needs it by calling Cell:getNeighborhood(), for
-	-- example when using Utils:forEachNeighbor().
-	-- Neighborhoods not in memory helps the simulation to run with larger datasets,
-	-- (because the Neighborhoods are not explicitly represented), but it consumes more
-	-- time, as it needs to be built again and again.
+	-- @arg data.inmemory If true (default), a Neighborhood will be built and stored for
+	-- each Cell of the CellularSpace. The Neighborhoods will change only if the
+	-- modeler add or remove neighbors explicitly. If false, a Neighborhood will be
+	-- computed every time the simulation calls Cell:getNeighborhood(), for
+	-- example when using Utils:forEachNeighbor(). In this case, if any of the attributes 
+	-- the Neighborhood is based on changes then the resulting Neighborhood might be different.
+	-- Neighborhoods not in memory also help the simulation to run with larger datasets,
+	-- as they are not explicitly represented, but they consume more
+	-- time as they need to be built again and again along the simulation.
 	-- @arg data.strategy A string with the strategy to be used for creating the Neighborhood. 
 	-- See the table below.
 	-- @tabular strategy
@@ -480,23 +481,23 @@ CellularSpace_ = {
 	-- opposite border? The default value is false.
 	-- @usage cs:createNeighborhood() -- moore
 	--
-	-- cs:createNeighborhood {
+	-- cs:createNeighborhood{
 	--     name = "moore"
 	-- }
 	--
-	-- cs:createNeighborhood {
+	-- cs:createNeighborhood{
 	--     strategy = "vonneumann",
 	--     self = true
 	-- }
 	--
-	-- cs:createNeighborhood {
+	-- cs:createNeighborhood{
 	--     strategy = "mxn",
 	--     m = 4,
 	--     n = 4
 	-- }
 	--
 	-- -- c2 overlaps cs1
-	-- cs1:createNeighborhood {
+	-- cs1:createNeighborhood{
 	--     strategy = "mxn",
 	--     target = cs2, -- other cs
 	--     m = 3,
@@ -996,13 +997,13 @@ metaTableCellularSpace_ = {
 -- only two attributes, x and y, starting from (0, 0). & xdim & ydim, autoload, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.
 -- @output parent The Environment it belongs.
--- @usage cs = CellularSpace {
+-- @usage cs = CellularSpace{
 --     database = "amazonia",
 --     theme = "cells",
 --     user = "root"
 -- }
 -- 
--- cs2 = CellularSpace {
+-- cs2 = CellularSpace{
 --     database = "d:\\db.mdb",
 --     layer = "cells_10",
 --     theme = "cells_10",
@@ -1010,11 +1011,11 @@ metaTableCellularSpace_ = {
 --     where = "height3 > 2"
 -- }
 -- 
--- cs3 = CellularSpace {
+-- cs3 = CellularSpace{
 --     database = "d:\\file.shp",
 -- }
 -- 
--- cs4 = CellularSpace {
+-- cs4 = CellularSpace{
 --     xdim = 20,
 --     ydim = 20
 -- }

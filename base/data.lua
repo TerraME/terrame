@@ -15,9 +15,9 @@ data{
 }
 
 data{
-	file = {"cabecadeboi.mdb", "cabecadeboi.sql"},
+	file = {"cabecaDeBoi.mdb", "cabecadeboi.sql"},
 	source = "TerraME team",
-	summary = "Topography data from Cabeca de Boi, Minas Gerais, Brazil."
+	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil."
 }
 
 data{
