@@ -219,6 +219,12 @@ return{
 		unitTest:assertEquals(resourceNotFoundMsg("aaa", "bbb"), "Resource 'bbb' not found for argument 'aaa'.")
 		unitTest:assertEquals(resourceNotFoundMsg(2, "bbb"), "Resource 'bbb' not found for argument '#2'.")
 	end,
+	strictWarning = function(unitTest)
+		local error_func = function()
+			strictWarning("test.")
+		end
+		unitTest:assertError(error_func, "test.")
+	end,
 	suggestion = function(unitTest)
 		local t = {
 			aaaaa = true,

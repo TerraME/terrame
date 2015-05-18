@@ -433,8 +433,7 @@ end
 
 local function usage()
 	print("")
-	print("Usage: TerraME [[-gui] | [-mode=normal|debug|quiet]] file1.lua file2.lua ...")
-	print("       or TerraME [-version]\n")
+	print("Usage: TerraME [arguments] [file1.lua file2.lua ...]\n")
 	print("Options: ")
 	print(" -autoclose                 Automatically close the platform after simulation.")
 --	print(" -draw-all-higher <value>   Draw all subjects when percentage of changes was higher")
@@ -446,6 +445,8 @@ local function usage()
 	print("                            internal lines from TerraME and loaded packages).")
 	print(" -mode=normal (default)     Warnings enabled.")
 	print(" -mode=debug                Warnings treated as errors.")
+	print(" -mode=strict               Execute additional verifications in the source code ")
+	print("                            when it finds unnecessary arguments for functions.")
 	print(" -mode=quiet                Warnings disabled.")
 	print(" -mode=silent               print() does not show any text on the screen. This")
 	print("                            mode can be used with the other three modes independently.")
@@ -645,6 +646,8 @@ function execute(arguments) -- arguments is a vector of strings
 				info_.mode = "debug"
 			elseif arg == "-mode=quiet" then
 				info_.mode = "quiet"
+			elseif arg == "-mode=strict" then
+				info_.mode = "strict"
 			elseif arg == "-mode=silent" then
 				info_.silent = true
 				print = function() end

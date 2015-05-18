@@ -44,6 +44,8 @@ end
 -- @arg msg A string describing the warning.
 -- @usage customWarning("warning message")
 function customWarning(msg)
+	if sessionInfo().mode == "quiet" then return end
+
 	if type(msg) ~= "string" then
 		customError(incompatibleTypeMsg(1, "string", msg))
 	end
@@ -94,7 +96,7 @@ function defaultValueMsg(argument, value)
 	return "Argument '"..argument.."' could be removed as it is the default value ("..tostring(value)..")."
 end
 
---- Show a warning if the attribute of a table has the default value. If TerraME is running
+--- Show a strict warning if the attribute of a table has the default value. If TerraME is running
 -- in the debug mode, the simulation stops with an error. The warning message comes from
 -- ErrorHandling:defaultValueMsg().
 -- @arg argument A string with the attribute name.
@@ -103,7 +105,7 @@ end
 function defaultValueWarning(argument, value)
 	mandatoryArgument(1, "string", argument)
 
-	customWarning(defaultValueMsg(argument, value))
+	strictWarning(defaultValueMsg(argument, value))
 end
 
 --- Show an error indicating a deprecated function. The error
@@ -413,6 +415,16 @@ function resourceNotFoundMsg(attr, path)
 	return "Resource '"..path.."' not found for argument '"..attr.."'."
 end
 
+--- Print a strict warning. This warning is shown only in the strict mode.
+-- If TerraME is executing in the debug mode, it stops the simulation with an error. 
+-- @arg msg A string describing the warning.
+-- @usage strictWarning("warning message")
+function strictWarning(msg)
+	if sessionInfo().mode == "normal" then return end
+
+	customWarning(msg)
+end
+
 --- Return a suggestion for a wrong string value. The suggestion must have a
 -- Levenshtein's distance of less than 60% the size of the string, otherwise
 -- it returns nil.
@@ -626,7 +638,7 @@ function verifyNamedTable(data)
 end
 
 --- Verify whether the user has passed only the allowed arguments for a function, showing
--- a warning otherwise. The warning comes from ErrorHandling:unnecessaryArgumentMsg().
+-- a strict warning otherwise. The warning comes from ErrorHandling:unnecessaryArgumentMsg().
 -- This function returns the number of unnecessary arguments found.
 -- @arg data A named table with the arguments used in the function call.
 -- The indexes of this table will be verified.
@@ -659,7 +671,7 @@ function verifyUnnecessaryArguments(data, arguments)
 				msg = unnecessaryArgumentMsg(value, correctedSuggestions[i])
 			end
 			count = count + 1
-			customWarning(msg)
+			strictWarning(msg)
 		end
 	end)
 	return count
