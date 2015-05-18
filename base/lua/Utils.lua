@@ -1063,10 +1063,12 @@ end
 -- with the following values.
 -- @tabular tab
 -- Attribute & Description \
--- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
 -- dbVersion & A string with the current TerraLib version for databases. \
+-- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \
+-- path & A string with the location of TerraME in the computer. \
 -- separator & A string with the directory separator. \
--- path & A string with the location of TerraME in the computer.
+-- silent & A boolean value indicating whether print() calls should not be shown in the
+-- screen. This parameter is set true when TerraME is executed with mode "silent".
 -- @usage sessionInfo().version
 function sessionInfo()
 	return info_ -- this is a global variable created when TerraME is initialized

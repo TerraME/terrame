@@ -447,6 +447,8 @@ local function usage()
 	print(" -mode=normal (default)     Warnings enabled.")
 	print(" -mode=debug                Warnings treated as errors.")
 	print(" -mode=quiet                Warnings disabled.")
+	print(" -mode=silent               print() does not show any text on the screen. This")
+	print("                            mode can be used with the other three modes independently.")
 	print(" -version                   TerraME general information.")
 	print(" -package <pkg>             Select a given package. If used alone and the model has a")
 	print("                            single model than it runs the graphical interface")
@@ -595,6 +597,7 @@ function execute(arguments) -- arguments is a vector of strings
 		mode = "normal",
 		dbVersion = "1_3_1",
 		separator = package.config:sub(1, 1),
+		silent = false,
 		path = os.getenv("TME_PATH"), 
 		fullTraceback = false,
 		autoclose = false
@@ -642,6 +645,9 @@ function execute(arguments) -- arguments is a vector of strings
 				info_.mode = "debug"
 			elseif arg == "-mode=quiet" then
 				info_.mode = "quiet"
+			elseif arg == "-mode=silent" then
+				info_.silent = true
+				print = function() end
 			elseif string.sub(arg, 1, 6) == "-mode=" then
 				printError("Invalid mode '"..string.sub(arg, 7).."'.")
 				os.exit()
