@@ -291,10 +291,6 @@ function executeTests(package, fileName)
 
 	doc_functions = luadocMain(baseDir, dir(baseDir..s.."lua"), {}, package, {}, {}, true)
 
-	if not isFile(srcDir) then
-		customError("Folder 'tests' does not exist in package '"..package.."'.")
-	end
-
 	printNote("Looking for package functions")
 	testfunctions = buildCountTable(package)
 	
@@ -309,7 +305,6 @@ function executeTests(package, fileName)
 		forEachElement(value.functions, function(midx)
 			if midx == "#" then midx = "__len" end
 
-
 			if type(midx) ~= "string" then return end
 			if testfunctions[idx][midx] == nil then
 				testfunctions[idx][midx] = 0
@@ -320,6 +315,37 @@ function executeTests(package, fileName)
 
 	if extra > 0 then
 		printNote("Found "..extra.." extra functions in the documentation")
+	end
+
+	if not isFile(srcDir) then
+		printError("Folder 'tests' does not exist in package '"..package.."'.")
+		
+		printWarning("Creating folder 'tests'")
+		mkDir(srcDir)
+
+		forEachOrderedElement(testfunctions, function(idx, value)
+			printWarning("Creating "..idx)
+
+			str = "-- Test file for "..idx.."\n"
+			str = str.."-- Author: "..packageInfo(package).authors
+			str = str.."\n\nreturn{\n"
+
+			forEachOrderedElement(value, function(func)
+				str = str.."\t"..func.." = function(unitTest)\n"
+				str = str.."\t\t-- add a test here \n"
+				str = str.."\tend,\n"
+			end)
+
+			str = str.."}\n\n"
+
+			local file = io.open(srcDir..s..idx, "w")
+			io.output(file)
+			io.write(str)
+			io.close(file)
+		end)
+
+		printWarning("Please fill the test files and run the tests again")
+		os.exit()
 	end
 
 	local executionlines
