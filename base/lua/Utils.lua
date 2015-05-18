@@ -746,6 +746,29 @@ function forEachOrderedElement(obj, func)
 	return true
 end
 
+--- Second order function to transverse all SocialNetworks of an Agent, applying a given function
+-- on them. It returns true if no call to the function taken as argument returns false,
+-- otherwise it returns false.
+-- @arg agent An Agent.
+-- @arg f A function that receives a SocialNetwork index as argument.
+-- @usage forEachSocialNetwork(agent, function(idx)
+--     forEachConnection(agent, idx, function()
+--         -- ...
+--     end)
+-- end)
+function forEachSocialNetwork(agent, f)
+	if type(agent) ~= "Agent" then
+		incompatibleTypeError(1, "Agent", agent)
+	elseif type(f) ~= "function" then
+		incompatibleTypeError(2, "function", f)
+	end
+
+	for idx in pairs(agent.socialnetworks) do
+		if f(idx) == false then return false end
+	end
+	return true
+end
+
 --- Return a table with the content of the file config.lua, stored in the directory where TerraME
 -- was executed. All the global variables of the file are elements of the returned table. 
 -- Some packages require specific variables in this file in order to be tested or executed.

@@ -229,6 +229,19 @@ return{
 		end
 		unitTest:assertError(error_func, "forEachOrderedElement() cannot work with two indexes having the same lower case.")
 	end,
+	forEachSocialNetwork = function(unitTest)
+		local ag = Agent{}
+
+		local error_func = function()
+			forEachSocialNetwork(nil, function() end)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Agent"))
+
+		error_func = function()
+			forEachSocialNetwork(ag)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
+	end,
 	getExtension = function(unitTest)
 		local error_func = function()
 			getExtension(2)

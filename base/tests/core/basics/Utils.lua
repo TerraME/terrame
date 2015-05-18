@@ -335,6 +335,46 @@ return{
 		unitTest:assert(not r)
 		unitTest:assertEquals(cont, 1)
 	end,
+	forEachSocialNetwork = function(unitTest)
+		local a1 = Agent{id = "111"}
+		local a2 = Agent{id = "222"}
+		local a3 = Agent{id = "333"}
+
+		local s1 = SocialNetwork()
+		s1:add(a2)
+		s1:add(a3)
+
+		local s2 = SocialNetwork()
+		s2:add(a2)
+		s2:add(a3)
+
+		a1:addSocialNetwork(s1, "1")
+		a1:addSocialNetwork(s2, "2")
+
+		local count = 0
+		local r
+		local connections = 0
+
+		r = forEachSocialNetwork(a1, function(idx)
+			unitTest:assertType(idx, "string")
+			forEachConnection(a1, idx, function()
+				connections = connections + 1
+			end)
+
+			count = count + 1
+		end)
+		unitTest:assert(r)
+		unitTest:assertEquals(count, 2)
+		unitTest:assertEquals(connections, 4)
+
+		local count = 0
+		r = forEachSocialNetwork(a1, function()
+			count = count + 1
+			return false
+		end)
+		unitTest:assert(not r)
+		unitTest:assertEquals(count, 1)
+	end,
 	getExtension = function(unitTest)
 		unitTest:assertEquals(getExtension("file.txt"), "txt")
 	end,
