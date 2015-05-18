@@ -28,7 +28,7 @@ Model_ = {
 	-- This function is optional and it is automatically called after the internal verification
 	-- of arguments but before creating internal objects. The internal verification ensures that
 	-- the type of the arguments is valid, acording to the definition of the Model.
-	-- See Package:toLabel(), for using names of arguments
+	-- See ErrorHandling:toLabel(), for using names of arguments
 	-- in error messages when building a Model to work with graphical interfaces.
 	-- @usage Tube = Model{
 	--     initialWater = 200,
@@ -44,8 +44,8 @@ Model_ = {
 	--
 	-- m = Tube{initialWater = 100, flow = 10} -- ok
 	-- m = Tube{initialWater = 100, flow = 100} -- "Flow should be less than initial water."
-	-- @see Package:verify
-	-- @see Package:customError
+	-- @see ErrorHandling:verify
+	-- @see ErrorHandling:customError
 	check = function(self)
 	end,
 	--- Run the Model instance. It requires that the Model instance has attribute finalTime.

@@ -1086,8 +1086,8 @@ end
 -- table with functions describing what to do for each case (which is the index for the respective
 -- function). This table can have a field "missing" that is used when
 -- the first argument does not have an attribute whose name is the value of the second argument.
--- The error messages of this function come from Package:switchInvalidArgumentMsg() and
--- Package:switchInvalidArgumentSuggestionMsg().
+-- The error messages of this function come from ErrorHandling:switchInvalidArgumentMsg() and
+-- ErrorHandling:switchInvalidArgumentSuggestionMsg().
 -- @arg data A named table.
 -- @arg att A string with the chosen attribute of the named table.
 -- @usage data = {protocol = "udp"}

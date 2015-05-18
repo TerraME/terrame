@@ -608,6 +608,7 @@ function execute(arguments) -- arguments is a vector of strings
 	-- documented and availeble for the final users.
 	local s = info_.separator
 	local path = info_.path..s.."packages"..s.."base"..s.."lua"..s
+	dofile(path.."ErrorHandling.lua")
 	dofile(path.."Package.lua")
 	dofile(path.."FileSystem.lua")
 	dofile(path.."Utils.lua")
