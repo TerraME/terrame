@@ -51,7 +51,7 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     //hashAttributes = (QHash<QString, Attributes *> *)
     //            &BlackBoard::getInstance().getAttributeHash(getSubjectId());
 
-    hashAttributes = new QHash<QString, Attributes*>();
+    hashAttributes = new QMap<QString, Attributes*>();
 
     // This pointer will pointing to a attribute object
     xAxisValues = 0;
@@ -549,8 +549,10 @@ void ObserverGraphic::draw()
     int id = getSubjectId();
     double v = 0;
 
-    foreach(Attributes *attrib, hashAttributes->values())
+    for (int i = hashAttributes->values().size() - 1; i >= 0; i--)
     {
+        Attributes *attrib = hashAttributes->values().at(i);
+
         subjAttr = BlackBoard::getInstance().getSubject(id);
 
         if (subjAttr && subjAttr->getNumericValue(attrib->getName(), v))

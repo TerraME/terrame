@@ -89,7 +89,7 @@ return{
 
 		t:execute(200)
 		-- FIXME: small bug here. this snapshot can produce two different files
-		-- unitTest:assertSnapshot(c3, "chart_agent_xaxis.bmp")
+		unitTest:assertSnapshot(c3, "chart_agent_xaxis.bmp")
 		unitTest:delay()
 	end
 }

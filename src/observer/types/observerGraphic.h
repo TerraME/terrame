@@ -173,7 +173,7 @@ private:
     QHash<QString, InternalCurve *> *internalCurves;
 
     QVector<double> *xAxisValues;
-    QHash<QString, Attributes *> *hashAttributes;
+    QMap<QString, Attributes *> *hashAttributes;
 
     // bool paused;
 };
