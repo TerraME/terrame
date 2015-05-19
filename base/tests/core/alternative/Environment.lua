@@ -101,7 +101,7 @@ return{
 			envmt = Environment{2}
 		end
 
-		unitTest:assertError(error_func, "Argument '1' (a 'number') cannot be added to an Environment.")
+		unitTest:assertError(error_func, "Argument '1' (a 'number') is unnecessary for the Environment.")
 	end,
 	add = function(unitTest)
 		local env = Environment{}

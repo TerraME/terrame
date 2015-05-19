@@ -499,7 +499,7 @@ function Environment(data)
 			cObj:add(ud.cObj_)
 		elseif t == "Cell" or t == "Group" or t == "Trajectory" then
 		elseif k ~= "id" then
-			customError("Argument '"..k.."' (a '"..t.."') cannot be added to an Environment.")
+			strictWarning("Argument '"..k.."' (a '"..t.."') is unnecessary for the Environment.")
 		end
 	end)
 
