@@ -114,7 +114,7 @@ BlackBoard::~BlackBoard()
 	//@RAIAN: Commented as temporary solution. Pointer is being destroyed also in the destructor of TaskManager,
 	// gerando um segmentation fault nesta linha quando tenta destruir pela segunda vez. A possible solution is
 	// to overload the 'operator =' of the class so that when assign, copy the object, not just the pointer. TEST THIS SOLUTION.
-//    if (control) { delete control; control = 0; }
+    if (control) { delete control; control = 0; }
 	//RAIAN: END
 
     foreach(SubjectAttributes *c, cache)
