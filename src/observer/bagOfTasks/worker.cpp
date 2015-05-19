@@ -29,6 +29,7 @@ Worker::~Worker()
     abort = true;
     // waitCondition.wakeAll(); // done by the destructor of TaskManager
     locker.unlock();
+    /*
     if (!wait(1000))
     {
         if(!wait(3000))
@@ -38,7 +39,7 @@ Worker::~Worker()
                     "flag has been used and caused the freezing of the current task.");
         }
     }
-
+    */
 #ifdef UNIT_TME_TEST_PRINT
     qDebug() << "Worker" << id << "destroyed!!!!!"; std::cout.flush();
 #endif

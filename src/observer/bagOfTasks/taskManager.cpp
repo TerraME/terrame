@@ -77,25 +77,20 @@ TaskManager& TaskManager::operator=(const TaskManager &)
 TaskManager::~TaskManager()
 {
 
-    // Stops all workers execution
     for(int i = 0; i < workers.size(); i++)
+    {
         workers.at(i)->stop();
 
-    QMutexLocker locker(&mutex);
-    waitCondition.wakeAll();
-    locker.unlock();
+        while (workers.at(i)->isRunning())
+        {
+            QMutexLocker locker(&mutex);
+            waitCondition.wakeAll();
+            locker.unlock();
+            workers.at(i)->stop();
+        }
 
-    // Destroys all tasks
-    for(QList<QPair<Task *, int> >::iterator it = bagOfTasks.begin();
-        it != bagOfTasks.end(); ++it)
-    {
-        if (it->first)
-            delete it->first;
-        it->first = 0;
-    }
-
-    for(int i = 0; i < workers.size(); i++)
         delete workers.at(i);
+    }
 
 #ifdef UNIT_TME_TEST_PRINT
     qDebug() << "bagOfTasks.size()" << bagOfTasks.size();
