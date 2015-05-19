@@ -32,7 +32,7 @@ return{
 			end
 		}
 
-		local c1 = InternetSender{subject = world}
+		local c1 = InternetSender{target = world, protocol = "tcp"}
 
 		local world = Agent{
 			count = 0,
@@ -41,12 +41,11 @@ return{
 			end
 		}
 
-		local c1 = InternetSender{subject = world, protocol = "udp"}
+		local c1 = InternetSender{target = world}
 
 		local c1 = InternetSender{
-			subject = world,
-			select = {"mcount"},
-			protocol = "udp"
+			target = world,
+			select = {"mcount"}
 		}
 
 		local soc = Society{
@@ -54,8 +53,16 @@ return{
 			quantity = 3
 		}
 
-		local c1 = InternetSender{subject = soc, protocol = "udp"}
-		local c1 = InternetSender{subject = soc, select = "#", protocol = "udp"}
+		local c1 = InternetSender{target = soc}
+		local c1 = InternetSender{target = soc, select = "#"}
+
+		local soc = Society{
+			instance = Agent{},
+			quantity = 3,
+			total = 10
+		}
+
+		local c1 = InternetSender{target = soc}
 
 		local world = Cell{
 			vcount = 0,
@@ -64,8 +71,16 @@ return{
 			end
 		}
 
-		local c1 = InternetSender{subject = world, protocol = "udp"}
-		local c1 = InternetSender{subject = world, select = "mcount", protocol = "udp"}
+		local c1 = InternetSender{target = world}
+		local c1 = InternetSender{target = world, select = "mcount"}
+
+		local world = CellularSpace{xdim = 10}
+
+		forEachCell(world, function(cell)
+			cell.value = 0
+		end)
+
+		local c1 = InternetSender{target = world, select = "value"}
 
 		unitTest:assert(true)
 	end

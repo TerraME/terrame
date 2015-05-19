@@ -30,95 +30,107 @@ return{
 		local error_func = function()
 			InternetSender{}
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("subject"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
 
 		local e = Event{action = function() end}
 		error_func = function()
-			InternetSender{subject = e}
+			InternetSender{target = e}
 		end
 		unitTest:assertError(error_func, "Invalid type. InternetSender only works with Cell, CellularSpace, Agent, and Society.")
 
 		error_func = function()
-			InternetSender{subject = c, select = 5}
+			InternetSender{target = c, select = 5}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 5))
 
 		error_func = function()
-			InternetSender{subject = c, select = "mvalue"}
+			InternetSender{target = c, select = "mvalue"}
 		end
-		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the subject.")
+		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
 
 		error_func = function()
-			InternetSender{subject = c, host = 5}
+			InternetSender{target = c, host = 5}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("host", "string", 5))
 
 		error_func = function()
-			InternetSender{subject = c, host = "localhost"}
+			InternetSender{target = c, host = "localhost"}
 		end
 		unitTest:assertError(error_func, defaultValueMsg("host", "localhost"))
 
 		error_func = function()
-			InternetSender{subject = c, port = "5"}
+			InternetSender{target = c, port = "5"}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("port", "number", "5"))
 		
 		error_func = function()
-      InternetSender{subject = c, port = 49999}
-    end
-    unitTest:assertError(error_func, "Argument 'port' should be greater or equal to 50000, got 49999.")
+			InternetSender{target = c, port = 49999}
+		end
+		unitTest:assertError(error_func, "Argument 'port' should be greater or equal to 50000, got 49999.")
 
 		error_func = function()
-			InternetSender{subject = c, port = 456456}
+			InternetSender{target = c, port = 456456}
 		end
 		unitTest:assertError(error_func, defaultValueMsg("port", "456456"))
 
 		error_func = function()
-			InternetSender{subject = c, protocol = 5}
+			InternetSender{target = c, protocol = 5}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("protocol", "string", 5))
 
 		error_func = function()
-			InternetSender{subject = c, protocol = "tcp"}
+			InternetSender{target = c, protocol = "udp"}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("protocol", "tcp"))
+		unitTest:assertError(error_func, defaultValueMsg("protocol", "udp"))
 
 		error_func = function()
-			InternetSender{subject = c, protocol = "vdp"}
+			InternetSender{target = c, protocol = "vdp"}
 		end
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("vdp", "protocol", "udp"))
 
 		error_func = function()
-			InternetSender{subject = c, visible = 4}
+			InternetSender{target = c, visible = 4}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("visible", "boolean", 4))
 
 		error_func = function()
-			InternetSender{subject = c, visible = true}
+			InternetSender{target = c, visible = true}
 		end
 		unitTest:assertError(error_func, defaultValueMsg("visible", "true"))
 
 		error_func = function()
-			InternetSender{subject = c, compress = 4}
+			InternetSender{target = c, compress = 4}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("compress", "boolean", 4))
 
 		error_func = function()
-			InternetSender{subject = c, compress = true}
+			InternetSender{target = c, compress = true}
 		end
 		unitTest:assertError(error_func, defaultValueMsg("compress", "true"))
 
 		error_func = function()
-			InternetSender{subject = c, select = {}}
+			InternetSender{target = c, select = {}}
 		end
 		unitTest:assertError(error_func, "InternetSender must select at least one attribute.")
 
 		local unit = Cell{}
 
 		error_func = function()
-			InternetSender{subject = unit}
+			InternetSender{target = unit}
 		end
-		unitTest:assertError(error_func, "The subject does not have at least one valid attribute to be used.")
+		unitTest:assertError(error_func, "The target does not have at least one valid attribute to be used.")
+
+		local world = CellularSpace{xdim = 10}
+
+		error_func = function()
+			InternetSender{target = world}
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg("select"))
+
+		error_func = function()
+			InternetSender{target = world, select = "value"}
+		end
+		unitTest:assertError(error_func, "Selected element 'value' does not belong to the target.")
 	end
 }
 

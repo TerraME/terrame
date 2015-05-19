@@ -30,35 +30,35 @@ return{
 		local error_func = function()
 			VisualTable{}
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("subject"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
 
 		local e = Event{action = function() end}
 		error_func = function()
-			VisualTable{subject = e}
+			VisualTable{target = e}
 		end
 		unitTest:assertError(error_func, "Invalid type. VisualTable only works with Cell, CellularSpace, Agent, and Society.")
 
 		error_func = function()
-			VisualTable{subject = c, select = 5}
+			VisualTable{target = c, select = 5}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 5))
 
 		error_func = function()
-			VisualTable{subject = c, select = "mvalue"}
+			VisualTable{target = c, select = "mvalue"}
 		end
-		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the subject.")
+		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
 
 		error_func = function()
-			VisualTable{subject = c, select = {}}
+			VisualTable{target = c, select = {}}
 		end
 		unitTest:assertError(error_func, "VisualTable must select at least one attribute.")
 
 		local unit = Cell{}
 
 		error_func = function()
-			VisualTable{subject = unit}
+			VisualTable{target = unit}
 		end
-		unitTest:assertError(error_func, "The subject does not have at least one valid attribute to be used.")
+		unitTest:assertError(error_func, "The target does not have at least one valid attribute to be used.")
 	end
 }
 

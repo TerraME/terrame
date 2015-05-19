@@ -33,7 +33,7 @@ e = Environment{
 e:createPlacement{max = 1}
 
 Chart{
-	subject = soc
+	target = soc
 }
 
 soc:notify(0)

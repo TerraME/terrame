@@ -35,21 +35,21 @@ return{
 			end
 		}
 
-		local c1 = Chart{subject = world}
+		local c1 = Chart{target = world}
 		unitTest:assertType(c1, "Chart")
 
-		local c2 = Chart{subject = world, select = {"count", "value", "sum"}}
+		local c2 = Chart{target = world, select = {"count", "value", "sum"}}
 		unitTest:assertType(c2, "Chart")
 
 		local c3 = Chart{
-			subject = world,
+			target = world,
 			style = "steps",
 			width = 2
 		}
 		unitTest:assertType(c3, "Chart")
 
 		local c4 = Chart{
-			subject = world,
+			target = world,
 			select = {"value", "sum"},
 			style = "sticks",
 			pen = {"dashdot", "dashdotdot"},
@@ -58,7 +58,7 @@ return{
 		unitTest:assertType(c4, "Chart")
 
 		local c5 = Chart{
-			subject = world,
+			target = world,
 			select = {"value", "sum"},
 			color = {"green", "yellow"},
 			size = 10,
@@ -76,9 +76,9 @@ return{
 			end}
 		}
 
-		TextScreen{subject = world}
-		LogFile{subject = world}
-		VisualTable{subject = world}
+		TextScreen{target = world}
+		LogFile{target = world}
+		VisualTable{target = world}
 		t:execute(30)
 		unitTest:assertSnapshot(c1, "chart_cell.bmp")
 		unitTest:assertSnapshot(c2, "chart_cell_select.bmp")
@@ -95,7 +95,7 @@ return{
 		world = Cell{value = 3, value2 = 5}
 
 		c = InternetSender{
-			subject = world,
+			target = world,
 			select = {"value", "value2"},
 			protocol = "udp",
 			port = 11111

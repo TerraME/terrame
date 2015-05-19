@@ -38,10 +38,10 @@ return{
 			value = 5
 		}
 
-		local c1 = Chart{subject = soc}
+		local c1 = Chart{target = soc, select = "#"}
 		unitTest:assertType(c1, "Chart")
 
-		local c2 = Chart{subject = soc, select = {"value", "height"}}
+		local c2 = Chart{target = soc, select = {"value", "height"}}
 		unitTest:assertType(c2, "Chart")
 
 		soc:notify()
@@ -57,9 +57,9 @@ return{
 			end}
 		}
 
-		TextScreen{subject = soc}
---		LogFile{subject = soc} -- #215
-		VisualTable{subject = soc}
+		TextScreen{target = soc}
+--		LogFile{target = soc} -- #215
+		VisualTable{target = soc}
 		t:execute(30)
 		unitTest:assertSnapshot(c1, "chart_society.bmp")
 		unitTest:assertSnapshot(c2, "chart_society_select.bmp")

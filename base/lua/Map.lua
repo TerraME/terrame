@@ -1512,7 +1512,7 @@ metaTableMap_ = {__index = Map_}
 --- Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
 -- or Society. It draws each element into the screen, according a given attribute.
 -- Each notify() draws the Map again in the screen.
--- @arg data.subject A CellularSpace, Trajectory, Agent, or Society.
+-- @arg data.target A CellularSpace, Trajectory, Agent, or Society.
 -- @arg data.value A table with the possible values for the selected attributes.
 -- @arg data.max The maximum value of the attribute (used only for numbers).
 -- @arg data.min The minimum value of the attribute (used only for numbers).
@@ -1524,15 +1524,15 @@ metaTableMap_ = {__index = Map_}
 -- "equalsteps" &The values are divided into a set of slices with the same range. Each slice is
 -- associated to a given color. Equalsteps require only two colors in the argument color, one for
 -- the minimum and the other for the maximum value. The other colors are computed from a linear
--- interpolation of the two colors. & color, slices, max, min, subject, select & precision, label \
+-- interpolation of the two colors. & color, slices, max, min, target, select & precision, label \
 -- "quantil" & Aggregate the values into slices with approximately the same size. Values are
 -- ordered from lower to higher and then sliced. This strategy uses two colors in the same way
--- of equalsteps. & color, slices, max, min, subject, select & precision, label \
+-- of equalsteps. & color, slices, max, min, target, select & precision, label \
 -- "stdeviation" & Define slices according to the distribution of a given attribute. Values with
 -- similar positive or negative distances to the average will belong to the same slice. &
--- color, stdColor, subject, select & stdDeviation, precision, label \
+-- color, stdColor, target, select & stdDeviation, precision, label \
 -- "uniquevalue" & Associate each attribute value to a given color. Attributes with type string can
--- only be sliced with this strategy. & color, subject, select, value & label \
+-- only be sliced with this strategy. & color, target, select, value & label \
 -- @arg data.label A table with the labels for the attributes.
 -- @arg data.stdDeviation When the grouping mode is stddeviation, it has to be one of "full",
 -- "half" "quarter", or "none".
@@ -1560,7 +1560,7 @@ metaTableMap_ = {__index = Map_}
 -- the chosen strategy.
 -- @arg data.select A string with the name of the attribute to be visualized.
 -- @usage Map{
---     subject = cs,
+--     target = cs,
 --     select = "temperature",
 --     min = 0,
 --     max = 50,
@@ -1569,7 +1569,7 @@ metaTableMap_ = {__index = Map_}
 -- }
 --
 -- Map{
---     subject = cs,
+--     target = cs,
 --     select = "seggregation",
 --     values = {0, 1, 2},
 --     colors = {"blue", "green", "red"},
@@ -1577,7 +1577,7 @@ metaTableMap_ = {__index = Map_}
 -- }
 --
 -- Map{
---     subject = world,
+--     target = world,
 --     select  = "forest",
 --     colors  = "RdYlGn",
 --     min = 0,
@@ -1585,7 +1585,7 @@ metaTableMap_ = {__index = Map_}
 --     slices = 10
 -- }
 function Map(data)
-	mandatoryTableArgument(data, "subject", "CellularSpace")
+	mandatoryTableArgument(data, "target", "CellularSpace")
 	optionalTableArgument(data, "value", "table")
 	optionalTableArgument(data, "label", "table")
 	optionalTableArgument(data, "select", "string")
@@ -1641,16 +1641,16 @@ function Map(data)
 		equalsteps = function()
 			mandatoryTableArgument(data, "select", "string")
 
-			local sample = data.subject.cells[1][data.select]
+			local sample = data.target.cells[1][data.select]
 
-			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
+			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the target.")
 			verify(type(sample) == "number", "Selected element should be number, got "..type(sample)..".")
 
 			if data.min == nil or data.max == nil then
 				local min = math.huge
 				local max = -math.huge
 
-				forEachCell(data.subject, function(cell)
+				forEachCell(data.target, function(cell)
 					local mdata = cell[data.select]
 					if min > mdata then
 						min = mdata
@@ -1694,14 +1694,14 @@ function Map(data)
 			mandatoryTableArgument(data, "color", "table")
 			verify(#data.color == 2, "Strategy 'equalsteps' requires only two colors, got "..#data.color..".")
 
-			verifyUnnecessaryArguments(data, {"subject", "select", "color", "grouping", "min", "max", "slices"})
+			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices"})
 		end,
 		uniquevalue = function()
 			mandatoryTableArgument(data, "select", "string")
 
-			local sample = data.subject.cells[1][data.select]
+			local sample = data.target.cells[1][data.select]
 
-			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the subject.")
+			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the target.")
 			verify(belong(type(sample), {"string", "number"}), "Selected element should be string or number, got "..type(sample)..".")
 
 			if type(data.color) == "string" then
@@ -1730,7 +1730,7 @@ function Map(data)
 
 			if data.value == nil then
 				data.value = {}
-				forEachCell(data.subject, function(cell)
+				forEachCell(data.target, function(cell)
 					if not belong(cell[data.select], data.value) then
 						data.value[#data.value + 1] = cell[data.select]
 					end
@@ -1755,10 +1755,10 @@ function Map(data)
 			end
 			verify(#data.label == #data.value, "There should exist labels for each value. Got "..#data.label.." labels and "..#data.value.." values.")
 
-			verifyUnnecessaryArguments(data, {"subject", "select", "value", "label", "color", "grouping"})
+			verifyUnnecessaryArguments(data, {"target", "select", "value", "label", "color", "grouping"})
 		end,
 		background = function()
-			verifyUnnecessaryArguments(data, {"subject", "color", "grouping"})
+			verifyUnnecessaryArguments(data, {"target", "color", "grouping"})
 
 			if type(data.color) == "string" then
 				customError("Strategy 'background' cannot use ColorBrewer.")
@@ -1768,7 +1768,7 @@ function Map(data)
 			data.select = {"background_"}
 			verify(#data.color == 1, "Strategy 'background' requires only one color, got "..#data.color..".")
 
-			forEachCell(data.subject, function(cell)
+			forEachCell(data.target, function(cell)
 				cell.background_ = 0
 			end)
 		end
@@ -1780,11 +1780,11 @@ function Map(data)
 	--verify(#data.select > 0, "Maps must select at least one attribute.")
 
 	--forEachElement(data.select, function(_, value)
-	--	verify(data.subject.cells[1][value] ~= nil, "Selected element '"..value.."' does not belong to the subject.")
+	--	verify(data.target.cells[1][value] ~= nil, "Selected element '"..value.."' does not belong to the subject.")
 	--end)
 
 	local observerType = 6
-	local tbDimensions = {data.subject.maxCol - data.subject.minCol + 1, data.subject.maxRow - data.subject.minRow + 1}
+	local tbDimensions = {data.target.maxCol - data.subject.minCol + 1, data.subject.maxRow - data.subject.minRow + 1}
 
 	local observerParams = {}
 	local colorBar = {}
@@ -1821,9 +1821,9 @@ function Map(data)
 
 	table.insert(observerParams, legend)
 
-	local idObs, obs = data.subject.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.subject.cells)
+	local idObs, obs = data.target.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.subject.cells)
  
-	table.insert(createdObservers, {subject = data.subject, id = idObs})
+	table.insert(createdObservers, {target = data.subject, id = idObs})
 
 	local map = TeMap()
 	map:setObserver(obs)
@@ -1831,8 +1831,8 @@ function Map(data)
 	setmetatable(mdata, metaTableMap_)
 
 	-- TODO: change the lines below by data:notify()
-	data.subject:notify()
-	data.subject:notify()
+	data.target:notify()
+	data.target:notify()
 
 	return mdata
 end

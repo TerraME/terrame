@@ -74,13 +74,13 @@ c = Cell{
 }
 
 Chart{
-	subject = c,
+	target = c,
 	select = {"beer_requested", "beer_delivered"},
 	color = {"red", "blue"}
 }
 
 Chart{
-	subject = c,
+	target = c,
 	select = "total_cost",
 	color = "black",
 	style = "sticks"

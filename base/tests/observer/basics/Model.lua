@@ -40,11 +40,11 @@ return{
 		local tube = Tube{}
 
 		local c = Chart{
-			subject = tube
+			target = tube
 		}
 
 		local c2 = Chart{
-			subject = tube,
+			target = tube,
 			select = "v2"
 		}
 
@@ -71,7 +71,7 @@ return{
 		local m = Tube{water = 100}
 
 		Chart{
-			subject = m,
+			target = m,
 			select = "water"
 		}
 

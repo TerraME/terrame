@@ -11,7 +11,7 @@ world = Cell{
 	recovered = 0,
 }
 
-Chart{subject = world}
+Chart{target = world}
 
 world:notify()
 

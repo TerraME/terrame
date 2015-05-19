@@ -1368,15 +1368,15 @@ end
 killAllObservers = function()
 	forEachElement(createdObservers, function(idx, obs)
 		local self = obs
-		if self.subject.cObj_ then
+		if self.target.cObj_ then
 			if self.type == TME_OBSERVERS.NEIGHBORHOOD or self.type == "neighborhood" then
-				return self.subject.cObj_:kill(self.id, self.observer.subject.cObj_)
+				return self.target.cObj_:kill(self.id, self.observer.target.cObj_)
 			else
-				return self.subject.cObj_:kill(self.id)
+				return self.target.cObj_:kill(self.id)
 			end
 		else
-			if type(self.subject) == "Society" then
-				return self.subject:remove(func)
+			if type(self.target) == "Society" then
+				return self.target:remove(func)
 			else
 				return false
 			end

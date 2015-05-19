@@ -35,102 +35,102 @@ return{
 		local error_func = function()
 			Map{}
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("subject"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
 
 		error_func = function()
-			Map{subject = Neighborhood()}
+			Map{target = Neighborhood()}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("subject", "CellularSpace", Neighborhood()))
+		unitTest:assertError(error_func, incompatibleTypeMsg("target", "CellularSpace", Neighborhood()))
 
 		error_func = function()
-			Map{subject = c}
+			Map{target = c}
 		end
 		unitTest:assertError(error_func, "It was not possible to infer argument 'grouping'.")
 
 		error_func = function()
-			Map{subject = c, select = 5}
+			Map{target = c, select = 5}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 5))
 
 		error_func = function()
-			Map{subject = c, select = "x", slices = 10, color = 5}
+			Map{target = c, select = "x", slices = 10, color = 5}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("color", "string or table", 5))
 
 		error_func = function()
-			Map{subject = c, select = "x", slices = "abc", color = {{1, "red", 3}}}
+			Map{target = c, select = "x", slices = "abc", color = {{1, "red", 3}}}
 		end
 		unitTest:assertError(error_func, "All the elements of an RGB composition should be numbers, got 'string' in position 1.")
 
 		-- equalsteps
 		error_func = function()
-			Map{subject = c, select = "x", label = 5, slices = 10, color = {"blue", "red"}}
+			Map{target = c, select = "x", label = 5, slices = 10, color = {"blue", "red"}}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("label", "table", 5))
 
 		error_func = function()
-			Map{subject = c, grouping = "equalsteps"}
+			Map{target = c, grouping = "equalsteps"}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("select"))
 
 		error_func = function()
-			Map{subject = c, select = "mvalue", grouping = "equalsteps"}
+			Map{target = c, select = "mvalue", grouping = "equalsteps"}
 		end
-		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the subject.")
+		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
 
 		error_func = function()
-			Map{subject = c, select = "bvalue", grouping = "equalsteps"}
+			Map{target = c, select = "bvalue", grouping = "equalsteps"}
 		end
 		unitTest:assertError(error_func, "Selected element should be number, got boolean.")
 
 		error_func = function()
-			Map{subject = c, select = {}}
+			Map{target = c, select = {}}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", {}))
 
 		error_func = function()
-			Map{subject = c, select = "x", slices = "abc", color = {{1, 2, 3}}}
+			Map{target = c, select = "x", slices = "abc", color = {{1, 2, 3}}}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("slices", "number", "abc"))
 
 		error_func = function()
-			Map{subject = c, select = "x", slices = 0, min = 5, max = 8, color = {{1, 2, 3}}}
+			Map{target = c, select = "x", slices = 0, min = 5, max = 8, color = {{1, 2, 3}}}
 		end
 		unitTest:assertError(error_func, "Argument 'slices' (0) should be greater than one.")
 
 		error_func = function()
-			Map{subject = c, select = "x", slices = 2, min = "abc", color = {{1, 2, 3}}}
+			Map{target = c, select = "x", slices = 2, min = "abc", color = {{1, 2, 3}}}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("min", "number", "abc"))
 
 		error_func = function()
-			Map{subject = c, select = "x", slices = 2, min = 3, max = "abc", color = {{1, 2, 3}}}
+			Map{target = c, select = "x", slices = 2, min = 3, max = "abc", color = {{1, 2, 3}}}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("max", "number", "abc"))
 
 		error_func = function()
-			Map{subject = c, select = "x", slices = 2, min = 5, max = 3, color = {{1, 2, 3}}}
+			Map{target = c, select = "x", slices = 2, min = 5, max = 3, color = {{1, 2, 3}}}
 		end
 		unitTest:assertError(error_func, "Argument 'min' (5) should be less than 'max' (3).")
 
 		error_func = function()
-			Map{subject = c, select = "x", slices = 10, color = {{1, 2}, "red"}}
+			Map{target = c, select = "x", slices = 10, color = {{1, 2}, "red"}}
 		end
 		unitTest:assertError(error_func, "RGB composition should have 3 values, got 2 values in position 1.")
 
 		error_func = function()
-			Map{subject = c, select = "x", slices = 10, color = {2, "red"}}
+			Map{target = c, select = "x", slices = 10, color = {2, "red"}}
 		end
 		unitTest:assertError(error_func, "Invalid description for color in position 1. It should be a table or string, got number.")
 
 		error_func = function()
-			Map{subject = c, select = "x", title = 5, slices = 10, color = {"blue", "red"}}
+			Map{target = c, select = "x", title = 5, slices = 10, color = {"blue", "red"}}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				slices = 3,
 				color = {"red", "green", "blue"}
@@ -140,7 +140,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				slices = 10,
 				color = "Pastel1"
@@ -150,7 +150,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				slices = 3,
 				color = "Xxx",
@@ -161,7 +161,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				slices = 3,
 				color = "Pastei1",
@@ -171,29 +171,29 @@ return{
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("Pastei1", "color", "Pastel1"))
 
 		error_func = function()
-			Map{subject = c, slices = 3, color = {"red", "blu", "green"}}
+			Map{target = c, slices = 3, color = {"red", "blu", "green"}}
 		end
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("blu", "color", "blue"))
 
 		error_func = function()
-			Map{subject = c, slices = 3, color = {"red", {0, 0}, "green"}}
+			Map{target = c, slices = 3, color = {"red", {0, 0}, "green"}}
 		end
 		unitTest:assertError(error_func, "RGB composition should have 3 values, got 2 values in position 2.")	
 
 		-- uniquevalue
 		error_func = function()
-			Map{subject = c, select = "mvalue", grouping = "uniquevalue"}
+			Map{target = c, select = "mvalue", grouping = "uniquevalue"}
 		end
-		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the subject.")
+		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
 
 		error_func = function()
-			Map{subject = c, select = "bvalue", grouping = "uniquevalue"}
+			Map{target = c, select = "bvalue", grouping = "uniquevalue"}
 		end
 		unitTest:assertError(error_func, "Selected element should be string or number, got boolean.")
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, 3},
 				color = {"red", "green"},
@@ -204,7 +204,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, 3},
 				color = {"red", "blue", "gren"},
@@ -215,7 +215,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
 				color = "Pastel1"
@@ -225,7 +225,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, 3},
 				color = {"red", "green", "blue"},
@@ -236,7 +236,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, 3},
 				color = {"red", "green", "blues"},
@@ -247,7 +247,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, 3},
 				color = {"red", "green", "xxxxx"},
@@ -258,7 +258,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, 3},
 				grouping = "uniquevalues",
@@ -270,7 +270,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, 3},
 				color = "Bluess",
@@ -281,7 +281,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, 3},
 				color = "Xxx",
@@ -292,7 +292,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, "3"},
 				color = "Blues",
@@ -303,7 +303,7 @@ return{
 
 		error_func = function()
 			Map{
-				subject = c,
+				target = c,
 				select = "x",
 				value = {1, 2, 1},
 				color = "Blues",
@@ -313,33 +313,33 @@ return{
 		unitTest:assertError(error_func, "There should not exist repeated elements in 'value'.")
 
 		error_func = function()
-			Map{subject = c, select = "x", title = 5, value = {1, 2}, color = {"blue", "red"}}
+			Map{target = c, select = "x", title = 5, value = {1, 2}, color = {"blue", "red"}}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
 
 		-- background
 		error_func = function()
-			Map{subject = c, grouping = "background", title =  "aaa"}
+			Map{target = c, grouping = "background", title =  "aaa"}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
 
 		error_func = function()
-			Map{subject = c, grouping = "background"}
+			Map{target = c, grouping = "background"}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("color"))
 
 		error_func = function()
-			Map{subject = c, grouping = "background", color = {"blue", "red"}}
+			Map{target = c, grouping = "background", color = {"blue", "red"}}
 		end
 		unitTest:assertError(error_func, "Strategy 'background' requires only one color, got 2.")	
 
 		error_func = function()
-			Map{subject = c, grouping = "background", color = {"blues"}}
+			Map{target = c, grouping = "background", color = {"blues"}}
 		end
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("blues", "color", "blue"))
 
 		error_func = function()
-			Map{subject = c, grouping = "background", color = "Blues"}
+			Map{target = c, grouping = "background", color = "Blues"}
 		end
 		unitTest:assertError(error_func, "Strategy 'background' cannot use ColorBrewer.")
 	end

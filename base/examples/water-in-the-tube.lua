@@ -3,7 +3,7 @@
 world = Cell{water = 40}
 
 Chart{
-    subject = world,
+    target = world,
 	yLabel = "Gallons"
 }
 

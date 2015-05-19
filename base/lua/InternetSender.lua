@@ -24,9 +24,9 @@
 --#########################################################################################
 
 --- An Internet connection to send attribute values of an object through a 
---- TCP or UDP protocol. Every call to notify (for example, Agent:notify()) in the subject
+--- TCP or UDP protocol. Every call to notify (for example, Agent:notify()) in the target
 -- activates the InternetSender.
--- @arg data.subject An Agent, Cell, CellularSpace, or Society.
+-- @arg data.target An Agent, Cell, CellularSpace, or Society.
 -- @arg data.port A number greater or equal to 50000 indicating the port of the host to transfer
 -- the data. The default value is 456456.
 -- @arg data.host A string with the host name to transfer the data. The default value is
@@ -40,112 +40,120 @@
 -- to make the simulation faster. The default value is true.
 -- @arg data.select A vector of strings with the name of the attributes to be observed.
 -- If it is a single value then it can also be described as a string. As default, it selects
--- all the user-defined attributes of an object.
+-- all the user-defined attributes of an object. When using a CellularSpace as subject,
+-- the values in select are related to its Cells and this argument is mandatory.
+-- In the case of Society, if it does not have any numeric attributes then it will use
+-- the number of agents in the Society as attribute.
 -- @usage InternetSender{
---     subject = cs,
---     protocol = "udp",
+--     target = cs,
+--     protocol = "tcp",
 --     compress = false
 -- }
 function InternetSender(data)
-	mandatoryTableArgument(data, "subject")
+	mandatoryTableArgument(data, "target")
 	defaultTableValue(data, "host", "localhost")
 	defaultTableValue(data, "port", 456456)
 	defaultTableValue(data, "visible", true)
-	defaultTableValue(data, "protocol", "tcp")
+	defaultTableValue(data, "protocol", "udp")
 	defaultTableValue(data, "compress", true)
 
 	if type(data.select) == "string" then data.select = {data.select} end
 
 	if data.select == nil then
 		data.select = {}
-		if type(data.subject) == "Cell" then
-			forEachElement(data.subject, function(idx, value, mtype)
+		if type(data.target) == "Cell" then
+			forEachElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
-				local size = string.len(idx)
-				if not belong(idx, {"x", "y", "past"}) and string.sub(idx, size, size) ~= "_" then
+
+				if not belong(idx, {"x", "y", "past"}) and string.sub(idx, -1, -1) ~= "_" then
 					table.insert(data.select, idx)
 				end
 			end)
-		elseif type(data.subject) == "Agent" then
-			forEachElement(data.subject, function(idx, value, mtype)
+		elseif type(data.target) == "Agent" then
+			forEachElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
-				local size = string.len(idx)
-				if string.sub(idx, size, size) ~= "_" then
+
+				if string.sub(idx, -1, -1) ~= "_" then
 					table.insert(data.select, idx)
 				end
 			end)
-		elseif type(data.subject) == "CellularSpace" then
-			forEachElement(data.subject, function(idx, value, mtype)
+		elseif type(data.target) == "CellularSpace" then
+			mandatoryArgumentError("select")
+		elseif type(data.target) == "Society" then
+			forEachElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
-				local size = string.len(idx)
-				if not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, size, size) ~= "_" then
+
+				if not belong(idx, {"autoincrement", "quantity", "observerId"}) and string.sub(idx, -1, -1) ~= "_" then
 					table.insert(data.select, idx)
 				end
 			end)
-		elseif type(data.subject) == "Society" then
-			forEachElement(data.subject, function(idx, value, mtype)
-				if not belong(mtype, {"number", "string", "boolean"}) then return end
-				local size = string.len(idx)
-				if string.sub(idx, size, size) ~= "_" then
-					table.insert(data.select, idx)
-				end
-			end)
+
+			if #data.select == 0 then
+				data.select = {"#"}
+			end
 		else
 			customError("Invalid type. InternetSender only works with Cell, CellularSpace, Agent, and Society.")
 		end
 
-		verify(#data.select > 0, "The subject does not have at least one valid attribute to be used.")
+		verify(#data.select > 0, "The target does not have at least one valid attribute to be used.")
 	end
 
 	mandatoryTableArgument(data, "select", "table")
 	verify(#data.select > 0, "InternetSender must select at least one attribute.")
-	forEachElement(data.select, function(_, value)
-		if data.subject[value] == nil then
-			if  value == "#" then
-				if data.subject.obsattrs == nil then
-					data.subject.obsattrs = {}
+
+	if type(data.target) == "CellularSpace" then
+		verify(#data.select == 1, "InternetSender with CellularSpace uses only one attribute.")
+
+		local sample = data.target.cells[1][data.select[1]]
+
+		verify(sample ~= nil, "Selected element '"..data.select[1].."' does not belong to the target.")
+	else
+		forEachElement(data.select, function(_, value)
+			if data.target[value] == nil then
+				if  value == "#" then
+					if data.target.obsattrs == nil then
+						data.target.obsattrs = {}
+					end
+
+					data.target.obsattrs["quantity_"] = true
+					data.target.quantity_ = #data.target
+				else
+					customError("Selected element '"..value.."' does not belong to the target.")
+				end
+			elseif type(data.target[value]) == "function" then
+				if data.target.obsattrs == nil then
+					data.target.obsattrs = {}
 				end
 
-				data.subject.obsattrs["quantity_"] = true
-				data.subject.quantity_ = #data.subject
-			else
-				customError("Selected element '"..value.."' does not belong to the subject.")
+				data.target.obsattrs[value] = true
 			end
-		elseif type(data.subject[value]) == "function" then
-			if data.subject.obsattrs == nil then
-				data.subject.obsattrs = {}
-			end
+		end)
+	end
 
-			data.subject.obsattrs[value] = true
-		end
-	end)
-
-	if data.subject.obsattrs then
-		forEachElement(data.subject.obsattrs, function(idx)
+	if data.target.obsattrs then
+		forEachElement(data.target.obsattrs, function(idx)
 			for i = 1, #data.select do
 				if data.select[i] == idx then
 					data.select[i] = idx.."_"
-					if type(data.subject[idx]) == "function" then
-						local mvalue = data.subject[idx](data.subject)
-						data.subject[idx.."_"] = mvalue
+					if type(data.target[idx]) == "function" then
+						local mvalue = data.target[idx](data.target)
+						data.target[idx.."_"] = mvalue
 					end
 				end
 			end
 		end)
 	end
 
-	verifyUnnecessaryArguments(data, {"subject", "protocol", "select", "port", "host", "visible", "compress"})
+	verifyUnnecessaryArguments(data, {"target", "protocol", "select", "port", "host", "visible", "compress"})
   
 	verify(data.port >= 50000, "Argument 'port' should be greater or equal to 50000, got "..data.port..".")
   
 	for i = 1, #data.select do
 		if data.select[i] == "#" then
 			data.select[i] = "quantity_"
-			data.subject.quantity_ = #data.subject
+			data.target.quantity_ = #data.target
 		end
 	end
-
-	local observerType
 
 	local observerParams = {}
 
@@ -163,20 +171,20 @@ function InternetSender(data)
 	}
 
 	local id
-	local subject = data.subject
-	if type(subject) == "CellularSpace" then
+	local target = data.target
+	if type(target) == "CellularSpace" then
 		observerParams = {observerParams}
-		id = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
+		id = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
 	else
-		if type(subject) == "Society" then
-			subject.observerId = 1 -- TODO: verify why this line is necessary
+		if type(target) == "Society" then
+			target.observerId = 1 -- TODO: verify why this line is necessary
 		end
-		id = subject.cObj_:createObserver(observerType, data.select, observerParams)
+		id = target.cObj_:createObserver(observerType, data.select, observerParams)
 	end
 
 	verify(id, "The observer could not be created.")
 
-	table.insert(createdObservers, {subject = data.subject, id = id})
+	table.insert(createdObservers, {target = data.target, id = id})
 
 	return id
 end

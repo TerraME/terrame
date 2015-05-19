@@ -36,10 +36,10 @@ env = Environment{cs, soc}
 env:createPlacement()
 
 --[[
-Chart{subject = soc}
+Chart{target = soc}
 
 Map{
-	subject    = cs,
+	target    = cs,
 	select =     "color",
 	--grouping   = "equalsteps",
 	--maximum    = 4,

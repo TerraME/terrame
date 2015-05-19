@@ -34,10 +34,10 @@ return{
 			cell.value = math.random()
 		end)
 
-		local c = Chart{subject = cs, select = "value"}
+		local c = Chart{target = cs, select = "value"}
 --[[
 		local m = Map{
-			subject = cs,
+			target = cs,
 			select = "value",
 			min = 0,
 			max = 1,
@@ -65,7 +65,7 @@ return{
 			instance = unit
 		}
 
-		local c = Chart{subject = world}
+		local c = Chart{target = world}
 
 		unitTest:assertType(c, "Chart")
 
@@ -81,9 +81,9 @@ return{
 			end}
 		}
 
-		TextScreen{subject = world}
-		LogFile{subject = world}
-		VisualTable{subject = world}
+		TextScreen{target = world}
+		LogFile{target = world}
+		VisualTable{target = world}
 
 		t:execute(30)
 
@@ -119,7 +119,7 @@ return{
 		}
 
 		Observer{
-			subject = world,
+			target = world,
 			attributes = {"value"},
 			legends = {l}
 		}
@@ -132,7 +132,7 @@ return{
 
 --[[
 		Map{
-			subject = world,
+			target = world,
 			select  = "value",
 			color  = {{0, 0, 0}, {255, 255, 255}},
 			min = 0,
@@ -141,7 +141,7 @@ return{
 		}
 
 		Map{
-			subject = world,
+			target = world,
 			select  = "value",
 			color  = {"blue", "red"},
 			min = 0,
@@ -151,7 +151,7 @@ return{
 --]]
 --[[
 		Map{
-			subject = world,
+			target = world,
 			select  = "x",
 			color  = {"blue", "red"},
 			min = 0,

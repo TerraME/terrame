@@ -32,7 +32,7 @@ return{
 			end
 		}
 
-		local c1 = VisualTable{subject = world}
+		local c1 = VisualTable{target = world}
 
 		local world = Agent{
 			count = 0,
@@ -41,10 +41,10 @@ return{
 			end
 		}
 
-		local c1 = VisualTable{subject = world}
+		local c1 = VisualTable{target = world}
 
 		local c1 = VisualTable{
-			subject = world,
+			target = world,
 			select = {"mcount"}
 		}
 
@@ -53,8 +53,16 @@ return{
 			quantity = 3
 		}
 
-		local c1 = VisualTable{subject = soc}
-		local c1 = VisualTable{subject = soc, select = "#"}
+		local c1 = VisualTable{target = soc}
+		local c1 = VisualTable{target = soc, select = "#"}
+
+		local soc = Society{
+			instance = Agent{},
+			quantity = 3,
+			total = 10
+		}
+
+		local c1 = VisualTable{target = soc}
 
 		local world = CellularSpace{
 			xdim = 10,
@@ -64,8 +72,8 @@ return{
 			end
 		}
 
-		local c1 = VisualTable{subject = world}
-		local c1 = VisualTable{subject = world, select = "mcount"}
+		local c1 = VisualTable{target = world}
+		local c1 = VisualTable{target = world, select = "mcount"}
 
 		unitTest:assert(true)
 	end

@@ -49,11 +49,14 @@ lifeLeg = Legend{
 	pen = 2
 }
 
+--[[
 obs = Observer{
 	subject = cs,
 	attributes = {"state"},
 	legends = {lifeLeg}
 }
+--]]
+
 
 gameoflife = Automaton{
 	it = Trajectory{

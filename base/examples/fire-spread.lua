@@ -85,7 +85,7 @@ cs = CellularSpace{
 
 --[[
 obs = Observer{
-	subject = cs,
+	target = cs,
 	type = "map",
 	attributes = {"state"},
 	legends = {stateLeg}

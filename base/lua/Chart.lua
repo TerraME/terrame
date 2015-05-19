@@ -87,10 +87,12 @@ metaTableChart_ = {__index = Chart_}
 
 --- Create a line chart showing the variation of one or more attributes (y axis) of an
 -- object. X axis values come from the single argument of notify().
--- @arg data.subject An Agent, Cell, CellularSpace, Society.
+-- @arg data.target An Agent, Cell, CellularSpace, Society.
 -- @arg data.select A vector of strings with the name of the attributes to be observed. If it is only a
 -- single value then it can also be described as a string. 
--- As default, it selects all the user-defined number attributes of the subject.
+-- As default, it selects all the user-defined number attributes of the target.
+-- In the case of Society, if it does not have any numeric attributes then it will use
+-- the number of agents in the Society as attribute.
 -- @arg data.xLabel Name of the x-axis. It shows "Time" as default.
 -- @arg data.yLabel Name of the y-axis. It does not show any label as default.
 -- @arg data.label Vector of the same size of select that indicates the labels for each
@@ -118,10 +120,10 @@ metaTableChart_ = {__index = Chart_}
 -- "lines", "dots", "none", "steps", and "sticks". The default value is "lines" for all lines.
 -- @arg data.xAxis Name of the attribute to be used as x axis (instead of time). In this case,
 -- notify() will not need its single argument for plotting Charts.
--- @usage Chart{subject = cs}
+-- @usage Chart{target = cs}
 --
 -- Chart{
---     subject = world,
+--     target = world,
 --     width = 2,
 --     select = {"susceptible", "infected", "recovered"},
 --     style = {"dots", "steps", "sticks"},
@@ -162,11 +164,11 @@ function Chart(data)
 		dashdotdot = 5
 	}
 
-	mandatoryTableArgument(data, "subject")
+	mandatoryTableArgument(data, "target")
 
-	if not belong(type(data.subject), {"Cell", "CellularSpace", "Agent", "Society"}) then
-		if not (data.subject.parent and type(data.subject.parent) == "Model") then
-			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, and instance of Model, got "..type(data.subject)..".")
+	if not belong(type(data.target), {"Cell", "CellularSpace", "Agent", "Society"}) then
+		if not (data.target.parent and type(data.target.parent) == "Model") then
+			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, and instance of Model, got "..type(data.target)..".")
 		end
 	end
 
@@ -186,34 +188,44 @@ function Chart(data)
 
 		data.select = {}
 
-		if type(data.subject) == "Cell" then
-			forEachOrderedElement(data.subject, function(idx, value, mtype)
+		if type(data.target) == "Cell" then
+			forEachOrderedElement(data.target, function(idx, value, mtype)
 				if mtype == "number" and idx ~= "x" and idx ~= "y" and string.sub(idx, -1, -1) ~= "_" then
 					if not data.xAxis or idx ~= data.xAxis then
 						data.select[#data.select + 1] = idx
 					end
 				end
 			end)
-		elseif type(data.subject) == "Agent" then
-			forEachOrderedElement(data.subject, function(idx, value, mtype)
+		elseif type(data.target) == "Agent" then
+			forEachOrderedElement(data.target, function(idx, value, mtype)
 				if mtype == "number" and string.sub(idx, -1, -1) ~= "_" then
 					if not data.xAxis or idx ~= data.xAxis then
 						data.select[#data.select + 1] = idx
 					end
 				end
 			end)
-		elseif type(data.subject) == "CellularSpace" then
-			forEachOrderedElement(data.subject, function(idx, value, mtype)
+		elseif type(data.target) == "CellularSpace" then
+			forEachOrderedElement(data.target, function(idx, value, mtype)
 				if mtype == "number" and not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, -1, -1) ~= "_" then
 					if not data.xAxis or idx ~= data.xAxis then
 						data.select[#data.select + 1] = idx
 					end
 				end
 			end)
-		elseif type(data.subject) == "Society" then
-			data.select[1] = "#"
+		elseif type(data.target) == "Society" then
+			forEachOrderedElement(data.target, function(idx, value, mtype)
+				if mtype == "number" and not belong(idx, {"autoincrement", "quantity", "observerId"}) and string.sub(idx, -1, -1) ~= "_"  then
+					if not data.xAxis or idx ~= data.xAxis then
+						data.select[#data.select + 1] = idx
+					end
+				end
+			end)
+
+			if #data.select == 0 then
+				data.select = {"#"}
+			end
 		else -- instance of model
-			forEachOrderedElement(data.subject, function(idx, value, mtype)
+			forEachOrderedElement(data.target, function(idx, value, mtype)
 				if mtype == "number" and not belong(idx, {"finalTime", "seed"}) and string.sub(idx, -1, -1) ~= "_" then
 					if not data.xAxis or idx ~= data.xAxis then
 						data.select[#data.select + 1] = idx
@@ -222,47 +234,45 @@ function Chart(data)
 			end)
 		end
 
-		verify(#data.select > 0, "The subject does not have at least one valid numeric attribute to be used.")
+		verify(#data.select > 0, "The target does not have at least one valid numeric attribute to be used.")
+	elseif type(data.select) == "string" then
+		data.select = {data.select}
 	else
-		if type(data.select) == "string" then
-			data.select = {data.select}
-		else
-			optionalTableArgument(data, "select", "table")
-		end
+		optionalTableArgument(data, "select", "table")
 	end
 
 	forEachElement(data.select, function(_, value)
-		if data.subject[value] == nil then
+		if data.target[value] == nil then
 			if  value == "#" then
-				if data.subject.obsattrs == nil then
-					data.subject.obsattrs = {}
+				if data.target.obsattrs == nil then
+					data.target.obsattrs = {}
 				end
 
-				data.subject.obsattrs["quantity_"] = true
-				data.subject.quantity_ = #data.subject
+				data.target.obsattrs["quantity_"] = true
+				data.target.quantity_ = #data.target
 			else
-				customError("Selected element '"..value.."' does not belong to the subject.")
+				customError("Selected element '"..value.."' does not belong to the target.")
 			end
-		elseif type(data.subject[value]) == "function" then
-			if data.subject.obsattrs == nil then
-				data.subject.obsattrs = {}
+		elseif type(data.target[value]) == "function" then
+			if data.target.obsattrs == nil then
+				data.target.obsattrs = {}
 			end
 
-			data.subject.obsattrs[value] = true
+			data.target.obsattrs[value] = true
 
-		elseif type(data.subject[value]) ~= "number" then
-			incompatibleTypeError(value, "number or function", data.subject[value])
+		elseif type(data.target[value]) ~= "number" then
+			incompatibleTypeError(value, "number or function", data.target[value])
 		end
 	end)
 
-	if data.subject.obsattrs then
-		forEachElement(data.subject.obsattrs, function(idx)
+	if data.target.obsattrs then
+		forEachElement(data.target.obsattrs, function(idx)
 			for i = 1, #data.select do
 				if data.select[i] == idx then
 					data.select[i] = idx.."_"
-					local mvalue = data.subject[idx](data.subject)
+					local mvalue = data.target[idx](data.target)
 					verify(type(mvalue) == "number", "Function '"..idx.. "' returns a non-number value.")
-					data.subject[idx.."_"] = mvalue
+					data.target[idx.."_"] = mvalue
 				end
 			end
 		end)
@@ -273,7 +283,7 @@ function Chart(data)
 	for i = 1, #data.select do
 		if data.select[i] == "#" then
 			data.select[i] = "quantity_"
-			data.subject.quantity_ = #data.subject
+			data.target.quantity_ = #data.target
 		end
 	end
 
@@ -324,7 +334,7 @@ function Chart(data)
 	end
 
 	verifyUnnecessaryArguments(data, {
-		"subject", "select", "yLabel", "xLabel",
+		"target", "select", "yLabel", "xLabel",
 		"title", "label", "pen", "color", "xAxis",
 		"width", "symbol", "style", "size"
 	})
@@ -344,7 +354,7 @@ function Chart(data)
 	end
 
 	local observerParams = {}
-	local subject = data.subject
+	local target = data.target
 
 	table.insert(observerParams, data.title)
 	table.insert(observerParams, data.xLabel)
@@ -488,15 +498,15 @@ function Chart(data)
 	local id
 	local obs
 
-	if type(subject) == "CellularSpace" then
-		id, obs = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
+	if type(target) == "CellularSpace" then
+		id, obs = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
 	else
-		if type(subject) == "Society" then
-			subject.observerId = 1 -- TODO: verify why this line is necessary
+		if type(target) == "Society" then
+			target.observerId = 1 -- TODO: verify why this line is necessary
 		end
-		id, obs = subject.cObj_:createObserver(observerType, data.select, observerParams)
+		id, obs = target.cObj_:createObserver(observerType, data.select, observerParams)
 	end
-    table.insert(createdObservers, {subject = data.subject, id = id})
+    table.insert(createdObservers, {target = data.target, id = id})
 
 	local chart = TeChart()
 	chart:setObserver(obs)

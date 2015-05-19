@@ -32,10 +32,10 @@ return{
 			end
 		}
 
-		local c1 = Chart{subject = world}
+		local c1 = Chart{target = world}
 
 		local c2 = Chart{
-			subject = world,
+			target = world,
 			select = "mcount"
 		}
 
@@ -55,9 +55,9 @@ return{
 			end}
 		}
 
-		TextScreen{subject = world}
-		LogFile{subject = world}
-		VisualTable{subject = world}
+		TextScreen{target = world}
+		LogFile{target = world}
+		VisualTable{target = world}
 		t:execute(30)
 		unitTest:assertSnapshot(c1, "chart_agent.bmp")
 		unitTest:assertSnapshot(c2, "chart_agent_select.bmp")
@@ -70,7 +70,7 @@ return{
 		}
 
 		local c3 = Chart{
-			subject = world,
+			target = world,
 			xAxis = "probability"
 		}
 		unitTest:assertType(c3, "Chart")

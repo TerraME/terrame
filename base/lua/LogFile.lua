@@ -26,19 +26,21 @@
 --- A log file to save attributes of an object. The saved file uses the csv
 -- standard: The first line contains the attribute names and the following lines
 -- contains values according to the calls to notify().
--- @arg data.subject An Agent, Cell, CellularSpace, Society.
+-- @arg data.target An Agent, Cell, CellularSpace, Society.
 -- @arg data.file A string with the file name to be saved. The default value is "result.csv".
 -- @arg data.separator A string with the separator. The default value is ",".
 -- @arg data.select A vector of strings with the name of the attributes to be observed.
 -- If it is only a single value then it can also be described as a string.
 -- As default, it selects all the user-defined attributes of an object.
+-- In the case of Society, if it does not have any numeric attributes then it will use
+-- the number of agents in the Society as attribute.
 -- @usage LogFile{
---     subject = cs,
+--     target = cs,
 --     file = "cs.csv",
 --     separator = ";"
 -- }
 function LogFile(data)
-	mandatoryTableArgument(data, "subject")
+	mandatoryTableArgument(data, "target")
 	defaultTableValue(data, "separator", ",")
 	defaultTableValue(data, "file", "result.csv")
 
@@ -46,101 +48,108 @@ function LogFile(data)
 
 	if data.select == nil then
 		data.select = {}
-		if type(data.subject) == "Cell" then
-			forEachElement(data.subject, function(idx, value, mtype)
+		if type(data.target) == "Cell" then
+			forEachElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
-				local size = string.len(idx)
-				if not belong(idx, {"x", "y", "past"}) and string.sub(idx, size, size) ~= "_" then
+
+				if not belong(idx, {"x", "y", "past"}) and string.sub(idx, -1, -1) ~= "_" then
 					table.insert(data.select, idx)
 				end
 			end)
-		elseif type(data.subject) == "Agent" then
-			forEachElement(data.subject, function(idx, value, mtype)
+		elseif type(data.target) == "Agent" then
+			forEachElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
-				local size = string.len(idx)
-				if string.sub(idx, size, size) ~= "_" then
+
+				if string.sub(idx, -1, -1) ~= "_" then
 					table.insert(data.select, idx)
 				end
 			end)
-		elseif type(data.subject) == "CellularSpace" then
-			forEachElement(data.subject, function(idx, value, mtype)
+		elseif type(data.target) == "CellularSpace" then
+			forEachElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
-				local size = string.len(idx)
-				if not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, size, size) ~= "_" then
+
+				if not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim", "dbType"}) and string.sub(idx, -1, -1) ~= "_" then
 					table.insert(data.select, idx)
 				end
 			end)
-		elseif type(data.subject) == "Society" then
-			forEachElement(data.subject, function(idx, value, mtype)
+		elseif type(data.target) == "Society" then
+			forEachElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
-				table.insert(data.select, idx)
+
+				if not belong(idx, {"autoincrement", "quantity", "observerId"}) and string.sub(idx, -1, -1) ~= "_" then
+					table.insert(data.select, idx)
+				end
 			end)
+
+			if #data.select == 0 then
+				data.select = {"#"}
+			end
 		else
 			customError("Invalid type. LogFile only works with Cell, CellularSpace, Agent, and Society.")
 		end
 
-		verify(#data.select > 0, "The subject does not have at least one valid attribute to be used.")
+		verify(#data.select > 0, "The target does not have at least one valid attribute to be used.")
 	end
 
 	mandatoryTableArgument(data, "select", "table")
 	verify(#data.select > 0, "LogFile must select at least one attribute.")
 	forEachElement(data.select, function(_, value)
-		if data.subject[value] == nil then
+		if data.target[value] == nil then
 			if  value == "#" then
-				if data.subject.obsattrs == nil then
-					data.subject.obsattrs = {}
+				if data.target.obsattrs == nil then
+					data.target.obsattrs = {}
 				end
 
-				data.subject.obsattrs["quantity_"] = true
-				data.subject.quantity_ = #data.subject
+				data.target.obsattrs["quantity_"] = true
+				data.target.quantity_ = #data.target
 			else
-				customError("Selected element '"..value.."' does not belong to the subject.")
+				customError("Selected element '"..value.."' does not belong to the target.")
 			end
-		elseif type(data.subject[value]) == "function" then
-			if data.subject.obsattrs == nil then
-				data.subject.obsattrs = {}
+		elseif type(data.target[value]) == "function" then
+			if data.target.obsattrs == nil then
+				data.target.obsattrs = {}
 			end
 
-			data.subject.obsattrs[value] = true
+			data.target.obsattrs[value] = true
 		end
 	end)
 
-	if data.subject.obsattrs then
-		forEachElement(data.subject.obsattrs, function(idx)
+	if data.target.obsattrs then
+		forEachElement(data.target.obsattrs, function(idx)
 			for i = 1, #data.select do
 				if data.select[i] == idx then
 					data.select[i] = idx.."_"
-					local mvalue = data.subject[idx](data.subject)
-					data.subject[idx.."_"] = mvalue
+					local mvalue = data.target[idx](data.target)
+					data.target[idx.."_"] = mvalue
 				end
 			end
 		end)
 	end
 
-	verifyUnnecessaryArguments(data, {"subject", "select", "file", "separator"})
+	verifyUnnecessaryArguments(data, {"target", "select", "file", "separator"})
 
 	for i = 1, #data.select do
 		if data.select[i] == "#" then
 			data.select[i] = "quantity_"
-			data.subject.quantity_ = #data.subject
+			data.target.quantity_ = #data.target
 		end
 	end
 
 	local observerType = 2
 	local observerParams = {}
-	local subject = data.subject
+	local target = data.target
 	local id
 
 	table.insert(observerParams, data.file)
 	table.insert(observerParams, data.separator)
 
-	if type(subject) == "CellularSpace" then
-		id = subject.cObj_:createObserver(observerType, {}, data.select, observerParams, subject.cells)
+	if type(target) == "CellularSpace" then
+		id = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
 	else
-		id = subject.cObj_:createObserver(observerType, data.select, observerParams)
+		id = target.cObj_:createObserver(observerType, data.select, observerParams)
 	end
 
-	table.insert(createdObservers, {subject = data.subject, id = id})
+	table.insert(createdObservers, {target = data.target, id = id})
 	return id
 end
 

@@ -24,20 +24,20 @@
 --#########################################################################################
 
 --- Create a display with the current time and Event queue of a given Timer.
--- @arg data.subject A timer.
--- @usage Clock{subject = timer}
+-- @arg data.target A timer.
+-- @usage Clock{target = timer}
 Clock = function(data)
-	mandatoryTableArgument(data, "subject", "Timer")
+	mandatoryTableArgument(data, "target", "Timer")
 
-	verifyUnnecessaryArguments(data, {"subject"})
+	verifyUnnecessaryArguments(data, {"target"})
 
 	local observerAttrs = {}
 	local observerParams = {"", ""}
 	local observerType = 8
 
-	local id = data.subject.cObj_:createObserver(observerType, observerAttrs, observerParams)
+	local id = data.target.cObj_:createObserver(observerType, observerAttrs, observerParams)
 
-	table.insert(createdObservers, {subject = data.subject, id = id})
+	table.insert(createdObservers, {target = data.target, id = id})
 	return id
 end
 

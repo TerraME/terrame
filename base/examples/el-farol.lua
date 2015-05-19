@@ -56,7 +56,7 @@ forEachElement(NAMES_STRATEGIES, function(_, name)
 end)
 
 Chart{
-	subject = c,
+	target = c,
 	select = {"agents_in_the_bar"},
 	symbol = "hexagon",
 	size = 7,
@@ -64,7 +64,7 @@ Chart{
 }
 
 Chart{
-	subject = c,
+	target = c,
 	select = list_attributes
 }
 

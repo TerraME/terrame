@@ -30,35 +30,35 @@ return{
 		local error_func = function()
 			TextScreen{}
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("subject"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
 
 		local e = Event{action = function() end}
 		error_func = function()
-			TextScreen{subject = e}
+			TextScreen{target = e}
 		end
 		unitTest:assertError(error_func, "Invalid type. TextScreen only works with Cell, CellularSpace, Agent, and Society.")
 
 		error_func = function()
-			TextScreen{subject = c, select = 5}
+			TextScreen{target = c, select = 5}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 5))
 
 		error_func = function()
-			TextScreen{subject = c, select = "mvalue"}
+			TextScreen{target = c, select = "mvalue"}
 		end
-		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the subject.")
+		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
 
 		error_func = function()
-			TextScreen{subject = c, select = {}}
+			TextScreen{target = c, select = {}}
 		end
 		unitTest:assertError(error_func, "TextScreen must select at least one attribute.")
 
 		local unit = Cell{}
 
 		error_func = function()
-			TextScreen{subject = unit}
+			TextScreen{target = unit}
 		end
-		unitTest:assertError(error_func, "The subject does not have at least one valid attribute to be used.")
+		unitTest:assertError(error_func, "The target does not have at least one valid attribute to be used.")
 	end
 }
 

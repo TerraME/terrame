@@ -100,7 +100,7 @@ c = Cell{
 }
 
 Chart{
-	subject = c,
+	target = c,
 	select = {"predators", "preys"}
 }
 

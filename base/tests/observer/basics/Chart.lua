@@ -39,7 +39,7 @@ return{
 		local tube = Tube{}
 
 		local c = Chart{
-			subject = tube
+			target = tube
 		}
 
 		tube:execute(10)
@@ -51,10 +51,10 @@ return{
 			end
 		}
 
-		local c1 = Chart{subject = world}
+		local c1 = Chart{target = world}
 
 		local c1 = Chart{
-			subject = world,
+			target = world,
 			select = {"mcount"},
 			color = "green",
 			size = 5,
@@ -69,7 +69,15 @@ return{
 			quantity = 3
 		}
 
-		local c1 = Chart{subject = soc}
+		local c1 = Chart{target = soc}
+
+		local soc = Society{
+			instance = Agent{},
+			quantity = 3,
+			total = 10
+		}
+
+		local c1 = Chart{target = soc}
 
 		local world = CellularSpace{
 			xdim = 10,
@@ -79,15 +87,15 @@ return{
 			end
 		}
 
-		local c1 = Chart{subject = world}
-		local c1 = Chart{subject = world, select = "mcount", xAxis = "count"}
+		local c1 = Chart{target = world}
+		local c1 = Chart{target = world, select = "mcount", xAxis = "count"}
 
 		unitTest:assert(true)
 	end,
 	save = function(unitTest)
 		local c = Cell{value = 1}
 
-		local ch = Chart{subject = c}
+		local ch = Chart{target = c}
 
 		c:notify(1)
 		c:notify(2)
