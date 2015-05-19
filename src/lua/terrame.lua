@@ -616,6 +616,8 @@ function execute(arguments) -- arguments is a vector of strings
 	dofile(path.."Package.lua")
 	dofile(path.."FileSystem.lua")
 	dofile(path.."Utils.lua")
+	dofile(info_.path..s.."lua"..s.."legend.lua")
+	dofile(info_.path..s.."lua"..s.."observer.lua")
 
 	info_.version = packageInfo().version
 

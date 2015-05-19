@@ -7,8 +7,6 @@ files = {
 	"UnitTest.lua",
 	"Mandatory.lua",
 	"Model.lua",
-	"Legend.lua",
-	"Observer.lua",
 	"SocialNetwork.lua",
 	"Society.lua",
 	"Group.lua",
