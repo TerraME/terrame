@@ -1784,7 +1784,7 @@ function Map(data)
 	--end)
 
 	local observerType = 6
-	local tbDimensions = {data.target.maxCol - data.subject.minCol + 1, data.subject.maxRow - data.subject.minRow + 1}
+	local tbDimensions = {data.target.maxCol - data.target.minCol + 1, data.target.maxRow - data.target.minRow + 1}
 
 	local observerParams = {}
 	local colorBar = {}
@@ -1821,9 +1821,9 @@ function Map(data)
 
 	table.insert(observerParams, legend)
 
-	local idObs, obs = data.target.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.subject.cells)
+	local idObs, obs = data.target.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.target.cells)
  
-	table.insert(createdObservers, {target = data.subject, id = idObs})
+	table.insert(createdObservers, {target = data.target, id = idObs})
 
 	local map = TeMap()
 	map:setObserver(obs)

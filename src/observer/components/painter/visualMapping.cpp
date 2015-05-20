@@ -529,9 +529,11 @@ void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
 									string("Invalid color. You need to reconfigure the "
 									"maximum and the minimum values of the attribute ")
 									+ string(attrib->getName().toLatin1().data());
-							lua_getglobal(L, "customWarning");
-							lua_pushstring(L, str.c_str());
-							lua_call(L, 1, 0);
+//************ Bug #70
+//							lua_getglobal(L, "customWarning");
+//							lua_pushstring(L, str.c_str());
+//							lua_call(L, 1, 0);
+//*********************************************
 						}
 
                         reconfigMaxMin = true;
