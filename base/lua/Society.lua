@@ -404,8 +404,7 @@ Society_ = {
 				if v.id == arg.id and v == arg then
 					table.remove(self.agents, k)
 
-					-- Kills the agent arg in the observer identified by observerId
-					return arg.cObj_:kill(self.observerId)
+					return arg.cObj_:kill(-1)
 				end
 			end
 			customError("Could not remove the Agent (id = '"..tostring(arg.id).."').")
@@ -636,7 +635,6 @@ function Society(data)
 	data.cObj_ = TeSociety()
 	data.agents = {}
 	data.messages = {}
-	data.observerId = -1
 	data.autoincrement = 1
 	data.placements = {}
 
@@ -759,7 +757,7 @@ function Society(data)
 		positiveTableArgument(data, "quantity")
 	
 		local quantity = data.quantity
-		data.quantity = 0
+		data.quantity = nil
 		for i = 1, quantity do
 			data:add({})
 		end

@@ -176,9 +176,7 @@ init           function
 instance       Agent
 messages       table of size 0
 name           function
-observerId     number [-1]
 placements     table of size 0
-quantity       number [0]
 ]])
 
 		local aa = soc1.agents[2]
