@@ -108,7 +108,7 @@ return{
 				id = "second"
 			}
 		}
-		unitTest:assertEquals(tostring(at1), [[1      userdata
+		unitTest:assertEquals(tostring(at1), [[1      State
 cObj_  userdata
 id     string [MyAutomaton]
 ]])

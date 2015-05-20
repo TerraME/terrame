@@ -24,11 +24,15 @@
 --          Rodrigo Reis Pereira
 --#########################################################################################
 
+State_ = {type_ = "State"}
+
+metaTableState_ = {__index = State_, __tostring = tostringTerraME}
+
 --- A container of Jumps and Flows. Every State also has an id to identify itself in the Jumps of
 -- other States within the same Agent or Automaton.
 -- @arg data A table that contains the State attributes.
 -- @arg data.id A string with the unique identifier of the State.
--- @usage State {
+-- @usage State{
 --     id = "working",
 --     Jump{...},
 --     Flow{...}
@@ -56,6 +60,9 @@ function State(data)
 		if type(ud) == "userdata" then cObj:add(ud) end
 	end
 
-	return cObj
+	data.cObj_ = cObj
+	setmetatable(data, metaTableState_)
+
+	return data
 end
 

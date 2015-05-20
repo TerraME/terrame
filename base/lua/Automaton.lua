@@ -33,7 +33,7 @@ Automaton_ = {
 	-- automaton:add(trajectory)
 	add = function(self, object)
 		if type(object) == "Trajectory" or type(object) == "State" then
-			self.cObj_:add(object)
+			self.cObj_:add(object.cObj_)
 		else
 			incompatibleTypeError(1, "State or Trajectory", object)
 		end
@@ -178,8 +178,8 @@ function Automaton(data)
 	setmetatable(data, metaTableAutomaton_)
 	cObj:setReference(data)
 	for i, ud in pairs(data) do
-		if type(ud) == "Trajectory" then cObj:add(ud.cObj_) end
-		if type(ud) == "userdata" then cObj:add(ud) end
+		local t = type(ud)
+		if t == "Trajectory" or t == "State" then cObj:add(ud.cObj_) end
 	end
 	cObj:build()
 	data.cObj_ = cObj

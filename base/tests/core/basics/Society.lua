@@ -187,7 +187,7 @@ cObj_           userdata
 id              string [2]
 parent          Society
 socialnetworks  table of size 0
-state_          userdata
+state_          State
 ]])
 	end,
 	add = function(unitTest)

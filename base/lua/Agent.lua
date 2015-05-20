@@ -37,10 +37,9 @@ Agent_ = {
 	--
 	-- agent:add(trajectory)
 	add = function(self, object)
-		--if type(object) == "State" or type(object) == "Trajectory" then
-		-- State is being considered userdata!
-		if type(object) == "userdata" or type(object) == "Trajectory" then
-			self.cObj_:add(object)
+		local t = type(object)
+		if t == "Trajectory" or t == "State" then
+			self.cObj_:add(object.cObj_)
 		else
 			incompatibleTypeError(1, "State or Trajectory", object)
 		end
@@ -597,8 +596,8 @@ function Agent(data)
 	cObj:setReference(data)
 
 	for i, ud in pairs(data) do
-		if type(ud) == "Trajectory" then cObj:add(ud.cObj_) end
-		if type(ud) == "userdata" then cObj:add(ud); end
+		local t = type(ud)
+		if t == "Trajectory" or t == "State" then cObj:add(ud.cObj_) end
 	end
 
 	cObj:build()

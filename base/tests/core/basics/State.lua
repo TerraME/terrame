@@ -28,10 +28,22 @@ return{
 	State = function(unitTest)
 		local s = State()
 
+		unitTest:assertType(s, "State")
+
 		local st1 = State{
 			id = "first"
 		}
-		unitTest:assertEquals(string.sub(tostring(st1),1,9), "TeState (")
+
+		unitTest:assertType(st1, "State")
+	end,
+	__tostring = function(unitTest)
+		local st1 = State{
+			id = "first"
+		}
+
+		unitTest:assertEquals(tostring(st1), [[cObj_  userdata
+id     string [first]
+]])
 	end
 }
 
