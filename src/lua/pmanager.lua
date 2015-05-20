@@ -102,7 +102,7 @@ function packageManager()
 	buildButton.text = "Build"
 	qt.connect(buildButton, "clicked()", function()
 		local msg = "terrame -package "..comboboxPackages.currentText..
-		            " -model "..comboboxModels.currentText
+		            " -interface "..comboboxModels.currentText
 		os.execute(msg)
 	end)
 
