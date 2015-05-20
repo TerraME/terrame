@@ -805,7 +805,9 @@ function execute(arguments) -- arguments is a vector of strings
 				checkNilVariables()
 			end
 
-			import("base")
+			if not isLoaded("base") then
+				import("base")
+			end
 
 			local s = sessionInfo().separator
 

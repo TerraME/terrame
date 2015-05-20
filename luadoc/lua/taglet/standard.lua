@@ -3,6 +3,7 @@
 -------------------------------------------------------------------------------
 
 local assert, tostring, type = assert, tostring, type
+local exit = os.exit
 local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
 local printNote, printError, print, attributes = printNote, printError, print, attributes
@@ -814,6 +815,12 @@ end
 
 function check_header(filepath)
 	f = io.open(filepath)
+
+	if not f then
+		printError("Could not load "..filepath)
+		exit()
+	end
+
 	local line
 	repeat
 		line = f:read()

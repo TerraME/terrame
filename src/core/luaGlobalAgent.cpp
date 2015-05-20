@@ -422,7 +422,7 @@ int luaGlobalAgent::createObserver(lua_State *L)
 
         switch (typeObserver)
         {
-        case  TObsTextScreen:
+        case TObsTextScreen:
             obsText = (ObserverTextScreen *)
                 GlobalAgentSubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
@@ -436,7 +436,7 @@ int luaGlobalAgent::createObserver(lua_State *L)
             }
             break;
 
-        case  TObsLogFile:
+        case TObsLogFile:
             obsLog = (ObserverLogFile *)
                 GlobalAgentSubjectInterf::createObserver(TObsLogFile);
             if (obsLog)
@@ -450,7 +450,7 @@ int luaGlobalAgent::createObserver(lua_State *L)
             }
             break;
 
-        case  TObsTable:
+        case TObsTable:
             obsTable = (ObserverTable *)
                 GlobalAgentSubjectInterf::createObserver(TObsTable);
             if (obsTable)
@@ -485,7 +485,7 @@ int luaGlobalAgent::createObserver(lua_State *L)
 			}
 
 			break;
-        case  TObsUDPSender:
+        case TObsUDPSender:
             obsUDPSender = (ObserverUDPSender *)
                 GlobalAgentSubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
@@ -516,8 +516,7 @@ int luaGlobalAgent::createObserver(lua_State *L)
                     qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
             }
             break;
-
-        case  TObsDynamicGraphic:
+        case TObsDynamicGraphic:
             obsGraphic = (ObserverGraphic *)
                 GlobalAgentSubjectInterf::createObserver(TObsDynamicGraphic);
             if (obsGraphic)
@@ -531,8 +530,7 @@ int luaGlobalAgent::createObserver(lua_State *L)
                     qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
             }
             break;
-
-        case  TObsGraphic:
+        case TObsGraphic:
             obsGraphic = (ObserverGraphic *)
                 GlobalAgentSubjectInterf::createObserver(TObsGraphic);
             if (obsGraphic)
@@ -545,7 +543,6 @@ int luaGlobalAgent::createObserver(lua_State *L)
                     qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
             }
             break;
-
         default:
             if (execModes != Quiet)
             {
