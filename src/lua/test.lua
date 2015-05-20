@@ -434,16 +434,24 @@ function executeTests(package, fileName)
 		for _, eachFile in ipairs(myFiles) do
 			ut.current_file = eachFolder..s..eachFile
 			local tests
+
+			printNote("Testing "..eachFolder..s..eachFile)
+
+			print = function(...)
+				ut.print_calls = ut.print_calls + 1
+				printError(...)
+			end
+
 			xpcall(function() tests = dofile(baseDir..s..eachFolder..s..eachFile) end, function(err)
-				printNote("Testing "..eachFolder..s..eachFile)
 				printError("Could not load file "..err)
 				os.exit()
 			end)
 
+			print = print__
+
 			local myAssertTable = assertTable(baseDir..s..eachFolder..s..eachFile)
 
 			if type(tests) ~= "table" or getn(tests) == 0 then
-				printNote("Testing "..eachFolder..s..eachFile)
 				printError("The file does not implement any test.")
 				os.exit()
 			end
@@ -465,9 +473,7 @@ function executeTests(package, fileName)
 				end)
 			end
 
-			if #myTests > 0 then
-				printNote("Testing "..eachFolder..s..eachFile)
-			else
+			if #myTests == 0 then
 				printWarning("Skipping "..eachFolder..s..eachFile)
 			end
 
