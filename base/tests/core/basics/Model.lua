@@ -42,16 +42,14 @@ local Tube = Model{
 		sleep = Choice{min = 1, max = 2, step = 0.5, default = 2}
 	},
 	init = function(model)
+		verify(model.simulationSteps > 0, "Simulation steps should be greater than zero.")
+		verify(model.initialWater > 0, "Initial water should be greater than zero.")
 		model.water = model.initialWater
 		model.timer = Timer{
 			Event{action = function()
 				model.water = model.water + 1
 			end}
 		}
-	end,
-	check = function(model)
-		verify(model.simulationSteps > 0, "Simulation steps should be greater than zero.")
-		verify(model.initialWater > 0, "Initial water should be greater than zero.")
 	end
 }
 
@@ -148,9 +146,6 @@ return{
 
 		unitTest:assertEquals(m.file0, "def")
 		unitTest:assertEquals(m.files.file3, "abc")
-	end,
-	check = function(unitTest)
-		unitTest:assert(true)
 	end,
 	execute = function(unitTest)
 		local t = Tube{block = {level = 2}, filter = function() end}

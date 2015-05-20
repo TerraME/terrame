@@ -24,30 +24,6 @@
 --#########################################################################################
 
 Model_ = {
-	--- User-defined function to check whether the instance of the model has correct arguments.
-	-- This function is optional and it is automatically called after the internal verification
-	-- of arguments but before creating internal objects. The internal verification ensures that
-	-- the type of the arguments is valid, acording to the definition of the Model.
-	-- See ErrorHandling:toLabel(), for using names of arguments
-	-- in error messages when building a Model to work with graphical interfaces.
-	-- @usage Tube = Model{
-	--     initialWater = 200,
-	--     flow = 20,
-	--     init = function(model)
-	--         -- ...
-	--     end,
-	--     check = function(model)
-	--         verify(model.flow < model.initialWater, toLabel("flow").." should be less than "..toLabel("initialWater")..".")
-	--         -- add any other verification
-	--     end
-	-- }
-	--
-	-- m = Tube{initialWater = 100, flow = 10} -- ok
-	-- m = Tube{initialWater = 100, flow = 100} -- "Flow should be less than initial water."
-	-- @see ErrorHandling:verify
-	-- @see ErrorHandling:customError
-	check = function(self)
-	end,
 	--- Run the Model instance. It requires that the Model instance has attribute finalTime.
 	-- @usage Tube = Model{
 	--     initialWater = 200,
@@ -75,12 +51,17 @@ Model_ = {
 	end,
 	--- User-defined function to create the objects of the Model. It is recommended that
 	-- all the created objects should be placed in the model instance itself, to guarantee
-	-- the content of the Model into a single object. This function is executed automatically
-	-- when one instantiates a given Model.
+	-- the content of the Model into a single object. It is also possible to verify
+	-- whether the model has correct arguments. The internal verification of Model ensures that
+    -- the type of the arguments is valid, acording to the definition of the Model.
+    -- See ErrorHandling:toLabel(), for using names of arguments
+    -- in error messages when building a Model to work with graphical interfaces.
+	-- This function is executed automaticall when one instantiates a given Model.
 	-- @usage usage Tube = Model{
 	--     initialWater = 200,
 	--     flow = 20,
 	--     init = function(model)
+	--         verify(model.flow < model.initialWater, toLabel("flow").." should be less than "..toLabel("initialWater")..".")
 	--         model.finalTime = 10
 	--         model.timer = Timer{
 	--             Event{action = function()
@@ -92,6 +73,8 @@ Model_ = {
 	--
 	-- m = Tube{initialWater = 100, flow = 10}
 	-- print(m.finalTime) -- 10
+	-- @see ErrorHandling:verify
+	-- @see ErrorHandling:customError
 	init = function(self)
 	end,
 	--- User-defined function to define the distribution of components in the graphical
@@ -173,8 +156,6 @@ Model_ = {
 -- @arg attrTab.init A mandatory function to describe how the model instance is created.
 -- See Model:init(). If the Model does not have argument finalTime, this function should
 -- create the attribute finalTime to allow the Model instance to be executed.
--- @arg attrTab.check An optional function to check if the arguments of the model instance
--- are valid. See Model:check().
 -- @arg attrTab.... Arguments of the Model. The values of each
 -- argument have an associated semantic. See the table below:
 -- @tabular ...
@@ -513,7 +494,6 @@ function Model(attrTab)
 		argv.execute = attrTab.execute
 		argv.type_ = typename
 		argv.parent = mmodel
-		attrTab.check(argv)
 
 		attrTab.init(argv)
 

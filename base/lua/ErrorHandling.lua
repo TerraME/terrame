@@ -531,7 +531,7 @@ function tableArgumentMsg()
 end
 
 --- Return a string with a literal description of a parameter name. It is useful to work
--- with Model:check() when the model will be available through a graphical interface.
+-- with Model:init() when the model will be available through a graphical interface.
 -- When using graphical interfaces, it converts upper case characters into space and lower case
 -- characters and convert the first character of the string to uppercase.
 -- Otherwise, it returns the name of the parameter itself.

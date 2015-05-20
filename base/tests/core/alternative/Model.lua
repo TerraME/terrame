@@ -196,10 +196,10 @@ return{
 				level = Choice{1, 2, 3},
 				sleep = Choice{min = 1, max = 2, step = 0.5, default = 2}
 			},
-			init = function(model) model.timer = Timer{} end,
-			check = function(model)
+			init = function(model)
 				verify(model.simulationSteps > 0, "Simulation steps should be greater than zero.")
 				verify(model.initialWater > 0, "Initial water should be greater than zero.")
+				model.timer = Timer{}
 			end
 		}
 
