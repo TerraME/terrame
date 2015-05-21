@@ -58,7 +58,7 @@ return{
 		}
 
 		TextScreen{target = soc}
---		LogFile{target = soc} -- #215
+		LogFile{target = soc}
 		VisualTable{target = soc}
 		t:execute(30)
 		unitTest:assertSnapshot(c1, "chart_society.bmp")
