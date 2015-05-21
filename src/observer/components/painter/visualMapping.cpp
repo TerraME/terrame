@@ -77,17 +77,6 @@ bool VisualMapping::execute()
     // double t3 = 0, tt = 0;
 #endif
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "VisualMapping::execute()";
-    for (int i = 0; i < attribList.size(); ++i)
-    {
-        Attributes *attrib = attribList.at(i);
-        qDebug() << "\n   type: " << getSubjectName(attrib->getType())
-            << "::: " << attribList.size();
-    }
-    std::cout.flush();
-#endif
-
     agentAttribPositions->clear();
 
 #ifdef TME_DRAW_VECTORIAL_AGENTS
@@ -376,14 +365,6 @@ void VisualMapping::mappingChanges(Attributes *attrib, QPainter *p)
     {
 		nestedSubj = bb.getSubject(subjectsIDs.at(id));
 
-#ifdef DEBUG_OBSERVER
-        if (subjAttr->getType() == TObsTrajectory)
-        qDebug() << "VisualMapping::mappingChanges()"
-				<< getSubjectName((int)subjAttr->getType())
-				<< "nesteds" << subjectsIDs << ": " << subjectsIDs.at(id)
-				<< (nestedSubj->getNumericValue(attrib->getName(), v) ? "sim" : "nao") << v;
-#endif
-
         p->setPen(Qt::NoPen);
 
         // Checks if the nestedSubj is valid and gets their value
@@ -492,12 +473,6 @@ void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
     {
         //nestedSubj = (*it);
 
-#ifdef DEBUG_OBSERVER
-        qDebug() << "VisualMapping::mappingAll()"
-        		<< getSubjectName((int)nestedSubj->getType())
-                << getDataName((int)attrib->getDataType());
-#endif
-
         p->setPen(Qt::NoPen);
 
         // Checks if the nestedSubj is valid and gets their value
@@ -579,10 +554,6 @@ void VisualMapping::mappingAll(Attributes *attrib, QPainter *p)
                 rendering(p, attrib->getType(), x, y);
 
         } // nestedSubj != NULL
-
-#ifdef DEBUG_OBSERVER
-        else {qDebug() << "nestedSubj: " << nestedSubj; }
-#endif
 
     } // foreach
 }
@@ -741,20 +712,6 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
     const double SIZE_CELL_PROPORT_W = ORIG_TO_DEST_W * WIDTH_CELL;
     const double SIZE_CELL_PROPORT_H = ORIG_TO_DEST_H * HEIGHT_CELL;
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "VisualMapping::mappingSociety()";
-
-    qDebug() << "spaceSize" << spaceSize;
-    qDebug() << "cellSize" << cellSize;
-
-    qDebug() << "SIZE_CELL_PROPORT_W " << SIZE_CELL_PROPORT_W
-    		<< "ORIG_TO_DEST_W" << ORIG_TO_DEST_W
-        << "WIDTH_CELL" << WIDTH_CELL;
-    qDebug() << "SIZE_CELL_PROPORT_H" << SIZE_CELL_PROPORT_H
-    		<< "ORIG_TO_DEST_H" << ORIG_TO_DEST_H
-        << "HEIGHT_CELL" << HEIGHT_CELL<< " cellSize" << cellSize;
-#endif
-
     QRectF rec;
     const QRectF RECT_CELL(0 - SIZE_CELL_PROPORT_W * 0.5, 0 - SIZE_CELL_PROPORT_H * 0.5,
         SIZE_CELL_PROPORT_W, SIZE_CELL_PROPORT_H);
@@ -765,11 +722,6 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
     //    return;
 
     QVector<ObsLegend> *vecLegend = attrib->getLegend();
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << parentSubjAttr->toString() << subjectsIDs.size()
-    		<< "\nids: " << subjectsIDs;
-#endif
 
     attrib->getImage()->fill(0);
 
@@ -805,14 +757,6 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
                 exist = nestedSubj->getTextValue(attrib->getName(), v);
             else
                 exist = nestedSubj->getNumericValue(attrib->getName(), num);
-
-#ifdef DEBUG_OBSERVER
-            qDebug() << ">>>>>>>>>>>>>>>>>>>>>" << nestedSubj->toString();
-            // << "\n------" << attrib->getName() << "\n" << v << parentSubjAttr->toString() << "\n";
-
-            qDebug() << "nestedSubj->getType()" << getSubjectName(nestedSubj->getType())
-                << "attrib->getType()" << getSubjectName(attrib->getType());
-#endif
 
             if (exist) // && (nestedSubj->getType() == attrib->getType()))
             {
@@ -858,17 +802,6 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
                 }
                 p->translate(rec.center());
 
-#ifdef DEBUG_OBSERVER
-                // qDebug() << "RECT_CELL" << RECT_CELL << ",  rec" << rec;
-                // p->drawRect(rec);
-
-                p->drawRect(RECT_CELL);
-                // p->rotate((qreal) (qrand() % 360));
-                qreal a = attrib->getDirection(x, y);
-                p->rotate(a);
-                p->drawText(RECT_CELL, Qt::AlignCenter, attrib->getSymbol());
-#else
-
                 p->rotate(attrib->getDirection(x, y));
 
                 // p.drawText(RECT_CELL, align[qrand() % ALIGN_FLAGS], attrib->getSymbol());
@@ -884,23 +817,10 @@ void VisualMapping::mappingSociety(Attributes *attrib, QPainter *p,
 
                 p->drawText(position, attrib->getSymbol());
 
-#endif
                 p->restore();
             }
         }
     }
-
-#ifdef DEBUG_OBSERVER
-    static int g = 0;
-    g++;
-    // result.save(QString("result_%1.png").arg(g), "png");
-
-    //if (img)
-    //    img->save(QString("agent_result_%1.png").arg(g), "png");
-
-    attrib->getImage()->save(QString("agent_result_%1.png").arg(g), "png");
-
-#endif
 
 }
 
@@ -927,29 +847,12 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
     double SIZE_CELL_PROPORT_W = ORIG_TO_DEST_W * WIDTH_CELL;
     double SIZE_CELL_PROPORT_H = ORIG_TO_DEST_H * HEIGHT_CELL;
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\nresult.size()" << result.size() << ", size" << size;
-
-    std::cout << "SIZE_CELL_PROPORT_W: " << SIZE_CELL_PROPORT_W
-    		<< ", ORIG_TO_DEST_W: " << ORIG_TO_DEST_W
-        << ", WIDTH_CELL: " << WIDTH_CELL;
-    std::cout << "\nSIZE_CELL_PROPORT_H: " << SIZE_CELL_PROPORT_H
-    		<< ", ORIG_TO_DEST_H: " << ORIG_TO_DEST_H
-			<< ", HEIGHT_CELL: " << HEIGHT_CELL;
-    qDebug() << " cellSize" << cellSize;
-#endif
-
     QRectF rec;
     const QRectF RECT_CELL(0 - SIZE_CELL_PROPORT_W * 0.5, 0 - SIZE_CELL_PROPORT_H * 0.5,
         SIZE_CELL_PROPORT_W, SIZE_CELL_PROPORT_H);
 
     QImage *img = 0;
     BlackBoard &bb = BlackBoard::getInstance();
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "agentAttribPositions->size()" <<
-        agentAttribPositions->size();
-#endif
 
     // Gets the Attribute that is an Agent
     for (int i = 0; i < agentAttribPositions->size(); i++)
@@ -984,10 +887,6 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
             const QVector<int> &subjectsIDs = subjAttr->getNestedSubjects();
             QVector<ObsLegend> *vecLegend = attrib->getLegend();
 
-#ifdef DEBUG_OBSERVER
-            qDebug() << subjAttr->toString() << subjectsIDs.size();
-#endif
-
 #ifdef TME_DRAW_VECTORIAL_AGENTS
             p.setFont(attrib->getFont());
 
@@ -1005,11 +904,6 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
             for(int id = 0; id < subjectsIDs.size(); ++id)  // Simple and efficient option
             {
                 nestedSubj = bb.getSubject(subjectsIDs.at(id));
-
-#ifdef DEBUG_OBSERVER
-                 qDebug() << ">>>>>>>>>>>>>>>>>>>>>" << nestedSubj->toString();
-                 // qDebug() << "------" << attrib->getName() << "\n" << v << subjAttr->toString() << "\n";
-#endif
 
                 // Checks if the nestedSubj is valid and gets their position
                 if (nestedSubj && exist) // && (nestedSubj->getType() == attrib->getType()))
@@ -1040,18 +934,6 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
                     }
                     p.translate(rec.center());
 
-#ifdef DEBUG_OBSERVER
-                   // qDebug() << "RECT_CELL" << RECT_CELL << ",  rec" << rec;
-                    // p.drawRect(rec);
-
-                    p.drawRect(RECT_CELL);
-                    // p.rotate((qreal) (qrand() % 360));
-                    qreal a = attrib->getDirection(x, y);
-                    p.rotate(a);
-                    p.drawText(RECT_CELL, Qt::AlignCenter, attrib->getSymbol());
-
-#else
-
                     p.rotate(attrib->getDirection(x, y));
 
                     // p.drawText(RECT_CELL, align[qrand() % ALIGN_FLAGS], attrib->getSymbol());
@@ -1066,8 +948,6 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
                     position += QPointF(xPos, yPos);
 
                     p.drawText(position, attrib->getSymbol());
-
-#endif
 
                     p.restore();
                 }
@@ -1093,18 +973,6 @@ void VisualMapping::drawAgent(const QImage &result, const QSize &size)
     else
         save(result);
 #endif
-
-
-#ifdef DEBUG_OBSERVER
-    static int g = 0;
-    g++;
-    //result.save(QString("result_%1.png").arg(g), "png");
-
-    if (img)
-        img->save(QString("agent_result_%1.png").arg(g), "png");
-
-#endif
-
 }
 
 void VisualMapping::mappingNeighborhood(Attributes *attrib, QPainter *p)
@@ -1149,11 +1017,6 @@ void VisualMapping::mappingNeighborhood(Attributes *attrib, QPainter *p)
     for(int id = 1; id < subjectsIDs.size(); ++id)
     {
         nestedSubj = bb.getSubject(subjectsIDs.at(id));
-
-#ifdef DEBUG_OBSERVER
-        if (subjAttr->getType() == TObsNeighborhood)
-            qDebug() << attrib->toString();
-#endif
 
         // Checks if the nestedSubj is valid and gets their value
         if ((nestedSubj)
@@ -1311,38 +1174,7 @@ void VisualMapping::save(const QImage &result)
 
     QString name =  path + aux + ".png";
 
-#ifndef DEBUG_OBSERVER
-
     bool ret = result.save(name);
     emit saveImage(ret);
-
-#else
-    //// bool ret = resultImage.save(name);
-
-    //// if (countSave == 1)
-    //{
-    //    // Salva o resultado em um PNG de 8 bits e em escala cinza.
-    //    QImage imgTeste = resultImage.scaled(8193, 8193);
-    //    // imgTeste.save(path + "teste.png");
-
-    //    QImage retImg(imgTeste.width(), imgTeste.height(), QImage::Format_Indexed8);
-    //    QVector<QRgb> table(256);
-    //    for(int i = 0; i < 256; ++i)
-    //        table[i] = qRgb(i, i, i);
-
-    //    retImg.setColorTable(table);
-
-    //    for(int i = 0; i < imgTeste.width(); i++)
-    //    {
-    //        for(int j = 0; j < imgTeste.height(); j++)
-    //        {
-    //            QRgb value = imgTeste.pixel(i, j);
-    //            retImg.setPixel(i, j, qGray(value));
-    //        }
-    //    }
-    //    return retImg.save(name); // path+ + "grayScale.png");
-    //}
-    //return ret;
-#endif
 }
 

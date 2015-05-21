@@ -145,9 +145,6 @@ void DatagramReceiverTask::process(const QString & /*state*/)
 //        return;
 //    }
 //
-//#ifdef DEBUG_OBSERVER
-//    dumpRetrievedState(state);
-//#endif
 //
 //    // QString state(msg);
 //

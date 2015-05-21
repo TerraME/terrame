@@ -47,13 +47,6 @@ bool Decoder::decode(const QByteArray &state)
 
     stateSize = subjDatagram.ByteSize();
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "ret: " << (ret ? "true" : "false");
-    // std::cout << subjDatagram.DebugString();
-
-    qDebug() << "subjDatagram.id()" << subjDatagram.id();
-#endif
-
     if (ret)
     {
         SubjectAttributes *subjAttr = bb->insertSubject(subjDatagram.id());
@@ -65,13 +58,6 @@ bool Decoder::decode(const QByteArray &state)
         {
             ret = ret && decodeAttributes(subjAttr, subjDatagram);
         }
-#ifdef DEBUG_OBSERVER
-        else
-        {
-            qDebug() << "Fail in decodeAttributes of subjDatagram - "
-            		<< subjDatagram.id();
-        }
-#endif
 
         if (ret && subjDatagram.itemsnumber() > 0)
         {
@@ -81,14 +67,6 @@ bool Decoder::decode(const QByteArray &state)
             // subjAttr->clearNestedSubjects();
             ret = ret && decodeInternals(subjAttr, subjDatagram, subjAttr);
         }
-#ifdef DEBUG_OBSERVER
-        else
-            qDebug() << "Fail in decodeInternals of subjDatagram - " << subjDatagram.id();
-
-        qDebug() << "inter. subjDatagram: " << subjDatagram.internalsubject_size();
-        qDebug() << "inter. subj: " << subjAttr->getNestedSubjects().size();
-
-#endif
 
     }
 
@@ -181,13 +159,6 @@ bool Decoder::decodeInternals(SubjectAttributes * /*subjAttr*/,
         {
             ret = ret && decodeAttributes(interSubjAttr, interSubjDatagram);
         }
-#ifdef DEBUG_OBSERVER
-        else
-        {
-            qDebug() << "Fail in decodeAttributes of subjDatagram - "
-            		<< interSubjDatagram.id();
-        }
-#endif
 
         //qDebug() << "\n\nDecoder::decodeInternals()";
         //qDebug() << interSubjAttr->toString();
@@ -197,13 +168,6 @@ bool Decoder::decodeInternals(SubjectAttributes * /*subjAttr*/,
             // ret = ret && decodeInternals(interSubjAttr, interSubjDatagram, parentSubjAttr);
             ret = ret && decodeInternals(interSubjAttr, interSubjDatagram, interSubjAttr);
         }
-#ifdef DEBUG_OBSERVER
-        else
-        {
-            qDebug() << "Fail in decodeInternals of subjDatagram - "
-            		<< interSubjDatagram.id();
-        }
-#endif
     }
     return ret;
 }
@@ -285,17 +249,6 @@ bool Decoder::consumeID(int &id, QStringList &tokens, int &idx)
     idx++;
 
     bb->addSubject(id);
-
-#ifdef DEBUG_OBSERVER
-        qDebug() << "Decoder::consumeID - inserted Id: " << id;
-#endif
-
-#ifdef DEBUG_OBSERVER
-    else
-    {
-        qDebug() << "subj cache: " << id << " size(): " << cache->value(id)->toString();
-	}
-#endif
 
     return ok;
 }

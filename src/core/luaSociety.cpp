@@ -86,10 +86,6 @@ int luaSociety::setID(lua_State *L)
 // see event class
 int luaSociety::createObserver(lua_State * luaL)
 {
-#ifdef DEBUG_OBSERVER
-	luaStackToQString(7);
-#endif
-
 	// retrieve Lua object reference
 	Reference<luaSociety>::getReference(luaL);
 
@@ -109,11 +105,6 @@ int luaSociety::createObserver(lua_State * luaL)
 	if((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
 	{
 		QStringList allAgentsAttribs, allSocietyAttribs, obsAttribs, obsParams, cols;
-
-#ifdef DEBUG_OBSERVER
-		luaStackToQString(12);
-		stackDump(luaL);
-#endif
 
 		// Runs the society and retrieve all its attribs and the attribs of the agents
 		lua_pushnil(luaL);
@@ -152,11 +143,6 @@ int luaSociety::createObserver(lua_State * luaL)
 			} // lua_type == LUA_TSTRING
 			lua_pop(luaL, 1);
 		}
-
-#ifdef DEBUG_OBSERVER
-		qDebug() << "allSocietyAttribs: " << allSocietyAttribs;
-		qDebug() << "allAgentsAttribs: " << allAgentsAttribs;
-#endif
 
 		// qDebug() << "Retrieves the parameters table";
 		lua_pushnil(luaL);
@@ -381,13 +367,6 @@ int luaSociety::createObserver(lua_State * luaL)
 					}
 					return 0;
 			}
-
-#ifdef DEBUG_OBSERVER
-			qDebug() << "obsParams: " << obsParams;
-			qDebug() << "\nobsAttribs: " << obsAttribs;
-			qDebug() << "\nallAttribs: " << allAttribs;
-			qDebug() << "\ncols: " << cols;
-#endif
 
 			if (obsLog)
 			{
@@ -667,17 +646,6 @@ int luaSociety::createObserver(lua_State * luaL)
 				observedAttribs.insert(obsAttribs.at(i), "");
 		}
 
-#ifdef DEBUG_OBSERVER
-		qDebug() << "\n\nluaSociety::createObserver()" << getId()
-				<< "attrClassName" << attrClassName;
-		// qDebug() << "\nobsParamsLeg: " << obsParams;
-		// qDebug() << "\nobsParamsAtribs: " << obsParamsAtribs;
-		qDebug() << "\n-- obsAttribs: " << obsAttribs;
-		qDebug() << "\n--allAttribs: " << allAttribs;
-
-		// qDebug() << "observedAttribs.keys()" << observedAttribs.keys();
-#endif
-
 		if (typeObserver == TObsMap)
 		{
             // to set the values of the agent attributes,
@@ -747,11 +715,6 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *,
 	}
 	// cleans the stack
 	// lua_settop(L, 0);
-
-#ifdef DEBUG_OBSERVER
-	qDebug() << "\nluaSociety::getState() - byteArray" <<
-		"\n\tcontent.size()" << content.size() << "\n";
-#endif
 
 	in << content;
 	return in;
@@ -986,11 +949,6 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 			// QString serialized;
 			QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
 
-#ifdef DEBUG_OBSERVER
-			qDebug() << "\nluaSociety:pop - currSubj size:" << currSubj->internalsubject_size();
-			std::cout << currSubj->DebugString();
-			std::cout.flush();
-#endif
 			return byteArray;
 		}
 
@@ -1004,30 +962,6 @@ QByteArray luaSociety::pop(lua_State *luaL, const QStringList& attribs,
 		if (!parentSubj)
 		{
 			QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
-
-#ifdef DEBUG_OBSERVER
-			qDebug() << "\n\nluaSociety::pop()"
-				<< "\n\tByteSize()" << currSubj->ByteSize()
-				<< "\n\tbyteArray.size()" << byteArray.size()
-				<< "\ncurrSubj->DebugString()\n";
-
-			std::cout << currSubj->DebugString() << "\n";
-			std::cout.flush();
-
-			std::string parseCheck;
-			if (!currSubj->SerializeToString(&parseCheck))
-			{
-				qDebug() << "\n\n SerializeToString FALHOU !!! \n\n";
-				std::abort();
-			}
-
-			if (!currSubj->ParseFromString(parseCheck))
-			{
-				qDebug() << "\n\n ParseFromString FALHOU !!! \n\n";
-				std::abort();
-			}
-			std::cout.flush();
-#endif
 
 			return byteArray;
 		}

@@ -302,20 +302,6 @@ void ObserverGraphic::setAttributes(const QStringList &attribs,
 		const QStringList &curveTitles,
         /*const*/ QStringList &legKeys, /*const*/ QStringList &legAttribs)
 {
-#ifdef DEBUG_OBSERVER
-    qDebug() <<"\n" << attribs;
-    qDebug() << curveTitles;
-    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
-
-    for(int i = 0; i < legKeys.size(); i++)
-    {
-        if (i == LEGEND_ITENS)
-            qDebug() << "\n";
-
-        qDebug() << i << " - " << legKeys.at(i) << ": " << legAttribs.at(i);
-    }
-#endif
-
     attribList = attribs;
     InternalCurve *interCurve = 0;
     QColor color;
@@ -567,13 +553,5 @@ void ObserverGraphic::draw()
         }
     }
     plotter->repaint();
-
-#ifdef DEBUG_OBSERVER
-        qDebug() << "internalCurves->keys().at(i): " << internalCurves->keys().at(i);
-        qDebug() << "\nxAxisValues->size() - "
-        		<< xAxisValues->size() << ": " << *xAxisValues;
-        qDebug() << "curve->values->size() - "
-        		<< curve->values->size() << ": " << *curve->values;
-#endif
 }
 

@@ -68,10 +68,6 @@ bool ObserverTCPSender::draw(QDataStream& state)
     QByteArray stateAux;
     state >> stateAux;
 
-#ifdef DEBUG_OBSERVER
-    dumpRetrievedState(stateAux, "serial_");
-#endif
-
     // qDebug() << "stateAux.size(): " << stateAux.size();
 
     if(!stateAux.isEmpty())

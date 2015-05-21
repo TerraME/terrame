@@ -295,11 +295,6 @@ const CellIndex & luaCell::getIndex() const
 // see event class
 int luaCell::createObserver(lua_State *)
 {
-#ifdef DEBUG_OBSERVER
-	luaStackToQString(7);
-	stackDump(luaL);
-#endif
-
 	// Gets cell reference
 	Reference<luaCell>::getReference(luaL);
 
@@ -596,14 +591,6 @@ int luaCell::createObserver(lua_State *)
 			}
 			return 0;
 		}
-
-#ifdef DEBUG_OBSERVER
-		qDebug() << "luaCell";
-		qDebug() << "obsParams: " << obsParams;
-		qDebug() << "obsAttribs: " << obsAttribs;
-		qDebug() << "allAttribs: " << allAttribs;
-		qDebug() << "cols: " << cols;
-#endif
 
 		if(obsLog) {
 			obsLog->setAttributes(obsAttribs);
@@ -1007,10 +994,6 @@ QByteArray luaCell::pop(lua_State *luaL, const QStringList& attribs,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-#ifdef DEBUG_OBSERVER
-						qDebug() << getId() << qPrintable(key) << ": "
-							<< qPrintable(observedAttribs.value(key)) << " == " << qPrintable(valueTmp);
-#endif
 
 						if ((parentSubj) && (!cellSubj))
 							cellSubj = parentSubj->add_internalsubject();
@@ -1327,10 +1310,6 @@ QByteArray luaCell::getChanges(QDataStream& in, int observerId,
 QDataStream& luaCell::getState(QDataStream& in, Subject *, int /*observerId*/,
 							const QStringList & /* attribs */)
 {
-#ifdef DEBUG_OBSERVER
-	printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-	luaStackToQString(12);
-#endif
 
 	int obsCurrentState = 0; //serverSession->getState(observerId);
 	QByteArray content;
@@ -1364,10 +1343,6 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int /*observerId*/,
 QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId,
 							QStringList &  attribs)
 {
-#ifdef DEBUG_OBSERVER
-	printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-	luaStackToQString(12);
-#endif
 
 	int obsCurrentState = 0; //serverSession->getState(observerId);
 	QByteArray content;

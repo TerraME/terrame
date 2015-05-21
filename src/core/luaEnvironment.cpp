@@ -117,11 +117,6 @@ int luaEnvironment::execute(lua_State *)
 
 int luaEnvironment::createObserver(lua_State *luaL)
 {
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(7);
-    stackDump(luaL);
-#endif
-
     // retrieve the reference of the cell
     Reference<luaEnvironment>::getReference(luaL);
 
@@ -144,10 +139,6 @@ int luaEnvironment::createObserver(lua_State *luaL)
     //------------------------
     QStringList allAttribs, obsAttribs;
 
-#ifdef DEBUG_OBSERVER
-    qDebug("\npos table: %i\nRetrieving all attributes:\n", top);
-#endif
-
     // Runs the Lua stack recovering all cell attributes
     lua_pushnil(luaL);
     while(lua_next(luaL, top) != 0)
@@ -168,10 +159,6 @@ int luaEnvironment::createObserver(lua_State *luaL)
                 key = aux;
             }
         }
-
-#ifdef DEBUG_OBSERVER
-        qDebug("\t%s \n", qPrintable(key));
-#endif
 
         allAttribs.push_back(key);
         lua_pop(luaL, 1);
@@ -194,10 +181,6 @@ int luaEnvironment::createObserver(lua_State *luaL)
 		return 0;
     }
 
-#ifdef DEBUG_OBSERVER
-    printf("\npos table: %i\nRecuperando a tabela Atributos:\n", top - 1);
-#endif
-
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 1) != 0)
     {
@@ -217,10 +200,6 @@ int luaEnvironment::createObserver(lua_State *luaL)
                 key = aux;
             }
         }
-
-#ifdef DEBUG_OBSERVER
-        qDebug("\t%s \n", qPrintable(key));
-#endif
 
         // Checks if the given attribute does not exist must have been mistyped
         if (allAttribs.contains(key))
@@ -257,15 +236,6 @@ int luaEnvironment::createObserver(lua_State *luaL)
             observedAttribs.insert(key, "");
     }
 
-#ifdef DEBUG_OBSERVER
-    printf("\n----\n");
-    qDebug() << "obsAttribs.size(): " << obsAttribs.size();
-    qDebug() << obsAttribs;
-
-    qDebug() << "allAttribs.size(): " << allAttribs.size();
-    qDebug() << allAttribs;
-#endif
-
     //------------------------
     if(!lua_istable(luaL, top))
     {
@@ -278,10 +248,6 @@ int luaEnvironment::createObserver(lua_State *luaL)
     }
 
     QStringList cols, obsParams;
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "Recuperando a tabela Parametros\n" << "top: " << top;
-#endif
 
     // Retrieves from parameters table the observers Table and Graphic type
     // case not be a table the syntax of the method is incorrect
@@ -583,11 +549,6 @@ int luaEnvironment::notify(lua_State *)
 {
     double time = luaL_checknumber(luaL, -1);
 
-#ifdef DEBUG_OBSERVER
-    printf("\n EnvironmentSubjectInterf::notifyObservers \t time: %g\n", time);
-    stackDump(luaL);
-#endif
-
     EnvironmentSubjectInterf::notify(time);
     return 0;
 }
@@ -605,10 +566,6 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *,
 									int /*observerId*/,
 									const QStringList & /* attribs */)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
 
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
@@ -641,12 +598,6 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *,
 QDataStream& luaEnvironment::getState(QDataStream& in, Subject *,
 									int observerId, QStringList &  attribs)
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 
@@ -906,17 +857,9 @@ QByteArray luaEnvironment::pop(lua_State *luaL, const QStringList& attribs,
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
             					currSubj->ByteSize());
 
-#ifdef DEBUG_OBSERVER
-            std::cout << currSubj->DebugString();
-            std::cout.flush();
-#endif
             return byteArray;
         }
     }
-
-//#ifdef DEBUG_OBSERVER
-//    dumpRetrievedState(msg, "out_protocol");
-//#endif
 
     return QByteArray();
 }

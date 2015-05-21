@@ -170,18 +170,6 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
         }
     }
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\nheaders:\n" << headers;
-    qDebug() << "\nitemList:\n" << itemList;
-    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
-
-    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
-    qDebug() << "num de legendas: " << (int) legKeys.size() / LEGEND_ITENS;
-
-    for (int j = 0; j < legKeys.size(); j++)
-        qDebug() << legKeys.at(j) << " = " << legAttrib.at(j);
-#endif
-
     for (int j = 0; (legKeys.size() > 0 && j < LEGEND_KEYS.size()); j++)
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
@@ -287,14 +275,6 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
                     legKeys.removeFirst();
                     legAttribs.removeFirst();
                 }
-
-#ifdef DEBUG_OBSERVER
-                qDebug() << "valueList.size(): " << valueList.size();
-                qDebug() << valueList;
-                qDebug() << "\nlabelList.size(): " << labelList.size();
-                qDebug() << labelList;
-                qDebug() << "\nattrib->toString()\n" << attrib->toString();
-#endif
             }
             attrib->makeBkp();
             mapAttributes->insert(attribList.at(i), attrib);

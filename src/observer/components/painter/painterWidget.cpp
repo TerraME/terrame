@@ -423,12 +423,6 @@ void PainterWidget::displayImage(const QImage &result)
     // It processes the update event
     qApp->processEvents();
 
-#ifdef DEBUG_OBSERVER
-    static int g = 0;
-    g++;
-    resultImage.save(QString("result_%1.png").arg(g), "png");
-#endif
-
     name = QString("display %1").arg(block);
     t = Statistic::getInstance().endMicroTime() - t;
     Statistic::getInstance().addElapsedTime(name, t);
@@ -470,17 +464,6 @@ void PainterWidget::displayImage(const QImage &result)
     // It processes the update event
     qApp->processEvents();
 
-#endif
-
-#ifdef DEBUG_OBSERVER
-    if (result.isNull())
-        qDebug() << ("result is NULL!!!");
-
-    if (resultImage.isNull())
-        qDebug() << ("resultImage is NULL!!!");
-
-    if (resultImageBkp.isNull())
-        qDebug() << ("resultImageBkp is NULL!!!");
 #endif
 }
 

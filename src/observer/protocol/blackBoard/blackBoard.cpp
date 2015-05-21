@@ -198,11 +198,6 @@ QDataStream & BlackBoard::getState(Subject *subj, int observerId,
 
     subjAttr->setDirtyBit(false);
 
-#ifdef DEBUG_OBSERVER
-    foreach(SubjectAttributes *attr, cache.values())
-        qDebug() << attr->getId() << ": " << attr->toString();
-#endif
-
     return *state;
 }
 

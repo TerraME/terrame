@@ -113,11 +113,6 @@ int luaGlobalAgent::getControlModeName(lua_State* L)
 
 int luaGlobalAgent::createObserver(lua_State *L)
 {
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(12);
-    stackDump(luaL);
-#endif
-
     // retrieve the reference of the cell
     Reference<luaAgent>::getReference(luaL);
 
@@ -142,11 +137,6 @@ int luaGlobalAgent::createObserver(lua_State *L)
         //------------------------
         QStringList allAttribs, obsAttribs;
         QList<QPair<QString, QString> > allStates;
-
-#ifdef DEBUG_OBSERVER
-        stackDump(luaL);
-        printf("\npos table: %i\nRecuperando todos os atributos:\n", top);
-#endif
 
         // Runs the Lua stack recovering
         // all attributes
@@ -224,10 +214,6 @@ int luaGlobalAgent::createObserver(lua_State *L)
             return -1;
         }
 
-#ifdef DEBUG_OBSERVER
-        printf("\npos table: %i\nRecuperando a tabela Atributos:\n", top - 1);
-#endif
-
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 1) != 0)
         {
@@ -277,11 +263,6 @@ int luaGlobalAgent::createObserver(lua_State *L)
 
         QStringList obsParams, obsParamsAtribs; // parameters/attributes of the legend
         QStringList cols;
-
-#ifdef DEBUG_OBSERVER
-        printf("\n*pos table: %i\nRecovering table Parameters\n", top);
-        stackDump(luaL);
-#endif
 
         // Retrieves from parameters table the observers Table and Graphic type
         // case not be a table the syntax of the method is incorrect
@@ -396,18 +377,6 @@ int luaGlobalAgent::createObserver(lua_State *L)
         }
 
         //------------------------
-#ifdef DEBUG_OBSERVER
-        qDebug() << "allAttribs.size(): " << allAttribs.size();
-        qDebug() << allAttribs;
-        qDebug() << "\nobsAttribs.size(): " << obsAttribs.size();
-        qDebug() << obsAttribs;
-        qDebug() << "\nobsParams.size(): " << obsParams.size();
-        qDebug() << obsParams;
-        qDebug() << "\ncols.size(): " << cols.size();
-        qDebug() << cols;
-        qDebug() << "\nobsParamsAtribs.size(): " << obsParamsAtribs.size();
-        qDebug() << obsParamsAtribs;
-#endif
 
         ObserverTextScreen *obsText = 0;
         ObserverTable *obsTable = 0;
@@ -913,11 +882,6 @@ int luaGlobalAgent::notify(lua_State *luaL)
 {
     double time = luaL_checknumber(luaL, -1);
 
-#ifdef DEBUG_OBSERVER
-    printf("\n GlobalAgentSubjectInterf::notify \t time: %g\n", time);
-    stackDump(luaL);
-#endif
-
 #ifdef TME_STATISTIC
     double t = Statistic::getInstance().startTime();
 
@@ -938,11 +902,6 @@ int luaGlobalAgent::notify(lua_State *luaL)
 QDataStream& luaGlobalAgent::getState(QDataStream& in, Subject *, int /*observerId*/,
     const QStringList & /* attribs */)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 
@@ -974,11 +933,6 @@ QDataStream& luaGlobalAgent::getState(QDataStream& in, Subject *, int /*observer
 QDataStream& luaGlobalAgent::getState(QDataStream& in, Subject *,
 									int observerId, const QStringList &  attribs)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 
@@ -1317,26 +1271,6 @@ QByteArray luaGlobalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
         // #elements
         currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
-#ifdef DEBUG_OBSERVER
-        std::cout << "\n\nluaGlobalAgent::pop(): " << getId() << "\n";
-        std::cout << currSubj->DebugString() << "\n";
-        std::cout.flush();
-
-        std::string parseCheck;
-        if (!currSubj->SerializeToString(&parseCheck))
-        {
-            qDebug() << "\n\n SerializeToString FALHOU !!! \n\n";
-            std::abort();
-        }
-
-        if (!currSubj->ParseFromString(parseCheck))
-        {
-            qDebug() << "\n\n ParseFromString FALHOU !!! \n\n";
-            std::abort();
-        }
-        std::cout.flush();
-#endif
-
         if (!parentSubj)
         {
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
@@ -1344,10 +1278,6 @@ QByteArray luaGlobalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
             return byteArray;
         }
     }
-
-//#ifdef DEBUG_OBSERVER
-//    dumpRetrievedState(msg, "out_protocol");
-//#endif
 
     return QByteArray();
 }

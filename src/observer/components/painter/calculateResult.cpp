@@ -67,10 +67,6 @@ bool CalculateResult::execute()
 
         attrib = attribList.at(i);
 
-#ifdef DEBUG_OBSERVER
-        qDebug() << "CalculateResult::execute()" << attrib->getName();  std::cout.flush();
-#endif
-
         if ((attrib && attrib->getVisible()) &&
             ((attrib->getType() != TObsAgent) || ((attrib->getType() != TObsSociety))))
         {
@@ -104,16 +100,6 @@ bool CalculateResult::execute()
 
             if (attrib)
                 painter.drawImage(ZERO_POINT, *attrib->getImage());
-
-#ifdef DEBUG_OBSERVER
-            static int o = 0;
-            o++;
-            if (attrib->getType() == TObsAutomaton) // TObsTrajectory)
-                attrib->getImage()->save(QString("obj_%1.png").arg(o), "png");
-            //else
-            //    attrib->getImage()->save(QString("cs_%1.png").arg(o), "png");
-#endif
-
 #endif
 
         }
@@ -121,12 +107,6 @@ bool CalculateResult::execute()
     painter.end();
 
     emit displayImage(result);
-
-#ifdef DEBUG_OBSERVER
-    static int g = 0;
-    g++;
-    result.save(QString("result_%1.png").arg(g), "png");
-#endif
 
 #ifdef TME_STATISTIC
     Statistic::getInstance().addElapsedTime("rendering calculateResult",

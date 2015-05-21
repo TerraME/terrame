@@ -147,18 +147,6 @@ void ClientTcpConnection::receive()
             (double) (QDateTime::currentMSecsSinceEpoch() - networkTime));
 #endif
 
-#ifdef DEBUG_OBSERVER
-        qDebug() << "\ndataSize:" << dataSize;
-        qDebug() << "auxData.size():" << auxData.size() << "\n";
-
-        QString str;
-        str.append(tr("\ndataSize: %1\n").arg((int) dataSize));
-        str.append(tr("pos: %1\n").arg((int) pos));
-        str.append(tr("compressDatagram: %1\n").arg(compressMsg ? "true" : "false"));
-        // qWarning() << "auxData: " << auxData;
-        ui->appendMessage(str);
-#endif
-
 #ifdef TME_STATISTIC
 
         if (compressed)
@@ -301,10 +289,6 @@ void ClientTcpConnection::process(const QByteArray &state)
 
     t = Statistic::getInstance().endMicroTime() - t;
     Statistic::getInstance().addElapsedTime("decoder bb", t);
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << (decoded ? "decoded!!!" : "decoding failure");
-#endif
 
     for(int i = 0; i < cSubjects.size(); i++)
     {

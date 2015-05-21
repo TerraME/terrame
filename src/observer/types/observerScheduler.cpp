@@ -309,12 +309,6 @@ bool ObserverScheduler::draw()
     QTreeWidgetItem *item = 0;
     double num = 0.0;
 
-//#ifdef DEBUG_OBSERVER
-//    //qDebug() << BlackBoard::getInstance().getSubject(1)->toString() << "\n\n"
-//    //    << BlackBoard::getInstance().getSubject(2)->toString();
-//    // qDebug() << attribList;
-//#endif
-
     // The first position of attribute list contains the TIMER_KEY attribute
     // So the loop starts from second position
     for(int i = 1; i < attribList.size(); i++)
@@ -340,13 +334,6 @@ bool ObserverScheduler::draw()
 
             //qDebug() << item->text(0) << item->text(Time) << item->text(Periodicity) << item->text(Priority);
         }
-#ifdef DEBUG_OBSERVER
-        else
-        {
-            qDebug() << "\n raw == NULL";
-            qDebug() << subjAttr->toString();
-        }
-#endif
     }
     setTimer(QString::number(subjAttr->getRawAttribute(TIMER_KEY)->number));
     return true;

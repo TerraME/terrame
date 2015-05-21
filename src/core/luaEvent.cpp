@@ -109,10 +109,6 @@ int luaEvent::getPeriod(lua_State *L)
 /// Creates an observer
 int luaEvent::createObserver(lua_State *luaL)
 {
-#ifdef DEBUG_OBSERVER
-    stackDump(luaL);
-#endif
-
     // retrieve the reference of the cell
     Reference<luaEvent>::getReference(luaL);
 
@@ -371,12 +367,6 @@ int luaEvent::getType(lua_State *L)
 /// Notifies observers
 int luaEvent::notify(lua_State *luaL)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\nevent::notifyObservers\n");
-    luaStackToQString(12);
-    stackDump(luaL);
-#endif
-
     double time = luaL_checknumber(luaL, -1);
     EventSubjectInterf::notify(time);
     return 0;
@@ -477,10 +467,6 @@ QByteArray luaEvent::pop(lua_State * /*L*/, const QStringList& /*attribs*/,
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
             					currSubj->ByteSize());
 
-#ifdef DEBUG_OBSERVER
-            std::cout << currSubj->DebugString();
-            std::cout.flush();
-#endif
             return byteArray;
         }
     }
@@ -560,12 +546,6 @@ QByteArray luaEvent::pop(lua_State *, const QStringList &)
 QDataStream& luaEvent::getState(QDataStream& in, Subject *,
 							int /*observerId*/, const QStringList & /* attribs */)
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 
@@ -597,11 +577,6 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *,
 QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId,
 							const QStringList &  attribs)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 

@@ -11,10 +11,6 @@ Observer * SocietySubjectInterf::createObserver(TypesOfObservers type)
 {
     Observer* obs = 0;
 
-#ifdef DEBUG_OBSERVER
-    printf("create in SocietySubjectInterf\n");
-#endif
-
     switch (type)
     {
         case TObsLogFile:

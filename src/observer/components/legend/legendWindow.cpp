@@ -250,10 +250,6 @@ void LegendWindow::attributesComboBox_activated(const QString &selected)
 
     if (!attrib)
         return;
-#ifdef DEBUG_OBSERVER
-    printf("attributesComboBox_activated:\n %s\n",
-    		attrib->toQString().toLatin1().constData());
-#endif
 
     if (attributesActive != selected)
     {
@@ -1117,12 +1113,6 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             break;
     }
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\n\nLegendWindow::groupByUniqueValue()\n"
-        << "attrib->getType()" << getSubjectName((int) attrib->getType())
-        << "  txtValues.size()" << txtValues.size() << "\n";
-#endif
-
     if ((txtValues.empty())
             && (attrib->getType() != TObsAgent)
             && (attrib->getType() != TObsSociety)
@@ -1288,10 +1278,6 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 
     QAbstractItemModel *model = legendTable->model();
 
-#ifdef DEBUG_OBSERVER
-    printf("\n\n rows: %i, vecLegend->size(): %i\n", rows, vecLegend->size());
-#endif
-
     QStringList *values = attrib->getValueList();
     QStringList *labels = attrib->getLabelList();
     ObsLegend leg;
@@ -1381,12 +1367,6 @@ void LegendWindow::rollbackChanges(const QString & name)
 
 void LegendWindow::makeLegend()
 {
-#ifdef DEBUG_OBSERVER
-    qDebug() << "LegendWindow::makeLegend() - keys.size(): "
-    		<< mapAttributes->keys().size();
-    qDebug() << "LegendWindow::makeLegend() - attribList: " << attribList;
-#endif
-
     for (int i = 0; i < attribList.size(); i++)
     {
         attributesComboBox->setCurrentIndex(i);
@@ -1820,11 +1800,6 @@ void LegendWindow::commitFile()
         for (int k = 0; k < legendKeys.size(); k++)
         {
             out << tabulation << legendKeys.at(k) << " = " << legAttribs.at(k) << "\n";
-
-#ifdef DEBUG_OBSERVER
-            printf("k: %i\t %s = %s\n", k, qPrintable(legendKeys.at(k)),
-            qPrintable(legAttribs.at(k));
-#endif
         }
 
         int idx = legendKeys.indexOf("class");
@@ -1836,10 +1811,6 @@ void LegendWindow::commitFile()
             out << "};\n\nLegend{\n";
         else
             out << "};\n";
-
-#ifdef DEBUG_OBSERVER
-        printf("\n\n");
-#endif
     }
     file.close();
 }
