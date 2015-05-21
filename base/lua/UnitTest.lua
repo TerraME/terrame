@@ -227,8 +227,8 @@ UnitTest_ = {
 		else
 			observer:save(newImage)
 
+			self.test = self.test + 1
 			if cpp_imagecompare(newImage, oldImage) then
-				self.test = self.test + 1
 				self.success = self.success + 1
 			else
 				self:printError("Files \n  'snapshots"..s..file.."'\nand\n  '"..newImage.."'\nare different.")

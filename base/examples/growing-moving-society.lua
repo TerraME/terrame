@@ -80,5 +80,5 @@ Observer {
 	legends = {leg}
 }
 --]]
-t:execute(5)
+t:execute(40)
 

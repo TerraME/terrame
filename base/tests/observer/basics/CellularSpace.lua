@@ -87,6 +87,8 @@ return{
 
 		t:execute(30)
 
+		unitTest:delay()
+
 		-- FIXME: this observer does not draw the cells in the screen here.
 		-- If one copies the script below to a separate file it works.
 		-- FIXME: it also generates a warning: -- FIXED
@@ -107,7 +109,8 @@ return{
 			end
 		end)
 
---[[
+
+-- [[
 		local l = Legend{
 			grouping = "uniquevalues",
 			colorBar = {
@@ -130,7 +133,7 @@ return{
 
 --]]
 
---[[
+-- [[
 		Map{
 			target = world,
 			select  = "value",
@@ -149,17 +152,18 @@ return{
 			slices = 2,
 		}
 --]]
---[[
+-- [[
 		Map{
 			target = world,
-			select  = "x",
+			select  = "value",
 			color  = {"blue", "red"},
 			min = 0,
 			slices = 10,
-			max = 10
+			max = 1
 		}
 --]]
-		--world:notify()
+		world:notify()
+		world:notify()
 		unitTest:assert(true)
 		unitTest:delay()
 	end
