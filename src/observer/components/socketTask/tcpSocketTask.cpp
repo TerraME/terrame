@@ -191,10 +191,6 @@ void TcpSocketTask::setModelTime(double /*time*/)
     // setType(Task::Once);
     sendCompleteStateInfo(COMPLETE_SIMULATION);
     emit messageSent(tr("Simulation finished!!\n"));
-
-#ifdef DEBUG_OBSERVERS
-    qDebug() << "\nTcpSocketTask::setModelTime(double time): " << COMPLETE_SIMULATION;
-#endif
 }
 
 bool TcpSocketTask::send(const QByteArray &data)
@@ -430,10 +426,6 @@ void TcpSocketTask::error(QAbstractSocket::SocketError /* socketError */)
 
 void TcpSocketTask::receive()
 {
-#ifdef DEBUG_OBSERVER
-    qDebug() << "SLOT TcpSocketTask::receive()";
-#endif
-
     QDataStream in(this);
     in.setVersion(QDataStream::Qt_4_6);
 

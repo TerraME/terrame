@@ -152,11 +152,6 @@ int luaLocalAgent::build(lua_State *) {
 
 int luaLocalAgent::createObserver(lua_State *L)
 {
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(12);
-    stackDump(luaL);
-#endif
-
     // retrieve the reference of the cell
     Reference<luaAgent>::getReference(luaL);
 
@@ -181,11 +176,6 @@ int luaLocalAgent::createObserver(lua_State *L)
         //------------------------
         QStringList allAttribs, obsAttribs;
         QList<QPair<QString, QString> > allStates;
-
-#ifdef DEBUG_OBSERVER
-        stackDump(luaL);
-        printf("\npos table: %i\nRecuperando todos os atributos:\n", top);
-#endif
 
         // // Runs the Lua stack recovering all cell attributes
         lua_pushnil(luaL);
@@ -262,11 +252,6 @@ int luaLocalAgent::createObserver(lua_State *L)
 			return 0;
         }
 
-#ifdef DEBUG_OBSERVER
-        printf("\npos table: %i\nRetrieving the Attributes table:\n", top - 1);
-        stackDump(luaL);
-#endif
-
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 1) != 0)
         {
@@ -318,11 +303,6 @@ int luaLocalAgent::createObserver(lua_State *L)
 			lua_call(L, 1, 0);
 			return 0;
         }
-
-#ifdef DEBUG_OBSERVER
-        printf("\n*pos table: %i\nRecuperando a tabela Parametros\n", top);
-        stackDump(luaL);
-#endif
 
         QStringList obsParams, obsParamsAtribs; // parameters/attributes of the legend
         QStringList cols;
@@ -928,11 +908,6 @@ int luaLocalAgent::notify(lua_State *luaL)
 QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *,
 		int /*observerId*/, const QStringList & /* attribs */)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 
@@ -964,11 +939,6 @@ QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *,
 QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *,
 		int observerId, const QStringList &  attribs)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 
@@ -1331,11 +1301,6 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
         // #elements
         currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
-#ifdef DEBUG_OBSERVER
-            std::cout << currSubj->DebugString();
-            std::cout.flush();
-#endif
-
         if (!parentSubj)
         {
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
@@ -1343,10 +1308,6 @@ QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
             return byteArray;
         }
     }
-
-//#ifdef DEBUG_OBSERVER
-//    dumpRetrievedState(msg, "out_protocol");
-//#endif
 
     return QByteArray();
 }

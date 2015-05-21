@@ -103,9 +103,6 @@ using namespace TerraMEObserver;
 	// }
 	// else
 	// {
-// #ifdef DEBUG_OBSERVER
-			// qDebug() << "luaCellularSpace removeLast()";
-// #endif
 
 		// if (parentSubj)
 			// parentSubj->mutable_internalsubject()->RemoveLast();
@@ -115,11 +112,6 @@ using namespace TerraMEObserver;
 	// {
 		// QByteArray byteArray(currSubj->SerializeAsString().c_str(), currSubj->ByteSize());
 
-// #ifdef DEBUG_OBSERVER
-		// qDebug() << "\nluaCellularSpace:pop - size:" << currSubj->internalsubject_size();
-		// std::cout << currSubj->DebugString();
-		// std::cout.flush();
-// #endif
 		// return byteArray;
 	// }
 
@@ -184,11 +176,6 @@ inline void popLua(const TypesOfSubjects &subjectType,
 
 					if(observedAttribs.value(key) != valueTmp)
 					{
-// #ifdef DEBUG_OBSERVER
-						// qDebug() << getId() << qPrintable(key) << ": "
-							// << qPrintable(observedAttribs.value(key)) << " == " << qPrintable(valueTmp);
-// #endif
-
 						if((parentSubj) && (!currSubj))
 							currSubj = parentSubj->add_internalsubject();
 

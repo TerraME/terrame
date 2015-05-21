@@ -360,10 +360,6 @@ Attributes & Attributes::operator=(const Attributes &other)
 
 Attributes::~Attributes()
 {
-#ifdef DEBUG_OBSERVER
-    qDebug() << "Attributes::~Attributes()"; std::cout.flush();
-#endif
-
     delete numericValues; numericValues = 0;
     delete textValues; textValues = 0;
     delete boolValues; boolValues = 0;
@@ -441,12 +437,6 @@ void Attributes::addValue(int id, double &value)
     //    numericValues->push_back(value);
     // else
     //    numericValues->replace(id - factor, value);
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "factor: " << factor;
-    qDebug() << "id: " << id;
-    qDebug() << "numericValues->size(): " << numericValues->size();
-#endif
 }
 
 void Attributes::addValue(int id, bool &value)
@@ -760,37 +750,12 @@ void Attributes::restore()
     groupMode = groupModeBkp;
     stdDev = stdDevBkp;
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\n-------------- " << attribName;
-    qDebug() << "colorBarVec.size():  " << colorBarVec.size();
-    foreach(ColorBar cb, colorBarVec)
-        qDebug() << cb.toString();
-
-    qDebug() << "\ncolorBarVec_bkp.size():  " << colorBarVec_bkp.size();
-    foreach(ColorBar cb, colorBarVec_bkp)
-        qDebug() << cb.toString();
-
-    qDebug() << "\ncolorBarVecB.size():  " << colorBarVecB.size();
-    foreach(ColorBar cb, colorBarVecB)
-        qDebug() << cb.toString();
-
-    qDebug() << "\ncolorBarVecB_bkp.size():  " << colorBarVecB_bkp.size();
-    foreach(ColorBar cb, colorBarVecB_bkp)
-        qDebug() << cb.toString();
-
-    qDebug() << "--------------\n";
-#endif
-
     colorBarVec = colorBarVecBkp;
     stdColorBarVec = stdColorBarVecBkp;
 }
 
 void Attributes::clear()
 {
-#ifdef DEBUG_OBSERVER
-    qDebug() << "Attributes::clear()";
-#endif
-
     textValues->clear();
     boolValues->clear();
 	// //@RAIAN

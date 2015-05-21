@@ -200,12 +200,6 @@ bool ObserverUDPSender::sendDatagram(const QString& /*msg*/)
 //    senderGUI->setMessagesSent(msgCount);
 //    senderGUI->setStateSent(stateCount);
 //
-//#ifdef DEBUG_OBSERVER
-//    senderGUI->appendMessage(tr("compressionSum: %1 / %2 = %3")
-    //    .arg(compressionSum).arg(compressionCount).arg(compressionSum / compressionCount));
-//    senderGUI->appendMessage(tr("renderingSum: %1 / %2 = %3")
-    //    .arg(renderingSum).arg(renderingCount).arg(renderingSum / renderingCount));
-//#endif
 //
 //    senderGUI->appendMessage(tr("States sent: %1.\n").arg(stateCount));
 //

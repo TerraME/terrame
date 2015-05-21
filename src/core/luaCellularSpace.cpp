@@ -290,9 +290,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 
 	getSpaceDimensions = false;
 
-#ifdef DEBUG_OBSERVER
-	luaStackToQString(12);
-#endif
 	// flags for the use of compression setting
 	// in datagram transmission and visibility of
 	// Udp Sender observers and Image
@@ -314,17 +311,8 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 	//int cellsNumber = 0;
 	bool boolAux = false;
 
-#ifdef DEBUG_OBSERVER
-	qDebug("\npos table: %i\nRecovering the parameters:\n", top);
-#endif
-
 	//----------------------------------------------------------------
 	//------- RECOVERING THE PARAMETERS TABLE
-
-#ifdef DEBUG_OBSERVER
-	luaStackToQString(12);
-	stackDump(luaL);
-#endif
 
 	// Runs the cell space and
 	// also retrieves the attributes of a cell
@@ -366,22 +354,12 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		lua_pop(luaL, 1);
 	}
 
-#ifdef DEBUG_OBSERVER
-	qDebug() << "allCellSpaceAttribs: " << allCellSpaceAttribs;
-	qDebug() << "allCellAttribs: " << allCellAttribs;
-#endif
-
 	// Retrieves the parameters table
 	lua_pushnil(luaL);
 	while(lua_next(luaL, top - 2) != 0)
 	{
 		lua_pushstring(luaL, "Minimum");
 		lua_gettable(luaL, -1);
-
-#ifdef DEBUG_OBSERVER
-		luaStackToQString(12);
-		stackDump(luaL);
-#endif
 
 		//********************************************************************************
 		int firstLegPos = lua_gettop(luaL);
@@ -418,10 +396,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		}
 		else
 		{
-#ifdef DEBUG_OBSERVER
-			luaStackToQString(12);
-			stackDump(luaL);
-#endif
 
 			while (lua_next(luaL, firstLegPos - iAux) != 0)
 			{
@@ -478,10 +452,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		lua_pop(luaL, 1); // lua_pushnil
 	}
 
-#ifdef DEBUG_OBSERVER
-	qDebug("\npos table: %i\nRetrieving all attributes:\n", top);
-#endif
-
 	lua_pushnil(luaL);
 	while(lua_next(luaL, top - 3) != 0)
 	{
@@ -490,9 +460,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		lua_pop(luaL, 1);
 	}
 
-#ifdef DEBUG_OBSERVER
-	printf("\npos table: %i\nRetrieving dimensions:\n", top);
-#endif
 	QList<int> obsDim;
 
 	// Retrieves the dimensions of table
@@ -501,9 +468,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 	{
 		int v = luaL_checknumber(luaL, -1);
 
-#ifdef DEBUG_OBSERVER
-		qDebug() << v;
-#endif
 		obsDim.push_back(v);
 		lua_pop(luaL, 1);
 	}
@@ -516,13 +480,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		if((width > 0) && (height > 0))
 			getSpaceDimensions = true;
 	}
-
-#ifdef DEBUG_OBSERVER
-	qDebug() << "obsAttribs: " << obsAttribs;
-	qDebug() << "observedAttribs: " << observedAttribs;
-	qDebug() << "obsParamsAtribs: " << obsParamsAtribs;
-	qDebug() << "obsParams: " << obsParams;
-#endif
 
 	if((typeObserver == TObsMap) || (typeObserver == TObsImage)
 			|| (typeObserver == TObsShapefile)
@@ -600,11 +557,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 			}
 		}
 	}
-
-#ifdef DEBUG_OBSERVER
-	luaStackToQString(12);
-	qDebug("\n\nlua_gettop(luaL): %i -------------\n\n", lua_gettop(luaL));
-#endif
 
 	AgentObserverMap *obsMap = 0;
 	ObserverUDPSender *obsUDPSender = 0;
@@ -1293,29 +1245,6 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 		// QString serialized;
 		QByteArray byteArray(csSubj->SerializeAsString().c_str(), csSubj->ByteSize());
 
-#ifdef DEBUG_OBSERVER
-			qDebug() << "\n\nluaCellularSpace::pop()" <<
-				"\n\tByteSize()" << csSubj->ByteSize() <<
-				"\n\tbyteArray.size()" << byteArray.size() << "\n";
-
-			std::cout << csSubj->DebugString() << "\n";
-			std::cout.flush();
-
-			std::string parseCheck;
-			if(!csSubj->SerializeToString(&parseCheck))
-			{
-				qDebug() << "\n\n SerializeToString FALHOU !!! \n\n";
-				std::abort();
-			}
-
-			if(!csSubj->ParseFromString(parseCheck))
-			{
-				qDebug() << "\n\n ParseFromString FALHOU !!! \n\n";
-				std::abort();
-			}
-			std::cout.flush();
-#endif
-
 #ifdef TME_STATISTIC
 			t = Statistic::getInstance().endMicroTime() - t;
 			Statistic::getInstance().addElapsedTime("pop lua", t);
@@ -1329,10 +1258,6 @@ QByteArray luaCellularSpace::pop(lua_State *luaL, const QStringList& attribs,
 	t = Statistic::getInstance().endMicroTime() - t;
 	Statistic::getInstance().addElapsedTime("pop lua", t);
 #endif
-
-//#ifdef DEBUG_OBSERVER
-//	dumpRetrievedState(msg, "out_protocol");
-//#endif
 
 	return QByteArray();
 }

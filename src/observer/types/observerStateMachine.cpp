@@ -240,17 +240,6 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
 
     attribList = attribs;
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\nattribs:\n" << attribs;
-    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
-
-    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
-    qDebug() << "num de legendas: " << (int) legKeys.size() / LEGEND_ITENS;
-
-    for (int j = 0; j < legKeys.size(); j++)
-        qDebug() << legKeys.at(j) << " = " << legAttrib.at(j);
-#endif
-
     for (int j = 0; (legKeys.size() > 0 && j < LEGEND_KEYS.size()); j++)
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
@@ -278,13 +267,6 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
     int font = legKeys.indexOf(FONT_FAMILY);
     int fontSize = legKeys.indexOf(FONT_SIZE);
     int symbol = legKeys.indexOf(SYMBOL);
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\nattribs:\n" << attribs;
-    qDebug() << "\nlegKeys: \n" << legKeys;
-    qDebug() << "\nlegAttrib: \n" << legAttrib;
-    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
-#endif
 
     QTreeWidgetItem *item = 0;
     Attributes *attrib = 0;
@@ -330,15 +312,6 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
                 	attrib->setStdColorBar(stdColorBarVec);
                 	attrib->setValueList(valueList);
                 	attrib->setLabelList(labelList);
-
-#ifdef DEBUG_OBSERVER
-            		qDebug() << "valueList.size(): " << valueList.size();
-            		qDebug() << valueList;
-            		qDebug() << "\nlabelList.size(): " << labelList.size();
-            		qDebug() << labelList;
-
-            		qDebug() << "\nattrib->toString()\n" << attrib->toString();
-#endif
             	}
 
             	mapAttributes->insert(attribs.at(i), attrib);

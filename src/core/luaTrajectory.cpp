@@ -52,11 +52,6 @@ int luaTrajectory::clear(lua_State *)
 
 int luaTrajectory::createObserver(lua_State *L)
 {
-
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(7);
-#endif
-
     // retrieve the reference of the cell
     Reference<luaTrajectory>::getReference(luaL);
 
@@ -323,13 +318,6 @@ int luaTrajectory::createObserver(lua_State *L)
             }
             return 0;
         }
-
-#ifdef DEBUG_OBSERVER
-        qDebug() << "obsParams: " << obsParams;
-        qDebug() << "\nobsAttribs: " << obsAttribs;
-        qDebug() << "\nallAttribs: " << allAttribs;
-        qDebug() << "\ncols: " << cols;
-#endif
 
 		if (obsLog)
 		{
@@ -630,11 +618,6 @@ int luaTrajectory::notify(lua_State *L)
 QDataStream& luaTrajectory::getState(QDataStream& in, Subject *,
 		int /*observerId*/, const QStringList & /* attribs */)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 
@@ -666,12 +649,6 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *,
 QDataStream& luaTrajectory::getState(QDataStream& in, Subject *,
 		int observerId, const QStringList &  attribs)
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 
@@ -955,11 +932,6 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
         // #elements
         currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
-#ifdef DEBUG_OBSERVER
-            std::cout << currSubj->DebugString();
-            std::cout.flush();
-#endif
-
         if (!parentSubj)
         {
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
@@ -967,10 +939,6 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs,
             return byteArray;
         }
     }
-
-//#ifdef DEBUG_OBSERVER
-//    dumpRetrievedState(msg, "out_protocol");
-//#endif
 
     return QByteArray();
 }
@@ -992,13 +960,6 @@ QByteArray luaTrajectory::getChanges(QDataStream& in, int observerId ,
 
 QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState - Trajectory\n\n");
-    luaStackToQString(12);
-
-    qDebug() << attribs;
-#endif
-
     QByteArray msg;
 
 	QStringList coordList = QStringList() << "x" << "y";
@@ -1162,11 +1123,6 @@ QByteArray luaTrajectory::pop(lua_State *luaL, const QStringList& attribs)
     msg.append(PROTOCOL_SEPARATOR);
     msg.append(elements);
     msg.append(PROTOCOL_SEPARATOR);
-
-#ifdef DEBUG_OBSERVER
-    // save(msg);
-    // qDebug() << msg.split(PROTOCOL_SEPARATOR); //, QString::SkipEmptyParts);
-#endif
 
     return msg;
 }

@@ -38,12 +38,7 @@ public:
 
     QStringList valuesToString() const
     {
-#ifndef DEBUG_OBSERVER
         return QString("%1$ %2$ %3$ %4$ %5$ %6$ %7$ %8$ %9$ %10$ %11$ %12$ %13$") // %14")
-#else
-        return QString("type:%1$ group:%2$ slice:%3$ precis:%4$ stdD:%5$ max:%6$ "
-            "min:%7$ colorB:%8$ fontF:%9$ fontS:%10$ sym:%11$ wid:%12$ sty:%13$") // %14")
-#endif
             .arg(type)
             .arg(grouping)
             .arg(slices)

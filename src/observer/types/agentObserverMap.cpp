@@ -51,13 +51,6 @@ bool AgentObserverMap::draw(QDataStream & state)
     //cleanImage = true;
     // className = "";
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\nAgentObserverMap::draw()";
-    qDebug() << "nestedSubjects.size():" << nestedSubjects.size()
-    		<< "\n" << nestedSubjects;
-    qDebug() << "subjectAttributes:" << subjectAttributes << "\n";
-#endif
-
     for(int i = 0; i < nestedSubjects.size(); i++)
     {
         Subject *subj = nestedSubjects.at(i).first;
@@ -65,20 +58,6 @@ bool AgentObserverMap::draw(QDataStream & state)
 
         BlackBoard::getInstance().setDirtyBit(subj->getId());
         BlackBoard::getInstance().getState(subj, getId(), subjectAttributes);
-
-#ifdef DEBUG_OBSERVER
-        qDebug() << "AgentObserverMap::draw()\n" << "subj->getId()" << subj->getId();
-
-        SubjectAttributes *subjAttr = BlackBoard::getInstance().getSubject(subj->getId());
-        if (subjAttr)
-        {
-            qDebug() << subjAttr->toString()
-                << (subjAttr->hasNestedSubjects() ?
-                    subjAttr->getNestedSubjects().size() : -1)
-               << subjAttr->getNestedSubjects();
-        }
-#endif
-
     }
 
 	decoded = BlackBoard::getInstance().canDraw();
@@ -200,10 +179,6 @@ bool AgentObserverMap::draw(QDataStream & state)
 void AgentObserverMap::setSubjectAttributes(const QStringList & attribs,
     int nestedSubjID, const QString & className)
 {
-#ifdef DEBUG_OBSERVER
-    qDebug() << "AgentObserverMap::setSubjectAttributes() " << attribs;
-#endif
-
     QHash<QString, Attributes*> * mapAttributes = getMapAttributes();
     // TypesOfSubjects type;
 

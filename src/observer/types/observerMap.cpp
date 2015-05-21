@@ -186,23 +186,6 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
         }
     }
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\n===\nattribs:\n" << attribs;
-    qDebug() << "\nlegKeys: " << legKeys.size() << "\n" << legKeys;
-    qDebug() << "\nlegAttribs: " << legAttribs.size() << "\n" << legAttribs;
-    qDebug() << "\n\nattribList:\n" << attribList;
-    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
-
-    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
-    qDebug() << "num de legendas: " << (int) legKeys.size() / LEGEND_ITENS << "\n";
-
-    for (int j = 0; j < legKeys.size(); j++)
-    {
-        if (j == LEGEND_ITENS) qDebug() << "\n";
-        qDebug() << legKeys.at(j) << " = " << legAttribs.at(j);
-    }
-#endif
-
     for (int j = 0; (legKeys.size() > 0 && j < LEGEND_KEYS.size()); j++)
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
@@ -312,13 +295,6 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                     legAttribs.removeFirst();
                 }
 
-#ifdef DEBUG_OBSERVER
-                qDebug() << "valueList.size(): " << valueList.size();
-                qDebug() << valueList;
-                qDebug() << "\nlabelList.size(): " << labelList.size();
-                qDebug() << labelList;
-                qDebug() << "\nattrib->toString()\n" << attrib->toString();
-#endif
             }
             attrib->makeBkp();
 
@@ -627,14 +603,6 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
     else
         zoom = height - 0.01;
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "zoomChanged: " << zoom;
-    qDebug() << "factWidth: " << width << " height: " << height;
-    qDebug() << "imgSize: " << imgSize;
-    qDebug() << "scrollArea->viewport: " << scrollArea->viewport()->size();
-    qDebug() << "painterWidget->size: " << painterWidget->size();
-#endif
-
     QSize imgSize(painterWidget->size() * zoom);
 
     if (!painterWidget->rescale(imgSize))
@@ -665,12 +633,6 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
     double ratio = (cellularSpaceSize.width() / cellularSpaceSize.height())
         * cellularSpaceSize.width();
     double percent = (imgSize.width() / ratio);// - 1.0;
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "zoomChanged::percent: " << percent;
-    qDebug() << "scrollArea->viewport: " << scrollArea->viewport()->size();
-    qDebug() << "painterWidget->size: " << painterWidget->size();
-#endif
 
     QString newZoom(QString::number(ceil(percent * 100)));
     int curr = zoomComboBox->findText(newZoom + "%");
@@ -824,14 +786,6 @@ ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
     QStringList colorattribList = strColorBar.split(ITEM_SEP, QString::SkipEmptyParts);
     QStringList teColorList = colorattribList.at(COLOR_).split(COMP_COLOR_SEP); //, QString::SkipEmptyParts); // list of components r, g, b
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "colorList.size(): " <<  colorattribList.size();
-    qDebug() << colorattribList;
-
-    qDebug() << "\nteColorList.size(): " <<   teColorList.size();
-    qDebug() << teColorList;
-#endif
-
     if (colorattribList.at(LABEL_) != ITEM_NULL)
         label = colorattribList.at(LABEL_);
 
@@ -876,11 +830,6 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
 
     QString value, label;
 
-#ifdef DEBUG_OBSERVER
-        qDebug() << "\ncolorBarStr: " << colorBarStr;
-        qDebug() << "colorList: " << colorBarList;
-#endif
-
     // create colorBar1 of attribute
     for (int i = 0; i < colorBarList.size(); i++)
     {
@@ -902,11 +851,6 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
         QString stdColorBarStr = colors.mid(pos + 1);
         QStringList stdColorBarList = stdColorBarStr.split(
         		COLORS_SEP, QString::SkipEmptyParts);
-
-#ifdef DEBUG_OBSERVER
-        qDebug() << "\nstdColorBarStr: " << stdColorBarStr;
-        qDebug() << "stdColorBarList: " << stdColorBarList;
-#endif
 
         for (int i = 0; i < stdColorBarList.size(); i++)
         {

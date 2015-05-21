@@ -429,11 +429,6 @@ int luaNeighborhood::getParent(lua_State *L)
 
 int luaNeighborhood::createObserver(lua_State *)
  {
-#ifdef DEBUG_OBSERVER
-    // luaStackToQString(7);
-    stackDump(luaL);
-#endif
-
      // retrieve the reference of the cell
 	Reference<luaNeighborhood>::getReference(luaL);
 
@@ -447,36 +442,6 @@ int luaNeighborhood::createObserver(lua_State *)
 
     // Retrieves the enum for the type of observer
     TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, -4);
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "typeObserver" << getObserverName(typeObserver);
-    luaStackToQString(12);
-
-    if (lua_type(luaL, top -3) == LUA_TTABLE)
-    	qDebug() << -3 << "table"; else qDebug() << -3 << "not table";
-    if (lua_type(luaL, top -2) == LUA_TTABLE)
-    	qDebug() << -2 << "table"; else qDebug() << -2 << "not table";
-    if (lua_type(luaL, top -1) == LUA_TTABLE)
-    	qDebug() << -1 << "table"; else qDebug() << -1 << "not table";
-
-    qDebug() << "\n";
-
-    if (lua_type(luaL, top -3) == LUA_TNUMBER)
-    	qDebug() << -3 << "number"; else qDebug() << -3 << "not number";
-    if (lua_type(luaL, top -2) == LUA_TNUMBER)
-    	qDebug() << -2 << "number"; else qDebug() << -2 << "not number";
-    if (lua_type(luaL, top -1) == LUA_TNUMBER)
-    	qDebug() << -1 << "number"; else qDebug() << -1 << "not number";
-
-    qDebug() << "\n";
-
-    if (lua_type(luaL, top -3) == LUA_TSTRING)
-    	qDebug() << -3 << "string"; else qDebug() << -3 << "not string";
-    if (lua_type(luaL, top -2) == LUA_TSTRING)
-    	qDebug() << -2 << "string"; else qDebug() << -2 << "not string";
-    if (lua_type(luaL, top -1) == LUA_TSTRING)
-    	qDebug() << -1 << "string"; else qDebug() << -1 << "not string";
-#endif
 
     if ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
     {
@@ -580,11 +545,6 @@ int luaNeighborhood::createObserver(lua_State *)
             }
             lua_pop(luaL, 1);
         }
-
-#ifdef DEBUG_OBSERVER
-        qDebug() << obsParams;
-        qDebug() << obsParamsAtribs;
-#endif
 
         // Runs the attribute table
         lua_pushnil(luaL);
@@ -1084,11 +1044,6 @@ const TypesOfSubjects luaNeighborhood::getType() const
 QDataStream& luaNeighborhood::getState(QDataStream& in, Subject *,
 		int /*observerId*/, const QStringList &attribs)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 
@@ -1118,11 +1073,6 @@ QDataStream& luaNeighborhood::getState(QDataStream& in, Subject *,
 QDataStream& luaNeighborhood::getState(QDataStream& in, Subject *,
 		int observerId, const QStringList &attribs)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QByteArray content;
 
@@ -1225,11 +1175,6 @@ QByteArray luaNeighborhood::pop(lua_State *, const QStringList &attribs,
         // #elements
         currSubj->set_itemsnumber(currSubj->internalsubject_size());
 
-#ifdef DEBUG_OBSERVER
-            std::cout << currSubj->DebugString();
-            std::cout.flush();
-#endif
-
         if (!parentSubj)
         {
             QByteArray byteArray(currSubj->SerializeAsString().c_str(),
@@ -1237,10 +1182,6 @@ QByteArray luaNeighborhood::pop(lua_State *, const QStringList &attribs,
             return byteArray;
         }
     }
-
-//#ifdef DEBUG_OBSERVER
-//    dumpRetrievedState(msg, "out_protocol");
-//#endif
 
     return QByteArray();
 }

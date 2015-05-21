@@ -61,11 +61,6 @@ TaskManager::TaskManager()
         workers.append(worker);
     }
 
-#ifdef DEBUG_OBSERVER
-     qDebug() << "\nTaskManager::TaskManager()\n  workers" << workers.size();
-     qDebug() << "  WORKERS_NUMBER" << WORKERS_NUMBER;
-     qDebug() << "  threadCount" << threadCount << "\n";
-#endif
 }
 
 TaskManager::TaskManager(const TaskManager &)
