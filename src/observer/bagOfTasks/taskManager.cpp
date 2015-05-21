@@ -56,7 +56,10 @@ TaskManager::TaskManager()
     // Starts workers for all cores identified (default) or
     // the number setted by "-workers" flag at main function
     while(workers.size() < workersCount)
-        workers.append(new Worker(waitCondition, mutex));
+    {
+        Worker *worker = new Worker(waitCondition, mutex);
+        workers.append(worker);
+    }
 
 #ifdef DEBUG_OBSERVER
      qDebug() << "\nTaskManager::TaskManager()\n  workers" << workers.size();
@@ -76,30 +79,29 @@ TaskManager& TaskManager::operator=(const TaskManager &)
 
 TaskManager::~TaskManager()
 {
+    VisualArrangement* v = VisualArrangement::getInstance();
+
+    v->buildLuaCode();
 
     for(int i = 0; i < workers.size(); i++)
     {
-        workers.at(i)->stop();
-
-        while (workers.at(i)->isRunning())
+        if (workers.at(i)->isRunning())
         {
-            QMutexLocker locker(&mutex);
-            waitCondition.wakeAll();
-            locker.unlock();
             workers.at(i)->stop();
-        }
+            waitCondition.wakeAll();
 
-        delete workers.at(i);
+            if (!workers.at(i)->wait(5000))
+            {
+                workers.at(i)->terminate();
+                workers.at(i)->wait();
+            }
+        }
     }
 
 #ifdef UNIT_TME_TEST_PRINT
     qDebug() << "bagOfTasks.size()" << bagOfTasks.size();
     qDebug() << "~TaskManager()"; std::cout.flush();
 #endif
-
-	VisualArrangement* v = VisualArrangement::getInstance();
-
-	v->buildLuaCode();
 }
 
 // #include <qthreadpool.h>

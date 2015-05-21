@@ -25,10 +25,10 @@ Worker::Worker(QWaitCondition &waitCond, QMutex &mtex)
 
 Worker::~Worker()
 {
-    QMutexLocker locker(&mutex);
-    abort = true;
+    //QMutexLocker locker(&mutex);
+    //abort = true;
     // waitCondition.wakeAll(); // done by the destructor of TaskManager
-    locker.unlock();
+    //locker.unlock();
     /*
     if (!wait(1000))
     {

@@ -35,7 +35,7 @@ return{
 		end)
 
 		local c = Chart{target = cs, select = "value"}
---[[
+
 		local m = Map{
 			target = cs,
 			select = "value",
@@ -45,8 +45,8 @@ return{
 			color = "Blues"
 		}
 
-		unitTest:assertType(m, "Map") -- SKIP
---]]
+		unitTest:assertType(m, "Map")
+
 		-- #308
 		--unitTest:assertSnapshot(m, "map_slices.bmp") -- SKIP
 
