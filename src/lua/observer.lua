@@ -92,7 +92,7 @@ createdObservers = {}
 
 -- OBSERVERS CREATION
 -- TME_OBSERVERS.TEXTSCREEN
-local function observerTextScreen(subjType, subject, observerAttrs, datale)
+local function observerTextScreen(subjType, target, observerAttrs, datale)
 	if datale.observer ~= nil then
 		customError("Cannot attach observers of type 'textscreen' to other observers.", 4)
 	end
@@ -107,19 +107,19 @@ local function observerTextScreen(subjType, subject, observerAttrs, datale)
 		end
 	end
 
-	if subject.cObj_ then
-		if type(subject) == "CellularSpace" then
-			return subject.cObj_:createObserver(TME_OBSERVERS.TEXTSCREEN, {}, observerAttrs, observerParams, subject.cells)
+	if target.cObj_ then
+		if type(target) == "CellularSpace" then
+			return target.cObj_:createObserver(TME_OBSERVERS.TEXTSCREEN, {}, observerAttrs, observerParams, target.cells)
 		else
-			return subject.cObj_:createObserver(TME_OBSERVERS.TEXTSCREEN, observerAttrs, observerParams)
+			return target.cObj_:createObserver(TME_OBSERVERS.TEXTSCREEN, observerAttrs, observerParams)
 		end
 	else
-		return subject:createObserver(TME_OBSERVERS.TEXTSCREEN, observerAttrs, observerParams)
+		return target:createObserver(TME_OBSERVERS.TEXTSCREEN, observerAttrs, observerParams)
 	end	
 end
 
 -- TME_OBSERVERS.LOGFILE
-local function observerLogFile(subjType, subject, observerAttrs, datale)
+local function observerLogFile(subjType, target, observerAttrs, datale)
 	if datale.observer ~= nil then
 		customError("Cannot attach observers of type 'logfile' to other observers.", 4)
 	end
@@ -140,19 +140,19 @@ local function observerLogFile(subjType, subject, observerAttrs, datale)
 	table.insert(observerParams, outfile)
 	table.insert(observerParams, separator)
 
-	if subject.cObj_ then
-		if type(subject) == "CellularSpace" then
-			return subject.cObj_:createObserver(TME_OBSERVERS.LOGFILE, {}, observerAttrs, observerParams, subject.cells)
+	if target.cObj_ then
+		if type(target) == "CellularSpace" then
+			return target.cObj_:createObserver(TME_OBSERVERS.LOGFILE, {}, observerAttrs, observerParams, target.cells)
 		else
-			return subject.cObj_:createObserver(TME_OBSERVERS.LOGFILE, observerAttrs, observerParams)
+			return target.cObj_:createObserver(TME_OBSERVERS.LOGFILE, observerAttrs, observerParams)
 		end
 	else
-		return subject:createObserver(TME_OBSERVERS.LOGFILE, observerAttrs, observerParams)
+		return target:createObserver(TME_OBSERVERS.LOGFILE, observerAttrs, observerParams)
 	end	
 end
 
 -- TME_OBSERVERS.TABLE
-local function observerTable(subjType, subject, observerAttrs, datale)
+local function observerTable(subjType, target, observerAttrs, datale)
 	if datale.observer ~= nil then
 		customError("Cannot attach observers of type 'table' to other observers.", 4)
 	end
@@ -174,19 +174,19 @@ local function observerTable(subjType, subject, observerAttrs, datale)
 	table.insert(observerParams, column1Label)
 	table.insert(observerParams, column2Label)
 
-	if subject.cObj_ then
-		if type(subject) == "CellularSpace" then
-			return subject.cObj_:createObserver(TME_OBSERVERS.TABLE, {}, observerAttrs, observerParams, subject.cells)
+	if target.cObj_ then
+		if type(target) == "CellularSpace" then
+			return target.cObj_:createObserver(TME_OBSERVERS.TABLE, {}, observerAttrs, observerParams, target.cells)
 		else
-			return subject.cObj_:createObserver(TME_OBSERVERS.TABLE, observerAttrs, observerParams)
+			return target.cObj_:createObserver(TME_OBSERVERS.TABLE, observerAttrs, observerParams)
 		end
 	else
-		return subject:createObserver(TME_OBSERVERS.TABLE, observerAttrs, observerParams)
+		return target:createObserver(TME_OBSERVERS.TABLE, observerAttrs, observerParams)
 	end	
 end
 
 -- TME_OBSERVERS.CHART
-local function observerChart(subjType, subject, observerAttrs, datale)
+local function observerChart(subjType, target, observerAttrs, datale)
 	if datale.observer ~= nil then
 		customError("Cannot attach observers of type 'chart' to other observers.", 4)
 	end
@@ -296,14 +296,14 @@ local function observerChart(subjType, subject, observerAttrs, datale)
 		end
 	end
 
-	if subject.cObj_ then
-		if type(subject) == "CellularSpace" then
-			return subject.cObj_:createObserver(observerType, {}, observerAttrs, observerParams, subject.cells)
+	if target.cObj_ then
+		if type(target) == "CellularSpace" then
+			return target.cObj_:createObserver(observerType, {}, observerAttrs, observerParams, target.cells)
 		else
-			return subject.cObj_:createObserver(observerType, observerAttrs, observerParams)
+			return target.cObj_:createObserver(observerType, observerAttrs, observerParams)
 		end
 	else
-		return subject:createObserver(observerType, observerAttrs, observerParams)
+		return target:createObserver(observerType, observerAttrs, observerParams)
 	end	
 end
 
@@ -374,9 +374,9 @@ end
 
 -- OBSERVER MAP
 -- In this function the second argument can assume two types of entities: a lua class ou a c++ one depending
--- on the subject type. This is necessary for Society type.
+-- on the target type. This is necessary for Society type.
 -- Last argument is used only for trajectories
-local function observerMap(subjType, subject, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
+local function observerMap(subjType, target, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
 	if subjType == TME_TYPES.TRAJECTORY then
 		observerAttrs = {"trajectory"}		
 	elseif subjType == TME_TYPES.NEIGHBORHOOD then
@@ -466,7 +466,7 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 
 		local csObserver = datale.observer
 		if not csObserver then customError("Argument 'observer' not found.", 3) end
-		local cs = csObserver.subject
+		local cs = csObserver.target
 		table.insert(observerParams, cs)
 		table.insert(observerParams, csObserver.id)
 	end
@@ -483,34 +483,34 @@ local function observerMap(subjType, subject, tbDimensions, observerAttrs, datal
 		end
 		-- cellularspace
 		-- #201
-		-- return subject.cObj_:createObserver(TME_OBSERVERS.MAP, tbDimensions, observerAttrs, observerParams, csCells)
-		local idObs = subject.cObj_:createObserver(TME_OBSERVERS.MAP, tbDimensions, observerAttrs, observerParams, csCells)
-		subject.cObj_:notify(0)
-		subject.cObj_:notify(0)
+		-- return target.cObj_:createObserver(TME_OBSERVERS.MAP, tbDimensions, observerAttrs, observerParams, csCells)
+		local idObs = target.cObj_:createObserver(TME_OBSERVERS.MAP, tbDimensions, observerAttrs, observerParams, csCells)
+		target.cObj_:notify(0)
+		target.cObj_:notify(0)
 		return idObs
 	else
-		if type(subject) == "Society" then
+		if type(target) == "Society" then
 			local obsId = -1
-			forEachAgent(subject, function(ag)
+			forEachAgent(target, function(ag)
 				if ag.cObj_ == nil then
 					customError("It is simple agent and it can not be observable.", 3)
 				end
 				obsId = ag.cObj_:createObserver(TME_OBSERVERS.MAP, observerAttrs, observerParams)
 			end)
-			subject.observerId = obsId
+			target.observerId = obsId
 			return obsId 
 		else
-			if subject.cObj_ then
-				return subject.cObj_:createObserver(TME_OBSERVERS.MAP, observerAttrs, observerParams)
+			if target.cObj_ then
+				return target.cObj_:createObserver(TME_OBSERVERS.MAP, observerAttrs, observerParams)
 			else
-				return subject:createObserver(TME_OBSERVERS.MAP, observerAttrs, observerParams)
+				return target:createObserver(TME_OBSERVERS.MAP, observerAttrs, observerParams)
 			end
 		end
 	end
 end
 
 -- OBSERVER NEIGHBORHOOD
-local function observerNeighborhood(subject, neighborhoods, datale)
+local function observerNeighborhood(target, neighborhoods, datale)
 	if #neighborhoods > 2 or #neighborhoods == 0 then
 		customError("Neighborhood Observers must have exactly one or two neighborhoods.", 3)
 	end
@@ -526,7 +526,7 @@ local function observerNeighborhood(subject, neighborhoods, datale)
 		customError("Cannot attach observers of type '".. csObserver.type .."'.", 3)
 	end
 
-	local cs = csObserver.subject
+	local cs = csObserver.target
 	if not cs or type(cs) ~= "CellularSpace" then
 		customError("Basis observer is not related to a CellularSpace.", 3)
 	end
@@ -538,14 +538,14 @@ local function observerNeighborhood(subject, neighborhoods, datale)
 		table.insert(observerParams, legends[i])
 	end
 
-	obs = subject.cObj_:createObserver(TME_OBSERVERS.NEIGHBORHOOD, neighborhoods, observerParams)
-	subject.observerId = obs
+	obs = target.cObj_:createObserver(TME_OBSERVERS.NEIGHBORHOOD, neighborhoods, observerParams)
+	target.observerId = obs
 	return obs
 end
 
 -- OBSERVER IMAGE
 -- Last argument is used only for trajectories
-local function observerImage(subjType, subject, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
+local function observerImage(subjType, target, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
 	if subjType == TME_TYPES.TRAJECTORY then
 		observerAttrs = {"trajectory"}
 	elseif subjType == TME_TYPES.NEIGHBORHOOD then
@@ -618,7 +618,7 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 		local csObserver = datale["observer"]
 		if (not csObserver) then customError("Argument 'observer' not found.") end
 
-		local cs = csObserver.subject
+		local cs = csObserver.target
 		if not cs then customError("Argument 'cellspace' not found.") end
 
 		table.insert(observerParams, cs)
@@ -637,34 +637,34 @@ local function observerImage(subjType, subject, tbDimensions, observerAttrs, dat
 		end
 
 		-- #201
-		-- return subject.cObj_:createObserver(TME_OBSERVERS.IMAGE, tbDimensions, observerAttrs, observerParams, csCells)
-		local idObs = subject.cObj_:createObserver(TME_OBSERVERS.IMAGE, tbDimensions, observerAttrs, observerParams, csCells)
-		subject.cObj_:notify(0)
-		subject.cObj_:notify(0)
+		-- return target.cObj_:createObserver(TME_OBSERVERS.IMAGE, tbDimensions, observerAttrs, observerParams, csCells)
+		local idObs = target.cObj_:createObserver(TME_OBSERVERS.IMAGE, tbDimensions, observerAttrs, observerParams, csCells)
+		target.cObj_:notify(0)
+		target.cObj_:notify(0)
 		return idObs
 	else
-		if type(subject) == "Society" then
+		if type(target) == "Society" then
 			local obsId = -1
-			forEachAgent(subject, function(ag)
+			forEachAgent(target, function(ag)
 				if ag.cObj_ == nil then
 					customError("It is simple agent and it can not be observable.", 3)
 				end
 				obsId = ag.cObj_:createObserver(TME_OBSERVERS.IMAGE, observerAttrs, observerParams)
 			end)
-			subject.observerId = obsId
+			target.observerId = obsId
 			return obsId 
 		else
-			if subject.cObj_ then
-				return subject.cObj_:createObserver(TME_OBSERVERS.IMAGE, observerAttrs, observerParams)
+			if target.cObj_ then
+				return target.cObj_:createObserver(TME_OBSERVERS.IMAGE, observerAttrs, observerParams)
 			else
-				return subject:createObserver(TME_OBSERVERS.IMAGE, observerAttrs, observerParams)
+				return target:createObserver(TME_OBSERVERS.IMAGE, observerAttrs, observerParams)
 			end
 		end
 	end
 end
 
 -- OBSERVER UDPSENDER
-local function observerUDPSender(subjType, subject, tbDimensions, observerAttrs, datale,csCells)
+local function observerUDPSender(subjType, target, tbDimensions, observerAttrs, datale,csCells)
 	local observerParams = {}
   
 	if datale.port and type(datale.port) ~="number" then
@@ -701,7 +701,7 @@ local function observerUDPSender(subjType, subject, tbDimensions, observerAttrs,
 		local flag = true
 		local attr = ""
 		for i=1, getn(observerAttrs) do
-			if observerAttrs[i] ~= "currentState" and not subject[observerAttrs[i]] then
+			if observerAttrs[i] ~= "currentState" and not target[observerAttrs[i]] then
 				flag = false
 				attr = observerAttrs[i]
 				break
@@ -733,18 +733,18 @@ local function observerUDPSender(subjType, subject, tbDimensions, observerAttrs,
 		-- cellularspace
 		local aux = observerParams
 		observerParams = {aux}
-		return subject.cObj_:createObserver(TME_OBSERVERS.UDPSENDER, tbDimensions, observerAttrs, observerParams, csCells)
+		return target.cObj_:createObserver(TME_OBSERVERS.UDPSENDER, tbDimensions, observerAttrs, observerParams, csCells)
 	end
 
-	if subject.cObj_ then
-		return subject.cObj_:createObserver(TME_OBSERVERS.UDPSENDER, observerAttrs, observerParams)
+	if target.cObj_ then
+		return target.cObj_:createObserver(TME_OBSERVERS.UDPSENDER, observerAttrs, observerParams)
 	else
-		return subject:createObserver(TME_OBSERVERS.UDPSENDER, observerAttrs, observerParams)
+		return target:createObserver(TME_OBSERVERS.UDPSENDER, observerAttrs, observerParams)
 	end
 end
 
 -- OBSERVER TCPSENDER
-local function observerTCPSender(subjType, subject, tbDimensions, observerAttrs, datale,csCells)
+local function observerTCPSender(subjType, target, tbDimensions, observerAttrs, datale,csCells)
 	local observerParams = {}
 	local port = datale.port or 456456
 	local hosts = datale.hosts or {""}
@@ -768,36 +768,36 @@ local function observerTCPSender(subjType, subject, tbDimensions, observerAttrs,
 		-- cellularspace
 		local aux = observerParams
 		observerParams = {aux}
-		return subject.cObj_:createObserver(TME_OBSERVERS.TCPSENDER, tbDimensions, observerAttrs, observerParams, csCells)
+		return target.cObj_:createObserver(TME_OBSERVERS.TCPSENDER, tbDimensions, observerAttrs, observerParams, csCells)
 	end
 	if subjType == TME_TYPES.CELL then
-		return subject.cObj_:createObserver(TME_OBSERVERS.TCPSENDER, observerAttrs, observerParams)
+		return target.cObj_:createObserver(TME_OBSERVERS.TCPSENDER, observerAttrs, observerParams)
 	else
-		customError("Observer TCP not implemented for this subject!!!", 3);
+		customError("Observer TCP not implemented for this target!!!", 3);
 	end
 	
-	-- if subject.cObj_ then
-		-- return subject.cObj_:createObserver(TME_OBSERVERS.TCPSENDER, observerAttrs, observerParams)
+	-- if target.cObj_ then
+		-- return target.cObj_:createObserver(TME_OBSERVERS.TCPSENDER, observerAttrs, observerParams)
 	-- else
-		-- return subject:createObserver(TME_OBSERVERS.TCPSENDER, observerAttrs, observerParams)
+		-- return target:createObserver(TME_OBSERVERS.TCPSENDER, observerAttrs, observerParams)
 	-- end
 end
 
 -- OBSERVER SCHEDULER
-local function observerScheduler(subjType, subject, observerAttrs, datale)
+local function observerScheduler(subjType, target, observerAttrs, datale)
 	local observerAttrs = {}
 	local observerParams = {"", ""}
 
-	if subject.cObj_ then
-		return subject.cObj_:createObserver(TME_OBSERVERS.SCHEDULER, observerAttrs, observerParams)
+	if target.cObj_ then
+		return target.cObj_:createObserver(TME_OBSERVERS.SCHEDULER, observerAttrs, observerParams)
 	else
-		return subject:createObserver(TME_OBSERVERS.SCHEDULER, observerAttrs, observerParams)
+		return target:createObserver(TME_OBSERVERS.SCHEDULER, observerAttrs, observerParams)
 	end
-	--return subject:createObserver(TME_OBSERVERS.SCHEDULER, observerAttrs, observerParams)
+	--return target:createObserver(TME_OBSERVERS.SCHEDULER, observerAttrs, observerParams)
 end
 
 -- OBSERVER STATEMACHINE
-local function observerStateMachine(subjType, subject, observerAttrs, datale)
+local function observerStateMachine(subjType, target, observerAttrs, datale)
 	local observerAttrs = {"currentState"}	   
 		
 	if type(datale.legends) ~= "table"  then
@@ -825,24 +825,24 @@ local function observerStateMachine(subjType, subject, observerAttrs, datale)
 	end
 	table.insert(observerParams, legends[1])
 
-	if subject.cObj_ then
-		return subject.cObj_:createObserver(TME_OBSERVERS.STATEMACHINE, observerAttrs, observerParams)
+	if target.cObj_ then
+		return target.cObj_:createObserver(TME_OBSERVERS.STATEMACHINE, observerAttrs, observerParams)
 	else
-		return subject:createObserver(TME_OBSERVERS.STATEMACHINE, observerAttrs, observerParams)
+		return target:createObserver(TME_OBSERVERS.STATEMACHINE, observerAttrs, observerParams)
 	end
-	--return subject.cObj_:createObserver(TME_OBSERVERS.STATEMACHINE, observerAttrs, observerParams)
+	--return target.cObj_:createObserver(TME_OBSERVERS.STATEMACHINE, observerAttrs, observerParams)
 end
 
 -- OBSERVER SHAPEFILE
 -- In this function the second argument can assume two types of entities: a lua class ou a c++ one
--- depending on the subject type. This is necessary for Society type.
+-- depending on the target type. This is necessary for Society type.
 -- Last argument is used only for trajectories
-local function observerShapefile(subjType, subject, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
+local function observerShapefile(subjType, target, tbDimensions, observerAttrs, datale, csCells, trajectorySize)
 	if #observerAttrs > 2 or #observerAttrs == 0 then
 		customError("Map observers must have exactly one or two attributes.", 3)
 	end
 	if subjType ~= TME_TYPES.CELLSPACE then
-		customError("The subject for Observer Shapefile should be a CellularSpace.", 3)
+		customError("The target for Observer Shapefile should be a CellularSpace.", 3)
 	end
 
 	local observerParams = {}
@@ -879,12 +879,12 @@ local function observerShapefile(subjType, subject, tbDimensions, observerAttrs,
 	end
 
 	if #tbDimensions ~= 0 then
-		return subject.cObj_:createObserver(TME_OBSERVERS.SHAPEFILE, tbDimensions, observerAttrs, observerParams, csCells)
+		return target.cObj_:createObserver(TME_OBSERVERS.SHAPEFILE, tbDimensions, observerAttrs, observerParams, csCells)
 	else
-		if subject.cObj_ then
-			return subject.cObj_:createObserver(TME_OBSERVERS.SHAPEFILE, observerAttrs, observerParams)
+		if target.cObj_ then
+			return target.cObj_:createObserver(TME_OBSERVERS.SHAPEFILE, observerAttrs, observerParams)
 		else
-			return subject:createObserver(TME_OBSERVERS.SHAPEFILE, observerAttrs, observerParams)
+			return target:createObserver(TME_OBSERVERS.SHAPEFILE, observerAttrs, observerParams)
 		end
 	end
 end
@@ -897,15 +897,15 @@ Observer_ = {
 	-- argument and returns true if the Agent should not be observed anymore.
 	-- @usage observer:kill()
 	kill = function(self, func)
-		if self.subject.cObj_ then 
+		if self.target.cObj_ then 
 			if self.type == TME_OBSERVERS.NEIGHBORHOOD or self.type == "neighborhood" then
-				return self.subject.cObj_:kill(self.id, self.observer.subject.cObj_)
+				return self.target.cObj_:kill(self.id, self.observer.target.cObj_)
 			else
-				return self.subject.cObj_:kill(self.id)
+				return self.target.cObj_:kill(self.id)
 			end
 		else
-			if type(self.subject) == "Society" then
-				return self.subject:remove(func)
+			if type(self.target) == "Society" then
+				return self.target:remove(func)
 			else
 				return false
 			end
@@ -914,15 +914,15 @@ Observer_ = {
 	--- Kill all the observers connected to a Society.
 	-- @usage observer:killAll()
 	killAll = function(self)
-		if type(self.subject) == "Society" then
-			return self.subject:remove(function() return true end)
+		if type(self.target) == "Society" then
+			return self.target:remove(function() return true end)
 		else
 			customError("This function is not applicable to this type.")
 		end
 	end
 }
 
-local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabel", "yLabel", "title", "curveLabels", "legends", "path", "location", "outfile", "separator", "prefix", "observer",--[["cellspace",]] "neighIndex", "neighType", "port", "hosts"}
+local observerPossibleParams = {"type", "target", "attributes", "xAxis", "xLabel", "yLabel", "title", "curveLabels", "legends", "path", "location", "outfile", "separator", "prefix", "observer",--[["cellspace",]] "neighIndex", "neighType", "port", "hosts"}
 --- Observer is the way to collect data from the objects of a model in order to save, toi
 -- graphically plot them, or to send them to another computer. Observers can be created from any
 -- TerraME object that has a built-in function called notify(). This function needs to be called
@@ -950,7 +950,7 @@ local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabe
 -- @arg data.observer An Observer that will be used as background for drawing properties of observed objects that canxnot be drawn alone.
 -- @arg data.port A string or a vector of strings with ports for the respective host names to be used by udpsenders.
 -- @arg data.separator The attribute separator character (i.e., ";"). Used only for logfiles.
--- @arg data.subject The TerraME object that will be observed.
+-- @arg data.target The TerraME object that will be observed.
 -- @arg data.title An overall title to the observer.
 -- @arg data.xaxis A string representing the attribute to be used as x axis in a chart observer. When nil, time will be used as axis.
 -- @arg data.xLabel Name of the x-axis. It does not show any label as default.
@@ -960,41 +960,41 @@ local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabe
 -- @tabular type
 -- Type & Description & Compulsory arguments & Optional arguments \
 -- "chart" & Create a line chart showing the variation of one or more attributes (y axis) of an
--- object. X axis values come from the single argument of notify(). & subject, attributes & xaxis, xLabel, yLabel, title, curveLabels \
+-- object. X axis values come from the single argument of notify(). & target, attributes & xaxis, xLabel, yLabel, title, curveLabels \
 -- "image" & Create a map with the spatial distribution of a given Agent, CellularSpace, Society or
--- Trajectory, saving it in a png file for each notify(). It works in the same way of the observer map. & subject, attributes & file, legends \
--- "logfile" & Save attributes of an object into a csv text file, with one row for each notify(). & subject, file, attributes, separator & \ 
+-- Trajectory, saving it in a png file for each notify(). It works in the same way of the observer map. & target, attributes & file, legends \
+-- "logfile" & Save attributes of an object into a csv text file, with one row for each notify(). & target, file, attributes, separator & \ 
 -- "map" & Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
 -- or Society. It draws each element into the screen, according to one or two attributes (two is
 -- allowed only for CellularSpace) colored from one or two Legends, respectively. The second
--- attribute and Legend are used as background. & subject, attributes, observer (unless when the
--- subject is a CellularSpace), legends & \
+-- attribute and Legend are used as background. & target, attributes, observer (unless when the
+-- target is a CellularSpace), legends & \
 -- "neighborhood" & Draw the Neighborhood of a Cell, or the Neighborhoods of each Cell within a
 -- Trajectory, CellularSpace, or Environment. They are drawn as lines, according to a neighType.
--- & subject, observer & neighIndex, neighType \
--- "scheduler" & Create a display with the current time and Event queue of a given Timer. & subject & \
+-- & target, observer & neighIndex, neighType \
+-- "scheduler" & Create a display with the current time and Event queue of a given Timer. & target & \
 -- "statemachine" & Draw the state machine of an Automaton in a Cell or an Agent. As default,
 -- states are drawn as gray circles with a green circle to represent the current state. Unique
 -- value Legends can be used to map state names to colors, putting the current state in evidence
--- with bold font. & subject, location (only when the subject is an Automaton), legends & \
--- "table" & Display a table with the current attributes of an object. Each notify() overwrites the previous values. & subject, attributes & \
+-- with bold font. & target, location (only when the target is an Automaton), legends & \
+-- "table" & Display a table with the current attributes of an object. Each notify() overwrites the previous values. & target, attributes & \
 -- "textscreen" & Create a display in a tabular format with the current attributes of an object. It will have one row for each notify(). &
--- subject, attributes & \
--- "udpsender" & Send observed attributes of an object through a UDP port of a given IP. &  subject, attributes, host, port & 
+-- target, attributes & \
+-- "udpsender" & Send observed attributes of an object through a UDP port of a given IP. &  target, attributes, host, port & 
 --
 -- @usage observer1 = Observer {
---	 subject = cs,
+--	 target = cs,
 --	 attributes = "water",
 --	 legends = {soilWaterLeg}
 -- }
 -- 
 -- Observer {
---	 subject = trajectory,
+--	 target = trajectory,
 --	 observer = observer
 -- }
 -- 
 -- observer3 = Observer {
---	 subject = cell,
+--	 target = cell,
 --	 type = "chart",
 --	 attributes = {"water"}
 -- }
@@ -1009,35 +1009,35 @@ local observerPossibleParams = {"type", "subject", "attributes", "xAxis", "xLabe
 -- udpsender \
 -- neighIndex ~= nil or neighType ~= nil &
 -- neighborhood \
--- type(subject) == "Timer" &
+-- type(target) == "Timer" &
 -- scheduler \
--- type(subject) == "Event" &
+-- type(target) == "Event" &
 -- table \
--- type(subject) == "CellularSpace" &
+-- type(target) == "CellularSpace" &
 -- map \
--- type(subject) == "Trajectory" &
+-- type(target) == "Trajectory" &
 -- map \
--- type(observer) == "Observer" and type(subject) == "Cell" &
+-- type(observer) == "Observer" and type(target) == "Cell" &
 -- neighborhood \
--- type(subject) == "Cell" &
+-- type(target) == "Cell" &
 -- table \
--- type(subject) == "Automaton" &
+-- type(target) == "Automaton" &
 -- map \
--- type(subject) == "Agent" &
+-- type(target) == "Agent" &
 -- statemachine \
--- type(subject) == "Society" &
+-- type(target) == "Society" &
 -- map \
--- type(subject) == "Group" &
+-- type(target) == "Group" &
 -- map \
 function Observer(data)
-	if type(data.subject) == "CellularSpace" then
+	if type(data.target) == "CellularSpace" then
 		if type(data.attributes) == "table" then
 			local att = data.attributes[1]
-			if type(data.subject:sample()[att]) == "function" then
-				forEachCell(data.subject, function(cell)
+			if type(data.target:sample()[att]) == "function" then
+				forEachCell(data.target, function(cell)
 					cell[att.."_"] = cell[att](cell)
 				end)
-				data.subject.attrfunc_ = {att}
+				data.target.attrfunc_ = {att}
 				if data.curveLabels == nil then
 					data.curveLabels = {data.attributes[1]}
 				end
@@ -1046,31 +1046,31 @@ function Observer(data)
 		end
 	end
 
-	if type(data.subject) == "Society" then
+	if type(data.target) == "Society" then
 		if type(data.attributes) == "table" then
 			local att = data.attributes[1]
-			if type(data.subject[att]) == "function" then
-				data.subject[att.."_"] = data.subject[att](data.subject)
-				if data.subject.attrfunc_ == nil then
-					data.subject.attrfunc_ = {}
+			if type(data.target[att]) == "function" then
+				data.target[att.."_"] = data.target[att](data.target)
+				if data.target.attrfunc_ == nil then
+					data.target.attrfunc_ = {}
 				end
 				
-				table.insert(data.subject.attrfunc_, att)
+				table.insert(data.target.attrfunc_, att)
 				if data.curveLabels == nil then
 					data.curveLabels = {data.attributes[1]}
 				end
 				data.attributes[1] = data.attributes[1].."_"
 			end
 		elseif data.attributes == nil then
-			if data.subject.attrfunc_ == nil then
-				data.subject.attrfunc_ = {}
+			if data.target.attrfunc_ == nil then
+				data.target.attrfunc_ = {}
 			end
 			if data.curveLabels == nil then
 				data.curveLabels = {"quantity"}
 			end
-			data.subject["quantity_"] = #data.subject
+			data.target["quantity_"] = #data.target
 			data.attributes = {"quantity_"}
-			table.insert(data.subject.attrfunc_, "quantity_")
+			table.insert(data.target.attrfunc_, "quantity_")
 		end
 	end
 
@@ -1084,10 +1084,10 @@ function Observer(data)
 		customError("Observer needs more information to be created.", 3)
 	end
 
-	local t = type(data.subject)
+	local t = type(data.target)
 	if t ~= "Agent" and t ~= "Automaton" and t ~= "Cell" and t ~= "CellularSpace" and t ~= "Environment"
 	and t ~= "Event" and t ~= "table" and t ~= "Neighborhood" and t ~= "Society" and t ~= "Timer" and t ~= "Trajectory" then
-		incompatibleTypeError("subject","one of the following types [Agent, Automaton, Cell, CellularSpace, Environment, Event, Neighborhood, Society, Timer, Trajectory]", data.subject, 3)
+		incompatibleTypeError("target","one of the following types [Agent, Automaton, Cell, CellularSpace, Environment, Event, Neighborhood, Society, Timer, Trajectory]", data.target, 3)
 	else
 		if t == "Agent" or t == "Automaton" then
 			if data.type == "map" or data.type == "image" then
@@ -1166,31 +1166,31 @@ function Observer(data)
 	local metaTable = {__index = Observer_,__tostring = tostringTerraME}
 	setmetatable(data, metaTable)
 
-	local subject = ""
+	local target = ""
 	local cppSubject = nil
-	local subjectType = ""
+	local targetType = ""
 
-	subject = data.subject
-	if subject == nil then
-		customError("Argument 'subject' is compulsory.", 3)
+	target = data.target
+	if target == nil then
+		customError("Argument 'target' is compulsory.", 3)
 	else
-		-- Checks the Lua subject type
-		if type(subject) == "table" and subject.cObj_ ~= nil then
-			--local t = type(subject)
-			--if (t == "Agent" or t == "Automaton" or t == "Cell" or t == "CellularSpace" or t == "Environment" or t == "Neighborhood" or t == "Society" or t == "Timer" or t == "Trajectory") and (subject.cObj_ ~= nil) then
-			if type(subject.cObj_) == "table" then
-				cppSubject = subject.cObj_[1]
+		-- Checks the Lua target type
+		if type(target) == "table" and target.cObj_ ~= nil then
+			--local t = type(target)
+			--if (t == "Agent" or t == "Automaton" or t == "Cell" or t == "CellularSpace" or t == "Environment" or t == "Neighborhood" or t == "Society" or t == "Timer" or t == "Trajectory") and (target.cObj_ ~= nil) then
+			if type(target.cObj_) == "table" then
+				cppSubject = target.cObj_[1]
 			else
-				cppSubject = subject.cObj_
+				cppSubject = target.cObj_
 			end
 		else
 			-- Este teste causa bug no ObsSociety
-			-- if type(subject) == "userdata" then
-			cppSubject = subject
+			-- if type(target) == "userdata" then
+			cppSubject = target
 			--end
 		end
 
-		if type(subjectType) == "string" then subjectType = TME_TYPES_USER[type(subject)] end
+		if type(targetType) == "string" then targetType = TME_TYPES_USER[type(target)] end
 	end
 
 	local neighborhoods = data.neighIndex or {}
@@ -1219,9 +1219,9 @@ function Observer(data)
 			if t == "image" or t == "map" then
 				flagAttrsValid = false
 			end
-		elseif type(data.subject) == "CellularSpace" and data.subject.cells[1] ~= nil then
+		elseif type(data.target) == "CellularSpace" and data.target.cells[1] ~= nil then
 			for i = 1, #data.attributes do
-				if data.subject.cells[1][data.attributes[i]] == nil then
+				if data.target.cells[1][data.attributes[i]] == nil then
 					flagAttrsValid = false
 					break  
 				end
@@ -1253,32 +1253,32 @@ function Observer(data)
 		if data.attributes == nil then
 			data.attributes = {}
 		end
-		observerId = observerTextScreen(subjectType, cppSubject, data.attributes, data)
+		observerId = observerTextScreen(targetType, cppSubject, data.attributes, data)
 	elseif observerType == TME_OBSERVERS.LOGFILE then
 		if data.attributes == nil then
 			data.attributes = {}
 		end
-		observerId = observerLogFile(subjectType, cppSubject, data.attributes, data)
+		observerId = observerLogFile(targetType, cppSubject, data.attributes, data)
 	elseif observerType == TME_OBSERVERS.TABLE then
 		if data.attributes == nil then
 			dataattributes = {}
 		end
-		observerId = observerTable(subjectType, cppSubject, data.attributes, data)
+		observerId = observerTable(targetType, cppSubject, data.attributes, data)
 	elseif observerType == TME_OBSERVERS.CHART then
-		observerId = observerChart(subjectType, cppSubject, data.attributes, data)
+		observerId = observerChart(targetType, cppSubject, data.attributes, data)
 	elseif observerType == TME_OBSERVERS.MAP then
 		local tbDimensions = {}
 		local cells = {}
-		if subjectType == TME_TYPES.CELLSPACE then
-			tbDimensions = { tonumber(subject.maxCol - subject.minCol + 1),
-				tonumber(subject.maxRow - subject.minRow + 1) }
-			cells = subject.cells
+		if targetType == TME_TYPES.CELLSPACE then
+			tbDimensions = { tonumber(target.maxCol - target.minCol + 1),
+				tonumber(target.maxRow - target.minRow + 1) }
+			cells = target.cells
 		end
 
-		if subjectType == TME_TYPES.TRAJECTORY then
-			observerId = observerMap(subjectType, cppSubject, tbDimensions, data.attributes, data, cells, #subject)
+		if targetType == TME_TYPES.TRAJECTORY then
+			observerId = observerMap(targetType, cppSubject, tbDimensions, data.attributes, data, cells, #target)
 		else
-			observerId = observerMap(subjectType, cppSubject, tbDimensions, data.attributes, data, cells)
+			observerId = observerMap(targetType, cppSubject, tbDimensions, data.attributes, data, cells)
 		end
 	elseif observerType == TME_OBSERVERS.IMAGE then
 		if data.legends == nil then
@@ -1309,54 +1309,54 @@ function Observer(data)
 
 		local tbDimensions = {}
 		local cells = {}
-		if subjectType == TME_TYPES.CELLSPACE then
-			tbDimensions = { tonumber(subject.maxCol - subject.minCol + 1),
-				tonumber(subject.maxRow - subject.minRow + 1) }
-			cells = subject.cells
+		if targetType == TME_TYPES.CELLSPACE then
+			tbDimensions = { tonumber(target.maxCol - target.minCol + 1),
+				tonumber(target.maxRow - target.minRow + 1) }
+			cells = target.cells
 		end
 
-		if subjectType == TME_TYPES.TRAJECTORY then
-			observerId = observerImage(subjectType, cppSubject, tbDimensions, data.attributes, data, cells, #subject)
+		if targetType == TME_TYPES.TRAJECTORY then
+			observerId = observerImage(targetType, cppSubject, tbDimensions, data.attributes, data, cells, #target)
 		else
-			observerId = observerImage(subjectType, cppSubject, tbDimensions, data.attributes, data, cells)
+			observerId = observerImage(targetType, cppSubject, tbDimensions, data.attributes, data, cells)
 		end
 	elseif observerType == TME_OBSERVERS.UDPSENDER then
 		local tbDimensions = {}
 		local cells = {}
-		if subjectType == TME_TYPES.CELLSPACE then
-			tbDimensions = { tonumber(subject.maxCol - subject.minCol + 1),
-				tonumber(subject.maxRow - subject.minRow + 1) }
-			cells = subject.cells
+		if targetType == TME_TYPES.CELLSPACE then
+			tbDimensions = { tonumber(target.maxCol - target.minCol + 1),
+				tonumber(target.maxRow - target.minRow + 1) }
+			cells = target.cells
 		end
 		if data.attributes == nil then
 			data.attributes = {}
 		end
-		observerId = observerUDPSender(subjectType, cppSubject, tbDimensions, data.attributes, data, cells)
+		observerId = observerUDPSender(targetType, cppSubject, tbDimensions, data.attributes, data, cells)
 	elseif observerType == TME_OBSERVERS.SCHEDULER then
-		observerId = observerScheduler(subjectType, cppSubject, data.attributes, data)
+		observerId = observerScheduler(targetType, cppSubject, data.attributes, data)
 	elseif observerType == TME_OBSERVERS.STATEMACHINE then
-		observerId = observerStateMachine(subjectType, cppSubject, data.attributes, data)
+		observerId = observerStateMachine(targetType, cppSubject, data.attributes, data)
 	elseif observerType == TME_OBSERVERS.NEIGHBORHOOD then
-		deprecatedFunction("Neighborhood Observer", "Map or Image Observer with Neighborhood object as subject", 3)
+		deprecatedFunction("Neighborhood Observer", "Map or Image Observer with Neighborhood object as target", 3)
 	elseif observerType == TME_OBSERVERS.SHAPEFILE then
 		local tbDimensions = {}
 		local cells = {}
-		if subjectType == TME_TYPES.CELLSPACE then
-			tbDimensions = { tonumber(subject.maxCol - subject.minCol + 1),
-				tonumber(subject.maxRow - subject.minRow + 1) }
-			cells = subject.cells
+		if targetType == TME_TYPES.CELLSPACE then
+			tbDimensions = { tonumber(target.maxCol - target.minCol + 1),
+				tonumber(target.maxRow - target.minRow + 1) }
+			cells = target.cells
 		end
 
-		observerId = observerShapefile(subjectType, cppSubject, tbDimensions, data.attributes, data, cells)
+		observerId = observerShapefile(targetType, cppSubject, tbDimensions, data.attributes, data, cells)
 	elseif observerType == TME_OBSERVERS.TCPSENDER then
 		local tbDimensions = {}
 		local cells = {}
-		if (subjectType == TME_TYPES.CELLSPACE) then
-			tbDimensions = { tonumber(subject.maxCol - subject.minCol + 1),
-			tonumber(subject.maxRow - subject.minRow + 1) }
-			cells = subject.cells
+		if (targetType == TME_TYPES.CELLSPACE) then
+			tbDimensions = { tonumber(target.maxCol - target.minCol + 1),
+			tonumber(target.maxRow - target.minRow + 1) }
+			cells = target.cells
 		end
-		return observerTCPSender(subjectType, cppSubject, tbDimensions, observerAttrs, attrTab, cells)
+		return observerTCPSender(targetType, cppSubject, tbDimensions, observerAttrs, attrTab, cells)
 	end
 
 	data.id = observerId 
