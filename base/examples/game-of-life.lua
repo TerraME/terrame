@@ -4,114 +4,74 @@
 -- beginning of the simulation. The default value is 0.15.
 -- @arg TURNS The number of simulation steps. The default value is 20.
 
+-- [[
 PROBABILITY = 0.15
 TURNS = 20
 
-ALIVE = 1
-DEAD  = 2
+r = Random{seed = 0}
 
-function random(cs)
-	forEachCell (cs, function (cell)
-		local v = math.random()
+cell = Cell{
+	init = function(cell)
+		local v = r:number()
 		if v <= PROBABILITY then
-			cell.state = ALIVE
+			cell.state = "alive"
 		else
-			cell.state = DEAD
+			cell.state = "dead"
 		end
-	end)
-end
-
-function countAlive(cell)
-	local count = 0
-	forEachNeighbor(cell, function(cell, neigh)
-		if neigh.past.state == ALIVE then
-			count = count + 1
-		end
-	end)
-	return count
-end
-
-cs = CellularSpace{
-	xdim = 50
+	end,
+	countAlive = function(cell)
+		local count = 0
+		forEachNeighbor(cell, function(cell, neigh)
+			if neigh.past.state == "alive" then
+				count = count + 1
+			end
+		end)
+		return count
+	end,
+	execute = function(cell)
+		local n = cell:countAlive()
+		if cell.state == "alive" and (n > 3 or n < 2) then
+			cell.state = "dead"
+		elseif cell.state == "dead" and n == 3 then
+			cell.state = "alive"
+		else
+			cell.state = cell.past.state
+		end 
+	end
 }
 
-math.randomseed(os.time())
-random(cs)
-cs:createNeighborhood()
+cs = CellularSpace{
+	xdim = 50,
+	instance = cell
+}	   
 
+cs:createNeighborhood()
+--[[
 lifeLeg = Legend{
 	grouping = "uniquevalues",
 	colorBar = {
-		{color = "black", value = ALIVE},
-		{color = "white", value = DEAD}
+		{color = "black", value = "alive"},
+		{color = "white", value = "dead"}
 	},
 	size = 1,
 	pen = 2
 }
 
---[[
 obs = Observer{
-	subject = cs,
+	target = cs,
 	attributes = {"state"},
 	legends = {lifeLeg}
 }
 --]]
 
-
-gameoflife = Automaton{
-	it = Trajectory{
-		target = cs,
-		select = function(cell) return true end,
-	},
-	State{
-		id = "alive",
-		Jump{
-			function(event, agent, cell)
-				return (cell.past.state == DEAD)
-			end,
-			target = "dead"
-		},
-		Flow{
-			function( event, agent, cell )
-				local n = countAlive(cell)
-				if (n > 3) or (n < 2) then cell.state = DEAD end
-			end
-		}
-	},
-	State{
-		id = "dead",
-		Jump{
-			function(event, agent, cell)
-				return (cell.past.state == ALIVE)
-			end,
-			target = "alive"
-		},
-		Flow{
-			function(event, agent, cell)
-				local n = countAlive(cell)
-				if n == 3 then cell.state = ALIVE end
-			end
-		}
-	}
-}
-
-env = Environment{
-	id = "env"
-}
-
-time = Timer{
-	Event{action = function(event)
-		local tick = event:getTime()
+timer = Timer{
+	Event{action = function()
 		cs:synchronize()
+		cs:execute()
 		cs:notify()
-		gameoflife:execute(event)
 	end}
 }
-env:add(cs)
-env:add(gameoflife)
-env:add(time)
 
-gameoflife:setTrajectoryStatus(true)
-
-env:execute(TURNS)
+timer:execute(TURNS)
+--]]
 

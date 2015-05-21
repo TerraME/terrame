@@ -81,6 +81,7 @@ ObserverMap::ObserverMap(Subject *sub, QWidget *parent)
 
 ObserverMap::~ObserverMap()
 {
+/*
     foreach(Attributes *attrib, mapAttributes->values())
         delete attrib;
     delete mapAttributes; mapAttributes = 0;
@@ -102,6 +103,7 @@ ObserverMap::~ObserverMap()
     //delete lblOperator;
     //delete operatorComboBox;
     delete frameTools;
+*/
 }
 
 const TypesOfObservers ObserverMap::getType() const

@@ -1133,10 +1133,12 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         {
             if (execModes != Quiet)
             {
+/* to solve #462
 				string str = msg.toLatin1().data();
 				lua_getglobal(L, "customWarning");
 				lua_pushstring(L, str.c_str());
 				lua_call(L, 1, 0);
+*/
             }
         }
         // return;
