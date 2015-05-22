@@ -72,8 +72,10 @@ PainterWidget::PainterWidget(QHash<QString, Attributes*> *mapAttrib,
 
 PainterWidget::~PainterWidget()
 {
+/*
     if (visualMapping)
         delete visualMapping; visualMapping = 0;
+*/
 }
 
 void PainterWidget::setOperatorMode(QPainter::CompositionMode mode)
