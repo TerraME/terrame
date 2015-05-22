@@ -25,7 +25,23 @@
 
 return{
 	Map = function(unitTest)
-		unitTest:assert(true)
+		local cs = CellularSpace{xdim = 10}
+
+		local r = Random()
+
+		forEachCell(cs, function(cell)
+			cell.value = r:number()
+		end)
+
+		local m = Map{
+			target = cs,
+			color = "blue"
+		}
+
+		unitTest:assertType(m, "Map")
+
+		cs:notify()
+		unitTest:assertSnapshot(m, "map_background.bmp")
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

@@ -1765,7 +1765,7 @@ function Map(data)
 			end
 
 			mandatoryTableArgument(data, "color", "table")
-			data.select = {"background_"}
+			data.select = "background_"
 			verify(#data.color == 1, "Strategy 'background' requires only one color, got "..#data.color..".")
 
 			forEachCell(data.target, function(cell)
@@ -1805,7 +1805,8 @@ function Map(data)
 		end,
 		background = function()
 			colorBar = {
-				{value = 0, color = data.color[1]}
+				{value = 0, color = data.color[1]},
+				{value = 1, color = "white"}
 			}
 			data.grouping = "uniquevalue"
 		end
