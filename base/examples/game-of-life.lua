@@ -46,7 +46,7 @@ cs = CellularSpace{
 }	   
 
 cs:createNeighborhood()
---[[
+-- [[
 lifeLeg = Legend{
 	grouping = "uniquevalues",
 	colorBar = {
@@ -68,7 +68,7 @@ timer = Timer{
 	Event{action = function()
 		cs:synchronize()
 		cs:execute()
-		cs:notify()
+--		cs:notify()
 	end}
 }
 
