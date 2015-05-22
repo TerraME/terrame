@@ -30,8 +30,10 @@ return{
 			value = function() return 3 end
 		}
 
+		local r = Random()
+
 		forEachCell(cs, function(cell)
-			cell.value = math.random()
+			cell.value = r:number()
 		end)
 
 		local c = Chart{target = cs, select = "value"}
@@ -47,8 +49,7 @@ return{
 
 		unitTest:assertType(m, "Map")
 
-		-- #308
-		--unitTest:assertSnapshot(m, "map_slices.bmp") -- SKIP
+		unitTest:assertSnapshot(m, "map_slices.bmp")
 
 		local e = Event{action = function() end}[1]
 

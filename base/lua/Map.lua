@@ -1441,10 +1441,10 @@ local brewerRGB = {
 local rgbMap = {}
 forEachOrderedElement(brewerRGB, function(idx, value)
 	local n = getn(value)
-	if not rgbMap[n] then
+	if not rgbMap[n] then -- SKIP
 		rgbMap[n] = {}
 	end
-	table.insert(rgbMap[n], idx)
+	table.insert(rgbMap[n], idx) -- SKIP
 end)
 
 -- check colorbrewer descriptions
@@ -1698,6 +1698,7 @@ function Map(data)
 		end,
 		uniquevalue = function()
 			mandatoryTableArgument(data, "select", "string")
+			mandatoryTableArgument(data, "value", "table")
 
 			local sample = data.target.cells[1][data.select]
 
@@ -1728,14 +1729,7 @@ function Map(data)
 
 			verify(#data.color == #data.value, "There should exist colors for each value. Got "..#data.color.." colors and "..#data.value.." values.")
 
-			if data.value == nil then
-				data.value = {}
-				forEachCell(data.target, function(cell)
-					if not belong(cell[data.select], data.value) then
-						data.value[#data.value + 1] = cell[data.select]
-					end
-				end)
-			else
+			if data.value ~= nil then
 				local theType = type(data.value[1])
 				forEachElement(data.value, function(_, value, mtype)
 					verify(mtype == theType, "All values should have the same type, got "..theType.." and "..mtype..".")
