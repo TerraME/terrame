@@ -33,6 +33,9 @@ bool comparePerPixel(const QString &img1, const QString &img2)
 
 	//cout << count << "/" << image1.height() * image1.height() << endl;
 
-	return count == 0;
+	// currently it accepts up to 5% of error.
+	return count < image1.height() * image1.height() * 0.05;
+
+	//return count == 0;
 }
 

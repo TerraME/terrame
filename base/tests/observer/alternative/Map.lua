@@ -27,8 +27,10 @@ return{
 	Map = function(unitTest)
 		local c = CellularSpace{xdim = 5}
 
+		local r = Random()
 		forEachCell(c, function(cell)
-			cell.value = math.random()
+			cell.value = r:number()
+			cell.nvalue = r:integer(1, 3)
 			cell.bvalue = false
 		end)
 
@@ -182,12 +184,12 @@ return{
 
 		-- uniquevalue
 		error_func = function()
-			Map{target = c, select = "mvalue", grouping = "uniquevalue"}
+			Map{target = c, select = "mvalue", value = {1, 2, 3}, grouping = "uniquevalue"}
 		end
 		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
 
 		error_func = function()
-			Map{target = c, select = "bvalue", grouping = "uniquevalue"}
+			Map{target = c, select = "bvalue", value = {1, 2, 3}, grouping = "uniquevalue"}
 		end
 		unitTest:assertError(error_func, "Selected element should be string or number, got boolean.")
 
@@ -342,6 +344,29 @@ return{
 			Map{target = c, grouping = "background", color = "Blues"}
 		end
 		unitTest:assertError(error_func, "Strategy 'background' cannot use ColorBrewer.")
+	end,
+	save = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local r = Random()
+
+		forEachCell(cs, function(cell)
+			cell.value = r:number()
+		end)
+
+		local m = Map{
+			target = cs,
+			select = "value",
+			min = 0,
+			max = 1,
+			slices = 10,
+			color = "Blues"
+		}
+
+		local error_func = function()
+			m:save("file.csv")
+		end
+		unitTest:assertError(error_func, invalidFileExtensionMsg(1, "csv"))
 	end
 }
 
