@@ -739,7 +739,13 @@ CellularSpace_ = {
 				resourceNotFoundError("source", data.source)
 			end
 		else
-			invalidFileExtensionError("source", string.match(data.source, "%w+$"))
+			local ext = string.match(data.source, "(([^%.]+))$")
+
+			if ext == data.source then
+				customError("Argument 'source' does not have an extension.")
+			else
+				invalidFileExtensionError("source", ext)
+			end
 		end
 
 		defaultTableValue(data, "name", "1")

@@ -539,6 +539,11 @@ return{
 		unitTest:assertError(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
 
 		error_func = function()
+			cs:loadNeighborhood{source = "gpmlinesDbEmas_invalid"}
+		end
+		unitTest:assertError(error_func, "Argument 'source' does not have an extension.")
+
+		error_func = function()
 			cs:loadNeighborhood{source = "gpmlinesDbEmas_invalid.teste"}
 		end
 		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))
