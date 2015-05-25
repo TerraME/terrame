@@ -1363,24 +1363,27 @@ function Observer(data)
 	return data
 end
 
+local deadObserverMetaTable_ = {__index = function()
+    customError("Trying to use a function of an observer that was destroyed.")
+end}
+
+
 --- Kill all Observers of the simulation.
 -- @usage killAllObservers()
 killAllObservers = function()
 	forEachElement(createdObservers, function(idx, obs)
-		local self = obs
-		if self.target.cObj_ then
-			if self.type == TME_OBSERVERS.NEIGHBORHOOD or self.type == "neighborhood" then
-				return self.target.cObj_:kill(self.id, self.observer.target.cObj_)
+		if obs.target.cObj_ then
+			if obs.type == TME_OBSERVERS.NEIGHBORHOOD or obs.type == "neighborhood" then
+				obs.target.cObj_:kill(obs.id, obs.observer.target.cObj_)
 			else
-				return self.target.cObj_:kill(self.id)
+				obs.target.cObj_:kill(obs.id)
 			end
+		elseif type(obs.target) == "Society" then
+			obs.target:remove(func)
 		else
-			if type(self.target) == "Society" then
-				return self.target:remove(func)
-			else
-				return false
-			end
+			return
 		end
+		setmetatable(obs, deadObserverMetaTable_)
 	end)
 	createdObservers = {}
 end

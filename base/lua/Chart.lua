@@ -506,12 +506,15 @@ function Chart(data)
 		end
 		id, obs = target.cObj_:createObserver(observerType, data.select, observerParams)
 	end
-    table.insert(createdObservers, {target = data.target, id = id})
 
 	local chart = TeChart()
 	chart:setObserver(obs)
-	local data = {cObj_ = chart}
+
+	data.cObj_ = chart
+	data.id = id
+	
 	setmetatable(data, metaTableChart_)
+    table.insert(createdObservers, data)
 	return data
 end
 

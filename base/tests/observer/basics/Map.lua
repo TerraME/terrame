@@ -61,6 +61,9 @@ return{
 		unitTest:assertType(m, "Map")
 
 		cs:notify()
+		cs:notify()
+		cs:notify()
+		cs:notify()
 		unitTest:assertSnapshot(m, "map_uniquevalue.bmp")
 
 		local m = Map{
@@ -70,6 +73,9 @@ return{
 
 		unitTest:assertType(m, "Map")
 
+		cs:notify()
+		cs:notify()
+		cs:notify()
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_background.bmp")
 	end,

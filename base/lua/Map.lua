@@ -1818,17 +1818,17 @@ function Map(data)
 
 	local idObs, obs = data.target.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.target.cells)
  
-	table.insert(createdObservers, {target = data.target, id = idObs})
-
 	local map = TeMap()
 	map:setObserver(obs)
-	local mdata = {cObj_ = map}
-	setmetatable(mdata, metaTableMap_)
+	data.id = idObs
+	data.cObj_ = map
+	setmetatable(data, metaTableMap_)
+    table.insert(createdObservers, data)
 
 	-- TODO: change the lines below by data:notify()
 	data.target:notify()
 	data.target:notify()
 
-	return mdata
+	return data
 end
 
