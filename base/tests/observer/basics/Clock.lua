@@ -38,7 +38,6 @@ return{
 		timer:execute(50)
 
 		unitTest:assert(true)
-		unitTest:delay()
 	end
 }
 

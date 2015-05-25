@@ -36,8 +36,6 @@ return{
 		unitTest:assertEquals(u.count_last, 0)
 		unitTest:assertEquals(u.sleep, 0.1)
 		unitTest:assertEquals(u.dbType, "test")
-
-		u:delay()
 	end,
 	assert = function(unitTest)
 		local u = UnitTest{}
@@ -81,10 +79,6 @@ return{
 		u:assertType(2, "number")
 
 		unitTest:assertEquals(u.success, 1)
-	end,
-	delay = function(unitTest)
-		local u = UnitTest{sleep = 1}
-		unitTest:assert(true)
 	end,
 	printError = function(unitTest)
 		unitTest:assert(true)

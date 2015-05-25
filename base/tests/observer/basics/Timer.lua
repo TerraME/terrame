@@ -34,8 +34,6 @@ return{
 			Event{priority = 4, action = function(event) timer:notify() end}
 		}
 
-		unitTest:delay()
-
 		Clock{target = timer}
 		timer:execute(50)
 		unitTest:assert(true)
@@ -54,7 +52,6 @@ return{
 		timer:execute(50)
 
 		unitTest:assert(true)
-		unitTest:delay()
 	end
 }
 

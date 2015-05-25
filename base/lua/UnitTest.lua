@@ -252,12 +252,19 @@ UnitTest_ = {
 			self:printError("Test should be "..mtype.." got "..type(value)..".")
 		end
 	end,
-	--- Sleep the tests for some time. The sleeping time is the value of a variable named sleep
-	-- in the configuration file for the tests, or zero if it does not exist. Calling this
-	-- function is particularly useful when the user wants to visualize the graphics or maps
-	-- produced by a test before TerraME closes the windows and starts a new test.
-	-- @usage unitTest:delay()
-	delay = function()
+	--- Clear the screen, removing all the visualization objects.
+	-- Whenever there is any visualization object, it might sleep the tests for some time before
+	-- removing them. The sleeping time is the value of a variable named sleep
+	-- in the configuration file for the tests, or zero if it does not exist. 
+	-- This function is automatically called after executing each test and each example
+	-- of the package.
+	-- @usage unitTest:clear()
+	clear = function(self)
+		if #createdObservers > 0 then
+			delay(self.sleep)
+			killAllObservers()
+			self.delayed_time = self.delayed_time + self.sleep
+		end
 	end,
 	--- Internal function to print error messages along the tests.
 	-- @arg msg A string with the error message.
@@ -322,8 +329,8 @@ local metaTableUnitTest_ = {
 -- @arg data.port Number of the port. See CellularSpace.
 -- @arg data.password A password. See CellularSpace.
 -- @arg data.user A user name. See CellularSpace.
--- @arg data.sleep A number indicating the amount of time to sleep every time there is a delay in
--- the tests.
+-- @arg data.sleep A number indicating the amount of time to sleep every time there is a UnitTest:clean() in
+-- the tests as well as in the end of each test that creates some visualization object.
 -- @usage unitTest = UnitTest{}
 function UnitTest(data)
 	setmetatable(data, metaTableUnitTest_)
@@ -332,13 +339,6 @@ function UnitTest(data)
 
 	if data.dbType ~= nil then
 		data.dbType = string.lower(data.dbType)
-	end
-
-	if data.sleep then
-		data.delay = function(self)
-			delay(data.sleep)
-			self.delayed_time = self.delayed_time + data.sleep
-		end
 	end
 
 	return data

@@ -533,7 +533,7 @@ function executeTests(package, fileName)
 
 				print = print__
 
-				killAllObservers()
+				ut:clear()
 				ut.executed_functions = ut.executed_functions + 1
 
 				if count_test == ut.test and not found_error then
@@ -775,7 +775,7 @@ function executeTests(package, fileName)
 
 				print = print__
 
-				killAllObservers()
+				ut:clear()
 			end)
 		end
 	else
@@ -885,7 +885,7 @@ function executeTests(package, fileName)
 		end
 
 		if ut.unused_snapshot_files > 0 then
-			printError(ut.unused_snapshot_files.." files from snapshot folder were not used.")
+			printError(ut.unused_snapshot_files.." files from folder 'snapshots' were not used.")
 		else
 			printNote("All snapshot files were used in the tests.")
 		end

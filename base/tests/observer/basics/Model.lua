@@ -52,7 +52,6 @@ return{
 		tube:execute(10)
 		tube:notify(11)
 		unitTest:assert(true)
-		unitTest:delay()
 	end,
 	notify = function(unitTest)
 		local Tube = Model{

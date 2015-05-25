@@ -88,12 +88,11 @@ return{
 
 		world:notify(Event{start = 31, action = function() end}[1])
 
-		unitTest:delay()
-
 -- FIXME: bug below
 --[[
 		world = Cell{value = 3, value2 = 5}
 
+		unitTest:clear()
 		c = InternetSender{
 			target = world,
 			select = {"value", "value2"},
@@ -103,7 +102,6 @@ return{
 		unitTest:assertType(c, "number") -- SKIP
 		world:notify(1)
 		world:notify(2)
-		unitTest:delay()
 --]]
 	end
 }

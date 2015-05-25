@@ -46,7 +46,7 @@ return{
 		world:notify(1)
 		world.count = world.count + 5
 		world:notify(2)
-		unitTest:delay()
+		--unitTest:clear()
 
 		local t = Timer{
 			Event{action = function(e)
@@ -62,7 +62,7 @@ return{
 		unitTest:assertSnapshot(c1, "chart_agent.bmp")
 		unitTest:assertSnapshot(c2, "chart_agent_select.bmp")
 		
-		unitTest:delay()
+		unitTest:clear()
 
 		local world = Agent{
 			probability = 0,
@@ -88,9 +88,8 @@ return{
 		}
 
 		t:execute(200)
-		-- FIXME: small bug here. this snapshot can produce two different files
+
 		unitTest:assertSnapshot(c3, "chart_agent_xaxis.bmp")
-		unitTest:delay()
 	end
 }
 

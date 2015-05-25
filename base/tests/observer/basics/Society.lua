@@ -63,7 +63,6 @@ return{
 		t:execute(30)
 		unitTest:assertSnapshot(c1, "chart_society.bmp")
 		unitTest:assertSnapshot(c2, "chart_society_select.bmp")
-		unitTest:delay()
 	end
 }
 

@@ -49,6 +49,7 @@ return{
 
 		unitTest:assertType(m, "Map")
 
+		cs:notify()
 		unitTest:assertSnapshot(m, "map_slices.bmp")
 
 		local e = Event{action = function() end}[1]
@@ -88,7 +89,7 @@ return{
 
 		t:execute(30)
 
-		unitTest:delay()
+		unitTest:clear()
 
 		-- FIXME: this observer does not draw the cells in the screen here.
 		-- If one copies the script below to a separate file it works.
@@ -166,7 +167,6 @@ return{
 		world:notify()
 		world:notify()
 		unitTest:assert(true)
-		unitTest:delay()
 	end
 }
 
