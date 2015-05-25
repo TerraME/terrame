@@ -911,8 +911,8 @@ function executeTests(package, fileName)
 		printWarning("No examples were executed.")
 	end
 
-	local errors = -ut.examples -ut.snapshot_files -ut.executed_functions -ut.test
-	               -ut.success -ut.snapshots - ut.package_functions - ut.delayed_time -ut.sleep
+	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
+	               -ut.snapshots - ut.package_functions - ut.delayed_time -ut.sleep
 
 	forEachElement(ut, function(_, value, mtype)
 		if mtype == "number" then
