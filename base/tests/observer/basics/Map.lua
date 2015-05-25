@@ -78,6 +78,34 @@ return{
 		cs:notify()
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_background.bmp")
+
+		local r = Random()
+
+		local c = Cell{
+			mvalue = function()
+				return r:number()
+			end
+		}
+
+		local cs = CellularSpace{
+			xdim = 5,
+			instance = c
+		}
+
+		local m = Map{
+			target = cs,
+			select = "mvalue",
+			min = 0,
+			max = 1,
+			slices = 10,
+			color = "Blues"
+		}
+
+		cs:notify()
+		cs:notify()
+		cs:notify()
+		cs:notify()
+		unitTest:assertSnapshot(m, "map_function.bmp")
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

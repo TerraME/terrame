@@ -1644,7 +1644,9 @@ function Map(data)
 			local sample = data.target.cells[1][data.select]
 
 			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the target.")
-			verify(type(sample) == "number", "Selected element should be number, got "..type(sample)..".")
+			if not belong(type(sample), {"number", "function"}) then
+				customError("Selected element should be number or function, got "..type(sample)..".")
+			end
 
 			if data.min == nil or data.max == nil then
 				local min = math.huge
@@ -1703,7 +1705,9 @@ function Map(data)
 			local sample = data.target.cells[1][data.select]
 
 			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the target.")
-			verify(belong(type(sample), {"string", "number"}), "Selected element should be string or number, got "..type(sample)..".")
+			if not belong(type(sample), {"string", "number", "function"}) then
+				customError("Selected element should be string, number, or function, got "..type(sample)..".")
+			end
 
 			if type(data.color) == "string" then
 				local colors = brewerMatchNames[data.color]
@@ -1767,6 +1771,21 @@ function Map(data)
 			end)
 		end
 	}
+
+	local sample = data.target.cells[1][data.select]
+
+	if type(sample) == "function" then
+		if data.target.cellobsattrs == nil then
+			data.target.cellobsattrs = {}
+		end
+
+		data.target.cellobsattrs[data.select] = true
+
+		forEachCell(data.target, function(cell)
+			cell[data.select.."_"] = cell[data.select](cell)
+		end)
+		data.select = data.select.."_"
+	end
 
 	-- TODO: select with more than one attribute
 	--if type(data.select) == "string" then data.select = {data.select} end

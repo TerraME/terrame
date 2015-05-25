@@ -777,6 +777,14 @@ CellularSpace_ = {
 			end)
 		end
 
+		if self.cellobsattrs then
+			forEachCell(self, function(cell)
+				forEachElement(self.cellobsattrs, function(idx)
+					cell[idx.."_"] = cell[idx](cell)
+				end)
+			end)
+		end
+
 		self.cObj_:notify(modelTime)
 	end,
 	--- Return a random Cell from the CellularSpace.

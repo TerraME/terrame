@@ -83,7 +83,7 @@ return{
 		error_func = function()
 			Map{target = c, select = "bvalue", grouping = "equalsteps"}
 		end
-		unitTest:assertError(error_func, "Selected element should be number, got boolean.")
+		unitTest:assertError(error_func, "Selected element should be number or function, got boolean.")
 
 		error_func = function()
 			Map{target = c, select = {}}
@@ -191,7 +191,7 @@ return{
 		error_func = function()
 			Map{target = c, select = "bvalue", value = {1, 2, 3}, grouping = "uniquevalue"}
 		end
-		unitTest:assertError(error_func, "Selected element should be string or number, got boolean.")
+		unitTest:assertError(error_func, "Selected element should be string, number, or function, got boolean.")
 
 		error_func = function()
 			Map{

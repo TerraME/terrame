@@ -167,6 +167,33 @@ return{
 		world:notify()
 		world:notify()
 		unitTest:assert(true)
+	end,
+	notify = function(unitTest)
+		local r = Random()
+
+		local c = Cell{
+			mvalue = function()
+				return r:number()
+			end
+		}
+
+		local cs = CellularSpace{
+			xdim = 5,
+			instance = c
+		}
+
+		local m = Map{
+			target = cs,
+			select = "mvalue",
+			min = 0,
+			max = 1,
+			slices = 10,
+			color = "Blues"
+		}
+
+		cs:notify()
+		cs:notify()
+		unitTest:assert(true)
 	end
 }
 
