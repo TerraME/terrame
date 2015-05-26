@@ -545,8 +545,8 @@ function Model(attrTab)
 				positiveArgument(1, modelTime, true)
 			end
 
-			if self.obsattrs then
-				forEachElement(self.obsattrs, function(idx)
+			if self.obsattrs_ then
+				forEachElement(self.obsattrs_, function(idx)
 					self[idx.."_"] = self[idx](self)
 				end)
 			end

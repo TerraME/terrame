@@ -1775,11 +1775,11 @@ function Map(data)
 	local sample = data.target.cells[1][data.select]
 
 	if type(sample) == "function" then
-		if data.target.cellobsattrs == nil then
-			data.target.cellobsattrs = {}
+		if data.target.cellobsattrs_ == nil then
+			data.target.cellobsattrs_ = {}
 		end
 
-		data.target.cellobsattrs[data.select] = true
+		data.target.cellobsattrs_[data.select] = true
 
 		forEachCell(data.target, function(cell)
 			cell[data.select.."_"] = cell[data.select](cell)

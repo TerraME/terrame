@@ -214,7 +214,7 @@ function Chart(data)
 			end)
 		elseif type(data.target) == "Society" then
 			forEachOrderedElement(data.target, function(idx, value, mtype)
-				if mtype == "number" and not belong(idx, {"autoincrement", "quantity", "observerId"}) and string.sub(idx, -1, -1) ~= "_"  then
+				if mtype == "number" and not belong(idx, {"autoincrement", "observerId"}) and string.sub(idx, -1, -1) ~= "_"  then
 					if not data.xAxis or idx ~= data.xAxis then
 						data.select[#data.select + 1] = idx
 					end
@@ -244,29 +244,29 @@ function Chart(data)
 	forEachElement(data.select, function(_, value)
 		if data.target[value] == nil then
 			if  value == "#" then
-				if data.target.obsattrs == nil then
-					data.target.obsattrs = {}
+				if data.target.obsattrs_ == nil then
+					data.target.obsattrs_ = {}
 				end
 
-				data.target.obsattrs["quantity_"] = true
+				data.target.obsattrs_["quantity_"] = true
 				data.target.quantity_ = #data.target
 			else
 				customError("Selected element '"..value.."' does not belong to the target.")
 			end
 		elseif type(data.target[value]) == "function" then
-			if data.target.obsattrs == nil then
-				data.target.obsattrs = {}
+			if data.target.obsattrs_ == nil then
+				data.target.obsattrs_ = {}
 			end
 
-			data.target.obsattrs[value] = true
+			data.target.obsattrs_[value] = true
 
 		elseif type(data.target[value]) ~= "number" then
 			incompatibleTypeError(value, "number or function", data.target[value])
 		end
 	end)
 
-	if data.target.obsattrs then
-		forEachElement(data.target.obsattrs, function(idx)
+	if data.target.obsattrs_ then
+		forEachElement(data.target.obsattrs_, function(idx)
 			for i = 1, #data.select do
 				if data.select[i] == idx then
 					data.select[i] = idx.."_"

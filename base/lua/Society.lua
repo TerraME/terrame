@@ -378,8 +378,8 @@ Society_ = {
 			positiveArgument(1, modelTime, true)
 		end
 
-		if self.obsattrs then
-			forEachElement(self.obsattrs, function(idx)
+		if self.obsattrs_ then
+			forEachElement(self.obsattrs_, function(idx)
 				if idx == "quantity_" then
 					self.quantity_ = #self
 				else
@@ -399,7 +399,6 @@ Society_ = {
 	-- returns true if the Agent must be removed.
 	remove = function(self, arg)
 		if type(arg) == "Agent" then
-			-- remove agent from agents's table
 			for k, v in pairs(self.agents) do
 				if v.id == arg.id and v == arg then
 					table.remove(self.agents, k)
@@ -408,9 +407,7 @@ Society_ = {
 				end
 			end
 			customError("Could not remove the Agent (id = '"..tostring(arg.id).."').")
-			return false
 		elseif type(arg) == "function" then
-			-- It uses the function func
 			local ret = false
 			for i = #self.agents, 1, -1  do
 				if arg(self.agents[i]) == true then
