@@ -253,7 +253,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 		local href = symbol_link(signature, doc, module_doc, file_doc, from, name, doc_report)
 		local anchor
 
-		if belong(te_type, doc.files[te_type..".lua"].functions) then -- it is a type
+		if doc.files[te_type..".lua"] and belong(te_type, doc.files[te_type..".lua"].functions) then -- it is a type
 			if te_type == name then
 				local mtoken = string.sub(token, string.len(name) + 2, string.len(token))
 				anchor = "<a href="..href..">"..mtoken.."</a>"

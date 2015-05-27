@@ -881,7 +881,7 @@ function _Gtme.myxpcall(func)
 			end
 			return string.sub(str, 0, string.len(str) - 1)
 		else
-			return err.."\n"..traceback()
+			return err.."\n".._Gtme.traceback()
 		end
 	end)
 end

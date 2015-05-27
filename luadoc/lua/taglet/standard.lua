@@ -875,7 +875,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 
 	if text == "" then
 		if not silent then
-			printError("No description found on @example")
+			printError("No description found in @example")
 			doc_report.problem_examples = doc_report.problem_examples + 1
 		end
 		return text

@@ -810,6 +810,10 @@ function _Gtme.executeTests(package, fileName)
 	end
 	printNote(text)
 
+	if ut.snapshots > 0 then
+		printNote("Snapshots were saved in '"..ut:tmpFolder().."'.")
+	end
+
 	if ut.print_when_loading == 1 then
 		printError("One print() call was found when loading the package.")
 	elseif ut.print_when_loading > 1 then
@@ -917,7 +921,6 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	if ut.snapshots > 0 then
-		printNote("Snapshots were saved in '"..ut:tmpFolder().."'.")
 		if ut.snapshot_files == 1 then
 			printError("One snapshot file was created. Please run the tests again.")
 		elseif ut.snapshot_files > 1 then

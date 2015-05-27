@@ -263,134 +263,180 @@ function _Gtme.executeDoc(package)
 		printError(doc_report.undoc_files.." out of "..doc_report.lua_files.." files are not documented.")
 	end
 
-	if doc_report.wrong_description == 0 then
-		printNote("All fields of 'description.lua' are correct.")
-	else
+	if doc_report.wrong_description == 1 then
+		printError("One problem was found in 'description.lua'.")
+	elseif doc_report.wrong_description > 1 then
 		printError(doc_report.wrong_description.." problems were found in 'description.lua'.")
+	else
+		printNote("All fields of 'description.lua' are correct.")
 	end
 
-	if doc_report.wrong_data == 0 then
-		printNote("All data files are correctly documented in 'data.lua'.")
-	else
-		printError(doc_report.wrong_data.." problems were found in 'data.lua'.")
-	end
-
-	if doc_report.undoc_data == 0 then
-		printNote("No undocumented data files were found.")
-	else
+	if doc_report.undoc_data == 1 then
+		printError("One data file is not documented.")
+	elseif doc_report.undoc_data > 1 then
 		printError(doc_report.undoc_data.." data files are not documented.")
+	else
+		printNote("No undocumented data files were found.")
 	end
 
-	if doc_report.wrong_line == 0 then
-		printNote("All source code lines starting with --- are valid.")
+	if doc_report.wrong_data == 1 then
+		printError("One problem was found in 'data.lua'.")
+	elseif doc_report.wrong_data > 1 then
+		printError(doc_report.wrong_data.." problems were found in 'data.lua'.")
 	else
+		printNote("All data files are correctly documented in 'data.lua'.")
+	end
+
+	if doc_report.wrong_line == 1 then
+		printError("One source code line starting with --- is invalid.")
+	elseif doc_report.wrong_line > 1 then
 		printError(doc_report.wrong_line.." source code lines starting with --- are invalid.")
+	else
+		printNote("All source code lines starting with --- are valid.")
 	end
 
 	if doc_report.models > 0 then
 		if doc_report.model_error == 0 then
-			printNote("All "..doc_report.models.." Models are correctly documented.")
+			if doc_report.models == 1 then
+				printNote("The single Model is correctly documented.")
+			else
+				printNote("All "..doc_report.models.." Models are correctly documented.")
+			end
+		elseif doc_report.model_error == 1 then
+			printError("One error was found in the documentation of Models.")
 		else
-			printError("There are "..doc_report.model_error.." errors in the documentation of Models.")
+			printError(doc_report.model_error.." errors were found in the documentation of Models.")
 		end
 	else
 		printNote("There are no Models in the package.")
 	end
 
-	if doc_report.undoc_functions == 0 then
-		printNote("All "..doc_report.functions.." global functions of the package are documented.")
-	else
+	if doc_report.undoc_functions == 1 then
+		printError("One global function is not documented.")
+	elseif doc_report.undoc_functions > 1 then
 		printError(doc_report.undoc_functions.." global functions are not documented.")
+	else
+		printNote("All "..doc_report.functions.." global functions of the package are documented.")
 	end
 
-	if doc_report.duplicated_functions == 0 then
+	if doc_report.duplicated_functions == 1 then
+		printError("One function is declared twice in the source code.")
+	elseif doc_report.duplicated_functions == 0 then
+		printError(doc_report.duplicated_functions.." functions are declared twice in the source code.")
+	else
 		printNote("All functions of each file are declared only once.")
-	else
-		printError("There are "..doc_report.duplicated_functions.." repeated functions in the source code.")
 	end
 
-	if doc_report.wrong_descriptions == 0 then
+	if doc_report.wrong_descriptions == 1 then
+		printError("One description ends with wrong character.")
+	elseif doc_report.wrong_descriptions == 0 then
+		printError(doc_report.wrong_descriptions.." descriptions end with wrong characters.")
+	else
 		printNote("All descriptions end with a correct character.")
-	else
-		printError("There are "..doc_report.wrong_descriptions.." descriptions ending with wrong characters.")
 	end
 
-	if doc_report.duplicated == 0 then
-		printNote("Tags are not duplicated.")
+	if doc_report.duplicated == 1 then
+		printError("One tag is duplicated in the documentation.")
+	elseif doc_report.duplicated > 1 then
+		printError(doc_report.duplicated.." tags are duplicated in the documentation.")
 	else
-		printError(doc_report.duplicated.." tags are duplicated.")
+		printNote("There is no duplicated tag in the documentation.")
 	end
 
-	if doc_report.compulsory_arguments == 0 then
+	if doc_report.compulsory_arguments == 1 then
+		printError("One tag should have a compulsory argument.")
+	elseif doc_report.compulsory_arguments > 1 then
+		printError(doc_report.compulsory_arguments.." tags should have compulsory arguments.")
+	else
 		printNote("All tags with compulsory arguments were correctly used.")
-	else
-		printError(doc_report.compulsory_arguments.." tags should use compulsory arguments.")
 	end
 
-	if doc_report.undoc_arg == 0 then
-		printNote("All "..doc_report.arguments.." non-named arguments are documented.")
-	else
+	if doc_report.undoc_arg == 1 then
+		printError("One non-named argument is not documented.")
+	elseif doc_report.undoc_arg > 2 then
 		printError(doc_report.undoc_arg.." non-named arguments are not documented.")
+	else
+		printNote("All "..doc_report.arguments.." non-named arguments are documented.")
 	end
 
-	if doc_report.undefined_arg == 0 then
-		printNote("No undefined arguments were found.")
-	else
+	if doc_report.undefined_arg == 1 then
+		printError("One undefined argument was found.")
+	elseif doc_report.undefined_arg > 1 then
 		printError(doc_report.undefined_arg.." undefined arguments were found.")
+	else
+		printNote("No undefined arguments were found.")
 	end
 
-	if doc_report.unused_arg == 0 then
-		printNote("All available arguments of functions are used in their HTML tables.")
-	else
+	if doc_report.unused_arg == 1 then
+		printError("One documented argument is not used in the HTML tables.")
+	elseif doc_report.unused_arg > 1 then
 		printError(doc_report.unused_arg.." documented arguments are not used in the HTML tables.")
+	else
+		printNote("All available arguments of functions are used in their HTML tables.")
 	end
 
-	if doc_report.unknown_arg == 0 then
-		printNote("All arguments used in the HTML tables are documented.")
-	else
+	if doc_report.unknown_arg == 1 then
+		printError("One argument used in the HTML tables is not documented.")
+	elseif doc_report.unknown_arg > 1 then
 		printError(doc_report.unknown_arg.." arguments used in the HTML tables are not documented.")
+	else
+		printNote("All arguments used in the HTML tables are documented.")
 	end
 
-	if doc_report.lack_usage == 0 then
-		printNote("All "..doc_report.functions.." functions have @usage.")
-	else
+	if doc_report.lack_usage == 1 then
+		printError("One out of "..doc_report.functions.." functions does not have @usage.")
+	elseif doc_report.lack_usage > 1 then
 		printError(doc_report.lack_usage.." out of "..doc_report.functions.." functions do not have @usage.")
+	else
+		printNote("All "..doc_report.functions.." functions have @usage.")
 	end
 
-	if doc_report.no_call_itself_usage == 0 then
-		printNote("All "..doc_report.functions.." functions call themselves in their @usage.")
-	else
+	if doc_report.no_call_itself_usage == 1 then
+		printError("One out of "..doc_report.functions.." documented functions does not call itself in its @usage.")
+	elseif doc_report.no_call_itself_usage > 1 then
 		printError(doc_report.no_call_itself_usage.." out of "..doc_report.functions.." documented functions do not call themselves in their @usage.")
+	else
+		printNote("All "..doc_report.functions.." functions call themselves in their @usage.")
 	end
 
-	if doc_report.wrong_tabular == 0 then
-		printNote("All @tabular are correctly described.")
-	else
+	if doc_report.wrong_tabular == 1 then
+		printError("One problem was found in @tabular.")
+	elseif doc_report.wrong_tabular > 1 then
 		printError(doc_report.wrong_tabular.." problems were found in @tabular.")
+	else
+		printNote("All @tabular are correctly described.")
 	end
 
-	if doc_report.invalid_tags == 0 then
-		printNote("No invalid tags were found.")
+	if doc_report.invalid_tags == 1 then
+		printError("One invalid tag was found in the documentation.")
+	elseif doc_report.invalid_tags > 1 then
+		printError(doc_report.invalid_tags.." invalid tags were found in the documentation.")
 	else
-		printError(doc_report.invalid_tags.." invalid tags were found.")
+		printNote("No invalid tags were found in the documentation.")
 	end
 
-	if doc_report.wrong_links == 0 then
-		printNote("All "..doc_report.links.." links were correctly built.")
-	else
+	if doc_report.wrong_links == 1 then
+		printError("One out of "..doc_report.links.." links is invalid.")
+	elseif doc_report.wrong_links > 1 then
 		printError(doc_report.wrong_links.." out of "..doc_report.links.." links are invalid.")
+	else
+		printNote("All "..doc_report.links.." links were correctly built.")
 	end
 
-	if doc_report.undoc_examples == 0 then
-		printNote("All "..doc_report.examples.." examples are documented.")
-	else
+	if doc_report.undoc_examples == 1 then
+		printError("One out of "..doc_report.examples.." examples is not documented.")
+	elseif doc_report.undoc_examples > 1 then
 		printError(doc_report.undoc_examples.." out of "..doc_report.examples.." examples are not documented.")
+	else
+		printNote("All "..doc_report.examples.." examples are documented.")
 	end
 
-	if doc_report.problem_examples == 0 then
-		printNote("All "..doc_report.examples.." examples are correctly documented.")
-	else
+	if doc_report.problem_examples == 1 then
+		printError("One problem was found in the documentation of examples.")
+	elseif doc_report.problem_examples > 1 then
 		printError(doc_report.problem_examples.." problems were found in the documentation of examples.")
+	else
+		printNote("All "..doc_report.examples.." examples are correctly documented.")
 	end
 
 	local errors = -doc_report.examples -doc_report.arguments - doc_report.links -doc_report.functions -doc_report.models

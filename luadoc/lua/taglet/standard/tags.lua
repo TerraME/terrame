@@ -119,9 +119,11 @@ end
 -- @arg text String with the current line beeing processed.
 local function arg(tag, block, text, doc_report, silent)
 	block[tag] = block[tag] or {}
-	if text == "" and not silent then
-		printError("In "..block.name.."(), @arg should be folowed by an argument name")
-		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
+	if text == "" then
+		if not silent then
+			printError("In "..block.name.."(), @arg should be folowed by an argument name")
+			doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
+		end
 		return
 	end
 
