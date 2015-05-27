@@ -451,7 +451,7 @@ Environment_ = {
 	end
 }
 
-metaTableEnvironment_ = {__index = Environment_, __tostring = tostringTerraME}
+metaTableEnvironment_ = {__index = Environment_, __tostring = _Gtme.tostring}
 
 --- A container that encapsulates space, time, behavior, and other Environments. Objects can be
 -- added directly when the Environment is declared or after it has been instantiated. It can

@@ -531,7 +531,7 @@ Agent_ = {
 	end
 }
 
-metaTableAgent_ = {__index = Agent_, __tostring = tostringTerraME}
+metaTableAgent_ = {__index = Agent_, __tostring = _Gtme.tostring}
 
 --- An autonomous entity that is capable of performing actions as well as interacting with other
 -- Agents and the spatial representation of the model. The Agent constructor gets a table

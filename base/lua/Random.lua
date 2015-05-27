@@ -120,7 +120,7 @@ Random_ = {
 	end
 }
 
-metaTableRandom_ = {__index = Random_, __tostring = tostringTerraME}
+metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 
 --- Type to generate random numbers. It uses RandomLib (http://randomlib.sourceforge.net),
 -- a C++ interface to the Mersenne Twister

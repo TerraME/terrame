@@ -7,6 +7,7 @@
 local assert, error, loadstring, select, string = assert, error, loadstring, select, string
 local find, format, gsub, strsub = string.find, string.format, string.gsub, string.sub
 local concat, tinsert, open, print, debug, load = table.concat, table.insert, io.open, print, debug, load
+local printError, xpcall, traceback = _Gtme.printError, xpcall, traceback
 
 ----------------------------------------------------------------------------
 -- function to do output
@@ -105,7 +106,6 @@ end
 ----------------------------------------------------------------------------
 -- Simulates the setenv function from lua 5.1
 -- Based in: http://stackoverflow.com/questions/14290527/recreating-setfenv-in-lua-5-2
-local printError, xpcall, traceback = printError, xpcall, traceback
 local function setfenv(f, env)
     local _, environment =  xpcall(function() return load(string.dump(f), nil, 'bt', env) end, function(err)
 		printError(err)

@@ -85,7 +85,7 @@ Timer_ = {
 	end
 }
 
-metaTableTimer_ = {__index = Timer_, __tostring = tostringTerraME}
+metaTableTimer_ = {__index = Timer_, __tostring = _Gtme.tostring}
 
 --- A Timer is an Event-based scheduler that executes and controls the simulation. It contains a
 -- set of Events, allowing the simulation to work with processes that start

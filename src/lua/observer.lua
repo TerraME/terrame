@@ -88,7 +88,7 @@ local TME_TYPES_USER = {
 	["Society"]         = TME_TYPES.SOCIETY
 }
 
-createdObservers = {}
+_Gtme.createdObservers = {}
 
 -- OBSERVERS CREATION
 -- TME_OBSERVERS.TEXTSCREEN
@@ -1029,7 +1029,7 @@ local observerPossibleParams = {"type", "target", "attributes", "xAxis", "xLabel
 -- map \
 -- type(target) == "Group" &
 -- map \
-function Observer(data)
+function _Gtme.Observer(data)
 	if type(data.target) == "CellularSpace" then
 		if type(data.attributes) == "table" then
 			local att = data.attributes[1]
@@ -1247,7 +1247,7 @@ function Observer(data)
 	end
 	observerId = nil
 
-	table.insert(createdObservers, data)
+	table.insert(_Gtme.createdObservers, data)
 
 	if observerType == TME_OBSERVERS.TEXTSCREEN then
 		if data.attributes == nil then
@@ -1367,11 +1367,8 @@ local deadObserverMetaTable_ = {__index = function()
     customError("Trying to use a function of an observer that was destroyed.")
 end}
 
-
---- Kill all Observers of the simulation.
--- @usage killAllObservers()
-killAllObservers = function()
-	forEachElement(createdObservers, function(idx, obs)
+function _Gtme.killAllObservers()
+	forEachElement(_Gtme.createdObservers, function(idx, obs)
 		if obs.target.cObj_ then
 			if obs.type == TME_OBSERVERS.NEIGHBORHOOD or obs.type == "neighborhood" then
 				obs.target.cObj_:kill(obs.id, obs.observer.target.cObj_)
@@ -1385,6 +1382,6 @@ killAllObservers = function()
 		end
 		setmetatable(obs, deadObserverMetaTable_)
 	end)
-	createdObservers = {}
+	_Gtme.createdObservers = {}
 end
 

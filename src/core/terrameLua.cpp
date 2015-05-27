@@ -254,13 +254,15 @@ int main(int argc, char *argv[])
 	// Execute the lua files
 	if(argc < 2)
 	{
-		lua_getglobal(L, "execute");
+		lua_getglobal(L, "_Gtme");
+		lua_getfield(L, -1, "execute");
 		lua_pushnil(L);
 		lua_call(L, 1, 0);
 	}
 	else
 	{
-		lua_getglobal(L, "execute");
+		lua_getglobal(L, "_Gtme");
+		lua_getfield(L, -1, "execute");
 		lua_newtable(L);
 
 		int argument = 1;

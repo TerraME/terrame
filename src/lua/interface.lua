@@ -207,7 +207,7 @@ local function create_t(mtable, ordering)
 	return t
 end
 
-function interface(self, modelName, package)
+function _Gtme.interface(self, modelName, package)
 	local quantity, count = 0, 0
 	local pkgattrs, qtattrs, typeattrs, r = "", "", "", ""
 

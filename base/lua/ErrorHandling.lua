@@ -36,7 +36,7 @@ function customError(msg)
 		customError(incompatibleTypeMsg(1, "string", msg))
 	end
 
-	local level = getLevel()
+	local level = _Gtme.getLevel()
 	error("Error: "..msg, level)
 end
 
@@ -50,9 +50,9 @@ function customWarning(msg)
 		customError(incompatibleTypeMsg(1, "string", msg))
 	end
 
-	local level = getLevel()
+	local level = _Gtme.getLevel()
 	local info = debug.getinfo(level)
-	local func = printWarning
+	local func = _Gtme.printWarning
 	local arg = msg
 
 	if info then

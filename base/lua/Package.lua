@@ -140,7 +140,7 @@ end
 -- @usage isLoaded("base")
 function isLoaded(package)
 	mandatoryArgument(1, "string", package)
-	return belong(package, loadedPackages__)
+	return belong(package, _Gtme.loadedPackages)
 end
 
 --- Return the description of a package. It reads file
@@ -179,9 +179,9 @@ function packageInfo(package)
 	local file = pkgfile..s.."description.lua"
 	
 	local result 
-	xpcall(function() result = include(file) end, function(err)
-		printError("Package "..package.." has a corrupted description.lua")
-		printError(err)
+	xpcall(function() result = _Gtme.include(file) end, function(err)
+		_Gtme.printError("Package "..package.." has a corrupted description.lua")
+		_Gtme.printError(err)
 		os.exit() -- SKIP
 	end)
 
@@ -253,7 +253,7 @@ function import(package)
 
 		if not isFile(package_path) then
 			if isFile(package) then
-				printWarning("Loading package '"..package.."' from a folder in the current directory")
+				_Gtme.printWarning("Loading package '"..package.."' from a folder in the current directory")
 				package_path = package -- SKIP
 			else
 				customError("Package '"..package.."' is not installed.")
@@ -267,21 +267,21 @@ function import(package)
 		local load_sequence
 
 		if isFile(load_file) then -- SKIP
-			xpcall(function() load_sequence = include(load_file) end, function(err)
-				printError("Package '"..package.."' could not be loaded.")
-				print(err)
+			xpcall(function() load_sequence = _Gtme.include(load_file) end, function(err)
+				_Gtme.printError("Package '"..package.."' could not be loaded.")
+				_Gtme.print(err)
 			end)
 
 			verifyUnnecessaryArguments(load_sequence, {"files"})
 
 			load_sequence = load_sequence.files -- SKIP
 			if load_sequence == nil then -- SKIP
-				printError("Package '"..package.."' could not be loaded.")
-				printError("load.lua should declare table 'files', with the order of the files to be loaded.")
+				_Gtme.printError("Package '"..package.."' could not be loaded.")
+				_Gtme.printError("load.lua should declare table 'files', with the order of the files to be loaded.")
 				os.exit() -- SKIP
 			elseif type(load_sequence) ~= "table" then
-				printError("Package '"..package.."' could not be loaded.")
-				printError("In load.lua, 'files' should be table, got "..type(load_sequence)..".")
+				_Gtme.printError("Package '"..package.."' could not be loaded.")
+				_Gtme.printError("In load.lua, 'files' should be table, got "..type(load_sequence)..".")
 				os.exit() -- SKIP
 			end
 		else
@@ -299,13 +299,13 @@ function import(package)
 			for _, file in ipairs(load_sequence) do
 				local mfile = package_path..s.."lua"..s..file
 				if not isFile(mfile) then -- SKIP
-					printError("Cannot open "..mfile..". No such file.")
-					printError("Please check "..package_path..s.."load.lua")
+					_Gtme.printError("Cannot open "..mfile..". No such file.")
+					_Gtme.printError("Please check "..package_path..s.."load.lua")
 					os.exit() -- SKIP
 				end
 				xpcall(function() dofile(mfile) end, function(err)
-					printError("Package '"..package.."' could not be loaded.")
-					printError(err)
+					_Gtme.printError("Package '"..package.."' could not be loaded.")
+					_Gtme.printError(err)
 					os.exit() -- SKIP
 				end)
 				count_files[file] = count_files[file] + 1 -- SKIP
@@ -315,13 +315,13 @@ function import(package)
 		for mfile, count in pairs(count_files) do
 			local attr = attributes(package_path..s.."lua"..s..mfile, "mode")
 			if count == 0 and attr ~= "directory" then -- SKIP
-				printWarning("File lua"..s..mfile.." is ignored by load.lua.")
+				_Gtme.printWarning("File lua"..s..mfile.." is ignored by load.lua.")
 			elseif count > 1 then
-				printWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.")
+				_Gtme.printWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.")
 			end
 		end
 
-		table.insert(loadedPackages__, package) -- SKIP
+		table.insert(_Gtme.loadedPackages, package) -- SKIP
 	end
 end
 

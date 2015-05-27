@@ -51,7 +51,7 @@ Choice_ = {
 
 metaTableChoice_ = {
 	__index = Choice_,
-	__tostring = tostringTerraME
+	__tostring = _Gtme.tostring
 }
 
 --- Type to define options to be used by the modeler. It can get a set of

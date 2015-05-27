@@ -17,9 +17,10 @@ local io, pairs, os = io, pairs, os
 local package, string, mkDir = package, string, mkDir
 local table = table
 local print =  print
-local printNote, printError, getn, belong = printNote, printError, getn, belong
+local printNote, printError, getn, belong = _Gtme.printNote, _Gtme.printError, getn, belong
 local forEachElement = forEachElement
 local belong = belong
+local include = _Gtme.include
 
 local s = sessionInfo().separator
 local lp = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."lp.lua")

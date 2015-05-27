@@ -216,7 +216,7 @@ metaTableNeighborhood_ = {
 	__len = function(self)
 		return self.cObj_:size()
 	end,
-	__tostring = tostringTerraME
+	__tostring = _Gtme.tostring
 }
 
 --- A Neighborhood is a set of pairs (cell, weight), where cell is a neighbor Cell and weight 

@@ -113,7 +113,7 @@ return{
 
 
 -- [[
-		local l = Legend{
+		local l = _Gtme.Legend{
 			grouping = "uniquevalues",
 			colorBar = {
 				{value = 0, color = "black"},
@@ -123,7 +123,7 @@ return{
 			pen = 2
 		}
 
-		Observer{
+		_Gtme.Observer{
 			target = world,
 			attributes = {"value"},
 			legends = {l}

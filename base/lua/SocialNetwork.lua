@@ -156,7 +156,7 @@ metaTableSocialNetwork_ = {
 	__len = function(self)
 		return self.count
 	end,
-	__tostring = tostringTerraME
+	__tostring = _Gtme.tostring
 }
 
 --- SocialNetwork represents relations between Agents. It is a set of pairs (connection, 

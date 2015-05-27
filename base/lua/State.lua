@@ -26,7 +26,7 @@
 
 State_ = {type_ = "State"}
 
-metaTableState_ = {__index = State_, __tostring = tostringTerraME}
+metaTableState_ = {__index = State_, __tostring = _Gtme.tostring}
 
 --- A container of Jumps and Flows. Every State also has an id to identify itself in the Jumps of
 -- other States within the same Agent or Automaton.

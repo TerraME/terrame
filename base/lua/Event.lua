@@ -38,7 +38,7 @@ TeEvent.type_ = "Event"
 local function Action(data)
 	local cObj = TeMessage()
 	local metaAttr = {cObj_ = cObj}
-	local metaTable = {__index = metaAttr, __tostring = tostringTerraME}
+	local metaTable = {__index = metaAttr, __tostring = _Gtme.tostring}
 	if data.id ~= nil then cObj:config(data.id) end
 	setmetatable(data, metaTable)
 	cObj:setReference(data)

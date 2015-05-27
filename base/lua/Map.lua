@@ -1825,7 +1825,7 @@ function Map(data)
 		end
 	}
 
-	local legend = Legend{
+	local legend = _Gtme.Legend{
 			grouping = data.grouping,
 			colorBar = colorBar,
 			slices = data.slices,
@@ -1842,7 +1842,7 @@ function Map(data)
 	data.id = idObs
 	data.cObj_ = map
 	setmetatable(data, metaTableMap_)
-    table.insert(createdObservers, data)
+    table.insert(_Gtme.createdObservers, data)
 
 	-- TODO: change the lines below by data:notify()
 	data.target:notify()

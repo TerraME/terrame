@@ -24,7 +24,7 @@
 --          Rodrigo Reis Pereira
 --#########################################################################################
 
-metaTableFlow_ = {__tostring = tostringTerraME}
+metaTableFlow_ = {__tostring = _Gtme.tostring}
 
 --- A Flow describes the behavior of an automaton or Agent in a given State.
 -- @arg data.1st A function(ev, agent, cell), where the arguments are: an Event that 

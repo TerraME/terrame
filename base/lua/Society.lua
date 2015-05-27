@@ -117,7 +117,7 @@ Society_ = {
 			agent.state_ = State{id = "state"} -- remove this in the next version
 			agent.id = tostring(self.autoincrement)
 			agent = Agent(agent)
-			local metaTable = {__index = self.instance, __tostring = tostringTerraME}
+			local metaTable = {__index = self.instance, __tostring = _Gtme.tostring}
 			setmetatable(agent, metaTable)
 			agent:init()
 
@@ -540,7 +540,7 @@ metaTableSociety_ = {
 	__len = function(self)
 		return #self.agents
 	end,
-	__tostring = tostringTerraME
+	__tostring = _Gtme.tostring
 }
 --- Type to create and manipulate a set of Agents. Each Agent within a Society has a
 -- unique id, which is initialized while creating the Society. There are different ways to
@@ -789,7 +789,7 @@ function Society(data)
 		end
 	end)
 
-	local metaTableInstance = {__index = data.instance, __tostring = tostringTerraME}
+	local metaTableInstance = {__index = data.instance, __tostring = _Gtme.tostring}
 
 	data.instance.type_ = "Agent"
 	data.instance.isinstance = true

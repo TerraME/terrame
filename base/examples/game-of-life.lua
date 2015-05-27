@@ -47,7 +47,7 @@ cs = CellularSpace{
 
 cs:createNeighborhood()
 -- [[
-lifeLeg = Legend{
+lifeLeg = _Gtme.Legend{
 	grouping = "uniquevalues",
 	colorBar = {
 		{color = "black", value = "alive"},
@@ -57,7 +57,7 @@ lifeLeg = Legend{
 	pen = 2
 }
 
-obs = Observer{
+obs = _Gtme.Observer{
 	target = cs,
 	attributes = {"state"},
 	legends = {lifeLeg}

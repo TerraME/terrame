@@ -16,7 +16,7 @@ BURNING     = 8
 BURNED      = 9
 
 -- Create a legend for Observer Map
-stateLeg = Legend{
+stateLeg = _Gtme.Legend{
 	type = "number",
 	grouping = "uniquevalue",
 	slices = 5,

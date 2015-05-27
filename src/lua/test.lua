@@ -25,6 +25,10 @@
 --       Raian V. Maretto
 -------------------------------------------------------------------------------------------
 
+local printError   = _Gtme.printError
+local printWarning = _Gtme.printWarning
+local printNote    = _Gtme.printNote
+
 -- find the folders inside a package that contain
 -- lua files, starting from package/tests
 local function testfolders(folder, ut)
@@ -61,6 +65,9 @@ local function testfolders(folder, ut)
 	return(result)
 end
 
+-- find the lines of the file that have the string ":assert"
+-- it ignores when this standart is inside a -- comment
+-- all these lines should be executed at least once
 local function assertTable(filename)
 	local count = 0
 	local mtable = {}
@@ -138,6 +145,7 @@ local function lineTable(filename)
 
 		line = file:read()
 	end
+
 	file:close()
 	return mtable
 end
@@ -152,7 +160,7 @@ local function buildLineTable(package)
 	if isFile(load_file) then
 		-- the 'include' below does not need to be inside a xpcall because
 		-- the package was already loaded with success
-		load_sequence = include(load_file).files
+		load_sequence = _Gtme.include(load_file).files
 	else
 		local dir = dir(baseDir..s.."lua")
 		load_sequence = {}
@@ -182,7 +190,7 @@ local function buildLineTable(package)
 	return testlines
 end
 
-function executeTests(package, fileName)
+function _Gtme.executeTests(package, fileName)
 	local initialTime = os.clock()
 
 	local data
@@ -190,7 +198,7 @@ function executeTests(package, fileName)
 	if type(fileName) == "string" then
 		printNote("Loading configuration file '"..fileName.."'")
 	
-		xpcall(function() data = include(fileName) end, function(err)
+		xpcall(function() data = _Gtme.include(fileName) end, function(err)
 			printError(err)
 			os.exit()
 		end)
@@ -292,7 +300,7 @@ function executeTests(package, fileName)
 	doc_functions = luadocMain(baseDir, dir(baseDir..s.."lua"), {}, package, {}, {}, true)
 
 	printNote("Looking for package functions")
-	testfunctions = buildCountTable(package)
+	testfunctions = _Gtme.buildCountTable(package)
 	
 	local extra = 0
 	forEachElement(doc_functions.files, function(idx, value)
@@ -357,7 +365,7 @@ function executeTests(package, fileName)
 		printWarning("Skip looking for lines of source code")
 	end
 
-	print = print__
+	print = _Gtme.print
 
 	local tf = testfolders(baseDir, ut)
 
@@ -447,7 +455,7 @@ function executeTests(package, fileName)
 				os.exit()
 			end)
 
-			print = print__
+			print = _Gtme.print
 
 			local myAssertTable = assertTable(baseDir..s..eachFolder..s..eachFile)
 
@@ -524,14 +532,14 @@ function executeTests(package, fileName)
 				xpcall(function() tests[eachTest](ut) end, function(err)
 					printError("Wrong execution, got error: '"..err.."'.")
 					ut.functions_with_error = ut.functions_with_error + 1
-					local tb = traceback()
+					local tb = _Gtme.traceback()
 					if tb ~= "" then
 						printError(tb)
 					end
 					found_error = true
 				end)
 
-				print = print__
+				print = _Gtme.print
 
 				ut:clear()
 				ut.executed_functions = ut.executed_functions + 1
@@ -589,6 +597,7 @@ function executeTests(package, fileName)
 					ut.last_error = ""
 				end
 			end
+
 			debug.sethook()
 
 			if data.test then
@@ -705,7 +714,7 @@ function executeTests(package, fileName)
 	-- executing examples
 	if data.examples then
 		printNote("Testing examples")
-		local dirFiles = findExamples(package)
+		local dirFiles = _Gtme.findExamples(package)
 		if dirFiles ~= nil then
 			forEachElement(dirFiles, function(idx, value)
 				print("Testing "..value)
@@ -756,7 +765,7 @@ function executeTests(package, fileName)
 				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
 					printError(err)
-					printError(traceback())
+					printError(_Gtme.traceback())
 					writing_log = true -- to avoid showing errors in the log file
 				end)
 
@@ -773,7 +782,7 @@ function executeTests(package, fileName)
 					io.close(logfile)
 				end
 
-				print = print__
+				print = _Gtme.print
 
 				ut:clear()
 			end)

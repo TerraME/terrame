@@ -480,7 +480,7 @@ function Chart(data)
 			color = data.color[i]
 		end
 
-		local l = Legend{
+		local l = _Gtme.Legend{
 			type = "number",
 			width = width,
 			style = style,
@@ -514,7 +514,7 @@ function Chart(data)
 	data.id = id
 	
 	setmetatable(data, metaTableChart_)
-    table.insert(createdObservers, data)
+    table.insert(_Gtme.createdObservers, data)
 	return data
 end
 

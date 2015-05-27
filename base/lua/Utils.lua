@@ -188,7 +188,7 @@ end
 -- @arg values A table with a set of values.
 -- @usage belong(2, {1, 2, 3})
 function belong(value, values)
-	if type__(values) ~= "table" then
+	if _Gtme.type(values) ~= "table" then
 		incompatibleTypeError(2, "table", values)
 	end
 
@@ -217,7 +217,7 @@ end
 function call(obj, func)
 	mandatoryArgument(2, "string", func)
 
-	if type__(obj) ~= "table" then
+	if _Gtme.type(obj) ~= "table" then
 		customError("Cannot access elements from an object of type '"..type(obj).."'.")
 	elseif type(obj[func]) ~= "function" then
 		customError("Function '"..func.."' does not exist.")
@@ -695,7 +695,7 @@ end
 -- TerraME execution options -imporDb and -exportDb also use this file.
 -- @usage getConfig()
 function getConfig()
-	return include("config.lua")
+	return _Gtme.include("config.lua")
 end
 
 --- Return the extension of a given file name. It returns the substring after the last dot.
@@ -720,7 +720,7 @@ end
 -- @arg t A table.
 -- @usage getn{name = "john", age = 20}
 function getn(t)
-	if type__(t) ~= "table" then
+	if _Gtme.type(t) ~= "table" then
 		incompatibleTypeError(1, "table", t)
 	end
 
@@ -1133,7 +1133,7 @@ end
 -- @usage c = Cell{value = 3}
 -- print(type(c)) -- "Cell"
 function type(data)
-	local t = type__(data)
+	local t = _Gtme.type(data)
 	if t == "table" or (t == "userdata" and getmetatable(data)) then
 		if data.type_ ~= nil then
 			return data.type_
@@ -1151,12 +1151,12 @@ function vardump(o, indent)
 	if indent == nil then indent = '' end
 
 	local indent2 = indent..'    '
-	if type__(o) == 'table' then
+	if _Gtme.type(o) == 'table' then
 		local s = indent..'{'..'\n'
 		local first = true
 		forEachOrderedElement(o, function(k, v)
 			if first == false then s = s .. ', \n' end
-			if type__(k) ~= 'number' then k = "'"..tostring(k).."'" end
+			if _Gtme.type(k) ~= 'number' then k = "'"..tostring(k).."'" end
 			s = s..indent2..'['..k..'] = '..vardump(v, indent2)
 			first = false
 		end)

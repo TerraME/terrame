@@ -209,7 +209,7 @@ metaTableCell_ = {
 	__len = function(self)
 		return self.cObj_:size()
 	end,
-	__tostring = tostringTerraME
+	__tostring = _Gtme.tostring
 }
 
 --- A spatial location with homogeneous internal content.

@@ -25,7 +25,11 @@
 --       Raian V. Maretto
 -------------------------------------------------------------------------------------------
 
-function buildPackage(package)
+local printError   = _Gtme.printError
+local printWarning = _Gtme.printWarning
+local printNote    = _Gtme.printNote
+
+function _Gtme.buildPackage(package)
 	local initialTime = os.clock()
 
 	local report = {
@@ -41,7 +45,7 @@ function buildPackage(package)
 	local s = sessionInfo().separator
 	local docErrors = 0
 	dofile(sessionInfo().path..s.."lua"..s.."doc.lua")
-	xpcall(function() docErrors = executeDoc(package) end, function(err)
+	xpcall(function() docErrors = _Gtme.executeDoc(package) end, function(err)
 		printError(err)
 		report.doc_errors = 1
 	end)
@@ -98,7 +102,7 @@ function buildPackage(package)
 	info_.mode = "debug"
 	local testErrors = 0
 	dofile(sessionInfo().path..s.."lua"..s.."test.lua")
-	xpcall(function() testErrors = executeTests(package) end, function(err)
+	xpcall(function() testErrors = _Gtme.executeTests(package) end, function(err)
 		printError(err)
 		report.test_errors = 1
 	end)
@@ -117,7 +121,7 @@ function buildPackage(package)
 	local result = {}
 
 	forEachFile(sessionInfo().path..s.."packages"..s..package..s.."lua", function(fname)
-		local data = include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..fname)
+		local data = _Gtme.include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..fname)
 		if attrTab ~= nil then
 			forEachElement(data, function(idx, value)
 				if value == attrTab then

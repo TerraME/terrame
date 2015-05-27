@@ -936,7 +936,7 @@ metaTableCellularSpace_ = {
 	__len = function(self)
 		return #self.cells
 	end,
-	__tostring = tostringTerraME
+	__tostring = _Gtme.tostring
 }
 
 --- A multivalued set of Cells. It can be retrieved from databases, files, or created

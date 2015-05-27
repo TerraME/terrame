@@ -5,6 +5,9 @@
 
 local print, pairs, pcall, loadfile = print, pairs, pcall, loadfile
 local belong = belong
+local include = _Gtme.include
+local printNote = _Gtme.printNote
+local printError = _Gtme.printError
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")

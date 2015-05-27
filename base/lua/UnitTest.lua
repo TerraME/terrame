@@ -117,8 +117,8 @@ UnitTest_ = {
 			if self.current_file then
 				local err2 = string.match(err, self.current_file)
 				if err2 ~= self.current_file then
-					printError("Error in wrong file (possibly wrong stack level). It should occur in '"..self.current_file.."', got '"..err.."'.")
-					printError(traceback())
+					_Gtme.printError("Error in wrong file (possibly wrong stack level). It should occur in '"..self.current_file.."', got '"..err.."'.")
+					_Gtme.printError(_Gtme.traceback())
 					self.wrong_file = self.wrong_file + 1 -- SKIP
 					return
 				end
@@ -127,8 +127,8 @@ UnitTest_ = {
 
 			if shortError == nil then
 				self.wrong_file = self.wrong_file + 1 -- SKIP
-				printError("Error should contain line number (possibly wrong stack level), got: '"..err.."'.")
-				printError(traceback())
+				_Gtme.printError("Error should contain line number (possibly wrong stack level), got: '"..err.."'.")
+				_Gtme.printError(_Gtme.traceback())
 				return
 			end
 
@@ -221,7 +221,7 @@ UnitTest_ = {
 		if not isFile(oldImage) then
 			observer:save(oldImage) -- SKIP
 			self.snapshot_files = self.snapshot_files + 1 -- SKIP
-			printWarning("Creating 'snapshots"..s..file.."'.")
+			_Gtme.printWarning("Creating 'snapshots"..s..file.."'.")
 			self.test = self.test + 1 -- SKIP
 			self.success = self.success + 1 -- SKIP
 		else
@@ -260,9 +260,9 @@ UnitTest_ = {
 	-- of the package.
 	-- @usage unitTest:clear()
 	clear = function(self)
-		if #createdObservers > 0 then
+		if #_Gtme.createdObservers > 0 then
 			delay(self.sleep)
-			killAllObservers()
+			_Gtme.killAllObservers()
 			self.delayed_time = self.delayed_time + self.sleep
 		end
 	end,
@@ -285,7 +285,7 @@ UnitTest_ = {
 			local count = self.count_last
 			self.count_last = 0
 			self.last_error = str
-			local func = printError
+			local func = _Gtme.printError
 			if self.unittest then
 				func = customError
 			end
@@ -295,7 +295,7 @@ UnitTest_ = {
 		end
 
 		if self.count_last == 0 then
-			local func = printError
+			local func = _Gtme.printError
 			local arg = str
 			if self.unittest then
 				func = customError
@@ -329,7 +329,7 @@ local metaTableUnitTest_ = {
 -- @arg data.port Number of the port. See CellularSpace.
 -- @arg data.password A password. See CellularSpace.
 -- @arg data.user A user name. See CellularSpace.
--- @arg data.sleep A number indicating the amount of time to sleep every time there is a UnitTest:clean() in
+-- @arg data.sleep A number indicating the amount of time to sleep every time there is a UnitTest:clear() in
 -- the tests as well as in the end of each test that creates some visualization object.
 -- @usage unitTest = UnitTest{}
 function UnitTest(data)

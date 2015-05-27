@@ -425,7 +425,7 @@ local metaTableLegend_ = {__index = Legend_, __tostring = tostringTerraME}
 --         {value = 1, color = "red"}
 --     }
 -- }
-function Legend(data)
+function _Gtme.Legend(data)
 	if type(data) ~= "table" then
 		if data == nil then
 			tableArgumentError("Legend", 3)
@@ -672,6 +672,7 @@ function Legend(data)
 			diffG = diffG + math.abs(nextColor[2] - color[2])
 			diffB = diffB + math.abs(nextColor[3] - color[3])
 		end
+
 		local maxDiff = math.max(diffR, diffG, diffB)
 
 		if data.slices > maxDiff then

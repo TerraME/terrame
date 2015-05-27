@@ -6,9 +6,10 @@ local assert, tostring, type = assert, tostring, type
 local exit = os.exit
 local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
-local printNote, printError, print, attributes = printNote, printError, print, attributes
+local printNote, printError, print, attributes = _Gtme.printNote, _Gtme.printError, print, attributes
 local sessionInfo, belong = sessionInfo, belong
-local include, getn = include, getn
+local include = _Gtme.include
+local getn = getn
 local forEachElement = forEachElement
 local belong = belong
 

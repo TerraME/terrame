@@ -177,7 +177,7 @@ metaTableTrajectory_ = {
 	__len = function(self)
 		return #self.cells
 	end,
-	__tostring = tostringTerraME
+	__tostring = _Gtme.tostring
 }
 
 --- Type that defines an ordered selection over a CellularSpace. It inherits CellularSpace;

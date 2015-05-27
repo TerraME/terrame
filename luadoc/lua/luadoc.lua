@@ -10,6 +10,7 @@
 -- Print version number.
 
 local s = sessionInfo().separator
+local include = _Gtme.include
 
 local function print_version ()
 	print (string.format("%s\n%s\n%s", 

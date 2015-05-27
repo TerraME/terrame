@@ -5,7 +5,8 @@
 
 local assert, type, tostring, ipairs = assert, type, tostring, ipairs
 local string, table = string, table
-local printError, pairs = printError, pairs
+local printError, pairs = _Gtme.printError, pairs
+local include = _Gtme.include
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")

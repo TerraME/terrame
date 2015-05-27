@@ -184,7 +184,7 @@ function InternetSender(data)
 
 	verify(id, "The observer could not be created.")
 
-	table.insert(createdObservers, {target = data.target, id = id})
+	table.insert(_Gtme.createdObservers, {target = data.target, id = id})
 
 	return id
 end

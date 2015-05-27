@@ -25,6 +25,10 @@
 --       Raian V. Maretto
 -------------------------------------------------------------------------------------------
 
+local printError   = _Gtme.printError
+local printWarning = _Gtme.printWarning
+local printNote    = _Gtme.printNote
+
 local function dataFiles(package)
 	local s = sessionInfo().separator
 	local datapath = sessionInfo().path..s.."packages"..s..package..s.."data"
@@ -42,7 +46,7 @@ local function dataFiles(package)
 	return result
 end
 
-function executeDoc(package)
+function _Gtme.executeDoc(package)
 	local initialTime = os.clock()
 
 	import("luadoc")
@@ -64,7 +68,7 @@ function executeDoc(package)
 
 	local lua_files = dir(package_path..s.."lua")
 
-	local example_files = findExamples(package)
+	local example_files = _Gtme.findExamples(package)
 
 	local doc_report = {
 		arguments = 0,
@@ -217,7 +221,7 @@ function executeDoc(package)
 
 	local result = luadocMain(package_path, lua_files, example_files, package, mdata, doc_report)
 
-	local all_functions = buildCountTable(package)
+	local all_functions = _Gtme.buildCountTable(package)
 
 	local all_doc_functions = {}
 

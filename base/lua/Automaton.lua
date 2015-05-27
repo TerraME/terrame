@@ -146,7 +146,7 @@ Automaton_ = {
 	end
 }
 
-metaTableAutomaton_ = {__index = Automaton_, __tostring = tostringTerraME}
+metaTableAutomaton_ = {__index = Automaton_, __tostring = _Gtme.tostring}
 
 --- A hybrid state machine that needs to be located on a CellularSpace, and is replicated over
 -- each Cell of the space. It has independent States in each Cell.

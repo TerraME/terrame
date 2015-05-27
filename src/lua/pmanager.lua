@@ -23,7 +23,7 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
-function packageManager()
+function _Gtme.packageManager()
 	require("qtluae")
 
 	local dialog = qt.new_qobject(qt.meta.QDialog)
@@ -133,7 +133,7 @@ function packageManager()
 		comboboxExamples:clear()
 		comboboxModels:clear()
 
-		local models = findModels(comboboxPackages.currentText)
+		local models = _Gtme.findModels(comboboxPackages.currentText)
 
 		comboboxModels.enabled = #models > 1
 		buildButton.enabled = #models > 0
@@ -142,7 +142,7 @@ function packageManager()
 			qt.combobox_add_item(comboboxModels, value)
 		end)
 
-		local ex = findExamples(comboboxPackages.currentText)
+		local ex = _Gtme.findExamples(comboboxPackages.currentText)
 
 		comboboxExamples.enabled = #ex > 1
 		runButton.enabled = #ex > 0

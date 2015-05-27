@@ -10,7 +10,7 @@ local sessionInfo = sessionInfo
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
 local assert, ipairs, type = assert, ipairs, type
-local string, table, printNote = string, table, printNote
+local string, table, printNote = string, table, _Gtme.printNote
 
 options = {
 	output_dir = "./",
