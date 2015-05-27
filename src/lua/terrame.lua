@@ -731,7 +731,7 @@ function execute(arguments) -- arguments is a vector of strings
 					printError(err)
 					--printError(traceback())
 				end)
-				os.exit() -- #76
+				os.exit()
 			elseif arg == "-help" then 
 				usage()
 				os.exit()
