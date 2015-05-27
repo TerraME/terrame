@@ -79,13 +79,14 @@ local function assertTable(filename)
 		count = count + 1
 
 		if string.match(line, ":assert") and not string.match(line, "SKIP") then
-			if string.match(line, "%-%-*assert") == "assert" then
+			if string.match(line, ".*%-%-.*assert") == nil then
 				mtable[count] = 0
 			end
 		end
 
 		line = file:read()
 	end
+
 	file:close()
 	return mtable
 end
@@ -283,12 +284,14 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	printNote("Loading package "..package)
-	print = function(...)
+	print = function(arg)
 		ut.print_when_loading = ut.print_when_loading + 1
-		printError(...)
+		printError("Error: print() call detected with argument '"..arg.."'")
 	end
 
 	import(package)
+
+	print = function() end
 
 	printNote("Looking for documented functions")
 	import("luadoc")
@@ -431,7 +434,9 @@ function _Gtme.executeTests(package, fileName)
 			end)
 		else -- nil
 			forEachElement(dirFiles, function(_, value)
-				myFiles[#myFiles + 1] = value
+				if string.endswith(value, ".lua") then
+					myFiles[#myFiles + 1] = value
+				end
 			end)
 		end
 
@@ -445,9 +450,9 @@ function _Gtme.executeTests(package, fileName)
 
 			printNote("Testing "..eachFolder..s..eachFile)
 
-			print = function(...)
+			print = function(arg)
 				ut.print_calls = ut.print_calls + 1
-				printError(...)
+				printError("Error: print() call detected with argument '"..arg.."'")
 			end
 
 			xpcall(function() tests = dofile(baseDir..s..eachFolder..s..eachFile) end, function(err)
@@ -496,10 +501,12 @@ function _Gtme.executeTests(package, fileName)
 				end
 
 				if data.lines and short == eachFile and not string.match(s, "tests") then
-					if not executionlines[eachFile][line] then
-						--printNote(line)
-					else
-						executionlines[eachFile][line] = executionlines[eachFile][line] + 1
+					if executionlines[eachFile] then	
+						if not executionlines[eachFile][line] then
+							--printNote(line)
+						else
+							executionlines[eachFile][line] = executionlines[eachFile][line] + 1
+						end
 					end
 				end
 			end
@@ -514,7 +521,7 @@ function _Gtme.executeTests(package, fileName)
 					if testfunctions[eachFile][eachTest] then
 						testfunctions[eachFile][eachTest] = testfunctions[eachFile][eachTest] + 1
 					else
-						printError("Function does not exist in the respective file in the source code.")
+						printError("This function does not exist in the respective file in the source code.")
 						ut.functions_not_exist = ut.functions_not_exist + 1
 					end
 				end
@@ -523,9 +530,9 @@ function _Gtme.executeTests(package, fileName)
 
 				collectgarbage("collect")
 
-				print = function(...)
+				print = function(arg)
 					ut.print_calls = ut.print_calls + 1
-					printError(...)
+					printError("Error: print() call detected with argument '"..arg.."'")
 				end
 
 				local found_error = false
@@ -728,7 +735,7 @@ function _Gtme.executeTests(package, fileName)
 
 						logfile = io.open(baseDir..s.."examples"..s..lfilename, "r")
 						if logfile == nil then
-							printWarning("Creating log file "..lfilename)
+							printError("Creating log file "..lfilename)
 							logfile = io.open(baseDir..s.."examples"..s..lfilename, "w")
 							writing_log = true
 							ut.log_files = ut.log_files + 1
@@ -741,7 +748,7 @@ function _Gtme.executeTests(package, fileName)
 						local str = logfile:read(string.len(x) + 1)
 						if str ~= x.."\n" then
 							ut.examples_error = ut.examples_error + 1
-							printError("Different strings:")
+							printError("Error: Strings do not match:")
 							if str == nil then
 								printError("Log file: <empty>")
 							else
@@ -764,7 +771,7 @@ function _Gtme.executeTests(package, fileName)
 				end
 				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
-					printError(err)
+					printError("Error in "..err)
 					printError(_Gtme.traceback())
 					writing_log = true -- to avoid showing errors in the log file
 				end)
@@ -803,70 +810,92 @@ function _Gtme.executeTests(package, fileName)
 	end
 	printNote(text)
 
-	if ut.print_when_loading > 0 then
-		printError(ut.print_when_loading.." print calls were found when loading the package.")
+	if ut.print_when_loading == 1 then
+		printError("One print() call was found when loading the package.")
+	elseif ut.print_when_loading > 1 then
+		printError(ut.print_when_loading.." print() calls were found when loading the package.")
 	else
-		printNote("No print calls were found when loading the package.")
+		printNote("No print() calls were found when loading the package.")
 	end
 
-	if ut.invalid_test_file > 0 then
-		printError("There are "..ut.invalid_test_file.." invalid files or folders in folder 'test'.")
+	if ut.invalid_test_file == 1 then
+		printError("One invalid file or folder was found in folder 'test'.")
+	elseif ut.invalid_test_file > 1 then
+		printError(""..ut.invalid_test_file.." invalid files or folders were found in folder 'test'.")
 	else
 		printNote("There are no invalid files or folders in folder 'tests'.")
 	end
 
-	if data.test then
+	if data.test then -- asserts are not verified only when the user executes specific tests
 		printWarning("Execution of all asserts was not verified.")
-	elseif ut.asserts_not_executed > 0 then
-		printError(ut.asserts_not_executed.." asserts were not executed.")
+	elseif ut.asserts_not_executed == 1 then
+		printError("One assert was not executed at least once.")
+	elseif ut.asserts_not_executed > 1 then
+		printError(ut.asserts_not_executed.." asserts were not executed at least once.")
 	else
 		printNote("All asserts were executed at least once.")
 	end
 
-	if ut.fail > 0 then
+	if ut.fail == 1 then
+		printError("One out of "..ut.test.." asserts failed.")
+	elseif ut.fail > 1 then
 		printError(ut.fail.." out of "..ut.test.." asserts failed.")
 	else
 		printNote("All "..ut.test.." asserts were executed successfully.")
 	end
 
-	if ut.functions_with_error > 0 then
+	if ut.functions_with_error == 1 then
+		printError("One out of "..ut.executed_functions.." tested functions stopped with an unexpected error.")
+	elseif ut.functions_with_error > 1 then
 		printError(ut.functions_with_error.." out of "..ut.executed_functions.." tested functions stopped with an unexpected error.")
 	else
 		printNote("All "..ut.executed_functions.." tested functions do not have any unexpected execution error.")
 	end
 
-	if ut.functions_without_assert > 0 then
+	if ut.functions_without_assert == 1 then
+		printError("One out of "..ut.executed_functions.." tested functions does not have at least one assert.")
+	elseif ut.functions_without_assert > 1 then
 		printError(ut.functions_without_assert.." out of "..ut.executed_functions.." tested functions do not have at least one assert.")
 	else
 		printNote("All "..ut.executed_functions.." tested functions have at least one assert.")
 	end
 
-	if ut.functions_not_exist > 0 then
+	if ut.functions_not_exist == 1 then
+		printError("One out of "..ut.executed_functions.." tested functions does not exist in the source code of the package.")
+	elseif ut.functions_not_exist > 1 then
 		printError(ut.functions_not_exist.." out of "..ut.executed_functions.." tested functions do not exist in the source code of the package.")
 	else
 		printNote("All "..ut.executed_functions.." tested functions exist in the source code of the package.")
 	end
 
-	if ut.functions_with_global_variables > 0 then
+	if ut.functions_with_global_variables == 1 then
+		printError("One out of "..ut.executed_functions.." tested functions creates or updates some global variable.")
+	elseif ut.functions_with_global_variables > 1 then
 		printError(ut.functions_with_global_variables.." out of "..ut.executed_functions.." tested functions create or update some global variable.")
 	else
 		printNote("No tested function creates or updates any global variable.")
 	end
 
-	if ut.print_calls > 0 then
+	if ut.print_calls == 1 then
+		printError("One print call was found in the tests.")
+	elseif ut.print_calls > 1 then
 		printError(ut.print_calls.." print calls were found in the tests.")
 	else
 		printNote("No function prints any text on the screen.")
 	end
 
-	if ut.wrong_file > 0 then
-		printError(ut.wrong_file.." assertError calls found an error message pointing to an internal file (wrong level).")
+	if ut.wrong_file == 1 then
+		printError("One assertError() call has an error message pointing to an internal file (wrong level).")
+	elseif ut.wrong_file > 1 then
+		printError(ut.wrong_file.." assertError() calls have error messages pointing to an internal file (wrong level).")
 	else
-		printNote("No assertError calls had error messages pointing to internal files.")
+		printNote("No assertError() calls have error messages pointing to internal files.")
 	end
 
 	if check_functions then
-		if ut.functions_not_tested > 0 then
+		if ut.functions_not_tested == 1 then
+			printError("One out of "..ut.package_functions.." source code functions was not tested.")
+		elseif ut.functions_not_tested > 1 then
 			printError(ut.functions_not_tested.." out of "..ut.package_functions.." source code functions were not tested.")
 		else
 			printNote("All "..ut.package_functions.." functions of the package were tested.")
@@ -876,24 +905,30 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	if data.lines then
-		if ut.lines_not_executed > 0 then
-			printError(ut.lines_not_executed.." lines of source code were not executed at least once.")
+		if ut.lines_not_executed == 1 then
+			printError("One line from the source code was not executed at least once.")
+		elseif ut.lines_not_executed > 1 then
+			printError(ut.lines_not_executed.." lines from the source code were not executed at least once.")
 		else
-			printNote("All lines of the source code were executed.")
+			printNote("All lines from the source code were executed.")
 		end
 	else
-		printWarning("No lines of source code were verified.")
+		printWarning("No lines from the source code were verified.")
 	end
 
 	if ut.snapshots > 0 then
 		printNote("Snapshots were saved in '"..ut:tmpFolder().."'.")
-		if ut.snapshot_files > 0 then
-			printError(ut.snapshot_files.." snapshots were created. Please run the tests again.")
+		if ut.snapshot_files == 1 then
+			printError("One snapshot file was created. Please run the tests again.")
+		elseif ut.snapshot_files > 1 then
+			printError(ut.snapshot_files.." snapshot files were created. Please run the tests again.")
 		else
-			printNote("No new snapshot was created.")
+			printNote("No new snapshot file was created.")
 		end
 
-		if ut.unused_snapshot_files > 0 then
+		if ut.unused_snapshot_files == 1 then
+			printError("One file from folder 'snapshots' was not used.")
+		elseif ut.unused_snapshot_files > 1 then
 			printError(ut.unused_snapshot_files.." files from folder 'snapshots' were not used.")
 		else
 			printNote("All snapshot files were used in the tests.")
@@ -907,11 +942,15 @@ function _Gtme.executeTests(package, fileName)
 			printError("No examples were found.")
 		elseif ut.examples_error == 0 then
 			printNote("All "..ut.examples.." examples were successfully executed.")
+		elseif ut.examples_error == 1 then
+			printError("One error was found in the "..ut.examples.." examples.")
 		else
 			printError(ut.examples_error.." errors were found in the "..ut.examples.." examples.")
 		end
 
-		if ut.log_files > 0 then
+		if ut.log_files == 1 then
+			printError("One log file was created in the examples. Please run the tests again.")
+		elseif ut.log_files > 1 then
 			printError(ut.log_files.." log files were created in the examples. Please run the tests again.")
 		else
 			printNote("No new log file was created.")

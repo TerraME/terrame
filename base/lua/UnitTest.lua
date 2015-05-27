@@ -210,7 +210,7 @@ UnitTest_ = {
 
 		if self.tsnapshots[file] then
 			self.fail = self.fail + 1 -- SKIP
-			self:printError("File '"..file.."' is used in more than one assert_shapshot().")
+			self:printError("File '"..file.."' is used in more than one assertShapshot().")
 			return
 		end
 
@@ -221,7 +221,7 @@ UnitTest_ = {
 		if not isFile(oldImage) then
 			observer:save(oldImage) -- SKIP
 			self.snapshot_files = self.snapshot_files + 1 -- SKIP
-			_Gtme.printWarning("Creating 'snapshots"..s..file.."'.")
+			_Gtme.printError("Creating 'snapshots"..s..file.."'.")
 			self.test = self.test + 1 -- SKIP
 			self.success = self.success + 1 -- SKIP
 		else
@@ -278,7 +278,7 @@ UnitTest_ = {
 		end
 
 		local str = info.short_src
-		str = str..":".. info.currentline ..": "..msg
+		str = "Error in "..str..":".. info.currentline ..": "..msg
 		if self.last_error == str then
 			self.count_last = self.count_last + 1
 		elseif self.count_last > 0 then

@@ -482,8 +482,8 @@ id     string [env]
 		local PRIO10 = 10
 		local PRIO11 = 11
 
-		local orderToken
-		local timeMemory
+		local orderToken = -1
+		local timeMemory = 0
 
 		local env = Environment{
 			clock1 = Timer{
