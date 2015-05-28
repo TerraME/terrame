@@ -79,7 +79,7 @@ return{
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_background.bmp")
 
-		local r = Random()
+		local r = Random{seed = 10}
 
 		local c = Cell{
 			mvalue = function()
@@ -105,7 +105,38 @@ return{
 		cs:notify()
 		cs:notify()
 		cs:notify()
+		cs:notify()
+		cs:notify()
+		cs:notify()
+		cs:notify()
+		cs:notify()
+		cs:notify()
+		cs:notify()
+		cs:notify()
 		unitTest:assertSnapshot(m, "map_function.bmp")
+
+--[[ Segmentation fault: 11 - Bag of tasks
+		local c = Choice{"low", "medium", "high"}
+		local cs = CellularSpace{xdim = 5}
+		forEachCell(cs, function(cell)
+			cell.level = c:sample()
+		end)
+
+		m = Map{
+			target = cs,
+			select = "level",
+			color = {"blue", "green", "red"},
+			value = {"low", "medium", "high"}
+		}
+
+		unitTest:assertType(m, "Map") -- SKIP
+
+		cs:notify()
+		cs:notify()
+		cs:notify()
+		cs:notify()
+		unitTest:assertSnapshot(m, "map_string.bmp") -- SKIP
+--]]
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
