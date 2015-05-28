@@ -321,7 +321,7 @@ function _Gtme.executeDoc(package)
 
 	if doc_report.duplicated_functions == 1 then
 		printError("One function is declared twice in the source code.")
-	elseif doc_report.duplicated_functions == 0 then
+	elseif doc_report.duplicated_functions > 1 then
 		printError(doc_report.duplicated_functions.." functions are declared twice in the source code.")
 	else
 		printNote("All functions of each file are declared only once.")
@@ -329,7 +329,7 @@ function _Gtme.executeDoc(package)
 
 	if doc_report.wrong_descriptions == 1 then
 		printError("One description ends with wrong character.")
-	elseif doc_report.wrong_descriptions == 0 then
+	elseif doc_report.wrong_descriptions > 1 then
 		printError(doc_report.wrong_descriptions.." descriptions end with wrong characters.")
 	else
 		printNote("All descriptions end with a correct character.")
