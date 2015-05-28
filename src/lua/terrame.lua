@@ -540,13 +540,19 @@ function _Gtme.traceback()
 	while info ~= nil do
 		local m1 = string.match(info.source, _Gtme.replaceSpecialChars(sessionInfo().path..s.."lua"))
 		local m2 = string.match(info.source, _Gtme.replaceSpecialChars(sessionInfo().path..s.."packages"))
+		local mb = string.match(info.source, _Gtme.replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"))
 		local m3 = string.match(info.short_src, "%[C%]")
 
 		if m1 or m2 or m3 then
 			last_function = info.name
 
-			if info.fullTraceback then
-				if last_function then
+			if (sessionInfo().fullTraceback or sessionInfo().mode == "debug") and last_function then
+				if sessionInfo().package then
+					if not mb and not m1 and not m3 then
+						str = str.. "\n    In "..last_function.."\n"
+						str = str.."    File "..info.short_src..", line "..info.currentline
+					end
+				else
 					str = str.. "\n    In "..last_function.."\n"
 					str = str.."    File "..info.short_src..", line "..info.currentline
 				end
@@ -572,18 +578,18 @@ function _Gtme.traceback()
 				end
 
 				if last_function then
-					str = str.. "    In "..last_function.."\n"
+					str = str.. "\n    In "..last_function
 				end
 				found_function = true
 			end
 
-			str = str.."    File "..info.short_src..", line "..info.currentline
+
+			str = str.."\n    File "..info.short_src..", line "..info.currentline
 			if info.name then
 				str = str..", in function "..info.name
 			else
 				str = str..", in main chunk"
 			end
-			str = str.."\n"
 		end
 		level = level + 1
 		info = debug.getinfo(level)
