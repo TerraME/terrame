@@ -31,6 +31,12 @@ return{
 	isLoaded = function(unitTest)
 		unitTest:assert(isLoaded("base"))
 	end,
+	package = function(unitTest)
+		local base = package("base")
+
+		local cs = base.CellularSpace{xdim = 10}
+		unitTest:assertType(cs, "CellularSpace")
+	end,
 	packageInfo = function(unitTest)
 		local r = packageInfo()
 

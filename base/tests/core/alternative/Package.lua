@@ -25,23 +25,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	isLoaded = function(unitTest)
-		local error_func = function()
-			isLoaded()
-		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
-	end,
-	packageInfo = function(unitTest)
-		local error_func = function()
-			local r = packageInfo(2)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
-	
-		error_func = function()
-			local r = packageInfo("asdfgh")
-		end
-		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
-	end,
 	import = function(unitTest)
 		local error_func = function()
 			import()
@@ -57,6 +40,34 @@ return{
 			import("base")
 		end
 		unitTest:assertError(error_func, "Package 'base' is already loaded.")
+	end,
+	isLoaded = function(unitTest)
+		local error_func = function()
+			isLoaded()
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
+	end,
+	package = function(unitTest)
+		local error_func = function()
+			package()
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
+
+		error_func = function()
+			package("asdfgh")
+		end
+		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
+	end,
+	packageInfo = function(unitTest)
+		local error_func = function()
+			local r = packageInfo(2)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+	
+		error_func = function()
+			local r = packageInfo("asdfgh")
+		end
+		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
 	end
 }
 

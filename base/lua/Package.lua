@@ -135,12 +135,195 @@ function file(filename, package)
 	return file
 end
 
+--- Load a given package. If the package is not installed, it tries to load from
+-- a folder in the current directory.
+-- @arg package A package name.
+-- @usage import("calibration")
+function import(package)
+	mandatoryArgument(1, "string", package)
+
+	if belong(package, {"terrame", "TerraME"}) then
+		return
+	end
+
+	if isLoaded(package) and sessionInfo().package == nil then
+		customWarning("Package '"..package.."' is already loaded.")
+	else
+		local s = sessionInfo().separator
+		local package_path = sessionInfo().path..s.."packages"..s..package
+
+		if not isFile(package_path) then
+			if isFile(package) then
+				_Gtme.printWarning("Loading package '"..package.."' from a folder in the current directory")
+				package_path = package -- SKIP
+			else
+				customError("Package '"..package.."' is not installed.")
+			end
+		end
+
+		verifyDepends(package)
+
+		local load_file = package_path..s.."load.lua"
+		local all_files = dir(package_path..s.."lua")
+		local load_sequence
+
+		if isFile(load_file) then -- SKIP
+			xpcall(function() load_sequence = _Gtme.include(load_file) end, function(err)
+				_Gtme.printError("Package '"..package.."' could not be loaded.")
+				_Gtme.print(err)
+			end)
+
+			verifyUnnecessaryArguments(load_sequence, {"files"})
+
+			load_sequence = load_sequence.files -- SKIP
+			if load_sequence == nil then -- SKIP
+				_Gtme.printError("Package '"..package.."' could not be loaded.")
+				_Gtme.printError("load.lua should declare table 'files', with the order of the files to be loaded.")
+				os.exit() -- SKIP
+			elseif type(load_sequence) ~= "table" then
+				_Gtme.printError("Package '"..package.."' could not be loaded.")
+				_Gtme.printError("In load.lua, 'files' should be table, got "..type(load_sequence)..".")
+				os.exit() -- SKIP
+			end
+		else
+			load_sequence = all_files -- SKIP
+		end
+
+		local count_files = {}
+		for _, file in ipairs(all_files) do
+			count_files[file] = 0 -- SKIP
+		end
+
+		local i, file
+
+		if load_sequence then -- SKIP
+			for _, file in ipairs(load_sequence) do
+				local mfile = package_path..s.."lua"..s..file
+				if not isFile(mfile) then -- SKIP
+					_Gtme.printError("Cannot open "..mfile..". No such file.")
+					_Gtme.printError("Please check "..package_path..s.."load.lua")
+					os.exit() -- SKIP
+				end
+				xpcall(function() dofile(mfile) end, function(err)
+					_Gtme.printError("Package '"..package.."' could not be loaded.")
+					_Gtme.printError(err)
+					os.exit() -- SKIP
+				end)
+				count_files[file] = count_files[file] + 1 -- SKIP
+			end
+		end
+
+		for mfile, count in pairs(count_files) do
+			local attr = attributes(package_path..s.."lua"..s..mfile, "mode")
+			if count == 0 and attr ~= "directory" then -- SKIP
+				_Gtme.printWarning("File lua"..s..mfile.." is ignored by load.lua.")
+			elseif count > 1 then
+				_Gtme.printWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.")
+			end
+		end
+
+		table.insert(_Gtme.loadedPackages, package) -- SKIP
+	end
+end
+
 --- Return whether a given package is loaded.
 -- @arg package A string with the name of the package.
 -- @usage isLoaded("base")
 function isLoaded(package)
 	mandatoryArgument(1, "string", package)
 	return belong(package, _Gtme.loadedPackages)
+end
+
+--- Return a table with the content of a given package. If the package is not
+-- installed, it tries to load from a folder in the current directory.
+-- @arg pname A package name.
+-- @usage base = package("base")
+-- cs = base.CellularSpace{xdim = 10}
+function package(pname)
+	mandatoryArgument(1, "string", pname)
+
+	if belong(pname, {"terrame", "TerraME"}) then
+		return
+	end
+
+	local s = sessionInfo().separator
+	local pname_path = sessionInfo().path..s.."packages"..s..pname
+
+	if not isFile(pname_path) then
+		if isFile(pname) then
+			_Gtme.printWarning("Loading package '"..pname.."' from a folder in the current directory")
+			pname_path = pname -- SKIP
+		else
+			customError("Package '"..pname.."' is not installed.")
+		end
+	end
+
+	verifyDepends(pname)
+
+	local load_file = pname_path..s.."load.lua"
+	local all_files = dir(pname_path..s.."lua")
+	local load_sequence
+
+	if isFile(load_file) then -- SKIP
+		xpcall(function() load_sequence = _Gtme.include(load_file) end, function(err)
+			_Gtme.printError("Package '"..pname.."' could not be loaded.")
+			_Gtme.print(err)
+		end)
+
+		verifyUnnecessaryArguments(load_sequence, {"files"})
+
+		load_sequence = load_sequence.files -- SKIP
+		if load_sequence == nil then -- SKIP
+			_Gtme.printError("Package '"..pname.."' could not be loaded.")
+			_Gtme.printError("load.lua should declare table 'files', with the order of the files to be loaded.")
+			os.exit() -- SKIP
+		elseif type(load_sequence) ~= "table" then
+			_Gtme.printError("Package '"..pname.."' could not be loaded.")
+			_Gtme.printError("In load.lua, 'files' should be table, got "..type(load_sequence)..".")
+			os.exit() -- SKIP
+		end
+	else
+		load_sequence = all_files -- SKIP
+	end
+
+	local count_files = {}
+	for _, file in ipairs(all_files) do
+		count_files[file] = 0 -- SKIP
+	end
+
+	local i, file
+	local result = setmetatable({}, {__index = _G})
+
+	if load_sequence then -- SKIP
+		for _, file in ipairs(load_sequence) do
+			local mfile = pname_path..s.."lua"..s..file
+			if not isFile(mfile) then -- SKIP
+				_Gtme.printError("Cannot open "..mfile..". No such file.")
+				_Gtme.printError("Please check "..pname_path..s.."load.lua")
+				os.exit() -- SKIP
+			end
+
+			local lf = loadfile(mfile, 't', env)
+
+ 			if lf == nil then
+				_Gtme.printError("Could not load file "..scriptfile..".")
+				dofile(scriptfile) -- this line will show the error when parsing the file
+			end
+
+			count_files[file] = count_files[file] + 1 -- SKIP
+		end
+	end
+
+	for mfile, count in pairs(count_files) do
+		local attr = attributes(pname_path..s.."lua"..s..mfile, "mode")
+		if count == 0 and attr ~= "directory" then -- SKIP
+			_Gtme.printWarning("File lua"..s..mfile.." is ignored by load.lua.")
+		elseif count > 1 then
+			_Gtme.printWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.")
+		end
+	end
+
+	return result
 end
 
 --- Return the description of a package. It reads file
@@ -232,96 +415,5 @@ function packageInfo(package)
 	end
 
 	return result
-end
-
---- Load a given package. If the package is not installed, it tries to load from
--- a folder in the current directory.
--- @arg package A package name.
--- @usage import("calibration")
-function import(package)
-	mandatoryArgument(1, "string", package)
-
-	if belong(package, {"terrame", "TerraME"}) then
-		return
-	end
-
-	if isLoaded(package) and sessionInfo().package == nil then
-		customWarning("Package '"..package.."' is already loaded.")
-	else
-		local s = sessionInfo().separator
-		local package_path = sessionInfo().path..s.."packages"..s..package
-
-		if not isFile(package_path) then
-			if isFile(package) then
-				_Gtme.printWarning("Loading package '"..package.."' from a folder in the current directory")
-				package_path = package -- SKIP
-			else
-				customError("Package '"..package.."' is not installed.")
-			end
-		end
-
-		verifyDepends(package)
-
-		local load_file = package_path..s.."load.lua"
-		local all_files = dir(package_path..s.."lua")
-		local load_sequence
-
-		if isFile(load_file) then -- SKIP
-			xpcall(function() load_sequence = _Gtme.include(load_file) end, function(err)
-				_Gtme.printError("Package '"..package.."' could not be loaded.")
-				_Gtme.print(err)
-			end)
-
-			verifyUnnecessaryArguments(load_sequence, {"files"})
-
-			load_sequence = load_sequence.files -- SKIP
-			if load_sequence == nil then -- SKIP
-				_Gtme.printError("Package '"..package.."' could not be loaded.")
-				_Gtme.printError("load.lua should declare table 'files', with the order of the files to be loaded.")
-				os.exit() -- SKIP
-			elseif type(load_sequence) ~= "table" then
-				_Gtme.printError("Package '"..package.."' could not be loaded.")
-				_Gtme.printError("In load.lua, 'files' should be table, got "..type(load_sequence)..".")
-				os.exit() -- SKIP
-			end
-		else
-			load_sequence = all_files -- SKIP
-		end
-
-		local count_files = {}
-		for _, file in ipairs(all_files) do
-			count_files[file] = 0 -- SKIP
-		end
-
-		local i, file
-
-		if load_sequence then -- SKIP
-			for _, file in ipairs(load_sequence) do
-				local mfile = package_path..s.."lua"..s..file
-				if not isFile(mfile) then -- SKIP
-					_Gtme.printError("Cannot open "..mfile..". No such file.")
-					_Gtme.printError("Please check "..package_path..s.."load.lua")
-					os.exit() -- SKIP
-				end
-				xpcall(function() dofile(mfile) end, function(err)
-					_Gtme.printError("Package '"..package.."' could not be loaded.")
-					_Gtme.printError(err)
-					os.exit() -- SKIP
-				end)
-				count_files[file] = count_files[file] + 1 -- SKIP
-			end
-		end
-
-		for mfile, count in pairs(count_files) do
-			local attr = attributes(package_path..s.."lua"..s..mfile, "mode")
-			if count == 0 and attr ~= "directory" then -- SKIP
-				_Gtme.printWarning("File lua"..s..mfile.." is ignored by load.lua.")
-			elseif count > 1 then
-				_Gtme.printWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.")
-			end
-		end
-
-		table.insert(_Gtme.loadedPackages, package) -- SKIP
-	end
 end
 
