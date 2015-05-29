@@ -645,8 +645,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit()
 			elseif arg == "-ide" then
 				local __cellEmpty = Cell{attrib = 1}
-				local __obsEmpty = _Gtme.Observer{subject = __cellEmpty, type = "chart", attributes = {"attrib"}}
-				__obsEmpty:kill()
+				local __obsEmpty = Chart{subject = __cellEmpty, select = "attrib"}
+				_Gtme.killAllObservers()
 			elseif arg == "-ft" then
 				info_.fullTraceback = true
 			elseif arg == "-mode=normal" then
