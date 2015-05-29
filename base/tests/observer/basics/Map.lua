@@ -137,6 +137,31 @@ return{
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_string.bmp") -- SKIP
 --]]
+
+--[[
+		local cs = CellularSpace{xdim = 10}
+
+		local r = Random()
+
+		forEachCell(cs, function(cell)
+			cell.value = r:number()
+		end)
+
+		local m = Map{
+			target = cs,
+			select = "value",
+			min = 0,
+			max = 1,
+			slices = 10,
+			grouping = "quantil",
+			color = "Blues"
+		}
+
+		unitTest:assertType(m, "Map") -- SKIP
+
+		cs:notify()
+		unitTest:assertSnapshot(m, "map_quantil.bmp") -- SKIP
+--]]
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

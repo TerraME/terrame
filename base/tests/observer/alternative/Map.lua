@@ -182,6 +182,128 @@ return{
 		end
 		unitTest:assertError(error_func, "RGB composition should have 3 values, got 2 values in position 2.")	
 
+		-- quantil
+		error_func = function()
+			Map{target = c, select = "x", label = 5, slices = 10, color = {"blue", "red"}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("label", "table", 5))
+
+		error_func = function()
+			Map{target = c, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg("select"))
+
+		error_func = function()
+			Map{target = c, select = "mvalue", grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")
+
+		error_func = function()
+			Map{target = c, select = "bvalue", grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, "Selected element should be number or function, got boolean.")
+
+		error_func = function()
+			Map{target = c, select = {}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", {}))
+
+		error_func = function()
+			Map{target = c, select = "x", slices = "abc", color = {{1, 2, 3}}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("slices", "number", "abc"))
+
+		error_func = function()
+			Map{target = c, select = "x", slices = 0, min = 5, max = 8, color = {{1, 2, 3}}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, "Argument 'slices' (0) should be greater than one.")
+
+		error_func = function()
+			Map{target = c, select = "x", slices = 2, min = "abc", color = {{1, 2, 3}}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("min", "number", "abc"))
+
+		error_func = function()
+			Map{target = c, select = "x", slices = 2, min = 3, max = "abc", color = {{1, 2, 3}}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("max", "number", "abc"))
+
+		error_func = function()
+			Map{target = c, select = "x", slices = 2, min = 5, max = 3, color = {{1, 2, 3}}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, "Argument 'min' (5) should be less than 'max' (3).")
+
+		error_func = function()
+			Map{target = c, select = "x", slices = 10, color = {{1, 2}, "red"}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, "RGB composition should have 3 values, got 2 values in position 1.")
+
+		error_func = function()
+			Map{target = c, select = "x", slices = 10, color = {2, "red"}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, "Invalid description for color in position 1. It should be a table or string, got number.")
+
+		error_func = function()
+			Map{target = c, select = "x", title = 5, slices = 10, color = {"blue", "red"}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
+
+		error_func = function()
+			Map{
+				target = c,
+				select = "x",
+				slices = 3,
+				color = {"red", "green", "blue"},
+				grouping = "quantil"
+			}
+		end
+		unitTest:assertError(error_func, "Strategy 'quantil' requires only two colors, got 3.")
+
+		error_func = function()
+			Map{
+				target = c,
+				select = "x",
+				slices = 10,
+				color = "Pastel1",
+				grouping = "quantil"
+			}
+		end
+		unitTest:assertError(error_func, "Color 'Pastel1' does not support 10 slices.")
+
+		error_func = function()
+			Map{
+				target = c,
+				select = "x",
+				slices = 3,
+				color = "Xxx",
+				label = {"1", "2", "3"},
+				grouping = "quantil"
+			}
+		end
+		unitTest:assertError(error_func, "Invalid color 'Xxx'.")
+
+		error_func = function()
+			Map{
+				target = c,
+				select = "x",
+				slices = 3,
+				color = "Pastei1",
+				label = {"1", "2", "3"},
+				grouping = "quantil"
+			}
+		end
+		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("Pastei1", "color", "Pastel1"))
+
+		error_func = function()
+			Map{target = c, slices = 3, color = {"red", "blu", "green"}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("blu", "color", "blue"))
+
+		error_func = function()
+			Map{target = c, slices = 3, color = {"red", {0, 0}, "green"}, grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, "RGB composition should have 3 values, got 2 values in position 2.")	
+
 		-- uniquevalue
 		error_func = function()
 			Map{target = c, select = "mvalue", value = {1, 2, 3}, grouping = "uniquevalue"}

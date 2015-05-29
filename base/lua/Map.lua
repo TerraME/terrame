@@ -1694,7 +1694,67 @@ function Map(data)
 			end
 
 			mandatoryTableArgument(data, "color", "table")
-			verify(#data.color == 2, "Strategy 'equalsteps' requires only two colors, got "..#data.color..".")
+			verify(#data.color == 2, "Strategy '"..data.grouping.."' requires only two colors, got "..#data.color..".")
+
+			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices"})
+		end,
+		quantil = function() -- equal to 'equalsteps'
+			mandatoryTableArgument(data, "select", "string")
+
+			local sample = data.target.cells[1][data.select]
+
+			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the target.")
+			if not belong(type(sample), {"number", "function"}) then
+				customError("Selected element should be number or function, got "..type(sample)..".")
+			end
+
+			if data.min == nil or data.max == nil then
+				local min = math.huge
+				local max = -math.huge
+
+				forEachCell(data.target, function(cell)
+					local mdata = cell[data.select]
+					if min > mdata then
+						min = mdata
+					elseif max < mdata then
+						max = mdata
+					end
+				end)
+
+				if data.min == nil then data.min = min end
+				if data.max == nil then data.max = max end
+			end
+
+			mandatoryTableArgument(data, "slices", "number")
+			mandatoryTableArgument(data, "min", "number")
+			mandatoryTableArgument(data, "max", "number")
+
+			verify(data.min < data.max, "Argument 'min' ("..data.min..") should be less than 'max' ("..data.max..").")
+			verify(data.slices > 1, "Argument 'slices' ("..data.slices..") should be greater than one.")
+
+			if type(data.color) == "string" then
+				local colors = brewerMatchNames[data.color]
+
+				if not colors then
+					local s = suggestion(data.color, brewerMatchNames)
+					if s then
+						customError(switchInvalidArgumentSuggestionMsg(data.color, "color", s))
+					else
+						customError("Invalid color '"..data.color.."'.")
+					end
+				end
+
+				colors = brewerRGB[colors][data.slices]
+
+				if not colors then
+					customError("Color '"..data.color.."' does not support "..data.slices.." slices.")
+				end
+
+				data.color = {colors[1], colors[#colors]}
+			end
+
+			mandatoryTableArgument(data, "color", "table")
+			verify(#data.color == 2, "Strategy '"..data.grouping.."' requires only two colors, got "..#data.color..".")
 
 			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices"})
 		end,
@@ -1807,6 +1867,12 @@ function Map(data)
 			colorBar = {
 				{value = data.min, color = data.color[1]},
 				{value = data.max, color = data.color[2]}
+			}
+		end,
+		quantil = function()
+			colorBar = { -- SKIP
+				{value = data.min, color = data.color[1]}, -- SKIP
+				{value = data.max, color = data.color[2]} -- SKIP
 			}
 		end,
 		uniquevalue = function()
