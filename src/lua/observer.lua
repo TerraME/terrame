@@ -1163,7 +1163,7 @@ function _Gtme.Observer(data)
 
 	verifyUnnecessaryArguments(data, observerPossibleParams)
 
-	local metaTable = {__index = Observer_,__tostring = tostringTerraME}
+	local metaTable = {__index = Observer_, __tostring = _Gtme.tostring}
 	setmetatable(data, metaTable)
 
 	local target = ""
