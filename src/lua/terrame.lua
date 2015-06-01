@@ -130,7 +130,7 @@ end
 -- builds a table with zero counts for each element of the table gotten as argument
 function _Gtme.buildCountTable(package)
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages"..s..package
+	local baseDir = packageInfo(package).path
 
 	local load_file = baseDir..s.."load.lua"
 	local load_sequence
@@ -172,7 +172,7 @@ local function sqlFiles(package)
 		end)
 	end
 
-	xpcall(function() dofile(sessionInfo().path..s.."packages"..s..package..s.."data.lua") end, function(err)
+	xpcall(function() dofile(packageInfo(package).path..s.."data.lua") end, function(err)
 		_Gtme.printError("Error loading "..package..s.."data.lua")
 		_Gtme.printError(err)
 		os.exit()
@@ -196,14 +196,14 @@ function _Gtme.findModels(package)
 		return "___123"
 	end
 
-	local packagepath = sessionInfo().path..s.."packages"..s..package
+	local packagepath = packageInfo(package).path
 
 	if attributes(packagepath, "mode") ~= "directory" then
 		_Gtme.printError("Error: Package '"..package.."' is not installed.")
 		os.exit()
 	end
 
-	local srcpath = sessionInfo().path..s.."packages"..s..package..s.."lua"..s
+	local srcpath = packagepath..s.."lua"..s
 
 	if attributes(srcpath, "mode") ~= "directory" then
 		_Gtme.printError("Error: Folder 'lua' from package '"..package.."' does not exist.")
@@ -232,7 +232,7 @@ end
 
 function _Gtme.findExamples(package)
 	local s = sessionInfo().separator
-	local examplespath = sessionInfo().path..s.."packages"..s..package..s.."examples"
+	local examplespath = packageInfo(package).path..s.."examples"
 
 	if attributes(examplespath, "mode") ~= "directory" then
 		return {}
@@ -252,7 +252,7 @@ end
 
 function _Gtme.showDoc(package)
 	local s = sessionInfo().separator
-	local docpath = sessionInfo().path..s.."packages"..s..package..s.."doc"..s.."index.html"
+	local docpath = packageInfo(package).path..s.."doc"..s.."index.html"
 
 	if s == "/" then
 		if runCommand("uname")[1] == "Darwin" then
@@ -297,7 +297,7 @@ local function exportDatabase(package)
 	forEachElement(files, function(_, mfile)
 		local database = string.sub(mfile, 1, string.len(mfile) - 4)
 
-		if isFile(sessionInfo().path..s.."packages"..s..package..s.."data"..s..mfile) then
+		if isFile(folder..s..mfile) then
 			_Gtme.printWarning("File "..mfile.." already exists and will not be replaced")
 		else
 			_Gtme.printNote("Exporting database "..database)
@@ -521,7 +521,7 @@ local function graphicalInterface(package, model)
 	local attrTab
 	local mModel = Model
 	Model = function(attr) attrTab = attr end
-	local data = _Gtme.include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..model..".lua")
+	local data = _Gtme.include(packageInfo(package).path..s.."lua"..s..model..".lua")
 	Model = mModel
 
 	_Gtme.interface(attrTab, model, package)
@@ -678,7 +678,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						os.exit()
 					end
 
-					local data = include(sessionInfo().path..s.."packages"..s..package..s.."description.lua")
+					local data = include(packageInfo(package).path..s.."description.lua")
 					print("Package '"..package.."'")
 					print(data.title)
 					print("Version "..data.version..", "..data.date)

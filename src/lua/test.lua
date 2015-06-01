@@ -153,7 +153,7 @@ end
 
 local function buildLineTable(package)
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages"..s..package
+	local baseDir = packageInfo(package).path
 
 	local load_file = baseDir..s.."load.lua"
 	local load_sequence
@@ -297,7 +297,7 @@ function _Gtme.executeTests(package, fileName)
 	import("luadoc")
 
 	local s = sessionInfo().separator
-	local baseDir = sessionInfo().path..s.."packages"..s..package
+	local baseDir = packageInfo(package).path
 	local srcDir = baseDir..s.."tests"
 
 	doc_functions = luadocMain(baseDir, dir(baseDir..s.."lua"), {}, package, {}, {}, true)
@@ -706,7 +706,7 @@ function _Gtme.executeTests(package, fileName)
 
 	if ut.snapshots > 0 and check_snapshots then
 		printNote("Checking snapshots")
-		local mdir = dir(sessionInfo().path..s.."packages"..s..package..s.."snapshots")
+		local mdir = dir(packageInfo(package).path..s.."snapshots")
 
 		forEachElement(mdir, function(_, value)
 			if not ut.tsnapshots[value] then

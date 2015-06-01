@@ -67,32 +67,33 @@ function _Gtme.buildPackage(package)
 		doc = true
 	}
 
-	local pkgFolder = sessionInfo().path..s.."packages"..s..package
+	local pkgInfo = packageInfo(package)
+	local pkgFolder = pkgInfo.path
 
 	forEachFile(pkgFolder, function(file)
 		if not root[file] then
-			printWarning("File '"..file.."' is unnecessary.")
+			printError("File '"..pkgFolder..s..file.."' is unnecessary.")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
 	forEachFile(pkgFolder..s.."examples", function(file)
-		if not string.endswith(file, ".lua") and not string.endswith(file, ".tme") then
-			printWarning("File '"..file.."' is unnecessary.")
+		if not string.endswith(file, ".lua") and not string.endswith(file, ".tme") and not string.endswith(file, ".log") then
+			printError("File '"..pkgFolder..s.."examples"..s..file.."' is unnecessary.")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
 	forEachFile(pkgFolder..s.."lua", function(file)
 		if not string.endswith(file, ".lua") and attributes(pkgFolder..s.."lua"..file, "mode") ~= "directory" then
-			printWarning("File '"..file.."' is unnecessary.")
+			printWarning("File '"..pkgFolder..s.."lua"..s..file.."' is unnecessary.")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
 	forEachFile(pkgFolder..s.."tests", function(file)
 		if not string.endswith(file, ".lua") and not attributes(pkgFolder..s.."tests"..file, "mode") ~= "directory" then
-			printWarning("File '"..file.."' is unnecessary.")
+			printWarning("File '"..pkgFolder..s.."tests"..s..file.."' is unnecessary.")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
@@ -120,8 +121,8 @@ function _Gtme.buildPackage(package)
 
 	local result = {}
 
-	forEachFile(sessionInfo().path..s.."packages"..s..package..s.."lua", function(fname)
-		local data = _Gtme.include(sessionInfo().path..s.."packages"..s..package..s.."lua"..s..fname)
+	forEachFile(pkgInfo.path..s.."lua", function(fname)
+		local data = _Gtme.include(pkgInfo.path..s.."lua"..s..fname)
 		if attrTab ~= nil then
 			forEachElement(data, function(idx, value)
 				if value == attrTab then
@@ -139,9 +140,8 @@ function _Gtme.buildPackage(package)
 
 	Model = mModel
 
-	local packageDir = sessionInfo().path..s.."packages"
 	printNote("Checking license")
-	if not isFile(packageDir..s..package..s.."license.txt") then
+	if not isFile(pkgFolder..s.."license.txt") then
 		report.license = 1
 		printError("The package does not contain file 'license.txt'")
 	end
@@ -151,16 +151,14 @@ function _Gtme.buildPackage(package)
 	local file = package.."_"..info.version..".zip"
 	printNote("Creating file '"..file.."'")
 	local currentdir = currentDir()
-	chDir(packageDir)
-	os.execute("zip -qr "..file.." "..package)
+	printNote("zip -qr "..file.." "..pkgFolder)
+	os.execute("zip -qr "..file.." "..pkgFolder)
 	if isFile(file) then
 		printNote("Package '"..package.."' successfully zipped")
 	else
 		printError("Error when zipping package '"..package.."'")
 		report.zip = 1
 	end
-	chDir(currentdir)
-	os.execute("mv "..packageDir..s..file.." .")
 
 	local finalTime = os.clock()
 	print("\nBuild report:")
@@ -181,7 +179,7 @@ function _Gtme.buildPackage(package)
 	if report.unnecessary_files == 0 then
 		printNote("Documentation was successfully built.")
 	else
-		printError(report.unnecessary_files.." package files are unnecessary.")
+		printError(report.unnecessary_files.." files are unnecessary.")
 	end
 
 	if report.test_errors == 0 then

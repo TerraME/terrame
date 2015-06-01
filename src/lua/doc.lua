@@ -31,7 +31,7 @@ local printNote    = _Gtme.printNote
 
 local function dataFiles(package)
 	local s = sessionInfo().separator
-	local datapath = sessionInfo().path..s.."packages"..s..package..s.."data"
+	local datapath = packageInfo(package).data
 
 	if attributes(datapath, "mode") ~= "directory" then
 		return {}
@@ -54,7 +54,7 @@ function _Gtme.executeDoc(package)
 
 	printNote("Building documentation for package '"..package.."'")
 	local s = sessionInfo().separator
-	local package_path = sessionInfo().path..s.."packages"..s..package
+	local package_path = packageInfo(package).path
 
 	printNote("Loading package '"..package.."'")
 

@@ -128,7 +128,7 @@ function file(filename, package)
 	if package == nil then package = "base" end
 
 	local s = sessionInfo().separator
-	local file = sessionInfo().path..s.."packages"..s..package..s.."data"..s..filename
+	local file = packageInfo(package).data..s..filename
 	if not isFile(file) then
 		customError("File '"..file.."' does not exist in package '"..package.."'.")
 	end
@@ -150,16 +150,7 @@ function import(package)
 		customWarning("Package '"..package.."' is already loaded.")
 	else
 		local s = sessionInfo().separator
-		local package_path = sessionInfo().path..s.."packages"..s..package
-
-		if not isFile(package_path) then
-			if isFile(package) then
-				_Gtme.printWarning("Loading package '"..package.."' from a folder in the current directory")
-				package_path = package -- SKIP
-			else
-				customError("Package '"..package.."' is not installed.")
-			end
-		end
+		local package_path = packageInfo(package).path
 
 		verifyDepends(package)
 
@@ -247,16 +238,7 @@ function package(pname)
 	end
 
 	local s = sessionInfo().separator
-	local pname_path = sessionInfo().path..s.."packages"..s..pname
-
-	if not isFile(pname_path) then
-		if isFile(pname) then
-			_Gtme.printWarning("Loading package '"..pname.."' from a folder in the current directory")
-			pname_path = pname -- SKIP
-		else
-			customError("Package '"..pname.."' is not installed.")
-		end
-	end
+	local pname_path = packageInfo(pname).path
 
 	verifyDepends(pname)
 
@@ -299,7 +281,7 @@ function package(pname)
 			local mfile = pname_path..s.."lua"..s..file
 			if not isFile(mfile) then -- SKIP
 				_Gtme.printError("Cannot open "..mfile..". No such file.")
-				_Gtme.printError("Please check "..pname_path..s.."load.lua")
+				_Gtme.printError("Please check "..pname_path.."load.lua")
 				os.exit() -- SKIP
 			end
 
@@ -315,7 +297,7 @@ function package(pname)
 	end
 
 	for mfile, count in pairs(count_files) do
-		local attr = attributes(pname_path..s.."lua"..s..mfile, "mode")
+		local attr = attributes(pname_path.."lua"..s..mfile, "mode")
 		if count == 0 and attr ~= "directory" then -- SKIP
 			_Gtme.printWarning("File lua"..s..mfile.." is ignored by load.lua.")
 		elseif count > 1 then
@@ -326,23 +308,26 @@ function package(pname)
 	return result
 end
 
---- Return the description of a package. It reads file
--- description.lua and returns the following attributes.
+--- Return the description of a package. This function tries to find the package in the TerraME
+-- installation folder. If it does not exist then it checks wether the package is available in the
+-- current directory. If the package does not exist then it stops with an error. Otherwise, it reads
+-- file description.lua and returns the following attributes.
 -- @tabular arg
 -- Attribute & Description \
--- package & Name of the package.\
--- title & Optional title for the HTML documentation of the package.\
--- version & Current version of the package, in the form <number>[.<number>]*.
--- For example: 1, 0.2, 2.5.2. \
--- date & Date of the current version.\
 -- authors & Name of the author(s) of the package.\
--- depends & A comma-separated list of package names which this package depends on.\
 -- contact & E-mail of one or more authors. \
 -- content & A description of the package. \
--- license & Name of the package's license. \
--- url & An optional variable with a webpage of the package.\
 -- data & The path to folder data of the package. This attribute is added
--- by this function as it does not exist in description.lua.
+-- by this function as it does not exist in description.lua.\
+-- date & Date of the current version.\
+-- depends & A comma-separated list of package names which this package depends on.\
+-- license & Name of the package's license. \
+-- package & Name of the package.\
+-- path & Folder where the package is stored in the computer.\
+-- title & Optional title for the HTML documentation of the package.\
+-- url & An optional variable with a webpage of the package.\
+-- version & Current version of the package, in the form <number>[.<number>]*.
+-- For example: 1, 0.2, 2.5.2.
 -- @arg package A string with the name of the package. If nil, packageInfo will return
 -- the description of TerraME.
 -- @usage packageInfo().version
@@ -356,7 +341,11 @@ function packageInfo(package)
 	local s = sessionInfo().separator
 	local pkgfile = sessionInfo().path..s.."packages"..s..package
 	if not isFile(pkgfile) then
-		customError("Package '"..package.."' is not installed.")
+		if isFile(package) then
+			pkgfile = package -- SKIP
+		else
+			customError("Package '"..package.."' is not installed.")
+		end
 	end
 	
 	local file = pkgfile..s.."description.lua"
@@ -372,7 +361,8 @@ function packageInfo(package)
 		customError("Could not read description.lua") -- SKIP
 	end
 
-	result.data = pkgfile..s.."data"..s
+	result.path = pkgfile
+	result.data = pkgfile..s.."data"
 
 	if result.depends then
 		local s = string.gsub(result.depends, "([%w]+ %(%g%g %d[.%d]+%))", function(v)
@@ -404,8 +394,7 @@ function packageInfo(package)
 		end
 
 		local mdepends = {}
-		s = string.gsub(result.depends, "([%w]+) %((%g%g) (%d[.%d]+)%)",
-		function(value, v2, v3)
+		s = string.gsub(result.depends, "([%w]+) %((%g%g) (%d[.%d]+)%)", function(value, v2, v3)
 			mversion = {}
 			getVersion(v3) -- SKIP
 			table.insert(mdepends, {package = value, operator = v2, version = mversion})
