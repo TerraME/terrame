@@ -38,6 +38,24 @@ ChartPlot::ChartPlot(QWidget *parent) : QwtPlot(parent)
 
 	QwtPlotLayout *layout = plotLayout();
 	layout->setCanvasMargin(0);
+
+	QFont font("font: Arial", 12);
+
+	setAxisFont(QwtPlot::xBottom, font);
+	setAxisFont(QwtPlot::yLeft, font);
+
+	QwtText text = title();
+	text.setFont(font);
+	setTitle(text);
+
+	text = axisTitle(QwtPlot::xBottom);
+	text.setFont(font);
+	setAxisTitle(QwtPlot::xBottom, text);
+
+	text = axisTitle(QwtPlot::yLeft);
+	text.setFont(font);
+	setAxisTitle(QwtPlot::yLeft, text);
+
 	// layout->setAlignCanvasToScales(true);
     createPicker();
 

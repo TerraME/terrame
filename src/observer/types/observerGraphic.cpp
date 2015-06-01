@@ -45,6 +45,10 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
 
     // paused = false;
     legend = new QwtLegend;
+
+	QFont font("font: Arial", 12);
+	legend->setFont(font);
+
     // legend->setItemMode(QwtLegend::ClickableItem);
     internalCurves = new QHash<QString, InternalCurve*>();
 
@@ -132,7 +136,6 @@ void ObserverGraphic::save(std::string file, std::string extension)
 
 bool ObserverGraphic::draw(QDataStream &/*state*/)
 {
-
 #ifdef TME_BLACK_BOARD
 
     draw();
@@ -283,7 +286,11 @@ void ObserverGraphic::setTitles(const QString &title,
 
 void ObserverGraphic::setLegendPosition(QwtPlot::LegendPosition pos)
 {
-    plotter->insertLegend(legend, pos);
+	// this should work, but the legend does not set its font #459
+	QFont font("font: Arial");
+	font.setPointSize(12);
+	legend->setFont(font);
+    plotter->insertLegend(legend, pos, 1.0);
 
 	// #253
     //connect(plotter, SIGNAL(legendClicked(QwtPlotItem *)), SLOT(colorChanged(QwtPlotItem *)));
@@ -435,6 +442,9 @@ void ObserverGraphic::setAttributes(const QStringList &attribs,
         }
     }
     plotter->setInternalCurves(internalCurves->values());
+
+	QFont font("font: Arial", 12);
+	plotter->legend()->setFont(font);
 
 //#ifdef TME_BLACK_BOARD_
 //    Attributes *attrib = 0;
