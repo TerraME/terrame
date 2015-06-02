@@ -33,6 +33,7 @@ local begin_green  = "\027[00;32m"
 local end_color    = "\027[00m"
 
 _Gtme = {}
+setmetatable(_Gtme, {__index = _G})
 
 _Gtme.loadedPackages = {}
 _Gtme.print = print
@@ -63,12 +64,16 @@ function _Gtme.printWarning(value)
 end
 
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
-function _Gtme.include(scriptfile)
-	local env = setmetatable({}, {__index = _G})
-	if not isFile(scriptfile) then
-		customError("File '"..scriptfile.."' does not exist.")
+function _Gtme.include(scriptfile, basetable)
+	if basetable == nil then
+		basetable = {}
 	end
-	local lf = loadfile(scriptfile, 't', env)
+
+	local env = setmetatable(basetable, {__index = _G})
+	if not isFile(scriptfile) then
+		_Gtme.customError("File '"..scriptfile.."' does not exist.")
+	end
+	local lf = loadfile(scriptfile, "t", env)
 
 	if lf == nil then
 		_Gtme.printError("Could not load file "..scriptfile..".")
@@ -95,7 +100,7 @@ local function checkNilVariables()
 		if __STRICT and not mt.__declared[n] then
 			local w = debug.getinfo(2, "S").what
 			if w ~= "main" and w ~= "C" then
-				customWarning("Assign to undeclared variable '"..n.."'.")
+				_Gtme.strictWarning("Assign to undeclared variable '"..n.."'.")
 			end
 			mt.__declared[n] = true
 		end
@@ -104,7 +109,7 @@ local function checkNilVariables()
 
 	mt.__index = function(t, n)
 		if not mt.__declared[n] and debug.getinfo(2, "S").what ~= "C" then
-			customWarning("Variable '"..n.."' is not declared.")
+			_Gtme.strictWarning("Variable '"..n.."' is not declared.")
 		end
 		return rawget(t, n)
 	end
@@ -113,11 +118,11 @@ end
 local function countTable(mtable)
 	local result = {}
 
-	forEachElement(mtable, function(idx, value, mtype)
+	_Gtme.forEachElement(mtable, function(idx, value, mtype)
 		if mtype == "function" or mtype == "Model" then
 			result[idx] = 0
 		elseif _Gtme.type(value) == "table" then
-			forEachElement(value, function(midx, mvalue, mmtype)
+			_Gtme.forEachElement(value, function(midx, mvalue, mmtype)
 				if mmtype == "function" or mmtype == "Model" then
 					result[midx] = 0
 				end
@@ -129,19 +134,19 @@ end
 
 -- builds a table with zero counts for each element of the table gotten as argument
 function _Gtme.buildCountTable(package)
-	local s = sessionInfo().separator
-	local baseDir = packageInfo(package).path
+	local s = _Gtme.sessionInfo().separator
+	local baseDir = _Gtme.packageInfo(package).path
 
 	local load_file = baseDir..s.."load.lua"
 	local load_sequence
 
-	if isFile(load_file) then
+	if _Gtme.isFile(load_file) then
 		-- the 'include' below does not need to be inside a xpcall because 
 		-- the package was already loaded with success
 		load_sequence = _Gtme.include(load_file).files
 	else
 		load_sequence = {}
-		forEachFile(baseDir..s.."lua", function(mfile)
+		_Gtme.forEachFile(baseDir..s.."lua", function(mfile)
 			if string.endswith(mfile, ".lua") then
 				table.insert(load_sequence, mfile)
 			end
@@ -160,19 +165,19 @@ function _Gtme.buildCountTable(package)
 end
 
 local function sqlFiles(package)
-	local s = sessionInfo().separator
+	local s = _Gtme.sessionInfo().separator
 	local files = {}
 	data = function(mtable)
 		if type(mtable.file) == "string" then mtable.file = {mtable.file} end
 
-		forEachElement(mtable.file, function(_, mfile)
+		_Gtme.forEachElement(mtable.file, function(_, mfile)
 			if string.endswith(mfile, ".sql") then
 				table.insert(files, mfile)
 			end
 		end)
 	end
 
-	xpcall(function() dofile(packageInfo(package).path..s.."data.lua") end, function(err)
+	xpcall(function() dofile(_Gtme.packageInfo(package).path..s.."data.lua") end, function(err)
 		_Gtme.printError("Error loading "..package..s.."data.lua")
 		_Gtme.printError(err)
 		os.exit()
@@ -182,10 +187,10 @@ local function sqlFiles(package)
 end
 
 function _Gtme.findModels(package)
-	local s = sessionInfo().separator
+	local s = _Gtme.sessionInfo().separator
 	
-	if not isLoaded("base") then
-		import("base")
+	if not _Gtme.isLoaded("base") then
+		_Gtme.import("base")
 	end
 
 	local models = {}
@@ -196,21 +201,21 @@ function _Gtme.findModels(package)
 		return "___123"
 	end
 
-	local packagepath = packageInfo(package).path
+	local packagepath = _Gtme.packageInfo(package).path
 
-	if attributes(packagepath, "mode") ~= "directory" then
+	if _Gtme.attributes(packagepath, "mode") ~= "directory" then
 		_Gtme.printError("Error: Package '"..package.."' is not installed.")
 		os.exit()
 	end
 
 	local srcpath = packagepath..s.."lua"..s
 
-	if attributes(srcpath, "mode") ~= "directory" then
+	if _Gtme.attributes(srcpath, "mode") ~= "directory" then
 		_Gtme.printError("Error: Folder 'lua' from package '"..package.."' does not exist.")
 		os.exit()
 	end
 
-	forEachFile(srcpath, function(fname)
+	_Gtme.forEachFile(srcpath, function(fname)
 		found = false
 		local a
 		xpcall(function() a = _Gtme.include(srcpath..fname) end, function(err)
@@ -219,7 +224,7 @@ function _Gtme.findModels(package)
 		end)
 
 		if found then
-			forEachElement(a, function(idx, value)
+			_Gtme.forEachElement(a, function(idx, value)
 				if value == "___123" then
 					table.insert(models, idx)
 				end
@@ -231,16 +236,16 @@ function _Gtme.findModels(package)
 end
 
 function _Gtme.findExamples(package)
-	local s = sessionInfo().separator
-	local examplespath = packageInfo(package).path..s.."examples"
+	local s = _Gtme.sessionInfo().separator
+	local examplespath = _Gtme.packageInfo(package).path..s.."examples"
 
-	if attributes(examplespath, "mode") ~= "directory" then
+	if _Gtme.attributes(examplespath, "mode") ~= "directory" then
 		return {}
 	end
 
 	local result = {}
 
-	forEachFile(examplespath, function(fname)
+	_Gtme.forEachFile(examplespath, function(fname)
 		if string.endswith(fname, ".lua") then
 			table.insert(result, string.sub(fname, 0, string.len(fname) - 4))
 		elseif not string.endswith(fname, ".tme") and not string.endswith(fname, ".log") then
@@ -251,14 +256,14 @@ function _Gtme.findExamples(package)
 end
 
 function _Gtme.showDoc(package)
-	local s = sessionInfo().separator
-	local docpath = packageInfo(package).path..s.."doc"..s.."index.html"
+	local s = _Gtme.sessionInfo().separator
+	local docpath = _Gtme.packageInfo(package).path..s.."doc"..s.."index.html"
 
 	if s == "/" then
-		if runCommand("uname")[1] == "Darwin" then
-			runCommand("open "..docpath)
+		if _Gtme.runCommand("uname")[1] == "Darwin" then
+			_Gtme.runCommand("open "..docpath)
 		else
-			runCommand("xdg-open "..docpath)
+			_Gtme.runCommand("xdg-open "..docpath)
 		end
 	else
 		print("This functionality is still not implemented in Windows.")
@@ -266,9 +271,9 @@ function _Gtme.showDoc(package)
 end
 
 local function exportDatabase(package)
-	local s = sessionInfo().separator
+	local s = _Gtme.sessionInfo().separator
 
-	local config = getConfig()
+	local config = _Gtme.getConfig()
 
 	local user = config.user
 	local password = config.password
@@ -291,17 +296,17 @@ local function exportDatabase(package)
 		command = command.." -h="..host
 	end
 
-	local folder = packageInfo(package).data
-	local files = sqlFiles(package)
+	local folder = _Gtme.packageInfo(package).data
+	local files = _Gtme.sqlFiles(package)
 
-	forEachElement(files, function(_, mfile)
+	_Gtme.forEachElement(files, function(_, mfile)
 		local database = string.sub(mfile, 1, string.len(mfile) - 4)
 
-		if isFile(folder..s..mfile) then
+		if _Gtme.isFile(folder..s..mfile) then
 			_Gtme.printWarning("File "..mfile.." already exists and will not be replaced")
 		else
 			_Gtme.printNote("Exporting database "..database)
-			local result = runCommand(command.." "..database.." > "..folder..mfile, 2)
+			local result = _Gtme.runCommand(command.." "..database.." > "..folder..mfile, 2)
 
 			if result and result[1] then
 				_Gtme.printError(result[1])
@@ -314,9 +319,9 @@ local function exportDatabase(package)
 end
 
 local function importDatabase(package)
-	local s = sessionInfo().separator
+	local s = _Gtme.sessionInfo().separator
 
-	local config = getConfig()
+	local config = _Gtme.getConfig()
 
 	local user = config.user
 	local password = config.password
@@ -339,19 +344,19 @@ local function importDatabase(package)
 		command = command.." -h"..host
 	end
 
-	local folder = packageInfo(package).data
+	local folder = _Gtme.packageInfo(package).data
 	local files = sqlFiles(package)
 
-	forEachElement(files, function(_, value)
+	_Gtme.forEachElement(files, function(_, value)
 		local database = string.sub(value, 1, string.len(value) - 4)
 
 		if drop then
 			_Gtme.printNote("Deleting database '"..database.."'")
-			local result = runCommand(command.." -e \"drop database "..database.."\"", 2)
+			local result = _Gtme.runCommand(command.." -e \"drop database "..database.."\"", 2)
 		end
 
 		_Gtme.printNote("Creating database '"..database.."'")
-		local result = runCommand(command.." -e \"create database "..database.."\"", 2)
+		local result = _Gtme.runCommand(command.." -e \"create database "..database.."\"", 2)
 		if result and result[1] then
 			_Gtme.printError(result[1])
 			_Gtme.printError("Add 'drop = true' to your config.lua to allow replacing databases if needed.")
@@ -367,14 +372,14 @@ function _Gtme.installPackage(file)
 	if file == nil then
 		_Gtme.printError("You need to choose the file to be installed.")
 		return
-	elseif not isFile(file) then
+	elseif not _Gtme.isFile(file) then
 		_Gtme.printError("No such file: "..file)
 		return
 	end
 
 	_Gtme.printNote("Installing "..file)
 
-	local s = sessionInfo().separator
+	local s = _Gtme.sessionInfo().separator
 	local package
 	local result = xpcall(function() package = string.sub(file, 1, string.find(file, "_") - 1) end, function(err)
 		_Gtme.printError(file.." is not a valid file name for a TerraME package")
@@ -382,13 +387,13 @@ function _Gtme.installPackage(file)
 
 	if not result then return end
 
-	local arg = sessionInfo().path..s.."packages"..s..package
+	local arg = _Gtme.sessionInfo().path..s.."packages"..s..package
 
-	local currentDir = currentDir()
-	local packageDir = sessionInfo().path..s.."packages"
+	local currentDir = _Gtme.currentDir()
+	local packageDir = _Gtme.sessionInfo().path..s.."packages"
 
 	os.execute("cp "..file.." "..packageDir)
-	chDir(packageDir)
+	_Gtme.chDir(packageDir)
 
 	os.execute("unzip -q "..file)
 
@@ -399,8 +404,8 @@ function _Gtme.installPackage(file)
 		name = string.sub(package, lastSep + 1)
 	end
 
-	if not isLoaded("base") then
-		import("base")
+	if not _Gtme.isLoaded("base") then
+		_Gtme.import("base")
 	end
 
 	_Gtme.printNote("Trying to load package "..name)
@@ -420,8 +425,8 @@ end
 
 local function version()
 	print("TerraME - Terra Modeling Environment")
-	print("Version: "..sessionInfo().version)
-	print("Location (TME_PATH): "..sessionInfo().path)
+	print("Version: ".._Gtme.sessionInfo().version)
+	print("Location (TME_PATH): ".._Gtme.sessionInfo().path)
 
 	local lua_release, qt_version, qwt_version, terralib_version, db_version = cpp_informations()
 
@@ -482,7 +487,7 @@ end
 function _Gtme.getLevel()
 	local level = 1
 
-	if sessionInfo().fullTraceback then
+	if _Gtme.sessionInfo().fullTraceback then
 		return 3
 	end
 
@@ -493,17 +498,19 @@ function _Gtme.getLevel()
 			return level - 1
 		end
 
-		local s = sessionInfo().separator
-		local m1 = string.match(info.source, _Gtme.replaceSpecialChars(sessionInfo().path..s.."lua"))
-		local m2 = string.match(info.source, _Gtme.replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"..s.."lua"))
+		local si = _Gtme.sessionInfo()
+
+		local s = si.separator
+		local m1 = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."lua"))
+		local m2 = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"..s.."lua"))
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4 = string.sub(info.short_src, 1, 1) == "["
 
 		local mpackage = false
 
-		local p = sessionInfo().package
+		local p = si.package
 		if p then
-			mpackage = string.match(info.source, _Gtme.replaceSpecialChars(sessionInfo().path..s.."packages"..s..p..s.."lua"))
+			mpackage = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."packages"..s..p..s.."lua"))
 		end
 
 		if m1 or m2 or m3 or m4 or mpackage then
@@ -515,13 +522,13 @@ function _Gtme.getLevel()
 end
 
 local function graphicalInterface(package, model)
-	local s = sessionInfo().separator
-	sessionInfo().interface = true
-	dofile(sessionInfo().path..s.."lua"..s.."interface.lua")
+	local s = _Gtme.sessionInfo().separator
+	_Gtme.sessionInfo().interface = true
+	dofile(_Gtme.sessionInfo().path..s.."lua"..s.."interface.lua")
 	local attrTab
 	local mModel = Model
 	Model = function(attr) attrTab = attr end
-	local data = _Gtme.include(packageInfo(package).path..s.."lua"..s..model..".lua")
+	local data = _Gtme.include(_Gtme.packageInfo(package).path..s.."lua"..s..model..".lua")
 	Model = mModel
 
 	_Gtme.interface(attrTab, model, package)
@@ -530,7 +537,8 @@ end
 function _Gtme.traceback()
 	local level = 1
 
-	local s = sessionInfo().separator
+	local si = sessionInfo()
+	local s = si.separator
 	local str = "Stack traceback:\n"
 
 	local last_function = ""
@@ -538,16 +546,16 @@ function _Gtme.traceback()
 
 	local info = debug.getinfo(level)
 	while info ~= nil do
-		local m1 = string.match(info.source, _Gtme.replaceSpecialChars(sessionInfo().path..s.."lua"))
-		local m2 = string.match(info.source, _Gtme.replaceSpecialChars(sessionInfo().path..s.."packages"))
-		local mb = string.match(info.source, _Gtme.replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"))
+		local m1 = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."lua"))
+		local m2 = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."packages"))
+		local mb = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"))
 		local m3 = string.match(info.short_src, "%[C%]")
 
 		if m1 or m2 or m3 then
 			last_function = info.name
 
-			if (sessionInfo().fullTraceback or sessionInfo().mode == "debug") and last_function then
-				if sessionInfo().package then
+			if (si.fullTraceback or si.mode == "debug") and last_function then
+				if si.package then
 					if not mb and not m1 and not m3 then
 						str = str.. "\n    In "..last_function.."\n"
 						str = str.."    File "..info.short_src..", line "..info.currentline
@@ -619,14 +627,14 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	-- documented and availeble for the final users.
 	local s = info_.separator
 	local path = info_.path..s.."packages"..s.."base"..s.."lua"..s
-	dofile(path.."ErrorHandling.lua")
-	dofile(path.."Package.lua")
-	dofile(path.."FileSystem.lua")
-	dofile(path.."Utils.lua")
+	dofile(path.."ErrorHandling.lua", _Gtme)
+	dofile(path.."Package.lua", _Gtme)
+	dofile(path.."FileSystem.lua", _Gtme)
+	dofile(path.."Utils.lua", _Gtme)
 	dofile(info_.path..s.."lua"..s.."legend.lua")
 	dofile(info_.path..s.."lua"..s.."observer.lua")
 
-	info_.version = packageInfo().version
+	info_.version = _Gtme.packageInfo().version
 
 	if arguments == nil or #arguments < 1 then 
 		dofile(info_.path..s.."lua"..s.."pmanager.lua")
@@ -678,7 +686,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						os.exit()
 					end
 
-					local data = include(packageInfo(package).path..s.."description.lua")
+					local data = include(_Gtme.packageInfo(package).path..s.."description.lua")
 					print("Package '"..package.."'")
 					print(data.title)
 					print("Version "..data.version..", "..data.date)
@@ -712,7 +720,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					_Gtme.printError("You should indicate a Model to be used.")
 					print("Please use one from the list below:")
 
-					forEachElement(models, function(_, value)
+					_Gtme.forEachElement(models, function(_, value)
 						print(" - "..value)
 					end)
 					os.exit()
@@ -722,7 +730,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					_Gtme.printError("Model '"..model.."' does not exist in package '"..package.."'.")
 					print("Please use one from the list below:")
 
-					forEachElement(models, function(_, value)
+					_Gtme.forEachElement(models, function(_, value)
 						print(" - "..value)
 					end)
 					os.exit()
@@ -733,7 +741,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				dofile(path.."UnitTest.lua")
 
 				local s = sessionInfo().separator
-				dofile(sessionInfo().path..s.."lua"..s.."test.lua")
+				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				local correct, errorMsg = xpcall(function() _Gtme.executeTests(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
@@ -746,8 +754,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				showDoc(package)
 				os.exit()
 			elseif arg == "-doc" then
-				local s = sessionInfo().separator
-				dofile(sessionInfo().path..s.."lua"..s.."doc.lua")
+				local s = _Gtme.sessionInfo().separator
+				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				local success, result = _Gtme.myxpcall(function() _Gtme.executeDoc(package) end)
 
 				if not success then
@@ -799,7 +807,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				else
 					files = _Gtme.findExamples(package)
 
-					forEachElement(files, function(_, value)
+					_Gtme.forEachElement(files, function(_, value)
 						print(" - "..value)
 					end)
 					os.exit()
@@ -812,21 +820,21 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				checkNilVariables()
 			end
 
-			if not isLoaded("base") then
-				import("base")
+			if not _Gtme.isLoaded("base") then
+				_Gtme.import("base")
 			end
 
-			local s = sessionInfo().separator
+			local s = _Gtme.sessionInfo().separator
 
 			local displayFile = string.sub(arg, 0, string.len(arg) - 3).."tme"
 
 			local cObj = TeVisualArrangement()
 			cObj:setFile(displayFile)
 
-			if isFile(displayFile) then
+			if _Gtme.isFile(displayFile) then
 				local display = dofile(displayFile)
 
-				forEachElement(display, function(idx, data)
+				_Gtme.forEachElement(display, function(idx, data)
 					cObj:addPosition(idx, data.x, data.y)
 					cObj:addSize(idx, data.width, data.height)
 				end)
@@ -845,10 +853,11 @@ end
 
 function _Gtme.myxpcall(func)
 	return xpcall(func, function(err)
-		local s = sessionInfo().separator
-		local luaFolder = _Gtme.replaceSpecialChars(sessionInfo().path..s.."lua")
-		local baseLuaFolder = _Gtme.replaceSpecialChars(sessionInfo().path..s.."packages"..s.."base"..s.."lua")
-		local luadocLuaFolder = _Gtme.replaceSpecialChars(sessionInfo().path..s.."packages"..s.."luadoc")
+		local si = _Gtme.sessionInfo()
+		local s = si.separator
+		local luaFolder = _Gtme.replaceSpecialChars(si.path..s.."lua")
+		local baseLuaFolder = _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"..s.."lua")
+		local luadocLuaFolder = _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."luadoc")
 				
 		local m1 = string.match(err, string.sub(luaFolder, string.len(luaFolder) - 25, string.len(luaFolder)))
 		local m2 = string.match(err, string.sub(baseLuaFolder, string.len(baseLuaFolder) - 25, string.len(baseLuaFolder)))
@@ -896,7 +905,7 @@ function _Gtme.tostring(self)
 	local rs = {}
 	local maxlen = 0
 
-	forEachElement(self, function(index)
+	_Gtme.forEachElement(self, function(index)
 		if type(index) ~= "string" then index = tostring(index) end
 
 		if index:len() > maxlen then
@@ -905,7 +914,7 @@ function _Gtme.tostring(self)
 	end)
 
 	local result = ""
-	forEachOrderedElement(self, function(index, value, mtype)
+	_Gtme.forEachOrderedElement(self, function(index, value, mtype)
 		if type(index) ~= "string" then index = tostring(index) end
 
 		result = result..index.." "

@@ -274,7 +274,18 @@ function package(pname)
 	end
 
 	local i, file
-	local result = setmetatable({}, {__index = _G})
+
+	local overwritten = {}
+
+	local mt = getmetatable(_G)
+	setmetatable(_G, {}) -- to avoid warnings: "Variable 'xxx' is not declared."
+
+	local result = setmetatable({}, {__index = _G, __newindex = function(t, k, v)
+		if _G[k] then
+			overwritten[k] = true
+		end
+		rawset(t, k, v)
+	end})
 
 	if load_sequence then -- SKIP
 		for _, file in ipairs(load_sequence) do
@@ -285,12 +296,14 @@ function package(pname)
 				os.exit() -- SKIP
 			end
 
-			local lf = loadfile(mfile, 't', env)
+			local lf = loadfile(mfile, 't', result)
 
  			if lf == nil then
 				_Gtme.printError("Could not load file "..scriptfile..".")
 				dofile(scriptfile) -- this line will show the error when parsing the file
 			end
+
+			lf()
 
 			count_files[file] = count_files[file] + 1 -- SKIP
 		end
@@ -305,7 +318,8 @@ function package(pname)
 		end
 	end
 
-	return result
+	setmetatable(_G, mt)
+	return result, overwritten
 end
 
 --- Return the description of a package. This function tries to find the package in the TerraME

@@ -276,6 +276,7 @@ function _Gtme.executeTests(package, fileName)
 		snapshot_files = 0,
 		lines_not_executed = 0,
 		asserts_not_executed = 0,
+		overwritten_variables = 0,
 		unused_snapshot_files = 0
 	}
 
@@ -289,9 +290,19 @@ function _Gtme.executeTests(package, fileName)
 		printError("Error: print() call detected with argument '"..arg.."'")
 	end
 
-	import(package)
+	_, overwritten = _G.package(package)
 
 	print = function() end
+
+	printNote("Looking for overwritten variables")
+	if package ~= "base" then
+		forEachOrderedElement(overwritten, function(value)
+			printError("Global variable '"..value.."' is overwritten.")
+			ut.overwritten_variables = ut.overwritten_variables + 1
+		end)
+	end
+
+	import(package)
 
 	printNote("Looking for documented functions")
 	import("luadoc")
@@ -820,6 +831,14 @@ function _Gtme.executeTests(package, fileName)
 		printError(ut.print_when_loading.." print() calls were found when loading the package.")
 	else
 		printNote("No print() calls were found when loading the package.")
+	end
+
+	if ut.overwritten_variables == 1 then
+		printError("One variable is overwritten when loading the package.")
+	elseif ut.overwritten_variables > 1 then
+		printError(ut.overwritten_variables.." variables are overwritten when loading the package.")
+	else
+		printNote("No variable is overwritten when loading the package.")
 	end
 
 	if ut.invalid_test_file == 1 then
