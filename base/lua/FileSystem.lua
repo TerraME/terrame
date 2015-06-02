@@ -194,7 +194,7 @@ function runCommand(command, number)
 		fileTable[#fileTable + 1] = line
 	end
 
-	file:close()
+	io.close(file)
 	os.execute("rm zzzz999.txt")
 	return fileTable
 end

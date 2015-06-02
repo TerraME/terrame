@@ -72,7 +72,7 @@ local function assertTable(filename)
 	local count = 0
 	local mtable = {}
 
-	local file = io.open(filename)
+	local file = io.open(filename, "r")
 
 	local line = file:read()
 	while line do
@@ -87,7 +87,7 @@ local function assertTable(filename)
 		line = file:read()
 	end
 
-	file:close()
+	io.close(file)
 	return mtable
 end
 
@@ -95,7 +95,7 @@ local function lineTable(filename)
 	local count = 0
 	local mtable = {}
 
-	local file = io.open(filename)
+	local file = io.open(filename, "r")
 
 	local line = file:read()
 	while line do
@@ -147,7 +147,7 @@ local function lineTable(filename)
 		line = file:read()
 	end
 
-	file:close()
+	io.close(file)
 	return mtable
 end
 

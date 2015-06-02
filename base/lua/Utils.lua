@@ -104,7 +104,7 @@ function CSVread(filename, sep)
 	optionalArgument(2, "string", sep)
 
 	local data = {}
-	local file = io.open(filename)
+	local file = io.open(filename, "r")
 
 	if not file then
 		resourceNotFoundError(1, filename)
@@ -127,7 +127,7 @@ function CSVread(filename, sep)
 		line = file:read()
 		cline = cline + 1
 	end
-	file:close()
+	io.close(file)
 	return data
 end
 
@@ -180,7 +180,7 @@ function CSVwrite(data, filename, sep)
 		file:write(table.concat(line, sep))
 		file:write("\n")
 	end
-	file:close()
+	io.close(file)
 end
 
 --- Return whether a given value belong to a table.

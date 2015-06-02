@@ -145,7 +145,7 @@ function include (filename, env)
 	-- read the whole contents of the file
 	local fh = assert (open (filename))
 	local src = fh:read("*a")
-	fh:close()
+	io.close(fh)
 	-- translates the file into a function
 	local prog = compile (src, '@'..filename)
 	local _env

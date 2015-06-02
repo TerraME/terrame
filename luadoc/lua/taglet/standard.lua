@@ -3,6 +3,7 @@
 -------------------------------------------------------------------------------
 
 local assert, tostring, type = assert, tostring, type
+local collectgarbage = collectgarbage
 local exit = os.exit
 local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
@@ -12,6 +13,7 @@ local include = _Gtme.include
 local getn = getn
 local forEachElement = forEachElement
 local belong = belong
+local traceback = _Gtme.traceback
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
@@ -395,7 +397,7 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 		first = false
 		i = i + 1
 	end
-	f:close()
+	io.close(f)
 	-- store blocks in file hierarchy
 	assert(doc.files[fileName] == nil, string.format("doc for file '%s' already defined", fileName))
 	table.insert(doc.files, fileName)
@@ -815,11 +817,18 @@ local function check_constructor_file(doc)
 end
 
 function check_header(filepath)
-	f = io.open(filepath)
+	f = io.open(filepath, "r")
 
 	if not f then
-		printError("Could not load "..filepath)
-		exit()
+		collectgarbage()
+
+		f = io.open(filepath, "r")
+
+		if not f then
+			printError("Could not load "..filepath)
+			printError(traceback())
+			exit()
+		end
 	end
 
 	local line
@@ -847,7 +856,7 @@ function check_header(filepath)
 			line = f:read()
 		end
 	end
-	f:close()
+	io.close(f)
 	return text
 end
 
@@ -929,7 +938,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 		table.insert(argnames, argName)
 		table.insert(argdescriptions, argDescription)
 	end
-	f:close()
+	io.close(f)
 	return text, argnames, argdescriptions
 end
 
