@@ -297,7 +297,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 		return word_table[tonumber(key)]
 	end)
 	
-	description_linked = string.gsub(description_linked, "http://[%w%.]+[%/%w~%-_]*", function(value)
+	description_linked = string.gsub(description_linked, "http://[%w%.%-]+[%/%w~%-_]*", function(value)
 		if value:sub(-1, -1) == "." then
 			value = value:sub(1, -2)
 			return "<a href=\""..value.."\">"..value.."</a>."

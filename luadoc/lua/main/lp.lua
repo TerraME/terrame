@@ -5,6 +5,7 @@
 ----------------------------------------------------------------------------
 
 local assert, error, loadstring, select, string = assert, error, loadstring, select, string
+local close = io.close
 local find, format, gsub, strsub = string.find, string.format, string.gsub, string.sub
 local concat, tinsert, open, print, debug, load = table.concat, table.insert, io.open, print, debug, load
 local printError, xpcall, traceback = _Gtme.printError, xpcall, traceback
@@ -145,7 +146,7 @@ function include (filename, env)
 	-- read the whole contents of the file
 	local fh = assert (open (filename))
 	local src = fh:read("*a")
-	io.close(fh)
+	close(fh)
 	-- translates the file into a function
 	local prog = compile (src, '@'..filename)
 	local _env
