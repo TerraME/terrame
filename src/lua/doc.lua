@@ -353,7 +353,7 @@ function _Gtme.executeDoc(package)
 
 	if doc_report.undoc_arg == 1 then
 		printError("One non-named argument is not documented.")
-	elseif doc_report.undoc_arg > 2 then
+	elseif doc_report.undoc_arg > 1 then
 		printError(doc_report.undoc_arg.." non-named arguments are not documented.")
 	else
 		printNote("All "..doc_report.arguments.." non-named arguments are documented.")
