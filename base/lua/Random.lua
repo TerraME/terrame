@@ -24,8 +24,30 @@
 --          Rodrigo Reis Pereira
 --#########################################################################################
 
+
+--[[  Parameters for the LCG random number generator 
+
+The Lehmer random number generator, sometimes also referred to as the Park–Miller 
+random number generator, is a variant of linear congruential generator (LCG) 
+that operates in multiplicative group of integers modulo n. 
+
+--]]
+
+
+--[[
+
+A linear congruential generator (LCG) is an algorithm that yields a sequence of 
+randomized numbers calculated with a linear equation. 
+The method represents one of the oldest and best-known pseudorandom number generator algorithms
+]]
+
 Random_ = {
 	type_ = "Random",
+	LCGprevious   = tonumber(tostring(os.time()):reverse():sub(1,6)),
+	LCGnext       = 0,
+	LCGmodulus    = 2^31 - 1, 	-- Mersenne prime M31
+	LCGmultiplier = 48271,   	-- ISO IEC standard for C++
+	LCGincrement  = 0
 	--- Return an integer random number. It uses a discrete uniform distribution.
 	-- @arg v1 An integer number. If abscent, integer() will return zero or one.
 	-- If it is the only argument, it will return a number between zero and this value.
@@ -36,6 +58,14 @@ Random_ = {
 	-- value = random:integer(10) -- from 0 to 10
 	--
 	-- value = random:integer(5, 10) -- from 5 to 10
+
+	randomLCG = function (self, v1, v2)
+    			self.LCGnext = (self.LCGmultiplier*self.LCGprevious + self.LCGincrement) % self.LCGmodulus 
+				local rand = (self.LCGnext % (max - min + 1)) + min  
+				self.LCGprevious = self.LCGnext
+			return rand
+	end,
+
 	integer = function(self, v1, v2)
 		optionalArgument(1, "number", v1)
 		optionalArgument(2, "number", v2)
@@ -44,17 +74,17 @@ Random_ = {
 			integerArgument(2, v2)
 			if v1 then
 				integerArgument(1, v1)
-				return self.cObj_:randomInteger(v1, v2)
+				return self.randomLCG(v1, v2)
 			end
 		elseif v1 then
 			integerArgument(1, v1)
 			if v1 < 0 then
-				return self.cObj_:randomInteger(v1, 0)
+				return self.randomLCG(v1, 0)
 			else
-				return self.cObj_:randomInteger(0, v1)
+				return self.randomLCG(0, v1)
 			end
 		else
-			return round(self.cObj_:random(-1, -1), 0)
+			return self.randomLCG(0, 1)
 		end
 	end,
 	--- Return a random real number. It uses a continuous uniform distribution.
@@ -72,7 +102,7 @@ Random_ = {
 		optionalArgument(2, "number", v2)
 
 		if not v1 and not v2 then
-			return self.cObj_:random(-1, -1)
+			return round (self.randomLCG(0, 1000000)/1000000)
 		else
 			local max
 			local min
@@ -94,7 +124,7 @@ Random_ = {
 					max = 0
 				end
 			end
-			return self.cObj_:random(-1, -1) * (max - min) + min
+			return (max - min)*(self.randomLCG(0, 1000000)/1000000)  + min
 		end
 	end,
 	--- Reset the seed to generate random numbers.
@@ -106,8 +136,7 @@ Random_ = {
 		optionalArgument(1, "number", seed)
 		integerArgument(1, seed)
 
-		self.seed = seed
-		self.cObj_:reseed(seed)
+		self.LCGprevious = seed
 	end,
 	--- Return a random element from a set of values using a discrete uniform distribution.
 	-- @arg mtable A non-named table with a set of values.
@@ -148,17 +177,11 @@ function Random(data)
 
 	if data.seed then
 		integerTableArgument(data, "seed")
-		Random_.cObj_ = RandomUtil(data.seed)
-		Random_.seed = data.seed
+		Random_.LCGprevious = data.seed
 		data.seed = nil
-	elseif not Random_.cObj_ then
-		data.seed = os.time()
-		Random_.seed = data.seed
-		Random_.cObj_ = RandomUtil(data.seed)
 	end
 
 	setmetatable(data, metaTableRandom_)
-	data.cObj_:setReference(data)
 	return data
 end
 

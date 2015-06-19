@@ -48,7 +48,7 @@ of this library and its documentation.
 #include "protocol.pb.h"
 
 #ifndef luaL_checkbool
-#define luaL_checkbool(L, i) (lua_isboolean(L, i) ? lua_toboolean(L, i) : luaL_checkint(L, i))
+#define luaL_checkbool(L, i) (lua_isboolean(L, i) ? lua_toboolean(L, i) : luaL_checkinteger (L, i))
 #endif
 
 #define TME_STATISTIC_UNDEF

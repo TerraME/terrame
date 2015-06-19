@@ -657,7 +657,7 @@ QByteArray ValueBase::to_bytecode() const
   if (lua_type(lst, -1) == LUA_TFUNCTION)
     {
       QByteArray bytecode;
-      int status = lua_dump(lst, &lua_writer, &bytecode);	
+      int status = lua_dump(lst, &lua_writer, &bytecode, false);	
       lua_pop(lst, 1);
       if (status)
 	QTLUA_THROW(QtLua::ValueBase, "Unable to dump function bytecode (status=%)", .arg(status));
