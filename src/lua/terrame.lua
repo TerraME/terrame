@@ -690,7 +690,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						os.exit()
 					end
 
-					local data = include(_Gtme.packageInfo(package).path..s.."description.lua")
+					local data = _Gtme.include(_Gtme.packageInfo(package).path..s.."description.lua")
 					print("Package '"..package.."'")
 					print(data.title)
 					print("Version "..data.version..", "..data.date)
