@@ -193,6 +193,10 @@ function _Gtme.findModels(package)
 		_Gtme.import("base")
 	end
 
+	if not _Gtme.isLoaded(package) then
+		_Gtme.import(package)
+	end
+
 	local models = {}
 	local found = false
 	local oldModel = Model
