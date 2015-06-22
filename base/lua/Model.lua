@@ -495,12 +495,34 @@ function Model(attrTab)
 		argv.type_ = typename
 		argv.parent = mmodel
 
-		attrTab.init(argv)
+		argv.cObj_ = TeCell()
+		argv.cObj_:setReference(argv)
+
+		argv.notify = function(self, modelTime)
+			if modelTime == nil then
+				modelTime = 0
+			elseif type(modelTime) == "Event" then
+				modelTime = modelTime:getTime()
+			else
+				optionalArgument(1, "number", modelTime)
+				positiveArgument(1, modelTime, true)
+			end
+
+			if self.obsattrs_ then
+				forEachElement(self.obsattrs_, function(idx)
+					self[idx.."_"] = self[idx](self)
+				end)
+			end
+
+			self.cObj_:notify(modelTime)
+		end
 
 		if argv.seed ~= nil then
 			positiveTableArgument(argv, "seed", true)
 			Random{seed = argv.seed}
 		end
+
+		attrTab.init(argv)
 
 		mandatoryTableArgument(argv, "finalTime", "number")
 
@@ -531,28 +553,6 @@ function Model(attrTab)
 		end)
 
 		verify(exec, "The object does not have a Timer or an Environment with at least one Timer.")
-
-		argv.cObj_ = TeCell()
-		argv.cObj_:setReference(argv)
-
-		argv.notify = function(self, modelTime)
-			if modelTime == nil then
-				modelTime = 0
-			elseif type(modelTime) == "Event" then
-				modelTime = modelTime:getTime()
-			else
-				optionalArgument(1, "number", modelTime)
-				positiveArgument(1, modelTime, true)
-			end
-
-			if self.obsattrs_ then
-				forEachElement(self.obsattrs_, function(idx)
-					self[idx.."_"] = self[idx](self)
-				end)
-			end
-
-			self.cObj_:notify(modelTime)
-		end
 
 		return argv
 	end
