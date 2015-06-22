@@ -288,9 +288,7 @@ function _Gtme.executeTests(package, fileName)
 	print = function(arg)
 		ut.print_when_loading = ut.print_when_loading + 1
 
-		if arg == nil then arg = "<nil>" end
-
-		printError("Error: print() call detected with argument '"..arg.."'")
+		printError("Error: print() call detected with argument '"..tostring(arg).."'")
 	end
 
 	_, overwritten = _G.package(package)
