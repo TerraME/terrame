@@ -287,6 +287,9 @@ function _Gtme.executeTests(package, fileName)
 	printNote("Loading package "..package)
 	print = function(arg)
 		ut.print_when_loading = ut.print_when_loading + 1
+
+		if arg == nil then arg = "<nil>" end
+
 		printError("Error: print() call detected with argument '"..arg.."'")
 	end
 
