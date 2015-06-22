@@ -54,7 +54,7 @@ function _Gtme.executeDoc(package)
 
 	printNote("Building documentation for package '"..package.."'")
 	local s = sessionInfo().separator
-	local package_path = packageInfo(package).path
+	local package_path = _Gtme.packageInfo(package).path
 
 	printNote("Loading package '"..package.."'")
 

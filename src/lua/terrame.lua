@@ -241,7 +241,13 @@ end
 
 function _Gtme.findExamples(package)
 	local s = _Gtme.sessionInfo().separator
-	local examplespath = _Gtme.packageInfo(package).path..s.."examples"
+
+	local examplespath
+
+	xpcall(function() examplespath = _Gtme.packageInfo(package).path..s.."examples" end, function(err)
+		_Gtme.printError(err)
+		os.exit()
+	end)
 
 	if _Gtme.attributes(examplespath, "mode") ~= "directory" then
 		return {}
@@ -261,7 +267,15 @@ end
 
 function _Gtme.showDoc(package)
 	local s = _Gtme.sessionInfo().separator
-	local docpath = _Gtme.packageInfo(package).path..s.."doc"..s.."index.html"
+
+	local docpath
+
+	xpcall(function() docpath = _Gtme.packageInfo(package).path end, function(err)
+		_Gtme.printError(err)
+		os.exit()
+	end)
+
+	docpath = docpath..s.."doc"..s.."index.html"
 
 	if s == "/" then
 		if _Gtme.runCommand("uname")[1] == "Darwin" then
@@ -717,7 +731,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				model = arguments[argCount]
 
 				import("base")
-				import(package)
+
+				xpcall(function() import(package) end, function(err)
+					_Gtme.printError(err)
+					os.exit()
+				end)
+
 				local models = _Gtme.findModels(package)
 
 				if model == nil then
@@ -755,7 +774,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				usage()
 				os.exit()
 			elseif arg == "-showdoc" then
-				showDoc(package)
+				_Gtme.showDoc(package)
 				os.exit()
 			elseif arg == "-doc" then
 				local s = _Gtme.sessionInfo().separator
@@ -793,7 +812,14 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				local file = arguments[argCount + 1]
 
 				if file then
-					arg = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..file..".lua"
+					local info
+					xpcall(function() info = packageInfo(package).path end, function(err)
+						_Gtme.printError(err)
+						os.exit()
+					end)
+
+					arg = info..s.."examples"..s..file..".lua"
+
 					if not isFile(arg) then
 						_Gtme.printError("Example '"..file.."' does not exist in package '"..package.."'.")
 						print("Please use one from the list below:")
@@ -816,8 +842,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					end)
 					os.exit()
 				end
+			elseif arg == "-gui" then
+				-- this option was already recognized by the C++ level #79
 			else
-				-- #79
+				_Gtme.printError("Option not recognized: "..arg)
+				os.exit()
 			end
 		else
 			if info_.mode ~= "quiet" then
@@ -900,7 +929,15 @@ function _Gtme.myxpcall(func)
 			end
 			return string.sub(str, 0, string.len(str) - 1)
 		else
-			return err.."\n".._Gtme.traceback()
+			local msg = _Gtme.traceback()
+
+			if msg ~= "" then
+				msg = err.."\n"..msg
+			else
+				msg = err
+			end
+
+			return msg
 		end
 	end)
 end
