@@ -183,6 +183,8 @@ local function sqlFiles(package)
 		os.exit()
 	end)
 
+	data = _Gtme.data
+
 	return files
 end
 
@@ -694,7 +696,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				package = arguments[argCount]
 				info_.package = package
 				if #arguments <= argCount then
-					local models = _Gtme.findModels(package)
+					local models
+
+					xpcall(function() models = _Gtme.findModels(package) end, function(err)
+						_Gtme.printError(err)
+						os.exit()
+					end)
 
 					if #models == 1 then
 						xpcall(function() graphicalInterface(package, models[1]) end, function(err)
