@@ -363,7 +363,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs,
             width = legKeys.indexOf(WIDTH);
             style = legKeys.indexOf(STYLE);
             symbol = legKeys.indexOf(SYMBOL);
-			size = legKeys.indexOf(SIZE);
+			size = legKeys.indexOf(SIZE_);
 			penstyle = legKeys.indexOf(PENSTYLE);
             colorBar = legKeys.indexOf(COLOR_BAR);
 
