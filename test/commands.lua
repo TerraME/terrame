@@ -4,6 +4,11 @@ test = {
 	onerror = "terrame -package onerror -test config/all.lua",
 	twoerrors = "terrame -package twoerrors -test config/all.lua",
 	onefile = "terrame -test config/oneFile.lua",
+	onetest = "terrame -test config/oneTest.lua",
+	onefolder = "terrame -test config/oneFolder.lua",
+	twofiles = "terrame -test config/twoFiles.lua",
+	twotest = "terrame -test config/twoTests.lua",
+	twofolder = "terrame -test config/twoFolders.lua",
 }
 
 package = {
