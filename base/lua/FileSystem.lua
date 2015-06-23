@@ -94,8 +94,8 @@ function dir(folder, all)
 	if not result or not result[1] then
 		customError(folder.." is not a folder or is empty or does not exist.")
 	else
-		if all and result[#result] == "zzzz999.txt" then
-			table.remove(result, #result)
+		if all and result[#result] == "zzzz0.txt" then
+			table.remove(result, #result) -- SKIP
 		end
 		return result
 	end
@@ -209,19 +209,31 @@ function runCommand(command, number)
 	mandatoryArgument(1, "string", command)
 	optionalArgument(2, "number", number)
 
+	count = 0
+	local mfile = "zzzz"..count..".txt"
+	while isFile(mfile) do
+		count = count + 1
+		mfile = "zzzz"..count..".txt"
+	end
+
 	if number == nil then number = 1 end
 	
-	command = command.." "..number.."> zzzz999.txt"
+	command = command.." "..number.."> "..mfile
 	
 	os.execute(command)
-	local file = io.open("zzzz999.txt", "r")
+	local file = io.open(mfile, "r")
+
+	if not file then
+		customError("Could not capture the result.") -- SKIP
+	end
+
 	local fileTable = {}
 	for line in file:lines() do
 		fileTable[#fileTable + 1] = line
 	end
 
 	io.close(file)
-	os.execute("rm zzzz999.txt")
+	os.execute("rm "..mfile)
 	return fileTable
 end
 

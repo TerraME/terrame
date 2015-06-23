@@ -8,6 +8,7 @@ local belong = belong
 local include = _Gtme.include
 local printNote = _Gtme.printNote
 local printError = _Gtme.printError
+local forEachOrderedElement = forEachOrderedElement
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
@@ -55,12 +56,12 @@ local function ldescription(package_path, doc_report)
 
 	local allowedFields = {"license", "version", "date", "package", "depends", "title", "authors", "contact", "content", "url"}
 		
-	for field, _ in pairs(script) do
+	forEachOrderedElement(script, function(field)
 		if not belong(field, allowedFields) then
 			printError("Error: Field '"..field.."' of 'description.lua' is unnecessary.")
 			doc_report.wrong_description = doc_report.wrong_description + 1
 		end
-	end
+	end)
 
 	local checkString = function(idx, optional)
 		if script[idx] == nil then

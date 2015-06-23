@@ -40,7 +40,7 @@ _Gtme.print = print
 _Gtme.type = type
 
 function _Gtme.printError(value)
-	if sessionInfo().separator == "/" then
+	if sessionInfo().separator == "/" and sessionInfo().color then
 		_Gtme.print(begin_red..value..end_color)
 	else
 		_Gtme.print(value)
@@ -48,7 +48,7 @@ function _Gtme.printError(value)
 end
 
 function _Gtme.printNote(value)
-	if sessionInfo().separator == "/" then
+	if sessionInfo().separator == "/" and sessionInfo().color then
 		_Gtme.print(begin_green..value..end_color)
 	else
 		_Gtme.print(value)
@@ -56,7 +56,7 @@ function _Gtme.printNote(value)
 end
 
 function _Gtme.printWarning(value)
-	if sessionInfo().separator == "/" then
+	if sessionInfo().separator == "/" and sessionInfo().color then
 		_Gtme.print(begin_yellow..value..end_color)
 	else
 		_Gtme.print(value)
@@ -182,6 +182,8 @@ local function sqlFiles(package)
 		_Gtme.printError(err)
 		os.exit()
 	end)
+
+	data = _Gtme.data
 
 	return files
 end
@@ -479,6 +481,7 @@ local function usage()
 	print(" -mode=silent                print() does not show any text on the screen. This")
 	print("                             mode can be used with the other three modes independently.")
 	print(" -version                    TerraME general information.")
+	print(" -color                      Show colored output (only for Linux and Mac systems).")
 	print(" -package <pkg>              Select a given package. If used alone and the model has a")
 	print("                             single model than it runs the graphical interface")
 	print("                             creating an instance of such model.")
@@ -636,6 +639,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		dbVersion = "1_3_1",
 		separator = package.config:sub(1, 1),
 		silent = false,
+		color = false,
 		path = os.getenv("TME_PATH"), 
 		fullTraceback = false,
 		autoclose = false
@@ -679,6 +683,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.killAllObservers()
 			elseif arg == "-ft" then
 				info_.fullTraceback = true
+			elseif arg == "-color" then
+				info_.color = true
 			elseif arg == "-mode=normal" then
 				info_.mode = "normal"
 			elseif arg == "-mode=debug" then
@@ -698,7 +704,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				package = arguments[argCount]
 				info_.package = package
 				if #arguments <= argCount then
-					local models = _Gtme.findModels(package)
+					local models
+
+					xpcall(function() models = _Gtme.findModels(package) end, function(err)
+						_Gtme.printError(err)
+						os.exit()
+					end)
 
 					if #models == 1 then
 						xpcall(function() graphicalInterface(package, models[1]) end, function(err)

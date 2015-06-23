@@ -366,7 +366,6 @@ function packageInfo(package)
 	
 	local result 
 	xpcall(function() result = _Gtme.include(file) end, function(err)
-		_Gtme.printError("Package "..package.." has a corrupted description.lua")
 		_Gtme.printError(err)
 		os.exit() -- SKIP
 	end)
