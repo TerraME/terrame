@@ -1,0 +1,8 @@
+TerraME - Terra Modeling Environment
+Version: 2.0
+Location (TME_PATH): /Users/pedro/github/terrame/bin
+Compiled with:
+  Lua 5.2.3
+  Qt 5.3.2
+  Qwt 6.1.1
+  TerraLib 4.2.0_dev (Database version: 4.1.2)

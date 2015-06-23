@@ -14,6 +14,7 @@ local getn = getn
 local forEachElement = forEachElement
 local belong = belong
 local traceback = _Gtme.traceback
+local forEachFile = forEachFile
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
@@ -611,7 +612,7 @@ end
 -- @arg doc table with documentation
 -- @return table with documentation
 function directory(lua_path, file_, doc, short_lua_path, silent)
-	for f in lfsdir(lua_path) do
+	forEachFile(lua_path, function(f)
 		local fullpath = lua_path..f
 		local attr = attributes(fullpath)
 		assert(attr, string.format("error stating file '%s'", fullpath))
@@ -622,7 +623,7 @@ function directory(lua_path, file_, doc, short_lua_path, silent)
 			fullpath = fullpath..s
 			doc = directory(fullpath, f, doc, short_lua_path, silent)
 		end
-	end
+	end)
 	return doc
 end
 

@@ -1,0 +1,214 @@
+Loading configuration file 'config/all.lua'
+Loading package twoerrors
+Error: print() call detected with argument 'print when loading'
+Error: print() call detected with argument 'print when loading'
+Looking for overwritten variables
+Global variable 'greaterByAttribute' is overwritten.
+Global variable 'levenshtein' is overwritten.
+Looking for documented functions
+Looking for package functions
+Found 1 extra functions in the documentation
+Looking for lines of source code
+'tests/invalidfile.txt' is not a folder neither a .lua file and will be ignored.
+'tests/invalidfile2.txt' is not a folder neither a .lua file and will be ignored.
+Testing tests/ErrorHandling.lua
+Testing customError2
+Testing customWarning2
+Testing defaultTableValue2
+Testing defaultValueMsg2
+Testing defaultValueWarning2
+Testing deprecatedFunction2
+Testing deprecatedFunctionMsg2
+Testing incompatibleTypeError2
+Testing incompatibleTypeMsg2
+Testing incompatibleValueError2
+Testing incompatibleValueMsg2
+Testing integerArgument2
+Testing integerArgumentMsg2
+Testing integerTableArgument2
+Testing invalidFileExtensionError2
+Testing invalidFileExtensionMsg2
+Testing mandatoryArgument2
+Testing mandatoryArgumentError2
+Testing mandatoryArgumentMsg2
+Testing mandatoryTableArgument2
+Testing namedArgumentsMsg2
+Testing optionalArgument2
+Testing optionalTableArgument2
+Testing positiveArgument2
+Testing positiveArgumentMsg2
+Testing positiveTableArgument2
+Testing resourceNotFoundError2
+Testing resourceNotFoundMsg2
+Testing strictWarning2
+Testing suggestion2
+Testing switchInvalidArgument2
+Testing switchInvalidArgumentMsg2
+Testing switchInvalidArgumentSuggestionMsg2
+Testing tableArgumentMsg2
+Testing toLabel2
+Testing unnecessaryArgumentMsg2
+Testing valueNotFoundError2
+Testing valueNotFoundMsg2
+Testing verify2
+Testing verifyNamedTable2
+Testing verifyUnnecessaryArguments2
+Checking if all asserts were executed
+Testing tests/Tube.lua
+Testing Tube
+Testing w
+Checking if all asserts were executed
+Testing tests/Tube2.lua
+Testing Tube2
+Testing w2
+Checking if all asserts were executed
+Testing tests/Utils.lua
+Testing belong2
+Error in ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua:32: Test should be true, got false.
+Test creates global variable(s): 'abcdef' (number).
+Testing call2
+Wrong execution, got error: '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:78: attempt to perform arithmetic on global 'aaa' (a nil value)'.
+Stack traceback:
+
+    In call2
+    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 78
+    In ?
+    File ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua, line 4
+Testing createNeighborhood2
+Testing elapsedTime2
+Testing forEachAgent2
+Testing forEachCell2
+Testing forEachCellPair2
+Testing forEachElement2
+Testing forEachFile2
+Testing forEachNeighbor2
+Testing forEachOrderedElement2
+Testing forEachSocialNetwork2
+Testing getExtension2
+Testing getn2
+Testing greaterByAttribute
+Testing greaterByCoord2
+Error: print() call detected with argument 'abcdef'
+Error: print() call detected with argument 'abcdef'
+Testing integrate2
+This function does not exist in the respective file in the source code.
+No asserts were found in the test.
+Test creates global variable(s): 'abcd' (number), 'abcde' (number).
+Testing integrate3
+This function does not exist in the respective file in the source code.
+No asserts were found in the test.
+Testing levenshtein
+Testing round2
+Testing sessionInfo2
+Testing string.endswith2
+Testing switch2
+Testing type2
+Testing vardump2
+Checking if all asserts were executed
+Assert in line 243 was not executed.
+Testing tests/alternative/Cell.lua
+Testing Cell
+Error in ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:42: Test should be Map got Chart.
+Creating 'snapshots/chart_cell.bmp'.
+Creating 'snapshots/chart_cell_select.bmp'.
+Wrong execution, got error: '...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:66: attempt to perform arithmetic on global 'abc' (a nil value)'.
+Stack traceback:
+
+    In ?
+    File ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua, line 6
+Checking if all asserts were executed
+Assert in line 45 was not executed.
+Testing tests/alternative/ErrorHandling.lua
+Testing customError2
+Testing customWarning2
+Testing defaultTableValue2
+Testing defaultValueWarning2
+Testing deprecatedFunction2
+Testing suggestion2
+Testing switchInvalidArgument2
+Testing switchInvalidArgumentMsg2
+Testing switchInvalidArgumentSuggestionMsg2
+Checking if all asserts were executed
+Testing tests/alternative/Utils.lua
+Testing belong2
+Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:46: attempt to perform arithmetic on global 'aab' (a nil value)'.
+Stack traceback:
+
+    In belong2
+    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 46
+    In ?
+    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 3
+Testing call2
+Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:46: attempt to perform arithmetic on global 'aab' (a nil value)'.
+Stack traceback:
+
+    In belong2
+    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 46
+    In ?
+    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 4
+Testing elapsedTime2
+Testing forEachCellPair2
+Testing forEachElement2
+Testing forEachFile2
+Testing forEachOrderedElement2
+Testing forEachSocialNetwork2
+Testing getExtension2
+Testing getn2
+Testing greaterByAttribute
+Testing greaterByCoord2
+Testing levenshtein
+Testing round2
+Testing switch2
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking ErrorHandling.lua
+Checking Tube.lua
+Checking Tube2.lua
+Checking Utils.lua
+Function 'forEachNeighborhood2' was not tested.
+Function 'forEachNeighborhood3' was not tested.
+Checking lines of source code
+Checking ErrorHandling.lua
+Checking Tube.lua
+Checking Tube2.lua
+Checking Utils.lua
+Line 41 was not executed.
+Line 42 was not executed.
+Checking snapshots
+File 'snapshot/chart_cell2.bmp' was not used by any assertSnapshot().
+File 'snapshot/chart_cell3.bmp' was not used by any assertSnapshot().
+Testing examples
+Testing continuous-rain
+Creating log file continuous-rain.log
+Testing discrete-rain
+Creating log file discrete-rain.log
+Testing ipd
+Error: Strings do not match:
+Log file: <empty>
+Simulation: 'NTFT	90	1	0	120	95	112	80	498'.
+Testing ipd2
+Error: Strings do not match:
+Log file: <empty>
+Simulation: 'NTFT	90	1	0	120	95	112	80	498'.
+
+Test report:
+Tests were executed in 10.93 seconds.
+Snapshots were saved in '.terrametmp_3Wrg6'.
+2 print() calls were found when loading the package.
+2 variables are overwritten when loading the package.
+2 invalid files or folders were found in folder 'test'.
+2 asserts were not executed at least once.
+2 out of 245 asserts failed.
+2 out of 95 tested functions stopped with an unexpected error.
+2 out of 95 tested functions do not have at least one assert.
+2 out of 95 tested functions do not exist in the source code of the package.
+2 out of 95 tested functions create or update some global variable.
+2 print calls were found in the tests.
+2 assertError() calls have error messages pointing to an internal file (wrong level).
+2 out of 70 source code functions were not tested.
+2 lines from the source code were not executed at least once.
+2 snapshot files were created. Please run the tests again.
+2 files from folder 'snapshots' were not used.
+2 errors were found in the 4 examples.
+2 log files were created in the examples. Please run the tests again.
+Summing up, 34 problems were found during the tests.

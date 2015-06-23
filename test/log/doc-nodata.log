@@ -1,0 +1,4 @@
+Building documentation for package 'nodata'
+Loading package 'nodata'
+Package nodata could not be loaded.
+Error: /Users/pedro/github/terrame/bin/packages/nodata/lua is not a folder or is empty or does not exist.

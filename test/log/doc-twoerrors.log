@@ -1,0 +1,115 @@
+Building documentation for package 'twoerrors'
+Loading package 'twoerrors'
+print when loading
+print when loading
+Parsing 'data.lua'
+Checking folder 'data'
+File 'data.csv' is not documented
+File 'data2.csv' is not documented
+File 'brazilstates.dbf' is documented but does not exist in folder 'data'
+File 'brazilstates2.dbf' is documented but does not exist in folder 'data'
+Parsing lua files
+Parsing lua/ErrorHandling.lua
+Parsing lua/Tube.lua
+Tube.lua should contain only a Model, got 1 additional object(s).
+Parsing lua/Tube2.lua
+Tube2.lua should contain only a Model, got 1 additional object(s).
+Parsing lua/Utils.lua
+Invalid documentation line: --- Abv
+Invalid documentation line: --- Abv
+Description of 'belong2' does not end with '.'
+Description of argument 'value' in 'belong2()' does end with '.', '?', nor ':'.
+In createNeighborhood2, row 2 of @tabular has size (3) different from the first one (4).
+In createNeighborhood2, row 4 of @tabular has size (3) different from the first one (4).
+In forEachElement2(), @arg 'obj' is used more than once and will be ignored in 'obj A TerraME object or a table.'
+In forEachElement2(), @arg 'obj' is used more than once and will be ignored in 'obj A TerraME object or a table.'
+In forEachElement2(), @arg should be folowed by an argument name
+In forEachElement2(), @arg should be folowed by an argument name
+In forEachElement2(), Tag '@abc' is invalid
+In forEachElement2(), Tag '@arg2' is invalid
+In forEachElement2(), undefined argument 'obj2' is documented
+In forEachElement2(), undefined argument 'obj3' is documented
+Function forEachCell2 was already declared.
+Function forEachNeighborhood2 was already declared.
+Parsing examples
+Parsing examples/continuous-rain.lua
+No description found in @example
+Parsing examples/discrete-rain.lua
+No description found in @example
+Parsing examples/ipd.lua
+Parsing examples/ipd2.lua
+Checking undocumented files
+Example discrete-rain.lua is not documented.
+Example continuous-rain.lua is not documented.
+Checking @usage definition
+Checking lua/ErrorHandling.lua
+Checking lua/Tube.lua
+Checking lua/Tube2.lua
+Checking lua/Utils.lua
+Function 'forEachNeighborhood3' has no @usage definition
+Function 'forEachOrderedElement2' has no @usage definition
+Checking calls to functions in @usage
+Checking lua/ErrorHandling.lua
+Checking lua/Tube.lua
+Checking lua/Tube2.lua
+Checking lua/Utils.lua
+Utils.lua: 'belong2' does not call itself in its @usage
+Utils.lua: 'call2' does not call itself in its @usage
+Checking undocumented arguments
+Checking lua/ErrorHandling.lua
+Checking lua/Tube.lua
+Checking lua/Tube2.lua
+Checking lua/Utils.lua
+Function 'belong2' has undocumented argument 'values'
+Function 'call2' has undocumented argument 'func'
+Checking 'description.lua'
+Error: Field 'date2' of 'description.lua' is unnecessary.
+Error: Field 'date3' of 'description.lua' is unnecessary.
+Building and checking HTML files
+Building doc/index.html
+Building doc/files/ErrorHandling.html
+Invalid link to 'Model'
+Building doc/files/Utils.html
+Unknown argument 'abc' in 'createNeighborhood2'
+Unknown argument 'abc2' in 'createNeighborhood2'
+Argument 'weight' in 'createNeighborhood2' is not used in the HTML table
+Argument 'wrap' in 'createNeighborhood2' is not used in the HTML table
+In 'forEachElement2()', invalid link to 'Utils:forEachOrderedElement3'
+Building doc/files/examples.html
+Building doc/files/data.html
+Building doc/files/models.html
+print when loading
+print when loading
+Checking if all functions are documented
+Checking ErrorHandling.lua
+Checking Tube.lua
+Checking Tube2.lua
+Checking Utils.lua
+Function forEachNeighbor2 is not documented
+Function forEachSocialNetwork2 is not documented
+
+Documentation report:
+Documentation was built in 0.07 seconds.
+5 HTML files were created.
+2 problems were found in 'description.lua'.
+2 data files are not documented.
+2 problems were found in 'data.lua'.
+2 source code lines starting with --- are invalid.
+2 errors were found in the documentation of Models.
+2 global functions are not documented.
+2 functions are declared twice in the source code.
+2 descriptions end with wrong characters.
+2 tags are duplicated in the documentation.
+2 tags should have compulsory arguments.
+2 non-named arguments are not documented.
+2 undefined arguments were found.
+2 documented arguments are not used in the HTML tables.
+2 arguments used in the HTML tables are not documented.
+2 out of 68 functions do not have @usage.
+2 out of 68 documented functions do not call themselves in their @usage.
+2 problems were found in @tabular.
+2 invalid tags were found in the documentation.
+2 out of 29 links are invalid.
+2 out of 4 examples are not documented.
+2 problems were found in the documentation of examples.
+Summing up, 42 problems were found in the documentation.

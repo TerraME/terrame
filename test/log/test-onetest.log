@@ -1,0 +1,270 @@
+Loading configuration file 'config/oneTest.lua'
+Loading package base
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Found 1 extra functions in the documentation
+Skip looking for lines of source code
+Testing tests/core/alternative/Agent.lua
+Skipping tests/core/alternative/Agent.lua
+Skip checking asserts
+Testing tests/core/alternative/Automaton.lua
+Skipping tests/core/alternative/Automaton.lua
+Skip checking asserts
+Testing tests/core/alternative/Cell.lua
+Skipping tests/core/alternative/Cell.lua
+Skip checking asserts
+Testing tests/core/alternative/CellularSpace.lua
+Skipping tests/core/alternative/CellularSpace.lua
+Skip checking asserts
+Testing tests/core/alternative/Choice.lua
+Skipping tests/core/alternative/Choice.lua
+Skip checking asserts
+Testing tests/core/alternative/Environment.lua
+Skipping tests/core/alternative/Environment.lua
+Skip checking asserts
+Testing tests/core/alternative/ErrorHandling.lua
+Skipping tests/core/alternative/ErrorHandling.lua
+Skip checking asserts
+Testing tests/core/alternative/Event.lua
+Testing Event
+Skip checking asserts
+Testing tests/core/alternative/FileSystem.lua
+Skipping tests/core/alternative/FileSystem.lua
+Skip checking asserts
+Testing tests/core/alternative/Flow.lua
+Skipping tests/core/alternative/Flow.lua
+Skip checking asserts
+Testing tests/core/alternative/Group.lua
+Skipping tests/core/alternative/Group.lua
+Skip checking asserts
+Testing tests/core/alternative/Jump.lua
+Skipping tests/core/alternative/Jump.lua
+Skip checking asserts
+Testing tests/core/alternative/Mandatory.lua
+Skipping tests/core/alternative/Mandatory.lua
+Skip checking asserts
+Testing tests/core/alternative/Memory.lua
+Testing Event
+Skip checking asserts
+Testing tests/core/alternative/Model.lua
+Skipping tests/core/alternative/Model.lua
+Skip checking asserts
+Testing tests/core/alternative/Neighborhood.lua
+Skipping tests/core/alternative/Neighborhood.lua
+Skip checking asserts
+Testing tests/core/alternative/Package.lua
+Skipping tests/core/alternative/Package.lua
+Skip checking asserts
+Testing tests/core/alternative/Random.lua
+Skipping tests/core/alternative/Random.lua
+Skip checking asserts
+Testing tests/core/alternative/SocialNetwork.lua
+Skipping tests/core/alternative/SocialNetwork.lua
+Skip checking asserts
+Testing tests/core/alternative/Society.lua
+Skipping tests/core/alternative/Society.lua
+Skip checking asserts
+Testing tests/core/alternative/State.lua
+Skipping tests/core/alternative/State.lua
+Skip checking asserts
+Testing tests/core/alternative/Timer.lua
+Skipping tests/core/alternative/Timer.lua
+Skip checking asserts
+Testing tests/core/alternative/Trajectory.lua
+Skipping tests/core/alternative/Trajectory.lua
+Skip checking asserts
+Testing tests/core/alternative/UnitTest.lua
+Skipping tests/core/alternative/UnitTest.lua
+Skip checking asserts
+Testing tests/core/alternative/Utils.lua
+Skipping tests/core/alternative/Utils.lua
+Skip checking asserts
+Testing tests/core/basics/Agent.lua
+Skipping tests/core/basics/Agent.lua
+Skip checking asserts
+Testing tests/core/basics/Automaton.lua
+Skipping tests/core/basics/Automaton.lua
+Skip checking asserts
+Testing tests/core/basics/Cell.lua
+Skipping tests/core/basics/Cell.lua
+Skip checking asserts
+Testing tests/core/basics/CellularSpace.lua
+Skipping tests/core/basics/CellularSpace.lua
+Skip checking asserts
+Testing tests/core/basics/Choice.lua
+Skipping tests/core/basics/Choice.lua
+Skip checking asserts
+Testing tests/core/basics/Environment.lua
+Skipping tests/core/basics/Environment.lua
+Skip checking asserts
+Testing tests/core/basics/ErrorHandling.lua
+Skipping tests/core/basics/ErrorHandling.lua
+Skip checking asserts
+Testing tests/core/basics/Event.lua
+Testing Event
+Skip checking asserts
+Testing tests/core/basics/FileSystem.lua
+Skipping tests/core/basics/FileSystem.lua
+Skip checking asserts
+Testing tests/core/basics/Flow.lua
+Skipping tests/core/basics/Flow.lua
+Skip checking asserts
+Testing tests/core/basics/Group.lua
+Skipping tests/core/basics/Group.lua
+Skip checking asserts
+Testing tests/core/basics/Jump.lua
+Skipping tests/core/basics/Jump.lua
+Skip checking asserts
+Testing tests/core/basics/Mandatory.lua
+Skipping tests/core/basics/Mandatory.lua
+Skip checking asserts
+Testing tests/core/basics/Model.lua
+Skipping tests/core/basics/Model.lua
+Skip checking asserts
+Testing tests/core/basics/Neighborhood.lua
+Skipping tests/core/basics/Neighborhood.lua
+Skip checking asserts
+Testing tests/core/basics/Package.lua
+Skipping tests/core/basics/Package.lua
+Skip checking asserts
+Testing tests/core/basics/Random.lua
+Skipping tests/core/basics/Random.lua
+Skip checking asserts
+Testing tests/core/basics/SocialNetwork.lua
+Skipping tests/core/basics/SocialNetwork.lua
+Skip checking asserts
+Testing tests/core/basics/Society.lua
+Skipping tests/core/basics/Society.lua
+Skip checking asserts
+Testing tests/core/basics/State.lua
+Skipping tests/core/basics/State.lua
+Skip checking asserts
+Testing tests/core/basics/Timer.lua
+Skipping tests/core/basics/Timer.lua
+Skip checking asserts
+Testing tests/core/basics/Trajectory.lua
+Skipping tests/core/basics/Trajectory.lua
+Skip checking asserts
+Testing tests/core/basics/UnitTest.lua
+Skipping tests/core/basics/UnitTest.lua
+Skip checking asserts
+Testing tests/core/basics/Utils.lua
+Skipping tests/core/basics/Utils.lua
+Skip checking asserts
+Testing tests/database/alternative/Assert.lua
+Skipping tests/database/alternative/Assert.lua
+Skip checking asserts
+Testing tests/database/alternative/CellularSpace.lua
+Skipping tests/database/alternative/CellularSpace.lua
+Skip checking asserts
+Testing tests/database/alternative/Environment.lua
+Skipping tests/database/alternative/Environment.lua
+Skip checking asserts
+Testing tests/database/alternative/Society.lua
+Skipping tests/database/alternative/Society.lua
+Skip checking asserts
+Testing tests/database/alternative/Utils.lua
+Skipping tests/database/alternative/Utils.lua
+Skip checking asserts
+Testing tests/database/basics/CellularSpace.lua
+Skipping tests/database/basics/CellularSpace.lua
+Skip checking asserts
+Testing tests/database/basics/Environment.lua
+Skipping tests/database/basics/Environment.lua
+Skip checking asserts
+Testing tests/database/basics/Society.lua
+Skipping tests/database/basics/Society.lua
+Skip checking asserts
+Testing tests/database/basics/Utils.lua
+Skipping tests/database/basics/Utils.lua
+Skip checking asserts
+Testing tests/observer/alternative/Chart.lua
+Skipping tests/observer/alternative/Chart.lua
+Skip checking asserts
+Testing tests/observer/alternative/Clock.lua
+Skipping tests/observer/alternative/Clock.lua
+Skip checking asserts
+Testing tests/observer/alternative/InternetSender.lua
+Skipping tests/observer/alternative/InternetSender.lua
+Skip checking asserts
+Testing tests/observer/alternative/LogFile.lua
+Skipping tests/observer/alternative/LogFile.lua
+Skip checking asserts
+Testing tests/observer/alternative/Map.lua
+Skipping tests/observer/alternative/Map.lua
+Skip checking asserts
+Testing tests/observer/alternative/TextScreen.lua
+Skipping tests/observer/alternative/TextScreen.lua
+Skip checking asserts
+Testing tests/observer/alternative/VisualTable.lua
+Skipping tests/observer/alternative/VisualTable.lua
+Skip checking asserts
+Testing tests/observer/basics/Agent.lua
+Skipping tests/observer/basics/Agent.lua
+Skip checking asserts
+Testing tests/observer/basics/Cell.lua
+Skipping tests/observer/basics/Cell.lua
+Skip checking asserts
+Testing tests/observer/basics/CellularSpace.lua
+Skipping tests/observer/basics/CellularSpace.lua
+Skip checking asserts
+Testing tests/observer/basics/Chart.lua
+Skipping tests/observer/basics/Chart.lua
+Skip checking asserts
+Testing tests/observer/basics/Clock.lua
+Skipping tests/observer/basics/Clock.lua
+Skip checking asserts
+Testing tests/observer/basics/Environment.lua
+Skipping tests/observer/basics/Environment.lua
+Skip checking asserts
+Testing tests/observer/basics/InternetSender.lua
+Skipping tests/observer/basics/InternetSender.lua
+Skip checking asserts
+Testing tests/observer/basics/LogFile.lua
+Skipping tests/observer/basics/LogFile.lua
+Skip checking asserts
+Testing tests/observer/basics/Map.lua
+Skipping tests/observer/basics/Map.lua
+Skip checking asserts
+Testing tests/observer/basics/Model.lua
+Skipping tests/observer/basics/Model.lua
+Skip checking asserts
+Testing tests/observer/basics/Society.lua
+Skipping tests/observer/basics/Society.lua
+Skip checking asserts
+Testing tests/observer/basics/TextScreen.lua
+Skipping tests/observer/basics/TextScreen.lua
+Skip checking asserts
+Testing tests/observer/basics/Timer.lua
+Skipping tests/observer/basics/Timer.lua
+Skip checking asserts
+Testing tests/observer/basics/UnitTest.lua
+Skipping tests/observer/basics/UnitTest.lua
+Skip checking asserts
+Testing tests/observer/basics/VisualTable.lua
+Skipping tests/observer/basics/VisualTable.lua
+Skip checking asserts
+Skipping source code functions check
+Skipping lines of source code check
+Skipping snapthots check
+Skipping examples
+
+Test report:
+Tests were executed in 2.61 seconds.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or folders in folder 'tests'.
+Execution of all asserts was not verified.
+All 129 asserts were executed successfully.
+All 3 tested functions do not have any unexpected execution error.
+All 3 tested functions have at least one assert.
+All 3 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+No source code functions were verified.
+No lines from the source code were verified.
+No snapshot test was executed.
+No examples were executed.
+Summing up, all tests were successfully executed.

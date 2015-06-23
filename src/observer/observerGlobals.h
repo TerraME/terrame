@@ -73,7 +73,7 @@ static const QString FONT_SIZE = "fontSize";
 static const QString SYMBOL = "symbol";
 static const QString WIDTH = "width";
 static const QString STYLE = "style";
-static const QString SIZE = "size";
+static const QString SIZE_ = "size";
 static const QString PENSTYLE = "pen";
 
 //// QByteArrays
@@ -92,7 +92,7 @@ static const QByteArray LUA_ADDRESS_OTHER = LUA_ADDRESS + "(O): ";
 //// Lists
 static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SLICES
     << PRECISION << STD_DEV << MAX << MIN << COLOR_BAR << FONT_FAMILY << FONT_SIZE
-    << SYMBOL << WIDTH << STYLE << SIZE << PENSTYLE; // << STD_COLOR_BAR; // is not a legend key
+    << SYMBOL << WIDTH << STYLE << SIZE_ << PENSTYLE; // << STD_COLOR_BAR; // is not a legend key
 
 //// Integers
 static const int LEGEND_ITENS = LEGEND_KEYS.size(); /// Number of items composing the legend of each attribute

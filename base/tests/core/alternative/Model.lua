@@ -41,6 +41,11 @@ return{
 		unitTest:assertError(error_func, "It is not possible to use a non-named table in a Model (parameter 'cs').")
 
 		local error_func = function()
+			local Tube = Model{cs = {{1, 2, 3, 4, 5}}}
+		end
+		unitTest:assertError(error_func, "It is not possible to use a non-named table in a Model (parameter 'cs').")
+
+		local error_func = function()
 			local Tube = Model{finalTime = "2"}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("finalTime", "number", "2"))

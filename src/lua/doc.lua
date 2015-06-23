@@ -188,7 +188,7 @@ function _Gtme.executeDoc(package)
 			return a.file[1] < b.file[1]
 		end)
 
-		forEachElement(df, function(_, mvalue)
+		forEachOrderedElement(df, function(_, mvalue)
 			if attributes(package_path..s.."data"..s..mvalue, "mode") == "directory" then
 				return
 			end
@@ -201,7 +201,7 @@ function _Gtme.executeDoc(package)
 			end
 		end)
 
-		forEachElement(filesdocumented, function(midx, mvalue)
+		forEachOrderedElement(filesdocumented, function(midx, mvalue)
 			if mvalue == 0 then
 				printError("File '"..midx.."' is documented but does not exist in folder 'data'")
 				doc_report.wrong_data = doc_report.wrong_data + 1
@@ -239,7 +239,7 @@ function _Gtme.executeDoc(package)
 	printNote("Checking if all functions are documented")
 	forEachOrderedElement(all_functions, function(idx, value)
 		print("Checking "..idx)
-		forEachElement(value, function(midx, mvalue)
+		forEachOrderedElement(value, function(midx, mvalue)
 			if midx == "__len" or midx == "__tostring" then return end -- TODO: think about this kind of function
 
 			if not result.files[idx] then

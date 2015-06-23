@@ -125,6 +125,11 @@ return{
 	runCommand = function(unitTest)
 		local d = runCommand("ls "..packageInfo().data)
 		unitTest:assertEquals(#d, 22) -- 22 files
+
+		os.execute("touch zzzz0.txt")
+		local d = runCommand("ls "..packageInfo().data)
+		unitTest:assertEquals(#d, 22) -- 22 files
+		os.execute("rm zzzz0.txt")
 	end,
 	setMode = function(unitTest)
 		local pathdata = packageInfo().data
