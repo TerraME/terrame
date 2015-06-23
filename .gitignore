@@ -32,3 +32,4 @@ ui_plotPropertiesGUI.h
 .project
 base/doc/
 test/.terrametmp_*
+test/packages/*/doc
