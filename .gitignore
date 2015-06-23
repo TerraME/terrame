@@ -31,3 +31,4 @@ ui_spatialObserverGUI.h
 ui_plotPropertiesGUI.h
 .project
 base/doc/
+test/.terrametmp_*

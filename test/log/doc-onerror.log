@@ -1,0 +1,86 @@
+Building documentation for package 'onerror'
+Loading package 'onerror'
+print when loading
+Parsing 'data.lua'
+Checking folder 'data'
+File 'data.csv' is not documented
+File 'brazilstates.dbf' is documented but does not exist in folder 'data'
+Parsing lua files
+Parsing lua/ErrorHandling.lua
+Parsing lua/Tube.lua
+Tube.lua should contain only a Model, got 1 additional object(s).
+Parsing lua/Utils.lua
+Invalid documentation line: --- Abv
+Description of 'belong2' does not end with '.'
+In createNeighborhood2, row 2 of @tabular has size (3) different from the first one (4).
+In forEachElement2(), @arg 'obj' is used more than once and will be ignored in 'obj A TerraME object or a table.'
+In forEachElement2(), @arg should be folowed by an argument name
+In forEachElement2(), Tag '@arg2' is invalid
+In forEachElement2(), undefined argument 'obj2' is documented
+Function forEachCell2 was already declared.
+Parsing examples
+Parsing examples/continuous-rain.lua
+No description found in @example
+Parsing examples/discrete-rain.lua
+Parsing examples/ipd.lua
+Checking undocumented files
+Example continuous-rain.lua is not documented.
+Checking @usage definition
+Checking lua/ErrorHandling.lua
+Checking lua/Tube.lua
+Checking lua/Utils.lua
+Function 'forEachNeighborhood2' has no @usage definition
+Checking calls to functions in @usage
+Checking lua/ErrorHandling.lua
+Checking lua/Tube.lua
+Checking lua/Utils.lua
+Utils.lua: 'belong2' does not call itself in its @usage
+Checking undocumented arguments
+Checking lua/ErrorHandling.lua
+Checking lua/Tube.lua
+Checking lua/Utils.lua
+Function 'belong2' has undocumented argument 'values'
+Checking 'description.lua'
+Error: Field 'date2' of 'description.lua' is unnecessary.
+Building and checking HTML files
+Building doc/index.html
+Building doc/files/ErrorHandling.html
+Invalid link to 'Model'
+Building doc/files/Utils.html
+Unknown argument 'abc' in 'createNeighborhood2'
+Argument 'wrap' in 'createNeighborhood2' is not used in the HTML table
+Building doc/files/examples.html
+Building doc/files/data.html
+Building doc/files/models.html
+print when loading
+Checking if all functions are documented
+Checking ErrorHandling.lua
+Checking Tube.lua
+Checking Utils.lua
+Function forEachNeighbor2 is not documented
+
+Documentation report:
+Documentation was built in 0.06 seconds.
+5 HTML files were created.
+One problem was found in 'description.lua'.
+One data file is not documented.
+One problem was found in 'data.lua'.
+One source code line starting with --- is invalid.
+One error was found in the documentation of Models.
+One global function is not documented.
+One function is declared twice in the source code.
+One description ends with wrong character.
+One tag is duplicated in the documentation.
+One tag should have a compulsory argument.
+One non-named argument is not documented.
+One undefined argument was found.
+One documented argument is not used in the HTML tables.
+One argument used in the HTML tables is not documented.
+One out of 66 functions does not have @usage.
+One out of 66 documented functions does not call itself in its @usage.
+One problem was found in @tabular.
+One invalid tag was found in the documentation.
+One out of 29 links is invalid.
+One out of 3 examples is not documented.
+One problem was found in the documentation of examples.
+Summing up, 21 problems were found in the documentation.

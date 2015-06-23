@@ -1,0 +1,3 @@
+Assign to undeclared variable 'count'.
+scripts/basic.lua:2: Warning: Variable 'abc' is not declared.
+nil
