@@ -6,10 +6,19 @@ test = {
 	onefile = "terrame -test config/oneFile.lua",
 }
 
+package = {
+	nodescription = "terrame -package nodescription",
+	nolua = "terrame -package nolua",
+	noexamples = "terrame -package noexamples",
+	noexamplesexample = "terrame -package noexamples -example",
+}
+
 doc = {
 	doc = "terrame -doc",
 	onerror = "terrame -package onerror -doc",
 	twoerrors = "terrame -package twoerrors -doc",
+	nodescription = "terrame -package nodescription -doc",
+	nodata = "terrame -package nodata -doc",
 }
 
 mode = {
@@ -25,7 +34,6 @@ basic = {
 	trace = "terrame scripts/trace.lua",
 	noexample = "terrame -example abc",
 	example = "terrame -example ipd",
-	-- example inside another package
 	nointerface = "terrame -interface abc",
 	qwerty4321 = "terrame -package qwerty4321",
 }
