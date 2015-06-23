@@ -1,0 +1,2 @@
+
+print(type(abc))
