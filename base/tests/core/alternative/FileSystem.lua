@@ -58,6 +58,12 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "boolean", 1))
 	end,
+    isDir = function(unitTest)
+        local error_func = function()
+            isDir(1)
+        end
+        unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+    end,
 	isFile = function(unitTest)
 		local error_func = function()
 			isFile(1)
