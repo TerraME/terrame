@@ -22,33 +22,36 @@
 --
 -- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 --          Rodrigo Reis Pereira
+--          Gilberto Camara (2015) - changed the Mersenne twister to the XORSHIFT generator
 --#########################################################################################
-
-
---[[  Parameters for the LCG random number generator 
-
-The Lehmer random number generator, sometimes also referred to as the Park–Miller 
-random number generator, is a variant of linear congruential generator (LCG) 
-that operates in multiplicative group of integers modulo n. 
-
---]]
-
-
---[[
-
-A linear congruential generator (LCG) is an algorithm that yields a sequence of 
-randomized numbers calculated with a linear equation. 
-The method represents one of the oldest and best-known pseudorandom number generator algorithms
-]]
 
 Random_ = {
 	type_ = "Random",
-	LCGprevious   = tonumber(tostring(os.time()):reverse():sub(1,6)),
-	LCGnext       = 0,
-	LCGmodulus    = 2^31 - 1, 	-- Mersenne prime M31
-	LCGmultiplier = 48271,   	-- ISO IEC standard for C++
-	LCGincrement  = 0
-	--- Return an integer random number. It uses a discrete uniform distribution.
+    --- seed for the 
+    seed = { tonumber(tostring(os.time()):reverse():sub(1,6)), tonumber(tostring(os.time()):reverse():sub(1,6))},
+
+	-- Xorshift random number generators are a class of pseudorandom number generators 
+    -- that was discovered by George Marsaglia.[1] 
+    -- They generate the next number in their sequence by repeatedly taking the exclusive or of a number 
+    -- with a bit shifted version of itself. This makes them extremely fast on modern computer architectures. 
+    -- They are a subclass of linear feedback shift registers, 
+    -- Their simple implementation typically makes them faster and use less space.
+    -- Xorshift generators are among the fastest non-cryptographic random number generators.
+    
+    -- The following xorshift+ generator uses 128 bits of state and has a maximal period of 2^128 − 1.
+    -- It passes the BigCrush tests and is considered better than the Mersenne twister.
+    xorshift128plus = function (self, max, min)
+        local x = self.seed[1];
+        local y = self.seed[2];
+        self.seed[1] = y;
+        x = bit32.bxor (x, bit32.lshift (x, 23))
+        x = bit32.bxor (x, bit32.rshift (x, 17))
+        x = bit32.bxor (x, bit32.bxor (y, bit32.rshift (y, 26)))    
+        self.seed[2] = x;
+        return ((x + y) % (max - min + 1)) + min
+    end,
+
+    --- Return an integer random number. It uses a discrete uniform distribution.
 	-- @arg v1 An integer number. If abscent, integer() will return zero or one.
 	-- If it is the only argument, it will return a number between zero and this value.
 	-- @arg v2 An integer number. When used, integer() will return a number between the first
@@ -58,38 +61,32 @@ Random_ = {
 	-- value = random:integer(10) -- from 0 to 10
 	--
 	-- value = random:integer(5, 10) -- from 5 to 10
-
-	randomLCG = function (self, v1, v2)
-    			self.LCGnext = (self.LCGmultiplier*self.LCGprevious + self.LCGincrement) % self.LCGmodulus 
-				local rand = (self.LCGnext % (max - min + 1)) + min  
-				self.LCGprevious = self.LCGnext
-			return rand
-	end,
-
 	integer = function(self, v1, v2)
 		optionalArgument(1, "number", v1)
 		optionalArgument(2, "number", v2)
 
-		if v2 then
+		if v2 ~= 0 then
 			integerArgument(2, v2)
-			if v1 then
+			if v1 ~= 0 then
 				integerArgument(1, v1)
-				return self.randomLCG(v1, v2)
+				return self:xorshift128plus(v1, v2)
 			end
-		elseif v1 then
+		elseif v1 ~= 0 then
 			integerArgument(1, v1)
 			if v1 < 0 then
-				return self.randomLCG(v1, 0)
+				return self:xorshift128plus(v1, 0)
 			else
-				return self.randomLCG(0, v1)
+				return self:xorshift128plus(0, v1)
 			end
 		else
-			return self.randomLCG(0, 1)
+			return self:xorshift128plus(0, 1)
+			end
 		end
 	end,
-	--- Return a random real number. It uses a continuous uniform distribution.
-	-- @arg v1 A number. If abscent, number() will return a value between zero and one. If
-	-- it is the only argument used, it will return a number from zero to this value.
+	--- Return a random real number. 
+    --  By default number() will return a value between zero and one.
+	-- @arg v1 A number. 
+	-- If it is the only argument used, it will return a number from zero to this value.
 	-- @arg v2 A number. When used, number() will return a number between the first argument
 	-- and the second.
 	-- @usage value = random:number() -- between 0 and 1
@@ -102,7 +99,7 @@ Random_ = {
 		optionalArgument(2, "number", v2)
 
 		if not v1 and not v2 then
-			return round (self.randomLCG(0, 1000000)/1000000)
+			return round (self:xorshift128plus(0, 1000000)/1000000)
 		else
 			local max
 			local min
@@ -124,19 +121,17 @@ Random_ = {
 					max = 0
 				end
 			end
-			return (max - min)*(self.randomLCG(0, 1000000)/1000000)  + min
+			return (max - min)*(self:xorshift128plus(0, 1000000)/1000000)  + min
 		end
 	end,
 	--- Reset the seed to generate random numbers.
 	-- @arg seed An integer number with the new seed.
 	-- @usage value = random:reSeed(1)
 	reSeed = function(self, seed)
-		if seed == nil then seed = os.time() end
-
-		optionalArgument(1, "number", seed)
-		integerArgument(1, seed)
-
-		self.LCGprevious = seed
+		if seed == nil then 
+            seed = tonumber(tostring(os.time()):reverse():sub(1,6))
+        end
+		self.seed[1] = seed
 	end,
 	--- Return a random element from a set of values using a discrete uniform distribution.
 	-- @arg mtable A non-named table with a set of values.
@@ -151,10 +146,9 @@ Random_ = {
 
 metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 
---- Type to generate random numbers. It uses RandomLib (http://randomlib.sourceforge.net),
--- a C++ interface to the Mersenne Twister
--- random number generator MT19937 and to the SIMD-oriented Fast Mersenne Twister random number
--- generator, SFMT19937. Random is a singleton, which means that every copy of Random created
+--- Type to generate random numbers. 
+-- Uses Xorshift generators are among the fastest non-cryptographic random number generators.
+-- Random is a singleton, which means that every copy of Random created
 -- by the user has the same seed.
 -- @arg data.seed A number to generate the pseudo-random numbers.
 -- The default value is the current time of the system, which means that
@@ -169,19 +163,9 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 function Random(data)
 	if data == nil then
 		data = {}
-	else
-		verifyNamedTable(data)
 	end
-
-	verifyUnnecessaryArguments(data, {"seed"})
-
-	if data.seed then
-		integerTableArgument(data, "seed")
-		Random_.LCGprevious = data.seed
-		data.seed = nil
-	end
-
-	setmetatable(data, metaTableRandom_)
-	return data
+    local rand = data
+	setmetatable(rand, metaTableRandom_)
+	return rand
 end
 
