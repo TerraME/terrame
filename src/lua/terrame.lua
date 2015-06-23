@@ -338,6 +338,10 @@ local function exportDatabase(package)
 	end)
 end
 
+local function isWarningMessage(message)
+	return string.match(string.upper(message), "WARNING")
+end
+
 local function importDatabase(package)
 	local s = _Gtme.sessionInfo().separator
 
@@ -377,12 +381,12 @@ local function importDatabase(package)
 
 		_Gtme.printNote("Creating database '"..database.."'")
 		local result = _Gtme.runCommand(command.." -e \"create database "..database.."\"", 2)
-		if result and result[1] then
+		if result and result[1] and not isWarningMessage(result[1]) then
 			_Gtme.printError(result[1])
 			_Gtme.printError("Add 'drop = true' to your config.lua to allow replacing databases if needed.")
 		else
 			_Gtme.printNote("Importing database '"..database.."'")
-			os.execute(command .." "..database.." < "..folder..value)
+			os.execute(command .." "..database.." < "..folder..s..value)
 			_Gtme.printNote("Database '"..database.."' successfully imported")
 		end
 	end)
