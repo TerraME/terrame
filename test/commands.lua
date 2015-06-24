@@ -28,7 +28,7 @@ doc = {
 
 mode = {
 	normal = "terrame scripts/basic.lua",
-	--debug = "terrame -mode=debug scripts/basic.lua",
+	debug = "terrame -mode=debug scripts/basic.lua",
 	strict = "terrame -mode=strict scripts/basic.lua",
 	quiet = "terrame -mode=quiet scripts/basic.lua",
 }

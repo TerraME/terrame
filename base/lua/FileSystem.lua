@@ -209,7 +209,7 @@ function runCommand(command, number)
 	mandatoryArgument(1, "string", command)
 	optionalArgument(2, "number", number)
 
-	count = 0
+	local count = 0
 	local mfile = "zzzz"..count..".txt"
 	while isFile(mfile) do
 		count = count + 1

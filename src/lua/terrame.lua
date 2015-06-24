@@ -579,7 +579,7 @@ function _Gtme.traceback()
 		if m1 or m2 or m3 then
 			last_function = info.name
 
-			if (si.fullTraceback or si.mode == "debug") and last_function then
+			if (si.fullTraceback or si.package) and last_function then
 				if si.package then
 					if not mb and not m1 and not m3 then
 						str = str.. "\n    In "..last_function.."\n"
@@ -774,6 +774,10 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit()
 				end
 			elseif arg == "-test" then
+				if info_.package == nil then
+					info_.package = "base"
+				end
+
 				info_.mode = "debug"
 				argCount = argCount + 1
 				dofile(path.."UnitTest.lua")
