@@ -1,4 +1,3 @@
-
 test = {
 	--__test__ = "terrame -test config/all.lua",
 	onerror = "terrame -package onerror -test config/all.lua",
@@ -27,6 +26,13 @@ doc = {
 	nodatadotlua = "terrame -package nodatadotlua -doc",
 	wrongdata = "terrame -package wrongdata -doc",
 	withoutdata = "terrame -package wrongdata -doc",
+}
+
+build = {
+	build = "terrame -package build -build",
+	onerrorbuild = "terrame -package onerrorbuild -build",
+	twoerrorsbuild = "terrame -package twoerrorsbuild -build",
+	buildunnecfiles = "terrame -package buildunnecfiles -build",
 }
 
 mode = {

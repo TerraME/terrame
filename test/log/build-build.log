@@ -1,0 +1,116 @@
+Building package build
+Building documentation for package 'build'
+Loading package 'build'
+Parsing lua files
+Parsing lua/Tube.lua
+Parsing lua/Utils.lua
+Parsing examples
+Parsing examples/ipd.lua
+Checking undocumented files
+Checking @usage definition
+Checking lua/Tube.lua
+Checking lua/Utils.lua
+Checking calls to functions in @usage
+Checking lua/Tube.lua
+Checking lua/Utils.lua
+Checking undocumented arguments
+Checking lua/Tube.lua
+Checking lua/Utils.lua
+Checking 'description.lua'
+Building and checking HTML files
+Building doc/index.html
+Building doc/files/Utils.html
+Building doc/files/examples.html
+Building doc/files/data.html
+Building doc/files/models.html
+Checking if all functions are documented
+Checking Tube.lua
+Checking Utils.lua
+
+Documentation report:
+Documentation was built in 0.04 seconds.
+4 HTML files were created.
+All fields of 'description.lua' are correct.
+No undocumented data files were found.
+All data files are correctly documented in 'data.lua'.
+All source code lines starting with --- are valid.
+The single Model is correctly documented.
+All 1 global functions of the package are documented.
+All functions of each file are declared only once.
+All descriptions end with a correct character.
+There is no duplicated tag in the documentation.
+All tags with compulsory arguments were correctly used.
+All 1 non-named arguments are documented.
+No undefined arguments were found.
+All available arguments of functions are used in their HTML tables.
+All arguments used in the HTML tables are documented.
+All 1 functions have @usage.
+All 1 functions call themselves in their @usage.
+All @tabular are correctly described.
+No invalid tags were found in the documentation.
+All 0 links were correctly built.
+All 1 examples are documented.
+All 1 examples are correctly documented.
+Summing up, all the documentation was successfully built.
+
+Checking unnecessary files
+
+Testing package build
+Loading package build
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/Tube.lua
+Testing Tube
+Checking if all asserts were executed
+Testing tests/Utils.lua
+Testing elapsedTime2
+Checking if all asserts were executed
+Testing tests/alternative/Utils.lua
+Testing elapsedTime2
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking Tube.lua
+Checking Utils.lua
+Skipping lines of source code check
+Skipping snapthots check
+Testing examples
+Testing ipd
+
+Test report:
+Tests were executed in 0.18 seconds.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or folders in folder 'tests'.
+All asserts were executed at least once.
+All 3 asserts were executed successfully.
+All 3 tested functions do not have any unexpected execution error.
+All 3 tested functions have at least one assert.
+All 3 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+All 2 functions of the package were tested.
+No lines from the source code were verified.
+No snapshot test was executed.
+All 1 examples were successfully executed.
+No new log file was created.
+Summing up, all tests were successfully executed.
+
+Checking Models
+Model 'Tube' belongs to file 'Tube.lua'
+Checking license
+Building package build
+Creating file 'build_0.1.zip'
+Package 'build' successfully zipped
+
+Build report:
+Package was built in 0.22 seconds.
+Build created file 'build_0.1.zip'.
+The package has a license file.
+Documentation was successfully built.
+There are no unnecessary files in the package.
+No errors were found while testing the package.
+All Models are placed in the right files.
+Summing up, the package was successfully built.
