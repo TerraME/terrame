@@ -16,6 +16,7 @@ package = {
 	nolua = "terrame -package nolua",
 	noexamples = "terrame -package noexamples",
 	noexamplesexample = "terrame -package noexamples -example",
+	example = "terrame -package onerror -example ipd"
 }
 
 doc = {
@@ -23,8 +24,9 @@ doc = {
 	onerror = "terrame -package onerror -doc",
 	twoerrors = "terrame -package twoerrors -doc",
 	nodescription = "terrame -package nodescription -doc",
-	nodata = "terrame -package nodata -doc",
+	nodatadotlua = "terrame -package nodatadotlua -doc",
 	wrongdata = "terrame -package wrongdata -doc",
+	withoutdata = "terrame -package wrongdata -doc",
 }
 
 mode = {
