@@ -24,6 +24,7 @@ doc = {
 	twoerrors = "terrame -package twoerrors -doc",
 	nodescription = "terrame -package nodescription -doc",
 	nodata = "terrame -package nodata -doc",
+	wrongdata = "terrame -package wrongdata -doc",
 }
 
 mode = {

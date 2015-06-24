@@ -135,10 +135,13 @@ function _Gtme.executeDoc(package)
 				if tab.description == nil then tab.description = {} end
 
 				local verifySize = function()
+					local ds = "Different sizes in the documentation: "
 					if #tab.attributes ~= #tab.types then
-						customError("Different sizes in the documentation: attributes ("..#tab.attributes..") and types ("..#tab.types..").")
-					elseif #tab.attributes ~= #tab.description then
-						customError("Different sizes in the documentation: attributes ("..#tab.attributes..") and description ("..#tab.description..").")
+						customError(ds.."'attributes' ("..#tab.attributes..") and 'types' ("..#tab.types..").")
+					end
+
+					if #tab.attributes ~= #tab.description then
+						customError(ds.."'attributes' ("..#tab.attributes..") and 'description' ("..#tab.description..").")
 					end
 				end
 
@@ -164,15 +167,17 @@ function _Gtme.executeDoc(package)
 				tab.shortsummary = string.match(tab.summary, "(.-%.)")
 			end
 
-			table.insert(mdata, tab)
+			if tab.file then
+				table.insert(mdata, tab)
 
-			forEachElement(tab.file, function(_, mvalue)
-				if filesdocumented[mvalue] then
-					printError("Data file '"..mvalue.."' is documented more than once")
-					doc_report.wrong_data = doc_report.wrong_data + 1
-				end
-				filesdocumented[mvalue] = 0
-			end)
+				forEachElement(tab.file, function(_, mvalue)
+					if filesdocumented[mvalue] then
+						printError("Data file '"..mvalue.."' is documented more than once.")
+						doc_report.wrong_data = doc_report.wrong_data + 1
+					end
+					filesdocumented[mvalue] = 0
+				end)
+			end
 		end
 
 		xpcall(function() dofile(package_path..s.."data.lua") end, function(err)
