@@ -10,6 +10,9 @@ commands = _Gtme.include("commands.lua")
 local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 
+_Gtme.printNote("Creating temporary folder")
+tmpfolder = runCommand("mktemp -d .terramerun_XXXXX")[1]
+
 _Gtme.printNote("Copying packages")
 forEachFile("packages", function(file)
 	_Gtme.print("Copying "..file)
@@ -29,24 +32,27 @@ forEachOrderedElement(commands, function(idx, group)
 		_Gtme.print("Testing "..name)
 		result = runCommand(command)
 	
-		local lfilename = "log"..s..idx.."-"..name..".log"
+		local lfilename = idx.."-"..name..".log"
 
-		logfile = io.open(lfilename, "r")
+		logfile = io.open("log"..s..lfilename, "r")
 		if logfile == nil then
-			_Gtme.printError("Creating log file "..lfilename)
+			_Gtme.printError("Creating log file '".."log"..s..lfilename.."'")
 			report.createdlogs = report.createdlogs + 1
 
-			logfile = io.open(lfilename, "w")
+			logfile = io.open("log"..s..lfilename, "w")
 			forEachElement(result, function(_, value)
 				logfile:write(value.."\n")
 			end)
 		else
+			local resultfile = io.open(tmpfolder..s..lfilename, "w")
+			
 			forEachElement(result, function(_, value)
+				resultfile:write(value.."\n")
+
 				local str = logfile:read()
 				if str ~= value then
 					if str then
 						if string.match(str, "seconds") then return end -- remove lines with 'seconds'
-
 						if string.match(str, "terrametmp") then return end
 					end
 
@@ -76,6 +82,7 @@ finalTime = os.time(os.date("*t"))
 print("\nTest report:")
 
 _Gtme.printNote("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
+_Gtme.printNote("Results were saved in '"..tmpfolder.."'.")
 
 if report.logerrors == 0 then
 	_Gtme.printNote("All tests were successfully executed.")
