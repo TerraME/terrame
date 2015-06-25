@@ -58,13 +58,11 @@ function _Gtme.executeDoc(package)
 
 	printNote("Loading package '"..package.."'")
 
-	if not isLoaded(package) then
-		xpcall(function() _G.package(package) end, function(err)
-			printError("Package "..package.." could not be loaded.")
-			printError(err)
-			os.exit()
-		end)
-	end
+	xpcall(function() _G.package(package) end, function(err)
+		printError("Package "..package.." could not be loaded.")
+		printError(err)
+		os.exit()
+	end)
 
 	local lua_files = dir(package_path..s.."lua")
 

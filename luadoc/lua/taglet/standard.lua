@@ -357,6 +357,10 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 	
 	-- read each line
 	local f = io.open(fullpath, "r")
+	if not f then
+		printError("Could not load "..fullpath)
+		exit()
+	end
 	local i = 1
 	local line = f:read()
 	local first = true

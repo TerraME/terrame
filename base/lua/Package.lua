@@ -146,7 +146,7 @@ function import(package)
 		return
 	end
 
-	if isLoaded(package) and sessionInfo().package == nil then
+	if isLoaded(package) then
 		customWarning("Package '"..package.."' is already loaded.")
 	else
 		local s = sessionInfo().separator

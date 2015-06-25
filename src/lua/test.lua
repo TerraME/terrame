@@ -280,7 +280,7 @@ function _Gtme.executeTests(package, fileName)
 		unused_snapshot_files = 0
 	}
 
-	if (not isLoaded("base")) and sessionInfo().package then
+	if not isLoaded("base") and sessionInfo().package ~= "base" then
 		import("base")
 	end
 
@@ -306,7 +306,10 @@ function _Gtme.executeTests(package, fileName)
 	import(package)
 
 	printNote("Looking for documented functions")
-	import("luadoc")
+
+	if not isLoaded("luadoc") then
+		import("luadoc")
+	end
 
 	local s = sessionInfo().separator
 	local baseDir = packageInfo(package).path
