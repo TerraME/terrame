@@ -146,11 +146,17 @@ function _Gtme.buildPackage(package)
 	end
 
 	printNote("Building package "..package)
+
+	tmpfolder = runCommand("mktemp -d .terrame_"..package.."_XXXXX")[1]
+	local currentdir = currentDir()
+
+	chDir(tmpfolder)
+	os.execute("cp -pr "..pkgFolder.." .")
+
 	local info = packageInfo(package)
 	local file = package.."_"..info.version..".zip"
 	printNote("Creating file '"..file.."'")
-	local currentdir = currentDir()
-	os.execute("zip -qr "..file.." "..pkgFolder)
+	os.execute("zip -qr "..file.." "..package)
 	if isFile(file) then
 		printNote("Package '"..package.."' successfully zipped")
 	else
@@ -158,10 +164,21 @@ function _Gtme.buildPackage(package)
 		os.exit()
 	end
 
+	os.execute("cp "..file.." "..currentdir)
+
+	md5sum = runCommand("md5 -q "..file)
+
+	chDir(currentdir)
+
 	local finalTime = os.clock()
 	print("\nBuild report:")
 	printNote("Package was built in "..round(finalTime - initialTime, 2).." seconds.")
 	printNote("Build created file '"..file.."'.")
+	printNote("Temporary files are saved in "..tmpfolder)
+
+	if type(md5sum) == "table" then
+		printNote("MD5 sum for the package is "..md5sum[1])
+	end
 
 	if report.license == 0 then
 		printNote("The package has a license file.")

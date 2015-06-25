@@ -125,6 +125,8 @@ Package 'twoerrorsbuild' successfully zipped
 Build report:
 Package was built in 0.25 seconds.
 Build created file 'twoerrorsbuild_0.1.zip'.
+Temporary files are saved in .terrame_twoerrorsbuild_eJ2LC
+MD5 sum for the package is 24b5b850f32bb07b62dae5065bfa0182
 The package does not have a license file.
 2 errors were found in the documentation.
 2 files are unnecessary.

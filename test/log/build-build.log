@@ -108,6 +108,8 @@ Package 'build' successfully zipped
 Build report:
 Package was built in 0.22 seconds.
 Build created file 'build_0.1.zip'.
+Temporary files are saved in .terrame_build_nnFUL
+MD5 sum for the package is a6dbdcfb12d1bd93231517f9ae44d0cf
 The package has a license file.
 Documentation was successfully built.
 There are no unnecessary files in the package.

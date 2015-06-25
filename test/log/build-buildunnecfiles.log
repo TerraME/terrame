@@ -115,6 +115,8 @@ Package 'buildunnecfiles' successfully zipped
 Build report:
 Package was built in 0.21 seconds.
 Build created file 'buildunnecfiles_0.1.zip'.
+Temporary files are saved in .terrame_buildunnecfiles_WE5qf
+MD5 sum for the package is c6961f36f4fb7b4b0fe9fce7ef729df1
 The package has a license file.
 Documentation was successfully built.
 4 files are unnecessary.

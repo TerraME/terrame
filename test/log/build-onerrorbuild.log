@@ -112,6 +112,8 @@ Package 'onerrorbuild' successfully zipped
 Build report:
 Package was built in 0.22 seconds.
 Build created file 'onerrorbuild_0.1.zip'.
+Temporary files are saved in .terrame_onerrorbuild_FPwEn
+MD5 sum for the package is 59d1dd4b3733b4182e18924ca5b09474
 The package does not have a license file.
 One error was found in the documentation.
 One file is unnecessary.

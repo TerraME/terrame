@@ -17,7 +17,7 @@ _Gtme.printNote("Copying packages")
 forEachFile("packages", function(file)
 	_Gtme.print("Copying "..file)
 	os.execute("rm -rf "..baseDir..s.."packages"..s..file)
-	os.execute("cp -r packages"..s..file.." "..baseDir..s.."packages"..s..file)
+	os.execute("cp -pr packages"..s..file.." "..baseDir..s.."packages"..s..file)
 end)
 
 local report = {
@@ -53,7 +53,8 @@ forEachOrderedElement(commands, function(idx, group)
 				if str ~= value then
 					if str then
 						if string.match(str, "seconds") then return end -- remove lines with 'seconds'
-						if string.match(str, "terrametmp") then return end
+						if string.match(str, "%.terrame") then return end
+						if string.match(str, "%MD5") then return end
 					end
 
 					_Gtme.printError("Error: Strings do not match:")
