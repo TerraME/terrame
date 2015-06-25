@@ -438,8 +438,11 @@ void State::lua_pgettable(lua_State *st, int index)
 {
   if (lua_type(st, index) == LUA_TTABLE)
     {
-      if (!lua_getmetatable(st, index))
-	return lua_rawget(st, index);
+      if (!lua_getmetatable(st, index)) 
+        {
+	         lua_rawget(st, index);
+           return;
+        }
       lua_pop(st, 1);
     }
 

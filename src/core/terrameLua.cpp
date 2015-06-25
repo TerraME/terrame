@@ -152,7 +152,6 @@ void registerClasses()
 	Luna<luaVisualArrangement>::Register(L);
 	Luna<luaMap>::Register(L);
 	Luna<luaChart>::Register(L);
-	Luna<LuaRandomUtil>::Register(L);
 	Luna<luaSociety>::Register(L);
 }
 

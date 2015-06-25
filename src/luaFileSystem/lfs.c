@@ -126,6 +126,8 @@ typedef struct dir_data {
 #define LSTAT_FUNC lstat
 #endif
 
+#define luaL_optlong(L,n,d)     ((long)luaL_optinteger(L, (n), (d)))
+
 /*
 ** Utility functions
 */
