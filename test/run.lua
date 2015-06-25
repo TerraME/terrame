@@ -22,6 +22,8 @@ end)
 
 local report = {
 	logerrors = 0,
+	build = 0,
+	builderrors = 0,
 	createdlogs = 0
 }
 
@@ -72,6 +74,26 @@ forEachOrderedElement(commands, function(idx, group)
 	end)
 end)
 
+if commands.build then
+	_Gtme.printNote("Checking builds")
+
+	forEachElement(commands.build, function(package)
+		local version = packageInfo(package).version
+
+		local mfile = package.."_"..version..".zip"
+
+		_Gtme.print("Checking "..mfile)
+		report.build = report.build + 1
+
+		if not isFile(mfile) then
+			_Gtme.printError("File does not exist")
+			report.builderrors = report.builderrors + 1
+		else
+			os.execute("rm "..mfile)
+		end
+	end)
+end
+
 _Gtme.printNote("Removing packages")
 forEachFile("packages", function(file)
 	_Gtme.print("Removing "..file)
@@ -84,6 +106,14 @@ print("\nTest report:")
 
 _Gtme.printNote("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
 _Gtme.printNote("Results were saved in '"..tmpfolder.."'.")
+
+if report.builderrors == 0 then
+	_Gtme.printNote("All build commands were successfully executed.")
+elseif report.builderrors == 1 then
+	_Gtme.printError("One out of "..report.build.." build commands was not successfully executed.")
+else					
+	_Gtme.printError(report.builderrors.." out of "..report.build.." build commands were not successfully executed.")
+end					 
 
 if report.logerrors == 0 then
 	_Gtme.printNote("All tests were successfully executed.")
