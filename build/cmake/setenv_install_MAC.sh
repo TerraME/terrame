@@ -7,9 +7,13 @@ else
    touch ~/.profile
 fi
 echo "" >> ~/.profile
-echo "#Environment variable used by TerraME 1.3.1" >> ~/.profile
-echo "TME_PATH_1_3_1=/usr/local/terrame" >> ~/.profile
-echo "PATH=\$PATH:\$TME_PATH_1_3_1/bin" >> ~/.profile
-echo "DYLD_LIBRARY_PATH=\$DYLD_LIBRARY_PATH:\$TME_PATH_1_3_1/lib" >> ~/.profile
-echo "export TME_PATH_1_3_1 PATH DYLD_LIBRARY_PATH" >> ~/.profile
-echo "alias terrame=TerraME"
+echo "#Environment variable used by TerraME 2.0" >> ~/.profile
+echo "TME_PATH=/usr/local/terrame" >> ~/.profile
+echo "PATH=\$PATH:\$TME_PATH/bin" >> ~/.profile
+echo "export TME_PATH PATH" >> ~/.profile
+
+mkdir -p /opt/local/lib/lua/5.2/
+mkdir -p /usr/local/lib/lua/5.2/
+ln -s /usr/local/terrame/lib/libqtluae.0.1.dylib /opt/local/lib/lua/5.2/
+ln -s /usr/local/terrame/lib/libqtluae.0.1.dylib /usr/local/lib/lua/5.2/
+ln -s /usr/local/terrame/lib/libqtluae.0.1.dylib /usr/local/terrame/bin/qtluae.so

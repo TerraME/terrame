@@ -246,9 +246,9 @@ else(MINGW)
 		include_directories(${QWT_INCLUDE_DIR})
 		link_directories(${QWT_LIBRARY_DIR})
 		if(QWTQT5_LIBRARY)
-			set(LIBS ${LIBS} ${QWTQT5_LIBRARY})
+			set(LIBS ${LIBS} ${QWTQT5_LIBRARY}/qwt)
 		else(QWTQT5_LIBRARY)
-			set(LIBS ${LIBS} ${QWT_LIBRARY})
+			set(LIBS ${LIBS} ${QWT_LIBRARY}/qwt)
 		endif(QWTQT5_LIBRARY)
 	endif( QWT_FOUND )
 endif(MINGW)
@@ -750,6 +750,10 @@ install(DIRECTORY ${ROOT}/base/doc/
 		# COMPONENT Documentation
 )
 
+install(FILES ${QTLUA_LIBRARY}
+			  ${QTLUAEXTRAS_INCLUDE_DIR}/../../lib/libqtluae.0.1.dylib
+		DESTINATION lib)
+
 set(CPACK_GENERATOR "PackageMaker")
 set(CPACK_PACKAGEMAKER ON)
 set(CPACK_OSX_PACKAGE_VERSION "10.9")
@@ -758,7 +762,7 @@ SET(CPACK_PACKAGE_NAME "TerraME")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/Description.txt")
 set(CPACK_RESOURCE_FILE_LICENSE "${ROOT}/licenses/terrame-license-lgpl-3.0.txt")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "TerraME is a programming environment for spatial dynamical modelling")
-set(CPACK_PACKAGE_ICON "/Users/raian/Documents/INPE/TerraME/source_code/PackageInstaller/Logomarca/logo_canto.png")
+# set(CPACK_PACKAGE_ICON "/Users/raian/Documents/INPE/TerraME/source_code/PackageInstaller/Logomarca/logo_canto.png")
 set(CPACK_DMG_BACKGROUND_IMAGE "/Users/raian/Documents/INPE/TerraME/source_code/PackageInstaller/Logomarca/logo_canto.png")
 #VERSION
 set(CPACK_PACKAGE_VERSION "2.0")
