@@ -62,8 +62,17 @@ return{
 
 		d = dir(".", true)
 	end,
+	isDir = function(unitTest)
+		unitTest:assert(isDir(sessionInfo().path))
+        
+        unitTest:assertEquals(isDir(""), false);
+        
+        unitTest:assert(not isDir(file("agents.csv")))
+	end,
 	isFile = function(unitTest)
 		unitTest:assert(isFile(file("agents.csv")))
+        
+        unitTest:assertEquals(isFile(""), false);
 	end, 
 	linkAttributes = function(unitTest)
 		local pathdata = packageInfo().data
@@ -125,6 +134,11 @@ return{
 	runCommand = function(unitTest)
 		local d = runCommand("ls "..packageInfo().data)
 		unitTest:assertEquals(#d, 22) -- 22 files
+
+		os.execute("touch zzzz0.txt")
+		local d = runCommand("ls "..packageInfo().data)
+		unitTest:assertEquals(#d, 22) -- 22 files
+		os.execute("rm zzzz0.txt")
 	end,
 	setMode = function(unitTest)
 		local pathdata = packageInfo().data

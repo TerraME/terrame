@@ -40,7 +40,7 @@ _Gtme.print = print
 _Gtme.type = type
 
 function _Gtme.printError(value)
-	if sessionInfo().separator == "/" then
+	if sessionInfo().separator == "/" and sessionInfo().color then
 		_Gtme.print(begin_red..value..end_color)
 	else
 		_Gtme.print(value)
@@ -48,7 +48,7 @@ function _Gtme.printError(value)
 end
 
 function _Gtme.printNote(value)
-	if sessionInfo().separator == "/" then
+	if sessionInfo().separator == "/" and sessionInfo().color then
 		_Gtme.print(begin_green..value..end_color)
 	else
 		_Gtme.print(value)
@@ -56,7 +56,7 @@ function _Gtme.printNote(value)
 end
 
 function _Gtme.printWarning(value)
-	if sessionInfo().separator == "/" then
+	if sessionInfo().separator == "/" and sessionInfo().color then
 		_Gtme.print(begin_yellow..value..end_color)
 	else
 		_Gtme.print(value)
@@ -183,6 +183,8 @@ local function sqlFiles(package)
 		os.exit()
 	end)
 
+	data = _Gtme.data
+
 	return files
 end
 
@@ -241,7 +243,13 @@ end
 
 function _Gtme.findExamples(package)
 	local s = _Gtme.sessionInfo().separator
-	local examplespath = _Gtme.packageInfo(package).path..s.."examples"
+
+	local examplespath
+
+	xpcall(function() examplespath = _Gtme.packageInfo(package).path..s.."examples" end, function(err)
+		_Gtme.printError(err)
+		os.exit()
+	end)
 
 	if _Gtme.attributes(examplespath, "mode") ~= "directory" then
 		return {}
@@ -261,7 +269,15 @@ end
 
 function _Gtme.showDoc(package)
 	local s = _Gtme.sessionInfo().separator
-	local docpath = _Gtme.packageInfo(package).path..s.."doc"..s.."index.html"
+
+	local docpath
+
+	xpcall(function() docpath = _Gtme.packageInfo(package).path end, function(err)
+		_Gtme.printError(err)
+		os.exit()
+	end)
+
+	docpath = docpath..s.."doc"..s.."index.html"
 
 	if s == "/" then
 		if _Gtme.runCommand("uname")[1] == "Darwin" then
@@ -322,6 +338,10 @@ local function exportDatabase(package)
 	end)
 end
 
+local function isWarningMessage(message)
+	return string.match(string.upper(message), "WARNING")
+end
+
 local function importDatabase(package)
 	local s = _Gtme.sessionInfo().separator
 
@@ -361,12 +381,12 @@ local function importDatabase(package)
 
 		_Gtme.printNote("Creating database '"..database.."'")
 		local result = _Gtme.runCommand(command.." -e \"create database "..database.."\"", 2)
-		if result and result[1] then
+		if result and result[1] and not isWarningMessage(result[1]) then
 			_Gtme.printError(result[1])
 			_Gtme.printError("Add 'drop = true' to your config.lua to allow replacing databases if needed.")
 		else
 			_Gtme.printNote("Importing database '"..database.."'")
-			os.execute(command .." "..database.." < "..folder..value)
+			os.execute(command .." "..database.." < "..folder..s..value)
 			_Gtme.printNote("Database '"..database.."' successfully imported")
 		end
 	end)
@@ -461,6 +481,7 @@ local function usage()
 	print(" -mode=silent                print() does not show any text on the screen. This")
 	print("                             mode can be used with the other three modes independently.")
 	print(" -version                    TerraME general information.")
+	print(" -color                      Show colored output (only for Linux and Mac systems).")
 	print(" -package <pkg>              Select a given package. If used alone and the model has a")
 	print("                             single model than it runs the graphical interface")
 	print("                             creating an instance of such model.")
@@ -558,7 +579,7 @@ function _Gtme.traceback()
 		if m1 or m2 or m3 then
 			last_function = info.name
 
-			if (si.fullTraceback or si.mode == "debug") and last_function then
+			if (si.fullTraceback or si.package) and last_function then
 				if si.package then
 					if not mb and not m1 and not m3 then
 						str = str.. "\n    In "..last_function.."\n"
@@ -618,6 +639,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		dbVersion = "1_3_1",
 		separator = package.config:sub(1, 1),
 		silent = false,
+		color = false,
 		path = os.getenv("TME_PATH"), 
 		fullTraceback = false,
 		autoclose = false
@@ -661,6 +683,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.killAllObservers()
 			elseif arg == "-ft" then
 				info_.fullTraceback = true
+			elseif arg == "-color" then
+				info_.color = true
 			elseif arg == "-mode=normal" then
 				info_.mode = "normal"
 			elseif arg == "-mode=debug" then
@@ -680,7 +704,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				package = arguments[argCount]
 				info_.package = package
 				if #arguments <= argCount then
-					local models = _Gtme.findModels(package)
+					local models
+
+					xpcall(function() models = _Gtme.findModels(package) end, function(err)
+						_Gtme.printError(err)
+						os.exit()
+					end)
 
 					if #models == 1 then
 						xpcall(function() graphicalInterface(package, models[1]) end, function(err)
@@ -717,7 +746,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				model = arguments[argCount]
 
 				import("base")
-				import(package)
+
+				xpcall(function() import(package) end, function(err)
+					_Gtme.printError(err)
+					os.exit()
+				end)
+
 				local models = _Gtme.findModels(package)
 
 				if model == nil then
@@ -740,6 +774,10 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit()
 				end
 			elseif arg == "-test" then
+				if info_.package == nil then
+					info_.package = "base"
+				end
+
 				info_.mode = "debug"
 				argCount = argCount + 1
 				dofile(path.."UnitTest.lua")
@@ -755,9 +793,10 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				usage()
 				os.exit()
 			elseif arg == "-showdoc" then
-				showDoc(package)
+				_Gtme.showDoc(package)
 				os.exit()
 			elseif arg == "-doc" then
+				info_.mode = "strict"
 				local s = _Gtme.sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."doc.lua")
 				local success, result = _Gtme.myxpcall(function() _Gtme.executeDoc(package) end)
@@ -793,7 +832,14 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				local file = arguments[argCount + 1]
 
 				if file then
-					arg = sessionInfo().path..s.."packages"..s..package..s.."examples"..s..file..".lua"
+					local info
+					xpcall(function() info = packageInfo(package).path end, function(err)
+						_Gtme.printError(err)
+						os.exit()
+					end)
+
+					arg = info..s.."examples"..s..file..".lua"
+
 					if not isFile(arg) then
 						_Gtme.printError("Example '"..file.."' does not exist in package '"..package.."'.")
 						print("Please use one from the list below:")
@@ -816,8 +862,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					end)
 					os.exit()
 				end
+			elseif arg == "-gui" then
+				-- this option was already recognized by the C++ level #79
 			else
-				-- #79
+				_Gtme.printError("Option not recognized: "..arg)
+				os.exit()
 			end
 		else
 			if info_.mode ~= "quiet" then
@@ -900,7 +949,15 @@ function _Gtme.myxpcall(func)
 			end
 			return string.sub(str, 0, string.len(str) - 1)
 		else
-			return err.."\n".._Gtme.traceback()
+			local msg = _Gtme.traceback()
+
+			if msg ~= "" then
+				msg = err.."\n"..msg
+			else
+				msg = err
+			end
+
+			return msg
 		end
 	end)
 end

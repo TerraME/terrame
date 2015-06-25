@@ -1,0 +1,2 @@
+scripts/basic.lua:1: Warning: Variable 'abc' is not declared.
+nil

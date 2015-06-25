@@ -1,0 +1,23 @@
+Example 'abc' does not exist in package 'base'.
+Please use one from the list below:
+ - beer
+ - continuous-rain
+ - discrete-rain
+ - drainage
+ - el-farol
+ - fire-spread
+ - game-of-life
+ - growing-moving-society
+ - growing-society
+ - ipd
+ - leontief
+ - predator-prey
+ - single-agent
+ - single-agents-society
+ - sir-basic
+ - sir-campaign
+ - sir-improved
+ - sugar
+ - water-in-the-tube-discrete
+ - water-in-the-tube-inflow-outflow
+ - water-in-the-tube

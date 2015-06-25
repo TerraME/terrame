@@ -1,0 +1,249 @@
+Building documentation for package 'base'
+Loading package 'base'
+Parsing 'data.lua'
+Checking folder 'data'
+Parsing lua files
+Parsing lua/Agent.lua
+Parsing lua/Automaton.lua
+Parsing lua/Cell.lua
+Parsing lua/CellularSpace.lua
+Parsing lua/Chart.lua
+Parsing lua/Choice.lua
+Parsing lua/Clock.lua
+Parsing lua/Environment.lua
+Parsing lua/ErrorHandling.lua
+Parsing lua/Event.lua
+Parsing lua/FileSystem.lua
+Parsing lua/Flow.lua
+Parsing lua/Group.lua
+Parsing lua/InternetSender.lua
+Parsing lua/Jump.lua
+Parsing lua/LogFile.lua
+Parsing lua/Mandatory.lua
+Parsing lua/Map.lua
+Parsing lua/Model.lua
+Parsing lua/Neighborhood.lua
+Parsing lua/Package.lua
+Parsing lua/Random.lua
+Parsing lua/SocialNetwork.lua
+Parsing lua/Society.lua
+Parsing lua/State.lua
+Parsing lua/TextScreen.lua
+Parsing lua/Timer.lua
+Parsing lua/Trajectory.lua
+Parsing lua/UnitTest.lua
+Parsing lua/Utils.lua
+Parsing lua/VisualTable.lua
+Parsing examples
+Parsing examples/beer.lua
+Parsing examples/continuous-rain.lua
+Parsing examples/discrete-rain.lua
+Parsing examples/drainage.lua
+Parsing examples/el-farol.lua
+Parsing examples/fire-spread.lua
+Parsing examples/game-of-life.lua
+Parsing examples/growing-moving-society.lua
+Parsing examples/growing-society.lua
+Parsing examples/ipd.lua
+Parsing examples/leontief.lua
+Parsing examples/predator-prey.lua
+Parsing examples/single-agent.lua
+Parsing examples/single-agents-society.lua
+Parsing examples/sir-basic.lua
+Parsing examples/sir-campaign.lua
+Parsing examples/sir-improved.lua
+Parsing examples/sugar.lua
+Parsing examples/water-in-the-tube-discrete.lua
+Parsing examples/water-in-the-tube-inflow-outflow.lua
+Parsing examples/water-in-the-tube.lua
+Checking undocumented files
+Checking @usage definition
+Checking lua/Agent.lua
+Checking lua/Automaton.lua
+Checking lua/Cell.lua
+Checking lua/CellularSpace.lua
+Checking lua/Chart.lua
+Checking lua/Choice.lua
+Checking lua/Clock.lua
+Checking lua/Environment.lua
+Checking lua/ErrorHandling.lua
+Checking lua/Event.lua
+Checking lua/FileSystem.lua
+Checking lua/Flow.lua
+Checking lua/Group.lua
+Checking lua/InternetSender.lua
+Checking lua/Jump.lua
+Checking lua/LogFile.lua
+Checking lua/Mandatory.lua
+Checking lua/Map.lua
+Checking lua/Model.lua
+Checking lua/Neighborhood.lua
+Checking lua/Package.lua
+Checking lua/Random.lua
+Checking lua/SocialNetwork.lua
+Checking lua/Society.lua
+Checking lua/State.lua
+Checking lua/TextScreen.lua
+Checking lua/Timer.lua
+Checking lua/Trajectory.lua
+Checking lua/UnitTest.lua
+Checking lua/Utils.lua
+Checking lua/VisualTable.lua
+Checking calls to functions in @usage
+Checking lua/Agent.lua
+Checking lua/Automaton.lua
+Checking lua/Cell.lua
+Checking lua/CellularSpace.lua
+Checking lua/Chart.lua
+Checking lua/Choice.lua
+Checking lua/Clock.lua
+Checking lua/Environment.lua
+Checking lua/ErrorHandling.lua
+Checking lua/Event.lua
+Checking lua/FileSystem.lua
+Checking lua/Flow.lua
+Checking lua/Group.lua
+Checking lua/InternetSender.lua
+Checking lua/Jump.lua
+Checking lua/LogFile.lua
+Checking lua/Mandatory.lua
+Checking lua/Map.lua
+Checking lua/Model.lua
+Checking lua/Neighborhood.lua
+Checking lua/Package.lua
+Checking lua/Random.lua
+Checking lua/SocialNetwork.lua
+Checking lua/Society.lua
+Checking lua/State.lua
+Checking lua/TextScreen.lua
+Checking lua/Timer.lua
+Checking lua/Trajectory.lua
+Checking lua/UnitTest.lua
+Checking lua/Utils.lua
+Checking lua/VisualTable.lua
+Checking undocumented arguments
+Checking lua/Agent.lua
+Checking lua/Automaton.lua
+Checking lua/Cell.lua
+Checking lua/CellularSpace.lua
+Checking lua/Chart.lua
+Checking lua/Choice.lua
+Checking lua/Clock.lua
+Checking lua/Environment.lua
+Checking lua/ErrorHandling.lua
+Checking lua/Event.lua
+Checking lua/FileSystem.lua
+Checking lua/Flow.lua
+Checking lua/Group.lua
+Checking lua/InternetSender.lua
+Checking lua/Jump.lua
+Checking lua/LogFile.lua
+Checking lua/Mandatory.lua
+Checking lua/Map.lua
+Checking lua/Model.lua
+Checking lua/Neighborhood.lua
+Checking lua/Package.lua
+Checking lua/Random.lua
+Checking lua/SocialNetwork.lua
+Checking lua/Society.lua
+Checking lua/State.lua
+Checking lua/TextScreen.lua
+Checking lua/Timer.lua
+Checking lua/Trajectory.lua
+Checking lua/UnitTest.lua
+Checking lua/Utils.lua
+Checking lua/VisualTable.lua
+Checking 'description.lua'
+Building and checking HTML files
+Building doc/index.html
+Building doc/files/Agent.html
+Building doc/files/Automaton.html
+Building doc/files/Cell.html
+Building doc/files/CellularSpace.html
+Building doc/files/Chart.html
+Building doc/files/Choice.html
+Building doc/files/Clock.html
+Building doc/files/Environment.html
+Building doc/files/ErrorHandling.html
+Building doc/files/Event.html
+Building doc/files/FileSystem.html
+Building doc/files/Flow.html
+Building doc/files/Group.html
+Building doc/files/InternetSender.html
+Building doc/files/Jump.html
+Building doc/files/LogFile.html
+Building doc/files/Mandatory.html
+Building doc/files/Map.html
+Building doc/files/Model.html
+Building doc/files/Neighborhood.html
+Building doc/files/Package.html
+Building doc/files/Random.html
+Building doc/files/SocialNetwork.html
+Building doc/files/Society.html
+Building doc/files/State.html
+Building doc/files/TextScreen.html
+Building doc/files/Timer.html
+Building doc/files/Trajectory.html
+Building doc/files/UnitTest.html
+Building doc/files/Utils.html
+Building doc/files/VisualTable.html
+Building doc/files/examples.html
+Building doc/files/data.html
+Checking if all functions are documented
+Checking Agent.lua
+Checking Automaton.lua
+Checking Cell.lua
+Checking CellularSpace.lua
+Checking Chart.lua
+Checking Choice.lua
+Checking Clock.lua
+Checking Environment.lua
+Checking ErrorHandling.lua
+Checking Event.lua
+Checking FileSystem.lua
+Checking Flow.lua
+Checking Group.lua
+Checking InternetSender.lua
+Checking Jump.lua
+Checking LogFile.lua
+Checking Mandatory.lua
+Checking Map.lua
+Checking Model.lua
+Checking Neighborhood.lua
+Checking Package.lua
+Checking Random.lua
+Checking SocialNetwork.lua
+Checking Society.lua
+Checking State.lua
+Checking TextScreen.lua
+Checking Timer.lua
+Checking Trajectory.lua
+Checking UnitTest.lua
+Checking Utils.lua
+Checking VisualTable.lua
+
+Documentation report:
+Documentation was built in 0.34 seconds.
+34 HTML files were created.
+All fields of 'description.lua' are correct.
+No undocumented data files were found.
+All data files are correctly documented in 'data.lua'.
+All source code lines starting with --- are valid.
+There are no Models in the package.
+All 284 global functions of the package are documented.
+All functions of each file are declared only once.
+All descriptions end with a correct character.
+There is no duplicated tag in the documentation.
+All tags with compulsory arguments were correctly used.
+All 312 non-named arguments are documented.
+No undefined arguments were found.
+All available arguments of functions are used in their HTML tables.
+All arguments used in the HTML tables are documented.
+All 284 functions have @usage.
+All 284 functions call themselves in their @usage.
+All @tabular are correctly described.
+No invalid tags were found in the documentation.
+All 242 links were correctly built.
+All 21 examples are documented.
+All 21 examples are correctly documented.
+Summing up, all the documentation was successfully built.

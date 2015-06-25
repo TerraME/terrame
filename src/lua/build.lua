@@ -37,7 +37,6 @@ function _Gtme.buildPackage(package)
 		unnecessary_files = 0,
 		test_errors = 0,
 		license = 0,
-		zip = 0,
 		model_error = 0
 	}
 
@@ -85,14 +84,14 @@ function _Gtme.buildPackage(package)
 	end)
 
 	forEachFile(pkgFolder..s.."lua", function(file)
-		if not string.endswith(file, ".lua") and attributes(pkgFolder..s.."lua"..file, "mode") ~= "directory" then
+		if not string.endswith(file, ".lua") and attributes(pkgFolder..s.."lua"..s..file, "mode") ~= "directory" then
 			printWarning("File '"..pkgFolder..s.."lua"..s..file.."' is unnecessary.")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
 	forEachFile(pkgFolder..s.."tests", function(file)
-		if not string.endswith(file, ".lua") and not attributes(pkgFolder..s.."tests"..file, "mode") ~= "directory" then
+		if not string.endswith(file, ".lua") and attributes(pkgFolder..s.."tests"..s..file, "mode") ~= "directory" then
 			printWarning("File '"..pkgFolder..s.."tests"..s..file.."' is unnecessary.")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
@@ -151,42 +150,18 @@ function _Gtme.buildPackage(package)
 	local file = package.."_"..info.version..".zip"
 	printNote("Creating file '"..file.."'")
 	local currentdir = currentDir()
-	printNote("zip -qr "..file.." "..pkgFolder)
 	os.execute("zip -qr "..file.." "..pkgFolder)
 	if isFile(file) then
 		printNote("Package '"..package.."' successfully zipped")
 	else
-		printError("Error when zipping package '"..package.."'")
-		report.zip = 1
+		printError("Could not zip package '"..package.."'. Aborting.")
+		os.exit()
 	end
 
 	local finalTime = os.clock()
 	print("\nBuild report:")
 	printNote("Package was built in "..round(finalTime - initialTime, 2).." seconds.")
-
-	if report.zip == 0 then
-		printNote("Build created file '"..file.."'.")
-	else
-		printError("Build could not create file '"..file.."'.")
-	end
-
-	if report.doc_errors == 0 then
-		printNote("Documentation was successfully built.")
-	else
-		printError(report.doc_errors.." errors were found in the documentation.")
-	end
-
-	if report.unnecessary_files == 0 then
-		printNote("Documentation was successfully built.")
-	else
-		printError(report.unnecessary_files.." files are unnecessary.")
-	end
-
-	if report.test_errors == 0 then
-		printNote("No errors were found while testing the package.")
-	else
-		printError(report.test_errors.." errors were found in the tests.")
-	end
+	printNote("Build created file '"..file.."'.")
 
 	if report.license == 0 then
 		printNote("The package has a license file.")
@@ -194,8 +169,34 @@ function _Gtme.buildPackage(package)
 		printError("The package does not have a license file.")
 	end
 
+	if report.doc_errors == 0 then
+		printNote("Documentation was successfully built.")
+	elseif report.doc_errors == 1 then
+		printError("One error was found in the documentation.")
+	else
+		printError(report.doc_errors.." errors were found in the documentation.")
+	end
+
+	if report.unnecessary_files == 0 then
+		printNote("There are no unnecessary files in the package.")
+	elseif report.unnecessary_files == 1 then
+		printError("One file is unnecessary.")
+	else
+		printError(report.unnecessary_files.." files are unnecessary.")
+	end
+
+	if report.test_errors == 0 then
+		printNote("No errors were found while testing the package.")
+	elseif report.test_errors == 1 then
+		printError("One error was found in the tests.")
+	else
+		printError(report.test_errors.." errors were found in the tests.")
+	end
+
 	if report.model_error == 0 then
 		printNote("All Models are placed in the right files.")
+	elseif report.model_error == 1 then
+		printError("One Model is placed in the wrong file.")
 	else
 		printError(report.model_error.." Models are placed in the wrong files.")
 	end

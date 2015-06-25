@@ -31,3 +31,5 @@ ui_spatialObserverGUI.h
 ui_plotPropertiesGUI.h
 .project
 base/doc/
+test/.terrame*
+test/packages/*/doc

@@ -1,0 +1,133 @@
+Building package twoerrorsbuild
+Building documentation for package 'twoerrorsbuild'
+Loading package 'twoerrorsbuild'
+Parsing lua files
+Parsing lua/Tube2.lua
+Parsing lua/Tube3.lua
+Parsing lua/Utils.lua
+Parsing examples
+Parsing examples/ipd.lua
+Checking undocumented files
+Checking @usage definition
+Checking lua/Tube2.lua
+Checking lua/Tube3.lua
+Checking lua/Utils.lua
+Checking calls to functions in @usage
+Checking lua/Tube2.lua
+Checking lua/Tube3.lua
+Checking lua/Utils.lua
+Checking undocumented arguments
+Checking lua/Tube2.lua
+Checking lua/Tube3.lua
+Checking lua/Utils.lua
+Function 'elapsedTime2' has undocumented argument 's'
+Checking 'description.lua'
+Error: Field 'date2' of 'description.lua' is unnecessary.
+Building and checking HTML files
+Building doc/index.html
+Building doc/files/Utils.html
+Building doc/files/examples.html
+Building doc/files/data.html
+Building doc/files/models.html
+Checking if all functions are documented
+Checking Tube2.lua
+Checking Tube3.lua
+Checking Utils.lua
+
+Documentation report:
+Documentation was built in 0.04 seconds.
+4 HTML files were created.
+One problem was found in 'description.lua'.
+No undocumented data files were found.
+All data files are correctly documented in 'data.lua'.
+All source code lines starting with --- are valid.
+All 2 Models are correctly documented.
+All 1 global functions of the package are documented.
+All functions of each file are declared only once.
+All descriptions end with a correct character.
+There is no duplicated tag in the documentation.
+All tags with compulsory arguments were correctly used.
+One non-named argument is not documented.
+No undefined arguments were found.
+All available arguments of functions are used in their HTML tables.
+All arguments used in the HTML tables are documented.
+All 1 functions have @usage.
+All 1 functions call themselves in their @usage.
+All @tabular are correctly described.
+No invalid tags were found in the documentation.
+All 0 links were correctly built.
+All 1 examples are documented.
+All 1 examples are correctly documented.
+Summing up, 2 problems were found in the documentation.
+
+Checking unnecessary files
+File '/Users/pedro/github/terrame/bin/packages/twoerrorsbuild/unnecessary.txt' is unnecessary.
+File '/Users/pedro/github/terrame/bin/packages/twoerrorsbuild/unnecessary2.txt' is unnecessary.
+
+Testing package twoerrorsbuild
+Loading package twoerrorsbuild
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/Tube2.lua
+Testing Tube
+Checking if all asserts were executed
+Testing tests/Tube3.lua
+Testing Tube2
+Checking if all asserts were executed
+Testing tests/Utils.lua
+Testing elapsedTime2
+Error in ...thub/terrame/bin/packages/twoerrorsbuild/tests/Utils.lua:29: Test should be true, got false.
+Error in ...thub/terrame/bin/packages/twoerrorsbuild/tests/Utils.lua:30: Test should be true, got false.
+Checking if all asserts were executed
+Testing tests/alternative/Utils.lua
+Testing elapsedTime2
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking Tube2.lua
+Checking Tube3.lua
+Checking Utils.lua
+Skipping lines of source code check
+Skipping snapthots check
+Testing examples
+Testing ipd
+
+Test report:
+Tests were executed in 0.2 seconds.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or folders in folder 'tests'.
+All asserts were executed at least once.
+2 out of 5 asserts failed.
+All 4 tested functions do not have any unexpected execution error.
+All 4 tested functions have at least one assert.
+All 4 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+All 3 functions of the package were tested.
+No lines from the source code were verified.
+No snapshot test was executed.
+All 1 examples were successfully executed.
+No new log file was created.
+Summing up, 2 problems were found during the tests.
+
+Checking Models
+Model 'Tube' is wrongly put in file 'Tube2.lua'. It should be in file 'Tube.lua'
+Model 'Tube2' is wrongly put in file 'Tube3.lua'. It should be in file 'Tube2.lua'
+Checking license
+The package does not contain file 'license.txt'
+Building package twoerrorsbuild
+Creating file 'twoerrorsbuild_0.1.zip'
+Package 'twoerrorsbuild' successfully zipped
+
+Build report:
+Package was built in 0.25 seconds.
+Build created file 'twoerrorsbuild_0.1.zip'.
+The package does not have a license file.
+2 errors were found in the documentation.
+2 files are unnecessary.
+2 errors were found in the tests.
+2 Models are placed in the wrong files.
+Summing up, 9 problems were found along the build.

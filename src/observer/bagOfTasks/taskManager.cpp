@@ -78,7 +78,6 @@ TaskManager::~TaskManager()
 
     v->buildLuaCode();
 
-/*
     for(int i = 0; i < workers.size(); i++)
     {
         if (workers.at(i)->isRunning())
@@ -93,7 +92,6 @@ TaskManager::~TaskManager()
             }
         }
     }
-*/
 
 #ifdef UNIT_TME_TEST_PRINT
     qDebug() << "bagOfTasks.size()" << bagOfTasks.size();

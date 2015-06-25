@@ -287,7 +287,8 @@ function _Gtme.executeTests(package, fileName)
 	printNote("Loading package "..package)
 	print = function(arg)
 		ut.print_when_loading = ut.print_when_loading + 1
-		printError("Error: print() call detected with argument '"..arg.."'")
+
+		printError("Error: print() call detected with argument '"..tostring(arg).."'")
 	end
 
 	_, overwritten = _G.package(package)
@@ -567,45 +568,47 @@ function _Gtme.executeTests(package, fileName)
 					ut.functions_without_assert = ut.functions_without_assert + 1
 				end
 
-				local variables = ""
 				local pvariables = {}
-				local rvariables = ""
 				local rpvariables = {}
 
 				forEachElement(_G, function(idx, _, mtype)
 					if global_variables[idx] == nil then
-						variables = variables.."'"..idx.."' ("..mtype.."), "
-						pvariables[#pvariables + 1] = idx
+						pvariables[idx] = mtype
 					elseif global_variables[idx] ~= mtype then
-						rvariables = rvariables.."'"..idx.."' (changed from "..global_variables[idx].." to "..mtype.."), "
-						rpvariables[#rpvariables + 1] = idx
+						rpvariables[idx] = {was = global_variables[idx], is = mtype}
 					end
 				end)
 
-				if variables ~= "" then
-					variables = variables:sub(1, variables:len() - 2).."."
-					printError("Test creates global variable(s): "..variables)
-
+				if getn(pvariables) > 0 then
+					local variables = ""
+				
 					-- we need to delete the global variables created in order to ensure that a
 					-- new error will be generated if this variable is found again. This need
 					-- to be done here because we cannot change _G inside a forEachElement
 					-- traversing _G
-					forEachElement(pvariables, function(_, value)
+					forEachOrderedElement(pvariables, function(value, mtype)
 						_G[value] = nil
+						variables = variables.."'"..value.."' ("..mtype.."), "
 					end)
+
+					variables = variables:sub(1, variables:len() - 2).."."
+					printError("Test creates global variable(s): "..variables)
 				end
 
-				if rvariables ~= "" then
-					rvariables = rvariables:sub(1, rvariables:len() - 2).."."
-					printError("Test updates global variable(s): "..rvariables)
+				if getn(rpvariables) > 0 then
+					local rvariables = ""
 
 					-- same reason as above
-					forEachElement(rpvariables, function(_, value)
+					forEachOrderedElement(rpvariables, function(value, t)
 						_G[value] = global_values[value]
+						rvariables = rvariables.."'"..value.."' (changed from "..t.was.." to "..t.is.."), "
 					end)
+
+					rvariables = rvariables:sub(1, rvariables:len() - 2).."."
+					printError("Test updates global variable(s): "..rvariables)
 				end
 
-				if variables ~= "" or rvariables ~= "" then
+				if getn(pvariables) > 0 or getn(rpvariables) > 0 then
 					ut.functions_with_global_variables = ut.functions_with_global_variables + 1
 				end
 
@@ -647,13 +650,13 @@ function _Gtme.executeTests(package, fileName)
 			end)
 
 			forEachOrderedElement(data.file, function(idx, value)
-				forEachElement(testfunctions, function(midx, mvalue)
+				forEachOrderedElement(testfunctions, function(midx, mvalue)
 					if not string.match(midx, value) then return end
 
 					found[value] = true
 
 					print("Checking "..midx)
-					forEachElement(mvalue, function(mmidx, mmvalue)
+					forEachOrderedElement(mvalue, function(mmidx, mmvalue)
 						ut.package_functions = ut.package_functions + 1
 						if mmvalue == 0 then
 							printError("Function '"..mmidx.."' was not tested.")
@@ -671,7 +674,7 @@ function _Gtme.executeTests(package, fileName)
 		else -- nil
 			forEachOrderedElement(testfunctions, function(idx, value)
 				print("Checking "..idx)
-				forEachElement(value, function(midx, mvalue)
+				forEachOrderedElement(value, function(midx, mvalue)
 					ut.package_functions = ut.package_functions + 1
 					if mvalue == 0 then
 						printError("Function '"..midx.."' was not tested.")

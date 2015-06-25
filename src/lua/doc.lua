@@ -54,12 +54,12 @@ function _Gtme.executeDoc(package)
 
 	printNote("Building documentation for package '"..package.."'")
 	local s = sessionInfo().separator
-	local package_path = packageInfo(package).path
+	local package_path = _Gtme.packageInfo(package).path
 
 	printNote("Loading package '"..package.."'")
 
 	if not isLoaded(package) then
-		xpcall(function() import(package) end, function(err)
+		xpcall(function() _G.package(package) end, function(err)
 			printError("Package "..package.." could not be loaded.")
 			printError(err)
 			os.exit()
@@ -135,10 +135,13 @@ function _Gtme.executeDoc(package)
 				if tab.description == nil then tab.description = {} end
 
 				local verifySize = function()
+					local ds = "Different sizes in the documentation: "
 					if #tab.attributes ~= #tab.types then
-						customError("Different sizes in the documentation: attributes ("..#tab.attributes..") and types ("..#tab.types..").")
-					elseif #tab.attributes ~= #tab.description then
-						customError("Different sizes in the documentation: attributes ("..#tab.attributes..") and description ("..#tab.description..").")
+						customError(ds.."'attributes' ("..#tab.attributes..") and 'types' ("..#tab.types..").")
+					end
+
+					if #tab.attributes ~= #tab.description then
+						customError(ds.."'attributes' ("..#tab.attributes..") and 'description' ("..#tab.description..").")
 					end
 				end
 
@@ -164,15 +167,17 @@ function _Gtme.executeDoc(package)
 				tab.shortsummary = string.match(tab.summary, "(.-%.)")
 			end
 
-			table.insert(mdata, tab)
+			if tab.file then
+				table.insert(mdata, tab)
 
-			forEachElement(tab.file, function(_, mvalue)
-				if filesdocumented[mvalue] then
-					printError("Data file '"..mvalue.."' is documented more than once")
-					doc_report.wrong_data = doc_report.wrong_data + 1
-				end
-				filesdocumented[mvalue] = 0
-			end)
+				forEachElement(tab.file, function(_, mvalue)
+					if filesdocumented[mvalue] then
+						printError("Data file '"..mvalue.."' is documented more than once.")
+						doc_report.wrong_data = doc_report.wrong_data + 1
+					end
+					filesdocumented[mvalue] = 0
+				end)
+			end
 		end
 
 		xpcall(function() dofile(package_path..s.."data.lua") end, function(err)
@@ -188,7 +193,7 @@ function _Gtme.executeDoc(package)
 			return a.file[1] < b.file[1]
 		end)
 
-		forEachElement(df, function(_, mvalue)
+		forEachOrderedElement(df, function(_, mvalue)
 			if attributes(package_path..s.."data"..s..mvalue, "mode") == "directory" then
 				return
 			end
@@ -201,7 +206,7 @@ function _Gtme.executeDoc(package)
 			end
 		end)
 
-		forEachElement(filesdocumented, function(midx, mvalue)
+		forEachOrderedElement(filesdocumented, function(midx, mvalue)
 			if mvalue == 0 then
 				printError("File '"..midx.."' is documented but does not exist in folder 'data'")
 				doc_report.wrong_data = doc_report.wrong_data + 1
@@ -239,7 +244,7 @@ function _Gtme.executeDoc(package)
 	printNote("Checking if all functions are documented")
 	forEachOrderedElement(all_functions, function(idx, value)
 		print("Checking "..idx)
-		forEachElement(value, function(midx, mvalue)
+		forEachOrderedElement(value, function(midx, mvalue)
 			if midx == "__len" or midx == "__tostring" then return end -- TODO: think about this kind of function
 
 			if not result.files[idx] then
