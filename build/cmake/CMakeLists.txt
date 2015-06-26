@@ -273,24 +273,6 @@ if(LUA_FOUND)
 endif(LUA_FOUND)
 
 ### --------------
-#RANDOM
-# if(MINGW)
-	# set(RANDOM_INCLUDE_DIR ${DEPS}/random/include)
-	# set(RANDOM_LIBRARY ${DEPS}/random/src/libRandom.a)
-	# link_directories(${RANDOM_LIBRARY})
-	# include_directories(${RANDOM_INCLUDE_DIR})
-	# set(LIBS ${LIBS} ${RANDOM_LIBRARY})
-# else(MINGW)
-	find_package(Random REQUIRED)
-	if(RANDOM_FOUND)
-		message("-- Found RandomLib library ${RANDOM_LIBRARY} and include dir ${RANDOM_INCLUDE_DIR}")
-		link_directories(${RANDOM_LIBRARY})
-		include_directories(${RANDOM_INCLUDE_DIR})
-		set(LIBS ${LIBS} ${RANDOM_LIBRARY})
-	endif(RANDOM_FOUND)
-# endif(MINGW)
-
-### --------------
 #PROTOCOL BUFFERS
 #-- TODO: Vefify if it is all correct
 find_package(Protobuf REQUIRED)
@@ -485,7 +467,6 @@ source_group("core" FILES
 	${SRCDIR}/core/luaNeighborhood.h
 	${SRCDIR}/core/imageCompare.h
 	${SRCDIR}/core/imageCompare.cpp
-	${SRCDIR}/core/luaRandomUtils.h
 	${SRCDIR}/core/luaRegion.h
 	${SRCDIR}/core/luaRule.h
 	${SRCDIR}/core/luaSociety.cpp

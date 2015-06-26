@@ -5,7 +5,6 @@ install_name_tool -change /usr/local/lib/libterralib.dylib @executable_path/../l
 install_name_tool -change /opt/local/lib/libjpeg.9.dylib @executable_path/../lib/libjpeg.9.dylib ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/bin/terrame
 install_name_tool -change /usr/local/qwt-6.1.2/lib/qwt.framework/Versions/6/qwt @executable_path/../lib/qwt ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/bin/terrame
 install_name_tool -change /opt/local/lib/liblua.dylib @executable_path/../lib/liblua.dylib ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/bin/terrame
-install_name_tool -change /usr/local/lib/libRandom.1.0.6.dylib @executable_path/../lib/libRandom.1.0.6.dylib ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/bin/terrame
 install_name_tool -change /opt/local/lib/libprotobuf.9.dylib @executable_path/../lib/libprotobuf.9.dylib ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/bin/terrame
 install_name_tool -change /opt/local/Library/Frameworks/QtWidgets.framework/Versions/5/QtWidgets @executable_path/../lib/QtWidgets ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/bin/terrame
 install_name_tool -change /opt/local/Library/Frameworks/QtNetwork.framework/Versions/5/QtNetwork @executable_path/../lib/QtNetwork ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/bin/terrame
@@ -160,10 +159,6 @@ install_name_tool -change /usr/lib/libSystem.B.dylib @executable_path/../lib/lib
 install_name_tool -id @executable_path/../lib/libSM.6.dylib ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/lib/libSM.6.dylib
 install_name_tool -change /opt/local/lib/libICE.6.dylib @executable_path/../lib/libICE.6.dylib ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/lib/libSM.6.dylib
 install_name_tool -change /usr/lib/libSystem.B.dylib @executable_path/../lib/libSystem.B.dylib ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/lib/libSM.6.dylib
-
-#libRANDOM
-install_name_tool -id @executable_path/../lib/libRandom.1.0.6.dylib ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/lib/libRandom.1.0.6.dylib
-install_name_tool -change /usr/lib/libSystem.B.dylib @executable_path/../lib/libSystem.B.dylib ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/lib/libRandom.1.0.6.dylib
 
 #libICE
 install_name_tool -id @executable_path/../lib/libICE.6.dylib ./_CPack_Packages/Mac-OSX/PackageMaker/TerraME-2.0-Mac-OSX/usr/local/terrame/lib/libICE.6.dylib

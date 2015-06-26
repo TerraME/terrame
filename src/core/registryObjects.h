@@ -35,7 +35,6 @@ extern "C"
 }
 
 #include "luna.h"
-#include "luaRandomUtils.h"
 
 //------------------------------------------------------------------------------------
 #define method(class, name) {#name, &class::name}
@@ -50,19 +49,6 @@ extern "C"
 //   lua_pushnumber(L, result);
 //   return 1;
 //}
-
-//****************************** RANDOM UTIL ******************************************//
-//----------------------------------------------------------------------------------------------
-const char LuaRandomUtil::className[] = "RandomUtil";
-
-Luna<LuaRandomUtil>::RegType LuaRandomUtil::methods[] = {
-	method(LuaRandomUtil, random),
-	method(LuaRandomUtil, randomInteger),
-	method(LuaRandomUtil, reseed),
-	method(LuaRandomUtil, getReference),
-	method(LuaRandomUtil, setReference),
-	{0, 0}
-};
 
 //****************************** SPACE **********************************************//
 //----------------------------------------------------------------------------------------------
