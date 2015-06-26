@@ -1,6 +1,6 @@
 -- @example Iterated Prisoner's dilemma model.
 
-Random{seed = 0}
+Random{seed = 12345}
 
 -- STRATEGIES AND META-STRATEGIES
 COOPERATE     = 1

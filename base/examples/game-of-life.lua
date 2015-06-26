@@ -8,7 +8,7 @@
 PROBABILITY = 0.15
 TURNS = 20
 
-r = Random{seed = 0}
+r = Random{seed = 12345}
 
 cell = Cell{
 	init = function(cell)

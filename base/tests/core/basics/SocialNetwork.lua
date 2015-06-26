@@ -165,8 +165,8 @@ weights      table of size 0
 
 		sntw:add(ag3)
 		unitTest:assertEquals(sntw:sample(randomObj), ag3)
-		unitTest:assertEquals(sntw:sample(randomObj), ag1)
 		unitTest:assertEquals(sntw:sample(randomObj), ag2)
+		unitTest:assertEquals(sntw:sample(randomObj), ag1)
 	end,
 	setWeight = function(unitTest)
 		local sntw = SocialNetwork()

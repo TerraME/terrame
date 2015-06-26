@@ -528,7 +528,7 @@ function _Gtme.executeTests(package, fileName)
 
 			for _, eachTest in ipairs(myTests) do
 				print("Testing "..eachTest)
-				Random{seed = 0}
+				Random{seed = 987654321}
 				debug.sethook(trace, "l")
 				if not doc_functions then io.flush() end -- theck why it is necessary to have the 'if'
 
@@ -743,6 +743,7 @@ function _Gtme.executeTests(package, fileName)
 			forEachElement(dirFiles, function(idx, value)
 				print("Testing "..value)
 				if not doc_functions then io.flush() end -- theck why it is necessary to have the 'if'
+				Random{seed = 987654321}
 
 				local logfile = nil
 				local writing_log = false

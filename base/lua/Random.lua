@@ -25,33 +25,30 @@
 --          Gilberto Camara (2015) - changed the Mersenne twister to the XORSHIFT generator
 --#########################################################################################
 
+-- Xorshift random number generators are a class of pseudorandom number generators 
+-- that was discovered by George Marsaglia [http://www.jstatsoft.org/v08/i14/paper]. 
+-- They generate the next number in their sequence by repeatedly taking the exclusive or of a number 
+-- with a bit shifted version of itself. This makes them extremely fast on modern computer architectures. 
+-- They are a subclass of linear feedback shift registers, 
+-- Their simple implementation typically makes them faster and use less space.
+-- Xorshift generators are among the fastest non-cryptographic random number generators.
+-- The following xorshift+ generator uses 128 bits of state and has a maximal period of 2 ^ 128 - 1.
+-- It passes the BigCrush tests and is considered better than the Mersenne twister.
+local function xorshift128plus(self, min, max)
+	local x = self.seed[1]
+	local y = self.seed[2]
+	Random_.seed[1] = y
+	x = bit32.bxor(x, bit32.lshift(x, 23))
+	x = bit32.bxor(x, bit32.rshift(x, 17))
+	x = bit32.bxor(x, bit32.bxor(y, bit32.rshift(y, 26)))	
+	Random_.seed[2] = x
+	return ((x + y) % (max - min + 1)) + min
+end
+
+
 Random_ = {
 	type_ = "Random",
-    --- seed for the 
-    seed = { tonumber(tostring(os.time()):reverse():sub(1,6)), tonumber(tostring(os.time()):reverse():sub(1,6))},
-
-	-- Xorshift random number generators are a class of pseudorandom number generators 
-    -- that was discovered by George Marsaglia.[1] 
-    -- They generate the next number in their sequence by repeatedly taking the exclusive or of a number 
-    -- with a bit shifted version of itself. This makes them extremely fast on modern computer architectures. 
-    -- They are a subclass of linear feedback shift registers, 
-    -- Their simple implementation typically makes them faster and use less space.
-    -- Xorshift generators are among the fastest non-cryptographic random number generators.
-    
-    -- The following xorshift+ generator uses 128 bits of state and has a maximal period of 2^128 − 1.
-    -- It passes the BigCrush tests and is considered better than the Mersenne twister.
-    xorshift128plus = function (self, max, min)
-        local x = self.seed[1];
-        local y = self.seed[2];
-        self.seed[1] = y;
-        x = bit32.bxor (x, bit32.lshift (x, 23))
-        x = bit32.bxor (x, bit32.rshift (x, 17))
-        x = bit32.bxor (x, bit32.bxor (y, bit32.rshift (y, 26)))    
-        self.seed[2] = x;
-        return ((x + y) % (max - min + 1)) + min
-    end,
-
-    --- Return an integer random number. It uses a discrete uniform distribution.
+	--- Return an integer random number. It uses a discrete uniform distribution.
 	-- @arg v1 An integer number. If abscent, integer() will return zero or one.
 	-- If it is the only argument, it will return a number between zero and this value.
 	-- @arg v2 An integer number. When used, integer() will return a number between the first
@@ -65,26 +62,25 @@ Random_ = {
 		optionalArgument(1, "number", v1)
 		optionalArgument(2, "number", v2)
 
-		if v2 ~= 0 then
+		if v2 then
 			integerArgument(2, v2)
-			if v1 ~= 0 then
+			if v1 then
 				integerArgument(1, v1)
-				return self:xorshift128plus(v1, v2)
+				return xorshift128plus(self, v1, v2)
 			end
-		elseif v1 ~= 0 then
+		elseif v1 then
 			integerArgument(1, v1)
 			if v1 < 0 then
-				return self:xorshift128plus(v1, 0)
+				return xorshift128plus(self, v1, 0)
 			else
-				return self:xorshift128plus(0, v1)
+				return xorshift128plus(self, 0, v1)
 			end
 		else
-			return self:xorshift128plus(0, 1)
-			end
+			return xorshift128plus(self, 0, 1)
 		end
 	end,
 	--- Return a random real number. 
-    --  By default number() will return a value between zero and one.
+	--  By default number() will return a value between zero and one.
 	-- @arg v1 A number. 
 	-- If it is the only argument used, it will return a number from zero to this value.
 	-- @arg v2 A number. When used, number() will return a number between the first argument
@@ -99,10 +95,10 @@ Random_ = {
 		optionalArgument(2, "number", v2)
 
 		if not v1 and not v2 then
-			return round (self:xorshift128plus(0, 1000000)/1000000)
+			return xorshift128plus(self, 0, 1000000) / 1000000
 		else
-			local max
-			local min
+			local max = 1
+			local min = 0
 
 			if v1 and v2 then
 				if v1 > v2 then
@@ -114,14 +110,13 @@ Random_ = {
 				end
 			elseif v1 then
 				if v1 > 0 then
-					min = 0
 					max = v1
 				else
 					min = v1
 					max = 0
 				end
 			end
-			return (max - min)*(self:xorshift128plus(0, 1000000)/1000000)  + min
+			return (max - min) * (xorshift128plus(self, 0, 1000000) / 1000000) + min
 		end
 	end,
 	--- Reset the seed to generate random numbers.
@@ -129,9 +124,16 @@ Random_ = {
 	-- @usage value = random:reSeed(1)
 	reSeed = function(self, seed)
 		if seed == nil then 
-            seed = tonumber(tostring(os.time()):reverse():sub(1,6))
-        end
-		self.seed[1] = seed
+			seed = tonumber(tostring(os.time()):reverse():sub(1, 6))
+		else
+			verify(seed ~= 0, "Argument 'seed' cannot be zero.")
+		end
+
+		optionalArgument(1, "number", seed)
+		integerArgument(1, seed)
+
+		Random_.seed[1] = 1
+		Random_.seed[2] = seed
 	end,
 	--- Return a random element from a set of values using a discrete uniform distribution.
 	-- @arg mtable A non-named table with a set of values.
@@ -163,9 +165,23 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 function Random(data)
 	if data == nil then
 		data = {}
+	else
+		verifyNamedTable(data)
 	end
-    local rand = data
-	setmetatable(rand, metaTableRandom_)
-	return rand
+
+	verifyUnnecessaryArguments(data, {"seed"})
+
+	if data.seed then
+		integerTableArgument(data, "seed")
+		verify(data.seed ~= 0, "Argument 'seed' cannot be zero.")
+		Random_.seed = {data.seed, data.seed}
+		data.seed = nil
+	elseif not Random_.seed then
+		local seed = tonumber(tostring(os.time()):reverse():sub(1, 6))
+		Random_.seed = {seed, seed}
+	end
+
+	setmetatable(data, metaTableRandom_)
+	return data
 end
 

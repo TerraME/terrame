@@ -64,7 +64,7 @@ return {
 
 		unitTest:assertType(nonFooSociety, "Society")
 		unitTest:assertEquals(50, #nonFooSociety)
-		unitTest:assertEquals(nonFooSociety:gender().male, 26)
+		unitTest:assertEquals(nonFooSociety:gender().male, 24)
 		unitTest:assertEquals(nonFooSociety:sample().money, 100)
 		unitTest:assertEquals(nonFooSociety:money(), 100 * #nonFooSociety)
 
@@ -89,7 +89,7 @@ return {
 
 		t:execute(50)
 
-		unitTest:assertEquals(4, findCounter)
+		unitTest:assertEquals(3, findCounter)
 
 		local count1 = 0
 		local count2 = 0
@@ -98,7 +98,7 @@ return {
 			if not cell:isEmpty() then count2 = count2 + 1 end
 		end)
 		unitTest:assertEquals(51, count1)
-		unitTest:assertEquals(47, count2)
+		unitTest:assertEquals(48, count2)
 
 		local agent1 = Agent{}
 
@@ -247,7 +247,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(5046,  count_prob)
+		unitTest:assertEquals(6608,  count_prob)
 		unitTest:assertEquals(100,   count_quant)
 		unitTest:assertEquals(10000, count_all)
 
@@ -267,8 +267,8 @@ state_          State
 			count_n  = count_n + #ag:getSocialNetwork("n")
 		end)
 
-		unitTest:assertEquals(370, count_c)
-		unitTest:assertEquals(2356, count_n)
+		unitTest:assertEquals(362, count_c)
+		unitTest:assertEquals(2150, count_n)
 
 		local ag1 = Agent{
 			name = "nonfoo",
@@ -327,7 +327,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(4943,  count_prob)
+		unitTest:assertEquals(6614,  count_prob)
 		unitTest:assertEquals(100,   count_quant)
 		unitTest:assertEquals(10000, count_all)
 
@@ -341,7 +341,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(5019,  count_prob)
+		unitTest:assertEquals(6597,  count_prob)
 		unitTest:assertEquals(100,   count_quant)
 		unitTest:assertEquals(10000, count_all)
 
@@ -362,7 +362,7 @@ state_          State
 		end)
 
 		unitTest:assertEquals(384, count_c)
-		unitTest:assertEquals(2168, count_n)
+		unitTest:assertEquals(2286, count_n)
 
 		predators:sample():die()
 
@@ -375,7 +375,7 @@ state_          State
 
 
 		unitTest:assertEquals(380, count_c)
-		unitTest:assertEquals(2094, count_n)
+		unitTest:assertEquals(2256, count_n)
 	end,
 	clear = function(unitTest)
 		local agent1 = Agent{}
@@ -451,14 +451,11 @@ state_          State
 		unitTest:assertType(ag, "Agent")
 	end,
 	synchronize = function(unitTest)
-		local randomObj = Random{}
-		randomObj:reSeed(0)
-
 		local received = 0
 		local sugar = 0
 		local nonFooAgent = Agent{
 			init = function(self)
-				self.age = randomObj:integer(10)
+				self.age = Random():integer(10)
 			end,
 			execute = function(self)
 				self.age = self.age + 1
@@ -497,7 +494,7 @@ state_          State
 			sum = sum + friend.age
 		end)
 
-		unitTest:assertEquals(12, sum)
+		unitTest:assertEquals(15, sum)
 
 		forEachConnection(myself, function(self, friend)
 			myself:message{receiver = friend}
@@ -505,13 +502,13 @@ state_          State
 		unitTest:assertEquals(2, received)
 
 		forEachConnection(myself, function(self, friend)
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
-			myself:message{receiver = friend, delay = randomObj:integer(1, 10)}
+			myself:message{receiver = friend, delay = Random():integer(1, 10)}
+			myself:message{receiver = friend, delay = Random():integer(1, 10)}
+			myself:message{receiver = friend, delay = Random():integer(1, 10)}
+			myself:message{receiver = friend, delay = Random():integer(1, 10)}
+			myself:message{receiver = friend, delay = Random():integer(1, 10)}
+			myself:message{receiver = friend, delay = Random():integer(1, 10)}
+			myself:message{receiver = friend, delay = Random():integer(1, 10)}
 			myself:message{subject = "sugar", receiver = friend, delay = 10}
 		end)
 
@@ -524,7 +521,7 @@ state_          State
 		--]]
 
 		soc:synchronize()
-		unitTest:assertEquals(5, received)
+		unitTest:assertEquals(4, received)
 
 		local t = Timer{
 			Event{period = 4, action = soc}
@@ -543,14 +540,11 @@ state_          State
 		unitTest:assertEquals(2, sugar)
 	end,
 	split = function(unitTest)
-		local randomObj = Random{}
-		randomObj:reSeed(0)
-
 		local received = 0
 		local nonFooAgent = Agent{
 			name = "nonfoo",
 			init = function(self)
-				self.age = randomObj:integer(10)
+				self.age = Random():integer(10)
 				if self.age < 5 then
 					self.name = "foo"
 				end

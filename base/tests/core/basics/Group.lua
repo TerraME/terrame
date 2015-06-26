@@ -72,13 +72,13 @@ return{
 			end
 		}
 
-		unitTest:assertEquals(6, #g)
+		unitTest:assertEquals(5, #g)
 		local sum = 0
 		forEachAgent(g, function(ag)
 			sum = sum + ag.age
 		end)
 
-		unitTest:assertEquals(49, sum)
+		unitTest:assertEquals(41, sum)
 
 		local g2 = Group{
 			target = g,
@@ -98,7 +98,7 @@ return{
 
 		unitTest:assertEquals(10, #g)
 		unitTest:assertEquals(10, g.agents[1].age)
-		unitTest:assertEquals(0, g.agents[10].age)
+		unitTest:assertEquals(1, g.agents[10].age)
 	end,
 	__len = function(unitTest)
 		local ag1 = Agent{age = 8}
@@ -151,13 +151,10 @@ select  function
 		unitTest:assertEquals(#g, 3)
 	end,
 	clone = function(unitTest)
-		local randomObj = Random{}
-		randomObj:reSeed(0)
-
 		local nonFooAgent = Agent{
 			name = "nonfoo",
 			init = function(self)
-				self.age = randomObj:integer(10)
+				self.age = Random():integer(10)
 				if self.age < 5 then
 					self.name = "foo"
 				end
@@ -177,7 +174,7 @@ select  function
 			select = function(ag) return ag.age > 5 end
 		}
 		unitTest:assertType(g, "Group")
-		unitTest:assertEquals(6, #g)
+		unitTest:assertEquals(5, #g)
 
 		local g2 = g:clone()
 		unitTest:assertType(g2, "Group")
@@ -236,10 +233,10 @@ select  function
 			end
 		}
 
-		unitTest:assertEquals(#g, 6)
+		unitTest:assertEquals(#g, 7)
 		g:randomize()
-		unitTest:assertEquals(#g, 6)
-		unitTest:assertEquals(0, g.agents[1].age)
+		unitTest:assertEquals(#g, 7)
+		unitTest:assertEquals(5, g.agents[1].age)
 	end,
 	rebuild = function(unitTest)
 		local nonFooAgent = Agent{
@@ -266,7 +263,7 @@ select  function
 			end
 		}
 
-		unitTest:assertEquals(0, g.agents[1].age)
+		unitTest:assertEquals(1, g.agents[1].age)
 		unitTest:assertEquals(6, g.agents[6].age)
 
 		nonFooSociety:execute()
@@ -278,8 +275,8 @@ select  function
 		g:execute()
 		g:rebuild()
 
-		unitTest:assertEquals(3, #g)
-		unitTest:assertEquals(4, g.agents[1].age)
+		unitTest:assertEquals(4, #g)
+		unitTest:assertEquals(5, g.agents[1].age)
 	end,
 	sort = function(unitTest)
 		local count = 0

@@ -52,8 +52,7 @@ return{
 		unitTest:assertEquals(cs:defor(), 100)
 		unitTest:assertEquals(cs:road(), 100)
 		unitTest:assertEquals(cs:cover().pasture, 100)
-		unitTest:assertEquals(cs:water(), 202)
-		unitTest:assertEquals(cs:water(), 202)
+		unitTest:assertEquals(cs:water(), 194)
 
 		cs:deforest()
 		unitTest:assertEquals(cs:sample().defor, 2)

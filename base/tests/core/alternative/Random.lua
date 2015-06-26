@@ -40,6 +40,11 @@ return{
 			local r = Random{seed = 2.3}
 		end
 		unitTest:assertError(error_func, integerArgumentMsg("seed", 2.3))
+
+		local error_func = function()
+			local r = Random{seed = 0}
+		end
+		unitTest:assertError(error_func, "Argument 'seed' cannot be zero.")
 	end,
 	integer = function(unitTest)
 		local randomObj = Random{}
@@ -88,6 +93,11 @@ return{
 			randomObj:reSeed(2.3)
 		end
 		unitTest:assertError(error_func, integerArgumentMsg(1, 2.3))
+
+		error_func = function()
+			randomObj:reSeed(0)
+		end
+		unitTest:assertError(error_func, "Argument 'seed' cannot be zero.")
 	end,
 	sample = function(unitTest)
 		local randomObj = Random{}

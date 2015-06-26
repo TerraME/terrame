@@ -185,11 +185,11 @@ Creating log file discrete-rain.log
 Testing ipd
 Error: Strings do not match:
 Log file: <empty>
-Simulation: 'NTFT	90	1	0	120	95	112	80	498'.
+Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 Testing ipd2
 Error: Strings do not match:
 Log file: <empty>
-Simulation: 'NTFT	90	1	0	120	95	112	80	498'.
+Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
 Test report:
 2 print() calls were found when loading the package.

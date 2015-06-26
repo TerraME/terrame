@@ -189,7 +189,7 @@ id     string [env]
 
 		local predators = Society{
 			instance = predator,
-			quantity = 10
+			quantity = 20
 		}
 
 		local ag = Agent{}
@@ -204,13 +204,13 @@ id     string [env]
 		forEachCell(cs, function(cell)
 			cont = cont + #cell.placement
 		end)
-		unitTest:assertEquals(11, cont)
+		unitTest:assertEquals(21, cont)
 
 		cont = 0
 		forEachAgent(predators, function(agent)
 			cont = cont + #agent.placement
 		end)
-		unitTest:assertEquals(10, cont)
+		unitTest:assertEquals(20, cont)
 
 		forEachAgent(predators, function(ag)
 			ag:reproduce{age = 0}
@@ -223,13 +223,13 @@ id     string [env]
 		forEachCell(cs, function(cell)
 			cont = cont + #cell.placement
 		end)
-		unitTest:assertEquals(21, cont)
+		unitTest:assertEquals(41, cont)
 
 		cont = 0
 		forEachAgent(predators, function(agent)
 			cont = cont + #agent.placement
 		end)
-		unitTest:assertEquals(20, cont)
+		unitTest:assertEquals(40, cont)
 
 		local predator = Agent{name = "predator"}
 		local ag = Agent{name = "ag"}

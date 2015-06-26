@@ -263,7 +263,7 @@ xyz     function
 		unitTest:assertEquals(tr.parent, cs)
 		unitTest:assertEquals(tr.select, s)
 		unitTest:assertEquals(tr.greater, g)
-		unitTest:assertEquals(#tr, 12)
+		unitTest:assertEquals(#tr, 14)
 
 		forEachCell(cs, function(cell)
 			cell.value = cell.value + 10
