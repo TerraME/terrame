@@ -31,5 +31,4 @@ Options:
  [-package <pkg>] -exportDb  Export .sql files described in data.lua from MySQL to
                              folder data within the package.
 
-For more information, please visit www.terrame.org
 

@@ -192,8 +192,6 @@ Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	95	112	80	498'.
 
 Test report:
-Tests were executed in 10.93 seconds.
-Snapshots were saved in '.terrametmp_3Wrg6'.
 2 print() calls were found when loading the package.
 2 variables are overwritten when loading the package.
 2 invalid files or folders were found in folder 'test'.

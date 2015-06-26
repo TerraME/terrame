@@ -27,6 +27,14 @@ local report = {
 	createdlogs = 0
 }
 
+local function ignoreLine(line)
+	if string.match(line, "seconds")   then return true end
+	if string.match(line, "%.terrame") then return true end
+	if string.match(line, "MD5")       then return true end
+
+	return false
+end
+
 forEachOrderedElement(commands, function(idx, group)
 	_Gtme.printNote("Testing group '"..idx.."'")
 
@@ -43,23 +51,22 @@ forEachOrderedElement(commands, function(idx, group)
 
 			logfile = io.open("log"..s..lfilename, "w")
 			forEachElement(result, function(_, value)
+				if value and ignoreLine(value) then return end
+
 				logfile:write(value.."\n")
 			end)
 		else
 			local resultfile = io.open(tmpfolder..s..lfilename, "w")
 			
+			local line = 1
 			forEachElement(result, function(_, value)
+				if value and ignoreLine(value) then return end
+
 				resultfile:write(value.."\n")
 
 				local str = logfile:read()
 				if str ~= value then
-					if str then
-						if string.match(str, "seconds") then return end -- remove lines with 'seconds'
-						if string.match(str, "%.terrame") then return end
-						if string.match(str, "%MD5") then return end
-					end
-
-					_Gtme.printError("Error: Strings do not match:")
+					_Gtme.printError("Error: Strings do not match (line "..line.."):")
 					if str == nil then
 						_Gtme.printError("Log file: <empty>")
 					else
@@ -69,6 +76,7 @@ forEachOrderedElement(commands, function(idx, group)
 					report.logerrors = report.logerrors + 1
 					return false
 				end
+				line = line + 1
 			end)
 		end
 	end)
