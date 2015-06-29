@@ -343,7 +343,7 @@ function _Gtme.executeTests(package, fileName)
 		printNote("Found "..extra.." extra functions in the documentation")
 	end
 
-	if not isFile(srcDir) then
+	if not isDir(srcDir) then
 		printError("Folder 'tests' does not exist in package '"..package.."'.")
 		
 		printWarning("Creating folder 'tests'")

@@ -122,10 +122,6 @@ end
 function isFile(file)
 	mandatoryArgument(1, "string", file)
 
-	if isDir(file) then
-		return true
-	end
-	
 	local fopen = io.open(file, "r")
 	
 	if fopen then
@@ -220,7 +216,7 @@ function runCommand(command, number)
 	
 	command = command.." "..number.."> "..mfile
 	
-	os.execute(command)
+	local result = os.execute(command)
 	local file = io.open(mfile, "r")
 
 	if not file then

@@ -299,8 +299,13 @@ function package(pname)
 			local lf = loadfile(mfile, 't', result)
 
  			if lf == nil then
-				_Gtme.printError("Could not load file "..scriptfile..".")
-				dofile(scriptfile) -- this line will show the error when parsing the file
+				collectgarbage() -- SKIP
+				lf = loadfile(mfile, 't', result) -- SKIP
+
+				if lf == nil then -- SKIP
+					_Gtme.printError("Could not load file "..scriptfile..".")
+					dofile(scriptfile) -- this line will show the error when parsing the file
+				end
 			end
 
 			lf()
