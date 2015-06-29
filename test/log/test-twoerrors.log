@@ -192,6 +192,8 @@ Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
 Test report:
+Tests were executed in 10.81 seconds.
+Snapshots were saved in '.terrametmp_Mq4K2'.
 2 print() calls were found when loading the package.
 2 variables are overwritten when loading the package.
 2 invalid files or folders were found in folder 'test'.

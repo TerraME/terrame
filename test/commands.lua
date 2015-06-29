@@ -1,54 +1,54 @@
 test = {
 	--__test__ = "terrame -test config/all.lua",
-	onerror = "terrame -package onerror -test config/all.lua",
-	twoerrors = "terrame -package twoerrors -test config/all.lua",
-	onefile = "terrame -test config/oneFile.lua",
-	onetest = "terrame -test config/oneTest.lua",
-	onefolder = "terrame -test config/oneFolder.lua",
-	twofiles = "terrame -test config/twoFiles.lua",
-	twotest = "terrame -test config/twoTests.lua",
-	twofolder = "terrame -test config/twoFolders.lua",
+	onerror   = {arg = "-test", config = "all.lua", package = "onerror"},
+	twoerrors = {arg = "-test", config = "all.lua", package = "twoerrors"},
+	onefile   = {arg = "-test", config = "oneFile.lua"},
+	onetest   = {arg = "-test", config = "oneTest.lua"},
+	onefolder = {arg = "-test", config = "oneFolder.lua"},
+	twofiles  = {arg = "-test", config = "twoFiles.lua"},
+	twotest   = {arg = "-test", config = "twoTests.lua"},
+	twofolder = {arg = "-test", config = "twoFolders.lua"},
 }
 
 package = {
-	nodescription = "terrame -package nodescription",
-	nolua = "terrame -package nolua",
-	noexamples = "terrame -package noexamples",
-	noexamplesexample = "terrame -package noexamples -example",
-	example = "terrame -package onerror -example ipd"
+	nodescription     = {package = "nodescription"},
+	nolua             = {package = "nolua"},
+	noexamples        = {package = "noexamples"},
+	noexamplesexample = {package = "noexamples", arg = "-example"},
+	example           = {package = "onerror", arg = "-example ipd"},
 }
 
 doc = {
-	doc = "terrame -doc",
-	onerror = "terrame -package onerror -doc",
-	twoerrors = "terrame -package twoerrors -doc",
-	nodescription = "terrame -package nodescription -doc",
-	nodatadotlua = "terrame -package nodatadotlua -doc",
-	wrongdata = "terrame -package wrongdata -doc",
-	withoutdata = "terrame -package wrongdata -doc",
+	doc           = {arg = "-doc"},
+	onerror       = {arg = "-doc", package = "onerror"},
+	twoerrors     = {arg = "-doc", package = "twoerrors"},
+	nodescription = {arg = "-doc", package = "nodescription"},
+	nodatadotlua  = {arg = "-doc", package = "nodatadotlua"},
+	wrongdata     = {arg = "-doc", package = "wrongdata"},
+	withoutdata   = {arg = "-doc", package = "wrongdata"}, -- withoutdata
 }
 
 build = {
-	build = "terrame -package build -build",
-	onerrorbuild = "terrame -package onerrorbuild -build",
-	twoerrorsbuild = "terrame -package twoerrorsbuild -build",
-	buildunnecfiles = "terrame -package buildunnecfiles -build",
+	build           = {arg = "-build", package = "build"},
+	onerrorbuild    = {arg = "-build", package = "onerrorbuild"},
+	twoerrorsbuild  = {arg = "-build", package = "twoerrorsbuild"},
+	buildunnecfiles = {arg = "-build", package = "buildunnecfiles"},
 }
 
 mode = {
-	normal = "terrame scripts/basic.lua",
-	debug = "terrame -mode=debug scripts/basic.lua",
-	strict = "terrame -mode=strict scripts/basic.lua",
-	quiet = "terrame -mode=quiet scripts/basic.lua",
+	normal = {script = "basic.lua"},
+	debug  = {script = "basic.lua", arg = "-mode=debug"},
+	strict = {script = "basic.lua", arg = "-mode=strict"},
+	quiet  = {script = "basic.lua", arg = "-mode=quiet"},
 }
 
 basic = {
-	help = "terrame -help",
-	version = "terrame -version",
-	trace = "terrame scripts/trace.lua",
-	noexample = "terrame -example abc",
-	example = "terrame -example ipd",
-	nointerface = "terrame -interface abc",
-	qwerty4321 = "terrame -package qwerty4321",
+	help        = {arg = "-help"},
+	version     = {arg = "-version"},
+	noexample   = {arg = "-example abc"},
+	example     = {arg = "-example ipd"},
+	nointerface = {arg = "-interface abc"},
+	trace       = {script = "trace.lua"},
+	qwerty4321  = {package = "qwerty4321"},
 }
 

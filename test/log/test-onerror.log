@@ -99,6 +99,7 @@ Creating 'snapshots/chart_cell.bmp'.
 Error in .../terrame/bin/packages/onerror/tests/alternative/Cell.lua:58: Files 
   'snapshots/chart_cell_select.bmp'
 and
+  '.terrametmp_DpNpA/chart_cell_select.bmp'
 are different.
 Checking if all asserts were executed
 Testing tests/alternative/ErrorHandling.lua
@@ -120,6 +121,7 @@ Stack traceback:
     In belong2
     File .../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua, line 43
     In ?
+    File ...terrame/bin/packages/onerror/tests/alternative/Utils.lua, line 3
 Testing call2
 Testing elapsedTime2
 Testing forEachCellPair2
@@ -157,6 +159,8 @@ Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
 Test report:
+Tests were executed in 9.68 seconds.
+Snapshots were saved in '.terrametmp_DpNpA'.
 One print() call was found when loading the package.
 One variable is overwritten when loading the package.
 One invalid file or folder was found in folder 'test'.

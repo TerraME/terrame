@@ -719,6 +719,13 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 						os.exit()
 					end
 
+					local description = _Gtme.packageInfo(package).path..s.."description.lua"
+
+					if not isFile(description) then
+						_Gtme.printError("File '"..package..s.."description.lua' does not exist.")
+						os.exit()
+					end
+
 					local data = _Gtme.include(_Gtme.packageInfo(package).path..s.."description.lua")
 					print("Package '"..package.."'")
 					print(data.title)

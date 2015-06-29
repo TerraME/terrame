@@ -29,6 +29,7 @@ Checking Tube.lua
 Checking Utils.lua
 
 Documentation report:
+Documentation was built in 0.04 seconds.
 4 HTML files were created.
 All fields of 'description.lua' are correct.
 No undocumented data files were found.
@@ -85,6 +86,7 @@ Test file 'unnec2.txt' does not have a valid extension
 Testing ipd
 
 Test report:
+Tests were executed in 0.17 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 One invalid file or folder was found in folder 'test'.
@@ -111,7 +113,10 @@ Creating file 'buildunnecfiles_0.1.zip'
 Package 'buildunnecfiles' successfully zipped
 
 Build report:
+Package was built in 0.22 seconds.
 Build created file 'buildunnecfiles_0.1.zip'.
+Temporary files are saved in .terrame_buildunnecfiles_zvCUS
+MD5 sum for the package is 929accaa3692d8300d29eaa6f606b025
 The package has a license file.
 Documentation was successfully built.
 4 files are unnecessary.

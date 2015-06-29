@@ -35,6 +35,7 @@ Checking Tube3.lua
 Checking Utils.lua
 
 Documentation report:
+Documentation was built in 0.04 seconds.
 4 HTML files were created.
 One problem was found in 'description.lua'.
 No undocumented data files were found.
@@ -93,6 +94,7 @@ Testing examples
 Testing ipd
 
 Test report:
+Tests were executed in 0.2 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.
@@ -121,7 +123,10 @@ Creating file 'twoerrorsbuild_0.1.zip'
 Package 'twoerrorsbuild' successfully zipped
 
 Build report:
+Package was built in 0.25 seconds.
 Build created file 'twoerrorsbuild_0.1.zip'.
+Temporary files are saved in .terrame_twoerrorsbuild_bHpGk
+MD5 sum for the package is 72c742799da5034c99cd2b5416ea9197
 The package does not have a license file.
 2 errors were found in the documentation.
 2 files are unnecessary.

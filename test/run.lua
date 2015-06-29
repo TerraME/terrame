@@ -27,18 +27,38 @@ local report = {
 	createdlogs = 0
 }
 
-local function ignoreLine(line)
-	if string.match(line, "seconds")   then return true end
-	if string.match(line, "%.terrame") then return true end
-	if string.match(line, "MD5")       then return true end
+local function approximateLine(line)
+	if string.match(line, "seconds")             then return 5  end
+	if string.match(line, "%.terrame")           then return 5  end
+	if string.match(line, "MD5")                 then return 32 end
+	if string.match(line, "configuration file")  then return 3  end
+	if string.match(line, "or is empty or does") then return 50 end
 
-	return false
+	return 0
 end
 
 forEachOrderedElement(commands, function(idx, group)
 	_Gtme.printNote("Testing group '"..idx.."'")
 
-	forEachOrderedElement(group, function(name, command)
+	forEachOrderedElement(group, function(name, args)
+		command = "terrame"
+
+		if args.package then
+			command = command.." -package "..args.package
+		end
+
+		if args.arg then
+			command = command.." "..args.arg
+		end
+
+		if args.config then
+			command = command.." config"..s..args.config
+		end
+
+		if args.script then
+			command = command.." scripts"..s..args.script
+		end
+
 		_Gtme.print("Testing "..name)
 		result = runCommand(command)
 	
@@ -51,8 +71,6 @@ forEachOrderedElement(commands, function(idx, group)
 
 			logfile = io.open("log"..s..lfilename, "w")
 			forEachElement(result, function(_, value)
-				if value and ignoreLine(value) then return end
-
 				logfile:write(value.."\n")
 			end)
 		else
@@ -60,12 +78,15 @@ forEachOrderedElement(commands, function(idx, group)
 			
 			local line = 1
 			forEachElement(result, function(_, value)
-				if value and ignoreLine(value) then return end
+				local distance = 0
+				if value then
+					distance = approximateLine(value)
+				end
 
 				resultfile:write(value.."\n")
 
 				local str = logfile:read()
-				if str ~= value then
+				if levenshtein(str, value) > distance then
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
 					if str == nil then
 						_Gtme.printError("Log file: <empty>")
@@ -81,7 +102,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 			local v = logfile:read()
 			if v then
-				_Gtme.printError("Test ends but the logfile has string '"..v.."' (line"..line..").")
+				_Gtme.printError("Test ends but the logfile has string '"..v.."' (line "..line..").")
 			end
 		end
 	end)

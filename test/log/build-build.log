@@ -28,6 +28,7 @@ Checking Tube.lua
 Checking Utils.lua
 
 Documentation report:
+Documentation was built in 0.04 seconds.
 4 HTML files were created.
 All fields of 'description.lua' are correct.
 No undocumented data files were found.
@@ -78,6 +79,7 @@ Testing examples
 Testing ipd
 
 Test report:
+Tests were executed in 0.18 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.
@@ -104,7 +106,10 @@ Creating file 'build_0.1.zip'
 Package 'build' successfully zipped
 
 Build report:
+Package was built in 0.22 seconds.
 Build created file 'build_0.1.zip'.
+Temporary files are saved in .terrame_build_8HSz8
+MD5 sum for the package is 788f91ab8062ecbe2cf1fd00be5624fe
 The package has a license file.
 Documentation was successfully built.
 There are no unnecessary files in the package.
