@@ -403,8 +403,7 @@ function Chart(data)
 
 	if type(data.target) == "table" then
 		if data.target.cobj_ == nil then
-			data.target.cObj_ = TeCell()
-			data.target.notify = Cell_.notify
+			data.target = Cell(data.target)
 		end
 	end
 
