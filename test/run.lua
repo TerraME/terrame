@@ -78,6 +78,11 @@ forEachOrderedElement(commands, function(idx, group)
 				end
 				line = line + 1
 			end)
+
+			local v = logfile:read()
+			if v then
+				_Gtme.printError("Test ends but the logfile has string '"..v.."' (line"..line..").")
+			end
 		end
 	end)
 end)
