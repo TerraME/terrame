@@ -91,6 +91,29 @@ return{
 		local c1 = Chart{target = world, select = "mcount", xAxis = "count"}
 
 		unitTest:assert(true)
+
+		local t = {
+			value1 = 2,
+			value2 = 5
+		}
+
+		local c1 = Chart{
+			target = t
+		}
+
+		t:notify()
+	
+		local c2 = Chart{
+			target = t,
+			select = "value1"
+		}
+
+		t:notify()
+		t:notify()
+		t:notify()
+
+		unitTest:assertSnapshot(c1, "chart-table-1.bmp")
+		unitTest:assertSnapshot(c2, "chart-table-2.bmp")
 	end,
 	save = function(unitTest)
 		local c = Cell{value = 1}

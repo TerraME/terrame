@@ -166,9 +166,9 @@ function Chart(data)
 
 	mandatoryTableArgument(data, "target")
 
-	if not belong(type(data.target), {"Cell", "CellularSpace", "Agent", "Society"}) then
+	if not belong(type(data.target), {"Cell", "CellularSpace", "Agent", "Society", "table"}) then
 		if not (data.target.parent and type(data.target.parent) == "Model") then
-			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, and instance of Model, got "..type(data.target)..".")
+			customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, and instance of Model, got "..type(data.target)..".")
 		end
 	end
 
@@ -224,6 +224,12 @@ function Chart(data)
 			if #data.select == 0 then
 				data.select = {"#"}
 			end
+		elseif type(data.target) == "table" then
+			forEachOrderedElement(data.target, function(idx, value, mtype)
+				if mtype == "number" then
+					data.select[#data.select + 1] = idx
+				end
+			end)
 		else -- instance of model
 			forEachOrderedElement(data.target, function(idx, value, mtype)
 				if mtype == "number" and not belong(idx, {"finalTime", "seed"}) and string.sub(idx, -1, -1) ~= "_" then
@@ -394,6 +400,12 @@ function Chart(data)
 	optionalTableArgument(data, "pen",    "table")
 	optionalTableArgument(data, "size",   "table")
 	optionalTableArgument(data, "color",  "table")
+
+	if type(data.target) == "table" then
+		if data.target.cobj_ == nil then
+			data.target = Cell(data.target)
+		end
+	end
 
 	if data.size then
 		forEachElement(data.size, function(idx, value)

@@ -36,7 +36,7 @@ return{
 		error_func = function()
 			Chart{target = e}
 		end
-		unitTest:assertError(error_func, "Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, and instance of Model, got Event.")
+		unitTest:assertError(error_func, "Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, and instance of Model, got Event.")
 
 		error_func = function()
 			Chart{target = c, select = 5}
