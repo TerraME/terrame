@@ -260,10 +260,18 @@ function _Gtme.executeDoc(package)
 	print("\nDocumentation report:")
 	printNote("Documentation was built in "..round(finalTime - initialTime, 2).." seconds.")
 
-	if doc_report.undoc_files == 0 then
-		printNote(doc_report.html_files.." HTML files were created.")
+	if doc_report.html_files == 1 then
+		printNote("One HTML file was created.")
 	else
+		printNote(doc_report.html_files.." HTML files were created.")
+	end
+
+	if doc_report.undoc_files == 1 then
+		printError("One out of "..doc_report.lua_files.." files are not documented.")
+	elseif doc_report.undoc_files > 1 then
 		printError(doc_report.undoc_files.." out of "..doc_report.lua_files.." files are not documented.")
+	else
+		printNote("All files are documented.")
 	end
 
 	if doc_report.wrong_description == 1 then

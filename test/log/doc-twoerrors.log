@@ -89,8 +89,9 @@ Function forEachNeighbor2 is not documented
 Function forEachSocialNetwork2 is not documented
 
 Documentation report:
-Documentation was built in 0.06 seconds.
+Documentation was built in 0.07 seconds.
 5 HTML files were created.
+All files are documented.
 2 problems were found in 'description.lua'.
 2 data files are not documented.
 2 problems were found in 'data.lua'.
