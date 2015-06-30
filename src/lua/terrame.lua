@@ -573,22 +573,31 @@ function _Gtme.traceback()
 
 	local info = debug.getinfo(level)
 	while info ~= nil do
-		local m1 = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."lua"))
+		local m1 = string.match(info.source, _Gtme.replaceSpecialChars("bin"..s.."lua"))
 		local m2 = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."packages"))
 		local mb = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"))
 		local m3 = string.match(info.short_src, "%[C%]")
+		local m4
 
-		if m1 or m2 or m3 then
+		if si.package then
+			m4 = string.match(info.source, _Gtme.replaceSpecialChars(si.package..s.."lua"))
+		end
+
+		if m1 or m2 or m3 or m4 then
 			last_function = info.name
 
-			if (si.fullTraceback or si.package) and last_function then
+			if last_function == "?" then
+				last_function = "main chunk"
+			end
+
+			if (si.fullTraceback or si.package) then
 				if si.package then
 					if not mb and not m1 and not m3 then
-						str = str.. "\n    In "..last_function.."\n"
+						str = str.. "\n    In "..tostring(last_function).."\n"
 						str = str.."    File "..info.short_src..", line "..info.currentline
 					end
 				else
-					str = str.. "\n    In "..last_function.."\n"
+					str = str.. "\n    In "..tostring(last_function).."\n"
 					str = str.."    File "..info.short_src..", line "..info.currentline
 				end
 			end
@@ -612,19 +621,19 @@ function _Gtme.traceback()
 				elseif last_function ~= nil          then last_function = "function '"..last_function.."'"
 				end
 
-				if last_function then
-					str = str.. "\n    In "..last_function
-				end
+				--if last_function then
+				--	str = str.. "\n    In "..last_function
+				--end
 				found_function = true
 			end
 
+			if info.name then
+				str = str.."\n    In function "..info.name
+			else
+				str = str.."\n    In main chunk"
+			end
 
 			str = str.."\n    File "..info.short_src..", line "..info.currentline
-			if info.name then
-				str = str..", in function "..info.name
-			else
-				str = str..", in main chunk"
-			end
 		end
 		level = level + 1
 		info = debug.getinfo(level)
@@ -632,7 +641,8 @@ function _Gtme.traceback()
 	if str == "Stack traceback:\n" then
 		return ""
 	end
-	return string.sub(str, 0, string.len(str) - 1)
+	--_Gtme.printWarning(str)
+	return str--string.sub(str, 0, string.len(str) - 1)
 end
 
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
