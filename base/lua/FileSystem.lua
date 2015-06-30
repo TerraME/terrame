@@ -195,12 +195,12 @@ function rmDir(path)
 	return lfs.rmdir(path)
 end
 
---- Execute a system command and return its output. Each line of the output will be a position
--- in the returned table.
+--- Execute a system command and return its output. It returns a table (with each line of the output as a position)
+-- and a value that can be true (when the command was successfully executed) or nil (otherwise).
 -- @arg command A command.
 -- @arg number A number indicating the output to be captured. The default value is 1 (standard output).
 -- It is also possible to use 2, to capture the error output.
--- @usage runCommand("dir")
+-- @usage result, ok = runCommand("dir")
 function runCommand(command, number)
 	mandatoryArgument(1, "string", command)
 	optionalArgument(2, "number", number)
@@ -230,7 +230,7 @@ function runCommand(command, number)
 
 	io.close(file)
 	os.execute("rm "..mfile)
-	return fileTable
+	return fileTable, result
 end
 
 --- Set the writing mode for a file. Returns true

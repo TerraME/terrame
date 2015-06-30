@@ -132,8 +132,9 @@ return{
 		unitTest:assert(rmDir(pathdata.."test"))
 	end, 
 	runCommand = function(unitTest)
-		local d = runCommand("ls "..packageInfo().data)
+		local d, ok = runCommand("ls "..packageInfo().data)
 		unitTest:assertEquals(#d, 22) -- 22 files
+		unitTest:assert(ok)
 
 		os.execute("touch zzzz0.txt")
 		local d = runCommand("ls "..packageInfo().data)
