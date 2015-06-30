@@ -72,8 +72,8 @@ Stack traceback:
 
     In call2
     File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 78
-    In ?
-    File ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua, line 4
+    In main chunk
+    File ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua, line 41
 Testing createNeighborhood2
 Testing elapsedTime2
 Testing forEachAgent2
@@ -111,11 +111,11 @@ Testing Cell
 Error in ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:42: Test should be Map got Chart.
 Creating 'snapshots/chart_cell.bmp'.
 Creating 'snapshots/chart_cell_select.bmp'.
-Wrong execution, got error: '...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:66: attempt to perform arithmetic on global 'abc' (a nil value)'.
+Wrong execution, got error: '...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:68: attempt to perform arithmetic on global 'abc' (a nil value)'.
 Stack traceback:
 
-    In ?
-    File ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua, line 6
+    In main chunk
+    File ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua, line 68
 Checking if all asserts were executed
 Assert in line 45 was not executed.
 Testing tests/alternative/ErrorHandling.lua
@@ -136,16 +136,20 @@ Stack traceback:
 
     In belong2
     File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 46
-    In ?
-    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 3
+    In nil
+    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 30
+    In main chunk
+    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 32
 Testing call2
 Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:46: attempt to perform arithmetic on global 'aab' (a nil value)'.
 Stack traceback:
 
     In belong2
     File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 46
-    In ?
-    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 4
+    In nil
+    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 41
+    In main chunk
+    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 43
 Testing elapsedTime2
 Testing forEachCellPair2
 Testing forEachElement2
@@ -192,8 +196,8 @@ Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
 Test report:
-Tests were executed in 10.81 seconds.
-Snapshots were saved in '.terrametmp_Mq4K2'.
+Tests were executed in 10.01 seconds.
+Snapshots were saved in '.terrametmp_l1ny0'.
 2 print() calls were found when loading the package.
 2 variables are overwritten when loading the package.
 2 invalid files or folders were found in folder 'test'.

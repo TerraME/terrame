@@ -33,3 +33,4 @@ ui_plotPropertiesGUI.h
 base/doc/
 test/.terrame*
 test/packages/*/doc
+test/packages/.terrame*

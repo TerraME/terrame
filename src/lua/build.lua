@@ -151,7 +151,11 @@ function _Gtme.buildPackage(package)
 	local currentdir = currentDir()
 
 	chDir(tmpfolder)
-	os.execute("cp -pr "..pkgFolder.." .")
+	if pkgFolder == package then
+		os.execute("cp -pr "..currentdir..s..pkgFolder.." .")
+	else
+		os.execute("cp -pr "..pkgFolder.." .")
+	end
 
 	local info = packageInfo(package)
 	local file = package.."_"..info.version..".zip"

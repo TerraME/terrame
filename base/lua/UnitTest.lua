@@ -201,7 +201,10 @@ UnitTest_ = {
 		self.snapshots = self.snapshots + 1
 		local s = sessionInfo().separator
 		if not self.imgFolder then
-			self.imgFolder = sessionInfo().path..s.."packages"..s..self.package..s.."snapshots" -- SKIP
+			local pkg = sessionInfo().package
+
+			self.imgFolder = packageInfo(pkg).path..s.."snapshots" -- SKIP
+
 			if attributes(self.imgFolder, "mode") ~= "directory" then -- SKIP
 				customError("Folder '"..self.imgFolder.."' does not exist. Please create such folder in order to use assertSnapshot().")
 			end

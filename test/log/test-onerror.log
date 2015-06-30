@@ -63,8 +63,8 @@ Stack traceback:
 
     In call2
     File .../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua, line 76
-    In ?
-    File ...edro/github/terrame/bin/packages/onerror/tests/Utils.lua, line 4
+    In main chunk
+    File ...edro/github/terrame/bin/packages/onerror/tests/Utils.lua, line 40
 Testing createNeighborhood2
 Testing elapsedTime2
 Testing forEachAgent2
@@ -96,10 +96,10 @@ Assert in line 241 was not executed.
 Testing tests/alternative/Cell.lua
 Testing Cell
 Creating 'snapshots/chart_cell.bmp'.
-Error in .../terrame/bin/packages/onerror/tests/alternative/Cell.lua:58: Files 
+Error in .../terrame/bin/packages/onerror/tests/alternative/Cell.lua:59: Files 
   'snapshots/chart_cell_select.bmp'
 and
-  '.terrametmp_DpNpA/chart_cell_select.bmp'
+  '.terrametmp_r1BoA/chart_cell_select.bmp'
 are different.
 Checking if all asserts were executed
 Testing tests/alternative/ErrorHandling.lua
@@ -120,8 +120,10 @@ Stack traceback:
 
     In belong2
     File .../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua, line 43
-    In ?
-    File ...terrame/bin/packages/onerror/tests/alternative/Utils.lua, line 3
+    In nil
+    File ...terrame/bin/packages/onerror/tests/alternative/Utils.lua, line 30
+    In main chunk
+    File ...terrame/bin/packages/onerror/tests/alternative/Utils.lua, line 32
 Testing call2
 Testing elapsedTime2
 Testing forEachCellPair2
@@ -159,8 +161,8 @@ Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
 Test report:
-Tests were executed in 9.68 seconds.
-Snapshots were saved in '.terrametmp_DpNpA'.
+Tests were executed in 10.48 seconds.
+Snapshots were saved in '.terrametmp_r1BoA'.
 One print() call was found when loading the package.
 One variable is overwritten when loading the package.
 One invalid file or folder was found in folder 'test'.

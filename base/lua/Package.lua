@@ -358,16 +358,16 @@ function packageInfo(package)
 	mandatoryArgument(1, "string", package)
 
 	local s = sessionInfo().separator
-	local pkgfile = sessionInfo().path..s.."packages"..s..package
-	if not isFile(pkgfile) then
-		if isFile(package) then
-			pkgfile = package -- SKIP
+	local pkgfolder = sessionInfo().path..s.."packages"..s..package
+	if not isDir(pkgfolder) then
+		if isDir(package) then
+			pkgfolder = package -- SKIP
 		else
 			customError("Package '"..package.."' is not installed.")
 		end
 	end
 	
-	local file = pkgfile..s.."description.lua"
+	local file = pkgfolder..s.."description.lua"
 	
 	local result 
 	xpcall(function() result = _Gtme.include(file) end, function(err)
@@ -379,8 +379,8 @@ function packageInfo(package)
 		customError("Could not read description.lua") -- SKIP
 	end
 
-	result.path = pkgfile
-	result.data = pkgfile..s.."data"
+	result.path = pkgfolder
+	result.data = pkgfolder..s.."data"
 
 	if result.depends then
 		local s = string.gsub(result.depends, "([%w]+ %(%g%g %d[.%d]+%))", function(v)
