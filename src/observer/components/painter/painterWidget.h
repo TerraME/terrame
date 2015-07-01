@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,23 +25,24 @@
 #ifndef PAINTER_WIDGET_H
 #define PAINTER_WIDGET_H
 
-#include <QScrollArea>
-#include <QLabel>
-#include <QImage>
-#include <QPainter>
-#include <QHash>
-#include <QString>
-#include <QPaintEvent>
+#include <QtGui/QScrollArea>
+#include <QtGui/QLabel>
+#include <QtGui/QImage>
+#include <QtGui/QPainter>
+#include <QtCore/QHash>
+#include <QtCore/QString>
+#include <QtGui/QPaintEvent>
 #include <iostream>
 
-#include "visualMapping.h"
+#include "painterThread.h"
 
 namespace TerraMEObserver {
+
 
 /**
  * \brief Shows the cellular space state
  * \see QWidget
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues 
  * \file painterWidget.h
  */
 class PainterWidget : public QWidget
@@ -55,9 +56,8 @@ public:
      * \see Attributes
      * \see QWidget, \see QHash, \see QString
      */
-    PainterWidget(QHash<QString, Attributes*> *mapAttributes,
-        TypesOfObservers observerType = TerraMEObserver::TObsMap, QWidget *parent = 0);
-
+    PainterWidget(QHash<QString, Attributes*> *mapAttributes, QWidget *parent = 0);
+    
     /**
      * Destructor
      */
@@ -70,42 +70,36 @@ public:
      */
     void setOperatorMode(QPainter::CompositionMode mode);
 
-    /* *
+    /** 
      * Plots a attribute
      * \param attrib a pointer to a attribute
      * \see Attributes
      */
     void plotMap(Attributes *attrib);
 
-    /* *
+    /**
      * Re-paints all attributes under observation
      */
     void replotMap();
-
-    /**
-     *
-     */
-    bool draw();
 
     /**
      * Rescale according the zoom
      * \param size new size of the object
      * \see QSize
      */
-    bool rescale(const QSize & size);
+    bool rescale(QSize size); 
 
-    /**
+    /** 
      * Rescale the image according the CellularSpace dimension
-     * \param size new sise of the image/space
-     * \param cellSize calculate size of cells
+     * \param size new sise of the image
      * \see QSize
      */
-    void resize(const QSize &spaceSize, const QSize &cellSize);
+    void resizeImage(const QSize &size);
 
-    // / Gets the original size of
+    // / Gets the original size of 
     // QSize getOriginalSize();
 
-    /**
+    /** 
      * Sets a pointer to a QScrollArea object
      * \param scrollArea a pointer to a QScrollArea
      */
@@ -121,12 +115,19 @@ public:
      */
     void setHandTool();
 
-    /**
+    /** 
      * Defines the mouse cursor
      * \param cursor a reference to a QCursor
      * \see QCursor
      */
     void defineCursor(QCursor &cursor);
+
+    /**
+     * Saves the attribute image in the full path
+     * \param fullPath path that image will be saved
+     * \see QString
+     */
+    bool save(const QString &fullPath);
 
     /**
      * Sets the existence of an agent
@@ -138,16 +139,6 @@ public:
      * Stops the thread and closes this object
      */
     int close();
-
-    void updateAttributeList();
-
-    void setCellSize(const QSize &size);
-
-    /**
-     * Sets path for save images when it observes by TObsImage
-     *
-     */
-    void setPath(const QString & pth);
 
 signals:
     /**
@@ -166,14 +157,17 @@ signals:
      */
     void zoomOut();
 
+public slots:
+    /**
+     * Calculates a result of the images draw
+     */
+    void calculateResult();
+
     /**
      * Activates and triggers the grid draw
      * \param on if \a true the grid will be draw. Otherwise, will not draw.
      */
-    void enableGrid(bool state);
-
-public slots:
-    void displayImage(const QImage &result);
+    void gridOn(bool on);
 
 protected:
     /**
@@ -199,13 +193,13 @@ protected:
      * \see QMouseEvent
      */
     void mouseReleaseEvent(QMouseEvent *);
-
+        
     /**
      * Catchs the resize event inside the user interface object
      * \see QResizeEvent
      */
     void resizeEvent(QResizeEvent *);
-
+    
     //void wheelEvent(QWheelEvent *);
 
 private:
@@ -219,12 +213,13 @@ private:
      */
     void drawAgent();
 
+
+    int countSave;
     double pixmapScale, curScale, scaleFactor;
     double heightProportion, widthProportion;
-    QSize cellSize;
-
     QPainter::CompositionMode operatorMode;
 
+    // atributos em observação
     QImage resultImage;
     QImage resultImageBkp;
 
@@ -232,12 +227,12 @@ private:
     QHash<QString, Attributes*> *mapAttributes;
     QScrollArea *mParentScroll;
 
-    VisualMapping *visualMapping;
+    PainterThread painterThread;
 
     QPoint lastDragPos, imageOffset;
     bool showRectZoom, zoomWindow, handTool;
-    bool gridEnabled, existAgent;
-    bool mapValuesPassed;
+    bool gridEnabled;
+    bool existAgent;
 
     QCursor zoomWindowCursor;
     QCursor zoomInCursor, zoomOutCursor;
@@ -246,4 +241,3 @@ private:
 }
 
 #endif
-

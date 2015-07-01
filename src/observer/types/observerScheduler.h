@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,7 +25,7 @@
 #ifndef OBSERVER_SCHEDULER
 #define OBSERVER_SCHEDULER
 
-#include "observerInterf.h"
+#include "../observerInterf.h"
 
 #include <QDialog>
 #include <QStringList>
@@ -39,11 +39,12 @@ class QResizeEvent;
 
 namespace TerraMEObserver {
 
+
 /**
  * \brief Shows the schedule events
  * \see ObserverInterf
  * \see QDialog
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file observerScheduler.h
 */
 class ObserverScheduler : public QDialog, public ObserverInterf
@@ -72,6 +73,7 @@ public:
      */
     virtual ~ObserverScheduler();
 
+
     /**
      * \copydoc Observer::draw
      */
@@ -92,12 +94,12 @@ public:
     /**
      * \copydoc Observer::getType
      */
-    const TypesOfObservers getType() const;
+    const TypesOfObservers getType();
 
-    ///**
-    // * Pauses the thread execution
-    // */
-    //void pause();
+    /**
+     * Pauses the thread execution
+     */
+    void pause();
 
     /**
      * Closes the window and stops the thread execution
@@ -126,8 +128,6 @@ private:
      */
     const QString number2String(double number);
 
-    bool draw();
-
     /**
      * \enum ObserverScheduler::PositionItems
      * Positons of the item inside the \a treeWidget component
@@ -139,16 +139,17 @@ private:
         Priority         /*!< a column of the priority in treeWidget component  */
     };
 
+
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
-    bool paused;		// ref. Thread
+    bool paused;		// ref. à Thread
 
     QTreeWidget* pipelineWidget;
     QLabel *lblClock;
     QWidget *clockPanel;
     QToolButton *butExpand;
 
-    QStringList attribList;
+    QStringList attributes;
 
     QHash<QString, QTreeWidgetItem *> hashTreeItem;
 

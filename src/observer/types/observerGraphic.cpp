@@ -5,196 +5,188 @@
 #include <QPalette>
 #include <QDebug>
 
-#include <qwt_plot_legenditem.h>
+#include <qwt_legend_item.h>
 #include <qwt_plot_item.h>
 
-#include "chartPlot.h"
-#include "internalCurve.h"
+#include "chartPlot/chartPlot.h"
+#include "chartPlot/internalCurve.h"
 #include "terrameGlobals.h"
 
-extern "C"
-{
-#include <lua.h>
-}
-#include "luna.h"
-
-extern lua_State * L;
 extern ExecutionModes execModes;
 
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    #include "statistic.h"
+    // Estatisticas de desempenho
+    #include "../statistic/statistic.h"
 #endif
-
-#ifdef TME_BLACK_BOARD
-    #include "blackBoard.h"
-    #include "subjectAttributes.h"
-    #include "legendAttributes.h"
-#endif
-
-#include "visualArrangement.h"
 
 using namespace TerraMEObserver;
 
-ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
-    : ObserverInterf(sub) // , QThread()
+// Hue component values contains 12 values and it is used
+// to compose a HSV color
+static const float hueValues[] = {
+    // 0, 30/360, 60/360, 90/360, 120/360, 150/360, 180/360, 210/360, 240/360, 270/360, 300/360, 330/360
+    0.000, 0.083, 0.167, 0.250, 0.333, 0.417, 0.500, 0.583, 0.667, 0.750, 0.833, 0.917
+};
+const int HUE_COUNT = 12;
+
+
+ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent) 
+    : ObserverInterf(sub), QThread()
 {
+    qsrand(1);
+
     observerType = TObsGraphic;
-    subjectType = sub->getType(); // TO_DO: Changes it to Observer pattern
+    subjectType = TObsUnknown;
 
-    // paused = false;
-    legend = new QwtLegend;
-
-	QFont font("font: Arial", 12);
-	legend->setFont(font);
-
-    // legend->setItemMode(QwtLegend::ClickableItem);
+    paused = false;
+    legend = 0;
+    xAxisValues = new QVector<double>();
     internalCurves = new QHash<QString, InternalCurve*>();
 
-    //hashAttributes = (QHash<QString, Attributes *> *)
-    //            &BlackBoard::getInstance().getAttributeHash(getSubjectId());
-
-    hashAttributes = new QMap<QString, Attributes*>();
-
-    // This pointer will pointing to a attribute object
-    xAxisValues = 0;
-
     plotter = new ChartPlot(parent);
-	plotter->id = getId();
     plotter->setAutoReplot(true);
-	plotter->setStyleSheet("QwtPlot { padding: 8px }");
+    // plotter->setStyleSheet("background-color: rgb(255, 255, 255);");
     plotter->setFrameShape(QFrame::Box);
     plotter->setFrameShadow(QFrame::Plain);
     plotter->setLineWidth(0);
-
-    QPalette palette = plotter->canvas()->palette();
-    palette.setColor(QPalette::Background, Qt::white);
-    plotter->canvas()->setPalette(palette);
-
-    palette = plotter->palette();
-    palette.setColor(QPalette::Background, Qt::white);
-    plotter->setPalette(palette);
-
-	VisualArrangement* v = VisualArrangement::getInstance();
-
-	SizeVisualArrangement s = v->getSize(getId());
-	PositionVisualArrangement p = v->getPosition(getId());
-    plotter->setWindowTitle("TerraME :: Chart");
-
-	if(s.width > 0 && s.height > 0)
-		plotter->resize(s.width, s.height);
-	else
-		plotter->resize(450, 350);
+    plotter->setMargin(10);
+    plotter->resize(300, 180);
+    plotter->setWindowTitle("TerraME Observer : Chart");
 
     plotter->showNormal();
 
-    // thread priority
+    // prioridade da thread
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
-    // start(QThread::IdlePriority);
-
-	if(p.x > 0 && p.y > 0)
-		plotter->move(p.x, p.y - plotter->geometry().y() + plotter->y());
-	else
-		plotter->move(50 + getId() * 50, 50 + getId() * 50);
+    start(QThread::IdlePriority);
 }
 
 ObserverGraphic::~ObserverGraphic()
 {
-    // wait();
+    wait();
+   
     foreach(InternalCurve *curve, internalCurves->values())
         delete curve;
     delete internalCurves; internalCurves = 0;
 
     delete plotter; plotter = 0;
-
-    if (observerType == TObsDynamicGraphic)
-        delete xAxisValues;
+    delete xAxisValues; xAxisValues = 0;
 
     //if (legend)
     //    delete legend;
     //legend = 0;
 }
 
+
 void ObserverGraphic::setObserverType(TypesOfObservers type)
 {
     observerType = type;
-
-    if (observerType == TObsDynamicGraphic)
-        xAxisValues = new QVector<double>();
 }
 
-const TypesOfObservers ObserverGraphic::getType() const
+const TypesOfObservers ObserverGraphic::getType()
 {
     return observerType;
 }
 
-void ObserverGraphic::save(std::string file, std::string extension)
+bool ObserverGraphic::draw(QDataStream &state)
 {
-	plotter->exportChart(file, extension);
-}
+#ifdef TME_STATISTIC
+    // tempo gasto do 'getState' ate aqui
+    // double t = Statistic::getInstance().endVolatileMicroTime();
+    // Statistic::getInstance().addElapsedTime("comunicação graphic", t);
 
-bool ObserverGraphic::draw(QDataStream &/*state*/)
-{
-#ifdef TME_BLACK_BOARD
+    double decodeSum = 0.0;
+    int decodeCount = 0;
 
-    draw();
-
-#else // TME_BLACKBOARD
+    // numero de bytes transmitidos
+    Statistic::getInstance().addOccurrence("bytes graphic", in.device()->size());
+#endif
 
     QString msg, key;
     state >> msg;
     QStringList tokens = msg.split(PROTOCOL_SEPARATOR);
 
     QVector<double> *ord = 0, *abs = xAxisValues;
+    // double num = 0, x = 0, y = 0;
+
+#ifdef TME_STATISTIC 
+        // t = Statistic::getInstance().startMicroTime();
+        Statistic::getInstance().startVolatileMicroTime();
+#endif
 
     //QString subjectId = tokens.at(0);
-    // subjectType = (TypesOfSubjects) tokens.at(1).toInt();
+    subjectType = (TypesOfSubjects) tokens.at(1).toInt();
     int qtdParametros = tokens.at(2).toInt();
     //int numElems = tokens.at(3).toInt();
 
+#ifdef TME_STATISTIC 
+        // decodeSum += Statistic::getInstance().endMicroTime() - t;
+        decodeSum += Statistic::getInstance().endVolatileMicroTime();
+        decodeCount++;
+#endif
+
     int j = 4;
 
-    for(int i = 0; i < qtdParametros; i++)
+    for (int i=0; i < qtdParametros; i++)
     {
+
+#ifdef TME_STATISTIC 
+        // t = Statistic::getInstance().startMicroTime();
+        Statistic::getInstance().startVolatileMicroTime();
+#endif
+
         key = tokens.at(j);
         j++;
         int typeOfData = tokens.at(j).toInt();
         j++;
 
+#ifdef TME_STATISTIC 
+        // decodeSum += Statistic::getInstance().endMicroTime() - t;
+        decodeSum += Statistic::getInstance().endVolatileMicroTime();
+        decodeCount++;
+#endif
+
         int idx = attribList.indexOf(key);
         // bool contains = itemList.contains(key);
-        bool contains = (idx != -1);
+        bool contains = (idx != -1); // caso a chave não exista, idx == -1
 
         switch (typeOfData)
         {
             case (TObsBool):
                 if (contains)
-				{
-					if (execModes != Quiet)
-					{
-						string str = string("Was expected a numeric parameter.");
-						lua_getglobal(L, "customWarning");
-						lua_pushstring(L, str.c_str());
-						lua_call(L, 1, 0);
-					}
-				}
+                    if (execModes != Quiet)
+                        qWarning("Warning: Was expected a numeric parameter.");
                 break;
-            case(TObsDateTime):
+
+            case (TObsDateTime)	:
                 //break;
-            case(TObsNumber):
-                if(contains)
+
+            case (TObsNumber):
+
+                if (contains)
                 {
-                    if(internalCurves->contains(key))
-                        internalCurves->value(key)->values->append(
-                        		tokens.at(j).toDouble());
+
+#ifdef TME_STATISTIC
+                    // t = Statistic::getInstance().startMicroTime();
+                    Statistic::getInstance().startVolatileMicroTime();
+#endif
+                    if (internalCurves->contains(key))
+                        internalCurves->value(key)->values->append( tokens.at(j).toDouble() );
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
+#ifdef TME_STATISTIC 
+                    // decodeSum += Statistic::getInstance().endMicroTime() - t;
+                    decodeSum += Statistic::getInstance().endVolatileMicroTime();
+                    decodeCount++;
+#endif
+
+                    // Gráfico Dinâmico: Tempo vs Y
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
-                        internalCurves->value(key)->plotCurve->setData(*abs, *ord);
+                        internalCurves->value(key)->plotCurve->setData(*abs, *ord); 
 
                         //qDebug() << "key: " << key;
                         //qDebug() << *ord;
@@ -202,7 +194,7 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
                     }
                     else
                     {
-                        // Graph: X vs Y
+                        // Gráfico: X vs Y
                         if (idx != attribList.size() - 1)
                             ord = internalCurves->value(key)->values; // y axis
                     }
@@ -211,50 +203,61 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 
             // case TObsText:
             default:
-                if (!contains)
+                if (! contains)
                     break;
 
-                if((subjectType == TObsAutomaton) || (subjectType == TObsAgent))
+                if ( (subjectType == TObsAutomaton) || (subjectType == TObsAgent) )
                 {
-                    if (!states.contains(tokens.at(j)))
+
+#ifdef TME_STATISTIC
+                    // t = Statistic::getInstance().startMicroTime();
+                    Statistic::getInstance().startVolatileMicroTime();
+#endif
+
+                    if (! states.contains(tokens.at(j)))
                         states.push_back(tokens.at(j));
 
                     if (internalCurves->contains(key))
-                        internalCurves->value(key)->values->append(
-                        		states.indexOf(tokens.at(j)));
+                        internalCurves->value(key)->values->append( states.indexOf(tokens.at(j)) );
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
-                    // Dynamic Graph: Time vs Y
+#ifdef TME_STATISTIC
+                    // decodeSum += Statistic::getInstance().endMicroTime() - t;
+                    decodeSum += Statistic::getInstance().endVolatileMicroTime();
+                    decodeCount++;
+#endif
+
+                    // Gráfico Dinâmico: Tempo vs Y
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
-                        internalCurves->value(key)->plotCurve->setData(*abs, *ord);
+                        // abs = xAxisValues;
+                        internalCurves->value(key)->plotCurve->setData(*abs, *ord); 
                     }
                     else
                     {
-                        // Graph: X vs Y
+                        // Gráfico: X vs Y
                         if (idx != attribList.size() - 1)
                             ord = internalCurves->value(key)->values;
-                        // else
+                        // else                     
                         //     abs = xAxisValues; // internalCurves->value(key)->values;
                     }
                 }
                 else
                 {
                     if (execModes != Quiet)
-					{
-						string str = string("Warnig: Was expected a numeric parameter not a string ")
-								+ string(tokens.at(j)) + string(".");
-						lua_getglobal(L, "customWarning");
-						lua_pushstring(L, str.c_str());
-						lua_call(L, 1, 0);
-					}
+                        qWarning("Warnig: Was expected a numeric parameter not a string '%s'.\n",
+                                 qPrintable(tokens.at(j)) );
                 }
                 break;
         }
         j++;
     }
+    
+#ifdef TME_STATISTIC
+    t = Statistic::getInstance().startMicroTime();
+#endif
 
     if (observerType == TObsGraphic)
     {
@@ -262,21 +265,25 @@ bool ObserverGraphic::draw(QDataStream &/*state*/)
 
         for (int i = 0; i < internalCurves->keys().size(); i++)
         {
-            curve = internalCurves->value(internalCurves->keys().at(i));
-            curve->plotCurve->setData(*abs, *internalCurves->value(
-            		internalCurves->keys().at(i))->values);
+            curve = internalCurves->value( internalCurves->keys().at(i) );
+            curve->plotCurve->setData(*abs, *internalCurves->value( internalCurves->keys().at(i) )->values); 
         }
     }
     plotter->repaint();
 
-#endif // TME_BLACKBOARD
+#ifdef TME_STATISTIC
+    t = Statistic::getInstance().endMicroTime() - t;
+    Statistic::getInstance().addElapsedTime("Graphic Rendering ", t);
+
+    if (decodeCount > 0)
+        Statistic::getInstance().addElapsedTime("Graphic Decoder", decodeSum / decodeCount);
+#endif
 
     qApp->processEvents();
     return true;
 }
 
-void ObserverGraphic::setTitles(const QString &title,
-		const QString &xTitle, const QString &yTitle)
+void ObserverGraphic::setTitles(const QString &title, const QString &xTitle, const QString &yTitle)
 {
     plotter->setTitle(title);
 
@@ -286,14 +293,12 @@ void ObserverGraphic::setTitles(const QString &title,
 
 void ObserverGraphic::setLegendPosition(QwtPlot::LegendPosition pos)
 {
-	// this should work, but the legend does not set its font #459
-	QFont font("font: Arial");
-	font.setPointSize(12);
-	legend->setFont(font);
-    plotter->insertLegend(legend, pos, 1.0);
+    if (! legend)
+        legend = new QwtLegend;
+   // legend->setItemMode(QwtLegend::ClickableItem);
+    plotter->insertLegend(legend, pos);
 
-	// #253
-    //connect(plotter, SIGNAL(legendClicked(QwtPlotItem *)), SLOT(colorChanged(QwtPlotItem *)));
+    connect(plotter, SIGNAL(legendClicked(QwtPlotItem *)), SLOT(colorChanged(QwtPlotItem *)));
 }
 
 //void ObserverGraphic::setGrid()
@@ -305,82 +310,69 @@ void ObserverGraphic::setLegendPosition(QwtPlot::LegendPosition pos)
 //    plotGrid->attach(this);
 //}
 
-void ObserverGraphic::setAttributes(const QStringList &attribs,
-		const QStringList &curveTitles,
+void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringList &curveTitles,
         /*const*/ QStringList &legKeys, /*const*/ QStringList &legAttribs)
 {
+#ifdef DEBUG_OBSERVER
+    qDebug() <<"\n" << attribs;
+    qDebug() << curveTitles;
+    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
+
+    for(int i = 0; i < legKeys.size(); i++)
+    {
+        if (i == LEGEND_ITENS)
+            qDebug() << "\n";
+
+        qDebug() << i << " - " << legKeys.at(i) << ": " << legAttribs.at(i);
+    }
+#endif
+
     attribList = attribs;
     InternalCurve *interCurve = 0;
     QColor color;
 
     int attrSize = attribList.size();
 
-    SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr)
-        subjAttr->setSubjectType(getSubjectType());
-
-    Attributes *attrib = 0;
-
-    for(int i = 0; i < attrSize; i++)
-    {
-        attrib = new Attributes(attribList.at(i), 0, 0);
-        hashAttributes->insert(attribList.at(i), attrib);
-
-        attrib->setParentSubjectID(getSubjectId());
-    }
-
-    // Ignores the attribute of the x axis
-    if(observerType == TObsGraphic)
-        xAxisValues = attrib->getNumericValues(); // last attribute is used in X axis
-
-    // Ignores the attribute of the x axis
-    if(observerType == TObsGraphic)
+    // Ignores the attribute of the x axis 
+    if (observerType == TObsGraphic)
         attrSize--;
 
     for(int i = 0; i < attrSize; i++)
     {
         interCurve = new InternalCurve(attribList.at(i), plotter);
 
-        if(interCurve)
+        if (interCurve)
         {
-            internalCurves->insert(attribList.at(i), interCurve);
 
-            // resign the values vector a curve
-            delete interCurve->values;
-            interCurve->values = hashAttributes->value(
-            		attribList.at(i))->getNumericValues();
-
-            if(i < curveTitles.size())
+            if (i < curveTitles.size())
                 interCurve->plotCurve->setTitle(curveTitles.at(i));
             else
                 interCurve->plotCurve->setTitle(QString("$curve %1").arg(i + 1));
 
-			interCurve->plotCurve->setLegendAttribute(QwtPlotCurve::LegendShowLine);
+            internalCurves->insert(attribList.at(i), interCurve);
 
-            int width = 0, style = 0, symbol = 0,
-            		colorBar = 0, num = 0, size, penstyle = 0;
+            // Sets a random color for the created curve 
+            color = QColor::fromHsvF(hueValues[(int)(qrand() % HUE_COUNT)], 1, 1);
+            interCurve->plotCurve->setPen(color);
+
+            int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0;
 
             width = legKeys.indexOf(WIDTH);
             style = legKeys.indexOf(STYLE);
             symbol = legKeys.indexOf(SYMBOL);
-			size = legKeys.indexOf(SIZE_);
-			penstyle = legKeys.indexOf(PENSTYLE);
             colorBar = legKeys.indexOf(COLOR_BAR);
 
-            if((!legAttribs.isEmpty()) && (colorBar > -1))
+            if ((! legAttribs.isEmpty()) && (colorBar > -1))
             {
                 QString aux;
                 QStringList colorStrList;
                 QPen pen;
 
-                aux = legAttribs.at(colorBar).mid(0,
-                		legAttribs.at(colorBar).indexOf(COLOR_BAR_SEP));
-
-                // Retrieves the first colorBar value
+                aux = legAttribs.at(colorBar).mid(0, legAttribs.at(colorBar).indexOf(COLOR_BAR_SEP));
                 colorStrList = aux.split(COLORS_SEP, QString::SkipEmptyParts)
-                    .first().split(ITEM_SEP).first().split(COMP_COLOR_SEP);
+                    .first().split(ITEM_SEP).first().split(COMP_COLOR_SEP);          
 
-                // Retrieves the last colorBar value
+                // Retrieves the last colorBar value 
                 // colorStrList = aux.split(COLORS_SEP, QString::SkipEmptyParts)
                 //      .last().split(ITEM_SEP).first().split(COMP_COLOR_SEP);
 
@@ -392,34 +384,23 @@ void ObserverGraphic::setAttributes(const QStringList &attribs,
                 // width
                 num = legAttribs.at(width).toInt();
                 pen = QPen(color);
-                pen.setWidth((num > 0) ? num : 1);
-
-				// pen
-                num = legAttribs.at(penstyle).toInt();
-				pen.setStyle((Qt::PenStyle) num);
+                pen.setWidth( (num > 0) ? num : 1);
                 interCurve->plotCurve->setPen(pen);
 
                 // style
                 num = legAttribs.at(style).toInt();
-                interCurve->plotCurve->setStyle((QwtPlotCurve::CurveStyle) num);
+                interCurve->plotCurve->setStyle( (QwtPlotCurve::CurveStyle) num);
 
                 // symbol
                 num = legAttribs.at(symbol).toInt();
-                QwtSymbol *qwtSymbol = new QwtSymbol;
-                qwtSymbol->setStyle((QwtSymbol::Style) num);
-                qwtSymbol->setPen(pen);
+                QwtSymbol qwtSymbol;
+                qwtSymbol.setStyle( (QwtSymbol::Style) num);
+                qwtSymbol.setPen(pen);
+                // increments the symbol size in two values
+                qwtSymbol.setSize(pen.width() + 2);
 
-				if((QwtSymbol::Style) num != (QwtSymbol::Style) -1)
-				{
-					interCurve->plotCurve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol);
-				}
-
-				//size
-                num = legAttribs.at(size).toInt();
-                qwtSymbol->setSize(num);
-
-                if(qwtSymbol->brush().style() != Qt::NoBrush)
-                    qwtSymbol->setBrush(pen.color());
+                if (qwtSymbol.brush().style() != Qt::NoBrush)
+                    qwtSymbol.setBrush(pen.color());
 
                 interCurve->plotCurve->setSymbol(qwtSymbol);
 
@@ -432,83 +413,48 @@ void ObserverGraphic::setAttributes(const QStringList &attribs,
         }
         else
         {
-			if(execModes != Quiet)
-			{
-				string str = string(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-				lua_getglobal(L, "customWarning");
-				lua_pushstring(L, str.c_str());
-				lua_call(L, 1, 0);
-			}
+            if (execModes != Quiet)
+                qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
         }
     }
     plotter->setInternalCurves(internalCurves->values());
-
-	QFont font("font: Arial", 12);
-	plotter->legend()->setFont(font);
-
-//#ifdef TME_BLACK_BOARD_
-//    Attributes *attrib = 0;
-//
-//    for(int i = 0; i < attribList.size(); i++)
-//    {
-//        attrib = (Attributes *) &BlackBoard::getInstance()
-//            .addAttribute(getSubjectId(), attribList.at(i));
-//
-//        attrib->setVisible(true);
-//        attrib->setObservedBy(observerType);
-//    }
-//
-//    if (observerType == TObsGraphic)
-//        xAxisValues = attrib->getNumericValues(); // last attribute is used in X axis
-//
-//    for (int i = 0; i < internalCurves->keys().size(); i++)
-//    {
-//        interCurve = internalCurves->value(internalCurves->keys().at(i));
-//
-//        attrib = (Attributes *) &BlackBoard::getInstance()
-//            .addAttribute(getSubjectId(), attribList.at(i));
-//
-//        // Frees memory of curve values
-//        delete interCurve->values;
-//        interCurve->values = attrib->getNumericValues();
-//
-//        interCurve->plotCurve->setData(*xAxisValues, *interCurve->values);
-//    }
-//#endif
 }
 
 void ObserverGraphic::colorChanged(QwtPlotItem * /* item */)
 {
     //QWidget *w = plotter->legend()->find(item);
-    //if (w && w->inherits("QwtLegendItem"))
+    //if ( w && w->inherits("QwtLegendItem") )
     //{
     //    QColor color = ((QwtLegendItem *)w)->curvePen().color();
     //    color = QColorDialog::getColor(color);
 
-    //    if ((color.isValid()) && (color != ((QwtLegendItem *)w)->curvePen().color()))
+    //    if ((color.isValid()) && (color != ((QwtLegendItem *)w)->curvePen().color()) )
     //    {
     //        ((QwtLegendItem *)w)->setCurvePen(QPen(color));
-    //
-    //        // in this context, pointer item is QwtPlotItem son
+    //        
+    //        // in this context, pointer item is QwtPlotItem son 
     //        ((QwtPlotCurve *)item)->setPen(QPen(color));
     //    }
     //}
     //plotter->replot();
 }
 
-//void ObserverGraphic::run()
+void ObserverGraphic::run()
+{
+    //while (!paused)
     //{
-//    //while (!paused)
-//    //{
-//    //    QThread::exec();
-//    //}
     //    QThread::exec();
-//}
 
-//void ObserverGraphic::pause()
-//{
-//    paused = !paused;
+    //    //std::cout << "teste thread\n";
+    //    //std::cout.flush();
     //}
+    QThread::exec();
+}
+
+void ObserverGraphic::pause()
+{
+    paused = !paused;
+}
 
 QStringList ObserverGraphic::getAttributes()
 {
@@ -517,10 +463,6 @@ QStringList ObserverGraphic::getAttributes()
 
 void ObserverGraphic::setModelTime(double time)
 {
-	if(xAxisValues->size() > 0 && time == (*xAxisValues)[0]
-		&& (*xAxisValues)[xAxisValues->size() - 1] == (xAxisValues->size() - 1))
-		time = xAxisValues->size();
-
     if (observerType == TObsDynamicGraphic)
         xAxisValues->push_back(time);
 }
@@ -534,34 +476,6 @@ void ObserverGraphic::setCurveStyle()
 int ObserverGraphic::close()
 {
     plotter->close();
-    // QThread::exit(0);
+    QThread::exit(0);
     return 0;
 }
-
-void ObserverGraphic::draw()
-{
-    InternalCurve *curve = 0;
-    SubjectAttributes *subjAttr = 0;
-    int id = getSubjectId();
-    double v = 0;
-
-    for (int i = hashAttributes->values().size() - 1; i >= 0; i--)
-    {
-        Attributes *attrib = hashAttributes->values().at(i);
-
-        subjAttr = BlackBoard::getInstance().getSubject(id);
-
-        if (subjAttr && subjAttr->getNumericValue(attrib->getName(), v))
-        {
-            attrib->addValue(id, v);
-
-            if (internalCurves->contains(attrib->getName()))
-            {
-                curve = internalCurves->value(attrib->getName());
-                curve->plotCurve->setSamples(*xAxisValues, *curve->values);
-            }
-        }
-    }
-    plotter->repaint();
-}
-

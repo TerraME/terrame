@@ -2,19 +2,16 @@
 #define OBSERVER_SHAPEFILE_H
 
 #include "observerMapSuperclass.h"
-
-#include <QtWidgets>
+#include <QtGui>
+#include "../../dependencies/shapelib/shapefil.h"
 #include <QVector>
-#include <QHash>
-#include <string>
+#include<string>
+#include<QHash>
+#include "../components/painter/painterShapefile.h"
 
-#include "shapefil.h"
-#include "painterShapefile.h"
+namespace TerraMEObserver{
 
-namespace TerraMEObserver {
-
-class ObserverShapefile : public ObserverMapSuperclass
-{
+class ObserverShapefile : public ObserverMapSuperclass{
     Q_OBJECT
 
 public:
@@ -23,24 +20,18 @@ public:
     virtual ~ObserverShapefile();
 
     bool draw(QDataStream &state);
-
-    QGraphicsPathItem* createItem(SHPObject *obj, int x, int y,
-    		double dx, double dy, double sx, double sy);
+    
+    QGraphicsPathItem* createItem(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy);
     void loadShape(const string &filename);
     void scaleView(qreal newScale);
-
-    int close();
 
 public slots:
     void treeLayers_itemChanged(QTreeWidgetItem * item, int column);
 
 private:
-    QGraphicsPathItem* createItemPolygon(SHPObject *obj, int x, int y,
-    		double dx, double dy, double sx, double sy);
-    QGraphicsPathItem* createItemPolyline(SHPObject *obj, int x, int y,
-    		double dx, double dy, double sx, double sy);
-    QGraphicsPathItem* createItemPoint(SHPObject *obj, int x, int y,
-    		double dx, double dy, double sx, double sy);
+    QGraphicsPathItem* createItemPolygon(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy);
+    QGraphicsPathItem* createItemPolyline(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy);
+    QGraphicsPathItem* createItemPoint(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy);
     void showLayerLegend();
 
     QVector<QGraphicsPathItem*> shapes;

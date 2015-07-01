@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,14 +25,14 @@
 #ifndef OBSERVER_TEXTSCREEN
 #define OBSERVER_TEXTSCREEN
 
-#include "observerInterf.h"
+#include "../observerInterf.h"
 
-#include <QDialog>
-#include <QTextEdit>
-#include <QString>
-#include <QStringList>
-#include <QThread>
-#include <QCloseEvent>
+#include <QtGui/QDialog>
+#include <QtGui/QTextEdit>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QThread>
+#include <QtGui/QCloseEvent>
 
 namespace TerraMEObserver {
 
@@ -40,10 +40,10 @@ namespace TerraMEObserver {
  * \brief Shows in tabled form attributes observed
  * \see QTextEdit
  * \see ObserverInterf, \see QThread
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file observerTextScreen.h
  */
-class ObserverTextScreen : public QTextEdit, public ObserverInterf //, public QThread
+class ObserverTextScreen : public QTextEdit, public ObserverInterf, public QThread
 {
 public:
     /* *
@@ -87,12 +87,12 @@ public:
     /**
      * \copydoc Observer::getAttributes
      */
-    const TypesOfObservers getType() const;
+    const TypesOfObservers getType();
 
-    ///**
-    // * Pauses the thread execution
-    // */
-    //void pause();
+    /**
+     * Pauses the thread execution
+     */
+    void pause();
 
     /**
      * Closes the window and stops the thread execution
@@ -100,14 +100,13 @@ public:
     int close();
 
 protected:
-    ///**
-    // * Runs the thread
-    // * \see QThread
-    // */
-    //void run();
+    /**
+     * Runs the thread
+     * \see QThread
+     */
+    void run();
 
 private:
-    bool draw();
 
     /**
      * Gets the state of the file header
@@ -119,12 +118,15 @@ private:
      */
     bool write();
 
+
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
 
-    QStringList attribList, valuesList;
+    QStringList attribList,valuesList;
 
     bool header;
+    bool paused;
+
 };
 
 }

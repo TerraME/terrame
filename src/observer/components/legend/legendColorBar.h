@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -25,12 +25,13 @@ of this library and its documentation.
 #define  __TERRALIB_INTERNAL_QTCOLORBAR_H
 
 #include <QFrame>
+//#include <TeVisual.h>
+//#include <TeColorUtils.h>
 #include "legendColorUtils.h"
 #include <QMenu>
 #include <QCursor>
 #include <vector>
 #include <map>
-
 using namespace std;
 
 //class Help;
@@ -52,24 +53,24 @@ public:
      * \param parent a pointer to a QWidget
      * \see QFrame, \see QWidget
      */
-    TeQtColorBar(QWidget* parent);
+    TeQtColorBar( QWidget* parent);
 
     /**
      * Destructor
      */
     virtual ~TeQtColorBar();
-
+    
     /**
      * Sets a vector of \a TeColor
      * \param colorVec a reference to a \a TeColor vector
      */
-    void setColorBar(const std::vector<TeColor>& colorVec);
+    void setColorBar(const vector<TeColor>& colorVec);
 
     /**
      * \overload
      * \param colorBarVec a reference to a \a ColorBar vector
      */
-    void setColorBar(const std::vector<ColorBar>& colorBarVec);
+    void setColorBar(const vector<ColorBar>& colorBarVec);
 
     /**
      * Sets the name of colors that compose the ColorBar
@@ -77,13 +78,13 @@ public:
      * and finishs with Black
      * \param colors string with the color name.
      */
-    void setColorBarFromNames(std::string colors);
+    void setColorBarFromNames(string colors);
 
     /**
      * Draws the colors in the colorBar object
      */
     void drawColorBar();
-
+ 
     /**
      * Sets the orientation
      * \param b boolean, \a True to vertical orientation.
@@ -92,12 +93,12 @@ public:
     void setVerticalBar(bool b);
 
     void setUpDownBar(bool b) {upDown_ = b;}
-
+    
     /**
      * Inverts the color sequence
      */
     void invertColorBar();
-
+    
     /**
      * Cleans the color bar
      */
@@ -114,7 +115,7 @@ public:
     std::vector<ColorBar> getInputColorVec() {return inputColorVec_;}
 
     // / Gets the color vector as a QVector
-    // QVector<QColor> getQVectColor() { return qvecColor;}
+    // QVector<QColor> getQVectColor(){ return qvecColor;}
 
 public slots:
     /**
@@ -166,7 +167,7 @@ protected:
      * Catchs the mouse double click event inside the user interface object
      * \see QMouseEvent
      */
-    void mouseDoubleClickEvent(QMouseEvent*);
+    void mouseDoubleClickEvent(QMouseEvent* );
 
     /**
      * Catchs the leave event
@@ -231,6 +232,7 @@ protected:
      */
     void sortByDistance();
 
+
     ColorBar* colorEdit_;
     //	std::vector<TeColor>	getColors(TeColor, TeColor, int);
 
@@ -238,6 +240,7 @@ protected:
     QAction *addColor;
     QAction *removeColor;
     QAction *changeColor;
+
 
     QPoint	p_;
     QPoint	pa_;

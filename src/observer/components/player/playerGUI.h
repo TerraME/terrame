@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -35,7 +35,7 @@ class PlayerGUI;
 /**
  * \brief User interface for simulation controller (Player)
  * \see QDialog
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file privatePlayerGUI.h
  */
 class PlayerGUI : public QDialog
@@ -44,7 +44,7 @@ class PlayerGUI : public QDialog
 
 public:
     /**
-     * Constructor
+     * Contructor
      * \param parent a pointer to a QWidget object
      * \see QWidget
      */
@@ -64,7 +64,7 @@ public:
 
     /**
      * Activates the buttons states
-     * \param active boolean, if \a true active the buttons. Otherwise, disables it.
+     * \param active boolean, if \a true actives the buttons. Otherwise, desactives it.
      */
     void setActiveButtons(bool active);
 
@@ -80,7 +80,7 @@ public slots:
     void stepClicked();
 
     /**
-     * Treats the click in the \a stop button and finishes the simulation
+     * Treats the click in the \a stop button and finishs the simulation
      */
     void stopClicked();
 

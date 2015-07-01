@@ -1,6 +1,6 @@
 /****************************************************
-* Based on the Arrow object example DiagramScene
-* the framework Qt 4.7.1
+ Baseado no objeto Arrow do exemplo DiagramScene
+ do framework Qt 4.7.1
 ****************************************************/
 
 #include "edge.h"
@@ -18,7 +18,7 @@ using namespace TerraMEObserver;
 static const int ARROW_SIZE = 16;
 
 Edge::Edge(Node *orig, Node *dest, QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsLineItem(parent/*, scene*/)
+    : QGraphicsLineItem(parent, scene)
 {
     origin = orig;
     destiny = dest;
@@ -56,11 +56,10 @@ void Edge::updatePosition()
     //                mapFromItem((QGraphicsItem *) origin, QPointF(0, 0)));
     //    setLine(line);
     // update();
-    // update(boundingRect());
+    // update( boundingRect() );
 }
 
-void Edge::paint(QPainter *painter,
-		const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
@@ -68,7 +67,7 @@ void Edge::paint(QPainter *painter,
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->setBrush(Qt::NoBrush);
 
-    // Edge correction
+    // Correção da borda
     QPointF mediumPointDest = destiny->pos() + destiny->boundingRect().center();
     QPointF mediumPointOrig = origin->pos() + origin->boundingRect().center();
     qreal hip = destiny->boundingRect().width() * 0.5;
@@ -94,7 +93,7 @@ void Edge::paint(QPainter *painter,
         intersectPointOrig -= QPointF(cos(-angle) * hip, sin(angle) * hip);
     }
 
-    // Draws the intersection points in the origin and destination
+    // Desenha os pontos de interseção na origem e no destino
     //    painter->setPen(QPen(Qt::red, 4));
     //    painter->drawPoint(intersectPointOrig);
     //    painter->drawPoint(intersectPointDest);
@@ -106,15 +105,16 @@ void Edge::paint(QPainter *painter,
 
     QPen pen = painter->pen();
 
-    //    // Draws the area between source and destination
+    //    // Desenha a area entre origem e destino
     //    painter->setBrush(Qt::NoBrush);
     //    QRectF rec(intersectPointDest, QSizeF(base.dx(), base.dy()));
     //    painter->drawRect(rec);
     //    painter->setPen(QPen(Qt::blue, 4));
     //    painter->drawPoint(intersectPointDest);
 
-    QPointF m = (base.p1() + base.p2()) * 0.5;
+    QPointF m = (base.p1() + base.p2()) * 0.5 ;
     QLineF normal = QLineF(m, base.p2()).normalVector();
+
 
     QPainterPath path;
     path.moveTo(intersectPointDest);

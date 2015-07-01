@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,10 +25,20 @@
 #ifndef OBSERVER_UDP_SENDER
 #define OBSERVER_UDP_SENDER
 
-#include "observerInterf.h"
+extern "C"
+{
+#include <lua.h>
+}
+#include "luna.h"
+
+#include "../observerInterf.h"
+#include "udpSender/udpSenderGUI.h"
+
+#include <QtGui/QDialog>
+#include <QtCore/QThread>
 #include <QtNetwork/QHostAddress>
 
-class SenderGUI;
+class QUdpSocket;
 
 namespace TerraMEObserver {
 
@@ -36,20 +46,23 @@ namespace TerraMEObserver {
  * \brief Sends the attributes observed via UDP Protocol
  * \see ObserverInterf
  * \see QThread,
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file observerUDPSender.h
  */
-class ObserverUDPSender : public QObject, public ObserverInterf
+class ObserverUDPSender : public QThread, public ObserverInterf 
 {
-    Q_OBJECT
-
 public:
+    /**
+     * Default constructor
+     */
+    ObserverUDPSender();
+
     /**
      * Constructor
      * \param subj a pointer to a Subject
      * \see Subject
      */
-    ObserverUDPSender(Subject *subj, QObject *parent = 0);
+    ObserverUDPSender(Subject *subj);
 
     /**
      * Destructor
@@ -76,7 +89,7 @@ public:
     /**
      * \copydoc Observer::getAttributes
      */
-    const TypesOfObservers getType() const;
+    const TypesOfObservers getType();
 
     /**
      * Pauses the thread execution
@@ -99,8 +112,14 @@ public:
      * \param on boolean, if \a true sends compressed datagrams.
      * Otherwise, sends without compression.
      */
-    void setCompress(bool on);
+    void setCompressDatagram(bool on);
 
+    /**
+     * Gets the use of compression
+     * \see setCompressDatagram
+     */
+    bool getCompressDatagram();
+    
     /**
      * Sets the number of communication port
      * \param port the number of port
@@ -119,11 +138,12 @@ public:
      */
     void addHost(const QString & host);
 
-signals:
-    void addState(const QByteArray &);
-    void setModelTimeSignal(double);
-
 protected:
+    /**
+     * Runs the thread
+     * \see QThread
+     */
+    void run();
 
     /**
      * \copydoc Observer::setModelTime
@@ -132,12 +152,17 @@ protected:
 
 private:
     /**
+     * Initializes the commom object to the constructors
+     */
+    void init();
+
+    /**
      * Sends the datagram
      * \param msg a reference to the datagram composes of the subject internal state
      * \return boolean, \a true if the datagram could be sent.
      * Otherwise, returns \a false.
      */
-    bool sendDatagram(const QString & msg);
+    bool sendDatagram(QString & msg);
 
     /**
      *  Sends the informations that indicates that complete state was sent
@@ -151,18 +176,19 @@ private:
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
 
-    QList<QHostAddress> addresses;
-    quint16 port;
-    // int stateCount, msgCount;
-    //int datagramSize;
-    //double datagramRatio;
+    QList<QHostAddress> *hosts;
+    int port, stateCount, msgCount;
+    int datagramSize;
+    float datagramRatio;
+
+    QUdpSocket *udpSocket;
 
     QStringList attribList;
 
-    SenderGUI *senderGUI;
+    UdpSenderGUI *udpGUI;
 
-    // bool failureToSend;
-    bool compressed;
+    bool failureToSend, compressDatagram;
+    bool paused;
 };
 
 }

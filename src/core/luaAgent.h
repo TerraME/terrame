@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -24,10 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaAgent objects.
         \author Tiago Garcia de Senna Carneiro
 */
-
-#ifndef TME_OBSERVER_CLIENT_MODE
-
-#ifndef LUAAGENT_H
+#if ! defined( LUAAGENT_H )
 #define LUAAGENT_H
 
 extern "C"
@@ -36,25 +33,57 @@ extern "C"
 }
 #include "luna.h"
 #include "reference.h"
-extern lua_State * L; ///< Global variable: Lua stack used for communication with C++ modules.
+extern lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 
 /**
-* \brief
+* \brief  
 *  Implementation for a luaAgent object.
 *
 */
 class luaAgent : public Reference<luaAgent>
 {
 private:
+    // @DANIEL
+    // Movido para a classe Reference
+    //int ref; ///< The position of the object in the Lua stack
 
 protected:
+    // @DANIEL
+//    int getRef()
+//    {
+//        return ref;
+//    }
 
 public:
 
     ///  Destructor
-    virtual ~luaAgent(void) { }
+    virtual ~luaAgent(void)
+    {
+        // @DANIEL
+        // não misturar gerência de memória da camada C++ com a camada Lua
+        // luaL_unref( L, LUA_REGISTRYINDEX, ref);
+    }
+
+    /// Registers the luaAgent object in the Lua stack
+    //virtual
+    // @DANIEL
+    // Movido para a classe Reference
+//    int setReference( lua_State* L) //= 0;
+//    {
+//        ref = luaL_ref(L, LUA_REGISTRYINDEX );
+//        return 0;
+//    }
+
+    // virtual
+    /// Gets the luaAgent object reference.
+    // @DANIEL
+    // Movido para a classe Reference
+//    int getReference( lua_State *L ) // = 0;
+//    {
+//        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+//        return 1;
+//    }
+
 };
 
 #endif
-
-#endif // TME_OBSERVER_CLIENT_MODE

@@ -1,16 +1,19 @@
 #include "cellSubjectInterf.h"
 
-#include "observerTable.h"
-#include "observerLogFile.h"
-#include "observerTextScreen.h"
-#include "observerGraphic.h"
-#include "observerUDPSender.h"
-#include "observerTCPSender.h"
-#include "agentObserverMap.h"
+#include "types/observerTable.h"
+#include "types/observerLogFile.h"
+#include "types/observerTextScreen.h"
+#include "types/observerGraphic.h"
+#include "types/observerUDPSender.h"
+#include "types/agentObserverMap.h"
 
 Observer * CellSubjectInterf::createObserver(TypesOfObservers type)
 {
     Observer* obs = 0;
+
+#ifdef DEBUG_OBSERVER
+    printf("create in CellSubjectInterf\n");
+#endif
 
     switch (type)
     {
@@ -30,15 +33,11 @@ Observer * CellSubjectInterf::createObserver(TypesOfObservers type)
         case TObsUDPSender:
             obs = new ObserverUDPSender(this);
             break;
-
-        case TObsTCPSender:
-            obs = new ObserverTCPSender(this);
+			
+		case TObsNeigh:
+			obs = new AgentObserverMap(this);
 			break;
-
-		//case TObsNeigh:
-		//	obs = new AgentObserverMap(this);
-		//	break;
-
+		
         default:
             obs = new ObserverTextScreen(this);
             break;
@@ -51,7 +50,7 @@ bool CellSubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (!obs)
+    if (! obs)
         return false;
 
     switch (obs->getType())
@@ -77,16 +76,11 @@ bool CellSubjectInterf::kill(int id)
             delete (ObserverUDPSender *)obs;
             break;
 
-        case TObsTCPSender:
-            ((ObserverTCPSender *)obs)->close();
-            delete (ObserverTCPSender *)obs;
-            break;
-
         case TObsTextScreen:
             ((ObserverTextScreen *)obs)->close();
             delete (ObserverTextScreen *)obs;
             break;
-
+            
         default:
             delete obs;
             break;

@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,7 +25,7 @@
 #ifndef OBSERVER_LOG_FILE
 #define OBSERVER_LOG_FILE
 
-#include "observerInterf.h"
+#include "../observerInterf.h"
 
 #include <QDialog>
 #include <QString>
@@ -38,13 +38,12 @@
 
 namespace TerraMEObserver {
 
-class LogFileTask;
 
 /**
  * \brief Saves the observed attributes in a log file
  * \see QObject
  * \see ObserverInterf
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file observerGraphic.h
 */
 class ObserverLogFile : public QObject, public ObserverInterf
@@ -58,17 +57,18 @@ public:
     // // WriteMode == w+ -> append
     //};
 
+
     /**
      * Default constructor
      */
-    ObserverLogFile(QObject *parent = 0);
+    ObserverLogFile();
 
     /**
      * Constructor
      * \param subj a pointer to a Subject
      * \see Subject
      */
-    ObserverLogFile (Subject *subj, QObject *parent = 0);
+    ObserverLogFile (Subject *subj);
 
     /**
      * Destructor
@@ -85,27 +85,18 @@ public:
     bool draw(QDataStream &state);
 
     /**
-     * Sets the way for write a file
-     * \param filename the filename defined by user or default name
-     * \param separator the character used to separate the data
-     * \param mode the mode of write a file
-     */
-    void setProperties(const QString &filename = DEFAULT_NAME + ".csv",
-        const QString &separator = ";", const QString &mode = "w");
-
-    /**
      * Sets the name of the file
      * \param name the filename
      * QString
      */
-    void setFileName(const QString & name);
+    void setFileName(QString name);
 
     /**
      * Sets the values separator
      * \param sep the values separator
      * \see QString
      */
-    void setSeparator(const QString &sep = ";");
+    void setSeparator(QString sep = ";");
 
     /**
      * Sets the attributes for observation in the observer
@@ -131,23 +122,23 @@ public:
      * \param mode mode of write in the file
      * \see QString
      */
-    void setWriteMode(const QString &mode = "w");
+    void setWriteMode(QString mode = "w");
 
     /**
      * Gets the file write mode
      */
-    const QString &getWriteMode() const;
+    QString getWriteMode();
 
     /**
      * Gets the type of observer
      * \see TypesOfObservers
      */
-    const TypesOfObservers getType() const;
+    const TypesOfObservers getType();
 
-    ///**
-    // * \deprecated Pauses the thread execution
-    // */
-    //void pause();
+    /**
+     * \deprecated Pauses the thread execution
+     */
+    void pause();
 
     /**
      * Closes the observer
@@ -155,15 +146,15 @@ public:
     int close();
 
 protected:
-    ///**
-    // * Runs the thread
-    // * \see QThread
-    // */
-    //void run();
+    /**
+     * Runs the thread
+     * \see QThread
+     */
+    void run();
 
 private:
     /**
-     * Initializes the common object to the constructors
+     * Initializes the commom object to the constructors
      */
     void init();
 
@@ -172,15 +163,23 @@ private:
      */
     bool headerDefined();
 
+    /**
+     * Writes the state into the file
+     */
+    bool write();
+
+
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
 
-#ifndef TME_BLACK_BOARD
     QStringList attribList, valuesList;
-#endif
+    QString fileName;
+    QString separator;
+    bool header;
+    //WriteMode mode;
+    QString mode;
 
-    LogFileTask *logTask;
-    QString UNKNOWN;
+    bool paused;
 };
 
 }

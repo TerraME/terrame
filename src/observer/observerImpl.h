@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,26 +25,28 @@
 /**
  * \file observerImpl.h
  * \brief Design Pattern Subject and Observer implementations
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \author Tiago Garcia de Senna Carneiro
  */
 
 #ifndef OBSERVER_IMPL
 #define OBSERVER_IMPL
 
-#include "bridge.h"
+#include "../core/bridge.h"
 #include "observer.h"
 
 #include <stdarg.h>
 #include <string.h>
 #include <list>
 #include <iterator>
+//#include <iostream>
 #include <QtCore/QDataStream>
 #include <QtCore/QDateTime>
 
 using namespace TerraMEObserver;
 
 class SubjectImpl;
+
 
 /**
  * \brief
@@ -53,7 +55,7 @@ class SubjectImpl;
  */
 class ObserverImpl : public Implementation
 {
-public:
+public:	
     /**
      * Constructor
      */
@@ -72,7 +74,7 @@ public:
     /**
      * \copydoc TerraMEObserver::Observer::getVisible
      */
-    bool getVisible() const;
+    bool getVisible();
 
     /**
      * \copydoc TerraMEObserver::Observer::setVisible
@@ -96,12 +98,7 @@ public:
     /**
      * \copydoc TerraMEObserver::Observer::getType
      */
-    virtual const TypesOfObservers getObserverType() const;
-
-    /**
-     * \copydoc TerraMEObserver::Observer::getSubjectType
-     */
-    virtual const TypesOfSubjects getSubjectType() const;
+    virtual const TypesOfObservers getObserverType();
 
     /**
      * \copydoc TerraMEObserver::Observer::setModelTime
@@ -111,12 +108,7 @@ public:
     /**
      * \copydoc TerraMEObserver::Observer::getId
      */
-    int getId() const;
-
-    /**
-     * \copydoc TerraMEObserver::Observer::getSubjectId
-     */
-    int getSubjectId() const;
+    int getId();
 
     /**
      * \copydoc TerraMEObserver::Observer::getAttributes
@@ -127,17 +119,6 @@ public:
      * \copydoc TerraMEObserver::Observer::setDirtyBit
      */
     void setDirtyBit();
-
-    /**
-     * \copydoc TerraMEObserver::Observer::close
-     */
-    int close();
-
-// protected:
-    /* *
-    * \copydoc TerraMEObserver::Observer::setId
-    */
-    // void setId(int);
 
 private:
     /**
@@ -156,7 +137,10 @@ private:
     Observer* obsHandle_;
 };
 
+
+
 ////////////////////////////////////////////////////////////  Subject
+
 
 /**
  * \brief
@@ -214,15 +198,12 @@ public:
     /**
      * \copydoc TerraMEObserver::Subject::getType
      */
-    virtual const TypesOfSubjects getSubjectType() const;
+    virtual const TypesOfSubjects getSubjectType();
 
     /**
      * \copydoc TerraMEObserver::Subject::getId
      */
     int getId() const;
-
-// protected:
-    void setId(int);
 
 private:
     /**
@@ -235,9 +216,10 @@ private:
      */
     SubjectImpl & operator=(SubjectImpl &);
 
+
     ObsList observers;
     int subjectID;
 };
 
-#endif
 
+#endif

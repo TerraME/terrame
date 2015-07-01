@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -22,18 +22,23 @@
 *
 *************************************************************************************/
 
+
 #ifndef CELLSPACE_CONCRET_SUBJECT_INTERF
 #define CELLSPACE_CONCRET_SUBJECT_INTERF
 
 #include <QtCore/QStringList>
+
 #include "observerInterf.h"
+
+//  Includes do TerraME
 #include "terrameIncludes.h"
 
+
 /**
- * \brief CelluarSpace Concrete Subject
+ * \brief CelluarSpace Concret Subject
  * \see SubjectInterf
  * \see CellularSpace
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \author Tiago Garcia de Senna Carneiro
  * \file cellSpaceSubjectInterf.h
  */
@@ -44,17 +49,8 @@ public:
      * \copydoc TerraMEObserver::Subject::getState
      */
     virtual QDataStream& getState(QDataStream &state, Subject *subj,
-        int observerId, const QStringList &attribs)
-#ifdef TME_BLACK_BOARD
-    {
-    	Q_UNUSED(state); Q_UNUSED(subj); Q_UNUSED(observerId);
-        Q_UNUSED(attribs); return state; }
+                                  int observerId, QStringList &attribs) = 0;
 
-    const TypesOfSubjects getType() const
-    { return TObsUnknown; }
-#else
-        = 0;
-#endif
     /**
      * Factory of Observer
      * \param type the type of the Observer that will be created
@@ -70,5 +66,5 @@ public:
     bool kill(int id);
 };
 
-#endif
 
+#endif

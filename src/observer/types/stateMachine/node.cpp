@@ -16,7 +16,7 @@ static const QColor INACTIVE_COLOR = Qt::gray;
 static const QColor ACTIVE_COLOR = Qt::green;
 
 Node::Node(QString n, QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsEllipseItem(parent/*, scene*/)
+    : QGraphicsEllipseItem(parent, scene)
 {
     // setZValue(-1);
     // setFlag(QGraphicsItem::ItemIsMovable);
@@ -50,13 +50,13 @@ void Node::setActive(bool active)
 {
     if (active)
     {
-        if (!currentColorDefined)
+        if (! currentColorDefined)
             currentColor = ACTIVE_COLOR;
         currentPenWidth = ACTIVE_PEN_WIDTH;
     }
     else
     {
-        if (!currentColorDefined)
+        if (! currentColorDefined)
             currentColor = INACTIVE_COLOR;
         currentPenWidth = INACTIVE_PEN_WIDTH;
     }
@@ -78,8 +78,7 @@ const QColor & Node::getColor()
     return currentColor;
 }
 
-void Node::paint(QPainter *painter,
-		const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);

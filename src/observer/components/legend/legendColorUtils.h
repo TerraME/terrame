@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -27,76 +27,68 @@ of this library and its documentation.
 #define  __TERRALIB_INTERNAL_COLORUTILS_H
 
 #include <iostream>
-
 #include <QString>
-#include <QByteArray>
-#include <QDataStream>
 
-#define ROUND(__val) \
-    ((__val) >= (0.0) ? ((int)((__val) + 0.5)) : ((int)((__val) - 0.5)));
-
-#if ! defined (TME_OBSERVER_CLIENT_MODE) && ! defined (TME_NO_TERRALIB)
-
+//#include "TeVisual.h"
 #include <TeVisual.h>
 #include <TeUtils.h>
 
-#else
+//#include "legendUtils.h"
 
-//! A structure for supporting a color definition
-struct TeColor
-{
-    //! Red component
-    int red_;
 
-    //! Green component
-    int green_;
+// using namespace std;
 
-    //! Blue component
-    int blue_;
 
-    //! Color name
-    std::string name_;
+// //! A structure for supporting a color definition
+// struct TeColor
+// {
+// //! Red component
+// int red_;
 
-    //! Empty constructor
-    TeColor () : red_(0), green_(0), blue_(0), name_("") {}
+// //! Green component
+// int green_;
 
-    //! Constructor with parameters
-    TeColor (int r, int g, int b, const std::string& name = "")
-    	: red_(r), green_(g), blue_(b), name_(name) {}
+// //! Blue component
+// int blue_;
 
-    //! Set parameters of colors
-    void init (int r, int g, int b, const std::string& name = "")
-    {
-    	red_ = r, green_ = g, blue_ = b;name_ = name;
-    }
+// //! Color name
+// std::string name_;
 
-    //! Returns TRUE if color1 is equal to color2 or FALSE if they are different.
-    bool operator== (const TeColor& color)
-    {
-        return (red_ == color.red_ && green_ == color.green_ && blue_ == color.blue_);
-    }
+// //! Empty constructor
+// TeColor () : red_(0),green_(0),blue_(0), name_("") {}
 
-    //! Assignment operator
-    TeColor& operator= (const TeColor& color)
-    {
-        if (this != &color)
-        {
-            red_ = color.red_;
-            green_ = color.green_;
-            blue_ = color.blue_;
-            name_ = color.name_;
-        }
-        return *this;
-    }
-};
-#endif
+// //! Constructor with parameters
+// TeColor (int r, int g, int b, const std::string& name="") : red_(r),green_(g),blue_(b), name_(name) {}
+
+// //! Set parameters of colors
+// void init (int r, int g, int b, const std::string& name="") {red_=r,green_=g,blue_=b;name_=name; }
+
+
+// //! Returns TRUE if color1 is equal to color2 or FALSE if they are different.
+// bool operator== (const TeColor& color)
+// {
+// return (red_==color.red_ && green_==color.green_ && blue_==color.blue_);
+// }
+
+// //! Assignment operator
+// TeColor& operator= ( const TeColor& color )
+// {
+// if ( this != &color )
+// {
+// red_ = color.red_;
+// green_ = color.green_;
+// blue_ = color.blue_;
+// name_ = color.name_;
+// }
+// return *this;
+// }
+// };
+
 
 void rgb2Hsv(const TeColor& c, int& h, int& s, int& v);
-void RGBtoHSV(const double& r, const double& g, const double& b,
-		double& h, double& s, double& v);
+void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v );
 void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v);
-void HSVtoRGB(double& r, double& g, double& b, const double& h,
-		const double& s, const double& v);
+void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s, const double& v );
 
 struct ColorBar {
     TeColor cor_;
@@ -105,7 +97,7 @@ struct ColorBar {
     int		v_;
     double	distance_;
 
-    void color(const TeColor& c) {cor_ = c; rgb2Hsv(cor_, h_, s_, v_);}
+    void color(const TeColor& c){cor_ = c; rgb2Hsv(cor_, h_, s_, v_);}
 
     ColorBar& operator= (const ColorBar& cb)
     {
@@ -135,38 +127,6 @@ struct ColorBar {
                 .arg(h_).arg(s_).arg(v_).arg(distance_);
         return r;
     }
-
-    friend QDataStream & operator <<(QDataStream &out, const ColorBar &cb)
-    {
-        out << (qint8)cb.h_ << (qint8)cb.s_ << (qint8)cb.v_;
-        out << cb.distance_;
-
-        out << (qint8)cb.cor_.red_ << (qint8)cb.cor_.green_ << (qint8)cb.cor_.blue_;
-        out << QByteArray(cb.cor_.name_.c_str());
-
-        return out;
-    }
-
-    friend QDataStream & operator >>(QDataStream &in, ColorBar &cb)
-    {
-        qint8 h, s, v, r, g, b;
-        double distance;
-        QByteArray name;
-
-        in >> h >> s >> v;
-        in >> distance;
-
-        in >> r >> g >> b;
-        in >> name;
-
-        cb.h_ = (int)h;
-        cb.s_ = (int)s;
-        cb.v_ = (int)v;
-
-        cb.cor_.init(r, g, b, name.constData());
-
-        return in;
-    }
 };
 
 #include <vector>
@@ -182,14 +142,16 @@ struct ColorBar {
         \returns true if color scale was successfully generated and false otherwise
 */
 bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor>& colors);
-std::vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc);
-std::vector<TeColor> getColors(std::vector<ColorBar>& iVec, int ncores);
-std::string getColors(std::vector<ColorBar>& aVec,
-		std::vector<ColorBar>& bVec, int groupingMode);
-void generateColorBarMap(std::vector<ColorBar>& inputColorVec,
-		int ncores, std::map<int, std::vector<TeColor> >& colorMap);
-std::vector<ColorBar> getColorBarVector(std::string& scores, const bool& first);
-//unsigned int  TeReadColorRampTextFile(const string& fileName, map<string, string>& colorRamps);
+vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc);
+vector<TeColor> getColors(vector<ColorBar>& iVec, int ncores);
+string getColors(vector<ColorBar>& aVec, vector<ColorBar>& bVec, int groupingMode);
+void generateColorBarMap(vector<ColorBar>& inputColorVec, int ncores, map<int, vector<TeColor> >& colorMap);
+vector<ColorBar> getColorBarVector(string& scores, const bool& first);
+//unsigned int  TeReadColorRampTextFile(const string& fileName, map<string,string>& colorRamps);
+
+
 
 #endif
+
+
 

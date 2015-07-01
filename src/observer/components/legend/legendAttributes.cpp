@@ -16,7 +16,7 @@ ObsLegend::ObsLegend() : color(Qt::white), from(""), to(""), label("")
 
 ObsLegend::ObsLegend(const ObsLegend &other)
 {
-    if(this != &other)
+    if (this != &other)
     {
         color = other.color;
         from = other.from;
@@ -32,7 +32,7 @@ ObsLegend::ObsLegend(const ObsLegend &other)
 
 ObsLegend & ObsLegend::operator=(const ObsLegend &other)
 {
-    if(this == &other)
+    if (this == &other)
         return *this;
 
     color = other.color;
@@ -50,6 +50,7 @@ ObsLegend & ObsLegend::operator=(const ObsLegend &other)
 
 ObsLegend::~ObsLegend()
 {
+
 }
 
 void ObsLegend::setColor(const QColor & c)
@@ -60,13 +61,12 @@ void ObsLegend::setColor(const QColor & c)
 void ObsLegend::setColor(int r, int g, int b, int a)
 {
     color = QColor(r, g, b, a);
-    invColor = QColor(255 - r, 255 - g, 255 - b, a);
 }
 
-//QColor ObsLegend::getColor() const
-//{
-//    return color;
-//}
+QColor ObsLegend::getColor() const
+{
+    return color;
+}
 
 void ObsLegend::setFrom(const QString & f)
 {
@@ -74,15 +74,15 @@ void ObsLegend::setFrom(const QString & f)
     fromNumber = from.toDouble();
 }
 
-//const QString & ObsLegend::getFrom() const
-//{
-//    return from;
-//}
+const QString & ObsLegend::getFrom() const
+{
+    return from;
+}
 
-//double ObsLegend::getFromNumber() const
-//{
-//    return fromNumber;
-//}
+double ObsLegend::getFromNumber() const
+{
+    return fromNumber;
+}
 
 void ObsLegend::setTo(const QString & t)
 {
@@ -90,138 +90,82 @@ void ObsLegend::setTo(const QString & t)
     toNumber = to.toDouble();
 }
 
-//const QString & ObsLegend::getTo() const
-//{
-//    return to;
-//}
+const QString & ObsLegend::getTo() const
+{
+    return to;
+}
 
-//double ObsLegend::getToNumber() const
-//{
-//    return toNumber;
-//}
+double ObsLegend::getToNumber() const
+{
+    return toNumber;
+}
 
 void ObsLegend::setLabel(const QString & l)
 {
     label = l;
 }
 
-//const QString & ObsLegend::getLabel() const
-//{
-//    return label;
-//}
+const QString & ObsLegend::getLabel() const
+{
+    return label;
+}
 
 void ObsLegend::setOccurrence(int o)
 {
     occurrence = o;
 }
 
-//int ObsLegend::getOccurrence() const
-//{
-//    return occurrence;
-//}
+int ObsLegend::getOcurrence() const
+{
+    return occurrence;
+}
 
 void ObsLegend::setIdxColor(unsigned int i)
 {
     idxColor = i;
 }
 
-//unsigned int ObsLegend::getIdxColor() const
-//{
-//    return idxColor;
-//}
-
-QDataStream & operator <<(QDataStream & out, const TerraMEObserver::ObsLegend & obsLeg)
+unsigned int ObsLegend::getIdxColor() const
 {
-    out << obsLeg.getColor();
-    out << obsLeg.getFrom();
-    out << obsLeg.getTo();
-    out << obsLeg.getLabel();
-    out << (qint8) obsLeg.getOccurrence();
-    out << (quint8) obsLeg.getIdxColor();
-
-    // out << obsLeg.fromNumber;
-    // out << obsLeg.toNumber;
-
-    return out;
+    return idxColor;
 }
 
-QDataStream & operator >>(QDataStream & in, TerraMEObserver::ObsLegend & obsLeg)
-{
-    QColor color;
-    QString from, to, label;
-    qint8 occurrence;
-    quint8 idxColor;
-    double fromNumber, toNumber;
-
-    in >> color;
-    in >> from;
-    in >> to;
-    in >> label;
-    in >> occurrence;
-    in >> idxColor;
-
-    in >> fromNumber;
-    in >> toNumber;
-
-    obsLeg.setColor(color);
-    obsLeg.setFrom(from);
-    obsLeg.setTo(to);
-    obsLeg.setLabel(label);
-    obsLeg.setOccurrence((int)occurrence);
-    obsLeg.setIdxColor((unsigned int) idxColor);
-
-    // obsLeg.setFrom = fromNumber;
-    // obsLeg.toNumber = toNumber;
-
-    return in;
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////// ATTRIBUTES
 
-Attributes::Attributes(const QString &name, double width,
-					double height, TypesOfSubjects type)
-    : attribName(name), attribType(type)
-{
+Attributes::Attributes(QString name, int contSize, double width, double height) : attribName(name)
+{	
+    containersSize = contSize;
     attribDataType = TObsUnknownData;
-    observerBy = TObsUndefined;
+    attribType = TObsCell;
     className = "";
-
-    circularIdxVectorDirectionPos = 0;
 
     numericValues = new QVector<double>();
     textValues = new QVector<QString>();
     boolValues = new QVector<bool>();
-
-#ifdef TME_BLACK_BOARD
-    xs = NULL;
-    ys = NULL;
-#else
     xs = new QVector<double>();
     ys = new QVector<double>();
-#endif
-    legend = new QVector<ObsLegend>();
 
-	////@RAIAN
- //   neighValues = new QVector<QMap<QString, QList<double> > >;
- //   neighValues = 0;
-	////@RAIAN: END
-
+	//@RAIAN
+        neighValues = new QVector<QMap<QString, QList<double> > >;
+	//@RAIAN: FIM
+	
     valueList = QStringList();
     labelList = QStringList();
-
-    setImageSize(QSize(width, height));
-
-    dirtyBit = true;
+    legend = new QVector<ObsLegend>();
+    image = QImage(QSize(width, height), QImage::Format_ARGB32_Premultiplied);
+    image.fill(0);
     visible = true;
+
     maxValue = 100;
     minValue = 0;
     val2Color = 255 / (maxValue - minValue);
-    colorBarVec = std::vector<ColorBar>();
-    stdColorBarVec = std::vector<ColorBar>();
+    colorBarVec = vector<ColorBar>();
+    stdColorBarVec = vector<ColorBar>();
 
-    slicesNumber = 4; // posicao 5 no comboBox
+    slicesNumber = 4; // posição 5 no comboBox
     groupMode = TObsEqualSteps;
-    precNumber = 5; // posicao 6 no comboBox
+    precNumber = 5; // posição 6 no comboBox
     stdDev = TObsNone;
 
     // Bkp
@@ -231,18 +175,16 @@ Attributes::Attributes(const QString &name, double width,
     attribDataTypeBkp = TObsUnknownData;
     groupModeBkp = TObsEqualSteps;
     stdDevBkp = TObsNone;
-    colorBarVecBkp = std::vector<ColorBar>();
-    stdColorBarVecBkp = std::vector<ColorBar>();
+    colorBarVecBkp = vector<ColorBar>();
+    stdColorBarVecBkp = vector<ColorBar>();
 }
 
 Attributes::Attributes(const Attributes &other)
 {
     if (this != &other)
     {
-#ifndef TME_BLACK_BOARD
         delete xs;
         delete ys;
-#endif
         delete numericValues;
         delete textValues;
         delete boolValues;
@@ -255,10 +197,10 @@ Attributes::Attributes(const Attributes &other)
         boolValues = other.boolValues;
         legend = other.legend;
 
-		////@RAIAN
-		//neighValues = other.neighValues;
-		////@RAIAN: END
-
+		//@RAIAN
+		neighValues = other.neighValues;
+		//@RAIAN: FIM
+		
         colorBarVec = colorBarVec;
         stdColorBarVec = stdColorBarVec;
         valueList = valueList;
@@ -268,13 +210,13 @@ Attributes::Attributes(const Attributes &other)
         maxValue = other.maxValue;
         minValue = other.minValue;
         val2Color = other.val2Color;
+        containersSize = other.containersSize;
 
         slicesNumber = other.slicesNumber;
         precNumber = other.precNumber;
 
         // Enumerators
         attribType = other.attribType;
-        observerBy = other.observerBy;
         attribDataType = other.attribDataType;
         groupMode = other.groupMode;
         stdDev = other.stdDev;
@@ -300,11 +242,8 @@ Attributes & Attributes::operator=(const Attributes &other)
     if (this == &other)
         return *this;
 
-#ifndef TME_BLACK_BOARD
     delete xs;
     delete ys;
-#endif
-
     delete numericValues;
     delete textValues;
     delete boolValues;
@@ -317,10 +256,10 @@ Attributes & Attributes::operator=(const Attributes &other)
     boolValues = other.boolValues;
     legend = other.legend;
 
-	////@RAIAN
-	//neighValues = other.neighValues;
-	////@RAIAN: END
-
+	//@RAIAN
+	neighValues = other.neighValues;
+	//@RAIAN: FIM
+	
     colorBarVec = colorBarVec;
     stdColorBarVec = stdColorBarVec;
     valueList = valueList;
@@ -330,13 +269,13 @@ Attributes & Attributes::operator=(const Attributes &other)
     maxValue = other.maxValue;
     minValue = other.minValue;
     val2Color = other.val2Color;
+    containersSize = other.containersSize;
 
     slicesNumber = other.slicesNumber;
     precNumber = other.precNumber;
 
     // Enumerators
     attribType = other.attribType;
-    observerBy = other.observerBy;
     attribDataType = other.attribDataType;
     groupMode = other.groupMode;
     stdDev = other.stdDev;
@@ -364,116 +303,86 @@ Attributes::~Attributes()
     delete textValues; textValues = 0;
     delete boolValues; boolValues = 0;
     delete legend; legend = 0;
-
-#ifndef TME_BLACK_BOARD
     delete xs; xs = 0;
     delete ys; ys = 0;
-#endif
-
-	////@RAIAN
-	//delete neighValues;
-	////@RAIAN: END
+	
+	//@RAIAN
+	delete neighValues;
+	//@RAIAN: FIM
 }
 
-void Attributes::setParentSubjectID(int subjID)
-{
-    parentSubjectID = subjID;
-}
-
-void Attributes::setName(const QString &name)
+void Attributes::setName(QString name)
 {
     attribName = name;
 }
 
-const QString & Attributes::getName() const
+QString Attributes::getName()
 {
     return attribName;
 }
 
 void Attributes::setValues(QVector<double>* v)
 {
-    if (numericValues) delete numericValues;
     numericValues = v;
 }
 
-QVector<double>* Attributes::getNumericValues() const
+QVector<double>* Attributes::getNumericValues()
 {
-    // Q_ASSERT_X(numericValues, "Attributes::getNumericValues()", "Vector of values is NULL");
-
     return numericValues;
 }
 
-void Attributes::setValues(QVector<QString>* s)
+void Attributes::setValues( QVector<QString>* s)
 {
-    if (textValues) delete textValues;
     textValues = s;
 }
 
-QVector<QString>* Attributes::getTextValues() const
+QVector<QString>* Attributes::getTextValues()
 {
-    // Q_ASSERT_X(!textValues, "Attributes::getTextValues()", "Vector of values is NULL");
     return textValues;
 }
 
-void Attributes::setValues(QVector<bool>* b)
+void Attributes::setValues( QVector<bool>* b)
 {
     boolValues = b;
 }
 
-QVector<bool>* Attributes::getBoolValues() const
+QVector<bool>* Attributes::getBoolValues()
 {
     return boolValues;
 }
 
-void Attributes::addValue(int id, double &value)
-{
-    numericValues->push_back(value);
-
-    // With bug: This follow code does not work for all subject (e.g. cell) at
-    // chart observer
-
-    // static int factor = id - numericValues->size();
-    // if (id > numericValues->size())
-    //    numericValues->push_back(value);
-    // else
-    //    numericValues->replace(id - factor, value);
+void Attributes::addValue(double num)
+{ 
+    //if (numericValues->size() == containersSize)
+    //    numericValues->clear();
+    numericValues->push_back(num);
 }
 
-void Attributes::addValue(int id, bool &value)
-{
-    boolValues->push_back(value);
-
-    //static int factor = id - boolValues->size();
-
-    //if (id > numericValues->size())
-    //    boolValues->push_back(value);
-    //else
-    //    boolValues->replace(id - factor, value);
+void Attributes::addValue(bool b)
+{ 
+    //if (boolValues->size() == containersSize)
+    //    boolValues->clear();
+    boolValues->push_back(b);
 }
 
-void Attributes::addValue(/*int id, */ const QString &value)
+void Attributes::addValue(QString txt)
 {
-    textValues->push_back(value);
-
-    // static int factor = id - textValues->size();
-
-    // if (id > numericValues->size())
-    //    textValues->push_back(value);
-    // else
-    //    textValues->replace(id - factor, value);
+    //if (textValues->size() == containersSize)
+    //    textValues->clear();
+    textValues->push_back(txt);
 }
 
-void Attributes::setLegend(QVector<ObsLegend>* l)
+void Attributes::setLegend( QVector<ObsLegend>* l)
 {
     legend = l;
 }
 
-QVector<ObsLegend>* Attributes::getLegend() const
+QVector<ObsLegend>* Attributes::getLegend()
 {
     return legend;
 }
 
-void Attributes::addLegend(const ObsLegend &leg)
+void Attributes::addLegend(ObsLegend leg)
 {
     legend->push_back(leg);
 }
@@ -486,7 +395,7 @@ void Attributes::setMaxValue(double m)
     val2Color = 255 / (maxValue - minValue);
 }
 
-double Attributes::getMaxValue() const
+double Attributes::getMaxValue()
 {
     return maxValue;
 }
@@ -500,32 +409,32 @@ void Attributes::setMinValue(double m)
     val2Color = 255 / (maxValue - minValue);
 }
 
-double Attributes::getMinValue() const
+double Attributes::getMinValue()
 {
     return minValue;
 }
 
-double Attributes::getVal2Color() const
+double Attributes::getVal2Color()
 {
     return val2Color;
 }
 
-void Attributes::setColorBar(const std::vector<ColorBar> &colorVec)
+void Attributes::setColorBar(vector<ColorBar> colorVec)
 {
     colorBarVec = colorVec;
 }
 
-std::vector<ColorBar> Attributes::getColorBar() const
+vector<ColorBar> Attributes::getColorBar()
 {
     return colorBarVec;
 }
 
-void Attributes::setStdColorBar(const std::vector<ColorBar> &colorVec)
+void Attributes::setStdColorBar(vector<ColorBar> colorVec)
 {
     stdColorBarVec = colorVec;
 }
 
-std::vector<ColorBar> Attributes::getStdColorBar() const
+vector<ColorBar> Attributes::getStdColorBar()
 {
     return stdColorBarVec;
 }
@@ -535,7 +444,7 @@ void Attributes::setSlices(int slices)
     slicesNumber = slices;
 }
 
-int Attributes::getSlices() const
+int Attributes::getSlices()
 {
     return slicesNumber;
 }
@@ -545,7 +454,7 @@ void Attributes::setPrecisionNumber(int prec)
     precNumber = prec;
 }
 
-int Attributes::getPrecisionNumber() const
+int Attributes::getPrecisionNumber()
 {
     return precNumber;
 }
@@ -555,19 +464,9 @@ void Attributes::setType(TypesOfSubjects type)
     attribType = type;
 }
 
-//TypesOfSubjects Attributes::getType() const
-//{
-//    return attribType;
-//}
-
-void Attributes::setObservedBy(TypesOfObservers type)
+TypesOfSubjects Attributes::getType()
 {
-    observerBy = type;
-}
-
-TypesOfObservers Attributes::getObserverBy() const
-{
-    return observerBy;
+    return attribType;
 }
 
 void Attributes::setDataType(TypesOfData type)
@@ -575,27 +474,27 @@ void Attributes::setDataType(TypesOfData type)
     attribDataType = type;
 }
 
-//TypesOfData Attributes::getDataType() const
-//{
-//    return attribDataType;
-//}
+TypesOfData Attributes::getDataType()
+{
+    return attribDataType;
+}
 
 void Attributes::setGroupMode(GroupingMode type)
 {
     groupMode = type;
 }
 
-//GroupingMode Attributes::getGroupMode() const
-//{
-//    return groupMode;
-//}
+GroupingMode Attributes::getGroupMode()
+{
+    return groupMode;
+}
 
 void Attributes::setStdDeviation(StdDev type)
 {
     stdDev = type;
 }
 
-StdDev Attributes::getStdDeviation() const
+StdDev Attributes::getStdDeviation()
 {
     return stdDev;
 }
@@ -605,9 +504,9 @@ void Attributes::setValueList(const QStringList & values)
     valueList = values;
 }
 
-int Attributes::addValueListItem(const QString &value)
+int Attributes::addValueListItem(QString value)
 {
-    if(!valueList.contains(value))
+    if (! valueList.contains(value))
     {
         valueList.push_back(value);
         return valueList.size() - 1;
@@ -615,9 +514,9 @@ int Attributes::addValueListItem(const QString &value)
     return valueList.indexOf(value);
 }
 
-QStringList * Attributes::getValueList() const
+QStringList & Attributes::getValueList()
 {
-    return (QStringList *)&valueList;
+    return valueList;
 }
 
 void Attributes::setLabelList(const QStringList & labels)
@@ -625,9 +524,9 @@ void Attributes::setLabelList(const QStringList & labels)
     labelList = labels;
 }
 
-int Attributes::addLabelListItem(const QString &label)
+int Attributes::addLabelListItem(QString label)
 {
-    if(!labelList.contains(label))
+    if (! labelList.contains(label))
     {
         labelList.push_back(label);
         return labelList.size() - 1;
@@ -635,26 +534,18 @@ int Attributes::addLabelListItem(const QString &label)
     return labelList.indexOf(label);
 }
 
-QStringList * Attributes::getLabelList() const
+QStringList & Attributes::getLabelList()
 {
-    return (QStringList *)&labelList;
+    return labelList;
 }
 
-void  Attributes::setImageSize(int width, int height)
+void  Attributes::setImageSize(int w, int h)
 {
-    setImageSize(QSize(width, height));
+    image = QImage( QSize(w, h),
+                    QImage::Format_ARGB32_Premultiplied);
 }
 
-void  Attributes::setImageSize(const QSize &size)
-{
-    if(attribType == TObsAgent || attribType == TObsSociety)
-        image = QImage(size, QImage::Format_ARGB32);
-    else
-        image = QImage(size, QImage::Format_ARGB32_Premultiplied);
-    image.fill(0);
-}
-
-QImage * Attributes::getImage() const
+QImage * Attributes::getImage()
 {
     return (QImage *) &image;
 }
@@ -664,29 +555,29 @@ void Attributes::setVisible(bool visible)
     this->visible = visible;
 }
 
-void Attributes::setDirtyBit(bool dirty)
+bool Attributes::getVisible()
 {
-    dirtyBit = dirty;
+    return visible;
 }
 
 void Attributes::setXsValue(QVector<double>* xss)
 {
-    if (xs) delete xs;
+    // delete xs;
     xs = xss;
 }
 
 void Attributes::setYsValue(QVector<double>* yss)
 {
-    if (ys) delete ys;
+    // delete ys;
     ys = yss;
 }
 
-QVector<double>* Attributes::getXsValue() const
+QVector<double>* Attributes::getXsValue()
 {
     return xs;
 }
 
-QVector<double>* Attributes::getYsValue() const
+QVector<double>* Attributes::getYsValue()
 {
     return ys;
 }
@@ -694,32 +585,29 @@ QVector<double>* Attributes::getYsValue() const
 //@RAIAN
 void Attributes::setValues(QVector<QMap<QString, QList<double> > >* n)
 {
-    qDebug() << "Deprecated!! 'Attributes::setValues()'";
-	// neighValues = n;
+	neighValues = n;
 }
 
 QVector<QMap<QString, QList<double> > >* Attributes::getNeighValues()
 {
-    qDebug() << "Deprecated!! 'Attributes::getNeighValues()'";
-	return 0; //neighValues;
+	return neighValues;
 }
 
 void Attributes::addValue(QMap<QString, QList<double> > n)
 {
-    qDebug() << "Deprecated!! 'Attributes::addValues()'";
-	// neighValues->push_back(n);
+	neighValues->push_back(n);
 }
 
 void Attributes::setWidth(double w)
 {
-	width = w;
+	width = w;	
 }
 
 double Attributes::getWidth()
 {
 	return width;
 }
-//@RAIAN: END
+//@RAIAN: FIM
 
 void Attributes::makeBkp()
 {
@@ -750,34 +638,54 @@ void Attributes::restore()
     groupMode = groupModeBkp;
     stdDev = stdDevBkp;
 
+#ifdef DEBUG_OBSERVER
+    qDebug() << "\n-------------- " << attribName;
+    qDebug() << "colorBarVec.size():  " << colorBarVec.size();
+    foreach(ColorBar cb, colorBarVec)
+        qDebug() << cb.toString();
+
+    qDebug() << "\ncolorBarVec_bkp.size():  " << colorBarVec_bkp.size();
+    foreach(ColorBar cb, colorBarVec_bkp)
+        qDebug() << cb.toString();
+
+    qDebug() << "\ncolorBarVecB.size():  " << colorBarVecB.size();
+    foreach(ColorBar cb, colorBarVecB)
+        qDebug() << cb.toString();
+
+    qDebug() << "\ncolorBarVecB_bkp.size():  " << colorBarVecB_bkp.size();
+    foreach(ColorBar cb, colorBarVecB_bkp)
+        qDebug() << cb.toString();
+
+    qDebug() << "--------------\n";
+#endif
+
+
     colorBarVec = colorBarVecBkp;
     stdColorBarVec = stdColorBarVecBkp;
+}
+
+void Attributes::setContainersSize(int size)
+{
+    containersSize = size;
 }
 
 void Attributes::clear()
 {
     textValues->clear();
-    boolValues->clear();
-	// //@RAIAN
-	// neighValues->clear();
-	// //@RAIAN: END
-
-#ifdef TME_BLACK_BOARD
-    if ((observerBy != TObsDynamicGraphic) && (observerBy != TObsGraphic))
-        numericValues->clear();
-#else
     numericValues->clear();
+    boolValues->clear();
+	//@RAIAN
+	neighValues->clear();
+	//@RAIAN: FIM
+    image.fill(0);
 
     xs->clear();
     ys->clear();
-
-    image.fill(0);
-#endif
 }
 
 void Attributes::setFontSize(int size)
 {
-    font.setPointSize(size);
+    font.setPointSize( (size < 1 ? 12 : size) );
 }
 
 void Attributes::setFontFamily(const QString &family)
@@ -790,7 +698,7 @@ void Attributes::setFont(const QFont &font)
     this->font = font;
 }
 
-const QFont & Attributes::getFont() const
+const QFont & Attributes::getFont()
 {
     return font;
 }
@@ -800,7 +708,7 @@ void Attributes::setSymbol(const QString &sym)
     symbol = sym;
 }
 
-const QString & Attributes::getSymbol() const
+const QString & Attributes::getSymbol()
 {
     return symbol;
 }
@@ -810,66 +718,66 @@ void Attributes::setClassName(const QString &name)
     className = name;
 }
 
-const QString & Attributes::getClassName() const
+const QString & Attributes::getClassName()
 {
     return className;
 }
 
 void Attributes::appendLastPos(double x, double y)
 {
-    qDebug() << "Deprecated!!! Attributes::appendLastPos(double x, double y)";
-
-    //// QPair<QPointF, qreal> p;
-    //QPointF point(x, y);
-    //lastPos.append(QPair<QPointF, qreal>(point, 0));
+    // QPair<QPointF, qreal> p;
+    QPointF point(x, y);
+    lastPos.append( QPair<QPointF, qreal>(point, 0) );
 }
 
-double Attributes::getDirection(double x1, double y1)
+qreal Attributes::getDirection(int pos, double x1, double y1)
 {
-    static const int CEILING = 3;
+    int size = lastPos.size();
+    QPointF point;
 
-    double angle = 0.0;
-
-    if(circularIdxVectorDirectionPos == CEILING)
-        circularIdxVectorDirectionPos = 0;
-
-    if(vectorDirectionPos.size() < CEILING)
+    if (pos >= size)
     {
-        if(vectorDirectionPos.size() == 0)
-        {
-            vectorDirectionPos.append(QPair<QPointF, double>(QPointF(x1, y1), 0.0));
-    	}
-    	else
-    	{
-            QPointF position = vectorDirectionPos.at(
-            		circularIdxVectorDirectionPos - 1).first;
-            angle = calcAngleDirection(y1 - position.y(), x1 - position.x());
-            vectorDirectionPos.append(qMakePair<QPointF, double>(QPointF(x1, y1), angle));
-        }
+        point = QPointF(x1, y1);
+        lastPos.append( QPair<QPointF, qreal>(point, 0) );
+        return 0;
+    }
+
+    point = lastPos.at(pos).first;
+    QPointF newPoint = QPointF(x1, y1);
+
+    if (point == newPoint)
+        return lastPos.at(pos).second;
+    
+    lastPos[pos].first = newPoint;
+
+    double num = y1 - point.y();
+    double den = x1 - point.x();
+
+    qreal angle = 0;
+
+    if ((den != 0) && (num != 0))
+    {
+        angle = atan(num / den) * 180 / PI;
     }
     else
     {
-        QPointF newPoint(x1, y1);
-
-        if(circularIdxVectorDirectionPos < vectorDirectionPos.size())
-        {
-            int last = circularIdxVectorDirectionPos - 1;
-            last = (last < 0) ? CEILING - 1 : last;
-            QPointF position = vectorDirectionPos.at(last).first;
-
-            if(position == newPoint)
-            {
-                angle = vectorDirectionPos.at(last).second;
-    		}
-    		else
-            {
-                angle = calcAngleDirection(y1 - position.y(), x1 - position.x());
-                vectorDirectionPos[circularIdxVectorDirectionPos].first = newPoint;
-                vectorDirectionPos[circularIdxVectorDirectionPos].second = angle;
-            }
-        }
+        if ((num == 0) && (den != 0))     // movimento na horizontal
+            angle = (den > 0) ? 0 : 180;
+        else
+            if ((den == 0) && (num != 0)) // movimento na vertical
+                angle = (num > 0) ? 90 : 270;
+        
+        lastPos[pos].second = angle;
+        return angle;
     }
-    circularIdxVectorDirectionPos++;
+
+    if ((den < 0) && (num < 0))
+        angle = 180 + angle;
+    else
+        if ((den < 0) && (num > 0))
+            angle = 90 - angle;
+
+    lastPos[pos].second = angle;
     return angle;
 }
 
@@ -878,59 +786,9 @@ double Attributes::getDirection(double x1, double y1)
 //    // lastPos.clear();
 //}
 
-const QList<QPair<QPointF, double> >& Attributes::getLastPositions() const
-{
-    return vectorDirectionPos;
-}
 
-QDataStream & operator <<(QDataStream & out,
-		const TerraMEObserver::Attributes & /* attr */)
-{
-    //// *xs, *ys;
-    //out << attr.getNumericValues();
-    //out << attr.getBoolValues();
-    //out << attr.getTextValues();
-    //out << attr.getLegend();
 
-    //out << QVector<ColorBar>::fromStdVector(attr.getColorBar());
-    //out << QVector<ColorBar>::fromStdVector(attr.getStdColorBar());
-
-    //// out << attr.getLabelList();
-    ////out << attr.getValueList();
-
-    //out << attr.getName();
-    //out << attr.getMaxValue();
-    //out << attr.getMinValue();
-    //out << attr.getVal2Color();
-
-    //out << (qint8) attr.getSlices();
-    //out << (qint8) attr.getPrecisionNumber();
-
-    ////// Enumerators
-    //out << (qint8) attr.getType();
-    //out << (qint8) attr.getObserverBy();
-    //out << (qint8) attr.getDataType();
-    //out << (qint8) attr.getGroupMode();
-    //out << (qint8) attr.getStdDeviation();
-
-    //// out << attr.getImage();
-    //out << (qint8) attr.getVisible();
-
-    //out << attr.getFont();
-    //out << attr.getSymbol();
-    //out << attr.getClassName();
-
-    //out << attr.getLastPositions();
-
-    return out;
-}
-
-QDataStream & operator >>(QDataStream & in, TerraMEObserver::Attributes & /* attr */)
-{
-    return in;
-}
-
-QString Attributes::toString() const
+QString Attributes::toString()
 {
     QString str("\n");
 
@@ -944,28 +802,23 @@ QString Attributes::toString() const
     str += "minValue: "		+ QString::number(minValue)		+ "\n\t";
     str += "val2Color: "	+ QString::number(val2Color)	+ "\n\t";
     str += "vectors size: \n\t\t";
-    str += "numeric: "		+ QString::number(numericValues->size()) + "\n\t\t";
+    str += "numeric: "		+ QString::number(numericValues->size())+ "\n\t\t";
     str += "text: "			+ QString::number(textValues->size())	+ "\n\t\t";
     str += "bool: "			+ QString::number(boolValues->size())	+ "\n\t\t";
-	////@RAIAN: neighborhood vector size
-	//str += "neighborhood: " + QString::number(neighValues->size())	+ "\n\t\t";
-	////@RAIAN: END
+	//@RAIAN: tamanho do vetor de vizinhancas
+	str += "neighborhood: " + QString::number(neighValues->size())	+ "\n\t\t";
+	//@RAIAN: FIM
     str += "legend: "		+ QString::number(legend->size())		+ "\n\t\t";
     str += "colorBarVec.size(): "	+ QString::number((int)colorBarVec.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)colorBarVec.size(); i++)
-        str += QString("(%1, %2, %3)\n\t\t").arg(colorBarVec.at(i).cor_.red_)
-			.arg(colorBarVec.at(i).cor_.green_).arg(colorBarVec.at(i).cor_.blue_);
+        str += QString("( %1, %2, %3)\n\t\t").arg(colorBarVec.at(i).cor_.red_).arg(colorBarVec.at(i).cor_.green_).arg(colorBarVec.at(i).cor_.blue_);
 
     str +="\n\t\t";
-    str += "colorBarVecB.size(): "
-    		+ QString::number((int)stdColorBarVec.size()) + "\n\t\t";
+    str += "colorBarVecB.size(): "	+ QString::number((int)stdColorBarVec.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)stdColorBarVec.size(); i++)
-        str += QString("(%1, %2, %3)\n\t\t")
-			.arg(stdColorBarVec.at(i).cor_.red_)
-			.arg(stdColorBarVec.at(i).cor_.green_)
-			.arg(stdColorBarVec.at(i).cor_.blue_);
+        str += QString("( %1, %2, %3)\n\t\t").arg(stdColorBarVec.at(i).cor_.red_).arg(stdColorBarVec.at(i).cor_.green_).arg(stdColorBarVec.at(i).cor_.blue_);
 
     str +="\n\t";
     str += "slicesNumber_bkp: "	+ QString::number(slicesNumberBkp) + "\n\t";
@@ -973,26 +826,19 @@ QString Attributes::toString() const
     str += "attribDataType_bkp: "	+ QString::number(attribDataTypeBkp) + "\n\t";
     str += "groupMode_bkp: "	+ QString::number(groupModeBkp) + "\n\t";
     str += "stdDev_bkp: "	+ QString::number(stdDevBkp) + "\n\t";
-    str += "colorBarVec_bkp.size(): "
-    		+ QString::number((int)colorBarVecBkp.size()) + "\n\t\t";
+    str += "colorBarVec_bkp.size(): "	+ QString::number((int)colorBarVecBkp.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)colorBarVecBkp.size(); i++)
-        str += QString("(%1, %2, %3)\n\t\t")
-			.arg(colorBarVecBkp.at(i).cor_.red_)
-			.arg(colorBarVecBkp.at(i).cor_.green_)
-			.arg(colorBarVecBkp.at(i).cor_.blue_);
+        str += QString("( %1, %2, %3)\n\t\t").arg(colorBarVecBkp.at(i).cor_.red_).arg(colorBarVecBkp.at(i).cor_.green_).arg(colorBarVecBkp.at(i).cor_.blue_);
 
     str +="\n\t";
-    str += "colorBarVecB_bkp.size(): "
-    		+ QString::number((int)stdColorBarVecBkp.size()) + "\n\t\t";
+    str += "colorBarVecB_bkp.size(): "	+ QString::number((int)stdColorBarVecBkp.size()) + "\n\t\t";
 
     for (int i = 0; i < (int)stdColorBarVecBkp.size(); i++)
-        str += QString("(%1, %2, %3)\n\t\t")
-			.arg(stdColorBarVecBkp.at(i).cor_.red_)
-			.arg(stdColorBarVecBkp.at(i).cor_.green_)
-			.arg(stdColorBarVecBkp.at(i).cor_.blue_);
+        str += QString("( %1, %2, %3)\n\t\t").arg(stdColorBarVecBkp.at(i).cor_.red_).arg(stdColorBarVecBkp.at(i).cor_.green_).arg(stdColorBarVecBkp.at(i).cor_.blue_);
 
     str +="\n\n";
     return str;
 }
+
 

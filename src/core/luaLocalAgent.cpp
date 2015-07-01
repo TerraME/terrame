@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright (C)  2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright  2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -38,20 +38,19 @@ of this library and its documentation.
 #include <QtCore/QByteArray>
 #include <QtCore/QMutex>
 
-#include "observerTextScreen.h"
-#include "observerGraphic.h"
-#include "observerLogFile.h"
-#include "observerTable.h"
-#include "observerUDPSender.h"
-#include "observerTCPSender.h"
-#include "agentObserverMap.h"
-#include "agentObserverImage.h"
-#include "observerStateMachine.h"
+// Observadores
+#include "../observer/types/observerTextScreen.h"
+#include "../observer/types/observerGraphic.h"
+#include "../observer/types/observerLogFile.h"
+#include "../observer/types/observerTable.h"
+#include "../observer/types/observerUDPSender.h"
+#include "../observer/types/agentObserverMap.h"
+#include "../observer/types/agentObserverImage.h"
+#include "../observer/types/observerStateMachine.h"
 
-#include "protocol.pb.h"
 
-/// < Global variable: Lua stack used for communication with C++ modules.
-extern lua_State * L;
+/// < Gobal variabel: Lua stack used for comunication with C++ modules.
+extern lua_State * L; 
 
 /// < true - TerraME runs in verbose mode and warning messages to the user;
 /// false - it runs in quite node and no messages are shown to the user.
@@ -66,19 +65,20 @@ luaLocalAgent::luaLocalAgent(lua_State *L)
     whereCell = 0;
     attrClassName = "";
     cellSpace = 0;
+    notNotify = false;
     observedAttribs.clear();
 }
 
 ///Destructor
 luaLocalAgent::~luaLocalAgent(void)
 {
-    // luaL_unref(L, LUA_REGISTRYINDEX, ref);
+    // luaL_unref( L, LUA_REGISTRYINDEX, ref);
 }
 
 /// Gets the simulation time elapsed since the last change in the luaLocalAgent internal discrete state
-int luaLocalAgent::getLatency(lua_State *L)
+int luaLocalAgent::getLatency( lua_State *L)
 {
-    double time = LocalAgent::getLastChangeTime();
+    float time = LocalAgent::getLastChangeTime();
     lua_pushnumber(L, time);
     return 1;
 }
@@ -87,20 +87,20 @@ int luaLocalAgent::getLatency(lua_State *L)
 int luaLocalAgent::add(lua_State *L) {
     //void *ud;
 
-    if(isudatatype(L, -1, "TeState"))
+    if( isudatatype(L, -1, "TeState") )
     {
         //cout << "aqui" << endl;
         ControlMode* lcm = (ControlMode*)Luna<luaControlMode>::check(L, -1);
         ControlMode &cm = *lcm;
-        LocalAgent::add(cm);
+        LocalAgent::add( cm );
     }
     else
     {
-        if(isudatatype(L, -1, "TeTrajectory"))
+        if( isudatatype(L, -1, "TeTrajectory") )
         {
-            luaRegion& actRegion = *((luaRegion*) Luna<luaTrajectory>::check(L, -1));
+            luaRegion& actRegion = *(( luaRegion* ) Luna<luaTrajectory>::check(L, -1));
             ActionRegionCompositeInterf& actRegions = luaLocalAgent::getActionRegions();
-            actRegions.add(actRegion);
+            actRegions.add( actRegion );
         }
     }
     return 0;
@@ -108,64 +108,66 @@ int luaLocalAgent::add(lua_State *L) {
 
 /// Executes the luaLocalAgent object
 /// parameter: luaEvent
-int luaLocalAgent::execute(lua_State* L) {
+int luaLocalAgent::execute( lua_State* L){ 
     luaEvent* ev = Luna<luaEvent>::check(L, -1);
-    LocalAgent::execute(*ev);
+    LocalAgent::execute( *ev );
     return 0;
 }
 
-/// Sets the luaLocalAgent "Action Region" status to true, than luaLocalAgent
+/// Sets the luaLocalAgent "Action Region" status to true, tha luaLocalAgent 
 /// object will traverse its internal
 /// luaTrajectory objects
 /// parameter: boolean
-int luaLocalAgent::setActionRegionStatus(lua_State* L)
+int luaLocalAgent::setActionRegionStatus( lua_State* L)
 {
-    bool status = lua_toboolean(L, -1);
-    LocalAgent::setActionRegionStatus(status);
+    bool status = lua_toboolean( L, -1);
+    LocalAgent::setActionRegionStatus( status );
     return 0;
 }
 
-/// Gets the luaLocalAgent "Action Region" status to true, than luaLocalAgent
+/// Gets the luaLocalAgent "Action Region" status to true, tha luaLocalAgent 
 /// object will traverse its internal
 /// luaTrajectory objects
 /// parameter: boolean
-int luaLocalAgent::getActionRegionStatus(lua_State* L)
+int luaLocalAgent::getActionRegionStatus( lua_State* L)
 {
-    bool status = LocalAgent::getActionRegionStatus();
-    lua_pushboolean(L, status);
+    bool status = LocalAgent::getActionRegionStatus( );
+    lua_pushboolean(L,status);
     return 1;
 }
 /// Builds the luaLocalAgent object
-int luaLocalAgent::build(lua_State *) {
-    if(!Agent::build())
+int luaLocalAgent::build( lua_State *){ 
+    if( ! Agent::build() )
     {
-		string errorMsg = string("You must add a state to the agent before use "
-				"it as a jump condition targert...");
-		lua_getglobal(L, "customError");
-		lua_pushstring(L, errorMsg.c_str());
-		//lua_pushnumber(L, 5);
-		lua_call(L, 1, 0);
+        qFatal( "Error: you must add a control mode to the agent before use "
+            "it as a jump condition targert..." );
         return 0;
     }
     return 0;
 }
 
-int luaLocalAgent::createObserver(lua_State *L)
+int luaLocalAgent::createObserver( lua_State *L )
 {
-    // retrieve the reference of the cell
-    Reference<luaAgent>::getReference(luaL);
+#ifdef DEBUG_OBSERVER
+    luaStackToQString(12);
+    stackDump(luaL);
+#endif
 
-    // flags for the definition of the use of compression
-    // in the datagram transmission and visibility
-    // of observers Udp Sender
+    // recupero a referencia da celula
+    // @DANIEL
+    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef()); // ref);
+    Reference<luaAgent>::getReference(luaL);
+        
+    // flags para a definição do uso de compressão
+    // na transmissão de datagramas e da visibilidade
+    // dos observadores Udp Sender 
     bool compressDatagram = false, obsVisible = true;
 
-    // retrieve the attribute table of the cell
+    // recupero a tabela de atributos da celula
     int top = lua_gettop(luaL);
 
-    // In no way changes the stack
-    // retrieves the enum for the type
-    // of observer
+    // No modifica em nada a pilha recupera o enum
+    // referente ao tipo do observer
     int typeObserver = (int)luaL_checkinteger(luaL, 1); //top - 3);
 
     if ((typeObserver !=  TObsMap) && (typeObserver !=  TObsImage))
@@ -177,9 +179,15 @@ int luaLocalAgent::createObserver(lua_State *L)
         QStringList allAttribs, obsAttribs;
         QList<QPair<QString, QString> > allStates;
 
-        // // Runs the Lua stack recovering all cell attributes
+#ifdef DEBUG_OBSERVER
+        stackDump(luaL);
+        printf("\npos table: %i\nRecuperando todos os atributos:\n", top);
+#endif
+
+        // Pecorre a pilha lua recuperando
+        // todos os atributos celula
         lua_pushnil(luaL);
-        while(lua_next(luaL, top) != 0)
+        while(lua_next(luaL, top ) != 0)
         {
             QString key;
 
@@ -201,18 +209,18 @@ int luaLocalAgent::createObserver(lua_State *L)
                 break;
             }
 
-            // Recover the states of TeState
-            if (isudatatype(luaL, -1, "TeState"))
+            // Recupero os estados do TeState
+            if (isudatatype(luaL, -1, "TeState") )
             {
                 ControlMode*  lcm = (ControlMode*)Luna<luaControlMode>::check(L, -1);
 
                 QString state, transition;
                 state.append(lcm->getControlModeName().c_str());
 
-                // Adds the state attribute in the parameter list
-                // allAttribs.push_back(state);
+                // Adiciona o estado do atributo na lista de parametros
+                // allAttribs.push_back( state );
 
-                // Recover the transition states
+                // Recupero a transição dos estados
                 ProcessCompositeInterf::iterator prIt;
                 prIt = lcm->ProcessCompositeInterf::begin();
 
@@ -221,61 +229,60 @@ int luaLocalAgent::createObserver(lua_State *L)
 
                 while (jIt != prIt->JumpCompositeInterf::end())
                 {
-                    transition = QString((*jIt)->getTargetControlModeName().c_str());
+                    transition = QString( (*jIt)->getTargetControlModeName().c_str());
                     jIt++;
                 }
 
-                // creates a pair (state, transition) and adds in the list of states
+                // cria um par (estado, transição) e adiciona na lista de estados
                 allStates.push_back(qMakePair(state, transition));
             }
             allAttribs.push_back(key);
             lua_pop(luaL, 1);
         }
 
-        // Add the currentState in the observer
-        allAttribs.push_back("currentState"); // inserts the current state
+        // Adiciono o currentState no observador
+        allAttribs.push_back("currentState"); // insere o estado atual
 
         //------------------------
-        // runs the moon stack recovering the
-        // attributes cell that wants to observe
+        // pecorre a pilha lua recuperando
+        // os atributos celula que se quer observar
         lua_settop(luaL, top - 1);
         top = lua_gettop(luaL);
 
-        // Syntax checking Attributes table
-        if(!lua_istable(luaL, top))
+        // Verificao da sintaxe da tabela Atributos
+        if(! lua_istable(luaL, top) )
         {
-            string errorMsg = string("Attributes table not found. Incorrect sintax.");
-			lua_getglobal(L, "customError");
-			lua_pushstring(L, errorMsg.c_str());
-			//lua_pushnumber(L, 5);
-			lua_call(L, 1, 0);
-			return 0;
+            qFatal("Error: Attributes table not found. Incorrect sintax.\n");
+            return -1;
         }
 
+#ifdef DEBUG_OBSERVER
+        printf("\npos table: %i\nRecuperando a tabela Atributos:\n", top - 1);
+        stackDump(luaL);
+#endif
+
         lua_pushnil(luaL);
-        while(lua_next(luaL, top - 1) != 0)
+        while(lua_next(luaL, top - 1 ) != 0)
         {
             QString key = luaL_checkstring(luaL, -1);
 
-            // Checks if the given attribute exists or
-            // may have been mistyped
+            // Verifica se o atributo informado existe
+            // ou pode ter sido digitado errado
             if (allAttribs.contains(key))
             {
                 obsAttribs.push_back(key);
-                if (!observedAttribs.contains(key))
-                    // observedAttribs.push_back(key);
-                    observedAttribs.insert(key, "");
+                if (! observedAttribs.contains(key))
+                    observedAttribs.push_back(key);
             }
             else
             {
-                if (!key.isNull() || !key.isEmpty())
+                if ( ! key.isNull() || ! key.isEmpty())
                 {
-					string err_out = string("Attribute name '")
-									+ string (qPrintable(key)) + string("' not found.");
-					lua_getglobal(L, "customError");
-					lua_pushstring(L, err_out.c_str());
-					//lua_pushnumber(L, 4);
-					lua_call(L, 1, 0);
+					string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
+					lua_getglobal(L, "customErrorMsg");
+					lua_pushstring(L,err_out.c_str());
+					lua_pushnumber(L,4);
+					lua_call(L,2,0);
                     return -1;
                 }
             }
@@ -283,32 +290,30 @@ int luaLocalAgent::createObserver(lua_State *L)
         }
         //------------------------
 
-        // Add the currentState in the observer
-        if ((obsAttribs.empty()) && (!isGraphicType))
+        // Adiciono o currentState no observador
+        if ((obsAttribs.empty() ) && (! isGraphicType))
         {
             obsAttribs = allAttribs;
-            // observedAttribs = allAttribs;
-
-            foreach(const QString &key, allAttribs)
-                observedAttribs.insert(key, "");
+            observedAttribs = allAttribs;
         }
-
+            
         //------------------------
-        if(!lua_istable(luaL, top))
+        if(! lua_istable(luaL, top) )
         {
-            string errorMsg = string("Parameter table not found. Incorrect sintax.");
-			lua_getglobal(L, "customError");
-			lua_pushstring(L, errorMsg.c_str());
-			//lua_pushnumber(L, 5);
-			lua_call(L, 1, 0);
-			return 0;
+            qFatal("Error: Parameter table not found. Incorrect sintax.\n");
+            return -1;
         }
 
-        QStringList obsParams, obsParamsAtribs; // parameters/attributes of the legend
+#ifdef DEBUG_OBSERVER
+        printf("\n*pos table: %i\nRecuperando a tabela Parametros\n", top);
+        stackDump(luaL);
+#endif
+
+        QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
         QStringList cols;
         bool isLegend = false;
 
-        // Retrieves the parameters table
+        // Recupera a tabela de parametros
         lua_pushnil(luaL);
         while(lua_next(luaL, top) != 0)
         {
@@ -327,14 +332,14 @@ int luaLocalAgent::createObserver(lua_State *L)
             case LUA_TBOOLEAN:
             {
                 bool val = lua_toboolean(luaL, -1);
-                if (key == "visible")
+                if (key == "visible") 
                     obsVisible = val;
                 else // if (key == "compress")
                     compressDatagram = val;
                 break;
             }
-
-            // Retrieves the cell you want to watch the automaton
+            
+            // Recupera a celula que se deseja observar o automato
             case LUA_TTABLE:
                 {
                     int paramTop = lua_gettop(luaL);
@@ -365,7 +370,7 @@ int luaLocalAgent::createObserver(lua_State *L)
 
                                 obsParams.push_back(value);
 
-                                switch(lua_type(luaL, -1))
+                                switch( lua_type(luaL, -1) )
                                 {
                                 case LUA_TBOOLEAN:
                                     // boolAux = lua_toboolean(luaL, -1);
@@ -399,17 +404,16 @@ int luaLocalAgent::createObserver(lua_State *L)
             lua_pop(luaL, 1);
         }
 
-        // If not set any parameters and the
-        // observer are not TextScreen then
-        // launches a warning
+        // Caso no seja definido nenhum parametro e o observador no TextScreen entao
+        // lanca uma falha
         if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
         {
-            if (execModes != Quiet) {
-                string err_out = string("The parameter table is empty.");
-                lua_getglobal(L, "customWarning");
-                lua_pushstring(L, err_out.c_str());
-                //lua_pushnumber(L, 5);
-                lua_call(L, 1, 0);
+            if (execModes != Quiet ){
+                string err_out = string("Warning: The parameter table is empty.");
+                lua_getglobal(L, "customWarningMsg");
+                lua_pushstring(L,err_out.c_str());
+                lua_pushnumber(L,5);
+                lua_call(L,2,0);
             }
         }
         //------------------------
@@ -419,7 +423,6 @@ int luaLocalAgent::createObserver(lua_State *L)
         ObserverGraphic *obsGraphic = 0;
         ObserverLogFile *obsLog = 0;
         ObserverUDPSender *obsUDPSender = 0;
-		ObserverTCPSender *obsTCPSender = 0;
         ObserverStateMachine *obsStateMachine = 0;
 
         int obsId = -1;
@@ -428,7 +431,7 @@ int luaLocalAgent::createObserver(lua_State *L)
         switch (typeObserver)
         {
         case TObsTextScreen:
-            obsText = (ObserverTextScreen *)
+            obsText = (ObserverTextScreen *) 
                 LocalAgentSubjectInterf::createObserver(TObsTextScreen);
             if (obsText)
             {
@@ -442,7 +445,7 @@ int luaLocalAgent::createObserver(lua_State *L)
             break;
 
         case TObsLogFile:
-            obsLog = (ObserverLogFile *)
+            obsLog = (ObserverLogFile *) 
                 LocalAgentSubjectInterf::createObserver(TObsLogFile);
             if (obsLog)
             {
@@ -456,7 +459,7 @@ int luaLocalAgent::createObserver(lua_State *L)
             break;
 
         case TObsTable:
-            obsTable = (ObserverTable *)
+            obsTable = (ObserverTable *) 
                 LocalAgentSubjectInterf::createObserver(TObsTable);
             if (obsTable)
             {
@@ -468,35 +471,14 @@ int luaLocalAgent::createObserver(lua_State *L)
                     qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
             }
             break;
-		case TObsTCPSender:
-			obsTCPSender = (ObserverTCPSender *)
-				LocalAgentSubjectInterf::createObserver(TObsTCPSender);
-			if (obsTCPSender)
-			{
-				obsId = obsTCPSender->getId();
-				obsTCPSender->setCompress(compressDatagram);
 
-				if (obsVisible)
-					obsTCPSender->show();
-			}
-			else
-			{
-				if (execModes != Quiet) {
-					QString str = QString(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-					lua_getglobal(L, "customWarning");
-					lua_pushstring(L, str.toLatin1().constData());
-					lua_call(L, 1, 0);
-				}
-			}
-
-			break;
         case TObsUDPSender:
-            obsUDPSender = (ObserverUDPSender *)
+            obsUDPSender = (ObserverUDPSender *) 
                 LocalAgentSubjectInterf::createObserver(TObsUDPSender);
             if (obsUDPSender)
             {
                 obsId = obsUDPSender->getId();
-                obsUDPSender->setCompress(compressDatagram);
+                obsUDPSender->setCompressDatagram(compressDatagram);
 
                 if (obsVisible)
                     obsUDPSender->show();
@@ -509,7 +491,7 @@ int luaLocalAgent::createObserver(lua_State *L)
             break;
 
         case TObsStateMachine:
-            obsStateMachine = (ObserverStateMachine *)
+            obsStateMachine = (ObserverStateMachine *) 
                 LocalAgentSubjectInterf::createObserver(TObsStateMachine);
             if (obsStateMachine)
             {
@@ -523,7 +505,7 @@ int luaLocalAgent::createObserver(lua_State *L)
             break;
 
         case TObsDynamicGraphic:
-            obsGraphic = (ObserverGraphic *)
+            obsGraphic = (ObserverGraphic *) 
                 LocalAgentSubjectInterf::createObserver(TObsDynamicGraphic);
             if (obsGraphic)
             {
@@ -538,7 +520,7 @@ int luaLocalAgent::createObserver(lua_State *L)
             break;
 
         case TObsGraphic:
-            obsGraphic = (ObserverGraphic *)
+            obsGraphic = (ObserverGraphic *) 
                 LocalAgentSubjectInterf::createObserver(TObsGraphic);
             if (obsGraphic)
             {
@@ -552,24 +534,24 @@ int luaLocalAgent::createObserver(lua_State *L)
             break;
 
         default:
-            if (execModes != Quiet)
+            if (execModes != Quiet )
             {
-                qWarning("In this context, the code '%s' does not correspond to a "
-                "valid type of Observer.", getObserverName(typeObserver));
+                qWarning("Warning: In this context, the code '%s' does not correspond to a "
+                "valid type of Observer.",  getObserverName(typeObserver) );
             }
             return 0;
         }
 
-        /// Defines some parameters of the instantiated observer -------------------------------------
+        /// Define alguns parametros do observador instanciado -------------------------------------
         if (obsLog)
         {
             obsLog->setAttributes(obsAttribs);
 
             if (cols.at(0).isNull() || cols.at(0).isEmpty())
             {
-                if (execModes != Quiet)
+                if (execModes != Quiet )
                 {
-                    qWarning("Filename was not specified, using a "
+                    qWarning("Warning: Filename was not specified, using a "
                         "default \"%s\".", qPrintable(DEFAULT_NAME));
                 }
                 obsLog->setFileName(DEFAULT_NAME + ".csv");
@@ -579,11 +561,11 @@ int luaLocalAgent::createObserver(lua_State *L)
                 obsLog->setFileName(cols.at(0));
             }
 
-            // if not defined, use the default ";"
+            // caso no seja definido, utiliza o default ";"
             if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
             {
-                if (execModes != Quiet)
-                    qWarning("Separator not defined, using \";\".");
+                if (execModes != Quiet )
+                    qWarning("Warning: Separator not defined, using \";\".");
                 obsLog->setSeparator();
             }
             else
@@ -604,12 +586,11 @@ int luaLocalAgent::createObserver(lua_State *L)
 
         if (obsTable)
         {
-            if ((cols.size() < 1) || (cols.size() < 2)
-            		|| cols.at(0).isNull() || cols.at(0).isEmpty()
-					|| cols.at(1).isNull() || cols.at(1).isEmpty())
+            if ((cols.size() < 1) || (cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
+                || cols.at(1).isNull() || cols.at(1).isEmpty())
             {
-                if (execModes != Quiet)
-                    qWarning("Column title not defined.");
+                if (execModes != Quiet )
+                    qWarning("Warning: Column title not defined.");
             }
             obsTable->setColumnHeaders(cols);
             obsTable->setAttributes(obsAttribs);
@@ -625,8 +606,8 @@ int luaLocalAgent::createObserver(lua_State *L)
             // if(cols.at(0).isEmpty())
             if (cols.isEmpty())
             {
-                if (execModes != Quiet)
-                    qWarning("Port not defined.");
+                if (execModes != Quiet )
+                    qWarning("Warning: Port not defined.");
             }
             else
             {
@@ -634,51 +615,28 @@ int luaLocalAgent::createObserver(lua_State *L)
             }
 
             // broadcast
-            if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()))
+            if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
             {
+                if (execModes != Quiet ){
+                    string err_out = string("Warning: Observer will send broadcast.");
+                    lua_getglobal(L, "customWarningMsg");
+                    lua_pushstring(L,err_out.c_str());
+                    lua_pushnumber(L,5);
+                    lua_call(L,2,0);
+                }
                 obsUDPSender->addHost(BROADCAST_HOST);
             }
             else
             {
                 // multicast or unicast
-                for(int i = 1; i < cols.size(); i++) {
-                    if (!cols.at(i).isEmpty())
+                for(int i = 1; i < cols.size(); i++){
+                    if (! cols.at(i).isEmpty())
                         obsUDPSender->addHost(cols.at(i));
                 }
             }
             lua_pushnumber(luaL, obsId);
             return 1;
         }
-
-		if(obsTCPSender) {
-			quint16 port = (quint16) DEFAULT_PORT;
-			obsTCPSender->setAttributes(obsAttribs);
-
-			if (cols.isEmpty()) {
-				if (execModes != Quiet) {
-					string err_out = string("Port not defined.");
-					lua_getglobal(L, "customWarning");
-					lua_pushstring(L, err_out.c_str());
-					lua_call(L, 1, 0);
-				}
-			}
-			else
-				port = (quint16) cols.at(0).toInt();
-
-			// broadcast
-			if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty())) {
-				obsTCPSender->addHost(LOCAL_HOST);
-			}
-			else {
-				// multicast or unicast
-				for(int i = 1; i < cols.size(); i++)
-					if (!cols.at(i).isEmpty())
-						obsTCPSender->addHost(cols.at(i));
-			}
-			obsTCPSender->connectTo(port);
-			lua_pushnumber(luaL, obsId);
-			return 1;
-		}
 
         if (obsGraphic)
         {
@@ -688,15 +646,14 @@ int luaLocalAgent::createObserver(lua_State *L)
             //    obsGraphic->setCurveStyle();
 
             // Takes titles of three first locations
-            obsGraphic->setTitles(cols.at(0), cols.at(1), cols.at(2));
+            obsGraphic->setTitles(cols.at(0), cols.at(1), cols.at(2));   
             cols.removeFirst(); // remove graphic title
             cols.removeFirst(); // remove axis x title
             cols.removeFirst(); // remove axis y title
 
             // Splits the attribute labels in the cols list
-            obsGraphic->setAttributes(obsAttribs, cols.takeFirst()
-            		.split(";", QString::SkipEmptyParts),
-					obsParams, obsParamsAtribs);
+            obsGraphic->setAttributes(obsAttribs, cols.takeFirst().split(";", QString::SkipEmptyParts), 
+                obsParams, obsParamsAtribs);
 
             lua_pushnumber(luaL, obsId);
             return 1;
@@ -723,12 +680,12 @@ int luaLocalAgent::createObserver(lua_State *L)
         AgentObserverMap *obsMap = 0;
         AgentObserverImage *obsImage = 0;
 
-        // Retrieves the parameters
+        // Recupera os parametros
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 1) != 0)
         {
-            // Retrieves the observer map ID
-            if ((lua_isnumber(luaL, -1) && (!getObserverID)))
+            // Recupera o ID do observer map
+            if ( (lua_isnumber(luaL, -1) && (! getObserverID)) )
             {
                 // obsID = lua_tonumber(luaL, paramTop - 1);
                 obsID = luaL_checknumber(luaL, -1);
@@ -736,7 +693,7 @@ int luaLocalAgent::createObserver(lua_State *L)
                 isLegend = true;
             }
 
-            // retrieves the celular space
+            // recupera o espao celular
             if (lua_istable(luaL, -1))
             {
                 int paramTop = lua_gettop(luaL);
@@ -759,7 +716,7 @@ int luaLocalAgent::createObserver(lua_State *L)
                             double numAux;
                             QString strAux;
 
-                            switch(lua_type(luaL, -1))
+                            switch( lua_type(luaL, -1) )
                             {
                             case LUA_TBOOLEAN:
                                 boolAux = lua_toboolean(luaL, -1);
@@ -787,24 +744,18 @@ int luaLocalAgent::createObserver(lua_State *L)
             lua_pop(luaL, 1);
         }
 
-        QString errorMsg = QString("The Observer ID \"%1\" was not found. "
+        QString errorMsg = QString("\nError: The Observer ID \"%1\" was not found. "
             "Check the declaration of this observer.\n").arg(obsID);
 
-        if (!cellSpace)
-		{
-			lua_getglobal(L, "customError");
-			lua_pushstring(L, errorMsg.toLatin1().data());
-			//lua_pushnumber(L, 5);
-			lua_call(L, 1, 0);
-			return 0;
-		}
+        if (! cellSpace)
+            qFatal("%s", qPrintable(errorMsg));
 
         QStringList allAttribs, obsAttribs;
 
-        // Retrieves all agent attributes
-        // seeking only the agent class
+        // Recupera todos os atributos do agente
+        // buscando apenas o classe do agente
         lua_pushnil(luaL);
-        while(lua_next(luaL, top) != 0)
+        while(lua_next(luaL, top ) != 0)
         {
             if (lua_type(luaL, -2) == LUA_TSTRING)
             {
@@ -812,7 +763,7 @@ int luaLocalAgent::createObserver(lua_State *L)
                 key = QString(luaL_checkstring(luaL, -2));
 
                 if (key == "class")
-                    attrClassName = luaL_checkstring(luaL, -1);
+                    attrClassName = QString(luaL_checkstring(luaL, -1));
             }
             lua_pop(luaL, 1);
         }
@@ -824,14 +775,8 @@ int luaLocalAgent::createObserver(lua_State *L)
         {
             obsMap = (AgentObserverMap *)cellSpace->getObserver(obsID);
 
-            if (!obsMap)
-			{
-				lua_getglobal(L, "customError");
-				lua_pushstring(L, errorMsg.toLatin1().data());
-				//lua_pushnumber(L, 5);
-				lua_call(L, 1, 0);
-				return 0;
-			}
+            if (! obsMap)
+                qFatal("%s", qPrintable(errorMsg));
 
             obsMap->registry(this, attrClassName);
         }
@@ -839,19 +784,13 @@ int luaLocalAgent::createObserver(lua_State *L)
         {
             obsImage = (AgentObserverImage *)cellSpace->getObserver(obsID);
 
-            if (!obsImage)
-			{
-				lua_getglobal(L, "customError");
-				lua_pushstring(L, errorMsg.toLatin1().data());
-				//lua_pushnumber(L, 5);
-				lua_call(L, 1, 0);
-				return 0;
-			}
+            if (! obsImage)
+                qFatal("%s", qPrintable(errorMsg));
 
             obsImage->registry(this, attrClassName);
         }
 
-        // Retrieves the attributes
+        // Recupera os atributos
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 2) != 0)
         {
@@ -864,26 +803,24 @@ int luaLocalAgent::createObserver(lua_State *L)
 
             lua_pop(luaL, 1);
         }
-
+        
         for(int i = 0; i < obsAttribs.size(); i++)
         {
-            if (!observedAttribs.contains(obsAttribs.at(i)))
-                // observedAttribs.push_back(obsAttribs.at(i));
-                observedAttribs.insert(obsAttribs.at(i), "");
+            if (! observedAttribs.contains(obsAttribs.at(i)) )
+                observedAttribs.push_back(obsAttribs.at(i));
         }
 
         if (typeObserver == TObsMap)
         {
-            // to set the values of the agent attributes,
-        	// redefine the type of attributes in the super class ObserverMap
-            obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs, TObsAutomaton);
-            obsMap->setSubjectAttributes(obsAttribs, getId(), attrClassName);
+            // ao definir os valores dos atributos do agente,
+            // redefino o tipo do atributos na super classe ObserverMap
+            obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs);
+            obsMap->setSubjectAttributes(obsAttribs, TObsAutomaton, attrClassName);
         }
         else // (typeObserver == obsImage)
         {
-            obsImage->setAttributes(obsAttribs, obsParams,
-            		obsParamsAtribs, TObsAutomaton);
-            obsImage->setSubjectAttributes(obsAttribs, getId(), attrClassName);
+            obsImage->setAttributes(obsAttribs, obsParams, obsParamsAtribs);
+            obsImage->setSubjectAttributes(obsAttribs, TObsAutomaton, attrClassName);
         }
         lua_pushnumber(luaL, obsID);
         return 1;
@@ -891,7 +828,7 @@ int luaLocalAgent::createObserver(lua_State *L)
     return 0;
 }
 
-const TypesOfSubjects luaLocalAgent::getType() const
+const TypesOfSubjects luaLocalAgent::getType()
 {
     return subjectType;
 }
@@ -899,63 +836,54 @@ const TypesOfSubjects luaLocalAgent::getType() const
 int luaLocalAgent::notify(lua_State *luaL)
 {
     double time = luaL_checknumber(luaL, -1);
+
+#ifdef DEBUG_OBSERVER
+    printf("\n LocalAgentSubjectInterf::notifyObservers \t time: %g \n", time);
+    stackDump(luaL);
+#endif
+
     LocalAgentSubjectInterf::notify(time);
     return 0;
 }
 
 #ifdef TME_BLACK_BOARD
+QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *, int observerId, QStringList & /* attribs */)
+#else
+QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs )
+#endif
 
-QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *,
-		int /*observerId*/, const QStringList & /* attribs */)
 {
+
+#ifdef DEBUG_OBSERVER
+    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
+    luaStackToQString(12);
+#endif
+
     int obsCurrentState = 0; //serverSession->getState(observerId);
-    QByteArray content;
-
-    switch(obsCurrentState)
-	{
-    case 0:
-        content = getAll(in, observedAttribs.keys());
-        // serverSession->setState(observerId, 1);
-        // if (!QUIET_MODE)
-        // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(1).toLatin1().constData());
-        break;
-
-    case 1:
-        content = getChanges(in, observedAttribs.keys());
-        // serverSession->setState(observerId, 0);
-        // if (!QUIET_MODE)
-        // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(0).toLatin1().constData());
-        break;
-    }
-    // cleans the stack
-    // lua_settop(L, 0);
-
-    in << content;
-    return in;
-}
-
-#else // TME_BLACK_BOARD
-
-QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *,
-		int observerId, const QStringList &  attribs)
-{
-    int obsCurrentState = 0; //serverSession->getState(observerId);
-    QByteArray content;
+    QString content;
 
     switch(obsCurrentState)
     {
     case 0:
+#ifdef TME_BLACK_BOARD
+        content = getAll(in, observerId, observedAttribs);
+#else
         content = getAll(in, observerId, attribs);
+#endif
         // serverSession->setState(observerId, 1);
-        // if (execModes == Quiet)
-        // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(1).toLatin1().constData());
+        // if (execModes == Quiet )
+        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
         break;
 
     case 1:
+#ifdef TME_BLACK_BOARD
+        content = getChanges(in, observerId, observedAttribs);
+#else
         content = getChanges(in, observerId, attribs);
+#endif
         // serverSession->setState(observerId, 0);
-        // if (execModes == Quiet)
-        // qWarning(QString("Observer %1 it went to the state %2").arg(observerId).arg(0).toLatin1().constData());
+        // if (execModes == Quiet )
+        // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
         break;
     }
     // cleans the stack
@@ -965,381 +893,32 @@ QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *,
     return in;
 }
 
-#endif // TME_BLACK_BOARD
-
-#ifdef TME_PROTOCOL_BUFFERS
-
-QByteArray luaLocalAgent::getAll(QDataStream& /*in*/, const QStringList& attribs)
+QString luaLocalAgent::getAll(QDataStream& /*in*/, int /*observerId*/, QStringList& attribs)
 {
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef());	// I retrieve the reference in the stack lua
-	Reference<luaAgent>::getReference(luaL);
-    ObserverDatagramPkg::SubjectAttribute autSubj;
-    return pop(luaL, attribs, &autSubj, 0);
-}
-
-QByteArray luaLocalAgent::getChanges(QDataStream& in, const QStringList& attribs)
-{
-    return getAll(in, attribs);
-}
-
-QByteArray luaLocalAgent::pop(lua_State * /*luaL*/, const QStringList& attribs,
-    ObserverDatagramPkg::SubjectAttribute *currSubj,
-    ObserverDatagramPkg::SubjectAttribute *parentSubj)
-{
-	const QStringList coordList = QStringList() << "x" << "y";
-
-    bool valueChanged = false;
-    char result[20];
-    double num = 0.0;
-
-    // I retrieve the reference in the stack lua
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
-    int position = lua_gettop(luaL);
-
-    QByteArray key, valueTmp;
-    const QByteArray currState = "currentState" + attrClassName;
-    ObserverDatagramPkg::RawAttribute *raw = 0;
-
-    // Runs through the cells of the space
-    // retrieving the state automaton
-    if (lua_istable(luaL, position - 1))
-    {
-        lua_pushnil(luaL);
-        while (lua_next(luaL, position - 1) != 0)
-        {
-            if (lua_type(luaL, -2) == LUA_TSTRING)
-                key = luaL_checkstring(luaL, -2);
-
-            if (key == "cells")
-            {
-                int top = lua_gettop(luaL);
-
-                lua_pushnil(luaL);
-                while(lua_next(luaL, top) != 0)
-                {
-                    int cellTop = lua_gettop(luaL);
-                    lua_pushstring(luaL, "cObj_");
-                    lua_gettable(luaL, cellTop);
-
-                    luaCell*  cell;
-                    cell = (luaCell*)Luna<luaCell>::check(luaL, -1);
-                    lua_pop(luaL, 1); // lua_pushstring
-
-                    // luaCell->popCell(...) It requires a cell on top of the stack
-                    //int internalCount = currSubj->internalsubject_size();
-                    //cell->pop(L, attribs, 0, currSubj);
-
-                    // qDebug() << "automaton pop()" << cell->getId() << "... "
-                    //      << internalCount << currSubj->internalsubject_size();
-
-                    ControlMode *ctrlMode = cell->getControlMode(this);
-
-                    if (ctrlMode)
-                    {
-                        valueTmp = ctrlMode->getControlModeName().c_str();
-
-                        // if (observedAttribs.value(currState) != valueTmp)
-                        {
-                            if ((parentSubj) && (!currSubj))
-                                currSubj = parentSubj->add_internalsubject();
-
-                            ObserverDatagramPkg::SubjectAttribute *cellSubj =
-                            		currSubj->add_internalsubject();
-
-                            raw = cellSubj->add_rawattributes();
-                            raw->set_key(currState);
-                            raw->set_text(valueTmp);
-
-                            cellSubj->set_id(cell->getId());
-                            cellSubj->set_type(ObserverDatagramPkg::TObsCell);
-                            cellSubj->set_attribsnumber(cellSubj->rawattributes_size());
-                            cellSubj->set_itemsnumber(cellSubj->internalsubject_size());
-
-                            valueChanged = true;
-                            // observedAttribs.insert(currState, valueTmp);
-                        }
-                    }
-                    else
-                    {
-                        if (execModes != Quiet) {
-                            QString str = QString("Could not find the Automaton inside an Environment object.");
-                            lua_getglobal(L, "customWarning");
-                            lua_pushstring(L, str.toLatin1().constData());
-                            //lua_pushnumber(L, 5);
-                            lua_call(L, 1, 0);
-                        }
-                    }
-
-                    lua_pop(luaL, 1);
-                }
-            }
-            lua_pop(luaL, 1);
-        }
-    }
-
-    lua_pushnil(luaL);
-    while(lua_next(luaL, position) != 0)
-    {
-        if (lua_type(luaL, -2) == LUA_TSTRING)
-        {
-            key = luaL_checkstring(luaL, -2);
-        }
-        else
-        {
-            if (lua_type(luaL, -2) == LUA_TNUMBER)
-            {
-                sprintf(result, "%g", luaL_checknumber(luaL, -2));
-                key = result;
-            }
-        }
-
-        if (attribs.contains(key))
-        {
-            switch(lua_type(luaL, -1))
-            {
-            case LUA_TBOOLEAN:
-                valueTmp = QByteArray::number(lua_toboolean(luaL, -1));
-
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (!currSubj))
-                        currSubj = parentSubj->add_internalsubject();
-
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_number(valueTmp.toDouble());
-
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
-
-            case LUA_TNUMBER:
-                num = luaL_checknumber(luaL, -1);
-                doubleToText(num, valueTmp, 20);
-
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (!currSubj))
-                        currSubj = parentSubj->add_internalsubject();
-
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_number(num);
-
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
-
-            case LUA_TSTRING:
-                valueTmp = luaL_checkstring(luaL, -1);
-
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (!currSubj))
-                        currSubj = parentSubj->add_internalsubject();
-
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_text(valueTmp);
-
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
-
-            case LUA_TTABLE:
-            {
-                sprintf(result, "%p", lua_topointer(luaL, -1));
-                valueTmp = result;
-
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (!currSubj))
-                        currSubj = parentSubj->add_internalsubject();
-
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_text(LUA_ADDRESS_TABLE + valueTmp);
-
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
-            }
-
-            case LUA_TUSERDATA:
-            {
-                sprintf(result, "%p", lua_topointer(luaL, -1));
-                valueTmp = result;
-
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (!currSubj))
-                        currSubj = parentSubj->add_internalsubject();
-
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_text(LUA_ADDRESS_USER_DATA + valueTmp);
-
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-
-                //if (isudatatype(luaL, -1, "TeState"))
-                //{
-                //    ControlMode*  lcm = (ControlMode*)Luna<luaControlMode>::check(L, -1);
-
-                //    QByteArray state(lcm->getControlModeName().c_str());
-                //    attrCounter++;
-                //    attrs.append(state);
-                //    attrs.append(PROTOCOL_SEPARATOR);
-                //    attrs.append(QByteArray::number(TObsText));
-                //    attrs.append(PROTOCOL_SEPARATOR);
-                //    attrs.append(state);
-                //    attrs.append(PROTOCOL_SEPARATOR);
-                //}
-                break;
-            }
-
-            case LUA_TFUNCTION:
-            {
-                sprintf(result, "%p", lua_topointer(luaL, -1));
-                valueTmp = result;
-
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (!currSubj))
-                        currSubj = parentSubj->add_internalsubject();
-
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_text(LUA_ADDRESS_FUNCTION + valueTmp);
-
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
-            }
-
-            default:
-            {
-                sprintf(result, "%p", lua_topointer(luaL, -1));
-                valueTmp = result;
-
-                if (observedAttribs.value(key) != valueTmp)
-                {
-                    if ((parentSubj) && (!currSubj))
-                        currSubj = parentSubj->add_internalsubject();
-
-                    raw = currSubj->add_rawattributes();
-                    raw->set_key(key);
-                    raw->set_text(LUA_ADDRESS_OTHER + valueTmp);
-
-                    valueChanged = true;
-                    observedAttribs.insert(key, valueTmp);
-                }
-                break;
-            }
-            }
-        }
-        lua_pop(luaL, 1);
-    }
-
-    key = "currentState";
-    if (attribs.contains(key))
-    {
-        valueTmp = "Where?";
-        if (whereCell)
-        {
-            ControlMode *ctrlMode = whereCell->getControlMode(this);
-            if (ctrlMode)
-            {
-                valueTmp = ctrlMode->getControlModeName().c_str();
-            }
-            else
-            {
-                if (execModes != Quiet) {
-                    QString str = QString("Could not find the Automaton inside an Environment object.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L, str.toLatin1().constData());
-                    //lua_pushnumber(L, 5);
-                    lua_call(L, 1, 0);
-                }
-            }
-        }
-
-        if (observedAttribs.value(key) != valueTmp)
-        {
-            if ((parentSubj) && (!currSubj))
-                currSubj = parentSubj->add_internalsubject();
-
-            raw = currSubj->add_rawattributes();
-            raw->set_key(key.constData());
-            raw->set_text(valueTmp);
-
-            valueChanged = true;
-            observedAttribs.insert(key, valueTmp);
-        }
-    }
-
-    if (valueChanged)
-    {
-        if ((parentSubj) && (!currSubj))
-            currSubj = parentSubj->add_internalsubject();
-
-        // id
-        currSubj->set_id(getId());
-
-        // subjectType
-        currSubj->set_type(ObserverDatagramPkg::TObsAutomaton);
-
-        // #attrs
-        currSubj->set_attribsnumber(currSubj->rawattributes_size());
-
-        // #elements
-        currSubj->set_itemsnumber(currSubj->internalsubject_size());
-
-        if (!parentSubj)
-        {
-            QByteArray byteArray(currSubj->SerializeAsString().c_str(),
-            		currSubj->ByteSize());
-            return byteArray;
-        }
-    }
-
-    return QByteArray();
-}
-
-#else // TME_PROTOCOL_BUFFERS
-
-QByteArray luaLocalAgent::getAll(QDataStream& /*in*/, int /*observerId*/,
-		const QStringList& attribs)
-{
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef());	// recover the reference on the stack lua
-	Reference<luaAgent>::getReference(luaL);
+    // @DANIEL
+    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef());	// recupero a referencia na pilha lua
+    Reference<luaAgent>::getReference(luaL);
     return pop(luaL, attribs);
 }
 
-QByteArray luaLocalAgent::getChanges(QDataStream& in, int observerId,
-		const QStringList& attribs)
+QString luaLocalAgent::getChanges(QDataStream& in, int observerId, QStringList& attribs)
 {
     return getAll(in, observerId, attribs);
 }
 
-QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
+QString luaLocalAgent::pop(lua_State *luaL, QStringList& attribs)
 {
-    QByteArray msg;
+    QString msg;
 
-	QStringList coordList = QStringList() << "x" << "y";
+    if (notNotify)
+        return msg;
 
     // id
-    msg.append(QByteArray::number(getId()));
+    msg.append(QString::number(getId()));
     msg.append(PROTOCOL_SEPARATOR);
 
     // subjectType
-    msg.append("7"); // QByteArray::number(subjectType));
+    msg.append(QString::number(subjectType));
     msg.append(PROTOCOL_SEPARATOR);
 
     int position = lua_gettop(luaL);
@@ -1348,14 +927,16 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
     int elementCounter = 0;
     // bool contains = false;
     double num = 0;
-    QByteArray text, key, attrs, elements;
+    QString text, key, attrs, elements; 
 
-    // Runs through the cells of the space
-    // retrieving the state automaton
+    QStringList coordList = QStringList() << "x" << "y";
+
+    // Percorre as celulas do espaço recuperando o 
+    // estado do automato
     if (lua_istable(luaL, position - 1))
     {
         lua_pushnil(luaL);
-        while (lua_next(luaL, position - 1) != 0)
+        while ( lua_next(luaL, position - 1) != 0)
         {
             if (lua_type(luaL, -2) == LUA_TSTRING)
                 key = luaL_checkstring(luaL, -2);
@@ -1372,33 +953,46 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
                     lua_gettable(luaL, cellTop);
 
                     luaCell*  cell;
-                    cell = (luaCell*)Luna<luaCell>::check(luaL, -1);
+                    cell = (luaCell*)Luna<luaCell>::check(L, -1);
                     lua_pop(luaL, 1); // lua_pushstring
 
                     // luaCell->popCell(...) requer uma celula no topo da pilha
-#ifdef TME_PROTOCOL_BUFFERS
-                    QByteArray cellMsg = cell->pop(luaL, coordList, 0, 0);
-#else
-                    QByteArray cellMsg = cell->pop(luaL, coordList);
-#endif
-
-                    cellMsg.append("currentState" + attrClassName);
-                    cellMsg.append(PROTOCOL_SEPARATOR);
-                    cellMsg.append(QByteArray::number(TObsText));
-                    cellMsg.append(PROTOCOL_SEPARATOR);
+                    QString cellMsg = cell->pop(L, coordList);
 
                     ControlMode *ctrlMode = cell->getControlMode(this);
 
-                    cellMsg.append(ctrlMode->getControlModeName().c_str());
-                    cellMsg.append(PROTOCOL_SEPARATOR);
+                    if (ctrlMode)
+                    {
+                        cellMsg.append("currentState" + attrClassName);
+                        cellMsg.append(PROTOCOL_SEPARATOR);
+                        cellMsg.append(QString::number(TObsText));
+                        cellMsg.append(PROTOCOL_SEPARATOR);
 
-                    // Adiciona o atributo currentState no protocolo
-                    int idx = cellMsg.indexOf(PROTOCOL_SEPARATOR);
-                    QByteArray attNum = ((const char *)&cellMsg[idx + 3]);
-                    cellMsg.replace(idx + 3, 1, attNum.setNum(attNum.toInt() + 1));
+                        cellMsg.append(ctrlMode->getControlModeName().c_str());
+                        cellMsg.append(PROTOCOL_SEPARATOR);
 
-                    elements.append(cellMsg);
-                    elementCounter++;
+                        // Adiciona o atributo currentState no protocolo
+                        int idx = cellMsg.indexOf(PROTOCOL_SEPARATOR);
+                        QString attNum = QString(cellMsg[idx + 3]);
+                        cellMsg.replace(idx + 3, 1, attNum.setNum(attNum.toInt() + 1));
+
+                        elements.append(cellMsg);
+                        elementCounter++;
+                    }
+                    else
+                    {
+                        notNotify = true;
+                        
+                        if (execModes != Quiet)
+                        {
+                            string err_out = string("Warning: Failed on retrieve Automaton subject state!!");
+                            lua_getglobal(L, "customWarningMsg");
+                            lua_pushstring(L, err_out.c_str());
+                            lua_pushnumber(L,4);
+                            lua_call(L,2,0);
+                        }
+                        return QString();
+                    }
 
                     lua_pop(luaL, 1);
                 }
@@ -1410,10 +1004,10 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
     lua_pushnil(luaL);
     while(lua_next(luaL, position) != 0)
     {
-        // If the index is the one string causing error
+        // Caso o indice no seja um string causava erro
         if (lua_type(luaL, -2) == LUA_TSTRING)
         {
-            key = luaL_checkstring(luaL, -2));
+            key = QString(luaL_checkstring(luaL, -2));
         }
         else
         {
@@ -1422,7 +1016,7 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
                 char aux[100];
                 double number = luaL_checknumber(luaL, -2);
                 sprintf(aux, "%g", number);
-                key = aux;
+                key = QString(aux);
             }
         }
 
@@ -1434,10 +1028,10 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
             attrs.append(key);
             attrs.append(PROTOCOL_SEPARATOR);
 
-            switch(lua_type(luaL, -1))
+            switch( lua_type(luaL, -1) )
             {
             case LUA_TBOOLEAN:
-                attrs.append(QByteArray::number(TObsBool));
+                attrs.append(QString::number(TObsBool));
                 attrs.append(PROTOCOL_SEPARATOR);
                 attrs.append(lua_toboolean(luaL, -1));
                 attrs.append(PROTOCOL_SEPARATOR);
@@ -1445,29 +1039,28 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
 
             case LUA_TNUMBER:
                 num = luaL_checknumber(luaL, -1);
-                doubleToText(num, text, 20);
-                attrs.append(QByteArray::number(TObsNumber));
+                doubleToQString(num, text, 20);
+                attrs.append(QString::number(TObsNumber));
                 attrs.append(PROTOCOL_SEPARATOR);
                 attrs.append(text);
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
             case LUA_TSTRING:
-                text = luaL_checkstring(luaL, -1);
-                attrs.append(QByteArray::number(TObsText));
+                text = QString(luaL_checkstring(luaL, -1));
+                attrs.append(QString::number(TObsText) );
                 attrs.append(PROTOCOL_SEPARATOR);
-                attrs.append((text.isEmpty()
-                		|| text.isNull() ? VALUE_NOT_INFORMED : text));
+                attrs.append( (text.isEmpty() || text.isNull() ? VALUE_NOT_INFORMED : text) );
                 attrs.append(PROTOCOL_SEPARATOR);
                 break;
 
             case LUA_TTABLE:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1));
-                    attrs.append(QByteArray::number(TObsText));
+                    sprintf( result, "%p", lua_topointer(luaL, -1) );
+                    attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
-                    attrs.append("Lua Address(TB): " + QByteArray(result));
+                    attrs.append(QString("Lua Address(TB): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
                 }
                 break;
@@ -1475,22 +1068,22 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
             case LUA_TUSERDATA:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1));
+                    sprintf( result, "%p", lua_topointer(luaL, -1) );
 
-                    attrs.append(QByteArray::number(TObsText));
+                    attrs.append(QString::number(TObsText));
                     attrs.append(PROTOCOL_SEPARATOR);
-                    attrs.append("Lua-Address(UD): " + QByteArray(result));
+                    attrs.append(QString("Lua-Address(UD): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
 
                     //if (isudatatype(luaL, -1, "TeState"))
                     //{
                     //    ControlMode*  lcm = (ControlMode*)Luna<luaControlMode>::check(L, -1);
 
-                    //    QByteArray state(lcm->getControlModeName().c_str());
+                    //    QString state(lcm->getControlModeName().c_str());
                     //    attrCounter++;
                     //    attrs.append(state);
                     //    attrs.append(PROTOCOL_SEPARATOR);
-                    //    attrs.append(QByteArray::number(TObsText));
+                    //    attrs.append(QString::number(TObsText));
                     //    attrs.append(PROTOCOL_SEPARATOR);
                     //    attrs.append(state);
                     //    attrs.append(PROTOCOL_SEPARATOR);
@@ -1501,10 +1094,10 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
             case LUA_TFUNCTION:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1));
-                    attrs.append(QByteArray::number(TObsText));
+                    sprintf(result, "%p", lua_topointer(luaL, -1) );
+                    attrs.append(QString::number(TObsText) );
                     attrs.append(PROTOCOL_SEPARATOR);
-                    attrs.append("Lua-Address(FT): " + QByteArray(result));
+                    attrs.append(QString("Lua-Address(FT): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
                     break;
                 }
@@ -1512,10 +1105,10 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
             default:
                 {
                     char result[100];
-                    sprintf(result, "%p", lua_topointer(luaL, -1));
-                    attrs.append(QByteArray::number(TObsText));
+                    sprintf(result, "%p", lua_topointer(luaL, -1) );
+                    attrs.append(QString::number(TObsText) );
                     attrs.append(PROTOCOL_SEPARATOR);
-                    attrs.append("Lua-Address(O): " + QByteArray(result));
+                    attrs.append(QString("Lua-Address(O): ") + QString(result));
                     attrs.append(PROTOCOL_SEPARATOR);
                     break;
                 }
@@ -1531,7 +1124,7 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
         attrCounter++;
         attrs.append("currentState");
         attrs.append(PROTOCOL_SEPARATOR);
-        attrs.append(QByteArray::number(TObsText));
+        attrs.append(QString::number(TObsText));
         attrs.append(PROTOCOL_SEPARATOR);
 
         currState = "Where?";
@@ -1540,16 +1133,16 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
             ControlMode *cm = whereCell->getControlMode(this);
             if (cm)
             {
-                currState = cm->getControlModeName().c_str();
+                currState= QString(cm->getControlModeName().c_str());
             }
             else
             {
-                if (execModes != Quiet) {
-                    string err_out = string("Could not find the Automaton inside an Environment object.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L, err_out.c_str());
-                    //lua_pushnumber(L, 5);
-                    lua_call(L, 1, 0);
+                if (execModes != Quiet){
+                    string err_out = string("Warning: Could not find the Automaton inside an Environment object.");
+                    lua_getglobal(L, "customWarningMsg");
+                    lua_pushstring(L,err_out.c_str());
+                    lua_pushnumber(L,5);
+                    lua_call(L,2,0);
                 }
             }
         }
@@ -1558,10 +1151,10 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
         attrs.append(PROTOCOL_SEPARATOR);
     }
 
-    msg.append(QByteArray::number(attrCounter));
-    msg.append(PROTOCOL_SEPARATOR);
-    msg.append(QByteArray::number(elementCounter));
-    msg.append(PROTOCOL_SEPARATOR);
+    msg.append(QString::number(attrCounter));
+    msg.append(PROTOCOL_SEPARATOR );
+    msg.append(QString::number(elementCounter));
+    msg.append(PROTOCOL_SEPARATOR );
     msg.append(attrs);
     msg.append(PROTOCOL_SEPARATOR);
     msg.append(elements);
@@ -1570,8 +1163,6 @@ QByteArray luaLocalAgent::pop(lua_State *luaL, const QStringList& attribs)
     return msg;
 }
 
-#endif
-
 int luaLocalAgent::kill(lua_State *luaL)
 {
     int id = luaL_checknumber(luaL, 1);
@@ -1579,14 +1170,14 @@ int luaLocalAgent::kill(lua_State *luaL)
 
     result = LocalAgentSubjectInterf::kill(id);
 
-    if (!result)
+    if (! result)
     {
         if (cellSpace)
         {
             Observer *obs = cellSpace->getObserverById(id);
 
             if (obs)
-            {
+            {        
                 if (obs->getType() == TObsMap)
                     result = ((AgentObserverMap *)obs)->unregistry(this, attrClassName);
                 else

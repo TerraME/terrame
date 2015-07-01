@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -21,13 +21,13 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
 /*! \file luaSociety.h
-	\brief This file definitions for the luaSociety objects.
-		\author Tiago Garcia de Senna Carneiro
+    \brief This file definitions for the luaSociety objects.
+        \author Tiago Garcia de Senna Carneiro
 */
-#ifndef LUASOCIETY_H
+#if ! defined( LUASOCIETY_H)
 #define LUASOCIETY_H
 
-#include "societySubjectInterf.h"
+#include "../observer/societySubjectInterf.h"
 #include "luaGlobalAgent.h"
 
 extern "C"
@@ -38,80 +38,157 @@ extern "C"
 #include "reference.h"
 
 /**
-* \brief
+* \brief 
 *
-* Represents a set of Society in the Lua runtime environment.
+* Represents a set of Societys in the Lua runtime environment. 
 *
 */
 //class SocietySubjectInterf;
 
 class luaSociety : public SocietySubjectInterf, public Reference<luaSociety>
 {
-	string objectId_; ///< luaSociety identifier
+    // @DANIEL
+    // Movido para clsse Reference
+    // int ref; ///< The position of the object in the Lua stack
+    string objectId_; ///< luaSociety identifier
+	
+    // Antonio - construtor
+    TypesOfSubjects subjectType;
+    lua_State *luaL; ///< Stores locally the lua stack location in memory
+    QStringList observedAttribs;
 
-	TypesOfSubjects subjectType;
-	lua_State *luaL; ///< Stores locally the lua stack location in memory
-	QHash<QString, QString> observedAttribs;
+    QString attrNeighName;
 
-	QString attrClassName, attrNeighName;
-	luaCellularSpace *cellSpace;
-
-	QByteArray getAll(QDataStream& in, const QStringList& attribs);
-	QByteArray getChanges(QDataStream& in, const QStringList& attribs);
-public:
-	///< Data structure issued by Luna<T>
-	static const char className[];
-
-	///< Data structure issued by Luna<T>
-	static Luna<luaSociety>::RegType methods[];
+    QString getAll(QDataStream& in, int obsId, QStringList& attribs);
+    QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
 
 public:
-	/// Constructor
-	luaSociety(lua_State *L);
+    ///< Data structure issued by Luna<T>
+    static const char className[]; 
 
-	/// destructor
-	~luaSociety(void);
+    ///< Data structure issued by Luna<T>
+    static Luna<luaSociety>::RegType methods[]; 
+
+public:
+    /// Constructor
+    luaSociety(lua_State *L);
+
+    /// Returns the current internal state of the LocalAgent (Automaton) within the cell and received as parameter
+    int getCurrentStateName( lua_State *L );
+
+    /// Puts the iterator in the beginning of the luaNeighborhood composite.
+    int first(lua_State *L);
+
+    /// Puts the iterator in the end of the luaNeighborhood composite.
+    int last(lua_State *L);
+
+    /// Returns true if the Neighborhood iterator is in the beginning of the Neighbor composite data structure
+    /// no parameters
+    int isFirst(lua_State *L);
+
+    /// Returns true if the Neighborhood iterator is in the end of the Neighbor composite data structure
+    /// no parameters
+    int isLast(lua_State *L);
+
+    /// Returns true if the Neighborhood is empty.
+    /// no parameters
+    int isEmpty(lua_State *L);
+
+    /// Clears all the Neighborhood content
+    /// no parameters
+    int clear(lua_State *L);
+
+    /// Returns the number of Neighbors cells in the Neighborhood
+    int size(lua_State *L);
+
+    /// Fowards the Neighborhood iterator to the next Neighbor cell
+    // no parameters
+    int next( lua_State *L );
+
+    /// destructor
+    ~luaSociety( void );
+
+    /// Sets the Society latency
+    int setLatency(lua_State *L);
+
+    /// Gets the Society latency
+    int getLatency(lua_State *L);
+
+    /// Sets the neighborhood
+    int setNeighborhood(lua_State *L);
+
+    /// Gets the current active luaNeighboorhood
+    int getCurrentNeighborhood(lua_State *L);
+
+    /// Returns the Neihborhood graph which name has been received as a parameter
+    int getNeighborhood(lua_State *L);
+
+    /// Adds a new luaNeighborhood graph to the Society
+    /// parameters: identifier, luaNeighborhood
+    int addNeighborhood( lua_State *L );
+
+    /// Synchronizes the luaSociety
+    int synchronize(lua_State *L);
+
+    /// Registers the luaSociety object in the Lua stack
+    // @DANIEL
+    // Movido para clsse Reference
+    // int setReference( lua_State* L);
+
+    /// Gets the luaSociety object reference
+    // @DANIEL
+    // Movido para clsse Reference
+    // int getReference( lua_State *L );
+
+    /// Gets the luaSociety identifier
+    int getID( lua_State *L );
+
+    /// Sets the luaSociety identifier
+    int setID( lua_State *L );
 
 	/// Gets the luaSociety identifier
-	int getID(lua_State *L);
+	/// \author Raian Vargas Maretto
+		const char* getID();
 
-	/// Sets the luaSociety identifier
-	int setID(lua_State *L);
+	// Raian
+	/// Sets the cell index
+	/// \author Raian Vargas Maretto
+        int setIndex(lua_State *L);
 
-	/// Creates several types of observers
-	/// parameters: observer type, observer attributes table, observer type parameters
-	int createObserver(lua_State *L);
+	//Raian
+	/// Gets the cell index (x,y)
+	/// \author Raian Vargas Maretto
+        //SocietyIndex getIndex();
+		
+    /// Creates several types of observers
+    /// parameters: observer type, observeb attributes table, observer type parameters
+    int createObserver( lua_State *L );
 
-	/// Notifies observers about changes in the luaSociety internal state
-	int notify(lua_State *L);
+    /// Notifies observers about changes in the luaSociety internal state
+    int notify(lua_State *L );
 
-	/// Gets the subject's type
-	const TypesOfSubjects getType() const;
+    /// Gets the subject's type
+    const TypesOfSubjects getType();
 
-	/// Gets the object's internal state (serialization)
-	/// \param in the serialized object that contains the data that will be observed in the observer
-	/// \param subject a pointer to a observed subject
-	/// \param observerId the id of the observer
-	/// \param attribs the list of attributes observed
-	QDataStream& getState(QDataStream& in, Subject *subject, int observerID,
-			const QStringList& attribs);
+    /// Gets the object's internal state (serialization)
+    /// \param in the serializated object that contains the data that will be observed in the observer
+    /// \param subject a pointer to a observed subject
+    /// \param observerId the id of the observer
+    /// \param attribs the list of attributes observed
+    QDataStream& getState(QDataStream& in, Subject *subject, int observerID, QStringList& attribs);
 
-	/**
-	 * Gets the attributes of Lua stack
-	 * \param attribs the list of attributes observed
-	*/
-	QByteArray pop(lua_State *L, const QStringList& attribs,
-			ObserverDatagramPkg::SubjectAttribute *csSubj,
-		ObserverDatagramPkg::SubjectAttribute *parentSubj);
+    /// Gets the attributes of Lua stack
+    /// \param attribs the list of attributes observed
+    QString pop(lua_State *L, QStringList& attribs);
 
-	/// Destroys the observer object instance
-	int kill(lua_State *L);
+    /// Destroys the observer object instance
+    int kill(lua_State *L);
 };
+
 
 /// Gets the luaSociety position of the luaSociety in the Lua stack
 /// \param L is a pointer to the Lua stack
 /// \param cell is a pointer to the cell within the Lua stack
-void getReference(lua_State *L, luaSociety *cell);
+void getReference( lua_State *L, luaSociety *cell );
 
 #endif
-

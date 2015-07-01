@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
 *
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -32,17 +32,16 @@
 #include <QVector>
 #include <QMap>
 #include <QElapsedTimer>
-#include <time.h>
 
-//#ifdef _MSC_VER
-//#include <windows.h>
-//static const double MICRO_DIV = 1/1000000.0f;
-//#else
-//#include <sys/time.h>
-//static const double MICRO_DIV = 1000000.0f;
-//#endif
+#ifdef _MSC_VER
+#include <windows.h>
+static const double MICRO_DIV = 1/1000000.0f;
+#else
+#include <sys/time.h>
+static const double MICRO_DIV = 1000000.0f;
+#endif
 
-class Statistic : private QObject
+class Statistic : public QObject
 {
 public:
     /**
@@ -57,23 +56,21 @@ public:
     virtual ~Statistic();
 
     /**
-     * Gets the start time in milliseconds
+     * Gets the start time in miliseconds
      * \return double the start time
      */
-    inline double startMiliTime()
+    inline double startTime()
     {
-        //return elapsedTimer->elapsed() * 1.0;
-        return (1.0 * clock()) / CLOCKS_PER_SEC;
+        return elapsedTimer->elapsed() * 1.0;
     }
 
     /**
-     * Gets the end time in milliseconds
+     * Gets the end time in miliseconds
      * \return double the end time
      */
-    inline double endMiliTime()
+    inline double endTime()
     {
-        // return elapsedTimer->elapsed() * 1.0;
-        return startMiliTime();
+        return elapsedTimer->elapsed() * 1.0;
     }
 
     /**
@@ -82,20 +79,18 @@ public:
      */
     inline double startMicroTime()
     {
-        return startMiliTime() * 1000.0;
-
-//#ifdef _MSC_VER
-//        __int64 time;
-//        QueryPerformanceCounter((LARGE_INTEGER*)(&time));
-//        return ((double)time * MICRO_DIV);
-//#else
-//        // Not tested
-//        struct timeval time;
-//        gettimeofday(&time, NULL);
-//        return (double) time.tv_sec * MICRO_DIV + (time.tv_usec);
-//        // return (double) (time->tv_sec * 1000000000) + time->tv_nsec)
-//#endif
-    }
+#ifdef _MSC_VER
+        __int64 time;
+        QueryPerformanceCounter( (LARGE_INTEGER*)(&time ) );
+        return ((double)time * MICRO_DIV);
+#else
+        // Not tested
+        struct timeval time;
+        gettimeofday(&time, NULL);
+        return (double) time.tv_sec * MICRO_DIV + (time.tv_usec);
+        // return (double) (time->tv_sec * 1000000000) + time->tv_nsec)
+#endif
+    }   
 
     /**
      * Gets the end time in microseconds
@@ -103,50 +98,34 @@ public:
      */
     inline double endMicroTime()
     {
-        return startMicroTime();
-
-//#ifdef _MSC_VER
-//        __int64 time;
-//        QueryPerformanceCounter((LARGE_INTEGER*) (&time));
-//        return ((double)time * MICRO_DIV);
-//#else
-//        // Not tested
-//        struct timeval time;
-//        gettimeofday(&time, NULL);
-//        return (double) time.tv_sec * MICRO_DIV + (time.tv_usec);
-//        // return (double) (time->tv_sec * 1000000000) + time->tv_nsec)
-//#endif
-    }
-
-    ///**
-    // * Gets the start time in nanoseconds
-    // * \return double the start time
-    // */
-    //inline double startNanoTime()
-    //{
-    //    timeval time;
-    //    gettimeofday(&time, NULL);
-    //    return time.tv_sec + (time.tv_usec / 1000000.0);
-    //}
-
-    /**
-     * Start the volatile time in milliseconds
-     */
-    inline void startVolatileMiliTime()
-    {
-       //  volatileTimer->start();
-        startTimeMili_ = startMiliTime();
+#ifdef _MSC_VER
+        __int64 time;
+        QueryPerformanceCounter( (LARGE_INTEGER*) (&time ) );
+        return ((double)time * MICRO_DIV);
+#else
+        // Not tested
+        struct timeval time;
+        gettimeofday(&time, NULL);
+        return (double) time.tv_sec * MICRO_DIV + (time.tv_usec);
+        // return (float) (time->tv_sec * 1000000000) + time->tv_nsec)
+#endif
     }
 
     /**
-     * Gets elapsed volatile time in milliseconds
-     * \return double the elapsed time
+     * Start the volatile time in miliseconds
      */
-    inline double endVolatileMiliTime()
+    inline void startVolatileTime()
     {
-        // return volatileTimer->elapsed() * 1.0;
-        endTimeMili_ = startMiliTime();
-        return endTimeMili_ - startTimeMili_;
+        volatileTimer->start();
+    }
+
+    /**
+     * Gets elapsed volatile time in miliseconds
+     * \return float the elapsed time
+     */
+    inline float endVolatileTime()
+    {
+        return volatileTimer->elapsed() * 1.0;
     }
 
     /**
@@ -154,13 +133,11 @@ public:
      */
     inline void startVolatileMicroTime()
     {
-        startTimeMicro_ = startMicroTime();
-
-//#ifdef _MSC_VER
-//        QueryPerformanceCounter((LARGE_INTEGER*)(&startMicroTime_));
-//#else
-//        gettimeofday(&startMicroTime_, NULL);
-//#endif
+#ifdef _MSC_VER
+        QueryPerformanceCounter( (LARGE_INTEGER*)(&startMicroTime_ ) );
+#else
+        gettimeofday(&startMicroTime_, NULL);
+#endif
     }
 
     /**
@@ -169,18 +146,15 @@ public:
      */
     inline double endVolatileMicroTime()
     {
-        endTimeMicro_ = startMicroTime();
-        return endTimeMicro_ - startTimeMicro_;
-
-//#ifdef _MSC_VER
-//        QueryPerformanceCounter((LARGE_INTEGER*)(&endMicroTime_));
-//        return (double) ((double)endMicroTime_ * MICRO_DIV - (double)startMicroTime_ * MICRO_DIV);
-//#else
-//        return (double) (endMicroTime_.tv_sec * MICRO_DIV + endMicroTime_.tv_usec) -
-//           (startMicroTime_.tv_sec * MICRO_DIV + startMicroTime_.tv_usec);
-//        // return (double) (endMicroTime_->tv_sec * 1000000000) + endMicroTime_->tv_nsec) -
-//           // ((startMicroTime_->tv_sec * 1000000000) + startMicroTime_->tv_nsec);
-//#endif
+#ifdef _MSC_VER
+        QueryPerformanceCounter( (LARGE_INTEGER*)(&endMicroTime_ ) );
+        return (double) ((double)endMicroTime_ * MICRO_DIV - (double)startMicroTime_ * MICRO_DIV);
+#else
+        return (double) (endMicroTime_.tv_sec * MICRO_DIV + endMicroTime_.tv_usec) -
+           (startMicroTime_.tv_sec * MICRO_DIV + startMicroTime_.tv_usec);
+        // return (double) (endMicroTime_->tv_sec * 1000000000) + endMicroTime_->tv_nsec) -
+           // ((startMicroTime_->tv_sec * 1000000000) + startMicroTime_->tv_nsec);
+#endif
     }
 
     /**
@@ -208,23 +182,7 @@ public:
      * Saves the statistic information in the file
      * \return boolean, if \a true the file was saved. Otherwise, the file was not saved.
      */
-    bool saveData(const QString &prefix = "");
-
-    /**
-     * Sets the number of observers created
-     * This information is used to remove the collected statistics
-     * This information is used to remove the statistics collected for
-     * the first notify which is used only for booting
-     */
-    void setObserverCount(int num = 1);
-
-    void setDisableRemove(bool on = true);
-
-    /**
-     * Capture the intermediate time between sequential and parallel code
-     */
-    inline void setIntermediateTime() { intermediateTime_ = startMicroTime(); }
-    inline double getIntermediateTime() { return intermediateTime_; }
+    bool saveData();
 
 private:
     /**
@@ -235,34 +193,27 @@ private:
     /**
      * Saves the statistic of time
      */
-    bool saveTimeStatistic(const QString &prefix = "");
+    bool saveTimeStatistic();
 
     /**
      * Saves the statistic of occurrence
      */
-    bool saveOccurrenceStatistic(const QString &prefix = "");
+    bool saveOccurrenceStatistic();
+
 
     QMap<QString, QVector<double> *> timeStatistics;
     QMap<QString, QVector<int> *> occurStatistics;
 
-    // QElapsedTimer *elapsedTimer, *volatileTimer;
-
-    int observerCount;
-    bool disableRemove;
-
-    double startTimeMili_, endTimeMili_;
-    double startTimeMicro_, endTimeMicro_;
-    double intermediateTime_;
+    QElapsedTimer *elapsedTimer, *volatileTimer;
 
     // Variable for measure time in microseconds
-//#ifdef _MSC_VER
-//    __int64 endMicroTime_, startMicroTime_;
-//#else
-//    struct timeval endMicroTime_, startMicroTime_;
-//#endif
+#ifdef _MSC_VER
+    __int64 endMicroTime_, startMicroTime_;
+#else
+    struct timeval endMicroTime_, startMicroTime_;
+#endif
 };
 
 #endif // STATISTIC_H
 
 // #endif // TME_STATISTIC
-

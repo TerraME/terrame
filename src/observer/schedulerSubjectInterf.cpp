@@ -1,11 +1,11 @@
 #include "schedulerSubjectInterf.h"
 
-#include "observerTable.h"
-#include "observerLogFile.h"
-#include "observerTextScreen.h"
-#include "observerUDPSender.h"
-#include "observerScheduler.h"
-#include "observerGraphic.h"
+#include "types/observerTable.h"
+#include "types/observerLogFile.h"
+#include "types/observerTextScreen.h"
+#include "types/observerUDPSender.h"
+#include "types/observerScheduler.h"
+#include "types/observerGraphic.h"
 
 Observer * SchedulerSubjectInterf::createObserver(TypesOfObservers typeObserver)
 {
@@ -41,7 +41,7 @@ bool SchedulerSubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (!obs)
+    if (! obs)
         return false;
 
     switch (obs->getType())

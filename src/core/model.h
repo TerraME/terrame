@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
+Copyright © 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
  * \author Tiago Garcia de Senna Carneiro
  */
 
-#ifndef MODEL
+#if ! defined( MODEL )
 #define MODEL
 
 #include "bridge.h"
@@ -37,7 +37,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #include <sstream>
 #include <stdio.h>
 
-#if defined (TME_WIN32)
+#if defined ( TME_WIN32 )
 #include <iostream>
 #else
 //#include <iostream.h>
@@ -46,20 +46,32 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 using namespace std;
 
 typedef string ModelID;
+// Classe Model: define a interface para um modelo de uso geral. Suas interfaces
+// derivadas poderiam modelar regiões, relógios, as leis que governam o comportamento 
+// de algum fenômeno ou as interferências resultantes da cooperação de comunidades de 
+// indivíduos autônomos sobre um determinado ambiente.
+// Para implementar essas subclasses o programador poderia lançar mão de modelos 
+// matemáticos como, por exemplo, células que modelam regiões, geralmente, retangulares 
+// ou hexagonais do espaço. Algoritmos de simulação, como simulação de Monte Carlo ou 
+// simulação dirigia por evetos poderiam ser utilizados para se implementar os relógios. 
+// Máquinas de estados como os autômatos de estados finitos ou autômantos de pilha 
+// poderiam ser utilizadas para modelar o comportamento de fenômenos. Técnicas de 
+// inteligência artificial como agentes poderiam ser utilizadas para simular 
+// indivíduos autônomos. 
+//
 
 /**
- * \brief Defines the interface for a general purpose model.
+ * \brief Define a interface para um modelo de uso geral.
  *
- * Model Class: defines the interface for a general purpose model. Its derivatives interfaces
- * could model regions, watches, the laws that govern the behavior of some phenomenon
- * or interference resulting from the co-operation of autonomous individuals communities
- * over a given environment.
- * To implement these subclasses the programmer could make use of mathematical models,
- * for example, cells that model regions generally rectangular or hexagonal of space.
- * Simulation algorithms such as Monte Carlo simulation or simulation ran for events
- * could be used to implement the clocks. State machines like finite state automata or
- * stack of automaton could be utilized to model the behavior of phenomena. Artificial
- * intelligence techniques as agents could be utilized to simulate autonomous individuals.
+ * Suas interfaces derivadas poderiam modelar regiões, relógios, as leis que governam o comportamento
+ * de algum fenômeno ou as interferências resultantes da cooperação de comunidades de indivíduos
+ * autônomos sobre um determinado ambiente.
+ * Para implementar essas subclasses o programador poderia lançar mão de modelos matemáticos como, por exemplo,
+ * células que modelam regiões, geralmente, retangulares ou hexagonais do espaço. Algoritmos de simulação,
+ * como simulação de Monte Carlo ou simulação dirigia por evetos poderiam ser utilizados para se implementar
+ * os relógios. Máquinas de estados como os autômatos de estados finitos ou autômantos de pilha poderiam ser
+ * utilizadas para modelar o comportamento de fenômenos. Técnicas de inteligência artificial como agentes
+ * poderiam ser utilizadas para simular indivíduos autônomos.
  */
 
 /**
@@ -70,27 +82,28 @@ typedef string ModelID;
 class ModelImpl : public Implementation
 {
 public:
-    /// Constructor
-    ModelImpl(void) {
+    /// Construtor
+    ModelImpl( void ) {
         char strNum[255];
         //	char ch;
 
-        //#if defined (TME_WIN32) //Raian: I commented because ostringstream was generating a segmentation fault on Linux
+        //#if defined ( TME_WIN32 ) //Raian: Comentei pq o ostringstream estava gerando um segmentation fault no linux
         sprintf (strNum, "%ld", modelCounter);
         //#else
-        //ostringstream strStream((string &) strNum);
+        //ostringstream strStream( (string &) strNum );
         //strStream << modelCounter;
         //#endif
 
-        setID(string("model") + strNum); modelCounter++;
+        setID( string( "model")+ strNum ); modelCounter++;
     }
-    void setID(ModelID id) { modelID = id; }
-    ModelID getID(void) { return modelID; }
-    ModelID setId(ModelID id) { modelID = modelID + ":" + id; return modelID; }
+    void setID( ModelID id ) { modelID = id; }
+    ModelID getID( void ) { return modelID; }
+    ModelID setId( ModelID id ) { modelID = modelID + ":" + id; return modelID; }
 private:
     ModelID modelID;
     static long int modelCounter;
 };
+
 
 /**
  * \brief
@@ -101,14 +114,14 @@ private:
 class Model : public Interface<ModelImpl>
 {
 public:
-    ModelID getID(void) { return pImpl_->getID(); }
-    virtual void update(void) { }
+    ModelID getID( void ) { return pImpl_->getID(); }
+    virtual void update( void ) { }
 
-    ModelID setId(ModelID id) { return pImpl_->setId(id); }
+    ModelID setId( ModelID id ){ return pImpl_->setId(id); }
 };
 
 #endif
 
-// Abstract method to be implemented by the programmer to
-// define the objects to compile an instance of a model.
-///virtual void modelDefinition()  = 0;
+// Metodo abstrato que deve ser implementado pelo programador para definir 
+// os objetos que compï¿½em uma instância de um modelo.
+///virtual void modelDefinition( )  = 0;

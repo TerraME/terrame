@@ -1,27 +1,16 @@
 #include "agentObserverImage.h"
-#include "terrameGlobals.h"
 
 #include <QBuffer>
 #include <QStringList>
 #include <QDebug>
+#include "terrameGlobals.h"
 
 extern ExecutionModes execModes;
 
-#include "globalAgentSubjectInterf.h"
-#include "decoder.h"
+#include "../globalAgentSubjectInterf.h"
+#include "../protocol/decoder/decoder.h"
 #include "observerMap.h"
 
-#ifdef TME_BLACK_BOARD
-	#include "blackBoard.h"
-#endif
-
-extern "C"
-{
-#include <lua.h>
-}
-#include "luna.h"
-
-extern lua_State * L;
 using namespace TerraMEObserver;
 
 AgentObserverImage::AgentObserverImage(Subject * subj) : ObserverImage(subj)
@@ -37,38 +26,15 @@ AgentObserverImage::~AgentObserverImage()
 
 bool AgentObserverImage::draw(QDataStream & state)
 {
-#ifdef TME_BLACK_BOARD
-    // bool drw = false;
-    // drw = ObserverImage::draw(state);
-
-    for(int i = 0; i < nestedSubjects.size(); i++)
-    {
-        Subject *subj = nestedSubjects.at(i).first;
-        // className = nestedSubjects.at(i).second;
-
-        BlackBoard::getInstance().setDirtyBit(subj->getId());
-        BlackBoard::getInstance().getState(subj, getId(), subjectAttributes);
-        // decoded = BlackBoard::getInstance().canDraw();
-	}
-
-	// decoded = BlackBoard::getInstance().canDraw();
-	//if (decoded)
-    //    drw = drw && draw();
-
-    // return drw && ObserverImage::save();
-    return BlackBoard::getInstance().canDraw() && ObserverImage::draw(state);
-
-#else
-
     bool drw = false, decoded = false;
     drw = ObserverImage::draw(state);
     cleanImage = true;
     className = "";
 
-    for(int i = 0; i < nestedSubjects.size(); i++)
+    for(int i = 0; i < linkedSubjects.size(); i++)
     {
-        Subject *subj = nestedSubjects.at(i).first;
-        // className = nestedSubjects.at(i).second;
+        Subject *subj = linkedSubjects.at(i).first;
+        // className = linkedSubjects.at(i).second;
 
         QByteArray byteArray;
         QBuffer buffer(&byteArray);
@@ -85,14 +51,14 @@ bool AgentObserverImage::draw(QDataStream & state)
         //-----
         if ((subj->getType() == TObsAgent) || (subj->getType() == TObsAutomaton))
         {
-            if (className != nestedSubjects.at(i).second)
+            if (className != linkedSubjects.at(i).second)
                 cleanImage = true;
-
+            
             // if (className != attribListAux.first())
             //    cleanImage = true;
 
             // className = attribListAux.first();
-            className = nestedSubjects.at(i).second;
+            className = linkedSubjects.at(i).second;
         }
         //-----
 
@@ -103,49 +69,42 @@ bool AgentObserverImage::draw(QDataStream & state)
 
         buffer.close();
     }
-
+   
     if (decoded)
         drw = drw && draw();
 
     return drw && ObserverImage::save();
-
-#endif // TME_BLACK_BOARD
-
 }
 
-void AgentObserverImage::setSubjectAttributes(const QStringList & attribs,
-    int nestedSubjID, const QString & className)
+void AgentObserverImage::setSubjectAttributes(const QStringList & attribs, TypesOfSubjects type,
+                                            const QString & className)
 {
     QHash<QString, Attributes*> * mapAttributes = getMapAttributes();
 
     for (int i = 0; i < attribs.size(); i++)
     {
-        if (!subjectAttributes.contains(attribs.at(i)))
+        if (! subjectAttributes.contains(attribs.at(i)) )
             subjectAttributes.push_back(attribs.at(i));
 
-        if (!mapAttributes->contains(attribs.at(i)))
+        if (! mapAttributes->contains(attribs.at(i)))
          {
-            if (execModes != Quiet)
+            if (execModes != Quiet )
             {
-				string str = string("The attribute called ")
-						+ attribs.at(i).toLatin1().data()
-						+ string(" was not found.");
-				lua_getglobal(L, "customWarning");
-				lua_pushstring(L, str.c_str());
-				lua_call(L, 1, 0);
+                qWarning("Warning: The attribute called \"%s\" not found.", 
+                    qPrintable(attribs.at(i)));
             }
         }
         else
         {
             Attributes *attrib = mapAttributes->value(attribs.at(i));
+            attrib->setType(type);
             attrib->setClassName(className);
-            attrib->setParentSubjectID(nestedSubjID);
-
-            if ((attrib->getType() == TObsAgent) || (attrib->getType() == TObsSociety))
-                getPainterWidget()->setExistAgent(true);
         }
     }
     setDisableSaveImage();
+
+    if (type == TObsAgent)
+        getPainterWidget()->setExistAgent(true);
 }
 
 QStringList & AgentObserverImage::getSubjectAttributes()
@@ -155,70 +114,57 @@ QStringList & AgentObserverImage::getSubjectAttributes()
 
 void AgentObserverImage::registry(Subject *subj, const QString & className)
 {
-    if (!ObserverMap::constainsItem(nestedSubjects, subj))
+    if (! ObserverMap::constainsItem(linkedSubjects, subj) )
     {
-#ifdef TME_BLACK_BOARD
-    	SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(subj->getId());
-    	if (subjAttr)
-        	subjAttr->setSubjectType(subj->getType());
-#endif
-
-        nestedSubjects.append(qMakePair(subj, className));
+        linkedSubjects.push_back(qMakePair(subj, className));
 
         // sorts the subject linked vector by the class name
-        qStableSort(nestedSubjects.begin(), nestedSubjects.end(), sortByClassName);
+        qStableSort(linkedSubjects.begin(), linkedSubjects.end(), sortByClassName);
     }
 }
 
 bool AgentObserverImage::unregistry(Subject *subj, const QString & className)
 {
-    if (!ObserverMap::constainsItem(nestedSubjects, subj))
+    if (! ObserverMap::constainsItem(linkedSubjects, subj))
         return false;
 
     int idxItem = -1;
-    for (int i = 0; i < nestedSubjects.size(); i++)
+    for (int i = 0; i < linkedSubjects.size(); i++)
     {
-        if (nestedSubjects.at(i).first == subj)
+        if (linkedSubjects.at(i).first == subj)
         {
             idxItem = i;
             break;
         }
     }
-    nestedSubjects.remove(idxItem);
+    linkedSubjects.remove(idxItem);
 
     for (int i = 0; i < subjectAttributes.size(); i++)
     {
-        Attributes *attrib = getMapAttributes()->value(subjectAttributes.at(i), 0);
+        Attributes *attrib = getMapAttributes()->value(subjectAttributes.at(i));
 
-        if (attrib && (className == attrib->getClassName()))
+        if (className == attrib->getClassName())
         {
-            getMapAttributes()->remove(subjectAttributes.at(i));
-
-            // Updates de copies of attributes lists
-            getPainterWidget()->updateAttributeList();
             attrib->clear();
-
-            // Deletes the Attribute
-            delete attrib; attrib = 0;
             break;
         }
 
-        //// Remove only the attribute that has no values
+        //// Remove apenas o atributo que não possui valores
         //if (subj->getSubjectType() == attrib->getType())
         //{
-        //        if ((attrib->getType() != TObsAgent)
-        //            || ((className == attrib->getExhibitionName())
-        //                 && (!ObserverMap::existAgents(nestedSubjects))))
+        //        if ( (attrib->getType() != TObsAgent) 
+        //            || ((className == attrib->getExhibitionName()) 
+        //                 && (! ObserverMap::existAgents(linkedSubjects)) ) )
         //    {
         //        getMapAttributes()->take(attrib->getName());
         //        getPainterWidget()->setExistAgent(false);
-        //        subjectAttributes.removeAt(subjectAttributes.indexOf(attrib->getName()));
+        //        subjectAttributes.removeAt( subjectAttributes.indexOf(attrib->getName()) );
         //        delete attrib;
         //        return true;
         //    }
         //}
     }
-    if (nestedSubjects.isEmpty())
+    if (linkedSubjects.isEmpty())
         getPainterWidget()->setExistAgent(false);
 
     return true;
@@ -226,7 +172,7 @@ bool AgentObserverImage::unregistry(Subject *subj, const QString & className)
 
 void AgentObserverImage::unregistryAll()
 {
-    nestedSubjects.clear();
+    linkedSubjects.clear();
 }
 
 bool AgentObserverImage::decode(QDataStream &in, TypesOfSubjects subject)
@@ -238,7 +184,7 @@ bool AgentObserverImage::decode(QDataStream &in, TypesOfSubjects subject)
     // qDebug() << msg.split(PROTOCOL_SEPARATOR, QString::SkipEmptyParts);
 
     Attributes * attrib = 0;
-
+    
     if (subject == TObsTrajectory)
         attrib = getMapAttributes()->value("trajectory");
     else
@@ -261,7 +207,7 @@ bool AgentObserverImage::decode(QDataStream &in, TypesOfSubjects subject)
         if (cleanImage)
             attrib->clear();
 
-        // decoded = getProtocolDecoder().decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
+        decoded = getProtocolDecoder().decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
         // getPainterWidget()->plotMap(attrib);
     }
     qApp->processEvents();
@@ -271,17 +217,17 @@ bool AgentObserverImage::decode(QDataStream &in, TypesOfSubjects subject)
 
 bool AgentObserverImage::draw()
 {
-    //QList<Attributes *> attribList = getMapAttributes()->values();
-    //Attributes *attrib = 0;
+    QList<Attributes *> attribList = getMapAttributes()->values();
+    Attributes *attrib = 0;
 
-    //qStableSort(attribList.begin(), attribList.end(), sortAttribByType);
+    qStableSort(attribList.begin(), attribList.end(), sortAttribByType);
 
-    //for(int i = 0; i < attribList.size(); i++)
-    //{
-    //    attrib = attribList.at(i);
-    //    if ((attrib->getType() != TObsCell)
-    //      ) // && (attrib->getType() != TObsAgent))
-    //        getPainterWidget()->plotMap(attrib);
-    //}
+    for(int i = 0; i < attribList.size(); i++)
+    {
+        attrib = attribList.at(i);
+        if ( (attrib->getType() != TObsCell)
+             ) // && (attrib->getType() != TObsAgent) )
+            getPainterWidget()->plotMap(attrib);
+    }
     return true;
 }

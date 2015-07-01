@@ -1,4 +1,4 @@
-#ifndef LUNA_H
+#if !defined( LUNA_H )
 #define LUNA_H
 
 extern "C" {
@@ -6,16 +6,16 @@ extern "C" {
 #include "lauxlib.h"
 }
 
+
 template <typename T> class Luna {
     typedef struct { T *pT; } userdataType;
 public:
     typedef int (T::*mfp)(lua_State *L);
     typedef struct { const char *name; mfp mfunc; } RegType;
 
-	static int t_error (lua_State *L, int narg, const char *tname)
+	static int t_error (lua_State *L, int narg, const char *tname) 
     {
-      const char *msg = lua_pushfstring(
-    		  L, "%s expected, got %s", tname, luaL_typename(L, narg));
+      const char *msg = lua_pushfstring(L, "%s expected, got %s",tname, luaL_typename(L, narg));
       return luaL_argerror(L, narg, msg);
     }
 
@@ -27,9 +27,9 @@ public:
         int metatable = lua_gettop(L);
 
 		//
-		//lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
+		//lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);		
 		//lua_pushglobaltable(L);
-
+      
 		// store method table in globals so that
         // scripts can add functions written in Lua.
         //lua_pushstring(L, T::className);
@@ -38,7 +38,7 @@ public:
 		//
 		//lua_setmetatable(L, -2);
 		//lua_pop(L, 1);
-		lua_setglobal(L, T::className);
+		lua_setglobal(L,T::className);
 
         lua_pushliteral(L, "__metatable");
         lua_pushvalue(L, methods);
@@ -82,7 +82,7 @@ public:
         userdataType *ud =
                 static_cast<userdataType*>(luaL_checkudata(L, narg, T::className));
         //if(!ud) luaL_typerror(L, narg, T::className);
-		if(!ud) t_error(L, narg, T::className);
+		if(!ud) t_error(L,narg,T::className);
         return ud->pT;  // pointer to T object
     }
 

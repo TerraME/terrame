@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
+Copyright © 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -23,16 +23,17 @@ of this library and its documentation.
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
 
-/*!
+/*! 
   \file process.h
-  \brief This file contains definitions about the TerraME model for representing spatial dynamic processes: Process class.
+  \brief This file contains definitions about the TerraME model for represening spatial dynamic processes: Process class.
              It is a empty class!
                  Handles: Process
                  Implementations: ProcessImpl
   \author Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 */
 
-#ifndef PROCESS_H
+
+#if ! defined( PROCESS_H )
 #define PROCESS_H
 
 #include "bridge.h"
@@ -49,6 +50,8 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 class ProcessImpl : public Implementation
 {
 public:
+
+
 };
 
 /**
@@ -67,30 +70,30 @@ typedef CompositeInterface< vectorComposite< JumpCondition*> > JumpCompositeInte
 
 /**
  * \brief
- *  FlowCondition Vector Composite Handle Type
+ *  FlowCondition Vector Composite Handle Tyoe
  *
  */
 typedef CompositeInterface< vectorComposite<FlowCondition*> > FlowCompositeInterf;
+
 
 /**
  * \brief
  *  Handle for a Process object.
  *
  */
-class Process : public ProcessInterf,
-				public JumpCompositeInterf, public FlowCompositeInterf
+class Process : public ProcessInterf, public JumpCompositeInterf, public FlowCompositeInterf
 {
 public:
 
-    /// Executes the Rules objects in the order they have been inserted into ControlMode composite. JumpCondition
+    /// Executes the Rules objets in the order they have been inserted into ControlMode composite. JumpCondition
     /// objects are executed before FlowCondition objects. If a JumpCondition object execution returns true (e.g.
-    /// it transits to the targets ControlMode) the FlowCondition objects will be not executed. Runtime Exceptions
+    /// it transits to the targes ControlMode) the FlowCondition objects will be not executued. Runtime Exceptions
     /// are silenced.
     /// \param event is a reference to the Event which linked message has triggered the agent Process execution.
-    /// \param agent is a pointer to the Agent being executed
+    /// \param agent is a ponter to the Agent being executed
     /// \param cellIndexPair is a pair of CellIndex objects and Cell pointers. The formers are user defined
-    ///  n-dimensional coordinates for the latter.
-    bool execute(Event &event, class Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
+    ///  n-dimensional coordenates for the latters.
+    bool execute( Event &event, class Agent *agent, pair<CellIndex,Cell*> &cellIndexPair )
     {
         try
         {
@@ -98,7 +101,7 @@ public:
 
             JumpCompositeInterf::iterator jIt;
             jIt = JumpCompositeInterf::pImpl_->begin();
-            while(jIt != JumpCompositeInterf::pImpl_->end())
+            while( jIt != JumpCompositeInterf::pImpl_->end() )
             {
                 if((*jIt)->execute(event, agent, cellIndexPair))
                 {
@@ -108,11 +111,11 @@ public:
                 jIt++;
             }
 
-            if(!jumped)
+            if( ! jumped )
             {
                 FlowCompositeInterf::iterator fIt;
                 fIt = FlowCompositeInterf::pImpl_->begin();
-                while(fIt != FlowCompositeInterf::pImpl_->end())
+                while( fIt != FlowCompositeInterf::pImpl_->end() )
                 {
                     (*fIt)->execute(event, agent, cellIndexPair);
                     fIt++;
@@ -122,9 +125,12 @@ public:
 
             return true;
         }
-        catch(...) { return true; }
+        catch(...){ return true; }
     }
+
+
+
 };
 
-#endif
 
+#endif

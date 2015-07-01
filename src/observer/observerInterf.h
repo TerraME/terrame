@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,14 +25,14 @@
 /*!
  * \file observerInterf.h
  * \brief Design Pattern Subject and Observer handles.
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues 
  * \author Tiago Garcia de Senna Carneiro
 */
 
 #ifndef OBSERVER_INTERF
 #define OBSERVER_INTERF
 
-#include "bridge.h"
+#include "../core/bridge.h"
 #include "observer.h"
 #include "observerImpl.h"
 
@@ -40,26 +40,22 @@
 #include <string.h>
 #include <list>
 #include <iterator>
+//#include <iostream>
 #include <QtCore/QDataStream>
 #include <QtCore/QDateTime>
+
 
 using namespace TerraMEObserver;
 
 class SubjectInterf;
-struct lua_State;
 
-#ifdef TME_PROTOCOL_BUFFERS
-namespace ObserverDatagramPkg
-{
-    class SubjectAttribute;
-}
-#endif
-
+// mantem o numero de observer já criados
 //static long int numObserverCreated = 0;
 
 /**
-* \brief
+* \brief  
 *  Handle for a Observer object.
+*
 */
 class ObserverInterf :public Observer, public Interface<ObserverImpl>
 {
@@ -94,7 +90,7 @@ public:
     /**
      * \copydoc TerraMEObserver::Observer::getVisible
      */
-    bool getVisible() const;
+    bool getVisible();
 
     /**
      * \copydoc TerraMEObserver::Observer::draw
@@ -104,12 +100,7 @@ public:
     /**
      * \copydoc TerraMEObserver::Observer::getType
      */
-    virtual const TypesOfObservers getType() const = 0;
-
-    /**
-     * \copydoc TerraMEObserver::Observer::getSubjectType
-     */
-    virtual const TypesOfSubjects getSubjectType() const;
+    virtual const TypesOfObservers getType() = 0;
 
     /**
      * \copydoc TerraMEObserver::Observer::setModelTime
@@ -119,12 +110,7 @@ public:
     /**
      * \copydoc TerraMEObserver::Observer::getId
      */
-    int getId() const;
-
-    /**
-     * \copydoc TerraMEObserver::Observer::getSubjectId
-     */
-    int getSubjectId() const;
+    int getId();
 
     /**
      * \copydoc TerraMEObserver::Observer::getAttributes
@@ -135,40 +121,27 @@ public:
      * \copydoc TerraMEObserver::Observer::setDirtyBit
      */
     void setDirtyBit();
-
-    /**
-     * \copydoc TerraMEObserver::Observer::close
-     */
-    virtual int close();
-
-protected:
-    /* *
-    * \copydoc TerraMEObserver::Observer::setId
-    */
-    // virtual void setId(int);
 };
+
+
 
 ////////////////////////////////////////////////////////////  Subject
 
+
 /*
-** \class SubjectInterf
-** \author Antonio Jose da Cunha Rodrigues
+** \classe Subject
+** \author Antônio José da Cunha Rodrigues
+** Baseado no padrão Observer do livro "Padrões de Projeto"
 */
 
 /**
-* \brief
+* \brief  
 *  Handle for a Subject object.
 *
 */
 class SubjectInterf : public Subject, public Interface<SubjectImpl>
 {
-
 public:
-    /**
-     * Destructor
-     */
-    virtual ~SubjectInterf();
-
     /**
      * \copydoc TerraMEObserver::Subject::attach
      */
@@ -182,68 +155,29 @@ public:
     /**
      * \copydoc TerraMEObserver::Subject::getObserverById
      */
-    Observer* getObserverById(int id);
+    Observer * getObserverById(int id);
 
     /**
      * \copydoc TerraMEObserver::Subject::notify
      */
-    void notify(double time = 0);
+    void notify(double );
 
     /**
      * \copydoc TerraMEObserver::Subject::getState
      */
     virtual QDataStream& getState(QDataStream &state, Subject *subj,
-                                  int observerId, const QStringList &attribs) = 0;
-
+                                  int observerId, QStringList &attribs) = 0;
+    
     /**
      * \copydoc TerraMEObserver::Subject::getType
      */
-    virtual const TypesOfSubjects getType() const = 0;
+    virtual const TypesOfSubjects getType() = 0;
 
     /**
      * \copydoc TerraMEObserver::Subject::getId
      */
     int getId() const;
-
-    /**
-     *  Gets the attributes of Lua stack
-     * \param attribs the list of attributes observed
-     */
-#ifdef TME_PROTOCOL_BUFFERS
-    virtual QByteArray pop(lua_State *L, const QStringList& attribs,
-    		ObserverDatagramPkg::SubjectAttribute *subj,
-        ObserverDatagramPkg::SubjectAttribute *parentSubj)
-    { Q_UNUSED(L); Q_UNUSED(attribs); Q_UNUSED(subj); Q_UNUSED(parentSubj);
-        return ""; }
-#else
-    virtual QByteArray pop(lua_State *L, const QStringList& attribs)
-    { Q_UNUSED(L); Q_UNUSED(attribs);
-      return ""; }
-#endif
-
-protected:
-    /**
-    * \copydoc TerraMEObserver::Subject::setId
-    */
-    virtual void setId(int);
-
-#ifdef TME_PROTOCOL_BUFFERS
-    virtual QByteArray getAll(QDataStream& in, const QStringList& attribs)
-    { Q_UNUSED(in); Q_UNUSED(attribs); return ""; }
-    virtual QByteArray getChanges(QDataStream& in, const QStringList& attribs)
-    { Q_UNUSED(in); Q_UNUSED(attribs); return ""; }
-#else
-    virtual QByteArray getAll(QDataStream& in, int obsId, const QStringList& attribs)
-    {
-    	Q_UNUSED(in); Q_UNUSED(obsId); Q_UNUSED(attribs);
-        return ""; }
-    virtual QByteArray getChanges(QDataStream& in, int obsId, const QStringList& attribs)
-    {
-    	Q_UNUSED(in); Q_UNUSED(obsId); Q_UNUSED(attribs);
-        return ""; }
-#endif
-
 };
 
-#endif
 
+#endif

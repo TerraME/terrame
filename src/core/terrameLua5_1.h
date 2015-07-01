@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
+Copyright © 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -30,78 +30,79 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #ifndef TERRAME_LUA_5_1_H
 #define TERRAME_LUA_5_1_H
 
-#ifndef TME_NO_TERRALIB
-	#include <TeDatabase.h>
-#endif
-
+#include <TeDatabase.h>
 #include "environment.h"
 #include "agent.h"
 #include "cellularSpace.h"
 #include "scheduler.h"
 #include "region.h"
 #include "terrameGlobals.h"
-#include "imageCompare.h"
 
 #include <QtCore/QBuffer>
 #include <QtCore/QByteArray>
 #include <QtCore/QMutex>
 
-#include "observerTextScreen.h"
-#include "observerGraphic.h"
-#include "observerLogFile.h"
-#include "observerTable.h"
-#include "observerMap.h"
-#include "observerUDPSender.h"
-#include "observerScheduler.h"
+// Observadores
+#include "../observer/types/observerTextScreen.h"
+#include "../observer/types/observerGraphic.h"
+#include "../observer/types/observerLogFile.h"
+#include "../observer/types/observerTable.h"
+#include "../observer/types/observerMap.h"
+#include "../observer/types/observerUDPSender.h"
+#include "../observer/types/observerScheduler.h"
 
+
+// Tiago: eu tive que colocar isso aqui para poder usar lua em um programa C++, 
+// pois lua foi compilado como codigo C puro
 extern "C"
 {
-	#include <lua.h>
-	#include <lauxlib.h>
-	#include <lualib.h>
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 }
 #include "luna.h"
+
 
 static char* TME_VERSION;
 static char* TME_PATH;
 
 /**
-* \brief
+* \brief 
 * luaCellIndex
 *
 * Represents an Index for a Cell. A TerraME Cell may have any representation in a geographic
-* database. In raster data, each pixel is loaded as one Cell. In vector data, each geometry (point,
+* database. In raster data, each pixel is loaded as one Cell. In vector data, each geometry (point, 
 * polyline, or polygon is one Cell. In cellular spaces from TerraLib database, each cell is
 * a TerraME Cell.
 */
 
-lua_State * L; ///< Global variable: Lua stack used for communication with C++ modules.
+lua_State * L; ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 
 ExecutionModes execModes;
 
 /// Shows the TerraME Player
 bool SHOW_GUI;
 
-int WORKERS_NUMBER;
-
 /// Pause the simulation execution
-/// false - (default) the simulation executes without pauses;
+/// false - (default) the simulation executes without pauses; 
 /// true - pause the simulation until the user press play on de Observer Player
-bool paused;
+bool paused; 
 
 /// Execute step by step the simulation
 /// false - (default)
-/// true -
+/// true - 
 bool step;
+
 
 class luaCell;
 
-void getReference(lua_State *L, luaCell *cell);
+void getReference( lua_State *L, luaCell *cell );
 
 class luaCell;
 class luaCellularSpace;
 
-luaCell * findCell(luaCellularSpace*, CellIndex&);
+luaCell * findCell( luaCellularSpace*, CellIndex& );
+
 
 // SPACE REPRESENATION
 #include "luaNeighborhood.h"
@@ -129,9 +130,4 @@ luaCell * findCell(luaCellularSpace*, CellIndex&);
 // ENVIRONMENT
 #include "luaEnvironment.h"
 
-#include "luaVisualArrangement.h"
-#include "luaMap.h"
-#include "luaChart.h"
-
 #endif // TERRAME_LUA_5_1_H
-

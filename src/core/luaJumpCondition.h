@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ of this library and its documentation.
     \brief This file definitions for the luaJumpCondition objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#ifndef LUAJUMPCONDITION_H
+#if ! defined( LUAJUMPCONDITION_H )
 #define LUAJUMPCONDITION_H
 
 #include "luaCell.h"
@@ -33,7 +33,7 @@ of this library and its documentation.
 #include "luaEvent.h"
 
 /**
-* \brief
+* \brief  
 *  Implementation for a luaJumpCondition object.
 *
 */
@@ -45,24 +45,24 @@ private:
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[];
+    static const char className[]; 
 
     ///< Data structure issued by Luna<T>
-    static Luna<luaJumpCondition>::RegType methods[];
+    static Luna<luaJumpCondition>::RegType methods[]; 
 
 public:
     /// Constructor
-    luaJumpCondition(lua_State *)
+    luaJumpCondition( lua_State *)
     {
         subjectType = TObsUnknown;
     }
 
     /// Sets luaJumpCondition object target luaControlMode
     /// parameter: luaControlMode identifier
-    int setTargetControlModeName(lua_State* L) {
+    int setTargetControlModeName(lua_State* L){
 
-        const char* ctrlName = luaL_checkstring(L , -1);
-        JumpCondition::setTargetControlModeName(string(ctrlName));
+        const char* ctrlName = luaL_checkstring( L , -1);
+        JumpCondition::setTargetControlModeName( string( ctrlName ) );
         return 0;
     }
 
@@ -70,8 +70,8 @@ public:
     /// \param event is the Event which has triggered this luaJumpCondition object
     /// \param agent is the Agent been executed
     /// \param cellIndexPair is the Cell - CellIndex pair where the luaJumpCondition is being executed
-    /// \return A booleand value: true if the rule transit, otherwise false.
-    bool execute (Event &event, Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
+    /// \return A booleand value: true if the rule transits, otherwise false.
+    bool execute ( Event &event, Agent *agent, pair<CellIndex,Cell*> &cellIndexPair )
     {
         try {
 
@@ -90,12 +90,12 @@ public:
 
             // puts the rule parameters on stack top
             ev->getReference(L);
-            if(dynamic_cast<luaGlobalAgent*>(agent))
+            if( dynamic_cast<luaGlobalAgent*>(agent) )
             {
                 isGlobalAgent = true;
                 luaGlobalAgent* ag = (luaGlobalAgent*) agent;
                 ag->getReference(L);
-                if(cell != NULL) cell->getReference(L);
+                if( cell != NULL ) cell->getReference(L);
                 else lua_pushnil(L);
                 agG = ag;
             }
@@ -103,26 +103,26 @@ public:
             {
                 luaLocalAgent* ag = (luaLocalAgent*) agent;
                 ag->getReference(L);
-                if(cell != NULL) cell->getReference(L);
+                if( cell != NULL ) cell->getReference(L);
                 else lua_pushnil(L);
                 agL = ag;
             }
 
+
             // calls the "execute" function of the rule
-            if(lua_pcall(L, 3, 1, 0) != 0)
+            if( lua_pcall( L, 3, 1, 0) != 0 )
             {
-                cout << " Error: rule can not be executed: "
-                		<< lua_tostring(L, -1) << endl;
+                cout << " Error: rule can not be executed: " << lua_tostring(L,-1) << endl;
 
                 return 0;
             }
 
-            result = lua_toboolean(L, -1);
+            result = lua_toboolean( L, -1);
             lua_pop(L, 1);  // pop returned value
 
-            if(result) {
-                if(isGlobalAgent) { ::jump(event, agG, JumpCondition::getTarget());	}
-                else { JumpCondition::jump(agL, cell); }
+            if( result ){
+                if( isGlobalAgent ) { ::jump( event, agG, JumpCondition::getTarget() );	}
+                else { JumpCondition::jump( agL, cell ); }
             }
 
             return result;
@@ -135,5 +135,6 @@ public:
     }
 
 };
+
 
 #endif

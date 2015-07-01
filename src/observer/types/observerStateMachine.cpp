@@ -18,41 +18,30 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QMessageBox>
-#include <QGraphicsRectItem>
-#include <QGraphicsSceneDragDropEvent>
 
 #include <math.h>
 
-#include "canvas.h"
-#include "decoder.h"
-#include "edge.h"
-#include "node.h"
+#include "../components/canvas.h"
+#include "../protocol/decoder/decoder.h"
+#include "stateMachine/edge.h"
+#include "stateMachine/node.h"
 #include "observerMap.h"
-
-#ifdef TME_BLACK_BOARD
-    #include "blackBoard.h"
-    #include "subjectAttributes.h"
-#endif
 
 using namespace TerraMEObserver;
 
 static const int DIMENSION = 77;
 
-extern "C"
-{
-#include <lua.h>
-}
-#include "luna.h"
+#include <QGraphicsRectItem>
+#include <QGraphicsSceneDragDropEvent>
 
-extern lua_State * L;
 
 //#include <QApplication>
 //#include <time.h>
 //
-//void wait (int seconds)
+//void wait ( int seconds )
 //{
 //    clock_t endwait;
-//    endwait = clock () + seconds * CLOCKS_PER_SEC;
+//    endwait = clock () + seconds * CLOCKS_PER_SEC ;
 //    while (clock() < endwait)
 //        qApp->processEvents();
 //}
@@ -71,7 +60,7 @@ ObserverStateMachine::ObserverStateMachine(Subject *subj, QWidget *parent)
     : ObserverInterf(subj), QDialog(parent)
 {
     observerType = TObsStateMachine;
-    subjectType = subj->getType(); // TO_DO: Changes it to Observer pattern
+    subjectType = TObsUnknown;
 
     setWindowTitle("TerraME Observer : StateMachine");
     setWindowFlags(Qt::Window);
@@ -86,8 +75,7 @@ ObserverStateMachine::ObserverStateMachine(Subject *subj, QWidget *parent)
     states = new QHash<QString, Node *>;
     mapAttributes = new QHash<QString, Attributes *>();
 
-    protocolDecoder = new Decoder();
-    // protocolDecoder->setAttrbutesHash(mapAttributes);
+    protocolDecoder = new Decoder(mapAttributes);
 
     show();
 }
@@ -122,17 +110,6 @@ ObserverStateMachine::~ObserverStateMachine()
 
 bool ObserverStateMachine::draw(QDataStream &state)
 {
-    bool decoded = false;
-
-#ifdef TME_BLACK_BOARD
-
-    Q_UNUSED(state);
-
-    if (BlackBoard::getInstance().canDraw())
-        decoded = draw();
-
-#else
-
     QString msg;
     state >> msg;
 
@@ -148,9 +125,7 @@ bool ObserverStateMachine::draw(QDataStream &state)
     int j = 4;
     Attributes *attrib = 0;
 
-    decoded = true;
-
-    for (int i = 0; i < qtdParametros; i++)
+    for (int i=0; i < qtdParametros; i++)
     {
         key = tokens.at(j);
         j++;
@@ -191,9 +166,9 @@ bool ObserverStateMachine::draw(QDataStream &state)
         }
     }
 
-#endif
+    // wait(2, qApp);
 
-    if ((legendWindow) && (buildLegend <= 2)) // (buildLegend <= states->size())) //
+    if ((legendWindow) && (buildLegend <= 2 )) // (buildLegend <= states->size() )) //
     {
         legendWindow->makeLegend();
         showLayerLegend();
@@ -208,51 +183,28 @@ bool ObserverStateMachine::draw(QDataStream &state)
     return true;
 }
 
-bool ObserverStateMachine::draw()
-{
-    SubjectAttributes *subjAttr = BlackBoard::getInstance().getSubject(getSubjectId());
-    QStringList stateKeys = states->keys();
-
-    for(int i = 0; i < attribList.size(); i++)
-    {
-        const RawAttribute *raw = subjAttr->getRawAttribute(attribList.at(i));
-
-        for (int j = 0; j < stateKeys.size(); j++)
-        {
-            Node *node = states->value(stateKeys.at(j));
-            if (raw->text == stateKeys.at(j))
-                node->setActive(true);
-            else
-                node->setActive(false);
-        }
-    }
-
-    return true;
-}
-
 void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKeys,
                                          QStringList legAttribs)
 {
-#ifdef TME_BLACK_BOARD
-    BlackBoard::getInstance().addSubject(getSubjectId());
-    // SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-#endif
-
     attribList = attribs;
+
+#ifdef DEBUG_OBSERVER
+    qDebug() << "\nattribs:\n" << attribs;
+    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
+
+    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
+    qDebug() << "num de legendas: " << (int) legKeys.size() / LEGEND_ITENS;
+
+    for (int j = 0; j < legKeys.size(); j++)
+        qDebug() << legKeys.at(j) << " = " << legAttrib.at(j);
+#endif
 
     for (int j = 0; (legKeys.size() > 0 && j < LEGEND_KEYS.size()); j++)
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
         {
-			string err_out = string("Error: Parameter legend")
-					+ LEGEND_KEYS.at(j).toLatin1().data() + string(" not found. ") +
-					string("Please check it in the model.");
-			lua_getglobal(L, "customErrorMsg");
-			lua_pushstring(L, err_out.c_str());
-			lua_pushnumber(L, 5);
-			lua_call(L, 2, 0);
-			//return 0;
-			break;
+            qFatal("Error: Parameter legend \"%s\" not found. "
+                "Please check it in the model.", qPrintable( LEGEND_KEYS.at(j) ) );
         }
     }
 
@@ -268,65 +220,79 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
     int fontSize = legKeys.indexOf(FONT_SIZE);
     int symbol = legKeys.indexOf(SYMBOL);
 
+#ifdef DEBUG_OBSERVER
+    qDebug() << "\nattribs:\n" << attribs;
+    qDebug() << "\nlegKeys: \n" << legKeys;
+    qDebug() << "\nlegAttrib: \n" << legAttrib;
+    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
+#endif
+
     QTreeWidgetItem *item = 0;
     Attributes *attrib = 0;
-    for(int i = 0; i < attribs.size(); i++)
+    for( int i = 0; i < attribs.size(); i++)
     {
-        if ((attribList.at(i) != QString("x")) && (attribList.at(i) != QString("y")))
+        if ((! mapAttributes->contains(attribs.at(i)))
+            && (attribs.at(i) != QString("x")) && (attribs.at(i) != QString("y")) )
         {
-            if (!mapAttributes->contains(attribList.at(i)))
+            obsAttrib.append(attribs.at(i));
+            attrib = new Attributes(attribs.at(i), 2, 0, 0); // states->size(), 0, 0);
+
+            //------- Recupera a legenda do arquivo e cria o objeto attrib
+            if (legKeys.size() > 0)
             {
-                attrib = new Attributes(attribs.at(i), 0, 0);
+                attrib->setDataType( (TypesOfData) legAttribs.at(type).toInt());
+                attrib->setGroupMode( (GroupingMode) legAttribs.at(mode ).toInt());
+                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// conta com o zero
+                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// conta com o zero
+                attrib->setStdDeviation( (StdDev) legAttribs.at(stdDeviation ).toInt());
+                attrib->setMaxValue(legAttribs.at(max).toDouble());
+                attrib->setMinValue(legAttribs.at(min).toDouble());
 
-            	//------- Retrieves the legend from the file and creates the object attrib
-            	if (legKeys.size() > 0)
-            	{
-                	attrib->setDataType((TypesOfData) legAttribs.at(type).toInt());
-                	attrib->setGroupMode((GroupingMode) legAttribs.at(mode).toInt());
-                	attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// count on zero
-                	attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// count on zero
-                	attrib->setStdDeviation((StdDev) legAttribs.at(stdDeviation).toInt());
-                	attrib->setMaxValue(legAttribs.at(max).toDouble());
-                	attrib->setMinValue(legAttribs.at(min).toDouble());
+                //Fonte
+                attrib->setFontFamily(legAttribs.at(font));
+                attrib->setFontSize(legAttribs.at(fontSize).toInt());
 
-                	//Font
-                	attrib->setFontFamily(legAttribs.at(font));
-                	attrib->setFontSize(legAttribs.at(fontSize).toInt());
+                //Converte o código ASCII do símbolo em caracter
+                bool ok = false;
+                int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
+                if (ok)
+                    attrib->setSymbol( QString( QChar(asciiCode) ));
+                else
+                    attrib->setSymbol(legAttribs.at(symbol));
 
-                	// Converts the ASCII code of the symbol to character
-                	bool ok = false;
-                	int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
-                	if (ok)
-                	    attrib->setSymbol(QString(QChar(asciiCode)));
-                	else
-                	    attrib->setSymbol(legAttribs.at(symbol));
+                std::vector<ColorBar> colorBarVec;
+                std::vector<ColorBar> stdColorBarVec;
+                QStringList labelList, valueList;
 
-                	std::vector<ColorBar> colorBarVec;
-    	            std::vector<ColorBar> stdColorBarVec;
-        	        QStringList labelList, valueList;
+                ObserverMap::createColorsBar(legAttribs.at(colorBar),
+                    colorBarVec, stdColorBarVec, valueList, labelList);
 
-    	            ObserverMap::createColorsBar(legAttribs.at(colorBar),
-        	            colorBarVec, stdColorBarVec, valueList, labelList);
+                attrib->setColorBar(colorBarVec);
+                attrib->setStdColorBar(stdColorBarVec);
+                attrib->setValueList(valueList);
+                attrib->setLabelList(labelList);
 
-            	    attrib->setColorBar(colorBarVec);
-                	attrib->setStdColorBar(stdColorBarVec);
-                	attrib->setValueList(valueList);
-                	attrib->setLabelList(labelList);
-            	}
+#ifdef DEBUG_OBSERVER
+            qDebug() << "valueList.size(): " << valueList.size();
+            qDebug() << valueList;
+            qDebug() << "\nlabelList.size(): " << labelList.size();
+            qDebug() << labelList;
 
-            	mapAttributes->insert(attribs.at(i), attrib);
+            qDebug() << "\nattrib->toString()\n" << attrib->toString();
+#endif
+            }
 
-            	item = new QTreeWidgetItem(treeLayers);
-            	item->setText(0, attribs.at(i));
-            	// item->setCheckState(0, Qt::Checked);
-        	}
-            obsAttrib.append(attribList.at(i));
-    	}
+            mapAttributes->insert(attribs.at(i), attrib);
+
+            item = new QTreeWidgetItem(treeLayers);
+            item->setText(0, attribs.at(i));
+            // item->setCheckState(0, Qt::Checked);
+        }
     }
 
-    if (!legendWindow)
-       	legendWindow = new LegendWindow(this);
-    legendWindow->setValues(mapAttributes, obsAttrib);
+    if (! legendWindow)
+        legendWindow = new LegendWindow(this);
+    legendWindow->setValues(mapAttributes);
 }
 
 QStringList ObserverStateMachine::getAttributes()
@@ -334,7 +300,7 @@ QStringList ObserverStateMachine::getAttributes()
     return attribList;
 }
 
-const TypesOfObservers ObserverStateMachine::getType() const
+const TypesOfObservers ObserverStateMachine::getType()
 {
     return observerType;
 }
@@ -344,8 +310,8 @@ void ObserverStateMachine::addState(QList<QPair<QString, QString> > &allStates)
     Node *nodeSource = 0, *nodeDest = 0;
     offsetState = DIMENSION * 2;
 
-    // Values for positioning of the state
-    // in the center of the object view
+    // Valores para o posicionamento do estados
+    // no centro do objeto view
     int resizeHeight = allStates.size();
     if (allStates.size() % 2 == 0)
         resizeHeight = allStates.size() - 1;
@@ -354,7 +320,7 @@ void ObserverStateMachine::addState(QList<QPair<QString, QString> > &allStates)
         DIMENSION * resizeHeight);
     center = scene->sceneRect().center();
 
-    double yPos = scene->sceneRect().center().y();
+    float yPos = scene->sceneRect().center().y();
 
     for (int i = 0; i < allStates.size(); i++)
     {
@@ -362,10 +328,10 @@ void ObserverStateMachine::addState(QList<QPair<QString, QString> > &allStates)
         nodeSource = new Node(stateName);
         nodeSource->setPos(40 + offsetState * i, yPos);
 
-        // Adds the node in the scene
+        // Adiciona  o nodo na cena
         scene->addItem(nodeSource);
 
-        // Stores in the hash
+        // Armazena no hash
         states->insert(stateName, nodeSource);
     }
 
@@ -374,7 +340,7 @@ void ObserverStateMachine::addState(QList<QPair<QString, QString> > &allStates)
 
     for(int i = 0; i < allStates.size(); i++)
     {
-        // recover again states already created
+        // recupero novamente os estados já criados
         if (states->contains(allStates.at(i).first))
             nodeSource = states->value(allStates.at(i).first);
 
@@ -412,20 +378,20 @@ void ObserverStateMachine::showLayerLegend()
 
         for(int j = 0; j < leg->size(); j++)
         {
-            if (states->contains(leg->at(j).getLabel()))
+            if (states->contains(leg->at(j).getLabel()) )
             {
-                child = new QTreeWidgetItem(parent);
+                child = new QTreeWidgetItem( parent);
                 child->setSizeHint(0, ICON_SIZE);
                 child->setText(0, leg->at(j).getLabel());
                 QColor color = leg->at(j).getColor();
 
-                if (!leg->at(j).getLabel().contains("mean"))
+                if (! leg->at(j).getLabel().contains("mean"))
                     child->setData(0, Qt::DecorationRole,
                     legendWindow->color2Pixmap(color, ICON_SIZE));
                 else
                     child->setData(0, Qt::DecorationRole, QString(""));
 
-                // Sets the colors of the states
+                // Define as cores dos estados
                 Node *node = states->value(leg->at(j).getLabel());
                 node->setColor(color);
                 node->update(node->boundingRect());
@@ -456,8 +422,8 @@ void ObserverStateMachine::scaleView(qreal newScale)
 
 void ObserverStateMachine::butZoomIn_Clicked()
 {
-    // currentIndex() < 0 : the index does not exist in comboBox
-    // currentIndex() > 22 : the index is the window zoom
+    // currentIndex() < 0 : o indice não existe no comboBox
+    // currentIndex() > 22 : o indice é o zoom de janela
     // if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
     if ((zoomComboBox->currentIndex() > 0)) // || (zoomComboBox->currentIndex() < 22))
     {
@@ -503,7 +469,7 @@ void ObserverStateMachine::butZoomWindow_Clicked()
 
 void ObserverStateMachine::butZoomRestore_Clicked()
 {
-    if (zoomComboBox->currentText() == WINDOW)		// zoom in Window
+    if (zoomComboBox->currentText() == WINDOW)		// zoom em Window
        return;
 
      zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
@@ -541,25 +507,10 @@ void ObserverStateMachine::resizeEvent(QResizeEvent * /*ev*/)
 
 void ObserverStateMachine::zoomWindow()
 {
-    QList<Node *> items = states->values();
 
-    if (items.isEmpty())
-        return;
-
-    qStableSort(items.begin(), items.end(), sortByXPosition);
-    qStableSort(items.begin(), items.end(), sortByYPosition);
-
-    //qDebug() << "-----------------";
-    //for(int i = 0; i < items.size(); i++)
-    //    qDebug() << items.at(i)->pos();
-    //qDebug() << "-----------------";
-
-    // Node *fstNode = items.first();
-    // Node *lstNode = items.last();
-
-    //// Sets the rectangle that surrounds all objects in the scene
-    //double x = fstNode->pos().x() + fstNode->boundingRect().width() + 4;
-    //double y = fstNode->pos().y() - offsetState * 0.25;
+    //// Define o retangulo que envolve todos os objetos da cena
+    //float x = fstNode->pos().x() + fstNode->boundingRect().width() + 4;
+    //float y = fstNode->pos().y() - offsetState * 0.25;
     //QSizeF size(lstNode->pos().x() + lstNode->boundingRect().right() - offsetState * 0.66, offsetState);
 
     // QRectF zoomRect(view->mapFromScene(x, y), size);
@@ -571,20 +522,21 @@ void ObserverStateMachine::zoomWindow()
     factWidth /= zoomRect.width() - 1;
     factHeight /= zoomRect.height() - 1;
 
-    // Sets the most zoom as 3200%
+    // Define o maior zoom como sendo 3200%
     factWidth = factWidth > 32.0 ? 32.0 : factWidth;
     factHeight = factHeight > 32.0 ? 32.0 : factHeight;
 
     zoomChanged(zoomRect, factWidth, factHeight);
-    //// view->centerOn(zoomRect.center());  // is not centered
-    //// view->centerOn(scene->itemsBoundingRect().center());  // is not centered
-    // view->centerOn(scene->sceneRect().center()); // is almost centralized
+    //// view->centerOn(zoomRect.center());  // não fica centralizado
+    //// view->centerOn( scene->itemsBoundingRect().center() );  // não fica centralizado
+    // view->centerOn(scene->sceneRect().center()); // fica quase centralizado
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
 
+
 #ifdef OBSEVER_DEBUG
     //qDebug() << "\nx: " << x << " y: " << y << " size: " << size;
-    qDebug() << "\nscene->sceneRect(): " << scene->sceneRect()
+    qDebug() << "\nscene->sceneRect(): " << scene->sceneRect() 
         << " == view->sceneRect(): " << view->sceneRect();
 
     qDebug() << "view->viewport(): " << view->viewport()->rect();
@@ -594,10 +546,9 @@ void ObserverStateMachine::zoomWindow()
     qDebug() << "offsetState: " << offsetState;
     qDebug() << "lstNode->boundingRect().height(): " << lstNode->boundingRect().height();
     qDebug() << "center: " << center;
-    qDebug() << "node: " << lstNode->pos().x() + lstNode->boundingRect().width()
+    qDebug() << "node: " << lstNode->pos().x() + lstNode->boundingRect().width() 
         << "; " << fstNode->pos().x() + fstNode->boundingRect().width();
-    qDebug() << "center 2: " << lstNode->pos().x()
-    		<< " + " <<  lstNode->boundingRect().width()
+    qDebug() << "center 2: " << lstNode->pos().x() << " + " <<  lstNode->boundingRect().width() 
          << " - " <<  fstNode->pos().x() << " + " <<  fstNode->boundingRect().height()
          << " = " << (lstNode->pos().x() + lstNode->boundingRect().width())
          - (fstNode->pos().x() + fstNode->boundingRect().height());
@@ -607,21 +558,21 @@ void ObserverStateMachine::zoomWindow()
     //qDebug() << "scrollH: " << view->horizontalScrollBar()->value();
 
     static bool criado = false;
-    if (!criado) {
+    if (!criado){
         criado = true;
         RectItemDebug *rectItem = 0;
-
-        // scene->setSceneRect(QRectF(zoomRect.topLeft() + QPoint(-1, -1), zoomRect.bottomRight() + QPoint(2, 1)));
+        
+        // scene->setSceneRect(QRectF(zoomRect.topLeft() + QPoint(-1, -1), zoomRect.bottomRight() + QPoint(2, 1)) );
         // scene->setSceneRect(scene->sceneRect());
 
         rectItem = new RectItemDebug(zoomRect);
         scene->addItem(rectItem);
-
-        //rectItem = new RectItemDebug(QRectF(center + QPointF(-1, -1),
+        
+        //rectItem = new RectItemDebug(QRectF(center + QPointF(-1, -1), 
         //    center + QPointF(1, 1)), Qt::darkCyan);
         //scene->addItem(rectItem);
 
-        //rectItem = new RectItemDebug(QRectF(scene->itemsBoundingRect().center() + QPointF(-1, -1),
+        //rectItem = new RectItemDebug(QRectF(scene->itemsBoundingRect().center() + QPointF(-1, -1), 
         //    scene->itemsBoundingRect().center() + QPointF(1, 1)), Qt::red);
         //scene->addItem(rectItem);
 
@@ -631,16 +582,16 @@ void ObserverStateMachine::zoomWindow()
         rectItem = new RectItemDebug(scene->sceneRect(), Qt::darkGray);
         scene->addItem(rectItem);
     }
-#endif
+#endif 
 }
 
-void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, double width,
-                                       double height)
+void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, float width,
+                                       float height)
 {
-    double ratio = scene->sceneRect().width() / scene->sceneRect().height();
+    float ratio = scene->sceneRect().width() / scene->sceneRect().height();
     ratio *= scene->sceneRect().width();
-    double percent = 0.0;
-
+    float percent = 0.0;
+    
     if (width < height)
         percent = zoomRect.width() / ratio;
     else
@@ -662,7 +613,7 @@ void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, double width,
     }
     else
     {
-        // FIX: the zoom scale is always the same, because the view is not rescaled
+        // FIX: a escala de zoom é sempre a mesma, pq o view não é rescalado
 
         zoomComboBox->setCurrentIndex(-1);
         //if (zoomComboBox->isEditable())
@@ -674,7 +625,7 @@ void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, double width,
         positionZoomVec = zoomVecAux.indexOf(newZoom.toInt());
     }
 
-    // Rescaling the view according to the rectangle zoomRect
+    // Rescala o view de acordo como o retangulo zoomRect
     view->fitInView(zoomRect, Qt::KeepAspectRatio);
 }
 
@@ -710,16 +661,16 @@ void ObserverStateMachine::zoomOut()
 
 //void ObserverStateMachine::connectTreeLayer(bool connect)
 //{
-//    // connects/disconnects the treeWidget signal with the slot
-//    if (!connect)
+//    // conecta/disconecta o sinal do treeWidget com o slot
+//    if (! connect)
 //    {
-//        disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
-//            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
+//        disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )), 
+//            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
 //    }
 //    else
 //    {
-//        QWidget::connect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
-//            this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
+//        QWidget::connect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )), 
+//            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
 //    }
 //}
 
@@ -732,9 +683,9 @@ void ObserverStateMachine::setupGUI()
     scene->setSceneRect(0, 0, 100, 200);
 
     view = new Canvas(scene, this);
-    view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); //
-    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate); // FullViewportUpdate); does not exist in version 4.3.4
-    // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); // 
+    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); não existe na versão 4.3.4
+    // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); 
     view->setRenderHint(QPainter::Antialiasing);
     // view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     // view->setFrameShape(QFrame::WinPanel);
@@ -750,6 +701,7 @@ void ObserverStateMachine::setupGUI()
     butLegend->setGeometry(5, 5, 50, 20);
     butLegend->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     connect(butLegend, SIGNAL(clicked()), this, SLOT(butLegend_Clicked()));
+
 
     butZoomIn = new QToolButton(frameTools);
     butZoomIn->setText("In");
@@ -794,13 +746,13 @@ void ObserverStateMachine::setupGUI()
     //butZoomRestore->setCheckable(true);
     connect(butZoomRestore, SIGNAL(clicked()), this, SLOT(butZoomRestore_Clicked()));
 
-    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300
+    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300 
         << 200 << 100 << 66 << 50 << 33 << 25 << 16  << 12 << 8 << 5 << 3 << 2 << 1;
 
     QStringList zoomList;
 
     for (int i = 0; i < zoomVec.size(); i++)
-        zoomList.append(QString::number(zoomVec.at(i)) + "%");
+        zoomList.append( QString::number(zoomVec.at(i)) + "%");
 
     zoomList.append(WINDOW);
 
@@ -811,8 +763,7 @@ void ObserverStateMachine::setupGUI()
     zoomComboBox->setCurrentIndex(23); // window  //zoomIdx); //11);
     //zoomComboBox->setCurrentIndex(zoomIdx); //11);
     zoomComboBox->setEditable(true);
-    connect(zoomComboBox, SIGNAL(activated(const QString &)),
-    		this, SLOT(zoomActivated(const QString &)));
+    connect(zoomComboBox, SIGNAL(activated(const QString & )), this, SLOT(zoomActivated(const QString &)));
 
     QHBoxLayout *hLayoutZoom1 = new QHBoxLayout();
     hLayoutZoom1->setMargin(5);
@@ -824,7 +775,7 @@ void ObserverStateMachine::setupGUI()
     hLayoutZoom1->addWidget(butZoomOut);
     hLayoutZoom1->addWidget(butHand);
     hLayoutZoom2->addWidget(butZoomWindow);
-    hLayoutZoom2->addWidget(butZoomRestore);    // Show information layers
+    hLayoutZoom2->addWidget(butZoomRestore);    // Exibe os layers de informação
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 150, 190, 310);
     treeLayers->setHeaderLabel(tr("Layers"));
@@ -835,8 +786,7 @@ void ObserverStateMachine::setupGUI()
     QVBoxLayout *layoutTools = new QVBoxLayout(frameTools);
     layoutTools->setMargin(5);
 
-    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50,
-    		QSizePolicy::Minimum, QSizePolicy::Fixed);
+    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50,  QSizePolicy::Minimum, QSizePolicy::Fixed);
 
     layoutTools->addWidget(butLegend);
     layoutTools->addItem(verticalSpacer);
@@ -848,8 +798,7 @@ void ObserverStateMachine::setupGUI()
     layoutTools->addWidget(treeLayers);
 
     QSplitter *splitter = new QSplitter(this);
-    splitter->setStyleSheet(
-    		"QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
+    splitter->setStyleSheet("QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
     splitter->addWidget(frameTools);
     splitter->addWidget(view);
     splitter->setStretchFactor(0, 0);
@@ -862,19 +811,19 @@ void ObserverStateMachine::setupGUI()
     setLayout(layoutDefault);
 }
 
+
 #ifdef OBSERVER_DEBUG
 
 class RectItemDebug : public QGraphicsRectItem
 {
 public:
-    RectItemDebug(const QRectF r, Qt::GlobalColor c = Qt::red)
+    RectItemDebug(const QRectF r, Qt::GlobalColor c = Qt::red) 
         : rect(r), color(c), QGraphicsRectItem(0)
     {
         setFlag(QGraphicsItem::ItemIsMovable);
     }
 
-    void paint (QPainter * painter,
-    		const QStyleOptionGraphicsItem * option, QWidget * widget = 0)
+    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 )
     {
         painter->setPen(QPen(color, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter->setBrush(Qt::NoBrush);
@@ -896,9 +845,9 @@ public:
         return path;
     }
 
-    void dragMoveEvent (QGraphicsSceneDragDropEvent * ev)
+    void dragMoveEvent (QGraphicsSceneDragDropEvent * ev )
     {
-
+        
         QGraphicsRectItem::dragMoveEvent(ev);
     }
 

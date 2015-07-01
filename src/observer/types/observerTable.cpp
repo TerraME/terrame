@@ -1,30 +1,26 @@
 #include "observerTable.h"
 
-#include <QApplication>
-#include <QVBoxLayout>
-#include <QTreeWidgetItem>
+#include <QtGui/QApplication>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QTreeWidgetItem>
 #include <QDebug>
 
 #include <math.h>
 
-#ifdef TME_BLACK_BOARD
-	#include "blackBoard.h"
-	#include "subjectAttributes.h"
-#endif
-
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-	// Performance Statistics
-	#include "statistic.h"
+    // Estatisticas de desempenho
+    #include "../observer/statistic/statistic.h"
 #endif
 
+
 ObserverTable::ObserverTable(Subject *subj, QWidget *parent)
-    : QDialog(parent), ObserverInterf(subj) //, QThread()
+    : QDialog(parent), ObserverInterf( subj ), QThread()
 {
     observerType = TObsTable;
-    subjectType = subj->getType(); // TO_DO: Changes it to Observer pattern
-    // paused = false;
+    subjectType = TObsUnknown;
+    paused = false;
 
     resize(200, 480);
     setWindowTitle("TerraME Observer : Table");
@@ -40,21 +36,21 @@ ObserverTable::ObserverTable(Subject *subj, QWidget *parent)
 
     setLayout(vertLayout);
 
-    showNormal(); // transferred to the run () method
+    showNormal(); // tranferido para o metodo run()
 
-    // thread priority
+    // prioridade da thread
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
-    // start(QThread::IdlePriority);
+    start(QThread::IdlePriority);
 }
 
 ObserverTable::~ObserverTable()
 {
-    // wait();
+    wait();
     delete tableWidget;
     tableWidget = 0;
 }
 
-const TypesOfObservers ObserverTable::getType() const
+const TypesOfObservers ObserverTable::getType()
 {
     return observerType;
 }
@@ -79,12 +75,6 @@ void ObserverTable::setColumnHeaders(QStringList &headers)
 
 void ObserverTable::setAttributes(QStringList &attribs)
 {
-#ifdef TME_BLACK_BOARD
-    SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr)
-        subjAttr->setSubjectType(getSubjectType());
-#endif
-
     attribList = attribs;
 
     QTreeWidgetItem *item;
@@ -93,38 +83,25 @@ void ObserverTable::setAttributes(QStringList &attribs)
         item = new QTreeWidgetItem(tableWidget);
         item->setText(0, attribs.at(i));
     }
-    // resizes the column size
+    // redimensiona o tamanho da coluna
     tableWidget->resizeColumnToContents(0);
 }
-
-#ifdef TME_BLACK_BOARD
-
-bool ObserverTable::draw(QDataStream & /*state*/)
-{
-    bool ret = draw();
-
-    tableWidget->resizeColumnToContents(1);
-    qApp->processEvents();
-    return ret;
-}
-
-#else // TME_BLACK_BOARD
 
 bool ObserverTable::draw(QDataStream &state)
 {
 #ifdef TME_STATISTIC
-    // spent time 'pop ()' up here
-    double t = Statistic::getInstance().endVolatileTime();
+    // tempo gasto do 'pop()' ate aqui
+    float t = Statistic::getInstance().endVolatileTime();
     Statistic::getInstance().addElapsedTime("comunicacao table", t);
 
-    // number of bytes transmitted
+    // numero de bytes transmitidos
     Statistic::getInstance().addOccurrence("bytes table", in.device()->size());
 #endif
 
     QString msg;
     state >> msg;
 
-#ifdef TME_STATISTIC
+#ifdef TME_STATISTIC 
         t = Statistic::getInstance().startMicroTime();
 #endif
 
@@ -137,7 +114,7 @@ bool ObserverTable::draw(QDataStream &state)
     // int nroElems = tokens.at(3).toInt();
     int j = 4;
 
-    for (int i = 0; i < qtdParametros; i++)
+    for (int i=0; i < qtdParametros; i++)
     {
         QString key = tokens.at(j);
         j++;
@@ -177,22 +154,21 @@ bool ObserverTable::draw(QDataStream &state)
         Statistic::getInstance().addElapsedTime("rendering table", t);
 #endif
 
+    // redimensiona o tamanho da coluna
     tableWidget->resizeColumnToContents(1);
     qApp->processEvents();
     return true;
 }
 
-#endif // TME_BLACK_BOARD
+void ObserverTable::run()
+{
+    QThread::exec();
+}
 
-//void ObserverTable::run()
-//{
-//    QThread::exec();
-//}
-//
-//void ObserverTable::pause()
-//{
-//    paused = !paused;
-//}
+void ObserverTable::pause()
+{
+    paused = !paused;
+}
 
 QStringList ObserverTable::getAttributes()
 {
@@ -202,82 +178,6 @@ QStringList ObserverTable::getAttributes()
 int ObserverTable::close()
 {
     QDialog::close();
-    // QThread::exit(0);
+    QThread::exit(0);
     return 0;
-}
-
-bool ObserverTable::draw()
-{
-    SubjectAttributes *subjAttr = BlackBoard::getInstance().getSubject(getSubjectId());
-    QTreeWidgetItem *item = 0;
-    QByteArray tmpValue;
-
-    switch(subjectType)
-    {
-    default:
-        for(int i = 0; i < attribList.size(); i++)
-        {
-            const RawAttribute *raw = subjAttr->getRawAttribute(attribList.at(i));
-            item = tableWidget->topLevelItem(i);
-
-            if (raw)
-            {
-                switch (raw->type)
-                {
-                case (TObsBool):
-                    item->setText(1, (raw->number ? "true" : "false"));
-                    break;
-
-                case (TObsDateTime):
-                    //break;
-
-                case (TObsNumber):
-                    doubleToText(raw->number, tmpValue, 20);
-                    item->setText(1, tmpValue);
-                    break;
-
-                default:
-                    item->setText(1, raw->text);
-                    break;
-                }
-            }
-        }
-        break;
-
-    case TObsNeighborhood:
-        {
-            const QVector<int> &subjectsIDs = subjAttr->getNestedSubjects();
-            // qStableSort(subjectsIDs.begin(), subjectsIDs.end());
-
-            tableWidget->clear();
-            long time = clock();
-            subjAttr->setTime(time + 1);
-            double weight = 0.;
-
-            SubjectAttributes *nestedSubj = 0;
-            QTreeWidgetItem *item = 0;
-
-            BlackBoard &bb = BlackBoard::getInstance();
-            bb.getLocker()->lockForRead();
-
-            for(int id = 0; id < subjectsIDs.size(); ++id)
-            {
-                nestedSubj = bb.getSubject(subjectsIDs.at(id));
-
-                // if (nestedSubj && nestedSubj->getNumericValue(attribList.first(), weight))
-                if (nestedSubj && nestedSubj->getNumericValue("weight", weight))
-                {
-                    item = new QTreeWidgetItem(tableWidget);
-                    doubleToText(nestedSubj->getId(), tmpValue);
-                    item->setText(0, tmpValue);
-
-                    doubleToText(weight, tmpValue);
-                    item->setText(1, tmpValue);
-                }
-            }
-            bb.getLocker()->unlock();
-        }
-        break;
-    }
-    return true;
 }

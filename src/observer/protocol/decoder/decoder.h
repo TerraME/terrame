@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -27,25 +27,16 @@
 
 #include <QVector>
 #include <QHash>
+#include <QDebug>
 
-#include "subjectAttributes.h"
-#include "observer.h"
-
-#ifdef TME_PROTOCOL_BUFFERS
-
-namespace ObserverDatagramPkg {
-    class SubjectAttribute;
-}
-
-#endif
+#include "../../components/legend/legendAttributes.h"
+#include "../../observer.h"
 
 namespace TerraMEObserver {
 
-class BlackBoard;
-
 /**
- * \brief Decoder class for communication protocol
- * \author Antonio Jose da Cunha Rodrigues
+ * \brief Decoder class for comunication protocol
+ * \author Antonio José da Cunha Rodrigues
  * \file decoder.h
  */
 class Decoder
@@ -54,8 +45,11 @@ class Decoder
 public:
     /**
      * Constructor
+     * \param mapAttributes a pointer to a hash of attributes
+     * \see Attributes
+     * \see QHash, \see QString
      */
-    Decoder();
+    Decoder( QHash<QString, Attributes *> *mapAttributes);
 
     /**
      * Destructor
@@ -63,28 +57,13 @@ public:
     virtual ~Decoder();
 
     /**
-     * Returns the size in bytes of state received
-     */
-    inline int getStateSize() const { return stateSize; }
-
-    /* *
-     * Sets a pointer for the attributes hash
-     * \param mapAttributes a pointer to a hash of attributes
-     * \see Attributes
-     * \see QHash, \see QString
-     */
-    // void setAttrbutesHash(QHash<QString, RawAttribute *> *attribHash);
-
-    void setMapAttrbute(QHash<QString, Attributes*> *mapAttribs);
-
-    void setBlackBoard(BlackBoard *blackBoard);
-
-    /**
      * Decodes the state
-     * \param protocol the state in QByteArray format
-     * \see QVector, \see QByteArray
+     * \param protocol the state in QString format
+     * \param xs a references to a x axis values
+     * \param ys a references to a y axis values
+     * \see QVector, \see QString
      */
-    bool decode(const QByteArray &state);
+    bool decode(const QString &protocol, QVector<double> &xs, QVector<double> &ys);
 
 private:
     /**
@@ -97,24 +76,8 @@ private:
      */
     Decoder& operator=(Decoder &);
 
-#ifdef TME_PROTOCOL_BUFFERS
-    inline bool decodeAttributes(SubjectAttributes *subjAttr,
-        const ObserverDatagramPkg::SubjectAttribute &subjDatagram);
-    inline bool decodeInternals(SubjectAttributes *subjAttr,
-        const ObserverDatagramPkg::SubjectAttribute &subjDatagram,
-        SubjectAttributes *compositeSubjAttr = 0);
-#endif
-
     /**
-     * Recursion method that start the interpretation of datagram
-     * \param tokens reference to a list of attributes values splitted
-     * \param idx index of a token under decodification
-     * \see QStringList
-     */
-    bool interpret(QStringList &tokens, int &idx, int parentID = -1);
-
-    /* *
-     * Recursion method that start the interpretation of datagram
+     * Recursion method that start the interpertation of datagram
      * \param tokens reference to a list of attributes values splitted
      * \param idx index of a token under decodification
      * \param xs reference to a doubles vector for x axis values
@@ -132,7 +95,7 @@ private:
      * \param idx index of a token under decodification
      * \see QStringList
      */
-    inline bool consumeID(int &id, QStringList &tokens, int &idx);
+    inline bool consumeID(QString &id, QStringList &tokens, int &idx );
 
     /**
      * Identification of the subject type
@@ -176,29 +139,23 @@ private:
      * \param idx index of a token under decodification
      * \see QStringList, \see QVector
      */
-    inline bool consumeTriple(QStringList &tokens, int &idx, const int &subjID);
+    inline bool consumeTriple(QStringList &tokens, int &idx, QVector<double> &xs,
+                              QVector<double> &ys);
 
-	//@RAIAN: Decode the neighborhood
+	//@RAIAN: Decodifica a vizinhanca
 		/// \author Raian Vargas Maretto
-    inline void consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID,
-        int &numElem, QMap<QString, QList<double> > &neighborhood);
-
-		/// \author Raian Vargas Maretto
-                inline void consumeNeighbor(QStringList &tokens,
-                		int &idx, QMap<QString, QList<double> > &neighborhood);
+                inline void consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID, int &numElem, QMap<QString, QList<double> > &neighborhood);
 
 		/// \author Raian Vargas Maretto
-		inline void consumeNeighborTriple(QStringList &tokens,
-				int &idx, QList<double> &neighbor);
-	//@RAIAN: END
+                inline void consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList<double> > &neighborhood);
+
+		/// \author Raian Vargas Maretto
+		inline void consumeNeighborTriple(QStringList &tokens, int &idx, QList<double> &neighbor);
+	//@RAIAN: FIM
+
 
     QHash<QString, Attributes *> *mapAttributes;
-    BlackBoard *bb;
-    // TypesOfSubjects parentSubjectType;
-    // int parentID;
-    bool ok;
-    int stateSize;
-    double tmpNumber;
+    TypesOfSubjects parentSubjectType;
 };
 
 }

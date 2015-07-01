@@ -1,10 +1,10 @@
 #include "environmentSubjectInterf.h"
 
-#include "observerTable.h"
-#include "observerGraphic.h"
-#include "observerTextScreen.h"
-#include "observerLogFile.h"
-#include "observerUDPSender.h"
+#include "types/observerTable.h"
+#include "types/observerGraphic.h"
+#include "types/observerTextScreen.h"
+#include "types/observerLogFile.h"
+#include "types/observerUDPSender.h"
 // #include "types/observerPlayer.h"
 
 Observer * EnvironmentSubjectInterf::createObserver(TypesOfObservers typeObserver)
@@ -43,7 +43,7 @@ bool EnvironmentSubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (!obs)
+    if (! obs)
         return false;
 
     switch (obs->getType())

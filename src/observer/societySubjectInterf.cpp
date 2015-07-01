@@ -1,15 +1,19 @@
 #include "societySubjectInterf.h"
 
-#include "observerTable.h"
-#include "observerLogFile.h"
-#include "observerTextScreen.h"
-#include "observerGraphic.h"
-#include "observerUDPSender.h"
-#include "agentObserverMap.h"
+#include "types/observerTable.h"
+#include "types/observerLogFile.h"
+#include "types/observerTextScreen.h"
+#include "types/observerGraphic.h"
+#include "types/observerUDPSender.h"
+#include "types/agentObserverMap.h"
 
 Observer * SocietySubjectInterf::createObserver(TypesOfObservers type)
 {
     Observer* obs = 0;
+
+#ifdef DEBUG_OBSERVER
+    printf("create in SocietySubjectInterf\n");
+#endif
 
     switch (type)
     {
@@ -29,11 +33,11 @@ Observer * SocietySubjectInterf::createObserver(TypesOfObservers type)
         case TObsUDPSender:
             obs = new ObserverUDPSender(this);
             break;
-
-		//case TObsNeigh:
-		//	obs = new AgentObserverMap(this);
-		//	break;
-
+			
+		case TObsNeigh:
+			obs = new AgentObserverMap(this);
+			break;
+		
         default:
             obs = new ObserverTextScreen(this);
             break;
@@ -46,7 +50,7 @@ bool SocietySubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (!obs)
+    if (! obs)
         return false;
 
     switch (obs->getType())
@@ -76,7 +80,7 @@ bool SocietySubjectInterf::kill(int id)
             ((ObserverTextScreen *)obs)->close();
             delete (ObserverTextScreen *)obs;
             break;
-
+            
         default:
             delete obs;
             break;

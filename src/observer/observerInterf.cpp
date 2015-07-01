@@ -1,11 +1,12 @@
 #include "observerInterf.h"
 #include "observerImpl.h"
 
+//////////////////////////////////////////////////////////// Observer
 ObserverInterf::ObserverInterf()
 {
 }
 
-ObserverInterf::ObserverInterf(Subject* subj)
+ObserverInterf::ObserverInterf( Subject* subj )
 {
     ObserverInterf::pImpl_->setSubject(subj);
     ObserverInterf::pImpl_->setObsHandle(this);
@@ -20,7 +21,7 @@ void ObserverInterf::setVisible(bool b)
     ObserverInterf::pImpl_->setVisible(b);
 }
 
-bool ObserverInterf::getVisible() const
+bool ObserverInterf::getVisible()
 {
     return ObserverInterf::pImpl_->getVisible();
 }
@@ -30,24 +31,14 @@ bool ObserverInterf::update(double time)
     return Interface<ObserverImpl>::pImpl_->update(time);
 }
 
-int ObserverInterf::getId() const
+int ObserverInterf::getId()
 {
     return Interface<ObserverImpl>::pImpl_->getId();
 }
 
-int ObserverInterf::getSubjectId() const
-{
-    return Interface<ObserverImpl>::pImpl_->getSubjectId();
-}
-
-const TypesOfObservers ObserverInterf::getType() const
+const TypesOfObservers ObserverInterf::getType()
 {
     return Interface<ObserverImpl>::pImpl_->getObserverType();
-}
-
-const TypesOfSubjects ObserverInterf::getSubjectType() const
-{
-    return Interface<ObserverImpl>::pImpl_->getSubjectType();
 }
 
 QStringList ObserverInterf::getAttributes()
@@ -65,21 +56,9 @@ void ObserverInterf::setDirtyBit()
     Interface<ObserverImpl>::pImpl_->setDirtyBit();
 }
 
-//void ObserverInterf::setId(int id)
-//{
-//    Interface<ObserverImpl>::pImpl_->setId(id);
-//}
 
-int ObserverInterf::close()
-{
-    return Interface<ObserverImpl>::pImpl_->close();
-}
 
 ////////////////////////////////////////////////////////////  Subject
-
-SubjectInterf::~SubjectInterf()
-{
-}
 
 void SubjectInterf::attach(Observer* obs)
 {
@@ -96,7 +75,7 @@ Observer * SubjectInterf::getObserverById(int id)
     return SubjectInterf::pImpl_->getObserverById(id);
 }
 
-void SubjectInterf::notify(double time)
+void SubjectInterf::notify(double time) 
 {
     SubjectInterf::pImpl_->notifyObservers(time);
 }
@@ -105,9 +84,3 @@ int SubjectInterf::getId() const
 {
     return SubjectInterf::pImpl_->getId();
 }
-
-void SubjectInterf::setId(int id)
-{
-    SubjectInterf::pImpl_->setId(id);
-}
-

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -24,13 +24,14 @@ of this library and its documentation.
     \brief This file definitions for the luaFlowCondition objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#ifndef LUAFLOWCONDITION_H
+#if ! defined( LUAFLOWCONDITION_H )
 #define LUAFLOWCONDITION_H
 
 #include "luaRule.h"
 
+
 /**
-* \brief
+* \brief  
 *  Implementation for a FlowCondition object.
 *
 */
@@ -41,14 +42,14 @@ private:
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[];
-
+    static const char className[]; 
+    
     ///< Data structure issued by Luna<T>
     static Luna<luaFlowCondition>::RegType methods[];
-
+    
 public:
     /// Constructor
-    luaFlowCondition(lua_State *)
+    luaFlowCondition( lua_State *)
     {
         subjectType = TObsUnknown;
     }
@@ -57,8 +58,8 @@ public:
     /// \param event is the Event which has triggered this luaFlowCondition object
     /// \param agent is the Agent been executed
     /// \param cellIndexPair is the Cell - CellIndex pair where the luaJumpCondition is being executed
-    /// \return A boolean value: true if the rule does not throw a exception, otherwise false.
-    bool execute (Event &event, Agent *agent, pair<CellIndex, Cell*> &cellIndexPair)
+    /// \return A booleand value: true if the rule does not throw a exception, otherwise false.
+    bool execute ( Event &event, Agent *agent, pair<CellIndex,Cell*> &cellIndexPair )
     {
         try {
 
@@ -66,42 +67,41 @@ public:
             luaEvent *ev = (luaEvent*)&event;
             luaCell  *cell = (luaCell*) cellIndexPair.second;
 
-            //puts the execute function of the rule on stack top
+            //puts the excute function of the rule on stack top
             luaRule::getReference(L);
             //lua_pushstring(L, "execute");
-            lua_pushnumber(L, 1);
+            lua_pushnumber(L,1);
             lua_gettable(L, -2);
 
             // puts the rule parameters on stack top
             ev->getReference(L);
-            if(dynamic_cast<luaGlobalAgent*>(agent))
+            if( dynamic_cast<luaGlobalAgent*>(agent) )
             {
                 luaGlobalAgent* ag = (luaGlobalAgent*) agent;
                 ag->getReference(L);
-                if(cell != NULL) cell->getReference(L);
+                if( cell != NULL ) cell->getReference(L);
                 else lua_pushnil(L);
             }
             else
             {
                 luaLocalAgent* ag = (luaLocalAgent*) agent;
                 ag->getReference(L);
-                if(cell != NULL) cell->getReference(L);
+                if( cell != NULL ) cell->getReference(L);
                 else lua_pushnil(L);
             }
 
             // calls the "execute" function of the rule
-            if(lua_pcall(L, 3, 1, 0) != 0)
+            if( lua_pcall( L, 3, 1, 0) != 0 )
             {
-                string err_out = string(" Error: rule can not be executed ")
-                				+ string (lua_tostring(L, -1)) + string("\".\n");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L, err_out.c_str());
-                //lua_pushnumber(L, 4);
-                lua_call(L, 1, 0);
+                string err_out = string(" Error: rule can not be executed " ) + string (lua_tostring(L,-1)) + string("\".\n");
+                lua_getglobal(L, "customErrorMsg");
+                lua_pushstring(L,err_out.c_str());
+                lua_pushnumber(L,4);
+                lua_call(L,2,0);             
                 return 0;
             }
 
-            result = lua_tonumber(L, -1);
+            result = lua_tonumber( L, -1);
             lua_pop(L, 1);  // pop returned value
 
             return result;
@@ -112,7 +112,9 @@ public:
         }
 
     }
+ 
 
 };
+
 
 #endif

@@ -1,10 +1,10 @@
 #include "eventSubjectInterf.h"
 
-#include "observerTable.h"
-#include "observerGraphic.h"
-#include "observerLogFile.h"
-#include "observerTextScreen.h"
-#include "observerUDPSender.h"
+#include "types/observerTable.h"
+#include "types/observerGraphic.h"
+#include "types/observerLogFile.h"
+#include "types/observerTextScreen.h"
+#include "types/observerUDPSender.h"
 
 Observer * EventSubjectInterf::createObserver(TypesOfObservers typeObserver)
 {
@@ -41,7 +41,7 @@ bool EventSubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (!obs)
+    if (! obs)
         return false;
 
     switch (obs->getType())

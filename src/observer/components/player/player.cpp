@@ -5,7 +5,7 @@ using namespace TerraMEObserver;
 
 Player & Player::getInstance()
 {
-    static Player player;
+    static Player player;       
     return player;
 }
 

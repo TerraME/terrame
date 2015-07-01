@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright  2001-2012 INPE and TerraLAB/UFOP.
 *
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 *
 *************************************************************************************/
 
+
 #ifndef OBSERVERSUPERCLASS_H
 #define OBSERVERSUPERCLASS_H
 
@@ -29,8 +30,8 @@
 #include <QHash>
 #include <QRectF>
 
-#include "observerInterf.h"
-#include "legendWindow.h"
+#include "../observerInterf.h"
+#include "components/legend/legendWindow.h"
 
 class QGraphicsView;
 class QGraphicsScene;
@@ -50,7 +51,7 @@ class Decoder;
 class Canvas;
 
 /**
- * \brief Super Class from draw observer in QGraphicsScene
+ * \brief Super Class from draw oberser in QGraphicsScene
  * \see ObserverInterf
  * \see QDialog
  * \author Washington Sena de Franca e Silva
@@ -100,7 +101,7 @@ public:
     /**
      * \copydoc Observer::getAttributes
      */
-    const TypesOfObservers getType() const;
+    const TypesOfObservers getType();
 
     /**
      * Adds the states and their transition in the observer
@@ -108,8 +109,6 @@ public:
      * \see QList, \see QPair, \see QString
      */
     void addState(QList<QPair<QString, QString> > &allStates);
-
-    virtual int close();
 
 public slots:
 
@@ -145,13 +144,13 @@ public slots:
 
     /**
      * Treats the selected scale of zoom in the zoom comboBox
-     * \param scale the select zoom scale
+     * \param scale the selecte zoom scale
      * \see QString
      */
 
     /**
     * Treats the selected scale of zoom in the zoom comboBox
-    * \param scale the select zoom scale
+    * \param scale the selecte zoom scale
     * \see QString
     */
     void zoomActivated(const QString &scale);
@@ -164,7 +163,7 @@ public slots:
     * \param height a proportion factor for the height
     * \see QRect
     */
-    void zoomChanged(const QRectF &zoomRect, double width, double height);
+    void zoomChanged(const QRectF &zoomRect, float width, float height);
 
     /**
     * Treats the zoom out signal
@@ -221,14 +220,14 @@ protected:
 
     QVector<int> zoomVec;
     int positionZoomVec;
-    double offsetState;
+    float offsetState;
     QPointF center;
 
     QComboBox *zoomComboBox;
 
     QStringList attribList;
-    QStringList obsAttrib;          // key list under observation
-    QHash<QString, Attributes *> *mapAttributes;  // map of all keys
+    QStringList obsAttrib;          // lista de chaves em observação
+    QHash<QString, Attributes *> *mapAttributes;  // map de todas as chaves
 
     QToolButton *butLegend, *butGrid;
     QToolButton *butZoomIn, *butZoomOut;

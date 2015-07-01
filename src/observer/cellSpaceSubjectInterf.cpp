@@ -1,16 +1,15 @@
 #include "cellSpaceSubjectInterf.h"
 
-#include "agentObserverMap.h"
-#include "observerUDPSender.h"
-#include "observerTCPSender.h"
-#include "agentObserverImage.h"
+#include "types/agentObserverMap.h"
+#include "types/observerUDPSender.h"
+#include "types/agentObserverImage.h"
 
-#include "observerTextScreen.h"
-#include "observerGraphic.h"
-#include "observerLogFile.h"
-#include "observerTable.h"
-#include "observerUDPSender.h"
-#include "observerShapefile.h"
+#include "types/observerTextScreen.h"
+#include "types/observerGraphic.h"
+#include "types/observerLogFile.h"
+#include "types/observerTable.h"
+#include "types/observerUDPSender.h"
+#include "types/observerShapefile.h"
 
 using namespace TerraMEObserver;
 
@@ -37,10 +36,6 @@ Observer * CellSpaceSubjectInterf::createObserver(TypesOfObservers type)
             obs = new ObserverUDPSender(this);
             break;
 
-        case TObsTCPSender:
-            obs = new ObserverTCPSender(this);
-            break;
-
         case TObsMap:
             obs = new AgentObserverMap(this);
             break;
@@ -48,11 +43,11 @@ Observer * CellSpaceSubjectInterf::createObserver(TypesOfObservers type)
         case TObsImage:
             obs = new AgentObserverImage(this);
             break;
-
+            
         case TObsShapefile:
             obs = new ObserverShapefile(this);
             break;
-
+    
         case TObsTextScreen:
         default:
             obs = new ObserverTextScreen(this);
@@ -66,7 +61,7 @@ bool CellSpaceSubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (!obs)
+    if (! obs)
         return false;
 
     switch (obs->getType())
@@ -97,11 +92,6 @@ bool CellSpaceSubjectInterf::kill(int id)
             delete (ObserverUDPSender *)obs;
             break;
 
-        case TObsTCPSender:
-            ((ObserverTCPSender *)obs)->close();
-            delete (ObserverTCPSender *)obs;
-            break;
-
         case TObsMap:
             ((AgentObserverMap *)obs)->close();
             delete (AgentObserverMap *)obs;
@@ -110,11 +100,6 @@ bool CellSpaceSubjectInterf::kill(int id)
         case TObsImage:
             ((AgentObserverImage *)obs)->close();
             delete (AgentObserverImage *)obs;
-            break;
-
-        case TObsShapefile:
-            ((ObserverShapefile *)obs)->close();
-            delete (ObserverShapefile *)obs;
             break;
 
         default:

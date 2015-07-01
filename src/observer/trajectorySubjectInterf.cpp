@@ -1,12 +1,12 @@
 #include "trajectorySubjectInterf.h"
 
-#include "observerTable.h"
-#include "observerLogFile.h"
-#include "observerTextScreen.h"
-#include "observerGraphic.h"
-#include "observerUDPSender.h"
-#include "agentObserverMap.h"
-#include "agentObserverImage.h"
+#include "types/observerTable.h"
+#include "types/observerLogFile.h"
+#include "types/observerTextScreen.h"
+#include "types/observerGraphic.h"
+#include "types/observerUDPSender.h"
+#include "types/agentObserverMap.h"
+#include "types/agentObserverImage.h"
 
 using namespace TerraMEObserver;
 
@@ -32,14 +32,14 @@ Observer * TrajectorySubjectInterf::createObserver(TypesOfObservers typeObserver
         case TObsUDPSender:
             obs = new ObserverUDPSender(this);
             break;
+            
+        case TObsMap:
+            obs = new AgentObserverMap(this);
+            break;
 
-        //case TObsMap:
-        //    obs = new AgentObserverMap(this);
-        //    break;
-
-        //case TObsImage:
-        //    obs = new AgentObserverImage(this);
-        //    break;
+        case TObsImage:
+            obs = new AgentObserverImage(this);
+            break;
 
         default:
             obs = new ObserverTextScreen(this);
@@ -53,10 +53,10 @@ bool TrajectorySubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (!obs)
+    if (! obs)
         return false;
 
-    // if ((obs->getObserverType() != TObsMap) && (obs->getObserverType() != TObsImage))
+    // if ((obs->getObserverType() != TObsMap) && (obs->getObserverType() != TObsImage)) 
     //     detachObserver(obs);
 
     switch (obs->getType())
@@ -81,7 +81,7 @@ bool TrajectorySubjectInterf::kill(int id)
             ((ObserverTextScreen *)obs)->close();
             delete (ObserverTextScreen *)obs;
             break;
-
+            
         case TObsUDPSender:
             ((ObserverUDPSender *)obs)->close();
             delete (ObserverUDPSender *)obs;
@@ -102,3 +102,5 @@ bool TrajectorySubjectInterf::kill(int id)
     obs = 0;
     return true;
 }
+
+

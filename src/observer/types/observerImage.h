@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,13 +25,19 @@
 #ifndef OBSERVER_IMAGE_H
 #define OBSERVER_IMAGE_H
 
-#include "observerInterf.h"
-#include "legendWindow.h"
-#include "painterWidget.h"
+#include "../observerInterf.h"
+#include "../components/legend/legendWindow.h"
+#include "../components/painter/painterWidget.h"
 
 #include <QDataStream>
 #include <QVector>
 #include <QHash>
+
+extern "C"
+{
+#include <lua.h>
+}
+#include "luna.h"
 
 class ImageGUI;
 
@@ -39,9 +45,10 @@ namespace TerraMEObserver {
 
 class Decoder;
 
+
 /**
  * \brief Spatial visualization for cells and saved in a png image file
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file observerImage.h
  */
 class ObserverImage :  public ObserverInterf
@@ -76,7 +83,7 @@ public:
      * \param legAttribs a list of legend attributes
      */
     void setAttributes(QStringList &attribs, QStringList legKeys,
-                       QStringList legAttribs, TypesOfSubjects type);
+                       QStringList legAttribs);
 
     /**
      * Gets the attributes list
@@ -86,7 +93,7 @@ public:
     /**
      * Gets the type of observer
      */
-    const TypesOfObservers getType() const;
+    const TypesOfObservers getType();
 
     /**
      * Sets the cellular space size
@@ -99,7 +106,7 @@ public:
      * Gets the size of cellular space
      * \see QSize
      */
-    const QSize & getCellSpaceSize() const;
+    const QSize getCellSpaceSize();
 
     /**
      * Sets the path and the prefix to the image file
@@ -132,10 +139,10 @@ protected:
      * \see Attributes
      * \see QHash, \see QString
      */
-    QHash<QString, Attributes*> * getMapAttributes() const;
+    QHash<QString, Attributes*> * getMapAttributes() const ;
 
     /**
-     * Gets a reference to the decoder object
+     * Gets a reference to the docoder object
      * \see Decoder
      */
     Decoder & getProtocolDecoder() const;
@@ -161,27 +168,28 @@ private:
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
 
-    QSize cellularSpaceSize;
     int width, height;
     int builtLegend;
-    bool needResizeImage;
-    // disables image rescue,
-    // for the method being invoked by another object
+    double 	newWidthCellSpace, newHeightCellSpace;
+    bool needResizeImage, savingImages;
+    // desativa o salvamento da imagem,
+    // o método seja invocado por meio de outro objeto
     bool disableSaveImage;
 
     QString path;
     QSize resultSize;
-
-    // list of all keys, key list under observation
+    QImage resultImage;
+    // lista de todas as chaves, lista de chaves em observação
     QStringList attribList, obsAttrib;
 
-    ImageGUI *obsImgGUI;  // GUI
+    ImageGUI *obsImgGUI;  // interface gráfica
     LegendWindow *legendWindow;
     PainterWidget *painterWidget;
-    // map of all keys
+    // map de todas as chaves
     QHash<QString, Attributes*> *mapAttributes;
     Decoder *protocolDecoder;
 };
+
 
 }
 

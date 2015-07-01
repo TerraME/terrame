@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -22,18 +22,23 @@
 *
 *************************************************************************************/
 
-#ifndef CONCRET_SUBJECT_INTERF
-#define CONCRET_SUBJECT_INTERF
+
+#ifndef CONCRET_CELL_SUBJECT_INTERF
+#define CONCRET_CELL_SUBJECT_INTERF
 
 #include <QtCore/QStringList>
+
 #include "observerInterf.h"
+
+//  Includes do TerraME
 #include "terrameIncludes.h"
 
+
 /**
- * \brief Cell Concrete Subject
+ * \brief Cell Concret Subject
  * \see SubjectInterf,
  * \see Cell
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \author Tiago Garcia de Senna Carneiro
  * \file cellSubjectInterf.h
  */
@@ -44,7 +49,7 @@ public:
      * \copydoc TerraMEObserver::Subject::getState
      */
     virtual QDataStream& getState(QDataStream &state, Subject *subj,
-                                  int observerId, const QStringList &attribs) = 0;
+                                  int observerId, QStringList &attribs) = 0;
 
     /**
      * Factory of Observer
@@ -61,5 +66,5 @@ public:
     bool kill(int id);
 };
 
-#endif
 
+#endif

@@ -16,20 +16,23 @@ class plotPropertiesGUI;
 }
 
 namespace TerraMEObserver {
-	class InternalCurve;
+ class InternalCurve;
 }
 
 // #include "internalCurve.h"
 
+
 class PlotPropertiesGUI : public QDialog
 {
     Q_OBJECT
-
+    
 public:
     PlotPropertiesGUI(TerraMEObserver::ChartPlot *plot); //, QWidget *parent = 0);
     virtual ~PlotPropertiesGUI();
 
     void consistGUI(QList<TerraMEObserver::InternalCurve *> *interCurves);
+
+    
 private slots:
     // general tab
     void borderColorClicked();
@@ -54,6 +57,7 @@ private slots:
     void curveColorClicked();
 
     void currentItemChanged (QTreeWidgetItem * current, QTreeWidgetItem * previous);
+
 private:
     void consistCurveTab(const QString &name);
 
@@ -68,4 +72,3 @@ private:
 };
 
 #endif // PLOTPROPERTIES_H
-

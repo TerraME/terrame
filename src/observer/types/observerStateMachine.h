@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -22,6 +22,7 @@
 *
 *************************************************************************************/
 
+
 #ifndef OBSERVERSTATEMACHINE_H
 #define OBSERVERSTATEMACHINE_H
 
@@ -29,8 +30,8 @@
 #include <QHash>
 #include <QRectF>
 
-#include "observerInterf.h"
-#include "legendWindow.h"
+#include "../observerInterf.h"
+#include "components/legend/legendWindow.h"
 
 class QGraphicsView;
 class QGraphicsScene;
@@ -49,11 +50,12 @@ class Decoder;
 class Node;
 class Canvas;
 
+
 /**
  * \brief Plots the state machine nodes and edges
  * \see ObserverInterf
  * \see QDialog
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file observerStateMachine.h
 */
 class ObserverStateMachine : public QDialog, public ObserverInterf
@@ -98,7 +100,7 @@ public:
     /**
      * \copydoc Observer::getAttributes
      */
-    const TypesOfObservers getType() const;
+    const TypesOfObservers getType();
 
     /**
      * Adds the states and their transition in the observer
@@ -106,8 +108,6 @@ public:
      * \see QList, \see QPair, \see QString
      */
     void addState(QList<QPair<QString, QString> > &allStates);
-
-    int close() { return 0; }
 
 public slots:
     /**
@@ -155,7 +155,7 @@ public slots:
      * \param height a proportion factor for the height
      * \see QRect
      */
-    void zoomChanged(const QRectF &zoomRect, double width, double height);
+    void zoomChanged(const QRectF &zoomRect, float width, float height);
 
     /**
      * Treats the zoom out signal
@@ -191,18 +191,17 @@ private:
      * Shows the attributes layer
      */
     void showLayerLegend();
-    // void connectTreeLayer(bool);
+    // void connectTreeLayer(bool );
 
     /**
-     * Converts a index from zoom comboBox to a integer
+     * Converts a index from zoom comboBox to a interger
      * \param in boolean, if \a true
-     * \return integer value of index
+     * \return interger value of index
      */
     int convertZoomIndex(bool in);
 
-    void zoomWindow();
 
-    bool draw();
+    void zoomWindow();
 
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
@@ -217,16 +216,16 @@ private:
 
     QHash<QString, Node *> *states;
     QStringList attribList;
-    QStringList obsAttrib;          // key list under observation
-    QHash<QString, Attributes *> *mapAttributes;  // map of all keys
-
+    QStringList obsAttrib;          // lista de chaves em observação
+    QHash<QString, Attributes *> *mapAttributes;  // map de todas as chaves
+    
     QVector<int> zoomVec;
     int positionZoomVec;
-    double offsetState;
+    float offsetState;
     QPointF center;
 
     QComboBox *zoomComboBox;
-
+ 
     QToolButton *butLegend, *butGrid;
     QToolButton *butZoomIn, *butZoomOut;
     QToolButton *butZoomWindow, *butHand;

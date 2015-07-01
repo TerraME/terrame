@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,22 +25,20 @@
 /*!
  * \file terrameIncludes.h
  * \brief All TerraME globals constants, variables, objects and classes
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \author Tiago Garcia de Senna Carneiro
 */
-
-// #ifndef TME_OBSERVER_CLIENT_MODE
 
 #ifndef TERRAME_INCLUDES_H
 #define TERRAME_INCLUDES_H
 
-#include "environment.h"
-#include "agent.h"
-#include "cellularSpace.h"
-#include "scheduler.h"
-#include "region.h"
-#include "composite.h"
+#include "../core/environment.h"
+#include "../core/agent.h"
+#include "../core/cellularSpace.h"
+#include "../core/scheduler.h"
+#include "../core/region.h"
+#include "../core/composite.h"
+
+#include "../core/society.h"
 
 #endif
-
-// #endif // TME_OBSERVER_CLIENT_MODE

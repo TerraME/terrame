@@ -1,18 +1,12 @@
 #include "decoder.h"
 
 #include <QStringList>
-#include <QMap>
-#include <QDebug>
-
-#include "blackBoard.h"
-#include "protocol.pb.h"
 
 using namespace TerraMEObserver;
 
-Decoder::Decoder()
+Decoder::Decoder( QHash<QString, Attributes *> *map) : mapAttributes(map)
 {
-    mapAttributes = 0;
-    stateSize = 0;
+
 }
 
 Decoder::Decoder(const Decoder &)
@@ -30,156 +24,37 @@ Decoder::~Decoder()
 
 }
 
-void Decoder::setBlackBoard(BlackBoard *blackBoard)
+bool Decoder::decode(const QString &protocol, 
+                     QVector<double> &xs, QVector<double> &ys)
 {
-    bb = blackBoard;
-}
+    int idx = 0;
+    QStringList tokens = protocol.split(PROTOCOL_SEPARATOR,
+                                        QString::SkipEmptyParts);
 
-void Decoder::setMapAttrbute(QHash<QString, Attributes*> *mapAttribs)
-{
-    mapAttributes = mapAttribs;
-}
+    if (tokens.isEmpty())
+        return false;
 
-bool Decoder::decode(const QByteArray &state)
-{
-    ObserverDatagramPkg::SubjectAttribute subjDatagram;
-    bool ret = subjDatagram.ParseFromArray(state.data(), state.size());
+    // qDebug() << tokens;
+    parentSubjectType = (TypesOfSubjects) tokens.at(1).toInt();
 
-    stateSize = subjDatagram.ByteSize();
+#ifdef DEBUG_OBSERVER
+    if (parentSubjectType == TObsAgent)
+        qDebug() << tokens.at(0);
+#endif
 
-    if (ret)
-    {
-        SubjectAttributes *subjAttr = bb->insertSubject(subjDatagram.id());
-        subjAttr->setSubjectType((TypesOfSubjects) subjDatagram.type());
-        subjAttr->setDirtyBit(false);
-        subjAttr->clearNestedSubjects();
-
-        if (ret && subjDatagram.attribsnumber() > 0)
-        {
-            ret = ret && decodeAttributes(subjAttr, subjDatagram);
-        }
-
-        if (ret && subjDatagram.itemsnumber() > 0)
-        {
-            // Resets the counter of subjects changed
-            bb->resetCounterChangedSubjects();
-
-            // subjAttr->clearNestedSubjects();
-            ret = ret && decodeInternals(subjAttr, subjDatagram, subjAttr);
-        }
-
-    }
-
+    bool ret = interpret(tokens, idx, xs, ys);
     return ret;
 }
 
-bool Decoder::decodeAttributes(SubjectAttributes *subjAttr,
-    const ObserverDatagramPkg::SubjectAttribute &subjDatagram)
-{
-    // int attrNumber = subjDatagram.rawattributes_size();
-    int attrNumber = subjDatagram.attribsnumber();
-    // QString key;
-
-    // Gets attributes
-    for (int i = 0; i < attrNumber; ++i)
-    {
-        const ObserverDatagramPkg::RawAttribute &raw = subjDatagram.rawattributes(i);
-
-        // Textual
-        if (raw.has_text())
-        {
-            subjAttr->addItem(raw.key().c_str(), raw.text().c_str());
-        }
-        else
-        {
-            // Numeric
-            // key = raw.key().c_str();
-            // if (key == "x")
-            if (strcmp(raw.key().c_str(), "x") == 0)
-            {
-                subjAttr->setX(raw.number());
-            }
-			// if (key == "y")
-            else if (strcmp(raw.key().c_str(), "y") == 0)
-			{
-                    subjAttr->setY(raw.number());
-			}
-			else
-			{
-				/*
-				if (mapAttributes)
-				{
-					Attributes *attrib = mapAttributes->value(raw.key().c_str());
-
-					if (attrib)
-					{
-						// TODO: Code will fail when the id of the subject is not
-						// consistent with the position in the vector of attributes values
-						double d = raw.number();
-						attrib->addValue(subjAttr->getId(), d);
-					}
-				}
-				*/
-				subjAttr->addItem(raw.key().c_str(), raw.number());
-			}
-        }
-    }
-
-    return true;
-}
-
-bool Decoder::decodeInternals(SubjectAttributes * /*subjAttr*/,
-    const ObserverDatagramPkg::SubjectAttribute &subjDatagram,
-	SubjectAttributes *parentSubjAttr)
-{
-    int itemsNumber = subjDatagram.itemsnumber();
-    // int itemsNumber = subjDatagram.internalsubject_size()
-
-    bool ret = true;
-
-    // Gets internals subjects
-    for (int i = 0; i < itemsNumber; ++i)
-    {
-        const ObserverDatagramPkg::SubjectAttribute &interSubjDatagram =
-        		subjDatagram.internalsubject(i);
-
-        SubjectAttributes *interSubjAttr = bb->insertSubject(interSubjDatagram.id());
-        interSubjAttr->setSubjectType((TypesOfSubjects) interSubjDatagram.type());
-        interSubjAttr->clearNestedSubjects();
-
-        if (parentSubjAttr)
-        {
-            parentSubjAttr->addNestedSubject(interSubjAttr->getId());
-
-            // Increments the counter of subjects changed
-            bb->incrementCounterChangedSubjects();
-        }
-
-        if (ret && interSubjDatagram.has_attribsnumber())
-        {
-            ret = ret && decodeAttributes(interSubjAttr, interSubjDatagram);
-        }
-
-        //qDebug() << "\n\nDecoder::decodeInternals()";
-        //qDebug() << interSubjAttr->toString();
-
-        if (ret && interSubjDatagram.itemsnumber() > 0)
-        {
-            // ret = ret && decodeInternals(interSubjAttr, interSubjDatagram, parentSubjAttr);
-            ret = ret && decodeInternals(interSubjAttr, interSubjDatagram, interSubjAttr);
-        }
-    }
-    return ret;
-}
-
-bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID)
+bool Decoder::interpret(QStringList &tokens, int &idx, 
+                        QVector<double> &xs, QVector<double> &ys)
 {
     bool ret = false;
-    int subID;
+    QString id;
     TypesOfSubjects subjectType = TObsUnknown;
     int numAttrib = 0, numElem = 0;
-
-    ret = consumeID(subID, tokens, idx);
+    
+    ret = consumeID(id, tokens, idx);
     ret = ret && consumeSubjectType(subjectType, tokens, idx);
     ret = ret && consumeAttribNumber(numAttrib, tokens, idx);
     ret = ret && consumeElementNumber(numElem, tokens, idx);
@@ -187,196 +62,166 @@ bool Decoder::interpret(QStringList &tokens, int &idx, int parentSubjID)
     numAttrib *= 3;
     numElem *= 3;
 
-    // Maintains the nested subject into parent subject
-    if (parentSubjID > 0)
+	//@RAIAN: Decodificando a Vizinhanca
+	if(subjectType == TObsNeighborhood)
 	{
-        SubjectAttributes *subjAttr = bb->getSubject(parentSubjID);
-        if (subjAttr)
-            subjAttr->addNestedSubject(subID);
+		if(mapAttributes->contains(id))
+		{
+			Attributes *attrib = 0;
+                        QMap<QString, QList<double> > neighborhood = QMap<QString, QList<double> >();
 
-        // 50% more efficient using pointers instead of IDs
-        //SubjectAttributes *subjAttr = bb->getSubject(parentSubjID);
-        //SubjectAttributes *nestedSubj = bb->getSubject(subID);
-        //if (subjAttr && nestedSubj)
-        //    subjAttr->addNestedSubject(nestedSubj);
 
-        // Increments the counter of subjects changed
-         bb->incrementCounterChangedSubjects();
-    }
-	////@RAIAN: Decoding the neighborhood
-	//if(subjectType == TObsNeighborhood)
-	//{
-	//	if(cache->contains(subID))
-	//	{
-	//		Attributes *attrib = 0;
- //           QMap<QString, QList<double> > neighborhood; // = QMap<QString, QList<double> >();
+			ret = interpret(tokens, idx, xs, ys); // Pega as informações da célula central da vizinhanca
 
-	//		ret = interpret(tokens, idx, xs, ys); // Takes the information from the central cell of the neighborhood
+			consumeNeighborhood(tokens, idx, id, numElem, neighborhood);
+			attrib = mapAttributes->value(id);
 
-	//		consumeNeighborhood(tokens, idx, subID, numElem, neighborhood);
-	//		attrib = cache->value(id);
+			if(attrib->getType() != TObsNeighborhood)
+				attrib->setType(TObsNeighborhood);
 
-	//		if(attrib->getType() != TObsNeighborhood)
-	//			attrib->setType(TObsNeighborhood);
+			if(attrib->getDataType() == TObsUnknownData)
+				attrib->setDataType(TObsNumber);
 
-	//		if(attrib->getDataType() == TObsUnknownData)
-	//			attrib->setDataType(TObsNumber);
-
-	//		attrib->addValue(neighborhood);
-	//	}
-	//}
-	////@RAIAN: END
-	// else
+			attrib->addValue(neighborhood);
+		}
+	}
+	//@RAIAN: FIM
+	else
 	{
+    
 		int i = 4;
 		for(; ret && (i < numAttrib + 4); i += 3)
-			ret = consumeTriple(tokens, idx, subID);
+			ret = consumeTriple(tokens, idx, xs, ys);
 
 		for(i = 0; ret && (i < numElem) && (idx < tokens.size()); i++)
-			ret = interpret(tokens, idx, subID);
+			ret = interpret(tokens, idx, xs, ys);
 	}
+
     return ret;
 }
 
-// transicao 1-2: ID of the object
-bool Decoder::consumeID(int &id, QStringList &tokens, int &idx)
+// transição 1-2: idenficação do objeto
+bool Decoder::consumeID(QString &id, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
         return false;
-
-    ok = false;
-    id = tokens.at(idx).toInt(&ok);
+        
+    id = tokens.at(idx);
     idx++;
-
-    bb->addSubject(id);
-
-    return ok;
+    return true;
 }
 
-// transition 2-3: definition of the type of subject
+// transição 2-3: definicao do tipo de subject
 bool Decoder::consumeSubjectType(TypesOfSubjects &type, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
         return false;
-
+        
     type = (TypesOfSubjects) tokens.at(idx).toInt();
     idx++;
     return true;
 }
 
-// transition 3-4: number of attributes
+// transição 3-4: número de atributos
 bool Decoder::consumeAttribNumber(int &value, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
         return false;
-
+        
     value = tokens.at(idx).toInt();
     idx++;
     return true;
 }
 
-// transition 4-5: number of elements
+// transição 4-5: número de elementos
 bool Decoder::consumeElementNumber(int &value, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
         return false;
-
+        
     value = tokens.at(idx).toInt();
     idx++;
     return true;
 }
 
-// transition 5- [6-7-8] *: key, type, value
-bool Decoder::consumeTriple(QStringList &tokens, int &idx, const int &subjID)
+// transição 5-[6-7-8]*: chave, tipo, valor
+bool Decoder::consumeTriple(QStringList &tokens, int &idx,
+                            QVector<double> &xs, QVector<double> &ys)
 {
     if (tokens.size() <= idx + 2)
         return false;
 
-    QString attrName = tokens.at(idx);
+    QString key = tokens.at(idx);
     TypesOfData type = (TypesOfData) tokens.at(idx + 1).toInt();
-    SubjectAttributes *subjAttr = 0;
+    Attributes *attrib = 0;
 
-    // const QString &hashKey = subjID;
-
-    if (attrName == "x")
+    if (mapAttributes->contains(key))
     {
-            subjAttr = bb->getSubject(subjID);
+        switch(type)
+        {
+            case TObsNumber:
+                attrib = mapAttributes->value(key);
+                if (attrib->getDataType() == TObsUnknownData)
+                    attrib->setDataType(TObsNumber);
 
-            if (subjAttr)
-                subjAttr->setX(tokens.at(idx + 2).toDouble());
+                attrib->addValue(tokens.at(idx + 2).toDouble());
+                break;
 
-            //if ((parentSubjectType == TObsTrajectory) && (cache->contains("trajectory")))
-            //{
-            //    rawAttrib = cache->value("trajectory");
-            //    rawAttrib->setValue<double>("trajectory", TObsNumber, attrib->getXsValue()->size());
-            //}
+            case TObsText:
+                attrib = mapAttributes->value(key);
+                if (attrib->getDataType() == TObsUnknownData)
+                    attrib->setDataType(TObsText);
+
+#ifdef DEBUG_OBSERVER
+                if (attrib->getType() == TObsAgent)
+                    qDebug() << "tokens.at(idx + 2): " << tokens.at(idx + 2);
+#endif
+                attrib->addValue(tokens.at(idx + 2));
+                break;
+
+            case TObsBool:
+            case TObsDateTime:
+            default:
+                break;
         }
+    }
     else
     {
-        if (attrName == "y")
+        if (key == "x")
         {
-            subjAttr = bb->getSubject(subjID);
-            if (subjAttr)
-                subjAttr->setY(tokens.at(idx + 2).toDouble());
+            xs.append(tokens.at(idx + 2).toDouble());
+
+            if ((parentSubjectType == TObsTrajectory) && (mapAttributes->contains("trajectory")))
+            {
+                attrib = mapAttributes->value("trajectory");
+                attrib->addValue( (double) attrib->getXsValue()->size() );
+            }
         }
         else
         {
-            subjAttr = bb->getSubject(subjID);
-
-            if (subjAttr)
-            {
-        		switch(type)
-        		{
-            	case TObsNumber:
-                    tmpNumber = tokens.at(idx + 2).toDouble();
-                    subjAttr->addItem(attrName, tmpNumber);
-
-                    //if (mapAttributes)
-                    //{
-                    //    Attributes *attrib = mapAttributes->value(attrName);
-                    //
-                    //    if (attrib)
-                    //    {
-                    //        // TO-DO: Code will fail when the id of the subject is not
-                    //        // consistent with the position in the vector of attributes values
-                    //        attrib->addValue(subjID, tmpNumber);
-                    //    }
-                    //}
-                break;
-
-            	case TObsText:
-                    subjAttr->addItem(attrName, tokens.at(idx + 2));
-                break;
-
-            	case TObsBool:
-            	case TObsDateTime:
-            	default:
-                	break;
-        		}
-    		}
+            if (key == "y")
+                ys.append(tokens.at(idx + 2).toDouble());
         }
     }
     idx += 3;
     return true;
 }
 
-//@RAIAN: Methods to decode the neighborhood
-void Decoder::consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID,
-    int &numElem, QMap<QString, QList<double> > &neighborhood)
+//@RAIAN: Metodos para decodificar a vizinhanca
+void Decoder::consumeNeighborhood(QStringList &tokens, int &idx, QString neighborhoodID, int &numElem, QMap<QString, QList<double> > &neighborhood)
 {
 	for(int i = 0; (i < (numElem - 3)) && idx < tokens.size(); i += 3)
 	{
 		consumeNeighbor(tokens, idx, neighborhood);
-	}
+	}	
 }
 
-void Decoder::consumeNeighbor(QStringList &tokens, int &idx,
-		QMap<QString, QList<double> > &neighborhood)
+void Decoder::consumeNeighbor(QStringList &tokens, int &idx, QMap<QString, QList<double> > &neighborhood)
 {
-	int id;
+	QString id;
 	TypesOfSubjects subjectType = TObsUnknown;
 	int numAttrib = 0, numElem = 0;
-
+	
 	consumeID(id, tokens, idx);
 	consumeSubjectType(subjectType, tokens, idx);
 	consumeAttribNumber(numAttrib, tokens, idx);
@@ -386,20 +231,19 @@ void Decoder::consumeNeighbor(QStringList &tokens, int &idx,
 	numElem *= 3;
 
 	QList<double> neighbor = QList<double>();
-
+	
 	for(int i = 0; i < numAttrib; i += 3)
 	{
 		consumeNeighborTriple(tokens, idx, neighbor);
-		neighborhood.insert(QString(id), neighbor);
+		neighborhood.insert(id, neighbor);
 	}
 }
 
-void Decoder::consumeNeighborTriple(QStringList &tokens,
-		int &idx, QList<double> &neighbor)
+void Decoder::consumeNeighborTriple(QStringList &tokens, int &idx, QList<double> &neighbor)
 {
 	QString key = tokens.at(idx);
 	// TypesOfData type = (TypesOfData) tokens.at(idx + 1).toInt();
-
+	
 	if(key == "x")
 		neighbor.insert(0, tokens.at(idx + 2).toDouble());
 	else
@@ -415,4 +259,5 @@ void Decoder::consumeNeighborTriple(QStringList &tokens,
 
 	idx += 3;
 }
-//@RAIAN: END
+//@RAIAN: FIM
+

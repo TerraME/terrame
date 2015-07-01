@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -21,6 +21,7 @@
 * of this library and its documentation.
 *
 *************************************************************************************/
+
 
 #ifndef AGENT_OBSERVER_MAP
 #define AGENT_OBSERVER_MAP
@@ -34,11 +35,12 @@ class SubjectInterf;
 
 namespace TerraMEObserver {
 
+
 /**
  * \brief Combined visualization for Agent, Automaton and
  * Trajectory in the user interface
  * \see ObserverMap
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file agentObserverMap.h
  */
 class AgentObserverMap : public ObserverMap
@@ -47,9 +49,16 @@ class AgentObserverMap : public ObserverMap
 public:
     /**
      * Constructor
+     * \param parent a pointer to a QWidget
+     */
+    AgentObserverMap(QWidget *parent = 0);
+
+
+    /**
+     * Constructor
      * \param subj a pointer to a Subject
      */
-    AgentObserverMap(Subject *subj, QWidget *parent = 0);
+    AgentObserverMap(Subject *subj);
 
     /**
      * Destructor
@@ -94,14 +103,15 @@ public:
      * \see TypesOfSubjects
      * \see QString, \see QStringList
      */
-    void setSubjectAttributes(const QStringList & attribs,
-        int nestedSubjID, const QString & className = "");
+    void setSubjectAttributes(const QStringList & attribs, TypesOfSubjects type,
+                            const QString & className = "");
 
     /**
      * Gets a reference to the list of subject attributes
      * \see QStringList
      */
     QStringList & getSubjectAttributes();
+
 
 private:
     /**
@@ -120,8 +130,7 @@ private:
      */
     bool draw();
 
-    void init();
-    QVector<QPair<Subject *, QString> > nestedSubjects;
+    QVector<QPair<Subject *, QString> > linkedSubjects;
     QStringList subjectAttributes;
     bool cleanImage;
     QString className;

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ of this library and its documentation.
 \brief This file definitions for the luaTrajectory objects.
 \author Tiago Garcia de Senna Carneiro
 */
-#ifndef LUATRAJECTORY_H
+#if ! defined( LUATRAJECTORY_H )
 #define LUATRAJECTORY_H
 
 #include "trajectorySubjectInterf.h"
@@ -36,43 +36,35 @@ of this library and its documentation.
 
 class luaCellularSpace;
 
-namespace ObserverDatagramPkg
-{
-    class SubjectAttribute;
-}
-
 /**
-* \brief
+* \brief  
 *  Implementation for a luaTrajectory object.
 *
 */
 class luaTrajectory : public TrajectorySubjectInterf, public Reference<luaTrajectory>
 {
-#ifdef TME_PROTOCOL_BUFFERS
-    QByteArray getAll(QDataStream& in, const QStringList& attribs);
-    QByteArray getChanges(QDataStream& in, const QStringList& attribs);
-#else
-    QByteArray getAll(QDataStream& in, int obsId, const QStringList& attribs);
-    QByteArray getChanges(QDataStream& in, int obsId, const QStringList& attribs);
-#endif
+    //@RODRIGO
+    QString getAll(QDataStream& in, int obsId, QStringList& attribs);
+    QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
 
+    // Antonio
     lua_State *luaL;
     luaCellularSpace* cellSpace;
-    QHash<QString, QString> observedAttribs;
+    QStringList observedAttribs;
 
 protected:
     // Antonio
     TypesOfSubjects subjectType;
     // @DANIEL
-    // Moved to Reference class
+    // Movido para a classe Reference
     // int ref; ///< The position of the object in the Lua stack
 
 public:
     ///< Data structure issued by Luna<T>
     static const char className[];
-
+    
     ///< Data structure issued by Luna<T>
-    static Luna<luaTrajectory>::RegType methods[];
+    static Luna<luaTrajectory>::RegType methods[]; 
 
 public:
     /// constructor
@@ -83,62 +75,53 @@ public:
 
     /// Inserts the the luaTrajectory object. The luaCell will be inserted in the number-th position.
     /// parameters: luaCell, number
-    int add(lua_State* L);
+    int add( lua_State* L);
 
     /// Clears all luaTrajectory object content
-    int clear(lua_State* L);
+    int clear( lua_State* L);
 
     /// Registers the luaTrajectory object in the Lua stack
     // @DANIEL
-    // Moved to Reference class
-    // int setReference(lua_State* L);
+    // Movido para a classe Reference
+    // int setReference( lua_State* L);
 
     /// Gets the luaTrajectory object reference
     // @DANIEL
-    // Moved to Reference class
-    // int getReference(lua_State *L);
+    // Movido para a classe Reference
+    // int getReference( lua_State *L );
 
     /// Creates several types of observers to the luaCellularSpace object
-    /// parameters: observer type, observer attributes table, observer type parameters
-    int createObserver(lua_State *L);
+    /// parameters: observer type, observeb attributes table, observer type parameters
+    int createObserver( lua_State *L );
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-    int notify(lua_State *L);
-
+    int notify(lua_State *L );
+    
     /// Returns the Agent Map Observers linked to this cellular space
     /// \param observerId the id of observer
     // \return a pointer for an observer if the id exists. Otherwise, returns a NULL pointer
     Observer * getObserver(int observerId);
 
     /// Gets the subject's type
-    const TypesOfSubjects getType() const;
+    const TypesOfSubjects getType();
 
     /// Gets the object's internal state (serialization)
-    /// \param in the serialized object that contains the data that will be observed in the observer
+    /// \param in the serializated object that contains the data that will be observed in the observer
     /// \param subject a pointer to a observed subject
     /// \param observerId the id of the observer
     /// \param attribs the list of attributes observed
-    QDataStream& getState(QDataStream& in, Subject *subject, int observerID,
-    		const QStringList& attribs);
+    QDataStream& getState(QDataStream& in, Subject *subject, int observerID, QStringList& attribs);
 
-#ifdef TME_PROTOCOL_BUFFERS
-    QByteArray pop(lua_State *L, const QStringList& attribs,
-    		ObserverDatagramPkg::SubjectAttribute *csSubj,
-        ObserverDatagramPkg::SubjectAttribute *parentSubj);
-#else
-    /**
-     * Gets the attributes of Lua stack
-     * \param attribs the list of attributes observed
-     */
-    QByteArray pop(lua_State *L, const QStringList& attribs);
-#endif
+    /// Gets the attributes of Lua stack
+    /// \param attribs the list of attributes observed
+    QString pop(lua_State *L, QStringList& attribs);
 
     /// Destroys the observer object instance
     int kill(lua_State *L);
 
     /// Debugging method for ObserverUDPSender
-    // void save(const QString &msg);
+    void save(const QString &msg);
 };
 
-#endif
 
+#endif

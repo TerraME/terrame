@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -25,13 +25,13 @@ of this library and its documentation.
         \author Tiago Garcia de Senna Carneiro
 */
 
-#ifndef LUAREGION_H
+#if ! defined( LUAREGION_H )
 #define LUAREGION_H
 
 #include "region.h"
 
 /**
-* \brief
+* \brief  
 *  CellIndex Region Type.
 *
 */

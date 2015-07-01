@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,6 +25,7 @@
 #ifndef OBSERVER_MAP_H
 #define OBSERVER_MAP_H
 
+
 #include <QDialog>
 #include <QString>
 #include <QTextEdit>
@@ -34,26 +35,33 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
+extern "C"
+{
+#include <lua.h>
+}
+#include "luna.h"
+
 class QLabel;
 class QToolButton;
 class QSplitter;
 class QHBoxLayout;
 class QSpacerItem;
 class QVBoxLayout;
-class QScrollArea;
 
 #include "../observerInterf.h"
 #include "../components/legend/legendWindow.h"
 #include "../components/painter/painterWidget.h"
 
 namespace TerraMEObserver {
+
 class Decoder;
+
 
 /**
  * \brief Spatial visualization for cells and saved in the user interface
  * \see ObserverInterf
  * \see QDialog
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file observerMap.h
 */
 class ObserverMap :  public QDialog, public ObserverInterf
@@ -63,10 +71,17 @@ class ObserverMap :  public QDialog, public ObserverInterf
 public:
     /**
      * Constructor
+     * \param parent a pointer to a QWidget
+     * \see QWidget
+     */
+    ObserverMap(QWidget *parent = 0);
+
+    /**
+     * Constructor
      * \param subj a pointer to a Subject
      * \see Subject
      */
-    ObserverMap(Subject *subj, QWidget *parent = 0);
+    ObserverMap(Subject *subj);
 
     /**
      * Destructor
@@ -86,7 +101,7 @@ public:
      * \see QStringList
      */
     void setAttributes(QStringList &attribs, QStringList legKeys,
-                       QStringList legAttribs, TypesOfSubjects type);
+                       QStringList legAttribs);
 
     /**
      * \copydoc Observer::getAttributes
@@ -96,7 +111,7 @@ public:
     /**
      * \copydoc Observer::getType
      */
-    const TypesOfObservers getType() const;
+    const TypesOfObservers getType();
 
     /**
      * Sets the cellular space size
@@ -109,9 +124,7 @@ public:
      * Gets the size of cellular space
      * \see QSize
      */
-    const QSize & getCellSpaceSize() const;
-
-	void save(string, string);
+    const QSize getCellSpaceSize();
 
     /**
      * Creates a color bar
@@ -133,22 +146,14 @@ public:
      * \see Subject
      * \see QVector, \see QPair, \see Subject
      */
-    static bool constainsItem(const QVector<QPair<Subject *, QString> > &linkedSubjects,
+    static bool constainsItem(const QVector<QPair<Subject *, QString> > &linkedSubjects, 
         const Subject *subj);
-
+    
     /**
      * Closes the observer window
      */
     int close();
 
-    /**
-     * Sets the attribute hash
-     * \param hash a pointer to a QHash
-     * \see QHash
-     */
-    void setAttributesHash(QHash<QString, Attributes *> *hash);
-
-	void moveEvent(QMoveEvent*);
 signals:
     /**
      * Triggers the grid draw
@@ -243,7 +248,7 @@ protected:
      * \see Attributes
      * \see QHash, \see QString
      */
-    QHash<QString, Attributes*> * getMapAttributes() const;
+    QHash<QString, Attributes*> * getMapAttributes() const ;
 
     /**
      * Gets a reference to the docoder object
@@ -259,7 +264,7 @@ protected:
 
 private:
     /**
-     * Initializes the common object to the constructors
+     * Initializes the commom object to the constructors
      */
     void init();
 
@@ -273,7 +278,7 @@ private:
      * \param on boolean, if \a true connects the signal to the slot.
      * Otherwise, disconnects its.
      */
-    // void connectTreeLayerSlot(bool on);
+    void connectTreeLayerSlot(bool on);
 
     /**
      * \deprecated Creates the comboBox operator
@@ -288,7 +293,7 @@ private:
 
     /**
      * Calculates the zoom level from the zoom comboBox
-     * \param in boolean, if \true calculates the zoom in.
+     * \param in boolean, if \true caluculates the zoom in.
      * Otherwise, calculates the zoom out.
      */
     void calculeZoom(bool in);
@@ -312,13 +317,14 @@ private:
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
 
-    bool paused;
+    bool paused, cleanValues;
     int numTiles;
-    int rows, cols;  /// number of lines and columns
+    int rows, cols;  /// numero de linha e colunas
 
-    QStringList attribList; /// list of all keys
-    QStringList obsAttrib;  /// key list in observation
-    QHash<QString, Attributes*> *mapAttributes;	/// map of all keys
+
+    QStringList itemList; /// lista de todas as chaves
+    QStringList obsAttrib;  /// lista de chaves em observação
+    QHash<QString, Attributes*> *mapAttributes;	/// map de todas as chaves
     QTreeWidget *treeLayers;
 
     QScrollArea *scrollArea;
@@ -332,15 +338,15 @@ private:
     QToolButton *butZoomIn, *butZoomOut;
     QToolButton *butZoomWindow, *butHand;
     QToolButton *butZoomRestore;
-
+    
     PainterWidget *painterWidget;
     LegendWindow *legendWindow;
     Decoder *protocolDecoder;
     int builtLegend;
 
     bool needResizeImage;
+    double 	newWidthCellSpace, newHeightCellSpace;
     int width, height;
-    QSize cellularSpaceSize;
 
     QVector<int> zoomVec;
     int positionZoomVec;
@@ -351,4 +357,3 @@ private:
 }
 
 #endif
-

@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
 *
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -28,16 +28,17 @@
 #include <QtCore/QStringList>
 
 #include "observerInterf.h"
+
+//  Includes do TerraME
 #include "terrameIncludes.h"
-#include "society.h"
 
 //class Society;
 
 /**
- * \brief Society Concrete Subject
+ * \brief Society Concret Subject
  * \see SubjectInterf,
  * \see Society
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \author Tiago Garcia de Senna Carneiro
  * \file societySubjectInterf.h
  */
@@ -48,7 +49,7 @@ public:
      * \copydoc TerraMEObserver::Subject::getState
      */
     virtual QDataStream& getState(QDataStream &state, Subject *subj,
-                                  int observerId, const QStringList &attribs) = 0;
+                                  int observerId, QStringList &attribs) = 0;
 
     /**
      * Factory of Observer
@@ -64,5 +65,6 @@ public:
      */
     bool kill(int id);
 };
+
 
 #endif

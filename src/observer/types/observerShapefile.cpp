@@ -1,20 +1,20 @@
-#include "observerShapefile.h"
-#include "decoder.h"
-#include "canvas.h"
+#include"observerShapefile.h"
+#include "../protocol/decoder/decoder.h"
+#include "../components/canvas.h"
 
 #include <QGraphicsScene>
-#include<QDebug>
 
 #include<vector>
 #include<list>
+
 #include<iostream>
+#include<QDebug>
 
 using namespace TerraMEObserver;
 using namespace std;
 
 ObserverShapefile::ObserverShapefile(Subject *subj, QWidget *parent) :
-    ObserverMapSuperclass(subj, TObsShapefile,
-    		QString("TerraME Observer : Shapefile"), parent)
+    ObserverMapSuperclass(subj,TObsShapefile, QString("TerraME Observer : Shapefile"), parent)
 {
 }
 
@@ -37,23 +37,23 @@ bool ObserverShapefile::draw(QDataStream &state)
 
     int j = 0;
 
-    // int qtdParametros = tokens.at(2).toInt();
-
+    int qtdParametros = tokens.at(2).toInt();
+    
     QVector<double> xs, ys;
 
-    // protocolDecoder->decode(msg, xs, ys);
-
+    protocolDecoder->decode(msg, xs,ys);
+    
     QList<Attributes *> listAttribs = mapAttributes->values();
 
     Attributes * attrib = 0;
 
-    if(!ids) {
+    if(!ids){
         ids = new QVector<int>(nshapes);
-        for(int i = 0; i < nshapes; i++) {
-            for(; j < tokens.size(); j++) {
-                if(tokens.at(j) == "objectId_") {
-                    j += 2;
-                    ids->insert(i, tokens.at(j).toInt());
+        for(int i = 0; i < nshapes; i++){
+            for(; j < tokens.size(); j++){
+                if(tokens.at(j) == "objectId_"){
+                    j+=2;
+                    ids->insert(i,tokens.at(j).toInt());
                     break;
                 }
             }
@@ -68,9 +68,8 @@ bool ObserverShapefile::draw(QDataStream &state)
         if (attrib->getType() == TObsCell)
         {
             attrib->clear();
-            qWarning() << "nao decodificou!!!!";
-            // decoded = protocolDecoder->decode(msg, xs, ys);
-            //qDebug() << msg;
+            decoded = protocolDecoder->decode(msg, xs, ys);
+            //qDebug()<<msg;
             painter->plotMap(attrib);
         }
         qApp->processEvents();
@@ -87,7 +86,7 @@ bool ObserverShapefile::draw(QDataStream &state)
         painter->replotMap();
         connectTreeLayerSlot(true);
 
-        // displays the window zoom
+        // exibe o zoom de janela
         zoomWindow();
         buildLegend++;
     }
@@ -101,8 +100,11 @@ bool ObserverShapefile::draw(QDataStream &state)
     //scene->render(&painter);
     //image.save("file_name.png");
 
+
     return decoded;
 }
+
+
 
 void ObserverShapefile::showLayerLegend()
 {
@@ -124,12 +126,12 @@ void ObserverShapefile::showLayerLegend()
 
         for(int j = 0; j < leg->size(); j++)
         {
-            child = new QTreeWidgetItem(parent);
+            child = new QTreeWidgetItem( parent);
             child->setSizeHint(0, ICON_SIZE);
             child->setText(0, leg->at(j).getLabel());
             QColor color = leg->at(j).getColor();
 
-            if (!leg->at(j).getLabel().contains("mean"))
+            if (! leg->at(j).getLabel().contains("mean"))
                 child->setData(0, Qt::DecorationRole,
                 legendWindow->color2Pixmap(color, ICON_SIZE));
             else
@@ -142,9 +144,10 @@ void ObserverShapefile::showLayerLegend()
     treeLayers->resizeColumnToContents(0);
 }
 
+
 void ObserverShapefile::loadShape(const string &filename)
 {
-    SHPHandle hSHP = SHPOpen(filename.c_str(), "r");
+    SHPHandle hSHP = SHPOpen(filename.c_str(),"r");
     //cout<<(char*)filename.constData()<<endl;
     //qDebug()<<hSHP;
     int n;
@@ -152,16 +155,16 @@ void ObserverShapefile::loadShape(const string &filename)
     SHPGetInfo(hSHP, &n, &shapeType, minBound, maxBound);
     double w = fabs(maxBound[0] - minBound[0]);
     double h = fabs(maxBound[1] - minBound[1]);
+    
+    double sx = scene->sceneRect().width()/w;
+    double sy = scene->sceneRect().height()/h;
 
-    double sx = scene->sceneRect().width() / w;
-    double sy = scene->sceneRect().height() / h;
-
-    double s = max(sx, sy);
+    double s = max(sx,sy);
 
     double dx = minBound[0]*-1;
     double dy = minBound[1]*-1;
 
-    scene->setSceneRect(scene->sceneRect().x(), scene->sceneRect().y(), w * s, h * s);
+    scene->setSceneRect(scene->sceneRect().x(),scene->sceneRect().y(),w*s, h*s);
 
     nshapes = n;
 
@@ -174,8 +177,8 @@ void ObserverShapefile::loadShape(const string &filename)
     for(int i = 0; i < nshapes; i++)
     {
         SHPObject *obj = SHPReadObject(hSHP, i);
-        //QGraphicsItem *item = createItem(obj, center.x(), center.y(), dx, dy);
-        QGraphicsPathItem *item = createItem(obj, 0, 0, dx, dy, s, s);
+        //QGraphicsItem *item = createItem(obj,center.x(), center.y(),dx, dy);
+        QGraphicsPathItem *item = createItem(obj,0, 0,dx, dy,s,s);
         shapes[obj->nShapeId] = item;
         scene->addItem(item);
         SHPDestroyObject(obj);
@@ -186,30 +189,28 @@ void ObserverShapefile::loadShape(const string &filename)
 
 }
 
-QGraphicsPathItem* ObserverShapefile::createItem(SHPObject *obj, int x, int y,
-		double dx, double dy, double sx, double sy)
+QGraphicsPathItem* ObserverShapefile::createItem(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
 {
-    switch(shapeType) {
+    switch(shapeType){
         case SHPT_POLYGONZ:
-        case SHPT_POLYGON:
-            return createItemPolygon(obj, x, y, dx, dy, sx, sy);// polygon
+        case SHPT_POLYGON: 
+            return createItemPolygon(obj,x,y,dx,dy,sx,sy);// polygon
         case SHPT_ARC:
         case SHPT_ARCZ:{
-            return createItemPolyline(obj, x, y, dx, dy, sx, sy);//polyline
+            return createItemPolyline(obj,x,y,dx,dy,sx,sy);//polyline
         }
         case SHPT_POINT:
         case SHPT_POINTZ:
-            return createItemPoint(obj, x, y, dx, dy, sx, sy);//points
+            return createItemPoint(obj,x,y,dx,dy,sx,sy);//points
         default :
-            return createItemPoint(obj, x, y, dx, dy, sx, sy);//default
+            return createItemPoint(obj,x,y,dx,dy,sx,sy);//default
     }
 }
 
-QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj,
-		int x, int y, double dx, double dy, double sx, double sy)
+QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, int y,double dx, double dy, double sx,double sy)
 {
     QGraphicsPathItem *item = new QGraphicsPathItem;
-    item->setPos(x, y);
+    item->setPos(x,y);
 
     vector<list<QPointF> > points(obj->nParts);
 
@@ -217,86 +218,84 @@ QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj,
 
     int j = 0;
     int i = 0;
-    while(j < obj->nVertices && i < obj->nParts) {
+    while(j < obj->nVertices && i < obj->nParts){
         i++;
-        while(j < obj->panPartStart[i] || (obj->nParts  == 1 && j < obj->nVertices)) {
-            points[i - 1].push_back(QPointF((obj->padfX[j]+dx), (obj->padfY[j]+dy)));
+        while(j < obj->panPartStart[i-1] || (obj->nParts  == 1 && j < obj->nVertices)){
+            points[i-1].push_back(QPointF((obj->padfX[j]+dx),(obj->padfY[j]+dy)));
             j++;
         }
     }
 
-    for(unsigned int i = 0; i < points.size(); i++) {
+    for(unsigned int i = 0; i < points.size(); i++){
         QPolygonF polygon;
         list<QPointF>::iterator it;
-        for(it = points[i].begin(); it != points[i].end(); it++) {
+        for(it = points[i].begin(); it != points[i].end(); it++){
             polygon << *it;
         }
         path.addPolygon(polygon);
     }
 
     item->setPath(path);
-    item->setTransform(QTransform::fromScale(sx, sy), true);
+    item->scale(sx, sy);
     return item;
 }
 
-QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj,
-		int x, int y, double dx, double dy, double sx, double sy)
+QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
 {
     QGraphicsPathItem *item = new QGraphicsPathItem;
-    item->setPos(x, y);
-
+    item->setPos(x,y);
+    
     //qDebug()<<x<<", "<<y;
-
+    
     QPainterPath path;
     for(int i = 0; i < obj->nVertices; i++)
-        path.addRoundRect(obj->padfX[i]+dx, obj->padfY[i]+dy, 1, 1, 90);
+        path.addRoundRect(obj->padfX[i]+dx,obj->padfY[i]+dy,1,1,90);
 
     item->setPath(path);
     item->setBrush(Qt::black);
-    item->setTransform(QTransform::fromScale(sx, sy), true);
+    item->scale(sx, sy);
 
     return item;
 }
-QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj,
-		int x, int y, double dx, double dy, double sx, double sy)
+QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
 {
     QGraphicsPathItem *item = new QGraphicsPathItem;
-    item->setPos(x, y);
-
+    item->setPos(x,y);
+    
     vector<list<QPointF> > points(obj->nParts);
 
-    int iPart, j = 0, nextStart = 0;
+    int iPart,j=0,nextStart=0; 
 	for (iPart = 0; iPart < obj->nParts; iPart++)
 	{
-		if (iPart == obj->nParts - 1)
+		if (iPart == obj->nParts-1)
 			nextStart = obj->nVertices;
-		else
-			nextStart = obj->panPartStart[iPart + 1];
+		else 
+			nextStart = obj->panPartStart[iPart+1];
 
 		list<QPointF> line;
-		while (j < nextStart)
+		while (j<nextStart)
 		{
 			line.push_back(QPointF(obj->padfX[j]+dx, obj->padfY[j]+dy));
 			j++;
 		}
 		points[iPart] = line;
 	}
-
+    
     QPainterPath path;
-
-    for(unsigned int i = 0; i < points.size(); i++) {
+    
+    for(unsigned int i = 0; i < points.size(); i++){
         list<QPointF>::iterator it;
         it = points[i].begin();
         path = QPainterPath(*it);
         it++;
-        for(; it != points[i].end(); it++) {
+        for(; it != points[i].end(); it++){
             path.lineTo(*it);
         }
     }
     item->setBrush(Qt::NoBrush);
 
     item->setPath(path);
-    item->setTransform(QTransform::fromScale(sx, sy), true);
+    item->scale(sx, sy);
 
     return item;
 }
@@ -306,7 +305,7 @@ void ObserverShapefile::scaleView(qreal newScale)
     QMatrix oldMatrix = view->matrix();
     view->resetMatrix();
     view->translate(oldMatrix.dx(), oldMatrix.dy());
-    view->scale(newScale, newScale * -1);
+    view->scale(newScale, newScale*-1);
 }
 
 void ObserverShapefile::treeLayers_itemChanged(QTreeWidgetItem * item, int /*column*/)
@@ -317,14 +316,7 @@ void ObserverShapefile::treeLayers_itemChanged(QTreeWidgetItem * item, int /*col
     Attributes * attrib = mapAttributes->value(item->text(0));
     if (attrib)
     {
-        attrib->setVisible((item->checkState(0) == Qt::Checked) ? true : false);
+        attrib->setVisible( (item->checkState(0) == Qt::Checked) ? true : false );
         painter->replotMap();
     }
 }
-
-int ObserverShapefile::close()
-{
-    ObserverMapSuperclass::close();
-    return 0;
-}
-

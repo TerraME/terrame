@@ -2,21 +2,26 @@
 #include "observerInterf.h"
 
 #include <time.h>
-#include <string>
-#include <QApplication>
-#include <QBuffer>
-#include <QByteArray>
-#include <QDebug>
 
 #ifdef TME_BLACK_BOARD
     #include "blackBoard.h"
 #endif
 
+#define TME_STATISTIC_UNDEF
+
 #ifdef TME_STATISTIC
-    #include "statistic.h"
+    // Estatisticas de desempenho
+    #include "../observer/statistic/statistic.h"
 #endif
 
-#include "legendAttributes.h"
+#include "components/legend/legendAttributes.h"
+
+//#include <iostream>
+#include <string>
+#include <QApplication>
+#include <QBuffer>
+#include <QByteArray>
+#include <QDebug>
 
 using namespace TerraMEObserver;
 
@@ -24,16 +29,14 @@ const char *const observersTypesNames[] =
 {
     "", "TextScreen", "LogFile", "Table", "Graphic",
     "DynamicGraphic", "Map", "UDPSender", "Scheduler",
-    "Image", "StateMachine", "Neigh", "Shapefile",
-    "TCPSender"
+    "Image", "StateMachine", "Player"
 };
 
 const char *const subjectTypesNames[] =
 {
     "", "Cell", "CellularSpace", "Neighborhood", "Timer",
-    "Event", "Trajectory", "Automaton", "Agent", "Environment",
-    "Society"
-    /* "Message", "State", "JumpCondition", "FlowCondition" */
+    "Event", /*"Message",*/ "Trajectory", "Automaton", "Agent",
+    /* "State", "JumpCondition", "FlowCondition",*/ "Environment"
 };
 
 const char *const dataTypesNames[] =
@@ -50,6 +53,7 @@ const char *const stdDevNames[] =
 {
     "Full", "Half", "Quarter"
 };
+
 
 // const char *getSubjectName(TypesOfSubjects type)
 const char *getSubjectName(int type)
@@ -81,74 +85,43 @@ const char *getStdDevNames(int type)
     return (type == TObsNone) ? "None" : stdDevNames[type];
 }
 
+
+
 bool sortAttribByType(Attributes *a, Attributes *b)
 {
     return a->getType() < b->getType();
 }
 
-bool sortByClassName(const QPair<Subject *, QString> & pair1,
-    const QPair<Subject *, QString> & pair2)
+bool sortByClassName(const QPair<Subject *, QString> & pair1, 
+    const QPair<Subject *, QString> & pair2) 
 {
     return pair1.second.toLower() < pair2.second.toLower();
 }
 
-void delay(double seconds)
+void delay(float seconds)
 {
     clock_t endwait;
-    endwait = clock() + seconds * CLOCKS_PER_SEC;
+    endwait = clock() + seconds * CLOCKS_PER_SEC ;
     while (clock() < endwait)
         qApp->processEvents();
 }
 
-#include <QFile>
-#include <QTextStream>
 
-void TerraMEObserver::dumpRetrievedState(const QString & msg, const QString &name)
-{
-    static int asas = 0;
-	asas++;
 
-    QFile file(name + QString::number(asas) + ".txt");
-    if(file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        QTextStream out(&file);
-
-        foreach(const QString x, msg.split(PROTOCOL_SEPARATOR, QString::SkipEmptyParts))
-            out << x << "\n";
-    }
-}
-
-void TerraMEObserver::formatSpeed(double speed, QString &strSpeed)
-{
-    strSpeed = QObject::tr("Speed: ");
-
-    if(speed < 1024)
-	{
-        strSpeed.append(QString("%1 bytes/s").arg(speed, 3, 'f', 1));
-    }
-    else
-    {
-        if(speed < MEGABYTE_VALUE)
-            strSpeed.append(QString("%1 KB/s").arg(speed * KILOBYTE_DIV, 3, 'f', 1));
-        else
-            strSpeed.append(QString("%1 MB/s").arg(speed * MEGABYTE_DIV, 3, 'f', 1));
-    }
-}
-
-// store the number of observers created along the simulation
+// mantem o numero de observer já criados
 static long int numObserverCreated = 0;
 static long int numSubjectCreated = 0;
 
 //////////////////////////////////////////////////////////// Observer
 ObserverImpl::ObserverImpl() : visible(true)
-{
+{ 
     numObserverCreated++;
     observerID = numObserverCreated;
 }
 
 ObserverImpl::ObserverImpl(const ObserverImpl &other)
 {
-    if(this != &other)
+    if (this != &other)
     {
         observerID = other.observerID;
         visible = other.visible;
@@ -163,7 +136,7 @@ ObserverImpl::ObserverImpl(const ObserverImpl &other)
 
 ObserverImpl & ObserverImpl::operator=(ObserverImpl &other)
 {
-    if(this == &other)
+    if (this == &other)
         return *this;
 
     observerID = other.observerID;
@@ -183,33 +156,94 @@ ObserverImpl::~ObserverImpl()
     bool thereAreOpenWidgets = false;
     foreach (QWidget *widget, QApplication::allWidgets())
     {
-        if(widget)
+        if (widget)
             thereAreOpenWidgets = true;
     }
-    if(!thereAreOpenWidgets)
+    if(! thereAreOpenWidgets)
         QApplication::exit();
 }
 
-bool ObserverImpl::update(double time)
+bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro aqui
 {
-    if(obsHandle_->getType() == TObsDynamicGraphic)
+    // if (! obsHandle_->getVisible())
+    //    return false;
+
+    if (obsHandle_->getType() == TObsDynamicGraphic)
         obsHandle_->setModelTime(time);
 
-    // TO-DO: Otimizar, retornar referencia ou ponteiro
-    // recupera a lista de atributos em observacao
+    // recupera a lista de atributos em observação
     QStringList attribList = obsHandle_->getAttributes();
 
+#ifdef TME_BLACK_BOARD
+
+
+#ifdef TME_STATISTIC
+    if ((time == -1) && (obsHandle_->getType() == TObsUDPSender))
+        obsHandle_->setModelTime(time);
+    else
+    {
+    // double t = Statistic::getInstance().startMicroTime();
+#endif
+
     // getState via BlackBoard
-    QDataStream& state = BlackBoard::getInstance()
-    					.getState(subject_, obsHandle_->getId(), attribList);
+    QDataStream& state = BlackBoard::getInstance().getState(subject_, obsHandle_->getId(), attribList);
 
-    obsHandle_->draw(state);
-    state.device()->close();
+#ifdef TME_STATISTIC 
+    t = Statistic::getInstance().endMicroTime() - t;
+    Statistic::getInstance().addElapsedTime("Recovery with BB", t);
+    Statistic::getInstance().startVolatileTime()
+#endif
 
+    state.device()->open(QIODevice::ReadOnly);
+    obsHandle_->draw( state );
+    state.device()->close(); 
+
+#ifdef TME_STATISTIC 
+    }
+#endif
+
+
+#else  // TME_BLACK_BOARD
+
+    // getState feito a partir do subject
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+    QDataStream out(&buffer);
+
+    buffer.open(QIODevice::WriteOnly);
+    
+#ifdef TME_STATISTIC
+    if ((time == -1) && (obsHandle_->getType() == TObsUDPSender))
+        obsHandle_->setModelTime(time);
+    else
+    {
+    double t = Statistic::getInstance().startMicroTime();
+#endif
+
+    QDataStream& state = subject_->getState(out, subject_, obsHandle_->getId(), attribList);
+
+#ifdef TME_STATISTIC 
+    t = Statistic::getInstance().endMicroTime() - t;
+    // t = Statistic::getInstance().endTime();
+    Statistic::getInstance().addElapsedTime("Recovery without BB", t);
+    Statistic::getInstance().startVolatileTime();
+#endif
+
+    buffer.close();
+    buffer.open(QIODevice::ReadOnly);
+    obsHandle_->draw( state );
+    buffer.close();
+
+#ifdef TME_STATISTIC 
+    }
+#endif
+
+#endif  // TME_BLACK_BOARD
+    
     return true;
 }
 
-bool ObserverImpl::getVisible() const
+bool ObserverImpl::getVisible()
 {
     return ObserverImpl::visible;
 }
@@ -230,24 +264,14 @@ void ObserverImpl::setObsHandle(Observer* obs)
     subject_->attach(obs);
 }
 
-const TypesOfObservers ObserverImpl::getObserverType() const
+const TypesOfObservers ObserverImpl::getObserverType()
 {
     return obsHandle_->getType();
 }
 
-const TypesOfSubjects ObserverImpl::getSubjectType() const
-{
-    return subject_->getType();
-}
-
-int ObserverImpl::getId() const
+int ObserverImpl::getId()
 {
     return observerID;
-}
-
-int ObserverImpl::getSubjectId() const
-{
-    return subject_->getId();
 }
 
 QStringList ObserverImpl::getAttributes()
@@ -266,15 +290,6 @@ void ObserverImpl::setDirtyBit()
     // obsHandle_->setDirtyBit();
 }
 
-//void ObserverImpl::setId(int id)
-//{
-//    observerID = id;
-//}
-
-int ObserverImpl::close()
-{
-    return 0;
-}
 
 ////////////////////////////////////////////////////////////  Subject
 SubjectImpl::SubjectImpl()
@@ -285,19 +300,19 @@ SubjectImpl::SubjectImpl()
 
 SubjectImpl::SubjectImpl(const SubjectImpl &other)
 {
-    if(this != &other)
+    if (this != &other)
     {
         observers.clear();
         ObsList &obs = (ObsList &) other.observers;
         ObsListIterator i = obs.begin();
-        for(; i != obs.end(); ++i)
+        for (; i != obs.end(); ++i)
             observers.push_back(*i);
     }
 }
 
 SubjectImpl & SubjectImpl::operator=(SubjectImpl &other)
 {
-    if(this == &other)
+    if (this == &other)
         return *this;
 
     observers.clear();
@@ -327,9 +342,9 @@ Observer * SubjectImpl::getObserverById(int id)
 {
     Observer *obs = 0;
 
-    for(ObsListIterator i (observers.begin()); i != observers.end(); ++i)
+    for (ObsListIterator i (observers.begin()); i != observers.end(); ++i)
     {
-        if((*i)->getId() == id)
+        if ( (*i)->getId() == id)
         {
             obs = *i;
             break;
@@ -338,80 +353,52 @@ Observer * SubjectImpl::getObserverById(int id)
     return obs;
 }
 
-void SubjectImpl::notifyObservers(double time)
+void SubjectImpl::notifyObservers(double time) 
 {
 #ifdef TME_BLACK_BOARD
-    BlackBoard::getInstance().stopControl();
-    BlackBoard::getInstance().setDirtyBit(getId());
+    BlackBoard::getInstance().setDirtyBit( getId() );
 #endif
 
     ObsList detachList;
 
-#ifdef TME_STATISTIC
-    for(ObsListIterator i (observers.begin()); i != observers.end(); ++i)
-    {
-//#ifdef TME_BLACK_BOARD
-//        (*i)->setDirtyBit();
-//#endif
-
-        double t = Statistic::getInstance().startMicroTime();
-
-        QString name = QString("Response Time (%1) %2")
-        		.arg(getObserverName((*i)->getType())).arg((*i)->getId());
-
-        if(!(*i)->update(time))
-        {
-            detachList.push_back(*i);
-        }
-
-        if((time == -1) && (((*i)->getType() == TObsUDPSender)
-        		|| ((*i)->getType() == TObsTCPSender)))
-        {
-            delay(0.750);
-            (*i)->setModelTime(time);
-            t -= 750.0; // remove delay time
-        }
-
-        t = Statistic::getInstance().endMicroTime() - t;
-        Statistic::getInstance().addElapsedTime(name, t);
-    }
-
-    // Calculates the time between sequential and parallel code
-    double tt = Statistic::getInstance().endMicroTime()
-    		- Statistic::getInstance().getIntermediateTime();
-    Statistic::getInstance().addElapsedTime("Total Response Time Seq - cellspace", tt);
-
-#else
     for (ObsListIterator i (observers.begin()); i != observers.end(); ++i)
     {
 //#ifdef TME_BLACK_BOARD
 //        (*i)->setDirtyBit();
 //#endif
 
-        if (!(*i)->update(time))
+#ifdef TME_STATISTIC
+        double t = Statistic::getInstance().startTime();
+
+        char pName[100];
+        sprintf(pName, "%p", (*i) );
+        QString name = QString("Response Time (%1) %2").arg(getObserverName( (*i)->getObserverType() )) .arg(pName);
+
+        if (! (*i)->update(time))
         {
             detachList.push_back(*i);
         }
+        t = Statistic::getInstance().endTime() - t;
+        Statistic::getInstance().addElapsedTime(name, t);
+        // Statistic::getInstance().collectMemoryUsage();
+#else
+        if (! (*i)->update(time))
+        {
+            detachList.push_back(*i);
+        }
+#endif
     }
-#endif
 
-#ifdef TME_BLACK_BOARD
-    BlackBoard::getInstance().startControl();
-#endif
+    // trata de alguma maneira os observers que não foram atualizados
+    // e estão presentes na lista detachList.
 }
 
-const TypesOfSubjects SubjectImpl::getSubjectType() const
+const TypesOfSubjects SubjectImpl::getSubjectType()
 {
     return TObsUnknown;
 }
 
-int SubjectImpl::getId() const
-{
+int SubjectImpl::getId() const 
+{ 
     return subjectID;
 }
-
-void SubjectImpl::setId(int id)
-{
-    subjectID = id;
-}
-

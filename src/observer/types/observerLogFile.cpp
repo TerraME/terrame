@@ -1,53 +1,45 @@
 #include "observerLogFile.h"
 
-#include <QApplication>
-#include <QMessageBox>
-#include <QTextStream>
-#include <QDebug>
+#include <QtGui/QApplication>
+#include <QtGui/QMessageBox>
+#include <QtCore/QTextStream>
 
-#include "logFileTask.h"
-#include "taskManager.h"
+ObserverLogFile::ObserverLogFile() : QObject()
+{
+    init();
+}
 
-#ifdef TME_BLACK_BOARD
-    #include "blackBoard.h"
-    #include "subjectAttributes.h"
-#endif
+ObserverLogFile::ObserverLogFile(Subject *subj)
+    : QObject(), ObserverInterf( subj ) // , QThread()
+{
+    init();
+}
 
-ObserverLogFile::ObserverLogFile(Subject *subj, QObject *parent)
-    : QObject(parent), ObserverInterf(subj)
+ObserverLogFile::~ObserverLogFile()
+{
+    // wait();
+}
+
+void ObserverLogFile::init()
 {
     observerType = TObsLogFile;
-    subjectType = subj->getType(); // TO_DO: Changes it to Observer pattern
+    subjectType = TObsUnknown;
 
-    UNKNOWN = "unknown";
-    logTask = new LogFileTask(subj->getId(), subjectType);
+    paused = false;
+    header = false;
+
+    fileName = DEFAULT_NAME + ".csv";
+    separator = ";";
 
     // // prioridade da thread
     // //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
     //start(QThread::IdlePriority);
 }
 
-ObserverLogFile::~ObserverLogFile()
-{
-    delete logTask; logTask = 0;
-}
-
-const TypesOfObservers ObserverLogFile::getType() const
+const TypesOfObservers ObserverLogFile::getType()
 {
     return observerType;
 }
-
-#ifdef TME_BLACK_BOARD
-
-bool ObserverLogFile::draw(QDataStream & /*state*/)
-{
-    BagOfTasks::TaskManager::getInstance().add(logTask);
-
-    // qApp->processEvents();
-    return (BlackBoard::getInstance().canDraw());
-}
-
-#else
 
 bool ObserverLogFile::draw(QDataStream &state)
 {
@@ -65,7 +57,7 @@ bool ObserverLogFile::draw(QDataStream &state)
     //int nroElems = tokens.at(3).toInt();
     int j = 4;
 
-    for (int i = 0; i < qtdParametros; i++)
+    for (int i=0; i < qtdParametros;i++)
     {
         QString key = tokens.at(j);
         j++;
@@ -102,64 +94,142 @@ bool ObserverLogFile::draw(QDataStream &state)
     return write();
 }
 
-#endif
-
-void ObserverLogFile::setProperties(const QString &filename,
-		const QString &separator, const QString &mode)
+void ObserverLogFile::setFileName(QString name)
 {
-    if (logTask)
-        logTask->setProperties(filename, separator, mode);
+    fileName = name;
 }
 
-void ObserverLogFile::setFileName(const QString &filename)
+void ObserverLogFile::setSeparator(QString sep)
 {
-    if (logTask)
-        logTask->setFilename(filename);
-}
-
-void ObserverLogFile::setSeparator(const QString &sep)
-{
-    if (logTask)
-        logTask->setSeparator(sep);
-}
-
-void ObserverLogFile::setWriteMode(const QString &mode)
-{
-    if (logTask)
-        logTask->setWriteMode(mode);
-}
-
-const QString & ObserverLogFile::getWriteMode() const
-{
-    if (logTask)
-        return logTask->getWriteMode();
-
-    return UNKNOWN;
+    separator = sep;
 }
 
 void ObserverLogFile::setAttributes(QStringList &attribs)
 {
-#ifdef TME_BLACK_BOARD
-    SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr)
-        subjAttr->setSubjectType(getSubjectType());
-#endif
-
-#ifndef TME_BLACK_BOARD
     attribList = attribs;
-#endif
+    for (int i = 0; i < attribList.size(); i++)
+        valuesList.insert(i, QString("")); // lista dos itens na ordem em que aparecem
+    header = true;
+}
 
-    if (logTask)
-        logTask->createHeader(attribs);
+bool ObserverLogFile::headerDefined()
+{
+    return header;
+}
+
+bool ObserverLogFile::write() //QString text)
+{
+    if (fileName.isEmpty() || fileName.isNull())
+    {
+        QMessageBox::information(0, QObject::tr("TerraME Observer :: LogFile"),
+                                 QObject::tr("Invalid filename."));
+        return false;
+    }
+
+    QFile file(fileName);
+
+    // Caso já exista o arquivo, os novos valores são inseridos ao final do arquivo
+    // Caso contrário, cria o arquivo com o nome passado.
+    //if (!QFile::exists(fileName)){
+    //	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+    //		QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
+    // QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+    //			.arg(this->fileName).arg(file.errorString()	));
+    //		return false;
+    //	}
+    //}
+    //else{
+    //	if (!file.open(QIODevice::Append | QIODevice::Text)){
+    //		QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
+    // QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+    //			.arg(this->fileName).arg(file.errorString()	));
+    //		return false;
+    //	}
+    //}
+
+
+    //if (!QFile::exists(fileName)){
+    if (mode == QString("w"))
+    {
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
+                                     QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+                                     .arg(this->fileName).arg(file.errorString()	));
+            return false;
+        }
+        mode = "w+";
+    }
+    else
+    {
+        if (!file.open(QIODevice::Append | QIODevice::Text))
+        {
+            QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
+                                     QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+                                     .arg(this->fileName).arg(file.errorString()	));
+            return false;
+        }
+    }
+
+    // insere o cabeçalho do arquivo
+    if (header)
+    {
+        QString headers;
+        for (int i = 0; i < attribList.size(); ++i)
+        {
+            headers += attribList.at(i);
+            
+            if (i < attribList.size() - 1)
+                headers += separator;
+        }
+        header = false;
+        headers += "\n";
+        file.write(headers.toAscii().data(),  qstrlen( headers.toAscii().data() ));
+    }
+
+    QString text;
+    for (int i = 0; i < valuesList.size(); ++i)
+    {
+        text += valuesList.at(i);
+
+        if (i < attribList.size() - 1)
+            text += separator;
+    }
+
+    text.append("\n");
+    file.write(text.toAscii().data(), qstrlen( text.toAscii().data() ));
+    file.close();
+
+    return true;
+}
+
+void ObserverLogFile::setWriteMode(QString mode)
+{
+    this->mode = mode;
+}
+
+QString ObserverLogFile::getWriteMode()
+{
+    return mode;
+}
+
+void ObserverLogFile::run()
+{
+    ////while (!paused)
+    ////{
+    ////	QThread::exec();
+    ////}
+    //QThread::exec();
+}
+
+void ObserverLogFile::pause()
+{
+    paused = !paused;
 }
 
 QStringList ObserverLogFile::getAttributes()
 {
-#ifdef TME_BLACK_BOARD
-    return (logTask ? logTask->getAttributes() : QStringList());
-#else
     return attribList;
-#endif
 }
 
 int ObserverLogFile::close()

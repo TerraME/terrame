@@ -1,25 +1,16 @@
 #include "observerImage.h"
+#include <QtGui/QApplication>
 #include "terrameGlobals.h"
 
-#include <QApplication>
-#include <QDesktopWidget>
-
-#include "imageGUI.h"
-#include "decoder.h"
-#include "observerMap.h"
-
-#ifdef TME_BLACK_BOARD
-	#include "blackBoard.h"
-#endif
-
-extern "C"
-{
-#include <lua.h>
-}
-#include "luna.h"
-
+///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L;
+
 extern ExecutionModes execModes;
+
+
+#include "image/imageGUI.h"
+#include "../protocol/decoder/decoder.h"
+#include "observerMap.h"
 
 using namespace TerraMEObserver;
 
@@ -28,26 +19,24 @@ ObserverImage::ObserverImage (Subject *sub) : ObserverInterf(sub)
     obsImgGUI = new ImageGUI();
 
     observerType = TObsImage;
-    subjectType = sub->getType(); // TO_DO: Changes it to Observer pattern
+    subjectType = TObsUnknown;
 
     mapAttributes = new QHash<QString, Attributes*>();
+    protocolDecoder = new Decoder(mapAttributes);
 
-#ifdef TME_BLACK_BOARD
-    protocolDecoder = NULL;
-#else
-    protocolDecoder = new Decoder();
-#endif
-
-    painterWidget = new PainterWidget(mapAttributes, observerType);
-    //painterWidget->setOperatorMode(QPainter::CompositionMode_Multiply);
-    //// painterWidget->setGeometry(0, 0, 1500, 1500);
-    //// painterWidget->show();
+    painterWidget = new PainterWidget(mapAttributes);
+    painterWidget->setOperatorMode(QPainter::CompositionMode_Multiply);
+    // painterWidget->setGeometry(0, 0, 1500, 1500);
+    // painterWidget->show();
 
     width = 0;
     height = 0;
+    newWidthCellSpace = 0.;
+    newHeightCellSpace = 0.;
 
+    savingImages = true;
     builtLegend = 0;
-    legendWindow = 0;		// pointer for LegendWindow
+    legendWindow = 0;		// ponteiro para LegendWindow
     path = DEFAULT_NAME;
 
     disableSaveImage = false;
@@ -57,37 +46,14 @@ ObserverImage::~ObserverImage()
 {
     foreach(Attributes *attrib, mapAttributes->values())
         delete attrib;
-    delete mapAttributes; mapAttributes = 0;
+    delete mapAttributes;
 
-    delete painterWidget; painterWidget = 0;
-    delete legendWindow; legendWindow = 0;
+    delete painterWidget;
+    delete legendWindow;
 
-    delete obsImgGUI; obsImgGUI = 0;
-    delete protocolDecoder; protocolDecoder = 0;
+    delete obsImgGUI;
+    delete protocolDecoder;
 }
-
-#ifdef TME_BLACK_BOARD
-
-bool ObserverImage::draw(QDataStream &state)
-{
-    bool drw = false;
-
-    if (BlackBoard::getInstance().canDraw())
-        drw = painterWidget->draw();
-
-    if (/*decoded &&*/ legendWindow && (builtLegend < 1))
-    {
-        // painterWidget->draw();
-        legendWindow->makeLegend();
-
-        builtLegend++;
-    }
-
-    qApp->processEvents();
-    return drw;
-}
-
-#else
 
 bool ObserverImage::draw(QDataStream &state)
 {
@@ -104,39 +70,37 @@ bool ObserverImage::draw(QDataStream &state)
         if (attrib->getType() == TObsCell)
         {
             attrib->clear();
-            // decoded = protocolDecoder->decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
+            decoded = protocolDecoder->decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
             if (decoded)
                 painterWidget->plotMap(attrib);
         }
         qApp->processEvents();
     }
 
-    if (/*decoded &&*/ legendWindow && (builtLegend < 1))
+    if (/*decoded &&*/ legendWindow && (builtLegend < 2))
     {
         legendWindow->makeLegend();
 
-        // Check because the first invocation of plotMap
-        // method generates the solid black foreground image. Thus, it is necessary
-        // to repeat that call here!
+        // Verificar porque a primeira invocação do método plotMap
+        // gera a imagem foreground totalmente preta. Assim, é preciso
+        // repetir essa chamada aqui!
         painterWidget->replotMap();
 
         builtLegend++;
     }
 
-    //if (!disableSaveImage)
+    //if (! disableSaveImage)
     //    return save();
 
     return decoded;
 }
-
-#endif
 
 QStringList ObserverImage::getAttributes()
 {
     return attribList;
 }
 
-const TypesOfObservers ObserverImage::getType() const
+const TypesOfObservers ObserverImage::getType()
 {
     return observerType;
 }
@@ -149,13 +113,12 @@ void ObserverImage::setPath(const QString & pth, const QString & prefix)
         path = pth + "/" + prefix;
 
     obsImgGUI->setPath(pth, prefix);
-    painterWidget->setPath(path);
 }
 
 void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
-    QStringList legAttribs, TypesOfSubjects type)
+                                  QStringList legAttribs)
 {
-    // list of attributes that will be observed
+    // lista com os atributos que serão observados
     //itemList = headers;
     if (attribList.isEmpty())
     {
@@ -165,57 +128,54 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
     {
         foreach(const QString & str, attribs)
         {
-            if (!attribList.contains(str))
+            if (! attribList.contains(str))
                 attribList.append(str);
         }
     }
+
+#ifdef DEBUG_OBSERVER
+    qDebug() << "\nheaders:\n" << headers;
+    qDebug() << "\nitemList:\n" << itemList;
+    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
+
+    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
+    qDebug() << "num de legendas: " << (int) legKeys.size() / LEGEND_ITENS;
+
+    for (int j = 0; j < legKeys.size(); j++)
+        qDebug() << legKeys.at(j) << " = " << legAttrib.at(j);
+#endif
 
     for (int j = 0; (legKeys.size() > 0 && j < LEGEND_KEYS.size()); j++)
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
         {
-            //qFatal("Error: Parameter legend \"%s\" not found. Please check it in the model.", qPrintable(LEGEND_KEYS.at(j)));
-            //string err_out = string("Neighborhood '") + string (index) + string("' not found");
+            //qFatal("Error: Parameter legend \"%s\" not found. Please check it in the model.", qPrintable( LEGEND_KEYS.at(j) ) );
+            //string err_out = string("Neighborhood '" ) + string (index) + string("' not found");
             lua_getglobal(L, "incompatibleTypesErrorMsg");
-            lua_pushstring(L, LEGEND_KEYS.at(j).toLatin1().constData());
-            lua_pushstring(L, "string");
-            lua_pushstring(L, "nil");
-            lua_pushnumber(L, 3);
-            lua_call(L, 4, 0);
+            lua_pushstring(L,LEGEND_KEYS.at(j).toAscii().constData());
+            lua_pushstring(L,"string");
+            lua_pushstring(L,"nil");
+            lua_pushnumber(L,3);
+            lua_call(L,4,0);
         }
     }
-    int dataType = 0, mode = 0, slices = 0, precision = 0, stdDeviation = 0, max = 0;
+    int type = 0, mode = 0, slices = 0, precision = 0, stdDeviation = 0, max = 0;
     int min = 0, colorBar = 0, font = 0, fontSize = 0, symbol = 0, width = 0;
-    // int style = 0;
-
-#ifdef TME_BLACK_BOARD
-    SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr)
-        subjAttr->setSubjectType(getSubjectType());
-#endif
 
     Attributes *attrib = 0;
-    for(int i = 0; i < attribList.size(); i++)
+    for( int i = 0; i < attribList.size(); i++)
     {
-        if ((attribList.at(i) != "x") && (attribList.at(i) != "y")
-            && (!mapAttributes->contains(attribList.at(i))))
+        if ((! mapAttributes->contains(attribList.at(i)) )
+                && (attribList.at(i) != "x") && (attribList.at(i) != "y") )
         {
-            attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(),
-                cellularSpaceSize.height(), type);
-
-#ifdef TME_BLACK_BOARD
-            attrib->setParentSubjectID(getSubjectId());
-            attrib->setXsValue(subjAttr->getXs());
-            attrib->setYsValue(subjAttr->getYs());
-#endif
-
             obsAttrib.append(attribList.at(i));
+            attrib = new Attributes(attribList.at(i), width * height, newWidthCellSpace, newHeightCellSpace );
             attrib->setVisible(true);
 
-            //------- Retrieves the legend of file and creates the object attrib
-            if (!legKeys.isEmpty())
+            //------- Recupera a legenda do arquivo e cria o objeto attrib
+            if (! legKeys.isEmpty())
             {
-                dataType = legKeys.indexOf(TYPE);
+                type = legKeys.indexOf(TYPE);
                 mode = legKeys.indexOf(GROUP_MODE);
                 slices = legKeys.indexOf(SLICES);
                 precision = legKeys.indexOf(PRECISION);
@@ -227,34 +187,27 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
                 fontSize = legKeys.indexOf(FONT_SIZE);
                 symbol = legKeys.indexOf(SYMBOL);
                 width = legKeys.indexOf(WIDTH);
-                // style = legKeys.indexOf(STYLE);
 
-                attrib->setDataType((TypesOfData) legAttribs.at(dataType).toInt());
-                attrib->setGroupMode((GroupingMode) legAttribs.at(mode).toInt());
-                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// count on zero
-                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// count on zero
-                attrib->setStdDeviation((StdDev) legAttribs.at(stdDeviation).toInt());
+                attrib->setDataType( (TypesOfData) legAttribs.at(type).toInt());
+                attrib->setGroupMode( (GroupingMode) legAttribs.at(mode).toInt());
+                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// conta com o zero
+                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// conta com o zero
+                attrib->setStdDeviation( (StdDev) legAttribs.at(stdDeviation).toInt());
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());
 
-                bool ok = false;
-                int value = 0;
-                //Font
+                //Fonte
                 attrib->setFontFamily(legAttribs.at(font));
-                value = legAttribs.at(fontSize).toInt(&ok, false);
-                if (ok)
-                    attrib->setFontSize(value);
-                else
-                    attrib->setFontSize(12);
+                attrib->setFontSize(legAttribs.at(fontSize).toInt());
 
-                // Converts the ASCII code of the symbol to character
-                ok = false;
-                value = legAttribs.at(symbol).toInt(&ok, 10);
+                //Converte o código ASCII do símbolo em caracter
+                bool ok = false;
+                int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
-                    attrib->setSymbol(QString(QChar(value)));
+                    attrib->setSymbol( QString( QChar(asciiCode ) ));
                 else
                     attrib->setSymbol(legAttribs.at(symbol));
-
+                
 				attrib->setWidth(legAttribs.at(width).toDouble());
 
                 std::vector<ColorBar> colorBarVec;
@@ -275,48 +228,51 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
                     legKeys.removeFirst();
                     legAttribs.removeFirst();
                 }
+
+#ifdef DEBUG_OBSERVER
+                qDebug() << "valueList.size(): " << valueList.size();
+                qDebug() << valueList;
+                qDebug() << "\nlabelList.size(): " << labelList.size();
+                qDebug() << labelList;
+                qDebug() << "\nattrib->toString()\n" << attrib->toString();
+#endif
             }
-            attrib->makeBkp();
+
+            //------- end
+
             mapAttributes->insert(attribList.at(i), attrib);
+            attrib->makeBkp();
         }
     }
 
-    if (!legendWindow)
+    if (! legendWindow)
         legendWindow = new LegendWindow();
-
-    legendWindow->setValues(mapAttributes, obsAttrib);
-	painterWidget->updateAttributeList();
+    legendWindow->setValues(mapAttributes);   
 }
 
 void ObserverImage::setCellSpaceSize(int w, int h)
 {
-    QRect deskRect = qApp->desktop()->screenGeometry(obsImgGUI);
-
-    double widthAux = deskRect.width() / w;
-    double heightAux = deskRect.height() / h;
-
     width = w;
     height = h;
+    newWidthCellSpace = width * SIZE_CELL;
+    newHeightCellSpace = height * SIZE_CELL;
 
-    cellularSpaceSize = QSize(width * widthAux, height * widthAux);
-    painterWidget->resize(cellularSpaceSize, QSize(widthAux, widthAux));
+    painterWidget->resizeImage(QSize(newWidthCellSpace, newHeightCellSpace));
     needResizeImage = true;
 }
 
 bool ObserverImage::save()
 {
-    bool savingImages = false; //painterWidget->save(path);
+    if (savingImages)
+        savingImages = painterWidget->save(path);
 
-    if (!savingImages)
+    if (! savingImages)
     {
         obsImgGUI->setStatusMessage("Unable to save the image.");
-        if (execModes != Quiet)
+        if (execModes != Quiet )
         {
-			string str = string("Unable to save the image."
-								"The path is incorrect or you do not have permission to perform this task.");
-			lua_getglobal(L, "customWarning");
-			lua_pushstring(L, str.c_str());
-			lua_call(L, 1, 0);
+            qWarning("Warning: Unable to save the image."
+                     "The path is incorrect or you do not have permission to perform this task.");
         }
     }
     return savingImages;
@@ -337,9 +293,9 @@ Decoder & ObserverImage::getProtocolDecoder() const
     return *protocolDecoder;
 }
 
-const QSize & ObserverImage::getCellSpaceSize() const
+const QSize ObserverImage::getCellSpaceSize()
 {
-    return cellularSpaceSize;
+    return QSize(newWidthCellSpace, newHeightCellSpace);
 }
 
 void ObserverImage::setDisableSaveImage()

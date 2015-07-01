@@ -1,35 +1,25 @@
 #include "painterWidget.h"
 
-#include <QApplication>
-#include <QPixmap>
-#include <QPainter>
-#include <QMetaType>
-#include <QMessageBox>
-#include <QScrollBar>
-#include <QFile>
+#include <QtGui/QPixmap>
+#include <QtGui/QPainter>
+#include <QtCore/QMetaType>
+#include <QtGui/QMessageBox>
+#include <QtGui/QScrollBar>
+//#include <QRectF>
+#include <QtCore/QFile>
 #include <QDebug>
 
 #include "observerImpl.h"
-#include "legendAttributes.h"
+#include "../legend/legendAttributes.h"
 
-#include "taskManager.h"
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-    // Performance Statistics
-    #include "statistic.h"
-#endif
+static const QString COMPLEMENT("000000");
 
 using namespace TerraMEObserver;
 
-PainterWidget::PainterWidget(QHash<QString, Attributes*> *mapAttrib,
-    TypesOfObservers observerType, QWidget *parent)
+PainterWidget::PainterWidget(QHash<QString, Attributes*> *mapAttrib, QWidget *parent)
     : mapAttributes(mapAttrib), QWidget(parent)
 {
-    // Optimization for Paint Event
-    // setAttribute(Qt::WA_OpaquePaintEvent);
-
     // zoom
     handTool = false;
     zoomWindow = false;
@@ -38,6 +28,7 @@ PainterWidget::PainterWidget(QHash<QString, Attributes*> *mapAttrib,
     heightProportion = 1.0;
     widthProportion = 1.0;
 
+    countSave = 0;
     pixmapScale = 0.;
     curScale = 1.0;
     operatorMode = QPainter::CompositionMode_Multiply;
@@ -46,36 +37,69 @@ PainterWidget::PainterWidget(QHash<QString, Attributes*> *mapAttrib,
     zoomInCursor = QCursor(QPixmap(":icons/zoomIn.png").scaled(ICON_SIZE));
     zoomOutCursor = QCursor(QPixmap(":icons/zoomOut.png").scaled(ICON_SIZE));
 
-    // resultImage = QImage(IMAGE_SIZE, QImage::Format_ARGB32_Premultiplied);
-    resultImage = QImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
-    resultImage.fill(0);
-    // resultImageBkp = resultImage;
+    resultImage = QImage(IMAGE_SIZE, QImage::Format_ARGB32_Premultiplied);
 
     setGeometry(0, 0, 1010, 1010);
 
-    cellSize = QSize(-1, -1);
     imageOffset = QPoint();
     showRectZoom = false;
     existAgent = false;
-    mapValuesPassed = false;
 
-    qRegisterMetaType<QImage>("QImage");
-    //connect(&visualMapping, SIGNAL(displayImage(QImage)), this, SLOT(displayImage(QImage)), Qt::DirectConnection);
-    //connect(&visualMapping, SIGNAL(update()), this, SLOT(update()), Qt::QueuedConnection);
-
-    visualMapping = new VisualMapping(observerType);
-    connect(visualMapping, SIGNAL(displayImage(QImage)),
-        this, SLOT(displayImage(QImage)) , Qt::QueuedConnection); // DirectConnection); //
-    connect(this, SIGNAL(enableGrid(bool)),
-        visualMapping, SLOT(enableGrid(bool)));
+    // connect(this, SIGNAL(gridOn(bool)), &painterThread, SLOT(gridOn(bool)));
+    painterThread.start();
 }
 
 PainterWidget::~PainterWidget()
 {
-/*
-    if (visualMapping)
-        delete visualMapping; visualMapping = 0;
-*/
+
+}
+
+void PainterWidget::calculateResult()
+{
+    resultImage.fill(0);
+    QPainter painter(&resultImage);
+
+    QPoint point(0, 0);
+
+    // qDebug() << mapAttributes->keys();
+
+    QList<Attributes *> attribs = mapAttributes->values();
+    qStableSort(attribs.begin(), attribs.end(), sortAttribByType);
+
+    foreach(Attributes * attrib, attribs)
+    {
+        if (attrib->getVisible() && (attrib->getType() != TObsAgent))
+        {
+            painter.fillRect(resultImage.rect(), Qt::white);
+
+            if (attrib->getType() == TObsCell)
+                painter.setCompositionMode(QPainter::CompositionMode_Multiply);
+            else
+			{
+				//@RAIAN
+				if(attrib->getType() == TObsNeighborhood)
+					painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+				else
+				//@RAIAN: FIM
+					painter.setCompositionMode(QPainter::CompositionMode_HardLight);
+			}
+
+            painter.drawImage(point, *attrib->getImage());
+        }
+    }
+
+    painter.end();
+
+    // resultImageBkp = QImage(resultImage.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    resultImageBkp = QImage( resultImage.scaled(size()) );
+
+    if (existAgent)
+        drawAgent();
+    
+    if (gridEnabled)
+        drawGrid();
+
+    update();
 }
 
 void PainterWidget::setOperatorMode(QPainter::CompositionMode mode)
@@ -83,84 +107,62 @@ void PainterWidget::setOperatorMode(QPainter::CompositionMode mode)
     operatorMode = mode;
 }
 
-void PainterWidget::plotMap(Attributes * /*attrib*/)
+void PainterWidget::plotMap(Attributes *attrib)
 {
-    qWarning("\nPainterWidget::plotMap() deprecated!!\n");
+    if (! attrib)
+        qFatal("\nErro: PainterWidget::plotMap - Invalid attribute!!\n");
 
-    // TO-DO: Verif., does not work with BlackBoard
+    QPainter p;
 
-    //if (!attrib)
-    //    qFatal("\nErro: PainterWidget::plotMap - Invalid attribute!!\n");
-
-    //if (attrib->getType() != TObsAgent)
-    //{
-    //    QPainter p;
-    //    visualMapping.drawAttrib(&p, attrib);
-
-    //    //static int aa = 1;
-    //    //attrib->getImage()->save(QString("%1_%2.png").arg(attrib->getName()).arg(aa));
-    //    //aa++;
-
-    //    // movido para o 'draw()'
-    //    // calculateResult();
-    //}
-    //
+    painterThread.drawAttrib(&p, attrib);
+    calculateResult();
 }
 
 void PainterWidget::replotMap()
 {
-    // qDebug() << "PainterWidget::replotMap() not implemented";
-
-    draw();
-
-    /*
     QPainter p;
 
-    foreach (Attributes *attrib, mapAttributes->values())
-    {
-        if (attrib->getType() != TObsAgent)
-            visualMapping.drawAttrib(&p, attrib);
-    }
+    QList<Attributes *> listAttribs = mapAttributes->values();
 
-    // movido para o 'draw()'
-    // calculateResult();
+    for (int i = 0; i < listAttribs.size(); i++)
+        painterThread.drawAttrib(&p, listAttribs.at(i));
 
-    */
+    calculateResult();
 }
 
 //void PainterWidget::setVectorPos(QVector<double> *xs, QVector<double> *ys)
 //{
-//    // visualMapping.setVectorPos(xs, ys);
+//    // painterThread.setVectorPos(xs, ys);
 //}
 
-bool PainterWidget::rescale(const QSize &newSize)
+bool PainterWidget::rescale(QSize size)
 {
-    QImage img = QImage(resultImage.scaled(newSize/*,
-    	Qt::IgnoreAspectRatio, Qt::SmoothTransformation*/));
+    QImage img = QImage(resultImage.scaled(size/*, Qt::IgnoreAspectRatio, Qt::SmoothTransformation*/));
 
     if (img.isNull())
     {
-        QMessageBox::information(this, "TerraME :: Map",
+        QMessageBox::information(this, "TerraME Observer : Map",
                                  tr("This zoom level generated a null image."));
         return false;
     }
 
     resultImageBkp = img;
+    
+    if (gridEnabled)
+        drawGrid();
 
     update();
     return true;
 }
 
 void PainterWidget::paintEvent(QPaintEvent * /* event */)
-{
-    // if (resultImageBkp.isNull())
-    //    return;
-
+{	
     QPainter painter(this);
-    // painter.drawPixmap(QPoint(0, 0), QPixmap::fromImage(resultImageBkp));
-    painter.drawImage(ZERO_POINT, resultImageBkp);
+    painter.drawPixmap(QPoint(0, 0), QPixmap::fromImage(resultImageBkp));
+    
+    // drawAgent();
 
-    if (!showRectZoom)
+    if (! showRectZoom)
         return;
 
     //---- Desenha o retangulo de zoom
@@ -173,25 +175,18 @@ void PainterWidget::paintEvent(QPaintEvent * /* event */)
     painter.drawRect(QRect(imageOffset, lastDragPos));
 }
 
-void PainterWidget::resizeEvent(QResizeEvent *event)
+void PainterWidget::resizeEvent(QResizeEvent * /*event*/)
 {
-    update();
-    QWidget::resizeEvent(event);
+    // drawAgent();
 }
 
-void PainterWidget::resize(const QSize &newSize, const QSize &cellSize)
+void PainterWidget::resizeImage(const QSize &newSize)
 {
-    if (size() == newSize)
-        return;
-
-    this->cellSize = cellSize;
-
     resultImage = QImage(newSize, QImage::Format_ARGB32_Premultiplied);
-    resultImage.fill(0);
-    resultImageBkp = resultImage;
+    resize(newSize);
 
-    visualMapping->setSize(newSize, cellSize);
-    QWidget::resize(newSize);
+    widthProportion = newSize.width() / SIZE_CELL;
+    heightProportion = newSize.height() / SIZE_CELL;
 }
 
 void PainterWidget::mousePressEvent(QMouseEvent *event)
@@ -224,8 +219,9 @@ void PainterWidget::mouseMoveEvent(QMouseEvent *event)
         if (zoomWindow)
         {
             // Define as coordenadas do retangulo de zoom
-            if (!rect().contains(QRect(imageOffset, event->pos())))
+            if (! rect().contains( QRect(imageOffset, event->pos()) ))
             {
+
                 bool right = event->pos().x() > rect().right();
                 bool left = event->pos().x() < rect().left();
 
@@ -349,15 +345,233 @@ void PainterWidget::defineCursor(QCursor &cursor)
     zoomWindowCursor = cursor;
 }
 
-void PainterWidget::setPath(const QString & path)
+bool PainterWidget::save(const QString & path)
 {
-    visualMapping->setPath(path);
+    countSave++;
+
+    QString countString, aux;
+    aux = COMPLEMENT;
+    countString = QString::number(countSave);
+    aux = aux.left(COMPLEMENT.size() - countString.size());
+    aux.append(countString);
+
+    QString name =  path + aux + ".png";
+    return resultImageBkp.save(name);
+
+    //// bool ret = resultImage.save(name);
+
+    //// if (countSave == 1)
+    //{
+    //    // Salva o resultado em um PNG de 8 bits e em escala cinza.
+    //    QImage imgTeste = resultImage.scaled(8193, 8193);
+    //    // imgTeste.save(path + "teste.png");
+
+    //    QImage retImg(imgTeste.width(), imgTeste.height(), QImage::Format_Indexed8);
+    //    QVector<QRgb> table( 256 );
+    //    for( int i = 0; i < 256; ++i )
+    //        table[i] = qRgb(i, i, i);
+
+    //    retImg.setColorTable(table);
+
+    //    for(int i = 0; i < imgTeste.width(); i++)
+    //    {
+    //        for(int j = 0; j < imgTeste.height(); j++)
+    //        {
+    //            QRgb value = imgTeste.pixel(i, j);
+    //            retImg.setPixel(i, j, qGray(value));
+    //        }
+    //    }
+    //    return retImg.save(name); // path+ + "grayScale.png");
+    //}
+    ////return ret;
+}
+
+void PainterWidget::gridOn(bool on)
+{
+    gridEnabled = on;
+
+    if (gridEnabled)
+    {
+        drawGrid();
+        update();
+    }
+    else
+    {
+        calculateResult();
+    }
+}
+
+void PainterWidget::drawGrid()
+{
+    double w = resultImageBkp.width() / widthProportion;
+    double h = resultImageBkp.height() / heightProportion;
+
+    //double w = (double) (int)(resultImageBkp.width() / widthProportion);
+    //double h = (double) (int) (resultImageBkp.height() / heightProportion);
+    
+    //qDebug() << w << ", " << h;
+    //if ((w < 2) || (h < 2))
+    //    return;
+
+    painterThread.drawGrid(resultImageBkp, w, h);
+
+
+    //QPainter p(&resultImageBkp);
+    //p.setPen(Qt::darkGray);
+
+    //for(int j = 0; j < resultImageBkp.height(); j++)
+    //{
+    //    for(int i = 0; i < resultImageBkp.width(); i++)
+    //        p.drawRect(i * w, j * h, w, h);
+    //}
+}
+
+void PainterWidget::drawAgent()
+{
+    QPainter painter(&resultImageBkp);
+
+    double orig2destW = (double) resultImageBkp.width() / resultImage.width();
+    double orig2destH = (double) resultImageBkp.height() / resultImage.height();
+    
+    double sizeCellPropW = orig2destW * SIZE_CELL;
+    double sizeCellPropH = orig2destH * SIZE_CELL;
+
+    QRectF rec, recCell;
+    double x, y;
+
+    recCell = QRectF(0 - sizeCellPropW * 0.5, 0 - sizeCellPropH * 0.5,
+                     sizeCellPropW, sizeCellPropH);
+    
+    //recCell = QRectF(0 - SIZE_CELL * 0.5, 0 - SIZE_CELL * 0.5,
+    //                 SIZE_CELL, SIZE_CELL);
+
+    foreach(Attributes * attrib, mapAttributes->values())
+    {
+        if ((attrib->getType() == TObsAgent) && (attrib->getVisible()) )
+        {
+            QVector<ObsLegend> *vecLegend = attrib->getLegend();
+
+
+            // TO-DO: Necessita otimização
+            if (attrib->getDataType() == TObsText)
+            {
+                QVector<QString> *values = attrib->getTextValues();
+
+                for (int pos = 0; pos < values->size(); pos++)
+                {
+                    const QString & v = values->at(pos);
+
+                    // Corrige o bug gerando quando um agente morre
+                    if (attrib->getXsValue()->isEmpty() || attrib->getXsValue()->size() == pos)
+                        break;
+
+                    x = attrib->getXsValue()->at(pos) * SIZE_CELL;
+                    y = attrib->getYsValue()->at(pos) * SIZE_CELL;
+
+                    rec = QRectF( x * orig2destW , y * orig2destH, sizeCellPropW, sizeCellPropH);
+
+                    painter.save();
+
+                    for(int j = 0; j < vecLegend->size(); j++)
+                    {
+                        const ObsLegend &leg = vecLegend->at(j);
+                        if (v == leg.getFrom())
+                        {
+                            painter.setPen(leg.getColor());
+                            break;
+                        }
+                    }
+                    painter.setFont(attrib->getFont());
+                    painter.translate(rec.center());
+
+#ifdef DEBUG_OBSERVER
+                    painter.drawRect(recCell);
+                    // painter.rotate((qreal) (qrand() % 360) );
+                    qreal a = attrib->getDirection(pos, x, y);
+                    painter.rotate(a);
+                    painter.drawText(recCell, Qt::AlignCenter, attrib->getSymbol());
+#else
+                    painter.rotate(attrib->getDirection(pos, x, y));
+                    // painter.drawText(recCell, align[qrand() % ALIGN_FLAGS], attrib->getSymbol());
+
+                    // Delimita a área que o simbolo poderá ocupar
+                    int xPos = (int) recCell.x() + recCell.width() * 0.07;
+                    int yPos = (int) recCell.y() + recCell.height() * 0.07;
+
+                    xPos += qrand() % (int) (recCell.width() * 0.85);
+                    yPos += qrand() % (int) (recCell.height() * 0.85); 
+                    QPointF position(recCell.center());
+                    position += QPointF(xPos, yPos);
+
+                    painter.drawText(position, attrib->getSymbol());
+#endif 
+                    painter.restore();
+                }
+            }
+            else
+            {
+                QVector<double> *values = attrib->getNumericValues();
+
+                for (int pos = 0; pos < values->size(); pos++)
+                {
+                    const double & v = values->at(pos);
+
+                    // Corrige o bug gerando quando um agente morre
+                    if (attrib->getXsValue()->isEmpty() || attrib->getXsValue()->size() == pos)
+                        break;
+
+                    x = attrib->getXsValue()->at(pos) * SIZE_CELL;
+                    y = attrib->getYsValue()->at(pos) * SIZE_CELL;
+
+                    rec = QRectF( x * orig2destW , y * orig2destH, sizeCellPropW, sizeCellPropH);
+
+                    painter.save();
+
+                    for(int j = 0; j < vecLegend->size(); j++)
+                    {
+                        const ObsLegend &leg = vecLegend->at(j);
+                        if (v == leg.getFromNumber())
+                        {
+                            painter.setPen(leg.getColor());
+                            break;
+                        }
+                    }
+                    painter.setFont(attrib->getFont());
+                    painter.translate(rec.center());
+
+#ifdef DEBUG_OBSERVER
+                    painter.drawRect(recCell);
+                    // painter.rotate((qreal) (qrand() % 360) );
+                    qreal a = attrib->getDirection(pos, x, y);
+                    painter.rotate(a);
+                    painter.drawText(recCell, Qt::AlignCenter, attrib->getSymbol());
+#else
+                    painter.rotate(attrib->getDirection(pos, x, y));
+                    // painter.drawText(recCell, align[qrand() % ALIGN_FLAGS], attrib->getSymbol());
+
+                    // Delimita a área que o simbolo poderá ocupar
+                    int xPos = (int) recCell.x() + recCell.width() * 0.07;
+                    int yPos = (int) recCell.y() + recCell.height() * 0.07;
+
+                    xPos += qrand() % (int) (recCell.width() * 0.85);
+                    yPos += qrand() % (int) (recCell.height() * 0.85); 
+                    QPointF position(recCell.center());
+                    position += QPointF(xPos, yPos);
+
+                    painter.drawText(position, attrib->getSymbol());
+#endif 
+                    painter.restore();
+                }
+            }
+        }
+    }
+    painter.end();
 }
 
 int PainterWidget::close()
 {
     // QWidget::close();
-    // visualMapping.exit(0);
+    painterThread.exit(0);
     return 0;
 }
 
@@ -365,107 +579,3 @@ void PainterWidget::setExistAgent(bool exist)
 {
     existAgent = exist;
 }
-
-bool PainterWidget::draw()
-{
-    BagOfTasks::TaskManager::getInstance().add(visualMapping);
-    return true;
-}
-
-void PainterWidget::updateAttributeList()
-{
-    visualMapping->setAttributeList(mapAttributes->values());
-}
-
-void PainterWidget::displayImage(const QImage &result)
-{
-#ifdef TME_STATISTIC
-    double t = 0;
-    QString name;
-    char block[30];
-    sprintf(block, "%p", this);
-
-    t = Statistic::getInstance().startMicroTime();
-
-    resultImage = result; //.copy();
-    resultImageBkp = resultImage.scaled(size(),
-    		Qt::IgnoreAspectRatio, Qt::FastTransformation);
-
-// see more information about this flag in VisualMapping.h
-#ifdef TME_DRAW_VECTORIAL_AGENTS
-    if (existAgent && visualMapping)
-    {
-        // qDebug() << "resultImageBkp.size() " << resultImageBkp.size()
-        //      << "resultImage.size()" << resultImage.size();
-        const QSize origSize = resultImage.size();
-        visualMapping->drawAgent(resultImageBkp, origSize);
-
-        foreach (Attributes *attrib, mapAttributes->values())
-        {
-        switch (attrib->getType())
-        {
-            default:
-                break;
-
-            case TObsSociety:
-                if (attrib->getVisible())
-                {
-                    QPainter p;
-                    visualMapping->mappingSociety(attrib, &p, resultImageBkp, origSize);
-                }
-        }
-        }
-
-        visualMapping->save(resultImageBkp);
-    }
-#endif // TME_DRAW_VECTORIAL_AGENTS
-
-    update();
-
-    // It processes the update event
-    qApp->processEvents();
-
-    name = QString("display %1").arg(block);
-    t = Statistic::getInstance().endMicroTime() - t;
-    Statistic::getInstance().addElapsedTime(name, t);
-
-#else
-
-    resultImage = result;
-    resultImageBkp = resultImage.scaled(size(),
-    		Qt::IgnoreAspectRatio, Qt::FastTransformation);
-
-// see more information about this flag in VisualMapping.h
-#ifdef TME_DRAW_VECTORIAL_AGENTS
-    if (existAgent && visualMapping)
-    {
-        const QSize origSize = resultImage.size();
-        visualMapping->drawAgent(resultImageBkp, origSize);
-
-        foreach (Attributes *attrib, mapAttributes->values())
-        {
-        switch (attrib->getType())
-        {
-            default:
-                break;
-
-            case TObsSociety:
-                if (attrib->getVisible())
-                {
-                    QPainter p;
-                    visualMapping->mappingSociety(attrib, &p, resultImageBkp, origSize);
-                }
-            }
-        }
-        visualMapping->save(resultImageBkp);
-    }
-#endif // TME_DRAW_VECTORIAL_AGENTS
-
-    update();
-
-    // It processes the update event
-    qApp->processEvents();
-
-#endif
-}
-

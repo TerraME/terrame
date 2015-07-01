@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -24,45 +24,48 @@ of this library and its documentation.
     \brief This file definitions for the luaCellIndex objects.
         \author Tiago Garcia de Senna Carneiro
 */
-#ifndef LUACELLINDEX_H
+#if ! defined( LUACELLINDEX_H )
 #define LUACELLINDEX_H
 
-extern "C"
+extern "C" 
 {
 #include <lua.h>
 }
-#include "luna.h"
+#include "luna.h" 
 
 #include "reference.h"
 
 /**
-* \brief
+* \brief  
 *  Implementation for a luaCellIndex object.
 *
 */
 class luaCellIndex : Reference<luaCellIndex>
 {
+    // @DANIEL:
+    // Movido para a classe Reference
+    //int ref; ///< The position of the object in the Lua stack
 
 public:
     ///< Data structure issued by Luna<T>
-    static const char className[];
-
+    static const char className[]; 
+    
     ///< Data structure issued by Luna<T>
-    static Luna<luaCellIndex>::RegType methods[];
-
+    static Luna<luaCellIndex>::RegType methods[]; 
+    
 public:
     int x, y; /// The luaCell coordenates (2D)
 
     /// Constructor
-    luaCellIndex(lua_State *L)
+    luaCellIndex(lua_State *L) 
     {
         x = y = 0;
-        if(lua_istable(L, -1))
+        if( lua_istable(L,-1) )
         {
-            lua_pushstring(L, "x"); lua_gettable(L, -2);
+            lua_pushstring(L, "x"); lua_gettable(L, -2); 
             x = (int) luaL_checknumber(L, -1); lua_pop(L, 1);
-
-            lua_pushstring(L, "y"); lua_gettable(L, -2);
+            
+            lua_pushstring(L, "y"); lua_gettable(L, -2); 
             y = (int) luaL_checknumber(L, -1); lua_pop(L, 1);
         }
     }
@@ -70,18 +73,36 @@ public:
     /// Stes the luaCellIndex value
     int set(lua_State *L)
     {
-        x = (int)luaL_checknumber(L, -2);
-        y = (int) luaL_checknumber(L, -1);
+        x = (int)luaL_checknumber(L, -2);  
+        y = (int) luaL_checknumber(L, -1 ); 
         return 0;
         }
 
     /// Gets the luaCellIndex value
-    int get(lua_State *L)
+    int get(lua_State *L) 
     {
-        lua_pushnumber(L, x);
-        lua_pushnumber(L, y);
+        lua_pushnumber(L, x); 
+        lua_pushnumber(L, y); 
         return 2;
     }
+
+    // @DANIEL:
+    // Movido para a classe Reference
+    /// Sets the luaCellIndex object reference. This registers the Lua object position in the Lua stack.
+//    int setReference( lua_State* L)
+//    {
+//        ref = luaL_ref(L, LUA_REGISTRYINDEX );
+//        return 0;
+//    }
+
+    // @DANIEL:
+    // Movido para a classe Reference
+    /// Gets the luaCellIndex object reference.
+//    int getReference( lua_State *L )
+//    {
+//        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+//        return 1;
+//    }
 };
 
 #endif

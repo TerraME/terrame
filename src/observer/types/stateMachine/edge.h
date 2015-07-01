@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -21,6 +21,7 @@
 * of this library and its documentation.
 *
 *************************************************************************************/
+
 
 #ifndef EDGE_H
 #define EDGE_H
@@ -42,10 +43,11 @@ namespace TerraMEObserver
 
 class Node;
 
+
 /**
  * \brief State machine edge
  * \see QGraphicsLineItem
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file edge.h
  */
 class Edge : public QGraphicsLineItem
@@ -96,6 +98,7 @@ public slots:
     void updatePosition();
 
 private:
+
 
     Node *origin, *destiny;
     QPolygonF arrowHead;

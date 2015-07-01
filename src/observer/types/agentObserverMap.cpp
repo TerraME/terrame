@@ -1,38 +1,36 @@
 #include "agentObserverMap.h"
 
-#ifndef TME_OBSERVER_CLIENT_MODE
-	#include "globalAgentSubjectInterf.h"
-#endif
-
-#include "decoder.h"
+#include "../globalAgentSubjectInterf.h"
+#include "../protocol/decoder/decoder.h"
 
 #include <QBuffer>
 #include <QStringList>
 #include <QTreeWidget>
 #include <QDebug>
 #include "terrameGlobals.h"
-#include "blackBoard.h"
+
+#ifdef TME_BLACK_BOARD
+    #include "blackBoard.h"
+#endif
 
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    // Performance Statistics
-    #include "statistic.h"
+    // Estatisticas de desempenho
+    #include "../observer/statistic/statistic.h"
 #endif
 
-extern "C"
-{
-#include <lua.h>
-}
-#include "luna.h"
-
-extern lua_State * L;
 extern ExecutionModes execModes;
 
 using namespace TerraMEObserver;
 
-AgentObserverMap::AgentObserverMap(Subject * subj, QWidget *parent)
-    : ObserverMap(subj, parent)
+AgentObserverMap::AgentObserverMap(QWidget *parent) : ObserverMap(parent)
+{
+    subjectAttributes.clear();
+    cleanImage = false;
+}
+
+AgentObserverMap::AgentObserverMap(Subject * subj) : ObserverMap(subj)
 {
     subjectAttributes.clear();
     cleanImage = false;
@@ -43,40 +41,16 @@ AgentObserverMap::~AgentObserverMap()
     unregistryAll();
 }
 
-#ifdef TME_BLACK_BOARD
-
-bool AgentObserverMap::draw(QDataStream & state)
-{
-    bool drw = true, decoded = false;
-    //cleanImage = true;
-    // className = "";
-
-    for(int i = 0; i < nestedSubjects.size(); i++)
-    {
-        Subject *subj = nestedSubjects.at(i).first;
-        // className = nestedSubjects.at(i).second;
-
-        BlackBoard::getInstance().setDirtyBit(subj->getId());
-        BlackBoard::getInstance().getState(subj, getId(), subjectAttributes);
-    }
-
-	decoded = BlackBoard::getInstance().canDraw();
-
-    return decoded && ObserverMap::draw(state);
-}
-
-#else // TME_BLACK_BOARD
-
 bool AgentObserverMap::draw(QDataStream & state)
 {
 #ifdef TME_STATISTIC
-    // time spent in the 'getState' until here
+    //// tempo gasto do 'getState' ate aqui
     //double decodeSum = 0.0, t = Statistic::getInstance().endVolatileTime();
-    //Statistic::getInstance().addElapsedTime("communication map", t);
+    //Statistic::getInstance().addElapsedTime("comunicação map", t);
 
     int decodeCount = 0;
 
-    // number of bytes transmitted
+    // numero de bytes transmitidos
     Statistic::getInstance().addOccurrence("bytes map", in.device()->size());
 #endif
 
@@ -85,10 +59,10 @@ bool AgentObserverMap::draw(QDataStream & state)
     cleanImage = true;
     className = "";
 
-    for(int i = 0; i < nestedSubjects.size(); i++)
+    for(int i = 0; i < linkedSubjects.size(); i++)
     {
-        Subject *subj = nestedSubjects.at(i).first;
-        // className = nestedSubjects.at(i).second;
+        Subject *subj = linkedSubjects.at(i).first;
+        // className = linkedSubjects.at(i).second;
 
         QByteArray byteArray;
         QBuffer buffer(&byteArray);
@@ -98,16 +72,18 @@ bool AgentObserverMap::draw(QDataStream & state)
 
         //QStringList attribListAux;
         //// attribListAux.push_back("@getLuaAgentState");
-        //attribListAux << subjectAttributes;
+        //attribListAux << subjectAttributes;        
 
+		//@RAIAN: Solucao provisoria
 #ifndef TME_BLACK_BOARD
 		if(subj->getType() == TObsCell)
 			subjectAttributes.push_back("@getNeighborhoodState");
 #endif
-
+		//@RAIAN: FIM
+		
 //#ifdef TME_BLACK_BOARD
 //        QDataStream& state = BlackBoard::getInstance().getState(subj, getId(), subjectAttributes);
-//        BlackBoard::getInstance().setDirtyBit(subj->getId());
+//        BlackBoard::getInstance().setDirtyBit(subj->getId() );
 //#else
         QDataStream& state = subj->getState(out, subj, getId(), subjectAttributes);
 //#endif
@@ -116,28 +92,27 @@ bool AgentObserverMap::draw(QDataStream & state)
         buffer.open(QIODevice::ReadOnly);
 
         //-----
-		// @RAIAN: I added the cell in comparison to the observer Neighborhood subtype
-        if ((subj->getType() == TObsAgent) || (subj->getType() == TObsAutomaton)
-            || (subj->getType() == TObsCell))
+		// @RAIAN: Acrescentei a celula na comparacao, para o observer do tipo Neighborhood
+        if ((subj->getType() == TObsAgent) || (subj->getType() == TObsAutomaton) || (subj->getType() == TObsCell))
         {
-            if (className != nestedSubjects.at(i).second)
+            if (className != linkedSubjects.at(i).second)
                 cleanImage = true;
-
+            
             // if (className != attribListAux.first())
             //    cleanImage = true;
 
             // className = attribListAux.first();
-            className = nestedSubjects.at(i).second;
+            className = linkedSubjects.at(i).second;
         }
         //-----
 
-#ifdef TME_STATISTIC
+#ifdef TME_STATISTIC 
         t = Statistic::getInstance().startTime();
 #endif
         ///////////////////////////////////////////// DRAW AGENT
         decoded = decode(state, subj->getType());
 
-#ifdef TME_STATISTIC
+#ifdef TME_STATISTIC 
         decodeSum += Statistic::getInstance().endTime() - t;
         decodeCount++;
 #endif
@@ -149,6 +124,7 @@ bool AgentObserverMap::draw(QDataStream & state)
     }
     //bool drw = true;
 
+
 #ifdef TME_STATISTIC
 
     if (decoded)
@@ -159,12 +135,13 @@ bool AgentObserverMap::draw(QDataStream & state)
 
         t = Statistic::getInstance().endMicroTime() - t;
         Statistic::getInstance().addElapsedTime("Map-Complex Rendering", t);
-
-    	if (decodeCount > 0)
-        	Statistic::getInstance().addElapsedTime(
-        			"Map-Complex Decoder", decodeSum / decodeCount);
     }
-    return drw && ObserverMap::draw(state);
+    drw = drw && ObserverMap::draw(in);
+
+    if (decodeCount > 0)
+        Statistic::getInstance().addElapsedTime("Map-Complex Decoder", decodeSum / decodeCount);
+    
+    return drw;
 
 #else
     if (decoded)
@@ -174,44 +151,35 @@ bool AgentObserverMap::draw(QDataStream & state)
 
 #endif
 }
-#endif // TME_BLACK_BOARD
 
-void AgentObserverMap::setSubjectAttributes(const QStringList & attribs,
-    int nestedSubjID, const QString & className)
+void AgentObserverMap::setSubjectAttributes(const QStringList & attribs, TypesOfSubjects type,
+                                          const QString & className)
 {
     QHash<QString, Attributes*> * mapAttributes = getMapAttributes();
-    // TypesOfSubjects type;
 
     for (int i = 0; i < attribs.size(); i++)
     {
-        if (!subjectAttributes.contains(attribs.at(i)))
+        if (! subjectAttributes.contains(attribs.at(i)) )
             subjectAttributes.push_back(attribs.at(i));
-
-        if (!mapAttributes->contains(attribs.at(i)))
+ 
+        if (! mapAttributes->contains(attribs.at(i)))
         {
             if (execModes != Quiet)
             {
-				string str = string("The attribute called ")
-						+ attribs.at(i).toLatin1().data()
-						+ string(" was not found.");
-				lua_getglobal(L, "customWarning");
-				lua_pushstring(L, str.c_str());
-				lua_call(L, 1, 0);
+                qWarning("Warning: The attribute called \"%s\" not found.", 
+                    qPrintable(attribs.at(i)));
             }
         }
         else
         {
             Attributes *attrib = mapAttributes->value(attribs.at(i));
+            attrib->setType(type);
             attrib->setClassName(className);
-            attrib->setParentSubjectID(nestedSubjID);
-
-            if ((attrib->getType() == TObsAgent) || (attrib->getType() == TObsSociety))
-        		getPainterWidget()->setExistAgent(true);
-
-            // qDebug() << "AgentObserverMap::setSubjectAttributes()" << attribs.at(i)
-            //     << "getSubjectId()" << getSubjectId() << "nestedSubjID" << nestedSubjID;
-		}
+        }
     }
+
+    if (type == TObsAgent)
+        getPainterWidget()->setExistAgent(true);
 }
 
 QStringList & AgentObserverMap::getSubjectAttributes()
@@ -221,93 +189,116 @@ QStringList & AgentObserverMap::getSubjectAttributes()
 
 void AgentObserverMap::registry(Subject *subj, const QString & className)
 {
-    if (!constainsItem(nestedSubjects, subj))
+    if (! constainsItem(linkedSubjects, subj) )
     {
-#ifdef TME_BLACK_BOARD
-    	SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(subj->getId());
-    	if (subjAttr)
-        	subjAttr->setSubjectType(subj->getType());
-#endif
 
-        nestedSubjects.append(qMakePair(subj, className));
+//#ifdef TME_BLACK_BOARD
+//        BlackBoard::getInstance().setDirtyBit(subj->getId() );
+//#endif
+
+        linkedSubjects.push_back(qMakePair(subj, className));
 
         // sorts the subject linked vector by the class name
-        qStableSort(nestedSubjects.begin(), nestedSubjects.end(), sortByClassName);
+        qStableSort(linkedSubjects.begin(), linkedSubjects.end(), sortByClassName);
     }
 }
 
 bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
 {
-    if (!constainsItem(nestedSubjects, subj))
+    if (! constainsItem(linkedSubjects, subj))
         return false;
 
 #ifdef DEGUB_OBSERVER
-    qDebug() << "\nsubjectAttributes " << subjectAttributes;
-    qDebug() << "nestedSubjects " << nestedSubjects << "\n";
+    // qDebug() << "subjectAttributes " << subjectAttributes;
+    // qDebug() << "linkedSubjects " << linkedSubjects;
+
+    foreach(SubjectInterf *s, subjects)
+        qDebug() << s->getSubjectType() << ", " << getSubjectName(s->getSubjectType());
 #endif
 
     int idxItem = -1;
-    for (int i = 0; i < nestedSubjects.size(); i++)
+    for (int i = 0; i < linkedSubjects.size(); i++)
     {
-        if (nestedSubjects.at(i).first == subj)
+        if (linkedSubjects.at(i).first == subj)
         {
             idxItem = i;
             break;
         }
     }
-    nestedSubjects.remove(idxItem);
+    linkedSubjects.remove(idxItem);
 
-    // QTreeWidget * treeLayers = getTreeLayers();
+    QTreeWidget * treeLayers = getTreeLayers();
 
     for (int i = 0; i < subjectAttributes.size(); i++)
     {
-        Attributes *attrib = getMapAttributes()->value(subjectAttributes.at(i), 0);
-
-        if (attrib && (className == attrib->getClassName()))
+        if (getMapAttributes()->contains(subjectAttributes.at(i)))
         {
-            getMapAttributes()->remove(subjectAttributes.at(i));
-
-            // Updates de copies of attributes lists
-            getPainterWidget()->updateAttributeList();
-            attrib->clear();
-
-            // Deletes the Attribute
-            delete attrib; attrib = 0;
-            break;
-        }
+            Attributes *attrib = getMapAttributes()->value(subjectAttributes.at(i));
+            
+            if (className == attrib->getClassName())
+            {
+            // @RAIAN: Comentei esta parte para execut‡-la no fim, ap—s remover a legenda.
+//                attrib->clear();
+//                break;
+//            }
+            // @RAIAN: FIM
+            
             /*
-             //Remove only the attribute that has no values
+             // Remove apenas o atributo que não possui valores
              if (subj->getSubjectType() == attrib->getType())
              {
              qDebug() << "\nclassName " << className;
              qDebug() << "attrib->getExhibitionName() " << attrib->getExhibitionName();
-
-             if ((attrib->getType() != TObsAgent)
+             
+             if ( (attrib->getType() != TObsAgent)
              || ((className == attrib->getExhibitionName()) &&
-        	 (!ObserverMap::existAgents(nestedSubjects))))
+             (! ObserverMap::existAgents(linkedSubjects)) ) )
              {
              //for (int j = 0; j < treeLayers->topLevelItemCount(); j++)
              //{
-             //    // Remove the attribute from the tree of layers
-             //    if (treeLayers->topLevelItem(j)->text(0) == attrib->getName())
+             //    // Remove o atributo da árvore de layers
+             //    if ( treeLayers->topLevelItem(j)->text(0) == attrib->getName())
              //    {
              //        QTreeWidgetItem *treeItem = treeLayers->takeTopLevelItem(j);
              //        delete treeItem;
              //        break;
              //    }
              //}
-
-             // Remove the attributes of map attribute
+             
+             // Remove o atributo do mapa de atributos
              getMapAttributes()->take(attrib->getName());
              getPainterWidget()->setExistAgent(false);
-             subjectAttributes.removeAt(subjectAttributes.indexOf(attrib->getName()));
+             subjectAttributes.removeAt( subjectAttributes.indexOf(attrib->getName()) );
              delete attrib;
              return true;
              }
              }*/
+            
+                //@RAIAN
+                // Alterei o codigo acima, do toninho, que havia sido comentado para remover a legenda caso
+                // nao haja mais agentes/vizinhancas sendo observados.
+                if ( ((attrib->getType() == TObsAgent) || (attrib->getType() == TObsNeighborhood))
+                    && (linkedSubjects.isEmpty()) )
+                {
+                    for (int j = 0; j < treeLayers->topLevelItemCount(); j++)
+                    {
+                        // Remove o atributo da arvore de layers
+                        if ( treeLayers->topLevelItem(j)->text(0) == attrib->getName())
+                        {
+                            QTreeWidgetItem *treeItem = treeLayers->takeTopLevelItem(j);
+                            delete treeItem;
+                            break;
+                        }
+                    }
+                }
+                attrib->clear();
+                break;
+            }
+            //@RAIAN: FIM
+        }
     }
 
-    if (nestedSubjects.isEmpty())
+    if (linkedSubjects.isEmpty())
         getPainterWidget()->setExistAgent(false);
 
     return true;
@@ -315,13 +306,11 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
 
 void AgentObserverMap::unregistryAll()
 {
-    nestedSubjects.clear();
+    linkedSubjects.clear();
 }
 
 bool AgentObserverMap::decode(QDataStream &in, TypesOfSubjects subject)
 {
-    qDebug() << "AgentObserverMap::decode() deprecated";
-
     bool ret = false;
     QString msg;
     in >> msg;
@@ -329,7 +318,7 @@ bool AgentObserverMap::decode(QDataStream &in, TypesOfSubjects subject)
     // qDebug() << msg.split(PROTOCOL_SEPARATOR, QString::SkipEmptyParts);
 
     Attributes * attrib = 0;
-
+    
     if (subject == TObsTrajectory)
     {
         attrib = getMapAttributes()->value("trajectory");
@@ -341,7 +330,7 @@ bool AgentObserverMap::decode(QDataStream &in, TypesOfSubjects subject)
 		{
 			attrib = getMapAttributes()->value(className);
 		}
-		//@RAIAN: END
+		//@RAIAN: FIM
 		else
 		{
             // // ((subjectType == TObsAgent) || (subjectType == TObsAutomaton))
@@ -362,7 +351,7 @@ bool AgentObserverMap::decode(QDataStream &in, TypesOfSubjects subject)
         if (cleanImage)
             attrib->clear();
 
-        //ret = getProtocolDecoder().decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
+        ret = getProtocolDecoder().decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
         // getPainterWidget()->plotMap(attrib);
     }
     qApp->processEvents();
@@ -371,26 +360,25 @@ bool AgentObserverMap::decode(QDataStream &in, TypesOfSubjects subject)
 
 bool AgentObserverMap::draw()
 {
-    //QList<Attributes *> attribList = getMapAttributes()->values();
-    //Attributes *attrib = 0;
+    QList<Attributes *> attribList = getMapAttributes()->values();
+    Attributes *attrib = 0;
 
-    //qStableSort(attribList.begin(), attribList.end(), sortAttribByType);
+    qStableSort(attribList.begin(), attribList.end(), sortAttribByType);
 
-    //for(int i = 0; i < attribList.size(); i++)
-    //{
-    //    attrib = attribList.at(i);
-
-    //    if ((attrib->getType() != TObsCell)
-    //          && (attrib->getType() != TObsAgent))
-    //        getPainterWidget()->draw();
-    //}
+    for(int i = 0; i < attribList.size(); i++)
+    {
+        attrib = attribList.at(i);
+        if ( (attrib->getType() != TObsCell)
+              && (attrib->getType() != TObsAgent) )
+            getPainterWidget()->plotMap(attrib);
+    }
 
     //static int ss = 1;
     //for(int i = 0; i < attribList.size(); i++)
     //{
     //    //attrib = attribList.at(i);
-    //    //if ((attrib->getType() != TObsCell)
-    //    //       && (attrib->getType() != TObsAgent))
+    //    //if ( (attrib->getType() != TObsCell)
+    //    //       && (attrib->getType() != TObsAgent) )
     //    //       attrib->getImage()->save("imgs/" + attrib->getName() + QString::number(ss) + ".png");
 
     //    qDebug() << attrib->getName() << ": " << getSubjectName(attrib->getType());
@@ -399,3 +387,6 @@ bool AgentObserverMap::draw()
     //ss++;
     return true;
 }
+
+
+

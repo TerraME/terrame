@@ -1,11 +1,11 @@
 #include "globalAgentSubjectInterf.h"
 
-#include "observerTable.h"
-#include "observerLogFile.h"
-#include "observerTextScreen.h"
-#include "observerGraphic.h"
-#include "observerUDPSender.h"
-#include "observerStateMachine.h"
+#include "types/observerTable.h"
+#include "types/observerLogFile.h"
+#include "types/observerTextScreen.h"
+#include "types/observerGraphic.h"
+#include "types/observerUDPSender.h"
+#include "types/observerStateMachine.h"
 
 //#include "types/agentObserverMap.h"
 //#include "types/agentObserverImage.h"
@@ -48,10 +48,10 @@ bool GlobalAgentSubjectInterf::kill(int id)
     Observer * obs = getObserverById(id);
     detach(obs);
 
-    if (!obs)
+    if (! obs)
         return false;
 
-    //if ((obs->getObserverType() != TObsMap) && (obs->getObserverType() != TObsImage))
+    //if ((obs->getObserverType() != TObsMap) && (obs->getObserverType() != TObsImage)) 
     //    detachObserver(obs);
 
     switch (obs->getType())

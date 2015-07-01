@@ -1,16 +1,16 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
-*
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+*  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
 * License as published by the Free Software Foundation; either
 * version 2.1 of the License, or (at your option) any later version.
-*
+* 
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.
-*
+* 
 * The authors reassure the license terms regarding the warranties.
 * They specifically disclaim any warranties, including, but not limited to,
 * the implied warranties of merchantability and fitness for a particular purpose.
@@ -25,14 +25,21 @@
 #ifndef OBSERVER_GRAPHIC
 #define OBSERVER_GRAPHIC
 
-#include "observerInterf.h"
+#include "../observerInterf.h"
 
 #include <QDialog>
-#include <QObject>
+#include <QThread>
+
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <qwt_legend.h>
+
+//#include <qwt_plot_marker.h>
+//#include <qwt_data.h>
+//#include <qwt_text.h>
+//#include <math.h>
+
 
 namespace TerraMEObserver {
 
@@ -43,11 +50,10 @@ class ChartPlot;
  * \brief Plots a simple scatter plot graphic or a scatter plot over the time
  * \see ObserverInterf
  * \see QThread
- * \author Antonio Jose da Cunha Rodrigues
+ * \author Antonio José da Cunha Rodrigues
  * \file observerGraphic.h
 */
-// class ObserverGraphic : public QThread, public ObserverInterf
-class ObserverGraphic : public QObject, public ObserverInterf
+class ObserverGraphic : public QThread, public ObserverInterf 
 {
     Q_OBJECT
 
@@ -59,7 +65,7 @@ public:
      * \see Subject
      * \see QWidget
      */
-    ObserverGraphic(Subject *subj, QWidget *parent = 0);
+    ObserverGraphic (Subject *subj, QWidget *parent = 0);
 
     /**
      * Destructor
@@ -77,7 +83,7 @@ public:
 
     /**
      * Sets the chart title and the name of x and y axes
-     * \param title the chart title
+     * \param title the chart title 
      * \param xTitle the title to the x axis
      * \param yTitle the title to the y axis
      * \see QString
@@ -89,14 +95,12 @@ public:
      * \param attribs a list of attributes
      */
     void setAttributes(const QStringList &attribs, const QStringList &curveTitles,
-        /*const*/ QStringList &legKeys, /*const*/ QStringList &legAttribs);
+        /*const*/ QStringList &legKeys, /*const*/ QStringList &legAttribs);   
 
     /**
      * Gets the list of attributes
      */
     QStringList getAttributes();
-
-	void save(std::string file, std::string extension);
 
     /**
      * Sets the position of the legend
@@ -116,7 +120,7 @@ public:
      * Gets the type of observer
      * \see TypesOfObservers
      */
-    const TypesOfObservers getType() const;
+    const TypesOfObservers getType();
 
     /**
      * Auxiliary method to set the simulation time for the dinamic chart
@@ -131,10 +135,10 @@ public:
      */
     void setCurveStyle();
 
-    ///**
-    // * Pauses the thread execution
-    // */
-    //void pause();
+    /**
+     * Pauses the thread execution
+     */
+    void pause();
 
     /**
      * Closes the window and stops the thread execution
@@ -150,14 +154,13 @@ private slots:
     void colorChanged(QwtPlotItem *);
 
 protected:
-    ///**
-    // * Runs the thread
-    // * \see QThread
-    // */
-    //void run();
+    /**
+     * Runs the thread
+     * \see QThread
+     */
+    void run();
 
 private:
-    void draw();
 
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
@@ -166,18 +169,14 @@ private:
     QStringList attribList, states;
     QString graphicTitle;
 
-    QString xAxisName;
-
     ChartPlot* plotter;
     QwtLegend *legend;
     QHash<QString, InternalCurve *> *internalCurves;
 
     QVector<double> *xAxisValues;
-    QMap<QString, Attributes *> *hashAttributes;
 
-    // bool paused;
+    bool paused;
 };
 
 }
 #endif
-

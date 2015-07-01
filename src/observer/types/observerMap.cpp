@@ -1,5 +1,4 @@
 #include "observerMap.h"
-#include "visualArrangement.h"
 
 #include <QApplication>
 #include <QRect>
@@ -10,86 +9,43 @@
 #include <QScrollBar>
 #include <QLabel>
 #include <QToolButton>
-#include <QDebug>
-#include <QDesktopWidget>
-
 #include <cmath>
+#include <QDebug> 
 
-#ifdef TME_BLACK_BOARD
-	#include "blackBoard.h"
-#endif
-#include "decoder.h"
+#include "../protocol/decoder/decoder.h"
+
+///< Gobal variabel: Lua stack used for comunication with C++ modules.
+extern lua_State * L;
 
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    #include "statistic.h"
+    // Estatisticas de desempenho
+    #include "../statistic/statistic.h"
 #endif
 
 using namespace TerraMEObserver;
 
-ObserverMap::ObserverMap(Subject *sub, QWidget *parent)
-    : ObserverInterf(sub), QDialog(parent)
+ObserverMap::ObserverMap(QWidget *parent) : QDialog(parent)
 {
-    observerType = TObsMap;
-    subjectType = sub->getType(); // TO_DO: Changes it to Observer pattern
+    init();
+}
 
-    //resize(1000, 900);
-    setWindowTitle("TerraME :: Map");
-    setWindowFlags(Qt::Window);
-
-    legendWindow = NULL;		// pointer for LegendWindow, instantiated in method setAttributes
-
-    mapAttributes = new QHash<QString, Attributes*>();
-
-#ifdef TME_BLACK_BOARD
-    protocolDecoder = NULL;
-#else
-    protocolDecoder = new Decoder();
-#endif
-
-    builtLegend = 0;
-    positionZoomVec = -1;
-    zoomIdx = 11;
-    actualZoom = 1.;
-    needResizeImage = false;
-    zoomCount = 0;  // index of 100% in comboBox
-    paused = false;
-    numTiles = -1;
-
-    width = 0;
-    height = 0;
-
-	VisualArrangement* v = VisualArrangement::getInstance();
-
-	SizeVisualArrangement s = v->getSize(getId());
-	PositionVisualArrangement p = v->getPosition(getId());
-
-	if(s.width > 0 && s.height > 0)
-		resize(s.width, s.height);
-	else
-		resize(450, 350);
-
-    setupGUI();
-    showNormal();
-
-	if(p.x > 0 && p.y > 0)
-		move(p.x, p.y - geometry().y() + y());
-	else
-		move(50 + getId() * 50, 50 + getId() * 50);
+ObserverMap::ObserverMap(Subject *sub)	: ObserverInterf(sub)
+{
+    init();
 }
 
 ObserverMap::~ObserverMap()
 {
-/*
     foreach(Attributes *attrib, mapAttributes->values())
         delete attrib;
-    delete mapAttributes; mapAttributes = 0;
+    delete mapAttributes;
 
-    delete protocolDecoder; protocolDecoder = 0;
-    delete legendWindow; legendWindow = 0;
-    delete painterWidget; painterWidget = 0;
+    delete legendWindow;
+    delete protocolDecoder;
 
+    delete painterWidget;
     delete treeLayers;
     delete butLegend;
     delete butZoomIn;
@@ -102,80 +58,125 @@ ObserverMap::~ObserverMap()
     delete scrollArea;
     //delete lblOperator;
     //delete operatorComboBox;
-    delete frameTools;
-*/
+    delete frameTools; 	
 }
 
-const TypesOfObservers ObserverMap::getType() const
+void ObserverMap::init()
+{
+    observerType = TObsMap;
+    subjectType = TObsUnknown;
+
+    //resize(1000, 900);
+    setWindowTitle("TerraME Observer : Map");
+    setWindowFlags(Qt::Window);
+
+    mapAttributes = new QHash<QString, Attributes*>();
+    protocolDecoder = new Decoder(mapAttributes);
+    legendWindow = 0;		// ponteiro para LegendWindow, instanciado no método setHeaders
+
+    builtLegend = 0;
+    positionZoomVec = -1;
+    zoomIdx = 11;
+    actualZoom = 1.;
+    needResizeImage = false;
+    zoomCount = 0;  // indice do 100% no comboBox
+    paused = false;
+    numTiles = -1;
+
+    cleanValues = false;
+
+    width = 0;
+    height = 0;
+    newWidthCellSpace = 0.;
+    newHeightCellSpace = 0.;
+
+    setupGUI();
+    showNormal();
+}
+
+const TypesOfObservers ObserverMap::getType()
 {
     return observerType;
 }
 
-void ObserverMap::save(string f, string e)
-{
-	//QDataStream d;
-	//draw(d);
-	QPixmap pixmap = painterWidget->grab();
-	pixmap.save(f.c_str(), e.c_str());
-}
-
-bool ObserverMap::draw(QDataStream & /*state*/)
+bool ObserverMap::draw(QDataStream &state)
 {
     bool decoded = false;
+    QString msg;
+    state >> msg;
 
-    treeLayers->blockSignals(true);
+    QList<Attributes *> listAttribs = mapAttributes->values();
+    Attributes * attrib = 0;
 
-    // TODO: Prevents the same image to be redesigned
-    // if (state.device()->isOpen())
-
-    // qDebug() << "BlackBoard::getInstance().canDraw(): " << BlackBoard::getInstance().canDraw();
-
-    if (BlackBoard::getInstance().canDraw())
-        decoded = painterWidget->draw();
-
-    // painterWidget->calculateResult();
-    treeLayers->blockSignals(false);
-    qApp->processEvents();
-
-    // creates and displays the legend on the screen
-    if(/*decoded &&*/ legendWindow && (builtLegend < 1))
+    connectTreeLayerSlot(false);
+    for (int i = 0; i < listAttribs.size(); i++)
     {
-        treeLayers->blockSignals(true);
+        attrib = listAttribs.at(i);
+        if (attrib->getType() == TObsCell)
+        {
+            attrib->clear();
 
-        // TO-DO: Checking the necessity
-// Interferes with the performance tests
-#ifndef TME_STATISTIC
-        // painterWidget->replotMap();
-        // painterWidget->calculateResult();
+#ifdef TME_STATISTIC 
+        double t = Statistic::getInstance().startTime();
 
-        painterWidget->draw();
+        decoded = protocolDecoder->decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
+
+        t = Statistic::getInstance().endTime() - t;
+        Statistic::getInstance().addElapsedTime("Map Decoder", t);
+
+        if (decoded)
+        {
+            t = Statistic::getInstance().startTime();
+
+            painterWidget->plotMap(attrib);
+
+            t = Statistic::getInstance().endTime() - t;
+            Statistic::getInstance().addElapsedTime("Map Rendering", t);
+        }
+#else
+            decoded = protocolDecoder->decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
+            if (decoded)
+                painterWidget->plotMap(attrib);
 #endif
-        painterWidget->draw();
+        }
+        qApp->processEvents();
+    }
 
-        // Make the legend and show
+    connectTreeLayerSlot(true);
+
+    // cria a legenda e exibe na tela
+	//@RAIAN: Troquei esta comparacao porque nao estava criando a legenda da segunda camada (No meu caso, a vizinhanca)
+    //if (/*decoded &&*/ legendWindow && (builtLegend < 1))
+	if((legendWindow) && (builtLegend < mapAttributes->size()))
+	//@RAIAN: FIM
+    {
+        connectTreeLayerSlot(false);
         legendWindow->makeLegend();
         showLayerLegend();
 
-        // displays the window zoom
+        painterWidget->replotMap();
+        connectTreeLayerSlot(true);
+
+        // exibe o zoom de janela
         zoomWindow();
         builtLegend++;
-        treeLayers->blockSignals(false);
     }
 
     return decoded;
 }
 
 void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
-                                QStringList legAttribs, TypesOfSubjects type)
+                                QStringList legAttribs)
 {
-    treeLayers->blockSignals(false);
+    connectTreeLayerSlot(false);
+    
+    bool complexMap = false; 
 
-    bool complexMap = false;
-
-    // list of attributes that will be observed
-    if (attribList.isEmpty())
+    // lista com os atributos que serão observados
+    //itemList = headers;
+    if (itemList.isEmpty())
     {
-        attribList << attribs;
+        itemList << attribs;
     }
     else
     {
@@ -183,60 +184,49 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
 
         foreach(const QString & str, attribs)
         {
-            if (!attribList.contains(str))
-                attribList.append(str);
+            if (! itemList.contains(str))
+                itemList.append(str);
         }
     }
+
+#ifdef DEBUG_OBSERVER
+    qDebug() << "\nheaders:\n" << attribs;
+    qDebug() << "\nitemList:\n" << itemList;
+    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
+
+    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
+    qDebug() << "num de legendas: " << (int) legKeys.size() / LEGEND_ITENS;
+
+    for (int j = 0; j < legKeys.size(); j++)
+        qDebug() << legKeys.at(j) << " = " << legAttribs.at(j);
+#endif
 
     for (int j = 0; (legKeys.size() > 0 && j < LEGEND_KEYS.size()); j++)
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
         {
             qFatal("Error: Parameter legend \"%s\" not found. Please check it in the model.",
-                qPrintable(LEGEND_KEYS.at(j)));
+                qPrintable( LEGEND_KEYS.at(j) ) );
         }
     }
-    int dataType = 0, mode = 0, slices = 0, precision = 0, stdDeviation = 0, max = 0;
+    int type = 0, mode = 0, slices = 0, precision = 0, stdDeviation = 0, max = 0;
     int min = 0, colorBar = 0, font = 0, fontSize = 0, symbol = 0, width = 0;
-    // int style = 0;
-
-#ifdef TME_BLACK_BOARD
-    SubjectAttributes *subjAttr = BlackBoard::getInstance().insertSubject(getSubjectId());
-    if (subjAttr)
-        subjAttr->setSubjectType(getSubjectType());
-#endif
 
     QTreeWidgetItem *item = 0;
     Attributes *attrib = 0;
-    for(int i = 0; i < attribList.size(); i++)
+    for( int i = 0; i < itemList.size(); i++)
     {
-        if ((attribList.at(i) != "x") && (attribList.at(i) != "y")
-            && (!mapAttributes->contains(attribList.at(i))))
+        if ((! mapAttributes->contains(itemList.at(i)) )
+            && (itemList.at(i) != "x") && (itemList.at(i) != "y") )
         {
-
-            attrib = new Attributes(attribList.at(i), cellularSpaceSize.width(),
-                cellularSpaceSize.height(), type);
-
-            // TO-DO: Modify code
-#ifdef TME_BLACK_BOARD
-            //SubjectAttributes *subjAttr = BlackBoard::getInstance()
-            //    .addAttribute(getSubjectId(), attribList.at(i));
-
-            attrib->setParentSubjectID(getSubjectId());
-            attrib->setXsValue(subjAttr->getXs());
-            attrib->setYsValue(subjAttr->getYs());
-
-            // attrib->setValues(subjAttr->getNumValues());
-            // attrib->setValues(subjAttr->getTextValues());
-#endif
-
-            obsAttrib.append(attribList.at(i));
+            obsAttrib.append(itemList.at(i));
+            attrib = new Attributes(itemList.at(i), width * height, newWidthCellSpace, newHeightCellSpace );
             attrib->setVisible(true);
 
-            //------- Retrieves the legend file and creates the object attrib
-            if (!legKeys.isEmpty())
+            //------- Recupera a legenda do arquivo e cria o objeto attrib
+            if (! legKeys.isEmpty())
             {
-                dataType = legKeys.indexOf(TYPE);
+                type = legKeys.indexOf(TYPE);
                 mode = legKeys.indexOf(GROUP_MODE);
                 slices = legKeys.indexOf(SLICES);
                 precision = legKeys.indexOf(PRECISION);
@@ -248,34 +238,27 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                 fontSize = legKeys.indexOf(FONT_SIZE);
                 symbol = legKeys.indexOf(SYMBOL);
                 width = legKeys.indexOf(WIDTH);
-                // style = legKeys.indexOf(STYLE);
 
-                attrib->setDataType((TypesOfData) legAttribs.at(dataType).toInt());
-                attrib->setGroupMode((GroupingMode) legAttribs.at(mode).toInt());
-                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// zero counts
-                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// zero counts
-                attrib->setStdDeviation((StdDev) legAttribs.at(stdDeviation).toInt());
+                attrib->setDataType( (TypesOfData) legAttribs.at(type).toInt());
+                attrib->setGroupMode( (GroupingMode) legAttribs.at(mode).toInt());
+                attrib->setSlices(legAttribs.at(slices).toInt() - 1);				// conta com o zero
+                attrib->setPrecisionNumber(legAttribs.at(precision).toInt() - 1);	// conta com o zero
+                attrib->setStdDeviation( (StdDev) legAttribs.at(stdDeviation).toInt());
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());
 
-                bool ok = false;
-                int value = 0;
-                //Font
+                //Fonte
                 attrib->setFontFamily(legAttribs.at(font));
-                value = legAttribs.at(fontSize).toInt(&ok, false);
-                if (ok)
-                    attrib->setFontSize(value);
-                else
-                    attrib->setFontSize(12);
+                attrib->setFontSize(legAttribs.at(fontSize).toInt());
 
-                // Converts the ASCII code of the symbol to character
-                ok = false;
-                value = legAttribs.at(symbol).toInt(&ok, 10);
+                //Converte o código ASCII do símbolo em caracter
+                bool ok = false;
+                int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
-                    attrib->setSymbol(QString(QChar(value)));
+                    attrib->setSymbol( QString( QChar(asciiCode ) ));
                 else
                     attrib->setSymbol(legAttribs.at(symbol));
-
+                
 				attrib->setWidth(legAttribs.at(width).toDouble());
 
                 std::vector<ColorBar> colorBarVec;
@@ -297,12 +280,20 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                     legAttribs.removeFirst();
                 }
 
+#ifdef DEBUG_OBSERVER
+                qDebug() << "valueList.size(): " << valueList.size();
+                qDebug() << valueList;
+                qDebug() << "\nlabelList.size(): " << labelList.size();
+                qDebug() << labelList;
+                qDebug() << "\nattrib->toString()\n" << attrib->toString();
+#endif
             }
+            mapAttributes->insert(itemList.at(i), attrib);
             attrib->makeBkp();
 
             item = new QTreeWidgetItem(treeLayers);
             item->setCheckState(0, Qt::Checked);
-            item->setText(0, attribList.at(i));
+            item->setText(0, itemList.at(i));
 
             if ((complexMap) && (treeLayers->topLevelItemCount() > 1))
             {
@@ -310,35 +301,18 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                 treeLayers->insertTopLevelItem(0, item);
                 item->setExpanded(true);
             }
-            mapAttributes->insert(attribList.at(i), attrib);
         }
     }
 
-    if (!legendWindow)
+    if (! legendWindow)
         legendWindow = new LegendWindow(this);
+    
+    legendWindow->setValues(mapAttributes);   
 
-    legendWindow->setValues(mapAttributes, obsAttrib);
-
-    // // ANTONIO - 10/09
-    // showLayerLegend();
-
-    // Updates the window zoom
+    // Atualiza o zoom de janela
     zoomWindow();
 
-    treeLayers->blockSignals(true);
-
-    painterWidget->updateAttributeList();
-}
-
-void ObserverMap::moveEvent(QMoveEvent* q)
-{
-	VisualArrangement* v = VisualArrangement::getInstance();
-
-	PositionVisualArrangement s;
-	s.x = q->pos().x();
-	s.y = q->pos().y();
-
-	v->addPosition(getId(), s);
+    connectTreeLayerSlot(true);
 }
 
 void ObserverMap::butLegend_Clicked()
@@ -361,12 +335,12 @@ void ObserverMap::butLegend_Clicked()
 
 void ObserverMap::butZoomIn_Clicked()
 {
-    // currentIndex() < 0 : the index not exists in comboBox
-    // currentIndex() > 22 : the index is the zoom of the window
+    // currentIndex() < 0 : o indice não existe no comboBox
+    // currentIndex() > 22 : o indice é o zoom de janela
     if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
         zoomComboBox->setCurrentIndex(positionZoomVec);
     calculeZoom(true);
-    // painterWidget->calculateResult();
+    painterWidget->calculateResult();
 }
 
 void ObserverMap::butZoomOut_Clicked()
@@ -377,7 +351,7 @@ void ObserverMap::butZoomOut_Clicked()
         zoomComboBox->setCurrentIndex(positionZoomVec);
     }
     calculeZoom(false);
-    // painterWidget->calculateResult();
+    painterWidget->calculateResult();
 }
 
 void ObserverMap::butZoomWindow_Clicked()
@@ -385,16 +359,16 @@ void ObserverMap::butZoomWindow_Clicked()
     painterWidget->setZoomWindow();
     butZoomWindow->setChecked(true);
     butHand->setChecked(false);
-    // painterWidget->calculateResult();
+    painterWidget->calculateResult();
 }
 
 void ObserverMap::butZoomRestore_Clicked()
 {
-    if (zoomComboBox->currentText() == WINDOW)		// zoom in Window
+    if (zoomComboBox->currentText() == WINDOW)		// zoom em Window
         return;
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
     zoomActivated(WINDOW);
-    // painterWidget->calculateResult();
+    painterWidget->calculateResult();
 }
 
 void ObserverMap::butHand_Clicked()
@@ -412,8 +386,8 @@ void ObserverMap::treeLayers_itemChanged(QTreeWidgetItem * item, int /*column*/)
     Attributes * attrib = mapAttributes->value(item->text(0));
     if (attrib)
     {
-        attrib->setVisible((item->checkState(0) == Qt::Checked) ? true : false);
-        // painterWidget->calculateResult();
+        attrib->setVisible( (item->checkState(0) == Qt::Checked) ? true : false );
+        painterWidget->calculateResult();
     }
 }
 
@@ -487,38 +461,28 @@ void ObserverMap::showLayerLegend()
 
         for(int j = 0; j < leg->size(); j++)
         {
-            child = new QTreeWidgetItem(parent);
+            child = new QTreeWidgetItem( parent);
             child->setSizeHint(0, ICON_SIZE);
             child->setText(0, leg->at(j).getLabel());
             QColor color = leg->at(j).getColor();
 
-            switch (attrib->getType())
+			//@RAIAN: Para exibir a legenda da vizinhanca como linha 
+            if(attrib->getType() == TObsNeighborhood)
 			{
-            	case TObsAgent:
-            	case TObsSociety:
-                    child->setData(0, Qt::DecorationRole,
-                        legendWindow->symbol2Pixmap(color,
-                            attrib->getFont(), attrib->getSymbol())
-                     	 	 	 );
-                	break;
-
-            	case TObsNeighborhood:
+				child->setData(0, Qt::DecorationRole, legendWindow->color2PixmapLine(color, attrib->getWidth()));
+			}
+			//@RAIAN: FIM
+			else
+			{
+				if (! leg->at(j).getLabel().contains("mean"))
 					child->setData(0, Qt::DecorationRole,
-                    	legendWindow->color2PixmapLine(color, attrib->getWidth()));
-                	break;
-
-            	default:
-					if (!leg->at(j).getLabel().contains("mean"))
-						child->setData(0, Qt::DecorationRole,
-							legendWindow->color2Pixmap(color, ICON_SIZE));
-					else
-						child->setData(0, Qt::DecorationRole, QString(""));
-                break;
-
+					legendWindow->color2Pixmap(color, ICON_SIZE));
+				else
+					child->setData(0, Qt::DecorationRole, QString(""));
 			}
         }
 
-        // Displays the item "does not belong" in the tree of layers
+        // Apresenta o item "does not belong" na arvore de layers
         //if (attrib->getType() == TObsTrajectory)
         //{
         //    child = new QTreeWidgetItem(parent);
@@ -531,7 +495,7 @@ void ObserverMap::showLayerLegend()
     treeLayers->resizeColumnToContents(0);
 }
 
-void ObserverMap::zoomActivated(const QString &scale)
+void ObserverMap::zoomActivated(const QString &scale )
 {
     if (scale == WINDOW)
     {
@@ -540,13 +504,15 @@ void ObserverMap::zoomActivated(const QString &scale)
     }
 
     double newScale = scale.left(scale.indexOf(tr("%"))).toDouble() * 0.01;
-    QSize imgActual(cellularSpaceSize.width() * newScale,
-        cellularSpaceSize.height() * newScale);
+    double scW = newWidthCellSpace * newScale;
+    double scH = newHeightCellSpace * newScale;
+
+    QSize imgActual(scW, scH);
 
     if (painterWidget->rescale(imgActual))
     {
         //scrollArea->setUpdatesEnabled(false);
-        painterWidget->QWidget::resize(imgActual);
+        painterWidget->resize(imgActual);
         //scrollArea->setUpdatesEnabled(true);
         actualZoom = newScale;
 
@@ -576,20 +542,15 @@ void ObserverMap::calculeZoom(bool in)
 
     QString scale = zoomComboBox->itemText(idx);
     double newScale = scale.left(scale.indexOf(tr("%"))).toDouble() * 0.01;
+    double scW = newWidthCellSpace * newScale;
+    double scH = newHeightCellSpace * newScale;
 
-    QSize imgActual(cellularSpaceSize.width() * newScale,
-        cellularSpaceSize.height() * newScale);
-
-    foreach(Attributes *attrib, mapAttributes->values())
-    {
-        if ((attrib->getType() == TObsAgent) || (attrib->getType() == TObsSociety))
-            attrib->setImageSize(imgActual);
-    }
+    QSize imgActual(scW, scH);
 
     if (painterWidget->rescale(imgActual))
     {
         //scrollArea->setUpdatesEnabled(false);
-        painterWidget->QWidget::resize(imgActual);
+        painterWidget->resize(imgActual);
         //scrollArea->setUpdatesEnabled(true);
         zoomComboBox->setCurrentIndex(idx);
         actualZoom = newScale;
@@ -605,9 +566,17 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
     else
         zoom = height - 0.01;
 
+#ifdef DEBUG_OBSERVER
+    qDebug() << "zoomChanged: " << zoom;
+    qDebug() << "factWidth: " << width << " height: " << height;
+    qDebug() << "imgSize: " << imgSize;
+    qDebug() << "scrollArea->viewport: " << scrollArea->viewport()->size();
+    qDebug() << "painterWidget->size: " << painterWidget->size();
+#endif
+
     QSize imgSize(painterWidget->size() * zoom);
 
-    if (!painterWidget->rescale(imgSize))
+    if (! painterWidget->rescale(imgSize))
     {
         //printf("\nzoomChanged:> painterWidget->rescale() FALSO\n\n");
         return;
@@ -623,18 +592,24 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
     int yScroll = (int) y;
 
     scrollArea->setUpdatesEnabled(false);
-    painterWidget->QWidget::resize(imgSize);
+    painterWidget->resize(imgSize);
 
-    // repositions the scroll bars at the point where it
-    // was selected
+    // reposiciona as barras de rolagem no ponto onde
+    // foi selecionado
     scrollArea->horizontalScrollBar()->setValue(xScroll);
     scrollArea->verticalScrollBar()->setValue(yScroll);
 
     scrollArea->setUpdatesEnabled(true);
 
-    double ratio = (cellularSpaceSize.width() / cellularSpaceSize.height())
-        * cellularSpaceSize.width();
+    double ratio = newWidthCellSpace / newHeightCellSpace;
+    ratio *= newWidthCellSpace;
     double percent = (imgSize.width() / ratio);// - 1.0;
+
+#ifdef DEBUG_OBSERVER
+    qDebug() << "zoomChanged::percent: " << percent;
+    qDebug() << "scrollArea->viewport: " << scrollArea->viewport()->size();
+    qDebug() << "painterWidget->size: " << painterWidget->size();
+#endif
 
     QString newZoom(QString::number(ceil(percent * 100)));
     int curr = zoomComboBox->findText(newZoom + "%");
@@ -653,7 +628,7 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
         QVector<int> zoomVecAux(zoomVec);
         zoomVecAux.push_back(newZoom.toInt());
         qStableSort(zoomVecAux.begin(), zoomVecAux.end(), qGreater<int>());
-        positionZoomVec = zoomVecAux.indexOf(newZoom.toInt()); // stores the position of the new value of zoom
+        positionZoomVec = zoomVecAux.indexOf(newZoom.toInt()); // armazena a posição do novo valor de zoom
     }
 }
 
@@ -666,22 +641,15 @@ void ObserverMap::zoomOut()
 
 QStringList ObserverMap::getAttributes()
 {
-    return attribList;
+    return itemList;
 }
 
-void ObserverMap::resizeEvent(QResizeEvent * q)
+void ObserverMap::resizeEvent(QResizeEvent *)
 {
     if (zoomComboBox->currentText() == WINDOW)
         zoomWindow();
-    // painterWidget->calculateResult();
 
-	VisualArrangement* v = VisualArrangement::getInstance();
-	SizeVisualArrangement s;
-
-	s.height = q->size().height();
-	s.width = q->size().width();
-
-	v->addSize(getId(), s);
+    painterWidget->calculateResult();
 }
 
 void ObserverMap::zoomWindow()
@@ -694,7 +662,7 @@ void ObserverMap::zoomWindow()
     factWidth /= zoomRect.width() - 1;
     factHeight /= zoomRect.height() - 1;
 
-    // Sets the most far as 3200%
+    // Define o maior zoom como sendo 3200%
     factWidth = factWidth > 32.0 ? 32.0 : factWidth;
     factHeight = factHeight > 32.0 ? 32.0 : factHeight;
 
@@ -705,19 +673,12 @@ void ObserverMap::zoomWindow()
 
 void ObserverMap::setCellSpaceSize(int w, int h)
 {
-    QRect deskRect = qApp->desktop()->screenGeometry(this);
-
-    double widthAux = deskRect.width() / w;
-    double heightAux = deskRect.height() / h;
-
     width = w;
     height = h;
+    newWidthCellSpace = width * SIZE_CELL;
+    newHeightCellSpace = height * SIZE_CELL;
 
-    // cellularSpaceSize = QSize(width * widthAux, height * heightAux);
-    cellularSpaceSize = QSize(width * widthAux, height * widthAux);
-
-    // painterWidget->resize(cellularSpaceSize, QSize(widthAux, heightAux));
-    painterWidget->resize(cellularSpaceSize, QSize(widthAux, widthAux));
+    painterWidget->resizeImage(QSize(newWidthCellSpace, newHeightCellSpace));
     needResizeImage = true;
 }
 
@@ -746,27 +707,25 @@ QTreeWidget * ObserverMap::getTreeLayers()
     return treeLayers;
 }
 
-const QSize & ObserverMap::getCellSpaceSize() const
+const QSize ObserverMap::getCellSpaceSize()
 {
-    return cellularSpaceSize;
+    return QSize(newWidthCellSpace, newHeightCellSpace);
 }
 
-//void ObserverMap::connectTreeLayerSlot(bool value)
-//{
-//    treeLayers->blockSignals(value);
-//
-//    //// connect/disconnect signal of treeWidget with the slot
-//    //if (!on)
-//    //{
-//    //    disconnect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
-//    //        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
-//    //}
-//    //else
-//    //{
-//    //    QWidget::connect(treeLayers, SIGNAL(itemChanged(QTreeWidgetItem *, int)),
-//    //        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
-//    //}
-//}
+void ObserverMap::connectTreeLayerSlot(bool on)
+{
+    // conecta/disconecta o sinal do treeWidget com o slot
+    if (! on)
+    {
+        disconnect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
+            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+    }
+    else
+    {
+        QWidget::connect(treeLayers, SIGNAL(itemChanged( QTreeWidgetItem *, int )),
+            this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+    }
+}
 
 int ObserverMap::close()
 {
@@ -775,24 +734,38 @@ int ObserverMap::close()
     return 0;
 }
 
-void ObserverMap::setAttributesHash(QHash<QString, Attributes *> *hash)
-{
-    mapAttributes = hash;
-}
+
+
 
 ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
                 QString &value, QString &label)
 {
-    const int COLOR_ = 0, VALUE_ = 1, LABEL_ = 2, DISTANCE_ = 3;
+    int COLOR_ = 0, VALUE_ = 1, LABEL_ = 2, DISTANCE_ = 3;
 
-    QStringList colorattribList = strColorBar.split(ITEM_SEP, QString::SkipEmptyParts);
-    QStringList teColorList = colorattribList.at(COLOR_).split(COMP_COLOR_SEP); //, QString::SkipEmptyParts); // list of components r, g, b
+    QStringList colorItemList = strColorBar.split(ITEM_SEP, QString::SkipEmptyParts);
+    QStringList teColorList = colorItemList.at(COLOR_).split(COMP_COLOR_SEP); //, QString::SkipEmptyParts); // lista com os componentes r, g, b
 
-    if (colorattribList.at(LABEL_) != ITEM_NULL)
-        label = colorattribList.at(LABEL_);
+    if (colorItemList.size() < 4){
+        string err_out = string("Error: Could not infer legend.");
+        lua_getglobal(L, "customErrorMsg");
+        lua_pushstring(L,err_out.c_str());
+        lua_pushnumber(L,4);
+        lua_call(L,2,0);
+    }
 
-    if (colorattribList.at(VALUE_) != ITEM_NULL)
-        value = colorattribList.at(VALUE_);
+#ifdef DEBUG_OBSERVER
+    qDebug() << "\ncolorList.size(): " <<  colorItemList.size();
+    qDebug() << colorItemList;
+
+    qDebug() << "teColorList.size(): " <<   teColorList.size();
+    qDebug() << teColorList;
+#endif
+
+    if (colorItemList.at(LABEL_) != ITEM_NULL)
+        label = colorItemList.at(LABEL_);
+
+    if (colorItemList.at(VALUE_) != ITEM_NULL)
+        value = colorItemList.at(VALUE_);
 
     ColorBar b;
 
@@ -809,9 +782,9 @@ ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
                "Please, check the 'colorBar' item in the legend.");
     }
 
-    // If the distance is informed
-    if (colorattribList.at(DISTANCE_) != ITEM_NULL)
-        b.distance_ = colorattribList.at(DISTANCE_).toDouble();
+    // Caso a distancia seja informada
+    if (colorItemList.at(DISTANCE_) != ITEM_NULL)
+        b.distance_ = colorItemList.at(DISTANCE_).toDouble();
     else
         b.distance_ = distance * 1.;
 
@@ -826,47 +799,52 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
     valueList.clear();
     labelList.clear();
 
-    int pos = colors.indexOf(COLOR_BAR_SEP); // separates colorBar and stdColorBar
+    int pos = colors.indexOf(COLOR_BAR_SEP); // separa a colorBar e o stdColorBar
     QString colorBarStr = colors.mid(0, pos);
     QStringList colorBarList = colorBarStr.split(COLORS_SEP, QString::SkipEmptyParts);
 
     QString value, label;
 
-    // create colorBar1 of attribute
+#ifdef DEBUG_OBSERVER
+        qDebug() << "\ncolorBarStr: " << colorBarStr;
+        qDebug() << "colorList: " << colorBarList;
+#endif
+
+    // cria a colorBar1 do atributo
     for (int i = 0; i < colorBarList.size(); i++)
     {
         ColorBar b = makeColorBarStruct(i, colorBarList.at(i), value, label);
         colorBarVec.push_back(b);
-        valueList.append((value.isEmpty()
-        		|| value.isNull()) ? QString::number(i) : value);
-        labelList.append((label.isEmpty()
-        		|| label.isNull()) ? QString::number(i) : label);
+        valueList.append( (value.isEmpty() || value.isNull()) ? QString::number(i) : value );
+        labelList.append( (label.isEmpty() || label.isNull()) ? QString::number(i) : label );
     }
 
-    // Standard deviation -----------------------
-    // create stdColorBar of attribute
+    // Desvio padrão -----------------------
+    // cria a stdColorBar do atributo
     if (pos > -1)
     {
         value.clear();
         label.clear();
 
         QString stdColorBarStr = colors.mid(pos + 1);
-        QStringList stdColorBarList = stdColorBarStr.split(
-        		COLORS_SEP, QString::SkipEmptyParts);
+        QStringList stdColorBarList = stdColorBarStr.split(COLORS_SEP, QString::SkipEmptyParts);
+
+#ifdef DEBUG_OBSERVER
+        qDebug() << "\nstdColorBarStr: " << stdColorBarStr;
+        qDebug() << "stdColorBarList: " << stdColorBarList;
+#endif
 
         for (int i = 0; i < stdColorBarList.size(); i++)
         {
             ColorBar b = makeColorBarStruct(i, stdColorBarList.at(i), value, label);
             stdColorBarVec.push_back(b);
-            valueList.append((value.isEmpty()
-            		|| value.isNull()) ? QString::number(i) : value);
-            labelList.append((label.isEmpty()
-            		|| label.isNull()) ? QString::number(i) : label);
+            valueList.append( (value.isEmpty() || value.isNull()) ? QString::number(i) : value );
+            labelList.append( (label.isEmpty() || label.isNull()) ? QString::number(i) : label );
         }
     }
 }
 
-bool ObserverMap::constainsItem(const QVector<QPair<Subject *, QString> > &linkedSubjects,
+bool ObserverMap::constainsItem(const QVector<QPair<Subject *, QString> > &linkedSubjects, 
         const Subject *subj)
 {
     for (int i = 0; i < linkedSubjects.size(); i++)
@@ -879,20 +857,20 @@ bool ObserverMap::constainsItem(const QVector<QPair<Subject *, QString> > &linke
 
 void ObserverMap::setupGUI()
 {
-    scrollArea = new QScrollArea();
+    scrollArea = new QScrollArea(this);
     scrollArea->setObjectName("scrollArea");
     scrollArea->setBackgroundRole(QPalette::Dark);  // (QPalette::Dark);// Light
     scrollArea->setAlignment(Qt::AlignCenter);
 
-    painterWidget = new PainterWidget(mapAttributes, observerType, this);
-    connect(painterWidget, SIGNAL(zoomOut()), this, SLOT(zoomOut()));
-    connect(painterWidget, SIGNAL(zoomChanged(QRect, double, double)),
-        this, SLOT(zoomChanged(QRect, double, double)));
+    painterWidget = new PainterWidget(mapAttributes, this);
+    connect(painterWidget, SIGNAL(zoomOut()), this, SLOT(zoomOut() ));
+    connect(painterWidget, SIGNAL(zoomChanged(QRect, double, double) ),
+        this, SLOT(zoomChanged(QRect, double, double) ));
 
     scrollArea->setWidget(painterWidget);
     painterWidget->setParentScroll(scrollArea);
 
-    frameTools = new QFrame();
+    frameTools = new QFrame(this);
     frameTools->setGeometry(0, 0, 200, 500);
 
     QVBoxLayout *layoutTools = new QVBoxLayout();
@@ -913,7 +891,7 @@ void ObserverMap::setupGUI()
     butGrid->setIcon(QIcon(QPixmap(":/icons/grid.png")));
     butGrid->setGeometry(75, 5, 50, 20);
     butGrid->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    connect(butGrid, SIGNAL(toggled(bool)), painterWidget, SIGNAL(enableGrid(bool)));
+    connect(butGrid, SIGNAL(toggled(bool)), painterWidget, SLOT(gridOn(bool)));
 
     butZoomIn = new QToolButton(frameTools);
     butZoomIn->setText("In");
@@ -958,13 +936,13 @@ void ObserverMap::setupGUI()
     //butZoomRestore->setCheckable(true);
     connect(butZoomRestore, SIGNAL(clicked()), this, SLOT(butZoomRestore_Clicked()));
 
-    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300
+    zoomVec << 3200 << 2400 << 1600 << 1200 << 800 << 700 << 600 << 500 << 400 << 300 
         << 200 << 100 << 66 << 50 << 33 << 25 << 16  << 12 << 8 << 5 << 3 << 2 << 1;
-
+    
     QStringList zoomList;
 
     for (int i = 0; i < zoomVec.size(); i++)
-        zoomList.append(QString::number(zoomVec.at(i)) + "%");
+        zoomList.append( QString::number(zoomVec.at(i)) + "%");
 
     zoomList.append(WINDOW);
 
@@ -975,7 +953,7 @@ void ObserverMap::setupGUI()
     zoomComboBox->setCurrentIndex(23); // window  //zoomIdx); //11);
     //zoomComboBox->setCurrentIndex(zoomIdx); //11);
     zoomComboBox->setEditable(true);
-    connect(zoomComboBox, SIGNAL(activated(const QString &)),
+    connect(zoomComboBox, SIGNAL(activated(const QString & )),
         this, SLOT(zoomActivated(const QString &)));
 
     QHBoxLayout *hLayoutZoom1 = new QHBoxLayout();
@@ -990,22 +968,22 @@ void ObserverMap::setupGUI()
     hLayoutZoom2->addWidget(butZoomWindow);
     hLayoutZoom2->addWidget(butZoomRestore);
 
-    // Displays information layers
+    // Exibe os layers de informação
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 150, 190, 310);
     treeLayers->setHeaderLabel(tr("Layers"));
     //treeLayers->setRootIsDecorated(false);
     //treeLayers->setAlternatingRowColors(true);
-    connect(treeLayers, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
-        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
-    connect(treeLayers, SIGNAL(itemActivated(QTreeWidgetItem *, int)),
-        this, SLOT(treeLayers_itemChanged(QTreeWidgetItem *, int)));
+    connect(treeLayers, SIGNAL(itemClicked( QTreeWidgetItem *, int )),
+        this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
+    connect(treeLayers, SIGNAL(itemActivated( QTreeWidgetItem *, int )),
+        this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
 
     // lblOperator = new QLabel(tr("Operations: "), frameTools);
     // lblOperator->setGeometry(10, 95, 150, 20);
     createOperatorComboBox();
 
-    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50, QSizePolicy::Minimum,
+    QSpacerItem *verticalSpacer = new QSpacerItem(20, 50,  QSizePolicy::Minimum,
         QSizePolicy::Preferred);
 
     //--------------------------
@@ -1026,8 +1004,7 @@ void ObserverMap::setupGUI()
     //-------------------------
 
     QSplitter *splitter = new QSplitter(this);
-    splitter->setStyleSheet(
-    		"QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
+    splitter->setStyleSheet("QSplitter::handle{image: url(:/icons/splitter.png); QSplitter { width: 3px; }}");
     splitter->addWidget(frameTools);
     splitter->addWidget(scrollArea);
     splitter->setStretchFactor(0, 0);
