@@ -5,7 +5,7 @@
 #include <QPalette>
 #include <QDebug>
 
-#include <qwt_legend_item.h>
+#include <qwt_plot_legenditem.h>
 #include <qwt_plot_item.h>
 
 #include "chartPlot/chartPlot.h"
@@ -51,7 +51,7 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     plotter->setFrameShape(QFrame::Box);
     plotter->setFrameShadow(QFrame::Plain);
     plotter->setLineWidth(0);
-    plotter->setMargin(10);
+    //plotter->setMargin(10);
     plotter->resize(300, 180);
     plotter->setWindowTitle("TerraME Observer : Chart");
 
@@ -87,6 +87,11 @@ void ObserverGraphic::setObserverType(TypesOfObservers type)
 const TypesOfObservers ObserverGraphic::getType()
 {
     return observerType;
+}
+
+void ObserverGraphic::save(std::string file, std::string extension)
+{
+	plotter->exportChart(file, extension);
 }
 
 bool ObserverGraphic::draw(QDataStream &state)
@@ -186,7 +191,7 @@ bool ObserverGraphic::draw(QDataStream &state)
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
-                        internalCurves->value(key)->plotCurve->setData(*abs, *ord); 
+                        //internalCurves->value(key)->plotCurve->setData(*abs, *ord); 
 
                         //qDebug() << "key: " << key;
                         //qDebug() << *ord;
@@ -233,7 +238,7 @@ bool ObserverGraphic::draw(QDataStream &state)
                     {
                         ord = internalCurves->value(key)->values;
                         // abs = xAxisValues;
-                        internalCurves->value(key)->plotCurve->setData(*abs, *ord); 
+                        //internalCurves->value(key)->plotCurve->setData(*abs, *ord); 
                     }
                     else
                     {
@@ -266,7 +271,7 @@ bool ObserverGraphic::draw(QDataStream &state)
         for (int i = 0; i < internalCurves->keys().size(); i++)
         {
             curve = internalCurves->value( internalCurves->keys().at(i) );
-            curve->plotCurve->setData(*abs, *internalCurves->value( internalCurves->keys().at(i) )->values); 
+            //curve->plotCurve->setData(*abs, *internalCurves->value( internalCurves->keys().at(i) )->values); 
         }
     }
     plotter->repaint();
@@ -393,14 +398,14 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 
                 // symbol
                 num = legAttribs.at(symbol).toInt();
-                QwtSymbol qwtSymbol;
-                qwtSymbol.setStyle( (QwtSymbol::Style) num);
-                qwtSymbol.setPen(pen);
+                QwtSymbol* qwtSymbol = new QwtSymbol;
+                qwtSymbol->setStyle( (QwtSymbol::Style) num);
+                qwtSymbol->setPen(pen);
                 // increments the symbol size in two values
-                qwtSymbol.setSize(pen.width() + 2);
+                qwtSymbol->setSize(pen.width() + 2);
 
-                if (qwtSymbol.brush().style() != Qt::NoBrush)
-                    qwtSymbol.setBrush(pen.color());
+                if (qwtSymbol->brush().style() != Qt::NoBrush)
+                    qwtSymbol->setBrush(pen.color());
 
                 interCurve->plotCurve->setSymbol(qwtSymbol);
 

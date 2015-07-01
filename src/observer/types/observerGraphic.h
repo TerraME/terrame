@@ -102,6 +102,7 @@ public:
      */
     QStringList getAttributes();
 
+	void save(std::string file, std::string extension);
     /**
      * Sets the position of the legend
      * \param pos enumerator legend position

@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@ of this library and its documentation.
 
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
-/*! 
+/*!
   \file rule.h
   \brief This file contains definitions about the JumpCondition and FlowCondition classes.
                  Interfaces: RuleStrategy, Rule
@@ -50,10 +50,13 @@ class GlobalAgent;
  */
 class RuleStrategy {
 public:
-    RuleStrategy( void ){}
-    virtual bool execute ( Event & /*event*/, Agent * /*agent*/, pair<CellIndex,Cell*> & /*cellIndexPair*/ ) { return true; }
+    RuleStrategy(void) {}
+    virtual bool execute (Event & /*event*/, Agent * /*agent*/,
+    		pair<CellIndex, Cell*> & /*cellIndexPair*/)
+    {
+    	return true;
+    }
 };
-
 
 /**
  * \brief
@@ -66,19 +69,19 @@ class Rule
 public:
 
     /// Copy constructor
-    Rule( RuleStrategy *strategy):theStrategy_(strategy){
+    Rule(RuleStrategy *strategy):theStrategy_(strategy) {
     }
 
     /// Configures the strategy to be used.
     /// \param strategy is a pointer to the choseen RuleStrategy object
-    void config( RuleStrategy *strategy) { theStrategy_ = strategy; }
+    void config(RuleStrategy *strategy) { theStrategy_ = strategy; }
 
     /// Executes a RuleStrategy object
     /// \param event is a reference to the Event which linked message has triggered the agent Rule execution.
-    /// \param agent is a ponter to the Agent being executed
+    /// \param agent is a pointer to the Agent being executed
     /// \param cellIndexPair is a pair of CellIndex objects and Cell pointers. The formers are user defined
-    ///  n-dimensional coordenates for the latters.
-    int execute( Event &event,class Agent *agent, pair<CellIndex,Cell*> &cellIndexPair) {
+    ///  n-dimensional coordinates for the latter.
+    int execute(Event &event, class Agent *agent, pair<CellIndex, Cell*> &cellIndexPair) {
         return theStrategy_->execute(event, agent, cellIndexPair);
     }
 
@@ -87,7 +90,6 @@ private:
     RuleStrategy *theStrategy_; ///< Each aRule is executed as the Strategy software design pattern
 
 };
-
 
 /**
  * \brief
@@ -110,42 +112,44 @@ class JumpCondition : public RuleStrategy
 public:
 
     /// Default constructor
-    JumpCondition( void ):targetControlMode_( NULL ),targetControlModeName_("") { }
+    JumpCondition(void):targetControlMode_(NULL), targetControlModeName_("") { }
 
     /// Constructor
     /// \param target is a pointer to a the JumpCondtion target ControleMode
     /// \param targetName is the name of the target ControlMode
-    JumpCondition( ControlMode *target, string &targetName )
-        :targetControlMode_ ( target ),
-          targetControlModeName_(targetName ) { }
+    JumpCondition(ControlMode *target, string &targetName)
+        :targetControlMode_ (target),
+          targetControlModeName_(targetName) { }
 
-
-    /// Transits the JumpCondition object to the tagert ControlMode
+    /// Transits the JumpCondition object to the target ControlMode
     /// \param agent is a pointer to the LocalAgent object being executed
     /// \param cell is a pointer to the Cell object where the Rule objects are being executed
-    void jump(LocalAgent* const agent, Cell *cell){
-        cell->attachControlMode((Agent*)agent, targetControlMode_ );
+    void jump(LocalAgent* const agent, Cell *cell) {
+        cell->attachControlMode((Agent*)agent, targetControlMode_);
     }
 
     /// Gets the JumpConfidtion target ControlMode
     /// \return A pointer to the JumpCondition target ControlMode object.
-    ControlMode* getTarget( void ) { return targetControlMode_;  }
+    ControlMode* getTarget(void) { return targetControlMode_;  }
 
     /// Configures the JumpCondition
     /// \param target is the JumpCondition target ControlMode reference
     /// \param targetName is the target ControlMode name (identifier)
-    void config( ControlMode& target, string& targetName ) {
+    void config(ControlMode& target, string& targetName) {
         targetControlMode_ = &target;
         targetControlModeName_ =  targetName;
     }
 
     /// Sets the JumpCondition target ControlMode name.
     /// \param ctrlModeName is the target ControlMode name (identifier)
-    void setTargetControlModeName( string ctrlModeName ) { targetControlModeName_ = ctrlModeName; }
+    void setTargetControlModeName(string ctrlModeName)
+    {
+    	targetControlModeName_ = ctrlModeName;
+    }
 
     /// Gets the JumpCondition target ControlMode name.
     /// \returns A string with the JumpCondition targe ControlMode name (identifier)
-    string getTargetControlModeName( void ) { return targetControlModeName_; }
+    string getTargetControlModeName(void) { return targetControlModeName_; }
 private:
 
     ControlMode* targetControlMode_; ///< The JumpCondition target ControlModel object

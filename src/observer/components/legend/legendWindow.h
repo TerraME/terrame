@@ -25,26 +25,26 @@
 #ifndef LEGEND_WINDOW_OBSERVERMAP
 #define LEGEND_WINDOW_OBSERVERMAP
 
-#include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QComboBox>
-#include <QtGui/QDialog>
-#include <QtGui/QGridLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QVBoxLayout>
-#include <QtCore/QAbstractItemModel>
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QStandardItemModel>
-#include <QtGui/QTableWidget>
-#include <QtGui/QColor>
-#include <QtCore/QString>
+#include <QVariant>
+#include <QAction>
+#include <QApplication>
+#include <QButtonGroup>
+#include <QComboBox>
+#include <QDialog>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QVBoxLayout>
+#include <QAbstractItemModel>
+#include <QAbstractItemView>
+#include <QItemSelectionModel>
+#include <QStandardItemModel>
+#include <QTableWidget>
+#include <QColor>
+#include <QString>
 
 #include <set>
 

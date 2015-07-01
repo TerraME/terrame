@@ -16,7 +16,7 @@ static const QColor INACTIVE_COLOR = Qt::gray;
 static const QColor ACTIVE_COLOR = Qt::green;
 
 Node::Node(QString n, QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsEllipseItem(parent, scene)
+    : QGraphicsEllipseItem(parent/*, scene*/)
 {
     // setZValue(-1);
     // setFlag(QGraphicsItem::ItemIsMovable);

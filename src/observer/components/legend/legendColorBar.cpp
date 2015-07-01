@@ -19,16 +19,16 @@ indirect, special, incidental, or consequential damages arising out of the use o
 this program and its documentation.
 ************************************************************************************/
 
-#include <QtGui/QColor>
+#include <QColor>
 #include <TeUtils.h>
 #include "legendColorUtils.h"
 #include "legendColorBar.h"
-#include <QtGui/QCursor>
-#include <QtGui/QMenu>
-#include <QtGui/QPainter>
-#include <QtGui/QColorDialog>
+#include <QCursor>
+#include <QMenu>
+#include <QPainter>
+#include <QColorDialog>
 
-#include <QtGui/QMouseEvent>
+#include <QMouseEvent>
 
 //#include <help.h>
 #include <algorithm>

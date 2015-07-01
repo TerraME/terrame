@@ -125,7 +125,7 @@ bool ObserverUDPSender::draw(QDataStream &state)
 
         if (execModes != Quiet){
             lua_getglobal(L, "customWarningMsg");
-            lua_pushstring(L,str.toAscii().constData());
+            lua_pushstring(L,str.toLatin1().constData());
             lua_pushnumber(L,4);
             lua_call(L,2,0);
         }
@@ -170,7 +170,7 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
     double t = 0.0, compressionSum = 0.0, renderingSum = 0.0;
 #endif
 
-    QByteArray data(msg.toAscii().constData(), msg.size());
+    QByteArray data(msg.toLatin1().constData(), msg.size());
 
     qint64 bytesWritten = 0, bytesRead = data.size();
     int pos = 0;
@@ -244,7 +244,7 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
 #ifdef TME_LUA_5_2
                 if (execModes != Quiet){
                     lua_getglobal(L, "customWarningMsg");
-                    lua_pushstring(L,error.toAscii().constData());
+                    lua_pushstring(L,error.toLatin1().constData());
                     lua_pushnumber(L,4);
                     lua_call(L,2,0);
                 }
@@ -277,7 +277,7 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
         qApp->processEvents();
     }
 
-    completeState(COMPLETE_STATE.toAscii());
+    completeState(COMPLETE_STATE.toLatin1());
 
     msgCount++;
     stateCount++;
@@ -378,7 +378,7 @@ bool ObserverUDPSender::completeState(const QByteArray & flag)
 void ObserverUDPSender::setModelTime(double time)
 {
     if (time == -1)
-        completeState(COMPLETE_SIMULATION.toAscii());
+        completeState(COMPLETE_SIMULATION.toLatin1());
 }
 
 int ObserverUDPSender::close()

@@ -27,10 +27,10 @@
 
 #include "../observerInterf.h"
 
-#include <QtGui/QDialog>
-#include <QtGui/QTreeWidget>
-#include <QtCore/QThread>
-#include <QtCore/QStringList>
+#include <QDialog>
+#include <QTreeWidget>
+#include <QThread>
+#include <QStringList>
 
 namespace TerraMEObserver {
 

@@ -235,7 +235,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 						{
                             if (execModes != Quiet ){
                                 QString st = QString("Warning: Invalid color. You need to reconfigure the maximum and the minimum values of the attribute '%1'.").arg(attrib->getName());
-                                string err_out = st.toAscii().constData();
+                                string err_out = st.toLatin1().constData();
                                 lua_getglobal(L, "customWarningMsg");
                                 lua_pushstring(L,err_out.c_str());
                                 lua_pushnumber(L,4);

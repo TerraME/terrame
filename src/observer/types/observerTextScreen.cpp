@@ -1,7 +1,7 @@
 #include "observerTextScreen.h"
 
-#include <QtGui/QApplication>
-#include <QtCore/QByteArray>
+#include <QApplication>
+#include <QByteArray>
 
 ObserverTextScreen::ObserverTextScreen(Subject *subj, QWidget *parent)
     : QTextEdit(parent), ObserverInterf(subj), QThread()

@@ -1,8 +1,8 @@
 #include "observerLogFile.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QMessageBox>
-#include <QtCore/QTextStream>
+#include <QApplication>
+#include <QMessageBox>
+#include <QTextStream>
 
 ObserverLogFile::ObserverLogFile() : QObject()
 {
@@ -184,7 +184,7 @@ bool ObserverLogFile::write() //QString text)
         }
         header = false;
         headers += "\n";
-        file.write(headers.toAscii().data(),  qstrlen( headers.toAscii().data() ));
+        file.write(headers.toLatin1().data(),  qstrlen( headers.toLatin1().data() ));
     }
 
     QString text;
@@ -197,7 +197,7 @@ bool ObserverLogFile::write() //QString text)
     }
 
     text.append("\n");
-    file.write(text.toAscii().data(), qstrlen( text.toAscii().data() ));
+    file.write(text.toLatin1().data(), qstrlen( text.toLatin1().data() ));
     file.close();
 
     return true;

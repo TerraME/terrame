@@ -78,6 +78,7 @@ PlotPropertiesGUI::~PlotPropertiesGUI()
 
 void PlotPropertiesGUI::consistGUI(QList<InternalCurve *> *interCurves)
 {
+/*
     QTreeWidgetItem *item = 0;
     InternalCurve *curve = 0;
 
@@ -115,11 +116,13 @@ void PlotPropertiesGUI::consistGUI(QList<InternalCurve *> *interCurves)
     // Curves tab
     ui->treeCurve->setCurrentItem(ui->treeCurve->topLevelItem(0));
     consistCurveTab(ui->treeCurve->currentItem()->text(0));
+*/
 }
 
 void PlotPropertiesGUI::borderColorClicked()
 {
     // borderColorButton is disabled
+/*
     
     QColor color;
     color = QColorDialog::getColor(color, this, "TerraME Observer : Chart - Select color");
@@ -134,6 +137,7 @@ void PlotPropertiesGUI::borderColorClicked()
 	    //plotter->setPalette(plotterPalette);
      //   // plotter->axisWidget(QwtPlot::xBottom)->setPalette(palette);
     }
+*/
 }
 
 void PlotPropertiesGUI::bckgrndColorClicked()
@@ -155,7 +159,8 @@ void PlotPropertiesGUI::bckgrndColorClicked()
 
 void PlotPropertiesGUI::canvasColorClicked()
 {
-    QColor color;
+/* 
+   QColor color;
     color = QColorDialog::getColor(plotter->canvas()->palette().color(QPalette::Background), 
         this, "Chart Properties - Select color");
 
@@ -169,10 +174,12 @@ void PlotPropertiesGUI::canvasColorClicked()
         plotter->canvas()->setPalette(palette);
         plotter->canvas()->replot();
     }
+*/
 }
 
 void PlotPropertiesGUI::curveColorClicked()
 {
+/*
     QColor color;
     color = QColorDialog::getColor(color, this, "TerraME Observer : Chart - Select color");
 
@@ -184,6 +191,7 @@ void PlotPropertiesGUI::curveColorClicked()
         internalCurves.value(currentCurve)->plotCurve->setPen(QPen(color));
         plotter->replot();
     }
+*/
 }
 
 void PlotPropertiesGUI::borderWidthValue(int value)
@@ -193,7 +201,7 @@ void PlotPropertiesGUI::borderWidthValue(int value)
 
 void PlotPropertiesGUI::marginValue(int value)
 {
-    plotter->setMargin(value);
+ //   plotter->setMargin(value);
 }
 
 void PlotPropertiesGUI::selectedStyle(int value)
@@ -205,6 +213,7 @@ void PlotPropertiesGUI::selectedStyle(int value)
 
 void PlotPropertiesGUI::selectedSymbol(int value)
 {
+/*
     QwtPlotCurve *plotCurve = internalCurves.value(currentCurve)->plotCurve;
 
     QwtSymbol symbol, oldSym = plotCurve->symbol();
@@ -218,6 +227,7 @@ void PlotPropertiesGUI::selectedSymbol(int value)
 
     plotCurve->setSymbol(symbol);
     plotter->replot();
+*/
 }
 
 void PlotPropertiesGUI::selectedLine(int value)
@@ -244,6 +254,7 @@ void PlotPropertiesGUI::curveWidthValue(int value)
 
 void PlotPropertiesGUI::symbolSizeValue(int value)
 {
+/*
     QwtPlotCurve *plotCurve = internalCurves.value(currentCurve)->plotCurve;
 
     // Changes only the symbol width
@@ -256,6 +267,7 @@ void PlotPropertiesGUI::symbolSizeValue(int value)
     symbol.setSize(value);
     plotCurve->setSymbol(symbol);
     plotter->replot();
+*/
 }
 
 void PlotPropertiesGUI::titlesFontClicked()
@@ -321,6 +333,7 @@ void PlotPropertiesGUI::currentItemChanged(QTreeWidgetItem * current, QTreeWidge
 
 void PlotPropertiesGUI::consistCurveTab(const QString &name)
 {
+/*
     QwtPlotCurve *plotCurve = internalCurves.value(name)->plotCurve;
 
     QwtSymbol symbol = plotCurve->symbol();
@@ -336,5 +349,6 @@ void PlotPropertiesGUI::consistCurveTab(const QString &name)
     ui->curveColorButton->setStyleSheet(QString("  border-radius: 4px; "
             "border: 1px solid rgb(0, 0, 0); background-color: %1")
             .arg(plotCurve->pen().color().name()));
+*/
 }
 

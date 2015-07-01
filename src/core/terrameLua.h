@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -23,17 +23,18 @@ of this library and its documentation.
 /*!
   \file terrameLua.h
   \brief This file contains definitions about the TerraME API for Lua programmers.
-   It contains definitions about the Lua Integration TerraME software layer
+  \ It contains definitions about the Lua Integration TerraME software layer
   \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined( TERRAME_LUA )
+#ifndef TERRAME_LUA
 
 #define TERRAME_LUA
-#if defined( TME_LUA_5_0 )
-#include "terrameLua5_0.h"
-#else 
-#include "terrameLua5_1.h"
+#if defined(TME_LUA_5_0)
+	#include "terrameLua5_0.h"
+#else
+	#include "terrameLua5_1.h"
 #endif
 
 #endif
+

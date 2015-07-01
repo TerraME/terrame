@@ -34,9 +34,9 @@ extern "C"
 #include "../observerInterf.h"
 #include "udpSender/udpSenderGUI.h"
 
-#include <QtGui/QDialog>
-#include <QtCore/QThread>
-#include <QtNetwork/QHostAddress>
+#include <QDialog>
+#include <QThread>
+#include <QHostAddress>
 
 class QUdpSocket;
 

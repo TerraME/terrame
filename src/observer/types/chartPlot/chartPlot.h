@@ -49,9 +49,9 @@ public:
     virtual ~ChartPlot();
 
     void setInternalCurves(const QList<TerraMEObserver::InternalCurve *> &internalCurves);
+    void exportChart(std::string, std::string);
 
 private slots:
-    void exportChart();
     void propertiesChart();
 
 protected:

@@ -108,7 +108,8 @@ bool ObserverShapefile::draw(QDataStream &state)
 
 void ObserverShapefile::showLayerLegend()
 {
-    int layer = treeLayers->topLevelItemCount();
+    /*
+	int layer = treeLayers->topLevelItemCount();
 
     QTreeWidgetItem *parent = 0, *child = 0;
     Attributes *attrib = 0;
@@ -142,12 +143,14 @@ void ObserverShapefile::showLayerLegend()
     QWidget::update();
     scene->update();
     treeLayers->resizeColumnToContents(0);
+*/
 }
 
 
 void ObserverShapefile::loadShape(const string &filename)
 {
-    SHPHandle hSHP = SHPOpen(filename.c_str(),"r");
+/*  
+  SHPHandle hSHP = SHPOpen(filename.c_str(),"r");
     //cout<<(char*)filename.constData()<<endl;
     //qDebug()<<hSHP;
     int n;
@@ -186,11 +189,12 @@ void ObserverShapefile::loadShape(const string &filename)
 
     scaleView(1);
     //zoomWindow();
-
+*/
 }
 
 QGraphicsPathItem* ObserverShapefile::createItem(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
 {
+/*
     switch(shapeType){
         case SHPT_POLYGONZ:
         case SHPT_POLYGON: 
@@ -205,11 +209,13 @@ QGraphicsPathItem* ObserverShapefile::createItem(SHPObject *obj, int x, int y,do
         default :
             return createItemPoint(obj,x,y,dx,dy,sx,sy);//default
     }
+*/
 }
 
 QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, int y,double dx, double dy, double sx,double sy)
 {
-    QGraphicsPathItem *item = new QGraphicsPathItem;
+/* 
+   QGraphicsPathItem *item = new QGraphicsPathItem;
     item->setPos(x,y);
 
     vector<list<QPointF> > points(obj->nParts);
@@ -238,10 +244,12 @@ QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, i
     item->setPath(path);
     item->scale(sx, sy);
     return item;
+*/
 }
 
 QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
 {
+/*
     QGraphicsPathItem *item = new QGraphicsPathItem;
     item->setPos(x,y);
     
@@ -256,9 +264,11 @@ QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int
     item->scale(sx, sy);
 
     return item;
+*/
 }
 QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
 {
+/*
     QGraphicsPathItem *item = new QGraphicsPathItem;
     item->setPos(x,y);
     
@@ -298,6 +308,7 @@ QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, 
     item->scale(sx, sy);
 
     return item;
+*/
 }
 
 void ObserverShapefile::scaleView(qreal newScale)
@@ -310,6 +321,7 @@ void ObserverShapefile::scaleView(qreal newScale)
 
 void ObserverShapefile::treeLayers_itemChanged(QTreeWidgetItem * item, int /*column*/)
 {
+/*
     if (obsAttrib.size() == 0)
         return;
 
@@ -319,4 +331,5 @@ void ObserverShapefile::treeLayers_itemChanged(QTreeWidgetItem * item, int /*col
         attrib->setVisible( (item->checkState(0) == Qt::Checked) ? true : false );
         painter->replotMap();
     }
+*/
 }

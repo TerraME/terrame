@@ -5,7 +5,7 @@
 
 #include "shapefil.h"
 
-#include <QtGui/QGraphicsPathItem>
+#include <QGraphicsPathItem>
 
 namespace TerraMEObserver {
 

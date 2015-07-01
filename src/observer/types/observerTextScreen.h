@@ -25,14 +25,14 @@
 #ifndef OBSERVER_TEXTSCREEN
 #define OBSERVER_TEXTSCREEN
 
-#include "../observerInterf.h"
+#include "observerInterf.h"
 
-#include <QtGui/QDialog>
-#include <QtGui/QTextEdit>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QThread>
-#include <QtGui/QCloseEvent>
+#include <QDialog>
+#include <QTextEdit>
+#include <QString>
+#include <QStringList>
+#include <QThread>
+#include <QCloseEvent>
 
 namespace TerraMEObserver {
 

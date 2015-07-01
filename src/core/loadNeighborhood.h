@@ -1,11 +1,15 @@
-#if ! defined( LOAD_NEIGHBORHOOD_H ) 
+#ifndef TME_NO_TERRALIB
+
+#ifndef LOAD_NEIGHBORHOOD_H
 #define LOAD_NEIGHBORHOOD_H
 
 #include <TeProgress.h>
 
 template<typename set>
-bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &gpm, 
-                    TeGPMConstructionStrategy& strategy, double& max_distance, double& num_neighbours)
+bool loadDefaultGPM(TeDatabase* db, const int& themeId,
+					TeGeneralizedProxMatrix<set>* &gpm,
+                    TeGPMConstructionStrategy& strategy,
+					double& max_distance, double& num_neighbours)
 {
     if(!db)
         return false;
@@ -31,24 +35,32 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
 
     //load weight strategy
     TeProxMatrixWeightsStrategy* ws = 0;
-    if((TeGPMWeightsStrategy)weightStrategy==TeNoWeightsStrategy)
+    if((TeGPMWeightsStrategy)weightStrategy == TeNoWeightsStrategy)
         ws = new TeProxMatrixNoWeightsStrategy((bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeInverseDistanceStrategy)
-        ws = new TeProxMatrixInverseDistanceStrategy (portal->getDouble(4), portal->getDouble(5),
-                                                      portal->getDouble(6), portal->getDouble(7), (bool)portal->getInt(3));
+    else if((TeGPMWeightsStrategy)weightStrategy == TeInverseDistanceStrategy)
+        ws = new TeProxMatrixInverseDistanceStrategy (portal->getDouble(4),
+        											portal->getDouble(5),
+                                                    portal->getDouble(6),
+													portal->getDouble(7),
+													(bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeSquaredInverseDistStrategy)
-        ws = new TeProxMatrixSquaredInverseDistanceStrategy (portal->getDouble(4), portal->getDouble(5),
-                                                             portal->getDouble(6), portal->getDouble(7), (bool)portal->getInt(3));
+    else if((TeGPMWeightsStrategy)weightStrategy == TeSquaredInverseDistStrategy)
+        ws = new TeProxMatrixSquaredInverseDistanceStrategy (portal->getDouble(4),
+        													portal->getDouble(5),
+															portal->getDouble(6),
+															portal->getDouble(7),
+															(bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeConnectionStrenghtStrategy)
-        ws = new TeProxMatrixConnectionStrenghtStrategy(portal->getDouble(8), portal->getDouble(9),
-                                                        portal->getDouble(7),(bool)portal->getInt(3));
+    else if((TeGPMWeightsStrategy)weightStrategy == TeConnectionStrenghtStrategy)
+        ws = new TeProxMatrixConnectionStrenghtStrategy(portal->getDouble(8),
+        												portal->getDouble(9),
+                                                        portal->getDouble(7),
+														(bool)portal->getInt(3));
 
     portal->freeResult();
 
-    sql= " SELECT count(*) FROM "+ table;
+    sql = " SELECT count(*) FROM "+ table;
     if(!portal->query(sql))
     {
         delete portal;
@@ -61,7 +73,7 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
 
     portal->freeResult();
 
-    sql= " SELECT object_id1, object_id2, centroid_distance, weight, ";
+    sql = " SELECT object_id1, object_id2, centroid_distance, weight, ";
     sql += " slice, order_neig, borders_length, net_objects_distance, ";
     sql += " net_minimum_path FROM "+ table;
     if(!portal->query(sql))
@@ -70,14 +82,17 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
         return false;
     }
 
-    TeProxMatrixImplementation* impl = TeProxMatrixAbstractFactory::MakeConcreteImplementation();
+    TeProxMatrixImplementation* impl =
+    		TeProxMatrixAbstractFactory::MakeConcreteImplementation();
     while(portal->fetchRow())
     {
         TeProxMatrixAttributes attr(portal->getDouble(3), portal->getInt(4),
-                                    portal->getInt(5),  portal->getDouble(2), portal->getDouble(6),
+                                    portal->getInt(5), portal->getDouble(2),
+									portal->getDouble(6),
                                     portal->getDouble(7), portal->getDouble(8));
 
-        impl->connectObjects (string(portal->getData(0)), string(portal->getData(1)), attr);
+        impl->connectObjects (string(portal->getData(0)),
+        					string(portal->getData(1)), attr);
 
         if(TeProgress::instance())
         {
@@ -97,19 +112,19 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
 
     gpm = new TeGeneralizedProxMatrix<set>(gpmId, table, impl, ws);
 
-    // Eu estava tentando utilizar a API da GPM, mas é dificil construir uma GPM a partir da
-    // do banco, falta na API metodos para carregar os metadados como estrategias de construcao,
-    // estrategia de slicing etc. Desisti e pus metodos parametros por referencia para retornar
-    // as os metadados que eu preciso
+    // I was trying to use the API GPM, but it is difficult to build a GPM from
+    // the database, lack the API methods to load the metadata as building strategies,
+    // slicing strategy etc. I gave up and put methods parameters by reference to return
+    // the metadata that I need
 
     //load  and set the construction strategy parameters
     //TeProxMatrixConstructionStrategy<set>* constStrategy;
     //int strategy = portal->getInt(9);
-    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy )  //adjacencia
+    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy)  //adjacency
     //{
     //	constStrategy = TeProxMatrixLocalAdjacencyStrategy();
     //}
-    //else if( (TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distancia
+    //else if((TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distance
     //{
     //	constStrategy = TeProxMatrixLocalDistanceStrategy();
     //}
@@ -117,9 +132,9 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
     //{
     //	constStrategy =	TeProxMatrixNearestNeighbourStrategy();
     //}
-    //gpm = new TeGeneralizedProxMatrix (constStrategy,  ws, 0, TeGraphBreymann, gpmId, false,  table, 1 );
+    //gpm = new TeGeneralizedProxMatrix (constStrategy, ws, 0, TeGraphBreymann, gpmId, false, table, 1);
     //gpm->impl_strategy_ = impl;
-    //gpm->setCurrentConstructionStrategy(constStrategy );
+    //gpm->setCurrentConstructionStrategy(constStrategy);
     //constStrategy->
     //TeProxMatrixConstructionParams* constParams = new TeProxMatrixConstructionParams();
     strategy = (TeGPMConstructionStrategy)portal->getInt(10);
@@ -131,8 +146,10 @@ bool loadDefaultGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<
 }
 
 template<typename set>
-bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &gpm, string& gpmID,
-             TeGPMConstructionStrategy& strategy, double& max_distance, double& num_neighbours)
+bool loadGPM(TeDatabase* db, const int& themeId,
+			TeGeneralizedProxMatrix<set>* &gpm, string& gpmID,
+             TeGPMConstructionStrategy& strategy,
+			 double& max_distance, double& num_neighbours)
 {
     if(!db)
         return false;
@@ -158,24 +175,32 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
 
     //load weight strategy
     TeProxMatrixWeightsStrategy* ws = 0;
-    if((TeGPMWeightsStrategy)weightStrategy==TeNoWeightsStrategy)
+    if((TeGPMWeightsStrategy)weightStrategy == TeNoWeightsStrategy)
         ws = new TeProxMatrixNoWeightsStrategy((bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeInverseDistanceStrategy)
-        ws = new TeProxMatrixInverseDistanceStrategy (portal->getDouble(4), portal->getDouble(5),
-                                                      portal->getDouble(6), portal->getDouble(7), (bool)portal->getInt(3));
+    else if((TeGPMWeightsStrategy)weightStrategy == TeInverseDistanceStrategy)
+        ws = new TeProxMatrixInverseDistanceStrategy (portal->getDouble(4),
+        											portal->getDouble(5),
+                                                      portal->getDouble(6),
+													  portal->getDouble(7),
+													  (bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeSquaredInverseDistStrategy)
-        ws = new TeProxMatrixSquaredInverseDistanceStrategy (portal->getDouble(4), portal->getDouble(5),
-                                                             portal->getDouble(6), portal->getDouble(7), (bool)portal->getInt(3));
+    else if((TeGPMWeightsStrategy)weightStrategy == TeSquaredInverseDistStrategy)
+        ws = new TeProxMatrixSquaredInverseDistanceStrategy (portal->getDouble(4),
+        													portal->getDouble(5),
+                                                             portal->getDouble(6),
+															 portal->getDouble(7),
+															 (bool)portal->getInt(3));
 
-    else if((TeGPMWeightsStrategy)weightStrategy==TeConnectionStrenghtStrategy)
-        ws = new TeProxMatrixConnectionStrenghtStrategy(portal->getDouble(8), portal->getDouble(9),
-                                                        portal->getDouble(7),(bool)portal->getInt(3));
+    else if((TeGPMWeightsStrategy)weightStrategy == TeConnectionStrenghtStrategy)
+        ws = new TeProxMatrixConnectionStrenghtStrategy(portal->getDouble(8),
+        												portal->getDouble(9),
+                                                        portal->getDouble(7),
+														(bool)portal->getInt(3));
 
     portal->freeResult();
 
-    sql= " SELECT count(*) FROM "+ table;
+    sql = " SELECT count(*) FROM "+ table;
     if(!portal->query(sql))
     {
         delete portal;
@@ -188,7 +213,7 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
 
     portal->freeResult();
 
-    sql= " SELECT object_id1, object_id2, centroid_distance, weight, ";
+    sql = " SELECT object_id1, object_id2, centroid_distance, weight, ";
     sql += " slice, order_neig, borders_length, net_objects_distance, ";
     sql += " net_minimum_path FROM "+ table;
     if(!portal->query(sql))
@@ -201,10 +226,12 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
     while(portal->fetchRow())
     {
         TeProxMatrixAttributes attr(portal->getDouble(3), portal->getInt(4),
-                                    portal->getInt(5),  portal->getDouble(2), portal->getDouble(6),
+                                    portal->getInt(5), portal->getDouble(2),
+									portal->getDouble(6),
                                     portal->getDouble(7), portal->getDouble(8));
 
-        impl->connectObjects (string(portal->getData(0)), string(portal->getData(1)), attr);
+        impl->connectObjects (string(portal->getData(0)),
+        					string(portal->getData(1)), attr);
 
         if(TeProgress::instance())
         {
@@ -224,19 +251,19 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
 
     gpm = new TeGeneralizedProxMatrix<set>(gpmId, table, impl, ws);
 
-    // Eu estava tentando utilizar a API da GPM, mas é dificil construir uma GPM a partir da
-    // do banco, falta na API metodos para carregar os metadados como estrategias de construcao,
-    // estrategia de slicing etc. Desisti e pus metodos parametros por referencia para retornar
-    // as os metadados que eu preciso
+    // I was trying to use the API GPM, but it is difficult to build a GPM from
+    // the database, lack the API methods to load the metadata as building strategies,
+    // slicing strategy etc. I gave up and put methods parameters by reference to return
+    // the metadata that I need
 
     //load  and set the construction strategy parameters
     //TeProxMatrixConstructionStrategy<set>* constStrategy;
     //int strategy = portal->getInt(9);
-    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy )  //adjacencia
+    //if((TeGPMConstructionStrategy) strategy == TeAdjacencyStrategy)  //adjacency
     //{
     //	constStrategy = TeProxMatrixLocalAdjacencyStrategy();
     //}
-    //else if( (TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distancia
+    //else if((TeGPMConstructionStrategy) strategy == TeDistanceStrategy)  //distance
     //{
     //	constStrategy = TeProxMatrixLocalDistanceStrategy();
     //}
@@ -244,9 +271,9 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
     //{
     //	constStrategy =	TeProxMatrixNearestNeighbourStrategy();
     //}
-    //gpm = new TeGeneralizedProxMatrix (constStrategy,  ws, 0, TeGraphBreymann, gpmId, false,  table, 1 );
+    //gpm = new TeGeneralizedProxMatrix (constStrategy,  ws, 0, TeGraphBreymann, gpmId, false,  table, 1);
     //gpm->impl_strategy_ = impl;
-    //gpm->setCurrentConstructionStrategy(constStrategy );
+    //gpm->setCurrentConstructionStrategy(constStrategy);
     //constStrategy->
     //TeProxMatrixConstructionParams* constParams = new TeProxMatrixConstructionParams();
     strategy = (TeGPMConstructionStrategy)portal->getInt(10);
@@ -256,4 +283,7 @@ bool loadGPM(TeDatabase* db, const int& themeId, TeGeneralizedProxMatrix<set>* &
     delete portal;
     return true;
 }
+
 #endif
+
+#endif // TME_NO_TERRALIB

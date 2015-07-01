@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -27,11 +27,11 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
  \file bridge.h
  \brief The classes Interface and Implementation implements "bridge" design pattern (also known as
         "handle/body idiom").The class Implementation was implemented based on the class teCounted
-        writed by Ricardo Cartaxo and Gilberto Câmara and founded in the geographic library TerraLib.
+        written by Ricardo Cartaxo and Gilberto Camara and founded in the geographic library TerraLib.
  \author Tiago Garcia de Senna Carneiro
 */
 
-#if ! defined( HANDLE_BODY )
+#ifndef HANDLE_BODY
 #define HANDLE_BODY
 
 #ifdef DEBUGING
@@ -41,29 +41,28 @@ static int numImplementationCreated = 0;
 static int numImplementationDeleted = 0;
 #endif
 
-
-/** 
+/**
  * \brief
  *
- * The classes Interface and Implementatio implements "bridge" design pattern (also known as
+ * The classes Interface and Implementation implements "bridge" design pattern (also known as
  * "handle/body idiom").
  */
-template <class T> 
+template <class T>
 class Interface
 {
 
-public:	
+public:
 
     /// constructor
-    Interface<T>( ){
+    Interface<T>() {
         pImpl_ = new T; pImpl_->attach();
 #ifdef DEBUGING
         numInterfaceCreated++;
-#endif	
+#endif
     }
 
     /// Destructor
-    virtual ~Interface<T>(){
+    virtual ~Interface<T>() {
         pImpl_->detach();
 #ifdef DEBUGING
         numInterfaceDeleted++;
@@ -71,17 +70,17 @@ public:
     }
 
     /// copy constructor
-    Interface<T>( const Interface& interf ):pImpl_( interf.pImpl_ ) {
+    Interface<T>(const Interface& interf):pImpl_(interf.pImpl_) {
         pImpl_->attach();
 #ifdef DEBUGING
         numInterfaceCreated++;
-#endif	
+#endif
 
     }
 
     /// assignment operator
-    Interface<T>& operator=( const Interface& interf) {
-        if (  this != &interf )
+    Interface<T>& operator=(const Interface& interf) {
+        if (this != &interf)
         {
             interf.pImpl_->attach();
             pImpl_->detach();
@@ -92,35 +91,34 @@ public:
 
 protected:
 
-    /// referência para a implementação
+    /// reference for the implementation
     T *pImpl_;
 };
 
 /**
  * \brief
  *
- * The class Implementation was implemented based on the class teCounted writed by Ricardo Cartaxo
- * and Gilberto Câmara and founded in the geographic library TerraLib.
+ * The class Implementation was implemented based on the class teCounted written by Ricardo Cartaxo
+ * and Gilberto Camara and founded in the geographic library TerraLib.
  */
 
 class Implementation
-{	
+{
 public:
     /// Constructor: zero references when the object is being built
-    Implementation(): refCount_ ( 0 ){
-#ifdef DEBUGING		
+    Implementation(): refCount_ (0) {
+#ifdef DEBUGING
         numImplementationCreated++;
 #endif
     }
-
 
     /// Increases the number of references to this object
     void attach ()	{ refCount_++; }
 
     /// Decreases the number of references to this object.
     /// Destroy it if there are no more references to it
-    void detach (){
-        if ( --refCount_ == 0 )	{
+    void detach () {
+        if (--refCount_ == 0)	{
             delete this;
 #ifdef DEBUGING
             numImplementationDeleted++;
@@ -129,10 +127,10 @@ public:
     }
 
     /// Returns the number of references to this object
-    int refCount(){ return refCount_; }
+    int refCount() { return refCount_; }
 
     /// Destructor
-    virtual ~Implementation(){}
+    virtual ~Implementation() {}
 
 private:
 
@@ -140,7 +138,7 @@ private:
     Implementation(const Implementation&);
 
     /// Implementation
-    Implementation& operator=(const Implementation&){return *this;}
+    Implementation& operator=(const Implementation&) {return *this;}
 
     int refCount_; 	/// the number of references to this class
 

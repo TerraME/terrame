@@ -126,6 +126,8 @@ public:
      */
     const QSize getCellSpaceSize();
 
+	void save(string, string);
+
     /**
      * Creates a color bar
      * \param colors a QString with the Lua legend colorBar in string format

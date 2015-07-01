@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -27,12 +27,11 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
  * \author Tiago Garcia de Senna Carneiro
  */
 
-#if ! defined( STRATEGY )
+#ifndef STRATEGY
 #define STRATEGY
 
-
 template <T>
-class StrategyContext 
+class StrategyContext
 {
 
     int execute() { return theStrategy.execute() }
@@ -42,11 +41,10 @@ private:
     T theStrategy;
 }
 
-
 class Strategy
 {
 
-    int execute( Cell& cell) = 0;
+    int execute(Cell& cell) = 0;
 }
 
 #endif

@@ -58,29 +58,20 @@ file(GLOB_RECURSE INC_ALL *.h)
 #Set include directories location
 include_directories( ${SRCDIR}
 	${SRCDIR}/core/
-	${SRCDIR_OBSERVER}/components
-	${SRCDIR_OBSERVER}/icons
-	${SRCDIR_OBSERVER}/protocol
-	${SRCDIR_OBSERVER}/statistic
-	${SRCDIR_OBSERVER}/types
-	${SRCDIR_OBSERVER}/components/console
-	${SRCDIR_OBSERVER}/components/legend
-	${SRCDIR_OBSERVER}/components/logFileTask
-	${SRCDIR_OBSERVER}/components/painter
-	${SRCDIR_OBSERVER}/components/player
-	${SRCDIR_OBSERVER}/components/receiver
-	${SRCDIR_OBSERVER}/components/senderGUI
-	${SRCDIR_OBSERVER}/components/socketTask
-	${SRCDIR_OBSERVER}/components/spatialObserver
-	${SRCDIR_OBSERVER}/components/receiver/tcp
-	${SRCDIR_OBSERVER}/components/receiver/udp
-	${SRCDIR_OBSERVER}/protocol/blackBoard
-	${SRCDIR_OBSERVER}/protocol/decoder
-	${SRCDIR_OBSERVER}/types/chartPlot
-	${SRCDIR_OBSERVER}/types/image
-	${SRCDIR_OBSERVER}/types/stateMachine
-	${SRCDIR_OBSERVER}/
-	${SRCDIR_OBSERVER}/bagOfTasks
+          ${SRCDIR}/observer/components/
+          ${SRCDIR}/observer/components/console/
+          ${SRCDIR}/observer/types/chartPlot/
+          ${SRCDIR}/observer/components/legend/
+          ${SRCDIR}/observer/components/painter/
+          ${SRCDIR}/observer/components/player/
+          ${SRCDIR}/observer/protocol/blackBoard/
+          ${SRCDIR}/observer/protocol/decoder/
+          ${SRCDIR}/observer/statistic/
+          ${SRCDIR}/observer/types/image/
+          ${SRCDIR}/observer/types/stateMachine/
+          ${SRCDIR}/observer/types/udpSender/
+          ${SRCDIR}/observer/types/
+          ${SRCDIR}/observer/
 	${SRCDIR}/luaFileSystem
 
 	/usr/local/include
@@ -89,59 +80,22 @@ include_directories( ${SRCDIR}
 # Set source files location
 file(GLOB SRCS  
 	${SRCDIR}/core/*.cpp 
-	${SRCDIR_OBSERVER}/components/*.cpp 
-	${SRCDIR_OBSERVER}/icons/*.cpp 
-	${SRCDIR_OBSERVER}/protocol/*.cpp 
-	${SRCDIR_OBSERVER}/statistic/*.cpp 
-	${SRCDIR_OBSERVER}/types/*.cpp 
-	${SRCDIR_OBSERVER}/components/console/*.cpp 
-	${SRCDIR_OBSERVER}/components/legend/*.cpp 
-	${SRCDIR_OBSERVER}/components/logFileTask/*.cpp 
-	${SRCDIR_OBSERVER}/components/painter/*.cpp 
-	${SRCDIR_OBSERVER}/components/player/*.cpp 
-	${SRCDIR_OBSERVER}/components/receiver/*.cpp 
-	${SRCDIR_OBSERVER}/components/senderGUI/*.cpp 
-	${SRCDIR_OBSERVER}/components/socketTask/*.cpp 
-	${SRCDIR_OBSERVER}/components/spatialObserver/*.cpp 
-	${SRCDIR_OBSERVER}/components/receiver/tcp/*.cpp 
-	${SRCDIR_OBSERVER}/components/receiver/udp/*.cpp 
-	${SRCDIR_OBSERVER}/protocol/blackBoard/*.cpp 
-	${SRCDIR_OBSERVER}/protocol/decoder/*.cpp
-	${SRCDIR_OBSERVER}/types/chartPlot/*.cpp 
-	${SRCDIR_OBSERVER}/types/image/*.cpp 
-	${SRCDIR_OBSERVER}/types/stateMachine/*.cpp 
-	${SRCDIR_OBSERVER}/*.cpp
-	${SRCDIR_OBSERVER}/bagOfTasks/*.cpp
+          ${SRCDIR}/observer/components/*.cpp
+          ${SRCDIR}/observer/components/console/*.cpp
+          ${SRCDIR}/observer/components/legend/*.cpp
+          ${SRCDIR}/observer/components/painter/*.cpp
+          ${SRCDIR}/observer/components/player/*.cpp 
+          ${SRCDIR}/observer/components/receiver/*.cpp 
+          ${SRCDIR}/observer/protocol/blackBoard/*.cpp    
+          ${SRCDIR}/observer/protocol/decoder/*.cpp
+          ${SRCDIR}/observer/statistic/*.cpp
+          ${SRCDIR}/observer/types/image/*.cpp
+          ${SRCDIR}/observer/types/udpSender/*.cpp
+          ${SRCDIR}/observer/types/stateMachine/*.cpp
+          ${SRCDIR}/observer/types/*.cpp
+          ${SRCDIR}/observer/*.cpp
+          ${SRCDIR}/observer/types/chartPlot/*.cpp
 	${SRCDIR}/luaFileSystem/*.c
-)
-
-# Set header files location
-file(GLOB HEADERS 
-	${SRCDIR}/core/*.h 
-	${SRCDIR_OBSERVER}/components/*.h 
-	${SRCDIR_OBSERVER}/icons/*.h 
-	${SRCDIR_OBSERVER}/protocol/*.h 
-	${SRCDIR_OBSERVER}/statistic/*.h 
-	${SRCDIR_OBSERVER}/types/*.h 
-	${SRCDIR_OBSERVER}/components/console/*.h 
-	${SRCDIR_OBSERVER}/components/legend/*.h 
-	${SRCDIR_OBSERVER}/components/logFileTask/*.h 
-	${SRCDIR_OBSERVER}/components/painter/*.h 
-	${SRCDIR_OBSERVER}/components/player/*.h 
-	${SRCDIR_OBSERVER}/components/receiver/*.h 
-	${SRCDIR_OBSERVER}/components/senderGUI/*.h 
-	${SRCDIR_OBSERVER}/components/socketTask/*.h 
-	${SRCDIR_OBSERVER}/components/spatialObserver/*.h 
-	${SRCDIR_OBSERVER}/components/receiver/tcp/*.h 
-	${SRCDIR_OBSERVER}/components/receiver/udp/*.h 
-	${SRCDIR_OBSERVER}/protocol/blackBoard/*.h 
-	${SRCDIR_OBSERVER}/protocol/decoder/*.h
-	${SRCDIR_OBSERVER}/types/chartPlot/*.h 
-	${SRCDIR_OBSERVER}/types/image/*.h 
-	${SRCDIR_OBSERVER}/types/stateMachine/*.h 
-	${SRCDIR_OBSERVER}/*.h 
-	${SRCDIR_OBSERVER}/bagOfTasks/*.h
-	${SRCDIR}/luaFileSystem/*.h
 )
 
 set(LIBS)
@@ -345,52 +299,39 @@ endif(QTLUAEXTRAS_FOUND)
 set(MOC_SRCS)
 
 set(MOC_HDRS
-	${SRCDIR_OBSERVER}/types/observerScheduler.h
-	${SRCDIR_OBSERVER}/types/observerStateMachine.h
-	${SRCDIR_OBSERVER}/types/observerMapSuperclass.h
-	${SRCDIR_OBSERVER}/types/image/imageGUI.h
-	${SRCDIR_OBSERVER}/types/observerShapefile.h
-	${SRCDIR_OBSERVER}/types/observerTCPSender.h
-	${SRCDIR_OBSERVER}/types/observerGraphic.h
-	${SRCDIR_OBSERVER}/types/observerUDPSender.h
-	${SRCDIR_OBSERVER}/types/chartPlot/plotPropertiesGUI.h
-	${SRCDIR_OBSERVER}/types/chartPlot/chartPlot.h
-	${SRCDIR_OBSERVER}/types/observerMap.h
-	${SRCDIR_OBSERVER}/statistic/statistic.h
-	${SRCDIR_OBSERVER}/components/receiver/receiverGUI.h
-	${SRCDIR_OBSERVER}/components/receiver/legendGUI.h
-	${SRCDIR_OBSERVER}/components/receiver/udp/receiverUDP.h
-	${SRCDIR_OBSERVER}/components/receiver/udp/datagramReceiverTask.h
-	${SRCDIR_OBSERVER}/components/receiver/tcp/clientTcpConnection.h
-	${SRCDIR_OBSERVER}/components/receiver/tcp/receiverTcpServer.h
-	${SRCDIR_OBSERVER}/components/painter/visualMapping.h
-	${SRCDIR_OBSERVER}/components/painter/calculateResult.h
-	${SRCDIR_OBSERVER}/components/painter/painterWidget.h
-	${SRCDIR_OBSERVER}/components/player/playerGUI.h
-	${SRCDIR_OBSERVER}/components/legend/legendWindow.h
-	${SRCDIR_OBSERVER}/components/legend/legendColorBar.h
-	${SRCDIR_OBSERVER}/components/spatialObserver/spatialObserverGUI.h
-	${SRCDIR_OBSERVER}/components/spatialObserver/smartSplitter.h
-	${SRCDIR_OBSERVER}/components/spatialObserver/canvas.h
-	${SRCDIR_OBSERVER}/components/socketTask/udpSocketTask.h
-	${SRCDIR_OBSERVER}/components/socketTask/tcpSocketTask.h
-	${SRCDIR_OBSERVER}/components/senderGUI/senderGUI.h
-	${SRCDIR_OBSERVER}/components/console/modelConsole.h
+    ${SRCDIR}/observer/types/observerMap.h
+    ${SRCDIR}/observer/types/observerGraphic.h
+    ${SRCDIR}/observer/types/observerScheduler.h
+    ${SRCDIR}/observer/types/observerStateMachine.h
+    ${SRCDIR}/observer/types/observerMapSuperclass.h
+    ${SRCDIR}/observer/types/observerShapefile.h
+    ${SRCDIR}/observer/types/image/imageGUI.h
+    ${SRCDIR}/observer/types/udpSender/udpSenderGUI.h
+    ${SRCDIR}/observer/components/player/playerGUI.h
+    ${SRCDIR}/observer/components/console/modelConsole.h
+    ${SRCDIR}/observer/components/legend/legendWindow.h
+    ${SRCDIR}/observer/components/legend/legendColorBar.h
+    ${SRCDIR}/observer/components/painter/painterWidget.h
+    ${SRCDIR}/observer/components/painter/painterThread.h
+    ${SRCDIR}/observer/components/painter/painterShapefile.h
+    ${SRCDIR}/observer/components/receiver/receiver.h
+    ${SRCDIR}/observer/components/canvas.h
+    ${SRCDIR}/observer/types/chartPlot/chartPlot.h
+    ${SRCDIR}/observer/types/chartPlot/internalCurve.h
+    ${SRCDIR}/observer/types/chartPlot/plotPropertiesGUI.h
 )
 
 set(MOC_RSRCS 
-	${SRCDIR_OBSERVER}/observerResource.qrc
+	${SRCDIR}/observer/observerResource.qrc
 )
 
 set(UIS
-	${SRCDIR_OBSERVER}/types/image/imageGUI.ui
-	${SRCDIR_OBSERVER}/types/chartPlot/plotPropertiesGUI.ui
-	${SRCDIR_OBSERVER}/components/receiver/legendGUI.ui
-	${SRCDIR_OBSERVER}/components/receiver/receiverGUI.ui
-	${SRCDIR_OBSERVER}/components/player/playerGUI.ui
-	${SRCDIR_OBSERVER}/components/spatialObserver/spatialObserverGUI.ui
-	${SRCDIR_OBSERVER}/components/senderGUI/senderGUI.ui
-	${SRCDIR_OBSERVER}/components/console/modelConsoleGUI.ui
+    ${SRCDIR}/observer/components/console/modelConsoleGUI.ui
+    ${SRCDIR}/observer/components/player/playerGUI.ui
+    ${SRCDIR}/observer/components/receiver/receiverGUI.ui
+    ${SRCDIR}/observer/types/image/imageGUI.ui
+    ${SRCDIR}/observer/types/udpSender/udpSenderGUI.ui
+    ${SRCDIR}/observer/types/chartPlot/plotPropertiesGUI.ui
 )
 
 qt5_wrap_cpp(MOC_SRCS ${MOC_HDRS})
@@ -413,7 +354,6 @@ add_executable( terrame
 	${SRCS} 
 	${MOC_SRCS} 
 	${UI_SRCS} 
-	${HEADERS} 
 	${INC_ALL} 
 	${MOC_HDRS} 
 	${PROTO_SRC} 
@@ -429,283 +369,6 @@ set_target_properties( terrame PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${BINARY_DIR}
 )
 
-## --------------------------------------- Defining source groups ---------------------------------------------- ##
-
-#-- TODO: Change it to another file if possible.
-source_group("core" FILES 
-	${SRCDIR}/core/*
-	${SRCDIR}/core/agent.h
-	${SRCDIR}/core/bridge.h
-	${SRCDIR}/core/cell.h
-	${SRCDIR}/core/cellularSpace.h
-	${SRCDIR}/core/composite.h
-	${SRCDIR}/core/controlMode.h
-	${SRCDIR}/core/environment.h
-	${SRCDIR}/core/environment.cpp
-	${SRCDIR}/core/event.h
-	${SRCDIR}/core/event.cpp
-	${SRCDIR}/core/loadNeighborhood.h
-	${SRCDIR}/core/luaAgent.h
-	${SRCDIR}/core/luaCell.h
-	${SRCDIR}/core/luaCell.cpp
-	${SRCDIR}/core/luaCellIndex.h
-	${SRCDIR}/core/luaCellularSpace.h
-	${SRCDIR}/core/luaCellularSpace.cpp
-	${SRCDIR}/core/luaControlMode.h
-	${SRCDIR}/core/luaEnvironment.h
-	${SRCDIR}/core/luaEnvironment.cpp
-	${SRCDIR}/core/luaEvent.h
-	${SRCDIR}/core/luaEvent.cpp
-	${SRCDIR}/core/luaFlowCondition.h
-	${SRCDIR}/core/luaGlobalAgent.h
-	${SRCDIR}/core/luaGlobalAgent.cpp
-	${SRCDIR}/core/luaJumpCondition.h
-	${SRCDIR}/core/luaLocalAgent.h
-	${SRCDIR}/core/luaLocalAgent.cpp
-	${SRCDIR}/core/luaMessage.h
-	${SRCDIR}/core/luaNeighborhood.cpp
-	${SRCDIR}/core/luaNeighborhood.h
-	${SRCDIR}/core/imageCompare.h
-	${SRCDIR}/core/imageCompare.cpp
-	${SRCDIR}/core/luaRegion.h
-	${SRCDIR}/core/luaRule.h
-	${SRCDIR}/core/luaSociety.cpp
-	${SRCDIR}/core/luaSociety.h
-	${SRCDIR}/core/luaTimer.cpp
-	${SRCDIR}/core/luaTimer.h
-	${SRCDIR}/core/luaTrajectory.cpp
-	${SRCDIR}/core/luaTrajectory.h
-	${SRCDIR}/core/luaVisualArrangement.cpp
-	${SRCDIR}/core/luaVisualArrangement.h
-	${SRCDIR}/core/luaMap.cpp
-	${SRCDIR}/core/luaMap.h
-	${SRCDIR}/core/luaChart.cpp
-	${SRCDIR}/core/luaChart.h
-	${SRCDIR}/core/luaUtils.cpp
-	${SRCDIR}/core/luaUtils.h
-	${SRCDIR}/core/luna.h
-	${SRCDIR}/core/message.h
-	${SRCDIR}/core/model.cpp
-	${SRCDIR}/core/model.h
-	${SRCDIR}/core/neighborhood.h
-	${SRCDIR}/core/process.h
-	${SRCDIR}/core/reference.h
-	${SRCDIR}/core/region.h
-	${SRCDIR}/core/registryObjects.h
-	${SRCDIR}/core/rule.h
-	${SRCDIR}/core/scheduler.h
-	${SRCDIR}/core/society.h
-	${SRCDIR}/core/strategy.h
-	${SRCDIR}/core/terrameGlobals.h
-	${SRCDIR}/core/terrameLua.cpp
-	${SRCDIR}/core/terrameLua.h
-	${SRCDIR}/core/terrameLua5_0.h
-	${SRCDIR}/core/terrameLua5_1.h
-)
-
-source_group("observer" FILES
-	${SRCDIR_OBSERVER}/cellSpaceSubjectInterf.cpp
-	${SRCDIR_OBSERVER}/cellSpaceSubjectInterf.h
-	${SRCDIR_OBSERVER}/cellSubjectInterf.cpp
-	${SRCDIR_OBSERVER}/cellSubjectInterf.h
-	${SRCDIR_OBSERVER}/environmentSubjectInterf.cpp
-	${SRCDIR_OBSERVER}/environmentSubjectInterf.h
-	${SRCDIR_OBSERVER}/eventSubjectInterf.cpp
-	${SRCDIR_OBSERVER}/eventSubjectInterf.h
-	${SRCDIR_OBSERVER}/globalAgentSubjectInterf.cpp
-	${SRCDIR_OBSERVER}/globalAgentSubjectInterf.h
-	${SRCDIR_OBSERVER}/localAgentSubjectInterf.cpp
-	${SRCDIR_OBSERVER}/localAgentSubjectInterf.h
-	${SRCDIR_OBSERVER}/neighborhoodSubjectInterf.cpp
-	${SRCDIR_OBSERVER}/neighborhoodSubjectInterf.h
-	${SRCDIR_OBSERVER}/observer.h
-	${SRCDIR_OBSERVER}/observerGlobals.h
-	${SRCDIR_OBSERVER}/observerImpl.cpp
-	${SRCDIR_OBSERVER}/observerImpl.h
-	${SRCDIR_OBSERVER}/observerInterf.cpp
-	${SRCDIR_OBSERVER}/observerInterf.h
-	${SRCDIR_OBSERVER}/observerLua.h
-	${SRCDIR_OBSERVER}/schedulerSubjectInterf.cpp
-	${SRCDIR_OBSERVER}/schedulerSubjectInterf.h
-	${SRCDIR_OBSERVER}/societySubjectInterf.cpp
-	${SRCDIR_OBSERVER}/societySubjectInterf.h
-	${SRCDIR_OBSERVER}/terrameIncludes.h
-	${SRCDIR_OBSERVER}/trajectorySubjectInterf.cpp
-	${SRCDIR_OBSERVER}/trajectorySubjectInterf.h
-	${SRCDIR_OBSERVER}/visualArrangement.h
-	${SRCDIR_OBSERVER}/visualArrangement.cpp
-)
-
-source_group("observer\\components\\console" FILES
-	${SRCDIR_OBSERVER}/components/console/modelConsole.cpp
-	${SRCDIR_OBSERVER}/components/console/modelConsole.h
-)
-
-source_group("observer\\components\\legend" FILES
-	${SRCDIR_OBSERVER}/components/legend/legendAttributes.cpp
-	${SRCDIR_OBSERVER}/components/legend/legendAttributes.h
-	${SRCDIR_OBSERVER}/components/legend/legendColorBar.cpp
-	${SRCDIR_OBSERVER}/components/legend/legendColorBar.h
-	${SRCDIR_OBSERVER}/components/legend/legendColorUtils.cpp
-	${SRCDIR_OBSERVER}/components/legend/legendColorUtils.h
-	${SRCDIR_OBSERVER}/components/legend/legendWindow.cpp
-	${SRCDIR_OBSERVER}/components/legend/legendWindow.h
-)
-
-source_group("observer\\components\\painter" FILES
-	${SRCDIR_OBSERVER}/components/painter/calculateResult.cpp
-	${SRCDIR_OBSERVER}/components/painter/calculateResult.h
-	${SRCDIR_OBSERVER}/components/painter/painterShapefile.cpp
-	${SRCDIR_OBSERVER}/components/painter/painterShapefile.h
-	${SRCDIR_OBSERVER}/components/painter/painterWidget.cpp
-	${SRCDIR_OBSERVER}/components/painter/painterWidget.h
-	${SRCDIR_OBSERVER}/components/painter/visualMapping.cpp
-	${SRCDIR_OBSERVER}/components/painter/visualMapping.h
-)
-
-source_group("observer\\components\\player" FILES
-	${SRCDIR_OBSERVER}/components/player/player.cpp
-	${SRCDIR_OBSERVER}/components/player/player.h
-	${SRCDIR_OBSERVER}/components/player/playerGUI.cpp
-	${SRCDIR_OBSERVER}/components/player/playerGUI.h
-)
-
-source_group("observer\\components\\receiver" FILES
-	${SRCDIR_OBSERVER}/components/receiver/concretSubject.h
-	${SRCDIR_OBSERVER}/components/receiver/legendGUI.cpp
-	${SRCDIR_OBSERVER}/components/receiver/legendGUI.h
-	${SRCDIR_OBSERVER}/components/receiver/receiverGUI.cpp
-	${SRCDIR_OBSERVER}/components/receiver/receiverGUI.h
-)
-
-source_group("observer\\components\\receiver\\tcp" FILES
-	${SRCDIR_OBSERVER}/components/receiver/tcp/clientTcpConnection.cpp
-	${SRCDIR_OBSERVER}/components/receiver/tcp/clientTcpConnection.h
-	${SRCDIR_OBSERVER}/components/receiver/tcp/receiverTcpServer.cpp
-	${SRCDIR_OBSERVER}/components/receiver/tcp/receiverTcpServer.h
-)
-
-source_group("observer\\components\\receiver\\udp" FILES
-	${SRCDIR_OBSERVER}/components/receiver/udp/datagramReceiverTask.cpp
-	${SRCDIR_OBSERVER}/components/receiver/udp/datagramReceiverTask.h
-	${SRCDIR_OBSERVER}/components/receiver/udp/receiverUDP.cpp
-	${SRCDIR_OBSERVER}/components/receiver/udp/receiverUDP.h
-)
-
-source_group("observer\\components\\spatialObserver" FILES
-	${SRCDIR_OBSERVER}/components/spatialObserver/canvas.cpp
-	${SRCDIR_OBSERVER}/components/spatialObserver/canvas.h
-	${SRCDIR_OBSERVER}/components/spatialObserver/main.cpp
-	${SRCDIR_OBSERVER}/components/spatialObserver/smartSplitter.cpp
-	${SRCDIR_OBSERVER}/components/spatialObserver/smartSplitter.h
-	${SRCDIR_OBSERVER}/components/spatialObserver/spatialObserverGUI.cpp
-	${SRCDIR_OBSERVER}/components/spatialObserver/spatialObserverGUI.h
-)
-
-source_group("observer\\components\\logFileTask" FILES
-	${SRCDIR_OBSERVER}/components/logFileTask/logFileTask.cpp
-	${SRCDIR_OBSERVER}/components/logFileTask/logFileTask.h
-)
-
-source_group("observer\\components\\senderGUI" FILES
-	${SRCDIR_OBSERVER}/components/senderGUI/senderGUI.cpp
-	${SRCDIR_OBSERVER}/components/senderGUI/senderGUI.h
-)
-
-source_group("observer\\components\\socketTask" FILES
-	${SRCDIR_OBSERVER}/components/socketTask/socketTask.cpp
-	${SRCDIR_OBSERVER}/components/socketTask/socketTask.h
-	${SRCDIR_OBSERVER}/components/socketTask/tcpSocketTask.cpp
-	${SRCDIR_OBSERVER}/components/socketTask/tcpSocketTask.h
-	${SRCDIR_OBSERVER}/components/socketTask/udpSocketTask.cpp
-	${SRCDIR_OBSERVER}/components/socketTask/udpSocketTask.h
-)
-
-source_group("observer\\protocol\\blackBoard" FILES
-	${SRCDIR_OBSERVER}/protocol/blackBoard/blackBoard.cpp
-	${SRCDIR_OBSERVER}/protocol/blackBoard/blackBoard.h
-	${SRCDIR_OBSERVER}/protocol/blackBoard/coordinate.cpp
-	${SRCDIR_OBSERVER}/protocol/blackBoard/coordinate.h
-	${SRCDIR_OBSERVER}/protocol/blackBoard/subjectAttributes.cpp
-	${SRCDIR_OBSERVER}/protocol/blackBoard/subjectAttributes.h
-)
-
-source_group("observer\\protocol\\decoder" FILES
-	${SRCDIR_OBSERVER}/protocol/decoder/decoder.cpp
-	${SRCDIR_OBSERVER}/protocol/decoder/decoder.h
-)
-
-source_group("observer\\statistic" FILES
-	${SRCDIR_OBSERVER}/statistic/statistic.cpp
-	${SRCDIR_OBSERVER}/statistic/statistic.h
-)
-
-source_group("observer\\types" FILES
-	${SRCDIR_OBSERVER}/types/agentObserverImage.cpp
-	${SRCDIR_OBSERVER}/types/agentObserverImage.h
-	${SRCDIR_OBSERVER}/types/agentObserverMap.cpp
-	${SRCDIR_OBSERVER}/types/agentObserverMap.h
-	${SRCDIR_OBSERVER}/types/observerGraphic.cpp
-	${SRCDIR_OBSERVER}/types/observerGraphic.h
-	${SRCDIR_OBSERVER}/types/observerImage.cpp
-	${SRCDIR_OBSERVER}/types/observerImage.h
-	${SRCDIR_OBSERVER}/types/observerLogFile.cpp
-	${SRCDIR_OBSERVER}/types/observerLogFile.h
-	${SRCDIR_OBSERVER}/types/observerMap.cpp
-	${SRCDIR_OBSERVER}/types/observerMap.h
-	${SRCDIR_OBSERVER}/types/observerMapSuperclass.cpp
-	${SRCDIR_OBSERVER}/types/observerMapSuperclass.h
-	${SRCDIR_OBSERVER}/types/observerScheduler.cpp
-	${SRCDIR_OBSERVER}/types/observerScheduler.h
-	${SRCDIR_OBSERVER}/types/observerShapefile.cpp
-	${SRCDIR_OBSERVER}/types/observerShapefile.h
-	${SRCDIR_OBSERVER}/types/observerStateMachine.cpp
-	${SRCDIR_OBSERVER}/types/observerStateMachine.h
-	${SRCDIR_OBSERVER}/types/observerTCPSender.cpp
-	${SRCDIR_OBSERVER}/types/observerTCPSender.h
-	${SRCDIR_OBSERVER}/types/observerTable.cpp
-	${SRCDIR_OBSERVER}/types/observerTable.h
-	${SRCDIR_OBSERVER}/types/observerTextScreen.cpp
-	${SRCDIR_OBSERVER}/types/observerTextScreen.h
-	${SRCDIR_OBSERVER}/types/observerUDPSender.cpp
-	${SRCDIR_OBSERVER}/types/observerUDPSender.h
-)
-
-source_group("observer\\types\\chartPlot" FILES
-	${SRCDIR_OBSERVER}/types/chartPlot/chartPlot.cpp
-	${SRCDIR_OBSERVER}/types/chartPlot/chartPlot.h
-	${SRCDIR_OBSERVER}/types/chartPlot/internalCurve.h
-	${SRCDIR_OBSERVER}/types/chartPlot/plotPropertiesGUI.cpp
-	${SRCDIR_OBSERVER}/types/chartPlot/plotPropertiesGUI.h
-	#${SRCDIR_OBSERVER}/types/chartPlot/plotPropertiesGUI.ui
-)
-
-source_group("observer\\types\\image" FILES
-	${SRCDIR_OBSERVER}/types/image/imageGUI.cpp
-	${SRCDIR_OBSERVER}/types/image/imageGUI.h
-	#${SRCDIR_OBSERVER}/types/image/imageGUI.ui
-)
-
-source_group("observer\\types\\stateMachine" FILES
-	${SRCDIR_OBSERVER}/types/stateMachine/edge.cpp
-	${SRCDIR_OBSERVER}/types/stateMachine/edge.h
-	${SRCDIR_OBSERVER}/types/stateMachine/node.cpp
-	${SRCDIR_OBSERVER}/types/stateMachine/node.h
-)
-
-source_group("observer\\bagOfTasks" FILES
-	${SRCDIR_OBSERVER}/bagOfTasks/task.cpp
-	${SRCDIR_OBSERVER}/bagOfTasks/task.h
-	${SRCDIR_OBSERVER}/bagOfTasks/taskManager.cpp
-	${SRCDIR_OBSERVER}/bagOfTasks/taskManager.h
-	${SRCDIR_OBSERVER}/bagOfTasks/worker.cpp
-	${SRCDIR_OBSERVER}/bagOfTasks/worker.h
-)
-
-source_group("luaFileSystem" FILES
-	${SRCDIR}/luaFileSystem/lfs.c
-	${SRCDIR}/luaFileSystem/lfs.h
-)
 
 ## ------------------------------------- Set Installation procedure -------------------------------------------- ##
 set(CMAKE_INSTALL_PREFIX ${BLDIR}/tmp_install)

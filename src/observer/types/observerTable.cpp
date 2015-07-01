@@ -1,8 +1,8 @@
 #include "observerTable.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QTreeWidgetItem>
+#include <QApplication>
+#include <QVBoxLayout>
+#include <QTreeWidgetItem>
 #include <QDebug>
 
 #include <math.h>

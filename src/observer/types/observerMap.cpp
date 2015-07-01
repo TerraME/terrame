@@ -99,6 +99,14 @@ const TypesOfObservers ObserverMap::getType()
     return observerType;
 }
 
+void ObserverMap::save(string f, string e)
+{
+	//QDataStream d;
+	//draw(d);
+	QPixmap pixmap = painterWidget->grab();
+	pixmap.save(f.c_str(), e.c_str());
+}
+
 bool ObserverMap::draw(QDataStream &state)
 {
     bool decoded = false;

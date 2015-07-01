@@ -26,6 +26,7 @@
 #define BLACKBOARD_H
 
 #include <QHash>
+#include <QStringList>
 
 class QBuffer;
 class QDataStream;

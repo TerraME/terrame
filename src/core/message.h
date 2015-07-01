@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright © 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -23,13 +23,13 @@ of this library and its documentation.
 Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 *************************************************************************************/
 
-/*! 
+/*!
   \file message.h
   \brief This file contains definitions about the Message objects. Messages are dispatched by the
                  simulation engine Event objects. In general, a message is, a function with several
                  calls to the  TerraME 1.0 API services (or API functions). Messages run Agent objects
-                 over the CellularSpace objets, carry out the comunication between Agent objects,
-                 report model result, synchronze or load or save Cellular space in the geographical database.
+                 over the CellularSpace objects, carry out the communication between Agent objects,
+                 report model result, synchronize or load or save Cellular space in the geographical database.
                  Handles: Message
                  Implementations: MessageImpl
   \author Tiago Garcia de Senna Carneiro
@@ -53,8 +53,8 @@ public:
     /// \param event is the reference to the Event which has triggered this Message
     /// \return A boolean value: true if the Message object must be re-inserted in the simulation
     ////        engine Scheduler, otherwise false.
-    virtual bool execute( Event& /*event*/ ) { return false;}
+    virtual bool execute(Event& /*event*/) { return false;}
 
 };
 
-#endif 
+#endif

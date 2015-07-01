@@ -37,7 +37,7 @@ luaTimer::~luaTimer(void)
 /// parameter: finalTime
 int luaTimer::execute(lua_State *L)
 {
-    float finalTime = luaL_checknumber(L, -1);
+    double finalTime = luaL_checknumber(L, -1);
     //float finalExecutedTime =
     Scheduler::execute( finalTime );
     return 1;

@@ -1019,7 +1019,7 @@ QDataStream& luaCellularSpace::getState(QDataStream& in, Subject *, int observer
 
         // serverSession->setState(observerId, 1);
         //if (execModes == Quiet )
-        // 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
+        // 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toLatin1().constData());
         break;
 
     case 1:
@@ -1031,7 +1031,7 @@ QDataStream& luaCellularSpace::getState(QDataStream& in, Subject *, int observer
 
         // serverSession->setState(observerId, 0);
         //if (execModes != Quiet )
-        // 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
+        // 	qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toLatin1().constData());
         break;
     }
     // cleans the stack
@@ -1758,11 +1758,11 @@ int luaCellularSpace::load(lua_State *L)
 
 
         // debugging
-        //cout << dbLegend.toAscii().constData() << endl; cout.flush();
+        //cout << dbLegend.toLatin1().constData() << endl; cout.flush();
         //int response = -1;
         if (! dbLegend.isEmpty()) {
-            //response = luaL_dostring(L, dbLegend.toAscii().constData());
-            lua_pushstring(L, dbLegend.toAscii().constData());
+            //response = luaL_dostring(L, dbLegend.toLatin1().constData());
+            lua_pushstring(L, dbLegend.toLatin1().constData());
         }
         else {
             lua_pushstring(L, "");
@@ -2006,7 +2006,7 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 	QStringList colorBarList;
 	QString colorBarsQuery = QString("SELECT grouping_color FROM te_theme_application WHERE theme_id=%1")
 			.arg(inputTheme->id());
-	if( portal->query(colorBarsQuery.toAscii().constData()) )
+	if( portal->query(colorBarsQuery.toLatin1().constData()) )
 	{
         // esta string recebe o conteúdo bruto recuperado do banco de dados
         QString auxColorBar;
@@ -2020,14 +2020,14 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 			{
                 if (execModes != Quiet) {
 					QString msg = QString("Warning: The legend found is invalid!\nTerraview has returned:\n%1").arg(colorBar);
-					qWarning(msg.toAscii().constData());
+					qWarning(msg.toLatin1().constData());
 				}
 				return colorBarList;
 			}
 			else {
 				// substitiu separadores toscos do TerraView, que usa o caracter '-'
 				// mesmo quando há numero negativos na string
-				string colorBarStr(auxColorBar.toAscii().constData());
+				string colorBarStr(auxColorBar.toLatin1().constData());
 				char previousChar = '#';
 				for(int i = 0; i < auxColorBar.size(); i++ ){
 					if(( colorBarStr[i] == '-') && (previousChar != '#'))
@@ -2075,7 +2075,7 @@ QString luaCellularSpace::retrieveMaxValue(TeDatabasePortal *portal, TeTheme *in
 			.arg(inputTheme->id());
 	if (attrType != TObsNumber)
     {
-		if( portal->query(maxValueQuery.toAscii().constData()) )
+		if( portal->query(maxValueQuery.toLatin1().constData()) )
 		{
 			while(portal->fetchRow())
             {
@@ -2089,7 +2089,7 @@ QString luaCellularSpace::retrieveMaxValue(TeDatabasePortal *portal, TeTheme *in
 		maxValueQuery = QString("SELECT %1 FROM %2")
 				.arg(attrName).arg(inputTheme->layer()->name().c_str());
 
-		if( portal->query(maxValueQuery.toAscii().constData()) )
+		if( portal->query(maxValueQuery.toLatin1().constData()) )
 		{
 			while(portal->fetchRow())
             {
@@ -2117,7 +2117,7 @@ QString luaCellularSpace::retrieveMinValue(TeDatabasePortal *portal, TeTheme *in
 			.arg(inputTheme->id());
 	if (attrType != TObsNumber)
     {
-		if( portal->query(minValueQuery.toAscii().constData()) )
+		if( portal->query(minValueQuery.toLatin1().constData()) )
 		{
 			while(portal->fetchRow())
             {
@@ -2130,7 +2130,7 @@ QString luaCellularSpace::retrieveMinValue(TeDatabasePortal *portal, TeTheme *in
     {
 		minValueQuery = QString("SELECT %1 FROM %2")
 				.arg(attrName).arg(inputTheme->layer()->name().c_str());
-		if( portal->query(minValueQuery.toAscii().constData()) )
+		if( portal->query(minValueQuery.toLatin1().constData()) )
 		{
 			while(portal->fetchRow())
             {

@@ -43,7 +43,7 @@ public:
        //  symbol = new QwtSymbol();
 
         plotCurve = new QwtPlotCurve(name);
-        plotCurve->setPaintAttribute(QwtPlotCurve::PaintFiltered, true);
+        plotCurve->setPaintAttribute(QwtPlotCurve::FilterPoints, true);
         plotCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
         // plotCurve->setSymbol(*symbol);
         plotCurve->attach(plotter);
