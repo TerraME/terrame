@@ -129,10 +129,11 @@ function file(filename, package)
 
 	local s = sessionInfo().separator
 	local file = packageInfo(package).data..s..filename
-	if not isFile(file) then
+	if isFile(file) or isDir(file) then
+		return file
+	else
 		customError("File '"..file.."' does not exist in package '"..package.."'.")
 	end
-	return file
 end
 
 --- Load a given package. If the package is not installed, it tries to load from

@@ -68,6 +68,14 @@ function currentDir()
 	return lfs.currentdir()
 end
 
+local function isWindowsOS()
+	if sessionInfo().separator == "/" then
+		return false
+	end
+	
+	return true
+end
+
 --- Return the files in a given directory.
 -- @arg folder A string describing a folder.
 -- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
@@ -77,13 +85,18 @@ function dir(folder, all)
 	optionalArgument(2, "boolean", all)
 
 	if all == nil then all = false end
+	
+	local command 
 
-	local s = sessionInfo().separator
-	local command = "dir "..folder.." /b"
-
-	if s == "/" then
-		if all then
+	if all then
+		if isWindowsOS() then
+			command = "ls -a1 "..folder.." 2> NUL" -- SKIP
+		else
 			command = "ls -a1 "..folder.." 2> /dev/null"
+		end
+	else
+		if isWindowsOS() then
+			command = "ls -1 "..folder.." 2> NUL" -- SKIP
 		else
 			command = "ls -1 "..folder.." 2> /dev/null"
 		end
