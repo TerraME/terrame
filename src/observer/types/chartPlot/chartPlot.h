@@ -68,6 +68,9 @@ private:
      */
     void createPicker();
 
+    // issue #537
+    //void closeEvent(QCloseEvent *event);
+
     QAction *exportAct, *propertiesAct;
     PlotPropertiesGUI *plotPropGui;
     QList<TerraMEObserver::InternalCurve *> internalCurves;

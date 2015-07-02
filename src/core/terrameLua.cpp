@@ -344,9 +344,9 @@ int main(int argc, char *argv[])
 
 	if (!existWindows())
 	{
-		lua_close(L);
-		app.exit();
-		return 0;
+        lua_close(L);
+        app.exit();
+        return 0;
 	}
 
 	//closeAllWidgets();

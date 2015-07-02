@@ -564,4 +564,3 @@ void ObserverGraphic::draw()
     }
     plotter->repaint();
 }
-

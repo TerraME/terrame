@@ -84,5 +84,7 @@ void VisualArrangement::buildLuaCode()
 		f << "\t}, " << endl;
 	}
 	f << "}" << endl;
+
+    //f.close();
 }
 

@@ -1,7 +1,6 @@
 #include "taskManager.h"
 
 #include "worker.h"
-#include "visualArrangement.h"
 
 #include <QPair>
 #include <QDebug>
@@ -74,9 +73,10 @@ TaskManager& TaskManager::operator=(const TaskManager &)
 
 TaskManager::~TaskManager()
 {
-    VisualArrangement* v = VisualArrangement::getInstance();
-
-    v->buildLuaCode();
+    // issue #537
+    //    VisualArrangement* v = VisualArrangement::getInstance();
+    //    qDebug() << "2------------------------------";
+    //    v->buildLuaCode();
 
     for(int i = 0; i < workers.size(); i++)
     {
