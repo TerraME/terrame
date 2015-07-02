@@ -126,22 +126,6 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "1"))
 	end,
-	setMode = function(unitTest)
-		local error_func = function()
-			setMode(1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "userdata", 1))
-
-		local pathdata = packageInfo().data
-		local f = io.open(pathdata.."testfile.txt", "w+")
-
-		error_func = function()
-			setMode(f, 1)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
-	
-		os.execute("rm "..pathdata.."testfile.txt")
-	end,
 	touch = function(unitTest)
 		local error_func = function()
 			touch(1)

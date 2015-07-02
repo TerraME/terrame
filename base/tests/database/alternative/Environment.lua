@@ -206,7 +206,9 @@ return{
 				name = "my_neighborhood"..countTest
 			}
 		end
-		unitTest:assertError(error_func, "The string '' found as weight in the file '"..mfile.."' could not be converted to a number.")
+		if not _Gtme.isWindowsOS() then
+			unitTest:assertError(error_func, "The string '' found as weight in the file '"..mfile.."' could not be converted to a number.") -- SKIP
+		end
 	end
 }
 

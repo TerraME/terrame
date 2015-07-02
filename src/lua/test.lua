@@ -507,6 +507,7 @@ function _Gtme.executeTests(package, fileName)
 
 			local function trace(event, line)
 				local s = debug.getinfo(2).short_src
+				s = _Gtme.makePathCompatibleToAllOS(s)
 				local short = string.match(s, "([^/]-)$")
 
 				if short == eachFile and string.match(s, "tests") then

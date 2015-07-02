@@ -68,7 +68,9 @@ function currentDir()
 	return lfs.currentdir()
 end
 
-local function isWindowsOS()
+--- Returns true if the operating system is Windows, otherwise returns false.
+-- @usage isWindowsOS()
+function isWindowsOS()
 	if sessionInfo().separator == "/" then
 		return false
 	end
@@ -244,20 +246,6 @@ function runCommand(command, number)
 	io.close(file)
 	os.execute("rm "..mfile)
 	return fileTable, result
-end
-
---- Set the writing mode for a file. Returns true
--- followed the previous mode string for the file, or nil followed by an error string in case of errors.
--- On non-Windows platforms, where the two modes are identical, setting the mode has no effect, and the
--- mode is always returned as binary.
--- @arg filepath A file handle with the file to be locked.
--- @arg mode A string that can be either "binary" or "text".
--- @usage setMode(file, "text")
-function setMode(filepath, mode)
-	mandatoryArgument(1, "userdata", filepath)
-	mandatoryArgument(2, "string", mode)
-
-	return lfs.setmode(filepath, mode)
 end
 
 --- Set access and modification times of a file. This function is a bind to utime function.
