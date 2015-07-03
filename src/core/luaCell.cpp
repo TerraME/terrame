@@ -35,6 +35,7 @@ of this library and its documentation.
 #include "../observer/types/observerLogFile.h"
 #include "../observer/types/observerTable.h"
 #include "../observer/types/observerUDPSender.h"
+#include "../observer/types/observerTCPSender.h"
 // #include "../observer/types/observerScheduler.h"
 #include "../observer/types/agentObserverMap.h"
 #include "luaUtils.h"
@@ -477,6 +478,7 @@ int luaCell::createObserver( lua_State * )
         ObserverGraphic *obsGraphic = 0;
         ObserverLogFile *obsLog = 0;
         ObserverUDPSender *obsUDPSender = 0;
+        ObserverTCPSender *obsTCPSender = 0;
 
         int obsId = -1;
 
@@ -569,8 +571,29 @@ int luaCell::createObserver( lua_State * )
                 if (execModes != Quiet)
                     qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
             }
-            break;
+        break;
 
+		case TObsTCPSender:
+			obsTCPSender = (ObserverTCPSender *)
+			CellSubjectInterf::createObserver(TObsTCPSender);
+			if (obsTCPSender)
+			{
+				obsId = obsTCPSender->getId();
+				obsTCPSender->setCompress(compressDatagram);
+
+				if (obsVisible)
+					obsTCPSender->show();
+			}
+			else
+			{
+				if (execModes != Quiet) {
+					QString str = QString(qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
+					lua_getglobal(L, "customWarning");
+					lua_pushstring(L, str.toLatin1().constData());
+					lua_call(L, 1, 0);
+				}
+			}
+		break;
         case TObsMap:
         default:
             if (execModes != Quiet )

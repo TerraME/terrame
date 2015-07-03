@@ -61,9 +61,6 @@ return{
 		unitTest:assertType(m, "Map")
 
 		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
 		unitTest:assertSnapshot(m, "map_uniquevalue.bmp")
 
 		local m = Map{
@@ -73,9 +70,6 @@ return{
 
 		unitTest:assertType(m, "Map")
 
-		cs:notify()
-		cs:notify()
-		cs:notify()
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_background.bmp")
 
@@ -102,20 +96,8 @@ return{
 		}
 
 		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
 		unitTest:assertSnapshot(m, "map_function.bmp")
 
---[[ Segmentation fault: 11 - Bag of tasks
 		local c = Choice{"low", "medium", "high"}
 		local cs = CellularSpace{xdim = 5}
 		forEachCell(cs, function(cell)
@@ -132,13 +114,8 @@ return{
 		unitTest:assertType(m, "Map") -- SKIP
 
 		cs:notify()
-		cs:notify()
-		cs:notify()
-		cs:notify()
 		unitTest:assertSnapshot(m, "map_string.bmp") -- SKIP
---]]
 
---[[
 		local cs = CellularSpace{xdim = 10}
 
 		local r = Random()
@@ -161,7 +138,6 @@ return{
 
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_quantil.bmp") -- SKIP
---]]
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

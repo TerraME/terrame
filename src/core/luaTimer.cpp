@@ -46,7 +46,7 @@ int luaTimer::execute(lua_State *L)
 /// Gets the luaTimer internal clock value
 int luaTimer::getTime(lua_State *L)
 {
-    lua_pushnumber(L, Scheduler::getEvent().getTime() );
+    lua_pushnumber(L, Scheduler::getTime());
     return 1;
 }
 

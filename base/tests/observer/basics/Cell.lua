@@ -44,16 +44,17 @@ return{
 		local c3 = Chart{
 			target = world,
 			style = "steps",
+			pen = "dashdot",
 			width = 2
 		}
 		unitTest:assertType(c3, "Chart")
 
 		local c4 = Chart{
 			target = world,
-			select = {"value", "sum"},
+			select = "sum",
 			style = "sticks",
-			pen = {"dashdot", "dashdotdot"},
-			width = {1, 2}
+			pen = "dashdotdot",
+			width = 2
 		}
 		unitTest:assertType(c4, "Chart")
 

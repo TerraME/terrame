@@ -195,8 +195,16 @@ int luaNeighborhood::setNeighWeight(lua_State *L) {
 	CellIndex cellIndex; 
 	cellIndex.second = luaL_checknumber(L, -3); 
 	cellIndex.first = luaL_checknumber(L, -4);
-	CellNeighborhood::setWeight( cellIndex, weight );
-	return 0;
+
+	if(CellNeighborhood::empty()
+		|| CellNeighborhood::find(cellIndex) == CellNeighborhood::end())
+		lua_pushboolean(L, false);
+	else
+	{
+		CellNeighborhood::setWeight(cellIndex, weight);
+		lua_pushboolean(L, true);
+	}
+	return 1;
 }
 
 //Raian:
@@ -208,9 +216,20 @@ int luaNeighborhood::getNeighWeight(lua_State *L) {
 	CellIndex cellIndex;
 	cellIndex.second = luaL_checknumber(L, -2);
 	cellIndex.first = luaL_checknumber(L, -3);
-	double weight = CellNeighborhood::getWeight(cellIndex);
-	lua_pushnumber(L, weight);
-	return 1;
+
+	if(CellNeighborhood::empty()
+		|| CellNeighborhood::find(cellIndex) == CellNeighborhood::end())
+	{
+		lua_pushnil(L);
+		return 1;
+	}
+	else
+	{
+		double weight = CellNeighborhood::getWeight(cellIndex);
+		lua_pushnumber(L, weight);
+		return 1;
+	}
+	return 0;
 }
 
 /// Sets the weight for the neighborhood relationship with the cell indexed by the coordenates 

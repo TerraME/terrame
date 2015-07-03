@@ -87,7 +87,7 @@ int luaEvent::getTime( lua_State *L )
 /// Gets the luaEvent priority
 int luaEvent::getPriority( lua_State *L )
 { 
-    int priority = Event::getPriority();
+    double priority = Event::getPriority();
     lua_pushnumber(L, priority);
     return 1;
 }
