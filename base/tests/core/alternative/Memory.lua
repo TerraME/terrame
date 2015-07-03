@@ -454,7 +454,9 @@ return{
 					countOutWT = countOutWT + 1
 				end
 			end
-			unitTest:assertEquals(1, countTimer) -- SKIP
+			if not _Gtme.isWindowsOS() then
+				unitTest:assertEquals(1, countTimer) -- SKIP
+			end
 			unitTest:assertEquals(0, countOutWT) -- SKIP
 		end
 
@@ -474,7 +476,9 @@ return{
 				countOutWT = countOutWT + 1
 			end
 		end
-		unitTest:assertEquals(0, countTimer) -- SKIP
+		if not _Gtme.isWindowsOS() then
+			unitTest:assertEquals(0, countTimer) -- SKIP
+		end
 		unitTest:assertEquals(0, countOutWT) -- SKIP
 	end,
 	Trajectory = function(unitTest)
