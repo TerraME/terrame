@@ -88,7 +88,7 @@ static const QString PENSTYLE = "pen";
 
 static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SLICES 
     << PRECISION << STD_DEV << MAX << MIN << COLOR_BAR << FONT_FAMILY << FONT_SIZE 
-    << SYMBOL << WIDTH << STYLE; // << STD_COLOR_BAR; // is not a legend key
+    << SYMBOL << WIDTH << STYLE << SIZE_ << PENSTYLE; // << STD_COLOR_BAR; // is not a legend key
 static const int LEGEND_ITENS = LEGEND_KEYS.size(); /// Número de itens que compoem a legenda de cada atributo
 
 static const QString VALUE_NOT_INFORMED = "not informed"; 

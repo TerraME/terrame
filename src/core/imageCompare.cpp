@@ -24,18 +24,10 @@ bool comparePerPixel(const QString &img1, const QString &img2)
 		for(int j = 0; j < image1.width(); j++)
 			if(image1.pixel(j, i) != image2.pixel(j, i))
 			{
-				//cout << j << ", " << i << endl;
-				//cout << image1.pixel(j, i) << endl;
-				//cout << image2.pixel(j, i) << endl;
 				count = count + 1;
 
 			}
 
-	//cout << count << "/" << image1.height() * image1.height() << endl;
-
-	// currently it accepts up to 5% of error.
-	return count < image1.height() * image1.height() * 0.05;
-
-	//return count == 0;
+	return count == 0;
 }
 
