@@ -45,8 +45,8 @@ ChartPlot::ChartPlot(QWidget *parent) : QwtPlot(parent)
 	// layout->setAlignCanvasToScales(true);
     createPicker();
 
-    connect(exportAct, SIGNAL(triggered()), this, SLOT(exportChart()));
-    connect(propertiesAct, SIGNAL(triggered()), this, SLOT(propertiesChart()));
+//    connect(exportAct, SIGNAL(triggered()), this, SLOT(exportChart()));
+//    connect(propertiesAct, SIGNAL(triggered()), this, SLOT(propertiesChart()));
 }
 
 ChartPlot::~ChartPlot()

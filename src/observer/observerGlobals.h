@@ -83,6 +83,8 @@ static const QString FONT_SIZE = "fontSize";
 static const QString SYMBOL = "symbol";
 static const QString WIDTH = "width";
 static const QString STYLE = "style";
+static const QString SIZE_ = "size";
+static const QString PENSTYLE = "pen";
 
 static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SLICES 
     << PRECISION << STD_DEV << MAX << MIN << COLOR_BAR << FONT_FAMILY << FONT_SIZE 

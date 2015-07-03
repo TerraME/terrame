@@ -191,11 +191,6 @@ int luaCell::getNeighborhood(lua_State *L) {
         NeighCmpstInterf::iterator location = neighs.find( index );
         if ( location == neighs.end())
         {
-            string err_out = string("Error: Neighborhood '" ) + string (index) + string("' not found.");
-            lua_getglobal(L, "customErrorMsg");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,3);
-            lua_call(L,2,0);
             lua_pushnil( L );
             return 1;
         }
@@ -353,7 +348,7 @@ int luaCell::createObserver( lua_State * )
         if(! lua_istable(luaL, top) )
         {
             string err_out = string("Error: Attribute table not found. Incorrect sintax.");
-            lua_getglobal(L, "customErrorMsg");
+            lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
             lua_pushnumber(L,3);
             lua_call(L,2,0);
@@ -380,7 +375,7 @@ int luaCell::createObserver( lua_State * )
                 if ( ! key.isNull() || ! key.isEmpty())
                 {
                     string err_out = string("Error: Attribute '"+ key.toStdString() +"' not found.");
-                    lua_getglobal(L, "customErrorMsg");
+                    lua_getglobal(L, "customError");
                     lua_pushstring(L,err_out.c_str());
                     lua_pushnumber(L,3);
                     lua_call(L,2,0);
@@ -469,7 +464,7 @@ int luaCell::createObserver( lua_State * )
         {
             if (execModes != Quiet){
                 string err_out = string("Warning: Parameter table is empty.");
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,5);
                 lua_call(L,2,0);
@@ -581,7 +576,7 @@ int luaCell::createObserver( lua_State * )
             if (execModes != Quiet )
             {
                 string err_out = string("Warning: In this context, the code '") + string(getObserverName(typeObserver)) + string("' does not correspond to a valid type of Observer.");
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,5);
                 lua_call(L,2,0);
@@ -607,7 +602,7 @@ int luaCell::createObserver( lua_State * )
             {
                 if (execModes != Quiet ){
                     string err_out = string("Warning: Filename was not specified, using a '") + string(DEFAULT_NAME.toStdString()) + string("'.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     lua_pushnumber(L,5);
                     lua_call(L,2,0);
@@ -624,7 +619,7 @@ int luaCell::createObserver( lua_State * )
             {
                 if (execModes != Quiet ){
                     string err_out = string("Warning: Parameter 'separator' not defined, using ';'.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     lua_pushnumber(L,5);
                     lua_call(L,2,0);
@@ -654,7 +649,7 @@ int luaCell::createObserver( lua_State * )
             {
                 if (execModes != Quiet ){
                     string err_out = string("Warning: Column title not defined.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     lua_pushnumber(L,5);
                     lua_call(L,2,0);
@@ -683,7 +678,9 @@ int luaCell::createObserver( lua_State * )
                                       obsParams, cols);
 
             lua_pushnumber(luaL, obsId);
-            return 1;
+			lua_pushlightuserdata(luaL, (void*) obsGraphic);
+
+			return 2;
         }
 
         if(obsUDPSender)
@@ -695,7 +692,7 @@ int luaCell::createObserver( lua_State * )
             {
                 if (execModes != Quiet ){
                     string err_out = string("Warning: Parameter 'port' not defined.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     lua_pushnumber(L,5);
                     lua_call(L,2,0);
@@ -711,7 +708,7 @@ int luaCell::createObserver( lua_State * )
             {
                 if (execModes != Quiet ){
                     string err_out = string("Warning: Observer will send broadcast.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     lua_pushnumber(L,5);
                     lua_call(L,2,0);
@@ -810,7 +807,7 @@ int luaCell::createObserver( lua_State * )
 
         if(!cellSpace){
             string err_out = string(errorMsg.toStdString());
-            lua_getglobal(L, "customErrorMsg");
+            lua_getglobal(L, "customError");
             lua_pushstring(L,err_out.c_str());
             lua_pushnumber(L,3);
             lua_call(L,2,0);
@@ -841,7 +838,7 @@ int luaCell::createObserver( lua_State * )
             obsMap = (AgentObserverMap *)cellSpace->getObserver(obsID);
             if(!obsMap){
                 string err_out = string(errorMsg.toStdString());
-                lua_getglobal(L, "customErrorMsg");
+                lua_getglobal(L, "customError");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,3);
                 lua_call(L,2,0);

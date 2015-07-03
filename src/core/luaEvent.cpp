@@ -197,7 +197,7 @@ int luaEvent::createObserver( lua_State *luaL )
     {
         if (execModes != Quiet ){
             string err_out = string("Warning: The parameter table is empty.");
-            lua_getglobal(L, "customWarningMsg");
+            lua_getglobal(L, "customWarning");
             lua_pushstring(L,err_out.c_str());
             lua_pushnumber(L,5);
             lua_call(L,2,0);
@@ -360,7 +360,7 @@ int luaEvent::createObserver( lua_State *luaL )
         {
             if (execModes != Quiet ){
                 string err_out = string("Warning: Observer will send broadcast.");
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,5);
                 lua_call(L,2,0);

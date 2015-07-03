@@ -251,7 +251,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
             {
                 
                 string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,err_out.c_str());
 				lua_pushnumber(L,5);
 				lua_call(L,2,0);
@@ -354,7 +354,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
     {
         if (execModes != Quiet ){
             QString str = QString("Warning: The parameter table is empty.");
-            lua_getglobal(L, "customWarningMsg");
+            lua_getglobal(L, "customWarning");
             lua_pushstring(L,str.toLatin1().constData());
             lua_pushnumber(L,5);
             lua_call(L,2,0);
@@ -564,7 +564,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
         {
             if (execModes != Quiet ){
                 string err_out = string("Warning: Observer will send broadcast.");
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,5);
                 lua_call(L,2,0);

@@ -172,7 +172,7 @@ private:
 
     ChartPlot* plotter;
     QwtLegend *legend;
-    QHash<QString, InternalCurve *> *internalCurves;
+    QMap<QString, InternalCurve *> *internalCurves;
 
     QVector<double> *xAxisValues;
 

@@ -1,5 +1,9 @@
 #include "observerGraphic.h"
 
+#include <iostream>
+
+using namespace std;
+
 #include <QColorDialog>
 #include <QApplication>
 #include <QPalette>
@@ -8,8 +12,8 @@
 #include <qwt_plot_legenditem.h>
 #include <qwt_plot_item.h>
 
-#include "chartPlot/chartPlot.h"
-#include "chartPlot/internalCurve.h"
+#include "chartPlot.h"
+#include "internalCurve.h"
 #include "terrameGlobals.h"
 
 extern ExecutionModes execModes;
@@ -43,16 +47,24 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     paused = false;
     legend = 0;
     xAxisValues = new QVector<double>();
-    internalCurves = new QHash<QString, InternalCurve*>();
+    internalCurves = new QMap<QString, InternalCurve*>();
 
     plotter = new ChartPlot(parent);
     plotter->setAutoReplot(true);
-    // plotter->setStyleSheet("background-color: rgb(255, 255, 255);");
+	plotter->setStyleSheet("QwtPlot { padding: 8px }");
     plotter->setFrameShape(QFrame::Box);
     plotter->setFrameShadow(QFrame::Plain);
     plotter->setLineWidth(0);
-    //plotter->setMargin(10);
-    plotter->resize(300, 180);
+
+    QPalette palette = plotter->canvas()->palette();
+    palette.setColor(QPalette::Background, Qt::white);
+    plotter->canvas()->setPalette(palette);
+
+    palette = plotter->palette();
+    palette.setColor(QPalette::Background, Qt::white);
+    plotter->setPalette(palette);
+
+    plotter->resize(450, 350);
     plotter->setWindowTitle("TerraME Observer : Chart");
 
     plotter->showNormal();
@@ -96,18 +108,6 @@ void ObserverGraphic::save(std::string file, std::string extension)
 
 bool ObserverGraphic::draw(QDataStream &state)
 {
-#ifdef TME_STATISTIC
-    // tempo gasto do 'getState' ate aqui
-    // double t = Statistic::getInstance().endVolatileMicroTime();
-    // Statistic::getInstance().addElapsedTime("comunicação graphic", t);
-
-    double decodeSum = 0.0;
-    int decodeCount = 0;
-
-    // numero de bytes transmitidos
-    Statistic::getInstance().addOccurrence("bytes graphic", in.device()->size());
-#endif
-
     QString msg, key;
     state >> msg;
     QStringList tokens = msg.split(PROTOCOL_SEPARATOR);
@@ -115,42 +115,19 @@ bool ObserverGraphic::draw(QDataStream &state)
     QVector<double> *ord = 0, *abs = xAxisValues;
     // double num = 0, x = 0, y = 0;
 
-#ifdef TME_STATISTIC 
-        // t = Statistic::getInstance().startMicroTime();
-        Statistic::getInstance().startVolatileMicroTime();
-#endif
-
     //QString subjectId = tokens.at(0);
     subjectType = (TypesOfSubjects) tokens.at(1).toInt();
     int qtdParametros = tokens.at(2).toInt();
     //int numElems = tokens.at(3).toInt();
 
-#ifdef TME_STATISTIC 
-        // decodeSum += Statistic::getInstance().endMicroTime() - t;
-        decodeSum += Statistic::getInstance().endVolatileMicroTime();
-        decodeCount++;
-#endif
-
     int j = 4;
 
     for (int i=0; i < qtdParametros; i++)
     {
-
-#ifdef TME_STATISTIC 
-        // t = Statistic::getInstance().startMicroTime();
-        Statistic::getInstance().startVolatileMicroTime();
-#endif
-
         key = tokens.at(j);
         j++;
         int typeOfData = tokens.at(j).toInt();
         j++;
-
-#ifdef TME_STATISTIC 
-        // decodeSum += Statistic::getInstance().endMicroTime() - t;
-        decodeSum += Statistic::getInstance().endVolatileMicroTime();
-        decodeCount++;
-#endif
 
         int idx = attribList.indexOf(key);
         // bool contains = itemList.contains(key);
@@ -161,7 +138,7 @@ bool ObserverGraphic::draw(QDataStream &state)
             case (TObsBool):
                 if (contains)
                     if (execModes != Quiet)
-                        qWarning("Warning: Was expected a numeric parameter.");
+                        qWarning("Was expected a numeric parameter.");
                 break;
 
             case (TObsDateTime)	:
@@ -171,31 +148,16 @@ bool ObserverGraphic::draw(QDataStream &state)
 
                 if (contains)
                 {
-
-#ifdef TME_STATISTIC
-                    // t = Statistic::getInstance().startMicroTime();
-                    Statistic::getInstance().startVolatileMicroTime();
-#endif
                     if (internalCurves->contains(key))
                         internalCurves->value(key)->values->append( tokens.at(j).toDouble() );
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
-#ifdef TME_STATISTIC 
-                    // decodeSum += Statistic::getInstance().endMicroTime() - t;
-                    decodeSum += Statistic::getInstance().endVolatileMicroTime();
-                    decodeCount++;
-#endif
-
                     // Gráfico Dinâmico: Tempo vs Y
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
-                        //internalCurves->value(key)->plotCurve->setData(*abs, *ord); 
-
-                        //qDebug() << "key: " << key;
-                        //qDebug() << *ord;
-                        //qDebug() << *abs;
+                        internalCurves->value(key)->plotCurve->setSamples(*abs, *ord); 
                     }
                     else
                     {
@@ -213,12 +175,6 @@ bool ObserverGraphic::draw(QDataStream &state)
 
                 if ( (subjectType == TObsAutomaton) || (subjectType == TObsAgent) )
                 {
-
-#ifdef TME_STATISTIC
-                    // t = Statistic::getInstance().startMicroTime();
-                    Statistic::getInstance().startVolatileMicroTime();
-#endif
-
                     if (! states.contains(tokens.at(j)))
                         states.push_back(tokens.at(j));
 
@@ -227,18 +183,12 @@ bool ObserverGraphic::draw(QDataStream &state)
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
-#ifdef TME_STATISTIC
-                    // decodeSum += Statistic::getInstance().endMicroTime() - t;
-                    decodeSum += Statistic::getInstance().endVolatileMicroTime();
-                    decodeCount++;
-#endif
-
                     // Gráfico Dinâmico: Tempo vs Y
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
-                        // abs = xAxisValues;
-                        //internalCurves->value(key)->plotCurve->setData(*abs, *ord); 
+                        abs = xAxisValues;
+                        internalCurves->value(key)->plotCurve->setSamples(*abs, *ord); 
                     }
                     else
                     {
@@ -260,10 +210,6 @@ bool ObserverGraphic::draw(QDataStream &state)
         j++;
     }
     
-#ifdef TME_STATISTIC
-    t = Statistic::getInstance().startMicroTime();
-#endif
-
     if (observerType == TObsGraphic)
     {
         InternalCurve *curve = 0;
@@ -271,18 +217,10 @@ bool ObserverGraphic::draw(QDataStream &state)
         for (int i = 0; i < internalCurves->keys().size(); i++)
         {
             curve = internalCurves->value( internalCurves->keys().at(i) );
-            //curve->plotCurve->setData(*abs, *internalCurves->value( internalCurves->keys().at(i) )->values); 
+            curve->plotCurve->setSamples(*abs, *internalCurves->value( internalCurves->keys().at(i) )->values); 
         }
     }
     plotter->repaint();
-
-#ifdef TME_STATISTIC
-    t = Statistic::getInstance().endMicroTime() - t;
-    Statistic::getInstance().addElapsedTime("Graphic Rendering ", t);
-
-    if (decodeCount > 0)
-        Statistic::getInstance().addElapsedTime("Graphic Decoder", decodeSum / decodeCount);
-#endif
 
     qApp->processEvents();
     return true;
@@ -303,7 +241,7 @@ void ObserverGraphic::setLegendPosition(QwtPlot::LegendPosition pos)
    // legend->setItemMode(QwtLegend::ClickableItem);
     plotter->insertLegend(legend, pos);
 
-    connect(plotter, SIGNAL(legendClicked(QwtPlotItem *)), SLOT(colorChanged(QwtPlotItem *)));
+    //connect(plotter, SIGNAL(legendClicked(QwtPlotItem *)), SLOT(colorChanged(QwtPlotItem *)));
 }
 
 //void ObserverGraphic::setGrid()
@@ -359,12 +297,15 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
             // Sets a random color for the created curve 
             color = QColor::fromHsvF(hueValues[(int)(qrand() % HUE_COUNT)], 1, 1);
             interCurve->plotCurve->setPen(color);
+			interCurve->plotCurve->setLegendAttribute(QwtPlotCurve::LegendShowLine);
 
-            int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0;
+            int width = 0, style = 0, symbol = 0, colorBar = 0, num = 0, size = 0, penstyle = 0;
 
             width = legKeys.indexOf(WIDTH);
             style = legKeys.indexOf(STYLE);
             symbol = legKeys.indexOf(SYMBOL);
+			size = legKeys.indexOf(SIZE_);
+			penstyle = legKeys.indexOf(PENSTYLE);
             colorBar = legKeys.indexOf(COLOR_BAR);
 
             if ((! legAttribs.isEmpty()) && (colorBar > -1))
@@ -392,6 +333,11 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
                 pen.setWidth( (num > 0) ? num : 1);
                 interCurve->plotCurve->setPen(pen);
 
+				// pen
+                num = legAttribs.at(penstyle).toInt();
+				pen.setStyle((Qt::PenStyle) num);
+                interCurve->plotCurve->setPen(pen);
+
                 // style
                 num = legAttribs.at(style).toInt();
                 interCurve->plotCurve->setStyle( (QwtPlotCurve::CurveStyle) num);
@@ -401,8 +347,16 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
                 QwtSymbol* qwtSymbol = new QwtSymbol;
                 qwtSymbol->setStyle( (QwtSymbol::Style) num);
                 qwtSymbol->setPen(pen);
-                // increments the symbol size in two values
-                qwtSymbol->setSize(pen.width() + 2);
+
+				if((QwtSymbol::Style) num != (QwtSymbol::Style) -1)
+				{
+					interCurve->plotCurve->setLegendAttribute(QwtPlotCurve::LegendShowSymbol);
+				}
+
+				//size
+                num = legAttribs.at(size).toInt();
+                qwtSymbol->setSize(num);
+
 
                 if (qwtSymbol->brush().style() != Qt::NoBrush)
                     qwtSymbol->setBrush(pen.color());
@@ -468,6 +422,9 @@ QStringList ObserverGraphic::getAttributes()
 
 void ObserverGraphic::setModelTime(double time)
 {
+	if(xAxisValues->size() > 0 && time == (*xAxisValues)[0] && (*xAxisValues)[xAxisValues->size() - 1] == (xAxisValues->size() - 1))
+		time = xAxisValues->size();	
+
     if (observerType == TObsDynamicGraphic)
         xAxisValues->push_back(time);
 }

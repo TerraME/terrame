@@ -279,7 +279,7 @@ int luaLocalAgent::createObserver( lua_State *L )
                 if ( ! key.isNull() || ! key.isEmpty())
                 {
 					string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
-					lua_getglobal(L, "customErrorMsg");
+					lua_getglobal(L, "customError");
 					lua_pushstring(L,err_out.c_str());
 					lua_pushnumber(L,4);
 					lua_call(L,2,0);
@@ -410,7 +410,7 @@ int luaLocalAgent::createObserver( lua_State *L )
         {
             if (execModes != Quiet ){
                 string err_out = string("Warning: The parameter table is empty.");
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,5);
                 lua_call(L,2,0);
@@ -619,7 +619,7 @@ int luaLocalAgent::createObserver( lua_State *L )
             {
                 if (execModes != Quiet ){
                     string err_out = string("Warning: Observer will send broadcast.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     lua_pushnumber(L,5);
                     lua_call(L,2,0);
@@ -986,7 +986,7 @@ QString luaLocalAgent::pop(lua_State *luaL, QStringList& attribs)
                         if (execModes != Quiet)
                         {
                             string err_out = string("Warning: Failed on retrieve Automaton subject state!!");
-                            lua_getglobal(L, "customWarningMsg");
+                            lua_getglobal(L, "customWarning");
                             lua_pushstring(L, err_out.c_str());
                             lua_pushnumber(L,4);
                             lua_call(L,2,0);
@@ -1139,7 +1139,7 @@ QString luaLocalAgent::pop(lua_State *luaL, QStringList& attribs)
             {
                 if (execModes != Quiet){
                     string err_out = string("Warning: Could not find the Automaton inside an Environment object.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     lua_pushnumber(L,5);
                     lua_call(L,2,0);

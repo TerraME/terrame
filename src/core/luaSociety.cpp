@@ -174,7 +174,7 @@ int luaSociety::createObserver( lua_State * )
             if ( ! key.isNull() || ! key.isEmpty())
             {
                 string err_out = string("Error: Attribute name '" ) + string (qPrintable(key)) + string("' not found.");
-				lua_getglobal(L, "customErrorMsg");
+				lua_getglobal(L, "customError");
 				lua_pushstring(L,err_out.c_str());
 				lua_pushnumber(L,4);
 				lua_call(L,2,0);
@@ -260,7 +260,7 @@ int luaSociety::createObserver( lua_State * )
         {
             if (execModes != Quiet ){
                 string err_out = string("Warning: The parameter table is empty.");
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,5);
                 lua_call(L,2,0);
@@ -460,7 +460,9 @@ int luaSociety::createObserver( lua_State * )
                                       obsParams, cols);
 
             lua_pushnumber(luaL, obsId);
-            return 1;
+			lua_pushlightuserdata(luaL, (void*) obsGraphic);
+
+			return 2;
         }
 
         if(obsUDPSender)
@@ -483,7 +485,7 @@ int luaSociety::createObserver( lua_State * )
             {
                 if (execModes != Quiet ){
                     string err_out = string("Warning: Observer will send broadcast.");
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,err_out.c_str());
                     lua_pushnumber(L,5);
                     lua_call(L,2,0);
