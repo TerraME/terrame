@@ -1,15 +1,12 @@
 -- @example A model with static agents that can reproduce to neighbor cells.
 
-EMPTY = 0
-FULL = 1
-
 singleFooAgent = Agent{
 	execute = function(self)
 		local cell = self:getCell():getNeighborhood():sample()
-		if cell.state == EMPTY and math.random() < 0.3 then
+		if cell.state == "empty" and math.random() < 0.3 then
 			local child = self:reproduce()
 			child:move(cell)
-			cell.state = FULL
+			cell.state = "full"
 		end
 	end
 }
@@ -47,28 +44,19 @@ t = Timer{
 }
 
 forEachCell(cs, function(cell)
-	cell.state = EMPTY
+	cell.state = "empty"
 end)
 
 forEachAgent(soc, function(agent)
-	agent:getCell().state = FULL
+	agent:getCell().state = "full"
 end)
 
---[[
-leg = Legend {
-	grouping = "uniquevalue",
-	colorBar = {
-		{value = EMPTY, color = "white"},
-		{value = FULL, color = "black"}
-	}
+Map{
+	target = cs,
+	select = "state",
+	color = {"black", "white"},
+	value = {"full", "empty"}
 }
-
-Observer {
-	subject = cs,
-	attributes = {"state"},
-	legends = {leg}
-}
---]]
 
 t:execute(120)
 

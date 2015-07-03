@@ -1389,10 +1389,12 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 
             if ((! noValues) && (vecLegendPos >= vecLegend->size()) )
             {
-                QString msg;
+/* 
+               QString msg;
                 msg = tr("Was found the value \"%1\" in the model but it was not reported in the legend for "
                     "\"%2\". Please, check the legend for this attribute.")
                     .arg(from).arg(attrib->getName());
+				cout << vecLegendPos << endl;
                 
                 if (isVisible())
                 {
@@ -1405,7 +1407,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
                         qWarning("Warning: %s", qPrintable(msg));
                     }
                 }
-
+*/
                 break;
             }
             

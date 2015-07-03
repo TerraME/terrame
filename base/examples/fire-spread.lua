@@ -1,7 +1,7 @@
 -- @example A simple fire spread model.
 -- @arg finalTime The final simulation time. The default value is 20.
 
-STEPS = 20
+STEPS = 80
 
 -- automaton states
 NO_DATA     = 0
@@ -15,29 +15,6 @@ FIREBREAK   = 7
 BURNING     = 8
 BURNED      = 9
 
--- Create a legend for Observer Map
-stateLeg = _Gtme.Legend{
-	type = "number",
-	grouping = "uniquevalue",
-	slices = 5,
-	precision = 6,
-	maximum = BURNED,
-	minimum = NO_DATA,
-	colorBar = {
-		{color = {255, 255, 255}, value = NO_DATA   },
-		{color = {192, 255, 192}, value = INACTIVE1 },
-		{color = {128, 255, 128}, value = INACTIVE2 },
-		{color = {64, 255, 64},   value = INACTIVE3 },
-		{color = {32, 255, 32},   value = INACTIVE4 },
-		{color = {0, 255, 0},     value = INACTIVE5 },
-		{color = {0, 0, 255},     value = RIVER     },
-		{color = {128, 64, 64},   value = FIREBREAK },
-		{color = {255, 0, 0},     value = BURNING   },
-		{color = {0, 0, 0},       value = BURNED    }
-		-- ,{{0, 0, 0}, 		BURNED		}
-	}
-}
-
 -- probability matrix
 I =	{{0.100, 0.250, 0.261, 0.273, 0.285},
 	 {0.113, 0.253, 0.264, 0.276, 0.288},
@@ -46,6 +23,8 @@ I =	{{0.100, 0.250, 0.261, 0.273, 0.285},
 	 {0.122, 0.262, 0.273, 0.285, 0.297}}
 
 config = getConfig()
+
+randomObj = Random{seed = 100}
 
 cell = Cell{
 	execute = function(cell)
@@ -83,25 +62,20 @@ cs = CellularSpace{
 	instance = cell
 }
 
---[[
-obs = Observer{
+obs = Map{
 	target = cs,
-	type = "map",
-	attributes = {"state"},
-	legends = {stateLeg}
+	select = "state",
+	color = {"white", "green",   "green",   "green",   "green",   "green",   "blue", "brown",   "red",   "black"},
+	value = {NO_DATA, INACTIVE1, INACTIVE2, INACTIVE3, INACTIVE4, INACTIVE5, RIVER,  FIREBREAK, BURNING, BURNED}
 }
---]]
 
 cs:createNeighborhood()
-
-randomObj = Random{}
 
 itF = Trajectory{
 	target = cs,
 	select = function(cell) return cell.state == BURNING end
 }
 
--- model execution
 t = Timer{
 	Event{action = function()
 		itF:execute()

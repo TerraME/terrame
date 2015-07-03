@@ -4,7 +4,6 @@
 -- beginning of the simulation. The default value is 0.15.
 -- @arg TURNS The number of simulation steps. The default value is 20.
 
--- [[
 PROBABILITY = 0.15
 TURNS = 20
 
@@ -46,32 +45,21 @@ cs = CellularSpace{
 }	   
 
 cs:createNeighborhood()
--- [[
-lifeLeg = _Gtme.Legend{
-	grouping = "uniquevalues",
-	colorBar = {
-		{color = "black", value = "alive"},
-		{color = "white", value = "dead"}
-	},
-	size = 1,
-	pen = 2
-}
 
-obs = _Gtme.Observer{
+m = Map{
 	target = cs,
-	attributes = {"state"},
-	legends = {lifeLeg}
+	select = "state",
+	color = {"black", "white"},
+	value = {"alive", "dead"}
 }
---]]
 
 timer = Timer{
 	Event{action = function()
 		cs:synchronize()
 		cs:execute()
---		cs:notify()
+		cs:notify()
 	end}
 }
 
 timer:execute(TURNS)
---]]
 

@@ -1,15 +1,12 @@
 -- @example A model with 30 moving agents.
 
-EMPTY = 0
-FULL = 1
-
 singleFooAgent = Agent{
 	execute = function(self)
 		local cell = self:getCell():getNeighborhood():sample()
-		if cell.state == EMPTY then
-			self:getCell().state = EMPTY
+		if cell.state == "empty" then
+			self:getCell().state = "empty"
 			self:move(cell)
-			cell.state = FULL
+			cell.state = "full"
 		end
 	end
 }
@@ -38,24 +35,15 @@ t = Timer{
 }
 
 forEachCell(cs, function(cell)
-	cell.state = EMPTY
+	cell.state = "empty"
 end)
 
---[[
-leg = Legend {
-	grouping = "uniquevalue",
-	colorBar = {
-		{value = EMPTY, color = "white"},
-		{value = FULL, color = "black"}
-	}
+Map{
+	target = cs,
+	select = "state",
+	color = {"black", "white"},
+	value = {"full", "empty"}
 }
 
-Observer {
-	subject = cs,
-	attributes = {"state"},
-	legends = {leg}
-}
---]]
-
-t:execute(1000)
+t:execute(100)
 
