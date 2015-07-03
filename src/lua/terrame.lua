@@ -509,6 +509,13 @@ function _Gtme.replaceSpecialChars(pattern)
 	return pattern
 end
 
+function _Gtme.makePathCompatibleToAllOS(path)
+	path = path:gsub("\\\\","/")
+	path = path:gsub("\\", "/")
+	
+	return path
+end
+
 function _Gtme.getLevel()
 	local level = 1
 
@@ -524,10 +531,11 @@ function _Gtme.getLevel()
 		end
 
 		local si = _Gtme.sessionInfo()
-
-		local s = si.separator
-		local m1 = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."lua"))
-		local m2 = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"..s.."lua"))
+		
+		local s = "/" -- si.separator
+		local infoSource = _Gtme.makePathCompatibleToAllOS(info.source)
+		local m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."lua")))
+		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"..s.."lua")))
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4 = string.sub(info.short_src, 1, 1) == "["
 
@@ -536,8 +544,8 @@ function _Gtme.getLevel()
 
 		local p = si.package
 		if p then
-			mpackage = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."packages"..s..p..s.."lua"))
-			localpackage = string.match(info.source, _Gtme.replaceSpecialChars(p..s.."lua"))
+			mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages"..s..p..s.."lua")))
+			localpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(p..s.."lua")))
 		end
 
 		if m1 or m2 or m3 or m4 or mpackage or localpackage then
@@ -565,7 +573,7 @@ function _Gtme.traceback()
 	local level = 1
 
 	local si = sessionInfo()
-	local s = si.separator
+	local s = "/" -- si.separator
 	local str = "Stack traceback:\n"
 
 	local last_function = ""
@@ -573,14 +581,15 @@ function _Gtme.traceback()
 
 	local info = debug.getinfo(level)
 	while info ~= nil do
-		local m1 = string.match(info.source, _Gtme.replaceSpecialChars("bin"..s.."lua"))
-		local m2 = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."packages"))
-		local mb = string.match(info.source, _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"))
+		local infoSource = _Gtme.makePathCompatibleToAllOS(info.source)
+		local m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("bin"..s.."lua")))
+		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages")))
+		local mb = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base")))
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4
 
 		if si.package then
-			m4 = string.match(info.source, _Gtme.replaceSpecialChars(si.package..s.."lua"))
+			m4 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.package..s.."lua")))
 		end
 
 		if m1 or m2 or m3 or m4 then
@@ -594,11 +603,11 @@ function _Gtme.traceback()
 				if si.package then
 					if not mb and not m1 and not m3 then
 						str = str.. "\n    In "..tostring(last_function).."\n"
-						str = str.."    File "..info.short_src..", line "..info.currentline
+						str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..", line "..info.currentline
 					end
 				else
 					str = str.. "\n    In "..tostring(last_function).."\n"
-					str = str.."    File "..info.short_src..", line "..info.currentline
+					str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..", line "..info.currentline
 				end
 			end
 		else

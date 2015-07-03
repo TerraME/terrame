@@ -72,7 +72,12 @@ private:
 
     QwtPlotPicker *picker;
 
+
+    // issue #537
+    //void closeEvent(QCloseEvent *event);
+
 };
 
 }
 #endif // CHART_PLOT_H
+

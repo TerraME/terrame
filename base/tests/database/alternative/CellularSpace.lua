@@ -449,7 +449,7 @@ return{
 					database = "terralab"
 				}
 			end
-			unitTest:assertError(error_func, "Can't connect to MySQL server on '321456' (XX).", 2)
+			unitTest:assertError(error_func, "Can't connect to MySQL server on '321456' (XX).", 18)
 		
 			error_func = function()
 				local cs = CellularSpace{

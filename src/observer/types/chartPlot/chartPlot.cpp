@@ -162,3 +162,14 @@ void ChartPlot::createPicker()
 }
 
 
+
+// issue #537
+//void ChartPlot::closeEvent(QCloseEvent *event)
+//{
+//    qDebug() << "1------------------------------";
+//    VisualArrangement* v = VisualArrangement::getInstance(); // << put #include to test
+//    qDebug() << "2------------------------------";
+//    v->buildLuaCode();
+//    qDebug() << "3------------------------------";
+//}
+

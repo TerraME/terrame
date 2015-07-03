@@ -26,16 +26,21 @@
 
 return{
 	attributes = function(unitTest)
-		local attr = attributes(file("agents.csv", "base"))
-		unitTest:assertEquals(getn(attr), 14)
-		unitTest:assertEquals(attr.mode, "file")
-		unitTest:assertEquals(attr.size, 135)
+		if not _Gtme.isWindowsOS() then
+			local attr = attributes(file("agents.csv", "base"))
+			-- local t = file("agents.csv", "base")
+			unitTest:assertEquals(getn(attr), 14) -- SKIP
+			unitTest:assertEquals(attr.mode, "file") -- SKIP
+			unitTest:assertEquals(attr.size, 135) -- SKIP
 
-		attr = attributes(file("agents.csv", "base"), "mode")
-		unitTest:assertEquals(attr, "file")
+			attr = attributes(file("agents.csv", "base"), "mode")
+			unitTest:assertEquals(attr, "file") -- SKIP
 
-		attr = attributes(file("agents.csv", "base"), "size")
-		unitTest:assertEquals(attr, 135)
+			attr = attributes(file("agents.csv", "base"), "size")
+			unitTest:assertEquals(attr, 135) -- SKIP
+		else
+			unitTest:assert(true) -- SKIP
+		end
 	end, 
 	chDir = function(unitTest)
 		local info = sessionInfo()
@@ -74,23 +79,30 @@ return{
         
         unitTest:assertEquals(isFile(""), false);
 	end, 
+	isWindowsOS = function(unitTest)
+		unitTest:assert(true)
+	end,
 	linkAttributes = function(unitTest)
-		local pathdata = packageInfo().data
+		if not _Gtme.isWindowsOS() then
+			local pathdata = packageInfo().data
 
-		os.execute("ln -s "..pathdata.."agents.csv "..pathdata.."agentslink")
-		local attr = linkAttributes(pathdata.."agentslink")
+			os.execute("ln -s "..pathdata.."agents.csv "..pathdata.."agentslink")
+			local attr = linkAttributes(pathdata.."agentslink")
 
-		unitTest:assertEquals(attr.mode, "link")
-		unitTest:assertEquals(attr.nlink, 1)
-		--unitTest:assert(attr.size >= 61)
+			unitTest:assertEquals(attr.mode, "link") -- SKIP
+			unitTest:assertEquals(attr.nlink, 1) -- SKIP
+			--unitTest:assert(attr.size >= 61)
 
-		attr = linkAttributes(pathdata.."agentslink", "mode")
-		unitTest:assertEquals(attr, "link")
+			attr = linkAttributes(pathdata.."agentslink", "mode")
+			unitTest:assertEquals(attr, "link") -- SKIP
 
-		attr = linkAttributes(pathdata.."agentslink", "nlink")
-		unitTest:assertEquals(attr, 1)
+			attr = linkAttributes(pathdata.."agentslink", "nlink")
+			unitTest:assertEquals(attr, 1) -- SKIP
 
-		os.execute("rm "..pathdata.."agentslink")
+			os.execute("rm "..pathdata.."agentslink")
+		else
+			unitTest:assert(true) -- SKIP
+		end
 	end,
 	lock = function(unitTest)
 		local pathdata = packageInfo().data
@@ -140,25 +152,6 @@ return{
 		local d = runCommand("ls "..packageInfo().data)
 		unitTest:assertEquals(#d, 22) -- 22 files
 		os.execute("rm zzzz0.txt")
-	end,
-	setMode = function(unitTest)
-		local pathdata = packageInfo().data
-
-		local f = io.open(pathdata.."testfile.txt", "w+")
-		f:write("test")
-		local success, mode = setMode(f, "binary")
-
-		unitTest:assert(success)
-	
-		unitTest:assertEquals(mode, "binary")
-
-		success, mode = setMode(f, "text")
-
-		unitTest:assert(success)
-		unitTest:assertEquals(mode, "binary") -- #199
-
-		f:close()
-		os.execute("rm "..pathdata.."testfile.txt")
 	end,
 	touch = function(unitTest)
 		local pathdata = packageInfo().data

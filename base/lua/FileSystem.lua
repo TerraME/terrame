@@ -68,6 +68,16 @@ function currentDir()
 	return lfs.currentdir()
 end
 
+--- Returns true if the operating system is Windows, otherwise returns false.
+-- @usage isWindowsOS()
+function isWindowsOS()
+	if sessionInfo().separator == "/" then
+		return false
+	end
+	
+	return true
+end
+
 --- Return the files in a given directory.
 -- @arg folder A string describing a folder.
 -- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
@@ -77,13 +87,18 @@ function dir(folder, all)
 	optionalArgument(2, "boolean", all)
 
 	if all == nil then all = false end
+	
+	local command 
 
-	local s = sessionInfo().separator
-	local command = "dir "..folder.." /b"
-
-	if s == "/" then
-		if all then
+	if all then
+		if isWindowsOS() then
+			command = "ls -a1 "..folder.." 2> NUL" -- SKIP
+		else
 			command = "ls -a1 "..folder.." 2> /dev/null"
+		end
+	else
+		if isWindowsOS() then
+			command = "ls -1 "..folder.." 2> NUL" -- SKIP
 		else
 			command = "ls -1 "..folder.." 2> /dev/null"
 		end
@@ -231,20 +246,6 @@ function runCommand(command, number)
 	io.close(file)
 	os.execute("rm "..mfile)
 	return fileTable, result
-end
-
---- Set the writing mode for a file. Returns true
--- followed the previous mode string for the file, or nil followed by an error string in case of errors.
--- On non-Windows platforms, where the two modes are identical, setting the mode has no effect, and the
--- mode is always returned as binary.
--- @arg filepath A file handle with the file to be locked.
--- @arg mode A string that can be either "binary" or "text".
--- @usage setMode(file, "text")
-function setMode(filepath, mode)
-	mandatoryArgument(1, "userdata", filepath)
-	mandatoryArgument(2, "string", mode)
-
-	return lfs.setmode(filepath, mode)
 end
 
 --- Set access and modification times of a file. This function is a bind to utime function.
