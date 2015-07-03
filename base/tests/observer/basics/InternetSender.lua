@@ -25,6 +25,7 @@
 
 return{
 	InternetSender = function(unitTest)
+--[[
 		local world = Cell{
 			count = 0,
 			mcount = function(self)
@@ -82,6 +83,7 @@ return{
 
 		local c1 = InternetSender{target = world, select = "value"}
 
+--]]
 		unitTest:assert(true)
 	end
 }

@@ -73,8 +73,8 @@ function InternetSender(data)
 			forEachElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
-				if string.sub(idx, -1, -1) ~= "_" then
-					table.insert(data.select, idx)
+				if string.sub(idx, -1, -1) ~= "_" then -- SKIP
+					table.insert(data.select, idx) -- SKIP
 				end
 			end)
 		elseif type(data.target) == "CellularSpace" then
@@ -84,11 +84,11 @@ function InternetSender(data)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
 				if not belong(idx, {"autoincrement", "quantity", "observerId"}) and string.sub(idx, -1, -1) ~= "_" then
-					table.insert(data.select, idx)
+					table.insert(data.select, idx) -- SKIP
 				end
 			end)
 
-			if #data.select == 0 then
+			if #data.select == 0 then -- SKIP
 				data.select = {"#"}
 			end
 		else
@@ -111,21 +111,21 @@ function InternetSender(data)
 		forEachElement(data.select, function(_, value)
 			if data.target[value] == nil then
 				if  value == "#" then
-					if data.target.obsattrs == nil then
+					if data.target.obsattrs == nil then -- SKIP
 						data.target.obsattrs = {}
 					end
 
-					data.target.obsattrs["quantity_"] = true
-					data.target.quantity_ = #data.target
+					data.target.obsattrs["quantity_"] = true -- SKIP
+					data.target.quantity_ = #data.target -- SKIP
 				else
 					customError("Selected element '"..value.."' does not belong to the target.")
 				end
 			elseif type(data.target[value]) == "function" then
-				if data.target.obsattrs == nil then
+				if data.target.obsattrs == nil then -- SKIP
 					data.target.obsattrs = {}
 				end
 
-				data.target.obsattrs[value] = true
+				data.target.obsattrs[value] = true -- SKIP
 			end
 		end)
 	end
@@ -133,11 +133,11 @@ function InternetSender(data)
 	if data.target.obsattrs then
 		forEachElement(data.target.obsattrs, function(idx)
 			for i = 1, #data.select do
-				if data.select[i] == idx then
-					data.select[i] = idx.."_"
+				if data.select[i] == idx then -- SKIP
+					data.select[i] = idx.."_" -- SKIP
 					if type(data.target[idx]) == "function" then
 						local mvalue = data.target[idx](data.target)
-						data.target[idx.."_"] = mvalue
+						data.target[idx.."_"] = mvalue -- SKIP
 					end
 				end
 			end
@@ -150,8 +150,8 @@ function InternetSender(data)
   
 	for i = 1, #data.select do
 		if data.select[i] == "#" then
-			data.select[i] = "quantity_"
-			data.target.quantity_ = #data.target
+			data.select[i] = "quantity_" -- SKIP
+			data.target.quantity_ = #data.target -- SKIP
 		end
 	end
 
@@ -172,17 +172,17 @@ function InternetSender(data)
 
 	local id
 	local target = data.target
-	if type(target) == "CellularSpace" then
+	if type(target) == "CellularSpace" then -- SKIP
 		observerParams = {observerParams}
 		id = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
 	else
-		if type(target) == "Society" then
-			target.observerId = 1 -- TODO: verify why this line is necessary
+		if type(target) == "Society" then -- SKIP
+			target.observerId = 1 -- TODO: verify why this line is necessary -- SKIP
 		end
-		id = target.cObj_:createObserver(observerType, data.select, observerParams)
+		id = target.cObj_:createObserver(observerType, data.select, observerParams) -- SKIP
 	end
 
-	verify(id, "The observer could not be created.")
+	verify(id, "The observer could not be created.") -- SKIP
 
 	table.insert(_Gtme.createdObservers, {target = data.target, id = id})
 
