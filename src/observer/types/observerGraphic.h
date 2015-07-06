@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -50,7 +50,7 @@ class ChartPlot;
  * \brief Plots a simple scatter plot graphic or a scatter plot over the time
  * \see ObserverInterf
  * \see QThread
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jos? da Cunha Rodrigues
  * \file observerGraphic.h
 */
 class ObserverGraphic : public QThread, public ObserverInterf 

@@ -226,7 +226,7 @@ protected:
     QComboBox *zoomComboBox;
 
     QStringList attribList;
-    QStringList obsAttrib;          // lista de chaves em observação
+    QStringList obsAttrib;          // lista de chaves em observacao
     QHash<QString, Attributes *> *mapAttributes;  // map de todas as chaves
 
     QToolButton *butLegend, *butGrid;

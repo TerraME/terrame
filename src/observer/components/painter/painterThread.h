@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ class Attributes;
 /**
  * \brief Auxiliary class to draws the cellular space state
  * \see QThread
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jos? da Cunha Rodrigues
  * \file painterThread.h
  */
 class PainterThread : public QThread

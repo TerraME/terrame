@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright ? 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ of this library and its documentation.
 /*! \file luaCellularSpace.cpp
 \brief This file contains implementations for the luaCellularSpace objects.
 \author Tiago Garcia de Senna Carneiro
-\author Antônio Rodrigues
+\author Ant?nio Rodrigues
 \author Rodrigo Reis Pereira
 */
 
@@ -296,7 +296,7 @@ int luaCellularSpace::getLayerName( lua_State *L )
 /// parameters: observer type, observeb attributes table, observer type parameters
 int luaCellularSpace::createObserver( lua_State * luaL)
 {
-    // recupero a referencia do espaço celular
+    // recupero a referencia do espaco celular
     // @DANIEL
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaCellularSpace>::getReference(luaL);
@@ -307,15 +307,15 @@ int luaCellularSpace::createObserver( lua_State * luaL)
     luaStackToQString(12);
 #endif
 
-    // flags para a definição do uso de compressão
-    // na transmissão de datagramas e da visibilidade
+    // flags para a definicao do uso de compressao
+    // na transmissao de datagramas e da visibilidade
     // dos observadores Udp Sender e Image
     bool compressDatagram = false, obsVisible = true;
 
     // recupero a tabela de atributos da celula
     int top = lua_gettop(luaL);
 
-    // Não modifica em nada a pilha recupera o enum referente ao tipo
+    // Nao modifica em nada a pilha recupera o enum referente ao tipo
     // do observer
     int typeObserver = (int)luaL_checkinteger(luaL, top - 5);
 
@@ -327,7 +327,7 @@ int luaCellularSpace::createObserver( lua_State * luaL)
     
     QStringList allCellSpaceAttribs, allCellAttribs, obsAttribs;
     QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
-    QStringList imagePath; //diretorio onde as imagens do ObsImage serão salvas
+    QStringList imagePath; //diretorio onde as imagens do ObsImage serao salvas
     
     const char *strAux;
     double numAux = -1;
@@ -346,8 +346,8 @@ int luaCellularSpace::createObserver( lua_State * luaL)
     stackDump(luaL);
 #endif
 
-    // Pecorre o espaço celular e também
-    // recupera o atributos de uma célula
+    // Pecorre o espaco celular e tambe'm
+    // recupera o atributos de uma ce'lula
     lua_pushnil(luaL);
     while(lua_next(luaL, top) != 0)
     {
@@ -525,14 +525,14 @@ int luaCellularSpace::createObserver( lua_State * luaL)
     }
 
     //----------------------------------------------------------------
-    //------- RECUPERA A TABELA DIMENSÃO
+    //------- RECUPERA A TABELA DIMENSaO
 
 #ifdef DEBUG_OBSERVER
-    printf("\npos table: %i\nRecuperando dimensões:\n", top);
+    printf("\npos table: %i\nRecuperando dimensoes:\n", top);
 #endif
     QList<int> obsDim;
 
-    // Recupera a tabela de dimensões
+    // Recupera a tabela de dimensoes
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 4) != 0)
     {
@@ -572,7 +572,7 @@ int luaCellularSpace::createObserver( lua_State * luaL)
         }
         else
         {
-            // posição da celula no espaço celular
+            // posicao da celula no espaco celular
             obsAttribs.push_back("x");
             obsAttribs.push_back("y");
             if(typeObserver == TObsShapefile) obsAttribs.push_back("objectId_");
@@ -798,7 +798,7 @@ int luaCellularSpace::createObserver( lua_State * luaL)
             obsLog->setFileName(obsParamsAtribs.at(0));
         }
 
-        // caso não seja definido, utiliza o default ";"
+        // caso nao seja definido, utiliza o default ";"
         if ((obsParamsAtribs.size() < 2) || obsParamsAtribs.at(1).isNull()
                 || obsParamsAtribs.at(1).isEmpty())
         {
@@ -1119,7 +1119,7 @@ QString luaCellularSpace::pop(lua_State *luaL, QStringList& attribs)
                 attrs.append(PROTOCOL_SEPARATOR);
 
                 // Recupera a tabela de cells e delega a cada
-                // celula sua serialização
+                // celula sua serializacao
                 // if(key == "cells")
                 //{
                 int top = lua_gettop(luaL);
@@ -1489,16 +1489,16 @@ int luaCellularSpace::load(lua_State *L)
             // Load input theme
             inputTheme = new TeTheme(inputThemeName, inputLayer );
             if (!db->loadTheme (inputTheme)) // erro, tiago: parece que a terralib carrega um thema com mesmo nome, mas de outro layer, pois
-                // esta função nao falha, caso o tema "inputTheme" não pertenca ao layer (inputLayer), quando deveria
+                // esta funcao nao falha, caso o tema "inputTheme" nao pertenca ao layer (inputLayer), quando deveria
                 // assim, o proximo acesso ao aobjeto inputTheme procara uma excecao
                 // Alem disso, quando dois temas possuem o mesmo nomemem layers diferentes, esta funcao falha
-                // ao carregar o tema do layer selecionado, só funciona quando se tenta carregar o tema
+                // ao carregar o tema do layer selecionado, so funciona quando se tenta carregar o tema
                 // do layer que o primeiro a ser inserido no banco, para os demais layers a tentativa abaixo
-                // de criar um tema temporário irá falhar.
+                // de criar um tema temporario ira falhar.
                 // Se varios bancos que possuirem a mesta estrutura, portanto, temas de com o mesmo nome, estiverem
-                // abertos simultaneamente no TerraView, então as vistas e os temas de resultados serão criados nos
-                // dois bancos simultaneamente. Para isso, é preciso que os banco tenham o mesmo usuário e senha.
-                //	Entretanto, as tabelas de resultados não são criadas em ambos os bancos.
+                // abertos simultaneamente no TerraView, entao as vistas e os temas de resultados serao criados nos
+                // dois bancos simultaneamente. Para isso, e' preciso que os banco tenham o mesmo usuario e senha.
+                //	Entretanto, as tabelas de resultados nao sao criadas em ambos os bancos.
             {
                 string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
                 lua_getglobal(L, "customError");
@@ -1526,7 +1526,7 @@ int luaCellularSpace::load(lua_State *L)
             temporaryTheme.attributeRest(whereClause);
             temporaryTheme.setAttTables( inputTheme->attrTables() );
 
-            // Configura o mecanismo para buscar geometrias (loadGeometries = true), e também
+            // Configura o mecanismo para buscar geometrias (loadGeometries = true), e tambe'm
             // buscar todos os atributos da c"lula (true )
             if( attrNames.empty() )
             {
@@ -1541,7 +1541,7 @@ int luaCellularSpace::load(lua_State *L)
         }
         else
         {
-            // Configura o mecanismo para buscar geometrias (loadGeometries = true), e também
+            // Configura o mecanismo para buscar geometrias (loadGeometries = true), e tambe'm
             // buscar todos os atributos da c"lula (true )
             if( attrNames.empty() )
             {
@@ -1589,7 +1589,7 @@ int luaCellularSpace::load(lua_State *L)
             int lin, col;
             char cellId[20];
 
-            // Raian: Verifica se o layer é de células, linhas, pontos ou polígonos para pegar
+            // Raian: Verifica se o layer e' de ce'lulas, linhas, pontos ou poligonos para pegar
             // as coordenadas x e y do objeto.
             if( element.hasCells() ){
                 strcpy( (char *) cellId, element.objectId().c_str());
@@ -1826,7 +1826,7 @@ void luaCellularSpace::loadLegendsFromDatabase(TeDatabase *db, TeTheme *inputThe
 		luaLegend.append(QString("%1=%2,").arg(MIN).arg(minValue));
 		
 		// symbol setup
-		luaLegend.append(QString("%1=\"%2\",").arg(SYMBOL).arg("®"));
+		luaLegend.append(QString("%1=\"%2\",").arg(SYMBOL).arg("?"));
 		
 		// font size setup
 		luaLegend.append(QString("%1=%2,").arg(FONT_SIZE).arg(12));
@@ -1983,7 +1983,7 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 			.arg(inputTheme->id());
 	if( portal->query(colorBarsQuery.toLatin1().constData()) )
 	{
-        // esta string recebe o conteúdo bruto recuperado do banco de dados
+        // esta string recebe o conteudo bruto recuperado do banco de dados
         QString auxColorBar;
         // na verdade existe uma unica linha na tabela (uma grande string)
 		while(portal->fetchRow())
@@ -2001,7 +2001,7 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 			}
 			else {
 				// substitiu separadores toscos do TerraView, que usa o caracter '-'
-				// mesmo quando há numero negativos na string
+				// mesmo quando ha numero negativos na string
 				string colorBarStr(auxColorBar.toLatin1().constData());
 				char previousChar = '#';
 				for(int i = 0; i < auxColorBar.size(); i++ ){
@@ -2011,14 +2011,14 @@ QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme
 				}
 				auxColorBar = QString(colorBarStr.c_str());
 
-				// Cada cor do objeto ColorBar é separado por "#"
+				// Cada cor do objeto ColorBar e' separado por "#"
 				QStringList colorBarRawItems = auxColorBar.split("#", QString::SkipEmptyParts);
 
 				// Legendas STD_DEVIATION
 				if(grouping->groupMode_ == TeStdDeviation){
 					return retrieveStdDeviationColorBar(colorBarRawItems);
 				}
-				// Legendas que não são STD_DEVIATION (UniqueValue, EqualSteps)
+				// Legendas que nao sao STD_DEVIATION (UniqueValue, EqualSteps)
 				else {
 					// Legendas UniqueValue e EqualSteps
 					return retrieveUniqueValueColorBar(inputTheme);
@@ -2587,14 +2587,14 @@ int luaCellularSpace::save(lua_State *L)
 // Parameters: 
 //		gpmName - it is the GPM unique identifier, a ASCII text.
 // Problemas:
-// 1) TerraLib nao oferece em sua API uma método para carregar uma GPM a partir do banco.
-// 2) Por enquanto, os testes so funcionaram para GPMs com estratégia "contiguity". Para as demais estrategias, nao consegui
+// 1) TerraLib nao oferece em sua API uma me'todo para carregar uma GPM a partir do banco.
+// 2) Por enquanto, os testes so funcionaram para GPMs com estrate'gia "contiguity". Para as demais estrategias, nao consegui
 // gerar uma GPM cuja tabela de conexoes tivessem elementos. 
 // 3) Arquivos ponto GAL nao possuem informacoes suficientes para a construcao da estrutura de vizinhanca de TerraME. Veja
 //    documentacao do metodo loadGALNeighborhood();
-// 4) O TerraView também parece nao gravar arquivos com extensao GWT. Assim, o metodo pre-existente para carregar
+// 4) O TerraView tambe'm parece nao gravar arquivos com extensao GWT. Assim, o metodo pre-existente para carregar
 // este tipo de arquivo nao foi adaptado para a nova classe vizinhanca.
-// 5) Ainda é necessária a implementacao de um iterador sobres as vizinhancaS de uma celula: begin, first, last, next, etc.
+// 5) Ainda e' necessaria a implementacao de um iterador sobres as vizinhancaS de uma celula: begin, first, last, next, etc.
 // 6) A API TerraLib para GPM no que tange ao ponto de vista do usuario final merece uma revisao.
 int luaCellularSpace::loadTerraLibGPM(lua_State *L){
 
@@ -2657,16 +2657,16 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
         // Load input theme
         inputTheme = new TeTheme(inputThemeName, inputLayer );
         if (!db->loadTheme (inputTheme)) // erro, tiago: parece que a terralib carrega um thema com mesmo nome, mas de outro layer, pois
-            // esta função nao falha, caso o tema "inputTheme" não pertenca ao layer (inputLayer), quando deveria
+            // esta funcao nao falha, caso o tema "inputTheme" nao pertenca ao layer (inputLayer), quando deveria
             // assim, o proximo acesso ao aobjeto inputTheme procara uma excecao
             // Alem disso, quando dois temas possuem o mesmo nomemem layers diferentes, esta funcao falha
-            // ao carregar o tema do layer selecionado, só funciona quando se tenta carregar o tema
+            // ao carregar o tema do layer selecionado, so funciona quando se tenta carregar o tema
             // do layer que o primeiro a ser inserido no banco, para os demais layers a tentativa abaixo
-            // de criar um tema temporário irá falhar.
+            // de criar um tema temporario ira falhar.
             // Se varios bancos que possuirem a mesta estrutura, portanto, temas de com o mesmo nome, estiverem
-            // abertos simultaneamente no TerraView, então as vistas e os temas de resultados serão criados nos
-            // dois bancos simultaneamente. Para isso, é preciso que os banco tenham o mesmo usuário e senha.
-            //	Entretanto, as tabelas de resultados não são criadas em ambos os bancos.
+            // abertos simultaneamente no TerraView, entao as vistas e os temas de resultados serao criados nos
+            // dois bancos simultaneamente. Para isso, e' preciso que os banco tenham o mesmo usuario e senha.
+            //	Entretanto, as tabelas de resultados nao sao criadas em ambos os bancos.
         {
 
             string err_out = string("\tCan't open input theme: ") + string(inputThemeName) + string( "\n");

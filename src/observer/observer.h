@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 /*!
  * \file observer.h
  * \brief Design Pattern Subject and Observer interfaces
- * \author Antonio José da Cunha Rodrigues 
+ * \author Antonio Jos? da Cunha Rodrigues 
  * \author Tiago Garcia de Senna Carneiro
 */
 
@@ -189,7 +189,7 @@ public:
     // virtual void setAttributes(QStringList &) = 0;
     
     /**
-    * Recupera a lista de atributos em observação
+    * Recupera a lista de atributos em observa??o
     * \return QStringList lista de atributtos
     */
     virtual QStringList getAttributes() = 0;

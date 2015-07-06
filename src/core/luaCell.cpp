@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright ? 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -141,7 +141,7 @@ int luaCell::next( lua_State * )
 
 /// destructor
 // @DANIEL:
-// Controle de recursos de memória (destrutor C++ e Lua Garbage Collector) não devem ser misturados
+// Controle de recursos de memoria (destrutor C++ e Lua Garbage Collector) nao devem ser misturados
 // luaCell::~luaCell( void ) { luaL_unref( L, LUA_REGISTRYINDEX, ref); }
 luaCell::~luaCell( void ) { }
 
@@ -306,8 +306,8 @@ int luaCell::createObserver( lua_State * )
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaCell>::getReference(luaL);
 
-    // flags para a defini��o do uso de compress�o
-    // na transmiss�o de datagramas e da visibilidade
+    // flags para a defini??o do uso de compress?o
+    // na transmiss?o de datagramas e da visibilidade
     // dos observadores Udp Sender
     bool compressDatagram = false, obsVisible = true;
 
@@ -364,7 +364,7 @@ int luaCell::createObserver( lua_State * )
             QString key( luaL_checkstring(luaL, -1) );
             attribTable = true;
 
-            // Verifica se o atributo informado n�o existe deve ter sido digitado errado
+            // Verifica se o atributo informado n?o existe deve ter sido digitado errado
             if (allAttribs.contains(key))
             {
                 obsAttribs.push_back(key);
@@ -401,7 +401,7 @@ int luaCell::createObserver( lua_State * )
         QStringList cols, obsParams;
 
         // Recupera a tabela de parametros os observadores do tipo Table e Graphic
-        // caso não seja um tabela a sintaxe do metodo esta incorreta
+        // caso nao seja um tabela a sintaxe do metodo esta incorreta
         lua_pushnil(luaL);
         while(lua_next(luaL, top) != 0)
         {
@@ -458,9 +458,9 @@ int luaCell::createObserver( lua_State * )
             lua_pop(luaL, 1);
         }
 
-        // Caso não seja definido nenhum parametro,
-        // e o observador não é TextScreen então
-        // lança um warning
+        // Caso nao seja definido nenhum parametro,
+        // e o observador nao e' TextScreen entao
+        // lanca um warning
         if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
         {
             if (execModes != Quiet){
@@ -637,7 +637,7 @@ int luaCell::createObserver( lua_State * )
                 obsLog->setFileName(cols.at(0));
             }
 
-            // caso não seja definido, utiliza o default ";"
+            // caso nao seja definido, utiliza o default ";"
             if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
             {
                 if (execModes != Quiet ){
@@ -956,7 +956,7 @@ QString luaCell::pop(lua_State *luaL, QStringList& attribs)
                 msg.append(QString::number(TObsNeighborhood));
                 msg.append(PROTOCOL_SEPARATOR);
 
-                // Pega as informaçõe da célula central (this)
+                // Pega as informacoe da ce'lula central (this)
                 QString cellMsg = this->pop(luaL, QStringList() << "x" << "y");
 
                 elements.append(cellMsg);

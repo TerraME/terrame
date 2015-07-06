@@ -252,7 +252,7 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
                 attrib->setFontFamily(legAttribs.at(font));
                 attrib->setFontSize(legAttribs.at(fontSize).toInt());
 
-                //Converte o código ASCII do símbolo em caracter
+                //Converte o c?digo ASCII do s?mbolo em caracter
                 bool ok = false;
                 int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
@@ -340,7 +340,7 @@ void ObserverStateMachine::addState(QList<QPair<QString, QString> > &allStates)
 
     for(int i = 0; i < allStates.size(); i++)
     {
-        // recupero novamente os estados já criados
+        // recupero novamente os estados j? criados
         if (states->contains(allStates.at(i).first))
             nodeSource = states->value(allStates.at(i).first);
 
@@ -422,8 +422,8 @@ void ObserverStateMachine::scaleView(qreal newScale)
 
 void ObserverStateMachine::butZoomIn_Clicked()
 {
-    // currentIndex() < 0 : o indice não existe no comboBox
-    // currentIndex() > 22 : o indice é o zoom de janela
+    // currentIndex() < 0 : o indice n?o existe no comboBox
+    // currentIndex() > 22 : o indice ? o zoom de janela
     // if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
     if ((zoomComboBox->currentIndex() > 0)) // || (zoomComboBox->currentIndex() < 22))
     {
@@ -527,8 +527,8 @@ void ObserverStateMachine::zoomWindow()
     factHeight = factHeight > 32.0 ? 32.0 : factHeight;
 
     zoomChanged(zoomRect, factWidth, factHeight);
-    //// view->centerOn(zoomRect.center());  // não fica centralizado
-    //// view->centerOn( scene->itemsBoundingRect().center() );  // não fica centralizado
+    //// view->centerOn(zoomRect.center());  // n?o fica centralizado
+    //// view->centerOn( scene->itemsBoundingRect().center() );  // n?o fica centralizado
     // view->centerOn(scene->sceneRect().center()); // fica quase centralizado
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
@@ -613,7 +613,7 @@ void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, float width,
     }
     else
     {
-        // FIX: a escala de zoom é sempre a mesma, pq o view não é rescalado
+        // FIX: a escala de zoom ? sempre a mesma, pq o view n?o ? rescalado
 
         zoomComboBox->setCurrentIndex(-1);
         //if (zoomComboBox->isEditable())
@@ -684,7 +684,7 @@ void ObserverStateMachine::setupGUI()
 
     view = new Canvas(scene, this);
     view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); // 
-    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); não existe na versão 4.3.4
+    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); n?o existe na vers?o 4.3.4
     // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform); 
     view->setRenderHint(QPainter::Antialiasing);
     // view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -775,7 +775,7 @@ void ObserverStateMachine::setupGUI()
     hLayoutZoom1->addWidget(butZoomOut);
     hLayoutZoom1->addWidget(butHand);
     hLayoutZoom2->addWidget(butZoomWindow);
-    hLayoutZoom2->addWidget(butZoomRestore);    // Exibe os layers de informação
+    hLayoutZoom2->addWidget(butZoomRestore);    // Exibe os layers de informa??o
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 150, 190, 310);
     treeLayers->setHeaderLabel(tr("Layers"));

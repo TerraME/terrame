@@ -145,8 +145,8 @@ int luaEnvironment::createObserver( lua_State *luaL )
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaEnvironment>::getReference(luaL);
 
-    // flags para a definição do uso de compressão
-    // na transmissão de datagramas e da visibilidade
+    // flags para a defini??o do uso de compress?o
+    // na transmiss?o de datagramas e da visibilidade
     // dos observadores Udp Sender 
     bool compressDatagram = false, obsVisible = true;
 
@@ -154,7 +154,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
     // atributos da celula
     int top = lua_gettop(luaL);
 
-    // Não modifica em nada a pilha
+    // N?o modifica em nada a pilha
     // recupera o enum referente ao tipo
     // do observer
     TypesOfObservers typeObserver = (TypesOfObservers)luaL_checkinteger(luaL, -4);
@@ -202,7 +202,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
     lua_settop(luaL, top - 1);
     top = lua_gettop(luaL);
 
-    // Verificação da sintaxe da tabela Atributos
+    // Verifica??o da sintaxe da tabela Atributos
     if(! lua_istable(luaL, top) )
     {
         //printf("\nError: Attributes table not found. Incorrect sintax.\n");
@@ -238,7 +238,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
         qDebug("\t%s \n", qPrintable(key));
 #endif
 
-        // Verifica se o atributo informado não existe deve ter sido digitado errado
+        // Verifica se o atributo informado n?o existe deve ter sido digitado errado
         if (allAttribs.contains(key))
         {
             obsAttribs.push_back(key);
@@ -291,7 +291,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
 #endif
 
     // Recupera a tabela de parametros os observadores do tipo Table e Graphic
-    // caso não seja um tabela a sintaxe do metodo esta incorreta
+    // caso n?o seja um tabela a sintaxe do metodo esta incorreta
     lua_pushnil(luaL);
     while(lua_next(luaL, top) != 0)
     {   
@@ -347,9 +347,9 @@ int luaEnvironment::createObserver( lua_State *luaL )
         lua_pop(luaL, 1);
     }
 
-    // Caso não seja definido nenhum parametro,
-    // e o observador não é TextScreen então
-    // lança um warning
+    // Caso n?o seja definido nenhum parametro,
+    // e o observador n?o ? TextScreen ent?o
+    // lan?a um warning
     if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
     {
         if (execModes != Quiet ){
@@ -489,7 +489,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
             obsLog->setFileName(cols.at(0));
         }
 
-        // caso não seja definido, utiliza o default ";"
+        // caso n?o seja definido, utiliza o default ";"
         if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
             if (execModes != Quiet )
@@ -697,7 +697,7 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
                 attrs.append(PROTOCOL_SEPARATOR);
 
                 /* / Recupera a tabela de cells e delega a cada
-                // celula sua serialização
+                // celula sua serializa??o
                 // if(key == "cells")
                 //{
                 int top = lua_gettop(luaL);

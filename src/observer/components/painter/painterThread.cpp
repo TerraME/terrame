@@ -19,11 +19,11 @@ PainterThread::PainterThread(QObject *parent)
     restart = false;
     abort = false;
     reconfigMaxMin = false;
-    // defaultPen = QPen(Qt::NoPen);		// não desenha a grade
+    // defaultPen = QPen(Qt::NoPen);		// n?o desenha a grade
 
-    //posicionar randomicamente os agentes na célula
-    // para que seja possível visualizar mais agentes
-    // dentro da mesma célular
+    //posicionar randomicamente os agentes na c?lula
+    // para que seja poss?vel visualizar mais agentes
+    // dentro da mesma c?lular
     //qsrand(time(NULL));
     qsrand(1);
 }
@@ -61,7 +61,7 @@ void PainterThread::run()
     //    //locker.unlock();
 
     //    // mutex.lock();
-    //    //---- Atribuições locais
+    //    //---- Atribui??es locais
     //    //QPainter *p = this->p;
     //    //Attributes *attrib = this->attrib;
     //    //QImage *img = this->img;
@@ -254,7 +254,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 						p->setBrush(Qt::white);
 
 						const ObsLegend &leg = vecLegend->at(j);
-						if (attrib->getGroupMode() == TObsUniqueValue) // valor único 3
+						if (attrib->getGroupMode() == TObsUniqueValue) // valor ?nico 3
 						{
 							if (v == leg.getToNumber())
 							{
@@ -341,7 +341,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 //this->xs = xs;
 //this->ys = ys;
 
-// a thread pode não ter os dados dos atributos
+// a thread pode n?o ter os dados dos atributos
 //if (!isRunning() && (this->p)) {
 //	start(LowPriority);
 //}// else {
@@ -392,7 +392,7 @@ void PainterThread::drawNeighborhood(QPainter *p, double &xCell, double &yCell, 
 //    if (on)
 //        defaultPen = QPen(Qt::darkGray);// habilita desenhar a grade
 //    else
-//        defaultPen = QPen(Qt::NoPen);		// não desenha a grade
+//        defaultPen = QPen(Qt::NoPen);		// n?o desenha a grade
 //
 //}
 

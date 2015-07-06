@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ namespace TerraMEObserver {
  * \brief Shows the schedule events
  * \see ObserverInterf
  * \see QDialog
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jos? da Cunha Rodrigues
  * \file observerScheduler.h
 */
 class ObserverScheduler : public QDialog, public ObserverInterf
@@ -142,7 +142,7 @@ private:
 
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
-    bool paused;		// ref. à Thread
+    bool paused;		// ref. ? Thread
 
     QTreeWidget* pipelineWidget;
     QLabel *lblClock;

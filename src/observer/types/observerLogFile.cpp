@@ -128,12 +128,12 @@ bool ObserverLogFile::write() //QString text)
 
     QFile file(fileName);
 
-    // Caso já exista o arquivo, os novos valores são inseridos ao final do arquivo
-    // Caso contrário, cria o arquivo com o nome passado.
+    // Caso j? exista o arquivo, os novos valores s?o inseridos ao final do arquivo
+    // Caso contr?rio, cria o arquivo com o nome passado.
     //if (!QFile::exists(fileName)){
     //	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
     //		QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
-    // QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+    // QObject::tr("N?o foi poss?vel abrir o arquivo de log \"%1\".\n%2")
     //			.arg(this->fileName).arg(file.errorString()	));
     //		return false;
     //	}
@@ -141,7 +141,7 @@ bool ObserverLogFile::write() //QString text)
     //else{
     //	if (!file.open(QIODevice::Append | QIODevice::Text)){
     //		QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
-    // QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+    // QObject::tr("N?o foi poss?vel abrir o arquivo de log \"%1\".\n%2")
     //			.arg(this->fileName).arg(file.errorString()	));
     //		return false;
     //	}
@@ -154,7 +154,7 @@ bool ObserverLogFile::write() //QString text)
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         {
             QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
-                                     QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+                                     QObject::tr("N?o foi poss?vel abrir o arquivo de log \"%1\".\n%2")
                                      .arg(this->fileName).arg(file.errorString()	));
             return false;
         }
@@ -165,13 +165,13 @@ bool ObserverLogFile::write() //QString text)
         if (!file.open(QIODevice::Append | QIODevice::Text))
         {
             QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
-                                     QObject::tr("Não foi possível abrir o arquivo de log \"%1\".\n%2")
+                                     QObject::tr("N?o foi poss?vel abrir o arquivo de log \"%1\".\n%2")
                                      .arg(this->fileName).arg(file.errorString()	));
             return false;
         }
     }
 
-    // insere o cabeçalho do arquivo
+    // insere o cabe?alho do arquivo
     if (header)
     {
         QString headers;

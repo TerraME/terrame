@@ -8,7 +8,7 @@
 #include <QApplication>
 #include <QDebug>
 
-// "«" "»"
+// "?" "?"
 
 using namespace TerraMEObserver;
 
@@ -36,7 +36,7 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
     butExpand->setObjectName(QString::fromUtf8("butExpand"));
     butExpand->setMinimumSize(QSize(20, 20));
     butExpand->setAutoRaise(true);
-    butExpand->setText("»");  // "«" "»"
+    butExpand->setText("#");  // "?" "?"
 
     QSpacerItem *horizSpacerItem = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -204,7 +204,7 @@ void ObserverScheduler::setAttributes(QStringList &attribs)
     QTreeWidgetItem *item = 0;
     for(int i = 0; i < attributes.size(); i++)
     {
-        // o atributo TIMER_KEY é aprentado apenas na GUI do observer
+        // o atributo TIMER_KEY ? aprentado apenas na GUI do observer
         if ((attributes.at(i) != TIMER_KEY) && (attributes.at(i).contains("@")) )
         {
             evKey = attributes.at(i);
@@ -239,12 +239,12 @@ void ObserverScheduler::on_butExpand_clicked()
     if (pipelineWidget->isVisible())
     {
         resize(QSize(600, height()));
-        butExpand->setText("«");
+        butExpand->setText("#");
     }
     else
     {
         resize(QSize(50, height()));
-        butExpand->setText("»");  // "«" "»"
+        butExpand->setText("#");  // "?" "?"
     }
 }
 
@@ -254,7 +254,7 @@ void ObserverScheduler::setTimer(const QString &timer)
 }
 
 // Verificar complexidade, pois para cada evento esse 
-// método é chamado 3 vezes.
+// m?todo ? chamado 3 vezes.
 const QString ObserverScheduler::number2String(double number)
 {
     static const QString COMPLEMENT("000000");

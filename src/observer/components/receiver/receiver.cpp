@@ -141,7 +141,7 @@ void Receiver::processPendingDatagrams()
     QDataStream in(&datagram, QIODevice::ReadOnly);
     // in.setVersion(QDataStream::Qt_4_6);
 
-    // Reserva o espaço necessário para o stream transmitido
+    // Reserva o espa?o necess?rio para o stream transmitido
     in >> dataSize;         // tamanho total do stream enviado
     in >> datagramSize;     // tamanho do datagrama enviado
 

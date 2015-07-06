@@ -163,9 +163,9 @@ Attributes::Attributes(QString name, int contSize, double width, double height) 
     colorBarVec = vector<ColorBar>();
     stdColorBarVec = vector<ColorBar>();
 
-    slicesNumber = 4; // posição 5 no comboBox
+    slicesNumber = 4; // posi??o 5 no comboBox
     groupMode = TObsEqualSteps;
-    precNumber = 5; // posição 6 no comboBox
+    precNumber = 5; // posi??o 6 no comboBox
     stdDev = TObsNone;
 
     // Bkp

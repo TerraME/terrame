@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ class Canvas;
  * \brief Plots the state machine nodes and edges
  * \see ObserverInterf
  * \see QDialog
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jos? da Cunha Rodrigues
  * \file observerStateMachine.h
 */
 class ObserverStateMachine : public QDialog, public ObserverInterf
@@ -216,7 +216,7 @@ private:
 
     QHash<QString, Node *> *states;
     QStringList attribList;
-    QStringList obsAttrib;          // lista de chaves em observação
+    QStringList obsAttrib;          // lista de chaves em observa??o
     QHash<QString, Attributes *> *mapAttributes;  // map de todas as chaves
     
     QVector<int> zoomVec;

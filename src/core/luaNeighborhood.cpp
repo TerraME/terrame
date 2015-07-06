@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ luaNeighborhood::luaNeighborhood(lua_State *) {
 
 /// destructor
 // @DANIEL:
-// Controle de recursos de memória (destrutor C++ VS Lua Garbage Collector) não devem ser misturados
+// Controle de recursos de mem?ria (destrutor C++ VS Lua Garbage Collector) n?o devem ser misturados
 // luaNeighborhood::~luaNeighborhood( void ) { luaL_unref( L, LUA_REGISTRYINDEX, ref); }
 luaNeighborhood::~luaNeighborhood( void ) { }
 
@@ -103,8 +103,8 @@ int luaNeighborhood::addCell(lua_State *L) {
 int luaNeighborhood::eraseCell(lua_State *L) {  
     luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
-    // Raian: Coloquei esta comparação porque quando um vizinho era retirado da vizinhança o iterador era invalidado
-    // Aqui faço o tratamento para que isto não ocorra.
+    // Raian: Coloquei esta compara??o porque quando um vizinho era retirado da vizinhan?a o iterador era invalidado
+    // Aqui fa?o o tratamento para que isto n?o ocorra.
     if( it != CellNeighborhood::end() && it->first == cellIndex){
         it++;
         itNext = true;

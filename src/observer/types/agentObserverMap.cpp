@@ -46,7 +46,7 @@ bool AgentObserverMap::draw(QDataStream & state)
 #ifdef TME_STATISTIC
     //// tempo gasto do 'getState' ate aqui
     //double decodeSum = 0.0, t = Statistic::getInstance().endVolatileTime();
-    //Statistic::getInstance().addElapsedTime("comunicação map", t);
+    //Statistic::getInstance().addElapsedTime("comunica??o map", t);
 
     int decodeCount = 0;
 
@@ -237,14 +237,14 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
             
             if (className == attrib->getClassName())
             {
-            // @RAIAN: Comentei esta parte para execut‡-la no fim, ap—s remover a legenda.
+            // @RAIAN: Comentei esta parte para execut?-la no fim, ap?s remover a legenda.
 //                attrib->clear();
 //                break;
 //            }
             // @RAIAN: FIM
             
             /*
-             // Remove apenas o atributo que não possui valores
+             // Remove apenas o atributo que n?o possui valores
              if (subj->getSubjectType() == attrib->getType())
              {
              qDebug() << "\nclassName " << className;
@@ -256,7 +256,7 @@ bool AgentObserverMap::unregistry(Subject *subj, const QString & className)
              {
              //for (int j = 0; j < treeLayers->topLevelItemCount(); j++)
              //{
-             //    // Remove o atributo da árvore de layers
+             //    // Remove o atributo da ?rvore de layers
              //    if ( treeLayers->topLevelItem(j)->text(0) == attrib->getName())
              //    {
              //        QTreeWidgetItem *treeItem = treeLayers->takeTopLevelItem(j);

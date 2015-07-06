@@ -72,7 +72,7 @@ void ObserverMap::init()
 
     mapAttributes = new QHash<QString, Attributes*>();
     protocolDecoder = new Decoder(mapAttributes);
-    legendWindow = 0;		// ponteiro para LegendWindow, instanciado no método setHeaders
+    legendWindow = 0;		// ponteiro para LegendWindow, instanciado no m?todo setHeaders
 
     builtLegend = 0;
     positionZoomVec = -1;
@@ -180,7 +180,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
     
     bool complexMap = false; 
 
-    // lista com os atributos que serão observados
+    // lista com os atributos que ser?o observados
     //itemList = headers;
     if (itemList.isEmpty())
     {
@@ -259,7 +259,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                 attrib->setFontFamily(legAttribs.at(font));
                 attrib->setFontSize(legAttribs.at(fontSize).toInt());
 
-                //Converte o código ASCII do símbolo em caracter
+                //Converte o c?digo ASCII do s?mbolo em caracter
                 bool ok = false;
                 int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
@@ -343,8 +343,8 @@ void ObserverMap::butLegend_Clicked()
 
 void ObserverMap::butZoomIn_Clicked()
 {
-    // currentIndex() < 0 : o indice não existe no comboBox
-    // currentIndex() > 22 : o indice é o zoom de janela
+    // currentIndex() < 0 : o indice n?o existe no comboBox
+    // currentIndex() > 22 : o indice ? o zoom de janela
     if ((zoomComboBox->currentIndex() < 0) || (zoomComboBox->currentIndex() > 22))
         zoomComboBox->setCurrentIndex(positionZoomVec);
     calculeZoom(true);
@@ -636,7 +636,7 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
         QVector<int> zoomVecAux(zoomVec);
         zoomVecAux.push_back(newZoom.toInt());
         qStableSort(zoomVecAux.begin(), zoomVecAux.end(), qGreater<int>());
-        positionZoomVec = zoomVecAux.indexOf(newZoom.toInt()); // armazena a posição do novo valor de zoom
+        positionZoomVec = zoomVecAux.indexOf(newZoom.toInt()); // armazena a posi??o do novo valor de zoom
     }
 }
 
@@ -827,7 +827,7 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
         labelList.append( (label.isEmpty() || label.isNull()) ? QString::number(i) : label );
     }
 
-    // Desvio padrão -----------------------
+    // Desvio padr?o -----------------------
     // cria a stdColorBar do atributo
     if (pos > -1)
     {
@@ -976,7 +976,7 @@ void ObserverMap::setupGUI()
     hLayoutZoom2->addWidget(butZoomWindow);
     hLayoutZoom2->addWidget(butZoomRestore);
 
-    // Exibe os layers de informação
+    // Exibe os layers de informa??o
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 150, 190, 310);
     treeLayers->setHeaderLabel(tr("Layers"));
