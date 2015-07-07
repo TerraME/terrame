@@ -51,6 +51,9 @@ public:
     void setInternalCurves(const QList<TerraMEObserver::InternalCurve *> &internalCurves);
     void exportChart(std::string, std::string);
 
+    void setId(int id);
+    const int getId() const;
+
 private slots:
     void propertiesChart();
 
@@ -65,6 +68,10 @@ private:
      */
     void createPicker();
 
+    void resizeEvent(QResizeEvent *event);
+    void moveEvent(QMoveEvent *event);
+    void closeEvent(QCloseEvent *event);
+
 
     QAction *exportAct, *propertiesAct;
     PlotPropertiesGUI *plotPropGui;
@@ -72,10 +79,7 @@ private:
 
     QwtPlotPicker *picker;
 
-
-    // issue #537
-    //void closeEvent(QCloseEvent *event);
-
+    int id;
 };
 
 }

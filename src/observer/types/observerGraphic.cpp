@@ -16,6 +16,8 @@ using namespace std;
 #include "internalCurve.h"
 #include "terrameGlobals.h"
 
+#include "visualArrangement.h"
+
 extern ExecutionModes execModes;
 
 #define TME_STATISTIC_UNDEF
@@ -50,6 +52,7 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     internalCurves = new QMap<QString, InternalCurve*>();
 
     plotter = new ChartPlot(parent);
+    plotter->setId(getId());
     plotter->setAutoReplot(true);
 	plotter->setStyleSheet("QwtPlot { padding: 8px }");
     plotter->setFrameShape(QFrame::Box);
@@ -63,11 +66,9 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     palette = plotter->palette();
     palette.setColor(QPalette::Background, Qt::white);
     plotter->setPalette(palette);
+    plotter->setWindowTitle("TerraME :: Chart");
 
-    plotter->resize(450, 350);
-    plotter->setWindowTitle("TerraME Observer : Chart");
-
-    plotter->showNormal();
+    VisualArrangement::getInstance()->starts(plotter->getId(), plotter);
 
     // prioridade da thread
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority

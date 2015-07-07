@@ -30,6 +30,10 @@
 #include <iostream>
 #include <fstream>
 
+class QResizeEvent;
+class QMoveEvent;
+class QWidget;
+
 using namespace std;
 
 struct PositionVisualArrangement
@@ -57,6 +61,12 @@ public:
 	void setFile(string);
 
 	void buildLuaCode();
+
+    void resizeEventDelegate(int id, QResizeEvent *event);
+    void moveEventDelegate(int id,  QMoveEvent *event);
+    void closeEventDelegate();
+    void starts(int id, QWidget *widget);
+
 protected:
 	VisualArrangement() {}
 	static VisualArrangement* myarrangement;

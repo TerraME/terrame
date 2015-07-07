@@ -14,6 +14,8 @@
 
 #include "../protocol/decoder/decoder.h"
 
+#include "visualArrangement.h"
+
 ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L;
 
@@ -91,7 +93,8 @@ void ObserverMap::init()
     newHeightCellSpace = 0.;
 
     setupGUI();
-    showNormal();
+
+    VisualArrangement::getInstance()->starts(getId(), this);
 }
 
 const TypesOfObservers ObserverMap::getType()
@@ -652,12 +655,14 @@ QStringList ObserverMap::getAttributes()
     return itemList;
 }
 
-void ObserverMap::resizeEvent(QResizeEvent *)
+void ObserverMap::resizeEvent(QResizeEvent *event)
 {
     if (zoomComboBox->currentText() == WINDOW)
         zoomWindow();
 
     painterWidget->calculateResult();
+
+    VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
 }
 
 void ObserverMap::zoomWindow()
@@ -1025,3 +1030,12 @@ void ObserverMap::setupGUI()
     setLayout(layoutDefault);
 }
 
+void ObserverMap::moveEvent(QMoveEvent *event)
+{
+    VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+}
+
+void ObserverMap::closeEvent(QCloseEvent *event)
+{
+    VisualArrangement::getInstance()->closeEventDelegate();
+}

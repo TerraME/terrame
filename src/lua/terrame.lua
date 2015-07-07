@@ -908,13 +908,14 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			local s = _Gtme.sessionInfo().separator
 
 			local displayFile = string.sub(arg, 0, string.len(arg) - 3).."tme"
+			displayFile = _Gtme.makePathCompatibleToAllOS(displayFile)
 
 			local cObj = TeVisualArrangement()
 			cObj:setFile(displayFile)
-
+			
 			if _Gtme.isFile(displayFile) then
 				local display = dofile(displayFile)
-
+				
 				_Gtme.forEachElement(display, function(idx, data)
 					cObj:addPosition(idx, data.x, data.y)
 					cObj:addSize(idx, data.width, data.height)
