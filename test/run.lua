@@ -281,6 +281,8 @@ end)
 if commands.build then
 	_Gtme.printNote("Checking builds")
 
+	local files = {}
+
 	forEachElement(commands.build, function(package)
 		local version = packageInfo(package).version
 
@@ -292,8 +294,23 @@ if commands.build then
 			_Gtme.printError("File does not exist")
 			report.localbuilderrors = report.localbuilderrors + 1
 		else
-			os.execute("rm "..mfile)
+			files[package] = mfile
 		end
+	end)
+
+	_Gtme.printNote("Installing packages")
+
+	forEachElement(files, function(package, mfile)
+		os.execute("terrame -install "..mfile)
+
+		if isDir(sessionInfo().path..s.."packages"..s..package) then
+			os.execute("rm -rf "..sessionInfo().path..s.."packages"..s..package)
+		else
+			_Gtme.printError("Package could not be installed")
+			report.localbuilderrors = report.localbuilderrors + 1
+		end
+
+		os.execute("rm "..mfile)
 	end)
 end
 
