@@ -92,15 +92,15 @@ function dir(folder, all)
 
 	if all then
 		if isWindowsOS() then
-			command = "ls -a1 "..folder.." 2> NUL" -- SKIP
+			command = "ls -a1 \""..folder.."\" 2> NUL" -- SKIP
 		else
-			command = "ls -a1 "..folder.." 2> /dev/null"
+			command = "ls -a1 \""..folder.."\" 2> /dev/null"
 		end
 	else
 		if isWindowsOS() then
-			command = "ls -1 "..folder.." 2> NUL" -- SKIP
+			command = "ls -1 \""..folder.."\" 2> NUL" -- SKIP
 		else
-			command = "ls -1 "..folder.." 2> /dev/null"
+			command = "ls -1 \""..folder.."\" 2> /dev/null"
 		end
 	end
 
