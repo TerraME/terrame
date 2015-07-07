@@ -1084,6 +1084,8 @@ function _Gtme.Observer(data)
 		customError("Observer needs more information to be created.", 3)
 	end
 
+	if not data.target then data.target = data.subject end
+
 	local t = type(data.target)
 	if t ~= "Agent" and t ~= "Automaton" and t ~= "Cell" and t ~= "CellularSpace" and t ~= "Environment"
 	and t ~= "Event" and t ~= "table" and t ~= "Neighborhood" and t ~= "Society" and t ~= "Timer" and t ~= "Trajectory" then

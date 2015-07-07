@@ -124,7 +124,7 @@ bool ObserverUDPSender::draw(QDataStream &state)
         udpGUI->appendMessage(str);
 
         if (execModes != Quiet){
-            lua_getglobal(L, "customWarningMsg");
+            lua_getglobal(L, "customWarning");
             lua_pushstring(L,str.toLatin1().constData());
             lua_pushnumber(L,4);
             lua_call(L,2,0);
@@ -243,7 +243,7 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
 
 #ifdef TME_LUA_5_2
                 if (execModes != Quiet){
-                    lua_getglobal(L, "customWarningMsg");
+                    lua_getglobal(L, "customWarning");
                     lua_pushstring(L,error.toLatin1().constData());
                     lua_pushnumber(L,4);
                     lua_call(L,2,0);

@@ -755,7 +755,7 @@ ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
 
     if (colorItemList.size() < 4){
         string err_out = string("Error: Could not infer legend.");
-        lua_getglobal(L, "customErrorMsg");
+        lua_getglobal(L, "customError");
         lua_pushstring(L,err_out.c_str());
         lua_pushnumber(L,4);
         lua_call(L,2,0);

@@ -197,14 +197,6 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 
 			double x = -1.0, y = -1.0, v = 0.0;
 
-#ifdef DEBUG_OBSERVER		
-			// if (attrib->getType() != TObsCell)
-			{
-				qDebug() << "\n----TObsNumber\nattrib->getXsValue()->size(): " << attrib->getXsValue()->size();
-				qDebug() << "values->size(): " << values->size() << "\n----\n";
-			}
-#endif
-
 			int vSize = values->size();
 			int xSize = attrib->getXsValue()->size();
 			int ySize = attrib->getYsValue()->size();
@@ -236,7 +228,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
                             if (execModes != Quiet ){
                                 QString st = QString("Warning: Invalid color. You need to reconfigure the maximum and the minimum values of the attribute '%1'.").arg(attrib->getName());
                                 string err_out = st.toLatin1().constData();
-                                lua_getglobal(L, "customWarningMsg");
+                                lua_getglobal(L, "customWarning");
                                 lua_pushstring(L,err_out.c_str());
                                 lua_pushnumber(L,4);
                                 lua_call(L,2,0);
@@ -280,14 +272,6 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 		{
 			QVector<QString> *values = attrib->getTextValues();
 			QVector<ObsLegend> *vecLegend = attrib->getLegend();
-
-#ifdef DEBUG_OBSERVER		
-			if (attrib->getType() != TObsCell)
-			{
-				qDebug() << "\n----TObsNumber\nattrib->getXsValue()->size(): " << attrib->getXsValue()->size();
-				qDebug() << "values->size(): " << values->size() << "\n----\n";
-			}
-#endif
 
 			int random = rand() % 256;
 			double x = -1.0, y = -1.0;

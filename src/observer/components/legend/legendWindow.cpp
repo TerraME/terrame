@@ -378,7 +378,7 @@ void LegendWindow::applyPushButton_clicked()
             if (execModes != Quiet){
                 QString st = QString("Warning: %1").arg(msg);
                 string err_out = st.toLatin1().constData();
-                lua_getglobal(L, "customWarningMsg");
+                lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,4);
                 lua_call(L,2,0);

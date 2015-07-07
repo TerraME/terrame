@@ -925,7 +925,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 			if not success then
 				_Gtme.printError(result)
 			end
-
 		end
 		argCount = argCount + 1
 	end

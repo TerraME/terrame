@@ -484,13 +484,6 @@ void PainterWidget::drawAgent()
                     painter.setFont(attrib->getFont());
                     painter.translate(rec.center());
 
-#ifdef DEBUG_OBSERVER
-                    painter.drawRect(recCell);
-                    // painter.rotate((qreal) (qrand() % 360) );
-                    qreal a = attrib->getDirection(pos, x, y);
-                    painter.rotate(a);
-                    painter.drawText(recCell, Qt::AlignCenter, attrib->getSymbol());
-#else
                     painter.rotate(attrib->getDirection(pos, x, y));
                     // painter.drawText(recCell, align[qrand() % ALIGN_FLAGS], attrib->getSymbol());
 
@@ -504,7 +497,6 @@ void PainterWidget::drawAgent()
                     position += QPointF(xPos, yPos);
 
                     painter.drawText(position, attrib->getSymbol());
-#endif 
                     painter.restore();
                 }
             }

@@ -151,7 +151,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
         {
             //qFatal("Error: Parameter legend \"%s\" not found. Please check it in the model.", qPrintable( LEGEND_KEYS.at(j) ) );
             //string err_out = string("Neighborhood '" ) + string (index) + string("' not found");
-            lua_getglobal(L, "incompatibleTypesErrorMsg");
+            lua_getglobal(L, "incompatibleTypesError");
             lua_pushstring(L,LEGEND_KEYS.at(j).toLatin1().constData());
             lua_pushstring(L,"string");
             lua_pushstring(L,"nil");
