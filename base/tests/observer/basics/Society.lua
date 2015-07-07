@@ -63,6 +63,48 @@ return{
 		t:execute(30)
 		unitTest:assertSnapshot(c1, "chart_society.bmp")
 		unitTest:assertSnapshot(c2, "chart_society_select.bmp")
+
+--[[
+		local cs = CellularSpace{
+			xdim = 10
+		}
+
+		local env = Environment{cs, soc}
+		env:createPlacement()
+
+		local m = Map{
+			target = soc -- white background
+		}
+
+		unitTest:assertSnapshot(m, "map_society_background.bmp")
+
+		local m = Map{
+			target = soc,
+			background = "green"
+		}
+		unitTest:assertSnapshot(m, "map_society_background2.bmp")
+
+		forEachCell(cs, function(cell)
+			cell.value = Random():number()
+		end)
+
+		local m1 = Map{
+			target = cs,
+			min = 0,
+			max = 1,
+			colors = "Blues",
+			slices = 10
+		}
+
+		m = Map{
+			target = soc,
+			background = m1,
+			size = 2, -- size = {1, 10} to work in the same way of value
+			symbol = "smile"
+		}
+
+		unitTest:assertSnapshot(m, "map_society_symbol.bmp")
+--]]
 	end
 }
 
