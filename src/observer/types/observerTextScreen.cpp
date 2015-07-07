@@ -102,7 +102,7 @@ bool ObserverTextScreen::headerDefined()
 
 bool ObserverTextScreen::write()
 {
-    // insere o cabeçalho do arquivo
+    // insere o cabe?alho do arquivo
     if (! header)
     {
         QString headers;

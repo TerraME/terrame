@@ -71,7 +71,7 @@ bool Decoder::interpret(QStringList &tokens, int &idx,
                         QMap<QString, QList<double> > neighborhood = QMap<QString, QList<double> >();
 
 
-			ret = interpret(tokens, idx, xs, ys); // Pega as informações da célula central da vizinhanca
+			ret = interpret(tokens, idx, xs, ys); // Pega as informa??es da c?lula central da vizinhanca
 
 			consumeNeighborhood(tokens, idx, id, numElem, neighborhood);
 			attrib = mapAttributes->value(id);
@@ -100,7 +100,7 @@ bool Decoder::interpret(QStringList &tokens, int &idx,
     return ret;
 }
 
-// transição 1-2: idenficação do objeto
+// transi??o 1-2: idenfica??o do objeto
 bool Decoder::consumeID(QString &id, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
@@ -111,7 +111,7 @@ bool Decoder::consumeID(QString &id, QStringList &tokens, int &idx)
     return true;
 }
 
-// transição 2-3: definicao do tipo de subject
+// transi??o 2-3: definicao do tipo de subject
 bool Decoder::consumeSubjectType(TypesOfSubjects &type, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
@@ -122,7 +122,7 @@ bool Decoder::consumeSubjectType(TypesOfSubjects &type, QStringList &tokens, int
     return true;
 }
 
-// transição 3-4: número de atributos
+// transi??o 3-4: n?mero de atributos
 bool Decoder::consumeAttribNumber(int &value, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
@@ -133,7 +133,7 @@ bool Decoder::consumeAttribNumber(int &value, QStringList &tokens, int &idx)
     return true;
 }
 
-// transição 4-5: número de elementos
+// transi??o 4-5: n?mero de elementos
 bool Decoder::consumeElementNumber(int &value, QStringList &tokens, int &idx)
 {
     if (tokens.size() <= idx)
@@ -144,7 +144,7 @@ bool Decoder::consumeElementNumber(int &value, QStringList &tokens, int &idx)
     return true;
 }
 
-// transição 5-[6-7-8]*: chave, tipo, valor
+// transi??o 5-[6-7-8]*: chave, tipo, valor
 bool Decoder::consumeTriple(QStringList &tokens, int &idx,
                             QVector<double> &xs, QVector<double> &ys)
 {

@@ -131,7 +131,7 @@ bool ObserverGraphic::draw(QDataStream &state)
 
         int idx = attribList.indexOf(key);
         // bool contains = itemList.contains(key);
-        bool contains = (idx != -1); // caso a chave não exista, idx == -1
+        bool contains = (idx != -1); // caso a chave n?o exista, idx == -1
 
         switch (typeOfData)
         {
@@ -153,7 +153,7 @@ bool ObserverGraphic::draw(QDataStream &state)
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
-                    // Gráfico Dinâmico: Tempo vs Y
+                    // Gr?fico Din?mico: Tempo vs Y
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
@@ -161,7 +161,7 @@ bool ObserverGraphic::draw(QDataStream &state)
                     }
                     else
                     {
-                        // Gráfico: X vs Y
+                        // Gr?fico: X vs Y
                         if (idx != attribList.size() - 1)
                             ord = internalCurves->value(key)->values; // y axis
                     }
@@ -183,7 +183,7 @@ bool ObserverGraphic::draw(QDataStream &state)
                     else
                         xAxisValues->append(tokens.at(j).toDouble());
 
-                    // Gráfico Dinâmico: Tempo vs Y
+                    // Gr?fico Din?mico: Tempo vs Y
                     if (observerType == TObsDynamicGraphic)
                     {
                         ord = internalCurves->value(key)->values;
@@ -192,7 +192,7 @@ bool ObserverGraphic::draw(QDataStream &state)
                     }
                     else
                     {
-                        // Gráfico: X vs Y
+                        // Gr?fico: X vs Y
                         if (idx != attribList.size() - 1)
                             ord = internalCurves->value(key)->values;
                         // else                     

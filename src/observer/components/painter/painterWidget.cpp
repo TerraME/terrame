@@ -452,7 +452,7 @@ void PainterWidget::drawAgent()
             QVector<ObsLegend> *vecLegend = attrib->getLegend();
 
 
-            // TO-DO: Necessita otimização
+            // TO-DO: Necessita otimiza??o
             if (attrib->getDataType() == TObsText)
             {
                 QVector<QString> *values = attrib->getTextValues();
@@ -494,7 +494,7 @@ void PainterWidget::drawAgent()
                     painter.rotate(attrib->getDirection(pos, x, y));
                     // painter.drawText(recCell, align[qrand() % ALIGN_FLAGS], attrib->getSymbol());
 
-                    // Delimita a área que o simbolo poderá ocupar
+                    // Delimita a ?rea que o simbolo poder? ocupar
                     int xPos = (int) recCell.x() + recCell.width() * 0.07;
                     int yPos = (int) recCell.y() + recCell.height() * 0.07;
 
@@ -549,7 +549,7 @@ void PainterWidget::drawAgent()
                     painter.rotate(attrib->getDirection(pos, x, y));
                     // painter.drawText(recCell, align[qrand() % ALIGN_FLAGS], attrib->getSymbol());
 
-                    // Delimita a área que o simbolo poderá ocupar
+                    // Delimita a ?rea que o simbolo poder? ocupar
                     int xPos = (int) recCell.x() + recCell.width() * 0.07;
                     int yPos = (int) recCell.y() + recCell.height() * 0.07;
 

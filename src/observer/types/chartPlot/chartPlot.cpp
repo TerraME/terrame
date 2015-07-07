@@ -151,7 +151,7 @@ void ChartPlot::setInternalCurves(const QList<InternalCurve *> &interCurves)
 
 void ChartPlot::createPicker()
 {
-    // cria o objeto responsável por exibir as coordenadas do ponteiro do mouse na tela
+    // cria o objeto respons?vel por exibir as coordenadas do ponteiro do mouse na tela
     picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft,
         QwtPlotPicker::CrossRubberBand, QwtPicker::ActiveOnly, //AlwaysOn,
         canvas());

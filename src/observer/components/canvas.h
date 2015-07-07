@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ namespace TerraMEObserver
 /**
  * \brief Draws an state machine
  * \see QGraphicsView
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jos? da Cunha Rodrigues
  * \file painterWidget.h
  */
 class Canvas : public QGraphicsView

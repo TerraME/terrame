@@ -67,7 +67,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->setBrush(Qt::NoBrush);
 
-    // Correção da borda
+    // Corre??o da borda
     QPointF mediumPointDest = destiny->pos() + destiny->boundingRect().center();
     QPointF mediumPointOrig = origin->pos() + origin->boundingRect().center();
     qreal hip = destiny->boundingRect().width() * 0.5;
@@ -93,7 +93,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         intersectPointOrig -= QPointF(cos(-angle) * hip, sin(angle) * hip);
     }
 
-    // Desenha os pontos de interseção na origem e no destino
+    // Desenha os pontos de interse??o na origem e no destino
     //    painter->setPen(QPen(Qt::red, 4));
     //    painter->drawPoint(intersectPointOrig);
     //    painter->drawPoint(intersectPointDest);

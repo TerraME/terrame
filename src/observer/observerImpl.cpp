@@ -108,7 +108,7 @@ void delay(float seconds)
 
 
 
-// mantem o numero de observer já criados
+// mantem o numero de observer j? criados
 static long int numObserverCreated = 0;
 static long int numSubjectCreated = 0;
 
@@ -163,7 +163,7 @@ ObserverImpl::~ObserverImpl()
         QApplication::exit();
 }
 
-bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro aqui
+bool ObserverImpl::update(double time) // ver se passa realmente este par?metro aqui
 {
     // if (! obsHandle_->getVisible())
     //    return false;
@@ -171,7 +171,7 @@ bool ObserverImpl::update(double time) // ver se passa realmente este parâmetro 
     if (obsHandle_->getType() == TObsDynamicGraphic)
         obsHandle_->setModelTime(time);
 
-    // recupera a lista de atributos em observação
+    // recupera a lista de atributos em observa??o
     QStringList attribList = obsHandle_->getAttributes();
 
 #ifdef TME_BLACK_BOARD
@@ -389,8 +389,8 @@ void SubjectImpl::notifyObservers(double time)
 #endif
     }
 
-    // trata de alguma maneira os observers que não foram atualizados
-    // e estão presentes na lista detachList.
+    // trata de alguma maneira os observers que n?o foram atualizados
+    // e est?o presentes na lista detachList.
 }
 
 const TypesOfSubjects SubjectImpl::getSubjectType()

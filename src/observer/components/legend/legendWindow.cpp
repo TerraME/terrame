@@ -104,7 +104,7 @@ void LegendWindow::createView(int rowsNum)
 {
     QStringList colTitle;
 
-    if (groupingModeComboBox->currentIndex() == TObsUniqueValue) // valor único
+    if (groupingModeComboBox->currentIndex() == TObsUniqueValue) // valor ?nico
         colTitle << tr("Color") << tr("Value") << tr("Label") << tr("Count");
     else
         colTitle << tr("Color") << tr("From") << tr("To") << tr("Label") << tr("Count");
@@ -161,7 +161,7 @@ void LegendWindow::setupComboBoxes()
     slicesComboBox->clear();
     for(int i = 1; i <= MAXSLICES; i++)
         slicesComboBox->insertItem(i, QString::number(i));
-    slicesComboBox->setCurrentIndex(4); // define o indice - lembrando q começa no 0
+    slicesComboBox->setCurrentIndex(4); // define o indice - lembrando q come?a no 0
 
     //************************** Standard Deviation ********************
     // Fill the standard deviation combobox
@@ -178,7 +178,7 @@ void LegendWindow::setupComboBoxes()
     for(int i = 1; i <= 15; ++i)
         precisionComboBox->insertItem(i, QString::number(i));
     precisionComboBox->setEditable(false);
-    precisionComboBox->setCurrentIndex(5); // precisão 6
+    precisionComboBox->setCurrentIndex(5); // precis?o 6
 }
 
 void LegendWindow::legendTable_doubleClicked(int /*row*/, int col)
@@ -317,7 +317,7 @@ void LegendWindow::groupingModeComboBox_activated(int idx)
 {
     Attributes *attrib = mapAttributes->value(attributesComboBox->currentText());
 
-    if (idx == TObsStdDeviation)	 // desvio padrão
+    if (idx == TObsStdDeviation)	 // desvio padr?o
     {
         frameTeQtStdColorBar->setVisible(true);
         //frameBTeQtColorBar->setColorBar(frameBTeQtColorBar->getInputColorVec());
@@ -515,8 +515,8 @@ void LegendWindow::colorChangedSlot()
     }
 }
 
-// em caso de duvida ver código no arquivo 
-// TeQtLegendSource.cpp, linha 526, método putColorOnLegend
+// em caso de duvida ver c?digo no arquivo 
+// TeQtLegendSource.cpp, linha 526, m?todo putColorOnLegend
 void LegendWindow::createColorVector()
 {
     std::vector<ColorBar> stdColorVec = frameTeQtStdColorBar->getInputColorVec();
@@ -538,7 +538,7 @@ void LegendWindow::createColorVector()
         for (unsigned i = 0; i < leftColorVec.size(); ++i)
             teColorVec->push_back(leftColorVec.at(i));
     }
-    else	// desvio padrão
+    else	// desvio padr?o
     {
         Attributes *attrib = mapAttributes->value(attributesComboBox->currentText());
         QVector<ObsLegend> *vecLegend = attrib->getLegend();
@@ -553,11 +553,11 @@ void LegendWindow::createColorVector()
         leftColors = ii;
         rightColors = vecLegend->size() - ii - 1;
 
-        // Correção de bug: divisão por zero no método getColors do TeColorUtils.cpp
+        // Corre??o de bug: divis?o por zero no m?todo getColors do TeColorUtils.cpp
         if (leftColors == 1)
             leftColors++;
 
-        // Correção de bug: divisão por zero no método getColors do TeColorUtils.cpp
+        // Corre??o de bug: divis?o por zero no m?todo getColors do TeColorUtils.cpp
         if (rightColors == 1)
             rightColors++;
 
@@ -610,7 +610,7 @@ void LegendWindow::countElementsBySlices()
     QVector<ObsLegend> *vecLegend = attrib->getLegend();
     legendTable->setRowCount(vecLegend->size());
 
-    if (groupingModeComboBox->currentIndex() == TObsStdDeviation)  // desvio padrão
+    if (groupingModeComboBox->currentIndex() == TObsStdDeviation)  // desvio padr?o
     {
         for (int i = 0; i < vecLegend->size(); ++i)
         {
@@ -643,7 +643,7 @@ void LegendWindow::countElementsBySlices()
             else
             {
                 model->setData(model->index(i, 0, QModelIndex()), QString(""),
-                            Qt::DecorationRole); // Não exibe a cor
+                            Qt::DecorationRole); // N?o exibe a cor
                 model->setData(model->index(i, 4, QModelIndex()), QString(""),
                             Qt::DisplayRole);
             }
@@ -681,7 +681,7 @@ void LegendWindow::countElementsBySlices()
 					{
 						// Recupera o peso (posicao 2 na lista)
 						double weight = itNeigh.value().at(2);
-						// verifica se o peso está dentro do intervalo e incrementa o contador
+						// verifica se o peso est? dentro do intervalo e incrementa o contador
 						if(weight >= from && weight < to)
 						{
 							occurrence++;
@@ -756,37 +756,37 @@ void LegendWindow::groupingAttribute(Attributes *attrib)
     attrib->setColorBar(frameTeQtColorBar->getInputColorVec());
     attrib->setStdColorBar(frameTeQtStdColorBar->getInputColorVec());
 
-    // correção para mais e para menos...
+    // corre??o para mais e para menos...
     double fix = pow(10, precisionComboBox->currentText().toDouble());
     fix = 1 / fix;
 
-    // métodos baseado no terraView
+    // m?todos baseado no terraView
     switch (groupingModeComboBox->currentIndex())
     {
 
         case 0: // TObsEqualSteps
-            // ver método TeGroupByEqualStep em TeGroupingAlgorithms.(h, cpp)
+            // ver m?todo TeGroupByEqualStep em TeGroupingAlgorithms.(h, cpp)
             groupByEqualStep(fix, attrib);
             countElementsBySlices();
             break;
 
         case 1: // TObsQuantil
-            // ver método TeGroupByQuantil em TeGroupingAlgorithms.(h, cpp)
+            // ver m?todo TeGroupByQuantil em TeGroupingAlgorithms.(h, cpp)
             groupByQuantil(fix, attrib);
             countElementsBySlices();
             break;
 
         case 2: // TObsStdDeviation
-            // ver método TeGroupByStdDev em TeGroupingAlgorithms.(h, cpp)
+            // ver m?todo TeGroupByStdDev em TeGroupingAlgorithms.(h, cpp)
             groupByStdDeviation(fix, attrib);
             createColorVector();
             countElementsBySlices();
             break;
 
-            // se esta definido "valor único" -- TObsUniqueValue
+            // se esta definido "valor ?nico" -- TObsUniqueValue
         case 3:
         default:
-            // ver método TeGroupByUniqueValue em TeGroupingAlgorithms.(h, cpp)
+            // ver m?todo TeGroupByUniqueValue em TeGroupingAlgorithms.(h, cpp)
             groupByUniqueValue(fix, attrib);
     }
 }
@@ -839,7 +839,7 @@ void LegendWindow::groupByEqualStep(double fix, Attributes *attrib)
         leg.setLabel(label);
         leg.setOccurrence(0);
 
-        // recupera a cor já dividida entre os slices
+        // recupera a cor j? dividida entre os slices
         leg.setColor(teColorVec->at(row).red_,
                 teColorVec->at(row).green_,
                 teColorVec->at(row).blue_);
@@ -853,9 +853,9 @@ void LegendWindow::groupByQuantil(double fix, Attributes *attrib)
     QVector<ObsLegend> *vecLegend = attrib->getLegend();
     vecLegend->clear();
 
-    // Causava modificações permanentes na estrutura, fato que
-    // gerava discordância nos dados após alterações na legenda
-    // quando feitas depois do término do modelo
+    // Causava modifica??es permanentes na estrutura, fato que
+    // gerava discord?ncia nos dados ap?s altera??es na legenda
+    // quando feitas depois do t?rmino do modelo
     //QVector<double> *values = attrib->getNumericValues();
     std::vector<double> values = attrib->getNumericValues()->toStdVector();
     qStableSort(values.begin(), values.end());
@@ -906,8 +906,8 @@ void LegendWindow::groupByQuantil(double fix, Attributes *attrib)
         leg.setLabel(label);
         leg.setOccurrence(0);
 
-        // recupera a cor já dividida entre os slices
-        // n - 1 pq o "n" é pre-incrementado (++n)
+        // recupera a cor j? dividida entre os slices
+        // n - 1 pq o "n" ? pre-incrementado (++n)
         leg.setColor(teColorVec->at(n - 1).red_, 
                 teColorVec->at(n - 1).green_,
                 teColorVec->at(n - 1).blue_);
@@ -1039,7 +1039,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //{
 //    // Correcao do bug apresentado quando se altera a posicao
 //    // das cores definidas na legenda pois os resultados do map/image
-//    // são diferentes (Ticket 85). 
+//    // s?o diferentes (Ticket 85). 
 //    // if (attrib->getDataType() == TObsNumber)
 //    //     attrib->getValueList().clear();
 //
@@ -1095,8 +1095,8 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //    double min = attrib->getMinValue();
 //    QString from;
 //
-//    // Cria todas as entradas possíveis 
-//    // considerando os valores de máximo e mínimo
+//    // Cria todas as entradas poss?veis 
+//    // considerando os valores de m?ximo e m?nimo
 //    for (double i = min; i <= max; i++)
 //    {
 //        ObsLegend leg;
@@ -1111,7 +1111,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //
 //        // Correcao do bug apresentado quando se altera a posicao
 //        // das cores definidas na legenda pois os resultados do map/image
-//        // são diferentes (Ticket 85).
+//        // s?o diferentes (Ticket 85).
 //        // if (attrib->getDataType() == TObsNumber)
 //        //    attrib->addValueListItem(from);
 //    }
@@ -1143,7 +1143,7 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //            from = txtValues.at(i - 1);
 //
 //            // adiciona o item e retorna o indice
-//            // caso já contenha o item retorna o indice
+//            // caso j? contenha o item retorna o indice
 //            vecLegendPos = attrib->addValueListItem(from);
 //
 //            if (vecLegendPos >= vecLegend->size())
@@ -1285,7 +1285,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 {
     // Correcao do bug apresentado quando se altera a posicao
     // das cores definidas na legenda pois os resultados do map/image
-    // são diferentes (Ticket 85). 
+    // s?o diferentes (Ticket 85). 
     // if (attrib->getDataType() == TObsNumber)
     //      attrib->getValueList().clear();
 
@@ -1384,7 +1384,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 #endif
 
             // adiciona o item e retorna o indice
-            // caso já contenha o item retorna o indice
+            // caso j? contenha o item retorna o indice
             vecLegendPos = attrib->addValueListItem(from);
 
             if ((! noValues) && (vecLegendPos >= vecLegend->size()) )
@@ -1437,7 +1437,7 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
 
     if (! txtValues.empty())
     {
-        // Verif. as posições última e penúltima
+        // Verif. as posi??es ?ltima e pen?ltima
         if ( (i > 1) && (txtValues.at(i - 2) == txtValues.at(i - 1)) )
         {
             from = txtValues.at(i - 1);
@@ -1724,7 +1724,7 @@ void LegendWindow::connectSlots(bool con)
         connect(attributesComboBox, SIGNAL(activated(QString)), this,
                 SLOT(attributesComboBox_activated(QString)));
         connect(attributesComboBox, SIGNAL(activated(QString)), this,
-                SLOT(applyPushButton_clicked())); // Executa o slot relacionado ao clique do botão Ok
+                SLOT(applyPushButton_clicked())); // Executa o slot relacionado ao clique do bot?o Ok
         connect(functionComboBox, SIGNAL(activated(int)), this,
                 SLOT(functionComboBox_activated(int)));
 
@@ -1761,7 +1761,7 @@ void LegendWindow::connectSlots(bool con)
         connect(frameTeQtStdColorBar, SIGNAL(colorChangedSignal()), this,
                 SLOT(colorChangedSlot()));
 
-        // Verificações de mudança nos valores dos objetos da GUI
+        // Verifica??es de mudan?a nos valores dos objetos da GUI
         //connect(attributesComboBox, SIGNAL(currentIndexChanged(int)), this,
         //        SLOT(valueChanged()));
         connect(functionComboBox, SIGNAL(currentIndexChanged(int)), this,
@@ -1785,7 +1785,7 @@ void LegendWindow::connectSlots(bool con)
         disconnect(attributesComboBox, SIGNAL(activated(QString)), this,
                 SLOT(attributesComboBox_activated(QString)));
         disconnect(attributesComboBox, SIGNAL(activated(QString)), this,
-                SLOT(applyPushButton_clicked())); // Executa o slot relacionado ao clique do botão Ok
+                SLOT(applyPushButton_clicked())); // Executa o slot relacionado ao clique do bot?o Ok
         connect(functionComboBox, SIGNAL(activated(int)), this,
                 SLOT(functionComboBox_activated(int)));
 
@@ -1822,7 +1822,7 @@ void LegendWindow::connectSlots(bool con)
         connect(frameTeQtStdColorBar, SIGNAL(colorChangedSignal()), this,
                 SLOT(colorChangedSlot()));
 
-        // Verificações de mudança nos valores dos objetos da GUI
+        // Verifica??es de mudan?a nos valores dos objetos da GUI
         //disconnect(attributesComboBox, SIGNAL(currentIndexChanged(int)), this,
         //        SLOT(valueChanged()));
         disconnect(functionComboBox, SIGNAL(currentIndexChanged(int)), this,
@@ -1881,18 +1881,18 @@ void LegendWindow::commitFile()
 
         legAttribs.push_back(enumToString("grouping", attrib->getGroupMode()) + ",");	// agrupamento
         legAttribs.push_back(QString::number(attrib->getSlices() + 1) + ",");		// slices
-        legAttribs.push_back(QString::number(attrib->getPrecisionNumber() + 1) + ",");	// precisão
-        legAttribs.push_back(enumToString("stdDev", attrib->getStdDeviation()) + ",");	// desvio padrão %
-        legAttribs.push_back(QString::number(attrib->getMaxValue()) + ",");	// valor máximo
-        legAttribs.push_back(QString::number(attrib->getMinValue()) + ",");		// valor mínimo
+        legAttribs.push_back(QString::number(attrib->getPrecisionNumber() + 1) + ",");	// precis?o
+        legAttribs.push_back(enumToString("stdDev", attrib->getStdDeviation()) + ",");	// desvio padr?o %
+        legAttribs.push_back(QString::number(attrib->getMaxValue()) + ",");	// valor m?ximo
+        legAttribs.push_back(QString::number(attrib->getMinValue()) + ",");		// valor m?nimo
 
         legAttribs.push_back("\"" + attrib->getSymbol() + "\",");		// simbolo
         legAttribs.push_back("\"" + attrib->getFont().family() + "\",");		// fonte
         legAttribs.push_back(QString::number(attrib->getFont().pointSize()) + ",");		// tamanho fonte
 
-        // stdDevComboBox	// não utilizados
-        // functionComboBox	// não utilizados
-        // chrononComboBox	// não utilizados
+        // stdDevComboBox	// n?o utilizados
+        // functionComboBox	// n?o utilizados
+        // chrononComboBox	// n?o utilizados
 
         std::vector<ColorBar> colorBarVec = attrib->getColorBar();
         QString colors; //("{\n" + tabulation + tabulation + tabulation);
@@ -1903,7 +1903,7 @@ void LegendWindow::commitFile()
             
             for (int j = 0; j < (int)colorBarVec.size(); j++)
             {
-                QString color = QString("color = {{%1, %2, %3}, distance = %4}")	// formatação: "r g b dist; "
+                QString color = QString("color = {{%1, %2, %3}, distance = %4}")	// formata??o: "r g b dist; "
                         .arg(QString::number(colorBarVec.at(j).cor_.red_))
                         .arg(QString::number(colorBarVec.at(j).cor_.green_))
                         .arg(QString::number(colorBarVec.at(j).cor_.blue_))
@@ -1934,7 +1934,7 @@ void LegendWindow::commitFile()
             if ((int)colorBarVec.size() > 0){
                 for (int j = 0; j < (int)colorBarVec.size(); j++)
                 {
-                    // formatação: "r g b dist; "
+                    // formata??o: "r g b dist; "
                     QString color = QString("color = {{%1, %2, %3}, distance = %4}")
                             .arg(QString::number(colorBarVec.at(j).cor_.red_))
                             .arg(QString::number(colorBarVec.at(j).cor_.green_))
@@ -1979,7 +1979,7 @@ void LegendWindow::commitFile()
         //if (idx > 0)
         //    legendKeys.removeAt(idx);
 
-        // começa uma outra legenda
+        // come?a uma outra legenda
         if (i < keys.size() - 1)
             out << "};\n\nLegend{\n";
         else

@@ -86,7 +86,7 @@ void ObserverMapSuperclass::setupGUI(){
 
     view = new Canvas(scene, this);
     view->setCacheMode(QGraphicsView::CacheNone); // CacheBackground); //
-    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); não existe na versão 4.3.4
+    // view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate); // SmartViewportUpdate) ; // FullViewportUpdate); nao existe na versao 4.3.4
     // view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     view->setRenderHint(QPainter::Antialiasing);
     // view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -177,7 +177,7 @@ void ObserverMapSuperclass::setupGUI(){
     hLayoutZoom1->addWidget(butZoomOut);
     hLayoutZoom1->addWidget(butHand);
     hLayoutZoom2->addWidget(butZoomWindow);
-    hLayoutZoom2->addWidget(butZoomRestore);    // Exibe os layers de informação
+    hLayoutZoom2->addWidget(butZoomRestore);    // Exibe os layers de informacao
     treeLayers = new QTreeWidget(frameTools);
     treeLayers->setGeometry(5, 150, 190, 310);
     treeLayers->setHeaderLabel(tr("Layers"));
@@ -246,7 +246,7 @@ void ObserverMapSuperclass::zoomChanged(const QRectF &zoomRect, float width,
     }
     else
     {
-        // FIX: a escala de zoom é sempre a mesma, pq o view não é rescalado
+        // FIX: a escala de zoom e' sempre a mesma, pq o view nao e' rescalado
 
         zoomComboBox->setCurrentIndex(-1);
         //if (zoomComboBox->isEditable())
@@ -308,8 +308,8 @@ void ObserverMapSuperclass::zoomWindow()
     factHeight = factHeight > 32.0 ? 32.0 : factHeight;
 
     zoomChanged(zoomRect, factWidth, factHeight);
-    //// view->centerOn(zoomRect.center());  // não fica centralizado
-    //// view->centerOn( scene->itemsBoundingRect().center() );  // não fica centralizado
+    //// view->centerOn(zoomRect.center());  // nao fica centralizado
+    //// view->centerOn( scene->itemsBoundingRect().center() );  // nao fica centralizado
     // view->centerOn(scene->sceneRect().center()); // fica quase centralizado
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
@@ -467,7 +467,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
 
     bool complexMap = false;
 
-    // lista com os atributos que serão observados
+    // lista com os atributos que serao observados
     //itemList = headers;
     if (attribList.isEmpty())
     {
@@ -540,7 +540,7 @@ void ObserverMapSuperclass::setAttributes(QStringList &attribs, QStringList legK
                 attrib->setFontFamily(legAttribs.at(font));
                 attrib->setFontSize(legAttribs.at(fontSize).toInt());
 
-                //Converte o código ASCII do símbolo em caracter
+                //Converte o codigo ASCII do simbolo em caracter
                 bool ok = false;
                 int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)

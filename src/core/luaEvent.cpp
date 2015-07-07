@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraLib - a library for developing GIS applications.
-Copyright © 2001-2007 INPE and Tecgraf/PUC-Rio.
+Copyright (C) 2001-2007 INPE and Tecgraf/PUC-Rio.
 
 This code is part of the TerraLib library.
 This library is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ luaEvent::luaEvent( lua_State *L )
 luaEvent::~luaEvent( void )
 {
     // @DANIEL
-    // não misturar gerência de memória de C++ com o lado Lua
+    // n?o misturar ger?ncia de mem?ria de C++ com o lado Lua
     // luaL_unref( L, LUA_REGISTRYINDEX, ref);
 }
 
@@ -140,8 +140,8 @@ int luaEvent::createObserver( lua_State *luaL )
     Reference<luaEvent>::getReference(luaL);
 
     
-    // flags para a definição do uso de compressão
-    // na transmissão de datagramas e da visibilidade
+    // flags para a defini??o do uso de compress?o
+    // na transmiss?o de datagramas e da visibilidade
     // dos observadores Udp Sender 
     bool compressDatagram = false, obsVisible = true;
 
@@ -303,7 +303,7 @@ int luaEvent::createObserver( lua_State *luaL )
             obsLog->setFileName(cols.at(0));
         }
 
-        // caso não seja definido, utiliza o default ";"
+        // caso n?o seja definido, utiliza o default ";"
         if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
             if (execModes != Quiet )
@@ -528,8 +528,8 @@ int luaEvent::kill(lua_State *luaL)
     int id = -1;
     bool result = false;
 
-    // Verifica se o parametro é uma tabela
-    // ou o próprio id do Observer
+    // Verifica se o parametro ? uma tabela
+    // ou o pr?prio id do Observer
     if (! lua_istable(luaL, top - 1))
     {
         id = luaL_checknumber(luaL, top - 1);

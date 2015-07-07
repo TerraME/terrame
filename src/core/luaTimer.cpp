@@ -29,7 +29,7 @@ luaTimer::luaTimer(lua_State *L)
 luaTimer::~luaTimer(void)
 {
     // @DANIEL
-    // não misturar gerência de memória de C++ com o lado Lua
+    // nao misturar ger?ncia de memoria de C++ com o lado Lua
     // luaL_unref( L, LUA_REGISTRYINDEX, ref);
 }
 
@@ -104,8 +104,8 @@ int luaTimer::createObserver( lua_State *luaL)
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaTimer>::getReference(luaL);
 
-    // flags para a defini��o do uso de compress�o
-    // na transmiss�o de datagramas e da visibilidade
+    // flags para a defini(C)(C)o do uso de compress(C)o
+    // na transmiss(C)o de datagramas e da visibilidade
     // dos observadores Udp Sender 
     bool compressDatagram = false, obsVisible = true;
 
@@ -113,7 +113,7 @@ int luaTimer::createObserver( lua_State *luaL)
     // atributos da celula
     int top = lua_gettop(luaL);
 
-    // Não modifica em nada a pilha recupera o enum referente ao tipo
+    // Nao modifica em nada a pilha recupera o enum referente ao tipo
     // do observer
     int typeObserver = (int)luaL_checkinteger(luaL, top - 3);
     bool isGraphicType = (typeObserver == TObsDynamicGraphic)
@@ -211,7 +211,7 @@ int luaTimer::createObserver( lua_State *luaL)
     //lua_settop(luaL, top - 1);
     //top = lua_gettop(luaL);
 
-    // Verificação da sintaxe da tabela Atributos
+    // Verificacao da sintaxe da tabela Atributos
     if(! lua_istable(luaL, top) )
     {
         string err_out = string("Error: Attribute table not found. Incorrect sintax.");
@@ -237,7 +237,7 @@ int luaTimer::createObserver( lua_State *luaL)
         printf("\t%s \n", qPrintable(key));
 #endif
 
-        // Verifica se o atributo informado não existe deve ter sido digitado errado
+        // Verifica se o atributo informado nao existe deve ter sido digitado errado
         if (allAttribs.contains(key))
         {
             obsAttribs.push_back(key);
@@ -300,7 +300,7 @@ int luaTimer::createObserver( lua_State *luaL)
 #endif
 
     // Recupera a tabela de parametros os observadores do tipo Table e Graphic
-    // caso não seja um tabela a sintaxe do metodo esta incorreta
+    // caso nao seja um tabela a sintaxe do metodo esta incorreta
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 1) != 0)
     {   
@@ -331,9 +331,9 @@ int luaTimer::createObserver( lua_State *luaL)
         lua_pop(luaL, 1);
     }
 
-    // Caso não seja definido nenhum parametro,
-    // e o observador não é TextScreen então
-    // lança um warning
+    // Caso nao seja definido nenhum parametro,
+    // e o observador nao e' TextScreen entao
+    // lanca um warning
     if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
     {
         if (execModes != Quiet ){
@@ -465,7 +465,7 @@ int luaTimer::createObserver( lua_State *luaL)
             obsLog->setFileName(cols.at(0));
         }
 
-        // caso não seja definido, utiliza o default ";"
+        // caso nao seja definido, utiliza o default ";"
         if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
             if (execModes != Quiet ){
@@ -629,7 +629,7 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
     {
         QString key;
 
-        // Caso o indice não seja um string causava erro
+        // Caso o indice nao seja um string causava erro
         if (lua_type(luaL, -2) == LUA_TSTRING)
         {
             key = luaL_checkstring(luaL, -2);

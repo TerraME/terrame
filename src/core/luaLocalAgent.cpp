@@ -158,8 +158,8 @@ int luaLocalAgent::createObserver( lua_State *L )
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef()); // ref);
     Reference<luaAgent>::getReference(luaL);
         
-    // flags para a definição do uso de compressão
-    // na transmissão de datagramas e da visibilidade
+    // flags para a defini(C)(C)o do uso de compress(C)o
+    // na transmiss(C)o de datagramas e da visibilidade
     // dos observadores Udp Sender 
     bool compressDatagram = false, obsVisible = true;
 
@@ -220,7 +220,7 @@ int luaLocalAgent::createObserver( lua_State *L )
                 // Adiciona o estado do atributo na lista de parametros
                 // allAttribs.push_back( state );
 
-                // Recupero a transição dos estados
+                // Recupero a transi(C)(C)o dos estados
                 ProcessCompositeInterf::iterator prIt;
                 prIt = lcm->ProcessCompositeInterf::begin();
 
@@ -233,7 +233,7 @@ int luaLocalAgent::createObserver( lua_State *L )
                     jIt++;
                 }
 
-                // cria um par (estado, transição) e adiciona na lista de estados
+                // cria um par (estado, transi(C)(C)o) e adiciona na lista de estados
                 allStates.push_back(qMakePair(state, transition));
             }
             allAttribs.push_back(key);
@@ -931,7 +931,7 @@ QString luaLocalAgent::pop(lua_State *luaL, QStringList& attribs)
 
     QStringList coordList = QStringList() << "x" << "y";
 
-    // Percorre as celulas do espaço recuperando o 
+    // Percorre as celulas do espa(C)o recuperando o
     // estado do automato
     if (lua_istable(luaL, position - 1))
     {

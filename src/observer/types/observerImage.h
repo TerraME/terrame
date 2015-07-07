@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ class Decoder;
 
 /**
  * \brief Spatial visualization for cells and saved in a png image file
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jos? da Cunha Rodrigues
  * \file observerImage.h
  */
 class ObserverImage :  public ObserverInterf
@@ -173,16 +173,16 @@ private:
     double 	newWidthCellSpace, newHeightCellSpace;
     bool needResizeImage, savingImages;
     // desativa o salvamento da imagem,
-    // o método seja invocado por meio de outro objeto
+    // o m?todo seja invocado por meio de outro objeto
     bool disableSaveImage;
 
     QString path;
     QSize resultSize;
     QImage resultImage;
-    // lista de todas as chaves, lista de chaves em observação
+    // lista de todas as chaves, lista de chaves em observa??o
     QStringList attribList, obsAttrib;
 
-    ImageGUI *obsImgGUI;  // interface gráfica
+    ImageGUI *obsImgGUI;  // interface gr?fica
     LegendWindow *legendWindow;
     PainterWidget *painterWidget;
     // map de todas as chaves

@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ namespace TerraMEObserver {
  * \brief Item of observer legend.
  * This object represents each item that composes the observer
  * legend for the ObserverMap, ObserverImage and ObserverStateMachine
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jos? da Cunha Rodrigues
  * \file legendAttributes.h
  */
 class ObsLegend
@@ -173,7 +173,7 @@ private:
 /**
  * \file legendAttributes.h
  * \brief Attributes of observation in the spacial observers
- * \author Antonio José da Cunha Rodrigues
+ * \author Antonio Jos? da Cunha Rodrigues
  */
 class Attributes
 {
@@ -633,7 +633,7 @@ private:
     QString attribName;
     double maxValue;
     double minValue;
-    double val2Color;	//conversão do valor observado em cor
+    double val2Color;	//convers?o do valor observado em cor
     int containersSize;  // tamanho dos vetores
 
     // indice nos comboBoxes

@@ -81,8 +81,8 @@ bool ObserverImage::draw(QDataStream &state)
     {
         legendWindow->makeLegend();
 
-        // Verificar porque a primeira invocação do método plotMap
-        // gera a imagem foreground totalmente preta. Assim, é preciso
+        // Verificar porque a primeira invoca??o do m?todo plotMap
+        // gera a imagem foreground totalmente preta. Assim, ? preciso
         // repetir essa chamada aqui!
         painterWidget->replotMap();
 
@@ -118,7 +118,7 @@ void ObserverImage::setPath(const QString & pth, const QString & prefix)
 void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
                                   QStringList legAttribs)
 {
-    // lista com os atributos que serão observados
+    // lista com os atributos que ser?o observados
     //itemList = headers;
     if (attribList.isEmpty())
     {
@@ -200,7 +200,7 @@ void ObserverImage::setAttributes(QStringList &attribs, QStringList legKeys,
                 attrib->setFontFamily(legAttribs.at(font));
                 attrib->setFontSize(legAttribs.at(fontSize).toInt());
 
-                //Converte o código ASCII do símbolo em caracter
+                //Converte o c?digo ASCII do s?mbolo em caracter
                 bool ok = false;
                 int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
                 if (ok)
