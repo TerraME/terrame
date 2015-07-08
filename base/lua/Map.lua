@@ -1454,15 +1454,13 @@ forEachOrderedElement(rgbMap, function(idx, value)
 end)
 --]]
 
---[[
-These are hex codes for Zapf Dingbats font, to be used as simbols for
-the agents in TerraME.
+-- These are hex codes for Zapf Dingbats font, to be used as simbols for
+-- the agents in TerraME.
 
-For more information and pictures of the symbols, please see
-http://www.alanwood.net/unicode/dingbats.html 
-and
-http://www.alanwood.net/unicode/index.html 
---]]
+-- For more information and pictures of the symbols, please see
+-- http://www.alanwood.net/unicode/dingbats.html 
+-- and
+-- http://www.alanwood.net/unicode/index.html 
 
 local dingbats = {
 	airplane      = 0x2708,
