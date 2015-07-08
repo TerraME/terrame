@@ -316,6 +316,9 @@ private:
                  QString strColorBar, QString &value, QString &label);
     void zoomWindow();
 
+    void moveEvent(QMoveEvent *event);
+    void closeEvent(QCloseEvent *event);
+
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
 

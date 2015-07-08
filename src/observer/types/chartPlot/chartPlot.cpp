@@ -16,6 +16,8 @@
 
 #include <iostream>
 
+#include "visualArrangement.h"
+
 using namespace std;
 
 using namespace TerraMEObserver;
@@ -47,6 +49,8 @@ ChartPlot::ChartPlot(QWidget *parent) : QwtPlot(parent)
 
 //    connect(exportAct, SIGNAL(triggered()), this, SLOT(exportChart()));
 //    connect(propertiesAct, SIGNAL(triggered()), this, SLOT(propertiesChart()));
+
+    id = 0;
 }
 
 ChartPlot::~ChartPlot()
@@ -161,15 +165,30 @@ void ChartPlot::createPicker()
     picker->setTrackerPen( QColor(Qt::black) );
 }
 
+void ChartPlot::setId(int id)
+{
+    this->id = id;
+}
 
+const int ChartPlot::getId() const
+{
+    return id;
+}
 
-// issue #537
-//void ChartPlot::closeEvent(QCloseEvent *event)
-//{
-//    qDebug() << "1------------------------------";
-//    VisualArrangement* v = VisualArrangement::getInstance(); // << put #include to test
-//    qDebug() << "2------------------------------";
-//    v->buildLuaCode();
-//    qDebug() << "3------------------------------";
-//}
+void ChartPlot::resizeEvent(QResizeEvent *event)
+{
+    VisualArrangement::getInstance()->resizeEventDelegate(id, event);
+
+    QwtPlot::resizeEvent(event);
+}
+
+void ChartPlot::moveEvent(QMoveEvent *event)
+{
+    VisualArrangement::getInstance()->moveEventDelegate(id, event);
+}
+
+void ChartPlot::closeEvent(QCloseEvent *event)
+{
+    VisualArrangement::getInstance()->closeEventDelegate();
+}
 

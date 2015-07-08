@@ -23,7 +23,12 @@
 *************************************************************************************/
 
 #include "visualArrangement.h"
-#include <iostream>
+
+#include <QFile>
+#include <QTextStream>
+#include <QWidget>
+#include <QResizeEvent>
+#include <QMoveEvent>
 
 using namespace std;
 
@@ -54,6 +59,47 @@ void VisualArrangement::setFile(string f)
 	file = f;
 }
 
+void VisualArrangement::resizeEventDelegate(int id,  QResizeEvent *event)
+{
+    SizeVisualArrangement s;
+    s.height = event->size().height();
+    s.width = event->size().width();
+
+    addSize(id, s);
+}
+
+void VisualArrangement::moveEventDelegate(int id, QMoveEvent *event)
+{
+    PositionVisualArrangement p;
+    p.x = event->pos().x();
+    p.y = event->pos().y();
+
+    addPosition(id, p);
+}
+
+void VisualArrangement::closeEventDelegate()
+{
+    buildLuaCode();
+}
+
+void VisualArrangement::starts(int id, QWidget *widget)
+{
+    SizeVisualArrangement s = getSize(id);
+    PositionVisualArrangement p = getPosition(id);
+
+    if(s.width > 0 && s.height > 0)
+        widget->resize(s.width, s.height);
+    else
+        widget->resize(450, 350);
+
+    if(p.x > 0 && p.y > 0)
+        widget->move(p.x, p.y - widget->geometry().y() + widget->y());
+    else
+        widget->move(50 + id * 50, 50 + id * 50);
+
+    widget->showNormal();
+}
+
 PositionVisualArrangement VisualArrangement::getPosition(int id)
 {
 	return myarrangement->position[id];
@@ -68,23 +114,24 @@ void VisualArrangement::buildLuaCode()
 {
 	if(file == "" or myarrangement->position.size() == 0) return;
 
-	ofstream f(file.c_str());
+    QFile qfile(file.c_str());
 
-	f << "return {" << endl;
-
-	for(std::map<int, PositionVisualArrangement>::iterator it =
-			myarrangement->position.begin(); it != myarrangement->position.end(); ++it)
-	{
-		f << "\t[" << it->first << "] = {" << endl;
-		f << "\t\tx = " << it->second.x << ", \n";
-		f << "\t\ty = " << it->second.y << ", \n";
-		f << "\t\twidth = " << myarrangement->size[it->first].width << ", \n";
-		f << "\t\theight = " << myarrangement->size[it->first].height << ", \n";
-
-		f << "\t}, " << endl;
-	}
-	f << "}" << endl;
-
-    //f.close();
+    if (qfile.open(QIODevice::ReadWrite | QIODevice::Truncate))
+    {
+        QTextStream out(&qfile);
+        out << "return {" << endl;
+        for(std::map<int, PositionVisualArrangement>::iterator it =
+                myarrangement->position.begin(); it != myarrangement->position.end(); ++it)
+        {
+            out << "\t[" << it->first << "] = {" << endl;
+            out << "\t\tx = " << it->second.x << ", \n";
+            out << "\t\ty = " << it->second.y << ", \n";
+            out << "\t\twidth = " << myarrangement->size[it->first].width << ", \n";
+            out << "\t\theight = " << myarrangement->size[it->first].height << ", \n";
+            out << "\t}, " << endl;
+        }
+        out << "}" << endl;
+    }
+    qfile.close();
 }
 
