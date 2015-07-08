@@ -1,6 +1,6 @@
 /************************************************************************************
 * TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-* Copyright (C) 2001-2012 INPE and TerraLAB/UFOP.
+* Copyright © 2001-2012 INPE and TerraLAB/UFOP.
 *  
 * This code is part of the TerraME framework.
 * This framework is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 /*!
  * \file observer.h
  * \brief Global items of observer layer
- * \author Antonio Jos? da Cunha Rodrigues 
+ * \author Antonio José da Cunha Rodrigues 
 */
 
 #ifndef OBSERVER_GLOBAL_ITEMS
@@ -60,7 +60,7 @@ static const QString TIMER_KEY = "@time";
 static const QString EVENT_KEY = "@event";
 static const QString DEFAULT_NAME = "result_";
 
-static const QString PROTOCOL_SEPARATOR = ":";
+static const QString PROTOCOL_SEPARATOR = "‡";
 
 static const QString COMP_COLOR_SEP = ",";
 static const QString ITEM_SEP = ";";
@@ -89,7 +89,7 @@ static const QString PENSTYLE = "pen";
 static const QStringList LEGEND_KEYS = QStringList() << TYPE << GROUP_MODE << SLICES 
     << PRECISION << STD_DEV << MAX << MIN << COLOR_BAR << FONT_FAMILY << FONT_SIZE 
     << SYMBOL << WIDTH << STYLE << SIZE_ << PENSTYLE; // << STD_COLOR_BAR; // is not a legend key
-static const int LEGEND_ITENS = LEGEND_KEYS.size(); /// N?mero de itens que compoem a legenda de cada atributo
+static const int LEGEND_ITENS = LEGEND_KEYS.size(); /// Número de itens que compoem a legenda de cada atributo
 
 static const QString VALUE_NOT_INFORMED = "not informed"; 
 static const QString WINDOW = "Window";
