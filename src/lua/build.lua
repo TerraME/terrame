@@ -152,15 +152,15 @@ function _Gtme.buildPackage(package)
 
 	chDir(tmpfolder)
 	if pkgFolder == package then
-		os.execute("cp -pr "..currentdir..s..pkgFolder.." .")
+		os.execute("cp -pr \""..currentdir..s..pkgFolder.."\" .")
 	else
-		os.execute("cp -pr "..pkgFolder.." .")
+		os.execute("cp -pr \""..pkgFolder.."\" .")
 	end
 
 	local info = packageInfo(package)
 	local file = package.."_"..info.version..".zip"
 	printNote("Creating file '"..file.."'")
-	os.execute("zip -qr "..file.." "..package)
+	os.execute("zip -qr \""..file.."\" "..package)
 	if isFile(file) then
 		printNote("Package '"..package.."' successfully zipped")
 	else
@@ -168,7 +168,7 @@ function _Gtme.buildPackage(package)
 		os.exit()
 	end
 
-	os.execute("cp "..file.." "..currentdir)
+	os.execute("cp \""..file.."\" \""..currentdir.."\"")
 
 	md5sum = runCommand("md5 -q "..file)
 

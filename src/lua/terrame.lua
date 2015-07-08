@@ -38,6 +38,7 @@ setmetatable(_Gtme, {__index = _G})
 _Gtme.loadedPackages = {}
 _Gtme.print = print
 _Gtme.type = type
+_Gtme.package_ = package
 
 function _Gtme.printError(value)
 	if sessionInfo().separator == "/" and sessionInfo().color then
@@ -330,7 +331,7 @@ local function exportDatabase(package)
 
 			if result and result[1] then
 				_Gtme.printError(result[1])
-				os.execute("rm "..folder..mfile)
+				os.execute("rm \""..folder..mfile.."\"")
 			else
 				_Gtme.printNote("Database '"..database.."'successfully exported")
 			end
@@ -386,7 +387,7 @@ local function importDatabase(package)
 			_Gtme.printError("Add 'drop = true' to your config.lua to allow replacing databases if needed.")
 		else
 			_Gtme.printNote("Importing database '"..database.."'")
-			os.execute(command .." "..database.." < "..folder..s..value)
+			os.execute(command .." "..database.." < \""..folder..s..value.."\"")
 			_Gtme.printNote("Database '"..database.."' successfully imported")
 		end
 	end)
@@ -416,10 +417,10 @@ function _Gtme.installPackage(file)
 	local currentDir = _Gtme.currentDir()
 	local packageDir = _Gtme.sessionInfo().path..s.."packages"
 
-	os.execute("cp "..file.." "..packageDir)
+	os.execute("cp \""..file.."\" \""..packageDir.."\"")
 	_Gtme.chDir(packageDir)
 
-	os.execute("unzip -q "..file)
+	os.execute("unzip -q \""..file.."\"")
 
 	local lastSep = string.find(package, s, string.len(package) / 2)
 	local name = package
@@ -437,13 +438,13 @@ function _Gtme.installPackage(file)
 		_Gtme.printError("Package could not be loaded:")
 		_Gtme.printError(err)
 
-		os.execute("rm -rf "..package)
+		os.execute("rm -rf \""..package.."\"")
 		os.exit()
 	end)
 	_Gtme.printNote("Package successfully installed")
 	chDir(currentDir)
 
-	os.execute("rm "..packageDir..s.."*.zip")
+	os.execute("rm \""..packageDir..s.."*.zip\"")
 	return name
 end
 
