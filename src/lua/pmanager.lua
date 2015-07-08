@@ -82,7 +82,7 @@ function _Gtme.packageManager()
 	docButton = qt.new_qobject(qt.meta.QPushButton)
 	docButton.text = "Documentation"
 	qt.connect(docButton, "clicked()", function()
-		showDoc(comboboxPackages.currentText)
+		_Gtme.showDoc(comboboxPackages.currentText)
 	end)
 
 	label = qt.new_qobject(qt.meta.QLabel)

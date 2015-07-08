@@ -287,7 +287,7 @@ function _Gtme.showDoc(package)
 			_Gtme.runCommand("xdg-open "..docpath)
 		end
 	else
-		print("This functionality is still not implemented in Windows.")
+		_Gtme.runCommand("start \""..docpath.."\"")
 	end
 end
 
