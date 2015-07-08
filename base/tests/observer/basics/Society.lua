@@ -76,13 +76,13 @@ return{
 			target = soc -- white background
 		}
 
-		unitTest:assertSnapshot(m, "map_society_background.bmp")
+		unitTest:assertSnapshot(m, "map_society_background.bmp") -- SKIP
 
 		local m = Map{
 			target = soc,
 			background = "green"
 		}
-		unitTest:assertSnapshot(m, "map_society_background2.bmp")
+		unitTest:assertSnapshot(m, "map_society_background2.bmp") -- SKIP
 
 		forEachCell(cs, function(cell)
 			cell.value = Random():number()
@@ -103,7 +103,7 @@ return{
 			symbol = "smile"
 		}
 
-		unitTest:assertSnapshot(m, "map_society_symbol.bmp")
+		unitTest:assertSnapshot(m, "map_society_symbol.bmp") -- SKIP
 --]]
 	end
 }

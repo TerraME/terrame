@@ -111,10 +111,10 @@ return{
 			value = {"low", "medium", "high"}
 		}
 
-		unitTest:assertType(m, "Map") -- SKIP
+		unitTest:assertType(m, "Map")
 
 		cs:notify()
-		unitTest:assertSnapshot(m, "map_string.bmp") -- SKIP
+		unitTest:assertSnapshot(m, "map_string.bmp")
 
 		local cs = CellularSpace{xdim = 10}
 
