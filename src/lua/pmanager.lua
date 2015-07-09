@@ -167,7 +167,7 @@ function _Gtme.packageManager()
 	local m2function = function()
 		local fname = qt.dialog.get_open_filename("Select Package", "", "*.zip")
 		if fname ~= "" then
-			local pkg = installPackage(fname)
+			local pkg = _Gtme.installPackage(fname)
 
 			if type(pkg) == "string" then
 				qt.dialog.msg_information("Package '"..pkg.."' successfully installed.")
@@ -188,6 +188,7 @@ function _Gtme.packageManager()
 	qt.ui.layout_add(buttonsLayout, quitButton)
 
 	local m2function = function() dialog:done(0) end
+	
 	qt.connect(quitButton, "clicked()", m2function)
 
 	qt.ui.layout_add(externalLayout, internalLayout)

@@ -344,7 +344,7 @@ int main(int argc, char *argv[])
 
 	if (!existWindows())
 	{
-        lua_close(L);
+        //lua_close(L); // issue #562
         app.exit();
         return 0;
 	}

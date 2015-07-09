@@ -16,6 +16,8 @@
 
     Copyright (C) 2008, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 #include <QDebug>
@@ -52,6 +54,7 @@ namespace QtLua {
 	assert_do(QMetaObject::connect(obj, destroyindex, this, metaObject()->methodCount() + 0));
 
 	ls->_whash.insert(obj, this);
+
 	// increment reference count since we are bound to a qobject
 	_inc();
       }
@@ -285,9 +288,27 @@ namespace QtLua {
       return Value(ls, QObjectWrapper::get_wrapper(ls, child));
 
     // fallback to member read access
-    Member::ptr m = MetaCache::get_meta(obj).get_member(skey);
+    MetaCache &mc = MetaCache::get_meta(obj);
+    Member::ptr m = mc.get_member(skey);
 
-    return m.valid() ? m->access(*this) : Value(ls);
+    if(m.valid())
+      return m->access(*this);
+    else
+      {
+        int index = mc.get_index_getDP();
+        if(index != -1)
+          {
+            QVariant dp;
+            QByteArray name = skey;
+            void *argv[2] = {Q_RETURN_ARG(QVariant, dp).data(), Q_ARG(QByteArray, name).data()};
+            obj.qt_metacall(QMetaObject::InvokeMetaMethod, index, argv);
+            return Value(ls, dp);
+          }
+        else if(mc.can_auto_property()) {
+            return Value(ls, obj.property(skey));
+        }
+        else return Value(ls);
+      }
   }
 
   void QObjectWrapper::reparent(QObject *parent)
@@ -312,6 +333,7 @@ namespace QtLua {
     // handle existing children access
     if (QObject *cobj = get_child(obj, skey))
       {
+        //old child
 	QObjectWrapper::ptr cw = get_wrapper(ls, cobj);
 
 	if (value.is_nil())
@@ -319,7 +341,7 @@ namespace QtLua {
 	    cw->reparent(0);
 	    return;
 	  }
-
+        //new child
 	QObjectWrapper::ptr vw = value.to_userdata_cast<QObjectWrapper>();
 	QObject &vobj = vw->get_object();
 
@@ -330,8 +352,9 @@ namespace QtLua {
       }
     else
       {
+        MetaCache &mc = MetaCache::get_meta(obj);
 	// fallback to member write access
-	Member::ptr m = MetaCache::get_meta(obj).get_member(skey);
+        Member::ptr m = mc.get_member(skey);
 
 	if (m.valid())
 	  {
@@ -340,12 +363,37 @@ namespace QtLua {
 	  }
       }
 
-    // child insertion
-    QObjectWrapper::ptr vw = value.to_userdata_cast<QObjectWrapper>();
-    QObject &vobj = vw->get_object();
+    switch(value.type()) {
+    case ValueBase::TUserData: {
+        // child insertion
+        QObjectWrapper::ptr vw = value.to_userdata_cast<QObjectWrapper>();
+        QObject &vobj = vw->get_object();
 
-    vobj.setObjectName(skey.to_qstring());
-    vw->reparent(&obj);
+        vobj.setObjectName(skey.to_qstring());
+        vw->reparent(&obj);
+    break; }
+    case ValueBase::TNumber:
+    case ValueBase::TBool:
+    case ValueBase::TString:
+    case ValueBase::TTable: {
+        MetaCache &mc = MetaCache::get_meta(obj);
+        int index = mc.get_index_setDP();
+        if(index != -1)
+        {
+          QVariant dp = value.to_qvariant();
+          QByteArray name = skey;
+          void *argv[3] = {0x0, Q_ARG(QByteArray, name).data(), Q_ARG(QVariant, dp).data()};
+          obj.qt_metacall(QMetaObject::InvokeMetaMethod, index, argv);
+        }
+        else if(mc.can_auto_property()) {
+            obj.setProperty(skey, value.to_qvariant());
+        }
+    break; }
+    default:
+        QTLUA_THROW(QtLua::QObjectWrapper, "Cannot assign value type `%' to QObject",
+                    .arg(value.type_name()));
+        break;
+    }
   }
 
   Ref<Iterator> QObjectWrapper::new_iterator(State *ls)
@@ -369,16 +417,27 @@ namespace QtLua {
 
   String QObjectWrapper::get_type_name() const
   {
-    return _obj ? _obj->metaObject()->className() : "";
+    return _obj ? MetaCache::get_meta_name(_obj->metaObject()) : "";
   }
 
   String QObjectWrapper::get_value_str() const
   {
-    if (!_obj)
-      return "(deleted)";
-    QString addr;
-    addr.sprintf("%p", _obj);
-    return addr;
+    if(!_obj) return "(deleted)";
+    QString result;
+    int index = MetaCache::get_index_toString(*_obj);
+    if(index != -1)
+      {
+        void *args[1] = {static_cast<void*>(&result)};
+        _obj->qt_metacall(QMetaObject::InvokeMetaMethod, index, args);
+
+      }
+    else
+      {
+        result = QString("0x%1(%2)")
+                .arg((qulonglong)_obj, 0, 16)
+                .arg(qobject_name(*_obj).constData());
+      }
+    return result;
   }
 
   void QObjectWrapper::completion_patch(String &path, String &entry, int &offset)
@@ -393,7 +452,7 @@ namespace QtLua {
       {
 	QString name;
 
-	name.sprintf("%s_%lx", obj.metaObject()->className(), (unsigned long)&obj);
+        name.sprintf("%s_%lx", MetaCache::get_meta_name(obj.metaObject()).constData(), (unsigned long)&obj);
 	obj.setObjectName(name.toLower());
       }
 

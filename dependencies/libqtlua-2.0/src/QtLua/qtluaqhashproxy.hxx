@@ -189,6 +189,8 @@ namespace QtLua {
 
   void QHashProxyKeytype<String>::completion_patch(String &path, String &entry, int &offset)
   {
+    Q_UNUSED(path)
+    Q_UNUSED(offset)
     entry += ".";
   }
 

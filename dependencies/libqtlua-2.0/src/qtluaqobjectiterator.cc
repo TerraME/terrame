@@ -16,6 +16,8 @@
 
     Copyright (C) 2008, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 #include <cstdlib>
@@ -35,6 +37,7 @@ namespace QtLua {
     _cur = CurMember;
     _mc = &MetaCache::get_meta(mo);
     _it = _mc->get_member_table().begin();
+    _supreme_mo = _mc->get_supreme_meta_object();
 
     update();
   }
@@ -49,6 +52,7 @@ namespace QtLua {
     QObject &obj = _qow->get_object();
 
     _mc = &MetaCache::get_meta(obj.metaObject());
+    _supreme_mo = _mc->get_supreme_meta_object();
     _it = _mc->get_member_table().begin();
 
     update();
@@ -86,12 +90,14 @@ namespace QtLua {
 
 	_cur = CurMember;
 
-      case CurMember:
+      case CurMember: {
 	while (_it == _mc->get_member_table().end())
 	  {
-	    const QMetaObject *super = _mc->get_meta_object()->superClass();
+            const QMetaObject *curMeta = _mc->get_meta_object();
+            bool reachSupreme = (curMeta == _supreme_mo);
+            const QMetaObject *super = curMeta->superClass();
 
-	    if (!super)
+            if (!super || reachSupreme)
 	      {
 		_cur = CurEnd;
 		break;
@@ -100,7 +106,7 @@ namespace QtLua {
 	    _mc = &MetaCache::get_meta(super);
 	    _it = _mc->get_member_table().begin();
 	  }
-
+        }
       case CurEnd:
 	break;
       }

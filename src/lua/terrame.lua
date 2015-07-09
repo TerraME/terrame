@@ -190,7 +190,7 @@ local function sqlFiles(package)
 end
 
 function _Gtme.findModels(package)
-	local s = _Gtme.sessionInfo().separator
+	local s = "/" --_Gtme.sessionInfo().separator
 	
 	if not _Gtme.isLoaded("base") then
 		_Gtme.import("base")
@@ -209,6 +209,7 @@ function _Gtme.findModels(package)
 	end
 
 	local packagepath = _Gtme.packageInfo(package).path
+	packagepath = _Gtme.makePathCompatibleToAllOS(packagepath)
 
 	if _Gtme.attributes(packagepath, "mode") ~= "directory" then
 		_Gtme.printError("Error: Package '"..package.."' is not installed.")
@@ -217,10 +218,11 @@ function _Gtme.findModels(package)
 
 	local srcpath = packagepath..s.."lua"..s
 
-	if _Gtme.attributes(srcpath, "mode") ~= "directory" then
-		_Gtme.printError("Error: Folder 'lua' from package '"..package.."' does not exist.")
-		os.exit()
-	end
+	-- issue #556
+	-- if _Gtme.attributes(srcpath, "mode") ~= "directory" then
+		-- _Gtme.printError("Error: Folder 'lua' from package '"..package.."' does not exist.")
+		-- os.exit()
+	-- end
 
 	_Gtme.forEachFile(srcpath, function(fname)
 		found = false

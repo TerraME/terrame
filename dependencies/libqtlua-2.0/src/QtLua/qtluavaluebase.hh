@@ -16,6 +16,8 @@
 
     Copyright (C) 2008, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 
@@ -26,6 +28,7 @@
 #include <QList>
 #include <QPointer>
 #include <QVariant>
+#include <QVariantList>
 
 #include "qtluastring.hh"
 #include "qtluaref.hh"
@@ -253,6 +256,7 @@ public:
   /** Call operation on a lua userdata or lua function value.
       When invoked on a lua thread value, the thread is resumed. @multiple */
   List call(const List &args) const;
+  inline List call(const QVariantList &args) const;
   inline List operator() () const;
   inline List operator() (const Value &arg1) const;
   inline List operator() (const Value &arg1, const Value &arg2) const;

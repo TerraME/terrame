@@ -16,6 +16,8 @@
 
     Copyright (C) 2008, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 
@@ -287,6 +289,15 @@ namespace QtLua {
   ValueBase::List::List(const Value &v1, const Value &v2, const Value &v3, const Value &v4, const Value &v5, const Value &v6)
   {
     *this << v1 << v2 << v3 << v4 << v5 << v6;
+  }
+
+  Value::List ValueBase::call(const QVariantList &args) const
+  {
+    ValueBase::List _args;
+    foreach(const QVariant &i, args) {
+      _args.push_back(Value(_st, i));
+    }
+    return call(_args);
   }
 
   ValueBase::List ValueBase::operator() () const

@@ -16,6 +16,8 @@
 
     Copyright (C) 2008-2013, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 #include "config.hh"
@@ -79,8 +81,7 @@ namespace QtLua {
   typedef QMap<String, QMetaObjectWrapper > qmetaobject_table_t;
 
   class QMetaObjectTable
-    : public QHashProxyRo<qmetaobject_table_t>
-    , public QObject
+    : public QObject, public QHashProxyRo<qmetaobject_table_t>
   {
   public:
     QMetaObjectTable()
@@ -88,10 +89,10 @@ namespace QtLua {
     {
       for (const meta_object_table_s *me = meta_object_table; me->_mo; me++)
 	{
-	  String name(me->_mo->className());
+          String name(me->_mo->className());
 	  name.replace(':', '_');
-	  _mo_table.insert(name, QMetaObjectWrapper(me->_mo, me->_creator));
-	}
+          _mo_table.insert(name, QMetaObjectWrapper(me->_mo, me->_creator));
+        }
 
       _mo_table.insert("Qt", QMetaObjectWrapper(&staticQtMetaObject));
       _mo_table.insert("QSizePolicy", QMetaObjectWrapper(&QtLua::SizePolicy::staticMetaObject));
@@ -100,13 +101,37 @@ namespace QtLua {
     qmetaobject_table_t _mo_table;
   };
 
-  static QMetaObjectTable qt_meta;
+  static QMetaObjectTable *qt_meta = 0x0;
+
+  void create_qmeta_object_table()
+  {
+      if(!qt_meta) {
+          qt_meta = new QMetaObjectTable;
+          qt_meta->setParent(qApp);
+      }
+  }
 
   void qtlib_register_meta(const QMetaObject *mo, qobject_creator *creator)
   {
-    String name(mo->className());
+    String name(MetaCache::get_meta_name(mo));
     name.replace(':', '_');
-    qt_meta._mo_table.insert(name, QMetaObjectWrapper(mo, creator));
+    qt_meta->_mo_table.insert(name, QMetaObjectWrapper(mo, creator));
+  }
+
+  void qtlib_register_meta(const QMetaObject *mo, const QMetaObject *supreme_mo, bool auto_property, qobject_creator *creator)
+  {
+      qtlib_register_meta(mo, creator);
+      MetaCache::create_meta(mo, supreme_mo, auto_property);
+  }
+  
+  void qtlib_enable_meta_auto_property(const QMetaObject *mo, bool enable)
+  {
+    MetaCache::get_meta(mo).enable_auto_property(enable);
+  }
+
+  void qtlib_register_static_method(const QMetaObject *mo, const String &name, FunctionSignature func, const QList<String> &argv)
+  {
+      MetaCache::add_static_function(mo, name, func, argv);
   }
 
 
@@ -1056,7 +1081,7 @@ namespace QtLua {
    
   void qtluaopen_qt(State *ls)
   {
-    ls->set_global("qt.meta", Value(ls, qt_meta));
+    ls->set_global("qt.meta", Value(ls, *qt_meta));
 
     QTLUA_FUNCTION_REGISTER(ls, "qt.", new_qobject           );
     QTLUA_FUNCTION_REGISTER(ls, "qt.", connect               );

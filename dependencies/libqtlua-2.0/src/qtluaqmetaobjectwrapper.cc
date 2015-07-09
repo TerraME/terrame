@@ -16,6 +16,8 @@
 
     Copyright (C) 2008, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 #include <QObject>
@@ -76,7 +78,7 @@ namespace QtLua {
       }
 #endif
 
-    QTLUA_THROW(QtLua::QMetaObjectWrapper, "No invokable constructor found to create an object of the `%' class.", .arg(_mo->className()));
+    QTLUA_THROW(QtLua::QMetaObjectWrapper, "No invokable constructor found to create an object of the `%' class.", .arg(MetaCache::get_meta_name(_mo)));
   }
 
   Value QMetaObjectWrapper::meta_index(State *ls, const Value &key)
@@ -119,10 +121,22 @@ namespace QtLua {
 
   String QMetaObjectWrapper::get_value_str() const
   {
-    String res(_mo->className());
+    String res(MetaCache::get_meta_name(_mo));
 
-    if (_mo->superClass())
-      res += String(" : public ") + _mo->superClass()->className();
+    const MetaCache &mc = MetaCache::get_meta(_mo);
+    if (const QMetaObject *super = _mo->superClass()) {
+        const QMetaObject *supreme = mc.get_supreme_meta_object();
+        if(_mo == supreme) {
+            res += String(" : protected ") +
+                    MetaCache::get_meta_name(super);
+        }
+        else {
+            res += String(" : public ") +
+                    MetaCache::get_meta_name(super);
+        }
+        res += String(", supreme ") +
+                MetaCache::get_meta_name(supreme);
+    }
 
     return res;
   }

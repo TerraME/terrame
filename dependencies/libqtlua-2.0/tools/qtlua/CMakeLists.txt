@@ -1,5 +1,8 @@
+IF(WIN32)
+SET(GUI_TYPE WIN32)
+ENDIF(WIN32)
 
-ADD_EXECUTABLE(qtlua_app qtlua.cc )
+ADD_EXECUTABLE(qtlua_app ${GUI_TYPE} qtlua.cc )
 QT5_USE_MODULES(qtlua_app Widgets Core)
 
 TARGET_LINK_LIBRARIES(qtlua_app qtlua)

@@ -16,6 +16,8 @@
 
     Copyright (C) 2008, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 #ifndef QTLUAMETACACHE_HXX_
@@ -28,7 +30,13 @@ namespace QtLua {
 
   MetaCache::MetaCache(const MetaCache &mc)
     : _member_cache(mc._member_cache),
-      _mo(mc._mo)
+      _mo(mc._mo),
+      _supreme_mo(mc._supreme_mo),
+      _lua_name(mc._lua_name),
+      _index_toString(mc._index_toString),
+      _index_getDP(mc._index_getDP),
+      _index_setDP(mc._index_setDP),
+      _auto_property(mc._auto_property)
   {
   }
 
@@ -40,6 +48,11 @@ namespace QtLua {
   const QMetaObject * MetaCache::get_meta_object() const
   {
     return _mo;
+  }
+
+  const QMetaObject * MetaCache::get_supreme_meta_object() const
+  {
+      return _supreme_mo;
   }
 
   Member::ptr MetaCache::get_member_throw(const String &name) const

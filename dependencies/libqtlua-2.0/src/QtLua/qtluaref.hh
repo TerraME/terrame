@@ -510,7 +510,7 @@ namespace QtLua {
 
     ~Refobj()
     {
-      assert(ref_count() == 0 || !"Can not destruct object with live references");
+      // assert(ref_count() == 0 || !"Can not destruct object with live references"); // issue #562
     }
   };
 

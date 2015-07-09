@@ -16,6 +16,8 @@
 
     Copyright (C) 2008-2012, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 #include <QSize>
@@ -146,6 +148,14 @@ namespace QtLua {
 	value[2] = color->green();
 	value[3] = color->blue();
 	return value;
+      }
+      case QMetaType::QVariant: {
+        const QVariant *v = reinterpret_cast<const QVariant*>(data);
+        return Value(ls, *v);
+      }
+      case QMetaType::QVariantList: {
+        const QVariantList *vl = reinterpret_cast<const QVariantList*>(data);
+        return Value(ls, *vl);
       }
       default:
 	if (type == ud_ref_type)
@@ -306,6 +316,16 @@ namespace QtLua {
 	QColor *color = reinterpret_cast<QColor*>(data);
 	*color = QColor(v.at(1).to_integer(), v.at(2).to_integer(), v.at(3).to_integer());
 	break;
+      }
+      case QMetaType::QVariant: {
+        QVariant *qv = reinterpret_cast<QVariant*>(data);
+        *qv = v.to_qvariant();
+        break;
+      }
+      case QMetaType::QVariantList: {
+        QVariantList *qvl = reinterpret_cast<QVariantList*>(data);
+        *qvl = v.to_qlist<QVariant>();
+        break;
       }
       default: {
 

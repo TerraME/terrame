@@ -16,6 +16,8 @@
 
     Copyright (C) 2008, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 #ifndef QTLUAQTLIB_HH_
@@ -29,6 +31,8 @@ namespace QtLua {
   class State;
 
   void qtluaopen_qt(State *ls);
+
+  void create_qmeta_object_table();
 
   /** Fake QSizePolicy class needed to expose Policy enum */
   class SizePolicy

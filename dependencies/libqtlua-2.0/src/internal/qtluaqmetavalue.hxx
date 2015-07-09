@@ -16,6 +16,8 @@
 
     Copyright (C) 2008-2012, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 #ifndef QTLUAQMETAVALUE_HXX_
@@ -40,7 +42,7 @@ namespace QtLua {
     _data = QMetaType::create(_type, 0);
 #endif
     if (!_data)
-      QTLUA_THROW(QtLui::QMetaValue, "Failed to construct an object of type `%' using the QMetaType API.",
+      QTLUA_THROW(QtLua::QMetaValue, "Failed to construct an object of type `%' using the QMetaType API.",
 		  .arg(QMetaType::typeName(_type)));
   }
 

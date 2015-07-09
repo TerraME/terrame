@@ -16,6 +16,8 @@
 
     Copyright (C) 2008, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 #ifndef QTLUAMETACACHE_HH_
@@ -25,6 +27,7 @@
 #include <QHash>
 
 #include <QtLua/Ref>
+#include <QtLua/FunctionSignature>
 
 namespace QtLua {
 
@@ -51,16 +54,28 @@ namespace QtLua {
   {
     friend class QObjectWrapper;
 
-    MetaCache(const QMetaObject *mo);
+    MetaCache(const QMetaObject *mo, const QMetaObject *supreme_mo, bool auto_property);
 
   public:
     /** Copy constructor */
     inline MetaCache(const MetaCache &mc);
-
+    /** Create cache meta information for a QMetaObject with supreme QMetaObject which limit member access. */
+    static MetaCache & create_meta(const QMetaObject *mo, const QMetaObject *supreme_mo, bool auto_property);
+    /** Add static function to existed cache meta information. */
+    static bool add_static_function(const QMetaObject *mo, const String &key, FunctionSignature func, QMetaType::Type argt[], int count);
+    static bool add_static_function(const QMetaObject *mo, const String &key, FunctionSignature func, const QList<String> &argv);
     /** Get cache meta information for a QObject */
     inline static MetaCache & get_meta(const QObject &obj);
     /** Get cache meta information for a QMetaObject */
     static MetaCache & get_meta(const QMetaObject *mo);
+    /** Get meta object name by className() or classInfo("LuaName") */
+    static String get_meta_name(const QMetaObject *mo);
+    /** Get index of toString slot which costum print() result*/
+    static int get_index_toString(const QObject &obj);
+    /** Get index of getDP slot which get dynamic property*/
+    static int get_index_getDP(const QObject &obj);
+    /** Get index of setDP slot which set dynamic property*/
+    static int get_index_setDP(const QObject &obj);
 
     /** Recursively search for memeber in class and parent classes */
     Ref<Member> get_member(const String &name) const;
@@ -80,10 +95,35 @@ namespace QtLua {
     /** Get associated QMetaObject pointer */
     inline const QMetaObject * get_meta_object() const;
 
+    /** Get supreme QMetaObject pointer for current QMetaObject pointer which should not affect others */
+    inline const QMetaObject * get_supreme_meta_object() const;
+
+    /** Get index of slot toString for current QMetaObject */
+    int get_index_toString() const;
+
+    /** Get index of slot getDP for current QMetaObject */
+    int get_index_getDP() const;
+
+    /** Get index of slot setDP for current QMetaObject */
+    int get_index_setDP() const;
+
+    /** Can use property() setProperty()*/
+    bool can_auto_property() const;
+    void enable_auto_property(bool enable);
+
   private:
     member_cache_t _member_cache;
     const QMetaObject *_mo;
+    const QMetaObject *_supreme_mo;
     static meta_cache_t _meta_cache;
+    //classinfo "LuaName"
+    String _lua_name;
+    //index of slots
+    int _index_toString;
+    int _index_setDP;
+    int _index_getDP;
+    //auto set/get property, will be override if has setDP/getDP
+    int _auto_property;
   };
 
 }

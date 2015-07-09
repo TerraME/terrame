@@ -16,6 +16,8 @@
 
     Copyright (C) 2008, Alexandre Becoulet <alexandre.becoulet@free.fr>
 
+    Fork
+    Copyright (C) 2015 (Li, Kwue-Ron) <likwueron@gmail.com>
 */
 
 #include <QDebug>
@@ -23,7 +25,7 @@
 #include <cstring>
 
 #include <internal/QObjectWrapper>
-
+#include <internal/MetaCache>
 #include <internal/Method>
 #include <internal/QMetaValue>
 #include <internal/qtluapoolarray.hh>
@@ -68,8 +70,9 @@ namespace QtLua {
     void *qt_args[11];
 
     // return value
-    if (*mm.typeName())
-      qt_args[0] = args.create(QMetaType::type(mm.typeName())).get_data();
+    if (*mm.typeName()) {
+        qt_args[0] = args.create(QMetaType::type(mm.typeName())).get_data();
+    }
     else
       qt_args[0] = 0;
 
@@ -89,12 +92,7 @@ namespace QtLua {
     foreach (const QByteArray &pt, pt)
       {
 	assert(i < 11);
-
-	//	if (i <= lua_args.size())
-	  qt_args[i] = args.create(QMetaType::type(pt.constData()), lua_args[i]).get_data();
-
-	  //	else
-	  //	  qt_args[i] = args.create(QMetaType::type(pt.constData())).get_data();
+        qt_args[i] = args.create(QMetaType::type(pt.constData()), lua_args[i]).get_data();
 	i++;
       }
 
@@ -107,8 +105,9 @@ namespace QtLua {
 		  .arg(mm.methodSignature()));
 #endif
 
-    if (qt_args[0])
-      return args[0].to_value(ls);
+    if (qt_args[0]) {
+        return args[0].to_value(ls);
+    }
     else
       return Value::List();
   }
@@ -131,7 +130,7 @@ namespace QtLua {
     QMetaMethod mm = _mo->method(_index);
     const char * t = mm.typeName();
 
-    return String(*t ? t : "void") + " " + _mo->className() + "::"
+    return String(*t ? t : "void") + " " + MetaCache::get_meta_name(_mo) + "::"
 #if QT_VERSION < 0x050000
       + mm.signature();
 #else
@@ -155,6 +154,7 @@ namespace QtLua {
     switch (_mo->method(_index).methodType())
       {
       case QMetaMethod::Slot:
+      case QMetaMethod::Method:
 	// force method invokation operator
 	if (!path.isEmpty())
 	  path[path.size() - 1] = ':';

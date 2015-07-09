@@ -69,6 +69,18 @@ namespace QtLua {
     qtlib_register_meta(&QObject_T::staticMetaObject, &create_qobject<QObject_T>);
   }
 
+  template <class QObject_T, class Supreme_T>
+  void State::register_qobject_meta()
+  {
+    qtlib_register_meta(&QObject_T::staticMetaObject, &Supreme_T::staticMetaObject, &create_qobject<QObject_T>);
+  }
+
+  template <class QObject_T>
+  void State::register_qobject_static_method(const String &name, FunctionSignature func, const QList<String> &argv)
+  {
+    qtlib_register_static_method(&QObject_T::staticMetaObject, name, func, argv);
+  }
+
   void State::enable_qdebug_print(bool enabled)
   {
     _debug_output = enabled;
