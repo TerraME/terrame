@@ -275,21 +275,23 @@ function _Gtme.showDoc(package)
 
 	local docpath
 
-	xpcall(function() docpath = _Gtme.packageInfo(package).path end, function(err)
+	xpcall(function() docpath = _Gtme.packageInfo().path end, function(err)
 		_Gtme.printError(err)
 		os.exit()
 	end)
-
+	
 	docpath = docpath..s.."doc"..s.."index.html"
 
-	if s == "/" then
+	if not _Gtme.isWindowsOS() then
 		if _Gtme.runCommand("uname")[1] == "Darwin" then
 			_Gtme.runCommand("open "..docpath)
 		else
 			_Gtme.runCommand("xdg-open "..docpath)
 		end
 	else
-		_Gtme.runCommand("start \""..docpath.."\"")
+		docpath = "file:///".._Gtme.makePathCompatibleToAllOS(docpath)
+		docpath = string.gsub (docpath, "%s", "%%20")
+		os.execute("start "..docpath)
 	end
 end
 
@@ -408,15 +410,11 @@ function _Gtme.installPackage(file)
 
 	local s = _Gtme.sessionInfo().separator
 	local package
-
-	local _, pfile = string.match(file, "(.-)([^"..s.."]-([^%.]+))$") -- remove path from the file
-
-	local result = xpcall(function() package = string.sub(pfile, 1, string.find(file, "_") - 1) end, function(err)
+	local result = xpcall(function() package = string.sub(file, 1, string.find(file, "_") - 1) end, function(err)
 		_Gtme.printError(file.." is not a valid file name for a TerraME package")
-		os.exit()
 	end)
 
-	_Gtme.printNote("Copying package '"..package.."'")
+	if not result then return end
 
 	local arg = _Gtme.sessionInfo().path..s.."packages"..s..package
 
@@ -428,23 +426,30 @@ function _Gtme.installPackage(file)
 
 	os.execute("unzip -q \""..file.."\"")
 
+	local lastSep = string.find(package, s, string.len(package) / 2)
+	local name = package
+
+	if lastSep then
+		name = string.sub(package, lastSep + 1)
+	end
+
 	if not _Gtme.isLoaded("base") then
 		_Gtme.import("base")
 	end
 
-	_Gtme.printNote("Trying to load package '"..package.."'")
-	xpcall(function() import(package) end, function(err)
+	_Gtme.printNote("Trying to load package "..name)
+	xpcall(function() import(name) end, function(err)
 		_Gtme.printError("Package could not be loaded:")
 		_Gtme.printError(err)
 
-		os.execute("rm -rf \""..packageDir..s..package.."\"")
+		os.execute("rm -rf \""..package.."\"")
 		os.exit()
 	end)
 	_Gtme.printNote("Package successfully installed")
 	chDir(currentDir)
 
-	os.execute("rm \""..packageDir..s..pfile.."\"")
-	return package
+	os.execute("rm \""..packageDir..s.."*.zip\"")
+	return name
 end
 
 local function version()
