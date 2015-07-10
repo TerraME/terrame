@@ -348,18 +348,26 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH true)
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH true)
 
+if(MINGW)
+    set(APP_ICON ${ROOT}/res/resource.o)
+else(MINGW)
+    set(APP_ICON "")
+endif(MINGW)
+
 ## ------------------------------------------------------------------------------------------------------------- ##
 # Add Target and link directories, and link with libraries
-add_executable( terrame 
-	${SRCS} 
-	${MOC_SRCS} 
-	${UI_SRCS} 
-	${INC_ALL} 
-	${MOC_HDRS} 
-	${PROTO_SRC} 
-	${SHAPELIB_SRCS}
-	${SHAPELIB_HEADERS}
-	${PROTO_HEADER})
+add_executable( terrame
+        ${SRCS}
+        ${MOC_SRCS}
+        ${UI_SRCS}
+        ${INC_ALL}
+        ${MOC_HDRS}
+        ${PROTO_SRC}
+        ${SHAPELIB_SRCS}
+        ${SHAPELIB_HEADERS}
+        ${PROTO_HEADER}
+        ${APP_ICON}
+)
 
 link_directories(/usr/lib) # Set link directories
 target_link_libraries(terrame ${LIBS}) # Link with libraries
