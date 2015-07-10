@@ -52,3 +52,8 @@ basic = {
 	qwerty4321  = {package = "qwerty4321"},
 }
 
+observer = {
+	chart = {script = "chart.lua", quantity = 3},
+	map   = {script = "map.lua",   quantity = 2}
+}
+
