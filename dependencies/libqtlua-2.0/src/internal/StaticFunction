@@ -1,0 +1,4 @@
+
+#include "qtluastaticfunction.hh"
+#include "qtluastaticfunction.hxx"
+
