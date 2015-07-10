@@ -30,7 +30,8 @@ local report = {
 	localbuilderrors = 0,
 	createdlogs = 0,
 	commands = 0,
-	commandserrors = 0
+	commandserrors = 0,
+	observererrors = 0
 }
 
 local function approximateLine(line)
@@ -314,6 +315,23 @@ if commands.build then
 	end)
 end
 
+chDir("..")
+
+if commands.observer then
+	_Gtme.printNote("Checking observers")
+
+	forEachElement(commands.observer, function(_, mtable)
+		tmefile = "scripts"..s..string.gsub(mtable.script, "lua", "tme")
+
+		local quantity = #dofile(tmefile)
+
+		if quantity ~= mtable.quantity then
+			_Gtme.printError("Wrong quantity, got "..quantity..", expected "..mtable.quantity..".")
+			report.observererrors = report.observererrors + 1
+		end
+	end)
+end
+
 finalTime = os.time(os.date("*t"))
 
 print("\nTest report:")
@@ -367,6 +385,14 @@ elseif report.createdlogs == 1 then
 	_Gtme.printError("One log file was created during the tests. Please run the tests again.")
 else
 	_Gtme.printError(report.createdlogs.." log files were created during the tests. Please run the tests again.")
+end
+
+if report.observererrors == 0 then
+	_Gtme.printNote("All observers are saved correctly.")
+elseif report.observererrors == 1 then
+	_Gtme.printError("One script did not save the exact number of observers.")
+else
+	_Gtme.printError(report.observererrors.." scripts did not save the exact number of observers.")
 end
 
 errors = 0
