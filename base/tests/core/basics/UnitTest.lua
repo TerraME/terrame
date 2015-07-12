@@ -82,16 +82,6 @@ return{
 	end,
 	printError = function(unitTest)
 		unitTest:assert(true)
-	end,
-	tmpFolder = function(unitTest)
-		local u = UnitTest{}
-
-		local f = u:tmpFolder()
-		local g = u:tmpFolder()
-
-		unitTest:assertEquals(f, g)
-		unitTest:assertType(f, "string")
-		os.execute("rm -rf "..f)
 	end
 }
 

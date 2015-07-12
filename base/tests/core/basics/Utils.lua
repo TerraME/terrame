@@ -767,6 +767,13 @@ return{
 
 		unitTest:assertEquals(count, 2)
 	end,
+	tmpFolder = function(unitTest)
+		local f = tmpFolder()
+		local g = tmpFolder()
+
+		unitTest:assertEquals(f, g)
+		unitTest:assertType(f, "string")
+	end,
 	type = function(unitTest)
 		local c = Cell{}
 

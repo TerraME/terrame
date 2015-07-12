@@ -58,7 +58,8 @@ return{
 			{age = 1, wealth = 10, vision = 3, metabolism = 2, test = "Foo(text"}
 		}
 
-		local filename = unitTest:tmpFolder().."/csvwrite.csv"
+		local s = sessionInfo().separator
+		local filename = tmpFolder()..s.."csvwrite.csv"
 
 		CSVwrite(example, filename)
 		local data = CSVread(filename)

@@ -830,7 +830,7 @@ function _Gtme.executeTests(package, fileName)
 	printNote(text)
 
 	if ut.snapshots > 0 then
-		printNote("Snapshots were saved in '"..ut:tmpFolder().."'.")
+		printNote("Snapshots were saved in '"..tmpFolder().."'.")
 	end
 
 	if ut.print_when_loading == 1 then

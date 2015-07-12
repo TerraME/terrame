@@ -218,7 +218,7 @@ UnitTest_ = {
 		end
 
 		self.tsnapshots[file] = true
-		local newImage = self:tmpFolder()..s..file
+		local newImage = tmpFolder()..s..file
 		local oldImage = self.imgFolder..s..file
 
 		if not isFile(oldImage) then
@@ -308,18 +308,6 @@ UnitTest_ = {
 			end
 			func(arg)
 		end
-	end,
-	--- Create a temporary folder in the directory TerraME was executed and return its name.
-	-- Every time this function is called with the same instance of UnitTest, it returns the
-	-- same folder (without deleting its internal files). This
-	-- folder needs to be removed manually after the end of the tests. The name of the folder
-	-- is shown in the tests report.
-	-- @usage tmpfolder = unitTest:tmpFolder()
-	tmpFolder = function(self)
-		if not self.tmpfolder then
-			self.tmpfolder = runCommand("mktemp -d .terrametmp_XXXXX")[1]
-		end
-		return self.tmpfolder
 	end
 }
 
