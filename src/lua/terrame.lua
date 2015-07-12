@@ -275,11 +275,11 @@ function _Gtme.showDoc(package)
 
 	local docpath
 
-	xpcall(function() docpath = _Gtme.packageInfo().path end, function(err)
+	xpcall(function() docpath = _Gtme.packageInfo(package).path end, function(err)
 		_Gtme.printError(err)
 		os.exit()
 	end)
-	
+
 	docpath = docpath..s.."doc"..s.."index.html"
 
 	if not _Gtme.isWindowsOS() then
