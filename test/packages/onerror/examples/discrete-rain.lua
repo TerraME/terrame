@@ -5,7 +5,7 @@
 
 local s = sessionInfo().separator
 
-os.execute("rm "..file(".."..s.."examples"..s.."discrete-rain.log", "onerror"))
+os.execute("rm \""..file(".."..s.."examples"..s.."discrete-rain.log", "onerror").."\"")
 
 -- model parameters
 C = 2

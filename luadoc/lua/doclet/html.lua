@@ -21,6 +21,7 @@ local printNote, printError, getn, belong = _Gtme.printNote, _Gtme.printError, g
 local forEachElement = forEachElement
 local belong = belong
 local include = _Gtme.include
+local makepath = _Gtme.makePathCompatibleToAllOS
 
 local s = sessionInfo().separator
 local lp = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."lp.lua")
@@ -472,7 +473,7 @@ function start(doc, doc_report)
 	f:close()
 
 	-- Copy logo
-	mkDir(doc.description.destination_logo)
-	os.execute("cp "..doc.description.logo.." "..doc.description.destination_logo)
+	mkDir(makepath(doc.description.destination_logo))
+	os.execute("cp \""..makepath(doc.description.logo.."\" \""..doc.description.destination_logo.."\""))
 end
 

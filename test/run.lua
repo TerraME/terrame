@@ -18,8 +18,8 @@ _Gtme.printNote("Testing installed packages")
 _Gtme.printNote("Copying packages")
 forEachFile("packages", function(file)
 	_Gtme.print("Copying "..file)
-	os.execute("rm -rf "..baseDir..s.."packages"..s..file)
-	os.execute("cp -pr packages"..s..file.." "..baseDir..s.."packages"..s..file)
+	os.execute("rm -rf \""..baseDir..s.."packages"..s..file.."\"")
+	os.execute("cp -pr \"packages"..s..file.."\" \""..baseDir..s.."packages"..s..file.."\"")	
 end)
 
 local report = {
@@ -35,8 +35,11 @@ local report = {
 }
 
 local function approximateLine(line)
+
+	if not line then return 0 end
+	
 	if string.match(line, "seconds")             then return 5  end
-	if string.match(line, "MD5")                 then return 32 end
+	if string.match(line, "MD5")                 then return 70 end
 	if string.match(line, "configuration file")  then return 3  end
 	if string.match(line, "or is empty or does") then return 50 end
 	if string.match(line, "does not exist")      then return 50 end
@@ -167,7 +170,7 @@ if commands.build then
 			_Gtme.printError("File does not exist")
 			report.builderrors = report.builderrors + 1
 		else
-			os.execute("rm "..mfile)
+			os.execute("rm \""..mfile.."\"")
 		end
 	end)
 end
@@ -175,7 +178,7 @@ end
 _Gtme.printNote("Removing packages")
 forEachFile("packages", function(file)
 	_Gtme.print("Removing "..file)
-	os.execute("rm -rf "..baseDir..s.."packages"..s..file)
+	os.execute("rm -rf \""..baseDir..s.."packages"..s..file.."\"")
 end)
 
 _Gtme.printNote("Testing from local folders")
@@ -246,14 +249,23 @@ forEachOrderedElement(commands, function(idx, group)
 				if distance > distance2 then
 					distance = distance2
 				end
+				
+				if not str then
+					_Gtme.printError("Error: Strings do not match (line "..line.."):")
+					_Gtme.printError("Log file: <end of file>")
+					_Gtme.printError("Test: '"..value.."'.")
 
+					logerror = true
+					report.logerrors = report.logerrors + 1
+					return false
+				end		
+
+				str = _Gtme.makePathCompatibleToAllOS(str)				
+				value = _Gtme.makePathCompatibleToAllOS(value)				
+				
 				if levenshtein(str, value) > distance then
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
-					if str == nil then
-						_Gtme.printError("Log file: <empty>")
-					else
-						_Gtme.printError("Log file: '"..str.."'.")
-					end
+					_Gtme.printError("Log file: '"..str.."'.")
 					_Gtme.printError("Test: '"..value.."'.")
 
 					if distance > 0 then
@@ -305,13 +317,13 @@ if commands.build then
 		os.execute("terrame -install "..mfile)
 
 		if isDir(sessionInfo().path..s.."packages"..s..package) then
-			os.execute("rm -rf "..sessionInfo().path..s.."packages"..s..package)
+			os.execute("rm -rf \""..sessionInfo().path..s.."packages"..s..package.."\"")
 		else
 			_Gtme.printError("Package could not be installed")
 			report.localbuilderrors = report.localbuilderrors + 1
 		end
 
-		os.execute("rm "..mfile)
+		os.execute("rm \""..mfile.."\"")
 	end)
 end
 

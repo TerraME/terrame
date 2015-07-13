@@ -53,7 +53,7 @@ return{
 		t:execute(30)
 		local s = sessionInfo().separator
 
-		pcall(function() os.execute("rm "..file(".."..s.."snapshots"..s.."chart_cell.bmp", "onerror")) end)
+		pcall(function() os.execute("rm \""..file(".."..s.."snapshots"..s.."chart_cell.bmp", "onerror").."\"") end)
 
 		unitTest:assertSnapshot(c1, "chart_cell.bmp")
 		unitTest:assertSnapshot(c2, "chart_cell_select.bmp")

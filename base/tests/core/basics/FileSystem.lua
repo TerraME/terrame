@@ -99,7 +99,7 @@ return{
 			attr = linkAttributes(pathdata.."agentslink", "nlink")
 			unitTest:assertEquals(attr, 1) -- SKIP
 
-			os.execute("rm "..pathdata.."agentslink")
+			os.execute("rm \""..pathdata.."agentslink\"")
 		else
 			unitTest:assert(true) -- SKIP
 		end
@@ -111,7 +111,7 @@ return{
 
 		unitTest:assert(lock(f, "w"))
 
-		os.execute("rm "..pathdata.."test.txt")
+		os.execute("rm \""..pathdata.."test.txt\"")
 	end,
 	lockDir = function(unitTest)
 		local pathdata = packageInfo().data
@@ -168,7 +168,7 @@ return{
 		attr = attributes(pathdata.."testfile.txt", "modification")
 		unitTest:assertEquals(attr, 10000)
 
-		os.execute("rm "..pathdata.."testfile.txt")
+		os.execute("rm \""..pathdata.."testfile.txt\"")
 	end, 
 	unlock = function(unitTest)
 		local pathdata = packageInfo().data
@@ -180,7 +180,7 @@ return{
 		unitTest:assert(unlock(f))
 
 		f:close()
-		os.execute("rm "..pathdata.."testfile.txt")
+		os.execute("rm \""..pathdata.."testfile.txt\"")
 	end
 }
 

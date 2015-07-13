@@ -169,8 +169,12 @@ function _Gtme.buildPackage(package)
 	end
 
 	os.execute("cp \""..file.."\" \""..currentdir.."\"")
-
-	md5sum = runCommand("md5 -q "..file)
+	
+	if _Gtme.isWindowsOS() then 
+		md5sum = runCommand("md5sum "..file) 
+	else 
+		md5sum = runCommand("md5 -q "..file) 
+	end
 
 	chDir(currentdir)
 

@@ -95,7 +95,7 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
 
-		os.execute("rm "..pathdata.."test.txt")
+		os.execute("rm \""..pathdata.."test.txt\"")
 	end,
 	lockDir = function(unitTest)
 		local error_func = function()
