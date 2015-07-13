@@ -408,10 +408,12 @@ function _Gtme.installPackage(file)
 
 	_Gtme.printNote("Installing "..file)
 
-	local s = _Gtme.sessionInfo().separator
+	local s = "/"
 	local package
 
-	local _, pfile = string.match(file, "(.-)([^"..s.."]-([^%.]+))$") -- remove path from the file
+	file = _Gtme.makePathCompatibleToAllOS(file)
+	
+	local _, pfile = string.match(file, "(.-)([^/]-([^%.]+))$") -- remove path from the file
 
 	local result = xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function(err)
 		_Gtme.printError(file.." is not a valid file name for a TerraME package")
