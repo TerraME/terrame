@@ -36,7 +36,7 @@ return{
 
 		local cs = base.CellularSpace{xdim = 10}
 		unitTest:assertType(cs, "CellularSpace")
-		unitTest:assertEquals(getn(base), 157)
+		unitTest:assertEquals(getn(base), 158)
 	end,
 	packageInfo = function(unitTest)
 		local r = packageInfo()
