@@ -410,46 +410,55 @@ function _Gtme.installPackage(file)
 
 	local s = _Gtme.sessionInfo().separator
 	local package
-	local result = xpcall(function() package = string.sub(file, 1, string.find(file, "_") - 1) end, function(err)
+
+	local _, pfile = string.match(file, "(.-)([^"..s.."]-([^%.]+))$") -- remove path from the file
+
+	local result = xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function(err)
 		_Gtme.printError(file.." is not a valid file name for a TerraME package")
+		os.exit()
 	end)
 
-	if not result then return end
+	_Gtme.printNote("Copying package '"..package.."'")
 
 	local arg = _Gtme.sessionInfo().path..s.."packages"..s..package
 
 	local currentDir = _Gtme.currentDir()
 	local packageDir = _Gtme.sessionInfo().path..s.."packages"
 
-	os.execute("cp \""..file.."\" \""..packageDir.."\"")
-	_Gtme.chDir(packageDir)
-
-	os.execute("unzip -q \""..file.."\"")
-
-	local lastSep = string.find(package, s, string.len(package) / 2)
-	local name = package
-
-	if lastSep then
-		name = string.sub(package, lastSep + 1)
-	end
-
 	if not _Gtme.isLoaded("base") then
 		_Gtme.import("base")
 	end
 
-	_Gtme.printNote("Trying to load package "..name)
-	xpcall(function() import(name) end, function(err)
+
+	local tmpfolder = tmpFolder()
+
+	os.execute("cp \""..file.."\" \""..tmpfolder.."\"")
+	_Gtme.chDir(tmpfolder)
+
+	os.execute("unzip -q \""..file.."\"")
+
+	_Gtme.printNote("Trying to load package '"..package.."'")
+	xpcall(function() import(package) end, function(err)
 		_Gtme.printError("Package could not be loaded:")
 		_Gtme.printError(err)
 
-		os.execute("rm -rf \""..package.."\"")
+		os.execute("rm -rf \""..tmpfolder.."\"")
 		os.exit()
 	end)
-	_Gtme.printNote("Package successfully installed")
+
+	if isDir(packageDir..s..package) then
+		_Gtme.printNote("Removing previous version of package")
+		os.execute("rm -rf \""..packageDir..s..package.."\"")
+	end
+
+	_Gtme.printNote("Installing package '"..package.."'")
+	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")
+
 	chDir(currentDir)
 
-	os.execute("rm \""..packageDir..s.."*.zip\"")
-	return name
+	os.execute("rm -rf \""..tmpfolder.."\"")
+	_Gtme.printNote("Package successfully installed")
+	return package
 end
 
 local function version()
