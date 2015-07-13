@@ -309,11 +309,25 @@ function Model(attrTab)
 
 	local model
 
-	local mmodel = {type_ = "Model"}
-	setmetatable(mmodel, {__call = function(_, v)
+	local callFunction = function(_, v)
 		if v == nil then return attrTab end
 		return model(v, debug.getinfo(1).name)
-	end})
+	end
+
+	local indexFunction = function(model, v)
+		if v ~= "execute" then
+			customError("It is not possible to call any function from a Model but execute().")
+		end
+
+		return function()
+			local m = model{}
+			m:execute()
+			return m
+		end
+	end
+
+	local mmodel = {type_ = "Model"}
+	setmetatable(mmodel, {__call = callFunction, __index = indexFunction})
 
 	model = function(argv, typename)
 		-- set the default values

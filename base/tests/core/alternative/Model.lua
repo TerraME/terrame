@@ -411,6 +411,11 @@ return{
 		}
 
 		error_func = function()
+			M:exec()
+		end
+		unitTest:assertError(error_func, "It is not possible to call any function from a Model but execute().")
+
+		error_func = function()
 			local m = M{files = {file1 = file("agents.csv", "base")}}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(toLabel("file2", "files")))
