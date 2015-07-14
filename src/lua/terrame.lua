@@ -190,7 +190,7 @@ local function sqlFiles(package)
 end
 
 function _Gtme.findModels(package)
-	local s = "/" --_Gtme.sessionInfo().separator
+	local s = "/"
 	
 	if not _Gtme.isLoaded("base") then
 		_Gtme.import("base")
@@ -408,7 +408,7 @@ function _Gtme.installPackage(file)
 
 	_Gtme.printNote("Installing "..file)
 
-	local s = "/"
+	local s = "/" --_Gtme.sessionInfo().separator
 	local package
 
 	file = _Gtme.makePathCompatibleToAllOS(file)
@@ -598,7 +598,14 @@ function _Gtme.traceback()
 	local info = debug.getinfo(level)
 	while info ~= nil do
 		local infoSource = _Gtme.makePathCompatibleToAllOS(info.source)
-		local m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("bin"..s.."lua")))
+		local m1
+		
+		if _Gtme.isWindowsOS() then
+			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."lua")))
+		else
+			m1 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars("bin"..s.."lua")))
+		end
+
 		local m2 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages")))
 		local mb = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base")))
 		local m3 = string.match(info.short_src, "%[C%]")
