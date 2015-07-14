@@ -7,6 +7,8 @@
 
 #include <math.h>
 
+#include "visualArrangement.h"
+
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
@@ -22,7 +24,6 @@ ObserverTable::ObserverTable(Subject *subj, QWidget *parent)
     subjectType = TObsUnknown;
     paused = false;
 
-    resize(200, 480);
     setWindowTitle("TerraME Observer : Table");
     //setMaximumSize(QSize(200, 480));
 
@@ -36,11 +37,11 @@ ObserverTable::ObserverTable(Subject *subj, QWidget *parent)
 
     setLayout(vertLayout);
 
-    showNormal(); // tranferido para o metodo run()
-
     // prioridade da thread
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
     start(QThread::IdlePriority);
+
+    VisualArrangement::getInstance()->starts(getId(), this);
 }
 
 ObserverTable::~ObserverTable()
@@ -180,4 +181,19 @@ int ObserverTable::close()
     QDialog::close();
     QThread::exit(0);
     return 0;
+}
+
+void ObserverTable::resizeEvent(QResizeEvent *event)
+{
+    VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+}
+
+void ObserverTable::moveEvent(QMoveEvent *event)
+{
+    VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+}
+
+void ObserverTable::closeEvent(QCloseEvent *event)
+{
+    VisualArrangement::getInstance()->closeEventDelegate();
 }
