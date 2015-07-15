@@ -1,0 +1,13 @@
+The installer script was generated with Inno Setup.
+http://www.jrsoftware.org/isinfo.php
+
+ModPath was used to provide extra features.
+http://www.legroom.net/software/modpath
+
+Some parameters should be checked before generating the installer, as follows:
+1. #define MyAppVersion [version]
+2. OutputBaseFilename=terrame-[version]-win[32|x64]
+3. All "Source" in [Files] section must be checked.
+
+To generate the installer just open the tme.iss in Inno Setup and compile it.
+
