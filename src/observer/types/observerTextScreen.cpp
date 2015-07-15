@@ -3,6 +3,8 @@
 #include <QApplication>
 #include <QByteArray>
 
+#include "visualArrangement.h"
+
 ObserverTextScreen::ObserverTextScreen(Subject *subj, QWidget *parent)
     : QTextEdit(parent), ObserverInterf(subj), QThread()
 {
@@ -16,12 +18,11 @@ ObserverTextScreen::ObserverTextScreen(Subject *subj, QWidget *parent)
     //setAutoFormatting(QTextEdit::AutoAll);
     setWindowTitle("TerraME Observer : Text Screen");
 
-    show();
-    resize(600, 480);
-
     // prioridade da thread
     //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
     start(QThread::IdlePriority);
+
+    VisualArrangement::getInstance()->starts(getId(), this);
 }
 
 ObserverTextScreen::~ObserverTextScreen()
@@ -156,4 +157,19 @@ int ObserverTextScreen::close()
 {
     QThread::exit(0);
     return 0;
+}
+
+void ObserverTextScreen::resizeEvent(QResizeEvent *event)
+{
+    VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+}
+
+void ObserverTextScreen::moveEvent(QMoveEvent *event)
+{
+    VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+}
+
+void ObserverTextScreen::closeEvent(QCloseEvent *event)
+{
+    VisualArrangement::getInstance()->closeEventDelegate();
 }

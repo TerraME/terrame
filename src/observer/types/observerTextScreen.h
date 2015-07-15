@@ -118,6 +118,9 @@ private:
      */
     bool write();
 
+    void resizeEvent(QResizeEvent *event);
+    void moveEvent(QMoveEvent *event);
+    void closeEvent(QCloseEvent *event);
 
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
