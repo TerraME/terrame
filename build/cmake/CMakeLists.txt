@@ -340,9 +340,7 @@ qt5_wrap_ui(UI_SRCS ${UIS})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-#RAIAN: 
 set(CMAKE_INSTALL_RPATH "@executable_path/../lib;/usr/local/terrame/lib")
-#Ver o que acontece caso esta linha seja comentada.
 set(CMAKE_INSTALL_NAME_DIR "@executable_path/../lib")
 set(CMAKE_BUILD_WITH_INSTALL_RPATH true)
 set(CMAKE_MACOSX_RPATH 1)
@@ -417,20 +415,19 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "TerraME is a programming environment for 
 # set(CPACK_PACKAGE_ICON "/Users/raian/Documents/INPE/TerraME/source_code/PackageInstaller/Logomarca/logo_canto.png")
 set(CPACK_DMG_BACKGROUND_IMAGE "/Users/raian/Documents/INPE/TerraME/source_code/PackageInstaller/Logomarca/logo_canto.png")
 #VERSION
-set(CPACK_PACKAGE_VERSION "2.0")
-set(CPACK_PACKAGE_VERSION_MAJOR "2")
-set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION "1.4")
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "4")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_PACKAGE_EXECUTABLES "TerraME;TerraME")
 set(CPACK_SYSTEM_NAME "Mac-OSX")
 
-# Environment Variables???? 
+# Environment Variables
 set(CPACK_POSTFLIGHT_SCRIPT "${CMAKE_CUURENT_SOURCE_DIR}/setenv_install_MAC.sh" ) 
 
 include(CPack)
 
 ########### Get dependencies ################
-# RAIAN: COMENTEI AQUI, pois e necessario resolver o problema do LOCATION. Ao resolver, remover comentarios
 set(MY_BINARY_LOCATION ${BINARY_DIR}/terrame)
 
 configure_file(
@@ -439,9 +436,7 @@ configure_file(
    @ONLY
  )
 install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/dependencies.cmake")
-#RAIAN: Retirar comentarios ate aqui.
 ######################################
-
 
 include(DeployQt4)
 resolve_qt4_paths(terrame "terrame" "@executable_path/../lib")

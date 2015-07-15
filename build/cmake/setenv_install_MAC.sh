@@ -7,7 +7,7 @@ else
    touch ~/.profile
 fi
 echo "" >> ~/.profile
-echo "#Environment variable used by TerraME 2.0" >> ~/.profile
+echo "#Environment variable used by TerraME 1.4" >> ~/.profile
 echo "TME_PATH=/usr/local/terrame" >> ~/.profile
 echo "PATH=\$PATH:\$TME_PATH/bin" >> ~/.profile
 echo "export TME_PATH PATH" >> ~/.profile

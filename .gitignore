@@ -8,6 +8,8 @@ __/
 clean_cmake.sh
 cmake_install.cmake
 build/cmake/dependencies.cmake
+build/cmake/_*
+build/cmake/install_manifest.txt
 CMakeCache.txt
 CMakeFiles/
 CMakeScripts/
