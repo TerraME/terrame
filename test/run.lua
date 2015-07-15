@@ -7,6 +7,19 @@ initialTime = os.time(os.date("*t"))
 
 commands = _Gtme.include("commands.lua")
 
+directories = {
+	log = {},
+	packages = {},
+	scripts = {},
+	config = {}
+}
+
+forEachElement(directories, function(idx, value)
+	forEachFile(idx, function(file)
+		value[file] = false
+	end)
+end)
+
 local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 
@@ -31,7 +44,8 @@ local report = {
 	createdlogs = 0,
 	commands = 0,
 	commandserrors = 0,
-	observererrors = 0
+	observererrors = 0,
+	forgottenfiles = 0,
 }
 
 local function approximateLine(line)
@@ -60,7 +74,10 @@ forEachOrderedElement(commands, function(idx, group)
 	forEachOrderedElement(group, function(name, args)
 		command = "terrame"
 
+		directories.log[idx.."-"..name..".log"] = true
+
 		if args.package then
+			directories.packages[args.package] = true
 			command = command.." -package "..args.package
 		end
 
@@ -69,10 +86,12 @@ forEachOrderedElement(commands, function(idx, group)
 		end
 
 		if args.config then
+			directories.config[args.config] = true
 			command = command.." config"..s..args.config
 		end
 
 		if args.script then
+			directories.scripts[args.script] = true
 			command = command.." scripts"..s..args.script
 		end
 
@@ -333,7 +352,11 @@ if commands.observer then
 	_Gtme.printNote("Checking observers")
 
 	forEachElement(commands.observer, function(_, mtable)
-		tmefile = "scripts"..s..string.gsub(mtable.script, "lua", "tme")
+		tmefile = string.gsub(mtable.script, "lua", "tme")
+
+		directories.scripts[tmefile] = true
+
+		tmefile = "scripts"..s..tmefile
 
 		local quantity = #dofile(tmefile)
 
@@ -343,6 +366,16 @@ if commands.observer then
 		end
 	end)
 end
+
+forEachElement(directories, function(idx, value)
+	_Gtme.printNote("Verifying directory "..idx)
+	forEachElement(value, function(mvalue, occur)
+		if not occur then
+			report.forgottenfiles = report.forgottenfiles + 1
+			_Gtme.printError(idx.."/"..mvalue.." is not used at least once in the tests.")
+		end
+	end)
+end)
 
 finalTime = os.time(os.date("*t"))
 
@@ -405,6 +438,14 @@ elseif report.observererrors == 1 then
 	_Gtme.printError("One script did not save the exact number of observers.")
 else
 	_Gtme.printError(report.observererrors.." scripts did not save the exact number of observers.")
+end
+
+if report.forgottenfiles == 0 then
+	_Gtme.printNote("All files and packages are used at least once in the tests.")
+elseif report.forgottenfiles == 1 then
+	_Gtme.printError("One file or package is not used at least once in the tests.")
+else
+	_Gtme.printError(report.forgottenfiles.." files and/or packages are not used at least once in the tests..")
 end
 
 errors = 0

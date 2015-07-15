@@ -25,7 +25,7 @@ doc = {
 	nodescription = {arg = "-doc", package = "nodescription"},
 	nodatadotlua  = {arg = "-doc", package = "nodatadotlua"},
 	wrongdata     = {arg = "-doc", package = "wrongdata"},
-	withoutdata   = {arg = "-doc", package = "wrongdata"}, -- withoutdata
+	withoutdata   = {arg = "-doc", package = "withoutdata"}
 }
 
 build = {
