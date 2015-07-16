@@ -49,6 +49,7 @@ basic = {
 	example     = {arg = "-example ipd"},
 	nointerface = {arg = "-interface abc"},
 	trace       = {script = "trace.lua"},
+	fulltrace   = {script = "trace.lua", arg = "-ft"},
 	qwerty4321  = {package = "qwerty4321"},
 }
 
