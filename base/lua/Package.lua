@@ -192,25 +192,24 @@ function import(package)
 			for _, file in ipairs(load_sequence) do
 				local mfile = package_path..s.."lua"..s..file
 				if not isFile(mfile) then -- SKIP
-					_Gtme.printError("Cannot open "..mfile..". No such file.")
-					_Gtme.printError("Please check "..package_path..s.."load.lua")
-					os.exit() -- SKIP
+					customWarning("Cannot open "..mfile..". No such file. Please check "..package_path..s.."load.lua.") -- SKIP
+				else
+					xpcall(function() dofile(mfile) end, function(err)
+						_Gtme.printError("Package '"..package.."' could not be loaded.")
+						_Gtme.printError(err)
+						os.exit() -- SKIP
+					end)
+					count_files[file] = count_files[file] + 1 -- SKIP
 				end
-				xpcall(function() dofile(mfile) end, function(err)
-					_Gtme.printError("Package '"..package.."' could not be loaded.")
-					_Gtme.printError(err)
-					os.exit() -- SKIP
-				end)
-				count_files[file] = count_files[file] + 1 -- SKIP
 			end
 		end
 
 		for mfile, count in pairs(count_files) do
 			local attr = attributes(package_path..s.."lua"..s..mfile, "mode")
 			if count == 0 and attr ~= "directory" then -- SKIP
-				_Gtme.printWarning("File lua"..s..mfile.." is ignored by load.lua.")
+				customWarning("File lua"..s..mfile.." is ignored by load.lua.") -- SKIP
 			elseif count > 1 then
-				_Gtme.printWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.")
+				customWarning("File lua"..s..mfile.." is loaded "..count.." times in load.lua.") -- SKIP
 			end
 		end
 

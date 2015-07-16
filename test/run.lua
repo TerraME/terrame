@@ -49,21 +49,21 @@ local report = {
 }
 
 local function approximateLine(line)
-
 	if not line then return 0 end
 	
-	if string.match(line, "seconds")             then return 5  end
-	if string.match(line, "MD5")                 then return 70 end
-	if string.match(line, "configuration file")  then return 3  end
-	if string.match(line, "or is empty or does") then return 50 end
-	if string.match(line, "does not exist")      then return 50 end
-	if string.match(line, "is unnecessary%.")    then return 50 end
-	if string.match(line, "Error: ")             then return 50 end
-	if string.match(line, "File ")               then return 60 end
-	if string.match(line, "In ")                 then return 50 end
-	if string.match(line, "Error in")            then return 50 end
-	if string.match(line, "Wrong execution")     then return 50 end
-	if string.match(line, "%.terrame")           then return 5  end
+	if string.match(line, "seconds")             then return   5 end
+	if string.match(line, "MD5")                 then return  70 end
+	if string.match(line, "configuration file")  then return   3 end
+	if string.match(line, "or is empty or does") then return  50 end
+	if string.match(line, "does not exist")      then return  50 end
+	if string.match(line, "is unnecessary%.")    then return  50 end
+	if string.match(line, "Error: ")             then return  50 end
+	if string.match(line, "File ")               then return  60 end
+	if string.match(line, "such file")           then return 120 end
+	if string.match(line, "In ")                 then return  50 end
+	if string.match(line, "Error in")            then return  50 end
+	if string.match(line, "Wrong execution")     then return  50 end
+	if string.match(line, "%.terrame")           then return   5 end
 
 	return 0
 end

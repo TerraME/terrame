@@ -14,8 +14,11 @@ package = {
 	nodescription     = {package = "nodescription"},
 	nolua             = {package = "nolua"},
 	noexamples        = {package = "noexamples"},
-	noexamplesexample = {package = "noexamples", arg = "-example"},
-	example           = {package = "onerror", arg = "-example ipd"},
+	noexamplesexample = {package = "noexamples",     arg = "-example"},
+	example           = {package = "onerror",        arg = "-example ipd"},
+	loadforgotten     = {package = "load-forgotten", arg = "-example ipd"},
+	loadtwice         = {package = "load-twice",     arg = "-example ipd"},
+	loadwrong         = {package = "load-wrong",     arg = "-example ipd"}
 }
 
 doc = {
