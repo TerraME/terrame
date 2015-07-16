@@ -31,6 +31,7 @@ return{
 		unitTest:assert(belong2("b", mvector))
 		unitTest:assert(belong2("e", mvector))
 		abcdef = 5
+		forEachCell = 2
 	end,
 	call2 = function(unitTest)
 		local cont = 0

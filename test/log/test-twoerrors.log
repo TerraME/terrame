@@ -66,6 +66,7 @@ Testing tests/Utils.lua
 Testing belong2
 Error in ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua:32: Test should be true, got false.
 Test creates global variable(s): 'abcdef' (number).
+Test updates global variable(s): 'forEachCell' (changed from function to number).
 Testing call2
 Wrong execution, got error: '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:78: attempt to perform arithmetic on global 'aaa' (a nil value)'.
 Stack traceback:
@@ -73,7 +74,7 @@ Stack traceback:
     In call2
     File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 78
     In main chunk
-    File ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua, line 41
+    File ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua, line 42
 Testing createNeighborhood2
 Testing elapsedTime2
 Testing forEachAgent2
@@ -105,7 +106,7 @@ Testing switch2
 Testing type2
 Testing vardump2
 Checking if all asserts were executed
-Assert in line 243 was not executed.
+Assert in line 244 was not executed.
 Testing tests/alternative/Cell.lua
 Testing Cell
 Error in ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:42: Test should be Map got Chart.
