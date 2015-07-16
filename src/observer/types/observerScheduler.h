@@ -128,6 +128,10 @@ private:
      */
     const QString number2String(double number);
 
+    void resizeEvent(QResizeEvent *event);
+    void moveEvent(QMoveEvent *event);
+    void closeEvent(QCloseEvent *event);
+
     /**
      * \enum ObserverScheduler::PositionItems
      * Positons of the item inside the \a treeWidget component

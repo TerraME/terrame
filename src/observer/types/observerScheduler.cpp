@@ -8,6 +8,8 @@
 #include <QApplication>
 #include <QDebug>
 
+#include "visualArrangement.h"
+
 // "?" "?"
 
 using namespace TerraMEObserver;
@@ -20,7 +22,6 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
 
     paused = false;
 
-    resize(200, 140);  // feito no final
     setWindowTitle("TerraME Observer : Scheduler");
 
     clockPanel = new QWidget(this);
@@ -86,7 +87,6 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
     hboxLayout->addWidget(pipelineWidget);
 
     setLayout(hboxLayout);
-    showNormal();
 
     QDialog::connect(butExpand, SIGNAL(clicked()), (QDialog *)this, SLOT(on_butExpand_clicked()));
 
@@ -95,6 +95,8 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
     // start(QThread::IdlePriority);
 
     on_butExpand_clicked();
+
+    VisualArrangement::getInstance()->starts(getId(), this);
 }
 
 
@@ -270,5 +272,20 @@ const QString ObserverScheduler::number2String(double number)
 int ObserverScheduler::close()
 {
     return QDialog::close();
+}
+
+void ObserverScheduler::resizeEvent(QResizeEvent *event)
+{
+    VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+}
+
+void ObserverScheduler::moveEvent(QMoveEvent *event)
+{
+    VisualArrangement::getInstance()->moveEventDelegate(getId(), event);
+}
+
+void ObserverScheduler::closeEvent(QCloseEvent *event)
+{
+    VisualArrangement::getInstance()->closeEventDelegate();
 }
 
