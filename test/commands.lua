@@ -54,10 +54,10 @@ basic = {
 }
 
 observer = {
-	chart = {script = "chart.lua", quantity = 3},
-	map   = {script = "map.lua",   quantity = 2},
-	clock   = {script = "clock.lua",   quantity = 1},
-	textscreen   = {script = "textscreen.lua",   quantity = 8},
-	visualtable	= {script = "visualtable.lua",   quantity = 8}
+	chart       = {script = "chart.lua",       quantity = 3},
+	map         = {script = "map.lua",         quantity = 2},
+	clock       = {script = "clock.lua",       quantity = 1},
+	textscreen  = {script = "textscreen.lua",  quantity = 8},
+	visualtable = {script = "visualtable.lua", quantity = 8}
 }
 

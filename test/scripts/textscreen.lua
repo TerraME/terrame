@@ -49,3 +49,4 @@ local c1 = TextScreen{target = world}
 local c1 = TextScreen{target = world, select = "mcount"}
 
 _Gtme.killAllObservers()
+
