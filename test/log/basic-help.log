@@ -22,6 +22,7 @@ Options:
                              creating an instance of such model.
  -install <file>             Install a package stored in a given file.
  [-package <pkg>] -test      Execute unit tests.
+ [-package <pkg>] -uninstall Remove an installed package.
  [-package <pkg>] -example   Run an example.
  [-package <pkg>] -doc       Build the documentation.
  [-package <pkg>] -showdoc   Show the documentation in the default browser.

@@ -48,6 +48,7 @@ basic = {
 	noexample   = {arg = "-example abc"},
 	example     = {arg = "-example ipd"},
 	nointerface = {arg = "-interface abc"},
+	uninstall   = {arg = "-package abcdef -uninstall"},
 	trace       = {script = "trace.lua"},
 	fulltrace   = {script = "trace.lua", arg = "-ft"},
 	qwerty4321  = {package = "qwerty4321"},

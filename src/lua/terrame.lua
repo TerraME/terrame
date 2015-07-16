@@ -397,6 +397,24 @@ local function importDatabase(package)
 	end)
 end
 
+function _Gtme.uninstall(package)
+	local si = _Gtme.sessionInfo()
+	local s = si.separator
+
+	local arg = si.path..s.."packages"..s..package
+
+	if isDir(arg) then
+		os.execute("rm -rf \""..arg.."\"")
+		if isDir(arg) then
+			_Gtme.print("Package \'"..package.."\' could not be uninstalled (wrong permission).")
+		else
+			_Gtme.print("Package \'"..package.."\' was sucessfully uninstalled.")
+		end
+	else
+		_Gtme.printError("Package \'"..package.."\' is not installed.")
+	end
+end
+
 function _Gtme.installPackage(file)
 	if file == nil then
 		_Gtme.printError("You need to choose the file to be installed.")
@@ -503,6 +521,7 @@ local function usage()
 	print("                             creating an instance of such model.")
 	print(" -install <file>             Install a package stored in a given file.")
 	print(" [-package <pkg>] -test      Execute unit tests.")
+	print(" [-package <pkg>] -uninstall Remove an installed package.")
 	print(" [-package <pkg>] -example   Run an example.")
 	print(" [-package <pkg>] -doc       Build the documentation.")
 	print(" [-package <pkg>] -showdoc   Show the documentation in the default browser.")
@@ -872,6 +891,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				os.exit()
 			elseif arg == "-install" then
 				_Gtme.installPackage(arguments[argCount + 1])
+				os.exit()
+			elseif arg == "-uninstall" then
+				_Gtme.uninstall(package)
 				os.exit()
 			elseif arg == "-importDb" then
 				importDatabase(package)

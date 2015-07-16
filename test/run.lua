@@ -195,9 +195,8 @@ if commands.build then
 end
 
 _Gtme.printNote("Removing packages")
-forEachFile("packages", function(file)
-	_Gtme.print("Removing "..file)
-	os.execute("rm -rf \""..baseDir..s.."packages"..s..file.."\"")
+forEachFile("packages", function(pkg)
+	_Gtme.uninstall(pkg)
 end)
 
 _Gtme.printNote("Testing from local folders")
