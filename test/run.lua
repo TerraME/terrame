@@ -352,13 +352,30 @@ if commands.observer then
 	_Gtme.printNote("Checking observers")
 
 	forEachElement(commands.observer, function(_, mtable)
-		tmefile = string.gsub(mtable.script, "lua", "tme")
+		local tmefile = string.gsub(mtable.script, "lua", "tme")
+		_Gtme.print("Checking "..tmefile)
 
 		directories.scripts[tmefile] = true
 
-		tmefile = "scripts"..s..tmefile
+		tmefile = dofile("scripts"..s..tmefile)
 
-		local quantity = #dofile(tmefile)
+		local names = {"x", "y", "width", "height"}
+
+		forEachElement(tmefile, function(idx, value)
+			if getn(value) > 4 then
+				_Gtme.printError("Position "..idx.." has "..getn(value).." indexes. It should have only 4.")
+				report.observererrors = report.observererrors + 1
+			end
+
+			forEachElement(names, function(_, mname)
+				if not value[mname] then
+					_Gtme.printError("Position "..idx.." does not have index "..mname..".")
+					report.observererrors = report.observererrors + 1
+				end
+			end)
+		end)
+
+		local quantity = #tmefile
 
 		if quantity ~= mtable.quantity then
 			_Gtme.printError("Wrong quantity, got "..quantity..", expected "..mtable.quantity..".")
@@ -367,8 +384,9 @@ if commands.observer then
 	end)
 end
 
+_Gtme.printNote("Verifying directories")
 forEachElement(directories, function(idx, value)
-	_Gtme.printNote("Verifying directory "..idx)
+	_Gtme.print("Verifying "..idx)
 	forEachElement(value, function(mvalue, occur)
 		if not occur then
 			report.forgottenfiles = report.forgottenfiles + 1
@@ -435,9 +453,9 @@ end
 if report.observererrors == 0 then
 	_Gtme.printNote("All observers are saved correctly.")
 elseif report.observererrors == 1 then
-	_Gtme.printError("One script did not save the exact number of observers.")
+	_Gtme.printError("One problem was found in the saved tme files.")
 else
-	_Gtme.printError(report.observererrors.." scripts did not save the exact number of observers.")
+	_Gtme.printError(report.observererrors.." problems were found in the saved tme files.")
 end
 
 if report.forgottenfiles == 0 then
