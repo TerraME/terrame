@@ -213,7 +213,7 @@ function import(package)
 			end
 		end
 
-		table.insert(_Gtme.loadedPackages, package) -- SKIP
+		_Gtme.loadedPackages[package] = true -- SKIP
 	end
 end
 
@@ -222,7 +222,7 @@ end
 -- @usage isLoaded("base")
 function isLoaded(package)
 	mandatoryArgument(1, "string", package)
-	return belong(package, _Gtme.loadedPackages)
+	return _Gtme.loadedPackages[package] == true
 end
 
 --- Return a table with the content of a given package. If the package is not
