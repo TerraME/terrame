@@ -53,6 +53,7 @@
 										arg_name = func.arg[i]%>
 									    <li><strong><%=arg_name%></strong>: <%= arg_desc%></li> 
 									<%end%>
+									</ul>
 							<%end%>
 						<%end%>
 					</dl>
