@@ -57,6 +57,18 @@ return{
 		local u = UnitTest{unittest = true}
 
 		local error_func = function()
+			u:assertEquals()
+		end
+
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
+
+		local error_func = function()
+			u:assertEquals(1)
+		end
+
+		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
+
+		local error_func = function()
 			u:assertEquals(2, 2, "a")
 		end
 
@@ -131,8 +143,32 @@ return{
 
 		unitTest:assertError(error_func, "Test should not be nil.")
 	end,
+	assertSnapshot = function(unitTest)
+		local u = UnitTest{unittest = true}
+
+		local error_func = function()
+			u:assertSnapshot()
+		end
+
+		unitTest:assertError(error_func, "Argument #1 should be Chart or Map, got nil.")
+
+		local ce = Cell{value = 5}
+		local ch = Chart{target = ce}
+
+		local error_func = function()
+			u:assertSnapshot(ch)
+		end
+
+		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
+	end,
 	assertType = function(unitTest)
 		local u = UnitTest{unittest = true}
+
+		local error_func = function()
+			u:assertType()
+		end
+
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		local error_func = function()
 			u:assertType(2, 2)

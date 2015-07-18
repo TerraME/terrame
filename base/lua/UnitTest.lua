@@ -63,6 +63,12 @@ UnitTest_ = {
 	assertEquals = function (self, v1, v2, tol)
 		self.test = self.test + 1
 
+		if v1 == nil then
+			mandatoryArgumentError(1)
+		elseif v2 == nil then
+			mandatoryArgumentError(2)
+		end
+
 		if tol ~= nil and type(v1) ~= "number" then
 			customError("#3 should be used only when comparing numbers (#1 is "..type(v1)..").")
 		end
@@ -198,6 +204,12 @@ UnitTest_ = {
 	-- @usage c = Chart{...}
 	-- unitTest:assertSnapshot(c, "test_chart.bmp")
 	assertSnapshot = function(self, observer, file)
+		if not belong(type(observer), {"Chart", "Map"}) then
+			customError("Argument #1 should be Chart or Map, got "..type(observer)..".")
+		end
+
+		mandatoryArgument(2, "string", file)
+
 		self.snapshots = self.snapshots + 1
 		local s = sessionInfo().separator
 		if not self.imgFolder then
@@ -244,9 +256,13 @@ UnitTest_ = {
 	-- @arg mtype A string with the name of a type.
 	-- @usage unitTest:assertType(2, "number")
 	assertType = function(self, value, mtype)
-		self.test = self.test + 1
+		if value == nil then
+			mandatoryArgumentError(1)
+		end
 
 		mandatoryArgument(2, "string", mtype)
+
+		self.test = self.test + 1
 
 		if type(value) == mtype then
 			self.success = self.success + 1
@@ -281,6 +297,8 @@ UnitTest_ = {
 			info = debug.getinfo(level)
 			infoSource = _Gtme.makePathCompatibleToAllOS(info.source)
 		end
+
+		msg = tostring(msg)
 
 		local str = info.short_src
 		str = "Error in "..str..":".. info.currentline ..": "..msg
