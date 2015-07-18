@@ -38,7 +38,6 @@ setmetatable(_Gtme, {__index = _G})
 _Gtme.loadedPackages = {}
 _Gtme.print = print
 _Gtme.type = type
-_Gtme.package_ = package
 
 function _Gtme.printError(value)
 	if sessionInfo().separator == "/" and sessionInfo().color then

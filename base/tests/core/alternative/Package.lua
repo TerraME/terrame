@@ -49,12 +49,12 @@ return{
 	end,
 	package = function(unitTest)
 		local error_func = function()
-			package()
+			getPackage()
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		error_func = function()
-			package("asdfgh")
+			getPackage("asdfgh")
 		end
 		unitTest:assertError(error_func, "Package 'asdfgh' is not installed.")
 	end,

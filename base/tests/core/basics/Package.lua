@@ -32,7 +32,7 @@ return{
 		unitTest:assert(isLoaded("base"))
 	end,
 	package = function(unitTest)
-		local base = package("base")
+		local base = getPackage("base")
 
 		local cs = base.CellularSpace{xdim = 10}
 		unitTest:assertType(cs, "CellularSpace")

@@ -291,7 +291,7 @@ function _Gtme.executeTests(package, fileName)
 		printError("Error: print() call detected with argument '"..tostring(arg).."'")
 	end
 
-	_, overwritten = _G.package(package)
+	_, overwritten = _G.getPackage(package)
 
 	print = function() end
 

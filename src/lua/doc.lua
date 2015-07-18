@@ -58,7 +58,7 @@ function _Gtme.executeDoc(package)
 
 	printNote("Loading package '"..package.."'")
 
-	xpcall(function() _G.package(package) end, function(err)
+	xpcall(function() _G.getPackage(package) end, function(err)
 		printError("Package "..package.." could not be loaded.")
 		printError(err)
 		os.exit()

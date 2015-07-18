@@ -228,9 +228,9 @@ end
 --- Return a table with the content of a given package. If the package is not
 -- installed, it tries to load from a folder in the current directory.
 -- @arg pname A package name.
--- @usage base = package("base")
+-- @usage base = getPackage("base")
 -- cs = base.CellularSpace{xdim = 10}
-function package(pname)
+function getPackage(pname)
 	mandatoryArgument(1, "string", pname)
 
 	if belong(pname, {"terrame", "TerraME"}) then
