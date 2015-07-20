@@ -31,6 +31,8 @@ _Gtme.printNote("Testing installed packages")
 _Gtme.printNote("Copying packages")
 forEachFile("packages", function(file)
 	_Gtme.print("Copying "..file)
+
+	os.execute("rm -rf \""..baseDir..s.."packages/*/doc\"")
 	os.execute("rm -rf \""..baseDir..s.."packages"..s..file.."\"")
 	os.execute("cp -pr \"packages"..s..file.."\" \""..baseDir..s.."packages"..s..file.."\"")	
 end)
@@ -202,6 +204,8 @@ end)
 _Gtme.printNote("Testing from local folders")
 
 chDir("packages")
+
+os.execute("rm -rf \"*/doc\"")
 
 forEachOrderedElement(commands, function(idx, group)
 	_Gtme.printNote("Testing group '"..idx.."'")
