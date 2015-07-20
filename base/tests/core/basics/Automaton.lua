@@ -134,26 +134,6 @@ id     string [MyAutomaton]
 		at1:add(it)
 		unitTest:assert(true)
 	end,
-	build = function(unitTest)
-		local at1 = Automaton{
-			it = Trajectory{
-				target = cs, 
-				select = function(cell)
-					local x = cell.x - 5
-					local y = cell.y - 5
-					return (x * x) + (y * y)  - 16 < 0.1
-				end
-			},
-			acum = 0,
-			cont = 0,
-			curve = 0,
-			st2 = state2,
-			st1 = state1
-		}
-	
-		at1:build()
-		unitTest:assert(true)
-	end,
 	execute = function(unitTest)
 		local at1 = Automaton{
 			it = Trajectory{

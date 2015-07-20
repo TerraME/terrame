@@ -66,13 +66,6 @@ Agent_ = {
 
 		self.socialnetworks[id] = set
 	end,
-	--- Check if the State machine was correctly defined. It verifies
-	-- whether the targets of Jump rules match the ids of the States. It is
-	-- useful only when the Agent is described as a state machine.
-	-- @usage agent:build()
-	build = function(self)
-		self.cObj_:build()
-	end,
 	--- Kill the agent and remove it from the Society it belongs. The methods execute() and
 	-- on_message() of the Agent are then set to do nothing.
 	-- @arg remove_placements A boolean value indicating whether the

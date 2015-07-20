@@ -110,11 +110,6 @@ socialnetworks  table of size 0
 		ag:addSocialNetwork(sn)
 		unitTest:assert(#ag:getSocialNetwork() == 5)
 	end,
-	build = function(unitTest)
-		local ag = Agent{}
-		ag:build()
-		unitTest:assert(true)
-	end,
 	die = function(unitTest)
 		local predator = Agent{
 			energy = 40,
@@ -151,7 +146,6 @@ socialnetworks  table of size 0
 			}
 		}
 
-		ag:build()
 		local t = Timer{
 			Event{action = function(ev)
 				ag:execute(ev)

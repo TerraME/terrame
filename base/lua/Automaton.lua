@@ -38,12 +38,6 @@ Automaton_ = {
 			incompatibleTypeError(1, "State or Trajectory", object)
 		end
 	end,
-	--- Check if the State machine was correctly defined. It verifies whether the targets of Jump
-	-- rules match the ids of the States.
-	-- @usage automaton:build()
-	build = function(self)
-		self.cObj_:build()
-	end,
 	--- Execute the State machine. First, it executes the Jump of the current State while it
 	-- jumps from State to State. When the machine stops jumping, it executes all the Flows of
 	-- the current State. Usually, this function is called within an Event, thus the time of the
