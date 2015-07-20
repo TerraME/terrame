@@ -246,68 +246,6 @@ id     string [MyAutomaton]
 	getId = function(unitTest)
 		unitTest:assert(true)
 	end,
-	getLatency = function(unitTest)
-		local cs = CellularSpace{xdim = 2}
-		local cont = 0
-
-		local at1 = Automaton{
-			it = Trajectory{
-				target = cs
-			},
-			cont = 0,
-			State{
-				id = "first",
-				Jump{
-					function(event, agent, cell)
-						cont = cont + 1
-						if agent.cont < 10 then
-							agent.cont = agent.cont + 1
-							return tru
-						end
-						if agent.cont == 10 then agent.cont = 0 end
-						return false
-					end,
-					target = "second"
-				}
-			},
-			State{
-				id = "second",
-				Jump{
-					function(event, agent, cell)
-						cont = cont + 1
-						if agent.cont < 10 then
-							agent.cont = agent.cont + 1
-							return true
-						end
-						if agent.cont == 10 then agent.cont = 0 end
-						return false
-					end,
-					target = "first"
-				}
-			}
-		}
-
-		local env = Environment{cs, at1}
-
-		local ev = Event{action = function() end}[1]
-
-		at1:setTrajectoryStatus(true)
-		at1:execute(ev)
-		unitTest:assertEquals(0, at1:getLatency())
-
-		local ev = Event{start = 4, action = function() end}[1]
-		at1.it:sort(greaterByCoord(">"))
-		at1:execute(ev)
-		unitTest:assertEquals(0, at1:getLatency())
-
-		at1.it:filter(function(cell) return cell.x == cell.y end)
-		at1:execute(ev)
-		unitTest:assertEquals(0, at1:getLatency())
-
-		at1.it:filter(function(cell) return true end)
-		at1:execute(ev)
-		unitTest:assertEquals(0, at1:getLatency())
-	end,
 	getState = function(unitTest)
 		unitTest:assert(true)
 	end,

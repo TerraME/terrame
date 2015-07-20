@@ -65,12 +65,6 @@ Automaton_ = {
 	getId = function(self)
 		return self.id
 	end,
-	--- Return the time when the machine executed the transition to the current state. Before
-	-- running, the latency is zero.
-	-- @usage latency = automaton:getLatency()
-	getLatency = function(self)
-		return self.cObj_:getLatency()
-	end,
 	--- Get a State of the Automaton according to a given position.
 	-- @arg index A number indicating the position of the State to be retrieved.
 	-- @usage state = automaton:getState(1)
