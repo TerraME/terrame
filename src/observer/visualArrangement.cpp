@@ -92,12 +92,12 @@ void VisualArrangement::starts(int id, QWidget *widget)
     else
         widget->resize(450, 350);
 
+    widget->showNormal();
+
     if(p.x > 0 && p.y > 0)
         widget->move(p.x, p.y - widget->geometry().y() + widget->y());
     else
         widget->move(50 + id * 50, 50 + id * 50);
-
-    widget->showNormal();
 }
 
 PositionVisualArrangement VisualArrangement::getPosition(int id)
