@@ -281,6 +281,12 @@ function _Gtme.showDoc(package)
 
 	docpath = docpath..s.."doc"..s.."index.html"
 
+	if not isFile(docpath) then
+		_Gtme.printError("It was not possible to find the documentation of package '"..package.."'.")
+		_Gtme.printError("Please run 'terrame -package "..package.." -doc' to build it.")
+		os.exit()
+	end
+
 	if not _Gtme.isWindowsOS() then
 		if _Gtme.runCommand("uname")[1] == "Darwin" then
 			_Gtme.runCommand("open "..docpath)
