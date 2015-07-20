@@ -47,7 +47,7 @@ return{
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 	end,
-	package = function(unitTest)
+	getPackage = function(unitTest)
 		local error_func = function()
 			getPackage()
 		end
