@@ -1594,13 +1594,13 @@ metaTableMap_ = {__index = Map_}
 -- @arg data.grouping A string with the strategy to slice and color the data. See below.
 -- @tabular grouping
 -- Grouping & Description & Compulsory arguments & Optional arguments\
--- "equalsteps" &The values are divided into a set of slices with the same range. Each slice is
+-- "equalsteps" & The values are divided into a set of slices with the same range. Each slice is
 -- associated to a given color. Equalsteps require only two colors in the argument color, one for
 -- the minimum and the other for the maximum value. The other colors are computed from a linear
--- interpolation of the two colors. & color, slices, max, min, target, select & precision, label \
+-- interpolation of the two colors. & color, slices, max, min, target, select & precision, label, invert \
 -- "quantil" & Aggregate the values into slices with approximately the same size. Values are
 -- ordered from lower to higher and then sliced. This strategy uses two colors in the same way
--- of equalsteps. & color, slices, max, min, target, select & precision, label \
+-- of equalsteps. & color, slices, max, min, target, select & precision, label, invert \
 -- "stdeviation" & Define slices according to the distribution of a given attribute. Values with
 -- similar positive or negative distances to the average will belong to the same slice. &
 -- color, stdColor, target, select & stdDeviation, precision, label \
@@ -1631,6 +1631,7 @@ metaTableMap_ = {__index = Map_}
 -- Blues, GnBu, Greens, Greys, Oranges, PuBuGn, PuRd, Purples, RdPu, Reds, YlGn, YlGnBu, YlOrBr, YlOrRd & 20 \
 -- @arg data.stdColor A table just as argument color. It is needed only when standard deviation is
 -- the chosen strategy.
+-- @arg data.invert Invert the order of the colors when using ColorBrewer. The default value is false.
 -- @arg data.select A string with the name of the attribute to be visualized.
 -- @usage Map{
 --     target = cs,
@@ -1741,6 +1742,7 @@ function Map(data)
 			mandatoryTableArgument(data, "slices", "number")
 			mandatoryTableArgument(data, "min", "number")
 			mandatoryTableArgument(data, "max", "number")
+			defaultTableValue(data, "invert", false)
 
 			verify(data.min < data.max, "Argument 'min' ("..data.min..") should be less than 'max' ("..data.max..").")
 			verify(data.slices > 1, "Argument 'slices' ("..data.slices..") should be greater than one.")
@@ -1763,13 +1765,17 @@ function Map(data)
 					customError("Color '"..data.color.."' does not support "..data.slices.." slices.")
 				end
 
-				data.color = {colors[1], colors[#colors]}
+				if data.invert then
+					data.color = {colors[#colors], colors[1]}
+				else
+					data.color = {colors[1], colors[#colors]}
+				end
 			end
 
 			mandatoryTableArgument(data, "color", "table")
 			verify(#data.color == 2, "Strategy '"..data.grouping.."' requires only two colors, got "..#data.color..".")
 
-			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices"})
+			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert"})
 		end,
 		quantil = function() -- equal to 'equalsteps'
 			mandatoryTableArgument(data, "select", "string")
@@ -1823,13 +1829,17 @@ function Map(data)
 					customError("Color '"..data.color.."' does not support "..data.slices.." slices.")
 				end
 
-				data.color = {colors[1], colors[#colors]}
+				if data.invert then
+					data.color = {colors[#colors], colors[1]}
+				else
+					data.color = {colors[1], colors[#colors]}
+				end
 			end
 
 			mandatoryTableArgument(data, "color", "table")
 			verify(#data.color == 2, "Strategy '"..data.grouping.."' requires only two colors, got "..#data.color..".")
 
-			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices"})
+			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert"})
 		end,
 		uniquevalue = function()
 			mandatoryTableArgument(data, "select", "string")
