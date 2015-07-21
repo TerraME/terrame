@@ -115,23 +115,6 @@ local function checkNilVariables()
 	end
 end
 
-local function countTable(mtable)
-	local result = {}
-
-	_Gtme.forEachElement(mtable, function(idx, value, mtype)
-		if mtype == "function" or mtype == "Model" then
-			result[idx] = 0
-		elseif _Gtme.type(value) == "table" then
-			_Gtme.forEachElement(value, function(midx, mvalue, mmtype)
-				if mmtype == "function" or mmtype == "Model" then
-					result[midx] = 0
-				end
-			end)
-		end
-	end)
-	return result
-end
-
 -- builds a table with zero counts for each element of the table gotten as argument
 function _Gtme.buildCountTable(package)
 	local s = _Gtme.sessionInfo().separator
@@ -155,12 +138,37 @@ function _Gtme.buildCountTable(package)
 
 	local testfunctions = {} -- test functions store all the functions that need to be tested, extracted from the source code
 
+	local currentFile
+	local mt = getmetatable(_G)
+	setmetatable(_G, {}) -- to avoid warnings: "Variable 'xxx' is not declared."
+
+	local result = setmetatable({}, {__index = _G, __newindex = function(t, k, v)
+		rawset(t, k, v)
+
+		local mtype = _Gtme.type(v)
+		if mtype == "function" or type(v) == "Model" then
+			testfunctions[currentFile][k] = 0
+		elseif mtype == "table" then
+			_Gtme.forEachElement(v, function(midx, mvalue, mmtype)
+				if mmtype == "function" or mmtype == "Model" then
+					testfunctions[currentFile][midx] = 0
+				end
+			end)
+		end
+
+	end})
+
 	for i, file in ipairs(load_sequence) do
-		-- the 'include' below does not need to be inside a xpcall because 
-		-- the package was already loaded with success
-		testfunctions[file] = countTable(_Gtme.include(baseDir..s.."lua"..s..file))
+		testfunctions[file] = {}
+		currentFile = file
+		lf = loadfile(baseDir..s.."lua"..s..file, 't', result)
+
+		if lf ~= nil then
+			lf()
+		end
 	end
 
+	setmetatable(_G, mt)
 	return testfunctions
 end
 

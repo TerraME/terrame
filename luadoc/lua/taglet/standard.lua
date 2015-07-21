@@ -4,6 +4,7 @@
 
 local assert, tostring, type = assert, tostring, type
 local collectgarbage = collectgarbage
+local pcall = pcall
 local exit = os.exit
 local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
@@ -47,9 +48,9 @@ local function_patterns = {
 	"^()%s*("..identifier_pattern..")%s*%=%s*function%s*%("..identifiers_list_pattern.."%)",
 }
 
--- Patterns for function recognition
+-- Patterns for Model recognition
 local model_patterns = {
-	"^()%s*("..identifier_pattern..")%s*%=%s*Model%s*%{" --..identifiers_list_pattern.."%)"
+	"^()%s*("..identifier_pattern..")%s*%=%s*%a*Model%s*%{"
 }
 
 -------------------------------------------------------------------------------
@@ -519,11 +520,16 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 			doc_report.models = doc_report.models + 1
 		end
 
-		local a = include(fullpath)
-		local quant = getn(a) - 1
-		if quant > 0 and not silent then
-			printError(fileName.." should contain only a Model, got "..quant.." additional object(s).")
-			doc_report.model_error = doc_report.model_error + quant
+		local a 
+
+		pcall(function() a = include(fullpath) end)
+
+		if type(a) == "table" then
+			local quant = getn(a) - 1
+			if quant > 0 and not silent then
+				printError(fileName.." should contain only a Model, got "..quant.." additional object(s).")
+				doc_report.model_error = doc_report.model_error + quant
+			end
 		end
 		table.insert(doc.files[fileName].models, f.name)
 		doc.files[fileName].models[f.name] = f
