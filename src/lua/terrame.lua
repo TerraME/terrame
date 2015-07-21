@@ -754,8 +754,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				version()
 				os.exit()
 			elseif arg == "-ide" then
+				if not _Gtme.isLoaded("base") then
+					_Gtme.import("base")
+				end
+
 				local __cellEmpty = Cell{attrib = 1}
-				local __obsEmpty = Chart{subject = __cellEmpty, select = "attrib"}
+				local __obsEmpty = Chart{target = __cellEmpty}
 				_Gtme.killAllObservers()
 			elseif arg == "-ft" then
 				info_.fullTraceback = true
