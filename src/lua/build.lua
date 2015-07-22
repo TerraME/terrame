@@ -29,7 +29,7 @@ local printError   = _Gtme.printError
 local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
-function _Gtme.buildPackage(package)
+function _Gtme.buildPackage(package, clean)
 	local initialTime = os.clock()
 
 	printNote("Building package '"..package.."'")
@@ -157,6 +157,21 @@ function _Gtme.buildPackage(package)
 			report.unnecessary_files = report.unnecessary_files + 1
 	end)
 
+	if clean then
+		printNote("Cleaning package")
+
+		print("Removing 'snapshots' folder")
+		os.execute("rm -rf \""..package..s.."snapshots\"")
+
+		print("Removing 'test' folder")
+		os.execute("rm -rf \""..package..s.."test\"")
+
+		local logs = runCommand("find \""..package.."\" -name \"*.log\"")
+		forEachElement(logs, function(_, file)
+			print("Removing "..file)
+			os.execute("rm -f \""..file.."\"")
+		end)
+	end
 
 	printNote("Checking Models")
 	local mModel = Model

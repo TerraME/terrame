@@ -32,10 +32,11 @@ doc = {
 }
 
 build = {
-	build           = {arg = "-build", package = "build"},
-	onerrorbuild    = {arg = "-build", package = "onerrorbuild"},
-	twoerrorsbuild  = {arg = "-build", package = "twoerrorsbuild"},
-	buildunnecfiles = {arg = "-build", package = "buildunnecfiles"},
+	build           = {arg = "-build",        package = "build"},
+	onerrorbuild    = {arg = "-build -clean", package = "onerrorbuild"},
+	twoerrorsbuild  = {arg = "-build",        package = "twoerrorsbuild"},
+	buildunnecfiles = {arg = "-build",        package = "buildunnecfiles"},
+	buildunneclean  = {arg = "-build -clean", package = "buildunneclean"},
 }
 
 mode = {

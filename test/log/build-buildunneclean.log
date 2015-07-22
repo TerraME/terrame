@@ -1,24 +1,24 @@
-Building package 'onerrorbuild'
-Creating documentation of package 'onerrorbuild'
-Building documentation for package 'onerrorbuild'
-Loading package 'onerrorbuild'
+Building package 'buildunneclean'
+Creating documentation of package 'buildunneclean'
+Building documentation for package 'buildunneclean'
+Loading package 'buildunneclean'
+Test file 'unnec2.txt' does not have a valid extension
 Parsing lua files
-Parsing lua/Tube2.lua
+Parsing lua/Tube.lua
 Parsing lua/Utils.lua
 Parsing examples
 Parsing examples/ipd.lua
 Checking undocumented files
 Checking @usage definition
-Checking lua/Tube2.lua
+Checking lua/Tube.lua
 Checking lua/Utils.lua
 Checking calls to functions in @usage
-Checking lua/Tube2.lua
+Checking lua/Tube.lua
 Checking lua/Utils.lua
 Checking undocumented arguments
-Checking lua/Tube2.lua
+Checking lua/Tube.lua
 Checking lua/Utils.lua
 Checking 'description.lua'
-Error: Field 'date2' of 'description.lua' is unnecessary.
 Building and checking HTML files
 Building doc/index.html
 Building doc/files/Utils.html
@@ -26,14 +26,14 @@ Building doc/files/examples.html
 Building doc/files/data.html
 Building doc/files/models.html
 Checking if all functions are documented
-Checking Tube2.lua
+Checking Tube.lua
 Checking Utils.lua
 
 Documentation report:
 Documentation was built in 0.04 seconds.
 4 HTML files were created.
 All files are documented.
-One problem was found in 'description.lua'.
+All fields of 'description.lua' are correct.
 No undocumented data files were found.
 All data files are correctly documented in 'data.lua'.
 All source code lines starting with --- are valid.
@@ -54,41 +54,45 @@ No invalid tags were found in the documentation.
 All 0 links were correctly built.
 All 1 examples are documented.
 All 1 examples are correctly documented.
-Summing up, one problem was found in the documentation.
+Summing up, all the documentation was successfully built.
 
-Testing package 'onerrorbuild'
-Loading package 'onerrorbuild'
+Testing package 'buildunneclean'
+Loading package 'buildunneclean'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
 Skip looking for lines of source code
-Testing tests/Tube2.lua
+'tests/alternative/abc/unnec6.txt' is not a folder neither a .lua file and will be ignored.
+Folder 'tests/alternative/abc' is empty.
+'tests/alternative/unnec5.txt' is not a folder neither a .lua file and will be ignored.
+'tests/unnec4.txt' is not a folder neither a .lua file and will be ignored.
+Testing tests/Tube.lua
 Testing Tube
 Checking if all asserts were executed
 Testing tests/Utils.lua
 Testing elapsedTime2
-No asserts were found in the test.
 Checking if all asserts were executed
 Testing tests/alternative/Utils.lua
 Testing elapsedTime2
 Checking if all asserts were executed
 Checking if functions from source code were tested
-Checking Tube2.lua
+Checking Tube.lua
 Checking Utils.lua
 Skipping lines of source code check
 Skipping snapthots check
 Testing examples
+Test file 'unnec2.txt' does not have a valid extension
 Testing ipd
 
 Test report:
 Tests were executed in 0.21 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
-There are no invalid files or folders in folder 'tests'.
+4 invalid files or folders were found in folder 'test'.
 All asserts were executed at least once.
-All 2 asserts were executed successfully.
+All 3 asserts were executed successfully.
 All 3 tested functions do not have any unexpected execution error.
-One out of 3 tested functions does not have at least one assert.
+All 3 tested functions have at least one assert.
 All 3 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
@@ -98,32 +102,38 @@ No lines from the source code were verified.
 No snapshot test was executed.
 All 1 examples were successfully executed.
 No new log file was created.
-Summing up, one problem was found during the tests.
+Summing up, 4 problems were found during the tests.
 
 Checking unnecessary files
-File 'onerrorbuild/unnecessary.txt' is unnecessary and will be ignored.
+File 'buildunneclean/unnec1.txt' is unnecessary and will be ignored.
+File 'buildunneclean/examples/unnec2.txt' is unnecessary and will be ignored.
+File 'buildunneclean/lua/unnec3.txt' is unnecessary and will be ignored.
+File 'buildunneclean/tests/alternative/abc/unnec6.txt' is unnecessary and will be ignored.
+File 'buildunneclean/tests/alternative/unnec5.txt' is unnecessary and will be ignored.
+File 'buildunneclean/tests/unnec4.txt' is unnecessary and will be ignored.
+File 'buildunneclean/buildunneclean/.hidden' is unnecessary and will be ignored.
+File 'buildunneclean/buildunneclean/lua/.hidden2' is unnecessary and will be ignored.
 Cleaning package
 Removing 'snapshots' folder
 Removing 'test' folder
-Removing onerrorbuild/examples/continuous-rain.log
-Removing onerrorbuild/examples/discrete-rain.log
-Removing onerrorbuild/examples/ipd.log
+Removing buildunneclean/examples/continuous-rain.log
+Removing buildunneclean/examples/discrete-rain.log
+Removing buildunneclean/examples/ipd.log
 Checking Models
-Model 'Tube' is wrongly put in file 'Tube2.lua'. It should be in file 'Tube.lua'
+Model 'Tube' belongs to file 'Tube.lua'
 Checking license
-The package does not contain file 'license.txt'
-Building package onerrorbuild
-Creating file 'onerrorbuild_0.1.zip'
-Package 'onerrorbuild' successfully zipped
+Building package buildunneclean
+Creating file 'buildunneclean_0.1.zip'
+Package 'buildunneclean' successfully zipped
 
 Build report:
-Package was built in 0.25 seconds.
-Build created file 'onerrorbuild_0.1.zip'.
-Temporary files are saved in .terrame_onerrorbuild_pkyzZ
-MD5 sum for the package is a362b65508ada2cf2e4cac2fafe45992
-The package does not have a license file.
-One error was found in the documentation.
-One file is unnecessary.
-One error was found in the tests.
-One Model is placed in the wrong file.
-Summing up, 5 problems were found along the build.
+Package was built in 0.26 seconds.
+Build created file 'buildunneclean_0.1.zip'.
+Temporary files are saved in .terrame_buildunneclean_Hg2ox
+MD5 sum for the package is 91dee546217b7608bb436ed813a84a93
+The package has a license file.
+Documentation was successfully built.
+8 files are unnecessary.
+4 errors were found in the tests.
+All Models are placed in the right files.
+Summing up, 12 problems were found along the build.

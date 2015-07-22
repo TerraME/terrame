@@ -2,35 +2,38 @@
 Usage: TerraME [arguments] [file1.lua file2.lua ...]
 
 Options: 
- -autoclose                  Automatically close the platform after simulation.
- -gui                        Show the player for the application (it works only 
-                             when an Environment and/or a Timer objects are used).
- -ide                        Configure TerraME for running from IDEs in Windows systems.
- -ft                         Show the full traceback in case of errors (including
-                             internal lines from TerraME and loaded packages).
- -mode=normal (default)      Warnings enabled.
- -mode=debug                 Warnings treated as errors.
- -mode=strict                Execute additional verifications in the source code 
-                             when it finds unnecessary arguments for functions.
- -mode=quiet                 Warnings disabled.
- -mode=silent                print() does not show any text on the screen. This
-                             mode can be used with the other three modes independently.
- -version                    TerraME general information.
- -color                      Show colored output (only for Linux and Mac systems).
- -package <pkg>              Select a given package. If used alone and the model has a
-                             single model than it runs the graphical interface
-                             creating an instance of such model.
- -install <file>             Install a package stored in a given file.
- [-package <pkg>] -test      Execute unit tests.
- [-package <pkg>] -uninstall Remove an installed package.
- [-package <pkg>] -example   Run an example.
- [-package <pkg>] -doc       Build the documentation.
- [-package <pkg>] -showdoc   Show the documentation in the default browser.
- [-package <pkg>] -interface Configure and run a Model using a graphical interface.
- [-package <pkg>] -importDb  Import .sql files described in data.lua from folder data
-                             within the package to MySQL.
- [-package <pkg>] -exportDb  Export .sql files described in data.lua from MySQL to
-                             folder data within the package.
+ -autoclose                       Automatically close the platform after simulation.
+ -gui                             Show the player for the application (it works only 
+                                  when an Environment and/or a Timer objects are used).
+ -ide                             Configure TerraME for running from IDEs in Windows.
+ -ft                              Show the full traceback in case of errors (including
+                                  internal lines from TerraME and loaded packages).
+ -mode=normal (default)           Warnings enabled.
+ -mode=debug                      Warnings treated as errors.
+ -mode=strict                     Execute additional verifications in the source code 
+                                  when it finds unnecessary arguments for functions.
+ -mode=quiet                      Warnings disabled.
+ -mode=silent                     print() does not show any text on the screen. This mode
+                                  can be used with the other three modes independently.
+ -version                         TerraME general information.
+ -color                           Show colored output (only for Linux and Mac systems).
+ -package <pkg>                   Select a given package. If used alone and the model has
+                                  a single model than it runs the graphical interface
+                                  creating an instance of such model.
+ -install <file>                  Install a package stored in a given file.
+ [-package <pkg>] -test           Execute unit tests.
+ [-package <pkg>] -build [-clean] Build an installer for the package. It executes all
+                                  tests and build the documentation of the packag.
+                                  -clean option remove test files, snapshots, and logs.
+ [-package <pkg>] -uninstall      Remove an installed package.
+ [-package <pkg>] -example [file] Run an example.
+ [-package <pkg>] -doc            Build the documentation.
+ [-package <pkg>] -showdoc        Show the documentation in the default browser.
+ [-package <pkg>] -interface      Configure and run a Model using a graphical interface.
+ [-package <pkg>] -importDb       Import .sql files described in data.lua from folder
+                                  data within the package to MySQL.
+ [-package <pkg>] -exportDb       Export .sql files described in data.lua from MySQL to
+                                  folder data within the package.
 
 For more information, please visit www.terrame.org
 
