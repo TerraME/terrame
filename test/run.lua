@@ -28,12 +28,17 @@ tmpfolder = runCommand("mktemp -d .terramerun_XXXXX")[1]
 
 _Gtme.printNote("Testing installed packages")
 
+_Gtme.printNote("Cleaning packages")
+forEachFile("packages", function(file)
+	_Gtme.print("Cleaning '"..file.."'")
+
+	os.execute("rm -rf \""..baseDir..s.."packages"..s..file.."\"")
+end)
+
 _Gtme.printNote("Copying packages")
 forEachFile("packages", function(file)
-	_Gtme.print("Copying "..file)
+	_Gtme.print("Copying '"..file.."'")
 
-	os.execute("rm -rf \""..baseDir..s.."packages/*/doc\"")
-	os.execute("rm -rf \""..baseDir..s.."packages"..s..file.."\"")
 	os.execute("cp -pr \"packages"..s..file.."\" \""..baseDir..s.."packages"..s..file.."\"")	
 end)
 
@@ -204,8 +209,6 @@ end)
 _Gtme.printNote("Testing from local folders")
 
 chDir("packages")
-
-os.execute("rm -rf \"*/doc\"")
 
 forEachOrderedElement(commands, function(idx, group)
 	_Gtme.printNote("Testing group '"..idx.."'")
@@ -430,11 +433,11 @@ else
 end
 
 if report.logerrors == 0 then
-	_Gtme.printNote("All logs for global packages are correct.")
+	_Gtme.printNote("All logs for installed packages are correct.")
 elseif report.logerrors == 1 then
-	_Gtme.printError("One log problem for global packages was found during the tests.")
+	_Gtme.printError("One log problem for installed packages was found during the tests.")
 else
-	_Gtme.printError(report.logerrors.." log problems for global packages were found during the tests.")
+	_Gtme.printError(report.logerrors.." log problems for installed packages were found during the tests.")
 end
 
 if report.locallogerrors == 0 then

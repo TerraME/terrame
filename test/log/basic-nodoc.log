@@ -1,2 +1,2 @@
-It was not possible to find the documentation of package 'onerror'.
-Please run 'terrame -package onerror -doc' to build it.
+It was not possible to find the documentation of package 'nodoc'.
+Please run 'terrame -package nodoc -doc' to build it.

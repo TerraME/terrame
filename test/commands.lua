@@ -49,7 +49,7 @@ basic = {
 	help        = {arg = "-help"},
 	version     = {arg = "-version"},
 	noexample   = {arg = "-example abc"},
-	nodoc       = {arg = "-showdoc", package = "onerror"}, -- this needs to be placed before doc
+	nodoc       = {arg = "-showdoc", package = "nodoc"},
 	example     = {arg = "-example ipd"},
 	nointerface = {arg = "-interface abc"},
 	uninstall   = {arg = "-package abcdef -uninstall"},
