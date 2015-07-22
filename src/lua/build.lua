@@ -95,6 +95,8 @@ function _Gtme.buildPackage(package)
 		end
 	end
 
+	printNote("Checking unnecessary files")
+
 	local root = {
 		["description.lua"] = true,
 		["license.lua"] = true,
@@ -108,46 +110,47 @@ function _Gtme.buildPackage(package)
 		doc = true
 	}
 
-	local pkgInfo = packageInfo(package)
-	local pkgFolder = pkgInfo.path
-
-	forEachFile(pkgFolder, function(file)
+	forEachFile(package, function(file)
 		if not root[file] then
-			printError("File '"..pkgFolder..s..file.."' is unnecessary.")
+			printError("File '"..package..s..file.."' is unnecessary and will be ignored.")
+			os.execute("rm -rf \""..package..s..file.."\"")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
-	forEachFile(pkgFolder..s.."examples", function(file)
+	forEachFile(package..s.."examples", function(file)
 		if not string.endswith(file, ".lua") and not string.endswith(file, ".tme") and not string.endswith(file, ".log") then
-			printError("File '"..pkgFolder..s.."examples"..s..file.."' is unnecessary.")
+			printError("File '"..package..s.."examples"..s..file.."' is unnecessary and will be ignored.")
+			os.execute("rm -rf \""..package..s.."examples"..s..file.."\"")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
-	forEachFile(pkgFolder..s.."lua", function(file)
-		if not string.endswith(file, ".lua") and attributes(pkgFolder..s.."lua"..s..file, "mode") ~= "directory" then
-			printWarning("File '"..pkgFolder..s.."lua"..s..file.."' is unnecessary.")
+	forEachFile(package..s.."lua", function(file)
+		if not string.endswith(file, ".lua") and not isDir(package..s.."lua"..s..file) then
+			printWarning("File '"..package..s.."lua"..s..file.."' is unnecessary and will be ignored.")
+			os.execute("rm -rf \""..package..s.."lua"..s..file.."\"")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
-	forEachFile(pkgFolder..s.."tests", function(file)
-		if not string.endswith(file, ".lua") and attributes(pkgFolder..s.."tests"..s..file, "mode") ~= "directory" then
-			printWarning("File '"..pkgFolder..s.."tests"..s..file.."' is unnecessary.")
+	forEachFile(package..s.."tests", function(file)
+		-- TODO: do it recursively
+		if not string.endswith(file, ".lua") and not isDir(package..s.."tests"..s..file) then
+			printWarning("File '"..package..s.."tests"..s..file.."' is unnecessary and will be ignored.")
+			os.execute("rm -rf \""..package..s.."tests"..s..file.."\"")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
 
-	printNote("\nChecking Models")
+	printNote("Checking Models")
 	local mModel = Model
 	local attrTab
 	Model = function(attr)
 		attrTab = attr
 		return attr
 	end
-	local s = sessionInfo().separator
 
 	local result = {}
 
@@ -157,7 +160,7 @@ function _Gtme.buildPackage(package)
 			forEachElement(data, function(idx, value)
 				if value == attrTab then
 					if idx..".lua" == fname then
-						printNote("Model '"..idx.."' belongs to file '"..fname.."'")
+						print("Model '"..idx.."' belongs to file '"..fname.."'")
 					else
 						report.model_error = report.model_error + 1
 						printError("Model '"..idx.."' is wrongly put in file '"..fname.."'. It should be in file '"..idx..".lua'")

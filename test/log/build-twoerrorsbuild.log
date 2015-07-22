@@ -1,4 +1,5 @@
-Building package twoerrorsbuild
+Building package 'twoerrorsbuild'
+Creating documentation of package 'twoerrorsbuild'
 Building documentation for package 'twoerrorsbuild'
 Loading package 'twoerrorsbuild'
 Parsing lua files
@@ -61,12 +62,8 @@ All 1 examples are documented.
 All 1 examples are correctly documented.
 Summing up, 2 problems were found in the documentation.
 
-Checking unnecessary files
-File '/Users/pedro/github/terrame/bin/packages/twoerrorsbuild/unnecessary.txt' is unnecessary.
-File '/Users/pedro/github/terrame/bin/packages/twoerrorsbuild/unnecessary2.txt' is unnecessary.
-
-Testing package twoerrorsbuild
-Loading package twoerrorsbuild
+Testing package 'twoerrorsbuild'
+Loading package 'twoerrorsbuild'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
@@ -95,7 +92,7 @@ Testing examples
 Testing ipd
 
 Test report:
-Tests were executed in 0.2 seconds.
+Tests were executed in 0.25 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.
@@ -114,6 +111,9 @@ All 1 examples were successfully executed.
 No new log file was created.
 Summing up, 2 problems were found during the tests.
 
+Checking unnecessary files
+File 'twoerrorsbuild/unnecessary.txt' is unnecessary and will be ignored.
+File 'twoerrorsbuild/unnecessary2.txt' is unnecessary and will be ignored.
 Checking Models
 Model 'Tube' is wrongly put in file 'Tube2.lua'. It should be in file 'Tube.lua'
 Model 'Tube2' is wrongly put in file 'Tube3.lua'. It should be in file 'Tube2.lua'
@@ -124,10 +124,10 @@ Creating file 'twoerrorsbuild_0.1.zip'
 Package 'twoerrorsbuild' successfully zipped
 
 Build report:
-Package was built in 0.25 seconds.
+Package was built in 0.29 seconds.
 Build created file 'twoerrorsbuild_0.1.zip'.
-Temporary files are saved in .terrame_twoerrorsbuild_bHpGk
-MD5 sum for the package is 72c742799da5034c99cd2b5416ea9197
+Temporary files are saved in .terrame_twoerrorsbuild_hVTsw
+MD5 sum for the package is 8d96f02247719a03f9b27fd59bad20c6
 The package does not have a license file.
 2 errors were found in the documentation.
 2 files are unnecessary.

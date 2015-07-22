@@ -29,7 +29,7 @@ Checking if all functions are documented
 Checking foo.lua
 
 Documentation report:
-Documentation was built in 0.04 seconds.
+Documentation was built in 0.03 seconds.
 One HTML file was created.
 One out of 1 files are not documented.
 All fields of 'description.lua' are correct.

@@ -1,3 +1,46 @@
 Building documentation for package 'nodatadotlua'
 Loading package 'nodatadotlua'
-Error: /Users/pedro/github/terrame/bin/packages/nodatadotlua/data is not a folder or is empty or does not exist.
+Checking folder 'data'
+Package has data files but data.lua does not exist
+File 'data.txt' is not documented
+Parsing lua files
+Parsing lua/foo.lua
+Parsing examples
+No examples were found.
+Checking undocumented files
+File foo.lua is not documented.
+Checking @usage definition
+Checking calls to functions in @usage
+Checking undocumented arguments
+Checking 'description.lua'
+Building and checking HTML files
+Building doc/files/data.html
+Checking if all functions are documented
+Checking foo.lua
+
+Documentation report:
+Documentation was built in 0.03 seconds.
+One HTML file was created.
+One out of 1 files are not documented.
+All fields of 'description.lua' are correct.
+One data file is not documented.
+All data files are correctly documented in 'data.lua'.
+All source code lines starting with --- are valid.
+There are no Models in the package.
+All 0 global functions of the package are documented.
+All functions of each file are declared only once.
+All descriptions end with a correct character.
+There is no duplicated tag in the documentation.
+All tags with compulsory arguments were correctly used.
+All 0 non-named arguments are documented.
+No undefined arguments were found.
+All available arguments of functions are used in their HTML tables.
+All arguments used in the HTML tables are documented.
+All 0 functions have @usage.
+All 0 functions call themselves in their @usage.
+All @tabular are correctly described.
+No invalid tags were found in the documentation.
+All 0 links were correctly built.
+All 0 examples are documented.
+One problem was found in the documentation of examples.
+Summing up, 3 problems were found in the documentation.

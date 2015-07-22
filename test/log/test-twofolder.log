@@ -1,5 +1,5 @@
 Loading configuration file 'config/twoFolders.lua'
-Loading package base
+Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
@@ -53,7 +53,7 @@ Skipping snapthots check
 Skipping examples
 
 Test report:
-Tests were executed in 53.91 seconds.
+Tests were executed in 69.44 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.

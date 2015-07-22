@@ -284,7 +284,7 @@ function _Gtme.executeTests(package, fileName)
 		import("base")
 	end
 
-	printNote("Loading package "..package)
+	printNote("Loading package '"..package.."'")
 	print = function(arg)
 		ut.print_when_loading = ut.print_when_loading + 1
 

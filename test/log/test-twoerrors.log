@@ -1,5 +1,5 @@
 Loading configuration file 'config/all.lua'
-Loading package twoerrors
+Loading package 'twoerrors'
 Error: print() call detected with argument 'print when loading'
 Error: print() call detected with argument 'print when loading'
 Looking for overwritten variables
@@ -197,8 +197,8 @@ Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
 Test report:
-Tests were executed in 10.01 seconds.
-Snapshots were saved in '.terrametmp_l1ny0'.
+Tests were executed in 12.76 seconds.
+Snapshots were saved in '.terrametmp_T7uCY'.
 2 print() calls were found when loading the package.
 2 variables are overwritten when loading the package.
 2 invalid files or folders were found in folder 'test'.
