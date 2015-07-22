@@ -82,6 +82,37 @@ return{
 		unitTest:assertEquals(t.block.level, 1)
 		unitTest:assertType(t.filter, "function")
 
+		unitTest:assertEquals(tostring(Tube), [[block            table of size 0
+checkZero        boolean [false]
+filter           Mandatory
+finalTime        number [10]
+flow             number [20]
+init             function
+initialWater     number [200]
+observingStep    Choice
+simulationSteps  Choice
+subwater         Choice
+]])
+
+		unitTest:assertEquals(tostring(t), [[block            table of size 0
+checkZero        boolean [false]
+cObj_            userdata
+execute          function
+filter           function
+finalTime        number [10]
+flow             number [20]
+init             function
+initialWater     number [200]
+notify           function
+observingStep    number [1]
+parent           Model
+simulationSteps  number [10]
+subwater         number [4]
+timer            Timer
+type_            string [Tube]
+water            number [200]
+]])
+
 		t = Tube{
 			simulationSteps = 20,
 			observingStep = 0.7,

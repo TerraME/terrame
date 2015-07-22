@@ -326,8 +326,16 @@ function Model(attrTab)
 		end
 	end
 
+	local tostringFunction = function()
+		return _Gtme.tostring(attrTab)
+	end
+
 	local mmodel = {type_ = "Model"}
-	setmetatable(mmodel, {__call = callFunction, __index = indexFunction})
+	setmetatable(mmodel, {
+		__call = callFunction,
+		__index = indexFunction,
+		__tostring = tostringFunction
+	})
 
 	model = function(argv, typename)
 		-- set the default values
@@ -568,6 +576,7 @@ function Model(attrTab)
 
 		verify(exec, "The object does not have a Timer or an Environment with at least one Timer.")
 
+		setmetatable(argv, {__tostring = _Gtme.tostring})
 		return argv
 	end
 
