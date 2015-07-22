@@ -26,6 +26,7 @@
 					<%=luadoc.include("menu.lp", { doc = doc, example = true })%>
 				</div> <!-- id="navigation" -->
 
+				<%local found = false%>
 				<div id="content">
 					<h1>Examples</h1>
 					<%if not options.nofiles and #doc.examples > 0 then%>
@@ -36,12 +37,16 @@
 								<tr>
 									<!-- <td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td> -->
 									<%file = string.sub(filepath, 0, string.len(filepath) - 4)%>
+									<%found = true%>
 									<td class="name"><a href = "#<%=file%>"><%=file%></a></td>
 									<td class="summary"><%= doc.files[filepath].summary or "" %></td>
 								</tr>
 								<%end%>
 							<%end%>
 						</table>
+					<%end%>
+					<%if not found then%>
+						<font color="red">The package has examples but none of them is documented.</font>
 					<%end%>
 					<dl class="function">
 						<%for _, filepath in ipairs(doc.files) do%>
