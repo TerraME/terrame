@@ -32,6 +32,8 @@ local printNote    = _Gtme.printNote
 function _Gtme.buildPackage(package)
 	local initialTime = os.clock()
 
+	printNote("Building package '"..package.."'")
+
 	local report = {
 		doc_errors = 0,
 		unnecessary_files = 0,
@@ -40,8 +42,9 @@ function _Gtme.buildPackage(package)
 		model_error = 0
 	}
 
-	printNote("Building package "..package)
 	local s = sessionInfo().separator
+
+	printNote("Creating documentation of package '"..package.."'")
 	local docErrors = 0
 	dofile(sessionInfo().path..s.."lua"..s.."doc.lua")
 	xpcall(function() docErrors = _Gtme.executeDoc(package) end, function(err)
@@ -51,7 +54,46 @@ function _Gtme.buildPackage(package)
 
 	report.doc_errors = report.doc_errors + docErrors
 
-	printNote("\nChecking unnecessary files")
+	printNote("\nTesting package '"..package.."'")
+	info_.mode = "debug"
+	local testErrors = 0
+	dofile(sessionInfo().path..s.."lua"..s.."test.lua")
+	xpcall(function() testErrors = _Gtme.executeTests(package) end, function(err)
+		printError(err)
+		report.test_errors = 1
+	end)
+
+	report.test_errors = report.test_errors + testErrors
+
+	tmpfolder = runCommand("mktemp -d .terrame_"..package.."_XXXXX")[1]
+	local currentdir = currentDir()
+
+	local pkgInfo = packageInfo(package)
+	local pkgFolder = pkgInfo.path
+
+	chDir(tmpfolder)
+
+	if pkgFolder == package then
+		os.execute("cp -pr \""..currentdir..s..pkgFolder.."\" .")
+	else
+		os.execute("cp -pr \""..pkgFolder.."\" .")
+	end
+
+	printNote("")
+
+	local data
+	pcall(function() data = _Gtme.include(package..s.."description.lua") end)
+
+	if data then
+		if not data.date then
+			printNote("Adding date to description.lua")
+			local date = "\ndate = \""..os.date("%d %B %Y").."\" -- automatically added by build"
+			local file = io.open(package..s.."description.lua", "a")
+			io.output(file)
+			io.write(date)
+			io.close(file)
+		end
+	end
 
 	local root = {
 		["description.lua"] = true,
@@ -97,17 +139,6 @@ function _Gtme.buildPackage(package)
 		end
 	end)
 
-	printNote("\nTesting package "..package)
-
-	info_.mode = "debug"
-	local testErrors = 0
-	dofile(sessionInfo().path..s.."lua"..s.."test.lua")
-	xpcall(function() testErrors = _Gtme.executeTests(package) end, function(err)
-		printError(err)
-		report.test_errors = 1
-	end)
-
-	report.test_errors = report.test_errors + testErrors
 
 	printNote("\nChecking Models")
 	local mModel = Model
@@ -146,16 +177,6 @@ function _Gtme.buildPackage(package)
 	end
 
 	printNote("Building package "..package)
-
-	tmpfolder = runCommand("mktemp -d .terrame_"..package.."_XXXXX")[1]
-	local currentdir = currentDir()
-
-	chDir(tmpfolder)
-	if pkgFolder == package then
-		os.execute("cp -pr \""..currentdir..s..pkgFolder.."\" .")
-	else
-		os.execute("cp -pr \""..pkgFolder.."\" .")
-	end
 
 	local info = packageInfo(package)
 	local file = package.."_"..info.version..".zip"

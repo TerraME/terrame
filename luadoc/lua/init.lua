@@ -27,9 +27,9 @@ local function ldescription(package_path, doc_report)
 
 	local defaultFields = {
 		version = "Undefined version",
-		date    = "Undefined date",
+		date    = os.date("%d %B %Y"),
 		package = "Undefined package",
-		title = "",
+		title   = "",
 		authors = "Undefined authors",
 		contact = "Undefined contact",
 		content = "Undefined content",
@@ -76,7 +76,7 @@ local function ldescription(package_path, doc_report)
 	end
 
 	checkString("version")
-	checkString("date")
+	checkString("date", true)
 	checkString("package")
 	checkString("title", true)
 	checkString("authors")
