@@ -107,6 +107,7 @@ function _Gtme.buildPackage(package)
 		tests = true,
 		examples = true,
 		data = true,
+		snapshots = true,
 		doc = true
 	}
 
@@ -128,19 +129,32 @@ function _Gtme.buildPackage(package)
 
 	forEachFile(package..s.."lua", function(file)
 		if not string.endswith(file, ".lua") and not isDir(package..s.."lua"..s..file) then
-			printWarning("File '"..package..s.."lua"..s..file.."' is unnecessary and will be ignored.")
+			printError("File '"..package..s.."lua"..s..file.."' is unnecessary and will be ignored.")
 			os.execute("rm -rf \""..package..s.."lua"..s..file.."\"")
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
 
-	forEachFile(package..s.."tests", function(file)
-		-- TODO: do it recursively
-		if not string.endswith(file, ".lua") and not isDir(package..s.."tests"..s..file) then
-			printWarning("File '"..package..s.."tests"..s..file.."' is unnecessary and will be ignored.")
-			os.execute("rm -rf \""..package..s.."tests"..s..file.."\"")
+	local function removeRecursiveLua(currentDir)
+		forEachFile(currentDir, function(file)
+			if isDir(currentDir..s..file) then
+				removeRecursiveLua(currentDir..s..file)
+			elseif not string.endswith(currentDir..s..file, ".lua") then
+				printError("File '"..currentDir..s..file.."' is unnecessary and will be ignored.")
+				os.execute("rm -f \""..currentDir..s..file.."\"")
+				report.unnecessary_files = report.unnecessary_files + 1
+			end
+		end)
+	end
+
+	removeRecursiveLua(package..s.."tests")
+
+	local hidden = runCommand("find \""..package.."\" -name \".*\"")
+
+	forEachElement(hidden, function(_, file)
+			printError("File '"..package..s..file.."' is unnecessary and will be ignored.")
+			os.execute("rm -rf \""..file.."\"")
 			report.unnecessary_files = report.unnecessary_files + 1
-		end
 	end)
 
 

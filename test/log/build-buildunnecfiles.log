@@ -62,6 +62,9 @@ Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
 Skip looking for lines of source code
+'tests/alternative/abc/unnec6.txt' is not a folder neither a .lua file and will be ignored.
+Folder 'tests/alternative/abc' is empty.
+'tests/alternative/unnec5.txt' is not a folder neither a .lua file and will be ignored.
 'tests/unnec4.txt' is not a folder neither a .lua file and will be ignored.
 Testing tests/Tube.lua
 Testing Tube
@@ -85,7 +88,7 @@ Test report:
 Tests were executed in 0.21 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
-One invalid file or folder was found in folder 'test'.
+4 invalid files or folders were found in folder 'test'.
 All asserts were executed at least once.
 All 3 asserts were executed successfully.
 All 3 tested functions do not have any unexpected execution error.
@@ -99,13 +102,17 @@ No lines from the source code were verified.
 No snapshot test was executed.
 All 1 examples were successfully executed.
 No new log file was created.
-Summing up, one problem was found during the tests.
+Summing up, 4 problems were found during the tests.
 
 Checking unnecessary files
 File 'buildunnecfiles/unnec1.txt' is unnecessary and will be ignored.
 File 'buildunnecfiles/examples/unnec2.txt' is unnecessary and will be ignored.
 File 'buildunnecfiles/lua/unnec3.txt' is unnecessary and will be ignored.
+File 'buildunnecfiles/tests/alternative/abc/unnec6.txt' is unnecessary and will be ignored.
+File 'buildunnecfiles/tests/alternative/unnec5.txt' is unnecessary and will be ignored.
 File 'buildunnecfiles/tests/unnec4.txt' is unnecessary and will be ignored.
+File 'buildunnecfiles/buildunnecfiles/.hidden' is unnecessary and will be ignored.
+File 'buildunnecfiles/buildunnecfiles/lua/.hidden2' is unnecessary and will be ignored.
 Checking Models
 Model 'Tube' belongs to file 'Tube.lua'
 Checking license
@@ -114,13 +121,13 @@ Creating file 'buildunnecfiles_0.1.zip'
 Package 'buildunnecfiles' successfully zipped
 
 Build report:
-Package was built in 0.25 seconds.
+Package was built in 0.26 seconds.
 Build created file 'buildunnecfiles_0.1.zip'.
-Temporary files are saved in .terrame_buildunnecfiles_5OGRz
-MD5 sum for the package is 895f24d2062d15bd678c0ead176b81c0
+Temporary files are saved in .terrame_buildunnecfiles_2cOhK
+MD5 sum for the package is 1adb9e5a2a36975d4dd18d4cc7ff782b
 The package has a license file.
 Documentation was successfully built.
-4 files are unnecessary.
-One error was found in the tests.
+8 files are unnecessary.
+4 errors were found in the tests.
 All Models are placed in the right files.
-Summing up, 5 problems were found along the build.
+Summing up, 12 problems were found along the build.
