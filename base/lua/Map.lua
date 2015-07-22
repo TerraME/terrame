@@ -1807,6 +1807,7 @@ function Map(data)
 			mandatoryTableArgument(data, "slices", "number")
 			mandatoryTableArgument(data, "min", "number")
 			mandatoryTableArgument(data, "max", "number")
+			defaultTableValue(data, "invert", false)
 
 			verify(data.min < data.max, "Argument 'min' ("..data.min..") should be less than 'max' ("..data.max..").")
 			verify(data.slices > 1, "Argument 'slices' ("..data.slices..") should be greater than one.")

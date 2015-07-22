@@ -182,6 +182,16 @@ return{
 		end
 		unitTest:assertError(error_func, "RGB composition should have 3 values, got 2 values in position 2.")	
 
+		error_func = function()
+			Map{target = c, select = "x", invert = 2, slices = 10, min = 0, max = 100, color = "Blues"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("invert", "boolean", 2))
+
+		error_func = function()
+			Map{target = c, select = "x", invert = false, slices = 10, min = 0, max = 100, color = "Blues"}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("invert", false))
+
 		-- quantil
 		error_func = function()
 			Map{target = c, select = "x", label = 5, slices = 10, color = {"blue", "red"}, grouping = "quantil"}
@@ -247,6 +257,17 @@ return{
 			Map{target = c, select = "x", title = 5, slices = 10, color = {"blue", "red"}, grouping = "quantil"}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
+
+		error_func = function()
+			Map{target = c, select = "x", invert = 2, slices = 10, color = "Blues", grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("invert", "boolean", 2))
+
+		error_func = function()
+			Map{target = c, select = "x", invert = false, slices = 10, color = "Blues", grouping = "quantil"}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("invert", false))
+
 
 		error_func = function()
 			Map{

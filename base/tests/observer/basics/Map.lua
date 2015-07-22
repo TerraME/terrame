@@ -44,8 +44,21 @@ return{
 
 		unitTest:assertType(m, "Map")
 
+		local mi = Map{
+			target = cs,
+			select = "value",
+			min = 0,
+			max = 1,
+			slices = 10,
+			invert = true,
+			color = "Blues"
+		}
+
+		unitTest:assertType(m, "Map")
+
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_basic.bmp")
+		unitTest:assertSnapshot(mi, "map_basic_invert.bmp")
 
 		forEachCell(cs, function(cell)
 			cell.value = r:integer(1, 3)
@@ -134,9 +147,22 @@ return{
 			color = "Blues"
 		}
 
+		local mi = Map{
+			target = cs,
+			select = "value",
+			min = 0,
+			max = 1,
+			slices = 10,
+			grouping = "quantil",
+			invert = true,
+			color = "Blues"
+		}
+
+
 		unitTest:assertType(m, "Map")
 
 		unitTest:assertSnapshot(m, "map_quantil.bmp")
+		unitTest:assertSnapshot(mi, "map_quantil_invert.bmp")
 
 		forEachCell(cs, function(cell)
 			cell.w = cell.x
