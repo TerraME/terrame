@@ -30,26 +30,6 @@
 
 local function verifyDepends(package)
 	local pinfo = packageInfo(package)
-
-	local function getVersion(str)
-		local version = {}
-
-		local function igetVersion(str)
-			if tonumber(str) and not string.match(str, "%.") then -- SKIP
-				table.insert(version, str) -- SKIP
-			else
-				local result = string.gsub(str, "(%d).", function(v)
-					table.insert(version, v) -- SKIP
-					return ""
-				end)
-				igetVersion(result) -- SKIP
-			end
-		end
-
-		igetVersion(str) -- SKIP
-		return version
-	end
-
 	local result = true
 
 	if not pinfo.tdepends then return end
@@ -61,56 +41,11 @@ local function verifyDepends(package)
 			import(dtable.package) -- SKIP
 		end
 
-		local currentVersion = getVersion(currentInfo.version)
-
 		local dstrversion = table.concat(dtable.version, ".")
 
-		if dtable.operator == "==" then -- SKIP
-			if dstrversion ~= currentInfo.version then -- SKIP
-				customWarning("Package '"..package.."' requires '"..dtable.package.."' version '".. -- SKIP
-					dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
-				result = false -- SKIP
-			end
-		elseif dtable.operator == ">=" then
-			local i = 1
-			local lresult = true
-
-			while i <= #dtable.version and i <= #currentVersion and dtable.version[i] == currentVersion[i] do
-				i = i + 1 -- SKIP
-			end
-
-			if i == #dtable.version and i == #currentVersion then -- SKIP
-				lresult = dtable.version[i] <= currentVersion[i] -- SKIP
-			elseif #dtable.version < #currentVersion then
-				lresult = false -- SKIP
-			end
-
-			if not lresult then -- SKIP
-				result = false -- SKIP
-				customWarning("Package '"..package.."' requires '"..dtable.package.."' version >= '".. -- SKIP
-					dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
-			end
-		elseif dtable.operator == "<=" then
-			local i = 1
-			local lresult = true
-
-			while i <= #dtable.version and i <= #currentVersion and dtable.version[i] == currentVersion[i] do
-				i = i + 1 -- SKIP
-			end
-
-			if i == #dtable.version and i == #currentVersion then -- SKIP
-				lresult = dtable.version[i] >= currentVersion[i] -- SKIP
-			elseif #dtable.version > #currentVersion then
-				lresult = false -- SKIP
-			end
-
-			if not lresult then -- SKIP
-				result = false -- SKIP
-				customWarning("Package '"..package.."' requires '"..dtable.package.."' version <= '".. -- SKIP
-					dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
-			end
-		else
-			customError("Wrong operator: "..dtable.operator) -- SKIP
+		if not _Gtme.verifyVersionDependency(dstrversion, dtable.operator, currentInfo.version) then
+			customError("Package '"..package.."' requires '"..dtable.package.."' version '".. -- SKIP
+				dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
 		end
 	end)
 
@@ -142,10 +77,6 @@ end
 -- @usage import("calibration")
 function import(package)
 	mandatoryArgument(1, "string", package)
-
-	if belong(package, {"terrame", "TerraME"}) then
-		return
-	end
 
 	if isLoaded(package) then
 		customWarning("Package '"..package.."' is already loaded.")
@@ -232,10 +163,6 @@ end
 -- cs = base.CellularSpace{xdim = 10}
 function getPackage(pname)
 	mandatoryArgument(1, "string", pname)
-
-	if belong(pname, {"terrame", "TerraME"}) then
-		return
-	end
 
 	local s = sessionInfo().separator
 	local pname_path = packageInfo(pname).path
@@ -351,7 +278,7 @@ end
 -- the description of TerraME.
 -- @usage packageInfo().version
 function packageInfo(package)
-	if package == nil or belong(package, {"terrame", "TerraME"}) then
+	if package == nil then
 		package = "base"
 	end
 
@@ -397,24 +324,9 @@ function packageInfo(package)
 			customError("Wrong description of 'depends' in description.lua of package '"..package.."'. Unrecognized '"..s.."'.")
 		end
 
-		local mversion
-
-		local function getVersion(str)
-			if tonumber(str) and not string.match(str, "%.") then -- SKIP
-				table.insert(mversion, str) -- SKIP
-			else
-				local result = string.gsub(str, "(%d).", function(v)
-					table.insert(mversion, v) -- SKIP
-					return ""
-				end)
-				getVersion(result) -- SKIP
-			end
-		end
-
 		local mdepends = {}
 		s = string.gsub(result.depends, "([%w]+) %((%g%g) (%d[.%d]+)%)", function(value, v2, v3)
-			mversion = {}
-			getVersion(v3) -- SKIP
+			mversion = _Gtme.getVersion(v3) -- SKIP
 			table.insert(mdepends, {package = value, operator = v2, version = mversion})
 		end)
 

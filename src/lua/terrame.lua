@@ -85,6 +85,28 @@ function _Gtme.include(scriptfile, basetable)
 	return setmetatable(env, nil)
 end
 
+function _Gtme.getVersion(str)
+	local version = {}
+
+	local function igetVersion(str)
+		if not str then return end
+
+		if tonumber(str) and not string.match(str, "%.") then
+			table.insert(version, str)
+		else
+			local result = string.gsub(str, "(%d).", function(v)
+				table.insert(version, v)
+				return ""
+			end)
+			igetVersion(result)
+		end
+	end
+
+	igetVersion(str)
+	return version
+end
+
+
 -- from http://metalua.luaforge.net/src/lib/strict.lua.html
 local function checkNilVariables()
 	local mt = getmetatable(_G)
@@ -428,6 +450,45 @@ function _Gtme.uninstall(package)
 	end
 end
 
+function _Gtme.verifyVersionDependency(newVersion, operator, oldVersion)
+	local newVersionT = _Gtme.getVersion(newVersion)
+	local oldVersionT = _Gtme.getVersion(oldVersion)
+
+	if operator == "==" then
+		return newVersion == oldVersion
+	else
+		local i = 1
+
+		while i <= #newVersionT and i <= #oldVersionT and newVersionT[i] == oldVersionT[i] do
+			i = i + 1
+		end
+
+		if i > #newVersionT or i > #oldVersionT then
+			i = i - 1
+		end
+
+		if operator == ">=" then
+			if i == #newVersionT and i == #oldVersionT then
+				return newVersionT[i] >= oldVersionT[i]
+			elseif newVersionT[i] ~= oldVersionT[i] then
+				return newVersionT[i] >= oldVersionT[i]
+			else
+				return #newVersionT >= #oldVersionT
+			end
+		elseif operator == "<=" then
+			if i == #newVersionT and i == #oldVersionT then
+				return newVersionT[i] <= oldVersionT[i]
+			elseif newVersionT[i] ~= oldVersionT[i] then
+				return newVersionT[i] <= oldVersionT[i]
+			else
+				return #newVersionT <= #oldVersionT
+			end
+		else
+			_Gtme.customError("Wrong operator: "..operator)
+		end
+	end
+end
+
 function _Gtme.installPackage(file)
 	if file == nil then
 		_Gtme.printError("You need to choose the file to be installed.")
@@ -462,6 +523,13 @@ function _Gtme.installPackage(file)
 		_Gtme.import("base")
 	end
 
+	local currentVersion
+	if isDir(packageDir..s..package) then
+		currentVersion = packageInfo(package).version
+		_Gtme.printNote("Package '"..package.."' is already installed")
+	else
+		_Gtme.printNote("Package '"..package.."' was not installed before")
+	end
 
 	local tmpfolder = tmpFolder()
 
@@ -469,6 +537,20 @@ function _Gtme.installPackage(file)
 	_Gtme.chDir(tmpfolder)
 
 	os.execute("unzip -q \""..file.."\"")
+
+	local newVersion = _Gtme.include(package..s.."description.lua").version
+
+	if currentVersion then
+		if not _Gtme.verifyVersionDependency(newVersion, ">=", currentVersion) then
+			_Gtme.printError("Error: New version ("..newVersion..") is older than current one ("..currentVersion..").")
+			_Gtme.printError("If you really want to install a previous version, please")
+			_Gtme.printError("execute 'terrame -package "..package.." -uninstall' first.")
+			os.exit()
+		else
+			_Gtme.printNote("Removing previous version of package")
+			os.execute("rm -rf \""..packageDir..s..package.."\"")
+		end
+	end
 
 	_Gtme.printNote("Trying to load package '"..package.."'")
 	xpcall(function() import(package) end, function(err)
@@ -478,11 +560,6 @@ function _Gtme.installPackage(file)
 		os.execute("rm -rf \""..tmpfolder.."\"")
 		os.exit()
 	end)
-
-	if isDir(packageDir..s..package) then
-		_Gtme.printNote("Removing previous version of package")
-		os.execute("rm -rf \""..packageDir..s..package.."\"")
-	end
 
 	_Gtme.printNote("Installing package '"..package.."'")
 	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")

@@ -20,31 +20,24 @@
 -- indirect, special, incidental, or consequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
---          Pedro R. Andrade (pedro.andrade@inpe.br)
+-- Author: Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
 return{
-	file = function(unitTest)
-		unitTest:assertType(file("simple-cs.csv"), "string")
-	end,
-	isLoaded = function(unitTest)
-		unitTest:assert(isLoaded("base"))
-	end,
-	getPackage = function(unitTest)
-		local base = getPackage("base")
+	verifyVersionDependency = function(unitTest)
+		unitTest:assert(    _Gtme.verifyVersionDependency("0.1", ">=", "0.0.3"))
+		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", ">=", "0.3"))
+		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.1", ">=", "0.1.3"))
+		unitTest:assert(    _Gtme.verifyVersionDependency("0.1.4", ">=", "0.1.3"))
+		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.0", ">=", "0.0.3.1"))
 
-		local cs = base.CellularSpace{xdim = 10}
-		unitTest:assertType(cs, "CellularSpace")
-		unitTest:assertEquals(getn(base), 158)
-	end,
-	packageInfo = function(unitTest)
-		local r = packageInfo()
+		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", "<=", "0.0.3"))
+		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.1", "<=", "0.0.3"))
+		unitTest:assert(    _Gtme.verifyVersionDependency("0.0.3.1", "<=", "0.0.3.1"))
 
-		unitTest:assertEquals(r.version, "1.4")
-		unitTest:assertEquals(r.date, "13 July 2015")
-		unitTest:assertEquals(r.package, "base")
-		unitTest:assertEquals(r.url, "http://www.terrame.org")
+		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", "==", "0.0.3"))
+		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.1", "==", "0.0.3"))
+		unitTest:assert(    _Gtme.verifyVersionDependency("0.0.3.1", "==", "0.0.3.1"))
 	end
 }
 

@@ -20,31 +20,15 @@
 -- indirect, special, incidental, or consequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
---          Pedro R. Andrade (pedro.andrade@inpe.br)
+-- Author: Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
 return{
-	file = function(unitTest)
-		unitTest:assertType(file("simple-cs.csv"), "string")
-	end,
-	isLoaded = function(unitTest)
-		unitTest:assert(isLoaded("base"))
-	end,
-	getPackage = function(unitTest)
-		local base = getPackage("base")
-
-		local cs = base.CellularSpace{xdim = 10}
-		unitTest:assertType(cs, "CellularSpace")
-		unitTest:assertEquals(getn(base), 158)
-	end,
-	packageInfo = function(unitTest)
-		local r = packageInfo()
-
-		unitTest:assertEquals(r.version, "1.4")
-		unitTest:assertEquals(r.date, "13 July 2015")
-		unitTest:assertEquals(r.package, "base")
-		unitTest:assertEquals(r.url, "http://www.terrame.org")
+	verifyVersionDependency = function(unitTest)
+		local error_func = function()
+			_Gtme.verifyVersionDependency("0.1", ">", "0.0.3")
+		end
+		unitTest:assertError(error_func, "Wrong operator: >")
 	end
 }
 
