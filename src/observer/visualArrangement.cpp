@@ -87,17 +87,16 @@ void VisualArrangement::starts(int id, QWidget *widget)
     SizeVisualArrangement s = getSize(id);
     PositionVisualArrangement p = getPosition(id);
 
-    if(s.width > 0 && s.height > 0)
-        widget->resize(s.width, s.height);
+    if((p.x > 0) && (p.y > 0) && (s.width > 0) && (s.height > 0))
+    {
+        widget->setGeometry(p.x, p.y, s.width, s.height);
+    }
     else
-        widget->resize(450, 350);
+    {
+        widget->setGeometry((50 + id * 50), (50 + id * 50), 450, 350);
+    }
 
-    widget->showNormal();
-
-    if(p.x > 0 && p.y > 0)
-        widget->move(p.x, p.y - widget->geometry().y() + widget->y());
-    else
-        widget->move(50 + id * 50, 50 + id * 50);
+    widget->show();
 }
 
 PositionVisualArrangement VisualArrangement::getPosition(int id)
