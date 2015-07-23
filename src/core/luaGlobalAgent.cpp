@@ -758,14 +758,17 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 key = QString(luaL_checkstring(luaL, -2));
                 allAttribs.append(key);
 
-                if (key == "class")
-                    attrClassName = QString(" (%1)").arg(luaL_checkstring(luaL, -1));
+                // issue #405
+                // if (key == "class")
+                //    attrClassName = QString(" (%1)").arg(luaL_checkstring(luaL, -1));
             }
             lua_pop(luaL, 1);
         }
 
         if (typeObserver == TObsMap)
         {
+            attrClassName = " (map)";   // issue #405
+
             obsMap = (AgentObserverMap *)cellSpace->getObserver(obsID);
 
             if (! obsMap)
@@ -775,6 +778,8 @@ int luaGlobalAgent::createObserver( lua_State *L )
         }
         else
         {
+            attrClassName = " (image)"; // issue #405
+
             obsImage = (AgentObserverImage *)cellSpace->getObserver(obsID);
 
             if (! obsImage)
