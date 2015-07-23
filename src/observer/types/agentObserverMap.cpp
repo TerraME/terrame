@@ -346,6 +346,7 @@ bool AgentObserverMap::decode(QDataStream &in, TypesOfSubjects subject)
             }
         }
     }
+
     if (attrib)
     {
         if (cleanImage)

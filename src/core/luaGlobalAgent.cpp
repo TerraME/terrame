@@ -794,7 +794,7 @@ int luaGlobalAgent::createObserver( lua_State *L )
             key = QString(luaL_checkstring(luaL, -1));
 
             //if (key == "currentState")
-                obsAttribs.append(key + attrClassName);
+                obsAttribs.append(key);
             //else
             //    obsAttribs.append(key);
 
