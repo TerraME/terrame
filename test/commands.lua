@@ -1,3 +1,5 @@
+show = true
+
 test = {
 	--__test__ = "terrame -test config/all.lua",
 	onerror   = {arg = "-test", config = "all.lua", package = "onerror"},

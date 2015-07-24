@@ -7,6 +7,13 @@ initialTime = os.time(os.date("*t"))
 
 commands = _Gtme.include("commands.lua")
 
+show = false
+
+if commands.show then
+	show = true
+	commands.show = nil
+end
+
 directories = {
 	log = {},
 	packages = {},
@@ -103,6 +110,11 @@ forEachOrderedElement(commands, function(idx, group)
 		end
 
 		_Gtme.print("Testing "..name)
+
+		if show then
+			_Gtme.printWarning(command)
+		end
+
 		result, ok = runCommand(command)
 
 		report.commands = report.commands + 1
@@ -235,6 +247,11 @@ forEachOrderedElement(commands, function(idx, group)
 		end
 
 		_Gtme.print("Testing "..name)
+
+		if show then
+			_Gtme.printWarning(command)
+		end
+
 		result, ok = runCommand(command)
 
 		report.commands = report.commands + 1
