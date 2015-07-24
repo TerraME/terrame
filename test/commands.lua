@@ -54,7 +54,7 @@ basic = {
 	noexample   = {arg = "-example abc"},
 	nodoc       = {arg = "-showdoc", package = "nodoc"},
 	example     = {arg = "-example ipd"},
-	nointerface = {arg = "-interface abc"},
+	noconfigure = {arg = "-configure abc"},
 	uninstall   = {arg = "-package abcdef -uninstall"},
 	trace       = {script = "trace.lua"},
 	fulltrace   = {script = "trace.lua", arg = "-ft"},

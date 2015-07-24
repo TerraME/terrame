@@ -99,10 +99,10 @@ function _Gtme.packageManager()
 	label.text = "Model:"
 
 	buildButton = qt.new_qobject(qt.meta.QPushButton)
-	buildButton.text = "Build"
+	buildButton.text = "Configure"
 	qt.connect(buildButton, "clicked()", function()
 		local msg = "terrame -package "..comboboxPackages.currentText..
-		            " -interface "..comboboxModels.currentText
+		            " -configure "..comboboxModels.currentText
 		os.execute(msg)
 	end)
 

@@ -278,7 +278,7 @@ end
 -- the description of TerraME.
 -- @usage packageInfo().version
 function packageInfo(package)
-	if package == nil then
+	if package == nil or package == "terrame" then
 		package = "base"
 	end
 

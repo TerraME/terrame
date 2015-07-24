@@ -11,8 +11,9 @@ show = false
 
 if commands.show then
 	show = true
-	commands.show = nil
 end
+
+commands.show = nil
 
 directories = {
 	log = {},

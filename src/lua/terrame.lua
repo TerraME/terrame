@@ -618,7 +618,7 @@ local function usage()
 	print(" [-package <pkg>] -example [file] Run an example.")
 	print(" [-package <pkg>] -doc            Build the documentation.")
 	print(" [-package <pkg>] -showdoc        Show the documentation in the default browser.")
-	print(" [-package <pkg>] -interface      Configure and run a Model using a graphical interface.")
+	print(" [-package <pkg>] -configure      Configure and run a Model using a graphical interface.")
 	print(" [-package <pkg>] -importDb       Import .sql files described in data.lua from folder")
 	print("                                  data within the package to MySQL.")
 	print(" [-package <pkg>] -exportDb       Export .sql files described in data.lua from MySQL to")
@@ -908,11 +908,13 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					end
 					os.exit()
 				end
-			elseif arg == "-interface" then
+			elseif arg == "-configure" then
 				argCount = argCount + 1
 				model = arguments[argCount]
 
-				import("base")
+				if package ~= "base" then
+					import("base")
+				end
 
 				xpcall(function() import(package) end, function(err)
 					_Gtme.printError(err)
@@ -920,6 +922,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end)
 
 				local models = _Gtme.findModels(package)
+
+				if #models == 0 then
+					_Gtme.printError("Package \""..package.."\" does not have any Model.")
+					os.exit()
+				end
 
 				if model == nil then
 					_Gtme.printError("You should indicate a Model to be used.")
