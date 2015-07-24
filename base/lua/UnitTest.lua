@@ -123,7 +123,7 @@ UnitTest_ = {
 			if self.current_file then
 				local err2 = string.match(err, self.current_file)
 				if err2 ~= self.current_file then
-					_Gtme.printError("Error in wrong file (possibly wrong stack level). It should occur in '"..self.current_file.."', got '"..err.."'.")
+					_Gtme.printError("Error in wrong file (possibly wrong stack level). It should occur in '".._Gtme.makePathCompatibleToAllOS(self.current_file).."', got '".._Gtme.makePathCompatibleToAllOS(err).."'.")
 					_Gtme.printError(_Gtme.traceback())
 					self.wrong_file = self.wrong_file + 1 -- SKIP
 					return
@@ -236,7 +236,7 @@ UnitTest_ = {
 		if not isFile(oldImage) then
 			observer:save(oldImage) -- SKIP
 			self.snapshot_files = self.snapshot_files + 1 -- SKIP
-			_Gtme.printError("Creating 'snapshots"..s..file.."'.")
+			_Gtme.printError("Creating 'snapshots".._Gtme.makePathCompatibleToAllOS(s..file).."'.")
 			self.test = self.test + 1 -- SKIP
 			self.success = self.success + 1 -- SKIP
 		else
@@ -246,7 +246,7 @@ UnitTest_ = {
 			if cpp_imagecompare(newImage, oldImage) then
 				self.success = self.success + 1
 			else
-				self:printError("Files \n  'snapshots"..s..file.."'\nand\n  '"..newImage.."'\nare different.")
+				self:printError("Files \n  'snapshots".._Gtme.makePathCompatibleToAllOS(s..file).."'\nand\n  '"..newImage.."'\nare different.")
 				self.fail = self.fail + 1 -- SKIP
 			end
 		end
@@ -301,7 +301,7 @@ UnitTest_ = {
 		msg = tostring(msg)
 
 		local str = info.short_src
-		str = "Error in "..str..":".. info.currentline ..": "..msg
+		str = "Error in ".._Gtme.makePathCompatibleToAllOS(str)..":".. info.currentline ..": "..msg
 		if self.last_error == str then
 			self.count_last = self.count_last + 1
 		elseif self.count_last > 0 then

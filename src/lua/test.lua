@@ -50,12 +50,12 @@ local function testfolders(folder, ut)
 				lf(mfolder..s..value)
 				found_folder = true
 			else
-				printError("'"..mfolder..s..value.."' is not a folder neither a .lua file and will be ignored.")
+				printError("'".._Gtme.makePathCompatibleToAllOS(mfolder..s..value).."' is not a folder neither a .lua file and will be ignored.")
 				ut.invalid_test_file = ut.invalid_test_file + 1
 			end
 		end)
 		if not found_file and not found_folder then
-			printError("Folder '"..mfolder.."' is empty.")
+			printError("Folder '".._Gtme.makePathCompatibleToAllOS(mfolder).."' is empty.")
 			ut.invalid_test_file = ut.invalid_test_file + 1
 		end
 	end
@@ -197,7 +197,7 @@ function _Gtme.executeTests(package, fileName)
 	local data
 
 	if type(fileName) == "string" then
-		printNote("Loading configuration file '"..fileName.."'")
+		printNote("Loading configuration file '".._Gtme.makePathCompatibleToAllOS(fileName).."'")
 	
 		xpcall(function() data = _Gtme.include(fileName) end, function(err)
 			printError(err)
@@ -456,7 +456,7 @@ function _Gtme.executeTests(package, fileName)
 		end
 
 		if #myFiles == 0 then
-			printWarning("Skipping folder "..eachFolder)
+			printWarning("Skipping folder ".._Gtme.makePathCompatibleToAllOS(eachFolder))
 		end
 
 		for _, eachFile in ipairs(myFiles) do
@@ -502,7 +502,7 @@ function _Gtme.executeTests(package, fileName)
 			end
 
 			if #myTests == 0 then
-				printWarning("Skipping "..eachFolder..s..eachFile)
+				printWarning("Skipping ".._Gtme.makePathCompatibleToAllOS(eachFolder..s..eachFile))
 			end
 
 			local function trace(event, line)
@@ -553,7 +553,7 @@ function _Gtme.executeTests(package, fileName)
 
 				local found_error = false
 				xpcall(function() tests[eachTest](ut) end, function(err)
-					printError("Wrong execution, got error: '"..err.."'.")
+					printError("Wrong execution, got error: '".._Gtme.makePathCompatibleToAllOS(err).."'.")
 					ut.functions_with_error = ut.functions_with_error + 1
 					local tb = _Gtme.traceback()
 					if tb ~= "" then
@@ -793,7 +793,7 @@ function _Gtme.executeTests(package, fileName)
 
 				xpcall(myfunc, function(err)
 					ut.examples_error = ut.examples_error + 1
-					printError("Error in "..err)
+					printError("Error in ".._Gtme.makePathCompatibleToAllOS(err))
 					printError(_Gtme.traceback())
 					writing_log = true -- to avoid showing errors in the log file
 				end)

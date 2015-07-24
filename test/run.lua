@@ -129,7 +129,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 		logfile = io.open("log"..s..lfilename, "r")
 		if logfile == nil then
-			_Gtme.printError("Creating log file '".."log"..s..lfilename.."'")
+			_Gtme.printError("Creating log file '".._Gtme.makePathCompatibleToAllOS( "log"..s..lfilename.."'"))
 			report.createdlogs = report.createdlogs + 1
 
 			logfile = io.open("log"..s..lfilename, "w")
@@ -266,7 +266,7 @@ forEachOrderedElement(commands, function(idx, group)
 
 		logfile = io.open(".."..s.."log"..s..lfilename, "r")
 		if logfile == nil then
-			_Gtme.printError("Creating log file '".."log"..s..lfilename.."'")
+			_Gtme.printError("Creating log file '".._Gtme.makePathCompatibleToAllOS("log"..s..lfilename.."'"))
 			report.createdlogs = report.createdlogs + 1
 
 			logfile = io.open(".."..s.."log"..s..lfilename, "w")
