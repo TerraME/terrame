@@ -180,6 +180,12 @@ Skip checking asserts
 Testing tests/database/basics/Utils.lua
 Skipping tests/database/basics/Utils.lua
 Skip checking asserts
+Testing tests/internal/alternative/terrame.lua
+Skipping tests/internal/alternative/terrame.lua
+Skip checking asserts
+Testing tests/internal/basic/terrame.lua
+Skipping tests/internal/basic/terrame.lua
+Skip checking asserts
 Testing tests/observer/alternative/Chart.lua
 Skipping tests/observer/alternative/Chart.lua
 Skip checking asserts
@@ -252,7 +258,7 @@ Skipping snapthots check
 Skipping examples
 
 Test report:
-Tests were executed in 3.55 seconds.
+Tests were executed in 3.49 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.

@@ -17,6 +17,8 @@ Testing getTime
 Checking if all asserts were executed
 Skipping folder tests/database/alternative
 Skipping folder tests/database/basics
+Skipping folder tests/internal/alternative
+Skipping folder tests/internal/basic
 Skipping folder tests/observer/alternative
 Skipping folder tests/observer/basics
 Checking if functions from source code were tested
@@ -26,7 +28,7 @@ Skipping snapthots check
 Skipping examples
 
 Test report:
-Tests were executed in 3.1 seconds.
+Tests were executed in 3 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.
