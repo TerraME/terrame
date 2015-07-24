@@ -519,7 +519,12 @@ end
 -- @see FileSystem:dir
 function forEachFile(folder, f)
 	if type(folder) == "string" then
-		folder = dir(folder)
+		if not isDir(folder) then
+			customError("Folder \""..folder.."\" is not a valid directory.") -- SKIP
+		end
+		if not pcall(function() folder = dir(folder) end) then
+			return true
+		end
 	end
 
 	mandatoryArgument(1, "table", folder)
