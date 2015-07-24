@@ -244,7 +244,7 @@ function runCommand(command, number)
 	end
 
 	io.close(file)
-	os.execute("rm \""..mfile.."\"")
+	os.execute("rm -f \""..mfile.."\"")
 	return fileTable, result
 end
 

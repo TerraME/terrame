@@ -1,4 +1,4 @@
-show = true
+show = false
 
 test = {
 	--__test__ = "terrame -test config/all.lua",
