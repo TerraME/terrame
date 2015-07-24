@@ -531,7 +531,7 @@ function _Gtme.installPackage(file)
 		_Gtme.printNote("Package '"..package.."' was not installed before")
 	end
 
-	local tmpfolder = tmpFolder()
+	local tmpfolder = tmpDir()
 
 	os.execute("cp \""..file.."\" \""..tmpfolder.."\"")
 	_Gtme.chDir(tmpfolder)

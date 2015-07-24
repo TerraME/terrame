@@ -100,7 +100,7 @@ return{
 		}
 
 		local s = sessionInfo().separator
-		local filename = tmpFolder()..s.."csvwrite.csv"
+		local filename = tmpDir()..s.."csvwrite.csv"
 
 		error_func = function()
 			CSVwrite(example, filename)

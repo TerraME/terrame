@@ -230,7 +230,7 @@ UnitTest_ = {
 		end
 
 		self.tsnapshots[file] = true
-		local newImage = tmpFolder()..s..file
+		local newImage = tmpDir()..s..file
 		local oldImage = self.imgFolder..s..file
 
 		if not isFile(oldImage) then

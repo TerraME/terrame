@@ -131,7 +131,7 @@ return{
 		c:notify(2)
 		c:notify(3)
 
-		local file = tmpFolder()..sessionInfo().separator.."save_test.bmp"
+		local file = tmpDir()..sessionInfo().separator.."save_test.bmp"
 
 		ch:save(file)
 

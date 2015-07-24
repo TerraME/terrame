@@ -59,7 +59,7 @@ return{
 		}
 
 		local s = sessionInfo().separator
-		local filename = tmpFolder()..s.."csvwrite.csv"
+		local filename = tmpDir()..s.."csvwrite.csv"
 
 		CSVwrite(example, filename)
 		local data = CSVread(filename)

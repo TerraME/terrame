@@ -1136,8 +1136,8 @@ end
 -- Every time this function is called in the same execution of TerraME, it returns the
 -- same folder (without deleting its internal files). This
 -- folder needs to be removed manually after the end of the execution.
--- @usage tmpf = tmpFolder()
-tmpFolder = function(self)
+-- @usage tmpf = tmpDir()
+tmpDir = function(self)
 	if not _Gtme.tmpfolder__ then
 		_Gtme.tmpfolder__ = runCommand("mktemp -d .terrametmp_XXXXX")[1]
 	end

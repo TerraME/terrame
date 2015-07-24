@@ -767,9 +767,9 @@ return{
 
 		unitTest:assertEquals(count, 2)
 	end,
-	tmpFolder = function(unitTest)
-		local f = tmpFolder()
-		local g = tmpFolder()
+	tmpDir = function(unitTest)
+		local f = tmpDir()
+		local g = tmpDir()
 
 		unitTest:assertEquals(f, g)
 		unitTest:assertType(f, "string")
