@@ -365,7 +365,7 @@ function start(doc, doc_report)
 	if (#doc.files > 0 or #doc.modules > 0) and (not options.noindexpage) then
 		local filename = options.output_dir.."index.html"
 		local short_fileName = options.short_output_path.."index.html"
-		print(string.format("Building %s", short_fileName))
+		print(string.format("Building %s", makepath(short_fileName)))
 		doc_report.html_files = doc_report.html_files + 1
 
 		local f = util.openFile(filename, "w")
@@ -381,7 +381,7 @@ function start(doc, doc_report)
 			local module_doc = doc.modules[modulename]
 			-- assembly the filename
 			local filename = out_module(modulename)
-			print(string.format("Building %s", filename))
+			print(string.format("Building %s", makepath(filename)))
 			doc_report.html_files = doc_report.html_files + 1
 			
 			local f = util.openFile(filename, "w")
@@ -400,7 +400,7 @@ function start(doc, doc_report)
 			if not belong(string.sub(filepath, 1, -5), doc.examples) and doc.files[filepath].type ~= "model" then
 				-- assembly the filename
 				local filepath, short_filepath = out_file(file_doc.name)
-				print(string.format("Building %s", short_filepath))
+				print(string.format("Building %s", makepath(short_filepath)))
 
 				doc_report.html_files = doc_report.html_files + 1
 				
@@ -417,7 +417,7 @@ function start(doc, doc_report)
 	if not options.nofiles and #doc.examples > 0 then
 		local filename = options.output_dir..s.."files"..s.."examples.html"
 		local short_fileName = options.short_output_path.."files"..s.."examples.html"
-		print(string.format("Building %s", short_fileName))
+		print(string.format("Building %s", makepath(short_fileName)))
 		doc_report.html_files = doc_report.html_files + 1
 
 		local f = util.openFile(filename, "w")
@@ -431,7 +431,7 @@ function start(doc, doc_report)
 	if not options.nofiles and doc.mdata then
 		local filename = options.output_dir..s.."files"..s.."data.html"
 		local short_fileName = options.short_output_path.."files"..s.."data.html"
-		print(string.format("Building %s", short_fileName))
+		print(string.format("Building %s", makepath(short_fileName)))
 		doc_report.html_files = doc_report.html_files + 1
 
 		local f = util.openFile(filename, "w")
@@ -454,7 +454,7 @@ function start(doc, doc_report)
 		if models then
 			local filename = options.output_dir..s.."files"..s.."models.html"
 			local short_fileName = options.short_output_path.."files"..s.."models.html"
-			print(string.format("Building %s", short_fileName))
+			print(string.format("Building %s", makepath(short_fileName)))
 
 			local f = util.openFile(filename, "w")
 			assert(f, string.format("Could not open %s for writing", filename))
