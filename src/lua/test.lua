@@ -463,7 +463,7 @@ function _Gtme.executeTests(package, fileName)
 			ut.current_file = eachFolder..s..eachFile
 			local tests
 
-			printNote("Testing "..eachFolder..s..eachFile)
+			printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachFolder..s..eachFile))
 
 			print = function(arg)
 				ut.print_calls = ut.print_calls + 1

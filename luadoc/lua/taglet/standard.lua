@@ -16,6 +16,7 @@ local forEachElement = forEachElement
 local belong = belong
 local traceback = _Gtme.traceback
 local forEachFile = forEachFile
+local makepath = _Gtme.makePathCompatibleToAllOS
 
 local s = sessionInfo().separator
 local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
@@ -582,7 +583,7 @@ function file(lua_path, fileName, doc, short_lua_path, doc_report, silent)
 	
 	if valid then
 		if not silent then
-			print(string.format("Parsing %s", short_lua_path..fileName))
+			print(string.format("Parsing %s", makepath(short_lua_path..fileName)))
 			doc_report.lua_files = doc_report.lua_files + 1
 		end
 
@@ -708,7 +709,7 @@ local function check_usage(files, doc_report)
 	for i = 1, #files do
 		local file_name = files[i]
 		if files[file_name].type ~= "example" then
-			print("Checking "..files[file_name].short_path..file_name)
+			print("Checking "..makepath(files[file_name].short_path..file_name))
 			local functions = files[file_name].functions
 			for j = 1, #functions do
 				local function_name = functions[j]
@@ -737,7 +738,7 @@ local function check_function_usage(files, doc_report)
 	for i = 1, #files do
 		local file_name = files[i]
 		if files[file_name].type ~= "example" then
-			print("Checking "..files[file_name].short_path..file_name)
+			print("Checking "..makepath(files[file_name].short_path..file_name))
 			local functions = files[file_name].functions
 			for j = 1, #functions do
 				local function_name = functions[j]
@@ -780,7 +781,7 @@ local function check_undoc_args(files, doc_report)
 	for i = 1, #files do
 		local file_name = files[i]
 		if files[file_name].type ~= "example" then
-			print("Checking "..files[file_name].short_path..file_name)
+			print("Checking "..makepath(files[file_name].short_path..file_name))
 			local functions = files[file_name].functions
 			for j = 1, #functions do
 				local function_name = functions[j]
