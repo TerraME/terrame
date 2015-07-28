@@ -233,6 +233,11 @@ function runCommand(command, number)
 
 	if number == nil then number = 1 end
 	
+	if _Gtme.isWindowsOS() then
+		tmpPath = os.getenv("TMP")
+		mfile = tmpPath.."\\"..mfile
+	end	
+	
 	command = command.." "..number.."> "..mfile
 	
 	local result = os.execute(command)
