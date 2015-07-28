@@ -761,3 +761,27 @@ function _Gtme.Legend(data)
 	return data
 end
 
+_Gtme.createdObservers = {}
+
+local deadObserverMetaTable_ = {__index = function()
+    customError("Trying to use a function of an observer that was destroyed.")
+end}
+
+function _Gtme.killAllObservers()
+	forEachElement(_Gtme.createdObservers, function(idx, obs)
+		if obs.target.cObj_ then
+			if obs.type == 11 or obs.type == "neighborhood" then
+				obs.target.cObj_:kill(obs.id, obs.observer.target.cObj_)
+			else
+				obs.target.cObj_:kill(obs.id)
+			end
+		elseif type(obs.target) == "Society" then
+			obs.target:remove(func)
+		else
+			return
+		end
+		setmetatable(obs, deadObserverMetaTable_)
+	end)
+	_Gtme.createdObservers = {}
+end
+

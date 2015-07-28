@@ -91,14 +91,6 @@ return{
 
 		unitTest:clear()
 
-		-- FIXME: this observer does not draw the cells in the screen here.
-		-- If one copies the script below to a separate file it works.
-		-- FIXME: it also generates a warning: -- FIXED
-		-- libpng warning: iCCP: known incorrect sRGB profile
-
-	-- FIXME: because of this test, we get an internal error:
-	-- libc++abi.dylib: Pure virtual function called! -> TODO - RAIAN: I was not able to reproduce this error
---  [[
 		local world = CellularSpace{
 			xdim = 10
 		}
@@ -111,31 +103,6 @@ return{
 			end
 		end)
 
-
--- [[
-		local l = _Gtme.Legend{
-			grouping = "uniquevalues",
-			colorBar = {
-				{value = 0, color = "black"},
-				{value = 1, color = "white"}
-			},
-			size = 1,
-			pen = 2
-		}
-
-		_Gtme.Observer{
-			target = world,
-			attributes = {"value"},
-			legends = {l}
-		}
-
-		world:notify()
-		world:notify()
-		world:notify()
-
---]]
-
--- [[
 		Map{
 			target = world,
 			select  = "value",
@@ -153,8 +120,7 @@ return{
 			max = 1,
 			slices = 2,
 		}
---]]
--- [[
+
 		Map{
 			target = world,
 			select  = "value",
@@ -163,10 +129,9 @@ return{
 			slices = 10,
 			max = 1
 		}
---]]
+
 		world:notify()
 		world:notify()
-		unitTest:assert(true)
 	end,
 	notify = function(unitTest)
 		local r = Random()

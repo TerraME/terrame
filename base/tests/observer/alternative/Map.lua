@@ -42,7 +42,7 @@ return{
 		error_func = function()
 			Map{target = Neighborhood()}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("target", "CellularSpace", Neighborhood()))
+		unitTest:assertError(error_func, "Invalid type. Maps only work with CellularSpace, Agent, Society, got Neighborhood.")
 
 		error_func = function()
 			Map{target = c}
@@ -268,7 +268,6 @@ return{
 		end
 		unitTest:assertError(error_func, defaultValueMsg("invert", false))
 
-
 		error_func = function()
 			Map{
 				target = c,
@@ -487,6 +486,8 @@ return{
 			Map{target = c, grouping = "background", color = "Blues"}
 		end
 		unitTest:assertError(error_func, "Strategy 'background' cannot use ColorBrewer.")
+
+		-- Society
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
