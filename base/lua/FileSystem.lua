@@ -122,6 +122,10 @@ end
 function isDir(path)
 	mandatoryArgument(1, "string", path)
 
+	if string.sub(path, -1) == "/" then
+		path = string.sub(path, 1, -2)
+	end	
+
 	if lfs.attributes(path:gsub("\\$", ""), "mode") == "directory" then
 		return true
 	else

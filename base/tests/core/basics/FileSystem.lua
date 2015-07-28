@@ -69,10 +69,14 @@ return{
 	end,
 	isDir = function(unitTest)
 		unitTest:assert(isDir(sessionInfo().path))
-        
+		
+		local path = _Gtme.makePathCompatibleToAllOS(sessionInfo().path)
+		path = path.."/"
+		unitTest:assert(isDir(path))
+		
         unitTest:assertEquals(isDir(""), false);
         
-        unitTest:assert(not isDir(file("agents.csv")))
+        unitTest:assert(not isDir(file("agents.csv")))	
 	end,
 	isFile = function(unitTest)
 		unitTest:assert(isFile(file("agents.csv")))
