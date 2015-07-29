@@ -28,8 +28,7 @@ t = Timer{
 }
 
 Map{
-	target = singleFooAgent,
-	symbol = "O"
+	target = singleFooAgent
 }
 
 t:execute(100)

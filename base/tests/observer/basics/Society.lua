@@ -101,7 +101,10 @@ return{
 		local env = Environment{cs, soc}
 		env:createPlacement()
 
-		local m = Map{target = soc}
+		local m = Map{
+			target = soc,
+			symbol = "beetle"
+		}
 
 		cs:notify()
 		soc:sample():reproduce()

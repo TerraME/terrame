@@ -28,11 +28,11 @@ Author: Tiago Garcia de Senna Carneiro
 
 #include <QApplication>
 // #include <QSystemLocale>
+#include <QFontDatabase>
 
 #define TME_STATISTIC_UNDEF
 
 #include "blackBoard.h"
-
 #include "protocol.pb.h"
 
 #ifndef TME_OBSERVER_CLIENT_MODE
@@ -176,6 +176,17 @@ int cpp_imagecompare(lua_State *L)
 	return 1;
 }
 
+int cpp_loadfont(lua_State *L)
+{
+	QFontDatabase qfd;
+
+    const char* s1 = lua_tostring(L, -1);
+	int result = qfd.addApplicationFont(s1);
+
+	lua_pushnumber(L, result);
+	return 1;
+}
+
 extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
@@ -250,6 +261,10 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_imagecompare);
 	lua_setglobal(L, "cpp_imagecompare");
+
+	lua_pushcfunction(L, cpp_loadfont);
+	lua_setglobal(L, "cpp_loadfont");
+
 	// Execute the lua files
 	if(argc < 2)
 	{

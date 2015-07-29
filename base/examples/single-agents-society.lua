@@ -33,7 +33,9 @@ t = Timer{
 }
 
 Map{
-	target = soc
+	target = soc,
+	size = 25,
+	symbol = "scorpion"
 }
 
 t:execute(100)

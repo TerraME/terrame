@@ -1595,7 +1595,10 @@ metaTableMap_ = {__index = Map_}
 -- It can also be a string with a color to be used as background.
 -- @arg data.font A string with a font name to draw Agents.
 -- @arg data.size The size of the font to be used to draw agents in space.
--- @arg data.symbol A symbol to be used to draw Agents in space.
+-- @arg data.symbol A string to be used to draw Agents in space. They can be any string,
+-- but there are some predefined symbols available : "fly", "ant", "butterfly", "spider",
+-- "bug", "dragonfly", "fly2", "bug2", "scorpion", and "beetle" (when using one of these symbols,
+-- no font should be selected).
 -- @arg data.grouping A string with the strategy to slice and color the data. See below.
 -- @tabular grouping
 -- Grouping & Description & Compulsory arguments & Optional arguments\
@@ -1909,8 +1912,16 @@ function Map(data)
 				end
 			else -- Society
 				defaultTableValue(data, "size", 20)
+				defaultTableValue(data, "symbol", "bug")
+
+				if data.font == nil and data.symbol then
+					if grissom[data.symbol] then
+						data.font = "Grissom Free"
+						data.symbol = grissom[data.symbol]
+					end
+				end
+
 				defaultTableValue(data, "font", "Times")
-				defaultTableValue(data, "symbol", "*")
 				attrs = {"target", "select", "value", "label", "color", "grouping", "background", "size", "font", "symbol"}
 			end
 
