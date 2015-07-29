@@ -3,10 +3,8 @@
 singleFooAgent = Agent{
 	execute = function(self)
 		local cell = self:getCell():getNeighborhood():sample()
-		if cell.state == "empty" then
-			self:getCell().state = "empty"
+		if cell:isEmpty() then
 			self:move(cell)
-			cell.state = "full"
 		end
 	end
 }
@@ -34,15 +32,8 @@ t = Timer{
 	Event{action = cs}
 }
 
-forEachCell(cs, function(cell)
-	cell.state = "empty"
-end)
-
 Map{
-	target = cs,
-	select = "state",
-	color = {"black", "white"},
-	value = {"full", "empty"}
+	target = soc
 }
 
 t:execute(100)

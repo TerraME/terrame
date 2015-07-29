@@ -7,16 +7,13 @@ GROWTH_PROB = 0.3
 singleFooAgent = Agent{
 	execute = function(self)
 		local cell = self:getCell():getNeighborhood():sample()
-		if cell.state == "empty" and math.random() < GROWTH_PROB then
+		if cell:isEmpty() and math.random() < GROWTH_PROB then
 			local child = self:reproduce()
 			child:move(cell)
-			cell.state = "full"
 		end
 		cell = self:getCell():getNeighborhood():sample()
-		if cell.state == "empty" then
-			self:getCell().state = "empty"
+		if cell:isEmpty() then
 			self:move(cell)
-			cell.state = "full"
 		end
 	end
 }
@@ -53,19 +50,8 @@ t = Timer{
 	end}
 }
 
-forEachCell(cs, function(cell)
-	cell.state = "empty"
-end)
-
-forEachAgent(soc, function(agent)
-	agent:getCell().state = "full"
-end)
-
 Map{
-	target = cs,
-	select = "state",
-	color = {"black", "white"},
-	value = {"full", "empty"}
+	target = soc
 }
 
 t:execute(40)
