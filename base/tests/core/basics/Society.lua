@@ -26,6 +26,16 @@
 
 return {
 	Society = function(unitTest)
+		local singleFooAgent = Agent{}
+	
+		local nonFooSociety = Society{
+			instance = singleFooAgent,
+			quantity = 0
+		}
+
+		unitTest:assertType(nonFooSociety, "Society")
+		unitTest:assertEquals(0, #nonFooSociety)
+
 		local singleFooAgent = Agent{
 			size = 10,
 			name = "foo",

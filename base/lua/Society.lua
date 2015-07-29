@@ -757,44 +757,46 @@ function Society(data)
 	else
 		mandatoryTableArgument(data, "quantity", "number")
 		integerTableArgument(data, "quantity")
-		positiveTableArgument(data, "quantity")
-	
+		positiveTableArgument(data, "quantity", true)
+
 		local quantity = data.quantity
-		data.quantity = nil
 		for i = 1, quantity do
 			data:add{}
 		end
 	end
 
-	local newAttTable = {}
-	forEachElement(data.agents[1], function(idx, value)
-		if data.instance[idx] == nil then
-			newAttTable[idx] = value
-		end
-	end)
+	if not (data.quantity and data.quantity == 0) then
+		local newAttTable = {}
+		forEachElement(data.agents[1], function(idx, value)
+			if data.instance[idx] == nil then
+				newAttTable[idx] = value
+			end
+		end)
 
-	createSummaryFunctions(newAttTable)
+		createSummaryFunctions(newAttTable)
 
-	setmetatable(data.instance, nil)
-	createSummaryFunctions(data.instance)
+		setmetatable(data.instance, nil)
+		createSummaryFunctions(data.instance)
 
-	forEachElement(Agent_, function(idx, value)
-		if belong(idx, {"execute", "init", "on_message"}) then
-			if not data.instance[idx] then
+		forEachElement(Agent_, function(idx, value)
+			if belong(idx, {"execute", "init", "on_message"}) then
+				if not data.instance[idx] then
+					data.instance[idx] = value
+				end
+				return
+			end
+
+			if data.instance[idx] then
+				if type(value) == "function" then
+					customWarning("Function '"..idx.."()' from Agent is replaced in the instance.")
+				end
+			else
 				data.instance[idx] = value
 			end
-			return
-		end
+		end)
+	end
 
-		if data.instance[idx] then
-			if type(value) == "function" then
-				customWarning("Function '"..idx.."()' from Agent is replaced in the instance.")
-			end
-		else
-			data.instance[idx] = value
-		end
-	end)
-
+	data.quantity = nil
 	local metaTableInstance = {__index = data.instance, __tostring = _Gtme.tostring}
 
 	data.instance.type_ = "Agent"

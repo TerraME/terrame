@@ -70,7 +70,7 @@ return{
 				quantity = -15
 			}
 		end
-		unitTest:assertError(error_func, positiveArgumentMsg("quantity", -15))
+		unitTest:assertError(error_func, positiveArgumentMsg("quantity", -15, true))
 
 		ag1 = Agent{id = "2"}
 

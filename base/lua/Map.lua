@@ -1675,8 +1675,7 @@ function Map(data)
 	end
 
 	if type(data.target) == "Agent" then
-		local s = Society{instance = Agent{}, quantity = 1}
-		s:remove(s:sample())
+		local s = Society{instance = Agent{}, quantity = 0}
 		s:add(data.target)
 		data.target = s
 		return Map(data)
