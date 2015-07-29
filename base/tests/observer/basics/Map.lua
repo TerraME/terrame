@@ -158,9 +158,7 @@ return{
 			color = "Blues"
 		}
 
-
 		unitTest:assertType(m, "Map")
-
 		unitTest:assertSnapshot(m, "map_quantil.bmp")
 		unitTest:assertSnapshot(mi, "map_quantil_invert.bmp")
 
@@ -191,6 +189,50 @@ return{
 		}
 
 		unitTest:assertSnapshot(m, "map_quantil_10.bmp")
+
+		local ag = Agent{
+			init = function(self)
+				if Random():number() > 0.8 then
+					self.class = "large"
+				else
+					self.class = "small"
+				end
+			end,
+			height = 1,
+			grow = function(self)
+				self.height = self.height + 1
+			end
+		}
+
+		local soc = Society{
+			instance = ag,
+			quantity = 10,
+			value = 5
+		}
+
+		local cs = CellularSpace{xdim = 10}
+
+		local env = Environment{cs, soc}
+		env:createPlacement()
+
+		local m = Map{target = soc}
+
+		cs:notify()
+		unitTest:assertSnapshot(m, "map_society_background.bmp")
+
+		local m = Map{
+			target = soc,
+			background = "green"
+		}
+		unitTest:assertSnapshot(m, "map_society_background2.bmp")
+
+		local m = Map{
+			target = soc,
+			value = {"small", "large"},
+			color = {"green", "red"}
+		}
+
+		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp")
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -210,11 +252,23 @@ return{
 			color = "Blues"
 		}
 
-		unitTest:assertType(m, "Map")
-
 		cs:notify()
-
+		unitTest:assertType(m, "Map")
 		unitTest:assertSnapshot(m, "map_save.bmp")
+
+		local singleFooAgent = Agent{}
+		local cs = CellularSpace{xdim = 10}
+		local e = Environment{cs,singleFooAgent}
+
+		e:createPlacement()
+
+		local m = Map{
+			target = singleFooAgent,
+			symbol = "O",
+			size = 30
+		}
+
+		unitTest:assertSnapshot(m, "map_single_agent_config.bmp")
 	end
 }
 

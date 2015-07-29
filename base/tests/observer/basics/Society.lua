@@ -64,26 +64,53 @@ return{
 		unitTest:assertSnapshot(c1, "chart_society.bmp")
 		unitTest:assertSnapshot(c2, "chart_society_select.bmp")
 
---[[
-		local cs = CellularSpace{
-			xdim = 10
+		local singleFooAgent = Agent{}
+		local cs = CellularSpace{xdim = 10}
+		local e = Environment{cs,singleFooAgent}
+
+		e:createPlacement()
+
+		local m = Map{
+			target = singleFooAgent
 		}
+
+		unitTest:assertSnapshot(m, "map_single_agent.bmp")
+
+		local ag = Agent{
+			init = function(self)
+				if Random():number() > 0.8 then
+					self.class = "large"
+				else
+					self.class = "small"
+				end
+			end,
+			height = 1,
+			grow = function(self)
+				self.height = self.height + 1
+			end
+		}
+
+		local soc = Society{
+			instance = ag,
+			quantity = 10,
+			value = 5
+		}
+
+		local cs = CellularSpace{xdim = 10}
 
 		local env = Environment{cs, soc}
 		env:createPlacement()
 
-		local m = Map{
-			target = soc -- white background
-		}
+		local m = Map{target = soc}
 
-		unitTest:assertSnapshot(m, "map_society_background.bmp") -- SKIP
+		cs:notify()
+		soc:sample():reproduce()
+		cs:notify()
+		cs:notify()
+		cs:notify()
+		unitTest:assertSnapshot(m, "map_society_reproduce.bmp")
 
-		local m = Map{
-			target = soc,
-			background = "green"
-		}
-		unitTest:assertSnapshot(m, "map_society_background2.bmp") -- SKIP
-
+--[[
 		forEachCell(cs, function(cell)
 			cell.value = Random():number()
 		end)
