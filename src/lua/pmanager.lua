@@ -195,6 +195,7 @@ function _Gtme.packageManager()
 	qt.ui.layout_add(externalLayout, buttonsLayout, 3, 0)
 
 	selectPackage()
+	dialog:show()
 	local result = dialog:exec()
 end
 
