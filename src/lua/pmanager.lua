@@ -68,10 +68,10 @@ function _Gtme.packageManager()
 		local msg = "Package "..comboboxPackages.currentText
 		local info = packageInfo(comboboxPackages.currentText)
 
-		msg = msg.."\n\nVersion: "..info.version
-		msg = msg.."\n\nDate: "..info.date
-		msg = msg.."\n\nAuthors: "..info.authors
-		msg = msg.."\n\nContact: "..info.contact
+		msg = msg.."\n\nVersion: "..tostring(info.version)
+		msg = msg.."\n\nDate: "..tostring(info.date)
+		msg = msg.."\n\nAuthors: "..tostring(info.authors)
+		msg = msg.."\n\nContact: "..tostring(info.contact)
 
 		if info.url then
 			msg = msg.."\n\nURL: "..info.url
