@@ -676,7 +676,7 @@ function _Gtme.interface(self, modelName, package)
 				r = r.."\tend\n"
 			end)
 		else -- named table
-			r = r.."local iresult = \"\"\n"
+			r = r.."\tlocal iresult = \"\"\n"
 			forEachOrderedElement(melement[1], function(midx, mvalue)
 				if midx == "number" then
 					forEachOrderedElement(mvalue, function(_, value)
@@ -813,16 +813,16 @@ function _Gtme.interface(self, modelName, package)
 		if merr then
 			qt.dialog.msg_critical("The simulation stopped with an internal error: "..merr)
 		end
-		Dialog:accept()
 	end]]
 
-	r = r.."\nend\n"
+	r = r.."\nend\n\n"
 	r = r.."qt.connect(RunButton, \"clicked()\", mfunction)\n\n"
-
+	
+	r = r.."Dialog:show()\n"
 	r = r.."local result = Dialog:exec()\n\n"
 	-- why not changing to Dialog:show()?
 	-- http://stackoverflow.com/questions/12068317/calling-qapplicationexec-after-qdialogexec
-	r = r.."print(result)"
+	r = r.."_Gtme.killAllObservers()"
 	
 	file = io.open(modelName.."-interface.lua", "w")
 	file:write(r)
