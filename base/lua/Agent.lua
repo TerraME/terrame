@@ -127,6 +127,7 @@ Agent_ = {
 				customWarning("Agent is already inside of a Cell. Use Agent:move() instead.")
 			end
 			self[placement].cells[1] = cell
+			self.cell = cell
 		else
 			customError("Placement '"..placement.."' was not found in the Agent.")
 		end
@@ -271,6 +272,7 @@ Agent_ = {
 		end
 
 		self[placement].cells[1] = nil
+		self.cell = nil
 
 		local ags = cell[placement].agents
 

@@ -1591,6 +1591,11 @@ metaTableMap_ = {__index = Map_}
 -- @arg data.min The minimum value of the attribute (used only for numbers).
 -- @arg data.slices Number of colors to be used for plotting. It must be an integer
 -- number greater than one.
+-- @arg data.background A Map that can be used as background to plot a Society.
+-- It can also be a string with a color to be used as background.
+-- @arg data.font A string with a font name to draw Agents.
+-- @arg data.size The size of the font to be used to draw agents in space.
+-- @arg data.symbol A symbol to be used to draw Agents in space.
 -- @arg data.grouping A string with the strategy to slice and color the data. See below.
 -- @tabular grouping
 -- Grouping & Description & Compulsory arguments & Optional arguments\
@@ -1605,7 +1610,8 @@ metaTableMap_ = {__index = Map_}
 -- similar positive or negative distances to the average will belong to the same slice. &
 -- color, stdColor, target, select & stdDeviation, precision, label \
 -- "uniquevalue" & Associate each attribute value to a given color. Attributes with type string can
--- only be sliced with this strategy. & color, target, select, value & label \
+-- only be sliced with this strategy. & color, target, select, value & label, background, 
+-- size, font, symbol \
 -- @arg data.label A table with the labels for the attributes.
 -- @arg data.stdDeviation When the grouping mode is stddeviation, it has to be one of "full",
 -- "half" "quarter", or "none".
@@ -1659,7 +1665,20 @@ metaTableMap_ = {__index = Map_}
 --     slices = 10
 -- }
 function Map(data)
-	mandatoryTableArgument(data, "target", "CellularSpace")
+	mandatoryTableArgument(data, "target")
+
+	if not belong(type(data.target), {"CellularSpace", "Agent", "Society"}) then
+		customError("Invalid type. Maps only work with CellularSpace, Agent, Society, got "..type(data.target)..".")
+	end
+
+	if type(data.target) == "Agent" then
+		local s = Society{instance = Agent{}, quantity = 1}
+		s:remove(s:sample())
+		s:add(data.target)
+		data.target = s
+		return Map(data)
+	end
+
 	optionalTableArgument(data, "value", "table")
 	optionalTableArgument(data, "label", "table")
 	optionalTableArgument(data, "select", "string")
@@ -1667,12 +1686,43 @@ function Map(data)
 	if data.grouping == nil then
 		if data.slices ~= nil or data.min ~= nil or data.max ~= nil then
 			data.grouping = "equalsteps"
-		elseif data.value ~= nil then
+		elseif data.value ~= nil or type(data.target) == "Society" then
 			data.grouping = "uniquevalue"
 		elseif data.color ~= nil and data.select == nil then
 			data.grouping = "background"
 		else
 			customError("It was not possible to infer argument 'grouping'.")
+		end
+	end
+
+	if type(data.target) == "Society" then
+
+		verify(data.grouping == "uniquevalue", "Map for Society only supports grouping 'uniquevalue'.")
+
+		local mcolor = "white"
+
+		if type(data.background) == "string" then
+			mcolor = data.background
+			data.background = nil
+		end
+
+		if not data.background then
+			local cs = data.target:sample():getCell().parent
+
+			local m = Map{target = cs, grouping = "background", color = mcolor}
+			data.background = m
+		end
+
+		optionalTableArgument(data, "background", "Map")
+
+		if not data.select then
+			forEachAgent(data.target, function(ag)
+				ag.state_ = "alive"
+			end)
+
+			data.select = "state_"
+			data.value = {"alive", "dead"}
+			data.color = {"black", "white"}
 		end
 	end
 
@@ -1846,11 +1896,22 @@ function Map(data)
 			mandatoryTableArgument(data, "select", "string")
 			mandatoryTableArgument(data, "value", "table")
 
-			local sample = data.target.cells[1][data.select]
+			local attrs
 
-			verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the target.")
-			if not belong(type(sample), {"string", "number", "function"}) then
-				customError("Selected element should be string, number, or function, got "..type(sample)..".")
+			if type(data.target) == "CellularSpace" then
+				attrs = {"target", "select", "value", "label", "color", "grouping"}
+
+				local sample = data.target.cells[1][data.select]
+
+				verify(sample ~= nil, "Selected element '"..data.select.."' does not belong to the target.")
+				if not belong(type(sample), {"string", "number", "function"}) then
+					customError("Selected element should be string, number, or function, got "..type(sample)..".")
+				end
+			else -- Society
+				defaultTableValue(data, "size", 20)
+				defaultTableValue(data, "font", "Times")
+				defaultTableValue(data, "symbol", "*")
+				attrs = {"target", "select", "value", "label", "color", "grouping", "background", "size", "font", "symbol"}
 			end
 
 			if type(data.color) == "string" then
@@ -1897,7 +1958,7 @@ function Map(data)
 			end
 			verify(#data.label == #data.value, "There should exist labels for each value. Got "..#data.label.." labels and "..#data.value.." values.")
 
-			verifyUnnecessaryArguments(data, {"target", "select", "value", "label", "color", "grouping"})
+			verifyUnnecessaryArguments(data, attrs)
 		end,
 		background = function()
 			verifyUnnecessaryArguments(data, {"target", "color", "grouping"})
@@ -1916,19 +1977,21 @@ function Map(data)
 		end
 	}
 
-	local sample = data.target.cells[1][data.select]
+	if type(data.target) == "CellularSpace" then
+		local sample = data.target.cells[1][data.select]
 
-	if type(sample) == "function" then
-		if data.target.cellobsattrs_ == nil then
-			data.target.cellobsattrs_ = {}
+		if type(sample) == "function" then
+			if data.target.cellobsattrs_ == nil then
+				data.target.cellobsattrs_ = {}
+			end
+
+			data.target.cellobsattrs_[data.select] = true
+
+			forEachCell(data.target, function(cell)
+				cell[data.select.."_"] = cell[data.select](cell)
+			end)
+			data.select = data.select.."_"
 		end
-
-		data.target.cellobsattrs_[data.select] = true
-
-		forEachCell(data.target, function(cell)
-			cell[data.select.."_"] = cell[data.select](cell)
-		end)
-		data.select = data.select.."_"
 	end
 
 	-- TODO: select with more than one attribute
@@ -1941,7 +2004,6 @@ function Map(data)
 	--end)
 
 	local observerType = 6
-	local tbDimensions = {data.target.maxCol - data.target.minCol + 1, data.target.maxRow - data.target.minRow + 1}
 
 	local observerParams = {}
 	local colorBar = {}
@@ -1954,9 +2016,9 @@ function Map(data)
 			}
 		end,
 		quantil = function()
-			colorBar = { -- SKIP
-				{value = data.min, color = data.color[1]}, -- SKIP
-				{value = data.max, color = data.color[2]} -- SKIP
+			colorBar = {
+				{value = data.min, color = data.color[1]},
+				{value = data.max, color = data.color[2]}
 			}
 		end,
 		uniquevalue = function()
@@ -1967,32 +2029,59 @@ function Map(data)
 			end
 		end,
 		background = function()
+			local mcolor = "white"
+			if data.color[1][1] == 255 and data.color[1][2] == 255 and data.color[1][3] == 255 then
+				mcolor = "black"
+			end
+
 			colorBar = {
 				{value = 0, color = data.color[1]},
-				{value = 1, color = "white"}
+				{value = 1, color = mcolor}
 			}
 			data.grouping = "uniquevalue"
 		end
 	}
 
 	local legend = _Gtme.Legend{
-			grouping = data.grouping,
-			colorBar = colorBar,
-			slices = data.slices,
-			size = 1,
-			pen = 2
+		grouping = data.grouping,
+		colorBar = colorBar,
+		slices = data.slices,
+		font = data.font,
+		fontSize = data.size,
+		symbol = data.symbol,
+		size = 1,
+		pen = 2
 	}
+
+	if type(data.target) == "Society" then
+		table.insert(observerParams, data.background.target)
+		table.insert(observerParams, data.background.id)
+	end
 
 	table.insert(observerParams, legend)
 
-	local idObs, obs = data.target.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.target.cells)
- 
+	local idObs, obs
+
+	if type(data.target) == "Society" then
+		forEachAgent(data.target, function(ag)
+			verify(ag.cObj_, "It is simple agent and it can not be observable.")
+			ag.cObj_:createObserver(observerType, {data.select}, observerParams)
+		end)
+		data.target.observerdata_ = {observerType, {data.select}, observerParams}
+		data.background.target:notify()
+		data.background.target:notify()
+		return data.background
+	else
+		local tbDimensions = {data.target.maxCol - data.target.minCol + 1, data.target.maxRow - data.target.minRow + 1}
+		idObs, obs = data.target.cObj_:createObserver(observerType, tbDimensions, {data.select}, observerParams, data.target.cells)
+	end
+
 	local map = TeMap()
 	map:setObserver(obs)
 	data.id = idObs
 	data.cObj_ = map
 	setmetatable(data, metaTableMap_)
-    table.insert(_Gtme.createdObservers, data)
+	table.insert(_Gtme.createdObservers, data)
 
 	-- TODO: change the lines below by data:notify()
 	data.target:notify()

@@ -146,6 +146,12 @@ Society_ = {
 				end
 			end
 		end)
+
+		if self.observerdata_ then
+			local mdata = self.observerdata_
+			agent.cObj_:createObserver(mdata[1], mdata[2], mdata[3])
+		end
+
 		return agent
 	end,
 	--- Remove all the Agents from the Society.
@@ -756,7 +762,7 @@ function Society(data)
 		local quantity = data.quantity
 		data.quantity = nil
 		for i = 1, quantity do
-			data:add({})
+			data:add{}
 		end
 	end
 
