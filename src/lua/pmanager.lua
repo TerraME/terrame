@@ -45,8 +45,9 @@ function _Gtme.packageManager()
 		comboboxPackages:clear()
 		local pos = 0
 		local index = 0
-		forEachFile(sessionInfo().path..s.."packages", function(file)
-			if file == "luadoc" then return end
+		local pkgDir = sessionInfo().path..s.."packages"
+		forEachFile(pkgDir, function(file)
+			if file == "luadoc" or not isDir(pkgDir..s..file) then return end
 	
 			qt.combobox_add_item(comboboxPackages, file)
 	
