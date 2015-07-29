@@ -234,8 +234,8 @@ function runCommand(command, number)
 	if number == nil then number = 1 end
 	
 	if _Gtme.isWindowsOS() then
-		tmpPath = os.getenv("TMP")
-		mfile = tmpPath.."\\"..mfile
+		local tmpPath = os.getenv("TMP") -- SKIP
+		mfile = tmpPath.."\\"..mfile -- SKIP
 	end	
 	
 	command = command.." "..number.."> "..mfile
