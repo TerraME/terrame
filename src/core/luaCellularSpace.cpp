@@ -407,11 +407,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         }
         else
         {
-#ifdef DEBUG_OBSERVER
-            luaStackToQString(12);
-            stackDump(luaL);
-#endif
-
             while (lua_next(luaL, firstLegPos - iAux) != 0)
             {
                 QString key;
@@ -459,7 +454,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
                 case LUA_TNIL:
                 case LUA_TTABLE:
                 default:
-                    // qWarning("%s - Just \"number\" or \"string\" are observable.\n", qPrintable(key));
                     break;
                 }
                 lua_pop(luaL, 1); // lua_pushnil
@@ -470,12 +464,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         lua_pop(luaL, 1); // lua_pushnil
     }
 
-    //----------------------------------------------------------------
-    //------- RECUPERA A TABELA ATRIBUTOS
-
-#ifdef DEBUG_OBSERVER
-    qDebug("\npos table: %i\nRecuperando todos os atributos:\n", top);
-#endif
     // Recupera a tabela de atributos
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 3) != 0)
@@ -493,12 +481,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         }
     }
 
-    //----------------------------------------------------------------
-    //------- RECUPERA A TABELA DIMENSaO
-
-#ifdef DEBUG_OBSERVER
-    printf("\npos table: %i\nRecuperando dimensoes:\n", top);
-#endif
     QList<int> obsDim;
 
     // Recupera a tabela de dimensoes
@@ -507,9 +489,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
     {
         int v = luaL_checknumber(luaL, -1);
 
-#ifdef DEBUG_OBSERVER
-        qDebug() << v;
-#endif
         obsDim.push_back(v);
         lua_pop(luaL, 1);
     }
@@ -522,15 +501,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         if (( width > 0) && (height > 0))
             getSpaceDimensions = true;
     }
-
-    ///////////////////////////--------------------------------------------
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "obsAttribs: "<< obsAttribs;
-    qDebug() << "observedAttribs: " << observedAttribs;
-    qDebug() << "obsParamsAtribs: " << obsParamsAtribs;
-    qDebug() << "obsParams: " << obsParams;
-#endif
 
     if ((typeObserver == TObsMap) || (typeObserver == TObsImage) || (typeObserver == TObsShapefile))
     {
@@ -568,10 +538,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
     }
     else
     {
-
-        // qDebug() << "allCellSpaceAttribs: " << allCellSpaceAttribs;
-        // qDebug() << "allCellAttribs: " << allCellAttribs;
-
         if (obsAttribs.isEmpty())
         {
             obsAttribs = allCellSpaceAttribs;
@@ -598,11 +564,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
             }
         }
     }
-
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(12);
-    qDebug("\n\nlua_gettop(luaL): %i -------------\n\n", lua_gettop(luaL));
-#endif
 
     AgentObserverMap *obsMap = 0;
     ObserverUDPSender *obsUDPSender = 0;
