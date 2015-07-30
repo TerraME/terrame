@@ -27,6 +27,23 @@ return{
 	Map = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
+		local m = Map{
+			target = cs
+		}
+
+		unitTest:assertType(m, "Map")
+		cs:notify()
+		unitTest:assertSnapshot(m, "map_none.bmp")
+
+		local m = Map{
+			target = cs,
+			color = "black"
+		}
+
+		unitTest:assertType(m, "Map")
+		cs:notify()
+		unitTest:assertSnapshot(m, "map_none_black.bmp")
+
 		local r = Random()
 
 		forEachCell(cs, function(cell)
@@ -228,11 +245,21 @@ return{
 
 		local m = Map{
 			target = soc,
+			select = "class",
 			value = {"small", "large"},
 			color = {"green", "red"}
 		}
 
 		unitTest:assertSnapshot(m, "map_society_uniquevalue.bmp")
+
+		local m = Map{
+			target = soc,
+			color = "white",
+			background = "darkGreen",
+			symbol = "beetle"
+		}
+
+		unitTest:assertSnapshot(m, "map_society_white.bmp")
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -258,7 +285,7 @@ return{
 
 		local singleFooAgent = Agent{}
 		local cs = CellularSpace{xdim = 10}
-		local e = Environment{cs,singleFooAgent}
+		local e = Environment{cs, singleFooAgent}
 
 		e:createPlacement()
 
@@ -269,6 +296,48 @@ return{
 		}
 
 		unitTest:assertSnapshot(m, "map_single_agent_config.bmp")
+
+		local singleFooAgent = Agent{}
+		local soc = Society{instance = Agent{}, quantity = 10}
+		local cs = CellularSpace{xdim = 10}
+		local e = Environment{cs, soc}
+
+		e:createPlacement()
+
+		forEachCell(cs, function(cell)
+			if cell:isEmpty() then
+				cell.state = "empty"
+			else
+				cell.state = "full"
+			end
+		end)
+
+		local m = Map{
+			target = cs,
+			select = "state",
+			value = {"empty", "full"},
+			color = {"white", "yellow"}
+		}
+
+		local m2 = Map{
+			background = m,
+			target = soc,
+			color = "red"
+		}
+
+		unitTest:assertSnapshot(m2, "map_society_location.bmp")
+
+		for i = 1, 5 do
+			soc:sample():die()
+		end
+
+		local m2 = Map{
+			background = "gray",
+			target = soc,
+			color = "red"
+		}
+
+		unitTest:assertSnapshot(m2, "map_society_five_left.bmp")
 	end
 }
 

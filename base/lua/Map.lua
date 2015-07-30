@@ -1613,8 +1613,11 @@ metaTableMap_ = {__index = Map_}
 -- similar positive or negative distances to the average will belong to the same slice. &
 -- color, stdColor, target, select & stdDeviation, precision, label \
 -- "uniquevalue" & Associate each attribute value to a given color. Attributes with type string can
--- only be sliced with this strategy. & color, target, select, value & label, background, 
+-- only be sliced with this strategy. It can be used for CellularSpaces as well as for
+-- Society. & color, target, select, value & label, background, 
 -- size, font, symbol \
+-- "none" & Does not execute any color slicing. It can be used for CellularSpaces as well as for
+-- Society. & & background, size, font, symbol, target, color \
 -- @arg data.label A table with the labels for the attributes.
 -- @arg data.stdDeviation When the grouping mode is stddeviation, it has to be one of "full",
 -- "half" "quarter", or "none".
@@ -1688,21 +1691,43 @@ function Map(data)
 	if data.grouping == nil then
 		if data.slices ~= nil or data.min ~= nil or data.max ~= nil then
 			data.grouping = "equalsteps"
-		elseif data.value ~= nil or type(data.target) == "Society" then
+		elseif data.value ~= nil then
 			data.grouping = "uniquevalue"
-		elseif data.color ~= nil and data.select == nil then
-			data.grouping = "background"
+		elseif data.select == nil then
+			data.grouping = "none"
 		else
 			customError("It was not possible to infer argument 'grouping'.")
 		end
 	end
 
-	if type(data.target) == "Society" then
+	if type(data.color) == "string" then
+		local firstChar = string.sub(data.color, 0, 1)
 
-		verify(data.grouping == "uniquevalue", "Map for Society only supports grouping 'uniquevalue'.")
+		if firstChar:lower() == firstChar then
+			data.color = {data.color}
+		end
+	end
+
+	if type(data.target) == "Society" then
+		if #data.target == 0 then
+			customError("It is not possible to create a Map from an empty Society.")
+		elseif not data.target:sample().cell then
+			customError("The Society does not have a placement. Please use Environment:createPlacement() first.")
+		end
+
+		defaultTableValue(data, "size", 20)
+		defaultTableValue(data, "symbol", "bug")
+
+		if data.font == nil and data.symbol then
+			if grissom[data.symbol] then
+				data.font = "Grissom Free"
+				data.symbol = grissom[data.symbol]
+			end
+		end
+
+		defaultTableValue(data, "font", "Times")
 
 		local mcolor = "white"
-
 		if type(data.background) == "string" then
 			mcolor = data.background
 			data.background = nil
@@ -1711,25 +1736,13 @@ function Map(data)
 		if not data.background then
 			local cs = data.target:sample():getCell().parent
 
-			local m = Map{target = cs, grouping = "background", color = mcolor}
-			data.background = m
+			data.background = Map{
+				target = cs,
+				color = mcolor
+			}
 		end
 
-		optionalTableArgument(data, "background", "Map")
-
-		if not data.select then
-			forEachAgent(data.target, function(ag)
-				ag.state_ = "alive"
-			end)
-
-			data.select = "state_"
-			data.value = {"alive", "dead"}
-			data.color = {"black", "white"}
-		end
-	end
-
-	if type(data.color) == "string" and data.color:lower() == data.color then
-		data.color = {data.color}
+		mandatoryTableArgument(data, "background", "Map")
 	end
 
 	if type(data.color) == "table" then
@@ -1766,6 +1779,7 @@ function Map(data)
 	switch(data, "grouping"):caseof{
 		equalsteps = function()
 			mandatoryTableArgument(data, "select", "string")
+			mandatoryTableArgument(data, "target", "CellularSpace")
 
 			local sample = data.target.cells[1][data.select]
 
@@ -1825,12 +1839,13 @@ function Map(data)
 			end
 
 			mandatoryTableArgument(data, "color", "table")
-			verify(#data.color == 2, "Strategy '"..data.grouping.."' requires only two colors, got "..#data.color..".")
+			verify(#data.color == 2, "Grouping '"..data.grouping.."' requires only two colors, got "..#data.color..".")
 
 			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert"})
 		end,
 		quantil = function() -- equal to 'equalsteps'
 			mandatoryTableArgument(data, "select", "string")
+			mandatoryTableArgument(data, "target", "CellularSpace")
 
 			local sample = data.target.cells[1][data.select]
 
@@ -1890,7 +1905,7 @@ function Map(data)
 			end
 
 			mandatoryTableArgument(data, "color", "table")
-			verify(#data.color == 2, "Strategy '"..data.grouping.."' requires only two colors, got "..#data.color..".")
+			verify(#data.color == 2, "Grouping '"..data.grouping.."' requires only two colors, got "..#data.color..".")
 
 			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert"})
 		end,
@@ -1910,17 +1925,6 @@ function Map(data)
 					customError("Selected element should be string, number, or function, got "..type(sample)..".")
 				end
 			else -- Society
-				defaultTableValue(data, "size", 20)
-				defaultTableValue(data, "symbol", "bug")
-
-				if data.font == nil and data.symbol then
-					if grissom[data.symbol] then
-						data.font = "Grissom Free"
-						data.symbol = grissom[data.symbol]
-					end
-				end
-
-				defaultTableValue(data, "font", "Times")
 				attrs = {"target", "select", "value", "label", "color", "grouping", "background", "size", "font", "symbol"}
 			end
 
@@ -1970,20 +1974,60 @@ function Map(data)
 
 			verifyUnnecessaryArguments(data, attrs)
 		end,
-		background = function()
-			verifyUnnecessaryArguments(data, {"target", "color", "grouping"})
+		none = function()
+			local mblack = {0, 0, 0}
+			local mwhite = {255, 255, 255}
+
+			if not data.color then
+				if type(data.target) == "CellularSpace" then
+					data.color = {mwhite}
+				else -- Society
+					data.color = {mblack}
+				end
+			end
 
 			if type(data.color) == "string" then
-				customError("Strategy 'background' cannot use ColorBrewer.")
+				customError("Grouping 'none' cannot use ColorBrewer.")
 			end
 
 			mandatoryTableArgument(data, "color", "table")
-			data.select = "background_"
-			verify(#data.color == 1, "Strategy 'background' requires only one color, got "..#data.color..".")
+			verify(#data.color == 1, "Grouping 'none' requires only one color, got "..#data.color..".")
 
-			forEachCell(data.target, function(cell)
-				cell.background_ = 0
-			end)
+			data.grouping = "uniquevalue"
+
+			if type(data.target) == "CellularSpace" then
+				verifyUnnecessaryArguments(data, {"target", "color", "grouping"})
+
+				data.select = "background_"
+				data.value = {0, 1}
+				data.label = {"Cell", "<none>"}
+
+				if data.color[1][1] == 0 and data.color[1][2] == 0 and data.color[1][3] == 0 then
+					data.color = {mblack, mwhite}
+				else
+					data.color = {data.color[1], mblack}
+				end
+		
+				forEachCell(data.target, function(cell)
+					cell.background_ = 0
+				end)
+			else -- Society
+				verifyUnnecessaryArguments(data, {"target", "color", "grouping", "background", "size", "font", "symbol"})
+
+				data.select = "state_"
+				data.value = {"alive", "dead"}
+				data.label = {"Agent", "<none>"}
+
+				if data.color[1][1] == 255 and data.color[1][2] == 255 and data.color[1][3] == 255 then
+					data.color = {mwhite, mblack}
+				else
+					data.color = {data.color[1], mwhite}
+				end
+
+				forEachAgent(data.target, function(ag)
+					ag.state_ = "alive"
+				end)
+			end
 		end
 	}
 
@@ -2037,18 +2081,6 @@ function Map(data)
 				                        color = data.color[i],
 				                        label = data.label[i]})
 			end
-		end,
-		background = function()
-			local mcolor = "white"
-			if data.color[1][1] == 255 and data.color[1][2] == 255 and data.color[1][3] == 255 then
-				mcolor = "black"
-			end
-
-			colorBar = {
-				{value = 0, color = data.color[1]},
-				{value = 1, color = mcolor}
-			}
-			data.grouping = "uniquevalue"
 		end
 	}
 

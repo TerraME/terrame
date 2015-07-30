@@ -43,7 +43,10 @@ t = Timer{
 }
 
 Map{
-	target = soc
+	target = soc,
+	symbol = "dragonfly",
+	color = "blue",
+	background = "gray"
 }
 
 t:execute(120)

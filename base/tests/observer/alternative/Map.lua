@@ -45,14 +45,14 @@ return{
 		unitTest:assertError(error_func, "Invalid type. Maps only work with CellularSpace, Agent, Society, got Neighborhood.")
 
 		error_func = function()
-			Map{target = c}
-		end
-		unitTest:assertError(error_func, "It was not possible to infer argument 'grouping'.")
-
-		error_func = function()
 			Map{target = c, select = 5}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 5))
+
+		local error_func = function()
+			Map{target = c, select = "value"}
+		end
+		unitTest:assertError(error_func, "It was not possible to infer argument 'grouping'.")
 
 		error_func = function()
 			Map{target = c, select = "x", slices = 10, color = 5}
@@ -138,7 +138,7 @@ return{
 				color = {"red", "green", "blue"}
 			}
 		end
-		unitTest:assertError(error_func, "Strategy 'equalsteps' requires only two colors, got 3.")
+		unitTest:assertError(error_func, "Grouping 'equalsteps' requires only two colors, got 3.")
 
 		error_func = function()
 			Map{
@@ -277,7 +277,7 @@ return{
 				grouping = "quantil"
 			}
 		end
-		unitTest:assertError(error_func, "Strategy 'quantil' requires only two colors, got 3.")
+		unitTest:assertError(error_func, "Grouping 'quantil' requires only two colors, got 3.")
 
 		error_func = function()
 			Map{
@@ -461,33 +461,66 @@ return{
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
 
-		-- background
+		-- none
 		error_func = function()
-			Map{target = c, grouping = "background", title =  "aaa"}
+			Map{target = c, grouping = "none", title =  "aaa"}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("title"))
 
 		error_func = function()
-			Map{target = c, grouping = "background"}
+			Map{target = c, grouping = "none", color = {"blue", "red"}}
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("color"))
+		unitTest:assertError(error_func, "Grouping 'none' requires only one color, got 2.")	
 
 		error_func = function()
-			Map{target = c, grouping = "background", color = {"blue", "red"}}
-		end
-		unitTest:assertError(error_func, "Strategy 'background' requires only one color, got 2.")	
-
-		error_func = function()
-			Map{target = c, grouping = "background", color = {"blues"}}
+			Map{target = c, grouping = "none", color = {"blues"}}
 		end
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("blues", "color", "blue"))
 
 		error_func = function()
-			Map{target = c, grouping = "background", color = "Blues"}
+			Map{target = c, grouping = "none", color = "Blues"}
 		end
-		unitTest:assertError(error_func, "Strategy 'background' cannot use ColorBrewer.")
+		unitTest:assertError(error_func, "Grouping 'none' cannot use ColorBrewer.")
 
 		-- Society
+		local ag = Agent{}
+		local soc = Society{instance = ag, quantity = 10}
+		local cs = CellularSpace{xdim = 10}
+
+		error_func = function()
+			Map{target = soc}
+		end
+		unitTest:assertError(error_func, "The Society does not have a placement. Please use Environment:createPlacement() first.")
+
+		local env = Environment{soc, cs}
+		env:createPlacement()
+
+		error_func = function()
+			Map{target = soc, color = "Blues"}
+		end
+		unitTest:assertError(error_func, "Grouping 'none' cannot use ColorBrewer.")
+
+		error_func = function()
+			Map{target = soc, font = 2}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("font", "string", 2))
+
+		error_func = function()
+			Map{target = soc, size = "Blues"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("size", "number", "Blues"))
+
+		error_func = function()
+			Map{target = soc, symbol = false}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("symbol", "string", false))
+
+		local soc2 = Society{instance = Agent{}, quantity = 0}
+
+		error_func = function()
+			Map{target = soc2}
+		end
+		unitTest:assertError(error_func, "It is not possible to create a Map from an empty Society.")
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
