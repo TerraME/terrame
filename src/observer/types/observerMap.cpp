@@ -22,7 +22,6 @@ extern lua_State * L;
 #define TME_STATISTIC_UNDEF
 
 #ifdef TME_STATISTIC
-    // Estatisticas de desempenho
     #include "../statistic/statistic.h"
 #endif
 
@@ -180,11 +179,8 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                                 QStringList legAttribs)
 {
     connectTreeLayerSlot(false);
-    
     bool complexMap = false; 
 
-    // lista com os atributos que ser?o observados
-    //itemList = headers;
     if (itemList.isEmpty())
     {
         itemList << attribs;
@@ -200,18 +196,6 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
         }
     }
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\nheaders:\n" << attribs;
-    qDebug() << "\nitemList:\n" << itemList;
-    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
-
-    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
-    qDebug() << "num de legendas: " << (int) legKeys.size() / LEGEND_ITENS;
-
-    for (int j = 0; j < legKeys.size(); j++)
-        qDebug() << legKeys.at(j) << " = " << legAttribs.at(j);
-#endif
-
     for (int j = 0; (legKeys.size() > 0 && j < LEGEND_KEYS.size()); j++)
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
@@ -225,17 +209,16 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
 
     QTreeWidgetItem *item = 0;
     Attributes *attrib = 0;
-    for( int i = 0; i < itemList.size(); i++)
+    for(int i = 0; i < itemList.size(); i++)
     {
-        if ((! mapAttributes->contains(itemList.at(i)) )
+        if((! mapAttributes->contains(itemList.at(i)) )
             && (itemList.at(i) != "x") && (itemList.at(i) != "y") )
         {
             obsAttrib.append(itemList.at(i));
-            attrib = new Attributes(itemList.at(i), width * height, newWidthCellSpace, newHeightCellSpace );
+            attrib = new Attributes(itemList.at(i), width * height, newWidthCellSpace, newHeightCellSpace);
             attrib->setVisible(true);
 
-            //------- Recupera a legenda do arquivo e cria o objeto attrib
-            if (! legKeys.isEmpty())
+            if(! legKeys.isEmpty())
             {
                 type = legKeys.indexOf(TYPE);
                 mode = legKeys.indexOf(GROUP_MODE);
@@ -258,15 +241,13 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                 attrib->setMaxValue(legAttribs.at(max).toDouble());
                 attrib->setMinValue(legAttribs.at(min).toDouble());
 
-                //Fonte
                 attrib->setFontFamily(legAttribs.at(font));
                 attrib->setFontSize(legAttribs.at(fontSize).toInt());
 
-                //Converte o c?digo ASCII do s?mbolo em caracter
                 bool ok = false;
                 int asciiCode = legAttribs.at(symbol).toInt(&ok, 10);
-                if (ok)
-                    attrib->setSymbol( QString( QChar(asciiCode ) ));
+                if(ok)
+                    attrib->setSymbol(QString(QChar(asciiCode)));
                 else
                     attrib->setSymbol(legAttribs.at(symbol));
                 
@@ -284,20 +265,11 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
                 attrib->setValueList(valueList);
                 attrib->setLabelList(labelList);
 
-                // Removes the legend items retrieved
                 for(int j = 0; j < LEGEND_ITENS; j++)
                 {
                     legKeys.removeFirst();
                     legAttribs.removeFirst();
                 }
-
-#ifdef DEBUG_OBSERVER
-                qDebug() << "valueList.size(): " << valueList.size();
-                qDebug() << valueList;
-                qDebug() << "\nlabelList.size(): " << labelList.size();
-                qDebug() << labelList;
-                qDebug() << "\nattrib->toString()\n" << attrib->toString();
-#endif
             }
             mapAttributes->insert(itemList.at(i), attrib);
             attrib->makeBkp();
@@ -306,7 +278,7 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
             item->setCheckState(0, Qt::Checked);
             item->setText(0, itemList.at(i));
 
-            if ((complexMap) && (treeLayers->topLevelItemCount() > 1))
+            if((complexMap) && (treeLayers->topLevelItemCount() > 1))
             {
                 item = treeLayers->takeTopLevelItem(treeLayers->topLevelItemCount() - 1);
                 treeLayers->insertTopLevelItem(0, item);
@@ -315,14 +287,11 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
         }
     }
 
-    if (! legendWindow)
+    if(! legendWindow)
         legendWindow = new LegendWindow(this);
     
-    legendWindow->setValues(mapAttributes);   
-
-    // Atualiza o zoom de janela
+    legendWindow->setValues(mapAttributes);
     zoomWindow();
-
     connectTreeLayerSlot(true);
 }
 
@@ -747,9 +716,6 @@ int ObserverMap::close()
     return 0;
 }
 
-
-
-
 ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
                 QString &value, QString &label)
 {
@@ -765,14 +731,6 @@ ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
         lua_pushnumber(L,4);
         lua_call(L,2,0);
     }
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\ncolorList.size(): " <<  colorItemList.size();
-    qDebug() << colorItemList;
-
-    qDebug() << "teColorList.size(): " <<   teColorList.size();
-    qDebug() << teColorList;
-#endif
 
     if (colorItemList.at(LABEL_) != ITEM_NULL)
         label = colorItemList.at(LABEL_);

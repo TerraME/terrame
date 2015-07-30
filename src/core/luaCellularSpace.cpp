@@ -285,27 +285,20 @@ string luaCellularSpace::getLayerName( )
 /// Gets the name of the TerraLib layer related to the CellularSpace object
 /// parameter: a pointer to the Lua Stack
 /// \author Raian Vargas Maretto
-int luaCellularSpace::getLayerName( lua_State *L )
+int luaCellularSpace::getLayerName(lua_State *L)
 {
     lua_pushstring(L, this->inputLayerName.c_str());
     return 1;
 }
-//@RAIAN: FIM
 
 /// Creates several types of observers to the luaCellularSpace object
 /// parameters: observer type, observeb attributes table, observer type parameters
-int luaCellularSpace::createObserver( lua_State * luaL)
+int luaCellularSpace::createObserver(lua_State * luaL)
 {
-    // recupero a referencia do espaco celular
-    // @DANIEL
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaCellularSpace>::getReference(luaL);
 
     getSpaceDimensions = false;
-
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(12);
-#endif
 
     // flags para a definicao do uso de compressao
     // na transmissao de datagramas e da visibilidade
@@ -334,20 +327,6 @@ int luaCellularSpace::createObserver( lua_State * luaL)
     //int cellsNumber = 0;
     bool boolAux = false;
 
-#ifdef DEBUG_OBSERVER
-    qDebug("\npos table: %i\nRecuperando os parametros:\n", top);
-#endif
-
-    //----------------------------------------------------------------
-    //------- RECUPERA A TABELA PARAMETROS
-
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(12);
-    stackDump(luaL);
-#endif
-
-    // Pecorre o espaco celular e tambe'm
-    // recupera o atributos de uma ce'lula
     lua_pushnil(luaL);
     while(lua_next(luaL, top) != 0)
     {
@@ -386,22 +365,12 @@ int luaCellularSpace::createObserver( lua_State * luaL)
         lua_pop(luaL, 1);
     }
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "allCellSpaceAttribs: " << allCellSpaceAttribs;
-    qDebug() << "allCellAttribs: " << allCellAttribs;
-#endif
-
     // Recupera a tabela de parametros
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 2) != 0)
     {
         lua_pushstring(luaL, "Minimum");
         lua_gettable(luaL, -1);
-
-#ifdef DEBUG_OBSERVER
-        luaStackToQString(12);
-        stackDump(luaL);
-#endif
 
         //********************************************************************************
         int firstLegPos = lua_gettop(luaL);

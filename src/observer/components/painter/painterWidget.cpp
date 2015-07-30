@@ -406,24 +406,7 @@ void PainterWidget::drawGrid()
     double w = resultImageBkp.width() / widthProportion;
     double h = resultImageBkp.height() / heightProportion;
 
-    //double w = (double) (int)(resultImageBkp.width() / widthProportion);
-    //double h = (double) (int) (resultImageBkp.height() / heightProportion);
-    
-    //qDebug() << w << ", " << h;
-    //if ((w < 2) || (h < 2))
-    //    return;
-
     painterThread.drawGrid(resultImageBkp, w, h);
-
-
-    //QPainter p(&resultImageBkp);
-    //p.setPen(Qt::darkGray);
-
-    //for(int j = 0; j < resultImageBkp.height(); j++)
-    //{
-    //    for(int i = 0; i < resultImageBkp.width(); i++)
-    //        p.drawRect(i * w, j * h, w, h);
-    //}
 }
 
 void PainterWidget::drawAgent()
