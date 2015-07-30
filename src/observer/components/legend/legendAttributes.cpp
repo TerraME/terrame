@@ -685,7 +685,7 @@ void Attributes::clear()
 
 void Attributes::setFontSize(int size)
 {
-    font.setPointSize( (size < 1 ? 12 : size) );
+    font.setPointSize( (size < 1 ? 1 : size) );
 }
 
 void Attributes::setFontFamily(const QString &family)
