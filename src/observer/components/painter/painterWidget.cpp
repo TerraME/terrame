@@ -467,18 +467,31 @@ void PainterWidget::drawAgent()
                     painter.setFont(attrib->getFont());
                     painter.translate(rec.center());
 
-                    painter.rotate(attrib->getDirection(pos, x, y));
-                    // painter.drawText(recCell, align[qrand() % ALIGN_FLAGS], attrib->getSymbol());
+                    // painter.rotate(attrib->getDirection(pos, x, y)); // future use issue #411
 
-                    // Delimita a ?rea que o simbolo poder? ocupar
-                    int xPos = (int) recCell.x() + recCell.width() * 0.07;
-                    int yPos = (int) recCell.y() + recCell.height() * 0.07;
+                    double xPos = recCell.x();
+                    double yPos = -recCell.y();
 
-                    xPos += qrand() % (int) (recCell.width() * 0.85);
-                    yPos += qrand() % (int) (recCell.height() * 0.85); 
-                    QPointF position(recCell.center());
-                    position += QPointF(xPos, yPos);
+                    int fontSize = attrib->getFont().pointSize();
 
+                    if (fontSize == 1)
+                    {
+                        attrib->setFontSize((int)floor(recCell.height()));
+                    }
+                    else if (fontSize <= recCell.height())
+                    {
+                        double range = floor(recCell.height() - fontSize);
+                        double rand = ((double)qrand() / RAND_MAX) * range;
+                        xPos += rand;
+                        yPos -= rand;
+                    }
+                    else
+                    {
+                        xPos = -fontSize * 0.5;
+                        yPos = fontSize * 0.5;
+                    }
+
+                    QPointF position = QPointF(xPos, yPos);
                     painter.drawText(position, attrib->getSymbol());
                     painter.restore();
                 }
@@ -521,18 +534,32 @@ void PainterWidget::drawAgent()
                     painter.rotate(a);
                     painter.drawText(recCell, Qt::AlignCenter, attrib->getSymbol());
 #else
-                    painter.rotate(attrib->getDirection(pos, x, y));
-                    // painter.drawText(recCell, align[qrand() % ALIGN_FLAGS], attrib->getSymbol());
 
-                    // Delimita a ?rea que o simbolo poder? ocupar
-                    int xPos = (int) recCell.x() + recCell.width() * 0.07;
-                    int yPos = (int) recCell.y() + recCell.height() * 0.07;
+                    // painter.rotate(attrib->getDirection(pos, x, y)); // future use issue #411
 
-                    xPos += qrand() % (int) (recCell.width() * 0.85);
-                    yPos += qrand() % (int) (recCell.height() * 0.85); 
-                    QPointF position(recCell.center());
-                    position += QPointF(xPos, yPos);
+                    double xPos = recCell.x();
+                    double yPos = -recCell.y();
 
+                    int fontSize = attrib->getFont().pointSize();
+
+                    if (fontSize == 1)
+                    {
+                        attrib->setFontSize((int)floor(recCell.height()));
+                    }
+                    else if (fontSize < recCell.height())
+                    {
+                        double range = floor(recCell.height() - fontSize);
+                        double rand = ((double)qrand() / RAND_MAX) * range;
+                        xPos += rand;
+                        yPos -= rand;
+                    }
+                    else
+                    {
+                        xPos = -fontSize * 0.5;
+                        yPos = fontSize * 0.5;
+                    }
+
+                    QPointF position = QPointF(xPos, yPos);
                     painter.drawText(position, attrib->getSymbol());
 #endif 
                     painter.restore();
