@@ -103,7 +103,8 @@ return{
 
 		local m = Map{
 			target = soc,
-			symbol = "beetle"
+			symbol = "beetle",
+			color = "green"
 		}
 
 		cs:notify()
@@ -112,29 +113,6 @@ return{
 		cs:notify()
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_society_reproduce.bmp")
-
---[[
-		forEachCell(cs, function(cell)
-			cell.value = Random():number()
-		end)
-
-		local m1 = Map{
-			target = cs,
-			min = 0,
-			max = 1,
-			colors = "Blues",
-			slices = 10
-		}
-
-		m = Map{
-			target = soc,
-			background = m1,
-			size = 2, -- size = {1, 10} to work in the same way of value
-			symbol = "smile"
-		}
-
-		unitTest:assertSnapshot(m, "map_society_symbol.bmp") -- SKIP
---]]
 	end
 }
 
