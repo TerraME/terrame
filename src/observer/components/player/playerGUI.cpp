@@ -13,9 +13,7 @@ PlayerGUI::PlayerGUI(QWidget *parent)
 {
     ui->setupUi(this);
     // ui->mainVLayout->addWidget( &ModelConsole::getInstance() );
-    resize(400, 300);
-
-    ui->textMessage->append("TerraME started!");
+    resize(400, 20);
 
     // The simulation will be launched in pause mode, so
     // the GUI must be similar
@@ -33,21 +31,12 @@ PlayerGUI::~PlayerGUI()
     delete ui;
 }
 
-void PlayerGUI::appendMessage(const QString & msg)
-{
-    // ModelConsole::getInstance().appendMessage(msg);
-    ui->textMessage->append(msg);
-}
-
 void PlayerGUI::playPauseClicked()
 {
     QIcon icon;
 
     if (! paused)
     {
-        // ModelConsole::getInstance().appendMessage("Simulation paused!\n");
-        ui->textMessage->append("Simulation paused!\n");
-
         ui->btPlayPause->setText("Play");
         icon.addFile(QString::fromUtf8(":/icons/play.png"), QSize(), QIcon::Normal, QIcon::Off);
         ui->btPlayPause->setIcon(icon);
@@ -55,9 +44,6 @@ void PlayerGUI::playPauseClicked()
     }
     else
     {
-        // ModelConsole::getInstance().appendMessage("Simulation running...\n");
-        ui->textMessage->append("Simulation running...\n");
-
         ui->btPlayPause->setText("Pause");
         icon.addFile(QString::fromUtf8(":/icons/pause.png"), QSize(), QIcon::Normal, QIcon::Off);
         ui->btPlayPause->setIcon(icon);
@@ -70,9 +56,6 @@ void PlayerGUI::stepClicked()
 {
     if (! step)
     {
-        // ModelConsole::getInstance().appendMessage("Step by step running...\n");
-        ui->textMessage->append("Step by step running...\n");
-        
         QIcon icon;
         ui->btPlayPause->setText("Play");
         icon.addFile(QString::fromUtf8(":/icons/play.png"), QSize(), QIcon::Normal, QIcon::Off);

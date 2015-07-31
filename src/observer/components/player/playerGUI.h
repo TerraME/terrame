@@ -56,13 +56,6 @@ public:
     virtual ~PlayerGUI();
 
     /**
-     * Appends a message in the user interface component
-     * \param msg a reference to a message
-     * \see QString
-     */
-    void appendMessage(const QString & msg);
-
-    /**
      * Activates the buttons states
      * \param active boolean, if \a true actives the buttons. Otherwise, desactives it.
      */

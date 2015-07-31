@@ -22,8 +22,6 @@
 *
 *************************************************************************************/
 
-
-
 #ifndef TME_PLAYER_H
 #define TME_PLAYER_H
 
@@ -53,12 +51,6 @@ public:
      * Destructor for the object
      */
     virtual ~Player();
-
-    /**
-     * Insert a new message on the window
-     * \param msg a QString reference to a message
-     */
-    void appendMessage(const QString & msg);
 
     /**
      * Shows the window
@@ -99,3 +91,4 @@ private:
 
 }
 #endif // TME_PLAYER_H
+

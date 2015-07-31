@@ -42,11 +42,6 @@ Player::~Player()
 //    return 0;
 //}
 
-void Player::appendMessage(const QString & msg)
-{
-    playerGUI->appendMessage(msg);
-}
-
 void Player::setActiveButtons(bool active)
 {
     playerGUI->setEnabled(active);

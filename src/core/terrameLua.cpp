@@ -29,6 +29,7 @@ Author: Tiago Garcia de Senna Carneiro
 #include <QApplication>
 // #include <QSystemLocale>
 #include <QFontDatabase>
+#include <QMessageBox>
 
 #define TME_STATISTIC_UNDEF
 
@@ -77,33 +78,24 @@ bool existWindows()
 
 void outputHandle(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-	// ModelConsole &console = ModelConsole::getInstance();
-	//if(!console.isVisible())
-	//	console.show();
+	QMessageBox msgBox;
+	msgBox.setText("Debug: " + QString(msg.toLatin1().data()));
 
-	Player &player = Player::getInstance();
-
-    //in this function, you can write the message to any stream!
     switch (type) {
         case QtDebugMsg:
-            player.appendMessage("Debug: " + QString(msg.toLatin1().data()));
+			msgBox.setIcon(QMessageBox::Information);
+			msgBox.exec();
             break;
-
         case QtWarningMsg:
-            player.appendMessage(QString(msg.toLatin1().data()));
+			msgBox.setIcon(QMessageBox::Warning);
+			msgBox.exec();
             break;
-
         case QtCriticalMsg:
-            player.appendMessage("Critical: " + QString(msg.toLatin1().data()));
-            break;
-
         case QtFatalMsg:
-            player.appendMessage("Fatal: " + QString(msg.toLatin1().data()));
-            fprintf(stderr, "Fatal: %s\n", msg.toLatin1().data());
+			msgBox.setIcon(QMessageBox::Critical);
+			msgBox.exec();
             abort();
-
         default:
-            fprintf(stdout, "%s\n", msg.toLatin1().data());
             break;
     }
 }
@@ -220,8 +212,6 @@ int main(int argc, char *argv[])
         Player::getInstance().show();
         Player::getInstance().setEnabled(false);
 
-		qWarning("Warning: The TerraME Player will be able to execute only when "
-			"an Environment and/or a Timer object are used in the model file.");
 		app.processEvents();
 	}
 
