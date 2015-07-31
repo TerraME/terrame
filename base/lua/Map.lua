@@ -1715,7 +1715,7 @@ function Map(data)
 			customError("The Society does not have a placement. Please use Environment:createPlacement() first.")
 		end
 
-		defaultTableValue(data, "size", 20)
+		defaultTableValue(data, "size", 1)
 		defaultTableValue(data, "symbol", "bug")
 
 		if data.font == nil and data.symbol then
