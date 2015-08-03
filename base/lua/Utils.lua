@@ -700,7 +700,11 @@ end
 -- TerraME execution options -imporDb and -exportDb also use this file.
 -- @usage getConfig()
 function getConfig()
-	return _Gtme.include("config.lua")
+	if not isFile("config.lua") then
+		_Gtme.buildConfig() -- SKIP
+	end
+
+	return _Gtme.include("config.lua")	
 end
 
 --- Return the extension of a given file name. It returns the substring after the last dot.

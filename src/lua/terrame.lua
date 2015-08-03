@@ -330,6 +330,108 @@ function _Gtme.showDoc(package)
 	end
 end
 
+function _Gtme.buildConfig()
+	require("qtluae")
+
+	local dialog = qt.new_qobject(qt.meta.QDialog)
+	dialog.windowTitle = "Configure database connection"
+
+	local externalLayout = qt.new_qobject(qt.meta.QVBoxLayout)
+
+	local internalLayout = qt.new_qobject(qt.meta.QGridLayout)
+	internalLayout.spacing = 8
+
+	qt.ui.layout_add(dialog, externalLayout)
+
+	label = qt.new_qobject(qt.meta.QLabel)
+	label.text = "Host:"
+	qt.ui.layout_add(internalLayout, label, 0, 0)
+	lineEditHost = qt.new_qobject(qt.meta.QLineEdit)
+	qt.ui.layout_add(internalLayout, lineEditHost, 0, 1)
+	lineEditHost:setText("localhost")
+
+	label = qt.new_qobject(qt.meta.QLabel)
+	label.text = "Port:"
+	qt.ui.layout_add(internalLayout, label, 1, 0)
+	lineEditPort = qt.new_qobject(qt.meta.QLineEdit)
+	qt.ui.layout_add(internalLayout, lineEditPort, 1, 1)
+	lineEditPort:setText("3306")
+
+	label = qt.new_qobject(qt.meta.QLabel)
+	label.text = "User:"
+	qt.ui.layout_add(internalLayout, label, 2, 0)
+	lineEditUser = qt.new_qobject(qt.meta.QLineEdit)
+	qt.ui.layout_add(internalLayout, lineEditUser, 2, 1)
+	lineEditUser:setText("root")
+
+	label = qt.new_qobject(qt.meta.QLabel)
+	label.text = "Password:"
+	qt.ui.layout_add(internalLayout, label, 3, 0)
+	lineEditPassword = qt.new_qobject(qt.meta.QLineEdit)
+	qt.ui.layout_add(internalLayout, lineEditPassword, 3, 1)
+
+	local conf = {}
+
+	if isFile("config.lua") then
+		conf = _Gtme.getConfig()
+
+		if conf.user     then lineEditUser:setText(conf.user)         end
+		if conf.password then lineEditPassword:setText(conf.password) end
+		if conf.port     then lineEditPort:setText(conf.port)         end
+		if conf.host     then lineEditHost:setText(conf.host)         end
+	end
+
+	buttonsLayout = qt.new_qobject(qt.meta.QHBoxLayout)
+
+	okButton = qt.new_qobject(qt.meta.QPushButton)
+	okButton.minimumSize = {100, 28}
+	okButton.maximumSize = {110, 28}
+	okButton.text = "OK"
+	qt.ui.layout_add(buttonsLayout, okButton)
+
+	local m2function = function()
+		str = ""
+
+		if lineEditUser.text ~= "root" then
+			str = str.."user = \""..lineEditUser.text.."\"\n"
+		end
+
+		if lineEditHost.text ~= "localhost" then
+			str = str.."host = \""..lineEditHost.text.."\"\n"
+		end
+
+		if lineEditPort.text ~= "3306" then
+			str = str.."port = "..lineEditPort.text.."\n"
+		end
+
+		str = str.."password = \""..lineEditPassword.text.."\"\n"
+		str = str.."drop = true\n"
+		str = str.."dbType = \"mysql\"\n"
+
+		conf = io.open("config.lua", "w")
+		conf:write(str)
+		conf:close()
+
+		dialog:done(0)
+	end
+	qt.connect(okButton, "clicked()", m2function)
+
+	quitButton = qt.new_qobject(qt.meta.QPushButton)
+	quitButton.minimumSize = {100, 28}
+	quitButton.maximumSize = {110, 28}
+	quitButton.text = "Cancel"
+	qt.ui.layout_add(buttonsLayout, quitButton)
+
+	local m2function = function() dialog:done(0) end
+	qt.connect(quitButton, "clicked()", m2function)
+
+	qt.ui.layout_add(externalLayout, internalLayout)
+	qt.ui.layout_add(externalLayout, buttonsLayout, 3, 0)
+
+	dialog:show()
+	local result = dialog:exec()
+end
+
 local function exportDatabase(package)
 	local s = _Gtme.sessionInfo().separator
 
