@@ -12,7 +12,6 @@
 #include "observerImpl.h"
 #include "../legend/legendAttributes.h"
 
-
 static const QString COMPLEMENT("000000");
 
 using namespace TerraMEObserver;
@@ -434,7 +433,6 @@ void PainterWidget::drawAgent()
         {
             QVector<ObsLegend> *vecLegend = attrib->getLegend();
 
-
             // TO-DO: Necessita otimiza??o
             if (attrib->getDataType() == TObsText)
             {
@@ -481,9 +479,10 @@ void PainterWidget::drawAgent()
                     else if (fontSize <= recCell.height())
                     {
                         double range = floor(recCell.height() - fontSize);
-                        double rand = ((double)qrand() / RAND_MAX) * range;
-                        xPos += rand;
-                        yPos -= rand;
+                        double randx = ((double)qrand() / RAND_MAX) * range;
+                        double randy = ((double)qrand() / RAND_MAX) * range;
+                        xPos += randx;
+                        yPos -= randy;
                     }
                     else
                     {
