@@ -194,7 +194,7 @@ function _Gtme.buildCountTable(package)
 	return testfunctions
 end
 
-local function sqlFiles(package)
+function _Gtme.sqlFiles(package)
 	local s = _Gtme.sessionInfo().separator
 	local files = {}
 	data = function(mtable)
@@ -484,7 +484,7 @@ local function isWarningMessage(message)
 	return string.match(string.upper(message), "WARNING")
 end
 
-local function importDatabase(package)
+function _Gtme.importDatabase(package)
 	local s = _Gtme.sessionInfo().separator
 
 	local config = _Gtme.getConfig()
@@ -511,7 +511,9 @@ local function importDatabase(package)
 	end
 
 	local folder = _Gtme.packageInfo(package).data
-	local files = sqlFiles(package)
+	local files = _Gtme.sqlFiles(package)
+
+	local returnv
 
 	_Gtme.forEachElement(files, function(_, value)
 		local database = string.sub(value, 1, string.len(value) - 4)
@@ -526,12 +528,14 @@ local function importDatabase(package)
 		if result and result[1] and not isWarningMessage(result[1]) then
 			_Gtme.printError(result[1])
 			_Gtme.printError("Add 'drop = true' to your config.lua to allow replacing databases if needed.")
+			returnv = result[1]
 		else
 			_Gtme.printNote("Importing database '"..database.."'")
 			os.execute(command .." "..database.." < \""..folder..s..value.."\"")
 			_Gtme.printNote("Database '"..database.."' successfully imported")
 		end
 	end)
+	return returnv
 end
 
 function _Gtme.uninstall(package)
@@ -1109,7 +1113,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				_Gtme.uninstall(package)
 				os.exit()
 			elseif arg == "-importDb" then
-				importDatabase(package)
+				_Gtme.importDatabase(package)
 				os.exit()
 			elseif arg == "-exportDb" then
 				exportDatabase(package)

@@ -86,12 +86,41 @@ function _Gtme.packageManager()
 		_Gtme.showDoc(comboboxPackages.currentText)
 	end)
 
+	dbButton = qt.new_qobject(qt.meta.QPushButton)
+	dbButton.text = "Import Db"
+	qt.connect(dbButton, "clicked()", function()
+		local files = _Gtme.sqlFiles(comboboxPackages.currentText)
+
+		local msg = "The following databases will be imported:\n"
+		_Gtme.forEachElement(files, function(_, value)
+			local database = string.sub(value, 1, string.len(value) - 4)
+			msg = msg.."- "..database.."\n"
+		end)
+
+		-- QMessageBox::StandardButton
+		local ok = 1024
+		local cancel = 4194304
+
+		msg = msg.."\nConfirm installation?"
+		if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
+			_Gtme.buildConfig()
+			local result = _Gtme.importDatabase(comboboxPackages.currentText)
+
+			if result then
+				qt.dialog.msg_critical("Error: "..result)
+			else
+				qt.dialog.msg_information("Databases sucessfully installed.")
+			end
+		end
+	end)
+
 	label = qt.new_qobject(qt.meta.QLabel)
 	label.text = "Package:"
 	qt.ui.layout_add(internalLayout, label, 0, 0)
 	qt.ui.layout_add(internalLayout, comboboxPackages, 0, 1)
 	qt.ui.layout_add(internalLayout, aboutButton, 0, 2)
 	qt.ui.layout_add(internalLayout, docButton, 0, 3)
+	qt.ui.layout_add(internalLayout, dbButton, 0, 4)
 
 	-- models list + execute button
 	comboboxModels = qt.new_qobject(qt.meta.QComboBox)
@@ -151,6 +180,15 @@ function _Gtme.packageManager()
 		forEachElement(ex, function(_, value)
 			qt.combobox_add_item(comboboxExamples, value)
 		end)
+
+		data = function() end
+
+		if not pcall(function() dofile(_Gtme.packageInfo(comboboxPackages.currentText).path..s.."data.lua") end) then
+			dbButton.enabled = false
+		else
+			local files = _Gtme.sqlFiles(comboboxPackages.currentText)
+			dbButton.enabled = #files > 0
+		end
 	end
 
 	comboboxPackages:setCurrentIndex(index)
