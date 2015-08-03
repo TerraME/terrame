@@ -93,7 +93,7 @@ void VisualArrangement::starts(int id, QWidget *widget)
     }
     else
     {
-        widget->setGeometry((50 + id * 50), (50 + id * 50), 450, 350);
+        widget->setGeometry((50 + id * 50), (50 + id * 50), 600, 500);
     }
 
     widget->show();
