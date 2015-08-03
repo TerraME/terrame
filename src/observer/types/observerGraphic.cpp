@@ -66,7 +66,7 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     palette = plotter->palette();
     palette.setColor(QPalette::Background, Qt::white);
     plotter->setPalette(palette);
-    plotter->setWindowTitle("TerraME :: Chart");
+    plotter->setWindowTitle("Chart");
 
     VisualArrangement::getInstance()->starts(plotter->getId(), plotter);
 
