@@ -389,6 +389,8 @@ function _Gtme.buildConfig()
 	okButton.text = "OK"
 	qt.ui.layout_add(buttonsLayout, okButton)
 
+	local returnv
+
 	local m2function = function()
 		str = ""
 
@@ -413,6 +415,7 @@ function _Gtme.buildConfig()
 		conf:close()
 
 		dialog:done(0)
+		returnv = true
 	end
 	qt.connect(okButton, "clicked()", m2function)
 
@@ -422,14 +425,18 @@ function _Gtme.buildConfig()
 	quitButton.text = "Cancel"
 	qt.ui.layout_add(buttonsLayout, quitButton)
 
-	local m2function = function() dialog:done(0) end
+	local m2function = function()
+		returnv = false
+		dialog:done(0)
+	end
 	qt.connect(quitButton, "clicked()", m2function)
 
 	qt.ui.layout_add(externalLayout, internalLayout)
 	qt.ui.layout_add(externalLayout, buttonsLayout, 3, 0)
 
 	dialog:show()
-	local result = dialog:exec()
+	dialog:exec()
+	return returnv
 end
 
 local function exportDatabase(package)

@@ -103,7 +103,8 @@ function _Gtme.packageManager()
 
 		msg = msg.."\nConfirm installation?"
 		if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
-			_Gtme.buildConfig()
+			if not _Gtme.buildConfig() then return end
+
 			local result = _Gtme.importDatabase(comboboxPackages.currentText)
 
 			if result then
