@@ -1625,6 +1625,7 @@ metaTableMap_ = {__index = Map_}
 -- number greater than one.
 -- @arg data.background A Map that can be used as background to plot a Society.
 -- It can also be a string with a color to be used as background.
+-- @arg data.grid Draw a grid around the Cells? The default value is false.
 -- @arg data.font A string with a font name to draw Agents.
 -- @arg data.size The size of the font to be used to draw agents in space.
 -- @arg data.symbol A string to be used to draw Agents in space. They can be any string,
@@ -1642,19 +1643,20 @@ metaTableMap_ = {__index = Map_}
 -- "equalsteps" & The values are divided into a set of slices with the same range. Each slice is
 -- associated to a given color. Equalsteps require only two colors in the argument color, one for
 -- the minimum and the other for the maximum value. The other colors are computed from a linear
--- interpolation of the two colors. & color, slices, max, min, target, select & precision, label, invert \
+-- interpolation of the two colors. & color, slices, max, min, target, select & precision, label,
+-- grid, invert \
 -- "quantil" & Aggregate the values into slices with approximately the same size. Values are
 -- ordered from lower to higher and then sliced. This strategy uses two colors in the same way
--- of equalsteps. & color, slices, max, min, target, select & precision, label, invert \
+-- of equalsteps. & color, slices, max, min, target, select & precision, label, invert, grid \
 -- "stdeviation" & Define slices according to the distribution of a given attribute. Values with
 -- similar positive or negative distances to the average will belong to the same slice. &
--- color, stdColor, target, select & stdDeviation, precision, label \
+-- color, stdColor, target, select & stdDeviation, precision, label, grid \
 -- "uniquevalue" & Associate each attribute value to a given color. Attributes with type string can
 -- only be sliced with this strategy. It can be used for CellularSpaces as well as for
 -- Society. & color, target, select, value & label, background, 
--- size, font, symbol \
+-- size, font, symbol, grid \
 -- "none" & Does not execute any color slicing. It can be used for CellularSpaces as well as for
--- Society. & & background, size, font, symbol, target, color \
+-- Society. & & background, size, font, symbol, target, color, grid \
 -- @arg data.label A table with the labels for the attributes.
 -- @arg data.stdDeviation When the grouping mode is stddeviation, it has to be one of "full",
 -- "half" "quarter", or "none".
@@ -1724,6 +1726,7 @@ function Map(data)
 	optionalTableArgument(data, "value", "table")
 	optionalTableArgument(data, "label", "table")
 	optionalTableArgument(data, "select", "string")
+	--defaultTableValue(data, "grid", false)
 
 	if data.grouping == nil then
 		if data.slices ~= nil or data.min ~= nil or data.max ~= nil then
@@ -1752,7 +1755,7 @@ function Map(data)
 			customError("The Society does not have a placement. Please use Environment:createPlacement() first.")
 		end
 
-		defaultTableValue(data, "size", 20)
+		defaultTableValue(data, "size", 1)
 		defaultTableValue(data, "symbol", "bug")
 
 		if data.font == nil and data.symbol then
