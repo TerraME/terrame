@@ -1759,7 +1759,7 @@ void luaCellularSpace::loadLegendsFromDatabase(TeDatabase *db, TeTheme *inputThe
 		luaLegend.append(QString("%1=\"%2\",").arg(SYMBOL).arg("?"));
 		
 		// font size setup
-		luaLegend.append(QString("%1=%2,").arg(FONT_SIZE).arg(12));
+        luaLegend.append(QString("%1=%2,").arg(FONT_SIZE).arg(1));
 		
 		// font family setup
 		luaLegend.append(QString("%1=%2,").arg(FONT_FAMILY).arg("\"Symbol\""));

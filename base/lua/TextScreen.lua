@@ -23,6 +23,12 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
+TextScreen_ = {
+	type_ = "TextScreen",
+}
+
+metaTableTextScreen_ = {__index = TextScreen_}
+
 --- A window with a table to show the attributes of an object along the simulation.
 -- Each call to notify() add one more line to the content of the window.
 -- @arg data.target An Agent, Cell, CellularSpace, Society.
@@ -139,10 +145,19 @@ function TextScreen(data)
 	if type(target) == "CellularSpace" then
 		id = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
 	else
-		id = target.cObj_:createObserver(observerType, data.select, observerParams)
+		id, obs = target.cObj_:createObserver(observerType, data.select, observerParams)
 	end
 
-	table.insert(_Gtme.createdObservers, {target = data.target, id = id})
-	return id
+	local textScreen = TeTextScreen()
+	textScreen:setObserver(obs)
+
+	data.cObj_ = textScreen
+	data.id = id
+
+	setmetatable(data, metaTableTextScreen_)
+
+	table.insert(_Gtme.createdObservers, data) -- duvida aqui
+	--table.insert(_Gtme.createdObservers, {target = data.target, id = id}) -- antigo
+	return data
 end
 

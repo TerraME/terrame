@@ -32,7 +32,9 @@ return{
 			end
 		}
 
-		local c1 = TextScreen{target = world}
+		local ts = TextScreen{target = world}
+
+		unitTest:assertType(ts, "TextScreen")
 
 		local world = Agent{
 			count = 0,
@@ -41,9 +43,9 @@ return{
 			end
 		}
 
-		local c1 = TextScreen{target = world}
+		local ts = TextScreen{target = world}
 
-		local c1 = TextScreen{
+		local ts = TextScreen{
 			target = world,
 			select = {"mcount"}
 		}
@@ -53,8 +55,8 @@ return{
 			quantity = 3
 		}
 
-		local c1 = TextScreen{target = soc}
-		local c1 = TextScreen{target = soc, select = "#"}
+		local ts = TextScreen{target = soc}
+		local ts = TextScreen{target = soc, select = "#"}
 
 		local soc = Society{
 			instance = Agent{},
@@ -62,7 +64,7 @@ return{
 			total = 10
 		}
 
-		local c1 = TextScreen{target = soc}
+		local ts = TextScreen{target = soc}
 
 		local world = CellularSpace{
 			xdim = 10,
@@ -72,8 +74,8 @@ return{
 			end
 		}
 
-		local c1 = TextScreen{target = world}
-		local c1 = TextScreen{target = world, select = "mcount"}
+		local ts = TextScreen{target = world}
+		local ts = TextScreen{target = world, select = "mcount"}
 
 		unitTest:assert(true)
 	end

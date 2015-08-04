@@ -474,7 +474,9 @@ void PainterWidget::drawAgent()
 
                     if (fontSize == 1)
                     {
-                        attrib->setFontSize((int)floor(recCell.height()));
+                        QFont font = attrib->getFont();
+                        font.setPointSize((int)floor(recCell.width()));
+                        painter.setFont(font);
                     }
                     else if (fontSize <= recCell.height())
                     {
@@ -543,7 +545,9 @@ void PainterWidget::drawAgent()
 
                     if (fontSize == 1)
                     {
-                        attrib->setFontSize((int)floor(recCell.height()));
+                        QFont font = attrib->getFont();
+                        font.setPointSize((int)floor(recCell.width()));
+                        painter.setFont(font);
                     }
                     else if (fontSize < recCell.height())
                     {
