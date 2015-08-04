@@ -146,7 +146,6 @@ div.header, div.footer { margin-left: 0em; }
 #navigation
 {
 	float: left;
-	position: fixed;
 	width: 12em;
 	margin: 0;
 	vertical-align: top;
