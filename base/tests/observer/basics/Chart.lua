@@ -42,6 +42,8 @@ return{
 			target = tube
 		}
 
+		unitTest:assertType(c, "Chart")
+
 		tube:execute(10)
 		unitTest:assertSnapshot(c, "chart-table-0.bmp")
 

@@ -10,7 +10,7 @@ singleFooAgent = Agent{
 }
 
 cs = CellularSpace{
-	xdim = 30
+	xdim = 10
 }
 
 cs:createNeighborhood()
@@ -27,8 +27,11 @@ t = Timer{
 	Event{action = cs}
 }
 
-Map{
-	target = singleFooAgent
+m = Map{
+	target = singleFooAgent,
+	symbol = "turtle",
+	color = "blue",
+	size = 80
 }
 
 t:execute(100)

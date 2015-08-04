@@ -11,11 +11,11 @@ singleFooAgent = Agent{
 
 soc = Society{
 	instance = singleFooAgent,
-	quantity = 20
+	quantity = 100
 }
 
 cs = CellularSpace{
-	xdim = 30
+	xdim = 10
 }
 
 cs:createNeighborhood()
@@ -25,7 +25,7 @@ e = Environment{
 	soc
 }
 
-e:createPlacement{max = 1}
+e:createPlacement{max = 5}
 
 t = Timer{
 	Event{action = soc},
@@ -34,10 +34,10 @@ t = Timer{
 
 Map{
 	target = soc,
-	size = 25,
-	symbol = "scorpion",
+	symbol = "smile",
 	color = "yellow",
-	background = "darkGreen"
+	background = "darkGreen",
+	size = 25
 }
 
 t:execute(100)

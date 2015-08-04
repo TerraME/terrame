@@ -1510,17 +1510,49 @@ local wingdings = {
 	sad     = 76
 }
 
+-- http://www.dafont.com/pet-animals.font
+local pet = {
+	fish = 66,
+	rabbit = 67,
+	owl = 71,
+	mouse = 72,
+	snake = 74,
+	turtle = 76,
+	bird = 77,
+	horse = 78,
+	pig = 80,
+	dog = 85,
+	cat = 90
+}
+
+-- http://www.dafont.com/jls-smiles-sampler.font
+local jls = {
+	smile = 65,
+	smile2 = 71,
+	smile3 = 77,
+	smile4 = 79,
+	pirate = 74,
+	skeleton = 86,
+	vampire = 88,
+	mustache = 99,
+	cry = 101,
+	sick = 113
+}
+
 local grissom = {
-    fly       =  71,
-    ant       =  74,
-    butterfly =  81,
-    spider    =  86,
-    bug       =  88,
-    dragonfly =  90,
-    fly2      =  97,
-    bug2      = 100,
-    scorpion  = 109,
-    beetle    =  52
+    beetle      =  52,
+    fly         =  71,
+    ant         =  74,
+    snail       =  75,
+	grasshopper =  80,
+    butterfly   =  81,
+    spider      =  86,
+    bug         =  88,
+    dragonfly   =  90,
+    fly2        =  97,
+    bug2        = 100,
+	mantis      = 108,
+    scorpion    = 109,
 }
 
 -- register fonts and check if nobody shares a name in its values.
@@ -1597,8 +1629,13 @@ metaTableMap_ = {__index = Map_}
 -- @arg data.size The size of the font to be used to draw agents in space.
 -- @arg data.symbol A string to be used to draw Agents in space. They can be any string,
 -- but there are some predefined symbols available : "fly", "ant", "butterfly", "spider",
--- "bug", "dragonfly", "fly2", "bug2", "scorpion", and "beetle" (when using one of these symbols,
--- no font should be selected).
+-- "bug", "dragonfly", "fly2", "bug2", "scorpion", and "beetle"
+-- (from Grissom font, http://www.dafont.com/grissom.font); 
+-- "fish", "rabbit", "owl", "mouse", "snake", "turtle", "bird", "horse", "pig", "dog", "cat"
+-- (from Pet Animals font, http://www.dafont.com/pet-animals.font); 
+-- "smile", "smile2", "smile3", "smile4", "pirate", "skeleton", "vampire", "mustache", 
+-- "cry", "sick" (from JLS Smiles font, http://www.dafont.com/jls-smiles-sampler.font). 
+-- When using one of these symbols, no font should be selected.
 -- @arg data.grouping A string with the strategy to slice and color the data. See below.
 -- @tabular grouping
 -- Grouping & Description & Compulsory arguments & Optional arguments\
@@ -1722,6 +1759,12 @@ function Map(data)
 			if grissom[data.symbol] then
 				data.font = "Grissom Free"
 				data.symbol = grissom[data.symbol]
+			elseif pet[data.symbol] then
+				data.font = "Pet Animals"
+				data.symbol = pet[data.symbol]
+			elseif jls[data.symbol] then
+				data.font = "JLS Smiles Sampler"
+				data.symbol = jls[data.symbol]
 			end
 		end
 
