@@ -29,9 +29,7 @@ t = Timer{
 
 m = Map{
 	target = singleFooAgent,
-	symbol = "turtle",
-	color = "blue",
-	size = 80
+	symbol = "turtle"
 }
 
 t:execute(100)

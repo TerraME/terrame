@@ -232,14 +232,18 @@ return{
 		local env = Environment{cs, soc}
 		env:createPlacement()
 
-		local m = Map{target = soc}
+		local m = Map{
+			target = soc,
+			symbol = "smile"
+		}
 
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_society_background.bmp")
 
 		local m = Map{
 			target = soc,
-			background = "green"
+			background = "green",
+			symbol = "turtle"
 		}
 		unitTest:assertSnapshot(m, "map_society_background2.bmp")
 
