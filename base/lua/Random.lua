@@ -149,7 +149,9 @@ Random_ = {
 metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 
 --- Type to generate random numbers. 
--- Uses Xorshift generators are among the fastest non-cryptographic random number generators.
+-- It uses Xorshift generators are among the fastest non-cryptographic random number generators.
+-- Xorshift random number generators are a class of pseudorandom number generators 
+-- that was discovered by George Marsaglia (http://www.jstatsoft.org/v08/i14/paper). 
 -- Random is a singleton, which means that every copy of Random created
 -- by the user has the same seed.
 -- @arg data.seed A number to generate the pseudo-random numbers.
