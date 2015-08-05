@@ -19,6 +19,7 @@ local table = table
 local print =  print
 local printNote, printError, getn, belong = _Gtme.printNote, _Gtme.printError, getn, belong
 local forEachElement = forEachElement
+local forEachOrderedElement = forEachOrderedElement
 local belong = belong
 local include = _Gtme.include
 local makepath = _Gtme.makePathCompatibleToAllOS
@@ -66,6 +67,8 @@ function includeMod(template, env)
 	env.io = io
 	env.lp = lp
 	env.ipairs = ipairs
+	env.pairs = pairs
+	env.forEachOrderedElement = forEachOrderedElement
 	env.tonumber = tonumber
 	env.tostring = tostring
 	env.type = type
@@ -439,6 +442,20 @@ function start(doc, doc_report)
 		io.output(f)
 
 		includeMod("data.lp", { doc = doc })
+		f:close()
+	end
+
+	if not options.nofiles and doc.mfont then
+		local filename = options.output_dir..s.."files"..s.."font.html"
+		local short_fileName = options.short_output_path.."files"..s.."font.html"
+		print(string.format("Building %s", makepath(short_fileName)))
+		doc_report.html_files = doc_report.html_files + 1
+
+		local f = util.openFile(filename, "w")
+		assert(f, string.format("Could not open %s for writing", filename))
+		io.output(f)
+
+		includeMod("font.lp", { doc = doc })
 		f:close()
 	end
 

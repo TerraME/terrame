@@ -63,6 +63,25 @@ function _Gtme.printWarning(value)
 	end
 end
 
+function _Gtme.fontFiles(package)
+	local s = sessionInfo().separator
+	local path = sessionInfo().path
+	local fontpath = path..s.."packages"..s..package..s.."font"
+
+	if not isDir(fontpath) then
+		return {}
+	end
+
+	local files = dir(fontpath)
+	local result = {}
+
+	forEachElement(files, function(_, fname)
+		table.insert(result, fname)
+	end)
+	return result
+end
+
+
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
 function _Gtme.include(scriptfile, basetable)
 	if basetable == nil then
@@ -930,7 +949,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 	info_.version = _Gtme.packageInfo().version
 
-	local fontsDir = info_.path..s.."packages"..s.."base"..s.."fonts"
+	local fontsDir = info_.path..s.."packages"..s.."base"..s.."font"
 	forEachFile(fontsDir, function(file)	
 		cpp_loadfont(fontsDir..s..file)
 	end)

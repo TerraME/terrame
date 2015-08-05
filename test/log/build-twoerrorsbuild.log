@@ -29,6 +29,7 @@ Building doc/index.html
 Building doc/files/Utils.html
 Building doc/files/examples.html
 Building doc/files/data.html
+Building doc/files/font.html
 Building doc/files/models.html
 Checking if all functions are documented
 Checking Tube2.lua
@@ -37,7 +38,7 @@ Checking Utils.lua
 
 Documentation report:
 Documentation was built in 0.04 seconds.
-4 HTML files were created.
+5 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
 No undocumented data files were found.
@@ -124,10 +125,10 @@ Creating file 'twoerrorsbuild_0.1.zip'
 Package 'twoerrorsbuild' successfully zipped
 
 Build report:
-Package was built in 0.29 seconds.
+Package was built in 0.3 seconds.
 Build created file 'twoerrorsbuild_0.1.zip'.
-Temporary files are saved in .terrame_twoerrorsbuild_hVTsw
-MD5 sum for the package is 8d96f02247719a03f9b27fd59bad20c6
+Temporary files are saved in .terrame_twoerrorsbuild_LwEmM
+MD5 sum for the package is 45578a3f632f1fc5c5fb114f12f76da5
 The package does not have a license file.
 2 errors were found in the documentation.
 2 files are unnecessary.

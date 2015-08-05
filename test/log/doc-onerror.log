@@ -51,6 +51,7 @@ Unknown argument 'abc' in 'createNeighborhood2'
 Argument 'wrap' in 'createNeighborhood2' is not used in the HTML table
 Building doc/files/examples.html
 Building doc/files/data.html
+Building doc/files/font.html
 Building doc/files/models.html
 print when loading
 Checking if all functions are documented
@@ -60,8 +61,8 @@ Checking Utils.lua
 Function forEachNeighbor2 is not documented
 
 Documentation report:
-Documentation was built in 0.06 seconds.
-5 HTML files were created.
+Documentation was built in 0.07 seconds.
+6 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
 One data file is not documented.

@@ -16,12 +16,13 @@ Building and checking HTML files
 Building doc/index.html
 Building doc/files/foo.html
 Building doc/files/data.html
+Building doc/files/font.html
 Checking if all functions are documented
 Checking foo.lua
 
 Documentation report:
-Documentation was built in 0.03 seconds.
-3 HTML files were created.
+Documentation was built in 0.04 seconds.
+4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No undocumented data files were found.

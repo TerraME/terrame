@@ -77,6 +77,7 @@ Argument 'wrap' in 'createNeighborhood2' is not used in the HTML table
 In 'forEachElement2()', invalid link to 'Utils:forEachOrderedElement3'
 Building doc/files/examples.html
 Building doc/files/data.html
+Building doc/files/font.html
 Building doc/files/models.html
 print when loading
 print when loading
@@ -90,7 +91,7 @@ Function forEachSocialNetwork2 is not documented
 
 Documentation report:
 Documentation was built in 0.07 seconds.
-5 HTML files were created.
+6 HTML files were created.
 All files are documented.
 2 problems were found in 'description.lua'.
 2 data files are not documented.

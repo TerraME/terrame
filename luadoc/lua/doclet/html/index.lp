@@ -191,6 +191,11 @@
 							<%end%>
 						</table>
 					<%end%>
+
+					<%if doc.mfont and #doc.mfont > 0 then%>
+						<h2><a href="<%=luadoc.link("files/font.html", from)%>">Font</a></h2>
+					<%end%>
+
 				</div> <!-- id="content" -->
 			</div> <!-- id="main" -->
 

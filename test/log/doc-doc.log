@@ -2,6 +2,8 @@ Building documentation for package 'base'
 Loading package 'base'
 Parsing 'data.lua'
 Checking folder 'data'
+Parsing 'font.lua'
+Checking folder 'font'
 Parsing lua files
 Parsing lua/Agent.lua
 Parsing lua/Automaton.lua
@@ -189,6 +191,7 @@ Building doc/files/Utils.html
 Building doc/files/VisualTable.html
 Building doc/files/examples.html
 Building doc/files/data.html
+Building doc/files/font.html
 Checking if all functions are documented
 Checking Agent.lua
 Checking Automaton.lua
@@ -223,8 +226,8 @@ Checking Utils.lua
 Checking VisualTable.lua
 
 Documentation report:
-Documentation was built in 0.36 seconds.
-34 HTML files were created.
+Documentation was built in 0.37 seconds.
+35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No undocumented data files were found.
@@ -244,7 +247,7 @@ All 281 functions have @usage.
 All 281 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
-All 242 links were correctly built.
+All 243 links were correctly built.
 All 21 examples are documented.
 All 21 examples are correctly documented.
 Summing up, all the documentation was successfully built.

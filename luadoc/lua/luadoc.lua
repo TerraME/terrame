@@ -108,7 +108,7 @@ local OPTIONS = {
 
 -------------------------------------------------------------------------------
 -- Main function. Process command-line arguments and call luadoc processor.
-function luadocMain(package_path, lua_files, example_files, package, mdata, doc_report, silent)
+function luadocMain(package_path, lua_files, example_files, package, mdata, mfont, doc_report, silent)
 	if not silent then silent = false end
 	-- Process options
 	-- local argc = #arg
@@ -124,6 +124,6 @@ function luadocMain(package_path, lua_files, example_files, package, mdata, doc_
 	options.short_output_path = "doc"..s
 	options.short_lua_path = "lua"..s
 
-	return startDoc(lua_files, example_files, options, package_path, mdata, doc_report, silent)
+	return startDoc(lua_files, example_files, options, package_path, mdata, mfont, doc_report, silent)
 end
 

@@ -24,6 +24,7 @@ Building doc/index.html
 Building doc/files/Utils.html
 Building doc/files/examples.html
 Building doc/files/data.html
+Building doc/files/font.html
 Building doc/files/models.html
 Checking if all functions are documented
 Checking Tube.lua
@@ -31,7 +32,7 @@ Checking Utils.lua
 
 Documentation report:
 Documentation was built in 0.04 seconds.
-4 HTML files were created.
+5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No undocumented data files were found.
@@ -121,10 +122,10 @@ Creating file 'buildunnecfiles_0.1.zip'
 Package 'buildunnecfiles' successfully zipped
 
 Build report:
-Package was built in 0.26 seconds.
+Package was built in 0.27 seconds.
 Build created file 'buildunnecfiles_0.1.zip'.
-Temporary files are saved in .terrame_buildunnecfiles_2cOhK
-MD5 sum for the package is 1adb9e5a2a36975d4dd18d4cc7ff782b
+Temporary files are saved in .terrame_buildunnecfiles_FI7LD
+MD5 sum for the package is 0afdfe6a55c7c570082bf8958f1fa9f8
 The package has a license file.
 Documentation was successfully built.
 8 files are unnecessary.

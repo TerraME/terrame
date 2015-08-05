@@ -24,6 +24,7 @@ Building doc/index.html
 Building doc/files/Utils.html
 Building doc/files/examples.html
 Building doc/files/data.html
+Building doc/files/font.html
 Building doc/files/models.html
 Checking if all functions are documented
 Checking Tube2.lua
@@ -31,7 +32,7 @@ Checking Utils.lua
 
 Documentation report:
 Documentation was built in 0.04 seconds.
-4 HTML files were created.
+5 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
 No undocumented data files were found.
@@ -81,7 +82,7 @@ Testing examples
 Testing ipd
 
 Test report:
-Tests were executed in 0.21 seconds.
+Tests were executed in 0.22 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.
@@ -117,10 +118,10 @@ Creating file 'onerrorbuild_0.1.zip'
 Package 'onerrorbuild' successfully zipped
 
 Build report:
-Package was built in 0.25 seconds.
+Package was built in 0.27 seconds.
 Build created file 'onerrorbuild_0.1.zip'.
-Temporary files are saved in .terrame_onerrorbuild_pkyzZ
-MD5 sum for the package is a362b65508ada2cf2e4cac2fafe45992
+Temporary files are saved in .terrame_onerrorbuild_58NkD
+MD5 sum for the package is 15315adcd6cf6d2bf1f556928bb4eacc
 The package does not have a license file.
 One error was found in the documentation.
 One file is unnecessary.

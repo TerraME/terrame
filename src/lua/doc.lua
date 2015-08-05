@@ -33,7 +33,7 @@ local function dataFiles(package)
 	local s = sessionInfo().separator
 	local datapath = packageInfo(package).data
 
-	if attributes(datapath, "mode") ~= "directory" then
+	if not isDir(datapath) then
 		return {}
 	end
 
@@ -97,6 +97,8 @@ function _Gtme.executeDoc(package)
 		undoc_examples = 0,
 		undoc_data = 0,
 		wrong_data = 0,
+		undoc_font = 0,
+		wrong_font = 0,
 		wrong_line = 0,
 		wrong_tabular = 0,
 		wrong_descriptions = 0
@@ -222,7 +224,101 @@ function _Gtme.executeDoc(package)
 		end
 	end
 
-	local result = luadocMain(package_path, lua_files, example_files, package, mdata, doc_report)
+	local mfont = {}
+	local fontsdocumented = {}
+
+	if isFile(package_path..s.."font.lua") then
+		printNote("Parsing 'font.lua'")
+		font = function(tab)
+			local count = verifyUnnecessaryArguments(tab, {"name", "file", "source", "symbol"})
+			doc_report.wrong_font = doc_report.wrong_font + count
+
+			local mverify = {
+				{"optionalTableArgument",  "name",   "string"},
+				{"mandatoryTableArgument", "file",   "string"},
+				{"mandatoryTableArgument", "source", "string"},
+				{"mandatoryTableArgument", "symbol", "table"},
+			}
+
+			-- it is necessary to implement this way in order to get the line number of the error
+			for i = 1, #mverify do
+				local func = "return function(tab) "..mverify[i][1].."(tab, \""..mverify[i][2].."\", \""..mverify[i][3].."\") end"
+
+				xpcall(function() load(func)()(tab) end, function(err)
+					doc_report.wrong_font = doc_report.wrong_font + 1
+					printError(err)
+				end)
+			end
+
+			forEachElement(tab.symbol, function(idx, value, mtype)
+				if type(idx) ~= "string" then
+					printError("Font '"..tostring(tab.name).."' has a non-string symbol.")
+					doc_report.wrong_font = doc_report.wrong_font + 1
+				elseif mtype ~= "number" then
+					printError("Symbol '"..idx.."' has a non-numeric value.")
+					doc_report.wrong_font = doc_report.wrong_font + 1
+				end
+			end)
+
+			if tab.file then
+				table.insert(mfont, tab)
+
+				if fontsdocumented[tab.file] then
+					printError("Font file '"..tab.file.."' is documented more than once.")
+					doc_report.wrong_font = doc_report.wrong_font + 1
+				end
+				fontsdocumented[tab.file] = 0
+			end
+		end
+
+		xpcall(function() dofile(package_path..s.."font.lua") end, function(err)
+			printError("Could not load 'font.lua'")
+			printError(err)
+			os.exit()
+		end)
+
+		table.sort(mfont, function(a, b)
+			return a.file < b.file
+		end)
+
+		printNote("Checking folder 'font'")
+		local df = _Gtme.fontFiles(package)
+		forEachOrderedElement(df, function(_, mvalue)
+			if isDir(package_path..s.."font"..s..mvalue) then
+				return
+			end
+
+			if fontsdocumented[mvalue] == nil then
+				printError("File '"..mvalue.."' is not documented")
+				doc_report.undoc_font = doc_report.undoc_font + 1
+			else
+				fontsdocumented[mvalue] = fontsdocumented[mvalue] + 1
+			end
+		end)
+
+		forEachOrderedElement(fontsdocumented, function(midx, mvalue)
+			if mvalue == 0 then
+				printError("Font file '"..midx.."' is documented but does not exist in folder 'font'")
+				doc_report.wrong_font = doc_report.wrong_font + 1
+			end
+		end)
+	else
+		local df = _Gtme.fontFiles(package)
+		if #df > 0 then
+			printNote("Checking folder 'font'")
+			printError("Package has font files but font.lua does not exist")
+			forEachElement(df, function(_, mvalue)
+				printError("File '"..mvalue.."' is not documented")
+				doc_report.undoc_data = doc_report.undoc_data + 1
+			end)
+		end
+	end
+
+	local result = luadocMain(package_path, lua_files, example_files, package, mdata, mfont, doc_report)
+
+	if isDir(package_path..s.."font") then
+		os.execute("cp "..package_path..s.."font"..s.."* "..package_path..s.."doc/files")
+	end
 
 	local all_functions = _Gtme.buildCountTable(package)
 

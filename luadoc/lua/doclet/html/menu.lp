@@ -14,7 +14,7 @@
 
 <h1><%=doc.description.package%></h1>
 <ul>
-	<%if not module_doc and not file_doc and not example and not mdata and not model then%>
+	<%if not module_doc and not file_doc and not example and not mdata and not model and not mfont then%>
 		<li><strong>Index</strong></li>
 	<%else%>
 		<li><a href="<%=luadoc.link("index.html", from)%>">Index</a></li>
@@ -127,6 +127,16 @@
 		<h1><a href="<%=luadoc.link("files/data.html", from)%>">Data</a></h1>
 	<%else%>
 		<h1>Data</h1>
+	<%end%>
+
+<%end%>
+
+<!-- Font -->
+<%if doc.mfont and #doc.mfont > 0 then%>
+	<%if not mfont then%>
+		<h1><a href="<%=luadoc.link("files/font.html", from)%>">Font</a></h1>
+	<%else%>
+		<h1>Font</h1>
 	<%end%>
 
 <%end%>
