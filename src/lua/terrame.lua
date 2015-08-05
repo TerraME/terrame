@@ -949,11 +949,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 	info_.version = _Gtme.packageInfo().version
 
-	local fontsDir = info_.path..s.."packages"..s.."base"..s.."font"
-	forEachFile(fontsDir, function(file)	
-		cpp_loadfont(fontsDir..s..file)
-	end)
-
 	if arguments == nil or #arguments < 1 then 
 		dofile(info_.path..s.."lua"..s.."pmanager.lua")
 		_Gtme.packageManager()

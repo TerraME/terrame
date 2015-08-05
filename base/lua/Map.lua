@@ -1454,111 +1454,6 @@ forEachOrderedElement(rgbMap, function(idx, value)
 end)
 --]]
 
--- These are hex codes for Zapf Dingbats font, to be used as simbols for
--- the agents in TerraME.
-
--- For more information and pictures of the symbols, please see
--- http://www.alanwood.net/unicode/dingbats.html 
--- and
--- http://www.alanwood.net/unicode/index.html 
-
-local dingbats = {
-	airplane      = 0x2708,
-	whitenib      = 0x2711,
-	blacknib      = 0x2712,
-    cross         = 0x271C, -- HEAVY_OPEN_CENTRE_CROSS
-    maltese       = 0x2720, -- maltese cross
-    david         = 0x2721, -- star of david
-    asterisk4     = 0x2722, -- FOUR_TEARDROP_SPOKED_ASTERISK
-    asterisk4b    = 0x2723, -- OUR_BALLOON_SPOKED_ASTERISK
-    asterisk4bh   = 0x2724, -- HEAVY_FOUR_BALLOON_SPOKED_ASTERISK
-    asterisk4c    = 0x2725, -- FOUR_CLUB_SPOKED_ASTERISK
-    star4b        = 0x2726, -- BLACK_FOUR_POINTED_STAR
-    star4w        = 0x2727, -- WHITE_FOUR_POINTED_STAR
-    starw         = 0x2729, -- STRESS_OUTLINED_WHITE_STAR
-    staro         = 0x272B, -- OPEN_CENTRE_BLACK_STAR
-    starwb        = 0x272C, -- BLACK_CENTRE_WHITE_STAR
-    starl         = 0x272D, -- OUTLINED_BLACK_STAR
-    starh         = 0x272E, -- HEAVY_OUTLINED_BLACK_STAR
-    asteriskh     = 0x2731, -- HEAVY_ASTERISK
-    asterisko     = 0x2732, -- OPEN_CENTRE_ASTERISK
-    asterisk8s    = 0x2733, -- EIGHT_SPOKED_ASTERISK
-    star8         = 0x2734, -- EIGHT_POINTED_BLACK_STAR
-    pinwheel      = 0x2735, -- EIGHT_POINTED_PINWHEEL_STAR
-    star6         = 0x2736, -- SIX_POINTED_BLACK_STAR
-    star8r        = 0x2737, -- EIGHT_POINTED_RECTILINEAR_BLACK_STAR
-    star9h        = 0x2738, -- HEAVY_EIGHT_POINTED_RECTILINEAR_BLACK_STAR
-    star12        = 0x2739, -- TWELVE_POINTED_BLACK_STAR
-    asterisk16    = 0x273A, -- SIXTEEN_POINTED_ASTERISK
-    asteriskt     = 0x273B, -- TEARDROP_SPOKED_ASTERISK
-    asteriskot    = 0x273C, -- OPEN_CENTRE_TEARDROP_SPOKED_ASTERISK
-    asteriskht    = 0x273D, -- HEAVY_TEARDROP_SPOKED_ASTERISK
-    blackflorette = 0x273F,
-    whiteflorette = 0x2740,
-    florette      = 0x2741, -- EIGHT_PETALLED_OUTLINED_BLACK_FLORETTE
-    star8c        = 0x2742, -- CIRCLED_OPEN_CENTRE_EIGHT_POINTED_STAR
-    sparkle       = 0x2747,
-    sparkle2      = 0x2748, -- HEAVY_SPARKLE
-    asteriskb     = 0x2749, -- BALLOON_SPOKED_ASTERISK
-    asterisk8     = 0x274A, -- EIGHT_TEARDROP_SPOKED_PROPELLER_ASTERISK
-    asterisk8h    = 0x274B  -- HEAVY_EIGHT_TEARDROP_SPOKED_PROPELLER_ASTERISK
-}
-
-local wingdings = {
-	smile   = 74,
-	neutral = 75,
-	sad     = 76
-}
-
--- http://www.dafont.com/pet-animals.font
-local pet = {
-	fish = 66,
-	rabbit = 67,
-	owl = 71,
-	mouse = 72,
-	snake = 74,
-	turtle = 76,
-	bird = 77,
-	horse = 78,
-	pig = 80,
-	dog = 85,
-	cat = 90
-}
-
--- http://www.dafont.com/jls-smiles-sampler.font
-local jls = {
-	smile = 65,
-	smile2 = 71,
-	smile3 = 77,
-	smile4 = 79,
-	pirate = 74,
-	skeleton = 86,
-	vampire = 88,
-	mustache = 99,
-	cry = 101,
-	sick = 113
-}
-
-local grissom = {
-    beetle      =  52,
-    fly         =  71,
-    ant         =  74,
-    snail       =  75,
-	grasshopper =  80,
-    butterfly   =  81,
-    spider      =  86,
-    bug         =  88,
-    dragonfly   =  90,
-    fly2        =  97,
-    bug2        = 100,
-	mantis      = 108,
-    scorpion    = 109,
-}
-
--- register fonts and check if nobody shares a name in its values.
--- registering fonts should tell the name of the font installed in the
--- computer and the table with the available {names, value}.
-
 forEachElement(brewerMatchNames, function(_, value)
 	if not brewerRGB[value] then
 		print("Color "..value.." does not have a description.")
@@ -1629,14 +1524,7 @@ metaTableMap_ = {__index = Map_}
 -- @arg data.font A string with a font name to draw Agents.
 -- @arg data.size The size of the font to be used to draw agents in space.
 -- @arg data.symbol A string to be used to draw Agents in space. They can be any string,
--- but there are some predefined symbols available : "fly", "ant", "butterfly", "spider",
--- "bug", "dragonfly", "fly2", "bug2", "scorpion", and "beetle"
--- (from Grissom font, http://www.dafont.com/grissom.font); 
--- "fish", "rabbit", "owl", "mouse", "snake", "turtle", "bird", "horse", "pig", "dog", "cat"
--- (from Pet Animals font, http://www.dafont.com/pet-animals.font); 
--- "smile", "smile2", "smile3", "smile4", "pirate", "skeleton", "vampire", "mustache", 
--- "cry", "sick" (from JLS Smiles font, http://www.dafont.com/jls-smiles-sampler.font). 
--- When using one of these symbols, no font should be selected.
+-- but there are some predefined symbols available. See the link Font in the left menu.
 -- @arg data.grouping A string with the strategy to slice and color the data. See below.
 -- @tabular grouping
 -- Grouping & Description & Compulsory arguments & Optional arguments\
@@ -1758,16 +1646,18 @@ function Map(data)
 		defaultTableValue(data, "size", 1)
 		defaultTableValue(data, "symbol", "bug")
 
-		if data.font == nil and data.symbol then
-			if grissom[data.symbol] then
-				data.font = "Grissom Free"
-				data.symbol = grissom[data.symbol]
-			elseif pet[data.symbol] then
-				data.font = "Pet Animals"
-				data.symbol = pet[data.symbol]
-			elseif jls[data.symbol] then
-				data.font = "JLS Smiles Sampler"
-				data.symbol = jls[data.symbol]
+		if data.font == nil then
+			forEachOrderedElement(_Gtme.fonts, function(font, mtable)
+				if mtable[data.symbol] then
+					data.font = font
+					data.symbol = mtable[data.symbol]
+				end
+			end)
+		elseif _Gtme.fonts[data.font] then
+			local symbol = _Gtme.fonts[data.font][data.symbol]
+
+			if symbol then
+				data.symbol = symbol
 			end
 		end
 

@@ -234,6 +234,7 @@ return{
 
 		local m = Map{
 			target = soc,
+			font = "JLS Smiles Sampler",
 			symbol = "smile"
 		}
 

@@ -144,6 +144,25 @@ function import(package)
 			end
 		end
 
+		local files = _Gtme.fontFiles(package)
+		forEachElement(files, function(_, file)	
+			cpp_loadfont(package_path..s.."font"..s..file) -- SKIP
+		end)
+
+		if _Gtme.fonts == nil then -- SKIP
+			_Gtme.fonts = {}
+		end
+
+		font = function(data)	
+			_Gtme.fonts[data.name] = data.symbol -- SKIP
+		end
+
+		if isFile(package_path..s.."font.lua") then -- SKIP
+			dofile(package_path..s.."font.lua")
+		end
+
+		font = nil -- SKIP
+
 		_Gtme.loadedPackages[package] = true -- SKIP
 	end
 end
