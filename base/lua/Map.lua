@@ -1663,6 +1663,10 @@ function Map(data)
 
 		defaultTableValue(data, "font", "Times")
 
+		if cpp_hasfont(data.font) == 0 then
+			customWarning("Font '"..data.font.."' is not installed. Using default font.")
+		end
+
 		local mcolor = "white"
 		if type(data.background) == "string" then
 			mcolor = data.background

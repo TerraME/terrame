@@ -501,6 +501,11 @@ return{
 		unitTest:assertError(error_func, "Grouping 'none' cannot use ColorBrewer.")
 
 		error_func = function()
+			Map{target = soc, font = "Blues"}
+		end
+		unitTest:assertError(error_func, "Font 'Blues' is not installed. Using default font.")
+
+		error_func = function()
 			Map{target = soc, font = 2}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("font", "string", 2))

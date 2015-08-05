@@ -180,6 +180,17 @@ int cpp_loadfont(lua_State *L)
 	return 1;
 }
 
+int cpp_hasfont(lua_State *L)
+{
+	QFontDatabase qfd;
+
+    const char* s1 = lua_tostring(L, -1);
+	int result = qfd.font(s1, QString(), 10).family() == QString(s1);
+
+	lua_pushnumber(L, result);
+	return 1;
+}
+
 extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
@@ -255,6 +266,9 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_loadfont);
 	lua_setglobal(L, "cpp_loadfont");
+
+	lua_pushcfunction(L, cpp_hasfont);
+	lua_setglobal(L, "cpp_hasfont");
 
 	// Execute the lua files
 	if(argc < 2)
