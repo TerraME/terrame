@@ -149,10 +149,11 @@ function _Gtme.buildPackage(package, clean)
 
 	removeRecursiveLua(package..s.."tests")
 
+	local hidden
 	if _Gtme.isWindowsOS() then
-		local hidden = runCommand("find-msys \""..package.."\" -name \".*\"")
+		hidden = runCommand("find-msys \""..package.."\" -name \".*\"")
 	else
-		local hidden = runCommand("find \""..package.."\" -name \".*\"")
+		hidden = runCommand("find \""..package.."\" -name \".*\"")
 	end
 
 	forEachElement(hidden, function(_, file)
@@ -170,10 +171,11 @@ function _Gtme.buildPackage(package, clean)
 		print("Removing 'test' folder")
 		os.execute("rm -rf \""..package..s.."test\"")
 
+		local logs 
 		if _Gtme.isWindowsOS() then
-			local logs = runCommand("find-msys \""..package.."\" -name \"*.log\"")
+			logs = runCommand("find-msys \""..package.."\" -name \"*.log\"")
 		else
-			local logs = runCommand("find \""..package.."\" -name \"*.log\"")
+			logs = runCommand("find \""..package.."\" -name \"*.log\"")
 		end
   
 		forEachElement(logs, function(_, file)
