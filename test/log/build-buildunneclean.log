@@ -114,8 +114,8 @@ File 'buildunneclean/lua/unnec3.txt' is unnecessary and will be ignored.
 File 'buildunneclean/tests/alternative/abc/unnec6.txt' is unnecessary and will be ignored.
 File 'buildunneclean/tests/alternative/unnec5.txt' is unnecessary and will be ignored.
 File 'buildunneclean/tests/unnec4.txt' is unnecessary and will be ignored.
-File 'buildunneclean/buildunneclean/.hidden' is unnecessary and will be ignored.
-File 'buildunneclean/buildunneclean/lua/.hidden2' is unnecessary and will be ignored.
+File 'buildunneclean/.hidden' is unnecessary and will be ignored.
+File 'buildunneclean/lua/.hidden2' is unnecessary and will be ignored.
 Cleaning package
 Removing 'snapshots' folder
 Removing 'test' folder

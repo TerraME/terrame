@@ -157,7 +157,7 @@ function _Gtme.buildPackage(package, clean)
 	end
 
 	forEachElement(hidden, function(_, file)
-			printError("File '"..package..s..file.."' is unnecessary and will be ignored.")
+			printError("File '"..file.."' is unnecessary and will be ignored.")
 			os.execute("rm -rf \""..file.."\"")
 			report.unnecessary_files = report.unnecessary_files + 1
 	end)

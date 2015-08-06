@@ -114,8 +114,8 @@ File 'buildunnecfiles/lua/unnec3.txt' is unnecessary and will be ignored.
 File 'buildunnecfiles/tests/alternative/abc/unnec6.txt' is unnecessary and will be ignored.
 File 'buildunnecfiles/tests/alternative/unnec5.txt' is unnecessary and will be ignored.
 File 'buildunnecfiles/tests/unnec4.txt' is unnecessary and will be ignored.
-File 'buildunnecfiles/buildunnecfiles/.hidden' is unnecessary and will be ignored.
-File 'buildunnecfiles/buildunnecfiles/lua/.hidden2' is unnecessary and will be ignored.
+File 'buildunnecfiles/.hidden' is unnecessary and will be ignored.
+File 'buildunnecfiles/lua/.hidden2' is unnecessary and will be ignored.
 Checking Models
 Model 'Tube' belongs to file 'Tube.lua'
 Checking license
