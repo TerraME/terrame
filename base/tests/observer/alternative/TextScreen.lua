@@ -59,6 +59,18 @@ return{
 			TextScreen{target = unit}
 		end
 		unitTest:assertError(error_func, "The target does not have at least one valid attribute to be used.")
+	end,
+	save = function(unitTest)
+		local world = Cell{
+			count = 0,
+		}
+
+		local ts = TextScreen{target = world}
+
+		local error_func = function()
+			ts:save("file.csv")
+		end
+		unitTest:assertError(error_func, invalidFileExtensionMsg(1, "csv"))
 	end
 }
 

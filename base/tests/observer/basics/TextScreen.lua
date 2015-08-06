@@ -35,6 +35,10 @@ return{
 		local ts = TextScreen{target = world}
 
 		unitTest:assertType(ts, "TextScreen")
+		world:notify()
+		world:notify()
+
+		unitTest:assertSnapshot(ts, "textscreen_basic.bmp")
 
 		local world = Agent{
 			count = 0,
@@ -43,20 +47,32 @@ return{
 			end
 		}
 
-		local ts = TextScreen{target = world}
+		local ts1 = TextScreen{target = world}
 
-		local ts = TextScreen{
+		local ts2 = TextScreen{
 			target = world,
 			select = {"mcount"}
 		}
+
+		world:notify()
+		world:notify()
+
+		unitTest:assertSnapshot(ts1, "textscreen_noselect.bmp")
+		unitTest:assertSnapshot(ts2, "textscreen_mcount.bmp")
 
 		local soc = Society{
 			instance = world,
 			quantity = 3
 		}
 
-		local ts = TextScreen{target = soc}
-		local ts = TextScreen{target = soc, select = "#"}
+		local ts1 = TextScreen{target = soc}
+		local ts2 = TextScreen{target = soc, select = "#"}
+
+		soc:notify()
+		soc:notify()
+
+		unitTest:assertSnapshot(ts, "textscreen_society.bmp")
+		unitTest:assertSnapshot(ts, "textscreen_society_select.bmp")
 
 		local soc = Society{
 			instance = Agent{},
@@ -66,6 +82,13 @@ return{
 
 		local ts = TextScreen{target = soc}
 
+		soc:notify()
+		soc:notify()
+		soc:notify()
+		soc:notify()
+
+		unitTest:assertSnapshot(ts, "textscreen_society_total.bmp")
+
 		local world = CellularSpace{
 			xdim = 10,
 			count = 0,
@@ -74,10 +97,25 @@ return{
 			end
 		}
 
-		local ts = TextScreen{target = world}
-		local ts = TextScreen{target = world, select = "mcount"}
+		local ts1 = TextScreen{target = world}
+		local ts2 = TextScreen{target = world, select = "mcount"}
 
-		unitTest:assert(true)
+		world:notify()
+		world:notify()
+		world:notify()
+	end,
+	save = function(unitTest)
+		local world = Cell{
+			count = 0,
+		}
+
+		local ts = TextScreen{target = world}
+
+		world:notify()
+		world:notify()
+		world:notify()
+
+		unitTest:assertSnapshot(ts, "textscreen_save.bmp")
 	end
 }
 

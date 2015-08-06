@@ -83,11 +83,13 @@ return{
 			end}
 		}
 
-		TextScreen{target = world}
+		local ts = TextScreen{target = world}
 		LogFile{target = world}
 		VisualTable{target = world}
 
 		t:execute(30)
+
+		world:notify()
 
 		unitTest:clear()
 
