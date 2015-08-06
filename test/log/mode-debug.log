@@ -1,5 +1,5 @@
 scripts/basic.lua:1: Error: Variable 'abc' is not declared.
 Stack traceback:
 
-    In operator [] (index)
-    File scripts/basic.lua, line 1, in main chun
+    In main chunk
+    File scripts/basic.lua, line 1
