@@ -35,13 +35,14 @@ return{
 		local soc = Society{
 			instance = ag,
 			quantity = 10,
-			value = 5
+			value = 5,
+			total = function(self) return self.value + 5000 end
 		}
 
 		local c1 = Chart{target = soc, select = "#"}
 		unitTest:assertType(c1, "Chart")
 
-		local c2 = Chart{target = soc, select = {"value", "height"}}
+		local c2 = Chart{target = soc, select = {"value", "height", "total"}}
 		unitTest:assertType(c2, "Chart")
 
 		soc:notify()
