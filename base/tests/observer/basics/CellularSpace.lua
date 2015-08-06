@@ -91,6 +91,8 @@ return{
 
 		world:notify()
 
+		--unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp")
+
 		unitTest:clear()
 
 		local world = CellularSpace{
