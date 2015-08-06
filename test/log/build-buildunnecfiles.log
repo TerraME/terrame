@@ -3,6 +3,7 @@ Creating documentation of package 'buildunnecfiles'
 Building documentation for package 'buildunnecfiles'
 Loading package 'buildunnecfiles'
 Test file 'unnec2.txt' does not have a valid extension
+Package 'buildunnecfiles' has no fonts
 Parsing lua files
 Parsing lua/Tube.lua
 Parsing lua/Utils.lua
@@ -31,12 +32,13 @@ Checking Tube.lua
 Checking Utils.lua
 
 Documentation report:
-Documentation was built in 0.04 seconds.
+Documentation was built in 0.12 seconds.
 5 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No undocumented data files were found.
 All data files are correctly documented in 'data.lua'.
+No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 The single Model is correctly documented.
 All 1 global functions of the package are documented.
@@ -122,10 +124,10 @@ Creating file 'buildunnecfiles_0.1.zip'
 Package 'buildunnecfiles' successfully zipped
 
 Build report:
-Package was built in 0.27 seconds.
+Package was built in 0.35 seconds.
 Build created file 'buildunnecfiles_0.1.zip'.
-Temporary files are saved in .terrame_buildunnecfiles_FI7LD
-MD5 sum for the package is 0afdfe6a55c7c570082bf8958f1fa9f8
+Temporary files are saved in .terrame_buildunnecfiles_hfEEA
+MD5 sum for the package is 230a141f8d38a2e3e02dd49a39b35f4d
 The package has a license file.
 Documentation was successfully built.
 8 files are unnecessary.

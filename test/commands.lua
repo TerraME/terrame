@@ -24,13 +24,16 @@ package = {
 }
 
 doc = {
-	doc           = {arg = "-doc"},
-	onerror       = {arg = "-doc", package = "onerror"},
-	twoerrors     = {arg = "-doc", package = "twoerrors"},
-	nodescription = {arg = "-doc", package = "nodescription"},
-	nodatadotlua  = {arg = "-doc", package = "nodatadotlua"},
-	wrongdata     = {arg = "-doc", package = "wrongdata"},
-	withoutdata   = {arg = "-doc", package = "withoutdata"}
+	doc             = {arg = "-doc"},
+	onerror         = {arg = "-doc", package = "onerror"},
+	twoerrors       = {arg = "-doc", package = "twoerrors"},
+	nodescription   = {arg = "-doc", package = "nodescription"},
+	nodatadotlua    = {arg = "-doc", package = "nodatadotlua"},
+	wrongdata       = {arg = "-doc", package = "wrongdata"},
+	nofont          = {arg = "-doc", package = "nofont"},
+	nofontdotlua    = {arg = "-doc", package = "nofontdotlua"},
+	wrongfont       = {arg = "-doc", package = "wrongfont"},
+	withoutdatafont = {arg = "-doc", package = "withoutdatafont"}
 }
 
 build = {

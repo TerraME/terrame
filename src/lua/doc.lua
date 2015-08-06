@@ -97,8 +97,7 @@ function _Gtme.executeDoc(package)
 		undoc_examples = 0,
 		undoc_data = 0,
 		wrong_data = 0,
-		undoc_font = 0,
-		wrong_font = 0,
+		error_font = 0,
 		wrong_line = 0,
 		wrong_tabular = 0,
 		wrong_descriptions = 0
@@ -226,12 +225,13 @@ function _Gtme.executeDoc(package)
 
 	local mfont = {}
 	local fontsdocumented = {}
+	local df = _Gtme.fontFiles(package)
 
-	if isFile(package_path..s.."font.lua") then
+	if isFile(package_path..s.."font.lua") and #df > 0 then
 		printNote("Parsing 'font.lua'")
 		font = function(tab)
 			local count = verifyUnnecessaryArguments(tab, {"name", "file", "source", "symbol"})
-			doc_report.wrong_font = doc_report.wrong_font + count
+			doc_report.error_font = doc_report.error_font + count
 
 			local mverify = {
 				{"optionalTableArgument",  "name",   "string"},
@@ -245,27 +245,32 @@ function _Gtme.executeDoc(package)
 				local func = "return function(tab) "..mverify[i][1].."(tab, \""..mverify[i][2].."\", \""..mverify[i][3].."\") end"
 
 				xpcall(function() load(func)()(tab) end, function(err)
-					doc_report.wrong_font = doc_report.wrong_font + 1
+					doc_report.error_font = doc_report.error_font + 1
+					tab.file = nil
 					printError(err)
 				end)
 			end
 
+			if type(tab.symbol) ~= "table" then tab.symbol = {} end
+
 			forEachElement(tab.symbol, function(idx, value, mtype)
 				if type(idx) ~= "string" then
 					printError("Font '"..tostring(tab.name).."' has a non-string symbol.")
-					doc_report.wrong_font = doc_report.wrong_font + 1
+					doc_report.error_font = doc_report.error_font + 1
+					tab.file = nil
 				elseif mtype ~= "number" then
 					printError("Symbol '"..idx.."' has a non-numeric value.")
-					doc_report.wrong_font = doc_report.wrong_font + 1
+					tab.file = nil
+					doc_report.error_font = doc_report.error_font + 1
 				end
 			end)
 
-			if tab.file then
+			if type(tab.file) == "string" then
 				table.insert(mfont, tab)
 
 				if fontsdocumented[tab.file] then
 					printError("Font file '"..tab.file.."' is documented more than once.")
-					doc_report.wrong_font = doc_report.wrong_font + 1
+					doc_report.error_font = doc_report.error_font + 1
 				end
 				fontsdocumented[tab.file] = 0
 			end
@@ -282,15 +287,14 @@ function _Gtme.executeDoc(package)
 		end)
 
 		printNote("Checking folder 'font'")
-		local df = _Gtme.fontFiles(package)
 		forEachOrderedElement(df, function(_, mvalue)
 			if isDir(package_path..s.."font"..s..mvalue) then
 				return
 			end
 
 			if fontsdocumented[mvalue] == nil then
-				printError("File '"..mvalue.."' is not documented")
-				doc_report.undoc_font = doc_report.undoc_font + 1
+				printError("Font file '"..mvalue.."' is not documented")
+				doc_report.error_font = doc_report.error_font + 1
 			else
 				fontsdocumented[mvalue] = fontsdocumented[mvalue] + 1
 			end
@@ -299,19 +303,21 @@ function _Gtme.executeDoc(package)
 		forEachOrderedElement(fontsdocumented, function(midx, mvalue)
 			if mvalue == 0 then
 				printError("Font file '"..midx.."' is documented but does not exist in folder 'font'")
-				doc_report.wrong_font = doc_report.wrong_font + 1
+				doc_report.error_font = doc_report.error_font + 1
 			end
 		end)
+	elseif #df > 0 then
+		printNote("Checking folder 'font'")
+		printError("Package has font files but font.lua does not exist")
+		forEachElement(df, function(_, mvalue)
+			printError("File '"..mvalue.."' is not documented")
+			doc_report.error_font = doc_report.error_font + 1
+		end)
+	elseif isFile(package_path..s.."font.lua") then
+		printError("Package '"..package.."' has font.lua but there are no fonts")
+		doc_report.error_font = doc_report.error_font + 1
 	else
-		local df = _Gtme.fontFiles(package)
-		if #df > 0 then
-			printNote("Checking folder 'font'")
-			printError("Package has font files but font.lua does not exist")
-			forEachElement(df, function(_, mvalue)
-				printError("File '"..mvalue.."' is not documented")
-				doc_report.undoc_data = doc_report.undoc_data + 1
-			end)
-		end
+		printNote("Package '"..package.."' has no fonts")
 	end
 
 	local result = luadocMain(package_path, lua_files, example_files, package, mdata, mfont, doc_report)
@@ -392,6 +398,14 @@ function _Gtme.executeDoc(package)
 		printError(doc_report.wrong_data.." problems were found in 'data.lua'.")
 	else
 		printNote("All data files are correctly documented in 'data.lua'.")
+	end
+
+	if doc_report.error_font == 1 then
+		printError("One problem was found in the documentation of fonts.")
+	elseif doc_report.error_font > 1 then
+		printError(doc_report.error_font.." problems were found in the documentation of fonts.")
+	else
+		printNote("No problems were found in the documentation of fonts.")
 	end
 
 	if doc_report.wrong_line == 1 then

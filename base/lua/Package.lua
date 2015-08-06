@@ -149,13 +149,9 @@ function import(package)
 			cpp_loadfont(package_path..s.."font"..s..file) -- SKIP
 		end)
 
-		if _Gtme.fonts == nil then -- SKIP
-			_Gtme.fonts = {}
-		end
-
-		font = function(data)	
+		rawset(_G, "font",  function(data)	
 			_Gtme.fonts[data.name] = data.symbol -- SKIP
-		end
+		end)
 
 		if isFile(package_path..s.."font.lua") then -- SKIP
 			dofile(package_path..s.."font.lua")

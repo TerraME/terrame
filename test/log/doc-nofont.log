@@ -1,5 +1,6 @@
-Building documentation for package 'withoutdata'
-Loading package 'withoutdata'
+Building documentation for package 'nofont'
+Loading package 'nofont'
+Package 'nofont' has font.lua but there are no fonts
 Parsing lua files
 Parsing lua/foo.lua
 Parsing examples
@@ -21,12 +22,13 @@ Checking if all functions are documented
 Checking foo.lua
 
 Documentation report:
-Documentation was built in 0.04 seconds.
+Documentation was built in 0.12 seconds.
 4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No undocumented data files were found.
 All data files are correctly documented in 'data.lua'.
+One problem was found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
 All 1 global functions of the package are documented.
@@ -45,4 +47,4 @@ No invalid tags were found in the documentation.
 All 0 links were correctly built.
 All 0 examples are documented.
 One problem was found in the documentation of examples.
-Summing up, one problem was found in the documentation.
+Summing up, 2 problems were found in the documentation.

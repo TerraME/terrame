@@ -2,6 +2,7 @@ Building package 'onerrorbuild'
 Creating documentation of package 'onerrorbuild'
 Building documentation for package 'onerrorbuild'
 Loading package 'onerrorbuild'
+Package 'onerrorbuild' has no fonts
 Parsing lua files
 Parsing lua/Tube2.lua
 Parsing lua/Utils.lua
@@ -31,12 +32,13 @@ Checking Tube2.lua
 Checking Utils.lua
 
 Documentation report:
-Documentation was built in 0.04 seconds.
+Documentation was built in 0.12 seconds.
 5 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
 No undocumented data files were found.
 All data files are correctly documented in 'data.lua'.
+No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 The single Model is correctly documented.
 All 1 global functions of the package are documented.
@@ -82,7 +84,7 @@ Testing examples
 Testing ipd
 
 Test report:
-Tests were executed in 0.22 seconds.
+Tests were executed in 0.21 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.
@@ -118,10 +120,10 @@ Creating file 'onerrorbuild_0.1.zip'
 Package 'onerrorbuild' successfully zipped
 
 Build report:
-Package was built in 0.27 seconds.
+Package was built in 0.35 seconds.
 Build created file 'onerrorbuild_0.1.zip'.
-Temporary files are saved in .terrame_onerrorbuild_58NkD
-MD5 sum for the package is 15315adcd6cf6d2bf1f556928bb4eacc
+Temporary files are saved in .terrame_onerrorbuild_V8P6Y
+MD5 sum for the package is aa78b2634a8499c6eb4ced3098437570
 The package does not have a license file.
 One error was found in the documentation.
 One file is unnecessary.

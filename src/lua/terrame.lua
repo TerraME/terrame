@@ -36,6 +36,7 @@ _Gtme = {}
 setmetatable(_Gtme, {__index = _G})
 
 _Gtme.loadedPackages = {}
+_Gtme.fonts = {}
 _Gtme.print = print
 _Gtme.type = type
 
@@ -66,7 +67,7 @@ end
 function _Gtme.fontFiles(package)
 	local s = sessionInfo().separator
 	local path = sessionInfo().path
-	local fontpath = path..s.."packages"..s..package..s.."font"
+	local fontpath = packageInfo(package).path..s.."font"
 
 	if not isDir(fontpath) then
 		return {}
@@ -80,7 +81,6 @@ function _Gtme.fontFiles(package)
 	end)
 	return result
 end
-
 
 -- from http://stackoverflow.com/questions/17673657/loading-a-file-and-returning-its-environment
 function _Gtme.include(scriptfile, basetable)

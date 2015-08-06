@@ -2,6 +2,7 @@ Building package 'twoerrorsbuild'
 Creating documentation of package 'twoerrorsbuild'
 Building documentation for package 'twoerrorsbuild'
 Loading package 'twoerrorsbuild'
+Package 'twoerrorsbuild' has no fonts
 Parsing lua files
 Parsing lua/Tube2.lua
 Parsing lua/Tube3.lua
@@ -37,12 +38,13 @@ Checking Tube3.lua
 Checking Utils.lua
 
 Documentation report:
-Documentation was built in 0.04 seconds.
+Documentation was built in 0.12 seconds.
 5 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
 No undocumented data files were found.
 All data files are correctly documented in 'data.lua'.
+No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 All 2 Models are correctly documented.
 All 1 global functions of the package are documented.
@@ -125,10 +127,10 @@ Creating file 'twoerrorsbuild_0.1.zip'
 Package 'twoerrorsbuild' successfully zipped
 
 Build report:
-Package was built in 0.3 seconds.
+Package was built in 0.38 seconds.
 Build created file 'twoerrorsbuild_0.1.zip'.
-Temporary files are saved in .terrame_twoerrorsbuild_LwEmM
-MD5 sum for the package is 45578a3f632f1fc5c5fb114f12f76da5
+Temporary files are saved in .terrame_twoerrorsbuild_ziJBu
+MD5 sum for the package is 1929796d145c0eaddf4f2adc5c3d621f
 The package does not have a license file.
 2 errors were found in the documentation.
 2 files are unnecessary.

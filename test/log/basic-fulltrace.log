@@ -4,7 +4,7 @@ Stack traceback:
     In traceback
     File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 842
     In __add
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1268
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1263
     In function h
     File scripts/trace.lua, line 11
     In function g
@@ -16,10 +16,10 @@ Stack traceback:
     In dofile
     File [C], line -1
     In nil
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1213
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1208
     In xpcall
     File [C], line -1
     In myxpcall
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1224
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1219
     In nil
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1213
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1208

@@ -1,0 +1,60 @@
+Building documentation for package 'wrongfont'
+Loading package 'wrongfont'
+Parsing 'font.lua'
+/Users/pedro/github/terrame/bin/packages/wrongfont/font.lua:2: Error: Incompatible types. Argument 'name' expected string, got number.
+/Users/pedro/github/terrame/bin/packages/wrongfont/font.lua:2: Error: Argument 'file' is mandatory.
+/Users/pedro/github/terrame/bin/packages/wrongfont/font.lua:12: Error: Incompatible types. Argument 'file' expected string, got number.
+/Users/pedro/github/terrame/bin/packages/wrongfont/font.lua:22: Error: Incompatible types. Argument 'source' expected string, got number.
+/Users/pedro/github/terrame/bin/packages/wrongfont/font.lua:32: Error: Incompatible types. Argument 'symbol' expected table, got number.
+Symbol 'dog' has a non-numeric value.
+Font 'abc' has a non-string symbol.
+Checking folder 'font'
+Font file 'Pet Animals.ttf' is not documented
+Font file 'Pet Animals2.ttf' is documented but does not exist in folder 'font'
+Parsing lua files
+Parsing lua/foo.lua
+Parsing examples
+No examples were found.
+Checking undocumented files
+Checking @usage definition
+Checking lua/foo.lua
+Checking calls to functions in @usage
+Checking lua/foo.lua
+Checking undocumented arguments
+Checking lua/foo.lua
+Checking 'description.lua'
+Building and checking HTML files
+Building doc/index.html
+Building doc/files/foo.html
+Building doc/files/data.html
+Building doc/files/font.html
+Checking if all functions are documented
+Checking foo.lua
+
+Documentation report:
+Documentation was built in 0.13 seconds.
+4 HTML files were created.
+All files are documented.
+All fields of 'description.lua' are correct.
+No undocumented data files were found.
+All data files are correctly documented in 'data.lua'.
+9 problems were found in the documentation of fonts.
+All source code lines starting with --- are valid.
+There are no Models in the package.
+All 1 global functions of the package are documented.
+All functions of each file are declared only once.
+All descriptions end with a correct character.
+There is no duplicated tag in the documentation.
+All tags with compulsory arguments were correctly used.
+All 0 non-named arguments are documented.
+No undefined arguments were found.
+All available arguments of functions are used in their HTML tables.
+All arguments used in the HTML tables are documented.
+All 1 functions have @usage.
+All 1 functions call themselves in their @usage.
+All @tabular are correctly described.
+No invalid tags were found in the documentation.
+All 0 links were correctly built.
+All 0 examples are documented.
+One problem was found in the documentation of examples.
+Summing up, 10 problems were found in the documentation.
