@@ -25,6 +25,22 @@
 
 TextScreen_ = {
 	type_ = "TextScreen",
+	--- Save a TextScreen into a file. Supported extensions are bmp, jpg, png, and tiff.
+	-- @arg file A string with the file name.
+	-- @usage text:save("file.bmp")
+	save = function(self, file)
+		local _, extension = string.match(file, "(.-)([^%.]+)$")
+
+		local availableExtensions = {bmp = true, jpg = true, png = true, tiff = true}
+
+		if not availableExtensions[extension] then
+			invalidFileExtensionError(1, extension)
+		end
+
+		extension = string.upper(extension)
+
+		self.cObj_:save(file, extension)
+	end
 }
 
 metaTableTextScreen_ = {__index = TextScreen_}
@@ -156,8 +172,8 @@ function TextScreen(data)
 
 	setmetatable(data, metaTableTextScreen_)
 
-	table.insert(_Gtme.createdObservers, data) -- duvida aqui
-	--table.insert(_Gtme.createdObservers, {target = data.target, id = id}) -- antigo
+	table.insert(_Gtme.createdObservers, data)
+	
 	return data
 end
 

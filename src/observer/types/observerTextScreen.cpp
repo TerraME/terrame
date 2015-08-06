@@ -6,7 +6,7 @@
 #include "visualArrangement.h"
 
 ObserverTextScreen::ObserverTextScreen(Subject *subj, QWidget *parent)
-    : QTextEdit(parent), ObserverInterf(subj), QThread()
+    : QDialog(parent), ObserverInterf(subj), QThread()
 {
     observerType = TObsTextScreen;
     subjectType = TObsUnknown;
@@ -14,15 +14,16 @@ ObserverTextScreen::ObserverTextScreen(Subject *subj, QWidget *parent)
     paused = false;
     header = false;
 
-    setReadOnly(true);
-    //setAutoFormatting(QTextEdit::AutoAll);
     setWindowTitle("TerraME Observer : Text Screen");
 
-    // prioridade da thread
-    //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
-    start(QThread::IdlePriority);
+    textEdit = new QTextEdit(this);
+    textEdit->setReadOnly(true);
 
     VisualArrangement::getInstance()->starts(getId(), this);
+
+    textEdit->setFixedSize(this->size());
+
+    start(QThread::IdlePriority);
 }
 
 ObserverTextScreen::~ObserverTextScreen()
@@ -115,7 +116,7 @@ bool ObserverTextScreen::write()
                 headers += "\t";
         }
 
-        this->setText(headers);
+        textEdit->setText(headers);
         header = true;
     }
 
@@ -128,7 +129,8 @@ bool ObserverTextScreen::write()
             text += "\t";
     }
 
-    this->append(text);
+    textEdit->append(text);
+
     return true;
 }
 
@@ -162,6 +164,7 @@ int ObserverTextScreen::close()
 void ObserverTextScreen::resizeEvent(QResizeEvent *event)
 {
     VisualArrangement::getInstance()->resizeEventDelegate(getId(), event);
+    textEdit->setFixedSize(this->size());
 }
 
 void ObserverTextScreen::moveEvent(QMoveEvent *event)
@@ -173,3 +176,15 @@ void ObserverTextScreen::closeEvent(QCloseEvent *event)
 {
     VisualArrangement::getInstance()->closeEventDelegate();
 }
+
+void ObserverTextScreen::save(std::string file, std::string extension)
+{
+      saveAsImage(file, extension);
+}
+
+void ObserverTextScreen::saveAsImage(std::string file, std::string extension)
+{
+      QPixmap pixmap = textEdit->grab();
+      pixmap.save(file.c_str(), extension.c_str());
+}
+

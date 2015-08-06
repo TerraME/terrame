@@ -295,6 +295,7 @@ Luna<luaMap>::RegType luaMap::methods[] = {
 const char luaTextScreen::className[] = "TeTextScreen";
 
 Luna<luaTextScreen>::RegType luaTextScreen::methods[] = {
+        method(luaTextScreen, save),
         method(luaTextScreen, setObserver),
         {0, 0}
 };
