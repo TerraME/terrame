@@ -43,7 +43,7 @@ namespace TerraMEObserver {
  * \author Antonio Jos? da Cunha Rodrigues
  * \file observerTextScreen.h
  */
-class ObserverTextScreen : public QTextEdit, public ObserverInterf, public QThread
+class ObserverTextScreen : public QDialog, public ObserverInterf, public QThread
 {
 public:
     /* *
@@ -99,6 +99,8 @@ public:
      */
     int close();
 
+    void save(std::string file, std::string extension);
+
 protected:
     /**
      * Runs the thread
@@ -122,6 +124,8 @@ private:
     void moveEvent(QMoveEvent *event);
     void closeEvent(QCloseEvent *event);
 
+    void saveAsImage(std::string file, std::string extension);
+
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;
 
@@ -130,6 +134,7 @@ private:
     bool header;
     bool paused;
 
+    QTextEdit *textEdit;
 };
 
 }

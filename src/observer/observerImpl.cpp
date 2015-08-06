@@ -196,7 +196,7 @@ bool ObserverImpl::update(double time) // ver se passa realmente este par?metro 
 
     state.device()->open(QIODevice::ReadOnly);
     obsHandle_->draw( state );
-    state.device()->close(); 
+    state.device()->close();
 
 #ifdef TME_STATISTIC 
     }

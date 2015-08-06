@@ -53,6 +53,8 @@ public:
 	/// destructor
         ~luaTextScreen(void);
 
+    int save(lua_State* L);
+
 private:
         lua_State *luaL;
         ObserverTextScreen* obs;

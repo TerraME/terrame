@@ -18,3 +18,13 @@ int luaTextScreen::setObserver(lua_State* L)
 luaTextScreen::~luaTextScreen(void)
 {
 }
+
+int luaTextScreen::save(lua_State* L)
+{
+    std::string e = luaL_checkstring(L, -1);
+    std::string f = luaL_checkstring(L, -2);
+
+    obs->save(f, e);
+
+    return 0;
+}
