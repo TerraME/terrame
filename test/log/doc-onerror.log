@@ -4,7 +4,6 @@ print when loading
 Parsing 'data.lua'
 Checking folder 'data'
 File 'data.csv' is not documented
-File 'brazilstates.dbf' is documented but does not exist in folder 'data'
 Package 'onerror' has font.lua but there are no fonts
 Parsing lua files
 Parsing lua/ErrorHandling.lua
@@ -62,12 +61,11 @@ Checking Utils.lua
 Function forEachNeighbor2 is not documented
 
 Documentation report:
-Documentation was built in 0.16 seconds.
+Documentation was built in 0.15 seconds.
 6 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
-One data file is not documented.
-One problem was found in 'data.lua'.
+One problem was found in the documentation of data.
 One problem was found in the documentation of fonts.
 One source code line starting with --- is invalid.
 One error was found in the documentation of Models.
@@ -87,4 +85,4 @@ One invalid tag was found in the documentation.
 One out of 29 links is invalid.
 One out of 3 examples is not documented.
 One problem was found in the documentation of examples.
-Summing up, 22 problems were found in the documentation.
+Summing up, 21 problems were found in the documentation.

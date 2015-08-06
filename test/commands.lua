@@ -28,6 +28,7 @@ doc = {
 	onerror         = {arg = "-doc", package = "onerror"},
 	twoerrors       = {arg = "-doc", package = "twoerrors"},
 	nodescription   = {arg = "-doc", package = "nodescription"},
+	nodata          = {arg = "-doc", package = "nodata"},
 	nodatadotlua    = {arg = "-doc", package = "nodatadotlua"},
 	wrongdata       = {arg = "-doc", package = "wrongdata"},
 	nofont          = {arg = "-doc", package = "nofont"},

@@ -1,5 +1,6 @@
 Building documentation for package 'withoutdatafont'
 Loading package 'withoutdatafont'
+Package 'withoutdatafont' has no data
 Package 'withoutdatafont' has no fonts
 Parsing lua files
 Parsing lua/foo.lua
@@ -26,8 +27,7 @@ Documentation was built in 0.12 seconds.
 4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
-No undocumented data files were found.
-All data files are correctly documented in 'data.lua'.
+No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.

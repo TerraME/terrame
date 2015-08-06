@@ -1,5 +1,6 @@
 Building documentation for package 'wrongfont'
 Loading package 'wrongfont'
+Package 'wrongfont' has no data
 Parsing 'font.lua'
 /Users/pedro/github/terrame/bin/packages/wrongfont/font.lua:2: Error: Incompatible types. Argument 'name' expected string, got number.
 /Users/pedro/github/terrame/bin/packages/wrongfont/font.lua:2: Error: Argument 'file' is mandatory.
@@ -32,12 +33,11 @@ Checking if all functions are documented
 Checking foo.lua
 
 Documentation report:
-Documentation was built in 0.13 seconds.
+Documentation was built in 0.12 seconds.
 4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
-No undocumented data files were found.
-All data files are correctly documented in 'data.lua'.
+No problems were found in the documentation of data.
 9 problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.

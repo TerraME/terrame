@@ -95,8 +95,7 @@ function _Gtme.executeDoc(package)
 		compulsory_arguments = 0,
 		undoc_functions = 0,
 		undoc_examples = 0,
-		undoc_data = 0,
-		wrong_data = 0,
+		error_data = 0,
 		error_font = 0,
 		wrong_line = 0,
 		wrong_tabular = 0,
@@ -105,12 +104,13 @@ function _Gtme.executeDoc(package)
 
 	local mdata = {}
 	local filesdocumented = {}
+	local df = dataFiles(package)
 
-	if isFile(package_path..s.."data.lua") then
+	if isFile(package_path..s.."data.lua") and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
 			local count = verifyUnnecessaryArguments(tab, {"file", "summary", "source", "attributes", "types", "description", "reference"})
-			doc_report.wrong_data = doc_report.wrong_data + count
+			doc_report.error_data = doc_report.error_data + count
 
 			if type(tab.file)        == "string" then tab.file = {tab.file} end
 			if type(tab.attributes)  == "string" then tab.attributes = {tab.attributes} end
@@ -145,7 +145,7 @@ function _Gtme.executeDoc(package)
 				end
 
 				xpcall(verifySize, function(err)
-					doc_report.wrong_data = doc_report.wrong_data + 1
+					doc_report.error_data = doc_report.error_data + 1
 					tab.attributes = {"_incompatible_"}
 					printError(err)
 				end)
@@ -157,7 +157,7 @@ function _Gtme.executeDoc(package)
 				local func = "return function(tab) "..mverify[i][1].."(tab, \""..mverify[i][2].."\", \""..mverify[i][3].."\") end"
 
 				xpcall(function() load(func)()(tab) end, function(err)
-					doc_report.wrong_data = doc_report.wrong_data + 1
+					doc_report.error_data = doc_report.error_data + 1
 					printError(err)
 				end)
 			end
@@ -172,7 +172,7 @@ function _Gtme.executeDoc(package)
 				forEachElement(tab.file, function(_, mvalue)
 					if filesdocumented[mvalue] then
 						printError("Data file '"..mvalue.."' is documented more than once.")
-						doc_report.wrong_data = doc_report.wrong_data + 1
+						doc_report.error_data = doc_report.error_data + 1
 					end
 					filesdocumented[mvalue] = 0
 				end)
@@ -186,7 +186,6 @@ function _Gtme.executeDoc(package)
 		end)
 
 		printNote("Checking folder 'data'")
-		local df = dataFiles(package)
 
 		table.sort(mdata, function(a, b)
 			return a.file[1] < b.file[1]
@@ -199,7 +198,7 @@ function _Gtme.executeDoc(package)
 
 			if filesdocumented[mvalue] == nil then
 				printError("File '"..mvalue.."' is not documented")
-				doc_report.undoc_data = doc_report.undoc_data + 1
+				doc_report.error_data = doc_report.error_data + 1
 			else
 				filesdocumented[mvalue] = filesdocumented[mvalue] + 1
 			end
@@ -208,19 +207,21 @@ function _Gtme.executeDoc(package)
 		forEachOrderedElement(filesdocumented, function(midx, mvalue)
 			if mvalue == 0 then
 				printError("File '"..midx.."' is documented but does not exist in folder 'data'")
-				doc_report.wrong_data = doc_report.wrong_data + 1
+				doc_report.error_data = doc_report.error_data + 1
 			end
 		end)
+	elseif #df > 0 then
+		printNote("Checking folder 'data'")
+		printError("Package has data files but data.lua does not exist")
+		forEachElement(df, function(_, mvalue)
+			printError("File '"..mvalue.."' is not documented")
+			doc_report.error_data = doc_report.error_data + 1
+		end)
+	elseif isFile(package_path..s.."data.lua") then
+		printError("Package '"..package.."' has data.lua but there is no data")
+		doc_report.error_data = doc_report.error_data + 1
 	else
-		local df = dataFiles(package)
-		if #df > 0 then
-			printNote("Checking folder 'data'")
-			printError("Package has data files but data.lua does not exist")
-			forEachElement(df, function(_, mvalue)
-				printError("File '"..mvalue.."' is not documented")
-				doc_report.undoc_data = doc_report.undoc_data + 1
-			end)
-		end
+		printNote("Package '"..package.."' has no data")
 	end
 
 	local mfont = {}
@@ -384,20 +385,12 @@ function _Gtme.executeDoc(package)
 		printNote("All fields of 'description.lua' are correct.")
 	end
 
-	if doc_report.undoc_data == 1 then
-		printError("One data file is not documented.")
-	elseif doc_report.undoc_data > 1 then
-		printError(doc_report.undoc_data.." data files are not documented.")
+	if doc_report.error_data == 1 then
+		printError("One problem was found in the documentation of data.")
+	elseif doc_report.error_data > 1 then
+		printError(doc_report.error_data.." problems were found in the documentation of data.")
 	else
-		printNote("No undocumented data files were found.")
-	end
-
-	if doc_report.wrong_data == 1 then
-		printError("One problem was found in 'data.lua'.")
-	elseif doc_report.wrong_data > 1 then
-		printError(doc_report.wrong_data.." problems were found in 'data.lua'.")
-	else
-		printNote("All data files are correctly documented in 'data.lua'.")
+		printNote("No problems were found in the documentation of data.")
 	end
 
 	if doc_report.error_font == 1 then

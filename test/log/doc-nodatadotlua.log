@@ -25,8 +25,7 @@ Documentation was built in 0.12 seconds.
 2 HTML files were created.
 One out of 1 files are not documented.
 All fields of 'description.lua' are correct.
-One data file is not documented.
-All data files are correctly documented in 'data.lua'.
+One problem was found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
