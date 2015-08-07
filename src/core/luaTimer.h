@@ -30,6 +30,7 @@ of this library and its documentation.
 #include "../observer/schedulerSubjectInterf.h"
 #include "luaUtils.h"
 #include "reference.h"
+#include "observerScheduler.h"
 
 /**
 * \brief  
@@ -50,6 +51,8 @@ private:
     
     QString getAll(QDataStream& in, int obsId, QStringList& attribs);
     QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
+
+    ObserverScheduler *obs;
 
 public:
     ///< Data structure issued by Luna<T>
@@ -115,6 +118,10 @@ public:
 
     /// Destroys the observer object instance
     int kill(lua_State *L);
+
+    int setObserver(lua_State* L);
+
+    int save(lua_State* L);
 };
 
 

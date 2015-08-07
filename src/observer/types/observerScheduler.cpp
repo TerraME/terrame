@@ -68,16 +68,15 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
     vboxLayout->addItem(vertSpacerItem);
 
     QStringList headers;
-    headers << "Event Key" << "Event time" << "Peridiocity" << "Priority";
+    headers << "Event Key" << "Event Time" << "Peridiocity" << "Priority";
 
     pipelineWidget = new QTreeWidget(this);
     pipelineWidget->setObjectName(QString::fromUtf8("pipelineWidget"));
     pipelineWidget->setRootIsDecorated(false);
     pipelineWidget->setHeaderLabels(headers);
     pipelineWidget->setVisible(false);
-    //	pipelineWidget->setSortingEnabled(true);
-
-    pipelineWidget->sortItems(0, Qt::AscendingOrder); //Qt::DescendingOrder);
+    pipelineWidget->setSortingEnabled(true);
+    pipelineWidget->sortItems(Time, Qt::AscendingOrder);
 
     QHBoxLayout *hboxLayout = new QHBoxLayout();
     hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
@@ -121,8 +120,6 @@ const TypesOfObservers ObserverScheduler::getType()
 
 bool ObserverScheduler::draw(QDataStream & state)
 {
-    pipelineWidget->setSortingEnabled(false);
-
     double num;
     QString msg, timer;
     state >> msg;
@@ -183,10 +180,6 @@ bool ObserverScheduler::draw(QDataStream & state)
     }
 
     setTimer(timer);
-
-    pipelineWidget->setSortingEnabled(true);
-    pipelineWidget->sortByColumn(Priority, Qt::AscendingOrder);
-    pipelineWidget->sortByColumn(Time, Qt::AscendingOrder);
 
     qApp->processEvents();
 
@@ -288,4 +281,11 @@ void ObserverScheduler::closeEvent(QCloseEvent *event)
 {
     VisualArrangement::getInstance()->closeEventDelegate();
 }
+
+void ObserverScheduler::save(std::string file, std::string extension)
+{
+    QPixmap pixmap = grab();
+    pixmap.save(file.c_str(), extension.c_str());
+}
+
 

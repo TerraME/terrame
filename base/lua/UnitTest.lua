@@ -204,8 +204,8 @@ UnitTest_ = {
 	-- @usage c = Chart{...}
 	-- unitTest:assertSnapshot(c, "test_chart.bmp")
 	assertSnapshot = function(self, observer, file)
-		if not belong(type(observer), {"Chart", "Map", "TextScreen"}) then
-			customError("Argument #1 should be Chart, Map, or TextScreen, got "..type(observer)..".")
+		if not belong(type(observer), {"Chart", "Map", "TextScreen", "Clock"}) then
+			customError("Argument #1 should be Chart, Map, TextScreen or Clock, got "..type(observer)..".")
 		end
 
 		mandatoryArgument(2, "string", file)

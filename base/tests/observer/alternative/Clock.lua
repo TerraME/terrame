@@ -43,6 +43,15 @@ return{
 			Clock{target = t, xwc = 5}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("xwc"))
-	end
+	end,
+  
+  save = function(unitTest)
+    local c = Clock{target = Timer{}} 
+    
+		local error_func = function()
+			c:save("file.csv")
+		end
+		unitTest:assertError(error_func, invalidFileExtensionMsg(1, "csv"))
+  end
 }
 

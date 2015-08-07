@@ -8,7 +8,6 @@
 #include "../observer/types/observerLogFile.h"
 #include "../observer/types/observerTable.h"
 #include "../observer/types/observerUDPSender.h"
-#include "../observer/types/observerScheduler.h"
 
 ///< Global variable: Lua stack used for comunication with C++ modules.
 extern lua_State * L; 
@@ -201,7 +200,7 @@ int luaTimer::createObserver( lua_State *luaL)
 #endif
         if (typeObserver != TObsScheduler)
             allAttribs.push_back(key);
-        
+
         lua_pop(luaL, 1);
     }
 
@@ -560,10 +559,10 @@ int luaTimer::createObserver( lua_State *luaL)
     if (obsScheduler)
     {
         obsScheduler->setAttributes(obsAttribs);
-        //obsScheduler->setEventList(eventList);
-
         lua_pushnumber(luaL, obsId);
-        return 1;
+        lua_pushlightuserdata(luaL, (void*) obsScheduler);
+
+        return 2;
     }
 
     //printf("createObserver( lua_State *L ) performed\n");
@@ -887,4 +886,21 @@ int luaTimer::kill(lua_State *luaL)
     bool result = SchedulerSubjectInterf::kill(id);
     lua_pushboolean(luaL, result);
     return 1;
+}
+
+int luaTimer::setObserver(lua_State* L)
+{
+    ObserverScheduler *obss = (ObserverScheduler*) lua_touserdata(L, -1);
+    obs = obss;
+    return 0;
+}
+
+int luaTimer::save(lua_State* L)
+{
+    std::string e = luaL_checkstring(L, -1);
+    std::string f = luaL_checkstring(L, -2);
+    //std::cout << e << f << std::endl;
+    obs->save(f, e);
+
+    return 0;
 }

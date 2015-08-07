@@ -150,7 +150,7 @@ return{
 			u:assertSnapshot()
 		end
 
-		unitTest:assertError(error_func, "Argument #1 should be Chart, Map, or TextScreen, got nil.")
+		unitTest:assertError(error_func, "Argument #1 should be Chart, Map, TextScreen or Clock, got nil.")
 
 		local ce = Cell{value = 5}
 		local ch = Chart{target = ce}
