@@ -1653,15 +1653,18 @@ function Map(data)
 					data.symbol = mtable[data.symbol]
 				end
 			end)
-		elseif _Gtme.fonts[data.font] then
-			local symbol = _Gtme.fonts[data.font][data.symbol]
+		end
 
+		if type(data.symbol) == "string" then
+			defaultTableValue(data, "font", "Ubuntu")
+		end
+
+		if _Gtme.fonts[data.font] then
+			local symbol = _Gtme.fonts[data.font][data.symbol]
 			if symbol then
 				data.symbol = symbol
 			end
 		end
-
-		defaultTableValue(data, "font", "Times")
 
 		if cpp_hasfont(data.font) == 0 then
 			customWarning("Font '"..data.font.."' is not installed. Using default font.")

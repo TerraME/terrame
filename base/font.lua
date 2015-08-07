@@ -57,3 +57,16 @@ font {
 	}
 }
 
+local symbols = {}
+
+for i = 65, 90 do
+	symbols[string.char(i)] = i
+end
+
+font {
+	name = "Ubuntu",
+	file = "Ubuntu-L.ttf",
+	source = "http://font.ubuntu.com",
+	symbol = symbols
+}
+
