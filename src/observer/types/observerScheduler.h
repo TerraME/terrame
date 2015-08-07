@@ -106,6 +106,8 @@ public:
      */
     int close();
 
+    void save(std::string file, std::string extension);
+
 private slots:
     /**
      * Treats the expand button click

@@ -33,10 +33,16 @@ return{
 			Event{priority = 3, action = function(event) timer:notify() end},
 			Event{priority = 4, action = function(event) timer:notify() end}
 		}
+    
+    unitTest:assertType(timer, "Timer")
 
-		Clock{target = timer}
+		local c1 = Clock{target = timer}
 		timer:execute(50)
-		unitTest:assert(true)
+    
+    -- unitTest:assertSnapshot(c1, "timer_clock_priority_ordered.bmp") -- issue #624
+    
+    unitTest:assertType(c1, "Clock")
+    
 	end,
 	notify = function(unitTest)
 		local timer
@@ -48,10 +54,13 @@ return{
 			ev4 = Event{priority = 10, action = function(event) timer:notify() end}
 		}
 
-		Clock{target = timer}
+		local c2 = Clock{target = timer}
 		timer:execute(50)
+    
+    -- unitTest:assertSnapshot(c2, "timer_clock_priority_nordered.bmp") -- issue #624
+    
+    unitTest:assertType(c2, "Clock")
 
-		unitTest:assert(true)
 	end
 }
 

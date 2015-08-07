@@ -347,6 +347,9 @@ Luna<luaTimer>::RegType luaTimer::methods[] =
 	method(luaTimer, createObserver),
 	method(luaTimer, notify),
 	method(luaTimer, kill),
+
+        method(luaTimer, setObserver),
+        method(luaTimer, save),
 	{0, 0}
 };
 //****************************** ENVIRONMENT ****************************************//

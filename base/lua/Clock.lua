@@ -23,6 +23,30 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
+Clock_ = {
+	type_ = "Clock",
+  
+	--- Save a Clock into a file. Supported extensions are bmp, jpg, png, and tiff.
+	-- @arg file A string with the file name.
+	-- @usage clock:save("file.bmp")
+	save = function(self, file)
+		local _, extension = string.match(file, "(.-)([^%.]+)$")
+
+		local availableExtensions = {bmp = true, jpg = true, png = true, tiff = true}
+
+		if not availableExtensions[extension] then
+			invalidFileExtensionError(1, extension)
+		end
+
+		extension = string.upper(extension)
+
+		self.cObj_:save(file, extension)
+	end
+
+}
+
+metaTableClock_ = {__index = Clock_}
+
 --- Create a display with the current time and Event queue of a given Timer.
 -- @arg data.target A timer.
 -- @usage Clock{target = timer}
@@ -34,10 +58,21 @@ Clock = function(data)
 	local observerAttrs = {}
 	local observerParams = {"", ""}
 	local observerType = 8
+  local id
+  local obs
 
-	local id = data.target.cObj_:createObserver(observerType, observerAttrs, observerParams)
+	id, obs = data.target.cObj_:createObserver(observerType, observerAttrs, observerParams)
+  
+	local clock = TeTimer()
+	clock:setObserver(obs)
 
-	table.insert(_Gtme.createdObservers, {target = data.target, id = id})
-	return id
+	data.cObj_ = clock
+	data.id = id
+
+	setmetatable(data, metaTableClock_)  
+
+	table.insert(_Gtme.createdObservers, data)
+  
+	return data
 end
 

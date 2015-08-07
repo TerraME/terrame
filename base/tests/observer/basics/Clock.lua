@@ -34,10 +34,12 @@ return{
 			ev4 = Event{priority = 10, action = function(event) timer:notify() end}
 		}
 
-		Clock{target = timer}
+		local c = Clock{target = timer}
 		timer:execute(50)
+    
+    -- unitTest:assertSnapshot(c, "clock_timer_events.bmp") -- issue #624
 
-		unitTest:assert(true)
+		unitTest:assertType(c, "Clock")
 	end
 }
 
