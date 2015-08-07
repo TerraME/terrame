@@ -102,15 +102,18 @@ function _Gtme.buildPackage(package, clean)
 		["license.lua"] = true,
 		["load.lua"] = true,
 		["data.lua"] = true,
+		["font.lua"] = true,
 		["license.txt"] = true,
 		lua = true,
 		tests = true,
 		examples = true,
 		data = true,
+		font = true,
 		snapshots = true,
 		doc = true
 	}
 
+	print("Checking basic files and folders")
 	forEachFile(package, function(file)
 		if not root[file] then
 			printError("File '"..package..s..file.."' is unnecessary and will be ignored.")
@@ -119,6 +122,7 @@ function _Gtme.buildPackage(package, clean)
 		end
 	end)
 
+	print("Checking examples")
 	forEachFile(package..s.."examples", function(file)
 		if not string.endswith(file, ".lua") and not string.endswith(file, ".tme") and not string.endswith(file, ".log") then
 			printError("File '"..package..s.."examples"..s..file.."' is unnecessary and will be ignored.")
@@ -127,6 +131,7 @@ function _Gtme.buildPackage(package, clean)
 		end
 	end)
 
+	print("Checking source code")
 	forEachFile(package..s.."lua", function(file)
 		if not string.endswith(file, ".lua") and not isDir(package..s.."lua"..s..file) then
 			printError("File '"..package..s.."lua"..s..file.."' is unnecessary and will be ignored.")
@@ -149,6 +154,27 @@ function _Gtme.buildPackage(package, clean)
 
 	removeRecursiveLua(package..s.."tests")
 
+	print("Checking fonts")
+	if isDir(package..s.."font") then
+		local fontFiles = {}
+		local df = _Gtme.fontFiles(package)
+		forEachElement(df, function(_, mvalue)
+			fontFiles[mvalue] = true
+			local license = string.sub(mvalue, 0, -5)..".txt"
+			fontFiles[license] = true
+		end)
+
+		forEachFile(package..s.."font", function(file)
+			if not fontFiles[file] then
+				local mfile = package..s.."font"..s..file
+				printError("File '"..mfile.."' is unnecessary and will be ignored.")
+				os.execute("rm -rf \""..mfile.."\"")
+				report.unnecessary_files = report.unnecessary_files + 1
+			end
+		end)
+	end
+
+	print("Looking for hidden files")
 	local hidden
 	if _Gtme.isWindowsOS() then
 		hidden = runCommand("find-msys \""..package.."\" -name \".*\"")

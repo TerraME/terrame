@@ -104,7 +104,12 @@ No new log file was created.
 Summing up, one problem was found during the tests.
 
 Checking unnecessary files
+Checking basic files and folders
 File 'onerrorbuild/unnecessary.txt' is unnecessary and will be ignored.
+Checking examples
+Checking source code
+Checking fonts
+Looking for hidden files
 Cleaning package
 Removing 'snapshots' folder
 Removing 'test' folder

@@ -115,8 +115,13 @@ No new log file was created.
 Summing up, 2 problems were found during the tests.
 
 Checking unnecessary files
+Checking basic files and folders
 File 'twoerrorsbuild/unnecessary.txt' is unnecessary and will be ignored.
 File 'twoerrorsbuild/unnecessary2.txt' is unnecessary and will be ignored.
+Checking examples
+Checking source code
+Checking fonts
+Looking for hidden files
 Checking Models
 Model 'Tube' is wrongly put in file 'Tube2.lua'. It should be in file 'Tube.lua'
 Model 'Tube2' is wrongly put in file 'Tube3.lua'. It should be in file 'Tube2.lua'

@@ -108,12 +108,17 @@ No new log file was created.
 Summing up, 4 problems were found during the tests.
 
 Checking unnecessary files
+Checking basic files and folders
 File 'buildunneclean/unnec1.txt' is unnecessary and will be ignored.
+Checking examples
 File 'buildunneclean/examples/unnec2.txt' is unnecessary and will be ignored.
+Checking source code
 File 'buildunneclean/lua/unnec3.txt' is unnecessary and will be ignored.
 File 'buildunneclean/tests/alternative/abc/unnec6.txt' is unnecessary and will be ignored.
 File 'buildunneclean/tests/alternative/unnec5.txt' is unnecessary and will be ignored.
 File 'buildunneclean/tests/unnec4.txt' is unnecessary and will be ignored.
+Checking fonts
+Looking for hidden files
 File 'buildunneclean/.hidden' is unnecessary and will be ignored.
 File 'buildunneclean/lua/.hidden2' is unnecessary and will be ignored.
 Cleaning package

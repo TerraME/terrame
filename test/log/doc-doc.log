@@ -4,6 +4,7 @@ Parsing 'data.lua'
 Checking folder 'data'
 Parsing 'font.lua'
 Checking folder 'font'
+Checking licenses of fonts
 Parsing lua files
 Parsing lua/Agent.lua
 Parsing lua/Automaton.lua
@@ -226,7 +227,7 @@ Checking Utils.lua
 Checking VisualTable.lua
 
 Documentation report:
-Documentation was built in 0.45 seconds.
+Documentation was built in 0.46 seconds.
 35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.

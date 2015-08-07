@@ -77,7 +77,9 @@ function _Gtme.fontFiles(package)
 	local result = {}
 
 	forEachElement(files, function(_, fname)
-		table.insert(result, fname)
+		if string.endswith(fname, ".ttf") then
+			table.insert(result, fname)
+		end
 	end)
 	return result
 end

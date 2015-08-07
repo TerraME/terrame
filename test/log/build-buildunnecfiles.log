@@ -4,7 +4,9 @@ Building documentation for package 'buildunnecfiles'
 Loading package 'buildunnecfiles'
 Test file 'unnec2.txt' does not have a valid extension
 Package 'buildunnecfiles' has no data
-Package 'buildunnecfiles' has no fonts
+Parsing 'font.lua'
+Checking folder 'font'
+Checking licenses of fonts
 Parsing lua files
 Parsing lua/Tube.lua
 Parsing lua/Utils.lua
@@ -108,12 +110,18 @@ No new log file was created.
 Summing up, 4 problems were found during the tests.
 
 Checking unnecessary files
+Checking basic files and folders
 File 'buildunnecfiles/unnec1.txt' is unnecessary and will be ignored.
+Checking examples
 File 'buildunnecfiles/examples/unnec2.txt' is unnecessary and will be ignored.
+Checking source code
 File 'buildunnecfiles/lua/unnec3.txt' is unnecessary and will be ignored.
 File 'buildunnecfiles/tests/alternative/abc/unnec6.txt' is unnecessary and will be ignored.
 File 'buildunnecfiles/tests/alternative/unnec5.txt' is unnecessary and will be ignored.
 File 'buildunnecfiles/tests/unnec4.txt' is unnecessary and will be ignored.
+Checking fonts
+File 'buildunnecfiles/font/unnec7.txt' is unnecessary and will be ignored.
+Looking for hidden files
 File 'buildunnecfiles/.hidden' is unnecessary and will be ignored.
 File 'buildunnecfiles/lua/.hidden2' is unnecessary and will be ignored.
 Checking Models
@@ -130,7 +138,7 @@ Temporary files are saved in .terrame_buildunnecfiles_pFXn3
 MD5 sum for the package is bd4a8e6877f63016137d28ed78e037f0
 The package has a license file.
 Documentation was successfully built.
-8 files are unnecessary.
+9 files are unnecessary.
 4 errors were found in the tests.
 All Models are placed in the right files.
-Summing up, 12 problems were found along the build.
+Summing up, 13 problems were found along the build.

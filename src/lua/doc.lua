@@ -307,6 +307,17 @@ function _Gtme.executeDoc(package)
 				doc_report.error_font = doc_report.error_font + 1
 			end
 		end)
+
+		printNote("Checking licenses of fonts")
+
+		forEachElement(df, function(_, mvalue)
+			local license = string.sub(mvalue, 0, -5)..".txt"
+
+			if not isFile(package_path..s.."font"..s..license) then
+				printError("License file '"..license.."' for font '"..mvalue.."' does not exist")
+				doc_report.error_font = doc_report.error_font + 1
+			end
+		end)
 	elseif #df > 0 then
 		printNote("Checking folder 'font'")
 		printError("Package has font files but font.lua does not exist")

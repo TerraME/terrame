@@ -102,6 +102,11 @@ No new log file was created.
 Summing up, all tests were successfully executed.
 
 Checking unnecessary files
+Checking basic files and folders
+Checking examples
+Checking source code
+Checking fonts
+Looking for hidden files
 Checking Models
 Model 'Tube' belongs to file 'Tube.lua'
 Checking license
