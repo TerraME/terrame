@@ -227,7 +227,7 @@ Checking Utils.lua
 Checking VisualTable.lua
 
 Documentation report:
-Documentation was built in 0.46 seconds.
+Documentation was built in 0.47 seconds.
 35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -235,17 +235,17 @@ No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
-All 282 global functions of the package are documented.
+All 283 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 311 non-named arguments are documented.
+All 312 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
-All 282 functions have @usage.
-All 282 functions call themselves in their @usage.
+All 283 functions have @usage.
+All 283 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All 243 links were correctly built.

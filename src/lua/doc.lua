@@ -231,14 +231,15 @@ function _Gtme.executeDoc(package)
 	if isFile(package_path..s.."font.lua") and #df > 0 then
 		printNote("Parsing 'font.lua'")
 		font = function(tab)
-			local count = verifyUnnecessaryArguments(tab, {"name", "file", "source", "symbol"})
+			local count = verifyUnnecessaryArguments(tab, {"name", "file", "summary", "source", "symbol"})
 			doc_report.error_font = doc_report.error_font + count
 
 			local mverify = {
-				{"optionalTableArgument",  "name",   "string"},
-				{"mandatoryTableArgument", "file",   "string"},
-				{"mandatoryTableArgument", "source", "string"},
-				{"mandatoryTableArgument", "symbol", "table"},
+				{"optionalTableArgument",  "name",    "string"},
+				{"mandatoryTableArgument", "file",    "string"},
+				{"mandatoryTableArgument", "source",  "string"},
+				{"mandatoryTableArgument", "summary", "string"},
+				{"mandatoryTableArgument", "symbol",  "table"},
 			}
 
 			-- it is necessary to implement this way in order to get the line number of the error
@@ -250,6 +251,10 @@ function _Gtme.executeDoc(package)
 					tab.file = nil
 					printError(err)
 				end)
+			end
+
+			if tab.summary then
+				tab.shortsummary = string.match(tab.summary, "(.-%.)")
 			end
 
 			if type(tab.symbol) ~= "table" then tab.symbol = {} end

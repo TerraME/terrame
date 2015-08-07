@@ -171,7 +171,7 @@
 									<tr>
 										<!-- <td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td> -->
 										<%file = string.sub(filepath, 0, string.len(filepath) - 4)%>
-										<td class="name"><%=file%></td>
+										<td class="name"><b><%=file%></b></td>
 										<td class="summary"><%= doc.files[filepath].summary or "" %></td>
 									</tr>
 								<%end%>
@@ -185,7 +185,7 @@
 							<!--<tr><td colspan="2">Examples</td></tr>-->
 							<%for _, data in ipairs(doc.mdata) do%>
 								<tr>
-									<td class="name"><%=data.file[1] or ""%></td>
+									<td class="name"><b><%=data.file[1] or ""%></b></td>
 									<td class="summary"><%= data.shortsummary or "" %></td>
 								</tr>
 							<%end%>
@@ -194,6 +194,16 @@
 
 					<%if doc.mfont and #doc.mfont > 0 then%>
 						<h2><a href="<%=luadoc.link("files/font.html", from)%>">Font</a></h2>
+						<table class="file_list">
+							<!--<tr><td colspan="2">Examples</td></tr>-->
+							<%for _, data in ipairs(doc.mfont) do%>
+								<tr>
+									<td class="name"><b><%=data.name or ""%></b></td>
+									<td class="summary"><%= data.shortsummary or "" %></td>
+								</tr>
+							<%end%>
+						</table>
+	
 					<%end%>
 
 				</div> <!-- id="content" -->

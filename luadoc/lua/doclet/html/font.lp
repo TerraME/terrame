@@ -59,6 +59,12 @@
 						<%else%>
 							<font color="red"><%="undefined"%></font>
 						<%end%>
+						<br><b>Summary: </b>
+						<%if data.summary then%>
+							<%=data.summary%>
+						<%else%>
+							<font color="red"><%="undefined"%></font>
+						<%end%>
 						<br><b>Source: </b>
 						<%if data.source then%>
 							<%data.source = string.gsub(data.source, "http://[%w%.]+[%/%w~%-_.]*", function(value)
@@ -78,7 +84,7 @@
 						<%count = 0%>
 						<tr>
 						<%forEachOrderedElement(data.symbol, function(pos, f)%>
-							<%if count > 3 then%>
+							<%if count > 4 then%>
 								</tr><tr>
 								<%count = 0%>
 							<%end%>
@@ -90,22 +96,6 @@
 							<br><b>Reference: </b><%=data.reference%>
 						<%end%>
 
-						<%if data.attributes then%>
-							<table class="arg_tab">
-							<tr><td><b>Attribute</b></td><td><b>Type</b></td><td><b>Description</b></td></tr>
-							<%if data.attributes[1] == "_incompatible_" then%>
-								<tr>
-								<td><font color="red">Incompatible sizes</font></td>
-								<td><font color="red">Incompatible sizes</font></td>
-								<td><font color="red">Incompatible sizes</font></td>
-								</tr>
-							<%else%>
-								<% for j = 1,#data.attributes do %>
-									<tr><td><%=data.attributes[j]%></td><td><%=data.types[j]%></td><td><%=data.description[j]%></td></tr>
-								<%end%>
-							<%end%> 
-							</table>
-						<%end%>
 						</dd>
 					<%end%>
 					</dl>
