@@ -52,6 +52,8 @@ extern "C"
 	#include "lfs.h"
 }
 
+QApplication* app;
+
 //////////////////////////////////////////////////////////////////////////////
 //// Runs through the widget list closing each
 //// Method responsible for avoiding the below message on the screen
@@ -191,6 +193,11 @@ int cpp_hasfont(lua_State *L)
 	return 1;
 }
 
+int cpp_setdefaultfont(lua_State *L)
+{
+	app->setFont(QFont("Ubuntu", 12));
+}
+
 extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
@@ -206,7 +213,7 @@ int main(int argc, char *argv[])
 	TME_VERSION = "2.0";
 	TME_PATH = "TME_PATH";
 
-	QApplication app(argc, argv); // #79
+	app = new QApplication(argc, argv); // #79
 	//app.setQuitOnLastWindowClosed(true);
 
 	execModes = Normal;
@@ -224,7 +231,7 @@ int main(int argc, char *argv[])
         Player::getInstance().show();
         Player::getInstance().setEnabled(false);
 
-		app.processEvents();
+		app->processEvents();
 	}
 
 	// Loads the TerrME constructors for LUA
@@ -269,6 +276,9 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_hasfont);
 	lua_setglobal(L, "cpp_hasfont");
+
+	lua_pushcfunction(L, cpp_setdefaultfont);
+	lua_setglobal(L, "cpp_setdefaultfont");
 
 	// Execute the lua files
 	if(argc < 2)
@@ -365,7 +375,8 @@ int main(int argc, char *argv[])
 	if (!existWindows())
 	{
         //lua_close(L); // issue #562
-        app.exit();
+        app->exit();
+		delete app;
         return 0;
 	}
 
@@ -395,7 +406,9 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	return app.exec();
+	int returnv = app->exec();
+	delete app;
+	return returnv;
 }
 #else
 

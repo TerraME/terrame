@@ -149,6 +149,10 @@ function import(package)
 			cpp_loadfont(package_path..s.."font"..s..file) -- SKIP
 		end)
 
+		if package == "base" then -- SKIP
+			cpp_setdefaultfont() -- SKIP
+		end
+
 		rawset(_G, "font",  function(data)	
 			_Gtme.fonts[data.name] = data.symbol -- SKIP
 		end)

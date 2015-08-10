@@ -8,6 +8,7 @@ using namespace std;
 #include <QApplication>
 #include <QPalette>
 #include <QDebug>
+#include <QFontDatabase>
 
 #include <qwt_plot_legenditem.h>
 #include <qwt_plot_item.h>
@@ -29,7 +30,6 @@ static const float hueValues[] = {
     0.000, 0.083, 0.167, 0.250, 0.333, 0.417, 0.500, 0.583, 0.667, 0.750, 0.833, 0.917
 };
 const int HUE_COUNT = 12;
-
 
 ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent) 
     : ObserverInterf(sub), QThread()
@@ -219,10 +219,23 @@ bool ObserverGraphic::draw(QDataStream &state)
 
 void ObserverGraphic::setTitles(const QString &title, const QString &xTitle, const QString &yTitle)
 {
-    plotter->setTitle(title);
+	QFontDatabase qfd;
+	QFont font = qfd.font("Ubuntu", QString(), 12);
+	QwtText qtitle(title);
+	qtitle.setFont(font);
+    plotter->setTitle(qtitle);
 
-    plotter->setAxisTitle(QwtPlot::xBottom, xTitle);
-    plotter->setAxisTitle(QwtPlot::yLeft, yTitle);
+	plotter->setAxisFont(0, font);
+	plotter->setAxisFont(1, font);
+	plotter->setAxisFont(2, font);
+
+	QwtText qxTitle(xTitle);
+	qxTitle.setFont(font);
+    plotter->setAxisTitle(QwtPlot::xBottom, qxTitle);
+
+	QwtText qyTitle(yTitle);
+	qyTitle.setFont(font);
+    plotter->setAxisTitle(QwtPlot::yLeft, qyTitle);
 }
 
 void ObserverGraphic::setLegendPosition(QwtPlot::LegendPosition pos)
