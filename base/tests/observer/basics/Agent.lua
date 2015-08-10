@@ -57,11 +57,12 @@ return{
 
 		local ts = TextScreen{target = world}
 		LogFile{target = world}
-		VisualTable{target = world}
+		local vt = VisualTable{target = world}
 		t:execute(30)
 		unitTest:assertSnapshot(c1, "chart_agent.bmp")
 		unitTest:assertSnapshot(c2, "chart_agent_select.bmp")
 		unitTest:assertSnapshot(ts, "textscreen_agent_select.bmp")
+    -- unitTest:assertSnapshot(vt, "agent_visualtable.bmp") -- issue #626
 		
 		unitTest:clear()
 

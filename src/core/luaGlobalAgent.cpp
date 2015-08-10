@@ -584,7 +584,9 @@ int luaGlobalAgent::createObserver( lua_State *L )
             obsTable->setAttributes(obsAttribs);
 
             lua_pushnumber(luaL, obsId);
-            return 1;
+            lua_pushlightuserdata(luaL, (void*) obsTable);
+
+            return 2;
         }
 
         if (obsUDPSender)

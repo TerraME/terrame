@@ -197,3 +197,14 @@ void ObserverTable::closeEvent(QCloseEvent *event)
 {
     VisualArrangement::getInstance()->closeEventDelegate();
 }
+
+void ObserverTable::save(std::string file, std::string extension)
+{
+      saveAsImage(file, extension);
+}
+
+void ObserverTable::saveAsImage(std::string file, std::string extension)
+{
+      QPixmap pixmap = grab();
+      pixmap.save(file.c_str(), extension.c_str());
+}

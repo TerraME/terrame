@@ -59,6 +59,15 @@ return{
 			VisualTable{target = unit}
 		end
 		unitTest:assertError(error_func, "The target does not have at least one valid attribute to be used.")
-	end
+	end,
+  
+  save = function(unitTest)
+    local vt = VisualTable{target = Cell{value = 5}} 
+    
+		local error_func = function()
+			vt:save("file.csv")
+		end
+		unitTest:assertError(error_func, invalidFileExtensionMsg(1, "csv"))
+  end  
 }
 

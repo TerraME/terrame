@@ -85,11 +85,13 @@ return{
 
 		local ts = TextScreen{target = world}
 		LogFile{target = world}
-		VisualTable{target = world}
+		local vt = VisualTable{target = world}
 
 		t:execute(30)
 
 		world:notify()
+    
+    -- unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp") -- issue #626
 
 		--unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp")
 

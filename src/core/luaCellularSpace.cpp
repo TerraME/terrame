@@ -609,7 +609,15 @@ int luaCellularSpace::createObserver(lua_State * luaL)
     case TObsTable:
         obsTable = (ObserverTable *)
                 CellSpaceSubjectInterf::createObserver(TObsTable);
-        obsId = obsTable->getId();
+        if (obsTable)
+        {
+            obsId = obsTable->getId();
+        }
+        else
+        {
+            if (execModes != Quiet)
+                qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
+        }
         break;
 
     case TObsDynamicGraphic:
@@ -767,7 +775,9 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         obsTable->setAttributes(obsAttribs);
 
         lua_pushnumber(luaL, obsId);
-        return 1;
+        lua_pushlightuserdata(luaL, (void*) obsTable);
+
+        return 2;
     }
 
     if (obsGraphic)

@@ -32,7 +32,11 @@ return{
 			end
 		}
 
-		local c1 = VisualTable{target = world}
+		local vt1 = VisualTable{target = world}
+    
+    unitTest:assertType(vt1, "VisualTable")
+    
+    -- unitTest:assertSnapshot(vt1, "visualtable_cell.bmp") -- issue #626
 
 		local world = Agent{
 			count = 0,
@@ -41,20 +45,27 @@ return{
 			end
 		}
 
-		local c1 = VisualTable{target = world}
+		local vt2 = VisualTable{target = world}
+    
+    -- unitTest:assertSnapshot(vt2, "visualtable_agent.bmp") -- issue #626
 
-		local c1 = VisualTable{
+		local vt3 = VisualTable{
 			target = world,
 			select = {"mcount"}
 		}
-
+    
+    -- unitTest:assertSnapshot(vt3, "visualtable_agent2.bmp") -- issue #626
+    
 		local soc = Society{
 			instance = world,
 			quantity = 3
 		}
-
-		local c1 = VisualTable{target = soc}
-		local c1 = VisualTable{target = soc, select = "#"}
+    
+		local vt4 = VisualTable{target = soc}
+		local vt5 = VisualTable{target = soc, select = "#"}
+    
+    -- unitTest:assertSnapshot(vt4, "visualtable_society.bmp") -- issue #626
+    -- unitTest:assertSnapshot(vt5, "visualtable_society_select.bmp") -- issue #626
 
 		local soc = Society{
 			instance = Agent{},
@@ -62,7 +73,9 @@ return{
 			total = 10
 		}
 
-		local c1 = VisualTable{target = soc}
+		local vt6 = VisualTable{target = soc}
+    
+    -- unitTest:assertSnapshot(vt6, "visualtable_society_agent.bmp") -- issue #626
 
 		local world = CellularSpace{
 			xdim = 10,
@@ -72,10 +85,12 @@ return{
 			end
 		}
 
-		local c1 = VisualTable{target = world}
-		local c1 = VisualTable{target = world, select = "mcount"}
+		local vt7 = VisualTable{target = world}
+		local vt8 = VisualTable{target = world, select = "mcount"}
+    
+    -- unitTest:assertSnapshot(vt7, "visualtable_cellularspace.bmp") -- issue #626
+    -- unitTest:assertSnapshot(vt8, "visualtable_cellularspace_select.bmp") -- issue #626    
 
-		unitTest:assert(true)
 	end
 }
 

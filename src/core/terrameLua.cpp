@@ -146,6 +146,7 @@ void registerClasses()
 	Luna<luaChart>::Register(L);
 	Luna<luaSociety>::Register(L);
     Luna<luaTextScreen>::Register(L);
+    Luna<luaTable>::Register(L);
 }
 
 int cpp_informations(lua_State *L)

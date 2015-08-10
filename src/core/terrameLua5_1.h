@@ -133,6 +133,7 @@ luaCell * findCell(luaCellularSpace*, CellIndex&);
 #include "luaMap.h"
 #include "luaChart.h"
 #include "luaTextScreen.h"
+#include "luaTable.h"
 
 #endif // TERRAME_LUA_5_1_H
 

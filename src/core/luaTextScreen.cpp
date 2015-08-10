@@ -1,5 +1,4 @@
 #include "luaTextScreen.h"
-#include "observerTextScreen.h"
 #include "luna.h"
 #include "terrameGlobals.h"
 

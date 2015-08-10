@@ -23,6 +23,30 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
+VisualTable_ = {
+	type_ = "VisualTable",
+  
+	--- Save a VisualTable into a file. Supported extensions are bmp, jpg, png, and tiff.
+	-- @arg file A string with the file name.
+	-- @usage table:save("file.bmp")
+	save = function(self, file)
+		local _, extension = string.match(file, "(.-)([^%.]+)$")
+
+		local availableExtensions = {bmp = true, jpg = true, png = true, tiff = true}
+
+		if not availableExtensions[extension] then
+			invalidFileExtensionError(1, extension)
+		end
+
+		extension = string.upper(extension)
+
+		self.cObj_:save(file, extension)
+	end
+
+}
+
+metaTableVisualTable_ = {__index = VisualTable_}
+
 --- A window with a table to show the current attributes of an object along the simulation.
 -- Each notify() overwrites the previous values shown in the table.
 -- @arg data.target An Agent, Cell, CellularSpace, Society.
@@ -131,18 +155,28 @@ function VisualTable(data)
 	local observerType = 3
 	local observerParams = {}
 	local id
+  local obs
 	local target = data.target
 
 	table.insert(observerParams, "Attribute")
 	table.insert(observerParams, "Value")
 
 	if type(target) == "CellularSpace" then
-		id = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
+		id, obs = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
 	else
-		id = target.cObj_:createObserver(observerType, data.select, observerParams)
+		id, obs = target.cObj_:createObserver(observerType, data.select, observerParams)
 	end
+  
+	local vtable = TeTable()
+	vtable:setObserver(obs)
 
-	table.insert(_Gtme.createdObservers, {target = data.target, id = id})
-	return id
+	data.cObj_ = vtable
+	data.id = id  
+  
+  setmetatable(data, metaTableVisualTable_)  
+
+	table.insert(_Gtme.createdObservers, data)
+  
+	return data
 end
 
