@@ -11,10 +11,6 @@ Observer * CellSubjectInterf::createObserver(TypesOfObservers type)
 {
     Observer* obs = 0;
 
-#ifdef DEBUG_OBSERVER
-    printf("create in CellSubjectInterf\n");
-#endif
-
     switch (type)
     {
         case TObsLogFile:

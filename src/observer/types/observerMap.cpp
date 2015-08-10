@@ -19,12 +19,6 @@
 ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L;
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-    #include "../statistic/statistic.h"
-#endif
-
 using namespace TerraMEObserver;
 
 ObserverMap::ObserverMap(QWidget *parent) : QDialog(parent)
@@ -126,28 +120,9 @@ bool ObserverMap::draw(QDataStream &state)
         {
             attrib->clear();
 
-#ifdef TME_STATISTIC 
-        double t = Statistic::getInstance().startTime();
-
-        decoded = protocolDecoder->decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
-
-        t = Statistic::getInstance().endTime() - t;
-        Statistic::getInstance().addElapsedTime("Map Decoder", t);
-
-        if (decoded)
-        {
-            t = Statistic::getInstance().startTime();
-
-            painterWidget->plotMap(attrib);
-
-            t = Statistic::getInstance().endTime() - t;
-            Statistic::getInstance().addElapsedTime("Map Rendering", t);
-        }
-#else
             decoded = protocolDecoder->decode(msg, *attrib->getXsValue(), *attrib->getYsValue());
             if (decoded)
                 painterWidget->plotMap(attrib);
-#endif
         }
         qApp->processEvents();
     }
@@ -546,14 +521,6 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
     else
         zoom = height - 0.01;
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "zoomChanged: " << zoom;
-    qDebug() << "factWidth: " << width << " height: " << height;
-    qDebug() << "imgSize: " << imgSize;
-    qDebug() << "scrollArea->viewport: " << scrollArea->viewport()->size();
-    qDebug() << "painterWidget->size: " << painterWidget->size();
-#endif
-
     QSize imgSize(painterWidget->size() * zoom);
 
     if (! painterWidget->rescale(imgSize))
@@ -584,12 +551,6 @@ void ObserverMap::zoomChanged(QRect zoomRect, double width, double height)
     double ratio = newWidthCellSpace / newHeightCellSpace;
     ratio *= newWidthCellSpace;
     double percent = (imgSize.width() / ratio);// - 1.0;
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "zoomChanged::percent: " << percent;
-    qDebug() << "scrollArea->viewport: " << scrollArea->viewport()->size();
-    qDebug() << "painterWidget->size: " << painterWidget->size();
-#endif
 
     QString newZoom(QString::number(ceil(percent * 100)));
     int curr = zoomComboBox->findText(newZoom + "%");
@@ -776,11 +737,6 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
 
     QString value, label;
 
-#ifdef DEBUG_OBSERVER
-        qDebug() << "\ncolorBarStr: " << colorBarStr;
-        qDebug() << "colorList: " << colorBarList;
-#endif
-
     // cria a colorBar1 do atributo
     for (int i = 0; i < colorBarList.size(); i++)
     {
@@ -799,11 +755,6 @@ void ObserverMap::createColorsBar(QString colors, std::vector<ColorBar> &colorBa
 
         QString stdColorBarStr = colors.mid(pos + 1);
         QStringList stdColorBarList = stdColorBarStr.split(COLORS_SEP, QString::SkipEmptyParts);
-
-#ifdef DEBUG_OBSERVER
-        qDebug() << "\nstdColorBarStr: " << stdColorBarStr;
-        qDebug() << "stdColorBarList: " << stdColorBarList;
-#endif
 
         for (int i = 0; i < stdColorBarList.size(); i++)
         {

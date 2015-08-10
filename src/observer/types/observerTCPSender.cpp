@@ -8,13 +8,6 @@
 //#include "taskManager.h"
 //#include "worker.h"
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-    // Performance Statistics
-    #include "statistic.h"
-#endif
-
 #ifdef TME_BLACK_BOARD
 	#include "blackBoard.h"
 //	#include "subjectAttributes.h"
@@ -27,13 +20,6 @@ using namespace TerraMEObserver;
 //{
 //	int i = 1;
 /*
-#ifdef TME_STATISTIC
-    static bool showMsg = true;
-    if (showMsg)
-        qDebug() << "flag TME_STATISTIC enabled in the class ObserverTCPSender";
-    showMsg = false;
-#endif
-
     observerType = TObsTCPSender;
     subjectType = subj->getType(); // TO_DO: Changes it to Observer pattern
     tcpSocketTask = 0;

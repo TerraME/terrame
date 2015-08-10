@@ -4,7 +4,6 @@
 #include <QApplication>
 // #include "../../components/console/modelConsole.h"
 
-
 extern bool paused;
 extern bool step;
 

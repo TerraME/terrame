@@ -11,33 +11,24 @@ Observer * SocietySubjectInterf::createObserver(TypesOfObservers type)
 {
     Observer* obs = 0;
 
-#ifdef DEBUG_OBSERVER
-    printf("create in SocietySubjectInterf\n");
-#endif
-
     switch (type)
     {
         case TObsLogFile:
             obs = new ObserverLogFile(this);
             break;
-
         case TObsTable:
             obs = new ObserverTable(this);
             break;
-
         case TObsDynamicGraphic:
         case TObsGraphic:
             obs = new ObserverGraphic(this);
             break;
-
         case TObsUDPSender:
             obs = new ObserverUDPSender(this);
             break;
-			
 		case TObsNeigh:
 			obs = new AgentObserverMap(this);
 			break;
-		
         default:
             obs = new ObserverTextScreen(this);
             break;

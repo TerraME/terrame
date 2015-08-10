@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef CELLSPACE_CONCRET_SUBJECT_INTERF
 #define CELLSPACE_CONCRET_SUBJECT_INTERF
 

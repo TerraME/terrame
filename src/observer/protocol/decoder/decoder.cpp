@@ -37,11 +37,6 @@ bool Decoder::decode(const QString &protocol,
     // qDebug() << tokens;
     parentSubjectType = (TypesOfSubjects) tokens.at(1).toInt();
 
-#ifdef DEBUG_OBSERVER
-    if (parentSubjectType == TObsAgent)
-        qDebug() << tokens.at(0);
-#endif
-
     bool ret = interpret(tokens, idx, xs, ys);
     return ret;
 }
@@ -172,10 +167,6 @@ bool Decoder::consumeTriple(QStringList &tokens, int &idx,
                 if (attrib->getDataType() == TObsUnknownData)
                     attrib->setDataType(TObsText);
 
-#ifdef DEBUG_OBSERVER
-                if (attrib->getType() == TObsAgent)
-                    qDebug() << "tokens.at(idx + 2): " << tokens.at(idx + 2);
-#endif
                 attrib->addValue(tokens.at(idx + 2));
                 break;
 

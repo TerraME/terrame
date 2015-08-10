@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef OBSERVERSUPERCLASS_H
 #define OBSERVERSUPERCLASS_H
 
@@ -60,7 +59,6 @@ class Canvas;
 class ObserverMapSuperclass : public QDialog, public ObserverInterf
 {
     Q_OBJECT
-
 public:
     /**
      * Constructor
@@ -111,7 +109,6 @@ public:
     void addState(QList<QPair<QString, QString> > &allStates);
 
 public slots:
-
     /**
      * Treats the legend button click
      */
@@ -235,9 +232,9 @@ protected:
     QToolButton *butZoomRestore;
 
     QFrame *frameTools;
-
 };
 
 }
 
 #endif // OBSERVERSTATEMACHINE_H
+

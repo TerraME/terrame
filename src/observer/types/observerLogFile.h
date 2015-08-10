@@ -38,7 +38,6 @@
 
 namespace TerraMEObserver {
 
-
 /**
  * \brief Saves the observed attributes in a log file
  * \see QObject

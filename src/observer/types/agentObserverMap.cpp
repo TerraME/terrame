@@ -13,13 +13,6 @@
     #include "blackBoard.h"
 #endif
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-    // Estatisticas de desempenho
-    #include "../observer/statistic/statistic.h"
-#endif
-
 extern ExecutionModes execModes;
 
 using namespace TerraMEObserver;
@@ -43,17 +36,6 @@ AgentObserverMap::~AgentObserverMap()
 
 bool AgentObserverMap::draw(QDataStream & state)
 {
-#ifdef TME_STATISTIC
-    //// tempo gasto do 'getState' ate aqui
-    //double decodeSum = 0.0, t = Statistic::getInstance().endVolatileTime();
-    //Statistic::getInstance().addElapsedTime("comunica??o map", t);
-
-    int decodeCount = 0;
-
-    // numero de bytes transmitidos
-    Statistic::getInstance().addOccurrence("bytes map", in.device()->size());
-#endif
-
     // bool drw = ObserverMap::draw(in);
     bool drw = true, decoded = false;
     cleanImage = true;
@@ -106,16 +88,8 @@ bool AgentObserverMap::draw(QDataStream & state)
         }
         //-----
 
-#ifdef TME_STATISTIC 
-        t = Statistic::getInstance().startTime();
-#endif
         ///////////////////////////////////////////// DRAW AGENT
         decoded = decode(state, subj->getType());
-
-#ifdef TME_STATISTIC 
-        decodeSum += Statistic::getInstance().endTime() - t;
-        decodeCount++;
-#endif
 
         cleanImage = false;
         /////////////////////////////////////////////
@@ -124,32 +98,10 @@ bool AgentObserverMap::draw(QDataStream & state)
     }
     //bool drw = true;
 
-
-#ifdef TME_STATISTIC
-
-    if (decoded)
-    {
-        t = Statistic::getInstance().startMicroTime();
-
-        drw = draw();
-
-        t = Statistic::getInstance().endMicroTime() - t;
-        Statistic::getInstance().addElapsedTime("Map-Complex Rendering", t);
-    }
-    drw = drw && ObserverMap::draw(in);
-
-    if (decodeCount > 0)
-        Statistic::getInstance().addElapsedTime("Map-Complex Decoder", decodeSum / decodeCount);
-    
-    return drw;
-
-#else
     if (decoded)
         drw = draw();
 
     return drw && ObserverMap::draw(state);
-
-#endif
 }
 
 void AgentObserverMap::setSubjectAttributes(const QStringList & attribs, TypesOfSubjects type,

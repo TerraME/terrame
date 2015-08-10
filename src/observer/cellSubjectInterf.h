@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef CONCRET_CELL_SUBJECT_INTERF
 #define CONCRET_CELL_SUBJECT_INTERF
 

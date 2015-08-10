@@ -25,8 +25,6 @@ of this library and its documentation.
 #define  __TERRALIB_INTERNAL_QTCOLORBAR_H
 
 #include <QFrame>
-//#include <TeVisual.h>
-//#include <TeColorUtils.h>
 #include "legendColorUtils.h"
 #include <QMenu>
 #include <QCursor>
@@ -232,7 +230,6 @@ protected:
      */
     void sortByDistance();
 
-
     ColorBar* colorEdit_;
     //	std::vector<TeColor>	getColors(TeColor, TeColor, int);
 
@@ -240,7 +237,6 @@ protected:
     QAction *addColor;
     QAction *removeColor;
     QAction *changeColor;
-
 
     QPoint	p_;
     QPoint	pa_;

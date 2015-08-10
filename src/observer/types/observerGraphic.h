@@ -30,7 +30,6 @@
 #include <QDialog>
 #include <QThread>
 
-
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 #include <qwt_legend.h>
@@ -39,7 +38,6 @@
 //#include <qwt_data.h>
 //#include <qwt_text.h>
 //#include <math.h>
-
 
 namespace TerraMEObserver {
 

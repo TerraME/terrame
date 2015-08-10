@@ -25,7 +25,6 @@
 #ifndef OBESERVERMAP_RENDERTHREAD_H
 #define OBESERVERMAP_RENDERTHREAD_H
 
-
 #include <QtCore/QMutex>
 #include <QtCore/QSize>
 #include <QtCore/QWaitCondition>

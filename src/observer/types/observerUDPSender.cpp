@@ -9,13 +9,6 @@
 ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L;
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-// Estatisticas de desempenho
-#include "../observer/statistic/statistic.h"
-#endif
-
 extern ExecutionModes execModes;
 
 // Debug method for check state data
@@ -87,24 +80,11 @@ const TypesOfObservers ObserverUDPSender::getType()
 
 bool ObserverUDPSender::draw(QDataStream &state)
 {
-#ifdef TME_STATISTIC
-    //// tempo gasto do 'getState()' ate aqui
-    //double t = Statistic::getInstance().endVolatileMicroTime();
-    //Statistic::getInstance().addElapsedTime("comunicacao udp", t);
-
-    // numero de bytes transmitidos
-    Statistic::getInstance().addOccurrence("bytes udp", in.device()->size());
-#endif
-
     if (failureToSend)
         return false;
 
     QString msg;
     state >> msg;
-
-#ifdef DEBUG_OBSERVER
-    saveInFile(msg);
-#endif
 
     if (! sendDatagram(msg))
     {
@@ -165,11 +145,6 @@ void ObserverUDPSender::setAttributes(QStringList& attribs)
 
 bool ObserverUDPSender::sendDatagram(QString& msg)
 {
-#ifdef TME_STATISTIC 
-    int datagramsCount = msgCount, compressionCount = 0, renderingCount = 0;
-    double t = 0.0, compressionSum = 0.0, renderingSum = 0.0;
-#endif
-
     QByteArray data(msg.toLatin1().constData(), msg.size());
 
     qint64 bytesWritten = 0, bytesRead = data.size();
@@ -189,47 +164,17 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
 
         if (compressDatagram)
         {
-#ifdef TME_STATISTIC 
-            // t = Statistic::getInstance().startMicroTime();
-            Statistic::getInstance().startVolatileMicroTime();
-#endif
             out << qCompress( data.mid(pos, datagramSize), COMPRESS_RATIO);
-
-#ifdef TME_STATISTIC
-            // compressionSum += (Statistic::getInstance().endMicroTime() - t);
-            compressionSum += Statistic::getInstance().endVolatileMicroTime();
-            compressionCount++;
-#endif
         }
         else    
         {
-#ifdef TME_STATISTIC 
-            // t = Statistic::getInstance().startMicroTime();
-            Statistic::getInstance().startVolatileMicroTime();
-#endif
             out << data.mid(pos, datagramSize);
-
-#ifdef TME_STATISTIC
-            // compressionSum += (Statistic::getInstance().endMicroTime() - t);
-            compressionSum += Statistic::getInstance().endVolatileMicroTime();
-            compressionCount++;
-#endif
         }
 
         for(int i = 0; i < hosts->size(); i++)
         {
-
-#ifdef TME_STATISTIC 
-            // t = Statistic::getInstance().startMicroTime();
-            Statistic::getInstance().startVolatileMicroTime();
-#endif
             bytesWritten = udpSocket->writeDatagram(datagram, hosts->at(i), port);     
 
-#ifdef TME_STATISTIC
-            // renderingSum += (Statistic::getInstance().endMicroTime() - t);
-            renderingSum += Statistic::getInstance().endVolatileMicroTime();
-            renderingCount++;
-#endif
             udpSocket->flush();
 
             udpGUI->appendMessage( QLabel::tr("Datagram sent for %1").arg(hosts->at(i).toString()) );
@@ -284,28 +229,13 @@ bool ObserverUDPSender::sendDatagram(QString& msg)
 
     udpGUI->setMessagesSent(msgCount);
     udpGUI->setStateSent(stateCount);
-    
 
     //udpGUI->appendMessage(tr("compressionSum: %1 / %2 = %3")
     //    .arg(compressionSum).arg(compressionCount).arg(compressionSum / compressionCount));
     //udpGUI->appendMessage(tr("renderingSum: %1 / %2 = %3")
     //    .arg(renderingSum).arg(renderingCount).arg(renderingSum / renderingCount));
     
-    
     udpGUI->appendMessage(tr("States sent: %1.\n").arg(stateCount));
-
-#ifdef TME_STATISTIC 
-    datagramsCount = (msgCount - datagramsCount) / hosts->size();
-    Statistic::getInstance().addOccurrence("Messages sent", datagramsCount);
-    Statistic::getInstance().addOccurrence("States sent", stateCount);
-    
-    if (compressDatagram) 
-        Statistic::getInstance().addElapsedTime("Storage with Compress", compressionSum / compressionCount);
-    else
-        Statistic::getInstance().addElapsedTime("Storage without Compress", compressionSum / compressionCount);
-
-    Statistic::getInstance().addElapsedTime("Udp Rendering", renderingSum / renderingCount);
-#endif
 
     return true;
 }

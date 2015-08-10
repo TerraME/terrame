@@ -31,7 +31,6 @@
 #ifndef OBSERVER_GLOBAL_ITEMS
 #define OBSERVER_GLOBAL_ITEMS
 
-
 #include <QString>
 #include <QSize>
 #include <QStringList>
@@ -50,7 +49,6 @@ static const int DEFAULT_PORT = 456456;
 
 static const int NUMBERIC_PRECISION = 6; // sets decimal places
 static const qreal PI = 3.141592653589;
-
 
 static const QSize ICON_SIZE(16, 16);
 static const QSize IMAGE_SIZE(1000, 1000);
@@ -100,9 +98,6 @@ static const QString COMPLETE_SIMULATION = "COMPLETE_SIMUL";
 static const QString MEMORY_ALLOC_FAILED = "Failed: Not enough memory for execute "
          "this action.";
 
-
-
-
 /**
 * \enum TerraMEObserver::TypesOfSubjects
 * \brief TerraME Subject Types.
@@ -111,7 +106,6 @@ static const QString MEMORY_ALLOC_FAILED = "Failed: Not enough memory for execut
 enum TypesOfSubjects 
 {
     TObsUnknown         = 0,   //!< Type unknown
-
     TObsCell,                  //!< Cell type
     TObsCellularSpace,         //!< CellularSpace type
     TObsNeighborhood,          //!< Neighborhood type
@@ -137,7 +131,6 @@ enum TypesOfSubjects
 enum TypesOfObservers
 {
     TObsUndefined       =  0,   //!< Undefined type
-
     TObsTextScreen      =  1,   //!< TextScreen type
     TObsLogFile         =  2,   //!< LogFile type
     TObsTable           =  3,   //!< Table type
@@ -151,7 +144,6 @@ enum TypesOfObservers
     TObsNeigh			= 11,	//!< Observes the Neighborhood type
 	TObsShapefile       = 12,    //!< Observes the Shapefile type
 	TObsTCPSender       = 13    //!< Sends the attributes via TCP protocol
-
 };
 
 /**
@@ -165,7 +157,6 @@ enum TypesOfData
     TObsNumber,                 //!< Numeric type 
     TObsDateTime,               //!< Time stamp type 
     TObsText,                   //!< Textual type
-
     TObsUnknownData     = 100   //!< Unknown type
 };
 
@@ -182,7 +173,6 @@ enum GroupingMode
     TObsUniqueValue     = 3     //!< Unique value type
 };
 
-
 /**
 * \enum TerraMEObserver::StdDev
 * \brief TerraME Standard Deviation Groupping Type.
@@ -191,7 +181,6 @@ enum GroupingMode
 enum StdDev
 {
     TObsNone    = -1,   //!< None deviation
-
     TObsFull    =  0,   //!< Full deviation
     TObsHalf    =  1,   //!< Half deviation
     TObsQuarter =  2    //!< Quarter deviation
@@ -200,3 +189,4 @@ enum StdDev
 }
 
 #endif // OBSERVER_GLOBAL_ITEMS
+

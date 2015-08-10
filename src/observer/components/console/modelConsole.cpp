@@ -24,3 +24,4 @@ void ModelConsole::appendMessage(const QString &s)
 {
     ui->tfMessages->append(s);
 }
+

@@ -6,13 +6,6 @@
 #include <QByteArray>
 #include <QDebug>
 
-//#define TME_STATISTIC
-//
-//#ifndef TME_STATISTIC
-//    // Estatisticas de desempenho
-//    #include "../observer/statistic/statistic.h"
-//#endif
-
 using namespace TerraMEObserver;
 
 /**

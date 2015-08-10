@@ -9,14 +9,6 @@
 
 #include "visualArrangement.h"
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-    // Estatisticas de desempenho
-    #include "../observer/statistic/statistic.h"
-#endif
-
-
 ObserverTable::ObserverTable(Subject *subj, QWidget *parent)
     : QDialog(parent), ObserverInterf( subj ), QThread()
 {
@@ -90,21 +82,8 @@ void ObserverTable::setAttributes(QStringList &attribs)
 
 bool ObserverTable::draw(QDataStream &state)
 {
-#ifdef TME_STATISTIC
-    // tempo gasto do 'pop()' ate aqui
-    float t = Statistic::getInstance().endVolatileTime();
-    Statistic::getInstance().addElapsedTime("comunicacao table", t);
-
-    // numero de bytes transmitidos
-    Statistic::getInstance().addOccurrence("bytes table", in.device()->size());
-#endif
-
     QString msg;
     state >> msg;
-
-#ifdef TME_STATISTIC 
-        t = Statistic::getInstance().startMicroTime();
-#endif
 
     QStringList tokens = msg.split(PROTOCOL_SEPARATOR); //, QString::SkipEmptyParts);
     QTreeWidgetItem *item = 0;
@@ -149,11 +128,6 @@ bool ObserverTable::draw(QDataStream &state)
         }
         j++;
     }
-
-#ifdef TME_STATISTIC
-        t = Statistic::getInstance().endMicroTime() - t;
-        Statistic::getInstance().addElapsedTime("rendering table", t);
-#endif
 
     // redimensiona o tamanho da coluna
     tableWidget->resizeColumnToContents(1);

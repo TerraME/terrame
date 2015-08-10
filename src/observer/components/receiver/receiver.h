@@ -4,7 +4,6 @@
 #include <QDialog>
 #include <QUdpSocket>
 
-
 namespace TerraMEObserver {
     class AgentObserverMap;
 }
@@ -23,7 +22,6 @@ namespace Ui {
 class Receiver : public QDialog
 {
     Q_OBJECT
-    
 public:
     /**
      * Constructor

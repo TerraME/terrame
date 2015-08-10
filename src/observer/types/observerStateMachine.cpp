@@ -34,7 +34,6 @@ static const int DIMENSION = 77;
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneDragDropEvent>
 
-
 //#include <QApplication>
 //#include <time.h>
 //
@@ -188,17 +187,6 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
 {
     attribList = attribs;
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\nattribs:\n" << attribs;
-    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
-
-    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
-    qDebug() << "num de legendas: " << (int) legKeys.size() / LEGEND_ITENS;
-
-    for (int j = 0; j < legKeys.size(); j++)
-        qDebug() << legKeys.at(j) << " = " << legAttrib.at(j);
-#endif
-
     for (int j = 0; (legKeys.size() > 0 && j < LEGEND_KEYS.size()); j++)
     {
         if (legKeys.indexOf(LEGEND_KEYS.at(j)) < 0)
@@ -219,13 +207,6 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
     int font = legKeys.indexOf(FONT_FAMILY);
     int fontSize = legKeys.indexOf(FONT_SIZE);
     int symbol = legKeys.indexOf(SYMBOL);
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\nattribs:\n" << attribs;
-    qDebug() << "\nlegKeys: \n" << legKeys;
-    qDebug() << "\nlegAttrib: \n" << legAttrib;
-    qDebug() << "\nMapAttributes()->keys(): " << mapAttributes->keys() << "\n";
-#endif
 
     QTreeWidgetItem *item = 0;
     Attributes *attrib = 0;
@@ -271,15 +252,6 @@ void ObserverStateMachine::setAttributes(QStringList &attribs, QStringList legKe
                 attrib->setStdColorBar(stdColorBarVec);
                 attrib->setValueList(valueList);
                 attrib->setLabelList(labelList);
-
-#ifdef DEBUG_OBSERVER
-            qDebug() << "valueList.size(): " << valueList.size();
-            qDebug() << valueList;
-            qDebug() << "\nlabelList.size(): " << labelList.size();
-            qDebug() << labelList;
-
-            qDebug() << "\nattrib->toString()\n" << attrib->toString();
-#endif
             }
 
             mapAttributes->insert(attribs.at(i), attrib);
@@ -532,57 +504,6 @@ void ObserverStateMachine::zoomWindow()
     // view->centerOn(scene->sceneRect().center()); // fica quase centralizado
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
-
-
-#ifdef OBSEVER_DEBUG
-    //qDebug() << "\nx: " << x << " y: " << y << " size: " << size;
-    qDebug() << "\nscene->sceneRect(): " << scene->sceneRect() 
-        << " == view->sceneRect(): " << view->sceneRect();
-
-    qDebug() << "view->viewport(): " << view->viewport()->rect();
-    qDebug() << "view->rect(): " << view->rect();
-    qDebug() << "zoomRect: " << zoomRect;
-    // qDebug() << "size: " << size;
-    qDebug() << "offsetState: " << offsetState;
-    qDebug() << "lstNode->boundingRect().height(): " << lstNode->boundingRect().height();
-    qDebug() << "center: " << center;
-    qDebug() << "node: " << lstNode->pos().x() + lstNode->boundingRect().width() 
-        << "; " << fstNode->pos().x() + fstNode->boundingRect().width();
-    qDebug() << "center 2: " << lstNode->pos().x() << " + " <<  lstNode->boundingRect().width() 
-         << " - " <<  fstNode->pos().x() << " + " <<  fstNode->boundingRect().height()
-         << " = " << (lstNode->pos().x() + lstNode->boundingRect().width())
-         - (fstNode->pos().x() + fstNode->boundingRect().height());
-    qDebug() << "center 3: " << scene->itemsBoundingRect().center();
-
-    //qDebug() << factWidth << "; " << factHeight;
-    //qDebug() << "scrollH: " << view->horizontalScrollBar()->value();
-
-    static bool criado = false;
-    if (!criado){
-        criado = true;
-        RectItemDebug *rectItem = 0;
-        
-        // scene->setSceneRect(QRectF(zoomRect.topLeft() + QPoint(-1, -1), zoomRect.bottomRight() + QPoint(2, 1)) );
-        // scene->setSceneRect(scene->sceneRect());
-
-        rectItem = new RectItemDebug(zoomRect);
-        scene->addItem(rectItem);
-        
-        //rectItem = new RectItemDebug(QRectF(center + QPointF(-1, -1), 
-        //    center + QPointF(1, 1)), Qt::darkCyan);
-        //scene->addItem(rectItem);
-
-        //rectItem = new RectItemDebug(QRectF(scene->itemsBoundingRect().center() + QPointF(-1, -1), 
-        //    scene->itemsBoundingRect().center() + QPointF(1, 1)), Qt::red);
-        //scene->addItem(rectItem);
-
-        //rectItem = new RectItemDebug(scene->itemsBoundingRect(), Qt::blue);
-        //scene->addItem(rectItem);
-
-        rectItem = new RectItemDebug(scene->sceneRect(), Qt::darkGray);
-        scene->addItem(rectItem);
-    }
-#endif 
 }
 
 void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, float width,
@@ -599,13 +520,6 @@ void ObserverStateMachine::zoomChanged(const QRectF &zoomRect, float width,
 
     QString newZoom(QString::number(ceil(percent * 100)));
     int curr = zoomComboBox->findText(newZoom + "%");
-
-#ifdef OBSERVER_DEBUG
-    qDebug() << "zoomRect: " << zoomRect << " width: "  << width
-       << " height: " << height;
-    qDebug() << "curr: " << curr << " newZoom: " << newZoom
-        << " percent: " << percent;
-#endif
 
     if (curr >= 0)
     {
@@ -811,49 +725,3 @@ void ObserverStateMachine::setupGUI()
     setLayout(layoutDefault);
 }
 
-
-#ifdef OBSERVER_DEBUG
-
-class RectItemDebug : public QGraphicsRectItem
-{
-public:
-    RectItemDebug(const QRectF r, Qt::GlobalColor c = Qt::red) 
-        : rect(r), color(c), QGraphicsRectItem(0)
-    {
-        setFlag(QGraphicsItem::ItemIsMovable);
-    }
-
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 )
-    {
-        painter->setPen(QPen(color, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        painter->setBrush(Qt::NoBrush);
-        painter->drawRect(rect);
-
-        //qDebug() << pos();
-        //qDebug() << boundingRect();
-    }
-
-    QRectF boundingRect() const
-    {
-        return rect;
-    }
-
-    QPainterPath shape() const
-    {
-        QPainterPath path;
-        path.addEllipse(boundingRect());
-        return path;
-    }
-
-    void dragMoveEvent (QGraphicsSceneDragDropEvent * ev )
-    {
-        
-        QGraphicsRectItem::dragMoveEvent(ev);
-    }
-
-private:
-    QRectF rect;
-    Qt::GlobalColor color;
-};
-
-#endif

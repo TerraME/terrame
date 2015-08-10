@@ -463,7 +463,6 @@ int main(int argc, char *argv[])
 			receiver.show();
 
 			ret = app.exec();
-			// return app.exec();
 		}
 
 		index = argsList.indexOf("-udp");
@@ -474,14 +473,9 @@ int main(int argc, char *argv[])
 			receiver.show();
 
 			ret = app.exec();
-			// return app.exec();
 		}
 	}
 
-#ifdef TME_STATISTIC
-	Statistic::getInstance().collectMemoryUsage();
-	Statistic::getInstance().saveData("client_");
-#endif
 	return ret;
 }
 

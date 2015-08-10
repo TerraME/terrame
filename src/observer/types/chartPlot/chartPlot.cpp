@@ -97,8 +97,6 @@ void ChartPlot::propertiesChart()
     int plotterMargin = 1;//margin();
     int plotterLWidth = lineWidth();
     QPalette canvasPalette = canvas()->palette();
-    QFont titleFont = title().font(), axesFont = axisTitle(QwtPlot::xBottom).font();
-    QFont scalesFont = axisFont(QwtPlot::xBottom), legendFont = legend()->font();
     //QVector<CurveBkp> curvesBkp;
     for (int i = 0; i < internalCurves.size(); i++)
     {
@@ -119,23 +117,15 @@ void ChartPlot::propertiesChart()
 
         // Title 
         QwtText text = title();
-        text.setFont(titleFont);
         setTitle(text);
 
         // Axes
         text = axisTitle(QwtPlot::xBottom);
-        text.setFont(axesFont);
         setAxisTitle(QwtPlot::xBottom, text);
 
         text = axisTitle(QwtPlot::yLeft);
-        text.setFont(axesFont);
         setAxisTitle(QwtPlot::yLeft, text);
 
-        // Scale
-        setAxisFont(QwtPlot::xBottom, scalesFont);
-        setAxisFont(QwtPlot::yLeft, scalesFont);
-
-        legend()->setFont(legendFont);
         canvas()->setPalette(canvasPalette);
 
         //for (int i = 0; i < curvesBkp.size(); i++)

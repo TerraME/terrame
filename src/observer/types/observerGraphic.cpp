@@ -20,13 +20,6 @@ using namespace std;
 
 extern ExecutionModes execModes;
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-    // Estatisticas de desempenho
-    #include "../statistic/statistic.h"
-#endif
-
 using namespace TerraMEObserver;
 
 // Hue component values contains 12 values and it is used
@@ -54,7 +47,6 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     plotter = new ChartPlot(parent);
     plotter->setId(getId());
     plotter->setAutoReplot(true);
-	plotter->setStyleSheet("QwtPlot { padding: 8px }");
     plotter->setFrameShape(QFrame::Box);
     plotter->setFrameShadow(QFrame::Plain);
     plotter->setLineWidth(0);
@@ -70,8 +62,6 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
 
     VisualArrangement::getInstance()->starts(plotter->getId(), plotter);
 
-    // prioridade da thread
-    //setPriority(QThread::IdlePriority); //  HighPriority    LowestPriority
     start(QThread::IdlePriority);
 }
 
@@ -132,7 +122,7 @@ bool ObserverGraphic::draw(QDataStream &state)
 
         int idx = attribList.indexOf(key);
         // bool contains = itemList.contains(key);
-        bool contains = (idx != -1); // caso a chave n?o exista, idx == -1
+        bool contains = (idx != -1);
 
         switch (typeOfData)
         {
@@ -257,20 +247,6 @@ void ObserverGraphic::setLegendPosition(QwtPlot::LegendPosition pos)
 void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringList &curveTitles,
         /*const*/ QStringList &legKeys, /*const*/ QStringList &legAttribs)
 {
-#ifdef DEBUG_OBSERVER
-    qDebug() <<"\n" << attribs;
-    qDebug() << curveTitles;
-    qDebug() << "LEGEND_ITENS: " << LEGEND_ITENS;
-
-    for(int i = 0; i < legKeys.size(); i++)
-    {
-        if (i == LEGEND_ITENS)
-            qDebug() << "\n";
-
-        qDebug() << i << " - " << legKeys.at(i) << ": " << legAttribs.at(i);
-    }
-#endif
-
     attribList = attribs;
     InternalCurve *interCurve = 0;
     QColor color;
@@ -287,7 +263,6 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
 
         if (interCurve)
         {
-
             if (i < curveTitles.size())
                 interCurve->plotCurve->setTitle(curveTitles.at(i));
             else
@@ -442,3 +417,4 @@ int ObserverGraphic::close()
     QThread::exit(0);
     return 0;
 }
+

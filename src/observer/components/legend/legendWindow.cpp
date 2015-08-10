@@ -242,10 +242,6 @@ void LegendWindow::attributesComboBox_activated(const QString &selected)
 {
     Attributes *attrib = mapAttributes->value(selected);
 
-#ifdef DEBUG_OBSERVER
-    printf("attributesComboBox_activated:\n %s\n", attrib->toQString().toLatin1().constData());
-#endif
-
     if (attributesActive != selected)
     {
         if (isVisible() && attrValuesChanged)
@@ -573,27 +569,6 @@ void LegendWindow::createColorVector()
 
         for (ui = 0; ui < rightColorVec.size(); ++ui)
             teColorVec->push_back(rightColorVec.at(ui));
-
-#ifdef OBSERVER_DEBUG
-        for (int p = 0; p < leftColorVec.size(); p++)
-            qDebug() << "(" << leftColorVec.at(p).red_ << ", "
-                << leftColorVec.at(p).green_ << ", "
-                << leftColorVec.at(p).blue_ << ")";
-
-        qDebug() << "++++++++++++++++";
-
-        for (int p = 0; p < rightColorVec.size(); p++)
-            qDebug() << "(" << rightColorVec.at(p).red_ << ", "
-                << rightColorVec.at(p).green_ << ", "
-                << rightColorVec.at(p).blue_ << ")";
-
-        qDebug() << "================";
-
-        for (int p = 0; p < teColorVec->size(); p++)
-            qDebug() << "(" << teColorVec->at(p).red_ << ", "
-                << teColorVec->at(p).green_ << ", "
-                << teColorVec->at(p).blue_ << ")";
-#endif
     }
 }
 
@@ -1227,10 +1202,6 @@ void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 //
 //    QAbstractItemModel *model = legendTable->model();
 //
-//#ifdef DEBUG_OBSERVER
-//    printf("\n\n rows: %i, vecLegend->size(): %i\n", rows, vecLegend->size());
-//#endif
-//
 //    QStringList & values = attrib->getValueList();
 //    QStringList & labels = attrib->getLabelList();
 //    ObsLegend leg;
@@ -1337,20 +1308,10 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         return;
     }
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "attrib->getNumericValues(): " << attrib->getNumericValues()->size();
-    qDebug() << "txtValues: " << txtValues.size();
-#endif
-
     int i = 0, count = 1, vecLegendPos = 0;
     QString from;
 
     QStringList & valuesList = attrib->getValueList();
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "valuesList: " << valuesList;
-    qDebug() << "valuesList: " << valuesList.isEmpty() << "\n";
-#endif
 
     for (i = 0; i < valuesList.size(); i++)
     {
@@ -1377,11 +1338,6 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         else
         {
             from = txtValues.at(i - 1);
-
-#ifdef DEBUG_OBSERVER
-            qDebug() << "\nfrom: " << from << " count: " << count;
-            qDebug() << "i: " << i;
-#endif
 
             // adiciona o item e retorna o indice
             // caso j? contenha o item retorna o indice
@@ -1482,26 +1438,12 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
         }
     }
     
-
-#ifdef DEBUG_OBSERVER    
-    qDebug() << "\nvecLegend->size(): " << vecLegend->size();
-    qDebug() << "from: " << from;
-    qDebug() << "count: " << count;
-    qDebug() << "attrib->getSlices(): " << attrib->getSlices();
-
-    qDebug() << "getValueList" << attrib->getValueList();
-#endif
-
     rows = vecLegend->size();
     createView(rows);
     createColorVector();
 
     // Mostra na GUI os valores encontrados
     QAbstractItemModel *model = legendTable->model();
-
-#ifdef DEBUG_OBSERVER
-    printf("\n\n rows: %i, vecLegend->size(): %i\n", rows, vecLegend->size());
-#endif
 
     QStringList & labelsList = attrib->getLabelList();
 
@@ -1651,15 +1593,8 @@ void LegendWindow::makeLegend()
 {
     QStringList keys = mapAttributes->keys();
 
-#ifdef DEBUG_OBSERVER
-    printf("makeLegend - keys.size(): %i\n", keys.size());
-#endif
-
     for (int i = 0; i < keys.size(); i++)
     {
-#ifdef DEBUG_OBSERVER
-        printf("%i \t %s", i, keys.at(i).toLatin1().constData());
-#endif
         attributesComboBox->setCurrentIndex(i);
         attributesComboBox_activated(keys.at(i));
         applyPushButton_clicked();
@@ -1962,10 +1897,6 @@ void LegendWindow::commitFile()
         {
             out << tabulation << legendKeys.at(k) << " = " << legAttribs.at(k) << "\n";
 
-#ifdef DEBUG_OBSERVER	
-            printf("k: %i\t %s = %s\n",k, qPrintable(legendKeys.at(k)),
-            qPrintable(legAttribs.at(k));
-#endif
         }
 
         //// Adiciona a classe do agente
@@ -1984,10 +1915,6 @@ void LegendWindow::commitFile()
             out << "};\n\nLegend{\n";
         else
             out << "};\n";
-
-#ifdef DEBUG_OBSERVER	
-        printf("\n\n");
-#endif
     }
     file.close();
 }

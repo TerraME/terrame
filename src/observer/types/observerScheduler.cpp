@@ -10,8 +10,6 @@
 
 #include "visualArrangement.h"
 
-// "?" "?"
-
 using namespace TerraMEObserver;
 
 ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)

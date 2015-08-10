@@ -10,15 +10,6 @@
 // Observers
 #include "../../types/agentObserverMap.h"
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-    // Estatisticas de desempenho
-    #include "../../statistic/statistic.h"
-#endif
-
-
-
 //class ObserverThread : public QThread
 //{
 //    // Q_OBJECT
@@ -50,10 +41,6 @@ Receiver::Receiver(QWidget *parent) :
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
 
     blindButtonClicked();
-
-#ifdef TME_STATISTIC
-    Statistic::getInstance();
-#endif
 }
 
 Receiver::~Receiver()
@@ -114,12 +101,6 @@ void Receiver::blindButtonClicked()
 // TENTATIVA 3
 void Receiver::processPendingDatagrams()
 {
-#ifdef TME_STATISTIC
-    // Statistic::getInstance().collectMemoryUsage();
-    float t = 0.0;
-    static int datagramCount = 0;
-#endif
-        
     // int totalDatagrams = 0;
     bool compressDatagram = false;
     qint64 dataSize = -1.0, pos = 0;
@@ -157,15 +138,7 @@ void Receiver::processPendingDatagrams()
 
     if (compressDatagram)
     {
-#ifdef TME_STATISTIC 
-        t = Statistic::getInstance().startMicroTime();
-#endif
         data = qUncompress(auxData);
-
-#ifdef TME_STATISTIC 
-            t = Statistic::getInstance().endMicroTime() - t;
-            Statistic::getInstance().addElapsedTime("Storage with compress", t);
-#endif
     }
     else
     {
@@ -202,14 +175,6 @@ void Receiver::processPendingDatagrams()
 
             ui->logEdit->appendPlainText(
                 QDateTime::currentDateTime().toString("MM/dd/yyyy, hh:mm:ss: ") + message);
-
-#ifdef TME_STATISTIC
-            datagramCount = msgReceiver - datagramCount;
-            Statistic::getInstance().addOccurrence("Received Messages", datagramCount);
-            Statistic::getInstance().addOccurrence("Received States", statesReceiver);
-            // Statistic::getInstance().collectMemoryUsage();
-            datagramCount = msgReceiver;
-#endif
         }
         else
         {
@@ -290,12 +255,7 @@ void Receiver::processDatagram(QByteArray msg)
             QStringList(), QStringList());
         // obs->moveToThread(&thread);
     }
-//#ifndef TME_STATISTIC
-//    Statistic::getInstance().startVolatileTime();
-//#endif
     obsMap->draw(out);
-
-
 
     //static ObserverLogFile *obs = 0; 
     //if (! obs)
@@ -309,3 +269,4 @@ void Receiver::processDatagram(QByteArray msg)
 
  */    
 }
+

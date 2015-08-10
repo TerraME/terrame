@@ -20,6 +20,7 @@ In no event shall INPE and Tecgraf / PUC-Rio be held liable to any party for dir
 indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
+
 /*! \file legendColorUtils.h
     \brief This file contains functions to manipulate a structure representing a color
 */
@@ -29,15 +30,8 @@ of this library and its documentation.
 #include <iostream>
 #include <QString>
 
-//#include "TeVisual.h"
 #include <TeVisual.h>
 #include <TeUtils.h>
-
-//#include "legendUtils.h"
-
-
-// using namespace std;
-
 
 // //! A structure for supporting a color definition
 // struct TeColor
@@ -63,7 +57,6 @@ of this library and its documentation.
 // //! Set parameters of colors
 // void init (int r, int g, int b, const std::string& name="") {red_=r,green_=g,blue_=b;name_=name; }
 
-
 // //! Returns TRUE if color1 is equal to color2 or FALSE if they are different.
 // bool operator== (const TeColor& color)
 // {
@@ -83,7 +76,6 @@ of this library and its documentation.
 // return *this;
 // }
 // };
-
 
 void rgb2Hsv(const TeColor& c, int& h, int& s, int& v);
 void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v );
@@ -149,9 +141,5 @@ void generateColorBarMap(vector<ColorBar>& inputColorVec, int ncores, map<int, v
 vector<ColorBar> getColorBarVector(string& scores, const bool& first);
 //unsigned int  TeReadColorRampTextFile(const string& fileName, map<string,string>& colorRamps);
 
-
-
 #endif
-
-
 

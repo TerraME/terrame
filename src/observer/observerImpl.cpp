@@ -7,13 +7,6 @@
     #include "blackBoard.h"
 #endif
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-    // Estatisticas de desempenho
-    #include "../observer/statistic/statistic.h"
-#endif
-
 #include "components/legend/legendAttributes.h"
 
 //#include <iostream>
@@ -176,32 +169,12 @@ bool ObserverImpl::update(double time) // ver se passa realmente este par?metro 
 
 #ifdef TME_BLACK_BOARD
 
-
-#ifdef TME_STATISTIC
-    if ((time == -1) && (obsHandle_->getType() == TObsUDPSender))
-        obsHandle_->setModelTime(time);
-    else
-    {
-    // double t = Statistic::getInstance().startMicroTime();
-#endif
-
     // getState via BlackBoard
     QDataStream& state = BlackBoard::getInstance().getState(subject_, obsHandle_->getId(), attribList);
-
-#ifdef TME_STATISTIC 
-    t = Statistic::getInstance().endMicroTime() - t;
-    Statistic::getInstance().addElapsedTime("Recovery with BB", t);
-    Statistic::getInstance().startVolatileTime()
-#endif
 
     state.device()->open(QIODevice::ReadOnly);
     obsHandle_->draw( state );
     state.device()->close();
-
-#ifdef TME_STATISTIC 
-    }
-#endif
-
 
 #else  // TME_BLACK_BOARD
 
@@ -212,31 +185,12 @@ bool ObserverImpl::update(double time) // ver se passa realmente este par?metro 
 
     buffer.open(QIODevice::WriteOnly);
     
-#ifdef TME_STATISTIC
-    if ((time == -1) && (obsHandle_->getType() == TObsUDPSender))
-        obsHandle_->setModelTime(time);
-    else
-    {
-    double t = Statistic::getInstance().startMicroTime();
-#endif
-
     QDataStream& state = subject_->getState(out, subject_, obsHandle_->getId(), attribList);
-
-#ifdef TME_STATISTIC 
-    t = Statistic::getInstance().endMicroTime() - t;
-    // t = Statistic::getInstance().endTime();
-    Statistic::getInstance().addElapsedTime("Recovery without BB", t);
-    Statistic::getInstance().startVolatileTime();
-#endif
 
     buffer.close();
     buffer.open(QIODevice::ReadOnly);
     obsHandle_->draw( state );
     buffer.close();
-
-#ifdef TME_STATISTIC 
-    }
-#endif
 
 #endif  // TME_BLACK_BOARD
     
@@ -363,34 +317,11 @@ void SubjectImpl::notifyObservers(double time)
 
     for (ObsListIterator i (observers.begin()); i != observers.end(); ++i)
     {
-//#ifdef TME_BLACK_BOARD
-//        (*i)->setDirtyBit();
-//#endif
-
-#ifdef TME_STATISTIC
-        double t = Statistic::getInstance().startTime();
-
-        char pName[100];
-        sprintf(pName, "%p", (*i) );
-        QString name = QString("Response Time (%1) %2").arg(getObserverName( (*i)->getObserverType() )) .arg(pName);
-
         if (! (*i)->update(time))
         {
             detachList.push_back(*i);
         }
-        t = Statistic::getInstance().endTime() - t;
-        Statistic::getInstance().addElapsedTime(name, t);
-        // Statistic::getInstance().collectMemoryUsage();
-#else
-        if (! (*i)->update(time))
-        {
-            detachList.push_back(*i);
-        }
-#endif
     }
-
-    // trata de alguma maneira os observers que n?o foram atualizados
-    // e est?o presentes na lista detachList.
 }
 
 const TypesOfSubjects SubjectImpl::getSubjectType()
@@ -402,3 +333,4 @@ int SubjectImpl::getId() const
 { 
     return subjectID;
 }
+

@@ -25,7 +25,6 @@
 #ifndef OBSERVER_MAP_H
 #define OBSERVER_MAP_H
 
-
 #include <QDialog>
 #include <QString>
 #include <QTextEdit>

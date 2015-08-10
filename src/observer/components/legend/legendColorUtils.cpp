@@ -30,8 +30,6 @@ of this library and its documentation.
 //#include <TeDatabase.h>
 //#include <TeAsciiFile.h>
 
-
-
 vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
 {
     vector<ColorBar> cbVec;

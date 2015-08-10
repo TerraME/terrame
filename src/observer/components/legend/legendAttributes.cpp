@@ -638,28 +638,6 @@ void Attributes::restore()
     groupMode = groupModeBkp;
     stdDev = stdDevBkp;
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\n-------------- " << attribName;
-    qDebug() << "colorBarVec.size():  " << colorBarVec.size();
-    foreach(ColorBar cb, colorBarVec)
-        qDebug() << cb.toString();
-
-    qDebug() << "\ncolorBarVec_bkp.size():  " << colorBarVec_bkp.size();
-    foreach(ColorBar cb, colorBarVec_bkp)
-        qDebug() << cb.toString();
-
-    qDebug() << "\ncolorBarVecB.size():  " << colorBarVecB.size();
-    foreach(ColorBar cb, colorBarVecB)
-        qDebug() << cb.toString();
-
-    qDebug() << "\ncolorBarVecB_bkp.size():  " << colorBarVecB_bkp.size();
-    foreach(ColorBar cb, colorBarVecB_bkp)
-        qDebug() << cb.toString();
-
-    qDebug() << "--------------\n";
-#endif
-
-
     colorBarVec = colorBarVecBkp;
     stdColorBarVec = stdColorBarVecBkp;
 }
@@ -674,9 +652,7 @@ void Attributes::clear()
     textValues->clear();
     numericValues->clear();
     boolValues->clear();
-	//@RAIAN
 	neighValues->clear();
-	//@RAIAN: FIM
     image.fill(0);
 
     xs->clear();

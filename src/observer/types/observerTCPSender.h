@@ -22,7 +22,6 @@ class TcpSocketTask;
 class ObserverTCPSender : public QObject, public ObserverInterf
 {
     Q_OBJECT
-
 public:
     ObserverTCPSender(Subject *subj, QObject *parent = 0) {};
     virtual ~ObserverTCPSender() {};

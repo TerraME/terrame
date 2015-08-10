@@ -233,13 +233,6 @@ void ObserverMapSuperclass::zoomChanged(const QRectF &zoomRect, float width,
     QString newZoom(QString::number(ceil(percent * 100)));
     int curr = zoomComboBox->findText(newZoom + "%");
 
-#ifdef OBSERVER_DEBUG
-    qDebug() << "zoomRect: " << zoomRect << " width: "  << width
-       << " height: " << height;
-    qDebug() << "curr: " << curr << " newZoom: " << newZoom
-        << " percent: " << percent;
-#endif
-
     if (curr >= 0)
     {
         zoomComboBox->setCurrentIndex(curr);
@@ -313,57 +306,6 @@ void ObserverMapSuperclass::zoomWindow()
     // view->centerOn(scene->sceneRect().center()); // fica quase centralizado
     view->centerOn(center);
     zoomComboBox->setCurrentIndex(zoomComboBox->findText(WINDOW));
-
-
-#ifdef OBSEVER_DEBUG
-    //qDebug() << "\nx: " << x << " y: " << y << " size: " << size;
-    qDebug() << "\nscene->sceneRect(): " << scene->sceneRect()
-        << " == view->sceneRect(): " << view->sceneRect();
-
-    qDebug() << "view->viewport(): " << view->viewport()->rect();
-    qDebug() << "view->rect(): " << view->rect();
-    qDebug() << "zoomRect: " << zoomRect;
-    // qDebug() << "size: " << size;
-    qDebug() << "offsetState: " << offsetState;
-    qDebug() << "lstNode->boundingRect().height(): " << lstNode->boundingRect().height();
-    qDebug() << "center: " << center;
-    qDebug() << "node: " << lstNode->pos().x() + lstNode->boundingRect().width()
-        << "; " << fstNode->pos().x() + fstNode->boundingRect().width();
-    qDebug() << "center 2: " << lstNode->pos().x() << " + " <<  lstNode->boundingRect().width()
-         << " - " <<  fstNode->pos().x() << " + " <<  fstNode->boundingRect().height()
-         << " = " << (lstNode->pos().x() + lstNode->boundingRect().width())
-         - (fstNode->pos().x() + fstNode->boundingRect().height());
-    qDebug() << "center 3: " << scene->itemsBoundingRect().center();
-
-    //qDebug() << factWidth << "; " << factHeight;
-    //qDebug() << "scrollH: " << view->horizontalScrollBar()->value();
-
-    static bool criado = false;
-    if (!criado){
-        criado = true;
-        RectItemDebug *rectItem = 0;
-
-        // scene->setSceneRect(QRectF(zoomRect.topLeft() + QPoint(-1, -1), zoomRect.bottomRight() + QPoint(2, 1)) );
-        // scene->setSceneRect(scene->sceneRect());
-
-        rectItem = new RectItemDebug(zoomRect);
-        scene->addItem(rectItem);
-
-        //rectItem = new RectItemDebug(QRectF(center + QPointF(-1, -1),
-        //    center + QPointF(1, 1)), Qt::darkCyan);
-        //scene->addItem(rectItem);
-
-        //rectItem = new RectItemDebug(QRectF(scene->itemsBoundingRect().center() + QPointF(-1, -1),
-        //    scene->itemsBoundingRect().center() + QPointF(1, 1)), Qt::red);
-        //scene->addItem(rectItem);
-
-        //rectItem = new RectItemDebug(scene->itemsBoundingRect(), Qt::blue);
-        //scene->addItem(rectItem);
-
-        rectItem = new RectItemDebug(scene->sceneRect(), Qt::darkGray);
-        scene->addItem(rectItem);
-    }
-#endif
 }
 
 void ObserverMapSuperclass::butLegend_Clicked()

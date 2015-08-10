@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef AGENT_OBSERVER_MAP
 #define AGENT_OBSERVER_MAP
 
@@ -34,7 +33,6 @@
 class SubjectInterf;
 
 namespace TerraMEObserver {
-
 
 /**
  * \brief Combined visualization for Agent, Automaton and

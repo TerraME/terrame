@@ -157,7 +157,6 @@ public:
     unsigned int getIdxColor() const;
 
 private:
-
     QColor color;
     QString from;
     QString to;
@@ -168,7 +167,6 @@ private:
     double fromNumber;
     double toNumber;
 };
-
 
 /**
  * \file legendAttributes.h
@@ -585,7 +583,6 @@ public:
      */
     qreal getDirection(int pos, double x, double y);
     
-	//@RAIAN: Acrescentando e manipulando a vizinhanca
 		/// Gets neighborhood values
 		/// \author Raian Vargas Maretto
                 QVector<QMap<QString, QList<double> > >* getNeighValues();
@@ -605,7 +602,6 @@ public:
 		/// Gets the width of the line used to draw the Neighborhood
 		/// \author Raian Vargas Maretto
 		double getWidth();
-	//@RAIAN: FIM
 private:
     /**
      * Copy constructor
@@ -625,10 +621,8 @@ private:
     vector<ColorBar> colorBarVec;
     vector<ColorBar> stdColorBarVec;
     QStringList labelList, valueList;
-	//@RAIAN: Vizinhanca
-        QVector<QMap<QString, QList<double> > > *neighValues;
+	QVector<QMap<QString, QList<double> > > *neighValues;
 	double width; 
-	//@RAIAN: FIM
 
     QString attribName;
     double maxValue;
@@ -666,7 +660,7 @@ private:
     QList<QPair<QPointF, qreal> > lastPos;
 };
 
-
 }
 
 #endif
+

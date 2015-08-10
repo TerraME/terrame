@@ -38,7 +38,6 @@
 
 namespace TerraMEObserver {
 
-
 /**
  * \brief Shows the cellular space state
  * \see QWidget

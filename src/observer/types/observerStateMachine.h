@@ -22,7 +22,6 @@
 *
 *************************************************************************************/
 
-
 #ifndef OBSERVERSTATEMACHINE_H
 #define OBSERVERSTATEMACHINE_H
 

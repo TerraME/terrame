@@ -64,3 +64,4 @@ public:
 
 }
 #endif // INTERNAL_CURVE_H
+

@@ -39,7 +39,6 @@ class QResizeEvent;
 
 namespace TerraMEObserver {
 
-
 /**
  * \brief Shows the schedule events
  * \see ObserverInterf

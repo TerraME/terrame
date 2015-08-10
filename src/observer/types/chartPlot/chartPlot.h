@@ -34,16 +34,13 @@ class QwtPlotPicker;
 
 class PlotPropertiesGUI;
 
-
 namespace TerraMEObserver {
 
 class InternalCurve;
 
-
 class ChartPlot : public QwtPlot
 {
     Q_OBJECT
-
 public:
     ChartPlot(QWidget *parent);
     virtual ~ChartPlot();
@@ -71,7 +68,6 @@ private:
     void resizeEvent(QResizeEvent *event);
     void moveEvent(QMoveEvent *event);
     void closeEvent(QCloseEvent *event);
-
 
     QAction *exportAct, *propertiesAct;
     PlotPropertiesGUI *plotPropGui;
