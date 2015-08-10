@@ -740,7 +740,7 @@ function _Gtme.executeTests(package, fileName)
 	if data.examples then
 		printNote("Testing examples")
 		local dirFiles = _Gtme.findExamples(package)
-		if dirFiles ~= nil then
+		if #dirFiles > 0 then
 			forEachElement(dirFiles, function(idx, value)
 				print("Testing "..value)
 				if not doc_functions then io.flush() end -- theck why it is necessary to have the 'if'
@@ -815,6 +815,8 @@ function _Gtme.executeTests(package, fileName)
 
 				ut:clear()
 			end)
+		else
+			printWarning("The package has no examples")
 		end
 	else
 		printWarning("Skipping examples")
@@ -972,7 +974,7 @@ function _Gtme.executeTests(package, fileName)
 
 	if data.examples then
 		if ut.examples == 0 then
-			printError("No examples were found.")
+			printWarning("The package has no examples.")
 		elseif ut.examples_error == 0 then
 			printNote("All "..ut.examples.." examples were successfully executed.")
 		elseif ut.examples_error == 1 then

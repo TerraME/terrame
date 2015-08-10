@@ -8,7 +8,8 @@ local pcall = pcall
 local exit = os.exit
 local io, table, string = io, table, string
 local ipairs, pairs, lfsdir = ipairs, pairs, lfsdir
-local printNote, printError, print, attributes = _Gtme.printNote, _Gtme.printError, print, attributes
+local printNote, printError, printWarning = _Gtme.printNote, _Gtme.printError, _Gtme.printWarning
+local print, attributes = print, attributes
 local sessionInfo, belong = sessionInfo, belong
 local include = _Gtme.include
 local getn = getn
@@ -993,8 +994,7 @@ function start(files, examples, package_path, short_lua_path, doc_report, silent
 	end
 	if #examples < 1 then
 		if not silent then
-			printError("No examples were found.")
-			doc_report.problem_examples = doc_report.problem_examples + 1
+			printWarning("No examples were found.")
 		end
 	else
 		for _, file_ in ipairs(examples) do

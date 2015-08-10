@@ -2,14 +2,15 @@ show = false
 
 test = {
 	--__test__ = "terrame -test config/all.lua",
-	onerror   = {arg = "-test", config = "all.lua", package = "onerror"},
-	twoerrors = {arg = "-test", config = "all.lua", package = "twoerrors"},
-	onefile   = {arg = "-test", config = "oneFile.lua"},
-	onetest   = {arg = "-test", config = "oneTest.lua"},
-	onefolder = {arg = "-test", config = "oneFolder.lua"},
-	twofiles  = {arg = "-test", config = "twoFiles.lua"},
-	twotest   = {arg = "-test", config = "twoTests.lua"},
-	twofolder = {arg = "-test", config = "twoFolders.lua"},
+	onerror    = {arg = "-test", config = "all.lua", package = "onerror"},
+	twoerrors  = {arg = "-test", config = "all.lua", package = "twoerrors"},
+	onefile    = {arg = "-test", config = "oneFile.lua"},
+	onetest    = {arg = "-test", config = "oneTest.lua"},
+	onefolder  = {arg = "-test", config = "oneFolder.lua"},
+	twofiles   = {arg = "-test", config = "twoFiles.lua"},
+	twotest    = {arg = "-test", config = "twoTests.lua"},
+	twofolder  = {arg = "-test", config = "twoFolders.lua"},
+	noexamples = {arg = "-test", package = "noexamples"}
 }
 
 package = {

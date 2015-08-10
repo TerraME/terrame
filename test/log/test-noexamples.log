@@ -1,0 +1,34 @@
+Loading package 'noexamples'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/single.lua
+Testing fff
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking single.lua
+Skipping lines of source code check
+Skipping snapthots check
+Testing examples
+The package has no examples
+
+Test report:
+Tests were executed in 0.16 seconds.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or folders in folder 'tests'.
+All asserts were executed at least once.
+All 1 asserts were executed successfully.
+All 1 tested functions do not have any unexpected execution error.
+All 1 tested functions have at least one assert.
+All 1 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+All 1 functions of the package were tested.
+No lines from the source code were verified.
+No snapshot test was executed.
+The package has no examples.
+No new log file was created.
+Summing up, all tests were successfully executed.
