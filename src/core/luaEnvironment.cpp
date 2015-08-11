@@ -545,7 +545,7 @@ int luaEnvironment::createObserver( lua_State *luaL )
 		return 1;
     }
 
-    if(obsUDPSender)
+    if (obsUDPSender)
     {
         obsUDPSender->setAttributes(obsAttribs);
 

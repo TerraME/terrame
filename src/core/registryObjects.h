@@ -308,6 +308,27 @@ Luna<luaTable>::RegType luaTable::methods[] = {
         {0, 0}
 };
 
+const char luaLogFile::className[] = "TeLogFile";
+
+Luna<luaLogFile>::RegType luaLogFile::methods[] = {
+        method(luaLogFile, setObserver),
+        {0, 0}
+};
+
+const char luaTcpSender::className[] = "TeTcpSender";
+
+Luna<luaTcpSender>::RegType luaTcpSender::methods[] = {
+        method(luaTcpSender, setObserver),
+        {0, 0}
+};
+
+const char luaUdpSender::className[] = "TeUdpSender";
+
+Luna<luaUdpSender>::RegType luaUdpSender::methods[] = {
+        method(luaUdpSender, setObserver),
+        {0, 0}
+};
+
 //****************************** TIME ***********************************************//
 //----------------------------------------------------------------------------------------------
 const char luaMessage::className[] = "TeMessage";

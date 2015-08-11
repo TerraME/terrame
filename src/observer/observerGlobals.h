@@ -148,10 +148,9 @@ enum TypesOfObservers
     TObsScheduler       =  8,   //!< Observes the scheduler's event
     TObsImage           =  9,   //!< Saves in an image the attributes observed over the space
     TObsStateMachine    = 10,    //!< Observes the states and transitions of a State Machine type
-    TObsNeigh			= 11,	//!< Observes the Neighborhood type
-	TObsShapefile       = 12,    //!< Observes the Shapefile type
-	TObsTCPSender       = 13    //!< Sends the attributes via TCP protocol
-
+    TObsNeigh           = 11,	//!< Observes the Neighborhood type
+    TObsShapefile       = 12,    //!< Observes the Shapefile type
+    TObsTCPSender       = 13    //!< Sends the attributes via TCP protocol
 };
 
 /**

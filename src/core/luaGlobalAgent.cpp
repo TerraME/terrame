@@ -560,7 +560,9 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 obsLog->setSeparator(cols.at(1));
             }
             lua_pushnumber(luaL, obsId);
-            return 1;
+            lua_pushlightuserdata(luaL, (void*) obsLog);
+
+            return 2;
         }
 
         if (obsText)
@@ -626,7 +628,9 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 }
             }
             lua_pushnumber(luaL, obsId);
-            return 1;
+            lua_pushlightuserdata(luaL, (void*) obsUDPSender);
+
+            return 2;
         }
         ///////////////////////////////////////////
 

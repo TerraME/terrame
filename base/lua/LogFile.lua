@@ -23,6 +23,12 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
+LogFile_ = {
+	type_ = "LogFile",
+}
+
+metaTableLogFile_ = {__index = LogFile_}
+
 --- A log file to save attributes of an object. The saved file uses the csv
 -- standard: The first line contains the attribute names and the following lines
 -- contains values according to the calls to notify().
@@ -139,17 +145,27 @@ function LogFile(data)
 	local observerParams = {}
 	local target = data.target
 	local id
+  local obs
 
 	table.insert(observerParams, data.file)
 	table.insert(observerParams, data.separator)
 
 	if type(target) == "CellularSpace" then
-		id = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
+		id, obs = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
 	else
-		id = target.cObj_:createObserver(observerType, data.select, observerParams)
+		id, obs = target.cObj_:createObserver(observerType, data.select, observerParams)
 	end
+  
+  local logfile = TeLogFile()
+	logfile:setObserver(obs)
 
-	table.insert(_Gtme.createdObservers, {target = data.target, id = id})
-	return id
+	data.cObj_ = logfile
+	data.id = id
+  
+  setmetatable(data, metaTableLogFile_)  
+
+	table.insert(_Gtme.createdObservers, data)
+  
+	return data
 end
 
