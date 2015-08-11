@@ -25,7 +25,6 @@
 
 VisualTable_ = {
 	type_ = "VisualTable",
-  
 	--- Save a VisualTable into a file. Supported extensions are bmp, jpg, png, and tiff.
 	-- @arg file A string with the file name.
 	-- @usage table:save("file.bmp")
@@ -42,14 +41,13 @@ VisualTable_ = {
 
 		self.cObj_:save(file, extension)
 	end
-
 }
 
 metaTableVisualTable_ = {__index = VisualTable_}
 
 --- A window with a table to show the current attributes of an object along the simulation.
 -- Each notify() overwrites the previous values shown in the table.
--- @arg data.target An Agent, Cell, CellularSpace, Society.
+-- @arg data.target An Agent, Cell, CellularSpace, or Society.
 -- @arg data.select A vector of strings with the name of the attributes to be observed.
 -- If it is only a single value then it can also be described as a string. 
 -- As default, it selects all the user-defined attributes of an object.

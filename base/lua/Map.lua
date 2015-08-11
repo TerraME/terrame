@@ -1512,7 +1512,7 @@ metaTableMap_ = {__index = Map_}
 --- Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
 -- or Society. It draws each element into the screen, according a given attribute.
 -- Each notify() draws the Map again in the screen.
--- @arg data.target A CellularSpace, Trajectory, Agent, or Society.
+-- @arg data.target A CellularSpace, Agent, or Society.
 -- @arg data.value A table with the possible values for the selected attributes.
 -- @arg data.max The maximum value of the attribute (used only for numbers).
 -- @arg data.min The minimum value of the attribute (used only for numbers).
@@ -1614,7 +1614,12 @@ function Map(data)
 	optionalTableArgument(data, "value", "table")
 	optionalTableArgument(data, "label", "table")
 	optionalTableArgument(data, "select", "string")
-	--defaultTableValue(data, "grid", false)
+
+	if type(data.background) ~= "Map" then
+		defaultTableValue(data, "grid", false)
+	elseif data.grid then
+		customWarning("Argument 'grid' cannot be used with a Map 'background'.")
+	end
 
 	if data.grouping == nil then
 		if data.slices ~= nil or data.min ~= nil or data.max ~= nil then
@@ -1679,10 +1684,12 @@ function Map(data)
 		if not data.background then
 			local cs = data.target:sample():getCell().parent
 
+			if data.grid == false then data.grid = nil end
+
 			data.background = Map{
 				target = cs,
 				color = mcolor,
-        grid = data.grid
+				grid = data.grid
 			}
 		end
 
@@ -1860,7 +1867,7 @@ function Map(data)
 			local attrs
 
 			if type(data.target) == "CellularSpace" then
-				attrs = {"target", "select", "value", "label", "color", "grouping"}
+				attrs = {"target", "select", "value", "label", "color", "grouping", "grid"}
 
 				local sample = data.target.cells[1][data.select]
 
@@ -1869,7 +1876,7 @@ function Map(data)
 					customError("Selected element should be string, number, or function, got "..type(sample)..".")
 				end
 			else -- Society
-				attrs = {"target", "select", "value", "label", "color", "grouping", "background", "size", "font", "symbol"}
+				attrs = {"target", "select", "value", "label", "color", "grouping", "background", "size", "font", "symbol", "grid"}
 			end
 
 			if type(data.color) == "string" then
@@ -2067,13 +2074,11 @@ function Map(data)
 
 	data.id = idObs
 	data.cObj_ = map
-  
-  if data.grid then
-    map:setGridVisible(1)
-  else
-    map:setGridVisible(0)
-  end
-  
+
+	if data.grid then
+		map:setGridVisible(1)
+	end
+
 	setmetatable(data, metaTableMap_)
 	table.insert(_Gtme.createdObservers, data)
 

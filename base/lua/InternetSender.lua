@@ -177,7 +177,7 @@ function InternetSender(data)
 	}
 
 	local id
-  local obs
+	local obs
 	local target = data.target
 	if type(target) == "CellularSpace" then -- SKIP
 		observerParams = {observerParams}
@@ -190,22 +190,21 @@ function InternetSender(data)
 	end
 
 	verify(id, "The observer could not be created.") -- SKIP
-  
-  local isender
-  
-  if observerType == 13 then  
-    isender = TeTcpSender()
-  else
-    isender = TeUdpSender()
-  end
-  
+
+	local isender
+
+	if observerType == 13 then
+		isender = TeTcpSender()
+	else
+		isender = TeUdpSender()
+	end
+
 	isender:setObserver(obs)
 
 	data.cObj_ = logfile
 	data.id = id
-  
-  setmetatable(data, metaTableInternetSender_)    
 
+	setmetatable(data, metaTableInternetSender_)
 	table.insert(_Gtme.createdObservers, data)
 
 	return data

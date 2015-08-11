@@ -48,7 +48,7 @@ Clock_ = {
 metaTableClock_ = {__index = Clock_}
 
 --- Create a display with the current time and Event queue of a given Timer.
--- @arg data.target A timer.
+-- @arg data.target A Timer.
 -- @usage Clock{target = timer}
 Clock = function(data)
 	mandatoryTableArgument(data, "target", "Timer")

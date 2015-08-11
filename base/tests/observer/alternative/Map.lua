@@ -492,8 +492,28 @@ return{
 		end
 		unitTest:assertError(error_func, "The Society does not have a placement. Please use Environment:createPlacement() first.")
 
+		local map = Map{
+			target = cs,
+			grouping = "none"
+		}
+
+		error_func = function()
+			Map{target = soc, background = map, grid = true}
+		end
+		unitTest:assertError(error_func, "Argument 'grid' cannot be used with a Map 'background'.")
+
 		local env = Environment{soc, cs}
 		env:createPlacement()
+
+		error_func = function()
+			Map{target = soc, grid = 2}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("grid", "boolean", 2))
+
+		error_func = function()
+			Map{target = soc, grid = false}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("grid", false))
 
 		error_func = function()
 			Map{target = soc, color = "Blues"}
