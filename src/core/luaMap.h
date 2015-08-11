@@ -57,6 +57,8 @@ public:
 	~luaMap(void);
 
 	int save(lua_State* L);
+
+    int setGridVisible(lua_State *L);
 public:
 	ObserverMap* obs;
 };

@@ -29,3 +29,9 @@ int luaMap::save(lua_State* L)
 	return 0;
 }
 
+int luaMap::setGridVisible(lua_State *L)
+{
+    int v = luaL_checkint(L, -1);
+    obs->setGridVisible(v);
+}
+

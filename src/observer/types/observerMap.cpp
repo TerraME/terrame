@@ -997,3 +997,9 @@ void ObserverMap::closeEvent(QCloseEvent *event)
 {
     VisualArrangement::getInstance()->closeEventDelegate();
 }
+
+void ObserverMap::setGridVisible(bool visible)
+{
+    butGrid->setChecked(visible);
+    butGrid->toggled(visible);
+}
