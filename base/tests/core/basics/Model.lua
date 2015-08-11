@@ -213,6 +213,9 @@ water            number [200]
 	end,
 	init = function(unitTest)
 		unitTest:assert(true)
+	end,
+	configure = function(unitTest)
+		unitTest:assert(true)
 	end
 }
 

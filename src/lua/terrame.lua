@@ -947,7 +947,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	dofile(path.."FileSystem.lua", _Gtme)
 	dofile(path.."Utils.lua", _Gtme)
 	dofile(info_.path..s.."lua"..s.."utils.lua")
-	dofile(info_.path..s.."lua"..s.."interface.lua")
+	dofile(info_.path..s.."lua"..s.."configure.lua")
 
 	info_.version = _Gtme.packageInfo().version
 
