@@ -24,6 +24,30 @@
 --#########################################################################################
 
 Model_ = {
+	--- Function to show a graphical interface to configure the parameters of a given Model.
+	-- This function can be used in scripts that implement a Model. If the Model belongs to
+	-- a package, then it should not be called, as TerraME will do it automatically when one
+	-- selects the Model to be configured.
+	-- @usage Tube = Model{
+	--     initialWater = 20,
+	--     flow = 1,
+	--     finalTime = 20,
+	--     init = function(model)
+	--         model.water = model.initialWater
+	--         Chart{target = model, select = "water"}
+	--         model:notify()
+	--         model.timer = Timer{
+	--             Event{action = function()
+	--                 model.water = model.water - model.flow
+	--                 model:notify()
+	--             end}
+	--         }
+	--     end
+	-- }
+	--
+	-- Tube:configure()
+	configure = function(self)
+	end,
 	--- Run the Model instance. It requires that the Model instance has attribute finalTime.
 	-- @usage Tube = Model{
 	--     initialWater = 200,
@@ -154,6 +178,8 @@ Model_ = {
 -- @arg attrTab.finalTime A number with the final time of the simulation.
 -- @arg attrTab.seed A number with the initial seed for Random.
 -- @arg attrTab.init A mandatory function to describe how the model instance is created.
+-- @arg attrTab.interface. An optional function to describe how the graphical interface is
+-- displayed. See Model:interface().
 -- See Model:init(). If the Model does not have argument finalTime, this function should
 -- create the attribute finalTime to allow the Model instance to be executed.
 -- @arg attrTab.... Arguments of the Model. The values of each
@@ -315,15 +341,26 @@ function Model(attrTab)
 	end
 
 	local indexFunction = function(model, v)
-		if v ~= "execute" then
-			customError("It is not possible to call any function from a Model but execute().")
-		end
+		local options = {
+			execute = function()
+				local m = model{}
+				m:execute()
+				return m
+			end,
+			configure = function()
+				_Gtme.configure(attrTab, model) -- SKIP
+			end
+		}
 
-		return function()
-			local m = model{}
-			m:execute()
-			return m
+		local mresult = options[v]
+
+		if not mresult then
+			mresult = rawget(model, v)
+			if not mresult and v ~= "interface" then
+				customError("It is not possible to call any function from a Model but execute() or configure().")
+			end
 		end
+		return mresult
 	end
 
 	local tostringFunction = function()

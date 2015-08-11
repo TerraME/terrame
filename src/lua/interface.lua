@@ -207,25 +207,39 @@ local function create_t(mtable, ordering)
 	return t
 end
 
-function _Gtme.interface(self, modelName, package)
+function _Gtme.configure(self, modelName, package)
 	local quantity, count = 0, 0
 	local pkgattrs, qtattrs, typeattrs, r = "", "", "", ""
 
 	r = r.."-- This file was created automatically from a TerraME Model ("..os.date("%c")..")\n\n"
 	r = r.."require(\"qtluae\")\n"
-	r = r.."sessionInfo().interface = true\n"
+	r = r.."sessionInfo().configure = true\n"
+
+	if not package then
+		__zzz = modelName
+		modelName = "__zzz"
+	end
 
 	local ordering
+
 	if type(self.interface) == "function" then
 		ordering = self.interface()
-	else
+	end
+
+	if type(ordering) ~= "table" then
 		ordering = create_ordering(self)
 	end
 
 	local t = create_t(self, ordering)
 
 	r = r.."Dialog = qt.new_qobject(qt.meta.QDialog)\n"
-	r = r.."Dialog.windowTitle = \""..modelName.."\"\n\n"
+
+	if package then
+		r = r.."Dialog.windowTitle = \""..modelName.."\"\n\n"
+	else
+		r = r.."Dialog.windowTitle = \"Configure Model\"\n\n"
+	end
+
 
 	-- the first layout will contain a layout with the arguments in the top 
 	-- and another with the buttons in the bottom
@@ -762,7 +776,10 @@ function _Gtme.interface(self, modelName, package)
 		end
 	end)
 	r = r.."\tlocal header = \"-- Model instance automatically built by TerraME (\"..os.date(\"%c\")..\")\"\n"
-	r = r.."\theader = header..\"\\n\\nimport(\\\""..package.."\\\")\"\n"
+
+	if package then
+		r = r.."\theader = header..\"\\n\\nimport(\\\""..package.."\\\")\"\n"
+	end
 
 	r = r.."\tif result ~= \"\" then\n"
 	r = r.."\t\tresult = \"\\n\\ninstance = "..modelName.."{\"..string.sub(result, 0, string.len(result) - 1)\n"
@@ -785,7 +802,11 @@ function _Gtme.interface(self, modelName, package)
 	r = r.."\n\n"
 	r = r.."\tfile = io.open(getFile(\""..modelName.."\"), \"w\")\n"
 	r = r.."\tfile:write(header..result..execute)\n"
-	r = r.."\theader = \"\\n\\nif not isLoaded(\\\""..package.."\\\") then  import(\\\""..package.."\\\") end\"\n"
+
+	if package then
+		r = r.."\theader = \"\\n\\nif not isLoaded(\\\""..package.."\\\") then  import(\\\""..package.."\\\") end\"\n"
+	end
+
 	r = r.."\tresult = header..result\n"
 	r = r.."\tfile:close()\n"
 	r = r..[[
@@ -824,13 +845,17 @@ function _Gtme.interface(self, modelName, package)
 	-- http://stackoverflow.com/questions/12068317/calling-qapplicationexec-after-qdialogexec
 	r = r.."_Gtme.killAllObservers()"
 	
-	file = io.open(modelName.."-interface.lua", "w")
+	file = io.open(modelName.."-configure.lua", "w")
 	file:write(r)
 	file:close()
 	-- TODO: replace the line below by load(r)(). There is a problem with qtlua that crashes
 	-- the application when loading, but it works properly if we call terrame again.
-	os.execute("terrame "..modelName.."-interface.lua")
-	--load(r)()
+
+	if package then
+		os.execute("terrame "..modelName.."-configure.lua")
+	else
+		load(r)()
+	end
 end
 
 -- ** Both Qt and Lua provide functions which may not be appropriate depending on 

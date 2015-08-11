@@ -821,14 +821,13 @@ end
 local function graphicalInterface(package, model)
 	local s = _Gtme.sessionInfo().separator
 	_Gtme.sessionInfo().interface = true
-	dofile(_Gtme.sessionInfo().path..s.."lua"..s.."interface.lua")
 	local attrTab
 	local mModel = Model
 	Model = function(attr) attrTab = attr end
 	local data = _Gtme.include(_Gtme.packageInfo(package).path..s.."lua"..s..model..".lua")
 	Model = mModel
 
-	_Gtme.interface(attrTab, model, package)
+	_Gtme.configure(attrTab, model, package)
 end
 
 function _Gtme.traceback()
@@ -948,6 +947,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	dofile(path.."FileSystem.lua", _Gtme)
 	dofile(path.."Utils.lua", _Gtme)
 	dofile(info_.path..s.."lua"..s.."utils.lua")
+	dofile(info_.path..s.."lua"..s.."interface.lua")
 
 	info_.version = _Gtme.packageInfo().version
 
