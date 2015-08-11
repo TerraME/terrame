@@ -845,23 +845,13 @@ function _Gtme.configure(self, modelName, package)
 	-- http://stackoverflow.com/questions/12068317/calling-qapplicationexec-after-qdialogexec
 	r = r.."_Gtme.killAllObservers()"
 	
-	file = io.open(modelName.."-configure.lua", "w")
-	file:write(r)
-	file:close()
-	-- TODO: replace the line below by load(r)(). There is a problem with qtlua that crashes
-	-- the application when loading, but it works properly if we call terrame again.
+	-- add the lines below for debug purposes...
+	-- file = io.open(modelName.."-configure.lua", "w")
+	-- file:write(r)
+	-- file:close()
+	-- os.execute("terrame "..modelName.."-configure.lua")
 
-	if package then
-		os.execute("terrame "..modelName.."-configure.lua")
-	else
-		load(r)()
-	end
+	-- ... and remove the line below
+	load(r)()
 end
-
--- ** Both Qt and Lua provide functions which may not be appropriate depending on 
--- the situation. The os.exit Lua function is not appropriate here because it 
--- calls the libc exit function which doesn't unwind the stack. The cleanup of 
--- various C++ objects is not performed properly in this case. Use app:quit() 
--- instead. You may want to drop the os.exit function and other such lua 
--- functions to prevent their use if it's critical in your application.
 
