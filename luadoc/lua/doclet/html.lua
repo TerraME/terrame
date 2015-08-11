@@ -16,7 +16,7 @@ local assert, getfenv, ipairs, loadstring, setfenv, tostring, tonumber, type = a
 local io, pairs, os = io, pairs, os
 local package, string, mkDir = package, string, mkDir
 local table = table
-local print =  print
+local print = print
 local printNote, printError, getn, belong = _Gtme.printNote, _Gtme.printError, getn, belong
 local forEachElement = forEachElement
 local forEachOrderedElement = forEachOrderedElement
@@ -45,6 +45,19 @@ local function search(path, name)
 		end
 	end
 	return nil    -- file not found
+end
+
+local function httpLink(text)
+	local result = string.gsub(text, "http://[%w%.%-]+[%/%w~%-_.]*", function(value)
+		if value:sub(-1, -1) == "." then
+			value = value:sub(1, -2)
+			return "<a href=\""..value.."\">"..value.."</a>."
+		else
+			return "<a href=\""..value.."\">"..value.."</a>"
+		end
+	end)
+
+	return result
 end
 
 -------------------------------------------------------------------------------
@@ -78,6 +91,7 @@ function includeMod(template, env)
 	env.string = string
 	env.util = util
 	env.hl = highlighting
+	env.httpLink = httpLink
 	-- Adding luadoc functions in the environment
 	env.luadoc = {
 		link = link,
@@ -301,14 +315,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 		return word_table[tonumber(key)]
 	end)
 	
-	description_linked = string.gsub(description_linked, "http://[%w%.%-]+[%/%w~%-_.]*", function(value)
-		if value:sub(-1, -1) == "." then
-			value = value:sub(1, -2)
-			return "<a href=\""..value.."\">"..value.."</a>."
-		else
-			return "<a href=\""..value.."\">"..value.."</a>"
-		end
-	end)
+	description_linked = httpLink(description_linked)
 
 	return description_linked
 end
