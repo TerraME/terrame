@@ -149,6 +149,9 @@ void registerClasses()
 	Luna<luaSociety>::Register(L);
     Luna<luaTextScreen>::Register(L);
     Luna<luaTable>::Register(L);
+    Luna<luaLogFile>::Register(L);
+    Luna<luaTcpSender>::Register(L);
+    Luna<luaUdpSender>::Register(L);
 }
 
 int cpp_informations(lua_State *L)

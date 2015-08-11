@@ -155,6 +155,8 @@ public:
      */
     int close();
 
+    void setGridVisible(bool visible);
+
 signals:
     /**
      * Triggers the grid draw

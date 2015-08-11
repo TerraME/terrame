@@ -20,48 +20,42 @@ In no event shall INPE and Tecgraf / PUC-Rio be held liable to any party for dir
 indirect, special, incidental, or consequential damages arising out of the use
 of this library and its documentation.
 *************************************************************************************/
-/*! \file luaMap.h
-\brief This file definitions for the luaMap objects.
-\author Pedro R. Andrade
+/*! \file luaTextScreen.h
+\brief This file definitions for the luaTextScreen objects.
 
 */
-#ifndef LUAMAP_H
-#define LUAMAP_H
+#ifndef LUA_LOG_FILE_H
+#define LUA_LOG_FILE_H
 
-#include "observerMap.h"
+#include "observerLogFile.h"
 #include "reference.h"
 #include "luna.h"
 
 /**
 * \brief
-*  Implementation for a luaMap object.
+*  Implementation for a luaTextScreen object.
 *
 */
-class luaMap : public Reference<luaMap>
+class luaLogFile : public Reference<luaLogFile>
 {
-	lua_State *luaL;
-
 public:
 	///< Data structure issued by Luna<T>
 	static const char className[];
 
 	///< Data structure issued by Luna<T>
-	static Luna<luaMap>::RegType methods[];
+        static Luna<luaLogFile>::RegType methods[];
 
 	/// constructor
-	luaMap(lua_State* L);
+        luaLogFile(lua_State* L);
 
 	int setObserver(lua_State* L);
 
 	/// destructor
-	~luaMap(void);
+        ~luaLogFile(void);
 
-	int save(lua_State* L);
-
-    int setGridVisible(lua_State *L);
-public:
-	ObserverMap* obs;
+private:
+        lua_State *luaL;
+        ObserverLogFile* obs;
 };
 
 #endif
-

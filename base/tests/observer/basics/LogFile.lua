@@ -32,7 +32,9 @@ return{
 			end
 		}
 
-		local c1 = LogFile{target = world}
+		local log = LogFile{target = world}
+    
+		unitTest:assertType(log, "LogFile")    
 
 		local world = Agent{
 			count = 0,
@@ -41,9 +43,9 @@ return{
 			end
 		}
 
-		local c1 = LogFile{target = world}
+		local log = LogFile{target = world}
 
-		local c1 = LogFile{
+		local log = LogFile{
 			target = world,
 			select = {"mcount"}
 		}
@@ -53,8 +55,8 @@ return{
 			quantity = 3
 		}
 
-		local c1 = LogFile{target = soc}
-		local c1 = LogFile{target = soc, select = "#"}
+		local log = LogFile{target = soc}
+		local log = LogFile{target = soc, select = "#"}
 
 		local soc = Society{
 			instance = Agent{},
@@ -62,7 +64,7 @@ return{
 			total = 10
 		}
 
-		local c1 = LogFile{target = soc}
+		local log = LogFile{target = soc}
 
 		local world = CellularSpace{
 			xdim = 10,
@@ -72,10 +74,9 @@ return{
 			end
 		}
 
-		local c1 = LogFile{target = world}
-		local c1 = LogFile{target = world, select = "mcount"}
-
-		unitTest:assert(true)
+		local log = LogFile{target = world}
+		local log = LogFile{target = world, select = "mcount"}
+    
 	end
 }
 

@@ -427,7 +427,7 @@ int luaTrajectory::createObserver( lua_State *L )
 		    return 1;
 		}
 
-		if(obsUDPSender)
+        if (obsUDPSender)
 		{
 		    obsUDPSender->setAttributes(obsAttribs);
 

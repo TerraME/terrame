@@ -750,7 +750,9 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         }
 
         lua_pushnumber(luaL, obsId);
-        return 1;
+        lua_pushlightuserdata(luaL, (void*) obsLog);
+
+        return 2;
     }
 
     if (obsText)
@@ -862,7 +864,9 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         }
 
         lua_pushnumber(luaL, obsId);
-        return 1;
+        lua_pushlightuserdata(luaL, (void*) obsUDPSender);
+
+        return 2;
     }
 
     if(obsImage)

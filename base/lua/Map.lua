@@ -1681,7 +1681,8 @@ function Map(data)
 
 			data.background = Map{
 				target = cs,
-				color = mcolor
+				color = mcolor,
+        grid = data.grid
 			}
 		end
 
@@ -1784,7 +1785,7 @@ function Map(data)
 			mandatoryTableArgument(data, "color", "table")
 			verify(#data.color == 2, "Grouping '"..data.grouping.."' requires only two colors, got "..#data.color..".")
 
-			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert"})
+			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid"})
 		end,
 		quantil = function() -- equal to 'equalsteps'
 			mandatoryTableArgument(data, "select", "string")
@@ -1850,7 +1851,7 @@ function Map(data)
 			mandatoryTableArgument(data, "color", "table")
 			verify(#data.color == 2, "Grouping '"..data.grouping.."' requires only two colors, got "..#data.color..".")
 
-			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert"})
+			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid"})
 		end,
 		uniquevalue = function()
 			mandatoryTableArgument(data, "select", "string")
@@ -1939,7 +1940,7 @@ function Map(data)
 			data.grouping = "uniquevalue"
 
 			if type(data.target) == "CellularSpace" then
-				verifyUnnecessaryArguments(data, {"target", "color", "grouping"})
+				verifyUnnecessaryArguments(data, {"target", "color", "grouping", "grid"})
 
 				data.select = "background_"
 				data.value = {0, 1}
@@ -1955,7 +1956,7 @@ function Map(data)
 					cell.background_ = 0
 				end)
 			else -- Society
-				verifyUnnecessaryArguments(data, {"target", "color", "grouping", "background", "size", "font", "symbol"})
+				verifyUnnecessaryArguments(data, {"target", "color", "grouping", "background", "size", "font", "symbol", "grid"})
 
 				data.select = "state_"
 				data.value = {"alive", "dead"}
@@ -2035,7 +2036,7 @@ function Map(data)
 		fontSize = data.size,
 		symbol = data.symbol,
 		size = 1,
-		pen = 2
+		pen = 2,
 	}
 
 	if type(data.target) == "Society" then
@@ -2063,8 +2064,16 @@ function Map(data)
 
 	local map = TeMap()
 	map:setObserver(obs)
+
 	data.id = idObs
 	data.cObj_ = map
+  
+  if data.grid then
+    map:setGridVisible(1)
+  else
+    map:setGridVisible(0)
+  end
+  
 	setmetatable(data, metaTableMap_)
 	table.insert(_Gtme.createdObservers, data)
 

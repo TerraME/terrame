@@ -23,6 +23,12 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
+InternetSender_ = {
+	type_ = "InternetSender",
+}
+
+metaTableInternetSender_ = {__index = InternetSender_}
+
 --- An Internet connection to send attribute values of an object through a 
 --- TCP or UDP protocol. Every call to notify (for example, Agent:notify()) in the target
 -- activates the InternetSender.
@@ -171,21 +177,37 @@ function InternetSender(data)
 	}
 
 	local id
+  local obs
 	local target = data.target
 	if type(target) == "CellularSpace" then -- SKIP
 		observerParams = {observerParams}
-		id = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
+		id, obs = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
 	else
 		if type(target) == "Society" then -- SKIP
 			target.observerId = 1 -- TODO: verify why this line is necessary -- SKIP
 		end
-		id = target.cObj_:createObserver(observerType, data.select, observerParams) -- SKIP
+		id, obs = target.cObj_:createObserver(observerType, data.select, observerParams) -- SKIP
 	end
 
 	verify(id, "The observer could not be created.") -- SKIP
+  
+  local isender
+  
+  if observerType == 13 then  
+    isender = TeTcpSender()
+  else
+    isender = TeUdpSender()
+  end
+  
+	isender:setObserver(obs)
 
-	table.insert(_Gtme.createdObservers, {target = data.target, id = id})
+	data.cObj_ = logfile
+	data.id = id
+  
+  setmetatable(data, metaTableInternetSender_)    
 
-	return id
+	table.insert(_Gtme.createdObservers, data)
+
+	return data
 end
 

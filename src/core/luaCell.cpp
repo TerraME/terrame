@@ -655,7 +655,9 @@ int luaCell::createObserver( lua_State * )
             }
 
             lua_pushnumber(luaL, obsId);
-            return 1;
+            lua_pushlightuserdata(luaL, (void*) obsLog);
+
+            return 2;
         }
 
         if (obsText)
@@ -710,7 +712,7 @@ int luaCell::createObserver( lua_State * )
 			return 2;
         }
 
-        if(obsUDPSender)
+        if (obsUDPSender)
         {
             obsUDPSender->setAttributes(obsAttribs);
 
@@ -751,7 +753,9 @@ int luaCell::createObserver( lua_State * )
                 }
             }
             lua_pushnumber(luaL, obsId);
-            return 1;
+            lua_pushlightuserdata(luaL, (void*) obsUDPSender);
+
+            return 2;
         }
     }
     //@RAIAN
