@@ -104,6 +104,8 @@ public:
      */
     int close();
 
+    void save(std::string file, std::string extension);
+
 protected:
     /**
      * Runs the thread
@@ -116,6 +118,8 @@ private:
     void resizeEvent(QResizeEvent *event);
     void moveEvent(QMoveEvent *event);
     void closeEvent(QCloseEvent *event);
+
+    void saveAsImage(std::string file, std::string extension);
 
     TypesOfObservers observerType;
     TypesOfSubjects subjectType;

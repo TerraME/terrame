@@ -300,6 +300,14 @@ Luna<luaTextScreen>::RegType luaTextScreen::methods[] = {
         {0, 0}
 };
 
+const char luaTable::className[] = "TeTable";
+
+Luna<luaTable>::RegType luaTable::methods[] = {
+        method(luaTable, save),
+        method(luaTable, setObserver),
+        {0, 0}
+};
+
 //****************************** TIME ***********************************************//
 //----------------------------------------------------------------------------------------------
 const char luaMessage::className[] = "TeMessage";

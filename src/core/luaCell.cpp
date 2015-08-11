@@ -685,7 +685,9 @@ int luaCell::createObserver( lua_State * )
             obsTable->setAttributes(obsAttribs);
 
             lua_pushnumber(luaL, obsId);
-            return 1;
+            lua_pushlightuserdata(luaL, (void*) obsTable);
+
+            return 2;
         }
 
         if (obsGraphic)
