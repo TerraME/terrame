@@ -1159,6 +1159,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					end
 				elseif package == "base" then
 					print("TerraME has the following examples:")
+				elseif #_Gtme.findExamples(package) == 0 then
+					_Gtme.printError("Package '"..package.."' has no examples")
+					os.exit()
 				else
 					print("Package '"..package.."' has the following examples:")
 				end
