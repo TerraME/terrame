@@ -28,6 +28,15 @@ return{
 		local timer
 
 		timer = Timer{
+			ev1 = Event{action = function(event) timer:notify() end},
+		}
+
+		local c = Clock{target = timer}
+		timer:execute(50)
+
+		unitTest:assertSnapshot(c, "clock_single_event.bmp")
+
+		timer = Timer{
 			ev1 = Event{priority =  1, action = function(event) timer:notify() end},
 			ev2 = Event{priority = 10, action = function(event) timer:notify() end},
 			ev3 = Event{priority = 10, action = function(event) timer:notify() end},
@@ -36,9 +45,8 @@ return{
 
 		local c = Clock{target = timer}
 		timer:execute(50)
-    
-    -- unitTest:assertSnapshot(c, "clock_timer_events.bmp") -- issue #624
 
+		unitTest:assertSnapshot(c, "clock_timer_events.bmp")
 		unitTest:assertType(c, "Clock")
 	end
 }

@@ -111,14 +111,14 @@ function Timer(data)
 	data.cObj_ = cObj
 	local eventTab = {}
 
-	for i, ud in pairs(data) do
-		if type(ud) == "table" then
-			cObj:add(ud.cObj_[1], ud.cObj_[2].cObj_)
-			table.insert(eventTab, ud)
-		elseif type(ud) ~= "userdata" then
-			incompatibleTypeError(i, "Event, table, or userdata", ud)
+	forEachOrderedElement(data, function(idx, value, mtype)
+		if mtype == "table" then
+			cObj:add(value.cObj_[1], value.cObj_[2].cObj_)
+			table.insert(eventTab, value)
+		elseif mtype ~= "userdata" then
+			incompatibleTypeError(idx, "Event, table, or userdata", value)
 		end
-	end
+	end)
 
 	data.events = eventTab
 
