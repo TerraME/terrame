@@ -160,7 +160,7 @@ function TextScreen(data)
 	local obs
 
 	if type(target) == "CellularSpace" then
-		id = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
+		id, obs = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
 	else
 		id, obs = target.cObj_:createObserver(observerType, data.select, observerParams)
 	end
