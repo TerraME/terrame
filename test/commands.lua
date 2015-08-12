@@ -10,6 +10,7 @@ test = {
 	twofiles   = {arg = "-test", config = "twoFiles.lua"},
 	twotest    = {arg = "-test", config = "twoTests.lua"},
 	twofolder  = {arg = "-test", config = "twoFolders.lua"},
+	pattern    = {arg = "-test", config = "pattern.lua"},
 	noexamples = {arg = "-test", package = "noexamples"}
 }
 

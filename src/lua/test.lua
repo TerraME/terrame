@@ -442,15 +442,15 @@ function _Gtme.executeTests(package, fileName)
 		if type(data.file) == "table" then
 			forEachElement(dirFiles, function(_, value)
 				forEachElement(data.file, function(_, mfile)
-					if string.match(value, mfile) then
-						myFiles[#myFiles + 1] = value
+					if string.match(value, mfile) and not belong(value, myFiles) then
+						table.insert(myFiles, value)
 					end
 				end)
 			end)
 		else -- nil
 			forEachElement(dirFiles, function(_, value)
 				if string.endswith(value, ".lua") then
-					myFiles[#myFiles + 1] = value
+					table.insert(myFiles, value)
 				end
 			end)
 		end
