@@ -1,5 +1,5 @@
 
--- @example Model to study scenarios for the economy of Southeast Para state. 
+-- @example Implementation of a model to study scenarios for the economy of Southeast Para state.
 -- Andrade et al. 2010 From input-output matrixes to agent-based models: A case study on 
 -- carbon credits in a local economy. BWSS 2010.
 -- @arg scenario Number of the scenario. It can be an integer value between 1 and 5.

@@ -1,4 +1,4 @@
--- @example A model with static agents that can reproduce to neighbor cells.
+-- @example A model with static Agents that can reproduce to neighbor Cells.
 
 singleFooAgent = Agent{
 	execute = function(self)

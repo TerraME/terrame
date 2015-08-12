@@ -1,4 +1,4 @@
--- @example A model with 30 moving agents.
+-- @example A model with 30 moving Agents.
 
 singleFooAgent = Agent{
 	execute = function(self)

@@ -7,7 +7,7 @@ data{
 
 data{
 	file = "agents.csv",
-	summary = "A simple set of four agents.",
+	summary = "A simple set of four Agents.",
 	source = "TerraME team",
 	attributes = {"name", "age", "wealth", "vision", "metabolism", "immune"},
 	types = {"string", "number", "number", "number", "number", "boolean"},
@@ -22,7 +22,7 @@ data{
 
 data{
 	file = {"brazil.gal"},
-	summary = "A small neighborhood file for brazilstates.shp.",
+	summary = "A small Neighborhood file for brazilstates.shp.",
 	source = "TerraME team"
 }
 
@@ -46,7 +46,7 @@ data{
 
 data{
 	file = {"simple-cs.csv"},
-	summary = "A simple map with an attribute called maxSugar (number).",
+	summary = "A simple CellularSpace with an attribute called maxSugar (number).",
 	source = "TerraME team"
 }
 

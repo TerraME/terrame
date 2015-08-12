@@ -1,4 +1,4 @@
--- @example A model with 100 moving and growing agents.
+-- @example A model with 100 moving and growing Agents.
 -- @arg GROWTH_PROB The probability of an agent to reproduce in an
 -- empty neighbor cell. The default value is 0.3.
 

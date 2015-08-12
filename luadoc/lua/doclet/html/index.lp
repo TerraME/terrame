@@ -11,6 +11,8 @@
 		<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
 	</head>
 
+	<%local file_doc = {name = "index.lua"}%>
+
 	<body>
 		<div id="container">
 			<div id="product">
@@ -82,7 +84,8 @@
 							<%for _, modulename in ipairs(doc.modules) do%>
 								<tr>
 									<td class="name"><a href="<%=luadoc.module_link(modulename, doc)%>"><%=modulename%></a></td>
-									<td class="summary"><%=doc.modules[modulename].summary%></td>
+									<td class="summary"><%=luadoc.link_description(doc.modules[modulename].summary or "", doc,
+										module_doc, file_doc, from, true, "summary", doc_report)%></td>
 								</tr>
 							<%end%>
 						</table>
@@ -103,9 +106,9 @@
 							<%for _, filepath in ipairs(doc.files) do%>
 								<%if doc.files[filepath].type == "model" then%>
 									<tr>
-										<!-- <td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td> -->
 										<td class="name"><%=doc.files[filepath].doc[1].name%></td>
-										<td class="summary"><%= doc.files[filepath].doc[1].summary or "" %></td>
+										<td class="summary"><%=luadoc.link_description(doc.files[filepath].doc[1].summary or "", doc,
+											module_doc, file_doc, from, true, "summary", doc_report)%></td>
 									</tr>
 								<%end%>
 							<%end%>
@@ -130,7 +133,8 @@
 								<%if doc.files[filepath].type == "type" then%>
 								<tr>
 									<td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td>
-									<td class="summary"><%= doc.files[filepath].summary or "" %></td>
+									<td class="summary"><%=luadoc.link_description(doc.files[filepath].summary or "", doc,
+										module_doc, file_doc, from, true, "summary", doc_report)%></td>
 								</tr>
 								<%end%>
 							<%end%>
@@ -155,7 +159,8 @@
 								<%if doc.files[filepath].type == "file" then%>
 									<tr>
 										<td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td>
-										<td class="summary"><%= doc.files[filepath].summary or "" %></td>
+										<td class="summary"><%=luadoc.link_description(doc.files[filepath].summary or "", doc,
+											module_doc, file_doc, from, true, "summary", doc_report)%></td>
 									</tr>
 								<%end%>
 							<%end%>
@@ -172,7 +177,8 @@
 										<!-- <td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td> -->
 										<%file = string.sub(filepath, 0, string.len(filepath) - 4)%>
 										<td class="name"><b><%=file%></b></td>
-										<td class="summary"><%= doc.files[filepath].summary or "" %></td>
+										<td class="summary"><%=luadoc.link_description(doc.files[filepath].summary or "", doc,
+											module_doc, file_doc, from, true, "summary", doc_report)%></td>
 									</tr>
 								<%end%>
 							<%end%>
@@ -186,7 +192,8 @@
 							<%for _, data in ipairs(doc.mdata) do%>
 								<tr>
 									<td class="name"><b><%=data.file[1] or ""%></b></td>
-									<td class="summary"><%= data.shortsummary or "" %></td>
+									<td class="summary"><%=luadoc.link_description(data.shortsummary or "", doc, 
+										module_doc, file_doc, from, true, "summary", doc_report)%></td>
 								</tr>
 							<%end%>
 						</table>
@@ -199,7 +206,8 @@
 							<%for _, data in ipairs(doc.mfont) do%>
 								<tr>
 									<td class="name"><b><%=data.name or ""%></b></td>
-									<td class="summary"><%= data.shortsummary or "" %></td>
+									<td class="summary"><%=luadoc.link_description(data.shortsummary or "", doc,
+										module_doc, file_doc, from, true, "summary", doc_report)%></td>
 								</tr>
 							<%end%>
 						</table>

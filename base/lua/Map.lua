@@ -1509,7 +1509,7 @@ Map_ = {
 
 metaTableMap_ = {__index = Map_}
 
---- Create a map with the spatial distribution of a given CellularSpace, Trajectory, Agent,
+--- Create a map with the spatial distribution of a given CellularSpace, Agent,
 -- or Society. It draws each element into the screen, according a given attribute.
 -- Each notify() draws the Map again in the screen.
 -- @arg data.target A CellularSpace, Agent, or Society.

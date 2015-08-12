@@ -68,7 +68,7 @@ end
 
 font {
 	name = "Ubuntu",
-	summary = "The Ubuntu Font Family are a set of matching new libre/open fonts. The development is being funded by Canonical on behalf the wider Free Software community and the Ubuntu project. The technical font design work and implementation is being undertaken by Dalton Maag.",
+	summary = "The Ubuntu Font Family are a set of matching new libre/open fonts. The development is being funded by Canonical on behalf the wider Free Software community and the Ubuntu project. The technical font design work and implementation is being undertaken by Dalton Maag. This font is used in every window displayed by TerraME.",
 	file = "Ubuntu-L.ttf",
 	source = "http://font.ubuntu.com",
 	symbol = symbols

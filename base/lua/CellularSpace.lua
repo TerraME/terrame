@@ -678,22 +678,22 @@ CellularSpace_ = {
 
 		return self.cObj_:getCell(cObj_)
 	end,
-	--- Return a cell from the CellularSpace given its x and y location.
-	-- @arg xIndex A number with the x location of the cell to be returned.
-	-- @arg yIndex A number with the y location of the cell to be returned.
+	--- Return a Cell from the CellularSpace given its x and y location.
+	-- @arg xIndex A number with the x location of the Cell to be returned.
+	-- @arg yIndex A number with the y location of the Cell to be returned.
 	-- @usage cs:getCell(2, 2)
 	-- @deprecated CellularSpace:get
 	getCell = function(self, xIndex, yIndex)
 		deprecatedFunction("getCell", "get")
 	end,
-	--- Return a cell from the CellularSpace given its id.
+	--- Return a Cell from the CellularSpace given its id.
 	-- @arg cellID A string with the unique identifier of the Cell to be returned.
 	-- @usage cs:getCellByID("2")
 	-- @deprecated CellularSpace:get
 	getCellByID = function(self, cellID)
 		deprecatedFunction("getCellByID", "get")
 	end,
-	--- Return all the cells of the CellularSpace in a vector.
+	--- Return all the Cells of the CellularSpace in a table indexed by numbers.
 	-- @usage cs:getCells()
 	-- @deprecated CellularSpace.cells
 	getCells = function(self)

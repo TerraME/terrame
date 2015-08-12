@@ -400,7 +400,7 @@ end
 
 --- Second order function to transverse two CellularSpaces with the same resolution and
 -- size. It applies a function that gets two Cells as arguments, one from each
--- CellularSpace. Both cells share the same (x, y) location.
+-- CellularSpace. Both Cells share the same (x, y) location.
 -- It returns true if no call to the function taken as argument returns false, otherwise
 -- it returns false.
 -- @arg cs1 A CellularSpace.

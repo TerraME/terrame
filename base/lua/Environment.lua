@@ -158,7 +158,7 @@ Environment_ = {
 	-- computationally efficient only when the number of Agents is considerably lower than max times
 	-- the number of Cells. Otherwise, it is better to consider using the uniform strategy.
 	-- Note that using this argument does not ensure a maximum number of
-	-- agents inside cells along the simulation - controlling the maximum is always up to
+	-- agents inside Cells along the simulation - controlling the maximum is always up to
 	-- the modeler.
 	-- @tabular strategy Strategy & Description & Arguments \
 	-- "random"(default) & Create placement by putting each Agent
