@@ -1783,14 +1783,19 @@ function Map(data)
 				end
 
 				if data.invert then
-					data.color = {colors[#colors], colors[1]}
+					local invcolors = {}
+					for i = #colors, 1, -1 do
+						table.insert(invcolors, colors[i])
+					end
+
+					data.color = invcolors
 				else
-					data.color = {colors[1], colors[#colors]}
+					data.color = colors
 				end
 			end
 
 			mandatoryTableArgument(data, "color", "table")
-			verify(#data.color == 2, "Grouping '"..data.grouping.."' requires only two colors, got "..#data.color..".")
+			verify(#data.color >= 2, "Grouping '"..data.grouping.."' requires at least two colors, got "..#data.color..".")
 
 			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid"})
 		end,
@@ -1849,14 +1854,19 @@ function Map(data)
 				end
 
 				if data.invert then
-					data.color = {colors[#colors], colors[1]}
+					local invcolors = {}
+					for i = #colors, 1, -1 do
+						table.insert(invcolors, colors[i])
+					end
+
+					data.color = invcolors
 				else
-					data.color = {colors[1], colors[#colors]}
+					data.color = colors
 				end
 			end
 
 			mandatoryTableArgument(data, "color", "table")
-			verify(#data.color == 2, "Grouping '"..data.grouping.."' requires only two colors, got "..#data.color..".")
+			verify(#data.color >= 2, "Grouping '"..data.grouping.."' requires at least two colors, got "..#data.color..".")
 
 			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid"})
 		end,
@@ -2015,16 +2025,18 @@ function Map(data)
 
 	switch(data, "grouping"):caseof{
 		equalsteps = function()
-			colorBar = {
-				{value = data.min, color = data.color[1]},
-				{value = data.max, color = data.color[2]}
-			}
+			local step = (data.max - data.min) / (#data.color - 1)
+
+			for i = 1, #data.color do
+				table.insert(colorBar, {value = data.min + step * (i - 1), color = data.color[i]})
+			end
 		end,
 		quantil = function()
-			colorBar = {
-				{value = data.min, color = data.color[1]},
-				{value = data.max, color = data.color[2]}
-			}
+			local step = (data.max - data.min) / (#data.color - 1)
+
+			for i = 1, #data.color do
+				table.insert(colorBar, {value = data.min + step * (i - 1), color = data.color[i]})
+			end
 		end,
 		uniquevalue = function()
 			for i = 1, #data.value do

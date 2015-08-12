@@ -103,6 +103,25 @@ return{
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_background.bmp")
 
+		local cs = CellularSpace{
+			xdim = 20
+		}
+		
+		forEachCell(cs, function(cell)
+			cell.w = cell.x
+		end)
+
+		local m = Map{
+			target = cs,
+			select = "w",
+			min = 0,
+			max = 20,
+			slices = 10,
+			color = "RdYlGn"
+		}
+
+		unitTest:assertSnapshot(m, "map_rdylgn.bmp")
+
 		local r = Random{seed = 10}
 
 		local c = Cell{

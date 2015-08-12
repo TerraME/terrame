@@ -135,10 +135,10 @@ return{
 				target = c,
 				select = "x",
 				slices = 3,
-				color = {"red", "green", "blue"}
+				color = {"red"}
 			}
 		end
-		unitTest:assertError(error_func, "Grouping 'equalsteps' requires only two colors, got 3.")
+		unitTest:assertError(error_func, "Grouping 'equalsteps' requires at least two colors, got 1.")
 
 		error_func = function()
 			Map{
@@ -273,11 +273,11 @@ return{
 				target = c,
 				select = "x",
 				slices = 3,
-				color = {"red", "green", "blue"},
+				color = {"red"},
 				grouping = "quantil"
 			}
 		end
-		unitTest:assertError(error_func, "Grouping 'quantil' requires only two colors, got 3.")
+		unitTest:assertError(error_func, "Grouping 'quantil' requires at least two colors, got 1.")
 
 		error_func = function()
 			Map{
