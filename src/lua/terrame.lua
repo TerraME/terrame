@@ -127,7 +127,6 @@ function _Gtme.getVersion(str)
 	return version
 end
 
-
 -- from http://metalua.luaforge.net/src/lib/strict.lua.html
 local function checkNilVariables()
 	local mt = getmetatable(_G)

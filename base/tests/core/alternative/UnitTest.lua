@@ -125,6 +125,15 @@ return{
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", false))
 	end,
+	assertFile = function(unitTest)
+		local u = UnitTest{unittest = true}
+
+		local error_func = function()
+			u:assertFile(2)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{unittest = true}
 

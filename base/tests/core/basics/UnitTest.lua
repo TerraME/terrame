@@ -49,6 +49,7 @@ return{
 		u:assertEquals(true, true)
 
 		unitTest:assertEquals(u.success, 1)
+		unitTest:assertEquals(u.test, 1)
 	end,
 	assertError = function(unitTest)
 		local u = UnitTest{}
@@ -60,6 +61,26 @@ return{
 		u:assertError(error_func, "Incompatible types. Argument 'xdim' expected number, got   string.", 3)
 
 		unitTest:assertEquals(u.success, 2)
+		unitTest:assertEquals(u.test, 2)
+	end,
+	assertFile = function(unitTest)
+		local u = UnitTest{}
+
+
+		local c = Cell{value = 2}
+		local lg = LogFile{target = c, file = "abc.csv"}
+
+		c:notify()
+
+		u:assertFile("abc.csv")
+
+		u.printError = function() end
+		u:assertFile("abc.csv")
+		u:assertFile(packageInfo().data)
+
+		unitTest:assertEquals(u.success, 1)
+		unitTest:assertEquals(u.test, 3)
+		unitTest:assertEquals(u.fail, 2)
 	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{}

@@ -285,8 +285,7 @@ return{
 		}
 
 		unitTest:assertSnapshot(m, "map_society_white.bmp")
-	end,
-	save = function(unitTest)
+
 		local cs = CellularSpace{xdim = 10}
 
 		local r = Random()
@@ -327,6 +326,7 @@ return{
 		local cs = CellularSpace{xdim = 10}
 		local e = Environment{cs, soc}
 
+		Random():reSeed(123456789)
 		e:createPlacement()
 
 		forEachCell(cs, function(cell)
@@ -363,6 +363,16 @@ return{
 		}
 
 		unitTest:assertSnapshot(m2, "map_society_five_left.bmp")
+	end,
+	save = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local m = Map{
+			target = cs
+		}
+
+		m:save("save_map.bmp")
+		unitTest:assertFile("save_map.bmp")
 	end
 }
 

@@ -137,7 +137,7 @@ return{
 
 		ch:save(file)
 
-		unitTest:assert(isFile(file))
+		unitTest:assertFile(file)
 	end
 }
 

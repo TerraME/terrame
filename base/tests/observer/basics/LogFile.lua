@@ -33,8 +33,10 @@ return{
 		}
 
 		local log = LogFile{target = world}
-    
-		unitTest:assertType(log, "LogFile")    
+
+		unitTest:assertType(log, "LogFile")
+		world:notify()
+		unitTest:assertFile("result.csv")
 
 		local world = Agent{
 			count = 0,
@@ -43,12 +45,16 @@ return{
 			end
 		}
 
-		local log = LogFile{target = world}
+		local log = LogFile{target = world, file = "file.csv"}
+		world:notify()
+		unitTest:assertFile("file.csv")
 
 		local log = LogFile{
 			target = world,
 			select = {"mcount"}
 		}
+		world:notify()
+		unitTest:assertFile("result.csv")
 
 		local soc = Society{
 			instance = world,
@@ -56,7 +62,12 @@ return{
 		}
 
 		local log = LogFile{target = soc}
+		soc:notify()
+		unitTest:assertFile("result.csv")
+
 		local log = LogFile{target = soc, select = "#"}
+		soc:notify()
+		unitTest:assertFile("result.csv")
 
 		local soc = Society{
 			instance = Agent{},
@@ -65,6 +76,8 @@ return{
 		}
 
 		local log = LogFile{target = soc}
+		soc:notify()
+		unitTest:assertFile("result.csv")
 
 		local world = CellularSpace{
 			xdim = 10,
@@ -74,9 +87,13 @@ return{
 			end
 		}
 
-		local log = LogFile{target = world}
+		local log = LogFile{target = world, file = "abc.csv"}
+		world:notify()
+		unitTest:assertFile("abc.csv")
+
 		local log = LogFile{target = world, select = "mcount"}
-    
+		world:notify()
+		unitTest:assertFile("result.csv")
 	end
 }
 

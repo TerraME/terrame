@@ -118,7 +118,8 @@ return{
 		world:notify()
 		world:notify()
 
-		unitTest:assertSnapshot(ts, "textscreen_save.bmp")
+		ts:save("textscreen_save.bmp")
+		unitTest:assertFile("textscreen_save.bmp")
 	end
 }
 

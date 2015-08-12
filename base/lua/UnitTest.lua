@@ -173,6 +173,34 @@ UnitTest_ = {
 
 		self.test = self.test + 1
 	end,
+	--- Check if a given file exists and remove it. Repeating: The file is removed when calling
+	-- this assert. If the file is a directory or does not exist then it shows an error.
+	-- @arg fname A string with a file name.
+	-- @usage unitTest:assertFile("file.txt")
+	assertFile = function(self, fname)
+		self.test = self.test + 1
+
+		mandatoryArgument(1, "string", fname)
+
+		if not isFile(fname) then
+			self.fail = self.fail + 1
+			self:printError("File '"..fname.."' does not exist.")
+			return
+		elseif isDir(fname) then
+			self.fail = self.fail + 1
+			self:printError("File '"..fname.."' is a directory.")
+			return
+		end
+
+		os.execute("rm -rf \""..fname.."\"")
+
+		if isFile(fname) then
+			self.fail = self.fail + 1 -- SKIP
+			self:printError("Could not remove file '"..fname.."'.")
+		else
+			self.success = self.success + 1
+		end
+	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
 	-- @arg value Any value.
 	-- @usage unitTest:assertNil()
