@@ -56,9 +56,9 @@ Parsing examples/sir-basic.lua
 Parsing examples/sir-campaign.lua
 Parsing examples/sir-improved.lua
 Parsing examples/sugar.lua
-Parsing examples/water-in-the-tube-discrete.lua
-Parsing examples/water-in-the-tube-inflow-outflow.lua
-Parsing examples/water-in-the-tube.lua
+Parsing examples/tube-discrete.lua
+Parsing examples/tube-inflow-outflow.lua
+Parsing examples/tube.lua
 Checking undocumented files
 Checking @usage definition
 Checking lua/Agent.lua
@@ -227,7 +227,7 @@ Checking Utils.lua
 Checking VisualTable.lua
 
 Documentation report:
-Documentation was built in 0.47 seconds.
+Documentation was built in 0.49 seconds.
 35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -235,7 +235,7 @@ No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
-All 284 global functions of the package are documented.
+All 285 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
@@ -244,11 +244,11 @@ All 313 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
-All 284 functions have @usage.
-All 284 functions call themselves in their @usage.
+All 285 functions have @usage.
+All 285 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
-All 243 links were correctly built.
+All 294 links were correctly built.
 All 21 examples are documented.
 All 21 examples are correctly documented.
 Summing up, all the documentation was successfully built.
