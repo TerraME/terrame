@@ -4,7 +4,7 @@
 
 #include <qimage.h>
 
-bool comparePerPixel(const QString &img1, const QString &img2);
+double comparePerPixel(const QString &img1, const QString &img2);
 
 #endif
 

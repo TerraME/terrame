@@ -728,7 +728,7 @@ function _Gtme.executeTests(package, fileName)
 
 		forEachElement(mdir, function(_, value)
 			if not ut.tsnapshots[value] then
-				printError("File 'snapshot/"..value.."' was not used by any assertSnapshot().")
+				printError("File 'snapshots/"..value.."' was not used by any assertSnapshot().")
 				ut.unused_snapshot_files = ut.unused_snapshot_files + 1
 			end
 		end)

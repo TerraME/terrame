@@ -169,9 +169,9 @@ int cpp_imagecompare(lua_State *L)
     const char* s1 = lua_tostring(L, -1);
     const char* s2 = lua_tostring(L, -2);
 
-	bool result = comparePerPixel(s1, s2);
+	double result = comparePerPixel(s1, s2);
 
-	lua_pushboolean(L, result);
+	lua_pushnumber(L, result);
 	return 1;
 }
 

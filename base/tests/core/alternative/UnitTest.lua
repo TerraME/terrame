@@ -169,6 +169,24 @@ return{
 		end
 
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
+
+		local error_func = function()
+			u:assertSnapshot(ch, "file.bmp", false)
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", false))
+	
+		local error_func = function()
+			u:assertSnapshot(ch, "file.bmp", 2)
+		end
+
+		unitTest:assertError(error_func, "Argument #3 should be between 0 and 1, got 2.")
+	
+		local error_func = function()
+			u:assertSnapshot(ch, "file.bmp", -1)
+		end
+
+		unitTest:assertError(error_func, "Argument #3 should be between 0 and 1, got -1.")
 	end,
 	assertType = function(unitTest)
 		local u = UnitTest{unittest = true}

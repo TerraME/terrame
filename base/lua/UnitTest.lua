@@ -229,14 +229,21 @@ UnitTest_ = {
 	-- @arg observer A Chart or a Map.
 	-- @arg file A string with the file name in the snapshot folder. If the file does not exist
 	-- then it will save the file in the snapshot folder.
+	-- @arg tolerance A number between 0 and 1 with the maximum difference in percentage of pixels
+	-- allowed. The default value is 0.
 	-- @usage c = Chart{...}
 	-- unitTest:assertSnapshot(c, "test_chart.bmp")
-	assertSnapshot = function(self, observer, file)
+	assertSnapshot = function(self, observer, file, tolerance)
 		if not belong(type(observer), {"Chart", "Map", "TextScreen", "Clock", "VisualTable"}) then
 			customError("Argument #1 should be Chart, Map, TextScreen, Clock or VisualTable, got "..type(observer)..".")
 		end
 
 		mandatoryArgument(2, "string", file)
+		optionalArgument(3, "number", tolerance)
+
+		if tolerance == nil then tolerance = 0 end
+
+		verify(tolerance >= 0 and tolerance <= 1, "Argument #3 should be between 0 and 1, got "..tolerance..".")
 
 		self.snapshots = self.snapshots + 1
 		local s = sessionInfo().separator
@@ -245,7 +252,7 @@ UnitTest_ = {
 
 			self.imgFolder = packageInfo(pkg).path..s.."snapshots" -- SKIP
 
-			if attributes(self.imgFolder, "mode") ~= "directory" then -- SKIP
+			if not isDir(self.imgFolder) then -- SKIP
 				customError("Folder '"..self.imgFolder.."' does not exist. Please create such folder in order to use assertSnapshot().")
 			end
 			self.tsnapshots = {}
@@ -271,8 +278,16 @@ UnitTest_ = {
 			observer:save(newImage)
 
 			self.test = self.test + 1
-			if cpp_imagecompare(newImage, oldImage) then
+			local merror = cpp_imagecompare(newImage, oldImage)
+
+			if merror <= tolerance then
 				self.success = self.success + 1
+			elseif tolerance > 0 then
+				local message = "Files \n  'snapshots".._Gtme.makePathCompatibleToAllOS(s..file)
+					.."'\nand\n  '"..newImage.."'\nare different." -- SKIP
+					.."\nError ("..merror..") is greater than maximum tolerance ("..tolerance..")." -- SKIP
+				self:printError(message)
+				self.fail = self.fail + 1 -- SKIP
 			else
 				self:printError("Files \n  'snapshots".._Gtme.makePathCompatibleToAllOS(s..file).."'\nand\n  '"..newImage.."'\nare different.")
 				self.fail = self.fail + 1 -- SKIP
