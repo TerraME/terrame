@@ -101,7 +101,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 		pen.setStyle(Qt::SolidLine);
 		pen.setWidth(attrib->getWidth());
 
-		// int random = rand() % 256;
+        // int random = qrand() % 256;
 		double xCell = -1.0, yCell = -1.0;
 
 		for(int pos = 0; pos < neighborhoods->size(); pos++)
@@ -273,7 +273,7 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 			QVector<QString> *values = attrib->getTextValues();
 			QVector<ObsLegend> *vecLegend = attrib->getLegend();
 
-			int random = rand() % 256;
+            int random = qrand() % 256;
 			double x = -1.0, y = -1.0;
 
 			int vSize = values->size();
