@@ -385,12 +385,14 @@ void PainterThread::drawGrid(QImage &imgResult, double &width, double &height)
     mutex.lock();
 
     QPainter p(&imgResult);
-    p.setPen(Qt::darkGray);
+    p.setPen(QPen(Qt::black));
 
     for(int j = 0; j < imgResult.height(); j++)
     {
         for(int i = 0; i < imgResult.width(); i++)
-            p.drawRect(i * width, j * height, width, height);
+        {
+            p.drawRect(QRectF(i * width, j * height, width, height));
+        }
     }
 
     mutex.unlock();
