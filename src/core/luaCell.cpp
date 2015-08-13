@@ -620,39 +620,8 @@ int luaCell::createObserver( lua_State * )
         if (obsLog)
         {
             obsLog->setAttributes(obsAttribs);
-
-            if (cols.at(0).isNull() || cols.at(0).isEmpty())
-            {
-                if (execModes != Quiet ){
-                    string err_out = string("Warning: Filename was not specified, using a '") + string(DEFAULT_NAME.toStdString()) + string("'.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
-                }
-                obsLog->setFileName(DEFAULT_NAME + ".csv");
-            }
-            else
-            {
-                obsLog->setFileName(cols.at(0));
-            }
-
-            // caso nao seja definido, utiliza o default ";"
-            if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
-            {
-                if (execModes != Quiet ){
-                    string err_out = string("Warning: Parameter 'separator' not defined, using ';'.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
-                }
-                obsLog->setSeparator();
-            }
-            else
-            {
-                obsLog->setSeparator(cols.at(1));
-            }
+            obsLog->setFileName(cols.at(0));
+            obsLog->setSeparator(cols.at(1));
 
             lua_pushnumber(luaL, obsId);
             lua_pushlightuserdata(luaL, (void*) obsLog);
