@@ -91,9 +91,9 @@ return{
 
 		world:notify()
     
-    -- unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp") -- issue #626
+		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp")
 
-		--unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp")
+		unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.01)
 
 		unitTest:clear()
 

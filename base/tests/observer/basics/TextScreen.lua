@@ -104,8 +104,9 @@ return{
 		world:notify()
 		world:notify()
 
-		--unitTest:assertSnapshot(ts1, "textscreen_cs.bmp")
-		--unitTest:assertSnapshot(ts2, "textscreen_cs_select.bmp")
+		unitTest:assertSnapshot(ts1, "textscreen_cs.bmp")
+		unitTest:assertSnapshot(ts2, "textscreen_cs_select.bmp")
+    
 	end,
 	save = function(unitTest)
 		local world = Cell{

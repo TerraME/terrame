@@ -19,13 +19,13 @@ double comparePerPixel(const QString &img1, const QString &img2)
 	if(image1.width() != image2.width() || image1.height() != image2.height())
 		return 1;
 
-	double count = 0;
-	for(int i = 0; i < image1.height(); i++)
-		for(int j = 0; j < image1.width(); j++)
+    double count = 0;
+    for(int i = 0; i < image1.height(); i++)
+        for(int j = 0; j < image1.width(); j++)
 			if(image1.pixel(j, i) != image2.pixel(j, i))
 			{
-				count = count + 1;
-			}
+                count = count + 1;
+            }
 
 	return count / (image1.width() * image1.height());
 }

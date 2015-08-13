@@ -45,7 +45,7 @@ return{
 		unitTest:assertType(c, "Chart")
 
 		tube:execute(10)
-		unitTest:assertSnapshot(c, "chart-table-0.bmp")
+		unitTest:assertSnapshot(c, "chart-table-0.bmp", 0.02)
 
 		local world = Agent{
 			count = 0,
@@ -93,13 +93,13 @@ return{
 		local c1 = Chart{target = world}
 		world:notify()
 		world:notify()
-		unitTest:assertSnapshot(c1, "chart-table-base.bmp")
+		unitTest:assertSnapshot(c1, "chart-table-base.bmp", 0.01)
 
 		local c1 = Chart{target = world, select = "mcount", xAxis = "count"}
 		world:notify()
 		world.count = world.count + 2
 		world:notify()
-		unitTest:assertSnapshot(c1, "chart-table-xaxis.bmp")
+		unitTest:assertSnapshot(c1, "chart-table-xaxis.bmp", 0.01)
 
 		local t = {
 			value1 = 2,
@@ -121,8 +121,8 @@ return{
 		t:notify()
 		t:notify()
 
-		unitTest:assertSnapshot(c1, "chart-table-1.bmp")
-		unitTest:assertSnapshot(c2, "chart-table-2.bmp")
+		unitTest:assertSnapshot(c1, "chart-table-1.bmp", 0.01)
+		unitTest:assertSnapshot(c2, "chart-table-2.bmp", 0.01)
 	end,
 	save = function(unitTest)
 		local c = Cell{value = 1}

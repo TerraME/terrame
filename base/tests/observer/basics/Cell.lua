@@ -80,14 +80,14 @@ return{
 		local ts = TextScreen{target = world}
 		LogFile{target = world}
 		local vt = VisualTable{target = world}
-		t:execute(30)
-		unitTest:assertSnapshot(c1, "chart_cell.bmp")
-		unitTest:assertSnapshot(c2, "chart_cell_select.bmp")
-		unitTest:assertSnapshot(c3, "chart_cell_style.bmp")
-		unitTest:assertSnapshot(c4, "chart_cell_select_pen.bmp")
-		unitTest:assertSnapshot(c5, "chart_cell_select_color.bmp")
-		unitTest:assertSnapshot(ts, "textscreen_cell.bmp")
-    -- unitTest:assertSnapshot(vt, "cell_visualtable.bmp") -- issue #626
+		t:execute(15)
+		unitTest:assertSnapshot(c1, "chart_cell.bmp", 0.02)
+		unitTest:assertSnapshot(c2, "chart_cell_select.bmp", 0.02)
+		unitTest:assertSnapshot(c3, "chart_cell_style.bmp", 0.02)
+		unitTest:assertSnapshot(c4, "chart_cell_select_pen.bmp", 0.02)
+		unitTest:assertSnapshot(c5, "chart_cell_select_color.bmp", 0.02)
+		unitTest:assertSnapshot(ts, "textscreen_cell.bmp", 0.01)
+		unitTest:assertSnapshot(vt, "cell_visualtable.bmp", 0.01)
 
 		world:notify(Event{start = 31, action = function() end}[1])
 

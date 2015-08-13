@@ -34,9 +34,9 @@ return{
 
 		local vt1 = VisualTable{target = world}
     
-    unitTest:assertType(vt1, "VisualTable")
+		unitTest:assertType(vt1, "VisualTable")
     
-    -- unitTest:assertSnapshot(vt1, "visualtable_cell.bmp") -- issue #626
+		unitTest:assertSnapshot(vt1, "visualtable_cell.bmp", 0.01)
 
 		local world = Agent{
 			count = 0,
@@ -47,14 +47,14 @@ return{
 
 		local vt2 = VisualTable{target = world}
     
-    -- unitTest:assertSnapshot(vt2, "visualtable_agent.bmp") -- issue #626
+		unitTest:assertSnapshot(vt2, "visualtable_agent.bmp", 0.01)
 
 		local vt3 = VisualTable{
 			target = world,
 			select = {"mcount"}
 		}
     
-    -- unitTest:assertSnapshot(vt3, "visualtable_agent2.bmp") -- issue #626
+		unitTest:assertSnapshot(vt3, "visualtable_agent2.bmp", 0.01)
     
 		local soc = Society{
 			instance = world,
@@ -64,8 +64,8 @@ return{
 		local vt4 = VisualTable{target = soc}
 		local vt5 = VisualTable{target = soc, select = "#"}
     
-    -- unitTest:assertSnapshot(vt4, "visualtable_society.bmp") -- issue #626
-    -- unitTest:assertSnapshot(vt5, "visualtable_society_select.bmp") -- issue #626
+		unitTest:assertSnapshot(vt4, "visualtable_society.bmp", 0.01)
+		unitTest:assertSnapshot(vt5, "visualtable_society_select.bmp", 0.01)
 
 		local soc = Society{
 			instance = Agent{},
@@ -75,7 +75,7 @@ return{
 
 		local vt6 = VisualTable{target = soc}
     
-    -- unitTest:assertSnapshot(vt6, "visualtable_society_agent.bmp") -- issue #626
+		unitTest:assertSnapshot(vt6, "visualtable_society_agent.bmp", 0.01)
 
 		local world = CellularSpace{
 			xdim = 10,
@@ -88,8 +88,8 @@ return{
 		local vt7 = VisualTable{target = world}
 		local vt8 = VisualTable{target = world, select = "mcount"}
     
-    -- unitTest:assertSnapshot(vt7, "visualtable_cellularspace.bmp") -- issue #626
-    -- unitTest:assertSnapshot(vt8, "visualtable_cellularspace_select.bmp") -- issue #626    
+		unitTest:assertSnapshot(vt7, "visualtable_cellularspace.bmp", 0.01)
+		unitTest:assertSnapshot(vt8, "visualtable_cellularspace_select.bmp", 0.01)    
 
 	end
 }
