@@ -35,6 +35,8 @@ metaTableLogFile_ = {__index = LogFile_}
 -- @arg data.target An Agent, Cell, CellularSpace, Society.
 -- @arg data.file A string with the file name to be saved. The default value is "result.csv".
 -- @arg data.separator A string with the separator. The default value is ",".
+-- @arg data.overwrite A boolean value indicating whether the file should be overwritten. 
+-- The default value is true.
 -- @arg data.select A vector of strings with the name of the attributes to be observed.
 -- If it is only a single value then it can also be described as a string.
 -- As default, it selects all the user-defined attributes of an object.
@@ -49,13 +51,14 @@ function LogFile(data)
 	mandatoryTableArgument(data, "target")
 	defaultTableValue(data, "separator", ",")
 	defaultTableValue(data, "file", "result.csv")
+	defaultTableValue(data, "overwrite", true)
 
 	if type(data.select) == "string" then data.select = {data.select} end
 
 	if data.select == nil then
 		data.select = {}
 		if type(data.target) == "Cell" then
-			forEachElement(data.target, function(idx, value, mtype)
+			forEachOrderedElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
 				if not belong(idx, {"x", "y", "past"}) and string.sub(idx, -1, -1) ~= "_" then
@@ -63,7 +66,7 @@ function LogFile(data)
 				end
 			end)
 		elseif type(data.target) == "Agent" then
-			forEachElement(data.target, function(idx, value, mtype)
+			forEachOrderedElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
 				if string.sub(idx, -1, -1) ~= "_" then
@@ -71,7 +74,7 @@ function LogFile(data)
 				end
 			end)
 		elseif type(data.target) == "CellularSpace" then
-			forEachElement(data.target, function(idx, value, mtype)
+			forEachOrderedElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
 				if not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim", "dbType"}) and string.sub(idx, -1, -1) ~= "_" then
@@ -79,7 +82,7 @@ function LogFile(data)
 				end
 			end)
 		elseif type(data.target) == "Society" then
-			forEachElement(data.target, function(idx, value, mtype)
+			forEachOrderedElement(data.target, function(idx, value, mtype)
 				if not belong(mtype, {"number", "string", "boolean"}) then return end
 
 				if not belong(idx, {"autoincrement", "quantity", "observerId"}) and string.sub(idx, -1, -1) ~= "_" then
@@ -101,7 +104,7 @@ function LogFile(data)
 	verify(#data.select > 0, "LogFile must select at least one attribute.")
 	forEachElement(data.select, function(_, value)
 		if data.target[value] == nil then
-			if  value == "#" then
+			if value == "#" then
 				if data.target.obsattrs == nil then
 					data.target.obsattrs = {}
 				end
@@ -132,7 +135,7 @@ function LogFile(data)
 		end)
 	end
 
-	verifyUnnecessaryArguments(data, {"target", "select", "file", "separator"})
+	verifyUnnecessaryArguments(data, {"target", "select", "file", "separator", "overwrite"})
 
 	for i = 1, #data.select do
 		if data.select[i] == "#" then
@@ -141,31 +144,36 @@ function LogFile(data)
 		end
 	end
 
+	if data.overwrite or not isFile(data.file) then
+		data.mode = "w"
+	else
+		data.mode = "w+"
+	end
+	
 	local observerType = 2
 	local observerParams = {}
 	local target = data.target
 	local id
-  local obs
+	local obs
 
 	table.insert(observerParams, data.file)
 	table.insert(observerParams, data.separator)
+	table.insert(observerParams, data.mode)
 
 	if type(target) == "CellularSpace" then
 		id, obs = target.cObj_:createObserver(observerType, {}, data.select, observerParams, target.cells)
 	else
 		id, obs = target.cObj_:createObserver(observerType, data.select, observerParams)
 	end
-  
-  local logfile = TeLogFile()
+
+	local logfile = TeLogFile()
 	logfile:setObserver(obs)
 
 	data.cObj_ = logfile
 	data.id = id
-  
-  setmetatable(data, metaTableLogFile_)  
 
+	setmetatable(data, metaTableLogFile_)
 	table.insert(_Gtme.createdObservers, data)
-  
 	return data
 end
 

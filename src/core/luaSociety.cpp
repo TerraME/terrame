@@ -352,30 +352,9 @@ int luaSociety::createObserver( lua_State * )
         if (obsLog)
         {
             obsLog->setAttributes(obsAttribs);
-
-            if (cols.at(0).isNull() || cols.at(0).isEmpty())
-            {
-                if (execModes != Quiet )
-                    qWarning("Warning: Filename was not specified, using a "
-                             "default \"%s\".", qPrintable(DEFAULT_NAME));
-                obsLog->setFileName(DEFAULT_NAME + ".csv");
-            }
-            else
-            {
-                obsLog->setFileName(cols.at(0));
-            }
-
-            // caso nao seja definido, utiliza o default ";"
-            if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
-            {
-                if (execModes != Quiet )
-                    qWarning("Warning: Separator not defined, using \";\".");
-                obsLog->setSeparator();
-            }
-            else
-            {
-                obsLog->setSeparator(cols.at(1));
-            }
+            obsLog->setFileName(cols.at(0));
+            obsLog->setSeparator(cols.at(1));
+			obsLog->setWriteMode(cols.at(2));
 
             lua_pushnumber(luaL, obsId);
             lua_pushlightuserdata(luaL, (void*) obsLog);

@@ -695,31 +695,9 @@ int luaCellularSpace::createObserver(lua_State * luaL)
     if (obsLog)
     {
         obsLog->setAttributes(obsAttribs);
-
-        if (obsParamsAtribs.at(0).isNull() || obsParamsAtribs.at(0).isEmpty())
-        {
-            if (execModes != Quiet )
-                qWarning("Warning: Filename was not specified, using a "
-                         "default \"%s\".", qPrintable(DEFAULT_NAME));
-            obsLog->setFileName(DEFAULT_NAME + ".csv");
-        }
-        else
-        {
-            obsLog->setFileName(obsParamsAtribs.at(0));
-        }
-
-        // caso nao seja definido, utiliza o default ";"
-        if ((obsParamsAtribs.size() < 2) || obsParamsAtribs.at(1).isNull()
-                || obsParamsAtribs.at(1).isEmpty())
-        {
-            if (execModes != Quiet )
-                qWarning("Warning: Separator not defined, using \";\".");
-            obsLog->setSeparator();
-        }
-        else
-        {
-            obsLog->setSeparator(obsParamsAtribs.at(1));
-        }
+        obsLog->setFileName(obsParamsAtribs.at(0));
+        obsLog->setSeparator(obsParamsAtribs.at(1));
+        obsLog->setWriteMode(obsParamsAtribs.at(2));
 
         lua_pushnumber(luaL, obsId);
         lua_pushlightuserdata(luaL, (void*) obsLog);

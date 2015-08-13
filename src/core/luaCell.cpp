@@ -607,6 +607,7 @@ int luaCell::createObserver( lua_State * )
             obsLog->setAttributes(obsAttribs);
             obsLog->setFileName(cols.at(0));
             obsLog->setSeparator(cols.at(1));
+			obsLog->setWriteMode(cols.at(2));
 
             lua_pushnumber(luaL, obsId);
             lua_pushlightuserdata(luaL, (void*) obsLog);

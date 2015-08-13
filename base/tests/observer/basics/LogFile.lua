@@ -35,7 +35,36 @@ return{
 		local log = LogFile{target = world}
 
 		unitTest:assertType(log, "LogFile")
+
 		world:notify()
+
+		local mytable = CSVread("result.csv")
+		unitTest:assertEquals(#mytable, 1)
+		unitTest:assertEquals(getn(mytable[1]), 1)
+		unitTest:assertEquals(mytable[1].count, 0)
+
+		world:notify()
+
+		local mytable = CSVread("result.csv")
+		unitTest:assertEquals(#mytable, 2)
+		unitTest:assertEquals(getn(mytable[2]), 1)
+		unitTest:assertEquals(mytable[2].count, 0)
+
+		local world2 = Cell{
+			count = 2
+		}
+
+		local log2 = LogFile{target = world2, overwrite = false}
+
+		unitTest:assertType(log2, "LogFile")
+
+		world2:notify()
+
+		local mytable = CSVread("result.csv")
+		unitTest:assertEquals(#mytable, 3)
+		unitTest:assertEquals(getn(mytable[3]), 1)
+		unitTest:assertEquals(mytable[3].count, 2)
+
 		unitTest:assertFile("result.csv")
 
 		local world = Agent{
@@ -45,9 +74,29 @@ return{
 			end
 		}
 
-		local log = LogFile{target = world, file = "file.csv"}
+		local log = LogFile{
+			target = world,
+			file = "file2.csv",
+			separator = ";",
+			overwrite = false
+		}
+
 		world:notify()
-		unitTest:assertFile("file.csv")
+		world:notify()
+
+		local mytable = CSVread("file2.csv", ";")
+		unitTest:assertEquals(#mytable, 2)
+		unitTest:assertEquals(getn(mytable[1]), 1)
+		unitTest:assertEquals(mytable[1].count, 0)
+
+		unitTest:assertFile("file2.csv")
+
+		local world = Agent{
+			count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
 
 		local log = LogFile{
 			target = world,
@@ -88,11 +137,10 @@ return{
 		}
 
 		local log = LogFile{target = world, file = "abc.csv"}
+		local log = LogFile{target = world, select = "mcount"}
+
 		world:notify()
 		unitTest:assertFile("abc.csv")
-
-		local log = LogFile{target = world, select = "mcount"}
-		world:notify()
 		unitTest:assertFile("result.csv")
 	end
 }

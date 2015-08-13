@@ -89,6 +89,10 @@ return{
 
 		t:execute(30)
 
+		local mytable = CSVread("result.csv")
+		unitTest:assertEquals(#mytable, 30)
+		unitTest:assertFile("result.csv")
+
 		world:notify()
     
     -- unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp") -- issue #626

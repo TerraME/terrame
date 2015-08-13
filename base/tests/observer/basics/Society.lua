@@ -62,6 +62,11 @@ return{
 		LogFile{target = soc}
 		local vt = VisualTable{target = soc}
 		t:execute(30)
+
+		local mytable = CSVread("result.csv")
+		unitTest:assertEquals(#mytable, 30)
+		unitTest:assertFile("result.csv")
+
 		unitTest:assertSnapshot(c1, "chart_society.bmp")
 		unitTest:assertSnapshot(c2, "chart_society_select.bmp")
 		unitTest:assertSnapshot(ts, "textscreen_society_grow.bmp")

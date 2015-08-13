@@ -44,6 +44,11 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 5))
 
 		error_func = function()
+			LogFile{target = c, overwrite = 5}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("overwrite", "boolean", 5))
+
+		error_func = function()
 			LogFile{target = c, select = "mvalue"}
 		end
 		unitTest:assertError(error_func, "Selected element 'mvalue' does not belong to the target.")

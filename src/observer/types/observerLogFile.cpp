@@ -117,38 +117,10 @@ bool ObserverLogFile::headerDefined()
     return header;
 }
 
-bool ObserverLogFile::write() //QString text)
+bool ObserverLogFile::write()
 {
-    if (fileName.isEmpty() || fileName.isNull())
-    {
-        QMessageBox::information(0, QObject::tr("TerraME Observer :: LogFile"),
-                                 QObject::tr("Invalid filename."));
-        return false;
-    }
-
     QFile file(fileName);
 
-    // Caso j? exista o arquivo, os novos valores s?o inseridos ao final do arquivo
-    // Caso contr?rio, cria o arquivo com o nome passado.
-    //if (!QFile::exists(fileName)){
-    //	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
-    //		QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
-    // QObject::tr("N?o foi poss?vel abrir o arquivo de log \"%1\".\n%2")
-    //			.arg(this->fileName).arg(file.errorString()	));
-    //		return false;
-    //	}
-    //}
-    //else{
-    //	if (!file.open(QIODevice::Append | QIODevice::Text)){
-    //		QMessageBox::information(0, QObject::tr("Erro ao abrir arquivo"),
-    // QObject::tr("N?o foi poss?vel abrir o arquivo de log \"%1\".\n%2")
-    //			.arg(this->fileName).arg(file.errorString()	));
-    //		return false;
-    //	}
-    //}
-
-
-    //if (!QFile::exists(fileName)){
     if (mode == QString("w"))
     {
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -158,6 +130,19 @@ bool ObserverLogFile::write() //QString text)
                                      .arg(this->fileName).arg(file.errorString()	));
             return false;
         }
+
+        QString headers;
+        for (int i = 0; i < attribList.size(); ++i)
+        {
+            headers += attribList.at(i);
+            
+            if (i < attribList.size() - 1)
+                headers += separator;
+        }
+        header = false;
+        headers += "\n";
+        file.write(headers.toLatin1().data(),  qstrlen( headers.toLatin1().data() ));
+ 
         mode = "w+";
     }
     else
@@ -171,29 +156,12 @@ bool ObserverLogFile::write() //QString text)
         }
     }
 
-    // insere o cabe?alho do arquivo
-    if (header)
-    {
-        QString headers;
-        for (int i = 0; i < attribList.size(); ++i)
-        {
-            headers += attribList.at(i);
-            
-            if (i < attribList.size() - 1)
-                headers += separator;
-        }
-        header = false;
-        headers += "\n";
-        file.write(headers.toLatin1().data(),  qstrlen( headers.toLatin1().data() ));
-    }
-
     QString text;
     for (int i = 0; i < valuesList.size(); ++i)
     {
         text += valuesList.at(i);
 
-        if (i < attribList.size() - 1)
-            text += separator;
+        if (i < attribList.size() - 1) text += separator;
     }
 
     text.append("\n");
