@@ -179,6 +179,8 @@ void ObserverTable::save(std::string file, std::string extension)
 
 void ObserverTable::saveAsImage(std::string file, std::string extension)
 {
+	raise();
+	activateWindow();	
       QPixmap pixmap = grab();
       pixmap.save(file.c_str(), extension.c_str());
 }

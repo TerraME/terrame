@@ -61,16 +61,17 @@ return{
 		local ts = TextScreen{target = soc}
 		LogFile{target = soc}
 		local vt = VisualTable{target = soc}
-		t:execute(30)
+
+		t:execute(15)
 
 		local mytable = CSVread("result.csv")
-		unitTest:assertEquals(#mytable, 30)
+		unitTest:assertEquals(#mytable, 15)
 		unitTest:assertFile("result.csv")
 
-		unitTest:assertSnapshot(c1, "chart_society.bmp")
-		unitTest:assertSnapshot(c2, "chart_society_select.bmp")
+		unitTest:assertSnapshot(c1, "chart_society.bmp", 0.02)
+		unitTest:assertSnapshot(c2, "chart_society_select.bmp", 0.02)
 		unitTest:assertSnapshot(ts, "textscreen_society_grow.bmp")
-    -- unitTest:assertSnapshot(vt, "society_visualtable.bmp") -- issue #626
+		unitTest:assertSnapshot(vt, "society_visualtable.bmp", 0.059)
 
 		local singleFooAgent = Agent{}
 		local cs = CellularSpace{xdim = 10}

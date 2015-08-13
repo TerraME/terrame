@@ -58,16 +58,17 @@ return{
 		local ts = TextScreen{target = world}
 		LogFile{target = world}
 		local vt = VisualTable{target = world}
-		t:execute(30)
+
+		t:execute(15)
 
 		local mytable = CSVread("result.csv")
-		unitTest:assertEquals(#mytable, 30)
+		unitTest:assertEquals(#mytable, 15)
 		unitTest:assertFile("result.csv")
 
 		unitTest:assertSnapshot(c1, "chart_agent.bmp")
 		unitTest:assertSnapshot(c2, "chart_agent_select.bmp")
-		unitTest:assertSnapshot(ts, "textscreen_agent_select.bmp")
-    -- unitTest:assertSnapshot(vt, "agent_visualtable.bmp") -- issue #626
+		unitTest:assertSnapshot(ts, "textscreen_agent_select.bmp", 0.01)
+		unitTest:assertSnapshot(vt, "agent_visualtable.bmp", 0.059)
 		
 		unitTest:clear()
 
@@ -96,7 +97,7 @@ return{
 
 		t:execute(200)
 
-		unitTest:assertSnapshot(c3, "chart_agent_xaxis.bmp")
+		unitTest:assertSnapshot(c3, "chart_agent_xaxis.bmp", 0.02)
 	end
 }
 
