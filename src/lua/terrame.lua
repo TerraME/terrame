@@ -669,7 +669,7 @@ function _Gtme.installPackage(file)
 	os.execute("cp \""..file.."\" \""..tmpfolder.."\"")
 	_Gtme.chDir(tmpfolder)
 
-	os.execute("unzip -q \""..file.."\"")
+	os.execute("unzip -oq \""..file.."\"")
 
 	local newVersion = _Gtme.include(package..s.."description.lua").version
 

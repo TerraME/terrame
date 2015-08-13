@@ -207,6 +207,54 @@ function _Gtme.packageManager()
 	local m2function = function()
 		local fname = qt.dialog.get_open_filename("Select Package", "", "*.zip")
 		if fname ~= "" then
+			local file = _Gtme.makePathCompatibleToAllOS(fname)
+			local _, pfile = string.match(file, "(.-)([^/]-([^%.]+))$") -- remove path from the file
+			local package
+
+			local result = xpcall(function() package = string.sub(pfile, 1, string.find(pfile, "_") - 1) end, function(err)
+				qt.dialog.msg_information(file.." is not a valid file name for a TerraME package")
+			end)
+
+			if not package then return end
+
+			local currentVersion
+			local packageDir = _Gtme.sessionInfo().path..s.."packages"
+			if isDir(packageDir..s..package) then
+				currentVersion = packageInfo(package).version
+				_Gtme.printNote("Package '"..package.."' is already installed")
+
+			else
+				_Gtme.printNote("Package '"..package.."' was not installed before")
+			end
+
+			local tmpfolder = tmpDir()
+
+			os.execute("cp \""..file.."\" \""..tmpfolder.."\"")
+			_Gtme.chDir(tmpfolder)
+
+			os.execute("unzip -oq \""..file.."\"")
+
+			local newVersion = _Gtme.include(package..s.."description.lua").version
+
+			if currentVersion then
+				if not _Gtme.verifyVersionDependency(newVersion, ">=", currentVersion) then
+					local msg = "New version ("..newVersion..") is older than current one ("
+						..currentVersion..").".."\nDo you really want to install "
+						.."an older version of package '"..package.."'?"
+
+					local ok = 1024
+					local cancel = 4194304
+
+					if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
+						_Gtme.printNote("Removing previous version of package")
+						os.execute("rm -rf \""..packageDir..s..package.."\"")
+					else
+						os.execute("rm -rf \""..tmpfolder.."\"")
+						return
+					end
+				end
+			end
+
 			local pkg = _Gtme.installPackage(fname)
 
 			if type(pkg) == "string" then
