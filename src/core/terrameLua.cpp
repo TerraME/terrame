@@ -31,8 +31,6 @@ Author: Tiago Garcia de Senna Carneiro
 #include <QFontDatabase>
 #include <QMessageBox>
 
-#define TME_STATISTIC_UNDEF
-
 #include "blackBoard.h"
 #include "protocol.pb.h"
 

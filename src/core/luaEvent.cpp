@@ -54,9 +54,6 @@ luaEvent::luaEvent( lua_State *L )
 /// destructor
 luaEvent::~luaEvent( void )
 {
-    // @DANIEL
-    // n?o misturar ger?ncia de mem?ria de C++ com o lado Lua
-    // luaL_unref( L, LUA_REGISTRYINDEX, ref);
 }
 
 /// Constructor - creates a luaEvent object from a Event object
@@ -109,36 +106,10 @@ int luaEvent::getPeriod( lua_State *L )
     return 1;
 }
 
-/// Registers the luaEvent object in the Lua stack
-// @DANIEL
-// Movido para a classe Reference
-//int luaEvent::setReference( lua_State* L)
-//{
-//    ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//    return 0;
-//}
-
-/// Gets the luaEvent object reference
-// @DANIEL
-// Movido para a classe Reference
-//int luaEvent::getReference( lua_State *L )
-//{
-//    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//    return 1;
-//}
-
 /// Creates an observer
 int luaEvent::createObserver( lua_State *luaL )
 {
-#ifdef DEBUG_OBSERVER
-    stackDump(luaL);
-#endif
-
-    // recupero a referencia da celula
-    //@DANIEL
-    //lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaEvent>::getReference(luaL);
-
     
     // flags para a defini??o do uso de compress?o
     // na transmiss?o de datagramas e da visibilidade
@@ -395,12 +366,6 @@ int luaEvent::getType(lua_State *L )
 /// Notifies observers
 int luaEvent::notify(lua_State *luaL )
 {
-#ifdef DEBUG_OBSERVER
-    printf("\nevent::notifyObservers\n");
-    luaStackToQString(12);
-    stackDump(luaL);
-#endif
-    
     double time = luaL_checknumber(luaL, -1);
     EventSubjectInterf::notify(time);
     return 0;
@@ -458,8 +423,6 @@ QString luaEvent::pop(lua_State *, QStringList &)
 
 QString luaEvent::getAll(QDataStream& /*in*/, int /*observerId*/, QStringList& attribs)
 {
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
     Reference<luaEvent>::getReference(luaL);
     return pop(luaL, attribs);
 }
@@ -477,12 +440,6 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, QStr
 #endif
 
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 
@@ -494,34 +451,21 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, QStr
 #else
         content = getAll(in, observerId, attribs);
 #endif
-            // serverSession->setState(observerId, 1);
-            // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(1).toAscii().constData());
             break;
-
         case 1:
 #ifdef TME_BLACK_BOARD
         content = getChanges(in, observerId, observedAttribs);
 #else
         content = getChanges(in, observerId, attribs);
 #endif
-            // serverSession->setState(observerId, 0);
-            // if (! QUIET_MODE )
-            // qWarning(QString("Observer %1 passou ao estado %2").arg(observerId).arg(0).toAscii().constData());
             break;
     }
-    // cleans the stack
-    // lua_settop(L, 0);
-
     in << content;
     return in;
 }
 
 int luaEvent::kill(lua_State *luaL)
 {
-    // recupero a referencia da celula
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaEvent>::getReference(luaL);
 
     int top = lua_gettop(luaL);;

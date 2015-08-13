@@ -40,13 +40,6 @@ of this library and its documentation.
 #include "../observer/types/agentObserverMap.h"
 #include "luaUtils.h"
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-// Estatisticas de desempenho
-#include "../observer/statistic/statistic.h"
-#endif
-
 ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L;
 
@@ -607,14 +600,6 @@ int luaCell::createObserver( lua_State * )
             return 0;
         }
 
-#ifdef DEBUG_OBSERVER
-        qDebug() << "luaCell";
-        qDebug() << "obsParams: " << obsParams;
-        qDebug() << "obsAttribs: " << obsAttribs;
-        qDebug() << "allAttribs: " << allAttribs;
-        qDebug() << "cols: " << cols;
-#endif
-
         /// Define alguns parametros do observador instanciado ---------------------------------------------------
 
         if (obsLog)
@@ -625,7 +610,6 @@ int luaCell::createObserver( lua_State * )
 
             lua_pushnumber(luaL, obsId);
             lua_pushlightuserdata(luaL, (void*) obsLog);
-
             return 2;
         }
 
@@ -864,24 +848,9 @@ const TypesOfSubjects luaCell::getType()
 /// Notifies observers about changes in the luaCell internal state
 int luaCell::notify(lua_State *L )
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ncell::notifyObservers\n");
-    luaStackToQString(12);
-# endif
-
     double time = luaL_checknumber(L, -1);
 
-#ifdef TME_STATISTIC
-    double t = Statistic::getInstance().startTime();
-
-    CellSubjectInterf::notifyObservers(time);
-
-    t = Statistic::getInstance().endTime() - t;
-    Statistic::getInstance().addElapsedTime("Total Response Time - cell", t);
-    Statistic::getInstance().collectMemoryUsage();
-#else
     CellSubjectInterf::notify(time);
-#endif
     return 0;
 }
 
@@ -1115,11 +1084,6 @@ QDataStream& luaCell::getState(QDataStream& in, Subject *, int observerId, QStri
 #endif
 
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
 
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;

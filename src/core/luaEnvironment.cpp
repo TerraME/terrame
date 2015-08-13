@@ -135,11 +135,6 @@ int luaEnvironment::execute( lua_State *)
 
 int luaEnvironment::createObserver( lua_State *luaL )
 {
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(7);
-    stackDump(luaL);
-#endif
-
     // recupero a referencia da celula
     // @DANIEL
     // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
@@ -163,10 +158,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
     //------------------------
     QStringList allAttribs, obsAttribs;
 
-#ifdef DEBUG_OBSERVER
-    qDebug("\npos table: %i\nRecuperando todos os atributos:\n", top);
-#endif
-
     // Pecorre a pilha lua recuperando todos os atributos celula
     lua_pushnil(luaL);
     while(lua_next(luaL, top) != 0)
@@ -188,10 +179,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
             } 
         }
 
-#ifdef DEBUG_OBSERVER
-        qDebug("\t%s \n", qPrintable(key));
-#endif
-
         allAttribs.push_back(key);
         lua_pop(luaL, 1);
     }
@@ -209,10 +196,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
         qFatal("Error: Attributes table not found. Incorrect sintax.\n");
         return -1;
     }
-
-#ifdef DEBUG_OBSERVER
-    printf("\npos table: %i\nRecuperando a tabela Atributos:\n", top - 1);
-#endif
 
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 1 ) != 0)
@@ -233,10 +216,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
                 key = aux; 
             } 
         } 
-
-#ifdef DEBUG_OBSERVER
-        qDebug("\t%s \n", qPrintable(key));
-#endif
 
         // Verifica se o atributo informado n?o existe deve ter sido digitado errado
         if (allAttribs.contains(key))
@@ -268,15 +247,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
         observedAttribs = allAttribs;
     }
 
-#ifdef DEBUG_OBSERVER
-    printf("\n----\n");
-    qDebug() << "obsAttribs.size(): " << obsAttribs.size();
-    qDebug() << obsAttribs;
-
-    qDebug() << "allAttribs.size(): " << allAttribs.size();
-    qDebug() << allAttribs;
-#endif
-
     //------------------------
     if(! lua_istable(luaL, top) )
     {
@@ -285,10 +255,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
     }
 
     QStringList cols, obsParams;
-
-#ifdef DEBUG_OBSERVER
-    qDebug() << "Recuperando a tabela Parametros\n" << "top: " << top;
-#endif
 
     // Recupera a tabela de parametros os observadores do tipo Table e Graphic
     // caso n?o seja um tabela a sintaxe do metodo esta incorreta
@@ -596,11 +562,6 @@ int luaEnvironment::notify(lua_State *)
 {
     double time = luaL_checknumber(luaL, -1);
 
-#ifdef DEBUG_OBSERVER
-    printf("\n EnvironmentSubjectInterf::notifyObservers \t time: %g\n", time);
-    stackDump(luaL);
-#endif
-
     EnvironmentSubjectInterf::notify(time);
     return 0;
 }
@@ -798,12 +759,6 @@ QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int observerId
 QDataStream& luaEnvironment::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs )
 #endif
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 

@@ -39,13 +39,6 @@ of this library and its documentation.
 #include "luaUtils.h"
 #include "terrameGlobals.h"
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-// Estatisticas de desempenho
-#include "../observer/statistic/statistic.h"
-#endif
-
 ///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L;
 extern ExecutionModes execModes;
@@ -61,28 +54,7 @@ luaSociety::luaSociety(lua_State *L)
 }
 
 /// destructor
-// @DANIEL
-// nao misturar ger?ncia de memoria de C++ com o lado Lua
-// luaSociety::~luaSociety( void ) { luaL_unref( L, LUA_REGISTRYINDEX, ref); }
 luaSociety::~luaSociety( void ) { }
-
-/// Registers the luaSociety object in the Lua stack
-// @DANIEL
-// Movido para clsse Reference
-//int luaSociety::setReference( lua_State* L)
-//{
-//    ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//    return 0;
-//}
-
-/// Gets the luaSociety object reference
-// @DANIEL
-// Movido para clsse Reference
-//int luaSociety::getReference( lua_State *L )
-//{
-//    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//    return 1;
-//}
 
 /// Gets the luaSociety identifier
 int luaSociety::getID( lua_State *L )
@@ -106,8 +78,6 @@ int luaSociety::setID( lua_State *L )
 int luaSociety::createObserver( lua_State * )
 {
     // recupero a referencia da celula
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaSociety>::getReference(luaL);
 
     // flags para a definicao do uso de compressao
@@ -377,17 +347,6 @@ int luaSociety::createObserver( lua_State * )
             return 0;
         }
 
-#ifdef DEBUG_OBSERVER
-        qDebug() << "luaCell";
-        qDebug() << "obsParams: " << obsParams;
-        qDebug() << "obsAttribs: " << obsAttribs;
-        qDebug() << "allAttribs: " << allAttribs;
-        qDebug() << "cols: " << cols;
-#endif
-
-        //@RODRIGO
-        //serverSession->add(obsKey);
-
         /// Define alguns parametros do observador instanciado ---------------------------------------------------
 
         if (obsLog)
@@ -523,31 +482,13 @@ const TypesOfSubjects luaSociety::getType()
 /// Notifies observers about changes in the luaSociety internal state
 int luaSociety::notify(lua_State *L )
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ncell::notifyObservers\n");
-    luaStackToQString(12);
-# endif
-
     double time = luaL_checknumber(L, -1);
-
-#ifdef TME_STATISTIC
-    double t = Statistic::getInstance().startTime();
-
-    SocietySubjectInterf::notifyObservers(time);
-
-    t = Statistic::getInstance().endTime() - t;
-    Statistic::getInstance().addElapsedTime("Total Response Time - cell", t);
-    Statistic::getInstance().collectMemoryUsage();
-#else
     SocietySubjectInterf::notify(time);
-#endif
     return 0;
 }
 
 QString luaSociety::getAll(QDataStream & /*in*/, int /*observerId*/, QStringList& attribs)
 {
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
     Reference<luaSociety>::getReference(luaL);
     return pop(luaL, attribs);
 }
@@ -555,13 +496,6 @@ QString luaSociety::getAll(QDataStream & /*in*/, int /*observerId*/, QStringList
 
 QString luaSociety::pop(lua_State *luaL, QStringList& attribs)
 {
-#ifdef DEBUG_OBSERVER
-    qDebug() << "\ngetState - Society";
-    luaStackToQString(12);
-
-    qDebug() << attribs;
-#endif
-
     QString msg;
 
     // id
@@ -573,8 +507,6 @@ QString luaSociety::pop(lua_State *luaL, QStringList& attribs)
     msg.append(PROTOCOL_SEPARATOR);
 
     // recupero a referencia na pilha lua
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaSociety>::getReference(luaL);
 
     int societyPos = lua_gettop(luaL);
@@ -683,9 +615,6 @@ QString luaSociety::pop(lua_State *luaL, QStringList& attribs)
     msg.append(elements);
     msg.append(PROTOCOL_SEPARATOR);
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << this->getId() << msg.split(PROTOCOL_SEPARATOR);
-#endif
     return msg;
 }
 
@@ -701,12 +630,6 @@ QDataStream& luaSociety::getState(QDataStream& in, Subject *, int observerId, QS
 #endif
 
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 

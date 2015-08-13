@@ -43,13 +43,6 @@ of this library and its documentation.
 #include "../observer/types/observerUDPSender.h"
 #include "../observer/types/observerShapefile.h"
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-// Estatisticas de desempenho
-#include "../observer/statistic/statistic.h"
-#endif
-
 // #define DISABLE_SHAPE_FILE
 #ifndef DISABLE_SHAPE_FILE
 //#include "terralib/drivers/shapelib/TeDriverSHPDBF.h"
@@ -231,8 +224,6 @@ int luaCellularSpace::getCell(lua_State *L)
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
     luaCell *cell = ::findCell( this, cellIndex );
     if( cell != NULL )
-        // @DANIEL
-        // ::getReference(L, cell);
         cell->getReference(L);
     else
         lua_pushnil( L );
@@ -247,25 +238,6 @@ int luaCellularSpace::size(lua_State* L)
     return 1;
 }
 
-/// Registers the luaCellularSpace object in the Lua stack
-// @DANIEL
-// Movido para Reference
-//int luaCellularSpace::setReference( lua_State* L)
-//{
-//    ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//    return 0;
-//}
-
-/// Gets the luaCellularSpace object reference
-// @DANIEL
-// Movido para Reference
-//int luaCellularSpace::getReference( lua_State *L )
-//{
-//    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//    return 1;
-//}
-
-//@RAIAN
 /// Sets the name of the TerraLib layer related to the CellularSpace object
 /// parameter: layerName is a string containing the new layerName
 /// \author Raian Vargas Maretto
@@ -904,19 +876,7 @@ const TypesOfSubjects luaCellularSpace::getType()
 int luaCellularSpace::notify(lua_State * )
 {
     double time = luaL_checknumber(L, -1);
-
-#ifdef TME_STATISTIC
-    double t = Statistic::getInstance().startTime();
-
     CellSpaceSubjectInterf::notify(time);
-
-    t = Statistic::getInstance().endTime() - t;
-    Statistic::getInstance().addElapsedTime("Total Response Time - cellspace", t);
-    Statistic::getInstance().collectMemoryUsage();
-#else
-    CellSpaceSubjectInterf::notify(time);
-#endif
-
     return 0;
 }
 
@@ -928,11 +888,9 @@ Observer * luaCellularSpace::getObserver(int id)
     else
         return NULL;
 }
-//@Rodrigo
+
 QString luaCellularSpace::getAll(QDataStream& /*in*/, int /*observerId*/ , QStringList &attribs)
 {
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
     Reference<luaCellularSpace>::getReference(luaL);
     return pop(luaL, attribs);
 }
@@ -988,13 +946,6 @@ QDataStream& luaCellularSpace::getState(QDataStream& in, Subject *, int observer
 
 QString luaCellularSpace::pop(lua_State *luaL, QStringList& attribs)
 {
-#ifdef DEBUG_OBSERVER	
-    qDebug() << "\ngetState - CellularSpace";
-    luaStackToQString(12);
-
-    qDebug() << attribs;
-#endif
-
     QString msg;
 
     // id
@@ -1006,8 +957,6 @@ QString luaCellularSpace::pop(lua_State *luaL, QStringList& attribs)
     msg.append(PROTOCOL_SEPARATOR);
 
     // recupero a referencia na pilha lua
-    // @DANIEL
-    //lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaCellularSpace>::getReference(luaL);
 
     int cellSpacePos = lua_gettop(luaL);
@@ -1143,9 +1092,6 @@ QString luaCellularSpace::pop(lua_State *luaL, QStringList& attribs)
     msg.append(elements);
     msg.append(PROTOCOL_SEPARATOR);
 
-#ifdef DEBUG_OBSERVER
-    qDebug() << this->getId() << msg.split(PROTOCOL_SEPARATOR);
-#endif
     return msg;
 }
 
@@ -2649,10 +2595,6 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
     CellularSpace::iterator itCell;
     unsigned long int cont = 0;
 
-#if defined( DEBUG_NEIGH )	
-    cout << endl;
-#endif
-
     itCell = CellularSpace::begin();
     while (itCell != CellularSpace::end())
     {
@@ -2661,9 +2603,6 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
         cellIndex.second = itCell->first.second; // cell.y
         cell = (luaCell*) itCell->second;
 
-#if defined( DEBUG_NEIGH )
-        cout << "C++, Cell: " << cell << endl;
-#endif
         // adds a new TerraME Neighborhood structure to the each cell in the CellularSpace
         NeighCmpstInterf* neighborhoods = &cell->getNeighborhoods( );
         luaNeighborhood* neighborhood = new luaNeighborhood( L );
@@ -2691,12 +2630,6 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
         neighborhoods->add( pStrNeigh );
         cont ++;
 
-#if defined( DEBUG_NEIGH )
-        cout << "C++, Neighs: " << neighborhoods << ", ";
-        cout.flush();
-        cout << neighborhoods->size() << endl;
-        cout << "C++, Neigh: " << neighborhood << ", "<< neighborhood->CellNeighborhood::size() << endl;
-#endif
         lua_getglobal(L, "Neighborhood" );
         if( !lua_isfunction(L, -1))
         {
@@ -2724,20 +2657,12 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
             return 0;
         }
 
-#if defined( DEBUG_NEIGH )
-        //break;
-#endif
         //  fullfil the cell Neighborhood structure, e. g. adds neighbours to the cell
         char xx[20], yy[20];
         sprintf(xx, "%02d", cellIndex.first );
         sprintf(yy, "%02d", cellIndex.second );
         string object_id = "C" + string( xx ) + "L" + string( yy );
 
-#if defined( DEBUG_NEIGH )
-        cout << object_id << "........................................................" << endl;
-        cout.flush();
-#endif
-        // RODRIGO
         //TeNeighbours& neigh = proxMat->getNeighbours(object_id );
         TeNeighbours neigh = proxMat->getNeighbours(object_id );
         TeNeighbours::iterator itNeigh = neigh.begin();
@@ -2751,10 +2676,6 @@ int luaCellularSpace::loadTerraLibGPM(lua_State *L){
             strcpy((char*)str, neighId.c_str());
             int neighX, neighY;
             objectId2coords(str,neighX, neighY);
-
-#if defined( DEBUG_NEIGH )
-            cout << neighId << "\t" << proxMatrixAttr.Weight() << "\t" << neighX << "\t" << neighY << endl;
-#endif
 
             // insert the new neighbor in the cell neighborhood
             cellIndex.first = neighX;
@@ -3684,8 +3605,6 @@ int luaCellularSpace::getCellByID(lua_State *L)
             idAux = cell->getID();
             if(strcmp(idAux, cellID) == 0)
             {
-                // @DANIEL
-                // ::getReference(L, cell);
                 cell->getReference(L);
                 return 1;
             }

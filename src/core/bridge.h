@@ -34,13 +34,6 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #ifndef HANDLE_BODY
 #define HANDLE_BODY
 
-#ifdef DEBUGING
-static int numInterfaceCreated = 0;
-static int numInterfaceDeleted = 0;
-static int numImplementationCreated = 0;
-static int numImplementationDeleted = 0;
-#endif
-
 /**
  * \brief
  *
@@ -56,25 +49,16 @@ public:
     /// constructor
     Interface<T>() {
         pImpl_ = new T; pImpl_->attach();
-#ifdef DEBUGING
-        numInterfaceCreated++;
-#endif
     }
 
     /// Destructor
     virtual ~Interface<T>() {
         pImpl_->detach();
-#ifdef DEBUGING
-        numInterfaceDeleted++;
-#endif
     }
 
     /// copy constructor
     Interface<T>(const Interface& interf):pImpl_(interf.pImpl_) {
         pImpl_->attach();
-#ifdef DEBUGING
-        numInterfaceCreated++;
-#endif
 
     }
 
@@ -107,9 +91,6 @@ class Implementation
 public:
     /// Constructor: zero references when the object is being built
     Implementation(): refCount_ (0) {
-#ifdef DEBUGING
-        numImplementationCreated++;
-#endif
     }
 
     /// Increases the number of references to this object
@@ -120,9 +101,6 @@ public:
     void detach () {
         if (--refCount_ == 0)	{
             delete this;
-#ifdef DEBUGING
-            numImplementationDeleted++;
-#endif
         }
     }
 

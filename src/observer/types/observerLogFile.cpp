@@ -199,7 +199,6 @@ bool ObserverLogFile::write() //QString text)
     text.append("\n");
     file.write(text.toLatin1().data(), qstrlen( text.toLatin1().data() ));
     file.close();
-
     return true;
 }
 
@@ -237,3 +236,4 @@ int ObserverLogFile::close()
     // QThread::exit(0);
     return 0;
 }
+

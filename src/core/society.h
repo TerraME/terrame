@@ -150,11 +150,6 @@ public:
     /// Gets the list of neighborhood graphs from the cell
     /// \return A reference to the list of neighborhoods.
     NeighCmpstInterf& getNeighborhoods(void) {
-
-#if defined(DEBUG_NEIGH)
-        cout << "C++, interno cell: " << &neighborhoods_ << endl;
-#endif
-
         return neighborhoods_;
     }
 

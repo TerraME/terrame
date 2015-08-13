@@ -148,14 +148,7 @@ int luaLocalAgent::build( lua_State *){
 
 int luaLocalAgent::createObserver( lua_State *L )
 {
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(12);
-    stackDump(luaL);
-#endif
-
     // recupero a referencia da celula
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef()); // ref);
     Reference<luaAgent>::getReference(luaL);
         
     // flags para a defini(C)(C)o do uso de compress(C)o
@@ -178,11 +171,6 @@ int luaLocalAgent::createObserver( lua_State *L )
         //------------------------
         QStringList allAttribs, obsAttribs;
         QList<QPair<QString, QString> > allStates;
-
-#ifdef DEBUG_OBSERVER
-        stackDump(luaL);
-        printf("\npos table: %i\nRecuperando todos os atributos:\n", top);
-#endif
 
         // Pecorre a pilha lua recuperando
         // todos os atributos celula
@@ -256,11 +244,6 @@ int luaLocalAgent::createObserver( lua_State *L )
             return -1;
         }
 
-#ifdef DEBUG_OBSERVER
-        printf("\npos table: %i\nRecuperando a tabela Atributos:\n", top - 1);
-        stackDump(luaL);
-#endif
-
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 1 ) != 0)
         {
@@ -303,11 +286,6 @@ int luaLocalAgent::createObserver( lua_State *L )
             qFatal("Error: Parameter table not found. Incorrect sintax.\n");
             return -1;
         }
-
-#ifdef DEBUG_OBSERVER
-        printf("\n*pos table: %i\nRecuperando a tabela Parametros\n", top);
-        stackDump(luaL);
-#endif
 
         QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
         QStringList cols;
@@ -837,11 +815,6 @@ int luaLocalAgent::notify(lua_State *luaL)
 {
     double time = luaL_checknumber(luaL, -1);
 
-#ifdef DEBUG_OBSERVER
-    printf("\n LocalAgentSubjectInterf::notifyObservers \t time: %g \n", time);
-    stackDump(luaL);
-#endif
-
     LocalAgentSubjectInterf::notify(time);
     return 0;
 }
@@ -853,12 +826,6 @@ QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *, int observerId,
 #endif
 
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 
@@ -895,8 +862,6 @@ QDataStream& luaLocalAgent::getState(QDataStream& in, Subject *, int observerId,
 
 QString luaLocalAgent::getAll(QDataStream& /*in*/, int /*observerId*/, QStringList& attribs)
 {
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef());	// recupero a referencia na pilha lua
     Reference<luaAgent>::getReference(luaL);
     return pop(luaL, attribs);
 }

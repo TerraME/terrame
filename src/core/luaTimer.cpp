@@ -27,9 +27,6 @@ luaTimer::luaTimer(lua_State *L)
 /// Desctructor
 luaTimer::~luaTimer(void)
 {
-    // @DANIEL
-    // nao misturar ger?ncia de memoria de C++ com o lado Lua
-    // luaL_unref( L, LUA_REGISTRYINDEX, ref);
 }
 
 /// Executes the luaTimer object
@@ -73,34 +70,9 @@ int luaTimer::reset(lua_State *)
     return 0;
 }
 
-/// Gets the object reference in the Lua stack
-// @DANIEL
-// Movido para a classe Reference
-//int luaTimer::setReference( lua_State* L)
-//{
-//    ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//    return 0;
-//}
-
-/// Sets the object reference in the Lua stack
-// @DANIEL
-// Movido para a classe Reference
-//int luaTimer::getReference( lua_State *L )
-//{
-//    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//    return 1;
-//}
-
 int luaTimer::createObserver( lua_State *luaL)
 {
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(7);
-    stackDump(luaL);
-#endif
-
     // recupero a referencia da celula
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaTimer>::getReference(luaL);
 
     // flags para a defini(C)(C)o do uso de compress(C)o
@@ -125,11 +97,6 @@ int luaTimer::createObserver( lua_State *luaL)
 
     allAttribs.push_back(TIMER_KEY); // insere a chave TIMER_KEY atual
     // int eventsCount = 0;
-
-#ifdef DEBUG_OBSERVER
-    printf("\npos table: %i\nRecuperando todos os atributos:\n", top);
-    stackDump(luaL);
-#endif
 
     // Pecorre a pilha lua recuperando todos os atributos celula
     lua_pushnil(luaL);
@@ -194,10 +161,6 @@ int luaTimer::createObserver( lua_State *luaL)
         }
         //---------------------------------------------------------------------------------------
 
-
-#ifdef DEBUG_OBSERVER
-        printf("\t%s \n", qPrintable(key));
-#endif
         if (typeObserver != TObsScheduler)
             allAttribs.push_back(key);
 
@@ -221,20 +184,11 @@ int luaTimer::createObserver( lua_State *luaL)
         return -1;
     }
 
-#ifdef DEBUG_OBSERVER
-    printf("\npos table: %i\nRecuperando a tabela Atributos:\n", top - 1);
-    //stackDump(luaL);
-#endif
-
     lua_pushnil(luaL);
 
     while(lua_next(luaL, top - 2 ) != 0)
     {
         QString key( luaL_checkstring(luaL, -1) );
-
-#ifdef DEBUG_OBSERVER
-        printf("\t%s \n", qPrintable(key));
-#endif
 
         // Verifica se o atributo informado nao existe deve ter sido digitado errado
         if (allAttribs.contains(key))
@@ -265,21 +219,6 @@ int luaTimer::createObserver( lua_State *luaL)
         observedAttribs = allAttribs;
     }
         
-#ifdef DEBUG_OBSERVER
-    printf("\n----\n");
-    printf("obsAttribs.size(): %i\n", obsAttribs.size());
-    for (int i = 0; i < obsAttribs.size(); i++)
-        printf("\tobsAttribs.at(%i): %s\n", i, obsAttribs.at(i).toAscii().constData());
-
-    printf("\n");
-
-    printf("allAttribs.size(): %i\n", allAttribs.size());
-    for (int i = 0; i < allAttribs.size(); i++)
-        printf("\tallAttribs.at(%i): %s\n", i, allAttribs.at(i).toAscii().constData());
-
-    printf("----\n");
-#endif
-
     //------------------------
 
     if(! lua_istable(luaL, top) )
@@ -293,10 +232,6 @@ int luaTimer::createObserver( lua_State *luaL)
     }
 
     QStringList cols;
-
-#ifdef DEBUG_OBSERVER
-    printf("\n*pos table: %i\nRecuperando a tabela Parametros\n", top);
-#endif
 
     // Recupera a tabela de parametros os observadores do tipo Table e Graphic
     // caso nao seja um tabela a sintaxe do metodo esta incorreta
@@ -577,34 +512,18 @@ const TypesOfSubjects luaTimer::getType()
 int luaTimer::notify(lua_State *luaL )
 {
     double time = luaL_checknumber(luaL, -1);
-
-#ifdef DEBUG_OBSERVER
-    printf("\n scheduler::notifyObservers \t time: %g\n", time);
-    luaStackToQString(12);
-#endif
-
     SchedulerSubjectInterf::notify(time);
     return 0;
 }
 
-//@RODRIGO
 QString luaTimer::getAll(QDataStream& /*in*/, int /*observerId*/, QStringList& attribs)
 {
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
     Reference<luaTimer>::getReference(luaL);
     return pop(luaL, attribs);
 }
 
 QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-    qDebug() << attribs;
-#endif
-
     double num = 0, minimumTime = 100000.0;
     int eventsCount = 0;
     bool boolAux = false;
@@ -839,12 +758,6 @@ QDataStream& luaTimer::getState(QDataStream& in, Subject *, int observerId, QStr
 #endif
 
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 

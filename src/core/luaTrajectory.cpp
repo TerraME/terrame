@@ -17,7 +17,6 @@ extern ExecutionModes execModes;
 
 luaTrajectory::luaTrajectory(lua_State* L)
 {
-    // Antonio
     subjectType = TObsTrajectory;
     luaL = L;
     cellSpace = 0;
@@ -26,9 +25,6 @@ luaTrajectory::luaTrajectory(lua_State* L)
 
 luaTrajectory::~luaTrajectory(void)
 {
-    // @DANIEL
-    // n?o misturar ger?ncia de mem?ria de C++ com o lado Lua
-    // luaL_unref( L, LUA_REGISTRYINDEX, ref);
     luaRegion::clear();
 }
 
@@ -50,32 +46,9 @@ int luaTrajectory::clear( lua_State *)
     return 0;
 }
 
-// @DANIEL
-// Movido para a classe Reference
-//int luaTrajectory::setReference( lua_State* L)
-//{
-//    ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//    return 0;
-//}
-
-// @DANIEL
-// Movido para a classe Reference
-//int luaTrajectory::getReference( lua_State *L )
-//{
-//    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//    return 1;
-//}
-
 int luaTrajectory::createObserver( lua_State *L )
 {
-
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(7);
-#endif
-
     // recupero a referencia da celula
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);
     Reference<luaTrajectory>::getReference(luaL);
 
     // flags para a defini??o do uso de compress?o
@@ -332,13 +305,6 @@ int luaTrajectory::createObserver( lua_State *L )
             }
             return 0; 
         }
-
-#ifdef DEBUG_OBSERVER
-        qDebug() << "obsParams: " << obsParams;
-        qDebug() << "\nobsAttribs: " << obsAttribs;
-        qDebug() << "\nallAttribs: " << allAttribs;
-        qDebug() << "\ncols: " << cols;
-#endif
 
 		if (obsLog)
 		{
@@ -622,8 +588,6 @@ int luaTrajectory::notify(lua_State *L )
 
 QString luaTrajectory::getAll(QDataStream& /*in*/, int /*observerId*/ , QStringList &attribs)
 {
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, ref);	// recupero a referencia na pilha lua
     Reference<luaTrajectory>::getReference(luaL);
     return pop(luaL, attribs);
 }
@@ -639,12 +603,6 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId,
 QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs )
 #endif
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 
@@ -681,13 +639,6 @@ QDataStream& luaTrajectory::getState(QDataStream& in, Subject *, int observerId,
 
 QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
 {
-#ifdef DEBUG_OBSERVER	
-    printf("\ngetState - Trajectory\n\n");
-    luaStackToQString(12);
-
-    qDebug() << attribs;
-#endif
-
     QString msg;
 
     // id
@@ -845,11 +796,6 @@ QString luaTrajectory::pop(lua_State *luaL, QStringList& attribs)
     msg.append(PROTOCOL_SEPARATOR);
     msg.append(elements);
     msg.append(PROTOCOL_SEPARATOR);
-
-#ifdef DEBUG_OBSERVER
-    // save(msg);
-    // qDebug() << msg.split(PROTOCOL_SEPARATOR); //, QString::SkipEmptyParts);
-#endif
 
     return msg;
 }

@@ -14,14 +14,6 @@
 #include "../observer/types/agentObserverImage.h"
 #include "../observer/types/observerStateMachine.h"
 
-#define TME_STATISTIC_UNDEF
-
-#ifdef TME_STATISTIC
-   // Estatisticas de desempenho
-   #include "../observer/statistic/statistic.h"
-#endif
-
-
 ///< true - TerrME runs in verbose mode and warning messages to the user; 
 /// false - it runs in quite node and no messages are shown to the user.
 extern ExecutionModes execModes;
@@ -113,14 +105,7 @@ int luaGlobalAgent::getControlModeName( lua_State* L)
 
 int luaGlobalAgent::createObserver( lua_State *L )
 {
-#ifdef DEBUG_OBSERVER
-    luaStackToQString(12);
-    stackDump(luaL);
-#endif
-
     // recupero a referencia da celula
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef()); // ref);
     Reference<luaAgent>::getReference(luaL);
         
     // flags para a defini??o do uso de compress?o
@@ -144,11 +129,6 @@ int luaGlobalAgent::createObserver( lua_State *L )
         //------------------------
         QStringList allAttribs, obsAttribs;
         QList<QPair<QString, QString> > allStates;
-
-#ifdef DEBUG_OBSERVER
-        stackDump(luaL);
-        printf("\npos table: %i\nRecuperando todos os atributos:\n", top);
-#endif
 
         // Pecorre a pilha lua recuperando
         // todos os atributos
@@ -226,10 +206,6 @@ int luaGlobalAgent::createObserver( lua_State *L )
             return -1;
         }
 
-#ifdef DEBUG_OBSERVER
-        printf("\npos table: %i\nRecuperando a tabela Atributos:\n", top - 1);
-#endif
-
         lua_pushnil(luaL);
         while(lua_next(luaL, top - 1 ) != 0)
         {
@@ -274,11 +250,6 @@ int luaGlobalAgent::createObserver( lua_State *L )
 
         QStringList obsParams, obsParamsAtribs; // parametros/atributos da legenda
         QStringList cols;
-
-#ifdef DEBUG_OBSERVER
-        printf("\n*pos table: %i\nRecuperando a tabela Parametros\n", top);
-        stackDump(luaL);
-#endif
 
         // Recupera a tabela de parametros dos observadores do tipo table e Graphic
         // caso n?o seja um tabela a sintaxe do metodo esta incorreta
@@ -390,20 +361,6 @@ int luaGlobalAgent::createObserver( lua_State *L )
                 lua_call(L,2,0);
             }
         }
-
-        //------------------------
-#ifdef DEBUG_OBSERVER
-        qDebug() << "allAttribs.size(): " << allAttribs.size();
-        qDebug() << allAttribs;
-        qDebug() << "\nobsAttribs.size(): " << obsAttribs.size();
-        qDebug() << obsAttribs;
-        qDebug() << "\nobsParams.size(): " << obsParams.size();
-        qDebug() << obsParams;
-        qDebug() << "\ncols.size(): " << cols.size();
-        qDebug() << cols;
-        qDebug() << "\nobsParamsAtribs.size(): " << obsParamsAtribs.size();
-        qDebug() << obsParamsAtribs;
-#endif
 
         ObserverTextScreen *obsText = 0;
         ObserverTable *obsTable = 0;
@@ -854,33 +811,12 @@ const TypesOfSubjects luaGlobalAgent::getType()
 int luaGlobalAgent::notify(lua_State *luaL)
 {
     double time = luaL_checknumber(luaL, -1);
-
-#ifdef DEBUG_OBSERVER
-    printf("\n GlobalAgentSubjectInterf::notify \t time: %g\n", time);
-    stackDump(luaL);
-#endif
-
-#ifdef TME_STATISTIC
-   double t = Statistic::getInstance().startTime();
-
-   GlobalAgentSubjectInterf::notify(time);
-   
-   t = Statistic::getInstance().endTime() - t;
-   Statistic::getInstance().addElapsedTime("resposta total agent", t);
-   Statistic::getInstance().collectMemoryUsage();
-#else
     GlobalAgentSubjectInterf::notify(time);
-#endif
-
     return 0;
 }
 
 QString luaGlobalAgent::pop(lua_State *luaL, QStringList& attribs)
 {
-//#ifdef TME_STATISTIC 
-//    double t = Statistic::getInstance().startMicroTime();
-//#endif
-
     QString msg;
     QStringList coordList = QStringList() << "x" << "y";
 
@@ -1073,19 +1009,11 @@ QString luaGlobalAgent::pop(lua_State *luaL, QStringList& attribs)
     msg.append(elements);
     msg.append(PROTOCOL_SEPARATOR);
 
-//#ifdef TME_STATISTIC 
-//    t = Statistic::getInstance().endMicroTime() - t;
-//    Statistic::getInstance().addElapsedTime("recuperacao agent", t);
-//    Statistic::getInstance().startVolatileTime();
-//#endif
-    
     return msg;
 }
 
 QString luaGlobalAgent::getAll(QDataStream& /*in*/, int /*observerId*/, QStringList& attribs)
 {
-    // @DANIEL
-    // lua_rawgeti(luaL, LUA_REGISTRYINDEX, getRef());	// recupero a referencia na pilha lua
     Reference<luaAgent>::getReference(luaL);
     return pop(luaL, attribs);
 }
@@ -1101,11 +1029,6 @@ QDataStream& luaGlobalAgent::getState(QDataStream& in, Subject *, int observerId
 QDataStream& luaGlobalAgent::getState(QDataStream& in, Subject *, int observerId, QStringList &  attribs )
 #endif
 {
-
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
 
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;

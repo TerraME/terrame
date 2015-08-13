@@ -38,9 +38,6 @@ luaNeighborhood::luaNeighborhood(lua_State *) {
 }
 
 /// destructor
-// @DANIEL:
-// Controle de recursos de mem?ria (destrutor C++ VS Lua Garbage Collector) n?o devem ser misturados
-// luaNeighborhood::~luaNeighborhood( void ) { luaL_unref( L, LUA_REGISTRYINDEX, ref); }
 luaNeighborhood::~luaNeighborhood( void ) { }
 
 /// Adds a new cell to the luaNeigborhood
@@ -54,8 +51,6 @@ int luaNeighborhood::addNeighbor(lua_State *L) {
     cellIndex.first = luaL_checknumber(L, -4);
     if( cell != NULL ) {
         CellNeighborhood::add(cellIndex, (Cell*)cell, weight);
-        // @DANIEL:
-        // ::getReference(L, cell);
         cell->getReference(L);
     }
     else lua_pushnil( L );
@@ -90,8 +85,6 @@ int luaNeighborhood::addCell(lua_State *L) {
     luaCell *cell = ::findCell( cs, cellIndex );
     if( cell != NULL ) {
         CellNeighborhood::add(cellIndex, (Cell*)cell, weight);
-        // @DANIEL:
-        // ::getReference(L, cell);
         cell->getReference(L);
     }
     else lua_pushnil( L );
@@ -131,8 +124,6 @@ int luaNeighborhood::getCellNeighbor(lua_State *L) {
     luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
     CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
     luaCell *cell = (luaCell*)(*CellNeighborhood::pImpl_)[ cellIndex ];
-    // @DANIEL
-    // if( cell ) ::getReference(L, cell);
     if( cell ) cell->getReference(L);
     else lua_pushnil( L );
     return 1;
@@ -166,8 +157,6 @@ int luaNeighborhood::getNeighbor( lua_State *L )
     if( it != CellNeighborhood::end() ){
         cellIndex = it->first;
         luaCell *cell = (luaCell*) it->second; //dynamic_cast<luaCell*>(it->second);
-        // @DANIEL
-        // ::getReference(L, cell);
         cell->getReference(L);
         return 1;
     }
@@ -374,26 +363,6 @@ int luaNeighborhood::size(lua_State *L) {
     return 1;
 }
 
-/// Registers the Lua object in the Lua stack, storing its reference
-// @DANIEL
-// Movido para Reference
-//int luaNeighborhood::setReference( lua_State* L)
-//{
-//    ref = luaL_ref(L, LUA_REGISTRYINDEX );
-//    return 0;
-//}
-
-/// Gets the luaNeighborhood object reference.
-/// no parameters
-// @DANIEL
-// Movido para Reference
-//int luaNeighborhood::getReference( lua_State *L )
-//{
-//    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-//    return 1;
-//}
-
-//@RAIAN 
 /// Gets the Neighborhood Parent, i. e., the "central" cell in the neighborhood graph.
 /// no parameters
 /// \author Raian Vargas Maretto
@@ -401,15 +370,12 @@ int luaNeighborhood::getParent( lua_State *L )
 {
     luaCell* parent = (luaCell*) CellNeighborhood::getParent();
     if(parent)
-        // @DANIEL:
-        //::getReference(L, parent);
         parent->getReference(L);
     else
         lua_pushnil(L);
 
     return 1;
 }
-//@RAIAN: FIM
 
 // int luaTrajectory::createObserver( lua_State *L )
 // {
@@ -423,11 +389,6 @@ int luaNeighborhood::getParent( lua_State *L )
 
 QDataStream& luaNeighborhood::getState(QDataStream& in, Subject *, int observerId, QStringList &attribs)
 {
-#ifdef DEBUG_OBSERVER
-    printf("\ngetState\n\nobsAttribs.size(): %i\n", obsAttribs.size());
-    luaStackToQString(12);
-#endif
-
     int obsCurrentState = 0; //serverSession->getState(observerId);
     QString content;
 
