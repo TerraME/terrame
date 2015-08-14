@@ -296,14 +296,14 @@ function Model(attrTab)
 	end
 
 	forEachElement(attrTab, function(name, value, mtype)
-		if mtype == "table" and #value == 0 then
-			forEachElement(value, function(iname, ivalue, itype)
-				if not belong(itype, {"Choice", "Mandatory", "number", "string", "function", "boolean"}) then
+		if mtype == "table" then
+			forEachElement(value, function(iname, _, itype)
+				if type(iname) ~= "string" then
+					customError("It is not possible to use a non-named table in a Model (parameter '"..name.."').")
+				elseif not belong(itype, {"Choice", "Mandatory", "number", "string", "function", "boolean"}) then
 					customError("Type "..itype.." (parameter '"..name.."."..iname.."') is not supported as argument of Model.")
 				end
 			end)
-		elseif mtype == "table" and #value > 0 then
-			customError("It is not possible to use a non-named table in a Model (parameter '"..name.."').")
 		elseif not belong(mtype, {"Choice", "Mandatory", "number", "string", "function", "boolean"}) then
 			customError("Type "..mtype.." (parameter '"..name.."') is not supported as argument of Model.")
 		end
