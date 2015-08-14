@@ -367,7 +367,9 @@ int luaTimer::createObserver( lua_State *luaL)
         default:
             if (execModes != Quiet )
             {
-                string err_out = string("Warning: In this context, the code '") + string(getObserverName(typeObserver)) + string("' does not correspond to a valid type of Observer.");
+                string err_out = string("Warning: In this context, the code '")
+                        + string(getObserverName(typeObserver))
+                        + string("' does not correspond to a valid type of Observer.");
                 lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,4);
@@ -384,14 +386,6 @@ int luaTimer::createObserver( lua_State *luaL)
 
         if (cols.at(0).isNull() || cols.at(0).isEmpty())
         {
-            if (execModes != Quiet )
-            {
-                string err_out = string("Warning: Filename was not specified, using a default '") + string(qPrintable(DEFAULT_NAME)) + string("'");
-                lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
-            }
             obsLog->setFileName(DEFAULT_NAME + ".csv");
         }
         else
@@ -402,13 +396,6 @@ int luaTimer::createObserver( lua_State *luaL)
         // caso nao seja definido, utiliza o default ";"
         if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
-            if (execModes != Quiet ){
-                string err_out = string("Warning: Separator not defined, using ';'.");
-                lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
-            }
             obsLog->setSeparator();
         }
         else
@@ -429,17 +416,6 @@ int luaTimer::createObserver( lua_State *luaL)
 
     if (obsTable)
     {
-        if ((cols.size() < 1) || (cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
-                || cols.at(1).isNull() || cols.at(1).isEmpty())
-        {
-            if (execModes != Quiet ){
-                string err_out = string("Warning: Column title not defined.");
-                lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
-            }
-        }
         obsTable->setColumnHeaders(cols);
         obsTable->setAttributes(obsAttribs);
 
@@ -450,33 +426,11 @@ int luaTimer::createObserver( lua_State *luaL)
     if (obsUDPSender)
     {
         obsUDPSender->setAttributes(obsAttribs);
-
-        // if(cols.at(0).isEmpty())
-        if (cols.isEmpty())
-        {
-            if (execModes != Quiet ){
-                string err_out = string("Warning: Port not defined.");
-                lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
-            }
-        }
-        else
-        {
-            obsUDPSender->setPort(cols.at(0).toInt());
-        }
+        obsUDPSender->setPort(cols.at(0).toInt());
 
         // broadcast
         if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
         {
-            if (execModes != Quiet ){
-                string err_out = string("Warning: Observer will send broadcast.");
-                lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
-            }
             obsUDPSender->addHost(BROADCAST_HOST);
         }
         else

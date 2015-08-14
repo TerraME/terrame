@@ -136,14 +136,6 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 						{
 							if( !reconfigMaxMin )
 							{
-								printf("C++ - Min value: %f\n", attrib->getMinValue());
-								printf("C++ - Max value: %f\n", attrib->getMaxValue());
-								printf("C++ - c value: %f\n", c);
-
-								qWarning("Warning: Invalid color. You need to reconfigure the maximum "
-									"and the minimum values of the \"%s\".", 
-									qPrintable(attrib->getName()) );
-
 								reconfigMaxMin = true;
 							}
 							color.setRgb(255, 255, 255);
