@@ -73,17 +73,7 @@ end %>
 	if func.arg.named then
 		arg_name = func.arg[i]
 	else
-		local sufix
-		if i == 1 then
-			sufix = "st"
-		elseif i == 2 then
-			sufix = "nd"
-		elseif i == 3 then
-			sufix = "rd"
-		else
-			sufix = "th"
-		end
-		arg_name = i .. sufix
+		arg_name = "#"..i
 	end %>
     <li>
 	  <strong><%=arg_name%></strong>: <%= luadoc.link_description(arg_desc or "", doc, module_doc, file_doc, from, nil, func.name, doc_report) %>
