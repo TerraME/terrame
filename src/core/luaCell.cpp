@@ -451,21 +451,6 @@ int luaCell::createObserver( lua_State * )
             lua_pop(luaL, 1);
         }
 
-        // Caso nao seja definido nenhum parametro,
-        // e o observador nao e' TextScreen entao
-        // lanca um warning
-        if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
-        {
-            if (execModes != Quiet){
-                string err_out = string("Warning: Parameter table is empty.");
-                lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
-            }
-        }
-        //------------------------
-
         ObserverTextScreen *obsText = 0;
         ObserverTable *obsTable = 0;
         ObserverGraphic *obsGraphic = 0;
@@ -591,7 +576,9 @@ int luaCell::createObserver( lua_State * )
         default:
             if (execModes != Quiet )
             {
-                string err_out = string("Warning: In this context, the code '") + string(getObserverName(typeObserver)) + string("' does not correspond to a valid type of Observer.");
+                string err_out = string("Warning: In this context, the code '")
+                        + string(getObserverName(typeObserver))
+                        + string("' does not correspond to a valid type of Observer.");
                 lua_getglobal(L, "customWarning");
                 lua_pushstring(L,err_out.c_str());
                 lua_pushnumber(L,5);
@@ -625,18 +612,6 @@ int luaCell::createObserver( lua_State * )
 
         if (obsTable)
         {
-            if ((cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
-                    || cols.at(1).isNull() || cols.at(1).isEmpty())
-            {
-                if (execModes != Quiet ){
-                    string err_out = string("Warning: Column title not defined.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
-                }
-            }
-
             obsTable->setColumnHeaders(cols);
             obsTable->setAttributes(obsAttribs);
 
@@ -670,32 +645,11 @@ int luaCell::createObserver( lua_State * )
         {
             obsUDPSender->setAttributes(obsAttribs);
 
-            // if (cols.at(0).isEmpty())
-            if (cols.isEmpty())
-            {
-                if (execModes != Quiet ){
-                    string err_out = string("Warning: Parameter 'port' not defined.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
-                }
-            }
-            else
-            {
-                obsUDPSender->setPort(cols.at(0).toInt());
-            }
+            obsUDPSender->setPort(cols.at(0).toInt());
 
             // broadcast
             if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
             {
-                if (execModes != Quiet ){
-                    string err_out = string("Warning: Observer will send broadcast.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
-                }
                 obsUDPSender->addHost(BROADCAST_HOST);
             }
             else

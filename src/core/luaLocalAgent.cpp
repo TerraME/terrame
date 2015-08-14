@@ -382,20 +382,6 @@ int luaLocalAgent::createObserver( lua_State *L )
             lua_pop(luaL, 1);
         }
 
-        // Caso no seja definido nenhum parametro e o observador no TextScreen entao
-        // lanca uma falha
-        if ((cols.isEmpty()) && (typeObserver != TObsTextScreen))
-        {
-            if (execModes != Quiet ){
-                string err_out = string("Warning: The parameter table is empty.");
-                lua_getglobal(L, "customWarning");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
-            }
-        }
-        //------------------------
-
         ObserverTextScreen *obsText = 0;
         ObserverTable *obsTable = 0;
         ObserverGraphic *obsGraphic = 0;
@@ -527,11 +513,6 @@ int luaLocalAgent::createObserver( lua_State *L )
 
             if (cols.at(0).isNull() || cols.at(0).isEmpty())
             {
-                if (execModes != Quiet )
-                {
-                    qWarning("Warning: Filename was not specified, using a "
-                        "default \"%s\".", qPrintable(DEFAULT_NAME));
-                }
                 obsLog->setFileName(DEFAULT_NAME + ".csv");
             }
             else
@@ -542,14 +523,13 @@ int luaLocalAgent::createObserver( lua_State *L )
             // caso no seja definido, utiliza o default ";"
             if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
             {
-                if (execModes != Quiet )
-                    qWarning("Warning: Separator not defined, using \";\".");
                 obsLog->setSeparator();
             }
             else
             {
                 obsLog->setSeparator(cols.at(1));
             }
+
             lua_pushnumber(luaL, obsId);
             return 1;
         }
@@ -564,12 +544,6 @@ int luaLocalAgent::createObserver( lua_State *L )
 
         if (obsTable)
         {
-            if ((cols.size() < 1) || (cols.size() < 2) || cols.at(0).isNull() || cols.at(0).isEmpty()
-                || cols.at(1).isNull() || cols.at(1).isEmpty())
-            {
-                if (execModes != Quiet )
-                    qWarning("Warning: Column title not defined.");
-            }
             obsTable->setColumnHeaders(cols);
             obsTable->setAttributes(obsAttribs);
 
@@ -580,28 +554,11 @@ int luaLocalAgent::createObserver( lua_State *L )
         if (obsUDPSender)
         {
             obsUDPSender->setAttributes(obsAttribs);
-
-            // if(cols.at(0).isEmpty())
-            if (cols.isEmpty())
-            {
-                if (execModes != Quiet )
-                    qWarning("Warning: Port not defined.");
-            }
-            else
-            {
-                obsUDPSender->setPort(cols.at(0).toInt());
-            }
+            obsUDPSender->setPort(cols.at(0).toInt());
 
             // broadcast
             if ((cols.size() == 1) || ((cols.size() == 2) && cols.at(1).isEmpty()) )
             {
-                if (execModes != Quiet ){
-                    string err_out = string("Warning: Observer will send broadcast.");
-                    lua_getglobal(L, "customWarning");
-                    lua_pushstring(L,err_out.c_str());
-                    lua_pushnumber(L,5);
-                    lua_call(L,2,0);
-                }
                 obsUDPSender->addHost(BROADCAST_HOST);
             }
             else

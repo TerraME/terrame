@@ -68,13 +68,6 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
                 {
                     if (! reconfigMaxMin)
                     {
-                        /*
-                        if (! QUIET_MODE )
-                            qWarning("Warning: Invalid color. You need to reconfigure the "
-                                     "maximum and the minimum values of the attribute \"%s\".",
-                                     qPrintable(attrib->getName()) );
-                        */
-
                         reconfigMaxMin = true;
                     }
                     color.setRgb(255, 255, 255);
@@ -113,7 +106,7 @@ void PainterShapefile::drawAttrib(Attributes *attrib)
         QVector<QString> *values = attrib->getTextValues();
         QVector<ObsLegend> *vecLegend = attrib->getLegend();
 
-        int random = rand() % 256;
+        int random = qrand() % 256;
         double x = -1.0, y = -1.0;
 
         int vSize = values->size();
