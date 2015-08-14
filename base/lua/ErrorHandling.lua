@@ -646,6 +646,12 @@ end
 -- @usage t = {value = 2}
 -- verifyUnnecessaryArguments(t, {"target", "select"})
 function verifyUnnecessaryArguments(data, arguments)
+	forEachElement(data, function(idx)
+		if type(idx) ~= "string" then
+			customError("Arguments should have only string indexes, got "..type(idx)..".")
+		end
+	end)
+
 	local count = 0
 	forEachElement(data, function(value)
 		local notCorrectArguments = {}

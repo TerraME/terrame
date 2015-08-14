@@ -295,6 +295,11 @@ return{
 			verifyUnnecessaryArguments({aaaa = "aaa"}, {"aabc", "aacd", "aaab"})
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("aaaa", "aaab"))
+
+		local error_func = function(unitTest)
+			verifyUnnecessaryArguments({[1] = "aaa"}, {"aabc", "aacd", "aaab"})
+		end
+		unitTest:assertError(error_func, "Arguments should have only string indexes, got number.")
 	end,
 	verifyNamedTable = function(unitTest)
 		local error_func = function()
