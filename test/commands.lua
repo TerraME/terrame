@@ -64,6 +64,7 @@ basic = {
 	uninstall   = {arg = "-package abcdef -uninstall"},
 	trace       = {script = "trace.lua"},
 	fulltrace   = {script = "trace.lua", arg = "-ft"},
+	observer    = {script = "observer.lua"},
 	qwerty4321  = {package = "qwerty4321"},
 }
 

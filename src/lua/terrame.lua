@@ -918,6 +918,7 @@ function _Gtme.traceback()
 		return ""
 	end
 	--_Gtme.printWarning(str)
+	_Gtme.killAllObservers()
 	return str--string.sub(str, 0, string.len(str) - 1)
 end
 
