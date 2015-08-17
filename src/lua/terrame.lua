@@ -1238,8 +1238,13 @@ function _Gtme.myxpcall(func)
 				"*************************************************************\n"..
 				"UNEXPECTED TERRAME INTERNAL ERROR. PLEASE GIVE US A FEEDBACK.\n"..
 				"WRITE AN EMAIL TO pedro.andrade@inpe.br REPORTING THIS ERROR.\n"..
-				"*************************************************************\n"..
-				err.."\nStack traceback:\n"
+				"*************************************************************\n"
+
+			if _Gtme.sessionInfo().fullTraceback then
+				str = ""
+			end
+
+			str = str..err.."\nStack traceback:\n"
 
 			local level = 1
 			local info = debug.getinfo(level)
