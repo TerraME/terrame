@@ -193,7 +193,7 @@ function InternetSender(data)
 
 	local isender
 
-	if observerType == 13 then
+	if observerType == 13 then -- SKIP
 		isender = TeTcpSender()
 	else
 		isender = TeUdpSender()
@@ -201,11 +201,11 @@ function InternetSender(data)
 
 	isender:setObserver(obs)
 
-	data.cObj_ = logfile
-	data.id = id
+	data.cObj_ = logfile -- SKIP
+	data.id = id -- SKIP
 
 	setmetatable(data, metaTableInternetSender_)
-	table.insert(_Gtme.createdObservers, data)
+	table.insert(_Gtme.createdObservers, data) -- SKIP
 
 	return data
 end
