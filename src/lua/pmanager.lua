@@ -87,8 +87,14 @@ function _Gtme.packageManager()
 	end)
 
 	dbButton = qt.new_qobject(qt.meta.QPushButton)
-	dbButton.text = "Import Db"
+	dbButton.text = "Databases"
 	qt.connect(dbButton, "clicked()", function()
+		local mysqlCheck = _Gtme.validateMySql()		
+		if not (mysqlCheck == "") then
+			qt.dialog.msg_critical(mysqlCheck)
+			return
+		end		
+		
 		local files = _Gtme.sqlFiles(comboboxPackages.currentText)
 
 		local msg = "The following databases will be imported:\n"
