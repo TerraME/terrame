@@ -128,14 +128,13 @@ function isDir(path)
 
 	if lfs.attributes(path:gsub("\\$", ""), "mode") == "directory" then
 		return true
-	else
-		return false
 	end
 	
 	return false
 end
 
 --- Return whether a given string represents a file stored in the computer.
+-- A directory is also considered a file.
 -- @arg file A string.
 -- @usage isFile("C:\\file.txt")
 function isFile(file)

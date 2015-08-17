@@ -507,10 +507,11 @@ function forEachElement(obj, func)
 	return true
 end
 
---- Second order function to transverse a given folder,
--- applying a given function on each of its files. If any of the function calls returns
+--- Second order function to transverse a given directory,
+-- applying a given function on each of its files. Internal directories are
+-- also considered files. If any of the function calls returns
 -- false, forEachFile() stops and returns false, otherwise it returns true.
--- @arg folder A string with the path to a folder, or a vector of files.
+-- @arg folder A string with the path to a directory, or a vector of files.
 -- @arg f A user-defined function that takes a file name as argument. Note that
 -- the name does not include the directory where the file is placed.
 -- @usage forEachFile("C:", function(file)
