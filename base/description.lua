@@ -1,6 +1,6 @@
-version = "1.4"
+version = "1.5"
 license = "LGPL-3"
-date = "13 July 2015"
+date = "21 August 2015"
 package = "base"
 title = "TerraME Types and Functions"
 url = "http://www.terrame.org"
