@@ -1,24 +1,40 @@
+
+@font-face {
+	font-family: "Ubuntu";
+	src: url('Ubuntu-L.ttf');
+}
+
+@font-face {
+	font-family: "Ubuntu Mono";
+	src: url('UbuntuMono-R.ttf');
+}
+
 body { 
     margin-left: 1em; 
     margin-right: 1em; 
-    font-family: arial, helvetica, geneva, sans-serif;
+    font-family: "Ubuntu";
 	background-color:#ffffff; margin:0px;
 }
 
 code {
-    font-family: "Andale Mono", monospace; 
+    font-family: "Ubuntu Mono";
+	font-size: 12pt;
 }
 
 tt {
-    font-family: "Andale Mono", monospace; 
+    font-family: "Ubuntu Mono", monospace; 
 }
 
-body, td, th { font-size: 11pt; }
+body, td, th { font-size: 12pt; }
 
 h1, h2, h3, h4 { margin-left: 0em; }
 
-textarea, pre, tt { font-size:10pt; }
-body, td, th { color:#000000; }
+textarea, pre, tt { font-size:12pt; }
+body, td, th { 
+	color:#000000; 
+    font-family: "Ubuntu";
+
+}
 small { font-size:0.85em; }
 h1 { font-size:1.5em; }
 h2 { font-size:1.25em; }

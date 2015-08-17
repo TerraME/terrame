@@ -73,9 +73,9 @@
 						<br>
 					</div>
 
-					<p> <%if doc.description.content ~= "Undefined content" then%> <%= doc.description.content %>
-						<%else%> <font color="red"><b><%= doc.description.content %></b></font>
-						<%end%></p>
+					<%if doc.description.content ~= "Undefined content" then%> <%= doc.description.content %>
+					<%else%> <font color="red"><b><%= doc.description.content %></b></font>
+					<%end%><br>
 
 					<%if not options.nomodules and #doc.modules > 0 then%>
 						<h2>Modules</h2>

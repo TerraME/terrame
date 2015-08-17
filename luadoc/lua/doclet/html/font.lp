@@ -37,7 +37,7 @@
 				</div> <!-- id="navigation" -->
 
 				<div id="content">
-					<h1><code>Font</code></h1>
+					<h1>Font</h1>
 					<%if not options.nofiles and doc.mfont then%>
 						<table class="file_list">
 							<%for _, data in ipairs(doc.mfont) do%>

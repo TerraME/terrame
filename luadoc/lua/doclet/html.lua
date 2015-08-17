@@ -25,9 +25,10 @@ local include = _Gtme.include
 local makepath = _Gtme.makePathCompatibleToAllOS
 
 local s = sessionInfo().separator
-local lp = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."lp.lua")
-local highlighting = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."doclet"..s.."highlighting.lua")
-local util = include(sessionInfo().path..s.."packages"..s.."luadoc"..s.."lua"..s.."main"..s.."util.lua")
+local ppath = packageInfo("luadoc").path
+local lp = include(ppath..s.."lua"..s.."main"..s.."lp.lua")
+local highlighting = include(ppath..s.."lua"..s.."doclet"..s.."highlighting.lua")
+local util = include(ppath..s.."lua"..s.."main"..s.."util.lua")
 
 -------------------------------------------------------------------------------
 -- Looks for a file 'name' in given path. Removed from compat-5.1
@@ -491,7 +492,13 @@ function start(doc, doc_report)
 	end
 
 	-- copy extra files
-	local f = util.openFile(options.output_dir..  "luadoc.css", "w")
+	files = {"Ubuntu-L.ttf", "UbuntuMono-R.ttf", "Ubuntu-license.txt"} 
+
+	forEachElement(files, function(_, file)
+		os.execute("cp '"..ppath.."/lua/doclet/html/"..file.."' '"..options.output_dir..file.."'")
+	end)
+
+	local f = util.openFile(options.output_dir.."luadoc.css", "w")
 	io.output(f)
 	includeMod("luadoc.css")
 	f:close()

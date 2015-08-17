@@ -27,7 +27,7 @@
 				</div> <!-- id="navigation" -->
 
 				<div id="content">
-					<h1><code>Data</code></h1>
+					<h1>Data</h1>
 					<%if not options.nofiles and doc.mdata then%>
 						<table class="file_list">
 							<%for _, data in ipairs(doc.mdata) do%>

@@ -27,7 +27,7 @@
 				</div> <!-- id="navigation" -->
 
 				<div id="content">
-					<h1><code><%=file_doc.name:match("(.-)%.lua")%>
+					<h1><%=file_doc.name:match("(.-)%.lua")%>
 					<% if #file_doc.functions > 0 then
 					  local constructor = file_doc.functions[file_doc.functions[1]]
 					  if constructor.inherits then%>
@@ -35,8 +35,7 @@
 					      <%= constructor.inherits %></a>)
 					  <% end %>
 					<% end %>
-
-					</code></h1>
+					</h1>
 
 					<%if file_doc.description then%>
 						<span class="description"><%=
