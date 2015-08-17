@@ -511,7 +511,66 @@ local function isWarningMessage(message)
 	return string.match(string.upper(message), "WARNING")
 end
 
+local function gimmeMySqlDirPath()	
+	local mySqlDirPath = "C:/Program Files/MySQL"
+	if not _Gtme.isDir(mySqlDirPath) then
+		mySqlDirPath = "C:/Program Files(x86)/MySQL"
+		if not _Gtme.isDir(mySqlDirPath) then
+			return ""
+		end
+	end		
+
+	mySqlDirPath = mySqlDirPath.."/MySQL Server 5."
+	for i = 0, 9, 1 do
+		if _Gtme.isDir(mySqlDirPath..i) then
+			return mySqlDirPath..i.."/bin"
+		end
+	end
+	
+	return ""
+end
+
+local function mySqlExists()
+	if gimmeMySqlDirPath() == "" then
+		return false
+	end
+	
+	return true
+end
+
+local function isMySqlOnPath() 
+	local result, ok = _Gtme.runCommand("mysql --version")
+	
+	return ok
+end
+
+function _Gtme.validateMySql()
+	if _Gtme.isWindowsOS() then
+		if mySqlExists() then
+			if not isMySqlOnPath() then
+				local error = "MySql is installed on your computer," 
+						.." however it is not in the Path environment variable."
+						.."\nSet MySql in Path:\n" .. gimmeMySqlDirPath()
+				return error
+			end
+		else
+			local error = "MySql is not installed, version 5.X required.\n"
+					.."Set mysql command in your Path environment variable after install."
+			return  error
+		end
+	end
+	
+	return ""
+end
+
 function _Gtme.importDatabase(package)
+	local mysqlCheck = _Gtme.validateMySql()
+
+	if not (mysqlCheck == "") then
+		_Gtme.printError(mysqlCheck)
+		return
+	end
+	
 	local s = _Gtme.sessionInfo().separator
 
 	local config = _Gtme.getConfig()
