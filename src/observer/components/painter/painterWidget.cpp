@@ -475,7 +475,11 @@ void PainterWidget::drawAgent()
                     if (fontSize == 1)
                     {
                         QFont font = attrib->getFont();
-                        font.setPointSize((int)floor(recCell.width()));
+#ifdef Q_OS_MAC
+                        font.setPixelSize((int)floor(recCell.width())*1.3334); // 1.333 == 96/72
+#else
+                        font.setPixelSize((int)floor(recCell.width()));
+#endif
                         painter.setFont(font);
                     }
                     else if (fontSize <= recCell.height())
