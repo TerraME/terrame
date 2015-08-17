@@ -66,6 +66,8 @@ ChartPlot::~ChartPlot()
     //picker = 0;
 }
 
+// issue #642
+/*
 void ChartPlot::contextMenuEvent(QContextMenuEvent *ev)
 {
     QMenu context(this);
@@ -74,11 +76,15 @@ void ChartPlot::contextMenuEvent(QContextMenuEvent *ev)
     context.addAction(propertiesAct);
     context.exec(ev->globalPos());
 }
+*/
 
-void ChartPlot::mouseDoubleClickEvent(QMouseEvent * /*ev*/)
+// issue #642
+/*
+void ChartPlot::mouseDoubleClickEvent(QMouseEvent *ev)
 {
     propertiesChart();
 }
+*/
 
 void ChartPlot::exportChart(std::string file, string extension)
 {

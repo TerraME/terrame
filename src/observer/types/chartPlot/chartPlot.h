@@ -55,8 +55,9 @@ private slots:
     void propertiesChart();
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *ev);
-    void mouseDoubleClickEvent(QMouseEvent *ev);
+    // issue #642
+    //void contextMenuEvent(QContextMenuEvent *ev);
+    //void mouseDoubleClickEvent(QMouseEvent *ev);
 
 private:
     /**
