@@ -197,7 +197,11 @@ int cpp_hasfont(lua_State *L)
 
 int cpp_setdefaultfont(lua_State *L)
 {
+#ifdef Q_OS_MAC
 	app->setFont(QFont("Ubuntu", 12));
+#else
+	app->setFont(QFont("Ubuntu", 9));
+#endif
 }
 
 extern ExecutionModes execModes;
