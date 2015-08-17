@@ -64,11 +64,11 @@ basic = {
 	uninstall   = {arg = "-package abcdef -uninstall"},
 	trace       = {script = "trace.lua"},
 	fulltrace   = {script = "trace.lua", arg = "-ft"},
-	observer    = {script = "observer.lua"},
 	qwerty4321  = {package = "qwerty4321"},
 }
 
 observer = {
+	observer    = {script = "observer.lua",    quantity = 1},
 	chart       = {script = "chart.lua",       quantity = 3},
 	map         = {script = "map.lua",         quantity = 2},
 	clock       = {script = "clock.lua",       quantity = 1},

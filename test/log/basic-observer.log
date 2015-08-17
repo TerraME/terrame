@@ -1,5 +1,0 @@
-scripts/observer.lua:6: attempt to perform arithmetic on global 'ee' (a nil value)
-Stack traceback:
-
-    In main chunk
-    File scripts/observer.lua, line 6
