@@ -51,6 +51,8 @@ ChartPlot::ChartPlot(QWidget *parent) : QwtPlot(parent)
 //    connect(propertiesAct, SIGNAL(triggered()), this, SLOT(propertiesChart()));
 
     id = 0;
+
+    canvas()->setStyleSheet("border: 0px");
 }
 
 ChartPlot::~ChartPlot()
