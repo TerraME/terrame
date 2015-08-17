@@ -5,8 +5,8 @@
 		from = "modules/"..module_doc.name
 	elseif file_doc then
 		from = "files/.."..file_doc.name
-	elseif #doc.examples > 0 and not index then
-		from = "files/..".."examples.html"
+	elseif not index then
+		from = "files/..".."anyfile.html"
 	else
 		from = ""
 	end
