@@ -109,21 +109,10 @@ end
 function _Gtme.getVersion(str)
 	local version = {}
 
-	local function igetVersion(str)
-		if not str then return end
+	string.gsub(str, "(%d+)", function(v)
+		table.insert(version, tonumber(v))
+	end)
 
-		if tonumber(str) and not string.match(str, "%.") then
-			table.insert(version, str)
-		else
-			local result = string.gsub(str, "(%d).", function(v)
-				table.insert(version, v)
-				return ""
-			end)
-			igetVersion(result)
-		end
-	end
-
-	igetVersion(str)
 	return version
 end
 

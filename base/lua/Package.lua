@@ -43,7 +43,7 @@ local function verifyDepends(package)
 
 		local dstrversion = table.concat(dtable.version, ".")
 
-		if not _Gtme.verifyVersionDependency(dstrversion, dtable.operator, currentInfo.version) then
+		if not _Gtme.verifyVersionDependency(currentInfo.version, dtable.operator, dstrversion) then
 			customError("Package '"..package.."' requires '"..dtable.package.."' version '".. -- SKIP
 				dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
 		end

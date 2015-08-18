@@ -65,6 +65,8 @@ basic = {
 	trace       = {script = "trace.lua"},
 	fulltrace   = {script = "trace.lua", arg = "-ft"},
 	qwerty4321  = {package = "qwerty4321"},
+	depend      = {arg = "-build", package = "depend"},
+	depend2     = {arg = "-build", package = "depend2"},
 }
 
 observer = {

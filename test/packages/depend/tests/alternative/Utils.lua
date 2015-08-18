@@ -20,36 +20,16 @@
 -- indirect, special, incidental, or consequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Author: Pedro R. Andrade (pedro.andrade@inpe.br)
+-- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
+--          Pedro R. Andrade (pedro.andrade@inpe.br)
 -------------------------------------------------------------------------------------------
 
 return{
-	validateMySql = function(unitTest)
-		local mysqlCheck = _Gtme.validateMySql()
-		unitTest:assert(mysqlCheck == "")
-	end,
-	verifyVersionDependency = function(unitTest)
-		unitTest:assert(    _Gtme.verifyVersionDependency("0.1", ">=", "0.0.3"))
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", ">=", "0.3"))
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.1", ">=", "0.1.3"))
-		unitTest:assert(    _Gtme.verifyVersionDependency("0.1.4", ">=", "0.1.3"))
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.0", ">=", "0.0.3.1"))
-
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", "<=", "0.0.3"))
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.1", "<=", "0.0.3"))
-		unitTest:assert(    _Gtme.verifyVersionDependency("0.0.3.1", "<=", "0.0.3.1"))
-
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", "==", "0.0.3"))
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.1", "==", "0.0.3"))
-		unitTest:assert(    _Gtme.verifyVersionDependency("0.0.3.1", "==", "0.0.3.1"))
-	end,
-	getVersion = function(unitTest)
-		local version = _Gtme.getVersion("10.100.1000")
-		unitTest:assertEquals(#version, 3)
-		unitTest:assertEquals(version[1], 10)
-		unitTest:assertEquals(version[2], 100)
-		unitTest:assertEquals(version[3], 1000)
-
+	elapsedTime2 = function(unitTest)
+		local error_func = function()
+			elapsedTime2("2")
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "2"))
 	end
 }
 
