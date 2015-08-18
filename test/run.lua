@@ -116,12 +116,16 @@ forEachOrderedElement(commands, function(idx, group)
 			_Gtme.printWarning(command)
 		end
 
-		result, ok = runCommand(command)
+		result, err = runCommand(command)
 
 		report.commands = report.commands + 1
 
-		if not ok then
+		if err and #err > 0 then
 			_Gtme.printError("Command '"..command.."' stopped with an error.")
+			forEachElement(err, function(_, value)
+				_Gtme.printError(value)
+			end)
+
 			report.commandserrors = report.commandserrors + 1
 		end
 
@@ -253,12 +257,16 @@ forEachOrderedElement(commands, function(idx, group)
 			_Gtme.printWarning(command)
 		end
 
-		result, ok = runCommand(command)
+		result, err = runCommand(command)
 
 		report.commands = report.commands + 1
 
-		if not ok then
+		if err and #err > 0 then
 			_Gtme.printError("Command '"..command.."' stopped with an error.")
+			forEachElement(err, function(_, value)
+				_Gtme.printError(value)
+			end)
+
 			report.commandserrors = report.commandserrors + 1
 		end
 
