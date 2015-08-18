@@ -70,11 +70,9 @@ Test updates global variable(s): 'forEachCell' (changed from function to number)
 Testing call2
 Wrong execution, got error: '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:78: attempt to perform arithmetic on global 'aaa' (a nil value)'.
 Stack traceback:
+    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 78, in call2
+    File ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua, line 42, in main chunk
 
-    In call2
-    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 78
-    In main chunk
-    File ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua, line 42
 Testing createNeighborhood2
 Testing elapsedTime2
 Testing forEachAgent2
@@ -114,9 +112,8 @@ Creating 'snapshots/chart_cell.bmp'.
 Creating 'snapshots/chart_cell_select.bmp'.
 Wrong execution, got error: '...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:68: attempt to perform arithmetic on global 'abc' (a nil value)'.
 Stack traceback:
+    File ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua, line 68, in main chunk
 
-    In main chunk
-    File ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua, line 68
 Checking if all asserts were executed
 Assert in line 45 was not executed.
 Testing tests/alternative/ErrorHandling.lua
@@ -134,23 +131,17 @@ Testing tests/alternative/Utils.lua
 Testing belong2
 Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:46: attempt to perform arithmetic on global 'aab' (a nil value)'.
 Stack traceback:
+    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 46, in belong2
+    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 30, in nil
+    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 32, in main chunk
 
-    In belong2
-    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 46
-    In nil
-    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 30
-    In main chunk
-    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 32
 Testing call2
 Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:46: attempt to perform arithmetic on global 'aab' (a nil value)'.
 Stack traceback:
+    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 46, in belong2
+    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 41, in nil
+    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 43, in main chunk
 
-    In belong2
-    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 46
-    In nil
-    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 41
-    In main chunk
-    File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 43
 Testing elapsedTime2
 Testing forEachCellPair2
 Testing forEachElement2
@@ -180,8 +171,8 @@ Checking Utils.lua
 Line 41 was not executed.
 Line 42 was not executed.
 Checking snapshots
-File 'snapshot/chart_cell2.bmp' was not used by any assertSnapshot().
-File 'snapshot/chart_cell3.bmp' was not used by any assertSnapshot().
+File 'snapshots/chart_cell2.bmp' was not used by any assertSnapshot().
+File 'snapshots/chart_cell3.bmp' was not used by any assertSnapshot().
 Testing examples
 Testing continuous-rain
 Creating log file continuous-rain.log

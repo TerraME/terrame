@@ -60,11 +60,9 @@ Testing belong2
 Testing call2
 Wrong execution, got error: '.../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua:76: attempt to perform arithmetic on global 'aaa' (a nil value)'.
 Stack traceback:
+    File .../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua, line 76, in call2
+    File ...edro/github/terrame/bin/packages/onerror/tests/Utils.lua, line 40, in main chunk
 
-    In call2
-    File .../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua, line 76
-    In main chunk
-    File ...edro/github/terrame/bin/packages/onerror/tests/Utils.lua, line 40
 Testing createNeighborhood2
 Testing elapsedTime2
 Testing forEachAgent2
@@ -117,13 +115,10 @@ Testing tests/alternative/Utils.lua
 Testing belong2
 Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '.../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua:43: attempt to perform arithmetic on global 'aab' (a nil value)'.
 Stack traceback:
+    File .../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua, line 43, in belong2
+    File ...terrame/bin/packages/onerror/tests/alternative/Utils.lua, line 30, in nil
+    File ...terrame/bin/packages/onerror/tests/alternative/Utils.lua, line 32, in main chunk
 
-    In belong2
-    File .../pedro/github/terrame/bin/packages/onerror/lua/Utils.lua, line 43
-    In nil
-    File ...terrame/bin/packages/onerror/tests/alternative/Utils.lua, line 30
-    In main chunk
-    File ...terrame/bin/packages/onerror/tests/alternative/Utils.lua, line 32
 Testing call2
 Testing elapsedTime2
 Testing forEachCellPair2
@@ -150,7 +145,7 @@ Checking Tube.lua
 Checking Utils.lua
 Line 39 was not executed.
 Checking snapshots
-File 'snapshot/chart_cell2.bmp' was not used by any assertSnapshot().
+File 'snapshots/chart_cell2.bmp' was not used by any assertSnapshot().
 Testing examples
 Testing continuous-rain
 Testing discrete-rain

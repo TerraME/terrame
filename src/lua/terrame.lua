@@ -917,12 +917,14 @@ function _Gtme.traceback()
 			if (si.fullTraceback or si.package) then
 				if si.package then
 					if not mb and not m1 and not m3 then
-						str = str.. "\n    In "..tostring(last_function).."\n"
-						str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..", line "..info.currentline
+						str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..
+							", line "..info.currentline..
+							", in "..tostring(last_function).."\n"
 					end
 				else
-					str = str.. "\n    In "..tostring(last_function).."\n"
-					str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..", line "..info.currentline
+					str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..
+						", line "..info.currentline..
+						", in "..tostring(last_function).."\n"
 				end
 			end
 		else
@@ -951,13 +953,14 @@ function _Gtme.traceback()
 				found_function = true
 			end
 
-			if info.name then
-				str = str.."\n    In function "..info.name
-			else
-				str = str.."\n    In main chunk"
-			end
+			str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..
+				", line "..info.currentline
 
-			str = str.."\n    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..", line "..info.currentline
+			if info.name then
+				str = str..", in function "..info.name.."\n"
+			else
+				str = str..", in main chunk\n"
+			end
 		end
 		level = level + 1
 		info = debug.getinfo(level)
