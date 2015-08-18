@@ -69,7 +69,7 @@ return{
 		unitTest:assertFile("result.csv")
 
 		unitTest:assertSnapshot(c1, "chart_society.bmp", 0.02)
-		unitTest:assertSnapshot(c2, "chart_society_select.bmp", 0.02)
+		unitTest:assertSnapshot(c2, "chart_society_select.bmp", 0.03)
 		unitTest:assertSnapshot(ts, "textscreen_society_grow.bmp")
 		unitTest:assertSnapshot(vt, "society_visualtable.bmp", 0.059)
 
