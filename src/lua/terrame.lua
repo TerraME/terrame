@@ -848,16 +848,11 @@ function _Gtme.getLevel()
 		local m3 = string.match(info.short_src, "%[C%]")
 		local m4 = string.sub(info.short_src, 1, 1) == "["
 
-		local mpackage = false
-		local localpackage = false
+		local mpackage
+		mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(s.."packages"..s)))
+		mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(s.."lua")))
 
-		local p = si.package
-		if p then
-			mpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.path..s.."packages"..s..p..s.."lua")))
-			localpackage = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(p..s.."lua")))
-		end
-
-		if m1 or m2 or m3 or m4 or mpackage or localpackage then
+		if m1 or m2 or m3 or m4 or mpackage then
 			level = level + 1
 		else
 			return level - 1 -- minus one because of getLevel()
