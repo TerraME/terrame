@@ -93,13 +93,13 @@ return{
 		local c1 = Chart{target = world}
 		world:notify()
 		world:notify()
-		unitTest:assertSnapshot(c1, "chart-table-base.bmp", 0.01)
+		unitTest:assertSnapshot(c1, "chart-table-base.bmp", 0.02)
 
 		local c1 = Chart{target = world, select = "mcount", xAxis = "count"}
 		world:notify()
 		world.count = world.count + 2
 		world:notify()
-		unitTest:assertSnapshot(c1, "chart-table-xaxis.bmp", 0.01)
+		unitTest:assertSnapshot(c1, "chart-table-xaxis.bmp", 0.02)
 
 		local t = {
 			value1 = 2,
