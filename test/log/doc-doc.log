@@ -240,7 +240,7 @@ All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 315 non-named arguments are documented.
+All 314 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.

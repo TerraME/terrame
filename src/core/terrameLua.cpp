@@ -30,6 +30,7 @@ Author: Tiago Garcia de Senna Carneiro
 // #include <QSystemLocale>
 #include <QFontDatabase>
 #include <QMessageBox>
+#include <QProcess>
 
 #include "blackBoard.h"
 #include "protocol.pb.h"
@@ -152,6 +153,22 @@ void registerClasses()
     Luna<luaUdpSender>::Register(L);
 }
 
+int cpp_runcommand(lua_State *L)
+{
+    const char* command = lua_tostring(L, -1);
+
+	QProcess process;
+	process.start(command);
+	process.waitForFinished(-1); // will wait forever until finished
+
+	QString out = process.readAllStandardOutput();
+	QString err = process.readAllStandardError();
+
+	lua_pushstring(L, out.toLatin1().constData());
+	lua_pushstring(L, err.toLatin1().constData());
+	return 2;
+}
+
 int cpp_informations(lua_State *L)
 {
 	lua_pushstring(L, LUA_RELEASE);
@@ -270,6 +287,9 @@ int main(int argc, char *argv[])
         lua_close(L);
         return -1;
     }
+
+	lua_pushcfunction(L, cpp_runcommand);
+	lua_setglobal(L, "cpp_runcommand");
 
 	lua_pushcfunction(L, cpp_informations);
 	lua_setglobal(L, "cpp_informations");

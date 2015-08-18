@@ -484,7 +484,7 @@ local function exportDatabase(package)
 			_Gtme.printWarning("File "..mfile.." already exists and will not be replaced")
 		else
 			_Gtme.printNote("Exporting database "..database)
-			local result = _Gtme.runCommand(command.." "..database.." > "..folder..mfile, 2)
+			local _, result = _Gtme.runCommand(command.." "..database.." > "..folder..mfile)
 
 			if result and result[1] then
 				_Gtme.printError(result[1])
@@ -595,11 +595,11 @@ function _Gtme.importDatabase(package)
 
 		if drop then
 			_Gtme.printNote("Deleting database '"..database.."'")
-			local result = _Gtme.runCommand(command.." -e \"drop database "..database.."\"", 2)
+			local _, result = _Gtme.runCommand(command.." -e \"drop database "..database.."\"")
 		end
 
 		_Gtme.printNote("Creating database '"..database.."'")
-		local result = _Gtme.runCommand(command.." -e \"create database "..database.."\"", 2)
+		local _, result = _Gtme.runCommand(command.." -e \"create database "..database.."\"")
 		if result and result[1] and not isWarningMessage(result[1]) then
 			_Gtme.printError(result[1])
 			_Gtme.printError("Add 'drop = true' to your config.lua to allow replacing databases if needed.")

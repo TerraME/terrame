@@ -120,11 +120,6 @@ return{
 			runCommand(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
-
-		error_func = function()
-			runCommand("ls", "1")
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "1"))
 	end,
 	touch = function(unitTest)
 		local error_func = function()

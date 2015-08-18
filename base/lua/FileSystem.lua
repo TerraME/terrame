@@ -91,29 +91,18 @@ function dir(folder, all)
 	local command 
 
 	if all then
-		if isWindowsOS() then
-			command = "ls -a1 \""..folder.."\" 2> NUL" -- SKIP
-		else
-			command = "ls -a1 \""..folder.."\" 2> /dev/null"
-		end
+		command = "ls -a1 \""..folder.."\""
 	else
-		if isWindowsOS() then
-			command = "ls -1 \""..folder.."\" 2> NUL" -- SKIP
-		else
-			command = "ls -1 \""..folder.."\" 2> /dev/null"
-		end
+		command = "ls -1 \""..folder.."\""
 	end
 
 	local result = runCommand(command)
 
 	if not result or not result[1] then
 		customError(folder.." is not a folder or is empty or does not exist.")
-	else
-		if all and result[#result] == "zzzz0.txt" then
-			table.remove(result, #result) -- SKIP
-		end
-		return result
 	end
+
+	return result
 end	
 
 --- Return whether a given string represents a directory stored in the computer.
@@ -213,47 +202,35 @@ function rmDir(path)
 	return lfs.rmdir(path)
 end
 
---- Execute a system command and return its output. It returns a table (with each line of the output as a position)
--- and a value that can be true (when the command was successfully executed) or nil (otherwise).
+--- Execute a system command and return its output. It returns two tables. 
+-- The first one contains each standard output line as a position.
+-- The second one contains  each error output line as a position.
 -- @arg command A command.
--- @arg number A number indicating the output to be captured. The default value is 1 (standard output).
--- It is also possible to use 2, to capture the error output.
--- @usage result, ok = runCommand("dir")
-function runCommand(command, number)
+-- @usage result, error = runCommand("dir")
+function runCommand(command)
 	mandatoryArgument(1, "string", command)
-	optionalArgument(2, "number", number)
 
-	local count = 0
-	local mfile = "zzzz"..count..".txt"
-	while isFile(mfile) do
-		count = count + 1
-		mfile = "zzzz"..count..".txt"
+	local result, err = cpp_runcommand(command)
+
+	local function convertToTable(str)
+		local t = {}
+		local i = 0
+		local v
+		local oldv = 0
+		while true do
+			i, v = string.find(str, "\n", i + 1) -- find 'next' newline
+			if i == nil then break end
+			table.insert(t, string.sub(str, oldv + 1, v - 1))
+			oldv = v
+		end
+
+		return t
 	end
 
-	if number == nil then number = 1 end
-	
-	if _Gtme.isWindowsOS() then
-		local tmpPath = os.getenv("TMP") -- SKIP
-		mfile = tmpPath.."\\"..mfile -- SKIP
-	end	
-	
-	command = command.." "..number.."> "..mfile
-	
-	local result = os.execute(command)
-	local file = io.open(mfile, "r")
+	result = convertToTable(result)
+	err = convertToTable(err)
 
-	if not file then
-		customError("Could not capture the result.") -- SKIP
-	end
-
-	local fileTable = {}
-	for line in file:lines() do
-		fileTable[#fileTable + 1] = line
-	end
-
-	io.close(file)
-	os.execute("rm -f \""..mfile.."\"")
-	return fileTable, result
+	return result, err
 end
 
 --- Set access and modification times of a file. This function is a bind to utime function.
