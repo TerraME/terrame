@@ -170,6 +170,19 @@ function _Gtme.packageManager()
 		comboboxExamples:clear()
 		comboboxModels:clear()
 
+		local result = xpcall(function() getPackage(comboboxPackages.currentText) end, function(err)
+			qt.dialog.msg_critical(err)
+		end)
+
+		if not result then
+			comboboxModels.enabled = false
+			buildButton.enabled = false
+			comboboxExamples.enabled = false
+			runButton.enabled = false
+			dbButton.enabled = false
+			return
+		end
+
 		local models = _Gtme.findModels(comboboxPackages.currentText)
 
 		comboboxModels.enabled = #models > 1
