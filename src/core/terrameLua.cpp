@@ -164,8 +164,11 @@ int cpp_runcommand(lua_State *L)
 	QString out = process.readAllStandardOutput();
 	QString err = process.readAllStandardError();
 
-	lua_pushstring(L, out.toLatin1().constData());
-	lua_pushstring(L, err.toLatin1().constData());
+    out.remove(QRegExp("[\\r]"));
+    err.remove(QRegExp("[\\r]"));
+
+    lua_pushstring(L, out.toLatin1().constData());
+    lua_pushstring(L, err.toLatin1().constData());
 	return 2;
 }
 
