@@ -401,7 +401,10 @@ function _Gtme.executeTests(package, fileName)
 
 		forEachElement(tf, function(_, value)
 			forEachElement(mfolder, function(_, mvalue)
-				if string.match(value, mvalue) then
+				local cvalue  = _Gtme.makePathCompatibleToAllOS(value)
+				local cmvalue = _Gtme.makePathCompatibleToAllOS(mvalue)
+
+				if string.match(cvalue, cmvalue) and not belong(value, data.folder) then
 					table.insert(data.folder, value)
 					found[mvalue] = true
 					return false
