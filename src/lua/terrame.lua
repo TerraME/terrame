@@ -960,12 +960,13 @@ function _Gtme.traceback()
 		level = level + 1
 		info = debug.getinfo(level)
 	end
+
+	_Gtme.killAllObservers()
+
 	if str == "Stack traceback:\n" then
 		return ""
 	end
-	--_Gtme.printWarning(str)
-	_Gtme.killAllObservers()
-	return str--string.sub(str, 0, string.len(str) - 1)
+	return str
 end
 
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
@@ -1291,6 +1292,7 @@ function _Gtme.myxpcall(func)
 			end
 
 			str = str..err.."\nStack traceback:\n"
+			_Gtme.killAllObservers()
 
 			local level = 1
 			local info = debug.getinfo(level)
