@@ -43,17 +43,19 @@
 						<%for _, filepath in ipairs(doc.files) do%>
 							<%if doc.files[filepath].type == "model" then%>
 								<dt><h2><%=doc.files[filepath].doc[1].name%><a name="<%=doc.files[filepath].doc[1].name%>"></h2></dt>
-									<%= doc.files[filepath].doc[1].description%>
-									<h3>Arguments</h3>
+									<%= httpLink(doc.files[filepath].doc[1].description)%>
 									<%func = doc.files[filepath].doc[1]%>
-									<ul><span class="arg">
-									<%for i = 1, #func.arg do
-										local arg_desc = func.arg[func.arg[i]] or ""
-										local arg_name
-										arg_name = func.arg[i]%>
-									    <li><strong><%=arg_name%></strong>: <%= arg_desc%></li> 
+									<% if func.arg then %>
+										<h3>Arguments</h3>
+										<ul><span class="arg">
+										<%for i = 1, #func.arg do
+											local arg_desc = func.arg[func.arg[i]] or ""
+											local arg_name
+											arg_name = func.arg[i]%>
+										    <li><strong><%=arg_name%></strong>: <%= arg_desc%></li> 
+										<%end%>
+										</ul>
 									<%end%>
-									</ul>
 							<%end%>
 						<%end%>
 					</dl>
