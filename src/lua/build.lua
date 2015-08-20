@@ -177,7 +177,7 @@ function _Gtme.buildPackage(package, clean)
 	print("Looking for hidden files")
 	local hidden
 	if _Gtme.isWindowsOS() then
-		hidden = runCommand("find-msys \""..package.."\" -name \".*\"")
+		hidden = runCommand("find-msys '"..package.."' -name '.*'")
 	else
 		hidden = runCommand("find \""..package.."\" -name \".*\"")
 	end

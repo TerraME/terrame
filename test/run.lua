@@ -79,6 +79,10 @@ local function approximateLine(line)
 	if string.match(line, "Error in")            then return  50 end
 	if string.match(line, "Wrong execution")     then return  50 end
 	if string.match(line, "%.terrame")           then return   5 end
+	if string.match(line, "TME_PATH")            then return 120 end
+	if string.match(line, "Lua 5")               then return   3 end
+	if string.match(line, "Qt 5")                then return   3 end
+	if string.match(line, "Qwt 6")               then return   3 end
 
 	return 0
 end
@@ -151,6 +155,7 @@ forEachOrderedElement(commands, function(idx, group)
 					distance = approximateLine(value)
 				end
 
+				value = _Gtme.makePathCompatibleToAllOS(value)
 				resultfile:write(value.."\n")
 
 				local str = logfile:read()
@@ -158,7 +163,7 @@ forEachOrderedElement(commands, function(idx, group)
 				if not str then
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
 					_Gtme.printError("Log file: <end of file>")
-					_Gtme.printError("Test: '".._Gtme.makePathCompatibleToAllOS(value).."'.")
+					_Gtme.printError("Test: '"..value.."'.")
 
 					logerror = true
 					report.logerrors = report.logerrors + 1
@@ -174,7 +179,7 @@ forEachOrderedElement(commands, function(idx, group)
 				if levenshtein(str, value) > distance then
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
 					_Gtme.printError("Log file: '"..str.."'.")
-					_Gtme.printError("Test: '".._Gtme.makePathCompatibleToAllOS(value).."'.")
+					_Gtme.printError("Test: '"..value.."'.")
 
 					if distance > 0 then
 						_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
@@ -292,6 +297,7 @@ forEachOrderedElement(commands, function(idx, group)
 					distance = approximateLine(value)
 				end
 
+				value = _Gtme.makePathCompatibleToAllOS(value)
 				resultfile:write(value.."\n")
 
 				local str = logfile:read()
@@ -304,7 +310,7 @@ forEachOrderedElement(commands, function(idx, group)
 				if not str then
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
 					_Gtme.printError("Log file: <end of file>")
-					_Gtme.printError("Test: '".._Gtme.makePathCompatibleToAllOS(value).."'.")
+					_Gtme.printError("Test: '"..value.."'.")
 
 					logerror = true
 					report.logerrors = report.logerrors + 1
@@ -317,7 +323,7 @@ forEachOrderedElement(commands, function(idx, group)
 				if levenshtein(str, value) > distance then
 					_Gtme.printError("Error: Strings do not match (line "..line.."):")
 					_Gtme.printError("Log file: '"..str.."'.")
-					_Gtme.printError("Test: '".._Gtme.makePathCompatibleToAllOS(value).."'.")
+					_Gtme.printError("Test: '"..value.."'.")
 
 					if distance > 0 then
 						_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
