@@ -364,9 +364,7 @@ function _Gtme.executeDoc(package)
 		forEachOrderedElement(value, function(midx, mvalue)
 			if midx == "__len" or midx == "__tostring" then return end -- TODO: think about this kind of function
 
-			if not result.files[idx] then
-				printWarning("File does not have any documentation")
-			elseif not result.files[idx].functions[midx] and 
+			if not result.files[idx] or not result.files[idx].functions[midx] and 
 			  (not result.files[idx].models or not result.files[idx].models[midx]) then
 				printError("Function "..midx.." is not documented")
 				doc_report.undoc_functions = doc_report.undoc_functions + 1
