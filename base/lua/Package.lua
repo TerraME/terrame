@@ -345,7 +345,7 @@ function packageInfo(package)
 
 		local mdepends = {}
 		s = string.gsub(result.depends, "([%w]+) %((%g%g) (%d[.%d]+)%)", function(value, v2, v3)
-			mversion = _Gtme.getVersion(v3) -- SKIP
+			local mversion = _Gtme.getVersion(v3) -- SKIP
 			table.insert(mdepends, {package = value, operator = v2, version = mversion})
 		end)
 
