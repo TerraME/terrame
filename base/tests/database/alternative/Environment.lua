@@ -208,6 +208,8 @@ return{
 		end
 		if not _Gtme.isWindowsOS() then
 			unitTest:assertError(error_func, "The string '' found as weight in the file '"..mfile.."' could not be converted to a number.") -- SKIP
+		else
+			unitTest:assert(true) -- SKIP
 		end
 	end
 }
