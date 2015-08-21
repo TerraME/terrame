@@ -123,6 +123,10 @@ function Event(data)
 		if targettype == "function" then
 			return Pair{cObj, Action{data.action}}
 		elseif targettype == "Society" then
+			if not data.action.execute then
+				customError("The Society cannot be used as an action because it does not have an execute() method.")
+			end
+
 			local func = function(event)
 				data.action:execute(event)
 				data.action:synchronize(event:getPeriod())

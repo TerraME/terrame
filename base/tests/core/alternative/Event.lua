@@ -111,6 +111,19 @@ return{
 			t:execute(2)
 		end
 		unitTest:assertError(error_func, "aaa")
+
+		local ag = Agent{}
+		local soc = Society{
+			instance = ag,
+			quantity = 5
+		}
+
+		error_func = function()
+			local t = Timer{
+				Event{action = soc}
+			}
+		end
+		unitTest:assertError(error_func, "The Society cannot be used as an action because it does not have an execute() method.")
 	end,
 --[[ #241
 	config = function(unitTest)
