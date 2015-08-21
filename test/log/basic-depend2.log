@@ -1,6 +1,2 @@
 Building package 'depend2'
-Creating documentation of package 'depend2'
-Building documentation for package 'depend2'
-Loading package 'depend2'
-Package depend2 could not be loaded.
 Error: Package 'abcd1234' is not installed.

@@ -50,7 +50,10 @@ function _Gtme.executeDoc(package)
 	local initialTime = os.clock()
 
 	import("luadoc")
-	import("base")
+
+	if not isLoaded("base") then
+		import("base")
+	end
 
 	printNote("Building documentation for package '"..package.."'")
 	local s = sessionInfo().separator

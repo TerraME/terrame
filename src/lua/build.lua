@@ -34,6 +34,15 @@ function _Gtme.buildPackage(package, clean)
 
 	printNote("Building package '"..package.."'")
 
+	if not isLoaded("base") then
+		import("base")
+	end
+
+	xpcall(function() _G.getPackage(package) end, function(err)
+		printError(err)
+		os.exit()
+	end)
+
 	local report = {
 		doc_errors = 0,
 		unnecessary_files = 0,
