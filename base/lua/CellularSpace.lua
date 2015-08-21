@@ -136,7 +136,7 @@ local function getVonNeumannNeighborhood(cs, data)
 			neigh:add(index, weight)
 		end
 
-		return neigh, name
+		return neigh
 	end
 end
 
@@ -1254,7 +1254,7 @@ function CellularSpace(data)
 			end
 		end)
 
-		local metaTableInstance = {__index = data.instance, __tostring = tostringTerraME}
+		local metaTableInstance = {__index = data.instance, __tostring = _Gtme.tostring}
 
 		data.instance.type_ = "Cell"
 		data.instance.isinstance = true
