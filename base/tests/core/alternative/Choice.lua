@@ -37,6 +37,12 @@ return{
 		unitTest:assertError(error_func, "There are no options for the Choice (table is empty).")
 
 		error_func = function()
+			local c = Choice{1}
+		end
+		unitTest:assertError(error_func, "Choice has only one available value.")
+
+
+		error_func = function()
 			local c = Choice{1, 2, "3"}
 		end
 		unitTest:assertError(error_func, "All the elements of Choice should have the same type.")

@@ -70,6 +70,10 @@ function Choice(attrTab)
 	if type(attrTab) ~= "table" then
 		customError(tableArgumentMsg())
 	elseif #attrTab > 0 then
+		if #attrTab == 1 then
+			strictWarning("Choice has only one available value.")
+		end
+
 		if not belong(type(attrTab[1]), {"number", "string"}) then
 			customError("The elements should be number or string, got "..type(attrTab[1])..".")
 		end
