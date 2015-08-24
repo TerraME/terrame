@@ -363,6 +363,27 @@ return{
 		}
 
 		unitTest:assertSnapshot(m2, "map_society_five_left.bmp")
+		
+		local cell = Cell{
+            init = function(self)
+                self.state = "alive"
+            end
+        }
+
+        local cs = CellularSpace {
+            xdim = 4,
+            instance = cell
+		}
+
+		local map = Map{
+            target = cs,
+            select = "state",
+            value = {"dead", "alive"},
+            color = {"red", "yellow"}
+        }		
+		
+		unitTest:assertSnapshot(map, "map_string_values.bmp")
+		
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

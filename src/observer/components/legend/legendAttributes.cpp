@@ -369,6 +369,9 @@ void Attributes::addValue(QString txt)
 {
     //if (textValues->size() == containersSize)
     //    textValues->clear();
+    if (txt.contains("Lua-Address"))
+        return;
+
     textValues->push_back(txt);
 }
 
