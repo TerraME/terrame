@@ -45,6 +45,7 @@ build = {
 	twoerrorsbuild  = {arg = "-build",        package = "twoerrorsbuild"},
 	buildunnecfiles = {arg = "-build",        package = "buildunnecfiles"},
 	buildunneclean  = {arg = "-build -clean", package = "buildunneclean"},
+	noexamples      = {arg = "-build",        package = "noexamples"}
 }
 
 mode = {

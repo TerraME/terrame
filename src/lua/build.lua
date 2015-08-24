@@ -131,14 +131,18 @@ function _Gtme.buildPackage(package, clean)
 		end
 	end)
 
-	print("Checking examples")
-	forEachFile(package..s.."examples", function(file)
-		if not string.endswith(file, ".lua") and not string.endswith(file, ".tme") and not string.endswith(file, ".log") then
-			printError("File '"..package..s.."examples"..s..file.."' is unnecessary and will be ignored.")
-			os.execute("rm -rf \""..package..s.."examples"..s..file.."\"")
-			report.unnecessary_files = report.unnecessary_files + 1
-		end
-	end)
+	if isDir(package..s.."examples") then
+		print("Checking examples")
+		forEachFile(package..s.."examples", function(file)
+			if not string.endswith(file, ".lua") and not string.endswith(file, ".tme") and not string.endswith(file, ".log") then
+				printError("File '"..package..s.."examples"..s..file.."' is unnecessary and will be ignored.")
+				os.execute("rm -rf \""..package..s.."examples"..s..file.."\"")
+				report.unnecessary_files = report.unnecessary_files + 1
+			end
+		end)
+	else
+		print("Skipping examples")
+	end
 
 	print("Checking source code")
 	forEachFile(package..s.."lua", function(file)
