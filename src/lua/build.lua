@@ -196,9 +196,14 @@ function _Gtme.buildPackage(package, clean)
 	end
 
 	forEachElement(hidden, function(_, file)
+		if belong(file, {package..s..".git", package..s..".gitignore"}) then
+			printWarning("File '"..file.."' is unnecessary and will be ignored.")
+		else
 			printError("File '"..file.."' is unnecessary and will be ignored.")
-			os.execute("rm -rf \""..file.."\"")
 			report.unnecessary_files = report.unnecessary_files + 1
+		end
+
+		os.execute("rm -rf \""..file.."\"")
 	end)
 
 	if clean then
