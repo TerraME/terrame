@@ -528,9 +528,13 @@ local function mySqlExists()
 end
 
 local function isMySqlOnPath() 
-	local result, ok = _Gtme.runCommand("mysql --version")
+	local result, err = _Gtme.runCommand("mysql --version")
+
+	if #result > 0 then
+		return true
+	end
 	
-	return ok
+	return false
 end
 
 function _Gtme.validateMySql()
