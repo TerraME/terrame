@@ -83,7 +83,14 @@ function _Gtme.packageManager()
 	docButton = qt.new_qobject(qt.meta.QPushButton)
 	docButton.text = "Documentation"
 	qt.connect(docButton, "clicked()", function()
-		_Gtme.showDoc(comboboxPackages.currentText)
+		local docpath = packageInfo(comboboxPackages.currentText).path
+		docpath = docpath..s.."doc"..s.."index.html"
+
+		if not isFile(docpath) then
+			qt.dialog.msg_critical("It was not possible to find the documentation of package '"..comboboxPackages.currentText.."'.")
+		else
+			_Gtme.showDoc(comboboxPackages.currentText)
+		end
 	end)
 
 	dbButton = qt.new_qobject(qt.meta.QPushButton)
