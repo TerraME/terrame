@@ -23,17 +23,54 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
-local comboboxPackages
-local comboboxModels
 local comboboxExamples
-local dialog
-local runButton
-local dbButton
-local configureButton
-local installButton
+local comboboxModels
+local comboboxPackages
 local aboutButton
+local configureButton
+local dbButton
 local docButton
+local installButton
 local quitButton
+local runButton
+local dialog
+local oldState
+
+local function disableAll()
+	oldState = {
+		[comboboxExamples] = comboboxExamples.enabled,
+		[comboboxModels]   = comboboxModels.enabled,
+		[dbButton]         = dbButton.enabled,
+		[docButton]        = docButton.enabled,
+		[configureButton]  = configureButton.enabled,
+		[runButton]        = runButton.enabled
+	}
+
+	comboboxExamples.enabled = false
+	comboboxModels.enabled   = false
+	comboboxPackages.enabled = false
+	aboutButton.enabled      = false
+	configureButton.enabled  = false
+	dbButton.enabled         = false
+	docButton.enabled        = false
+	installButton.enabled    = false
+	quitButton.enabled       = false
+	runButton.enabled        = false
+end
+
+local function enableAll()
+	comboboxExamples.enabled = oldState[comboboxExamples]
+	comboboxModels.enabled   = oldState[comboboxModels]
+	configureButton.enabled  = oldState[configureButton]
+	dbButton.enabled         = oldState[dbButton]
+	docButton.enabled        = oldState[docButton]
+	runButton.enabled        = oldState[runButton]
+
+	comboboxPackages.enabled = true
+	aboutButton.enabled      = true
+	installButton.enabled    = true
+	quitButton.enabled       = true
+end
 
 local function buildComboboxPackages(default)
 	local s = sessionInfo().separator
@@ -56,6 +93,7 @@ local function buildComboboxPackages(default)
 end
 
 local function aboutButtonClicked()
+	disableAll()
 	local msg = "Package "..comboboxPackages.currentText
 	local info = packageInfo(comboboxPackages.currentText)
 
@@ -69,9 +107,11 @@ local function aboutButtonClicked()
 	end
 
 	qt.dialog.msg_about(msg)
+	enableAll()
 end
 
 local function docButtonClicked()
+	disableAll()
 	local s = sessionInfo().separator
 	local docpath = packageInfo(comboboxPackages.currentText).path
 	docpath = docpath..s.."doc"..s.."index.html"
@@ -82,12 +122,15 @@ local function docButtonClicked()
 	else
 		_Gtme.showDoc(comboboxPackages.currentText)
 	end
+	enableAll()
 end
 
 local function dbButtonClicked()
+	disableAll()
 	local mysqlCheck = _Gtme.validateMySql()		
 	if not (mysqlCheck == "") then
 		qt.dialog.msg_critical(mysqlCheck)
+		enableAll()
 		return
 	end		
 		
@@ -105,7 +148,10 @@ local function dbButtonClicked()
 
 	msg = msg.."\nConfirm installation?"
 	if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
-		if not _Gtme.buildConfig() then return end
+		if not _Gtme.buildConfig() then
+			enableAll()
+			return
+		end
 
 		local result = _Gtme.importDatabase(comboboxPackages.currentText)
 
@@ -115,18 +161,22 @@ local function dbButtonClicked()
 			qt.dialog.msg_information("Databases sucessfully installed.")
 		end
 	end
+	enableAll()
 end
 
 local function configureButtonClicked()
+	disableAll()
 	local msg = "terrame -package "..comboboxPackages.currentText..
 	            " -configure "..comboboxModels.currentText
 	os.execute(msg)
+	enableAll()
 end
 
 local function runButtonClicked()
 	local msg = "terrame -package "..comboboxPackages.currentText..
 	            " -example "..comboboxExamples.currentText
 	os.execute(msg)
+	enableAll()
 end
 
 -- what to do when a new package is selected
@@ -177,9 +227,13 @@ local function selectPackage()
 end
 
 local function installButtonClicked()
+	disableAll()
 	local s = sessionInfo().separator
 	local fname = qt.dialog.get_open_filename("Select Package", "", "*.zip")
-	if fname == "" then return end
+	if fname == "" then
+		enableAll()
+		return
+	end
 
 	local file = _Gtme.makePathCompatibleToAllOS(fname)
 	local _, pfile = string.match(file, "(.-)([^/]-([^%.]+))$") -- remove path from the file
@@ -189,7 +243,10 @@ local function installButtonClicked()
 		qt.dialog.msg_information(file.." is not a valid file name for a TerraME package.")
 	end)
 
-	if not package then return end
+	if not package then
+		enableAll()
+		return
+	end
 
 	local currentVersion
 	local packageDir = _Gtme.sessionInfo().path..s.."packages"
@@ -222,6 +279,7 @@ local function installButtonClicked()
 				os.execute("rm -rf \""..packageDir..s..package.."\"")
 			else
 				os.execute("rm -rf \""..tmpfolder.."\"")
+				enableAll()
 				return
 			end
 		end
@@ -237,6 +295,7 @@ local function installButtonClicked()
 	else
 		qt.dialog.msg_critical("File "..fname.." could not be installed.")
 	end
+	enableAll()
 end
 
 local function quitButtonClicked()
