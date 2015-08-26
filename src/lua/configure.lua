@@ -117,8 +117,8 @@ local function create_ordering(self)
 	end
 
 	forEachElement(named, function(_, idx)
-		element = self[idx]
-		mtype = type(element)
+		local element = self[idx]
+		local mtype = type(element)
 		if mtype == "table" and #element == 0 then
 			local qelement = 0 -- we need to count the elements of a named table manually
 			forEachElement(element, function()
@@ -216,7 +216,7 @@ function _Gtme.configure(self, modelName, package)
 	r = r.."sessionInfo().configure = true\n"
 
 	if not package then
-		__zzz = modelName
+		rawset(_G, "__zzz", modelName)
 		modelName = "__zzz"
 	end
 
@@ -788,7 +788,7 @@ function _Gtme.configure(self, modelName, package)
 	r = r.."\t\tresult = \"\\n\\ninstance = "..modelName.."{}\\n\\n\"\n"
 	r = r.."\tend\n"
 
-	r = r.."\texecute = \"instance:execute()\"\n"
+	r = r.."\tlocal execute = \"instance:execute()\"\n"
 	r = r..[[
 	local getFile = function(prefix)
 		local fname = prefix.."-instance.lua"
@@ -800,15 +800,15 @@ function _Gtme.configure(self, modelName, package)
 		return fname
 	end]]
 	r = r.."\n\n"
-	r = r.."\tfile = io.open(getFile(\""..modelName.."\"), \"w\")\n"
-	r = r.."\tfile:write(header..result..execute)\n"
 
 	if package then
+		r = r.."\tfile = io.open(getFile(\""..modelName.."\"), \"w\")\n"
+		r = r.."\tfile:write(header..result..execute)\n"
 		r = r.."\theader = \"\\n\\nif not isLoaded(\\\""..package.."\\\") then  import(\\\""..package.."\\\") end\"\n"
+		r = r.."\tresult = header..result\n"
+		r = r.."\tfile:close()\n"
 	end
 
-	r = r.."\tresult = header..result\n"
-	r = r.."\tfile:close()\n"
 	r = r..[[
 	if not merr then
 		-- BUG**: http://lists.gnu.org/archive/html/libqtlua-list/2013-05/msg00004.html
@@ -817,7 +817,7 @@ function _Gtme.configure(self, modelName, package)
 		if merr then
 			local merr2 = string.match(merr, ":[0-9]*:.*")
 			if merr2 then
-				local merr3 = string.gsub(merr2,":[0-9]*: ", "")
+				local merr3 = string.gsub(merr2, ":[0-9]*: ", "")
 				if merr3 then
 					merr = merr3
 				else
