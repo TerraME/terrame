@@ -112,16 +112,7 @@ end
 
 local function docButtonClicked()
 	disableAll()
-	local s = sessionInfo().separator
-	local docpath = packageInfo(comboboxPackages.currentText).path
-	docpath = docpath..s.."doc"..s.."index.html"
-
-	if not isFile(docpath) then
-		qt.dialog.msg_critical("It was not possible to find the documentation of package '"
-			..comboboxPackages.currentText.."'.")
-	else
-		_Gtme.showDoc(comboboxPackages.currentText)
-	end
+	_Gtme.showDoc(comboboxPackages.currentText)
 	enableAll()
 end
 
@@ -195,8 +186,14 @@ local function selectPackage()
 		comboboxExamples.enabled = false
 		runButton.enabled = false
 		dbButton.enabled = false
+		docButton.enabled = false
 		return
 	end
+
+	local docpath = packageInfo(comboboxPackages.currentText).path
+	docpath = docpath..s.."doc"..s.."index.html"
+
+	docButton.enabled = isFile(docpath)
 
 	local models = _Gtme.findModels(comboboxPackages.currentText)
 
