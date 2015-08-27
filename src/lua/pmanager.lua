@@ -282,16 +282,27 @@ local function installButtonClicked()
 		end
 	end
 
-	local pkg = _Gtme.installPackage(fname)
+	local pkg = xpcall(function() _Gtme.installPackage(fname) end, function(err)
+		qt.dialog.msg_critical("File "..fname.." could not be installed:\n"..err)
+	end)
 
-	if type(pkg) == "string" then
-		qt.dialog.msg_information("Package '"..pkg.."' successfully installed.")
-		local index = buildComboboxPackages(pkg)
-		comboboxPackages:setCurrentIndex(index)
-		selectPackage()
-	else
-		qt.dialog.msg_critical("File "..fname.." could not be installed.")
+	if pkg then
+		local ok = true
+		xpcall(function() getPackage(package) end, function(err)
+			os.execute("rm -rf \""..packageInfo(package).path.."\"")
+			qt.dialog.msg_critical(err)
+			ok = false
+		end)
+
+
+		if ok then
+			qt.dialog.msg_information("Package '"..package.."' successfully installed.")
+			local index = buildComboboxPackages(package)
+			comboboxPackages:setCurrentIndex(index)
+			selectPackage()
+		end
 	end
+
 	enableAll()
 end
 

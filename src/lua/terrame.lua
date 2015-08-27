@@ -635,6 +635,31 @@ function _Gtme.uninstall(package)
 	end
 end
 
+function _Gtme.verifyDepends(package)
+	local pinfo = packageInfo(package)
+	local result = true
+
+	if not pinfo.tdepends then return end
+
+	forEachElement(pinfo.tdepends, function(_, dtable)
+		local currentInfo = packageInfo(dtable.package)
+		
+		if not isLoaded(dtable.package) then -- SKIP
+			import(dtable.package) -- SKIP
+		end
+
+		local dstrversion = table.concat(dtable.version, ".")
+
+		if not _Gtme.verifyVersionDependency(currentInfo.version, dtable.operator, dstrversion) then
+			customError("Package '"..package.."' requires '"..dtable.package.."' version '".. -- SKIP
+				dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
+		end
+	end)
+
+	return result
+end
+
+
 function _Gtme.verifyVersionDependency(newVersion, operator, oldVersion)
 	local newVersionT = _Gtme.getVersion(newVersion)
 	local oldVersionT = _Gtme.getVersion(oldVersion)
@@ -723,6 +748,10 @@ function _Gtme.installPackage(file)
 
 	os.execute("unzip -oq \""..file.."\"")
 
+	_Gtme.printNote("Verifying dependencies")
+
+	_Gtme.verifyDepends(package)
+
 	local newVersion = _Gtme.include(package..s.."description.lua").version
 
 	if currentVersion then
@@ -739,11 +768,8 @@ function _Gtme.installPackage(file)
 
 	_Gtme.printNote("Trying to load package '"..package.."'")
 	xpcall(function() import(package) end, function(err)
-		_Gtme.printError("Package could not be loaded:")
-		_Gtme.printError(err)
-
 		os.execute("rm -rf \""..tmpfolder.."\"")
-		os.exit()
+		_Gtme.customError("Package ccccould not be loaded:"..err)
 	end)
 
 	_Gtme.printNote("Installing package '"..package.."'")
@@ -1181,7 +1207,9 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end
 				os.exit()
 			elseif arg == "-install" then
-				_Gtme.installPackage(arguments[argCount + 1])
+				xpcall(function() _Gtme.installPackage(arguments[argCount + 1]) end, function(err)
+					_Gtme.printError(err)
+				end)
 				os.exit()
 			elseif arg == "-uninstall" then
 				_Gtme.uninstall(package)

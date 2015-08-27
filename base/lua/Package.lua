@@ -20,37 +20,11 @@
 -- indirect, special, incidental, or consequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
---          Rodrigo Reis Pereira
---          Antonio Jose da Cunha Rodrigues
+-- Authors: Pedro R. Andrade
 --          Raian Vargas Maretto
 --#########################################################################################
 
 --@header Functions to work with packages in TerraME.
-
-local function verifyDepends(package)
-	local pinfo = packageInfo(package)
-	local result = true
-
-	if not pinfo.tdepends then return end
-
-	forEachElement(pinfo.tdepends, function(_, dtable)
-		local currentInfo = packageInfo(dtable.package)
-		
-		if not isLoaded(dtable.package) then -- SKIP
-			import(dtable.package) -- SKIP
-		end
-
-		local dstrversion = table.concat(dtable.version, ".")
-
-		if not _Gtme.verifyVersionDependency(currentInfo.version, dtable.operator, dstrversion) then
-			customError("Package '"..package.."' requires '"..dtable.package.."' version '".. -- SKIP
-				dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
-		end
-	end)
-
-	return result
-end
 
 --- Return the path to a file of a given package. The file must be inside the folder data
 -- within the package.
@@ -84,7 +58,7 @@ function import(package)
 		local s = sessionInfo().separator
 		local package_path = packageInfo(package).path
 
-		verifyDepends(package)
+		_Gtme.verifyDepends(package)
 
 		local load_file = package_path..s.."load.lua"
 		local all_files = dir(package_path..s.."lua")
@@ -92,8 +66,7 @@ function import(package)
 
 		if isFile(load_file) then -- SKIP
 			xpcall(function() load_sequence = _Gtme.include(load_file) end, function(err)
-				_Gtme.printError("Package '"..package.."' could not be loaded.")
-				_Gtme.print(err)
+				_Gtme.customError("Package '"..package.."' could not be loaded:"..err) -- SKIP
 			end)
 
 			verifyUnnecessaryArguments(load_sequence, {"files"})
@@ -125,11 +98,15 @@ function import(package)
 				if not isFile(mfile) then -- SKIP
 					customWarning("Cannot open "..mfile..". No such file. Please check "..package_path..s.."load.lua.") -- SKIP
 				else
+					local merror
 					xpcall(function() dofile(mfile) end, function(err)
-						_Gtme.printError("Package '"..package.."' could not be loaded.")
-						_Gtme.printError(err)
-						os.exit() -- SKIP
+						merror = "Package '"..package.."' could not be loaded: "..err -- SKIP
 					end)
+
+					if merror then -- SKIP
+						_Gtme.customError(merror) -- SKIP
+					end
+
 					count_files[file] = count_files[file] + 1 -- SKIP
 				end
 			end
@@ -186,7 +163,7 @@ function getPackage(pname)
 	local s = sessionInfo().separator
 	local pname_path = packageInfo(pname).path
 
-	verifyDepends(pname)
+	_Gtme.verifyDepends(pname)
 
 	local load_file = pname_path..s.."load.lua"
 	local all_files = dir(pname_path..s.."lua")
