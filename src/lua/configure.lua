@@ -23,33 +23,6 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
--- this function is similar to Package:label, but does not include ' in the
--- final string, as they are going to be used by the graphical interface.
-local function stringToLabel(mstring, parent)
-	if type(mstring) == "number" then
-		return tostring(mstring)
-	end
-
-	local result = string.upper(string.sub(mstring, 1, 1))
-
-	local nextsub = string.match(mstring, "%u")
-	for i = 2, mstring:len() do
-		local nextchar = string.sub(mstring, i, i)
-		if nextchar == nextsub then
-			result = result.." "..nextsub
-			nextsub = string.match(string.sub(mstring, i + 1, mstring:len()), "%u")
-		else
-			result = result..nextchar
-		end
-	end
-
-	if parent then
-		return result.." (in "..stringToLabel(parent)..")"
-	else
-		return result
-	end
-end
-
 local function create_ordering(self)
 	local ordering         = {}
 	local current_ordering = {}
@@ -275,7 +248,7 @@ function _Gtme.configure(self, modelName, package)
 
 			forEachElement(melement, function(_, value)
 				r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
-				r = r.."label.text = \""..stringToLabel(value).."\"\n"
+				r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 	
 				r = r.."lineEdit"..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
@@ -298,7 +271,7 @@ function _Gtme.configure(self, modelName, package)
 			forEachElement(melement, function(_, value)
 				r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
 
-				r = r.."label.text = \""..stringToLabel(value).."\"\n"
+				r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 
 				r = r.."lineEdit"..value.."= qt.new_qobject(qt.meta.QLineEdit)\n"
@@ -312,7 +285,7 @@ function _Gtme.configure(self, modelName, package)
 				r = r.."SelectButton.maximumSize = {16, 18}\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, SelectButton, "..count..", 2)\n\n"
 
-				local svalue = stringToLabel(value)
+				local svalue = _Gtme.stringToLabel(value)
 				local ext = string.find(self[value], "%.")
 				if ext then
 					ext = "*"..string.sub(self[value], ext)
@@ -340,7 +313,7 @@ function _Gtme.configure(self, modelName, package)
 
 			forEachElement(melement, function(_, value)
 				r = r.."checkBox"..value.." = qt.new_qobject(qt.meta.QCheckBox)\n"
-				r = r.."checkBox"..value..".text = \""..stringToLabel(value).."\"\n"
+				r = r.."checkBox"..value..".text = \"".._Gtme.stringToLabel(value).."\"\n"
 				r = r.."checkBox"..value..".checked = "..tostring(self[value]).."\n"
 				r = r.."qt.ui.layout_add(TmpVBoxLayout, checkBox"..value..")\n\n"
 			end)
@@ -351,7 +324,7 @@ function _Gtme.configure(self, modelName, package)
 
 			forEachElement(melement, function(_, value)
 				r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
-				r = r.."label.text = \""..stringToLabel(value).."\"\n"
+				r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 	
 				r = r.."lineEdit"..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
@@ -366,7 +339,7 @@ function _Gtme.configure(self, modelName, package)
 
 			forEachElement(melement, function(_, value)
 				r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
-				r = r.."label.text = \""..stringToLabel(value).."\"\n"
+				r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 				r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 
 				if self[value].values then
@@ -377,7 +350,7 @@ function _Gtme.configure(self, modelName, package)
 					table.sort(self[value].values)
 					local tvalue = "\ntvalue"..value.." = {"
 					forEachElement(self[value].values, function(_, mstring)
-						r = r.."qt.combobox_add_item(combobox"..value..", \""..stringToLabel(mstring).."\")\n"
+						r = r.."qt.combobox_add_item(combobox"..value..", \"".._Gtme.stringToLabel(mstring).."\")\n"
 						tvalue = tvalue.."\""..mstring.."\", "
 
 						if mstring == self[value].default then
@@ -427,7 +400,7 @@ function _Gtme.configure(self, modelName, package)
 			end)
 		else -- named table (idx is the name of the table)
 			r = r.."groupbox"..idx.." = qt.new_qobject(qt.meta.QGroupBox)\n"
-			r = r.."groupbox"..idx..".title = \""..stringToLabel(idx).."\"\n"
+			r = r.."groupbox"..idx..".title = \"".._Gtme.stringToLabel(idx).."\"\n"
 			r = r.."groupbox"..idx..".flat = false\n"
 			r = r.."qt.ui.layout_add("..layout..", groupbox"..idx..")\n"
 			r = r.."TmpLayout = qt.new_qobject(qt.meta.QGridLayout)\n"
@@ -441,7 +414,7 @@ function _Gtme.configure(self, modelName, package)
 
 					forEachElement(mvalue, function(_, value)
 						r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
-						r = r.."label.text = \""..stringToLabel(value).."\"\n"
+						r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 						r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 
 						if self[idx][value].values then
@@ -452,7 +425,7 @@ function _Gtme.configure(self, modelName, package)
 							local tvalue = "\ntvalue"..idx..value.." = {"
 							table.sort(self[idx][value].values)
 							forEachElement(self[idx][value].values, function(_, mstring)
-								r = r.."qt.combobox_add_item(combobox"..idx..value..", \""..stringToLabel(mstring).."\")\n"
+								r = r.."qt.combobox_add_item(combobox"..idx..value..", \"".._Gtme.stringToLabel(mstring).."\")\n"
 								tvalue = tvalue.."\""..mstring.."\", "
 
 								if mstring == self[idx][value].default then
@@ -509,7 +482,7 @@ function _Gtme.configure(self, modelName, package)
 
 					forEachElement(mvalue, function(_, value)
 						r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
-						r = r.."label.text = \""..stringToLabel(value).."\"\n"
+						r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 						r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 	
 						r = r.."lineEdit"..idx..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
@@ -524,7 +497,7 @@ function _Gtme.configure(self, modelName, package)
 
 					forEachElement(mvalue, function(_, value)
 						r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
-						r = r.."label.text = \""..stringToLabel(value).."\"\n"
+						r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 						r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 	
 						r = r.."lineEdit"..idx..value.." = qt.new_qobject(qt.meta.QLineEdit)\n"
@@ -547,7 +520,7 @@ function _Gtme.configure(self, modelName, package)
 							r = r.."groupbox"..idx..".checked = "..tostring(self[idx][value]).."\n"
 						else
 							r = r.."checkBox"..idx..value.." = qt.new_qobject(qt.meta.QCheckBox)\n"
-							r = r.."checkBox"..idx..value..".text = \""..stringToLabel(value).."\"\n"
+							r = r.."checkBox"..idx..value..".text = \"".._Gtme.stringToLabel(value).."\"\n"
 							r = r.."checkBox"..idx..value..".checked = "..tostring(self[idx][value]).."\n"
 							r = r.."qt.ui.layout_add(TmpVBoxLayout, checkBox"..idx..value..")\n\n"
 						end
@@ -560,7 +533,7 @@ function _Gtme.configure(self, modelName, package)
 					forEachElement(mvalue, function(_, value)
 						r = r.."label = qt.new_qobject(qt.meta.QLabel)\n"
 
-						r = r.."label.text = \""..stringToLabel(value).."\"\n"
+						r = r.."label.text = \"".._Gtme.stringToLabel(value).."\"\n"
 						r = r.."qt.ui.layout_add(TmpGridLayout, label, "..count..", 0)\n"
 
 						r = r.."lineEdit"..idx..value.."= qt.new_qobject(qt.meta.QLineEdit)\n"
@@ -684,7 +657,7 @@ function _Gtme.configure(self, modelName, package)
 				r = r.."\tif lineEdit"..value..".text == \"inf\" then\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
 				r = r.."\telseif lineEdit"..value..".text == \"\" then\n"
-				r = r.."\t\tmerr = \"Error: "..stringToLabel(value).." is a mandatory argument.\"\n"
+				r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value).." is a mandatory argument.\"\n"
 				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
 				r = r.."\t\tmerr = \"Error: "..toLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
 				r = r.."\telse\n"
@@ -760,7 +733,7 @@ function _Gtme.configure(self, modelName, package)
 						r = r.."\tif lineEdit"..idx..value..".text == \"inf\" then\n"
 						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
 						r = r.."\telseif lineEdit"..idx..value..".text == \"\" then\n"
-						r = r.."\t\tmerr = \"Error: "..stringToLabel(value, idx).." is a mandatory argument.\"\n"
+						r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value, idx).." is a mandatory argument.\"\n"
 						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
 						r = r.."\t\tmerr = \"Error: "..toLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
 						r = r.."\telse\n"

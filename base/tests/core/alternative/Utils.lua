@@ -378,6 +378,17 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "a"))
 	end,
+	stringToLabel = function(unitTest)
+		local error_func = function()
+			x = stringToLabel(false)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", false))
+
+		error_func = function()
+			x = stringToLabel("abc", false)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", false))
+	end,
 	switch = function(unitTest)
 		local error_func = function()
 			switch("aaaab")

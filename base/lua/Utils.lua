@@ -1084,6 +1084,40 @@ function sessionInfo()
 	return info_ -- this is a global variable created when TerraME is initialized
 end
 
+--- Convert a given string to a readable text.
+-- @arg mstring A string.
+-- @arg parent A string with the table name where the string is stored. If used,
+-- the return value will be appended by this value between parenthesis.
+-- @usage stringToLabel("myFirstString")
+-- stringToLabel("my_second_string")
+function stringToLabel(mstring, parent)
+	if type(mstring) == "number" then
+		return tostring(mstring)
+	end
+
+	mandatoryArgument(1, "string", mstring)
+	optionalArgument(2, "string", parent)
+
+	local result = string.upper(string.sub(mstring, 1, 1))
+
+	local nextsub = string.match(mstring, "%u")
+	for i = 2, mstring:len() do
+		local nextchar = string.sub(mstring, i, i)
+		if nextchar == nextsub then
+			result = result.." "..nextsub
+			nextsub = string.match(string.sub(mstring, i + 1, mstring:len()), "%u")
+		else
+			result = result..nextchar
+		end
+	end
+
+	if parent then
+		return result.." (in "..stringToLabel(parent)..")"
+	else
+		return result
+	end
+end
+
 --- Return whether a string ends with a given substring (no case sensitive).
 -- @arg str A string.
 -- @arg send A substring describing the end of the first parameter.
@@ -1142,7 +1176,7 @@ end
 -- same folder (without deleting its internal files). This
 -- folder needs to be removed manually after the end of the execution.
 -- @usage tmpf = tmpDir()
-tmpDir = function(self)
+function tmpDir(self)
 	if not _Gtme.tmpfolder__ then
 		_Gtme.tmpfolder__ = runCommand("mktemp -d .terrametmp_XXXXX")[1]
 	end

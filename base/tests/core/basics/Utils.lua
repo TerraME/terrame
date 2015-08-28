@@ -752,6 +752,11 @@ return{
 		unitTest:assert(string.endswith("abcdef", "def"))
 		unitTest:assert(not string.endswith("abcdef", "deef"))
 	end,
+	stringToLabel = function(unitTest)
+		unitTest:assertEquals(stringToLabel("myFirstString"), "My First String")
+		unitTest:assertEquals(stringToLabel(255), "255")
+		unitTest:assertEquals(stringToLabel("myFirstStr", "myParent"), "My First Str (in My Parent)")
+	end,
 	switch = function(unitTest)
 		local count = 0
 

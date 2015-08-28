@@ -49,7 +49,7 @@ return{
 
 		local world = Agent{
 			count = 0,
-			mcount = function(self)
+			mCount = function(self)
 				return self.count + 1
 			end
 		}
@@ -58,7 +58,7 @@ return{
 
 		local c1 = Chart{
 			target = world,
-			select = {"mcount"},
+			select = {"mCount"},
 			color = "green",
 			size = 5,
 			pen = "solid",
@@ -85,7 +85,7 @@ return{
 		local world = CellularSpace{
 			xdim = 10,
 			count = 0,
-			mcount = function(self)
+			mCount = function(self)
 				return self.count + 1
 			end
 		}
@@ -95,7 +95,7 @@ return{
 		world:notify()
 		unitTest:assertSnapshot(c1, "chart-table-base.bmp", 0.02)
 
-		local c1 = Chart{target = world, select = "mcount", xAxis = "count"}
+		local c1 = Chart{target = world, select = "mCount", xAxis = "count"}
 		world:notify()
 		world.count = world.count + 2
 		world:notify()
