@@ -374,6 +374,7 @@ function _Gtme.configure(self, modelName, package)
 
 					local pos = 0
 					local index
+					table.sort(self[value].values)
 					local tvalue = "\ntvalue"..value.." = {"
 					forEachElement(self[value].values, function(_, mstring)
 						r = r.."qt.combobox_add_item(combobox"..value..", \""..stringToLabel(mstring).."\")\n"
@@ -449,6 +450,7 @@ function _Gtme.configure(self, modelName, package)
 							local pos = 0
 							local index
 							local tvalue = "\ntvalue"..idx..value.." = {"
+							table.sort(self[idx][value].values)
 							forEachElement(self[idx][value].values, function(_, mstring)
 								r = r.."qt.combobox_add_item(combobox"..idx..value..", \""..stringToLabel(mstring).."\")\n"
 								tvalue = tvalue.."\""..mstring.."\", "
