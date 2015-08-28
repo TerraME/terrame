@@ -164,6 +164,7 @@ local function configureButtonClicked()
 end
 
 local function runButtonClicked()
+	disableAll()
 	local msg = "terrame -package "..comboboxPackages.currentText..
 	            " -example "..comboboxExamples.currentText
 	os.execute(msg)
