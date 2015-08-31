@@ -226,8 +226,8 @@ function getPackage(pname)
 				lf = loadfile(mfile, 't', result) -- SKIP
 
 				if lf == nil then -- SKIP
-					_Gtme.printError("Could not load file "..scriptfile..".")
-					dofile(scriptfile) -- this line will show the error when parsing the file
+					_Gtme.printError("Could not load file "..mfile..".")
+					dofile(mfile) -- this line will show the error when parsing the file
 				end
 			end
 
