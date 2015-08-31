@@ -105,7 +105,7 @@ int luaEnvironment::addGlobalAgent(lua_State *L)
     return 0;
 };
 
-int luaEnvironment::config( lua_State *L )
+int luaEnvironment::config(lua_State *L)
 {
     float finalTime = lua_tonumber(L, -1);
     Environment::config(finalTime );
@@ -113,7 +113,7 @@ int luaEnvironment::config( lua_State *L )
     return 0;
 }
 
-int luaEnvironment::execute( lua_State *)
+int luaEnvironment::execute(lua_State *)
 {
     Environment::execute();
     return 0;
@@ -133,7 +133,7 @@ int luaEnvironment::execute( lua_State *)
 //    return 1;
 //}
 
-int luaEnvironment::createObserver( lua_State *luaL )
+int luaEnvironment::createObserver(lua_State *luaL)
 {
     // recupero a referencia da celula
     // @DANIEL
@@ -189,7 +189,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
     lua_settop(luaL, top - 1);
     top = lua_gettop(luaL);
 
-    // Verifica??o da sintaxe da tabela Atributos
     if(! lua_istable(luaL, top) )
     {
         //printf("\nError: Attributes table not found. Incorrect sintax.\n");
@@ -239,7 +238,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
         }
         lua_pop(luaL, 1);
     }
-    //------------------------
 
     if ((obsAttribs.empty() ) && (! isGraphicType))
     {
@@ -247,7 +245,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
         observedAttribs = allAttribs;
     }
 
-    //------------------------
     if(! lua_istable(luaL, top) )
     {
         qFatal("Error: Parameter table not found. Incorrect sintax.");
@@ -421,7 +418,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
             return 0;
     }
 
-    /// Define alguns parametros do observador instanciado ------------------------------------------
     if (obsLog)
     {
         obsLog->setAttributes(obsAttribs);
@@ -435,7 +431,6 @@ int luaEnvironment::createObserver( lua_State *luaL )
             obsLog->setFileName(cols.at(0));
         }
 
-        // caso n?o seja definido, utiliza o default ";"
         if ((cols.size() < 2) || cols.at(1).isNull() || cols.at(1).isEmpty())
         {
             obsLog->setSeparator();
@@ -573,8 +568,6 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
             } 
         }
 
-        //if ((attribs.contains(key)) || (key == "cells"))
-        //{
         attrCounter++;
         attrs.append(key);
         attrs.append(PROTOCOL_SEPARATOR);
@@ -614,36 +607,10 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
                 attrs.append(QString("Lua-Address(TB): ") + QString(result));
                 attrs.append(PROTOCOL_SEPARATOR);
 
-                /* / Recupera a tabela de cells e delega a cada
-                // celula sua serializa??o
-                // if(key == "cells")
-                //{
-                int top = lua_gettop(luaL);
-
-                lua_pushnil(luaL);
-                while(lua_next(luaL, top) != 0)
-                {
-                        int cellTop = lua_gettop(luaL);
-                        lua_pushstring(luaL, "cObj_");
-                        lua_gettable(luaL, cellTop);
-
-                        luaCell*  cell;
-                        cell = (luaCell*)Luna<luaCell>::check(L, -1);
-                        lua_pop(luaL, 1);
-
-                        // luaCell->pop(...) requer uma celula no topo da pilha
-                        QString cellMsg = cell->pop(L, attribs);
-                        elements.append(cellMsg);
-                        elementCounter++;
-
-                        lua_pop(luaL, 1);
-                }*/
-                //break;
-                //}
                 break;
             }
 
-            case LUA_TUSERDATA	:
+            case LUA_TUSERDATA:
             {
                 char result[100];
                 sprintf(result, "%p", lua_topointer(luaL, -1) );
@@ -676,7 +643,6 @@ QString luaEnvironment::pop(lua_State *luaL, QStringList& /*attribs*/)
                 break;
             }
         }
-        //}
 
         lua_pop(luaL, 1);
     }
@@ -758,3 +724,4 @@ int luaEnvironment::kill(lua_State *luaL)
     lua_pushboolean(luaL, result);
     return 1;
 }
+

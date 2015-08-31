@@ -70,15 +70,14 @@ extern bool step;
 *  Event-Message Pair Composite Handle Type.
 *
 */
-typedef CompositeInterface< multimapComposite<Event, Message*> >
-				EventMessagePairCompositeInterf;
+typedef CompositeInterface<multimapComposite<Event, Message*> > EventMessagePairCompositeInterf;
 
 /**
 * \brief
 *  Implementation for a Scheduler object.
 *
 */
-class SchedulerImpl : public Implementation
+class SchedulerImpl: public Implementation
 {
     Event time_; ///< Scheduler simulation timer
 
@@ -93,22 +92,28 @@ public:
     }
 
     /// Resets the Scheduler simulation time
-    void reset(void) { time_.setTime(-DBL_MAX); }
+    void reset(void)
+	{
+		time_.setTime(-DBL_MAX);
+	}
 
     ///Sets the Scheduler simulation time
     /// \param time is a double value representing the current simulation time
-    void setTime(double time) {
+    void setTime(double time)
+	{
 		time_.setTime(time);
 	}
 
     ///Gets the Scheduler simulation time
-    double getTime() {
+    double getTime()
+	{
 		return time_.getTime();
 	}
 
     /// Gets the Event object on the head of the Event-Message queue
     /// \return A copy to the Event object on Event-Message head
-    Event getEvent(void) {
+    Event getEvent(void)
+	{
         EventMessagePairCompositeInterf::iterator iterator = eventMessageQueue.begin();
         pair<Event, Message*> eventMessagePair;
 
@@ -128,7 +133,8 @@ public:
     /// Adds a new pair Event-Messsage to the Scheduler queue.
     /// \param event is a reference to the Event being added
     /// \param message is a pointer to message being linked to the Event
-    void add(Event& event, Message* message) {
+    void add(Event& event, Message* message)
+	{
         pair<Event, Message*> eventMessagePair;
         eventMessagePair.first = event;
         eventMessagePair.second = message;
@@ -138,7 +144,8 @@ public:
     /// Executes the Scheduler object. Only one simulation time step is executed.
     /// Therefore, just the Message on the head of the Scheduler queue is executed.
     /// \return A reference to Event object which has triggered the Message object
-    Event& execute() {
+    Event& execute()
+	{
         pair<Event, Message*> eventMessagePair;
         EventMessagePairCompositeInterf::iterator iterator;
 
@@ -153,9 +160,9 @@ public:
             Message msg = *message; // it's Important to keep the message implementation alive
             eventMessageQueue.erase(iterator);
 
-            if (message->execute(event)) {
-                eventMessagePair.first.setTime(double(time_.getTime()
-                		+ event.getPeriod()));
+            if (message->execute(event))
+			{
+                eventMessagePair.first.setTime(double(time_.getTime() + event.getPeriod()));
                 eventMessageQueue.add(eventMessagePair);
             }
 
@@ -174,7 +181,8 @@ public:
     /// until the Event-Message queue becomes empty.
     /// \param finalTime is a real number representing the end simulation time
     /// \return A real number meaning the Scheduler internal clock
-    double execute(double& finalTime) {
+    double execute(double& finalTime)
+	{
         Event event;
         Message *message;
         pair<Event, Message*> eventMessagePair;
@@ -183,14 +191,13 @@ public:
         iterator = eventMessageQueue.begin();
         while(iterator != eventMessageQueue.end() && time_.getTime() <= finalTime)
         {
-		//Player
-            while (paused)
-                qApp->processEvents();
+            while (paused) qApp->processEvents();
 
             event = eventMessagePair.first = iterator->first;
             message = eventMessagePair.second = iterator->second;
 
-            if(event.getTime() > finalTime) {
+            if(event.getTime() > finalTime)
+			{
 				time_ = finalTime;
 				break;
 			}
@@ -199,16 +206,15 @@ public:
             Message msg = *message; // it's Important to keep the message implementation alive
             eventMessageQueue.erase(iterator);
 
-            if (message->execute(event)) {
-                eventMessagePair.first.setTime(double(time_.getTime()
-                		+ event.getPeriod()));
+            if(message->execute(event))
+			{
+                eventMessagePair.first.setTime(double(time_.getTime() + event.getPeriod()));
                 eventMessageQueue.add(eventMessagePair);
             }
 
             iterator = eventMessageQueue.begin();
 
-            if (step)
-                paused = true;
+            if (step) paused = true;
         }
 		return finalTime;
     }
@@ -224,9 +230,7 @@ public:
     bool empty(void) { return eventMessageQueue.empty(); }
 
 public:
-
     EventMessagePairCompositeInterf eventMessageQueue; ///< Event-Message Pair queue
-
 };
 
 /**
@@ -296,4 +300,6 @@ public:
     ///Gets the Scheduler simulation time
     double getTime() { return SchedulerInterf::pImpl_->getTime(); }
 };
+
 #endif
+

@@ -71,16 +71,11 @@ class ModelImpl : public Implementation
 {
 public:
     /// Constructor
-    ModelImpl(void) {
+    ModelImpl(void)
+	{
         char strNum[255];
-        //	char ch;
 
-        //#if defined (TME_WIN32) //Raian: I commented because ostringstream was generating a segmentation fault on Linux
         sprintf (strNum, "%ld", modelCounter);
-        //#else
-        //ostringstream strStream((string &) strNum);
-        //strStream << modelCounter;
-        //#endif
 
         setID(string("model") + strNum); modelCounter++;
     }
@@ -97,8 +92,7 @@ private:
  *  Handle for a Model object.
  *
  */
-
-class Model : public Interface<ModelImpl>
+class Model: public Interface<ModelImpl>
 {
 public:
     ModelID getID(void) { return pImpl_->getID(); }
@@ -109,6 +103,3 @@ public:
 
 #endif
 
-// Abstract method to be implemented by the programmer to
-// define the objects to compile an instance of a model.
-///virtual void modelDefinition()  = 0;

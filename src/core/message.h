@@ -26,8 +26,8 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 /*!
   \file message.h
   \brief This file contains definitions about the Message objects. Messages are dispatched by the
-                 simulation engine Event objects. In general, a message is, a function with several
-                 calls to the  TerraME 1.0 API services (or API functions). Messages run Agent objects
+                 simulation engine Event objects. In general, a message is a function with several
+                 calls to the TerraME API services (or API functions). Messages run Agent objects
                  over the CellularSpace objects, carry out the communication between Agent objects,
                  report model result, synchronize or load or save Cellular space in the geographical database.
                  Handles: Message
@@ -45,7 +45,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
  *  Implementation for a Message object.
  *
  */
-class Message : public Model
+class Message: public Model
 {
 public:
 
@@ -53,8 +53,9 @@ public:
     /// \param event is the reference to the Event which has triggered this Message
     /// \return A boolean value: true if the Message object must be re-inserted in the simulation
     ////        engine Scheduler, otherwise false.
-    virtual bool execute(Event& /*event*/) { return false;}
+    virtual bool execute(Event& /*event*/){return false;}
 
 };
 
 #endif
+

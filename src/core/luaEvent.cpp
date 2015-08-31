@@ -29,13 +29,11 @@ of this library and its documentation.
 #include "luaUtils.h"
 #include "terrameGlobals.h"
 
-// Observadores
 #include "../observer/types/observerTextScreen.h"
 #include "../observer/types/observerLogFile.h"
 #include "../observer/types/observerTable.h"
 #include "../observer/types/observerUDPSender.h"
 
-///< Gobal variabel: Lua stack used for comunication with C++ modules.
 extern lua_State * L; 
 
 ///< true - TerrME runs in verbose mode and warning messages to the user; 
@@ -43,38 +41,37 @@ extern lua_State * L;
 extern ExecutionModes execModes;
 
 /// constructor
-luaEvent::luaEvent( lua_State *L )
+luaEvent::luaEvent(lua_State *L)
 {
-    // Antonio
     subjectType = TObsEvent;
     luaL = L;
     observedAttribs.clear();
 }
 
 /// destructor
-luaEvent::~luaEvent( void )
+luaEvent::~luaEvent(void)
 {
 }
 
 /// Constructor - creates a luaEvent object from a Event object
 /// \param event is the copied Event object
-luaEvent::luaEvent( Event &event )
+luaEvent::luaEvent(Event &event)
 {
-    Event::config( event.getTime(), event.getPeriod(), event.getPriority() );
+    Event::config(event.getTime(), event.getPeriod(), event.getPriority());
 }
 
 /// Configures the luaEvent object
-int luaEvent::config( lua_State *L )
+int luaEvent::config(lua_State *L)
 {
     double time = luaL_checknumber(L, -3);
     double period = luaL_checknumber(L, -2);
     double priority = luaL_checknumber(L, -1);
-    Event::config( time, period, priority  );
+    Event::config(time, period, priority);
     return 0;
 }
 
 /// Gets the luaEvent time
-int luaEvent::getTime( lua_State *L )
+int luaEvent::getTime(lua_State *L)
 { 
     double time = Event::getTime();
     lua_pushnumber(L, time);
@@ -82,8 +79,8 @@ int luaEvent::getTime( lua_State *L )
 }
 
 /// Gets the luaEvent priority
-int luaEvent::getPriority( lua_State *L )
-{ 
+int luaEvent::getPriority(lua_State *L)
+{
     double priority = Event::getPriority();
     lua_pushnumber(L, priority);
     return 1;
@@ -91,7 +88,7 @@ int luaEvent::getPriority( lua_State *L )
 
 /// Sets the luaEvent priority
 /// parameters: number
-int luaEvent::setPriority( lua_State *L )
+int luaEvent::setPriority(lua_State *L)
 { 
     int priority= luaL_checknumber(L, -1);
     Event::setPriority( priority );
@@ -99,7 +96,7 @@ int luaEvent::setPriority( lua_State *L )
 }
 
 /// Gets the luaEvent periodicity
-int luaEvent::getPeriod( lua_State *L )
+int luaEvent::getPeriod(lua_State *L)
 { 
     double time = Event::getPeriod();
     lua_pushnumber(L, time);
@@ -107,7 +104,7 @@ int luaEvent::getPeriod( lua_State *L )
 }
 
 /// Creates an observer
-int luaEvent::createObserver( lua_State *luaL )
+int luaEvent::createObserver(lua_State *luaL)
 {
     Reference<luaEvent>::getReference(luaL);
     
@@ -125,14 +122,6 @@ int luaEvent::createObserver( lua_State *luaL )
     allAttribs.push_back("Periodicity");
     allAttribs.push_back("Priority");
 
-    // Recupera a tabela de parametros
-    //if(! lua_istable(luaL, top - 1) )
-    //{
-    //    if (execModes == Quiet )
-    //        qWarning("Warning: Parameter table not found.");
-    //}
-    //else
-    //{
     lua_pushnil(luaL);
     while(lua_next(luaL, top - 1) != 0)
     {   
@@ -162,7 +151,6 @@ int luaEvent::createObserver( lua_State *luaL )
         }
         lua_pop(luaL, 1);
     }
-    // }
 
     if (cols.isEmpty())
     {
@@ -254,8 +242,6 @@ int luaEvent::createObserver( lua_State *luaL )
     obsAttribs = allAttribs;
     observedAttribs = allAttribs;
 
-    /// Define alguns parametros do observador instanciado ---------------------------------------------------
-
     if (obsLog)
     {
         obsLog->setAttributes(obsAttribs);
@@ -339,7 +325,7 @@ int luaEvent::getType(lua_State *L )
 }
 
 /// Notifies observers
-int luaEvent::notify(lua_State *luaL )
+int luaEvent::notify(lua_State *luaL)
 {
     double time = luaL_checknumber(luaL, -1);
     EventSubjectInterf::notify(time);
@@ -447,8 +433,6 @@ int luaEvent::kill(lua_State *luaL)
     int id = -1;
     bool result = false;
 
-    // Verifica se o parametro ? uma tabela
-    // ou o pr?prio id do Observer
     if (! lua_istable(luaL, top - 1))
     {
         id = luaL_checknumber(luaL, top - 1);
@@ -483,3 +467,4 @@ int luaEvent::kill(lua_State *luaL)
     lua_pushboolean(luaL, result);
     return 1;
 }
+

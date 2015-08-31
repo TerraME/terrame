@@ -45,6 +45,7 @@ public:
 
         return 0;
     }
+
     /// Gets the lua object.
     int getReference(lua_State *L)
     {
@@ -62,3 +63,4 @@ public:
 template <typename T> int Reference<T>::m_ref = LUA_REFNIL;
 
 #endif // REFFERENCE_H
+

@@ -37,15 +37,11 @@ of this library and its documentation.
 *  Implementation for a luaTimer object.
 *
 */
-class luaTimer : public SchedulerSubjectInterf, public Reference<luaTimer>
+class luaTimer: public SchedulerSubjectInterf, public Reference<luaTimer>
 {
 private:
-    // Antonio
     lua_State *luaL;
 
-    // @DANIEL
-    // Movido para a classe Reference
-    // int ref;
     TypesOfSubjects subjectType;
     QStringList observedAttribs;
     
@@ -85,22 +81,12 @@ public:
     /// Resets the luaTimer
     int reset(lua_State* L);
 
-    /// Gets the object reference in the Lua stack
-    // @DANIEL
-    // Movido para a classe Reference
-    // int setReference( lua_State* L);
-
-    /// Sets the object reference in the Lua stack
-    // @DANIEL
-    // Movido para a classe Reference
-    // int getReference( lua_State *L );
-
     /// Creates several types of observers to the luaCellularSpace object
     /// parameters: observer type, observeb attributes table, observer type parameters
-    int createObserver( lua_State *L );
+    int createObserver(lua_State *L);
 
     /// Notifies the Observer objects about changes in the luaCellularSpace internal state
-    int notify(lua_State *L );
+    int notify(lua_State *L);
 
     /// Gets the subject's type
     const TypesOfSubjects getType();
@@ -124,5 +110,5 @@ public:
     int save(lua_State* L);
 };
 
-
 #endif
+

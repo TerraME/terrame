@@ -3,7 +3,6 @@
 #include "luaMessage.h"
 #include "terrameGlobals.h"
 
-// Observadores
 #include "../observer/types/observerTextScreen.h"
 #include "../observer/types/observerLogFile.h"
 #include "../observer/types/observerTable.h"
@@ -18,7 +17,6 @@ extern ExecutionModes execModes;
 
 luaTimer::luaTimer(lua_State *L)
 {
-    // Antonio
     luaL = L;
     subjectType = TObsTimer;
     observedAttribs.clear();
@@ -34,8 +32,7 @@ luaTimer::~luaTimer(void)
 int luaTimer::execute(lua_State *L)
 {
     double finalTime = luaL_checknumber(L, -1);
-    //float finalExecutedTime =
-    Scheduler::execute( finalTime );
+    Scheduler::execute(finalTime);
     return 1;
 }
 
@@ -49,7 +46,7 @@ int luaTimer::getTime(lua_State *L)
 /// Return true if the luaTimer object is empty and has no luaEvents to execute
 int luaTimer::isEmpty(lua_State *L)
 {
-    lua_pushnumber(L, Scheduler::empty() );
+    lua_pushnumber(L, Scheduler::empty());
     return 1;
 }
 
@@ -70,7 +67,7 @@ int luaTimer::reset(lua_State *)
     return 0;
 }
 
-int luaTimer::createObserver( lua_State *luaL)
+int luaTimer::createObserver(lua_State *luaL)
 {
     // recupero a referencia da celula
     Reference<luaTimer>::getReference(luaL);
@@ -90,7 +87,6 @@ int luaTimer::createObserver( lua_State *luaL)
     bool isGraphicType = (typeObserver == TObsDynamicGraphic)
             || (typeObserver == TObsGraphic);
 
-
     //------------------------
     QStringList allAttribs, obsAttribs;
     //QList<Triple> eventList;
@@ -98,7 +94,6 @@ int luaTimer::createObserver( lua_State *luaL)
     allAttribs.push_back(TIMER_KEY); // insere a chave TIMER_KEY atual
     // int eventsCount = 0;
 
-    // Pecorre a pilha lua recuperando todos os atributos celula
     lua_pushnil(luaL);
 
     while(lua_next(luaL, top) != 0)
@@ -211,7 +206,6 @@ int luaTimer::createObserver( lua_State *luaL)
         }
         lua_pop(luaL, 1);
     }
-    //------------------------
 
     if ((obsAttribs.empty() ) && (! isGraphicType))
     {
@@ -219,8 +213,6 @@ int luaTimer::createObserver( lua_State *luaL)
         observedAttribs = allAttribs;
     }
         
-    //------------------------
-
     if(! lua_istable(luaL, top) )
     {
         string err_out = string("Error: Attribute table not found. Incorrect sintax.");
@@ -278,7 +270,6 @@ int luaTimer::createObserver( lua_State *luaL)
             lua_call(L,2,0);
         }
     }
-    //------------------------
 
     ObserverTextScreen *obsText = 0;
     ObserverTable *obsTable = 0;
@@ -463,7 +454,7 @@ const TypesOfSubjects luaTimer::getType()
     return this->subjectType;
 }
 
-int luaTimer::notify(lua_State *luaL )
+int luaTimer::notify(lua_State *luaL)
 {
     double time = luaL_checknumber(luaL, -1);
     SchedulerSubjectInterf::notify(time);
@@ -618,30 +609,13 @@ QString luaTimer::pop(lua_State *luaL, QStringList& attribs)
                                 attrs.append(PROTOCOL_SEPARATOR);
 
                                 eventsCount++;
-
-                                //if (containEventKey)
-                                //{
-                                //    char resultEvent[100];
-                                //    sprintf( resultEvent, "%p", lua_topointer(luaL, -1) );
-
-                                //    attrCounter++;
-                                //    attrs.append(eventKey);
-                                //    attrs.append(PROTOCOL_SEPARATOR);
-                                //    attrs.append(QString::number(TObsText));
-                                //    attrs.append(PROTOCOL_SEPARATOR);
-                                //    attrs.append(QString("Lua-Address(UD):") + QString(resultEvent));
-                                //    attrs.append(PROTOCOL_SEPARATOR);
-                                //}
-
                             }
                         }
                         lua_pop(luaL, 1);
                     }
-                    // } //Event
-
                     break;
                 }
-                case LUA_TUSERDATA	:
+                case LUA_TUSERDATA:
                 {
                     char result[100];
                     sprintf( result, "%p", lua_topointer(luaL, -1) );
@@ -766,8 +740,8 @@ int luaTimer::save(lua_State* L)
 {
     std::string e = luaL_checkstring(L, -1);
     std::string f = luaL_checkstring(L, -2);
-    //std::cout << e << f << std::endl;
     obs->save(f, e);
 
     return 0;
 }
+

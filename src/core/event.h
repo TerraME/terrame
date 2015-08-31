@@ -59,7 +59,7 @@ class EventImpl : public Implementation
 {
     double time_; ///< instant in which the Events must occurs
     double period_; ///<  periodicity in which the Event must occurs
-    double	  priority_; /// Event priority (default value = 0)  Higher numbers means lower  priority.
+    double priority_; /// Event priority (default value = 0)  Higher numbers means lower  priority.
     /// The normal priority is 0(zero).
 public:
 
@@ -89,8 +89,8 @@ public:
     /// \param priority is the priority in which the event must occurs
     ///        Higher numbers means lower  priority. The normal priority is 0(zero).
     void config(double eventTime, double eventFrequency, double priority) {
-        period_ = eventFrequency > 0 ? eventFrequency : 0;
-        time_      = eventTime;// > 0 ? eventTime : 0;
+        period_   = eventFrequency > 0 ? eventFrequency : 0;
+        time_     = eventTime;// > 0 ? eventTime : 0;
         priority_ = priority;
     }
 
@@ -101,7 +101,6 @@ public:
     /// Sets the periodicity in which the Event must occurs in time
     /// \param period is the real number representing the periodicity in which the Event must occurs
     void setPeriod(double period) { period_ = period; }
-
 };
 
 /**
@@ -116,7 +115,7 @@ typedef Interface<EventImpl> EventInterf;
  *  Handle for a Event object.
  *
  */
-class Event : public Model, public EventInterf
+class Event: public Model, public EventInterf
 {
 public:
 
@@ -125,7 +124,8 @@ public:
     /// \param period is the periodicity in which the Event must occurs
     /// \param priority is the priority in which the event must occurs
     ///        Higher numbers means lower  priority. The normal priority is 0(zero).
-    Event(double time = -DBL_MAX, double period = 1, double priority = 0) {
+    Event(double time = -DBL_MAX, double period = 1, double priority = 0)
+	{
         EventInterf::pImpl_->setTime(time);
         EventInterf::pImpl_->setPeriod(period);
         EventInterf::pImpl_->setPriority(priority);
@@ -165,7 +165,6 @@ public:
     /// \return A double value representing the Event priority. Higher numbers means lower  priority. The default
     /// priority is 0(zero).
     double getPriority(void) { return EventInterf::pImpl_->getPriority(); }
-
 };
 
 /// Compares Event objects.
@@ -175,3 +174,4 @@ public:
 bool operator<(Event e1, Event e2);
 
 #endif
+

@@ -31,7 +31,6 @@ of this library and its documentation.
 
 #include <QDebug>
 
-//////////////////////
 /**
 * \brief
 *  Implementation for a luaMessage object.
@@ -39,7 +38,7 @@ of this library and its documentation.
 */
 extern lua_State * L; ///< Global variable: Lua stack used for communication with C++ modules.
 
-class luaMessage : public Message, public Reference<luaMessage>
+class luaMessage: public Message, public Reference<luaMessage>
 {
     TypesOfSubjects subjectType;
     string msg;  ///< The message identifier
@@ -79,7 +78,6 @@ public:
             				+ string(" not defined!");
 			lua_getglobal(L, "customError");
 			lua_pushstring(L, err_out.c_str());
-			//lua_pushnumber(L, 5);
 			lua_call(L, 1, 0);
             return 0;
         }
@@ -124,19 +122,11 @@ public:
             string err_out = string("Event constructor not found in the stack.");
 			lua_getglobal(L, "customError");
 			lua_pushstring(L, err_out.c_str());
-			//lua_pushnumber(L, 5);
 			lua_call(L, 1, 0);
             return 0;
         }
 
-        // puts the event parameter on stack top
-        //luaEvent *ev = (luaEvent*)&event;
-        //ev->getReference(L);
-
-    // Bug agentes
-    // qDebug() << "calls the function 'execute': lua_pcall(L, 1, 1, 0)";
-
-    // calls the function 'execute'
+    	// calls the function 'execute'
         lua_call(L, 1, 1);
 
         // retrieve the message result value from the lua stack
@@ -146,15 +136,10 @@ public:
             result = lua_toboolean(L, -1);
             lua_pop(L, 1);  // pop returned value
         }
-        //else
-        //{
-        //cout << " Error: message must return \"true\" or \"false\"" << endl;
-        //return 0;
-
-        //}
 
         return result;
     }
 };
 
 #endif
+
