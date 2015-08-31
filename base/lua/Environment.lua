@@ -498,6 +498,12 @@ function Environment(data)
 			ud.parent = data
 			cObj:add(ud.cObj_)
 		elseif t == "Cell" or t == "Group" or t == "Trajectory" then
+		elseif type(_G[t]) == "Model" then
+			forEachElement(ud, function(idx, value, mtype)
+				if mtype == "Timer" or mtype == "Environment" then
+					cObj:add(value.cObj_)
+				end
+			end)
 		elseif k ~= "id" then
 			strictWarning("Argument '"..k.."' (a '"..t.."') is unnecessary for the Environment.")
 		end

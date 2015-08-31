@@ -579,9 +579,6 @@ end
 function unnecessaryArgumentMsg2(value, suggestion)
 	local str = "Argument '"..tostring(value).."' is unnecessary."
 
-	if suggestion then
-		str = str .." Do you mean '"..suggestion.."'?"
-	end
 	return str
 end
 

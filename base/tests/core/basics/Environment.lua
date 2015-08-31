@@ -164,6 +164,30 @@ return{
 		ag1:setTrajectoryStatus(true)
 		ag1:execute(ev)
 		self:assertEquals(88, cont)
+
+		M = Model{
+			init = function(model)
+				model.water = 20
+				model.finalTime = 10
+				model.timer = Timer{
+					Event{action = function()
+						model.water = model.water - 1
+					end}
+				}
+			end
+		}
+
+		local m1 = M{}
+		local m2 = M{}
+
+		local e = Environment{m1, m2}
+		e:execute(10)
+
+		M = nil -- it is necessary to make it global to verify
+		        -- that it is a Model
+
+		self:assertEquals(m1.water, 10)
+		self:assertEquals(m2.water, 10)
 	end,
 	__tostring = function(unitTest)
 		local cs1 = CellularSpace{xdim = 2}
