@@ -96,7 +96,7 @@ metaTableChart_ = {__index = Chart_}
 -- @arg data.xLabel Name of the x-axis. It shows "Time" as default.
 -- @arg data.yLabel Name of the y-axis. It does not show any label as default.
 -- @arg data.label Vector of the same size of select that indicates the labels for each
--- line of the Chart. The default value is the name of the attributes using Utils:stringToLabel().
+-- line of the Chart. The default value is the name of the attributes using Utils:toLabel().
 -- @arg data.width The width of the lines to be drawn. It can be a number, indicating that all lines
 -- will be drawn with the same width, or a vector describing each line. The default value is width one
 -- for all lines.
@@ -296,19 +296,7 @@ function Chart(data)
 	if data.label == nil then
 		data.label = {}
 		for i = 1, #data.select do
-			if data.select[i] == "quantity_" then
-				data.label[i] = "quantity"
-			else
-				data.label[i] = stringToLabel(data.select[i])
-			end
-		end
-	end
-
-	for i = 1, #data.label do
-		local size = string.len(data.label[i])
-
-		if string.sub(data.label[i], size, size) == "_" then
-			data.label[i] = string.sub(data.label[i], 1, size - 1)
+			data.label[i] = _Gtme.stringToLabel(data.select[i])
 		end
 	end
 
@@ -346,7 +334,7 @@ function Chart(data)
 	})
 
 	if data.xAxis then
-		defaultTableValue(data, "xLabel", data.xAxis)
+		defaultTableValue(data, "xLabel", _Gtme.stringToLabel(data.xAxis))
 	else
 		defaultTableValue(data, "xLabel", "Time")
 	end

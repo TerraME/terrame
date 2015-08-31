@@ -752,10 +752,22 @@ return{
 		unitTest:assert(string.endswith("abcdef", "def"))
 		unitTest:assert(not string.endswith("abcdef", "deef"))
 	end,
-	stringToLabel = function(unitTest)
-		unitTest:assertEquals(stringToLabel("myFirstString"), "My First String")
-		unitTest:assertEquals(stringToLabel(255), "255")
-		unitTest:assertEquals(stringToLabel("myFirstStr", "myParent"), "My First Str (in My Parent)")
+	toLabel = function(unitTest)
+		sessionInfo().interface = true
+		unitTest:assertEquals(toLabel("myFirstString"), "'My First String'")
+		unitTest:assertEquals(toLabel(255), "'255'")
+		unitTest:assertEquals(toLabel("my_first_string"), "'My First String'")
+		unitTest:assertEquals(toLabel("my_first_string_"), "'My First String'")
+		unitTest:assertEquals(toLabel("myFirstString_"), "'My First String'")
+		unitTest:assertEquals(toLabel("myFirstStr", "myParent"), "'My First Str' (in 'My Parent')")
+
+		sessionInfo().interface = false
+		unitTest:assertEquals(toLabel("myFirstString"), "'myFirstString'")
+		unitTest:assertEquals(toLabel(255), "'255'")
+		unitTest:assertEquals(toLabel("my_first_string"), "'my_first_string'")
+		unitTest:assertEquals(toLabel("my_first_string_"), "'my_first_string_'")
+		unitTest:assertEquals(toLabel("myFirstString_"), "'myFirstString_'")
+		unitTest:assertEquals(toLabel("myFirstStr", "myParent"), "'myParent.myFirstStr'")
 	end,
 	switch = function(unitTest)
 		local count = 0

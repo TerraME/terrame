@@ -605,7 +605,7 @@ function _Gtme.configure(self, modelName, package)
 					r = r.."\t\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
 				end
 				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
-				r = r.."\t\tmerr = \"Error: "..toLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
+				r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
 				r = r.."\telseif tonumber(lineEdit"..value..".text) ~= "..self[value].." then\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
@@ -646,7 +646,7 @@ function _Gtme.configure(self, modelName, package)
 						r = r.."\t\tresult = result..\"\\n\t"..value.." = math.huge,\"\n"
 					end
 					r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
-					r = r.."\t\tmerr = \"Error: "..toLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
+					r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
 					r = r.."\telseif tonumber(lineEdit"..value..".text) ~= "..self[value].default.. " then \n"
 					r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 					r = r.."\tend\n"
@@ -659,7 +659,7 @@ function _Gtme.configure(self, modelName, package)
 				r = r.."\telseif lineEdit"..value..".text == \"\" then\n"
 				r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value).." is a mandatory argument.\"\n"
 				r = r.."\telseif not tonumber(lineEdit"..value..".text) then\n"
-				r = r.."\t\tmerr = \"Error: "..toLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
+				r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value).." (\"..lineEdit"..value..".text..\") is not a number.\"\n"
 				r = r.."\telse\n"
 				r = r.."\t\tresult = result..\"\\n\t"..value.." = \"..lineEdit"..value..".text..\",\"\n"
 				r = r.."\tend\n"
@@ -674,7 +674,7 @@ function _Gtme.configure(self, modelName, package)
 							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
 						end
 						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
-						r = r.."\t\tmerr = \"Error: "..toLabel(value).." (\"..lineEdit"..idx..value..".text..\") is not a number.\"\n"
+						r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value).." (\"..lineEdit"..idx..value..".text..\") is not a number.\"\n"
 						r = r.."\telseif tonumber(lineEdit"..idx..value..".text) ~= "..self[idx][value].." then\n"
 						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 						r = r.."\tend"
@@ -722,7 +722,7 @@ function _Gtme.configure(self, modelName, package)
 								r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = math.huge,\"\n"
 							end
 							r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
-							r = r.."\t\tmerr = \"Error: "..toLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
+							r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
 							r = r.."\telseif tonumber(lineEdit"..idx..value..".text) ~= "..self[idx][value].default.. " then \n"
 							r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 							r = r.."\tend\n"
@@ -735,7 +735,7 @@ function _Gtme.configure(self, modelName, package)
 						r = r.."\telseif lineEdit"..idx..value..".text == \"\" then\n"
 						r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value, idx).." is a mandatory argument.\"\n"
 						r = r.."\telseif not tonumber(lineEdit"..idx..value..".text) then\n"
-						r = r.."\t\tmerr = \"Error: "..toLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
+						r = r.."\t\tmerr = \"Error: ".._Gtme.stringToLabel(value, idx).." is not a number (\"..lineEdit"..idx..value..".text..\").\"\n"
 						r = r.."\telse\n"
 						r = r.."\t\tiresult = iresult..\"\\n\t\t"..value.." = \"..lineEdit"..idx..value..".text..\",\"\n"
 						r = r.."\tend\n"

@@ -78,7 +78,7 @@ Model_ = {
 	-- the content of the Model into a single object. It is also possible to verify
 	-- whether the model has correct arguments. The internal verification of Model ensures that
     -- the type of the arguments is valid, acording to the definition of the Model.
-    -- See ErrorHandling:toLabel(), for using names of arguments
+    -- See Utils:toLabel(), for using names of arguments
     -- in error messages when building a Model to work with graphical interfaces.
 	-- This function is executed automaticall when one instantiates a given Model.
 	-- @usage usage Tube = Model{

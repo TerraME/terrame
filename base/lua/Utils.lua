@@ -1084,37 +1084,36 @@ function sessionInfo()
 	return info_ -- this is a global variable created when TerraME is initialized
 end
 
---- Convert a given string to a readable text.
--- @arg mstring A string.
--- @arg parent A string with the table name where the string is stored. If used,
--- the return value will be appended by this value between parenthesis.
--- @usage stringToLabel("myFirstString")
--- stringToLabel("my_second_string")
-function stringToLabel(mstring, parent)
+--- Convert a parameter name into a more readable name. It is useful to work
+-- with Model:init() when the model will be available through a graphical interface.
+-- In graphical interfaces, if the string contains underscores, it
+-- replaces them by spaces and convert the next characters to uppercase.
+-- Otherwise, it adds a space before each uppercase character.
+-- It also converts the first character of the string to uppercase.
+-- @arg mstring A string with the parameter name.
+-- @arg parent A string with the name of the table the parameter belongs to.
+-- This parameter is optional.
+-- @usage toLabel("maxValue") --  'Max Value' (with graphical interface) or 'maxValue' (without)
+function toLabel(mstring, parent)
 	if type(mstring) == "number" then
-		return tostring(mstring)
+		mstring = tostring(mstring)
 	end
 
 	mandatoryArgument(1, "string", mstring)
 	optionalArgument(2, "string", parent)
 
-	local result = string.upper(string.sub(mstring, 1, 1))
+	if sessionInfo().interface then
+		mstring = "'".._Gtme.stringToLabel(mstring).."'"
 
-	local nextsub = string.match(mstring, "%u")
-	for i = 2, mstring:len() do
-		local nextchar = string.sub(mstring, i, i)
-		if nextchar == nextsub then
-			result = result.." "..nextsub
-			nextsub = string.match(string.sub(mstring, i + 1, mstring:len()), "%u")
-		else
-			result = result..nextchar
+		if parent then
+			mstring = mstring.." (in '".._Gtme.stringToLabel(parent).."')"
 		end
-	end
 
-	if parent then
-		return result.." (in "..stringToLabel(parent)..")"
+		return mstring
+	elseif parent then
+		return "'"..parent.."."..mstring.."'"
 	else
-		return result
+		return "'"..mstring.."'"
 	end
 end
 

@@ -49,7 +49,7 @@ return{
 
 		local world = Agent{
 			count = 0,
-			mCount = function(self)
+			m_count = function(self)
 				return self.count + 1
 			end
 		}
@@ -58,7 +58,7 @@ return{
 
 		local c1 = Chart{
 			target = world,
-			select = {"mCount"},
+			select = {"m_count"},
 			color = "green",
 			size = 5,
 			pen = "solid",

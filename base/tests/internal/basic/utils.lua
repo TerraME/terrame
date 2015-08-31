@@ -24,31 +24,13 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	validateMySql = function(unitTest)
-		local mysqlCheck = _Gtme.validateMySql()
-		unitTest:assert(mysqlCheck == "")
-	end,
-	verifyVersionDependency = function(unitTest)
-		unitTest:assert(    _Gtme.verifyVersionDependency("0.1", ">=", "0.0.3"))
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", ">=", "0.3"))
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.1", ">=", "0.1.3"))
-		unitTest:assert(    _Gtme.verifyVersionDependency("0.1.4", ">=", "0.1.3"))
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.0", ">=", "0.0.3.1"))
-
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", "<=", "0.0.3"))
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.1", "<=", "0.0.3"))
-		unitTest:assert(    _Gtme.verifyVersionDependency("0.0.3.1", "<=", "0.0.3.1"))
-
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", "==", "0.0.3"))
-		unitTest:assert(not _Gtme.verifyVersionDependency("0.0.3.1", "==", "0.0.3"))
-		unitTest:assert(    _Gtme.verifyVersionDependency("0.0.3.1", "==", "0.0.3.1"))
-	end,
-	getVersion = function(unitTest)
-		local version = _Gtme.getVersion("10.100.1000")
-		unitTest:assertEquals(#version, 3)
-		unitTest:assertEquals(version[1], 10)
-		unitTest:assertEquals(version[2], 100)
-		unitTest:assertEquals(version[3], 1000)
+	stringToLabel = function(unitTest)
+        unitTest:assertEquals(_Gtme.stringToLabel("myFirstString"), "My First String")
+        unitTest:assertEquals(_Gtme.stringToLabel(255), "255")
+        unitTest:assertEquals(_Gtme.stringToLabel("my_first_string"), "My First String")
+        unitTest:assertEquals(_Gtme.stringToLabel("my_first_string_"), "My First String")
+        unitTest:assertEquals(_Gtme.stringToLabel("myFirstString_"), "My First String")
+        unitTest:assertEquals(_Gtme.stringToLabel("myFirstStr", "myParent"), "My First Str (in My Parent)")
 	end
 }
 

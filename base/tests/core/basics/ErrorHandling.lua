@@ -269,15 +269,6 @@ return{
 	tableArgumentMsg = function(unitTest)
 		unitTest:assertEquals(tableArgumentMsg(), "Argument must be a table.")
 	end,
-	toLabel = function(unitTest)
-		sessionInfo().interface = true
-		unitTest:assertEquals(toLabel("maxValue"), "'Max Value'")
-		unitTest:assertEquals(toLabel("maxValue", "tab"), "'Max Value' (in 'Tab')")
-
-		sessionInfo().interface = nil
-		unitTest:assertEquals(toLabel("maxValue"), "'maxValue'")
-		unitTest:assertEquals(toLabel("maxValue", "tab"), "'tab.maxValue'")
-	end,
 	unnecessaryArgumentMsg = function(unitTest)
 		unitTest:assertEquals(unnecessaryArgumentMsg("aaa"), "Argument 'aaa' is unnecessary.")
 	end,

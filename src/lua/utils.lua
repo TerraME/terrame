@@ -785,3 +785,65 @@ function _Gtme.killAllObservers()
 	_Gtme.createdObservers = {}
 end
 
+-- Convert a given string to a readable text. It converts the first character
+-- of the string to uppercase. If the string contains underscores, it
+-- replaces them by spaces and convert the next characters to uppercase.
+-- Otherwise, it adds a space before each uppercase characters.
+-- @arg mstring A string.
+-- @arg parent A string with the table name where the string is stored. If used,
+-- the return value will be appended by this value between parenthesis.
+function _Gtme.stringToLabel(mstring, parent)
+	if type(mstring) == "number" then
+		return tostring(mstring)
+	end
+
+	mandatoryArgument(1, "string", mstring)
+	optionalArgument(2, "string", parent)
+
+	local result = string.upper(string.sub(mstring, 1, 1))
+
+	local size = string.len(mstring)
+
+	if string.sub(mstring, size, size) == "_" then
+		mstring = string.sub(mstring, 1, size - 1)
+	end
+
+	local find = string.find(mstring, "_")
+
+	if find then
+		local i = 2
+		while i <= mstring:len() do
+			local char = string.sub(mstring, i, i)
+			local nextchar = string.sub(mstring, i + 1, i + 1)
+			local post = string.sub(mstring, i + 2, mstring:len())
+
+			if char == "_" then
+				nextchar = string.upper(nextchar)
+				result = result.." "..nextchar
+				i = i + 1
+			else
+				result = result..char
+			end
+
+			i = i + 1
+		end
+	else
+		local nextsub = string.match(mstring, "%u")
+		for i = 2, mstring:len() do
+			local nextchar = string.sub(mstring, i, i)
+			if nextchar == nextsub then
+				result = result.." "..nextsub
+				nextsub = string.match(string.sub(mstring, i + 1, mstring:len()), "%u")
+			else
+				result = result..nextchar
+			end
+		end
+	end
+
+	if parent then
+		return result.." (in ".._Gtme.stringToLabel(parent)..")"
+	else
+		return result
+	end
+end
+
