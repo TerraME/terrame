@@ -94,3 +94,4 @@ bool SchedulerSubjectInterf::kill(int id)
     obs = 0;
     return true;
 }
+

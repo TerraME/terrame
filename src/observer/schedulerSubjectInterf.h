@@ -65,5 +65,5 @@ public:
     bool kill(int id);
 };
 
-
 #endif
+

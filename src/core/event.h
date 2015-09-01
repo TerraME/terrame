@@ -48,7 +48,10 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 
 #include "bridge.h"
 #include "model.h"
+#include "reference.h"
 #include <float.h>
+
+extern lua_State * L; ///< Global variable: Lua stack used for communication with C++ modules.
 
 /**
  * \brief
@@ -60,11 +63,12 @@ class EventImpl : public Implementation
     double time_; ///< instant in which the Events must occurs
     double period_; ///<  periodicity in which the Event must occurs
     double priority_; /// Event priority (default value = 0)  Higher numbers means lower  priority.
+	int action_;
     /// The normal priority is 0(zero).
 public:
 
     /// Default constructor
-    EventImpl(void) { time_ = -DBL_MAX, period_ = 1, priority_ = 0; }
+    EventImpl(void) { time_ = -DBL_MAX, period_ = 1, priority_ = 0, action_ = 0; }
 
     /// Sets the Event instant to occur
     /// \param eventTime is the moment to the Event happens
@@ -101,6 +105,9 @@ public:
     /// Sets the periodicity in which the Event must occurs in time
     /// \param period is the real number representing the periodicity in which the Event must occurs
     void setPeriod(double period) { period_ = period; }
+
+    void setAction(int action) { action_ = action; }
+    int getAction() { return action_; }
 };
 
 /**
@@ -161,10 +168,80 @@ public:
     /// \param priority is a double number. Higher numbers means lower  priority. The default priority is 0(zero).
     void setPriority(double priority) { EventInterf::pImpl_->setPriority(priority); }
 
+    void setAction(int action) { EventInterf::pImpl_->setAction(action); }
+    int getAction() { return EventInterf::pImpl_->getAction(); }
+
     /// HANDLE - Gets the Event priority
     /// \return A double value representing the Event priority. Higher numbers means lower  priority. The default
     /// priority is 0(zero).
     double getPriority(void) { return EventInterf::pImpl_->getPriority(); }
+
+    /// Executes the luaMessage object
+    /// \param event is the Event which has trigered this luaMessage
+    bool execute() {
+		lua_rawgeti(L, LUA_REGISTRYINDEX, getAction());
+        if(!lua_isfunction(L, -1))
+        {
+            string err_out = string("Action function not defined!");
+			lua_getglobal(L, "customError");
+			lua_pushstring(L, err_out.c_str());
+			lua_call(L, 1, 0);
+            return 0;
+        }
+
+        // puts the Event constructor on the top of the lua stack
+        lua_getglobal(L, "Event");
+        if(!lua_isfunction(L, -1))
+        {
+			string err_out = string("Event constructor not found.");
+			lua_getglobal(L, "customError");
+			lua_pushstring(L, err_out.c_str());
+			//lua_pushnumber(L, 5);
+			lua_call(L, 1, 0);
+            return 0;
+        }
+
+        // builds the table parameter of the constructor
+        lua_newtable(L);
+		if(getTime() != 1) {
+        	lua_pushstring(L, "start");
+        	lua_pushnumber(L, getTime());
+        	lua_settable(L, -3);
+		}
+		if(getPeriod() != 1) {
+        	lua_pushstring(L, "period");
+        	lua_pushnumber(L, getPeriod());
+        	lua_settable(L, -3);
+		}
+		if(getPriority() != 0) {
+        	lua_pushstring(L, "priority");
+        	lua_pushnumber(L, getPriority());
+        	lua_settable(L, -3);
+		}
+
+        // calls the event constructor
+        if(lua_pcall(L, 1, 1, 0) != 0)
+        {
+            string err_out = string("Event constructor not found in the stack.");
+			lua_getglobal(L, "customError");
+			lua_pushstring(L, err_out.c_str());
+			lua_call(L, 1, 0);
+            return 0;
+        }
+
+    	// calls the function 'execute'
+        lua_call(L, 1, 1);
+
+        // retrieve the message result value from the lua stack
+        int result = true;
+        if(lua_type(L, -1) == LUA_TBOOLEAN)
+        {
+            result = lua_toboolean(L, -1);
+            lua_pop(L, 1);  // pop returned value
+        }
+
+        return result;
+    }
 };
 
 /// Compares Event objects.

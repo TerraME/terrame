@@ -113,7 +113,6 @@ public:
             if( lua_pcall( L, 3, 1, 0) != 0 )
             {
                 cout << " Error: rule can not be executed: " << lua_tostring(L,-1) << endl;
-
                 return 0;
             }
 

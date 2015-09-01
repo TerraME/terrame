@@ -54,7 +54,6 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #include "composite.h"
 
 #include "event.h"
-#include "message.h"
 
 #include <QApplication>
 #include "player.h"
@@ -70,7 +69,7 @@ extern bool step;
 *  Event-Message Pair Composite Handle Type.
 *
 */
-typedef CompositeInterface<multimapComposite<Event, Message*> > EventMessagePairCompositeInterf;
+typedef CompositeInterface<multimapComposite<Event, Event*> > EventMessagePairCompositeInterf;
 
 /**
 * \brief
@@ -115,7 +114,7 @@ public:
     Event getEvent(void)
 	{
         EventMessagePairCompositeInterf::iterator iterator = eventMessageQueue.begin();
-        pair<Event, Message*> eventMessagePair;
+        pair<Event, Event*> eventMessagePair;
 
         if (iterator != eventMessageQueue.end())
         {
@@ -133,9 +132,9 @@ public:
     /// Adds a new pair Event-Messsage to the Scheduler queue.
     /// \param event is a reference to the Event being added
     /// \param message is a pointer to message being linked to the Event
-    void add(Event& event, Message* message)
+    void add(Event& event, Event* message)
 	{
-        pair<Event, Message*> eventMessagePair;
+        pair<Event, Event*> eventMessagePair;
         eventMessagePair.first = event;
         eventMessagePair.second = message;
         eventMessageQueue.add(eventMessagePair);
@@ -146,21 +145,19 @@ public:
     /// \return A reference to Event object which has triggered the Message object
     Event& execute()
 	{
-        pair<Event, Message*> eventMessagePair;
+        pair<Event, Event*> eventMessagePair;
         EventMessagePairCompositeInterf::iterator iterator;
 
         iterator = eventMessageQueue.begin();
         if(iterator != eventMessageQueue.end())
         {
             Event& event = eventMessagePair.first = iterator->first;
-            Message *message = eventMessagePair.second = iterator->second;
 
             time_ = event.getTime();
 
-            Message msg = *message; // it's Important to keep the message implementation alive
             eventMessageQueue.erase(iterator);
 
-            if (message->execute(event))
+            if (event.execute())
 			{
                 eventMessagePair.first.setTime(double(time_.getTime() + event.getPeriod()));
                 eventMessageQueue.add(eventMessagePair);
@@ -184,8 +181,7 @@ public:
     double execute(double& finalTime)
 	{
         Event event;
-        Message *message;
-        pair<Event, Message*> eventMessagePair;
+        pair<Event, Event*> eventMessagePair;
         EventMessagePairCompositeInterf::iterator iterator;
 
         iterator = eventMessageQueue.begin();
@@ -194,7 +190,6 @@ public:
             while (paused) qApp->processEvents();
 
             event = eventMessagePair.first = iterator->first;
-            message = eventMessagePair.second = iterator->second;
 
             if(event.getTime() > finalTime)
 			{
@@ -203,10 +198,9 @@ public:
 			}
 
             time_ = event.getTime();
-            Message msg = *message; // it's Important to keep the message implementation alive
             eventMessageQueue.erase(iterator);
 
-            if(message->execute(event))
+            if(event.execute())
 			{
                 eventMessagePair.first.setTime(double(time_.getTime() + event.getPeriod()));
                 eventMessageQueue.add(eventMessagePair);
@@ -280,10 +274,9 @@ public:
 
     /// Adds a new pair Event-Message to the Scheduler queue.
     /// \param event is a reference to the Event being added
-    /// \param message is a pointer to message being linked to the Event
-    void add(Event& event, Message* message)
+    void add(Event& event)
     {
-    	SchedulerInterf::pImpl_->add(event, message);
+    	SchedulerInterf::pImpl_->add(event, &event);
     }
 
     /// Return true if the Event-Message queue is empty.

@@ -51,6 +51,15 @@ luaEvent::luaEvent(lua_State *L)
 /// destructor
 luaEvent::~luaEvent(void)
 {
+	int action = Event::getAction();
+
+	if(action != 0)
+	{
+		//cout << "destroying: " << action << endl;
+		luaL_unref(L, LUA_REGISTRYINDEX, action);
+	}
+	//else
+		//cout << "nothing to be destroyed" << endl;
 }
 
 /// Constructor - creates a luaEvent object from a Event object
@@ -88,6 +97,16 @@ int luaEvent::getPriority(lua_State *L)
 
 /// Sets the luaEvent priority
 /// parameters: number
+int luaEvent::setAction(lua_State *L)
+{ 
+    int action = luaL_ref(L, LUA_REGISTRYINDEX);
+	//cout << "Action: " << action << endl;
+    Event::setAction(action);
+    return 0;
+}
+
+/// Sets the luaEvent priority
+/// parameters: number
 int luaEvent::setPriority(lua_State *L)
 { 
     int priority= luaL_checknumber(L, -1);
@@ -106,6 +125,7 @@ int luaEvent::getPeriod(lua_State *L)
 /// Creates an observer
 int luaEvent::createObserver(lua_State *luaL)
 {
+/*
     Reference<luaEvent>::getReference(luaL);
     
     // flags para a defini??o do uso de compress?o
@@ -310,6 +330,7 @@ int luaEvent::createObserver(lua_State *luaL)
         lua_pushnumber(luaL, obsId);
         return 1;
     }
+*/
     return 0;
 }
 
@@ -384,7 +405,9 @@ QString luaEvent::pop(lua_State *, QStringList &)
 
 QString luaEvent::getAll(QDataStream& /*in*/, int /*observerId*/, QStringList& attribs)
 {
+/*
     Reference<luaEvent>::getReference(luaL);
+*/
     return pop(luaL, attribs);
 }
 
@@ -427,6 +450,7 @@ QDataStream& luaEvent::getState(QDataStream& in, Subject *, int observerId, QStr
 
 int luaEvent::kill(lua_State *luaL)
 {
+/*
     Reference<luaEvent>::getReference(luaL);
 
     int top = lua_gettop(luaL);;
@@ -465,6 +489,7 @@ int luaEvent::kill(lua_State *luaL)
     }
 
     lua_pushboolean(luaL, result);
+*/
     return 1;
 }
 

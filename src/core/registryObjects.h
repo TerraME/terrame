@@ -330,17 +330,6 @@ Luna<luaUdpSender>::RegType luaUdpSender::methods[] = {
         {0, 0}
 };
 
-//****************************** TIME ***********************************************//
-//----------------------------------------------------------------------------------------------
-const char luaMessage::className[] = "TeMessage";
-
-Luna<luaMessage>::RegType luaMessage::methods[] = {
-	method(luaMessage, config),
-	method(luaMessage, getReference),
-	method(luaMessage, setReference),
-	{0, 0}
-};
-
 //----------------------------------------------------------------------------------------------
 const char luaEvent::className[] = "TeEvent";
 
@@ -351,6 +340,7 @@ Luna<luaEvent>::RegType luaEvent::methods[] =
 	method(luaEvent, getPeriod),
 	method(luaEvent, setPriority),
 	method(luaEvent, getPriority),
+	method(luaEvent, setAction),
 	method(luaEvent, getReference),
 	method(luaEvent, setReference),
 
