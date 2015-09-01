@@ -25,25 +25,52 @@
 --      Rodrigo Reis Pereira
 --#########################################################################################
 
-local function Pair(data)
-	if data == nil then data = {} end
-
-	data.cObj_ = data
-	return data
-end
-
 -- Set type to "Event"
 TeEvent.type_ = "Event"
+Event_ = {
+	type_ = "Event",
+	--- Return the current simulation time, according to the Timer it belongs.
+	-- @usage event:getTime()
+	getTime = function(self)
+		return self.cObj_:getTime()
+	end,
+	--- Return the Timer that contains the Event.
+	-- @usage timer = event:getParent()
+	getParent = function(self) end,
+	--#- Change the attributes of the Event. It will be rescheduled according to its new attributes.
+	-- @arg time The time instant the Event will occur again (default is the current time of the
+	-- Timer it will belong).
+	-- @arg period The new periodicity of the Event (default is 1).
+	-- @arg priority The new priority of the Event. The default priority is 0 (zero). Smaller
+	--  values have higher priority.
+	-- @usage event:config(1)
+	-- event:config(1, 0.05)
+	-- event:config(1, 0.05, -1)
+	--config = function(self, time, period, priority) end,
+	--- Return the period of the Event.
+	-- @usage period = event:getPeriod()
+	getPeriod = function(self)
+		return self.cObj_:getPeriod()
+	end,
+	--- Return the priority of the Event.
+	-- @usage timer = event:getPriority()
+	getPriority = function(self)
+		return self.cObj_:getPriority()
+	end
+	--#- Change the priority of the Event. This change will take place as soon as the Event
+	-- is rescheduled.
+	-- @arg period The new periodicity of the Event (default is 1).
+	-- @usage event:setPriority(4)
+	-- setPriority = function(period) end,
+	--#- Notify every Observer connected to the Event.
+	-- @usage event:notify()
+	-- notify = function() end,
+}
 
-local function Action(data)
-	local cObj = TeMessage()
-	local metaAttr = {cObj_ = cObj}
-	local metaTable = {__index = metaAttr, __tostring = _Gtme.tostring}
-	if data.id ~= nil then cObj:config(data.id) end
-	setmetatable(data, metaTable)
-	cObj:setReference(data)
-	return data
-end
+metaTableEvent_ = {
+	__index = Event_,
+	__tostring = _Gtme.tostring
+}
 
 --- An Event represents a time instant when the simulation engine must execute some computation.
 -- In order to be executed, Events must belong to a Timer. An Event is usually rescheduled to be
@@ -116,82 +143,49 @@ function Event(data)
 	end
 
 	cObj:config(data.start, data.period, data.priority)
-	cObj:setReference(cObj)
 
 	if data.action ~= nil then
 		local targettype = type(data.action)
-		if targettype == "function" then
-			return Pair{cObj, Action{data.action}}
-		elseif targettype == "Society" then
+		local maction = data.action
+		if targettype == "Society" then
 			if not data.action.execute then
 				customError("The Society cannot be used as an action because it does not have an execute() method.")
 			end
 
-			local func = function(event)
-				data.action:execute(event)
-				data.action:synchronize(event:getPeriod())
+			data.action = function(event)
+				maction:execute(event)
+				maction:synchronize(event:getPeriod())
 			end
-			return Pair{cObj, Action{func}}
 		elseif targettype == "Cell" then
-			local func = function(event)
-				data.action:notify(event)
+			data.action = function(event)
+				maction:notify(event)
 			end
-			return Pair{cObj, Action{func}}
 		elseif targettype == "CellularSpace" then
-			local func = function(event)
-				data.action:synchronize()
-				data.action:notify(event)
+			data.action = function(event)
+				maction:synchronize()
+				maction:notify(event)
 			end
-			return Pair{cObj, Action{func}}
 		elseif targettype == "Agent" or targettype == "Automaton" then
-			local func = function(event)
-				data.action:execute(event)
-				data.action:notify(event)
+			data.action = function(event)
+				maction:execute(event)
+				maction:notify(event)
 			end
-			return Pair{cObj, Action{func}}
 		elseif targettype == "Group" or targettype == "Trajectory" then
-			local func = function(event)
-				data.action:rebuild()
+			data.action = function(event)
+				maction:rebuild()
 			end
-			return Pair{cObj, Action{func}}
-		else
+		elseif targettype ~= "function" then
 			incompatibleTypeError("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", data.action)
 		end
 	else
 		return cObj
 	end
-end
 
-Event_ = {
-	--- Return the current simulation time, according to the Timer it belongs.
-	-- @usage event:getTime()
-	getTime = function(self) end,
-	--- Return the Timer that contains the Event.
-	-- @usage timer = event:getParent()
-	getParent = function(self) end,
-	--#- Change the attributes of the Event. It will be rescheduled according to its new attributes.
-	-- @arg time The time instant the Event will occur again (default is the current time of the
-	-- Timer it will belong).
-	-- @arg period The new periodicity of the Event (default is 1).
-	-- @arg priority The new priority of the Event. The default priority is 0 (zero). Smaller
-	--  values have higher priority.
-	-- @usage event:config(1)
-	-- event:config(1, 0.05)
-	-- event:config(1, 0.05, -1)
-	--config = function(self, time, period, priority) end,
-	--- Return the period of the Event.
-	-- @usage period = event:getPeriod()
-	getPeriod = function(self) end,
-	--- Return the priority of the Event.
-	-- @usage timer = event:getPriority()
-	getPriority = function(self) end
-	--#- Change the priority of the Event. This change will take place as soon as the Event
-	-- is rescheduled.
-	-- @arg period The new periodicity of the Event (default is 1).
-	-- @usage event:setPriority(4)
-	-- setPriority = function(period) end,
-	--#- Notify every Observer connected to the Event.
-	-- @usage event:notify()
-	-- notify = function() end,
-}
+	cObj:setAction(data.action)
+	cObj:setReference(data)
+
+	data.cObj_ = cObj
+	setmetatable(data, metaTableEvent_)
+	return data
+end
 

@@ -90,9 +90,8 @@ return {
 			end}
 		}
 
-		unitTest:assertEquals(tostring(t1), [[1       table of size 2
-cObj_   userdata
-events  table of size 1
+		unitTest:assertEquals(tostring(t1), [[1      Event
+cObj_  userdata
 ]])
 	end,
 	add = function(unitTest)

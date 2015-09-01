@@ -32,20 +32,17 @@ Timer_ = {
 	-- @arg event An Event.
 	-- @usage timer:add(Event{...})
 	add = function (self, event)
-		if type(event) == "table" then 
-			if self.events == nil then self.events = {} end
-			table.insert(self.events, event)
-			self.cObj_:add(event.cObj_[1], event.cObj_[2].cObj_)
+		mandatoryArgument(1, "Event", event)
 
-			if event.cObj_[1]:getTime() < self:getTime() then
-				local msg = "Adding an Event with time ("..event.cObj_[1]:getTime()..
-					") before the current simulation time ("..self:getTime()..")."
-				customWarning(msg)
-			end
-		elseif event == nil then
-			mandatoryArgumentError(1)
-		else
-			incompatibleTypeError(1, "Event or table", event)
+		if self.events == nil then self.events = {} end
+
+		table.insert(self.events, event)
+		self.cObj_:add(event.cObj_)
+
+		if event.cObj_:getTime() < self:getTime() then
+			local msg = "Adding an Event with time ("..event.cObj_:getTime()..
+				") before the current simulation time ("..self:getTime()..")."
+			customWarning(msg)
 		end
 	end,
 	--- Execute the Timer until a final time. It manages the Event queue according to their execution
@@ -74,7 +71,7 @@ Timer_ = {
 	end,
 	--- Notify every Observer connected to the Timer.
 	-- @usage timer:notify()
-	notify = function (self)
+	notify = function(self)
 		local modelTime = self:getTime()
 		self.cObj_:notify(modelTime)
 	end,
@@ -108,20 +105,16 @@ function Timer(data)
 	end
 	
 	local cObj = TeTimer()
-	data.cObj_ = cObj
-	local eventTab = {}
 
 	forEachOrderedElement(data, function(idx, value, mtype)
-		if mtype == "table" then
-			cObj:add(value.cObj_[1], value.cObj_[2].cObj_)
-			table.insert(eventTab, value)
-		elseif mtype ~= "userdata" then
-			incompatibleTypeError(idx, "Event, table, or userdata", value)
+		if mtype == "Event" then
+			cObj:add(value.cObj_)
+		else
+			incompatibleTypeError(idx, "Event", value)
 		end
 	end)
-
-	data.events = eventTab
-
+ 
+	data.cObj_ = cObj
 	setmetatable(data, metaTableTimer_)
 	cObj:setReference(data)
 	return data

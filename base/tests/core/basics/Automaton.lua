@@ -199,7 +199,7 @@ id     string [MyAutomaton]
 
 		local env = Environment{cs, at1}
 
-		local ev = Event{action = function() end}[1]
+		local ev = Event{action = function() end}
 
 		at1:setTrajectoryStatus(true)
 		at1.it:sort(function(a,b) return a.x > b.x; end)
@@ -207,7 +207,7 @@ id     string [MyAutomaton]
 		unitTest:assertEquals(4, at1.cont)
 		unitTest:assertEquals(4, cont)
 
-		local ev = Event{start = 4, action = function() end}[1]
+		local ev = Event{start = 4, action = function() end}
 		at1.it:sort(greaterByCoord(">"))
 		at1:execute(ev)
 		unitTest:assertEquals(8, at1.cont)
@@ -272,7 +272,7 @@ id     string [MyAutomaton]
 
 		local env = Environment{cs, at1}
 
-		local ev = Event{action = function() end}[1]
+		local ev = Event{action = function() end}
 
 		at1:setTrajectoryStatus(true)
 		at1:execute(ev)
@@ -368,7 +368,7 @@ id     string [MyAutomaton]
 
 		local env = Environment{cs, at1}
 
-		local e = Event{action = function() end}[1]
+		local e = Event{action = function() end}
 		at1:execute(e)
 		unitTest:assertEquals(count, 0)
 

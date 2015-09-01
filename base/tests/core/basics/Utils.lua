@@ -621,7 +621,7 @@ return{
 			return t - 0.1
 		end
 
-		local event = Event{start = 2, period = 2, priority = 1, action = function(event) end}[1]
+		local event = Event{start = 2, period = 2, priority = 1, action = function(event) end}
 
 		local v = integrate{
 			equation = df,

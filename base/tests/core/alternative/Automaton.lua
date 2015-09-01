@@ -156,7 +156,7 @@ return{
 		local error_func = function()
 			at1:execute()
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event"))
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		at1 = Automaton{
 			it = Trajectory{

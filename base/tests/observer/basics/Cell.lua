@@ -95,7 +95,7 @@ return{
 		unitTest:assertSnapshot(ts, "textscreen_cell.bmp", 0.01)
 		unitTest:assertSnapshot(vt, "cell_visualtable.bmp", 0.059)
 
-		world:notify(Event{start = 31, action = function() end}[1])
+		world:notify(Event{start = 31, action = function() end})
 
 -- FIXME: bug below
 --[[

@@ -32,7 +32,7 @@ return{
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
 
-		local e = Event{action = function() end}[1]
+		local e = Event{action = function() end}
 		error_func = function()
 			Chart{target = e}
 		end

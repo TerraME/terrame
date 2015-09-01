@@ -36,13 +36,13 @@ return {
 			local timer = Timer{Cell()}
 		end
 
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event, table, or userdata", Cell()))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event", Cell()))
 	
 		error_func = function()
 			local timer = Timer{b = Cell()}
 		end
 
-		unitTest:assertError(error_func, incompatibleTypeMsg("b", "Event, table, or userdata", Cell()))
+		unitTest:assertError(error_func, incompatibleTypeMsg("b", "Event", Cell()))
 	
 	end,
 	add = function(unitTest)
@@ -64,7 +64,7 @@ return {
 		error_func = function()
 			timer:add("ev")
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event or table", "ev"))
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event", "ev"))
 
 		timer:execute(10)
 

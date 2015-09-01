@@ -915,7 +915,7 @@ return{
 			cs:save(t, "themeName", "height_")
 		end
 
-		local ev = Event{start = 10, action = function() end}[1]
+		local ev = Event{start = 10, action = function() end}
 		cs:save(ev, "themeName", "height_")
 		unitTest:assert(true)
 	end

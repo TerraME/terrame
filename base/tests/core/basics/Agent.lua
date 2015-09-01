@@ -232,7 +232,7 @@ socialnetworks  table of size 0
 
 		unitTest:assertEquals(0, a:getLatency())
 
-		a:execute(Event{action = function() end}[1])
+		a:execute(Event{action = function() end})
 		unitTest:assertEquals(0, a:getLatency())
 		unitTest:assertEquals(4, a.x)
 
@@ -308,7 +308,7 @@ socialnetworks  table of size 0
 
 		unitTest:assertEquals("stop", a:getStateName())
 
-		a:execute(Event{action = function() end}[1])
+		a:execute(Event{action = function() end})
 		unitTest:assertEquals("stop", a:getStateName())
 
 		local t = Timer{
@@ -541,7 +541,7 @@ socialnetworks  table of size 0
 			}
 		}
 
-		local ev = Event{action = function() end}[1]
+		local ev = Event{action = function() end}
 
 		ag1:setTrajectoryStatus(false)
 		ag1.it:sort(function(a, b) return a.x > b.x end)
