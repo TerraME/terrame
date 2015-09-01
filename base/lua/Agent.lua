@@ -157,7 +157,13 @@ Agent_ = {
 	execute = function(self, event)
 		mandatoryArgument(1, "Event", event)
 
-		self.cObj_:execute(event)
+		local mevent = event.cObj_
+
+		if not mevent then
+			mevent = event
+		end
+
+		self.cObj_:execute(mevent)
 	end,
 	--- Return the Cell where the Agent is located according to its placement. It assumes
 	-- that each Agent belongs to at most one Cell.

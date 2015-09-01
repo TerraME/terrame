@@ -46,13 +46,15 @@ Automaton_ = {
 	-- @arg event An Event.
 	-- @usage automaton:execute(event)
 	execute = function(self, event)
-		local t = type(event)
-		-- if t == "userdata" or t == "Pair" then
-		if t == "Event" or t == "Pair" then
-			self.cObj_:execute(event)
-		else
-			incompatibleTypeError(1, "Event", event)
+		mandatoryArgument(1, "Event", event)
+
+		local mevent = event.cObj_
+
+		if not mevent then
+			mevent = event
 		end
+
+		self.cObj_:execute(mevent)
 	end,
 	--- Return the unique identifier name of the Automaton.
 	-- @usage automaton:getId()
