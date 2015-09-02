@@ -33,7 +33,7 @@ using namespace TerraMEObserver;
     //// connect(tcpSocketTask, SIGNAL(connected()), this, SLOT(connected()));
 
     senderGUI = new SenderGUI();
-    senderGUI->setWindowTitle("TerraME Observer :: TCP Sender");
+    senderGUI->setWindowTitle("TCP Sender");
 
     addresses = new QList<QHostAddress>();
 */

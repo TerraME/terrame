@@ -14,7 +14,7 @@ using namespace TerraMEObserver;
 using namespace std;
 
 ObserverShapefile::ObserverShapefile(Subject *subj, QWidget *parent) :
-    ObserverMapSuperclass(subj,TObsShapefile, QString("TerraME Observer : Shapefile"), parent)
+    ObserverMapSuperclass(subj,TObsShapefile, QString("Shapefile"), parent)
 {
 }
 

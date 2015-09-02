@@ -61,7 +61,7 @@ ObserverStateMachine::ObserverStateMachine(Subject *subj, QWidget *parent)
     observerType = TObsStateMachine;
     subjectType = TObsUnknown;
 
-    setWindowTitle("TerraME Observer : StateMachine");
+    setWindowTitle("StateMachine");
     setWindowFlags(Qt::Window);
 
     setupGUI();

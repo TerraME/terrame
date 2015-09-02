@@ -24,7 +24,7 @@ PlotPropertiesGUI::PlotPropertiesGUI(ChartPlot *parent) : //, QWidget *parent) :
     ui(new Ui::plotPropertiesGUI)
 {
     ui->setupUi(this);
-    setWindowTitle("TerraME Observer : Chart - Properties");
+    setWindowTitle("Chart - Properties");
     // setStyleSheet("QTabWidget#tabWidget QPushButton[flat=true] {"
     //              "width: 35px; border-radius: 4px; "
     //              "border: 1px solid rgb(0, 0, 0); background-color: white; }");
@@ -125,7 +125,7 @@ void PlotPropertiesGUI::borderColorClicked()
 /*
     
     QColor color;
-    color = QColorDialog::getColor(color, this, "TerraME Observer : Chart - Select color");
+    color = QColorDialog::getColor(color, this, "Chart - Select color");
 
     if (color.isValid())
     {
@@ -181,7 +181,7 @@ void PlotPropertiesGUI::curveColorClicked()
 {
 /*
     QColor color;
-    color = QColorDialog::getColor(color, this, "TerraME Observer : Chart - Select color");
+    color = QColorDialog::getColor(color, this, "Chart - Select color");
 
     if (color.isValid())
     {
@@ -274,7 +274,7 @@ void PlotPropertiesGUI::titlesFontClicked()
 {
     bool ok;
     QFont newFont = QFontDialog::getFont(&ok, plotter->title().font(),
-                                         this, "TerraME Observer : Chart - Select Font");
+                                         this, "Chart - Select Font");
     if ((ok) && (newFont != plotter->title().font()) )
     {
         QwtText text = plotter->title();
@@ -287,7 +287,7 @@ void PlotPropertiesGUI::labelsFontClicked()
 {
     bool ok;
     QFont newFont = QFontDialog::getFont(&ok, plotter->axisTitle(QwtPlot::xBottom).font(),
-                                         this, "TerraME Observer : Chart - Select Font");
+                                         this, "Chart - Select Font");
     if ((ok) && (newFont != plotter->axisTitle(QwtPlot::xBottom).font()) )
     {
         QwtText text = plotter->axisTitle(QwtPlot::xBottom);
@@ -304,7 +304,7 @@ void PlotPropertiesGUI::scalesFontClicked()
 {
     bool ok;
     QFont newFont = QFontDialog::getFont(&ok, plotter->axisFont(QwtPlot::xBottom),
-                                         this, "TerraME Observer : Chart - Select Font");
+                                         this, "Chart - Select Font");
     if ((ok) && (newFont != plotter->axisFont(QwtPlot::xBottom)) )
     {
         plotter->setAxisFont(QwtPlot::xBottom, newFont);
@@ -317,7 +317,7 @@ void PlotPropertiesGUI::legendFontClicked()
     bool ok;
 
     QFont newFont = QFontDialog::getFont(&ok, plotter->legend()->font(),
-                                         this, "TerraME Observer : Chart - Select Font");
+                                         this, "Chart - Select Font");
     if ((ok) && (newFont != plotter->legend()->font()) )
     {
         plotter->legend()->setFont(newFont);

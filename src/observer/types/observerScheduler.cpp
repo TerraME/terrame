@@ -20,7 +20,7 @@ ObserverScheduler::ObserverScheduler(Subject *s, QWidget *parent)
 
     paused = false;
 
-    setWindowTitle("TerraME Observer : Scheduler");
+    setWindowTitle("Clock");
 
     clockPanel = new QWidget(this);
     clockPanel->setObjectName(QString::fromUtf8("clockPanel"));

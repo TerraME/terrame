@@ -14,7 +14,7 @@ ObserverTextScreen::ObserverTextScreen(Subject *subj, QWidget *parent)
     paused = false;
     header = false;
 
-    setWindowTitle("TerraME Observer : Text Screen");
+    setWindowTitle("Text Screen");
 
     textEdit = new QTextEdit(this);
     textEdit->setReadOnly(true);

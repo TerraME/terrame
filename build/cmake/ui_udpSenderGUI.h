@@ -131,7 +131,7 @@ public:
 
     void retranslateUi(QDialog *UdpSenderGUI)
     {
-        UdpSenderGUI->setWindowTitle(QApplication::translate("UdpSenderGUI", "TerraME Observer :: UDP Sender", 0));
+        UdpSenderGUI->setWindowTitle(QApplication::translate("UdpSenderGUI", "UDP Sender", 0));
         label->setText(QApplication::translate("UdpSenderGUI", "UDP Log messages: ", 0));
         pushButton->setText(QApplication::translate("UdpSenderGUI", "Close", 0));
         lblPortStatus->setText(QApplication::translate("UdpSenderGUI", "Sending at: 456456", 0));

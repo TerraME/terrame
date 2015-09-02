@@ -62,7 +62,7 @@ void ObserverMap::init()
     subjectType = TObsUnknown;
 
     //resize(1000, 900);
-    setWindowTitle("TerraME Observer : Map");
+    setWindowTitle("Map");
     setWindowFlags(Qt::Window);
 
     mapAttributes = new QHash<QString, Attributes*>();

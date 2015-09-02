@@ -249,7 +249,7 @@ void LegendWindow::attributesComboBox_activated(const QString &selected)
             attrValuesChanged = false;
             
              QMessageBox msgBox(this);
-             msgBox.setWindowTitle("TerraME Observer : Map");
+             msgBox.setWindowTitle("Map");
              msgBox.setText(tr("The attribute value has been modified.\n"
                  "Do you want save your changes?"));
 

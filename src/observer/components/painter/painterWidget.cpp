@@ -140,7 +140,7 @@ bool PainterWidget::rescale(QSize size)
 
     if (img.isNull())
     {
-        QMessageBox::information(this, "TerraME Observer : Map",
+        QMessageBox::information(this, "Map",
                                  tr("This zoom level generated a null image."));
         return false;
     }

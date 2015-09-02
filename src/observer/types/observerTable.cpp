@@ -16,7 +16,7 @@ ObserverTable::ObserverTable(Subject *subj, QWidget *parent)
     subjectType = TObsUnknown;
     paused = false;
 
-    setWindowTitle("TerraME Observer : Table");
+    setWindowTitle("Table");
     //setMaximumSize(QSize(200, 480));
 
     tableWidget = new QTreeWidget(this);
