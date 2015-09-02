@@ -777,11 +777,11 @@ function _Gtme.configure(self, modelName, package)
 	r = r.."\n\n"
 
 	if package then
-		r = r.."\tfile = io.open(getFile(\""..modelName.."\"), \"w\")\n"
-		r = r.."\tfile:write(header..result..execute)\n"
+		r = r.."\tlocal mfile = io.open(getFile(\""..modelName.."\"), \"w\")\n"
+		r = r.."\tmfile:write(header..result..execute)\n"
 		r = r.."\theader = \"\\n\\nif not isLoaded(\\\""..package.."\\\") then  import(\\\""..package.."\\\") end\"\n"
 		r = r.."\tresult = header..result\n"
-		r = r.."\tfile:close()\n"
+		r = r.."\tmfile:close()\n"
 	end
 
 	r = r..[[
