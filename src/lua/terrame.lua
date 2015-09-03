@@ -36,6 +36,7 @@ _Gtme = {}
 setmetatable(_Gtme, {__index = _G})
 
 _Gtme.loadedPackages = {}
+_Gtme.loadedFonts = {}
 _Gtme.createdObservers = {}
 _Gtme.fonts = {}
 _Gtme.print = print

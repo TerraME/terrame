@@ -123,14 +123,17 @@ function import(package)
 
 		local files = _Gtme.fontFiles(package)
 		forEachElement(files, function(_, file)	
-			cpp_loadfont(package_path..s.."font"..s..file) -- SKIP
+			if not _Gtme.loadedFonts[file] then
+				cpp_loadfont(package_path..s.."font"..s..file) -- SKIP
+				_Gtme.loadedFonts[file] = true
+			end
 		end)
 
 		if package == "base" then -- SKIP
 			cpp_setdefaultfont() -- SKIP
 		end
 
-		rawset(_G, "font",  function(data)	
+		rawset(_G, "font", function(data)	
 			_Gtme.fonts[data.name] = data.symbol -- SKIP
 		end)
 
