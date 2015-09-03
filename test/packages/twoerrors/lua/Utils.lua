@@ -40,6 +40,7 @@ function belong2(value, values)
 	if false then
 		a = 3
 		a = 3
+		c = f + d
 	end
 
 	if _Gtme.type(values) ~= "table" then

@@ -818,7 +818,7 @@ function _Gtme.configure(self, modelName, package)
 	r = r.."local result = Dialog:exec()\n\n"
 	-- why not changing to Dialog:show()?
 	-- http://stackoverflow.com/questions/12068317/calling-qapplicationexec-after-qdialogexec
-	r = r.."_Gtme.killAllObservers()"
+	r = r.."clean()"
 	
 	-- add the lines below for debug purposes...
 	-- file = io.open(modelName.."-configure.lua", "w")

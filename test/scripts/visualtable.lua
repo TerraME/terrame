@@ -48,5 +48,5 @@ local world = CellularSpace{
 local c1 = VisualTable{target = world}
 local c1 = VisualTable{target = world, select = "mcount"}
 
-_Gtme.killAllObservers()
+clean()
 

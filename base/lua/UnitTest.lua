@@ -324,7 +324,7 @@ UnitTest_ = {
 	clear = function(self)
 		if #_Gtme.createdObservers > 0 then
 			delay(self.sleep)
-			_Gtme.killAllObservers()
+			clean()
 			self.delayed_time = self.delayed_time + self.sleep
 		end
 	end,

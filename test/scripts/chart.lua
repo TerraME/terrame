@@ -5,5 +5,5 @@ Chart{target = c}
 Chart{target = c}
 Chart{target = c}
 
-_Gtme.killAllObservers()
+clean()
 

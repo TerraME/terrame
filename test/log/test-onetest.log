@@ -172,6 +172,8 @@ Testing tests/observer/basics/Timer.lua
 Skipping tests/observer/basics/Timer.lua
 Testing tests/observer/basics/UnitTest.lua
 Skipping tests/observer/basics/UnitTest.lua
+Testing tests/observer/basics/Utils.lua
+Skipping tests/observer/basics/Utils.lua
 Testing tests/observer/basics/VisualTable.lua
 Skipping tests/observer/basics/VisualTable.lua
 Skipping source code functions check
@@ -180,7 +182,7 @@ Skipping snapthots check
 Skipping examples
 
 Test report:
-Tests were executed in 3.58 seconds.
+Tests were executed in 3.56 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.

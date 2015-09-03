@@ -36,6 +36,7 @@ _Gtme = {}
 setmetatable(_Gtme, {__index = _G})
 
 _Gtme.loadedPackages = {}
+_Gtme.createdObservers = {}
 _Gtme.fonts = {}
 _Gtme.print = print
 _Gtme.type = type
@@ -991,7 +992,7 @@ function _Gtme.traceback()
 		info = debug.getinfo(level)
 	end
 
-	_Gtme.killAllObservers()
+	clean()
 
 	if str == "Stack traceback:\n" then
 		return ""
@@ -1050,7 +1051,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 				local __cellEmpty = Cell{attrib = 1}
 				local __obsEmpty = Chart{target = __cellEmpty}
-				_Gtme.killAllObservers()
+				clean()
 			elseif arg == "-ft" then
 				info_.fullTraceback = true
 			elseif arg == "-color" then
@@ -1324,7 +1325,7 @@ function _Gtme.myxpcall(func)
 			end
 
 			str = str..err.."\nStack traceback:\n"
-			_Gtme.killAllObservers()
+			clean()
 
 			local level = 1
 			local info = debug.getinfo(level)

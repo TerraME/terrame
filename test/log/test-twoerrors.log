@@ -68,9 +68,9 @@ Error in ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua:32: Test sh
 Test creates global variable(s): 'abcdef' (number).
 Test updates global variable(s): 'forEachCell' (changed from function to number).
 Testing call2
-Wrong execution, got error: '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:78: attempt to perform arithmetic on global 'aaa' (a nil value)'.
+Wrong execution, got error: '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:79: attempt to perform arithmetic on global 'aaa' (a nil value)'.
 Stack traceback:
-    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 78, in call2
+    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 79, in call2
     File ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua, line 42, in main chunk
 
 Testing createNeighborhood2
@@ -129,16 +129,16 @@ Testing switchInvalidArgumentSuggestionMsg2
 Checking if all asserts were executed
 Testing tests/alternative/Utils.lua
 Testing belong2
-Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:46: attempt to perform arithmetic on global 'aab' (a nil value)'.
+Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:47: attempt to perform arithmetic on global 'aab' (a nil value)'.
 Stack traceback:
-    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 46, in belong2
+    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 47, in belong2
     File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 30, in nil
     File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 32, in main chunk
 
 Testing call2
-Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:46: attempt to perform arithmetic on global 'aab' (a nil value)'.
+Error in wrong file (possibly wrong stack level). It should occur in 'tests/alternative/Utils.lua', got '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:47: attempt to perform arithmetic on global 'aab' (a nil value)'.
 Stack traceback:
-    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 46, in belong2
+    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 47, in belong2
     File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 41, in nil
     File ...rrame/bin/packages/twoerrors/tests/alternative/Utils.lua, line 43, in main chunk
 
@@ -169,7 +169,7 @@ Checking Tube.lua
 Checking Tube2.lua
 Checking Utils.lua
 Line 41 was not executed.
-Line 42 was not executed.
+Line 43 was not executed.
 Checking snapshots
 File 'snapshots/chart_cell2.bmp' was not used by any assertSnapshot().
 File 'snapshots/chart_cell3.bmp' was not used by any assertSnapshot().

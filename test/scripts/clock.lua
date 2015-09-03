@@ -10,5 +10,5 @@ timer = Timer{
 Clock{target = timer}
 timer:execute(200)
 	
-_Gtme.killAllObservers()
+clean()
 

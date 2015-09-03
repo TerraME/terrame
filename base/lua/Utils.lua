@@ -28,6 +28,32 @@
 
 -- @header Some basic and useful functions for modeling.
 
+local deadObserverMetaTable_ = {__index = function(_, idx)
+    customError("Trying to call a function of an observer that was destroyed.")
+end}
+
+--- Remove all graphical interfaces (Chart, Map, etc.).
+-- This function is particularly useful when one wants to simulate
+-- a Model repeated times.
+-- @usage clean()
+function clean()
+	forEachElement(_Gtme.createdObservers, function(idx, obs)
+		if obs.target.cObj_ then
+			if obs.type == 11 or obs.type == "neighborhood" then
+				obs.target.cObj_:kill(obs.id, obs.observer.target.cObj_) -- SKIP
+			else
+				obs.target.cObj_:kill(obs.id)
+			end
+		elseif type(obs.target) == "Society" then
+			obs.target:remove() -- SKIP
+		else
+			return
+		end
+		setmetatable(obs, deadObserverMetaTable_)
+	end)
+	_Gtme.createdObservers = {}
+end
+
 --- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
 -- This function was taken froom http://lua-users.org/wiki/LuaCsv.
 -- @arg line A string from a CSV file.

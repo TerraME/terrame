@@ -575,7 +575,7 @@ return{
 		error_func = function()
 			m:save("file.bmp")
 		end
-		unitTest:assertError(error_func, "Trying to use a function of an observer that was destroyed.")
+		unitTest:assertError(error_func, "Trying to call a function of an observer that was destroyed.")
 	end
 }
 

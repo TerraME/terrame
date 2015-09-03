@@ -235,7 +235,7 @@ No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
-All 286 global functions of the package are documented.
+All 287 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
@@ -244,8 +244,8 @@ All 314 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
-All 286 functions have @usage.
-All 286 functions call themselves in their @usage.
+All 287 functions have @usage.
+All 287 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All 295 links were correctly built.
