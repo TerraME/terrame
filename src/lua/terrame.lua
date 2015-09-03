@@ -1098,9 +1098,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					end
 
 					local data = _Gtme.include(_Gtme.packageInfo(package).path..s.."description.lua")
+					local date = data.date
+					if not date then date = "(undefined date)" end
+
 					print("Package '"..package.."'")
 					print(data.title)
-					print("Version "..data.version..", "..data.date)
+					print("Version "..data.version..", "..date)
 
 					if #models > 0 then
 						print("Model(s):")
