@@ -29,6 +29,8 @@
 -- @header Some basic and useful functions for modeling.
 
 local deadObserverMetaTable_ = {__index = function(_, idx)
+	if idx == "type_" then return "<DestroyedObserver>" end
+
     customError("Trying to call a function of an observer that was destroyed.")
 end}
 
