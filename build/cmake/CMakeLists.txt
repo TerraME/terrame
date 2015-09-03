@@ -305,7 +305,6 @@ set(MOC_HDRS
     ${SRCDIR}/observer/types/observerStateMachine.h
     ${SRCDIR}/observer/types/observerMapSuperclass.h
     ${SRCDIR}/observer/types/observerShapefile.h
-    ${SRCDIR}/observer/types/image/imageGUI.h
     ${SRCDIR}/observer/types/udpSender/udpSenderGUI.h
     ${SRCDIR}/observer/components/player/playerGUI.h
     ${SRCDIR}/observer/components/console/modelConsole.h
@@ -313,12 +312,9 @@ set(MOC_HDRS
     ${SRCDIR}/observer/components/legend/legendColorBar.h
     ${SRCDIR}/observer/components/painter/painterWidget.h
     ${SRCDIR}/observer/components/painter/painterThread.h
-    ${SRCDIR}/observer/components/painter/painterShapefile.h
     ${SRCDIR}/observer/components/receiver/receiver.h
     ${SRCDIR}/observer/components/canvas.h
     ${SRCDIR}/observer/types/chartPlot/chartPlot.h
-    ${SRCDIR}/observer/types/chartPlot/internalCurve.h
-    ${SRCDIR}/observer/types/chartPlot/plotPropertiesGUI.h
 )
 
 set(MOC_RSRCS 
@@ -329,9 +325,7 @@ set(UIS
     ${SRCDIR}/observer/components/console/modelConsoleGUI.ui
     ${SRCDIR}/observer/components/player/playerGUI.ui
     ${SRCDIR}/observer/components/receiver/receiverGUI.ui
-    ${SRCDIR}/observer/types/image/imageGUI.ui
     ${SRCDIR}/observer/types/udpSender/udpSenderGUI.ui
-    ${SRCDIR}/observer/types/chartPlot/plotPropertiesGUI.ui
 )
 
 qt5_wrap_cpp(MOC_SRCS ${MOC_HDRS})

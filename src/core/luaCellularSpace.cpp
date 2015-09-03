@@ -35,7 +35,6 @@ of this library and its documentation.
 // Observadores
 #include "../observer/types/observerUDPSender.h"
 #include "../observer/types/agentObserverMap.h"
-#include "../observer/types/agentObserverImage.h"
 #include "../observer/types/observerTextScreen.h"
 #include "../observer/types/observerGraphic.h"
 #include "../observer/types/observerLogFile.h"
@@ -539,7 +538,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 
     AgentObserverMap *obsMap = 0;
     ObserverUDPSender *obsUDPSender = 0;
-    AgentObserverImage *obsImage = 0;
     ObserverTextScreen *obsText = 0;
     ObserverTable *obsTable = 0;
     ObserverGraphic *obsGraphic = 0;
@@ -667,22 +665,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
                 qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
         }
         break;
-
-    case TObsImage:
-        obsImage = (AgentObserverImage *) CellSpaceSubjectInterf::createObserver(TObsImage);
-        if (obsImage)
-        {
-            obsId = obsImage->getId();
-            
-            if (obsVisible)
-                obsImage->show();
-        }
-        else
-        {
-            if (execModes != Quiet)
-                qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-        }
-        break;
     default:
         if (execModes != Quiet )
         {
@@ -795,29 +777,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
         return 2;
     }
 
-    if(obsImage)
-    {
-        if (getSpaceDimensions)
-            obsImage->setCellSpaceSize(width, height);
-
-        obsImage->setAttributes(obsAttribs, obsParams, obsParamsAtribs);
-        observersHash.insert(obsImage->getId(), obsImage);
-
-        if (imagePath.isEmpty())
-        {
-            obsImage->setPath();
-        }
-        else
-        {
-            if (imagePath.size() == 1)
-                obsImage->setPath( imagePath.at(0) );
-            else
-                obsImage->setPath(imagePath.at(0), imagePath.at(1));
-        }
-
-        lua_pushnumber(luaL, obsId);
-        return 1;
-    }
     return 0;
 }
 

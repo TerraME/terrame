@@ -11,7 +11,6 @@
 #include "../observer/types/observerTable.h"
 #include "../observer/types/observerUDPSender.h"
 #include "../observer/types/agentObserverMap.h"
-#include "../observer/types/agentObserverImage.h"
 #include "../observer/types/observerStateMachine.h"
 
 ///< true - TerrME runs in verbose mode and warning messages to the user; 
@@ -576,7 +575,6 @@ int luaGlobalAgent::createObserver( lua_State *L )
         int obsID = -1;
 
         AgentObserverMap *obsMap = 0;
-        AgentObserverImage *obsImage = 0;
 
         // Recupera os parametros
         lua_pushnil(luaL);
@@ -682,18 +680,6 @@ int luaGlobalAgent::createObserver( lua_State *L )
 
             obsMap->registry(this, attrClassName);
         }
-        else
-        {
-            attrClassName = " (image)"; // issue #405
-
-            obsImage = (AgentObserverImage *)cellSpace->getObserver(obsID);
-
-            if (! obsImage)
-                qFatal("%s", qPrintable(errorMsg));
-
-            obsImage->registry(this, attrClassName);
-        }
-        
         
         // Adiciono o currentState no observador
         allAttribs.push_back("currentState");
@@ -733,11 +719,6 @@ int luaGlobalAgent::createObserver( lua_State *L )
             // redefino o tipo do atributos na super classe ObserverMap
             obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs);
             obsMap->setSubjectAttributes(obsAttribs, TObsAgent, attrClassName);
-        }
-        else // (typeObserver == obsImage)
-        {
-            obsImage->setAttributes(obsAttribs, obsParams, obsParamsAtribs);
-            obsImage->setSubjectAttributes(obsAttribs, TObsAgent, attrClassName);
         }
         lua_pushnumber(luaL, obsID);
         return 1;
@@ -1023,8 +1004,6 @@ int luaGlobalAgent::kill(lua_State *luaL)
             {        
                 if (obs->getType() == TObsMap)
                     result = ((AgentObserverMap *)obs)->unregistry(this, attrClassName);
-                else
-                    result = ((AgentObserverImage *)obs)->unregistry(this, attrClassName);
             }
         }
     }

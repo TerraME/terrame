@@ -9,7 +9,6 @@
 #include "types/observerShapefile.h"
 
 //#include "../observer/types/agentObserverMap.h"
-//#include "../observer/types/agentObserverImage.h"
 
 using namespace TerraMEObserver;
 
@@ -92,10 +91,6 @@ bool LocalAgentSubjectInterf::kill(int id)
 
         //case TObsMap:
         //    ((AgentObserverMap *)obs)->unregistry(this);
-        //    break;
-
-        //case TObsImage:
-        //    ((AgentObserverImage *)obs)->unregistry(this);
         //    break;
 
         default:

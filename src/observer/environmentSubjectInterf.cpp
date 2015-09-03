@@ -84,11 +84,6 @@ bool EnvironmentSubjectInterf::kill(int id)
             //     delete (AgentObserverMap *)obs;
             //     break;
 
-            //case TObsImage:
-            //     ((AgentObserverImage *)obs)->close();
-            //     delete (AgentObserverImage *)obs;
-            //     break;
-
         default:
             delete obs;
             break;
@@ -96,3 +91,4 @@ bool EnvironmentSubjectInterf::kill(int id)
     obs = 0;
     return true;
 }
+

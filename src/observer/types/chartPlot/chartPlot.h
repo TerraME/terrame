@@ -51,9 +51,6 @@ public:
     void setId(int id);
     const int getId() const;
 
-private slots:
-    void propertiesChart();
-
 protected:
     // issue #642
     //void contextMenuEvent(QContextMenuEvent *ev);
@@ -71,7 +68,6 @@ private:
     void closeEvent(QCloseEvent *event);
 
     QAction *exportAct, *propertiesAct;
-    PlotPropertiesGUI *plotPropGui;
     QList<TerraMEObserver::InternalCurve *> internalCurves;
 
     QwtPlotPicker *picker;

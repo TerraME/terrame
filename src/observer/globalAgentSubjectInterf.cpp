@@ -8,7 +8,6 @@
 #include "types/observerStateMachine.h"
 
 //#include "types/agentObserverMap.h"
-//#include "types/agentObserverImage.h"
 
 Observer * GlobalAgentSubjectInterf::createObserver(TypesOfObservers typeObserver)
 {
@@ -91,10 +90,6 @@ bool GlobalAgentSubjectInterf::kill(int id)
         //    ((AgentObserverMap *)obs)->unregistry(this);
         //    break;
 
-        //case TObsImage:
-        //    ((AgentObserverImage *)obs)->unregistry(this);
-        //    break;
-
         default:
             delete obs;
             break;
@@ -102,3 +97,4 @@ bool GlobalAgentSubjectInterf::kill(int id)
     obs = 0;
     return true;
 }
+

@@ -7,7 +7,6 @@
 #include "../observer/types/observerTable.h"
 #include "../observer/types/observerUDPSender.h"
 #include "../observer/types/agentObserverMap.h"
-#include "../observer/types/agentObserverImage.h"
 
 #include "luaCellularSpace.h"
 #include "luaUtils.h"
@@ -401,7 +400,6 @@ int luaTrajectory::createObserver( lua_State *L )
         int obsId = -1;
 
         AgentObserverMap *obsMap = 0;
-        AgentObserverImage *obsImage = 0;
 
         // Recupera os parametros
         lua_pushnil(luaL);
@@ -481,15 +479,6 @@ int luaTrajectory::createObserver( lua_State *L )
 
             obsMap->registry(this);
         }
-        else
-        {
-            obsImage = (AgentObserverImage *)cellSpace->getObserver(obsId);
-
-            if (! obsImage)
-                qFatal("%s", qPrintable(errorMsg));
-
-            obsImage->registry(this);
-        }
 
         QStringList allAttribs, obsAttribs;
 
@@ -514,11 +503,6 @@ int luaTrajectory::createObserver( lua_State *L )
             // redefino o tipo do atributos na super classe ObserverMap
             obsMap->setAttributes(obsAttribs, obsParams, obsParamsAtribs);
             obsMap->setSubjectAttributes(obsAttribs, TObsTrajectory);
-        }
-        else
-        {
-            obsImage->setAttributes(obsAttribs, obsParams, obsParamsAtribs);
-            obsImage->setSubjectAttributes(obsAttribs, TObsTrajectory);
         }
         lua_pushnumber(luaL, obsId);
         return 1;
@@ -770,16 +754,12 @@ int luaTrajectory::kill(lua_State *luaL)
             {        
                 if (obs->getType() == TObsMap)
                     result = ((AgentObserverMap *)obs)->unregistry(this);
-                else
-                    result = ((AgentObserverImage *)obs)->unregistry(this);
             }
         }
     }
     lua_pushboolean(luaL, result);
     return 1;
 }
-
-
 
 #include <QFile>
 #include <QTextStream>
@@ -796,3 +776,4 @@ void luaTrajectory::save(const QString &msg)
         out << s << " ";
     out << "\n";
 }
+

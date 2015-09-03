@@ -6,7 +6,6 @@
 #include "types/observerGraphic.h"
 #include "types/observerUDPSender.h"
 #include "types/agentObserverMap.h"
-#include "types/agentObserverImage.h"
 
 using namespace TerraMEObserver;
 
@@ -31,9 +30,6 @@ Observer * TrajectorySubjectInterf::createObserver(TypesOfObservers typeObserver
             break;
         case TObsMap:
             obs = new AgentObserverMap(this);
-            break;
-        case TObsImage:
-            obs = new AgentObserverImage(this);
             break;
         default:
             obs = new ObserverTextScreen(this);
@@ -78,9 +74,6 @@ bool TrajectorySubjectInterf::kill(int id)
             break;
         //case TObsMap:
         //    ((AgentObserverMap *)obs)->unregistry(this);
-        //    break;
-        //case TObsImage:
-        //    ((AgentObserverImage *)obs)->unregistry(this);
         //    break;
         default:
             delete obs;

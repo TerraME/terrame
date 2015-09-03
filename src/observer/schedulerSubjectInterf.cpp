@@ -77,11 +77,6 @@ bool SchedulerSubjectInterf::kill(int id)
             //     delete (AgentObserverMap *)obs;
             //     break;
 
-            //case TObsImage:
-            //     ((AgentObserverImage *)obs)->close();
-            //     delete (AgentObserverImage *)obs;
-            //     break;
-
         case TObsScheduler:
             ((ObserverScheduler *)obs)->close();
             delete (ObserverScheduler *)obs;

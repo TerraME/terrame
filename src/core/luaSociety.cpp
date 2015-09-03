@@ -35,7 +35,6 @@ of this library and its documentation.
 #include "../observer/types/observerTable.h"
 #include "../observer/types/observerUDPSender.h"
 #include "../observer/types/agentObserverMap.h"
-#include "../observer/types/agentObserverImage.h"
 #include "luaUtils.h"
 #include "terrameGlobals.h"
 

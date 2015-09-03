@@ -2,7 +2,6 @@
 
 #include "types/agentObserverMap.h"
 #include "types/observerUDPSender.h"
-#include "types/agentObserverImage.h"
 
 #include "types/observerTextScreen.h"
 #include "types/observerGraphic.h"
@@ -40,10 +39,6 @@ Observer * CellSpaceSubjectInterf::createObserver(TypesOfObservers type)
             obs = new AgentObserverMap(this);
             break;
 
-        case TObsImage:
-            obs = new AgentObserverImage(this);
-            break;
-            
         case TObsShapefile:
             obs = new ObserverShapefile(this);
             break;
@@ -97,11 +92,6 @@ bool CellSpaceSubjectInterf::kill(int id)
             delete (AgentObserverMap *)obs;
             break;
 
-        case TObsImage:
-            ((AgentObserverImage *)obs)->close();
-            delete (AgentObserverImage *)obs;
-            break;
-
         default:
             delete obs;
             break;
@@ -109,3 +99,4 @@ bool CellSpaceSubjectInterf::kill(int id)
     obs = 0;
     return true;
 }
+
