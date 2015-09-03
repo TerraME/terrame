@@ -686,7 +686,7 @@ local function exclude_undoc(tab, doc_report, doc)
 		if doc_blocs == 0 then
 			if tab[tab[i]].type == "example" then
 				printError("Example "..tab[tab[i]].name.." is not documented.")
-				doc_report.undoc_examples = doc_report.undoc_examples + 1
+				doc_report.problem_examples = doc_report.problem_examples + 1
 				for k, v in ipairs(doc.examples) do
 					if v == tab[i] then
 						table.remove(doc.examples, k)

@@ -35,9 +35,7 @@ Function forEachCell2 was already declared.
 Function forEachNeighborhood2 was already declared.
 Parsing examples
 Parsing examples/continuous-rain.lua
-No description found in @example
 Parsing examples/discrete-rain.lua
-No description found in @example
 Parsing examples/ipd.lua
 Parsing examples/ipd2.lua
 Checking undocumented files
@@ -114,6 +112,5 @@ All files are documented.
 2 problems were found in @tabular.
 2 invalid tags were found in the documentation.
 2 out of 29 links are invalid.
-2 out of 4 examples are not documented.
 2 problems were found in the documentation of examples.
-Summing up, 42 problems were found in the documentation.
+Summing up, 40 problems were found in the documentation.

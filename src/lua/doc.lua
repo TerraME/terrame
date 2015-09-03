@@ -97,7 +97,6 @@ function _Gtme.executeDoc(package)
 		duplicated = 0,
 		compulsory_arguments = 0,
 		undoc_functions = 0,
-		undoc_examples = 0,
 		error_data = 0,
 		error_font = 0,
 		wrong_line = 0,
@@ -552,14 +551,6 @@ function _Gtme.executeDoc(package)
 		printError(doc_report.wrong_links.." out of "..doc_report.links.." links are invalid.")
 	else
 		printNote("All "..doc_report.links.." links were correctly built.")
-	end
-
-	if doc_report.undoc_examples == 1 then
-		printError("One out of "..doc_report.examples.." examples is not documented.")
-	elseif doc_report.undoc_examples > 1 then
-		printError(doc_report.undoc_examples.." out of "..doc_report.examples.." examples are not documented.")
-	else
-		printNote("All "..doc_report.examples.." examples are documented.")
 	end
 
 	if doc_report.problem_examples == 1 then

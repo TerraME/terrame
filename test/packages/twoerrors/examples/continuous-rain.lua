@@ -1,5 +1,3 @@
--- @example 
-
 local s = sessionInfo().separator
 os.execute("rm \""..file(".."..s.."examples"..s.."continuous-rain.log", "twoerrors").."\"")
 
