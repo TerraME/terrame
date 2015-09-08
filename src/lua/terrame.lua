@@ -541,16 +541,8 @@ end
 
 function _Gtme.validateMySql()
 	if _Gtme.isWindowsOS() then
-		if mySqlExists() then
-			if not isMySqlOnPath() then
-				local error = "MySql is installed on your computer," 
-						.." however it is not in the Path environment variable."
-						.."\nSet MySql in Path:\n" .. gimmeMySqlDirPath()
-				return error
-			end
-		else
-			local error = "MySql is not installed, version 5.X required.\n"
-					.."Set mysql command in your Path environment variable after install."
+		if not mySqlExists() then
+			local error = "MySql is not installed, version 5.X required."
 			return  error
 		end
 	end
@@ -558,14 +550,18 @@ function _Gtme.validateMySql()
 	return ""
 end
 
-function _Gtme.importDatabase(package)
+function _Gtme.importDatabase(package)	
 	local mysqlCheck = _Gtme.validateMySql()
-
 	if not (mysqlCheck == "") then
 		_Gtme.printError(mysqlCheck)
 		return
-	end
+	end	
 	
+	local mysqlPath = ""
+	if not isMySqlOnPath() then
+		mysqlPath = gimmeMySqlDirPath().."/"
+	end	
+
 	local s = _Gtme.sessionInfo().separator
 
 	local config = _Gtme.getConfig()
@@ -575,20 +571,21 @@ function _Gtme.importDatabase(package)
 	local host = config.host
 	local drop = config.drop
 
-	local command = "mysql"
+	local command = mysqlPath.."mysql"
+	local options = ""
 
 	if user then
-		command = command.." -u"..user
+		options = options.." -u"..user
 	else
-		command = command.." -u root"
+		options = options.." -u root"
 	end
 
 	if password and password ~= "" then
-		command = command.." -p"..password
+		options = options.." -p"..password
 	end
 
 	if host then
-		command = command.." -h"..host
+		options = options.." -h"..host
 	end
 
 	local folder = _Gtme.packageInfo(package).data
@@ -601,18 +598,20 @@ function _Gtme.importDatabase(package)
 
 		if drop then
 			_Gtme.printNote("Deleting database '"..database.."'")
-			local _, result = _Gtme.runCommand(command.." -e \"drop database "..database.."\"")
+			local _, result = _Gtme.runCommand("\""..command.."\" "..options.." -e \"drop database "..database.."\"")
 		end
 
 		_Gtme.printNote("Creating database '"..database.."'")
-		local _, result = _Gtme.runCommand(command.." -e \"create database "..database.."\"")
+		local _, result = _Gtme.runCommand("\""..command.."\" "..options.." -e \"create database "..database.."\"")
 		if result and result[1] and not isWarningMessage(result[1]) then
 			_Gtme.printError(result[1])
 			_Gtme.printError("Add 'drop = true' to your config.lua to allow replacing databases if needed.")
 			returnv = result[1]
 		else
 			_Gtme.printNote("Importing database '"..database.."'")
-			os.execute(command .." "..database.." < \""..folder..s..value.."\"")
+			local importDbFile = _Gtme.makePathCompatibleToAllOS(folder..s..value)
+			local cmd = "\""..command.."\" "..options.." "..database.." < \""..importDbFile.."\""
+			os.execute("\""..cmd.."\"")
 			_Gtme.printNote("Database '"..database.."' successfully imported")
 		end
 	end)
