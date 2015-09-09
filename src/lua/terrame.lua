@@ -505,7 +505,7 @@ end
 local function gimmeMySqlDirPath()	
 	local mySqlDirPath = "C:/Program Files/MySQL"
 	if not _Gtme.isDir(mySqlDirPath) then
-		mySqlDirPath = "C:/Program Files(x86)/MySQL"
+		mySqlDirPath = "C:/Program Files (x86)/MySQL"
 		if not _Gtme.isDir(mySqlDirPath) then
 			return ""
 		end
@@ -539,6 +539,22 @@ local function isMySqlOnPath()
 	return false
 end
 
+local function isValidDbConnection(command, options)
+	local result, error = _Gtme.runCommand("\""..command.."\" "..options.. " <")
+
+	for i = 1, #error, 1 do
+		local out = string.upper(error[i])
+		_Gtme.print(out)
+		if string.match(out, "ERROR") then
+			if string.match(out, "1045") or string.match(out, "2005") then
+				return false
+			end
+		end
+	end
+	
+	return true
+end
+
 function _Gtme.validateMySql()
 	if _Gtme.isWindowsOS() then
 		if not mySqlExists() then
@@ -550,7 +566,7 @@ function _Gtme.validateMySql()
 	return ""
 end
 
-function _Gtme.importDatabase(package)	
+function _Gtme.importDatabase(package)
 	local mysqlCheck = _Gtme.validateMySql()
 	if not (mysqlCheck == "") then
 		_Gtme.printError(mysqlCheck)
@@ -570,7 +586,7 @@ function _Gtme.importDatabase(package)
 	local password = config.password
 	local host = config.host
 	local drop = config.drop
-
+	
 	local command = mysqlPath.."mysql"
 	local options = ""
 
@@ -586,8 +602,14 @@ function _Gtme.importDatabase(package)
 
 	if host then
 		options = options.." -h"..host
-	end
-
+	end	
+	
+	if not isValidDbConnection(command, options) then
+		local error = "Wrong database connection parameters!"
+		_Gtme.printError(error)
+		return error
+	end		
+	
 	local folder = _Gtme.packageInfo(package).data
 	local files = _Gtme.sqlFiles(package)
 
