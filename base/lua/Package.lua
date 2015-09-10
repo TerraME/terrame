@@ -123,9 +123,9 @@ function import(package)
 
 		local files = _Gtme.fontFiles(package)
 		forEachElement(files, function(_, file)	
-			if not _Gtme.loadedFonts[file] then
+			if not _Gtme.loadedFonts[file] then -- SKIP
 				cpp_loadfont(package_path..s.."font"..s..file) -- SKIP
-				_Gtme.loadedFonts[file] = true
+				_Gtme.loadedFonts[file] = true -- SKIP
 			end
 		end)
 
