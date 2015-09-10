@@ -944,14 +944,22 @@ function _Gtme.traceback()
 			if (si.fullTraceback or si.package) then
 				if si.package then
 					if not mb and not m1 and not m3 then
-						str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..
-							", line "..info.currentline..
-							", in "..tostring(last_function).."\n"
+						str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
+
+						if info.currentline > 0 then
+							str = str..", line "..info.currentline
+						end
+
+						str = str..", in "..tostring(last_function).."\n"
 					end
 				else
-					str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..
-						", line "..info.currentline..
-						", in "..tostring(last_function).."\n"
+					str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
+
+					if info.currentline > 0 then
+						str = str..", line "..info.currentline
+					end
+
+					str = str..", in "..tostring(last_function).."\n"
 				end
 			end
 		else
@@ -980,8 +988,11 @@ function _Gtme.traceback()
 				found_function = true
 			end
 
-			str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..
-				", line "..info.currentline
+			str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
+
+			if info.currentline > 0 then
+				str = str..", line "..info.currentline
+			end
 
 			if info.name then
 				str = str..", in function "..info.name.."\n"
