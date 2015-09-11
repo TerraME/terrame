@@ -291,7 +291,7 @@ function _Gtme.executeTests(package, fileName)
 		printError("Error: print() call detected with argument '"..tostring(arg).."'")
 	end
 
-	_, overwritten = _G.getPackage(package)
+	local pkgData, overwritten = _G.getPackage(package)
 
 	print = function() end
 
@@ -358,7 +358,43 @@ function _Gtme.executeTests(package, fileName)
 
 			forEachOrderedElement(value, function(func)
 				str = str.."\t"..func.." = function(unitTest)\n"
-				str = str.."\t\t-- add a test here \n"
+
+				if type(pkgData[func]) == "Model" then
+					local model = pkgData[func]{}
+
+					str = str.."\t\tlocal model = "..func.."{}\n\n"
+
+					local countMap = 1
+
+					forEachOrderedElement(model, function(idx, value, mtype)
+						if mtype == "Map" then
+							str = str.."\t\tunitTest:assertSnapshot(model."..idx..", \""..func.."-map-"..countMap.."-begin.bmp\")\n"
+							countMap = countMap + 1
+						end
+					end)
+
+					str = str.."\n\t\tmodel:execute()\n\n"
+
+					local countChart = 1
+					local countMap = 1
+
+					forEachOrderedElement(model, function(idx, value, mtype)
+						if mtype == "Chart" then
+							str = str.."\t\tunitTest:assertSnapshot(model."..idx..", \""..func.."-chart-"..countChart..".bmp\")\n"
+							countChart = countChart + 1
+						elseif mtype == "Map" then
+							str = str.."\t\tunitTest:assertSnapshot(model."..idx..", \""..func.."-map-"..countMap.."-end.bmp\")\n"
+							countMap = countMap + 1
+						end
+					end)
+
+
+					--clear()
+
+				else
+					str = str.."\t\t-- add a test here \n"
+				end
+
 				str = str.."\tend,\n"
 			end)
 
