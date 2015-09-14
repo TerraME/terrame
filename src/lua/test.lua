@@ -388,8 +388,7 @@ function _Gtme.executeTests(package, fileName)
 						end
 					end)
 
-
-					--clear()
+					clean()
 
 				else
 					str = str.."\t\t-- add a test here \n"
