@@ -29,8 +29,8 @@
 --- Return the path to a file of a given package. The file must be inside the folder data
 -- within the package.
 -- @arg filename A string with the name of the file.
--- @arg package A string with the name of the package. As default, it uses paciage base.
--- @usage file("cs.csv") 
+-- @arg package A string with the name of the package. As default, it uses package base.
+-- @usage file("cs.csv")
 --
 -- cs = CellularSpace{database = file("simple.map")}
 function file(filename, package)
