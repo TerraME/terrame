@@ -178,7 +178,12 @@ local function selectPackage()
 	comboboxModels:clear()
 
 	local result = xpcall(function() getPackage(comboboxPackages.currentText) end, function(err)
-		qt.dialog.msg_critical(err)
+		sessionInfo().fullTraceback = true
+		local trace = _Gtme.traceback()
+		local merr = "Error: Package '"..comboboxPackages.currentText.."' could not be loaded:\n\n"
+			..err.."\n\n"..trace
+
+		qt.dialog.msg_critical(merr)
 	end)
 
 	if not result then
