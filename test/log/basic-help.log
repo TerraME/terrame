@@ -22,6 +22,8 @@ Options:
                                   creating an instance of such model.
  -install <file>                  Install a package stored in a given file.
  [-package <pkg>] -test           Execute unit tests.
+ [-package <pkg>] -sketch         Create test scripts for source code files missing
+                                  tests and initial documentation for undocumented files.
  [-package <pkg>] -build [-clean] Build an installer for the package. It executes all
                                   tests and build the documentation of the packag.
                                   -clean option remove test files, snapshots, and logs.

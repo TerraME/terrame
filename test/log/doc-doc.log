@@ -50,6 +50,7 @@ Parsing examples/growing-society.lua
 Parsing examples/ipd.lua
 Parsing examples/leontief.lua
 Parsing examples/predator-prey.lua
+Parsing examples/runoff.lua
 Parsing examples/single-agent.lua
 Parsing examples/single-agents-society.lua
 Parsing examples/sir-basic.lua
@@ -227,7 +228,7 @@ Checking Utils.lua
 Checking VisualTable.lua
 
 Documentation report:
-Documentation was built in 0.48 seconds.
+Documentation was built in 0.5 seconds.
 35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -249,5 +250,5 @@ All 287 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All 295 links were correctly built.
-All 21 examples are correctly documented.
+All 22 examples are correctly documented.
 Summing up, all the documentation was successfully built.

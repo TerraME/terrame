@@ -1,3 +1,9 @@
+
+-- @example Implementation of a simple runoff model.
+-- There is an initial rain in the highest cells.
+-- Each cell then sends its water equally to all neighbors
+-- with lower height. 
+
 cell = Cell{
 	init = function(cell)
 		cell.water = 0

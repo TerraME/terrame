@@ -313,7 +313,6 @@ function _Gtme.executeTests(package, fileName)
 
 	local s = sessionInfo().separator
 	local baseDir = packageInfo(package).path
-	local srcDir = baseDir..s.."tests"
 
 	doc_functions = luadocMain(baseDir, dir(baseDir..s.."lua"), {}, package, {}, {}, {}, true)
 
@@ -343,69 +342,9 @@ function _Gtme.executeTests(package, fileName)
 		printNote("Found "..extra.." extra functions in the documentation")
 	end
 
-	if not isDir(srcDir) then
-		printError("Folder 'tests' does not exist in package '"..package.."'.")
-		
-		printWarning("Creating folder 'tests'")
-		mkDir(srcDir)
-
-		forEachOrderedElement(testfunctions, function(idx, value)
-			printWarning("Creating "..idx)
-
-			str = "-- Test file for "..idx.."\n"
-			str = str.."-- Author: "..packageInfo(package).authors
-			str = str.."\n\nreturn{\n"
-
-			forEachOrderedElement(value, function(func)
-				str = str.."\t"..func.." = function(unitTest)\n"
-
-				if type(pkgData[func]) == "Model" then
-					local model = pkgData[func]{}
-
-					str = str.."\t\tlocal model = "..func.."{}\n\n"
-
-					local countMap = 1
-
-					forEachOrderedElement(model, function(idx, value, mtype)
-						if mtype == "Map" then
-							str = str.."\t\tunitTest:assertSnapshot(model."..idx..", \""..func.."-map-"..countMap.."-begin.bmp\")\n"
-							countMap = countMap + 1
-						end
-					end)
-
-					str = str.."\n\t\tmodel:execute()\n\n"
-
-					local countChart = 1
-					local countMap = 1
-
-					forEachOrderedElement(model, function(idx, value, mtype)
-						if mtype == "Chart" then
-							str = str.."\t\tunitTest:assertSnapshot(model."..idx..", \""..func.."-chart-"..countChart..".bmp\")\n"
-							countChart = countChart + 1
-						elseif mtype == "Map" then
-							str = str.."\t\tunitTest:assertSnapshot(model."..idx..", \""..func.."-map-"..countMap.."-end.bmp\")\n"
-							countMap = countMap + 1
-						end
-					end)
-
-					clean()
-
-				else
-					str = str.."\t\t-- add a test here \n"
-				end
-
-				str = str.."\tend,\n"
-			end)
-
-			str = str.."}\n\n"
-
-			local file = io.open(srcDir..s..idx, "w")
-			io.output(file)
-			io.write(str)
-			io.close(file)
-		end)
-
-		printWarning("Please fill the test files and run the tests again")
+	if not isDir(baseDir..s.."tests") then
+		printError("Folder 'tests' does not exist in package '"..package.."'")
+		printError("Please run 'terrame -package "..package.." -sketch' to create test files.")
 		os.exit()
 	end
 

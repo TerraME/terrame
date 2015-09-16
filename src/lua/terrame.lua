@@ -845,6 +845,8 @@ local function usage()
 	print("                                  creating an instance of such model.")
 	print(" -install <file>                  Install a package stored in a given file.")
 	print(" [-package <pkg>] -test           Execute unit tests.")
+	print(" [-package <pkg>] -sketch         Create test scripts for source code files missing")
+	print("                                  tests and initial documentation for undocumented files.")
 	print(" [-package <pkg>] -build [-clean] Build an installer for the package. It executes all")
 	print("                                  tests and build the documentation of the packag.")
 	print("                                  -clean option remove test files, snapshots, and logs.")
@@ -1206,6 +1208,22 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				local s = sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				local correct, errorMsg = xpcall(function() _Gtme.executeTests(package, arguments[argCount]) end, function(err)
+					_Gtme.printError(err)
+					--_Gtme.printError(traceback())
+				end)
+				os.exit()
+			elseif arg == "-sketch" then
+				if info_.package == nil then
+					_Gtme.printError("It is not possible to sketch base package")
+				end
+
+				info_.mode = "debug"
+				argCount = argCount + 1
+
+				local s = sessionInfo().separator
+				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
+				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."sketch.lua")
+				local correct, errorMsg = xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
 				end)
