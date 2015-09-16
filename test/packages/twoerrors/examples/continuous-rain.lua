@@ -1,5 +1,4 @@
 local s = sessionInfo().separator
-os.execute("rm \""..file(".."..s.."examples"..s.."continuous-rain.log", "twoerrors").."\"")
 
 C = 2
 K = 0.4
