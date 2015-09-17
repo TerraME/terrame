@@ -10,6 +10,6 @@ Package 'nodatadotlua' does not have a font folder
 
 Sketch report:
 No new test file was necessary.
-2 data files were not documented. Please fill data.lua with their parameters.
+2 data files were not documented.
 All font files are already documented.
-Summing up, 2 sketches were created.
+Summing up, 2 sketches were created. Please fill them.

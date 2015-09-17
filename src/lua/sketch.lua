@@ -270,25 +270,25 @@ function _Gtme.sketch(package)
 	if report.created_files == 0 then
 		printNote("No new test file was necessary.")
 	elseif report.created_files == 1 then
-		printWarning("One test file was created. Please fill it and run the tests again.")
+		printWarning("One test file was created.")
 	else
-		printWarning(report.created_files.." test files were created. Please fill them and run the tests again.")
+		printWarning(report.created_files.." test files were created.")
 	end
 
 	if report.created_data == 0 then
 		printNote("All data is already documented.")
 	elseif report.created_data == 1 then
-		printWarning("One data file was not documented. Please fill data.lua with its parameters.")
+		printWarning("One data file was not documented.")
 	else
-		printWarning(report.created_data.." data files were not documented. Please fill data.lua with their parameters.")
+		printWarning(report.created_data.." data files were not documented.")
 	end
 
 	if report.created_font == 0 then
 		printNote("All font files are already documented.")
 	elseif report.created_font == 1 then
-		printWarning("One font file was not documented. Please fill font.lua with its parameters.")
+		printWarning("One font file was not documented.")
 	else
-		printWarning(report.created_font.." font files were not documented. Please fill font.lua with their parameters.")
+		printWarning(report.created_font.." font files were not documented.")
 	end
 
 	local errors = 0
@@ -300,9 +300,9 @@ function _Gtme.sketch(package)
 	if errors == 0 then
 		printNote("Summing up, no sketch was created.")
 	elseif errors == 1 then
-		printError("Summing up, one sketch was created.")
+		printError("Summing up, one sketch was created. Please fill it.")
 	else
-		printError("Summing up, "..errors.." sketches were created.")
+		printError("Summing up, "..errors.." sketches were created. Please fill them.")
 	end
 
 	os.exit()
