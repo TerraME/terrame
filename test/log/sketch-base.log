@@ -1,5 +1,5 @@
 Verifying test files
-Internal folders were found in the tests. Ignoring tests.
+Ignoring tests because internal folders were found in the tests
 Verifying data files
 File 'agents.csv' is already documented in 'data.lua'
 File 'brazil.gal' is already documented in 'data.lua'
@@ -37,3 +37,4 @@ Sketch report:
 No new test file was necessary.
 All data is already documented.
 All font files are already documented.
+Summing up, no sketch was created.

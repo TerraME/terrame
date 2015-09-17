@@ -12,6 +12,11 @@ local function verifyTest(package, report)
 	local testDir = baseDir..s.."tests"
 	local internalFolder = false
 
+	if not isDir(baseDir..s.."lua") then
+		_Gtme.print("Package '"..package.."' does not have source code")
+		return
+	end
+
 	if not isDir(testDir) then
 		printWarning("Creating folder 'tests'")
 		mkDir(testDir)
@@ -24,7 +29,7 @@ local function verifyTest(package, report)
 	end)
 
 	if internalFolder then
-		_Gtme.printWarning("Internal folders were found in the tests. Ignoring tests.")
+		_Gtme.printWarning("Ignoring tests because internal folders were found in the tests")
 		return false
 	end
 
@@ -264,6 +269,20 @@ function _Gtme.sketch(package)
 		printWarning("One font file was not documented. Please fill font.lua with its parameters.")
 	else
 		printWarning(report.created_font.." font files were not documented. Please fill font.lua with their parameters.")
+	end
+
+	local errors = 0
+
+	forEachElement(report, function(_, value)
+		errors = errors + value
+	end)
+
+	if errors == 0 then
+		printNote("Summing up, no sketch was created.")
+	elseif errors == 1 then
+		printError("Summing up, one sketch was created.")
+	else
+		printError("Summing up, "..errors.." sketches were created.")
 	end
 
 	os.exit()
