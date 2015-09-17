@@ -12,6 +12,11 @@ local function verifyTest(package, report)
 	local testDir = baseDir..s.."tests"
 	local internalFolder = false
 
+	if not isDir(testDir) then
+		printWarning("Creating folder 'tests'")
+		mkDir(testDir)
+	end
+
 	forEachFile(testDir, function(mfile)
 		if isDir(testDir..s..mfile) then
 			internalFolder = true
@@ -21,11 +26,6 @@ local function verifyTest(package, report)
 	if internalFolder then
 		_Gtme.printWarning("Internal folders were found in the tests. Ignoring tests.")
 		return false
-	end
-
-	if not isDir(testDir) then
-		printWarning("Creating folder 'tests'")
-		mkDir(testDir)
 	end
 
 	local pkgData = _G.getPackage(package)
@@ -130,7 +130,7 @@ local function verifyData(package, report)
 			end
 		end
 
-		_Gtme.include(baseDir..s.."data.lua")
+		_Gtme.include(datadotlua)
 		data = originaldata
 	else
 		_Gtme.print("Creating 'data.lua'")
@@ -163,16 +163,82 @@ local function verifyData(package, report)
 	mfile:close()
 end
 
+local function verifyFont(package, report)
+	printNote("Verifying font files")
+
+	local baseDir = packageInfo(package).path
+	local s = sessionInfo().separator
+	local fontDir = baseDir..s.."font"
+
+	if not isDir(fontDir) then
+		_Gtme.print("Package '"..package.."' does not have a font folder")
+		return
+	end
+
+	local fontfiles = {}
+	local fontdotlua = baseDir..s.."font.lua"
+
+	forEachFile(fontDir, function(file)
+		fontfiles[file] = false
+	end)
+
+	if getn(fontfiles) == 0 then
+		_Gtme.print("Package '"..package.."' has no fonts")
+		return
+	end
+
+	if isFile(fontdotlua) then
+		local originalfont = font
+		font = function(mfont)
+			if type(mfont.file) == "string" then
+				fontfiles[mfont.file] = true
+			end
+		end
+
+		_Gtme.include(fontdotlua)
+		font = originalfont
+	else
+		_Gtme.print("Creating 'font.lua'")
+	end
+
+	local mfile = io.open(fontdotlua, "a")
+
+	forEachOrderedElement(fontfiles, function(idx, value)
+		if value then
+			_Gtme.print("File '"..idx.."' is already documented in 'font.lua'")
+		elseif string.endswith(idx, ".ttf") then
+			_Gtme.printWarning("Adding sketch for font file '"..idx.."'")
+			local str = "font{\n"
+				.."\tfile = \""..idx.."\",\n"
+    			.."\tname = \"\",    -- optional\n"
+    			.."\tsummary = \"\",\n"
+    			.."\tsource = \"\",\n"
+    			.."\tsymbol = {}\n"
+				.."}\n\n"
+			mfile:write(str)
+
+			report.created_font = report.created_font + 1
+		else
+			_Gtme.print("File '"..idx.."' will be ignored")
+		end
+	end)
+
+	mfile:close()
+end
+
+
 function _Gtme.sketch(package)
 	local report = {
 		created_files = 0,
 		created_data = 0,
+		created_font = 0,
 	}
 
 	import("base")
 
 	verifyTest(package, report)
 	verifyData(package, report)
+	verifyFont(package, report)
 
 	print("\nSketch report:")
 
@@ -190,6 +256,14 @@ function _Gtme.sketch(package)
 		printWarning("One data file was not documented. Please fill data.lua with its parameters.")
 	else
 		printWarning(report.created_data.." data files were not documented. Please fill data.lua with their parameters.")
+	end
+
+	if report.created_font == 0 then
+		printNote("All font files are already documented.")
+	elseif report.created_font == 1 then
+		printWarning("One font file was not documented. Please fill font.lua with its parameters.")
+	else
+		printWarning(report.created_font.." font files were not documented. Please fill font.lua with their parameters.")
 	end
 
 	os.exit()

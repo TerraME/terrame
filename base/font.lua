@@ -2,7 +2,7 @@
 font {
 	name = "Pet Animals",
 	file = "Pet Animals.ttf",
-	summary = " Pet animals by Zdravko Andreev, aka Z-Designs. This font is free for personal and non-commercial use.",
+	summary = "Pet animals by Zdravko Andreev, aka Z-Designs. This font is free for personal and non-commercial use.",
 	source = "http://www.dafont.com/pet-animals.font",
 	symbol = {
 		fish   = 66,

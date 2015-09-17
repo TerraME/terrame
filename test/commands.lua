@@ -83,7 +83,8 @@ observer = {
 }
 
 sketch = {
-	create = {arg = "-sketch", package = "nodatadotlua"},
+	data = {arg = "-sketch", package = "nodatadotlua"},
+	font = {arg = "-sketch", package = "nofontdotlua"},
 	base = {arg = "-sketch"}
 }
 
