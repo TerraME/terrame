@@ -45,6 +45,26 @@ function file(filename, package)
 	end
 end
 
+--- Return a table with the files of a package that have a given extension. 
+-- @arg package A string with the name of the package.
+-- @arg extension A string with the extension.
+-- @usage filesByExtension("base", "csv")
+function filesByExtension(package, extension)
+	mandatoryArgument(1, "string", package)
+	mandatoryArgument(2, "string", extension)
+
+	local size = string.len(extension)
+	local result = {}
+
+	forEachFile(packageInfo(package).data, function(file)
+		if string.sub(file, -size) == extension then
+			table.insert(result, string.sub(file, 1, -size - 1))
+		end
+	end)
+
+	return result
+end
+
 --- Load a given package. If the package is not installed, it tries to load from
 -- a folder in the current directory.
 -- @arg package A package name.
