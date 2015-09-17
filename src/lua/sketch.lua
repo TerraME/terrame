@@ -42,6 +42,22 @@ local function verifyTest(package, report)
 			return
 		end
 
+		local sub = string.sub(idx, 1, -5)
+
+		if type(pkgData[sub]) == "Model" then
+			local mandatory = false
+			forEachElement(pkgData[sub](), function(_, _, mtype)
+				if mtype == "Mandatory" then
+					mandatory = true
+				end
+			end)
+
+			if mandatory then
+				printNote("Ignoring Model '"..sub.."' as it has a Mandatory argument")
+				return
+			end
+		end
+
 		printWarning("Creating "..idx)
 		report.created_files = report.created_files + 1
 
@@ -66,7 +82,11 @@ local function verifyTest(package, report)
 					end
 				end)
 
-				str = str.."\n\t\tmodel:execute()\n\n"
+				if countMap > 1 then
+					str = str.."\n"
+				end
+
+				str = str.."\t\tmodel:execute()\n\n"
 
 				local countChart = 1
 				local countMap = 1

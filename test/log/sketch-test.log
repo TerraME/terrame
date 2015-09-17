@@ -1,0 +1,16 @@
+Verifying test files
+Creating folder 'tests'
+Creating Space.lua
+Creating Tube.lua
+Ignoring Model 'Tube2' as it has a Mandatory argument
+Creating Utils.lua
+Verifying data files
+Package 'models' does not have a data folder
+Verifying font files
+Package 'models' does not have a font folder
+
+Sketch report:
+3 test files were created. Please fill them and run the tests again.
+All data is already documented.
+All font files are already documented.
+Summing up, 3 sketches were created.
