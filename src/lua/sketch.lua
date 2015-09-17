@@ -10,6 +10,18 @@ local function verifyTest(package, report)
 	local baseDir = packageInfo(package).path
 	local s = sessionInfo().separator
 	local testDir = baseDir..s.."tests"
+	local internalFolder = false
+
+	forEachFile(testDir, function(mfile)
+		if isDir(testDir..s..mfile) then
+			internalFolder = true
+		end
+	end)
+
+	if internalFolder then
+		_Gtme.printWarning("Internal folders were found in the tests. Ignoring tests.")
+		return false
+	end
 
 	if not isDir(testDir) then
 		printWarning("Creating folder 'tests'")

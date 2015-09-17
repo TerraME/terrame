@@ -1213,10 +1213,6 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				end)
 				os.exit()
 			elseif arg == "-sketch" then
-				if info_.package == nil then
-					_Gtme.printError("It is not possible to sketch base package")
-				end
-
 				info_.mode = "debug"
 				argCount = argCount + 1
 

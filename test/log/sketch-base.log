@@ -1,0 +1,29 @@
+Verifying test files
+Internal folders were found in the tests. Ignoring tests.
+Verifying data files
+File 'agents.csv' is already documented in 'data.lua'
+File 'brazil.gal' is already documented in 'data.lua'
+File 'brazilstates.dbf' is already documented in 'data.lua'
+File 'brazilstates.shp' is already documented in 'data.lua'
+File 'brazilstates.shx' is already documented in 'data.lua'
+File 'cabecadeboi-neigh.gal' is already documented in 'data.lua'
+File 'cabecadeboi-neigh.gpm' is already documented in 'data.lua'
+File 'cabecadeboi-neigh.gwt' is already documented in 'data.lua'
+File 'cabecaDeBoi.mdb' is already documented in 'data.lua'
+File 'cabecadeboi.sql' is already documented in 'data.lua'
+File 'emas-distance.gal' is already documented in 'data.lua'
+File 'emas-distance.gpm' is already documented in 'data.lua'
+File 'emas-distance.gwt' is already documented in 'data.lua'
+File 'emas-pollin.gpm' is already documented in 'data.lua'
+File 'emas.mdb' is already documented in 'data.lua'
+File 'emas.sql' is already documented in 'data.lua'
+Folder 'error' will be ignored
+File 'gpmAreaCellsPols.gpm' is already documented in 'data.lua'
+File 'gpmdistanceDbEmasCells.gpm' is already documented in 'data.lua'
+File 'gpmlinesDbEmas.gpm' is already documented in 'data.lua'
+File 'simple-cs.csv' is already documented in 'data.lua'
+File 'simple.map' is already documented in 'data.lua'
+
+Sketch report:
+No new test file was necessary.
+All data is already documented.
