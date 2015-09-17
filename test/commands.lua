@@ -82,3 +82,7 @@ observer = {
 	visualtable = {script = "visualtable.lua", quantity = 8}
 }
 
+sketch = {
+	create = {arg = "-sketch", package = "nodatadotlua"}
+}
+

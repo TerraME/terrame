@@ -4,11 +4,7 @@ local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 local print        = _Gtme.print
 
-function _Gtme.sketch(package)
-	local report = {
-		created_files = 0,
-	}
-
+local function verifyTest(package, report)
 	printNote("Verifying test files")
 
 	local baseDir = packageInfo(package).path
@@ -20,13 +16,12 @@ function _Gtme.sketch(package)
 		mkDir(testDir)
 	end
 
-	import("base")
 	local pkgData = _G.getPackage(package)
 	local testfunctions = _Gtme.buildCountTable(package)
 
 	forEachOrderedElement(testfunctions, function(idx, value)
 		if isFile(testDir..s..idx) then
-			print(idx.." already exists")
+			print("File '"..idx.."' already exists in the tests")
 			return
 		end
 
@@ -85,6 +80,87 @@ function _Gtme.sketch(package)
 		io.write(str)
 		io.close(file)
 	end)
+end
+
+local function verifyData(package, report)
+	printNote("Verifying data files")
+
+	local baseDir = packageInfo(package).path
+	local s = sessionInfo().separator
+	local dataDir = baseDir..s.."data"
+
+	if not isDir(dataDir) then
+		_Gtme.print("Package '"..package.."' does not have a data folder")
+		return
+	end
+
+	local datafiles = {}
+	local datadotlua = baseDir..s.."data.lua"
+
+	forEachFile(dataDir, function(file)
+		datafiles[file] = false
+	end)
+
+	if getn(datafiles) == 0 then
+		_Gtme.print("Package '"..package.."' has no data")
+		return
+	end
+
+	if isFile(datadotlua) then
+		local originaldata = data
+		data = function(mdata)
+			if type(mdata.file) == "string" then
+				datafiles[mdata.file] = true
+			elseif type(mdata.file) == "table" then
+				forEachElement(mdata.file, function(_, mfile)
+					datafiles[mfile] = true
+				end)
+			end
+		end
+
+		_Gtme.include(baseDir..s.."data.lua")
+		data = originaldata
+	else
+		_Gtme.print("Creating 'data.lua'")
+	end
+
+	local mfile = io.open(datadotlua, "a")
+
+	forEachOrderedElement(datafiles, function(idx, value)
+		if value then
+			_Gtme.print("File '"..idx.."' is already documented in 'data.lua'")
+		elseif isDir(dataDir..s..idx) then
+			_Gtme.print("Folder '"..idx.."' will be ignored")
+		else
+			_Gtme.printWarning("Adding sketch for data file '"..idx.."'")
+			local str = "data{\n"
+				.."\tfile = \""..idx.."\",\n"
+    			.."\tsummary = \"\",\n"
+    			.."\tsource = \"\",\n"
+    			.."\tattributes = {},  -- optional\n"
+    			.."\ttypes = {},       -- optional\n"
+    			.."\tdescription = {}, -- optional\n"
+    			.."\treference = \"\"    -- optional\n"
+				.."}\n\n"
+			mfile:write(str)
+
+			report.created_data = report.created_data + 1
+		end
+	end)
+
+	mfile:close()
+end
+
+function _Gtme.sketch(package)
+	local report = {
+		created_files = 0,
+		created_data = 0,
+	}
+
+	import("base")
+
+	verifyTest(package, report)
+	verifyData(package, report)
 
 	print("\nSketch report:")
 
@@ -95,6 +171,15 @@ function _Gtme.sketch(package)
 	else
 		printWarning(report.created_files.." test files were created. Please fill them and run the tests again.")
 	end
+
+	if report.created_data == 0 then
+		printNote("All data is already documented.")
+	elseif report.created_data == 1 then
+		printWarning("One data file was not documented. Please fill data.lua with its parameters.")
+	else
+		printWarning(report.created_data.." data files were not documented. Please fill data.lua with their parameters.")
+	end
+
 	os.exit()
 end
 

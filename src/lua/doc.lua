@@ -194,7 +194,7 @@ function _Gtme.executeDoc(package)
 		end)
 
 		forEachOrderedElement(df, function(_, mvalue)
-			if attributes(package_path..s.."data"..s..mvalue, "mode") == "directory" then
+			if isDir(package_path..s.."data"..s..mvalue) then
 				return
 			end
 
@@ -216,6 +216,10 @@ function _Gtme.executeDoc(package)
 		printNote("Checking folder 'data'")
 		printError("Package has data files but data.lua does not exist")
 		forEachElement(df, function(_, mvalue)
+			if isDir(package_path..s.."data"..s..mvalue) then
+				return
+			end
+
 			printError("File '"..mvalue.."' is not documented")
 			doc_report.error_data = doc_report.error_data + 1
 		end)

@@ -3,6 +3,7 @@ Loading package 'nodatadotlua'
 Checking folder 'data'
 Package has data files but data.lua does not exist
 File 'data.txt' is not documented
+File 'mycsv.csv' is not documented
 Package 'nodatadotlua' has no fonts
 Parsing lua files
 Parsing lua/foo.lua
@@ -21,11 +22,11 @@ Checking if all functions are documented
 Checking foo.lua
 
 Documentation report:
-Documentation was built in 0.12 seconds.
+Documentation was built in 0.14 seconds.
 2 HTML files were created.
 One out of 1 files are not documented.
 All fields of 'description.lua' are correct.
-One problem was found in the documentation of data.
+2 problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
@@ -44,4 +45,4 @@ All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All 0 links were correctly built.
 All 0 examples are correctly documented.
-Summing up, 2 problems were found in the documentation.
+Summing up, 3 problems were found in the documentation.

@@ -1,0 +1,11 @@
+Verifying test files
+File 'foo.lua' already exists in the tests
+Verifying data files
+Creating 'data.lua'
+Adding sketch for data file 'data.txt'
+Folder 'folder' will be ignored
+Adding sketch for data file 'mycsv.csv'
+
+Sketch report:
+No new test file was necessary.
+2 data files were not documented. Please fill data.lua with their parameters.
