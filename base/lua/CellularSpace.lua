@@ -1150,12 +1150,12 @@ function CellularSpace(data)
 
 				data[attribute] = function(cs, args)
 					local func = function()
-						forEachCell(cs, function(cell)
-							cell[attribute](cell, args)
+						return forEachCell(cs, function(cell)
+							return cell[attribute](cell, args)
 						end)
 					end
 
-					callFunc(func, "function", attribute)
+					return callFunc(func, "function", attribute)
 				end
 			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
 				if data[attribute] then

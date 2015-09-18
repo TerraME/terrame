@@ -690,12 +690,12 @@ function Society(data)
 
 				data[attribute] = function(soc, args)
 					local func = function()
-						forEachAgent(soc, function(agent)
-							agent[attribute](agent, args)
+						return forEachAgent(soc, function(agent)
+							return agent[attribute](agent, args)
 						end)
 					end
 
-					callFunc(func, "function", attribute)
+					return callFunc(func, "function", attribute)
 				end
 			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
 				if data[attribute] then

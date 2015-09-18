@@ -54,8 +54,28 @@ return{
 		unitTest:assertEquals(cs:cover().pasture, 100)
 		unitTest:assertEquals(cs:water(), 194)
 
-		cs:deforest()
+		unitTest:assert(cs:deforest())
 		unitTest:assertEquals(cs:sample().defor, 2)
+
+		local cell = Cell{
+			defor = 1,
+			deforest = function(self)
+				if self.x > 4 then
+					return false
+				end
+
+				self.defor = self.defor + 1
+			end
+		}
+
+		local cs = CellularSpace{
+			instance = cell,
+			xdim = 10
+		}
+
+		unitTest:assertEquals(cs:defor(), 100)
+		unitTest:assert(not cs:deforest())
+		unitTest:assertEquals(cs:defor(), 150)
 	end, 
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
