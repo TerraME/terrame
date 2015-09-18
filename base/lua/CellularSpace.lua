@@ -1122,6 +1122,23 @@ function CellularSpace(data)
 	setmetatable(data, metaTableCellularSpace_)
 	cObj:setReference(data)
 
+	local function callFunc(func, mtype, attribute)
+		local status, result = pcall(func) 
+
+		if not status then
+			local msg
+
+			if mtype == "function" then
+				msg = "Could not call function '"..attribute.."' from the Cells. It has some error or it does not exist anymore."
+			else
+				msg = "Could not find attribute '"..attribute.."' in all the Cells."
+			end
+
+			customError(msg)
+		end
+		return result
+	end
+
 	local function createSummaryFunctions(cell)
 		forEachElement(cell, function(attribute, value, mtype)
 			if attribute == "id" or attribute == "parent" or string.endswith(attribute, "_") then return
@@ -1132,9 +1149,13 @@ function CellularSpace(data)
 				end
 
 				data[attribute] = function(cs, args)
-					forEachCell(cs, function(cell)
-						cell[attribute](cell, args)
-					end)
+					local func = function()
+						forEachCell(cs, function(cell)
+							cell[attribute](cell, args)
+						end)
+					end
+
+					callFunc(func, "function", attribute)
 				end
 			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
 				if data[attribute] then
@@ -1144,11 +1165,15 @@ function CellularSpace(data)
 
 				if attribute ~= "x" and attribute ~= "y" then
 					data[attribute] = function(cs)
-						local quantity = 0
-						forEachCell(cs, function(cell)
-							quantity = quantity + cell[attribute]
-						end)
-						return quantity
+						local func = function()
+							local quantity = 0
+							forEachCell(cs, function(cell)
+								quantity = quantity + cell[attribute]
+							end)
+							return quantity
+						end
+
+						return callFunc(func, "number", attribute)
 					end
 				end
 			elseif mtype == "boolean" then

@@ -180,6 +180,29 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "Attribute 'status' will not be replaced by a summary function.")
+
+		local cell = Cell{
+			water = 2,
+			exec = function() end
+		}
+    
+		local cs = CellularSpace{
+			xdim = 10,
+			instance = cell
+		}
+
+		cs:sample().exec = 2
+		cs:sample().water = "abc"
+
+		error_func = function()
+			cs:exec()
+		end
+		unitTest:assertError(error_func, "Could not call function 'exec' from the Cells. It has some error or it does not exist anymore.")
+
+		error_func = function()
+			cs:water()
+		end
+		unitTest:assertError(error_func, "Could not find attribute 'water' in all the Cells.")
 	end,
 	add = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
