@@ -54,6 +54,7 @@ function clean()
 		setmetatable(obs, deadObserverMetaTable_)
 	end)
 	_Gtme.createdObservers = {}
+	cpp_restartobservercounter()
 end
 
 --- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
