@@ -111,7 +111,7 @@ function _Gtme.executeDoc(package)
 	if isFile(package_path..s.."data.lua") and #df > 0 then
 		printNote("Parsing 'data.lua'")
 		data = function(tab)
-			local count = verifyUnnecessaryArguments(tab, {"file", "summary", "source", "attributes", "types", "description", "reference"})
+			local count = verifyUnnecessaryArguments(tab, {"file", "image", "summary", "source", "attributes", "types", "description", "reference"})
 			doc_report.error_data = doc_report.error_data + count
 
 			if type(tab.file)        == "string" then tab.file = {tab.file} end
@@ -124,6 +124,7 @@ function _Gtme.executeDoc(package)
 				{"mandatoryTableArgument", "summary",     "string"},
 				{"mandatoryTableArgument", "source",      "string"},
 				{"optionalTableArgument",  "file",        "table"},
+				{"optionalTableArgument",  "image",       "string"},
 				{"optionalTableArgument",  "attributes",  "table"},
 				{"optionalTableArgument",  "types",       "table"},
 				{"optionalTableArgument",  "description", "table"},
