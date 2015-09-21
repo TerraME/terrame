@@ -244,6 +244,7 @@ return{
 		local options = {
 			["3x3"] = true,
 			coord = true,
+			diagonal = true,
 			["function"] = true,
 			moore = true,
 			mxn = true,

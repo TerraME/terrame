@@ -37,6 +37,42 @@ local function getCoordCoupling(cs, data)
 	end
 end
 
+local function getDiagonalNeighborhood(cs, data)
+	return function(cell)
+		local neigh = Neighborhood()
+		local indexes = {}
+		local lin = -1
+		while lin <= 1 do
+			local col = -1
+			while col <= 1 do
+				if (lin ~= 0 and col ~= 0) or (data.self and lin == 0 and col == 0) then
+					local index = nil
+					if data.wrap then
+						index = cs:get(
+							((cell.x + col) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol,
+							((cell.y + lin) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
+					else
+						index = cs:get(cell.x + col, cell.y + lin)
+					end
+					if index ~= nil then
+						table.insert(indexes, index)
+					end
+				end
+
+				col = col + 1
+			end
+			lin = lin + 1
+		end
+
+		local weight = 1 / #indexes
+		for i, index in ipairs(indexes) do
+			neigh:add(index, weight)
+		end
+
+		return neigh
+	end
+end
+
 local function getFunctionNeighborhood(cs, data)
 	return function(cell)
 		local neighborhood = Neighborhood()
@@ -85,8 +121,8 @@ local function getMooreNeighborhood(cs, data)
 end
 
 local function getMxNNeighborhood(cs, data)
-	local m = math.floor(data.m/2)
-	local n = math.floor(data.n/2)
+	local m = math.floor(data.m / 2)
+	local n = math.floor(data.n / 2)
 
 	return function(cell)
 		local neighborhood = Neighborhood()
@@ -451,6 +487,8 @@ CellularSpace_ = {
 	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight, inmemory \
 	-- "coord" & A bidirected relation between two CellularSpaces connecting Cells with the same 
 	-- (x, y) coordinates. & target & name, inmemory\
+	-- "diagonal" & Connect each Cell to its (at most) four diagonal neighbors.
+	-- & & name, self, wrap, inmemory \
 	-- "function" & A Neighborhood based on a function where any other Cell can be a neighbor. & 
 	-- filter & name, weight, inmemory \
 	-- "moore"(default) & A Moore (queen) Neighborhood, connecting each Cell to its (at most) 
@@ -523,6 +561,15 @@ CellularSpace_ = {
 		defaultTableValue(data, "inmemory", true)
 
 		switch(data, "strategy"):caseof{
+			diagonal = function()
+				defaultTableValue(data, "self", false)
+				defaultTableValue(data, "wrap", false)
+
+				verifyUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "inmemory"})
+
+				data.func = getDiagonalNeighborhood
+			end,
+
 			["function"] = function() 
 				mandatoryTableArgument(data, "filter", "function")
 				verifyUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "inmemory"})
