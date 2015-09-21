@@ -95,6 +95,6 @@ bool deleteLayerTableName ( TeDatabase *db, std::string &tableName );
 /// \param theme is a pointer to the TeTheme object being added to the geographical database
 bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, string inputThemeName, TeView *view, TeLayer *layer, TeDatabase *db, TeTheme *theme );
 
-
+void returnsError(lua_State *L, int number, const string message);
 
 #endif

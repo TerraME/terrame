@@ -137,7 +137,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assertError(error_func, "Can't open input layer 'terralab'.")
+		unitTest:assertError(error_func, "Can't load input layer 'terralab'.")
 
 		error_func = function()
 			local cs = CellularSpace{
@@ -177,7 +177,7 @@ return{
 				database = mdatabase
 			}
 		end
-		unitTest:assertError(error_func, "Can't open input theme 'terralab'.")
+		unitTest:assertError(error_func, "Can't load input theme 'terralab'.")
 
 		error_func = function()
 			local cs = CellularSpace{

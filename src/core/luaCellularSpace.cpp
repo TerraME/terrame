@@ -73,6 +73,10 @@ of this library and its documentation.
 #include "loadNeighborhood.h"
 #include "luaUtils.h"
 
+#include "terralibFacade.h"
+#include "cellularSpaceMapper.h"
+#include "cellMapper.h"
+
 #include <fstream>
 #include <algorithm>
 
@@ -1205,321 +1209,196 @@ int luaCellularSpace::saveShape(lua_State *L)
 /// Loads the CellularSpace from a TerraLib database.
 int luaCellularSpace::load(lua_State *L)
 {
-
-    TeDatabase * db;
-
     try
     {
-        // Opens a connection to a database accessible
-        if( dbType == "mysql")
-            db = new TeMySQL();
-#if defined( TME_MSVC ) && defined( TME_TERRALIB_RC3 )
-        else {
-            ::configureADO();
-            db = new TeAdo();
-        }
-#endif
-        if (!db->connect(host,user,pass,dbName,0))
+        if (TerraLibFacade::getInstance()->connect(TerraLibFacade::MYSQL, host, user, pass, dbName, 0))
         {
-            string err_out = db->errorMessage() + string(".");
-            lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
-            return 0;
-        }
+            CellularSpaceMapper cellularSpace;
 
-        string dbVersion;
-        db->loadVersionStamp(dbVersion);
-        if( dbVersion != TeDBVERSION ) {
-			string err_out = string("Wrong TerraLib database version, expected '") +
-							string(TeDBVERSION.c_str()) + string("', got '") +
-							string(dbVersion.c_str()) + string(".\n") +
-							string("Please, use TerraView to update the '") +
-							string(dbName.c_str()) + string("' database.");
-            db->close();
-            lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
-            return 0;
-        }
-
-        TeTheme *inputTheme;
-        TeLayer *inputLayer;
-        if ( inputLayerName == "")
-        {
-            // Load input theme
-            inputTheme = new TeTheme(inputThemeName );
-            if (!db->loadTheme (inputTheme))
+            if (inputLayerName.empty())
             {
-                db->close();
-                string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
-                return 0;
-            }
-            // Load input layers
-            inputLayer = inputTheme->layer();
-            //@RAIAN
-            setLayerName(inputLayer->name());
-            //@RAIAN: FIM
-            if (!db->loadLayer (inputLayer))
-            {
-                db->close();
-                string err_out = string("Error: Can't load input layer '") + string(inputLayerName) + string("'.");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
-                return false;
-            }
-        }
-        else
-        {
-            // Load input layers
-            inputLayer = new TeLayer (inputLayerName);
-            if (!db->loadLayer (inputLayer))
-            {
-                string err_out = string("Can't open input layer '") + string(inputLayerName) + string("'.");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
-                db->close();
-                return 0;
-            }
-            // Load input theme
-            inputTheme = new TeTheme(inputThemeName, inputLayer );
-            if (!db->loadTheme (inputTheme)) // erro, tiago: parece que a terralib carrega um thema com mesmo nome, mas de outro layer, pois
-                // esta funcao nao falha, caso o tema "inputTheme" nao pertenca ao layer (inputLayer), quando deveria
-                // assim, o proximo acesso ao aobjeto inputTheme procara uma excecao
-                // Alem disso, quando dois temas possuem o mesmo nomemem layers diferentes, esta funcao falha
-                // ao carregar o tema do layer selecionado, so funciona quando se tenta carregar o tema
-                // do layer que o primeiro a ser inserido no banco, para os demais layers a tentativa abaixo
-                // de criar um tema temporario ira falhar.
-                // Se varios bancos que possuirem a mesta estrutura, portanto, temas de com o mesmo nome, estiverem
-                // abertos simultaneamente no TerraView, entao as vistas e os temas de resultados serao criados nos
-                // dois bancos simultaneamente. Para isso, e' preciso que os banco tenham o mesmo usuario e senha.
-                //	Entretanto, as tabelas de resultados nao sao criadas em ambos os bancos.
-            {
-                string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
-                db->close();
-                return 0;
-            }
-        }
-        // Inicia o mecanismo de consula da TerraLib
-        //	#if ! defined( TME_TERRALIB_RC3 )
-        //		TeInitQuerierStrategies();
-        //	#endif
+                cellularSpace = TerraLibFacade::
+                            getInstance()->getCellularSpace(inputThemeName,
+                                                            attrNames, whereClause);
 
-        TeQuerierParams* querierParams;
-        bool loadGeometries = true;
-
-        TeTheme temporaryTheme("temporaryTheme", inputLayer);
-
-        if( ! whereClause.empty() )
-        {
-            // Create a temporary theme that aplies attribute restrictions over the
-            // input theme
-            temporaryTheme.attributeRest(whereClause);
-            temporaryTheme.setAttTables( inputTheme->attrTables() );
-
-            // Configura o mecanismo para buscar geometrias (loadGeometries = true), e tambe'm
-            // buscar todos os atributos da c"lula (true )
-            if( attrNames.empty() )
-            {
-                querierParams = new TeQuerierParams( loadGeometries, true );
-                querierParams->setParams( &temporaryTheme );
-            }
-            else
-            {
-                querierParams = new TeQuerierParams( loadGeometries, attrNames );
-                querierParams->setParams( &temporaryTheme );
-            }
-        }
-        else
-        {
-            // Configura o mecanismo para buscar geometrias (loadGeometries = true), e tambe'm
-            // buscar todos os atributos da c"lula (true )
-            if( attrNames.empty() )
-            {
-                querierParams = new TeQuerierParams( loadGeometries, true );
-                querierParams->setParams( inputTheme );
-            }
-            else
-            {
-
-
-                //	cout << attrNames[i] << endl;
-                //	l++;
-                //}
-                //cout << l <<endl;
-
-                querierParams = new TeQuerierParams( loadGeometries, attrNames );
-                querierParams->setParams( inputTheme );
-            }
-        }
-        // Cria uma consulta e a executa
-        TeQuerier query( *querierParams );
-        query.loadInstances();
-
-        // puts a table for represent the whole cellular space on the top of the stack
-        lua_newtable(L);
-        int tabPos = lua_gettop(L);
-
-        TeSTInstance element;
-        bool primeiraCell = true;
-        int minCol = 0, minLin = 0;
-        int maxCol = 0, maxLin = 0;
-        string luaCmd;
-        //int  colAnt = -1;
-        long int cont = 0;
-        // Calcula quais s"o os indices minimos para a coluna e para a linha
-
-        while( query.fetchInstance( element ) )
-        {
-            //TePropertyVector& properties = element.getPropertyVector();
-            const TePropertyVector& properties = element.getPropertyVector();
-
-
-            // Obtem o identificador do objeto espa"o-temporal associado " c"lula
-            // e obtem coordenadas da c"lula
-            int lin, col;
-            char cellId[20];
-
-            // Raian: Verifica se o layer e' de ce'lulas, linhas, pontos ou poligonos para pegar
-            // as coordenadas x e y do objeto.
-            if( element.hasCells() ){
-                strcpy( (char *) cellId, element.objectId().c_str());
-                objectId2coords( cellId, col, lin);
-                //cout << col << ":" << lin << " - ";
-            }
-            else{
-                if( element.hasPolygons() || element.hasPoints() || element.hasLines() ){
-                    strcpy( (char *) cellId, element.getObjectId().c_str() );
-                    lin = element.getCentroid().x();
-                    col = element.getCentroid().y();
-                }
-            }
-            if( primeiraCell )
-            {
-                minLin = lin;
-                minCol = col;
-                primeiraCell = false;
-            }
-            else
-            {
-                minLin = min(minLin, lin);
-                minCol = min(minCol, col);
-            }
-            maxCol = max(maxCol, col);
-            maxLin = max(maxLin, lin);
-
-
-            // puts the index for the new cell on the stack
-            lua_pushnumber(L, cont + 1);
-
-            // puts the Cell constructor on the top of the lua stack
-            lua_getglobal(L, "Cell" );
-            if( !lua_isfunction(L, -1))
-            {
-                string err_out = string("Error: Event constructor not found.'");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
-                return 0;
-            };
-
-            // creates a attribute table for the new cell of the cellular space
-            string aux;
-            lua_newtable(L);
-
-            // puts the cell's coords on the table
-            lua_pushstring(L, "x");
-            lua_pushnumber(L, col );
-            lua_settable(L, -3);
-            lua_pushstring(L, "y");
-            lua_pushnumber(L, lin );
-            lua_settable(L, -3);
-
-            // puts the cell's id on the table
-            lua_pushstring(L, "id");
-            lua_pushstring(L, cellId );
-            lua_settable(L, -3);
-
-            // puts the cell's id on the table
-            lua_pushstring(L, "objectId_");
-            lua_pushstring(L, cellId );
-            lua_settable(L, -3);
-
-            // puts the others cell's attributes on the table
-            for( unsigned int i = 0; i < properties.size(); i++)
-            {
-                //TeProperty &prop = properties[i];
-                const TeProperty &prop = properties[i];
-
-                lua_pushstring(L, prop.attr_.rep_.name_.c_str() );
-
-                element.getPropertyValue(aux,i);
-                switch( prop.attr_.rep_.type_  )
+                if (TerraLibFacade::getInstance()->getLastError() ==
+                         TerraLibFacade::NONERROR)
                 {
-                case TeSTRING:
-                case TeDATETIME:
-                case TeCHARACTER:
-                    lua_pushstring(L, aux.c_str() );
-                    break;
+                    setLayerName(cellularSpace.getLayerName());
+                }
+            }
+            else
+            {
+                cellularSpace = TerraLibFacade::
+                            getInstance()->getCellularSpace(inputLayerName, inputThemeName,
+                                                            attrNames, whereClause);
+            }
 
-                case TeREAL:
-                    lua_pushnumber( L, atof( aux.c_str() ) );
-                    break;
+            vector<CellMapper> cells = cellularSpace.getCells();
 
-                case TeINT:
-                    lua_pushnumber( L, atoi( aux.c_str() ) );
-                    break;
+            if (!cells.empty())
+            {
+                // puts a table for represent the whole cellular space on the top of the stack
+                lua_newtable(L);
+                int luaTopbPos = lua_gettop(L);
 
-                case TeBLOB:
-                case TeOBJECT:
-                case TeUNKNOWN:
-                default:
-                    lua_pushstring(L, aux.c_str() );
+                int minX = 0, minY = 0;
+                int maxX = 0, maxY = 0;
+                minX = cells.at(0).getX();
+                minY = cells.at(0).getY();
+
+                for (int i = 0; i < cells.size(); i++)
+                {
+                    minX = min(cells.at(i).getX(), minX);
+                    minY = min(cells.at(i).getY(), minY);
+                    maxX = max(cells.at(i).getX(), maxX);
+                    maxY = max(cells.at(i).getY(), maxY);
+
+                    // puts the index for the new cell on the stack
+                    lua_pushnumber(L, i + 1);
+
+                    // puts the Cell constructor on the top of the lua stack
+                    lua_getglobal(L, "Cell" );
+                    if(!lua_isfunction(L, -1))
+                    {
+                        string err = string("Error: Event constructor not found.'");
+                        returnsError(L, 4, err);
+
+                        return 0;
+                    };
+
+                    // creates a attribute table for the new cell of the cellular space
+                    lua_newtable(L);
+
+                    // puts the cell's coords on the table
+                    lua_pushstring(L, "x");
+                    lua_pushnumber(L, cells.at(i).getX());
+                    lua_settable(L, -3);
+                    lua_pushstring(L, "y");
+                    lua_pushnumber(L, cells.at(i).getY());
+                    lua_settable(L, -3);
+
+                    // puts the cell's id on the table
+                    lua_pushstring(L, "id");
+                    lua_pushstring(L, cells.at(i).getId().c_str());
+                    lua_settable(L, -3);
+
+                    // puts the cell's id on the table
+                    lua_pushstring(L, "objectId_");
+                    lua_pushstring(L, cells.at(i).getId().c_str());
+                    lua_settable(L, -3);
+
+                    vector<Attribute> attributes =
+                            cells.at(i).getAttributes();
+                    for (int a = 0; a < attributes.size(); a++)
+                    {
+                        lua_pushstring(L, attributes.at(a).getName().c_str());
+
+                        switch(attributes.at(a).getType())
+                        {
+                            case Attribute::STRING:
+                            case Attribute::DATETIME:
+                            case Attribute::CHARACTER:
+                                lua_pushstring(L, attributes.at(a).getValue().c_str());
+                                break;
+
+                            case Attribute::REAL:
+                                lua_pushnumber(L, atof(attributes.at(a).getValue().c_str()));
+                                break;
+
+                            case Attribute::INT:
+                                lua_pushnumber(L, atoi(attributes.at(a).getValue().c_str()));
+                                break;
+
+                            case Attribute::BLOB:
+                            case Attribute::OBJECT:
+                            case Attribute::UNKNOWN:
+                            default:
+                                lua_pushstring(L, attributes.at(a).getValue().c_str());
+                        }
+
+                        lua_settable(L, -3);
+                    }
+
+                    // calls the Cell constructor
+                    if(lua_pcall(L, 1, 1, 0) != 0)
+                    {
+                        return 0;
+                    }
+                    // insert the new cell into the cellular space table
+                    lua_settable(L, luaTopbPos);
                 }
 
-                lua_settable(L, -3);
-            }
+                // returns values to the attributes minCol, minRow, maxCol and maxRow
+                // of the lua cellularSpace
+                lua_pushnumber(L, minX);
+                lua_pushnumber(L, minY);
+                lua_pushnumber(L, maxX);
+                lua_pushnumber(L, maxY);
 
-            // calls the Cell constructor
-            if( lua_pcall( L, 1, 1, 0) != 0 )
+                // carrega legendas do banco
+
+//                QString dbLegend;
+//                loadLegendsFromDatabase(db, inputTheme, dbLegend);
+//                //qDebug() << dbLegend << "\n\n";
+
+
+//                // debugging
+//                //cout << dbLegend.toLatin1().constData() << endl; cout.flush();
+//                //int response = -1;
+//                if (! dbLegend1.isEmpty()) {
+//                    //response = luaL_dostring(L, dbLegend.toLatin1().constData());
+//                    lua_pushstring(L, dbLegend.toLatin1().constData());
+//                }
+//                else {
+                lua_pushstring(L, "");
+//                }
+
+                return 6;
+            }
+            else
             {
-                cont++;
+                if (TerraLibFacade::getInstance()->getLastError() ==
+                        TerraLibFacade::DB_VERSION_ERROR)
+                {
+                    string err = TerraLibFacade::
+                            getInstance()->getLastErrorMessage();
+                    returnsError(L, 5, err);
+                }
+                else if (TerraLibFacade::getInstance()->getLastError() ==
+                         TerraLibFacade::THEME_LOAD_ERROR)
+                {
+                    string err = string("Can't load input theme '") + string(inputThemeName) + string("'.");
+                    returnsError(L, 4, err);
+                }
+                else if (TerraLibFacade::getInstance()->getLastError() ==
+                         TerraLibFacade::LAYER_LOAD_ERROR)
+                {
+                    string err = string("Can't load input layer '") + string(inputLayerName) + string("'.");
+                    returnsError(L, 4, err);
+                }
+                else if (TerraLibFacade::getInstance()->getLastError() ==
+                         TerraLibFacade::UNKNOWN_ERROR)
+                {
+                    string err = "Unknown Error!";
+                    returnsError(L, 4, err);
+                }
+                else if (TerraLibFacade::getInstance()->getLastError() ==
+                         TerraLibFacade::NONERROR)
+                {
+                    string err = "Unknown Error!";
+                    returnsError(L, 4, err);
+                }
+
                 return 0;
             }
-            // insert the new cell into the cellular space table
-            lua_settable(L, tabPos);
-
-            //colAnt = col;
-            cont++;
-            element.clear();
-            //cout << "<";
-            //if((cont % 79) == 0) cout << endl;
         }
-
-        // returns values to the attributes minCol, minRow, maxCol and maxRow
-        // of the lua cellularSpace
-        lua_pushnumber( L, minCol );
-        lua_pushnumber( L, minLin );
-        lua_pushnumber( L, maxCol );
-        lua_pushnumber( L, maxLin );
-
-        delete querierParams;
-
+        else
+        {
+            string err = TerraLibFacade::
+                    getInstance()->getLastErrorMessage() + string(".");
+            returnsError(L, 5, err);
+        }
 
         /* TODO
           - transformar dbLegend em membro da classe
@@ -1528,40 +1407,16 @@ int luaCellularSpace::load(lua_State *L)
           - antes inferir legenda para observer verifica se existe legenda disponivel no espaco celular carregado
 
         */
-
-
-        // carrega legendas do banco
-
-        QString dbLegend;
-        loadLegendsFromDatabase(db, inputTheme, dbLegend);
-        //qDebug() << dbLegend << "\n\n";
-
-
-        // debugging
-        //cout << dbLegend.toLatin1().constData() << endl; cout.flush();
-        //int response = -1;
-        if (! dbLegend.isEmpty()) {
-            //response = luaL_dostring(L, dbLegend.toLatin1().constData());
-            lua_pushstring(L, dbLegend.toLatin1().constData());
-        }
-        else {
-            lua_pushstring(L, "");
-        }
-        // debugging
-        // cout << response << endl; cout.flush();
-
-        // fecha o banco
-        db->close();
-        return 6;
     }
-    catch( ... ){
-        string err_out = string("Error: It is not possible to load the TerraLib database '") + string(db->errorMessage().c_str()) + string("'.");
-        lua_getglobal(L, "customError");
-        lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
-        return 0;
+    catch(...)
+    {
+        string err = string("Error: It is not possible to load the TerraLib database '")
+                + TerraLibFacade::getInstance()->getLastErrorMessage()
+                + string("'.");
+        returnsError(L, 4, err);
     }
+
+    return 0;
 }
 
 // Loads (if any) existing legends from database
