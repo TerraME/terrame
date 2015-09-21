@@ -1,4 +1,5 @@
 -- @example A model with static Agents that can reproduce to neighbor Cells.
+-- @image growing-society.bmp
 
 singleFooAgent = Agent{
 	execute = function(self)
@@ -42,7 +43,7 @@ t = Timer{
 	end}
 }
 
-Map{
+map = Map{
 	target = soc,
 	symbol = "dragonfly",
 	color = "blue",

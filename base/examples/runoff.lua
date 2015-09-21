@@ -3,6 +3,7 @@
 -- There is an initial rain in the highest cells.
 -- Each cell then sends its water equally to all neighbors
 -- with lower height. 
+-- @image runoff.bmp
 
 cell = Cell{
 	init = function(cell)
@@ -54,7 +55,7 @@ Map{
 	color = "Grays"
 }
 
-Map{
+map = Map{
 	target = cs,
 	select = "logwater",
 	min = 0,

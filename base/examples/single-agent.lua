@@ -1,4 +1,5 @@
 -- @example A simple example with one Agent that moves randomly in space.
+-- @image single-agent.bmp
 
 singleFooAgent = Agent{
 	execute = function(self)
@@ -29,7 +30,8 @@ t = Timer{
 
 m = Map{
 	target = singleFooAgent,
-	symbol = "turtle"
+	symbol = "turtle",
+	grid = true
 }
 
 t:execute(100)

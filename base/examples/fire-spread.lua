@@ -1,5 +1,6 @@
 -- @example A simple fire spread model.
 -- @arg finalTime The final simulation time. The default value is 20.
+-- @image fire-spread.bmp
 
 STEPS = 80
 

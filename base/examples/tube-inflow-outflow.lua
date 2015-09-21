@@ -1,8 +1,9 @@
 -- @example A model that describes water flowing in and out of a tube.
+-- @image tube-inflow-outflow.bmp
 
 world = Cell{water = 40}
 
-Chart{
+chart = Chart{
     target = world,
 	pen = "dash"
 }

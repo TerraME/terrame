@@ -3,6 +3,7 @@
 -- @arg PROBABILITY The probability of a Cell to be alive in the
 -- beginning of the simulation. The default value is 0.15.
 -- @arg TURNS The number of simulation steps. The default value is 20.
+-- @image game-of-life.bmp
 
 PROBABILITY = 0.15
 TURNS = 20

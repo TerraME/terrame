@@ -1,5 +1,6 @@
 -- @example A Susceptible-Infected-Recovered (SIR) model. In this model
 -- the disease has a duration of 8 weeks.
+-- @image sir-improved.bmp
 
 contacts = 6
 infections = 0.25
@@ -11,7 +12,7 @@ world = Cell{
 	recovered = 0,
 }
 
-Chart{target = world}
+chart = Chart{target = world}
 
 world:notify()
 

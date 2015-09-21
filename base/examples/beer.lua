@@ -6,6 +6,7 @@
 -- delivered from one agent to the next agent in the chain.
 -- @arg NUMBER_OF_AGENTS Number of agents in the chain, excluding the producer and the consumer.
 -- The default value is three.
+-- @image beer.bmp
 
 math.randomseed(os.time())
 
@@ -73,7 +74,7 @@ c = Cell{
 	total_cost = 0
 }
 
-Chart{
+reqDeliv = Chart{
 	target = c,
 	select = {"beer_requested", "beer_delivered"},
 	color = {"red", "blue"}
