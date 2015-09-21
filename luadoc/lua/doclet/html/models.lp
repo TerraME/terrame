@@ -43,8 +43,12 @@
 						<%for _, filepath in ipairs(doc.files) do%>
 							<%if doc.files[filepath].type == "model" then%>
 								<dt><h2><%=doc.files[filepath].doc[1].name%><a name="<%=doc.files[filepath].doc[1].name%>"></h2></dt>
-									<%= httpLink(doc.files[filepath].doc[1].description)%>
 									<%func = doc.files[filepath].doc[1]%>
+									<% if func.image then %>
+										<% loc = "../../images/"..func.image %>
+										<center><img src=<% =loc %> ></center><br><br>
+									<%end%>
+									<%= httpLink(doc.files[filepath].doc[1].description)%>
 									<% if func.arg then %>
 										<h3>Arguments</h3>
 										<ul><span class="arg">
