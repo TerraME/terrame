@@ -597,10 +597,11 @@ function file(lua_path, fileName, doc, short_lua_path, doc_report, silent)
 				doc.files[file_].summary = parse_summary(description)
 			end
 		else
-			local description, argnames, argdescr = check_example(doc.files[fileName].path..fileName, doc, fileName, doc_report, silent)
+			local description, argnames, argdescr, image = check_example(doc.files[fileName].path..fileName, doc, fileName, doc_report, silent)
 			doc.files[fileName].description = description
 			doc.files[fileName].argnames = argnames
 			doc.files[fileName].argdescription = argdescr
+			doc.files[fileName].image = image
 			doc.files[fileName].summary = parse_summary(description)
 			doc.files[fileName].type = "example"
 
@@ -893,6 +894,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 	local argdescriptions = {}
 	local readingArg = false
 	local argName
+	local image
 	local argDescription = ""
 
 	if text == "" then
@@ -906,7 +908,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 		while line and line:match("^%s*%-%-") do
 			local next_text = line:match("%-%-(.*)")
 
-			if line:match("%-%-(.*)@arg(.*)") then
+			if line:match("%-%-(.*)@arg(.*)") or line:match("%-%-(.*)@image(.*)") then
 				readingArg = true
 			end
 
@@ -933,6 +935,8 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 						argName = name
 						argDescription = desc
 					end
+				elseif tag == "image" then
+					image = text
 				else
 					if not silent then
 						printError("Invalid tag '@"..tag.."'. Examples can only have @arg.")
@@ -952,7 +956,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 		table.insert(argdescriptions, argDescription)
 	end
 	io.close(f)
-	return text, argnames, argdescriptions
+	return text, argnames, argdescriptions, image
 end
 
 -------------------------------------------------------------------------------

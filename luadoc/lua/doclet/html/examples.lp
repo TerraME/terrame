@@ -53,9 +53,15 @@
 							<%if doc.files[filepath].type == "example" then%>
 								<%file = string.sub(filepath, 0, string.len(filepath) - 4)%>
 								<dt><h2><%=file%><a name="<%=file%>"></h2>
+									<% if doc.files[filepath].image then %>
+										<% loc = "../../images/"..doc.files[filepath].image %>
+										<center><img src=<% =loc %> ></center><br><br>
+									<%end%>
+
 									<%= httpLink(doc.files[filepath].description) %>
 								</dt>
 							<%end%>
+
 							<%if doc.files[filepath].argnames and #doc.files[filepath].argnames > 0 then%>
 								<h3>Arguments (global variables)</h3>
 								<ul><span class="arg">
