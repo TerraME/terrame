@@ -142,11 +142,11 @@ int isudatatype (lua_State *L, int idx, const char *name)
 /// \param y is a natural number returned by this fucntion
 // RODRIGO
 //void objectId2coords( const char const * objId, int &x, int &y)
-void objectId2coords( const char * objId, int &x, int &y)
+void objectId2coords(const char *objId, int &x, int &y)
 {
     char lin[32], col[32];
     char seps[] = "CL";
-    char aux[255]="";
+    char aux[255] = "";
 
     strncpy(aux, objId, strlen(objId));
     strcpy( col, strtok( (char*)aux, seps ));
@@ -330,4 +330,12 @@ bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, s
     };
     return true;
 
+}
+
+void returnsError(lua_State *L, int number, const string message)
+{
+    lua_getglobal(L, "customError");
+    lua_pushstring(L, message.c_str());
+    lua_pushnumber(L, number);
+    lua_call(L, 2, 0);
 }

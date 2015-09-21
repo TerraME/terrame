@@ -72,9 +72,12 @@ include_directories( ${SRCDIR}
           ${SRCDIR}/observer/types/udpSender/
           ${SRCDIR}/observer/types/
           ${SRCDIR}/observer/
-	${SRCDIR}/luaFileSystem
+          ${SRCDIR}/luaFileSystem
+          ${SRCDIR}/service/
+          ${SRCDIR}/service/persistence
+          ${SRCDIR}/service/persistence/terralib
 
-	/usr/local/include
+          /usr/local/include
 )
 
 # Set source files location
@@ -95,7 +98,8 @@ file(GLOB SRCS
           ${SRCDIR}/observer/types/*.cpp
           ${SRCDIR}/observer/*.cpp
           ${SRCDIR}/observer/types/chartPlot/*.cpp
-	${SRCDIR}/luaFileSystem/*.c
+          ${SRCDIR}/luaFileSystem/*.c
+          ${SRCDIR}/service/persistence/terralib/*.cpp
 )
 
 set(LIBS)
