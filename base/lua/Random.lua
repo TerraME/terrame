@@ -163,7 +163,7 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- the seed in the beginning of the simulation and only once.
 -- @usage random = Random()
 --
--- random = Random{seed = 0}
+-- random = Random{seed = 12345}
 function Random(data)
 	if data == nil then
 		data = {}

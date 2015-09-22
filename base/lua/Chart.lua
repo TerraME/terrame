@@ -87,7 +87,7 @@ metaTableChart_ = {__index = Chart_}
 
 --- Create a line chart showing the variation of one or more attributes (y axis) of an
 -- object. X axis values come from the single argument of notify().
--- @arg data.target An Agent, Cell, CellularSpace, or Society.
+-- @arg data.target An Agent, Cell, CellularSpace, Society, table, or instance of a Model.
 -- @arg data.select A vector of strings with the name of the attributes to be observed. If it is only a
 -- single value then it can also be described as a string. 
 -- As default, it selects all the user-defined number attributes of the target.

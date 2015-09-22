@@ -1023,6 +1023,7 @@ metaTableCellularSpace_ = {
 -- restriction). Only the Cells that reflect the established criteria will be loaded. Note that SQL
 -- uses the operator "=" to compare values, instead of "==". This argument can only be used when
 -- reading data from a database.
+-- @arg data.attrname A string with an attribute name.
 -- @arg data.... Any other attribute or function for the CellularSpace.
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
@@ -1047,6 +1048,8 @@ metaTableCellularSpace_ = {
 -- dbType & Description & Compulsory arguments & Optional arguments\
 -- "mdb" & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer,
 -- select, where, autoload, ... \
+-- "map" & Load from a text file where Cells are stored as numbers with its attribute value.
+-- & & sep, attrname \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
 -- requires at least two attributes: x and y. & database & sep, autoload, ...\
 -- "mysql" & Load from a TerraLib database stored in a MySQL database. & database, theme & host, 
