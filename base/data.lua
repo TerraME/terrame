@@ -16,6 +16,7 @@ data{
 
 data{
 	file = {"cabecaDeBoi.mdb", "cabecadeboi.sql"},
+	image = "cabeca.bmp",
 	source = "TerraME team",
 	summary = "Topography data from Cabeca de Boi mountain, Minas Gerais, Brazil."
 }
@@ -40,18 +41,21 @@ data{
 
 data{
 	file = {"simple.map"},
+	image = "simple.bmp",
 	summary = "A simple CellularSpace with one attribute for sugarscape model.",
 	source = "TerraME team"
 }
 
 data{
 	file = {"simple-cs.csv"},
+	image = "simple-cs.bmp",
 	summary = "A simple CellularSpace with an attribute called maxSugar (number).",
 	source = "TerraME team"
 }
 
 data{
 	file = {"emas.mdb", "emas.sql"},
+	image = "emas.bmp",
 	source = "TerraME team",
 	reference = "Almeida, Rodolfo M., et al. 'Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil.' X Simposio Brasileiro de Geoinfoamatica (2008)",
 	summary = "Land cover data on Parque Nacional das Emas, Brazil."
