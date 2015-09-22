@@ -31,7 +31,7 @@ t = Timer{
 m = Map{
 	target = singleFooAgent,
 	symbol = "turtle",
-	grid = true
+	background = "green"
 }
 
 t:execute(100)

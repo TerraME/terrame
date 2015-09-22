@@ -1,4 +1,5 @@
 -- @example A model with 30 moving Agents.
+-- @image single-agents-society.bmp
 
 singleFooAgent = Agent{
 	execute = function(self)
@@ -32,7 +33,7 @@ t = Timer{
 	Event{action = cs}
 }
 
-Map{
+m = Map{
 	target = soc,
 	symbol = "smile",
 	color = "yellow",

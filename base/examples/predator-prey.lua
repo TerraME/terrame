@@ -1,4 +1,5 @@
 -- @example Implementation of a predator-prey model.
+-- @image predator-prey.bmp
 
 PASTURE = 0
 SOIL = 1
@@ -99,7 +100,7 @@ c = Cell{
 	preys = function() return #preys end
 }
 
-Chart{
+chart = Chart{
 	target = c,
 	select = {"predators", "preys"}
 }
