@@ -44,7 +44,7 @@
 						<dt><h2><%=data.file[1]%><a name="<%=data.file[1]%>"></h2></dt>
 
 						<% if data.image then %>
-							<% loc = "../../images/"..data.image %>
+							<% loc = "../../images/"..tostring(data.image) %>
 							<center><img src=<% =loc %> ></center><br><br>
 						<%end%>
 						<%if data.summary then%>
