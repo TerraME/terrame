@@ -19,11 +19,16 @@ Building doc/index.html
 Building doc/files/foo.html
 Building doc/files/data.html
 Building doc/files/font.html
+Checking images
+Checking data.lua
+Checking models
+Checking examples
+Checking if all images are used
 Checking if all functions are documented
 Checking foo.lua
 
 Documentation report:
-Documentation was built in 0.12 seconds.
+Documentation was built in 0.15 seconds.
 4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -44,6 +49,7 @@ All 1 functions have @usage.
 All 1 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
+All images are correctly used.
 All 0 links were correctly built.
 All 0 examples are correctly documented.
 Summing up, one problem was found in the documentation.

@@ -56,7 +56,6 @@ Parsing examples/single-agents-society.lua
 Parsing examples/sir-basic.lua
 Parsing examples/sir-campaign.lua
 Parsing examples/sir-improved.lua
-Parsing examples/sugar.lua
 Parsing examples/tube-discrete.lua
 Parsing examples/tube-inflow-outflow.lua
 Parsing examples/tube.lua
@@ -194,6 +193,11 @@ Building doc/files/VisualTable.html
 Building doc/files/examples.html
 Building doc/files/data.html
 Building doc/files/font.html
+Checking images
+Checking data.lua
+Checking models
+Checking examples
+Checking if all images are used
 Checking if all functions are documented
 Checking Agent.lua
 Checking Automaton.lua
@@ -249,6 +253,7 @@ All 288 functions have @usage.
 All 288 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
+All images are correctly used.
 All 295 links were correctly built.
-All 22 examples are correctly documented.
+All 21 examples are correctly documented.
 Summing up, all the documentation was successfully built.

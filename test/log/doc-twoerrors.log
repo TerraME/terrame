@@ -81,6 +81,13 @@ Building doc/files/font.html
 Building doc/files/models.html
 print when loading
 print when loading
+Checking images
+Checking data.lua
+Checking models
+Checking examples
+Checking if all images are used
+Image file 'wrong.bmp' in folder 'images' is unnecessary
+Image file 'wrong2.bmp' in folder 'images' is unnecessary
 Checking if all functions are documented
 Checking ErrorHandling.lua
 Checking Tube.lua
@@ -90,7 +97,7 @@ Function forEachNeighbor2 is not documented
 Function forEachSocialNetwork2 is not documented
 
 Documentation report:
-Documentation was built in 0.15 seconds.
+Documentation was built in 0.19 seconds.
 6 HTML files were created.
 All files are documented.
 2 problems were found in 'description.lua'.
@@ -111,6 +118,7 @@ All files are documented.
 2 out of 68 documented functions do not call themselves in their @usage.
 2 problems were found in @tabular.
 2 invalid tags were found in the documentation.
+2 problems with image files were found.
 2 out of 29 links are invalid.
 2 problems were found in the documentation of examples.
-Summing up, 40 problems were found in the documentation.
+Summing up, 42 problems were found in the documentation.
