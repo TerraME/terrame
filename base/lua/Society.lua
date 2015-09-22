@@ -801,6 +801,7 @@ function Society(data)
 
 		createSummaryFunctions(newAttTable)
 
+		local mt = getmetatable(data.instance)
 		setmetatable(data.instance, nil)
 		createSummaryFunctions(data.instance)
 
@@ -820,6 +821,8 @@ function Society(data)
 				data.instance[idx] = value
 			end
 		end)
+
+		setmetatable(data.instance, mt)
 	end
 
 	data.quantity = nil
