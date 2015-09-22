@@ -29,6 +29,25 @@ local printError   = _Gtme.printError
 local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
+local function imageFiles(package)
+	local s = sessionInfo().separator
+	local imagepath = packageInfo(package).path..s.."images"
+
+	if not isDir(imagepath) then
+		return {}
+	end
+
+	local files = dir(imagepath)
+	local result = {}
+
+	forEachElement(files, function(_, fname)
+		if not string.endswith(fname, ".lua") then
+			result[fname] = 0
+		end
+	end)
+	return result
+end
+
 local function dataFiles(package)
 	local s = sessionInfo().separator
 	local datapath = packageInfo(package).data
@@ -101,6 +120,7 @@ function _Gtme.executeDoc(package)
 		error_font = 0,
 		wrong_line = 0,
 		wrong_tabular = 0,
+		wrong_image = 0,
 		wrong_descriptions = 0
 	}
 
@@ -365,6 +385,64 @@ function _Gtme.executeDoc(package)
 		end)
 	end)
 
+	printNote("Checking images")
+	local images = imageFiles(package)
+
+	print("Checking data.lua")
+	forEachOrderedElement(mdata, function(_, data)
+		if data.image then
+			if not images[data.image] then
+				printError("Image file '"..data.image.."' does not exist in folder 'images'")
+				doc_report.wrong_image = doc_report.wrong_image + 1
+			else
+				images[data.image] = images[data.image] + 1
+			end
+		end
+	end)
+
+	print("Checking models")
+
+	forEachOrderedElement(result.files, function(idx, value)
+		if type(idx) ~= "string" then return end
+		if not string.endswith(idx, ".lua") then return end
+
+		forEachElement(value.models, function(midx, value, mtype)
+			if mtype == "table" and value.image then
+				if not images[value.image] then
+					printError("Image file '"..value.image.."' does not exist in folder 'images'")
+					doc_report.wrong_image = doc_report.wrong_image + 1
+				else
+					images[value.image] = images[value.image] + 1
+				end
+			end
+		end)
+	end)
+
+	print("Checking examples")
+
+	forEachOrderedElement(result.files, function(idx, value)
+		if type(idx) ~= "string" then return end
+		if not string.endswith(idx, ".lua") then return end
+
+		if value.image then
+			if not images[value.image] then
+				printError("Image file '"..value.image.."' does not exist in folder 'images'")
+				doc_report.wrong_image = doc_report.wrong_image + 1
+			else
+				images[value.image] = images[value.image] + 1
+			end
+		end	
+	end)
+
+
+	print("Checking if all images are used")
+	forEachOrderedElement(images, function(file, value)
+		if value == 0 then
+			printError("Image file '"..file.."' in folder 'images' is unnecessary")
+			doc_report.wrong_image = doc_report.wrong_image + 1
+		end
+	end)
+
 	printNote("Checking if all functions are documented")
 	forEachOrderedElement(all_functions, function(idx, value)
 		print("Checking "..idx)
@@ -550,6 +628,14 @@ function _Gtme.executeDoc(package)
 		printNote("No invalid tags were found in the documentation.")
 	end
 
+	if doc_report.wrong_image == 1 then
+		printError("One problem with image files was found.")
+	elseif doc_report.wrong_image > 1 then
+		printError(doc_report.wrong_image.." problems with image files were found.")
+	else
+		printNote("All images are correctly used.")
+	end
+
 	if doc_report.wrong_links == 1 then
 		printError("One out of "..doc_report.links.." links is invalid.")
 	elseif doc_report.wrong_links > 1 then
@@ -580,6 +666,7 @@ function _Gtme.executeDoc(package)
 	else
 		printError("Summing up, "..errors.." problems were found in the documentation.")
 	end
+
 	return errors, all_doc_functions
 end
 
