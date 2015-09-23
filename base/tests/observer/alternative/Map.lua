@@ -546,6 +546,30 @@ return{
 			Map{target = soc2}
 		end
 		unitTest:assertError(error_func, "It is not possible to create a Map from an empty Society.")
+
+		-- placement
+		local ag = Agent{}
+		local soc = Society{instance = ag, quantity = 10}
+		local cs = CellularSpace{xdim = 10}
+		local env = Environment{soc, cs}
+		env:createPlacement()
+
+		error_func = function()
+			Map{
+				target = cs,
+				grouping = "placement",
+				abx = 2
+			}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("abx"))
+
+		error_func = function()
+			Map{
+				target = soc,
+				grouping = "placement"
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("target", "CellularSpace", soc))
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

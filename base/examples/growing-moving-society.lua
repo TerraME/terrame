@@ -52,7 +52,10 @@ t = Timer{
 }
 
 map = Map{
-	target = soc
+	target = cs,
+	grouping = "placement",
+	value = {0, 1},
+	color = {"green", "red"}
 }
 
 t:execute(40)
