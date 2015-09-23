@@ -66,11 +66,6 @@ return{
 
 		-- equalsteps
 		error_func = function()
-			Map{target = c, select = "x", label = 5, slices = 10, color = {"blue", "red"}}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("label", "table", 5))
-
-		error_func = function()
 			Map{target = c, grouping = "equalsteps"}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("select"))
@@ -193,11 +188,6 @@ return{
 		unitTest:assertError(error_func, defaultValueMsg("invert", false))
 
 		-- quantil
-		error_func = function()
-			Map{target = c, select = "x", label = 5, slices = 10, color = {"blue", "red"}, grouping = "quantil"}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("label", "table", 5))
-
 		error_func = function()
 			Map{target = c, grouping = "quantil"}
 		end

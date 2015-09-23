@@ -1531,17 +1531,17 @@ metaTableMap_ = {__index = Map_}
 -- "equalsteps" & The values are divided into a set of slices with the same range. Each slice is
 -- associated to a given color. Equalsteps require only two colors in the argument color, one for
 -- the minimum and the other for the maximum value. The other colors are computed from a linear
--- interpolation of the two colors. & color, slices, max, min, target, select & precision, label,
+-- interpolation of the two colors. & color, slices, max, min, target, select & precision,
 -- grid, invert \
 -- "placement" & Observe a CellularSpace showing the number of Agents in each Cell. Values can
 -- be grouped in the same way of uniquevalue or equalsteps. & color, target & 
 -- min, max, value, slices, grid \
 -- "quantil" & Aggregate the values into slices with approximately the same size. Values are
 -- ordered from lower to higher and then sliced. This strategy uses two colors in the same way
--- of equalsteps. & color, slices, max, min, target, select & precision, label, invert, grid \
+-- of equalsteps. & color, slices, max, min, target, select & precision, invert, grid \
 -- "stdeviation" & Define slices according to the distribution of a given attribute. Values with
 -- similar positive or negative distances to the average will belong to the same slice. &
--- color, stdColor, target, select & stdDeviation, precision, label, grid \
+-- color, stdColor, target, select & stdDeviation, precision, grid \
 -- "uniquevalue" & Associate each attribute value to a given color. Attributes with type string can
 -- only be sliced with this strategy. It can be used for CellularSpaces as well as for
 -- Society. & color, target, select, value & label, background, 
@@ -1581,21 +1581,21 @@ metaTableMap_ = {__index = Map_}
 --     min = 0,
 --     max = 50,
 --     slices = 10,
---     colors = {"blue", "red"}
+--     color = {"blue", "red"}
 -- }
 --
 -- Map{
 --     target = cs,
 --     select = "seggregation",
---     values = {0, 1, 2},
---     colors = {"blue", "green", "red"},
---     labels = {"low", "medium", "high"}
+--     value = {0, 1, 2},
+--     color = {"blue", "green", "red"},
+--     label = {"low", "medium", "high"}
 -- }
 --
 -- Map{
 --     target = world,
 --     select  = "forest",
---     colors  = "RdYlGn",
+--     color  = "RdYlGn",
 --     min = 0,
 --     max = 1,
 --     slices = 10
@@ -1615,7 +1615,6 @@ function Map(data)
 	end
 
 	optionalTableArgument(data, "value", "table")
-	optionalTableArgument(data, "label", "table")
 	optionalTableArgument(data, "select", "string")
 
 	if type(data.background) ~= "Map" then
@@ -1876,6 +1875,7 @@ function Map(data)
 		uniquevalue = function()
 			mandatoryTableArgument(data, "select", "string")
 			mandatoryTableArgument(data, "value", "table")
+			optionalTableArgument(data, "label", "table")
 
 			local attrs
 
@@ -1932,7 +1932,11 @@ function Map(data)
 			end
 
 			if data.label == nil then
-				data.label = data.value
+				data.label = {}
+
+				for i = 1, #data.value do
+					data.label[i] = _Gtme.stringToLabel(data.value[i])
+				end
 			end
 			verify(#data.label == #data.value, "There should exist labels for each value. Got "..#data.label.." labels and "..#data.value.." values.")
 
