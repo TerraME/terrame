@@ -110,6 +110,7 @@ function _Gtme.executeDoc(package)
 		undoc_files = 0,
 		lack_usage = 0,
 		no_call_itself_usage = 0,
+		usage_error = 0,
 		wrong_links = 0,
 		invalid_tags = 0,
 		problem_examples = 0,
@@ -610,6 +611,14 @@ function _Gtme.executeDoc(package)
 		printError(doc_report.no_call_itself_usage.." out of "..doc_report.functions.." documented functions do not call themselves in their @usage.")
 	else
 		printNote("All "..doc_report.functions.." functions call themselves in their @usage.")
+	end
+
+	if doc_report.usage_error == 1 then
+		printError("One out of "..doc_report.functions.." functions has error in its @usage.")
+	elseif doc_report.usage_error > 1 then
+		printError(doc_report.usage_error.." out of "..doc_report.functions.." functions have error in their @usage.")
+	else
+		printNote("All "..doc_report.functions.." functions do not have any error in their @usage.")
 	end
 
 	if doc_report.wrong_tabular == 1 then

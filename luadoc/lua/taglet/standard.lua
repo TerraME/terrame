@@ -4,6 +4,9 @@
 
 local assert, tostring, type = assert, tostring, type
 local collectgarbage = collectgarbage
+local load = load
+local getPackage = getPackage
+local xpcall = xpcall
 local pcall = pcall
 local exit = os.exit
 local io, table, string = io, table, string
@@ -731,6 +734,29 @@ local function check_usage(files, doc_report)
 		local file_name = no_usage[i]
 		for j = 1, #no_usage[file_name] do
 			local function_name = no_usage[file_name][j]
+		end
+	end
+
+	printNote("Testing @usage")
+	for i = 1, #files do
+		local file_name = files[i]
+		if files[file_name].type ~= "example" then
+			printNote("Testing file "..makepath(files[file_name].short_path..file_name))
+			local functions = files[file_name].functions
+			for j = 1, #functions do
+				local function_name = functions[j]
+				if functions[function_name].usage then
+					local base = getPackage("base")
+
+					base.print = function() end
+
+				    print("Testing "..function_name)
+					xpcall(load(functions[function_name].usage, nil, "t", base), function(err)
+				    	printError("Error: "..err)
+						doc_report.usage_error = doc_report.usage_error + 1
+					end)
+				end
+			end
 		end
 	end
 end
