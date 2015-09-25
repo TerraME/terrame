@@ -18,7 +18,6 @@ PainterThread::PainterThread(QObject *parent)
 {
     restart = false;
     abort = false;
-    reconfigMaxMin = false;
     // defaultPen = QPen(Qt::NoPen);		// n?o desenha a grade
 
     //posicionar randomicamente os agentes na c?lula
@@ -134,10 +133,6 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 						}
 						else
 						{
-							if( !reconfigMaxMin )
-							{
-								reconfigMaxMin = true;
-							}
 							color.setRgb(255, 255, 255);
 						}
 
@@ -215,18 +210,6 @@ void PainterThread::drawAttrib(QPainter *p, Attributes *attrib)
 					}
 					else
 					{
-						if (! reconfigMaxMin)
-						{
-                            if (execModes != Quiet ){
-                                QString st = QString("Warning: Invalid color. You need to reconfigure the maximum and the minimum values of the attribute '%1'.").arg(attrib->getName());
-                                string err_out = st.toLatin1().constData();
-                                lua_getglobal(L, "customWarning");
-                                lua_pushstring(L,err_out.c_str());
-                                lua_pushnumber(L,4);
-                                lua_call(L,2,0);
-                            }
-							reconfigMaxMin = true;
-						}
 						color.setRgb(255, 255, 255);
 					}
 					p->setBrush(color);

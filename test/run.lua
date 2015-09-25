@@ -50,6 +50,15 @@ forEachFile("packages", function(file)
 	os.execute("cp -pr \"packages"..s..file.."\" \""..baseDir..s.."packages"..s..file.."\"")	
 end)
 
+_Gtme.printNote("Removing files")
+remove = _Gtme.include("remove.lua")
+
+forEachElement(remove.files, function(_, value)
+	_Gtme.print("Removing \""..value.."\"")
+	pcall(function() os.execute("rm -rf \""..value.."\"") end)
+end)
+
+
 local report = {
 	logerrors = 0,
 	locallogerrors = 0,
@@ -231,6 +240,14 @@ end)
 _Gtme.printNote("Testing from local folders")
 
 chDir("packages")
+
+_Gtme.printNote("Removing files")
+remove = _Gtme.include(".."..s.."remove.lua")
+
+forEachElement(remove.files, function(_, value)
+	_Gtme.print("Removing \""..value.."\"")
+	pcall(function() os.execute("rm -rf \""..value.."\"") end)
+end)
 
 forEachOrderedElement(commands, function(idx, group)
 	_Gtme.printNote("Testing group '"..idx.."'")

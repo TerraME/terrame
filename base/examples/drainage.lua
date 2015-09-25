@@ -1,8 +1,16 @@
 -- @example A simple drainage model.
+-- @image drainage.bmp
 
 -- model parameters
-Q1 = 0
-Q2 = 0
+
+c = Cell{
+	Q1 = 0,
+	Q2 = 0
+}
+
+chart = Chart{
+	target = c
+}
 
 -- model execution
 t = Timer{
@@ -10,19 +18,20 @@ t = Timer{
 		-- Input
 		E1 = 2
 		-- Output
-		S1 = 0.4 * Q1
+		S1 = 0.4 * c.Q1
 		-- Simulation
-		Q1 = Q1 + (E1 - S1)
+		c.Q1 = c.Q1 + (E1 - S1)
 		----------------------
 		-- Input
 		E2 = S1
 		-- Output
-		S2 = 0.2 * Q2
+		S2 = 0.2 * c.Q2
 		-- Simulation
-		Q2 = Q2 + (E2 - S2)
+		c.Q2 = c.Q2 + (E2 - S2)
 
 		-- Report
-		print(Q1, Q2)
+		print(c.Q1, c.Q2)
+		c:notify()
 	end}
 }
 

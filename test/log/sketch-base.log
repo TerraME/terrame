@@ -1,0 +1,40 @@
+Verifying test files
+Ignoring tests because internal folders were found in the tests
+Verifying data files
+File 'agents.csv' is already documented in 'data.lua'
+File 'brazil.gal' is already documented in 'data.lua'
+File 'brazilstates.dbf' is already documented in 'data.lua'
+File 'brazilstates.shp' is already documented in 'data.lua'
+File 'brazilstates.shx' is already documented in 'data.lua'
+File 'cabecadeboi-neigh.gal' is already documented in 'data.lua'
+File 'cabecadeboi-neigh.gpm' is already documented in 'data.lua'
+File 'cabecadeboi-neigh.gwt' is already documented in 'data.lua'
+File 'cabecaDeBoi.mdb' is already documented in 'data.lua'
+File 'cabecadeboi.sql' is already documented in 'data.lua'
+File 'emas-distance.gal' is already documented in 'data.lua'
+File 'emas-distance.gpm' is already documented in 'data.lua'
+File 'emas-distance.gwt' is already documented in 'data.lua'
+File 'emas-pollin.gpm' is already documented in 'data.lua'
+File 'emas.mdb' is already documented in 'data.lua'
+File 'emas.sql' is already documented in 'data.lua'
+Folder 'error' will be ignored
+File 'gpmAreaCellsPols.gpm' is already documented in 'data.lua'
+File 'gpmdistanceDbEmasCells.gpm' is already documented in 'data.lua'
+File 'gpmlinesDbEmas.gpm' is already documented in 'data.lua'
+File 'simple-cs.csv' is already documented in 'data.lua'
+File 'simple.map' is already documented in 'data.lua'
+Verifying font files
+File 'Grissom Free.ttf' is already documented in 'font.lua'
+File 'Grissom Free.txt' will be ignored
+File 'JLS Smiles Sampler.ttf' is already documented in 'font.lua'
+File 'JLS Smiles Sampler.txt' will be ignored
+File 'Pet Animals.ttf' is already documented in 'font.lua'
+File 'Pet Animals.txt' will be ignored
+File 'Ubuntu-L.ttf' is already documented in 'font.lua'
+File 'Ubuntu-L.txt' will be ignored
+
+Sketch report:
+No new test file was necessary.
+All data is already documented.
+All font files are already documented.
+Summing up, no sketch was created.

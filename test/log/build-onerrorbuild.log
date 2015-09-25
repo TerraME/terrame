@@ -28,12 +28,17 @@ Building doc/files/examples.html
 Building doc/files/data.html
 Building doc/files/font.html
 Building doc/files/models.html
+Checking images
+Checking data.lua
+Checking models
+Checking examples
+Checking if all images are used
 Checking if all functions are documented
 Checking Tube2.lua
 Checking Utils.lua
 
 Documentation report:
-Documentation was built in 0.12 seconds.
+Documentation was built in 0.03 seconds.
 5 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
@@ -54,6 +59,7 @@ All 1 functions have @usage.
 All 1 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
+All images are correctly used.
 All 0 links were correctly built.
 All 1 examples are correctly documented.
 Summing up, one problem was found in the documentation.
@@ -83,7 +89,7 @@ Testing examples
 Testing ipd
 
 Test report:
-Tests were executed in 0.21 seconds.
+Tests were executed in 0.23 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.
@@ -124,10 +130,10 @@ Creating file 'onerrorbuild_0.1.zip'
 Package 'onerrorbuild' successfully zipped
 
 Build report:
-Package was built in 0.34 seconds.
+Package was built in 0.41 seconds.
 Build created file 'onerrorbuild_0.1.zip'.
-Temporary files are saved in .terrame_onerrorbuild_fkNMo
-MD5 sum for the package is d6817f3e586d2b2b0d21fb3df2e4d92f
+Temporary files are saved in .terrame_onerrorbuild_R3gqm
+MD5 sum for the package is a5fd0b90e0bd1edd98162d26ee2ca378
 The package does not have a license file.
 One error was found in the documentation.
 One file is unnecessary.

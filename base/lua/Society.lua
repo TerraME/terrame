@@ -663,6 +663,23 @@ function Society(data)
 		customError("Argument 'instance' should not have attribute 'parent'.")
 	end
 
+	local function callFunc(func, mtype, attribute)
+		local status, result = pcall(func) 
+
+		if not status then
+			local msg
+
+			if mtype == "function" then
+				msg = "Could not call function '"..attribute.."' from the Agents. It has some error or it does not exist anymore."
+			else
+				msg = "Could not find attribute '"..attribute.."' in all the Agents."
+			end
+
+			customError(msg)
+		end
+		return result
+	end
+
 	local function createSummaryFunctions(agent)
 		-- create functions for the society according to the attributes of its instance
 		forEachElement(agent, function(attribute, value, mtype)
@@ -676,9 +693,13 @@ function Society(data)
 				end
 
 				data[attribute] = function(soc, args)
-					forEachAgent(soc, function(agent)
-						agent[attribute](agent, args)
-					end)
+					local func = function()
+						return forEachAgent(soc, function(agent)
+							return agent[attribute](agent, args)
+						end)
+					end
+
+					return callFunc(func, "function", attribute)
 				end
 			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
 				if data[attribute] then
@@ -687,11 +708,15 @@ function Society(data)
 				end
 
 				data[attribute] = function(soc)
-					local quantity = 0
-					forEachAgent(soc, function(agent)
-						quantity = quantity + agent[attribute]
-					end)
-					return quantity
+					local func = function()
+						local quantity = 0
+						forEachAgent(soc, function(agent)
+							quantity = quantity + agent[attribute]
+						end)
+						return quantity
+					end
+
+					return callFunc(func, "number", attribute)
 				end
 			elseif mtype == "boolean" then
 				if data[attribute] then
@@ -780,6 +805,7 @@ function Society(data)
 
 		createSummaryFunctions(newAttTable)
 
+		local mt = getmetatable(data.instance)
 		setmetatable(data.instance, nil)
 		createSummaryFunctions(data.instance)
 
@@ -799,6 +825,8 @@ function Society(data)
 				data.instance[idx] = value
 			end
 		end)
+
+		setmetatable(data.instance, mt)
 	end
 
 	data.quantity = nil

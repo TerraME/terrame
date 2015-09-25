@@ -221,5 +221,6 @@ private:
     int subjectID;
 };
 
+void restartObserverCounter();
 
 #endif

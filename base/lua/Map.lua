@@ -1544,14 +1544,17 @@ metaTableMap_ = {__index = Map_}
 -- "equalsteps" & The values are divided into a set of slices with the same range. Each slice is
 -- associated to a given color. Equalsteps require only two colors in the argument color, one for
 -- the minimum and the other for the maximum value. The other colors are computed from a linear
--- interpolation of the two colors. & color, slices, max, min, target, select & precision, label,
+-- interpolation of the two colors. & color, slices, max, min, target, select & precision,
 -- grid, invert \
+-- "placement" & Observe a CellularSpace showing the number of Agents in each Cell. Values can
+-- be grouped in the same way of uniquevalue or equalsteps. & color, target & 
+-- min, max, value, slices, grid \
 -- "quantil" & Aggregate the values into slices with approximately the same size. Values are
 -- ordered from lower to higher and then sliced. This strategy uses two colors in the same way
--- of equalsteps. & color, slices, max, min, target, select & precision, label, invert, grid \
+-- of equalsteps. & color, slices, max, min, target, select & precision, invert, grid \
 -- "stdeviation" & Define slices according to the distribution of a given attribute. Values with
 -- similar positive or negative distances to the average will belong to the same slice. &
--- color, stdColor, target, select & stdDeviation, precision, label, grid \
+-- color, stdColor, target, select & stdDeviation, precision, grid \
 -- "uniquevalue" & Associate each attribute value to a given color. Attributes with type string can
 -- only be sliced with this strategy. It can be used for CellularSpaces as well as for
 -- Society. & color, target, select, value & label, background, 
@@ -1635,7 +1638,6 @@ function Map(data)
 	end
 
 	optionalTableArgument(data, "value", "table")
-	optionalTableArgument(data, "label", "table")
 	optionalTableArgument(data, "select", "string")
 
 	if type(data.background) ~= "Map" then
@@ -1896,6 +1898,7 @@ function Map(data)
 		uniquevalue = function()
 			mandatoryTableArgument(data, "select", "string")
 			mandatoryTableArgument(data, "value", "table")
+			optionalTableArgument(data, "label", "table")
 
 			local attrs
 
@@ -1952,11 +1955,26 @@ function Map(data)
 			end
 
 			if data.label == nil then
-				data.label = data.value
+				data.label = {}
+
+				for i = 1, #data.value do
+					data.label[i] = _Gtme.stringToLabel(data.value[i])
+				end
 			end
 			verify(#data.label == #data.value, "There should exist labels for each value. Got "..#data.label.." labels and "..#data.value.." values.")
 
 			verifyUnnecessaryArguments(data, attrs)
+		end,
+		placement = function()
+			mandatoryTableArgument(data, "target", "CellularSpace")
+
+			if data.grid == false then data.grid = nil end
+
+			verifyUnnecessaryArguments(data, {"target", "color", "grouping", "min", "max", "slices", "value", "grid"})
+
+			forEachCell(data.target, function(cell)
+				cell.quantity_ = function(self) return #self:getAgents() end
+			end)
 		end,
 		none = function()
 			local mblack = {0, 0, 0}
@@ -2014,6 +2032,19 @@ function Map(data)
 			end
 		end
 	}
+
+	if data.grouping == "placement" then
+		return Map{
+			target = data.target,
+			select = "quantity_",
+			min = data.min,
+			max = data.max,
+			grid = data.grid,
+			slices = data.slices,
+			color = data.color,
+			value = data.value
+		}
+	end
 
 	if type(data.target) == "CellularSpace" then
 		local sample = data.target.cells[1][data.select]

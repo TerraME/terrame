@@ -185,6 +185,29 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "Attribute 'male' will not be replaced by a summary function.")
+
+		local ag = Agent{
+			water = 2,
+			exec = function() end
+		}
+    
+		local soc = Society{
+			quantity = 10,
+			instance = ag
+		}
+
+		soc:sample().exec = 2
+		soc:sample().water = "abc"
+
+		error_func = function()
+			soc:exec()
+		end
+		unitTest:assertError(error_func, "Could not call function 'exec' from the Agents. It has some error or it does not exist anymore.")
+
+		error_func = function()
+			soc:water()
+		end
+		unitTest:assertError(error_func, "Could not find attribute 'water' in all the Agents.")
 	end,
 	add = function(unitTest)
 		local ag1 = Agent{}

@@ -25,6 +25,27 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	filesByExtension = function(unitTest)
+		local error_func = function()
+			local files = filesByExtension()
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
+
+		local error_func = function()
+			local files = filesByExtension(2)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+	
+		local error_func = function()
+			local files = filesByExtension("base")
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
+
+		local error_func = function()
+			local files = filesByExtension("base", 2)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
+	end,
 	import = function(unitTest)
 		local error_func = function()
 			import()

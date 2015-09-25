@@ -54,8 +54,28 @@ return{
 		unitTest:assertEquals(cs:cover().pasture, 100)
 		unitTest:assertEquals(cs:water(), 194)
 
-		cs:deforest()
+		unitTest:assert(cs:deforest())
 		unitTest:assertEquals(cs:sample().defor, 2)
+
+		local cell = Cell{
+			defor = 1,
+			deforest = function(self)
+				if self.x > 4 then
+					return false
+				end
+
+				self.defor = self.defor + 1
+			end
+		}
+
+		local cs = CellularSpace{
+			instance = cell,
+			xdim = 10
+		}
+
+		unitTest:assertEquals(cs:defor(), 100)
+		unitTest:assert(not cs:deforest())
+		unitTest:assertEquals(cs:defor(), 150)
 	end, 
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -327,6 +347,101 @@ ydim    number [20]
 
 			unitTest:assert(neighborhood:isNeighbor(cell))
 		end)
+
+		cs = CellularSpace{xdim = 10}
+
+		cs:createNeighborhood{strategy = "diagonal"}
+
+		local sizes = {}
+
+		forEachCell(cs, function(cell)
+			local neighborhood = cell:getNeighborhood("1")
+
+			local neighborhoodSize = #neighborhood
+
+			local sumWeight = 0
+
+			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
+			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
+
+			forEachNeighbor(cell, function(c, neigh, weight)
+				unitTest:assert(neigh.x ~= c.x and neigh.y ~= c.y)
+
+				sumWeight = sumWeight + weight
+			end)
+
+			unitTest:assertEquals(1, sumWeight, 0.00001)
+
+			unitTest:assert(not neighborhood:isNeighbor(cell))
+		end)
+
+		unitTest:assertEquals(4, sizes[1])
+		unitTest:assertEquals(32, sizes[2])
+		unitTest:assertEquals(64, sizes[4])
+
+		cs = CellularSpace{xdim = 10}
+
+		cs:createNeighborhood{
+			strategy = "diagonal",
+			wrap = true
+		}
+
+		local sizes = {}
+
+		forEachCell(cs, function(cell)
+			local neighborhood = cell:getNeighborhood("1")
+
+			local neighborhoodSize = #neighborhood
+
+			local sumWeight = 0
+
+			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
+			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
+
+			forEachNeighbor(cell, function(c, neigh, weight)
+				unitTest:assert(neigh.x ~= c.x and neigh.y ~= c.y)
+
+				sumWeight = sumWeight + weight
+			end)
+
+			unitTest:assertEquals(1, sumWeight, 0.00001)
+
+			unitTest:assert(not neighborhood:isNeighbor(cell))
+		end)
+
+		unitTest:assertEquals(100, sizes[4])
+
+		cs = CellularSpace{xdim = 10}
+
+		cs:createNeighborhood{
+			strategy = "diagonal",
+			self = true,
+			wrap = true
+		}
+
+		local sizes = {}
+
+		forEachCell(cs, function(cell)
+			local neighborhood = cell:getNeighborhood("1")
+
+			local neighborhoodSize = #neighborhood
+
+			local sumWeight = 0
+
+			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
+			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
+
+			forEachNeighbor(cell, function(c, neigh, weight)
+				unitTest:assert((neigh.x ~= c.x and neigh.y ~= c.y) or (c == neigh))
+
+				sumWeight = sumWeight + weight
+			end)
+
+			unitTest:assertEquals(1, sumWeight, 0.00001)
+
+		end)
+
+		unitTest:assertEquals(100, sizes[5])
 
 		-- mxn
 		local cs = CellularSpace{xdim = 10}

@@ -44,6 +44,20 @@ local function release(tag, block, text)
 end
 
 -------------------------------------------------------------------------------
+local function image(tag, block, text, doc_report, silent)
+	if text == "" and not silent then
+		printError("In "..block.name.."(), @image should be folowed by a file name")
+		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
+	end
+		
+	if block[tag] == nil then
+		block[tag] = text
+	elseif not silent then
+		printError("In "..block.name.."(), @image is used more than once and will be ignored in '"..text.."'")
+		doc_report.duplicated = doc_report.duplicated + 1
+	end
+end
+
 local function inherits(tag, block, text, doc_report, silent)
 	if text == "" and not silent then
 		printError("In "..block.name.."(), @inherits should be folowed by a type")
@@ -317,6 +331,7 @@ handlers["output"] = output
 handlers["tabular"] = tab
 handlers["inherits"] = inherits
 handlers["deprecated"] = deprecated
+handlers["image"] = image
 
 -------------------------------------------------------------------------------
 function handle(tag, block, text, doc_report, silent)

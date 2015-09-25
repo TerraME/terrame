@@ -307,12 +307,12 @@ Environment_ = {
 		local header = file:read()
 		
 		local numAttribIdx = string.find(header, "%s", 1)
-		local layer1Idx = string.find(header, "%s", (numAttribIdx + 1))
-		local layer2Idx = string.find(header, "%s", (layer1Idx + 1))
+		local layer1Idx = string.find(header, "%s", numAttribIdx + 1)
+		local layer2Idx = string.find(header, "%s", layer1Idx + 1)
 		
 		local numAttributes = tonumber(string.sub(header, 1, numAttribIdx))
-		local layer1Id = string.sub(header, (numAttribIdx + 1), (layer1Idx - 1))
-		local layer2Id = string.sub(header, (layer1Idx + 1), (layer2Idx - 1))
+		local layer1Id = string.sub(header, numAttribIdx + 1, layer1Idx - 1)
+		local layer2Id = string.sub(header, layer1Idx + 1, layer2Idx - 1)
 
 		verify(layer1Id ~= layer2Id, "This function does not load neighborhoods between cells from the same "..
 			"CellularSpace. Use CellularSpace:loadNeighborhood() instead.") 
@@ -325,11 +325,11 @@ Environment_ = {
 		for i = 1, numAttributes do
 			if i ~= 1 then local beginName = string.find(header, "%s", (endName + 1)) end
 
-			local endName = string.find(header, "%s", (beginName + 1))
+			local endName = string.find(header, "%s", beginName + 1)
 			
-			attribNames[i] = string.sub(header, (beginName + 1))
+			attribNames[i] = string.sub(header, beginName + 1)
 			if endName ~= nil then
-				attribNames[i] = string.sub(header, (beginName + 1), (endName - 1))
+				attribNames[i] = string.sub(header, beginName + 1, endName - 1)
 			else
 				break
 			end
@@ -354,8 +354,8 @@ Environment_ = {
 			if line_cell == nil then break; end
 
 			local cellIdIdx = string.find(line_cell, "%s", 1)
-			local cellId = string.sub(line_cell, 1, (cellIdIdx - 1))
-			local numNeighbors = tonumber(string.sub(line_cell, (cellIdIdx + 1)))
+			local cellId = string.sub(line_cell, 1, cellIdIdx - 1)
+			local numNeighbors = tonumber(string.sub(line_cell, cellIdIdx + 1))
 
 			local cell = cellSpaces[1]:get(cellId)
 
@@ -375,15 +375,15 @@ Environment_ = {
 						neighIdIdx = string.find(line_neighbors, "%s", neighIdEndIdx) + 1
 						neighIdEndIdx = string.find(line_neighbors, "%s", neighIdIdx)
 					end
-					local neighId = string.sub(line_neighbors, neighIdIdx, (neighIdEndIdx - 1))
+					local neighId = string.sub(line_neighbors, neighIdIdx, neighIdEndIdx - 1)
 					local neighbor = cellSpaces[2]:get(neighId)
 
 					-- Gets the weight
 					if numAttributes > 0 then
-						local weightEndIdx = string.find(line_neighbors, "%s", (neighIdEndIdx + 1))
+						local weightEndIdx = string.find(line_neighbors, "%s", neighIdEndIdx + 1)
 
 						if weightEndIdx == nil then 
-							local weightAux = string.sub(line_neighbors, (neighIdEndIdx + 1))
+							local weightAux = string.sub(line_neighbors, neighIdEndIdx + 1)
 							weight = tonumber(weightAux)
 
 							if weight == nil then
@@ -421,7 +421,7 @@ Environment_ = {
 		until(line_cell == nil)
 
 		if data.bidirect then
-			for i, cell2 in ipairs(cellSpaces[2].cells)do
+			for i, cell2 in ipairs(cellSpaces[2].cells) do
 				local neighborhoodNeigh = cell2:getNeighborhood(data.name)
 				if neighborhoodNeigh == nil then
 					neighborhoodNeigh = Neighborhood()

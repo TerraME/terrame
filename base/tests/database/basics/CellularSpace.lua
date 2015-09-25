@@ -389,7 +389,6 @@ return{
 		unitTest:assertEquals(451.98359156683, sumWeight, 0.00001) -- SKIP
 	end,
 	loadNeighborhood = function(unitTest)
-	
 		if _Gtme.isWindowsOS() then
 			unitTest:assert(true) -- SKIP
 			return

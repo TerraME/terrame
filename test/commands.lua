@@ -29,6 +29,7 @@ doc = {
 	doc             = {arg = "-doc"},
 	onerror         = {arg = "-doc", package = "onerror"},
 	twoerrors       = {arg = "-doc", package = "twoerrors"},
+	images          = {arg = "-doc", package = "images"},
 	nodescription   = {arg = "-doc", package = "nodescription"},
 	nodata          = {arg = "-doc", package = "nodata"},
 	nodatadotlua    = {arg = "-doc", package = "nodatadotlua"},
@@ -80,5 +81,13 @@ observer = {
 	clock       = {script = "clock.lua",       quantity = 1},
 	textscreen  = {script = "textscreen.lua",  quantity = 8},
 	visualtable = {script = "visualtable.lua", quantity = 8}
+}
+
+sketch = {
+	data = {arg = "-sketch", package = "nodatadotlua"},
+	font = {arg = "-sketch", package = "nofontdotlua"},
+	void = {arg = "-sketch", package = "nolua"},
+	test = {arg = "-sketch", package = "models"},
+	base = {arg = "-sketch"}
 }
 

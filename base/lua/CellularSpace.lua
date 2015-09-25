@@ -37,6 +37,42 @@ local function getCoordCoupling(cs, data)
 	end
 end
 
+local function getDiagonalNeighborhood(cs, data)
+	return function(cell)
+		local neigh = Neighborhood()
+		local indexes = {}
+		local lin = -1
+		while lin <= 1 do
+			local col = -1
+			while col <= 1 do
+				if (lin ~= 0 and col ~= 0) or (data.self and lin == 0 and col == 0) then
+					local index = nil
+					if data.wrap then
+						index = cs:get(
+							((cell.x + col) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol,
+							((cell.y + lin) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
+					else
+						index = cs:get(cell.x + col, cell.y + lin)
+					end
+					if index ~= nil then
+						table.insert(indexes, index)
+					end
+				end
+
+				col = col + 1
+			end
+			lin = lin + 1
+		end
+
+		local weight = 1 / #indexes
+		for i, index in ipairs(indexes) do
+			neigh:add(index, weight)
+		end
+
+		return neigh
+	end
+end
+
 local function getFunctionNeighborhood(cs, data)
 	return function(cell)
 		local neighborhood = Neighborhood()
@@ -85,8 +121,8 @@ local function getMooreNeighborhood(cs, data)
 end
 
 local function getMxNNeighborhood(cs, data)
-	local m = math.floor(data.m/2)
-	local n = math.floor(data.n/2)
+	local m = math.floor(data.m / 2)
+	local n = math.floor(data.n / 2)
 
 	return function(cell)
 		local neighborhood = Neighborhood()
@@ -456,6 +492,8 @@ CellularSpace_ = {
 	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight, inmemory \
 	-- "coord" & A bidirected relation between two CellularSpaces connecting Cells with the same 
 	-- (x, y) coordinates. & target & name, inmemory\
+	-- "diagonal" & Connect each Cell to its (at most) four diagonal neighbors.
+	-- & & name, self, wrap, inmemory \
 	-- "function" & A Neighborhood based on a function where any other Cell can be a neighbor. & 
 	-- filter & name, weight, inmemory \
 	-- "moore"(default) & A Moore (queen) Neighborhood, connecting each Cell to its (at most) 
@@ -536,6 +574,15 @@ CellularSpace_ = {
 		defaultTableValue(data, "inmemory", true)
 
 		switch(data, "strategy"):caseof{
+			diagonal = function()
+				defaultTableValue(data, "self", false)
+				defaultTableValue(data, "wrap", false)
+
+				verifyUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "inmemory"})
+
+				data.func = getDiagonalNeighborhood
+			end,
+
 			["function"] = function() 
 				mandatoryTableArgument(data, "filter", "function")
 				verifyUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "inmemory"})
@@ -1005,6 +1052,7 @@ metaTableCellularSpace_ = {
 -- restriction). Only the Cells that reflect the established criteria will be loaded. Note that SQL
 -- uses the operator "=" to compare values, instead of "==". This argument can only be used when
 -- reading data from a database.
+-- @arg data.attrname A string with an attribute name.
 -- @arg data.... Any other attribute or function for the CellularSpace.
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
@@ -1029,6 +1077,8 @@ metaTableCellularSpace_ = {
 -- dbType & Description & Compulsory arguments & Optional arguments\
 -- "mdb" & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer,
 -- select, where, autoload, ... \
+-- "map" & Load from a text file where Cells are stored as numbers with its attribute value.
+-- & & sep, attrname \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
 -- requires at least two attributes: x and y. & database & sep, autoload, ...\
 -- "mysql" & Load from a TerraLib database stored in a MySQL database. & database, theme & host, 
@@ -1139,6 +1189,23 @@ function CellularSpace(data)
 	setmetatable(data, metaTableCellularSpace_)
 	cObj:setReference(data)
 
+	local function callFunc(func, mtype, attribute)
+		local status, result = pcall(func) 
+
+		if not status then
+			local msg
+
+			if mtype == "function" then
+				msg = "Could not call function '"..attribute.."' from the Cells. It has some error or it does not exist anymore."
+			else
+				msg = "Could not find attribute '"..attribute.."' in all the Cells."
+			end
+
+			customError(msg)
+		end
+		return result
+	end
+
 	local function createSummaryFunctions(cell)
 		forEachElement(cell, function(attribute, value, mtype)
 			if attribute == "id" or attribute == "parent" or string.endswith(attribute, "_") then return
@@ -1149,9 +1216,13 @@ function CellularSpace(data)
 				end
 
 				data[attribute] = function(cs, args)
-					forEachCell(cs, function(cell)
-						cell[attribute](cell, args)
-					end)
+					local func = function()
+						return forEachCell(cs, function(cell)
+							return cell[attribute](cell, args)
+						end)
+					end
+
+					return callFunc(func, "function", attribute)
 				end
 			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
 				if data[attribute] then
@@ -1161,11 +1232,15 @@ function CellularSpace(data)
 
 				if attribute ~= "x" and attribute ~= "y" then
 					data[attribute] = function(cs)
-						local quantity = 0
-						forEachCell(cs, function(cell)
-							quantity = quantity + cell[attribute]
-						end)
-						return quantity
+						local func = function()
+							local quantity = 0
+							forEachCell(cs, function(cell)
+								quantity = quantity + cell[attribute]
+							end)
+							return quantity
+						end
+
+						return callFunc(func, "number", attribute)
 					end
 				end
 			elseif mtype == "boolean" then

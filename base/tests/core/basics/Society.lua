@@ -144,7 +144,14 @@ return {
 		local ag = Agent{
 			age = 0,
 			human = true,
-			gender = "male"
+			gender = "male",
+			getOld = function(self)
+				if self.age > 0 then
+					return false
+				end
+
+				self.age = self.age + 1
+			end
 		}
 
 		local soc = Society{
@@ -155,6 +162,11 @@ return {
 		unitTest:assertEquals(soc:age(), 0)
 		unitTest:assertEquals(soc:human(), 10)
 		unitTest:assertEquals(soc:gender().male, 10)
+
+		unitTest:assert(soc:getOld())
+		unitTest:assertEquals(soc:age(), 10)
+		unitTest:assert(not soc:getOld())
+		unitTest:assertEquals(soc:age(), 10)
 	end,
 	__len = function(unitTest)
 		local sc1 = Society{
