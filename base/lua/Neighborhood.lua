@@ -30,7 +30,9 @@ Neighborhood_ = {
 	-- then it will stop with an error.
 	-- @arg cell A Cell to be added.
 	-- @arg weight A number representing the weight of the connection. The default value is 1.
-	-- @usage n:add(cell, 0.02)
+	-- @usage n = Neighborhood()
+	-- c = Cell{}
+	-- n:add(c, 0.02)
 	add = function(self, cell, weight)
 		mandatoryArgument(1, "Cell", cell)
 		optionalArgument(2, "number", weight)
@@ -46,7 +48,7 @@ Neighborhood_ = {
 	-- @arg yIndex A number with the y value of the Cell.
 	-- @arg cellularSpace A CellularSpace.
 	-- @arg weight A number representing the weight of the connection.
-	-- @usage n:addCell(2, 2, cs, 0.5)
+	-- @usage -- n:addCell(2, 2, cs, 0.5)
 	-- @deprecated Neighborhood:add
 	addCell = function(self, xIndex, yIndex, cellularSpace, weight)
 		deprecatedFunction("addCell", "add")
@@ -54,28 +56,29 @@ Neighborhood_ = {
 	--- Add a new Cell to the Neighborhood.
 	-- @arg cell A Cell.
 	-- @arg weight A number representing the weight of the connection.
-	-- @usage n:addNeighbor(cell, 0.7)
+	-- @usage -- n:addNeighbor(cell, 0.7)
 	-- @deprecated Neighborhood:add
 	addNeighbor = function(self, cell, weight)
 		deprecatedFunction("addNeighbor", "add")
 	end,
 	--- Remove all Cells from the Neighborhood. In practice, it has the same behavior
 	-- as calling Neighborhood() again if the Neighborhood was not added to any Cell.
-	-- @usage n:clear()
+	-- @usage n = Neighborhood()
+	-- n:clear()
 	clear = function(self)
 		self.cObj_:clear()
 	end,
 	--- Remove a Cell from the Neighborhood.
 	-- @arg xIndex A number with the x value of the Cell.
 	-- @arg yIndex A number with the y value of the Cell.
-	-- @usage n:eraseCell(2, 2)
+	-- @usage -- n:eraseCell(2, 2)
 	-- @deprecated Neighborhood:remove
 	eraseCell = function(self, xIndex, yIndex)
 		deprecatedFunction("eraseCell", "remove")
 	end,
 	--- Remove a Cell from the Neighborhood.
 	-- @arg cell A string with the unique identifier of the Cell.
-	-- @usage n:eraseNeighbor("2")
+	-- @usage -- n:eraseNeighbor("2")
 	-- @deprecated Neighborhood:remove
 	eraseNeighbor = function(self, cell)
 		deprecatedFunction("eraseNeighbor", "remove")
@@ -83,20 +86,21 @@ Neighborhood_ = {
 	--- Return the weight of the connection to a given neighbor Cell.
 	-- @arg xIndex A number with the x value of the Cell.
 	-- @arg yIndex A number with the y value of the Cell.
-	-- @usage n:getCellWeight(2, 2)
+	-- @usage -- n:getCellWeight(2, 2)
 	-- @deprecated Neighborhood:getWeight
 	getCellWeight = function(self, xIndex, yIndex)
 		deprecatedFunction("getCellWeight", "getWeight")
 	end,
 	--- Return the unique identifier of the Neighborhood. It represents
 	-- the index if the Neighborhood in the Cell it was added.
-	-- @usage n:getID()
+	-- @usage n = Neighborhood()
+	-- n:getID()
 	getID = function(self)
 		return self.cObj_:getID()
 	end,
 	--- Return the weight of the connection to a given neighbor Cell.
 	-- @arg cell A Cell.
-	-- @usage n:getNeighWeight(cell)
+	-- @usage -- n:getNeighWeight(cell)
 	-- @deprecated Neighborhood:getWeight
 	getNeighWeight = function(self, cell)
 		deprecatedFunction("getNeighWeight", "getWeight")

@@ -53,7 +53,8 @@ Random_ = {
 	-- If it is the only argument, it will return a number between zero and this value.
 	-- @arg v2 An integer number. When used, integer() will return a number between the first
 	-- argument and the second, inclusive.
-	-- @usage value = random:integer() -- 0 or 1
+	-- @usage random = Random()
+	-- value = random:integer() -- 0 or 1
 	--
 	-- value = random:integer(10) -- from 0 to 10
 	--
@@ -85,7 +86,8 @@ Random_ = {
 	-- If it is the only argument used, it will return a number from zero to this value.
 	-- @arg v2 A number. When used, number() will return a number between the first argument
 	-- and the second.
-	-- @usage value = random:number() -- between 0 and 1
+	-- @usage random = Random()
+	-- value = random:number() -- between 0 and 1
 	--
 	-- value = random:number(10) -- between 0 and 10
 	--
@@ -121,7 +123,8 @@ Random_ = {
 	end,
 	--- Reset the seed to generate random numbers.
 	-- @arg seed An integer number with the new seed.
-	-- @usage value = random:reSeed(1)
+	-- @usage random = Random()
+	-- random:reSeed(1)
 	reSeed = function(self, seed)
 		if seed == nil then 
 			seed = tonumber(tostring(os.time()):reverse():sub(1, 6))
@@ -137,7 +140,8 @@ Random_ = {
 	end,
 	--- Return a random element from a set of values using a discrete uniform distribution.
 	-- @arg mtable A non-named table with a set of values.
-	-- @usage random:sample{2, 3, 4, 6}
+	-- @usage random = Random()
+	-- random:sample{2, 3, 4, 6}
 	sample = function(self, mtable)
 		mandatoryArgument(1, "table", mtable)
 

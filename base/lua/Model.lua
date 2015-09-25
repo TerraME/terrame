@@ -45,7 +45,7 @@ Model_ = {
 	--     end
 	-- }
 	--
-	-- Tube:configure()
+	-- -- Tube:configure()
 	configure = function(self)
 	end,
 	--- Run the Model instance. It requires that the Model instance has attribute finalTime.

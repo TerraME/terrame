@@ -325,7 +325,7 @@ end
 --- Pause the simulation for a given time.
 -- @arg delay_s A number indicating how long in seconds should the model pause.
 -- The default value is 1.
--- @usage delay(2.5)
+-- @usage delay(0.1)
 function delay(delay_s)
 	optionalArgument(1, "number", delay_s)
 

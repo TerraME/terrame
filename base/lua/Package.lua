@@ -30,7 +30,7 @@
 -- within the package.
 -- @arg filename A string with the name of the file.
 -- @arg package A string with the name of the package. As default, it uses package base.
--- @usage file("cs.csv")
+-- @usage file("simple-cs.csv")
 --
 -- cs = CellularSpace{database = file("simple.map")}
 function file(filename, package)
