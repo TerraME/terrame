@@ -48,9 +48,21 @@ Agent_ = {
 	-- same id (if it exists) without showing any warning message.
 	-- @arg set A SocialNetwork.
 	-- @arg id Name of the relation. The default value is "1".
-	-- @usage agent:addSocialNetwork(network)
+	-- @usage agent = Agent{}
 	--
-	-- agent:addSocialNetwork(network, "friends")
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 30
+	-- }
+	--
+	-- agent = soc:sample()
+	-- friend1 = soc:sample()
+	-- friend2 = soc:sample()
+	--
+	-- sn = SocialNetwork()
+	-- sn:add(friend1)
+	-- sn:add(friend2)
+	-- agent:addSocialNetwork(sn)
 	-- @see Utils:forEachConnection
 	addSocialNetwork = function(self, set, id)
 		if type(set) ~= "SocialNetwork" and type(set) ~= "function" then
@@ -74,7 +86,13 @@ Agent_ = {
 	-- a single Cell in each placement. If more complex relations are used
 	-- in the model, then the modeler should set this argument as false
 	-- and remove the relations by himself/herself.
-	-- @usage agent:die()
+	-- @usage agent = Agent{
+	--     execute = function(self)
+	--         if self.energy <= 0 then
+	--             agent:die()
+	--         end
+	--     end
+	-- }
 	die = function(self, remove_placements)
 		optionalArgument(1, "boolean", remove_placements)
 		if remove_placements == nil then remove_placements = true end
@@ -91,6 +109,7 @@ Agent_ = {
 				end
 			end)
 		end
+
 		self.execute = function() customWarning("Trying to execute a dead agent.") end
 		-- remove all the possible ways of getting delayed messages
 		forEachElement(self, function(idx, _, mtype)
@@ -100,9 +119,11 @@ Agent_ = {
 				end
 			end
 		end)
+
 		self.on_message = function()
 			customWarning("Trying to send a message to a dead Agent.")
 		end
+
 		self.parent:remove(self)
 		setmetatable(self, deadAgentMetaTable_)
 	end,
@@ -112,9 +133,20 @@ Agent_ = {
 	-- use Agent:enter(), Agent:leave(), Agent:move(), or Agent:walk().
 	-- @arg cell A Cell.
 	-- @arg placement A string representing the index to be used. The default value is "placement".
-	-- @usage agent:enter(newcell)
+	-- @usage soc = Society{
+	--     instance = Agent{},
+	--     quantity = 30
+	-- }
 	--
-	-- agent:enter(newcell, "renting")
+	-- cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- env = Environment{soc, cs}
+	-- env:createPlacement{strategy = "void"}
+	-- 
+	-- agent = soc:sample()
+	-- agent:enter(cs:sample())
 	-- @see Environment:createPlacement
 	enter = function(self, cell, placement)
 		mandatoryArgument(1, "Cell", cell)
@@ -153,7 +185,7 @@ Agent_ = {
 	--     end
 	-- }
 	--
-	-- agent:execute(event)
+	-- agent:execute()
 	execute = function(self, event)
 		mandatoryArgument(1, "Event", event)
 
@@ -168,7 +200,20 @@ Agent_ = {
 	--- Return the Cell where the Agent is located according to its placement. It assumes
 	-- that each Agent belongs to at most one Cell.
 	-- @arg placement A string representing the index to be used. The default value is "placement".
-	-- @usage cell = agent:getCell()
+	-- @usage soc = Society{
+	--     instance = Agent{},
+	--     quantity = 30
+	-- }
+	--
+	-- cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- env = Environment{soc, cs}
+	-- env:createPlacement{}
+	-- 
+	-- agent = soc:sample()
+	-- cell = agent:getCell()
 	getCell = function(self, placement)
 		optionalArgument(1, "string", placement)
 		if placement == nil then placement = "placement" end
@@ -180,7 +225,21 @@ Agent_ = {
 	end,
 	--- Return a vector with the Cells pointed by the Agent.
 	-- @arg placement A string representing the index to be used. The default value is "placement".
-	-- @usage cell = agent:getCells()[1]
+	-- @usage soc = Society{
+	--     instance = Agent{},
+	--     quantity = 30
+	-- }
+	--
+	-- cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- env = Environment{soc, cs}
+	-- env:createPlacement{}
+	-- 
+	-- agent = soc:sample()
+	--
+	-- cell = agent:getCells()[1]
 	getCells = function(self, placement)
 		optionalArgument(1, "string", placement)
 		if placement == nil then placement = "placement" end
@@ -192,7 +251,7 @@ Agent_ = {
 		return self[placement].cells
 	end,
 	--- Return the unique identifier of the Agent.
-	-- @usage id = agent:getId()
+	-- @usage -- id = agent:getId()
 	-- @deprecated Agent.id
 	getId = function(self)
 		deprecatedFunction("getId", ".id")
@@ -200,11 +259,11 @@ Agent_ = {
 	--- Return the time when the State machine executed the transition to the current state.
 	-- Before executing for the first time, the latency is zero.
 	-- This function is useful only when the Agent is described as a State machine.
-	-- @usage latency = agent:getLatency()
+	-- @usage -- latency = agent:getLatency()
 	getLatency = function(self)
 		return self.cObj_:getLatency()
 	end,
-	--- Returns a SocialNetwork of the Agent given its name.
+	--- Return a SocialNetwork of the Agent given its name.
 	-- @arg id Name of the SocialNetwork.
 	-- @usage net = agent:getSocialNetwork("friends")
 	-- @see Society:createSocialNetwork
@@ -219,16 +278,18 @@ Agent_ = {
 		end
 		return s
 	end,
-	--- Returns a string with the current State name. This function is useful only when the
+	--- Return a string with the current State name. This function is useful only when the
 	-- Agent is described as a state machine.
-	-- @usage name = agent:getStateName()
+	-- @usage -- DONTRUN
+	-- name = agent:getStateName()
 	getStateName = function(self)
 		return self.cObj_:getControlModeName()
 	end,
 	--- Return the status of the Trajectories of the Agent. 
 	-- This function is useful only when the Agent is described as a State machine.
 	-- @see Agent:setTrajectoryStatus
-	-- @usage agent:getTrajectoryStatus()
+	-- @usage -- DONTRUN
+	-- agent:getTrajectoryStatus()
 	getTrajectoryStatus = function(self)
 		return self.cObj_:getActionRegionStatus()
 	end,
@@ -307,9 +368,16 @@ Agent_ = {
 	-- Whenever a delayed message is received, it comes with an attribute delay equals to true.
 	-- @arg data.... Other arguments are allowed to this function, as the message is a table.
 	-- The receiver will get all the attributes sent plus an attribute called sender. 
-	-- @usage agent:message{
-	--     receiver = agent2,
-	--     delay = 2,
+	-- @usage agent1 = Agent{
+	--     on_message = function(self, message)
+	--         print("Got money:"..message.quantity)
+	--     end
+	-- }
+	--
+	-- agent2 = Agent{}
+	--
+	-- agent2:message{
+	--     receiver = agent1,
 	--     content = "money",
 	--     quantity = 20
 	-- }
@@ -371,7 +439,13 @@ Agent_ = {
 	-- @arg modelTime A number representing the notification time. The default value is zero.
 	-- It is also possible to use an Event as argument. In this case, it will use the result of
 	-- Event:getTime().
-	-- @usage agent:notify()
+	-- @usage agent = Agent{
+	--     value = 1
+	-- }
+	--
+	-- Chart{target = agent}
+	-- agent:notify()
+	-- agent:notify()
 	notify = function(self, modelTime)
 		if modelTime == nil then
 			modelTime = 0
@@ -409,19 +483,23 @@ Agent_ = {
 	--         self.money = self.money + message.quantity
 	--         self:message{receiver = message.sender, content = "thanks"}
 	--     end,
-	--     --...
 	--     on_thanks = function(self, message)
 	--         self:message{receiver = message.sender, content = "yourewelcome"}
 	--     end
-	--     --...
 	-- }
+	--
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 10
+	-- }
+	--
+	-- soc:sample():message{
 	-- @arg message A table with the received message. It has an attribute called sender with
 	-- the Agent that sent the message.
 	on_message = function(self, message)
 		customError("Agent "..self.id.." does not implement 'on_message'.")
 	end,
 	--- Execute a random walk to a neighbor Cell.
-	-- @usage agent:randomWalk()
 	-- @deprecated Agent:walk
 	randomWalk = function(self)
 		deprecatedFunction("randomWalk", "walk")
@@ -483,7 +561,6 @@ Agent_ = {
 	end,
 	--- Set the unique identifier of the Agent.
 	-- @arg name A string with the new unique identifier.
-	-- @usage agent:setId("newid")
 	-- @deprecated Agent.id
 	setId = function(self, name)
 		deprecatedFunction("setId", ".id")
@@ -494,7 +571,7 @@ Agent_ = {
 	-- traverse all trajectories defined within it, which means that Agent:execute() will
 	-- be executed once for each of its Cells. This function is useful only when the
 	-- Agent is described as a State machine.
-	-- @usage agent:setTrajectoryStatus(true)
+	-- @usage -- agent:setTrajectoryStatus(true)
 	setTrajectoryStatus = function(self, status)
 		optionalArgument(1, "boolean", status)
 		if status == nil then status = false end
@@ -508,9 +585,16 @@ Agent_ = {
 	-- is "placement".
 	-- @arg neighborhood A string representing the Neighborhood to be used.
 	-- The default value is "1.
-	-- @usage agent:walk()
+	-- @usage singleFooAgent = Agent{}
 	--
-	-- agent:walk("moore")
+	-- cs = CellularSpace{xdim = 10}
+	-- cs:createNeighborhood()
+	--
+	-- e = Environment{cs, singleFooAgent}
+	-- e:createPlacement()
+	-- 
+	-- singleFooAgent:walk()
+	-- singleFooAgent:walk()
 	-- @see Environment:createPlacement
 	walk = function(self, placement, neighborhood)
 		optionalArgument(1, "string", placement)
@@ -559,13 +643,7 @@ metaTableAgent_ = {__index = Agent_, __tostring = _Gtme.tostring}
 -- Agent belongs to an Environment or to a Society that belongs to
 -- an Environment).
 -- @output socialnetworks A set of SocialNetworks with the connections of the Agent.
--- @usage agent = Agent{
---     State{...},
---     -- ...
---     State{...}
--- }
---
--- singleFooAgent = Agent{
+-- @usage singleFooAgent = Agent{
 --     size = 10,
 --     name = "foo",
 --     execute = function(self)
@@ -573,7 +651,7 @@ metaTableAgent_ = {__index = Agent_, __tostring = _Gtme.tostring}
 --         self:walk()
 --     end,
 --     on_hello = function(self, m)
---         self:message {
+--         self:message{
 --             receiver = m.sender,
 --             content = "hi"
 --         }

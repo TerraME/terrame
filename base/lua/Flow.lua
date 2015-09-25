@@ -30,7 +30,7 @@ metaTableFlow_ = {__tostring = _Gtme.tostring}
 -- @arg data.1st A function(ev, agent, cell), where the arguments are: an Event that 
 -- activated the Flow, the Automaton or Agent that owns the Flow, and the Cell over which
 -- the Flow will be evaluated.
--- @usage Flow { function(ev, agent, cell)
+-- @usage Flow{function(ev, agent, cell)
 --     agent.value = agent.value + 2
 -- end}
 function Flow(data)

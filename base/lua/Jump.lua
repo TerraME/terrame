@@ -29,7 +29,7 @@
 -- @arg data.1st a function that returns a boolean value and takes as arguments an Event,
 -- an Agent or Automaton, and a Cell, respectively.
 -- @arg data.target a string with another State id.
--- @usage Jump {
+-- @usage Jump{
 --     function(ev, agent, c)
 --         return c.water > c.capInf
 --     end,

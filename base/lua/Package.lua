@@ -30,9 +30,7 @@
 -- within the package.
 -- @arg filename A string with the name of the file.
 -- @arg package A string with the name of the package. As default, it uses paciage base.
--- @usage file("cs.csv") 
---
--- cs = CellularSpace{database = file("simple.map")}
+-- @usage cs = CellularSpace{database = file("simple.map")}
 function file(filename, package)
 	if package == nil then package = "base" end
 
@@ -48,7 +46,8 @@ end
 --- Load a given package. If the package is not installed, it tries to load from
 -- a folder in the current directory.
 -- @arg package A package name.
--- @usage import("calibration")
+-- @usage -- DONTRUN
+-- import("calibration")
 function import(package)
 	mandatoryArgument(1, "string", package)
 
@@ -149,7 +148,9 @@ end
 
 --- Return whether a given package is loaded.
 -- @arg package A string with the name of the package.
--- @usage isLoaded("base")
+-- @usage if isLoaded("base") then
+--     print("is loaded")
+-- end
 function isLoaded(package)
 	mandatoryArgument(1, "string", package)
 	return _Gtme.loadedPackages[package] == true
@@ -275,7 +276,8 @@ end
 -- For example: 1, 0.2, 2.5.2.
 -- @arg package A string with the name of the package. If nil, packageInfo will return
 -- the description of TerraME.
--- @usage packageInfo().version
+-- @usage str = packageInfo().version
+-- print(str)
 function packageInfo(package)
 	if package == nil or package == "terrame" then
 		package = "base"

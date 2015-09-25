@@ -28,7 +28,13 @@ Clock_ = {
   
 	--- Save a Clock into a file. Supported extensions are bmp, jpg, png, and tiff.
 	-- @arg file A string with the file name.
-	-- @usage clock:save("file.bmp")
+	-- @usage timer = Timer{
+	--     Event{action = function() end}
+	-- }
+	-- 
+	-- clock = Clock{target = timer}
+	--
+	-- clock:save("file.bmp")
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 
@@ -49,7 +55,15 @@ metaTableClock_ = {__index = Clock_}
 
 --- Create a display with the current time and Event queue of a given Timer.
 -- @arg data.target A Timer.
--- @usage Clock{target = timer}
+-- @usage timer = Timer{
+--     Event{action = function() end},
+--     Event{period = 2, action = function() end}
+-- }
+-- 
+-- Clock{target = timer}
+--
+-- timer:execute(3)
+-- timer:notify()
 Clock = function(data)
 	mandatoryTableArgument(data, "target", "Timer")
 

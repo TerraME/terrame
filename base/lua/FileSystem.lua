@@ -1,4 +1,4 @@
---@header Functions to handle files and directories.
+-- @header Functions to handle files and directories.
 -- Most of the functions bellow are taken from LuaFileSystem 1.6.2.
 -- Copyright Kepler Project 2003 (http://www.keplerproject.org/luafilesystem).
 
@@ -44,7 +44,7 @@
 -- block allocated for file; (Unix only) \
 -- "blksize" &
 -- optimal file system I/O blocksize; (Unix only)
--- @usage attributes(filepath, "mode")
+-- @usage attributes(packageInfo("base").path, "mode")
 function attributes(filepath, attributename)
 	mandatoryArgument(1, "string", filepath)
 	optionalArgument(2, "string", attributename)
@@ -55,7 +55,8 @@ end
 --- Change the current working directory to the given path.
 -- Returns true in case of success or nil plus an error string.
 -- @arg path A string with the path.
--- @usage chDir("c:\\tests")
+-- @usage -- DONTRUN
+-- chDir("c:\\tests")
 function chDir(path)
 	mandatoryArgument(1, "string", path)
 
@@ -63,13 +64,18 @@ function chDir(path)
 end
 
 --- Return a string with the current working directory or nil plus an error string.
--- @usage currentDir()
+-- @usage dir = currentDir()
+-- print(dir)
 function currentDir()
 	return lfs.currentdir()
 end
 
 --- Returns true if the operating system is Windows, otherwise returns false.
--- @usage isWindowsOS()
+-- @usage if isWindowsOS() then
+--     print("is windows")
+-- else
+--     print("not windows")
+-- end
 function isWindowsOS()
 	if sessionInfo().separator == "/" then
 		return false
@@ -81,7 +87,11 @@ end
 --- Return the files in a given directory.
 -- @arg folder A string describing a folder.
 -- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
--- @usage dir("C:\\")
+-- @usage files = dir(".")
+--
+-- forEachFile(files, function(file)
+--     print(file)
+-- end)
 function dir(folder, all)
 	mandatoryArgument(1, "string", folder)
 	optionalArgument(2, "boolean", all)
@@ -107,7 +117,9 @@ end
 
 --- Return whether a given string represents a directory stored in the computer.
 -- @arg path A string.
--- @usage isDir("C:\\TerraME\bin")
+-- @usage if isDir("C:\\TerraME\\bin") then
+--     print("is dir")
+-- end
 function isDir(path)
 	mandatoryArgument(1, "string", path)
 
@@ -125,7 +137,9 @@ end
 --- Return whether a given string represents a file stored in the computer.
 -- A directory is also considered a file.
 -- @arg file A string.
--- @usage isFile("C:\\file.txt")
+-- @usage if isFile("C:\\file.txt") then
+--     print("is file")
+-- end
 function isFile(file)
 	mandatoryArgument(1, "string", file)
 
@@ -144,7 +158,8 @@ end
 -- to FileSystem:attributes().
 -- @arg filepath A string with the file path.
 -- @arg attributename A string with the name of the attribute to be read.
--- @usage linkAttributes(filepath, "size")
+-- @usage -- DONTRUN
+-- linkAttributes(filepath, "size")
 function linkAttributes(filepath, attributename)
 	mandatoryArgument(1, "string", filepath)
 	optionalArgument(2, "string", attributename)
@@ -159,8 +174,10 @@ end
 -- @arg fh A file handle with the file to be locked.
 -- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w
 -- (for a write/exclusive lock).
--- @usage filehandle = io.open("test.txt", "w+")
+-- @usage filehandle = io.open(file("agents.csv", "base"), "r")
 -- lock(filehandle, "r")
+-- unlock(filehandle)
+-- @see unlock
 function lock(fh, mode)
 	mandatoryArgument(1, "userdata", fh)
 	mandatoryArgument(2, "string", mode)
@@ -175,7 +192,8 @@ end
 -- In case of any errors it returns nil and the error message. In particular, if the lock exists and is
 -- not stale it returns the "File exists" message.
 -- @arg path A string with the path.
--- @usage lockDir(path)
+-- @usage lock = lockDir(packageInfo("base").path)
+-- lock:free()
 function lockDir(path)
 	mandatoryArgument(1, "string", path)
 
@@ -185,7 +203,8 @@ end
 --- Create a new directory. The argument is the name of the new directory.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 -- @arg path A string with the path.
--- @usage mkDir(dirname)
+-- @usage -- DONTRUN
+-- mkDir("mydirectory")
 function mkDir(path)
 	mandatoryArgument(1, "string", path)
 
@@ -195,7 +214,8 @@ end
 --- Remove an existing directory. The argument is the name of the directory.
 -- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
 -- @arg path A string with the path.
--- @usage rmDir(dirname)
+-- @usage -- DONTRUN
+-- rmDir("mydirectory"))
 function rmDir(path)
 	mandatoryArgument(1, "string", path)
 
@@ -241,7 +261,7 @@ end
 -- @arg filepath A string with the file name.
 -- @arg atime The new access time (in seconds).
 -- @arg mtime The new modification time (in seconds).
--- @usage touch(filepath)
+-- @usage touch(packageInfo("base").path)
 function touch(filepath, atime, mtime)
 	mandatoryArgument(1, "string", filepath)
 	mandatoryArgument(2, "number", atime)
@@ -255,8 +275,10 @@ end
 -- a starting point and its length; both should be numbers. It returns true if the operation was
 -- successful. In case of error, it returns nil plus an error string.
 -- @arg fh A file handle with the file to be locked.
--- @usage filehandle = io.open("test.txt", "w+")
+-- @usage filehandle = io.open(file("agents.csv", "base"), "r")
+-- lock(filehandle, "r")
 -- unlock(filehandle)
+-- @see lock
 function unlock(fh)
 	mandatoryArgument(1, "userdata", fh)
 

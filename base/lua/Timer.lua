@@ -30,7 +30,9 @@ Timer_ = {
 	--- Add a new Event to the timer. If the Event has a start time less than the current
 	-- simulation time then add() will prompt a warning (but the Event will be added).
 	-- @arg event An Event.
-	-- @usage timer:add(Event{...})
+	-- @usage timer = Timer{}
+	--
+	-- timer:add(Event{action = function() end})
 	add = function (self, event)
 		mandatoryArgument(1, "Event", event)
 
@@ -52,7 +54,11 @@ Timer_ = {
 	-- Events are scheduled to execute after the final time, or when there is no remaining Events.
 	-- @arg finalTime A number representing the final time of the simulation.
 	-- This argument is mandatory.
-	-- @usage timer:execute(2013)
+	-- @usage timer = Timer{
+	--     Event{action = function() print("step") end}
+	-- }
+	--
+	-- timer:execute(10)
 	execute = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
 
@@ -65,18 +71,40 @@ Timer_ = {
 		self.cObj_:execute(finalTime)
 	end,
 	--- Return the current simulation time.
-	-- @usage print(timer:getTime())
+	-- @usage timer = Timer{
+	--     Event{action = function() print("step") end}
+	-- }
+	--
+	-- timer:execute(10)
+	-- print(timer:getTime())
 	getTime = function(self)
 		return self.cObj_:getTime()
 	end,
 	--- Notify every Observer connected to the Timer.
-	-- @usage timer:notify()
+	-- @usage timer = Timer{
+	--     Event{action = function() print("step") end}
+	-- }
+	--
+	-- Clock{target = timer}
+	--
+	-- timer:execute(10)
+	--
+	-- timer:notify()
 	notify = function(self)
 		local modelTime = self:getTime()
 		self.cObj_:notify(modelTime)
 	end,
 	--- Reset the Timer to time minus infinite, keeping the same Event queue.
-	-- @usage timer:reset()
+	-- @usage timer = Timer{
+	--     Event{action = function() print("step") end}
+	-- }
+	--
+	-- Clock{target = timer}
+	--
+	-- timer:execute(10)
+	--
+	-- timer:reset()
+	-- print(timer:getTime())
 	reset = function(self)
 		self.cObj_:reset()
 	end
@@ -90,11 +118,18 @@ metaTableTimer_ = {__index = Timer_, __tostring = _Gtme.tostring}
 -- it ensures that all the Events before that time were already executed.
 -- @arg data.... A set of Events.
 -- @usage timer = Timer{
---     Event{...},
---     Event{...},
---     -- ...
---     Event{...}
+--     Event{action = function()
+--         print("each time step")
+--     end},
+--     Event{period = 2, action = function()
+--         print("each two time steps")
+--     end},
+--     Event{priority = "high", period = 4, action = function()}
+--         print("each four time steps")
+--     end}
 -- }
+--
+-- timer:execute(10)
 function Timer(data)
 	if type(data) ~= "table" then
 		if data == nil then
