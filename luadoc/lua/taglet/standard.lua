@@ -718,7 +718,7 @@ local function check_usage(files, doc_report)
 			local functions = files[file_name].functions
 			for j = 1, #functions do
 				local function_name = functions[j]
-				if not functions[function_name].usage then
+				if not functions[function_name].usage and not functions[function_name].deprecated then
 					if not no_usage[file_name] then
 						no_usage[file_name] = {}
 						table.insert(no_usage, file_name)

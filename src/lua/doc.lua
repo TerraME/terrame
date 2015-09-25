@@ -598,11 +598,11 @@ function _Gtme.executeDoc(package)
 	end
 
 	if doc_report.lack_usage == 1 then
-		printError("One out of "..doc_report.functions.." functions does not have @usage.")
+		printError("One non-deprecated function does not have @usage.")
 	elseif doc_report.lack_usage > 1 then
-		printError(doc_report.lack_usage.." out of "..doc_report.functions.." functions do not have @usage.")
+		printError(doc_report.lack_usage.." non-deprecated functions do not have @usage.")
 	else
-		printNote("All "..doc_report.functions.." functions have @usage.")
+		printNote("All non-deprecated functions have @usage.")
 	end
 
 	if doc_report.no_call_itself_usage == 1 then
