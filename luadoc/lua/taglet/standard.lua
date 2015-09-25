@@ -749,12 +749,19 @@ local function check_usage(files, doc_report)
 					local base = getPackage("base")
 
 					base.print = function() end
+					local usage = functions[function_name].usage
 
-				    print("Testing "..function_name)
-					xpcall(load(functions[function_name].usage, nil, "t", base), function(err)
-				    	printError("Error: "..err)
-						doc_report.usage_error = doc_report.usage_error + 1
-					end)
+					if string.find(usage, "DONTRUN") then
+						print("Skipping "..function_name)
+					else
+				    	print("Testing "..function_name)
+						xpcall(load(usage, nil, "t", base), function(err)
+				    		printError("Error: "..err)
+							doc_report.usage_error = doc_report.usage_error + 1
+						end)
+					end
+
+					base.clean()
 				end
 			end
 		end
