@@ -1491,7 +1491,20 @@ Map_ = {
 	type_ = "Map",
 	--- Save a Map into a file. Supported extensions are bmp, jpg, png, and tiff.
 	-- @arg file A string with the file name.
-	-- @usage map:save("file.bmp")
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- map = Map{
+	--     target = cs,
+	--     select = "x",
+	--     min = 0,
+	--     max = 10,
+	--     slices = 4,
+	--     color = "Blues"
+	-- }
+	--
+	-- map:save("file.bmp")
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 
@@ -1575,7 +1588,17 @@ metaTableMap_ = {__index = Map_}
 -- the chosen strategy.
 -- @arg data.invert Invert the order of the colors when using ColorBrewer. The default value is false.
 -- @arg data.select A string with the name of the attribute to be visualized.
--- @usage Map{
+-- @usage cs = CellularSpace{
+--     xdim = 10
+-- }
+--
+-- forEachCell(cs, function(cell)
+--     cell.temperature = Random():number(0, 50)
+--     cell.seggregation = Random():sample(0, 1, 2)
+--     cell.forest = Random():number()
+-- end)
+--
+-- Map{
 --     target = cs,
 --     select = "temperature",
 --     min = 0,

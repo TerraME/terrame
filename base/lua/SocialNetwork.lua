@@ -30,10 +30,12 @@ SocialNetwork_ = {
 	-- @arg connection An Agent.
 	-- @arg weight A number representing the weight of the connection). The default value is 1.
 	-- @usage sn = SocialNetwork()
-	-- agent = Agent{}
+	-- agent1 = Agent{}
+	-- agent2 = Agent{}
 	--
-	-- sn:add(agent)
-	-- sn:add(agent, 0.5)
+	-- sn:add(agent1)
+	-- sn:add(agent2, 0.5)
+	-- print(#sn)
 	add = function(self, connection, weight)
 		mandatoryArgument(1, "Agent", connection)
 		optionalArgument(2, "number", weight)
@@ -54,7 +56,14 @@ SocialNetwork_ = {
 	--- Remove all Agents from the SocialNetwork. In practice, it has the same behavior
 	-- of calling SocialNetwork() again if the SocialNetwork was not added to any Agent.
 	-- @usage sn = SocialNetwork()
+	-- agent1 = Agent{}
+	-- agent2 = Agent{}
+	--
+	-- sn:add(agent1)
+	-- sn:add(agent2)
+	--
 	-- sn:clear()
+	-- print(#sn)
 	clear = function(self)
 		self.count = 0
 		self.connections = {}
@@ -63,11 +72,14 @@ SocialNetwork_ = {
 	--- Return a number with the weight of a given connection.
 	-- @arg connection An Agent.
 	-- @usage sn = SocialNetwork()
-	-- agent = Agent{}
+	-- agent1 = Agent{}
+	-- agent2 = Agent{}
 	--
-	-- sn:add(agent, 0.2)
+	-- sn:add(agent1)
+	-- sn:add(agent2, 0.5)
 	--
-	-- print(sn:getWeight(agent))
+	-- print(sn:getWeight(agent1))
+	-- print(sn:getWeight(agent2))
 	getWeight = function(self, connection)
 		mandatoryArgument(1, "Agent", connection)
 
@@ -89,7 +101,7 @@ SocialNetwork_ = {
 	-- sn:add(agent)
 	--
 	-- if sn:isConnection(agent) then
-	--     print("not connected")
+	--     print("connected")
 	-- end
 	isConnection = function(self, connection)
 		mandatoryArgument(1, "Agent", connection)
@@ -107,7 +119,14 @@ SocialNetwork_ = {
 	--- Remove an Agent from the SocialNetwork.
 	-- @arg connection An Agent.
 	-- @usage sn = SocialNetwork()
-	-- sn:remove(agent)
+	-- agent1 = Agent{}
+	-- agent2 = Agent{}
+	--
+	-- sn:add(agent1)
+	-- sn:add(agent2)
+	--
+	-- sn:remove(agent1)
+	-- print(#sn)
 	remove = function(self, connection)
 		mandatoryArgument(1, "Agent", connection)
 
@@ -122,6 +141,12 @@ SocialNetwork_ = {
 	end,
 	--- Return a random Agent from the SocialNetwork.
 	-- @usage sn = SocialNetwork()
+	-- agent1 = Agent{}
+	-- agent2 = Agent{}
+	--
+	-- sn:add(agent1)
+	-- sn:add(agent2)
+	--
 	-- agent = sn:sample()
 	sample = function(self)
 		if self:isEmpty() then
@@ -145,7 +170,14 @@ SocialNetwork_ = {
 	-- @arg connection An Agent.
 	-- @arg weight A number with the new weight.
 	-- @usage sn = SocialNetwork()
-	-- sn:setWeight(agent, 0.001)
+	-- agent1 = Agent{}
+	-- agent2 = Agent{}
+	--
+	-- sn:add(agent1)
+	-- sn:add(agent2, 0.5)
+	-- sn:setWeight(agent1, 0.001)
+	--
+	-- print(sn:getWeight(agent1))
 	setWeight = function(self, connection, weight)
 		mandatoryArgument(1, "Agent", connection)
 		mandatoryArgument(2, "number", weight)
@@ -161,7 +193,6 @@ SocialNetwork_ = {
 		self.weights[id] = weight
 	end,
 	--- Retrieve the number of connections in the SocialNetwork.
-	-- @usage -- sn:size()
 	-- @deprecated SocialNetwork:#
 	size = function(self)
 		deprecatedFunction("size", "operator #")
@@ -192,7 +223,8 @@ metaTableSocialNetwork_ = {
 -- @output weights The weights of the Agents in the SocialNetwork.
 -- @output count The number of Agents in the SocialNetwork.
 -- @usage sn = SocialNetwork()
---  sn = SocialNetwork{}
+-- sn = SocialNetwork{}
+-- @see Society:createSocialNetwork
 function SocialNetwork()
 	local data = {}
 

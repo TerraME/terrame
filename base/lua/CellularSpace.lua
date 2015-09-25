@@ -452,7 +452,12 @@ CellularSpace_ = {
 	type_ = "CellularSpace",
 	--- Add a new Cell to the CellularSpace. It will be the last Cell of the CellularSpace when one uses Utils:forEachCell().
 	-- @arg cell A Cell.
-	-- @usage cs:add(cell)
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- cell = Cell{}
+	-- cs:add(cell)
 	add = function(self, cell)
 		if type(cell) ~= "Cell" then
 			incompatibleTypeError(1, "Cell", cell)
@@ -517,7 +522,11 @@ CellularSpace_ = {
 	-- function will be called only if filter returns true.
 	-- @arg data.wrap Will the Cells in the borders be connected to the Cells in the
 	-- opposite border? The default value is false.
-	-- @usage cs:createNeighborhood() -- moore
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- cs:createNeighborhood() -- moore
 	--
 	-- cs:createNeighborhood{
 	--     name = "moore"
@@ -534,10 +543,14 @@ CellularSpace_ = {
 	--     n = 4
 	-- }
 	--
-	-- -- c2 overlaps cs1
-	-- cs1:createNeighborhood{
+	--
+	-- cs2 = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- cs:createNeighborhood{
 	--     strategy = "mxn",
-	--     target = cs2, -- other cs
+	--     target = cs2,
 	--     m = 3,
 	--     n = 2,
 	--     name = "spatialCoupling"
@@ -673,7 +686,10 @@ CellularSpace_ = {
 	-- @arg data.xmax A number with the maximum value of x.
 	-- @arg data.ymin A number with the minimum value of y.
 	-- @arg data.ymax A number with the maximum value of y.
-	-- @usage cs:cut{xmin = 3, ymax = 8}
+	-- @usage cs = CellularSpace{xdim = 10}
+	--
+	-- cs2 = cs:cut{xmin = 3, ymax = 8}
+	-- print(#cs2)
 	cut = function(self, data)
 		if data == nil then
 			data = {}
@@ -703,8 +719,14 @@ CellularSpace_ = {
 	-- @arg xIndex A number indicating an x coordinate. It can also be a string with the object id.
 	-- @arg yIndex A number indicating a y coordinate. This argument is unnecessary when the first 
 	-- argument is a string.
-	-- @usage cs:get(2, 2)
-	-- cs:get("5")
+	-- @usage cs = CellularSpace{xdim = 10}
+	--
+	-- cell = cs:get(2, 2)
+	-- print(cell.x)
+	-- print(cell.y)
+	--
+	-- cell = cs:get("5")
+	-- print(cell.id)
 	get = function(self, xIndex, yIndex)
 		if type(xIndex) == "string" then
 			if yIndex ~= nil then
@@ -728,20 +750,17 @@ CellularSpace_ = {
 	--- Return a Cell from the CellularSpace given its x and y location.
 	-- @arg xIndex A number with the x location of the Cell to be returned.
 	-- @arg yIndex A number with the y location of the Cell to be returned.
-	-- @usage cs:getCell(2, 2)
 	-- @deprecated CellularSpace:get
 	getCell = function(self, xIndex, yIndex)
 		deprecatedFunction("getCell", "get")
 	end,
 	--- Return a Cell from the CellularSpace given its id.
 	-- @arg cellID A string with the unique identifier of the Cell to be returned.
-	-- @usage cs:getCellByID("2")
 	-- @deprecated CellularSpace:get
 	getCellByID = function(self, cellID)
 		deprecatedFunction("getCellByID", "get")
 	end,
 	--- Return all the Cells of the CellularSpace in a table indexed by numbers.
-	-- @usage cs:getCells()
 	-- @deprecated CellularSpace.cells
 	getCells = function(self)
 		deprecatedFunction("getCells", ".cells")
@@ -749,6 +768,7 @@ CellularSpace_ = {
 	--- Load the CellularSpace from the database. TerraME automatically executes this function when
 	-- the CellularSpace is created, but one can execute this to load the attributes again, erasing
 	-- all attributes and relations created by the modeler.
+	-- @usage cs = CellularSpace{xdim = 10}
 	-- @usage cs:load()
 	load = function(self)
 		customError("Load function was not implemented.")
@@ -768,6 +788,7 @@ CellularSpace_ = {
 	-- "*.gpm" & Load a Neighborhood from a GPM (generalized proximity matrix) file. \
 	-- Any other & Load a Neighborhood from table stored in the same database of the 
 	-- CellularSpace. \
+	-- @usage cs = CellularSpace{xdim = 10}
 	-- @usage cs:loadNeighborhood{
 	--     source = "n.gpm"
 	-- }
@@ -806,8 +827,15 @@ CellularSpace_ = {
 	-- @arg modelTime A number representing the notification time. The default value is zero.
 	-- It is also possible to use an Event as argument. In this case, it will use the result of
 	-- Event:getTime().
-	-- @usage cs:notify()
-	-- cs:notify(event)
+	-- @usage cs = CellularSpace{
+	--     xdim = 10,
+	--     value = 5
+	-- }
+	--
+	-- Chart{target = cs}
+	--
+	-- cs:notify()
+	-- cs:notify()
 	notify = function(self, modelTime)
 		if modelTime == nil then
 			modelTime = 0
@@ -872,7 +900,6 @@ CellularSpace_ = {
 		local erros = self.cObj_:save(time, outputTableName, attrNames, self.cells)
 	end,
 	--- Return the number of Cells in the CellularSpace.
-	-- @usage print(cs:size())
 	-- @deprecated CellularSpace:#
 	size = function(self)
 		deprecatedFunction("size", "operator #")
@@ -979,7 +1006,9 @@ CellularSpace_ = {
 metaTableCellularSpace_ = {
 	__index = CellularSpace_,
 	--- Return the number of Cells in the CellularSpace.
-	-- @usage print(#cs)
+	-- @usage cs = CellularSpace{xdim = 5}
+	--
+	-- print(#cs)
 	__len = function(self)
 		return #self.cells
 	end,
@@ -1068,20 +1097,8 @@ metaTableCellularSpace_ = {
 -- }
 -- 
 -- cs2 = CellularSpace{
---     database = "d:\\db.mdb",
---     layer = "cells_10",
---     theme = "cells_10",
---     select = "height3 as h",
---     where = "height3 > 2"
--- }
--- 
--- cs3 = CellularSpace{
---     database = "d:\\file.shp",
--- }
--- 
--- cs4 = CellularSpace{
 --     xdim = 20,
---     ydim = 20
+--     ydim = 25
 -- }
 function CellularSpace(data)
 	verifyNamedTable(data)

@@ -3,10 +3,7 @@
 
 singleFooAgent = Agent{
 	execute = function(self)
-		local cell = self:getCell():getNeighborhood():sample()
-		if cell:isEmpty() then
-			self:move(cell)
-		end
+		self:walk()
 	end
 }
 

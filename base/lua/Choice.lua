@@ -31,7 +31,8 @@ Choice_ = {
 	-- value using a continuous uniform distribution. When sampling from
 	-- Choices that have maximum but not minimum, or minimum but not maximum, it uses
 	-- 2^52 as maximum or -2^52 as minimum.
-	-- @usage c1:sample()
+	-- @usage c = Choice{1, 2, 5, 6}
+	-- c:sample()
 	sample = function(self)
 		local r = Random()
 		if self.values then
@@ -63,7 +64,7 @@ metaTableChoice_ = {
 -- When using this argument, min and max become mandatory.
 -- @usage c1 = Choice{1, 2, 3}
 -- c2 = Choice{"low", "medium", "high"}
--- c3 = Choice{min = 2, max = 5, step = 0.1"}
+-- c3 = Choice{min = 2, max = 5, step = 0.1}
 function Choice(attrTab)
 	local result
 

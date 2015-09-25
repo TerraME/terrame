@@ -359,13 +359,11 @@ Society_ = {
 	end,
 	--- Return a given Agent based on its index.
 	-- @arg index The index of the Agent that will be returned.
-	-- @usage agent = soc:getAgent("1")
 	-- @deprecated Society:get
 	getAgent = function(self, index)
 		deprecatedFunction("getAgent", "get")
 	end,
 	--- Return a vector with the Agents of the Society.
-	-- @usage agent = soc:getAgents()[1]
 	-- @deprecated Society.agents
 	getAgents = function(self)
 		deprecatedFunction("getAgents", ".agents")
@@ -426,7 +424,13 @@ Society_ = {
 		end
 	end,
 	--- Return a random Agent from the Society.
-	-- @usage agent = soc:sample()
+	-- @usage agent = Agent{}
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 10
+	-- }
+	--
+	-- sample = soc:sample()
 	sample = function(self)
 		if #self.agents > 0 then
 			return self.agents[Random():integer(1, #self.agents)]
@@ -435,7 +439,6 @@ Society_ = {
 		end
 	end,
 	--- Return the number of Agents in the Society.
-	-- @usage print(soc:size())
 	-- @deprecated Society:#
 	size = function(self)
 		deprecatedFunction("size", "operator #")
@@ -608,31 +611,32 @@ metaTableSociety_ = {
 -- @output messages A vector that contains the delayed messages.
 -- @output parent The Environment it belongs.
 --
--- @usage my_instance = Agent{
---     execute = function(...),
---     run = function(...),
+-- @usage instance = Agent{
+--     execute = function() end,
+--     run = function() end,
 --     age = 0
 -- }
 -- 
 -- s = Society{
---     instance = my_instance,
+--     instance = instance,
 --     quantity = 20
 -- }
 -- 
 -- s:execute() -- call execute for each agent
 -- s:run() -- call run for each agent
 -- print(s:age()) -- sum of the ages of each agent
+-- print(#s)
 --
--- s = Society{
---     instance = my_instance,
---     database = "c:\\datab.mdb",
---     layer = "farmers"
+-- instance = Agent{
+--     execute = function() end
 -- }
--- 
+
 -- s = Society{
---     instance = my_instance,
---     database = "file.csv"
+--     instance = instance,
+--     database = file("agents.csv", "base")
 -- }
+--
+-- print(#s)
 function Society(data)
 	verifyNamedTable(data)
 
