@@ -1309,12 +1309,14 @@ function CellularSpace(data)
 					cell[attribute] = value
 				end
 			end)
-			cell:init()
+
 			forEachOrderedElement(data.instance, function(idx, value, mtype)
 				if mtype == "Choice" then
 					cell[idx] = value:sample()
 				end
 			end)
+
+			cell:init()
 		end)
 
 		createSummaryFunctions(data.instance)

@@ -119,13 +119,14 @@ Society_ = {
 			agent = Agent(agent)
 			local metaTable = {__index = self.instance, __tostring = _Gtme.tostring}
 			setmetatable(agent, metaTable)
-			agent:init()
 
 			forEachOrderedElement(self.instance, function(idx, value, mtype)
 				if mtype == "Choice" then
 					agent[idx] = value:sample()
 				end
 			end)
+
+			agent:init()
 		elseif mtype ~= "Agent" then
 			incompatibleTypeError(1, "Agent or table", agent)
 		end
@@ -552,6 +553,7 @@ metaTableSociety_ = {
 	end,
 	__tostring = _Gtme.tostring
 }
+
 --- Type to create and manipulate a set of Agents. Each Agent within a Society has a
 -- unique id, which is initialized while creating the Society. There are different ways to
 -- create a Society. See the argument dbType for the options.
