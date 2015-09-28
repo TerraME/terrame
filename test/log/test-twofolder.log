@@ -56,7 +56,7 @@ Skipping snapthots check
 Skipping examples
 
 Test report:
-Tests were executed in 70.94 seconds.
+Tests were executed in 72.53 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.

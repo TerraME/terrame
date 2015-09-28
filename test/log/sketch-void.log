@@ -1,0 +1,12 @@
+Verifying test files
+Package 'nolua' does not have source code
+Verifying data files
+Package 'nolua' does not have a data folder
+Verifying font files
+Package 'nolua' does not have a font folder
+
+Sketch report:
+No new test file was necessary.
+All data is already documented.
+All font files are already documented.
+Summing up, no sketch was created.

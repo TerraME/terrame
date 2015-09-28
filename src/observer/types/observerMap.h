@@ -55,7 +55,6 @@ namespace TerraMEObserver {
 
 class Decoder;
 
-
 /**
  * \brief Spatial visualization for cells and saved in the user interface
  * \see ObserverInterf
@@ -166,11 +165,6 @@ signals:
 
 public slots:
     /**
-     * Treats the legend button click
-     */
-    void butLegend_Clicked();
-
-    /**
      * Treats the zoom in button click
      */
     void butZoomIn_Clicked();
@@ -202,12 +196,6 @@ public slots:
      * \see QTreeWidget, \see QTreeWidgetItem
      */
     void treeLayers_itemChanged(QTreeWidgetItem * item, int column);
-
-    /**
-     * \deprecated Sets the painter operator mode
-     * \param idx the index of the painter operation
-     */
-    void setOperatorMode(int idx);
 
     /**
      * Treats the selected scale of zoom in the zoom comboBox
@@ -284,11 +272,6 @@ private:
     void connectTreeLayerSlot(bool on);
 
     /**
-     * \deprecated Creates the comboBox operator
-     */
-    void createOperatorComboBox();
-
-    /**
      * currentMode
      * @return
      */
@@ -336,11 +319,8 @@ private:
     QScrollArea *scrollArea;
     QFrame *frameTools;
 
-    // QLabel *lblOperator;
-    // QComboBox *operatorComboBox;
     QComboBox *zoomComboBox;
 
-    QToolButton *butLegend, *butGrid;
     QToolButton *butZoomIn, *butZoomOut;
     QToolButton *butZoomWindow, *butHand;
     QToolButton *butZoomRestore;

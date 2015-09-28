@@ -54,6 +54,7 @@ function clean()
 		setmetatable(obs, deadObserverMetaTable_)
 	end)
 	_Gtme.createdObservers = {}
+	cpp_restartobservercounter()
 end
 
 --- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
@@ -324,7 +325,7 @@ end
 --- Pause the simulation for a given time.
 -- @arg delay_s A number indicating how long in seconds should the model pause.
 -- The default value is 1.
--- @usage delay(2.5)
+-- @usage delay(0.1)
 function delay(delay_s)
 	optionalArgument(1, "number", delay_s)
 

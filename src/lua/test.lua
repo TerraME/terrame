@@ -291,7 +291,7 @@ function _Gtme.executeTests(package, fileName)
 		printError("Error: print() call detected with argument '"..tostring(arg).."'")
 	end
 
-	_, overwritten = _G.getPackage(package)
+	local pkgData, overwritten = _G.getPackage(package)
 
 	print = function() end
 
@@ -313,7 +313,6 @@ function _Gtme.executeTests(package, fileName)
 
 	local s = sessionInfo().separator
 	local baseDir = packageInfo(package).path
-	local srcDir = baseDir..s.."tests"
 
 	doc_functions = luadocMain(baseDir, dir(baseDir..s.."lua"), {}, package, {}, {}, {}, true)
 
@@ -343,34 +342,9 @@ function _Gtme.executeTests(package, fileName)
 		printNote("Found "..extra.." extra functions in the documentation")
 	end
 
-	if not isDir(srcDir) then
-		printError("Folder 'tests' does not exist in package '"..package.."'.")
-		
-		printWarning("Creating folder 'tests'")
-		mkDir(srcDir)
-
-		forEachOrderedElement(testfunctions, function(idx, value)
-			printWarning("Creating "..idx)
-
-			str = "-- Test file for "..idx.."\n"
-			str = str.."-- Author: "..packageInfo(package).authors
-			str = str.."\n\nreturn{\n"
-
-			forEachOrderedElement(value, function(func)
-				str = str.."\t"..func.." = function(unitTest)\n"
-				str = str.."\t\t-- add a test here \n"
-				str = str.."\tend,\n"
-			end)
-
-			str = str.."}\n\n"
-
-			local file = io.open(srcDir..s..idx, "w")
-			io.output(file)
-			io.write(str)
-			io.close(file)
-		end)
-
-		printWarning("Please fill the test files and run the tests again")
+	if not isDir(baseDir..s.."tests") then
+		printError("Folder 'tests' does not exist in package '"..package.."'")
+		printError("Please run 'terrame -package "..package.." -sketch' to create test files.")
 		os.exit()
 	end
 

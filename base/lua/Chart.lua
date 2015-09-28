@@ -62,7 +62,18 @@ Chart_ = {
 	type_ = "Chart",
 	--- Save a Chart into a file. Supported extensions are bmp, jpg, png, and tiff.
 	-- @arg file A string with the file name.
-	-- @usage chart:save("file.bmp")
+	-- @usage cs = CellularSpace{
+	--     xdim = 10,
+	--     value1 = 5,
+	--     value2 = 7
+	-- }
+	--
+	-- chart = Chart{target = cs}
+	--
+	-- cs:notify()
+	-- cs:notify()
+	-- cs:notify()
+	-- chart:save("file.bmp")
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 
@@ -87,7 +98,7 @@ metaTableChart_ = {__index = Chart_}
 
 --- Create a line chart showing the variation of one or more attributes (y axis) of an
 -- object. X axis values come from the single argument of notify().
--- @arg data.target An Agent, Cell, CellularSpace, or Society.
+-- @arg data.target An Agent, Cell, CellularSpace, Society, table, or instance of a Model.
 -- @arg data.select A vector of strings with the name of the attributes to be observed. If it is only a
 -- single value then it can also be described as a string. 
 -- As default, it selects all the user-defined number attributes of the target.
@@ -120,7 +131,21 @@ metaTableChart_ = {__index = Chart_}
 -- "lines", "dots", "none", "steps", and "sticks". The default value is "lines" for all lines.
 -- @arg data.xAxis Name of the attribute to be used as x axis (instead of time). In this case,
 -- notify() will not need its single argument for plotting Charts.
--- @usage Chart{target = cs}
+-- @usage cs = CellularSpace{
+--     xdim = 10,
+--     value1 = 5,
+--     value2 = 7
+-- }
+--
+-- chart = Chart{target = cs}
+--
+-- print(type(chart))
+--
+-- world = Cell{
+--     susceptible = 498,
+--     recovered = 0,
+--     infected = 2
+-- }
 --
 -- Chart{
 --     target = world,

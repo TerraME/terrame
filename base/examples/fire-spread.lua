@@ -1,5 +1,6 @@
 -- @example A simple fire spread model.
 -- @arg finalTime The final simulation time. The default value is 20.
+-- @image fire-spread.bmp
 
 STEPS = 80
 
@@ -54,9 +55,9 @@ cell = Cell{
 cs = CellularSpace{
 	dbType = config.dbType,
 	host = config.host,
-	database = "emas",
 	user = config.user,
 	password = config.password,
+	database = "emas",
 	theme = "cells1000x1000",
 	select = {"firebreak", "river", "accumulation", "fire", "state"},
 	instance = cell

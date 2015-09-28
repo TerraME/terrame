@@ -28,6 +28,13 @@ return{
 	file = function(unitTest)
 		unitTest:assertType(file("simple-cs.csv"), "string")
 	end,
+	filesByExtension = function(unitTest)
+		local files = filesByExtension("base", ".csv")
+
+		unitTest:assertType(files, "table")
+		unitTest:assertEquals(#files, 2)
+		unitTest:assertType(files[1], "string")
+	end,
 	isLoaded = function(unitTest)
 		unitTest:assert(isLoaded("base"))
 	end,
@@ -38,7 +45,7 @@ return{
 		unitTest:assertType(cs, "CellularSpace")
 
 		-- The assert below checks the number of functions in package 'base'.
-		unitTest:assertEquals(getn(base), 170)
+		unitTest:assertEquals(getn(base), 171)
 	end,
 	packageInfo = function(unitTest)
 		local r = packageInfo()

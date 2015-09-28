@@ -845,6 +845,8 @@ local function usage()
 	print("                                  creating an instance of such model.")
 	print(" -install <file>                  Install a package stored in a given file.")
 	print(" [-package <pkg>] -test           Execute unit tests.")
+	print(" [-package <pkg>] -sketch         Create test scripts for source code files missing")
+	print("                                  tests and initial documentation for undocumented files.")
 	print(" [-package <pkg>] -build [-clean] Build an installer for the package. It executes all")
 	print("                                  tests and build the documentation of the packag.")
 	print("                                  -clean option remove test files, snapshots, and logs.")
@@ -965,14 +967,22 @@ function _Gtme.traceback()
 			if (si.fullTraceback or si.package) then
 				if si.package then
 					if not mb and not m1 and not m3 then
-						str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..
-							", line "..info.currentline..
-							", in "..tostring(last_function).."\n"
+						str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
+
+						if info.currentline > 0 then
+							str = str..", line "..info.currentline
+						end
+
+						str = str..", in "..tostring(last_function).."\n"
 					end
 				else
-					str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..
-						", line "..info.currentline..
-						", in "..tostring(last_function).."\n"
+					str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
+
+					if info.currentline > 0 then
+						str = str..", line "..info.currentline
+					end
+
+					str = str..", in "..tostring(last_function).."\n"
 				end
 			end
 		else
@@ -1001,8 +1011,11 @@ function _Gtme.traceback()
 				found_function = true
 			end
 
-			str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)..
-				", line "..info.currentline
+			str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
+
+			if info.currentline > 0 then
+				str = str..", line "..info.currentline
+			end
 
 			if info.name then
 				str = str..", in function "..info.name.."\n"
@@ -1195,6 +1208,18 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				local s = sessionInfo().separator
 				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
 				local correct, errorMsg = xpcall(function() _Gtme.executeTests(package, arguments[argCount]) end, function(err)
+					_Gtme.printError(err)
+					--_Gtme.printError(traceback())
+				end)
+				os.exit()
+			elseif arg == "-sketch" then
+				info_.mode = "debug"
+				argCount = argCount + 1
+
+				local s = sessionInfo().separator
+				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."test.lua")
+				dofile(_Gtme.sessionInfo().path..s.."lua"..s.."sketch.lua")
+				local correct, errorMsg = xpcall(function() _Gtme.sketch(package, arguments[argCount]) end, function(err)
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
 				end)

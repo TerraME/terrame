@@ -6,9 +6,9 @@ Stack traceback:
     File scripts/trace.lua, line 7, in function g
     File scripts/trace.lua, line 3, in function f
     File scripts/trace.lua, line 14, in main chunk
-    File [C], line -1, in dofile
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1264, in nil
-    File [C], line -1, in xpcall
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1275, in myxpcall
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1264, in nil
+    File [C], in dofile
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1308, in nil
+    File [C], in xpcall
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1319, in myxpcall
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1308, in nil
 

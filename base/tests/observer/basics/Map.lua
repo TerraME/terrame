@@ -384,6 +384,28 @@ return{
 		
 		unitTest:assertSnapshot(map, "map_string_values.bmp")
 		
+		local ag = Agent{}
+
+		local soc = Society{
+			instance = ag,
+			quantity = 40
+		}
+
+		local cs = CellularSpace{xdim = 10}
+
+		local env = Environment{cs, soc}
+		env:createPlacement{max = 5}
+
+		local map = Map{
+			target = cs,
+			grouping = "placement",
+			min = 0,
+			max = 5,
+			slices = 6,
+			color = "Reds"
+		}
+
+		unitTest:assertSnapshot(map, "map_placement.bmp")
 	end,
 	save = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

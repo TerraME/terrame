@@ -23,6 +23,11 @@ Building doc/index.html
 Building doc/files/single.html
 Building doc/files/data.html
 Building doc/files/font.html
+Checking images
+Checking data.lua
+Checking models
+Checking examples
+Checking if all images are used
 Checking if all functions are documented
 Checking single.lua
 
@@ -48,6 +53,7 @@ One out of 1 functions does not have @usage.
 All 1 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
+All images are correctly used.
 All 0 links were correctly built.
 All 0 examples are correctly documented.
 Summing up, 2 problems were found in the documentation.
@@ -104,8 +110,8 @@ Package 'noexamples' successfully zipped
 Build report:
 Package was built in 0.21 seconds.
 Build created file 'noexamples_0.1.zip'.
-Temporary files are saved in .terrame_noexamples_TL5ny
-MD5 sum for the package is 11cb48c1525d3da7d57fb2009c09e6da
+Temporary files are saved in .terrame_noexamples_KXaVZ
+MD5 sum for the package is 42808fce012eef591ef91892a9d146a9
 The package does not have a license file.
 2 errors were found in the documentation.
 There are no unnecessary files in the package.

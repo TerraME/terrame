@@ -42,7 +42,6 @@ ObserverMap::~ObserverMap()
 
     delete painterWidget;
     delete treeLayers;
-    delete butLegend;
     delete butZoomIn;
     delete butZoomOut;
     delete butZoomWindow;
@@ -51,8 +50,6 @@ ObserverMap::~ObserverMap()
     delete zoomComboBox;
 
     delete scrollArea;
-    //delete lblOperator;
-    //delete operatorComboBox;
     delete frameTools; 	
 }
 
@@ -270,24 +267,6 @@ void ObserverMap::setAttributes(QStringList &attribs, QStringList legKeys,
     connectTreeLayerSlot(true);
 }
 
-void ObserverMap::butLegend_Clicked()
-{
-    // legendWindow->setValues(mapAttributes);
-
-    //if (legendWindow->exec())
-    //{
-    //    painterWidget->replotMap();
-    //    showLayerLegend();
-    //    repaint();
-    //}
-
-    legendWindow->exec();
-
-    painterWidget->replotMap();
-    showLayerLegend();
-    repaint();
-}
-
 void ObserverMap::butZoomIn_Clicked()
 {
     // currentIndex() < 0 : o indice n?o existe no comboBox
@@ -346,56 +325,6 @@ void ObserverMap::treeLayers_itemChanged(QTreeWidgetItem * item, int /*column*/)
     }
 }
 
-void ObserverMap::createOperatorComboBox()
-{
-    //operatorComboBox = new QComboBox(frameTools);
-    //operatorComboBox->setGeometry(10, 120, 150, 20);
-    //connect(operatorComboBox, SIGNAL(activated(int)), this, SLOT(setOperatorMode(int)));
-    //// *
-    //operatorComboBox->addItem(tr("Clear"), QPainter::CompositionMode_Clear);
-
-    //operatorComboBox->addItem(tr("SourceIn"), QPainter::CompositionMode_SourceIn);
-    //operatorComboBox->addItem(tr("DestinationIn"), QPainter::CompositionMode_DestinationIn);
-
-    //operatorComboBox->addItem(tr("SourceOut"), QPainter::CompositionMode_SourceOut);
-    //operatorComboBox->addItem(tr("DestinationOut"), QPainter::CompositionMode_DestinationOut);
-
-    //operatorComboBox->addItem(tr("SourceAtop"), QPainter::CompositionMode_SourceAtop);
-    //operatorComboBox->addItem(tr("DestinationAtop"), QPainter::CompositionMode_DestinationAtop);
-    //// * /
-    //operatorComboBox->addItem(tr("Xor"), QPainter::CompositionMode_Xor);
-    //operatorComboBox->addItem(tr("Plus"), QPainter::CompositionMode_Plus);
-    //operatorComboBox->addItem(tr("Multiply"), QPainter::CompositionMode_Multiply);
-    //operatorComboBox->addItem(tr("Difference"), QPainter::CompositionMode_Difference);
-    //operatorComboBox->addItem(tr("Exclusion"), QPainter::CompositionMode_Exclusion);
-
-    //operatorComboBox->addItem(tr("Screen"), QPainter::CompositionMode_Screen);
-    //operatorComboBox->addItem(tr("Overlay"), QPainter::CompositionMode_Overlay);
-
-    //operatorComboBox->addItem(tr("Darken"), QPainter::CompositionMode_Darken);
-    //operatorComboBox->addItem(tr("Lighten"), QPainter::CompositionMode_Lighten);
-
-    //operatorComboBox->addItem(tr("ColorDodge"), QPainter::CompositionMode_ColorDodge);
-    //operatorComboBox->addItem(tr("ColorBurn"), QPainter::CompositionMode_ColorBurn);
-
-    //operatorComboBox->addItem(tr("HardLight"), QPainter::CompositionMode_HardLight);
-    //operatorComboBox->addItem(tr("SoftLight"), QPainter::CompositionMode_SoftLight);
-
-    ////set OperatorMode(QPainter::CompositionMode_Multiply);
-    //////operatorComboBox->setCurrentIndex(9);		// multiply
-    //operatorComboBox->setCurrentIndex(2);		// multiply
-    //painterWidget->setOperatorMode(QPainter::CompositionMode_Multiply);
-}
-
-void ObserverMap::setOperatorMode(int /*idx*/)
-{
-    //QPainter::CompositionMode mode =
-    //    (QPainter::CompositionMode) operatorComboBox->itemData(idx).toInt();
-
-    //painterWidget->setOperatorMode(mode);
-    //painterWidget->calculateResult();
-}
-
 void ObserverMap::showLayerLegend()
 {
     int layer = treeLayers->topLevelItemCount();
@@ -421,12 +350,10 @@ void ObserverMap::showLayerLegend()
             child->setText(0, leg->at(j).getLabel());
             QColor color = leg->at(j).getColor();
 
-			//@RAIAN: Para exibir a legenda da vizinhanca como linha 
             if(attrib->getType() == TObsNeighborhood)
 			{
 				child->setData(0, Qt::DecorationRole, legendWindow->color2PixmapLine(color, attrib->getWidth()));
 			}
-			//@RAIAN: FIM
 			else
 			{
 				if (! leg->at(j).getLabel().contains("mean"))
@@ -436,16 +363,6 @@ void ObserverMap::showLayerLegend()
 					child->setData(0, Qt::DecorationRole, QString(""));
 			}
         }
-
-        // Apresenta o item "does not belong" na arvore de layers
-        //if (attrib->getType() == TObsTrajectory)
-        //{
-        //    child = new QTreeWidgetItem(parent);
-        //    child->setSizeHint(0, ICON_SIZE);
-        //    child->setText(0, TRAJECTORY_LABEL);
-        //    child->setData(0, Qt::DecorationRole,
-        //        legendWindow->color2Pixmap(Qt::white, ICON_SIZE));
-        //}
     }
     treeLayers->resizeColumnToContents(0);
 }
@@ -800,21 +717,6 @@ void ObserverMap::setupGUI()
 
     frameTools->setLayout(layoutTools);
 
-    butLegend = new QToolButton(frameTools);
-    butLegend->setText(tr("legend"));
-    butLegend->setIcon(QIcon(QPixmap(":/icons/legend.png")));
-    butLegend->setGeometry(5, 5, 50, 20);
-    butLegend->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    connect(butLegend, SIGNAL(clicked()), this, SLOT(butLegend_Clicked()));
-
-    butGrid = new QToolButton(frameTools);
-    butGrid->setText(tr("grid"));
-    butGrid->setCheckable(true);
-    butGrid->setIcon(QIcon(QPixmap(":/icons/grid.png")));
-    butGrid->setGeometry(75, 5, 50, 20);
-    butGrid->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    connect(butGrid, SIGNAL(toggled(bool)), painterWidget, SLOT(gridOn(bool)));
-
     butZoomIn = new QToolButton(frameTools);
     butZoomIn->setText("In");
     butZoomIn->setIcon(QIcon(QPixmap(":/icons/zoomIn.png")));
@@ -852,7 +754,7 @@ void ObserverMap::setupGUI()
     butZoomRestore = new QToolButton(frameTools);
     butZoomRestore->setText("Restore");
     butZoomRestore->setIcon(QIcon(QPixmap(":/icons/zoomRestore.png")));
-    butZoomRestore->setGeometry(5, 155, 20, 20);
+    butZoomRestore->setGeometry(5, 75, 20, 20);
     butZoomRestore->setToolTip("Restore Zoom");
     butZoomRestore->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     //butZoomRestore->setCheckable(true);
@@ -870,7 +772,7 @@ void ObserverMap::setupGUI()
 
     zoomComboBox = new QComboBox(frameTools);
     zoomComboBox->addItems(zoomList);
-    zoomComboBox->setGeometry(10, 95, 30, 20);
+    zoomComboBox->setGeometry(10, 15, 30, 20);
     zoomComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
     zoomComboBox->setCurrentIndex(23); // window  //zoomIdx); //11);
     //zoomComboBox->setCurrentIndex(zoomIdx); //11);
@@ -892,8 +794,8 @@ void ObserverMap::setupGUI()
 
     // Exibe os layers de informa??o
     treeLayers = new QTreeWidget(frameTools);
-    treeLayers->setGeometry(5, 150, 190, 310);
-    treeLayers->setHeaderLabel(tr("Layers"));
+    treeLayers->setGeometry(5, 20, 190, 310);
+    treeLayers->setHeaderLabel(tr("Legends"));
     //treeLayers->setRootIsDecorated(false);
     //treeLayers->setAlternatingRowColors(true);
     connect(treeLayers, SIGNAL(itemClicked( QTreeWidgetItem *, int )),
@@ -901,17 +803,12 @@ void ObserverMap::setupGUI()
     connect(treeLayers, SIGNAL(itemActivated( QTreeWidgetItem *, int )),
         this, SLOT(treeLayers_itemChanged( QTreeWidgetItem *, int ) ));
 
-    // lblOperator = new QLabel(tr("Operations: "), frameTools);
-    // lblOperator->setGeometry(10, 95, 150, 20);
-    createOperatorComboBox();
 
     QSpacerItem *verticalSpacer = new QSpacerItem(20, 50,  QSizePolicy::Minimum,
         QSizePolicy::Preferred);
 
     //--------------------------
     QHBoxLayout *hLayoutZoom3 = new QHBoxLayout();
-    hLayoutZoom3->addWidget(butLegend);
-    hLayoutZoom3->addWidget(butGrid);
     layoutTools->addItem(hLayoutZoom3);
 
     layoutTools->addItem(verticalSpacer);
@@ -920,8 +817,6 @@ void ObserverMap::setupGUI()
     layoutTools->addItem(hLayoutZoom1);
     layoutTools->addItem(hLayoutZoom2);
 
-    //layoutTools->addWidget(lblOperator);
-    // layoutTools->addWidget(operatorComboBox);
     layoutTools->addWidget(treeLayers);
     //-------------------------
 
@@ -931,6 +826,8 @@ void ObserverMap::setupGUI()
     splitter->addWidget(scrollArea);
     splitter->setStretchFactor(0, 0);
     splitter->setStretchFactor(1, 1);
+	//splitter->setHandleWidth(0);
+
 
     QHBoxLayout *layoutDefault = new QHBoxLayout(this);
     layoutDefault->setMargin(5);
@@ -951,6 +848,5 @@ void ObserverMap::closeEvent(QCloseEvent *event)
 
 void ObserverMap::setGridVisible(bool visible)
 {
-    butGrid->setChecked(visible);
-    butGrid->toggled(visible);
+	painterWidget->gridOn(visible);
 }

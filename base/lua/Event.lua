@@ -27,6 +27,7 @@
 
 -- Set type to "Event"
 TeEvent.type_ = "Event"
+
 Event_ = {
 	type_ = "Event",
 	--- Return the current simulation time, according to the Timer it belongs.
@@ -107,10 +108,19 @@ metaTableEvent_ = {
 --     print(event:getTime())
 -- end}
 -- 
+-- agent = Agent{
+--     execute = function()
+--         print("executing")
+--     end
+-- }
+--
 -- event2 = Event{
 --     start = 2000,
---     action = my_society
+--     action = agent
 -- }
+--
+-- timer = Timer{event, event2}
+-- timer:execute(10)
 function Event(data)
 	if data == nil then
 		data = {}

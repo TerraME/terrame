@@ -37,6 +37,42 @@ local function getCoordCoupling(cs, data)
 	end
 end
 
+local function getDiagonalNeighborhood(cs, data)
+	return function(cell)
+		local neigh = Neighborhood()
+		local indexes = {}
+		local lin = -1
+		while lin <= 1 do
+			local col = -1
+			while col <= 1 do
+				if (lin ~= 0 and col ~= 0) or (data.self and lin == 0 and col == 0) then
+					local index = nil
+					if data.wrap then
+						index = cs:get(
+							((cell.x + col) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol,
+							((cell.y + lin) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
+					else
+						index = cs:get(cell.x + col, cell.y + lin)
+					end
+					if index ~= nil then
+						table.insert(indexes, index)
+					end
+				end
+
+				col = col + 1
+			end
+			lin = lin + 1
+		end
+
+		local weight = 1 / #indexes
+		for i, index in ipairs(indexes) do
+			neigh:add(index, weight)
+		end
+
+		return neigh
+	end
+end
+
 local function getFunctionNeighborhood(cs, data)
 	return function(cell)
 		local neighborhood = Neighborhood()
@@ -85,8 +121,8 @@ local function getMooreNeighborhood(cs, data)
 end
 
 local function getMxNNeighborhood(cs, data)
-	local m = math.floor(data.m/2)
-	local n = math.floor(data.n/2)
+	local m = math.floor(data.m / 2)
+	local n = math.floor(data.n / 2)
 
 	return function(cell)
 		local neighborhood = Neighborhood()
@@ -416,7 +452,12 @@ CellularSpace_ = {
 	type_ = "CellularSpace",
 	--- Add a new Cell to the CellularSpace. It will be the last Cell of the CellularSpace when one uses Utils:forEachCell().
 	-- @arg cell A Cell.
-	-- @usage cs:add(cell)
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- cell = Cell{}
+	-- cs:add(cell)
 	add = function(self, cell)
 		if type(cell) ~= "Cell" then
 			incompatibleTypeError(1, "Cell", cell)
@@ -451,6 +492,8 @@ CellularSpace_ = {
 	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight, inmemory \
 	-- "coord" & A bidirected relation between two CellularSpaces connecting Cells with the same 
 	-- (x, y) coordinates. & target & name, inmemory\
+	-- "diagonal" & Connect each Cell to its (at most) four diagonal neighbors.
+	-- & & name, self, wrap, inmemory \
 	-- "function" & A Neighborhood based on a function where any other Cell can be a neighbor. & 
 	-- filter & name, weight, inmemory \
 	-- "moore"(default) & A Moore (queen) Neighborhood, connecting each Cell to its (at most) 
@@ -479,7 +522,11 @@ CellularSpace_ = {
 	-- function will be called only if filter returns true.
 	-- @arg data.wrap Will the Cells in the borders be connected to the Cells in the
 	-- opposite border? The default value is false.
-	-- @usage cs:createNeighborhood() -- moore
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- cs:createNeighborhood() -- moore
 	--
 	-- cs:createNeighborhood{
 	--     name = "moore"
@@ -496,10 +543,14 @@ CellularSpace_ = {
 	--     n = 4
 	-- }
 	--
-	-- -- c2 overlaps cs1
-	-- cs1:createNeighborhood{
+	--
+	-- cs2 = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- cs:createNeighborhood{
 	--     strategy = "mxn",
-	--     target = cs2, -- other cs
+	--     target = cs2,
 	--     m = 3,
 	--     n = 2,
 	--     name = "spatialCoupling"
@@ -523,6 +574,15 @@ CellularSpace_ = {
 		defaultTableValue(data, "inmemory", true)
 
 		switch(data, "strategy"):caseof{
+			diagonal = function()
+				defaultTableValue(data, "self", false)
+				defaultTableValue(data, "wrap", false)
+
+				verifyUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "inmemory"})
+
+				data.func = getDiagonalNeighborhood
+			end,
+
 			["function"] = function() 
 				mandatoryTableArgument(data, "filter", "function")
 				verifyUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "inmemory"})
@@ -626,7 +686,10 @@ CellularSpace_ = {
 	-- @arg data.xmax A number with the maximum value of x.
 	-- @arg data.ymin A number with the minimum value of y.
 	-- @arg data.ymax A number with the maximum value of y.
-	-- @usage cs:cut{xmin = 3, ymax = 8}
+	-- @usage cs = CellularSpace{xdim = 10}
+	--
+	-- cs2 = cs:cut{xmin = 3, ymax = 8}
+	-- print(#cs2)
 	cut = function(self, data)
 		if data == nil then
 			data = {}
@@ -656,8 +719,14 @@ CellularSpace_ = {
 	-- @arg xIndex A number indicating an x coordinate. It can also be a string with the object id.
 	-- @arg yIndex A number indicating a y coordinate. This argument is unnecessary when the first 
 	-- argument is a string.
-	-- @usage cs:get(2, 2)
-	-- cs:get("5")
+	-- @usage cs = CellularSpace{xdim = 10}
+	--
+	-- cell = cs:get(2, 2)
+	-- print(cell.x)
+	-- print(cell.y)
+	--
+	-- cell = cs:get("5")
+	-- print(cell.id)
 	get = function(self, xIndex, yIndex)
 		if type(xIndex) == "string" then
 			if yIndex ~= nil then
@@ -681,20 +750,17 @@ CellularSpace_ = {
 	--- Return a Cell from the CellularSpace given its x and y location.
 	-- @arg xIndex A number with the x location of the Cell to be returned.
 	-- @arg yIndex A number with the y location of the Cell to be returned.
-	-- @usage cs:getCell(2, 2)
 	-- @deprecated CellularSpace:get
 	getCell = function(self, xIndex, yIndex)
 		deprecatedFunction("getCell", "get")
 	end,
 	--- Return a Cell from the CellularSpace given its id.
 	-- @arg cellID A string with the unique identifier of the Cell to be returned.
-	-- @usage cs:getCellByID("2")
 	-- @deprecated CellularSpace:get
 	getCellByID = function(self, cellID)
 		deprecatedFunction("getCellByID", "get")
 	end,
 	--- Return all the Cells of the CellularSpace in a table indexed by numbers.
-	-- @usage cs:getCells()
 	-- @deprecated CellularSpace.cells
 	getCells = function(self)
 		deprecatedFunction("getCells", ".cells")
@@ -702,6 +768,7 @@ CellularSpace_ = {
 	--- Load the CellularSpace from the database. TerraME automatically executes this function when
 	-- the CellularSpace is created, but one can execute this to load the attributes again, erasing
 	-- all attributes and relations created by the modeler.
+	-- @usage cs = CellularSpace{xdim = 10}
 	-- @usage cs:load()
 	load = function(self)
 		customError("Load function was not implemented.")
@@ -721,6 +788,7 @@ CellularSpace_ = {
 	-- "*.gpm" & Load a Neighborhood from a GPM (generalized proximity matrix) file. \
 	-- Any other & Load a Neighborhood from table stored in the same database of the 
 	-- CellularSpace. \
+	-- @usage cs = CellularSpace{xdim = 10}
 	-- @usage cs:loadNeighborhood{
 	--     source = "n.gpm"
 	-- }
@@ -759,8 +827,15 @@ CellularSpace_ = {
 	-- @arg modelTime A number representing the notification time. The default value is zero.
 	-- It is also possible to use an Event as argument. In this case, it will use the result of
 	-- Event:getTime().
-	-- @usage cs:notify()
-	-- cs:notify(event)
+	-- @usage cs = CellularSpace{
+	--     xdim = 10,
+	--     value = 5
+	-- }
+	--
+	-- Chart{target = cs}
+	--
+	-- cs:notify()
+	-- cs:notify()
 	notify = function(self, modelTime)
 		if modelTime == nil then
 			modelTime = 0
@@ -825,7 +900,6 @@ CellularSpace_ = {
 		local erros = self.cObj_:save(time, outputTableName, attrNames, self.cells)
 	end,
 	--- Return the number of Cells in the CellularSpace.
-	-- @usage print(cs:size())
 	-- @deprecated CellularSpace:#
 	size = function(self)
 		deprecatedFunction("size", "operator #")
@@ -932,7 +1006,9 @@ CellularSpace_ = {
 metaTableCellularSpace_ = {
 	__index = CellularSpace_,
 	--- Return the number of Cells in the CellularSpace.
-	-- @usage print(#cs)
+	-- @usage cs = CellularSpace{xdim = 5}
+	--
+	-- print(#cs)
 	__len = function(self)
 		return #self.cells
 	end,
@@ -976,6 +1052,7 @@ metaTableCellularSpace_ = {
 -- restriction). Only the Cells that reflect the established criteria will be loaded. Note that SQL
 -- uses the operator "=" to compare values, instead of "==". This argument can only be used when
 -- reading data from a database.
+-- @arg data.attrname A string with an attribute name.
 -- @arg data.... Any other attribute or function for the CellularSpace.
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
@@ -1000,6 +1077,8 @@ metaTableCellularSpace_ = {
 -- dbType & Description & Compulsory arguments & Optional arguments\
 -- "mdb" & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer,
 -- select, where, autoload, ... \
+-- "map" & Load from a text file where Cells are stored as numbers with its attribute value.
+-- & & sep, attrname \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
 -- requires at least two attributes: x and y. & database & sep, autoload, ...\
 -- "mysql" & Load from a TerraLib database stored in a MySQL database. & database, theme & host, 
@@ -1018,20 +1097,8 @@ metaTableCellularSpace_ = {
 -- }
 -- 
 -- cs2 = CellularSpace{
---     database = "d:\\db.mdb",
---     layer = "cells_10",
---     theme = "cells_10",
---     select = "height3 as h",
---     where = "height3 > 2"
--- }
--- 
--- cs3 = CellularSpace{
---     database = "d:\\file.shp",
--- }
--- 
--- cs4 = CellularSpace{
 --     xdim = 20,
---     ydim = 20
+--     ydim = 25
 -- }
 function CellularSpace(data)
 	verifyNamedTable(data)
@@ -1122,6 +1189,23 @@ function CellularSpace(data)
 	setmetatable(data, metaTableCellularSpace_)
 	cObj:setReference(data)
 
+	local function callFunc(func, mtype, attribute)
+		local status, result = pcall(func) 
+
+		if not status then
+			local msg
+
+			if mtype == "function" then
+				msg = "Could not call function '"..attribute.."' from the Cells. It has some error or it does not exist anymore."
+			else
+				msg = "Could not find attribute '"..attribute.."' in all the Cells."
+			end
+
+			customError(msg)
+		end
+		return result
+	end
+
 	local function createSummaryFunctions(cell)
 		forEachElement(cell, function(attribute, value, mtype)
 			if attribute == "id" or attribute == "parent" or string.endswith(attribute, "_") then return
@@ -1132,9 +1216,13 @@ function CellularSpace(data)
 				end
 
 				data[attribute] = function(cs, args)
-					forEachCell(cs, function(cell)
-						cell[attribute](cell, args)
-					end)
+					local func = function()
+						return forEachCell(cs, function(cell)
+							return cell[attribute](cell, args)
+						end)
+					end
+
+					return callFunc(func, "function", attribute)
 				end
 			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
 				if data[attribute] then
@@ -1144,11 +1232,15 @@ function CellularSpace(data)
 
 				if attribute ~= "x" and attribute ~= "y" then
 					data[attribute] = function(cs)
-						local quantity = 0
-						forEachCell(cs, function(cell)
-							quantity = quantity + cell[attribute]
-						end)
-						return quantity
+						local func = function()
+							local quantity = 0
+							forEachCell(cs, function(cell)
+								quantity = quantity + cell[attribute]
+							end)
+							return quantity
+						end
+
+						return callFunc(func, "number", attribute)
 					end
 				end
 			elseif mtype == "boolean" then

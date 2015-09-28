@@ -3,6 +3,7 @@ Loading package 'nofontdotlua'
 Package 'nofontdotlua' has no data
 Checking folder 'font'
 Package has font files but font.lua does not exist
+File 'Grissom Free.ttf' is not documented
 File 'Pet Animals.ttf' is not documented
 Parsing lua files
 Parsing lua/foo.lua
@@ -21,16 +22,21 @@ Building doc/index.html
 Building doc/files/foo.html
 Building doc/files/data.html
 Building doc/files/font.html
+Checking images
+Checking data.lua
+Checking models
+Checking examples
+Checking if all images are used
 Checking if all functions are documented
 Checking foo.lua
 
 Documentation report:
-Documentation was built in 0.12 seconds.
+Documentation was built in 0.15 seconds.
 4 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
 No problems were found in the documentation of data.
-One problem was found in the documentation of fonts.
+2 problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
 All 1 global functions of the package are documented.
@@ -46,6 +52,7 @@ All 1 functions have @usage.
 All 1 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
+All images are correctly used.
 All 0 links were correctly built.
 All 0 examples are correctly documented.
-Summing up, one problem was found in the documentation.
+Summing up, 2 problems were found in the documentation.

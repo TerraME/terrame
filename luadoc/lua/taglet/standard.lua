@@ -4,6 +4,9 @@
 
 local assert, tostring, type = assert, tostring, type
 local collectgarbage = collectgarbage
+local load = load
+local getPackage = getPackage
+local xpcall = xpcall
 local pcall = pcall
 local exit = os.exit
 local io, table, string = io, table, string
@@ -597,10 +600,11 @@ function file(lua_path, fileName, doc, short_lua_path, doc_report, silent)
 				doc.files[file_].summary = parse_summary(description)
 			end
 		else
-			local description, argnames, argdescr = check_example(doc.files[fileName].path..fileName, doc, fileName, doc_report, silent)
+			local description, argnames, argdescr, image = check_example(doc.files[fileName].path..fileName, doc, fileName, doc_report, silent)
 			doc.files[fileName].description = description
 			doc.files[fileName].argnames = argnames
 			doc.files[fileName].argdescription = argdescr
+			doc.files[fileName].image = image
 			doc.files[fileName].summary = parse_summary(description)
 			doc.files[fileName].type = "example"
 
@@ -714,7 +718,7 @@ local function check_usage(files, doc_report)
 			local functions = files[file_name].functions
 			for j = 1, #functions do
 				local function_name = functions[j]
-				if not functions[function_name].usage then
+				if not functions[function_name].usage and not functions[function_name].deprecated then
 					if not no_usage[file_name] then
 						no_usage[file_name] = {}
 						table.insert(no_usage, file_name)
@@ -730,6 +734,36 @@ local function check_usage(files, doc_report)
 		local file_name = no_usage[i]
 		for j = 1, #no_usage[file_name] do
 			local function_name = no_usage[file_name][j]
+		end
+	end
+
+	printNote("Testing @usage")
+	for i = 1, #files do
+		local file_name = files[i]
+		if files[file_name].type ~= "example" then
+			printNote("Testing file "..makepath(files[file_name].short_path..file_name))
+			local functions = files[file_name].functions
+			for j = 1, #functions do
+				local function_name = functions[j]
+				if functions[function_name].usage then
+					local base = getPackage("base")
+
+					base.print = function() end
+					local usage = functions[function_name].usage
+
+					if string.find(usage, "DONTRUN") then
+						print("Skipping "..function_name)
+					else
+				    	print("Testing "..function_name)
+						xpcall(load(usage, nil, "t", base), function(err)
+				    		printError("Error: "..err)
+							doc_report.usage_error = doc_report.usage_error + 1
+						end)
+					end
+
+					base.clean()
+				end
+			end
 		end
 	end
 end
@@ -893,6 +927,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 	local argdescriptions = {}
 	local readingArg = false
 	local argName
+	local image
 	local argDescription = ""
 
 	if text == "" then
@@ -906,7 +941,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 		while line and line:match("^%s*%-%-") do
 			local next_text = line:match("%-%-(.*)")
 
-			if line:match("%-%-(.*)@arg(.*)") then
+			if line:match("%-%-(.*)@arg(.*)") or line:match("%-%-(.*)@image(.*)") then
 				readingArg = true
 			end
 
@@ -933,6 +968,8 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 						argName = name
 						argDescription = desc
 					end
+				elseif tag == "image" then
+					image = text
 				else
 					if not silent then
 						printError("Invalid tag '@"..tag.."'. Examples can only have @arg.")
@@ -952,7 +989,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 		table.insert(argdescriptions, argDescription)
 	end
 	io.close(f)
-	return text, argnames, argdescriptions
+	return text, argnames, argdescriptions, image
 end
 
 -------------------------------------------------------------------------------

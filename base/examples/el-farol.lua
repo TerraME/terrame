@@ -5,6 +5,7 @@
 -- @arg K number of strategies an agent have (if it is one the agents will never change their strategies).
 -- The default value is 3.
 -- @arg MAX Maximum number of people in the bar. The default value is 60.
+-- @image el-farol.bmp
 
 N = 100
 K = 3
@@ -63,7 +64,7 @@ Chart{
 	yLabel = "percentage"
 }
 
-Chart{
+chartStrategies = Chart{
 	target = c,
 	select = list_attributes
 }

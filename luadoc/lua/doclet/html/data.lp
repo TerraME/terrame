@@ -42,6 +42,11 @@
 					<dl class="function">
 					<%for _, data in ipairs(doc.mdata) do%>
 						<dt><h2><%=data.file[1]%><a name="<%=data.file[1]%>"></h2></dt>
+
+						<% if data.image then %>
+							<% loc = "../../images/"..tostring(data.image) %>
+							<center><img src=<% =loc %> ></center><br><br>
+						<%end%>
 						<%if data.summary then%>
 							<%=data.summary%>
 						<%else%>

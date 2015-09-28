@@ -27,6 +27,7 @@ Author: Tiago Garcia de Senna Carneiro
 *************************************************************************************/
 
 #include <QApplication>
+#include "../observer/observerImpl.h"
 // #include <QSystemLocale>
 #include <QFontDatabase>
 #include <QMessageBox>
@@ -223,6 +224,12 @@ int cpp_setdefaultfont(lua_State *L)
 #endif
 }
 
+int cpp_restartobservercounter(lua_State *L)
+{
+	restartObserverCounter();
+	return 0;
+}
+
 extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
@@ -307,6 +314,9 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_setdefaultfont);
 	lua_setglobal(L, "cpp_setdefaultfont");
+
+	lua_pushcfunction(L, cpp_restartobservercounter);
+	lua_setglobal(L, "cpp_restartobservercounter");
 
 	// Execute the lua files
 	if(argc < 2)

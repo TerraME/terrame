@@ -99,11 +99,15 @@ void delay(float seconds)
         qApp->processEvents();
 }
 
-
-
 // mantem o numero de observer j? criados
 static long int numObserverCreated = 0;
 static long int numSubjectCreated = 0;
+
+void restartObserverCounter()
+{
+	numObserverCreated = 0;
+	numSubjectCreated = 0;
+}
 
 //////////////////////////////////////////////////////////// Observer
 ObserverImpl::ObserverImpl() : visible(true)

@@ -27,7 +27,10 @@ Group_ = {
 	type_ = "Group",
 	--- Add a new Agent to the Group. It will be added to the end of the list of Agents.
 	-- @arg agent An Agent.
-	-- @usage group:add(agent)
+	-- @usage agent = Agent{}
+	-- group = Group{}
+	--
+	-- group:add(agent)
 	add = function(self, agent)
 		mandatoryArgument(1, "Agent", agent)
 
@@ -35,7 +38,23 @@ Group_ = {
 	end,
 	--- Return a copy of the Group. It has the same parent, select, greater and Agents.
 	-- Any change in the cloned Group will not affect the original one.
-	-- @usage group:clone()
+	-- @usage agent = Agent{
+	--     age = Choice{min = 0, max = 50, step = 1}
+	-- }
+	--
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 20
+	-- }
+	--
+	-- group = Group{
+	--     target = soc,
+	--     select = function(agent) return agent.age < 10 end
+	-- }
+	--
+	-- group2 = group:clone()
+	-- print(#group)
+	-- print(#group2)
 	clone = function(self)
 		local cloneG = Group{
 			target = self.parent,
@@ -55,7 +74,20 @@ Group_ = {
 	-- filters the Society with the function used as argument for the last call to filter itself,
 	-- or then the value of argument select used to build the Group. When it cannot find any
 	-- function to be used, this function will add all the Agents of the Society to the Group.
-	-- @usage group:filter(function(agent)
+	-- @usage agent = Agent{
+	--     age = Choice{min = 0, max = 50, step = 1}
+	-- }
+	--
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 20
+	-- }
+	--
+	-- group = Group{
+	--     target = soc
+	-- }
+	--
+	-- group:filter(function(agent)
 	--     return agent.age >= 18
 	-- end)
 	filter = function(self, f)
@@ -82,7 +114,20 @@ Group_ = {
 	end,
 	--- Randomize the Agents of the Group. It will change the traversing order used by
 	-- Utils:forEachAgent().
-	-- @usage group:randomize()
+	-- @usage agent = Agent{
+	--     age = Choice{min = 0, max = 50, step = 1}
+	-- }
+	--
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 20
+	-- }
+	--
+	-- group = Group{
+	--     target = soc
+	-- }
+	-- 
+	-- group:randomize()
 	randomize = function(self)
 		local randomObj = Random()
 
@@ -96,7 +141,25 @@ Group_ = {
 	end,
 	--- Rebuild the Group from the Society used as target.
 	-- It is a shortcut to Group:filter() and then Group:sort().
-	-- @usage group:rebuild()
+	-- @usage agent = Agent{
+	--     age = Choice{min = 0, max = 50, step = 1}
+	-- }
+	--
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 20
+	-- }
+	--
+	-- group = Group{
+	--     target = soc,
+	--     select = function(agent) return agent.age < 10 end
+	-- }
+	-- 
+	-- forEachAgent(group, function(agent)
+	--     agent.age = agent.age + 5
+	-- end)
+	--
+	-- group:rebuild()
 	rebuild = function(self)
 		self:filter()
 		self:sort()
@@ -108,7 +171,20 @@ Group_ = {
 	-- or then the value of argument greater used to build the Group. When it cannot find
 	-- any function to be used, it shows a warning.
 	-- @see Utils:greaterByAttribute
-	-- @usage group:sort(function(ag1, ag2)
+	-- @usage agent = Agent{
+	--     age = Choice{min = 0, max = 50, step = 1}
+	-- }
+	--
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 20
+	-- }
+	--
+	-- group = Group{
+	--     target = soc
+	-- }
+	--
+	-- group:sort(function(ag1, ag2)
 	--     return ag1.age > ag2.age
 	-- end)
 	sort = function(self, f)
@@ -129,7 +205,21 @@ setmetatable(Group_, metaTableSociety_)
 metaTableGroup_ = {
 	__index = Group_,
 	--- Return the number of Agents in the Group.
-	-- @usage print(#group)
+	-- @usage agent = Agent{
+	--     age = Choice{min = 0, max = 50, step = 1}
+	-- }
+	--
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 20
+	-- }
+	--
+	-- group = Group{
+	--     target = soc,
+	--     select = function(agent) return agent.age < 10 end
+	-- }
+	--
+	-- print(#group)
 	__len = function(self)
 		return #self.agents
 	end,
@@ -153,19 +243,28 @@ metaTableGroup_ = {
 -- Utils:greaterByAttribute() for predefined options for this argument.
 -- @arg data.build A boolean value indicating whether the Group should be computed when created.
 -- The default value is true.
--- @usage group = Group{
+-- @usage agent = Agent{
+--     size = Choice{min = 10, max = 200, step = 0.5}
+-- }
+--
+-- soc = Society{
+--     instance = agent,
+--     quantity = 20
+-- }
+--
+-- group = Group{
 --     target = society,
 --     select = function(agent)
 --         return agent.size > 90
---     end,
---     greater = function(a, b)
---         return a.size > b.size
 --     end
 -- }
 --
--- groupBySize = Group{target = society, greater = function(a1, a2)
---     return a1.size > a2.size
--- end}
+-- groupBySize = Group{
+--     target = society,
+--     greater = function(a1, a2)
+--         return a1.size > a2.size
+--     end
+-- }
 -- @output agents A vector with Agents of the Group.
 -- @output parent The Society used by the Group (its target).
 -- @output select The last function used to filter the Group.

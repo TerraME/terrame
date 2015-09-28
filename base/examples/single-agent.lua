@@ -1,11 +1,9 @@
 -- @example A simple example with one Agent that moves randomly in space.
+-- @image single-agent.bmp
 
 singleFooAgent = Agent{
 	execute = function(self)
-		local cell = self:getCell():getNeighborhood():sample()
-		if cell:isEmpty() then
-			self:move(cell)
-		end
+		self:walk()
 	end
 }
 
@@ -29,7 +27,8 @@ t = Timer{
 
 m = Map{
 	target = singleFooAgent,
-	symbol = "turtle"
+	symbol = "turtle",
+	background = "green"
 }
 
 t:execute(100)

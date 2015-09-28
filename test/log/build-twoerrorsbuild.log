@@ -33,13 +33,18 @@ Building doc/files/examples.html
 Building doc/files/data.html
 Building doc/files/font.html
 Building doc/files/models.html
+Checking images
+Checking data.lua
+Checking models
+Checking examples
+Checking if all images are used
 Checking if all functions are documented
 Checking Tube2.lua
 Checking Tube3.lua
 Checking Utils.lua
 
 Documentation report:
-Documentation was built in 0.12 seconds.
+Documentation was built in 0.03 seconds.
 5 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
@@ -60,6 +65,7 @@ All 1 functions have @usage.
 All 1 functions call themselves in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
+All images are correctly used.
 All 0 links were correctly built.
 All 1 examples are correctly documented.
 Summing up, 2 problems were found in the documentation.
@@ -94,7 +100,7 @@ Testing examples
 Testing ipd
 
 Test report:
-Tests were executed in 0.25 seconds.
+Tests were executed in 0.28 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.
@@ -131,10 +137,10 @@ Creating file 'twoerrorsbuild_0.1.zip'
 Package 'twoerrorsbuild' successfully zipped
 
 Build report:
-Package was built in 0.38 seconds.
+Package was built in 0.46 seconds.
 Build created file 'twoerrorsbuild_0.1.zip'.
-Temporary files are saved in .terrame_twoerrorsbuild_8Yi9Y
-MD5 sum for the package is eb7f50c0367529f21a1055267e09dda8
+Temporary files are saved in .terrame_twoerrorsbuild_u7NAE
+MD5 sum for the package is 5f12e2a95003ddfb4b4aa5c3a15efd2f
 The package does not have a license file.
 2 errors were found in the documentation.
 2 files are unnecessary.

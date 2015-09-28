@@ -45,7 +45,7 @@ Model_ = {
 	--     end
 	-- }
 	--
-	-- Tube:configure()
+	-- -- Tube:configure()
 	configure = function(self)
 	end,
 	--- Run the Model instance. It requires that the Model instance has attribute finalTime.
@@ -66,10 +66,23 @@ Model_ = {
 	--
 	-- m:execute()
 	execute = function(self)
-		forEachElement(self, function(name, value, mtype)
-			if belong(mtype, {"Timer", "Environment"}) then
+		forEachOrderedElement(self, function(name, value, mtype)
+			if mtype == "Timer" then
 				value:execute(self.finalTime)
 				return false
+			elseif mtype == "Environment" then
+				local found = false
+				forEachElement(value, function(mname, mvalue, mmtype)
+					if mmtype == "Timer" then
+						found = true
+						return false
+					end
+				end)
+
+				if found then
+					value:execute(self.finalTime)
+					return false
+				end
 			end
 		end)
 	end,

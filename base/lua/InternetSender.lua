@@ -50,7 +50,9 @@ metaTableInternetSender_ = {__index = InternetSender_}
 -- the values in select are related to its Cells and this argument is mandatory.
 -- In the case of Society, if it does not have any numeric attributes then it will use
 -- the number of agents in the Society as attribute.
--- @usage InternetSender{
+-- @usage cs = CellularSpace{xdim = 10}
+--
+-- InternetSender{
 --     target = cs,
 --     protocol = "tcp",
 --     compress = false

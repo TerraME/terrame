@@ -58,6 +58,8 @@ local Tube2 = Model{
 	finalTime       = 10,
 	init = function(model)
 		model.water = model.initialWater
+		model.aenv = Environment{} -- this line is necessary because TerraME must see that
+		                           -- it does not have a Timer so it will not be executed.
 		model.env = Environment{
 			timer = Timer{
 				Event{action = function()
