@@ -390,7 +390,9 @@ Agent_ = {
 		defaultTableValue(data, "delay", 0)
 		positiveTableArgument(data, "delay", true)
 
-		verify(type(self.parent) == "Society", "Agent must be within a Society to send messages with delay.")
+		if data.delay > 0 then
+			verify(type(self.parent) == "Society", "Agent must be within a Society to send messages with delay.")
+		end
 
 		if data.delay == 0 then
 			if data.subject then
