@@ -240,6 +240,8 @@ Society_ = {
 				if data.quantity == 1 then data.quantity = nil end
 			elseif data.filter ~= nil then
 				data.strategy = "function"
+			elseif data.neighborhood ~= nil then
+				data.strategy = "neighbor"
 			else
 				customError("It was not possible to infer a value for argument 'strategy'.")
 			end

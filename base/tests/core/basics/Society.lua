@@ -275,22 +275,27 @@ state_          State
 
 		local cs = CellularSpace{xdim = 5}
 		cs:createNeighborhood()
+		cs:createNeighborhood{name = "2"}
 
 		local env = Environment{cs, predators}
 		env:createPlacement()
 
 		predators:createSocialNetwork{strategy = "cell", name = "c"}
 		predators:createSocialNetwork{strategy = "neighbor", name = "n"}
+		predators:createSocialNetwork{neighborhood = "2", name = "n2"}
 
 		local count_c = 0
 		local count_n = 0
+		local count_n2 = 0
 		forEachAgent(predators, function(ag)
-			count_c  = count_c + #ag:getSocialNetwork("c")
-			count_n  = count_n + #ag:getSocialNetwork("n")
+			count_c  = count_c  + #ag:getSocialNetwork("c")
+			count_n  = count_n  + #ag:getSocialNetwork("n")
+			count_n2 = count_n2 + #ag:getSocialNetwork("n2")
 		end)
 
 		unitTest:assertEquals(362, count_c)
 		unitTest:assertEquals(2150, count_n)
+		unitTest:assertEquals(2150, count_n2)
 
 		local ag1 = Agent{
 			name = "nonfoo",
