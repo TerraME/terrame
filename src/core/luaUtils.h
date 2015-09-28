@@ -38,19 +38,9 @@ extern "C"
 }
 #include "luna.h"
 
-#if defined( TME_MSVC ) && defined( TME_WIN32 )
-#include <TeAdoDB.h>
-#endif
-
-#include <TeLegendEntry.h>
-#include <TeMySQL.h>
-
-//#if ! defined( TME_TERRALIB_RC3 )
-//#include <TeInitQuerierStrategy.h>
-//#endif
-
-#include <TeQuerier.h>
-#include <TeQuerierParams.h>
+#include <iostream>
+#include <string>
+using namespace std;
 
 /// UTILIITARY FUNCTION - Print the Lua stack. Used for debugging purpose.
 /// \param size is the number of position to be printed from the stack top
@@ -77,24 +67,6 @@ int isudatatype (lua_State *L, int idx, const char *name);
 // void objectId2coords( const char const * objId, int &x, int &y);
 void objectId2coords( const char * objId, int &x, int &y);
 
-/// UTILIITARY FUNCTION - Deletes a table from a TerraLib geographical database.
-/// \param db is a pointer to a TerraLib database
-/// \param tableName is the name of the table being removed
-/// \return Return true in case of sucess, otherwise it returns false. 
-bool deleteLayerTableName ( TeDatabase *db, std::string &tableName );
-
-/// UTILIITARY FUNCTION - Creates a new Theme a TerraLib geographical database
-/// \param attTable is a copy to the Theme new attriute table being created
-/// \param outputTable is the new Theme table name
-/// \param whereClause is a SQL WHERE CLAUSE like string used to querie the TerraLib database
-/// \param inputThemeName is a string containing the inputTheme that serves as information 
-///        source for the Theme being created
-/// \param view is a pointer to the TerrraLib TeView object to which Theme will be attached
-/// \param layer is a pointer to the TerrraLib TeLayer object to which Theme will be attached
-/// \param db is a pointer to the TerrraLib database into which the Theme will be interted
-/// \param theme is a pointer to the TeTheme object being added to the geographical database
-bool createNewTheme( TeTable attTable, char outputTable[], string whereClause, string inputThemeName, TeView *view, TeLayer *layer, TeDatabase *db, TeTheme *theme );
-
-void returnsError(lua_State *L, int number, const string message);
+void returnsCustomError(lua_State *L, int number, const string message);
 
 #endif
