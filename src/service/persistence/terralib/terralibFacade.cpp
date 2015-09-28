@@ -568,7 +568,7 @@ bool TerraLibFacade::createNewTheme(TeTable attTable, const string tableName,
     // Save the theme in the database
     if (!theme->save())
     {
-        lastErrorMessage = "Error: fail to save the theme \""
+        lastErrorMessage = "fail to save the theme \""
                 + tableName + "\" in the database: "
                 + db->errorMessage();
         lastError = THEME_SAVE_ERROR;
