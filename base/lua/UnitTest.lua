@@ -38,7 +38,8 @@ UnitTest_ = {
 	--- Check if a given value is true. In any other case (number, string, false, or nil)
 	-- it generates an error.
 	-- @arg value Any value.
-	-- @usage unitTest:assert(2 < 3)
+	-- @usage unitTest = UnitTest{}
+	-- unitTest:assert(2 < 3)
 	assert = function(self, value)
 		self.test = self.test + 1
 
@@ -58,7 +59,8 @@ UnitTest_ = {
 	-- @arg v2 Any value.
 	-- @arg tol A number indicating a maximum error tolerance. This argument is optional and can
 	-- be used only with numeric values. The default tolerance is zero.
-	-- @usage unitTest:assertEquals(3, 3)
+	-- @usage unitTest = UnitTest{}
+	-- unitTest:assertEquals(3, 3)
 	-- unitTest:assertEquals(2, 2.1, 0.2)
 	assertEquals = function (self, v1, v2, tol)
 		self.test = self.test + 1
@@ -110,7 +112,9 @@ UnitTest_ = {
 	-- between the error produced by the error function and the expected error message.
 	-- This argument might be necessary in error messages that include information that can change
 	-- from machine to machine, such as an username. The default value is zero (no discrepance).
-	-- @usage error_func = function() verify(2 > 3, "wrong operator") end
+	-- @usage -- DONTRUN
+	-- unitTest = UnitTest{}
+	-- error_func = function() verify(2 > 3, "wrong operator") end
 	-- unitTest:assertError(error_func, "wrong operator")
 	assertError = function(self, my_function, error_message, max_error)
 		mandatoryArgument(1, "function", my_function)
@@ -176,7 +180,9 @@ UnitTest_ = {
 	--- Check if a given file exists and remove it. Repeating: The file is removed when calling
 	-- this assert. If the file is a directory or does not exist then it shows an error.
 	-- @arg fname A string with a file name.
-	-- @usage unitTest:assertFile("file.txt")
+	-- @usage unitTest = UnitTest{}
+	-- os.execute("touch file.txt") -- create a file (only works in Linux and Mac)
+	-- unitTest:assertFile("file.txt")
 	assertFile = function(self, fname)
 		self.test = self.test + 1
 
@@ -203,7 +209,8 @@ UnitTest_ = {
 	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
 	-- @arg value Any value.
-	-- @usage unitTest:assertNil()
+	-- @usage unitTest = UnitTest{}
+	-- unitTest:assertNil()
 	assertNil = function(self, value)
 		self.test = self.test + 1
 		if value == nil then
@@ -215,7 +222,8 @@ UnitTest_ = {
 	end,
 	--- Check if a given value is not nil. Otherwise it generates an error.
 	-- @arg value Any value.
-	-- @usage unitTest:assertNotNil(2)
+	-- @usage unitTest = UnitTest{}
+	-- unitTest:assertNotNil(2)
 	assertNotNil = function (self, value)
 		self.test = self.test + 1
 		if value ~= nil then
@@ -231,8 +239,12 @@ UnitTest_ = {
 	-- then it will save the file in the snapshot folder.
 	-- @arg tolerance A number between 0 and 1 with the maximum difference in percentage of pixels
 	-- allowed. The default value is 0.
-	-- @usage c = Chart{...}
-	-- unitTest:assertSnapshot(c, "test_chart.bmp")
+	-- @usage unitTest = UnitTest{}
+	-- cell = Cell{value = 2}
+	-- chart = Chart{target = cell}
+	-- unitTest:assertSnapshot(chart, "test_chart.bmp")
+	--
+	-- os.execute("rm -f \""..packageInfo("base").path.."/snapshots/test_chart.bmp\"")
 	assertSnapshot = function(self, observer, file, tolerance)
 		if not belong(type(observer), {"Chart", "Map", "TextScreen", "Clock", "VisualTable"}) then
 			customError("Argument #1 should be Chart, Map, TextScreen, Clock or VisualTable, got "..type(observer)..".")
@@ -244,6 +256,8 @@ UnitTest_ = {
 		if tolerance == nil then tolerance = 0 end
 
 		verify(tolerance >= 0 and tolerance <= 1, "Argument #3 should be between 0 and 1, got "..tolerance..".")
+
+		if not self.snapshots then self.snapshots = 0 end
 
 		self.snapshots = self.snapshots + 1
 		local s = sessionInfo().separator
@@ -270,6 +284,11 @@ UnitTest_ = {
 
 		if not isFile(oldImage) then
 			observer:save(oldImage) -- SKIP
+
+			if not self.snapshot_files then -- SKIP
+				self.snapshot_files = 0 -- SKIP
+			end
+
 			self.snapshot_files = self.snapshot_files + 1 -- SKIP
 			_Gtme.printError("Creating 'snapshots".._Gtme.makePathCompatibleToAllOS(s..file).."'.")
 			self.test = self.test + 1 -- SKIP
@@ -297,7 +316,8 @@ UnitTest_ = {
 	--- Check if a value belongs to a given type. If not, it generates an error.
 	-- @arg value Any value.
 	-- @arg mtype A string with the name of a type.
-	-- @usage unitTest:assertType(2, "number")
+	-- @usage unitTest = UnitTest{}
+	-- unitTest:assertType(2, "number")
 	assertType = function(self, value, mtype)
 		if value == nil then
 			mandatoryArgumentError(1)
@@ -320,7 +340,8 @@ UnitTest_ = {
 	-- in the configuration file for the tests, or zero if it does not exist. 
 	-- This function is automatically called after executing each test and each example
 	-- of the package.
-	-- @usage unitTest:clear()
+	-- @usage unitTest = UnitTest{}
+	-- unitTest:clear()
 	clear = function(self)
 		if #_Gtme.createdObservers > 0 then
 			delay(self.sleep)
@@ -330,7 +351,9 @@ UnitTest_ = {
 	end,
 	--- Internal function to print error messages along the tests.
 	-- @arg msg A string with the error message.
-	-- @usage unitTest:printError("msg")
+	-- @usage -- DONTRUN
+	-- unitTest = UnitTest{}
+	-- unitTest:printError("msg")
 	printError = function(self, msg)
 		local level = 1
 		local info = debug.getinfo(level)

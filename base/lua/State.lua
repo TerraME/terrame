@@ -33,9 +33,7 @@ metaTableState_ = {__index = State_, __tostring = _Gtme.tostring}
 -- @arg data A table that contains the State attributes.
 -- @arg data.id A string with the unique identifier of the State.
 -- @usage State{
---     id = "working",
---     Jump{...},
---     Flow{...}
+--     id = "working"
 -- }
 function State(data)
 	if type(data) ~= "table" then

@@ -64,8 +64,8 @@ function chDir(path)
 end
 
 --- Return a string with the current working directory or nil plus an error string.
--- @usage dir = currentDir()
--- print(dir)
+-- @usage cdir = currentDir()
+-- print(cdir)
 function currentDir()
 	return lfs.currentdir()
 end
@@ -177,7 +177,7 @@ end
 -- @usage filehandle = io.open(file("agents.csv", "base"), "r")
 -- lock(filehandle, "r")
 -- unlock(filehandle)
--- @see unlock
+-- @see FileSystem:unlock
 function lock(fh, mode)
 	mandatoryArgument(1, "userdata", fh)
 	mandatoryArgument(2, "string", mode)
@@ -185,15 +185,13 @@ function lock(fh, mode)
 	return lfs.lock(fh, mode)
 end
 
---- Create a lockfile (called lockfile.lfs) in path if it does not exist and returns the lock. If the
--- lock already exists checks if it's stale, using the second argeter (default for the second
--- argeter is INT_MAX, which in practice means the lock will never be stale. To free the the lock call
--- lock:free().
--- In case of any errors it returns nil and the error message. In particular, if the lock exists and is
--- not stale it returns the "File exists" message.
+--- Create a lockfile (called lockfile.lfs) in path if it does not exist and returns the lock. 
+-- If the lock already exists checks if it's stale, using the second argeter (default for the 
+-- second argeter is INT_MAX, which in practice means the lock will never be stale.
+-- In case of any errors it returns nil and the error message. In particular, if the lock
+-- exists and is not stale it returns the "File exists" message.
 -- @arg path A string with the path.
--- @usage lock = lockDir(packageInfo("base").path)
--- lock:free()
+-- @usage ld = lockDir(packageInfo("base").path)
 function lockDir(path)
 	mandatoryArgument(1, "string", path)
 
@@ -261,7 +259,7 @@ end
 -- @arg filepath A string with the file name.
 -- @arg atime The new access time (in seconds).
 -- @arg mtime The new modification time (in seconds).
--- @usage touch(packageInfo("base").path)
+-- @usage touch(packageInfo("base").path, 0, 0)
 function touch(filepath, atime, mtime)
 	mandatoryArgument(1, "string", filepath)
 	mandatoryArgument(2, "number", atime)
@@ -278,7 +276,7 @@ end
 -- @usage filehandle = io.open(file("agents.csv", "base"), "r")
 -- lock(filehandle, "r")
 -- unlock(filehandle)
--- @see lock
+-- @see FileSystem:lock
 function unlock(fh)
 	mandatoryArgument(1, "userdata", fh)
 

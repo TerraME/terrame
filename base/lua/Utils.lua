@@ -62,7 +62,10 @@ end
 -- @arg line A string from a CSV file.
 -- @arg sep A string with the separator. The default value is ','.
 -- @arg cline A number with the position of the line in the file. The default value is zero.
--- @usage CSVparseLine(line, ",")
+-- @usage line = CSVparseLine("2,5,aa", ",")
+-- print(line[1])
+-- print(line[2])
+-- print(line[3])
 function CSVparseLine(line, sep, cline)
 	mandatoryArgument(1, "string", line)
 	optionalArgument(2, "string", sep)
@@ -119,15 +122,10 @@ end
 -- The first line of the file list the attribute names.
 -- @arg filename A string with the location of the CSV file.
 -- @arg sep A string with the separator. The default value is ','.
--- @usage -- Given file.csv:
--- -- attr1;attr2
--- -- 11;12
--- -- 21;22
+-- @usage mytable = CSVread(file("agents.csv", "base"))
 --
--- mytable = CSVread("file.csv", ";")
---
--- print(mytable[1].attr1) -- 11
--- print(mytable[2].attr2) -- 22
+-- print(mytable[1].name) -- john
+-- print(mytable[2].age) -- 18
 function CSVread(filename, sep)
 	mandatoryArgument(1, "string", filename)
 	optionalArgument(2, "string", sep)
@@ -173,6 +171,7 @@ end
 -- }
 --
 -- CSVwrite(mytable, "file.csv", ";")
+-- os.execute("rm -f file.csv")
 function CSVwrite(data, filename, sep)
 	mandatoryArgument(1, "table", data)
 	mandatoryArgument(2, "string", filename)
@@ -271,7 +270,14 @@ end
 -- @arg data.4 A number with the end of the interval.
 -- @arg data.5 A positive number with the step within the interval. The default value is
 -- 0.2, but the user can change it by declaring a global variable DELTA.
--- @usage d{func, 0.1, 0, 10, 0.01}
+-- @usage df = function(x, y) return y - x ^ 2 + 1 end
+-- a = 0
+-- b = 2
+-- init = 0.5
+-- delta = 0.2
+--
+-- result = d{df, init, a, b, delta}
+-- print(result)
 function d(data)
 	local result = 0
 	local delta = DELTA
@@ -367,7 +373,13 @@ end
 -- false, forEachAgent() stops and does not process any other Agent. 
 -- This function can optionally get a second argument with a positive number representing the
 -- position of the Agent in the vector of Agents.
--- @usage forEachAgent(group, function(agent)
+-- @usage ag = Agent{age = Choice{min = 0, max = 2}}
+-- soc = Society{
+--     instance = ag,
+--     quantity = 5
+-- }
+-- 
+-- forEachAgent(soc, function(agent)
 --     agent.age = agent.age + 1
 -- end)
 -- @see Environment:createPlacement
@@ -405,12 +417,10 @@ end
 -- It can optionally have a second argument with a positive number representing the position of
 -- the Cell in the vector of Cells. If it returns false when processing a given Cell,
 -- forEachCell() stops and does not process any other Cell.
--- @usage forEachCell(cellularspace, function(cell)
---     cell.water = cell.water + 1
--- end)
---
--- forEachCell(cellularspace, function(cell, i)
---     print(i) -- 1, 2, 3, ...
+-- @usage cellularspace = CellularSpace{xdim = 10}
+-- 
+-- forEachCell(cellularspace, function(cell)
+--     cell.water = 0
 -- end)
 -- @see Environment:createPlacement
 function forEachCell(cs, f)
@@ -438,9 +448,15 @@ end
 -- first argument and the other from the second one.
 -- If some call returns false, forEachCellPair() stops and does not
 -- process any other pair of Cells.
--- @usage forEachCellPair(cs1, cs2, function(cell1, cell2)
---     cell1.water = cell1.water + cell2.water
---     cell2.water = 0
+-- @usage cs1 = CellularSpace{
+--     xdim = 10,
+--     instance = Cell{water = Choice{min = 0, max = 20}}
+-- }
+-- cs2 = CellularSpace{xdim = 10}
+--
+-- forEachCellPair(cs1, cs2, function(cell1, cell2)
+--     cell2.water = cell1.water
+--     cell1.water = 0
 -- end)
 function forEachCellPair(cs1, cs2, f)
 	if type(cs1) ~= "CellularSpace" then
@@ -470,17 +486,17 @@ end
 -- connection weight. If some call to f returns false, forEachConnection() stops and does not
 -- process any other connection. In the case where the second argument is missing, this
 -- function becomes the second argument.
--- @usage forEachConnection(agent, function(agent, connection, weight)
---     agent:message {
---         receiver = connection,
---         content = "sugar",
---         quantity = 2 * weight
---     }
--- end)
+-- @usage ag = Agent{
+--     value = 2,
+--     on_message = function() print("thanks") end
+-- }
 --
--- sugarfriends = 0
--- forEachConnection(agent, "friends", function(agent, friend)
---     sugarfriends = sugarfriends + friend.sugar
+-- soc = Society{instance = ag, quantity = 10}
+--
+-- soc:createSocialNetwork{quantity = 3}
+-- 
+-- forEachConnection(soc:sample(), function(ag1, ag2)
+--     ag1:message{receiver = ag2}
 -- end)
 -- @see Society:createSocialNetwork
 function forEachConnection(agent, index, f)
@@ -517,8 +533,13 @@ end
 -- @arg func A user-defined function that takes three arguments: the index of the element,
 -- the element itself, and the type of the element. If some call to this function returns
 -- false then forEachElement() stops.
--- @usage forEachElement(cell, function(idx, element, etype)
---     print(element, etype)
+-- @usage cell = Cell{
+--     value1 = 10,
+--     value2 = 5
+-- }
+--
+-- forEachElement(cell, function(idx, _, etype)
+--     print(idx.."\t"..etype)
 -- end)
 function forEachElement(obj, func)
 	if obj == nil then
@@ -543,7 +564,7 @@ end
 -- @arg folder A string with the path to a directory, or a vector of files.
 -- @arg f A user-defined function that takes a file name as argument. Note that
 -- the name does not include the directory where the file is placed.
--- @usage forEachFile("C:", function(file)
+-- @usage forEachFile(packageInfo("base").path, function(file)
 --     print(file)
 -- end)
 -- @see FileSystem:dir
@@ -577,15 +598,17 @@ end
 -- Cell, and the connection weight. If some call to it returns false, forEachNeighbor() stops
 -- and does not process any other neighbor. In the case where the second argument is missing,
 -- this function becomes the second argument.
--- @usage forEachNeighbor(cell, function(cell, neighbor)
+-- @usage cs = CellularSpace{
+--     xdim = 10,
+--     instance = Cell{deforestation = Choice{min = 0, max = 1}}
+-- }
+--
+-- cs:createNeighborhood()
+--
+-- forEachNeighbor(cs:sample(), function(cell, neighbor)
 --     if neighbor.deforestation > 0.9 then
 --         cell.deforestation = cell.deforestation * 1.01
 --     end
--- end)
---
--- neigh_deforestation = 0
--- forEachNeighbor(cell, "roads", function(cell, neighbor, weight)
---     neigh_deforestation = neigh_deforestation + neighbor.deforestation * weight
 -- end)
 -- @see CellularSpace:createNeighborhood
 -- @see CellularSpace:loadNeighborhood
@@ -620,10 +643,19 @@ end
 -- otherwise it returns false.
 -- @arg cell A Cell.
 -- @arg f A function that receives a Neighborhood index as argument.
--- @usage forEachNeighborhood(cell, function(idx)
---     forEachNeighbor(cell, idx, function()
---         -- ...
---     end)
+-- @usage cs = CellularSpace{
+--     xdim = 10
+-- }
+--
+-- cs:createNeighborhood()
+-- cs:createNeighborhood{
+--     name = "2"
+-- }
+--
+-- cell = cs:sample()
+-- forEachNeighborhood(cell, function(idx)
+--     print(idx)
+--     print(#cell:getNeighborhood(idx))
 -- end)
 function forEachNeighborhood(cell, f)
 	if type(cell) ~= "Cell" then
@@ -652,8 +684,13 @@ end
 -- @arg func A user-defined function that takes three arguments: the index of the element,
 -- the element itself, and the type of the element. If some call to this function returns
 -- false then forEachElement() stops.
--- @usage forEachOrderedElement(cell, function(idx, element, etype)
---     print(element, etype)
+-- @usage cell = Cell{
+--     value1 = 10,
+--     value2 = 5
+-- }
+--
+-- forEachOrderedElement(cell, function(idx, _, etype)
+--     print(idx.."\t"..etype)
 -- end)
 function forEachOrderedElement(obj, func)
 	if obj == nil then
@@ -706,10 +743,19 @@ end
 -- otherwise it returns false.
 -- @arg agent An Agent.
 -- @arg f A function that receives a SocialNetwork index as argument.
--- @usage forEachSocialNetwork(agent, function(idx)
---     forEachConnection(agent, idx, function()
---         -- ...
---     end)
+-- @usage ag = Agent{value = 2}
+-- soc = Society{instance = ag, quantity = 20}
+--
+-- soc:createSocialNetwork{quantity = 3}
+-- soc:createSocialNetwork{
+--     quantity = 5,
+--     name = "2"
+-- }
+-- 
+-- agent = soc:sample()
+-- forEachSocialNetwork(agent, function(idx)
+--     print(idx)
+--     print(#agent:getSocialNetwork(idx))
 -- end)
 function forEachSocialNetwork(agent, f)
 	if type(agent) ~= "Agent" then
@@ -775,9 +821,14 @@ end
 -- objects and a given operator. If the function was not successfully built it returns nil.
 -- @arg attribute A string with the name of the attribute.
 -- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=". The default value is "<".
--- @usage t = Trajectory{
+-- @usage cs = CellularSpace{
+--     xdim = 10,
+--     instance = Cell{cover = Choice{min = 0, max = 1}}
+-- }
+--
+-- t = Trajectory{
 --     target = cs,
---     sort = greaterByAttribute("cover")
+--     greater = greaterByAttribute("cover")
 -- }
 -- @see Trajectory
 -- @see Group
@@ -799,9 +850,13 @@ end
 -- operator.
 -- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=".
 -- The default value is "<".
--- @usage t = Trajectory{
+-- @usage cs = CellularSpace{
+--     xdim = 10
+-- }
+--
+-- t = Trajectory{
 --     target = cs,
---     sort = greaterByCoord()
+--     greater = greaterByCoord()
 -- }
 -- @see Trajectory
 function greaterByCoord(operator)
@@ -848,7 +903,6 @@ end
 --     equation = function(t, y)
 --         return t - 0.1 * y
 --     end,
---     method = "euler",
 --     initial = 0,
 --     a = 0,
 --     b = 100,
@@ -1108,7 +1162,7 @@ end
 -- separator & A string with the directory separator. \
 -- silent & A boolean value indicating whether print() calls should not be shown in the
 -- screen. This parameter is set true when TerraME is executed with mode "silent".
--- @usage sessionInfo().version
+-- @usage print(sessionInfo().mode)
 function sessionInfo()
 	return info_ -- this is a global variable created when TerraME is initialized
 end

@@ -29,7 +29,8 @@ Automaton_ = {
 	--- Add a new Trajectory or State to the Automaton. It returns a boolean value
 	-- indicating whether the new element was successfully added.
 	-- @arg object A Trajectory or State.
-	-- @usage automaton:add(state)
+	-- @usage -- DONTRUN
+	-- automaton:add(state)
 	-- automaton:add(trajectory)
 	add = function(self, object)
 		if type(object) == "Trajectory" or type(object) == "State" then
@@ -44,7 +45,8 @@ Automaton_ = {
 	-- Event can be got from the Timer. It returns a boolean value indicating whether the Jumps
 	-- were executed correctly.
 	-- @arg event An Event.
-	-- @usage automaton:execute(event)
+	-- @usage -- DONTRUN
+	-- automaton:execute(event)
 	execute = function(self, event)
 		mandatoryArgument(1, "Event", event)
 
@@ -57,13 +59,15 @@ Automaton_ = {
 		self.cObj_:execute(mevent)
 	end,
 	--- Return the unique identifier name of the Automaton.
-	-- @usage automaton:getId()
+	-- @usage -- DONTRUN
+	-- automaton:getId()
 	getId = function(self)
 		return self.id
 	end,
 	--- Get a State of the Automaton according to a given position.
 	-- @arg index A number indicating the position of the State to be retrieved.
-	-- @usage state = automaton:getState(1)
+	-- @usage -- DONTRUN
+	-- state = automaton:getState(1)
 	getState = function(self, index)
 		mandatoryArgument(1, "number", index)
 
@@ -76,13 +80,15 @@ Automaton_ = {
 	--- Return the name of the current State. As an Automaton has independent States in each Cell, 
 	-- it requires a location to return its State name.
 	-- @arg cell A Cell.
-	-- @usage id = automaton:getStateName(cell)
+	-- @usage -- DONTRUN
+	-- id = automaton:getStateName(cell)
 	getStateName = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 		return cell.cObj_:getCurrentStateName(self.cObj_)
 	end,
 	--- Get all the States inside the Automaton. It returns a vector indexed by numeric positions.
-	-- @usage state = automaton:getStates()[1]
+	-- @usage -- DONTRUN
+	-- state = automaton:getStates()[1]
 	getStates = function(self)
 		local statesVector = {}
 		for _, value in pairs(self) do
@@ -96,7 +102,8 @@ Automaton_ = {
 	-- @arg modelTime An integer number representing the notification time. The default value is zero.
 	-- It is also possible to use an Event as argument. In this case, it will use the result of
 	-- Event:getTime().
-	-- @usage automaton:notify()
+	-- @usage -- DONTRUN
+	-- automaton:notify()
 	notify = function(self, modelTime)
 		if modelTime == nil then
 			modelTime = 0
@@ -112,7 +119,8 @@ Automaton_ = {
 	--- Set the unique identifier of the Automaton. Return a boolean value indicating whether
 	-- the id was changed correctly.
 	-- @arg id A string that names the Automaton.
-	-- @usage automaton:setId("newid")
+	-- @usage -- DONTRUN
+	-- automaton:setId("newid")
 	setId = function(self, id)
 		if id == nil then
 			mandatoryArgument(1, "string", id)
@@ -125,7 +133,8 @@ Automaton_ = {
 	-- change was successfully executed. When the Automaton is built its status is
 	-- not activated.
 	-- @arg status A boolean that indicates if the Trajectories will be activated.
-	-- @usage automaton:setTrajectoryStatus(true)
+	-- @usage -- DONTRUN
+	-- automaton:setTrajectoryStatus(true)
 	setTrajectoryStatus = function(self, status)
 		if status == nil then
 			status = false
@@ -142,7 +151,8 @@ metaTableAutomaton_ = {__index = Automaton_, __tostring = _Gtme.tostring}
 -- each Cell of the space. It has independent States in each Cell.
 -- @arg data.id A string that names the Automanton.
 -- @output parent The Environment it belongs.
--- @usage automaton = Automaton {
+-- @usage -- DONTRUN
+-- automaton = Automaton {
 --     id = "MyAutomaton",
 --     State {...},
 --     -- ...

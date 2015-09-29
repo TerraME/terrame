@@ -1505,6 +1505,7 @@ Map_ = {
 	-- }
 	--
 	-- map:save("file.bmp")
+	-- os.execute("rm -f file.bmp")
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 
@@ -1588,15 +1589,16 @@ metaTableMap_ = {__index = Map_}
 -- the chosen strategy.
 -- @arg data.invert Invert the order of the colors when using ColorBrewer. The default value is false.
 -- @arg data.select A string with the name of the attribute to be visualized.
--- @usage cs = CellularSpace{
---     xdim = 10
+-- @usage cell = Cell{
+--     temperature = Choice{min = 0, max = 50},
+--     seggregation = Choice{0, 1, 2},
+--     forest = Choice{min = 0, max = 1}
 -- }
 --
--- forEachCell(cs, function(cell)
---     cell.temperature = Random():number(0, 50)
---     cell.seggregation = Random():sample(0, 1, 2)
---     cell.forest = Random():number()
--- end)
+-- cs = CellularSpace{
+--     xdim = 10,
+--     instance = cell
+-- }
 --
 -- Map{
 --     target = cs,
@@ -1616,8 +1618,8 @@ metaTableMap_ = {__index = Map_}
 -- }
 --
 -- Map{
---     target = world,
---     select  = "forest",
+--     target = cs,
+--     select = "forest",
 --     color  = "RdYlGn",
 --     min = 0,
 --     max = 1,

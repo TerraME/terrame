@@ -31,8 +31,12 @@ Cell_ = {
 	-- @arg neigh A Neighborhood.
 	-- @arg id Neighborhood's name. The default value is "1".
 	-- @see Neighborhood
-	-- @usage cell:addNeighborhood(n)
-	-- cell:addNeighborhood(n, "east")
+	-- @usage c1 = Cell{}
+	-- c2 = Cell{}
+	-- n = Neighborhood()
+	--
+	-- n:add(c2)
+	-- c1:addNeighborhood(n)
 	addNeighborhood = function(self, neigh, id)
 		if neigh == nil then
 			mandatoryArgumentError(1)
@@ -52,8 +56,10 @@ Cell_ = {
 	end,
 	--- Compute the Euclidean distance to a given Cell. It uses the attributes x and y of both Cells.
 	-- @arg cell A Cell.
-	-- @usage c2 = Cell{x = 10, y = 10}
-	-- cell:distance(c2)
+	-- @usage c1 = Cell{x = 5, y = 5}
+	-- c2 = Cell{x = 10, y = 10}
+	-- dist = c1:distance(c2)
+	-- print(dist)
 	distance = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 
@@ -62,13 +68,37 @@ Cell_ = {
 	--- Return an Agent that belongs to the Cell. It assumes that there is at most one Agent per Cell.
 	-- If there is no Agent within the cell then it returns nil.
 	-- @arg placement A string with the name of the placement. The default value is "placement".
-	-- @usage agent = cell:getAgent()
+	-- @usage ag = Agent{}
+	-- s = Society{instance = ag, quantity = 2}
+	-- ag1 = s.agents[1]
+	-- cs = CellularSpace{xdim = 3}
+	-- c = cs.cells[1]
+	-- myEnv = Environment{cs, ag1}
+	--
+	-- myEnv:createPlacement{strategy = "void"}
+	-- 
+	-- ag1:enter(c)
+	-- if c:getAgent() == ag1 then
+	--     print("equal")
+	-- end
 	getAgent = function(self, placement)
 		return self:getAgents(placement)[1]
 	end,
 	--- Return the Agents that belong to the Cell. Agents are indexed by numeric positions.
 	-- @arg placement A string with the name of the placement. The default value is "placement".
-	-- @usage agent = cell:getAgents()[1]
+	-- @usage ag = Agent{}
+	-- s = Society{instance = ag, quantity = 2}
+	-- ag1 = s.agents[1]
+	-- cs = CellularSpace{xdim = 3}
+	-- c = cs.cells[1]
+	-- myEnv = Environment{cs, ag1}
+	--
+	-- myEnv:createPlacement{strategy = "void"}
+	-- 
+	-- ag1:enter(c)
+	-- if c:getAgents()[1] == ag1 then
+	--     print("equal")
+	-- end
 	getAgents = function(self, placement)
 		if placement == nil then placement = "placement" end
 		mandatoryArgument(1, "string", placement)
@@ -81,15 +111,24 @@ Cell_ = {
 			customError("Placement '".. placement.. "' should be a Group, got "..type(self[placement])..".")
 		end
 	end,
-	--- Return a string with the unique identifier of the Cell.
-	-- @usage id = cell:getId()
+	--- Return a string with the unique identifier of the Cell. Note that any Cell
+	-- that belongs to a CellularSpace has an id.
+	-- @usage cell = Cell{id = "2"}
+	-- id = cell:getId()
+	-- print(id)
 	getId = function(self)
 		return self.cObj_:getID()
 	end,
 	--- Return a Neighborhood of the Cell. If the Neighborhood does not exist then it returns nil.
 	-- @arg index A string with the neighborhood's name to be retrieved. The default value is "1".
-	-- @usage n = cell:getNeighborhood()
-	-- n = cell:getNeighborhood("moore")
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- cs:createNeighborhood()
+	--
+	-- n = cs:sample():getNeighborhood()
+	-- print(#n)
 	getNeighborhood = function(self, index)
 		if index == nil then
 			index = "1"
@@ -125,9 +164,21 @@ Cell_ = {
 	init = function(self) -- virtual function that might be implemented by the modeler
 	end,
 	--- Return whether the cell is empty according to a given placement.
+	-- An empty Cell does not contain any Agent.
 	-- @arg placement A string with the name of the placement. The default value is "placement".
-	-- @usage print(cell:isEmpty())
-	-- print(cell:isEmpty("workingplace"))
+	-- @usage ag = Agent{}
+	-- s = Society{instance = ag, quantity = 2}
+	-- ag1 = s.agents[1]
+	-- cs = CellularSpace{xdim = 3}
+	-- c = cs.cells[1]
+	-- myEnv = Environment{cs, ag1}
+	--
+	-- myEnv:createPlacement{strategy = "void"}
+	--
+	-- ag1:enter(c)
+	-- if not c:isEmpty() then
+	--     print("not empty")
+	-- end
 	isEmpty = function(self, placement)
 		return #self:getAgents(placement) == 0
 	end,
@@ -136,7 +187,11 @@ Cell_ = {
 	-- The default value is zero.
 	-- It is also possible to use an Event as argument. In this case, it will use the result of
 	-- Event:getTime().
-	-- @usage cell:notify()
+	-- @usage cell = Cell{value = 5}
+	-- Chart{target = cell}
+	--
+	-- cell:notify()
+	-- cell:notify()
 	notify = function(self, modelTime)
 		if modelTime == nil then
 			modelTime = 0
@@ -157,9 +212,16 @@ Cell_ = {
 	end,
 	--- Return a random Cell from a Neighborhood of the Cell.
 	-- @arg id A string with the name of the Neighborhood. The default value is "1".
-	-- @usage cell_neighbor = cell:sample()
-	-- cell_neighbor = cell:sample("myneighborhood")
 	-- @see Cell:getNeighborhood
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- cs:createNeighborhood()
+	--
+	-- cell = cs:sample()
+	-- neigh = cell:sample()
+	-- print(type(neigh))
 	sample = function(self, id)
 		local randomObj = Random()
 		if id == nil then id = "1" end
@@ -174,14 +236,16 @@ Cell_ = {
 	end,
 	--- Update the unique identifier of the Cell.
 	-- @arg id A string with the new unique identifier.
-	-- @usage cell:setId("newid")
+	-- @usage cell = Cell{id = "2"}
+	-- cell:setId("newid")
+	-- id = cell:getId()
+	-- print(id)
 	setId = function(self, id)
 		mandatoryArgument(1, "string", id)
 		self.id = id
 		self.cObj_:setID(self.id)
 	end,
 	--- Return the number of Neighborhoods in the Cell.
-	-- @usage size = #cell
 	-- @deprecated Cell:#
 	size = function(self)
 		deprecatedFunction("size", "operator #")
@@ -190,7 +254,10 @@ Cell_ = {
 	-- one stores the past values and the other stores the current (present) values. Synchronize
 	-- copies the current values to a table named past, within the Cell. The previous past is
 	-- therefore overwritten.
-	-- @usage cell:synchronize()
+	-- @usage cell = Cell{value = 5}
+	--
+	-- cell:synchronize()
+	-- print(cell.past.value)
 	-- @see CellularSpace:synchronize
 	synchronize = function(self)
 		self.past = {}
@@ -205,7 +272,12 @@ Cell_ = {
 metaTableCell_ = {
 	__index = Cell_,
 	--- Return the number of Neighborhoods in the Cell.
-	-- @usage size = #cell
+	-- @usage cell = Cell{}
+	-- cell:addNeighborhood(Neighborhood())
+	-- cell:addNeighborhood(Neighborhood())
+	--
+	-- size = #cell
+	-- print(size)
 	__len = function(self)
 		return self.cObj_:size()
 	end,

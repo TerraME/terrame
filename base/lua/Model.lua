@@ -94,7 +94,7 @@ Model_ = {
     -- See Utils:toLabel(), for using names of arguments
     -- in error messages when building a Model to work with graphical interfaces.
 	-- This function is executed automaticall when one instantiates a given Model.
-	-- @usage usage Tube = Model{
+	-- @usage Tube = Model{
 	--     initialWater = 200,
 	--     flow = 20,
 	--     init = function(model)
@@ -150,7 +150,11 @@ Model_ = {
 	--             {"block", "boolean"}
 	--         }
 	--     end,
-	--     -- ...
+	--     init = function(model)
+	--         model.timer = Timer{
+	--             Event{action = function() end}
+	--         }
+	--     end
 	-- }
 	interface = function(self)
 	end,
@@ -174,7 +178,7 @@ Model_ = {
 	-- m = Tube{water = 100}
 	--
 	-- Chart{
-	--     subject = m,
+	--     target = m,
 	--     select = "water"
 	-- }
 	--
@@ -211,9 +215,16 @@ Model_ = {
 -- It is possible to define only part of the table in the instance, keeping the other default values. \
 -- @usage mymodel = Model{
 --     par1 = 3,
---     par2 = {"low", "medium", "high"},
+--     par2 = Choice{"low", "medium", "high"},
 --     par3 = {min = 3, max = 5},
---     ...
+--     finalTime = 20,
+--     init = function(model)
+--         model.timer = Timer{
+--             Event{action = function()
+--                 -- ...
+--             end}
+--         }
+--     end
 -- }
 --
 -- print(type(mymodel)) -- "Model"
@@ -223,8 +234,12 @@ Model_ = {
 -- print(type(scenario1)) -- "mymodel"
 --
 -- scenario2 = mymodel{par2 = "medium", par3 = {max = 6}} -- par1 = 3, par3.min = 3
--- scenario3 = mymodel{par2 = "equal"} -- error: there is no such option in par2
--- scenario4 = mymodel{par3 = {average = 2}} -- error: there is no such name in par3
+--
+-- _, err = pcall(function() cenario3 = mymodel{par2 = "equal"} end)
+-- print(err) -- error: there is no such option in par2
+--
+-- _, err = pcall(function() scenario4 = mymodel{par3 = {average = 2}} end)
+-- print(err) -- error: there is no such name in par3
 function Model(attrTab)
 	if type(attrTab.interface) == "function" then
 		local minterface = attrTab.interface()

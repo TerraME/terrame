@@ -117,7 +117,8 @@ end
 -- @arg functionName A string with the name of the deprecated function.
 -- @arg functionExpected A string indicating hot to proceed to replace the
 -- deprecated function.
--- @usage deprecatedFunction("abc", "def")
+-- @usage _, err = pcall(function() deprecatedFunction("abc", "def") end)
+-- print(err)
 function deprecatedFunction(functionName, functionExpected)
 	mandatoryArgument(1, "string", functionName)
 	mandatoryArgument(2, "string", functionExpected)
@@ -206,7 +207,8 @@ end
 -- The error message comes from ErrorHandling:integerArgumentMsg().
 -- @arg position A number with the position of the argument in the function.
 -- @arg value The valued used as argument to the function call.
--- @usage integerArgument(1, 2.3)
+-- @usage _, err = pcall(function() integerArgument(1, 2.3) end)
+-- print(err)
 function integerArgument(position, value)
 	if type(value) ~= "number" then customError(type(value)) end
 	if math.floor(value) ~= value then
@@ -235,7 +237,8 @@ end
 -- @arg table A named table.
 -- @arg attr A string with the attribute name.
 -- @usage mtable = {bbb = 2.3}
--- integerTableArgument(table, "bbb")
+-- _, err = pcall(function() integerTableArgument(mtable, "bbb") end)
+-- print(err)
 function integerTableArgument(table, attr)
 	if math.floor(table[attr]) ~= table[attr] then
 		customError(integerArgumentMsg(attr, table[attr]))
@@ -248,7 +251,8 @@ end
 -- @arg attr A string with an attribute name (for functions with named arguments), or position
 -- (otherwise).
 -- @arg ext A string with the incompatible file extension.
--- @usage invalidFileExtensionError("file", ".txt")
+-- @usage _, err = pcall(function() invalidFileExtensionError("file", ".txt") end)
+-- print(err)
 function invalidFileExtensionError(attr, ext)
 	customError(invalidFileExtensionMsg(attr, ext))
 end
@@ -504,7 +508,8 @@ end
 --     green = true
 -- }
 --
--- switchInvalidArgument("attribute", "gren", t) 
+-- _, err = pcall(function() switchInvalidArgument("attribute", "gren", t) end)
+-- print(err)
 function switchInvalidArgument(att, value, suggestions)
 	mandatoryArgument(1, "string", att)
 	mandatoryArgument(2, "string", value)

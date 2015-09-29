@@ -35,6 +35,7 @@ Clock_ = {
 	-- clock = Clock{target = timer}
 	--
 	-- clock:save("file.bmp")
+	-- os.execute("rm -f file.bmp")
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 
