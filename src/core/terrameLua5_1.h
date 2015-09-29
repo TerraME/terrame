@@ -31,7 +31,7 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #define TERRAME_LUA_5_1_H
 
 #ifndef TME_NO_TERRALIB
-	#include <TeDatabase.h>
+//	#include <TeDatabase.h>
 #endif
 
 #include "environment.h"

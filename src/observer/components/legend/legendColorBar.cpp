@@ -20,7 +20,7 @@ this program and its documentation.
 ************************************************************************************/
 
 #include <QColor>
-#include <TeUtils.h>
+//#include <TeUtils.h>
 #include "legendColorUtils.h"
 #include "legendColorBar.h"
 #include <QCursor>
@@ -88,173 +88,173 @@ void TeQtColorBar::setColorBar(const vector<ColorBar>& colorBarVec)
     generateColorMap();
 }
 
-void TeQtColorBar::setColorBar(const vector<TeColor>& colorVec)
-{
-    int	i;
+//void TeQtColorBar::setColorBar(const vector<TeColor>& colorVec)
+//{
+//    int	i;
 
-    inputColorVec_.clear();
-    vector<ColorBar> cbVec;
-    ColorBar cb;
+//    inputColorVec_.clear();
+//    vector<ColorBar> cbVec;
+//    ColorBar cb;
 
-    for(i=0; i<(int)colorVec.size(); i++)
-    {
-        cb.color(colorVec[i]);
-        cbVec.push_back(cb);
-    }
+//    for(i=0; i<(int)colorVec.size(); i++)
+//    {
+//        cb.color(colorVec[i]);
+//        cbVec.push_back(cb);
+//    }
 
-    if(cbVec.size() == 1)
-    {
-        TeColor c = colorVec[0];
-        c.red_ = c.red_ / 5;
-        c.green_ = c.green_ / 5;
-        c.blue_ = c.blue_ / 5;
+//    if(cbVec.size() == 1)
+//    {
+//        TeColor c = colorVec[0];
+//        c.red_ = c.red_ / 5;
+//        c.green_ = c.green_ / 5;
+//        c.blue_ = c.blue_ / 5;
 
-        cb.color(c);
-        cbVec.push_back(cb);
-    }
+//        cb.color(c);
+//        cbVec.push_back(cb);
+//    }
 
-    for(i=0; i<(int)cbVec.size(); ++i)
-    {
-        cbVec[i].distance_ = (double)i;
-        inputColorVec_.push_back(cbVec[i]);
-    }
+//    for(i=0; i<(int)cbVec.size(); ++i)
+//    {
+//        cbVec[i].distance_ = (double)i;
+//        inputColorVec_.push_back(cbVec[i]);
+//    }
 
-    generateColorMap();
-}
+//    generateColorMap();
+//}
 
-void TeQtColorBar::setColorBarFromNames(string colors)
-{
-    int	i;
-    if(colors.empty())
-        colors = "W";
+//void TeQtColorBar::setColorBarFromNames(string colors)
+//{
+//    int	i;
+//    if(colors.empty())
+//        colors = "W";
 
-    vector<string> colorNameVec;
-    QString s(colors.c_str());
-    QStringList ss = s.split("-");
+//    vector<string> colorNameVec;
+//    QString s(colors.c_str());
+//    QStringList ss = s.split("-");
 
-    for(i = 0; i < (int)ss.size(); i++)
-    {
-        QString a = ss[i];
-        if(tr("R") == a)
-            colorNameVec.push_back("RED");
-        else if(tr("G") == a)
-            colorNameVec.push_back("GREEN");
-        else if(tr("B") == a)
-            colorNameVec.push_back("BLUE");
-        else if(tr("Cy") == a)
-            colorNameVec.push_back("CYAN");
-        else if(tr("Or") == a)
-            colorNameVec.push_back("ORANGE");
-        else if(tr("Mg") == a)
-            colorNameVec.push_back("MAGENTA");
-        else if(tr("Y") == a)
-            colorNameVec.push_back("YELLOW");
-        else if((tr("Bl") == a) || (tr("BL") == a))
-            colorNameVec.push_back("BLACK");
-        else if(tr("W") == a)
-            colorNameVec.push_back("WHITE");
-        else
-            colorNameVec.push_back("GRAY");
-    }
+//    for(i = 0; i < (int)ss.size(); i++)
+//    {
+//        QString a = ss[i];
+//        if(tr("R") == a)
+//            colorNameVec.push_back("RED");
+//        else if(tr("G") == a)
+//            colorNameVec.push_back("GREEN");
+//        else if(tr("B") == a)
+//            colorNameVec.push_back("BLUE");
+//        else if(tr("Cy") == a)
+//            colorNameVec.push_back("CYAN");
+//        else if(tr("Or") == a)
+//            colorNameVec.push_back("ORANGE");
+//        else if(tr("Mg") == a)
+//            colorNameVec.push_back("MAGENTA");
+//        else if(tr("Y") == a)
+//            colorNameVec.push_back("YELLOW");
+//        else if((tr("Bl") == a) || (tr("BL") == a))
+//            colorNameVec.push_back("BLACK");
+//        else if(tr("W") == a)
+//            colorNameVec.push_back("WHITE");
+//        else
+//            colorNameVec.push_back("GRAY");
+//    }
 
-    TeColor	RGB;
-    map<string, TeColor> mapcor;
+//    TeColor	RGB;
+//    map<string, TeColor> mapcor;
 
-    RGB.name_ = "RED";
-    RGB.red_ = 240;
-    RGB.green_ = 0;
-    RGB.blue_ = 0;
-    mapcor["RED"] = RGB;
+//    RGB.name_ = "RED";
+//    RGB.red_ = 240;
+//    RGB.green_ = 0;
+//    RGB.blue_ = 0;
+//    mapcor["RED"] = RGB;
 
-    RGB.name_ = "GREEN";
-    RGB.red_ = 0;
-    RGB.green_ = 240;
-    RGB.blue_ = 0;
-    mapcor["GREEN"] = RGB;
+//    RGB.name_ = "GREEN";
+//    RGB.red_ = 0;
+//    RGB.green_ = 240;
+//    RGB.blue_ = 0;
+//    mapcor["GREEN"] = RGB;
 
-    RGB.name_ = "BLUE";
-    RGB.red_ = 0;
-    RGB.green_ = 0;
-    RGB.blue_ = 240;
-    mapcor["BLUE"] = RGB;
+//    RGB.name_ = "BLUE";
+//    RGB.red_ = 0;
+//    RGB.green_ = 0;
+//    RGB.blue_ = 240;
+//    mapcor["BLUE"] = RGB;
 
-    RGB.name_ = "YELLOW";
-    RGB.red_ = 255;
-    RGB.green_ = 255;
-    RGB.blue_ = 100;
-    mapcor["YELLOW"] = RGB;
+//    RGB.name_ = "YELLOW";
+//    RGB.red_ = 255;
+//    RGB.green_ = 255;
+//    RGB.blue_ = 100;
+//    mapcor["YELLOW"] = RGB;
 
-    RGB.name_ = "CYAN";
-    RGB.red_ = 100;
-    RGB.green_ = 255;
-    RGB.blue_ = 255;
-    mapcor["CYAN"] = RGB;
+//    RGB.name_ = "CYAN";
+//    RGB.red_ = 100;
+//    RGB.green_ = 255;
+//    RGB.blue_ = 255;
+//    mapcor["CYAN"] = RGB;
 
-    RGB.name_ = "MAGENTA";
-    RGB.red_ = 255;
-    RGB.green_ = 100;
-    RGB.blue_ = 255;
-    mapcor["MAGENTA"] = RGB;
+//    RGB.name_ = "MAGENTA";
+//    RGB.red_ = 255;
+//    RGB.green_ = 100;
+//    RGB.blue_ = 255;
+//    mapcor["MAGENTA"] = RGB;
 
-    RGB.name_ = "ORANGE";
-    RGB.red_ = 255;
-    RGB.green_ = 140;
-    RGB.blue_ = 0;
-    mapcor["ORANGE"] = RGB;
+//    RGB.name_ = "ORANGE";
+//    RGB.red_ = 255;
+//    RGB.green_ = 140;
+//    RGB.blue_ = 0;
+//    mapcor["ORANGE"] = RGB;
 
-    RGB.name_ = "GRAY";
-    RGB.red_ = 240;
-    RGB.green_ = 240;
-    RGB.blue_ = 240;
-    mapcor["GRAY"] = RGB;
+//    RGB.name_ = "GRAY";
+//    RGB.red_ = 240;
+//    RGB.green_ = 240;
+//    RGB.blue_ = 240;
+//    mapcor["GRAY"] = RGB;
 
-    RGB.name_ = "BLACK";
-    RGB.red_ = 0;
-    RGB.green_ = 0;
-    RGB.blue_ = 0;
-    mapcor["BLACK"] = RGB;
+//    RGB.name_ = "BLACK";
+//    RGB.red_ = 0;
+//    RGB.green_ = 0;
+//    RGB.blue_ = 0;
+//    mapcor["BLACK"] = RGB;
 
-    RGB.name_ = "WHITE";
-    RGB.red_ = 255;
-    RGB.green_ = 255;
-    RGB.blue_ = 255;
-    mapcor["WHITE"] = RGB;
+//    RGB.name_ = "WHITE";
+//    RGB.red_ = 255;
+//    RGB.green_ = 255;
+//    RGB.blue_ = 255;
+//    mapcor["WHITE"] = RGB;
 
-    vector<ColorBar> cbVec;
-    for(i=0; i<(int)colorNameVec.size(); ++i)  {
-        ColorBar cb;
-        cb.color(mapcor[colorNameVec[i]]);
-        cbVec.push_back(cb);
-    }
+//    vector<ColorBar> cbVec;
+//    for(i=0; i<(int)colorNameVec.size(); ++i)  {
+//        ColorBar cb;
+//        cb.color(mapcor[colorNameVec[i]]);
+//        cbVec.push_back(cb);
+//    }
 
-    if(inputColorVec_.size() == 1){
-        ColorBar cb;
-        TeColor c = inputColorVec_[0].cor_;
+//    if(inputColorVec_.size() == 1){
+//        ColorBar cb;
+//        TeColor c = inputColorVec_[0].cor_;
 
-        c.red_ = c.red_ / 5;
-        c.green_ = c.green_ / 5;
-        c.blue_ = c.blue_ / 5;
+//        c.red_ = c.red_ / 5;
+//        c.green_ = c.green_ / 5;
+//        c.blue_ = c.blue_ / 5;
 
-        cb.color(c);
-        cbVec.push_back(cb);
-    }
+//        cb.color(c);
+//        cbVec.push_back(cb);
+//    }
 
-    inputColorVec_.clear();
-    for(i=0; i<(int)cbVec.size(); ++i) {
-        cbVec[i].distance_ = (double)i;
-        inputColorVec_.push_back(cbVec[i]);
-    }
+//    inputColorVec_.clear();
+//    for(i=0; i<(int)cbVec.size(); ++i) {
+//        cbVec[i].distance_ = (double)i;
+//        inputColorVec_.push_back(cbVec[i]);
+//    }
 
-    generateColorMap();
-}
+//    generateColorMap();
+//}
 
 void TeQtColorBar::generateColorMap()
 {
-    sortByDistance();
-    generateColorBarMap(inputColorVec_, ftam_, colorMap_);
-    totalDistance_ = 1.;
-    if(inputColorVec_.empty() == false)
-        totalDistance_ = inputColorVec_[inputColorVec_.size()-1].distance_;
+//    sortByDistance();
+//    generateColorBarMap(inputColorVec_, ftam_, colorMap_);
+//    totalDistance_ = 1.;
+//    if(inputColorVec_.empty() == false)
+//        totalDistance_ = inputColorVec_[inputColorVec_.size()-1].distance_;
 }
 
 void TeQtColorBar::drawColorBar()
@@ -436,196 +436,196 @@ void TeQtColorBar::drawColorBar()
 
 void TeQtColorBar::paintEvent(QPaintEvent *)
 {
-    if(colorMap_.empty())
-        return;
+//    if(colorMap_.empty())
+//        return;
 
-    int	i = 0, j = 0, size = 0, tsize = 0;
-    QColor cor;
-    map<int, vector<TeColor> > :: iterator it = colorMap_.begin();
+//    int	i = 0, j = 0, size = 0, tsize = 0;
+//    QColor cor;
+//    map<int, vector<TeColor> > :: iterator it = colorMap_.begin();
 
-    QRect rect = this->rect(); //frameRect();
-    int w = rect.width(); //  - 1;
-    int h = rect.height(); // - 1;
-    changeVec_.clear();
-    changeVec_.push_back(0);
-    //QPainterPath painterPath;
-    QPainter painter(this);
+//    QRect rect = this->rect(); //frameRect();
+//    int w = rect.width(); //  - 1;
+//    int h = rect.height(); // - 1;
+//    changeVec_.clear();
+//    changeVec_.push_back(0);
+//    //QPainterPath painterPath;
+//    QPainter painter(this);
 
-    tsize = w;
-    if(vertical_)
-        tsize = h;
+//    tsize = w;
+//    if(vertical_)
+//        tsize = h;
 
-    painter.setPen(Qt::NoPen);
+//    painter.setPen(Qt::NoPen);
 
-    while(it != colorMap_.end())
-    {
-        vector<TeColor>& colorVec = it->second;
-        size = (int)colorVec.size();
+//    while(it != colorMap_.end())
+//    {
+//        vector<TeColor>& colorVec = it->second;
+//        size = (int)colorVec.size();
 
-        i = 0;
-        while(i < size)
-        {
-            //            int r = colorVec[i].red_;
-            //            int g = colorVec[i].green_;
-            //            int b = colorVec[i].blue_;
-            //
-            //            cor.setRgb(r, g, b );
+//        i = 0;
+//        while(i < size)
+//        {
+//            //            int r = colorVec[i].red_;
+//            //            int g = colorVec[i].green_;
+//            //            int b = colorVec[i].blue_;
+//            //
+//            //            cor.setRgb(r, g, b );
 
-            cor.setRgb(colorVec[i].red_, colorVec[i].green_, colorVec[i].blue_);
-            painter.setPen(cor);
+//            cor.setRgb(colorVec[i].red_, colorVec[i].green_, colorVec[i].blue_);
+//            painter.setPen(cor);
 
-            //qvecColor.append(cor);
+//            //qvecColor.append(cor);
 
-            if(vertical_)
-            {
-                if(upDown_)
-                {
-                    //painter.lineTo(0, j);
-                    //painter.moveTo(w-7, j);
-                    painter.drawLine(0, j, w-7, j);
-                }
-                else
-                {
-                    //painter.lineTo(0, h-j);
-                    //painter.moveTo(w-7, h-j);
-                    painter.drawLine(0, h-j, w-7, h-j);
-                }
-            }
-            else
-            {
-                //painter.lineTo(j, 7);
-                //painter.moveTo(j, h);
-                painter.drawLine(j, 7, j, h);
-            }
-            i++;
-            j++;
-        }
-        //painter.drawPath(painterPath);
+//            if(vertical_)
+//            {
+//                if(upDown_)
+//                {
+//                    //painter.lineTo(0, j);
+//                    //painter.moveTo(w-7, j);
+//                    painter.drawLine(0, j, w-7, j);
+//                }
+//                else
+//                {
+//                    //painter.lineTo(0, h-j);
+//                    //painter.moveTo(w-7, h-j);
+//                    painter.drawLine(0, h-j, w-7, h-j);
+//                }
+//            }
+//            else
+//            {
+//                //painter.lineTo(j, 7);
+//                //painter.moveTo(j, h);
+//                painter.drawLine(j, 7, j, h);
+//            }
+//            i++;
+//            j++;
+//        }
+//        //painter.drawPath(painterPath);
 
-        it++;
-        if(it == colorMap_.end())
-        {
-            while(j < tsize)
-            {
-                if(vertical_)
-                {
-                    if(upDown_)
-                    {
-                        //painter.lineTo(0, j);
-                        //painter.moveTo(w-7, j);
-                        painter.drawLine(0, j, w-7, j);
-                    }
-                    else
-                    {
-                        //painter.lineTo(0, h-j);
-                        //painter.moveTo(w-7, h-j);
-                        painter.drawLine(0, h-j, w-7,h-j);
-                    }
-                }
-                else
-                {
-                    //painter.lineTo(j, 7);
-                    //painter.moveTo(j, h);
-                    painter.drawLine(j, 7, j, h);
-                }
-                j++;
-            }
-        }
-        if(j-1 < 0)
-            changeVec_.push_back(0);
-        else if(j >= tsize)
-            changeVec_.push_back(tsize-1);
-        else
-            changeVec_.push_back(j);
-    }
+//        it++;
+//        if(it == colorMap_.end())
+//        {
+//            while(j < tsize)
+//            {
+//                if(vertical_)
+//                {
+//                    if(upDown_)
+//                    {
+//                        //painter.lineTo(0, j);
+//                        //painter.moveTo(w-7, j);
+//                        painter.drawLine(0, j, w-7, j);
+//                    }
+//                    else
+//                    {
+//                        //painter.lineTo(0, h-j);
+//                        //painter.moveTo(w-7, h-j);
+//                        painter.drawLine(0, h-j, w-7,h-j);
+//                    }
+//                }
+//                else
+//                {
+//                    //painter.lineTo(j, 7);
+//                    //painter.moveTo(j, h);
+//                    painter.drawLine(j, 7, j, h);
+//                }
+//                j++;
+//            }
+//        }
+//        if(j-1 < 0)
+//            changeVec_.push_back(0);
+//        else if(j >= tsize)
+//            changeVec_.push_back(tsize-1);
+//        else
+//            changeVec_.push_back(j);
+//    }
 
-    //painter.drawPath(painterPath);
+//    //painter.drawPath(painterPath);
 
-    painter.setPen(Qt::black);
-    painter.setBrush(Qt::white);
+//    painter.setPen(Qt::black);
+//    painter.setBrush(Qt::white);
 
-    QRect ru(0, 0, w, 7);
-    if(vertical_)
-        ru.setRect(w-7, 0, 7, h);
-    painter.drawRect(ru);
+//    QRect ru(0, 0, w, 7);
+//    if(vertical_)
+//        ru.setRect(w-7, 0, 7, h);
+//    painter.drawRect(ru);
 
-    QPolygon pa(4);
-    if(vertical_)
-    {
-        pa.setPoint(0, 0, 0);
-        pa.setPoint(1, 6, -3);
-        pa.setPoint(2, 6, 3);
-        pa.setPoint(3, 0, 0);
-        painter.drawPolygon(pa);
-        pa.translate(0, h-1);
-        painter.drawPolygon(pa);
-        pa.translate(0, -(h-1));
+//    QPolygon pa(4);
+//    if(vertical_)
+//    {
+//        pa.setPoint(0, 0, 0);
+//        pa.setPoint(1, 6, -3);
+//        pa.setPoint(2, 6, 3);
+//        pa.setPoint(3, 0, 0);
+//        painter.drawPolygon(pa);
+//        pa.translate(0, h-1);
+//        painter.drawPolygon(pa);
+//        pa.translate(0, -(h-1));
 
-        if(!upDown_)
-            pa.translate(0, h);
-    }
-    else
-    {
-        pa.setPoint(0, -3, 0);
-        pa.setPoint(1, 3, 0);
-        pa.setPoint(2, 0, 6);
-        pa.setPoint(3, -3, 0);
-        painter.drawPolygon(pa);
-        pa.translate(w-1, 0);
-        painter.drawPolygon(pa);
-        pa.translate(-(w-1), 0);
-    }
+//        if(!upDown_)
+//            pa.translate(0, h);
+//    }
+//    else
+//    {
+//        pa.setPoint(0, -3, 0);
+//        pa.setPoint(1, 3, 0);
+//        pa.setPoint(2, 0, 6);
+//        pa.setPoint(3, -3, 0);
+//        painter.drawPolygon(pa);
+//        pa.translate(w-1, 0);
+//        painter.drawPolygon(pa);
+//        pa.translate(-(w-1), 0);
+//    }
 
-    it = colorMap_.begin();
-    while(it != colorMap_.end())
-    {
-        j = it->second.size();
-        it++;
-        if(it != colorMap_.end())
-        {
-            if(vertical_)
-            {
-                if(upDown_)
-                    pa.translate(0, j);
-                else
-                    pa.translate(0, -j);
-            }
-            else
-                pa.translate(j, 0);
-            painter.drawPolygon(pa);
-        }
-    }
+//    it = colorMap_.begin();
+//    while(it != colorMap_.end())
+//    {
+//        j = it->second.size();
+//        it++;
+//        if(it != colorMap_.end())
+//        {
+//            if(vertical_)
+//            {
+//                if(upDown_)
+//                    pa.translate(0, j);
+//                else
+//                    pa.translate(0, -j);
+//            }
+//            else
+//                pa.translate(j, 0);
+//            painter.drawPolygon(pa);
+//        }
+//    }
 
-    painter.setBrush(Qt::NoBrush);
-    painter.setPen(Qt::black);
+//    painter.setBrush(Qt::NoBrush);
+//    painter.setPen(Qt::black);
 
-    double pd = (double)tsize / 10.;
-    int	t;
-    for(i=0; i < 10; ++i){
-        t = 5;
-        if(i % 2)
-            t = 3;
+//    double pd = (double)tsize / 10.;
+//    int	t;
+//    for(i=0; i < 10; ++i){
+//        t = 5;
+//        if(i % 2)
+//            t = 3;
 
-        int a = TeRound((double)i * pd);
-        if(vertical_){
-            //painterPath.moveTo(0, a);
-            //painterPath.lineTo(t, a);
-            painter.drawLine(0, a, t, a);
-        }
-        else{
-            //painterPath.moveTo(a, h);
-            //painterPath.lineTo(a, h-t);
-            painter.drawLine(a, h, a, h-t);
-        }
-        //painter.drawPath(painterPath);
-    }
-    painter.drawRect(rect);
+//        int a = TeRound((double)i * pd);
+//        if(vertical_){
+//            //painterPath.moveTo(0, a);
+//            //painterPath.lineTo(t, a);
+//            painter.drawLine(0, a, t, a);
+//        }
+//        else{
+//            //painterPath.moveTo(a, h);
+//            //painterPath.lineTo(a, h-t);
+//            painter.drawLine(a, h, a, h-t);
+//        }
+//        //painter.drawPath(painterPath);
+//    }
+//    painter.drawRect(rect);
 }
 
 void TeQtColorBar::mousePressEvent(QMouseEvent* e)
 {
-    if(colorMap_.empty())
-        return;
+//    if(colorMap_.empty())
+//        return;
 
     p_ = e->pos();
     ind_ = getColorIndiceToChange();
@@ -638,12 +638,12 @@ void TeQtColorBar::mousePressEvent(QMouseEvent* e)
             addColor->setEnabled(false);
             //popupMenu_.setItemEnabled(popupMenu_.idAt(1), true); // change color
             changeColor->setEnabled(true);
-            if(colorMap_.size() <= 1)
-                //popupMenu_.setItemEnabled(popupMenu_.idAt(2), false); // remove color
-                removeColor->setEnabled(false);
-            else
-                //popupMenu_.setItemEnabled(popupMenu_.idAt(2), true); // remove color
-                removeColor->setEnabled(true);
+//            if(colorMap_.size() <= 1)
+//                //popupMenu_.setItemEnabled(popupMenu_.idAt(2), false); // remove color
+//                removeColor->setEnabled(false);
+//            else
+//                //popupMenu_.setItemEnabled(popupMenu_.idAt(2), true); // remove color
+//                removeColor->setEnabled(true);
         }
         else
         {
@@ -688,8 +688,8 @@ void TeQtColorBar::mouseDoubleClickEvent(QMouseEvent* e)
 
 void TeQtColorBar::mouseMoveEvent(QMouseEvent* e)
 {
-    if(colorMap_.empty())
-        return;
+//    if(colorMap_.empty())
+//        return;
     pa_ = e->pos();
     if(e->button() == Qt::NoButton) // set cursor
     {
@@ -756,58 +756,58 @@ void TeQtColorBar::leaveEvent(QEvent*)
 
 void TeQtColorBar::addColorSlot()
 {
-    int ind = ind_;
-    TeColor cor;
+//    int ind = ind_;
+////    TeColor cor;
 
-    bool isOK = false;
-    QColor inputColor(255, 255, 255);
-    QColor outputColor = QColorDialog::getRgba (inputColor.rgb(), &isOK, this);
-    if (isOK)
-    {
-        cor.init(outputColor.red(), outputColor.green(), outputColor.blue());
-        ColorBar cb;
-        double dist = (double)a_ * totalDistance_ / (double)(ftam_-1);
-        cb.color(cor);
-        cb.distance_ = dist;
+//    bool isOK = false;
+//    QColor inputColor(255, 255, 255);
+//    QColor outputColor = QColorDialog::getRgba (inputColor.rgb(), &isOK, this);
+//    if (isOK)
+//    {
+////        cor.init(outputColor.red(), outputColor.green(), outputColor.blue());
+//        ColorBar cb;
+//        double dist = (double)a_ * totalDistance_ / (double)(ftam_-1);
+//        cb.color(cor);
+//        cb.distance_ = dist;
 
-        vector<ColorBar> bcor = inputColorVec_;
-        inputColorVec_.clear();
-        int i;
-        for(i=0; i<(int)bcor.size(); ++i)
-        {
-            if(i == ind+1)
-                inputColorVec_.push_back(cb);
-            inputColorVec_.push_back(bcor[i]);
-        }
-        generateColorMap();
-        drawColorBar();
+//        vector<ColorBar> bcor = inputColorVec_;
+//        inputColorVec_.clear();
+//        int i;
+//        for(i=0; i<(int)bcor.size(); ++i)
+//        {
+//            if(i == ind+1)
+//                inputColorVec_.push_back(cb);
+//            inputColorVec_.push_back(bcor[i]);
+//        }
+//        generateColorMap();
+//        drawColorBar();
 
-        emit colorChangedSignal();
-    }
+//        emit colorChangedSignal();
+//    }
 }
 
 void TeQtColorBar::changeColorSlot()
 {
-    int ind = ind_;
+//    int ind = ind_;
 
-    if((int)inputColorVec_.size() <= ind)
-        return;
-    ColorBar& cb = inputColorVec_[ind];
-    TeColor cor = cb.cor_;
+//    if((int)inputColorVec_.size() <= ind)
+//        return;
+//    ColorBar& cb = inputColorVec_[ind];
+//    TeColor cor = cb.cor_;
 
-    bool isOK = false;
-    QColor inputColor(cor.red_, cor.green_, cor.blue_);
-    QColor outputColor = QColorDialog::getRgba (inputColor.rgb(), &isOK, this);
+//    bool isOK = false;
+//    QColor inputColor(cor.red_, cor.green_, cor.blue_);
+//    QColor outputColor = QColorDialog::getRgba (inputColor.rgb(), &isOK, this);
 
-    if (isOK)
-    {
-        cor.init(outputColor.red(), outputColor.green(), outputColor.blue());
-        cb.color(cor);
-        generateColorMap();
-        drawColorBar();
+//    if (isOK)
+//    {
+//        cor.init(outputColor.red(), outputColor.green(), outputColor.blue());
+//        cb.color(cor);
+//        generateColorMap();
+//        drawColorBar();
 
-        emit colorChangedSignal();
-    }
+//        emit colorChangedSignal();
+//    }
 }
 
 void TeQtColorBar::removeColorSlot()
@@ -1061,8 +1061,8 @@ void TeQtColorBar::changeAllBrightness()
 
         QColor cor;
         cor.setHsv(cb.h_, cb.s_, cb.v_);
-        TeColor tc(cor.red(), cor.green(),cor.blue());
-        cb.color(tc);
+//        TeColor tc(cor.red(), cor.green(),cor.blue());
+//        cb.color(tc);
     }
     generateColorMap();
     drawColorBar();
@@ -1100,8 +1100,8 @@ void TeQtColorBar::changeBrightness()
 
     QColor cor;
     cor.setHsv(cb.h_, cb.s_, cb.v_);
-    TeColor tc(cor.red(), cor.green(),cor.blue());
-    cb.color(tc);
+//    TeColor tc(cor.red(), cor.green(),cor.blue());
+//    cb.color(tc);
 
     generateColorMap();
     drawColorBar();
@@ -1166,8 +1166,8 @@ void TeQtColorBar::changeAllSaturation()
 
         QColor cor;
         cor.setHsv(cb.h_, cb.s_, cb.v_);
-        TeColor tc(cor.red(), cor.green(),cor.blue());
-        cb.color(tc);
+//        TeColor tc(cor.red(), cor.green(),cor.blue());
+//        cb.color(tc);
     }
     generateColorMap();
     drawColorBar();
@@ -1211,8 +1211,8 @@ void TeQtColorBar::changeSaturation()
 
     QColor cor;
     cor.setHsv(cb.h_, cb.s_, cb.v_);
-    TeColor tc(cor.red(), cor.green(),cor.blue());
-    cb.color(tc);
+//    TeColor tc(cor.red(), cor.green(),cor.blue());
+//    cb.color(tc);
 
     generateColorMap();
     drawColorBar();
@@ -1244,7 +1244,7 @@ void TeQtColorBar::changeHue()
     if(cb.h_ == -1)
     {
         cb.s_ = 0;
-        cb.v_ = cb.cor_.red_;
+//        cb.v_ = cb.cor_.red_;
     }
     else if(cb.h_ >= 360)
         cb.h_ -= 360;
@@ -1253,8 +1253,8 @@ void TeQtColorBar::changeHue()
 
     QColor cor;
     cor.setHsv(cb.h_, cb.s_, cb.v_);
-    TeColor tc(cor.red(), cor.green(),cor.blue());
-    cb.color(tc);
+//    TeColor tc(cor.red(), cor.green(),cor.blue());
+//    cb.color(tc);
 
     generateColorMap();
     drawColorBar();
@@ -1285,8 +1285,8 @@ void TeQtColorBar::clearColorBar()
     ColorBar cb;
 
     QColor cor(Qt::white); // = paletteBackgroundColor();
-    TeColor c(cor.red(), cor.green(), cor.blue());
-    cb.color(c);
+//    TeColor c(cor.red(), cor.green(), cor.blue());
+//    cb.color(c);
     cb.distance_ = 0.;
 
     inputColorVec_.push_back(cb);

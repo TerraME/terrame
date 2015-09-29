@@ -31,6 +31,8 @@ static const int DIMENSION = 77;
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneDragDropEvent>
 
+#include <math.h>
+
 ObserverMapSuperclass::ObserverMapSuperclass(Subject *subj, const TypesOfObservers &obsType,
                                        const QString &windowTitle, QWidget *parent) : ObserverInterf(subj), QDialog(parent)
 {

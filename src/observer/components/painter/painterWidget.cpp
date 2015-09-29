@@ -9,6 +9,8 @@
 #include <QFile>
 #include <QDebug>
 
+#include <math.h>
+
 #include "observerImpl.h"
 #include "../legend/legendAttributes.h"
 

@@ -41,7 +41,7 @@ Author: Tiago Garcia de Senna Carneiro
 #include "terrameLua.h"
 
 #ifndef TME_NO_TERRALIB
-	#include "TeVersion.h"
+//	#include "TeVersion.h"
 #endif
 
 #include "player.h"
@@ -177,8 +177,8 @@ int cpp_informations(lua_State *L)
 	lua_pushstring(L, LUA_RELEASE);
 	lua_pushstring(L, qVersion());
 	lua_pushstring(L, QWT_VERSION_STR);
-	lua_pushstring(L, TERRALIB_VERSION);
-	lua_pushstring(L, TeDBVERSION.c_str());
+//	lua_pushstring(L, TERRALIB_VERSION);
+//	lua_pushstring(L, TeDBVERSION.c_str());
 	return 5;
 }
 

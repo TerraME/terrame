@@ -790,14 +790,14 @@ QString Attributes::toString()
     str += "legend: "		+ QString::number(legend->size())		+ "\n\t\t";
     str += "colorBarVec.size(): "	+ QString::number((int)colorBarVec.size()) + "\n\t\t";
 
-    for (int i = 0; i < (int)colorBarVec.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(colorBarVec.at(i).cor_.red_).arg(colorBarVec.at(i).cor_.green_).arg(colorBarVec.at(i).cor_.blue_);
+//    for (int i = 0; i < (int)colorBarVec.size(); i++)
+//        str += QString("( %1, %2, %3)\n\t\t").arg(colorBarVec.at(i).cor_.red_).arg(colorBarVec.at(i).cor_.green_).arg(colorBarVec.at(i).cor_.blue_);
 
     str +="\n\t\t";
     str += "colorBarVecB.size(): "	+ QString::number((int)stdColorBarVec.size()) + "\n\t\t";
 
-    for (int i = 0; i < (int)stdColorBarVec.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(stdColorBarVec.at(i).cor_.red_).arg(stdColorBarVec.at(i).cor_.green_).arg(stdColorBarVec.at(i).cor_.blue_);
+//    for (int i = 0; i < (int)stdColorBarVec.size(); i++)
+//        str += QString("( %1, %2, %3)\n\t\t").arg(stdColorBarVec.at(i).cor_.red_).arg(stdColorBarVec.at(i).cor_.green_).arg(stdColorBarVec.at(i).cor_.blue_);
 
     str +="\n\t";
     str += "slicesNumber_bkp: "	+ QString::number(slicesNumberBkp) + "\n\t";
@@ -807,14 +807,14 @@ QString Attributes::toString()
     str += "stdDev_bkp: "	+ QString::number(stdDevBkp) + "\n\t";
     str += "colorBarVec_bkp.size(): "	+ QString::number((int)colorBarVecBkp.size()) + "\n\t\t";
 
-    for (int i = 0; i < (int)colorBarVecBkp.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(colorBarVecBkp.at(i).cor_.red_).arg(colorBarVecBkp.at(i).cor_.green_).arg(colorBarVecBkp.at(i).cor_.blue_);
+//    for (int i = 0; i < (int)colorBarVecBkp.size(); i++)
+//        str += QString("( %1, %2, %3)\n\t\t").arg(colorBarVecBkp.at(i).cor_.red_).arg(colorBarVecBkp.at(i).cor_.green_).arg(colorBarVecBkp.at(i).cor_.blue_);
 
     str +="\n\t";
     str += "colorBarVecB_bkp.size(): "	+ QString::number((int)stdColorBarVecBkp.size()) + "\n\t\t";
 
-    for (int i = 0; i < (int)stdColorBarVecBkp.size(); i++)
-        str += QString("( %1, %2, %3)\n\t\t").arg(stdColorBarVecBkp.at(i).cor_.red_).arg(stdColorBarVecBkp.at(i).cor_.green_).arg(stdColorBarVecBkp.at(i).cor_.blue_);
+//    for (int i = 0; i < (int)stdColorBarVecBkp.size(); i++)
+//        str += QString("( %1, %2, %3)\n\t\t").arg(stdColorBarVecBkp.at(i).cor_.red_).arg(stdColorBarVecBkp.at(i).cor_.green_).arg(stdColorBarVecBkp.at(i).cor_.blue_);
 
     str +="\n\n";
     return str;

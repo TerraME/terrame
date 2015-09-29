@@ -75,7 +75,7 @@ include_directories( ${SRCDIR}
           ${SRCDIR}/luaFileSystem
           ${SRCDIR}/service/
           ${SRCDIR}/service/persistence
-          ${SRCDIR}/service/persistence/terralib
+#          ${SRCDIR}/service/persistence/terralib
 
           /usr/local/include
 )
@@ -99,7 +99,7 @@ file(GLOB SRCS
           ${SRCDIR}/observer/*.cpp
           ${SRCDIR}/observer/types/chartPlot/*.cpp
           ${SRCDIR}/luaFileSystem/*.c
-          ${SRCDIR}/service/persistence/terralib/*.cpp
+#          ${SRCDIR}/service/persistence/terralib/*.cpp
 )
 
 set(LIBS)
@@ -131,7 +131,7 @@ endif(SHAPELIB_FOUND)
 	# Set(TERRALIB_LIBRARY ${TERRALIB_LIBRARIES}/libterralib.a)
 	# set(TERRALIB_FOUND TRUE)
 # else(MINGW)
-	find_package(TerraLib)
+#	find_package(TerraLib)
 # endif(MINGW)
 if( TERRALIB_FOUND )
 	message("-- Found TerraLib library ${TERRALIB_LIBRARY} and include dir ${TERRLIB_INCLUDE_DIR}")
