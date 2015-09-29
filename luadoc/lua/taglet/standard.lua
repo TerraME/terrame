@@ -5,6 +5,7 @@
 local assert, tostring, type = assert, tostring, type
 local collectgarbage = collectgarbage
 local load = load
+local _Gtme = _Gtme
 local getPackage = getPackage
 local xpcall = xpcall
 local pcall = pcall
@@ -743,12 +744,18 @@ local function check_usage(files, doc_report)
 		if files[file_name].type ~= "example" then
 			printNote("Testing file "..makepath(files[file_name].short_path..file_name))
 			local functions = files[file_name].functions
+
+			local oldPrintError = _Gtme.printError
+			local oldPrintWarning = _Gtme.printWarning
+			_Gtme.printError = function() end
+			_Gtme.printWarning = function() end
+
+			local base = getPackage("base")
+			base.print = function() end
+
 			for j = 1, #functions do
 				local function_name = functions[j]
 				if functions[function_name].usage then
-					local base = getPackage("base")
-
-					base.print = function() end
 					local usage = functions[function_name].usage
 
 					if string.find(usage, "DONTRUN") then
@@ -764,6 +771,9 @@ local function check_usage(files, doc_report)
 					base.clean()
 				end
 			end
+
+			_Gtme.printError = oldPrintError
+			_Gtme.printWarning = oldPrintWarning
 		end
 	end
 end
