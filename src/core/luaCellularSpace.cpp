@@ -49,29 +49,11 @@ of this library and its documentation.
 #include "../../dependencies/shapelib/findCentroid.h"
 #endif
 
-
-// RODRIGO
-#if defined( TME_MSVC ) && defined( TME_WIN32 )
-#include <TeAdoDB.h>
-#include <windows.h>
-#endif
-
-#include <TeLegendEntry.h>
-#include <TeMySQL.h>
-#include <TeVersion.h>
-#include <TeDefines.h>
-
-//#if ! defined( TME_TERRALIB_RC3 )
-//#include <TeInitQuerierStrategy.h>
-//#endif
-
-#include <TeQuerier.h>
-#include <TeQuerierParams.h>
-
-#include <TeProgress.h>
-#include <TeGeneralizedProxMatrix.h>
-#include "loadNeighborhood.h"
 #include "luaUtils.h"
+
+#include "terralibFacade.h"
+#include "cellularSpaceMapper.h"
+#include "cellMapper.h"
 
 #include <fstream>
 #include <algorithm>
@@ -1023,8 +1005,21 @@ int luaCellularSpace::loadShape(lua_State *L)
 #ifndef DISABLE_SHAPE_FILE
     string filename = dbName;
 
-    //open a shapefile
+//    CellularSpaceMapper cellularSpace = TerraLibFacade::getInstance()->getCellularSpace(filename);
+
+//    vector<CellMapper> cells = cellularSpace.getCells();
+
+//    if (cells.size() > 0)
+//    {
+//        if (sendCells(cells))
+//        {
+//            return 5;
+//        }
+//    }
     
+//    return 0;
+
+    //open a shapefile
     string filePrefix = TeGetName(filename.c_str());
     string shpFileN = filePrefix + ".shp";
     string dbfFileN = filePrefix + ".dbf";
@@ -1177,6 +1172,109 @@ int luaCellularSpace::loadShape(lua_State *L)
     
 }
 
+bool luaCellularSpace::sendCells(vector<CellMapper> cells)
+{
+    // puts a table for represent the whole cellular space on the top of the stack
+    lua_newtable(L);
+    int luaTopbPos = lua_gettop(L);
+
+    int minX = 0, minY = 0;
+    int maxX = 0, maxY = 0;
+    minX = cells.at(0).getX();
+    minY = cells.at(0).getY();
+
+    for (int i = 0; i < cells.size(); i++)
+    {
+        minX = min(cells.at(i).getX(), minX);
+        minY = min(cells.at(i).getY(), minY);
+        maxX = max(cells.at(i).getX(), maxX);
+        maxY = max(cells.at(i).getY(), maxY);
+
+        // puts the index for the new cell on the stack
+        lua_pushnumber(L, i + 1);
+
+        // puts the Cell constructor on the top of the lua stack
+        lua_getglobal(L, "Cell" );
+        if(!lua_isfunction(L, -1))
+        {
+            string err = string("Error: Event constructor not found.'");
+            returnsCustomError(L, 4, err);
+
+            return false;
+        };
+
+        // creates a attribute table for the new cell of the cellular space
+        lua_newtable(L);
+
+        // puts the cell's coords on the table
+        lua_pushstring(L, "x");
+        lua_pushnumber(L, cells.at(i).getX());
+        lua_settable(L, -3);
+        lua_pushstring(L, "y");
+        lua_pushnumber(L, cells.at(i).getY());
+        lua_settable(L, -3);
+
+        // puts the cell's id on the table
+        lua_pushstring(L, "id");
+        lua_pushstring(L, cells.at(i).getId().c_str());
+        lua_settable(L, -3);
+
+        // puts the cell's id on the table
+        lua_pushstring(L, "objectId_");
+        lua_pushstring(L, cells.at(i).getId().c_str());
+        lua_settable(L, -3);
+
+        vector<Attribute> attributes =
+                cells.at(i).getAttributes();
+        for (int a = 0; a < attributes.size(); a++)
+        {
+            lua_pushstring(L, attributes.at(a).getName().c_str());
+
+            switch(attributes.at(a).getType())
+            {
+                case Attribute::STRING:
+                case Attribute::DATETIME:
+                case Attribute::CHARACTER:
+                    lua_pushstring(L, attributes.at(a).getValue().c_str());
+                    break;
+
+                case Attribute::REAL:
+                    lua_pushnumber(L, atof(attributes.at(a).getValue().c_str()));
+                    break;
+
+                case Attribute::INT:
+                    lua_pushnumber(L, atoi(attributes.at(a).getValue().c_str()));
+                    break;
+
+                case Attribute::BLOB:
+                case Attribute::OBJECT:
+                case Attribute::UNKNOWN:
+                default:
+                    lua_pushstring(L, attributes.at(a).getValue().c_str());
+            }
+
+            lua_settable(L, -3);
+        }
+
+        // calls the Cell constructor
+        if(lua_pcall(L, 1, 1, 0) != 0)
+        {
+            return false;
+        }
+        // insert the new cell into the cellular space table
+        lua_settable(L, luaTopbPos);
+    }
+
+    // returns values to the attributes minCol, minRow, maxCol and maxRow
+    // of the lua cellularSpace
+    lua_pushnumber(L, minX);
+    lua_pushnumber(L, minY);
+    lua_pushnumber(L, maxX);
+    lua_pushnumber(L, maxY);
+
+    return true;
+}
+
 int luaCellularSpace::saveShape(lua_State *L)
 {
     string filePrefix = TeGetName(dbName.c_str());
@@ -1205,321 +1303,103 @@ int luaCellularSpace::saveShape(lua_State *L)
 /// Loads the CellularSpace from a TerraLib database.
 int luaCellularSpace::load(lua_State *L)
 {
-
-    TeDatabase * db;
-
     try
     {
-        // Opens a connection to a database accessible
-        if( dbType == "mysql")
-            db = new TeMySQL();
-#if defined( TME_MSVC ) && defined( TME_TERRALIB_RC3 )
-        else {
-            ::configureADO();
-            db = new TeAdo();
-        }
-#endif
-        if (!db->connect(host,user,pass,dbName,0))
+        if (TerraLibFacade::getInstance()->connect(TerraLibFacade::MYSQL, host, user, pass, dbName, 0))
         {
-            string err_out = db->errorMessage() + string(".");
-            lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
-            return 0;
-        }
+            CellularSpaceMapper cellularSpace;
 
-        string dbVersion;
-        db->loadVersionStamp(dbVersion);
-        if( dbVersion != TeDBVERSION ) {
-			string err_out = string("Wrong TerraLib database version, expected '") +
-							string(TeDBVERSION.c_str()) + string("', got '") +
-							string(dbVersion.c_str()) + string(".\n") +
-							string("Please, use TerraView to update the '") +
-							string(dbName.c_str()) + string("' database.");
-            db->close();
-            lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
-            return 0;
-        }
-
-        TeTheme *inputTheme;
-        TeLayer *inputLayer;
-        if ( inputLayerName == "")
-        {
-            // Load input theme
-            inputTheme = new TeTheme(inputThemeName );
-            if (!db->loadTheme (inputTheme))
+            if (inputLayerName.empty())
             {
-                db->close();
-                string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
-                return 0;
-            }
-            // Load input layers
-            inputLayer = inputTheme->layer();
-            //@RAIAN
-            setLayerName(inputLayer->name());
-            //@RAIAN: FIM
-            if (!db->loadLayer (inputLayer))
-            {
-                db->close();
-                string err_out = string("Error: Can't load input layer '") + string(inputLayerName) + string("'.");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
-                return false;
-            }
-        }
-        else
-        {
-            // Load input layers
-            inputLayer = new TeLayer (inputLayerName);
-            if (!db->loadLayer (inputLayer))
-            {
-                string err_out = string("Can't open input layer '") + string(inputLayerName) + string("'.");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
-                db->close();
-                return 0;
-            }
-            // Load input theme
-            inputTheme = new TeTheme(inputThemeName, inputLayer );
-            if (!db->loadTheme (inputTheme)) // erro, tiago: parece que a terralib carrega um thema com mesmo nome, mas de outro layer, pois
-                // esta funcao nao falha, caso o tema "inputTheme" nao pertenca ao layer (inputLayer), quando deveria
-                // assim, o proximo acesso ao aobjeto inputTheme procara uma excecao
-                // Alem disso, quando dois temas possuem o mesmo nomemem layers diferentes, esta funcao falha
-                // ao carregar o tema do layer selecionado, so funciona quando se tenta carregar o tema
-                // do layer que o primeiro a ser inserido no banco, para os demais layers a tentativa abaixo
-                // de criar um tema temporario ira falhar.
-                // Se varios bancos que possuirem a mesta estrutura, portanto, temas de com o mesmo nome, estiverem
-                // abertos simultaneamente no TerraView, entao as vistas e os temas de resultados serao criados nos
-                // dois bancos simultaneamente. Para isso, e' preciso que os banco tenham o mesmo usuario e senha.
-                //	Entretanto, as tabelas de resultados nao sao criadas em ambos os bancos.
-            {
-                string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,5);
-                lua_call(L,2,0);
-                db->close();
-                return 0;
-            }
-        }
-        // Inicia o mecanismo de consula da TerraLib
-        //	#if ! defined( TME_TERRALIB_RC3 )
-        //		TeInitQuerierStrategies();
-        //	#endif
+                cellularSpace = TerraLibFacade::
+                            getInstance()->getCellularSpace(inputThemeName,
+                                                            attrNames, whereClause);
 
-        TeQuerierParams* querierParams;
-        bool loadGeometries = true;
-
-        TeTheme temporaryTheme("temporaryTheme", inputLayer);
-
-        if( ! whereClause.empty() )
-        {
-            // Create a temporary theme that aplies attribute restrictions over the
-            // input theme
-            temporaryTheme.attributeRest(whereClause);
-            temporaryTheme.setAttTables( inputTheme->attrTables() );
-
-            // Configura o mecanismo para buscar geometrias (loadGeometries = true), e tambe'm
-            // buscar todos os atributos da c"lula (true )
-            if( attrNames.empty() )
-            {
-                querierParams = new TeQuerierParams( loadGeometries, true );
-                querierParams->setParams( &temporaryTheme );
-            }
-            else
-            {
-                querierParams = new TeQuerierParams( loadGeometries, attrNames );
-                querierParams->setParams( &temporaryTheme );
-            }
-        }
-        else
-        {
-            // Configura o mecanismo para buscar geometrias (loadGeometries = true), e tambe'm
-            // buscar todos os atributos da c"lula (true )
-            if( attrNames.empty() )
-            {
-                querierParams = new TeQuerierParams( loadGeometries, true );
-                querierParams->setParams( inputTheme );
-            }
-            else
-            {
-
-
-                //	cout << attrNames[i] << endl;
-                //	l++;
-                //}
-                //cout << l <<endl;
-
-                querierParams = new TeQuerierParams( loadGeometries, attrNames );
-                querierParams->setParams( inputTheme );
-            }
-        }
-        // Cria uma consulta e a executa
-        TeQuerier query( *querierParams );
-        query.loadInstances();
-
-        // puts a table for represent the whole cellular space on the top of the stack
-        lua_newtable(L);
-        int tabPos = lua_gettop(L);
-
-        TeSTInstance element;
-        bool primeiraCell = true;
-        int minCol = 0, minLin = 0;
-        int maxCol = 0, maxLin = 0;
-        string luaCmd;
-        //int  colAnt = -1;
-        long int cont = 0;
-        // Calcula quais s"o os indices minimos para a coluna e para a linha
-
-        while( query.fetchInstance( element ) )
-        {
-            //TePropertyVector& properties = element.getPropertyVector();
-            const TePropertyVector& properties = element.getPropertyVector();
-
-
-            // Obtem o identificador do objeto espa"o-temporal associado " c"lula
-            // e obtem coordenadas da c"lula
-            int lin, col;
-            char cellId[20];
-
-            // Raian: Verifica se o layer e' de ce'lulas, linhas, pontos ou poligonos para pegar
-            // as coordenadas x e y do objeto.
-            if( element.hasCells() ){
-                strcpy( (char *) cellId, element.objectId().c_str());
-                objectId2coords( cellId, col, lin);
-                //cout << col << ":" << lin << " - ";
-            }
-            else{
-                if( element.hasPolygons() || element.hasPoints() || element.hasLines() ){
-                    strcpy( (char *) cellId, element.getObjectId().c_str() );
-                    lin = element.getCentroid().x();
-                    col = element.getCentroid().y();
-                }
-            }
-            if( primeiraCell )
-            {
-                minLin = lin;
-                minCol = col;
-                primeiraCell = false;
-            }
-            else
-            {
-                minLin = min(minLin, lin);
-                minCol = min(minCol, col);
-            }
-            maxCol = max(maxCol, col);
-            maxLin = max(maxLin, lin);
-
-
-            // puts the index for the new cell on the stack
-            lua_pushnumber(L, cont + 1);
-
-            // puts the Cell constructor on the top of the lua stack
-            lua_getglobal(L, "Cell" );
-            if( !lua_isfunction(L, -1))
-            {
-                string err_out = string("Error: Event constructor not found.'");
-                lua_getglobal(L, "customError");
-                lua_pushstring(L,err_out.c_str());
-                lua_pushnumber(L,4);
-                lua_call(L,2,0);
-                return 0;
-            };
-
-            // creates a attribute table for the new cell of the cellular space
-            string aux;
-            lua_newtable(L);
-
-            // puts the cell's coords on the table
-            lua_pushstring(L, "x");
-            lua_pushnumber(L, col );
-            lua_settable(L, -3);
-            lua_pushstring(L, "y");
-            lua_pushnumber(L, lin );
-            lua_settable(L, -3);
-
-            // puts the cell's id on the table
-            lua_pushstring(L, "id");
-            lua_pushstring(L, cellId );
-            lua_settable(L, -3);
-
-            // puts the cell's id on the table
-            lua_pushstring(L, "objectId_");
-            lua_pushstring(L, cellId );
-            lua_settable(L, -3);
-
-            // puts the others cell's attributes on the table
-            for( unsigned int i = 0; i < properties.size(); i++)
-            {
-                //TeProperty &prop = properties[i];
-                const TeProperty &prop = properties[i];
-
-                lua_pushstring(L, prop.attr_.rep_.name_.c_str() );
-
-                element.getPropertyValue(aux,i);
-                switch( prop.attr_.rep_.type_  )
+                if (TerraLibFacade::getInstance()->getLastError() ==
+                         TerraLibFacade::NONERROR)
                 {
-                case TeSTRING:
-                case TeDATETIME:
-                case TeCHARACTER:
-                    lua_pushstring(L, aux.c_str() );
-                    break;
+                    setLayerName(cellularSpace.getLayerName());
+                }
+            }
+            else
+            {
+                cellularSpace = TerraLibFacade::
+                            getInstance()->getCellularSpace(inputLayerName, inputThemeName,
+                                                            attrNames, whereClause);
+            }
 
-                case TeREAL:
-                    lua_pushnumber( L, atof( aux.c_str() ) );
-                    break;
+            vector<CellMapper> cells = cellularSpace.getCells();
 
-                case TeINT:
-                    lua_pushnumber( L, atoi( aux.c_str() ) );
-                    break;
+            if (!cells.empty())
+            {
 
-                case TeBLOB:
-                case TeOBJECT:
-                case TeUNKNOWN:
-                default:
-                    lua_pushstring(L, aux.c_str() );
+                if (!sendCells(cells))
+                {
+                    return 0;
+                }
+                // carrega legendas do banco
+
+//                QString dbLegend;
+//                loadLegendsFromDatabase(db, inputTheme, dbLegend);
+//                //qDebug() << dbLegend << "\n\n";
+
+
+//                // debugging
+//                //cout << dbLegend.toLatin1().constData() << endl; cout.flush();
+//                //int response = -1;
+//                if (! dbLegend1.isEmpty()) {
+//                    //response = luaL_dostring(L, dbLegend.toLatin1().constData());
+//                    lua_pushstring(L, dbLegend.toLatin1().constData());
+//                }
+//                else {
+                lua_pushstring(L, "");
+//                }
+
+                return 6;
+            }
+            else
+            {
+                if (TerraLibFacade::getInstance()->getLastError() ==
+                        TerraLibFacade::DB_VERSION_ERROR)
+                {
+                    string err = TerraLibFacade::
+                            getInstance()->getLastErrorMessage();
+                    returnsCustomError(L, 5, err);
+                }
+                else if (TerraLibFacade::getInstance()->getLastError() ==
+                         TerraLibFacade::THEME_LOAD_ERROR)
+                {
+                    string err = string("Can't load input theme '") + string(inputThemeName) + string("'.");
+                    returnsCustomError(L, 4, err);
+                }
+                else if (TerraLibFacade::getInstance()->getLastError() ==
+                         TerraLibFacade::LAYER_LOAD_ERROR)
+                {
+                    string err = string("Can't load input layer '") + string(inputLayerName) + string("'.");
+                    returnsCustomError(L, 4, err);
+                }
+                else if (TerraLibFacade::getInstance()->getLastError() ==
+                         TerraLibFacade::UNKNOWN_ERROR)
+                {
+                    string err = "Unknown Error!";
+                    returnsCustomError(L, 4, err);
+                }
+                else if (TerraLibFacade::getInstance()->getLastError() ==
+                         TerraLibFacade::NONERROR)
+                {
+                    string err = "Unknown Error!";
+                    returnsCustomError(L, 4, err);
                 }
 
-                lua_settable(L, -3);
-            }
-
-            // calls the Cell constructor
-            if( lua_pcall( L, 1, 1, 0) != 0 )
-            {
-                cont++;
                 return 0;
             }
-            // insert the new cell into the cellular space table
-            lua_settable(L, tabPos);
-
-            //colAnt = col;
-            cont++;
-            element.clear();
-            //cout << "<";
-            //if((cont % 79) == 0) cout << endl;
         }
-
-        // returns values to the attributes minCol, minRow, maxCol and maxRow
-        // of the lua cellularSpace
-        lua_pushnumber( L, minCol );
-        lua_pushnumber( L, minLin );
-        lua_pushnumber( L, maxCol );
-        lua_pushnumber( L, maxLin );
-
-        delete querierParams;
-
+        else
+        {
+            string err = TerraLibFacade::
+                    getInstance()->getLastErrorMessage() + string(".");
+            returnsCustomError(L, 5, err);
+        }
 
         /* TODO
           - transformar dbLegend em membro da classe
@@ -1528,448 +1408,17 @@ int luaCellularSpace::load(lua_State *L)
           - antes inferir legenda para observer verifica se existe legenda disponivel no espaco celular carregado
 
         */
-
-
-        // carrega legendas do banco
-
-        QString dbLegend;
-        loadLegendsFromDatabase(db, inputTheme, dbLegend);
-        //qDebug() << dbLegend << "\n\n";
-
-
-        // debugging
-        //cout << dbLegend.toLatin1().constData() << endl; cout.flush();
-        //int response = -1;
-        if (! dbLegend.isEmpty()) {
-            //response = luaL_dostring(L, dbLegend.toLatin1().constData());
-            lua_pushstring(L, dbLegend.toLatin1().constData());
-        }
-        else {
-            lua_pushstring(L, "");
-        }
-        // debugging
-        // cout << response << endl; cout.flush();
-
-        // fecha o banco
-        db->close();
-        return 6;
     }
-    catch( ... ){
-        string err_out = string("Error: It is not possible to load the TerraLib database '") + string(db->errorMessage().c_str()) + string("'.");
-        lua_getglobal(L, "customError");
-        lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
-        return 0;
+    catch(...)
+    {
+        string err = string("Error: It is not possible to load the TerraLib database '")
+                + TerraLibFacade::getInstance()->getLastErrorMessage()
+                + string("'.");
+        returnsCustomError(L, 4, err);
     }
+
+    return 0;
 }
-
-// Loads (if any) existing legends from database
-void luaCellularSpace::loadLegendsFromDatabase(TeDatabase *db, TeTheme *inputTheme, QString& luaLegend)
-{
-    if(inputTheme->legend().size() > 0) {	
-		luaLegend.clear();
-		TeDatabasePortal *portal = db->getPortal();
-		TeGrouping grouping = inputTheme->grouping();
-
-		TeAttributeRep attrRep = grouping.groupAttribute_;
-		QString attr = QString(attrRep.name_.c_str());
-		QString attrName = attr.mid(attr.lastIndexOf(".")+1,attr.length()-1);
-		int attrType = attrRep.type_;
-
-		// converting a TerraLib type into a TerraME type
-		// constansts from TeDataTypes.h
-		switch (attrType){
-			case TeSTRING:
-			case TeTEXTTYPE:
-			case TeCHARACTER:
-				attrType = TObsText;
-				break;
-
-			case TeREAL:
-			case TeINT:
-			case TeUNSIGNEDINT:
-			case TeBOOLEAN:
-				attrType = TObsNumber;
-				break;
-			case TeDATETIME:
-				attrType = TObsDateTime;
-				break;
-			default:
-                if (execModes != Quiet)
-				{
-					qWarning() << "Warning: This type of data is not supported in TerraME Legend.";
-				}
-				luaLegend.clear();
-				return;
-				break;
-		}
-
-		luaLegend.append("return Legend{");
-		QString legendType = retrieveLegendType(attrType);
-		luaLegend.append(QString("%1=%2").arg(TYPE).arg(legendType));
-		
-		// stdmode mode setup
-		QString stdMode = retrieveStdMode(attrType, grouping);
-		luaLegend.append(QString("%1=%2,").arg(STD_DEV).arg(stdMode));
-		
-		// slices setup
-		TeSliceVector slices = inputTheme->getSlices();
-		luaLegend.append(QString("%1=%2,").arg(SLICES).arg(slices.size()));
-		
-		// max value setup
-		if(attrType != TObsText){
-			QString maxValue = retrieveMaxValue(portal, inputTheme, attrName, attrType);
-			luaLegend.append(QString("%1=%2,").arg(MAX).arg(maxValue));
-		}
-		else {
-			luaLegend.append(QString("%1=%2,").arg(MAX).arg(slices.size()-1));
-		}
-		
-		// min value setup
-		QString minValue = retrieveMinValue(portal, inputTheme, attrName, attrType);
-		luaLegend.append(QString("%1=%2,").arg(MIN).arg(minValue));
-		
-		// symbol setup
-		luaLegend.append(QString("%1=\"%2\",").arg(SYMBOL).arg("?"));
-		
-		// font size setup
-        luaLegend.append(QString("%1=%2,").arg(FONT_SIZE).arg(1));
-		
-		// font family setup
-		luaLegend.append(QString("%1=%2,").arg(FONT_FAMILY).arg("\"Symbol\""));
-		
-		// color bar setup
-
-		QStringList colors = retrieveColorBar(portal, inputTheme, &grouping);
-		if(colors.length() > 0){				
-			luaLegend.append(QString("%1=%2,").arg(COLOR_BAR).arg(colors.at(0)));
-			if(colors.length() == 2){
-				luaLegend.append(QString("%1=%2,").arg(STD_COLOR_BAR).arg(colors.at(1)));	
-			}			
-		}
-
-		// precision setup
-		//luaLegend.append(QString("%1=%2,").arg(PRECISION).arg(grouping.groupPrecision_));
-		luaLegend.append(QString("%1=%2,").arg(PRECISION).arg(6));
-		
-		// grouping mode setup
-		luaLegend.append(QString("%1=%2").arg(GROUP_MODE).arg((GroupingMode) grouping.groupMode_));
-		luaLegend.append("}");
-    }
-}
-
-//@CamelloHenrique(refactory)
-// Discover colorBar
-QStringList luaCellularSpace::retrieveStdDeviationColorBar(QStringList colorBarRawItems ){
-		QStringList colorBarItems, stdColorBarItems;
-		QColor color;
-		QStringList colorBarList;
-		QString colorBar; 
-		// stdColorBar may be null
-		QString stdColorBar;
-		bool isStd = false;
-		QString str = "";
-
-		for(int i=0;i<colorBarRawItems.size();i++){
-			str = colorBarRawItems.at(i);
-			if(str.contains("|")){
-				QStringList auxStrList = str.split("|");
-				QString auxStr = auxStrList.at(0);
-				colorBarItems.append(auxStr);
-				isStd = true;
-				str = auxStrList.at(1);
-			}
-
-			if(! isStd){
-				colorBarItems.append(str);
-			}
-			else {
-				stdColorBarItems.append(str);
-			}
-		}
-
-		QString colorStr;
-		colorBar.append(" {");
-		for(int i=0;i<colorBarItems.size();i++){
-			QStringList auxList = colorBarItems.at(i).split(";");
-			color = QColor::fromHsv(auxList.at(0).toInt(),
-								auxList.at(1).toInt(),
-								auxList.at(2).toInt()).toRgb();
-
-			colorStr = QString("{ color = {%1, %2, %3},distance=%4 }")
-				.arg(color.red())
-				.arg(color.green())
-				.arg(color.blue())
-				.arg(auxList.at(3));
-			if(i+1 < colorBarItems.size()) 
-				colorStr.append(",");
-			colorBar.append(colorStr);
-		}
-		colorBar.append("}");
-		colorBarList.append(colorBar);
-
-		if(stdColorBarItems.size() > 0) stdColorBar.append(" { ");
-
-		for(int i=0;i<stdColorBarItems.size();i++){
-			QStringList auxList = colorBarItems.at(i).split(";");
-			color = QColor::fromHsv(auxList.at(0).toInt(),
-								auxList.at(1).toInt(),
-								auxList.at(2).toInt()).toRgb();
-
-			colorStr = QString("{ color = {%1, %2, %3}, distance=%4 }")
-				.arg(color.red())
-				.arg(color.green())
-				.arg(color.blue())									
-				.arg(auxList.at(3));
-			if(i+1 < stdColorBarItems.size()) colorStr.append(",");
-			stdColorBar.append(colorStr);
-		}
-
-		if(stdColorBarItems.size() > 0){
-			stdColorBar.append(" }");
-			colorBarList.append(stdColorBar);	
-		}
-		return colorBarList;
-}
-
-
-//
-QStringList luaCellularSpace::retrieveUniqueValueColorBar(TeTheme *inputTheme){
-	QColor color;
-	QStringList colorBarList;
-	QString colorStr(" {");
-
-	TeLegendEntryVector legEntryVec = inputTheme->legend();
-
-	for(int i = 0; i < legEntryVec.size(); i++)
-	{
-		TeLegendEntry legEntry = legEntryVec.at(i);
-		TeGeomRepVisualMap map = legEntry.getVisualMap();
-		TeGeomRepVisualMap::iterator it = map.begin();
-
-		TeColor tcolor = (*it).second->color();
-		// qDebug()  << legEntry.from().c_str() << legEntry.to().c_str() << legEntry.count() 
-			// << QColor::fromHsv(tcolor.red_, tcolor.green_, tcolor.blue_).toRgb();
-			//<< "("<< tcolor.red_ << tcolor.green_ << tcolor.blue_ <<")";
-
-
-
-		if(i < legEntryVec.size() - 1)
-		{
-			colorStr.append(QString("{ color = {%1, %2, %3},value='%4',distance=%5}, ")
-			.arg(tcolor.red_)
-			.arg(tcolor.green_)
-			.arg(tcolor.blue_)
-            .arg(legEntry.from().c_str())
-			.arg(i)
-			);
-		}
-		else
-		{
-			colorStr.append( QString("{ color = {%1, %2, %3},value='%4',distance=%5}")
-				.arg(tcolor.red_)
-				.arg(tcolor.green_)
-				.arg(tcolor.blue_)
-				.arg(legEntry.from().c_str())
-				.arg(i)
-			);
-		}
-	}
-	colorStr.append("}");
-	colorBarList.append(colorStr);
-	return colorBarList;
-}
-
-QStringList luaCellularSpace::retrieveColorBar(TeDatabasePortal *portal, TeTheme *inputTheme, TeGrouping *grouping){
-	QString colorBar;	
-	QStringList colorBarList;
-	QString colorBarsQuery = QString("SELECT grouping_color FROM te_theme_application WHERE theme_id=%1")
-			.arg(inputTheme->id());
-	if( portal->query(colorBarsQuery.toLatin1().constData()) )
-	{
-        // esta string recebe o conteudo bruto recuperado do banco de dados
-        QString auxColorBar;
-        // na verdade existe uma unica linha na tabela (uma grande string)
-		while(portal->fetchRow())
-			auxColorBar = QString("%1").arg(portal->getData(0));
-
-		if(auxColorBar.length() > 0){
-			// Caso nao exista legenda no banco ou ela esteja incorreta, aborta a recuperacao
-			if (! auxColorBar.contains("-"))
-			{
-                if (execModes != Quiet) {
-					QString msg = QString("Warning: The legend found is invalid!\nTerraview has returned:\n%1").arg(colorBar);
-					qWarning(msg.toLatin1().constData());
-				}
-				return colorBarList;
-			}
-			else {
-				// substitiu separadores toscos do TerraView, que usa o caracter '-'
-				// mesmo quando ha numero negativos na string
-				string colorBarStr(auxColorBar.toLatin1().constData());
-				char previousChar = '#';
-				for(int i = 0; i < auxColorBar.size(); i++ ){
-					if(( colorBarStr[i] == '-') && (previousChar != '#'))
-						colorBarStr[i] = '#';
-					previousChar = colorBarStr[i];
-				}
-				auxColorBar = QString(colorBarStr.c_str());
-
-				// Cada cor do objeto ColorBar e' separado por "#"
-				QStringList colorBarRawItems = auxColorBar.split("#", QString::SkipEmptyParts);
-
-				// Legendas STD_DEVIATION
-				if(grouping->groupMode_ == TeStdDeviation){
-					return retrieveStdDeviationColorBar(colorBarRawItems);
-				}
-				// Legendas que nao sao STD_DEVIATION (UniqueValue, EqualSteps)
-				else {
-					// Legendas UniqueValue e EqualSteps
-					return retrieveUniqueValueColorBar(inputTheme);
-				}
-
-			}
-		}
-	}
-	else
-	{
-        if (execModes != Quiet)
-		{
-			qWarning("Warning: Failed to load database legend. The error message received from "
-						"database driver was: \"%s\".", portal->errorMessage().c_str());
-		}
-		return colorBarList;
-	}
-}
-
-// Discover max value
-QString luaCellularSpace::retrieveMaxValue(TeDatabasePortal *portal, TeTheme *inputTheme,QString attrName ,int attrType)
-{
-	double maxDouble = -0.0000001;
-	QString maxStr;
-    QTextStream stream(&maxStr);
-    stream.setRealNumberPrecision(12);
-
-	QString maxValueQuery = QString("SELECT upper_value FROM te_legend WHERE theme_id=%1")
-			.arg(inputTheme->id());
-	if (attrType != TObsNumber)
-    {
-		if( portal->query(maxValueQuery.toLatin1().constData()) )
-		{
-			while(portal->fetchRow())
-            {
-				maxStr = portal->getData(0);
-                maxDouble = max(maxStr.toDouble(), maxDouble);				
-			}
-		}
-	}
-	else 
-    {
-		maxValueQuery = QString("SELECT %1 FROM %2")
-				.arg(attrName).arg(inputTheme->layer()->name().c_str());
-
-		if( portal->query(maxValueQuery.toLatin1().constData()) )
-		{
-			while(portal->fetchRow())
-            {
-				maxStr = portal->getData(0);
-                maxDouble = max(maxStr.toDouble(), maxDouble);	
-			}
-		}
-	}
-    maxStr = "";
-	portal->freeResult();
-	stream << maxDouble;
-	return maxStr;
-}
-
-// Discover min value
-QString luaCellularSpace::retrieveMinValue(TeDatabasePortal *portal, TeTheme *inputTheme,QString attrName ,int attrType)
-{
-	double minDouble = 1000000;
-	QString minStr;
-    
-    QTextStream stream(&minStr);
-    stream.setRealNumberPrecision(12);
-
-	QString minValueQuery = QString("SELECT lower_value FROM te_legend WHERE theme_id=%1")
-			.arg(inputTheme->id());
-	if (attrType != TObsNumber)
-    {
-		if( portal->query(minValueQuery.toLatin1().constData()) )
-		{
-			while(portal->fetchRow())
-            {
-				minStr = portal->getData(0);
-                minDouble = min(minDouble, minStr.toDouble());
-			}
-		}
-	}
-	else
-    {
-		minValueQuery = QString("SELECT %1 FROM %2")
-				.arg(attrName).arg(inputTheme->layer()->name().c_str());
-		if( portal->query(minValueQuery.toLatin1().constData()) )
-		{
-			while(portal->fetchRow())
-            {
-				minStr = portal->getData(0);
-                minDouble = min(minDouble, minStr.toDouble());
-			}
-		}
-	}
-    minStr = "";
-	portal->freeResult();
-	stream << minDouble;
-	return minStr;
-}
-
-// Discover TerraME Legend Type
-QString luaCellularSpace::retrieveLegendType(int attrType){
-	QString s;
-	switch(attrType)
-	{
-	case TObsDateTime:
-		s.append("TME_LEGEND_TYPE.DATETIME,");
-		break;
-	case TObsText:
-		s.append("TME_LEGEND_TYPE.TEXT,");
-		break;
-	case TObsBool:
-		//s.append("TME_LEGEND_TYPE.BOOL,");
-		//break;
-	default:
-		s.append("TME_LEGEND_TYPE.NUMBER,");
-	}
-	return s;
-}
-
-// Discover StdDeviation Mode
-QString luaCellularSpace::retrieveStdMode(int attrType, TeGrouping grouping){
-    StdDev stdMode = TObsNone;
-    if(attrType != TObsText)
-    {
-        if(grouping.groupStdDev_ > 0)
-        {
-            if(grouping.groupStdDev_ == 1)
-            {
-                stdMode = TObsFull;
-            }
-            else
-            {
-                if(grouping.groupStdDev_ == 0.5)
-                    stdMode = TObsHalf;
-                else
-                    stdMode = TObsQuarter;
-            }
-        }
-    }
-    QString s = QString("%1").arg(stdMode); 
-	return s;
-}
-
-// Discover 
 
 /// Saves celular space.
 int luaCellularSpace::save(lua_State *L)
@@ -1978,634 +1427,198 @@ int luaCellularSpace::save(lua_State *L)
     // the simulation time(year, day, etc) that will be concatened to the attribute names,
     // the output table name,
     // table of names of attributes to be saved
-    //char xx[20], yy[20], val[255];
     char val[255];
     const char *key, *value, *objId;
     double v;
     char attName[255];
-    //int index;
-    TeAttributeList attList;
     vector<string> attNameList;
-    TeTableRow tableRow;
-    TeAttribute column;
     const char* outputTableName = luaL_checkstring(L, -3);
     char outputTable[100];
-    long int contCells = 0;
 
     // Convert time value to string ********
     const float time = luaL_checknumber(L, -4);
     char aux[100], *ch;
-    if( (time - floor(time)) > 0 ) sprintf(aux, "%f", time); else sprintf(aux, "%.0f", time);
-    ch = aux;
-    for( unsigned int i= 0; i < strlen(aux); i++) { if( ch[i] == '.' || ch[i] ==',' ) ch[i] = '_'; }
 
-    strcpy(outputTable,outputTableName);
+    if( (time - floor(time)) > 0 )
+        sprintf(aux, "%f", time);
+    else
+        sprintf(aux, "%.0f", time);
+
+    ch = aux;
+
+    for( unsigned int i= 0; i < strlen(aux); i++)
+    {
+        if( ch[i] == '.' || ch[i] ==',' )
+            ch[i] = '_';
+    }
+
+    strcpy(outputTable, outputTableName);
     strcat(outputTable, aux);
 
     if( ! lua_istable(L, -2) )
     {
-        string err_out = string("Error: attribute names table not found.");
-        lua_getglobal(L, "customError");
-        lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        string err = string("Error: attribute names table not found.");
+        returnsCustomError(L, 4, err);
+
         return false;
     }
 
     if( ! lua_istable(L, -1) )
     {
-        string err_out = string("Error: cells not found.");
-        lua_getglobal(L, "customError");
-        lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
+        string err = string("Error: cells not found.");
+        returnsCustomError(L, 4, err);
+
         return false;
     }
+
+    vector<CellMapper> cellsSchemas;
+    CellMapper cell;
 
     //  get the cellular space position *********
     int cellsPos = lua_gettop(L);
-
-    // Opens a connection to a database accessible *******
-    TeDatabase * db;
-    if( dbType == "mysql")
-        db = new TeMySQL();
-    // RODRIGO
-    //#if defined ( TME_WIN32 )
-#if defined( TME_MSVC ) && defined( TME_TERRALIB_RC3 )
-    else {
-        ::configureADO();
-        db = new TeAdo();
-    }
-#endif
-    if (!db->connect(host,user,pass,dbName,0))
-    {
-        string err_out = string("Error: ") + db->errorMessage() + string(".");
-        lua_getglobal(L, "customError");
-        lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
-        return false;
-    }
-
-    // Load the layer ******
-    TeLayer *layer;
-    if ( inputLayerName == "")
-    {
-        // Load input theme
-        TeTheme *inputTheme = new TeTheme(inputThemeName );
-        if (!db->loadTheme (inputTheme))
-        {
-            string err_out = string("Can't open input theme '") + string(inputThemeName) + string("'.");
-            lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,4);
-            lua_call(L,2,0);
-            db->close();
-            return false;
-        }
-        // Load input layers
-        layer = inputTheme->layer();
-        if (!db->loadLayer (layer))
-        {
-            string err_out = string("Failed to load layer '") + string(db->errorMessage()) + string("'.");
-            lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,4);
-            lua_call(L,2,0);
-            db->close();
-            return false;
-        }
-
-    }
-    else
-    {
-        layer = new TeLayer(inputLayerName);
-        if (!db->loadLayer(layer))
-        {
-            string err_out = string("Error: failed to load layer '") + string(db->errorMessage()) + string("'.");
-            lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,4);
-            lua_call(L,2,0);
-            db->close();
-            return false;
-        }
-
-    }
-
-    // Delete the new attribute table whether it already exist *********
-    if( db->tableExist( string( outputTable ) ) )
-    {
-        //if( !deleteLayerTableName( db, string ( outputTable ) ) )
-        if( !deleteLayerTableName( db, (string&)(string const&)string( outputTable ) ) )
-        {
-            /*cout << "Error: fail to delete table \"" << outputTable
-            << db->errorMessage() << endl;
-            db->close();*/
-            return false;
-        }
-
-
-    }
-
-    // Get the first cell of the cellular space (cells)
-    // "index" is at index -2 and "value(cell)" at index -1
     lua_pushnumber(L, 1);
     lua_gettable(L, cellsPos );
     int firstCellPos = lua_gettop(L);
 
-    // Create the new attribute table **********
-    // Set the primary key field of the attribute table
-    column.rep_.name_  = "object_id_";
-    column.rep_.type_ = TeSTRING;
-    column.rep_.isPrimaryKey_ = true;
-    column.rep_.numChar_ = 255;
-    attList.push_back(column);
+    cell.addAttribute("object_id_", "", Attribute::STRING, true, 255);
+    cellsSchemas.push_back(cell);
 
-    // tranverse the table( attribute names )
-    int count = 0;
     lua_pushnil(L);
+
     while(lua_next(L, cellsPos - 1 ) != 0)
     {
         // "index" is at index -2 and "value(attribute name)" at index -1
-        key = luaL_checkstring(L, -1); // gets the cell attribute name
+        cell = CellMapper();
 
+        key = luaL_checkstring(L, -1); // gets the cell attribute name
         strcpy( attName, key );
         attNameList.push_back( key);
 
-        //strcat( attName, aux ); // Raian: Comentei para colocar o nome da coluna sem o tempo.
-        column.rep_.name_  = attName;
-        column.rep_.isPrimaryKey_ = false;
-
         lua_pushstring(L, key);
-        lua_gettable(L,firstCellPos);
+        lua_gettable(L, firstCellPos);
+
         switch( lua_type(L, -1) )
         {
-        case LUA_TNUMBER:
-        case LUA_TBOOLEAN:
-            // always save numbers as double (TeReal)
-            column.rep_.type_ = TeREAL;
-            column.rep_.numChar_ = 0;
-            break;
+            case LUA_TNUMBER:
+            case LUA_TBOOLEAN:
+                cell.addAttribute(attName, "", Attribute::REAL, false, 0);
+                break;
 
-        case LUA_TSTRING:
-            column.rep_.type_ = TeSTRING;
-            column.rep_.numChar_ = 255;
-            break;
+            case LUA_TSTRING:
+                cell.addAttribute(attName, "", Attribute::STRING, false, 255);
+                break;
 
-        default:
-            column.rep_.type_ = TeSTRING;
-            column.rep_.numChar_ = 255;
-            break;
+            default:
+                cell.addAttribute(attName, "", Attribute::STRING, false, 255);
+                break;
 
         }
-        attList.push_back(column);
-        lua_pop(L,1); // remove the attribute value
 
+        cellsSchemas.push_back(cell);
+
+        lua_pop(L, 1); // remove the attribute value
         lua_pop(L, 1); // removes the cell attribute name
-        count++;
-    }
-    // there are no attributes name in the table (count ==0),
-    // then save all cells attributes
-    if( !count )
-    {
-        // tranverse the table (cell)
-        lua_pushnil(L);
-        while(lua_next(L, -2 ) != 0)
-        {
-            // "index" is at index -2 and "value(attribute name)" at index -1
-            key = luaL_checkstring(L, -2);
-            if( strcmp(key, "x") && strcmp(key, "y") )
-            {
-                strcpy( attName, key );
-                attNameList.push_back( key );
-
-                strcat( attName, aux );
-                column.rep_.name_  = attName;
-                column.rep_.isPrimaryKey_ = false;
-
-                switch( lua_type(L, -1) )
-                {
-                case LUA_TNUMBER:
-                case LUA_TBOOLEAN:
-                    // always save numbers as double (TeReal)
-                    column.rep_.type_ = TeREAL;
-                    column.rep_.numChar_ = 0;
-                    break;
-
-                case LUA_TSTRING:
-                    column.rep_.type_ = TeSTRING;
-                    column.rep_.numChar_ = 255;
-                    break;
-
-                default:
-                    column.rep_.type_ = TeSTRING;
-                    column.rep_.numChar_ = 255;
-                    break;
-
-                }
-                attList.push_back(column);
-            }
-
-            lua_pop(L, 1); // removes the cell attribute name
-        }
-
-    }
-    TeTable attTable( string( outputTable ),attList, "object_id_", "object_id_", TeAttrStatic);
-    if ( !layer->createAttributeTable(attTable) )
-    {
-        string err_out = string("Error: failed to create table '") + string(outputTable) + string("' in the TerraLib database.");
-        lua_getglobal(L, "customError");
-        lua_pushstring(L,err_out.c_str());
-        lua_pushnumber(L,4);
-        lua_call(L,2,0);
-        db->close();
-        return false;
     }
 
+    vector<CellMapper> cells;
 
     // Save data on the attribute table *****************
     // tranverse the table(cells)
     lua_pushnil(L); // first key
+
     while (lua_next(L, cellsPos) != 0)
     {	// "key" is at index -2 and "value(luaCell)" at index -1
 
         // build a table row for the cell at the top of the lua stack
-        tableRow.clear();
-
-
         // Raian: Gets the cell's Id
         lua_pushstring(L, "objectId_");
         lua_gettable( L, -2);
         objId = luaL_checkstring(L, -1);
         lua_pop(L, 1);
-        tableRow.push_back( objId );
 
-        // tranverse the attribute names list
-        TeAttributeList::iterator it = attList.begin();
+        CellMapper cell(objId);
+
         vector<string>::iterator itName = attNameList.begin();
-        it++; // skip the field "object_id_"
-        while ( it != attList.end() )
+
+        for (int i = 1; i < cellsSchemas.size(); i++)
         {
-            column = *it;
+            string attrName(itName->c_str());
+            lua_pushstring(L, attrName.c_str());
+            lua_gettable(L, -2);
 
-            //printf("%s, %s\n",itName->c_str(), column.rep_.name_.c_str() );
+            vector<Attribute> attrs = cellsSchemas.at(i).getAttributes();
 
-            lua_pushstring(L, itName->c_str() );
-            lua_gettable( L, -2 );
-            switch(  column.rep_.type_ )
+            switch(attrs.at(0).getType())
             {
-            case TeREAL:
-                // always save numbers as double
-                v = lua_tonumber(L, -1);
-                sprintf( val, "%f", v);
-                value = val;
-                break;
+                case Attribute::REAL:
+                    // always save numbers as double
+                    v = lua_tonumber(L, -1);
+                    sprintf( val, "%f", v);
+                    value = val;
+                    cell.addAttribute(attrName, value, Attribute::REAL);
+                    break;
 
-            case TeSTRING:
-                value = lua_tostring(L, -1);
-                break;
+                case Attribute::STRING:
+                    value = lua_tostring(L, -1);
+                    cell.addAttribute(attrName, value, Attribute::STRING);
+                    break;
 
-            default:
-                value = lua_tostring(L, -1);
-                break;
+                default:
+                    value = lua_tostring(L, -1);
+                    cell.addAttribute(attrName, value, Attribute::STRING);
+                    break;
 
             }
-            tableRow.push_back( value );
 
             lua_pop(L, 1); // removes the cell attribute value
-            it++;
+
             itName++;
         }
 
-        attTable.add( tableRow );
+        cells.push_back(cell);
+
         lua_pop(L, 1); // removes "value (cell)"; keeps "key" for next iteration
-        //cout << ">";
-        contCells++;
     }
-    // save the new attribute table to the database
-    if (attTable.size() > 0)
+
+    if (TerraLibFacade::getInstance()->connect(TerraLibFacade::MYSQL, host, user, pass, dbName, 0))
     {
-        if (!layer->saveAttributeTable(attTable))
+        if (inputLayerName.empty())
         {
-            string err_out = string("Error: Could not create table '") + string(outputTable) + string("' in the TerraLib database.");
-            lua_getglobal(L, "customError");
-            lua_pushstring(L,err_out.c_str());
-            lua_pushnumber(L,5);
-            lua_call(L,2,0);
-            db->close();
-            return false;
+            if (TerraLibFacade::getInstance()->
+                    save(inputThemeName, outputTable, whereClause, cellsSchemas, cells))
+                return true;
+            else
+            {
+                returnsCustomError(L, 4,
+                                   TerraLibFacade::getInstance()->getLastErrorMessage());
+                return false;
+            }
         }
-    }
-
-
-    // Create a view to show the saved results *****************
-    TeProjection* proj = layer->projection();
-    string viewName = "Result";
-    TeView* view = new TeView(viewName, user);
-    // Check whether there is a view with this name in the datatabase
-    if (db->viewExist(viewName))
-    {
-        // loads the existing view
-        if( !db->loadView( view ) )
+        else
         {
-            string err_out = string("Error: fail to load view \"") + string(viewName) + string("\" - ")+ db->errorMessage()  + string("\n");
-            qFatal( "%s", err_out.c_str() );
-
-            db->close();
-            return false;
+            if(TerraLibFacade::getInstance()->
+                    save(inputLayerName, inputThemeName, outputTable,
+                         whereClause, cellsSchemas, cells))
+                return true;
+            else
+            {
+                returnsCustomError(L, 4,
+                                   TerraLibFacade::getInstance()->getLastErrorMessage());
+                return false;
+            }
         }
     }
     else
     {
-        // Create a view with the same projection of the layer
-        view->projection(proj);
-        if (!db->insertView(view))			// save the view in the database
-        {
-            string err_out = string("Error: fail to insert the view \"") + string(viewName) + string("\" into the database - ")+ db->errorMessage()  + string("\n");
-            qFatal( "%s", err_out.c_str() );
+        string err = string("Error: ")
+                + TerraLibFacade::getInstance()->getLastErrorMessage()
+                + string(".");
+        returnsCustomError(L, 4, err);
 
-            db->close();
-            return false;
-        }
-    }
-
-    // Create a theme that will contain the objects of the layer which satisfies the
-    // attribute restrictions applied
-    TeTheme* theme;
-    theme = new TeTheme(string(outputTable), layer);
-    // Check whether there is a theme with this name in the datatabse
-    if( db->themeExist( string(outputTable)) )
-    {
-        /// load the inputTheme properties
-        // loads the existing view
-        if( !db->loadTheme( theme ) )
-        {
-            string err_out = string("Error: fail to load theme \"") + string(outputTable) + string("\" - ")+ db->errorMessage()  + string("\n");
-            qFatal( "%s", err_out.c_str() );
-
-            db->close();
-            return false;
-        }
-        // delete the existing theme
-        int themeId = theme->id();
-        if ( !db->deleteTheme( themeId ) )
-        {
-            string err_out = string("Error: fail to delete theme \"") + string(outputTable) + string("\" - ")+ db->errorMessage()  + string("\n");
-            qFatal( "%s", err_out.c_str() );
-
-            db->close();
-            return false;
-        }
-        // BEGIN: Raian
-        theme = new TeTheme(string(outputTable), layer);
-
-        if( !createNewTheme( attTable, outputTable, whereClause, inputThemeName, view, layer, db, theme ) )
-        {
-
-            string err_out = string("Error: fail to create theme \"") + string(inputThemeName) + string("\" - ")+ db->errorMessage()  + string("\n");
-            qFatal( "%s", err_out.c_str() );
-
-            return false;
-        }
-
-    }
-    else
-    {
-        if( !createNewTheme( attTable, outputTable, whereClause, inputThemeName, view, layer, db, theme ) )
-        {
-            string err_out = string("Error: fail to create theme \"") + string(inputThemeName) + string("\" - ")+ db->errorMessage()  + string("\n");
-            qFatal( "%s", err_out.c_str() );
-
-            return false;
-        }
-
-    }
-
-    db->close();
-    return 0;
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// A funcao abaixo recebe um o nome da GPM (campo "gmp_id" nda tabela "te_gmp")
-// Parameters: 
-//		gpmName - it is the GPM unique identifier, a ASCII text.
-// Problemas:
-// 1) TerraLib nao oferece em sua API uma me'todo para carregar uma GPM a partir do banco.
-// 2) Por enquanto, os testes so funcionaram para GPMs com estrate'gia "contiguity". Para as demais estrategias, nao consegui
-// gerar uma GPM cuja tabela de conexoes tivessem elementos. 
-// 3) Arquivos ponto GAL nao possuem informacoes suficientes para a construcao da estrutura de vizinhanca de TerraME. Veja
-//    documentacao do metodo loadGALNeighborhood();
-// 4) O TerraView tambe'm parece nao gravar arquivos com extensao GWT. Assim, o metodo pre-existente para carregar
-// este tipo de arquivo nao foi adaptado para a nova classe vizinhanca.
-// 5) Ainda e' necessaria a implementacao de um iterador sobres as vizinhancaS de uma celula: begin, first, last, next, etc.
-// 6) A API TerraLib para GPM no que tange ao ponto de vista do usuario final merece uma revisao.
-int luaCellularSpace::loadTerraLibGPM(lua_State *L){
-
-    const char* neighName = luaL_checkstring(L, -1);
-
-    // Opens a connection to a database accessible
-    TeDatabase * db;
-    if( dbType == "mysql")
-        db = new TeMySQL();
-#if defined( TME_MSVC ) && defined( TME_TERRALIB_RC3 )
-    else
-        db = new TeAdo();
-#endif
-    if (!db->connect(host,user,pass,dbName,0))
-    {
-
-        string err_out = string("Error: ") + db->errorMessage().c_str() + string( "\n");
-        qFatal( "%s", err_out.c_str() );
         return false;
     }
 
-    TeTheme *inputTheme;
-    TeLayer *inputLayer;
-    if ( inputLayerName == "")
-    {
-        // Load input theme
-        inputTheme = new TeTheme(inputThemeName );
-        if (!db->loadTheme (inputTheme))
-        {
-            string err_out = string("\tCan't open input theme: ") + string(inputThemeName) + string( "\n");
-            qFatal( "%s", err_out.c_str() );
-            db->close();
-            return false;
-        }
-        // Load input layers
-        inputLayer = inputTheme->layer();
-        if (!db->loadLayer (inputLayer))
-        {
-
-            string err_out = string("\tCan't open input layer: ") + string(inputLayerName) + string( "\n");
-            qFatal( "%s", err_out.c_str() );
-
-            db->close();
-            return false;
-        }
-
-    }
-    else
-    {
-        // Load input layers
-        inputLayer = new TeLayer (inputLayerName);
-        if (!db->loadLayer (inputLayer))
-        {
-            string err_out = string("\tCan't open input layer: ") + string(inputLayerName) + string( "\n");
-            qFatal( "%s", err_out.c_str() );
-
-            db->close();
-            return false;
-        }
-        // Load input theme
-        inputTheme = new TeTheme(inputThemeName, inputLayer );
-        if (!db->loadTheme (inputTheme)) // erro, tiago: parece que a terralib carrega um thema com mesmo nome, mas de outro layer, pois
-            // esta funcao nao falha, caso o tema "inputTheme" nao pertenca ao layer (inputLayer), quando deveria
-            // assim, o proximo acesso ao aobjeto inputTheme procara uma excecao
-            // Alem disso, quando dois temas possuem o mesmo nomemem layers diferentes, esta funcao falha
-            // ao carregar o tema do layer selecionado, so funciona quando se tenta carregar o tema
-            // do layer que o primeiro a ser inserido no banco, para os demais layers a tentativa abaixo
-            // de criar um tema temporario ira falhar.
-            // Se varios bancos que possuirem a mesta estrutura, portanto, temas de com o mesmo nome, estiverem
-            // abertos simultaneamente no TerraView, entao as vistas e os temas de resultados serao criados nos
-            // dois bancos simultaneamente. Para isso, e' preciso que os banco tenham o mesmo usuario e senha.
-            //	Entretanto, as tabelas de resultados nao sao criadas em ambos os bancos.
-        {
-
-            string err_out = string("\tCan't open input theme: ") + string(inputThemeName) + string( "\n");
-            qFatal( "%s", err_out.c_str() );
-
-            db->close();
-            return false;
-        }
-    }
-
-    if(execModes != Quiet ) qWarning( "Loading default TerraLib GPM (Generalized Proximity Matrix). Please, wait...");
-    //  Load an existing proximity matrix or create a new one
-    double tol = TeGetPrecision(inputLayer->projection());
-    TePrecision::instance().setPrecision(tol);
-    //TeProxMatrixConstructionStrategy<TeSTElementSet>*   constStrategy=0;
-    TeGeneralizedProxMatrix<TeSTElementSet>* proxMat=0;
-    TeGPMConstructionStrategy strategy;
-    double max_distance;
-    double num_neighbours;
-    // RODRIGO
-    //if (!loadGPM(db, inputTheme->id(), proxMat, string( neighName ), strategy, max_distance, num_neighbours)){
-    if (!loadGPM(db, inputTheme->id(), proxMat, (string&)(string const&)string(neighName), strategy, max_distance, num_neighbours)){
-        string err_out = string("\tCan't load the \"") + string(neighName) + string( "\" TerraLib GPM.\n");
-        qFatal( "%s", err_out.c_str() );
-
-        db->close();
-        return false;
-    }
-
-    // NOW that the teGeneralizedProxMatrix is loaded, the neighbours will be added to the TerraME CellularSpace
-    // neighborhood structure
-    CellIndex cellIndex;
-    luaCell *cell,*viz;
-    CellularSpace::iterator itCell;
-    unsigned long int cont = 0;
-
-    itCell = CellularSpace::begin();
-    while (itCell != CellularSpace::end())
-    {
-
-        cellIndex.first = itCell->first.first; // cell.x
-        cellIndex.second = itCell->first.second; // cell.y
-        cell = (luaCell*) itCell->second;
-
-        // adds a new TerraME Neighborhood structure to the each cell in the CellularSpace
-        NeighCmpstInterf* neighborhoods = &cell->getNeighborhoods( );
-        luaNeighborhood* neighborhood = new luaNeighborhood( L );
-        pair< string, CellNeighborhood*> pStrNeigh;
-        //string matrix;
-        //if( strategy == TeAdjacencyStrategy )  //adjacencia
-        //{
-        //	matrix = string("Contiguity");
-        //}
-        //else if( strategy == TeDistanceStrategy)  //distancia
-        //{
-        //	matrix = string("Distance: ") + Te2String( max_distance, 6);
-        //}
-        //else if( strategy == TeNearestNeighboursStrategy)  //nn
-        //{
-        //	matrix = string("Nearest neighbours: ")+ Te2String(num_neighbours);
-        //}
-        //pStrNeigh.first = matrix;
-        pStrNeigh.first = neighName;
-        pStrNeigh.second = neighborhood;
-        // RODRIGO
-        //neighborhood->setID( string(neighName) );
-        neighborhood->setID( (string&)(string const&)string(neighName) );
-        neighborhoods->erase( neighName );
-        neighborhoods->add( pStrNeigh );
-        cont ++;
-
-        lua_getglobal(L, "Neighborhood" );
-        if( !lua_isfunction(L, -1))
-        {
-            qFatal("Error: Neighborhood constructor not found!");
-
-            db->close();
-            return 0;
-        };
-
-        // puts the neighborhood on the stack top
-        lua_newtable(L);
-        lua_pushstring(L, "cObj_");
-        typedef struct { luaNeighborhood *pT; } userdataType;
-        userdataType *ud = static_cast<userdataType*>(lua_newuserdata(L, sizeof(userdataType)));
-        ud->pT = neighborhood;  // store pointer to object in userdata//lua_pushlightuserdata(L,(void*) neigh);
-        luaL_getmetatable(L, luaNeighborhood::className);  // lookup metatable in Lua registry
-        lua_setmetatable(L, -2);
-        lua_settable(L,-3);
-
-        // calls the Neighborhood constructor
-        if( lua_pcall( L, 1, 1, 0) != 0 )
-        {
-            qFatal(" Error: Neighborhood constructor not found in the stack");
-            db->close();
-            return 0;
-        }
-
-        //  fullfil the cell Neighborhood structure, e. g. adds neighbours to the cell
-        char xx[20], yy[20];
-        sprintf(xx, "%02d", cellIndex.first );
-        sprintf(yy, "%02d", cellIndex.second );
-        string object_id = "C" + string( xx ) + "L" + string( yy );
-
-        //TeNeighbours& neigh = proxMat->getNeighbours(object_id );
-        TeNeighbours neigh = proxMat->getNeighbours(object_id );
-        TeNeighbours::iterator itNeigh = neigh.begin();
-
-        while (itNeigh != neigh.end())
-        {
-            string& neighId = itNeigh->first;
-            TeProxMatrixAttributes& proxMatrixAttr = itNeigh->second;
-
-            char str[30];
-            strcpy((char*)str, neighId.c_str());
-            int neighX, neighY;
-            objectId2coords(str,neighX, neighY);
-
-            // insert the new neighbor in the cell neighborhood
-            cellIndex.first = neighX;
-            cellIndex.second = neighY;
-            viz = (luaCell * ) CellularSpace::operator [](cellIndex);
-            float peso = (float) proxMatrixAttr.Weight();
-            neighborhood->add(cellIndex, viz, peso);
-
-            itNeigh++;
-        }
-        //cout << neigh.size() << ", "<< neighborhood->size() << endl;
-        itCell++;
-    }
-
-
-    if(execModes != Quiet ) qWarning("\tGPM sucessfuly loaded.\n");
-    return 0;
+    return false;
 }
 
 //@RAIAN: novo loadNeighborhood

@@ -41,11 +41,7 @@ extern "C"
 #include "luaCell.h"
 #include "reference.h"
 
-class TeDatabase;
-class TeDatabasePortal;
-class TeTheme;
-//class TeGrouping;
-struct TeGrouping;
+class CellMapper;
 
 /**
 * \brief  
@@ -54,42 +50,6 @@ struct TeGrouping;
 */
 class luaCellularSpace : public CellSpaceSubjectInterf, public Reference<luaCellularSpace>
 {
-    string dbType; ///< database type, e. g., MySQL, ADO, etc...
-    string host;  ///< host name
-    string dbName; ///< database name
-    string user;  ///< user name
-    string pass;  ///< password
-    string inputLayerName; ///< database input layer
-    string inputThemeName;  ///< database input TeTheme name
-    vector<string> attrNames; ///< TeTable attribute names
-    string whereClause;  ///< SQL WHERE CLAUSE string used to querie the TeTheme
-    int port;
-
-    // @DANIEL
-    // Movido para Reference
-    //int ref; ///< The position of the object in the Lua stack
-
-    // Antonio - construtor
-    lua_State *luaL; ///< Stores locally the lua stack location in memory
-    TypesOfSubjects subjectType;
-    bool getSpaceDimensions;
-    QStringList observedAttribs;
-    QHash<int, Observer *> observersHash;
-
-	QStringList retrieveStdDeviationColorBar(QStringList colorBarRawItems);
-	QStringList retrieveUniqueValueColorBar(TeTheme *inputTheme);
-	QStringList retrieveColorBar(TeDatabasePortal *portal, TeTheme *inputTheme, TeGrouping *grouping);
-
-	QString retrieveLegendType(int attrType);
-	QString retrieveMaxValue(TeDatabasePortal *portal, TeTheme *inputTheme,QString attrName ,int attrType);
-	QString retrieveMinValue(TeDatabasePortal *portal, TeTheme *inputTheme,QString attrName ,int attrType);
-	QString retrieveStdMode(int attrType, TeGrouping grouping);
-
-    QString getAll(QDataStream& in, int obsId, QStringList& attribs);
-    QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
-
-    void loadLegendsFromDatabase(TeDatabase *db, TeTheme *inputTheme, QString& luaLegend);
-    
 public:
     ///< Data structure issued by Luna<T>
     static const char className[]; 
@@ -97,7 +57,6 @@ public:
     ///< Data structure issued by Luna<T>
     static Luna<luaCellularSpace>::RegType methods[]; 
 
-public:
     /// constructor
     luaCellularSpace(lua_State *L);
 
@@ -149,9 +108,6 @@ public:
 
     /// Loads a luaNeighborhood from a GAL text file
     int loadGALNeighborhood(lua_State *L);
-
-    /// Loads a luaNeighborhood from a GPM matrix stored into a TerraLib database
-    int loadTerraLibGPM( lua_State *L);
 
     /// Adds a the luaCell received as parameter to the luaCellularSpace object
     /// parameters: x, y, luaCell
@@ -254,6 +210,34 @@ public:
 	/// Gets the luaCell object within the CellularSpace identified by the cell ID received as parameter
 	/// \author Raian Vargas Maretto
 	int getCellByID(lua_State *L);
+
+private:
+    string dbType; ///< database type, e. g., MySQL, ADO, etc...
+    string host;  ///< host name
+    string dbName; ///< database name
+    string user;  ///< user name
+    string pass;  ///< password
+    string inputLayerName; ///< database input layer
+    string inputThemeName;  ///< database input TeTheme name
+    vector<string> attrNames; ///< TeTable attribute names
+    string whereClause;  ///< SQL WHERE CLAUSE string used to querie the TeTheme
+    int port;
+
+    // @DANIEL
+    // Movido para Reference
+    //int ref; ///< The position of the object in the Lua stack
+
+    // Antonio - construtor
+    lua_State *luaL; ///< Stores locally the lua stack location in memory
+    TypesOfSubjects subjectType;
+    bool getSpaceDimensions;
+    QStringList observedAttribs;
+    QHash<int, Observer *> observersHash;
+    QString getAll(QDataStream& in, int obsId, QStringList& attribs);
+    QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
+
+//    void loadLegendsFromDatabase(TeDatabase *db, TeTheme *inputTheme, QString& luaLegend);
+    bool sendCells(vector<CellMapper> cells);
 };
 
 /// Find a cell given a luaCellularSpace object and a luaCellIndex object

@@ -32,6 +32,9 @@ of this library and its documentation.
 #include "luaGlobalAgent.h"
 #include "luaEvent.h"
 
+#include <iostream>
+using namespace std;
+
 /**
 * \brief  
 *  Implementation for a luaJumpCondition object.
