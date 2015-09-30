@@ -340,6 +340,14 @@ Society_ = {
 
 				defaultTableValue(data, "quantity", 1)
 
+				if data.quantity > #self then
+					local merror = "It is not possible to connect such amount of agents ("..data.quantity.."). "..
+						"The Society only has "..#self.." agents."
+					customError(merror)
+				elseif data.quantity > #self * 0.9 then
+					customWarning("Connecting more than 90% of the Agents randomly might take too much time.")
+				end
+
 				integerTableArgument(data, "quantity")
 				positiveTableArgument(data, "quantity")
 

@@ -322,6 +322,22 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
+				strategy = "quantity",
+				quantity = 19,
+			}
+		end
+		unitTest:assertError(error_func, "Connecting more than 90% of the Agents randomly might take too much time.")
+
+		error_func = function()
+			sc1:createSocialNetwork{
+				strategy = "quantity",
+				quantity = 21,
+			}
+		end
+		unitTest:assertError(error_func, "It is not possible to connect such amount of agents (21). The Society only has 20 agents.")
+
+		error_func = function()
+			sc1:createSocialNetwork{
 				strategy = "probability",
 				probability = "wrongValue"
 			}

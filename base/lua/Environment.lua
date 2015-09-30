@@ -250,13 +250,18 @@ Environment_ = {
 			table.insert(self, t)
 		end
 
-		if data.strategy == "random" and data.max ~= nil and qty_agents > #mycs * data.max then
-			customError("It is not possible to put such amount of agents in space.")
-		end
-
 		switch(data, "strategy"):caseof{
 			random = function()
 				verifyUnnecessaryArguments(data, {"strategy", "name", "max"})
+
+				if data.max ~= nil then
+					if qty_agents > #mycs * data.max then
+						customError("It is not possible to put such amount of agents in space.")
+					elseif qty_agents > #mycs * data.max * 0.9 then
+						customWarning("Placing more than 90% of the available space randomly might take too much time.")
+					end
+				end
+
 				createVoidPlacement(self, mycs, data)
 				createRandomPlacement(self, mycs, data.max, data.name)
 			end,
