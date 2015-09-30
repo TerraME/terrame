@@ -1,7 +1,6 @@
--- @example A simple discrete rain model.
+-- @example A simple discrete rain model
 -- @arg C The amount of rain per unit of time. The default value is 2.
 -- @arg K The flow coefficient. The default value is 0.4.
-
 
 local s = sessionInfo().separator
 

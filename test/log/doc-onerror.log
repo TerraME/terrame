@@ -21,6 +21,7 @@ Function forEachCell2 was already declared.
 Parsing examples
 Parsing examples/continuous-rain.lua
 Parsing examples/discrete-rain.lua
+Description of example does not end with '.'
 Parsing examples/ipd.lua
 Checking undocumented files
 Example continuous-rain.lua is not documented.
@@ -137,7 +138,7 @@ Checking Utils.lua
 Function forEachNeighbor2 is not documented
 
 Documentation report:
-Documentation was built in 1.82 seconds.
+Documentation was built in 1.8 seconds.
 6 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
@@ -161,5 +162,5 @@ One problem was found in @tabular.
 One invalid tag was found in the documentation.
 One problem with image files was found.
 One out of 29 links is invalid.
-One problem was found in the documentation of examples.
-Summing up, 22 problems were found in the documentation.
+2 problems were found in the documentation of examples.
+Summing up, 23 problems were found in the documentation.

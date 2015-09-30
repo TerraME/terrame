@@ -982,7 +982,7 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 					image = text
 				else
 					if not silent then
-						printError("Invalid tag '@"..tag.."'. Examples can only have @arg.")
+						printError("Invalid tag '@"..tag.."' for example.")
 						doc_report.invalid_tags = doc_report.invalid_tags + 1
 					end
 					argDescription = ""
@@ -999,6 +999,19 @@ function check_example(filepath, doc, file_name, doc_report, silent)
 		table.insert(argdescriptions, argDescription)
 	end
 	io.close(f)
+
+	if text:sub(text:len(), text:len()) ~= "." then
+		printError("Description of example does not end with '.'")
+		doc_report.problem_examples = doc_report.problem_examples + 1
+	end
+
+	forEachElement(argdescriptions, function(idx, value)
+		if value:sub(value:len(), value:len()) ~= "." then
+			printError("Description of '"..argnames[idx].."' does not end with '.'")
+			doc_report.problem_examples = doc_report.problem_examples + 1
+		end
+	end)
+
 	return text, argnames, argdescriptions, image
 end
 

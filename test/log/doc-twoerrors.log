@@ -37,6 +37,8 @@ Parsing examples
 Parsing examples/continuous-rain.lua
 Parsing examples/discrete-rain.lua
 Parsing examples/ipd.lua
+Description of example does not end with '.'
+Description of 'COOPERATE' does not end with '.'
 Parsing examples/ipd2.lua
 Checking undocumented files
 Example discrete-rain.lua is not documented.
@@ -170,7 +172,7 @@ Function forEachNeighbor2 is not documented
 Function forEachSocialNetwork2 is not documented
 
 Documentation report:
-Documentation was built in 1.84 seconds.
+Documentation was built in 1.83 seconds.
 6 HTML files were created.
 All files are documented.
 2 problems were found in 'description.lua'.
@@ -194,5 +196,5 @@ All files are documented.
 2 invalid tags were found in the documentation.
 2 problems with image files were found.
 2 out of 29 links are invalid.
-2 problems were found in the documentation of examples.
-Summing up, 44 problems were found in the documentation.
+4 problems were found in the documentation of examples.
+Summing up, 46 problems were found in the documentation.
