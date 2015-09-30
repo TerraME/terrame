@@ -222,6 +222,8 @@ int cpp_setdefaultfont(lua_State *L)
 #else
 	app->setFont(QFont("Ubuntu", 9));
 #endif
+
+	return 0;
 }
 
 int cpp_restartobservercounter(lua_State *L)

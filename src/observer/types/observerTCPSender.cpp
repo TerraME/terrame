@@ -118,6 +118,7 @@ bool ObserverTCPSender::draw(QDataStream& state)
     qApp->processEvents();
     return drew;
 */
+	return false;
 }
 
 void ObserverTCPSender::setAttributes(QStringList &attribs)

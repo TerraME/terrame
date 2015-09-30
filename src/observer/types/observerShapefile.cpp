@@ -210,12 +210,14 @@ QGraphicsPathItem* ObserverShapefile::createItem(SHPObject *obj, int x, int y,do
             return createItemPoint(obj,x,y,dx,dy,sx,sy);//default
     }
 */
+	return NULL;
 }
 
 QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, int y,double dx, double dy, double sx,double sy)
 {
-/* 
+ 
    QGraphicsPathItem *item = new QGraphicsPathItem;
+   /*
     item->setPos(x,y);
 
     vector<list<QPointF> > points(obj->nParts);
@@ -243,14 +245,16 @@ QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, i
 
     item->setPath(path);
     item->scale(sx, sy);
+	*/
     return item;
-*/
+
 }
 
 QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
 {
-/*
+
     QGraphicsPathItem *item = new QGraphicsPathItem;
+	/*
     item->setPos(x,y);
     
     //qDebug()<<x<<", "<<y;
@@ -262,14 +266,13 @@ QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int
     item->setPath(path);
     item->setBrush(Qt::black);
     item->scale(sx, sy);
-
-    return item;
 */
+    return item;
 }
 QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
 {
-/*
     QGraphicsPathItem *item = new QGraphicsPathItem;
+	/*
     item->setPos(x,y);
     
     vector<list<QPointF> > points(obj->nParts);
@@ -306,9 +309,9 @@ QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, 
 
     item->setPath(path);
     item->scale(sx, sy);
-
+	*/
     return item;
-*/
+
 }
 
 void ObserverShapefile::scaleView(qreal newScale)

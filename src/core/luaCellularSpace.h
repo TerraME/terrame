@@ -237,7 +237,7 @@ private:
     QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
 
 //    void loadLegendsFromDatabase(TeDatabase *db, TeTheme *inputTheme, QString& luaLegend);
-    bool sendCells(vector<CellMapper> cells);
+//    bool sendCells(vector<CellMapper> cells);
 };
 
 /// Find a cell given a luaCellularSpace object and a luaCellIndex object

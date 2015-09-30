@@ -141,8 +141,8 @@ PT SHPCentrd_2d ( SHPObject *psCShape ) {
     PT ringCentrd, C;
 
 
-   if ( !(SHPDimension (psCShape->nSHPType) & SHPD_AREA) )
-       return ( (PT){0,0.0} );
+   //if ( !(SHPDimension (psCShape->nSHPType) & SHPD_AREA) )
+     //  return ( (PT){0,0.0} );
 
    Area = 0;
    C.x = 0.0;

@@ -1159,8 +1159,8 @@ int luaCellularSpace::loadShape(lua_State *L)
     
 }
 
-bool luaCellularSpace::sendCells(vector<CellMapper> cells)
-{
+//bool luaCellularSpace::sendCells(vector<CellMapper> cells)
+//{
 //    // puts a table for represent the whole cellular space on the top of the stack
 //    lua_newtable(L);
 //    int luaTopbPos = lua_gettop(L);
@@ -1259,8 +1259,8 @@ bool luaCellularSpace::sendCells(vector<CellMapper> cells)
 //    lua_pushnumber(L, maxX);
 //    lua_pushnumber(L, maxY);
 
-    return true;
-}
+//    return true;
+//}
 
 int luaCellularSpace::saveShape(lua_State *L)
 {
