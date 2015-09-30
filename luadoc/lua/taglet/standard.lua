@@ -750,12 +750,12 @@ local function check_usage(files, doc_report)
 			_Gtme.printError = function() end
 			_Gtme.printWarning = function() end
 
-			local base = getPackage("base")
-			base.print = function() end
-
 			for j = 1, #functions do
 				local function_name = functions[j]
 				if functions[function_name].usage then
+					local base = getPackage("base")
+					base.print = function() end
+
 					local usage = functions[function_name].usage
 
 					if string.find(usage, "DONTRUN") then
