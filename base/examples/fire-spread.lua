@@ -23,8 +23,6 @@ I =	{{0.100, 0.250, 0.261, 0.273, 0.285},
 	 {0.119, 0.259, 0.270, 0.282, 0.294},
 	 {0.122, 0.262, 0.273, 0.285, 0.297}}
 
-config = getConfig()
-
 randomObj = Random{seed = 100}
 
 cell = Cell{
@@ -51,6 +49,8 @@ cell = Cell{
 		end
 	end
 }
+
+config = getConfig()
 
 cs = CellularSpace{
 	dbType = config.dbType,
