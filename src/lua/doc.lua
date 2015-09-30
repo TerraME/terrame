@@ -68,7 +68,9 @@ end
 function _Gtme.executeDoc(package)
 	local initialTime = os.clock()
 
-	import("luadoc")
+	if not isLoaded("luadoc") then
+		import("luadoc")
+	end
 
 	if not isLoaded("base") then
 		import("base")

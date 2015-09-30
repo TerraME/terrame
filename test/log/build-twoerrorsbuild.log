@@ -1,4 +1,53 @@
 Building package 'twoerrorsbuild'
+
+Testing package 'twoerrorsbuild'
+Loading package 'twoerrorsbuild'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/Tube2.lua
+Testing Tube
+Checking if all asserts were executed
+Testing tests/Tube3.lua
+Testing Tube2
+Checking if all asserts were executed
+Testing tests/Utils.lua
+Testing elapsedTime2
+Error in ...thub/terrame/bin/packages/twoerrorsbuild/tests/Utils.lua:29: Test should be true, got false.
+Error in ...thub/terrame/bin/packages/twoerrorsbuild/tests/Utils.lua:30: Test should be true, got false.
+Checking if all asserts were executed
+Testing tests/alternative/Utils.lua
+Testing elapsedTime2
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking Tube2.lua
+Checking Tube3.lua
+Checking Utils.lua
+Skipping lines of source code check
+Skipping snapthots check
+Testing examples
+Testing ipd
+
+Test report:
+Tests were executed in 0.27 seconds.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or folders in folder 'tests'.
+All asserts were executed at least once.
+2 out of 5 asserts failed.
+All 4 tested functions do not have any unexpected execution error.
+All 4 tested functions have at least one assert.
+All 4 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+All 3 functions of the package were tested.
+No lines from the source code were verified.
+No snapshot test was executed.
+All 1 examples were successfully executed.
+No new log file was created.
+Summing up, 2 problems were found during the tests.
 Creating documentation of package 'twoerrorsbuild'
 Building documentation for package 'twoerrorsbuild'
 Loading package 'twoerrorsbuild'
@@ -15,6 +64,11 @@ Checking @usage definition
 Checking lua/Tube2.lua
 Checking lua/Tube3.lua
 Checking lua/Utils.lua
+Testing @usage
+Testing file lua/Tube2.lua
+Testing file lua/Tube3.lua
+Testing file lua/Utils.lua
+Testing elapsedTime2
 Checking calls to functions in @usage
 Checking lua/Tube2.lua
 Checking lua/Tube3.lua
@@ -61,63 +115,15 @@ One non-named argument is not documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
-All 1 functions have @usage.
+All non-deprecated functions have @usage.
 All 1 functions call themselves in their @usage.
+All 1 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
 All 1 examples are correctly documented.
 Summing up, 2 problems were found in the documentation.
-
-Testing package 'twoerrorsbuild'
-Loading package 'twoerrorsbuild'
-Looking for overwritten variables
-Looking for documented functions
-Looking for package functions
-Skip looking for lines of source code
-Testing tests/Tube2.lua
-Testing Tube
-Checking if all asserts were executed
-Testing tests/Tube3.lua
-Testing Tube2
-Checking if all asserts were executed
-Testing tests/Utils.lua
-Testing elapsedTime2
-Error in ...thub/terrame/bin/packages/twoerrorsbuild/tests/Utils.lua:29: Test should be true, got false.
-Error in ...thub/terrame/bin/packages/twoerrorsbuild/tests/Utils.lua:30: Test should be true, got false.
-Checking if all asserts were executed
-Testing tests/alternative/Utils.lua
-Testing elapsedTime2
-Checking if all asserts were executed
-Checking if functions from source code were tested
-Checking Tube2.lua
-Checking Tube3.lua
-Checking Utils.lua
-Skipping lines of source code check
-Skipping snapthots check
-Testing examples
-Testing ipd
-
-Test report:
-Tests were executed in 0.28 seconds.
-No print() calls were found when loading the package.
-No variable is overwritten when loading the package.
-There are no invalid files or folders in folder 'tests'.
-All asserts were executed at least once.
-2 out of 5 asserts failed.
-All 4 tested functions do not have any unexpected execution error.
-All 4 tested functions have at least one assert.
-All 4 tested functions exist in the source code of the package.
-No tested function creates or updates any global variable.
-No function prints any text on the screen.
-No assertError() calls have error messages pointing to internal files.
-All 3 functions of the package were tested.
-No lines from the source code were verified.
-No snapshot test was executed.
-All 1 examples were successfully executed.
-No new log file was created.
-Summing up, 2 problems were found during the tests.
 
 Checking unnecessary files
 Checking basic files and folders

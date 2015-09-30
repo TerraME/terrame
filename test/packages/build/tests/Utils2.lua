@@ -1,6 +1,6 @@
---#########################################################################################
+-------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
+-- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP.
 --
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
@@ -21,32 +21,12 @@
 -- of this library and its documentation.
 --
 -- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
---          Rodrigo Reis Pereira
---          Antonio Jose da Cunha Rodrigues
---          Raian Vargas Maretto
---#########################################################################################
+--          Pedro R. Andrade (pedro.andrade@inpe.br)
+-------------------------------------------------------------------------------------------
 
--- @header Some basic and useful functions for modeling.
-
---- Convert the time in seconds to a more readable value. It returns a string in the format
--- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is
--- more than one day.
--- @arg s A number.
--- @usage import("buildunneclean")
--- print(elapsedTime2(100)) -- 00:01:40
-function elapsedTime2(s)
-	mandatoryArgument(1, "number", s)
-
-	local floor = math.floor
-	local seconds = s
-	local minutes = floor(s / 60);     seconds = floor(seconds % 60)
-	local hours = floor(minutes / 60); minutes = floor(minutes % 60)
-	local days = floor(hours / 24);    hours = floor(hours % 24)
-
-	if days > 0 then
-		return string.format("%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
-	else
-		return string.format("%02d:%02d:%02d", hours, minutes, seconds)
+return{
+	elapsedTime3 = function(unitTest)
+		unitTest:assertType(elapsedTime3(50), "string")
 	end
-end
+}
 

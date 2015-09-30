@@ -92,6 +92,303 @@ Checking lua/Trajectory.lua
 Checking lua/UnitTest.lua
 Checking lua/Utils.lua
 Checking lua/VisualTable.lua
+Testing @usage
+Testing file lua/Agent.lua
+Testing Agent
+Testing add
+Testing addSocialNetwork
+Testing die
+Testing enter
+Testing execute
+Testing getCell
+Testing getCells
+Testing getId
+Testing getLatency
+Testing getSocialNetwork
+Skipping getStateName
+Skipping getTrajectoryStatus
+Testing init
+Testing leave
+Testing message
+Testing move
+Testing notify
+Testing on_message
+Testing reproduce
+Testing sample
+Testing setTrajectoryStatus
+Testing walk
+Testing file lua/Automaton.lua
+Skipping Automaton
+Skipping add
+Skipping execute
+Skipping getId
+Skipping getState
+Skipping getStateName
+Skipping getStates
+Skipping notify
+Skipping setId
+Skipping setTrajectoryStatus
+Testing file lua/Cell.lua
+Testing Cell
+Testing addNeighborhood
+Testing distance
+Testing getAgent
+Testing getAgents
+Testing getId
+Testing getNeighborhood
+Testing init
+Testing isEmpty
+Testing notify
+Testing sample
+Testing setId
+Testing synchronize
+Testing #
+Testing file lua/CellularSpace.lua
+Testing CellularSpace
+Testing add
+Testing createNeighborhood
+Testing cut
+Testing get
+Testing load
+Testing loadNeighborhood
+Testing notify
+Testing sample
+Skipping save
+Testing split
+Testing synchronize
+Testing #
+Testing file lua/Chart.lua
+Testing Chart
+Testing save
+Testing file lua/Choice.lua
+Testing Choice
+Testing sample
+Testing file lua/Clock.lua
+Testing Clock
+Testing save
+Testing file lua/Environment.lua
+Testing Environment
+Testing add
+Testing createPlacement
+Testing execute
+Testing loadNeighborhood
+Testing notify
+Testing file lua/ErrorHandling.lua
+Testing customError
+Testing customWarning
+Testing defaultTableValue
+Testing defaultValueMsg
+Testing defaultValueWarning
+Testing deprecatedFunction
+Testing deprecatedFunctionMsg
+Testing incompatibleTypeError
+Testing incompatibleTypeMsg
+Testing incompatibleValueError
+Testing incompatibleValueMsg
+Testing integerArgument
+Testing integerArgumentMsg
+Testing integerTableArgument
+Testing invalidFileExtensionError
+Testing invalidFileExtensionMsg
+Testing mandatoryArgument
+Testing mandatoryArgumentError
+Testing mandatoryArgumentMsg
+Testing mandatoryTableArgument
+Testing namedArgumentsMsg
+Testing optionalArgument
+Testing optionalTableArgument
+Testing positiveArgument
+Testing positiveArgumentMsg
+Testing positiveTableArgument
+Testing resourceNotFoundError
+Testing resourceNotFoundMsg
+Skipping strictWarning
+Testing suggestion
+Testing switchInvalidArgument
+Testing switchInvalidArgumentMsg
+Testing switchInvalidArgumentSuggestionMsg
+Testing tableArgumentMsg
+Testing unnecessaryArgumentMsg
+Testing valueNotFoundError
+Testing valueNotFoundMsg
+Testing verify
+Testing verifyNamedTable
+Testing verifyUnnecessaryArguments
+Testing file lua/Event.lua
+Testing Event
+Testing getParent
+Testing getPeriod
+Testing getPriority
+Testing getTime
+Testing file lua/FileSystem.lua
+Testing attributes
+Skipping chDir
+Testing currentDir
+Testing dir
+Testing isDir
+Testing isFile
+Testing isWindowsOS
+Skipping linkAttributes
+Testing lock
+Testing lockDir
+Skipping mkDir
+Skipping rmDir
+Testing runCommand
+Testing touch
+Testing unlock
+Testing file lua/Flow.lua
+Testing Flow
+Testing file lua/Group.lua
+Testing Group
+Testing add
+Testing clone
+Testing filter
+Testing randomize
+Testing rebuild
+Testing sort
+Testing #
+Testing file lua/InternetSender.lua
+Skipping InternetSender
+Testing file lua/Jump.lua
+Testing Jump
+Testing file lua/LogFile.lua
+Testing LogFile
+Testing file lua/Mandatory.lua
+Testing Mandatory
+Testing file lua/Map.lua
+Testing Map
+Testing save
+Testing file lua/Model.lua
+Testing Model
+Testing configure
+Testing execute
+Testing init
+Testing interface
+Testing notify
+Testing file lua/Neighborhood.lua
+Testing Neighborhood
+Testing add
+Testing clear
+Testing getID
+Testing getParent
+Testing getWeight
+Testing isEmpty
+Testing isNeighbor
+Testing remove
+Testing sample
+Testing setWeight
+Testing #
+Testing file lua/Package.lua
+Testing file
+Testing filesByExtension
+Testing getPackage
+Skipping import
+Testing isLoaded
+Testing packageInfo
+Testing file lua/Random.lua
+Testing Random
+Testing integer
+Testing number
+Testing reSeed
+Testing sample
+Testing file lua/SocialNetwork.lua
+Testing SocialNetwork
+Testing add
+Testing clear
+Testing getWeight
+Testing isConnection
+Testing isEmpty
+Testing remove
+Testing sample
+Testing setWeight
+Testing #
+Testing file lua/Society.lua
+Testing Society
+Testing add
+Testing clear
+Testing createSocialNetwork
+Testing get
+Testing notify
+Testing remove
+Testing sample
+Testing split
+Testing synchronize
+Testing #
+Testing file lua/State.lua
+Testing State
+Testing file lua/TextScreen.lua
+Testing TextScreen
+Testing save
+Testing file lua/Timer.lua
+Testing Timer
+Testing add
+Testing execute
+Testing getTime
+Testing notify
+Testing reset
+Testing file lua/Trajectory.lua
+Testing Trajectory
+Testing add
+Testing clone
+Testing filter
+Testing get
+Testing randomize
+Testing rebuild
+Testing sort
+Testing #
+Testing file lua/UnitTest.lua
+Testing UnitTest
+Testing assert
+Testing assertEquals
+Skipping assertError
+Testing assertFile
+Testing assertNil
+Testing assertNotNil
+Testing assertSnapshot
+Testing assertType
+Testing clear
+Skipping printError
+Testing file lua/Utils.lua
+Testing CSVparseLine
+Testing CSVread
+Testing CSVwrite
+Testing belong
+Testing call
+Testing clean
+Testing d
+Testing delay
+Testing elapsedTime
+Testing forEachAgent
+Testing forEachCell
+Testing forEachCellPair
+Testing forEachConnection
+Testing forEachElement
+Testing forEachFile
+Testing forEachNeighbor
+Testing forEachNeighborhood
+Testing forEachOrderedElement
+Testing forEachSocialNetwork
+Testing getConfig
+Testing getExtension
+Testing getn
+Testing greaterByAttribute
+Testing greaterByCoord
+Testing integrate
+Testing integrationEuler
+Testing integrationHeun
+Testing integrationRungeKutta
+Testing levenshtein
+Testing round
+Testing sessionInfo
+Testing string.endswith
+Testing switch
+Testing tmpDir
+Testing toLabel
+Testing type
+Testing vardump
+Testing file lua/VisualTable.lua
+Testing VisualTable
+Testing save
 Checking calls to functions in @usage
 Checking lua/Agent.lua
 Checking lua/Automaton.lua
@@ -232,7 +529,7 @@ Checking Utils.lua
 Checking VisualTable.lua
 
 Documentation report:
-Documentation was built in 0.5 seconds.
+Documentation was built in 8.91 seconds.
 35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -249,11 +546,12 @@ All 316 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
-All 288 functions have @usage.
+All non-deprecated functions have @usage.
 All 288 functions call themselves in their @usage.
+All 288 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
-All 295 links were correctly built.
+All 299 links were correctly built.
 All 21 examples are correctly documented.
 Summing up, all the documentation was successfully built.

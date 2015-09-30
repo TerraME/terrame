@@ -19,4 +19,5 @@ Tube = Model{
 
 --- W is a function.
 --@usage w()
+-- DONTRUN
 function w() end

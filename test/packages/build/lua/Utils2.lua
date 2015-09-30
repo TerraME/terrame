@@ -32,9 +32,9 @@
 -- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is
 -- more than one day.
 -- @arg s A number.
--- @usage import("buildunneclean")
--- print(elapsedTime2(100)) -- 00:01:40
-function elapsedTime2(s)
+-- @usage import("build")
+-- print(elapsedTime3(100)) -- 00:01:40
+function elapsedTime3(s)
 	mandatoryArgument(1, "number", s)
 
 	local floor = math.floor

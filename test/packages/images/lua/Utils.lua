@@ -32,7 +32,8 @@
 -- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is
 -- more than one day.
 -- @arg s A number.
--- @usage print(elapsedTime2(100)) -- 00:01:40
+-- @usage import("images")
+-- print(elapsedTime2(100)) -- 00:01:40
 function elapsedTime2(s)
 	mandatoryArgument(1, "number", s)
 

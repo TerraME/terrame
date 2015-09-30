@@ -1,4 +1,52 @@
 Building package 'buildunneclean'
+
+Testing package 'buildunneclean'
+Loading package 'buildunneclean'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+'tests/alternative/abc/unnec6.txt' is not a folder neither a .lua file and will be ignored.
+Folder 'tests/alternative/abc' is empty.
+'tests/alternative/unnec5.txt' is not a folder neither a .lua file and will be ignored.
+'tests/unnec4.txt' is not a folder neither a .lua file and will be ignored.
+Testing tests/Tube.lua
+Testing Tube
+Checking if all asserts were executed
+Testing tests/Utils.lua
+Testing elapsedTime2
+Checking if all asserts were executed
+Testing tests/alternative/Utils.lua
+Testing elapsedTime2
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking Tube.lua
+Checking Utils.lua
+Skipping lines of source code check
+Skipping snapthots check
+Testing examples
+Test file 'unnec2.txt' does not have a valid extension
+Testing ipd
+
+Test report:
+Tests were executed in 0.23 seconds.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+4 invalid files or folders were found in folder 'test'.
+All asserts were executed at least once.
+All 3 asserts were executed successfully.
+All 3 tested functions do not have any unexpected execution error.
+All 3 tested functions have at least one assert.
+All 3 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+All 2 functions of the package were tested.
+No lines from the source code were verified.
+No snapshot test was executed.
+All 1 examples were successfully executed.
+No new log file was created.
+Summing up, 4 problems were found during the tests.
 Creating documentation of package 'buildunneclean'
 Building documentation for package 'buildunneclean'
 Loading package 'buildunneclean'
@@ -14,6 +62,10 @@ Checking undocumented files
 Checking @usage definition
 Checking lua/Tube.lua
 Checking lua/Utils.lua
+Testing @usage
+Testing file lua/Tube.lua
+Testing file lua/Utils.lua
+Testing elapsedTime2
 Checking calls to functions in @usage
 Checking lua/Tube.lua
 Checking lua/Utils.lua
@@ -55,62 +107,15 @@ All 1 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
-All 1 functions have @usage.
+All non-deprecated functions have @usage.
 All 1 functions call themselves in their @usage.
+All 1 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
 All 0 links were correctly built.
 All 1 examples are correctly documented.
 Summing up, all the documentation was successfully built.
-
-Testing package 'buildunneclean'
-Loading package 'buildunneclean'
-Looking for overwritten variables
-Looking for documented functions
-Looking for package functions
-Skip looking for lines of source code
-'tests/alternative/abc/unnec6.txt' is not a folder neither a .lua file and will be ignored.
-Folder 'tests/alternative/abc' is empty.
-'tests/alternative/unnec5.txt' is not a folder neither a .lua file and will be ignored.
-'tests/unnec4.txt' is not a folder neither a .lua file and will be ignored.
-Testing tests/Tube.lua
-Testing Tube
-Checking if all asserts were executed
-Testing tests/Utils.lua
-Testing elapsedTime2
-Checking if all asserts were executed
-Testing tests/alternative/Utils.lua
-Testing elapsedTime2
-Checking if all asserts were executed
-Checking if functions from source code were tested
-Checking Tube.lua
-Checking Utils.lua
-Skipping lines of source code check
-Skipping snapthots check
-Testing examples
-Test file 'unnec2.txt' does not have a valid extension
-Testing ipd
-
-Test report:
-Tests were executed in 0.24 seconds.
-No print() calls were found when loading the package.
-No variable is overwritten when loading the package.
-4 invalid files or folders were found in folder 'test'.
-All asserts were executed at least once.
-All 3 asserts were executed successfully.
-All 3 tested functions do not have any unexpected execution error.
-All 3 tested functions have at least one assert.
-All 3 tested functions exist in the source code of the package.
-No tested function creates or updates any global variable.
-No function prints any text on the screen.
-No assertError() calls have error messages pointing to internal files.
-All 2 functions of the package were tested.
-No lines from the source code were verified.
-No snapshot test was executed.
-All 1 examples were successfully executed.
-No new log file was created.
-Summing up, 4 problems were found during the tests.
 
 Checking unnecessary files
 Checking basic files and folders

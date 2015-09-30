@@ -1,14 +1,14 @@
 scripts/trace.lua:11: attempt to perform arithmetic on global 'x' (a nil value)
 Stack traceback:
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 890, in traceback
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1324, in __add
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 940, in traceback
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1404, in __add
     File scripts/trace.lua, line 11, in function h
     File scripts/trace.lua, line 7, in function g
     File scripts/trace.lua, line 3, in function f
     File scripts/trace.lua, line 14, in main chunk
     File [C], in dofile
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1308, in nil
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1343, in nil
     File [C], in xpcall
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1319, in myxpcall
-    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1308, in nil
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1354, in myxpcall
+    File /Users/pedro/github/terrame/bin/lua/terrame.lua, line 1343, in nil
 

@@ -31,6 +31,7 @@
 --- Stop the simulation with an error.
 -- @arg msg A string describing the error message.
 -- @usage customError2("error message")
+-- DONTRUN
 function customError2(msg)
 	if type(msg) ~= "string" then
 		customError(incompatibleTypeMsg(1, "string", msg))
@@ -43,6 +44,7 @@ end
 --- Print a warning. If TerraME is executing in the debug mode, it stops the simulation with an error.
 -- @arg msg A string describing the warning.
 -- @usage customWarning2("warning message")
+-- DONTRUN
 function customWarning2(msg)
 	if sessionInfo().mode == "quiet" then return end
 
@@ -77,6 +79,7 @@ end
 -- @arg value The default value (any type).
 -- @usage t = {x = 5}
 -- defaultTableValue2(t, "y", 8)
+-- DONTRUN
 function defaultTableValue2(data, idx, value)
 	if data[idx] == nil then
 		data[idx] = value
@@ -92,6 +95,7 @@ end
 -- @arg argument A string with the name of the argument.
 -- @arg value A number or string or boolean value with the default value for the argument.
 -- @usage defaultValueMsg2("dbtype", "mysql")
+-- DONTRUN
 function defaultValueMsg2(argument, value)
 	return "Argument '"..argument.."' could be removed as it is the default value ("..tostring(value)..")."
 end
@@ -102,6 +106,7 @@ end
 -- @arg argument A string with the attribute name.
 -- @arg value The default value.
 -- @usage defaultValueWarning2("size", 2)
+-- DONTRUN
 function defaultValueWarning2(argument, value)
 	mandatoryArgument(1, "string", argument)
 
@@ -114,6 +119,7 @@ end
 -- @arg functionExpected A string indicating hot to proceed to replace the
 -- deprecated function.
 -- @usage deprecatedFunction2("abc", "def")
+-- DONTRUN
 function deprecatedFunction2(functionName, functionExpected)
 	mandatoryArgument(1, "string", functionName)
 	mandatoryArgument(2, "string", functionExpected)
@@ -126,6 +132,7 @@ end
 -- @arg functionExpected A string indicating hot to proceed to replace the
 -- deprecated function.
 -- @usage deprecatedFunctionMsg2("abc", "def")
+-- DONTRUN
 function deprecatedFunctionMsg2(functionName, functionExpected)
 	return "Function '"..functionName.."' is deprecated. Use '"..functionExpected.."' instead."
 end
@@ -137,6 +144,7 @@ end
 -- @arg expectedTypesString A string with the possible type (or types).
 -- @arg gottenValue The value passed as argument with wrong type.
 -- @usage incompatibleTypeError2("cell", "Cell", Agent{})
+-- DONTRUN
 function incompatibleTypeError2(attr, expectedTypesString, gottenValue)
 	customError(incompatibleTypeMsg(attr, expectedTypesString, gottenValue))
 end
@@ -147,9 +155,10 @@ end
 -- @arg expectedTypesString A string with the possible type (or types).
 -- @arg gottenValue The value passed as argument with wrong type.
 -- @usage incompatibleTypeMsg2("dbType", "string", 2)
+-- DONTRUN
 function incompatibleTypeMsg2(attr, expectedTypesString, gottenValue)
 	if type(attr) == "number" then
-		attr = "#"..attr
+		attr = "#"..attr -- SKIP
 	end
 
 	if expectedTypesString == nil then expectedTypesString = "nil" end
@@ -165,6 +174,7 @@ end
 -- @arg expectedValues A string with the expected values for the argument.
 -- @arg gottenValue The wrong value passed as argument.
 -- @usage incompatibleValueError2("position", "one of {1, 2, 3}", 4)
+-- DONTRUN
 function incompatibleValueError2(attr, expectedValues, gottenValue)
 	customError(incompatibleValueMsg(attr, expectedValues, gottenValue))
 end
@@ -175,18 +185,19 @@ end
 -- @arg expectedValues A string with the expected values for the argument.
 -- @arg gottenValue The wrong value passed as argument.
 -- @usage incompatibleValueMsg2("dbType", "one of {1, 3, 4}", 2)
+-- DONTRUN
 function incompatibleValueMsg2(attr, expectedValues, gottenValue)
 	if expectedValues == nil then expectedValues = "nil" end
 
 	if type(attr) == "number" then
-		attr = "#"..attr
+		attr = "#"..attr -- SKIP
 	end
 
 	local msg = "Incompatible values. Argument '"..attr.."' expected ".. expectedValues ..", got "
 	if type(gottenValue) == "string" then
 		msg = msg.."'"..gottenValue.."'."
 	elseif gottenValue == nil then
-		msg = msg.."nil."
+		msg = msg.."nil." -- SKIP
 	else
 		msg = msg..gottenValue.."."
 	end
@@ -198,6 +209,7 @@ end
 -- @arg position A number with the position of the argument in the function.
 -- @arg value The valued used as argument to the function call.
 -- @usage integerArgument2(1, 2.3)
+-- DONTRUN
 function integerArgument2(position, value)
 	if type(value) ~= "number" then customError(type(value)) end
 	if math.floor(value) ~= value then
@@ -210,9 +222,10 @@ end
 -- @arg value The valued used as argument to the function call.
 -- @usage integerArgumentMsg("target", 7.4)
 -- integerArgumentMsg2(2, 5.1)
+-- DONTRUN
 function integerArgumentMsg2(attr, value)
 	if type(attr) == "number" then
-		attr = "#"..attr
+		attr = "#"..attr -- SKIP
 	end
 
 	return incompatibleValueMsg(attr, "integer number", value)
@@ -224,6 +237,7 @@ end
 -- @arg attr A string with the attribute name.
 -- @usage mtable = {bbb = 2.3}
 -- integerTableArgument2(table, "bbb")
+-- DONTRUN
 function integerTableArgument2(table, attr)
 	if math.floor(table[attr]) ~= table[attr] then
 		customError(integerArgumentMsg(attr, table[attr]))
@@ -237,6 +251,7 @@ end
 -- (otherwise).
 -- @arg ext A string with the incompatible file extension.
 -- @usage invalidFileExtensionError2("file", ".txt")
+-- DONTRUN
 function invalidFileExtensionError2(attr, ext)
 	customError(invalidFileExtensionMsg(attr, ext))
 end
@@ -246,9 +261,10 @@ end
 -- (otherwise).
 -- @arg ext A string with the incompatible file extension.
 -- @usage invalidFileExtensionMsg2("file", "csv")
+-- DONTRUN
 function invalidFileExtensionMsg2(attr, ext)
 	if type(attr) == "number" then
-		attr = "#"..attr
+		attr = "#"..attr -- SKIP
 	end
 
 	return "Argument '".. attr.."' does not support extension '"..ext.."'."
@@ -261,6 +277,7 @@ end
 -- @arg mtype A string with the required type for the argument.
 -- @arg value The value used as argument to the function call.
 -- @usage mandatoryArgument2(1, "string", argument)
+-- DONTRUN
 function mandatoryArgument2(position, mtype, value)
 	if type(value) ~= mtype then
 		if value == nil then
@@ -277,6 +294,7 @@ end
 -- function (a number).
 -- @usage mandatoryArgumentError("target")
 -- mandatoryArgumentError2(2)
+-- DONTRUN
 function mandatoryArgumentError2(attr)
 	customError(mandatoryArgumentMsg(attr))
 end
@@ -285,9 +303,10 @@ end
 -- @arg attr The name of the argument. It can be a string or a number.
 -- @usage mandatoryArgumentMsg("target")
 -- mandatoryArgumentMsg2(2)
+-- DONTRUN
 function mandatoryArgumentMsg2(attr)
 	if type(attr) == "number" then
-		attr = "#"..attr
+		attr = "#"..attr -- SKIP
 	end
 	return "Argument '"..attr.."' is mandatory."
 end
@@ -300,6 +319,7 @@ end
 -- @arg mtype A string with the required type for the attribute.
 -- @usage mtable = {bbb = 3, ccc = "aaa"}
 -- mandatoryTableArgument2(mtable, "bbb", "string")
+-- DONTRUN
 function mandatoryTableArgument2(table, attr, mtype)
 	if table[attr] == nil then
 		mandatoryArgumentError(attr)
@@ -310,6 +330,7 @@ end
 
 --- Return a message indicating that the arguments of a function must be named.
 -- @usage namedArgumentsMsg2()
+-- DONTRUN
 function namedArgumentsMsg2()
 	return "Arguments must be named."
 end
@@ -321,6 +342,7 @@ end
 -- @arg mtype A string with the required type for the argument.
 -- @arg value The value used as argument to the function call.
 -- @usage optionalArgument2(1, "string", argument)
+-- DONTRUN
 function optionalArgument2(position, mtype, value)
 	if value ~= nil and type(value) ~= mtype then
 		incompatibleTypeError(position, mtype, value)
@@ -335,6 +357,7 @@ end
 -- @arg allowedType A string with the required type for the attribute.
 -- @usage mtable = {bbb = 3, ccc = "aaa"}
 -- optionalTableArgument2(mtable, "bbb", "string")
+-- DONTRUN
 function optionalTableArgument2(table, attr, allowedType)
 	local value = table[attr]
 	local mtype = type(value)
@@ -351,6 +374,7 @@ end
 -- @arg zero A boolean value indicating whether zero should be included
 -- (the default value is false).
 -- @usage positiveArgument2(1, -2)
+-- DONTRUN
 function positiveArgument2(position, value, zero)
 	if not zero then
 		if value <= 0 then customError(positiveArgumentMsg(position, value, false)) end
@@ -366,9 +390,10 @@ end
 -- (the default value is false).
 -- @usage positiveArgumentMsg("target", -5)
 -- positiveArgumentMsg2(2, -2, true)
+-- DONTRUN
 function positiveArgumentMsg2(attr, value, zero)
 	if type(attr) == "number" then
-		attr = "#"..attr
+		attr = "#"..attr -- SKIP
 	end
 
 	if zero then
@@ -386,6 +411,7 @@ end
 -- (the default value is false).
 -- @usage mtable = {bbb = -3}
 -- positiveTableArgument2(table, "bbb")
+-- DONTRUN
 function positiveTableArgument2(table, attr, zero)
 	if not zero then
 		if table[attr] <= 0 then customError(positiveArgumentMsg(attr, table[attr], false)) end
@@ -399,6 +425,7 @@ end
 -- @arg attr A string with the attribute name.
 -- @arg path A string with the location of the resource.
 -- @usage resourceNotFoundError2("file", "/usr/local/file.txt")
+-- DONTRUN
 function resourceNotFoundError2(attr, path)
 	customError(resourceNotFoundMsg(attr, path))
 end
@@ -407,9 +434,10 @@ end
 -- @arg attr A string with the attribute name.
 -- @arg path A string with the location of the resource.
 -- @usage resourceNotFoundMsg2("file", "c:\\myfiles\\file.csv")
+-- DONTRUN
 function resourceNotFoundMsg2(attr, path)
 	if type(attr) == "number" then
-		attr = "#"..attr
+		attr = "#"..attr -- SKIP
 	end
 
 	return "Resource '"..path.."' not found for argument '"..attr.."'."
@@ -419,6 +447,7 @@ end
 -- If TerraME is executing in the debug mode, it stops the simulation with an error. 
 -- @arg msg A string describing the warning.
 -- @usage strictWarning2("warning message")
+-- DONTRUN
 function strictWarning2(msg)
 	if sessionInfo().mode == "normal" then return end
 
@@ -437,6 +466,7 @@ end
 -- }
 --
 -- suggestion2("gren", t) -- "green"
+-- DONTRUN
 function suggestion2(value, options)
 	mandatoryArgument(1, "string", value)
 	mandatoryArgument(2, "table", options)
@@ -475,6 +505,7 @@ end
 -- }
 --
 -- switchInvalidArgument2("attribute", "gren", t) 
+-- DONTRUN
 function switchInvalidArgument2(att, value, suggestions)
 	mandatoryArgument(1, "string", att)
 	mandatoryArgument(2, "string", value)
@@ -498,6 +529,7 @@ end
 --     ccc = true
 -- }
 -- switchInvalidArgumentMsg2("ddd", "attr", options)
+-- DONTRUN
 function switchInvalidArgumentMsg2(casevar, att, options)
 	mandatoryArgument(1, "string", casevar)
 	mandatoryArgument(2, "string", att)
@@ -516,6 +548,7 @@ end
 -- @arg att A string with the name of the attribute.
 -- @arg suggestion A string with a suggestion to replace the wrong value.
 -- @usage switchInvalidArgumentSuggestionMsg2("aab", "attr", "aaa")
+-- DONTRUN
 function switchInvalidArgumentSuggestionMsg2(casevar, att, suggestion)
 	mandatoryArgument(1, "string", casevar)
 	mandatoryArgument(2, "string", att)
@@ -526,6 +559,7 @@ end
 
 --- Return a message indicating that the argument of a function must be a table.
 -- @usage tableArgumentMsg2()
+-- DONTRUN
 function tableArgumentMsg2()
 	return "Argument must be a table."
 end
@@ -539,6 +573,7 @@ end
 -- @arg parent A string with the name of the table the parameter belongs to.
 -- This parameter is optional.
 -- @usage toLabel2("maxValue") --  'Max Value' (with graphical interface) or 'maxValue' (without)
+-- DONTRUN
 function toLabel2(mstring, parent)
 	if type(mstring) == "number" then
 		return tostring(mstring)
@@ -576,6 +611,7 @@ end
 -- This parameter is optional.
 -- @usage unnecessaryArgumentMsg("file")
 -- unnecessaryArgumentMsg2("filf", "file")
+-- DONTRUN
 function unnecessaryArgumentMsg2(value, suggestion)
 	local str = "Argument '"..tostring(value).."' is unnecessary."
 
@@ -588,6 +624,7 @@ end
 -- (otherwise).
 -- @arg value The valued used as argument to the function call.
 -- @usage valueNotFoundError2(1, "neighborhood")
+-- DONTRUN
 function valueNotFoundError2(attr, value)
 	customError(valueNotFoundMsg(attr, value))
 end
@@ -597,10 +634,11 @@ end
 -- (otherwise).
 -- @arg value The valued used as argument to the function call.
 -- @usage valueNotFoundMsg2(1, "neighborhood")
+-- DONTRUN
 function valueNotFoundMsg2(attr, value)
 	if type(value) == nil then value = "nil" end
 	if type(attr) == "number" then
-		attr = "#"..attr
+		attr = "#"..attr -- SKIP
 	end
 
 	return "Value '"..value.."' not found for argument '"..attr.."'."
@@ -610,6 +648,7 @@ end
 -- @arg condition A value of any type. If it is false or nil, the function generates an error.
 -- @arg msg A string with the error to be displayed.
 -- @usage verify2(2 < 3, "wrong operator")
+-- DONTRUN
 function verify2(condition, msg)
 	if not condition then
 		customError(msg)
@@ -622,6 +661,7 @@ end
 -- @arg data A value of any type.
 -- @usage t = {value = 2}
 -- verifyNamedTable2(t)
+-- DONTRUN
 function verifyNamedTable2(data)
 	if type(data) ~= "table" then
 		if data == nil then
@@ -642,6 +682,7 @@ end
 -- @arg arguments A non-named table with the allowed arguments.
 -- @usage t = {value = 2}
 -- verifyUnnecessaryArguments2(t, {"target", "select"})
+-- DONTRUN
 function verifyUnnecessaryArguments2(data, arguments)
 	local count = 0
 	forEachElement(data, function(value)
