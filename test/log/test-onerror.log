@@ -156,13 +156,13 @@ Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
 Test report:
-Tests were executed in 12.92 seconds.
-Snapshots were saved in '.terrametmp_8U6Z8'.
+Tests were executed in 12.82 seconds.
+Snapshots were saved in '.terrametmp_rXX0M'.
 One print() call was found when loading the package.
 One variable is overwritten when loading the package.
 One invalid file or folder was found in folder 'test'.
 One assert was not executed at least once.
-One out of 242 asserts failed.
+One out of 243 asserts failed.
 One out of 92 tested functions stopped with an unexpected error.
 One out of 92 tested functions does not have at least one assert.
 One out of 92 tested functions does not exist in the source code of the package.
