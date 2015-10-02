@@ -43,6 +43,7 @@ Checking examples
 Checking if all images are used
 Checking if all functions are documented
 Checking foo.lua
+Checking if all Models are documented
 
 Documentation report:
 Documentation was built in 0.18 seconds.

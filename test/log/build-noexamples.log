@@ -68,6 +68,7 @@ Checking examples
 Checking if all images are used
 Checking if all functions are documented
 Checking single.lua
+Checking if all Models are documented
 
 Documentation report:
 Documentation was built in 0.02 seconds.

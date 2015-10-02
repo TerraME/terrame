@@ -528,6 +528,7 @@ Checking Trajectory.lua
 Checking UnitTest.lua
 Checking Utils.lua
 Checking VisualTable.lua
+Checking if all Models are documented
 
 Documentation report:
 Documentation was built in 8.91 seconds.

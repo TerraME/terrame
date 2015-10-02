@@ -170,6 +170,7 @@ Checking Tube2.lua
 Checking Utils.lua
 Function forEachNeighbor2 is not documented
 Function forEachSocialNetwork2 is not documented
+Checking if all Models are documented
 
 Documentation report:
 Documentation was built in 1.83 seconds.
