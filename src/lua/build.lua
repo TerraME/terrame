@@ -53,16 +53,6 @@ function _Gtme.buildPackage(package, clean)
 
 	local s = sessionInfo().separator
 
-	printNote("Creating documentation of package '"..package.."'")
-	local docErrors = 0
-	dofile(sessionInfo().path..s.."lua"..s.."doc.lua")
-	xpcall(function() docErrors = _Gtme.executeDoc(package) end, function(err)
-		printError(err)
-		report.doc_errors = 1
-	end)
-
-	report.doc_errors = report.doc_errors + docErrors
-
 	printNote("\nTesting package '"..package.."'")
 	info_.mode = "debug"
 	local testErrors = 0
@@ -73,6 +63,16 @@ function _Gtme.buildPackage(package, clean)
 	end)
 
 	report.test_errors = report.test_errors + testErrors
+
+	printNote("Creating documentation of package '"..package.."'")
+	local docErrors = 0
+	dofile(sessionInfo().path..s.."lua"..s.."doc.lua")
+	xpcall(function() docErrors = _Gtme.executeDoc(package) end, function(err)
+		printError(err)
+		report.doc_errors = 1
+	end)
+
+	report.doc_errors = report.doc_errors + docErrors
 
 	tmpfolder = runCommand("mktemp -d .terrame_"..package.."_XXXXX")[1]
 	local currentdir = currentDir()

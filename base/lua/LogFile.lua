@@ -42,9 +42,13 @@ metaTableLogFile_ = {__index = LogFile_}
 -- As default, it selects all the user-defined attributes of an object.
 -- In the case of Society, if it does not have any numeric attributes then it will use
 -- the number of agents in the Society as attribute.
--- @usage LogFile{
---     target = cs,
---     file = "cs.csv",
+-- @usage agent = Agent{
+--     age = 3
+-- }
+--
+-- LogFile{
+--     target = agent,
+--     file = "agent.csv",
 --     separator = ";"
 -- }
 function LogFile(data)

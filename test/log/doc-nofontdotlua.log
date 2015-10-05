@@ -12,6 +12,9 @@ No examples were found.
 Checking undocumented files
 Checking @usage definition
 Checking lua/foo.lua
+Testing @usage
+Testing file lua/foo.lua
+Skipping ttt
 Checking calls to functions in @usage
 Checking lua/foo.lua
 Checking undocumented arguments
@@ -29,6 +32,7 @@ Checking examples
 Checking if all images are used
 Checking if all functions are documented
 Checking foo.lua
+Checking if all Models are documented
 
 Documentation report:
 Documentation was built in 0.15 seconds.
@@ -48,8 +52,9 @@ All 0 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
-All 1 functions have @usage.
+All non-deprecated functions have @usage.
 All 1 functions call themselves in their @usage.
+All 1 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.

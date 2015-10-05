@@ -27,7 +27,18 @@ TextScreen_ = {
 	type_ = "TextScreen",
 	--- Save a TextScreen into a file. Supported extensions are bmp, jpg, png, and tiff.
 	-- @arg file A string with the file name.
-	-- @usage text:save("file.bmp")
+	-- @usage agent = Agent{
+	--     size = 5,
+	--     age = 1
+	-- }
+	--
+	-- ts = TextScreen{
+	--     target = agent,
+	--     select = {"size" , "age"}
+	-- }
+	--
+	-- ts:save("file.bmp")
+	-- os.execute("rm -f file.bmp")
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 
@@ -53,7 +64,12 @@ metaTableTextScreen_ = {__index = TextScreen_}
 -- As default, it selects all the user-defined attributes of an object.
 -- In the case of Society, if it does not have any numeric attributes then it will use
 -- the number of agents in the Society as attribute.
--- @usage TextScreen{
+-- @usage agent = Agent{
+--     size = 5,
+--     age = 1
+-- }
+--
+-- TextScreen{
 --     target = agent,
 --     select = {"size" , "age"}
 -- }

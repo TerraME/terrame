@@ -2,6 +2,7 @@ Verifying test files
 Ignoring tests because internal folders were found in the tests
 Verifying data files
 File 'agents.csv' is already documented in 'data.lua'
+File 'amazonia.sql' is already documented in 'data.lua'
 File 'brazil.gal' is already documented in 'data.lua'
 File 'brazilstates.dbf' is already documented in 'data.lua'
 File 'brazilstates.shp' is already documented in 'data.lua'

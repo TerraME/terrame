@@ -54,6 +54,13 @@ data{
 }
 
 data{
+	file = {"amazonia.sql"},
+	image = "amazonia.bmp",
+	source = "TerraME team",
+	summary = "Database with some data for the Amazonia region, in Brazil."
+}
+
+data{
 	file = {"emas.mdb", "emas.sql"},
 	image = "emas.bmp",
 	source = "TerraME team",

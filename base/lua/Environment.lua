@@ -122,8 +122,15 @@ Environment_ = {
 	type_ = "Environment",
 	--- Add an element to the Environment.
 	-- @arg object An Agent, Automaton, Cell, CellularSpace, Society, Trajectory, Group, Timer, or Environment.
-	-- @usage environment:add(agent)
-	-- environment:add(cellularSpace)
+	-- @usage environment = Environment{}
+	--
+	-- cs1 = CellularSpace{xdim = 10}
+	-- ag1 = Agent{}
+	-- t1 = Timer{}
+	--
+	-- environment:add(cs1)
+	-- environment:add(ag1)
+	-- environment:add(t1)
 	add = function(self, object)
 		local t = type(object)
 		if belong(t, {"Cell", "CellularSpace", "Society", "Agent", "Automaton", "Timer", "Environment", "Trajectory", "Cell"}) then
@@ -173,16 +180,16 @@ Environment_ = {
 	-- use this strategy if the modeler needs to establish the relations between Agents and Cells by
 	-- himself/herself. In this case, Agents cannot use Agent:move() or Agent:walk()
 	-- before calling Agent:enter() explicitly. & name \
-	-- @usage environment = Environment{
-	--     society,
-	--     cellularSpace
-	-- }
-	-- 
-	-- environment:createPlacement{
-	--     strategy = "uniform"
+	-- @usage ag = Agent{}
+	--
+	-- soc = Society{
+	--     instance = ag,
+	--     quantity = 20
 	-- }
 	--
-	-- society:sample():walk()
+	-- cs = CellularSpace{xdim = 10}
+	-- env = Environment{soc, cs}
+	-- env:createPlacement()
 	createPlacement = function(self, data)
 		if type(data) ~= "table" then
 			if data == nil then
@@ -243,13 +250,18 @@ Environment_ = {
 			table.insert(self, t)
 		end
 
-		if data.strategy == "random" and data.max ~= nil and qty_agents > #mycs * data.max then
-			customError("It is not possible to put such amount of agents in space.")
-		end
-
 		switch(data, "strategy"):caseof{
 			random = function()
 				verifyUnnecessaryArguments(data, {"strategy", "name", "max"})
+
+				if data.max ~= nil then
+					if qty_agents > #mycs * data.max then
+						customError("It is not possible to put such amount of agents in space.")
+					elseif qty_agents > #mycs * data.max * 0.9 then
+						customWarning("Placing more than 90% of the available space randomly might take too much time.")
+					end
+				end
+
 				createVoidPlacement(self, mycs, data)
 				createRandomPlacement(self, mycs, data.max, data.name)
 			end,
@@ -268,7 +280,15 @@ Environment_ = {
 	-- of the Environments it contains, and so on.
 	-- @arg finalTime A number representing the final time. This funcion will stop when there is no
 	-- Event scheduled to a time less or equal to the final time.
-	-- @usage environment:execute(1000)
+	-- @usage env = Environment{
+	--     Timer{Event{action = function()
+	--         print("execute 1")
+	--     end}},
+	--     Timer{Event{action = function()
+	--         print("execute 2")
+	--     end}}
+	-- }
+	-- env:execute(10)
 	execute = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
 		self.cObj_:config(finalTime)
@@ -281,10 +301,33 @@ Environment_ = {
 	-- @arg data.bidirect A boolean value. If true then, for each relation from Cell a
 	-- to Cell b loaded from the file, it will also create
 	-- a relation from b to a. The default value is false.
-	-- @usage environment:loadNeighborhood{
-	--     source = "file.gpm",
-	--     name = "newNeigh"
+	-- @usage config = getConfig()
+	-- mhost = config.host
+	-- muser = config.user
+	-- mpassword = config.password
+	-- mport = config.port
+	--
+	--
+	-- cs = CellularSpace{
+	--     host = mhost,
+	--     user = muser,
+	--     password = mpassword,
+	--     port = mport,
+	--     database = "emas",
+	--     theme = "cells1000x1000"
 	-- }
+	--
+	-- cs2 = CellularSpace{
+	--     host = mhost,
+	--     user = muser,
+	--     password = mpassword,
+	--     port = mport,
+	--     database = "emas",
+	--     theme = "River"
+	-- }
+	--
+	-- env = Environment{cs, cs2}
+	-- env:loadNeighborhood{source = file("gpmlinesDbEmas.gpm", "base")}
 	-- @see Package:file
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
@@ -436,7 +479,8 @@ Environment_ = {
 	-- @arg modelTime A number representing the notification time. The default value is zero.
 	-- It is also possible to use an Event as argument. In this case, it will use the result of
 	-- Event:getTime().
-	-- @usage env:notify()
+	-- @usage env = Environment{}
+	-- env:notify()
 	notify = function(self, modelTime)
 		if modelTime == nil then
 			modelTime = 0
@@ -461,11 +505,9 @@ metaTableEnvironment_ = {__index = Environment_, __tostring = _Gtme.tostring}
 -- @arg data.... Agents, Automatons, Cells, CellularSpaces, Societies, Trajectories, Groups,
 -- Timers, or Environments.
 -- @usage environment = Environment{
---     cs1 = CellularSpace{...},
---     ag1 = Agent{...},
---     aut2 = Automaton{...},
---     t1 = Timer{...},
---     env1 = Environment{...}
+--     cs1 = CellularSpace{xdim = 10},
+--     ag1 = Agent{},
+--     t1 = Timer{}
 -- }
 function Environment(data)
 	if type(data) ~= "table" then

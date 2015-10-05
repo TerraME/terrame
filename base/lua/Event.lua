@@ -31,12 +31,26 @@ TeEvent.type_ = "Event"
 Event_ = {
 	type_ = "Event",
 	--- Return the current simulation time, according to the Timer it belongs.
-	-- @usage event:getTime()
+	-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
+    --     print(event:getTime())
+    -- end}
+	-- 
+	-- time = event:getTime()
+	-- print(time)
 	getTime = function(self)
 		return self.cObj_:getTime()
 	end,
 	--- Return the Timer that contains the Event.
-	-- @usage timer = event:getParent()
+	-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
+	--     print(event:getTime())
+	-- end}
+	--
+	-- timer = Timer{event}
+	--
+	-- parent = event:getParent()
+	-- if parent == timer then
+	--     print("equal")
+	-- end
 	getParent = function(self) end,
 	--#- Change the attributes of the Event. It will be rescheduled according to its new attributes.
 	-- @arg time The time instant the Event will occur again (default is the current time of the
@@ -49,12 +63,22 @@ Event_ = {
 	-- event:config(1, 0.05, -1)
 	--config = function(self, time, period, priority) end,
 	--- Return the period of the Event.
-	-- @usage period = event:getPeriod()
+	-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
+    --     print(event:getTime())
+    -- end}
+	-- 
+	-- period = event:getPeriod()
+	-- print(period)
 	getPeriod = function(self)
 		return self.cObj_:getPeriod()
 	end,
 	--- Return the priority of the Event.
-	-- @usage timer = event:getPriority()
+	-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
+    --     print(event:getTime())
+    -- end}
+	--
+	-- priority = event:getPriority()
+	-- print(priority)
 	getPriority = function(self)
 		return self.cObj_:getPriority()
 	end

@@ -27,7 +27,18 @@ VisualTable_ = {
 	type_ = "VisualTable",
 	--- Save a VisualTable into a file. Supported extensions are bmp, jpg, png, and tiff.
 	-- @arg file A string with the file name.
-	-- @usage table:save("file.bmp")
+	-- @usage cell = Cell{
+	--     temperature = 20,
+	--     humidity = 0.4
+	-- }
+	--
+	-- vt = VisualTable{
+	--     target = cell,
+	--     select = {"temperature", "humidity"}
+	-- }
+	--
+	-- vt:save("file.bmp")
+	-- os.execute("rm -f file.bmp")
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 
@@ -53,7 +64,12 @@ metaTableVisualTable_ = {__index = VisualTable_}
 -- As default, it selects all the user-defined attributes of an object.
 -- In the case of Society, if it does not have any numeric attributes then it will use
 -- the number of agents in the Society as attribute.
--- @usage VisualTable{
+-- @usage cell = Cell{
+--     temperature = 20,
+--     humidity = 0.4
+-- }
+--
+-- VisualTable{
 --     target = cell,
 --     select = {"temperature", "humidity"}
 -- }

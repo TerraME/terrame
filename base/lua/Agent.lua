@@ -33,9 +33,11 @@ Agent_ = {
 	type_ = "Agent",
 	--- Add a Trajectory or a State to the Agent.
 	-- @arg object A State or a Trajectory.
-	-- @usage agent:add(state)
+	-- @usage ag = Agent{}
+	-- cs = CellularSpace{xdim = 5}
+	-- traj = Trajectory{target = cs}
 	--
-	-- agent:add(trajectory)
+	-- ag:add(traj)
 	add = function(self, object)
 		local t = type(object)
 		if t == "Trajectory" or t == "State" then
@@ -178,10 +180,10 @@ Agent_ = {
 	-- of the current State. Usually, this function is called within an Event, thus the time
 	-- of the Event can be got directly from the Timer.
 	-- @arg event An Event.
-	-- @usage singleFooAgent = Agent{
+	-- @usage agent = Agent{
+	--     size = 5,
 	--     execute = function(self)
 	--         self.size = self.size + 1
-	--         self:walk() 
 	--     end
 	-- }
 	--
@@ -265,7 +267,16 @@ Agent_ = {
 	end,
 	--- Return a SocialNetwork of the Agent given its name.
 	-- @arg id Name of the SocialNetwork.
-	-- @usage net = agent:getSocialNetwork("friends")
+	-- @usage agent = Agent{}
+	--
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 100
+	-- }
+	--
+	-- soc:createSocialNetwork{probability = 0.5, name = "friends"}
+	-- ag = soc:sample()
+	-- ag:getSocialNetwork("friends")	
 	-- @see Society:createSocialNetwork
 	-- @see Utils:forEachConnection
 	getSocialNetwork = function(self, id)
@@ -296,9 +307,13 @@ Agent_ = {
 	--- User-defined function that is used to initialize an Agent when it enters in a
 	-- given Society (e.g. when the Society is created, or when one calls Society:add()).
 	-- @usage agent = Agent{
+	--     age = Choice{min = 1, max  = 50, step = 1},
 	--     init = function(self)
-	--         self.age = Random:integer(1, 10) -- initial age chosen randomly
-	--         self.wealth = Random:integer(50, 100) -- initial wealth chosen randomly
+	--         if self.age > 40 then
+	--             self.wealth = Random():integer(50, 100)
+	--         else
+	--             self.wealth = Random():integer(5, 10)
+	--         end
 	--     end
 	-- }
 	-- 
@@ -316,11 +331,11 @@ Agent_ = {
     -- only one Cell along the simulation. The Agent needs to have a placement to be
 	-- able to use Agent:enter(), Agent:leave(), Agent:move(), and Agent:walk().
 	-- @arg placement A string representing the index to be used. The default value is "placement".
-	-- @usage agent:leave()
-	--
-	-- agent:leave()
-	--
-	-- agent:leave("renting")
+	-- @usage ag1 = Agent{}
+	-- cs = CellularSpace{xdim = 3}
+	-- myEnv = Environment{cs, ag1}
+	-- myEnv:createPlacement()
+	-- ag1:leave()
 	-- @see Environment:createPlacement
 	leave = function(self, placement)
 		optionalArgument(1, "string", placement)
@@ -390,7 +405,9 @@ Agent_ = {
 		defaultTableValue(data, "delay", 0)
 		positiveTableArgument(data, "delay", true)
 
-		verify(type(self.parent) == "Society", "Agent must be within a Society to send messages with delay.")
+		if data.delay > 0 then
+			verify(type(self.parent) == "Society", "Agent must be within a Society to send messages with delay.")
+		end
 
 		if data.delay == 0 then
 			if data.subject then
@@ -416,9 +433,19 @@ Agent_ = {
 	-- @arg newcell The new Cell.
 	-- @arg placement A string representing the placement to be used. The default
 	-- value is "placement".
-	-- @usage agent:move(newcell)
+	-- @usage ag1 = Agent{}
+	-- cs = CellularSpace{xdim = 3}
+	-- soc = Society{
+	--     instance = ag1,
+	--     quantity = 5
+	-- }
 	--
-	-- agent:move(newcell, "renting")
+	-- myEnv = Environment{cs, ag1}
+	-- myEnv:createPlacement()
+	--
+	-- ag = soc:sample()
+	-- cell = cs:sample()
+	-- ag:move(cell)
 	-- @see Environment:createPlacement
 	move = function(self, newcell, placement)
 		mandatoryArgument(1, "Cell", newcell)
@@ -479,12 +506,17 @@ Agent_ = {
 	-- @see Agent:message
 	-- @see Society:synchronize
 	-- @usage agent = Agent{
+	--     money = 0,
 	--     on_message = function(self, message)
 	--         self.money = self.money + message.quantity
-	--         self:message{receiver = message.sender, content = "thanks"}
+	--         self:message{receiver = message.sender, subject = "thanks"}
 	--     end,
 	--     on_thanks = function(self, message)
-	--         self:message{receiver = message.sender, content = "yourewelcome"}
+	--         print("thanks")
+	--         self:message{receiver = message.sender, subject = "yourewelcome"}
+	--     end,
+	--     on_yourewelcome = function()
+	--         print("yourewelcome")
 	--     end
 	-- }
 	--
@@ -494,6 +526,9 @@ Agent_ = {
 	-- }
 	--
 	-- soc:sample():message{
+	--     receiver = soc:sample(),
+	--     quantity = 20
+	-- }
 	-- @arg message A table with the received message. It has an attribute called sender with
 	-- the Agent that sent the message.
 	on_message = function(self, message)
@@ -514,14 +549,15 @@ Agent_ = {
 	-- then they are instantiated and the newborn will be placed in the same Cell of its
 	-- parent. This functionality supposes that an Agent can be in one and only one Cell
 	-- for each placement along the simulation.
-	-- @usage child = agent:reproduce()
+	-- @usage agent = Agent{}
 	--
-	-- child = agent:reproduce{age=0}
-	--
-	-- child = agent:reproduce{
-	--     age = 0,
-	--     house = agent.house:clone() -- house is a placement
+	-- soc = Society{
+	--     instance = agent,
+	--     quantity = 100
 	-- }
+	--
+	-- soc.agents[1]:reproduce()
+	-- print(#soc)
 	reproduce = function(self, data)
 		verify(type(self.parent) == "Society", "Agent should belong to a Society to be able to reproduce.")
 
@@ -547,8 +583,17 @@ Agent_ = {
 	end,
 	--- Return a random Agent from a SocialNetwork of the Agent.
 	-- @arg id A string with the name of the SocialNetwork. The default value is "1".
-	-- @usage ag_friend = agent:sample("friends")
 	-- @see Agent:getSocialNetwork
+	-- @usage ag = Agent{}
+	-- soc = Society{instance = ag, quantity = 5}
+	--
+	-- sn = SocialNetwork()
+	-- forEachAgent(soc, function(agent)
+	--     sn:add(agent)
+	-- end)
+	--
+	-- ag:addSocialNetwork(sn)
+	-- friend = ag:sample()
 	sample = function(self, id)
 		optionalArgument(1, "string", id)
 		if id == nil then id = "1" end

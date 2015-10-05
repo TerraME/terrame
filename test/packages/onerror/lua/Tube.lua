@@ -4,6 +4,7 @@
 -- @arg data.initialWater Initial amount of water in the tube.
 -- @arg data.flow Amount of water that flows out of the tube.
 -- @arg data.observingStep Time interval to observe the amount of water along the simulation.
+-- @arg data.finalTime The final simulation time.
 -- @arg data.checkZero Deny having a negative amount of water in the model.
 Tube = Model{
 	initialWater    = Choice{min = 10, default = 200},
@@ -19,4 +20,5 @@ Tube = Model{
 
 --- W is a function.
 --@usage w()
+-- DONTRUN
 function w() end

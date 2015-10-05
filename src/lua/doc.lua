@@ -68,7 +68,9 @@ end
 function _Gtme.executeDoc(package)
 	local initialTime = os.clock()
 
-	import("luadoc")
+	if not isLoaded("luadoc") then
+		import("luadoc")
+	end
 
 	if not isLoaded("base") then
 		import("base")
@@ -80,7 +82,9 @@ function _Gtme.executeDoc(package)
 
 	printNote("Loading package '"..package.."'")
 
-	xpcall(function() _G.getPackage(package) end, function(err)
+	local pkg
+
+	xpcall(function() pkg = _G.getPackage(package) end, function(err)
 		printError("Package "..package.." could not be loaded.")
 		printError(err)
 		os.exit()
@@ -456,6 +460,39 @@ function _Gtme.executeDoc(package)
 				doc_report.undoc_functions = doc_report.undoc_functions + 1
 			end
 		end)
+	end)
+
+	printNote("Checking if all Models are documented")
+	forEachOrderedElement(result.files, function(idx, value)
+		if type(idx) ~= "string" then return end
+		if not string.endswith(idx, ".lua") then return end
+
+		local documentedArguments = {}
+
+		forEachOrderedElement(value.models, function(midx, value, mtype)
+			if mtype == "table" then
+				if type(value.arg) == "table" then -- if some argument is documented
+					forEachOrderedElement(value.arg, function(mmidx, mvalue, mmtype)
+						if type(mmidx) == "string" then
+							documentedArguments[mmidx] = true
+						end
+					end)
+				end
+			end
+		end)
+
+		local modelName = string.sub(idx, 0, -5)
+		if value.models and type(pkg[modelName]) == "Model" then
+			local args = pkg[modelName]()
+
+			forEachOrderedElement(args, function(idx, _, mtype)
+				if mtype ~= "function" and not documentedArguments[idx] then
+					printError("Argument '"..idx.."' from '"..modelName.."' is not documented")
+					doc_report.model_error = doc_report.model_error + 1
+				end
+			end)
+
+		end
 	end)
 
 	local finalTime = os.clock()

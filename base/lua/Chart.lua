@@ -74,6 +74,7 @@ Chart_ = {
 	-- cs:notify()
 	-- cs:notify()
 	-- chart:save("file.bmp")
+	-- os.execute("rm -f file.bmp")
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 

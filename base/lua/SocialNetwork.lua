@@ -30,8 +30,8 @@ SocialNetwork_ = {
 	-- @arg connection An Agent.
 	-- @arg weight A number representing the weight of the connection). The default value is 1.
 	-- @usage sn = SocialNetwork()
-	-- agent1 = Agent{}
-	-- agent2 = Agent{}
+	-- agent1 = Agent{id = "1"}
+	-- agent2 = Agent{id = "2"}
 	--
 	-- sn:add(agent1)
 	-- sn:add(agent2, 0.5)
@@ -56,8 +56,8 @@ SocialNetwork_ = {
 	--- Remove all Agents from the SocialNetwork. In practice, it has the same behavior
 	-- of calling SocialNetwork() again if the SocialNetwork was not added to any Agent.
 	-- @usage sn = SocialNetwork()
-	-- agent1 = Agent{}
-	-- agent2 = Agent{}
+	-- agent1 = Agent{id = "1"}
+	-- agent2 = Agent{id = "2"}
 	--
 	-- sn:add(agent1)
 	-- sn:add(agent2)
@@ -72,8 +72,8 @@ SocialNetwork_ = {
 	--- Return a number with the weight of a given connection.
 	-- @arg connection An Agent.
 	-- @usage sn = SocialNetwork()
-	-- agent1 = Agent{}
-	-- agent2 = Agent{}
+	-- agent1 = Agent{id = "1"}
+	-- agent2 = Agent{id = "2"}
 	--
 	-- sn:add(agent1)
 	-- sn:add(agent2, 0.5)
@@ -96,7 +96,7 @@ SocialNetwork_ = {
 	--- Return whether a given Agent belongs to the SocialNetwork.
 	-- @arg connection An Agent.
 	-- @usage sn = SocialNetwork()
-	-- agent = Agent{}
+	-- agent = Agent{id = "1"}
 	--
 	-- sn:add(agent)
 	--
@@ -119,8 +119,8 @@ SocialNetwork_ = {
 	--- Remove an Agent from the SocialNetwork.
 	-- @arg connection An Agent.
 	-- @usage sn = SocialNetwork()
-	-- agent1 = Agent{}
-	-- agent2 = Agent{}
+	-- agent1 = Agent{id = "1"}
+	-- agent2 = Agent{id = "2"}
 	--
 	-- sn:add(agent1)
 	-- sn:add(agent2)
@@ -141,8 +141,8 @@ SocialNetwork_ = {
 	end,
 	--- Return a random Agent from the SocialNetwork.
 	-- @usage sn = SocialNetwork()
-	-- agent1 = Agent{}
-	-- agent2 = Agent{}
+	-- agent1 = Agent{id = "1"}
+	-- agent2 = Agent{id = "2"}
 	--
 	-- sn:add(agent1)
 	-- sn:add(agent2)
@@ -170,8 +170,8 @@ SocialNetwork_ = {
 	-- @arg connection An Agent.
 	-- @arg weight A number with the new weight.
 	-- @usage sn = SocialNetwork()
-	-- agent1 = Agent{}
-	-- agent2 = Agent{}
+	-- agent1 = Agent{id = "1"}
+	-- agent2 = Agent{id = "2"}
 	--
 	-- sn:add(agent1)
 	-- sn:add(agent2, 0.5)

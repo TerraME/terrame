@@ -124,7 +124,7 @@ metaTableTimer_ = {__index = Timer_, __tostring = _Gtme.tostring}
 --     Event{period = 2, action = function()
 --         print("each two time steps")
 --     end},
---     Event{priority = "high", period = 4, action = function()}
+--     Event{priority = "high", period = 4, action = function()
 --         print("each four time steps")
 --     end}
 -- }

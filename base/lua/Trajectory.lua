@@ -29,7 +29,18 @@ Trajectory_ = {
 	type_ = "Trajectory",
 	--- Add a new Cell to the Trajectory. It will be added to the end of the list of Cells.
 	-- @arg cell A Cell.
-	-- @usage traj:add(cell)
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- traj = Trajectory{
+	--     target = cs,
+	--     select = function(c)
+	--         return c.x > 3
+	--     end
+	-- }
+	--
+	-- traj:add(cs:get(1, 1))
 	add = function(self, cell)
 		mandatoryArgument(1, "Cell", cell)
 
@@ -42,14 +53,31 @@ Trajectory_ = {
 	end,
 	--- Add a new Cell to the Trajectory.
 	-- @arg cell A Cell that will be added.
-	-- @usage traj:addCell(cell)
 	-- @deprecated Trajectory:add
 	addCell = function(self, cell)
 		deprecatedFunction("addCell", "add")
 	end,
 	--- Return a copy of the Trajectory. It has the same parent, select, greater and Cells.
 	-- Any change in the cloned Trajectory will not affect the original one.
-	-- @usage copy = traj:clone()
+	-- @usage cell = Cell{
+	--     cover = Choice{"forest", "deforested"}
+	-- }
+	--
+	-- cs = CellularSpace{
+	--     xdim = 10,
+	--     instance = cell
+	-- }
+	--
+	-- traj = Trajectory{
+	--     target = cs,
+	--     select = function(c)
+	--         return c.cover == "forest"
+	--     end
+	-- }
+	--
+	-- copy = traj:clone()
+	-- print(#copy)
+	-- print(#traj)
 	clone = function(self)
 		local cloneT = Trajectory{
 			target = self.parent,
@@ -70,9 +98,28 @@ Trajectory_ = {
 	-- with the function used as argument for the last call to filter itself, or then the value of
 	-- argument select used to build the Trajectory. When it cannot find any function to be used,
 	-- this function will add all the Cells of the CellularSpace to the Trajectory.
-	-- @usage traj:filter(function(cell)
-	--     return cell.cover = "forest"
+	-- @usage cell = Cell{
+	--     cover = Choice{"forest", "deforested"},
+	--     dist = Choice{min = 0, max = 50}
+	-- }
+	--
+	-- cs = CellularSpace{
+	--     xdim = 10,
+	--     instance = cell
+	-- }
+	--
+	-- traj = Trajectory{
+	--     target = cs,
+	--     select = function(c)
+	--         return c.dist > 20
+	--     end
+	-- }
+	--
+	-- print(#traj)
+	-- traj:filter(function(cell)
+	--     return cell.cover == "forest"
 	-- end)
+	-- print(#traj)
 	filter = function(self, f)
 		optionalArgument(1, "function", f)
 
@@ -99,7 +146,11 @@ Trajectory_ = {
 	-- If the Cell does not belong to the Trajectory then it will return nil.
 	-- @arg xIndex The x location.
 	-- @arg yIndex The y location.
-	-- @usage traj:get(1, 1)
+	-- @usage cs = CellularSpace{xdim = 10}
+	--
+	-- traj = Trajectory{target = cs}
+	--
+	-- traj:get(1, 1)
 	get = function(self, xIndex, yIndex)
 		mandatoryArgument(1, "number", xIndex)
 		mandatoryArgument(2, "number", yIndex)
@@ -115,14 +166,17 @@ Trajectory_ = {
 	end,
 	--- Return a cell given its x and y locations.
 	-- @arg index a Coord.
-	-- @usage traj:getCell(index)
 	-- @deprecated Trajectory:get
 	getCell = function(self, index)
 		deprecatedFunction("getCell", "get")
 	end,
 	--- Randomize the Cells of the Trajectory. It will change the traversing order used by
 	-- Utils:forEachCell().
-	-- @usage traj:randomize()
+	-- @usage cs = CellularSpace{xdim = 10}
+	--
+	-- traj = Trajectory{target = cs}
+	--
+	-- traj:randomize()
 	randomize = function(self)
 		local randomObj = Random()
 
@@ -136,7 +190,28 @@ Trajectory_ = {
 	end,
 	--- Rebuild the Trajectory from the CellularSpace used as target.
 	-- It is a shortcut to Trajectory:filter() and then Trajectory:sort().
-	-- @usage traj:rebuild()
+	-- @usage cell = Cell{
+	--     dist = Choice{min = 0, max = 50}
+	-- }
+	--
+	-- cs = CellularSpace{
+	--     xdim = 10,
+	--     instance = cell
+	-- }
+	--
+	-- traj = Trajectory{
+	--     target = cs,
+	--     select = function(cell) return cell.dist < 20 end,
+	--     greater = function(c1, c2) return c1.dist < c2.dist end
+	-- }
+	--
+	-- print(#traj)
+	-- forEachCell(cs, function(cell)
+	--     cell.dist = cell.dist + 10
+	-- end)
+	--
+	-- traj:rebuild()
+	-- print(#traj)
 	rebuild = function(self)
 		self:filter()
 		self:sort()
@@ -149,7 +224,20 @@ Trajectory_ = {
 	-- any function to be used, it shows a warning.
 	-- @see Utils:greaterByAttribute
 	-- @see Utils:greaterByCoord
-	-- @usage traj:sort(function(c, d)
+	-- @usage cell = Cell{
+	--     dist = Choice{min = 0, max = 50}
+	-- }
+	--
+	-- cs = CellularSpace{
+	--     xdim = 10,
+	--     instance = cell
+	-- }
+	--
+	-- traj = Trajectory{
+	--     target = cs
+	-- }
+	--
+	-- traj:sort(function(c, d)
 	--     return c.dist < d.dist
 	-- end)
 	sort = function(self, f)
@@ -173,7 +261,15 @@ setmetatable(Trajectory_, metaTableCellularSpace_)
 metaTableTrajectory_ = {
 	__index = Trajectory_,
 	--- Retrieve the number of Cells in the Trajectory.
-	-- @usage print(#traj)
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- traj = Trajectory{
+	--     target = cs
+	-- }
+	--
+	-- print(#traj)
 	__len = function(self)
 		return #self.cells
 	end,
@@ -201,7 +297,17 @@ metaTableTrajectory_ = {
 -- @output parent The CellularSpace where the Trajectory takes place.
 -- @output select The last function used to filter the Trajectory.
 -- @output greater The last function used to sort the Trajectory.
--- @usage traj = Trajectory{
+-- @usage cell = Cell{
+--     cover = Choice{"forest", "deforested"},
+--     dist = Choice{min = 0, max = 50}
+-- }
+--
+-- cs = CellularSpace{
+--     xdim = 10,
+--     instance = cell
+-- }
+--
+-- traj = Trajectory{
 --     target = cs,
 --     select = function(c)
 --         return c.cover == "forest"

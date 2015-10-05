@@ -456,7 +456,7 @@ CellularSpace_ = {
 	--     xdim = 10
 	-- }
 	--
-	-- cell = Cell{}
+	-- cell = Cell{x = 10, y = 11}
 	-- cs:add(cell)
 	add = function(self, cell)
 		if type(cell) ~= "Cell" then
@@ -534,13 +534,14 @@ CellularSpace_ = {
 	--
 	-- cs:createNeighborhood{
 	--     strategy = "vonneumann",
+	--     name = "vonneumann",
 	--     self = true
 	-- }
 	--
 	-- cs:createNeighborhood{
 	--     strategy = "mxn",
-	--     m = 4,
-	--     n = 4
+	--     m = 5,
+	--     name = "5"
 	-- }
 	--
 	--
@@ -551,8 +552,7 @@ CellularSpace_ = {
 	-- cs:createNeighborhood{
 	--     strategy = "mxn",
 	--     target = cs2,
-	--     m = 3,
-	--     n = 2,
+	--     m = 5,
 	--     name = "spatialCoupling"
 	-- }
 	createNeighborhood = function(self, data)
@@ -769,7 +769,7 @@ CellularSpace_ = {
 	-- the CellularSpace is created, but one can execute this to load the attributes again, erasing
 	-- all attributes and relations created by the modeler.
 	-- @usage cs = CellularSpace{xdim = 10}
-	-- @usage cs:load()
+	-- cs:load()
 	load = function(self)
 		customError("Load function was not implemented.")
 	end,
@@ -788,15 +788,22 @@ CellularSpace_ = {
 	-- "*.gpm" & Load a Neighborhood from a GPM (generalized proximity matrix) file. \
 	-- Any other & Load a Neighborhood from table stored in the same database of the 
 	-- CellularSpace. \
-	-- @usage cs = CellularSpace{xdim = 10}
-	-- @usage cs:loadNeighborhood{
-	--     source = "n.gpm"
+	-- @usage config = getConfig()
+	-- mhost = config.host
+	-- muser = config.user
+	-- mpassword = config.password
+	-- mport = config.port
+	--
+	-- cs = CellularSpace{
+	--     host = mhost,
+	--     user = muser,
+	--     password = mpassword,
+	--     port = mport,
+	--     database = "cabecadeboi",
+	--     theme = "cells900x900"
 	-- }
-	-- 
-	-- cs:loadNeighborhood{
-	--     source = "mtab",
-	--     name = "mtab"
-	-- }
+	--
+	-- cs:loadNeighborhood{source = file("cabecadeboi-neigh.gpm", "base")}
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
 
@@ -863,7 +870,12 @@ CellularSpace_ = {
 		self.cObj_:notify(modelTime)
 	end,
 	--- Return a random Cell from the CellularSpace.
-	-- @usage cell = cs:sample()
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- cell = cs:sample()
+	-- print(type(cell))
 	sample = function(self)
 		return self.cells[Random():integer(1, #self)]
 	end,
@@ -871,12 +883,26 @@ CellularSpace_ = {
 	-- @arg time A number indicating a temporal value to be stored in the database, 
 	-- which can be different from the simulation time.
 	-- @arg outputTableName Name of the table to store the attributes of the Cells.
-	-- @arg attrNames A vector with the names of the attributes to be saved (as default it
-	-- saves all attributes). When saving a single attribute, you can use
+	-- @arg attrNames A vector with the names of the attributes to be saved.
+	-- When saving a single attribute, you can use
 	-- attrNames = "attribute" instead of attrNames = {"attribute"}.
-	-- @usage cs:save(20, "table")
+	-- @usage -- DONTRUN
+	-- config = getConfig()
+	-- mhost = config.host
+	-- muser = config.user
+	-- mpassword = config.password
+	-- mport = config.port
 	--
-	-- cs:save(100, "ntab", "attr")
+	-- cs = CellularSpace{
+	--     host = mhost,
+	--     user = muser,
+	--     password = mpassword,
+	--     port = mport,
+	--     database = "cabecadeboi",
+	--     theme = "cells900x900"
+	-- }
+	--
+	-- cs:save(2, "themeName", "height_")
 	save = function(self, time, outputTableName, attrNames)
 		if type(time) == "Event" then
 			time = time:getTime()
@@ -919,7 +945,17 @@ CellularSpace_ = {
 	-- index for the Cell, which can be a number, string, or boolean value.
 	-- Trajectories are then indexed according to the
 	-- returning value.
-	-- @usage ts = cs:split("cover")
+	-- @usage cell = Cell{
+	--     cover = Choice{"pasture", "forest"},
+	--     forest = Choice{min = 0, max = 1}
+	-- }
+	--
+	-- cs = CellularSpace{
+	--     xdim = 20,
+	--     instance = cell
+	-- }
+	--
+	-- ts = cs:split("cover")
 	-- print(#ts.forest)
 	-- print(#ts.pasture)
 	-- 
@@ -930,7 +966,7 @@ CellularSpace_ = {
 	--         return "lt" 
 	--     end
 	-- end)
-	-- print(#ts.gt)
+	-- print(#ts2.gt)
 	split = function(self, argument)
 		if type(argument) ~= "function" and type(argument) ~= "string" then
 			if argument == nil then
@@ -968,9 +1004,19 @@ CellularSpace_ = {
 	--- Synchronize the CellularSpace, calling the function synchronize() for each of its Cells.
 	-- @arg values A string or a vector of strings with the attributes to be synchronized. If 
 	-- empty, TerraME synchronizes every attribute of the Cells but the (x, y) coordinates.
-	-- @usage cs:synchronize()
-	-- cs:synchronize("landuse")
-	-- cs:synchronize{"water","use"}
+	-- @usage cell = Cell{
+	--     forest = Choice{min = 0, max = 1}
+	-- }
+	--
+	-- cs = CellularSpace{
+	--     xdim = 10,
+	--     instance = cell
+	-- }
+	--
+	-- cs:synchronize()
+	-- c = cs:sample()
+	-- print(c.forest)
+	-- print(c.past.forest)
 	synchronize = function(self, values)
 		if type(values) == "string" then values = {values} end
 		if type(values) ~= "table" then 
@@ -1091,14 +1137,23 @@ metaTableCellularSpace_ = {
 -- @output cells A vector of Cells pointed by the CellularSpace.
 -- @output parent The Environment it belongs.
 -- @usage cs = CellularSpace{
---     database = "amazonia",
---     theme = "cells",
---     user = "root"
--- }
--- 
--- cs2 = CellularSpace{
 --     xdim = 20,
 --     ydim = 25
+-- }
+--
+-- config = getConfig()
+-- mhost = config.host
+-- muser = config.user
+-- mpassword = config.password
+-- mport = config.port
+--
+-- cs2 = CellularSpace{
+--     host = mhost,
+--     user = muser,
+--     password = mpassword,
+--     port = mport,
+--     database = "cabecadeboi",
+--     theme = "cells900x900"
 -- }
 function CellularSpace(data)
 	verifyNamedTable(data)
@@ -1309,12 +1364,14 @@ function CellularSpace(data)
 					cell[attribute] = value
 				end
 			end)
-			cell:init()
+
 			forEachOrderedElement(data.instance, function(idx, value, mtype)
 				if mtype == "Choice" then
 					cell[idx] = value:sample()
 				end
 			end)
+
+			cell:init()
 		end)
 
 		createSummaryFunctions(data.instance)

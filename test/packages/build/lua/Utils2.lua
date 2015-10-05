@@ -22,45 +22,31 @@
 --
 -- Authors: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 --          Rodrigo Reis Pereira
+--          Antonio Jose da Cunha Rodrigues
+--          Raian Vargas Maretto
 --#########################################################################################
 
-State_ = {type_ = "State"}
+-- @header Some basic and useful functions for modeling.
 
-metaTableState_ = {__index = State_, __tostring = _Gtme.tostring}
+--- Convert the time in seconds to a more readable value. It returns a string in the format
+-- "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is
+-- more than one day.
+-- @arg s A number.
+-- @usage import("build")
+-- print(elapsedTime3(100)) -- 00:01:40
+function elapsedTime3(s)
+	mandatoryArgument(1, "number", s)
 
---- A container of Jumps and Flows. Every State also has an id to identify itself in the Jumps of
--- other States within the same Agent or Automaton.
--- @arg data A table that contains the State attributes.
--- @arg data.id A string with the unique identifier of the State.
--- @usage State{
---     id = "working"
--- }
-function State(data)
-	if type(data) ~= "table" then
-		if data == nil then
-			data = {}
-		else
-			customError(tableArgumentMsg())
-		end
+	local floor = math.floor
+	local seconds = s
+	local minutes = floor(s / 60);     seconds = floor(seconds % 60)
+	local hours = floor(minutes / 60); minutes = floor(minutes % 60)
+	local days = floor(hours / 24);    hours = floor(hours % 24)
+
+	if days > 0 then
+		return string.format("%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
+	else
+		return string.format("%02d:%02d:%02d", hours, minutes, seconds)
 	end
-
-	local cObj = TeState()
-
-	if data.id == nil then
-		data.id = "1"
-	elseif type(data.id) ~= "string" then
-		incompatibleTypeError("id", "string", data.id)
-	end
-	cObj:config(data.id)
-
-	for i, ud in pairs(data) do
-		if type(ud) == "table" then cObj:add(ud.cObj_) end
-		if type(ud) == "userdata" then cObj:add(ud) end
-	end
-
-	data.cObj_ = cObj
-	setmetatable(data, metaTableState_)
-
-	return data
 end
 

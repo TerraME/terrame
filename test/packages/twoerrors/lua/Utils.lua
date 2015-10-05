@@ -62,6 +62,7 @@ end
 -- It is particularly useful as argument action for an Event.
 -- @arg obj Any TerraME object.
 -- @usage a = Agent{exec = function(self, ev) print(ev:getTime()) end}
+-- DONTRUN
 --
 -- t = Timer{
 --     Event{action = cal2(a, "exec")}
@@ -110,6 +111,7 @@ end
 -- This function can optionally get a second argument with a positive number representing the
 -- position of the Agent in the vector of Agents.
 -- @usage forEachAgent2(group, function(agent)
+-- DONTRUN
 --     agent.age = agent.age + 1
 -- end)
 function forEachAgent2(obj, func)
@@ -125,6 +127,7 @@ end
 -- the Cell in the vector of Cells. If it returns false when processing a given Cell,
 -- forEachCell() stops and does not process any other Cell.
 -- @usage forEachCell2(cellularspace, function(cell)
+-- DONTRUN
 --     cell.water = cell.water + 1
 -- end)
 --
@@ -146,6 +149,7 @@ end
 -- If some call returns false, forEachCellPair() stops and does not
 -- process any other pair of Cells.
 -- @usage forEachCellPair2(cs1, cs2, function(cell1, cell2)
+-- DONTRUN
 --     cell1.water = cell1.water + cell2.water
 --     cell2.water = 0
 -- end)
@@ -211,6 +215,7 @@ end
 -- @arg data.wrap Will the Cells in the borders be connected to the Cells in the
 -- opposite border? The default value is false.
 -- @usage cs:createNeighborhood2() -- moore
+-- DONTRUN
 createNeighborhood2 = function(self, data)
 end	
 
@@ -234,6 +239,7 @@ end
 -- the element itself, and the type of the element. If some call to this function returns
 -- false then forEachElement() stops.
 -- @usage forEachElement2(cell, function(idx, element, etype)
+-- DONTRUN
 --     print(element, etype)
 -- end)
 function forEachElement2(obj, func)
@@ -259,6 +265,7 @@ end
 -- @arg f A user-defined function that takes a file name as argument. Note that
 -- the name does not include the directory where the file is placed.
 -- @usage forEachFile2("C:", function(file)
+-- DONTRUN
 --     print(file)
 -- end)
 function forEachFile2(folder, f)
@@ -277,6 +284,7 @@ end
 
 --- Second order function.
 -- @usage forEachCell2("C:", function(file) end)
+-- DONTRUN
 function forEachCell2()
 end
 
@@ -289,6 +297,7 @@ end
 -- @arg cell A Cell.
 -- @arg f A function that receives a Neighborhood index as argument.
 -- @usage forEachNeighborhood2(cell, f)
+-- DONTRUN
 function forEachNeighborhood2(cell, f)
 end
 
@@ -298,6 +307,7 @@ end
 -- @arg cell A Cell.
 -- @arg f A function that receives a Neighborhood index as argument.
 -- @usage forEachNeighborhood2(cell, f)
+-- DONTRUN
 function forEachNeighborhood2(cell, f)
 end
 
@@ -383,6 +393,7 @@ end
 -- If it does not have a dot, an empty string is returned.
 -- @arg filename A string with the file name.
 -- @usage getExtension2("file.txt") -- ".txt"
+-- DONTRUN
 function getExtension2(filename)
 	mandatoryArgument(1, "string", filename)
 
@@ -400,6 +411,7 @@ end
 -- object, such as Agent or Environment.
 -- @arg t A table.
 -- @usage getn2{name = "john", age = 20}
+-- DONTRUN
 function getn2(t)
 	if _Gtme.type(t) ~= "table" then
 		incompatibleTypeError(1, "table", t)
@@ -418,6 +430,7 @@ end
 -- @arg attribute A string with the name of the attribute.
 -- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=". The default value is "<".
 -- @usage greaterByAttribute()
+-- DONTRUN
 function greaterByAttribute(attribute, operator)
 	if type(attribute) ~= "string" then
 		incompatibleTypeError(1, "string", attribute)
@@ -437,6 +450,7 @@ end
 -- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=".
 -- The default value is "<".
 -- @usage t = Trajectory{
+-- DONTRUN
 --     target = cs,
 --     sort = greaterByCoord2()
 -- }
@@ -459,6 +473,7 @@ end
 -- @arg s A string.
 -- @arg t Another string.
 -- @usage levenshtein("abc", "abb")
+-- DONTRUN
 function levenshtein(s, t)
 	mandatoryArgument(1, "string", s)
 	mandatoryArgument(2, "string", t)
@@ -480,6 +495,7 @@ end
 -- @arg num A number.
 -- @arg idp The number of decimal places to be used. The default value is zero.
 -- @usage round2(2.34566, 3)
+-- DONTRUN
 function round2(num, idp)
 	mandatoryArgument(1, "number", num)
 	optionalArgument(2, "number", idp)
@@ -501,6 +517,7 @@ end
 -- silent & A boolean value indicating whether print() calls should not be shown in the
 -- screen. This parameter is set true when TerraME is executed with mode "silent".
 -- @usage sessionInfo2().version
+-- DONTRUN
 function sessionInfo2()
 	return info_ -- this is a global variable created when TerraME is initialized
 end
@@ -509,6 +526,7 @@ end
 -- @arg str A string.
 -- @arg send A substring describing the end of the first parameter.
 -- @usage string.endswith2("abcdef", "def")
+-- DONTRUN
 function string.endswith2(str, send)
 	local send = send:lower().."$"
 	return str:lower():match(send) ~= nil
@@ -524,6 +542,7 @@ end
 -- @arg data A named table.
 -- @arg att A string with the chosen attribute of the named table.
 -- @usage data = {protocol = "udp"}
+-- DONTRUN
 --
 -- switch2(data, "protocol"):caseof{
 --     tcp = function() print("tcp") end,
@@ -562,6 +581,7 @@ end
 -- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
 -- @arg data Any object or value.
 -- @usage c = Cell{value = 3}
+-- DONTRUN
 -- print(type2(c)) -- "Cell"
 function type2(data)
 	local t = _Gtme.type(data)
@@ -578,6 +598,7 @@ end
 -- @arg o The object to be converted into a string.
 -- @arg indent A string to be placed in the beginning of each line of the returning string.
 -- @usage vardump2{name = "john", age = 20}
+-- DONTRUN
 function vardump2(o, indent)
 	if indent == nil then indent = '' end
 

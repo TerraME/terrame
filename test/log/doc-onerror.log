@@ -21,6 +21,7 @@ Function forEachCell2 was already declared.
 Parsing examples
 Parsing examples/continuous-rain.lua
 Parsing examples/discrete-rain.lua
+Description of example does not end with '.'
 Parsing examples/ipd.lua
 Checking undocumented files
 Example continuous-rain.lua is not documented.
@@ -29,6 +30,77 @@ Checking lua/ErrorHandling.lua
 Checking lua/Tube.lua
 Checking lua/Utils.lua
 Function 'forEachNeighborhood2' has no @usage definition
+Testing @usage
+Testing file lua/ErrorHandling.lua
+Skipping customError2
+Skipping customWarning2
+Skipping defaultTableValue2
+Skipping defaultValueMsg2
+Skipping defaultValueWarning2
+Skipping deprecatedFunction2
+Skipping deprecatedFunctionMsg2
+Skipping incompatibleTypeError2
+Skipping incompatibleTypeMsg2
+Skipping incompatibleValueError2
+Skipping incompatibleValueMsg2
+Skipping integerArgument2
+Skipping integerArgumentMsg2
+Skipping integerTableArgument2
+Skipping invalidFileExtensionError2
+Skipping invalidFileExtensionMsg2
+Skipping mandatoryArgument2
+Skipping mandatoryArgumentError2
+Skipping mandatoryArgumentMsg2
+Skipping mandatoryTableArgument2
+Skipping namedArgumentsMsg2
+Skipping optionalArgument2
+Skipping optionalTableArgument2
+Skipping positiveArgument2
+Skipping positiveArgumentMsg2
+Skipping positiveTableArgument2
+Skipping resourceNotFoundError2
+Skipping resourceNotFoundMsg2
+Skipping strictWarning2
+Skipping suggestion2
+Skipping switchInvalidArgument2
+Skipping switchInvalidArgumentMsg2
+Skipping switchInvalidArgumentSuggestionMsg2
+Skipping tableArgumentMsg2
+Skipping toLabel2
+Skipping unnecessaryArgumentMsg2
+Skipping valueNotFoundError2
+Skipping valueNotFoundMsg2
+Skipping verify2
+Skipping verifyNamedTable2
+Skipping verifyUnnecessaryArguments2
+Testing file lua/Tube.lua
+Skipping w
+Testing file lua/Utils.lua
+Skipping belong2
+Skipping call2
+Skipping createNeighborhood2
+Skipping elapsedTime2
+Skipping forEachAgent2
+Skipping forEachCell2
+Skipping forEachCell2
+Skipping forEachCellPair2
+Skipping forEachElement2
+Skipping forEachFile2
+Skipping forEachOrderedElement2
+Skipping forEachSocialNetwork2
+Skipping getExtension2
+Skipping getn2
+Skipping greaterByAttribute2
+Testing greaterByCoord2
+print when loading
+Error: Error: Argument 'target' is mandatory.
+Testing levenshtein
+Testing round2
+Skipping sessionInfo2
+Testing string.endswith2
+Skipping switch2
+Skipping type2
+Skipping vardump2
 Checking calls to functions in @usage
 Checking lua/ErrorHandling.lua
 Checking lua/Tube.lua
@@ -64,9 +136,10 @@ Checking ErrorHandling.lua
 Checking Tube.lua
 Checking Utils.lua
 Function forEachNeighbor2 is not documented
+Checking if all Models are documented
 
 Documentation report:
-Documentation was built in 0.19 seconds.
+Documentation was built in 1.8 seconds.
 6 HTML files were created.
 All files are documented.
 One problem was found in 'description.lua'.
@@ -83,11 +156,12 @@ One non-named argument is not documented.
 One undefined argument was found.
 One documented argument is not used in the HTML tables.
 One argument used in the HTML tables is not documented.
-One out of 66 functions does not have @usage.
+One non-deprecated function does not have @usage.
 One out of 66 documented functions does not call itself in its @usage.
+One out of 66 functions has error in its @usage.
 One problem was found in @tabular.
 One invalid tag was found in the documentation.
 One problem with image files was found.
 One out of 29 links is invalid.
-One problem was found in the documentation of examples.
-Summing up, 21 problems were found in the documentation.
+2 problems were found in the documentation of examples.
+Summing up, 23 problems were found in the documentation.

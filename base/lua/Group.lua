@@ -152,7 +152,8 @@ Group_ = {
 	--
 	-- group = Group{
 	--     target = soc,
-	--     select = function(agent) return agent.age < 10 end
+	--     select = function(agent) return agent.age < 10 end,
+	--     greater = function(a1, a2) return a1.age > a2.age end
 	-- }
 	-- 
 	-- forEachAgent(group, function(agent)
@@ -244,7 +245,7 @@ metaTableGroup_ = {
 -- @arg data.build A boolean value indicating whether the Group should be computed when created.
 -- The default value is true.
 -- @usage agent = Agent{
---     size = Choice{min = 10, max = 200, step = 0.5}
+--     age = Choice{min = 10, max = 50, step = 1}
 -- }
 --
 -- soc = Society{
@@ -255,14 +256,14 @@ metaTableGroup_ = {
 -- group = Group{
 --     target = society,
 --     select = function(agent)
---         return agent.size > 90
+--         return agent.age > 20
 --     end
 -- }
 --
 -- groupBySize = Group{
 --     target = society,
 --     greater = function(a1, a2)
---         return a1.size > a2.size
+--         return a1.age > a2.age
 --     end
 -- }
 -- @output agents A vector with Agents of the Group.

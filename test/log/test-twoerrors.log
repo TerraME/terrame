@@ -68,9 +68,9 @@ Error in ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua:32: Test sh
 Test creates global variable(s): 'abcdef' (number).
 Test updates global variable(s): 'forEachCell' (changed from function to number).
 Testing call2
-Wrong execution, got error: '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:79: attempt to perform arithmetic on global 'aaa' (a nil value)'.
+Wrong execution, got error: '...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua:80: attempt to perform arithmetic on global 'aaa' (a nil value)'.
 Stack traceback:
-    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 79, in call2
+    File ...edro/github/terrame/bin/packages/twoerrors/lua/Utils.lua, line 80, in call2
     File ...ro/github/terrame/bin/packages/twoerrors/tests/Utils.lua, line 42, in main chunk
 
 Testing createNeighborhood2
@@ -110,9 +110,9 @@ Testing Cell
 Error in ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:42: Test should be Map got Chart.
 Creating 'snapshots/chart_cell.bmp'.
 Creating 'snapshots/chart_cell_select.bmp'.
-Wrong execution, got error: '...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:68: attempt to perform arithmetic on global 'abc' (a nil value)'.
+Wrong execution, got error: '...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:63: attempt to perform arithmetic on global 'abc' (a nil value)'.
 Stack traceback:
-    File ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua, line 68, in main chunk
+    File ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua, line 63, in main chunk
 
 Checking if all asserts were executed
 Assert in line 45 was not executed.
@@ -188,13 +188,13 @@ Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
 Test report:
-Tests were executed in 13.21 seconds.
-Snapshots were saved in '.terrametmp_lScGz'.
+Tests were executed in 12.69 seconds.
+Snapshots were saved in '.terrametmp_dRyI5'.
 2 print() calls were found when loading the package.
 2 variables are overwritten when loading the package.
 2 invalid files or folders were found in folder 'test'.
 2 asserts were not executed at least once.
-2 out of 245 asserts failed.
+2 out of 246 asserts failed.
 2 out of 95 tested functions stopped with an unexpected error.
 2 out of 95 tested functions do not have at least one assert.
 2 out of 95 tested functions do not exist in the source code of the package.

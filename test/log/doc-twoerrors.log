@@ -37,6 +37,8 @@ Parsing examples
 Parsing examples/continuous-rain.lua
 Parsing examples/discrete-rain.lua
 Parsing examples/ipd.lua
+Description of example does not end with '.'
+Description of 'COOPERATE' does not end with '.'
 Parsing examples/ipd2.lua
 Checking undocumented files
 Example discrete-rain.lua is not documented.
@@ -48,6 +50,79 @@ Checking lua/Tube2.lua
 Checking lua/Utils.lua
 Function 'forEachNeighborhood3' has no @usage definition
 Function 'forEachOrderedElement2' has no @usage definition
+Testing @usage
+Testing file lua/ErrorHandling.lua
+Skipping customError2
+Skipping customWarning2
+Skipping defaultTableValue2
+Skipping defaultValueMsg2
+Skipping defaultValueWarning2
+Skipping deprecatedFunction2
+Skipping deprecatedFunctionMsg2
+Skipping incompatibleTypeError2
+Skipping incompatibleTypeMsg2
+Skipping incompatibleValueError2
+Skipping incompatibleValueMsg2
+Skipping integerArgument2
+Skipping integerArgumentMsg2
+Skipping integerTableArgument2
+Skipping invalidFileExtensionError2
+Skipping invalidFileExtensionMsg2
+Skipping mandatoryArgument2
+Skipping mandatoryArgumentError2
+Skipping mandatoryArgumentMsg2
+Skipping mandatoryTableArgument2
+Skipping namedArgumentsMsg2
+Skipping optionalArgument2
+Skipping optionalTableArgument2
+Skipping positiveArgument2
+Skipping positiveArgumentMsg2
+Skipping positiveTableArgument2
+Skipping resourceNotFoundError2
+Skipping resourceNotFoundMsg2
+Skipping strictWarning2
+Skipping suggestion2
+Skipping switchInvalidArgument2
+Skipping switchInvalidArgumentMsg2
+Skipping switchInvalidArgumentSuggestionMsg2
+Skipping tableArgumentMsg2
+Skipping toLabel2
+Skipping unnecessaryArgumentMsg2
+Skipping valueNotFoundError2
+Skipping valueNotFoundMsg2
+Skipping verify2
+Skipping verifyNamedTable2
+Skipping verifyUnnecessaryArguments2
+Testing file lua/Tube.lua
+Skipping w
+Testing file lua/Tube2.lua
+Skipping w2
+Testing file lua/Utils.lua
+Testing belong2
+Error: [string "belon2(2, {1, 2, 3})"]:1: attempt to call global 'belon2' (a nil value)
+Skipping call2
+Skipping createNeighborhood2
+Testing elapsedTime2
+Error: [string "print(elapsedTime2(100)) -- 00:01:40"]:1: attempt to call global 'elapsedTime2' (a nil value)
+Skipping forEachAgent2
+Skipping forEachCell2
+Skipping forEachCell2
+Skipping forEachCellPair2
+Skipping forEachElement2
+Skipping forEachFile2
+Skipping forEachNeighborhood2
+Skipping forEachNeighborhood2
+Skipping getExtension2
+Skipping getn2
+Skipping greaterByAttribute
+Skipping greaterByCoord2
+Skipping levenshtein
+Skipping round2
+Skipping sessionInfo2
+Skipping string.endswith2
+Skipping switch2
+Skipping type2
+Skipping vardump2
 Checking calls to functions in @usage
 Checking lua/ErrorHandling.lua
 Checking lua/Tube.lua
@@ -95,9 +170,10 @@ Checking Tube2.lua
 Checking Utils.lua
 Function forEachNeighbor2 is not documented
 Function forEachSocialNetwork2 is not documented
+Checking if all Models are documented
 
 Documentation report:
-Documentation was built in 0.19 seconds.
+Documentation was built in 1.83 seconds.
 6 HTML files were created.
 All files are documented.
 2 problems were found in 'description.lua'.
@@ -114,11 +190,12 @@ All files are documented.
 2 undefined arguments were found.
 2 documented arguments are not used in the HTML tables.
 2 arguments used in the HTML tables are not documented.
-2 out of 68 functions do not have @usage.
+2 non-deprecated functions do not have @usage.
 2 out of 68 documented functions do not call themselves in their @usage.
+2 out of 68 functions have error in their @usage.
 2 problems were found in @tabular.
 2 invalid tags were found in the documentation.
 2 problems with image files were found.
 2 out of 29 links are invalid.
-2 problems were found in the documentation of examples.
-Summing up, 42 problems were found in the documentation.
+4 problems were found in the documentation of examples.
+Summing up, 46 problems were found in the documentation.

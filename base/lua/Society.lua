@@ -103,9 +103,21 @@ Society_ = {
 	--- Add a new Agent to the Society. It will be the last Agent of the Society when one
 	-- uses Utils:forEachAgent().
 	-- @arg agent The new Agent that will be added to the Society. If nil, the Society will add a
-	-- copy of its instance. In this case, the Society executes
-	-- Agent:init() after creating the copy.
-	-- @usage soc:add(agent)
+	-- copy of its instance. In this case, the Society converts Choices into samples and executes
+	-- Agent:init().
+	-- @usage ag = Agent{
+	--     age = Choice{min = 1, max = 50, step = 1}
+	-- }
+	--
+	-- soc = Society{
+	--     instance = ag,
+	--     quantity = 2
+	-- }
+	--
+	-- soc:add()
+	-- print(#soc)
+	-- agent = soc:add()
+	-- print(agent.age)
 	-- @see Agent:init
 	add = function(self, agent)
 		if agent == nil then
@@ -119,13 +131,14 @@ Society_ = {
 			agent = Agent(agent)
 			local metaTable = {__index = self.instance, __tostring = _Gtme.tostring}
 			setmetatable(agent, metaTable)
-			agent:init()
 
 			forEachOrderedElement(self.instance, function(idx, value, mtype)
 				if mtype == "Choice" then
 					agent[idx] = value:sample()
 				end
 			end)
+
+			agent:init()
 		elseif mtype ~= "Agent" then
 			incompatibleTypeError(1, "Agent or table", agent)
 		end
@@ -156,7 +169,16 @@ Society_ = {
 		return agent
 	end,
 	--- Remove all the Agents from the Society.
-	-- @usage soc:clear()
+	-- @usage ag = Agent{}
+	--
+	-- soc = Society{
+	--     instance = ag,
+	--     quantity = 2
+	-- }
+	--
+	-- print(#soc)
+	-- soc:clear()
+	-- print(#soc)
 	clear = function(self)
 		self.agents = {}
 		self.autoincrement = 1
@@ -215,19 +237,31 @@ Society_ = {
 	-- "void" &
 	-- Create an empty SocialNetwork for each Agent of the Society. &
 	-- & name \
-	-- @usage soc:createSocialNetwork{
+	-- @usage ag = Agent{}
+	--
+	-- soc = Society{
+	--     instance = ag,
+	--     quantity = 20
+	-- }
+	--
+	-- soc:createSocialNetwork{
 	--     quantity = 2
 	-- }
 	--
 	-- soc:createSocialNetwork{
-	--     probability = 0.15
+	--     probability = 0.15,
 	--     name = "random"
 	-- }
 	--
+	-- cs = CellularSpace{xdim = 10}
+	-- cs:createNeighborhood()
+	-- env = Environment{soc, cs}
+	-- env:createPlacement()
+	--
 	-- soc:createSocialNetwork{
-	--    neighbor = "1"
+	--    strategy = "neighbor",
 	--    name = "byneighbor"
-	--}
+	-- }
 	createSocialNetwork = function(self, data)
 		verifyNamedTable(data)
 
@@ -239,6 +273,8 @@ Society_ = {
 				if data.quantity == 1 then data.quantity = nil end
 			elseif data.filter ~= nil then
 				data.strategy = "function"
+			elseif data.neighborhood ~= nil then
+				data.strategy = "neighbor"
 			else
 				customError("It was not possible to infer a value for argument 'strategy'.")
 			end
@@ -304,6 +340,14 @@ Society_ = {
 
 				defaultTableValue(data, "quantity", 1)
 
+				if data.quantity > #self then
+					local merror = "It is not possible to connect such amount of agents ("..data.quantity.."). "..
+						"The Society only has "..#self.." agents."
+					customError(merror)
+				elseif data.quantity > #self * 0.9 then
+					customWarning("Connecting more than 90% of the Agents randomly might take too much time.")
+				end
+
 				integerTableArgument(data, "quantity")
 				positiveTableArgument(data, "quantity")
 
@@ -332,8 +376,15 @@ Society_ = {
 	-- @arg index The index of the Agent that will be returned. It can be a number
 	-- (with the position of the Agent in the vector of Agents) or a string (with the
 	-- id of the Agent).
-	-- @usage agent = soc:get("1")
-	-- agent = soc:get(5)
+	-- @usage ag = Agent{}
+	--
+	-- soc = Society{
+	--     instance = ag,
+	--     quantity = 2
+	-- }
+	--
+	-- agent = soc:get("1")
+	-- print(agent.id)
 	get = function(self, index)
 		if type(index) == "string" then
 			if not self.idindex or not self.idindex[index] then
@@ -372,7 +423,17 @@ Society_ = {
 	-- @arg modelTime A positive number representing the notification time. The default value is 0.
 	-- It is also possible to use an Event as argument. In this case, it will use the result of
 	-- Event:getTime().
-	-- @usage society:notify()
+	-- @usage ag = Agent{}
+	--
+	-- soc = Society{
+	--     instance = ag,
+	--     quantity = 2
+	-- }
+	--
+	-- soc:notify()
+	-- soc:add()
+	-- soc:add()
+	-- soc:notify()
 	notify = function (self, modelTime)
 		if modelTime == nil then
 			modelTime = 0
@@ -399,9 +460,18 @@ Society_ = {
 		self.cObj_:notify(modelTime)
 	end,
 	--- Remove a given Agent from the Society.
-	-- @usage soc:remove(agent)
 	-- @arg arg The Agent that will be removed, or a function that takes an Agent as argument and
 	-- returns true if the Agent must be removed.
+	-- @usage ag = Agent{}
+	--
+	-- soc = Society{
+	--     instance = ag,
+	--     quantity = 2
+	-- }
+	--
+	-- print(#soc)
+	-- soc:remove(soc:sample())
+	-- print(#soc)
 	remove = function(self, arg)
 		if type(arg) == "Agent" then
 			for k, v in pairs(self.agents) do
@@ -460,18 +530,28 @@ Society_ = {
 	-- index for the Agent, which can be a number, string, or boolean value.
 	-- Groups are then indexed according to the returning value.
 	--
-	-- @usage gs = soc:split("gender")
-	-- print(#gs.male)
-	-- print(#gs.female)
+	-- @usage ag = Agent{
+	--     gender = Choice{"male", "female"},
+	--     age = Choice{min = 1, max = 80, step = 1}
+	-- }
+	--
+	-- soc = Society{
+	--     instance = ag,
+	--     quantity = 50
+	-- }
+	--
+	-- groups = soc:split("gender")
+	-- print(#groups.male)
+	-- print(#groups.female)
 	-- 
-	-- gs2 = soc:split(function(ag)
+	-- groups2 = soc:split(function(ag)
 	--     if ag.age > 60 then 
 	--         return "old" 
 	--     else 
 	--         return "notold" 
 	--     end
 	-- end)
-	-- print(#ts.old)
+	-- print(#groups2.old)
 	split = function(self, argument)
 		if type(argument) ~= "function" and type(argument) ~= "string" then
 			if argument == nil then
@@ -512,8 +592,32 @@ Society_ = {
 	-- @arg delay A number indicating the current delay to be delivered. Messages with delay less
 	-- or equal this value are sent, while the others have their delays reduced by this value.
 	-- The default value is one.
-	-- @usage soc:synchronize()
+	-- @usage nonFooAgent = Agent{
+	--     received = 0,
+	--     on_message = function(self)
+	--         self.received = self.received + 1
+	--     end
+	-- }
+	--
+	-- soc = Society{
+	--     instance = nonFooAgent,
+	--     quantity = 15
+	-- }
+	--
+	-- soc:createSocialNetwork{quantity = 5}
+	--
+	-- forEachAgent(soc, function(agent)
+	--     forEachConnection(agent, function(self, friend)
+	--         self:message{receiver = friend, delay = 5}
+	--     end)
+	-- end)
+	--
+	-- otheragent = soc:sample()
+	-- print(otheragent.received)
+	-- soc:synchronize(4)
+	-- print(otheragent.received)
 	-- soc:synchronize(2)
+	-- print(otheragent.received)
 	synchronize = function(self, delay)
 		optionalArgument(1, "number", delay)
 
@@ -546,12 +650,20 @@ Society_ = {
 metaTableSociety_ = {
 	__index = Society_,
 	--- Return the number of Agents in the Society.
-	-- @usage print(#soc)
+	-- @usage ag = Agent{}
+	--
+	-- soc = Society{
+	--     instance = ag,
+	--     quantity = 2
+	-- }
+	--
+	-- print(#soc)
 	__len = function(self)
 		return #self.agents
 	end,
 	__tostring = _Gtme.tostring
 }
+
 --- Type to create and manipulate a set of Agents. Each Agent within a Society has a
 -- unique id, which is initialized while creating the Society. There are different ways to
 -- create a Society. See the argument dbType for the options.
@@ -630,7 +742,6 @@ metaTableSociety_ = {
 -- instance = Agent{
 --     execute = function() end
 -- }
-
 -- s = Society{
 --     instance = instance,
 --     database = file("agents.csv", "base")

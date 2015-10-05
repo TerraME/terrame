@@ -34,6 +34,7 @@ print("print when loading")
 --- Return whether a given value belong to a table
 -- @arg value A value.
 -- @usage belon2(2, {1, 2, 3})
+-- DONTRUN
 function belong2(value, values)
 	if false then
 		a = 3
@@ -65,6 +66,7 @@ end
 -- }
 --
 -- t:execute(10)
+-- DONTRUN
 function call2(obj, func)
 	mandatoryArgument(2, "string", func)
 
@@ -81,6 +83,7 @@ end
 -- more than one day.
 -- @arg s A number.
 -- @usage print(elapsedTime2(100)) -- 00:01:40
+-- DONTRUN
 function elapsedTime2(s)
 	mandatoryArgument(1, "number", s)
 
@@ -109,6 +112,7 @@ end
 -- @usage forEachAgent2(group, function(agent)
 --     agent.age = agent.age + 1
 -- end)
+-- DONTRUN
 function forEachAgent2(obj, func)
 end
 
@@ -128,6 +132,7 @@ end
 -- forEachCell(cellularspace, function(cell, i)
 --     print(i) -- 1, 2, 3, ...
 -- end)
+-- DONTRUN
 function forEachCell2(cs, f)
 end
 
@@ -146,6 +151,7 @@ end
 --     cell1.water = cell1.water + cell2.water
 --     cell2.water = 0
 -- end)
+-- DONTRUN
 function forEachCellPair2(cs1, cs2, f)
 	if type(cs1) ~= "CellularSpace" then
 		incompatibleTypeError(1, "CellularSpace", cs1)
@@ -208,6 +214,7 @@ end
 -- @arg data.wrap Will the Cells in the borders be connected to the Cells in the
 -- opposite border? The default value is false.
 -- @usage cs:createNeighborhood2() -- moore
+-- DONTRUN
 createNeighborhood2 = function(self, data)
 end	
 
@@ -229,6 +236,7 @@ end
 -- @usage forEachElement2(cell, function(idx, element, etype)
 --     print(element, etype)
 -- end)
+-- DONTRUN
 function forEachElement2(obj, func)
 	if obj == nil then
 		mandatoryArgumentError(1)
@@ -254,6 +262,7 @@ end
 -- @usage forEachFile2("C:", function(file)
 --     print(file)
 -- end)
+-- DONTRUN
 function forEachFile2(folder, f)
 	if type(folder) == "string" then
 		folder = dir(folder)
@@ -270,6 +279,7 @@ end
 
 --- Second order function.
 -- @usage forEachCell2("C:", function(file) end)
+-- DONTRUN
 function forEachCell2()
 end
 
@@ -298,6 +308,7 @@ end
 -- @usage forEachOrderedElement2(cell, function(idx, element, etype)
 --     print(element, etype)
 -- end)
+-- DONTRUN
 function forEachOrderedElement2(obj, func)
 	if obj == nil then
 		mandatoryArgumentError(1)
@@ -354,6 +365,7 @@ end
 --         -- ...
 --     end)
 -- end)
+-- DONTRUN
 function forEachSocialNetwork2(agent, f)
 	if type(agent) ~= "Agent" then
 		incompatibleTypeError(1, "Agent", agent)
@@ -371,6 +383,7 @@ end
 -- If it does not have a dot, an empty string is returned.
 -- @arg filename A string with the file name.
 -- @usage getExtension2("file.txt") -- ".txt"
+-- DONTRUN
 function getExtension2(filename)
 	mandatoryArgument(1, "string", filename)
 
@@ -388,6 +401,7 @@ end
 -- object, such as Agent or Environment.
 -- @arg t A table.
 -- @usage getn2{name = "john", age = 20}
+-- DONTRUN
 function getn2(t)
 	if _Gtme.type(t) ~= "table" then
 		incompatibleTypeError(1, "table", t)
@@ -406,6 +420,7 @@ end
 -- @arg attribute A string with the name of the attribute.
 -- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=". The default value is "<".
 -- @usage greaterByAttribute2()
+-- DONTRUN
 function greaterByAttribute2(attribute, operator)
 	if type(attribute) ~= "string" then
 		incompatibleTypeError(1, "string", attribute)
@@ -424,7 +439,8 @@ end
 -- operator.
 -- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=".
 -- The default value is "<".
--- @usage t = Trajectory{
+-- @usage import("onerror")
+-- t = Trajectory{
 --     target = cs,
 --     sort = greaterByCoord2()
 -- }
@@ -489,6 +505,7 @@ end
 -- silent & A boolean value indicating whether print() calls should not be shown in the
 -- screen. This parameter is set true when TerraME is executed with mode "silent".
 -- @usage sessionInfo2().version
+-- DONTRUN
 function sessionInfo2()
 	return info_ -- this is a global variable created when TerraME is initialized
 end
@@ -517,6 +534,7 @@ end
 --     tcp = function() print("tcp") end,
 --     udp = function() print("udp") end
 -- }
+-- DONTRUN
 function switch2(data, att)
 	mandatoryArgument(1, "table", data)
 	mandatoryArgument(2, "string", att)
@@ -551,6 +569,7 @@ end
 -- @arg data Any object or value.
 -- @usage c = Cell{value = 3}
 -- print(type2(c)) -- "Cell"
+-- DONTRUN
 function type2(data)
 	local t = _Gtme.type(data)
 	if t == "table" or (t == "userdata" and getmetatable(data)) then
@@ -566,6 +585,7 @@ end
 -- @arg o The object to be converted into a string.
 -- @arg indent A string to be placed in the beginning of each line of the returning string.
 -- @usage vardump2{name = "john", age = 20}
+-- DONTRUN
 function vardump2(o, indent)
 	if indent == nil then indent = '' end
 
