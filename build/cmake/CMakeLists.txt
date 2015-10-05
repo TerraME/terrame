@@ -263,6 +263,40 @@ set(LIBS ${LIBS} ${Qt5Network_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES
 link_directories(${Qt5Network_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
 include_directories(${Qt5Network_INCLUDE_DIRS} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS})
 
+### --------------
+#QtLua
+find_package(QtLua REQUIRED)
+if(QTLUA_FOUND)
+	message("-- Found QtLua library ${QTLUA_LIBRARY} and include directories ${QTLUA_INCLUDE_DIR}")
+	# TODO: Vefify if it is realy necessary (TerraME needs to link to QtLua?)
+	# include_directories(${QTLUA_INCLUDE_DIR})
+	# link_directories(${QTLUA_LIBRARY})
+	# if(QTLUA_LIBRARY)
+	# 	set(LIBS ${LIBS} ${QTLUA_LIBRARY})
+	# else(QTLUA_LIBRARY)
+	# 	set(LIBS ${LIBS} ${QTLUA_LIBRARY})
+	# endif(QTLUA_LIBRARY)
+else(QTLUA_FOUND)
+	message( FATAL_ERROR "-- QtLua library was not found.")
+endif(QTLUA_FOUND)
+
+### --------------
+#QtLua-extras
+find_package(QtLua-extras REQUIRED)
+if(QTLUAEXTRAS_FOUND)
+	message("-- Found QtLua-extras library ${QTLUAEXTRAS_LIBRARY} and include directories ${QTLUAEXTRAS_INCLUDE_DIR}")
+	# TODO: Vefify if it is realy necessary (TerraME needs to link to QtLua-extras?)
+	# include_directories(${QTLUA_INCLUDE_DIR})
+	# link_directories(${QTLUAEXTRAS_LIBRARY})
+	# if(QTLUAEXTRAS_LIBRARY)
+	# 	set(LIBS ${LIBS} ${QTLUAEXTRAS_LIBRARY})
+	# else(QTLUAEXTRAS_LIBRARY)
+	# 	set(LIBS ${LIBS} ${QTLUAEXTRAS_LIBRARY})
+	# endif(QTLUAEXTRAS_LIBRARY)
+else(QTLUAEXTRAS_FOUND)
+	message( FATAL_ERROR "-- QtLua-extras library was not found.")
+endif(QTLUAEXTRAS_FOUND)
+
 ## ------------------------------------------------------------------------------------------------------------- ##
 # Set Qt moc parameters
 
