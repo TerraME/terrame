@@ -63,8 +63,9 @@ Group_ = {
 			build = false
 		}
 		forEachAgent(self, function(agent)
-			cloneG:add(agent)
+			table.insert(cloneG.agents, agent)
 		end)
+
 		return cloneG
 	end,
 	--- Apply a filter over the Society used as target for the Group. It replaces the previous

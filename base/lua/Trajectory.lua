@@ -87,8 +87,10 @@ Trajectory_ = {
 		}
 
 		forEachCell(self, function(cell)
-			cloneT:add(cell)
+			table.insert(cloneT.cells, cell)
+			cloneT.cObj_:add(#cloneT.cells, cell.cObj_)
 		end)
+
 		return cloneT
 	end,
 	--- Apply a filter over the CellularSpace used as target for the Trajectory. It replaces the
