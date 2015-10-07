@@ -111,7 +111,7 @@ SizeVisualArrangement VisualArrangement::getSize(int id)
 
 void VisualArrangement::buildLuaCode()
 {
-	if(file == "" or myarrangement->position.size() == 0) return;
+	if(file == "" || myarrangement->position.size() == 0) return;
 
     QFile qfile(file.c_str());
 

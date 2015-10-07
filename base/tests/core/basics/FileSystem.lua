@@ -153,21 +153,26 @@ return{
 		unitTest:assertEquals(#e, 0)
 	end,
 	touch = function(unitTest)
-		local pathdata = packageInfo().data
+		if not _Gtme.isWindowsOS() then
+			local pathdata = packageInfo().data
 
-		local f = io.open(pathdata.."testfile.txt", "w+")
-		f:write("test")
-		f:close()
+			local f = io.open(pathdata.."testfile.txt", "w+")
+			f:write("test")
+			f:close()
 
-		unitTest:assert(touch(pathdata.."testfile.txt", 10000, 10000))
+			unitTest:assert(touch(pathdata.."testfile.txt", 10000, 10000)) -- SKIP
 
-		local attr = attributes(pathdata.."testfile.txt", "access")
-		unitTest:assertEquals(attr, 10000)
+			local attr = attributes(pathdata.."testfile.txt", "access")
+			unitTest:assertEquals(attr, 10000) -- SKIP
 
-		attr = attributes(pathdata.."testfile.txt", "modification")
-		unitTest:assertEquals(attr, 10000)
+			attr = attributes(pathdata.."testfile.txt", "modification")
+			unitTest:assertEquals(attr, 10000) -- SKIP
 
-		os.execute("rm \""..pathdata.."testfile.txt\"")
+			os.execute("rm \""..pathdata.."testfile.txt\"")
+		end
+		
+		unitTest:assert(true)
+		
 	end, 
 	unlock = function(unitTest)
 		local pathdata = packageInfo().data

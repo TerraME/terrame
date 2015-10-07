@@ -41,7 +41,7 @@ extern "C"
 #include "luaCell.h"
 #include "reference.h"
 
-class CellMapper;
+// class CellMapper; // issue #319
 
 /**
 * \brief  
@@ -237,7 +237,7 @@ private:
     QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
 
 //    void loadLegendsFromDatabase(TeDatabase *db, TeTheme *inputTheme, QString& luaLegend);
-    bool sendCells(vector<CellMapper> cells);
+    // bool sendCells(vector<CellMapper> cells); // issue #319
 };
 
 /// Find a cell given a luaCellularSpace object and a luaCellIndex object
