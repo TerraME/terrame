@@ -60,11 +60,12 @@ namespace QtLua {
 #endif
 	)
       QTLUA_THROW(QtLua::Method, "The QMetaMethod `%' is not callable.",
-#if QT_VERSION < 0x050000
-		  .arg(mm.signature()));
-#else
+// COMMENTED FOR TO WORK IN MSVC
+//#if QT_VERSION < 0x050000
+//		  .arg(mm.signature()));
+//#else
 		  .arg(mm.methodSignature()));
-#endif
+//#endif
 
     PoolArray<QMetaValue, 11> args;
     void *qt_args[11];
@@ -82,11 +83,12 @@ namespace QtLua {
 
     if (pt.size() != lua_args.size() - 1)
       QTLUA_THROW(QtLua::Method, "Wrong number of arguments for the `%' QMetaMethod.",
-#if QT_VERSION < 0x050000
-		 .arg(mm.signature()));
-#else
+// COMMENTED FOR TO WORK IN MSVC
+//#if QT_VERSION < 0x050000
+//		 .arg(mm.signature()));
+//#else
 		 .arg(mm.methodSignature()));
-#endif
+//#endif
 
     // parameters
     foreach (const QByteArray &pt, pt)
@@ -99,11 +101,12 @@ namespace QtLua {
     // actual invocation
     if (!obj.qt_metacall(QMetaObject::InvokeMetaMethod, _index, qt_args))
       QTLUA_THROW(QtLua::Method, "Error on invocation of the `%' Qt method.",
-#if QT_VERSION < 0x050000
-		  .arg(mm.signature()));
-#else
+// COMMENTED FOR TO WORK IN MSVC
+//#if QT_VERSION < 0x050000
+//		  .arg(mm.signature()));
+//#else
 		  .arg(mm.methodSignature()));
-#endif
+//#endif
 
     if (qt_args[0]) {
         return args[0].to_value(ls);
