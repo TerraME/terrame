@@ -102,7 +102,17 @@ return{
 	end,
 --]]
 	getParent = function(unitTest)
-		unitTest:assert(true)
+		local event = Event{action = function()
+			return false
+		end}
+
+		local timer = Timer{event}
+
+		unitTest:assertEquals(timer, event.parent)
+
+		timer:execute(2)
+
+		unitTest:assertNil(event.parent)
 	end,
 	getPeriod = function(unitTest)
 		local event = Event{period = 2, action = function(event) end}

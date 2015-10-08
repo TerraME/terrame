@@ -38,7 +38,7 @@ Event_ = {
 		return self.time
 	end,
 	--- Return the Timer that contains the Event.
-	-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
+	-- @usage event = Event {action = function(event)
 	--     print(event:getTime())
 	-- end}
 	--

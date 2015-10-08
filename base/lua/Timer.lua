@@ -53,6 +53,7 @@ Timer_ = {
 		end
 
 		table.insert(self.events, pos, event)
+		event.parent = self
 	end,
 	--- Execute the Timer until a final time. It manages the Event queue according to their execution
 	-- time and priority. The Event that has lower execution time and lower priority is executed at
@@ -90,7 +91,9 @@ Timer_ = {
 
 			local result = ev.action(ev, self)
 
-			if result ~= false then
+			if result == false then
+				ev.parent = nil
+			else
 				ev.time = ev.time + ev.period
 				self:add(ev)
 			end
