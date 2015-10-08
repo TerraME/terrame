@@ -99,6 +99,15 @@ Timer_ = {
 			end
 		end
 	end,
+	--- Return a vector with the Events of the Timer.
+	-- @usage timer = Timer{
+	--     Event{action = function() print("step") end}
+	-- }
+	--
+	-- print(timer:getEvents()[1]:getTime())
+	getEvents = function(self)
+		return self.events
+	end,
 	--- Return the current simulation time.
 	-- @usage timer = Timer{
 	--     Event{action = function() print("step") end}

@@ -83,6 +83,18 @@ return {
 
 		unitTest:assertEquals(60, count)
 	end,
+	getEvents = function(unitTest)
+		local timer = Timer{
+			Event{action = function()
+				print("each time step")
+			end},
+			Event{period = 2, action = function()
+				print("each two time steps")
+			end}
+		}
+
+		unitTest:assertEquals(#timer:getEvents(), 2)
+	end,
 	__len = function(unitTest)
 		local timer = Timer{
 			Event{action = function()
