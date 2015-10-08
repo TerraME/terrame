@@ -186,9 +186,9 @@ socialnetworks  table of size 0
 					function(ev, self)
 						jumps = jumps + 1
 						if self.x > 5 then
-							unitTest:assertEquals(6, self.x) -- SKIP
-							unitTest:assertEquals(3, ev:getTime()) -- SKIP
-							unitTest:assertEquals(0, self:getLatency()) -- SKIP
+							unitTest:assertEquals(6, self.x)
+							unitTest:assertEquals(3, ev:getTime())
+							unitTest:assertEquals(0, self:getLatency())
 							return true
 						end
 					end,
@@ -205,9 +205,9 @@ socialnetworks  table of size 0
 					function(ev, self)
 						jumps = jumps + 1
 						if self.x < 3 then
-							unitTest:assertEquals(7, ev:getTime()) -- SKIP
-							unitTest:assertEquals(2, self.x) -- SKIP
-							unitTest:assertEquals(3, self:getLatency()) -- SKIP
+							unitTest:assertEquals(7, ev:getTime())
+							unitTest:assertEquals(2, self.x)
+							unitTest:assertEquals(3, self:getLatency())
 							return true
 						end
 					end,
@@ -235,7 +235,7 @@ socialnetworks  table of size 0
 		a:execute(Event{action = function() end})
 		unitTest:assertEquals(0, a:getLatency())
 		unitTest:assertEquals(4, a.x)
---[[
+
 		local t = Timer{
 			Event{action = function(ev)
 				a:execute(ev)
@@ -244,12 +244,11 @@ socialnetworks  table of size 0
 
 		t:execute(10)
 
-		unitTest:assertEquals(6, a.x) -- SKIP
-		unitTest:assertEquals(7, a:getLatency()) -- SKIP
+		unitTest:assertEquals(6, a.x)
+		unitTest:assertEquals(7, a:getLatency())
 
-		unitTest:assertEquals(15, flows) -- SKIP
-		unitTest:assertEquals(17, jumps) -- SKIP
---]]
+		unitTest:assertEquals(15, flows)
+		unitTest:assertEquals(17, jumps)
 	end,
 	getSocialNetwork = function(unitTest)
 		local ag1 = Agent{}
@@ -276,9 +275,9 @@ socialnetworks  table of size 0
 				Jump{
 					function(ev, self)
 						if self.x > 5 then
-							unitTest:assertEquals(6, self.x) -- SKIP
-							unitTest:assertEquals(3, ev:getTime()) -- SKIP
-							unitTest:assertEquals(0, self:getLatency()) -- SKIP
+							unitTest:assertEquals(6, self.x)
+							unitTest:assertEquals(3, ev:getTime())
+							unitTest:assertEquals(0, self:getLatency())
 							return true
 						end
 					end,
@@ -293,9 +292,9 @@ socialnetworks  table of size 0
 				Jump{
 					function(ev, self)
 						if self.x < 3 then
-							unitTest:assertEquals(7, ev:getTime()) -- SKIP
-							unitTest:assertEquals(2, self.x) -- SKIP
-							unitTest:assertEquals(3, self:getLatency()) -- SKIP
+							unitTest:assertEquals(7, ev:getTime())
+							unitTest:assertEquals(2, self.x)
+							unitTest:assertEquals(3, self:getLatency())
 							return true
 						end
 					end,
@@ -318,10 +317,10 @@ socialnetworks  table of size 0
 			end}
 		}
 
-		--t:execute(5)
-		--unitTest:assertEquals("go", a:getStateName())
-		--t:execute(10)
-		--unitTest:assertEquals("stop", a:getStateName())
+		t:execute(5)
+		unitTest:assertEquals("go", a:getStateName())
+		t:execute(10)
+		unitTest:assertEquals("stop", a:getStateName())
 	end,
 	getTrajectoryStatus = function(unitTest)
 		local cs = CellularSpace{xdim = 2}
