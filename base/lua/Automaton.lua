@@ -50,13 +50,12 @@ Automaton_ = {
 	execute = function(self, event)
 		mandatoryArgument(1, "Event", event)
 
-		local mevent = event.cObj_
+		local cObj = TeEvent()
+		cObj:config(event.time, event.period, event.priority)
+		cObj:setAction(event.action)
+		cObj:setReference(event)
 
-		if not mevent then
-			mevent = event
-		end
-
-		self.cObj_:execute(mevent)
+		self.cObj_:execute(cObj)
 	end,
 	--- Return the unique identifier name of the Automaton.
 	-- @usage -- DONTRUN

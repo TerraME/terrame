@@ -28,7 +28,7 @@ return {
 	Timer = function(unitTest)
 		local timer = Timer()
 		unitTest:assertEquals(type(timer), "Timer")
-		unitTest:assertEquals(tostring(timer:getTime()), tostring(-1.7976931348623e+308))
+		unitTest:assertEquals(timer:getTime(), -math.huge)
 
 		local cont1 = 0
 
@@ -90,8 +90,10 @@ return {
 			end}
 		}
 
-		unitTest:assertEquals(tostring(t1), [[1      Event
-cObj_  userdata
+		unitTest:assertEquals(tostring(t1), [[1       Event
+cObj_   userdata
+events  table of size 1
+time    number [-inf]
 ]])
 	end,
 	add = function(unitTest)
@@ -100,13 +102,8 @@ cObj_  userdata
 
 		timer2:add(Event{action = function(event)
 			cont = cont + 1
-			unitTest:assertNotNil(event)
-
-			-- configuring the current event does not affects the TerraME scheduler
-			local evTime = event:getTime() + 2
-			event:config(evTime, 2, 0) 
-			unitTest:assertEquals(evTime, event:getTime())
-			unitTest:assertEquals(2, event:getPeriod())
+			unitTest:assertType(event, "Event")
+			unitTest:assertEquals(1, event:getPeriod())
 		end})
 
 		timer2:add(Event{action = function(event)
@@ -214,13 +211,9 @@ cObj_  userdata
 		local timer2 = Timer{
 			Event{action = function(event)
 				cont = cont + 1
-				unitTest:assertNotNil(event)
+				unitTest:assertType(event, "Event")
  
-				-- configuring the current event does not affects the TerraME scheduler
-				local evTime = event:getTime() + 2
-				event:config(evTime , 2, 0) 
-				unitTest:assertEquals(evTime, event:getTime())
-				unitTest:assertEquals(2, event:getPeriod())
+				unitTest:assertEquals(1, event:getPeriod())
 			end},
 			Event{action = function(event)
 				cont = cont + 1

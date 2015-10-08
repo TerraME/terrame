@@ -120,10 +120,9 @@ return{
 		local event = Event{start = -10, action = function(event) end}
 
 		unitTest:assertEquals(tostring(event), [[action    function
-cObj_     Event
 period    number [1]
 priority  number [0]
-start     number [-10]
+time      number [-10]
 ]])
 	end
 }

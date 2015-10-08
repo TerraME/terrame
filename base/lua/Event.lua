@@ -25,9 +25,6 @@
 --      Rodrigo Reis Pereira
 --#########################################################################################
 
--- Set type to "Event"
-TeEvent.type_ = "Event"
-
 Event_ = {
 	type_ = "Event",
 	--- Return the current simulation time, according to the Timer it belongs.
@@ -38,7 +35,7 @@ Event_ = {
 	-- time = event:getTime()
 	-- print(time)
 	getTime = function(self)
-		return self.cObj_:getTime()
+		return self.time
 	end,
 	--- Return the Timer that contains the Event.
 	-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
@@ -51,7 +48,9 @@ Event_ = {
 	-- if parent == timer then
 	--     print("equal")
 	-- end
-	getParent = function(self) end,
+	getParent = function(self)
+		return self.parent
+	end,
 	--#- Change the attributes of the Event. It will be rescheduled according to its new attributes.
 	-- @arg time The time instant the Event will occur again (default is the current time of the
 	-- Timer it will belong).
@@ -70,7 +69,7 @@ Event_ = {
 	-- period = event:getPeriod()
 	-- print(period)
 	getPeriod = function(self)
-		return self.cObj_:getPeriod()
+		return self.period
 	end,
 	--- Return the priority of the Event.
 	-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
@@ -80,7 +79,7 @@ Event_ = {
 	-- priority = event:getPriority()
 	-- print(priority)
 	getPriority = function(self)
-		return self.cObj_:getPriority()
+		return self.priority
 	end
 	--#- Change the priority of the Event. This change will take place as soon as the Event
 	-- is rescheduled.
@@ -152,7 +151,6 @@ function Event(data)
 		verifyNamedTable(data)
 	end
 
-	local cObj = TeEvent()
 	if data.message ~= nil then 
 		customError("Argument 'message' is deprecated, use 'action' instead.")
 	end
@@ -161,6 +159,9 @@ function Event(data)
 
 	defaultTableValue(data, "start", 1)
 	defaultTableValue(data, "period", 1)
+
+	data.time = data.start
+	data.start = nil
 
 	positiveTableArgument(data, "period")
 
@@ -175,8 +176,6 @@ function Event(data)
 	else
 		defaultTableValue(data, "priority", 0)
 	end
-
-	cObj:config(data.start, data.period, data.priority)
 
 	if data.action ~= nil then
 		local targettype = type(data.action)
@@ -211,14 +210,8 @@ function Event(data)
 		elseif targettype ~= "function" then
 			incompatibleTypeError("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", data.action)
 		end
-	else
-		return cObj
 	end
 
-	cObj:setAction(data.action)
-	cObj:setReference(data)
-
-	data.cObj_ = cObj
 	setmetatable(data, metaTableEvent_)
 	return data
 end

@@ -33,19 +33,26 @@ Timer_ = {
 	-- @usage timer = Timer{}
 	--
 	-- timer:add(Event{action = function() end})
-	add = function (self, event)
+	add = function(self, event)
 		mandatoryArgument(1, "Event", event)
 
-		if self.events == nil then self.events = {} end
-
-		table.insert(self.events, event)
-		self.cObj_:add(event.cObj_)
-
-		if event.cObj_:getTime() < self:getTime() then
-			local msg = "Adding an Event with time ("..event.cObj_:getTime()..
-				") before the current simulation time ("..self:getTime()..")."
+		if event.time < self.time then
+			local msg = "Adding an Event with time ("..event.time..
+				") before the current simulation time ("..self.time..")."
 			customWarning(msg)
 		end
+
+		local pos = 1
+		local evp = self.events[pos]
+		local quant = #self.events
+		local time = event.time
+		local prio = event.priority
+		while pos <= quant and (time > evp.time or (time == evp.time and prio > evp.priority)) do
+			pos = pos + 1
+			evp = self.events[pos]
+		end
+
+		table.insert(self.events, pos, event)
 	end,
 	--- Execute the Timer until a final time. It manages the Event queue according to their execution
 	-- time and priority. The Event that has lower execution time and lower priority is executed at
@@ -62,13 +69,32 @@ Timer_ = {
 	execute = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
 
-		if finalTime < self:getTime() then
+		if finalTime < self.time then
 			local msg = "Simulating until a time ("..finalTime..
 				") before the current simulation time ("..self:getTime()..")."
 			customWarning(msg)
 		end
 
-		self.cObj_:execute(finalTime)
+		while true do
+			if getn(self.events) == 0 then return end
+
+			local ev = self.events[1]
+			if ev.time > finalTime then
+				self.time = finalTime
+				return
+			end
+
+			self.time = ev.time
+
+			table.remove(self.events, 1)
+
+			local result = ev.action(ev, self)
+
+			if result ~= false then
+				ev.time = ev.time + ev.period
+				self:add(ev)
+			end
+		end
 	end,
 	--- Return the current simulation time.
 	-- @usage timer = Timer{
@@ -78,7 +104,7 @@ Timer_ = {
 	-- timer:execute(10)
 	-- print(timer:getTime())
 	getTime = function(self)
-		return self.cObj_:getTime()
+		return self.time
 	end,
 	--- Notify every Observer connected to the Timer.
 	-- @usage timer = Timer{
@@ -106,7 +132,7 @@ Timer_ = {
 	-- timer:reset()
 	-- print(timer:getTime())
 	reset = function(self)
-		self.cObj_:reset()
+		self.time = -math.huge
 	end
 }
 
@@ -138,19 +164,22 @@ function Timer(data)
 			customError(tableArgumentMsg())
 		end
 	end
-	
+
 	local cObj = TeTimer()
+
+	data.events = {}
+	data.time = -math.huge
+	setmetatable(data, metaTableTimer_)
 
 	forEachOrderedElement(data, function(idx, value, mtype)
 		if mtype == "Event" then
-			cObj:add(value.cObj_)
-		else
+			data:add(value)
+		elseif idx ~= "events" and idx ~= "time" then
 			incompatibleTypeError(idx, "Event", value)
 		end
 	end)
  
 	data.cObj_ = cObj
-	setmetatable(data, metaTableTimer_)
 	cObj:setReference(data)
 	return data
 end

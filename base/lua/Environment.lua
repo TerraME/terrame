@@ -291,8 +291,27 @@ Environment_ = {
 	-- env:execute(10)
 	execute = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
-		self.cObj_:config(finalTime)
-		self.cObj_:execute()
+		local timer = Timer{}
+
+		local process
+
+		process = function(env)
+			forEachElement(env, function(idx, value, mtype)
+				if mtype == "Environment" and idx ~= "parent" then
+					process(value)
+				elseif mtype == "Timer" then
+					forEachElement(value.events, function(_, ev)
+						timer:add(ev)
+					end)
+				elseif type(_G[mtype]) == "Model" then
+					process(value)
+				end
+			end)
+		end
+
+		process(self)
+
+		timer:execute(finalTime)
 	end,
 	--- Load a Neighborhood between two different CellularSpaces.
 	-- @arg data.source A string representing the name of the file to be loaded.
