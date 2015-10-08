@@ -36,7 +36,6 @@ return{
 		end
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
-
 		error_func = function()
 			event = Event{period = "1", priority = 1, action = function(event) end}
 		end
@@ -125,32 +124,38 @@ return{
 		end
 		unitTest:assertError(error_func, "The Society cannot be used as an action because it does not have an execute() method.")
 	end,
---[[ #241
 	config = function(unitTest)
 		local event = Event{action = function(event) end}
+
 		local error_func = function()
-			event:config(1, -2, 1)
+			event:config()
 		end
-		unitTest:assertError(error_func, incompatibleValueMsg(2, "positive number", -2)) -- SKIP
+		unitTest:assertError(error_func, tableArgumentMsg())
 
-		event = Event{action = function(event) end}
 		error_func = function()
-			event:config(1, 0, 1)
+			event:config{perod = false}
 		end
-		unitTest:assertError(error_func, incompatibleValueMsg(2, "positive number", 0)) -- SKIP
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("perod", "period"))
 
-		event = Event{action = function(event) end}
 		error_func = function()
-			event:config(1, "5")
+			event:config{period = false}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(2, "number", "5")) -- SKIP
+		unitTest:assertError(error_func, incompatibleTypeMsg("period", "number", false))
 
-		event = Event{action = function(event) end}
 		error_func = function()
-			event:config(1, 1, "aa")
+			event:config{period = 0}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "aa")) -- SKIP
+		unitTest:assertError(error_func, incompatibleValueMsg("period", "positive number (except zero)", 0))
+
+		error_func = function()
+			event:config{priority = false}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("priority", "number", false))
+
+		error_func = function()
+			event:config{time = false}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("time", "number", false))
 	end
---]]
 }
 

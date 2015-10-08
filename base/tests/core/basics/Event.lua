@@ -84,23 +84,27 @@ return{
 
 		t:execute(2)
 	end,
---[[ #241
 	config = function(unitTest)
 		local event = Event{action = function(event) end}
 
-		event:config(0.5, 2, 1)
+		event:config{
+			time = 0.5,
+			period = 2,
+			priority = 1
+		}
 
-		unitTest:assertEquals(event[1]:getTime(), 0.5) -- SKIP
-		unitTest:assertEquals(event[1]:getPeriod(), 2) -- SKIP
-		unitTest:assertEquals(event[1]:getPriority(), 1) -- SKIP
-	
-		event:config(1)
+		unitTest:assertEquals(event:getTime(), 0.5)
+		unitTest:assertEquals(event:getPeriod(), 2)
+		unitTest:assertEquals(event:getPriority(), 1)
 
-		unitTest:assertEquals(event[1]:getTime(), 1) -- SKIP
-		unitTest:assertEquals(event[1]:getPeriod(), 2) -- SKIP
-		unitTest:assertEquals(event[1]:getPriority(), 1) -- SKIP
+		event:config{
+			time = 1
+		}
+
+		unitTest:assertEquals(event:getTime(), 1)
+		unitTest:assertEquals(event:getPeriod(), 2)
+		unitTest:assertEquals(event:getPriority(), 1)
 	end,
---]]
 	getParent = function(unitTest)
 		local event = Event{action = function()
 			return false

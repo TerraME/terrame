@@ -51,16 +51,34 @@ Event_ = {
 	getParent = function(self)
 		return self.parent
 	end,
-	--#- Change the attributes of the Event. It will be rescheduled according to its new attributes.
-	-- @arg time The time instant the Event will occur again (default is the current time of the
-	-- Timer it will belong).
-	-- @arg period The new periodicity of the Event (default is 1).
-	-- @arg priority The new priority of the Event. The default priority is 0 (zero). Smaller
-	--  values have higher priority.
-	-- @usage event:config(1)
-	-- event:config(1, 0.05)
-	-- event:config(1, 0.05, -1)
-	--config = function(self, time, period, priority) end,
+	--- Change the attributes of the Event. It will be rescheduled according to its new attributes.
+	-- @arg data.time The time instant the Event will occur.
+	-- @arg data.period The new periodicity of the Event.
+	-- @arg data.priority The new priority of the Event.
+	-- @usage event = Event{start = 2, action = function() end}
+	-- 
+	-- event:config{priority = -1}
+	-- event:config{time = 10, period = 2}
+	config = function(self, data)
+		verifyNamedTable(data)
+		verifyUnnecessaryArguments(data, {"time", "priority", "period"})
+
+		if data.time ~= nil then
+			optionalTableArgument(data, "time", "number")
+			self.time = data.time
+		end
+
+		if data.period ~= nil then
+			optionalTableArgument(data, "period", "number")
+			positiveTableArgument(data, "period")
+			self.period = data.period
+		end
+
+		if data.priority ~= nil then
+			optionalTableArgument(data, "priority", "number")
+			self.priority = data.priority
+		end
+	end,
 	--- Return the period of the Event.
 	-- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
     --     print(event:getTime())
