@@ -136,7 +136,24 @@ Timer_ = {
 	end
 }
 
-metaTableTimer_ = {__index = Timer_, __tostring = _Gtme.tostring}
+metaTableTimer_ = {
+	__index = Timer_,
+	__tostring = _Gtme.tostring,
+	--- Return the number of Events in the Timer.
+	-- @usage timer = Timer{
+	--     Event{action = function()
+	--         print("each time step")
+	--     end},
+	--     Event{period = 2, action = function()
+	--         print("each two time steps")
+	--     end}
+	-- }
+	--
+	-- print(#timer)
+	__len = function(self)
+		return #self.events
+	end
+}
 
 --- A Timer is an Event-based scheduler that executes and controls the simulation. It contains a
 -- set of Events, allowing the simulation to work with processes that start
