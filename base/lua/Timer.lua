@@ -95,6 +95,15 @@ Timer_ = {
 				ev.parent = nil
 			else
 				ev.time = ev.time + ev.period
+
+				local floor = math.floor(ev.time)
+				local ceil = math.ceil(ev.time)
+
+				if math.abs(ev.time - floor) < self.round then
+					ev.time = floor
+				elseif math.abs(ev.time - ceil) < self.round then
+					ev.time = ceil
+				end
 				self:add(ev)
 			end
 		end
@@ -171,6 +180,13 @@ metaTableTimer_ = {
 -- set of Events, allowing the simulation to work with processes that start
 -- independently and act in different periodicities. Once it has a given simulation time,
 -- it ensures that all the Events before that time were already executed.
+-- @arg data.round A number to work with Events that have period less than one. It rounds
+-- the execution time of an Event that is going to be scheduled to be executed to
+-- a time in the future if the difference between such time and the closest integer number
+-- is less then the value of this argument. For example, an Event that starts in time one
+-- and has period 0.1 might execute in time 1.999999999, as we are working with real numbers.
+-- Round is then useful to make sure that such Event will be executed in time exactly two.
+-- The default value is 0.00001 (1e-5).
 -- @arg data.... A set of Events.
 -- @usage timer = Timer{
 --     Event{action = function()
@@ -198,16 +214,18 @@ function Timer(data)
 
 	data.events = {}
 	data.time = -math.huge
+
 	setmetatable(data, metaTableTimer_)
 
 	forEachOrderedElement(data, function(idx, value, mtype)
 		if mtype == "Event" then
 			data:add(value)
-		elseif idx ~= "events" and idx ~= "time" then
+		elseif not belong(idx, {"events", "time"}) then
 			incompatibleTypeError(idx, "Event", value)
 		end
 	end)
  
+	defaultTableValue(data, "round", 1e-5)
 	data.cObj_ = cObj
 	cObj:setReference(data)
 	return data
