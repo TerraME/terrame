@@ -292,6 +292,7 @@ Environment_ = {
 	execute = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
 		local timer = Timer{}
+		local timers = {}
 
 		local process
 
@@ -300,6 +301,7 @@ Environment_ = {
 				if mtype == "Environment" and idx ~= "parent" then
 					process(value)
 				elseif mtype == "Timer" then
+					table.insert(timers, value)
 					forEachElement(value.events, function(_, ev)
 						timer:add(ev)
 					end)
@@ -312,6 +314,40 @@ Environment_ = {
 		process(self)
 
 		timer:execute(finalTime)
+
+		forEachElement(timers, function(_, value)
+			value.time = finalTime
+		end)
+	end,
+	--- Return the older simulation time of its Timers.
+	-- @usage env = Environment{
+	--     Timer{Event{action = function() end}}
+	-- }
+	--
+	-- env:execute(10)
+	-- print(env:getTime())
+	getTime = function(self)
+		local oldTime = math.huge
+
+		local process
+
+		process = function(env)
+			forEachElement(env, function(idx, value, mtype)
+				if mtype == "Environment" and idx ~= "parent" then
+					process(value)
+				elseif mtype == "Timer" then
+					if oldTime > value:getTime() then
+						oldTime = value:getTime()
+					end
+				elseif type(_G[mtype]) == "Model" then
+					process(value)
+				end
+			end)
+		end
+
+		process(self)
+
+		return oldTime
 	end,
 	--- Load a Neighborhood between two different CellularSpaces.
 	-- @arg data.source A string representing the name of the file to be loaded.

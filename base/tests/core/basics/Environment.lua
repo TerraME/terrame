@@ -62,7 +62,6 @@ return{
 		env:add(t)
 
 		env:execute(10)
-		--assertEquals(11, env:getTime() ) -- #195
 		self:assertEquals(13, a.x)
 
 		local cellCont = 0
@@ -590,6 +589,29 @@ id     string [env]
 			}
 		}
 		env:execute(6)
+	end,
+	getTime = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local t = Timer{
+			Event{action = function(ev)
+			end}
+		}
+
+		mmm = Model{
+			init = function(model)
+				model.timer = Timer{Event{action = function() end}}
+			end,
+			finalTime = 100
+		}
+
+		local mi = mmm{}
+
+		local env = Environment{cs, t, Environment{}, mi}
+		env:execute(10)
+		unitTest:assertEquals(10, env:getTime())
+
+		mmm = nil
 	end
 }
 
