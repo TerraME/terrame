@@ -52,12 +52,14 @@ class luaEvent : public EventSubjectInterf, public Reference<luaEvent>
     QString getChanges(QDataStream& in, int observerId, QStringList& attribs);
 
 public:
+
     ///< Data structure issued by Luna<T>
     static const char className[]; 
     
     ///< Data structure issued by Luna<T>
     static Luna<luaEvent>::RegType methods[]; 
 
+public:
     /// constructor
     luaEvent(lua_State *L);
 
@@ -80,8 +82,6 @@ public:
     /// Sets the luaEvent priority
     /// parameters: number
     int setPriority(lua_State *L);
-
-    int setAction(lua_State *L);
 
     /// Gets the luaEvent periodicity
     int getPeriod(lua_State *L);

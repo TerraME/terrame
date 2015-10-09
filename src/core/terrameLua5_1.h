@@ -110,6 +110,7 @@ luaCell * findCell(luaCellularSpace*, CellIndex&);
 
 // TIME REPRESENATION
 #include "luaEvent.h"
+#include "luaMessage.h"
 #include "luaTimer.h"
 
 // BEHAVIOR REPRESENATION

@@ -139,6 +139,7 @@ void registerClasses()
 
 	Luna<luaTimer>::Register(L);
 	Luna<luaEvent>::Register(L);
+	Luna<luaMessage>::Register(L);
 
 	Luna<luaEnvironment>::Register(L);
 	Luna<luaTrajectory>::Register(L);

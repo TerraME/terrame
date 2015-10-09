@@ -1,5 +1,6 @@
 #include "luaTimer.h"
 #include "luaEvent.h"
+#include "luaMessage.h"
 #include "terrameGlobals.h"
 
 #include "../observer/types/observerTextScreen.h"
@@ -53,8 +54,9 @@ int luaTimer::isEmpty(lua_State *L)
 /// parameters: luaEvent, luaMessage
 int luaTimer::add(lua_State *L)
 {
-    luaEvent* event = Luna<luaEvent>::check(L, -1);
-    Scheduler::add(*event);
+    luaEvent* event = Luna<luaEvent>::check(L, -2);
+    luaMessage* message = Luna<luaMessage>::check(L, -1);
+    Scheduler::add( *event, message );
     return 0;
 }
 

@@ -193,7 +193,6 @@ Agent_ = {
 
 		local cObj = TeEvent()
 		cObj:config(event.time, event.period, event.priority)
-		cObj:setAction(event.action)
 		cObj:setReference(event)
 
 		self.cObj_:execute(cObj)
