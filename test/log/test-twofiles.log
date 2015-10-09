@@ -6,6 +6,7 @@ Looking for package functions
 Found 1 extra functions in the documentation
 Skip looking for lines of source code
 Testing tests/core/alternative/Event.lua
+Testing config
 Testing Event
 Checking if all asserts were executed
 Testing tests/core/alternative/Jump.lua
@@ -13,6 +14,7 @@ Testing Jump
 Checking if all asserts were executed
 Testing tests/core/basics/Event.lua
 Testing __tostring
+Testing config
 Testing Event
 Testing getParent
 Testing getPeriod
@@ -36,19 +38,19 @@ Skipping snapthots check
 Skipping examples
 
 Test report:
-Tests were executed in 3.7 seconds.
+Tests were executed in 4.6 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.
 All asserts were executed at least once.
-All 42 asserts were executed successfully.
-All 9 tested functions do not have any unexpected execution error.
-All 9 tested functions have at least one assert.
-All 9 tested functions exist in the source code of the package.
+All 55 asserts were executed successfully.
+All 11 tested functions do not have any unexpected execution error.
+All 11 tested functions have at least one assert.
+All 11 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
-All 7 functions of the package were tested.
+All 8 functions of the package were tested.
 No lines from the source code were verified.
 No snapshot test was executed.
 No examples were executed.

@@ -55,7 +55,7 @@ return{
 		local c2 = Clock{target = timer}
 		timer:execute(50)
 
-		unitTest:assertSnapshot(c2, "timer_clock_priority_nordered.bmp", 0.045)
+		unitTest:assertSnapshot(c2, "timer_clock_priority_nordered.bmp", 0.05)
 		unitTest:assertType(c2, "Clock")
 	end
 }

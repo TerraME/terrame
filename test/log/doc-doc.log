@@ -172,6 +172,7 @@ Testing Environment
 Testing add
 Testing createPlacement
 Testing execute
+Testing getTime
 Testing loadNeighborhood
 Testing notify
 Testing file lua/ErrorHandling.lua
@@ -217,6 +218,7 @@ Testing verifyNamedTable
 Testing verifyUnnecessaryArguments
 Testing file lua/Event.lua
 Testing Event
+Testing config
 Testing getParent
 Testing getPeriod
 Testing getPriority
@@ -324,9 +326,11 @@ Testing file lua/Timer.lua
 Testing Timer
 Testing add
 Testing execute
+Testing getEvents
 Testing getTime
 Testing notify
 Testing reset
+Testing #
 Testing file lua/Trajectory.lua
 Testing Trajectory
 Testing add
@@ -531,7 +535,7 @@ Checking VisualTable.lua
 Checking if all Models are documented
 
 Documentation report:
-Documentation was built in 8.91 seconds.
+Documentation was built in 9.01 seconds.
 35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -539,7 +543,7 @@ No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
-All 288 global functions of the package are documented.
+All 292 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
@@ -549,11 +553,11 @@ No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 288 functions call themselves in their @usage.
-All 288 functions do not have any error in their @usage.
+All 292 functions call themselves in their @usage.
+All 292 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
-All 299 links were correctly built.
+All 305 links were correctly built.
 All 22 examples are correctly documented.
 Summing up, all the documentation was successfully built.
