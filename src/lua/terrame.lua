@@ -957,72 +957,37 @@ function _Gtme.traceback()
 			m4 = string.match(infoSource, _Gtme.makePathCompatibleToAllOS(_Gtme.replaceSpecialChars(si.package..s.."lua")))
 		end
 
-		if m1 or m2 or m3 or m4 then
-			last_function = info.name
+		last_function = info.name
 
-			if last_function == "?" then
-				last_function = "main chunk"
-			end
+		if     last_function == "?"          then last_function = "main chunk"
+		elseif last_function == "__add"      then last_function = "operator + (addition)"
+		elseif last_function == "__sub"      then last_function = "operator - (subtraction)"
+		elseif last_function == "__mul"      then last_function = "operator * (multiplication)"
+		elseif last_function == "__div"      then last_function = "operator / (division)"
+		elseif last_function == "__mod"      then last_function = "operator % (modulo)"
+		elseif last_function == "__pow"      then last_function = "operator ^ (exponentiation)"
+		elseif last_function == "__unm"      then last_function = "operator - (minus)"
+		elseif last_function == "__concat"   then last_function = "operator .. (concatenation)"
+		elseif last_function == "__len"      then last_function = "operator # (size)"
+		elseif last_function == "__eq"       then last_function = "operator == (equal)"
+		elseif last_function == "__lt"       then last_function = "comparison operator"
+		elseif last_function == "__le"       then last_function = "comparison operator"
+		elseif last_function == "__index"    then last_function = "operator [] (index)"
+		elseif last_function == "__newindex" then last_function = "operator [] (index)"
+		elseif last_function == "__call"     then last_function = "call"
+		elseif last_function ~= nil          then last_function = "function '"..last_function.."'"
+		elseif not last_function             then last_function = "main chunk"
+		end
 
-			if (si.fullTraceback or si.package) then
-				if si.package then
-					if not mb and not m1 and not m3 then
-						str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
-
-						if info.currentline > 0 then
-							str = str..", line "..info.currentline
-						end
-
-						str = str..", in "..tostring(last_function).."\n"
-					end
-				else
-					str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
-
-					if info.currentline > 0 then
-						str = str..", line "..info.currentline
-					end
-
-					str = str..", in "..tostring(last_function).."\n"
-				end
-			end
-		else
-			if not found_function then
-				if     last_function == "__add"      then last_function = "operator + (addition)"
-				elseif last_function == "__sub"      then last_function = "operator - (subtraction)"
-				elseif last_function == "__mul"      then last_function = "operator * (multiplication)"
-				elseif last_function == "__div"      then last_function = "operator / (division)"
-				elseif last_function == "__mod"      then last_function = "operator % (modulo)"
-				elseif last_function == "__pow"      then last_function = "operator ^ (exponentiation)"
-				elseif last_function == "__unm"      then last_function = "operator - (minus)"
-				elseif last_function == "__concat"   then last_function = "operator .. (concatenation)"
-				elseif last_function == "__len"      then last_function = "operator # (size)"
-				elseif last_function == "__eq"       then last_function = "operator == (equal)"
-				elseif last_function == "__lt"       then last_function = "comparison operator"
-				elseif last_function == "__le"       then last_function = "comparison operator"
-				elseif last_function == "__index"    then last_function = "operator [] (index)"
-				elseif last_function == "__newindex" then last_function = "operator [] (index)"
-				elseif last_function == "__call"     then last_function = "call"
-				elseif last_function ~= nil          then last_function = "function '"..last_function.."'"
-				end
-
-				--if last_function then
-				--	str = str.. "\n    In "..last_function
-				--end
-				found_function = true
-			end
-
+		if si.fullTraceback or (si.package and not (mb or m1 or m3)) or (not (m1 or m2 or m3 or m4)) then
 			str = str.."    File ".._Gtme.makePathCompatibleToAllOS(info.short_src)
 
 			if info.currentline > 0 then
 				str = str..", line "..info.currentline
 			end
-
-			if info.name then
-				str = str..", in function "..info.name.."\n"
-			else
-				str = str..", in main chunk\n"
-			end
+			str = str..", in "..last_function.."\n"
 		end
+	
 		level = level + 1
 		info = debug.getinfo(level)
 	end
@@ -1395,10 +1360,12 @@ function _Gtme.myxpcall(func)
 				else
 					str = str..", in main chunk"
 				end
+
 				str = str.."\n"
 				level = level + 1
 				info = debug.getinfo(level)
 			end
+
 			return string.sub(str, 0, string.len(str) - 1)
 		else
 			local msg = _Gtme.traceback()
