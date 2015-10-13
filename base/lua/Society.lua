@@ -668,13 +668,6 @@ metaTableSociety_ = {
 -- unique id, which is initialized while creating the Society. There are different ways to
 -- create a Society. See the argument dbType for the options.
 -- Calling Utils:forEachAgent() traverses Societies.
--- @tabular instance
--- Type of attribute & Function within the Society \
--- function & Call the function of each of its Agents. \
--- number & Return the sum of the number in each of its Agents. \
--- boolean & Return the quantity of true values in its Agents. \
--- string & Return a table with positions equal to the unique strings and values equal to the
--- number of occurrences in each of its Agents.
 -- @arg data.database Name of the database.
 -- @arg data.dbType A string with the name of the source the Society will be read from.
 -- TerraME always converts this string to lower case. See the table below:
@@ -698,6 +691,13 @@ metaTableSociety_ = {
 -- created to the Society. For each attribute of the its Agents (after calling Agent:init()),
 -- one function is created in the Society with the same name. The table below describes how each
 -- attribute is mapped from the Agent to the Society:
+-- @tabular instance
+-- Type of attribute & Function within the Society \
+-- function & Call the function of each of its Agents. \
+-- number & Return the sum of the number in each of its Agents. \
+-- boolean & Return the quantity of true values in its Agents. \
+-- string & Return a table with positions equal to the unique strings and values equal to the
+-- number of occurrences in each of its Agents.
 -- @arg data.layer Name of the layer the theme was created from. It must be used to solve a
 -- conflict when there are two themes with the same name (default is "").
 -- @arg data.password The password (default is "").

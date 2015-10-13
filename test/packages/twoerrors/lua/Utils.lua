@@ -508,7 +508,7 @@ end
 
 --- Return information about the current execution. The result is a table
 -- with the following values.
--- @tabular tab
+-- @tabular NONE
 -- Attribute & Description \
 -- dbVersion & A string with the current TerraLib version for databases. \
 -- mode & A string with the current mode for warnings ("normal", "debug", or "quiet"). \

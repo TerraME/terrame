@@ -259,6 +259,18 @@ end
 local function tab(tag, block, text, doc_report, silent)
 	block[tag] = block[tag] or {}
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
+
+	if not silent then
+		if name == nil then
+			printError("In "..block.name..", @tabular requires an argument name (or 'NONE').")
+			doc_report.wrong_tabular = doc_report.wrong_tabular + 1
+			return
+		elseif name ~= "NONE" and not block["arg"][name] then
+			printError("In "..block.name..", could not find argument '"..tostring(name).."' referred by @tabular.")
+			doc_report.wrong_tabular = doc_report.wrong_tabular + 1
+		end
+	end
+
 	--desc = desc:gsub("%s*([&\\])%s*", "%1")
 	local rows = {}
 	for line in desc:gmatch("[^\\]+") do
@@ -271,6 +283,7 @@ local function tab(tag, block, text, doc_report, silent)
 
 		table.insert(rows, row)
 	end
+
 	table.insert(block[tag], name)
 
 	if #rows < 2 and not silent then

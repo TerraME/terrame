@@ -278,7 +278,7 @@ end
 -- installation folder. If it does not exist then it checks wether the package is available in the
 -- current directory. If the package does not exist then it stops with an error. Otherwise, it reads
 -- file description.lua and returns the following attributes.
--- @tabular arg
+-- @tabular NONE
 -- Attribute & Description \
 -- authors & Name of the author(s) of the package.\
 -- contact & E-mail of one or more authors. \
