@@ -82,6 +82,27 @@ return {
 		t:execute(10)
 
 		unitTest:assertEquals(60, count)
+
+		local counter = 0
+
+		t = Timer{
+			Event{action = function(ev)
+				ev:config{
+					time = ev.time + 1,
+					period = ev.period + 1,
+					priority = ev.priority + 1
+				}
+				unitTest:assertType(ev.parent, "Timer")
+				counter = counter + 1
+			end}
+		}
+
+		t:execute(15)
+
+		unitTest:assertEquals(counter, 4) 
+		unitTest:assertEquals(t.events[1].time, 19) 
+		unitTest:assertEquals(t.events[1].period, 5) 
+		unitTest:assertEquals(t.events[1].priority, 4) 
 	end,
 	getEvents = function(unitTest)
 		local timer = Timer{

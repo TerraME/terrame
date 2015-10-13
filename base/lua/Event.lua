@@ -51,7 +51,10 @@ Event_ = {
 	getParent = function(self)
 		return self.parent
 	end,
-	--- Change the attributes of the Event. It will be rescheduled according to its new attributes.
+	--- Change the attributes of the Event. It will be rescheduled according to its new attributes if
+	-- this function is called while the action is being executed. Be careful when using this function
+	-- outside the events's action, because the scheduler will not update its queue. In this case, it
+	-- is recommended to replace the Event by another one.
 	-- @arg data.time The time instant the Event will occur.
 	-- @arg data.period The new periodicity of the Event.
 	-- @arg data.priority The new priority of the Event.
