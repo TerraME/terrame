@@ -30,6 +30,8 @@ local Tube = Model{
 	initialWater    = 200,
 	finalTime       = 10,
 	flow            = 20,
+	soilCap         = Choice{min = 4},
+	soilInf         = Choice{max = 5},
 	observingStep   = Choice{min = 0, max = 1, step = 0.1, default = 1},
 	checkZero       = false,
 	filter          = Mandatory("function"),
@@ -93,6 +95,8 @@ init             function
 initialWater     number [200]
 observingStep    Choice
 simulationSteps  Choice
+soilCap          Choice
+soilInf          Choice
 subwater         Choice
 ]])
 
@@ -109,6 +113,8 @@ notify           function
 observingStep    number [1]
 parent           Model
 simulationSteps  number [10]
+soilCap          number [4]
+soilInf          number [5]
 subwater         number [4]
 timer            Timer
 type_            string [Tube]
