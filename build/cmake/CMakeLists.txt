@@ -393,11 +393,6 @@ install(DIRECTORY ${ROOT}/base/
 		# COMPONENT Base_Package
 )
 
-install(DIRECTORY ${ROOT}/base/doc/
-		DESTINATION doc/
-		# COMPONENT Documentation
-)
-
 install(FILES ${QTLUA_LIBRARY}
 			  ${QTLUAEXTRAS_INCLUDE_DIR}/../../lib/libqtluae.0.1.dylib
 		DESTINATION lib)
