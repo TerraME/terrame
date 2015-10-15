@@ -754,6 +754,7 @@ local function check_usage(files, doc_report)
 				local function_name = functions[j]
 				if functions[function_name].usage then
 					local base = getPackage("base")
+					_Gtme.loadedPackages = {}
 					base.print = function() end
 
 					local usage = functions[function_name].usage
@@ -761,9 +762,9 @@ local function check_usage(files, doc_report)
 					if string.find(usage, "DONTRUN") then
 						print("Skipping "..function_name)
 					else
-				    	print("Testing "..function_name)
+						print("Testing "..function_name)
 						xpcall(load(usage, nil, "t", base), function(err)
-				    		printError("Error: "..err)
+							printError("Error: "..err)
 							doc_report.usage_error = doc_report.usage_error + 1
 						end)
 					end

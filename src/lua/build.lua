@@ -117,6 +117,7 @@ function _Gtme.buildPackage(package, clean)
 		tests = true,
 		examples = true,
 		data = true,
+		images = true,
 		font = true,
 		snapshots = true,
 		doc = true
