@@ -372,7 +372,7 @@ function _Gtme.executeDoc(package)
 	local result = luadocMain(package_path, lua_files, example_files, package, mdata, mfont, doc_report)
 
 	if isDir(package_path..s.."font") then
-		os.execute("cp "..package_path..s.."font"..s.."* "..package_path..s.."doc/files")
+		os.execute("cp "..package_path..s.."font"..s.."* "..package_path..s.."doc"..s.."files")
 	end
 
 	local all_functions = _Gtme.buildCountTable(package)
@@ -487,7 +487,7 @@ function _Gtme.executeDoc(package)
 
 			forEachOrderedElement(args, function(idx, _, mtype)
 				if mtype ~= "function" and not documentedArguments[idx] then
-					printError("Argument '"..idx.."' from '"..modelName.."' is not documented")
+					printError("Model '"..modelName.."' has undocumented argument '"..idx.."'")
 					doc_report.model_error = doc_report.model_error + 1
 				end
 			end)

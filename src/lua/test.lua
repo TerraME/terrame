@@ -803,7 +803,7 @@ function _Gtme.executeTests(package, fileName)
 
 	local finalTime = os.clock()
 
-	print("\nTest report:")
+	print("\nUnit test report:")
 
 	local text = "Tests were executed in "..round(finalTime - initialTime, 2).." seconds"
 	if ut.delayed_time > 0 then

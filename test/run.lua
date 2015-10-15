@@ -54,7 +54,7 @@ _Gtme.printNote("Removing files")
 remove = _Gtme.include("remove.lua")
 
 forEachElement(remove.files, function(_, value)
-	_Gtme.print("Removing \""..value.."\"")
+	_Gtme.print("Removing '"..value.."'")
 	pcall(function() os.execute("rm -rf \""..value.."\"") end)
 end)
 
@@ -245,7 +245,7 @@ _Gtme.printNote("Removing files")
 remove = _Gtme.include(".."..s.."remove.lua")
 
 forEachElement(remove.files, function(_, value)
-	_Gtme.print("Removing \""..value.."\"")
+	_Gtme.print("Removing '"..value.."'")
 	pcall(function() os.execute("rm -rf \""..value.."\"") end)
 end)
 
@@ -452,7 +452,7 @@ end)
 
 finalTime = os.time(os.date("*t"))
 
-print("\nTest report:")
+print("\nExecution test report:")
 
 _Gtme.printNote("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
 _Gtme.printNote("Results were saved in '"..tmpfolder.."'.")
