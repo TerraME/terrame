@@ -30,6 +30,7 @@ local aboutButton
 local configureButton
 local dbButton
 local docButton
+local installLocalButton
 local installButton
 local quitButton
 local runButton
@@ -46,16 +47,17 @@ local function disableAll()
 		[runButton]        = runButton.enabled
 	}
 
-	comboboxExamples.enabled = false
-	comboboxModels.enabled   = false
-	comboboxPackages.enabled = false
-	aboutButton.enabled      = false
-	configureButton.enabled  = false
-	dbButton.enabled         = false
-	docButton.enabled        = false
-	installButton.enabled    = false
-	quitButton.enabled       = false
-	runButton.enabled        = false
+	comboboxExamples.enabled   = false
+	comboboxModels.enabled     = false
+	comboboxPackages.enabled   = false
+	aboutButton.enabled        = false
+	configureButton.enabled    = false
+	dbButton.enabled           = false
+	docButton.enabled          = false
+	installLocalButton.enabled = false
+	installButton.enabled      = false
+	quitButton.enabled         = false
+	runButton.enabled          = false
 end
 
 local function enableAll()
@@ -66,10 +68,11 @@ local function enableAll()
 	docButton.enabled        = oldState[docButton]
 	runButton.enabled        = oldState[runButton]
 
-	comboboxPackages.enabled = true
-	aboutButton.enabled      = true
-	installButton.enabled    = true
-	quitButton.enabled       = true
+	comboboxPackages.enabled   = true
+	aboutButton.enabled        = true
+	installLocalButton.enabled = true
+	installButton.enabled      = true
+	quitButton.enabled         = true
 end
 
 local function buildComboboxPackages(default)
@@ -231,6 +234,63 @@ end
 
 local function installButtonClicked()
 	disableAll()
+
+	local pkgs = _Gtme.downloadPackagesList()
+	local pkgsTab = {}
+
+	local dialog = qt.new_qobject(qt.meta.QDialog)
+	dialog.windowTitle = "Install package"
+
+	local externalLayout = qt.new_qobject(qt.meta.QVBoxLayout)
+
+	qt.ui.layout_add(dialog, externalLayout)
+
+	local listPackages = qt.new_qobject(qt.meta.QListWidget)
+
+	local count = 0
+	forEachOrderedElement(pkgs, function(idx)
+		local package = string.sub(idx, 1, string.find(idx, "_") - 1)
+
+		pkgsTab[count] = idx
+		count = count + 1
+		qt.listwidget_add_item(listPackages, package)
+	end)
+
+	local installButton = qt.new_qobject(qt.meta.QPushButton)
+	installButton.text = "Install"
+	qt.connect(installButton, "clicked()", function()
+		local package = pkgsTab[listPackages.currentRow]
+		_Gtme.print("Downloading "..package)
+		_Gtme.downloadPackage(package)
+		_Gtme.print("Installing "..package)
+		local result = _Gtme.installPackage(package)
+
+		if result then
+			qt.dialog.msg_information("Package '"..package.."' successfully installed.")
+		else
+			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
+		end
+
+		os.execute("rm -f \""..package.."\"")
+	end)
+
+	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
+	cancelButton.text = "Cancel"
+	qt.connect(cancelButton, "clicked()", function()
+		dialog:done(0)
+	end)
+
+	qt.ui.layout_add(externalLayout, listPackages)
+	qt.ui.layout_add(externalLayout, installButton)
+	qt.ui.layout_add(externalLayout, cancelButton)
+
+	dialog:show()
+	dialog:exec()
+	enableAll()
+end
+	
+local function installLocalButtonClicked()
+	disableAll()
 	local s = sessionInfo().separator
 	local fname = qt.dialog.get_open_filename("Select Package", "", "*.zip")
 	if fname == "" then
@@ -388,10 +448,18 @@ function _Gtme.packageManager()
 	installButton = qt.new_qobject(qt.meta.QPushButton)
 	installButton.minimumSize = {150, 28}
 	installButton.maximumSize = {160, 28}
-	installButton.text = "Install new package"
+	installButton.text = "Install package"
 	qt.ui.layout_add(buttonsLayout, installButton)
 
 	qt.connect(installButton, "clicked()", installButtonClicked)
+
+	installLocalButton = qt.new_qobject(qt.meta.QPushButton)
+	installLocalButton.minimumSize = {150, 28}
+	installLocalButton.maximumSize = {160, 28}
+	installLocalButton.text = "Install local package"
+	qt.ui.layout_add(buttonsLayout, installLocalButton)
+
+	qt.connect(installLocalButton, "clicked()", installLocalButtonClicked)
 
 	quitButton = qt.new_qobject(qt.meta.QPushButton)
 	quitButton.minimumSize = {100, 28}

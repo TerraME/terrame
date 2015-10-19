@@ -313,6 +313,7 @@ set(MOC_HDRS
     ${SRCDIR}/observer/components/receiver/receiver.h
     ${SRCDIR}/observer/components/canvas.h
     ${SRCDIR}/observer/types/chartPlot/chartPlot.h
+    ${SRCDIR}/core/Downloader.h
 )
 
 set(MOC_RSRCS 

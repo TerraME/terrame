@@ -118,6 +118,22 @@ function _Gtme.getVersion(str)
 	return version
 end
 
+function _Gtme.downloadPackagesList()
+	local pkgs = cpp_listpackages("http://www.terrame.org/packages/")
+	local packages = {}
+
+	for w in string.gmatch(pkgs, "\"[_%.%w]+%.zip\"") do
+		packages[string.sub(w, 2, -2)] = true
+	end
+
+	return packages
+end
+
+function _Gtme.downloadPackage(pkg)
+	_Gtme.print("http://www.terrame.org/packages/"..pkg)
+	cpp_downloadpackage(pkg, "http://www.terrame.org/packages/")
+end
+
 -- from http://metalua.luaforge.net/src/lib/strict.lua.html
 local function checkNilVariables()
 	local mt = getmetatable(_G)

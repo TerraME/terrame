@@ -33,6 +33,7 @@ Author: Tiago Garcia de Senna Carneiro
 #include <QMessageBox>
 #include <QProcess>
 
+#include "Downloader.h"
 #include "blackBoard.h"
 #include "protocol.pb.h"
 
@@ -194,6 +195,30 @@ int cpp_imagecompare(lua_State *L)
 	return 1;
 }
 
+int cpp_listpackages(lua_State* L)
+{
+    const char* s1 = lua_tostring(L, -1);
+	Downloader* d = new Downloader;
+	QString str = d->listPackages(s1);
+
+	lua_pushstring(L, str.toLatin1().constData());
+	delete d;
+
+	return 1;
+}
+
+int cpp_downloadpackage(lua_State* L)
+{
+    const char* repos = lua_tostring(L, -1);
+    const char* file = lua_tostring(L, -2);
+	Downloader* d = new Downloader;
+	QString str = d->downloadPackage(file, repos);
+
+	lua_pushstring(L, str.toLatin1().constData());
+	delete d;
+	return 1;
+}
+
 int cpp_loadfont(lua_State *L)
 {
 	QFontDatabase qfd;
@@ -300,6 +325,12 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_runcommand);
 	lua_setglobal(L, "cpp_runcommand");
+
+	lua_pushcfunction(L, cpp_listpackages);
+	lua_setglobal(L, "cpp_listpackages");
+
+	lua_pushcfunction(L, cpp_downloadpackage);
+	lua_setglobal(L, "cpp_downloadpackage");
 
 	lua_pushcfunction(L, cpp_informations);
 	lua_setglobal(L, "cpp_informations");
