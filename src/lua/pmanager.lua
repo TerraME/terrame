@@ -282,6 +282,11 @@ local function installButtonClicked()
 	local installButton = qt.new_qobject(qt.meta.QPushButton)
 	installButton.text = "Install"
 	qt.connect(installButton, "clicked()", function()
+		local tmpfolder = tmpDir()
+		local cdir = currentDir()
+
+		_Gtme.chDir(tmpfolder)
+
 		local pkgfile = pkgsTab[listPackages.currentRow].file
 		_Gtme.print("Downloading "..pkgfile)
 		_Gtme.downloadPackage(pkgfile)
@@ -300,6 +305,9 @@ local function installButtonClicked()
 		end
 
 		os.execute("rm -f \""..pkgfile.."\"")
+
+		_Gtme.chDir(cdir)
+		os.execute("rm -rf \""..tmpfolder.."\"")
 		dialog:done(0)
 	end)
 
