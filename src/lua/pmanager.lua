@@ -249,9 +249,23 @@ local function installButtonClicked()
 
 	local count = 0
 	forEachOrderedElement(pkgs, function(idx)
-		local package = string.sub(idx, 1, string.find(idx, "_") - 1)
+		local sep = string.find(idx, "_")
+		local package = string.sub(idx, 1, sep - 1)
+		local version = string.sub(idx, sep + 1, string.find(idx, "zip") - 2)
 
-		pkgsTab[count] = idx
+		pkgsTab[count] = {file = idx, newversion = true}
+
+		local ok, info = pcall(function() return packageInfo(package) end)
+
+		if ok then
+        	if _Gtme.verifyVersionDependency(info.version, ">=", version) then
+				package = package.." (already installed)"
+				pkgsTab[count].newversion = false
+			else
+				package = package.." (version "..version.." available)"
+			end
+		end
+
 		count = count + 1
 		qt.listwidget_add_item(listPackages, package)
 	end)
@@ -259,7 +273,7 @@ local function installButtonClicked()
 	local installButton = qt.new_qobject(qt.meta.QPushButton)
 	installButton.text = "Install"
 	qt.connect(installButton, "clicked()", function()
-		local pkgfile = pkgsTab[listPackages.currentRow]
+		local pkgfile = pkgsTab[listPackages.currentRow].file
 		_Gtme.print("Downloading "..pkgfile)
 		_Gtme.downloadPackage(pkgfile)
 		_Gtme.print("Installing "..pkgfile)
@@ -284,6 +298,10 @@ local function installButtonClicked()
 	cancelButton.text = "Cancel"
 	qt.connect(cancelButton, "clicked()", function()
 		dialog:done(0)
+	end)
+
+	qt.connect(listPackages, "itemClicked(QListWidgetItem*)", function()
+		installButton.enabled = pkgsTab[listPackages.currentRow].newversion
 	end)
 
 	qt.ui.layout_add(externalLayout, listPackages)
