@@ -239,7 +239,7 @@ local function installButtonClicked()
 	local pkgsTab = {}
 
 	local dialog = qt.new_qobject(qt.meta.QDialog)
-	dialog.windowTitle = "Install package"
+	dialog.windowTitle = "Download and install package"
 
 	local externalLayout = qt.new_qobject(qt.meta.QVBoxLayout)
 
@@ -259,19 +259,25 @@ local function installButtonClicked()
 	local installButton = qt.new_qobject(qt.meta.QPushButton)
 	installButton.text = "Install"
 	qt.connect(installButton, "clicked()", function()
-		local package = pkgsTab[listPackages.currentRow]
-		_Gtme.print("Downloading "..package)
-		_Gtme.downloadPackage(package)
-		_Gtme.print("Installing "..package)
-		local result = _Gtme.installPackage(package)
+		local pkgfile = pkgsTab[listPackages.currentRow]
+		_Gtme.print("Downloading "..pkgfile)
+		_Gtme.downloadPackage(pkgfile)
+		_Gtme.print("Installing "..pkgfile)
+		local result = _Gtme.installPackage(pkgfile)
+		local package = string.sub(pkgfile, 1, string.find(pkgfile, "_") - 1)
 
 		if result then
 			qt.dialog.msg_information("Package '"..package.."' successfully installed.")
+
+			local index = buildComboboxPackages(package)
+			comboboxPackages:setCurrentIndex(index)
+			selectPackage()
 		else
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
 
-		os.execute("rm -f \""..package.."\"")
+		os.execute("rm -f \""..pkgfile.."\"")
+		dialog:done(0)
 	end)
 
 	local cancelButton = qt.new_qobject(qt.meta.QPushButton)
