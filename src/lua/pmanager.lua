@@ -236,6 +236,15 @@ local function installButtonClicked()
 	disableAll()
 
 	local pkgs = _Gtme.downloadPackagesList()
+
+	if getn(pkgs) == 0 then
+		local msg = "Could not download the packages list. "..
+		            "Please verify your internet connection and run TerraME again."
+		qt.dialog.msg_critical(msg)
+		enableAll()
+		return
+	end
+
 	local pkgsTab = {}
 
 	local dialog = qt.new_qobject(qt.meta.QDialog)
