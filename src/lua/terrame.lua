@@ -130,7 +130,6 @@ function _Gtme.downloadPackagesList()
 end
 
 function _Gtme.downloadPackage(pkg)
-	_Gtme.print("http://www.terrame.org/packages/"..pkg)
 	cpp_downloadpackage(pkg, "http://www.terrame.org/packages/")
 end
 
@@ -761,7 +760,7 @@ function _Gtme.installPackage(file)
 		os.exit()
 	end)
 
-	_Gtme.printNote("Copying package '"..package.."'")
+	_Gtme.print("Copying package '"..package.."'")
 
 	local arg = _Gtme.sessionInfo().path..s.."packages"..s..package
 
@@ -775,9 +774,9 @@ function _Gtme.installPackage(file)
 	local currentVersion
 	if isDir(packageDir..s..package) then
 		currentVersion = packageInfo(package).version
-		_Gtme.printNote("Package '"..package.."' is already installed")
+		_Gtme.print("Package '"..package.."' is already installed")
 	else
-		_Gtme.printNote("Package '"..package.."' was not installed before")
+		_Gtme.print("Package '"..package.."' was not installed before")
 	end
 
 	local tmpfolder = tmpDir()
@@ -787,7 +786,7 @@ function _Gtme.installPackage(file)
 
 	os.execute("unzip -oq \""..file.."\"")
 
-	_Gtme.printNote("Verifying dependencies")
+	_Gtme.print("Verifying dependencies")
 
 	_Gtme.verifyDepends(package)
 
@@ -800,24 +799,24 @@ function _Gtme.installPackage(file)
 			_Gtme.printError("execute 'terrame -package "..package.." -uninstall' first.")
 			os.exit()
 		else
-			_Gtme.printNote("Removing previous version of package")
+			_Gtme.print("Removing previous version of package")
 			os.execute("rm -rf \""..packageDir..s..package.."\"")
 		end
 	end
 
-	_Gtme.printNote("Trying to load package '"..package.."'")
+	_Gtme.print("Trying to load package '"..package.."'")
 	xpcall(function() import(package) end, function(err)
 		os.execute("rm -rf \""..tmpfolder.."\"")
 		_Gtme.customError("Package ccccould not be loaded:"..err)
 	end)
 
-	_Gtme.printNote("Installing package '"..package.."'")
+	_Gtme.print("Installing package '"..package.."'")
 	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")
 
 	chDir(currentDir)
 
 	os.execute("rm -rf \""..tmpfolder.."\"")
-	_Gtme.printNote("Package successfully installed")
+	_Gtme.print("Package '"..package.."' successfully installed")
 	return package
 end
 

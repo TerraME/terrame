@@ -1,0 +1,35 @@
+Loading package 'sci'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/Spline.lua
+Testing Spline
+Testing value
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking Spline.lua
+Skipping lines of source code check
+Skipping snapthots check
+Testing examples
+Testing SimpleSpline
+
+Unit test report:
+Tests were executed in 0.65 seconds.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or folders in folder 'tests'.
+All asserts were executed at least once.
+All 2 asserts were executed successfully.
+All 2 tested functions do not have any unexpected execution error.
+All 2 tested functions have at least one assert.
+All 2 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+All 2 functions of the package were tested.
+No lines from the source code were verified.
+No snapshot test was executed.
+All 1 examples were successfully executed.
+No new log file was created.
+Summing up, all tests were successfully executed.

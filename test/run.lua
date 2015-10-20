@@ -58,7 +58,6 @@ forEachElement(remove.files, function(_, value)
 	pcall(function() os.execute("rm -rf \""..value.."\"") end)
 end)
 
-
 local report = {
 	logerrors = 0,
 	locallogerrors = 0,
@@ -346,7 +345,6 @@ forEachOrderedElement(commands, function(idx, group)
 						_Gtme.printError("The distance ("..levenshtein(str, value)..") was greater than the maximum ("..distance..").")
 					end
 
-					logerror = true
 					report.locallogerrors = report.locallogerrors + 1
 					logerror = true
 					return false
