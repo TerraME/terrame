@@ -648,7 +648,11 @@ function _Gtme.importDatabase(package)
 			_Gtme.printNote("Importing database '"..database.."'")
 			local importDbFile = _Gtme.makePathCompatibleToAllOS(folder..s..value)
 			local cmd = "\""..command.."\" "..options.." "..database.." < \""..importDbFile.."\""
-			os.execute("\""..cmd.."\"")
+			if _Gtme.isWindowsOS() then
+				cmd = "\""..cmd.."\""
+			end
+
+			os.execute(cmd)
 			_Gtme.printNote("Database '"..database.."' successfully imported")
 		end
 	end)
