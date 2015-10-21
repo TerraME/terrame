@@ -670,7 +670,7 @@ function _Gtme.uninstall(package)
 		if isDir(arg) then
 			_Gtme.print("Package \'"..package.."\' could not be uninstalled (wrong permission).")
 		else
-			_Gtme.print("Package \'"..package.."\' was sucessfully uninstalled.")
+			_Gtme.print("Package \'"..package.."\' was successfully uninstalled.")
 		end
 	else
 		_Gtme.printError("Package \'"..package.."\' is not installed.")

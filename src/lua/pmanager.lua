@@ -288,14 +288,67 @@ local function installButtonClicked()
 		_Gtme.chDir(tmpfolder)
 
 		local pkgfile = pkgsTab[listPackages.currentRow].file
-		_Gtme.print("Downloading "..pkgfile)
-		_Gtme.downloadPackage(pkgfile)
-		_Gtme.print("Installing "..pkgfile)
-		local result = _Gtme.installPackage(pkgfile)
+		local installed = {}
+
+		local installRecursive
+
+		installRecursive = function(pkgfile)
+			_Gtme.print("Downloading "..pkgfile)
+			_Gtme.downloadPackage(pkgfile)
+			_Gtme.print("Installing "..pkgfile)
+			local package = string.sub(pkgfile, 1, string.find(pkgfile, "_") - 1)
+
+    		os.execute("unzip -oq \""..pkgfile.."\"")
+
+    		_Gtme.print("Verifying dependencies")
+
+    		local pinfo = packageInfo(package)
+    		local result = true
+
+    		if pinfo.tdepends then
+		    	forEachElement(pinfo.tdepends, function(_, dtable)
+					if dtable.package == "terrame" or dtable.package == "base" then return end
+
+					_Gtme.print("Package depends on "..dtable.package)
+		    	    local isInstalled = pcall(function() packageInfo(dtable.package) end)
+
+					if not isInstalled then
+						forEachElement(pkgs, function(idx)
+							if string.match(idx, dtable.package.."_") then
+								installRecursive(idx)
+								installed[dtable.package] = true
+								return false
+							end
+						end)
+					end
+				end)
+			end
+
+			local result = _Gtme.installPackage(pkgfile)
+			return result
+		end
+
+		local result = installRecursive(pkgfile)
 		local package = string.sub(pkgfile, 1, string.find(pkgfile, "_") - 1)
 
 		if result then
-			qt.dialog.msg_information("Package '"..package.."' successfully installed.")
+			msg = "Package '"..package.."' successfully installed."
+
+			print(_Gtme.getn(installed))
+
+			if _Gtme.getn(installed) == 1 then
+				msg = msg.." One additional dependency package was installed:"
+			elseif _Gtme.getn(installed) > 1 then
+				msg = msg.." Additional dependency packages were installed:"
+			end
+
+			if _Gtme.getn(installed) > 0 then
+				forEachOrderedElement(installed, function(idx)
+					msg = msg.."\n- "..idx
+				end)
+			end
+
+			qt.dialog.msg_information(msg)
 
 			local index = buildComboboxPackages(package)
 			comboboxPackages:setCurrentIndex(index)
