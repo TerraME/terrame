@@ -1772,6 +1772,11 @@ function Map(data)
 
 				forEachCell(data.target, function(cell)
 					local mdata = cell[data.select]
+
+					if type(mdata) == "function" then
+						mdata = mdata(cell)
+					end
+
 					if min > mdata then
 						min = mdata
 					elseif max < mdata then

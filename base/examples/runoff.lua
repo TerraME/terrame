@@ -15,7 +15,11 @@ cell = Cell{
 		end
 	end,
 	logwater = function(cell)
-		return math.log(cell.water)
+		if cell.water < 1 then
+			return 0
+		else
+			return math.log(cell.water)
+		end
 	end,
 	runoff = function(cell)
 		local quantity = cell.past.water / #cell:getNeighborhood()
