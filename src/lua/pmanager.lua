@@ -300,6 +300,7 @@ local function installButtonClicked()
 			local index = buildComboboxPackages(package)
 			comboboxPackages:setCurrentIndex(index)
 			selectPackage()
+			disableAll()
 		else
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
@@ -407,6 +408,7 @@ local function installLocalButtonClicked()
 			local index = buildComboboxPackages(package)
 			comboboxPackages:setCurrentIndex(index)
 			selectPackage()
+			disableAll()
 		end
 	end
 
