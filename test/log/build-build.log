@@ -27,7 +27,7 @@ Skipping snapthots check
 Testing examples
 Testing ipd
 
-Test report:
+Unit test report:
 Tests were executed in 0.26 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.

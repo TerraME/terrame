@@ -181,7 +181,7 @@ Skipping lines of source code check
 Skipping snapthots check
 Skipping examples
 
-Test report:
+Unit test report:
 Tests were executed in 3.56 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.

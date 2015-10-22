@@ -155,7 +155,7 @@ Error: Strings do not match:
 Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
-Test report:
+Unit test report:
 Tests were executed in 12.82 seconds.
 Snapshots were saved in '.terrametmp_rXX0M'.
 One print() call was found when loading the package.

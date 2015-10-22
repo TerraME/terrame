@@ -50,8 +50,8 @@ return{
 	packageInfo = function(unitTest)
 		local r = packageInfo()
 
-		unitTest:assertEquals(r.version, "1.5")
-		unitTest:assertEquals(r.date, "21 August 2015")
+		unitTest:assertEquals(r.version, "1.6")
+		unitTest:assertEquals(r.date, "22 October 2015")
 		unitTest:assertEquals(r.package, "base")
 		unitTest:assertEquals(r.url, "http://www.terrame.org")
 	end
