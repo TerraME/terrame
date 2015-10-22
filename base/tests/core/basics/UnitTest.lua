@@ -50,6 +50,9 @@ return{
 
 		unitTest:assertEquals(u.success, 1)
 		unitTest:assertEquals(u.test, 1)
+
+		unitTest:assertEquals(1, 1.1, 0.15)
+		unitTest:assertEquals("abc", "abd", 1)
 	end,
 	assertError = function(unitTest)
 		local u = UnitTest{}

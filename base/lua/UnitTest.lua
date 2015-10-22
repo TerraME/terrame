@@ -58,7 +58,8 @@ UnitTest_ = {
 	-- @arg v1 Any value.
 	-- @arg v2 Any value.
 	-- @arg tol A number indicating a maximum error tolerance. This argument is optional and can
-	-- be used only with numeric values. The default tolerance is zero.
+	-- be used with numbers or strings. When using string, the tolerance is measured according
+	-- to the Utils:levenshtein() distance. The default tolerance is zero.
 	-- @usage unitTest = UnitTest{}
 	-- unitTest:assertEquals(3, 3)
 	-- unitTest:assertEquals(2, 2.1, 0.2)
@@ -71,8 +72,8 @@ UnitTest_ = {
 			mandatoryArgumentError(2)
 		end
 
-		if tol ~= nil and type(v1) ~= "number" then
-			customError("#3 should be used only when comparing numbers (#1 is "..type(v1)..").")
+		if tol ~= nil and type(v1) ~= "number" and type(v1) ~= "string" then
+			customError("#3 should be used only when comparing numbers or strings (#1 is "..type(v1)..").")
 		end
 
 		if tol == nil then tol = 0 end
@@ -86,7 +87,7 @@ UnitTest_ = {
 				self:printError("Values should be equal, but got '"..v1.."' and '"..v2.."'.")
 			end
 		elseif type(v1) == "string" and type(v2) == "string" then
-			if v1 == v2 then
+			if levenshtein(v1, v2) <= tol then
 				self.success = self.success + 1
 			else 
 				self.fail = self.fail + 1

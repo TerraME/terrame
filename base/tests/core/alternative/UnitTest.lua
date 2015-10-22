@@ -75,10 +75,10 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(3, "number", "a"))
 
 		local error_func = function()
-			u:assertEquals("abc", "abc", 2)
+			u:assertEquals(false, true, 2)
 		end
 
-		unitTest:assertError(error_func, "#3 should be used only when comparing numbers (#1 is string).")
+		unitTest:assertError(error_func, "#3 should be used only when comparing numbers or strings (#1 is boolean).")
 
 		local error_func = function()
 			u:assertEquals(2, 3)
