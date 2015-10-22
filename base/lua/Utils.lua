@@ -1262,6 +1262,11 @@ function tmpDir(self)
 	if not _Gtme.tmpfolder__ then
 		_Gtme.tmpfolder__ = runCommand("mktemp -d .terrametmp_XXXXX")[1]
 	end
+
+	if not isDir(_Gtme.tmpfolder__) then
+		os.execute("mkdir ".._Gtme.tmpfolder__)
+	end
+
 	return _Gtme.tmpfolder__
 end
 
