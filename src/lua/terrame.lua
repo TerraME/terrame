@@ -555,11 +555,10 @@ local function isMySqlOnPath()
 end
 
 local function isValidDbConnection(command, options)
-	local result, error = _Gtme.runCommand("\""..command.."\" "..options.. " <")
+	local result, err = _Gtme.runCommand("\""..command.."\" "..options.. " <")
 
-	for i = 1, #error, 1 do
-		local out = string.upper(error[i])
-		_Gtme.print(out)
+	for i = 1, #err, 1 do
+		local out = string.upper(err[i])
 		if string.match(out, "ERROR") then
 			if string.match(out, "1045") or string.match(out, "2005") then
 				return false
@@ -573,8 +572,8 @@ end
 function _Gtme.validateMySql()
 	if _Gtme.isWindowsOS() then
 		if not mySqlExists() then
-			local error = "MySql is not installed, version 5.X required."
-			return  error
+			local err = "MySql is not installed, version 5.X required."
+			return  err
 		end
 	end
 	
@@ -620,9 +619,9 @@ function _Gtme.importDatabase(package)
 	end	
 	
 	if not isValidDbConnection(command, options) then
-		local error = "Wrong database connection parameters!"
-		_Gtme.printError(error)
-		return error
+		local err = "Wrong database connection parameters!"
+		_Gtme.printError(err)
+		return err
 	end		
 	
 	local folder = _Gtme.packageInfo(package).data
