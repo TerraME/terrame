@@ -788,7 +788,8 @@ CellularSpace_ = {
 	-- "*.gpm" & Load a Neighborhood from a GPM (generalized proximity matrix) file. \
 	-- Any other & Load a Neighborhood from table stored in the same database of the 
 	-- CellularSpace. \
-	-- @usage config = getConfig()
+	-- @usage -- DONTRUN
+	-- config = getConfig() 
 	-- mhost = config.host
 	-- muser = config.user
 	-- mpassword = config.password

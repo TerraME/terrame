@@ -6,7 +6,8 @@
 local initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
 local baseDir = sessionInfo().path
-local pkgDir = baseDir..s.."packages"
+local pkgDir = _Gtme.makePathCompatibleToAllOS(baseDir..s.."packages")
+
 
 _Gtme.printNote("Creating temporary folder")
 tmpfolder = runCommand("mktemp -d .terramerepository_XXXXX")[1]
@@ -14,14 +15,16 @@ chDir(tmpfolder)
 
 _Gtme.printNote("Copying currently installed packages")
 
-os.execute("cp -R \""..pkgDir.."\" .")
+local cpCmd = _Gtme.makePathCompatibleToAllOS("cp -R \""..pkgDir.."\" .")
+os.execute(cpCmd)
 
 local pkgs = _Gtme.downloadPackagesList()
 
 local report = {
 	packages = 0,
 	errors = 0,
-	createdlogs = 0
+	createdlogs = 0,
+	locallogerrors = 0
 }
 
 _Gtme.printNote("Downloading packages from www.terrame.org/packages")
@@ -161,8 +164,10 @@ end)
 
 _Gtme.printNote("Rolling back to previously installed packages")
 
-os.execute("rm -rf \""..pkgDir.."\"")
-os.execute("cp -R \"packages\" \""..pkgDir.."\"")
+local rmCmd = _Gtme.makePathCompatibleToAllOS("rm -rf \""..pkgDir.."\"")
+os.execute(rmCmd)
+local cpCmd = _Gtme.makePathCompatibleToAllOS("cp -R \"packages\" \""..pkgDir.."\"")
+os.execute(cpCmd)
 
 local finalTime = os.time(os.date("*t"))
 

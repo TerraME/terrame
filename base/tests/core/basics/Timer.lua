@@ -143,7 +143,7 @@ cObj_   userdata
 events  table of size 1
 round   number [1e-05]
 time    number [-inf]
-]])
+]], 8)
 	end,
 	add = function(unitTest)
 		local cont = 0
@@ -292,4 +292,3 @@ time    number [-inf]
 		unitTest:assertEquals(18, cont)
 	end
 }
-

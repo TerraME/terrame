@@ -372,7 +372,9 @@ function _Gtme.executeDoc(package)
 	local result = luadocMain(package_path, lua_files, example_files, package, mdata, mfont, doc_report)
 
 	if isDir(package_path..s.."font") then
-		os.execute("cp "..package_path..s.."font"..s.."* "..package_path..s.."doc"..s.."files")
+		local cmd = "cp "..package_path..s.."font"..s.."* "..package_path..s.."doc"..s.."files"
+		cmd = _Gtme.makePathCompatibleToAllOS(cmd)
+		os.execute(cmd)
 	end
 
 	local all_functions = _Gtme.buildCountTable(package)
