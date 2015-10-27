@@ -507,7 +507,7 @@ function Model(attrTab)
 						else
 							if type(iargv[iname]) ~= "number" then
 								incompatibleTypeError(name.."."..iname, "number", iargv[iname])
-							elseif iargv[iname] < ivalue.min then
+							elseif ivalue.min and iargv[iname] < ivalue.min then
 								customError("Argument "..toLabel(iname, name).." should be greater than or equal to "..ivalue.min..".")
 							elseif ivalue.max and iargv[iname] > ivalue.max then
 								customError("Argument "..toLabel(iname, name).." should be less than or equal to "..ivalue.max..".")

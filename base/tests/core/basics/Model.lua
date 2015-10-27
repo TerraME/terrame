@@ -36,8 +36,8 @@ local Tube = Model{
 	checkZero       = false,
 	filter          = Mandatory("function"),
 	block = {
-		xmin = 0,
-		xmax = math.huge,
+		xmin = Choice{min = 0},
+		xmax = Choice{max = math.huge},
 		ymin = 0,
 		ymax = math.huge,
 		level = Choice{1, 2, 3},
@@ -124,14 +124,14 @@ water            number [200]
 		t = Tube{
 			simulationSteps = 20,
 			observingStep = 0.7,
-			block = {xmax = 10},
+			block = {xmin = 2, xmax = 10},
 			checkZero = true,
 			finalTime = 5,
 			filter = function() end
 		}
 
 		unitTest:assertEquals(t.simulationSteps, 20)
-		unitTest:assertEquals(t.block.xmin, 0)
+		unitTest:assertEquals(t.block.xmin, 2)
 		unitTest:assertEquals(t.block.xmax, 10)
 		unitTest:assertEquals(t.block.level, 1)
 		unitTest:assertEquals(t.block.sleep, 2)
