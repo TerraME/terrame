@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TerraME"
-#define MyAppVersion "1.4.0"
+#define MyAppVersion "1.6.0"
 #define MyAppPublisher "INPE"
 #define MyAppURL "http://www.terrame.org/"
 #define MyAppExeName "terrame.exe"
@@ -25,7 +25,7 @@ DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=..\..\licenses\terrame-license-lgpl-3.0.txt
 OutputDir=setup
-OutputBaseFilename=terrame-1.4.0-win32
+OutputBaseFilename=terrame-1.6.0-win32
 Compression=lzma
 SolidCompression=yes
 ChangesEnvironment=yes
@@ -39,6 +39,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\..\bin\terrame.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\bin\cp.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\bin\find-msys.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\bin\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\bin\libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\bin\libGLESV2.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -65,7 +66,6 @@ Source: "..\..\bin\Qt5OpenGL.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\bin\Qt5PrintSupport.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\bin\Qt5Svg.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\bin\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\qtlua.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\bin\qtluae.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\bin\qwt.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\bin\rm.exe"; DestDir: "{app}"; Flags: ignoreversion
