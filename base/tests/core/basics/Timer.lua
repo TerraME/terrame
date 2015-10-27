@@ -104,6 +104,16 @@ return {
 		unitTest:assertEquals(t.events[1].period, 5) 
 		unitTest:assertEquals(t.events[1].priority, 4) 
 	end,
+	clear = function(unitTest)
+		local timer = Timer{
+			Event{action = function() end},
+			Event{period = 2, action = function() end}
+		}
+
+		timer:clear()
+
+		unitTest:assertEquals(#timer:getEvents(), 0)
+	end,
 	getEvents = function(unitTest)
 		local timer = Timer{
 			Event{action = function()

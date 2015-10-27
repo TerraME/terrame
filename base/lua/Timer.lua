@@ -55,6 +55,15 @@ Timer_ = {
 		table.insert(self.events, pos, event)
 		event.parent = self
 	end,
+	--- Remove all the Events from the Timer.
+	-- @usage timer = Timer{
+	--     Event{action = function() print("step") end}
+	-- }
+	--
+	-- timer:clear()
+	clear = function(self)
+		self.events = {}
+	end,
 	--- Execute the Timer until a final time. It manages the Event queue according to their execution
 	-- time and priority. The Event that has lower execution time and lower priority is executed at
 	-- each step. It this Event does not return false it is scheduled to execute again according to
