@@ -16,7 +16,6 @@ _Gtme.printNote("Copying currently installed packages")
 
 os.execute("cp -R \""..pkgDir.."\" .")
 
-
 local pkgs = _Gtme.downloadPackagesList()
 
 local report = {

@@ -444,7 +444,7 @@ function _Gtme.executeTests(package, fileName)
 
 			print = function(arg)
 				ut.print_calls = ut.print_calls + 1
-				printError("Error: print() call detected with argument '"..arg.."'")
+				printError("Error: print() call detected with argument '"..tostring(arg).."'")
 			end
 
 			xpcall(function() tests = dofile(baseDir..s..eachFolder..s..eachFile) end, function(err)
