@@ -57,6 +57,22 @@ Trajectory_ = {
 	addCell = function(self, cell)
 		deprecatedFunction("addCell", "add")
 	end,
+	--- Remove all Cells from the Trajectory.
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- traj = Trajectory{
+	--     target = cs
+	-- }
+	--
+	-- traj:clear()
+	--
+	-- print(#traj)
+	clear = function(self)
+		self.cells = {}
+		self.cObj_:clear()
+	end,
 	--- Return a copy of the Trajectory. It has the same parent, select, greater and Cells.
 	-- Any change in the cloned Trajectory will not affect the original one.
 	-- @usage cell = Cell{

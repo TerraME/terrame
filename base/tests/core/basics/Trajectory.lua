@@ -181,6 +181,17 @@ xyz     function
 		unitTest:assert(it.cells[2] == cs.cells[2])
 		unitTest:assert(it.cells[3] == cs.cells[3])
 	end,
+	clear = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local t = Trajectory{
+			target = cs
+		}
+
+		t:clear()
+
+		unitTest:assertEquals(#t, 0)
+	end,
 	clone = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 

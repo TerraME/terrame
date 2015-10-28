@@ -325,6 +325,7 @@ Testing save
 Testing file lua/Timer.lua
 Testing Timer
 Testing add
+Testing clear
 Testing execute
 Testing getEvents
 Testing getTime
@@ -334,6 +335,7 @@ Testing #
 Testing file lua/Trajectory.lua
 Testing Trajectory
 Testing add
+Testing clear
 Testing clone
 Testing filter
 Testing get
