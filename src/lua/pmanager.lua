@@ -142,17 +142,22 @@ local function dbButtonClicked()
 
 	msg = msg.."\nConfirm installation?"
 	if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
-		if not _Gtme.buildConfig() then
-			enableAll()
-			return
-		end
+		local success = false
 
-		local result = _Gtme.importDatabase(comboboxPackages.currentText)
+		while not success do
+			if not _Gtme.buildConfig() then
+				enableAll()
+				return
+			end
 
-		if result then
-			qt.dialog.msg_critical("Error: "..result)
-		else
-			qt.dialog.msg_information("Databases sucessfully installed.")
+			local result = _Gtme.importDatabase(comboboxPackages.currentText)
+
+			if result then
+				qt.dialog.msg_critical("Error: "..result)
+			else
+				qt.dialog.msg_information("Databases sucessfully installed.")
+				success = true
+			end
 		end
 	end
 	enableAll()
