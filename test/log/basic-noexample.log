@@ -14,11 +14,13 @@ Please use one from the list below:
  - leontief
  - predator-prey
  - runoff
+ - schelling
  - single-agent
  - single-agents-society
  - sir-basic
  - sir-campaign
  - sir-improved
+ - spatial-game
  - tube-discrete
  - tube-inflow-outflow
  - tube

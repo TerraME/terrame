@@ -52,11 +52,13 @@ Parsing examples/ipd.lua
 Parsing examples/leontief.lua
 Parsing examples/predator-prey.lua
 Parsing examples/runoff.lua
+Parsing examples/schelling.lua
 Parsing examples/single-agent.lua
 Parsing examples/single-agents-society.lua
 Parsing examples/sir-basic.lua
 Parsing examples/sir-campaign.lua
 Parsing examples/sir-improved.lua
+Parsing examples/spatial-game.lua
 Parsing examples/tube-discrete.lua
 Parsing examples/tube-inflow-outflow.lua
 Parsing examples/tube.lua
@@ -151,7 +153,7 @@ Testing createNeighborhood
 Testing cut
 Testing get
 Testing load
-Testing loadNeighborhood
+Skipping loadNeighborhood
 Testing notify
 Testing sample
 Skipping save
@@ -537,7 +539,7 @@ Checking VisualTable.lua
 Checking if all Models are documented
 
 Documentation report:
-Documentation was built in 9.01 seconds.
+Documentation was built in 9.95 seconds.
 35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -545,7 +547,7 @@ No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
-All 292 global functions of the package are documented.
+All 294 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
@@ -555,11 +557,11 @@ No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 292 functions call themselves in their @usage.
-All 292 functions do not have any error in their @usage.
+All 294 functions call themselves in their @usage.
+All 294 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
-All 306 links were correctly built.
-All 22 examples are correctly documented.
+All 310 links were correctly built.
+All 24 examples are correctly documented.
 Summing up, all the documentation was successfully built.
