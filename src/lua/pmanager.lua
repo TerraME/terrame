@@ -239,7 +239,8 @@ local function installButtonClicked()
 
 	if getn(pkgs) == 0 then
 		local msg = "Could not download the packages list. "..
-		            "Please verify your internet connection and run TerraME again."
+		            "Please verify your internet connection and try again. "..
+		            "If it still does not work, close and open TerraME again."
 		qt.dialog.msg_critical(msg)
 		enableAll()
 		return
