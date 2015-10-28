@@ -27,6 +27,8 @@ return{
 	stringToLabel = function(unitTest)
         unitTest:assertEquals(_Gtme.stringToLabel("myFirstString"), "My First String")
         unitTest:assertEquals(_Gtme.stringToLabel(255), "255")
+        unitTest:assertEquals(_Gtme.stringToLabel("value255Abc"), "Value 255 Abc")
+        unitTest:assertEquals(_Gtme.stringToLabel("valueABC233"), "Value ABC 233")
         unitTest:assertEquals(_Gtme.stringToLabel("my_first_string"), "My First String")
         unitTest:assertEquals(_Gtme.stringToLabel("my_first_string_"), "My First String")
         unitTest:assertEquals(_Gtme.stringToLabel("myFirstString_"), "My First String")

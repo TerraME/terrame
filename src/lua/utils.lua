@@ -777,7 +777,6 @@ function _Gtme.stringToLabel(mstring, parent)
 	optionalArgument(2, "string", parent)
 
 	local result = string.upper(string.sub(mstring, 1, 1))
-
 	local size = string.len(mstring)
 
 	if string.sub(mstring, size, size) == "_" then
@@ -804,14 +803,36 @@ function _Gtme.stringToLabel(mstring, parent)
 			i = i + 1
 		end
 	else
-		local nextsub = string.match(mstring, "%u")
+		local nextu = string.match(mstring, "%u")
+		local nextd = string.match(mstring, "%d")
+		local prevu = false
+		local prevd = false
+
 		for i = 2, mstring:len() do
 			local nextchar = string.sub(mstring, i, i)
-			if nextchar == nextsub then
-				result = result.." "..nextsub
-				nextsub = string.match(string.sub(mstring, i + 1, mstring:len()), "%u")
+			if nextchar == nextu then
+				if not prevu then
+					result = result.." "
+				end
+
+				result = result..nextu
+	
+				nextu = string.match(string.sub(mstring, i + 1, mstring:len()), "%u")
+				prevd = false
+				prevu = true
+			elseif nextchar == nextd then
+				if not prevd then
+					result = result.." "
+				end
+
+				result = result..nextd
+				nextd = string.match(string.sub(mstring, i + 1, mstring:len()), "%d")
+				prevu = false
+				prevd = true
 			else
 				result = result..nextchar
+				prevu = false
+				prevd = false
 			end
 		end
 	end

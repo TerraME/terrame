@@ -1167,7 +1167,7 @@ function sessionInfo()
 	return info_ -- this is a global variable created when TerraME is initialized
 end
 
---- Convert a parameter name into a more readable name. It is useful to work
+--- Convert a string into a more readable name. It is useful to work
 -- with Model:init() when the model will be available through a graphical interface.
 -- In graphical interfaces, if the string contains underscores, it
 -- replaces them by spaces and convert the next characters to uppercase.
