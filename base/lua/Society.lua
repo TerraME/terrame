@@ -778,10 +778,15 @@ function Society(data)
 		local status, result = pcall(func) 
 
 		if not status then
+			local match = string.find(result, ":")
+			local str = string.sub(result, match + 1)
+			match = string.find(str, ":")
+			str = string.sub(str, match + 2)
+
 			local msg
 
 			if mtype == "function" then
-				msg = "Could not call function '"..attribute.."' from the Agents. It has some error or it does not exist anymore."
+				msg = "Could not execute function '"..attribute.."' from the Agents: "..str.."."
 			else
 				msg = "Could not find attribute '"..attribute.."' in all the Agents."
 			end

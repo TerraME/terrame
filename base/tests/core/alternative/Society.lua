@@ -202,7 +202,7 @@ return{
 		error_func = function()
 			soc:exec()
 		end
-		unitTest:assertError(error_func, "Could not call function 'exec' from the Agents. It has some error or it does not exist anymore.")
+		unitTest:assertError(error_func, "Could not execute function 'exec' from the Agents: attempt to call field '?' (a number value).")
 
 		error_func = function()
 			soc:water()

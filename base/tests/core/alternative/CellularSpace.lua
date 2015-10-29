@@ -197,7 +197,7 @@ return{
 		error_func = function()
 			cs:exec()
 		end
-		unitTest:assertError(error_func, "Could not call function 'exec' from the Cells. It has some error or it does not exist anymore.")
+		unitTest:assertError(error_func, "Could not execute function 'exec' from the Cells: attempt to call field '?' (a number value).")
 
 		error_func = function()
 			cs:water()
