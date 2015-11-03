@@ -210,9 +210,10 @@ metaTableSocialNetwork_ = {
 	__tostring = _Gtme.tostring
 }
 
---- SocialNetwork represents relations between Agents. It is a set of pairs (connection, 
--- weight), where connection is an Agent and weight
--- is a number storing the relation's strength. This type is used to create relations from
+--- SocialNetwork represents relations between A gents. It is a set of pairs (connection, 
+-- weight), where connection is an A gent and weight
+-- is a number storing the relation's strength. \
+-- This type is used to create relations from
 -- scratch to be used by Agent:addSocialNetwork(). To create well-established SocialNetworks see
 -- Society:createSocialNetwork(). 
 -- It is recommended that a SocialNetwork should contain only Agents that belong to the same Society,

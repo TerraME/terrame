@@ -257,7 +257,7 @@ metaTableNeighborhood_ = {
 
 --- A Neighborhood is a set of pairs (cell, weight), where cell is a neighbor Cell and weight 
 -- is a number storing the relation's strength.
--- Each Cell can have one or more Neighborhoods to represent its proximity relations.
+-- Each Cell can have one or more Neighborhoods to represent its proximity relations. \
 -- This type is used to create Neighborhoods from scratch to be used by
 -- Cell:addNeighborhood(). To create well-established Neighborhoods see
 -- CellularSpace:createNeighborhood(). Neighborhoods can also be loaded from external soures

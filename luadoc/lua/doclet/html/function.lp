@@ -39,8 +39,14 @@ end
 <dd>
 <%end %>
 <%if func.deprecated then%><font color="gray"><%end%>
-<span class="description"><%=
-luadoc.link_description(func.description or "", doc, module_doc, file_doc, from, true, func.name, doc_report)%></span>
+<span class="description"><%
+local description = func.description
+description = string.gsub(description, "\\[ ]*", "<br><br>")
+if file_doc.functions[file_doc.functions[1]] ~= func then
+	description = description.."<br><br>"
+end%>
+
+<%=luadoc.link_description(description or "", doc, module_doc, file_doc, from, true, func.name, doc_report)%></span>
 
 <%if type(func.tabular) == "table" and #func.tabular > 0 then %>
 	<%for i = 1, #func.tabular do 

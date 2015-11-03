@@ -58,7 +58,9 @@
 										<center><img src=<% =loc %> ></center><br><br>
 									<%end%>
 
-									<%= httpLink(doc.files[filepath].description) %>
+									<% local description = doc.files[filepath].description
+									description = string.gsub(description, "\\[ ]*", "<br><br>").."<br><br>"%>
+									<%= httpLink(description) %>
 								</dt>
 							<%end%>
 
