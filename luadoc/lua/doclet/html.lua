@@ -272,7 +272,7 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 		local href = symbol_link(signature, doc, module_doc, file_doc, from, name, doc_report)
 		local anchor
 
-		if doc.files[te_type..".lua"] and belong(te_type, doc.files[te_type..".lua"].functions) then -- it is a type
+		if doc.files[te_type..".lua"] and doc.files[te_type..".lua"].functions[te_type] then -- it is a type
 			if te_type == name then
 				local mtoken = string.sub(token, string.len(name) + 2, string.len(token))
 				anchor = "<a href="..href..">"..mtoken.."</a>"
@@ -307,11 +307,13 @@ function link_description(description, doc, module_doc, file_doc, from, new_tab,
 				local anchor = "<a href="..href..">"..token.."</a>"
 				table.insert(word_table, anchor)
 			end
+
 			types_linked[type_name] = type_name
 			word_table[token] = #word_table
 			description_linked = string.gsub(description_linked, token, "$"..#word_table.."$", 1)
 		end
 	end
+
 	description_linked = string.gsub(description_linked,"%$(%d-)%$", function(key)
 		return word_table[tonumber(key)]
 	end)
