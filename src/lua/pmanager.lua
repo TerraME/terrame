@@ -184,6 +184,7 @@ local function selectPackage()
 	local s = sessionInfo().separator
 	comboboxExamples:clear()
 	comboboxModels:clear()
+	local models
 
 	local result = xpcall(function() getPackage(comboboxPackages.currentText) end, function(err)
 		sessionInfo().fullTraceback = true
@@ -193,6 +194,17 @@ local function selectPackage()
 
 		qt.dialog.msg_critical(merr)
 	end)
+
+	if result then
+		result = xpcall(function() models = _Gtme.findModels(comboboxPackages.currentText) end, function(err)
+			sessionInfo().fullTraceback = true
+			local trace = _Gtme.traceback()
+			local merr = "Error: Package '"..comboboxPackages.currentText.."' could not be loaded:\n\n"
+				..err.."\n\n"..trace
+	
+			qt.dialog.msg_critical(merr)
+		end)
+	end
 
 	if not result then
 		comboboxModels.enabled = false
@@ -208,8 +220,6 @@ local function selectPackage()
 	docpath = docpath..s.."doc"..s.."index.html"
 
 	docButton.enabled = isFile(docpath)
-
-	local models = _Gtme.findModels(comboboxPackages.currentText)
 
 	comboboxModels.enabled = #models > 1
 	configureButton.enabled = #models > 0

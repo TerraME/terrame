@@ -267,25 +267,15 @@ function _Gtme.findModels(package)
 	packagepath = _Gtme.makePathCompatibleToAllOS(packagepath)
 
 	if _Gtme.attributes(packagepath, "mode") ~= "directory" then
-		_Gtme.printError("Error: Package '"..package.."' is not installed.")
-		os.exit()
+		_Gtme.customError("Package '"..package.."' is not installed.")
 	end
 
 	local srcpath = packagepath..s.."lua"..s
 
-	-- issue #556
-	-- if _Gtme.attributes(srcpath, "mode") ~= "directory" then
-		-- _Gtme.printError("Error: Folder 'lua' from package '"..package.."' does not exist.")
-		-- os.exit()
-	-- end
-
 	_Gtme.forEachFile(srcpath, function(fname)
 		found = false
 		local a
-		xpcall(function() a = _Gtme.include(srcpath..fname) end, function(err)
-			_Gtme.printError("Error: Could not load "..fname..": "..err)
-			os.exit()
-		end)
+		a = _Gtme.include(srcpath..fname)
 
 		if found then
 			_Gtme.forEachElement(a, function(idx, value)
@@ -1153,7 +1143,12 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					os.exit()
 				end)
 
-				local models = _Gtme.findModels(package)
+				local models
+
+				xpcall(function() models = _Gtme.findModels(package) end, function(err)
+					_Gtme.printError(err)
+					os.exit()
+				end)
 
 				if #models == 0 then
 					_Gtme.printError("Package \""..package.."\" does not have any Model.")
