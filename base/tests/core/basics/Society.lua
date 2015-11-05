@@ -400,9 +400,33 @@ state_          State
 			count_n  = count_n + #ag:getSocialNetwork("n")
 		end)
 
-
 		unitTest:assertEquals(380, count_c)
 		unitTest:assertEquals(2256, count_n)
+
+		local predator = Agent{
+			energy = 40,
+			execute = function(self)
+			end
+		}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 100
+		}
+	
+		predators:createSocialNetwork{probability = 0.05, name = "friends", symmetric = true}
+		predators:createSocialNetwork{quantity = 1, name = "boss", symmetric = true}
+
+		local count_prob = 0
+		local count_quant = 0
+
+		forEachAgent(predators, function(ag)
+			count_prob  = count_prob  + #ag:getSocialNetwork("friends")
+			count_quant = count_quant + #ag:getSocialNetwork("boss")
+		end)
+
+		unitTest:assertEquals(1492,  count_prob)
+		unitTest:assertEquals(200,   count_quant)
 	end,
 	clear = function(unitTest)
 		local agent1 = Agent{}

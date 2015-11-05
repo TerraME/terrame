@@ -274,7 +274,7 @@ Agent_ = {
 	--
 	-- soc:createSocialNetwork{probability = 0.5, name = "friends"}
 	-- ag = soc:sample()
-	-- ag:getSocialNetwork("friends")	
+	-- ag:getSocialNetwork("friends")
 	-- @see Society:createSocialNetwork
 	-- @see Utils:forEachConnection
 	getSocialNetwork = function(self, id)

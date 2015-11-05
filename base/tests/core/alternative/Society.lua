@@ -338,6 +338,15 @@ return{
 
 		error_func = function()
 			sc1:createSocialNetwork{
+				strategy = "quantity",
+				quantity = 2,
+				symmetric = 2
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("symmetric", "boolean", 2))
+
+		error_func = function()
+			sc1:createSocialNetwork{
 				strategy = "probability",
 				probability = "wrongValue"
 			}
@@ -378,6 +387,15 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 2))
+
+		error_func = function()
+			sc1:createSocialNetwork{
+				strategy = "probability",
+				probability = 0.1,
+				symmetric = 2
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("symmetric", "boolean", 2))
 
 		error_func = function()
 			sc1:createSocialNetwork{strategy = "cell", name = "c"}

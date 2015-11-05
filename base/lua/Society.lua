@@ -85,10 +85,9 @@ local function getSocialNetworkByQuantity(soc, data)
 	return function(agent)
 		local quant = 0
 		local rs = SocialNetwork()
-		local rand = Random()
 
 		while quant < data.quantity do
-			local randomagent = soc:sample(rand)
+			local randomagent = soc:sample()
 			if randomagent ~= agent and not rs:isConnection(randomagent) then
 				rs:add(randomagent, 1)
 				quant = quant + 1
@@ -213,6 +212,10 @@ Society_ = {
 	-- strategy becomes "quantity".
 	-- @arg data.self A boolean value indicating whether the Agent can be connected to itself.
 	-- The default value is false.
+	-- @arg data.symmetric A boolean value indicating that, if Agent a is connected to Agent b,
+	-- then Agent b will be connected to Agent a. In practice, if this option is used, the
+	-- number of connections double. For example, if one use this with 20% of probability,
+	-- on average, Agents will be connected with 40% of probability. The default value is false.
 	-- @tabular strategy
 	-- Strategy &
 	-- Description &
@@ -222,7 +225,7 @@ Society_ = {
 	-- same Cell the Agent belongs. & &
 	-- name, placement, self, inmemory \
 	-- "function" &
-	-- Create a SocialNetwork according to a filter function. & filter &
+	-- Create a SocialNetwork according to a filter function applied to each Agent of the Society. & filter &
 	-- name, inmemory \
 	-- "neighbor" &
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
@@ -230,10 +233,10 @@ Society_ = {
 	-- & name, neighborhood, placement, inmemory \
 	-- "probability" &
 	-- Applies a probability for each pair of Agents (excluding the agent itself). &
-	-- probability & name, inmemory \
+	-- probability & name, inmemory, symmetric \
 	-- "quantity" &
 	-- Number of connections randomly taken from the Society (excluding the agent itself). &
-	-- quantity & name, inmemory \
+	-- quantity & name, inmemory, symmetric \
 	-- "void" &
 	-- Create an empty SocialNetwork for each Agent of the Society. &
 	-- & name \
@@ -292,9 +295,10 @@ Society_ = {
 
 		switch(data, "strategy"):caseof{
 			probability = function() 
-				verifyUnnecessaryArguments(data, {"strategy", "probability", "name", "inmemory"})
+				verifyUnnecessaryArguments(data, {"strategy", "probability", "name", "inmemory", "symmetric"})
 
 				mandatoryTableArgument(data, "probability", "number")
+				defaultTableValue(data, "symmetric", false)
 
 				if data.probability <= 0 or data.probability > 1 then
 					incompatibleValueError("probability", "a number between 0 and 1", data.probability)
@@ -336,9 +340,10 @@ Society_ = {
 				data.mfunc = getSocialNetworkByNeighbor
 			end,
 			quantity = function()
-				verifyUnnecessaryArguments(data, {"strategy", "quantity", "name", "inmemory"})
+				verifyUnnecessaryArguments(data, {"strategy", "quantity", "name", "inmemory", "symmetric"})
 
 				defaultTableValue(data, "quantity", 1)
+				defaultTableValue(data, "symmetric", false)
 
 				if data.quantity > #self then
 					local merror = "It is not possible to connect such amount of agents ("..data.quantity.."). "..
@@ -369,6 +374,18 @@ Society_ = {
 		else
 			forEachAgent(self, function(agent)
 				agent:addSocialNetwork(func, name)
+			end)
+		end
+
+		if data.symmetric then
+			forEachAgent(self, function(agent)
+				forEachConnection(agent, name, function(agent, connection)
+					local sn = connection:getSocialNetwork(name)
+
+					if not sn:isConnection(agent) then
+						sn:add(agent)
+					end
+				end)
 			end)
 		end
 	end,
