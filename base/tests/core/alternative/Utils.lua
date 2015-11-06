@@ -166,6 +166,11 @@ return{
 			forEachElement(agent, 12345)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 12345))
+
+		error_func = function()
+			forEachElement("abc", function() end)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", "abc"))
 	end,
 	forEachFile = function(unitTest)
 		local error_func = function()
@@ -245,6 +250,11 @@ return{
 			forEachOrderedElement({aaa = 2, aaA = 3}, function() end)
 		end
 		unitTest:assertError(error_func, "forEachOrderedElement() cannot work with two indexes having the same lower case.")
+
+		error_func = function()
+			forEachOrderedElement("abc", function() end)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", "abc"))
 	end,
 	forEachSocialNetwork = function(unitTest)
 		local ag = Agent{}

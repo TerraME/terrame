@@ -544,6 +544,8 @@ end
 function forEachElement(obj, func)
 	if obj == nil then
 		mandatoryArgumentError(1)
+	elseif _Gtme.type(obj) ~= "table" then
+		incompatibleTypeError(1, "table", obj)
 	elseif func == nil then
 		mandatoryArgumentError(2)
 	elseif type(func) ~= "function" then
@@ -573,6 +575,7 @@ function forEachFile(folder, f)
 		if not isDir(folder) then
 			customError("Folder \""..folder.."\" is not a valid directory.") -- SKIP
 		end
+
 		if not pcall(function() folder = dir(folder) end) then
 			return true
 		end
@@ -584,6 +587,7 @@ function forEachFile(folder, f)
 	for i = 1, #folder do
 		if f(folder[i]) == false then return false end
 	end
+
 	return true
 end
 
@@ -695,6 +699,8 @@ end
 function forEachOrderedElement(obj, func)
 	if obj == nil then
 		mandatoryArgumentError(1)
+	elseif _Gtme.type(obj) ~= "table" then
+		incompatibleTypeError(1, "table", obj)
 	elseif type(func) ~= "function" then
 		incompatibleTypeError(2, "function", func)
 	end
