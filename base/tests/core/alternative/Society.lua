@@ -260,7 +260,8 @@ return{
 			neighbor = true,
 			probability = true,
 			quantity = true,
-			void = true
+			void = true,
+			erdos = true,
 		}
 			
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("terralab", "strategy", options))
@@ -451,21 +452,35 @@ return{
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("quantity"))
 
-		local ag1 = Agent{
-			name = "nonfoo",
-			init = function(self)
-				self.age = Random():integer(10)
-			end,
-			execute = function(self)
-				self.age = self.age + 1
-				self:walk()
-				forEachAgent(self:getCell(), function(agent)
-					if agent.name == "foo" then
-						findCounter = findCounter + 1
-					end
-				end)
-			end
-		}
+		-- social networks that must be "in memory"
+
+		local ag1 = Agent{}
+		local sc1 = Society{instance = ag1, quantity = 20}
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "erdos", quantity = "abc"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("quantity", "number", "abc"))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "erdos", quantity = 4.5}
+		end
+		unitTest:assertError(error_func, integerArgumentMsg("quantity", 4.5))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "erdos", quantity = 0}
+		end
+		unitTest:assertError(error_func, positiveArgumentMsg("quantity", 0))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "erdos", quantity = 5, inmemory = true}
+		end
+		unitTest:assertError(error_func, "Argument 'inmemory' does not work with strategy 'erdos'.")
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "erdos", quantity = 5, abc = true}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("abc"))
 	end,
 	get = function(unitTest)
 		local ag1 = Agent{

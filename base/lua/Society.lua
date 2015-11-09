@@ -224,6 +224,9 @@ Society_ = {
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
 	-- same Cell the Agent belongs. & &
 	-- name, placement, self, inmemory \
+	-- "erdos" & Create a SocialNetwork with a given number of random connections. This strategy implements
+	-- the algorithm proposed by Erdos and Renyi (1959) "On Random Graphs I". Publicationes Mathematicae 
+	-- 6: 290-297 & strategy, quantity & \
 	-- "function" &
 	-- Create a SocialNetwork according to a filter function applied to each Agent of the Society. & filter &
 	-- name, inmemory \
@@ -285,7 +288,7 @@ Society_ = {
 
 		defaultTableValue(data, "name", "1")
 
-		if data.strategy ~= "void" then
+		if not belong(data.strategy, {"void", "erdos"}) then
 			defaultTableValue(data, "inmemory", true)
 		end
 
@@ -358,6 +361,30 @@ Society_ = {
 
 				data.mfunc = getSocialNetworkByQuantity
 			end,
+			erdos = function()
+				mandatoryTableArgument(data, "quantity", "number")
+				integerTableArgument(data, "quantity")
+				positiveTableArgument(data, "quantity")
+
+				verify(data.inmemory == nil, "Argument 'inmemory' does not work with strategy 'erdos'.")
+				verifyUnnecessaryArguments(data, {"strategy", "name", "quantity"})
+
+				local name = data.name
+				if name == "1" then name = nil end
+				self:createSocialNetwork{strategy = "void", name = name}
+
+				for i = 1, data.quantity do
+					local ag1 = self:sample()
+					local ag2 = ag1
+
+					while ag2 == ag1 or ag2:getSocialNetwork(data.name):isConnection(ag1) do
+						ag2 = self:sample()
+					end
+
+					ag1:getSocialNetwork(data.name):add(ag2, 1)
+					ag2:getSocialNetwork(data.name):add(ag1, 1)
+				end
+			end,
 			void = function()
 				verifyUnnecessaryArguments(data, {"strategy", "name"})
 
@@ -365,6 +392,8 @@ Society_ = {
 				data.inmemory = true
 			end
 		}
+
+		if not data.mfunc then return end 
 
 		local func = data.mfunc(self, data)
 		local name = data.name

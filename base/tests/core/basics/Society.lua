@@ -434,6 +434,29 @@ state_          State
 
 		unitTest:assertEquals(1492,  count_prob)
 		unitTest:assertEquals(200,   count_quant)
+
+		-- social networks that must be "in memory"
+		local predator = Agent{
+			energy = 40,
+			execute = function(self)
+			end
+		}
+
+		local predators = Society{
+			instance = predator,
+			quantity = 100
+		}
+
+		predators:createSocialNetwork{strategy = "erdos", quantity = 200, name = "erdos"}
+
+		local count_prob = 0
+		local count_erdos = 0
+
+		forEachAgent(predators, function(ag)
+			count_erdos = count_erdos + #ag:getSocialNetwork("erdos")
+		end)
+
+		unitTest:assertEquals(400,   count_erdos)
 	end,
 	clear = function(unitTest)
 		local agent1 = Agent{}
