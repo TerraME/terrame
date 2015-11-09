@@ -267,12 +267,10 @@ local function checkShape(self)
 end
 
 local function checkVirtual(self)
-	mandatoryTableArgument(self, "xdim", "number")
-	defaultTableValue(self, "ydim", self.xdim)
-
 	integerTableArgument(self, "xdim")
 	positiveTableArgument(self, "xdim")
 
+	defaultTableValue(self, "ydim", self.xdim)
 	integerTableArgument(self, "ydim")
 	positiveTableArgument(self, "ydim")
 end

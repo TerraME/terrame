@@ -240,6 +240,10 @@ end
 -- _, err = pcall(function() integerTableArgument(mtable, "bbb") end)
 -- print(err)
 function integerTableArgument(table, attr)
+	if type(table[attr]) ~= "number" then
+		incompatibleTypeError(attr, "number", table[attr])
+	end
+
 	if math.floor(table[attr]) ~= table[attr] then
 		customError(integerArgumentMsg(attr, table[attr]))
 	end
@@ -417,6 +421,10 @@ end
 -- _, err = pcall(function() positiveTableArgument(table, "bbb") end)
 -- print(err)
 function positiveTableArgument(table, attr, zero)
+	if type(table[attr]) ~= "number" then
+		incompatibleTypeError(attr, "number", table[attr])
+	end
+
 	if not zero then
 		if table[attr] <= 0 then customError(positiveArgumentMsg(attr, table[attr], false)) end
 	else

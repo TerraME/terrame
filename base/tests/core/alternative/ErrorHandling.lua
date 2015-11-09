@@ -66,6 +66,18 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", -1))
 	end,
+	integerTableArgument = function(unitTest)
+		local error_func = function()
+			integerTableArgument({}, "value")
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("value", "number", nil))
+	end,
+	positiveTableArgument = function(unitTest)
+		local error_func = function()
+			positiveTableArgument({}, "value")
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("value", "number", nil))
+	end,
 	suggestion = function(unitTest)
 		local t = {
 			"aaaaa",
