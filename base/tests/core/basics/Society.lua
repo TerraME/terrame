@@ -449,17 +449,21 @@ state_          State
 
 		predators:createSocialNetwork{strategy = "erdos", quantity = 200, name = "erdos"}
 		predators:createSocialNetwork{strategy = "barabasi", start = 50, quantity = 10, name = "barabasi"}
+		predators:createSocialNetwork{strategy = "watts", probability = 0.1, quantity = 2, name = "watts"}
 
 		local count_barabasi = 0
 		local count_erdos = 0
+		local count_watts = 0
 
 		forEachAgent(predators, function(ag)
 			count_barabasi = count_barabasi + #ag:getSocialNetwork("barabasi")
-			count_erdos = count_erdos + #ag:getSocialNetwork("erdos")
+			count_erdos    = count_erdos    + #ag:getSocialNetwork("erdos")
+			count_watts    = count_watts    + #ag:getSocialNetwork("watts")
 		end)
 
-		unitTest:assertEquals(1000,  count_barabasi)
-		unitTest:assertEquals(400,   count_erdos)
+		unitTest:assertEquals(1000, count_barabasi)
+		unitTest:assertEquals(400,  count_erdos)
+		unitTest:assertEquals(400,  count_watts)
 	end,
 	clear = function(unitTest)
 		local agent1 = Agent{}

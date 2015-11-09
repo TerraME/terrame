@@ -196,20 +196,23 @@ Society_ = {
 	-- example when using Utils:forEachConnection(). In this case, if any of the attributes 
 	-- the SocialNetwork is based on changes then the resulting SocialNetwork might be different.
 	-- For instance, if the SocialNetwork of an Agent is based on its Neighborhood and the Agent
-	-- walks to another Cell, a SocialNetwork not in memory will also be updated. 
-	-- SocialNetworks not in memory also help the simulation to run with larger datasets,
+	-- walks to another Cell, a SocialNetwork not inmemory will also be updated. 
+	-- SocialNetworks not inmemory also help the simulation to run with larger datasets,
 	-- as they are not explicitly represented, but they consume more
 	-- time as they need to be built again and again along the simulation.
+	-- Note that not inmemory relations cannot be changed manually (for example by using 
+	-- SocialNetwork:add()), because the relation is recomputed every time it is needed.
 	-- @arg data.neighborhood A string with the name of the Neighborhood that will be used to
 	-- create the SocialNetwork. The default value is "1".
 	-- @arg data.placement A string with the name of the placement that will be used to
 	-- create the SocialNetwork. The default value is "placement".
-	-- @arg data.probability A number between 0 and 1 indicating the probability of each
-	-- connection. The probability is applied for each pair of Agents. When using this argument,
+	-- @arg data.probability A number between 0 and 1 indicating a probability. The
+	-- semantics associated to the probability depends on the argument strategy.
+	-- When using this argument,
 	-- the default value of strategy becomes "probability".
-	-- @arg data.quantity A number indicating the number of connections each Agent will have,
-	-- taking randomly from the whole Society. When using this argument, the default value of
-	-- strategy becomes "quantity".
+	-- @arg data.quantity A number indicating a quantity of connections. The semantics associated
+	-- to this value depends on the argument strategy.
+	-- When using this argument, the default value of strategy becomes "quantity".
 	-- @arg data.self A boolean value indicating whether the Agent can be connected to itself.
 	-- The default value is false.
 	-- @arg data.start The number of agents without any connection in the initial group. New
@@ -241,14 +244,18 @@ Society_ = {
 	-- neighbor Cells of the one the Agent belongs. &
 	-- & name, neighborhood, placement, inmemory \
 	-- "probability" &
-	-- Applies a probability for each pair of Agents (excluding the agent itself). &
+	-- Applies a probability for each pair of Agents to be connected (excluding the Agent itself). &
 	-- probability & name, inmemory, symmetric \
 	-- "quantity" &
-	-- Number of connections randomly taken from the Society (excluding the agent itself). &
+	-- Each Agent will be connected to a given number of other Agents randomly taken from the Society
+	-- (excluding the Agent itself). &
 	-- quantity & name, inmemory, symmetric \
 	-- "void" &
 	-- Create an empty SocialNetwork for each Agent of the Society. &
 	-- & name \
+	-- "watts" & Create a SocialNetwork according to the strategy proposed by
+	-- Watts and Strogarz (1998) Collective dynamics of 'small-world' networks. Nature 393, 440-442.
+	-- & probability, quantity, strategy & name  \
 	-- @usage ag = Agent{}
 	--
 	-- soc = Society{
@@ -294,7 +301,7 @@ Society_ = {
 
 		defaultTableValue(data, "name", "1")
 
-		if belong(data.strategy, {"void", "erdos", "barabasi"}) then
+		if belong(data.strategy, {"void", "erdos", "barabasi", "watts"}) then
 			verify(data.inmemory == nil, "Argument 'inmemory' does not work with strategy '"..data.strategy.."'.")
 		else
 			defaultTableValue(data, "inmemory", true)
@@ -435,6 +442,41 @@ Society_ = {
 
 					count = count + data.quantity + 1
 
+				end
+			end,
+			watts = function()
+				mandatoryTableArgument(data, "quantity", "number")
+				integerTableArgument(data, "quantity")
+				positiveTableArgument(data, "quantity")
+
+				mandatoryTableArgument(data, "probability", "number")
+				verify(data.probability >= 0 and data.probability <= 1, "Argument 'probability' should be between 0 and 1.")
+
+				verifyUnnecessaryArguments(data, {"strategy", "name", "quantity", "probability"})
+
+				local name = data.name
+				if name == "1" then name = nil end
+				self:createSocialNetwork{strategy = "void", name = name}
+
+				for i = 1, #self do
+					local ag1 = self.agents[i]
+					local sn = ag1:getSocialNetwork(data.name)
+					local ag2
+
+					for dist = 1, data.quantity do
+						if Random():number() < data.probability then
+							ag2 = ag1
+						else
+							ag2 = self.agents[((i - 1 + dist) % #self) + 1]
+						end
+
+						while ag2 == ag1 or sn:isConnection(ag2) do
+							ag2 = self:sample()
+						end
+
+						ag2:getSocialNetwork(data.name):add(ag1)
+						sn:add(ag2)
+					end
 				end
 			end,
 			void = function()

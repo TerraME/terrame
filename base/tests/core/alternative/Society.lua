@@ -262,6 +262,7 @@ return{
 			quantity = true,
 			void = true,
 			erdos = true,
+			watts = true,
 			barabasi = true
 		}
 			
@@ -541,6 +542,40 @@ return{
 		end
 		unitTest:assertError(error_func, "Argument 'quantity' should be less than 'start'.")
 
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "watts", probability = 0.3, quantity = "abc"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("quantity", "number", "abc"))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "watts", probability = 0.3, quantity = 4.5}
+		end
+		unitTest:assertError(error_func, integerArgumentMsg("quantity", 4.5))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "watts", probability = 0.3, quantity = 0}
+		end
+		unitTest:assertError(error_func, positiveArgumentMsg("quantity", 0))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "watts", quantity = 4, probability = "abc"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("probability", "number", "abc"))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "watts", quantity = 4, probability = 4.5}
+		end
+		unitTest:assertError(error_func, "Argument 'probability' should be between 0 and 1.")
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "watts", quantity = 5, inmemory = true}
+		end
+		unitTest:assertError(error_func, "Argument 'inmemory' does not work with strategy 'watts'.")
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "watts", quantity = 5, probability = 0.8, abc = true}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("abc"))
 	end,
 	get = function(unitTest)
 		local ag1 = Agent{
