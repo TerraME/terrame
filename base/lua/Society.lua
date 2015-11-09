@@ -682,8 +682,13 @@ Society_ = {
 	-- }
 	--
 	-- groups = soc:split("gender")
-	-- print(#groups.male)
-	-- print(#groups.female)
+	-- if groups.male then
+	--     print(#groups.male)
+	-- end
+	--
+	-- if groups.female then
+	--     print(#groups.female)
+	-- end
 	-- 
 	-- groups2 = soc:split(function(ag)
 	--     if ag.age > 60 then 
