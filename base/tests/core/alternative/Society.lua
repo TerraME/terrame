@@ -262,6 +262,7 @@ return{
 			quantity = true,
 			void = true,
 			erdos = true,
+			barabasi = true
 		}
 			
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("terralab", "strategy", options))
@@ -287,6 +288,15 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("probability"))
+
+		error_func = function()
+			sc1:createSocialNetwork{
+				strategy = "void",
+				name = "void2",
+				inmemory = false
+			}
+		end
+		unitTest:assertError(error_func, "Argument 'inmemory' does not work with strategy 'void'.")
 
 		error_func = function()
 			sc1:createSocialNetwork{
@@ -453,7 +463,6 @@ return{
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("quantity"))
 
 		-- social networks that must be "in memory"
-
 		local ag1 = Agent{}
 		local sc1 = Society{instance = ag1, quantity = 20}
 
@@ -481,6 +490,57 @@ return{
 			sc1:createSocialNetwork{strategy = "erdos", quantity = 5, abc = true}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("abc"))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "barabasi", start = 3, quantity = "abc"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("quantity", "number", "abc"))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "barabasi", start = 3, quantity = 4.5}
+		end
+		unitTest:assertError(error_func, integerArgumentMsg("quantity", 4.5))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "barabasi", start = 3, quantity = 0}
+		end
+		unitTest:assertError(error_func, positiveArgumentMsg("quantity", 0))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "barabasi", quantity = 4, start = "abc"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("start", "number", "abc"))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "barabasi", quantity = 4, start = 4.5}
+		end
+		unitTest:assertError(error_func, integerArgumentMsg("start", 4.5))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "barabasi", quantity = 4, start = 0}
+		end
+		unitTest:assertError(error_func, positiveArgumentMsg("start", 0))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "barabasi", quantity = 5, inmemory = true}
+		end
+		unitTest:assertError(error_func, "Argument 'inmemory' does not work with strategy 'barabasi'.")
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "barabasi", quantity = 5, start = 8, abc = true}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("abc"))
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "barabasi", quantity = 5, start = 21}
+		end
+		unitTest:assertError(error_func, "Argument 'start' should be less than the total of Agents in the Society.")
+
+		error_func = function()
+			sc1:createSocialNetwork{strategy = "barabasi", quantity = 5, start = 2}
+		end
+		unitTest:assertError(error_func, "Argument 'quantity' should be less than 'start'.")
+
 	end,
 	get = function(unitTest)
 		local ag1 = Agent{

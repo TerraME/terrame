@@ -212,6 +212,9 @@ Society_ = {
 	-- strategy becomes "quantity".
 	-- @arg data.self A boolean value indicating whether the Agent can be connected to itself.
 	-- The default value is false.
+	-- @arg data.start The number of agents without any connection in the initial group. New
+	-- agents are connected to agents in this group and then added to the group. This argument
+	-- is useful only for "barabasi" strategy.
 	-- @arg data.symmetric A boolean value indicating that, if Agent a is connected to Agent b,
 	-- then Agent b will be connected to Agent a. In practice, if this option is used, the
 	-- number of connections double. For example, if one use this with 20% of probability,
@@ -220,13 +223,16 @@ Society_ = {
 	-- Strategy &
 	-- Description &
 	-- Compulsory arguments & Optional arguments \
+	-- "barabasi" & Create a SocialNetwork according to the strategy proposed by Barabasi and
+	-- Albert "Emergence of scaling in random networks" Science 286 509-512 (1999). &
+	-- strategy, start, quantity & name \
 	-- "cell" &
 	-- Create a dynamic SocialNetwork for each Agent of the Society with every Agent within the
 	-- same Cell the Agent belongs. & &
 	-- name, placement, self, inmemory \
 	-- "erdos" & Create a SocialNetwork with a given number of random connections. This strategy implements
-	-- the algorithm proposed by Erdos and Renyi (1959) "On Random Graphs I". Publicationes Mathematicae 
-	-- 6: 290-297 & strategy, quantity & \
+	-- the algorithm proposed by Erdos and Renyi (1959) "On random graphs I". Publicationes Mathematicae 
+	-- 6: 290-297 & strategy, quantity & name \
 	-- "function" &
 	-- Create a SocialNetwork according to a filter function applied to each Agent of the Society. & filter &
 	-- name, inmemory \
@@ -288,7 +294,9 @@ Society_ = {
 
 		defaultTableValue(data, "name", "1")
 
-		if not belong(data.strategy, {"void", "erdos"}) then
+		if belong(data.strategy, {"void", "erdos", "barabasi"}) then
+			verify(data.inmemory == nil, "Argument 'inmemory' does not work with strategy '"..data.strategy.."'.")
+		else
 			defaultTableValue(data, "inmemory", true)
 		end
 
@@ -366,7 +374,6 @@ Society_ = {
 				integerTableArgument(data, "quantity")
 				positiveTableArgument(data, "quantity")
 
-				verify(data.inmemory == nil, "Argument 'inmemory' does not work with strategy 'erdos'.")
 				verifyUnnecessaryArguments(data, {"strategy", "name", "quantity"})
 
 				local name = data.name
@@ -383,6 +390,51 @@ Society_ = {
 
 					ag1:getSocialNetwork(data.name):add(ag2, 1)
 					ag2:getSocialNetwork(data.name):add(ag1, 1)
+				end
+			end,
+			barabasi = function()
+				mandatoryTableArgument(data, "start", "number")
+				integerTableArgument(data, "start")
+				positiveTableArgument(data, "start")
+
+				mandatoryTableArgument(data, "quantity", "number")
+				integerTableArgument(data, "quantity")
+				positiveTableArgument(data, "quantity")
+
+				verify(data.start < #self, "Argument 'start' should be less than the total of Agents in the Society.")
+				verify(data.quantity < data.start, "Argument 'quantity' should be less than 'start'.")
+				verifyUnnecessaryArguments(data, {"strategy", "start", "name", "quantity"})
+
+				local name = data.name
+				if name == "1" then name = nil end
+				self:createSocialNetwork{strategy = "void", name = name}
+
+				local count = data.start
+
+				for i = data.start + 1, #self do
+					local agent = self.agents[i]
+					local sn = agent:getSocialNetwork(data.name)
+
+					while #sn < data.quantity do
+						local value = Random():integer(1, count)
+						local position = 0
+
+						while value > 0 do
+							position = position + 1
+							value = value - #self.agents[position]:getSocialNetwork(data.name) - 1
+						end
+
+						local candidate = self.agents[position]
+
+						if not sn:isConnection(candidate) then
+							candidate:getSocialNetwork(data.name):add(agent)
+							sn:add(candidate)
+							count = count + 1
+						end
+					end
+
+					count = count + data.quantity + 1
+
 				end
 			end,
 			void = function()
