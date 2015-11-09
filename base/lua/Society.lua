@@ -32,7 +32,7 @@ end
 
 local function getSocialNetworkByCell(soc, data)
 	return function(agent)
-		local  rs = SocialNetwork()
+		local rs = SocialNetwork()
 		forEachAgent(agent:getCell(data.placement), function(agentwithin)
 			if agent ~= agentwithin or data.self then
 				rs:add(agentwithin, 1)
@@ -362,6 +362,7 @@ Society_ = {
 				verifyUnnecessaryArguments(data, {"strategy", "name"})
 
 				data.mfunc = getEmptySocialNetwork
+				data.inmemory = true
 			end
 		}
 

@@ -324,6 +324,13 @@ state_          State
 		}
 		unitTest:assertEquals(0, #sc:sample():getSocialNetwork("void"))
 
+		local ag1 = sc:sample()
+		local ag2 = sc:sample()
+
+		ag1:getSocialNetwork("void"):add(ag2)
+
+		unitTest:assertEquals(1, #ag1:getSocialNetwork("void"))
+
 		-- on the fly social networks
 		local predator = Agent{
 			energy = 40,
@@ -354,7 +361,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(6614,  count_prob)
+		unitTest:assertEquals(6617,  count_prob)
 		unitTest:assertEquals(100,   count_quant)
 		unitTest:assertEquals(10000, count_all)
 
