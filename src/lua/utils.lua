@@ -844,3 +844,12 @@ function _Gtme.stringToLabel(mstring, parent)
 	end
 end
 
+function _Gtme.cleanErrorMessage(err)
+	local match = string.find(err, ":")
+	local str = string.sub(err, match + 1)
+	match = string.find(str, ":")
+	str = string.sub(str, match + 2)
+
+	return str
+end
+

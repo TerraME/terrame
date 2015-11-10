@@ -1247,11 +1247,7 @@ function CellularSpace(data)
 		local status, result = pcall(func) 
 
 		if not status then
-			local match = string.find(result, ":")
-			local str = string.sub(result, match + 1)
-			match = string.find(str, ":")
-			str = string.sub(str, match + 2)
-
+			local str = _Gtme.cleanErrorMessage(result)
 			local msg
 
 			if mtype == "function" then

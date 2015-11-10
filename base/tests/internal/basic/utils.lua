@@ -24,6 +24,12 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	cleanErrorMessage = function(unitTest)
+		local str = "...o/github/terrame/bin/packages/base/lua/CellularSpace.lua:871: "
+		local err = "attempt to call field '?' (a string value)"
+
+		unitTest:assertEquals(_Gtme.cleanErrorMessage(str..err), err)
+	end,
 	stringToLabel = function(unitTest)
         unitTest:assertEquals(_Gtme.stringToLabel("myFirstString"), "My First String")
         unitTest:assertEquals(_Gtme.stringToLabel(255), "255")
