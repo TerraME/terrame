@@ -47,7 +47,7 @@ map = Map{
 	target = cs,
 	grouping = "placement",
 	value = {0, 1},
-	color = {"black", "white"}
+	color = {"black", "blue"}
 }
 
 t:execute(120)

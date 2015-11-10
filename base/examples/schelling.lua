@@ -106,7 +106,7 @@ map = Map{
 	target = cells,
 	select = "color",
 	value = {"empty", "black", "red"},
-	color = {"white", "black", "red"}
+	color = {"lightGray", "black", "red"}
 }
 
 Chart{

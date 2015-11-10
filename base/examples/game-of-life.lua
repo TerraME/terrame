@@ -50,7 +50,7 @@ cs:createNeighborhood()
 m = Map{
 	target = cs,
 	select = "state",
-	color = {"black", "white"},
+	color = {"black", "lightGray"},
 	value = {"alive", "dead"}
 }
 
