@@ -852,18 +852,33 @@ CellularSpace_ = {
 			positiveArgument(1, modelTime, true)
 		end
 
-		if self.obsattrs_ then
-			forEachElement(self.obsattrs_, function(idx)
-				self[idx.."_"] = self[idx](self)
-			end)
-		end
-
-		if self.cellobsattrs_ then
-			forEachCell(self, function(cell)
-				forEachElement(self.cellobsattrs_, function(idx)
-					cell[idx.."_"] = cell[idx](cell)
+		local midx = ""
+		local typename = ""
+		local ok, result = pcall(function()
+			if self.obsattrs_ then
+				typename = "CellularSpace"
+				forEachElement(self.obsattrs_, function(idx)
+					midx = idx
+					self[idx.."_"] = self[idx](self)
 				end)
-			end)
+			end
+
+			if self.cellobsattrs_ then
+				typename = "Cell"
+				forEachElement(self.cellobsattrs_, function(idx)
+					midx = idx
+					forEachCell(self, function(cell)
+						cell[idx.."_"] = cell[idx](cell)
+					end)
+				end)
+			end
+		end)
+
+		if not ok then
+			local str = _Gtme.cleanErrorMessage(result)
+			local msg = "Could not execute function '"..midx.."' from "..typename..": "..str.."."
+
+			customError(msg)
 		end
 
 		self.cObj_:notify(modelTime)

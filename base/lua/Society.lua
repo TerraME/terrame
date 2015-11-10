@@ -585,19 +585,31 @@ Society_ = {
 			positiveArgument(1, modelTime, true)
 		end
 
-		if self.obsattrs_ then
-			forEachElement(self.obsattrs_, function(idx)
-				if idx == "quantity_" then
-					self.quantity_ = #self
-				else
-					self[idx.."_"] = self[idx](self)
-				end
-			end)
+		local midx = ""
+		local ok, result = pcall(function()
+			if self.obsattrs_ then
+				forEachElement(self.obsattrs_, function(idx)
+					if idx == "quantity_" then
+						self.quantity_ = #self
+					else
+						midx = idx
+						self[idx.."_"] = self[idx](self)
+					end
+				end)
+			end
+		end)
+
+		if not ok then
+			local str = _Gtme.cleanErrorMessage(result)
+			local msg = "Could not execute function '"..midx.."': "..str.."."
+
+			customError(msg)
 		end
 
 		forEachAgent(self, function(agent)
 			agent:notify(modelTime)
 		end)
+
 		self.cObj_:notify(modelTime)
 	end,
 	--- Remove a given Agent from the Society.

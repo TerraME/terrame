@@ -202,10 +202,21 @@ Cell_ = {
 			positiveArgument(1, modelTime, true)
 		end
 
-		if self.obsattrs_ then
-			forEachElement(self.obsattrs_, function(idx)
-				self[idx.."_"] = self[idx](self)
-			end)
+		local midx = ""
+		local ok, result = pcall(function()
+			if self.obsattrs_ then
+				forEachElement(self.obsattrs_, function(idx)
+					midx = idx
+					self[idx.."_"] = self[idx](self)
+				end)
+			end
+		end)
+
+		if not ok then
+			local str = _Gtme.cleanErrorMessage(result)
+			local msg = "Could not execute function '"..midx.."': "..str.."."
+
+			customError(msg)
 		end
 
 		self.cObj_:notify(modelTime)
