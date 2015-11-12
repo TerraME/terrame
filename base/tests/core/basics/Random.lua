@@ -299,6 +299,38 @@ sample   function
 		unitTest:assertEquals(sum.poor, 106)
 		unitTest:assertEquals(sum.middle, 60)
 		unitTest:assertEquals(sum.rich, 34)
+
+		local c = Choice{1, 2, 3}
+		c = Random{choice = c}
+
+		unitTest:assertEquals(c:sample(), 3)
+		unitTest:assertEquals(c:sample(), 1)
+		unitTest:assertEquals(c:sample(), 3)
+		unitTest:assertEquals(c:sample(), 2)
+
+		c = Choice{min = 2, max = 3, step = 0.1}
+		c = Random{choice = c}
+		unitTest:assertEquals(c:sample(), 2.2)
+		unitTest:assertEquals(c:sample(), 2.6)
+		unitTest:assertEquals(c:sample(), 2.5)
+
+		c = Choice{min = 1, max = 3}
+		c = Random{choice = c}
+		unitTest:assertEquals(c:sample(), 1.414726, 0.01)
+		unitTest:assertEquals(c:sample(), 2.629930, 0.01)
+		unitTest:assertEquals(c:sample(), 2.686062, 0.01)
+
+		c = Choice{min = 1}
+		c = Random{choice = c}
+		unitTest:assertEquals(c:sample(), 3.9269452202831e+15, 100)
+		unitTest:assertEquals(c:sample(), 3.6615661086407e+15, 100)
+		unitTest:assertEquals(c:sample(), 3.0056258301134e+15, 100)
+
+		c = Choice{max = 1}
+		c = Random{choice = c}
+		unitTest:assertEquals(c:sample(), -6.4502805663014e+14, 100)
+		unitTest:assertEquals(c:sample(), -3.5085473041015e+15, 100)
+		unitTest:assertEquals(c:sample(), -5.7368203133334e+14, 100)
 	end
 }
 

@@ -67,35 +67,6 @@ max      number [3]
 min      number [2]
 step     number [0.1]
 ]])
-	end,
-	sample = function(unitTest)
-		Random{seed = 12345}
-		local c = Choice{1, 2, 3}
-
-		unitTest:assertEquals(c:sample(), 1)
-		unitTest:assertEquals(c:sample(), 3)
-		unitTest:assertEquals(c:sample(), 3)
-		unitTest:assertEquals(c:sample(), 2)
-
-		c = Choice{min = 2, max = 3, step = 0.1}
-		unitTest:assertEquals(c:sample(), 2.7)
-		unitTest:assertEquals(c:sample(), 2.9)
-		unitTest:assertEquals(c:sample(), 3)
-
-		c = Choice{min = 1, max = 3}
-		unitTest:assertEquals(c:sample(), 1.721746, 0.01)
-		unitTest:assertEquals(c:sample(), 1.585926, 0.01)
-		unitTest:assertEquals(c:sample(), 1.774378, 0.01)
-
-		c = Choice{min = 1}
-		unitTest:assertEquals(c:sample(), 2.2744889486079e+15, 100)
-		unitTest:assertEquals(c:sample(), 3.2294412207948e+14, 100)
-		unitTest:assertEquals(c:sample(), 3.7023687212646e+15, 100)
-
-		c = Choice{max = 1}
-		unitTest:assertEquals(c:sample(), -7.8339665158147e+14, 100)
-		unitTest:assertEquals(c:sample(), -7.6351325922663e+14, 100)
-		unitTest:assertEquals(c:sample(), -1.3816142936847e+15, 100)
 	end
 }
 

@@ -207,11 +207,17 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- that was discovered by George Marsaglia (http://www.jstatsoft.org/v08/i14/paper). 
 -- Random is a singleton, which means that every copy of Random created
 -- by the user has the same seed.
+-- @arg data.choice A Choice value.
 -- @arg data.distrib A string representing the statistical distribution to be used. See the
 -- table below.
 -- @tabular distrib
 -- Distrib & Description & Compulsory Arguments & Optional Arguments \
 -- "bernoulli" & A boolean distribution that returns true with probability p. & p & seed, distrib \
+-- "choice" & Use the available options from a given Choice. If the Choice was built
+-- from non-named arguments or it has a step, it returns a discrete uniform
+-- distribution. If it has maximum and minimum then it returns a continuous uniform
+-- distribution. When the Choice has maximum but not minimum, or minimum but not
+-- maximum, it uses 2^52 as maximum or -2^52 as minimum. & choice & distrib, seed \
 -- "categorical" & A distribution that has names associated to probabilities. Each name is a
 -- parameter and has a value between 0 and 1, indicating the probability to be selected. The sum of
 -- all probabilities must be one. & ... & seed, distrib \
@@ -220,7 +226,7 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- "discrete" & A discrete uniform distribition. Elements are described as non-named
 -- values. & ... & seed, distrib \
 -- "none" & No distribution. This is useful only when the modeler wants only to set
--- seed. & seed & distrib \
+-- seed. & & seed, distrib \
 -- "step" & A discrete uniform distribution whose values belong to a given [min, max] interval
 -- using step values.
 -- & max, min, step & seed, distrib \
@@ -278,6 +284,8 @@ function Random(data)
 	if not data.distrib then
 		if data.p ~= nil then
 			data.distrib = "bernoulli"
+		elseif data.choice ~= nil then
+			data.distrib = "choice"
 		--elseif data.lambda ~= nil then
 		--	data.distrib = "poisson"
 		--elseif data.mean ~= nil or data.sd ~= nil then
@@ -301,6 +309,41 @@ function Random(data)
 		bernoulli = function()
 			verifyUnnecessaryArguments(data, {"distrib", "seed", "p"})
 			data.sample = bernoulli(data, data.p)
+		end,
+		choice = function()
+			mandatoryTableArgument(data, "choice", "Choice")
+			verifyUnnecessaryArguments(data, {"distrib", "seed", "choice"})
+
+			local choice = data.choice
+			local seed = data.seed
+
+			if choice.values then
+				data = Random(choice.values)
+			elseif choice.step then
+				data = Random{
+					max = choice.max,
+					min = choice.min,
+					step = choice.step
+				}
+			elseif choice.max and choice.min then
+				data = Random{
+					max = choice.max,
+					min = choice.min
+				}
+			elseif choice.max then
+				data = Random{
+					max = choice.max,
+					min = -2^52
+				}
+			else
+				data = Random{
+					min = choice.min,
+					max = 2^52
+				}
+			end
+
+			data.seed = seed
+			setmetatable(data, nil)
 		end,
 		step = function()
 			mandatoryTableArgument(data, "min", "number")
