@@ -102,10 +102,10 @@ Society_ = {
 	--- Add a new Agent to the Society. It will be the last Agent of the Society when one
 	-- uses Utils:forEachAgent().
 	-- @arg agent The new Agent that will be added to the Society. If nil, the Society will add a
-	-- copy of its instance. In this case, the Society converts Choices into samples and executes
+	-- copy of its instance. In this case, the Society converts Random values into samples and executes
 	-- Agent:init().
 	-- @usage ag = Agent{
-	--     age = Choice{min = 1, max = 50, step = 1}
+	--     age = Random{min = 1, max = 50, step = 1}
 	-- }
 	--
 	-- soc = Society{
@@ -132,7 +132,7 @@ Society_ = {
 			setmetatable(agent, metaTable)
 
 			forEachOrderedElement(self.instance, function(idx, value, mtype)
-				if mtype == "Choice" then
+				if mtype == "Random" then
 					agent[idx] = value:sample()
 				end
 			end)
@@ -684,8 +684,8 @@ Society_ = {
 	-- Groups are then indexed according to the returning value.
 	--
 	-- @usage ag = Agent{
-	--     gender = Choice{"male", "female"},
-	--     age = Choice{min = 1, max = 80, step = 1}
+	--     gender = Random{"male", "female"},
+	--     age = Random{min = 1, max = 80, step = 1}
 	-- }
 	--
 	-- soc = Society{
@@ -844,7 +844,7 @@ metaTableSociety_ = {
 -- argument, each Agent of the Society will have attributes and functions according to the
 -- instance. The attributes of the instance will be copyed to the Agent and Society 
 -- calls Agent:init() for each of its Agents.
--- Every attribute from the Agent that is a Choice will be converted into a Choice:sample().
+-- Every attribute from the Agent that is a Random will be converted into a Random:sample().
 -- When using this argument, additional functions are also
 -- created to the Society. For each attribute of the its Agents (after calling Agent:init()),
 -- one function is created in the Society with the same name. The table below describes how each
@@ -884,7 +884,7 @@ metaTableSociety_ = {
 -- @usage instance = Agent{
 --     execute = function() end,
 --     run = function() end,
---     age = 0
+--     age = Random{min = 1, max = 50, step = 1}
 -- }
 -- 
 -- s = Society{
@@ -900,6 +900,7 @@ metaTableSociety_ = {
 -- instance = Agent{
 --     execute = function() end
 -- }
+--
 -- s = Society{
 --     instance = instance,
 --     database = file("agents.csv", "base")
@@ -971,7 +972,7 @@ function Society(data)
 
 					return callFunc(func, "function", attribute)
 				end
-			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
+			elseif mtype == "number" or (mtype == "Random" and value.distrib ~= "categorical" and (value.distrib ~= "discrete" or type(value[1]) == "number")) then
 				if data[attribute] then
 					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
 					return
@@ -1003,7 +1004,7 @@ function Society(data)
 					end)
 					return quantity
 				end
-			elseif mtype == "string" or (mtype == "Choice" and value.values and type(value.values[1]) == "string") then
+			elseif mtype == "string" or (mtype == "Random" and (value.distrib == "categorical" or (value.distrib == "discrete" and type(value[1]) == "string"))) then
 				if data[attribute] then
 					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
 					return

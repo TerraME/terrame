@@ -39,7 +39,7 @@ Group_ = {
 	--- Return a copy of the Group. It has the same parent, select, greater and Agents.
 	-- Any change in the cloned Group will not affect the original one.
 	-- @usage agent = Agent{
-	--     age = Choice{min = 0, max = 50, step = 1}
+	--     age = Random{min = 0, max = 50, step = 1}
 	-- }
 	--
 	-- soc = Society{
@@ -76,7 +76,7 @@ Group_ = {
 	-- or then the value of argument select used to build the Group. When it cannot find any
 	-- function to be used, this function will add all the Agents of the Society to the Group.
 	-- @usage agent = Agent{
-	--     age = Choice{min = 0, max = 50, step = 1}
+	--     age = Random{min = 0, max = 50, step = 1}
 	-- }
 	--
 	-- soc = Society{
@@ -116,7 +116,7 @@ Group_ = {
 	--- Randomize the Agents of the Group. It will change the traversing order used by
 	-- Utils:forEachAgent().
 	-- @usage agent = Agent{
-	--     age = Choice{min = 0, max = 50, step = 1}
+	--     age = Random{min = 0, max = 50, step = 1}
 	-- }
 	--
 	-- soc = Society{
@@ -143,7 +143,7 @@ Group_ = {
 	--- Rebuild the Group from the Society used as target.
 	-- It is a shortcut to Group:filter() and then Group:sort().
 	-- @usage agent = Agent{
-	--     age = Choice{min = 0, max = 50, step = 1}
+	--     age = Random{min = 0, max = 50, step = 1}
 	-- }
 	--
 	-- soc = Society{
@@ -174,7 +174,7 @@ Group_ = {
 	-- any function to be used, it shows a warning.
 	-- @see Utils:greaterByAttribute
 	-- @usage agent = Agent{
-	--     age = Choice{min = 0, max = 50, step = 1}
+	--     age = Random{min = 0, max = 50, step = 1}
 	-- }
 	--
 	-- soc = Society{
@@ -208,7 +208,7 @@ metaTableGroup_ = {
 	__index = Group_,
 	--- Return the number of Agents in the Group.
 	-- @usage agent = Agent{
-	--     age = Choice{min = 0, max = 50, step = 1}
+	--     age = Random{min = 0, max = 50, step = 1}
 	-- }
 	--
 	-- soc = Society{
@@ -246,7 +246,7 @@ metaTableGroup_ = {
 -- @arg data.build A boolean value indicating whether the Group should be computed when created.
 -- The default value is true.
 -- @usage agent = Agent{
---     age = Choice{min = 10, max = 50, step = 1}
+--     age = Random{min = 10, max = 50, step = 1}
 -- }
 --
 -- soc = Society{

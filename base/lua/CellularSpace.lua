@@ -580,7 +580,6 @@ CellularSpace_ = {
 
 				data.func = getDiagonalNeighborhood
 			end,
-
 			["function"] = function() 
 				mandatoryTableArgument(data, "filter", "function")
 				verifyUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "inmemory"})
@@ -960,8 +959,8 @@ CellularSpace_ = {
 	-- Trajectories are then indexed according to the
 	-- returning value.
 	-- @usage cell = Cell{
-	--     cover = Choice{"pasture", "forest"},
-	--     forest = Choice{min = 0, max = 1}
+	--     cover = Random{"pasture", "forest"},
+	--     forest = Random{min = 0, max = 1}
 	-- }
 	--
 	-- cs = CellularSpace{
@@ -1019,7 +1018,7 @@ CellularSpace_ = {
 	-- @arg values A string or a vector of strings with the attributes to be synchronized. If 
 	-- empty, TerraME synchronizes every attribute of the Cells but the (x, y) coordinates.
 	-- @usage cell = Cell{
-	--     forest = Choice{min = 0, max = 1}
+	--     forest = Random{min = 0, max = 1}
 	-- }
 	--
 	-- cs = CellularSpace{
@@ -1117,7 +1116,7 @@ metaTableCellularSpace_ = {
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
 -- instance. It also calls Cell:init() from the instance for each of its Cells.
--- Every attribute from the Cell that is a Choice will be converted into a sample from the Choice.
+-- Every attribute from the Cell that is a Random will be converted into Random:sample().
 -- Additional functions are also created to the CellularSpace, according to the attributes of the
 -- instance. For each attribute of the instance, one function is created in the CellularSpace with
 -- the same name (note that attributes declared exclusively in Cell:init() will not be mapped, as
@@ -1294,7 +1293,7 @@ function CellularSpace(data)
 
 					return callFunc(func, "function", attribute)
 				end
-			elseif mtype == "number" or (mtype == "Choice" and (value.min or type(value.values[1]) == "number")) then
+			elseif mtype == "number" or (mtype == "Random" and value.distrib ~= "categorical" and (value.distrib ~= "discrete" or type(value[1]) == "number")) then
 				if data[attribute] then
 					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
 					return
@@ -1328,7 +1327,7 @@ function CellularSpace(data)
 					end)
 					return quantity
 				end
-			elseif mtype == "string" or (mtype == "Choice" and value.values and type(value.values[1]) == "string") then
+			elseif mtype == "string" or (mtype == "Random" and (value.distrib == "categorical" or (value.distrib == "discrete" and type(value[1]) == "string"))) then
 				if data[attribute] then
 					customWarning("Attribute '"..attribute.."' will not be replaced by a summary function.")
 					return
@@ -1381,7 +1380,7 @@ function CellularSpace(data)
 			end)
 
 			forEachOrderedElement(data.instance, function(idx, value, mtype)
-				if mtype == "Choice" then
+				if mtype == "Random" then
 					cell[idx] = value:sample()
 				end
 			end)

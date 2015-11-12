@@ -373,7 +373,7 @@ end
 -- false, forEachAgent() stops and does not process any other Agent. 
 -- This function can optionally get a second argument with a positive number representing the
 -- position of the Agent in the vector of Agents.
--- @usage ag = Agent{age = Choice{min = 0, max = 2}}
+-- @usage ag = Agent{age = Random{min = 0, max = 2}}
 -- soc = Society{
 --     instance = ag,
 --     quantity = 5
@@ -450,7 +450,7 @@ end
 -- process any other pair of Cells.
 -- @usage cs1 = CellularSpace{
 --     xdim = 10,
---     instance = Cell{water = Choice{min = 0, max = 20}}
+--     instance = Cell{water = Random{min = 0, max = 20}}
 -- }
 -- cs2 = CellularSpace{xdim = 10}
 --
@@ -604,7 +604,7 @@ end
 -- this function becomes the second argument.
 -- @usage cs = CellularSpace{
 --     xdim = 10,
---     instance = Cell{deforestation = Choice{min = 0, max = 1}}
+--     instance = Cell{deforestation = Random{min = 0, max = 1}}
 -- }
 --
 -- cs:createNeighborhood()
@@ -829,7 +829,7 @@ end
 -- @arg operator A string with the operator, which can be ">", "<", "<=", or ">=". The default value is "<".
 -- @usage cs = CellularSpace{
 --     xdim = 10,
---     instance = Cell{cover = Choice{min = 0, max = 1}}
+--     instance = Cell{cover = Random{min = 0, max = 1}}
 -- }
 --
 -- t = Trajectory{

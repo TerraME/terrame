@@ -1590,9 +1590,9 @@ metaTableMap_ = {__index = Map_}
 -- @arg data.invert Invert the order of the colors when using ColorBrewer. The default value is false.
 -- @arg data.select A string with the name of the attribute to be visualized.
 -- @usage cell = Cell{
---     temperature = Choice{min = 0, max = 50},
---     seggregation = Choice{0, 1, 2},
---     forest = Choice{min = 0, max = 1}
+--     temperature = Random{min = 0, max = 50},
+--     seggregation = Random{0, 1, 2},
+--     forest = Random{min = 0, max = 1}
 -- }
 --
 -- cs = CellularSpace{

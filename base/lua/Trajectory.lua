@@ -76,7 +76,7 @@ Trajectory_ = {
 	--- Return a copy of the Trajectory. It has the same parent, select, greater and Cells.
 	-- Any change in the cloned Trajectory will not affect the original one.
 	-- @usage cell = Cell{
-	--     cover = Choice{"forest", "deforested"}
+	--     cover = Random{"forest", "deforested"}
 	-- }
 	--
 	-- cs = CellularSpace{
@@ -117,8 +117,8 @@ Trajectory_ = {
 	-- argument select used to build the Trajectory. When it cannot find any function to be used,
 	-- this function will add all the Cells of the CellularSpace to the Trajectory.
 	-- @usage cell = Cell{
-	--     cover = Choice{"forest", "deforested"},
-	--     dist = Choice{min = 0, max = 50}
+	--     cover = Random{"forest", "deforested"},
+	--     dist = Random{min = 0, max = 50}
 	-- }
 	--
 	-- cs = CellularSpace{
@@ -209,7 +209,7 @@ Trajectory_ = {
 	--- Rebuild the Trajectory from the CellularSpace used as target.
 	-- It is a shortcut to Trajectory:filter() and then Trajectory:sort().
 	-- @usage cell = Cell{
-	--     dist = Choice{min = 0, max = 50}
+	--     dist = Random{min = 0, max = 50}
 	-- }
 	--
 	-- cs = CellularSpace{
@@ -243,7 +243,7 @@ Trajectory_ = {
 	-- @see Utils:greaterByAttribute
 	-- @see Utils:greaterByCoord
 	-- @usage cell = Cell{
-	--     dist = Choice{min = 0, max = 50}
+	--     dist = Random{min = 0, max = 50}
 	-- }
 	--
 	-- cs = CellularSpace{
@@ -316,8 +316,8 @@ metaTableTrajectory_ = {
 -- @output select The last function used to filter the Trajectory.
 -- @output greater The last function used to sort the Trajectory.
 -- @usage cell = Cell{
---     cover = Choice{"forest", "deforested"},
---     dist = Choice{min = 0, max = 50}
+--     cover = Random{"forest", "deforested"},
+--     dist = Random{min = 0, max = 50}
 -- }
 --
 -- cs = CellularSpace{

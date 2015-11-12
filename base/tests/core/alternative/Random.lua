@@ -29,22 +29,72 @@ return{
 		local error_func = function()
 			local r = Random(12345)
 		end
-		unitTest:assertError(error_func, namedArgumentsMsg())
+		unitTest:assertError(error_func, tableArgumentMsg())
 
-		local error_func = function()
-			local r = Random{x = 12345}
+		error_func = function()
+			local c = Random{min = false}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("x"))
+		unitTest:assertError(error_func, incompatibleTypeMsg("min", "number", false))
 
-		local error_func = function()
-			local r = Random{seed = 2.3}
+		error_func = function()
+			local c = Random{min = 2, max = false}
 		end
-		unitTest:assertError(error_func, integerArgumentMsg("seed", 2.3))
+		unitTest:assertError(error_func, incompatibleTypeMsg("max", "number", false))
 
-		local error_func = function()
-			local r = Random{seed = 0}
+		error_func = function()
+			local c = Random{min = 20, max = 5}
 		end
-		unitTest:assertError(error_func, "Argument 'seed' cannot be zero.")
+		unitTest:assertError(error_func, "Argument 'max' should be greater than 'min'.")
+	
+		error_func = function()
+			local c = Random{min = 2, max = 5, w = 2}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("w"))
+	
+		error_func = function()
+			local bern = Random{p = 0.3, w = 2}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("w"))
+		
+		error_func = function()
+			local bern = Random{1, 2, 4, 5, 6, w = 2}
+		end
+		unitTest:assertError(error_func, "The only named arguments should be distrib and seed.")
+
+		error_func = function()
+			local c = Random{min = 2, max = 5, step = 2}
+		end
+		unitTest:assertError(error_func, "Invalid 'max' value (5). It could be 4 or 6.")
+
+		error_func = function()
+			local c = Random{min = 2, max = 5, step = false}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("step", "number", false))
+
+		error_func = function()
+			local c = Random{min = "2", max = 5, step = 2}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("min", "number", "2"))
+
+		error_func = function()
+			local c = Random{min = 2, max = "5", step = 2}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("max", "number", "5"))
+
+		error_func = function()
+			local c = Random{min = 20, max = 5, step = 2}
+		end
+		unitTest:assertError(error_func, "Argument 'max' should be greater than 'min'.")
+
+		error_func = function()
+			local c = Random{male = 0.4, female = "0.6"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("female", "number", "0.6"))
+
+		error_func = function()
+			local c = Random{male = 0.4, female = 0.5}
+		end
+		unitTest:assertError(error_func, "Sum should be one, got 0.9.")
 	end,
 	integer = function(unitTest)
 		local randomObj = Random{}
@@ -98,13 +148,6 @@ return{
 			randomObj:reSeed(0)
 		end
 		unitTest:assertError(error_func, "Argument 'seed' cannot be zero.")
-	end,
-	sample = function(unitTest)
-		local randomObj = Random{}
-		local error_func = function()
-			randomObj:sample(2)
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
 	end
 }
 

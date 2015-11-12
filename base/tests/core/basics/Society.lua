@@ -52,8 +52,8 @@ return {
 			init = function(self)
 				self.charge = 0
 			end,
-			age = Choice{min = 0, max = 10, step = 1},
-			gender = Choice{"male", "female"},
+			age = Random{min = 0, max = 10, step = 1},
+			gender = Random{"male", "female"},
 			execute = function(self)
 				self.age = self.age + 1
 				self:walk()

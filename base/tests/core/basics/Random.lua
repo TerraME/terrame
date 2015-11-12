@@ -37,8 +37,12 @@ return {
 		self:assertEquals(type(r:number()), "number")
 	end,
 	__tostring = function(unitTest)
-		local randomObj = Random{seed = 12345}
-		unitTest:assertEquals(tostring(randomObj), "")
+		local bern = Random{p = 0.3}
+
+		unitTest:assertEquals(tostring(bern), [[distrib  string [bernoulli]
+p        number [0.3]
+sample   function
+]])
 	end,
 	integer = function(self)
 		local randomObj = Random{}
@@ -204,21 +208,97 @@ return {
 		self:assertEquals(Random_.seed[2], 12345)
 	end,
 	sample = function(unitTest)
-		local r = Random{seed = 123456789}
+		local bern = Random{p = 0.3}
+		local counter = 0
 
-		local vector = {1, 4, 5, 6}
+		unitTest:assertType(bern:sample(), "boolean")
 
-		unitTest:assertEquals(r:sample(vector), 4)
-		unitTest:assertEquals(r:sample(vector), 5)
+		for i = 1, 1000 do
+			if bern:sample() then
+				counter = counter + 1
+			end
+		end
 
-		r:reSeed(567890123)
-		vector = {"a", "b", "c"}
-		unitTest:assertEquals(r:sample(vector), "b")
-		unitTest:assertEquals(r:sample(vector), "a")
-		unitTest:assertEquals(r:sample(vector), "b")
-		unitTest:assertEquals(r:sample(vector), "c")
-		unitTest:assertEquals(r:sample(vector), "c")
-		unitTest:assertEquals(r:sample(vector), "a")
+		unitTest:assertEquals(counter, 301)
+
+		local continuous = Random{min = 0, max = 10}
+		local sum = 0
+
+		unitTest:assertType(continuous:sample(), "number")
+
+		for i = 1, 1000 do
+			local sample = continuous:sample()
+			sum = sum + sample
+			unitTest:assert(sample <= 10)
+			unitTest:assert(sample >= 0)
+		end
+
+		unitTest:assertEquals(sum, 5140.55, 0.01)
+
+		local discrete = Random{1, 2, 5, 6}
+		local sum = 0
+
+		unitTest:assertType(discrete:sample(), "number")
+
+		for i = 1, 1000 do
+			local sample = discrete:sample()
+			sum = sum + sample
+			unitTest:assert(sample <= 6)
+			unitTest:assert(sample >= 1)
+		end
+
+		unitTest:assertEquals(sum, 3634)
+
+		local discrete = Random{"a", "b", "c"}
+		local sum = {
+			a = 0,
+			b = 0,
+			c = 0
+		}
+
+		unitTest:assertType(discrete:sample(), "string")
+
+		for i = 1, 200 do
+			local sample= discrete:sample()
+			sum[sample] = sum[sample] + 1
+		end
+
+		unitTest:assertEquals(sum.a, 64)
+		unitTest:assertEquals(sum.b, 72)
+		unitTest:assertEquals(sum.c, 64)
+
+		local step = Random{min = 1, max = 4, step = 1}
+		local sum = {0, 0, 0, 0}
+
+		unitTest:assertType(step:sample(), "number")
+
+		for i = 1, 200 do
+			local sample = step:sample()
+			sum[sample] = sum[sample] + 1
+		end
+
+		unitTest:assertEquals(sum[1], 54)
+		unitTest:assertEquals(sum[2], 41)
+		unitTest:assertEquals(sum[3], 53)
+		unitTest:assertEquals(sum[4], 52)
+
+		local cat = Random{poor = 0.5, middle = 0.33, rich = 0.17}
+		local sum = {
+			poor = 0,
+			middle = 0,
+			rich = 0
+		}
+
+		unitTest:assertType(cat:sample(), "string")
+
+		for i = 1, 200 do
+			local sample = cat:sample()
+			sum[sample] = sum[sample] + 1
+		end
+
+		unitTest:assertEquals(sum.poor, 106)
+		unitTest:assertEquals(sum.middle, 60)
+		unitTest:assertEquals(sum.rich, 34)
 	end
 }
 

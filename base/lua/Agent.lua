@@ -305,7 +305,7 @@ Agent_ = {
 	--- User-defined function that is used to initialize an Agent when it enters in a
 	-- given Society (e.g. when the Society is created, or when one calls Society:add()).
 	-- @usage agent = Agent{
-	--     age = Choice{min = 1, max  = 50, step = 1},
+	--     age = Random{min = 1, max  = 50, step = 1},
 	--     init = function(self)
 	--         if self.age > 40 then
 	--             self.wealth = Random():integer(50, 100)

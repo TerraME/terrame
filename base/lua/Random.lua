@@ -25,6 +25,59 @@
 --          Gilberto Camara (2015) - changed the Mersenne twister to the XORSHIFT generator
 --#########################################################################################
 
+local function bernoulli(generator, p)
+	return function()
+		return generator:number() < p
+	end
+end
+
+local function categorical(generator, values)
+	local str = "return function(number)\n"
+
+	local previous = 0
+	local sum = {}
+	forEachOrderedElement(values, function(idx, value)
+		previous = previous + value
+		sum[idx] = previous
+	end)
+
+	forEachOrderedElement(sum, function(idx, value)
+		str = str.."\tif number <= "..value.." then\n"
+		         .."\t\treturn \""..idx.."\"\n"
+		         .."\tend\n"
+	end)
+
+	str = str.."end"
+
+	local func = load(str)()
+
+	return function()
+		local number = generator:number()
+		return func(number)
+	end
+end
+
+local function discrete(generator, values)
+	local quantity = #values
+	return function()
+		return values[generator:integer(1, quantity)]
+	end
+end
+
+local function step(generator, min, max, step)
+	local quantity = (max - min) / step
+
+	return function()
+		return min + step * generator:integer(0, quantity)
+	end
+end
+
+local function continuous(generator, min, max)
+	return function()
+		return generator:number(min, max)
+	end
+end
+
 -- Xorshift random number generators are a class of pseudorandom number generators 
 -- that was discovered by George Marsaglia [http://www.jstatsoft.org/v08/i14/paper]. 
 -- They generate the next number in their sequence by repeatedly taking the exclusive or of a number 
@@ -137,16 +190,12 @@ Random_ = {
 		Random_.seed[1] = 1
 		Random_.seed[2] = seed
 	end,
-	--- Return a random element from a set of values using a discrete uniform distribution.
-	-- @arg mtable A non-named table with a set of values.
-	-- @usage random = Random()
+	--- Return a random element from the chosen distribution. 
+	-- @usage random = Random{2, 3, 4, 6}
 	--
-	-- random:sample{2, 3, 4, 6}
-	sample = function(self, mtable)
-		mandatoryArgument(1, "table", mtable)
-
-		local int = self:integer(1, #mtable)
-		return mtable[int]
+	-- random:sample()
+	sample = function(self)
+		customError("Cannot return a random number.")
 	end
 }
 
@@ -158,6 +207,26 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- that was discovered by George Marsaglia (http://www.jstatsoft.org/v08/i14/paper). 
 -- Random is a singleton, which means that every copy of Random created
 -- by the user has the same seed.
+-- @arg data.distrib A string representing the statistical distribution to be used. See the
+-- table below.
+-- @tabular distrib
+-- Distrib & Description & Compulsory Arguments & Optional Arguments \
+-- "bernoulli" & A boolean distribution that returns true with probability p. & p & seed, distrib \
+-- "categorical" & A distribution that has names associated to probabilities. Each name is a
+-- parameter and has a value between 0 and 1, indicating the probability to be selected. The sum of
+-- all probabilities must be one. & ... & seed, distrib \
+-- "continuous" & A continuous uniform distribition. It selects real numbers in a given
+-- interval. & max, min & seed, distrib \
+-- "discrete" & A discrete uniform distribition. Elements are described as non-named
+-- values. & ... & seed, distrib \
+-- "none" & No distribution. This is useful only when the modeler wants only to set
+-- seed. & seed & distrib \
+-- "step" & A discrete uniform distribution whose values belong to a given [min, max] interval
+-- using step values.
+-- & max, min, step & seed, distrib \
+-- @arg data.max A number indicating the maximum value to be randomly selected.
+-- @arg data.min A number indicating the minimum value to be randomly selected.
+-- @arg data.p A number between 0 and 1 representing a probability.
 -- @arg data.seed A number to generate the pseudo-random numbers.
 -- The default value is the current time of the system, which means that
 -- every simulation will use different random numbers.
@@ -165,17 +234,125 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- despite using random numbers.
 -- It is a good programming practice to set
 -- the seed in the beginning of the simulation and only once.
+-- @arg attrTab.step The step where possible values are computed from minimum to maximum.
+-- When using this argument, min and max become mandatory.
+-- @arg attrTab.... Other values to build a categorical or discrete uniform distribution.
 -- @usage random = Random()
 --
--- random = Random{seed = 12345}
+-- bernoulli = Random{p = 0.4}
+-- print(bernoulli:sample())
+--
+-- range = Random{min = 3, max = 7}
+-- print(range:sample())
+--
+-- step = Random{min = 1, max = 9, step = 2}
+-- print(step:sample())
+--
+-- gender = Random{male = 0.49, female = 0.51}
+-- print(gender:sample())
+--
+-- age = Random{1, 2, 4, 8, 16, 32}
+-- print(age:sample())
+--
+-- cover = Random{"pasture", "forest", "clearcut"}
+-- print(cover:sample())
+--
+-- person = Agent{
+--     gender = Random{male = 0.49, female = 0.51},
+--     --age = Random{mean = 20, sd = 2} TODO
+-- }
+--
+-- soc = Society{
+--     instance = person,
+--     quantity = 10
+-- }
+--
+-- print(soc:gender().male)
 function Random(data)
 	if data == nil then
 		data = {}
-	else
-		verifyNamedTable(data)
+	elseif type(data) ~= "table" then
+		customError(tableArgumentMsg())
 	end
 
-	verifyUnnecessaryArguments(data, {"seed"})
+	if not data.distrib then
+		if data.p ~= nil then
+			data.distrib = "bernoulli"
+		--elseif data.lambda ~= nil then
+		--	data.distrib = "poisson"
+		--elseif data.mean ~= nil or data.sd ~= nil then
+		--	data.distrib = "normal"
+		elseif data.min ~= nil and data.max ~= nil and data.step ~= nil then
+			data.distrib = "step"
+		elseif data.min ~= nil or data.max ~= nil then
+			data.distrib = "continuous"
+		elseif #data > 0 then
+			data.distrib = "discrete"
+		elseif getn(data) > 1 or (getn(data) > 0 and data.seed == nil) then
+			data.distrib = "categorical"
+		else
+			data.distrib = "none"
+		end
+	end
+
+	mandatoryTableArgument(data, "distrib", "string")
+
+	switch(data, "distrib"):caseof{
+		bernoulli = function()
+			verifyUnnecessaryArguments(data, {"distrib", "seed", "p"})
+			data.sample = bernoulli(data, data.p)
+		end,
+		step = function()
+			mandatoryTableArgument(data, "min", "number")
+			mandatoryTableArgument(data, "max", "number")
+			mandatoryTableArgument(data, "step", "number")
+			verify(data.max > data.min, "Argument 'max' should be greater than 'min'.")
+
+			local k = (data.max - data.min) / data.step
+
+			local rest = k % 1
+			if rest > 0.00001 then
+				local max1 = data.min + (k - rest) * data.step
+				local max2 = data.min + (k - rest + 1) * data.step
+				customError("Invalid 'max' value ("..data.max.."). It could be "..max1.." or "..max2..".")
+			end
+
+			data.sample = step(data, data.min, data.max, data.step)
+		end,
+		discrete = function()
+			local count = 1
+			if data.seed then count = 2 end
+
+			verify(#data + count == getn(data), "The only named arguments should be distrib and seed.")
+			data.sample = discrete(data, data)
+		end,
+		continuous = function()
+			mandatoryTableArgument(data, "min", "number")
+			mandatoryTableArgument(data, "max", "number")
+			verifyUnnecessaryArguments(data, {"distrib", "seed", "max", "min"})
+			verify(data.max > data.min, "Argument 'max' should be greater than 'min'.")
+			data.sample = continuous(data, data.min, data.max)
+		end,
+		categorical = function()
+			local sum = 0
+			local seed = data.seed
+			data.seed = nil
+			data.distrib = nil
+
+			forEachElement(data, function(idx, value)
+				mandatoryTableArgument(data, idx, "number")
+				sum = sum + value
+			end)
+
+			verify(sum == 1, "Sum should be one, got "..sum..".")
+
+			data.sample = categorical(data, data)
+			data.distrib = "categorical"
+			data.seed = seed
+		end,
+		none = function()
+		end
+	}
 
 	if data.seed then
 		integerTableArgument(data, "seed")

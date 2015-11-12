@@ -41,7 +41,7 @@ return{
 			road = true,
 			cover = "pasture",
 			deforest = function(self) self.defor = self.defor + 1 end,
-			water = Choice{1, 2, 3}
+			water = Random{1, 2, 3}
 		}
 
 		local cs = CellularSpace{

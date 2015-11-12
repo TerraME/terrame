@@ -147,7 +147,7 @@ return{
 		cs:notify()
 		unitTest:assertSnapshot(m, "map_function.bmp")
 
-		local c = Choice{"low", "medium", "high"}
+		local c = Random{"low", "medium", "high"}
 		local cs = CellularSpace{xdim = 5}
 		forEachCell(cs, function(cell)
 			cell.level = c:sample()
