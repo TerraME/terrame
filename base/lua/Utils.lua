@@ -1132,6 +1132,12 @@ function levenshtein(s, t)
 	mandatoryArgument(2, "string", t)
 
 	local d, sn, tn = {}, #s, #t
+
+	if sn > tn then -- invert arguments
+		sn, tn = tn, sn
+		s, t = t, s
+	end
+
 	local byte, min = string.byte, math.min
 	for i = 0, sn do d[i * tn] = i end
 	for j = 0, tn do d[j] = j end

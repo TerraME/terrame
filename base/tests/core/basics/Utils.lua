@@ -737,6 +737,8 @@ return{
 		unitTest:assertEquals(levenshtein("abv", "abc"), 1)
 		unitTest:assertEquals(levenshtein("abvaacc", "abcaacac"), 2)
 		unitTest:assertEquals(levenshtein("abvxwtaacc", "abcaacac"), 5)
+		unitTest:assertEquals(levenshtein("abc", "n"), 3)
+		unitTest:assertEquals(levenshtein("abcd", ""), 4)
 	end,
 	round = function(unitTest)
 		unitTest:assertEquals(round(5.22), 5)
