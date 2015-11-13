@@ -706,10 +706,8 @@ function forEachOrderedElement(obj, func)
 	end
 
 	local strk
-
 	local sorder = {}
 	local sreference = {}
-
 	local norder = {}
 	local nreference = {}
 
@@ -719,13 +717,18 @@ function forEachOrderedElement(obj, func)
 			nreference[k] = k
 		else
 			strk = string.lower(tostring(k))
-			sorder[#sorder + 1] = strk
 
-			if sreference[strk] then
-				customError("forEachOrderedElement() cannot work with two indexes having the same lower case.")
+			if sreference[strk] then -- two strings with the same lower case
+				local count = 1
+				local ref = sreference[strk]
+
+				while count <= #ref and ref[count] > k do count = count + 1 end
+
+				table.insert(sreference[strk], count, k)
+			else
+				sreference[strk] = {k}
+				table.insert(sorder, strk)
 			end
-
-			sreference[strk] = k
 		end
 	end
 
@@ -738,8 +741,11 @@ function forEachOrderedElement(obj, func)
 	end
 
 	for k = 1, #sorder do
-		local idx = sreference[sorder[k]]
-		if func(idx, obj[idx], type(obj[idx])) == false then return false end
+		local ref = sreference[sorder[k]]
+		for l = 1, #ref do
+			local idx = ref[l]
+			if func(idx, obj[idx], type(obj[idx])) == false then return false end
+		end
 	end
 	return true
 end

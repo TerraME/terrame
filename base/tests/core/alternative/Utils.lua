@@ -247,11 +247,6 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function"))
 
 		error_func = function()
-			forEachOrderedElement({aaa = 2, aaA = 3}, function() end)
-		end
-		unitTest:assertError(error_func, "forEachOrderedElement() cannot work with two indexes having the same lower case.")
-
-		error_func = function()
 			forEachOrderedElement("abc", function() end)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", "abc"))

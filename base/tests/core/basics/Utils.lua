@@ -125,6 +125,7 @@ return{
 			unitTest:assertEquals(ag.value, 2)
 			count = count + 1
 		end)
+
 		unitTest:assertEquals(count, 10)
 
 		count = 0
@@ -132,6 +133,7 @@ return{
 			count = count + 1
 			if count > 5 then return false end
 		end)
+
 		unitTest:assertEquals(count, 6)
 
 		local g = Group{target = soc}
@@ -141,6 +143,7 @@ return{
 			unitTest:assertEquals(ag.value, 2)
 			count = count + 1
 		end)
+
 		unitTest:assertEquals(count, 10)
 
 		local cs = CellularSpace{xdim = 2}
@@ -155,6 +158,7 @@ return{
 				count = count + 1
 			end)
 		end)
+
 		unitTest:assertEquals(count, 10)
 	end,
 	forEachCell = function(unitTest)
@@ -253,6 +257,7 @@ return{
 			unitTest:assertEquals(mtype, "string")
 			count = count + 1
 		end)
+
 		unitTest:assertEquals(count, 4)
 
 		mvector = {1, 2, 3, 4, 5}
@@ -326,6 +331,7 @@ return{
 			unitTest:assertType(w, "number")
 			count = count + 1
 		end)
+
 		unitTest:assert(r)
 		unitTest:assertEquals(count, 3)
 
@@ -334,6 +340,7 @@ return{
 			count = count + 1
 			if count > 1 then return false end
 		end)
+
 		unitTest:assert(not r)
 		unitTest:assertEquals(count, 2)
 	end,
@@ -365,6 +372,7 @@ return{
 
 			count = count + 1
 		end)
+
 		unitTest:assert(r)
 		unitTest:assertEquals(count, 2)
 		unitTest:assertEquals(neighbors, 4)
@@ -374,12 +382,13 @@ return{
 			count = count + 1
 			return false
 		end)
+
 		unitTest:assert(not r)
 		unitTest:assertEquals(count, 1)
 	end,
 	forEachOrderedElement = function(unitTest)
-		local result = {1, 2, 3, "a", "b", "c"}
-		local list = {[1] = 1, [3] = 3, [2] = 2, a = "a", b = "b", c = "c"}
+		local list = {[1] = 1, [3] = 3, [2] = 2, a = "a", A = "A", b = "b", c = "c"}
+		local result = {1, 2, 3, "a", "A", "b", "c"}
 
 		local cont = 0
 		local r
@@ -390,14 +399,16 @@ return{
 			unitTest:assertEquals(idx, result[cont])
 			unitTest:assertEquals(value, result[cont])
 		end)
+
 		unitTest:assert(r)
-		unitTest:assertEquals(cont, 6)
+		unitTest:assertEquals(cont, #result)
 
 		local cont = 0
 		r = forEachOrderedElement(list, function()
 			cont = cont + 1
 			return false
 		end)
+
 		unitTest:assert(not r)
 		unitTest:assertEquals(cont, 1)
 	end,
@@ -429,6 +440,7 @@ return{
 
 			count = count + 1
 		end)
+
 		unitTest:assert(r)
 		unitTest:assertEquals(count, 2)
 		unitTest:assertEquals(connections, 4)
@@ -438,6 +450,7 @@ return{
 			count = count + 1
 			return false
 		end)
+
 		unitTest:assert(not r)
 		unitTest:assertEquals(count, 1)
 	end,
