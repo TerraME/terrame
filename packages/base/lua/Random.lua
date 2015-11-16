@@ -212,24 +212,24 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- table below.
 -- @tabular distrib
 -- Distrib & Description & Compulsory Arguments & Optional Arguments \
--- "bernoulli" & A boolean distribution that returns true with probability p. & p & seed, distrib \
+-- "bernoulli" & A boolean distribution that returns true with probability p. & p & seed \
 -- "choice" & Use the available options from a given Choice. If the Choice was built
 -- from non-named arguments or it has a step, it returns a discrete uniform
 -- distribution. If it has maximum and minimum then it returns a continuous uniform
 -- distribution. When the Choice has maximum but not minimum, or minimum but not
--- maximum, it uses 2^52 as maximum or -2^52 as minimum. & choice & distrib, seed \
+-- maximum, it uses 2^52 as maximum or -2^52 as minimum. & choice & seed \
 -- "categorical" & A distribution that has names associated to probabilities. Each name is a
 -- parameter and has a value between 0 and 1, indicating the probability to be selected. The sum of
--- all probabilities must be one. & ... & seed, distrib \
+-- all probabilities must be one. & ... & seed \
 -- "continuous" & A continuous uniform distribition. It selects real numbers in a given
--- interval. & max, min & seed, distrib \
+-- interval. & max, min & seed \
 -- "discrete" & A discrete uniform distribition. Elements are described as non-named
--- values. & ... & seed, distrib \
+-- values. & ... & seed \
 -- "none" & No distribution. This is useful only when the modeler wants only to set
--- seed. & & seed, distrib \
+-- seed. & & seed \
 -- "step" & A discrete uniform distribution whose values belong to a given [min, max] interval
 -- using step values.
--- & max, min, step & seed, distrib \
+-- & max, min, step & seed \
 -- @arg data.max A number indicating the maximum value to be randomly selected.
 -- @arg data.min A number indicating the minimum value to be randomly selected.
 -- @arg data.p A number between 0 and 1 representing a probability.

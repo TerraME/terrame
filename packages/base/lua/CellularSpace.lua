@@ -497,7 +497,7 @@ CellularSpace_ = {
 	-- "moore"(default) & A Moore (queen) Neighborhood, connecting each Cell to its (at most) 
 	-- eight touching Cells. & & name, self, wrap, inmemory \
 	-- "mxn" & A m (columns) by n (rows) Neighborhood within the CellularSpace or between two
-	-- CellularSpaces if target is used. & m & name, n, filter, weight, target, inmemory \
+	-- CellularSpaces if target is used. & & m, name, n, filter, weight, target, inmemory \
 	-- "vonneumann" & A von Neumann (rook) Neighborhood, connecting each Cell to its (at most)
 	-- four ortogonally surrounding Cells. & & name, self, wrap, inmemory
 	-- @arg data.filter A function(Cell, Cell)->bool, where the first argument is the Cell itself
