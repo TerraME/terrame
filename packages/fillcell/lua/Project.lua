@@ -24,9 +24,67 @@
 --          Rodrigo Avancini
 --#########################################################################################
 
+Project_ = {
+	type_ = "Project",
+	--- Add a new layer to the project. This layer can be stored in a database, 
+	-- a file, or even a web service.
+	-- @arg data.source A string with the data source. See table below:
+	-- @tabular source
+	-- Source & Description & Mandatory arguments & Optional arguments \
+	-- "postgis" & A connection to a PostGIS database. & password, layer & user, port, host \
+	-- "shapefile" & A shapefile according to ESRI definition. & file, layer & \
+	-- "webservice" & A web service & host, layer & \
+	-- @arg data.layer Name of the layer to be created.
+	-- @arg data.host String with the host where the database is stored.
+	-- The default value is "localhost".
+	-- @arg data.port Number with the port of the connection. The default value is the standard port
+	-- of the DBMS. For example, MySQL uses 3306 as standard port.
+	-- @arg data.user String with the username. The default value is "".
+	-- @arg data.password A string with the password.
+	-- @arg data.file A string with the location of the file to be loaded.
+	-- @usage -- DONTRUN
+	-- import("fillcell")
+	--
+	-- proj = Project{
+	--     file = "myproject.tview"
+	-- }
+	--
+	-- proj:addLayer{
+	--     layer = "roads",
+	--     user = "root",
+	--     password = "abc123",
+	--     table = "roads"
+	-- }
+	addLayer = function(self, data)	
+	end,
+	--- Add a new CellularLayer to the project.
+	-- @arg data.layer Name of the layer to be created.
+	-- @arg data.input A layer whose spatial coverage will be used to create the CellularLayer.
+	-- @arg data.box A boolean value indicating whether the CellularLayer will fill the
+	-- box from the input layer (true) or only the minimal set of cells that cover all the
+	-- input data (false, default).
+	-- @arg data.resolution A number with the x and y resolution. It will need to be
+	-- measured in the same projection of the input layer.
+	-- @usage -- DONTRUN
+	-- proj:addCellularLayer{
+	--     input = "amazonia-states",
+	--     layer = "cells",
+	--     resolution = 5e4 -- 50x50km
+	-- }
+	addCellularLayer = function(self, data)
+	end
+}
 
 --- A TerraView project. It can handle data connections and create
 -- layers.
+-- @arg data.file A string with the file name to be used. If the
+-- file does not exist then it will be created.
+-- @usage -- DONTRUN
+-- import("fillcell")
+--
+-- proj = Project{
+--     file = "myproject.tview"
+-- }
 function Project(data)
 end
 

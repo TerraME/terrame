@@ -32,8 +32,8 @@ ui_senderGUI.h
 ui_spatialObserverGUI.h
 ui_plotPropertiesGUI.h
 .project
-packages/base/doc/
-packages/base/examples/*.tme
+packages/*/doc/
+packages/*/examples/*.tme
 test/.terrame*
 test/packages/*/doc
 test/packages/.terrame*
