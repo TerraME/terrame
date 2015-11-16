@@ -33,17 +33,11 @@ add_definitions(-w -DTME_LUA_5_2 -DTME_TERRALIB_RC3 -DQWT_DLL
 
 set(BINARY_DIR ${ROOT}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR})
-set(BASE_DIR ${ROOT}/base)
-set(DOC_DIR ${ROOT}/luadoc)
+set(PACKAGE_DIR ${ROOT}/packages)
 
 file(COPY
-	${BASE_DIR}/
-	DESTINATION ${BINARY_DIR}/packages/base/
-)
-
-file(COPY
-	${DOC_DIR}/
-	DESTINATION ${BINARY_DIR}/packages/luadoc/
+	${PACKAGE_DIR}/
+	DESTINATION ${BINARY_DIR}/
 )
 
 file(COPY
