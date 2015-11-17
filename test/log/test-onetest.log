@@ -130,6 +130,12 @@ Testing tests/internal/basic/terrame.lua
 Skipping tests/internal/basic/terrame.lua
 Testing tests/internal/basic/utils.lua
 Skipping tests/internal/basic/utils.lua
+Testing tests/observer/alternative/Agent.lua
+Skipping tests/observer/alternative/Agent.lua
+Testing tests/observer/alternative/Cell.lua
+Skipping tests/observer/alternative/Cell.lua
+Testing tests/observer/alternative/CellularSpace.lua
+Skipping tests/observer/alternative/CellularSpace.lua
 Testing tests/observer/alternative/Chart.lua
 Skipping tests/observer/alternative/Chart.lua
 Testing tests/observer/alternative/Clock.lua
@@ -140,6 +146,8 @@ Testing tests/observer/alternative/LogFile.lua
 Skipping tests/observer/alternative/LogFile.lua
 Testing tests/observer/alternative/Map.lua
 Skipping tests/observer/alternative/Map.lua
+Testing tests/observer/alternative/Society.lua
+Skipping tests/observer/alternative/Society.lua
 Testing tests/observer/alternative/TextScreen.lua
 Skipping tests/observer/alternative/TextScreen.lua
 Testing tests/observer/alternative/VisualTable.lua
@@ -182,7 +190,7 @@ Skipping snapthots check
 Skipping examples
 
 Unit test report:
-Tests were executed in 3.56 seconds.
+Tests were executed in 3.7 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.

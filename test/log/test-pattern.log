@@ -26,22 +26,24 @@ Testing walk
 Checking if all asserts were executed
 Skipping folder tests/database/alternative
 Skipping folder tests/internal/alternative
-Skipping folder tests/observer/alternative
+Testing tests/observer/alternative/Agent.lua
+Testing notify
+Checking if all asserts were executed
 Skipping source code functions check
 Skipping lines of source code check
 Skipping snapthots check
 Skipping examples
 
 Unit test report:
-Tests were executed in 5.16 seconds.
+Tests were executed in 6.61 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or folders in folder 'tests'.
 All asserts were executed at least once.
-All 44 asserts were executed successfully.
-All 17 tested functions do not have any unexpected execution error.
-All 17 tested functions have at least one assert.
-All 17 tested functions exist in the source code of the package.
+All 45 asserts were executed successfully.
+All 18 tested functions do not have any unexpected execution error.
+All 18 tested functions have at least one assert.
+All 18 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
