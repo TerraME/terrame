@@ -24,7 +24,30 @@
 --#########################################################################################
 
 Choice_ = {
-	type_ = "Choice"
+	type_ = "Choice",
+	--- Return a random element from the available options. If the Choice was built
+	-- from non-named arguments or it has a step, it returns a random value following a
+	-- discrete uniform distribution. If it has maximum and minimum then it returns a random
+	-- value using a continuous uniform distribution. When sampling from
+	-- Choices that have maximum but not minimum, or minimum but not maximum, it uses
+	-- 2^52 as maximum or -2^52 as minimum.
+	-- @usage c = Choice{1, 2, 5, 6}
+	-- c:sample()
+	sample = function(self)
+		local r = Random()
+		if self.values then
+			return self.values[r:integer(#self.values - 1) + 1]
+		elseif self.step then
+			local quantity = (self.max - self.min) / self.step
+			return self.min + self.step * r:integer(0, quantity)
+		elseif self.max and self.min then
+			return r:number(self.min, self.max)
+		elseif self.max then
+			return r:number(-2^52, self.max)
+		else
+			return r:number(self.min, 2^52)
+		end
+	end
 }
 
 metaTableChoice_ = {
