@@ -57,6 +57,34 @@ function clean()
 	cpp_restartobservercounter()
 end
 
+--- Return a copy of a given table. It does not copy metatables.
+-- @arg mtable A table.
+-- @usage animal = {
+--     age = 5,
+--     height = 10,
+--     weight = 8
+-- }
+--
+-- copy = clone(animal)
+-- copy.age = 2
+--
+-- print(animal.age)
+function clone(mtable)
+	mandatoryArgument(1, "table", mtable)
+
+	local result = {}
+
+	forEachElement(mtable, function(idx, value, mtype)
+		if mtype == "table" then
+			result[idx] = clone(value)
+		else
+			result[idx] = value
+		end
+	end)
+
+	return result
+end
+
 --- Parse a single CSV line. It returns a vector of strings with the i-th value in the position i.
 -- This function was taken froom http://lua-users.org/wiki/LuaCsv.
 -- @arg line A string from a CSV file.

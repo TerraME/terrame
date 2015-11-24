@@ -47,6 +47,12 @@ return{
 		end
 		unitTest:assertError(error_func, "Function 'sum' does not exist.")
 	end,
+	clone = function(unitTest)
+		local error_func = function()
+			clone(2)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
+	end,
 	d = function(unitTest)
 		local error_func = function()
 			local gt = d()

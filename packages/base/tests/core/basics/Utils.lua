@@ -42,6 +42,20 @@ return{
 		t:execute(10)
 		unitTest:assertEquals(cont, 10)
 	end,
+	clone = function(unitTest)
+		local animal = {
+			age = 5,
+			dim = {10, 8}
+		}
+
+		local copy = clone(animal)
+
+		unitTest:assertEquals(copy.dim[1], 10)
+		unitTest:assertEquals(copy.age, 5)
+		copy.age = 2
+
+		unitTest:assertEquals(animal.age, 5)
+	end,
 	d = function(unitTest)
 		local df = function(x, y) return y - x ^ 2 + 1 end
 		local a = 0
