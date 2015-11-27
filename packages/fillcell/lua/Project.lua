@@ -75,10 +75,17 @@ Project_ = {
 	end
 }
 
---- A TerraView project. It can handle data connections and create
--- layers.
+--- Project is a concept to describe all the data to be used by a given model.
+-- Data can be stored in different sources, with different formats and access.
+-- A project organises the data into a set of layers, storing all the information
+-- related to each data source internally. After that, the user can refer to the
+-- data sets only using the respective layer name. 
+-- TerraME allows the modeler to create a Project from scratch or load one already
+-- created in another software of TerraLib family.
 -- @arg data.file A string with the file name to be used. If the
 -- file does not exist then it will be created.
+-- @arg data.create A boolean value indicating whether the project should be created.
+-- The default value is false.
 -- @usage -- DONTRUN
 -- import("fillcell")
 --
