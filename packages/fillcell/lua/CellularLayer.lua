@@ -26,18 +26,38 @@
 
 CellularLayer_ = {
 	type_ = "CellularLayer",
-	--- Function to create a new attribute for a CellularLayer. It has different strategies
-	-- for any geospatial data.
+	--- Create a new attribute for each cell of a CellularLayer.
+	-- This attribute can be stored as a new
+	-- column of a table or a new file, according to where the CellularLayer is stored.
+	-- There are several strategies for filling cells according to the geometry of the
+	-- input layer.
 	-- @arg data.select Name of an attribute from the input data. It is only required when
 	-- the strategy needs a value associated to the geometry (average, sum, majority).
 	-- It can also be an integer value representing the band of the raster to be used.
 	-- If the raster has only one band then this value is optional.
-	-- @arg data.layer An input layer belonging to the same Project.
+	-- @arg data.layer Name of an input layer belonging to the same Project. There are
+	-- several strategies available, depending on the geometry of the layer. See below:
+	-- @tabular layer
+	-- Geometry & Using only geometry & Using attribute of objects with some overlap &
+	-- Using geometry and attribute \
+	-- Points & "count", "distance", "presence" & 
+	-- "average", "majority", "maximum", "minimum", "stdev", "sum" &
+	-- "value" \
+	-- Lines & "count", "distance", "length", "presence" &
+	-- "average", "majority", "maximum", "minimum", "stdev", "sum" &
+	-- "majority", "value" \
+	-- Polygons & "area", "count", "distance", "presence" &
+	-- "average", "majority", "maximum", "minimum", "stdev", "sum" &
+	-- "average", "majority", "percentage", "value", "sum" \
+	-- Raster & (none) &
+	-- "average", "majority", "maximum", "minimum", "percentage", "stdev", "sum" &
+	-- (none) \
 	-- @arg data.strategy The way to calculate the attribute of each cell. See the
 	-- table below:
 	-- @tabular strategy
 	-- Strategy & Description & Mandatory arguments & Optional arguments \
-	-- "area" & Total overlay area between the cell and a layer of polygons. & attribute, layer & \
+	-- "area" & Total overlay area between the cell and a layer of polygons. The created values
+	-- will range from zero to one, indicating a percentage of coverage. & attribute, layer & \
 	-- "average" & Average of an attribute of the objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. When using argument area, 
 	-- it computes the average weighted by the proportions of the respective intersection areas.
@@ -51,29 +71,33 @@ CellularLayer_ = {
 	-- "length" & Total length of overlay between the cell and a layer of lines. If there is
 	-- more than one line, it sums all lengths.
 	-- & attribute, layer & \
-	-- "minimum" & Minimum value of an attribute among the objects that have some intersection with
-	-- the cell, without taking into account their geometric properties. & attribute, layer, select &
+	-- "majority" & More common value in the objects that have some intersection with the cell, 
+	-- without taking into account their geometric properties. When using argument area, it
+	-- computes the value of a given attribute that has larger coverage. & attribute, layer, select & 
 	-- default, dummy \
 	-- "maximum" & Maximum value of  an attribute among the objects that have some intersection with the
 	-- cell, without taking into account their geometric properties. & attribute, layer, select &
 	-- default, dummy \
-	-- "majority" & More common value in the objects that have some intersection with the cell, 
-	-- without taking into account their geometric properties. When using argument area, it
-	-- computes the value of a given attribute that has larger coverage. & attribute, layer & 
-	-- select, default \
+	-- "minimum" & Minimum value of an attribute among the objects that have some intersection with
+	-- the cell, without taking into account their geometric properties. & attribute, layer, select &
+	-- default, dummy \
 	-- "percentage" & Percentages of each value of an attribute covering the cell. It creates
 	-- one attribute for each attribute value, appending the value to the attribute name. 
-	-- & attribute, layer & select \
+	-- The sum of the created values for a given cell will range from zero to one, according to
+	-- the percentage of coverage.
+	-- & attribute, layer, select & default, dummy \
 	-- "presence" & Boolean value pointing out whether some object has an overlay with the cell.
 	-- & attribute, layer & \
 	-- "stdev" & Standard deviation of an attribute of the objects that have some intersection with the
-	-- cell, without taking into account their geometric properties. & attribute, layer & default,
-	-- select, dummy \
+	-- cell, without taking into account their geometric properties. & attribute, layer, select &
+	-- default, dummy \
 	-- "sum" & Sum of an attribute of the objects that have some intersection with the cell, without
 	-- taking into account their geometric properties. When using argument area, it computes the sum 
 	-- based on the proportions of intersection area. Useful to preserve the total sum
 	-- in both layers, such as population size.
-	-- & attribute, layer & area, default, select \
+	-- & attribute, layer, select & area, default, dummy \
+	-- "value" & The attribute value of the closest object. If using area, it uses the attribute
+	-- value of the object with greater intersection area. & attribute, layer, select & area \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true), 
 	-- or the weights are equal for each object with some overlap (false, default value).
