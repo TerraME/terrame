@@ -57,7 +57,12 @@ Project_ = {
 	-- }
 	addLayer = function(self, data)	
 	end,
-	--- Add a new CellularLayer to the project.
+	--- Add a new CellularLayer to the project. It has a raster-like
+	-- representation of space with several attributes created from
+	-- different spatial representations.
+	-- CellularLayers homogeneize the spatial representation of a given
+	-- model, making the model simpler and requiring less computational
+	-- resources.
 	-- @arg data.layer Name of the layer to be created.
 	-- @arg data.input A layer whose spatial coverage will be used to create the CellularLayer.
 	-- @arg data.box A boolean value indicating whether the CellularLayer will fill the
