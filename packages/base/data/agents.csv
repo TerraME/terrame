@@ -1,0 +1,5 @@
+name,age,wealth,vision,metabolism,immune
+"john",20,200,2,2,false
+"mary",18,100,3,1,false
+"paul",35,500,2,1,true
+"fred",32,200,4,2,true

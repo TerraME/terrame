@@ -1,0 +1,10 @@
+diff a/src/core/model.h b/src/core/model.h	(rejected hunks)
+@@ -45,7 +45,7 @@
+ 
+ using namespace std;
+ 
+-typedef string ModelID;
++typedef std::string ModelID;
+ 
+ /**
+  * \brief Defines the interface for a general purpose model.
