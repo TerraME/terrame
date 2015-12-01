@@ -28,7 +28,7 @@ LegendWindow::LegendWindow(QWidget *parent)
     invertColor = false;
     attrValuesChanged = false;
     rows = 5;
-    teColorVec = 0;
+    //teColorVec = 0; // issue #319
 
     setupUi();  // instancia todos os objetos da GUI
 
@@ -97,7 +97,7 @@ LegendWindow::~LegendWindow()
     //    delete frameTeQtColorBar;
 
     delete legendTable;
-    delete teColorVec;
+    //delete teColorVec;// issue #319
 }
 
 void LegendWindow::createView(int rowsNum)
@@ -519,20 +519,22 @@ void LegendWindow::createColorVector()
     std::vector<ColorBar> colorVec = frameTeQtColorBar->getInputColorVec();
 
     // vetor TeColor que possui as cores
-    if (teColorVec)
-        delete teColorVec;
-    teColorVec = new std::vector<TeColor>();
-    std::vector<TeColor> leftColorVec;
+	// issue #319
+    //if (teColorVec)
+    //    delete teColorVec;
+    //teColorVec = new std::vector<TeColor>();
+    //std::vector<TeColor> leftColorVec;
 
     if (rows == 1)
         rows++;
 
     if (groupingModeComboBox->currentIndex() != TObsStdDeviation) 
     {
-        leftColorVec = getColors(colorVec, rows);
+		// issue #319
+        //leftColorVec = getColors(colorVec, rows);
 
-        for (unsigned i = 0; i < leftColorVec.size(); ++i)
-            teColorVec->push_back(leftColorVec.at(i));
+        //for (unsigned i = 0; i < leftColorVec.size(); ++i)
+        //    teColorVec->push_back(leftColorVec.at(i));
     }
     else	// desvio padr?o
     {
@@ -556,19 +558,20 @@ void LegendWindow::createColorVector()
         // Corre??o de bug: divis?o por zero no m?todo getColors do TeColorUtils.cpp
         if (rightColors == 1)
             rightColors++;
-
-        leftColorVec = getColors(colorVec, leftColors);
-        std::vector<TeColor> rightColorVec = getColors(stdColorVec, rightColors);
+		// issue #319
+        //leftColorVec = getColors(colorVec, leftColors);
+        //std::vector<TeColor> rightColorVec = getColors(stdColorVec, rightColors);
 
         unsigned ui;
-        for (ui = 0; ui < leftColorVec.size(); ++ui)
-            teColorVec->push_back(leftColorVec.at(ui));
+		// issue #319
+        //for (ui = 0; ui < leftColorVec.size(); ++ui)
+        //    teColorVec->push_back(leftColorVec.at(ui));
 
         // if (ui > 0)
-            teColorVec->push_back(leftColorVec.at(ui-1));
-
-        for (ui = 0; ui < rightColorVec.size(); ++ui)
-            teColorVec->push_back(rightColorVec.at(ui));
+            //teColorVec->push_back(leftColorVec.at(ui-1));// issue #319
+		// issue #319
+        //for (ui = 0; ui < rightColorVec.size(); ++ui)
+        //    teColorVec->push_back(rightColorVec.at(ui));
     }
 }
 
@@ -603,9 +606,10 @@ void LegendWindow::countElementsBySlices()
                     {
                         occurrence++;
                         leg.setOccurrence(occurrence);
-                        leg.setColor(teColorVec->at(leg.getIdxColor()).red_, 
-                                teColorVec->at(leg.getIdxColor()).green_,
-                                teColorVec->at(leg.getIdxColor()).blue_);
+						// issue #319
+                        //leg.setColor(teColorVec->at(leg.getIdxColor()).red_, 
+                        //        teColorVec->at(leg.getIdxColor()).green_,
+                        //        teColorVec->at(leg.getIdxColor()).blue_);
                         vecLegend->replace(i, leg);
                     }
                 }
@@ -815,9 +819,10 @@ void LegendWindow::groupByEqualStep(double fix, Attributes *attrib)
         leg.setOccurrence(0);
 
         // recupera a cor j? dividida entre os slices
-        leg.setColor(teColorVec->at(row).red_,
-                teColorVec->at(row).green_,
-                teColorVec->at(row).blue_);
+		// issue #319
+        //leg.setColor(teColorVec->at(row).red_,
+        //        teColorVec->at(row).green_,
+        //        teColorVec->at(row).blue_);
 
         vecLegend->append(leg);
     }
@@ -883,19 +888,23 @@ void LegendWindow::groupByQuantil(double fix, Attributes *attrib)
 
         // recupera a cor j? dividida entre os slices
         // n - 1 pq o "n" ? pre-incrementado (++n)
-        leg.setColor(teColorVec->at(n - 1).red_, 
-                teColorVec->at(n - 1).green_,
-                teColorVec->at(n - 1).blue_);
+		// issue #319
+        //leg.setColor(teColorVec->at(n - 1).red_, 
+        //        teColorVec->at(n - 1).green_,
+        //        teColorVec->at(n - 1).blue_);
 
-        vecLegend->append(leg);
+        //vecLegend->append(leg);
     }
 }
 
 void LegendWindow::groupByStdDeviation(double fix, Attributes *attrib)
 {
     // Compute mim, max and mean
-    double	min = TeMAXFLOAT;
-    double	max = -TeMAXFLOAT;
+	// issue #319
+    //double	min = TeMAXFLOAT;
+    //double	max = -TeMAXFLOAT;
+	double	min = FLT_MAX;
+	double	max = FLT_MIN;
     float	sum = 0.0, sm2 = 0.0;
 
     QVector<double>* values = attrib->getNumericValues();
@@ -1459,13 +1468,13 @@ void LegendWindow::groupByUniqueValue(double /*fix*/, Attributes *attrib)
             leg.setFrom( valuesList.at(i) );
             leg.setIdxColor(i);
         }
-
-        if (leg.getIdxColor() < teColorVec->size())
-        {
-            leg.setColor(teColorVec->at(leg.getIdxColor()).red_,
-                    teColorVec->at(leg.getIdxColor()).green_,
-                    teColorVec->at(leg.getIdxColor()).blue_);
-        }
+		// issue #319
+        //if (leg.getIdxColor() < teColorVec->size())
+        //{
+        //    leg.setColor(teColorVec->at(leg.getIdxColor()).red_,
+        //            teColorVec->at(leg.getIdxColor()).green_,
+        //            teColorVec->at(leg.getIdxColor()).blue_);
+        //}
 
         model->setData(model->index(i, 0, QModelIndex()), color2Pixmap(leg.getColor()),
                        Qt::DecorationRole);	// color
@@ -1839,9 +1848,10 @@ void LegendWindow::commitFile()
             for (int j = 0; j < (int)colorBarVec.size(); j++)
             {
                 QString color = QString("color = {{%1, %2, %3}, distance = %4}")	// formata??o: "r g b dist; "
-                        .arg(QString::number(colorBarVec.at(j).cor_.red_))
-                        .arg(QString::number(colorBarVec.at(j).cor_.green_))
-                        .arg(QString::number(colorBarVec.at(j).cor_.blue_))
+						// issue #319
+                        //.arg(QString::number(colorBarVec.at(j).cor_.red_))
+                        //.arg(QString::number(colorBarVec.at(j).cor_.green_))
+                        //.arg(QString::number(colorBarVec.at(j).cor_.blue_))
                         .arg(QString::number(colorBarVec.at(j).distance_));
 
                 if (j < (int)colorBarVec.size() - 1)
@@ -1871,9 +1881,10 @@ void LegendWindow::commitFile()
                 {
                     // formata??o: "r g b dist; "
                     QString color = QString("color = {{%1, %2, %3}, distance = %4}")
-                            .arg(QString::number(colorBarVec.at(j).cor_.red_))
-                            .arg(QString::number(colorBarVec.at(j).cor_.green_))
-                            .arg(QString::number(colorBarVec.at(j).cor_.blue_))
+							// issue #319
+                            //.arg(QString::number(colorBarVec.at(j).cor_.red_))
+                            //.arg(QString::number(colorBarVec.at(j).cor_.green_))
+                            //.arg(QString::number(colorBarVec.at(j).cor_.blue_))
                             .arg(QString::number(colorBarVec.at(j).distance_));
 
                     if (j < (int)colorBarVec.size() - 1)

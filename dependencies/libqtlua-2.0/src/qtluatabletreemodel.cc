@@ -28,6 +28,11 @@
 
 #include <internal/TableTreeKeys>
 
+// ADD FOR TO WORK IN MSVC
+#ifdef _MSC_VER
+#define __func__ __FUNCTION__
+#endif
+
 namespace QtLua {
 
 #define QTLUA_PROTECT(...)					\

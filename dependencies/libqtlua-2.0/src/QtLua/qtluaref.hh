@@ -23,7 +23,8 @@
 #define QTLUAREF_HH_
 
 #ifndef __GNUC__
-# warning GCC atomic operations are not available, QtLua::Ref will not be thread-safe
+// COMMENTED FOR TO WORK IN MSVC
+//# warning GCC atomic operations are not available, QtLua::Ref will not be thread-safe
 #endif
 
 #include <QtGlobal> // for Q_UNUSED

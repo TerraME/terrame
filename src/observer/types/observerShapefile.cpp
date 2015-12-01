@@ -210,6 +210,7 @@ QGraphicsPathItem* ObserverShapefile::createItem(SHPObject *obj, int x, int y,do
             return createItemPoint(obj,x,y,dx,dy,sx,sy);//default
     }
 */
+	return new QGraphicsPathItem();
 }
 
 QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, int y,double dx, double dy, double sx,double sy)
@@ -245,6 +246,7 @@ QGraphicsPathItem* ObserverShapefile::createItemPolygon(SHPObject *obj, int x, i
     item->scale(sx, sy);
     return item;
 */
+	return new QGraphicsPathItem();
 }
 
 QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
@@ -265,6 +267,7 @@ QGraphicsPathItem* ObserverShapefile::createItemPoint(SHPObject *obj, int x, int
 
     return item;
 */
+	return new QGraphicsPathItem();
 }
 QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, int y,double dx, double dy, double sx, double sy)
 {
@@ -309,6 +312,7 @@ QGraphicsPathItem* ObserverShapefile::createItemPolyline(SHPObject *obj, int x, 
 
     return item;
 */
+	return new QGraphicsPathItem();
 }
 
 void ObserverShapefile::scaleView(qreal newScale)
