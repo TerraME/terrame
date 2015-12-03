@@ -7,7 +7,7 @@ local patterns = {
 	{"^(([\"\']).-%2)","string"}, -- string
 	{"^([%a_][%w_]*)", "id"},     -- id
 	{"^(%-%-[^\n]+)", "comment"},     -- comment
-	{"^([%.%-]?%d+)", "number"},    -- number
+	{"^(%d*[%.%-%+]?%d+[eE]?)", "number"},    -- number
 	{"^(.)"}                      -- other
 }
 
