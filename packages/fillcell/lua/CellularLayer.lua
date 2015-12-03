@@ -32,7 +32,7 @@ CellularLayer_ = {
 	-- There are several strategies for filling cells according to the geometry of the
 	-- input layer.
 	-- @arg data.select Name of an attribute from the input data. It is only required when
-	-- the strategy needs a value associated to the geometry (average, sum, majority).
+	-- the selected operation needs a value associated to the geometry (average, sum, majority).
 	-- It can also be an integer value representing the band of the raster to be used.
 	-- If the raster has only one band then this value is optional.
 	-- @arg data.layer Name of an input layer belonging to the same Project. There are
@@ -52,10 +52,10 @@ CellularLayer_ = {
 	-- Raster & (none) &
 	-- "average", "majority", "maximum", "minimum", "percentage", "stdev", "sum" &
 	-- (none) \
-	-- @arg data.strategy The way to calculate the attribute of each cell. See the
+	-- @arg data.operation The way to compute the attribute of each cell. See the
 	-- table below:
-	-- @tabular strategy
-	-- Strategy & Description & Mandatory arguments & Optional arguments \
+	-- @tabular operation
+	-- Operation & Description & Mandatory arguments & Optional arguments \
 	-- "area" & Total overlay area between the cell and a layer of polygons. The created values
 	-- will range from zero to one, indicating a percentage of coverage. & attribute, layer & \
 	-- "average" & Average of an attribute of the objects that have some intersection with the
@@ -101,7 +101,7 @@ CellularLayer_ = {
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true), 
 	-- or the weights are equal for each object with some overlap (false, default value).
-	-- @arg data.dummy A value that will ignored when computing the strategy, used only for
+	-- @arg data.dummy A value that will ignored when computing the operation, used only for
 	-- raster strategies.
 	-- @arg data.default A value that will be used to fill a cell whose attribute cannot be computed.
 	-- For example, when there is no intersection area.
@@ -115,20 +115,20 @@ CellularLayer_ = {
 	--
 	-- cl:fillCells{
 	--     attribute = "distRoads",
-	--     strategy = "distance",
+	--     operation = "distance",
 	--     layer = "roads"
 	-- }
 	--
 	-- cl:fillCells{
 	--     attribute = "population",
 	--     layer = "population",
-	--     strategy = "sum",
+	--     operation = "sum",
 	--     area = true
 	-- }
 	--
 	-- cl:fillCells{
 	--     attribute = "area2010_",
-	--     strategy = "percentage",
+	--     operation = "percentage",
 	--     layer = "cover",
 	--     select = "cover2010"
 	-- }
