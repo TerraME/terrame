@@ -37,7 +37,7 @@ set(PACKAGE_DIR ${ROOT}/packages)
 
 file(COPY
 	${PACKAGE_DIR}/
-	DESTINATION ${BINARY_DIR}/
+	DESTINATION ${BINARY_DIR}/packages/
 )
 
 file(COPY
@@ -67,9 +67,9 @@ include_directories( ${SRCDIR}
           ${SRCDIR}/observer/types/
           ${SRCDIR}/observer/
           ${SRCDIR}/luaFileSystem
-          ${SRCDIR}/service/
-          ${SRCDIR}/service/persistence
-          ${SRCDIR}/service/persistence/terralib
+          # ${SRCDIR}/service/
+          # ${SRCDIR}/service/persistence
+          # ${SRCDIR}/service/persistence/terralib
 
           /usr/local/include
 )
@@ -93,7 +93,7 @@ file(GLOB SRCS
           ${SRCDIR}/observer/*.cpp
           ${SRCDIR}/observer/types/chartPlot/*.cpp
           ${SRCDIR}/luaFileSystem/*.c
-          ${SRCDIR}/service/persistence/terralib/*.cpp
+          # ${SRCDIR}/service/persistence/terralib/*.cpp
 )
 
 set(LIBS)
@@ -125,13 +125,15 @@ endif(SHAPELIB_FOUND)
 	# Set(TERRALIB_LIBRARY ${TERRALIB_LIBRARIES}/libterralib.a)
 	# set(TERRALIB_FOUND TRUE)
 # else(MINGW)
-	find_package(TerraLib)
+	# find_package(TerraLib)
 # endif(MINGW)
 if( TERRALIB_FOUND )
 	message("-- Found TerraLib library ${TERRALIB_LIBRARY} and include dir ${TERRLIB_INCLUDE_DIR}")
 	include_directories(${TERRALIB_KERNEL_INCLUDE_DIR})
 	include_directories(${TERRALIB_MYSQL_INCLUDE_DIR})
 	include_directories(${TERRALIB_JPEG_INCLUDE_DIR})
+	include_directories(${TERRALIB_INCLUDE_DIR})
+	link_directories(${TERRALIB_LIBRARY})
 	set(LIBS ${LIBS} ${TERRALIB_LIBRARY})
 endif( TERRALIB_FOUND )
 

@@ -42,7 +42,7 @@ Author: Tiago Garcia de Senna Carneiro
 #include "terrameLua.h"
 
 #ifndef TME_NO_TERRALIB
-	#include "TeVersion.h"
+	// #include "TeVersion.h" // issue #319
 #endif
 
 #include "player.h"
@@ -179,8 +179,8 @@ int cpp_informations(lua_State *L)
 	lua_pushstring(L, LUA_RELEASE);
 	lua_pushstring(L, qVersion());
 	lua_pushstring(L, QWT_VERSION_STR);
-	lua_pushstring(L, TERRALIB_VERSION);
-	lua_pushstring(L, TeDBVERSION.c_str());
+	// lua_pushstring(L, TERRALIB_VERSION); // issue #319
+	// lua_pushstring(L, TeDBVERSION.c_str()); // issue #319
 	return 5;
 }
 
@@ -248,6 +248,8 @@ int cpp_setdefaultfont(lua_State *L)
 #else
 	app->setFont(QFont("Ubuntu", 9));
 #endif
+
+	return 0;
 }
 
 int cpp_restartobservercounter(lua_State *L)

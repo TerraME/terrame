@@ -33,5 +33,7 @@ int luaMap::setGridVisible(lua_State *L)
 {
     int v = luaL_checkint(L, -1);
     obs->setGridVisible(v);
+
+	return 0;
 }
 

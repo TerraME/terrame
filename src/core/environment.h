@@ -51,6 +51,10 @@ Author: Tiago Garcia de Senna Carneiro (tiago@dpi.inpe.br)
 #define MIN(a, b)  (a < b ? a : b)
 #endif
 
+#ifndef MAX
+#define MAX(a, b)  (a > b ? a : b)
+#endif
+
 #include <QApplication>
 #include "player.h"
 

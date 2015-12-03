@@ -30,6 +30,7 @@ of this library and its documentation.
 #include <QCursor>
 #include <vector>
 #include <map>
+#include <string>
 using namespace std;
 
 //class Help;
@@ -62,7 +63,7 @@ public:
      * Sets a vector of \a TeColor
      * \param colorVec a reference to a \a TeColor vector
      */
-    void setColorBar(const vector<TeColor>& colorVec);
+    // void setColorBar(const vector<TeColor>& colorVec); // issue #319
 
     /**
      * \overload
@@ -76,7 +77,7 @@ public:
      * and finishs with Black
      * \param colors string with the color name.
      */
-    void setColorBarFromNames(string colors);
+    void setColorBarFromNames(std::string colors);
 
     /**
      * Draws the colors in the colorBar object
@@ -246,7 +247,7 @@ protected:
     int		ind_;
     std::vector<ColorBar> inputColorVec_;
     std::vector<int> changeVec_;
-    std::map<int, std::vector<TeColor> > colorMap_;
+    // std::map<int, std::vector<TeColor> > colorMap_; // issue #319
     bool	vertical_;
     bool	upDown_;
     bool	brightness_;

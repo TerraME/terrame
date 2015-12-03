@@ -635,7 +635,12 @@ namespace QtLua {
   QTLUA_FUNCTION(new_action_group, "Create a new QActionGroup and add passed actions.",
 		 "usage: qt.ui.menu.new_action_group( action [, action ...] )\n")
   {
-    QAction *a[args.size()];
+// CHANGED FOR TO WORK IN MSVC
+#ifdef _MSC_VER
+	  QVector<QAction*> a(args.size());
+#else
+	  QAction *a[args.size()];
+#endif
 
     for (int i = 0; i < args.size(); i++)
       a[i] = args[i].to_qobject_cast<QAction>();
