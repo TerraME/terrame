@@ -46,7 +46,7 @@ return{
 		local c = Clock{target = timer}
 		timer:execute(50)
 
-		--unitTest:assertSnapshot(c, "clock_timer_events.bmp", 0.01)
+		--unitTest:assertSnapshot(c, "clock_timer_events.bmp", 0.01) -- SKIP
 		unitTest:assertType(c, "Clock")
 	end
 }
