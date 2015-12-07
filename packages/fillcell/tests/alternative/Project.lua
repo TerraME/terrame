@@ -24,6 +24,84 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	addCellularLayer = function(unitTest)
+		local proj = Project{
+			file = file("amazonia.tview", "fillcell")
+		}
+
+		local error_func = function()
+			proj:addCellularLayer()
+		end
+		unitTest:assertError(error_func, tableArgumentMsg())
+
+		local error_func = function()
+			proj:addCellularLayer{
+				input = 123,
+				layer = "cells",
+				resolution = 5e4
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("input", "string", 123))
+
+		local error_func = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = 123,
+				resolution = 5e4
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 123))
+
+		local error_func = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = "cells",
+				resolution = 5e4,
+				box = 123
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("box", "boolean", 123))
+
+		local error_func = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = "cells",
+				resolution = false
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("resolution", "number", false))
+
+		error_func = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = "cells",
+				resolution = 0
+			}
+		end
+		unitTest:assertError(error_func, positiveArgumentMsg("resolution", 0))
+
+		error_func = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = "cells",
+				resolution = 0
+			}
+		end
+		unitTest:assertError(error_func, positiveArgumentMsg("resolution", 0))
+
+		error_func = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = "cells",
+				resoltion = 200
+			}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("resoltion", "resolution"))
+
+		-- TODO: check if the input layer contains polygons (?)
+		-- TODO: check if the input layer exists
+		-- TODO: check if a layer to be added already exists
+	end,
 	addLayer = function(unitTest)
 		local proj = Project{
 			file = file("amazonia.tview", "fillcell")

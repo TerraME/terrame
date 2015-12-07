@@ -80,6 +80,14 @@ Project_ = {
 	--     resolution = 5e4 -- 50x50km
 	-- }
 	addCellularLayer = function(self, data)
+	    verifyNamedTable(data)
+
+	    verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution"})
+
+	    defaultTableValue(data, "box", false)
+	    mandatoryTableArgument(data, "layer", "string")
+	    mandatoryTableArgument(data, "input", "string")
+		positiveTableArgument(data, "resolution")
 	end
 }
 
