@@ -189,6 +189,17 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select"))
+
+		-- length
+		error_func = function()
+			cl:fillCells{
+				attribute = "area2010",
+				operation = "length",
+				layer = "cover",
+				select = "cover2010"
+			}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("select"))
 	end
 }
 
