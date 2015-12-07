@@ -80,6 +80,10 @@ Project_ = {
 	end
 }
 
+metaTableProject_ = {
+	__index = Project_
+}
+	
 --- Project is a concept to describe all the data to be used by a given model.
 -- Data can be stored in different sources, with different formats and access.
 -- A project organises the data into a set of layers, storing all the information
@@ -98,5 +102,15 @@ Project_ = {
 --     file = "myproject.tview"
 -- }
 function Project(data)
+    verifyNamedTable(data)
+
+    defaultTableValue(data, "create", false)
+    mandatoryTableArgument(data, "file", "string")
+
+    verifyUnnecessaryArguments(data, {"create", "file"})
+
+	setmetatable(data, metaTableProject_)
+
+	return data
 end
 
