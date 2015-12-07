@@ -56,6 +56,9 @@ Project_ = {
 	--     table = "roads"
 	-- }
 	addLayer = function(self, data)	
+	    verifyNamedTable(data)
+
+	    mandatoryTableArgument(data, "layer", "string")
 	end,
 	--- Add a new CellularLayer to the project. It has a raster-like
 	-- representation of space with several attributes created from

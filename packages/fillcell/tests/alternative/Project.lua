@@ -24,6 +24,30 @@
 -------------------------------------------------------------------------------------------
 
 return{
+	addLayer = function(unitTest)
+		local proj = Project{
+			file = file("amazonia.tview", "fillcell")
+		}
+
+		local error_func = function()
+			proj:addLayer()
+		end
+		unitTest:assertError(error_func, tableArgumentMsg())
+
+		error_func = function()
+			proj:addLayer{
+				layer = 123,
+				file = "myfile.shp",
+			}
+
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 123))
+
+		-- TODO: check if a layer to be added already exists
+		-- TODO: tests for shapefiles
+		-- TODO: tests for postgis
+		-- TODO: tests for tiff
+	end,
 	Project = function(unitTest)
 		local error_func = function()
 			local proj = Project()
