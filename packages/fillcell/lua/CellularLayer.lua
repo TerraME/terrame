@@ -143,6 +143,14 @@ CellularLayer_ = {
 			area = function()
 	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 			end,
+			average = function()
+	    		mandatoryTableArgument(data, "select", "string")
+				defaultTableValue(data, "area", false)
+				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "dummy", math.huge)
+
+	    		verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+			end,
 		}
 	end
 }
