@@ -160,6 +160,13 @@ CellularLayer_ = {
 			length = function()
 	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 			end,
+			majority = function()
+	    		mandatoryTableArgument(data, "select", "string")
+				defaultTableValue(data, "default", 0)
+				defaultTableValue(data, "dummy", math.huge)
+
+	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+			end,
 		}
 	end
 }
