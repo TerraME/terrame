@@ -136,6 +136,10 @@ CellularLayer_ = {
 	end
 }
 
+metaTableCellularLayer_ = {
+	__index = CellularLayer_
+}
+	
 --- A Layer of cells. It has operations to create new attributes from other layers.
 -- @arg data.project A file name with the TerraView project to be used, or a Project.
 -- @arg data.layer A string with the layer name to be used.
@@ -147,5 +151,15 @@ CellularLayer_ = {
 --     layer = "cells"
 -- }
 function CellularLayer(data)
+    verifyNamedTable(data)
+
+    verifyUnnecessaryArguments(data, {"layer", "project"})
+
+    mandatoryTableArgument(data, "project", "string")
+    mandatoryTableArgument(data, "layer", "string")
+
+	setmetatable(data, metaTableCellularLayer_)
+
+	return data
 end
 
