@@ -47,6 +47,60 @@ return{
 
 		-- TODO: select a project that does not exist
 		-- TODO: open a cellularlayer that does not exist - with and without suggestion
+	end,
+	fillCells = function(unitTest)
+		local cl = CellularLayer{project = "amazonia.tview", layer = "cells"}
+
+		local error_func = function()
+			cl:fillCells{
+				attribute = "population",
+				layer = "population"
+			}
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg("operation"))
+
+		error_func = function()
+			cl:fillCells{
+				attribute = "distRoads",
+				operation = 2,
+				layer = "roads"
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("operation", "string", 2))
+
+		error_func = function()
+			cl:fillCells{
+				attribute = "population",
+				operation = "area"
+			}
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg("layer"))
+
+		error_func = function()
+			cl:fillCells{
+				attribute = "distRoads",
+				operation = "area",
+				layer = 2
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 2))
+	
+		error_func = function()
+			cl:fillCells{
+				layer = "cells",
+				operation = "area"
+			}
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg("attribute"))
+
+		error_func = function()
+			cl:fillCells{
+				attribute = 2,
+				operation = "area",
+				layer = "cells"
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("attribute", "string", 2))
 	end
 }
 

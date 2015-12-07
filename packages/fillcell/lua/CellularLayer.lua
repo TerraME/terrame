@@ -133,6 +133,12 @@ CellularLayer_ = {
 	--     select = "cover2010"
 	-- }
 	fillCells = function(self, data)
+	    verifyNamedTable(data)
+
+	    mandatoryTableArgument(data, "operation", "string")
+	    mandatoryTableArgument(data, "layer", "string")
+	    mandatoryTableArgument(data, "attribute", "string")
+
 	end
 }
 
