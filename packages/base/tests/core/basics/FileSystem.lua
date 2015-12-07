@@ -95,7 +95,7 @@ return{
 
 			unitTest:assertEquals(attr.mode, "link") -- SKIP
 			unitTest:assertEquals(attr.nlink, 1) -- SKIP
-			--unitTest:assert(attr.size >= 61)
+			--unitTest:assert(attr.size >= 61) -- SKIP
 
 			attr = linkAttributes(pathdata.."agentslink", "mode")
 			unitTest:assertEquals(attr, "link") -- SKIP

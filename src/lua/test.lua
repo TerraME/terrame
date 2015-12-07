@@ -79,9 +79,7 @@ local function assertTable(filename)
 		count = count + 1
 
 		if string.match(line, ":assert") and not string.match(line, "SKIP") then
-			if string.match(line, ".*%-%-.*assert") == nil then
-				mtable[count] = 0
-			end
+			mtable[count] = 0
 		end
 
 		line = file:read()
