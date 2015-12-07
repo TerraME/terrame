@@ -167,6 +167,17 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
+
+		-- count
+		error_func = function()
+			cl:fillCells{
+				attribute = "area2010",
+				operation = "count",
+				layer = "cover",
+				select = "cover2010"
+			}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("select"))
 	end
 }
 

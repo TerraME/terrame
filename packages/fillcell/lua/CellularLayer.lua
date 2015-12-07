@@ -151,6 +151,9 @@ CellularLayer_ = {
 
 	    		verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
 			end,
+			count = function()
+	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+			end,
 		}
 	end
 }
