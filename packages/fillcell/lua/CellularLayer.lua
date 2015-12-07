@@ -154,6 +154,9 @@ CellularLayer_ = {
 			count = function()
 	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 			end,
+			distance = function()
+	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+			end,
 		}
 	end
 }
