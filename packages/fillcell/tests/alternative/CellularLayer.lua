@@ -101,6 +101,17 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("attribute", "string", 2))
+
+		-- area
+		error_func = function()
+			cl:fillCells{
+				attribute = "area2010",
+				operation = "area",
+				layer = "cover",
+				select = "cover2010"
+			}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("select"))
 	end
 }
 

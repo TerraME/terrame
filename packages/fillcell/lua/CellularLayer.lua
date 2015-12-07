@@ -139,6 +139,11 @@ CellularLayer_ = {
 	    mandatoryTableArgument(data, "layer", "string")
 	    mandatoryTableArgument(data, "attribute", "string")
 
+		switch(data, "operation"):caseof{
+			area = function()
+	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+			end,
+		}
 	end
 }
 
