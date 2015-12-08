@@ -378,6 +378,50 @@ return{
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
 
 
+		-- stdev
+		error_func = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = "cover",
+				select = 2
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2))
+
+		error_func = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = "cover",
+				select = "cover2010",
+				default = false
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false))
+
+		error_func = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = "cover",
+				select = "cover2010",
+				dummy = false
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false))
+
+		error_func = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = "cover",
+				select = "cover2010",
+				defaut = 3
+			}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
+
 		-- sum
 		error_func = function()
 			cl:fillCells{
