@@ -189,6 +189,9 @@ CellularLayer_ = {
 				defaultTableValue(data, "dummy", math.huge)
 
 			end,
+			presence = function()
+	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+			end,
 			stdev = function()
 	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 

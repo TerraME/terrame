@@ -377,6 +377,16 @@ return{
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
 
+		-- presence
+		error_func = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "presence",
+				layer = "cover",
+				select = "cover2010"
+			}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("select"))
 
 		-- stdev
 		error_func = function()
