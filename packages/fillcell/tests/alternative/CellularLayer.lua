@@ -105,7 +105,7 @@ return{
 		-- area
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "area",
 				layer = "cover",
 				select = "cover2010"
@@ -116,7 +116,7 @@ return{
 		-- average
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "average",
 				layer = "cover",
 				select = 2
@@ -126,7 +126,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "average",
 				layer = "cover",
 				select = "cover2010",
@@ -137,7 +137,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "average",
 				layer = "cover",
 				select = "cover2010",
@@ -148,7 +148,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "average",
 				layer = "cover",
 				select = "cover2010",
@@ -159,7 +159,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "average",
 				layer = "cover",
 				select = "cover2010",
@@ -171,7 +171,7 @@ return{
 		-- count
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "count",
 				layer = "cover",
 				select = "cover2010"
@@ -182,7 +182,7 @@ return{
 		-- distance
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "distance",
 				layer = "cover",
 				select = "cover2010"
@@ -193,7 +193,7 @@ return{
 		-- length
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "length",
 				layer = "cover",
 				select = "cover2010"
@@ -204,7 +204,7 @@ return{
 		-- majority
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "majority",
 				layer = "cover",
 				select = 2
@@ -214,7 +214,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "majority",
 				layer = "cover",
 				select = "cover2010",
@@ -225,7 +225,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "majority",
 				layer = "cover",
 				select = "cover2010",
@@ -236,7 +236,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "majority",
 				layer = "cover",
 				select = "cover2010",
@@ -248,7 +248,7 @@ return{
 		-- maximum
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "maximum",
 				layer = "cover",
 				select = 2
@@ -258,7 +258,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "maximum",
 				layer = "cover",
 				select = "cover2010",
@@ -269,7 +269,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "maximum",
 				layer = "cover",
 				select = "cover2010",
@@ -280,7 +280,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "maximum",
 				layer = "cover",
 				select = "cover2010",
@@ -292,7 +292,7 @@ return{
 		-- minimum
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "minimum",
 				layer = "cover",
 				select = 2
@@ -302,7 +302,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "minimum",
 				layer = "cover",
 				select = "cover2010",
@@ -313,7 +313,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "minimum",
 				layer = "cover",
 				select = "cover2010",
@@ -324,7 +324,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "minimum",
 				layer = "cover",
 				select = "cover2010",
@@ -336,7 +336,7 @@ return{
 		-- percentage
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "percentage",
 				layer = "cover",
 				select = 2
@@ -346,7 +346,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "percentage",
 				layer = "cover",
 				select = "cover2010",
@@ -357,7 +357,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "percentage",
 				layer = "cover",
 				select = "cover2010",
@@ -368,7 +368,7 @@ return{
 
 		error_func = function()
 			cl:fillCells{
-				attribute = "area2010",
+				attribute = "attr",
 				operation = "percentage",
 				layer = "cover",
 				select = "cover2010",
@@ -518,6 +518,14 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("selec", "select"))
+
+		-- TODO: match geometries with the available strategies
+		-- (first table of the documentation)
+		-- check if terralib already does this (but the test must exist anyway)
+
+		-- TODO: try to create an attribute that already exists (I dont know if TerraLib
+		-- will stop with an error or it is up to us to check this.)
+		-- TODO: try to fillCells using a `layer` that does not exist.
 	end
 }
 

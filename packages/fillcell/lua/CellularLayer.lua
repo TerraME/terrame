@@ -144,12 +144,12 @@ CellularLayer_ = {
 	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 			end,
 			average = function()
+	    		verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+
 	    		mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "area", false)
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
-
-	    		verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
 			end,
 			count = function()
 	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
@@ -161,25 +161,25 @@ CellularLayer_ = {
 	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 			end,
 			majority = function()
+	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+
 	    		mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
-
-	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 			end,
 			maximum = function()
+	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+
 	    		mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
-
-	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 			end,
 			minimum = function()
+	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+
 	    		mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
-
-	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 			end,
 			percentage = function()
 	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
@@ -187,7 +187,6 @@ CellularLayer_ = {
 	    		mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
-
 			end,
 			presence = function()
 	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
