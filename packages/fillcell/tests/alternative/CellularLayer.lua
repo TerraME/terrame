@@ -376,6 +376,38 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
+
+		-- value
+		error_func = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "value",
+				layer = "cover",
+				select = 2
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2))
+
+		error_func = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "value",
+				layer = "cover",
+				select = "cover2010",
+				area = 2
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("area", "boolean", 2))
+
+		error_func = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "value",
+				layer = "cover",
+				selec = "cover2010"
+			}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("selec", "select"))
 	end
 }
 
