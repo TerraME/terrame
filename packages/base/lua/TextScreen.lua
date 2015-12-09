@@ -74,6 +74,8 @@ metaTableTextScreen_ = {__index = TextScreen_}
 --     select = {"size" , "age"}
 -- }
 function TextScreen(data)
+	verifyNamedTable(data)
+	verifyUnnecessaryArguments(data, {"target", "select"})
 	mandatoryTableArgument(data, "target")
 
 	if type(data.select) == "string" then data.select = {data.select} end
@@ -159,8 +161,6 @@ function TextScreen(data)
 			end
 		end)
 	end
-
-	verifyUnnecessaryArguments(data, {"target", "select"})
 
 	for i = 1, #data.select do
 		if data.select[i] == "#" then

@@ -66,15 +66,16 @@ metaTableClock_ = {__index = Clock_}
 -- timer:execute(3)
 -- timer:notify()
 Clock = function(data)
-	mandatoryTableArgument(data, "target", "Timer")
-
+	verifyNamedTable(data)
 	verifyUnnecessaryArguments(data, {"target"})
+
+	mandatoryTableArgument(data, "target", "Timer")
 
 	local observerAttrs = {}
 	local observerParams = {"", ""}
 	local observerType = 8
-  local id
-  local obs
+	local id
+	local obs
 
 	id, obs = data.target.cObj_:createObserver(observerType, observerAttrs, observerParams)
   

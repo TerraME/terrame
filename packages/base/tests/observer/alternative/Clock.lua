@@ -30,6 +30,11 @@ return{
 		local t = Timer{}
 
 		local error_func = function()
+			Clock(2)
+		end
+		unitTest:assertError(error_func, namedArgumentsMsg())
+
+		error_func = function()
 			Clock{}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))

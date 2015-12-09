@@ -653,6 +653,8 @@ end
 
 --- Verify whether the user has passed only the allowed arguments for a function, showing
 -- a strict warning otherwise. The warning comes from ErrorHandling:unnecessaryArgumentMsg().
+-- It is recommended that this function should be called as early as possible, in order
+-- to show the warning before any error that might be related to it.
 -- This function returns the number of unnecessary arguments found.
 -- @arg data A named table with the arguments used in the function call.
 -- The indexes of this table will be verified.

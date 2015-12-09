@@ -950,6 +950,7 @@ end
 -- }
 function integrate(attrs)
 	verifyNamedTable(attrs)
+	verifyUnnecessaryArguments(attrs, {"a", "b", "event", "method", "initial", "equation", "step"})
 
 	if attrs.event ~= nil then
 		mandatoryTableArgument(attrs, "event", "Event")
@@ -990,8 +991,6 @@ function integrate(attrs)
 	positiveTableArgument(attrs, "step")
 
 	defaultTableValue(attrs, "method", "euler")
-
-	verifyUnnecessaryArguments(attrs, {"a", "b", "event", "method", "initial", "equation", "step"})
 
 	local result = switch(attrs, "method"):caseof {
 		euler = function() return integrationEuler(attrs.equation, attrs.initial, attrs.a, attrs.b, attrs.step) end,

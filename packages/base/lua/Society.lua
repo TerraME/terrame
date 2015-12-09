@@ -377,11 +377,11 @@ Society_ = {
 				data.mfunc = getSocialNetworkByQuantity
 			end,
 			erdos = function()
+				verifyUnnecessaryArguments(data, {"strategy", "name", "quantity"})
+
 				mandatoryTableArgument(data, "quantity", "number")
 				integerTableArgument(data, "quantity")
 				positiveTableArgument(data, "quantity")
-
-				verifyUnnecessaryArguments(data, {"strategy", "name", "quantity"})
 
 				local name = data.name
 				if name == "1" then name = nil end
@@ -400,6 +400,8 @@ Society_ = {
 				end
 			end,
 			barabasi = function()
+				verifyUnnecessaryArguments(data, {"strategy", "start", "name", "quantity"})
+
 				mandatoryTableArgument(data, "start", "number")
 				integerTableArgument(data, "start")
 				positiveTableArgument(data, "start")
@@ -410,7 +412,6 @@ Society_ = {
 
 				verify(data.start < #self, "Argument 'start' should be less than the total of Agents in the Society.")
 				verify(data.quantity < data.start, "Argument 'quantity' should be less than 'start'.")
-				verifyUnnecessaryArguments(data, {"strategy", "start", "name", "quantity"})
 
 				local name = data.name
 				if name == "1" then name = nil end
@@ -445,14 +446,14 @@ Society_ = {
 				end
 			end,
 			watts = function()
+				verifyUnnecessaryArguments(data, {"strategy", "name", "quantity", "probability"})
+
 				mandatoryTableArgument(data, "quantity", "number")
 				integerTableArgument(data, "quantity")
 				positiveTableArgument(data, "quantity")
 
 				mandatoryTableArgument(data, "probability", "number")
 				verify(data.probability >= 0 and data.probability <= 1, "Argument 'probability' should be between 0 and 1.")
-
-				verifyUnnecessaryArguments(data, {"strategy", "name", "quantity", "probability"})
 
 				local name = data.name
 				if name == "1" then name = nil end

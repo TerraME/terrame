@@ -52,6 +52,9 @@ metaTableLogFile_ = {__index = LogFile_}
 --     separator = ";"
 -- }
 function LogFile(data)
+	verifyNamedTable(data)
+	verifyUnnecessaryArguments(data, {"target", "select", "file", "separator", "overwrite"})
+
 	mandatoryTableArgument(data, "target")
 	defaultTableValue(data, "separator", ",")
 	defaultTableValue(data, "file", "result.csv")
@@ -138,8 +141,6 @@ function LogFile(data)
 			end
 		end)
 	end
-
-	verifyUnnecessaryArguments(data, {"target", "select", "file", "separator", "overwrite"})
 
 	for i = 1, #data.select do
 		if data.select[i] == "#" then

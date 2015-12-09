@@ -74,6 +74,8 @@ metaTableVisualTable_ = {__index = VisualTable_}
 --     select = {"temperature", "humidity"}
 -- }
 function VisualTable(data)
+	verifyNamedTable(data)
+	verifyUnnecessaryArguments(data, {"target", "select"})
 	mandatoryTableArgument(data, "target")
 
 	if type(data.select) == "string" then data.select = {data.select} end
@@ -156,8 +158,6 @@ function VisualTable(data)
 			end
 		end)
 	end
-
-	verifyUnnecessaryArguments(data, {"target", "select"})
 
 	for i = 1, #data.select do
 		if data.select[i] == "#" then

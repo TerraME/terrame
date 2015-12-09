@@ -403,13 +403,21 @@ function Model(attrTab)
 	})
 
 	model = function(argv, typename)
-		-- set the default values
-		optionalTableArgument(argv, "seed", "number")
-		optionalTableArgument(argv, "finalTime", "number")
-
 		if #argv > 0 then
 			customError("All the arguments must be named.")
 		end
+
+		-- verify whether there are some arguments in the instance that do not belong to the Model
+		local names = {}
+		forEachElement(attrTab, function(name)
+			table.insert(names, name)
+		end)
+
+		verifyUnnecessaryArguments(argv, names)
+
+		-- set the default values
+		optionalTableArgument(argv, "seed", "number")
+		optionalTableArgument(argv, "finalTime", "number")
 
 		forEachElement(attrTab, function(name, value, mtype)
 			if mtype == "Choice" then
@@ -552,13 +560,6 @@ function Model(attrTab)
 				incompatibleTypeError(name, mtype, argv[name])
 			end
 		end)
-
-		-- verify whether there are some arguments in the instance that do not belong to the Model
-		local names = {}
-		forEachElement(attrTab, function(name)
-			table.insert(names, name)
-		end)
-		verifyUnnecessaryArguments(argv, names)
 
 		forEachElement(argv, function(name, value, mtype)
 			if mtype == "table" then

@@ -573,30 +573,32 @@ CellularSpace_ = {
 
 		switch(data, "strategy"):caseof{
 			diagonal = function()
+				verifyUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "inmemory"})
+
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
-
-				verifyUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "inmemory"})
 
 				data.func = getDiagonalNeighborhood
 			end,
 			["function"] = function() 
-				mandatoryTableArgument(data, "filter", "function")
 				verifyUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "inmemory"})
 
+				mandatoryTableArgument(data, "filter", "function")
 				defaultTableValue(data, "weight", function() return 1 end)
 
 				data.func = getFunctionNeighborhood
 			end,
 			moore = function()
+				verifyUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "inmemory"})
+
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
-
-				verifyUnnecessaryArguments(data, {"self", "wrap", "name", "strategy", "inmemory"})
 
 				data.func = getMooreNeighborhood
 			end,
 			mxn = function()
+				verifyUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "inmemory"})
+
 				defaultTableValue(data, "filter", function() return true end)
 				defaultTableValue(data, "weight", function() return 1 end)
 				defaultTableValue(data, "target", self)
@@ -618,14 +620,13 @@ CellularSpace_ = {
 					customWarning("Argument 'n' is even. It will be increased by one to keep the Cell in the center of the Neighborhood.")
 				end
 
-				verifyUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "inmemory"})
 				data.func = getMxNNeighborhood
 			end,
 			vonneumann = function() 
+				verifyUnnecessaryArguments(data, {"name", "strategy", "wrap", "self", "inmemory"})
+
 				defaultTableValue(data, "self", false)
 				defaultTableValue(data, "wrap", false)
-
-				verifyUnnecessaryArguments(data, {"name", "strategy", "wrap", "self", "inmemory"})
 
 				data.func = getVonNeumannNeighborhood
 			end,
@@ -633,9 +634,9 @@ CellularSpace_ = {
 				deprecatedFunction("createNeighborhood with strategy 3x3", "mxn")
 			end,
 			coord = function() 
-				mandatoryTableArgument(data, "target", "CellularSpace")
-
 				verifyUnnecessaryArguments(data, {"name", "strategy", "target", "inmemory"})
+
+				mandatoryTableArgument(data, "target", "CellularSpace")
 
 				data.func = getCoordCoupling
 			end
@@ -694,12 +695,12 @@ CellularSpace_ = {
 			verifyNamedTable(data)
 		end
 
+		verifyUnnecessaryArguments(data, {"xmin", "xmax", "ymin", "ymax"})
+
 		defaultTableValue(data, "xmin", self.minCol)
 		defaultTableValue(data, "xmax", self.maxCol)
 		defaultTableValue(data, "ymin", self.minRow)
 		defaultTableValue(data, "ymax", self.maxRow)
-
-		verifyUnnecessaryArguments(data, {"xmin", "xmax", "ymin", "ymax"})
 
 		local result = Trajectory{target = self, build = false}
 
@@ -804,6 +805,7 @@ CellularSpace_ = {
 	-- cs:loadNeighborhood{source = file("cabecadeboi-neigh.gpm", "base")}
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
+		verifyUnnecessaryArguments(data, {"source", "name", "check"})
 
 		mandatoryTableArgument(data, "source", "string")
 
@@ -823,8 +825,6 @@ CellularSpace_ = {
 
 		defaultTableValue(data, "name", "1")
 		defaultTableValue(data, "check", true)
-
-		verifyUnnecessaryArguments(data, {"source", "name", "check"})
 
 		self.cObj_:loadNeighborhood(data.source, data.name, data.check)
 	end,

@@ -28,6 +28,11 @@ return{
 		local c = Cell{value = 5}
 
 		local error_func = function()
+			InternetSender(2)
+		end
+		unitTest:assertError(error_func, namedArgumentsMsg())
+
+		error_func = function()
 			InternetSender{}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))

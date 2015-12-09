@@ -190,6 +190,14 @@ function Chart(data)
 		dashdotdot = 5
 	}
 
+	verifyNamedTable(data)
+
+	verifyUnnecessaryArguments(data, {
+		"target", "select", "yLabel", "xLabel",
+		"title", "label", "pen", "color", "xAxis",
+		"width", "symbol", "style", "size"
+	})
+
 	mandatoryTableArgument(data, "target")
 
 	if not belong(type(data.target), {"Cell", "CellularSpace", "Agent", "Society", "table"}) then
@@ -352,12 +360,6 @@ function Chart(data)
 			end
 		end)
 	end
-
-	verifyUnnecessaryArguments(data, {
-		"target", "select", "yLabel", "xLabel",
-		"title", "label", "pen", "color", "xAxis",
-		"width", "symbol", "style", "size"
-	})
 
 	if data.xAxis then
 		defaultTableValue(data, "xLabel", _Gtme.stringToLabel(data.xAxis))

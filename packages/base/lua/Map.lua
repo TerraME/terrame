@@ -1626,6 +1626,7 @@ metaTableMap_ = {__index = Map_}
 --     slices = 10
 -- }
 function Map(data)
+	verifyNamedTable(data)
 	mandatoryTableArgument(data, "target")
 
 	if not belong(type(data.target), {"CellularSpace", "Agent", "Society"}) then
@@ -1756,6 +1757,8 @@ function Map(data)
 
 	switch(data, "grouping"):caseof{
 		equalsteps = function()
+			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid"})
+
 			mandatoryTableArgument(data, "select", "string")
 			mandatoryTableArgument(data, "target", "CellularSpace")
 
@@ -1828,10 +1831,10 @@ function Map(data)
 
 			mandatoryTableArgument(data, "color", "table")
 			verify(#data.color >= 2, "Grouping '"..data.grouping.."' requires at least two colors, got "..#data.color..".")
-
-			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid"})
 		end,
 		quantil = function() -- equal to 'equalsteps'
+			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid"})
+
 			mandatoryTableArgument(data, "select", "string")
 			mandatoryTableArgument(data, "target", "CellularSpace")
 
@@ -1899,8 +1902,6 @@ function Map(data)
 
 			mandatoryTableArgument(data, "color", "table")
 			verify(#data.color >= 2, "Grouping '"..data.grouping.."' requires at least two colors, got "..#data.color..".")
-
-			verifyUnnecessaryArguments(data, {"target", "select", "color", "grouping", "min", "max", "slices", "invert", "grid"})
 		end,
 		uniquevalue = function()
 			mandatoryTableArgument(data, "select", "string")
@@ -1975,9 +1976,11 @@ function Map(data)
 		placement = function()
 			mandatoryTableArgument(data, "target", "CellularSpace")
 
-			if data.grid == false then data.grid = nil end
-
+			-- we need to verify the target before unnecessary arguments because if
+			-- target is Society then new attributes were added
 			verifyUnnecessaryArguments(data, {"target", "color", "grouping", "min", "max", "slices", "value", "grid"})
+
+			if data.grid == false then data.grid = nil end
 
 			forEachCell(data.target, function(cell)
 				cell.quantity_ = function(self) return #self:getAgents() end

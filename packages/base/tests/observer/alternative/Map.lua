@@ -35,6 +35,11 @@ return{
 		end)
 
 		local error_func = function()
+			Map(2)
+		end
+		unitTest:assertError(error_func, namedArgumentsMsg())
+
+		error_func = function()
 			Map{}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("target"))
@@ -150,8 +155,7 @@ return{
 				target = c,
 				select = "x",
 				slices = 3,
-				color = "Xxx",
-				label = {"1", "2", "3"}
+				color = "Xxx"
 			}
 		end
 		unitTest:assertError(error_func, "Invalid color 'Xxx'.")
@@ -161,8 +165,7 @@ return{
 				target = c,
 				select = "x",
 				slices = 3,
-				color = "Pastei1",
-				label = {"1", "2", "3"}
+				color = "Pastei1"
 			}
 		end
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("Pastei1", "color", "Pastel1"))
@@ -286,7 +289,6 @@ return{
 				select = "x",
 				slices = 3,
 				color = "Xxx",
-				label = {"1", "2", "3"},
 				grouping = "quantil"
 			}
 		end
@@ -298,7 +300,6 @@ return{
 				select = "x",
 				slices = 3,
 				color = "Pastei1",
-				label = {"1", "2", "3"},
 				grouping = "quantil"
 			}
 		end
@@ -330,8 +331,7 @@ return{
 				target = c,
 				select = "x",
 				value = {1, 2, 3},
-				color = {"red", "green"},
-				label = {"1", "2", "3"}
+				color = {"red", "green"}
 			}
 		end
 		unitTest:assertError(error_func, "There should exist colors for each value. Got 2 colors and 3 values.")

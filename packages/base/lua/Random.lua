@@ -205,8 +205,7 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- It uses Xorshift generators are among the fastest non-cryptographic random number generators.
 -- Xorshift random number generators are a class of pseudorandom number generators 
 -- that was discovered by George Marsaglia (http://www.jstatsoft.org/v08/i14/paper). 
--- Random is a singleton, which means that every copy of Random created
--- by the user has the same seed.
+-- Every instance of Random along a simulation has the same seed.
 -- @arg data.distrib A string representing the statistical distribution to be used. See the
 -- table below.
 -- @tabular distrib
@@ -327,9 +326,9 @@ function Random(data)
 			data.sample = discrete(data, data)
 		end,
 		continuous = function()
+			verifyUnnecessaryArguments(data, {"distrib", "seed", "max", "min"})
 			mandatoryTableArgument(data, "min", "number")
 			mandatoryTableArgument(data, "max", "number")
-			verifyUnnecessaryArguments(data, {"distrib", "seed", "max", "min"})
 			verify(data.max > data.min, "Argument 'max' should be greater than 'min'.")
 			data.sample = continuous(data, data.min, data.max)
 		end,

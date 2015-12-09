@@ -62,6 +62,9 @@ metaTableInternetSender_ = {__index = InternetSender_}
 --     compress = false
 -- }
 function InternetSender(data)
+	verifyNamedTable(data)
+	verifyUnnecessaryArguments(data, {"target", "protocol", "select", "port", "host", "visible", "compress"})
+
 	mandatoryTableArgument(data, "target")
 	defaultTableValue(data, "host", "localhost")
 	defaultTableValue(data, "port", 456456)
@@ -155,9 +158,7 @@ function InternetSender(data)
 			end
 		end)
 	end
-
-	verifyUnnecessaryArguments(data, {"target", "protocol", "select", "port", "host", "visible", "compress"})
-  
+ 
 	verify(data.port >= 50000, "Argument 'port' should be greater or equal to 50000, got "..data.port..".")
   
 	for i = 1, #data.select do

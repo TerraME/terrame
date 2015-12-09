@@ -109,6 +109,8 @@ function Choice(attrTab)
 
 		result = {values = attrTab, default = default}
 	elseif getn(attrTab) > 0 then
+		verifyUnnecessaryArguments(attrTab, {"default", "min", "max", "step"})
+
 		optionalTableArgument(attrTab, "min", "number")
 		optionalTableArgument(attrTab, "max", "number")
 		optionalTableArgument(attrTab, "step", "number")
@@ -136,8 +138,6 @@ function Choice(attrTab)
 		if attrTab.step and not (attrTab.max and attrTab.min) then
 			customError("Attribute 'step' requires 'max' and 'min'.")
 		end
-
-		verifyUnnecessaryArguments(attrTab, {"default", "min", "max", "step"})
 
 		if attrTab.step then
 			local k = (attrTab.max - attrTab.min) / attrTab.step
