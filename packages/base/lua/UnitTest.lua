@@ -134,6 +134,7 @@ UnitTest_ = {
 					return
 				end
 			end
+
 			local shortError = string.match(err, ":[0-9]*:.*")
 
 			if shortError == nil then
@@ -144,6 +145,8 @@ UnitTest_ = {
 			end
 
 			shortError = string.gsub(shortError,":[0-9]*: ", "")
+			shortError = string.gsub(shortError,"%s+[0-9]+:", "")
+
 			local start = shortError:sub(1, 7)
 
 			if start ~= "Error: " then
