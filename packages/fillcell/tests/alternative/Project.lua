@@ -24,156 +24,168 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	addCellularLayer = function(unitTest)
-		local proj = Project{
-			file = file("amazonia.tview", "fillcell")
-		}
+ 	Project = function(unitTest)
+ 		local noDataInContructor = function()
+ 			local proj = Project()
+ 		end
+ 		unitTest:assertError(noDataInContructor, tableArgumentMsg())
 
-		local error_func = function()
-			proj:addCellularLayer()
-		end
-		unitTest:assertError(error_func, tableArgumentMsg())
-
-		local error_func = function()
-			proj:addCellularLayer{
-				input = 123,
-				layer = "cells",
-				resolution = 5e4
-			}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("input", "string", 123))
-
-		local error_func = function()
-			proj:addCellularLayer{
-				input = "amazonia-states",
-				layer = 123,
-				resolution = 5e4
-			}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 123))
-
-		local error_func = function()
-			proj:addCellularLayer{
-				input = "amazonia-states",
-				layer = "cells",
-				resolution = 5e4,
-				box = 123
-			}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("box", "boolean", 123))
-
-		local error_func = function()
-			proj:addCellularLayer{
-				input = "amazonia-states",
-				layer = "cells",
-				resolution = false
-			}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("resolution", "number", false))
-
-		error_func = function()
-			proj:addCellularLayer{
-				input = "amazonia-states",
-				layer = "cells",
-				resolution = 0
-			}
-		end
-		unitTest:assertError(error_func, positiveArgumentMsg("resolution", 0))
-
-		error_func = function()
-			proj:addCellularLayer{
-				input = "amazonia-states",
-				layer = "cells",
-				resolution = 0
-			}
-		end
-		unitTest:assertError(error_func, positiveArgumentMsg("resolution", 0))
-
-		error_func = function()
-			proj:addCellularLayer{
-				input = "amazonia-states",
-				layer = "cells",
-				resoltion = 200
-			}
-		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("resoltion", "resolution"))
-
-		-- TODO: check if the input layer contains polygons (?)
-		-- TODO: check if the input layer exists
-		-- TODO: check if a layer to be added already exists
-	end,
-	addLayer = function(unitTest)
-		local proj = Project{
-			file = file("amazonia.tview", "fillcell")
-		}
-
-		local error_func = function()
-			proj:addLayer()
-		end
-		unitTest:assertError(error_func, tableArgumentMsg())
-
-		error_func = function()
-			proj:addLayer{
-				layer = 123,
-				file = "myfile.shp",
-			}
-
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 123))
-
-		-- TODO: check if a layer to be added already exists
-		-- TODO: tests for shapefiles
-		-- TODO: tests for postgis
-		-- TODO: tests for tiff
-	end,
-	Project = function(unitTest)
-		local error_func = function()
-			local proj = Project()
-		end
-		unitTest:assertError(error_func, tableArgumentMsg())
-
-		error_func = function()
-			local proj = Project{file = "myproj.tview", create = false}
-		end
-		unitTest:assertError(error_func, defaultValueMsg("create", false))
-
-		error_func = function()
-			local proj = Project{file = "myproj.tview", create = 2}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("create", "boolean", 2))
-
-		error_func = function()
+		local attrFileNonString = function()
 			local proj = Project{file = 123, create = true}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 123))
+		unitTest:assertError(attrFileNonString, incompatibleTypeMsg("file", "string", 123))
 
-		error_func = function()
+		local attrCreateNonBool = function()
+			local proj = Project{file = "myproj.tview", create = 2}
+		end
+		unitTest:assertError(attrCreateNonBool, incompatibleTypeMsg("create", "boolean", 2))
+
+		local attrTitleNonString = function()
+			local proj = Project{file = "myproj.tview", title = 2}
+		end
+		unitTest:assertError(attrTitleNonString, incompatibleTypeMsg("title", "string", 2))		
+
+		local attrAuthorNonString = function()
+			local proj = Project{file = "myproj.tview", author = 2}
+		end
+		unitTest:assertError(attrAuthorNonString, incompatibleTypeMsg("author", "string", 2))				
+
+		local fileMandatory = function()
 			local proj = Project{create = true}
 		end
-		unitTest:assertError(error_func, mandatoryArgumentMsg("file"))
+		unitTest:assertError(fileMandatory, mandatoryArgumentMsg("file"))
 
-		error_func = function()
+		local unnecessaryArgument = function()
 			local proj = Project{file = "myproj.tview", ceate = true}
 		end
-		unitTest:assertError(error_func, unnecessaryArgumentMsg("ceate", "create"))
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("ceate", "create"))
 
-		-- TODO: open a project that does not exist
-		local error_func = function()
+		local projectNonExists = function()
 			local proj = Project{
 				file = "myproject123.tview"
 			}
 		end
-		-- unitTest:assertError(error_func, "Project 'myproject123.tview' does not exist. Use 'create = true' to create a new Project.")
+ 		unitTest:assertError(projectNonExists, "Project 'myproject123.tview' does not exist. Use 'create = true' to create a new Project.")
 
-		-- TODO: create a project that already exists
-		local name = file("amazonia.tview", "fillcell")
-		local error_func = function()
+		local name = "amazonia.tview"
+
+		local proj = Project {
+			file = name,
+			create = true
+		}
+
+		local projAreadyExists = function()
 			local proj = Project{
 				file = name,
 				create = true
 			}
 		end
-		-- unitTest:assertError(error_func, "Project '"..name.."' already exists.")
-	end
+		unitTest:assertError(projAreadyExists, "Project '"..name.."' already exists.")
+
+		os.execute("rm -f "..name)
+
+ 	end,
+-- 	addCellularLayer = function(unitTest)
+-- 		local proj = Project{
+-- 			file = file("amazonia.tview", "fillcell")
+-- 		}
+
+-- 		local error_func = function()
+-- 			proj:addCellularLayer()
+-- 		end
+-- 		unitTest:assertError(error_func, tableArgumentMsg())
+
+-- 		local error_func = function()
+-- 			proj:addCellularLayer{
+-- 				input = 123,
+-- 				layer = "cells",
+-- 				resolution = 5e4
+-- 			}
+-- 		end
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("input", "string", 123))
+
+-- 		local error_func = function()
+-- 			proj:addCellularLayer{
+-- 				input = "amazonia-states",
+-- 				layer = 123,
+-- 				resolution = 5e4
+-- 			}
+-- 		end
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 123))
+
+-- 		local error_func = function()
+-- 			proj:addCellularLayer{
+-- 				input = "amazonia-states",
+-- 				layer = "cells",
+-- 				resolution = 5e4,
+-- 				box = 123
+-- 			}
+-- 		end
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("box", "boolean", 123))
+
+-- 		local error_func = function()
+-- 			proj:addCellularLayer{
+-- 				input = "amazonia-states",
+-- 				layer = "cells",
+-- 				resolution = false
+-- 			}
+-- 		end
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("resolution", "number", false))
+
+-- 		error_func = function()
+-- 			proj:addCellularLayer{
+-- 				input = "amazonia-states",
+-- 				layer = "cells",
+-- 				resolution = 0
+-- 			}
+-- 		end
+-- 		unitTest:assertError(error_func, positiveArgumentMsg("resolution", 0))
+
+-- 		error_func = function()
+-- 			proj:addCellularLayer{
+-- 				input = "amazonia-states",
+-- 				layer = "cells",
+-- 				resolution = 0
+-- 			}
+-- 		end
+-- 		unitTest:assertError(error_func, positiveArgumentMsg("resolution", 0))
+
+-- 		error_func = function()
+-- 			proj:addCellularLayer{
+-- 				input = "amazonia-states",
+-- 				layer = "cells",
+-- 				resoltion = 200
+-- 			}
+-- 		end
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("resoltion", "resolution"))
+
+-- 		-- TODO: check if the input layer contains polygons (?)
+-- 		-- TODO: check if the input layer exists
+-- 		-- TODO: check if a layer to be added already exists
+-- 	end,
+	-- addLayer = function(unitTest)
+	-- 	local proj = Project{
+	-- 		file = file("amazonia.tview", "fillcell")
+	-- 	}
+
+	-- 	local error_func = function()
+	-- 		proj:addLayer()
+	-- 	end
+	-- 	unitTest:assertError(error_func, tableArgumentMsg())
+
+	-- 	error_func = function()
+	-- 		proj:addLayer{
+	-- 			layer = 123,
+	-- 			file = "myfile.shp",
+	-- 		}
+
+	-- 	end
+	-- 	unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 123))
+
+	-- 	-- TODO: check if a layer to be added already exists
+	-- 	-- TODO: tests for shapefiles
+	-- 	-- TODO: tests for postgis
+	-- 	-- TODO: tests for tiff
+	-- end
 }
 
