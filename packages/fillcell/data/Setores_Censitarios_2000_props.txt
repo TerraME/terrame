@@ -1,0 +1,22 @@
+Plano de Informação: Setores_Censitarios_2000
+Identificador do Plano: 8
+
+Coordenada Inicial(X): 547177.350
+Coordenada Inicial(Y): 9485214.187
+Coordenada Final(X): 700365.905
+Coordenada Final(Y): 9583948.623
+
+Projeção: UTM
+Identificador da Projeção: 11
+Datum: SAD69
+Unidade: Meters
+Longitude de Origem: -5.700000e+001
+Latitude de Origem: 0.000000e+000
+Offset X: 5.000000e+005
+Offset Y: 1.000000e+007
+Paralelo Padrão 1: 0.000000e+000
+Paralelo Padrão 2: 0.000000e+000
+Escala: 9.996000e-001
+Hemisfério: Sul
+
+Número de polígonos:68
