@@ -3,6 +3,8 @@ require("terralib_mod_binding_lua")
 -- TODO: To document this
 
 local binding = terralib_mod_binding_lua
+
+
 local currentProject = nil
 local initialized = false
 
@@ -14,24 +16,24 @@ local function printTable(sometable)
 	end
 end
 
-local function createConnInfo(name, dsType)
+local function createConnInfo(nameOrPath, dsType)
 	local connInfo = {}
 		
 	if dsType == "ADO" then
 		connInfo.PROVIDER = "Microsoft.Jet.OLEDB.4.0"
-		connInfo.DB_NAME = name
+		connInfo.DB_NAME = nameOrPath
 		connInfo.CREATE_OGC_METADATA_TABLES = "TRUE"		
 	elseif dsType == "POSTGIS" then
 		connInfo.PG_HOST = "localhost" 
 		connInfo.PG_PORT = "5432" 
 		connInfo.PG_USER = "postgres"
 		connInfo.PG_PASSWORD = "postgres"
-		connInfo.PG_DB_NAME = name
+		connInfo.PG_DB_NAME = nameOrPath
 		connInfo.PG_CONNECT_TIMEOUT = "4" 
 		connInfo.PG_CLIENT_ENCODING = "CP1252"     -- "LATIN1" --"WIN1252" 
 		connInfo.CREATE_OGC_METADATA_TABLES = "TRUE"	
 	elseif dsType == "OGR" then
-		connInfo.URI = name
+		connInfo.URI = nameOrPath
 	elseif dsType == "GDAL" then
 		connInfo = {} -- TODO THIS
 	end
@@ -48,7 +50,7 @@ local function addDataSourceInfo(dsId, type, title, connInfo)
 	dsInfo:setTitle(title)
 	dsInfo:setConnInfo(connInfo)
 	dsInfo:setDescription("Created on TerraME")
-	binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo)		
+	binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo)	
 end
 
 local function makeAndOpenDataSource(name, filePath, type)
@@ -59,7 +61,7 @@ local function makeAndOpenDataSource(name, filePath, type)
 	ds:setId(dsId)
 	ds:setConnectionInfo(connInfo) 
 	ds:open()
-	binding.te.da.DataSourceManager.getInstance():insert(ds)	
+	binding.te.da.DataSourceManager.getInstance():insert(ds)
 
 	addDataSourceInfo(dsId, type, name, connInfo)
 
@@ -67,25 +69,26 @@ local function makeAndOpenDataSource(name, filePath, type)
 end
 
 local function createLayer(name, filePath, type)
-
 	local ds = makeAndOpenDataSource(name, filePath, type)
+	local _, dsetNameWithExtension, _ = string.match(filePath, "(.-)([^\\/]-%.?([^%.\\/]*))$") -- TODO: VERIFY THIS
+	local _, _, dsetName = string.find(dsetNameWithExtension, "^(.*)%.[^%.]*$")
 
-	local dsetType = ds:getDataSetType(name)
-	local dset = ds:getDataSet(name)
+	local dsetType = ds:getDataSetType(dsetName)
+	local dset = ds:getDataSet(dsetName)
 	local gp = binding.GetFirstGeomProperty(dsetType)
 	local env = binding.te.gm.Envelope(binding.GetExtent(dsetType:getName(), gp:getName(), ds:getId()))
 
 	local id = binding.GetRandomicId()
 	local layer = binding.te.map.DataSetLayer(id)
 
-	layer:setDataSetName(name)
+	layer:setDataSetName(dsetName)
 	layer:setTitle(name)
 	layer:setDataSourceId(ds:getId())
 	layer:setVisibility(binding.VISIBLE)
 	layer:setRendererType("ABSTRACT_LAYER_RENDERER")
 	layer:setSRID(gp:getSRID())
-	
-	return layer -- TODO: check if necessary return
+
+	return ds, layer
 end
 
 local function saveProject(project, fileName)
@@ -94,11 +97,8 @@ local function saveProject(project, fileName)
 	
 	binding.te.qt.af.XMLFormatter.format(project, true)
 	binding.te.qt.af.XMLFormatter.formatDataSourceInfos(true)
-	
 	binding.Save(project, fileName)
-
 	binding.SaveDataSourcesFile()
-	
 	binding.te.qt.af.XMLFormatter.format(project, false)
 	binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)	
 	
@@ -108,17 +108,27 @@ end
 local function finalize()
 	if initialized then
 		local terralib = binding.TeSingleton.getInstance()
-		terralib:finalize()		
+		local pmger = binding.te.plugin.PluginManager.getInstance()
+		
+		pmger:shutdownAll()
+		pmger:unloadAll()
+		pmger:clear()
+		terralib:finalize()	
+		terralib = nil
+		pmger = nil
+		
 		currentProject = nil
 		binding = nil
-		_Gtme.print("TERRALIB FINALIZED")	
+		initialized = false	
 	end
 end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 
-	init = function()
+	init = function()		
 		if not initialized then
+			binding = terralib_mod_binding_lua
 			local terralib = binding.TeSingleton.getInstance()
 			terralib:initialize()
 
@@ -134,7 +144,7 @@ TerraLib_ = {
 
 	createProject = function(self, fileName, author, title)
 		local project = binding.te.qt.af.Project()	
-		
+
 		project:setTitle(title)
 		project:setAuthor(author)
 		project:setFileName(fileName)
@@ -167,31 +177,48 @@ TerraLib_ = {
 		projInfo.author = currentProject:getAuthor()
 		projInfo.file = currentProject:getFileName()
 
-		-- TODO: Remove prints after
-		_Gtme.print("Title:\t"..currentProject:getTitle())
-		_Gtme.print("Author:\t"..currentProject:getAuthor())
-		_Gtme.print("File:\t"..currentProject:getFileName())
-
 		return projInfo
 	end,
 
-	-- getLayerInfo = function(layerName)
-	-- 	-- TODO THIS
-	-- end,
+	getLayerInfo = function(self, layerName)
+		local layer = currentProject:getDataSetLayerByTitle(layerName)
+				
+		if layer == nil then
+			return nil
+		end
+		
+		local info = {}		
+		info.name = layer:getTitle()
+
+		return info
+	end,
 
 	getLayersNames = function()
 		local layersNames = currentProject:getLayersTitles()
-
+		
+		if layersNames == nil then
+			return {}
+		end
+		
 		return layersNames
 	end,
 
-	addLayer = function(self, name, filePath, type)
-		local layer = createLayer(name, filePath, type)
+	addOgrLayer = function(self, name, filePath)
+		local ds, layer = createLayer(name, filePath, "OGR")
 
 		currentProject:add(layer)
 		saveProject(currentProject, currentProject:getFileName())
-
-		return layer
+		-- I must reopen project because add() and/or save() is not keeping the consistency. Verify this in the future
+		self:openProject(currentProject:getFileName()) 
+		
+		-- release all objects created 
+		binding.te.da.DataSourceManager.getInstance():detach(layer:getDataSourceId())
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():get(layer:getDataSourceId())
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():remove(layer:getDataSourceId())
+		dsInfo = nil
+		ds = nil
+		layer = nil
+		collectgarbage("collect")			
 	end,
 
 	createCellularSpaceLayer = function(self, inputLayerTitle, name, resX, resY, type, repository) 

@@ -67,24 +67,99 @@ return{
 		end
  		unitTest:assertError(projectNonExists, "Project 'myproject123.tview' does not exist. Use 'create = true' to create a new Project.")
 
-		local name = "amazonia.tview"
+		local projName = "amazonia.tview"
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
 
 		local proj = Project {
-			file = name,
+			file = projName,
 			create = true
 		}
 
 		local projAreadyExists = function()
 			local proj = Project{
-				file = name,
+				file = projName,
 				create = true
 			}
 		end
-		unitTest:assertError(projAreadyExists, "Project '"..name.."' already exists.")
+		unitTest:assertError(projAreadyExists, "Project '"..projName.."' already exists.")
 
-		os.execute("rm -f "..name)
-
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
  	end,
+	addLayer = function(unitTest)
+		local projName = "amazonia.tview"
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+
+		local proj = Project{
+			file = projName,
+			create = true,
+			author = "Avancini",
+			title = "The Amazonia"
+		}
+
+		local noDataInLayer = function()
+			proj:addLayer()
+		end
+		unitTest:assertError(noDataInLayer, tableArgumentMsg())
+
+		local attrLayerNonString = function()
+			proj:addLayer{
+				layer = 123,
+				file = "myfile.shp",
+			}
+
+		end
+		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("layer", "string", 123))
+
+		local attrSourceNonString = function()
+			proj:addLayer{
+				layer = "layer",
+				source = 123
+			}
+
+		end
+		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))		
+		
+		local nLayer = "any"
+		local layerNonExists = function()
+			proj:infoLayer(nLayer)
+		end
+		unitTest:assertError(layerNonExists, "Layer '"..nLayer.."' not exists.")
+		
+		local layerName = "Setores_2000"
+		proj:addLayer {
+			layer = layerName,
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell"),
+			source = "shp"			
+		}
+		
+		local layerAlreadyExists = function()
+			proj:addLayer {
+				layer = layerName,
+				file = file("Setores_Censitarios_2000_pol.shp", "fillcell"),
+				source = "shp"			
+			}			
+		end
+		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName.."' already exists in the Project.")
+		
+		
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+
+
+		-- TODO: check if a layer to be added already exists
+		-- TODO: tests for shapefiles
+		-- TODO: tests for postgis
+		-- TODO: tests for tiff
+	end, 	
 -- 	addCellularLayer = function(unitTest)
 -- 		local proj = Project{
 -- 			file = file("amazonia.tview", "fillcell")
@@ -162,30 +237,6 @@ return{
 -- 		-- TODO: check if the input layer contains polygons (?)
 -- 		-- TODO: check if the input layer exists
 -- 		-- TODO: check if a layer to be added already exists
--- 	end,
-	-- addLayer = function(unitTest)
-	-- 	local proj = Project{
-	-- 		file = file("amazonia.tview", "fillcell")
-	-- 	}
-
-	-- 	local error_func = function()
-	-- 		proj:addLayer()
-	-- 	end
-	-- 	unitTest:assertError(error_func, tableArgumentMsg())
-
-	-- 	error_func = function()
-	-- 		proj:addLayer{
-	-- 			layer = 123,
-	-- 			file = "myfile.shp",
-	-- 		}
-
-	-- 	end
-	-- 	unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 123))
-
-	-- 	-- TODO: check if a layer to be added already exists
-	-- 	-- TODO: tests for shapefiles
-	-- 	-- TODO: tests for postgis
-	-- 	-- TODO: tests for tiff
-	-- end
+-- 	end
 }
 

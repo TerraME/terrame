@@ -27,7 +27,7 @@
 -- TODO: create Common for this
 local dataSourceTypeMapper = {
 	shp = "OGR",
-	tiff = "GDAL",
+	tif = "GDAL",
 	postgis = "POSTGIS",
 	access = "ADO"
 }
@@ -70,11 +70,21 @@ Project_ = {
 	addLayer = function(self, data)	
 		verifyNamedTable(data)
 	    mandatoryTableArgument(data, "layer", "string")
-	    --TODO: layer name overwrite
-		local type = dataSourceTypeMapper[data.type]
-		local newLayer = self.terralib:addLayer(data.layer, data.file, type)
+	    mandatoryTableArgument(data, "source", "string")
 
-		--TODO: implement all types (tiff, access, etc)		
+	    --TODO: layer name overwrite
+		--local source = dataSourceTypeMapper[data.source]
+		
+		if self.terralib:getLayerInfo(data.layer) == nil then -- TODO: ALTER THIS TO GET A BOOLEAN IN SWIG
+			if data.source == "shp" then
+				mandatoryTableArgument(data, "file", "string")			
+				self.terralib:addOgrLayer(data.layer, data.file)
+			end
+		else
+			customError("Layer '"..data.layer.."' already exists in the Project.")
+		end
+
+		--TODO: implement all types (tif, access, etc)		
 	end,
 	--- Add a new CellularLayer to the project. It has a raster-like
 	-- representation of space with several attributes created from
@@ -108,11 +118,18 @@ Project_ = {
 
 	info = function(self)
 		return self.terralib:getProjectInfo()
+	end,
+	
+	infoLayer = function(self, name)
+		-- TODO: CHECK WHICH INFORMATIONS ARE NECESSARY
+		local info = self.terralib:getLayerInfo(name)
+		
+		if info == nil then
+			customError("Layer '"..name.."' not exists.")
+		else
+			return info
+		end
 	end
-
-	-- showLayers = function(self)
-	-- 	self.terralib:printLayersInfo()
-	-- end
 }
 
 metaTableProject_ = {
@@ -182,8 +199,6 @@ function Project(data)
 	end
 
 	setmetatable(data, metaTableProject_)
-
-	--terralib:finalize()
 
 	return data
 end
