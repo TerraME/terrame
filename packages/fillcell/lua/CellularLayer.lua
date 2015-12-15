@@ -142,20 +142,20 @@ CellularLayer_ = {
 	--     select = "cover2010"
 	-- }
 	fillCells = function(self, data)
-	    verifyNamedTable(data)
+		verifyNamedTable(data)
 
-	    mandatoryTableArgument(data, "operation", "string")
-	    mandatoryTableArgument(data, "layer", "string")
-	    mandatoryTableArgument(data, "attribute", "string")
+		mandatoryTableArgument(data, "operation", "string")
+		mandatoryTableArgument(data, "layer", "string")
+		mandatoryTableArgument(data, "attribute", "string")
 
 		switch(data, "operation"):caseof{
 			area = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 			end,
 			average = function()
-	    		verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
 
-	    		mandatoryTableArgument(data, "select", "string")
+				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "area", false)
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
@@ -167,59 +167,59 @@ CellularLayer_ = {
 	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 			end,
 			length = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 			end,
 			majority = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 
-	    		mandatoryTableArgument(data, "select", "string")
+				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			maximum = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 
-	    		mandatoryTableArgument(data, "select", "string")
+				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			minimum = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 
-	    		mandatoryTableArgument(data, "select", "string")
+				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			percentage = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 
-	    		mandatoryTableArgument(data, "select", "string")
+				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			presence = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 			end,
 			stdev = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
 
-	    		mandatoryTableArgument(data, "select", "string")
+				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			sum = function()
-	    		verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
 
-	    		mandatoryTableArgument(data, "select", "string")
+				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "area", false)
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
-	    		mandatoryTableArgument(data, "select", "string")
+				mandatoryTableArgument(data, "select", "string")
 			end,
 			value = function()
-	    		verifyUnnecessaryArguments(data, {"area", "attribute", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"area", "attribute", "layer", "operation", "select"})
 
-	    		mandatoryTableArgument(data, "select", "string")
+				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "area", false)
 			end
 		}
@@ -241,13 +241,13 @@ metaTableCellularLayer_ = {
 --     layer = "cells"
 -- }
 function CellularLayer(data)
-    verifyNamedTable(data)
+	verifyNamedTable(data)
 
-    verifyUnnecessaryArguments(data, {"layer", "project"})
+	verifyUnnecessaryArguments(data, {"layer", "project"})
 	local terralib = TerraLib{}
 
-    mandatoryTableArgument(data, "project", "string")
-    mandatoryTableArgument(data, "layer", "string")
+	mandatoryTableArgument(data, "project", "string")
+	mandatoryTableArgument(data, "layer", "string")
 	data.type = dataSourceTypeMapper[data.type]
 	--print(data.type)
 	terralib:createCellularSpaceLayer(data.layer, data.name, data.resX, data.resY, data.type, data.repository) 

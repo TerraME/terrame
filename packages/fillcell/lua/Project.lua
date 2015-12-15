@@ -69,13 +69,14 @@ Project_ = {
 	-- }
 	addLayer = function(self, data)	
 		verifyNamedTable(data)
-	    mandatoryTableArgument(data, "layer", "string")
-	    mandatoryTableArgument(data, "source", "string")
+		mandatoryTableArgument(data, "layer", "string")
+	   
+		mandatoryTableArgument(data, "source", "string")
 
 	    --TODO: layer name overwrite
 		--local source = dataSourceTypeMapper[data.source]
 		
-		if self.terralib:getLayerInfo(data.layer) == nil then -- TODO: ALTER THIS TO GET A BOOLEAN IN SWIG
+		if self.terralib:getLayerInfo(data.layer) == nil then -- TODO: ALTER THIS TO GET A BOO
 			if data.source == "shp" then
 				mandatoryTableArgument(data, "file", "string")			
 				self.terralib:addOgrLayer(data.layer, data.file)
@@ -106,13 +107,13 @@ Project_ = {
 	--     resolution = 5e4 -- 50x50km
 	-- }
 	addCellularLayer = function(self, data)
-	    verifyNamedTable(data)
+		verifyNamedTable(data)
 
-	    verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution"})
+		verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution"})
 
-	    defaultTableValue(data, "box", false)
-	    mandatoryTableArgument(data, "layer", "string")
-	    mandatoryTableArgument(data, "input", "string")
+		defaultTableValue(data, "box", false)
+		mandatoryTableArgument(data, "layer", "string")
+		mandatoryTableArgument(data, "input", "string")
 		positiveTableArgument(data, "resolution")	
 	end,
 
@@ -154,27 +155,27 @@ metaTableProject_ = {
 --     file = "myproject.tview"
 -- }
 function Project(data)
-    verifyNamedTable(data)
+	verifyNamedTable(data)
     
-    mandatoryTableArgument(data, "file", "string")
+	mandatoryTableArgument(data, "file", "string")
 
-    optionalTableArgument(data, "create", "boolean")
-    optionalTableArgument(data, "title", "string")
-    optionalTableArgument(data, "author", "string")
+	optionalTableArgument(data, "create", "boolean")
+	optionalTableArgument(data, "title", "string")
+	optionalTableArgument(data, "author", "string")
 
-    verifyUnnecessaryArguments(data, {"create", "file", "author", "title"})
+	verifyUnnecessaryArguments(data, {"create", "file", "author", "title"})
 
-    if isEmpty(data.author) then
-    	data.author = "<no author>"
-    end
+	if isEmpty(data.author) then
+		data.author = "<no author>"
+	end
 
-    if isEmpty(data.title) then
-    	data.title = "<no title>" 
-   	end 
+	if isEmpty(data.title) then
+		data.title = "<no title>" 
+	end 
 
-   	if isEmpty(data.create) then
-   		data.create = false
-   	end
+	if isEmpty(data.create) then
+		data.create = false
+	end
 
 	local terralib = TerraLib{}
 	
@@ -202,4 +203,3 @@ function Project(data)
 
 	return data
 end
-
