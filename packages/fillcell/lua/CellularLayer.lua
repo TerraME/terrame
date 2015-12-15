@@ -24,6 +24,13 @@
 --          Rodrigo Avancini
 --#########################################################################################
 
+local dataSourceTypeMapper = {
+	vector = "OGR",
+	raster = "GDAL",
+	postgis = "POSTGIS",
+	access = "ADO"
+}
+
 CellularLayer_ = {
 	type_ = "CellularLayer",
 	--- Create a new attribute for each cell of a CellularLayer.
@@ -237,9 +244,13 @@ function CellularLayer(data)
     verifyNamedTable(data)
 
     verifyUnnecessaryArguments(data, {"layer", "project"})
+	local terralib = TerraLib{}
 
     mandatoryTableArgument(data, "project", "string")
     mandatoryTableArgument(data, "layer", "string")
+	data.type = dataSourceTypeMapper[data.type]
+	--print(data.type)
+	terralib:createCellularSpaceLayer(data.layer, data.name, data.resX, data.resY, data.type, data.repository) 
 
 	setmetatable(data, metaTableCellularLayer_)
 

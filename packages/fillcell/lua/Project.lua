@@ -24,6 +24,18 @@
 --          Rodrigo Avancini
 --#########################################################################################
 
+-- TODO: create Common for this
+local dataSourceTypeMapper = {
+	shp = "OGR",
+	tiff = "GDAL",
+	postgis = "POSTGIS",
+	access = "ADO"
+}
+
+local function isEmpty(data)
+	return (data == "") or (data == nil)
+end
+
 Project_ = {
 	type_ = "Project",
 	--- Add a new layer to the project. This layer can be stored in a database, 
@@ -56,9 +68,13 @@ Project_ = {
 	--     table = "roads"
 	-- }
 	addLayer = function(self, data)	
-	    verifyNamedTable(data)
-
+		verifyNamedTable(data)
 	    mandatoryTableArgument(data, "layer", "string")
+	    --TODO: layer name overwrite
+		local type = dataSourceTypeMapper[data.type]
+		local newLayer = self.terralib:addLayer(data.layer, data.file, type)
+
+		--TODO: implement all types (tiff, access, etc)		
 	end,
 	--- Add a new CellularLayer to the project. It has a raster-like
 	-- representation of space with several attributes created from
@@ -87,14 +103,22 @@ Project_ = {
 	    defaultTableValue(data, "box", false)
 	    mandatoryTableArgument(data, "layer", "string")
 	    mandatoryTableArgument(data, "input", "string")
-		positiveTableArgument(data, "resolution")
+		positiveTableArgument(data, "resolution")	
+	end,
+
+	info = function(self)
+		return self.terralib:getProjectInfo()
 	end
+
+	-- showLayers = function(self)
+	-- 	self.terralib:printLayersInfo()
+	-- end
 }
 
 metaTableProject_ = {
 	__index = Project_
 }
-	
+
 --- Project is a concept to describe all the data to be used by a given model.
 -- Data can be stored in different sources, with different formats and access.
 -- A project organises the data into a set of layers, storing all the information
@@ -114,13 +138,52 @@ metaTableProject_ = {
 -- }
 function Project(data)
     verifyNamedTable(data)
-
-    defaultTableValue(data, "create", false)
+    
     mandatoryTableArgument(data, "file", "string")
 
-    verifyUnnecessaryArguments(data, {"create", "file"})
+    optionalTableArgument(data, "create", "boolean")
+    optionalTableArgument(data, "title", "string")
+    optionalTableArgument(data, "author", "string")
+
+    verifyUnnecessaryArguments(data, {"create", "file", "author", "title"})
+
+    if isEmpty(data.author) then
+    	data.author = "<no author>"
+    end
+
+    if isEmpty(data.title) then
+    	data.title = "<no title>" 
+   	end 
+
+   	if isEmpty(data.create) then
+   		data.create = false
+   	end
+
+	local terralib = TerraLib{}
+	
+	terralib:init()
+
+	--TODO: auto finalize terralib and all objects, how? 
+
+	data.terralib = terralib
+
+	if data.create then
+		if isFile(data.file) then
+			customError("Project '"..data.file.."' already exists.")
+		else
+			terralib:createProject(data.file, data.author, data.title)
+		end
+	else
+		if isFile(data.file) then
+			terralib:openProject(data.file)
+		else
+			customError("Project '"..data.file.."' does not exist. Use 'create = true' to create a new Project.")
+		end
+	end
 
 	setmetatable(data, metaTableProject_)
+
+	--terralib:finalize()
 
 	return data
 end
