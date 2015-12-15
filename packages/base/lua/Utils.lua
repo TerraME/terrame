@@ -1298,23 +1298,6 @@ function switch(data, att)
 	return swtbl
 end
 
---- Create a temporary folder in the directory TerraME was executed and return its name.
--- Every time this function is called in the same execution of TerraME, it returns the
--- same folder (without deleting its internal files). This
--- folder needs to be removed manually after the end of the execution.
--- @usage tmpf = tmpDir()
-function tmpDir(self)
-	if not _Gtme.tmpfolder__ then
-		_Gtme.tmpfolder__ = runCommand("mktemp -d .terrametmp_XXXXX")[1]
-	end
-
-	if not isDir(_Gtme.tmpfolder__) then
-		os.execute("mkdir ".._Gtme.tmpfolder__)
-	end
-
-	return _Gtme.tmpfolder__
-end
-
 --- Return the type of an object. It extends the original Lua type() to support TerraME objects,
 -- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
 -- @arg data Any object or value.

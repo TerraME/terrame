@@ -813,20 +813,6 @@ return{
 
 		unitTest:assertEquals(count, 2)
 	end,
-	tmpDir = function(unitTest)
-		local f = tmpDir()
-		local g = tmpDir()
-
-		unitTest:assertEquals(f, g)
-		unitTest:assertType(f, "string")
-		unitTest:assert(isDir(f))
-
-		os.execute("rm -rf "..g)
-		local g = tmpDir()
-
-		unitTest:assert(isDir(f))
-		unitTest:assertEquals(f, g)
-	end,
 	type = function(unitTest)
 		local c = Cell{}
 

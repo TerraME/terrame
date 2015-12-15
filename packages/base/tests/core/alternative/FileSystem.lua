@@ -121,6 +121,12 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
 	end,
+	tmpDir = function(unitTest)
+		local error_func = function()
+			tmpDir(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+	end,
 	touch = function(unitTest)
 		local error_func = function()
 			touch(1)

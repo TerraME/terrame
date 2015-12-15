@@ -32,7 +32,7 @@ local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 
 _Gtme.printNote("Creating temporary folder")
-tmpfolder = runCommand("mktemp -d .terramerun_XXXXX")[1]
+tmpfolder = tmpDir(".terramerun_XXXXX")
 
 _Gtme.printNote("Testing installed packages")
 

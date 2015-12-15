@@ -152,6 +152,29 @@ return{
 		unitTest:assertEquals(#d, 23) -- 23 files
 		unitTest:assertEquals(#e, 0)
 	end,
+	tmpDir = function(unitTest)
+		local f = tmpDir()
+		local g = tmpDir()
+
+		unitTest:assertEquals(f, g)
+		unitTest:assertType(f, "string")
+		unitTest:assert(isDir(f))
+
+		os.execute("rm -rf "..g)
+		local g = tmpDir()
+
+		unitTest:assertEquals(f, g)
+		unitTest:assertType(f, "string")
+		unitTest:assert(isDir(f))
+
+		local g = tmpDir("abc123XXXXX")
+
+		unitTest:assert(isDir(g))
+		unitTest:assertEquals(string.len(g), 11)
+		unitTest:assertType(g, "string")
+
+		os.execute("rm -rf "..g)
+	end,
 	touch = function(unitTest)
 		if not _Gtme.isWindowsOS() then
 			local pathdata = packageInfo().data

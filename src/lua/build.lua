@@ -74,7 +74,7 @@ function _Gtme.buildPackage(package, clean)
 
 	report.doc_errors = report.doc_errors + docErrors
 
-	tmpfolder = runCommand("mktemp -d .terrame_"..package.."_XXXXX")[1]
+	tmpfolder = tmpDir(".terrame_"..package.."_XXXXX")
 	local currentdir = currentDir()
 
 	local pkgInfo = packageInfo(package)

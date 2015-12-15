@@ -8,9 +8,8 @@ local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 local pkgDir = _Gtme.makePathCompatibleToAllOS(baseDir..s.."packages")
 
-
 _Gtme.printNote("Creating temporary folder")
-tmpfolder = runCommand("mktemp -d .terramerepository_XXXXX")[1]
+tmpfolder = tmpDir(".terramerepository_XXXXX")
 chDir(tmpfolder)
 
 _Gtme.printNote("Copying currently installed packages")

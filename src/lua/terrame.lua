@@ -772,7 +772,7 @@ function _Gtme.installPackage(file)
 		_Gtme.print("Package '"..package.."' was not installed before")
 	end
 
-	local tmpfolder = tmpDir()
+	local tmpfolder = tmpDir(".terrametmp_XXXXX")
 
 	os.execute("cp \""..file.."\" \""..tmpfolder.."\"")
 	_Gtme.chDir(tmpfolder)
@@ -1325,6 +1325,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		end
 		argCount = argCount + 1
 	end
+
+	if _Gtme.tmpfolder__ then
+		os.execute("rm -rf ".._Gtme.tmpfolder__)
+	end
+
 	return true
 end
 

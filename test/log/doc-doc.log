@@ -240,6 +240,7 @@ Testing lockDir
 Skipping mkDir
 Skipping rmDir
 Testing runCommand
+Testing tmpDir
 Testing touch
 Testing unlock
 Testing file lua/Flow.lua

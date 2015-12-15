@@ -251,6 +251,34 @@ function runCommand(command)
 	return result, err
 end
 
+--- Create a temporary directory and return its name.
+-- If this function is used without any argument, the directory will be deleted
+-- in the end of the simulation. Otherwise, the modeler will need to remove the
+-- directory manually if necessary.
+-- If the directory was deleted between two calls of this function without any
+-- argument then it is created again. 
+-- @arg directory Name of the directory to be created. It might contain a path 
+-- to a given directory
+-- where the new one will be created. The end of the string might contain X's,
+-- which are going to be replaced by random alphanumerica values in order to
+-- guarantee that the created directory will not replace a previous one.
+-- @usage tmpf = tmpDir("mytmpdir_XXX")
+-- print(tmpf)
+--
+-- os.execute("rm -rf "..tmpf)
+function tmpDir(directory)
+	if directory then
+		optionalArgument(1, "string", directory)
+		return runCommand("mktemp -d "..directory)[1]
+	elseif not _Gtme.tmpfolder__ then
+		_Gtme.tmpfolder__ = runCommand("mktemp -d .terrametmp_XXXXX")[1]
+	elseif not isDir(_Gtme.tmpfolder__) then
+		os.execute("mkdir ".._Gtme.tmpfolder__)
+	end
+
+	return _Gtme.tmpfolder__
+end
+
 --- Set access and modification times of a file. This function is a bind to utime function.
 -- Times are provided in seconds (which should be generated with Lua
 -- standard function os.time). If the modification time is omitted, the access time provided is used;
