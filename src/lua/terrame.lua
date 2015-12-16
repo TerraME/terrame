@@ -1326,7 +1326,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		argCount = argCount + 1
 	end
 
-	if _Gtme.tmpfolder__ then
+	if rawget(_Gtme, "tmpfolder__") then
 		os.execute("rm -rf ".._Gtme.tmpfolder__)
 	end
 

@@ -73,6 +73,7 @@ basic = {
 	qwerty4321  = {package = "qwerty4321"},
 	depend      = {arg = "-build", package = "depend"},
 	depend2     = {arg = "-build", package = "depend2"},
+	tmp         = {script = "tmp.lua"}
 }
 
 observer = {
