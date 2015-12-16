@@ -36,6 +36,14 @@ local function isEmpty(data)
 	return (data == "") or (data == nil)
 end
 
+local function isValidSource(source)
+	return source == "tif" or source == "shp" or source == "postgis" or source == "access"
+end
+
+local function isSourceConsistent(source, filePath)
+	return source == getFileExtension(filePath)
+end
+
 Project_ = {
 	type_ = "Project",
 	--- Add a new layer to the project. This layer can be stored in a database, 
@@ -70,16 +78,33 @@ Project_ = {
 	addLayer = function(self, data)	
 		verifyNamedTable(data)
 		mandatoryTableArgument(data, "layer", "string")
-	   
-		mandatoryTableArgument(data, "source", "string")
 
-	    --TODO: layer name overwrite
-		--local source = dataSourceTypeMapper[data.source]
+		if isEmpty(data.source) then
+			mandatoryTableArgument(data, "file", "string")
+			
+			if not isFile(data.file) then
+				customError("The layer file'"..data.file.."' not found.")
+			end
+			
+			local source = getFileExtension(data.file)
+			data.source = source
+		else
+			mandatoryTableArgument(data, "source", "string")
+			
+			if not isSourceConsistent(data.source, data.file) then
+				customError("File '"..data.file.."'not match to source '"..data.source.."'.")
+			end
+		end
 		
-		if self.terralib:getLayerInfo(data.layer) == nil then -- TODO: ALTER THIS TO GET A BOO
-			if data.source == "shp" then
-				mandatoryTableArgument(data, "file", "string")			
-				self.terralib:addOgrLayer(data.layer, data.file)
+		if not isValidSource(data.source) then
+			customError("The source'"..data.source.."' is invalid.")
+		end		
+		
+		if self.terralib:getLayerInfo(data.layer) == nil then -- TODO: ALTER THIS TO GET A BOOLEAN
+			if data.source == "shp" then			
+				self.terralib:addShpLayer(data.layer, data.file)
+			elseif data.source == "tif" then	
+				self.terralib:addTifLayer(data.layer, data.file)
 			end
 		else
 			customError("Layer '"..data.layer.."' already exists in the Project.")

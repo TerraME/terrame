@@ -136,107 +136,133 @@ return{
 		local layerName = "Setores_2000"
 		proj:addLayer {
 			layer = layerName,
-			file = file("Setores_Censitarios_2000_pol.shp", "fillcell"),
-			source = "shp"			
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")			
 		}
 		
 		local layerAlreadyExists = function()
 			proj:addLayer {
 				layer = layerName,
-				file = file("Setores_Censitarios_2000_pol.shp", "fillcell"),
-				source = "shp"			
+				file = file("Setores_Censitarios_2000_pol.shp", "fillcell")	
 			}			
 		end
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName.."' already exists in the Project.")
 		
+		local sourceInvalid = function()
+			proj:addLayer {
+				layer = layerName,
+				file = file("amazonia.tview", "fillcell")	
+			}			
+		end
+		unitTest:assertError(sourceInvalid, "The source'".."tview".."' is invalid.")		
+		
+		local layerFile = "linhares.shp"
+		local fileLayerNonExists = function()
+			proj:addLayer {
+				layer = "Linhares",
+				file = layerFile	
+			}			
+		end
+		unitTest:assertError(fileLayerNonExists, "The layer file'"..layerFile.."' not found.")			
+	
+		local filePath = file("Setores_Censitarios_2000_pol.shp", "fillcell")
+		local source = "tif"
+		local inconsistentExtension = function()
+			proj:addLayer {
+				layer = "Setores_New",
+				file = filePath,
+				source = "tif"
+			}			
+		end
+		unitTest:assertError(inconsistentExtension, "File '"..filePath.."'not match to source '"..source.."'.")			
 		
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end
-
-
-		-- TODO: check if a layer to be added already exists
-		-- TODO: tests for shapefiles
+		
 		-- TODO: tests for postgis
-		-- TODO: tests for tiff
 	end, 	
--- 	addCellularLayer = function(unitTest)
--- 		local proj = Project{
--- 			file = file("amazonia.tview", "fillcell")
--- 		}
+	addCellularLayer = function(unitTest)
+		local projName = "amazonia.tview"
 
--- 		local error_func = function()
--- 			proj:addCellularLayer()
--- 		end
--- 		unitTest:assertError(error_func, tableArgumentMsg())
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
 
--- 		local error_func = function()
--- 			proj:addCellularLayer{
--- 				input = 123,
--- 				layer = "cells",
--- 				resolution = 5e4
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("input", "string", 123))
+		local proj = Project{
+			file = projName,
+			create = true,
+			author = "Avancini",
+			title = "The Amazonia"
+		}	
 
--- 		local error_func = function()
--- 			proj:addCellularLayer{
--- 				input = "amazonia-states",
--- 				layer = 123,
--- 				resolution = 5e4
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 123))
+		local noDataArguments = function()
+			proj:addCellularLayer()
+		end
+		unitTest:assertError(noDataArguments, tableArgumentMsg())
 
--- 		local error_func = function()
--- 			proj:addCellularLayer{
--- 				input = "amazonia-states",
--- 				layer = "cells",
--- 				resolution = 5e4,
--- 				box = 123
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("box", "boolean", 123))
+		local attrInputNonString = function()
+			proj:addCellularLayer{
+				input = 123,
+				layer = "cells",
+				resolution = 5e4
+			}
+		end
+		unitTest:assertError(attrInputNonString, incompatibleTypeMsg("input", "string", 123))
 
--- 		local error_func = function()
--- 			proj:addCellularLayer{
--- 				input = "amazonia-states",
--- 				layer = "cells",
--- 				resolution = false
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("resolution", "number", false))
+		local attrLayerNonString = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = 123,
+				resolution = 5e4
+			}
+		end
+		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("layer", "string", 123))
 
--- 		error_func = function()
--- 			proj:addCellularLayer{
--- 				input = "amazonia-states",
--- 				layer = "cells",
--- 				resolution = 0
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, positiveArgumentMsg("resolution", 0))
+		local attrBoxNonBoolean = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = "cells",
+				resolution = 5e4,
+				box = 123
+			}
+		end
+		unitTest:assertError(attrBoxNonBoolean, incompatibleTypeMsg("box", "boolean", 123))
 
--- 		error_func = function()
--- 			proj:addCellularLayer{
--- 				input = "amazonia-states",
--- 				layer = "cells",
--- 				resolution = 0
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, positiveArgumentMsg("resolution", 0))
+		local attrResolutionNonNumber = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = "cells",
+				resolution = false
+			}
+		end
+		unitTest:assertError(attrResolutionNonNumber, incompatibleTypeMsg("resolution", "number", false))
 
--- 		error_func = function()
--- 			proj:addCellularLayer{
--- 				input = "amazonia-states",
--- 				layer = "cells",
--- 				resoltion = 200
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("resoltion", "resolution"))
+		local attrResolutionNonPositive = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = "cells",
+				resolution = 0
+			}
+		end
+		unitTest:assertError(attrResolutionNonPositive, positiveArgumentMsg("resolution", 0))
 
--- 		-- TODO: check if the input layer contains polygons (?)
--- 		-- TODO: check if the input layer exists
--- 		-- TODO: check if a layer to be added already exists
--- 	end
+
+		local unnecessaryArgument = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = "cells",
+				resoltion = 200
+			}
+		end
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
+		
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end		
+
+		-- TODO: check if the input layer contains polygons (?)
+		-- TODO: check if the input layer exists
+		-- TODO: check if a layer to be added already exists
+	end
 }
 

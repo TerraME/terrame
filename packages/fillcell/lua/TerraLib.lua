@@ -3,8 +3,6 @@ require("terralib_mod_binding_lua")
 -- TODO: To document this
 
 local binding = terralib_mod_binding_lua
-
-
 local currentProject = nil
 local initialized = false
 
@@ -35,7 +33,7 @@ local function createConnInfo(nameOrPath, dsType)
 	elseif dsType == "OGR" then
 		connInfo.URI = nameOrPath
 	elseif dsType == "GDAL" then
-		connInfo = {} -- TODO THIS
+		connInfo.URI = nameOrPath
 	end
 		
 	return connInfo
@@ -70,23 +68,41 @@ end
 
 local function createLayer(name, filePath, type)
 	local ds = makeAndOpenDataSource(name, filePath, type)
-	local _, dsetNameWithExtension, _ = string.match(filePath, "(.-)([^\\/]-%.?([^%.\\/]*))$") -- TODO: VERIFY THIS
-	local _, _, dsetName = string.find(dsetNameWithExtension, "^(.*)%.[^%.]*$")
-
-	local dsetType = ds:getDataSetType(dsetName)
-	local dset = ds:getDataSet(dsetName)
-	local gp = binding.GetFirstGeomProperty(dsetType)
-	local env = binding.te.gm.Envelope(binding.GetExtent(dsetType:getName(), gp:getName(), ds:getId()))
-
+	
+	local dsetType = nil
+	local dset = nil
+	local dsetName = ""
+	local env = nil
+	local srid = 0
+	
+	if type == "OGR" then
+		dsetName = getFileName(filePath)
+		dsetType = ds:getDataSetType(dsetName)
+		dset = ds:getDataSet(dsetName)
+		local gp = binding.GetFirstGeomProperty(dsetType)
+		env = binding.te.gm.Envelope(binding.GetExtent(dsetType:getName(), gp:getName(), ds:getId()))
+		srid = gp:getSRID()
+	elseif type == "GDAL" then
+		dsetName = getFileNameWithExtension(filePath)
+		dsetType = ds:getDataSetType(dsetName)
+		dset = ds:getDataSet(dsetName)
+		local rpos = binding.GetFirstPropertyPos(dset, binding.RASTER_TYPE)
+		local raster = dset:getRaster(rpos)
+		
+		env = raster:getExtent()
+		srid = raster:getSRID()
+	end
+	
 	local id = binding.GetRandomicId()
 	local layer = binding.te.map.DataSetLayer(id)
-
+	
 	layer:setDataSetName(dsetName)
 	layer:setTitle(name)
 	layer:setDataSourceId(ds:getId())
+	layer:setExtent(env)
 	layer:setVisibility(binding.VISIBLE)
 	layer:setRendererType("ABSTRACT_LAYER_RENDERER")
-	layer:setSRID(gp:getSRID())
+	layer:setSRID(srid)
 
 	return ds, layer
 end
@@ -103,6 +119,39 @@ local function saveProject(project, fileName)
 	binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)	
 	
 	project:setProjectAsChanged(false)
+end
+
+local function openProject(filePath)		
+	-- TODO: This project could not be found:
+
+	-- TODO: add file extension if user didn't set
+	local project = binding.ReadProject(filePath)
+		
+	binding.te.qt.af.XMLFormatter.format(project, false)
+	binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)		
+		
+	project:setProjectAsChanged(false)	
+		
+	currentProject = project
+end
+
+local function addFileLayer(name, filePath, type)
+	local ds, layer = createLayer(name, filePath, type)
+
+	currentProject:add(layer)
+	saveProject(currentProject, currentProject:getFileName())
+
+	-- I must reopen project because add() and/or save() is not keeping the consistency. Verify this in the future
+	openProject(currentProject:getFileName()) 
+	
+	-- release all objects created 
+	binding.te.da.DataSourceManager.getInstance():detach(layer:getDataSourceId())
+	local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():get(layer:getDataSourceId())
+	local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():remove(layer:getDataSourceId())
+	dsInfo = nil
+	ds = nil
+	layer = nil
+	collectgarbage("collect")	
 end
 
 local function finalize()
@@ -154,19 +203,11 @@ TerraLib_ = {
 	end,
 
 	openProject = function(self, filePath)
-
 		-- TODO: This project could not be found:
 
 		-- TODO: add file extension if user didn't set
 		
-		local project = binding.ReadProject(filePath)
-		
-		binding.te.qt.af.XMLFormatter.format(project, false)
-		binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)		
-		
-		project:setProjectAsChanged(false)		
-
-		currentProject = project
+		openProject(filePath)		
 
 		-- TODO: Maybe here getLayersNames()
 	end,
@@ -203,23 +244,13 @@ TerraLib_ = {
 		return layersNames
 	end,
 
-	addOgrLayer = function(self, name, filePath)
-		local ds, layer = createLayer(name, filePath, "OGR")
-
-		currentProject:add(layer)
-		saveProject(currentProject, currentProject:getFileName())
-		-- I must reopen project because add() and/or save() is not keeping the consistency. Verify this in the future
-		self:openProject(currentProject:getFileName()) 
-		
-		-- release all objects created 
-		binding.te.da.DataSourceManager.getInstance():detach(layer:getDataSourceId())
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():get(layer:getDataSourceId())
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():remove(layer:getDataSourceId())
-		dsInfo = nil
-		ds = nil
-		layer = nil
-		collectgarbage("collect")			
+	addShpLayer = function(self, name, filePath)
+		addFileLayer(name, filePath, "OGR")
 	end,
+	
+	addTifLayer = function(self, name, filePath)
+		addFileLayer(name, filePath, "GDAL")
+	end,	
 
 	createCellularSpaceLayer = function(self, inputLayerTitle, name, resX, resY, type, repository) 
 		local inputLayer = currentProject:getDataSetLayerByTitle(inputLayerTitle)
