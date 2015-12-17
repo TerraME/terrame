@@ -24,7 +24,10 @@ return {
 	getLayerInfo = function(unitTest)
 		unitTest:assert(true)
 	end,
-	addOgrLayer = function(unitTest)
+	addShpLayer = function(unitTest)
+		unitTest:assert(true)
+	end,
+	addTifLayer = function(unitTest)
 		unitTest:assert(true)
 	end,
 	createCellularSpaceLayer = function(unitTest)

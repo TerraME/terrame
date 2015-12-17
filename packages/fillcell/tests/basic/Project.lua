@@ -71,11 +71,8 @@ return {
 		local layerName1 = "Setores_Censitarios_2000"
 		proj1:addLayer {
 			layer = layerName1,
-			file = file("Setores_Censitarios_2000_pol.shp", "fillcell"),
-			source = "shp"
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")
 		}
-
-		unitTest:assert(true)
 
 		local proj2 = Project {
 			file = projName
@@ -87,15 +84,24 @@ return {
 		local layerName2 = "Localidades"
 		proj2:addLayer {
 			layer = layerName2,
-			file = file("Localidades_pt.shp", "fillcell"),
-			source = "shp"			
+			file = file("Localidades_pt.shp", "fillcell")	
 		}
 		
 		local layer1 = proj2:infoLayer(layerName1)
 		local layer2 = proj2:infoLayer(layerName2)
 
 		unitTest:assertEquals(layer1.name, layerName1)
-		unitTest:assertEquals(layer2.name, layerName2)	
+		unitTest:assertEquals(layer2.name, layerName2)
+
+		local layerName3 = "Altimetria"
+		proj2:addLayer {
+			layer = layerName3,
+			file = file("altimetria.tif", "fillcell")		
+		}		
+		
+		local layer3 = proj2:infoLayer(layerName3)
+		
+		unitTest:assertEquals(layer3.name, layerName3)
 		
 		if isFile(projName) then
 			os.execute("rm -f "..projName)

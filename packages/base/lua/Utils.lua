@@ -1315,9 +1315,14 @@ end
 
 -- This function is taken from https://gist.github.com/lunixbochs/5b0bb27861a396ab7a86
 --- Function that returns a string describing the internal content of an object.
+-- It converts a table into a string that represents a Lua code that declares such table.
 -- @arg o The object to be converted into a string.
 -- @arg indent A string to be placed in the beginning of each line of the returning string.
 -- @usage vardump{name = "john", age = 20}
+-- -- {
+-- --     ['age'] = '20', 
+-- --     ['name'] = 'john'
+-- -- }
 function vardump(o, indent)
 	if indent == nil then indent = '' end
 
