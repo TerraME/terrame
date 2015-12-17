@@ -404,8 +404,6 @@ function _Gtme.executeTests(package, fileName)
 		global_values[idx] = value
 	end)
 
-	tmpDir(".terrametmp_XXXXX")
-
 	local myTests
 	local myFiles
 
@@ -814,9 +812,7 @@ function _Gtme.executeTests(package, fileName)
 	printNote(text)
 
 	if ut.snapshots > 0 then
-		printNote("Snapshots were saved in '"..tmpDir().."'.")
-	else
-		os.execute("rm -rf "..tmpDir())
+		printNote("Snapshots were saved in '"..ut.tmpdir.."'.")
 	end
 
 	if ut.print_when_loading == 1 then

@@ -134,7 +134,6 @@ File 'buildunneclean/.hidden' is unnecessary and will be ignored.
 File 'buildunneclean/lua/.hidden2' is unnecessary and will be ignored.
 Cleaning package
 Removing 'snapshots' folder
-Removing 'test' folder
 Removing buildunneclean/examples/continuous-rain.log
 Removing buildunneclean/examples/discrete-rain.log
 Removing buildunneclean/examples/ipd.log

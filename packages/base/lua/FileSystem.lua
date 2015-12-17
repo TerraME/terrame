@@ -209,15 +209,58 @@ function mkDir(path)
 	return lfs.mkdir(path)
 end
 
---- Remove an existing directory. The argument is the name of the directory.
--- Returns true if the operation was successful; in case of error, it returns nil plus an error string.
--- @arg path A string with the path.
--- @usage -- DONTRUN
--- rmDir("mydirectory"))
+--- Remove an existing directory. It removes all internal files and directories
+-- recursively. If the directory does not exist or it cannot be removed,
+-- this function stops with an error.
+-- @arg path A string with the path. The function will automatically add
+-- quotation marks in the beginning and in the end of this argument in order
+-- to avoid problems related to empty spaces in the string. Therefore,
+-- this string must not contain quotation marks.
+-- @usage mkDir("mydirectory")
+--
+-- rmDir("mydirectory")
 function rmDir(path)
 	mandatoryArgument(1, "string", path)
 
-	return lfs.rmdir(path)
+	if string.find(path, "\"") then
+		customError("Argument #1 should not contain quotation marks.")
+	elseif not isDir(path) then
+		resourceNotFoundError(1, path)
+	end
+
+	local result = os.execute("rm -rf \""..path.."\"")
+
+	if result ~= true then
+		customError(result) -- SKIP
+	end
+end
+
+--- Remove an existing file. If the file does not exist or it cannot be removed,
+-- this function stops with an error. Directories cannot be removed using
+-- this function.
+-- @arg file A string with the file to be removed. It might contain a path if needed.
+-- The function will automatically add
+-- quotation marks in the beginning and in the end of this argument in order
+-- to avoid problems related to empty spaces in the string. Therefore,
+-- this string must not contain quotation marks.
+-- @usage file = io.open("myfile.txt", "w")
+-- file:close()
+--
+-- rmFile("myfile.txt")
+function rmFile(file)
+	mandatoryArgument(1, "string", file)
+
+	if string.find(file, "\"") then
+		customError("Argument #1 should not contain quotation marks.")
+	elseif not isFile(file) then
+		resourceNotFoundError(1, file)
+	end
+
+	local result = os.execute("rm -f "..file)
+
+	if result ~= true then
+		customError(result) -- SKIP
+	end
 end
 
 --- Execute a system command and return its output. It returns two tables. 

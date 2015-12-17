@@ -145,7 +145,17 @@ return{
 		local attr = attributes(pathdata.."test", "mode")
 		unitTest:assertEquals(attr, "directory")
 
-		unitTest:assert(rmDir(pathdata.."test"))
+		rmDir(pathdata.."test")
+
+		unitTest:assert(not isDir(pathdata.."test"))
+	end,
+	rmFile = function(unitTest)
+		local file = packageInfo().data.."test123"
+		os.execute("touch "..file)
+
+		rmFile(file)
+
+		unitTest:assert(not isFile(file))
 	end, 
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)

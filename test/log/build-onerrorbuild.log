@@ -122,8 +122,6 @@ Checking source code
 Checking fonts
 Looking for hidden files
 Cleaning package
-Removing 'snapshots' folder
-Removing 'test' folder
 Removing onerrorbuild/examples/continuous-rain.log
 Removing onerrorbuild/examples/discrete-rain.log
 Removing onerrorbuild/examples/ipd.log

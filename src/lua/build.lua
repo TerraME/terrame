@@ -29,6 +29,14 @@ local printError   = _Gtme.printError
 local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
+local function rm(file)
+	if isFile(file) then
+		rmFile(file)
+	else
+		rmDir(file)
+	end
+end
+
 function _Gtme.buildPackage(package, clean)
 	local initialTime = os.clock()
 
@@ -127,7 +135,7 @@ function _Gtme.buildPackage(package, clean)
 	forEachFile(package, function(file)
 		if not root[file] then
 			printError("File '"..package..s..file.."' is unnecessary and will be ignored.")
-			os.execute("rm -rf \""..package..s..file.."\"")
+			rm(package..s..file)
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
@@ -137,7 +145,7 @@ function _Gtme.buildPackage(package, clean)
 		forEachFile(package..s.."examples", function(file)
 			if not string.endswith(file, ".lua") and not string.endswith(file, ".tme") and not string.endswith(file, ".log") then
 				printError("File '"..package..s.."examples"..s..file.."' is unnecessary and will be ignored.")
-				os.execute("rm -rf \""..package..s.."examples"..s..file.."\"")
+				rm(package..s.."examples"..s..file)
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
 		end)
@@ -149,7 +157,7 @@ function _Gtme.buildPackage(package, clean)
 	forEachFile(package..s.."lua", function(file)
 		if not string.endswith(file, ".lua") and not isDir(package..s.."lua"..s..file) then
 			printError("File '"..package..s.."lua"..s..file.."' is unnecessary and will be ignored.")
-			os.execute("rm -rf \""..package..s.."lua"..s..file.."\"")
+			rm(package..s.."lua"..s..file)
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 	end)
@@ -160,7 +168,7 @@ function _Gtme.buildPackage(package, clean)
 				removeRecursiveLua(currentDir..s..file)
 			elseif not string.endswith(currentDir..s..file, ".lua") then
 				printError("File '"..currentDir..s..file.."' is unnecessary and will be ignored.")
-				os.execute("rm -f \""..currentDir..s..file.."\"")
+				rm(currentDir..s..file)
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
 		end)
@@ -182,7 +190,7 @@ function _Gtme.buildPackage(package, clean)
 			if not fontFiles[file] then
 				local mfile = package..s.."font"..s..file
 				printError("File '"..mfile.."' is unnecessary and will be ignored.")
-				os.execute("rm -rf \""..mfile.."\"")
+				rm(mfile)
 				report.unnecessary_files = report.unnecessary_files + 1
 			end
 		end)
@@ -204,17 +212,25 @@ function _Gtme.buildPackage(package, clean)
 			report.unnecessary_files = report.unnecessary_files + 1
 		end
 
-		os.execute("rm -rf \""..file.."\"")
+		rm(file)
 	end)
 
 	if clean then
 		printNote("Cleaning package")
 
-		print("Removing 'snapshots' folder")
-		os.execute("rm -rf \""..package..s.."snapshots\"")
+		local dsnapshots = package..s.."snapshots"
 
-		print("Removing 'test' folder")
-		os.execute("rm -rf \""..package..s.."test\"")
+		if isDir(dsnapshots) then
+			print("Removing 'snapshots' folder")
+			rmDir(package..s.."snapshots")
+		end
+
+		local dtest = package..s.."test"
+
+		if isDir(dtest) then
+			print("Removing 'test' folder")
+			rmDir(package..s.."test")
+		end
 
 		local logs 
 		if _Gtme.isWindowsOS() then
@@ -225,7 +241,7 @@ function _Gtme.buildPackage(package, clean)
   
 		forEachElement(logs, function(_, file)
 			print("Removing "..file)
-			os.execute("rm -f \""..file.."\"")
+			rmFile(file)
 		end)
 	end
 

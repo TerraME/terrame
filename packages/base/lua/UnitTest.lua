@@ -283,7 +283,12 @@ UnitTest_ = {
 		end
 
 		self.tsnapshots[file] = true
-		local newImage = tmpDir()..s..file
+
+		if not self.tmpdir then
+			self.tmpdir = tmpDir(".terrametmp_XXXXX") -- SKIP
+		end
+
+		local newImage = self.tmpdir..s..file
 		local oldImage = self.imgFolder..s..file
 
 		if not isFile(oldImage) then

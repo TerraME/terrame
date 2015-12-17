@@ -114,6 +114,32 @@ return{
 			rmDir(1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+
+		local error_func = function()
+			rmDir("abc\"")
+		end
+		unitTest:assertError(error_func, "Argument #1 should not contain quotation marks.")
+
+		local error_func = function()
+			rmDir("abc123456")
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abc123456"))
+	end,
+	rmFile = function(unitTest)
+		local error_func = function()
+			rmFile(1)
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 1))
+
+		local error_func = function()
+			rmFile("abc\"")
+		end
+		unitTest:assertError(error_func, "Argument #1 should not contain quotation marks.")
+
+		local error_func = function()
+			rmFile("abc123456")
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abc123456"))
 	end,
 	runCommand = function(unitTest)
 		local error_func = function()

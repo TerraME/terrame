@@ -40,7 +40,11 @@ _Gtme.printNote("Cleaning packages")
 forEachFile("packages", function(file)
 	_Gtme.print("Cleaning '"..file.."'")
 
-	os.execute("rm -rf \""..baseDir..s.."packages"..s..file.."\"")
+	local mdir = baseDir..s.."packages"..s..file
+
+	if isDir(mdir) then
+		rmDir(mdir)
+	end
 end)
 
 _Gtme.printNote("Copying packages")
@@ -55,7 +59,11 @@ remove = _Gtme.include("remove.lua")
 
 forEachElement(remove.files, function(_, value)
 	_Gtme.print("Removing '"..value.."'")
-	pcall(function() os.execute("rm -rf \""..value.."\"") end)
+	if isDir(value) then
+		result = rmDir(value)
+	elseif isFile(value) then
+		rmFile(value)
+	end
 end)
 
 local report = {
@@ -226,7 +234,7 @@ if commands.build then
 			_Gtme.printError("File does not exist")
 			report.builderrors = report.builderrors + 1
 		else
-			os.execute("rm \""..mfile.."\"")
+			rmFile(mfile)
 		end
 	end)
 end
@@ -245,7 +253,12 @@ remove = _Gtme.include(".."..s.."remove.lua")
 
 forEachElement(remove.files, function(_, value)
 	_Gtme.print("Removing '"..value.."'")
-	pcall(function() os.execute("rm -rf \""..value.."\"") end)
+	if isDir(value) then
+		result = rmDir(value)
+	elseif isFile(value) then
+		rmFile(value)
+	end
+
 end)
 
 forEachOrderedElement(commands, function(idx, group)
@@ -388,14 +401,16 @@ if commands.build then
 	forEachElement(files, function(package, mfile)
 		os.execute("terrame -install "..mfile)
 
-		if isDir(sessionInfo().path..s.."packages"..s..package) then
-			os.execute("rm -rf \""..sessionInfo().path..s.."packages"..s..package.."\"")
+		local pkgdir = sessionInfo().path..s.."packages"..s..package
+
+		if isDir(pkgdir) then
+			rmDir(pkgdir)
 		else
 			_Gtme.printError("Package could not be installed")
 			report.localbuilderrors = report.localbuilderrors + 1
 		end
 
-		os.execute("rm \""..mfile.."\"")
+		rmFile(mfile)
 	end)
 end
 

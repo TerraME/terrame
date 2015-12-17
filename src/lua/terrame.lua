@@ -655,7 +655,7 @@ function _Gtme.uninstall(package)
 	local arg = si.path..s.."packages"..s..package
 
 	if isDir(arg) then
-		os.execute("rm -rf \""..arg.."\"")
+		rmDir(arg)
 		if isDir(arg) then
 			_Gtme.print("Package \'"..package.."\' could not be uninstalled (wrong permission).")
 		else
@@ -793,13 +793,13 @@ function _Gtme.installPackage(file)
 			os.exit()
 		else
 			_Gtme.print("Removing previous version of package")
-			os.execute("rm -rf \""..packageDir..s..package.."\"")
+			rmDir(packageDir..s..package)
 		end
 	end
 
 	_Gtme.print("Trying to load package '"..package.."'")
 	xpcall(function() import(package) end, function(err)
-		os.execute("rm -rf \""..tmpfolder.."\"")
+		rmDir(tmpfolder)
 		_Gtme.customError("Package ccccould not be loaded:"..err)
 	end)
 
@@ -808,7 +808,7 @@ function _Gtme.installPackage(file)
 
 	chDir(currentDir)
 
-	os.execute("rm -rf \""..tmpfolder.."\"")
+	rmDir(tmpfolder)
 	_Gtme.print("Package '"..package.."' successfully installed")
 	return package
 end
@@ -1327,7 +1327,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	end
 
 	if rawget(_Gtme, "tmpfolder__") then
-		os.execute("rm -rf ".._Gtme.tmpfolder__)
+		rmDir(_Gtme.tmpfolder__)
 	end
 
 	return true

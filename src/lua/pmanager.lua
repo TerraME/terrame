@@ -374,10 +374,10 @@ local function installButtonClicked()
 			qt.dialog.msg_critical("Package '"..package.."' could not be installed.")
 		end
 
-		os.execute("rm -f \""..pkgfile.."\"")
+		rmFile(pkgfile)
 
 		_Gtme.chDir(cdir)
-		os.execute("rm -rf \""..tmpfolder.."\"")
+		rmDir(tmpfolder)
 		dialog:done(0)
 	end)
 
@@ -450,9 +450,9 @@ local function installLocalButtonClicked()
 
 			if qt.dialog.msg_question(msg, "Confirm?", ok + cancel, cancel) == ok then
 				_Gtme.printNote("Removing previous version of package")
-				os.execute("rm -rf \""..packageDir..s..package.."\"")
+				rmDir(packageDir..s..package)
 			else
-				os.execute("rm -rf \""..tmpfolder.."\"")
+				rmDir(tmpfolder)
 				enableAll()
 				return
 			end
@@ -466,7 +466,7 @@ local function installLocalButtonClicked()
 	if pkg then
 		local ok = true
 		xpcall(function() getPackage(package) end, function(err)
-			os.execute("rm -rf \""..packageInfo(package).path.."\"")
+			rmDir(packageInfo(package).path)
 			qt.dialog.msg_critical(err)
 			ok = false
 		end)
