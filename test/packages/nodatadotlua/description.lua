@@ -5,4 +5,4 @@ package = "nodatadotlua"
 title = "Error Package"
 authors = "Pedro R. Andrade"
 contact = "pedro.andrade@inpe.br"
-content = [[A package that has a folder data but does not have a file data.lua to document the available data.]]
+content = [[A package that has a directory data but does not have a file data.lua to document the available data.]]

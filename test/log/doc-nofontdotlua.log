@@ -1,7 +1,7 @@
 Building documentation for package 'nofontdotlua'
 Loading package 'nofontdotlua'
 Package 'nofontdotlua' has no data
-Checking folder 'font'
+Checking directory 'font'
 Package has font files but font.lua does not exist
 File 'Grissom Free.ttf' is not documented
 File 'Pet Animals.ttf' is not documented

@@ -18,12 +18,12 @@ Testing getPeriod
 Testing getPriority
 Testing getTime
 Checking if all asserts were executed
-Skipping folder tests/database/alternative
-Skipping folder tests/database/basics
-Skipping folder tests/internal/alternative
-Skipping folder tests/internal/basic
-Skipping folder tests/observer/alternative
-Skipping folder tests/observer/basics
+Skipping directory tests/database/alternative
+Skipping directory tests/database/basics
+Skipping directory tests/internal/alternative
+Skipping directory tests/internal/basic
+Skipping directory tests/observer/alternative
+Skipping directory tests/observer/basics
 Checking if functions from source code were tested
 Checking Event.lua
 Skipping lines of source code check
@@ -34,7 +34,7 @@ Unit test report:
 Tests were executed in 4.14 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
-There are no invalid files or folders in folder 'tests'.
+There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
 All 48 asserts were executed successfully.
 All 9 tested functions do not have any unexpected execution error.

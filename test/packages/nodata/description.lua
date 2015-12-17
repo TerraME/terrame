@@ -5,4 +5,4 @@ package = "nodata"
 title = "Error Package"
 authors = "Pedro R. Andrade"
 contact = "pedro.andrade@inpe.br"
-content = [[A package that contains data.lua but no data folder.]]
+content = [[A package that contains data.lua but no data directory.]]

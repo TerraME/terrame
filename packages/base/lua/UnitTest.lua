@@ -237,10 +237,11 @@ UnitTest_ = {
 			self:printError("Test should not be nil.")
 		end
 	end,
-	--- Verify whether a Chart or a Map has a plot similar to the one defined by snapshot folder.
+	--- Verify whether a Chart or a Map has a plot similar to the one defined in the
+	-- snapshot directory.
 	-- @arg observer A Chart or a Map.
-	-- @arg file A string with the file name in the snapshot folder. If the file does not exist
-	-- then it will save the file in the snapshot folder.
+	-- @arg file A string with the file name in the snapshot directory. If the file does not exist
+	-- then it will save the file in the snapshot directory.
 	-- @arg tolerance A number between 0 and 1 with the maximum difference in percentage of pixels
 	-- allowed. The default value is 0.
 	-- @usage unitTest = UnitTest{}
@@ -271,7 +272,7 @@ UnitTest_ = {
 			self.imgFolder = packageInfo(pkg).path..s.."snapshots" -- SKIP
 
 			if not isDir(self.imgFolder) then -- SKIP
-				customError("Folder '"..self.imgFolder.."' does not exist. Please create such folder in order to use assertSnapshot().")
+				customError("Folder '"..self.imgFolder.."' does not exist. Please create such directory in order to use assertSnapshot().")
 			end
 			self.tsnapshots = {}
 		end

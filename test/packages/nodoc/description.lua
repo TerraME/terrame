@@ -4,4 +4,4 @@ package = "nodoc"
 title = "Error Package"
 authors = "Pedro R. Andrade"
 contact = "pedro.andrade@inpe.br"
-content = [[A package that does not have folder 'doc'.]]
+content = [[A package that does not have directory 'doc'.]]

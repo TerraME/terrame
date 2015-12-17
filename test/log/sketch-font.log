@@ -1,7 +1,7 @@
 Verifying test files
 File 'foo.lua' already exists in the tests
 Verifying data files
-Package 'nofontdotlua' does not have a data folder
+Package 'nofontdotlua' does not have a data directory
 Verifying font files
 Creating 'font.lua'
 Adding sketch for font file 'Grissom Free.ttf'

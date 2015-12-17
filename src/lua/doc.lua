@@ -213,7 +213,7 @@ function _Gtme.executeDoc(package)
 			os.exit()
 		end)
 
-		printNote("Checking folder 'data'")
+		printNote("Checking directory 'data'")
 
 		table.sort(mdata, function(a, b)
 			return a.file[1] < b.file[1]
@@ -234,12 +234,12 @@ function _Gtme.executeDoc(package)
 
 		forEachOrderedElement(filesdocumented, function(midx, mvalue)
 			if mvalue == 0 then
-				printError("File '"..midx.."' is documented but does not exist in folder 'data'")
+				printError("File '"..midx.."' is documented but does not exist in directory 'data'")
 				doc_report.error_data = doc_report.error_data + 1
 			end
 		end)
 	elseif #df > 0 then
-		printNote("Checking folder 'data'")
+		printNote("Checking directory 'data'")
 		printError("Package has data files but data.lua does not exist")
 		forEachElement(df, function(_, mvalue)
 			if isDir(package_path..s.."data"..s..mvalue) then
@@ -324,7 +324,7 @@ function _Gtme.executeDoc(package)
 			return a.file < b.file
 		end)
 
-		printNote("Checking folder 'font'")
+		printNote("Checking directory 'font'")
 		forEachOrderedElement(df, function(_, mvalue)
 			if isDir(package_path..s.."font"..s..mvalue) then
 				return
@@ -340,7 +340,7 @@ function _Gtme.executeDoc(package)
 
 		forEachOrderedElement(fontsdocumented, function(midx, mvalue)
 			if mvalue == 0 then
-				printError("Font file '"..midx.."' is documented but does not exist in folder 'font'")
+				printError("Font file '"..midx.."' is documented but does not exist in directory 'font'")
 				doc_report.error_font = doc_report.error_font + 1
 			end
 		end)
@@ -356,7 +356,7 @@ function _Gtme.executeDoc(package)
 			end
 		end)
 	elseif #df > 0 then
-		printNote("Checking folder 'font'")
+		printNote("Checking directory 'font'")
 		printError("Package has font files but font.lua does not exist")
 		forEachElement(df, function(_, mvalue)
 			printError("File '"..mvalue.."' is not documented")
@@ -399,7 +399,7 @@ function _Gtme.executeDoc(package)
 	forEachOrderedElement(mdata, function(_, data)
 		if data.image then
 			if not images[data.image] then
-				printError("Image file '"..data.image.."' does not exist in folder 'images'")
+				printError("Image file '"..data.image.."' does not exist in directory 'images'")
 				doc_report.wrong_image = doc_report.wrong_image + 1
 			else
 				images[data.image] = images[data.image] + 1
@@ -416,7 +416,7 @@ function _Gtme.executeDoc(package)
 		forEachElement(value.models, function(midx, value, mtype)
 			if mtype == "table" and value.image then
 				if not images[value.image] then
-					printError("Image file '"..value.image.."' does not exist in folder 'images'")
+					printError("Image file '"..value.image.."' does not exist in directory 'images'")
 					doc_report.wrong_image = doc_report.wrong_image + 1
 				else
 					images[value.image] = images[value.image] + 1
@@ -433,7 +433,7 @@ function _Gtme.executeDoc(package)
 
 		if value.image then
 			if not images[value.image] then
-				printError("Image file '"..value.image.."' does not exist in folder 'images'")
+				printError("Image file '"..value.image.."' does not exist in directory 'images'")
 				doc_report.wrong_image = doc_report.wrong_image + 1
 			else
 				images[value.image] = images[value.image] + 1
@@ -445,7 +445,7 @@ function _Gtme.executeDoc(package)
 	print("Checking if all images are used")
 	forEachOrderedElement(images, function(file, value)
 		if value == 0 then
-			printError("Image file '"..file.."' in folder 'images' is unnecessary")
+			printError("Image file '"..file.."' in directory 'images' is unnecessary")
 			doc_report.wrong_image = doc_report.wrong_image + 1
 		end
 	end)

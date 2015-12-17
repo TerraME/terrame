@@ -82,18 +82,18 @@ function _Gtme.buildPackage(package, clean)
 
 	report.doc_errors = report.doc_errors + docErrors
 
-	tmpfolder = tmpDir(".terrame_"..package.."_XXXXX")
+	tmpdirectory = tmpDir(".terrame_"..package.."_XXXXX")
 	local currentdir = currentDir()
 
 	local pkgInfo = packageInfo(package)
-	local pkgFolder = pkgInfo.path
+	local pkgDirectory = pkgInfo.path
 
-	chDir(tmpfolder)
+	chDir(tmpdirectory)
 
-	if pkgFolder == package then
-		os.execute("cp -pr \""..currentdir..s..pkgFolder.."\" .")
+	if pkgDirectory == package then
+		os.execute("cp -pr \""..currentdir..s..pkgDirectory.."\" .")
 	else
-		os.execute("cp -pr \""..pkgFolder.."\" .")
+		os.execute("cp -pr \""..pkgDirectory.."\" .")
 	end
 
 	printNote("")
@@ -131,7 +131,7 @@ function _Gtme.buildPackage(package, clean)
 		doc = true
 	}
 
-	print("Checking basic files and folders")
+	print("Checking basic files and directories")
 	forEachFile(package, function(file)
 		if not root[file] then
 			printError("File '"..package..s..file.."' is unnecessary and will be ignored.")
@@ -221,14 +221,14 @@ function _Gtme.buildPackage(package, clean)
 		local dsnapshots = package..s.."snapshots"
 
 		if isDir(dsnapshots) then
-			print("Removing 'snapshots' folder")
+			print("Removing 'snapshots' directory")
 			rmDir(package..s.."snapshots")
 		end
 
 		local dtest = package..s.."test"
 
 		if isDir(dtest) then
-			print("Removing 'test' folder")
+			print("Removing 'test' directory")
 			rmDir(package..s.."test")
 		end
 
@@ -275,7 +275,7 @@ function _Gtme.buildPackage(package, clean)
 	Model = mModel
 
 	printNote("Checking license")
-	if not isFile(pkgFolder..s.."license.txt") then
+	if not isFile(pkgDirectory..s.."license.txt") then
 		report.license = 1
 		printError("The package does not contain file 'license.txt'")
 	end
@@ -307,7 +307,7 @@ function _Gtme.buildPackage(package, clean)
 	print("\nBuild report:")
 	printNote("Package was built in "..round(finalTime - initialTime, 2).." seconds.")
 	printNote("Build created file '"..file.."'.")
-	printNote("Temporary files are saved in "..tmpfolder)
+	printNote("Temporary files are saved in "..tmpdirectory)
 
 	if type(md5sum) == "table" then
 		printNote("MD5 sum for the package is "..md5sum[1])

@@ -9,7 +9,7 @@ rmFile("mytmp.lua")
 file = io.open("resp.txt")
 value = file:read()
 
--- check if the folder does not exist
+-- check if the directory does not exist
 if value == nil then
 	print("Could not read the directory's name.")
 elseif isDir(value) then

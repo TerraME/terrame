@@ -2,7 +2,7 @@ Building documentation for package 'onerror'
 Loading package 'onerror'
 print when loading
 Parsing 'data.lua'
-Checking folder 'data'
+Checking directory 'data'
 File 'data.csv' is not documented
 Package 'onerror' has font.lua but there are no fonts
 Parsing lua files
@@ -130,7 +130,7 @@ Checking data.lua
 Checking models
 Checking examples
 Checking if all images are used
-Image file 'wrong.bmp' in folder 'images' is unnecessary
+Image file 'wrong.bmp' in directory 'images' is unnecessary
 Checking if all functions are documented
 Checking ErrorHandling.lua
 Checking Tube.lua

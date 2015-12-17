@@ -591,29 +591,29 @@ end
 -- applying a given function on each of its files. Internal directories are
 -- also considered files. If any of the function calls returns
 -- false, forEachFile() stops and returns false, otherwise it returns true.
--- @arg folder A string with the path to a directory, or a vector of files.
+-- @arg directory A string with the path to a directory, or a vector of files.
 -- @arg f A user-defined function that takes a file name as argument. Note that
 -- the name does not include the directory where the file is placed.
 -- @usage forEachFile(packageInfo("base").path, function(file)
 --     print(file)
 -- end)
 -- @see FileSystem:dir
-function forEachFile(folder, f)
-	if type(folder) == "string" then
-		if not isDir(folder) then
-			customError("Folder \""..folder.."\" is not a valid directory.") -- SKIP
+function forEachFile(directory, f)
+	if type(directory) == "string" then
+		if not isDir(directory) then
+			customError("Folder \""..directory.."\" is not a valid directory.") -- SKIP
 		end
 
-		if not pcall(function() folder = dir(folder) end) then
+		if not pcall(function() directory = dir(directory) end) then
 			return true
 		end
 	end
 
-	mandatoryArgument(1, "table", folder)
+	mandatoryArgument(1, "table", directory)
 	mandatoryArgument(2, "function", f)
 
-	for i = 1, #folder do
-		if f(folder[i]) == false then return false end
+	for i = 1, #directory do
+		if f(directory[i]) == false then return false end
 	end
 
 	return true

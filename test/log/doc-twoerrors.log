@@ -3,10 +3,10 @@ Loading package 'twoerrors'
 print when loading
 print when loading
 Parsing 'data.lua'
-Checking folder 'data'
+Checking directory 'data'
 File 'data.csv' is not documented
-File 'brazilstates.dbf' is documented but does not exist in folder 'data'
-Checking folder 'font'
+File 'brazilstates.dbf' is documented but does not exist in directory 'data'
+Checking directory 'font'
 Package has font files but font.lua does not exist
 File 'Grissom Free.ttf' is not documented
 File 'JLS Smiles Sampler.ttf' is not documented
@@ -161,8 +161,8 @@ Checking data.lua
 Checking models
 Checking examples
 Checking if all images are used
-Image file 'wrong.bmp' in folder 'images' is unnecessary
-Image file 'wrong2.bmp' in folder 'images' is unnecessary
+Image file 'wrong.bmp' in directory 'images' is unnecessary
+Image file 'wrong2.bmp' in directory 'images' is unnecessary
 Checking if all functions are documented
 Checking ErrorHandling.lua
 Checking Tube.lua

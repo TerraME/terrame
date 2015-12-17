@@ -3,10 +3,10 @@ File 'foo.lua' already exists in the tests
 Verifying data files
 Creating 'data.lua'
 Adding sketch for data file 'data.txt'
-Folder 'folder' will be ignored
+Directory 'directory' will be ignored
 Adding sketch for data file 'mycsv.csv'
 Verifying font files
-Package 'nodatadotlua' does not have a font folder
+Package 'nodatadotlua' does not have a font directory
 
 Sketch report:
 No new test file was necessary.

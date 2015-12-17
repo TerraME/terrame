@@ -6,10 +6,10 @@ Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
 Skip looking for lines of source code
-'tests/alternative/abc/unnec6.txt' is not a folder neither a .lua file and will be ignored.
-Folder 'tests/alternative/abc' is empty.
-'tests/alternative/unnec5.txt' is not a folder neither a .lua file and will be ignored.
-'tests/unnec4.txt' is not a folder neither a .lua file and will be ignored.
+'tests/alternative/abc/unnec6.txt' is not a directory neither a .lua file and will be ignored.
+Directory 'tests/alternative/abc' is empty.
+'tests/alternative/unnec5.txt' is not a directory neither a .lua file and will be ignored.
+'tests/unnec4.txt' is not a directory neither a .lua file and will be ignored.
 Testing tests/Tube.lua
 Testing Tube
 Checking if all asserts were executed
@@ -32,7 +32,7 @@ Unit test report:
 Tests were executed in 0.23 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
-4 invalid files or folders were found in folder 'test'.
+4 invalid files or directories were found in directory 'test'.
 All asserts were executed at least once.
 All 3 asserts were executed successfully.
 All 3 tested functions do not have any unexpected execution error.
@@ -119,7 +119,7 @@ All 1 examples are correctly documented.
 Summing up, all the documentation was successfully built.
 
 Checking unnecessary files
-Checking basic files and folders
+Checking basic files and directories
 File 'buildunneclean/unnec1.txt' is unnecessary and will be ignored.
 Checking examples
 File 'buildunneclean/examples/unnec2.txt' is unnecessary and will be ignored.
@@ -133,7 +133,7 @@ Looking for hidden files
 File 'buildunneclean/.hidden' is unnecessary and will be ignored.
 File 'buildunneclean/lua/.hidden2' is unnecessary and will be ignored.
 Cleaning package
-Removing 'snapshots' folder
+Removing 'snapshots' directory
 Removing buildunneclean/examples/continuous-rain.log
 Removing buildunneclean/examples/discrete-rain.log
 Removing buildunneclean/examples/ipd.log

@@ -28,7 +28,7 @@ Unit test report:
 Tests were executed in 0.23 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
-There are no invalid files or folders in folder 'tests'.
+There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
 All 2 asserts were executed successfully.
 All 3 tested functions do not have any unexpected execution error.
@@ -115,7 +115,7 @@ All 1 examples are correctly documented.
 Summing up, one problem was found in the documentation.
 
 Checking unnecessary files
-Checking basic files and folders
+Checking basic files and directories
 File 'onerrorbuild/unnecessary.txt' is unnecessary and will be ignored.
 Checking examples
 Checking source code

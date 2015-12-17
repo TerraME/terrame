@@ -24,8 +24,8 @@ Testing reproduce
 Testing setId
 Testing walk
 Checking if all asserts were executed
-Skipping folder tests/database/alternative
-Skipping folder tests/internal/alternative
+Skipping directory tests/database/alternative
+Skipping directory tests/internal/alternative
 Testing tests/observer/alternative/Agent.lua
 Testing notify
 Checking if all asserts were executed
@@ -38,7 +38,7 @@ Unit test report:
 Tests were executed in 6.61 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
-There are no invalid files or folders in folder 'tests'.
+There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
 All 45 asserts were executed successfully.
 All 18 tested functions do not have any unexpected execution error.

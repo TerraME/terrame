@@ -1,9 +1,9 @@
 Verifying test files
 Package 'nolua' does not have source code
 Verifying data files
-Package 'nolua' does not have a data folder
+Package 'nolua' does not have a data directory
 Verifying font files
-Package 'nolua' does not have a font folder
+Package 'nolua' does not have a font directory
 
 Sketch report:
 No new test file was necessary.

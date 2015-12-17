@@ -1,5 +1,5 @@
 -- Script to test the package repository.
--- To use it, just run 'terrame repository.lua' within this folder.
+-- To use it, just run 'terrame repository.lua' within this directory.
 --
 -- Pedro R. Andrade
 
@@ -8,9 +8,9 @@ local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 local pkgDir = _Gtme.makePathCompatibleToAllOS(baseDir..s.."packages")
 
-_Gtme.printNote("Creating temporary folder")
-tmpfolder = tmpDir(".terramerepository_XXXXX")
-chDir(tmpfolder)
+_Gtme.printNote("Creating temporary directory")
+tmpdirectory = tmpDir(".terramerepository_XXXXX")
+chDir(tmpdirectory)
 
 _Gtme.printNote("Copying currently installed packages")
 
@@ -84,7 +84,7 @@ local function execute(command, filename)
 			logfile:write(value.."\n")
 		end)
 	else
-		local resultfile = io.open(".."..s..tmpfolder..s..filename, "w")
+		local resultfile = io.open(".."..s..tmpdirectory..s..filename, "w")
 			
 		local line = 1
 		local logerror = false
@@ -174,7 +174,7 @@ print("\nRepository test report:")
 
 _Gtme.printNote("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
 _Gtme.printNote("The repository has "..report.packages.." packages.")
-_Gtme.printNote("Results were saved in '"..tmpfolder.."'.")
+_Gtme.printNote("Results were saved in '"..tmpdirectory.."'.")
 
 if report.createdlogs == 0 then
 	_Gtme.printNote("No repos log file was created.")

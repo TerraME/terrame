@@ -481,21 +481,21 @@ local function exportDatabase(package)
 		command = command.." -h="..host
 	end
 
-	local folder = _Gtme.packageInfo(package).data
+	local directory = _Gtme.packageInfo(package).data
 	local files = _Gtme.sqlFiles(package)
 
 	_Gtme.forEachElement(files, function(_, mfile)
 		local database = string.sub(mfile, 1, string.len(mfile) - 4)
 
-		if _Gtme.isFile(folder..s..mfile) then
+		if _Gtme.isFile(directory..s..mfile) then
 			_Gtme.printWarning("File "..mfile.." already exists and will not be replaced")
 		else
 			_Gtme.printNote("Exporting database "..database)
-			local _, result = _Gtme.runCommand(command.." "..database.." > "..folder..mfile)
+			local _, result = _Gtme.runCommand(command.." "..database.." > "..directory..mfile)
 
 			if result and result[1] then
 				_Gtme.printError(result[1])
-				os.execute("rm \""..folder..mfile.."\"")
+				rmFile(directory..mfile)
 			else
 				_Gtme.printNote("Database '"..database.."'successfully exported")
 			end
@@ -614,7 +614,7 @@ function _Gtme.importDatabase(package)
 		return err
 	end		
 	
-	local folder = _Gtme.packageInfo(package).data
+	local directory = _Gtme.packageInfo(package).data
 	local files = _Gtme.sqlFiles(package)
 
 	local returnv
@@ -635,7 +635,7 @@ function _Gtme.importDatabase(package)
 			returnv = result[1]
 		else
 			_Gtme.printNote("Importing database '"..database.."'")
-			local importDbFile = _Gtme.makePathCompatibleToAllOS(folder..s..value)
+			local importDbFile = _Gtme.makePathCompatibleToAllOS(directory..s..value)
 			local cmd = "\""..command.."\" "..options.." "..database.." < \""..importDbFile.."\""
 			if _Gtme.isWindowsOS() then
 				cmd = "\""..cmd.."\""
@@ -772,10 +772,10 @@ function _Gtme.installPackage(file)
 		_Gtme.print("Package '"..package.."' was not installed before")
 	end
 
-	local tmpfolder = tmpDir(".terrametmp_XXXXX")
+	local tmpdirectory = tmpDir(".terrametmp_XXXXX")
 
-	os.execute("cp \""..file.."\" \""..tmpfolder.."\"")
-	_Gtme.chDir(tmpfolder)
+	os.execute("cp \""..file.."\" \""..tmpdirectory.."\"")
+	_Gtme.chDir(tmpdirectory)
 
 	os.execute("unzip -oq \""..file.."\"")
 
@@ -799,7 +799,7 @@ function _Gtme.installPackage(file)
 
 	_Gtme.print("Trying to load package '"..package.."'")
 	xpcall(function() import(package) end, function(err)
-		rmDir(tmpfolder)
+		rmDir(tmpdirectory)
 		_Gtme.customError("Package ccccould not be loaded:"..err)
 	end)
 
@@ -808,7 +808,7 @@ function _Gtme.installPackage(file)
 
 	chDir(currentDir)
 
-	rmDir(tmpfolder)
+	rmDir(tmpdirectory)
 	_Gtme.print("Package '"..package.."' successfully installed")
 	return package
 end
@@ -863,10 +863,10 @@ local function usage()
 	print(" [-package <pkg>] -doc            Build the documentation.")
 	print(" [-package <pkg>] -showdoc        Show the documentation in the default browser.")
 	print(" [-package <pkg>] -configure      Configure and run a Model using a graphical interface.")
-	print(" [-package <pkg>] -importDb       Import .sql files described in data.lua from folder")
+	print(" [-package <pkg>] -importDb       Import .sql files described in data.lua from directory")
 	print("                                  data within the package to MySQL.")
 	print(" [-package <pkg>] -exportDb       Export .sql files described in data.lua from MySQL to")
-	print("                                  folder data within the package.")
+	print("                                  directory data within the package.")
 --	print(" -workers <value>                 Sets the number of threads used for spatial observers.")
 	print("\nFor more information, please visit www.terrame.org\n")
 end
@@ -1021,7 +1021,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	}
 
 	if info_.path == nil or info_.path == "" then
-		error("Error: TME_PATH environment variable should exist and point to TerraME installation folder.", 2)
+		error("Error: TME_PATH environment variable should exist and point to TerraME installation directory.", 2)
 	end
 
 	-- Package.lua contains functions that terrame.lua needs, but should also be
@@ -1326,8 +1326,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 		argCount = argCount + 1
 	end
 
-	if rawget(_Gtme, "tmpfolder__") then
-		rmDir(_Gtme.tmpfolder__)
+	if rawget(_Gtme, "tmpdirectory__") then
+		rmDir(_Gtme.tmpdirectory__)
 	end
 
 	return true
@@ -1337,13 +1337,13 @@ function _Gtme.myxpcall(func)
 	return xpcall(func, function(err)
 		local si = _Gtme.sessionInfo()
 		local s = si.separator
-		local luaFolder = _Gtme.replaceSpecialChars(si.path..s.."lua")
-		local baseLuaFolder = _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"..s.."lua")
-		local luadocLuaFolder = _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."luadoc")
+		local luaDirectory = _Gtme.replaceSpecialChars(si.path..s.."lua")
+		local baseLuaDirectory = _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."base"..s.."lua")
+		local luadocLuaDirectory = _Gtme.replaceSpecialChars(si.path..s.."packages"..s.."luadoc")
 				
-		local m1 = string.match(err, string.sub(luaFolder, string.len(luaFolder) - 25, string.len(luaFolder)))
-		local m2 = string.match(err, string.sub(baseLuaFolder, string.len(baseLuaFolder) - 25, string.len(baseLuaFolder)))
-		local m3 = string.match(err, string.sub(luadocLuaFolder, string.len(luadocLuaFolder) - 25, string.len(luadocLuaFolder)))
+		local m1 = string.match(err, string.sub(luaDirectory, string.len(luaDirectory) - 25, string.len(luaDirectory)))
+		local m2 = string.match(err, string.sub(baseLuaDirectory, string.len(baseLuaDirectory) - 25, string.len(baseLuaDirectory)))
+		local m3 = string.match(err, string.sub(luadocLuaDirectory, string.len(luadocLuaDirectory) - 25, string.len(luadocLuaDirectory)))
 		local m4 = string.match(err, "%[C%]")
 
 		if m1 or m2 or m3 or m4 then

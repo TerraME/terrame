@@ -6,10 +6,10 @@ Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
 Skip looking for lines of source code
-'tests/alternative/abc/unnec6.txt' is not a folder neither a .lua file and will be ignored.
-Folder 'tests/alternative/abc' is empty.
-'tests/alternative/unnec5.txt' is not a folder neither a .lua file and will be ignored.
-'tests/unnec4.txt' is not a folder neither a .lua file and will be ignored.
+'tests/alternative/abc/unnec6.txt' is not a directory neither a .lua file and will be ignored.
+Directory 'tests/alternative/abc' is empty.
+'tests/alternative/unnec5.txt' is not a directory neither a .lua file and will be ignored.
+'tests/unnec4.txt' is not a directory neither a .lua file and will be ignored.
 Testing tests/Tube.lua
 Testing Tube
 Checking if all asserts were executed
@@ -32,7 +32,7 @@ Unit test report:
 Tests were executed in 0.24 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
-4 invalid files or folders were found in folder 'test'.
+4 invalid files or directories were found in directory 'test'.
 All asserts were executed at least once.
 All 3 asserts were executed successfully.
 All 3 tested functions do not have any unexpected execution error.
@@ -53,7 +53,7 @@ Loading package 'buildunnecfiles'
 Test file 'unnec2.txt' does not have a valid extension
 Package 'buildunnecfiles' has no data
 Parsing 'font.lua'
-Checking folder 'font'
+Checking directory 'font'
 Checking licenses of fonts
 Parsing lua files
 Parsing lua/Tube.lua
@@ -121,7 +121,7 @@ All 1 examples are correctly documented.
 Summing up, all the documentation was successfully built.
 
 Checking unnecessary files
-Checking basic files and folders
+Checking basic files and directories
 File 'buildunnecfiles/unnec1.txt' is unnecessary and will be ignored.
 Checking examples
 File 'buildunnecfiles/examples/unnec2.txt' is unnecessary and will be ignored.

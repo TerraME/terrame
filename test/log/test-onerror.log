@@ -7,7 +7,7 @@ Looking for documented functions
 Looking for package functions
 Found 1 extra functions in the documentation
 Looking for lines of source code
-'tests/invalidfile.txt' is not a folder neither a .lua file and will be ignored.
+'tests/invalidfile.txt' is not a directory neither a .lua file and will be ignored.
 Testing tests/ErrorHandling.lua
 Testing customError2
 Testing customWarning2
@@ -160,7 +160,7 @@ Tests were executed in 12.82 seconds.
 Snapshots were saved in '.terrametmp_rXX0M'.
 One print() call was found when loading the package.
 One variable is overwritten when loading the package.
-One invalid file or folder was found in folder 'test'.
+One invalid file or directory was found in directory 'test'.
 One assert was not executed at least once.
 One out of 243 asserts failed.
 One out of 92 tested functions stopped with an unexpected error.
@@ -172,7 +172,7 @@ One assertError() call has an error message pointing to an internal file (wrong 
 One out of 67 source code functions was not tested.
 One line from the source code was not executed at least once.
 One snapshot file was created. Please run the tests again.
-One file from folder 'snapshots' was not used.
+One file from directory 'snapshots' was not used.
 One error was found in the 3 examples.
 One log file was created in the examples. Please run the tests again.
 Summing up, 17 problems were found during the tests.

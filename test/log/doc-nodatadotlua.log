@@ -1,6 +1,6 @@
 Building documentation for package 'nodatadotlua'
 Loading package 'nodatadotlua'
-Checking folder 'data'
+Checking directory 'data'
 Package has data files but data.lua does not exist
 File 'data.txt' is not documented
 File 'mycsv.csv' is not documented

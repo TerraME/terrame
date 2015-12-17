@@ -1,5 +1,5 @@
 -- Script to test TerraME basic functionalities (-test, -doc, -build, and so on).
--- To use it, just run 'terrame run.lua' within this folder.
+-- To use it, just run 'terrame run.lua' within this directory.
 --
 -- Pedro R. Andrade
 
@@ -31,8 +31,8 @@ end)
 local s = sessionInfo().separator
 local baseDir = sessionInfo().path
 
-_Gtme.printNote("Creating temporary folder")
-tmpfolder = tmpDir(".terramerun_XXXXX")
+_Gtme.printNote("Creating temporary directory")
+tmpdirectory = tmpDir(".terramerun_XXXXX")
 
 _Gtme.printNote("Testing installed packages")
 
@@ -161,7 +161,7 @@ forEachOrderedElement(commands, function(idx, group)
 				logfile:write(value.."\n")
 			end)
 		else
-			local resultfile = io.open(tmpfolder..s..lfilename, "w")
+			local resultfile = io.open(tmpdirectory..s..lfilename, "w")
 			
 			local line = 1
 			local logerror = false
@@ -244,7 +244,7 @@ forEachFile("packages", function(pkg)
 	_Gtme.uninstall(pkg)
 end)
 
-_Gtme.printNote("Testing from local folders")
+_Gtme.printNote("Testing from local directories")
 
 chDir("packages")
 
@@ -316,7 +316,7 @@ forEachOrderedElement(commands, function(idx, group)
 				logfile:write(value.."\n")
 			end)
 		else
-			local resultfile = io.open(".."..s..tmpfolder..s..lfilename, "w")
+			local resultfile = io.open(".."..s..tmpdirectory..s..lfilename, "w")
 			
 			local line = 1
 			local logerror = false
@@ -468,7 +468,7 @@ finalTime = os.time(os.date("*t"))
 print("\nExecution test report:")
 
 _Gtme.printNote("Tests were executed in "..round(finalTime - initialTime, 2).." seconds.")
-_Gtme.printNote("Results were saved in '"..tmpfolder.."'.")
+_Gtme.printNote("Results were saved in '"..tmpdirectory.."'.")
 
 if report.commandserrors == 0 then
 	_Gtme.printNote("All "..report.commands.." commands were successfully executed.")

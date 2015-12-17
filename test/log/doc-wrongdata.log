@@ -8,11 +8,11 @@ Data file 'abc.txt' is documented more than once.
 /Users/pedro/github/terrame/bin/packages/wrongdata/data.lua:17: Warning: Argument 'wrong' is unnecessary.
 /Users/pedro/github/terrame/bin/packages/wrongdata/data.lua:17: Error: Different sizes in the documentation: 'attributes' (2) and 'types' (1).
 /Users/pedro/github/terrame/bin/packages/wrongdata/data.lua:26: Error: Different sizes in the documentation: 'attributes' (2) and 'description' (1).
-Checking folder 'data'
+Checking directory 'data'
 File 'file.csv' is not documented
-File 'abc.txt' is documented but does not exist in folder 'data'
-File 'abc2.txt' is documented but does not exist in folder 'data'
-File 'abc3.txt' is documented but does not exist in folder 'data'
+File 'abc.txt' is documented but does not exist in directory 'data'
+File 'abc2.txt' is documented but does not exist in directory 'data'
+File 'abc3.txt' is documented but does not exist in directory 'data'
 Package 'wrongdata' has no fonts
 Parsing lua files
 Parsing lua/foo.lua

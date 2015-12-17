@@ -46,7 +46,7 @@ return{
 		local error_func = function()
 			dir("abc123")
 		end
-		unitTest:assertError(error_func, "abc123 is not a folder or is empty or does not exist.")
+		unitTest:assertError(error_func, "abc123 is not a directory or is empty or does not exist.")
 
 		error_func = function()
 			dir(1)

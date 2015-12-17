@@ -298,10 +298,10 @@ local function installButtonClicked()
 	local installButton = qt.new_qobject(qt.meta.QPushButton)
 	installButton.text = "Install"
 	qt.connect(installButton, "clicked()", function()
-		local tmpfolder = tmpDir()
+		local tmpdirectory = tmpDir()
 		local cdir = currentDir()
 
-		_Gtme.chDir(tmpfolder)
+		_Gtme.chDir(tmpdirectory)
 
 		local pkgfile = pkgsTab[listPackages.currentRow].file
 		local installed = {}
@@ -377,7 +377,7 @@ local function installButtonClicked()
 		rmFile(pkgfile)
 
 		_Gtme.chDir(cdir)
-		rmDir(tmpfolder)
+		rmDir(tmpdirectory)
 		dialog:done(0)
 	end)
 
@@ -431,10 +431,10 @@ local function installLocalButtonClicked()
 		_Gtme.printNote("Package '"..package.."' was not installed before")
 	end
 
-	local tmpfolder = tmpDir()
+	local tmpdirectory = tmpDir()
 
-	os.execute("cp \""..file.."\" \""..tmpfolder.."\"")
-	_Gtme.chDir(tmpfolder)
+	os.execute("cp \""..file.."\" \""..tmpdirectory.."\"")
+	_Gtme.chDir(tmpdirectory)
 
 	os.execute("unzip -oq \""..file.."\"")
 
@@ -452,7 +452,7 @@ local function installLocalButtonClicked()
 				_Gtme.printNote("Removing previous version of package")
 				rmDir(packageDir..s..package)
 			else
-				rmDir(tmpfolder)
+				rmDir(tmpdirectory)
 				enableAll()
 				return
 			end

@@ -1,7 +1,7 @@
 Building documentation for package 'images'
 Loading package 'images'
 Parsing 'data.lua'
-Checking folder 'data'
+Checking directory 'data'
 Package 'images' has no fonts
 Parsing lua files
 Parsing lua/Tube.lua
@@ -38,13 +38,13 @@ Building doc/files/font.html
 Building doc/files/models.html
 Checking images
 Checking data.lua
-Image file 'abc2.bmp' does not exist in folder 'images'
+Image file 'abc2.bmp' does not exist in directory 'images'
 Checking models
-Image file 'tube2.bmp' does not exist in folder 'images'
+Image file 'tube2.bmp' does not exist in directory 'images'
 Checking examples
-Image file 'btube.bmp' does not exist in folder 'images'
+Image file 'btube.bmp' does not exist in directory 'images'
 Checking if all images are used
-Image file 'wrong.bmp' in folder 'images' is unnecessary
+Image file 'wrong.bmp' in directory 'images' is unnecessary
 Checking if all functions are documented
 Checking Tube.lua
 Checking Tube2.lua

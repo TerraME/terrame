@@ -85,15 +85,15 @@ function isWindowsOS()
 end
 
 --- Return the files in a given directory.
--- @arg folder A string describing a folder.
+-- @arg directory A string describing a directory.
 -- @arg all A boolean value indicating whether hidden files should be returned. The default value is false.
 -- @usage files = dir(".")
 --
 -- forEachFile(files, function(file)
 --     print(file)
 -- end)
-function dir(folder, all)
-	mandatoryArgument(1, "string", folder)
+function dir(directory, all)
+	mandatoryArgument(1, "string", directory)
 	optionalArgument(2, "boolean", all)
 
 	if all == nil then all = false end
@@ -101,15 +101,15 @@ function dir(folder, all)
 	local command 
 
 	if all then
-		command = "ls -a1 \""..folder.."\""
+		command = "ls -a1 \""..directory.."\""
 	else
-		command = "ls -1 \""..folder.."\""
+		command = "ls -1 \""..directory.."\""
 	end
 
 	local result = runCommand(command)
 
 	if not result or not result[1] then
-		customError(folder.." is not a folder or is empty or does not exist.")
+		customError(directory.." is not a directory or is empty or does not exist.")
 	end
 
 	return result
@@ -313,13 +313,13 @@ function tmpDir(directory)
 	if directory then
 		optionalArgument(1, "string", directory)
 		return runCommand("mktemp -d "..directory)[1]
-	elseif not _Gtme.tmpfolder__ then
-		_Gtme.tmpfolder__ = runCommand("mktemp -d .terrametmp_XXXXX")[1]
-	elseif not isDir(_Gtme.tmpfolder__) then
-		os.execute("mkdir ".._Gtme.tmpfolder__)
+	elseif not _Gtme.tmpdirectory__ then
+		_Gtme.tmpdirectory__ = runCommand("mktemp -d .terrametmp_XXXXX")[1]
+	elseif not isDir(_Gtme.tmpdirectory__) then
+		os.execute("mkdir ".._Gtme.tmpdirectory__)
 	end
 
-	return _Gtme.tmpfolder__
+	return _Gtme.tmpdirectory__
 end
 
 --- Set access and modification times of a file. This function is a bind to utime function.

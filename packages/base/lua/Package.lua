@@ -26,7 +26,7 @@
 
 --@header Functions to work with packages in TerraME.
 
---- Return the path to a file of a given package. The file must be inside the folder data
+--- Return the path to a file of a given package. The file must be inside the directory data
 -- within the package.
 -- @arg filename A string with the name of the file.
 -- @arg package A string with the name of the package. As default, it uses paciage base.
@@ -63,8 +63,8 @@ function filesByExtension(package, extension)
 	return result
 end
 
---- Load a given package. If the package is not installed, it tries to load from
--- a folder in the current directory.
+--- Load a given package. If the package is not installed, it verifies if the
+-- package in the current directory.
 -- @arg package A package name.
 -- @usage -- DONTRUN
 -- import("calibration")
@@ -177,7 +177,7 @@ function isLoaded(package)
 end
 
 --- Return a table with the content of a given package. If the package is not
--- installed, it tries to load from a folder in the current directory.
+-- installed, it verifies if the package is in the current directory.
 -- @arg pname A package name.
 -- @usage base = getPackage("base")
 -- cs = base.CellularSpace{xdim = 10}
@@ -275,15 +275,15 @@ function getPackage(pname)
 end
 
 --- Return the description of a package. This function tries to find the package in the TerraME
--- installation folder. If it does not exist then it checks wether the package is available in the
--- current directory. If the package does not exist then it stops with an error. Otherwise, it reads
--- file description.lua and returns the following attributes.
+-- installation directory. If it does not exist then it checks wether the package is available in
+-- the current directory. If the package does not exist then it stops with an error. Otherwise,
+-- it reads file description.lua and returns the following attributes.
 -- @tabular NONE
 -- Attribute & Description \
 -- authors & Name of the author(s) of the package.\
 -- contact & E-mail of one or more authors. \
 -- content & A description of the package. \
--- data & The path to folder data of the package. This attribute is added
+-- data & The path to the data directory of the package. This attribute is added
 -- by this function as it does not exist in description.lua.\
 -- date & Date of the current version.\
 -- depends & A comma-separated list of package names which this package depends on.\
@@ -306,16 +306,16 @@ function packageInfo(package)
 	mandatoryArgument(1, "string", package)
 
 	local s = sessionInfo().separator
-	local pkgfolder = sessionInfo().path..s.."packages"..s..package
-	if not isDir(pkgfolder) then
+	local pkgdirectory = sessionInfo().path..s.."packages"..s..package
+	if not isDir(pkgdirectory) then
 		if isDir(package) then
-			pkgfolder = package -- SKIP
+			pkgdirectory = package -- SKIP
 		else
 			customError("Package '"..package.."' is not installed.")
 		end
 	end
 	
-	local file = pkgfolder..s.."description.lua"
+	local file = pkgdirectory..s.."description.lua"
 	
 	local result 
 	xpcall(function() result = _Gtme.include(file) end, function(err)
@@ -327,8 +327,8 @@ function packageInfo(package)
 		customError("Could not read description.lua") -- SKIP
 	end
 
-	result.path = pkgfolder
-	result.data = pkgfolder..s.."data"
+	result.path = pkgdirectory
+	result.data = pkgdirectory..s.."data"
 
 	if result.depends then
 		local s = string.gsub(result.depends, "([%w]+ %(%g%g %d[.%d]+%))", function(v)

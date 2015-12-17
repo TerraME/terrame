@@ -1,4 +1,4 @@
-Loading configuration file 'config/twoFolders.lua'
+Loading configuration file 'config/twoDirectories.lua'
 Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
@@ -68,10 +68,10 @@ Skipping snapthots check
 Skipping examples
 
 Unit test report:
-Tests were executed in 78.26 seconds.
+Tests were executed in 34.08 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
-There are no invalid files or folders in folder 'tests'.
+There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
 All 194 asserts were executed successfully.
 All 25 tested functions do not have any unexpected execution error.

@@ -10,7 +10,7 @@ local function verifyTest(package, report)
 	local baseDir = packageInfo(package).path
 	local s = sessionInfo().separator
 	local testDir = baseDir..s.."tests"
-	local internalFolder = false
+	local internalDirectory = false
 
 	if not isDir(baseDir..s.."lua") then
 		_Gtme.print("Package '"..package.."' does not have source code")
@@ -18,18 +18,18 @@ local function verifyTest(package, report)
 	end
 
 	if not isDir(testDir) then
-		printWarning("Creating folder 'tests'")
+		printWarning("Creating directory 'tests'")
 		mkDir(testDir)
 	end
 
 	forEachFile(testDir, function(mfile)
 		if isDir(testDir..s..mfile) then
-			internalFolder = true
+			internalDirectory = true
 		end
 	end)
 
-	if internalFolder then
-		_Gtme.printWarning("Ignoring tests because internal folders were found in the tests")
+	if internalDirectory then
+		_Gtme.printWarning("Ignoring tests because internal directories were found in the tests")
 		return false
 	end
 
@@ -127,7 +127,7 @@ local function verifyData(package, report)
 	local dataDir = baseDir..s.."data"
 
 	if not isDir(dataDir) then
-		_Gtme.print("Package '"..package.."' does not have a data folder")
+		_Gtme.print("Package '"..package.."' does not have a data directory")
 		return
 	end
 
@@ -167,7 +167,7 @@ local function verifyData(package, report)
 		if value then
 			_Gtme.print("File '"..idx.."' is already documented in 'data.lua'")
 		elseif isDir(dataDir..s..idx) then
-			_Gtme.print("Folder '"..idx.."' will be ignored")
+			_Gtme.print("Directory '"..idx.."' will be ignored")
 		else
 			_Gtme.printWarning("Adding sketch for data file '"..idx.."'")
 			local str = "data{\n"
@@ -196,7 +196,7 @@ local function verifyFont(package, report)
 	local fontDir = baseDir..s.."font"
 
 	if not isDir(fontDir) then
-		_Gtme.print("Package '"..package.."' does not have a font folder")
+		_Gtme.print("Package '"..package.."' does not have a font directory")
 		return
 	end
 

@@ -1,5 +1,5 @@
 Verifying test files
-Ignoring tests because internal folders were found in the tests
+Ignoring tests because internal directories were found in the tests
 Verifying data files
 File 'agents.csv' is already documented in 'data.lua'
 File 'amazonia.sql' is already documented in 'data.lua'
@@ -18,7 +18,7 @@ File 'emas-distance.gwt' is already documented in 'data.lua'
 File 'emas-pollin.gpm' is already documented in 'data.lua'
 File 'emas.mdb' is already documented in 'data.lua'
 File 'emas.sql' is already documented in 'data.lua'
-Folder 'error' will be ignored
+Directory 'error' will be ignored
 File 'gpmAreaCellsPols.gpm' is already documented in 'data.lua'
 File 'gpmdistanceDbEmasCells.gpm' is already documented in 'data.lua'
 File 'gpmlinesDbEmas.gpm' is already documented in 'data.lua'

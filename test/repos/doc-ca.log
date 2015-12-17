@@ -1,7 +1,7 @@
 Building documentation for package 'ca'
 Loading package 'ca'
 Parsing 'data.lua'
-Checking folder 'data'
+Checking directory 'data'
 Package 'ca' has no fonts
 Parsing lua files
 Parsing lua/Anneal.lua

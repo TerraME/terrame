@@ -193,7 +193,7 @@ Unit test report:
 Tests were executed in 3.7 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
-There are no invalid files or folders in folder 'tests'.
+There are no invalid files or directories in directory 'tests'.
 Execution of all asserts was not verified.
 All 130 asserts were executed successfully.
 All 3 tested functions do not have any unexpected execution error.

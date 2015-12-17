@@ -1,2 +1,2 @@
 file = {"Agent", "gent"}
-folder = "alternative"
+directory = "alternative"

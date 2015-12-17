@@ -258,26 +258,26 @@ function forEachElement2(obj, func)
 	return true
 end
 
---- Second order function to transverse a given folder,
+--- Second order function to transverse a given directory,
 -- applying a given function on each of its files. If any of the function calls returns
 -- false, forEachFile() stops and returns false, otherwise it returns true.
--- @arg folder A string with the path to a folder, or a vector of files.
+-- @arg directory A string with the path to a directory, or a vector of files.
 -- @arg f A user-defined function that takes a file name as argument. Note that
 -- the name does not include the directory where the file is placed.
 -- @usage forEachFile2("C:", function(file)
 -- DONTRUN
 --     print(file)
 -- end)
-function forEachFile2(folder, f)
-	if type(folder) == "string" then
-		folder = dir(folder)
+function forEachFile2(directory, f)
+	if type(directory) == "string" then
+		directory = dir(directory)
 	end
 
-	mandatoryArgument(1, "table", folder)
+	mandatoryArgument(1, "table", directory)
 	mandatoryArgument(2, "function", f)
 
-	for i = 1, #folder do
-		if f(folder[i]) == false then return false end
+	for i = 1, #directory do
+		if f(directory[i]) == false then return false end
 	end
 	return true
 end

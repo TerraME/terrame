@@ -5,4 +5,4 @@ package = "nofont"
 title = "Error Package"
 authors = "Pedro R. Andrade"
 contact = "pedro.andrade@inpe.br"
-content = [[A package that contains font.lua but no font folder.]]
+content = [[A package that contains font.lua but no font directory.]]

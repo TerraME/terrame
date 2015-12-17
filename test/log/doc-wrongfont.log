@@ -11,9 +11,9 @@ Parsing 'font.lua'
 Symbol 'dog' has a non-numeric value.
 Font 'abc' has a non-string symbol.
 /Users/pedro/github/terrame/bin/packages/wrongfont/font.lua:77: Warning: Argument 'zzz' is unnecessary.
-Checking folder 'font'
+Checking directory 'font'
 Font file 'Pet Animals.ttf' is not documented
-Font file 'Pet Animals2.ttf' is documented but does not exist in folder 'font'
+Font file 'Pet Animals2.ttf' is documented but does not exist in directory 'font'
 Checking licenses of fonts
 License file 'Pet Animals.txt' for font 'Pet Animals.ttf' does not exist
 Parsing lua files

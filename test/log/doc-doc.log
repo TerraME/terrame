@@ -1,9 +1,9 @@
 Building documentation for package 'base'
 Loading package 'base'
 Parsing 'data.lua'
-Checking folder 'data'
+Checking directory 'data'
 Parsing 'font.lua'
-Checking folder 'font'
+Checking directory 'font'
 Checking licenses of fonts
 Parsing lua files
 Parsing lua/Agent.lua

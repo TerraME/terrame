@@ -1,13 +1,13 @@
 Verifying test files
-Creating folder 'tests'
+Creating directory 'tests'
 Creating Space.lua
 Creating Tube.lua
 Ignoring Model 'Tube2' as it has a Mandatory argument
 Creating Utils.lua
 Verifying data files
-Package 'models' does not have a data folder
+Package 'models' does not have a data directory
 Verifying font files
-Package 'models' does not have a font folder
+Package 'models' does not have a font directory
 
 Sketch report:
 3 test files were created.

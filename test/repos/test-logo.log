@@ -55,7 +55,7 @@ Tests were executed in 205.27 seconds.
 Snapshots were saved in '.terrametmp_obhkL'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
-There are no invalid files or folders in folder 'tests'.
+There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
 All 35 asserts were executed successfully.
 All 14 tested functions do not have any unexpected execution error.

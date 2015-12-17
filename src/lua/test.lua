@@ -29,33 +29,33 @@ local printError   = _Gtme.printError
 local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
--- find the folders inside a package that contain
+-- find the directories inside a package that contain
 -- lua files, starting from package/tests
-local function testfolders(folder, ut)
+local function testdirectories(directory, ut)
 	local result = {}
 
 	local s = sessionInfo().separator
 
 	local lf 
-	lf = function(mfolder)
+	lf = function(mdirectory)
 		local found_file = false
-		local found_folder = false
-		forEachFile(folder..s..mfolder, function(value)
+		local found_directory = false
+		forEachFile(directory..s..mdirectory, function(value)
 			if string.endswith(value, ".lua") then
 				if not found_file then
 					found_file = true
-					table.insert(result, mfolder)
+					table.insert(result, mdirectory)
 				end
-			elseif attributes(folder..s..mfolder..s..value, "mode") == "directory" then
-				lf(mfolder..s..value)
-				found_folder = true
+			elseif attributes(directory..s..mdirectory..s..value, "mode") == "directory" then
+				lf(mdirectory..s..value)
+				found_directory = true
 			else
-				printError("'".._Gtme.makePathCompatibleToAllOS(mfolder..s..value).."' is not a folder neither a .lua file and will be ignored.")
+				printError("'".._Gtme.makePathCompatibleToAllOS(mdirectory..s..value).."' is not a directory neither a .lua file and will be ignored.")
 				ut.invalid_test_file = ut.invalid_test_file + 1
 			end
 		end)
-		if not found_file and not found_folder then
-			printError("Folder '".._Gtme.makePathCompatibleToAllOS(mfolder).."' is empty.")
+		if not found_file and not found_directory then
+			printError("Directory '".._Gtme.makePathCompatibleToAllOS(mdirectory).."' is empty.")
 			ut.invalid_test_file = ut.invalid_test_file + 1
 		end
 	end
@@ -203,14 +203,14 @@ function _Gtme.executeTests(package, fileName)
 		end)
 
 		if getn(data) == 0 then
-			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'folder', 'file', 'lines', 'sleep', 'test'}.")
+			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'sleep', 'test'}.")
 			os.exit()
 		end
 
-		if type(data.folder) == "string" then
-			data.folder = {data.folder}
-		elseif data.folder ~= nil and type(data.folder) ~= "table" then
-			customError("'folder' should be string, table, or nil, got "..type(data.folder)..".")
+		if type(data.directory) == "string" then
+			data.directory = {data.directory}
+		elseif data.directory ~= nil and type(data.directory) ~= "table" then
+			customError("'directory' should be string, table, or nil, got "..type(data.directory)..".")
 		end
 
 		if type(data.file) == "string" then
@@ -234,12 +234,12 @@ function _Gtme.executeTests(package, fileName)
 		if data.lines ~= nil then
 			if type(data.lines) ~= "boolean" then
 				customError("'lines' should be boolean or nil, got "..type(data.lines)..".")
-			elseif data.test ~= nil or data.folder ~= nil then
-				customError("'lines' cannot be used with 'test' or 'folder'.")
+			elseif data.test ~= nil or data.directory ~= nil then
+				customError("'lines' cannot be used with 'test' or 'directory'.")
 			end
 		end
 
-		verifyUnnecessaryArguments(data, {"folder", "file", "test", "sleep", "examples", "lines"})
+		verifyUnnecessaryArguments(data, {"directory", "file", "test", "sleep", "examples", "lines"})
 	else
 		data = {}
 	end
@@ -248,8 +248,8 @@ function _Gtme.executeTests(package, fileName)
 		data.sleep = 0
 	end
 
-	local check_functions = data.folder == nil and data.test == nil
-	local check_snapshots = data.folder == nil and data.test == nil and data.file == nil
+	local check_functions = data.directory == nil and data.test == nil
+	local check_snapshots = data.directory == nil and data.test == nil and data.file == nil
 	if data.examples == nil then
 		data.examples = check_functions and data.file == nil
 	end
@@ -341,7 +341,7 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	if not isDir(baseDir..s.."tests") then
-		printError("Folder 'tests' does not exist in package '"..package.."'")
+		printError("Directory 'tests' does not exist in package '"..package.."'")
 		printError("Please run 'terrame -package "..package.." -sketch' to create test files.")
 		os.exit()
 	end
@@ -357,43 +357,43 @@ function _Gtme.executeTests(package, fileName)
 
 	print = _Gtme.print
 
-	local tf = testfolders(baseDir, ut)
+	local tf = testdirectories(baseDir, ut)
 
-	-- Check every selected folder
-	if data.folder == nil then
-		data.folder = tf
+	-- Check every selected directory
+	if data.directory == nil then
+		data.directory = tf
 	else -- table
-		local mfolder = data.folder
-		data.folder = {}
+		local mdirectory = data.directory
+		data.directory = {}
 
 		local found = {}
-		forEachElement(mfolder, function(_, value)
+		forEachElement(mdirectory, function(_, value)
 			found[value] = false
 		end)
 
 		forEachElement(tf, function(_, value)
-			forEachElement(mfolder, function(_, mvalue)
+			forEachElement(mdirectory, function(_, mvalue)
 				local cvalue  = _Gtme.makePathCompatibleToAllOS(value)
 				local cmvalue = _Gtme.makePathCompatibleToAllOS(mvalue)
 
-				if string.match(cvalue, cmvalue) and not belong(value, data.folder) then
-					table.insert(data.folder, value)
+				if string.match(cvalue, cmvalue) and not belong(value, data.directory) then
+					table.insert(data.directory, value)
 					found[mvalue] = true
 					return false
 				end
 			end)
 		end)
 
-		forEachElement(mfolder, function(_, value)
+		forEachElement(mdirectory, function(_, value)
 			if not found[value] then
-				printError("Could not find any folder for pattern '"..value.."'.")
+				printError("Could not find any directory for pattern '"..value.."'.")
 				os.exit()
 			end
 		end)
 	end
 
-	if #data.folder == 0 then
-		customError("Could not find any folder to be tested according to the value of 'folder'.")
+	if #data.directory == 0 then
+		customError("Could not find any directory to be tested according to the value of 'directory'.")
 		os.exit()
 	end
 
@@ -407,9 +407,9 @@ function _Gtme.executeTests(package, fileName)
 	local myTests
 	local myFiles
 
-	-- For each test in each file in each folder, execute the test
-	forEachElement(data.folder, function(_, eachFolder)
-		local dirFiles = dir(baseDir..s..eachFolder)
+	-- For each test in each file in each directory, execute the test
+	forEachElement(data.directory, function(_, eachDirectory)
+		local dirFiles = dir(baseDir..s..eachDirectory)
 
 		if dirFiles == nil then return end
 
@@ -431,28 +431,28 @@ function _Gtme.executeTests(package, fileName)
 		end
 
 		if #myFiles == 0 then
-			printWarning("Skipping folder ".._Gtme.makePathCompatibleToAllOS(eachFolder))
+			printWarning("Skipping directory ".._Gtme.makePathCompatibleToAllOS(eachDirectory))
 		end
 
 		for _, eachFile in ipairs(myFiles) do
-			ut.current_file = eachFolder..s..eachFile
+			ut.current_file = eachDirectory..s..eachFile
 			local tests
 
-			printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachFolder..s..eachFile))
+			printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
 
 			print = function(arg)
 				ut.print_calls = ut.print_calls + 1
 				printError("Error: print() call detected with argument '"..tostring(arg).."'")
 			end
 
-			xpcall(function() tests = dofile(baseDir..s..eachFolder..s..eachFile) end, function(err)
+			xpcall(function() tests = dofile(baseDir..s..eachDirectory..s..eachFile) end, function(err)
 				printError("Could not load file "..err)
 				os.exit()
 			end)
 
 			print = _Gtme.print
 
-			local myAssertTable = assertTable(baseDir..s..eachFolder..s..eachFile)
+			local myAssertTable = assertTable(baseDir..s..eachDirectory..s..eachFile)
 
 			if type(tests) ~= "table" or getn(tests) == 0 then
 				printError("The file does not implement any test.")
@@ -477,7 +477,7 @@ function _Gtme.executeTests(package, fileName)
 			end
 
 			if #myTests == 0 then
-				printWarning("Skipping ".._Gtme.makePathCompatibleToAllOS(eachFolder..s..eachFile))
+				printWarning("Skipping ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
 			end
 
 			local function trace(event, line)
@@ -832,11 +832,11 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	if ut.invalid_test_file == 1 then
-		printError("One invalid file or folder was found in folder 'test'.")
+		printError("One invalid file or directory was found in directory 'test'.")
 	elseif ut.invalid_test_file > 1 then
-		printError(""..ut.invalid_test_file.." invalid files or folders were found in folder 'test'.")
+		printError(""..ut.invalid_test_file.." invalid files or directories were found in directory 'test'.")
 	else
-		printNote("There are no invalid files or folders in folder 'tests'.")
+		printNote("There are no invalid files or directories in directory 'tests'.")
 	end
 
 	if data.test then -- asserts are not verified only when the user executes specific tests
@@ -939,9 +939,9 @@ function _Gtme.executeTests(package, fileName)
 		end
 
 		if ut.unused_snapshot_files == 1 then
-			printError("One file from folder 'snapshots' was not used.")
+			printError("One file from directory 'snapshots' was not used.")
 		elseif ut.unused_snapshot_files > 1 then
-			printError(ut.unused_snapshot_files.." files from folder 'snapshots' were not used.")
+			printError(ut.unused_snapshot_files.." files from directory 'snapshots' were not used.")
 		else
 			printNote("All snapshot files were used in the tests.")
 		end
