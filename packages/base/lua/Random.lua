@@ -322,8 +322,17 @@ function Random(data)
 			local count = 1
 			if data.seed then count = 2 end
 
+			local values = {}
+
+			forEachElement(data, function(idx, value)
+				if idx == "seed" then return end
+
+				table.insert(values, value)
+			end)
+	
 			verify(#data + count == getn(data), "The only named arguments should be distrib and seed.")
 			data.sample = discrete(data, data)
+			data.values = values
 		end,
 		continuous = function()
 			verifyUnnecessaryArguments(data, {"distrib", "seed", "max", "min"})
@@ -338,8 +347,11 @@ function Random(data)
 			data.seed = nil
 			data.distrib = nil
 
+			local values = {}
+
 			forEachElement(data, function(idx, value)
 				mandatoryTableArgument(data, idx, "number")
+				table.insert(values, idx)
 				sum = sum + value
 			end)
 
@@ -348,6 +360,7 @@ function Random(data)
 			data.sample = categorical(data, data)
 			data.distrib = "categorical"
 			data.seed = seed
+			data.values = values
 		end,
 		none = function()
 		end

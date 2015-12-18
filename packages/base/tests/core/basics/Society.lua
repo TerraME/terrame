@@ -661,6 +661,20 @@ state_          State
 
 		unitTest:assertEquals(4, #g3[2])
 		unitTest:assertEquals(10, #g3[1] + #g3[2] + #g3[3])
+
+		local ag = Agent{
+			gender = Random{"male", "female"},
+			age = Random{min = 1, max = 80, step = 1}
+		}
+
+		soc = Society{
+			instance = ag,
+			quantity = 1
+		}
+
+		local groups = soc:split("gender")
+		unitTest:assertEquals(#groups.male, 0)
+		unitTest:assertEquals(#groups.female, 1)
 	end
 }
 

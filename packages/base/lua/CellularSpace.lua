@@ -964,7 +964,10 @@ CellularSpace_ = {
 	-- string & The argument must represent the name of one attribute of the Cells of the
 	-- CellularSpace. Split then creates one Trajectory for each possible value of the attribute
 	-- using the value as index and fills them with the Cells that have the respective attribute
-	-- value. \
+	-- value. If the CellularSpace has an instance and the respective attribute in the instance
+	-- is a Random value with discrete or categorical strategy, it will use the possible values
+	-- to create Trajectories, which means that the returning Trajectories can have size zero in
+	-- this case. \
 	-- function & The argument is a function that gets a Cell as argument and returns an
 	-- index for the Cell, which can be a number, string, or boolean value.
 	-- Trajectories are then indexed according to the
@@ -980,13 +983,8 @@ CellularSpace_ = {
 	-- }
 	--
 	-- ts = cs:split("cover")
-	-- if ts.forest then
-	--     print(#ts.forest)
-	-- end
-	--
-	-- if ts.pasture then
-	--     print(#ts.pasture)
-	-- end
+	-- print(#ts.forest) -- can be zero because it comes from an instance
+	-- print(#ts.pasture) -- also
 	-- 
 	-- ts2 = cs:split(function(cell)
 	--     if cell.forest > 0.5 then 
@@ -996,7 +994,7 @@ CellularSpace_ = {
 	--     end
 	-- end)
 	--
-	-- if ts2.gt then
+	-- if ts2.gt then -- might not exist as it does not come from an instance
 	--     print(#ts2.gt)
 	-- end
 	split = function(self, argument)
@@ -1008,9 +1006,18 @@ CellularSpace_ = {
 			end
 		end
 
+		local result = {}
+		local class
+
 		if type(argument) == "string" then
 			if self:sample()[argument] == nil then
 				customError("Attribute '"..argument.."' does not exist.")
+			end
+
+			if self.instance and type(self.instance[argument]) == "Random" and self.instance[argument].values then
+				forEachElement(self.instance[argument].values, function(_, value)
+					 result[value] = Trajectory{target = self, build = false}
+				end)
 			end
 
 			local value = argument
@@ -1019,8 +1026,6 @@ CellularSpace_ = {
 			end
 		end
 
-		local result = {}
-		local class
 		forEachCell(self, function(cell)
 			class = argument(cell)
 			if class == nil then return end -- the cell will not belong to any Trajectory
@@ -1031,6 +1036,7 @@ CellularSpace_ = {
 			table.insert(result[class].cells, cell)
 			result[class].cObj_:add(#result[class], cell.cObj_)
 		end)
+
 		return result
 	end,
 	--- Synchronize the CellularSpace, calling the function synchronize() for each of its Cells.

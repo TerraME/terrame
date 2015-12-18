@@ -1089,6 +1089,19 @@ ydim    number [20]
 		t2 = cs:split(v)
 
 		unitTest:assertEquals(#t2.test, 3)
+
+		local cell = Cell{
+			cover = Random{"pasture", "forest"},
+		}
+
+		cs = CellularSpace{
+			xdim = 1,
+			instance = cell
+		}
+
+		ts = cs:split("cover")
+		unitTest:assertEquals(#ts.forest, 1)
+		unitTest:assertEquals(#ts.pasture, 0)
 	end,
 	synchronize = function(unitTest)
 		local cs = CellularSpace{xdim = 5}

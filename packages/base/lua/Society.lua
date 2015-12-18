@@ -678,7 +678,10 @@ Society_ = {
 	-- string &
 	-- The argument must represent the name of one attribute of the Agents of the Society. Split
 	-- then creates one Group for each possible value of the attribute using the value as index
-	-- and fills them with the Agents that have the respective attribute value. \
+	-- and fills them with the Agents that have the respective attribute value. If the Society
+	-- has an instance and the respective attribute in the instance is a Random value with discrete
+	-- or categorical strategy, it will use the possible values to create Groups, which means
+	-- that the returning Groups can have size zero in this case. \
 	-- function &
 	-- The argument is a function that gets an Agent as argument and returns an
 	-- index for the Agent, which can be a number, string, or boolean value.
@@ -695,13 +698,8 @@ Society_ = {
 	-- }
 	--
 	-- groups = soc:split("gender")
-	-- if groups.male then
-	--     print(#groups.male)
-	-- end
-	--
-	-- if groups.female then
-	--     print(#groups.female)
-	-- end
+	-- print(#groups.male) -- can be zero because it comes from an instance
+	-- print(#groups.female) -- also
 	-- 
 	-- groups2 = soc:split(function(ag)
 	--     if ag.age > 60 then 
@@ -710,7 +708,10 @@ Society_ = {
 	--         return "notold" 
 	--     end
 	-- end)
-	-- print(#groups2.old)
+	--
+	-- if groups2.old then -- might not exist as it does not come from an instance
+	--     print(#groups2.old)
+	-- end
 	split = function(self, argument)
 		if type(argument) ~= "function" and type(argument) ~= "string" then
 			if argument == nil then
@@ -720,9 +721,18 @@ Society_ = {
 			end
 		end
 
+		local result = {}
+		local class_
+
 		if type(argument) == "string" then
 			if self:sample()[argument] == nil then
 				customError("Attribute '"..argument.."' does not exist.")
+			end
+
+			if self.instance and type(self.instance[argument]) == "Random" and self.instance[argument].values then
+				forEachElement(self.instance[argument].values, function(_, value)
+					 result[value] = Group{target = self, build = false}
+				end)
 			end
 
 			local value = argument
@@ -731,20 +741,18 @@ Society_ = {
 			end
 		end
 
-		local result = {}
-		local class_
-
 		forEachAgent(self, function(agent)
 			class_ = argument(agent)
 
 			if result[class_] == nil then
 				result[class_] = Group{
 					target = self,
-					build = false,
+					build = false
 				}
 			end
 			table.insert(result[class_].agents, agent)
 		end)
+
 		return result
 	end,
 	--- Deliver asynchronous messages sent by Agents belonging to the Society.
