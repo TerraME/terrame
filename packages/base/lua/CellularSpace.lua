@@ -980,8 +980,13 @@ CellularSpace_ = {
 	-- }
 	--
 	-- ts = cs:split("cover")
-	-- print(#ts.forest)
-	-- print(#ts.pasture)
+	-- if ts.forest then
+	--     print(#ts.forest)
+	-- end
+	--
+	-- if ts.pasture then
+	--     print(#ts.pasture)
+	-- end
 	-- 
 	-- ts2 = cs:split(function(cell)
 	--     if cell.forest > 0.5 then 
@@ -990,7 +995,10 @@ CellularSpace_ = {
 	--         return "lt" 
 	--     end
 	-- end)
-	-- print(#ts2.gt)
+	--
+	-- if ts2.gt then
+	--     print(#ts2.gt)
+	-- end
 	split = function(self, argument)
 		if type(argument) ~= "function" and type(argument) ~= "string" then
 			if argument == nil then
