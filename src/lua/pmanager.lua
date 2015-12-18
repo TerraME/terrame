@@ -331,7 +331,10 @@ local function installButtonClicked()
 					if not isInstalled then
 						forEachElement(pkgs, function(idx)
 							if string.match(idx, dtable.package.."_") then
-								installRecursive(idx)
+								if not installRecursive(idx) then
+									return false
+								end
+
 								installed[dtable.package] = true
 								return false
 							end
@@ -340,8 +343,14 @@ local function installButtonClicked()
 				end)
 			end
 
-			local result = _Gtme.installPackage(pkgfile)
-			return result
+			local status, err = pcall(function() _Gtme.installPackage(pkgfile) end)
+
+			if not status then
+				qt.dialog.msg_critical("File "..pkgfile.." could not be installed:\n"..err)
+				return false
+			end
+
+			return true
 		end
 
 		local result = installRecursive(pkgfile)

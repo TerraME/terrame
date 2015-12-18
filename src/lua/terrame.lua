@@ -675,15 +675,15 @@ function _Gtme.verifyDepends(package)
 	forEachElement(pinfo.tdepends, function(_, dtable)
 		local currentInfo = packageInfo(dtable.package)
 		
-		if not isLoaded(dtable.package) then -- SKIP
-			import(dtable.package) -- SKIP
+		if not isLoaded(dtable.package) then
+			import(dtable.package)
 		end
 
 		local dstrversion = table.concat(dtable.version, ".")
 
 		if not _Gtme.verifyVersionDependency(currentInfo.version, dtable.operator, dstrversion) then
-			customError("Package '"..package.."' requires '"..dtable.package.."' version '".. -- SKIP
-				dstrversion.."', got '"..currentInfo.version.."'.") -- SKIP
+			_Gtme.customError("Package '"..package.."' requires '"..dtable.package.."' version '"..
+				dstrversion.."', got '"..currentInfo.version.."'.")
 		end
 	end)
 
@@ -798,10 +798,12 @@ function _Gtme.installPackage(file)
 	end
 
 	_Gtme.print("Trying to load package '"..package.."'")
-	xpcall(function() import(package) end, function(err)
+	local status, err = pcall(function() import(package) end)
+
+	if not status then
 		rmDir(tmpdirectory)
-		_Gtme.customError("Package ccccould not be loaded:"..err)
-	end)
+		_Gtme.customError(err)
+	end
 
 	_Gtme.print("Installing package '"..package.."'")
 	os.execute("cp -r \""..package.."\" \""..packageDir.."\"")
