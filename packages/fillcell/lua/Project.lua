@@ -41,7 +41,11 @@ local function isValidSource(source)
 end
 
 local function isSourceConsistent(source, filePath)
-	return source == getFileExtension(filePath)
+	if filePath ~= nil then
+		return source == getFileExtension(filePath)
+	end
+	
+	return true
 end
 
 Project_ = {
@@ -78,13 +82,15 @@ Project_ = {
 	addLayer = function(self, data)	
 		verifyNamedTable(data)
 		mandatoryTableArgument(data, "layer", "string")
-
+		
+		verifyUnnecessaryArguments(data, {"layer", "source", "file"})
+		
 		if isEmpty(data.source) then
 			mandatoryTableArgument(data, "file", "string")
 			
 			if not isFile(data.file) then
 				customError("The layer file'"..data.file.."' not found.")
-			end
+			end				
 			
 			local source = getFileExtension(data.file)
 			data.source = source
@@ -98,12 +104,14 @@ Project_ = {
 		
 		if not isValidSource(data.source) then
 			customError("The source'"..data.source.."' is invalid.")
-		end		
-		
+		end	
+			
 		if self.terralib:getLayerInfo(data.layer) == nil then -- TODO: ALTER THIS TO GET A BOOLEAN
-			if data.source == "shp" then			
+			if data.source == "shp" then	
+				mandatoryTableArgument(data, "file", "string")
 				self.terralib:addShpLayer(data.layer, data.file)
 			elseif data.source == "tif" then	
+				mandatoryTableArgument(data, "file", "string")
 				self.terralib:addTifLayer(data.layer, data.file)
 			end
 		else
@@ -134,12 +142,37 @@ Project_ = {
 	addCellularLayer = function(self, data)
 		verifyNamedTable(data)
 
-		verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution"})
+		verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution", "file", "source"})
 
 		defaultTableValue(data, "box", false)
 		mandatoryTableArgument(data, "layer", "string")
 		mandatoryTableArgument(data, "input", "string")
 		positiveTableArgument(data, "resolution")	
+		
+		if isEmpty(data.source) then
+			mandatoryTableArgument(data, "file", "string")	
+			
+			local source = getFileExtension(data.file)
+			data.source = source
+		else
+			mandatoryTableArgument(data, "source", "string")
+			
+			if not isSourceConsistent(data.source, data.file) then
+				customError("File '"..data.file.."'not match to source '"..data.source.."'.")
+			end
+		end
+		
+		if self.terralib:getLayerInfo(data.layer) == nil then -- TODO: ALTER THIS TO GET A BOOLEAN
+			if data.source == "shp" then	
+				mandatoryTableArgument(data, "file", "string")
+				self.terralib:addShpCellSpaceLayer(data.input, data.layer, data.resolution, data.file)
+			elseif data.source == "tif" then	
+				mandatoryTableArgument(data, "file", "string")
+				--self.terralib:addTifLayer(data.layer, data.file)
+			end
+		else
+			customError("Layer '"..data.layer.."' already exists in the Project.")
+		end
 	end,
 
 	info = function(self)

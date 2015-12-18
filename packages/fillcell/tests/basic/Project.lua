@@ -108,7 +108,100 @@ return {
 		end
 	end,
 	addCellularLayer = function(unitTest)
-		unitTest:assert(true)
+		local projName = "cells_setores_2000.tview"
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+
+		local proj = Project {
+			file = projName,
+			create = true,
+			author = "Avancini",
+			title = "Setores"
+		}		
+
+		local layerName1 = "Setores_Censitarios_2000"
+		proj:addLayer {
+			layer = layerName1,
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")
+		}
+		
+		local layerName2 = "Localidades"
+		proj:addLayer {
+			layer = layerName2,
+			file = file("Localidades_pt.shp", "fillcell")	
+		}		
+		
+		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local shp1 = "setores_cells.shp"
+		local filePath1 = testDir.."/"..shp1	
+		local fn1 = getFileName(filePath1)
+		fn1 = testDir.."/"..fn1	
+
+		local exts = {".dbf", ".prj", ".shp", ".shx"}
+		
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end	
+		
+		local clName1 = "Setores_Cells"
+		proj:addCellularLayer {
+			input = layerName1,
+			layer = clName1,
+			resolution = 10000,
+			file = filePath1
+		}
+		local lInfo = proj:infoLayer(clName1)
+		
+		unitTest:assertEquals(lInfo.name, clName1)
+		
+		local shp2 = "localidades_cells.shp"
+		local filePath2 = testDir.."/"..shp2	
+		local fn2 = getFileName(filePath2)
+		fn2 = testDir.."/"..fn2	
+		
+		for i = 1, #exts do
+			local f = fn2..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end			
+		
+		local clName2 = "Localidades_Cells"
+		proj:addCellularLayer {
+			input = layerName2,
+			layer = clName2,
+			resolution = 10000,
+			file = filePath2		
+		}
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end	
+			
+		-- It is necessary for remove files because the TerraLib
+		-- that create and manager them.
+		local terralib = TerraLib{}
+		terralib:finalize()
+		
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end
+		
+		for i = 1, #exts do
+			local f = fn2..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end		
+		
 	end,
 	info = function(unitTest)
 		-- this is being tested on Project constructor

@@ -5,6 +5,7 @@ require("terralib_mod_binding_lua")
 local binding = terralib_mod_binding_lua
 local currentProject = nil
 local initialized = false
+local layersDsIds = {}
 
 -- TODO: Remove this after
 local function printTable(sometable)
@@ -107,6 +108,11 @@ local function createLayer(name, filePath, type)
 	return ds, layer
 end
 
+local function release(obj)
+	obj = nil
+	collectgarbage("collect")
+end
+
 local function saveProject(project, fileName)
 	project:setProjectAsChanged(true)
 	project:setFileName(fileName)
@@ -114,45 +120,80 @@ local function saveProject(project, fileName)
 	binding.te.qt.af.XMLFormatter.format(project, true)
 	binding.te.qt.af.XMLFormatter.formatDataSourceInfos(true)
 	binding.Save(project, fileName)
-	binding.SaveDataSourcesFile()
+	--binding.SaveDataSourcesFile()
 	binding.te.qt.af.XMLFormatter.format(project, false)
 	binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)	
 	
 	project:setProjectAsChanged(false)
+	
+	currentProject = project
 end
 
 local function openProject(filePath)		
 	-- TODO: This project could not be found:
-
 	-- TODO: add file extension if user didn't set
 	local project = binding.ReadProject(filePath)
 		
 	binding.te.qt.af.XMLFormatter.format(project, false)
 	binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)		
-		
-	project:setProjectAsChanged(false)	
-		
+	
+	release(currentProject)
 	currentProject = project
+		
+	currentProject:setProjectAsChanged(false)	
+end
+
+local function releaseProject()
+	for key, value in pairs(layersDsIds) do
+		local ds = binding.te.da.DataSourceManager.getInstance():detach(value)
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():get(value)
+		binding.te.da.DataSourceInfoManager.getInstance():remove(value)
+		release(dsInfo)
+		release(ds)
+	end
+	
+	layersDsIds = {}
+	release(currentProject)
 end
 
 local function addFileLayer(name, filePath, type)
 	local ds, layer = createLayer(name, filePath, type)
-
+	
 	currentProject:add(layer)
 	saveProject(currentProject, currentProject:getFileName())
-
-	-- I must reopen project because add() and/or save() is not keeping the consistency. Verify this in the future
-	openProject(currentProject:getFileName()) 
 	
-	-- release all objects created 
-	binding.te.da.DataSourceManager.getInstance():detach(layer:getDataSourceId())
-	local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():get(layer:getDataSourceId())
-	local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():remove(layer:getDataSourceId())
-	dsInfo = nil
-	ds = nil
-	layer = nil
-	collectgarbage("collect")	
+	local dsId = ds:getId()
+	if layersDsIds["dsId"] == nil then
+		layersDsIds[name] = dsId
+	end	
 end
+
+local function	addCellSpaceLayer(inputLayerTitle, name, resolultion, filePath, type) 
+		local inputLayer = currentProject:getDataSetLayerByTitle(inputLayerTitle)
+		-- TODO: inputLayer == nil
+
+		local connInfo = {}
+		
+		if type == "OGR" then
+			connInfo = createConnInfo(filePath, "OGR")
+		end
+
+		local cLId = binding.GetRandomicId()
+		local cellLayerInfo = binding.te.da.DataSourceInfo()
+		
+		cellLayerInfo:setConnInfo(connInfo)
+		cellLayerInfo:setType(type)
+		cellLayerInfo:setAccessDriver(type)
+		cellLayerInfo:setId(cLId)
+		cellLayerInfo:setTitle(name)
+		cellLayerInfo:setDescription("Created on TerraME")
+		
+		local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations()
+		local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
+		local cellName = getFileName(filePath)
+
+		cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
+	end
 
 local function finalize()
 	if initialized then
@@ -169,6 +210,8 @@ local function finalize()
 		currentProject = nil
 		binding = nil
 		initialized = false	
+		
+		collectgarbage("collect")
 	end
 end
 
@@ -188,25 +231,27 @@ TerraLib_ = {
 	end,
 
 	finalize = function()
-		finalize()
+		releaseProject()
+		--finalize()
 	end,
 
 	createProject = function(self, fileName, author, title)
+		releaseProject()
+	
 		local project = binding.te.qt.af.Project()	
 
 		project:setTitle(title)
 		project:setAuthor(author)
 		project:setFileName(fileName)
 		
-		currentProject = project
-		saveProject(currentProject, currentProject:getFileName())
+		saveProject(project, project:getFileName())
 	end,
 
 	openProject = function(self, filePath)
 		-- TODO: This project could not be found:
-
 		-- TODO: add file extension if user didn't set
 		
+		releaseProject()
 		openProject(filePath)		
 
 		-- TODO: Maybe here getLayersNames()
@@ -223,7 +268,7 @@ TerraLib_ = {
 
 	getLayerInfo = function(self, layerName)
 		local layer = currentProject:getDataSetLayerByTitle(layerName)
-				
+		
 		if layer == nil then
 			return nil
 		end
@@ -252,34 +297,10 @@ TerraLib_ = {
 		addFileLayer(name, filePath, "GDAL")
 	end,	
 
-	createCellularSpaceLayer = function(self, inputLayerTitle, name, resX, resY, type, repository) 
-		local inputLayer = currentProject:getDataSetLayerByTitle(inputLayerTitle)
-
-		-- TODO: inputLayer == nil
-
-		local connInfo = {}
-
-		if type == "OGR" then
-			connInfo = createConnInfo(repository.."/"..name..".shp", "OGR")
-		end
-
-		local cLId = binding.GetRandomicId()
-
-		local cellLayerInfo = binding.te.da.DataSourceInfo()
-		cellLayerInfo:setConnInfo(connInfo)
-		cellLayerInfo:setAccessDriver(type)
-		cellLayerInfo:setId(cLId)
-		cellLayerInfo:setTitle(name)
-		
-		local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations
-
-		local cLType = cellSpaceOpts.CELLSPACE_POLYGONS
-
-		cellSpaceOpts():createCellSpace(cellLayerInfo, name, resX, resY, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
-
---		currentProject:add() TODO: add automatically
+	addShpCellSpaceLayer = function(self, inputLayerTitle, name, resolultion, filePath) 
+		addCellSpaceLayer(inputLayerTitle, name, resolultion, filePath, "OGR")
+		self:addShpLayer(name, filePath)
 	end
-
 }
 
 metaTableTerraLib_ = {

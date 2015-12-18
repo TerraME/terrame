@@ -127,6 +127,21 @@ return{
 		end
 		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))		
 		
+		local fileMandatory = function()
+			proj:addLayer{
+				layer = "Linhares"
+			}
+		end
+		unitTest:assertError(fileMandatory, mandatoryArgumentMsg("file"))
+		
+		local noFilePass = function()
+			proj:addLayer{
+				layer = "Linhares",
+				source = "tif"
+			}
+		end
+		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))		
+		
 		local nLayer = "any"
 		local layerNonExists = function()
 			proj:infoLayer(nLayer)
@@ -256,8 +271,90 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
 		
+		local noFilePass = function()
+			proj:addCellularLayer {
+				input = "amazonia-states",
+				layer = "cells",
+				resolution = 10000		
+			}
+		end
+		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))	
+		
+		local attrSourceNonString = function()
+			proj:addCellularLayer{
+				input = "amazonia-states",
+				layer = "cells",
+				resolution = 10000,				
+				layer = "layer",
+				file = "cells.shp",
+				source = 123
+			}
+		end
+		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))		
+
+		local layerName1 = "Setores_Censitarios_2000"
+		proj:addLayer {
+			layer = layerName1,
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")
+		}
+		
+		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local shp1 = "setores_cells.shp"
+		local filePath1 = testDir.."/"..shp1	
+		local fn1 = getFileName(filePath1)
+		fn1 = testDir.."/"..fn1	
+
+		local exts = {".dbf", ".prj", ".shp", ".shx"}
+		
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end	
+		
+		local clName1 = "Setores_Cells"
+		proj:addCellularLayer {
+			input = layerName1,
+			layer = clName1,
+			resolution = 10000,
+			file = filePath1
+		}
+		
+		local cellLayerAlreadyExists = function()
+			proj:addCellularLayer {
+				input = layerName1,
+				layer = clName1,
+				resolution = 10000,
+				file = filePath1
+			}	
+		end
+		unitTest:assertError(cellLayerAlreadyExists, "Layer '"..clName1.."' already exists in the Project.")
+		
+		-- local sourceInvalid = function()
+			-- proj:addCellularLayer{
+				-- input = layerName1,
+				-- layer = "cells",
+				-- resolution = 10000,
+				-- file = file("amazonia.tview", "fillcell")	
+			-- }			
+		-- end
+		-- unitTest:assertError(sourceInvalid, "The source'".."tview".."' is invalid.")			
+		
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
+		end		
+		
+		-- It is necessary for remove files because the TerraLib
+		-- that create and manager them.
+		local terralib = TerraLib{}
+		terralib:finalize()
+		
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
 		end		
 
 		-- TODO: check if the input layer contains polygons (?)

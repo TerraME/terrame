@@ -30,7 +30,7 @@ return {
 	addTifLayer = function(unitTest)
 		unitTest:assert(true)
 	end,
-	createCellularSpaceLayer = function(unitTest)
+	addShpCellSpaceLayer = function(unitTest)
 		unitTest:assert(true)
 	end
 }
