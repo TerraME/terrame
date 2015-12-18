@@ -108,7 +108,7 @@ return{
 		local error_func = function()
 			suggestion("aaaab", t)
 		end
-		unitTest:assertError(error_func, "All the indexes of second parameter should be string, got 'number'.")
+		unitTest:assertError(error_func, "All the indexes of second argument should be string, got 'number'.")
 	end,
 	switchInvalidArgument = function(unitTest)
 		local error_func = function()

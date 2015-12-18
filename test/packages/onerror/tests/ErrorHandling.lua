@@ -89,6 +89,9 @@ return{
 	incompatibleValueMsg2 = function(unitTest)
 		local str = incompatibleValueMsg2("attr", "positive", -2)
 		unitTest:assertEquals(str, "Incompatible values. Argument 'attr' expected positive, got -2.")
+
+		local str = incompatibleValueMsg2("attr", "positive", "5")
+		unitTest:assertEquals(str, "Incompatible values. Argument 'attr' expected positive, got '5'.")
 	end,
 	integerArgument2 = function(unitTest)
 		local error_func = function()

@@ -26,7 +26,7 @@
 --          Raian Vargas Maretto
 --#########################################################################################
 
---@header Some basic and useful functions to handle errors and error messages.
+-- @header Some basic and useful functions to handle errors and error messages.
 
 --- Stop the simulation with an error.
 -- @arg msg A string describing the error message.
@@ -73,8 +73,8 @@ end
 -- stops with an error (ErrorHandling:incompatibleTypeMsg()) if
 -- the value has a different type, or shows a
 -- warning (ErrorHandling:defaultValueWarning()) if it is equal to the default value.
--- @arg data A named table.
--- @arg idx A string with the name of the attribute.
+-- @arg data A named table (which can be an argument for a function).
+-- @arg idx A string with the name of an attribute (or argument) from #1.
 -- @arg value The default value (any type).
 -- @usage t = {x = 5}
 -- defaultTableValue(t, "y", 8)
@@ -103,7 +103,7 @@ end
 --- Show a strict warning if the attribute of a table has the default value. If TerraME is running
 -- in the debug mode, the simulation stops with an error. The warning message comes from
 -- ErrorHandling:defaultValueMsg().
--- @arg argument A string with the attribute name.
+-- @arg argument A string with the name of the argument.
 -- @arg value The default value.
 -- @usage defaultValueWarning("size", 2)
 function defaultValueWarning(argument, value)
@@ -115,8 +115,8 @@ end
 --- Show an error indicating a deprecated function. The error
 -- comes from ErrorHandling:deprecatedFunctionMsg().
 -- @arg functionName A string with the name of the deprecated function.
--- @arg functionExpected A string indicating hot to proceed to replace the
--- deprecated function.
+-- @arg functionExpected A string indicating how to proceed to replace the
+-- deprecated function call.
 -- @usage _, err = pcall(function() deprecatedFunction("abc", "def") end)
 -- print(err)
 function deprecatedFunction(functionName, functionExpected)
@@ -128,8 +128,8 @@ end
 
 --- Return a message indicating that a function is deprecated and must be replaced.
 -- @arg functionName A string with the name of the deprecated function.
--- @arg functionExpected A string indicating hot to proceed to replace the
--- deprecated function.
+-- @arg functionExpected A string indicating how to proceed to replace the
+-- deprecated function call.
 -- @usage str = deprecatedFunctionMsg("abc", "def")
 -- print(str)
 function deprecatedFunctionMsg(functionName, functionExpected)
@@ -138,10 +138,9 @@ end
 
 --- Stop the simulation with an error of a wrong type for an argument of a function.
 -- The error message is the return value of ErrorHandling:incompatibleTypeMsg().
--- @arg attr A string with an attribute name, or a numeric position of the argument
--- in a function with non-named arguments.
+-- @arg attr A string with the name of the argument, or a number with its the position.
 -- @arg expectedTypesString A string with the possible type (or types).
--- @arg gottenValue The value passed as argument with wrong type.
+-- @arg gottenValue The value wrongly passed as argument.
 -- @usage _, err = pcall(function() incompatibleTypeError("cell", "Cell", Agent{}) end)
 -- print(err)
 function incompatibleTypeError(attr, expectedTypesString, gottenValue)
@@ -149,10 +148,9 @@ function incompatibleTypeError(attr, expectedTypesString, gottenValue)
 end
 
 --- Return an error message for incompatible types.
--- @arg attr A string with an attribute name, or a numeric position of the argument
--- in a function with non-named arguments.
+-- @arg attr A string with the name of the argument, or a number with its the position.
 -- @arg expectedTypesString A string with the possible type (or types).
--- @arg gottenValue The value passed as argument with wrong type.
+-- @arg gottenValue The value wrongly passed as argument.
 -- @usage str = incompatibleTypeMsg("dbType", "string", 2)
 -- print(str)
 function incompatibleTypeMsg(attr, expectedTypesString, gottenValue)
@@ -168,10 +166,9 @@ end
 
 --- Stop the simulation with an error of a wrong value for an argument of a function.
 -- The error message comes from ErrorHandling:incompatibleValueMsg().
--- @arg attr A string with an attribute name (for functions with named arguments),
--- or position (otherwise).
--- @arg expectedValues A string with the expected values for the argument.
--- @arg gottenValue The wrong value passed as argument.
+-- @arg attr A string with the name of the argument or a number with its position.
+-- @arg expectedValues A string with the expected value(s) for the argument.
+-- @arg gottenValue The value wrongly passed as argument.
 -- @usage _, err = pcall(function() incompatibleValueError("position", "one of {1, 2, 3}", 4) end)
 -- print(err)
 function incompatibleValueError(attr, expectedValues, gottenValue)
@@ -179,10 +176,9 @@ function incompatibleValueError(attr, expectedValues, gottenValue)
 end
 
 --- Return an error message for incompatible values.
--- @arg attr A string with an attribute name (for functions with named arguments),
--- or position (otherwise).
--- @arg expectedValues A string with the expected values for the argument.
--- @arg gottenValue The wrong value passed as argument.
+-- @arg attr A string with the name of the argument or a number with its position.
+-- @arg expectedValues A string with the expected value(s) for the argument.
+-- @arg gottenValue The value wrongly passed as argument.
 -- @usage str = incompatibleValueMsg("dbType", "one of {1, 3, 4}", 2)
 -- print(str)
 function incompatibleValueMsg(attr, expectedValues, gottenValue)
@@ -206,7 +202,7 @@ end
 --- Verify whether a given argument of a non-named function is integer.
 -- The error message comes from ErrorHandling:integerArgumentMsg().
 -- @arg position A number with the position of the argument in the function.
--- @arg value The valued used as argument to the function call.
+-- @arg value The value used as argument to the function call.
 -- @usage _, err = pcall(function() integerArgument(1, 2.3) end)
 -- print(err)
 function integerArgument(position, value)
@@ -217,8 +213,8 @@ function integerArgument(position, value)
 end
 
 --- Return a message indicating that a given argument of a function should be integer.
--- @arg attr The name of the argument. It can be a string or a number.
--- @arg value The valued used as argument to the function call.
+-- @arg attr A string with the name of the argument or a number with the position of the argument.
+-- @arg value The value used as argument to the function call.
 -- @usage str = integerArgumentMsg("target", 7.4)
 -- print(str)
 --
@@ -235,7 +231,7 @@ end
 --- Verify whether a given argument of a named function is integer.
 -- The error message comes from ErrorHandling:integerArgumentMsg().
 -- @arg table A named table.
--- @arg attr A string with the attribute name.
+-- @arg attr A string with the name of the argument.
 -- @usage mtable = {bbb = 2.3}
 -- _, err = pcall(function() integerTableArgument(mtable, "bbb") end)
 -- print(err)
@@ -252,8 +248,7 @@ end
 --- Stop the simulation with an error indicating that the function does not support
 -- a given file extension.
 -- The error message comes from ErrorHandling:invalidFileExtensionMsg().
--- @arg attr A string with an attribute name (for functions with named arguments), or position
--- (otherwise).
+-- @arg attr A string with the name of the argument or a number with its position.
 -- @arg ext A string with the incompatible file extension.
 -- @usage _, err = pcall(function() invalidFileExtensionError("file", ".txt") end)
 -- print(err)
@@ -262,8 +257,8 @@ function invalidFileExtensionError(attr, ext)
 end
 
 --- Return a message indicating that a given file extension is incompatible.
--- @arg attr A string with an attribute name (for functions with named arguments), or position
--- (otherwise).
+-- @arg attr A string with the name of the argument (for named functions), or its position
+-- (for non-named functions).
 -- @arg ext A string with the incompatible file extension.
 -- @usage str = invalidFileExtensionMsg("file", "csv")
 -- print(str)
@@ -278,7 +273,7 @@ end
 --- Verify whether a given argument of a function with non-named arguments belongs
 --  to the correct type. The error message comes
 -- from ErrorHandling:mandatoryArgumentMsg() and ErrorHandling:incompatibleTypeMsg().
--- @arg position A number wiht the position of the argument in the function.
+-- @arg position A number with the position of the argument in the function.
 -- @arg mtype A string with the required type for the argument.
 -- @arg value The value used as argument to the function call.
 -- @usage _, err = pcall(function() mandatoryArgument(1, "string", 2) end)
@@ -295,8 +290,8 @@ end
 
 --- Stop the simulation with an error indicating that a given argument is mandatory.
 -- The error message comes from ErrorHandling:mandatoryArgumentMsg().
--- @arg attr The name of the argument (a string) or the position of the argument in the
--- function (a number).
+-- @arg attr A string with name of the argument or a number with its position in the
+-- function.
 -- @usage _, err = pcall(function() mandatoryArgumentError(2) end)
 -- print(err)
 function mandatoryArgumentError(attr)
@@ -319,10 +314,11 @@ end
 
 --- Verify whether a named table contains a mandatory argument. It stops with an error
 -- if the value is nil or if it does not belong to the required type.
--- The error message comes from ErrorHandling:mandatoryArgumentMsg() or ErrorHandling:incompatibleTypeMsg().
+-- The error message comes from ErrorHandling:mandatoryArgumentMsg()
+-- or ErrorHandling:incompatibleTypeMsg().
 -- @arg table A named table.
--- @arg attr A string with the attribute name.
--- @arg mtype A string with the required type for the attribute.
+-- @arg attr A string with the argument name.
+-- @arg mtype A string with the required type for the argument.
 -- @usage mtable = {bbb = 3, ccc = "aaa"}
 -- _, err = pcall(function() mandatoryTableArgument(mtable, "bbb", "string") end)
 -- print(err)
@@ -359,8 +355,8 @@ end
 -- error if the value is not nil and it has a type different from the required type.
 -- The error comes from ErrorHandling:incompatibleTypeError().
 -- @arg table A named table.
--- @arg attr A string with the argument name.
--- @arg allowedType A string with the required type for the attribute.
+-- @arg attr A string with the name of the argument.
+-- @arg allowedType A string with the required type for the argument.
 -- @usage mtable = {bbb = 3, ccc = "aaa"}
 -- _, err = pcall(function() optionalTableArgument(mtable, "bbb", "string") end)
 -- print(err)
@@ -434,7 +430,7 @@ end
 
 --- Stop the simulation with an error indicating that a given resource was not found.
 -- The error message comes from ErrorHandling:resourceNotFoundMsg().
--- @arg attr A string with the attribute name.
+-- @arg attr A string with the name of the argument, or its position.
 -- @arg path A string with the location of the resource.
 -- @usage _, err = pcall(function() resourceNotFoundError("file", "file.txt") end)
 -- print(err)
@@ -443,7 +439,7 @@ function resourceNotFoundError(attr, path)
 end
 
 --- Return a message indicating that a given resource could not be found.
--- @arg attr A string with the attribute name.
+-- @arg attr A string with the name of the argument, or its position.
 -- @arg path A string with the location of the resource.
 -- @usage str = resourceNotFoundMsg("file", "c:\\myfiles\\file.csv")
 -- print(str)
@@ -487,7 +483,7 @@ function suggestion(value, options)
 	local word
 	forEachOrderedElement(options, function(a)
 		if type(a) ~= "string" then
-			customError("All the indexes of second parameter should be string, got '"..type(a).."'.")
+			customError("All the indexes of second argument should be string, got '"..type(a).."'.")
 		end
 
 		local d = levenshtein(a, value) 
@@ -507,7 +503,7 @@ end
 -- a suggestion. Otherwise, it shows all the available options.
 -- The error messages come from ErrorHandling:switchInvalidArgumentSuggestionMsg() and
 -- ErrorHandling:switchInvalidArgumentMsg().
--- @arg att A string with the attribute name.
+-- @arg att A string with the name of the argument.
 -- @arg value A string with wrong value passed as argument.
 -- @arg suggestions A table with string indexes describing the available options.
 -- @usage t = {
@@ -532,8 +528,8 @@ function switchInvalidArgument(att, value, suggestions)
 end
 
 --- Return a message for a wrong argument value showing the options.
--- @arg casevar A string with the value of the attribute.
--- @arg att A string with the name of the attribute.
+-- @arg casevar A string with the value of the argument.
+-- @arg att A string with the name of the argument.
 -- @arg options A table whose indexes indicate the available options.
 -- @usage local options = {
 --     aaa = true,
@@ -557,8 +553,8 @@ function switchInvalidArgumentMsg(casevar, att, options)
 end
 
 --- Return a message for a wrong argument value showing the most similar option.
--- @arg casevar A string with the value of the attribute.
--- @arg att A string with the name of the attribute.
+-- @arg casevar A string with the value of the argument.
+-- @arg att A string with the name of the argument.
 -- @arg suggestion A string with a suggestion to replace the wrong value.
 -- @usage str = switchInvalidArgumentSuggestionMsg("aab", "attr", "aaa")
 -- print(str)
@@ -580,7 +576,7 @@ end
 --- Return a message indicating that a given argument is unnecessary.
 -- @arg value A string or number or boolean value.
 -- @arg suggestion A possible suggestion for the argument.
--- This parameter is optional.
+-- This argument is optional.
 -- @usage str = unnecessaryArgumentMsg("file")
 -- print(str)
 --
@@ -597,8 +593,7 @@ end
 
 --- Stop the simulation with an error due to a wrong value for an argument.
 -- The error message comes from ErrorHandling:valueNotFoundMsg().
--- @arg attr A string with an attribute name (for functions with named arguments), or position
--- (otherwise).
+-- @arg attr A string with the name of the argument or a number with its position.
 -- @arg value The value used as argument to the function call.
 -- @usage _, err = pcall(function() valueNotFoundError(1, "neighborhood") end)
 -- print(err)
@@ -607,8 +602,7 @@ function valueNotFoundError(attr, value)
 end
 
 --- Return a message indicating that a given argument of a function is mandatory.
--- @arg attr A string with an attribute name (for functions with named arguments), or position
--- (otherwise).
+-- @arg attr A string with the name of the argument or a number with its position.
 -- @arg value The valued used as argument to the function call.
 -- @usage str = valueNotFoundMsg(1, "neighborhood")
 -- print(str)

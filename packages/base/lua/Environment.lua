@@ -150,7 +150,7 @@ Environment_ = {
 	-- a Trajectory or a Cell, the Agents will be able to move over the whole CellularSpace.
 	-- Note that this function uses rules that will be used only to build the placement. It is up to
 	-- the modeler to implement such rules for the rest of the simulation if needed.
-	-- For example, one can use the parameter max = 1 to indicate
+	-- For example, one can use argument max equals to one to indicate
 	-- that the placement must have at most one Agent per Cell, but it works only to create the
 	-- placement, having no effect along the simulation.
 	-- @arg data.strategy A string containing the strategy to be used to create a placement

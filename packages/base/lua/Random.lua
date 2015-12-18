@@ -211,9 +211,9 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- @tabular distrib
 -- Distrib & Description & Compulsory Arguments & Optional Arguments \
 -- "bernoulli" & A boolean distribution that returns true with probability p. & p & seed \
--- "categorical" & A distribution that has names associated to probabilities. Each name is a
--- parameter and has a value between 0 and 1, indicating the probability to be selected. The sum of
--- all probabilities must be one. & ... & seed \
+-- "categorical" & A distribution that has names associated to probabilities. Each name is an
+-- argument and has a value between zero and one, indicating the probability to be selected. The
+-- sum of all probabilities must be one. & ... & seed \
 -- "continuous" & A continuous uniform distribition. It selects real numbers in a given
 -- interval. & max, min & seed \
 -- "discrete" & A discrete uniform distribition. Elements are described as non-named
