@@ -520,8 +520,13 @@ CellularSpace_ = {
 	-- function will be called only if filter returns true.
 	-- @arg data.wrap Will the Cells in the borders be connected to the Cells in the
 	-- opposite border? The default value is false.
-	-- @usage cs = CellularSpace{
-	--     xdim = 10
+	-- @usage cell = Cell{
+	--     height = Random{min = 0, max = 100}
+	-- }
+	--
+	-- cs = CellularSpace{
+	--     xdim = 10,
+	--     instance = cell
 	-- }
 	--
 	-- cs:createNeighborhood() -- moore
@@ -539,7 +544,13 @@ CellularSpace_ = {
 	-- cs:createNeighborhood{
 	--     strategy = "mxn",
 	--     m = 5,
-	--     name = "5"
+	--     name = "5",
+	--     filter = function(cell, candidate)
+	--         return cell.height > candidate.height
+	--     end,
+	--     weight = function(cell, candidate)
+	--         return (cell.height - candidate.height) / 100
+	--     end
 	-- }
 	--
 	--

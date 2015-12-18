@@ -642,6 +642,18 @@ end
 --         cell.deforestation = cell.deforestation * 1.01
 --     end
 -- end)
+--
+-- cs:createNeighborhood{
+--     strategy = "vonneumann",
+--     name = "vonneumann",
+--     self = true
+-- }
+--
+-- forEachNeighbor(cs:sample(), "vonneumann", function(cell, neighbor)
+--     if cell.deforestation <= neighbor.deforestation then
+--         cell.deforestation = neighbor.deforestation
+--     end
+-- end)
 -- @see CellularSpace:createNeighborhood
 -- @see CellularSpace:loadNeighborhood
 function forEachNeighbor(cell, index, f)
