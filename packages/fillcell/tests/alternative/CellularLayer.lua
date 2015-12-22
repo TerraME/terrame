@@ -25,40 +25,39 @@
 
 return{
 	CellularLayer = function(unitTest)
-		unitTest:assert(true)
--- 		local error_func = function()
--- 			local cl = CellularLayer()
--- 		end
--- 		unitTest:assertError(error_func, tableArgumentMsg())
+		local noDataArguments = function()
+			local cl = CellularLayer()
+		end
+		unitTest:assertError(noDataArguments, tableArgumentMsg())
 
--- 		error_func = function()
--- 			local cl = CellularLayer{project = 2, layer = "cells"}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("project", "string", 2))
+		local attrProjectNonString = function()
+			local cl = CellularLayer{project = 2, layer = "cells"}
+		end
+		unitTest:assertError(attrProjectNonString, incompatibleTypeMsg("project", "string", 2))
 
--- 		error_func = function()
--- 			local cl = CellularLayer{project = "myproj.tview", layer = false}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", false))
+		local attrLayerNonString = function()
+			local cl = CellularLayer{project = "myproj.tview", layer = false}
+		end
+		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("layer", "string", false))
 
--- 		error_func = function()
--- 			local cl = CellularLayer{project = "myproj.tview", lauer = "cells"}
--- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("lauer", "layer"))
+		local unnecessaryArgument = function()
+			local cl = CellularLayer{project = "myproj.tview", lauer = "cells"}
+		end
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("lauer", "layer"))
 
 -- 		-- TODO: select a project that does not exist
 -- 		-- TODO: open a cellularlayer that does not exist - with and without suggestion
--- 	end,
--- 	fillCells = function(unitTest)
--- 		local cl = CellularLayer{project = "amazonia.tview", layer = "cells"}
+	end,
+	-- fillCells = function(unitTest)
+		-- local cl = CellularLayer{project = "amazonia.tview", layer = "cells"}
 
--- 		local error_func = function()
--- 			cl:fillCells{
--- 				attribute = "population",
--- 				layer = "population"
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, mandatoryArgumentMsg("operation"))
+		-- local operationMandatoryArgument = function()
+			-- cl:fillCells{
+				-- attribute = "population",
+				-- layer = "population"
+			-- }
+		-- end
+		-- unitTest:assertError(operationMandatoryArgument, mandatoryArgumentMsg("operation"))
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -528,6 +527,6 @@ return{
 -- 		-- will stop with an error or it is up to us to check this.)
 -- 		-- TODO: try to fillCells using a `layer` that does not exist.
 
- 	end
+ 	-- end
 }
 
