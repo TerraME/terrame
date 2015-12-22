@@ -144,10 +144,10 @@ Project_ = {
 
 		verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution", "file", "source"})
 
-		defaultTableValue(data, "box", false)
+		defaultTableValue(data, "box", false) -- TODO: CHECK HOW USE THIS
 		mandatoryTableArgument(data, "layer", "string")
 		mandatoryTableArgument(data, "input", "string")
-		positiveTableArgument(data, "resolution")	
+		positiveTableArgument(data, "resolution")
 		
 		if isEmpty(data.source) then
 			mandatoryTableArgument(data, "file", "string")	
@@ -162,10 +162,19 @@ Project_ = {
 			end
 		end
 		
+		if not isValidSource(data.source) then
+			customError("The source'"..data.source.."' is invalid.")
+		end		
+		
+		-- TODO
+		-- if not self.terralib:layerExists(data.input) then
+			-- customError("The input layer '"..data.input.."' not found.")
+		-- end				
+		
 		if self.terralib:getLayerInfo(data.layer) == nil then -- TODO: ALTER THIS TO GET A BOOLEAN
 			if data.source == "shp" then	
 				mandatoryTableArgument(data, "file", "string")
-				self.terralib:addShpCellSpaceLayer(data.input, data.layer, data.resolution, data.file)
+				self.terralib:addShpCellSpaceLayer(data.input, data.layer, data.resolution, data.file)	
 			elseif data.source == "tif" then	
 				mandatoryTableArgument(data, "file", "string")
 				--self.terralib:addTifLayer(data.layer, data.file)

@@ -170,7 +170,10 @@ end
 
 local function	addCellSpaceLayer(inputLayerTitle, name, resolultion, filePath, type) 
 		local inputLayer = currentProject:getDataSetLayerByTitle(inputLayerTitle)
-		-- TODO: inputLayer == nil
+		
+		-- if inputLayer == nil then
+			-- customError("The input layer '"..inputLayerTitle.."' not found.")
+		-- end
 
 		local connInfo = {}
 		
@@ -295,7 +298,11 @@ TerraLib_ = {
 	
 	addTifLayer = function(self, name, filePath)
 		addFileLayer(name, filePath, "GDAL")
-	end,	
+	end,
+
+	layerExists = function(self, name)
+		return currentProject:layerExists(name)
+	end,
 
 	addShpCellSpaceLayer = function(self, inputLayerTitle, name, resolultion, filePath) 
 		addCellSpaceLayer(inputLayerTitle, name, resolultion, filePath, "OGR")

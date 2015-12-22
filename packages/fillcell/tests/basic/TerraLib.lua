@@ -30,6 +30,9 @@ return {
 	addTifLayer = function(unitTest)
 		unitTest:assert(true)
 	end,
+	layerExists = function(unitTest)
+		unitTest:assert(true)
+	end,	
 	addShpCellSpaceLayer = function(unitTest)
 		unitTest:assert(true)
 	end

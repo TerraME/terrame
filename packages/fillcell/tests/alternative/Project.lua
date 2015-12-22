@@ -331,15 +331,40 @@ return{
 		end
 		unitTest:assertError(cellLayerAlreadyExists, "Layer '"..clName1.."' already exists in the Project.")
 		
-		-- local sourceInvalid = function()
+		local sourceInvalid = function()
+			proj:addCellularLayer{
+				input = layerName1,
+				layer = "cells",
+				resolution = 10000,
+				file = file("amazonia.tview", "fillcell")	
+			}			
+		end
+		unitTest:assertError(sourceInvalid, "The source'".."tview".."' is invalid.")		
+
+		local filePath = file("Setores_Censitarios_2000_pol.shp", "fillcell")
+		local source = "tif"
+		local inconsistentExtension = function()
+			proj:addCellularLayer{
+				input = layerName1,
+				layer = "cells",
+				resolution = 10000,
+				file = filePath,
+				source = "tif"
+			}			
+		end
+		unitTest:assertError(inconsistentExtension, "File '"..filePath.."'not match to source '"..source.."'.")	
+
+		-- TODO
+		-- local inLayer = "no_exists"
+		-- local inputNonExists = function()
 			-- proj:addCellularLayer{
-				-- input = layerName1,
+				-- input = inLayer,
 				-- layer = "cells",
 				-- resolution = 10000,
-				-- file = file("amazonia.tview", "fillcell")	
-			-- }			
+				-- file = "some.shp"
+			-- }
 		-- end
-		-- unitTest:assertError(sourceInvalid, "The source'".."tview".."' is invalid.")			
+		-- unitTest:assertError(inputNonExists, "The input layer '".."no_exists".."' not found.")		
 		
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
