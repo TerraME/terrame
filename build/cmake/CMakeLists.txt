@@ -146,7 +146,7 @@ endif( TERRALIB_FOUND )
 	# set(MYSQL_LIBRARY ${MYSQL_LIBRARIES}/libmysql_mingw.a)
 	# set(MYSQL_FOUND true)
 # elseif(MINGW)
-	find_package(MySQL)
+#	find_package(MySQL)
 # endif(MINGW) 
 
 #-- TODO: Vefify if it is all correct and how we can use the CMAKE finder instead of this.
@@ -172,10 +172,10 @@ endif( MYSQL_FOUND )
 	# set(JPEG_LIBRARY ${JPEG_LIBRARIES}/libjpeg.a)
 	# set(LIBS ${LIBS} ${JPEG_LIBRARY})
 # else(MINGW)
-	find_package(JPEG REQUIRED)
-	set(LIBS ${LIBS} ${JPEG_LIBRARIES})
+#	find_package(JPEG REQUIRED)
+#	set(LIBS ${LIBS} ${JPEG_LIBRARIES})
 # endif(MINGW)
-include_directories(${JPEG_INCLUDE_DIR})
+#include_directories(${JPEG_INCLUDE_DIR})
 
 ### --------------
 #QWT
