@@ -260,7 +260,7 @@ function Project(data)
 		end
 	else
 		if isFile(data.file) then
-			terralib:openProject(data.file)
+			terralib:openProject(data, data.file)
 		else
 			customError("Project '"..data.file.."' does not exist. Use 'create = true' to create a new Project.")
 		end

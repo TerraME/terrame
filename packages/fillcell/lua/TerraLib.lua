@@ -6,6 +6,7 @@ local binding = terralib_mod_binding_lua
 local currentProject = nil
 local initialized = false
 local layersDsIds = {}
+local layers = {}
 
 -- TODO: Remove this after
 local function printTable(sometable)
@@ -114,33 +115,161 @@ local function release(obj)
 end
 
 local function saveProject(project, fileName)
-	project:setProjectAsChanged(true)
-	project:setFileName(fileName)
+	-- project:setProjectAsChanged(true)
+	-- project:setFileName(fileName)
 	
-	binding.te.qt.af.XMLFormatter.format(project, true)
-	binding.te.qt.af.XMLFormatter.formatDataSourceInfos(true)
-	binding.Save(project, fileName)
-	--binding.SaveDataSourcesFile()
-	binding.te.qt.af.XMLFormatter.format(project, false)
-	binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)	
+	-- binding.te.qt.af.XMLFormatter.format(project, true)
+	-- binding.te.qt.af.XMLFormatter.formatDataSourceInfos(true)
+	-- binding.Save(project, fileName)
+	-- -- binding.SaveDataSourcesFile()
+	-- binding.te.qt.af.XMLFormatter.format(project, false)
+	-- binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)	
 	
-	project:setProjectAsChanged(false)
+	-- project:setProjectAsChanged(false)
 	
-	currentProject = project
+	-- currentProject = project
 end
 
-local function openProject(filePath)		
+local function loadProject(proj, filePath)		
 	-- TODO: This project could not be found:
 	-- TODO: add file extension if user didn't set
-	local project = binding.ReadProject(filePath)
+	-- local project = binding.ReadProject(filePath)
 		
-	binding.te.qt.af.XMLFormatter.format(project, false)
-	binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)		
+	-- binding.te.qt.af.XMLFormatter.format(project, false)
+	-- binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)		
 	
-	release(currentProject)
-	currentProject = project
+	-- release(currentProject)
+	-- currentProject = project
 		
-	currentProject:setProjectAsChanged(false)	
+	-- currentProject:setProjectAsChanged(false)	
+	
+	if not isFile(filePath) then
+		customError("Could not read project file: "..filePath..".")
+	end
+	
+	local xmlReader = binding.te.xml.ReaderFactory.make()
+
+	xmlReader:setValidationScheme(false)
+	xmlReader:read(filePath)
+	
+	if not xmlReader:next() then
+		customError("Could not read project information in the file: "..filePath..".")
+	end
+	
+	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
+		customError("Error reading the document "..filePath..", the start element wasn't found.")
+	end
+	
+	if xmlReader:getElementLocalName() ~= "Project" then
+		customError("The first tag in the document "..filePath.." is not 'Project'.")
+	end	
+	
+	xmlReader:next()
+	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
+		-- TODO
+	end
+	if xmlReader:getElementLocalName() ~= "Title" then
+		-- TODO
+	end
+
+	xmlReader:next()
+	if xmlReader:getNodeType() ~= binding.VALUE then
+		
+	end
+	proj.title = xmlReader:getElementValue()
+	
+	xmlReader:next() -- End element
+
+	xmlReader:next()
+	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
+		-- TODO
+	end
+	if xmlReader:getElementLocalName() == "Author" then
+		-- TODO
+	end
+
+	xmlReader:next()
+
+	if xmlReader:getNodeType() == binding.VALUE then
+		proj.author = xmlReader:getElementValue()
+		xmlReader:next() -- End element
+	end	
+
+	-- read data source list from this project
+	xmlReader:next()
+
+	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
+		-- TODO
+	end
+	if xmlReader:getElementLocalName() ~= "DataSourceList" then
+		-- TODO
+	end
+
+	xmlReader:next()
+
+	-- DataSourceList contract form
+	if (xmlReader:getNodeType() == binding.END_ELEMENT) and 
+		(xmlReader:getElementLocalName() == "DataSourceList") then
+		xmlReader:next()
+	end
+	
+	while (xmlReader:getNodeType() == binding.START_ELEMENT) and
+			(xmlReader:getElementLocalName() == "DataSource") do
+		local  ds = binding.ReadDataSourceInfo(xmlReader)
+		binding.te.da.DataSourceInfoManager.getInstance():add(ds)
+	end
+	
+	-- end read data source list
+
+	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
+		-- TODO
+	end
+	if xmlReader:getElementLocalName() ~= "ComponentList" then
+		-- TODO
+	end
+	
+	xmlReader:next() -- End element
+	xmlReader:next() -- next after </ComponentList>
+
+	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
+	
+	end
+	if xmlReader:getElementLocalName() ~= "LayerList" then
+	
+	end
+
+	xmlReader:next()
+
+	local lserial = binding.te.map.serialize.Layer.getInstance()
+	
+	-- Read the layers
+	proj.layers = {}
+	while (xmlReader:getNodeType() ~= binding.END_ELEMENT) and
+			(xmlReader:getElementLocalName() ~= "LayerList") do
+		local layer = lserial:read(xmlReader)
+
+		if not layer then
+			-- TODO
+		end
+		
+		proj.layers[layer:getTitle()] = layer
+	end
+
+	if xmlReader:getNodeType() ~= binding.END_ELEMENT then
+	
+	end
+	if xmlReader:getElementLocalName() ~= "LayerList" then
+		
+	end
+
+	xmlReader:next()
+	if (xmlReader:getNodeType() ~= binding.END_ELEMENT) or
+		(xmlReader:getNodeType() ~= binding.END_DOCUMENT) then
+	
+	end
+	if xmlReader:getElementLocalName() ~= "Project" then
+	
+	end
 end
 
 local function releaseProject()
@@ -239,23 +368,23 @@ TerraLib_ = {
 	end,
 
 	createProject = function(self, fileName, author, title)
-		releaseProject()
+		--releaseProject()
 	
-		local project = binding.te.qt.af.Project()	
+		-- local project = binding.te.qt.af.Project()	
 
-		project:setTitle(title)
-		project:setAuthor(author)
-		project:setFileName(fileName)
+		-- project:setTitle(title)
+		-- project:setAuthor(author)
+		-- project:setFileName(fileName)
 		
 		saveProject(project, project:getFileName())
 	end,
 
-	openProject = function(self, filePath)
+	openProject = function(self, project, filePath)
 		-- TODO: This project could not be found:
 		-- TODO: add file extension if user didn't set
 		
-		releaseProject()
-		openProject(filePath)		
+		--releaseProject()
+		loadProject(project, filePath)		
 
 		-- TODO: Maybe here getLayersNames()
 	end,
