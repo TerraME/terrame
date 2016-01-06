@@ -106,7 +106,7 @@ Project_ = {
 			customError("The source'"..data.source.."' is invalid.")
 		end	
 			
-		if self.terralib:getLayerInfo(data.layer) == nil then -- TODO: ALTER THIS TO GET A BOOLEAN
+		if self.layers[data.layer] == nil then
 			if data.source == "shp" then	
 				mandatoryTableArgument(data, "file", "string")
 				self.terralib:addShpLayer(data.layer, data.file)
@@ -185,18 +185,27 @@ Project_ = {
 	end,
 
 	info = function(self)
-		return self.terralib:getProjectInfo()
+		local info = {}
+		info.title = self.title
+		info.author = self.author
+		info.file = self.file
+		
+		return info
 	end,
 	
 	infoLayer = function(self, name)
 		-- TODO: CHECK WHICH INFORMATIONS ARE NECESSARY
-		local info = self.terralib:getLayerInfo(name)
 		
-		if info == nil then
+		local layer = self.layers[name]
+		
+		if layer == nil then
 			customError("Layer '"..name.."' not exists.")
-		else
-			return info
 		end
+		
+		local info = {}		
+		info.name = layer:getTitle()	
+			
+		return info
 	end
 }
 
@@ -251,12 +260,13 @@ function Project(data)
 	--TODO: auto finalize terralib and all objects, how? 
 
 	data.terralib = terralib
+	data.layers = {}
 
 	if data.create then
 		if isFile(data.file) then
 			customError("Project '"..data.file.."' already exists.")
 		else
-			terralib:createProject(data.file, data.author, data.title)
+			terralib:createProject(data, data.layers)
 		end
 	else
 		if isFile(data.file) then

@@ -57,7 +57,7 @@ return{
 				-- layer = "population"
 			-- }
 		-- end
-		-- unitTest:assertError(operationMandatoryArgument, mandatoryArgumentMsg("operation"))
+		-- unitTest:assertError(operationMandatoryArgument, mandatoryArgumentMsg("operation")) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -66,7 +66,7 @@ return{
 -- 				layer = "roads"
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("operation", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("operation", "string", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -74,7 +74,7 @@ return{
 -- 				operation = "area"
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, mandatoryArgumentMsg("layer"))
+-- 		unitTest:assertError(error_func, mandatoryArgumentMsg("layer")) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -83,7 +83,7 @@ return{
 -- 				layer = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("layer", "string", 2)) -- SKIP
 	
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -91,7 +91,7 @@ return{
 -- 				operation = "area"
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, mandatoryArgumentMsg("attribute"))
+-- 		unitTest:assertError(error_func, mandatoryArgumentMsg("attribute")) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -100,7 +100,7 @@ return{
 -- 				layer = "cells"
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("attribute", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("attribute", "string", 2)) -- SKIP
 
 -- 		-- area
 -- 		error_func = function()
@@ -111,7 +111,7 @@ return{
 -- 				select = "cover2010"
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select")) -- SKIP
 
 -- 		-- average
 -- 		error_func = function()
@@ -122,7 +122,7 @@ return{
 -- 				select = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -133,7 +133,7 @@ return{
 -- 				area = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("area", "boolean", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("area", "boolean", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -144,7 +144,7 @@ return{
 -- 				default = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -155,7 +155,7 @@ return{
 -- 				dummy = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -166,7 +166,7 @@ return{
 -- 				defaut = 3
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
 
 -- 		-- count
 -- 		error_func = function()
@@ -177,7 +177,7 @@ return{
 -- 				select = "cover2010"
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select")) -- SKIP
 
 -- 		-- distance
 -- 		error_func = function()
@@ -188,7 +188,7 @@ return{
 -- 				select = "cover2010"
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select")) -- SKIP
 
 -- 		-- length
 -- 		error_func = function()
@@ -199,7 +199,7 @@ return{
 -- 				select = "cover2010"
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select")) -- SKIP
 
 -- 		-- majority
 -- 		error_func = function()
@@ -210,7 +210,7 @@ return{
 -- 				select = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -221,7 +221,7 @@ return{
 -- 				default = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -232,7 +232,7 @@ return{
 -- 				dummy = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -243,7 +243,7 @@ return{
 -- 				defaut = 3
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
 
 -- 		-- maximum
 -- 		error_func = function()
@@ -254,7 +254,7 @@ return{
 -- 				select = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -265,7 +265,7 @@ return{
 -- 				default = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -276,7 +276,7 @@ return{
 -- 				dummy = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -287,7 +287,7 @@ return{
 -- 				defaut = 3
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
 
 -- 		-- minimum
 -- 		error_func = function()
@@ -298,7 +298,7 @@ return{
 -- 				select = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -309,7 +309,7 @@ return{
 -- 				default = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -320,7 +320,7 @@ return{
 -- 				dummy = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -331,7 +331,7 @@ return{
 -- 				defaut = 3
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
 
 -- 		-- percentage
 -- 		error_func = function()
@@ -342,7 +342,7 @@ return{
 -- 				select = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -353,7 +353,7 @@ return{
 -- 				default = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -364,7 +364,7 @@ return{
 -- 				dummy = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -375,7 +375,7 @@ return{
 -- 				defaut = 3
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
 
 -- 		-- presence
 -- 		error_func = function()
@@ -386,7 +386,7 @@ return{
 -- 				select = "cover2010"
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select")) -- SKIP
 
 -- 		-- stdev
 -- 		error_func = function()
@@ -397,7 +397,7 @@ return{
 -- 				select = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -408,7 +408,7 @@ return{
 -- 				default = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -419,7 +419,7 @@ return{
 -- 				dummy = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -430,7 +430,7 @@ return{
 -- 				defaut = 3
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
 
 -- 		-- sum
 -- 		error_func = function()
@@ -441,7 +441,7 @@ return{
 -- 				select = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -452,7 +452,7 @@ return{
 -- 				area = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("area", "boolean", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("area", "boolean", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -463,7 +463,7 @@ return{
 -- 				default = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -474,7 +474,7 @@ return{
 -- 				dummy = false
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -485,7 +485,7 @@ return{
 -- 				defaut = 3
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
 
 -- 		-- value
 -- 		error_func = function()
@@ -496,7 +496,7 @@ return{
 -- 				select = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -507,7 +507,7 @@ return{
 -- 				area = 2
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("area", "boolean", 2))
+-- 		unitTest:assertError(error_func, incompatibleTypeMsg("area", "boolean", 2)) -- SKIP
 
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -517,7 +517,7 @@ return{
 -- 				selec = "cover2010"
 -- 			}
 -- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("selec", "select"))
+-- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("selec", "select")) -- SKIP
 
 -- 		-- TODO: match geometries with the available strategies
 -- 		-- (first table of the documentation)

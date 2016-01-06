@@ -15,15 +15,15 @@ return {
 	openProject = function(unitTest)
 		unitTest:assert(true)
 	end,
-	getProjectInfo = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getLayersNames = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getLayerInfo = function(unitTest)
-		unitTest:assert(true)
-	end,
+	-- getProjectInfo = function(unitTest)
+		-- unitTest:assert(true) -- SKIP
+	-- end,
+	-- getLayersNames = function(unitTest)
+		-- unitTest:assert(true) -- SKIP
+	-- end,
+	-- getLayerInfo = function(unitTest)
+		-- unitTest:assert(true) -- SKIP
+	-- end,
 	addShpLayer = function(unitTest)
 		unitTest:assert(true)
 	end,

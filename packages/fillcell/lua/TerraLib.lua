@@ -3,7 +3,6 @@ require("terralib_mod_binding_lua")
 -- TODO: To document this
 
 local binding = terralib_mod_binding_lua
-local currentProject = nil
 local initialized = false
 local layersDsIds = {}
 local layers = {}
@@ -114,35 +113,62 @@ local function release(obj)
 	collectgarbage("collect")
 end
 
-local function saveProject(project, fileName)
-	-- project:setProjectAsChanged(true)
-	-- project:setFileName(fileName)
+local function saveProject(project, layers)
+	local writer = binding.te.xml.AbstractWriterFactory.make()
+
+	writer:setURI(project.file)
 	
-	-- binding.te.qt.af.XMLFormatter.format(project, true)
-	-- binding.te.qt.af.XMLFormatter.formatDataSourceInfos(true)
-	-- binding.Save(project, fileName)
-	-- -- binding.SaveDataSourcesFile()
-	-- binding.te.qt.af.XMLFormatter.format(project, false)
-	-- binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)	
+	-- TODO: THIS GET THE PATH WHERE WAS INSTALLED (PROBLEM)
+	local schema = binding.FindInTerraLibPath("share/terralib/schemas/terralib/qt/af/project.xsd")
+	schema = _Gtme.makePathCompatibleToAllOS(schema)
+
+	writer:writeStartDocument("UTF-8", "no")
+
+	writer:writeStartElement("Project")
+
+	--boost::replace_all(schema_loc, " ", "%20") -- TODO: REVIEW	
 	
-	-- project:setProjectAsChanged(false)
+	writer:writeAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema-instance")
+	writer:writeAttribute("xmlns:te_da", "http://www.terralib.org/schemas/dataaccess")
+	writer:writeAttribute("xmlns:te_map", "http://www.terralib.org/schemas/maptools")
+	writer:writeAttribute("xmlns:te_qt_af", "http://www.terralib.org/schemas/common/af")
+
+	writer:writeAttribute("xmlns:se", "http://www.opengis.net/se")
+	writer:writeAttribute("xmlns:ogc", "http://www.opengis.net/ogc")
+	writer:writeAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink")
+
+	writer:writeAttribute("xmlns", "http://www.terralib.org/schemas/qt/af")
+	writer:writeAttribute("xsd:schemaLocation", "http://www.terralib.org/schemas/qt/af "..schema)
+	writer:writeAttribute("version", binding.te.common.Version.asString())
+
+	writer:writeElement("Title", project.title)
+	writer:writeElement("Author", project.author)
 	
-	-- currentProject = project
+	-- TODO: VERIFY PASS LAYERS IDS TO C++
+	writer:writeDataSourceList()
+	
+	writer:writeStartElement("ComponentList")
+	writer:writeEndElement("ComponentList")
+
+	writer:writeStartElement("te_map:LayerList")
+	
+	if layers then 
+		local lserial = binding.te.map.serialize.Layer.getInstance()
+		
+		for title, layer in pairs(layers) do
+			lserial:write(layer, writer)
+		end
+	end
+	writer:writeEndElement("te_map:LayerList")
+
+	writer:writeEndElement("Project")
+
+	writer:writeToFile()
 end
 
-local function loadProject(proj, filePath)		
+local function loadProject(project, filePath)		
 	-- TODO: This project could not be found:
 	-- TODO: add file extension if user didn't set
-	-- local project = binding.ReadProject(filePath)
-		
-	-- binding.te.qt.af.XMLFormatter.format(project, false)
-	-- binding.te.qt.af.XMLFormatter.formatDataSourceInfos(false)		
-	
-	-- release(currentProject)
-	-- currentProject = project
-		
-	-- currentProject:setProjectAsChanged(false)	
-	
 	if not isFile(filePath) then
 		customError("Could not read project file: "..filePath..".")
 	end
@@ -176,7 +202,7 @@ local function loadProject(proj, filePath)
 	if xmlReader:getNodeType() ~= binding.VALUE then
 		
 	end
-	proj.title = xmlReader:getElementValue()
+	project.title = xmlReader:getElementValue()
 	
 	xmlReader:next() -- End element
 
@@ -191,7 +217,7 @@ local function loadProject(proj, filePath)
 	xmlReader:next()
 
 	if xmlReader:getNodeType() == binding.VALUE then
-		proj.author = xmlReader:getElementValue()
+		project.author = xmlReader:getElementValue()
 		xmlReader:next() -- End element
 	end	
 
@@ -243,7 +269,6 @@ local function loadProject(proj, filePath)
 	local lserial = binding.te.map.serialize.Layer.getInstance()
 	
 	-- Read the layers
-	proj.layers = {}
 	while (xmlReader:getNodeType() ~= binding.END_ELEMENT) and
 			(xmlReader:getElementLocalName() ~= "LayerList") do
 		local layer = lserial:read(xmlReader)
@@ -252,7 +277,7 @@ local function loadProject(proj, filePath)
 			-- TODO
 		end
 		
-		proj.layers[layer:getTitle()] = layer
+		project.layers[layer:getTitle()] = layer
 	end
 
 	if xmlReader:getNodeType() ~= binding.END_ELEMENT then
@@ -269,32 +294,33 @@ local function loadProject(proj, filePath)
 	end
 	if xmlReader:getElementLocalName() ~= "Project" then
 	
-	end
+	end	
 end
 
-local function releaseProject()
-	for key, value in pairs(layersDsIds) do
-		local ds = binding.te.da.DataSourceManager.getInstance():detach(value)
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():get(value)
-		binding.te.da.DataSourceInfoManager.getInstance():remove(value)
-		release(dsInfo)
-		release(ds)
-	end
+-- local function releaseProject()
+	-- for key, value in pairs(layersDsIds) do
+		-- local ds = binding.te.da.DataSourceManager.getInstance():detach(value)
+		-- local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():get(value)
+		-- binding.te.da.DataSourceInfoManager.getInstance():remove(value)
+		-- release(dsInfo)
+		-- release(ds)
+	-- end
 	
-	layersDsIds = {}
-	release(currentProject)
-end
+	-- layersDsIds = {}
+	-- release(currentProject)
+-- end
 
 local function addFileLayer(name, filePath, type)
 	local ds, layer = createLayer(name, filePath, type)
 	
-	currentProject:add(layer)
-	saveProject(currentProject, currentProject:getFileName())
+	--currentProject:add(layer)
+	project.layers[layer:getTitle()] = layer
+	saveProject(project, project.layers)
 	
-	local dsId = ds:getId()
-	if layersDsIds["dsId"] == nil then
-		layersDsIds[name] = dsId
-	end	
+	-- local dsId = ds:getId()
+	-- if layersDsIds["dsId"] == nil then
+		-- layersDsIds[name] = dsId
+	-- end	
 end
 
 local function	addCellSpaceLayer(inputLayerTitle, name, resolultion, filePath, type) 
@@ -336,11 +362,10 @@ local function finalize()
 		pmger:unloadAll()
 		pmger:clear()
 		terralib:finalize()	
-		terralib = nil
-		pmger = nil
+		release(terralib)
+		release(pmger)
 		
-		currentProject = nil
-		binding = nil
+		release(binding)
 		initialized = false	
 		
 		collectgarbage("collect")
@@ -363,70 +388,61 @@ TerraLib_ = {
 	end,
 
 	finalize = function()
-		releaseProject()
-		--finalize()
+		--releaseProject()
+		finalize()
 	end,
 
-	createProject = function(self, fileName, author, title)
-		--releaseProject()
-	
-		-- local project = binding.te.qt.af.Project()	
-
-		-- project:setTitle(title)
-		-- project:setAuthor(author)
-		-- project:setFileName(fileName)
-		
-		saveProject(project, project:getFileName())
+	createProject = function(self, project, layers)
+		saveProject(project, layers)
 	end,
 
 	openProject = function(self, project, filePath)
 		-- TODO: This project could not be found:
 		-- TODO: add file extension if user didn't set
 		
-		--releaseProject()
 		loadProject(project, filePath)		
 
 		-- TODO: Maybe here getLayersNames()
 	end,
 
-	getProjectInfo = function()
-		local projInfo = {}
-		projInfo.title = currentProject:getTitle()
-		projInfo.author = currentProject:getAuthor()
-		projInfo.file = currentProject:getFileName()
+	-- getProjectInfo = function()
+		-- local projInfo = {}
+		-- projInfo.title = currentProject:getTitle()
+		-- projInfo.author = currentProject:getAuthor()
+		-- projInfo.file = currentProject:getFileName()
 
-		return projInfo
-	end,
+		-- return projInfo
+	-- end,
 
-	getLayerInfo = function(self, layerName)
-		local layer = currentProject:getDataSetLayerByTitle(layerName)
+	-- getLayerInfo = function(self, layerName)
+		-- local layer = currentProject:getDataSetLayerByTitle(layerName)
 		
-		if layer == nil then
-			return nil
-		end
+		-- if layer == nil then
+			-- return nil
+		-- end
 		
-		local info = {}		
-		info.name = layer:getTitle()
+		-- local info = {}		
+		-- info.name = layer:getTitle()
 
-		return info
-	end,
+		-- return info
+	-- end,
 
-	getLayersNames = function()
-		local layersNames = currentProject:getLayersTitles()
+	-- getLayersNames = function()
+		-- local layersNames = currentProject:getLayersTitles()
 		
-		if layersNames == nil then
-			return {}
-		end
+		-- if layersNames == nil then
+			-- return {}
+		-- end
 		
-		return layersNames
-	end,
+		-- return layersNames
+	-- end,
 
-	addShpLayer = function(self, name, filePath)
-		addFileLayer(name, filePath, "OGR")
+	addShpLayer = function(self, project, name, filePath)
+		addFileLayer(project, name, filePath, "OGR")
 	end,
 	
-	addTifLayer = function(self, name, filePath)
-		addFileLayer(name, filePath, "GDAL")
+	addTifLayer = function(self, project, name, filePath)
+		addFileLayer(project, name, filePath, "GDAL")
 	end,
 
 	layerExists = function(self, name)
