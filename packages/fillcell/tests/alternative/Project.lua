@@ -34,7 +34,17 @@ return{
 			local proj = Project{file = 123, create = true}
 		end
 		unitTest:assertError(attrFileNonString, incompatibleTypeMsg("file", "string", 123))
-
+		
+		local invalidFileExtensionToCreate = function()
+			local proj = Project{file = "project.xml", create = true}
+		end
+		unitTest:assertError(invalidFileExtensionToCreate, "Please, the file extension must be '.tview'.")
+		
+		local invalidFileExtensionToLoad = function()
+			local proj = Project{file = file("Altimetria.xml", "fillcell")}
+		end
+		unitTest:assertError(invalidFileExtensionToLoad, "Please, the file extension must be '.tview'.")		
+		
 		local attrCreateNonBool = function()
 			local proj = Project{file = "myproj.tview", create = 2}
 		end

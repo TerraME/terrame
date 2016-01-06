@@ -1,9 +1,9 @@
 return {
 	Project = function(unitTest)
-		local projName = "amazonia.tview"
+		local projName = "amazonia"
 		
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
+		if isFile(projName..".tview") then
+			os.execute("rm -f "..projName..".tview")
 		end
 		-- ###################### 1 #############################
 		local proj1 = Project {
@@ -18,7 +18,7 @@ return {
 		
 		-- ###################### 2 #############################
 		local proj1Info = proj1:info()
-
+		
 		local proj2 = Project {
 			file = projName,
 			create = false,
@@ -38,12 +38,12 @@ return {
 		unitTest:assertEquals(proj1Info.title, proj3Info.title)
 		unitTest:assertEquals(proj1Info.file, proj3Info.file)
 		
-		-- ###################### 3 #############################
 		-- TODO: APPLICATION DOESN'T ALLOWING REMOVE THE FILE (PROBLEM)
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
-		end
+		if isFile(proj1Info.file) then
+			os.execute("rm -f "..proj1Info.file)
+		end		
 		
+		-- ###################### 3 #############################
 		local proj4Name = "notitlenoauthor.tview"
 		
 		if isFile(proj4Name) then

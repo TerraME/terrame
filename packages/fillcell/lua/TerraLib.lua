@@ -113,6 +113,10 @@ local function release(obj)
 	collectgarbage("collect")
 end
 
+local function isValidTviewExt(filePath)
+	return getFileExtension(filePath) == "tview"
+end
+
 local function saveProject(project, layers)
 	local writer = binding.te.xml.AbstractWriterFactory.make()
 
@@ -393,13 +397,19 @@ TerraLib_ = {
 	end,
 
 	createProject = function(self, project, layers)
+		if not isValidTviewExt(project.file) then
+			customError("Please, the file extension must be '.tview'.")
+		end
+		
 		saveProject(project, layers)
 	end,
 
 	openProject = function(self, project, filePath)
 		-- TODO: This project could not be found:
 		-- TODO: add file extension if user didn't set
-		
+		if not isValidTviewExt(project.file) then
+			customError("Please, the file extension must be '.tview'.")
+		end		
 		loadProject(project, filePath)		
 
 		-- TODO: Maybe here getLayersNames()

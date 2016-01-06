@@ -234,6 +234,11 @@ function Project(data)
 	verifyNamedTable(data)
     
 	mandatoryTableArgument(data, "file", "string")
+	
+	local fileName = getFileName(data.file)
+	if isEmpty(fileName) then
+		data.file = data.file..".tview"
+	end
 
 	optionalTableArgument(data, "create", "boolean")
 	optionalTableArgument(data, "title", "string")
