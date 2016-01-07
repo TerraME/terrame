@@ -166,15 +166,14 @@ Project_ = {
 			customError("The source'"..data.source.."' is invalid.")
 		end		
 		
-		-- TODO
-		-- if not self.terralib:layerExists(data.input) then
-			-- customError("The input layer '"..data.input.."' not found.")
-		-- end				
+		if not self.layers[data.input] then
+			customError("The input layer '"..data.input.."' not found.")
+		end				
 		
-		if self.terralib:getLayerInfo(data.layer) == nil then -- TODO: ALTER THIS TO GET A BOOLEAN
+		if self.layers[data.layer] == nil then
 			if data.source == "shp" then	
 				mandatoryTableArgument(data, "file", "string")
-				self.terralib:addShpCellSpaceLayer(data.input, data.layer, data.resolution, data.file)	
+				self.terralib:addShpCellSpaceLayer(self, data.input, data.layer, data.resolution, data.file)	
 			elseif data.source == "tif" then	
 				mandatoryTableArgument(data, "file", "string")
 				--self.terralib:addTifLayer(data.layer, data.file)
