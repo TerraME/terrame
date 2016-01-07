@@ -100,112 +100,112 @@ return{
 			os.execute("rm -f "..projName)
 		end
  	end,
-	-- addLayer = function(unitTest)
-		-- local projName = "amazonia.tview"
+	addLayer = function(unitTest)
+		local projName = "amazonia.tview"
 
-		-- if isFile(projName) then
-			-- os.execute("rm -f "..projName)
-		-- end
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
 
-		-- local proj = Project{
-			-- file = projName,
-			-- create = true,
-			-- author = "Avancini",
-			-- title = "The Amazonia"
-		-- }
+		local proj = Project{
+			file = projName,
+			create = true,
+			author = "Avancini",
+			title = "The Amazonia"
+		}
 
-		-- local noDataInLayer = function()
-			-- proj:addLayer()
-		-- end
-		-- unitTest:assertError(noDataInLayer, tableArgumentMsg()) -- SKIP
+		local noDataInLayer = function()
+			proj:addLayer()
+		end
+		unitTest:assertError(noDataInLayer, tableArgumentMsg())
 
-		-- local attrLayerNonString = function()
-			-- proj:addLayer{
-				-- layer = 123,
-				-- file = "myfile.shp",
-			-- }
+		local attrLayerNonString = function()
+			proj:addLayer{
+				layer = 123,
+				file = "myfile.shp",
+			}
 
-		-- end
-		-- unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("layer", "string", 123)) -- SKIP
+		end
+		unitTest:assertError(attrLayerNonString, incompatibleTypeMsg("layer", "string", 123))
 
-		-- local attrSourceNonString = function()
-			-- proj:addLayer{
-				-- layer = "layer",
-				-- source = 123
-			-- }
+		local attrSourceNonString = function()
+			proj:addLayer{
+				layer = "layer",
+				source = 123
+			}
 
-		-- end
-		-- unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123)) -- SKIP		
+		end
+		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))	
 		
-		-- local fileMandatory = function()
-			-- proj:addLayer{
-				-- layer = "Linhares"
-			-- }
-		-- end
-		-- unitTest:assertError(fileMandatory, mandatoryArgumentMsg("file")) -- SKIP
+		local fileMandatory = function()
+			proj:addLayer{
+				layer = "Linhares"
+			}
+		end
+		unitTest:assertError(fileMandatory, mandatoryArgumentMsg("file"))
 		
-		-- local noFilePass = function()
-			-- proj:addLayer{
-				-- layer = "Linhares",
-				-- source = "tif"
-			-- }
-		-- end
-		-- unitTest:assertError(noFilePass, mandatoryArgumentMsg("file")) -- SKIP		
+		local noFilePass = function()
+			proj:addLayer{
+				layer = "Linhares",
+				source = "tif"
+			}
+		end
+		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))	
 		
-		-- local nLayer = "any"
-		-- local layerNonExists = function()
-			-- proj:infoLayer(nLayer)
-		-- end
-		-- unitTest:assertError(layerNonExists, "Layer '"..nLayer.."' not exists.") -- SKIP
+		local nLayer = "any"
+		local layerNonExists = function()
+			proj:infoLayer(nLayer)
+		end
+		unitTest:assertError(layerNonExists, "Layer '"..nLayer.."' not exists.")
 		
-		-- local layerName = "Setores_2000"
-		-- proj:addLayer {
-			-- layer = layerName,
-			-- file = file("Setores_Censitarios_2000_pol.shp", "fillcell")			
-		-- }
+		local layerName = "Setores_2000"
+		proj:addLayer {
+			layer = layerName,
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")			
+		}
 		
-		-- local layerAlreadyExists = function()
-			-- proj:addLayer {
-				-- layer = layerName,
-				-- file = file("Setores_Censitarios_2000_pol.shp", "fillcell")	
-			-- }			
-		-- end
-		-- unitTest:assertError(layerAlreadyExists, "Layer '"..layerName.."' already exists in the Project.") -- SKIP
+		local layerAlreadyExists = function()
+			proj:addLayer {
+				layer = layerName,
+				file = file("Setores_Censitarios_2000_pol.shp", "fillcell")	
+			}			
+		end
+		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName.."' already exists in the Project.")
 		
-		-- local sourceInvalid = function()
-			-- proj:addLayer {
-				-- layer = layerName,
-				-- file = file("amazonia.tview", "fillcell")	
-			-- }			
-		-- end
-		-- unitTest:assertError(sourceInvalid, "The source'".."tview".."' is invalid.") -- SKIP
+		local sourceInvalid = function()
+			proj:addLayer {
+				layer = layerName,
+				file = file("amazonia.tview", "fillcell")	
+			}			
+		end
+		unitTest:assertError(sourceInvalid, "The source'".."tview".."' is invalid.")
 		
-		-- local layerFile = "linhares.shp"
-		-- local fileLayerNonExists = function()
-			-- proj:addLayer {
-				-- layer = "Linhares",
-				-- file = layerFile	
-			-- }			
-		-- end
-		-- unitTest:assertError(fileLayerNonExists, "The layer file'"..layerFile.."' not found.") -- SKIP			
+		local layerFile = "linhares.shp"
+		local fileLayerNonExists = function()
+			proj:addLayer {
+				layer = "Linhares",
+				file = layerFile	
+			}			
+		end
+		unitTest:assertError(fileLayerNonExists, "The layer file'"..layerFile.."' not found.")			
 	
-		-- local filePath = file("Setores_Censitarios_2000_pol.shp", "fillcell")
-		-- local source = "tif"
-		-- local inconsistentExtension = function()
-			-- proj:addLayer {
-				-- layer = "Setores_New",
-				-- file = filePath,
-				-- source = "tif"
-			-- }			
-		-- end
-		-- unitTest:assertError(inconsistentExtension, "File '"..filePath.."'not match to source '"..source.."'.") -- SKIP			
+		local filePath = file("Setores_Censitarios_2000_pol.shp", "fillcell")
+		local source = "tif"
+		local inconsistentExtension = function()
+			proj:addLayer {
+				layer = "Setores_New",
+				file = filePath,
+				source = "tif"
+			}			
+		end
+		unitTest:assertError(inconsistentExtension, "File '"..filePath.."' not match to source '"..source.."'.")			
 		
-		-- if isFile(projName) then
-			-- os.execute("rm -f "..projName)
-		-- end
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
 		
 		-- -- TODO: tests for postgis
-	-- end, 	
+	end, 	
 	-- addCellularLayer = function(unitTest)
 		-- local projName = "amazonia.tview"
 

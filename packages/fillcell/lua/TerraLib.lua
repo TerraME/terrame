@@ -3,9 +3,8 @@ require("terralib_mod_binding_lua")
 -- TODO: To document this
 
 local binding = terralib_mod_binding_lua
+local instance = nil
 local initialized = false
-local layersDsIds = {}
-local layers = {}
 
 -- TODO: Remove this after
 local function printTable(sometable)
@@ -67,6 +66,11 @@ local function makeAndOpenDataSource(name, filePath, type)
 	return ds	
 end
 
+local function release(obj)
+	obj = nil
+	collectgarbage("collect")
+end
+
 local function createLayer(name, filePath, type)
 	local ds = makeAndOpenDataSource(name, filePath, type)
 	
@@ -104,24 +108,31 @@ local function createLayer(name, filePath, type)
 	layer:setVisibility(binding.VISIBLE)
 	layer:setRendererType("ABSTRACT_LAYER_RENDERER")
 	layer:setSRID(srid)
-
-	return ds, layer
-end
-
-local function release(obj)
-	obj = nil
-	collectgarbage("collect")
+	
+	binding.te.da.DataSourceManager.getInstance():detach(ds:getId())
+	release(ds)
+	
+	return layer
 end
 
 local function isValidTviewExt(filePath)
 	return getFileExtension(filePath) == "tview"
 end
 
+local function releaseProject(project)
+	for title, layer in pairs(project.layers) do
+		local id = layer:getDataSourceId()
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():get(id)
+		binding.te.da.DataSourceInfoManager.getInstance():remove(id)
+		release(dsInfo)
+	end
+end
+
 local function saveProject(project, layers)
 	local writer = binding.te.xml.AbstractWriterFactory.make()
-
-	writer:setURI(project.file)
 	
+	writer:setURI(project.file)
+
 	-- TODO: THIS GET THE PATH WHERE WAS INSTALLED (PROBLEM)
 	local schema = binding.FindInTerraLibPath("share/terralib/schemas/terralib/qt/af/project.xsd")
 	schema = _Gtme.makePathCompatibleToAllOS(schema)
@@ -172,7 +183,6 @@ end
 
 local function loadProject(project, filePath)		
 	-- TODO: This project could not be found:
-	-- TODO: add file extension if user didn't set
 	if not isFile(filePath) then
 		customError("Could not read project file: "..filePath..".")
 	end
@@ -283,7 +293,7 @@ local function loadProject(project, filePath)
 		
 		project.layers[layer:getTitle()] = layer
 	end
-
+	
 	if xmlReader:getNodeType() ~= binding.END_ELEMENT then
 	
 	end
@@ -294,37 +304,25 @@ local function loadProject(project, filePath)
 	xmlReader:next()
 	if (xmlReader:getNodeType() ~= binding.END_ELEMENT) or
 		(xmlReader:getNodeType() ~= binding.END_DOCUMENT) then
-	
+		--_Gtme.print("ERROR ########################1")
 	end
 	if xmlReader:getElementLocalName() ~= "Project" then
-	
+		--_Gtme.print("ERROR ########################2")
 	end	
+	
+	-- TODO: THE ONLY WAY SO FAR TO RELEASE THE FILE AFTER READ
+	-- WAS READ ANOTHER FILE (REVIEW)
+	xmlReader:read(file("YgDbLUDrqQbvu7QxTYxX.xml", "fillcell"))
 end
 
--- local function releaseProject()
-	-- for key, value in pairs(layersDsIds) do
-		-- local ds = binding.te.da.DataSourceManager.getInstance():detach(value)
-		-- local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():get(value)
-		-- binding.te.da.DataSourceInfoManager.getInstance():remove(value)
-		-- release(dsInfo)
-		-- release(ds)
-	-- end
+local function addFileLayer(project, name, filePath, type)
+	local layer = createLayer(name, filePath, type)
 	
-	-- layersDsIds = {}
-	-- release(currentProject)
--- end
-
-local function addFileLayer(name, filePath, type)
-	local ds, layer = createLayer(name, filePath, type)
-	
-	--currentProject:add(layer)
 	project.layers[layer:getTitle()] = layer
-	saveProject(project, project.layers)
 	
-	-- local dsId = ds:getId()
-	-- if layersDsIds["dsId"] == nil then
-		-- layersDsIds[name] = dsId
-	-- end	
+	loadProject(project, project.file)
+	saveProject(project, project.layers)
+	releaseProject(project)
 end
 
 local function	addCellSpaceLayer(inputLayerTitle, name, resolultion, filePath, type) 
@@ -371,6 +369,7 @@ local function finalize()
 		
 		release(binding)
 		initialized = false	
+		release(instance)
 		
 		collectgarbage("collect")
 	end
@@ -392,7 +391,6 @@ TerraLib_ = {
 	end,
 
 	finalize = function()
-		--releaseProject()
 		finalize()
 	end,
 
@@ -410,6 +408,7 @@ TerraLib_ = {
 		if not isValidTviewExt(project.file) then
 			customError("Please, the file extension must be '.tview'.")
 		end		
+	
 		loadProject(project, filePath)		
 
 		-- TODO: Maybe here getLayersNames()
@@ -470,6 +469,11 @@ metaTableTerraLib_ = {
 }
 
 function TerraLib(data)
-	setmetatable(data, metaTableTerraLib_)
-	return data
+	if instance then
+		return instance
+	else	
+		setmetatable(data, metaTableTerraLib_)
+		instance = data
+		return data
+	end
 end

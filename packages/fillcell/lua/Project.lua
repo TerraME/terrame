@@ -98,21 +98,21 @@ Project_ = {
 			mandatoryTableArgument(data, "source", "string")
 			
 			if not isSourceConsistent(data.source, data.file) then
-				customError("File '"..data.file.."'not match to source '"..data.source.."'.")
+				customError("File '"..data.file.."' not match to source '"..data.source.."'.")
 			end
 		end
 		
 		if not isValidSource(data.source) then
 			customError("The source'"..data.source.."' is invalid.")
 		end	
-			
+
 		if self.layers[data.layer] == nil then
 			if data.source == "shp" then	
 				mandatoryTableArgument(data, "file", "string")
-				self.terralib:addShpLayer(data.layer, data.file)
+				self.terralib:addShpLayer(self, data.layer, data.file)
 			elseif data.source == "tif" then	
 				mandatoryTableArgument(data, "file", "string")
-				self.terralib:addTifLayer(data.layer, data.file)
+				self.terralib:addTifLayer(self, data.layer, data.file)
 			end
 		else
 			customError("Layer '"..data.layer.."' already exists in the Project.")
@@ -158,7 +158,7 @@ Project_ = {
 			mandatoryTableArgument(data, "source", "string")
 			
 			if not isSourceConsistent(data.source, data.file) then
-				customError("File '"..data.file.."'not match to source '"..data.source.."'.")
+				customError("File '"..data.file.."' not match to source '"..data.source.."'.")
 			end
 		end
 		

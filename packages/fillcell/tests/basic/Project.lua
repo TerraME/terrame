@@ -64,58 +64,66 @@ return {
 		end
 	end,
 	addLayer = function(unitTest)
-		unitTest:assert(true)
-		-- local projName = "setores_2000.tview"
+		local projName = "setores_2000.tview"
 
-		-- if isFile(projName) then
-			-- os.execute("rm -f "..projName)
-		-- end
-
-		-- local proj1 = Project {
-			-- file = projName,
-			-- create = true,
-			-- author = "Avancini",
-			-- title = "Setores"
-		-- }		
-
-		-- local layerName1 = "Setores_Censitarios_2000"
-		-- proj1:addLayer {
-			-- layer = layerName1,
-			-- file = file("Setores_Censitarios_2000_pol.shp", "fillcell")
-		-- }
-
-		-- local proj2 = Project {
-			-- file = projName
-		-- }
-		-- local layer = proj2:infoLayer(layerName1)
-
-		-- unitTest:assertEquals(layer.name, layerName1) -- SKIP
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
 		
-		-- local layerName2 = "Localidades"
-		-- proj2:addLayer {
-			-- layer = layerName2,
-			-- file = file("Localidades_pt.shp", "fillcell")	
-		-- }
+		-- ###################### 1 #############################
+		local proj1 = Project {
+			file = projName,
+			create = true,
+			author = "Avancini",
+			title = "Setores"
+		}		
 		
-		-- local layer1 = proj2:infoLayer(layerName1)
-		-- local layer2 = proj2:infoLayer(layerName2)
+		local layerName1 = "Setores_Censitarios_2000"
+		proj1:addLayer {
+			layer = layerName1,
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")
+		}
+		local layer1 = proj1:infoLayer(layerName1)
+		unitTest:assertEquals(layer1.name, layerName1)
+		
+		-- ###################### 2 #############################
+		local proj2 = Project {
+			file = projName
+		}
+		local layer2 = proj2:infoLayer(layerName1)
 
-		-- unitTest:assertEquals(layer1.name, layerName1) -- SKIP
-		-- unitTest:assertEquals(layer2.name, layerName2) -- SKIP
+		unitTest:assertEquals(layer2.name, layerName1)
 
-		-- local layerName3 = "Altimetria"
-		-- proj2:addLayer {
-			-- layer = layerName3,
-			-- file = file("altimetria.tif", "fillcell")		
-		-- }		
+		-- ###################### 3 #############################
+		local layerName2 = "Localidades"
+		proj2:addLayer {
+			layer = layerName2,
+			file = file("Localidades_pt.shp", "fillcell")
+		}
 		
-		-- local layer3 = proj2:infoLayer(layerName3)
+		local layer1 = proj2:infoLayer(layerName1)
+		local layer2 = proj2:infoLayer(layerName2)
+
+		unitTest:assertEquals(layer1.name, layerName1)
+		unitTest:assertEquals(layer2.name, layerName2)
 		
-		-- unitTest:assertEquals(layer3.name, layerName3) -- SKIP
+		-- ###################### 4 #############################
+		local layerName3 = "Altimetria"
+		proj2:addLayer {
+			layer = layerName3,
+			file = file("altimetria.tif", "fillcell")		
+		}		
+		local layer3 = proj2:infoLayer(layerName3)
 		
-		-- if isFile(projName) then
-			-- os.execute("rm -f "..projName)
-		-- end
+		unitTest:assertEquals(layer3.name, layerName3)
+		
+		-- ###################### END #############################
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		local terralib = TerraLib{}
+		terralib:finalize()			
 	end,
 	addCellularLayer = function(unitTest)
 		unitTest:assert(true)

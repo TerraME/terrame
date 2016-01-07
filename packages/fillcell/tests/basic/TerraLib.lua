@@ -1,6 +1,9 @@
 return {
 	TerraLib = function(unitTest)
-		unitTest:assert(true)
+		local t1 = TerraLib{}
+		local t2 = TerraLib{}
+		
+		unitTest:assertEquals(t1, t2)
 	end,
 	init = function(unitTest)
 		unitTest:assert(true)
