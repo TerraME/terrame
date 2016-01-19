@@ -20,7 +20,8 @@
 -- indirect, special, incidental, or caonsequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Author: Rodrigo Avancini
+-- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
+--          Rodrigo Avancini
 -------------------------------------------------------------------------------------------
 
 return {
@@ -63,7 +64,6 @@ return {
 		unitTest:assertEquals(proj1Info.title, proj3Info.title)
 		unitTest:assertEquals(proj1Info.file, proj3Info.file)
 		
-		-- TODO: APPLICATION DOESN'T ALLOWING REMOVE THE FILE (PROBLEM)
 		if isFile(proj1Info.file) then
 			os.execute("rm -f "..proj1Info.file)
 		end		
@@ -125,12 +125,21 @@ return {
 			layer = layerName2,
 			file = file("Localidades_pt.shp", "fillcell")
 		}
-		
 		local layer1 = proj2:infoLayer(layerName1)
 		local layer2 = proj2:infoLayer(layerName2)
 
 		unitTest:assertEquals(layer1.name, layerName1)
 		unitTest:assertEquals(layer2.name, layerName2)
+		
+		-- ###################### 3.1 #############################
+		local layerName21 = "Another_Localidades"
+		proj2:addLayer {
+			layer = layerName21,
+			file = file("Localidades_pt.shp", "fillcell")
+		}
+		local layer21 = proj2:infoLayer(layerName21)
+		unitTest:assert(layer21.name ~= layer2.name)
+		unitTest:assertEquals(layer21.sid, layer2.sid)		
 		
 		-- ###################### 4 #############################
 		local layerName3 = "Altimetria"
@@ -142,13 +151,23 @@ return {
 		
 		unitTest:assertEquals(layer3.name, layerName3)
 		
+		-- ###################### 5 #############################
+		local layerName4 = "Another_Altimetria"
+		proj2:addLayer {
+			layer = layerName4,
+			file = file("altimetria.tif", "fillcell")		
+		}		
+		local layer4 = proj2:infoLayer(layerName4)
+		unitTest:assert(layer4.name ~= layer3.name)
+		unitTest:assertEquals(layer4.sid, layer3.sid)		
+		
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end
 		
-		local terralib = TerraLib{}
-		terralib:finalize()			
+		-- local terralib = TerraLib{}
+		-- terralib:finalize()			
 	end,
 	addCellularLayer = function(unitTest)
 		local projName = "cells_setores_2000.tview"

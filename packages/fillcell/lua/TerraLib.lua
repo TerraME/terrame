@@ -20,7 +20,8 @@
 -- indirect, special, incidental, or caonsequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Author: Rodrigo Avancini
+-- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
+--          Rodrigo Avancini
 -------------------------------------------------------------------------------------------
 
 require("terralib_mod_binding_lua")
@@ -31,6 +32,12 @@ local binding = terralib_mod_binding_lua
 local instance = nil
 local initialized = false
 
+local OperationMapper = {
+	value = binding.VALUE_OPERATION,
+	sum = binding.SUM,
+	percentage = binding.PERCENT_TOTAL_AREA
+}
+
 -- TODO: Remove this after
 local function printTable(sometable)
 	print("\n\n------------------------------ Table")
@@ -39,6 +46,7 @@ local function printTable(sometable)
 	end
 end
 
+-- DEPRECATED
 local function createConnInfo(nameOrPath, dsType)
 	local connInfo = {}
 		
@@ -53,10 +61,11 @@ local function createConnInfo(nameOrPath, dsType)
 		connInfo.PG_PASSWORD = "postgres"
 		connInfo.PG_DB_NAME = nameOrPath
 		connInfo.PG_CONNECT_TIMEOUT = "4" 
-		connInfo.PG_CLIENT_ENCODING = "CP1252"     -- "LATIN1" --"WIN1252" 
+		connInfo.PG_CLIENT_ENCODING = "UTF-8" --"CP1252"     -- "LATIN1" --"WIN1252" 
 		connInfo.CREATE_OGC_METADATA_TABLES = "TRUE"	
 	elseif dsType == "OGR" then
 		connInfo.URI = nameOrPath
+		connInfo.DRIVER = "ESRI Shapefile"
 	elseif dsType == "GDAL" then
 		connInfo.URI = nameOrPath
 	end
@@ -64,78 +73,146 @@ local function createConnInfo(nameOrPath, dsType)
 	return connInfo
 end
 
-local function addDataSourceInfo(dsId, type, title, connInfo)
-	local dsInfo = binding.te.da.DataSourceInfo()
+local function hasConnectionError(type, connInfo)
+	local ds = binding.te.da.DataSourceFactory.make(type)
+	ds:setConnectionInfo(connInfo)
+	local msg = binding.te.da.DataSource.Exists(ds)	
+	
+	ds = nil
+	collectgarbage("collect")
+	
+	return msg
+end
 
+local function createPgConnInfo(host, port, user, pass, database, table, encoding)
+	local connInfo = {}
+	
+	connInfo.PG_HOST = host 
+	connInfo.PG_PORT = port 
+	connInfo.PG_USER = user
+	connInfo.PG_PASSWORD = pass
+	connInfo.PG_DB_NAME = database
+	connInfo.PG_NEWDB_NAME = table
+	connInfo.PG_CONNECT_TIMEOUT = "4" 
+	connInfo.PG_CLIENT_ENCODING = encoding -- "UTF-8" --"CP1252"     -- "LATIN1" --"WIN1252" 	
+	connInfo.PG_CHECK_DB_EXISTENCE = database		
+
+	local errorMgs = hasConnectionError("POSTGIS", connInfo)	
+	if errorMgs ~= "" then
+		if string.match(errorMgs, "connections on port "..port) then
+			errorMgs = "Please check the port '"..port.."'."
+		end
+		customError(errorMgs)
+	end
+
+	return connInfo
+end
+
+local function createFileConnInfo(filePath)
+	local connInfo = {}
+	connInfo.URI = filePath
+	
+	return connInfo
+end
+
+local function createAdoConnInfo(dbName)
+	local connInfo = {}
+	connInfo.PROVIDER = "Microsoft.Jet.OLEDB.4.0"
+	connInfo.DB_NAME = nameOrPath
+	connInfo.CREATE_OGC_METADATA_TABLES = "TRUE"	
+	
+	return connInfo
+end
+
+local function addDataSourceInfo(type, title, connInfo)
+	local dsInfo = binding.te.da.DataSourceInfo()
+	local dsId = binding.GetRandomicId()
+		
 	dsInfo:setId(dsId)
 	dsInfo:setType(type)
 	dsInfo:setAccessDriver(type)
 	dsInfo:setTitle(title)
 	dsInfo:setConnInfo(connInfo)
 	dsInfo:setDescription("Created on TerraME")
-	binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo)	
+
+	if not binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo) then
+		dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfoByConnInfo(dsInfo:getConnInfoAsString())
+	end
+	
+	return dsInfo:getId()
 end
 
-local function makeAndOpenDataSource(name, filePath, type)
+local function makeAndOpenDataSource(connInfo, type)
 	local ds = binding.te.da.DataSourceFactory.make(type)
-	local connInfo = createConnInfo(filePath, type)
-	local dsId = binding.GetRandomicId()
 
-	ds:setId(dsId)
 	ds:setConnectionInfo(connInfo) 
 	ds:open()
-	binding.te.da.DataSourceManager.getInstance():insert(ds)
-
-	addDataSourceInfo(dsId, type, name, connInfo)
 
 	return ds	
 end
 
-local function release(obj)
-	obj = nil
-	collectgarbage("collect")
-end
-
-local function createLayer(name, filePath, type)
-	local ds = makeAndOpenDataSource(name, filePath, type)
+local function createLayer(name, connInfo, type)
+	local dsId = addDataSourceInfo(type, name, connInfo)	
 	
-	local dsetType = nil
-	local dset = nil
-	local dsetName = ""
+	local ds = makeAndOpenDataSource(connInfo, type)
+	ds:setId(dsId)
+	
+	binding.te.da.DataSourceManager.getInstance():insert(ds)
+	
+	local dSetType = nil
+	local dSet = nil
+	local dSetName = ""
 	local env = nil
 	local srid = 0
-	
+
 	if type == "OGR" then
-		dsetName = getFileName(filePath)
-		dsetType = ds:getDataSetType(dsetName)
-		dset = ds:getDataSet(dsetName)
-		local gp = binding.GetFirstGeomProperty(dsetType)
-		env = binding.te.gm.Envelope(binding.GetExtent(dsetType:getName(), gp:getName(), ds:getId()))
+		dSetName = getFileName(connInfo.URI)
+		dSetType = ds:getDataSetType(dSetName)
+		dSet = ds:getDataSet(dSetName)
+		local gp = binding.GetFirstGeomProperty(dSetType)
+		env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
 		srid = gp:getSRID()
 	elseif type == "GDAL" then
-		dsetName = getFileNameWithExtension(filePath)
-		dsetType = ds:getDataSetType(dsetName)
-		dset = ds:getDataSet(dsetName)
-		local rpos = binding.GetFirstPropertyPos(dset, binding.RASTER_TYPE)
-		local raster = dset:getRaster(rpos)
-		
+		dSetName = getFileNameWithExtension(connInfo.URI)
+		dSetType = ds:getDataSetType(dSetName)
+		dSet = ds:getDataSet(dSetName)
+		local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+		local raster = dSet:getRaster(rpos)	
 		env = raster:getExtent()
 		srid = raster:getSRID()
+	elseif type == "POSTGIS" then
+		dSetName = connInfo.PG_NEWDB_NAME
+		local tableExists = ds:dataSetExists(dSetName)
+		if not tableExists then
+			binding.te.da.DataSourceManager.getInstance():detach(ds:getId())
+			ds:close()
+			ds = nil
+			collectgarbage("collect")		
+			return 1
+		end	
+		dSetType = ds:getDataSetType(dSetName)
+		dSet = ds:getDataSet(dSetName)
+		local gp = binding.GetFirstGeomProperty(dSetType)
+		env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
+		srid = gp:getSRID()
 	end
-	
+
 	local id = binding.GetRandomicId()
 	local layer = binding.te.map.DataSetLayer(id)
 	
-	layer:setDataSetName(dsetName)
+	layer:setDataSetName(dSetName)
 	layer:setTitle(name)
 	layer:setDataSourceId(ds:getId())
 	layer:setExtent(env)
 	layer:setVisibility(binding.VISIBLE)
 	layer:setRendererType("ABSTRACT_LAYER_RENDERER")
 	layer:setSRID(srid)
-	
+
 	binding.te.da.DataSourceManager.getInstance():detach(ds:getId())
-	release(ds)
+
+	ds:close()
+	ds = nil
+	collectgarbage("collect")
 	
 	return layer
 end
@@ -145,11 +222,16 @@ local function isValidTviewExt(filePath)
 end
 
 local function releaseProject(project)
+	local removed = {}
 	for title, layer in pairs(project.layers) do
 		local id = layer:getDataSourceId()
-		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():get(id)
-		binding.te.da.DataSourceInfoManager.getInstance():remove(id)
-		release(dsInfo)
+
+		if not removed[id] then
+			binding.te.da.DataSourceInfoManager.getInstance():remove(id)
+			removed[id] = id
+		end
+
+		collectgarbage("collect")
 	end
 end
 
@@ -277,7 +359,7 @@ local function loadProject(project, filePath)
 		(xmlReader:getElementLocalName() == "DataSourceList") then
 		xmlReader:next()
 	end
-	
+
 	while (xmlReader:getNodeType() == binding.START_ELEMENT) and
 			(xmlReader:getElementLocalName() == "DataSource") do
 		local  ds = binding.ReadDataSourceInfo(xmlReader)
@@ -311,7 +393,7 @@ local function loadProject(project, filePath)
 	while (xmlReader:getNodeType() ~= binding.END_ELEMENT) and
 			(xmlReader:getElementLocalName() ~= "LayerList") do
 		local layer = lserial:read(xmlReader)
-
+		
 		if not layer then
 			-- TODO
 		end
@@ -341,54 +423,111 @@ local function loadProject(project, filePath)
 end
 
 local function addFileLayer(project, name, filePath, type)
-	local layer = createLayer(name, filePath, type)
-	
-	project.layers[layer:getTitle()] = layer
+	local connInfo = createFileConnInfo(filePath)
 	
 	loadProject(project, project.file)
+	
+	local layer = createLayer(name, connInfo, type)
+	
+	project.layers[layer:getTitle()] = layer
 	saveProject(project, project.layers)
 	releaseProject(project)
 end
 
-local function addCellSpaceLayer(inputLayer, name, resolultion, filePath, type) 
-		local connInfo = {}
+local function dropDataSet(connInfo, type)
+	local ds = nil
+	local dSetName = ""
+	
+	if type == "POSTGIS" then
+		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
+		dSetName = string.lower(connInfo.PG_NEWDB_NAME)
+	end
+	
+	local tableExists = ds:dataSetExists(dSetName)
+	if tableExists then
+		ds:dropDataSet(dSetName)
+	end	
+	
+	ds:close()
+	ds = nil
+	collectgarbage("collect")
+end
+
+local function copyLayer(from, to)
+	local fromDsId = from:getDataSourceId()
+	local fromDs = binding.GetDs(fromDsId, true)	
+	
+	from = binding.te.map.DataSetLayer.toDataSetLayer(from)	
+	local dSetName = from:getDataSetName()
+	
+	local toDs = nil
 		
-		if type == "OGR" then
-			connInfo = createConnInfo(filePath, "OGR")
+	if to.type == "POSTGIS" then
+		to.table = dSetName
+		local toConnInfo = createPgConnInfo(to.host, to.port, to.user, to.password, to.database, to.table, to.encoding)	
+		local toTable = string.lower(to.table)	
+		local toDb = string.lower(to.database)	
+		-- TODO: IT IS NOT POSSIBLE CREATE A DATABASE (REVIEW)
+		--toConnInfo.PG_CHECK_DB_EXISTENCE = toDb		
+		--print(binding.te.da.DataSource.exists("POSTGIS", toConnInfo))
+		--local exists = binding.te.da.DataSource.exists("POSTGIS", toConnInfo)
+		-- if exists then
+			-- toConnInfo.PG_DB_TO_DROP = string.lower(to.dbName)	
+			-- binding.te.da.DataSource.drop("POSTGIS", toConnInfo)	
+		-- end		
+		toDs = makeAndOpenDataSource(toConnInfo, "POSTGIS")
+			
+		local tableExists = toDs:dataSetExists(toTable)
+		if tableExists then
+			toDs:dropDataSet(toTable)
 		end
-
-		local cLId = binding.GetRandomicId()
-		local cellLayerInfo = binding.te.da.DataSourceInfo()
+	end
 		
-		cellLayerInfo:setConnInfo(connInfo)
-		cellLayerInfo:setType(type)
-		cellLayerInfo:setAccessDriver(type)
-		cellLayerInfo:setId(cLId)
-		cellLayerInfo:setTitle(name)
-		cellLayerInfo:setDescription("Created on TerraME")
+	local fromDSetType = fromDs:getDataSetType(dSetName)
+	local fromDSet = fromDs:getDataSet(dSetName)
 		
-		local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations()
-		local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
-		local cellName = getFileName(filePath)
+	binding.Create(toDs, fromDSetType, fromDSet)
+			
+	fromDSetType = nil
+	fromDSet = nil
+	fromDs:close()
+	fromDs = nil
+	toDs:close()
+	toDs = nil
+	collectgarbage("collect")	
+end
 
-		cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
+local function addCellSpaceLayer(inputLayer, name, resolultion, filePath, type) 
+	local connInfo = {}
+		
+	if type == "OGR" then
+		connInfo = createConnInfo(filePath, "OGR")
 	end
 
+	local cLId = binding.GetRandomicId()
+	local cellLayerInfo = binding.te.da.DataSourceInfo()
+		
+	cellLayerInfo:setConnInfo(connInfo)
+	cellLayerInfo:setType(type)
+	cellLayerInfo:setAccessDriver(type)
+	cellLayerInfo:setId(cLId)
+	cellLayerInfo:setTitle(name)
+	cellLayerInfo:setDescription("Created on TerraME")
+		
+	local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations()
+	local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
+	local cellName = getFileName(filePath)
+
+	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
+end
+
 local function finalize()
-	if initialized then
-		local terralib = binding.TeSingleton.getInstance()
-		local pmger = binding.te.plugin.PluginManager.getInstance()
-		
-		pmger:shutdownAll()
-		pmger:unloadAll()
-		pmger:clear()
-		terralib:finalize()	
-		release(terralib)
-		release(pmger)
-		
-		release(binding)
+	if initialized then		
+		binding.te.plugin.PluginManager.getInstance():clear()
+		binding.TeSingleton.getInstance():finalize()	
+
 		initialized = false	
-		release(instance)
+		instance = nil
 		
 		collectgarbage("collect")
 	end
@@ -399,12 +538,9 @@ TerraLib_ = {
 
 	init = function()		
 		if not initialized then
-			binding = terralib_mod_binding_lua
-			local terralib = binding.TeSingleton.getInstance()
-			terralib:initialize()
-
-			local pmger = binding.te.plugin.PluginManager.getInstance()
-			pmger:loadAll()
+			binding.TeSingleton.getInstance():initialize()
+			binding.te.plugin.PluginManager.getInstance():clear()		
+			binding.te.plugin.PluginManager.getInstance():loadAll()
 			initialized = true
 		end
 	end,
@@ -472,7 +608,24 @@ TerraLib_ = {
 	addTifLayer = function(self, project, name, filePath)
 		addFileLayer(project, name, filePath, "GDAL")
 	end,
+	
+	addPgLayer = function(self, project, name, data)
+		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.table, data.encoding)
 
+		loadProject(project, project.file)
+		
+		local layer = createLayer(name, connInfo, "POSTGIS")
+		
+		if layer == 1 then
+			releaseProject(project)
+			customError("Is not possible add the Layer. The table '"..data.table.."' does not exists.")
+		end
+		
+		project.layers[layer:getTitle()] = layer		
+		saveProject(project, project.layers)		
+		releaseProject(project)		
+	end,
+	
 	layerExists = function(self, name)
 		return currentProject:layerExists(name)
 	end,
@@ -484,11 +637,57 @@ TerraLib_ = {
 		addCellSpaceLayer(inputLayer, name, resolultion, filePath, "OGR")
 		
 		self:addShpLayer(project, name, filePath)
+	end,
+	
+	dropPgTable = function(self, data)
+		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.table)		
+		dropDataSet(connInfo, "POSTGIS")
+	end,
+	
+	copyLayer = function(self, project, from, to)
+		loadProject(project, project.file)
+		
+		local fromLayer = project.layers[from]	
+		copyLayer(fromLayer, to)
+		
+		releaseProject(project)	
+	end,
+	
+	attributeFill = function(self, project, from, to, out)
+		loadProject(project, project.file)
+
+		local fromLayer = project.layers[from]
+		local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
+		
+		local toLayer = project.layers[to]
+		local toDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
+		
+		out = "output6"
+		
+		local v2v = binding.te.attributefill.VectorToVectorMemory()
+		
+		v2v:setInput(fromLayer, toLayer)
+		
+		local outDs = v2v:createAndSetOutput("D:/terrame/tests/"..out..".shp", out)
+
+		local dsId = binding.GetRandomicId()		
+		addDataSourceInfo(dsId, "OGR", out, outDs:getConnectionInfo())
+		local operation = "value" -- TODO
+		-- TODO: THE TERRALIB APLY OPERATIONS ON EACH PROPERTY (REVIEW)
+		--v2v:setParams("CONSUMO_FA", OperationMapper[operation], toLayer)
+		v2v:setParams(fromLayer, OperationMapper[operation], toLayer)
+		
+		v2v:run()
+		
+		outDs:close()
+		outDs = nil
+		v2v = nil
+		collectgarbage("collect")
 	end
 }
 
 metaTableTerraLib_ = {
-	__index = TerraLib_
+	__index = TerraLib_,
 }
 
 function TerraLib(data)

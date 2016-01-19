@@ -20,7 +20,8 @@
 -- indirect, special, incidental, or caonsequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Author: Pedro R. Andrade
+-- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
+--          Rodrigo Avancini
 -------------------------------------------------------------------------------------------
 
 return{
@@ -137,12 +138,12 @@ return{
 		end
 		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))	
 		
-		local fileMandatory = function()
+		local sourceMandatoryIfNoFile = function()
 			proj:addLayer{
 				layer = "Linhares"
 			}
 		end
-		unitTest:assertError(fileMandatory, mandatoryArgumentMsg("file"))
+		unitTest:assertError(sourceMandatoryIfNoFile, mandatoryArgumentMsg("source"))
 		
 		local noFilePass = function()
 			proj:addLayer{
@@ -187,7 +188,7 @@ return{
 				file = layerFile	
 			}			
 		end
-		unitTest:assertError(fileLayerNonExists, "The layer file'"..layerFile.."' not found.")			
+		unitTest:assertError(fileLayerNonExists, mandatoryArgumentMsg("source"))			
 	
 		local filePath = file("Setores_Censitarios_2000_pol.shp", "fillcell")
 		local source = "tif"
@@ -279,7 +280,7 @@ return{
 				resoltion = 200
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution")) -- SKIP
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("resoltion", "resolution"))
 		
 		local noFilePass = function()
 			proj:addCellularLayer {
@@ -288,7 +289,7 @@ return{
 				resolution = 10000		
 			}
 		end
-		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file")) -- SKIP
+		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))
 		
 		local attrSourceNonString = function()
 			proj:addCellularLayer{
@@ -336,10 +337,20 @@ return{
 				input = layerName1,
 				layer = clName1,
 				resolution = 10000,
-				file = filePath1
+				file = "setores_cells_x.shp"
 			}	
 		end
 		unitTest:assertError(cellLayerAlreadyExists, "Layer '"..clName1.."' already exists in the Project.")
+		
+		local cellLayerFileAlreadyExists = function()
+			proj:addCellularLayer {
+				input = layerName1,
+				layer = "CellLayerFileAlreadyExists",
+				resolution = 10000,
+				file = filePath1
+			}	
+		end
+		unitTest:assertError(cellLayerFileAlreadyExists, "File '"..filePath1.."' already exists.")
 		
 		local sourceInvalid = function()
 			proj:addCellularLayer{

@@ -20,7 +20,8 @@
 -- indirect, special, incidental, or caonsequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Author: Rodrigo Avancini
+-- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
+--          Rodrigo Avancini
 -------------------------------------------------------------------------------------------
 
 return {
@@ -29,6 +30,8 @@ return {
 		local t2 = TerraLib{}
 		
 		unitTest:assertEquals(t1, t2)
+		
+		t1:finalize()
 	end,
 	init = function(unitTest)
 		unitTest:assert(true)
@@ -58,10 +61,22 @@ return {
 	addTifLayer = function(unitTest)
 		unitTest:assert(true)
 	end,
+	addPgLayer = function(unitTest)
+		unitTest:assert(true)
+	end,
 	layerExists = function(unitTest)
 		unitTest:assert(true)
-	end,	
+	end,
+	dropPgTable = function(unitTest)
+		unitTest:assert(true)
+	end,
+	copyLayer = function(unitTest)
+		unitTest:assert(true)
+	end,
 	addShpCellSpaceLayer = function(unitTest)
+		unitTest:assert(true)
+	end,
+	attributeFill = function(unitTest)
 		unitTest:assert(true)
 	end
 }

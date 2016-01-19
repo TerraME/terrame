@@ -20,7 +20,8 @@
 -- indirect, special, incidental, or caonsequential damages arising out of the use
 -- of this library and its documentation.
 --
--- Author: Pedro R. Andrade
+-- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
+--          Rodrigo Avancini
 -------------------------------------------------------------------------------------------
 
 return{
@@ -29,11 +30,11 @@ return{
 			local cl = CellularLayer()
 		end
 		unitTest:assertError(noDataArguments, tableArgumentMsg())
-
-		local attrProjectNonString = function()
+		
+		local attrProjectNonStringOrProject = function()
 			local cl = CellularLayer{project = 2, layer = "cells"}
 		end
-		unitTest:assertError(attrProjectNonString, incompatibleTypeMsg("project", "string", 2))
+		unitTest:assertError(attrProjectNonStringOrProject, "The 'project' parameter must be a Project or a Project file path.")		
 
 		local attrLayerNonString = function()
 			local cl = CellularLayer{project = "myproj.tview", layer = false}
@@ -44,6 +45,32 @@ return{
 			local cl = CellularLayer{project = "myproj.tview", lauer = "cells"}
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("lauer", "layer"))
+		
+		local projFile = "proj_celllayer.tview"
+		
+		if isFile(projFile) then
+			os.execute("rm -f "..projFile)
+		end
+		
+		local proj = Project{
+			file = projFile,
+			create = true,
+			author = "Avancini",
+			title = "CellLayer"
+		}
+		
+		local layerName = "any"
+		local layerDoesNotExists = function()
+			local cl = CellularLayer {
+				project = proj,
+				layer = layerName
+			}
+		end
+		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exists in the Project '"..projFile.."'.")
+		
+		if isFile(projFile) then
+			os.execute("rm -f "..projFile)
+		end		
 
 -- 		-- TODO: select a project that does not exist
 -- 		-- TODO: open a cellularlayer that does not exist - with and without suggestion

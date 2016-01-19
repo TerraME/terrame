@@ -83,36 +83,69 @@ Project_ = {
 		verifyNamedTable(data)
 		mandatoryTableArgument(data, "layer", "string")
 		
-		verifyUnnecessaryArguments(data, {"layer", "source", "file"})
+		verifyUnnecessaryArguments(data, {"layer", "source", "file", "host", "port", "user", "password", "database", "table"})
 		
 		if isEmpty(data.source) then
-			mandatoryTableArgument(data, "file", "string")
+			-- mandatoryTableArgument(data, "file", "string")
+		
+			if not isEmpty(data.file) then
+				if not isFile(data.file) then
+					--customError("The layer file'"..data.file.."' not found.")
+					mandatoryTableArgument(data, "source", "string")
+				end	
+				
+				local source = getFileExtension(data.file)
+				data.source = source	
+			end
+		end
+		
+		mandatoryTableArgument(data, "source", "string")
 			
-			if not isFile(data.file) then
-				customError("The layer file'"..data.file.."' not found.")
-			end				
-			
-			local source = getFileExtension(data.file)
-			data.source = source
-		else
-			mandatoryTableArgument(data, "source", "string")
-			
+		if not isValidSource(data.source) then
+			customError("The source'"..data.source.."' is invalid.")
+		end				
+		
+		if (data.source == "tif") or (data.source == "shp") then
 			if not isSourceConsistent(data.source, data.file) then
 				customError("File '"..data.file.."' not match to source '"..data.source.."'.")
 			end
 		end
-		
-		if not isValidSource(data.source) then
-			customError("The source'"..data.source.."' is invalid.")
-		end	
 
 		if self.layers[data.layer] == nil then
 			if data.source == "shp" then	
 				mandatoryTableArgument(data, "file", "string")
+				verifyUnnecessaryArguments(data, {"layer", "source", "file"})
+				
 				self.terralib:addShpLayer(self, data.layer, data.file)
 			elseif data.source == "tif" then	
 				mandatoryTableArgument(data, "file", "string")
+				verifyUnnecessaryArguments(data, {"layer", "source", "file"})
+				
 				self.terralib:addTifLayer(self, data.layer, data.file)
+			elseif data.source == "postgis" then
+				mandatoryTableArgument(data, "user", "string")
+				mandatoryTableArgument(data, "password", "string")
+				mandatoryTableArgument(data, "database", "string")
+				mandatoryTableArgument(data, "table", "string")
+				
+				optionalTableArgument(data, "host", "string")
+				optionalTableArgument(data, "port", "string")
+				
+				verifyUnnecessaryArguments(data, {"layer", "source", "host", "port", "user", "password", "database", "table"})
+				
+				if isEmpty(data.host) then
+					data.host = "localhost"
+				end
+				
+				if isEmpty(data.port) then
+					data.port = "5432"
+				end
+				
+				if isEmpty(data.encoding) then -- TODO: REVIEW THIS
+					data.encoding = "CP1252"
+				end
+				
+				self.terralib:addPgLayer(self, data.layer, data)
 			end
 		else
 			customError("Layer '"..data.layer.."' already exists in the Project.")
@@ -168,12 +201,16 @@ Project_ = {
 		
 		if not self.layers[data.input] then
 			customError("The input layer '"..data.input.."' not found.")
-		end				
+		end		
+
+		if isFile(data.file) then
+			customError("File '"..data.file.."' already exists.")
+		end		
 		
 		if self.layers[data.layer] == nil then
 			if data.source == "shp" then	
 				mandatoryTableArgument(data, "file", "string")
-				self.terralib:addShpCellSpaceLayer(self, data.input, data.layer, data.resolution, data.file)	
+				self.terralib:addShpCellSpaceLayer(self, data.input, data.layer, data.resolution, data.file)
 			elseif data.source == "tif" then	
 				mandatoryTableArgument(data, "file", "string")
 				--self.terralib:addTifLayer(data.layer, data.file)
@@ -203,9 +240,10 @@ Project_ = {
 		
 		local info = {}		
 		info.name = layer:getTitle()	
+		info.sid = layer:getDataSourceId()
 			
 		return info
-	end
+	end,
 }
 
 metaTableProject_ = {

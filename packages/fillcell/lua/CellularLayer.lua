@@ -151,6 +151,9 @@ CellularLayer_ = {
 		switch(data, "operation"):caseof{
 			area = function()
 				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+				
+				tlib = TerraLib{}
+				tlib:attributeFill(self.project, data.layer, self.layer, data.output)
 			end,
 			average = function()
 				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
@@ -244,13 +247,23 @@ function CellularLayer(data)
 	verifyNamedTable(data)
 
 	verifyUnnecessaryArguments(data, {"layer", "project"})
-	local terralib = TerraLib{}
-
-	mandatoryTableArgument(data, "project", "string")
+	
+	if not (type(data.project) == "Project") then	
+		if type(data.project) == "string" then
+			local file = data.project
+			data.project = Project{
+				file = file
+			}
+		else
+			customError("The 'project' parameter must be a Project or a Project file path.")
+		end
+	end
+	
 	mandatoryTableArgument(data, "layer", "string")
-	data.type = dataSourceTypeMapper[data.type]
-	--print(data.type)
-	terralib:createCellularSpaceLayer(data.layer, data.name, data.resX, data.resY, data.type, data.repository) 
+	
+	if not data.project.layers[data.layer] then
+		customError("Layer '"..data.layer.."' does not exists in the Project '"..data.project.file.."'.")
+	end
 
 	setmetatable(data, metaTableCellularLayer_)
 
