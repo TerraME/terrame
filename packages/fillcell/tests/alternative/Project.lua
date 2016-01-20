@@ -272,7 +272,6 @@ return{
 		end
 		unitTest:assertError(attrResolutionNonPositive, positiveArgumentMsg("resolution", 0))
 
-
 		local unnecessaryArgument = function()
 			proj:addCellularLayer{
 				input = "amazonia-states",
@@ -289,7 +288,7 @@ return{
 				resolution = 10000		
 			}
 		end
-		unitTest:assertError(noFilePass, mandatoryArgumentMsg("file"))
+		unitTest:assertError(noFilePass, mandatoryArgumentMsg("source"))
 		
 		local attrSourceNonString = function()
 			proj:addCellularLayer{

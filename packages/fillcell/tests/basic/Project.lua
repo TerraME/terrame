@@ -175,7 +175,8 @@ return {
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end
-
+		
+		-- ###################### 1 #############################
 		local proj = Project {
 			file = projName,
 			create = true,
@@ -227,6 +228,7 @@ return {
 		
 		unitTest:assertEquals(l1Info.name, clName1)
 		
+		-- ###################### 2 #############################
 		local shp2 = "localidades_cells.shp"
 		local filePath2 = testDir.."/"..shp2	
 		local fn2 = getFileName(filePath2)
@@ -250,6 +252,31 @@ return {
 		
 		unitTest:assertEquals(l2Info.name, clName2)
 		
+		-- ###################### 3 #############################
+		local shp3 = "another_localidades_cells.shp"
+		local filePath3 = testDir.."/"..shp3	
+		local fn3 = getFileName(filePath3)
+		fn3 = testDir.."/"..fn3	
+		
+		for i = 1, #exts do
+			local f = fn3..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end			
+		
+		local clName3 = "Another_Localidades_Cells"
+		proj:addCellularLayer {
+			input = layerName2,
+			layer = clName3,
+			resolution = 10000,
+			file = filePath3		
+		}
+		local l3Info = proj:infoLayer(clName3)
+		
+		unitTest:assertEquals(l3Info.name, clName3)	
+
+		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end		
@@ -257,12 +284,16 @@ return {
 		for i = 1, #exts do
 			local f1 = fn1..exts[i]
 			local f2 = fn2..exts[i]
+			local f3 = fn3..exts[i]
 			if isFile(f1) then
 				os.execute("rm -f "..f1)
 			end
 			if isFile(f2) then
 				os.execute("rm -f "..f2)
-			end			
+			end
+			if isFile(f3) then
+				os.execute("rm -f "..f3)
+			end				
 		end		
 	end,
 	info = function(unitTest)

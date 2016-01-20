@@ -85,9 +85,7 @@ Project_ = {
 		
 		verifyUnnecessaryArguments(data, {"layer", "source", "file", "host", "port", "user", "password", "database", "table"})
 		
-		if isEmpty(data.source) then
-			-- mandatoryTableArgument(data, "file", "string")
-		
+		if isEmpty(data.source) then		
 			if not isEmpty(data.file) then
 				if not isFile(data.file) then
 					--customError("The layer file'"..data.file.."' not found.")
@@ -175,25 +173,47 @@ Project_ = {
 	addCellularLayer = function(self, data)
 		verifyNamedTable(data)
 
-		verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution", "file", "source"})
+		verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution", "file", "source", 
+											"host", "port", "user", "password", "database", "table"})
 
 		defaultTableValue(data, "box", false) -- TODO: CHECK HOW USE THIS
 		mandatoryTableArgument(data, "layer", "string")
 		mandatoryTableArgument(data, "input", "string")
 		positiveTableArgument(data, "resolution")
 		
-		if isEmpty(data.source) then
-			mandatoryTableArgument(data, "file", "string")	
+		if isEmpty(data.source) then		
+			if isEmpty(data.file) then
+				--if not isFile(data.file) then
+					--customError("The layer file'"..data.file.."' not found.")
+					mandatoryTableArgument(data, "source", "string")
+				--end	
+			else
+				
+				local source = getFileExtension(data.file)
+				data.source = source	
+			end
+		end
+		
+		-- if isEmpty(data.source) then
+			-- mandatoryTableArgument(data, "file", "string")	
 			
-			local source = getFileExtension(data.file)
-			data.source = source
-		else
-			mandatoryTableArgument(data, "source", "string")
+			-- local source = getFileExtension(data.file)
+			-- data.source = source
+		-- else
+			-- mandatoryTableArgument(data, "source", "string")
 			
+			-- if not isSourceConsistent(data.source, data.file) then
+				-- customError("File '"..data.file.."' not match to source '"..data.source.."'.")
+			-- end
+		-- end		
+
+		mandatoryTableArgument(data, "source", "string")
+		
+		if (data.source == "tif") or (data.source == "shp") then
 			if not isSourceConsistent(data.source, data.file) then
 				customError("File '"..data.file.."' not match to source '"..data.source.."'.")
 			end
-		end
+		end		
 		
 		if not isValidSource(data.source) then
 			customError("The source'"..data.source.."' is invalid.")
@@ -203,17 +223,53 @@ Project_ = {
 			customError("The input layer '"..data.input.."' not found.")
 		end		
 
-		if isFile(data.file) then
-			customError("File '"..data.file.."' already exists.")
-		end		
-		
 		if self.layers[data.layer] == nil then
 			if data.source == "shp" then	
 				mandatoryTableArgument(data, "file", "string")
+				
+				verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution", "file", "source"})
+				
+				if isFile(data.file) then
+					customError("File '"..data.file.."' already exists.")
+				end			
+				
 				self.terralib:addShpCellSpaceLayer(self, data.input, data.layer, data.resolution, data.file)
 			elseif data.source == "tif" then	
 				mandatoryTableArgument(data, "file", "string")
+				
+				verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution", "file", "source"})
+				
+				if isFile(data.file) then
+					customError("File '"..data.file.."' already exists.")
+				end	
+				
 				--self.terralib:addTifLayer(data.layer, data.file)
+				
+			elseif data.source == "postgis" then
+				mandatoryTableArgument(data, "user", "string")
+				mandatoryTableArgument(data, "password", "string")
+				mandatoryTableArgument(data, "database", "string")
+				mandatoryTableArgument(data, "table", "string")
+				
+				optionalTableArgument(data, "host", "string")
+				optionalTableArgument(data, "port", "string")
+				
+				verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution", "source", 
+												"host", "port", "user", "password", "database", "table"})
+				
+				if isEmpty(data.host) then
+					data.host = "localhost"
+				end
+				
+				if isEmpty(data.port) then
+					data.port = "5432"
+				end
+				
+				if isEmpty(data.encoding) then -- TODO: REVIEW THIS
+					data.encoding = "CP1252"
+				end			
+				
+				self.terralib:addPgCellSpaceLayer(self, data.input, data.layer, data.resolution, data)
 			end
 		else
 			customError("Layer '"..data.layer.."' already exists in the Project.")
@@ -237,12 +293,8 @@ Project_ = {
 		if layer == nil then
 			customError("Layer '"..name.."' not exists.")
 		end
-		
-		local info = {}		
-		info.name = layer:getTitle()	
-		info.sid = layer:getDataSourceId()
 			
-		return info
+		return self.terralib:getLayerInfo(layer)
 	end,
 }
 

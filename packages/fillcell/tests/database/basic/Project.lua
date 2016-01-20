@@ -56,21 +56,21 @@ return {
 		local encoding = "CP1252"
 		local tableName = "sampa"
 		
-		local data = {
+		local pgData = {
 			type = "POSTGIS",
 			host = host,
 			port = port,
 			user = user,
 			password = password,
 			database = database,
-			table = tableName, -- USED ONLY TO DROP
+			table = tableName,
 			encoding = encoding
 			
 		}
 		
 		-- USED ONLY TO TESTS
 		local tl = TerraLib{}
-		tl:copyLayer(proj1, layerName1, data)
+		tl:copyLayer(proj1, layerName1, pgData)
 		
 		local layerName2 = "SampaDB"	
 		
@@ -103,10 +103,146 @@ return {
 		unitTest:assert(layer3.name ~= layer2.name)
 		unitTest:assertEquals(layer3.sid, layer2.sid)
 		
-		tl:dropPgTable(data)
+		-- ###################### 3 #############################		
+		-- TODO: ADO DON'T WORK (REVIEW)
+		-- if _Gtme.isWindowsOS() then
+			-- local adoData = {
+				-- type = "ADO",
+				-- file = "D:/terrame/tests/sampa.accdb" --file("sampa.accdb", "fillcell")
+			-- }		
+			
+			-- tl:copyLayer(proj1, layerName1, adoData)
+		-- end
+		
+		-- local layerName4 = "SampaAdoDB" 
+		-- local adofilePath = 
+		-- proj1:addLayer {
+			-- source = "access",
+			-- layer = layerName4,
+			-- user = user,
+			-- password = password,
+			-- database = database,
+			-- table = tableName			
+		-- }		
+
+		tl:dropPgTable(pgData)
 		
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end		
+	end,
+	addCellularLayer = function(unitTest)
+		local projName = "cells_setores_2000.tview"
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		-- ###################### 1 #############################
+		local proj = Project {
+			file = projName,
+			create = true,
+			author = "Avancini",
+			title = "Setores"
+		}		
+
+		local layerName1 = "Setores_Censitarios_2000"
+		proj:addLayer {
+			layer = layerName1,
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")
+		}	
+		
+		local clName1 = "Setores_Cells"
+		local tName1 = "add_cellslayer_basic"
+		
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+		local tableName = tName1	
+		
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1, -- USED ONLY TO DROP
+			encoding = encoding
+		}
+		
+		local tl = TerraLib{}
+		tl:dropPgTable(pgData)
+		
+		proj:addCellularLayer {
+			source = "postgis",
+			input = layerName1,
+			layer = clName1,
+			resolution = 10000,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1
+		}	
+		local l1Info = proj:infoLayer(clName1)
+	
+		unitTest:assertEquals(l1Info.name, clName1)		
+		
+		-- ###################### 2 #############################
+		local clName2 = "Another_Setores_Cells"
+		local tName2 = "add_cellslayer_basic_another"
+		
+		pgData.table = tName2
+		tl:dropPgTable(pgData)
+		
+		proj:addCellularLayer {
+			source = "postgis",
+			input = layerName1,
+			layer = clName2,
+			resolution = 10000,
+			user = user,
+			password = password,
+			database = database,
+			table = tName2
+		}	
+		local l2Info = proj:infoLayer(clName2)
+	
+		unitTest:assertEquals(l2Info.name, clName2)	
+		
+		-- ###################### 3 #############################
+		local clName3 = "Other_Setores_Cells"
+		local tName3 = "add_cellslayer_basic_from_db"
+		
+		pgData.table = tName3
+		tl:dropPgTable(pgData)
+		
+		proj:addCellularLayer {
+			source = "postgis",
+			input = clName2,
+			layer = clName3,
+			resolution = 10000,
+			user = user,
+			password = password,
+			database = database,
+			table = tName3
+		}	
+		local l3Info = proj:infoLayer(clName3)
+	
+		unitTest:assertEquals(l3Info.name, clName3)			
+
+		-- ###################### END #############################
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end	
+		
+		pgData.table = tName1
+		tl:dropPgTable(pgData)
+		pgData.table = tName2
+		tl:dropPgTable(pgData)	
+		pgData.table = tName3
+		tl:dropPgTable(pgData)		
 	end
 }

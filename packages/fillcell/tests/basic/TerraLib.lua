@@ -46,15 +46,9 @@ return {
 	openProject = function(unitTest)
 		unitTest:assert(true)
 	end,
-	-- getProjectInfo = function(unitTest)
-		-- unitTest:assert(true) -- SKIP
-	-- end,
-	-- getLayersNames = function(unitTest)
-		-- unitTest:assert(true) -- SKIP
-	-- end,
-	-- getLayerInfo = function(unitTest)
-		-- unitTest:assert(true) -- SKIP
-	-- end,
+	getLayerInfo = function(unitTest)
+		unitTest:assert(true)
+	end,
 	addShpLayer = function(unitTest)
 		unitTest:assert(true)
 	end,
@@ -76,6 +70,9 @@ return {
 	addShpCellSpaceLayer = function(unitTest)
 		unitTest:assert(true)
 	end,
+	addPgCellSpaceLayer = function(unitTest)
+		unitTest:assert(true)
+	end,	
 	attributeFill = function(unitTest)
 		unitTest:assert(true)
 	end

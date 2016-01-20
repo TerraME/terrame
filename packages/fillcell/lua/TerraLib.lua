@@ -46,33 +46,6 @@ local function printTable(sometable)
 	end
 end
 
--- DEPRECATED
-local function createConnInfo(nameOrPath, dsType)
-	local connInfo = {}
-		
-	if dsType == "ADO" then
-		connInfo.PROVIDER = "Microsoft.Jet.OLEDB.4.0"
-		connInfo.DB_NAME = nameOrPath
-		connInfo.CREATE_OGC_METADATA_TABLES = "TRUE"		
-	elseif dsType == "POSTGIS" then
-		connInfo.PG_HOST = "localhost" 
-		connInfo.PG_PORT = "5432" 
-		connInfo.PG_USER = "postgres"
-		connInfo.PG_PASSWORD = "postgres"
-		connInfo.PG_DB_NAME = nameOrPath
-		connInfo.PG_CONNECT_TIMEOUT = "4" 
-		connInfo.PG_CLIENT_ENCODING = "UTF-8" --"CP1252"     -- "LATIN1" --"WIN1252" 
-		connInfo.CREATE_OGC_METADATA_TABLES = "TRUE"	
-	elseif dsType == "OGR" then
-		connInfo.URI = nameOrPath
-		connInfo.DRIVER = "ESRI Shapefile"
-	elseif dsType == "GDAL" then
-		connInfo.URI = nameOrPath
-	end
-		
-	return connInfo
-end
-
 local function hasConnectionError(type, connInfo)
 	local ds = binding.te.da.DataSourceFactory.make(type)
 	ds:setConnectionInfo(connInfo)
@@ -97,12 +70,12 @@ local function createPgConnInfo(host, port, user, pass, database, table, encodin
 	connInfo.PG_CLIENT_ENCODING = encoding -- "UTF-8" --"CP1252"     -- "LATIN1" --"WIN1252" 	
 	connInfo.PG_CHECK_DB_EXISTENCE = database		
 
-	local errorMgs = hasConnectionError("POSTGIS", connInfo)	
-	if errorMgs ~= "" then
-		if string.match(errorMgs, "connections on port "..port) then
-			errorMgs = "Please check the port '"..port.."'."
+	local errorMsg = hasConnectionError("POSTGIS", connInfo)	
+	if errorMsg ~= "" then
+		if string.match(errorMsg, "connections on port "..port) then
+			errorMsg = "Please check the port '"..port.."'."
 		end
-		customError(errorMgs)
+		customError(errorMsg)
 	end
 
 	return connInfo
@@ -115,10 +88,11 @@ local function createFileConnInfo(filePath)
 	return connInfo
 end
 
-local function createAdoConnInfo(dbName)
+local function createAdoConnInfo(dbFilePath)
 	local connInfo = {}
-	connInfo.PROVIDER = "Microsoft.Jet.OLEDB.4.0"
-	connInfo.DB_NAME = nameOrPath
+	--connInfo.PROVIDER = "Microsoft.Jet.OLEDB.4.0"
+	connInfo.PROVIDER = "Microsoft.ACE.OLEDB.12.0" 
+	connInfo.DB_NAME = dbFilePath
 	connInfo.CREATE_OGC_METADATA_TABLES = "TRUE"	
 	
 	return connInfo
@@ -182,14 +156,6 @@ local function createLayer(name, connInfo, type)
 		srid = raster:getSRID()
 	elseif type == "POSTGIS" then
 		dSetName = connInfo.PG_NEWDB_NAME
-		local tableExists = ds:dataSetExists(dSetName)
-		if not tableExists then
-			binding.te.da.DataSourceManager.getInstance():detach(ds:getId())
-			ds:close()
-			ds = nil
-			collectgarbage("collect")		
-			return 1
-		end	
 		dSetType = ds:getDataSetType(dSetName)
 		dSet = ds:getDataSet(dSetName)
 		local gp = binding.GetFirstGeomProperty(dSetType)
@@ -434,6 +400,27 @@ local function addFileLayer(project, name, filePath, type)
 	releaseProject(project)
 end
 
+local function dataSetExists(connInfo, type)
+	local ds = nil
+	local dSetName = ""
+	
+	if type == "POSTGIS" then
+		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
+		dSetName = string.lower(connInfo.PG_NEWDB_NAME)
+	end
+	
+	local exists = ds:dataSetExists(dSetName)
+	if exists then
+		return true
+	end	
+	
+	ds:close()
+	ds = nil
+	collectgarbage("collect")
+	
+	return false
+end
+
 local function dropDataSet(connInfo, type)
 	local ds = nil
 	local dSetName = ""
@@ -481,6 +468,15 @@ local function copyLayer(from, to)
 		if tableExists then
 			toDs:dropDataSet(toTable)
 		end
+	elseif to.type == "ADO" then
+		local toConnInfo = createAdoConnInfo(to.file)
+		-- TODO: ADO DON'T WORK (REVIEW)
+		toDs = makeAndOpenDataSource(toConnInfo, "ADO") --binding.te.da.DataSource.create("ADO", toConnInfo)
+		-- local tableExists = toDs:dataSetExists(toTable)
+		-- if tableExists then
+			-- toDs:dropDataSet(toTable)
+		-- end		
+		--fromDs:moveFirst()
 	end
 		
 	local fromDSetType = fromDs:getDataSetType(dSetName)
@@ -497,13 +493,7 @@ local function copyLayer(from, to)
 	collectgarbage("collect")	
 end
 
-local function addCellSpaceLayer(inputLayer, name, resolultion, filePath, type) 
-	local connInfo = {}
-		
-	if type == "OGR" then
-		connInfo = createConnInfo(filePath, "OGR")
-	end
-
+local function createCellSpaceLayer(inputLayer, name, resolultion, connInfo, type) 
 	local cLId = binding.GetRandomicId()
 	local cellLayerInfo = binding.te.da.DataSourceInfo()
 		
@@ -516,7 +506,13 @@ local function addCellSpaceLayer(inputLayer, name, resolultion, filePath, type)
 		
 	local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations()
 	local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
-	local cellName = getFileName(filePath)
+	
+	local cellName = ""
+	if type == "OGR" then
+		cellName = getFileName(connInfo.URI)
+	elseif type == "POSTGIS" then
+		cellName = connInfo.PG_NEWDB_NAME
+	end
 
 	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 end
@@ -565,42 +561,14 @@ TerraLib_ = {
 		end		
 	
 		loadProject(project, filePath)		
-
-		-- TODO: Maybe here getLayersNames()
 	end,
+	getLayerInfo = function(self, layer)
+		local info = {}		
+		info.name = layer:getTitle()	
+		info.sid = layer:getDataSourceId()
 
-	-- getProjectInfo = function()
-		-- local projInfo = {}
-		-- projInfo.title = currentProject:getTitle()
-		-- projInfo.author = currentProject:getAuthor()
-		-- projInfo.file = currentProject:getFileName()
-
-		-- return projInfo
-	-- end,
-
-	-- getLayerInfo = function(self, layerName)
-		-- local layer = currentProject:getDataSetLayerByTitle(layerName)
-		
-		-- if layer == nil then
-			-- return nil
-		-- end
-		
-		-- local info = {}		
-		-- info.name = layer:getTitle()
-
-		-- return info
-	-- end,
-
-	-- getLayersNames = function()
-		-- local layersNames = currentProject:getLayersTitles()
-		
-		-- if layersNames == nil then
-			-- return {}
-		-- end
-		
-		-- return layersNames
-	-- end,
-
+		return info
+	end,
 	addShpLayer = function(self, project, name, filePath)
 		addFileLayer(project, name, filePath, "OGR")
 	end,
@@ -609,14 +577,16 @@ TerraLib_ = {
 		addFileLayer(project, name, filePath, "GDAL")
 	end,
 	
-	addPgLayer = function(self, project, name, data)
+	addPgLayer = function(self, project, name, data)				
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.table, data.encoding)
-
+		
 		loadProject(project, project.file)
 		
-		local layer = createLayer(name, connInfo, "POSTGIS")
+		local layer = nil
 		
-		if layer == 1 then
+		if dataSetExists(connInfo, "POSTGIS") then
+			layer = createLayer(name, connInfo, "POSTGIS")
+		else
 			releaseProject(project)
 			customError("Is not possible add the Layer. The table '"..data.table.."' does not exists.")
 		end
@@ -634,10 +604,28 @@ TerraLib_ = {
 		loadProject(project, project.file)
 		
 		local inputLayer = project.layers[inputLayerTitle]
-		addCellSpaceLayer(inputLayer, name, resolultion, filePath, "OGR")
+		local connInfo = createFileConnInfo(filePath)
+		
+		createCellSpaceLayer(inputLayer, name, resolultion, connInfo, "OGR")
 		
 		self:addShpLayer(project, name, filePath)
 	end,
+	
+	addPgCellSpaceLayer = function(self, project, inputLayerTitle, name, resolultion, data) 
+		loadProject(project, project.file)
+
+		local inputLayer = project.layers[inputLayerTitle]
+		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.table, data.encoding)
+		
+		if not dataSetExists(connInfo, "POSTGIS") then
+			createCellSpaceLayer(inputLayer, name, resolultion, connInfo, "POSTGIS")
+		else
+			releaseProject(project)
+			customError("The table '"..data.table.."' already exists.")
+		end
+		
+		self:addPgLayer(project, name, data)
+	end,	
 	
 	dropPgTable = function(self, data)
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.table)		
