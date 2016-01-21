@@ -1170,6 +1170,7 @@ end
 --- Return whether an object can be used as a table. This includes
 -- tables themselves as well as all TerraME types (Cell, CellularSpace, etc.).
 -- @arg data A value of any type.
+-- @see Utils:type
 -- @usage c = Cell{}
 -- print(isTable(c))
 function isTable(data)
@@ -1321,6 +1322,7 @@ end
 --- Return the type of an object. It extends the original Lua type() to support TerraME objects,
 -- whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".
 -- @arg data Any object or value.
+-- @see Utils:isTable
 -- @usage c = Cell{value = 3}
 -- print(type(c)) -- "Cell"
 function type(data)

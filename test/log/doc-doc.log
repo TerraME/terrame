@@ -543,7 +543,7 @@ Checking VisualTable.lua
 Checking if all Models are documented
 
 Documentation report:
-Documentation was built in 9.88 seconds.
+Documentation was built in 10.33 seconds.
 35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -566,6 +566,6 @@ All 297 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
-All 310 links were correctly built.
+All 312 links were correctly built.
 All 25 examples are correctly documented.
 Summing up, all the documentation was successfully built.
