@@ -438,14 +438,25 @@ function _Gtme.executeTests(package, fileName)
 			ut.current_file = eachDirectory..s..eachFile
 			local tests
 
-			printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+			local printTesting = false
 
 			print = function(arg)
 				ut.print_calls = ut.print_calls + 1
+
+				if not printTesting then
+					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+					printTesting = true
+				end
+
 				printError("Error: print() call detected with argument '"..tostring(arg).."'")
 			end
 
 			xpcall(function() tests = dofile(baseDir..s..eachDirectory..s..eachFile) end, function(err)
+				if not printTesting then
+					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+					printTesting = true
+				end
+
 				printError("Could not load file "..err)
 				os.exit()
 			end)
@@ -455,6 +466,11 @@ function _Gtme.executeTests(package, fileName)
 			local myAssertTable = assertTable(baseDir..s..eachDirectory..s..eachFile)
 
 			if type(tests) ~= "table" or getn(tests) == 0 then
+				if not printTesting then
+					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+					printTesting = true
+				end
+
 				printError("The file does not implement any test.")
 				os.exit()
 			end
@@ -478,6 +494,8 @@ function _Gtme.executeTests(package, fileName)
 
 			if #myTests == 0 then
 				printWarning("Skipping ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
+			elseif not printTesting then
+					printNote("Testing ".._Gtme.makePathCompatibleToAllOS(eachDirectory..s..eachFile))
 			end
 
 			local function trace(event, line)
