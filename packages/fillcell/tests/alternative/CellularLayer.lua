@@ -46,6 +46,11 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("lauer", "layer"))
 		
+		local projNotExists = function()
+			local cl = CellularLayer{project = "myproj.tview", layer = "cells"}
+		end
+		unitTest:assertError(projNotExists, "The Project '".."myproj.tview".."'not found.")		
+		
 		local projFile = "proj_celllayer.tview"
 		
 		if isFile(projFile) then
@@ -71,9 +76,6 @@ return{
 		if isFile(projFile) then
 			os.execute("rm -f "..projFile)
 		end		
-
--- 		-- TODO: select a project that does not exist
--- 		-- TODO: open a cellularlayer that does not exist - with and without suggestion
 	end,
 	-- fillCells = function(unitTest)
 		-- local cl = CellularLayer{project = "amazonia.tview", layer = "cells"}

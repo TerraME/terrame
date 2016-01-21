@@ -247,19 +247,22 @@ function CellularLayer(data)
 	verifyNamedTable(data)
 
 	verifyUnnecessaryArguments(data, {"layer", "project"})
+	mandatoryTableArgument(data, "layer", "string")
 	
 	if not (type(data.project) == "Project") then	
 		if type(data.project) == "string" then
-			local file = data.project
-			data.project = Project{
-				file = file
-			}
+			if isFile(data.project) then
+				local file = data.project
+				data.project = Project{
+					file = file
+				}
+			else
+				customError("The Project '"..data.project.."'not found.")
+			end
 		else
 			customError("The 'project' parameter must be a Project or a Project file path.")
 		end
 	end
-	
-	mandatoryTableArgument(data, "layer", "string")
 	
 	if not data.project.layers[data.layer] then
 		customError("Layer '"..data.layer.."' does not exists in the Project '"..data.project.file.."'.")
