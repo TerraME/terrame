@@ -25,11 +25,11 @@
 --#########################################################################################
 
 -- TODO: create Common for this
-local dataSourceTypeMapper = {
-	shp = "OGR",
-	tif = "GDAL",
-	postgis = "POSTGIS",
-	access = "ADO"
+local SourceTypeMapper = {
+	OGR = "shp",
+	GDAL = "tif",
+	POSTGIS = "postgis",
+	ADO = "access"
 }
 
 local function isEmpty(data)
@@ -293,8 +293,12 @@ Project_ = {
 		if layer == nil then
 			customError("Layer '"..name.."' not exists.")
 		end
-			
-		return self.terralib:getLayerInfo(layer)
+		
+		local info = self.terralib:getLayerInfo(self, layer)
+		info.source = SourceTypeMapper[info.type]
+		info.type = nil
+		
+		return info
 	end,
 }
 
@@ -348,8 +352,6 @@ function Project(data)
 	end
 
 	local terralib = TerraLib{}
-	
-	terralib:init()
 
 	--TODO: auto finalize terralib and all objects, how? 
 

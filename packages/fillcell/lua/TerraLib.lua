@@ -562,11 +562,31 @@ TerraLib_ = {
 	
 		loadProject(project, filePath)		
 	end,
-	getLayerInfo = function(self, layer)
+	getLayerInfo = function(self, project, layer)
 		local info = {}		
 		info.name = layer:getTitle()	
 		info.sid = layer:getDataSourceId()
+		
+		loadProject(project, project.file)
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(info.sid)
+		
+		local type = dsInfo:getType()
+		info.type = type
+		local connInfo = dsInfo:getConnInfo()
 
+		if type == "POSTGIS" then
+			info.host = connInfo.PG_HOST
+			info.port = connInfo.PG_PORT
+			info.user = connInfo.PG_USER
+			info.password = connInfo.PG_PASSWORD
+			info.database = connInfo.PG_DB_NAME
+			info.table = connInfo.PG_NEWDB_NAME
+		elseif (type == "OGR") or (type == "GDAL") then
+			info.file = connInfo.URI
+		end
+		
+		releaseProject(project)
+		
 		return info
 	end,
 	addShpLayer = function(self, project, name, filePath)
@@ -648,7 +668,7 @@ TerraLib_ = {
 		local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
 		
 		local toLayer = project.layers[to]
-		local toDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
+		local toDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
 		
 		out = "output6"
 		
@@ -684,6 +704,7 @@ function TerraLib(data)
 	else	
 		setmetatable(data, metaTableTerraLib_)
 		instance = data
+		instance:init()
 		return data
 	end
 end

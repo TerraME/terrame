@@ -23,29 +23,40 @@ return {
 			file = file("sampa.shp", "fillcell")
 		}	
 		
-		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
-		local shp1 = "setores_cells.shp"
-		local filePath1 = testDir.."/"..shp1	
-		local fn1 = getFileName(filePath1)
-		fn1 = testDir.."/"..fn1	
-
-		local exts = {".dbf", ".prj", ".shp", ".shx"}
+		local clName1 = "Sampa_Cells_DB"
+		local tName1 = "sampa_cells"
 		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				os.execute("rm -f "..f)
-			end
-		end			
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+		local tableName = tName1	
 		
-		local clName1 = "Sampa_Cells"
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1,
+			encoding = encoding
+		}
+		
+		local tl = TerraLib{}
+		tl:dropPgTable(pgData)
 		
 		proj:addCellularLayer {
-			source = "shp",
+			source = "postgis",
 			input = layerName1,
 			layer = clName1,
 			resolution = 0.3,
-			file = filePath1
+			user = user,
+			password = password,
+			database = database,
+			table = tName1
 		}	
 		
 		local cl = CellularLayer{
@@ -58,7 +69,7 @@ return {
 		
 		-- ###################### 2 #############################
 		proj = nil
-		local tl = TerraLib{}
+		tl = TerraLib{}
 		tl:finalize()
 		
 		local cl2 = CellularLayer{
@@ -73,21 +84,22 @@ return {
 		unitTest:assertEquals(clProjInfo.author, author)
 		
 		local clLayerInfo = clProj:infoLayer(clName1)
-		unitTest:assertEquals(clLayerInfo.source, "shp")
-		unitTest:assertEquals(clLayerInfo.file, filePath1)
-	
+		unitTest:assertEquals(clLayerInfo.source, "postgis")
+		unitTest:assertEquals(clLayerInfo.host, host)
+		unitTest:assertEquals(clLayerInfo.port, port)
+		unitTest:assertEquals(clLayerInfo.user, user)
+		unitTest:assertEquals(clLayerInfo.password, password)
+		unitTest:assertEquals(clLayerInfo.database, database)
+		unitTest:assertEquals(clLayerInfo.table, tName1)
+		
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end
 		
-		for i = 1, #exts do
-			local f = fn1..exts[i]
-			if isFile(f) then
-				os.execute("rm -f "..f)
-			end
-		end		
+		tl:dropPgTable(pgData)
 		
+		tl = TerraLib{}
 		tl:finalize()		
 	end,
 	fillCells = function(unitTest)
