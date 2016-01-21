@@ -769,7 +769,7 @@ CellularSpace_ = {
 	getCellByID = function(self, cellID)
 		deprecatedFunction("getCellByID", "get")
 	end,
-	--- Return all the Cells of the CellularSpace in a table indexed by numbers.
+	--- Return all the Cells of the CellularSpace as a non-named table.
 	-- @deprecated CellularSpace.cells
 	getCells = function(self)
 		deprecatedFunction("getCells", ".cells")
@@ -963,14 +963,14 @@ CellularSpace_ = {
 	-- Type of argument & Description \
 	-- string & The argument must represent the name of one attribute of the Cells of the
 	-- CellularSpace. Split then creates one Trajectory for each possible value of the attribute
-	-- using the value as index and fills them with the Cells that have the respective attribute
+	-- using the value as name and fills them with the Cells that have the respective attribute
 	-- value. If the CellularSpace has an instance and the respective attribute in the instance
 	-- is a Random value with discrete or categorical strategy, it will use the possible values
 	-- to create Trajectories, which means that the returning Trajectories can have size zero in
 	-- this case. \
-	-- function & The argument is a function that gets a Cell as argument and returns an
-	-- index for the Cell, which can be a number, string, or boolean value.
-	-- Trajectories are then indexed according to the
+	-- function & The argument is a function that gets a Cell as argument and returns a
+	-- name for the Cell, which can be a number, string, or boolean value.
+	-- Trajectories are then named according to the
 	-- returning value.
 	-- @usage cell = Cell{
 	--     cover = Random{"pasture", "forest"},

@@ -87,7 +87,7 @@ Neighborhood_ = {
 		deprecatedFunction("getCellWeight", "getWeight")
 	end,
 	--- Return the unique identifier of the Neighborhood. It represents
-	-- the index if the Neighborhood in the Cell it was added.
+	-- the name of the Neighborhood in the Cell it was added.
 	-- @usage n = Neighborhood()
 	-- n:getID()
 	getID = function(self)

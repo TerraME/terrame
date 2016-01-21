@@ -134,7 +134,8 @@ Agent_ = {
 	-- Cell, use Agent:move() instead. The agent needs to have a placement to be able to
 	-- use Agent:enter(), Agent:leave(), Agent:move(), or Agent:walk().
 	-- @arg cell A Cell.
-	-- @arg placement A string representing the index to be used. The default value is "placement".
+	-- @arg placement A string representing the name of the placement to be used.
+	-- The default value is "placement".
 	-- @usage soc = Society{
 	--     instance = Agent{},
 	--     quantity = 30
@@ -199,7 +200,8 @@ Agent_ = {
 	end,
 	--- Return the Cell where the Agent is located according to its placement. It assumes
 	-- that each Agent belongs to at most one Cell.
-	-- @arg placement A string representing the index to be used. The default value is "placement".
+	-- @arg placement A string representing the name of the placement to be used.
+	-- The default value is "placement".
 	-- @usage soc = Society{
 	--     instance = Agent{},
 	--     quantity = 30
@@ -224,7 +226,8 @@ Agent_ = {
 		return self[placement].cells[1]
 	end,
 	--- Return a vector with the Cells pointed by the Agent.
-	-- @arg placement A string representing the index to be used. The default value is "placement".
+	-- @arg placement A string representing the name of the placement to be used.
+	-- The default value is "placement".
 	-- @usage soc = Society{
 	--     instance = Agent{},
 	--     quantity = 30
@@ -328,7 +331,8 @@ Agent_ = {
 	-- stop with an error. This function supposes that each Agent can be in one and
     -- only one Cell along the simulation. The Agent needs to have a placement to be
 	-- able to use Agent:enter(), Agent:leave(), Agent:move(), and Agent:walk().
-	-- @arg placement A string representing the index to be used. The default value is "placement".
+	-- @arg placement A string representing the name of the placement to be used.
+	-- The default value is "placement".
 	-- @usage ag1 = Agent{}
 	-- cs = CellularSpace{xdim = 3}
 	-- myEnv = Environment{cs, ag1}

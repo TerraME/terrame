@@ -63,17 +63,17 @@ Automaton_ = {
 		return self.id
 	end,
 	--- Get a State of the Automaton according to a given position.
-	-- @arg index A number indicating the position of the State to be retrieved.
+	-- @arg position A number indicating the position of the State to be retrieved.
 	-- @usage -- DONTRUN
 	-- state = automaton:getState(1)
-	getState = function(self, index)
-		mandatoryArgument(1, "number", index)
+	getState = function(self, position)
+		mandatoryArgument(1, "number", position)
 
-		integerArgument(1, index)
-		positiveArgument(1, index)
+		integerArgument(1, position)
+		positiveArgument(1, position)
 
 		local statesVector = self:getStates()
-		return statesVector[index]
+		return statesVector[position]
 	end,
 	--- Return the name of the current State. As an Automaton has independent States in each Cell, 
 	-- it requires a location to return its State name.
@@ -84,7 +84,7 @@ Automaton_ = {
 		mandatoryArgument(1, "Cell", cell)
 		return cell.cObj_:getCurrentStateName(self.cObj_)
 	end,
-	--- Get all the States inside the Automaton. It returns a vector indexed by numeric positions.
+	--- Get all the States inside the Automaton. It returns a non-named table.
 	-- @usage -- DONTRUN
 	-- state = automaton:getStates()[1]
 	getStates = function(self)

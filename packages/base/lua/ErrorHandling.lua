@@ -466,7 +466,7 @@ end
 -- Levenshtein's distance of less than 60% the size of the string, otherwise
 -- it returns nil.
 -- @arg value A string.
--- @arg options A table with string indexes with the possible suggestions.
+-- @arg options A named table with the possible suggestions.
 -- @usage t = {
 --     blue = true,
 --     red = true,
@@ -483,7 +483,7 @@ function suggestion(value, options)
 	local word
 	forEachOrderedElement(options, function(a)
 		if type(a) ~= "string" then
-			customError("All the indexes of second argument should be string, got '"..type(a).."'.")
+			customError("All the names of argument #2 should be string, got '"..type(a).."'.")
 		end
 
 		local d = levenshtein(a, value) 
@@ -505,7 +505,7 @@ end
 -- ErrorHandling:switchInvalidArgumentMsg().
 -- @arg att A string with the name of the argument.
 -- @arg value A string with wrong value passed as argument.
--- @arg suggestions A table with string indexes describing the available options.
+-- @arg suggestions A named table describing the available options.
 -- @usage t = {
 --     blue = true,
 --     red = true,
@@ -530,7 +530,7 @@ end
 --- Return a message for a wrong argument value showing the options.
 -- @arg casevar A string with the value of the argument.
 -- @arg att A string with the name of the argument.
--- @arg options A table whose indexes indicate the available options.
+-- @arg options A named table indicating the available options.
 -- @usage local options = {
 --     aaa = true,
 --     bbb = true,
@@ -627,7 +627,7 @@ function verify(condition, msg)
 end
 
 --- Verify if a given object is a named table. It generates errors if it is nil,
--- if it is not a table, or if it has numeric indexes. The error messages come from
+-- if it is not a table, or if it has numeric names. The error messages come from
 -- ErrorHandling:tableArgumentMsg() and ErrorHandling:namedArgumentsMsg().
 -- @arg data A value of any type.
 -- @usage t = {1, 2, 3, 4}
@@ -651,14 +651,14 @@ end
 -- to show the warning before any error that might be related to it.
 -- This function returns the number of unnecessary arguments found.
 -- @arg data A named table with the arguments used in the function call.
--- The indexes of this table will be verified.
+-- The names of this table will be verified.
 -- @arg arguments A non-named table with the allowed arguments.
 -- @usage t = {value = 2}
 -- verifyUnnecessaryArguments(t, {"target", "select"})
 function verifyUnnecessaryArguments(data, arguments)
 	forEachElement(data, function(idx)
 		if type(idx) ~= "string" then
-			customError("Arguments should have only string indexes, got "..type(idx)..".")
+			customError("Arguments should have only string names, got "..type(idx)..".")
 		end
 	end)
 

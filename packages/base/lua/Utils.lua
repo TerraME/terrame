@@ -145,8 +145,8 @@ function CSVparseLine(line, sep, cline)
 	return res
 end
 
---- Read a CSV file. It returns a non-named table (indexed by the lines)
--- containing named-tables (indexed by the attribute names).
+--- Read a CSV file. It returns a non-named table (with line numbers)
+-- containing named-tables (with the attribute names).
 -- The first line of the file list the attribute names.
 -- @arg filename A string with the location of the CSV file.
 -- @arg sep A string with the separator. The default value is ','.
@@ -188,8 +188,8 @@ end
 
 --- Write a given table into a CSV file.
 -- The first line of the file will list the attributes of each table.
--- @arg data A table to be saved. It must be a non-named table (indexed by the lines)
--- containing named-tables (indexed by the attribute names).
+-- @arg data A table to be saved. It must be a non-named table (with line numbers)
+-- containing named-tables (with the attribute names).
 -- @arg filename A string with the location of the CSV file.
 -- @arg sep A string with the separator. The default value is ','.
 -- @usage mytable = {
@@ -212,7 +212,7 @@ function CSVwrite(data, filename, sep)
 	if data[1] == nil then
 		customError("#1 does not have position 1.")
 	elseif #data ~= getn(data) then
-		customError("#1 should have only numbers as indexes.")
+		customError("#1 should be a non-named table.")
 	end
 
 	for k in pairs(data[1]) do
@@ -509,7 +509,7 @@ end
 -- otherwise it returns false.
 -- There are two ways of using this function because the second argument is optional.
 -- @arg agent An Agent.
--- @arg index (Optional) A string with the name of the SocialNetwork to be transversed. The default value is "1".
+-- @arg name (Optional) A string with the name of the SocialNetwork to be transversed. The default value is "1".
 -- @arg f A function that takes three arguments: the Agent itself, its connection, and the
 -- connection weight. If some call to f returns false, forEachConnection() stops and does not
 -- process any other connection. In the case where the second argument is missing, this
@@ -527,26 +527,28 @@ end
 --     ag1:message{receiver = ag2}
 -- end)
 -- @see Society:createSocialNetwork
-function forEachConnection(agent, index, f)
+function forEachConnection(agent, name, f)
 	if type(agent) ~= "Agent" then
 		incompatibleTypeError(1, "Agent", agent)
-	elseif type(index) == "function" then
-		f = index
-		index = "1"
-	elseif type(index) ~= "string" then
-		incompatibleTypeError(2, "function or string", index)
+	elseif type(name) == "function" then
+		f = name
+		name = "1"
+	elseif type(name) ~= "string" then
+		incompatibleTypeError(2, "function or string", name)
 	elseif type(f) ~= "function" then
 		incompatibleTypeError(3, "function", f)
 	end
 
-	local socialnetwork = agent:getSocialNetwork(index)
+	local socialnetwork = agent:getSocialNetwork(name)
 	if not socialnetwork then
-		customError("Agent does not have a SocialNetwork named '"..index.."'.")
+		customError("Agent does not have a SocialNetwork named '"..name.."'.")
 	end
-	for index, connection in pairs(socialnetwork.connections) do
-		local weight = socialnetwork.weights[index]
+
+	for name, connection in pairs(socialnetwork.connections) do
+		local weight = socialnetwork.weights[name]
 		if f(agent, connection, weight) == false then return false end
 	end
+
 	return true
 end
 
@@ -558,7 +560,7 @@ end
 -- This function returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg obj A TerraME object or a table.
--- @arg func A user-defined function that takes three arguments: the index of the element,
+-- @arg func A user-defined function that takes three arguments: the name of the element,
 -- the element itself, and the type of the element. If some call to this function returns
 -- false then forEachElement() stops.
 -- @usage cell = Cell{
@@ -584,6 +586,7 @@ function forEachElement(obj, func)
 		local t = type(ud)
 		if func(k, ud, t) == false then return false end
 	end
+
 	return true
 end
 
@@ -624,7 +627,7 @@ end
 -- argument returns false, otherwise it returns false.
 -- There are two ways of using this function because the second argument is optional.
 -- @arg cell A Cell.
--- @arg index (Optional) A string with the name of the Neighborhood to be transversed.
+-- @arg name (Optional) A string with the name of the Neighborhood to be transversed.
 -- The default value is "1".
 -- @arg f A user-defined function that takes three arguments: the Cell itself, the neighbor
 -- Cell, and the connection weight. If some call to it returns false, forEachNeighbor() stops
@@ -656,29 +659,32 @@ end
 -- end)
 -- @see CellularSpace:createNeighborhood
 -- @see CellularSpace:loadNeighborhood
-function forEachNeighbor(cell, index, f)
+function forEachNeighbor(cell, name, f)
 	if type(cell) ~= "Cell" then
 		incompatibleTypeError(1, "Cell", cell)
-	elseif type(index) == "function" then
-		f = index
-		index = "1"
-	elseif type(index) ~= "string" then
-		incompatibleTypeError(2, "function or string", index)
+	elseif type(name) == "function" then
+		f = name
+		name = "1"
+	elseif type(name) ~= "string" then
+		incompatibleTypeError(2, "function or string", name)
 	elseif type(f) ~= "function" then
 		incompatibleTypeError(3, "function", f)
 	end
 
-	local neighborhood = cell:getNeighborhood(index)
+	local neighborhood = cell:getNeighborhood(name)
 	if neighborhood == nil then
-		customError("Neighborhood '"..index.."' does not exist.")
+		customError("Neighborhood '"..name.."' does not exist.")
 	end
+
 	neighborhood.cObj_:first()
+
 	while not neighborhood.cObj_:isLast() do
 		local neigh = neighborhood.cObj_:getNeighbor()
 		local weight = neighborhood.cObj_:getWeight()
 		if f(cell, neigh, weight) == false then return false end
 		neighborhood.cObj_:next()
 	end
+
 	return true
 end
 
@@ -686,7 +692,7 @@ end
 -- on them. It returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg cell A Cell.
--- @arg f A function that receives a Neighborhood index as argument.
+-- @arg f A function that receives a Neighborhood name as argument.
 -- @usage cs = CellularSpace{
 --     xdim = 10
 -- }
@@ -714,18 +720,19 @@ function forEachNeighborhood(cell, f)
 		if f(idx) == false then return false end
 		cell.cObj_:next()
 	end
+
 	return true
 end
 
 --- Second order function to transverse a given object, applying a function to each of its
 -- elements according to their alphabetical order. It can be used for instance to transverse all
--- the elements of an Agent or an
--- Environment. This function executes first the numeric indexes and then the string ones, with
+-- the elements of an Agent or an Environment. This function executes first the positions with
+-- numeric names and then the string ones, with
 -- upper case characters having priority over lower case.
 -- This function returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg obj A TerraME object or a table.
--- @arg func A user-defined function that takes three arguments: the index of the element,
+-- @arg func A user-defined function that takes three arguments: the name of the element,
 -- the element itself, and the type of the element. If some call to this function returns
 -- false then forEachElement() stops.
 -- @usage cell = Cell{
@@ -787,6 +794,7 @@ function forEachOrderedElement(obj, func)
 			if func(idx, obj[idx], type(obj[idx])) == false then return false end
 		end
 	end
+
 	return true
 end
 
@@ -794,7 +802,7 @@ end
 -- on them. It returns true if no call to the function taken as argument returns false,
 -- otherwise it returns false.
 -- @arg agent An Agent.
--- @arg f A function that receives a SocialNetwork index as argument.
+-- @arg f A function that receives a SocialNetwork name as argument.
 -- @usage ag = Agent{value = 2}
 -- soc = Society{instance = ag, quantity = 20}
 --
@@ -819,6 +827,7 @@ function forEachSocialNetwork(agent, f)
 	for idx in pairs(agent.socialnetworks) do
 		if f(idx) == false then return false end
 	end
+
 	return true
 end
 
@@ -847,6 +856,7 @@ function getExtension(filename)
 			return filename:sub(i + 1, filename:len())
 		end
 	end
+
 	return ""
 end
 
@@ -865,6 +875,7 @@ function getn(t)
 	for k, v in pairs(t) do
 		n = n + 1
 	end
+
 	return n
 end
 
@@ -1017,6 +1028,7 @@ function integrate(attrs)
 		end
 		return load(str)()
 	end
+
 	return result
 end
 
@@ -1036,6 +1048,7 @@ function integrationEuler(df, initCond, a, b, delta)
 		for x = a, bb, delta do
 			y = y + delta * df(x, y)
 		end
+
 		return y
 	else
 		local i = 0
@@ -1048,6 +1061,7 @@ function integrationEuler(df, initCond, a, b, delta)
 			for i = 1, #df do
 				values[i] = df[i](x, y)
 			end
+
 			for i = 1, #df do
 				y[i] = y[i] + delta * values[i]
 			end
@@ -1078,6 +1092,7 @@ function integrationHeun(df, initCond, a, b, delta)
 			y1 = y + delta * val
 			y = y + 0.5 * delta * (val + df(x + delta, y1))
 		end
+
 		return y
 	else
 		local x = a
@@ -1093,14 +1108,17 @@ function integrationHeun(df, initCond, a, b, delta)
 				val[i] = df[i](x, y)
 				y1[i] = y[i] + delta * val[i]
 			end
+
 			local values = {}
 			for i = 1, sizeDF do
 				values[i] = df[i](x + delta, y1)
 			end
+
 			for i = 1, sizeDF do
 				y[i] = y[i] + 0.5 * delta * (val[i] + values[i])
 			end
 		end
+
 		return y
 	end
 end
@@ -1131,6 +1149,7 @@ function integrationRungeKutta(df, initCond, a, b, delta)
 			y4 = df(x + delta, y + delta* y3)
 			y = y + delta * (y1 + 2 * y2 + 2 * y3 + y4) / 6
 		end
+
 		return y
 	else
 		local x = a
@@ -1148,6 +1167,7 @@ function integrationRungeKutta(df, initCond, a, b, delta)
 			for i = 1, sizeDF do
 				yTemp[i] = y[i]
 			end
+
 			for i = 1, sizeDF do
 				y1 = df[i](x, y)
 				yTemp[i] = y[i] + midDelta * y1
@@ -1158,12 +1178,13 @@ function integrationRungeKutta(df, initCond, a, b, delta)
 				y4 = df[i](x + delta, yTemp)
 				values[i] = y[i] + delta * (y1 + 2 * y2 + 2 * y3 + y4) / 6
 			end
+
 			for i = 1, sizeDF do
 				y[i] = values[i]
 			end
 		end
-		return y
 
+		return y
 	end
 end
 
@@ -1201,6 +1222,7 @@ function levenshtein(s, t)
 			d[i*tn+j] = min(d[(i-1)*tn+j]+1, d[i*tn+j-1]+1, d[(i-1)*tn+j-1]+(si == byte(t,j) and 0 or 1))
 		end
 	end
+
 	return d[#d]
 end
 
@@ -1277,7 +1299,7 @@ end
 
 --- Implement a switch case function, where functions are associated to the available options.
 -- This function returns a table that contains a function called caseof, that gets a named
--- table with functions describing what to do for each case (which is the index for the respective
+-- table with functions describing what to do for each case (which is the name for the respective
 -- function). This table can have a field "missing" that is used when
 -- the first argument does not have an attribute whose name is the value of the second argument.
 -- The error messages of this function come from ErrorHandling:switchInvalidArgumentMsg() and
@@ -1304,6 +1326,7 @@ function switch(data, att)
 			else
 				f = code.missing or code.default
 			end
+
 			if f then
 				if type(f) == "function" then
 					return f(self.casevar,self)
@@ -1312,7 +1335,6 @@ function switch(data, att)
 				end
 			else
 				switchInvalidArgument(att, self.casevar, code)
-
 			end
 		end
 	}
@@ -1332,6 +1354,7 @@ function type(data)
 			return data.type_
 		end
 	end
+
 	return t
 end
 
@@ -1358,6 +1381,7 @@ function vardump(o, indent)
 			s = s..indent2..'['..k..'] = '..vardump(v, indent2)
 			first = false
 		end)
+
 		return s..'\n'..indent..'}'
 	else
 		return "'"..tostring(o).."'"

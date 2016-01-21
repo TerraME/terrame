@@ -291,7 +291,7 @@ end
 -- package & Name of the package.\
 -- path & Folder where the package is stored in the computer.\
 -- title & Optional title for the HTML documentation of the package.\
--- url & An optional variable with a webpage of the package.\
+-- url & An optional value with the webpage of the package.\
 -- version & Current version of the package, in the form <number>[.<number>]*.
 -- For example: 1, 0.2, 2.5.2.
 -- @arg package A string with the name of the package. If nil, packageInfo will return

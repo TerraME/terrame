@@ -84,7 +84,8 @@ Cell_ = {
 	getAgent = function(self, placement)
 		return self:getAgents(placement)[1]
 	end,
-	--- Return the Agents that belong to the Cell. Agents are indexed by numeric positions.
+	--- Return the Agents that belong to the Cell. The returning value is a table with
+	-- non-named elements.
 	-- @arg placement A string with the name of the placement. The default value is "placement".
 	-- @usage ag = Agent{}
 	-- s = Society{instance = ag, quantity = 2}
@@ -120,7 +121,7 @@ Cell_ = {
 		return self.cObj_:getID()
 	end,
 	--- Return a Neighborhood of the Cell. If the Neighborhood does not exist then it returns nil.
-	-- @arg index A string with the neighborhood's name to be retrieved. The default value is "1".
+	-- @arg name A string with the neighborhood's name to be retrieved. The default value is "1".
 	-- @usage cs = CellularSpace{
 	--     xdim = 10
 	-- }
@@ -129,21 +130,21 @@ Cell_ = {
 	--
 	-- n = cs:sample():getNeighborhood()
 	-- print(#n)
-	getNeighborhood = function(self, index)
-		if index == nil then
-			index = "1"
-		elseif type(index) ~= "string" then
-			incompatibleTypeError(1, "string", index)
+	getNeighborhood = function(self, name)
+		if name == nil then
+			name = "1"
+		elseif type(name) ~= "string" then
+			incompatibleTypeError(1, "string", name)
 		end
 
 		if self.neighborhoods then
-			local s = self.neighborhoods[index]
+			local s = self.neighborhoods[name]
 			if type(s) == "function" then
 				return s(self)
 			end
 		end
 
-		return self.cObj_:getNeighborhood(index)
+		return self.cObj_:getNeighborhood(name)
 	end,
 	--- User-defined function that is used to initialize a Cell when a CellularSpace is
 	-- created. This function gets the Cell itself as argument.

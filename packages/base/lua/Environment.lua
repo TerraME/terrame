@@ -225,8 +225,8 @@ Environment_ = {
 				mycs = ud
 			elseif t == "Society" then
 				qty_agents = qty_agents + #ud
-				forEachElement(ud.placements, function(index)
-					if index == data.name or (data.name == nil and index == "placement") then
+				forEachElement(ud.placements, function(name)
+					if name == data.name or (data.name == nil and name == "placement") then
 						customError("There is a Society within this Environment that already has this placement.")
 					end
 				end)

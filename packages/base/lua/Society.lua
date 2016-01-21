@@ -514,8 +514,8 @@ Society_ = {
 			end)
 		end
 	end,
-	--- Return a given Agent based on its index.
-	-- @arg index The index of the Agent that will be returned. It can be a number
+	--- Return a given Agent based on its position.
+	-- @arg position The position of the Agent that will be returned. It can be a number
 	-- (with the position of the Agent in the vector of Agents) or a string (with the
 	-- id of the Agent).
 	-- @usage ag = Agent{}
@@ -527,33 +527,33 @@ Society_ = {
 	--
 	-- agent = soc:get("1")
 	-- print(agent.id)
-	get = function(self, index)
-		if type(index) == "string" then
-			if not self.idindex or not self.idindex[index] then
+	get = function(self, position)
+		if type(position) == "string" then
+			if not self.idindex or not self.idindex[position] then
 				self.idindex = {}
 				forEachAgent(self, function(agent)
 					self.idindex[agent.id] = agent
 				end)
 			end
 
-			local result = self.idindex[index]
+			local result = self.idindex[position]
 			if not result then
-				customError("Agent '"..index.."' does not belong to the Society.")
+				customError("Agent '"..position.."' does not belong to the Society.")
 			end
 			return result
 		end
 
-		mandatoryArgument(1, "number", index)
+		mandatoryArgument(1, "number", position)
 
-		integerArgument(1, index)
-		positiveArgument(1, index)
+		integerArgument(1, position)
+		positiveArgument(1, position)
 
-		return self.agents[index]
+		return self.agents[position]
 	end,
-	--- Return a given Agent based on its index.
-	-- @arg index The index of the Agent that will be returned.
+	--- Return a given Agent based on its position.
+	-- @arg position The position of the Agent that will be returned.
 	-- @deprecated Society:get
-	getAgent = function(self, index)
+	getAgent = function(self, position)
 		deprecatedFunction("getAgent", "get")
 	end,
 	--- Return a vector with the Agents of the Society.
@@ -677,15 +677,15 @@ Society_ = {
 	-- Description \
 	-- string &
 	-- The argument must represent the name of one attribute of the Agents of the Society. Split
-	-- then creates one Group for each possible value of the attribute using the value as index
+	-- then creates one Group for each possible value of the attribute using the value as name
 	-- and fills them with the Agents that have the respective attribute value. If the Society
 	-- has an instance and the respective attribute in the instance is a Random value with discrete
 	-- or categorical strategy, it will use the possible values to create Groups, which means
 	-- that the returning Groups can have size zero in this case. \
 	-- function &
-	-- The argument is a function that gets an Agent as argument and returns an
-	-- index for the Agent, which can be a number, string, or boolean value.
-	-- Groups are then indexed according to the returning value.
+	-- The argument is a function that gets an Agent as argument and returns a
+	-- name for the Agent, which can be a number, string, or boolean value.
+	-- Groups are then named according to the returning value.
 	--
 	-- @usage ag = Agent{
 	--     gender = Random{"male", "female"},
