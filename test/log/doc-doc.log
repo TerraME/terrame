@@ -390,6 +390,7 @@ Testing integrate
 Testing integrationEuler
 Testing integrationHeun
 Testing integrationRungeKutta
+Testing isTable
 Testing levenshtein
 Testing round
 Testing sessionInfo
@@ -542,7 +543,7 @@ Checking VisualTable.lua
 Checking if all Models are documented
 
 Documentation report:
-Documentation was built in 10.08 seconds.
+Documentation was built in 9.88 seconds.
 35 HTML files were created.
 All files are documented.
 All fields of 'description.lua' are correct.
@@ -550,18 +551,18 @@ No problems were found in the documentation of data.
 No problems were found in the documentation of fonts.
 All source code lines starting with --- are valid.
 There are no Models in the package.
-All 296 global functions of the package are documented.
+All 297 global functions of the package are documented.
 All functions of each file are declared only once.
 All descriptions end with a correct character.
 There is no duplicated tag in the documentation.
 All tags with compulsory arguments were correctly used.
-All 318 non-named arguments are documented.
+All 319 non-named arguments are documented.
 No undefined arguments were found.
 All available arguments of functions are used in their HTML tables.
 All arguments used in the HTML tables are documented.
 All non-deprecated functions have @usage.
-All 296 functions call themselves in their @usage.
-All 296 functions do not have any error in their @usage.
+All 297 functions call themselves in their @usage.
+All 297 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.

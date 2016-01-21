@@ -760,6 +760,13 @@ return{
 	integrationRungeKutta = function(unitTest)
 		unitTest:assert(true)
 	end,
+	isTable = function(unitTest)
+		local c = Cell{}
+
+		unitTest:assert(isTable(c))
+		unitTest:assert(isTable({2, 3}))
+		unitTest:assert(not isTable(2))
+	end,
 	levenshtein = function(unitTest)
 		unitTest:assertEquals(levenshtein("abv", "abc"), 1)
 		unitTest:assertEquals(levenshtein("abvaacc", "abcaacac"), 2)

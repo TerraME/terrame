@@ -244,7 +244,7 @@ end
 -- @arg values A table with a set of values.
 -- @usage belong(2, {1, 2, 3})
 function belong(value, values)
-	if _Gtme.type(values) ~= "table" then
+	if not isTable(values) then
 		incompatibleTypeError(2, "table", values)
 	end
 
@@ -273,7 +273,7 @@ end
 function call(obj, func)
 	mandatoryArgument(2, "string", func)
 
-	if _Gtme.type(obj) ~= "table" then
+	if not isTable(obj) then
 		customError("Cannot access elements from an object of type '"..type(obj).."'.")
 	elseif type(obj[func]) ~= "function" then
 		customError("Function '"..func.."' does not exist.")
@@ -572,7 +572,7 @@ end
 function forEachElement(obj, func)
 	if obj == nil then
 		mandatoryArgumentError(1)
-	elseif _Gtme.type(obj) ~= "table" then
+	elseif not isTable(obj) then
 		incompatibleTypeError(1, "table", obj)
 	elseif func == nil then
 		mandatoryArgumentError(2)
@@ -739,7 +739,7 @@ end
 function forEachOrderedElement(obj, func)
 	if obj == nil then
 		mandatoryArgumentError(1)
-	elseif _Gtme.type(obj) ~= "table" then
+	elseif not isTable(obj) then
 		incompatibleTypeError(1, "table", obj)
 	elseif type(func) ~= "function" then
 		incompatibleTypeError(2, "function", func)
@@ -857,7 +857,7 @@ end
 -- @arg t A table.
 -- @usage getn{name = "john", age = 20}
 function getn(t)
-	if _Gtme.type(t) ~= "table" then
+	if not isTable(t) then
 		incompatibleTypeError(1, "table", t)
 	end
 
@@ -1167,6 +1167,14 @@ function integrationRungeKutta(df, initCond, a, b, delta)
 	end
 end
 
+--- Return whether an object can be used as a table. This includes
+-- tables themselves as well as all TerraME types (Cell, CellularSpace, etc.).
+-- @arg data A value of any type.
+-- @usage c = Cell{}
+-- print(isTable(c))
+function isTable(data)
+	return _Gtme.type(data) == "table"
+end
 --- Return the Levenshtein's distance between two strings.
 -- See http://en.wikipedia.org/wiki/Levenshtein_distance for more details.
 -- @arg s A string.
@@ -1339,12 +1347,12 @@ function vardump(o, indent)
 	if indent == nil then indent = '' end
 
 	local indent2 = indent..'    '
-	if _Gtme.type(o) == 'table' then
+	if isTable(o) then
 		local s = indent..'{'..'\n'
 		local first = true
 		forEachOrderedElement(o, function(k, v)
 			if first == false then s = s .. ', \n' end
-			if _Gtme.type(k) ~= 'number' then k = "'"..tostring(k).."'" end
+			if type(k) ~= 'number' then k = "'"..tostring(k).."'" end
 			s = s..indent2..'['..k..'] = '..vardump(v, indent2)
 			first = false
 		end)
