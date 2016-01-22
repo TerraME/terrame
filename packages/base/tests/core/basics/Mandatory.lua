@@ -29,6 +29,12 @@ return{
 		local c = Mandatory("number")
 		unitTest:assertType(c, "Mandatory")
 		unitTest:assertEquals(c.value, "number")
+	end,
+	__tostring = function(unitTest)
+		local m = Mandatory("number")
+		
+		unitTest:assertEquals(tostring(m), [[value  string [number]
+]])
 	end
 }
 

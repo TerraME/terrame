@@ -23,6 +23,12 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --#########################################################################################
 
+Mandatory_ = {
+	type_ = "Mandatory"
+}
+
+metaTableMandatory_ = {__index = Mandatory_, __tostring = _Gtme.tostring}
+
 --- Type to define a mandatory argument for a given Model.
 -- @arg value A string with the type of the argument. It cannot be boolean, string, nor userdata.
 -- Note that Mandatory does not get named arguments as the other TerraME types.
@@ -37,7 +43,7 @@ function Mandatory(value)
 	end
 	result.value = value
 
-	setmetatable(result, {__index = {type_ = "Mandatory"}})
+	setmetatable(result, metaTableMandatory_)
 	return result
 end
 
