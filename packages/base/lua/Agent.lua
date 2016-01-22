@@ -267,7 +267,7 @@ Agent_ = {
 		return self.cObj_:getLatency()
 	end,
 	--- Return a SocialNetwork of the Agent given its name.
-	-- @arg id Name of the SocialNetwork.
+	-- @arg name Name of the SocialNetwork.
 	-- @usage agent = Agent{}
 	--
 	-- soc = Society{
@@ -280,14 +280,15 @@ Agent_ = {
 	-- ag:getSocialNetwork("friends")
 	-- @see Society:createSocialNetwork
 	-- @see Utils:forEachConnection
-	getSocialNetwork = function(self, id)
-		optionalArgument(1, "string", id)
-		if id == nil then id = "1" end
+	getSocialNetwork = function(self, name)
+		optionalArgument(1, "string", name)
+		if name == nil then name = "1" end
 
-		local s = self.socialnetworks[id]
+		local s = self.socialnetworks[name]
 		if type(s) == "function" then
 			s = s(self)
 		end
+
 		return s
 	end,
 	--- Return a string with the current State name. This function is useful only when the
