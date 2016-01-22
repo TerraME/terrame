@@ -485,10 +485,10 @@ function _Gtme.executeDoc(package)
 
 		local modelName = string.sub(idx, 0, -5)
 		if value.models and type(pkg[modelName]) == "Model" then
-			local args = pkg[modelName]()
+			local args = pkg[modelName]:getParameters()
 
 			forEachOrderedElement(args, function(idx, _, mtype)
-				if mtype ~= "function" and not documentedArguments[idx] then
+				if not documentedArguments[idx] then
 					printError("Model '"..modelName.."' has undocumented argument '"..idx.."'")
 					doc_report.model_error = doc_report.model_error + 1
 				end

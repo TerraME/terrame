@@ -46,7 +46,7 @@ local function verifyTest(package, report)
 
 		if type(pkgData[sub]) == "Model" then
 			local mandatory = false
-			forEachElement(pkgData[sub](), function(_, _, mtype)
+			forEachElement(pkgData[sub]:getParameters(), function(_, _, mtype)
 				if mtype == "Mandatory" then
 					mandatory = true
 				end

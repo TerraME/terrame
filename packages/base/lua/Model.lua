@@ -114,6 +114,28 @@ Model_ = {
 	-- @see ErrorHandling:customError
 	init = function(self)
 	end,
+	--- Return the parameters of the Model as they were defined. The result must not
+	-- be changed, otherwise it might affect the Model itself.
+	-- @usage model = Model{
+	--     par1 = 3,
+	--     par2 = Choice{"low", "medium", "high"},
+	--     par3 = {min = 3, max = 5},
+	--     finalTime = 20,
+	--     init = function(model)
+	--         model.timer = Timer{
+	--             Event{action = function()
+	--                 -- ...
+	--             end}
+	--         }
+	--     end
+	-- }
+	--
+	-- params = model:getParameters()
+	-- print(params.par1)
+	-- print(type(params.par2))
+	-- print(params.init) -- nil
+	getParameters = function(self)
+	end,
 	--- User-defined function to define the distribution of components in the graphical
 	-- interface. If this function is not
 	-- implemented in the Model, the components will be distributed automatically. This function
@@ -229,7 +251,7 @@ Model_ = {
 --
 -- print(type(mymodel)) -- "Model"
 --
--- scenario1 = mymodel() -- par1 = 3, par2 = "low", par3.min = 3, par3.max = 5
+-- scenario1 = mymodel{} -- par1 = 3, par2 = "low", par3.min = 3, par3.max = 5
 --
 -- print(type(scenario1)) -- "mymodel"
 --
@@ -364,7 +386,10 @@ function Model(attrTab)
 	local model
 
 	local callFunction = function(_, v)
-		if v == nil then return attrTab end
+		if v == nil then
+			customError("This call is deprecated. Use Model:getParameters() instead.")
+		end
+
 		return model(v, debug.getinfo(1).name)
 	end
 
@@ -377,6 +402,17 @@ function Model(attrTab)
 			end,
 			configure = function()
 				_Gtme.configure(attrTab, model) -- SKIP
+			end,
+			getParameters = function()
+				local result = {}
+
+				forEachElement(attrTab, function(idx, value, mtype)
+					if mtype ~= "function" then
+						result[idx] = value
+					end
+				end)
+
+				return result
 			end
 		}
 

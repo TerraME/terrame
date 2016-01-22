@@ -157,12 +157,6 @@ water            number [200]
 
 		local t3 = Tube3{tube = t}
 
-		t = Tube()
-
-		unitTest:assertType(t, "table")
-		unitTest:assertType(t.simulationSteps, "Choice")
-		unitTest:assertType(t.filter, "Mandatory")
-
 		local M = Model{
 			file0 = "def",
 			files = {
@@ -218,6 +212,15 @@ water            number [200]
 		local t3 = Tube3:execute()
 
 		unitTest:assertEquals(t3.water, 10)
+	end,
+	getParameters = function(unitTest)
+		local t = Tube:getParameters()
+
+		unitTest:assertType(t, "table")
+		unitTest:assertType(t.simulationSteps, "Choice")
+		unitTest:assertType(t.filter, "Mandatory")
+		unitTest:assertNil(t.init)
+		unitTest:assertEquals(getn(t), 11)
 	end,
 	init = function(unitTest)
 		unitTest:assert(true)
