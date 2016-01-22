@@ -236,6 +236,8 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- @arg attrTab.step The step where possible values are computed from minimum to maximum.
 -- When using this argument, min and max become mandatory.
 -- @arg attrTab.... Other values to build a categorical or discrete uniform distribution.
+-- @output distrib The distribution of the Random object. All the other parameters of the
+-- distribution are also attributes.
 -- @usage random = Random()
 --
 -- bernoulli = Random{p = 0.4}

@@ -566,6 +566,6 @@ All 297 functions do not have any error in their @usage.
 All @tabular are correctly described.
 No invalid tags were found in the documentation.
 All images are correctly used.
-All 312 links were correctly built.
+All 314 links were correctly built.
 All 25 examples are correctly documented.
 Summing up, all the documentation was successfully built.

@@ -56,6 +56,29 @@ w      number [3]
 x      number [0]
 y      number [0]
 ]])
+
+		local ag = Agent{}
+		local s = Society{instance = ag, quantity = 2}
+
+		local ag1 = s.agents[1]
+
+		local cs = CellularSpace{xdim = 3}
+
+		local myEnv = Environment{cs, ag1}
+		myEnv:createPlacement{strategy = "void"}
+		myEnv:createPlacement{strategy = "void", name = "friends"}
+
+		local c = cs.cells[1]
+
+		unitTest:assertEquals(tostring(c), [[agents     table of size 0
+cObj_      userdata
+friends    Group
+parent     CellularSpace
+past       table of size 0
+placement  Group
+x          number [0]
+y          number [0]
+]])
 	end,
 	addNeighborhood = function(unitTest)
 		local c1 = Cell{}

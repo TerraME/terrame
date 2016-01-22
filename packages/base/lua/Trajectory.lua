@@ -311,6 +311,7 @@ metaTableTrajectory_ = {
 -- Utils:greaterByAttribute() for predefined options for this argument.
 -- @arg data.build A boolean value indicating whether the Trajectory should be computed when
 -- created. The default value is true.
+-- @output cObj_ A pointer to a C++ representation of the Trajectory. Never use this object.
 -- @output cells A vector of Cells pointed by the Trajectory.
 -- @output parent The CellularSpace where the Trajectory takes place.
 -- @output select The last function used to filter the Trajectory.

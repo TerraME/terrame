@@ -266,6 +266,7 @@ metaTableNeighborhood_ = {
 -- CellularSpace, as it guarantees that all its Cells have unique identifiers.
 -- Calling Utils:forEachNeighbor() from a Cell traverses one of its Neighborhoods.
 -- @arg data.... Attributes with only internal purposes. They should not be used explicitly by the user.
+-- @output cObj_ A pointer to a C++ representation of the Neighborhood. Never use this object.
 -- @usage n = Neighborhood()
 -- n = Neighborhood{}
 function Neighborhood(data)

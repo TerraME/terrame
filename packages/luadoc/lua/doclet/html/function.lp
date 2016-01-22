@@ -117,7 +117,8 @@ end %>
 
 <%if type(func.output) == "table" and #func.output > 0 then%>
 <!-- Outputs of the function -->
-<p>Attributes of <%=file_doc.name:match("(.-)%.lua")%> that can be used as <b>read-only</b> by the modeler:</p>
+  <h3>Attributes</h3>
+Some attributes of <%=file_doc.name:match("(.-)%.lua")%> have internal semantics. They can be used as <b>read-only</b> by the modeler.</p>
 <ul>
 <span class="output">
 	<%for p = 1, #func.output do%>

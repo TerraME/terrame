@@ -886,10 +886,12 @@ metaTableSociety_ = {
 -- @output instance The Agent that describes attributes and functions of each Agent belonging to
 -- the Society. This Agent must not be executed.
 -- @output autoincrement unique identifier used to represent the last Agent added to the Society.
--- The next Agent will have 'autoincrement+1' as id.
+-- The next Agent will have 'autoincrement + 1' as id.
 -- @output messages A vector that contains the delayed messages.
 -- @output parent The Environment it belongs.
---
+-- @output cObj_ A pointer to a C++ representation of the Society. Never use this object.
+-- @output placements A vector with the names of the placements created using this object (see
+-- Environment:createPlacement()).
 -- @usage instance = Agent{
 --     execute = function() end,
 --     run = function() end,

@@ -694,14 +694,17 @@ metaTableAgent_ = {__index = Agent_, __tostring = _Gtme.tostring}
 -- message. See Agent:on_message().
 -- @arg data.... Any other attribute or function for the Agent. It can have, for instance, other
 -- "on_x" functions to get messages with subject "x" (see Agent:message()).
--- @output cells A vector of Cells necessary to use Utils:forEachCell(). This value is the same
--- of "agent.placement.cells".
--- @output id The unique identifier of the Agent within the Society.
--- @output parent The Society it belongs.
--- @output placement A Trajectory representing the default placement of the Agent (only when the
--- Agent belongs to an Environment or to a Society that belongs to
--- an Environment).
+-- @output state_ An internal state for the Agent. Never use this object.
+-- @output cObj_ A pointer to a C++ representation of the Agent. Never use this object.
+-- @output cells A non-named table with the Cells representing the default placement of the Agent.
+-- It is necessary to use Utils:forEachCell(). This value is the same of "agent.placement.cells".
+-- @output id The unique identifier of the Agent. This attribute only exists when the agent belongs
+-- to a Society.
+-- @output parent The Society it belongs (if any).
+-- @output placement A Trajectory representing the default placement of the Agent (only when a call to
+-- Environment:createPlacement() use the Agent).
 -- @output socialnetworks A set of SocialNetworks with the connections of the Agent.
+-- This value only exists if the Agent has at least one SocialNetwork.
 -- @usage singleFooAgent = Agent{
 --     size = 10,
 --     name = "foo",

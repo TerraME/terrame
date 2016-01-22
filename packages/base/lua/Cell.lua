@@ -305,12 +305,13 @@ metaTableCell_ = {
 -- @arg data.x An integer number with the x location of the Cell. The default value is 0.
 -- @arg data.y An integer number with the y location of the Cell. The default value is 0.
 -- @arg data.... Any other attribute or function for the Cell.
--- @output past a copy of the attributes at the time of the last synchronization.
--- @output parent the CellularSpace it belongs.
--- @output placement a Group representing the default placement of the Cell (only when its
--- CellularSpace belongs to an Environment).
--- @output agents a vector of Agents necessary to use Utils:forEachAgent() with the Cell
--- (only when Environment:createPlacement() was used).
+-- @output cObj_ A pointer to a C++ representation of the Cell. Never use this object.
+-- @output past A copy of the attributes at the time of the last synchronization.
+-- @output parent The CellularSpace it belongs.
+-- @output agents A non-named table with the Agents representing the default placement of the Cell.
+-- It is necessary to use Utils:forEachAgent(). This value is the same of "cell.placement.agents".
+-- @output placement A SocialNetwork representing the default placement of the Cell (only when a call to
+-- Environment:createPlacement() use the Cell).
 -- @see Utils:forEachNeighborhood
 -- @usage cell = Cell {
 --     cover = "forest",

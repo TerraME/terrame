@@ -559,6 +559,7 @@ metaTableEnvironment_ = {__index = Environment_, __tostring = _Gtme.tostring}
 -- Utils:forEachElement() traverses each object of an Environment.
 -- @arg data.... Agents, Automatons, Cells, CellularSpaces, Societies, Trajectories, Groups,
 -- Timers, or Environments.
+-- @output cObj_ A pointer to a C++ representation of the Environment. Never use this object.
 -- @usage environment = Environment{
 --     cs1 = CellularSpace{xdim = 10},
 --     ag1 = Agent{},

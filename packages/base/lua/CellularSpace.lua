@@ -1173,7 +1173,12 @@ metaTableCellularSpace_ = {
 -- "virtual" & Create a rectangular CellularSpace from scratch. Cells will be instantiated with
 -- only two attributes, x and y, starting from (0, 0). & xdim & ydim, autoload, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.
+-- @output cObj_ A pointer to a C++ representation of the CellularSpace. Never use this object.
 -- @output parent The Environment it belongs.
+-- @output maxCol The maximum value of the attribute y of its Cells.
+-- @output maxRow The maximum value of the attribute x of its Cells.
+-- @output minCol The minimum value of the attribute y of its Cells.
+-- @output minRow The minimum value of the attribute x of its Cells.
 -- @usage cs = CellularSpace{
 --     xdim = 20,
 --     ydim = 25

@@ -60,9 +60,15 @@ metaTableChoice_ = {
 -- is useful to define parameters of a Model.
 -- @arg attrTab.min The minimum value (optional).
 -- @arg attrTab.max The maximum value (optional).
+-- @arg attrTab.default The default value for the choice. The default value
+-- for this argument depends on the other arguments used. If using min then it
+-- is the default value. Otherwise, if using max then it is the default value.
+-- If using a non-named table as argument, the default value is the first element
+-- of the table.
 -- @arg attrTab.step An optional argument with the step from minimum to maximum.
 -- Note that max should be equals to min plus k times step, where k is an integer
 -- number. When using this argument, min and max become mandatory.
+-- @output values A vector with the possible values for the Choice.
 -- @usage c1 = Choice{1, 2, 3}
 -- c2 = Choice{"low", "medium", "high"}
 -- c3 = Choice{min = 2, max = 5, step = 0.1}

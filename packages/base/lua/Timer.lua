@@ -197,6 +197,9 @@ metaTableTimer_ = {
 -- Round is then useful to make sure that such Event will be executed in time exactly two.
 -- The default value is 0.00001 (1e-5).
 -- @arg data.... A set of Events.
+-- @output cObj_ A pointer to a C++ representation of the Timer. Never use this object.
+-- @output events An ordered vector with the Events.
+-- @output time The current simulation time.
 -- @usage timer = Timer{
 --     Event{action = function()
 --         print("each time step")

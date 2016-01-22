@@ -79,6 +79,32 @@ init            function
 name            string [nonfoo]
 socialnetworks  table of size 0
 ]])
+
+		local predator = Agent{
+			energy = 40,
+			name = "predator",
+			execute = function(self) return self.energy end
+		}
+
+		local predators = Society{
+			instance = predator, 
+			quantity = 5
+		}
+
+		local cs = CellularSpace{xdim = 5}
+
+		local e = Environment{predators, cs}
+		e:createPlacement()
+
+		unitTest:assertEquals(tostring(predators:sample()), [[cell            Cell
+cells           table of size 1
+cObj_           userdata
+id              string [4]
+parent          Society
+placement       Trajectory
+socialnetworks  table of size 0
+state_          State
+]])
 	end,
 	add = function(unitTest)
 		local ag = Agent{}
