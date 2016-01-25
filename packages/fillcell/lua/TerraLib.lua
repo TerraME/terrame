@@ -40,7 +40,8 @@ local OperationMapper = {
 }
 
 local AttributeCreatedMapper = {
-	presence = "presence"
+	presence = "presence",
+	area = "percent_of_total_area"
 }
 
 -- TODO: Remove this after

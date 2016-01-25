@@ -173,17 +173,6 @@ return{
 			}
 		end
 		unitTest:assertError(layerNotExists, "The layer '".."LayerNotExists".."' not exists.")
-
-		local presenceSelectUnnecessary = function()
-			cl:fillCells{
-				operation = "presence",
-				layer = layerName1,
-				attribute = "presence",
-				select = "FID",
-				output = presenceLayerName
-			}
-		end
-		unitTest:assertError(presenceSelectUnnecessary, unnecessaryArgumentMsg("select"))			
 		
 		local attrAlreadyExists = function()
 			cl:fillCells{
@@ -194,17 +183,30 @@ return{
 			}
 		end
 		unitTest:assertError(attrAlreadyExists, "The attribute '".."row".."' already exists in layer '"..clName1.."'.")				
+
+		local presenceSelectUnnecessary = function()
+			cl:fillCells{
+				operation = "presence",
+				layer = layerName1,
+				attribute = "presence",
+				select = "FID",
+				output = presenceLayerName
+			}
+		end
+		unitTest:assertError(presenceSelectUnnecessary, unnecessaryArgumentMsg("select"))		
 		
--- 		-- area
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "area",
--- 				layer = "cover",
--- 				select = "cover2010"
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select")) -- SKIP
+		local areaLayerName = clName1.."_Presence"
+		
+		local areaSelectUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "area",
+				layer = layerName1,
+				select = "FID",
+				output = areaLayerName
+			}
+		end
+		unitTest:assertError(areaSelectUnnecessary, unnecessaryArgumentMsg("select"))
 
 -- 		-- average
 -- 		error_func = function()

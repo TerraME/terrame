@@ -164,7 +164,8 @@ CellularLayer_ = {
 		
 		switch(data, "operation"):caseof{
 			area = function()		
-								
+				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+				data.select = "FID"								
 			end,
 			average = function()
 				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
