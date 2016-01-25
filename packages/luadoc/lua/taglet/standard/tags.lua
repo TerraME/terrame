@@ -242,17 +242,20 @@ local function usage(tag, block, text, doc_report, silent)
 end
 
 -------------------------------------------------------------------------------
-local function output(tag, block, text, silent)
+local function output(tag, block, text, doc_report, silent)
 	block[tag] = block[tag] or {}
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
 	if not name and not silent then
-		printError("output 'name' not defined [["..text.."]]: skipping")
+		printError("output 'name' not defined in [["..text.."]]: skipping")
+		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
 		return
 	end
 
-	table.insert(block[tag], name)
-	block[tag][name] = desc
+	if name then
+		table.insert(block[tag], name)
+		block[tag][name] = desc
+	end
 end
 
 -------------------------------------------------------------------------------
