@@ -253,6 +253,12 @@ local function output(tag, block, text, doc_report, silent)
 	end
 
 	if name then
+		if block[tag][name] and not silent then
+			printError("In "..block.name.."(), @output '"..name.."' is used more than once and will be ignored in '"..text.."'")
+			doc_report.duplicated = doc_report.duplicated + 1
+			return
+		end
+
 		table.insert(block[tag], name)
 		block[tag][name] = desc
 	end
