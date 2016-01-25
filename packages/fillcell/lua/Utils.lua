@@ -46,7 +46,7 @@ end
 function getFilePathAndNameAndExtension(path)
 	local filePath, fileNameWithExtension, extension = string.match(path, "(.-)([^\\/]-%.?([^%.\\/]*))$")
 	local fileName = removeFileExtension(fileNameWithExtension)
-
+	
 	return filePath, fileName, extension
 end
 
@@ -54,4 +54,10 @@ function getFileExtension(path)
 	local _, _, extension = getFilePathAndNameAndExtension(path)
 
 	return extension
+end
+
+function getFileDir(path)
+	local dir, _, _ = getFilePathAndNameAndExtension(path)
+	
+	return dir
 end

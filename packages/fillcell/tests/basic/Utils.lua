@@ -13,5 +13,8 @@ return {
 	end,	
 	getFileExtension = function(unitTest)
 		unitTest:assert(true)
-	end
+	end,
+	getFileDir = function(unitTest)
+		unitTest:assert(true)
+	end	
 }
