@@ -42,7 +42,7 @@
 						<table class="file_list">
 							<%for _, data in ipairs(doc.mfont) do%>
 								<tr>
-									<td class="name"><a href = "#<%=data.file%>"><%=data.file%></a></td>
+									<td class="name"><a href = "#<%=data.name%>"><%=data.name%></a></td>
 									<td class="summary"><%= data.shortsummary or "" %></td>
 								</tr>
 							<%end%>
@@ -51,11 +51,11 @@
 
 					<dl class="function">
 					<%for fpos, data in ipairs(doc.mfont) do%>
-						<dt><a name="<%=data.file%>"><h2><%=data.file%></h2></dt>
+						<dt><a name="<%=data.name%>"><h2><%=data.name%></h2></dt>
 						<dd>
-						<br><b>Name: </b>
+						<br><b>File: </b>
 						<%if data.name then%>
-							<%=data.name%>
+							<%=data.file%>
 						<%else%>
 							<font color="red"><%="undefined"%></font>
 						<%end%>
