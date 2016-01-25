@@ -51,7 +51,7 @@
 
 					<dl class="function">
 					<%for fpos, data in ipairs(doc.mfont) do%>
-						<dt><h2><%=data.file%><a name="<%=data.file%>"></h2></dt>
+						<dt><a name="<%=data.file%>"><h2><%=data.file%></h2></dt>
 						<dd>
 						<br><b>Name: </b>
 						<%if data.name then%>

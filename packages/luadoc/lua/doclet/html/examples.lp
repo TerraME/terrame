@@ -52,7 +52,7 @@
 						<%for _, filepath in ipairs(doc.files) do%>
 							<%if doc.files[filepath].type == "example" then%>
 								<%file = string.sub(filepath, 0, string.len(filepath) - 4)%>
-								<dt><h2><a href = <%="../../examples/"..file..".lua"%> ><%=file%> </a><a name="<%=file%>"></h2>
+								<dt><h2><a name="<%=file%>"><a href = <%="../../examples/"..file..".lua"%> ><%=file%> </a></h2>
 									<% if doc.files[filepath].image then %>
 										<% loc = "../../images/"..doc.files[filepath].image %>
 										<center><img src=<% =loc %> ></center><br><br>
