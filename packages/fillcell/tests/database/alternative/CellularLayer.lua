@@ -163,7 +163,6 @@ return{
 		unitTest:assertError(outputNotString, incompatibleTypeMsg("output", "string", 2))		
 		
 		local presenceLayerName = clName1.."_Presence"
-
 		local layerNotExists = function()
 			cl:fillCells{
 				operation = "presence",
@@ -196,7 +195,6 @@ return{
 		unitTest:assertError(presenceSelectUnnecessary, unnecessaryArgumentMsg("select"))		
 		
 		local areaLayerName = clName1.."_Presence"
-		
 		local areaSelectUnnecessary = function()
 			cl:fillCells{
 				attribute = "attr",
@@ -207,6 +205,18 @@ return{
 			}
 		end
 		unitTest:assertError(areaSelectUnnecessary, unnecessaryArgumentMsg("select"))
+		
+		local countLayerName = clName1.."_Count"
+		local countSelectUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "area",
+				layer = layerName1,
+				select = "FID",
+				output = countLayerName
+			}
+		end
+		unitTest:assertError(countSelectUnnecessary, unnecessaryArgumentMsg("select"))	
 
 -- 		-- average
 -- 		error_func = function()
@@ -262,17 +272,6 @@ return{
 -- 			}
 -- 		end
 -- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
-
--- 		-- count
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "count",
--- 				layer = "cover",
--- 				select = "cover2010"
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select")) -- SKIP
 
 -- 		-- distance
 -- 		error_func = function()

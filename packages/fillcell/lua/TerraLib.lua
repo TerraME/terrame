@@ -36,12 +36,14 @@ local OperationMapper = {
 	value = binding.VALUE_OPERATION,
 	sum = binding.SUM,
 	area = binding.PERCENT_TOTAL_AREA,
-	presence = binding.PRESENCE
+	presence = binding.PRESENCE,
+	count = binding.COUNT
 }
 
 local AttributeCreatedMapper = {
 	presence = "presence",
-	area = "percent_of_total_area"
+	area = "percent_of_total_area",
+	count = "total_values"
 }
 
 -- TODO: Remove this after
@@ -724,6 +726,9 @@ TerraLib_ = {
 		local propCreated = getCreatedPropertyName(select, operation)
 		outDs:renameProperty(outDSetName, propCreated, property)
 		
+		-- TODO: RENAME INSTEAD OUTPUT
+		--outDs:renameDataSet(string.upper(out), "rename_test")
+
 		local outLayer = createLayer(out, outConnInfo, outType)
 		project.layers[out] = outLayer
 		

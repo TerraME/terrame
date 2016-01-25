@@ -176,7 +176,8 @@ CellularLayer_ = {
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			count = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+				data.select = "FID"
 			end,
 			distance = function()
 	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})

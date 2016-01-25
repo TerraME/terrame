@@ -186,7 +186,7 @@ return {
 		unitTest:assertEquals(presenceLayerInfo.password, password)
 		unitTest:assertEquals(presenceLayerInfo.database, database)
 		unitTest:assertEquals(presenceLayerInfo.table, string.lower(presenceLayerName))		
-		
+
 		-- ###################### 2 #############################
 		
 		local areaLayerName = clName1.."_Area"
@@ -214,16 +214,45 @@ return {
 		unitTest:assertEquals(areaLayerInfo.database, database)
 		unitTest:assertEquals(areaLayerInfo.table, string.lower(areaLayerName))			
 		
+		-- ###################### 3 #############################	
+		local countLayerName = clName1.."_Count"
+		pgData.table = countLayerName
+		tl:dropPgTable(pgData)
+		
+		local c3 = CellularLayer{
+			project = proj,
+			layer = areaLayerName
+		}		
+		
+		c3:fillCells{
+			operation = "count",
+			layer = layerName1,
+			attribute = "count",
+			output = countLayerName
+		}
+		
+		local countLayerInfo = proj:infoLayer(countLayerName)
+		unitTest:assertEquals(countLayerInfo.source, "postgis")
+		unitTest:assertEquals(countLayerInfo.host, host)
+		unitTest:assertEquals(countLayerInfo.port, port)
+		unitTest:assertEquals(countLayerInfo.user, user)
+		unitTest:assertEquals(countLayerInfo.password, password)
+		unitTest:assertEquals(countLayerInfo.database, database)
+		unitTest:assertEquals(countLayerInfo.table, string.lower(countLayerName))			
+
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end
-
+		
+		pgData.table = string.lower(tName1)
 		tl:dropPgTable(pgData)
 		pgData.table = string.lower(presenceLayerName)
 		tl:dropPgTable(pgData)
 		pgData.table = string.lower(areaLayerName)
 		tl:dropPgTable(pgData)
+		pgData.table = string.lower(countLayerName)
+		tl:dropPgTable(pgData)		
 		
 		tl = TerraLib{}
 		tl:finalize()		
