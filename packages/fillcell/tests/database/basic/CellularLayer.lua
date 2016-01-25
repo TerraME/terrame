@@ -238,8 +238,29 @@ return {
 		unitTest:assertEquals(countLayerInfo.user, user)
 		unitTest:assertEquals(countLayerInfo.password, password)
 		unitTest:assertEquals(countLayerInfo.database, database)
-		unitTest:assertEquals(countLayerInfo.table, string.lower(countLayerName))			
+		unitTest:assertEquals(countLayerInfo.table, string.lower(countLayerName))
 
+		-- ###################### 4 #############################	
+		local distanceLayerName = clName1.."_Distance"
+		pgData.table = distanceLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "distance",
+			layer = layerName1,
+			attribute = "distance",
+			output = distanceLayerName
+		}
+		
+		local distanceLayerInfo = proj:infoLayer(distanceLayerName)
+		unitTest:assertEquals(distanceLayerInfo.source, "postgis")
+		unitTest:assertEquals(distanceLayerInfo.host, host)
+		unitTest:assertEquals(distanceLayerInfo.port, port)
+		unitTest:assertEquals(distanceLayerInfo.user, user)
+		unitTest:assertEquals(distanceLayerInfo.password, password)
+		unitTest:assertEquals(distanceLayerInfo.database, database)
+		unitTest:assertEquals(distanceLayerInfo.table, string.lower(distanceLayerName))			
+		os.execute("pause")
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
@@ -252,6 +273,8 @@ return {
 		pgData.table = string.lower(areaLayerName)
 		tl:dropPgTable(pgData)
 		pgData.table = string.lower(countLayerName)
+		tl:dropPgTable(pgData)		
+		pgData.table = string.lower(distanceLayerName)
 		tl:dropPgTable(pgData)		
 		
 		tl = TerraLib{}

@@ -210,13 +210,25 @@ return{
 		local countSelectUnnecessary = function()
 			cl:fillCells{
 				attribute = "attr",
-				operation = "area",
+				operation = "count",
 				layer = layerName1,
 				select = "FID",
 				output = countLayerName
 			}
 		end
 		unitTest:assertError(countSelectUnnecessary, unnecessaryArgumentMsg("select"))	
+		
+		local distanceLayerName = clName1.."_Distance"
+		local distanceSelectUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "distance",
+				layer = layerName1,
+				select = "FID",
+				output = distanceLayerName
+			}
+		end
+		unitTest:assertError(distanceSelectUnnecessary, unnecessaryArgumentMsg("select"))
 
 -- 		-- average
 -- 		error_func = function()
@@ -272,17 +284,6 @@ return{
 -- 			}
 -- 		end
 -- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
-
--- 		-- distance
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "distance",
--- 				layer = "cover",
--- 				select = "cover2010"
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select")) -- SKIP
 
 -- 		-- length
 -- 		error_func = function()

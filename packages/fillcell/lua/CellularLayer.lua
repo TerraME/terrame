@@ -180,7 +180,8 @@ CellularLayer_ = {
 				data.select = "FID"
 			end,
 			distance = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+				data.select = "FID"
 			end,
 			length = function()
 				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})

@@ -37,13 +37,15 @@ local OperationMapper = {
 	sum = binding.SUM,
 	area = binding.PERCENT_TOTAL_AREA,
 	presence = binding.PRESENCE,
-	count = binding.COUNT
+	count = binding.COUNT,
+	distance = binding.MIN_DISTANCE
 }
 
 local AttributeCreatedMapper = {
 	presence = "presence",
 	area = "percent_of_total_area",
-	count = "total_values"
+	count = "total_values",
+	distance = "min_distance"
 }
 
 -- TODO: Remove this after
