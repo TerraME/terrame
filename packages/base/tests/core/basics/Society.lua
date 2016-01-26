@@ -51,6 +51,7 @@ return {
 			money = 100,
 			init = function(self)
 				self.charge = 0
+				unitTest:assertType(self.parent, "Society")
 			end,
 			age = Random{min = 0, max = 10, step = 1},
 			gender = Random{"male", "female"},

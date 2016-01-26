@@ -137,12 +137,15 @@ Society_ = {
 				end
 			end)
 
+			agent.parent = self
 			agent:init()
 		elseif mtype ~= "Agent" then
 			incompatibleTypeError(1, "Agent or table", agent)
+		else
+			agent.parent = self
 		end
 
-		agent.parent = self
+
 		table.insert(self.agents, agent)
 		if agent.id == nil then agent.id = tostring(self.autoincrement) end
 		self.autoincrement = self.autoincrement + 1
