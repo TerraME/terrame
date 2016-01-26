@@ -106,9 +106,7 @@
 							<%for _, filepath in ipairs(doc.files) do%>
 								<%if doc.files[filepath].type == "model" then%>
 									<tr>
-										<%local name = doc.files[filepath].doc[1].name%>
-										<%local link = luadoc.link("files/models.html", from).."#"..name%>
-										<td class="name"><a href="<%=link%>"><%=name%></a></td>
+										<td class="name"><%=doc.files[filepath].doc[1].name%></td>
 										<td class="summary"><%=luadoc.link_description(doc.files[filepath].doc[1].summary or "", doc,
 											module_doc, file_doc, from, true, "summary", doc_report)%></td>
 									</tr>
@@ -178,8 +176,7 @@
 									<tr>
 										<!-- <td class="name"><a href="<%=luadoc.file_link(filepath)%>"><%=filepath:match("(.-)%.lua")%></a></td> -->
 										<%file = string.sub(filepath, 0, string.len(filepath) - 4)%>
-										<%local link = luadoc.link("files/examples.html", from).."#"..file%>
-										<td class="name"><a href="<%=link%>"><b><%=file%></b></a></td>
+										<td class="name"><b><%=file%></b></td>
 										<td class="summary"><%=luadoc.link_description(doc.files[filepath].summary or "", doc,
 											module_doc, file_doc, from, true, "summary", doc_report)%></td>
 									</tr>
@@ -194,8 +191,7 @@
 							<!--<tr><td colspan="2">Examples</td></tr>-->
 							<%for _, data in ipairs(doc.mdata) do%>
 								<tr>
-									<%local link = luadoc.link("files/data.html", from).."#"..data.file[1]%>
-									<td class="name"><a href="<%=link%>"><b><%=data.file[1] or ""%></b></a></td>
+									<td class="name"><b><%=data.file[1] or ""%></b></td>
 									<td class="summary"><%=luadoc.link_description(data.shortsummary or "", doc, 
 										module_doc, file_doc, from, true, "summary", doc_report)%></td>
 								</tr>
@@ -209,8 +205,7 @@
 							<!--<tr><td colspan="2">Examples</td></tr>-->
 							<%for _, data in ipairs(doc.mfont) do%>
 								<tr>
-									<%local link = luadoc.link("files/font.html", from).."#"..data.name%>
-									<td class="name"><a href="<%=link%>"><b><%=data.name or ""%></b></a></td>
+									<td class="name"><b><%=data.name or ""%></b></td>
 									<td class="summary"><%=luadoc.link_description(data.shortsummary or "", doc,
 										module_doc, file_doc, from, true, "summary", doc_report)%></td>
 								</tr>

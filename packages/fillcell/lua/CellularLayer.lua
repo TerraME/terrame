@@ -147,13 +147,25 @@ CellularLayer_ = {
 		mandatoryTableArgument(data, "operation", "string")
 		mandatoryTableArgument(data, "layer", "string")
 		mandatoryTableArgument(data, "attribute", "string")
-
+		mandatoryTableArgument(data, "output", "string")
+		
+		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "select", "table"})
+		
+		local tlib = TerraLib{}
+		local project = self.project
+		
+		if not project.layers[data.layer] then
+			customError("The layer '"..data.layer.."' not exists.")
+		end		
+		
+		if not data.table then
+			data.table = data.layer
+		end
+		
 		switch(data, "operation"):caseof{
-			area = function()
-				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
-				
-				tlib = TerraLib{}
-				tlib:attributeFill(self.project, data.layer, self.layer, data.output)
+			area = function()		
+				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+				data.select = "FID"								
 			end,
 			average = function()
 				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
@@ -164,10 +176,12 @@ CellularLayer_ = {
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			count = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+				data.select = "FID"
 			end,
 			distance = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+				data.select = "FID"
 			end,
 			length = function()
 				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
@@ -201,7 +215,8 @@ CellularLayer_ = {
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			presence = function()
-				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+				data.select = "FID"
 			end,
 			stdev = function()
 				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
@@ -226,6 +241,8 @@ CellularLayer_ = {
 				defaultTableValue(data, "area", false)
 			end
 		}
+		
+		tlib:attributeFill(project, data.layer, self.layer, data.output, data.attribute, data.operation, data.select)
 	end
 }
 

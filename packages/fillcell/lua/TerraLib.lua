@@ -35,7 +35,17 @@ local initialized = false
 local OperationMapper = {
 	value = binding.VALUE_OPERATION,
 	sum = binding.SUM,
-	percentage = binding.PERCENT_TOTAL_AREA
+	area = binding.PERCENT_TOTAL_AREA,
+	presence = binding.PRESENCE,
+	count = binding.COUNT,
+	distance = binding.MIN_DISTANCE
+}
+
+local AttributeCreatedMapper = {
+	presence = "presence",
+	area = "percent_of_total_area",
+	count = "total_values",
+	distance = "min_distance"
 }
 
 -- TODO: Remove this after
@@ -410,15 +420,30 @@ local function dataSetExists(connInfo, type)
 	end
 	
 	local exists = ds:dataSetExists(dSetName)
-	if exists then
-		return true
-	end	
 	
 	ds:close()
 	ds = nil
 	collectgarbage("collect")
 	
-	return false
+	return exists
+end
+
+local function propertyExists(connInfo, property, type)
+	local ds = nil
+	local dSetName = ""
+	
+	if type == "POSTGIS" then
+		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
+		dSetName = string.lower(connInfo.PG_NEWDB_NAME)
+	end
+	
+	local exists = ds:propertyExists(dSetName, property)
+	
+	ds:close()
+	ds = nil
+	collectgarbage("collect")
+	
+	return exists
 end
 
 local function dropDataSet(connInfo, type)
@@ -515,6 +540,10 @@ local function createCellSpaceLayer(inputLayer, name, resolultion, connInfo, typ
 	end
 
 	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
+end
+
+local function getCreatedPropertyName(select, operation)
+	return string.lower(select).."_"..AttributeCreatedMapper[operation]
 end
 
 local function finalize()
@@ -627,7 +656,7 @@ TerraLib_ = {
 		local connInfo = createFileConnInfo(filePath)
 		
 		createCellSpaceLayer(inputLayer, name, resolultion, connInfo, "OGR")
-		
+		-- TODO: TRY CHANGE TO CREATE LAYER HERE
 		self:addShpLayer(project, name, filePath)
 	end,
 	
@@ -643,8 +672,8 @@ TerraLib_ = {
 			releaseProject(project)
 			customError("The table '"..data.table.."' already exists.")
 		end
-		
-		self:addPgLayer(project, name, data)
+		-- TODO: TRY CHANGE TO CREATE LAYER HERE
+		self:addPgLayer(project, name, data)	
 	end,	
 	
 	dropPgTable = function(self, data)
@@ -661,32 +690,53 @@ TerraLib_ = {
 		releaseProject(project)	
 	end,
 	
-	attributeFill = function(self, project, from, to, out)
+	attributeFill = function(self, project, from, to, out, property, operation, select)
 		loadProject(project, project.file)
 
 		local fromLayer = project.layers[from]
 		local fromDsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
-		
 		local toLayer = project.layers[to]
 		local toDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
+		local outDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
 		
-		out = "output6"
+		if propertyExists(toDsInfo:getConnInfo(), property, toDsInfo:getType()) then
+			customError("The attribute '"..property.."' already exists in layer '"..to.."'.")
+		end			
 		
 		local v2v = binding.te.attributefill.VectorToVectorMemory()
-		
 		v2v:setInput(fromLayer, toLayer)
 		
-		local outDs = v2v:createAndSetOutput("D:/terrame/tests/"..out..".shp", out)
-
-		local dsId = binding.GetRandomicId()		
-		addDataSourceInfo(dsId, "OGR", out, outDs:getConnectionInfo())
-		local operation = "value" -- TODO
+		local outDs = nil
+		local outConnInfo = outDsInfo:getConnInfo()
+		local outDSetName = out
+		local outType = outDsInfo:getType()
+		
+		if outType == "POSTGIS" then
+			outConnInfo.PG_NEWDB_NAME = string.lower(outDSetName)
+		-- elseif (outType == "OGR") then -- TODO: TERRALIB DOES NOT WORK WITH OGR (REVIEW)
+			-- local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
+			-- outConnInfo.URI = outDir..out..".shp"
+		end
+		
+		outDs = v2v:createAndSetOutput(out, outType, outConnInfo)
+		
 		-- TODO: THE TERRALIB APLY OPERATIONS ON EACH PROPERTY (REVIEW)
-		--v2v:setParams("CONSUMO_FA", OperationMapper[operation], toLayer)
-		v2v:setParams(fromLayer, OperationMapper[operation], toLayer)
+		--v2v:setParams(fromLayer, OperationMapper[operation], toLayer)
+		v2v:setParams(select, OperationMapper[operation], toLayer)	
+		v2v:run()	
+
+		local propCreated = getCreatedPropertyName(select, operation)
+		outDs:renameProperty(outDSetName, propCreated, property)
 		
-		v2v:run()
+		-- TODO: RENAME INSTEAD OUTPUT
+		--outDs:renameDataSet(string.upper(out), "rename_test")
+
+		local outLayer = createLayer(out, outConnInfo, outType)
+		project.layers[out] = outLayer
 		
+		saveProject(project, project.layers)
+		
+		releaseProject(project)
 		outDs:close()
 		outDs = nil
 		v2v = nil
