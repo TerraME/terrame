@@ -803,13 +803,15 @@ function _Gtme.stringToLabel(mstring, parent)
 			i = i + 1
 		end
 	else
+		mstring = string.sub(mstring, 2)
 		local nextu = string.match(mstring, "%u")
 		local nextd = string.match(mstring, "%d")
 		local prevu = false
 		local prevd = false
 
-		for i = 2, mstring:len() do
+		for i = 1, mstring:len() do
 			local nextchar = string.sub(mstring, i, i)
+
 			if nextchar == nextu then
 				if not prevu then
 					result = result.." "
