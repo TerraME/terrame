@@ -199,7 +199,7 @@ end
 -- }
 --
 -- CSVwrite(mytable, "file.csv", ";")
--- os.execute("rm -f file.csv")
+-- rmFile("file.csv")
 function CSVwrite(data, filename, sep)
 	mandatoryArgument(1, "table", data)
 	mandatoryArgument(2, "string", filename)

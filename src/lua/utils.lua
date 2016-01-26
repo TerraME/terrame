@@ -806,8 +806,13 @@ function _Gtme.stringToLabel(mstring, parent)
 		mstring = string.sub(mstring, 2)
 		local nextu = string.match(mstring, "%u")
 		local nextd = string.match(mstring, "%d")
+
 		local prevu = false
 		local prevd = false
+
+		if tostring(tonumber(result)) == result then
+			prevd = true
+		end
 
 		for i = 1, mstring:len() do
 			local nextchar = string.sub(mstring, i, i)

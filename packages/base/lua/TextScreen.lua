@@ -38,7 +38,7 @@ TextScreen_ = {
 	-- }
 	--
 	-- ts:save("file.bmp")
-	-- os.execute("rm -f file.bmp")
+	-- rmFile("file.bmp")
 	save = function(self, file)
 		local _, extension = string.match(file, "(.-)([^%.]+)$")
 

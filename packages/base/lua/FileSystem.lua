@@ -256,7 +256,7 @@ function rmFile(file)
 		resourceNotFoundError(1, file)
 	end
 
-	local result = os.execute("rm -f "..file)
+	local result = os.execute("rm -f \""..file.."\"")
 
 	if result ~= true then
 		customError(result) -- SKIP
@@ -308,7 +308,7 @@ end
 -- @usage tmpf = tmpDir("mytmpdir_XXX")
 -- print(tmpf)
 --
--- os.execute("rm -rf "..tmpf)
+-- rmDir(tmpf)
 function tmpDir(directory)
 	if directory then
 		optionalArgument(1, "string", directory)

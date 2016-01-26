@@ -202,7 +202,7 @@ UnitTest_ = {
 			return
 		end
 
-		os.execute("rm -rf \""..fname.."\"")
+		rmFile(fname)
 
 		if isFile(fname) then
 			self.fail = self.fail + 1 -- SKIP
@@ -249,7 +249,7 @@ UnitTest_ = {
 	-- chart = Chart{target = cell}
 	-- unitTest:assertSnapshot(chart, "test_chart.bmp")
 	--
-	-- os.execute("rm -f \""..packageInfo("base").path.."/snapshots/test_chart.bmp\"")
+	-- rmFile(packageInfo("base").path.."/snapshots/test_chart.bmp")
 	assertSnapshot = function(self, observer, file, tolerance)
 		if not belong(type(observer), {"Chart", "Map", "TextScreen", "Clock", "VisualTable"}) then
 			customError("Argument #1 should be Chart, Map, TextScreen, Clock or VisualTable, got "..type(observer)..".")
