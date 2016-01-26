@@ -149,8 +149,6 @@ CellularLayer_ = {
 		mandatoryTableArgument(data, "attribute", "string")
 		mandatoryTableArgument(data, "output", "string")
 		
-		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "select", "table"})
-		
 		local tlib = TerraLib{}
 		local project = self.project
 		
@@ -201,7 +199,7 @@ CellularLayer_ = {
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			minimum = function()
-				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output" ,"table"})
 
 				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)

@@ -229,6 +229,55 @@ return{
 			}
 		end
 		unitTest:assertError(distanceSelectUnnecessary, unnecessaryArgumentMsg("select"))
+		
+		local minValueLayerName = clName1.."_Minimum"
+		local selectNotString = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName1,
+				select = 2,
+				output = minValueLayerName
+			}
+		end
+		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
+
+		local defaultNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName1,
+				select = "row",
+				output = minValueLayerName,
+				default = false
+			}
+		end
+		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+
+		local dummyNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName1,
+				select = "row",
+				output = minValueLayerName,
+				dummy = false
+			}
+		end
+		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
+
+		local unnecessaryArgument = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName1,
+				select = "row",
+				output = minValueLayerName,
+				dummy = 0,
+				defaut = 3
+			}
+		end
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))	
 
 -- 		-- average
 -- 		error_func = function()
@@ -384,50 +433,6 @@ return{
 -- 		end
 -- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
 
--- 		-- minimum
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "minimum",
--- 				layer = "cover",
--- 				select = 2
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
-
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "minimum",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				default = false
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
-
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "minimum",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				dummy = false
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
-
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "minimum",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				defaut = 3
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
-
 -- 		-- percentage
 -- 		error_func = function()
 -- 			cl:fillCells{
@@ -471,17 +476,6 @@ return{
 -- 			}
 -- 		end
 -- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
-
--- 		-- presence
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "presence",
--- 				layer = "cover",
--- 				select = "cover2010"
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select")) -- SKIP
 
 -- 		-- stdev
 -- 		error_func = function()
