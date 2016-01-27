@@ -305,6 +305,28 @@ return {
 		unitTest:assertEquals(maxValueLayerInfo.database, database)
 		unitTest:assertEquals(maxValueLayerInfo.table, string.lower(maxValueLayerName))	
 		
+	-- ###################### 7 #############################	
+		local percentageLayerName = clName1.."_Percentage"
+		pgData.table = percentageLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "percentage",
+			layer = layerName1,
+			attribute = "percentage",
+			output = percentageLayerName,
+			select = "NM_MICRO"
+		}
+		
+		local percentageLayerInfo = proj:infoLayer(percentageLayerName)
+		unitTest:assertEquals(percentageLayerInfo.source, "postgis")
+		unitTest:assertEquals(percentageLayerInfo.host, host)
+		unitTest:assertEquals(percentageLayerInfo.port, port)
+		unitTest:assertEquals(percentageLayerInfo.user, user)
+		unitTest:assertEquals(percentageLayerInfo.password, password)
+		unitTest:assertEquals(percentageLayerInfo.database, database)
+		unitTest:assertEquals(percentageLayerInfo.table, string.lower(percentageLayerName))	
+
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
@@ -321,7 +343,11 @@ return {
 		pgData.table = string.lower(distanceLayerName)
 		tl:dropPgTable(pgData)			
 		pgData.table = string.lower(minValueLayerName)
-		tl:dropPgTable(pgData)		
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(maxValueLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(percentageLayerName)
+		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}
 		tl:finalize()		

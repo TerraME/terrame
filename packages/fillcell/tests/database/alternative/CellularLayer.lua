@@ -279,14 +279,14 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))	
 		
-		local minValueLayerName = clName1.."_Maximum"
+		local maxValueLayerName = clName1.."_Maximum"
 		local selectNotString = function()
 			cl:fillCells{
 				attribute = "attr",
 				operation = "maximum",
 				layer = layerName1,
 				select = 2,
-				output = minValueLayerName
+				output = maxValueLayerName
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -297,7 +297,7 @@ return{
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				output = minValueLayerName,
+				output = maxValueLayerName,
 				default = false
 			}
 		end
@@ -309,7 +309,7 @@ return{
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				output = minValueLayerName,
+				output = maxValueLayerName,
 				dummy = false
 			}
 		end
@@ -321,12 +321,60 @@ return{
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				output = minValueLayerName,
+				output = maxValueLayerName,
 				defaut = 3
 			}
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 		
+		local percentageLayerName = clName1.."_Percentage"
+		local selectNotString = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName1,
+				select = 2,
+				output = percentageLayerName
+			}
+		end
+		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
+
+		local defaultNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName1,
+				select = "FID",
+				output = percentageLayerName,
+				default = false
+			}
+		end
+		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+
+		local dummyNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName1,
+				select = "FID",
+				output = percentageLayerName,
+				dummy = false
+			}
+		end
+		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
+
+		local unnecessaryArgument = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName1,
+				select = "FID",
+				output = percentageLayerName,
+				defaut = 3
+			}
+		end
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+	
 -- 		-- average
 -- 		error_func = function()
 -- 			cl:fillCells{
