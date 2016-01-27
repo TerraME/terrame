@@ -283,6 +283,28 @@ return {
 		unitTest:assertEquals(minValueLayerInfo.database, database)
 		unitTest:assertEquals(minValueLayerInfo.table, string.lower(minValueLayerName))			
 
+	-- ###################### 6 #############################	
+		local maxValueLayerName = clName1.."_Maximum"
+		pgData.table = maxValueLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "maximum",
+			layer = layerName1,
+			attribute = "maximum",
+			output = maxValueLayerName,
+			select = "FID"
+		}
+		
+		local maxValueLayerInfo = proj:infoLayer(maxValueLayerName)
+		unitTest:assertEquals(maxValueLayerInfo.source, "postgis")
+		unitTest:assertEquals(maxValueLayerInfo.host, host)
+		unitTest:assertEquals(maxValueLayerInfo.port, port)
+		unitTest:assertEquals(maxValueLayerInfo.user, user)
+		unitTest:assertEquals(maxValueLayerInfo.password, password)
+		unitTest:assertEquals(maxValueLayerInfo.database, database)
+		unitTest:assertEquals(maxValueLayerInfo.table, string.lower(maxValueLayerName))	
+		
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)

@@ -39,7 +39,8 @@ local OperationMapper = {
 	presence = binding.PRESENCE,
 	count = binding.COUNT,
 	distance = binding.MIN_DISTANCE,
-	minimum = binding.MIN_VALUE
+	minimum = binding.MIN_VALUE,
+	maximum = binding.MAX_VALUE
 }
 
 local AttributeCreatedMapper = {
@@ -47,7 +48,8 @@ local AttributeCreatedMapper = {
 	area = "percent_of_total_area",
 	count = "total_values",
 	distance = "min_distance",
-	minimum = "min_val"
+	minimum = "min_val",
+	maximum = "max_val"
 }
 
 -- TODO: Remove this after
