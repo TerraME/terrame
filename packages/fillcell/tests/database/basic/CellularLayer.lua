@@ -259,8 +259,52 @@ return {
 		unitTest:assertEquals(distanceLayerInfo.user, user)
 		unitTest:assertEquals(distanceLayerInfo.password, password)
 		unitTest:assertEquals(distanceLayerInfo.database, database)
-		unitTest:assertEquals(distanceLayerInfo.table, string.lower(distanceLayerName))			
-		os.execute("pause")
+		unitTest:assertEquals(distanceLayerInfo.table, string.lower(distanceLayerName))		
+
+		-- ###################### 5 #############################	
+		local minValueLayerName = clName1.."_Minimum"
+		pgData.table = minValueLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "minimum",
+			layer = layerName1,
+			attribute = "minimum",
+			output = minValueLayerName,
+			select = "FID"
+		}
+		
+		local minValueLayerInfo = proj:infoLayer(minValueLayerName)
+		unitTest:assertEquals(minValueLayerInfo.source, "postgis")
+		unitTest:assertEquals(minValueLayerInfo.host, host)
+		unitTest:assertEquals(minValueLayerInfo.port, port)
+		unitTest:assertEquals(minValueLayerInfo.user, user)
+		unitTest:assertEquals(minValueLayerInfo.password, password)
+		unitTest:assertEquals(minValueLayerInfo.database, database)
+		unitTest:assertEquals(minValueLayerInfo.table, string.lower(minValueLayerName))			
+
+	-- ###################### 6 #############################	
+		local maxValueLayerName = clName1.."_Maximum"
+		pgData.table = maxValueLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "maximum",
+			layer = layerName1,
+			attribute = "maximum",
+			output = maxValueLayerName,
+			select = "FID"
+		}
+		
+		local maxValueLayerInfo = proj:infoLayer(maxValueLayerName)
+		unitTest:assertEquals(maxValueLayerInfo.source, "postgis")
+		unitTest:assertEquals(maxValueLayerInfo.host, host)
+		unitTest:assertEquals(maxValueLayerInfo.port, port)
+		unitTest:assertEquals(maxValueLayerInfo.user, user)
+		unitTest:assertEquals(maxValueLayerInfo.password, password)
+		unitTest:assertEquals(maxValueLayerInfo.database, database)
+		unitTest:assertEquals(maxValueLayerInfo.table, string.lower(maxValueLayerName))	
+		
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
@@ -275,6 +319,8 @@ return {
 		pgData.table = string.lower(countLayerName)
 		tl:dropPgTable(pgData)		
 		pgData.table = string.lower(distanceLayerName)
+		tl:dropPgTable(pgData)			
+		pgData.table = string.lower(minValueLayerName)
 		tl:dropPgTable(pgData)		
 		
 		tl = TerraLib{}

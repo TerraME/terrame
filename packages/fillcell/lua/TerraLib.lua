@@ -38,14 +38,18 @@ local OperationMapper = {
 	area = binding.PERCENT_TOTAL_AREA,
 	presence = binding.PRESENCE,
 	count = binding.COUNT,
-	distance = binding.MIN_DISTANCE
+	distance = binding.MIN_DISTANCE,
+	minimum = binding.MIN_VALUE,
+	maximum = binding.MAX_VALUE
 }
 
 local AttributeCreatedMapper = {
 	presence = "presence",
 	area = "percent_of_total_area",
 	count = "total_values",
-	distance = "min_distance"
+	distance = "min_distance",
+	minimum = "min_val",
+	maximum = "max_val"
 }
 
 -- TODO: Remove this after
@@ -723,14 +727,34 @@ TerraLib_ = {
 		-- TODO: THE TERRALIB APLY OPERATIONS ON EACH PROPERTY (REVIEW)
 		--v2v:setParams(fromLayer, OperationMapper[operation], toLayer)
 		v2v:setParams(select, OperationMapper[operation], toLayer)	
-		v2v:run()	
-
-		local propCreated = getCreatedPropertyName(select, operation)
-		outDs:renameProperty(outDSetName, propCreated, property)
+		v2v:run()
+		
+		local propCreatedName = getCreatedPropertyName(select, operation)
+		outDs:renameProperty(outDSetName, propCreatedName, property)
+		
+		-- TODO: FILL NULL ATTRIBUTES WITH DEFAULT VALUES (REVIEW)
+		-- local outDSet = outDs:getDataSet(outDSetName)
+		-- local outDSetType = outDs:getDataSetType(outDSetName)
+		-- local outMemDSet = binding.te.mem.DataSet(outDSetType)
+		-- local numProp = outDSet:getNumProperties()
+		-- while outDSet:moveNext() do
+			-- local item = binding.te.mem.DataSetItem.create(outMemDSet)
+			-- for i = 0, numProp - 1 do
+				-- if outDSet:isNull(i) then
+					-- if outDSet:getPropertyName(i) == propCreatedName then
+						-- item:setValue(i, 0)
+					-- end
+				-- else
+					-- _Gtme.print(outDSet:getPropertyName(i)..":::::::::::::::::::: "..outDSet:getAsString(i))					
+				-- end
+				
+			-- end
+			-- outMemDSet:add(item)
+		-- end
 		
 		-- TODO: RENAME INSTEAD OUTPUT
 		--outDs:renameDataSet(string.upper(out), "rename_test")
-
+		
 		local outLayer = createLayer(out, outConnInfo, outType)
 		project.layers[out] = outLayer
 		
