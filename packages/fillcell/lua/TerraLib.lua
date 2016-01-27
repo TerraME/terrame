@@ -41,7 +41,8 @@ local OperationMapper = {
 	distance = binding.MIN_DISTANCE,
 	minimum = binding.MIN_VALUE,
 	maximum = binding.MAX_VALUE,
-	percentage = binding.PERCENT_EACH_CLASS
+	percentage = binding.PERCENT_EACH_CLASS,
+	stdev = binding.STANDARD_DEVIATION
 }
 
 local AttributeCreatedMapper = {
@@ -51,7 +52,8 @@ local AttributeCreatedMapper = {
 	distance = "min_distance",
 	minimum = "min_val",
 	maximum = "max_val",
-	percentage = "percent_area_class"
+	percentage = "percent_area_class",
+	stdev = "stand_dev"
 }
 
 -- TODO: Remove this after

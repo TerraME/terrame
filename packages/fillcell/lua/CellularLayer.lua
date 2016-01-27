@@ -217,7 +217,7 @@ CellularLayer_ = {
 				data.select = "FID"
 			end,
 			stdev = function()
-				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output" ,"table"})
 
 				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)

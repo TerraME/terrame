@@ -283,7 +283,7 @@ return {
 		unitTest:assertEquals(minValueLayerInfo.database, database)
 		unitTest:assertEquals(minValueLayerInfo.table, string.lower(minValueLayerName))			
 
-	-- ###################### 6 #############################	
+		-- ###################### 6 #############################	
 		local maxValueLayerName = clName1.."_Maximum"
 		pgData.table = maxValueLayerName
 		tl:dropPgTable(pgData)	
@@ -305,7 +305,7 @@ return {
 		unitTest:assertEquals(maxValueLayerInfo.database, database)
 		unitTest:assertEquals(maxValueLayerInfo.table, string.lower(maxValueLayerName))	
 		
-	-- ###################### 7 #############################	
+		-- ###################### 7 #############################	
 		local percentageLayerName = clName1.."_Percentage"
 		pgData.table = percentageLayerName
 		tl:dropPgTable(pgData)	
@@ -326,6 +326,28 @@ return {
 		unitTest:assertEquals(percentageLayerInfo.password, password)
 		unitTest:assertEquals(percentageLayerInfo.database, database)
 		unitTest:assertEquals(percentageLayerInfo.table, string.lower(percentageLayerName))	
+		
+		-- ###################### 8 #############################	
+		local stdevLayerName = clName1.."_Stdev"
+		pgData.table = stdevLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "stdev",
+			layer = layerName1,
+			attribute = "stdev",
+			output = stdevLayerName,
+			select = "FID"
+		}
+		
+		local stdevLayerInfo = proj:infoLayer(stdevLayerName)
+		unitTest:assertEquals(stdevLayerInfo.source, "postgis")
+		unitTest:assertEquals(stdevLayerInfo.host, host)
+		unitTest:assertEquals(stdevLayerInfo.port, port)
+		unitTest:assertEquals(stdevLayerInfo.user, user)
+		unitTest:assertEquals(stdevLayerInfo.password, password)
+		unitTest:assertEquals(stdevLayerInfo.database, database)
+		unitTest:assertEquals(stdevLayerInfo.table, string.lower(stdevLayerName))			
 
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -347,6 +369,8 @@ return {
 		pgData.table = string.lower(maxValueLayerName)
 		tl:dropPgTable(pgData)	
 		pgData.table = string.lower(percentageLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(stdevLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}
