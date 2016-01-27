@@ -145,7 +145,7 @@ metaTableEvent_ = {
 -- Agent/Automaton & execute -> notify \
 -- CellularSpace/Cell & synchronize -> notify \
 -- function & function\
--- Society & execute -> synchronize \
+-- Society & execute -> synchronize -> notify \
 -- Timer & notify \
 -- Trajectory/Group & rebuild -> notify \
 -- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
@@ -209,6 +209,7 @@ function Event(data)
 			data.action = function(event)
 				maction:execute(event)
 				maction:synchronize(event:getPeriod())
+				maction:notify(event)
 			end
 		elseif targettype == "Cell" then
 			data.action = function(event)
