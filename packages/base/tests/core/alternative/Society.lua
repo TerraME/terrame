@@ -202,12 +202,12 @@ return{
 		error_func = function()
 			soc:exec()
 		end
-		unitTest:assertError(error_func, "Could not execute function 'exec' from the Agents: attempt to call field '?' (a number value).")
+		unitTest:assertError(error_func, incompatibleTypeMsg("exec", "function", 2))
 
 		error_func = function()
 			soc:water()
 		end
-		unitTest:assertError(error_func, "Could not find attribute 'water' in all the Agents.")
+		unitTest:assertError(error_func, incompatibleTypeMsg("water", "number", "abc"))
 	end,
 	add = function(unitTest)
 		local ag1 = Agent{}

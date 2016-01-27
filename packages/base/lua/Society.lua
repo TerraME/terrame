@@ -445,7 +445,6 @@ Society_ = {
 					end
 
 					count = count + data.quantity + 1
-
 				end
 			end,
 			watts = function()
@@ -638,6 +637,7 @@ Society_ = {
 					return arg.cObj_:kill(-1)
 				end
 			end
+
 			customError("Could not remove the Agent (id = '"..tostring(arg.id).."').")
 		elseif type(arg) == "function" then
 			local ret = false
@@ -753,6 +753,7 @@ Society_ = {
 					build = false
 				}
 			end
+
 			table.insert(result[class_].agents, agent)
 		end)
 
@@ -809,6 +810,7 @@ Society_ = {
 				else
 					kmessage.receiver:on_message(kmessage)
 				end
+
 				table.remove(self.messages, k)
 			else
 				k = k + 1
@@ -947,24 +949,6 @@ function Society(data)
 		customError("Argument 'instance' should not have attribute 'parent'.")
 	end
 
-	local function callFunc(func, mtype, attribute)
-		local status, result = pcall(func) 
-
-		if not status then
-			local str = _Gtme.cleanErrorMessage(result)
-			local msg
-
-			if mtype == "function" then
-				msg = "Could not execute function '"..attribute.."' from the Agents: "..str.."."
-			else
-				msg = "Could not find attribute '"..attribute.."' in all the Agents."
-			end
-
-			customError(msg)
-		end
-		return result
-	end
-
 	local function createSummaryFunctions(agent)
 		-- create functions for the society according to the attributes of its instance
 		forEachElement(agent, function(attribute, value, mtype)
@@ -978,13 +962,13 @@ function Society(data)
 				end
 
 				data[attribute] = function(soc, args)
-					local func = function()
-						return forEachAgent(soc, function(agent)
-							return agent[attribute](agent, args)
-						end)
-					end
+					return forEachAgent(soc, function(agent)
+						if type(agent[attribute]) ~= "function" then
+							incompatibleTypeError(attribute, "function", agent[attribute])
+						end
 
-					return callFunc(func, "function", attribute)
+						return agent[attribute](agent, args)
+					end)
 				end
 			elseif mtype == "number" or (mtype == "Random" and value.distrib ~= "categorical" and (value.distrib ~= "discrete" or type(value[1]) == "number")) then
 				if data[attribute] then
@@ -993,15 +977,15 @@ function Society(data)
 				end
 
 				data[attribute] = function(soc)
-					local func = function()
-						local quantity = 0
-						forEachAgent(soc, function(agent)
-							quantity = quantity + agent[attribute]
-						end)
-						return quantity
-					end
+					local quantity = 0
+					forEachAgent(soc, function(agent)
+						if type(agent[attribute]) ~= "number" then
+							incompatibleTypeError(attribute, "number", agent[attribute])
+						end
 
-					return callFunc(func, "number", attribute)
+						quantity = quantity + agent[attribute]
+					end)
+					return quantity
 				end
 			elseif mtype == "boolean" then
 				if data[attribute] then
