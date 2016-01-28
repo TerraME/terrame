@@ -1625,6 +1625,55 @@ metaTableMap_ = {__index = Map_}
 --     max = 1,
 --     slices = 10
 -- }
+--
+-- -- Visualizing the result of a function
+-- cell = Cell{
+--     cover = function(cell)
+--         if Random():number() > 0.2 then
+--             return "pasture"
+--         else
+--             return "soil"
+--         end
+--     end
+-- }
+--
+-- cs = CellularSpace{
+--     xdim = 30,
+--     instance = cell
+-- }
+--
+-- Map{
+--     target = cs,
+--     select = "cover",
+--     value = {"soil", "pasture"},
+--     color = {"brown", "green"}
+-- }
+--
+-- -- Visualizing the agents of a Society
+-- soc = Society{
+--     instance = Agent{},
+--     quantity = 20
+-- }
+--
+-- cs = CellularSpace{
+--     xdim = 10
+-- }
+--
+-- e = Environment{
+--     cs,
+--     soc
+-- }
+--
+-- e:createPlacement{max = 1}
+--
+-- m = Map{
+--     target = soc,
+--     symbol = "smile",
+--     color = "yellow",
+--     background = "darkGreen",
+--     grid = true,
+--     size = 25
+-- }
 function Map(data)
 	verifyNamedTable(data)
 	mandatoryTableArgument(data, "target")
