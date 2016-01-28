@@ -347,7 +347,52 @@ return {
 		unitTest:assertEquals(stdevLayerInfo.user, user)
 		unitTest:assertEquals(stdevLayerInfo.password, password)
 		unitTest:assertEquals(stdevLayerInfo.database, database)
-		unitTest:assertEquals(stdevLayerInfo.table, string.lower(stdevLayerName))			
+		unitTest:assertEquals(stdevLayerInfo.table, string.lower(stdevLayerName))
+		
+		-- ###################### 9 #############################	
+		local meanLayerName = clName1.."_Average_Mean"
+		pgData.table = meanLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "average",
+			layer = layerName1,
+			attribute = "mean",
+			output = meanLayerName,
+			select = "FID"
+		}
+		
+		local meanLayerInfo = proj:infoLayer(meanLayerName)
+		unitTest:assertEquals(meanLayerInfo.source, "postgis")
+		unitTest:assertEquals(meanLayerInfo.host, host)
+		unitTest:assertEquals(meanLayerInfo.port, port)
+		unitTest:assertEquals(meanLayerInfo.user, user)
+		unitTest:assertEquals(meanLayerInfo.password, password)
+		unitTest:assertEquals(meanLayerInfo.database, database)
+		unitTest:assertEquals(meanLayerInfo.table, string.lower(meanLayerName))		
+
+		-- ###################### 10 #############################	
+		local weighLayerName = clName1.."_Average_Weighted"
+		pgData.table = weighLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "average",
+			layer = layerName1,
+			attribute = "weighted",
+			output = weighLayerName,
+			select = "FID",
+			area = true
+		}
+		
+		local weighLayerInfo = proj:infoLayer(weighLayerName)
+		unitTest:assertEquals(weighLayerInfo.source, "postgis")
+		unitTest:assertEquals(weighLayerInfo.host, host)
+		unitTest:assertEquals(weighLayerInfo.port, port)
+		unitTest:assertEquals(weighLayerInfo.user, user)
+		unitTest:assertEquals(weighLayerInfo.password, password)
+		unitTest:assertEquals(weighLayerInfo.database, database)
+		unitTest:assertEquals(weighLayerInfo.table, string.lower(weighLayerName))			
 
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -371,6 +416,10 @@ return {
 		pgData.table = string.lower(percentageLayerName)
 		tl:dropPgTable(pgData)	
 		pgData.table = string.lower(stdevLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(meanLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(weighLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}

@@ -166,7 +166,7 @@ CellularLayer_ = {
 				data.select = "FID"								
 			end,
 			average = function()
-				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
 
 				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "area", false)
@@ -240,7 +240,7 @@ CellularLayer_ = {
 			end
 		}
 		
-		tlib:attributeFill(project, data.layer, self.layer, data.output, data.attribute, data.operation, data.select)
+		tlib:attributeFill(project, data.layer, self.layer, data.output, data.attribute, data.operation, data.select, data.area)
 	end
 }
 

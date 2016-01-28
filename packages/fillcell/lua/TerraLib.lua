@@ -42,7 +42,9 @@ local OperationMapper = {
 	minimum = binding.MIN_VALUE,
 	maximum = binding.MAX_VALUE,
 	percentage = binding.PERCENT_EACH_CLASS,
-	stdev = binding.STANDARD_DEVIATION
+	stdev = binding.STANDARD_DEVIATION,
+	mean = binding.MEAN,
+	weighted = binding.WEIGHTED
 }
 
 local AttributeCreatedMapper = {
@@ -53,7 +55,9 @@ local AttributeCreatedMapper = {
 	minimum = "min_val",
 	maximum = "max_val",
 	percentage = "percent_area_class",
-	stdev = "stand_dev"
+	stdev = "stand_dev",
+	mean = "mean",
+	weighted = "weigh_area"
 }
 
 -- TODO: Remove this after
@@ -737,7 +741,7 @@ TerraLib_ = {
 		releaseProject(project)	
 	end,
 	
-	attributeFill = function(self, project, from, to, out, property, operation, select)
+	attributeFill = function(self, project, from, to, out, property, operation, select, area)
 		loadProject(project, project.file)
 
 		local fromLayer = project.layers[from]
@@ -767,6 +771,13 @@ TerraLib_ = {
 		
 		outDs = v2v:createAndSetOutput(out, outType, outConnInfo)
 		
+		if operation == "average" then
+			if area then
+				operation = "weighted"
+			else
+				operation = "mean"
+			end
+		end
 		-- TODO: THE TERRALIB APLY OPERATIONS ON EACH PROPERTY (REVIEW)
 		--v2v:setParams(fromLayer, OperationMapper[operation], toLayer)
 		v2v:setParams(select, OperationMapper[operation], toLayer)	
