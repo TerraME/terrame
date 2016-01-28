@@ -1,4 +1,5 @@
--- @example A simple discrete rain model.
+-- @example A simple discrete rain model. It simply computes the
+-- amount of water according to the rain and a flow coefficient.
 -- @arg C The amount of rain per unit of time. The default value is 2.
 -- @arg K The flow coefficient. The default value is 0.4.
 
@@ -19,7 +20,7 @@ t = Timer{
 		-- soil water
 		q = q + input - output
 		-- drainage
-		output = K*q
+		output = K * q
 		-- report
 		print(event:getTime(), input, output, q)
 	end}

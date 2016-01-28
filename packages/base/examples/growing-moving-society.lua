@@ -1,4 +1,7 @@
 -- @example A model with 100 moving and growing Agents.
+-- An Agent moves to an empty random cell in each time step and
+-- reproduces if it finds another empty random cell, given a
+-- probability.
 -- @arg GROWTH_PROB The probability of an agent to reproduce in an
 -- empty neighbor cell. The default value is 0.3.
 -- @image growing-moving-society.bmp

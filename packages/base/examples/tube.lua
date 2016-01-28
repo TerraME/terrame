@@ -3,7 +3,7 @@
 
 world = Cell{water = 40}
 
-chart = Chart{
+Chart{
     target = world,
 	yLabel = "Gallons"
 }

@@ -1,6 +1,12 @@
 -- @example Implementation of Schelling's segregation model.
--- Thomas Schelling, in 1971, showed that a small preference for one's neighbors to be of the same color could lead to total segregation. He used coins on graph paper to demonstrate his theory by placing pennies and nickels in different patterns on the "board" and then moving them one by one if they were in an "unhappy" situation. \ Here's the high-tech equivalent. The rule this model operates on is that for every colored cell, if greater than 33% of the adjacent cells are of a different color, the cell moves to another randomly selected cell.
--- Dynamic models of seggregation, Journal of Mathematical Sociology 1:143-186, 1971.
+-- In this model, a Society is composed by two types of Agents, reds and
+-- blacks, which live in Cells. Each Agent is happy if its neighborhood
+-- has at least a given number of Agents sharing its type. Otherwise, it
+-- will try to move to another place where it is satisfied.
+-- Using this model, Thomas Schelling showed that a small preference for one's
+-- neighbors to be of the same color could lead to total segregation. \
+-- For more information, see Schelling, T. (1971) Dynamic models of seggregation,
+-- Journal of Mathematical Sociology 1:143-186.
 -- @arg NDIM Space dimensions in x and y axis.
 -- @arg PREFERENCE Agent contentedness, indicating the minimum number of neighbors
 -- of the same color to make the agent satisfied. It should be an integer

@@ -1,5 +1,9 @@
--- @example A simple Susceptible-Infected-Recovered (SIR) model. For a description
--- of such model visit http://en.wikipedia.org/wiki/Epidemic_model.
+-- @example A simple Susceptible-Infected-Recovered (SIR) model.
+-- This model represents a given disease that propagates over a population.
+-- It starts with a small number of infected that passes the disease to
+-- the susceptible ones. After some time, infected become recovered,
+-- which cannot be infected again. \
+-- For mode details visit http://en.wikipedia.org/wiki/Epidemic_model.
 -- @image sir-basic.bmp
 
 world = Cell{
@@ -8,7 +12,7 @@ world = Cell{
 	recovered = 0
 }
 
-chart = Chart{target = world}
+Chart{target = world}
 
 world:notify()
 

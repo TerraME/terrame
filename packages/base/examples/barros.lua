@@ -1,6 +1,15 @@
 -- @example Implementation of Barros urban dynamics model.
--- Joana Barros "Simulating urban dynamics in Latin American cities." 
--- GeoDynamics (2005): 313-328.
+-- It simulates a virtual city
+-- composed by poor, middle class, and rich people. The simulation
+-- starts with the city having only one inhabitant in the center
+-- of space. At each time step, a new inhabitant arrives in the
+-- center. As it is not possible to have more than one inhabitant in
+-- the same cell, the arriving inhabitants with higher income can
+-- replace those with lower income, which in turn need to search for
+-- a new cell to leave, moving randomly. Empty cells can be occupied
+-- by any kind of agent. \
+-- Reference: Barros, J. "Simulating urban dynamics in Latin American cities." 
+-- GeoDynamics (2005): 313-328. 
 -- @arg P_POOR Percentage of poor agents.
 -- @arg P_MIDDLE Percentage of middle class agents.
 -- @arg P_RICH Percentage of rich agents. Note that the sum of the three percentages

@@ -1,8 +1,8 @@
-
--- @example Implementation of a simple runoff model.
+-- @example Implementation of a simple runoff model using geospatial data.
 -- There is an initial rain in the highest cells.
--- Each cell then sends its water equally to all neighbors
--- with lower height. 
+-- The Neighborhood of a Cell is composed by its Moore neighbors that
+-- have lower height.
+-- Each cell then sends its water equally to all neighbors. 
 -- @image runoff.bmp
 
 cell = Cell{

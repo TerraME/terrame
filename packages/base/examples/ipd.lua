@@ -1,4 +1,17 @@
 -- @example Iterated Prisoner's dilemma model.
+-- It implements a championship with a set of Agents
+-- where they play with each other a non-cooperative game
+-- repeatedly.
+-- Some of the available strategies are Pavlov and Tit-for-tat.
+-- In the end, the model shows the results for each strategy. \
+-- For more information, see Axelrod, R. (1984) The Evolution of
+-- Cooperation. Basic Books. See also Nowak, M., and Sigmund, K. 
+-- (1993) A strategy of win-stay, lose-shift that outperforms
+-- tit-for-tat in the Prisoner's Dilemma game. Nature 364.6432: 56-58.
+-- @arg TURNS The number of times an Agent plays
+-- with each opponent.
+-- @arg CHAMPIONSHIP A vector with the strategies used
+-- in the championship.
 
 Random{seed = 12345}
 
@@ -138,6 +151,7 @@ nplayers = getn(CHAMPIONSHIP)
 results = {}
 for i = 1, nplayers do
 	results[i] = {}
+
 	for j = 1, nplayers do
 		results[i][j] = 0
 	end
@@ -175,9 +189,11 @@ end
 
 -- plot the results
 p = "\t"
+
 for j = 1, nplayers do
 	p = p..CHAMPIONSHIP[j].name.."\t"
 end
+
 print(p.."_SUM_")
 
 for i = 1, nplayers do

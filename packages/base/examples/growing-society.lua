@@ -1,4 +1,8 @@
 -- @example A model with static Agents that can reproduce to neighbor Cells.
+-- An Agent reproduces if it finds another empty random cell, given a
+-- probability.
+-- @arg GROWTH_PROB The probability of an agent to reproduce in an
+-- empty neighbor cell. The default value is 0.3.
 -- @image growing-society.bmp
 
 singleFooAgent = Agent{

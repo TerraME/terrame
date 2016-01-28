@@ -1,10 +1,13 @@
 -- @example Implementation of beer economic chain model.
--- This model represents an economic chaing with a final consumer with a random demand.
--- The agents in the economic chain need to fill the demand by requesting beer to the
--- previous agent of the chain.
--- There is a delay in the economic chain because beer takes three time steps to be
--- delivered from one agent to the next agent in the chain.
--- @arg NUMBER_OF_AGENTS Number of agents in the chain, excluding the producer and the consumer.
+-- This model represents an economic chain with a manufacturer, some intermediate nodes (such as
+-- a distributor and a supplier), and a retailer. The agents in the economic chain need to fill
+-- their demand by requesting beer to the previous agent of the chain.
+-- The retailer has a random demand, while the others have a demand requested by the next
+-- agent of the chain. Each requested beer takes three time steps to be delivered from one agent
+-- to the next one (as long as there is some stock to fulfil the demand).
+-- The objective of the game is to minimize expenditure from back orders and inventory. \
+-- For more information, see https://en.wikipedia.org/wiki/Beer_distribution_game.
+-- @arg NUMBER_OF_AGENTS Number of agents in the chain, excluding the manufacturer and the retailer.
 -- The default value is three.
 -- @image beer.bmp
 
@@ -87,7 +90,7 @@ Chart{
 	style = "sticks"
 }
 
-consumer = Agent{
+retailer = Agent{
 	priority  = 0,
 	received  = 0,
 	ordered   = 0,
@@ -105,7 +108,7 @@ consumer = Agent{
 	end
 }
 
-producer = Agent{
+manufacturer = Agent{
 	priority = NUMBER_OF_AGENTS + 1,
 	received  = 0,
 	ordered   = 0,
@@ -126,8 +129,8 @@ s = Society{
 	quantity = NUMBER_OF_AGENTS
 }
 
-s:add(consumer)
-s:add(producer)
+s:add(retailer)
+s:add(manufacturer)
 
 -- defines the order to execute the agents
 g = Group{
