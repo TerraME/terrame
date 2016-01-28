@@ -19,10 +19,22 @@ local reserved = {
 		"while"
 }
 
+local base = {
+	"Agent", "Automaton", "Cell", "CellularSpace", "Chart", "Choice",
+	"Clock", "Environment", "Event", "Flow", "Group", "InternetSender",
+	"Jump", "LogFile", "Mandatory", "Map", "Model", "Neighborhood",
+	"Random", "SocialNetwork", "Society", "State", "TextScreen",
+	"Timer", "Trajectory", "UnitTest", "VisualTable"
+}
+
 words = {}
 
-for i,j in ipairs(reserved) do
+for i, j in ipairs(reserved) do
 	reserved[j] = j
+end
+
+for i, j in ipairs(base) do
+	base[j] = j
 end
 
 function parse(text, func)
@@ -41,6 +53,8 @@ function parse(text, func)
 						if reserved[token] then
 							class = "reserved"
 						elseif words[token] then
+							class = "function"
+						elseif base[token] then
 							class = "function"
 						end
 					end
@@ -63,7 +77,10 @@ end
 
 function setWords(lwords)
 	words = lwords or {}
+end
 
+function getBase()
+	return base
 end
 
 -- return M

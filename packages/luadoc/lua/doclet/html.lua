@@ -372,6 +372,35 @@ function start(doc, doc_report)
 		end
 	end
 
+	if doc.description.package == "base" then
+		local base = highlighting.getBase()
+
+		forEachElement(base, function(mtype)
+			if type(mtype) == "number" then return end
+
+			if not doc.files[mtype..".lua"] or doc.files[mtype..".lua"].type ~= "type" then
+				printError("IMPORTANT: You have removed type '"..mtype.."' from package 'base'.")
+				printError("Please update 'packages/luadoc/lua/doclet/highlighting.lua' and")
+				printError("remove this type from a table called 'base'.")
+				os.exit()
+			end
+		end)
+
+		forEachElement(doc.files, function(idx, file)
+			if type(idx) == "number" then return end
+
+			if file.type == "type" then
+				local mtype = string.sub(idx, 1, -5)
+					if mtype ~= "funcn" and not base[mtype] then
+					printError("IMPORTANT: You have added type '"..mtype.."' to package 'base'.")
+					printError("Please update 'packages/luadoc/lua/doclet/highlighting.lua' and")
+					printError("add this type to a table called 'base'.")
+					os.exit()
+				end
+			end
+		end)
+	end
+
 	printNote("Building and checking HTML files")
 
 	-- Generate index file
