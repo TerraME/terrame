@@ -283,7 +283,7 @@ return {
 		unitTest:assertEquals(minValueLayerInfo.database, database)
 		unitTest:assertEquals(minValueLayerInfo.table, string.lower(minValueLayerName))			
 
-	-- ###################### 6 #############################	
+		-- ###################### 6 #############################	
 		local maxValueLayerName = clName1.."_Maximum"
 		pgData.table = maxValueLayerName
 		tl:dropPgTable(pgData)	
@@ -305,6 +305,95 @@ return {
 		unitTest:assertEquals(maxValueLayerInfo.database, database)
 		unitTest:assertEquals(maxValueLayerInfo.table, string.lower(maxValueLayerName))	
 		
+		-- ###################### 7 #############################	
+		local percentageLayerName = clName1.."_Percentage"
+		pgData.table = percentageLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "percentage",
+			layer = layerName1,
+			attribute = "percentage",
+			output = percentageLayerName,
+			select = "NM_MICRO"
+		}
+		
+		local percentageLayerInfo = proj:infoLayer(percentageLayerName)
+		unitTest:assertEquals(percentageLayerInfo.source, "postgis")
+		unitTest:assertEquals(percentageLayerInfo.host, host)
+		unitTest:assertEquals(percentageLayerInfo.port, port)
+		unitTest:assertEquals(percentageLayerInfo.user, user)
+		unitTest:assertEquals(percentageLayerInfo.password, password)
+		unitTest:assertEquals(percentageLayerInfo.database, database)
+		unitTest:assertEquals(percentageLayerInfo.table, string.lower(percentageLayerName))	
+		
+		-- ###################### 8 #############################	
+		local stdevLayerName = clName1.."_Stdev"
+		pgData.table = stdevLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "stdev",
+			layer = layerName1,
+			attribute = "stdev",
+			output = stdevLayerName,
+			select = "FID"
+		}
+		
+		local stdevLayerInfo = proj:infoLayer(stdevLayerName)
+		unitTest:assertEquals(stdevLayerInfo.source, "postgis")
+		unitTest:assertEquals(stdevLayerInfo.host, host)
+		unitTest:assertEquals(stdevLayerInfo.port, port)
+		unitTest:assertEquals(stdevLayerInfo.user, user)
+		unitTest:assertEquals(stdevLayerInfo.password, password)
+		unitTest:assertEquals(stdevLayerInfo.database, database)
+		unitTest:assertEquals(stdevLayerInfo.table, string.lower(stdevLayerName))
+		
+		-- ###################### 9 #############################	
+		local meanLayerName = clName1.."_Average_Mean"
+		pgData.table = meanLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "average",
+			layer = layerName1,
+			attribute = "mean",
+			output = meanLayerName,
+			select = "FID"
+		}
+		
+		local meanLayerInfo = proj:infoLayer(meanLayerName)
+		unitTest:assertEquals(meanLayerInfo.source, "postgis")
+		unitTest:assertEquals(meanLayerInfo.host, host)
+		unitTest:assertEquals(meanLayerInfo.port, port)
+		unitTest:assertEquals(meanLayerInfo.user, user)
+		unitTest:assertEquals(meanLayerInfo.password, password)
+		unitTest:assertEquals(meanLayerInfo.database, database)
+		unitTest:assertEquals(meanLayerInfo.table, string.lower(meanLayerName))		
+
+		-- ###################### 10 #############################	
+		local weighLayerName = clName1.."_Average_Weighted"
+		pgData.table = weighLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "average",
+			layer = layerName1,
+			attribute = "weighted",
+			output = weighLayerName,
+			select = "FID",
+			area = true
+		}
+		
+		local weighLayerInfo = proj:infoLayer(weighLayerName)
+		unitTest:assertEquals(weighLayerInfo.source, "postgis")
+		unitTest:assertEquals(weighLayerInfo.host, host)
+		unitTest:assertEquals(weighLayerInfo.port, port)
+		unitTest:assertEquals(weighLayerInfo.user, user)
+		unitTest:assertEquals(weighLayerInfo.password, password)
+		unitTest:assertEquals(weighLayerInfo.database, database)
+		unitTest:assertEquals(weighLayerInfo.table, string.lower(weighLayerName))			
+
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
@@ -321,7 +410,17 @@ return {
 		pgData.table = string.lower(distanceLayerName)
 		tl:dropPgTable(pgData)			
 		pgData.table = string.lower(minValueLayerName)
-		tl:dropPgTable(pgData)		
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(maxValueLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(percentageLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(stdevLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(meanLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(weighLayerName)
+		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}
 		tl:finalize()		

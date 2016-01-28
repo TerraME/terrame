@@ -279,14 +279,14 @@ return{
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))	
 		
-		local minValueLayerName = clName1.."_Maximum"
+		local maxValueLayerName = clName1.."_Maximum"
 		local selectNotString = function()
 			cl:fillCells{
 				attribute = "attr",
 				operation = "maximum",
 				layer = layerName1,
 				select = 2,
-				output = minValueLayerName
+				output = maxValueLayerName
 			}
 		end
 		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
@@ -297,7 +297,7 @@ return{
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				output = minValueLayerName,
+				output = maxValueLayerName,
 				default = false
 			}
 		end
@@ -309,7 +309,7 @@ return{
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				output = minValueLayerName,
+				output = maxValueLayerName,
 				dummy = false
 			}
 		end
@@ -321,66 +321,167 @@ return{
 				operation = "maximum",
 				layer = layerName1,
 				select = "FID",
-				output = minValueLayerName,
+				output = maxValueLayerName,
 				defaut = 3
 			}
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
 		
--- 		-- average
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "average",
--- 				layer = "cover",
--- 				select = 2
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
+		local percentageLayerName = clName1.."_Percentage"
+		local selectNotString = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName1,
+				select = 2,
+				output = percentageLayerName
+			}
+		end
+		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "average",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				area = 2
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("area", "boolean", 2)) -- SKIP
+		local defaultNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName1,
+				select = "FID",
+				output = percentageLayerName,
+				default = false
+			}
+		end
+		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
 
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "average",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				default = false
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
+		local dummyNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName1,
+				select = "FID",
+				output = percentageLayerName,
+				dummy = false
+			}
+		end
+		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
 
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "average",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				dummy = false
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
+		local unnecessaryArgument = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName1,
+				select = "FID",
+				output = percentageLayerName,
+				defaut = 3
+			}
+		end
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		
+		local stdevLayerName = clName1.."_Stdev"
+		local selectNotString = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = layerName1,
+				select = 2,
+				output = stdevLayerName
+			}
+		end
+		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
 
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "average",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				defaut = 3
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
+		local defaultNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = layerName1,
+				select = "FID",
+				output = stdevLayerName,
+				default = false
+			}
+		end
+		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+
+		local dummyNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = layerName1,
+				select = "FID",
+				output = stdevLayerName,
+				dummy = false
+			}
+		end
+		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
+
+		local defaultNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = layerName1,
+				select = "FID",
+				output = stdevLayerName,
+				defaut = 3
+			}
+		end
+		unitTest:assertError(defaultNotNumber, unnecessaryArgumentMsg("defaut", "default"))
+		
+		local averageLayerName = clName1.."_Average"
+		local selectNotString = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName1,
+				select = 2,
+				output = averageLayerName
+			}
+		end
+		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
+
+		local areaNotBoolean = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName1,
+				select = "FID",
+				output = averageLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
+
+		local defaultNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName1,
+				select = "FID",
+				output = averageLayerName,
+				default = false
+			}
+		end
+		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+
+		local dummyNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName1,
+				select = "FID",
+				output = averageLayerName,
+				dummy = false
+			}
+		end
+		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
+
+		local unnecessaryArgument = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName1,
+				select = "FID",
+				output = averageLayerName,
+				defaut = 3
+			}
+		end
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
 
 -- 		-- length
 -- 		error_func = function()
@@ -474,50 +575,6 @@ return{
 -- 			cl:fillCells{
 -- 				attribute = "attr",
 -- 				operation = "percentage",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				defaut = 3
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
-
--- 		-- stdev
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "stdev",
--- 				layer = "cover",
--- 				select = 2
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
-
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "stdev",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				default = false
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
-
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "stdev",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				dummy = false
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
-
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "stdev",
 -- 				layer = "cover",
 -- 				select = "cover2010",
 -- 				defaut = 3

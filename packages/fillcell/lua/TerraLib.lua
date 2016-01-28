@@ -40,7 +40,11 @@ local OperationMapper = {
 	count = binding.COUNT,
 	distance = binding.MIN_DISTANCE,
 	minimum = binding.MIN_VALUE,
-	maximum = binding.MAX_VALUE
+	maximum = binding.MAX_VALUE,
+	percentage = binding.PERCENT_EACH_CLASS,
+	stdev = binding.STANDARD_DEVIATION,
+	mean = binding.MEAN,
+	weighted = binding.WEIGHTED
 }
 
 local AttributeCreatedMapper = {
@@ -49,7 +53,11 @@ local AttributeCreatedMapper = {
 	count = "total_values",
 	distance = "min_distance",
 	minimum = "min_val",
-	maximum = "max_val"
+	maximum = "max_val",
+	percentage = "percent_area_class",
+	stdev = "stand_dev",
+	mean = "mean",
+	weighted = "weigh_area"
 }
 
 -- TODO: Remove this after
@@ -547,7 +555,46 @@ local function createCellSpaceLayer(inputLayer, name, resolultion, connInfo, typ
 end
 
 local function getCreatedPropertyName(select, operation)
-	return string.lower(select).."_"..AttributeCreatedMapper[operation]
+	return select.."_"..AttributeCreatedMapper[operation]
+end
+
+local function updateDataSet(ds, dSetName)
+	-- TODO: FILL NULL ATTRIBUTES WITH DEFAULT VALUES (REVIEW)
+	-- local dSet = ds:getDataSet(dSetName)
+	-- local dSetType = ds:getDataSetType(dSetName)
+		-- local outMemDSet = binding.te.mem.DataSet(outDSetType)
+	-- local numProps = dSet:getNumProperties()
+	
+	--local newDst = binding.te.da.DataSetType(dSetName)	
+	-- while dSet:moveNext() do
+			-- local item = binding.te.mem.DataSetItem.create(outMemDSet)
+		-- for i = 0, numProp - 1 do
+			-- if dSet:isNull(i) then
+					-- if outDSet:getPropertyName(i) == propCreatedName then
+						-- item:setValue(i, 0)
+					-- end
+				-- else
+					-- _Gtme.print(outDSet:getPropertyName(i)..":::::::::::::::::::: "..outDSet:getAsString(i))	
+				--_Gtme.print(dSet:get)
+			-- end
+				
+		-- end
+			-- outMemDSet:add(item)
+	-- end
+end
+
+local function renameEachClass(ds, dSetName, select, property)
+	local dSet = ds:getDataSet(dSetName)
+	local numProps = dSet:getNumProperties()
+	
+	for i = 0, numProps - 1 do
+		local currentProp = dSet:getPropertyName(i)
+		
+		if string.match(currentProp, select) then
+			local newName = string.gsub(currentProp, select.."_", property.."_")
+			ds:renameProperty(dSetName, currentProp, newName)
+		end		
+	end
 end
 
 local function finalize()
@@ -694,7 +741,7 @@ TerraLib_ = {
 		releaseProject(project)	
 	end,
 	
-	attributeFill = function(self, project, from, to, out, property, operation, select)
+	attributeFill = function(self, project, from, to, out, property, operation, select, area)
 		loadProject(project, project.file)
 
 		local fromLayer = project.layers[from]
@@ -724,33 +771,29 @@ TerraLib_ = {
 		
 		outDs = v2v:createAndSetOutput(out, outType, outConnInfo)
 		
+		if operation == "average" then
+			if area then
+				operation = "weighted"
+			else
+				operation = "mean"
+			end
+		end
 		-- TODO: THE TERRALIB APLY OPERATIONS ON EACH PROPERTY (REVIEW)
 		--v2v:setParams(fromLayer, OperationMapper[operation], toLayer)
 		v2v:setParams(select, OperationMapper[operation], toLayer)	
 		v2v:run()
 		
-		local propCreatedName = getCreatedPropertyName(select, operation)
-		outDs:renameProperty(outDSetName, propCreatedName, property)
+		if outType == "POSTGIS" then
+			select = string.lower(select)
+		end
 		
-		-- TODO: FILL NULL ATTRIBUTES WITH DEFAULT VALUES (REVIEW)
-		-- local outDSet = outDs:getDataSet(outDSetName)
-		-- local outDSetType = outDs:getDataSetType(outDSetName)
-		-- local outMemDSet = binding.te.mem.DataSet(outDSetType)
-		-- local numProp = outDSet:getNumProperties()
-		-- while outDSet:moveNext() do
-			-- local item = binding.te.mem.DataSetItem.create(outMemDSet)
-			-- for i = 0, numProp - 1 do
-				-- if outDSet:isNull(i) then
-					-- if outDSet:getPropertyName(i) == propCreatedName then
-						-- item:setValue(i, 0)
-					-- end
-				-- else
-					-- _Gtme.print(outDSet:getPropertyName(i)..":::::::::::::::::::: "..outDSet:getAsString(i))					
-				-- end
-				
-			-- end
-			-- outMemDSet:add(item)
-		-- end
+		local propCreatedName = getCreatedPropertyName(select, operation)
+		
+		if property == "percentage" then
+			renameEachClass(outDs, outDSetName, select, property)
+		else
+			outDs:renameProperty(outDSetName, propCreatedName, property)
+		end
 		
 		-- TODO: RENAME INSTEAD OUTPUT
 		--outDs:renameDataSet(string.upper(out), "rename_test")
