@@ -34,7 +34,6 @@ local initialized = false
 
 local OperationMapper = {
 	value = binding.VALUE_OPERATION,
-	sum = binding.SUM,
 	area = binding.PERCENT_TOTAL_AREA,
 	presence = binding.PRESENCE,
 	count = binding.COUNT,
@@ -46,7 +45,9 @@ local OperationMapper = {
 	mean = binding.MEAN,
 	weighted = binding.WEIGHTED,
 	intersection = binding.HIGHEST_INTERSECTION,
-	occurrence = binding.HIGHEST_OCCURRENCE
+	occurrence = binding.HIGHEST_OCCURRENCE,
+	sum = binding.SUM,
+	wsum = binding.WEIGHTED_SUM
 }
 
 local AttributeCreatedMapper = {
@@ -61,7 +62,9 @@ local AttributeCreatedMapper = {
 	mean = "mean",
 	weighted = "weigh_area",
 	intersection = "class_high_area",
-	occurrence = "class_high_occurrence"
+	occurrence = "class_high_occurrence",
+	sum = "sum_values",
+	wsum = "weigh_sum_area" 
 }
 
 -- TODO: Remove this after
@@ -765,6 +768,10 @@ TerraLib_ = {
 				operation = "intersection"
 			else
 				operation = "occurrence"
+			end
+		elseif operation == "sum" then
+			if area then
+				operation = "wsum"
 			end
 		end
 		

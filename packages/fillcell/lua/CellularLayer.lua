@@ -225,13 +225,12 @@ CellularLayer_ = {
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			sum = function()
-				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
 
 				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "area", false)
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
-				mandatoryTableArgument(data, "select", "string")
 			end,
 			value = function()
 				verifyUnnecessaryArguments(data, {"area", "attribute", "layer", "operation", "select"})
