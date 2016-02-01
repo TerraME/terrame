@@ -37,7 +37,7 @@ return{
 		local error_func = function()
 			c:notify()
 		end
-		unitTest:assertError(error_func, "Could not execute function 'value': attempt to call field '?' (a number value).")
+		unitTest:assertError(error_func, "Could not execute function 'value' from Cell because it was replaced by a 'number'.")
   end
 }
 

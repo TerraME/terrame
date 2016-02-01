@@ -588,25 +588,18 @@ Society_ = {
 			positiveArgument(1, modelTime, true)
 		end
 
-		local midx = ""
-		local ok, result = pcall(function()
-			if self.obsattrs_ then
-				forEachElement(self.obsattrs_, function(idx)
-					if idx == "quantity_" then
-						self.quantity_ = #self
-					else
-						midx = idx
-						self[idx.."_"] = self[idx](self)
+		if self.obsattrs_ then
+			forEachElement(self.obsattrs_, function(idx)
+				if idx == "quantity_" then
+					self.quantity_ = #self
+				else
+					if type(self[idx]) ~= "function" then
+						customError("Could not execute function '"..idx.."' from Society because it was replaced by a '"..type(self[idx]).."'.")
 					end
-				end)
-			end
-		end)
 
-		if not ok then
-			local str = _Gtme.cleanErrorMessage(result)
-			local msg = "Could not execute function '"..midx.."': "..str.."."
-
-			customError(msg)
+					self[idx.."_"] = self[idx](self)
+				end
+			end)
 		end
 
 		forEachAgent(self, function(agent)

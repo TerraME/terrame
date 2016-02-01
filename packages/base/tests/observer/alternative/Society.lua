@@ -41,7 +41,7 @@ return{
 		local error_func = function()
 			soc:notify()
 		end
-		unitTest:assertError(error_func, "Could not execute function 'myvalue': attempt to call field '?' (a number value).")
+		unitTest:assertError(error_func, "Could not execute function 'myvalue' from Society because it was replaced by a 'number'.")
   end
 }
 

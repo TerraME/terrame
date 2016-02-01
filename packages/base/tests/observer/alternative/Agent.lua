@@ -37,7 +37,7 @@ return{
 		local error_func = function()
 			a:notify()
 		end
-		unitTest:assertError(error_func, "Could not execute function 'value': attempt to call field '?' (a number value).")
+		unitTest:assertError(error_func, "Could not execute function 'value' from Agent because it was replaced by a 'number'.")
   end
 }
 

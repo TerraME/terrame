@@ -486,21 +486,14 @@ Agent_ = {
 			positiveArgument(1, modelTime, true)
 		end
 
-		local midx = ""
-		local ok, result = pcall(function()
-			if self.obsattrs_ then
-				forEachElement(self.obsattrs_, function(idx)
-					midx = idx
-					self[idx.."_"] = self[idx](self)
-				end)
-			end
-		end)
+		if self.obsattrs_ then
+			forEachElement(self.obsattrs_, function(idx)
+				if type(self[idx]) ~= "function" then
+					customError("Could not execute function '"..idx.."' from Agent because it was replaced by a '"..type(self[idx]).."'.")
+				end
 
-		if not ok then
-			local str = _Gtme.cleanErrorMessage(result)
-			local msg = "Could not execute function '"..midx.."': "..str.."."
-
-			customError(msg)
+				self[idx.."_"] = self[idx](self)
+			end)
 		end
 
 		self.cObj_:notify(modelTime)

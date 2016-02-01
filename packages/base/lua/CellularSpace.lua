@@ -862,13 +862,16 @@ CellularSpace_ = {
 			positiveArgument(1, modelTime, true)
 		end
 
-		local midx = ""
 		local typename = ""
-		local ok, result = pcall(function()
+
 			if self.obsattrs_ then
 				typename = "CellularSpace"
 				forEachElement(self.obsattrs_, function(idx)
-					midx = idx
+
+					if type(self[idx]) ~= "function" then
+						customError("Could not execute function '"..idx.."' from CellularSpace because it was replaced by a '"..type(self[idx]).."'.")
+					end
+
 					self[idx.."_"] = self[idx](self)
 				end)
 			end
@@ -876,20 +879,15 @@ CellularSpace_ = {
 			if self.cellobsattrs_ then
 				typename = "Cell"
 				forEachElement(self.cellobsattrs_, function(idx)
-					midx = idx
 					forEachCell(self, function(cell)
+						if type(cell[idx]) ~= "function" then
+							customError("Could not execute function '"..idx.."' from Cell because it was replaced by a '"..type(cell[idx]).."'.")
+						end
+
 						cell[idx.."_"] = cell[idx](cell)
 					end)
 				end)
 			end
-		end)
-
-		if not ok then
-			local str = _Gtme.cleanErrorMessage(result)
-			local msg = "Could not execute function '"..midx.."' from "..typename..": "..str.."."
-
-			customError(msg)
-		end
 
 		self.cObj_:notify(modelTime)
 	end,
@@ -1206,7 +1204,7 @@ function CellularSpace(data)
 			local candidates = {}
 			forEachElement(CellularSpaceDrivers, function(idx, value)
 				local all = true
-				forEachElement(value.compulsory, function(midx, mvalue)
+				forEachElement(value.compulsory, function(_, mvalue)
 					if data[mvalue] == nil then
 						all = false
 					end
@@ -1422,7 +1420,7 @@ function CellularSpace(data)
 
 			if data.instance[idx] then
 				if type(value) == "function" then
-					customWarning("Function '"..idx.."()' from Cell is replaced in the instance.")
+					strictWarning("Function '"..idx.."()' from Cell is replaced in the instance.")
 				end
 			else
 				data.instance[idx] = value

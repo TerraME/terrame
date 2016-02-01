@@ -40,7 +40,7 @@ return{
 		local error_func = function()
 			cs:notify()
 		end
-		unitTest:assertError(error_func, "Could not execute function 'myvalue' from CellularSpace: attempt to call field '?' (a number value).")
+		unitTest:assertError(error_func, "Could not execute function 'myvalue' from CellularSpace because it was replaced by a 'number'.")
 
 		local c = Cell{value = function() return 5 end}
 
@@ -61,7 +61,7 @@ return{
 		local error_func = function()
 			cs:notify()
 		end
-		unitTest:assertError(error_func, "Could not execute function 'value' from Cell: attempt to call field '?' (a number value).")
+		unitTest:assertError(error_func, "Could not execute function 'value' from Cell because it was replaced by a 'number'.")
   end
 }
 
