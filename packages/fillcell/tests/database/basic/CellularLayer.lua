@@ -439,6 +439,51 @@ return {
 		unitTest:assertEquals(occurrenceLayerInfo.database, database)
 		unitTest:assertEquals(occurrenceLayerInfo.table, string.lower(occurrenceLayerName))		
 
+		-- ###################### 13 #############################	
+		local sumLayerName = clName1.."_Sum"
+		pgData.table = sumLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "sum",
+			layer = layerName1,
+			attribute = "sum",
+			output = sumLayerName,
+			select = "FID"
+		}
+		
+		local sumLayerInfo = proj:infoLayer(sumLayerName)
+		unitTest:assertEquals(sumLayerInfo.source, "postgis")
+		unitTest:assertEquals(sumLayerInfo.host, host)
+		unitTest:assertEquals(sumLayerInfo.port, port)
+		unitTest:assertEquals(sumLayerInfo.user, user)
+		unitTest:assertEquals(sumLayerInfo.password, password)
+		unitTest:assertEquals(sumLayerInfo.database, database)
+		unitTest:assertEquals(sumLayerInfo.table, string.lower(sumLayerName))
+
+		-- ###################### 14 #############################	
+		local wsumLayerName = clName1.."_Weighted_Sum"
+		pgData.table = wsumLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "sum",
+			layer = layerName1,
+			attribute = "sum",
+			output = wsumLayerName,
+			select = "FID",
+			area = true
+		}
+		
+		local wsumLayerInfo = proj:infoLayer(wsumLayerName)
+		unitTest:assertEquals(wsumLayerInfo.source, "postgis")
+		unitTest:assertEquals(wsumLayerInfo.host, host)
+		unitTest:assertEquals(wsumLayerInfo.port, port)
+		unitTest:assertEquals(wsumLayerInfo.user, user)
+		unitTest:assertEquals(wsumLayerInfo.password, password)
+		unitTest:assertEquals(wsumLayerInfo.database, database)
+		unitTest:assertEquals(wsumLayerInfo.table, string.lower(wsumLayerName))		
+
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
@@ -469,6 +514,10 @@ return {
 		pgData.table = string.lower(intersecLayerName)
 		tl:dropPgTable(pgData)	
 		pgData.table = string.lower(occurrenceLayerName)
+		tl:dropPgTable(pgData)		
+		pgData.table = string.lower(sumLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(wsumLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}

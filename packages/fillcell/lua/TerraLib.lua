@@ -34,7 +34,6 @@ local initialized = false
 
 local OperationMapper = {
 	value = binding.VALUE_OPERATION,
-	sum = binding.SUM,
 	area = binding.PERCENT_TOTAL_AREA,
 	presence = binding.PRESENCE,
 	count = binding.COUNT,
@@ -46,7 +45,9 @@ local OperationMapper = {
 	mean = binding.MEAN,
 	weighted = binding.WEIGHTED,
 	intersection = binding.HIGHEST_INTERSECTION,
-	occurrence = binding.HIGHEST_OCCURRENCE
+	occurrence = binding.HIGHEST_OCCURRENCE,
+	sum = binding.SUM,
+	wsum = binding.WEIGHTED_SUM
 }
 
 local AttributeCreatedMapper = {
@@ -61,7 +62,9 @@ local AttributeCreatedMapper = {
 	mean = "mean",
 	weighted = "weigh_area",
 	intersection = "class_high_area",
-	occurrence = "class_high_occurrence"
+	occurrence = "class_high_occurrence",
+	sum = "sum_values",
+	wsum = "weigh_sum_area" 
 }
 
 -- TODO: Remove this after
@@ -766,6 +769,10 @@ TerraLib_ = {
 			else
 				operation = "occurrence"
 			end
+		elseif operation == "sum" then
+			if area then
+				operation = "wsum"
+			end
 		end
 		
 		-- TODO: THE TERRALIB APLY OPERATIONS ON EACH PROPERTY (REVIEW)
@@ -788,12 +795,11 @@ TerraLib_ = {
 			propsToUp[property] = property
 		end
 		
-		-- TODO: METHOD UPDATE (REVIEW) 
-		-- if default then
-			-- for key, prop in pairs(propsToUp) do
-				-- outDs:updateNullValues(outDSetName, prop, tostring(default))
-			-- end			
-		-- end
+		if default then
+			for key, prop in pairs(propsToUp) do
+				outDs:updateNullValues(outDSetName, prop, tostring(default))
+			end			
+		end
 		
 		-- TODO: RENAME INSTEAD OUTPUT
 		--outDs:renameDataSet(string.upper(out), "rename_test")
