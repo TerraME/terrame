@@ -105,6 +105,8 @@ metaTableChart_ = {__index = Chart_}
 -- As default, it selects all the user-defined number attributes of the target.
 -- In the case of Society, if it does not have any numeric attributes then it will use
 -- the number of agents in the Society as attribute.
+-- The positions of the vector define the plot order. It draws starting from the first
+-- until the last position.
 -- @arg data.xLabel Name of the x-axis. It shows "Time" as default.
 -- @arg data.yLabel Name of the y-axis. It does not show any label as default.
 -- @arg data.label Vector of the same size of select that indicates the labels for each
