@@ -187,8 +187,7 @@ Project_ = {
 					--customError("The layer file'"..data.file.."' not found.")
 					mandatoryTableArgument(data, "source", "string")
 				--end	
-			else
-				
+			else		
 				local source = getFileExtension(data.file)
 				data.source = source	
 			end
@@ -286,8 +285,6 @@ Project_ = {
 	end,
 	
 	infoLayer = function(self, name)
-		-- TODO: CHECK WHICH INFORMATIONS ARE NECESSARY
-		
 		local layer = self.layers[name]
 		
 		if layer == nil then
