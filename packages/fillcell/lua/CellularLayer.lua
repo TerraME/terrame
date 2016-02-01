@@ -241,6 +241,8 @@ CellularLayer_ = {
 		}
 		
 		tlib:attributeFill(project, data.layer, self.layer, data.output, data.attribute, data.operation, data.select, data.area, data.default)
+		
+		self.layer = data.output
 	end
 }
 
