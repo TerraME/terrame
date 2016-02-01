@@ -483,7 +483,7 @@ return {
 		unitTest:assertEquals(wsumLayerInfo.password, password)
 		unitTest:assertEquals(wsumLayerInfo.database, database)
 		unitTest:assertEquals(wsumLayerInfo.table, string.lower(wsumLayerName))		
-	
+
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
@@ -514,6 +514,10 @@ return {
 		pgData.table = string.lower(intersecLayerName)
 		tl:dropPgTable(pgData)	
 		pgData.table = string.lower(occurrenceLayerName)
+		tl:dropPgTable(pgData)		
+		pgData.table = string.lower(sumLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(wsumLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}
