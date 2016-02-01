@@ -1,10 +1,11 @@
 -- @example A model that describes water flowing out of a tube. It uses
--- an observation step more frequent than the execution.
+-- an observation step more frequent than the execution. Because of that,
+-- we can see that the water flows out of the tube in discrete steps.
 -- @image tube-discrete.bmp
 
 world = Cell{water = 40}
 
-chart = Chart{
+Chart{
     target = world,
 	yLabel = "Gallons",
 }

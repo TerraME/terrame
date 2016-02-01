@@ -197,12 +197,12 @@ return{
 		error_func = function()
 			cs:exec()
 		end
-		unitTest:assertError(error_func, "Could not execute function 'exec' from the Cells: attempt to call field '?' (a number value).")
+		unitTest:assertError(error_func, incompatibleTypeMsg("exec", "function", 2))
 
 		error_func = function()
 			cs:water()
 		end
-		unitTest:assertError(error_func, "Could not find attribute 'water' in all the Cells.")
+		unitTest:assertError(error_func, incompatibleTypeMsg("water", "number", "abc"))
 	end,
 	add = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

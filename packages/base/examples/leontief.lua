@@ -1,7 +1,9 @@
-
--- @example Implementation of a model to study scenarios for the economy of Southeast Para state.
--- Andrade et al. 2010 From input-output matrixes to agent-based models: A case study on 
--- carbon credits in a local economy. BWSS 2010.
+-- @example Implementation of a model to study scenarios for the economy of Southeast
+-- Para state. This model solves the inversion of an input-output matrix using an
+-- agent-based model. It implements a set of investment scenarios for the region
+-- and simulates the impacts over salaries, employment, and carbon emissions. \
+-- For more information, see Andrade et al. (2010) From input-output matrixes to
+-- agent-based models: A case study on carbon credits in a local economy. BWSS 2010.
 -- @arg scenario Number of the scenario. It can be an integer value between 1 and 5.
 -- The default value is 1.
 

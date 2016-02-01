@@ -1287,24 +1287,6 @@ function CellularSpace(data)
 	setmetatable(data, metaTableCellularSpace_)
 	cObj:setReference(data)
 
-	local function callFunc(func, mtype, attribute)
-		local status, result = pcall(func) 
-
-		if not status then
-			local str = _Gtme.cleanErrorMessage(result)
-			local msg
-
-			if mtype == "function" then
-				msg = "Could not execute function '"..attribute.."' from the Cells: "..str.."."
-			else
-				msg = "Could not find attribute '"..attribute.."' in all the Cells."
-			end
-
-			customError(msg)
-		end
-		return result
-	end
-
 	local function createSummaryFunctions(cell)
 		forEachElement(cell, function(attribute, value, mtype)
 			if attribute == "id" or attribute == "parent" or string.endswith(attribute, "_") then return
@@ -1315,13 +1297,13 @@ function CellularSpace(data)
 				end
 
 				data[attribute] = function(cs, args)
-					local func = function()
-						return forEachCell(cs, function(cell)
-							return cell[attribute](cell, args)
-						end)
-					end
+					return forEachCell(cs, function(cell)
+						if type(cell[attribute]) ~= "function" then
+							incompatibleTypeError(attribute, "function", cell[attribute])
+						end
 
-					return callFunc(func, "function", attribute)
+						return cell[attribute](cell, args)
+					end)
 				end
 			elseif mtype == "number" or (mtype == "Random" and value.distrib ~= "categorical" and (value.distrib ~= "discrete" or type(value[1]) == "number")) then
 				if data[attribute] then
@@ -1331,15 +1313,15 @@ function CellularSpace(data)
 
 				if attribute ~= "x" and attribute ~= "y" then
 					data[attribute] = function(cs)
-						local func = function()
-							local quantity = 0
-							forEachCell(cs, function(cell)
-								quantity = quantity + cell[attribute]
-							end)
-							return quantity
-						end
+						local quantity = 0
+						forEachCell(cs, function(cell)
+							if type(cell[attribute]) ~= "number" then
+								incompatibleTypeError(attribute, "number", cell[attribute])
+							end
 
-						return callFunc(func, "number", attribute)
+							quantity = quantity + cell[attribute]
+						end)
+						return quantity
 					end
 				end
 			elseif mtype == "boolean" then

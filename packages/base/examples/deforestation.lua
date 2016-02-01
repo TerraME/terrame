@@ -1,5 +1,11 @@
 -- @example Amazonia deforestation models. It uses a top-down approach
 -- with three strategies to compute deforestation potential.
+-- The first strategy compute the deforestation potential based on
+-- the deforestation of neighbor cells. The second one uses the result
+-- of a statistical regression using distance to urban areas, connection
+-- to markets, and coverage of protected areas as parameters.
+-- The last strategies mixes the other two. It adds the average deforestation
+-- of the neighborhood to the statistical regression.
 -- @arg FINAL_TIME The final simulation time. The simulation starts in 2005.
 -- @arg ALLOCATION The yearly deforestation demand in km2.
 -- @arg LIMIT The maximum area per year that might not be deforested, given

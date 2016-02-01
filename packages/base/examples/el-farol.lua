@@ -1,9 +1,17 @@
 -- @example Implementation of El Farol model.
 -- It is based on Brian Arthur's paper available at
 -- http://www.santafe.edu/~wbarthur/Papers/El_Farol.
--- @arg N Number of agents. The default value is 100.
--- @arg K number of strategies an agent have (if it is one the agents will never change their strategies).
--- The default value is 3.
+-- In this model, there is a city with a given population.
+-- Everybody wants to go to an entertainment offered once a week
+-- by a bar called El Farol. However, if the bar is too crowded,
+-- it is not enjoyable. Each agent decides on
+-- whether to go to the bar based on its expectations on how much
+-- people the bar will have. Decisions are taken independently from
+-- each other. Agents can have different ways of thinking, based on the
+-- amount of people that went to the bar in the last weeks.
+-- @arg N Number of people in the city. The default value is 100.
+-- @arg K number of strategies each individual has (if only one then the
+-- agent will never change its strategy). The default value is 3.
 -- @arg MAX Maximum number of people in the bar. The default value is 60.
 -- @image el-farol.bmp
 
@@ -21,6 +29,7 @@ update_last_turns = function(new_value)
 end
 
 -- different strategies that can be adopted by the agents
+-- t[x] represent the amount of people that went to the bar x weeks ago
 function d_same_last_week(t)    return t[1]                            end
 function d_same_plus_10(t)      return t[1] + 10                       end
 function d_mirror_last_week(t)  return 100 - t[1]                      end
@@ -101,6 +110,7 @@ beerAgent = Agent{
 			repeat
 				p = math.random(1, #STRATEGIES)
 			until ag.chosen[p] == 0
+
 			ag.strategies [i] = STRATEGIES[p]
 			ag.chosen[p] = 1
 		end
@@ -109,6 +119,7 @@ beerAgent = Agent{
 	end,
 	execute = function(ag)
 		local best = 1
+
 		for i = 2, K do
 			if ag.count_fails[best] > ag.count_fails[i] then
 				best = i
@@ -118,11 +129,13 @@ beerAgent = Agent{
 		ag.last_strategy = best
 
 		local last = ag.strategies[best](LAST_TURNS)
+
 		if last < 60 then
 			ag.last_choose = 1
 		else
 			ag.last_choose = 0
 		end
+
 		return ag.last_choose
 	end,
 	update = function(ag, quantity)
@@ -143,9 +156,11 @@ s = Society{
 t = Timer{
 	Event{action = function(ev)
 		local quant = 0
+
 		forEachAgent(s, function(ag)
 			quant = quant + ag:execute()
 		end)
+
 		c.agents_in_the_bar = quant
 		count_strategies(s)
 		c:notify(ev:getTime())

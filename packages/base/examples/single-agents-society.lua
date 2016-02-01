@@ -1,4 +1,4 @@
--- @example A model with 30 moving Agents.
+-- @example Simulation of a Society with 30 moving Agents.
 -- @image single-agents-society.bmp
 
 singleFooAgent = Agent{

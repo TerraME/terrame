@@ -1,7 +1,8 @@
--- @example A simple continuous rain model.
+-- @example A simple continuous rain model. It uses three differential
+-- equations to simulate rain, soil water, and drainage dynamics.
 -- @arg C The amount of rain per unit of time. The default value is 2.
 -- @arg K The flow coefficient. The default value is 0.4.
--- @arg dt The time increment per simulation step. The default value is 0.01.
+-- @arg dt The step used in the numerical integration. The default value is 0.01.
 
 C = 2
 K = 0.4

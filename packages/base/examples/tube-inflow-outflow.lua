@@ -1,9 +1,11 @@
 -- @example A model that describes water flowing in and out of a tube.
+-- This implementation also verifies does not allow to have negative
+-- amounts of water in the tube.
 -- @image tube-inflow-outflow.bmp
 
 world = Cell{water = 40}
 
-chart = Chart{
+Chart{
     target = world,
 	pen = "dash"
 }
@@ -17,10 +19,10 @@ t = Timer{
 	    end
     end},
     Event{start = 10, period = 10, action = function()
-    	world.water = world.water + 40 -- also try 60
+    	world.water = world.water + 40 -- try another value
     end},
     Event{start = 0, action = function(e)
-    	world:notify(e:getTime())
+    	world:notify()
     end}
 }
 

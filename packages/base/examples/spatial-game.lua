@@ -1,5 +1,11 @@
 -- @example Implementation of the model proposed by Nowak and Sigmund.
--- Evolutionary Dynamics of Biological Games, Science 303(5659):793-799, 2004.
+-- In this model, each Cell has a strategy and plays a non-cooperative
+-- game with its neighbors. Then it updates its strategy with the
+-- most successful one among its neighbors. This simple spatial game
+-- produces a very complex spatial dynamics such as kaleidoscopes and
+-- dynamic fractals. \
+-- Reference: Nowak and Sigmund (2004) Evolutionary Dynamics of
+-- Biological Games, Science 303(5659):793-799.
 -- @arg N Space dimensions in x and y axis.
 -- @arg TURNS Number of simulation steps.
 -- @image spatial-game.bmp

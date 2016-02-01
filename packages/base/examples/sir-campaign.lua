@@ -1,5 +1,6 @@
 -- @example A Susceptible-Infected-Recovered (SIR) model with a public campaign. The
--- campaign reduces the number of contacts by half whenever there are more than 1000
+-- campaign asks the population to stop leaving home, which reduces the number of
+-- contacts by half. It is activated whenever there are more than 1000
 -- infected individuous in the population.
 -- @image sir-campaign.bmp
 
@@ -13,7 +14,7 @@ world = Cell{
 	recovered = 0,
 }
 
-chart = Chart{target = world}
+Chart{target = world}
 
 world:notify()
 
