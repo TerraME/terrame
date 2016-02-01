@@ -482,6 +482,67 @@ return{
 			}
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		
+		local majorityLayerName = clName1.."_Majority"
+		local selectNotString = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "majority",
+				layer = layerName1,
+				select = 2,
+				output = majorityLayerName
+			}
+		end
+		unitTest:assertError(selectNotString, incompatibleTypeMsg("select", "string", 2))
+
+		local areaNotBoolean = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "majority",
+				layer = layerName1,
+				select = "FID",
+				output = majorityLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaNotBoolean, incompatibleTypeMsg("area", "boolean", 2))
+
+		local defaultNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "majority",
+				layer = layerName1,
+				select = "FID",
+				output = majorityLayerName,
+				default = false
+			}
+		end
+		unitTest:assertError(defaultNotNumber, incompatibleTypeMsg("default", "number", false))
+
+		local dummyNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "majority",
+				layer = layerName1,
+				select = "FID",
+				output = majorityLayerName,
+				dummy = false
+			}
+		end
+		unitTest:assertError(dummyNotNumber, incompatibleTypeMsg("dummy", "number", false))
+
+		local unnecessaryArgument = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "majority",
+				layer = layerName1,
+				select = "FID",
+				output = majorityLayerName,
+				defaut = 3
+			}
+		end
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		
 
 -- 		-- length
 -- 		error_func = function()
@@ -493,50 +554,6 @@ return{
 -- 			}
 -- 		end
 -- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("select")) -- SKIP
-
--- 		-- majority
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "majority",
--- 				layer = "cover",
--- 				select = 2
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("select", "string", 2)) -- SKIP
-
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "majority",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				default = false
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("default", "number", false)) -- SKIP
-
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "majority",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				dummy = false
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, incompatibleTypeMsg("dummy", "number", false)) -- SKIP
-
--- 		error_func = function()
--- 			cl:fillCells{
--- 				attribute = "attr",
--- 				operation = "majority",
--- 				layer = "cover",
--- 				select = "cover2010",
--- 				defaut = 3
--- 			}
--- 		end
--- 		unitTest:assertError(error_func, unnecessaryArgumentMsg("defaut", "default")) -- SKIP
 
 -- 		-- sum
 -- 		error_func = function()

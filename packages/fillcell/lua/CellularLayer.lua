@@ -185,9 +185,10 @@ CellularLayer_ = {
 				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
 			end,
 			majority = function()
-				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select"})
+				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
 
 				mandatoryTableArgument(data, "select", "string")
+				defaultTableValue(data, "area", false)
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
@@ -240,7 +241,7 @@ CellularLayer_ = {
 			end
 		}
 		
-		tlib:attributeFill(project, data.layer, self.layer, data.output, data.attribute, data.operation, data.select, data.area)
+		tlib:attributeFill(project, data.layer, self.layer, data.output, data.attribute, data.operation, data.select, data.area, data.default)
 	end
 }
 

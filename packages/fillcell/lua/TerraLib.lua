@@ -44,7 +44,9 @@ local OperationMapper = {
 	percentage = binding.PERCENT_EACH_CLASS,
 	stdev = binding.STANDARD_DEVIATION,
 	mean = binding.MEAN,
-	weighted = binding.WEIGHTED
+	weighted = binding.WEIGHTED,
+	intersection = binding.HIGHEST_INTERSECTION,
+	occurrence = binding.HIGHEST_OCCURRENCE
 }
 
 local AttributeCreatedMapper = {
@@ -57,7 +59,9 @@ local AttributeCreatedMapper = {
 	percentage = "percent_area_class",
 	stdev = "stand_dev",
 	mean = "mean",
-	weighted = "weigh_area"
+	weighted = "weigh_area",
+	intersection = "class_high_area",
+	occurrence = "class_high_occurrence"
 }
 
 -- TODO: Remove this after
@@ -558,34 +562,10 @@ local function getCreatedPropertyName(select, operation)
 	return select.."_"..AttributeCreatedMapper[operation]
 end
 
-local function updateDataSet(ds, dSetName)
-	-- TODO: FILL NULL ATTRIBUTES WITH DEFAULT VALUES (REVIEW)
-	-- local dSet = ds:getDataSet(dSetName)
-	-- local dSetType = ds:getDataSetType(dSetName)
-		-- local outMemDSet = binding.te.mem.DataSet(outDSetType)
-	-- local numProps = dSet:getNumProperties()
-	
-	--local newDst = binding.te.da.DataSetType(dSetName)	
-	-- while dSet:moveNext() do
-			-- local item = binding.te.mem.DataSetItem.create(outMemDSet)
-		-- for i = 0, numProp - 1 do
-			-- if dSet:isNull(i) then
-					-- if outDSet:getPropertyName(i) == propCreatedName then
-						-- item:setValue(i, 0)
-					-- end
-				-- else
-					-- _Gtme.print(outDSet:getPropertyName(i)..":::::::::::::::::::: "..outDSet:getAsString(i))	
-				--_Gtme.print(dSet:get)
-			-- end
-				
-		-- end
-			-- outMemDSet:add(item)
-	-- end
-end
-
 local function renameEachClass(ds, dSetName, select, property)
 	local dSet = ds:getDataSet(dSetName)
 	local numProps = dSet:getNumProperties()
+	local propsRenamed = {}
 	
 	for i = 0, numProps - 1 do
 		local currentProp = dSet:getPropertyName(i)
@@ -593,8 +573,11 @@ local function renameEachClass(ds, dSetName, select, property)
 		if string.match(currentProp, select) then
 			local newName = string.gsub(currentProp, select.."_", property.."_")
 			ds:renameProperty(dSetName, currentProp, newName)
+			propsRenamed[newName] = newName
 		end		
 	end
+	
+	return propsRenamed
 end
 
 local function finalize()
@@ -741,7 +724,7 @@ TerraLib_ = {
 		releaseProject(project)	
 	end,
 	
-	attributeFill = function(self, project, from, to, out, property, operation, select, area)
+	attributeFill = function(self, project, from, to, out, property, operation, select, area, default)
 		loadProject(project, project.file)
 
 		local fromLayer = project.layers[from]
@@ -777,7 +760,14 @@ TerraLib_ = {
 			else
 				operation = "mean"
 			end
+		elseif operation == "majority" then
+			if area then 
+				operation = "intersection"
+			else
+				operation = "occurrence"
+			end
 		end
+		
 		-- TODO: THE TERRALIB APLY OPERATIONS ON EACH PROPERTY (REVIEW)
 		--v2v:setParams(fromLayer, OperationMapper[operation], toLayer)
 		v2v:setParams(select, OperationMapper[operation], toLayer)	
@@ -789,11 +779,21 @@ TerraLib_ = {
 		
 		local propCreatedName = getCreatedPropertyName(select, operation)
 		
+		local propsToUp = {}
+		
 		if property == "percentage" then
-			renameEachClass(outDs, outDSetName, select, property)
+			propsToUp = renameEachClass(outDs, outDSetName, select, property)
 		else
 			outDs:renameProperty(outDSetName, propCreatedName, property)
+			propsToUp[property] = property
 		end
+		
+		-- TODO: METHOD UPDATE (REVIEW) 
+		-- if default then
+			-- for key, prop in pairs(propsToUp) do
+				-- outDs:updateNullValues(outDSetName, prop, tostring(default))
+			-- end			
+		-- end
 		
 		-- TODO: RENAME INSTEAD OUTPUT
 		--outDs:renameDataSet(string.upper(out), "rename_test")
@@ -802,7 +802,7 @@ TerraLib_ = {
 		project.layers[out] = outLayer
 		
 		saveProject(project, project.layers)
-		
+
 		releaseProject(project)
 		outDs:close()
 		outDs = nil

@@ -392,7 +392,52 @@ return {
 		unitTest:assertEquals(weighLayerInfo.user, user)
 		unitTest:assertEquals(weighLayerInfo.password, password)
 		unitTest:assertEquals(weighLayerInfo.database, database)
-		unitTest:assertEquals(weighLayerInfo.table, string.lower(weighLayerName))			
+		unitTest:assertEquals(weighLayerInfo.table, string.lower(weighLayerName))
+
+		-- ###################### 11 #############################	
+		local intersecLayerName = clName1.."_Mojority_Intersection"
+		pgData.table = intersecLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "majority",
+			layer = layerName1,
+			attribute = "high_intersection",
+			output = intersecLayerName,
+			select = "CD_GEOCODU",
+			area = true
+		}
+		
+		local intersecLayerInfo = proj:infoLayer(intersecLayerName)
+		unitTest:assertEquals(intersecLayerInfo.source, "postgis")
+		unitTest:assertEquals(intersecLayerInfo.host, host)
+		unitTest:assertEquals(intersecLayerInfo.port, port)
+		unitTest:assertEquals(intersecLayerInfo.user, user)
+		unitTest:assertEquals(intersecLayerInfo.password, password)
+		unitTest:assertEquals(intersecLayerInfo.database, database)
+		unitTest:assertEquals(intersecLayerInfo.table, string.lower(intersecLayerName))
+		
+		-- ###################### 12 #############################	
+		local occurrenceLayerName = clName1.."_Mojority_Occurrence"
+		pgData.table = occurrenceLayerName
+		tl:dropPgTable(pgData)	
+		
+		cl:fillCells{
+			operation = "majority",
+			layer = layerName1,
+			attribute = "high_occurrence",
+			output = occurrenceLayerName,
+			select = "CD_GEOCODU"
+		}
+		
+		local occurrenceLayerInfo = proj:infoLayer(occurrenceLayerName)
+		unitTest:assertEquals(occurrenceLayerInfo.source, "postgis")
+		unitTest:assertEquals(occurrenceLayerInfo.host, host)
+		unitTest:assertEquals(occurrenceLayerInfo.port, port)
+		unitTest:assertEquals(occurrenceLayerInfo.user, user)
+		unitTest:assertEquals(occurrenceLayerInfo.password, password)
+		unitTest:assertEquals(occurrenceLayerInfo.database, database)
+		unitTest:assertEquals(occurrenceLayerInfo.table, string.lower(occurrenceLayerName))		
 
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -420,6 +465,10 @@ return {
 		pgData.table = string.lower(meanLayerName)
 		tl:dropPgTable(pgData)	
 		pgData.table = string.lower(weighLayerName)
+		tl:dropPgTable(pgData)
+		pgData.table = string.lower(intersecLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(occurrenceLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}
