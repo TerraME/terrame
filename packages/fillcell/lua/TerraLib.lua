@@ -795,12 +795,11 @@ TerraLib_ = {
 			propsToUp[property] = property
 		end
 		
-		-- TODO: METHOD UPDATE (REVIEW) 
-		-- if default then
-			-- for key, prop in pairs(propsToUp) do
-				-- outDs:updateNullValues(outDSetName, prop, tostring(default))
-			-- end			
-		-- end
+		if default then
+			for key, prop in pairs(propsToUp) do
+				outDs:updateNullValues(outDSetName, prop, tostring(default))
+			end			
+		end
 		
 		-- TODO: RENAME INSTEAD OUTPUT
 		--outDs:renameDataSet(string.upper(out), "rename_test")
