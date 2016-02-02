@@ -143,11 +143,11 @@ metaTableEvent_ = {
 -- @tabular action
 -- Object & Function(s) activated by the Event \
 -- Agent/Automaton & execute -> notify \
--- CellularSpace/Cell & synchronize -> notify \
+-- CellularSpace/Cell & execute (if exists) -> synchronize -> notify \
 -- function & function\
--- Society & execute -> synchronize -> notify \
+-- Society & execute (if exists) -> synchronize -> notify \
 -- Timer & notify \
--- Trajectory/Group & rebuild -> notify \
+-- Trajectory/Group & rebuild \
 -- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
 --     print(event:getTime())
 -- end}
@@ -202,23 +202,30 @@ function Event(data)
 		local targettype = type(data.action)
 		local maction = data.action
 		if targettype == "Society" then
-			if not data.action.execute then
-				customError("The Society cannot be used as an action because it does not have an execute() method.")
+			if data.action.execute then
+				data.action = function(event)
+					maction:execute(event)
+					maction:synchronize(event:getPeriod())
+					maction:notify(event)
+				end
+			else
+				data.action = function(event)
+					maction:synchronize(event:getPeriod())
+					maction:notify(event)
+				end
 			end
-
-			data.action = function(event)
-				maction:execute(event)
-				maction:synchronize(event:getPeriod())
-				maction:notify(event)
-			end
-		elseif targettype == "Cell" then
-			data.action = function(event)
-				maction:notify(event)
-			end
-		elseif targettype == "CellularSpace" then
-			data.action = function(event)
-				maction:synchronize()
-				maction:notify(event)
+		elseif targettype == "Cell" or targettype == "CellularSpace" then
+			if data.action.execute then
+				data.action = function(event)
+					maction:execute(event)
+					maction:synchronize()
+					maction:notify(event)
+				end
+			else
+				data.action = function(event)
+					maction:synchronize()
+					maction:notify(event)
+				end
 			end
 		elseif targettype == "Agent" or targettype == "Automaton" then
 			data.action = function(event)

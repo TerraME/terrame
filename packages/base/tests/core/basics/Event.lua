@@ -60,12 +60,25 @@ return{
 		event = Event{start = 0.5, period = 2, priority = "veryhigh", action = function(event) end}
 		unitTest:assertEquals(event:getPriority(), -10)
 
-		local ag = Agent{execute = function() end}
+		local count = 0
+
+		local ag = Agent{
+			execute = function()
+				count = count + 100
+			end
+		}
+
 		local soc = Society{
 			instance = ag,
 			quantity = 5
 		}
-		local c = Cell{}
+
+		local c = Cell{
+			execute = function()
+				count = count + 1				
+			end
+		}
+
 		local cs = CellularSpace{xdim = 5}
 
 		forEachCell(cs, function(cell)
@@ -75,14 +88,42 @@ return{
 		local traj = Trajectory{target = cs, greater = function(c1, c2) return c1.value > c2.value end}
 
 		local t = Timer{
-			Event{action = soc},
-			Event{action = c},
+			Event{action = soc}, -- 1000
+			Event{action = c},   -- 2
 			Event{action = cs},
-			Event{action = ag},
+			Event{action = ag},  -- 100
 			Event{action = traj}
 		}
 
 		t:execute(2)
+		unitTest:assertEquals(count, 1202)
+
+		local sum = 0
+
+		local ag = Agent{
+			on_message = function(msg)
+				sum = sum + 1
+			end
+		}
+
+		local soc = Society{
+			instance = ag,
+			quantity = 5
+		}
+
+		for i = 1, 10 do
+			soc.agents[1]:message{
+				receiver = soc.agents[2],
+				delay = i
+			}
+		end
+
+		local t = Timer{
+			Event{action = soc}
+		}
+
+		t:execute(5)
+		unitTest:assertEquals(sum, 5)
 	end,
 	config = function(unitTest)
 		local event = Event{action = function(event) end}
