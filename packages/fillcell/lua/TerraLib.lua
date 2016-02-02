@@ -284,7 +284,6 @@ local function saveProject(project, layers)
 end
 
 local function loadProject(project, filePath)		
-	-- TODO: This project could not be found:
 	if not isFile(filePath) then
 		customError("Could not read project file: "..filePath..".")
 	end
@@ -620,8 +619,6 @@ TerraLib_ = {
 	end,
 
 	openProject = function(self, project, filePath)
-		-- TODO: This project could not be found:
-		-- TODO: add file extension if user didn't set
 		if not isValidTviewExt(project.file) then
 			customError("Please, the file extension must be '.tview'.")
 		end		
@@ -693,7 +690,7 @@ TerraLib_ = {
 		local connInfo = createFileConnInfo(filePath)
 		
 		createCellSpaceLayer(inputLayer, name, resolultion, connInfo, "OGR")
-		-- TODO: TRY CHANGE TO CREATE LAYER HERE
+		
 		self:addShpLayer(project, name, filePath)
 	end,
 	
@@ -709,7 +706,7 @@ TerraLib_ = {
 			releaseProject(project)
 			customError("The table '"..data.table.."' already exists.")
 		end
-		-- TODO: TRY CHANGE TO CREATE LAYER HERE
+		
 		self:addPgLayer(project, name, data)	
 	end,	
 	
@@ -775,8 +772,6 @@ TerraLib_ = {
 			end
 		end
 		
-		-- TODO: THE TERRALIB APLY OPERATIONS ON EACH PROPERTY (REVIEW)
-		--v2v:setParams(fromLayer, OperationMapper[operation], toLayer)
 		v2v:setParams(select, OperationMapper[operation], toLayer)	
 		v2v:run()
 		

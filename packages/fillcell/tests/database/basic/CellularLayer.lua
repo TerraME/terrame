@@ -469,7 +469,7 @@ return {
 		cl:fillCells{
 			operation = "sum",
 			layer = layerName1,
-			attribute = "sum",
+			attribute = "wsum",
 			output = wsumLayerName,
 			select = "FID",
 			area = true
