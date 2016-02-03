@@ -761,6 +761,28 @@ local function check_usage(files, doc_report)
 
 					if string.find(usage, "DONTRUN") then
 						print("Skipping "..function_name)
+
+						local pos = string.find(usage, "DONTRUN")
+
+						local before = string.sub(usage, 1, pos)
+						local after = string.sub(usage, pos)
+
+						local b = string.find(before, "\n[^\n]*$")
+						local a = string.find(after, "\n")
+
+						if b == nil then 
+							before = ""
+						else
+							before = string.sub(usage, 1, b)
+						end
+
+						if a == nil then
+							after = ""
+						else
+							after = string.sub(usage, a + pos, #usage)
+						end
+
+						functions[function_name].usage = before..after
 					else
 						print("Testing "..function_name)
 						xpcall(load(usage, nil, "t", base), function(err)

@@ -113,8 +113,7 @@ UnitTest_ = {
 	-- between the error produced by the error function and the expected error message.
 	-- This argument might be necessary in error messages that include information that can change
 	-- from machine to machine, such as an username. The default value is zero (no discrepance).
-	-- @usage -- DONTRUN
-	-- unitTest = UnitTest{}
+	-- @usage unitTest = UnitTest{}
 	-- error_func = function() verify(2 > 3, "wrong operator") end
 	-- unitTest:assertError(error_func, "wrong operator")
 	assertError = function(self, my_function, error_message, max_error)

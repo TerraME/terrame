@@ -29,8 +29,8 @@ Automaton_ = {
 	--- Add a new Trajectory or State to the Automaton. It returns a boolean value
 	-- indicating whether the new element was successfully added.
 	-- @arg object A Trajectory or State.
-	-- @usage -- DONTRUN
-	-- automaton:add(state)
+	-- @usage automaton:add(state)
+	-- DONTRUN
 	-- automaton:add(trajectory)
 	add = function(self, object)
 		if type(object) == "Trajectory" or type(object) == "State" then
@@ -57,8 +57,8 @@ Automaton_ = {
 		self.cObj_:execute(cObj)
 	end,
 	--- Return the unique identifier name of the Automaton.
-	-- @usage -- DONTRUN
-	-- automaton:getId()
+	-- @usage automaton:getId()
+	-- DONTRUN
 	getId = function(self)
 		return self.id
 	end,
