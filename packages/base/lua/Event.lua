@@ -198,7 +198,9 @@ function Event(data)
 		defaultTableValue(data, "priority", 0)
 	end
 
-	if data.action ~= nil then
+	if data.action == nil then
+		customError("Argument 'action' is mandatory.")
+	else
 		local targettype = type(data.action)
 		local maction = data.action
 		if targettype == "Society" then

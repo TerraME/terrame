@@ -37,6 +37,11 @@ return{
 		unitTest:assertError(error_func, namedArgumentsMsg())
 
 		error_func = function()
+			event = Event{}
+		end
+		unitTest:assertError(error_func, "Argument 'action' is mandatory.")
+
+		error_func = function()
 			event = Event{period = "1", priority = 1, action = function(event) end}
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("period", "number", "1"))
