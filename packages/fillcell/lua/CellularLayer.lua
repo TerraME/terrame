@@ -156,6 +156,8 @@ CellularLayer_ = {
 			customError("The layer '"..data.layer.."' not exists.")
 		end		
 		
+		local fromLayerInfo = project:infoLayer(data.layer)
+		
 		if not data.table then
 			data.table = data.layer
 		end
@@ -165,11 +167,16 @@ CellularLayer_ = {
 				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
 				data.select = "FID"								
 			end,
-			average = function()
-				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+			average = function()		
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					defaultTableValue(data, "area", false)
+					mandatoryTableArgument(data, "select", "string")
+				else
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					mandatoryTableArgument(data, "select", "number")
+				end
 
-				mandatoryTableArgument(data, "select", "string")
-				defaultTableValue(data, "area", false)
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,

@@ -31,8 +31,7 @@ return {
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = tName1	
+		local encoding = "CP1252"	
 		
 		local pgData = {
 			type = "POSTGIS",
@@ -134,8 +133,7 @@ return {
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = tName1	
+		local encoding = "CP1252"	
 		
 		local pgData = {
 			type = "POSTGIS",
@@ -483,7 +481,65 @@ return {
 		unitTest:assertEquals(wsumLayerInfo.password, password)
 		unitTest:assertEquals(wsumLayerInfo.database, database)
 		unitTest:assertEquals(wsumLayerInfo.table, string.lower(wsumLayerName))		
+		
+		-- RASTER TESTS ------------------------------------------
+		
+		-- ###################### 15 #############################
+		local layerName2 = "Setores"
+		proj:addLayer {
+			layer = layerName2,
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")		
+		}
+		
+		local layerName3 = "Desmatamento"
+		proj:addLayer {
+			layer = layerName3,
+			file = file("Desmatamento_2000.tif", "fillcell")		
+		}			
+		
+		local tName2 = "setores_cells"
+		local clName2 = "Setores_Cells"
+		
+		pgData.table = tName2
+		tl:dropPgTable(pgData)
+		
+		proj:addCellularLayer {
+			source = "postgis",
+			input = layerName2,
+			layer = clName2,
+			resolution = 2e4,
+			user = user,
+			password = password,
+			database = database,
+			table = tName2
+		}		
+		
+		local rmeanLayerName = clName2.."_Mean"
+		pgData.table = rmeanLayerName
+		tl:dropPgTable(pgData)
+		
+		local c4 = CellularLayer{
+			project = proj,
+			layer = clName2
+		}		
+		
+		c4:fillCells{
+			operation = "average",
+			layer = layerName3,
+			attribute = "mean_0",
+			output = rmeanLayerName,
+			select = 0
+		}		
 
+		local rmeanLayerInfo = proj:infoLayer(rmeanLayerName)
+		unitTest:assertEquals(rmeanLayerInfo.source, "postgis")
+		unitTest:assertEquals(rmeanLayerInfo.host, host)
+		unitTest:assertEquals(rmeanLayerInfo.port, port)
+		unitTest:assertEquals(rmeanLayerInfo.user, user)
+		unitTest:assertEquals(rmeanLayerInfo.password, password)
+		unitTest:assertEquals(rmeanLayerInfo.database, database)
+		unitTest:assertEquals(rmeanLayerInfo.table, string.lower(rmeanLayerName))	
+		
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
@@ -518,6 +574,8 @@ return {
 		pgData.table = string.lower(sumLayerName)
 		tl:dropPgTable(pgData)	
 		pgData.table = string.lower(wsumLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(rmeanLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}

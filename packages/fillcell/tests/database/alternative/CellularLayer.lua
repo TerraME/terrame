@@ -650,6 +650,66 @@ return{
 -- 		-- (first table of the documentation)
 -- 		-- check if terralib already does this (but the test must exist anyway)
 
+		local layerName2 = "Setores"
+		proj:addLayer {
+			layer = layerName2,
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")		
+		}
+		
+		local layerNotIntersect = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "sum",
+				layer = layerName2,
+				select = "FID",
+				output = sumLayerName
+			}
+		end
+		unitTest:assertError(layerNotIntersect, "The two layers do not intersect.")		
+		
+		-- RASTER TESTS ----------------------------------------------------------------
+		local layerName3 = "Desmatamento"
+		proj:addLayer {
+			layer = layerName3,
+			file = file("Desmatamento_2000.tif", "fillcell")		
+		}	
+
+		local averageLayerName = clName1.."_Average"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName3,
+				select = 0,
+				output = averageLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName3,
+				select = "0",
+				output = averageLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+		
+		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT) 
+		-- local layerNotIntersect = function()
+			-- cl:fillCells{
+				-- attribute = "attr",
+				-- operation = "average",
+				-- layer = layerName3,
+				-- select = 0,
+				-- output = averageLayerName
+			-- }
+		-- end
+		-- unitTest:assertError(layerNotIntersect, "The two layers do not intersect.") -- SKIP				
+
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end
