@@ -28,13 +28,16 @@ Model_ = {
 	-- This function can be used in scripts that implement a Model. If the Model belongs to
 	-- a package, then it should not be called, as TerraME will do it automatically when one
 	-- selects the Model to be configured.
-	-- @usage Tube = Model{
+	-- @usage -- DONTRUN
+	-- Tube = Model{
 	--     initialWater = 20,
 	--     flow = 1,
 	--     finalTime = 20,
 	--     init = function(model)
 	--         model.water = model.initialWater
+	--
 	--         Chart{target = model, select = "water"}
+	--
 	--         model:notify()
 	--         model.timer = Timer{
 	--             Event{action = function()
@@ -45,7 +48,7 @@ Model_ = {
 	--     end
 	-- }
 	--
-	-- -- Tube:configure()
+	-- Tube:configure()
 	configure = function(self)
 	end,
 	--- Run the Model instance. It requires that the Model instance has attribute finalTime.
@@ -54,6 +57,7 @@ Model_ = {
 	--     flow = 20,
 	--     init = function(model)
 	--         model.finalTime = 10
+	--
 	--         model.timer = Timer{
 	--             Event{action = function()
 	--                 -- ...
@@ -148,7 +152,8 @@ Model_ = {
 	-- table will not be shown in the graphical interface (in the example, "season").
 	-- Note that all Compulsory arguments must belong to the graphical interface to allow
 	-- instantiate Model instances properly.
-	-- @usage Sugarscape = Model{
+	-- @usage -- DONTRUN
+	-- Sugarscape = Model{
 	--     mapFile        = "sugar-map.csv",
 	--     showGraphics   = true,
 	--     agents = {
@@ -178,6 +183,8 @@ Model_ = {
 	--         }
 	--     end
 	-- }
+	--
+	-- Sugarscape:configure()
 	interface = function(self)
 	end,
 	--- Notify the Observers of the Model instance.
@@ -188,6 +195,12 @@ Model_ = {
 	--     water = 200,
 	--     init = function(model)
 	--         model.finalTime = 100
+	--
+	--         Chart{
+	--             target = model,
+	--             select = "water"
+	--         }
+	--
 	--         model.timer = Timer{
 	--             Event{action = function()
 	--                 model.water = model.water - 1
@@ -197,21 +210,17 @@ Model_ = {
 	--     end
 	-- }
 	--
-	-- m = Tube{water = 100}
+	-- scenario1 = Tube{water = 100}
 	--
-	-- Chart{
-	--     target = m,
-	--     select = "water"
-	-- }
-	--
-	-- m:execute()
+	-- scenario1:execute()
 	notify = function(self, modelTime)
 	end
 }
 
 --- Type that defines a model. The user can use Model to describe the arguments of a model 
--- and how it can be built.
--- The returning value of a Model is an object that can be used to create instances of the model.
+-- and how it can be built. The returning value of a Model is an object that can be used
+-- directly to simulate (as long as it does not have any Mandatory parameter) or used to create
+-- as many instances as needed to simulate the Model with different parameters.
 -- A tutorial about Models in TerraME is available at
 --  http://github.com/pedro-andrade-inpe/terrame/wiki/Models.
 -- @arg attrTab.finalTime A number with the final time of the simulation.
@@ -236,33 +245,39 @@ Model_ = {
 -- the model instance must have all its elements belonging to the same type. & No default value.\
 -- named table & It will verify each attribute according to the rules above. & The table itself.
 -- It is possible to define only part of the table in the instance, keeping the other default values. \
--- @usage mymodel = Model{
---     par1 = 3,
---     par2 = Choice{"low", "medium", "high"},
---     par3 = {min = 3, max = 5},
+-- @usage Tube = Model{
+--     initialWater = 20,
+--     flow = 1,
 --     finalTime = 20,
 --     init = function(model)
+--         model.water = model.initialWater
+--
+--         Chart{target = model, select = "water"}
+--
+--         model:notify()
 --         model.timer = Timer{
 --             Event{action = function()
---                 -- ...
+--                 model.water = model.water - model.flow
+--                 model:notify()
 --             end}
 --         }
 --     end
 -- }
 --
--- print(type(mymodel)) -- "Model"
+-- print(type(Tube)) -- "Model"
+-- Tube:execute() -- One can execute a Model directly...
 --
--- scenario1 = mymodel{} -- par1 = 3, par2 = "low", par3.min = 3, par3.max = 5
+-- MyTube = Tube{initialWater = 50} -- ... or create instances using it
+-- print(type(MyTube)) -- "Tube"
+-- MyTube:execute()
 --
--- print(type(scenario1)) -- "mymodel"
+-- pcall(function() MyTube2 = Tube{initialwater = 100} end)
+-- -- Warning: Argument 'initialwater' is unnecessary. Do you mean 'initialWater'?
+-- -- (when executing TerraME with mode=strict)
 --
--- scenario2 = mymodel{par2 = "medium", par3 = {max = 6}} -- par1 = 3, par3.min = 3
---
--- _, err = pcall(function() cenario3 = mymodel{par2 = "equal"} end)
--- print(err) -- error: there is no such option in par2
---
--- _, err = pcall(function() scenario4 = mymodel{par3 = {average = 2}} end)
--- print(err) -- error: there is no such name in par3
+-- _, err = pcall(function() MyTube2 = Tube{flow = false} end)
+-- print(err)
+-- -- Error: Incompatible types. Argument 'flow' expected number, got boolean.
 function Model(attrTab)
 	if type(attrTab.interface) == "function" then
 		local minterface = attrTab.interface()
