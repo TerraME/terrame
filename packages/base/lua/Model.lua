@@ -452,6 +452,29 @@ function Model(attrTab)
 
 		verifyUnnecessaryArguments(argv, names)
 
+		forEachElement(argv, function(name, value, mtype)
+			if mtype == "table" then
+				local attrTabValue = attrTab[name]
+
+				if type(attrTabValue) ~= "table" then
+					return -- this error will be shown later on
+				end
+
+				forEachElement(value, function(mname, mvalue, mtype)
+					if attrTabValue[mname] == nil then
+						local msg = "Argument '"..name.."."..mname.."' is unnecessary."
+
+						local s = suggestion(mname, attrTabValue)
+						if s then
+							msg = msg.." Do you mean '"..name.."."..s.."'?"
+						end
+
+						customWarning(msg)
+					end
+				end)
+			end
+		end)
+
 		-- set the default values
 		optionalTableArgument(argv, "seed", "number")
 		optionalTableArgument(argv, "finalTime", "number")
@@ -595,24 +618,6 @@ function Model(attrTab)
 				end)
 			elseif type(argv[name]) ~= mtype then
 				incompatibleTypeError(name, mtype, argv[name])
-			end
-		end)
-
-		forEachElement(argv, function(name, value, mtype)
-			if mtype == "table" then
-				local attrTabValue = attrTab[name]
-				forEachElement(value, function(mname, mvalue, mtype)
-					if attrTabValue[mname] == nil then
-						local msg = "Argument '"..name.."."..mname.."' is unnecessary."
-
-						local s = suggestion(mname, attrTabValue)
-						if s then
-							msg = msg.." Do you mean '"..name.."."..s.."'?"
-						end
-
-						customWarning(msg)
-					end
-				end)
 			end
 		end)
 
