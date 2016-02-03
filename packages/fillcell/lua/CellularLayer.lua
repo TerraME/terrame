@@ -207,9 +207,15 @@ CellularLayer_ = {
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			minimum = function()
-				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output" ,"table"})
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					defaultTableValue(data, "area", false)
+					mandatoryTableArgument(data, "select", "string")
+				else
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					mandatoryTableArgument(data, "select", "number")
+				end
 
-				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,

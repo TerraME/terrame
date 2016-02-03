@@ -674,14 +674,14 @@ return{
 			file = file("Desmatamento_2000.tif", "fillcell")		
 		}	
 
-		local averageLayerName = clName1.."_Average"
+		local raverageLayerName = clName1.."_Average"
 		local areaUnnecessary = function()
 			cl:fillCells{
 				attribute = "attr",
 				operation = "average",
 				layer = layerName3,
 				select = 0,
-				output = averageLayerName,
+				output = raverageLayerName,
 				area = 2
 			}
 		end
@@ -693,7 +693,7 @@ return{
 				operation = "average",
 				layer = layerName3,
 				select = "0",
-				output = averageLayerName
+				output = raverageLayerName
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
@@ -705,10 +705,34 @@ return{
 				-- operation = "average",
 				-- layer = layerName3,
 				-- select = 0,
-				-- output = averageLayerName
+				-- output = raverageLayerName
 			-- }
 		-- end
-		-- unitTest:assertError(layerNotIntersect, "The two layers do not intersect.") -- SKIP				
+		-- unitTest:assertError(layerNotIntersect, "The two layers do not intersect.") -- SKIP			
+		
+		local rminLayerName = clName1.."_Minimum"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName3,
+				select = 0,
+				output = rminLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName3,
+				select = "0",
+				output = rminLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))			
 
 		if isFile(projName) then
 			os.execute("rm -f "..projName)

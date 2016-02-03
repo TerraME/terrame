@@ -68,7 +68,8 @@ local VectorAttributeCreatedMapper = {
 }
 
 local RasterAttributeCreatedMapper = {
-	mean = "_Mean"
+	mean = "_Mean",
+	minimum = "_Min_Value"
 }
 
 -- TODO: Remove this after

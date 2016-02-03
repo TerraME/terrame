@@ -526,7 +526,7 @@ return {
 		c4:fillCells{
 			operation = "average",
 			layer = layerName3,
-			attribute = "mean_0",
+			attribute = "mean",
 			output = rmeanLayerName,
 			select = 0
 		}		
@@ -539,6 +539,28 @@ return {
 		unitTest:assertEquals(rmeanLayerInfo.password, password)
 		unitTest:assertEquals(rmeanLayerInfo.database, database)
 		unitTest:assertEquals(rmeanLayerInfo.table, string.lower(rmeanLayerName))	
+		
+		-- ###################### 16 #############################
+		local rminLayerName = clName2.."_Minimum"
+		pgData.table = rminLayerName
+		tl:dropPgTable(pgData)
+		
+		c4:fillCells{
+			operation = "minimum",
+			layer = layerName3,
+			attribute = "minimum",
+			output = rminLayerName,
+			select = 0
+		}		
+
+		local rminLayerInfo = proj:infoLayer(rminLayerName)
+		unitTest:assertEquals(rminLayerInfo.source, "postgis")
+		unitTest:assertEquals(rminLayerInfo.host, host)
+		unitTest:assertEquals(rminLayerInfo.port, port)
+		unitTest:assertEquals(rminLayerInfo.user, user)
+		unitTest:assertEquals(rminLayerInfo.password, password)
+		unitTest:assertEquals(rminLayerInfo.database, database)
+		unitTest:assertEquals(rminLayerInfo.table, string.lower(rminLayerName))		
 		
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -576,6 +598,8 @@ return {
 		pgData.table = string.lower(wsumLayerName)
 		tl:dropPgTable(pgData)	
 		pgData.table = string.lower(rmeanLayerName)
+		tl:dropPgTable(pgData)		
+		pgData.table = string.lower(rminLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}
