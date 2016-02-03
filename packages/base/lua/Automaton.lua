@@ -84,7 +84,7 @@ Automaton_ = {
 		mandatoryArgument(1, "Cell", cell)
 		return cell.cObj_:getCurrentStateName(self.cObj_)
 	end,
-	--- Get all the States inside the Automaton. It returns a non-named table.
+	--- Get all the States inside the Automaton. It returns a vector.
 	-- @usage -- DONTRUN
 	-- state = automaton:getStates()[1]
 	getStates = function(self)

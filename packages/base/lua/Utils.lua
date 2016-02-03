@@ -145,8 +145,8 @@ function CSVparseLine(line, sep, cline)
 	return res
 end
 
---- Read a CSV file. It returns a non-named table (with line numbers)
--- containing named-tables (with the attribute names).
+--- Read a CSV file. It returns a vector (whose indexes are line numbers)
+-- containing named tables (whose indexes are attribute names).
 -- The first line of the file list the attribute names.
 -- @arg filename A string with the location of the CSV file.
 -- @arg sep A string with the separator. The default value is ','.
@@ -188,8 +188,8 @@ end
 
 --- Write a given table into a CSV file.
 -- The first line of the file will list the attributes of each table.
--- @arg data A table to be saved. It must be a non-named table (with line numbers)
--- containing named-tables (with the attribute names).
+-- @arg data A table to be saved. It must be a vector (whose indexes are line numbers)
+-- containing named-tables (whose indexes are attribute names).
 -- @arg filename A string with the location of the CSV file.
 -- @arg sep A string with the separator. The default value is ','.
 -- @usage mytable = {
@@ -212,7 +212,7 @@ function CSVwrite(data, filename, sep)
 	if data[1] == nil then
 		customError("#1 does not have position 1.")
 	elseif #data ~= getn(data) then
-		customError("#1 should be a non-named table.")
+		customError("#1 should be a vector.")
 	end
 
 	for k in pairs(data[1]) do

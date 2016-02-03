@@ -84,8 +84,7 @@ Cell_ = {
 	getAgent = function(self, placement)
 		return self:getAgents(placement)[1]
 	end,
-	--- Return the Agents that belong to the Cell. The returning value is a table with
-	-- non-named elements.
+	--- Return the Agents that belong to the Cell. The returning vector.
 	-- @arg placement A string with the name of the placement. The default value is "placement".
 	-- @usage ag = Agent{}
 	-- s = Society{instance = ag, quantity = 2}
@@ -301,7 +300,7 @@ metaTableCell_ = {
 -- @output cObj_ A pointer to a C++ representation of the Cell. Never use this object.
 -- @output past A copy of the attributes at the time of the last synchronization.
 -- @output parent The CellularSpace it belongs.
--- @output agents A non-named table with the Agents representing the default placement of the Cell.
+-- @output agents A vector with the Agents representing the default placement of the Cell.
 -- It is necessary to use Utils:forEachAgent(). This value is the same of "cell.placement.agents".
 -- @output placement A SocialNetwork representing the default placement of the Cell (only when a call to
 -- Environment:createPlacement() use the Cell).

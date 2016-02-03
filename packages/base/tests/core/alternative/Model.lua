@@ -38,12 +38,12 @@ return{
 		local error_func = function()
 			local Tube = Model{cs = {1, 2, 3, 4, 5}}
 		end
-		unitTest:assertError(error_func, "It is not possible to use a non-named table in a Model (parameter 'cs').")
+		unitTest:assertError(error_func, "It is not possible to use a vector in a Model (parameter 'cs').")
 
 		local error_func = function()
 			local Tube = Model{cs = {{1, 2, 3, 4, 5}}}
 		end
-		unitTest:assertError(error_func, "It is not possible to use a non-named table in a Model (parameter 'cs').")
+		unitTest:assertError(error_func, "It is not possible to use a vector in a Model (parameter 'cs').")
 
 		local error_func = function()
 			local Tube = Model{finalTime = "2"}
@@ -527,7 +527,7 @@ return{
 				interface = function() return {{"number", "aaa"}} end
 			}
 		end
-		unitTest:assertError(error_func, "interface() element 'aaa' is a non-named table in the Model.")
+		unitTest:assertError(error_func, "interface() element 'aaa' is a vector in the Model.")
 
 		error_func = function()
 			local Tube = Model{

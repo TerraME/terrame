@@ -26,7 +26,7 @@
 Choice_ = {
 	type_ = "Choice",
 	--- Return a random element from the available options. If the Choice was built
-	-- from non-named arguments or it has a step, it returns a random value following a
+	-- from a vector or it has a step, it returns a random value following a
 	-- discrete uniform distribution. If it has maximum and minimum then it returns a random
 	-- value using a continuous uniform distribution. When sampling from
 	-- Choices that have maximum but not minimum, or minimum but not maximum, it uses
@@ -55,15 +55,14 @@ metaTableChoice_ = {
 	__tostring = _Gtme.tostring
 }
 
---- Type to define options to be used by the modeler. It can get a set of
--- non-named values as arguments or the named arguments as follows. This type
--- is useful to define parameters of a Model.
+--- Type to define options to be used by the modeler. It can get a vector a argument or
+-- named arguments as follows. This type is useful to define parameters of a Model.
 -- @arg attrTab.min The minimum value (optional).
 -- @arg attrTab.max The maximum value (optional).
 -- @arg attrTab.default The default value for the choice. The default value
 -- for this argument depends on the other arguments used. If using min then it
 -- is the default value. Otherwise, if using max then it is the default value.
--- If using a non-named table as argument, the default value is the first element
+-- If using a vector as argument, the default value is the first element
 -- of the table.
 -- @arg attrTab.step An optional argument with the step from minimum to maximum.
 -- Note that max should be equals to min plus k times step, where k is an integer

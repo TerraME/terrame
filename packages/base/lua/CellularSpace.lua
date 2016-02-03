@@ -769,7 +769,7 @@ CellularSpace_ = {
 	getCellByID = function(self, cellID)
 		deprecatedFunction("getCellByID", "get")
 	end,
-	--- Return all the Cells of the CellularSpace as a non-named table.
+	--- Return all the Cells of the CellularSpace as a vector.
 	-- @deprecated CellularSpace.cells
 	getCells = function(self)
 		deprecatedFunction("getCells", ".cells")

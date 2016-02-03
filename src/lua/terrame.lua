@@ -341,7 +341,7 @@ function _Gtme.showDoc(package)
 		end
 	else
 		docpath = "file:///".._Gtme.makePathCompatibleToAllOS(docpath)
-		docpath = string.gsub (docpath, "%s", "%%20")
+		docpath = string.gsub(docpath, "%s", "%%20")
 		os.execute("start "..docpath)
 	end
 end

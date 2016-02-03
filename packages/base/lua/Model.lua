@@ -215,8 +215,9 @@ Model_ = {
 -- A tutorial about Models in TerraME is available at
 --  http://github.com/pedro-andrade-inpe/terrame/wiki/Models.
 -- @arg attrTab.finalTime A number with the final time of the simulation.
--- @arg attrTab.seed A number with the initial seed for Random.
--- @arg attrTab.init A mandatory function to describe how the model instance is created.
+-- If the Model does not have this as argument, it must be defined within function Model:init().
+-- @arg attrTab.seed A number with the initial seed for Random. This argument is optional.
+-- @arg attrTab.init A mandatory function to describe how an instance of Model is created.
 -- @arg attrTab.interface. An optional function to describe how the graphical interface is
 -- displayed. See Model:interface().
 -- See Model:init(). If the Model does not have argument finalTime, this function should
@@ -305,7 +306,7 @@ function Model(attrTab)
 					elseif type(attrTab[mvalue]) ~= "table" then
 						customError("interface() element '"..mvalue.."' is not a table in the Model.")
 					elseif #attrTab[mvalue] > 0 then
-						customError("interface() element '"..mvalue.."' is a non-named table in the Model.")
+						customError("interface() element '"..mvalue.."' is a vector in the Model.")
 					elseif getn(attrTab[mvalue]) == 0 then
 						customError("interface() element '"..mvalue.."' is empty in the Model.")
 					end
@@ -349,7 +350,7 @@ function Model(attrTab)
 		if mtype == "table" then
 			forEachElement(value, function(iname, _, itype)
 				if type(iname) ~= "string" then
-					customError("It is not possible to use a non-named table in a Model (parameter '"..name.."').")
+					customError("It is not possible to use a vector in a Model (parameter '"..name.."').")
 				elseif not belong(itype, {"Choice", "Mandatory", "number", "string", "function", "boolean"}) then
 					customError("Type "..itype.." (parameter '"..name.."."..iname.."') is not supported as argument of Model.")
 				end

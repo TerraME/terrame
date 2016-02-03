@@ -199,8 +199,8 @@ function incompatibleValueMsg(attr, expectedValues, gottenValue)
 	return msg
 end
 
---- Verify whether a given argument of a non-named function is integer.
--- The error message comes from ErrorHandling:integerArgumentMsg().
+--- Verify whether a given argument is integer. It is useful only for functions with
+-- non-named arguments. The error message comes from ErrorHandling:integerArgumentMsg().
 -- @arg position A number with the position of the argument in the function.
 -- @arg value The value used as argument to the function call.
 -- @usage _, err = pcall(function() integerArgument(1, 2.3) end)
@@ -257,8 +257,8 @@ function invalidFileExtensionError(attr, ext)
 end
 
 --- Return a message indicating that a given file extension is incompatible.
--- @arg attr A string with the name of the argument (for named functions), or its position
--- (for non-named functions).
+-- @arg attr A string with the name of the argument (for functions with named arguments),
+-- or its position (for functions with non-named arguments).
 -- @arg ext A string with the incompatible file extension.
 -- @usage str = invalidFileExtensionMsg("file", "csv")
 -- print(str)
@@ -271,7 +271,7 @@ function invalidFileExtensionMsg(attr, ext)
 end
 
 --- Verify whether a given argument of a function with non-named arguments belongs
---  to the correct type. The error message comes
+-- to the correct type. The error message comes
 -- from ErrorHandling:mandatoryArgumentMsg() and ErrorHandling:incompatibleTypeMsg().
 -- @arg position A number with the position of the argument in the function.
 -- @arg mtype A string with the required type for the argument.
@@ -338,8 +338,8 @@ function namedArgumentsMsg()
 end
 
 --- Verify whether an optional argument of a function with non-named arguments
--- belongs to the correct type.
--- The error message comes from ErrorHandling:incompatibleTypeMsg(), only if the argument is not nil.
+-- belongs to the correct type. If the argument is nil then no error is
+-- created. The error message comes from ErrorHandling:incompatibleTypeMsg().
 -- @arg position A number with the position of the argument in the function.
 -- @arg mtype A string with the required type for the argument.
 -- @arg value The value used as argument to the function call.
@@ -369,8 +369,8 @@ function optionalTableArgument(table, attr, allowedType)
 	end
 end
 
---- Verify whether a given argument of a function with non-named arguments is positive.
--- The error message comes from ErrorHandling:positiveArgumentMsg().
+--- Verify whether a given argument is positive. It is useful only for functions with
+-- non-named arguments. The error message comes from ErrorHandling:positiveArgumentMsg().
 -- @arg position A number with the position of the argument in the function.
 -- @arg value The value used as argument to the function call.
 -- @arg zero A boolean value indicating whether zero should be included
@@ -652,7 +652,7 @@ end
 -- This function returns the number of unnecessary arguments found.
 -- @arg data A named table with the arguments used in the function call.
 -- The names of this table will be verified.
--- @arg arguments A non-named table with the allowed arguments.
+-- @arg arguments A vector with the allowed arguments.
 -- @usage t = {value = 2}
 -- verifyUnnecessaryArguments(t, {"target", "select"})
 function verifyUnnecessaryArguments(data, arguments)

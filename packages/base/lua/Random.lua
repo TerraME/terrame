@@ -216,8 +216,8 @@ metaTableRandom_ = {__index = Random_, __tostring = _Gtme.tostring}
 -- sum of all probabilities must be one. & ... & seed \
 -- "continuous" & A continuous uniform distribition. It selects real numbers in a given
 -- interval. & max, min & seed \
--- "discrete" & A discrete uniform distribition. Elements are described as non-named
--- values. & ... & seed \
+-- "discrete" & A discrete uniform distribition. Elements are described as a vector.
+-- & ... & seed \
 -- "none" & No distribution. This is useful only when the modeler wants only to set
 -- seed. & & seed \
 -- "step" & A discrete uniform distribution whose values belong to a given [min, max] interval

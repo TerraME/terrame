@@ -105,7 +105,7 @@ return{
 		error_func = function()
 			CSVwrite(example, filename)
 		end
-		unitTest:assertError(error_func, "#1 should be a non-named table.")
+		unitTest:assertError(error_func, "#1 should be a vector.")
 
 		example = {
 			[2] = {age = 1, wealth = 10, vision = 2, metabolism = 1, test = "Foo text"},

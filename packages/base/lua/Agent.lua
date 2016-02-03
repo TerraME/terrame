@@ -689,7 +689,7 @@ metaTableAgent_ = {__index = Agent_, __tostring = _Gtme.tostring}
 -- "on_x" functions to get messages with subject "x" (see Agent:message()).
 -- @output state_ An internal state for the Agent. Never use this object.
 -- @output cObj_ A pointer to a C++ representation of the Agent. Never use this object.
--- @output cells A non-named table with the Cells representing the default placement of the Agent.
+-- @output cells A vector with the Cells representing the default placement of the Agent.
 -- It is necessary to use Utils:forEachCell(). This value is the same of "agent.placement.cells".
 -- @output id The unique identifier of the Agent. This attribute only exists when the agent belongs
 -- to a Society.
