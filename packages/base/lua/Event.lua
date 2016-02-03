@@ -143,7 +143,7 @@ metaTableEvent_ = {
 -- @tabular action
 -- Object & Function(s) activated by the Event \
 -- Agent/Automaton & execute -> notify \
--- CellularSpace/Cell & execute (if exists) -> synchronize -> notify \
+-- CellularSpace/Cell & synchronize -> execute (if exists) -> notify \
 -- function & function\
 -- Society & execute (if exists) -> synchronize -> notify \
 -- Timer & notify \
@@ -219,8 +219,8 @@ function Event(data)
 		elseif targettype == "Cell" or targettype == "CellularSpace" then
 			if data.action.execute then
 				data.action = function(event)
-					maction:execute(event)
 					maction:synchronize()
+					maction:execute(event)
 					maction:notify(event)
 				end
 			else
