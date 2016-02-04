@@ -145,6 +145,7 @@ metaTableEvent_ = {
 -- Agent/Automaton & execute -> notify \
 -- CellularSpace/Cell & synchronize -> execute (if exists) -> notify \
 -- function & function\
+-- Model & step (if exists) -> notify \
 -- Society & execute (if exists) -> synchronize -> notify \
 -- Timer & notify \
 -- Trajectory/Group & rebuild \
@@ -238,8 +239,19 @@ function Event(data)
 			data.action = function(event)
 				maction:rebuild()
 			end
+		elseif isModel(maction) then
+			if data.action.step then
+				data.action = function(event)
+					maction:step(event)
+					maction:notify(event)
+				end
+			else
+				data.action = function(event)
+					maction:notify(event)
+				end
+			end
 		elseif targettype ~= "function" then
-			incompatibleTypeError("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", data.action)
+			incompatibleTypeError("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Model, Society, Timer, Trajectory]", data.action)
 		end
 	end
 

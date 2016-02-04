@@ -87,16 +87,32 @@ return{
 
 		local traj = Trajectory{target = cs, greater = function(c1, c2) return c1.value > c2.value end}
 
+		local m = Model{
+			finalTime = 10,
+			init = function(model)
+				model.step = function()
+					count = count + 10
+				end
+
+				model.timer = Timer{
+					Event{action = model}
+				}
+			end
+		}
+
+		local instance = m{}
+
 		local t = Timer{
 			Event{action = soc}, -- 1000
 			Event{action = c},   -- 2
 			Event{action = cs},
+			Event{action = instance}, -- 20
 			Event{action = ag},  -- 100
 			Event{action = traj}
 		}
 
 		t:execute(2)
-		unitTest:assertEquals(count, 1202)
+		unitTest:assertEquals(count, 1222)
 
 		local sum = 0
 

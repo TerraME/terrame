@@ -92,6 +92,9 @@ Skipping tests/observer/basics/CellularSpace.lua
 Skipping tests/observer/basics/Chart.lua
 Skipping tests/observer/basics/Clock.lua
 Skipping tests/observer/basics/Environment.lua
+Testing tests/observer/basics/Event.lua
+Testing Event
+Skip checking asserts
 Skipping tests/observer/basics/InternetSender.lua
 Skipping tests/observer/basics/LogFile.lua
 Skipping tests/observer/basics/Map.lua
@@ -108,20 +111,22 @@ Skipping snapthots check
 Skipping examples
 
 Unit test report:
-Tests were executed in 3.83 seconds.
+Tests were executed in 5.23 seconds.
+Snapshots were saved in '.terrametmp_nIESE'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 Execution of all asserts was not verified.
-All 232 asserts were executed successfully.
-All 5 tested functions do not have any unexpected execution error.
-All 5 tested functions have at least one assert.
-All 5 tested functions exist in the source code of the package.
+All 235 asserts were executed successfully.
+All 6 tested functions do not have any unexpected execution error.
+All 6 tested functions have at least one assert.
+All 6 tested functions exist in the source code of the package.
 No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No source code functions were verified.
 No lines from the source code were verified.
-No snapshot test was executed.
+No new snapshot file was created.
+All snapshot files were used in the tests.
 No examples were executed.
 Summing up, all tests were successfully executed.

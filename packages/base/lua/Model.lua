@@ -245,6 +245,8 @@ Model_ = {
 -- the model instance must have all its elements belonging to the same type. & No default value.\
 -- named table & It will verify each attribute according to the rules above. & The table itself.
 -- It is possible to define only part of the table in the instance, keeping the other default values. \
+-- @output parent The Model used to create the object. This object only exists in the Model instance,
+-- but not in the Model itself.
 -- @usage Tube = Model{
 --     initialWater = 20,
 --     flow = 1,
@@ -409,7 +411,7 @@ function Model(attrTab)
 		return model(v, debug.getinfo(1).name)
 	end
 
-	local indexFunction = function(model, v)
+	local indexFunction = function(model, v) -- in this case, the type of this model will be "model"
 		local options = {
 			execute = function()
 				local m = model{}

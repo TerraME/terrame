@@ -78,7 +78,7 @@ return{
 		error_func = function()
 			event = Event{period = 2, priority = 1, action = -5.5}
 		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Society, Timer, Trajectory]", -5.5))
+		unitTest:assertError(error_func, incompatibleTypeMsg("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Model, Society, Timer, Trajectory]", -5.5))
 
 		error_func = function()
 			event = Event{message = function() end}
