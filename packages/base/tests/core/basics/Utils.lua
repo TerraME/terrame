@@ -760,6 +760,18 @@ return{
 	integrationRungeKutta = function(unitTest)
 		unitTest:assert(true)
 	end,
+	isModel = function(unitTest)
+		local M = Model{
+			init = function(model)
+				model.finalTime = 10
+				model.timer = Timer{}
+			end
+		}
+
+		unitTest:assert(not isModel(2))
+		unitTest:assert(isModel(M))
+		unitTest:assert(isModel(M{}))
+	end,
 	isTable = function(unitTest)
 		local c = Cell{}
 

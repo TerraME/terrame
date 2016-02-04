@@ -259,6 +259,15 @@ function belong(value, values)
 	return found
 end
 
+--- Return whether a given value is a Model or an instance of a Model.
+-- @arg value A value.
+-- @usage print(isModel(2)) -- false
+function isModel(value)
+	local mtype = type(value)
+
+	return mtype == "Model" or (isTable(value) and type(value.parent) == "Model")
+end
+
 --- Return a function that executes a given function of an object.
 -- It is particularly useful as argument action for an Event.
 -- @arg obj Any TerraME object.

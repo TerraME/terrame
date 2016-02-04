@@ -305,7 +305,7 @@ Environment_ = {
 					forEachElement(value.events, function(_, ev)
 						timer:add(ev)
 					end)
-				elseif type(rawget(_G, mtype)) == "Model" then
+				elseif isModel(value) then
 					process(value)
 				end
 			end)
