@@ -72,16 +72,9 @@ local RasterAttributeCreatedMapper = {
 	minimum = "_Min_Value",
 	maximum = "_Max_Value",
 	percentage = "",
-	stdev = "_Standard_Deviation"
+	stdev = "_Standard_Deviation",
+	sum = "_Sum"
 }
-
--- TODO: Remove this after
-local function printTable(sometable)
-	print("\n\n------------------------------ Table")
-	for key, value in pairs(sometable) do
-		print(key, value)
-	end
-end
 
 local function hasConnectionError(type, connInfo)
 	local ds = binding.te.da.DataSourceFactory.make(type)
@@ -104,7 +97,7 @@ local function createPgConnInfo(host, port, user, pass, database, table, encodin
 	connInfo.PG_DB_NAME = database
 	connInfo.PG_NEWDB_NAME = table
 	connInfo.PG_CONNECT_TIMEOUT = "4" 
-	connInfo.PG_CLIENT_ENCODING = encoding -- "UTF-8" --"CP1252"     -- "LATIN1" --"WIN1252" 	
+	connInfo.PG_CLIENT_ENCODING = encoding -- "UTF-8" --"CP1252" -- "LATIN1" --"WIN1252" 	
 	connInfo.PG_CHECK_DB_EXISTENCE = database		
 
 	local errorMsg = hasConnectionError("POSTGIS", connInfo)	

@@ -626,7 +626,29 @@ return {
 		unitTest:assertEquals(rstdevLayerInfo.user, user)
 		unitTest:assertEquals(rstdevLayerInfo.password, password)
 		unitTest:assertEquals(rstdevLayerInfo.database, database)
-		unitTest:assertEquals(rstdevLayerInfo.table, string.lower(rstdevLayerName))			
+		unitTest:assertEquals(rstdevLayerInfo.table, string.lower(rstdevLayerName))
+
+		-- ###################### 20 #############################
+		local rsumLayerName = clName2.."_Sum"
+		pgData.table = rsumLayerName
+		tl:dropPgTable(pgData)
+		
+		c4:fillCells{
+			operation = "sum",
+			layer = layerName3,
+			attribute = "sum",
+			output = rsumLayerName,
+			select = 0
+		}		
+
+		local rsumLayerInfo = proj:infoLayer(rsumLayerName)
+		unitTest:assertEquals(rsumLayerInfo.source, "postgis")
+		unitTest:assertEquals(rsumLayerInfo.host, host)
+		unitTest:assertEquals(rsumLayerInfo.port, port)
+		unitTest:assertEquals(rsumLayerInfo.user, user)
+		unitTest:assertEquals(rsumLayerInfo.password, password)
+		unitTest:assertEquals(rsumLayerInfo.database, database)
+		unitTest:assertEquals(rsumLayerInfo.table, string.lower(rsumLayerName))			
 
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -674,6 +696,8 @@ return {
 		pgData.table = string.lower(rpercentLayerName)
 		tl:dropPgTable(pgData)		
 		pgData.table = string.lower(rstdevLayerName)
+		tl:dropPgTable(pgData)		
+		pgData.table = string.lower(rsumLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}

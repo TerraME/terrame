@@ -839,6 +839,30 @@ return{
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))
+		
+		local rsumLayerName = clName1.."_Sum"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "sum",
+				layer = layerName3,
+				select = 0,
+				output = rsumLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "sum",
+				layer = layerName3,
+				select = "0",
+				output = rsumLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
 
 		local op1NotAvailable = function()
 			cl:fillCells{
