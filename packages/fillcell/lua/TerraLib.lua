@@ -70,7 +70,8 @@ local VectorAttributeCreatedMapper = {
 local RasterAttributeCreatedMapper = {
 	mean = "_Mean",
 	minimum = "_Min_Value",
-	maximum = "_Max_Value"
+	maximum = "_Max_Value",
+	percentage = ""
 }
 
 -- TODO: Remove this after
@@ -574,7 +575,7 @@ local function createCellSpaceLayer(inputLayer, name, resolultion, connInfo, typ
 	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 end
 
-local function renameEachClass(ds, dSetName, select, property)
+local function renameEachClass(ds, dSetName, dsType, select, property)
 	local dSet = ds:getDataSet(dSetName)
 	local numProps = dSet:getNumProperties()
 	local propsRenamed = {}
@@ -583,7 +584,16 @@ local function renameEachClass(ds, dSetName, select, property)
 		local currentProp = dSet:getPropertyName(i)
 		
 		if string.match(currentProp, select) then
-			local newName = string.gsub(currentProp, select.."_", property.."_")
+			local newName = ""
+			if type(select) == "number" then
+				if dsType == "POSTGIS" then
+					newName = string.gsub(currentProp, "b"..select.."_", property.."_")
+				else
+					newName = string.gsub(currentProp, "B"..select.."_", property.."_")
+				end
+			else
+				newName = string.gsub(currentProp, select.."_", property.."_")
+			end
 			ds:renameProperty(dSetName, currentProp, newName)
 			propsRenamed[newName] = newName
 		end		
@@ -862,7 +872,7 @@ TerraLib_ = {
 			propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out)
 		end
 		
-		if outType == "POSTGIS" then
+		if (outType == "POSTGIS") and (type(select) == "string")  then
 			select = string.lower(select)
 		end
 		
@@ -870,7 +880,7 @@ TerraLib_ = {
 		local attrsRenamed = {}
 		
 		if operation == "percentage" then
-			attrsRenamed = renameEachClass(outDs, outDSetName, select, property)
+			attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, property)
 		else
 			outDs:renameProperty(outDSetName, propCreatedName, property)
 			attrsRenamed[property] = property

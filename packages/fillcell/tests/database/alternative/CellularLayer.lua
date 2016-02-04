@@ -779,6 +779,30 @@ return{
 				output = rmaxLayerName
 			}
 		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+
+		local rpercentLayerName = clName1.."_Percentage"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "percentage",
+				layer = layerName3,
+				select = 0,
+				output = rpercentLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "percentage",
+				layer = layerName3,
+				select = "0",
+				output = rpercentLayerName
+			}
+		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))			
 
 		if isFile(projName) then
