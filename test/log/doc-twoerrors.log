@@ -106,11 +106,9 @@ Testing elapsedTime2
 Error: [string "print(elapsedTime2(100)) -- 00:01:40"]:1: attempt to call global 'elapsedTime2' (a nil value)
 Skipping forEachAgent2
 Skipping forEachCell2
-Skipping forEachCell2
 Skipping forEachCellPair2
 Skipping forEachElement2
 Skipping forEachFile2
-Skipping forEachNeighborhood2
 Skipping forEachNeighborhood2
 Skipping getExtension2
 Skipping getn2
