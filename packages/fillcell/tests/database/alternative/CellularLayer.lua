@@ -277,7 +277,19 @@ return{
 				defaut = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))	
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		
+		local selected = "ITNOTEXISTS"
+		local selectNotExists = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName1,
+				select = selected,
+				output = minValueLayerName
+			}
+		end
+		unitTest:assertError(selectNotExists, "The attribute selected '"..selected.."' not exists in layer '"..layerName1.."'.")			
 		
 		local maxValueLayerName = clName1.."_Maximum"
 		local selectNotString = function()
@@ -698,6 +710,17 @@ return{
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
 		
+		local bandNotExists = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName3,
+				select = 9,
+				output = raverageLayerName
+			}
+		end
+		unitTest:assertError(bandNotExists, "The attribute selected '".."9".."' not exists in layer '"..layerName3.."'.")	
+		
 		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT) 
 		-- local layerNotIntersect = function()
 			-- cl:fillCells{
@@ -730,6 +753,30 @@ return{
 				layer = layerName3,
 				select = "0",
 				output = rminLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+
+		local rmaxLayerName = clName1.."_Maximum"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName3,
+				select = 0,
+				output = rmaxLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName3,
+				select = "0",
+				output = rmaxLayerName
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))			

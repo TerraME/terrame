@@ -69,7 +69,8 @@ local VectorAttributeCreatedMapper = {
 
 local RasterAttributeCreatedMapper = {
 	mean = "_Mean",
-	minimum = "_Min_Value"
+	minimum = "_Min_Value",
+	maximum = "_Max_Value"
 }
 
 -- TODO: Remove this after
@@ -452,12 +453,20 @@ local function dataSetExists(connInfo, type)
 end
 
 local function propertyExists(connInfo, property, type)
-	local ds = nil
+	local ds = makeAndOpenDataSource(connInfo, type)
 	local dSetName = ""
 	
 	if type == "POSTGIS" then
-		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
 		dSetName = string.lower(connInfo.PG_NEWDB_NAME)
+	elseif type == "OGR" then
+		dSetName = getFileName(connInfo.URI)
+	elseif type == "GDAL" then
+		dSetName = getFileNameWithExtension(connInfo.URI)
+		local dSet = ds:getDataSet(dSetName)
+		local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+		local raster = dSet:getRaster(rpos)	
+		local numBands = raster:getNumberOfBands()
+		return (property < numBands)
 	end
 	
 	local exists = ds:propertyExists(dSetName, property)
@@ -826,7 +835,11 @@ TerraLib_ = {
 		
 		if propertyExists(toDsInfo:getConnInfo(), property, toDsInfo:getType()) then
 			customError("The attribute '"..property.."' already exists in layer '"..to.."'.")
-		end			
+		end		
+
+		if not propertyExists(fromDsInfo:getConnInfo(), select, fromDsInfo:getType()) then
+			customError("The attribute selected '"..select.."' not exists in layer '"..from.."'.")
+		end
 		
 		local outDs = nil
 		local outConnInfo = outDsInfo:getConnInfo()

@@ -507,7 +507,7 @@ return {
 			source = "postgis",
 			input = layerName2,
 			layer = clName2,
-			resolution = 2e4,
+			resolution = 3e4,
 			user = user,
 			password = password,
 			database = database,
@@ -560,8 +560,30 @@ return {
 		unitTest:assertEquals(rminLayerInfo.user, user)
 		unitTest:assertEquals(rminLayerInfo.password, password)
 		unitTest:assertEquals(rminLayerInfo.database, database)
-		unitTest:assertEquals(rminLayerInfo.table, string.lower(rminLayerName))		
+		unitTest:assertEquals(rminLayerInfo.table, string.lower(rminLayerName))	
+
+		-- ###################### 17 #############################
+		local rmaxLayerName = clName2.."_Maximum"
+		pgData.table = rmaxLayerName
+		tl:dropPgTable(pgData)
 		
+		c4:fillCells{
+			operation = "maximum",
+			layer = layerName3,
+			attribute = "maximum",
+			output = rmaxLayerName,
+			select = 0
+		}		
+
+		local rmaxLayerInfo = proj:infoLayer(rmaxLayerName)
+		unitTest:assertEquals(rmaxLayerInfo.source, "postgis")
+		unitTest:assertEquals(rmaxLayerInfo.host, host)
+		unitTest:assertEquals(rmaxLayerInfo.port, port)
+		unitTest:assertEquals(rmaxLayerInfo.user, user)
+		unitTest:assertEquals(rmaxLayerInfo.password, password)
+		unitTest:assertEquals(rmaxLayerInfo.database, database)
+		unitTest:assertEquals(rmaxLayerInfo.table, string.lower(rmaxLayerName))			
+
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
@@ -597,9 +619,13 @@ return {
 		tl:dropPgTable(pgData)	
 		pgData.table = string.lower(wsumLayerName)
 		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(tName2)
+		tl:dropPgTable(pgData)
 		pgData.table = string.lower(rmeanLayerName)
 		tl:dropPgTable(pgData)		
 		pgData.table = string.lower(rminLayerName)
+		tl:dropPgTable(pgData)			
+		pgData.table = string.lower(rmaxLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}
