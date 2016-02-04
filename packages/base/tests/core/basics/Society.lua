@@ -136,7 +136,7 @@ return {
 
 		local ag = soc1:sample()
 		unitTest:assertType(ag, "Agent")
-		local ev = Event{}
+		local ev = Event{action = function() end}
 		ag:execute(ev)
 
 		ag:die()

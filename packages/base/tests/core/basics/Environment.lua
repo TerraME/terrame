@@ -154,12 +154,12 @@ return{
 			cs, at1, ag1
 		}
 
-		local ev = Event{start = 0}
+		local ev = Event{start = 0, action = function() end}
 		at1:setTrajectoryStatus(true)
 		at1:execute(ev)
 		self:assertEquals(44, cont)
 
-		ev = Event{start = 0}
+		ev = Event{start = 0, action = function() end}
 		ag1:setTrajectoryStatus(true)
 		ag1:execute(ev)
 		self:assertEquals(88, cont)
