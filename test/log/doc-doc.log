@@ -268,11 +268,11 @@ Testing Map
 Testing save
 Testing file lua/Model.lua
 Testing Model
-Testing configure
+Skipping configure
 Testing execute
 Testing getParameters
 Testing init
-Testing interface
+Skipping interface
 Testing notify
 Testing file lua/Neighborhood.lua
 Testing Neighborhood
@@ -353,7 +353,7 @@ Testing file lua/UnitTest.lua
 Testing UnitTest
 Testing assert
 Testing assertEquals
-Skipping assertError
+Testing assertError
 Testing assertFile
 Testing assertNil
 Testing assertNotNil
