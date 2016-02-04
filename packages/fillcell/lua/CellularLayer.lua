@@ -156,71 +156,124 @@ CellularLayer_ = {
 			customError("The layer '"..data.layer.."' not exists.")
 		end		
 		
+		local fromLayerInfo = project:infoLayer(data.layer)
+		
 		if not data.table then
 			data.table = data.layer
 		end
 		
 		switch(data, "operation"):caseof{
-			area = function()		
-				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
-				data.select = "FID"								
+			area = function()	
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+					data.select = "FID"
+				else
+					customError("The operation '"..data.operation.."' is not available to raster layer.")
+				end
 			end,
-			average = function()
-				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+			average = function()		
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					defaultTableValue(data, "area", false)
+					mandatoryTableArgument(data, "select", "string")
+				else
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					mandatoryTableArgument(data, "select", "number")
+				end
 
-				mandatoryTableArgument(data, "select", "string")
-				defaultTableValue(data, "area", false)
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			count = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
-				data.select = "FID"
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+					data.select = "FID"
+				else
+					customError("The operation '"..data.operation.."' is not available to raster layer.")
+				end
 			end,
 			distance = function()
-	    		verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
-				data.select = "FID"
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+					data.select = "FID"
+				else
+					customError("The operation '"..data.operation.."' is not available to raster layer.")
+				end				
 			end,
-			length = function()
-				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
-			end,
+			-- length = function()
+				-- verifyUnnecessaryArguments(data, {"attribute", "layer", "operation"})
+			-- end,
 			majority = function()
-				verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					defaultTableValue(data, "area", false)
+					mandatoryTableArgument(data, "select", "string")
+				else
+					--verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					--mandatoryTableArgument(data, "select", "number")
+					customError("The operation '"..data.operation.."' is not available to raster layer.")
+				end
 
-				mandatoryTableArgument(data, "select", "string")
-				defaultTableValue(data, "area", false)
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			maximum = function()
-				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output" ,"table"})
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					defaultTableValue(data, "area", false)
+					mandatoryTableArgument(data, "select", "string")
+				else
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					mandatoryTableArgument(data, "select", "number")
+				end
 
-				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			minimum = function()
-				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output" ,"table"})
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					defaultTableValue(data, "area", false)
+					mandatoryTableArgument(data, "select", "string")
+				else
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					mandatoryTableArgument(data, "select", "number")
+				end
 
-				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			percentage = function()
-				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output" ,"table"})
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					defaultTableValue(data, "area", false)
+					mandatoryTableArgument(data, "select", "string")
+				else
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					mandatoryTableArgument(data, "select", "number")
+				end
 
-				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
 			presence = function()
-				verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
-				data.select = "FID"
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"attribute", "layer", "operation", "output", "table"})
+					data.select = "FID"
+				else
+					customError("The operation '"..data.operation.."' is not available to raster layer.")
+				end
 			end,
 			stdev = function()
-				verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output" ,"table"})
+				if fromLayerInfo.rep == "geometry" then
+					verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					defaultTableValue(data, "area", false)
+					mandatoryTableArgument(data, "select", "string")
+				else
+					verifyUnnecessaryArguments(data, {"attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})
+					mandatoryTableArgument(data, "select", "number")
+				end
 
-				mandatoryTableArgument(data, "select", "string")
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
 			end,
@@ -231,13 +284,13 @@ CellularLayer_ = {
 				defaultTableValue(data, "area", false)
 				defaultTableValue(data, "default", 0)
 				defaultTableValue(data, "dummy", math.huge)
-			end,
-			value = function()
-				verifyUnnecessaryArguments(data, {"area", "attribute", "layer", "operation", "select"})
-
-				mandatoryTableArgument(data, "select", "string")
-				defaultTableValue(data, "area", false)
 			end
+			-- value = function()
+				-- verifyUnnecessaryArguments(data, {"area", "attribute", "layer", "operation", "select"})
+
+				-- mandatoryTableArgument(data, "select", "string")
+				-- defaultTableValue(data, "area", false)
+			-- end
 		}
 		
 		tlib:attributeFill(project, data.layer, self.layer, data.output, data.attribute, data.operation, data.select, data.area, data.default)

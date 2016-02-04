@@ -277,7 +277,19 @@ return{
 				defaut = 3
 			}
 		end
-		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))	
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("defaut", "default"))
+		
+		local selected = "ITNOTEXISTS"
+		local selectNotExists = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName1,
+				select = selected,
+				output = minValueLayerName
+			}
+		end
+		unitTest:assertError(selectNotExists, "The attribute selected '"..selected.."' not exists in layer '"..layerName1.."'.")			
 		
 		local maxValueLayerName = clName1.."_Maximum"
 		local selectNotString = function()
@@ -649,6 +661,223 @@ return{
 -- 		-- TODO: match geometries with the available strategies
 -- 		-- (first table of the documentation)
 -- 		-- check if terralib already does this (but the test must exist anyway)
+
+		local layerName2 = "Setores"
+		proj:addLayer {
+			layer = layerName2,
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")		
+		}
+		
+		local layerNotIntersect = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "sum",
+				layer = layerName2,
+				select = "FID",
+				output = sumLayerName
+			}
+		end
+		unitTest:assertError(layerNotIntersect, "The two layers do not intersect.")		
+		
+		-- RASTER TESTS ----------------------------------------------------------------
+		local layerName3 = "Desmatamento"
+		proj:addLayer {
+			layer = layerName3,
+			file = file("Desmatamento_2000.tif", "fillcell")		
+		}	
+
+		local raverageLayerName = clName1.."_Average"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName3,
+				select = 0,
+				output = raverageLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName3,
+				select = "0",
+				output = raverageLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+		
+		local bandNotExists = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName3,
+				select = 9,
+				output = raverageLayerName
+			}
+		end
+		unitTest:assertError(bandNotExists, "The attribute selected '".."9".."' not exists in layer '"..layerName3.."'.")	
+		
+		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT) 
+		-- local layerNotIntersect = function()
+			-- cl:fillCells{
+				-- attribute = "attr",
+				-- operation = "average",
+				-- layer = layerName3,
+				-- select = 0,
+				-- output = raverageLayerName
+			-- }
+		-- end
+		-- unitTest:assertError(layerNotIntersect, "The two layers do not intersect.") -- SKIP			
+		
+		local rminLayerName = clName1.."_Minimum"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName3,
+				select = 0,
+				output = rminLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "minimum",
+				layer = layerName3,
+				select = "0",
+				output = rminLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+
+		local rmaxLayerName = clName1.."_Maximum"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName3,
+				select = 0,
+				output = rmaxLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "maximum",
+				layer = layerName3,
+				select = "0",
+				output = rmaxLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+
+		local rpercentLayerName = clName1.."_Percentage"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "percentage",
+				layer = layerName3,
+				select = 0,
+				output = rpercentLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "percentage",
+				layer = layerName3,
+				select = "0",
+				output = rpercentLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+
+		local rstdevLayerName = clName1.."_Stdev"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = layerName3,
+				select = 0,
+				output = rstdevLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = layerName3,
+				select = "0",
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))
+
+		local op1NotAvailable = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "area",
+				layer = layerName3,
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(op1NotAvailable, "The operation '".."area".."' is not available to raster layer.")	
+
+		local op2NotAvailable = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "count",
+				layer = layerName3,
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(op2NotAvailable, "The operation '".."count".."' is not available to raster layer.")
+
+		local op3NotAvailable = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "distance",
+				layer = layerName3,
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(op3NotAvailable, "The operation '".."distance".."' is not available to raster layer.")	
+
+		local op4NotAvailable = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "majority",
+				layer = layerName3,
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(op4NotAvailable, "The operation '".."majority".."' is not available to raster layer.")	
+
+		local op5NotAvailable = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "presence",
+				layer = layerName3,
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(op5NotAvailable, "The operation '".."presence".."' is not available to raster layer.")			
 
 		if isFile(projName) then
 			os.execute("rm -f "..projName)

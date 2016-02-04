@@ -31,8 +31,7 @@ return {
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = tName1	
+		local encoding = "CP1252"	
 		
 		local pgData = {
 			type = "POSTGIS",
@@ -134,8 +133,7 @@ return {
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"
-		local tableName = tName1	
+		local encoding = "CP1252"	
 		
 		local pgData = {
 			type = "POSTGIS",
@@ -483,6 +481,152 @@ return {
 		unitTest:assertEquals(wsumLayerInfo.password, password)
 		unitTest:assertEquals(wsumLayerInfo.database, database)
 		unitTest:assertEquals(wsumLayerInfo.table, string.lower(wsumLayerName))		
+		
+		-- RASTER TESTS ------------------------------------------
+		
+		-- ###################### 15 #############################
+		local layerName2 = "Setores"
+		proj:addLayer {
+			layer = layerName2,
+			file = file("Setores_Censitarios_2000_pol.shp", "fillcell")		
+		}
+		
+		local layerName3 = "Desmatamento"
+		proj:addLayer {
+			layer = layerName3,
+			file = file("Desmatamento_2000.tif", "fillcell")		
+		}			
+		
+		local tName2 = "setores_cells"
+		local clName2 = "Setores_Cells"
+		
+		pgData.table = tName2
+		tl:dropPgTable(pgData)
+		
+		proj:addCellularLayer {
+			source = "postgis",
+			input = layerName2,
+			layer = clName2,
+			resolution = 3e4,
+			user = user,
+			password = password,
+			database = database,
+			table = tName2
+		}		
+		
+		local rmeanLayerName = clName2.."_Mean"
+		pgData.table = rmeanLayerName
+		tl:dropPgTable(pgData)
+		
+		local c4 = CellularLayer{
+			project = proj,
+			layer = clName2
+		}		
+		
+		c4:fillCells{
+			operation = "average",
+			layer = layerName3,
+			attribute = "mean",
+			output = rmeanLayerName,
+			select = 0
+		}		
+
+		local rmeanLayerInfo = proj:infoLayer(rmeanLayerName)
+		unitTest:assertEquals(rmeanLayerInfo.source, "postgis")
+		unitTest:assertEquals(rmeanLayerInfo.host, host)
+		unitTest:assertEquals(rmeanLayerInfo.port, port)
+		unitTest:assertEquals(rmeanLayerInfo.user, user)
+		unitTest:assertEquals(rmeanLayerInfo.password, password)
+		unitTest:assertEquals(rmeanLayerInfo.database, database)
+		unitTest:assertEquals(rmeanLayerInfo.table, string.lower(rmeanLayerName))	
+		
+		-- ###################### 16 #############################
+		local rminLayerName = clName2.."_Minimum"
+		pgData.table = rminLayerName
+		tl:dropPgTable(pgData)
+		
+		c4:fillCells{
+			operation = "minimum",
+			layer = layerName3,
+			attribute = "minimum",
+			output = rminLayerName,
+			select = 0
+		}		
+
+		local rminLayerInfo = proj:infoLayer(rminLayerName)
+		unitTest:assertEquals(rminLayerInfo.source, "postgis")
+		unitTest:assertEquals(rminLayerInfo.host, host)
+		unitTest:assertEquals(rminLayerInfo.port, port)
+		unitTest:assertEquals(rminLayerInfo.user, user)
+		unitTest:assertEquals(rminLayerInfo.password, password)
+		unitTest:assertEquals(rminLayerInfo.database, database)
+		unitTest:assertEquals(rminLayerInfo.table, string.lower(rminLayerName))	
+
+		-- ###################### 17 #############################
+		local rmaxLayerName = clName2.."_Maximum"
+		pgData.table = rmaxLayerName
+		tl:dropPgTable(pgData)
+		
+		c4:fillCells{
+			operation = "maximum",
+			layer = layerName3,
+			attribute = "maximum",
+			output = rmaxLayerName,
+			select = 0
+		}		
+
+		local rmaxLayerInfo = proj:infoLayer(rmaxLayerName)
+		unitTest:assertEquals(rmaxLayerInfo.source, "postgis")
+		unitTest:assertEquals(rmaxLayerInfo.host, host)
+		unitTest:assertEquals(rmaxLayerInfo.port, port)
+		unitTest:assertEquals(rmaxLayerInfo.user, user)
+		unitTest:assertEquals(rmaxLayerInfo.password, password)
+		unitTest:assertEquals(rmaxLayerInfo.database, database)
+		unitTest:assertEquals(rmaxLayerInfo.table, string.lower(rmaxLayerName))		
+
+		-- ###################### 18 #############################
+		local rpercentLayerName = clName2.."_Percentage"
+		pgData.table = rpercentLayerName
+		tl:dropPgTable(pgData)
+		
+		c4:fillCells{
+			operation = "percentage",
+			layer = layerName3,
+			attribute = "percentage",
+			output = rpercentLayerName,
+			select = 0
+		}		
+
+		local rpercentLayerInfo = proj:infoLayer(rpercentLayerName)
+		unitTest:assertEquals(rpercentLayerInfo.source, "postgis")
+		unitTest:assertEquals(rpercentLayerInfo.host, host)
+		unitTest:assertEquals(rpercentLayerInfo.port, port)
+		unitTest:assertEquals(rpercentLayerInfo.user, user)
+		unitTest:assertEquals(rpercentLayerInfo.password, password)
+		unitTest:assertEquals(rpercentLayerInfo.database, database)
+		unitTest:assertEquals(rpercentLayerInfo.table, string.lower(rpercentLayerName))
+
+		-- ###################### 19 #############################
+		local rstdevLayerName = clName2.."_Stdev"
+		pgData.table = rstdevLayerName
+		tl:dropPgTable(pgData)
+		
+		c4:fillCells{
+			operation = "stdev",
+			layer = layerName3,
+			attribute = "stdev",
+			output = rstdevLayerName,
+			select = 0
+		}		
+
+		local rstdevLayerInfo = proj:infoLayer(rstdevLayerName)
+		unitTest:assertEquals(rstdevLayerInfo.source, "postgis")
+		unitTest:assertEquals(rstdevLayerInfo.host, host)
+		unitTest:assertEquals(rstdevLayerInfo.port, port)
+		unitTest:assertEquals(rstdevLayerInfo.user, user)
+		unitTest:assertEquals(rstdevLayerInfo.password, password)
+		unitTest:assertEquals(rstdevLayerInfo.database, database)
+		unitTest:assertEquals(rstdevLayerInfo.table, string.lower(rstdevLayerName))			
 
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -518,6 +662,18 @@ return {
 		pgData.table = string.lower(sumLayerName)
 		tl:dropPgTable(pgData)	
 		pgData.table = string.lower(wsumLayerName)
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(tName2)
+		tl:dropPgTable(pgData)
+		pgData.table = string.lower(rmeanLayerName)
+		tl:dropPgTable(pgData)		
+		pgData.table = string.lower(rminLayerName)
+		tl:dropPgTable(pgData)			
+		pgData.table = string.lower(rmaxLayerName)
+		tl:dropPgTable(pgData)			
+		pgData.table = string.lower(rpercentLayerName)
+		tl:dropPgTable(pgData)		
+		pgData.table = string.lower(rstdevLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}

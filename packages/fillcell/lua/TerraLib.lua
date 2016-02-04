@@ -50,7 +50,7 @@ local OperationMapper = {
 	wsum = binding.WEIGHTED_SUM
 }
 
-local AttributeCreatedMapper = {
+local VectorAttributeCreatedMapper = {
 	presence = "presence",
 	area = "percent_of_total_area",
 	count = "total_values",
@@ -65,6 +65,14 @@ local AttributeCreatedMapper = {
 	occurrence = "class_high_occurrence",
 	sum = "sum_values",
 	wsum = "weigh_sum_area" 
+}
+
+local RasterAttributeCreatedMapper = {
+	mean = "_Mean",
+	minimum = "_Min_Value",
+	maximum = "_Max_Value",
+	percentage = "",
+	stdev = "_Standard_Deviation"
 }
 
 -- TODO: Remove this after
@@ -447,12 +455,20 @@ local function dataSetExists(connInfo, type)
 end
 
 local function propertyExists(connInfo, property, type)
-	local ds = nil
+	local ds = makeAndOpenDataSource(connInfo, type)
 	local dSetName = ""
 	
 	if type == "POSTGIS" then
-		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
 		dSetName = string.lower(connInfo.PG_NEWDB_NAME)
+	elseif type == "OGR" then
+		dSetName = getFileName(connInfo.URI)
+	elseif type == "GDAL" then
+		dSetName = getFileNameWithExtension(connInfo.URI)
+		local dSet = ds:getDataSet(dSetName)
+		local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
+		local raster = dSet:getRaster(rpos)	
+		local numBands = raster:getNumberOfBands()
+		return (property < numBands)
 	end
 	
 	local exists = ds:propertyExists(dSetName, property)
@@ -560,11 +576,7 @@ local function createCellSpaceLayer(inputLayer, name, resolultion, connInfo, typ
 	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 end
 
-local function getCreatedPropertyName(select, operation)
-	return select.."_"..AttributeCreatedMapper[operation]
-end
-
-local function renameEachClass(ds, dSetName, select, property)
+local function renameEachClass(ds, dSetName, dsType, select, property)
 	local dSet = ds:getDataSet(dSetName)
 	local numProps = dSet:getNumProperties()
 	local propsRenamed = {}
@@ -573,13 +585,92 @@ local function renameEachClass(ds, dSetName, select, property)
 		local currentProp = dSet:getPropertyName(i)
 		
 		if string.match(currentProp, select) then
-			local newName = string.gsub(currentProp, select.."_", property.."_")
+			local newName = ""
+			if type(select) == "number" then
+				if dsType == "POSTGIS" then
+					newName = string.gsub(currentProp, "b"..select.."_", property.."_")
+				else
+					newName = string.gsub(currentProp, "B"..select.."_", property.."_")
+				end
+			else
+				newName = string.gsub(currentProp, select.."_", property.."_")
+			end
 			ds:renameProperty(dSetName, currentProp, newName)
 			propsRenamed[newName] = newName
 		end		
 	end
 	
 	return propsRenamed
+end
+
+local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName)
+	local v2v = binding.te.attributefill.VectorToVectorMemory()
+	v2v:setInput(fromLayer, toLayer)			
+			
+	local outDs = v2v:createAndSetOutput(outDSetName, outType, outConnInfo)
+			
+	if operation == "average" then
+		if area then
+			operation = "weighted"
+		else
+			operation = "mean"
+		end
+	elseif operation == "majority" then
+		if area then 
+			operation = "intersection"
+		else
+			operation = "occurrence"
+		end
+	elseif operation == "sum" then
+		if area then
+			operation = "wsum"
+		end
+	end
+			
+	v2v:setParams(select, OperationMapper[operation], toLayer)
+
+	local err = v2v:prun()
+	if err ~= "" then
+		customError(err)
+	end
+	
+	local propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
+	
+	if outType == "POSTGIS" then
+		propCreatedName = string.lower(propCreatedName)
+	end		
+	
+	return propCreatedName
+end
+
+local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName)
+	local r2v = binding.te.attributefill.RasterToVector()
+			
+	fromLayer = binding.te.map.DataSetLayer.toDataSetLayer(fromLayer)
+	toLayer = binding.te.map.DataSetLayer.toDataSetLayer(toLayer)
+			
+	r2v:setInput(fromLayer, toLayer)
+			
+	if operation == "average" then
+		operation = "mean"
+	end			
+			
+	r2v:setParams(select, OperationMapper[operation], false) -- TODO: TEXTURE PARAM (REVIEW)
+			
+	local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
+
+	local err = r2v:prun()
+	if err ~= "" then
+		customError(err)
+	end
+			
+	local propCreatedName = "B"..select..RasterAttributeCreatedMapper[operation]
+	
+	if outType == "POSTGIS" then
+		propCreatedName = string.lower(propCreatedName)
+	end	
+	
+	return propCreatedName
 end
 
 local function finalize()
@@ -636,7 +727,8 @@ TerraLib_ = {
 		local type = dsInfo:getType()
 		info.type = type
 		local connInfo = dsInfo:getConnInfo()
-
+		local dseName = ""
+		
 		if type == "POSTGIS" then
 			info.host = connInfo.PG_HOST
 			info.port = connInfo.PG_PORT
@@ -644,9 +736,28 @@ TerraLib_ = {
 			info.password = connInfo.PG_PASSWORD
 			info.database = connInfo.PG_DB_NAME
 			info.table = connInfo.PG_NEWDB_NAME
-		elseif (type == "OGR") or (type == "GDAL") then
+			dseName = info.table
+		elseif type == "OGR" then
 			info.file = connInfo.URI
+			dseName = getFileName(info.file)
+		elseif type == "GDAL" then
+			info.file = connInfo.URI
+			dseName = getFileNameWithExtension(info.file)
 		end
+		
+		local ds = makeAndOpenDataSource(connInfo, type)
+		local dst = ds:getDataSetType(dseName)
+
+		if dst:hasGeom() then
+			info.rep = "geometry"
+		else
+			info.rep = "raster"
+		end
+		
+		ds:close()
+		ds = nil
+		dst = nil
+		collectgarbage("collect")
 		
 		releaseProject(project)
 		
@@ -735,79 +846,59 @@ TerraLib_ = {
 		
 		if propertyExists(toDsInfo:getConnInfo(), property, toDsInfo:getType()) then
 			customError("The attribute '"..property.."' already exists in layer '"..to.."'.")
-		end			
-		
-		local v2v = binding.te.attributefill.VectorToVectorMemory()
-		v2v:setInput(fromLayer, toLayer)
+		end		
+
+		if not propertyExists(fromDsInfo:getConnInfo(), select, fromDsInfo:getType()) then
+			customError("The attribute selected '"..select.."' not exists in layer '"..from.."'.")
+		end
 		
 		local outDs = nil
 		local outConnInfo = outDsInfo:getConnInfo()
 		local outDSetName = out
 		local outType = outDsInfo:getType()
+		local propCreatedName = ""
 		
 		if outType == "POSTGIS" then
 			outConnInfo.PG_NEWDB_NAME = string.lower(outDSetName)
 		-- elseif (outType == "OGR") then -- TODO: TERRALIB DOES NOT WORK WITH OGR (REVIEW)
 			-- local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
 			-- outConnInfo.URI = outDir..out..".shp"
+		end				
+		
+		local dseType = fromLayer:getSchema()
+		
+		if dseType:hasRaster() then
+			propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out)
+		else
+			propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out)
 		end
 		
-		outDs = v2v:createAndSetOutput(out, outType, outConnInfo)
-		
-		if operation == "average" then
-			if area then
-				operation = "weighted"
-			else
-				operation = "mean"
-			end
-		elseif operation == "majority" then
-			if area then 
-				operation = "intersection"
-			else
-				operation = "occurrence"
-			end
-		elseif operation == "sum" then
-			if area then
-				operation = "wsum"
-			end
-		end
-		
-		v2v:setParams(select, OperationMapper[operation], toLayer)	
-		v2v:run()
-		
-		if outType == "POSTGIS" then
+		if (outType == "POSTGIS") and (type(select) == "string")  then
 			select = string.lower(select)
 		end
 		
-		local propCreatedName = getCreatedPropertyName(select, operation)
+		outDs = makeAndOpenDataSource(outConnInfo, outType)
+		local attrsRenamed = {}
 		
-		local propsToUp = {}
-		
-		if property == "percentage" then
-			propsToUp = renameEachClass(outDs, outDSetName, select, property)
+		if operation == "percentage" then
+			attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, property)
 		else
 			outDs:renameProperty(outDSetName, propCreatedName, property)
-			propsToUp[property] = property
+			attrsRenamed[property] = property
 		end
 		
 		if default then
-			for key, prop in pairs(propsToUp) do
+			for key, prop in pairs(attrsRenamed) do
 				outDs:updateNullValues(outDSetName, prop, tostring(default))
 			end			
 		end
 		
-		-- TODO: RENAME INSTEAD OUTPUT
-		--outDs:renameDataSet(string.upper(out), "rename_test")
-		
 		local outLayer = createLayer(out, outConnInfo, outType)
 		project.layers[out] = outLayer
 		
+		loadProject(project, project.file) -- TODO: IT NEED RELOAD (REVIEW)
 		saveProject(project, project.layers)
-
 		releaseProject(project)
-		outDs:close()
-		outDs = nil
-		v2v = nil
 		collectgarbage("collect")
 	end
 }
