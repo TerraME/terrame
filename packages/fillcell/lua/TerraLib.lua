@@ -468,7 +468,7 @@ local function propertyExists(connInfo, property, type)
 		local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
 		local raster = dSet:getRaster(rpos)	
 		local numBands = raster:getNumberOfBands()
-		return (property < numBands)
+		return (property >= 0) and (property < numBands)
 	end
 	
 	local exists = ds:propertyExists(dSetName, property)

@@ -721,6 +721,17 @@ return{
 		end
 		unitTest:assertError(bandNotExists, "The attribute selected '".."9".."' not exists in layer '"..layerName3.."'.")	
 		
+		local bandNegative = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName3,
+				select = -1,
+				output = raverageLayerName
+			}
+		end
+		unitTest:assertError(bandNegative, "The attribute selected must be '>=' 0.")	
+
 		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT) 
 		-- local layerNotIntersect = function()
 			-- cl:fillCells{
