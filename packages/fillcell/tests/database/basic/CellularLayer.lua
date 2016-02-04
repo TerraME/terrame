@@ -604,7 +604,29 @@ return {
 		unitTest:assertEquals(rpercentLayerInfo.user, user)
 		unitTest:assertEquals(rpercentLayerInfo.password, password)
 		unitTest:assertEquals(rpercentLayerInfo.database, database)
-		unitTest:assertEquals(rpercentLayerInfo.table, string.lower(rpercentLayerName))			
+		unitTest:assertEquals(rpercentLayerInfo.table, string.lower(rpercentLayerName))
+
+		-- ###################### 19 #############################
+		local rstdevLayerName = clName2.."_Stdev"
+		pgData.table = rstdevLayerName
+		tl:dropPgTable(pgData)
+		
+		c4:fillCells{
+			operation = "stdev",
+			layer = layerName3,
+			attribute = "stdev",
+			output = rstdevLayerName,
+			select = 0
+		}		
+
+		local rstdevLayerInfo = proj:infoLayer(rstdevLayerName)
+		unitTest:assertEquals(rstdevLayerInfo.source, "postgis")
+		unitTest:assertEquals(rstdevLayerInfo.host, host)
+		unitTest:assertEquals(rstdevLayerInfo.port, port)
+		unitTest:assertEquals(rstdevLayerInfo.user, user)
+		unitTest:assertEquals(rstdevLayerInfo.password, password)
+		unitTest:assertEquals(rstdevLayerInfo.database, database)
+		unitTest:assertEquals(rstdevLayerInfo.table, string.lower(rstdevLayerName))			
 
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -650,6 +672,8 @@ return {
 		pgData.table = string.lower(rmaxLayerName)
 		tl:dropPgTable(pgData)			
 		pgData.table = string.lower(rpercentLayerName)
+		tl:dropPgTable(pgData)		
+		pgData.table = string.lower(rstdevLayerName)
 		tl:dropPgTable(pgData)			
 		
 		tl = TerraLib{}

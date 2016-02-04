@@ -71,7 +71,8 @@ local RasterAttributeCreatedMapper = {
 	mean = "_Mean",
 	minimum = "_Min_Value",
 	maximum = "_Max_Value",
-	percentage = ""
+	percentage = "",
+	stdev = "_Standard_Deviation"
 }
 
 -- TODO: Remove this after

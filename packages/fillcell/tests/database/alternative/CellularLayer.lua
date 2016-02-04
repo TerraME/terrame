@@ -803,7 +803,81 @@ return{
 				output = rpercentLayerName
 			}
 		end
-		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))			
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
+
+		local rstdevLayerName = clName1.."_Stdev"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = layerName3,
+				select = 0,
+				output = rstdevLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "stdev",
+				layer = layerName3,
+				select = "0",
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))
+
+		local op1NotAvailable = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "area",
+				layer = layerName3,
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(op1NotAvailable, "The operation '".."area".."' is not available to raster layer.")	
+
+		local op2NotAvailable = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "count",
+				layer = layerName3,
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(op2NotAvailable, "The operation '".."count".."' is not available to raster layer.")
+
+		local op3NotAvailable = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "distance",
+				layer = layerName3,
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(op3NotAvailable, "The operation '".."distance".."' is not available to raster layer.")	
+
+		local op4NotAvailable = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "majority",
+				layer = layerName3,
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(op4NotAvailable, "The operation '".."majority".."' is not available to raster layer.")	
+
+		local op5NotAvailable = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "presence",
+				layer = layerName3,
+				output = rstdevLayerName
+			}
+		end
+		unitTest:assertError(op5NotAvailable, "The operation '".."presence".."' is not available to raster layer.")			
 
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
