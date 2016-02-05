@@ -4,7 +4,7 @@
 -- @release $Id: lp.lua,v 1.7 2007/04/18 14:28:39 tomas Exp $
 ----------------------------------------------------------------------------
 
-local assert, error, loadstring, select, string = assert, error, loadstring, select, string
+local assert, error, loadstring, select, string = assert, error, load, select, string
 local close = io.close
 local find, format, gsub, strsub = string.find, string.format, string.gsub, string.sub
 local concat, tinsert, open, print, debug, load = table.concat, table.insert, io.open, print, debug, load
