@@ -365,6 +365,10 @@ function Chart(data)
 
 	if data.xAxis then
 		defaultTableValue(data, "xLabel", _Gtme.stringToLabel(data.xAxis))
+
+		if belong(data.xAxis, data.select) then
+			customError("Attribute '"..data.xAxis.."' cannot belong to argument 'select' as it was already selected as 'xAxis'.")
+		end
 	else
 		defaultTableValue(data, "xLabel", "Time")
 	end

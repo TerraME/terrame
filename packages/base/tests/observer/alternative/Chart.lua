@@ -79,6 +79,11 @@ return{
 		unitTest:assertError(error_func, "The target does not have at least one valid numeric attribute to be used.")
 
 		error_func = function()
+			Chart{target = c, select = "value", xAxis = "value"}
+		end
+		unitTest:assertError(error_func, "Attribute 'value' cannot belong to argument 'select' as it was already selected as 'xAxis'.")
+
+		error_func = function()
 			Chart{target = c, xwc = 5}
 		end
 		unitTest:assertError(error_func, unnecessaryArgumentMsg("xwc"))
