@@ -721,6 +721,17 @@ return{
 		end
 		unitTest:assertError(bandNotExists, "The attribute selected '".."9".."' not exists in layer '"..layerName3.."'.")	
 		
+		local bandNegative = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "average",
+				layer = layerName3,
+				select = -1,
+				output = raverageLayerName
+			}
+		end
+		unitTest:assertError(bandNegative, "The attribute selected must be '>=' 0.")	
+
 		-- TODO: TERRALIB IS NOT VERIFY THIS (REPORT) 
 		-- local layerNotIntersect = function()
 			-- cl:fillCells{
@@ -828,6 +839,30 @@ return{
 			}
 		end
 		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))
+		
+		local rsumLayerName = clName1.."_Sum"
+		local areaUnnecessary = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "sum",
+				layer = layerName3,
+				select = 0,
+				output = rsumLayerName,
+				area = 2
+			}
+		end
+		unitTest:assertError(areaUnnecessary, unnecessaryArgumentMsg("area"))		
+		
+		local selectNotNumber = function()
+			cl:fillCells{
+				attribute = "attr",
+				operation = "sum",
+				layer = layerName3,
+				select = "0",
+				output = rsumLayerName
+			}
+		end
+		unitTest:assertError(selectNotNumber, incompatibleTypeMsg("select", "number", "0"))		
 
 		local op1NotAvailable = function()
 			cl:fillCells{
