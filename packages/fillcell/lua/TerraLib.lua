@@ -244,7 +244,7 @@ local function saveProject(project, layers)
 
 	writer:writeStartElement("Project")
 
-	--boost::replace_all(schema_loc, " ", "%20") -- TODO: REVIEW	
+	schema = string.gsub(schema, "%s", "%%20")
 	
 	writer:writeAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema-instance")
 	writer:writeAttribute("xmlns:te_da", "http://www.terralib.org/schemas/dataaccess")
@@ -262,7 +262,6 @@ local function saveProject(project, layers)
 	writer:writeElement("Title", project.title)
 	writer:writeElement("Author", project.author)
 	
-	-- TODO: VERIFY PASS LAYERS IDS TO C++
 	writer:writeDataSourceList()
 	
 	writer:writeStartElement("ComponentList")
