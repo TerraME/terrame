@@ -307,15 +307,15 @@ local function loadProject(project, filePath)
 	
 	xmlReader:next()
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		-- TODO
+		customError("PROJECT READ ERROR.")
 	end
 	if xmlReader:getElementLocalName() ~= "Title" then
-		-- TODO
+		customError("PROJECT READ ERROR.")
 	end
 
 	xmlReader:next()
 	if xmlReader:getNodeType() ~= binding.VALUE then
-		
+		customError("PROJECT READ ERROR.")
 	end
 	project.title = xmlReader:getElementValue()
 	
@@ -323,10 +323,10 @@ local function loadProject(project, filePath)
 
 	xmlReader:next()
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		-- TODO
+		customError("PROJECT READ ERROR.")
 	end
-	if xmlReader:getElementLocalName() == "Author" then
-		-- TODO
+	if xmlReader:getElementLocalName() ~= "Author" then
+		customError("PROJECT READ ERROR.")
 	end
 
 	xmlReader:next()
@@ -340,10 +340,10 @@ local function loadProject(project, filePath)
 	xmlReader:next()
 
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		-- TODO
+		customError("PROJECT READ ERROR.")
 	end
 	if xmlReader:getElementLocalName() ~= "DataSourceList" then
-		-- TODO
+		customError("PROJECT READ ERROR.")
 	end
 
 	xmlReader:next()
@@ -363,20 +363,19 @@ local function loadProject(project, filePath)
 	-- end read data source list
 
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		-- TODO
+		customError("PROJECT READ ERROR.")
 	end
 	if xmlReader:getElementLocalName() ~= "ComponentList" then
-		-- TODO
+		customError("PROJECT READ ERROR.")
 	end
-	
 	xmlReader:next() -- End element
 	xmlReader:next() -- next after </ComponentList>
 
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-	
+		customError("PROJECT READ ERROR.")
 	end
 	if xmlReader:getElementLocalName() ~= "LayerList" then
-	
+		customError("PROJECT READ ERROR.")
 	end
 
 	xmlReader:next()
@@ -389,30 +388,31 @@ local function loadProject(project, filePath)
 		local layer = lserial:read(xmlReader)
 		
 		if not layer then
-			-- TODO
+			customError("PROJECT READ ERROR.")
 		end
 		
 		project.layers[layer:getTitle()] = layer
 	end
 	
 	if xmlReader:getNodeType() ~= binding.END_ELEMENT then
-	
+		customError("PROJECT READ ERROR.")
 	end
 	if xmlReader:getElementLocalName() ~= "LayerList" then
-		
+		customError("PROJECT READ ERROR.")
 	end
 
 	xmlReader:next()
-	if (xmlReader:getNodeType() ~= binding.END_ELEMENT) or
-		(xmlReader:getNodeType() ~= binding.END_DOCUMENT) then
-		--_Gtme.print("ERROR ########################1")
+	if not ((xmlReader:getNodeType() == binding.END_ELEMENT) or
+		(xmlReader:getNodeType() == binding.END_DOCUMENT)) then
+		customError("PROJECT READ ERROR.")
 	end
 	if xmlReader:getElementLocalName() ~= "Project" then
-		--_Gtme.print("ERROR ########################2")
+		customError("PROJECT READ ERROR.")
 	end	
 	
 	-- TODO: THE ONLY WAY SO FAR TO RELEASE THE FILE AFTER READ
 	-- WAS READ ANOTHER FILE (REVIEW)
+	-- #880
 	xmlReader:read(file("YgDbLUDrqQbvu7QxTYxX.xml", "fillcell"))
 end
 
