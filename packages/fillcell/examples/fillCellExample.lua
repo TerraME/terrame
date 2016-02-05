@@ -1,22 +1,12 @@
-
 import("fillcell")
 
-local exts = {".dbf", ".prj", ".shp", ".shx"}
-
-local cellsShp = "sampa_cells"
-		
-for i = 1, #exts do
-	local f = cellsShp..exts[i]
-	if isFile(f) then
-		os.execute("rm -f "..f)
-	end
-end	
-
+-- HUNK USED ONLY TO TEST
 local projName = "fillcell_example.tview"
 
 if isFile(projName) then
 	os.execute("rm -f "..projName)
 end
+-- END HUNK
 
 local project = Project{
 	file = projName,
@@ -25,34 +15,29 @@ local project = Project{
 	title = "FillCell Example"
 }
 
-local polygons = "Sampa"
+local polygons = "Setores"
 project:addLayer {
 	layer = polygons,
-	file = file("sampa.shp", "fillcell")
+	file = file("Setores_Censitarios_2000_pol.shp", "fillcell")
 }
 	
--- local points = "Localidades"
--- project:addLayer {
-	-- layer = points,
-	-- file = file("Localidades_pt.shp", "fillcell")	
--- }
+local points = "Localidades"
+project:addLayer {
+	layer = points,
+	file = file("Localidades_pt.shp", "fillcell")	
+}
 
--- local lines = "Rodovias"
--- project:addLayer {
-	-- layer = lines,
-	-- file = file("Rodovias_lin.shp", "fillcell")	
--- }
+local lines = "Rodovias"
+project:addLayer {
+	layer = lines,
+	file = file("Rodovias_lin.shp", "fillcell")	
+}
 
--- local cellLayerName = "Sampa_Cells"
--- local exDir = _Gtme.makePathCompatibleToAllOS(currentDir())
--- local exFile = exDir.."/"..cellsShp..".shp"
-
--- project:addCellularLayer {
-	-- input = polygons,
-	-- layer = cellLayerName,
-	-- resolution = 0.3, -- 5x5km
-	-- file = exFile
--- }
+local tif = "Desmatamento"
+project:addLayer {
+	layer = tif,
+	file = file("Desmatamento_2000.tif", "fillcell")		
+}
 
 local host = "localhost"
 local port = "5432"
@@ -60,8 +45,9 @@ local user = "postgres"
 local password = "postgres"
 local database = "postgis_22_sample"
 local encoding = "CP1252"
-local tableName = "sampa_cells"
+local tableName = "setores_cells"
 
+-- HUNK USED ONLY TO TEST
 local pgData = {
 	type = "POSTGIS",
 	host = host,
@@ -75,13 +61,13 @@ local pgData = {
 
 local terralib = TerraLib{}
 terralib:dropPgTable(pgData)
+-- END HUNK
 
-local cellDbLayerName = "Sampa_Cells_DB"
-
+local cellDbLayerName = "Setores_Cells_DB"
 project:addCellularLayer {
 	input = polygons,
 	layer = cellDbLayerName,
-	resolution = 0.9,
+	resolution = 2e4, -- 50x50km
 	source = "postgis",
 	user = user,
 	password = password,
@@ -94,98 +80,74 @@ local cl = CellularLayer{
 	layer = cellDbLayerName
 }
 
--- TODO: PROBLEMS WITH TERRALIB (REVIEW)
--- cl:fillCells{
-	-- operation = "area",
-	-- layer = polygons,
-	-- attribute = "distpoints"
-	-- select = "FID"
-	-- output = tableName.."_area"
--- }
+local distLayer = cellDbLayerName.."_Distance"
 
-local presenceLayerName = cellDbLayerName.."_Presence"
-
-pgData.table = presenceLayerName
+-- HUNK USED ONLY TO TEST
+pgData.table = distLayer
 terralib:dropPgTable(pgData)
+-- END HUNK
 
 cl:fillCells{
-	operation = "presence",
-	layer = polygons,
-	attribute = "presence",
-	output = presenceLayerName
+	operation = "distance",
+	layer = points,
+	attribute = "distpoints",
+	output = distLayer
 }
 
--- cl:fillCells{
-	-- strategy = "distance",
-	-- layer = "points",
-	-- attribute = "distpoints"
--- }
-
+-- TODO: OPERATION NOT IMPLEMENTED YET
 -- cl:fillCells{
 	-- strategy = "lenght",
 	-- layer = "lines",
 	-- attribute = "llenght"
 -- }
 
--- cl:fillCells{
-	-- layer = "polygons",
-	-- strategy = "sum",
-	-- attribute = "population",
-	-- area = true
--- }
+local sumLayer = cellDbLayerName.."_Sum"
 
--- cl:fillCells{
-	-- layer = "polygons",
-	-- strategy = "average",
-	-- attribute = "income",
-	-- area = true
--- }
+-- HUNK USED ONLY TO TEST
+pgData.table = sumLayer
+terralib:dropPgTable(pgData)
+-- END HUNK
 
--- local test = "Sampa"
--- project:addLayer {
-	-- layer = test,
-	-- file = file("sampa.shp", "fillcell")	
--- }
+cl:fillCells{
+	operation = "sum",
+	layer = polygons,
+	attribute = "sum_population",
+	select = "Populacao",
+	output = sumLayer,
+	area = true
+}
 
--- local toLayer = {
-	-- type = "POSTGIS",
-	-- host = "localhost",
-	-- port = "5432",
-	-- user = "postgres",
-	-- password = "postgres",
-	-- database = "postgis_22_sample",
-	-- table = "sampa",
-	-- encoding = "CP1252"
--- }
+local averageLayer = cellDbLayerName.."_Average"
 
--- terralib:copyLayer(project, test, toLayer)
--- terralib:dropPgTable(toLayer)
+-- HUNK USED ONLY TO TEST
+pgData.table = averageLayer
+terralib:dropPgTable(pgData)
+-- END HUNK
 
--- local toLayer = {
-	-- type = "POSTGIS",
-	-- host = "localhost",
-	-- port = "5432",
-	-- user = "postgres",
-	-- password = "postgres",
-	-- database = "postgis_22_sample",
-	-- table = "Setores_Censitarios_2000_pol",
-	-- encoding = "CP1252"
--- }
+cl:fillCells{
+	layer = polygons,
+	operation = "average",
+	attribute = "income",
+	select = "Populacao",
+	output = averageLayer,
+	area = true
+}
 
--- terralib:copyLayer(project, polygons, toLayer)
--- terralib:dropPgTable(toLayer)
+-- USED ONLY TO TEST
+pgData.table = tableName
 terralib:dropPgTable(pgData)
 
-for i = 1, #exts do
-	local f = cellsShp..exts[i]
-	if isFile(f) then
-		os.execute("rm -f "..f)
-	end
-end	
+pgData.table = distLayer
+terralib:dropPgTable(pgData)
+
+pgData.table = sumLayer
+terralib:dropPgTable(pgData)
+
+pgData.table = averageLayer
+terralib:dropPgTable(pgData)
 
 if isFile(projName) then
 	os.execute("rm -f "..projName)
 end
 
 terralib:finalize()
-
