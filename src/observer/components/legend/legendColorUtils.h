@@ -35,67 +35,67 @@ using namespace std;
 // #include <TeVisual.h> // issue #319
 // #include <TeUtils.h>
 
-// //! A structure for supporting a color definition
-// struct TeColor
-// {
-// //! Red component
-// int red_;
+ //! A structure for supporting a color definition
+ struct TeColor
+ {
+	 //! Red component
+	 int red_;
 
-// //! Green component
-// int green_;
+	 //! Green component
+	 int green_;
 
-// //! Blue component
-// int blue_;
+	 //! Blue component
+	 int blue_;
 
-// //! Color name
-// std::string name_;
+	 //! Color name
+	 std::string name_;
 
-// //! Empty constructor
-// TeColor () : red_(0),green_(0),blue_(0), name_("") {}
+	 //! Empty constructor
+	 TeColor () : red_(0),green_(0),blue_(0), name_("") {}
 
-// //! Constructor with parameters
-// TeColor (int r, int g, int b, const std::string& name="") : red_(r),green_(g),blue_(b), name_(name) {}
+	 //! Constructor with parameters
+	 TeColor (int r, int g, int b, const std::string& name="") : red_(r),green_(g),blue_(b), name_(name) {}
 
-// //! Set parameters of colors
-// void init (int r, int g, int b, const std::string& name="") {red_=r,green_=g,blue_=b;name_=name; }
+	 //! Set parameters of colors
+	 void init (int r, int g, int b, const std::string& name="") {red_=r,green_=g,blue_=b;name_=name; }
 
-// //! Returns TRUE if color1 is equal to color2 or FALSE if they are different.
-// bool operator== (const TeColor& color)
-// {
-// return (red_==color.red_ && green_==color.green_ && blue_==color.blue_);
-// }
+	 //! Returns TRUE if color1 is equal to color2 or FALSE if they are different.
+	 bool operator== (const TeColor& color)
+	 {
+		 return (red_==color.red_ && green_==color.green_ && blue_==color.blue_);
+	 }
 
-// //! Assignment operator
-// TeColor& operator= ( const TeColor& color )
-// {
-// if ( this != &color )
-// {
-// red_ = color.red_;
-// green_ = color.green_;
-// blue_ = color.blue_;
-// name_ = color.name_;
-// }
-// return *this;
-// }
-// };
+	 //! Assignment operator
+	 TeColor& operator= ( const TeColor& color )
+	 {
+		 if ( this != &color )
+		{
+			 red_ = color.red_;
+			 green_ = color.green_;
+			 blue_ = color.blue_;
+			 name_ = color.name_;
+		 }
+		 return *this;
+	 }
+ };
 
-// void rgb2Hsv(const TeColor& c, int& h, int& s, int& v); // issue #319
+void rgb2Hsv(const TeColor& c, int& h, int& s, int& v); // issue #319
 void RGBtoHSV(const double& r, const double& g, const double& b, double& h, double& s, double& v );
-// void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v); // issue #319
+void hsv2Rgb(TeColor& c, const int& h, const int& s, const int& v); // issue #319
 void HSVtoRGB( double& r, double& g, double& b, const double& h, const double& s, const double& v );
 
 struct ColorBar {
-    // TeColor cor_; // issue #319
+    TeColor cor_; // issue #319
     int		h_;
     int		s_;
     int		v_;
     double	distance_;
 
-    // void color(const TeColor& c){cor_ = c; rgb2Hsv(cor_, h_, s_, v_);} // issue #319
+    void color(const TeColor& c){cor_ = c; rgb2Hsv(cor_, h_, s_, v_);} // issue #319
 
     ColorBar& operator= (const ColorBar& cb)
     {
-        // cor_ = cb.cor_; // issue #319
+        cor_ = cb.cor_; // issue #319
         h_ = cb.h_;
         s_ = cb.s_;
         v_ = cb.v_;
@@ -117,7 +117,7 @@ struct ColorBar {
     QString toString()
     {
         QString r = QString("rgb: (%1, %2, %3); hsv: (%4, %5, %6); distance: %7;")
-                //.arg(cor_.red_).arg(cor_.green_).arg(cor_.blue_) // issue #319
+                .arg(cor_.red_).arg(cor_.green_).arg(cor_.blue_) // issue #319
                 .arg(h_).arg(s_).arg(v_).arg(distance_);
         return r;
     }
@@ -135,13 +135,101 @@ struct ColorBar {
         \param colors	resulting color scale
         \returns true if color scale was successfully generated and false otherwise
 */
-// bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor>& colors); // issue #319
-// vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc); // issue #319
-// vector<TeColor> getColors(vector<ColorBar>& iVec, int ncores); // issue #319
+bool getColors(std::vector<std::string>& ramps, int nc, std::vector<TeColor>& colors); // issue #319
+vector<TeColor> getColors(TeColor cfrom, TeColor cto, int nc); // issue #319
+vector<TeColor> getColors(vector<ColorBar>& iVec, int ncores); // issue #319
 string getColors(vector<ColorBar>& aVec, vector<ColorBar>& bVec, int groupingMode);
-// void generateColorBarMap(vector<ColorBar>& inputColorVec, int ncores, map<int, vector<TeColor> >& colorMap); // issue #319
+void generateColorBarMap(vector<ColorBar>& inputColorVec, int ncores, map<int, vector<TeColor> >& colorMap); // issue #319
 vector<ColorBar> getColorBarVector(string& scores, const bool& first);
 //unsigned int  TeReadColorRampTextFile(const string& fileName, map<string,string>& colorRamps);
+
+/// <TeDefines>
+//! A default name length
+const int	TeNAME_LENGTH = 2000;			//!< A default name length
+
+/// <TeUtils>
+//! Rounds a double to int
+inline int TeRound(double val)
+{
+	if (val >= 0)
+		return (int)(val + .5);
+	else
+		return (int)(val - .5);
+}
+
+inline string
+Te2String(const int value)
+{
+	char name[TeNAME_LENGTH];
+	sprintf(name, "%d", value);
+	return name;
+}
+
+inline string
+Te2String(const unsigned int value)
+{
+	char name[TeNAME_LENGTH];
+	sprintf(name, "%u", value);
+	return name;
+}
+
+inline string
+Te2String(const long value)
+{
+	char name[TeNAME_LENGTH];
+	sprintf(name, "%ld", value);
+	return name;
+}
+
+inline string
+Te2String(const long long int value)
+{
+	char name[TeNAME_LENGTH];
+	sprintf(name, "%lld", value);
+	return name;
+}
+
+inline string
+Te2String(const unsigned long value)
+{
+	char name[TeNAME_LENGTH];
+	sprintf(name, "%lu", value);
+	return name;
+}
+
+inline string
+Te2String(const double value, int precision)
+{
+	char name[TeNAME_LENGTH];
+	sprintf(name, "%.*f", precision, value);
+
+	std::string strOut(name);
+	size_t found = strOut.find(',');
+	if (found != std::string::npos)
+	{
+		strOut[(int)found] = '.';
+	}
+
+	return strOut;
+}
+
+
+inline string
+Te2String(const double value)
+{
+	char name[TeNAME_LENGTH];
+	sprintf(name, "%e", value);
+
+	std::string strOut(name);
+	size_t found = strOut.find(',');
+	if (found != std::string::npos)
+	{
+		strOut[(int)found] = '.';
+	}
+
+	return strOut;
+}
+
 
 #endif
 

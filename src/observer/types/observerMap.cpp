@@ -620,11 +620,10 @@ ColorBar ObserverMap::makeColorBarStruct(int distance, QString strColorBar,
 
     if ((teColorList.size() == 3) || (teColorList.size() == 4))
     {
-		// issue #319
-        //TeColor c(teColorList.at(0).toInt(),
-        //          teColorList.at(1).toInt(),
-        //          teColorList.at(2).toInt());
-        //b.color(c);
+        TeColor c(teColorList.at(0).toInt(),
+                  teColorList.at(1).toInt(),
+                  teColorList.at(2).toInt());
+        b.color(c);
     }
     else
     {
