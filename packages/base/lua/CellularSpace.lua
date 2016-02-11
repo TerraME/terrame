@@ -1119,10 +1119,6 @@ metaTableCellularSpace_ = {
 -- @arg data.password A string with the password. The default value is "".
 -- @arg data.layer A string with the name of the database layer. This argument is necessary only
 -- when there are two or more themes with the same name in the database. The default value is "". 
--- @arg data.autoload A boolean value indicating whether the CellularSpace will be loaded
--- automatically (true, default value) or the user by herself will call load (false).
--- If false, TerraME will not create the automatic functions based on the attributes of the Cells
--- (see argument instance).
 -- @arg data.select A table containing the names of the attributes to be retrieved (as default it
 -- will read all attributes). When retrieving a single attribute, you can use select = "attribute"
 -- instead of select = {"attribute"}. It is possible to rename attributes using "as", for example,
@@ -1134,7 +1130,7 @@ metaTableCellularSpace_ = {
 -- restriction). Only the Cells that reflect the established criteria will be loaded. Note that SQL
 -- uses the operator "=" to compare values, instead of "==". This argument can only be used when
 -- reading data from a database.
--- @arg data.attrname A string with an attribute name.
+-- @arg data.attrname A string with an attribute name. It is useful for files that have only one attribute value for each cell but no attribute name.
 -- @arg data.... Any other attribute or function for the CellularSpace.
 -- @arg data.instance A Cell with the description of attributes and functions. 
 -- When using this argument, each Cell will have attributes and functions according to the
@@ -1158,18 +1154,18 @@ metaTableCellularSpace_ = {
 -- @tabular dbType
 -- dbType & Description & Compulsory arguments & Optional arguments\
 -- "mdb" & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer,
--- select, where, autoload, ... \
+-- select, where, ... \
 -- "map" & Load from a text file where Cells are stored as numbers with its attribute value.
 -- & & sep, attrname \
 -- "csv" & Load from a Comma-separated value (.csv) file. Each column will become an attribute. It
--- requires at least two attributes: x and y. & database & sep, autoload, ...\
+-- requires at least two attributes: x and y. & database & sep, ...\
 -- "mysql" & Load from a TerraLib database stored in a MySQL database. & database, theme & host, 
--- layer, password, port, select, user, where, autoload, ... \
+-- layer, password, port, select, user, where, ... \
 -- "shp" & Load data from a shapefile. It requires three files with the same name and 
 -- different extensions: .shp, .shx, and .dbf. The argument database must contain the file with
--- extension .shp.& database & autoload, ... \
+-- extension .shp.& database & ... \
 -- "virtual" & Create a rectangular CellularSpace from scratch. Cells will be instantiated with
--- only two attributes, x and y, starting from (0, 0). & xdim & ydim, autoload, ...
+-- only two attributes, x and y, starting from (0, 0). & xdim & ydim, ...
 -- @output cells A vector of Cells pointed by the CellularSpace.
 -- @output cObj_ A pointer to a C++ representation of the CellularSpace. Never use this object.
 -- @output parent The Environment it belongs.
@@ -1262,8 +1258,6 @@ function CellularSpace(data)
 			end
 		end
 	end
-
-	defaultTableValue(data, "autoload", true)
 
 	local cObj = TeCellularSpace()
 	data.cObj_= cObj
@@ -1359,22 +1353,13 @@ function CellularSpace(data)
 		end)
 	end
 
-	if data.autoload then
-		data:load()
-		-- needed for Environment's loadNeighborhood
-		if data.database then
-			data.layer = data.cObj_:getLayerName()
-		end
-		data.autoload = nil
-	else
-		data.cells = {}
+	data:load()
+	-- needed for Environment's loadNeighborhood
+	if data.database then
+		data.layer = data.cObj_:getLayerName()
 	end
 
 	if data.instance ~= nil then
-		if data.autoload == false then
-			customError("Parameter 'instance' can only be used with 'autoload = true'.")
-		end
-
 		mandatoryTableArgument(data, "instance", "Cell")
 
 		if data.instance.isinstance then

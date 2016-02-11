@@ -125,15 +125,6 @@ return{
 			local cs = CellularSpace{
 				xdim = 10,
 				instance = c1,
-				autoload = false
-			}
-		end
-		unitTest:assertError(error_func, "Parameter 'instance' can only be used with 'autoload = true'.")
-
-		error_func = function()
-			local cs = CellularSpace{
-				xdim = 10,
-				instance = c1,
 				status = 5
 			}
 		end
