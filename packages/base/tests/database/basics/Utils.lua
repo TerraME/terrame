@@ -37,7 +37,7 @@ return{
 		unitTest:assertEquals(line[3], "aa")
 	end,
 	CSVread = function(unitTest)
-		local mfile = file("agents.csv", "base")
+		local mfile = filePath("agents.csv", "base")
 
 		local csv = CSVread(mfile)
 

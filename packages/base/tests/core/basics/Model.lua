@@ -172,8 +172,8 @@ water            number [200]
 
 		local m = M{
 			files = {
-				file1 = file("agents.csv", "base"),
-				file2 = file("agents.csv", "base")
+				file1 = filePath("agents.csv", "base"),
+				file2 = filePath("agents.csv", "base")
 			}
 		}
 

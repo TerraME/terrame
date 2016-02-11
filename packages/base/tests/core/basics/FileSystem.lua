@@ -27,16 +27,16 @@
 return{
 	attributes = function(unitTest)
 		if not _Gtme.isWindowsOS() then
-			local attr = attributes(file("agents.csv", "base"))
-			-- local t = file("agents.csv", "base")
+			local attr = attributes(filePath("agents.csv", "base"))
+			-- local t = filePath("agents.csv", "base")
 			unitTest:assertEquals(getn(attr), 14) -- SKIP
 			unitTest:assertEquals(attr.mode, "file") -- SKIP
 			unitTest:assertEquals(attr.size, 135) -- SKIP
 
-			attr = attributes(file("agents.csv", "base"), "mode")
+			attr = attributes(filePath("agents.csv", "base"), "mode")
 			unitTest:assertEquals(attr, "file") -- SKIP
 
-			attr = attributes(file("agents.csv", "base"), "size")
+			attr = attributes(filePath("agents.csv", "base"), "size")
 			unitTest:assertEquals(attr, 135) -- SKIP
 		else
 			unitTest:assert(true) -- SKIP
@@ -76,10 +76,10 @@ return{
 		
         unitTest:assertEquals(isDir(""), false);
         
-        unitTest:assert(not isDir(file("agents.csv")))	
+        unitTest:assert(not isDir(filePath("agents.csv")))	
 	end,
 	isFile = function(unitTest)
-		unitTest:assert(isFile(file("agents.csv")))
+		unitTest:assert(isFile(filePath("agents.csv")))
         
         unitTest:assertEquals(isFile(""), false);
 	end, 

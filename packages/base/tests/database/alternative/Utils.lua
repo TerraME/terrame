@@ -72,7 +72,7 @@ return{
 		local s = sessionInfo().separator
 
 		error_func = function()
-			CSVread(file("error"..s.."csv-error.csv"))
+			CSVread(filePath("error"..s.."csv-error.csv"))
 		end
 		unitTest:assertError(error_func, "Line 2 ('\"mary\",18,100,3,1') should contain 6 attributes but has 5.")
 	end,

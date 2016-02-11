@@ -30,8 +30,8 @@
 -- within the package.
 -- @arg filename A string with the name of the file.
 -- @arg package A string with the name of the package. As default, it uses paciage base.
--- @usage cs = CellularSpace{database = file("simple.map")}
-function file(filename, package)
+-- @usage cs = CellularSpace{database = filePath("simple.map")}
+function filePath(filename, package)
 	if package == nil then package = "base" end
 
 	local s = sessionInfo().separator

@@ -191,12 +191,12 @@ return{
 
 		if not _Gtme.isWindowsOS() then		
 			error_func = function()
-				forEachFile(file("", "base"))
+				forEachFile(filePath("", "base"))
 			end
 			unitTest:assertError(error_func, mandatoryArgumentMsg(2)) -- SKIP
 		
 			error_func = function()
-				forEachFile(file("", "base"), 2)
+				forEachFile(filePath("", "base"), 2)
 			end
 			unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2)) -- SKIP
 		else

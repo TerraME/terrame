@@ -34,7 +34,7 @@ return{
 
 		local soc = Society {
 			instance = nonFooAgent,
-			database = file("agents.csv", "base")
+			database = filePath("agents.csv", "base")
 		}
 		
 		unitTest:assertEquals(4, #soc)
@@ -63,7 +63,7 @@ return{
 
 		local soc = Society {
 			instance = nonFooAgent,
-			database = file("brazilstates.shp", "base")
+			database = filePath("brazilstates.shp", "base")
 		}
 
 		unitTest:assertEquals(#soc, 27)

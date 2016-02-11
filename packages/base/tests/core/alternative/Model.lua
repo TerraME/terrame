@@ -381,7 +381,7 @@ return{
 		}
 
 		error_func = function()
-			local m = M{file1 = file("agents.csv", "base")}
+			local m = M{file1 = filePath("agents.csv", "base")}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("file2"))
 
@@ -391,7 +391,7 @@ return{
 		unitTest:assertError(error_func, "No file extension for parameter 'file1'. It should be one of '*.csv'.")
 
 		error_func = function()
-			local m = M{file1 = file("brazil.gal", "base")}
+			local m = M{file1 = filePath("brazil.gal", "base")}
 		end
 		unitTest:assertError(error_func, "Invalid file extension for parameter 'file1'. It should be one of '*.csv'.")
 
@@ -416,7 +416,7 @@ return{
 		unitTest:assertError(error_func, "It is not possible to call any function from a Model but execute() or configure().")
 
 		error_func = function()
-			local m = M{files = {file1 = file("agents.csv", "base")}}
+			local m = M{files = {file1 = filePath("agents.csv", "base")}}
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(toLabel("file2", "files")))
 
@@ -431,7 +431,7 @@ return{
 		unitTest:assertError(error_func, "No file extension for parameter 'files.file1'. It should be one of '*.csv'.")
 
 		error_func = function()
-			local m = M{files = {file1 = file("brazil.gal", "base")}}
+			local m = M{files = {file1 = filePath("brazil.gal", "base")}}
 		end
 		unitTest:assertError(error_func, "Invalid file extension for parameter 'files.file1'. It should be one of '*.csv'.")
 

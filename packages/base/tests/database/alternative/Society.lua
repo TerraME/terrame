@@ -26,7 +26,7 @@
 
 return{
 	Society = function(unitTest)
-		local agents_csv = file("agents.csv", "base")
+		local agents_csv = filePath("agents.csv", "base")
 		local error_func = function()
 			sc = Society{
 				instance = Agent{},

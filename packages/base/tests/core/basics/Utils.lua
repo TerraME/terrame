@@ -303,7 +303,7 @@ return{
 			local count = 0
 			local r
 
-			r = forEachFile(file("", "base"), function(file)
+			r = forEachFile(filePath("", "base"), function(file)
 				count = count + 1
 				unitTest:assertType(file, "string") -- SKIP
 			end)
@@ -312,7 +312,7 @@ return{
 			unitTest:assertEquals(count, 23) -- SKIP
 
 			local count2 = 0
-			forEachFile(dir(file("", "base"), true), function(file)
+			forEachFile(dir(filePath("", "base"), true), function(file)
 				count2 = count2 + 1
 			end)
 
@@ -320,7 +320,7 @@ return{
 
 			count = 0
 
-			r = forEachFile(file("", "base"), function(file)
+			r = forEachFile(filePath("", "base"), function(file)
 				count = count + 1
 				if count > 1 then return false end
 			end)
