@@ -23,6 +23,11 @@
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --          Rodrigo Avancini
 --#########################################################################################
+
+if not isLoaded("terralib") then
+	import("terralib")
+end
+
 local function validateGeomAndRasterData(data, repr)
 	if repr == "geometry" then
 		verifyUnnecessaryArguments(data, {"area", "attribute", "default", "dummy", "layer", "operation", "select", "output", "table"})

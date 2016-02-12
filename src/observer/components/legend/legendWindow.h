@@ -386,7 +386,7 @@ private:
     // QAbstractItemModel *model;
     QTableWidget *legendTable;
     QHash<QString, Attributes*> *mapAttributes;
-    //std::vector<TeColor> *teColorVec; // issue #319
+    std::vector<TeColor> *teColorVec;
 
     //double minValue;
     //double maxValue;

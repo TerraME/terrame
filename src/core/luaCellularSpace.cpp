@@ -44,7 +44,6 @@ of this library and its documentation.
 
 // #define DISABLE_SHAPE_FILE
 #ifndef DISABLE_SHAPE_FILE
-//#include "terralib/drivers/shapelib/TeDriverSHPDBF.h"
 #include "../../dependencies/shapelib/shapefil.h"
 #include "../../dependencies/shapelib/findCentroid.h"
 #endif

@@ -63,7 +63,7 @@ public:
      * Sets a vector of \a TeColor
      * \param colorVec a reference to a \a TeColor vector
      */
-    // void setColorBar(const vector<TeColor>& colorVec); // issue #319
+    void setColorBar(const vector<TeColor>& colorVec);
 
     /**
      * \overload
@@ -247,7 +247,7 @@ protected:
     int		ind_;
     std::vector<ColorBar> inputColorVec_;
     std::vector<int> changeVec_;
-    // std::map<int, std::vector<TeColor> > colorMap_; // issue #319
+    std::map<int, std::vector<TeColor> > colorMap_;
     bool	vertical_;
     bool	upDown_;
     bool	brightness_;

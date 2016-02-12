@@ -20,7 +20,7 @@ return {
 		local layerName1 = "Sampa"
 		proj:addLayer {
 			layer = layerName1,
-			file = file("sampa.shp", "fillcell")
+			file = file("sampa.shp", "terralib")
 		}	
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
