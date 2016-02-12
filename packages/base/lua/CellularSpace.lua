@@ -813,7 +813,7 @@ CellularSpace_ = {
 	--     theme = "cells900x900"
 	-- }
 	--
-	-- cs:loadNeighborhood{source = file("cabecadeboi-neigh.gpm", "base")}
+	-- cs:loadNeighborhood{source = filePath("cabecadeboi-neigh.gpm", "base")}
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
 		verifyUnnecessaryArguments(data, {"source", "name", "check"})
@@ -1104,7 +1104,7 @@ metaTableCellularSpace_ = {
 -- See the table below with the description and the arguments of each data source.
 -- Calling Utils:forEachCell() traverses CellularSpaces.
 -- @arg data.database Name of the database or the location of a
--- file. See Package:file() for loading CellularSpaces from packages.
+-- file. See Package:filePath() for loading CellularSpaces from packages.
 -- @arg data.theme A string with the name of the theme to be loaded.
 -- @arg data.dbType A string with the name of the data source. It tries to infer the data source
 -- according to the extension of the argument database. When it does not have an extension or

@@ -382,8 +382,8 @@ Environment_ = {
 	-- }
 	--
 	-- env = Environment{cs, cs2}
-	-- env:loadNeighborhood{source = file("gpmlinesDbEmas.gpm", "base")}
-	-- @see Package:file
+	-- env:loadNeighborhood{source = filePath("gpmlinesDbEmas.gpm", "base")}
+	-- @see Package:filePath
 	loadNeighborhood = function(self, data)
 		verifyNamedTable(data)
 

@@ -912,7 +912,7 @@ metaTableSociety_ = {
 --
 -- s = Society{
 --     instance = instance,
---     database = file("agents.csv", "base")
+--     database = filePath("agents.csv", "base")
 -- }
 --
 -- print(#s)

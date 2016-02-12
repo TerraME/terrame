@@ -152,7 +152,7 @@ end
 -- The first line of the file list the attribute names.
 -- @arg filename A string with the location of the CSV file.
 -- @arg sep A string with the separator. The default value is ','.
--- @usage mytable = CSVread(file("agents.csv", "base"))
+-- @usage mytable = CSVread(filePath("agents.csv", "base"))
 --
 -- print(mytable[1].name) -- john
 -- print(mytable[2].age) -- 18

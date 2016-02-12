@@ -174,7 +174,7 @@ end
 -- @arg fh A file handle with the file to be locked.
 -- @arg mode A string representing the mode. It could be either r (for a read/shared lock) or w
 -- (for a write/exclusive lock).
--- @usage filehandle = io.open(file("agents.csv", "base"), "r")
+-- @usage filehandle = io.open(filePath("agents.csv", "base"), "r")
 -- lock(filehandle, "r")
 -- unlock(filehandle)
 -- @see FileSystem:unlock
@@ -344,7 +344,7 @@ end
 -- a starting point and its length; both should be numbers. It returns true if the operation was
 -- successful. In case of error, it returns nil plus an error string.
 -- @arg fh A file handle with the file to be locked.
--- @usage filehandle = io.open(file("agents.csv", "base"), "r")
+-- @usage filehandle = io.open(filePath("agents.csv", "base"), "r")
 -- lock(filehandle, "r")
 -- unlock(filehandle)
 -- @see FileSystem:lock
