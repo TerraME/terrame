@@ -29,26 +29,21 @@ return {
 		local error_func = function()
 			local timer = Timer(2)
 		end
-
 		unitTest:assertError(error_func, tableArgumentMsg())
-	
+
 		error_func = function()
 			local timer = Timer{Cell()}
 		end
-
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event", Cell()))
-	
+
 		error_func = function()
 			local timer = Timer{b = Cell()}
 		end
-
 		unitTest:assertError(error_func, incompatibleTypeMsg("b", "Event", Cell()))
-	
 	end,
 	add = function(unitTest)
 		local timer = Timer{
-			Event{period = 2, action = function(event)
-			end}
+			Event{period = 2, action = function(event) end}
 		}
 
 		local error_func = function()
@@ -57,8 +52,7 @@ return {
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		timer = Timer{
-			Event{period = 2, action = function(event)
-			end}
+			Event{period = 2, action = function(event) end}
 		}
 
 		error_func = function()
@@ -72,6 +66,93 @@ return {
 			timer:add(Event{period = 2, action = function(event) end})
 		end
 		unitTest:assertError(error_func, "Adding an Event with time (1) before the current simulation time (10).")
+	end,
+	addReplacement = function(unitTest)
+		local timer = Timer{}
+
+		local error_func = function()
+			timer:addReplacement()
+		end
+		unitTest:assertError(error_func, tableArgumentMsg())
+
+		local cs = CellularSpace{
+			xdim = 10
+		}
+
+		error_func = function()
+			timer:addReplacement{
+				target = timer,
+				select = {"roads2010", "roads2020"},
+				attribute = "roads",
+				time = {2010, 2020}
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("target", "CellularSpace or Society", timer))
+
+		error_func = function()
+			timer:addReplacement{
+				target = cs,
+				select = 2,
+				attribute = "attr",
+				time = {2010, 2020, 2030}
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("select", "table", 2))
+
+		error_func = function()
+			timer:addReplacement{
+				target = cs,
+				select = {"roads2010", "roads2020"},
+				attribute = 2,
+				time = {2010, 2020, 2030}
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("attribute", "string", 2))
+
+		error_func = function()
+			timer:addReplacement{
+				target = cs,
+				select = {"roads2010", "roads2020"},
+				attribute = "attr",
+				time = 2
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("time", "table", 2))
+
+		error_func = function()
+			timer:addReplacement{
+				target = cs,
+				select = {"roads2010", "roads2020"},
+				attribute = "roads",
+				time = {2010, 2020, 2030}
+			}
+		end
+		unitTest:assertError(error_func, "The size of argument 'time' should be 2, got 3.")
+
+		error_func = function()
+			timer:addReplacement{
+				target = cs,
+				select = {"roads2010", "roads2020"},
+				attribute = "roads",
+				time = {2010, 2020}
+			}
+		end
+		unitTest:assertError(error_func, "Attribute 'roads2010' does not exist in the Cells.")
+
+		local soc = Society{
+			instance = Agent{},
+			quantity = 10
+		}
+
+		error_func = function()
+			timer:addReplacement{
+				target = soc,
+				select = {"roads2010", "roads2020"},
+				attribute = "roads",
+				time = {2010, 2020}
+			}
+		end
+		unitTest:assertError(error_func, "Attribute 'roads2010' does not exist in the Agents.")
 	end,
 	execute = function(unitTest)
 		local timer = Timer{

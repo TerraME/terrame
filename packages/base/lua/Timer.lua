@@ -55,6 +55,90 @@ Timer_ = {
 		table.insert(self.events, pos, event)
 		event.parent = self
 	end,
+	--- Add temporal replacements for a given attribute. Cells and Agents might have temporal
+	-- data stored as attribute values, with time stored as part of the attribute name.
+	-- This function adds a set of Events to update a given attribute from several temporal
+	-- attributes. It is particularly useful when working with data loaded from files or databases.
+	-- @arg data.target A CellularSpace or a Society.
+	-- @arg data.select A vector of attributes that represent temporal data. This function will
+	-- create one Event for each value in this vector.
+	-- @arg data.attribute A string with an attribute name to be updated with the temporal data.
+	-- @arg data.time A vector of times, with the same length of select. The events will be
+	-- scheduled to execute in such times with priority "veryhigh".
+	-- @usage c = Cell{
+	--     dist = 1,
+	--     dist10 = 2,
+	--     dist20 = 3
+	-- }
+	--
+	-- cs = CellularSpace{
+	--     xdim = 10,
+	--     instance = c
+	-- }
+	--
+	-- timer = Timer{}
+	--
+	-- timer:addReplacement{
+	--     target = cs,
+	--     select = {"dist10", "dist20"},
+	--     attribute = "dist",
+	--     time = {10, 20}
+	-- }
+	--
+	-- print(cs:dist()) -- 100
+	--
+	-- timer:execute(13)
+	-- print(cs:dist()) -- 200
+	--
+	-- timer:execute(20)
+	-- print(cs:dist()) -- 300
+	addReplacement = function(self, data)
+		verifyNamedTable(data)
+
+		if type(data.target) ~= "CellularSpace" and type(data.target) ~= "Society" then
+			customError(incompatibleTypeMsg("target", "CellularSpace or Society", data.target))
+		end
+
+		mandatoryTableArgument(data, "select", "table")
+		mandatoryTableArgument(data, "attribute", "string")
+		mandatoryTableArgument(data, "time", "table")
+
+		verify(#data.select == #data.time, "The size of argument 'time' should be "..#data.select..", got "..#data.time..".")
+
+		if type(data.target) == "Society" then
+			forEachElement(data.select, function(pos, attr)
+				if data.target.agents[1][attr] == nil then
+					customError("Attribute '"..attr.."' does not exist in the Agents.")
+				end
+
+				local target = data.target
+				local attribute = data.attribute
+				self:add(Event{start = data.time[pos], action = function()
+					forEachAgent(target, function(agent)
+						agent[attribute] = agent[attr]
+					end)
+
+					return false
+				end})
+			end)
+		else -- CellularSpace
+			forEachElement(data.select, function(pos, attr)
+				if data.target.cells[1][attr] == nil then
+					customError("Attribute '"..attr.."' does not exist in the Cells.")
+				end
+
+				local target = data.target
+				local attribute = data.attribute
+				self:add(Event{start = data.time[pos], action = function()
+					forEachCell(target, function(cell)
+						cell[attribute] = cell[attr]
+					end)
+
+					return false
+				end})
+			end)
+		end
+	end,
 	--- Remove all the Events from the Timer.
 	-- @usage timer = Timer{
 	--     Event{action = function() print("step") end}
