@@ -34,6 +34,122 @@ return{
 		clean()
 
 		unitTest:assertType(ch, "<DestroyedObserver>")
+	end,
+	disableGraphics = function(unitTest)
+		disableGraphics()
+
+		local c = Chart{
+		    target = {value = 2}
+		}
+
+		local error_func = function()
+			c:save("abc.png")
+		end
+		unitTest:assertError(error_func, "It is not possible to call 'save' with graphics disabled.")
+
+		local cs = CellularSpace{xdim = 10}
+
+		local m = Map{
+			target = cs
+		}
+
+		local error_func = function()
+			m:save("abc.png")
+		end
+		unitTest:assertError(error_func, "It is not possible to call 'save' with graphics disabled.")
+
+		local timer
+
+		timer = Timer{
+			ev1 = Event{action = function(event) timer:notify() end},
+		}
+
+		local c = Clock{target = timer}
+
+		local error_func = function()
+			c:save("abc.png")
+		end
+		unitTest:assertError(error_func, "It is not possible to call 'save' with graphics disabled.")
+
+		local world = Cell{
+			count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
+
+		local ts = TextScreen{target = world}
+
+		local error_func = function()
+			ts:save("abc.png")
+		end
+		unitTest:assertError(error_func, "It is not possible to call 'save' with graphics disabled.")
+
+		local world = Cell{
+			count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
+
+		local vt1 = VisualTable{target = world}
+
+		local error_func = function()
+			vt1:save("abc.png")
+		end
+		unitTest:assertError(error_func, "It is not possible to call 'save' with graphics disabled.")
+
+		enableGraphics()
+	end,
+	enableGraphics = function(unitTest)
+		disableGraphics()
+		enableGraphics()
+
+		local c = Chart{
+		    target = {value = 2}
+		}
+
+		unitTest:assertSnapshot(c, "enable_graphics_chart.png")
+
+		local cs = CellularSpace{xdim = 10}
+
+		local m = Map{
+			target = cs
+		}
+
+		unitTest:assertSnapshot(c, "enable_graphics_map.png")
+
+		local timer
+
+		timer = Timer{
+			ev1 = Event{action = function(event) timer:notify() end},
+		}
+
+		local c = Clock{target = timer}
+
+		unitTest:assertSnapshot(c, "enable_graphics_clock.png")
+
+		local world = Cell{
+			count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
+
+		local ts = TextScreen{target = world}
+
+		unitTest:assertSnapshot(ts, "enable_graphics_textscreen.png")
+
+		local world = Cell{
+			count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
+
+		local vt1 = VisualTable{target = world}
+
+		unitTest:assertSnapshot(vt1, "enable_graphics_visualtable.png")
 	end
 }
 
