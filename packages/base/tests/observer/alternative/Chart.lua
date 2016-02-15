@@ -260,6 +260,115 @@ return{
 			Chart{target = cell, select = {"v1", "v2", "v3"}, color = {"red", {0, 0, "red"}, "green"}}
 		end
 		unitTest:assertError(error_func, "All the elements of an RGB composition should be numbers, got 'string' in position 2.")
+
+		-- chart using data
+		local tab = makeDataTable{
+			first = 2000,
+			step = 10,
+			demand = {7, 8, 9, 10},
+			limit = {0.1, 0.04, 0.3, 0.07}
+		}
+
+		error_func = function()
+			Chart{
+			    data = tab,
+			    select = "limit",
+				target = cell,
+			    xAxis = "demand",
+			    color = "blue"
+			}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("target"))
+		
+		error_func = function()
+			Chart{
+			    data = "limit",
+			    select = "limit",
+			    xAxis = "demand",
+			    color = "blue"
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("data", "table", "limit"))
+	
+		error_func = function()
+			Chart{
+			    data = tab,
+			    select = "limit",
+			    xAxis = "demand2",
+			    color = "blue"
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("data.demand2", "table"))
+
+
+		error_func = function()
+			Chart{
+			    data = tab,
+			    select = "limit2",
+			    xAxis = "demand",
+			    color = "blue"
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("data.limit2", "table"))
+	
+		tab.demand = {7, 8, 9}
+
+		error_func = function()
+			Chart{
+			    data = tab,
+			    select = "limit",
+			    xAxis = "demand",
+			    color = "blue"
+			}
+		end
+		unitTest:assertError(error_func, "Argument 'data.demand' should have 4 elements, got 3.")
+
+		local tab = makeDataTable{
+			first = 2000,
+			step = 10,
+			demand = {7, 8, 9, 10},
+			limit = {0.1, 0.04, 0.3, 0.07}
+		}
+
+		tab.limit = "abc"
+
+		error_func = function()
+			Chart{
+			    data = tab,
+			    select = "limit",
+			    xAxis = "demand",
+			    color = "blue"
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("data.limit", "table", "abc"))
+
+		local tab = makeDataTable{
+			first = 2000,
+			step = 10,
+			demand = {7, 8, 9, 10},
+			limit = {0.1, 0.04, 0.3, 0.07}
+		}
+
+		tab.limit = {0.1, 0.04, 0.3}
+
+		error_func = function()
+			Chart{
+			    data = tab,
+			    select = {"limit", "demand"},
+			    color = "blue"
+			}
+		end
+		unitTest:assertError(error_func, "Argument 'data.demand' should have 3 elements, got 4.")
+	
+		error_func = function()
+			Chart{
+			    data = tab,
+			    select = "limit",
+			    xAxis = "demand",
+			    color = "blue"
+			}
+		end
+		unitTest:assertError(error_func, "Argument 'data.demand' should have 3 elements, got 4.")
 	end,
 	save = function(unitTest)
 		local c = Cell{value = 5}

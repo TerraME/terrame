@@ -58,6 +58,72 @@ local colors = {
 	darkPurple   = { 85,  26, 139}
 }
 
+local function chartFromData(attrTab)
+	local mtable = {}
+	local indexes = {}
+
+	local data = attrTab.data
+	attrTab.data = nil
+
+	forEachElement(attrTab.select, function(_, idx)
+		mandatoryTableArgument(data, idx, "table")
+	end)
+
+
+	forEachOrderedElement(data[attrTab.select[1]], function(idx)
+		table.insert(indexes, idx)
+	end)
+
+	local size = getn(data[attrTab.select[1]])
+
+	-- verify if they have the same size
+	forEachElement(attrTab.select, function(_, idx)
+		if getn(data[idx]) ~= size then
+			customError("Argument 'data."..idx.."' should have "..size.." elements, got "..getn(data[idx])..".")
+		end
+	end)
+
+	if attrTab.xAxis then
+		mandatoryTableArgument(data, attrTab.xAxis, "table")
+
+		if getn(data[attrTab.xAxis]) ~= size then
+			customError("Argument 'data."..attrTab.xAxis.."' should have "..size.." elements, got "..getn(data[attrTab.xAxis])..".")
+		end
+	end
+
+	local function updateValues(time)
+		forEachElement(attrTab.select, function(_, value)
+			attrTab.target[value] = data[value][time]
+		end)
+
+		if attrTab.xAxis then
+			attrTab.target[attrTab.xAxis] = data[attrTab.xAxis][time]
+		end
+	end
+
+	updateValues(indexes[1])
+
+	if attrTab.yLabel == "" then attrTab.yLabel = nil end
+	if attrTab.title == "" then attrTab.title = nil end
+
+	if attrTab.xAxis then
+		if attrTab.xLabel == _Gtme.stringToLabel(attrTab.xAxis) then
+			attrTab.xLabel = nil
+		end
+	elseif attrTab.xLabel == "Time" then
+		attrTab.xLabel = nil
+	end
+
+	local chart = Chart(attrTab)
+
+	for i = 1, #indexes do
+		updateValues(indexes[i])
+		attrTab.target:notify(indexes[i])
+	end
+
+	return chart
+end
+
 Chart_ = {
 	type_ = "Chart",
 	--- Save a Chart into a file. Supported extensions are bmp, jpg, png, and tiff.
@@ -119,6 +185,10 @@ metaTableChart_ = {__index = Chart_}
 -- "yellow", "brown", "cyan", "gray", "magenta", "orange", "purple", and their light and dark
 -- compositions, such as "lightGray" and "darkGray"), or as tables with three integer numbers
 -- representing RGB compositions.
+-- @arg attrTab.data An optional table with a complete description of the data to be drawn in the Chart.
+-- It must be a table with a set of vectors, each one with a name. The names of these vectors can be
+-- used in arguments select and xAxis. If not using xAxis, it will draw the time according to the
+-- positions of the values. When using data, argument target becomes unnecessary. 
 -- @arg attrTab.title An overall title to the Chart.
 -- @arg attrTab.symbol The symbol to be used to draw the points of the Chart. It can be a string to
 -- be used by all lines, or a vector of strings, describing the symbol for each line. The available
@@ -156,6 +226,19 @@ metaTableChart_ = {__index = Chart_}
 --     select = {"susceptible", "infected", "recovered"},
 --     style = {"dots", "steps", "sticks"},
 --     color = {"red", "green", "blue"}
+-- }
+--
+-- tab = makeDataTable{
+--     first = 2000,
+--     step = 10,
+--     demand = {7, 8, 9, 10},
+--     limit = {0.1, 0.04, 0.3, 0.07}
+-- }
+--
+-- Chart{
+--     data = tab,
+--     select = "limit",
+--     color = "blue"
 -- }
 function Chart(attrTab)
 	local symbolTable = {
@@ -197,17 +280,8 @@ function Chart(attrTab)
 	verifyUnnecessaryArguments(attrTab, {
 		"target", "select", "yLabel", "xLabel",
 		"title", "label", "pen", "color", "xAxis",
-		"width", "symbol", "style", "size"
+		"width", "symbol", "style", "size", "data"
 	})
-
-		mandatoryTableArgument(attrTab, "target")
-
-		if not belong(type(attrTab.target), {"Cell", "CellularSpace", "Agent", "Society", "table"}) then
-			if not (attrTab.target.parent and type(attrTab.target.parent) == "Model") then
-				customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, and instance of Model, got "..type(attrTab.target)..".")
-			end
-		end
-	end
 
 	defaultTableValue(attrTab, "yLabel", "")
 	defaultTableValue(attrTab, "title",  "")
@@ -218,7 +292,41 @@ function Chart(attrTab)
 	if type(attrTab.label)  == "string" then attrTab.label  = {attrTab.label} end
 
 	optionalTableArgument(attrTab, "select", "table")
-	optionalTableArgument(attrTab, "label",  "table")
+	optionalTableArgument(attrTab, "label", "table")
+
+	if attrTab.data then
+		mandatoryTableArgument(attrTab, "data", "table")
+		mandatoryTableArgument(attrTab, "select", "table")
+
+		if attrTab.target then
+			customWarning(unnecessaryArgumentMsg("target"))
+		end
+
+		attrTab.target = {}
+
+		forEachElement(attrTab.data, function(idx)
+			attrTab.target[idx] = 0
+			-- they are put zero just to pass the checks before calling 
+		end)
+
+		forEachElement(attrTab.select, function(_, idx)
+			if type(attrTab.data[idx]) ~= "table" then
+				customError(incompatibleTypeMsg("data."..idx, "table", attrTab.data[idx]))
+			end
+		end)
+
+		if attrTab.xAxis and type(attrTab.data[attrTab.xAxis]) ~= "table" then
+			customError(incompatibleTypeMsg("data."..attrTab.xAxis, "table", attrTab.data[attrTab.xAxis]))
+		end
+	else
+		mandatoryTableArgument(attrTab, "target")
+
+		if not belong(type(attrTab.target), {"Cell", "CellularSpace", "Agent", "Society", "table"}) then
+			if not (attrTab.target.parent and type(attrTab.target.parent) == "Model") then
+				customError("Invalid type. Charts only work with Cell, CellularSpace, Agent, Society, table, and instance of Model, got "..type(attrTab.target)..".")
+			end
+		end
+	end
 
 	if attrTab.select == nil then
 		verify(attrTab.label == nil, "As select is nil, it is not possible to use label.")
@@ -372,6 +480,10 @@ function Chart(attrTab)
 		end
 	else
 		defaultTableValue(attrTab, "xLabel", "Time")
+	end
+
+	if attrTab.data then
+		return chartFromData(attrTab)
 	end
 
 	local observerType

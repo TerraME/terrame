@@ -123,6 +123,31 @@ return{
 
 		unitTest:assertSnapshot(c1, "chart-table-1.bmp", 0.01)
 		unitTest:assertSnapshot(c2, "chart-table-2.bmp", 0.01)
+
+		-- chart using data
+		local tab = makeDataTable{
+			first = 2000,
+			step = 10,
+			demand = {7, 8, 9, 10},
+			limit = {0.1, 0.04, 0.3, 0.07}
+		}
+
+		c1 = Chart{
+		    data = tab,
+		    select = "limit",
+		    xAxis = "demand",
+		    color = "blue"
+		}
+	
+		c2 = Chart{
+		    data = tab,
+		    select = "demand",
+		    color = "green",
+			pen = "dash"
+		}
+		
+		unitTest:assertSnapshot(c1, "chart-data-1.bmp", 0.01)
+		unitTest:assertSnapshot(c2, "chart-data-2.bmp", 0.01)
 	end,
 	save = function(unitTest)
 		local c = Cell{value = 1}
