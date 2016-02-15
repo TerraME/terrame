@@ -45,6 +45,8 @@ return{
 	end,
 	defaultValueMsg = function(unitTest)
 		unitTest:assertEquals(defaultValueMsg("aaa", 2), "Argument 'aaa' could be removed as it is the default value (2).")
+
+		unitTest:assertEquals(defaultValueMsg("aaa", "2"), "Argument 'aaa' could be removed as it is the default value ('2').")
 	end,
 	defaultValueWarning = function(unitTest)
 		local error_func = function()

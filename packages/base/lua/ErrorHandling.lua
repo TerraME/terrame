@@ -97,7 +97,11 @@ end
 -- @usage str = defaultValueMsg("dbtype", "mysql")
 -- print(str)
 function defaultValueMsg(argument, value)
-	return "Argument '"..argument.."' could be removed as it is the default value ("..tostring(value)..")."
+	if type(value) == "string" then
+		return "Argument '"..argument.."' could be removed as it is the default value ('"..value.."')."
+	else
+		return "Argument '"..argument.."' could be removed as it is the default value ("..tostring(value)..")."
+	end
 end
 
 --- Show a strict warning if the attribute of a table has the default value. If TerraME is running
@@ -319,6 +323,8 @@ end
 -- @arg table A named table.
 -- @arg attr A string with the argument name.
 -- @arg mtype A string with the required type for the argument.
+-- This argument is optional. If not used, then this function
+-- will check only if the argument is not nil.
 -- @usage mtable = {bbb = 3, ccc = "aaa"}
 -- _, err = pcall(function() mandatoryTableArgument(mtable, "bbb", "string") end)
 -- print(err)
