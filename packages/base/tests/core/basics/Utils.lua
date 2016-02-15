@@ -786,6 +786,61 @@ return{
 		unitTest:assertEquals(levenshtein("abc", "n"), 3)
 		unitTest:assertEquals(levenshtein("abcd", ""), 4)
 	end,
+	makeDataTable = function(unitTest)
+		local tab = makeDataTable{
+			first = 2000,
+			step = 10,
+			demand = {7, 8, 9, 10},
+			limit = {0.1, 0.04, 0.3, 0.07}
+		}
+
+		unitTest:assertType(tab, "table")
+		unitTest:assertType(tab.demand, "table")
+		unitTest:assertType(tab.limit, "table")
+		unitTest:assertEquals(getn(tab), 2)
+		unitTest:assertEquals(getn(tab.demand), 4)
+		unitTest:assertEquals(getn(tab.limit), 4)
+
+		unitTest:assertEquals(tab.demand[2010], 8)
+		unitTest:assertEquals(tab.limit[2030], 0.07)
+
+		local sumidx = 0
+		local sumvalue = 0
+
+		forEachElement(tab.demand, function(idx, value)
+			sumidx = sumidx + idx
+			sumvalue = sumvalue + value
+		end)
+
+		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
+		unitTest:assertEquals(sumvalue, 7 + 8 + 9 + 10)
+
+		local tab = makeDataTable{
+			first = 2000,
+			step = 10,
+			last = 2030,
+			demand = {7, 8, 9, 10},
+			limit = {0.1, 0.04, 0.3, 0.07}
+		}
+
+		unitTest:assertType(tab, "table")
+		unitTest:assertType(tab.demand, "table")
+		unitTest:assertType(tab.limit, "table")
+		unitTest:assertEquals(getn(tab), 2)
+		unitTest:assertEquals(getn(tab.demand), 4)
+		unitTest:assertEquals(getn(tab.limit), 4)
+
+		local sumidx = 0
+		local sumvalue = 0
+
+		forEachElement(tab.limit, function(idx, value)
+			sumidx = sumidx + idx
+			sumvalue = sumvalue + value
+		end)
+
+		unitTest:assertEquals(sumidx, 2000 + 2010 + 2020 + 2030)
+		unitTest:assertEquals(sumvalue, 0.1 + 0.04 + 0.3 + 0.07)
+	end,
 	round = function(unitTest)
 		unitTest:assertEquals(round(5.22), 5)
 		unitTest:assertEquals(round(5.2235, 3), 5.224)

@@ -378,6 +378,71 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
 	end,
+	makeDataTable = function(unitTest)
+		local error_func = function()
+			x = makeDataTable()
+		end
+		unitTest:assertError(error_func, tableArgumentMsg())
+
+		local error_func = function()
+			x = makeDataTable{first = "a"}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("first", "number", "a"))
+
+		local error_func = function()
+			x = makeDataTable{
+				first = 2000,
+				step = "a"
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("step", "number", "a"))
+
+		local error_func = function()
+			x = makeDataTable{
+				first = 2000,
+				step = 10,
+				demand = "a"
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("demand", "table", "a"))
+
+		local error_func = function()
+			x = makeDataTable{
+				first = 2000,
+				step = 10,
+				last = 2025
+			}
+		end
+		unitTest:assertError(error_func, "Invalid 'last' value (2025). It could be 2020 or 2030.")
+
+		local error_func = function()
+			x = makeDataTable{
+				first = 2000,
+				step = 10
+			}
+		end
+		unitTest:assertError(error_func, "It is not possible to create a table without any data.")
+
+		local error_func = function()
+			x = makeDataTable{
+				first = 2000,
+				step = 10,
+				last = 2030,
+				demand = {7, 8, 9}
+			}
+		end
+		unitTest:assertError(error_func, "Argument 'demand' should have 4 elements, got 3.")
+
+		local error_func = function()
+			x = makeDataTable{
+				first = 2000,
+				step = 10,
+				demand = {7, 8, 9, 10},
+				limit = {0.1, 0.04, 0.3}
+			}
+		end
+		unitTest:assertError(error_func, "Argument 'limit' should have 4 elements, got 3.")
+	end,
 	round = function(unitTest)
 		local error_func = function()
 			x = round("a")
