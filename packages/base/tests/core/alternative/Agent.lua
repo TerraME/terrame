@@ -75,11 +75,6 @@ return {
 			on_message = function() end
 		}
 
-		local test_function = function()
-			ag:die(true)
-		end
-		unitTest:assertError(test_function, "Cannot remove the placements of an Agent that does not belong to a Society.")
-
 		ag:die()
 
 		local test_function = function()

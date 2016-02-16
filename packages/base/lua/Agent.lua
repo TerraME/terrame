@@ -80,14 +80,11 @@ Agent_ = {
 
 		self.socialnetworks[id] = set
 	end,
-	--- Kill the agent and remove it from the Society it belongs. The methods execute() and
-	-- on_message() of the Agent are then set to do nothing.
-	-- @arg remove_placements A boolean value indicating whether the
-	-- relations of the Agent should be removed. The default value is true, but it
-	-- only works with simple placements, where one Agent is connected to
-	-- a single Cell in each placement. If more complex relations are used
-	-- in the model, then the modeler should set this argument as false
-	-- and remove the relations manually.
+	--- Kill the agent and remove it from the Society it belongs. It also
+	-- removes any basic placements from the agents (those used by Agent:enter(), Agent:leave(),
+	-- and Agent:move()). After executing this function, it will not be possible to call any
+	-- function from the Agent anymore. Therefore, if there is any complex placement in the model,
+	-- it should be removed manually before calling this function.
 	-- @usage agent = Agent{
 	--     execute = function(self)
 	--         if self.energy <= 0 then
@@ -95,24 +92,7 @@ Agent_ = {
 	--         end
 	--     end
 	-- }
-	die = function(self, remove_placements)
-		optionalArgument(1, "boolean", remove_placements)
-
-		if remove_placements and not self.parent then
-			customError("Cannot remove the placements of an Agent that does not belong to a Society.")
-		end
-
-		if remove_placements == nil then remove_placements = true end
-
-		-- remove all the placements
-		if remove_placements and self.parent then
-			forEachElement(self.parent.placements, function(placement)
-				if #self[placement].cells > 0 then
-					self:leave(placement)
-				end
-			end)
-		end
-
+	die = function(self)
 		self.execute = function() customWarning("Trying to execute a dead agent.") end
 
 		-- remove all the possible ways of getting delayed messages
@@ -125,6 +105,12 @@ Agent_ = {
 		end)
 
 		if self.parent then
+			forEachElement(self.parent.placements, function(placement)
+				if #self[placement].cells > 0 then
+					self:leave(placement)
+				end
+			end)
+
 			self.parent:remove(self)
 		end
 
