@@ -87,7 +87,7 @@ Agent_ = {
 	-- only works with simple placements, where one Agent is connected to
 	-- a single Cell in each placement. If more complex relations are used
 	-- in the model, then the modeler should set this argument as false
-	-- and remove the relations by himself/herself.
+	-- and remove the relations manually.
 	-- @usage agent = Agent{
 	--     execute = function(self)
 	--         if self.energy <= 0 then
@@ -97,11 +97,12 @@ Agent_ = {
 	-- }
 	die = function(self, remove_placements)
 		optionalArgument(1, "boolean", remove_placements)
-		if remove_placements == nil then remove_placements = true end
 
 		if remove_placements and not self.parent then
 			customError("Cannot remove the placements of an Agent that does not belong to a Society.")
 		end
+
+		if remove_placements == nil then remove_placements = true end
 
 		-- remove all the placements
 		if remove_placements and self.parent then
@@ -113,6 +114,7 @@ Agent_ = {
 		end
 
 		self.execute = function() customWarning("Trying to execute a dead agent.") end
+
 		-- remove all the possible ways of getting delayed messages
 		forEachElement(self, function(idx, _, mtype)
 			if mtype == "function" and idx:sub(1, 3) == "on_" then
@@ -122,11 +124,10 @@ Agent_ = {
 			end
 		end)
 
-		self.on_message = function()
-			customWarning("Trying to send a message to a dead Agent.")
+		if self.parent then
+			self.parent:remove(self)
 		end
 
-		self.parent:remove(self)
 		setmetatable(self, deadAgentMetaTable_)
 	end,
 	--- Put the Agent into a Cell. This function supposes that each Agent can be in one and

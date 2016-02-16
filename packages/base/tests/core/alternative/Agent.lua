@@ -70,6 +70,32 @@ return {
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 123))
 	end,
+	die = function(unitTest)
+		local ag = Agent{
+			on_message = function() end
+		}
+
+		local test_function = function()
+			ag:die(true)
+		end
+		unitTest:assertError(test_function, "Cannot remove the placements of an Agent that does not belong to a Society.")
+
+		ag:die()
+
+		local test_function = function()
+			ag:execute()
+		end
+		unitTest:assertError(test_function, "Trying to execute a dead agent.")
+
+		local ag2 = Agent{}
+
+		test_function = function()
+			ag2:message{
+				receiver = ag
+			}
+		end
+		unitTest:assertError(test_function, "Trying to use a function or an attribute of a dead Agent.")
+	end,
 	enter = function(unitTest)
 		local ag1 = Agent{}
 		local cs = CellularSpace{xdim = 3}
