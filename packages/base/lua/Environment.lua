@@ -31,24 +31,38 @@ local function createRandomPlacement(environment, cs, max, placement)
 		nplacement = "placement"
 	end
 
+	local g = Group{}
+
 	forEachOrderedElement(environment, function(_, element)
 		local t = type(element)
 		if t == "Society" then
 			element.placements[nplacement] = cs
 			forEachAgent(element, function(agent)
-				local cell = cs:sample()
-				while #cell[nplacement] >= max do
-					cell = cs:sample()
-				end
-				agent:enter(cell, placement)
+				g:add(agent)
 			end)
 		elseif t == "Agent" then
-			local cell = cs:sample()
-			while #cell[nplacement] >= max do
-				cell = cs:sample()
-			end 
-			element:enter(cell, placement)
+			g:add(element)
 		end 
+	end)
+
+	local traj = Trajectory{
+		target = cs
+	}
+
+	traj:randomize()
+	g:randomize()
+
+	local countMax = 0
+	local countCell = 1
+	forEachAgent(g, function(agent)
+		agent:enter(traj.cells[countCell], placement)
+
+		countMax = countMax + 1
+
+		if countMax >= max then
+			countMax = 0
+			countCell = countCell + 1
+		end
 	end)
 end
 
@@ -161,15 +175,14 @@ Environment_ = {
 	-- different from the default value, the modeler will
 	-- have to use the last argument of these functions with the name of the placement.
 	-- @arg data.max A number representing the maximum number of Agents that can enter in the
-	-- same Cell when creating the placement. As default it has no limit. Using this argument is
-	-- computationally efficient only when the number of Agents is considerably lower than max times
-	-- the number of Cells. Otherwise, it is better to consider using the uniform strategy.
+	-- same Cell when creating the placement. As default it will add at most one Agent per Cell.
 	-- Note that using this argument does not ensure a maximum number of
 	-- agents inside Cells along the simulation - controlling the maximum is always up to
 	-- the modeler.
 	-- @tabular strategy Strategy & Description & Arguments \
-	-- "random"(default) & Create placement by putting each Agent
-	-- in a randomly chosen Cell. & name, max \
+	-- "random"(default) & Choose a Cell randomly and put max agents also chosen randomly.
+	-- Repeat this process until allocate all Agents. The last Cell chosen might have less than
+	-- max Agents. All the Cells that were not chosen in this process will remain empty. & name, max \
 	-- "uniform" & Create placements uniformly. The first Agent enters in the first Cell, the second
 	-- one in the second Cell, and so on. If it reaches the last Cell of the CellularSpace or Trajectory
 	-- then it starts again in the first Cell. The
@@ -209,7 +222,7 @@ Environment_ = {
 		if data.name == "placement" then data.name = nil end -- to avoid warning messages
 
 		if data.strategy == "random" then
-			defaultTableValue(data, "max", math.huge)
+			defaultTableValue(data, "max", 1)
 
 			positiveTableArgument(data, "max")
 		end
@@ -257,8 +270,6 @@ Environment_ = {
 				if data.max ~= nil then
 					if qty_agents > #mycs * data.max then
 						customError("It is not possible to put such amount of agents in space.")
-					elseif qty_agents > #mycs * data.max * 0.9 then
-						customWarning("Placing more than 90% of the available space randomly might take too much time.")
 					end
 				end
 

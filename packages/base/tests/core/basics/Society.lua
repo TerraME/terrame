@@ -92,7 +92,7 @@ return {
 
 		local env = Environment{nonFooSociety, cs, singleFooAgent}
 
-		env:createPlacement{max = 1}
+		env:createPlacement{}
 
 		local t = Timer{
 			Event {action = nonFooSociety},
@@ -100,7 +100,7 @@ return {
 
 		t:execute(50)
 
-		unitTest:assertEquals(3, findCounter)
+		unitTest:assertEquals(4, findCounter)
 
 		local count1 = 0
 		local count2 = 0
@@ -279,7 +279,7 @@ state_          State
 		cs:createNeighborhood{name = "2"}
 
 		local env = Environment{cs, predators}
-		env:createPlacement()
+		env:createPlacement{max = 5}
 
 		predators:createSocialNetwork{strategy = "cell", name = "c"}
 		predators:createSocialNetwork{strategy = "neighbor", name = "n"}
@@ -294,9 +294,9 @@ state_          State
 			count_n2 = count_n2 + #ag:getSocialNetwork("n2")
 		end)
 
-		unitTest:assertEquals(362, count_c)
-		unitTest:assertEquals(2150, count_n)
-		unitTest:assertEquals(2150, count_n2)
+		unitTest:assertEquals(400, count_c)
+		unitTest:assertEquals(2300, count_n)
+		unitTest:assertEquals(2300, count_n2)
 
 		local ag1 = Agent{
 			name = "nonfoo",
@@ -362,7 +362,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(6617,  count_prob)
+		unitTest:assertEquals(6618,  count_prob)
 		unitTest:assertEquals(100,   count_quant)
 		unitTest:assertEquals(10000, count_all)
 
@@ -376,7 +376,7 @@ state_          State
 			count_all   = count_all   + #ag:getSocialNetwork("all")
 		end)
 
-		unitTest:assertEquals(6597,  count_prob)
+		unitTest:assertEquals(6594,  count_prob)
 		unitTest:assertEquals(100,   count_quant)
 		unitTest:assertEquals(10000, count_all)
 
@@ -384,7 +384,7 @@ state_          State
 		cs:createNeighborhood()
 
 		local env = Environment{cs, predators}
-		env:createPlacement()
+		env:createPlacement{max = 4}
 
 		predators:createSocialNetwork{strategy = "cell", name = "c", inmemory = false}
 		predators:createSocialNetwork{strategy = "neighbor", name = "n", inmemory = false}
@@ -396,8 +396,8 @@ state_          State
 			count_n  = count_n + #ag:getSocialNetwork("n")
 		end)
 
-		unitTest:assertEquals(384, count_c)
-		unitTest:assertEquals(2286, count_n)
+		unitTest:assertEquals(300, count_c)
+		unitTest:assertEquals(2304, count_n)
 
 		predators:sample():die()
 
@@ -408,8 +408,8 @@ state_          State
 			count_n  = count_n + #ag:getSocialNetwork("n")
 		end)
 
-		unitTest:assertEquals(380, count_c)
-		unitTest:assertEquals(2256, count_n)
+		unitTest:assertEquals(294, count_c)
+		unitTest:assertEquals(2280, count_n)
 
 		local predator = Agent{
 			energy = 40,
@@ -433,8 +433,8 @@ state_          State
 			count_quant = count_quant + #ag:getSocialNetwork("boss")
 		end)
 
-		unitTest:assertEquals(1492,  count_prob)
-		unitTest:assertEquals(200,   count_quant)
+		unitTest:assertEquals(1460, count_prob)
+		unitTest:assertEquals(200,  count_quant)
 
 		-- social networks that must be "in memory"
 		local predator = Agent{

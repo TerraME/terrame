@@ -221,7 +221,7 @@ id     string [env]
 		cs:createNeighborhood()
 
 		local env = Environment{cs, predators = predators, zag = ag}
-		env:createPlacement{max = 1}
+		env:createPlacement{}
 
 		local cont = 0
 		forEachCell(cs, function(cell)
@@ -295,7 +295,7 @@ id     string [env]
 		cs:createNeighborhood()
 
 		local env = Environment{cs, predators}
-		env:createPlacement{max = 1, name = "house"}
+		env:createPlacement{name = "house"}
 		env:createPlacement{strategy = "uniform", name = "stay"}
 		env:createPlacement{strategy = "void", name = "workingplace"}
 			
@@ -346,7 +346,7 @@ id     string [env]
 		local cs = CellularSpace{xdim = 10}
 
 		local env = Environment{cs.cells[1], predators}
-		env:createPlacement()
+		env:createPlacement{max = 200}
 
 		unitTest:assertEquals(#cs.cells[1]:getAgents(), #predators)
 	end,

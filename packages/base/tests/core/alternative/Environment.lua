@@ -204,20 +204,15 @@ return{
 		env = Environment{cs, sc1}
 
 		error_func = function()
-			env:createPlacement{max = 1}
+			env:createPlacement{}
 		end
 		unitTest:assertError(error_func, "It is not possible to put such amount of agents in space.")
 
 		local cs2 = CellularSpace{xdim = 7, ydim = 3}
 		env = Environment{cs2, sc1}
 
-		error_func = function()
-			env:createPlacement{max = 1}
-		end
-		unitTest:assertError(error_func, "Placing more than 90% of the available space randomly might take too much time.")
-
 		env = Environment{cs, sc1}
-		env:createPlacement()
+		env:createPlacement{max = 20}
 
 		error_func = function()
 			env:createPlacement()
