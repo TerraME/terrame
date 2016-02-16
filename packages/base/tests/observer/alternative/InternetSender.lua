@@ -76,7 +76,7 @@ return{
 		error_func = function()
 			InternetSender{target = c, port = 456456}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("port", "456456"))
+		unitTest:assertError(error_func, defaultValueMsg("port", 456456))
 
 		error_func = function()
 			InternetSender{target = c, protocol = 5}
@@ -101,7 +101,7 @@ return{
 		error_func = function()
 			InternetSender{target = c, visible = true}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("visible", "true"))
+		unitTest:assertError(error_func, defaultValueMsg("visible", true))
 
 		error_func = function()
 			InternetSender{target = c, compress = 4}
@@ -111,7 +111,7 @@ return{
 		error_func = function()
 			InternetSender{target = c, compress = true}
 		end
-		unitTest:assertError(error_func, defaultValueMsg("compress", "true"))
+		unitTest:assertError(error_func, defaultValueMsg("compress", true))
 
 		error_func = function()
 			InternetSender{target = c, select = {}}
