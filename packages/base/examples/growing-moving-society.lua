@@ -38,7 +38,7 @@ e = Environment{
 	soc
 }
 
-e:createPlacement{max = 1}
+e:createPlacement{}
 
 Chart{
 	target = soc

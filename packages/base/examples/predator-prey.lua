@@ -105,7 +105,7 @@ env = Environment{
 	preys
 }
 
-env:createPlacement{max = 1}
+env:createPlacement{}
 
 c = Cell{
 	predators = function() return #predators end,

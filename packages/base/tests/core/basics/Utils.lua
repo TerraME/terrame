@@ -163,7 +163,7 @@ return{
 		local cs = CellularSpace{xdim = 2}
 		local e = Environment{soc, cs}
 
-		e:createPlacement()
+		e:createPlacement{max = 8}
 
 		count = 0
 		forEachCell(cs, function(cell)

@@ -80,9 +80,7 @@ env = Environment{
 	cells, society
 }
 
-env:createPlacement{
-	max = 1
-}
+env:createPlacement{}
 
 empty_cells = Trajectory{
 	target = cells,
