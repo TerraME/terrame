@@ -783,7 +783,14 @@ function _Gtme.executeTests(package, fileName)
 					local env = setmetatable({}, {__index = _G})
 					-- loadfile is necessary to avoid any global variable from one
 					-- example affect another example
-					loadfile(baseDir..s.."examples"..s..value..".lua", 't', env)()
+					local result, err = loadfile(baseDir..s.."examples"..s..value..".lua", 't', env)
+
+					if not result then
+						printError(err)
+						ut.examples_error = ut.examples_error + 1
+					else
+						return result()
+					end
 				end
 
 				xpcall(myfunc, function(err)
