@@ -935,6 +935,30 @@ function getn(t)
 	return n
 end
 
+--- Return the names of a given object derived from a table.
+-- The output is a vector with the names as values alphabetically ordered.
+-- @see Utils:isTable
+-- @usage t = {
+--     cover = "forest",
+--     area = 200,
+--     water = false
+-- }
+--
+-- getNames(t) -- {"area", "cover", "water"}
+function getNames(data)
+	if not isTable(data) then
+		incompatibleTypeError(1, "table", data)
+	end
+
+	local result = {}
+
+	forEachOrderedElement(data, function(idx)
+		table.insert(result, idx)
+	end)
+
+	return result
+end
+
 --- Return a function that compares two tables (which can be, for instance, Agents or Cells).
 -- The function returns which one has a priority over the other, according to an attribute of the
 -- objects and a given operator. If the function was not successfully built it returns nil.

@@ -45,7 +45,7 @@ return{
 		unitTest:assertType(cs, "CellularSpace")
 
 		-- The assert below checks the number of functions in package 'base'.
-		unitTest:assertEquals(getn(base), 180)
+		unitTest:assertEquals(getn(base), 181)
 	end,
 	packageInfo = function(unitTest)
 		local r = packageInfo()

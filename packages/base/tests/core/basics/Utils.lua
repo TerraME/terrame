@@ -487,6 +487,20 @@ return{
 
 		unitTest:assertEquals(getn(Cell{}), 4)
 	end,
+	getNames = function(unitTest)
+		local t = {
+			cover = "forest",
+			area = 200,
+			water = false
+		}
+
+		local result = getNames(t)
+
+		unitTest:assertType(result, "table")
+		unitTest:assertEquals(#result, 3)
+		unitTest:assertEquals(result[1], "area")
+		unitTest:assertEquals(result[3], "water")
+	end,
 	greaterByAttribute = function(unitTest)
 		local gt = greaterByAttribute("cover")
 		unitTest:assertType(gt, "function")
