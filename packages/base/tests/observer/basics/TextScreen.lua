@@ -104,7 +104,7 @@ return{
 		world:notify()
 		world:notify()
 
-		unitTest:assertSnapshot(ts1, "textscreen_cs.bmp")
+		unitTest:assertSnapshot(ts1, "textscreen_cs.bmp", 0.05)
 		unitTest:assertSnapshot(ts2, "textscreen_cs_select.bmp")
     
 	end,

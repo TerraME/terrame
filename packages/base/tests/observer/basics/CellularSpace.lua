@@ -97,7 +97,7 @@ return{
     
 		unitTest:assertSnapshot(vt, "cellularspace_visualtable.bmp", 0.059)
 
-		unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.01)
+		unitTest:assertSnapshot(ts, "textscreen_cs_value.bmp", 0.06)
 
 		unitTest:clear()
 
@@ -225,13 +225,13 @@ return{
 		local ts = TextScreen{target = cs}
 		local vt = VisualTable{target = cs}
 
-		t:execute(30)
+		t:run(30)
 
 		cs:notify()
     
 		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.059)
 
-		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.01)		
+		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.09)		
 
 		-- ###################### END #############################
 		if isFile(projName) then
