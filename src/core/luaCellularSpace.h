@@ -89,9 +89,6 @@ public:
 
     /// Sets the SQL WHERE CLAUSE to the string received as parameter
     int setWhereClause(lua_State *L );
-    
-    /// Load the luaCellularSpace object from the Shapefile
-    int loadShape(lua_State *L);
 
     int saveShape(lua_State *L);
 

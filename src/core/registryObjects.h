@@ -155,7 +155,6 @@ Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
 	method(luaCellularSpace, setTheme),
 	method(luaCellularSpace, clearAttrName),
 	method(luaCellularSpace, addAttrName),
-        method(luaCellularSpace, loadShape),
 	method(luaCellularSpace, saveShape),
 	method(luaCellularSpace, clear),
 	method(luaCellularSpace, size),

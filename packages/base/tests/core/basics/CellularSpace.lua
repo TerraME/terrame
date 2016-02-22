@@ -124,6 +124,7 @@ return{
 			file = filePath1
 		}
 		
+		-- ###################### 1 #############################
 		local cs = CellularSpace{
 			project = projName,
 			layer = clName1
@@ -141,7 +142,20 @@ return{
 		local csLayerInfo = csProj:infoLayer(clName1)
 		unitTest:assertEquals(csLayerInfo.source, "shp")
 		unitTest:assertEquals(csLayerInfo.file, filePath1)
-	
+		
+		-- ###################### 2 #############################
+		local cs = CellularSpace{
+			source = "shp",
+			file = filePath1
+		}
+		
+		unitTest:assert(#cs.cells > 0)
+		
+		forEachCell(cs, function(cell)
+			unitTest:assertNotNil(cell.x)
+			unitTest:assertNotNil(cell.y)
+		end)		
+		
 		-- ###################### END #############################
 		if isFile(projName) then
 			os.execute("rm -f "..projName)

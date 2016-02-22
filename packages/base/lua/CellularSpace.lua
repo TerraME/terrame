@@ -290,22 +290,39 @@ local function loadMap(self)
 	self.ydim = self.yMax
 end
 
-local function loadShape(self)
-	self.cells, self.xMin, self.yMin, self.xMax, self.yMax = self.cObj_:loadShape()
-
-	table.sort(self.cells, function(a, b) 
-		if a.x < b.x then return true; end
-		if a.x > b.x then return false; end
-		return a.y < b.y
-	end)
-
-	self.xdim = self.xMax
-	self.ydim = self.yMax
+local function setCellsByTerraLibDataSet(self, dSet)
+	self.xMax = 0
+	self.yMin = 0
+	self.yMax = 0
+	self.xMin = 0
+	
+	self.cells = {}
 	self.cObj_:clear()
-	for i, tab in pairs(self.cells) do
-		tab.parent = self
-		self.cObj_:addCell(tab.x, tab.y, tab.cObj_)
+	
+	for i = 0, #dSet do
+		local row = tonumber(dSet[i].row)
+		local col = tonumber(dSet[i].col)
+				
+		local cell = Cell{id = tostring(i), x = col, y = row}
+		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
+		
+		for k, v in pairs(dSet[i]) do
+			cell[k] = v
+		end
+		
+		table.insert(self.cells, cell)
+
+		self.xMin = math.min(self.xMin, cell.x)
+		self.xMax = math.max(self.xMax, cell.y)
+		self.yMin = math.min(self.yMin, cell.y)
+		self.yMax = math.max(self.yMax, cell.x)		
 	end
+end
+
+local function loadShape(self)
+	local tlib = terralib.TerraLib{}
+	local dSet = tlib:getShpByFilePath(self.file)
+	setCellsByTerraLibDataSet(self, dSet)
 end
 
 local function loadVirtual(self)
@@ -329,35 +346,9 @@ local function loadVirtual(self)
 end
 
 local function loadLayer(self)
-	self.cells = {}
-	self.cObj_:clear()
-	
 	local tlib = terralib.TerraLib{}
 	local dset = tlib:getDataSet(self.project, self.layer)
-	
-	self.xMax = 0
-	self.yMin = 0
-	self.yMax = 0
-	self.xMin = 0
-	
-	for i = 0, #dset do
-		local row = tonumber(dset[i].row)
-		local col = tonumber(dset[i].col)
-				
-		local cell = Cell{id = tostring(i), x = col, y = row}
-		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
-		
-		for k, v in pairs(dset[i]) do
-			cell[k] = v
-		end
-		
-		table.insert(self.cells, cell)
-
-		self.xMin = math.min(self.xMin, cell.x)
-		self.xMax = math.max(self.xMax, cell.y)
-		self.yMin = math.min(self.yMin, cell.y)
-		self.yMax = math.max(self.yMax, cell.x)		
-	end
+	setCellsByTerraLibDataSet(self, dset)
 end
 
 local CellularSpaceDrivers = {}
