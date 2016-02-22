@@ -51,8 +51,8 @@ local function getDiagonalNeighborhood(cs, data)
 					local index = nil
 					if data.wrap then
 						index = cs:get(
-							((cell.x + col) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol,
-							((cell.y + lin) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
+							((cell.x + col) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin,
+							((cell.y + lin) - cs.yMin) % (cs.yMax - cs.yMin + 1) + cs.yMin)
 					else
 						index = cs:get(cell.x + col, cell.y + lin)
 					end
@@ -99,8 +99,8 @@ local function getMooreNeighborhood(cs, data)
 					local index = nil
 					if data.wrap then
 						index = cs:get(
-							((cell.x + col) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol,
-							((cell.y + lin) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
+							((cell.x + col) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin,
+							((cell.y + lin) - cs.yMin) % (cs.yMax - cs.yMin + 1) + cs.yMin)
 					else
 						index = cs:get(cell.x + col, cell.y + lin)
 					end
@@ -154,8 +154,8 @@ local function getVonNeumannNeighborhood(cs, data)
 					local index = nil
 					if data.wrap then
 						index = cs:get(
-							((cell.x + col) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol,
-							((cell.y + lin) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
+							((cell.x + col) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin,
+							((cell.y + lin) - cs.yMin) % (cs.yMax - cs.yMin + 1) + cs.yMin)
 					else
 						index = cs:get(cell.x + col, cell.y + lin)
 					end
@@ -241,10 +241,10 @@ local function checkProject(self)
 end
 
 local function loadCsv(self)
-	if self.minRow == nil then self.minRow = 100000 end
-	if self.minCol == nil then self.minCol = 100000 end
-	if self.maxRow == nil then self.maxRow = -self.minRow end
-	if self.maxCol == nil then self.maxCol = -self.minCol end
+	if self.yMin == nil then self.yMin = 100000 end
+	if self.xMin == nil then self.xMin = 100000 end
+	if self.xMax == nil then self.xMax = -self.xMin end
+	if self.yMax == nil then self.yMax = -self.yMin end
 
 	self.cells = {}
 	self.cObj_:clear()
@@ -264,10 +264,10 @@ local function loadMap(self)
 	local i = 0
 	local j = 0
 
-	if self.minRow == nil then self.minRow = 100000 end
-	if self.minCol == nil then self.minCol = 100000 end
-	if self.maxRow == nil then self.maxRow = -self.minRow end
-	if self.maxCol == nil then self.maxCol = -self.minCol end
+	if self.yMin == nil then self.yMin = 100000 end
+	if self.xMin == nil then self.xMin = 100000 end
+	if self.xMax == nil then self.xMax = -self.xMin end
+	if self.yMax == nil then self.yMax = -self.yMin end
 
 	self.cells = {}
 	self.cObj_:clear()
@@ -286,12 +286,12 @@ local function loadMap(self)
 		i = i + 1
 	end
 
-	self.xdim = self.maxRow
-	self.ydim = self.maxCol
+	self.xdim = self.xMax
+	self.ydim = self.yMax
 end
 
 local function loadShape(self)
-	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:loadShape()
+	self.cells, self.xMin, self.yMin, self.xMax, self.yMax = self.cObj_:loadShape()
 
 	table.sort(self.cells, function(a, b) 
 		if a.x < b.x then return true; end
@@ -299,8 +299,8 @@ local function loadShape(self)
 		return a.y < b.y
 	end)
 
-	self.xdim = self.maxCol
-	self.ydim = self.maxRow
+	self.xdim = self.xMax
+	self.ydim = self.yMax
 	self.cObj_:clear()
 	for i, tab in pairs(self.cells) do
 		tab.parent = self
@@ -309,10 +309,10 @@ local function loadShape(self)
 end
 
 local function loadVirtual(self)
-	self.minRow = 0
-	self.minCol = 0
-	self.maxRow = self.ydim - 1
-	self.maxCol = self.xdim - 1
+	self.yMin = 0
+	self.xMin = 0
+	self.xMax = self.xdim - 1
+	self.yMax = self.ydim - 1
 
 	self.cells = {}
 	self.cObj_:clear()
@@ -335,31 +335,15 @@ local function loadLayer(self)
 	local tlib = terralib.TerraLib{}
 	local dset = tlib:getDataSet(self.project, self.layer)
 	
-	self.maxRow = 0
-	self.minRow = 0
-	self.maxCol = 0
-	self.minCol = 0
+	self.xMax = 0
+	self.yMin = 0
+	self.yMax = 0
+	self.xMin = 0
 	
 	for i = 0, #dset do
 		local row = tonumber(dset[i].row)
 		local col = tonumber(dset[i].col)
-			
-		if self.maxRow < row then
-			self.maxRow = row
-		end
-			
-		if row < self.minRow then
-			self.minRow = row
-		end
-			
-		if self.maxCol < col then
-			self.maxCol = col
-		end
-			
-		if col < self.minCol then
-			self.minCol = col
-		end			
-			
+				
 		local cell = Cell{id = tostring(i), x = col, y = row}
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 		
@@ -368,6 +352,11 @@ local function loadLayer(self)
 		end
 		
 		table.insert(self.cells, cell)
+
+		self.xMin = math.min(self.xMin, cell.x)
+		self.xMax = math.max(self.xMax, cell.y)
+		self.yMin = math.min(self.yMin, cell.y)
+		self.yMax = math.max(self.yMax, cell.x)		
 	end
 end
 
@@ -447,10 +436,10 @@ CellularSpace_ = {
 		cell.parent = self
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 		table.insert(self.cells, cell)
-		self.minRow = math.min(self.minRow, cell.y)
-		self.minCol = math.min(self.minCol, cell.x)
-		self.maxRow = math.max(self.maxRow, cell.y)
-		self.maxCol = math.max(self.maxCol, cell.x)
+		self.yMin = math.min(self.yMin, cell.y)
+		self.xMin = math.min(self.xMin, cell.x)
+		self.xMax = math.max(self.xMax, cell.x)
+		self.yMax = math.max(self.yMax, cell.y)
 	end,
 	--- Create a Neighborhood for each Cell of the CellularSpace.
 	-- @arg data.inmemory If true (default), a Neighborhood will be built and stored for
@@ -687,10 +676,10 @@ CellularSpace_ = {
 
 		verifyUnnecessaryArguments(data, {"xmin", "xmax", "ymin", "ymax"})
 
-		defaultTableValue(data, "xmin", self.minCol)
-		defaultTableValue(data, "xmax", self.maxCol)
-		defaultTableValue(data, "ymin", self.minRow)
-		defaultTableValue(data, "ymax", self.maxRow)
+		defaultTableValue(data, "xmin", self.xMin)
+		defaultTableValue(data, "xmax", self.xMax)
+		defaultTableValue(data, "ymin", self.yMin)
+		defaultTableValue(data, "ymax", self.yMax)
 
 		local result = Trajectory{target = self, build = false}
 
@@ -1148,10 +1137,10 @@ metaTableCellularSpace_ = {
 -- @output cells A vector of Cells pointed by the CellularSpace.
 -- @output cObj_ A pointer to a C++ representation of the CellularSpace. Never use this object.
 -- @output parent The Environment it belongs.
--- @output maxCol The maximum value of the attribute y of its Cells.
--- @output maxRow The maximum value of the attribute x of its Cells.
--- @output minCol The minimum value of the attribute y of its Cells.
--- @output minRow The minimum value of the attribute x of its Cells.
+-- @output xMax The maximum value of the attribute x of its Cells.
+-- @output yMax The maximum value of the attribute y of its Cells.
+-- @output xMin The minimum value of the attribute x of its Cells.
+-- @output yMin The minimum value of the attribute y of its Cells.
 -- @usage cs = CellularSpace{
 --     xdim = 20,
 --     ydim = 25

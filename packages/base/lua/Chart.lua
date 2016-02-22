@@ -351,7 +351,7 @@ function Chart(attrTab)
 			end)
 		elseif type(attrTab.target) == "CellularSpace" then
 			forEachOrderedElement(attrTab.target, function(idx, value, mtype)
-				if mtype == "number" and not belong(idx, {"minCol", "maxCol", "minRow", "maxRow", "ydim", "xdim"}) and string.sub(idx, -1, -1) ~= "_" then
+				if mtype == "number" and not belong(idx, {"xMin", "xMax", "yMin", "yMax", "ydim", "xdim"}) and string.sub(idx, -1, -1) ~= "_" then
 					if not attrTab.xAxis or idx ~= attrTab.xAxis then
 						attrTab.select[#attrTab.select + 1] = idx
 					end

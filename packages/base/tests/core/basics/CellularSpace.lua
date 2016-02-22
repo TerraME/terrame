@@ -171,15 +171,15 @@ return{
 		unitTest:assertEquals(tostring(cs1), [[cells   table of size 200
 cObj_   userdata
 load    function
-maxCol  number [9]
-maxRow  number [19]
-minCol  number [0]
-minRow  number [0]
 source  string [virtual]
 vvv     number [333]
 xdim    number [10]
+xMax    number [9]
+xMin    number [0]
 xyz     function
 ydim    number [20]
+yMax    number [19]
+yMin    number [0]
 ]])
 	end,
 	add = function(unitTest)
