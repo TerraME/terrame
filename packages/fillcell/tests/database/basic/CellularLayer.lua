@@ -647,7 +647,32 @@ return {
 		unitTest:assertEquals(rsumLayerInfo.user, user)
 		unitTest:assertEquals(rsumLayerInfo.password, password)
 		unitTest:assertEquals(rsumLayerInfo.database, database)
-		unitTest:assertEquals(rsumLayerInfo.table, string.lower(rsumLayerName))			
+		unitTest:assertEquals(rsumLayerInfo.table, string.lower(rsumLayerName))		
+
+		-- CELLULAR SPACE TESTS ---------------------------------------------------
+		-- ###################### 21 #############################
+		local cs = CellularSpace{
+			project = proj,
+			layer = rsumLayerName
+		}
+		
+		forEachCell(cs, function(cell)
+			cell.past_sum = cell.sum
+			cell.sum = cell.sum + 10000
+		end)		
+		
+		local cellSpaceLayerName = clName2.."_CellSpace_Sum"
+		
+		cs:save(cellSpaceLayerName, "past_sum")
+		
+		local cellSpaceLayerInfo = proj:infoLayer(cellSpaceLayerName)
+		unitTest:assertEquals(cellSpaceLayerInfo.source, "postgis")
+		unitTest:assertEquals(cellSpaceLayerInfo.host, host)
+		unitTest:assertEquals(cellSpaceLayerInfo.port, port)
+		unitTest:assertEquals(cellSpaceLayerInfo.user, user)
+		unitTest:assertEquals(cellSpaceLayerInfo.password, password)
+		unitTest:assertEquals(cellSpaceLayerInfo.database, database)
+		unitTest:assertEquals(cellSpaceLayerInfo.table, cellSpaceLayerName)	-- TODO: VERIFY LOWER CASE IF CHANGED
 
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -697,9 +722,10 @@ return {
 		pgData.table = string.lower(rstdevLayerName)
 		tl:dropPgTable(pgData)		
 		pgData.table = string.lower(rsumLayerName)
-		tl:dropPgTable(pgData)			
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(cellSpaceLayerName)
+		tl:dropPgTable(pgData)
 		
-		tl = TerraLib{}
 		tl:finalize()		
 	end
 }
