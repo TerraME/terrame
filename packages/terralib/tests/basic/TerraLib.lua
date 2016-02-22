@@ -76,5 +76,11 @@ return {
 	end,	
 	attributeFill = function(unitTest)
 		unitTest:assert(true)
+	end,
+	getDataSet = function(unitTest)
+		unitTest:assert(true)
+	end,
+	saveDataSet = function(unitTest)
+		unitTest:assert(true)
 	end
 }

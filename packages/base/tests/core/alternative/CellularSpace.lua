@@ -194,6 +194,55 @@ return{
 			cs:water()
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg("water", "number", "abc"))
+		
+		-- ###################### PROJECT #############################	
+		local terralib = getPackage("terralib")
+		
+		local projectNonStringOrProject = function()
+			local cs = CellularSpace{project = 2, layer = "cells"}
+		end
+		unitTest:assertError(projectNonStringOrProject, "The 'project' parameter must be a Project or a Project file path.")		
+
+		local layerNonString = function()
+			local cs = CellularSpace{project = "myproj.tview", layer = false}
+		end
+		unitTest:assertError(layerNonString, incompatibleTypeMsg("layer", "string", false))
+
+		local unnecessaryArgument = function()
+			local cs = CellularSpace{project = "myproj.tview", lauer = "cells"}
+		end
+		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("lauer", "layer"))
+		
+		local projNotExists = function()
+			local cs = CellularSpace{project = "myproj.tview", layer = "cells"}
+		end
+		unitTest:assertError(projNotExists, "The Project '".."myproj.tview".."'not found.")		
+		
+		local projFile = "cellspace_alt.tview"
+		
+		if isFile(projFile) then
+			os.execute("rm -f "..projFile)
+		end
+		
+		local proj = terralib.Project{
+			file = projFile,
+			create = true,
+			author = "Avancini",
+			title = "CellSpace"
+		}
+		
+		local layerName = "any"
+		local layerDoesNotExists = function()
+			local cs = CellularSpace {
+				project = proj,
+				layer = layerName
+			}
+		end
+		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exists in the Project '"..projFile.."'.")
+		
+		if isFile(projFile) then
+			os.execute("rm -f "..projFile)
+		end					
 	end,
 	add = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

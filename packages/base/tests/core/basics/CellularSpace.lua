@@ -76,6 +76,86 @@ return{
 		unitTest:assertEquals(cs:defor(), 100)
 		unitTest:assert(not cs:deforest())
 		unitTest:assertEquals(cs:defor(), 150)
+		
+		-- ##### PROJECT ########################################
+		local terralib = getPackage("terralib")
+		
+		local projName = "cellspace.tview"
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		local author = "Avancini"
+		local title = "Cellular Space"
+
+		local proj = terralib.Project {
+			file = projName,
+			create = true,
+			author = author,
+			title = title
+		}		
+
+		local layerName1 = "Sampa"
+		proj:addLayer {
+			layer = layerName1,
+			file = filePath("sampa.shp", "terralib")
+		}		
+		
+		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local shp1 = "sampa_cells.shp"
+		local filePath1 = testDir.."/"..shp1	
+		local fn1 = terralib.getFileName(filePath1)
+		fn1 = testDir.."/"..fn1			
+		
+		local exts = {".dbf", ".prj", ".shp", ".shx"}
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end			
+		
+		local clName1 = "Sampa_Cells"
+		proj:addCellularLayer {
+			input = layerName1,
+			layer = clName1,
+			resolution = 1,
+			file = filePath1
+		}
+		
+		local cs = CellularSpace{
+			project = projName,
+			layer = clName1
+		}
+		
+		unitTest:assertEquals(projName, cs.project.file)
+		unitTest:assertEquals(clName1, cs.layer)
+		
+		local csProj = cs.project
+		local csProjInfo = csProj:info()
+		
+		unitTest:assertEquals(csProjInfo.title, title)
+		unitTest:assertEquals(csProjInfo.author, author)
+		
+		local csLayerInfo = csProj:infoLayer(clName1)
+		unitTest:assertEquals(csLayerInfo.source, "shp")
+		unitTest:assertEquals(csLayerInfo.file, filePath1)
+	
+		-- ###################### END #############################
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end			
+		
+		local tlib = terralib.TerraLib{}
+		tlib:finalize()
 	end, 
 	__len = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -90,12 +170,12 @@ return{
 			vvv = 333}
 		unitTest:assertEquals(tostring(cs1), [[cells   table of size 200
 cObj_   userdata
-dbType  string [virtual]
 load    function
 maxCol  number [9]
 maxRow  number [19]
 minCol  number [0]
 minRow  number [0]
+source  string [virtual]
 vvv     number [333]
 xdim    number [10]
 xyz     function

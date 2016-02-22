@@ -142,6 +142,111 @@ return{
 
 		world:notify()
 		world:notify()
+		
+		-- ##### PROJECT ########################################
+		local terralib = getPackage("terralib")
+		
+		local projName = "cellspace_basic_observer.tview"
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		local author = "Avancini"
+		local title = "Cellular Space"
+
+		local proj = terralib.Project {
+			file = projName,
+			create = true,
+			author = author,
+			title = title
+		}		
+
+		local layerName1 = "Sampa"
+		proj:addLayer {
+			layer = layerName1,
+			file = filePath("sampa.shp", "terralib")
+		}		
+		
+		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
+		local shp1 = "sampa_cells.shp"
+		local filePath1 = testDir.."/"..shp1	
+		local fn1 = terralib.getFileName(filePath1)
+		fn1 = testDir.."/"..fn1			
+		
+		local exts = {".dbf", ".prj", ".shp", ".shx"}
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end			
+		
+		local clName1 = "Sampa_Cells"
+		proj:addCellularLayer {
+			input = layerName1,
+			layer = clName1,
+			resolution = 1,
+			file = filePath1
+		}
+		
+		local cs = CellularSpace{
+			project = projName,
+			layer = clName1
+		}
+		
+		local r = Random()
+		
+		forEachCell(cs, function(cell)
+			cell.value = r:number()
+		end)
+
+		local map = Map{
+			target = cs,
+			select = "value",
+			min = 0,
+			max = 1,
+			slices = 10,
+			color = "Red"
+		}
+
+		cs:notify()
+		unitTest:assertSnapshot(map, "cellspace_map_project.bmp")		
+		
+		local t = Timer{
+			Event{action = function(e)
+				forEachCell(cs, function(cell)
+					cell.count = cell.value + 1
+				end)
+				cs:notify(e)
+			end}
+		}		
+		
+		local ts = TextScreen{target = cs}
+		local vt = VisualTable{target = cs}
+
+		t:execute(30)
+
+		cs:notify()
+    
+		unitTest:assertSnapshot(vt, "cellspace_visualtable_project.bmp", 0.059)
+
+		unitTest:assertSnapshot(ts, "cellspace_textscreen_project.bmp", 0.01)		
+
+		-- ###################### END #############################
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		for i = 1, #exts do
+			local f = fn1..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end			
+		
+		local tlib = terralib.TerraLib{}
+		tlib:finalize()		
 	end,
 	notify = function(unitTest)
 		local r = Random()

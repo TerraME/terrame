@@ -283,26 +283,26 @@ local function saveProject(project, layers)
 	writer:writeToFile()
 end
 
-local function loadProject(project, filePath)		
-	if not isFile(filePath) then
-		customError("Could not read project file: "..filePath..".")
+local function loadProject(project, file)		
+	if not isFile(file) then
+		customError("Could not read project file: "..file..".")
 	end
 	
 	local xmlReader = binding.te.xml.ReaderFactory.make()
 
 	xmlReader:setValidationScheme(false)
-	xmlReader:read(filePath)
+	xmlReader:read(file)
 	
 	if not xmlReader:next() then
-		customError("Could not read project information in the file: "..filePath..".")
+		customError("Could not read project information in the file: "..file..".")
 	end
 	
 	if xmlReader:getNodeType() ~= binding.START_ELEMENT then
-		customError("Error reading the document "..filePath..", the start element wasn't found.")
+		customError("Error reading the document "..file..", the start element wasn't found.")
 	end
 	
 	if xmlReader:getElementLocalName() ~= "Project" then
-		customError("The first tag in the document "..filePath.." is not 'Project'.")
+		customError("The first tag in the document "..file.." is not 'Project'.")
 	end	
 	
 	xmlReader:next()
@@ -413,7 +413,7 @@ local function loadProject(project, filePath)
 	-- TODO: THE ONLY WAY SO FAR TO RELEASE THE FILE AFTER READ
 	-- WAS READ ANOTHER FILE (REVIEW)
 	-- #880
-	xmlReader:read(file("YgDbLUDrqQbvu7QxTYxX.xml", "terralib"))
+	xmlReader:read(filePath("YgDbLUDrqQbvu7QxTYxX.xml", "terralib"))
 end
 
 local function addFileLayer(project, name, filePath, type)
@@ -665,6 +665,30 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 	return propCreatedName
 end
 
+local function isNumber(type)
+	return	(type == binding.INT16_TYPE) or 
+			(type == binding.INT32_TYPE) or 
+			(type == binding.INT64_TYPE) or 
+			(type == binding.UINT16_TYPE) or 
+			(type == binding.UINT32_TYPE) or 
+			(type == binding.UINT64_TYPE) or 
+			(type == binding.FLOAT_TYPE) or 
+			(type == binding.DOUBLE_TYPE) or 
+			(type == binding.NUMERIC_TYPE)
+end
+
+local function getPropertiesTypes(dse)
+	dse:moveFirst()
+	local types = {}
+	local numProps = dse:getNumProperties()
+	
+	for i = 0, numProps - 1 do
+		types[dse:getPropertyName(i)] = dse:getPropertyDataType(i)
+	end
+	
+	return types
+end	
+
 local function finalize()
 	if initialized then		
 		binding.te.plugin.PluginManager.getInstance():clear()
@@ -896,6 +920,186 @@ TerraLib_ = {
 		saveProject(project, project.layers)
 		releaseProject(project)
 		collectgarbage("collect")
+	end,
+	
+	getDataSet = function(self, project, layerName)
+		loadProject(project, project.file)
+		
+		local layer = project.layers[layerName]
+		
+		if layer:getType() == "DATASETLAYER" then
+			layer = binding.te.map.DataSetLayer.toDataSetLayer(layer)	
+		else
+			customError("Unknown Layer '"..layerName.."'.")
+		end
+		
+		local dseName = layer:getDataSetName()
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+		local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+		local dse = ds:getDataSet(dseName)
+		local count = 0
+		local numProps = dse:getNumProperties()
+		local set = {}
+		
+		while dse:moveNext() do
+			local line = {}
+			for i = 0, numProps - 1 do
+				local type = dse:getPropertyDataType(i)
+				
+				if isNumber(type) then
+					line[dse:getPropertyName(i)] = tonumber(dse:getAsString(i))
+				elseif type == binding.BOOLEAN_TYPE then
+					line[dse:getPropertyName(i)] = dse:getBool(i)
+				elseif type == binding.GEOMETRY_TYPE then
+					line[dse:getPropertyName(i)] = dse:getGeom(i)
+				else
+					line[dse:getPropertyName(i)] = dse:getAsString(i)
+				end
+			end
+			set[count] = line
+			count = count + 1
+		end
+		
+		releaseProject(project)
+		ds:close()
+		ds = nil
+		dse = nil
+		collectgarbage("collect")
+		
+		return set
+	end,
+	
+	saveDataSet = function(self, project, from, to, toName, attrs)
+		loadProject(project, project.file)
+
+		local fromLayer = project.layers[from]
+		
+		if fromLayer:getType() == "DATASETLAYER" then
+			fromLayer = binding.te.map.DataSetLayer.toDataSetLayer(fromLayer)	
+		else
+			customError("Unknown Layer '"..from.."'.")
+		end
+
+		local dseName = fromLayer:getDataSetName()
+		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
+		local ds = makeAndOpenDataSource(dsInfo:getConnInfo(), dsInfo:getType())
+		local dse = ds:getDataSet(dseName)
+		local dst = ds:getDataSetType(dseName)
+		local pk = dst:getPrimaryKey()
+		local pkName = pk:getPropertyName(0)
+		local numProps = dse:getNumProperties()		
+		local newDst = binding.te.da.DataSetType(toName)
+		local geom = binding.GetFirstGeomProperty(dst)
+		local srid = geom:getSRID()	
+		
+		local attrsToIn = {}
+		if attrs then
+			for i = 1, #attrs do
+				attrsToIn[attrs[i]] = true
+			end
+		end
+		
+		local types = getPropertiesTypes(dse)
+
+		-- Config the properties of the new DataSet 
+		for k, v in pairs(to[1]) do		
+			local isPk = (k == pkName)
+			
+			if types[k] ~= nil then
+				if types[k] == binding.GEOMETRY_TYPE then
+					newDst:add(k, srid, geom:getGeometryType(), true)
+				else
+					newDst:add(k, isPk, types[k], true)
+				end
+			elseif attrsToIn[k] then
+				if type(v) == "number" then
+					newDst:add(k, isPk, binding.DOUBLE_TYPE, true)
+				elseif type(v) == "string" then
+					newDst:add(k, binding.STRING_TYPE)
+				elseif type(v) == "boolean" then
+					newDst:add(k, binding.BOOLEAN_TYPE)
+				end
+			end
+		end
+
+		-- Create the new DataSet
+		local newDse = binding.te.mem.DataSet(newDst)
+		numProps = newDse:getNumProperties()
+		
+		for i = 1, #to do
+			local idpos = 0
+			local item = binding.te.mem.DataSetItem.create(newDse)
+
+			for j = 0, numProps - 1 do
+				local propName = newDse:getPropertyName(j)
+
+				for k, v in pairs(to[i]) do				
+					if propName == k then 
+						local type = newDse:getPropertyDataType(j)
+						
+						if type == binding.INT16_TYPE then
+							item:setInt16(j, v)
+						elseif type == binding.INT32_TYPE then
+							item:setInt32(j, v)
+						elseif type == binding.INT64_TYPE then
+							item:setInt64(j, v)
+						elseif type == binding.FLOAT_TYPE then
+							item:setFloat(j, v)
+						elseif type == binding.DOUBLE_TYPE then
+							item:setDouble(j, v)
+						elseif type == binding.NUMERIC_TYPE then
+							item:setNumeric(j, tostring(v))
+						elseif type == binding.BOOLEAN_TYPE then
+							item:setBool(j, v)
+						elseif type == binding.GEOMETRY_TYPE then
+							item:setGeom(j, v)
+						else
+							item:setString(j, v)
+						end
+
+						break
+					end
+				end
+			end
+			newDse:add(item)
+		end
+		
+		local newDstName = newDst:getName()
+
+		-- Remove the DataSet if it already exists
+		local outConnInfo = dsInfo:getConnInfo()
+		local outType = dsInfo:getType()
+		local outDs = nil
+		if outType == "POSTGIS" then
+			outConnInfo.PG_NEWDB_NAME = newDstName
+			dropDataSet(outConnInfo, "POSTGIS")
+			outDs = makeAndOpenDataSource(outConnInfo, outType)
+		end
+		
+		-- Save the new DataSet into the from DataSource
+		outDs:createDataSet(newDst)
+		newDse:moveBeforeFirst()
+		outDs:add(newDstName, newDse)
+		
+		-- Create the new Layer
+		local outLayer = createLayer(toName, outConnInfo, outType)
+		project.layers[toName] = outLayer
+		
+		saveProject(project, project.layers)
+		releaseProject(project)
+		
+		ds:close()
+		dst:clear()
+		ds = nil
+		dse = nil	
+		dst = nil
+		newDst:clear()
+		newDse:clear()		
+		newDst = nil
+		newDse = nil
+		outDs:close()
+		outDs = nil		
+		collectgarbage("collect")		
 	end
 }
 

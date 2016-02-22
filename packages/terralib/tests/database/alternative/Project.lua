@@ -42,7 +42,7 @@ return {
 		local layerName1 = "Sampa"
 		proj1:addLayer {
 			layer = layerName1,
-			file = file("sampa.shp", "terralib")
+			file = filePath("sampa.shp", "terralib")
 		}
 		
 		local host = "localhost"
@@ -194,7 +194,7 @@ return {
 				password = password,
 				database = database,
 				table = tableName,
-				file = file("sampa.shp", "terralib")
+				file = filePath("sampa.shp", "terralib")
 			}	
 		end
 		unitTest:assertError(fileUnnecessary, unnecessaryArgumentMsg("file"))		
@@ -428,7 +428,7 @@ return {
 		local layerName1 = "Setores_Censitarios_2000"
 		proj:addLayer {
 			layer = layerName1,
-			file = file("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}	
 		
 		local clName1 = "Setores_Cells"
@@ -691,7 +691,7 @@ return {
 				password = password,
 				database = database,
 				table = tName1,
-				file = file("sampa.shp", "terralib")
+				file = filePath("sampa.shp", "terralib")
 			}
 		end
 		unitTest:assertError(unnecessaryArgument, unnecessaryArgumentMsg("file"))

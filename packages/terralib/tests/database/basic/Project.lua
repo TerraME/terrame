@@ -43,7 +43,7 @@ return {
 		local layerName1 = "Sampa"
 		proj1:addLayer {
 			layer = layerName1,
-			file = file("sampa.shp", "terralib")
+			file = filePath("sampa.shp", "terralib")
 		}
 		local layer1 = proj1:infoLayer(layerName1)
 		unitTest:assertEquals(layer1.name, layerName1)	
@@ -150,7 +150,7 @@ return {
 		local layerName1 = "Setores_Censitarios_2000"
 		proj:addLayer {
 			layer = layerName1,
-			file = file("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}	
 		
 		local clName1 = "Setores_Cells"

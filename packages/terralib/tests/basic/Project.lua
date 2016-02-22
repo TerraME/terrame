@@ -106,7 +106,7 @@ return {
 		local layerName1 = "Setores_Censitarios_2000"
 		proj1:addLayer {
 			layer = layerName1,
-			file = file("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
 		local layer1 = proj1:infoLayer(layerName1)
 		unitTest:assertEquals(layer1.name, layerName1)
@@ -123,7 +123,7 @@ return {
 		local layerName2 = "Localidades"
 		proj2:addLayer {
 			layer = layerName2,
-			file = file("Localidades_pt.shp", "terralib")
+			file = filePath("Localidades_pt.shp", "terralib")
 		}
 		local layer1 = proj2:infoLayer(layerName1)
 		local layer2 = proj2:infoLayer(layerName2)
@@ -135,7 +135,7 @@ return {
 		local layerName21 = "Another_Localidades"
 		proj2:addLayer {
 			layer = layerName21,
-			file = file("Localidades_pt.shp", "terralib")
+			file = filePath("Localidades_pt.shp", "terralib")
 		}
 		local layer21 = proj2:infoLayer(layerName21)
 		unitTest:assert(layer21.name ~= layer2.name)
@@ -145,7 +145,7 @@ return {
 		local layerName3 = "Altimetria"
 		proj2:addLayer {
 			layer = layerName3,
-			file = file("altimetria.tif", "terralib")		
+			file = filePath("altimetria.tif", "terralib")		
 		}		
 		local layer3 = proj2:infoLayer(layerName3)
 		
@@ -155,7 +155,7 @@ return {
 		local layerName4 = "Another_Altimetria"
 		proj2:addLayer {
 			layer = layerName4,
-			file = file("altimetria.tif", "terralib")		
+			file = filePath("altimetria.tif", "terralib")		
 		}		
 		local layer4 = proj2:infoLayer(layerName4)
 		unitTest:assert(layer4.name ~= layer3.name)
@@ -187,19 +187,19 @@ return {
 		local layerName1 = "Setores_Censitarios_2000"
 		proj:addLayer {
 			layer = layerName1,
-			file = file("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
 		
 		local layerName2 = "Localidades"
 		proj:addLayer {
 			layer = layerName2,
-			file = file("Localidades_pt.shp", "terralib")	
+			file = filePath("Localidades_pt.shp", "terralib")	
 		}
 
 		local layerName3 = "Altimetria"
 		proj:addLayer {
 			layer = layerName3,
-			file = file("altimetria.tif", "terralib")		
+			file = filePath("altimetria.tif", "terralib")		
 		}		
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())

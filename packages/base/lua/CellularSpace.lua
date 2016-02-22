@@ -24,6 +24,8 @@
 --          Rodrigo Reis Pereira
 --#########################################################################################
 
+local terralib = getPackage("terralib")
+
 TeCoord.type_ = "Coord" -- We now use Coord only internally, but it is necessary to set its type.
 
 local function getCoordCoupling(cs, data)
@@ -192,72 +194,11 @@ local function checkMap(self)
 		return filename
 	end
 
-	defaultTableValue(self, "attrname", getFileName(self.database))
-end
-
-local function checkMdb(self)
-	mandatoryTableArgument(self, "theme", "string") -- SKIP
-	defaultTableValue(self, "layer", "") -- SKIP
-	defaultTableValue(self, "where", "") -- SKIP
-
-	self.cObj_:setTheme(self.theme) -- SKIP
-	self.cObj_:setLayer(self.layer) -- SKIP
-	self.cObj_:setWhereClause(self.where) -- SKIP
-
-	if type(self.select) == "string" then -- SKIP
-		self.select = {self.select}
-	end
-
-	defaultTableValue(self, "select", {})
-
-	for i in ipairs(self.select) do -- SKIP
-		self.cObj_:addAttrName(self.select[i]) -- SKIP
-	end
-end
-
-local function checkMySQL(self)
-	-- until 1024 also 65535
-	defaultTableValue(self, "port", 3306)
-	defaultTableValue(self, "host", "localhost")
-	defaultTableValue(self, "user", "root")
-	mandatoryTableArgument(self, "password", "string")
-	mandatoryTableArgument(self, "database", "string")
-
-	verify(self.database ~= "", "Invalid database name.")
-
-	integerTableArgument(self, "port")
-	positiveTableArgument(self, "port")
-
-	if self.port < 1024 then
-		customError("Argument 'port' should have values above 1023 to avoid using system reserved values.")
-	end
-
-	self.cObj_:setUser(self.user)
-	self.cObj_:setHostName(self.host)
-	self.cObj_:setPassword(self.password)
-	self.cObj_:setPort(self.port)
-
-	mandatoryTableArgument(self, "theme", "string")
-	defaultTableValue(self, "layer", "")
-	defaultTableValue(self, "where", "")
-
-	self.cObj_:setTheme(self.theme) 
-	self.cObj_:setLayer(self.layer)
-	self.cObj_:setWhereClause(self.where)
-
-	if type(self.select) == "string" then
-		self.select = {self.select}
-	end
-
-	defaultTableValue(self, "select", {})
-
-	for i in ipairs(self.select) do
-		self.cObj_:addAttrName(self.select[i])
-	end
+	defaultTableValue(self, "attrname", getFileName(self.file))
 end
 
 local function checkShape(self)
-	local dbf = self.database:sub(1, self.database:len() - 3).."dbf"
+	local dbf = self.file:sub(1, self.file:len() - 3).."dbf"
 	local f = io.open(dbf)
 	if not f then
 		customError("File '"..dbf.."' not found.")
@@ -275,6 +216,30 @@ local function checkVirtual(self)
 	positiveTableArgument(self, "ydim")
 end
 
+local function checkProject(self)
+	verifyUnnecessaryArguments(self, {"source", "layer", "project", "cObj_"})
+	mandatoryTableArgument(self, "layer", "string")		
+	
+	if not (type(self.project) == "Project") then	
+		if type(self.project) == "string" then
+			if isFile(self.project) then
+				local file = self.project
+				self.project = terralib.Project{
+					file = file
+				}
+			else
+				customError("The Project '"..self.project.."'not found.")
+			end
+		else
+			customError("The 'project' parameter must be a Project or a Project file path.")
+		end
+	end
+		
+	if not self.project.layers[self.layer] then
+		customError("Layer '"..self.layer.."' does not exists in the Project '"..self.project.file.."'.")
+	end	
+end
+
 local function loadCsv(self)
 	if self.minRow == nil then self.minRow = 100000 end
 	if self.minCol == nil then self.minCol = 100000 end
@@ -283,7 +248,7 @@ local function loadCsv(self)
 
 	self.cells = {}
 	self.cObj_:clear()
-	local data = CSVread(self.database, self.sep)
+	local data = CSVread(self.file, self.sep)
 	local cellIdCounter = 0
 	for i = 1, #data do
 		cellIdCounter = cellIdCounter + 1
@@ -293,28 +258,6 @@ local function loadCsv(self)
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 	end
 	return 
-end
-
-local function loadDb(self)
-	self.cells, self.minCol, self.minRow, self.maxCol, self.maxRow = self.cObj_:load()
-
-	if self.cells == nil then
-		customError("It was not possible to load the CellularSpace.") -- SKIP
-	end
-
-	table.sort(self.cells, function(a, b) 
-		if a.x < b.x then return true; end
-		if a.x > b.x then return false; end
-		return a.y < b.y
-	end)
-
-	self.xdim = self.maxCol
-	self.ydim = self.maxRow
-	self.cObj_:clear()
-	for _, tab in pairs(self.cells) do
-		tab.parent = self
-		self.cObj_:addCell(tab.x, tab.y, tab.cObj_)
-	end
 end
 
 local function loadMap(self)
@@ -328,7 +271,7 @@ local function loadMap(self)
 
 	self.cells = {}
 	self.cObj_:clear()
-	for line in io.lines(self.database) do
+	for line in io.lines(self.file) do
 		j = 0
 
 		local res = CSVparseLine(line, self.sep)
@@ -385,6 +328,49 @@ local function loadVirtual(self)
 	end
 end
 
+local function loadLayer(self)
+	self.cells = {}
+	self.cObj_:clear()
+	
+	local tlib = terralib.TerraLib{}
+	local dset = tlib:getDataSet(self.project, self.layer)
+	
+	self.maxRow = 0
+	self.minRow = 0
+	self.maxCol = 0
+	self.minCol = 0
+	
+	for i = 0, #dset do
+		local row = tonumber(dset[i].row)
+		local col = tonumber(dset[i].col)
+			
+		if self.maxRow < row then
+			self.maxRow = row
+		end
+			
+		if row < self.minRow then
+			self.minRow = row
+		end
+			
+		if self.maxCol < col then
+			self.maxCol = col
+		end
+			
+		if col < self.minCol then
+			self.minCol = col
+		end			
+			
+		local cell = Cell{id = tostring(i), x = col, y = row}
+		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
+		
+		for k, v in pairs(dset[i]) do
+			cell[k] = v
+		end
+		
+		table.insert(self.cells, cell)
+	end
+end
+
 local CellularSpaceDrivers = {}
 
 local function registerCellularSpaceDriver(data)
@@ -397,25 +383,19 @@ local function registerCellularSpaceDriver(data)
 
 	mandatoryTableArgument(data, "load", "function")
 	mandatoryTableArgument(data, "check", "function")
-	mandatoryTableArgument(data, "dbType", "string")
+	mandatoryTableArgument(data, "source", "string")
 
-	CellularSpaceDrivers[data.dbType] =  data
+	CellularSpaceDrivers[data.source] =  data
 end
 
 registerCellularSpaceDriver{
-	dbType = "mdb",
-	load = loadDb,
-	check = checkMdb
-}
-
-registerCellularSpaceDriver{
-	dbType = "shp",
+	source = "shp",
 	load = loadShape,
 	check = checkShape
 }
 
 registerCellularSpaceDriver{
-	dbType = "virtual",
+	source = "virtual",
 	extension = false,
 	compulsory = "xdim",
 	optional = "ydim",
@@ -424,26 +404,25 @@ registerCellularSpaceDriver{
 }
 
 registerCellularSpaceDriver{
-	dbType = "csv",
+	source = "csv",
 	optional = "sep",
 	load = loadCsv,
 	check = checkCsv
 }
 
 registerCellularSpaceDriver{
-	dbType = "map",
+	source = "map",
 	optional = {"sep", "attrname"},
 	load = loadMap,
 	check = checkMap
 }
 
 registerCellularSpaceDriver{
-	dbType = "mysql",
+	source = "proj",
 	extension = false,
-	compulsory = "password",
-	optional = {"host", "user", "port"},
-	load = loadDb,
-	check = checkMySQL
+	load = loadLayer,
+	compulsory = {"project", "layer"},
+	check = checkProject
 }
 
 CellularSpace_ = {
@@ -924,28 +903,28 @@ CellularSpace_ = {
 	--     theme = "cells900x900"
 	-- }
 	--
-	-- cs:save(2, "themeName", "height_")
-	save = function(self, time, outputTableName, attrNames)
-		if type(time) == "Event" then
-			time = time:getTime()
-		else
-			mandatoryArgument(1, "number", time)
-			positiveArgument(1, time, true)
-			integerArgument(1, time)
-		end
-
-		mandatoryArgument(2, "string", outputTableName)
-
-		if type(attrNames) == "string" then attrNames = {attrNames} end
-
-		mandatoryArgument(3, "table", attrNames)
-
-		for _, attr in pairs(attrNames) do
-			if not self.cells[1][attr] then
-				customError("Attribute '"..attr.."' does not exist in the CellularSpace.")
+	-- cs:save("themeName", "height_")
+	save = function(self, newLayerName, attrNames)
+		mandatoryArgument(1, "string", newLayerName)
+		
+		if (attrNames ~= nil) and (attrNames ~= "") then
+			
+			
+			if type(attrNames) == "string" then 
+				attrNames = {attrNames} 
+			elseif type(attrNames) ~= "table" then
+				customError("Incompatible types. Argument '#2' expected table or string.")
+			end
+			
+			for _, attr in pairs(attrNames) do
+				if not self.cells[1][attr] then
+					customError("Attribute '"..attr.."' does not exist in the CellularSpace.")
+				end
 			end
 		end
-		local erros = self.cObj_:save(time, outputTableName, attrNames, self.cells)
+
+		local tlib = terralib.TerraLib{}
+		tlib:saveDataSet(self.project, self.layer, self.cells, newLayerName, attrNames)
 	end,
 	--- Return the number of Cells in the CellularSpace.
 	-- @deprecated CellularSpace:#
@@ -1106,7 +1085,7 @@ metaTableCellularSpace_ = {
 -- @arg data.database Name of the database or the location of a
 -- file. See Package:filePath() for loading CellularSpaces from packages.
 -- @arg data.theme A string with the name of the theme to be loaded.
--- @arg data.dbType A string with the name of the data source. It tries to infer the data source
+-- @arg data.source A string with the name of the data source. It tries to infer the data source
 -- according to the extension of the argument database. When it does not have an extension or
 -- when the extension is not recognized it will read data from a MySQL database.
 -- TerraME always converts this string to lower case.
@@ -1151,8 +1130,8 @@ metaTableCellularSpace_ = {
 -- load from a database.
 -- @arg data.ydim Number of lines, in the case of creating a CellularSpace without needing to
 -- load from a database. The default value is equal to xdim.
--- @tabular dbType
--- dbType & Description & Compulsory arguments & Optional arguments\
+-- @tabular source
+-- source & Description & Compulsory arguments & Optional arguments\
 -- "mdb" & Load from a Microsoft Access database (.mdb)  file. & database, theme & layer,
 -- select, where, ... \
 -- "map" & Load from a text file where Cells are stored as numbers with its attribute value.
@@ -1194,9 +1173,11 @@ metaTableCellularSpace_ = {
 -- }
 function CellularSpace(data)
 	verifyNamedTable(data)
-
-	if data.dbType == nil then
-		if data.database == nil then -- virtual cellular space
+	
+	if data.source == nil then
+		if data.project then
+			data.source = "proj"
+		else
 			local candidates = {}
 			forEachElement(CellularSpaceDrivers, function(idx, value)
 				local all = true
@@ -1206,7 +1187,7 @@ function CellularSpace(data)
 					end
 				end)
 
-				if value.extension and (not data.database or getExtension(data.database) ~= idx) then
+				if value.extension then
 					all = false
 				end
 				if all then
@@ -1217,64 +1198,40 @@ function CellularSpace(data)
 			if #candidates == 0 then
 				customError("Not enough information to build the CellularSpace.")
 			elseif #candidates == 1 then
-				data.dbType = candidates[1]
+				data.source = candidates[1]
 			else
-				-- TODO: unskip the lines below after updating to TerraLib 5
-				str = "" -- SKIP
+			-- TODO: unskip the lines below after updating to TerraLib 5
+			-- TODO: REVIEW THIS HUNK BECAUSE IT NEVER BEEN EXECTUTED, 'str' was global 
+				local str = "" -- SKIP
 				forEachElement(candidates, function(idx, value)
 					str = str..value..", " -- SKIP
 				end)
 				customError("More than one candidate: "..str) -- SKIP
 			end
-		else
-			local ext = getExtension(data.database)
-
-			data.dbType = "mysql"
-			if CellularSpaceDrivers[ext] ~= nil then
-				data.dbType = ext
-			end
 		end
 	else
-		mandatoryTableArgument(data, "dbType", "string")
+		mandatoryTableArgument(data, "source", "string")
 		
-		if CellularSpaceDrivers[data.dbType] == nil then
+		if CellularSpaceDrivers[data.source] == nil then
 			local word = "It must be a string from the set ["
 			forEachOrderedElement(CellularSpaceDrivers, function(a)
 				word = word.."'"..a.."', "
 			end)
 			word = string.sub(word, 0, string.len(word) - 2).."]."
-			customError("'"..data.dbType.."' is an invalid value for argument 'dbType'. "..word)
-		elseif CellularSpaceDrivers[data.dbType].extension then
-			mandatoryTableArgument(data, "database", "string")
-			if getExtension(data.database) ~= data.dbType then
-				customError("dbType and file extension should be the same.")
-			end
-
-			local f = io.open(data.database, "r") 
-			if not f then
-				resourceNotFoundError("database", data.database)
-			else
-				io.close(f)
-			end
+			customError("'"..data.source.."' is an invalid value for argument 'source'. "..word)
 		end
 	end
 
 	local cObj = TeCellularSpace()
 	data.cObj_= cObj
 
-	cObj:setDBType(data.dbType)
+	cObj:setDBType(data.source)
 
-	if data.database then 
-		mandatoryTableArgument(data, "database", "string")
-		verify(data.database ~= "", "Empty database name.")
-		cObj:setDBName(data.database)
+	if CellularSpaceDrivers[data.source].check then
+		CellularSpaceDrivers[data.source].check(data)
 	end
 
-	if CellularSpaceDrivers[data.dbType].check then
-		CellularSpaceDrivers[data.dbType].check(data)
-	end
-
-	data.load = CellularSpaceDrivers[data.dbType].load
+	data.load = CellularSpaceDrivers[data.source].load
 
 	setmetatable(data, metaTableCellularSpace_)
 	cObj:setReference(data)
@@ -1354,10 +1311,6 @@ function CellularSpace(data)
 	end
 
 	data:load()
-	-- needed for Environment's loadNeighborhood
-	if data.database then
-		data.layer = data.cObj_:getLayerName()
-	end
 
 	if data.instance ~= nil then
 		mandatoryTableArgument(data, "instance", "Cell")
@@ -1411,7 +1364,7 @@ function CellularSpace(data)
 				data.instance[idx] = value
 			end
 		end)
-
+		
 		local metaTableInstance = {__index = data.instance, __tostring = _Gtme.tostring}
 
 		data.instance.type_ = "Cell"

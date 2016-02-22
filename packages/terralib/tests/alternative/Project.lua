@@ -42,7 +42,7 @@ return{
 		unitTest:assertError(invalidFileExtensionToCreate, "Please, the file extension must be '.tview'.")
 		
 		local invalidFileExtensionToLoad = function()
-			local proj = Project{file = file("Altimetria.xml", "terralib")}
+			local proj = Project{file = filePath("Altimetria.xml", "terralib")}
 		end
 		unitTest:assertError(invalidFileExtensionToLoad, "Please, the file extension must be '.tview'.")		
 		
@@ -162,13 +162,13 @@ return{
 		local layerName = "Setores_2000"
 		proj:addLayer {
 			layer = layerName,
-			file = file("Setores_Censitarios_2000_pol.shp", "terralib")			
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")			
 		}
 		
 		local layerAlreadyExists = function()
 			proj:addLayer {
 				layer = layerName,
-				file = file("Setores_Censitarios_2000_pol.shp", "terralib")	
+				file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")	
 			}			
 		end
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName.."' already exists in the Project.")
@@ -176,7 +176,7 @@ return{
 		local sourceInvalid = function()
 			proj:addLayer {
 				layer = layerName,
-				file = file("amazonia.tview", "terralib")	
+				file = filePath("amazonia.tview", "terralib")	
 			}			
 		end
 		unitTest:assertError(sourceInvalid, "The source'".."tview".."' is invalid.")
@@ -190,7 +190,7 @@ return{
 		end
 		unitTest:assertError(fileLayerNonExists, mandatoryArgumentMsg("source"))			
 	
-		local filePath = file("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		local source = "tif"
 		local inconsistentExtension = function()
 			proj:addLayer {
@@ -305,7 +305,7 @@ return{
 		local layerName1 = "Setores_Censitarios_2000"
 		proj:addLayer {
 			layer = layerName1,
-			file = file("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		}
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
@@ -356,12 +356,12 @@ return{
 				input = layerName1,
 				layer = "cells",
 				resolution = 10000,
-				file = file("amazonia.tview", "terralib")	
+				file = filePath("amazonia.tview", "terralib")	
 			}			
 		end
 		unitTest:assertError(sourceInvalid, "The source'".."tview".."' is invalid.")
 
-		local filePath = file("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 		local source = "tif"
 		local inconsistentExtension = function()
 			proj:addCellularLayer{
