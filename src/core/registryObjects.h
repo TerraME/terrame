@@ -155,7 +155,6 @@ Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
 	method(luaCellularSpace, setTheme),
 	method(luaCellularSpace, clearAttrName),
 	method(luaCellularSpace, addAttrName),
-	method(luaCellularSpace, load),
         method(luaCellularSpace, loadShape),
 	method(luaCellularSpace, saveShape),
 	method(luaCellularSpace, clear),
@@ -163,10 +162,6 @@ Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
 	method(luaCellularSpace, addCell),
 	method(luaCellularSpace, setWhereClause),
 	method(luaCellularSpace, loadNeighborhood),
-
-#ifndef TME_NO_TERRALIB
-	method(luaCellularSpace, save),
-#endif #ifndef TME_NO_TERRALIB
 
 	method(luaCellularSpace, getReference),
 	method(luaCellularSpace, setReference),

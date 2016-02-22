@@ -41,8 +41,6 @@ extern "C"
 #include "luaCell.h"
 #include "reference.h"
 
-// class CellMapper; // issue #319
-
 /**
 * \brief  
 *  Implementation for a luaCellularSpace object. It is integrated with TerraLib geographical databases.
@@ -91,17 +89,11 @@ public:
 
     /// Sets the SQL WHERE CLAUSE to the string received as parameter
     int setWhereClause(lua_State *L );
-
-    /// Load the luaCellularSpace object from the TerraLib geographic database
-    int load(lua_State *L);
     
     /// Load the luaCellularSpace object from the Shapefile
     int loadShape(lua_State *L);
 
     int saveShape(lua_State *L);
-
-    /// Save the luaCellularSpace object to the TerraLib geographic database
-    int save(lua_State *L);
 
     /// Clear all luaCellularSpace object content (cells)
     int clear(lua_State *L);
@@ -237,7 +229,6 @@ private:
     QString getChanges(QDataStream& in, int obsId, QStringList& attribs);
 
 //    void loadLegendsFromDatabase(TeDatabase *db, TeTheme *inputTheme, QString& luaLegend);
-    // bool sendCells(vector<CellMapper> cells); // issue #319
 };
 
 /// Find a cell given a luaCellularSpace object and a luaCellIndex object
