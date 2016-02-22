@@ -82,5 +82,8 @@ return {
 	end,
 	saveDataSet = function(unitTest)
 		unitTest:assert(true)
-	end
+	end,
+	getShpByFilePath = function(unitTest)
+		unitTest:assert(true)
+	end	
 }

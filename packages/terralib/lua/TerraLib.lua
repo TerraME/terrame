@@ -689,6 +689,33 @@ local function getPropertiesTypes(dse)
 	return types
 end	
 
+local function createDataSetAdapted(dSet)
+	local count = 0
+	local numProps = dSet:getNumProperties()
+	local set = {}
+		
+	while dSet:moveNext() do
+		local line = {}
+		for i = 0, numProps - 1 do
+			local type = dSet:getPropertyDataType(i)
+			
+			if isNumber(type) then
+				line[dSet:getPropertyName(i)] = tonumber(dSet:getAsString(i))
+			elseif type == binding.BOOLEAN_TYPE then
+				line[dSet:getPropertyName(i)] = dSet:getBool(i)
+			elseif type == binding.GEOMETRY_TYPE then
+				line[dSet:getPropertyName(i)] = dSet:getGeom(i)
+			else
+				line[dSet:getPropertyName(i)] = dSet:getAsString(i)
+			end
+		end
+		set[count] = line
+		count = count + 1
+	end	
+	
+	return set
+end
+
 local function finalize()
 	if initialized then		
 		binding.te.plugin.PluginManager.getInstance():clear()
@@ -939,26 +966,7 @@ TerraLib_ = {
 		local dse = ds:getDataSet(dseName)
 		local count = 0
 		local numProps = dse:getNumProperties()
-		local set = {}
-		
-		while dse:moveNext() do
-			local line = {}
-			for i = 0, numProps - 1 do
-				local type = dse:getPropertyDataType(i)
-				
-				if isNumber(type) then
-					line[dse:getPropertyName(i)] = tonumber(dse:getAsString(i))
-				elseif type == binding.BOOLEAN_TYPE then
-					line[dse:getPropertyName(i)] = dse:getBool(i)
-				elseif type == binding.GEOMETRY_TYPE then
-					line[dse:getPropertyName(i)] = dse:getGeom(i)
-				else
-					line[dse:getPropertyName(i)] = dse:getAsString(i)
-				end
-			end
-			set[count] = line
-			count = count + 1
-		end
+		local set = createDataSetAdapted(dse)
 		
 		releaseProject(project)
 		ds:close()
@@ -1100,6 +1108,23 @@ TerraLib_ = {
 		outDs:close()
 		outDs = nil		
 		collectgarbage("collect")		
+	end,
+	
+	getShpByFilePath = function(self, filePath)
+		local connInfo = createFileConnInfo(filePath)
+		local ds = makeAndOpenDataSource(connInfo, "OGR")
+		local dSetName = getFileName(filePath)
+		local dSet = ds:getDataSet(dSetName)
+		
+		local count = 0
+		local numProps = dSet:getNumProperties()
+		local set = createDataSetAdapted(dSet)
+		
+		ds = nil
+		dSet = nil
+		collectgarbage("collect")
+		
+		return set	
 	end
 }
 
