@@ -41,5 +41,5 @@ m = Map{
 	size = 25
 }
 
-t:execute(100)
+t:run(100)
 

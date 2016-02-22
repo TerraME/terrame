@@ -90,7 +90,7 @@ return{
 		local m = Model{
 			finalTime = 10,
 			init = function(model)
-				model.step = function()
+				model.execute = function()
 					count = count + 10
 				end
 
@@ -111,7 +111,7 @@ return{
 			Event{action = traj}
 		}
 
-		t:execute(2)
+		t:run(2)
 		unitTest:assertEquals(count, 1222)
 
 		local sum = 0
@@ -138,7 +138,7 @@ return{
 			Event{action = soc}
 		}
 
-		t:execute(5)
+		t:run(5)
 		unitTest:assertEquals(sum, 5)
 	end,
 	config = function(unitTest)
@@ -171,7 +171,7 @@ return{
 
 		unitTest:assertEquals(timer, event.parent)
 
-		timer:execute(2)
+		timer:run(2)
 
 		unitTest:assertNil(event.parent)
 	end,

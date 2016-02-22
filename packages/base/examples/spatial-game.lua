@@ -92,5 +92,5 @@ t = Timer{
 	end}
 }
 
-t:execute(TURNS)
+t:run(TURNS)
 

@@ -112,7 +112,7 @@ return{
 		}
 
 		error_func = function()
-			t:execute(2)
+			t:run(2)
 		end
 		unitTest:assertError(error_func, "aaa")
 	end,

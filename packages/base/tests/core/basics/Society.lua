@@ -98,7 +98,7 @@ return {
 			Event {action = nonFooSociety},
 		}
 
-		t:execute(50)
+		t:run(50)
 
 		unitTest:assertEquals(4, findCounter)
 
@@ -616,7 +616,7 @@ state_          State
 			Event{period = 4, action = soc}
 		}
 
-		t:execute(8)
+		t:run(8)
 		unitTest:assertEquals(14, received)
 		unitTest:assertEquals(0, sugar)
 

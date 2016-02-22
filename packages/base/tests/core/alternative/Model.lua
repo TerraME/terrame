@@ -413,7 +413,7 @@ return{
 		error_func = function()
 			M:exec()
 		end
-		unitTest:assertError(error_func, "It is not possible to call any function from a Model but execute() or configure().")
+		unitTest:assertError(error_func, "It is not possible to call any function from a Model but run() or configure().")
 
 		error_func = function()
 			local m = M{files = {file1 = filePath("agents.csv", "base")}}

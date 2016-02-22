@@ -42,7 +42,7 @@ return {
 
 		unitTest:assertType(t, "Timer")
 
-		t:execute(100)
+		t:run(100)
 		unitTest:assert(cont1 == 105)
 
 		local countEvent = 0
@@ -52,7 +52,7 @@ return {
 			end}
 		}
 
-		clock1:execute(10)
+		clock1:run(10)
 
 		unitTest:assertEquals(countEvent, 11)
 
@@ -79,7 +79,7 @@ return {
 			Event{action = traj}
 		}
 
-		t:execute(10)
+		t:run(10)
 
 		unitTest:assertEquals(60, count)
 
@@ -97,7 +97,7 @@ return {
 			end}
 		}
 
-		t:execute(15)
+		t:run(15)
 
 		unitTest:assertEquals(counter, 4) 
 		unitTest:assertEquals(t.events[1].time, 19) 
@@ -147,12 +147,12 @@ return {
 		unitTest:assertEquals(soc:dist(), 10)
 		unitTest:assertEquals(#timer, 4)
 
-		timer:execute(13)
+		timer:run(13)
 		unitTest:assertEquals(cs:dist(), 200)
 		unitTest:assertEquals(soc:dist(), 20)
 		unitTest:assertEquals(#timer, 2)
 
-		timer:execute(20)
+		timer:run(20)
 		unitTest:assertEquals(cs:dist(), 300)
 		unitTest:assertEquals(soc:dist(), 20)
 		unitTest:assertEquals(#timer, 1)
@@ -223,11 +223,11 @@ time    number [-inf]
 			return false
 		end})
 
-		timer2:execute(6)
+		timer2:run(6)
 		unitTest:assertEquals(6, timer2:getTime())
 		unitTest:assertEquals(7, cont)
 	end,
-	execute = function(unitTest)
+	run = function(unitTest)
 		local qt1 = 0
 		local qt2 = 0
 		local qt3 = 0
@@ -244,7 +244,7 @@ time    number [-inf]
 			end}
 		}
 
-		timer:execute(4)
+		timer:run(4)
 
 		unitTest:assertEquals(4, qt1)
 		unitTest:assertEquals(3, qt2)
@@ -270,7 +270,7 @@ time    number [-inf]
 				orderToken = 0
 			end}
 		}
-		clock1:execute(3)
+		clock1:run(3)
 
 		-- negative time
 		local cont = 0
@@ -280,7 +280,7 @@ time    number [-inf]
 			end}
 		}
 	
-		t:execute(-5)
+		t:run(-5)
 		unitTest:assertEquals(cont, 6)
 
 		--	time fraction
@@ -291,7 +291,7 @@ time    number [-inf]
 			end}
 		}
 	
-		t:execute(10)
+		t:run(10)
 		unitTest:assertEquals(cont, t:getTime(), 0.0000000001)
 	end,
 	getTime = function(unitTest)
@@ -314,7 +314,7 @@ time    number [-inf]
 
 		local t = Timer{ev1, ev2}
 
-		t:execute(100)
+		t:run(100)
 		unitTest:assertEquals(cont1, 105)
 		unitTest:assertEquals(cont2, 60)
 	end,
@@ -333,13 +333,13 @@ time    number [-inf]
 			end}
 		}
 
-		timer2:execute(6)
+		timer2:run(6)
 		unitTest:assertEquals(6, timer2:getTime())
 		unitTest:assertEquals(7, cont)
 
 		cont = 0
 		timer2:reset()
-		timer2:execute(4)
+		timer2:run(4)
 		unitTest:assertEquals(4, timer2:getTime())
 		unitTest:assertEquals(0, cont)
 
@@ -350,7 +350,7 @@ time    number [-inf]
 		end})
 
 		cont = 0
-		timer2:execute(12)
+		timer2:run(12)
 		unitTest:assertEquals(12, timer2:getTime())
 		unitTest:assertEquals(18, cont)
 	end

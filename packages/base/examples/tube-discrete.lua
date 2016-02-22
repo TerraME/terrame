@@ -19,5 +19,5 @@ t = Timer{
     end}
 }
 
-t:execute(8)
+t:run(8)
 

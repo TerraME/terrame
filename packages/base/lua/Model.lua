@@ -68,11 +68,11 @@ Model_ = {
 	--
 	-- m = Tube{initialWater = 100, flow = 10}
 	--
-	-- m:execute()
-	execute = function(self)
+	-- m:run()
+	run = function(self)
 		forEachOrderedElement(self, function(name, value, mtype)
 			if mtype == "Timer" then
-				value:execute(self.finalTime)
+				value:run(self.finalTime)
 				return false
 			elseif mtype == "Environment" then
 				local found = false
@@ -84,7 +84,7 @@ Model_ = {
 				end)
 
 				if found then
-					value:execute(self.finalTime)
+					value:run(self.finalTime)
 					return false
 				end
 			end
@@ -97,7 +97,7 @@ Model_ = {
     -- the type of the arguments is valid, acording to the definition of the Model.
     -- See Utils:toLabel(), for using names of arguments
     -- in error messages when building a Model to work with graphical interfaces.
-	-- This function is executed automaticall when one instantiates a given Model.
+	-- This function is executed automatically when one instantiates a given Model.
 	-- @usage Tube = Model{
 	--     initialWater = 200,
 	--     flow = 20,
@@ -212,7 +212,7 @@ Model_ = {
 	--
 	-- scenario1 = Tube{water = 100}
 	--
-	-- scenario1:execute()
+	-- scenario1:run()
 	notify = function(self, modelTime)
 	end
 }
@@ -230,7 +230,7 @@ Model_ = {
 -- @arg attrTab.interface. An optional function to describe how the graphical interface is
 -- displayed. See Model:interface().
 -- See Model:init(). If the Model does not have argument finalTime, this function should
--- create the attribute finalTime to allow the Model instance to be executed.
+-- create the attribute finalTime to allow the Model instance to be run.
 -- @arg attrTab.... Arguments of the Model. The values of each
 -- argument have an associated semantic. See the table below:
 -- @tabular ...
@@ -267,11 +267,11 @@ Model_ = {
 -- }
 --
 -- print(type(Tube)) -- "Model"
--- Tube:execute() -- One can execute a Model directly...
+-- Tube:run() -- One can run a Model directly...
 --
 -- MyTube = Tube{initialWater = 50} -- ... or create instances using it
 -- print(type(MyTube)) -- "Tube"
--- MyTube:execute()
+-- MyTube:run()
 --
 -- pcall(function() MyTube2 = Tube{initialwater = 100} end)
 -- -- Warning: Argument 'initialwater' is unnecessary. Do you mean 'initialWater'?
@@ -413,9 +413,9 @@ function Model(attrTab)
 
 	local indexFunction = function(model, v) -- in this case, the type of this model will be "model"
 		local options = {
-			execute = function()
+			run = function()
 				local m = model{}
-				m:execute()
+				m:run()
 				return m
 			end,
 			configure = function()
@@ -439,7 +439,7 @@ function Model(attrTab)
 		if not mresult then
 			mresult = rawget(model, v)
 			if not mresult and v ~= "interface" then
-				customError("It is not possible to call any function from a Model but execute() or configure().")
+				customError("It is not possible to call any function from a Model but run() or configure().")
 			end
 		end
 		return mresult
@@ -638,7 +638,7 @@ function Model(attrTab)
 			end
 		end)
 
-		argv.execute = attrTab.execute
+		argv.run = attrTab.run
 		argv.type_ = typename
 		argv.parent = mmodel
 

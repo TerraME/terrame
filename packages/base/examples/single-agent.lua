@@ -31,5 +31,5 @@ m = Map{
 	background = "green"
 }
 
-t:execute(100)
+t:run(100)
 

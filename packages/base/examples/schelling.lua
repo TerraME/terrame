@@ -120,5 +120,5 @@ Chart{
 
 society:notify()
 
-timer:execute(MAX_TURNS)
+timer:run(MAX_TURNS)
 

@@ -182,5 +182,5 @@ t = Timer{
 	end}
 }
 
-t:execute(FINAL_TIME)
+t:run(FINAL_TIME)
 

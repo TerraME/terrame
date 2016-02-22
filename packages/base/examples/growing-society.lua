@@ -54,5 +54,5 @@ map = Map{
 	color = {"black", "blue"}
 }
 
-t:execute(120)
+t:run(120)
 

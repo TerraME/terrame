@@ -20,7 +20,7 @@ return{
 
 		local instance = m{}
 
-		instance:execute()
+		instance:run()
 
 		unitTest:assertSnapshot(instance.ch, "model-chart.png")
 	end

@@ -89,5 +89,5 @@ timer = Timer{
 	end}
 }
 
-timer:execute(100)
+timer:run(100)
 

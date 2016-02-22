@@ -154,7 +154,7 @@ id     string [MyAutomaton]
 		local t = Timer{
 			Event{action = function(ev)	at1:execute(ev) end}
 		}
-		t:execute(1)
+		t:run(1)
 		unitTest:assert(true)
 
 		local cs = CellularSpace{xdim = 2}
@@ -320,7 +320,7 @@ id     string [MyAutomaton]
 		local t = Timer{
 			Event{action = function(ev)	at1:notify(ev) end}
 		}
-		t:execute(1)
+		t:run(1)
 
 		unitTest:assert(true)
 	end,

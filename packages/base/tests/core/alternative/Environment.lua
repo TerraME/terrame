@@ -226,6 +226,15 @@ return{
 			env:execute()
 		end
 
+		unitTest:assertError(error_func, deprecatedFunctionMsg("execute", "run"))
+	end,
+	run = function(unitTest)
+		local env = Environment{}
+
+		local error_func = function()
+			env:run()
+		end
+
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 	end,
 	notify = function(unitTest)

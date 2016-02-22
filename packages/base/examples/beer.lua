@@ -160,5 +160,5 @@ t = Timer{
 	end}
 }
 
-t:execute(500)
+t:run(500)
 

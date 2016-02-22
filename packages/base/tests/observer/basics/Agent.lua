@@ -59,7 +59,7 @@ return{
 		LogFile{target = world}
 		local vt = VisualTable{target = world}
 
-		t:execute(15)
+		t:run(15)
 
 		local mytable = CSVread("result.csv")
 		unitTest:assertEquals(#mytable, 15)
@@ -95,7 +95,7 @@ return{
 			end}
 		}
 
-		t:execute(200)
+		t:run(200)
 
 		unitTest:assertSnapshot(c3, "chart_agent_xaxis.bmp", 0.02)
 	end

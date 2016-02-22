@@ -287,7 +287,12 @@ Environment_ = {
 			end
 		}
 	end,
-	--- Execute the Environment until a given time. It activates the Timers it contains, the Timers
+	--- Run the Environment.
+	-- @deprecated Timer:run
+	execute = function(self)
+		deprecatedFunction("execute", "run")
+	end,
+	--- Run the Environment until a given time. It activates the Timers it contains, the Timers
 	-- of the Environments it contains, and so on.
 	-- @arg finalTime A number representing the final time. This funcion will stop when there is no
 	-- Event scheduled to a time less or equal to the final time.
@@ -299,8 +304,8 @@ Environment_ = {
 	--         print("execute 2")
 	--     end}}
 	-- }
-	-- env:execute(10)
-	execute = function(self, finalTime)
+	-- env:run(10)
+	run = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
 		local timer = Timer{}
 		local timers = {}
@@ -324,7 +329,7 @@ Environment_ = {
 
 		process(self)
 
-		timer:execute(finalTime)
+		timer:run(finalTime)
 
 		forEachElement(timers, function(_, value)
 			value.time = finalTime
@@ -335,7 +340,7 @@ Environment_ = {
 	--     Timer{Event{action = function() end}}
 	-- }
 	--
-	-- env:execute(10)
+	-- env:run(10)
 	-- print(env:getTime())
 	getTime = function(self)
 		local oldTime = math.huge

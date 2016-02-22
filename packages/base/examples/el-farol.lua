@@ -173,5 +173,5 @@ t = Timer{
 	end}
 }
 
-t:execute(100)
+t:run(100)
 

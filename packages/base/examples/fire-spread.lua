@@ -94,5 +94,5 @@ t = Timer{
 	end}
 }
 
-t:execute(STEPS)
+t:run(STEPS)
 

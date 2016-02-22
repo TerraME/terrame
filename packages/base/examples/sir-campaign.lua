@@ -39,5 +39,5 @@ t = Timer{
 	end}
 }
 
-t:execute(30)
+t:run(30)
 

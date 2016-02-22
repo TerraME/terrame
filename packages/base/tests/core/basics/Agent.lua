@@ -55,7 +55,7 @@ return{
 			Event{action = singleFooAgent}
 		}
 
-		t:execute(10)
+		t:run(10)
 		unitTest:assertEquals(20,singleFooAgent.size)
 
 		unitTest:assertType(singleFooAgent:getCell(), "Cell")
@@ -177,7 +177,7 @@ state_          State
 				ag:execute(ev)
 			end}
 		}
-		t:execute(1)
+		t:run(1)
 		unitTest:assertEquals(count, 1)
 	end,
 	getCell = function(unitTest)
@@ -268,7 +268,7 @@ state_          State
 			end}
 		}
 
-		t:execute(10)
+		t:run(10)
 
 		unitTest:assertEquals(6, a.x)
 		unitTest:assertEquals(7, a:getLatency())
@@ -343,9 +343,9 @@ state_          State
 			end}
 		}
 
-		t:execute(5)
+		t:run(5)
 		unitTest:assertEquals("go", a:getStateName())
-		t:execute(10)
+		t:run(10)
 		unitTest:assertEquals("stop", a:getStateName())
 	end,
 	getTrajectoryStatus = function(unitTest)

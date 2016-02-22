@@ -52,7 +52,7 @@ return{
 		}
 
 		local env = Environment{cs, a, t}
-		env:execute(10)
+		env:run(10)
 		self:assertEquals(13, a.x)
 
 		env = Environment{}
@@ -61,7 +61,7 @@ return{
 		env:add(a)
 		env:add(t)
 
-		env:execute(10)
+		env:run(10)
 		self:assertEquals(13, a.x)
 
 		local cellCont = 0
@@ -180,7 +180,7 @@ return{
 		local m2 = M{}
 
 		local e = Environment{m1, m2}
-		e:execute(10)
+		e:run(10)
 
 		M = nil -- it is necessary to make it global to verify
 		        -- that it is a Model
@@ -350,7 +350,7 @@ id     string [env]
 
 		unitTest:assertEquals(#cs.cells[1]:getAgents(), #predators)
 	end,
-	execute = function(self)
+	run = function(self)
 		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
 		local timeMemory = 0   -- memory of time test variable 
 		self:assertEquals(orderToken, 0)
@@ -383,7 +383,7 @@ id     string [env]
 				end}
 			}
 		}
-		env:execute(6)
+		env:run(6)
 
 		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
 		local timeMemory = 0 -- memory of time test variable 
@@ -420,7 +420,7 @@ id     string [env]
 				}
 			}
 		}
-		env:execute(6)
+		env:run(6)
 
 		local PRIO1 = 1
 		local PRIO2 = 2
@@ -491,7 +491,7 @@ id     string [env]
 				}
 			}
 		}
-		env:execute(6)
+		env:run(6)
 
 		local PRIO1 = 1
 		local PRIO2 = 2
@@ -588,7 +588,7 @@ id     string [env]
 				}
 			}
 		}
-		env:execute(6)
+		env:run(6)
 	end,
 	getTime = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
@@ -608,7 +608,7 @@ id     string [env]
 		local mi = mmm{}
 
 		local env = Environment{cs, t, Environment{}, mi}
-		env:execute(10)
+		env:run(10)
 		unitTest:assertEquals(10, env:getTime())
 
 		mmm = nil

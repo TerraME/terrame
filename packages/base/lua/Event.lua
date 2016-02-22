@@ -145,7 +145,7 @@ metaTableEvent_ = {
 -- Agent/Automaton & execute -> notify \
 -- CellularSpace/Cell & synchronize -> execute (if exists) -> notify \
 -- function & function\
--- Model & step (if exists) -> notify \
+-- Model & execute (if exists) -> notify \
 -- Society & execute (if exists) -> synchronize -> notify \
 -- Timer & notify \
 -- Trajectory/Group & rebuild \
@@ -240,9 +240,9 @@ function Event(data)
 				maction:rebuild()
 			end
 		elseif isModel(maction) then
-			if data.action.step then
+			if data.action.execute then
 				data.action = function(event)
-					maction:step(event)
+					maction:execute(event)
 					maction:notify(event)
 				end
 			else

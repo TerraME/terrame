@@ -61,7 +61,7 @@ local Tube2 = Model{
 	init = function(model)
 		model.water = model.initialWater
 		model.aenv = Environment{} -- this line is necessary because TerraME must see that
-		                           -- it does not have a Timer so it will not be executed.
+		                           -- it does not have a Timer so it will not run.
 		model.env = Environment{
 			timer = Timer{
 				Event{action = function()
@@ -103,7 +103,6 @@ subwater         Choice
 		unitTest:assertEquals(tostring(t), [[block            table of size 0
 checkZero        boolean [false]
 cObj_            userdata
-execute          function
 filter           function
 finalTime        number [10]
 flow             number [20]
@@ -112,6 +111,7 @@ initialWater     number [200]
 notify           function
 observingStep    number [1]
 parent           Model
+run              function
 simulationSteps  number [10]
 soilCap          number [4]
 soilInf          number [5]
@@ -180,18 +180,18 @@ water            number [200]
 		unitTest:assertEquals(m.file0, "def")
 		unitTest:assertEquals(m.files.file3, "abc")
 	end,
-	execute = function(unitTest)
+	run = function(unitTest)
 		local t = Tube{block = {level = 2}, filter = function() end}
 
 		unitTest:assertEquals(t.block.xmin, 0)
 		unitTest:assertEquals(t.block.level, 2)
 
 		unitTest:assertEquals(t.water, 200)
-		t:execute()
+		t:run()
 		unitTest:assertEquals(t.water, 210)
 
 		t = Tube2{}
-		t:execute()
+		t:run()
 		unitTest:assertEquals(t.water, 10)
 
 		local Tube3 = Model{
@@ -209,7 +209,7 @@ water            number [200]
 			end
 		}
 
-		local t3 = Tube3:execute()
+		local t3 = Tube3:run()
 
 		unitTest:assertEquals(t3.water, 10)
 	end,

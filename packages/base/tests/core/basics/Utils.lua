@@ -39,7 +39,7 @@ return{
 			Event{action = call(a, "map")}
 		}
 
-		t:execute(10)
+		t:run(10)
 		unitTest:assertEquals(cont, 10)
 	end,
 	clone = function(unitTest)

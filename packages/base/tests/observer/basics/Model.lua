@@ -49,7 +49,7 @@ return{
 		}
 
 		tube:notify()
-		tube:execute(10)
+		tube:run(10)
 		tube:notify(11)
 		unitTest:assert(true)
 	end,
@@ -74,7 +74,7 @@ return{
 			select = "water"
 		}
 
-		m:execute()
+		m:run()
 
 		unitTest:assert(true)
 	end

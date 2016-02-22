@@ -87,7 +87,7 @@ return{
 		LogFile{target = world}
 		local vt = VisualTable{target = world}
 
-		t:execute(30)
+		t:run(30)
 
 		local mytable = CSVread("result.csv")
 		unitTest:assertEquals(#mytable, 30)

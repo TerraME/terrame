@@ -145,5 +145,5 @@ timer = Timer{
 	end}
 }
 
-timer:execute(500)
+timer:run(500)
 

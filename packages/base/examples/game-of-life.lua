@@ -74,5 +74,5 @@ timer = Timer{
 	end}
 }
 
-timer:execute(TURNS)
+timer:run(TURNS)
 

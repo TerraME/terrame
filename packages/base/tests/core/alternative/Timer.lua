@@ -60,7 +60,7 @@ return {
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "Event", "ev"))
 
-		timer:execute(10)
+		timer:run(10)
 
 		error_func = function()
 			timer:add(Event{period = 2, action = function(event) end})
@@ -163,6 +163,17 @@ return {
 		local error_func = function()
 			timer:execute()
 		end
+		unitTest:assertError(error_func, deprecatedFunctionMsg("execute", "run"))
+	end,
+	run = function(unitTest)
+		local timer = Timer{
+			Event{period = 2, action = function(event)
+			end}
+		}
+
+		local error_func = function()
+			timer:run()
+		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(1))
 
 		timer = Timer{
@@ -171,7 +182,7 @@ return {
 		}
 
 		error_func = function()
-			timer:execute("2")
+			timer:run("2")
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "number", "2"))
 
@@ -180,9 +191,9 @@ return {
 			end}
 		}
 
-		timer:execute(10)
+		timer:run(10)
 		error_func = function()
-			timer:execute(2)
+			timer:run(2)
 		end
 		unitTest:assertError(error_func, "Simulating until a time (2) before the current simulation time (10).")
 	end

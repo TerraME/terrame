@@ -87,10 +87,10 @@ Timer_ = {
 	--
 	-- print(cs:dist()) -- 100
 	--
-	-- timer:execute(13)
+	-- timer:run(13)
 	-- print(cs:dist()) -- 200
 	--
-	-- timer:execute(20)
+	-- timer:run(20)
 	-- print(cs:dist()) -- 300
 	addReplacement = function(self, data)
 		verifyNamedTable(data)
@@ -148,7 +148,59 @@ Timer_ = {
 	clear = function(self)
 		self.events = {}
 	end,
-	--- Execute the Timer until a final time. It manages the Event queue according to their execution
+	--- Run the simulation.
+	-- @deprecated Timer:run
+	execute = function(self)
+		deprecatedFunction("execute", "run")
+	end,
+	--- Return a vector with the Events of the Timer.
+	-- @usage timer = Timer{
+	--     Event{action = function() print("step") end}
+	-- }
+	--
+	-- print(timer:getEvents()[1]:getTime())
+	getEvents = function(self)
+		return self.events
+	end,
+	--- Return the current simulation time.
+	-- @usage timer = Timer{
+	--     Event{action = function() print("step") end}
+	-- }
+	--
+	-- timer:run(10)
+	-- print(timer:getTime())
+	getTime = function(self)
+		return self.time
+	end,
+	--- Notify every Observer connected to the Timer.
+	-- @usage timer = Timer{
+	--     Event{action = function() print("step") end}
+	-- }
+	--
+	-- Clock{target = timer}
+	--
+	-- timer:run(10)
+	--
+	-- timer:notify()
+	notify = function(self)
+		local modelTime = self:getTime()
+		self.cObj_:notify(modelTime)
+	end,
+	--- Reset the Timer to time minus infinite, keeping the same Event queue.
+	-- @usage timer = Timer{
+	--     Event{action = function() print("step") end}
+	-- }
+	--
+	-- Clock{target = timer}
+	--
+	-- timer:run(10)
+	--
+	-- timer:reset()
+	-- print(timer:getTime())
+	reset = function(self)
+		self.time = -math.huge
+	end,
+	--- Run the Timer until a final time. It manages the Event queue according to their execution
 	-- time and priority. The Event that has lower execution time and lower priority is executed at
 	-- each step. It this Event does not return false it is scheduled to execute again according to
 	-- its period. The Timer then repeats its execution again and again. It stops only when all its
@@ -159,8 +211,8 @@ Timer_ = {
 	--     Event{action = function() print("step") end}
 	-- }
 	--
-	-- timer:execute(10)
-	execute = function(self, finalTime)
+	-- timer:run(10)
+	run = function(self, finalTime)
 		mandatoryArgument(1, "number", finalTime)
 
 		if finalTime < self.time then
@@ -201,53 +253,7 @@ Timer_ = {
 			end
 		end
 	end,
-	--- Return a vector with the Events of the Timer.
-	-- @usage timer = Timer{
-	--     Event{action = function() print("step") end}
-	-- }
-	--
-	-- print(timer:getEvents()[1]:getTime())
-	getEvents = function(self)
-		return self.events
-	end,
-	--- Return the current simulation time.
-	-- @usage timer = Timer{
-	--     Event{action = function() print("step") end}
-	-- }
-	--
-	-- timer:execute(10)
-	-- print(timer:getTime())
-	getTime = function(self)
-		return self.time
-	end,
-	--- Notify every Observer connected to the Timer.
-	-- @usage timer = Timer{
-	--     Event{action = function() print("step") end}
-	-- }
-	--
-	-- Clock{target = timer}
-	--
-	-- timer:execute(10)
-	--
-	-- timer:notify()
-	notify = function(self)
-		local modelTime = self:getTime()
-		self.cObj_:notify(modelTime)
-	end,
-	--- Reset the Timer to time minus infinite, keeping the same Event queue.
-	-- @usage timer = Timer{
-	--     Event{action = function() print("step") end}
-	-- }
-	--
-	-- Clock{target = timer}
-	--
-	-- timer:execute(10)
-	--
-	-- timer:reset()
-	-- print(timer:getTime())
-	reset = function(self)
-		self.time = -math.huge
-	end
+
 }
 
 metaTableTimer_ = {
@@ -269,7 +275,7 @@ metaTableTimer_ = {
 	end
 }
 
---- A Timer is an Event-based scheduler that executes and controls the simulation. It contains a
+--- A Timer is an Event-based scheduler that runs the simulation. It contains a
 -- set of Events, allowing the simulation to work with processes that start
 -- independently and act in different periodicities. Once it has a given simulation time,
 -- it ensures that all the Events before that time were already executed.
@@ -296,7 +302,7 @@ metaTableTimer_ = {
 --     end}
 -- }
 --
--- timer:execute(10)
+-- timer:run(10)
 function Timer(data)
 	if type(data) ~= "table" then
 		if data == nil then
