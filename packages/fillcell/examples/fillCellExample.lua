@@ -18,25 +18,25 @@ local project = Project{
 local polygons = "Setores"
 project:addLayer {
 	layer = polygons,
-	file = file("Setores_Censitarios_2000_pol.shp", "terralib")
+	file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
 }
 	
 local points = "Localidades"
 project:addLayer {
 	layer = points,
-	file = file("Localidades_pt.shp", "terralib")	
+	file = filePath("Localidades_pt.shp", "terralib")	
 }
 
 local lines = "Rodovias"
 project:addLayer {
 	layer = lines,
-	file = file("Rodovias_lin.shp", "terralib")	
+	file = filePath("Rodovias_lin.shp", "terralib")	
 }
 
 local tif = "Desmatamento"
 project:addLayer {
 	layer = tif,
-	file = file("Desmatamento_2000.tif", "terralib")		
+	file = filePath("Desmatamento_2000.tif", "terralib")		
 }
 
 local host = "localhost"

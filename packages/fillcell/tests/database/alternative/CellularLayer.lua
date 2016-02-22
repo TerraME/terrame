@@ -48,7 +48,7 @@ return{
 		local layerName1 = "Sampa"
 		proj:addLayer {
 			layer = layerName1,
-			file = file("sampa.shp", "terralib")
+			file = filePath("sampa.shp", "terralib")
 		}	
 		
 		local clName1 = "Sampa_Cells_DB"
@@ -665,7 +665,7 @@ return{
 		local layerName2 = "Setores"
 		proj:addLayer {
 			layer = layerName2,
-			file = file("Setores_Censitarios_2000_pol.shp", "terralib")		
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")		
 		}
 		
 		local layerNotIntersect = function()
@@ -683,7 +683,7 @@ return{
 		local layerName3 = "Desmatamento"
 		proj:addLayer {
 			layer = layerName3,
-			file = file("Desmatamento_2000.tif", "terralib")		
+			file = filePath("Desmatamento_2000.tif", "terralib")		
 		}	
 
 		local raverageLayerName = clName1.."_Average"
@@ -912,7 +912,7 @@ return{
 				output = rstdevLayerName
 			}
 		end
-		unitTest:assertError(op5NotAvailable, "The operation '".."presence".."' is not available to raster layer.")			
+		unitTest:assertError(op5NotAvailable, "The operation '".."presence".."' is not available to raster layer.")		
 
 		if isFile(projName) then
 			os.execute("rm -f "..projName)

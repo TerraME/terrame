@@ -20,7 +20,7 @@ return {
 		local layerName1 = "Sampa"
 		proj:addLayer {
 			layer = layerName1,
-			file = file("sampa.shp", "terralib")
+			file = filePath("sampa.shp", "terralib")
 		}	
 		
 		local clName1 = "Sampa_Cells_DB"
@@ -122,7 +122,7 @@ return {
 		local layerName1 = "Sampa"
 		proj:addLayer {
 			layer = layerName1,
-			file = file("sampa.shp", "terralib")
+			file = filePath("sampa.shp", "terralib")
 		}	
 		
 		local clName1 = "Sampa_Cells_DB"
@@ -482,19 +482,18 @@ return {
 		unitTest:assertEquals(wsumLayerInfo.database, database)
 		unitTest:assertEquals(wsumLayerInfo.table, string.lower(wsumLayerName))		
 		
-		-- RASTER TESTS ------------------------------------------
-		
+		-- RASTER TESTS ------------------------------------------	
 		-- ###################### 15 #############################
 		local layerName2 = "Setores"
 		proj:addLayer {
 			layer = layerName2,
-			file = file("Setores_Censitarios_2000_pol.shp", "terralib")		
+			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")		
 		}
 		
 		local layerName3 = "Desmatamento"
 		proj:addLayer {
 			layer = layerName3,
-			file = file("Desmatamento_2000.tif", "terralib")		
+			file = filePath("Desmatamento_2000.tif", "terralib")		
 		}			
 		
 		local tName2 = "setores_cells"
