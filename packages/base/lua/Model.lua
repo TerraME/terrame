@@ -378,7 +378,6 @@ function Model(attrTab)
 	end)
 
 	mandatoryTableArgument(attrTab, "init", "function")
-	optionalTableArgument(attrTab, "check", "function")
 
 	local function getExtensions(value)
 		local extensions = {}

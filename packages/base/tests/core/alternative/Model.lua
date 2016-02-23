@@ -85,15 +85,6 @@ return{
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("init"))
 	
-		local error_func = function()
-			local Tube = Model{
-				seed = Choice{1, 2},
-				init = function() end,
-				check = 2
-			}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("check", "function", 2))
-
 		local Tube = Model{
 			init = function(model) end,
 			finalTime = 10
