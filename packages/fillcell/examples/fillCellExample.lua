@@ -133,6 +133,21 @@ cl:fillCells{
 	area = true
 }
 
+local rasterLayer = cellDbLayerName.."_Dematamento_Average"
+
+-- HUNK USED ONLY TO TEST
+pgData.table = rasterLayer
+terralib:dropPgTable(pgData)
+-- END HUNK
+
+cl:fillCells{
+	operation = "average",
+	layer = tif,
+	attribute = "raverage",
+	output = rasterLayer,
+	select = 0
+}
+
 -- USED ONLY TO TEST
 pgData.table = tableName
 terralib:dropPgTable(pgData)
@@ -144,6 +159,9 @@ pgData.table = sumLayer
 terralib:dropPgTable(pgData)
 
 pgData.table = averageLayer
+terralib:dropPgTable(pgData)
+
+pgData.table = rasterLayer
 terralib:dropPgTable(pgData)
 
 if isFile(projName) then
