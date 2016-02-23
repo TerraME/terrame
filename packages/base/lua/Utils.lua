@@ -937,6 +937,7 @@ end
 
 --- Return the names of a given object derived from a table.
 -- The output is a vector with the names as values alphabetically ordered.
+-- @arg data Any table or TerraME type that works as a table.
 -- @see Utils:isTable
 -- @usage t = {
 --     cover = "forest",
