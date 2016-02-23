@@ -63,7 +63,7 @@ metaTableClock_ = {__index = Clock_}
 -- 
 -- Clock{target = timer}
 --
--- timer:execute(3)
+-- timer:run(3)
 -- timer:notify()
 Clock = function(data)
 	verifyNamedTable(data)

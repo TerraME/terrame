@@ -280,7 +280,7 @@ end
 --     Event{action = call(a, "exec")}
 -- }
 --
--- t:execute(10)
+-- t:run(10)
 function call(obj, func)
 	mandatoryArgument(2, "string", func)
 
