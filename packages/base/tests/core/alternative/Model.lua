@@ -85,15 +85,6 @@ return{
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg("init"))
 	
-		local error_func = function()
-			local Tube = Model{
-				seed = Choice{1, 2},
-				init = function() end,
-				check = 2
-			}
-		end
-		unitTest:assertError(error_func, incompatibleTypeMsg("check", "function", 2))
-
 		local Tube = Model{
 			init = function(model) end,
 			finalTime = 10
@@ -444,6 +435,24 @@ return{
 			local m = M()
 		end
 		unitTest:assertError(error_func, "This call is deprecated. Use Model:getParameters() instead.")
+	end,
+	execute = function(unitTest)
+		local error_func = function()
+			local Tube = Model{
+				water = 20,
+				flow = 1,
+				finalTime = 20,
+				execute = "2",
+				init = function (model)
+					model.chart = Chart{
+						target = model,
+						select = "water"
+				}
+				end
+			}
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg("execute", "function", "2"))
 	end,
 	interface = function(unitTest)
 		local error_func = function()

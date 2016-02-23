@@ -42,7 +42,7 @@ return{
 			Event{action = call2(a, "map")}
 		}
 
-		t:execute(10)
+		t:run(10)
 	end,
 	elapsedTime2 = function(unitTest)
 		unitTest:assertType(elapsedTime2(50), "string")
@@ -117,7 +117,7 @@ return{
 		local count = 0
 		local r
 
-		r = forEachFile2(file("", "base"), function(file)
+		r = forEachFile2(filePath("", "base"), function(file)
 			count = count + 1
 			unitTest:assertType(file, "string")
 		end)
@@ -126,7 +126,7 @@ return{
 		unitTest:assertEquals(count, 23)
 
 		local count2 = 0
-		forEachFile2(dir(file("", "base"), true), function(file)
+		forEachFile2(dir(filePath("", "base"), true), function(file)
 			count2 = count2 + 1
 		end)
 
@@ -134,7 +134,7 @@ return{
 
 		count = 0
 
-		r = forEachFile2(file("", "base"), function(file)
+		r = forEachFile2(filePath("", "base"), function(file)
 			count = count + 1
 			if count > 1 then return false end
 		end)

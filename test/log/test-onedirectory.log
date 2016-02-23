@@ -49,12 +49,12 @@ Skipping snapthots check
 Skipping examples
 
 Unit test report:
-Tests were executed in 32.73 seconds.
+Tests were executed in 31.42 seconds.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
 All asserts were executed at least once.
-All 171 asserts were executed successfully.
+All 180 asserts were executed successfully.
 All 16 tested functions do not have any unexpected execution error.
 All 16 tested functions have at least one assert.
 All 16 tested functions exist in the source code of the package.

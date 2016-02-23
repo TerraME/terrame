@@ -97,12 +97,12 @@ return{
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
 
 		error_func = function()
-			forEachFile2(file("", "base"))
+			forEachFile2(filePath("", "base"))
 		end
 		unitTest:assertError(error_func, mandatoryArgumentMsg(2))
 	
 		error_func = function()
-			forEachFile2(file("", "base"), 2)
+			forEachFile2(filePath("", "base"), 2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "function", 2))
 	end,

@@ -44,5 +44,5 @@ t = Timer{
 	end}
 }
 
-t:execute(75)
+t:run(75)
 

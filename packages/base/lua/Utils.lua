@@ -280,7 +280,7 @@ end
 --     Event{action = call(a, "exec")}
 -- }
 --
--- t:execute(10)
+-- t:run(10)
 function call(obj, func)
 	mandatoryArgument(2, "string", func)
 
@@ -937,6 +937,7 @@ end
 
 --- Return the names of a given object derived from a table.
 -- The output is a vector with the names as values alphabetically ordered.
+-- @arg data Any table or TerraME type that works as a table.
 -- @see Utils:isTable
 -- @usage t = {
 --     cover = "forest",

@@ -165,7 +165,7 @@ metaTableEvent_ = {
 -- }
 --
 -- timer = Timer{event, event2}
--- timer:execute(10)
+-- timer:run(10)
 function Event(data)
 	if data == nil then
 		data = {}

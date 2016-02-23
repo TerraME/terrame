@@ -169,7 +169,7 @@ Checking Tube.lua
 Checking Tube2.lua
 Checking Utils.lua
 Line 41 was not executed.
-Line 43 was not executed.
+Line 42 was not executed.
 Checking snapshots
 File 'snapshots/chart_cell2.bmp' was not used by any assertSnapshot().
 File 'snapshots/chart_cell3.bmp' was not used by any assertSnapshot().

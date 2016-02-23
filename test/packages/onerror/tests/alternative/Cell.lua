@@ -50,7 +50,7 @@ return{
 			end}
 		}
 
-		t:execute(30)
+		t:run(30)
 		local s = sessionInfo().separator
 
 		unitTest:assertSnapshot(c1, "chart_cell.bmp")
