@@ -8,7 +8,7 @@ timer = Timer{
 }
 
 Clock{target = timer}
-timer:execute(200)
+timer:run(200)
 	
 clean()
 

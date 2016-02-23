@@ -39,7 +39,6 @@ print("print when loading")
 function belong2(value, values)
 	if false then
 		a = 3
-		a = 3
 		c = f + d
 	end
 
