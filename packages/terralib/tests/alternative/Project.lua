@@ -42,7 +42,7 @@ return{
 		unitTest:assertError(invalidFileExtensionToCreate, "Please, the file extension must be '.tview'.")
 		
 		local invalidFileExtensionToLoad = function()
-			local proj = Project{file = filePath("Altimetria.xml", "terralib")}
+			local proj = Project{file = filePath("sampa.shp", "terralib")}
 		end
 		unitTest:assertError(invalidFileExtensionToLoad, "Please, the file extension must be '.tview'.")		
 		
@@ -159,16 +159,16 @@ return{
 		end
 		unitTest:assertError(layerNonExists, "Layer '"..nLayer.."' not exists.")
 		
-		local layerName = "Setores_2000"
+		local layerName = "Sampa"
 		proj:addLayer {
 			layer = layerName,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")			
+			file = filePath("sampa.shp", "terralib")			
 		}
 		
 		local layerAlreadyExists = function()
 			proj:addLayer {
 				layer = layerName,
-				file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")	
+				file = filePath("sampa.shp", "terralib")	
 			}			
 		end
 		unitTest:assertError(layerAlreadyExists, "Layer '"..layerName.."' already exists in the Project.")
@@ -176,10 +176,10 @@ return{
 		local sourceInvalid = function()
 			proj:addLayer {
 				layer = layerName,
-				file = filePath("amazonia.tview", "terralib")	
+				file = filePath("sampa.dbf", "terralib")	
 			}			
 		end
-		unitTest:assertError(sourceInvalid, "The source'".."tview".."' is invalid.")
+		unitTest:assertError(sourceInvalid, "The source'".."dbf".."' is invalid.")
 		
 		local layerFile = "linhares.shp"
 		local fileLayerNonExists = function()
@@ -190,7 +190,7 @@ return{
 		end
 		unitTest:assertError(fileLayerNonExists, mandatoryArgumentMsg("source"))			
 	
-		local filePath = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath = filePath("sampa.shp", "terralib")
 		local source = "tif"
 		local inconsistentExtension = function()
 			proj:addLayer {
@@ -285,7 +285,7 @@ return{
 			proj:addCellularLayer {
 				input = "amazonia-states",
 				layer = "cells",
-				resolution = 10000		
+				resolution = 0.7		
 			}
 		end
 		unitTest:assertError(noFilePass, mandatoryArgumentMsg("source"))
@@ -294,7 +294,7 @@ return{
 			proj:addCellularLayer{
 				input = "amazonia-states",
 				layer = "cells",
-				resolution = 10000,				
+				resolution = 0.7,				
 				layer = "layer",
 				file = "cells.shp",
 				source = 123
@@ -302,10 +302,10 @@ return{
 		end
 		unitTest:assertError(attrSourceNonString, incompatibleTypeMsg("source", "string", 123))
 
-		local layerName1 = "Setores_Censitarios_2000"
+		local layerName1 = "Sampa"
 		proj:addLayer {
 			layer = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("sampa.shp", "terralib")
 		}
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
@@ -327,7 +327,7 @@ return{
 		proj:addCellularLayer {
 			input = layerName1,
 			layer = clName1,
-			resolution = 10000,
+			resolution = 0.7,
 			file = filePath1
 		}
 		
@@ -335,7 +335,7 @@ return{
 			proj:addCellularLayer {
 				input = layerName1,
 				layer = clName1,
-				resolution = 10000,
+				resolution = 0.7,
 				file = "setores_cells_x.shp"
 			}	
 		end
@@ -345,7 +345,7 @@ return{
 			proj:addCellularLayer {
 				input = layerName1,
 				layer = "CellLayerFileAlreadyExists",
-				resolution = 10000,
+				resolution = 0.7,
 				file = filePath1
 			}	
 		end
@@ -355,19 +355,19 @@ return{
 			proj:addCellularLayer{
 				input = layerName1,
 				layer = "cells",
-				resolution = 10000,
-				file = filePath("amazonia.tview", "terralib")	
+				resolution = 0.7,
+				file = filePath("sampa.dbf", "terralib")	
 			}			
 		end
-		unitTest:assertError(sourceInvalid, "The source'".."tview".."' is invalid.")
+		unitTest:assertError(sourceInvalid, "The source'".."dbf".."' is invalid.")
 
-		local filePath = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+		local filePath = filePath("sampa.shp", "terralib")
 		local source = "tif"
 		local inconsistentExtension = function()
 			proj:addCellularLayer{
 				input = layerName1,
 				layer = "cells",
-				resolution = 10000,
+				resolution = 0.7,
 				file = filePath,
 				source = "tif"
 			}			
@@ -379,7 +379,7 @@ return{
 			proj:addCellularLayer{
 				input = inLayer,
 				layer = "cells",
-				resolution = 10000,
+				resolution = 0.7,
 				file = "some.shp"
 			}
 		end

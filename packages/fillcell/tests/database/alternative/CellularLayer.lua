@@ -665,7 +665,7 @@ return{
 		local layerName2 = "Setores"
 		proj:addLayer {
 			layer = layerName2,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")		
+			file = filePath("Setores_Censitarios_2000_pol.shp", "fillcell")		
 		}
 		
 		local layerNotIntersect = function()
@@ -683,7 +683,7 @@ return{
 		local layerName3 = "Desmatamento"
 		proj:addLayer {
 			layer = layerName3,
-			file = filePath("Desmatamento_2000.tif", "terralib")		
+			file = filePath("Desmatamento_2000.tif", "fillcell")		
 		}	
 
 		local raverageLayerName = clName1.."_Average"

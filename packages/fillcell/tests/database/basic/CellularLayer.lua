@@ -487,13 +487,13 @@ return {
 		local layerName2 = "Setores"
 		proj:addLayer {
 			layer = layerName2,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")		
+			file = filePath("Setores_Censitarios_2000_pol.shp", "fillcell")		
 		}
 		
 		local layerName3 = "Desmatamento"
 		proj:addLayer {
 			layer = layerName3,
-			file = filePath("Desmatamento_2000.tif", "terralib")		
+			file = filePath("Desmatamento_2000.tif", "fillcell")		
 		}			
 		
 		local tName2 = "setores_cells"
