@@ -436,6 +436,24 @@ return{
 		end
 		unitTest:assertError(error_func, "This call is deprecated. Use Model:getParameters() instead.")
 	end,
+	execute = function(unitTest)
+		local error_func = function()
+			local Tube = Model{
+				water = 20,
+				flow = 1,
+				finalTime = 20,
+				execute = "2",
+				init = function (model)
+					model.chart = Chart{
+						target = model,
+						select = "water"
+				}
+				end
+			}
+		end
+
+		unitTest:assertError(error_func, incompatibleTypeMsg("execute", "function", "2"))
+	end,
 	interface = function(unitTest)
 		local error_func = function()
 			local Tube = Model{

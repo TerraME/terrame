@@ -180,6 +180,28 @@ water            number [200]
 		unitTest:assertEquals(m.file0, "def")
 		unitTest:assertEquals(m.files.file3, "abc")
 	end,
+	execute = function(unitTest)
+		local Tube = Model{
+			water = 20,
+			flow = 1,
+			finalTime = 20,
+			execute = function(model)
+				model.water = model.water - model.flow
+			end,
+			init = function (model)
+				model.chart = Chart{
+					target = model,
+					select = "water"
+			}
+			end
+		}
+
+		local t = Tube{}
+
+		t:run()
+
+		unitTest:assertEquals(t.water, 0)
+	end,
 	run = function(unitTest)
 		local t = Tube{block = {level = 2}, filter = function() end}
 

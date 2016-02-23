@@ -51,6 +51,24 @@ Model_ = {
 	-- Tube:configure()
 	configure = function(self)
 	end,
+	--- User-defined function to execute the Model in a given time step. It is useful
+	-- when using the Model as an action for a given Event.
+	-- @usage Tube = Model{
+	--     water = 20,
+	--     flow = 1,
+	--     finalTime = 20,
+	--     execute = function(model)
+	--         model.water = model.water - model.flow
+	--     end,
+	--     init = function (model)
+	--         model.chart = Chart{
+	--             target = model,
+	--             select = "water"
+	--         }
+	--     end
+	-- }
+	execute = function()
+	end,
 	--- Run the Model instance. It requires that the Model instance has attribute finalTime.
 	-- @usage Tube = Model{
 	--     initialWater = 200,
@@ -227,6 +245,9 @@ Model_ = {
 -- If the Model does not have this as argument, it must be defined within function Model:init().
 -- @arg attrTab.seed A number with the initial seed for Random. This argument is optional.
 -- @arg attrTab.init A mandatory function to describe how an instance of Model is created.
+-- @arg attrTab.execute An optional function to define the changes of the Model in each time step.
+-- it the Model does not have a Timer after Model:init() but it has this function, a Timer will
+-- be automatically created and will add an Event with the Model as its action.
 -- @arg attrTab.interface. An optional function to describe how the graphical interface is
 -- displayed. See Model:interface().
 -- See Model:init(). If the Model does not have argument finalTime, this function should
@@ -378,6 +399,7 @@ function Model(attrTab)
 	end)
 
 	mandatoryTableArgument(attrTab, "init", "function")
+	optionalTableArgument(attrTab, "execute", "function")
 
 	local function getExtensions(value)
 		local extensions = {}
@@ -697,6 +719,14 @@ function Model(attrTab)
 				end)
 			end
 		end)
+
+		if not exec and argv.execute then
+			argv.timer_ = Timer{
+				Event{action = argv}
+			}
+
+			exec = true
+		end
 
 		verify(exec, "The object does not have a Timer or an Environment with at least one Timer.")
 
