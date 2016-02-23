@@ -792,7 +792,11 @@ local function check_usage(files, doc_report)
 					else
 						print("Testing "..function_name)
 						xpcall(load(usage, nil, "t", base), function(err)
-							printError("Error: "..err)
+							if string.sub(err, 1, 5) ~= "Error" then
+								err = "Error: "..err
+							end
+
+							printError(err)
 							doc_report.usage_error = doc_report.usage_error + 1
 						end)
 					end
