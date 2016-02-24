@@ -64,14 +64,23 @@ function filesByExtension(package, extension)
 end
 
 --- Load a given package. If the package is not installed, it verifies if the
--- package in the current directory.
+-- package is available in the current directory. It shows a warning if
+-- trying to load a package that was already loaded. In this case, the package
+-- will not be loaded again. See #2 below for a different procedure.
 -- @arg package A package name.
+-- @arg check A boolean value indicating whether TerraME should verify if the
+-- package is already loaded (default is true). Setting this parameter
+-- to false forces the package to be loaded again if it was already loaded. It
+-- also avoids a warning indicating that the package was already loaded.
 -- @usage -- DONTRUN
 -- import("calibration")
-function import(package)
+function import(package, check)
 	mandatoryArgument(1, "string", package)
+	optionalArgument(2, "boolean", check)
 
-	if isLoaded(package) then
+	if check == nil then check = true end
+
+	if isLoaded(package) and check then
 		customWarning("Package '"..package.."' is already loaded.")
 	else
 		local s = sessionInfo().separator

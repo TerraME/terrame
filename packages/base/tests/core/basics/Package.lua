@@ -47,6 +47,13 @@ return{
 		-- The assert below checks the number of functions in package 'base'.
 		unitTest:assertEquals(getn(base), 181)
 	end,
+	import = function(unitTest)
+		forEachCell = nil
+
+		import("base", false)
+
+		unitTest:assertType(forEachCell, "function")
+	end,
 	packageInfo = function(unitTest)
 		local r = packageInfo()
 
