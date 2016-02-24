@@ -640,8 +640,13 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 			
 	fromLayer = binding.te.map.DataSetLayer.toDataSetLayer(fromLayer)
 	toLayer = binding.te.map.DataSetLayer.toDataSetLayer(toLayer)
+	
+	local rDs = binding.GetDs(fromLayer:getDataSourceId(), true)
+    local rDSet = rDs:getDataSet(fromLayer:getDataSetName())
+	local rpos = binding.GetFirstPropertyPos(rDSet, binding.RASTER_TYPE)
+	local raster = rDSet:getRaster(rpos)
 			
-	r2v:setInput(fromLayer, toLayer)
+	r2v:setInput(raster, toLayer)
 			
 	if operation == "average" then
 		operation = "mean"

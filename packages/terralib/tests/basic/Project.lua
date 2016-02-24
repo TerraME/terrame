@@ -103,10 +103,10 @@ return {
 			title = "Setores"
 		}		
 		
-		local layerName1 = "Setores_Censitarios_2000"
+		local layerName1 = "Sampa"
 		proj1:addLayer {
 			layer = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("sampa.shp", "terralib")
 		}
 		local layer1 = proj1:infoLayer(layerName1)
 		unitTest:assertEquals(layer1.name, layerName1)
@@ -120,10 +120,10 @@ return {
 		unitTest:assertEquals(layer2.name, layerName1)
 
 		-- ###################### 3 #############################
-		local layerName2 = "Localidades"
+		local layerName2 = "MG"
 		proj2:addLayer {
 			layer = layerName2,
-			file = filePath("Localidades_pt.shp", "terralib")
+			file = filePath("MG_cities.shp", "terralib")
 		}
 		local layer1 = proj2:infoLayer(layerName1)
 		local layer2 = proj2:infoLayer(layerName2)
@@ -132,30 +132,30 @@ return {
 		unitTest:assertEquals(layer2.name, layerName2)
 		
 		-- ###################### 3.1 #############################
-		local layerName21 = "Another_Localidades"
+		local layerName21 = "MG_2"
 		proj2:addLayer {
 			layer = layerName21,
-			file = filePath("Localidades_pt.shp", "terralib")
+			file = filePath("MG_cities.shp", "terralib")
 		}
 		local layer21 = proj2:infoLayer(layerName21)
 		unitTest:assert(layer21.name ~= layer2.name)
 		unitTest:assertEquals(layer21.sid, layer2.sid)		
 		
 		-- ###################### 4 #############################
-		local layerName3 = "Altimetria"
+		local layerName3 = "CBERS1"
 		proj2:addLayer {
 			layer = layerName3,
-			file = filePath("altimetria.tif", "terralib")		
+			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
 		}		
 		local layer3 = proj2:infoLayer(layerName3)
 		
 		unitTest:assertEquals(layer3.name, layerName3)
 		
 		-- ###################### 5 #############################
-		local layerName4 = "Another_Altimetria"
+		local layerName4 = "CBERS2"
 		proj2:addLayer {
 			layer = layerName4,
-			file = filePath("altimetria.tif", "terralib")		
+			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
 		}		
 		local layer4 = proj2:infoLayer(layerName4)
 		unitTest:assert(layer4.name ~= layer3.name)
@@ -166,8 +166,8 @@ return {
 			os.execute("rm -f "..projName)
 		end
 		
-		-- local terralib = TerraLib{}
-		-- terralib:finalize()			
+		local terralib = TerraLib{}
+		terralib:finalize()			
 	end,
 	addCellularLayer = function(unitTest)
 		local projName = "cells_setores_2000.tview"
@@ -184,22 +184,22 @@ return {
 			title = "Setores"
 		}		
 
-		local layerName1 = "Setores_Censitarios_2000"
+		local layerName1 = "Sampa"
 		proj:addLayer {
 			layer = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("sampa.shp", "terralib")
 		}
 		
-		local layerName2 = "Localidades"
+		local layerName2 = "MG"
 		proj:addLayer {
 			layer = layerName2,
-			file = filePath("Localidades_pt.shp", "terralib")	
+			file = filePath("MG_cities.shp", "terralib")	
 		}
 
-		local layerName3 = "Altimetria"
+		local layerName3 = "CBERS"
 		proj:addLayer {
 			layer = layerName3,
-			file = filePath("altimetria.tif", "terralib")		
+			file = filePath("cbers_rgb342_crop1.tif", "terralib")		
 		}		
 		
 		local testDir = _Gtme.makePathCompatibleToAllOS(currentDir())
@@ -217,11 +217,11 @@ return {
 			end
 		end	
 		
-		local clName1 = "Setores_Cells"
+		local clName1 = "Sampa_Cells"
 		proj:addCellularLayer {
 			input = layerName1,
 			layer = clName1,
-			resolution = 10000,
+			resolution = 0.7,
 			file = filePath1
 		}
 		local l1Info = proj:infoLayer(clName1)
@@ -229,7 +229,7 @@ return {
 		unitTest:assertEquals(l1Info.name, clName1)
 		
 		-- ###################### 2 #############################
-		local shp2 = "localidades_cells.shp"
+		local shp2 = "mg_cells.shp"
 		local filePath2 = testDir.."/"..shp2	
 		local fn2 = getFileName(filePath2)
 		fn2 = testDir.."/"..fn2	
@@ -241,11 +241,11 @@ return {
 			end
 		end			
 		
-		local clName2 = "Localidades_Cells"
+		local clName2 = "MG_Cells"
 		proj:addCellularLayer {
 			input = layerName2,
 			layer = clName2,
-			resolution = 10000,
+			resolution = 1,
 			file = filePath2		
 		}
 		local l2Info = proj:infoLayer(clName2)
@@ -253,7 +253,7 @@ return {
 		unitTest:assertEquals(l2Info.name, clName2)
 		
 		-- ###################### 3 #############################
-		local shp3 = "another_localidades_cells.shp"
+		local shp3 = "another_sampa_cells.shp"
 		local filePath3 = testDir.."/"..shp3	
 		local fn3 = getFileName(filePath3)
 		fn3 = testDir.."/"..fn3	
@@ -265,11 +265,11 @@ return {
 			end
 		end			
 		
-		local clName3 = "Another_Localidades_Cells"
+		local clName3 = "Another_Sampa_Cells"
 		proj:addCellularLayer {
 			input = layerName2,
 			layer = clName3,
-			resolution = 10000,
+			resolution = 0.7,
 			file = filePath3		
 		}
 		local l3Info = proj:infoLayer(clName3)

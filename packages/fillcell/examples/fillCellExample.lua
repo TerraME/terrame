@@ -18,25 +18,25 @@ local project = Project{
 local polygons = "Setores"
 project:addLayer {
 	layer = polygons,
-	file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+	file = filePath("Setores_Censitarios_2000_pol.shp", "fillcell")
 }
 	
 local points = "Localidades"
 project:addLayer {
 	layer = points,
-	file = filePath("Localidades_pt.shp", "terralib")	
+	file = filePath("Localidades_pt.shp", "fillcell")	
 }
 
 local lines = "Rodovias"
 project:addLayer {
 	layer = lines,
-	file = filePath("Rodovias_lin.shp", "terralib")	
+	file = filePath("Rodovias_lin.shp", "fillcell")	
 }
 
 local tif = "Desmatamento"
 project:addLayer {
 	layer = tif,
-	file = filePath("Desmatamento_2000.tif", "terralib")		
+	file = filePath("Desmatamento_2000.tif", "fillcell")		
 }
 
 local host = "localhost"
@@ -133,6 +133,21 @@ cl:fillCells{
 	area = true
 }
 
+local rasterLayer = cellDbLayerName.."_Dematamento_Average"
+
+-- HUNK USED ONLY TO TEST
+pgData.table = rasterLayer
+terralib:dropPgTable(pgData)
+-- END HUNK
+
+cl:fillCells{
+	operation = "average",
+	layer = tif,
+	attribute = "raverage",
+	output = rasterLayer,
+	select = 0
+}
+
 -- USED ONLY TO TEST
 pgData.table = tableName
 terralib:dropPgTable(pgData)
@@ -144,6 +159,9 @@ pgData.table = sumLayer
 terralib:dropPgTable(pgData)
 
 pgData.table = averageLayer
+terralib:dropPgTable(pgData)
+
+pgData.table = rasterLayer
 terralib:dropPgTable(pgData)
 
 if isFile(projName) then

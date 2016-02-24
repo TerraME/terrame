@@ -147,13 +147,13 @@ return {
 			title = "Setores"
 		}		
 
-		local layerName1 = "Setores_Censitarios_2000"
+		local layerName1 = "Sampa"
 		proj:addLayer {
 			layer = layerName1,
-			file = filePath("Setores_Censitarios_2000_pol.shp", "terralib")
+			file = filePath("sampa.shp", "terralib")
 		}	
 		
-		local clName1 = "Setores_Cells"
+		local clName1 = "Sampa_Cells"
 		local tName1 = "add_cellslayer_basic"
 		
 		local host = "localhost"
@@ -182,7 +182,7 @@ return {
 			source = "postgis",
 			input = layerName1,
 			layer = clName1,
-			resolution = 10000,
+			resolution = 0.7,
 			user = user,
 			password = password,
 			database = database,
@@ -193,7 +193,7 @@ return {
 		unitTest:assertEquals(l1Info.name, clName1)		
 
 		-- ###################### 2 #############################
-		local clName2 = "Another_Setores_Cells"
+		local clName2 = "Another_Sampa_Cells"
 		local tName2 = "add_cellslayer_basic_another"
 		
 		pgData.table = tName2
@@ -203,7 +203,7 @@ return {
 			source = "postgis",
 			input = layerName1,
 			layer = clName2,
-			resolution = 10000,
+			resolution = 0.7,
 			user = user,
 			password = password,
 			database = database,
@@ -214,7 +214,7 @@ return {
 		unitTest:assertEquals(l2Info.name, clName2)	
 		
 		-- ###################### 3 #############################
-		local clName3 = "Other_Setores_Cells"
+		local clName3 = "Other_Sampa_Cells"
 		local tName3 = "add_cellslayer_basic_from_db"
 		
 		pgData.table = tName3
