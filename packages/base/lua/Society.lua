@@ -1032,13 +1032,10 @@ function Society(data)
 				data:add(csv[i])
 			end
 		else
+			-- TODO: REVIEW #924
 			local cs = CellularSpace{
-				database = data.database,
-				port = data.port,
-				user = data.user,
-				host = data.host,
-				dbType = data.dbType,
-				password = data.password
+				source = data.dbType,
+				file = data.database
 			}
 			forEachCell(cs, function(cell)
 				cell.type_ = "table"

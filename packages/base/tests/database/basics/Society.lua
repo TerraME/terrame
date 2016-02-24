@@ -58,15 +58,17 @@ return{
 		unitTest:assertEquals(11, sum_vision)
 		unitTest:assertEquals(6, sum_metabolism)
 		unitTest:assertEquals(2, sum_immunes)
-
+		
+		-- TODO: REVIEW #924
 		local nonFooAgent = Agent{}
 
 		local soc = Society {
 			instance = nonFooAgent,
-			database = filePath("brazilstates.shp", "base")
+			database = filePath("brazilstates.shp", "base"),
+			source = "shp"
 		}
 
-		unitTest:assertEquals(#soc, 27)
+		unitTest:assertEquals(#soc, 27) -- SKIP
 	end
 }
 
