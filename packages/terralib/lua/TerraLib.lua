@@ -818,6 +818,10 @@ TerraLib_ = {
 	finalize = function()
 		finalize()
 	end,
+	
+	getVersion = function()
+		return binding.te.common.Version.asString()
+	end,
 
 	createProject = function(self, project, layers)
 		if not isValidTviewExt(project.file) then

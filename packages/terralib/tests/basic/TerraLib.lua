@@ -41,6 +41,10 @@ return {
 		tlib:finalize()
 		unitTest:assert(true)
 	end,
+	getVersion = function(unitTest)
+		local tlib = TerraLib{}
+		unitTest:assertEquals(tlib:getVersion(), "5.1.0")		
+	end,
 	createProject = function(unitTest)
 		unitTest:assert(true)
 	end,
