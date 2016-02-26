@@ -172,7 +172,6 @@ local function createLayer(name, connInfo, type)
 	if type == "OGR" then
 		dSetName = getFileName(connInfo.URI)
 		dSetType = ds:getDataSetType(dSetName)
-		dSet = ds:getDataSet(dSetName)
 		local gp = binding.GetFirstGeomProperty(dSetType)
 		env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
 		srid = gp:getSRID()
@@ -187,10 +186,9 @@ local function createLayer(name, connInfo, type)
 	elseif type == "POSTGIS" then
 		dSetName = connInfo.PG_NEWDB_NAME
 		dSetType = ds:getDataSetType(dSetName)
-		dSet = ds:getDataSet(dSetName)
 		local gp = binding.GetFirstGeomProperty(dSetType)
 		env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
-		srid = gp:getSRID()
+		srid = gp:getSRID()	
 	end
 
 	local id = binding.GetRandomicId()
@@ -479,6 +477,9 @@ local function dropDataSet(connInfo, type)
 	if type == "POSTGIS" then
 		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
 		dSetName = string.lower(connInfo.PG_NEWDB_NAME)
+	elseif type == "OGR" then
+		ds = makeAndOpenDataSource(connInfo, "OGR")
+		dSetName = getFileName(connInfo.URI)
 	end
 	
 	local tableExists = ds:dataSetExists(dSetName)
@@ -554,6 +555,7 @@ local function createCellSpaceLayer(inputLayer, name, resolultion, connInfo, typ
 	cellLayerInfo:setId(cLId)
 	cellLayerInfo:setTitle(name)
 	cellLayerInfo:setDescription("Created on TerraME")
+	
 		
 	local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations()
 	local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
@@ -595,12 +597,63 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 	return propsRenamed
 end
 
+local function getPropertyCreatedName(outDs, outDSetName, toLayer)
+	local toDSetName = toLayer:getDataSetName()
+	local toDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
+	local toDs = makeAndOpenDataSource(toDsInfo:getConnInfo(), toDsInfo:getType())
+
+	
+	local outDSet = outDs:getDataSet(outDSetName)
+	local numProps = outDSet:getNumProperties()		
+	local propCreatedName = ""
+	
+	while outDSet:moveNext() do
+		for i = 0, numProps - 1 do
+			local propName = outDSet:getPropertyName(i)
+			if not toDs:propertyExists(toDSetName, propName) then
+				if propName ~= "OGR_GEOMETRY" then
+					propCreatedName = propName
+				end
+			end
+		end
+		outDSet:moveLast()
+	end
+	
+	toDs:close()
+	toDs = nil
+	outDSet = nil
+	collectgarbage("collect")
+
+	return propCreatedName
+end
+
+local function getDataSetTypeByLayer(layer)
+	local dSetName = layer:getDataSetName()
+	local connInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
+	local ds = makeAndOpenDataSource(connInfo:getConnInfo(), connInfo:getType())
+	local dst = ds:getDataSetType(dSetName)
+	
+	ds:close()
+	ds = nil
+	collectgarbage("collect")
+	
+	return dst
+end
+
+local function getNormalizedName(name)
+	if string.len(name) <= 10 then
+		return name
+	end
+	
+	return string.sub(name, 1, 10)
+end
+
 local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName)
 	local v2v = binding.te.attributefill.VectorToVectorMemory()
 	v2v:setInput(fromLayer, toLayer)			
 			
 	local outDs = v2v:createAndSetOutput(outDSetName, outType, outConnInfo)
-			
+
 	if operation == "average" then
 		if area then
 			operation = "weighted"
@@ -618,19 +671,29 @@ local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo
 			operation = "wsum"
 		end
 	end
-			
-	v2v:setParams(select, OperationMapper[operation], toLayer)
+	
+	local toDst = getDataSetTypeByLayer(toLayer)
 
-	local err = v2v:prun()
+	v2v:setParams(select, OperationMapper[operation], toDst)
+
+	local err = v2v:pRun() -- TODO: OGR RELEASE SHAPE PROBLEM (REVIEW)
 	if err ~= "" then
 		customError(err)
 	end
 	
 	local propCreatedName = select.."_"..VectorAttributeCreatedMapper[operation]
 	
-	if outType == "POSTGIS" then
-		propCreatedName = string.lower(propCreatedName)
-	end		
+	if outType == "OGR" then
+		propCreatedName = getNormalizedName(propCreatedName)
+	end
+	
+	propCreatedName = string.lower(propCreatedName)	
+	
+	outDs:close()
+	outDs = nil
+	toDst = nil
+	v2v = nil
+	collectgarbage("collect")
 	
 	return propCreatedName
 end
@@ -645,6 +708,13 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
     local rDSet = rDs:getDataSet(fromLayer:getDataSetName())
 	local rpos = binding.GetFirstPropertyPos(rDSet, binding.RASTER_TYPE)
 	local raster = rDSet:getRaster(rpos)
+	
+	if (fromLayer:getSRID() == 0) or (toLayer:getSRID() == 0) then
+		customError("Input layer with invalid SRID information.")
+	end
+	
+	local grid = raster:getGrid()
+	grid:setSRID(fromLayer:getSRID())
 			
 	r2v:setInput(raster, toLayer)
 			
@@ -656,7 +726,7 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 			
 	local outDs = r2v:createAndSetOutput(outDSetName, outType, outConnInfo)
 
-	local err = r2v:prun()
+	local err = r2v:pRun()
 	if err ~= "" then
 		customError(err)
 	end
@@ -764,6 +834,7 @@ TerraLib_ = {
 	
 		loadProject(project, filePath)		
 	end,
+	
 	getLayerInfo = function(self, project, layer)
 		local info = {}		
 		info.name = layer:getTitle()	
@@ -838,10 +909,6 @@ TerraLib_ = {
 		releaseProject(project)		
 	end,
 	
-	layerExists = function(self, name)
-		return currentProject:layerExists(name)
-	end,
-
 	addShpCellSpaceLayer = function(self, project, inputLayerTitle, name, resolultion, filePath) 
 		loadProject(project, project.file)
 		
@@ -892,8 +959,18 @@ TerraLib_ = {
 		local toDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
 		local outDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
 		
+		local outType = outDsInfo:getType()
+		
+		if outType == "OGR" then
+			if string.len(property) > 10 then
+				property = getNormalizedName(property)
+				customWarning("The 'attribute' lenght is more than 10 characters, it was changed to '"..property.."'.")
+			end
+		end
+		
 		if propertyExists(toDsInfo:getConnInfo(), property, toDsInfo:getType()) then
-			customError("The attribute '"..property.."' already exists in layer '"..to.."'.")
+			customError("The attribute '"..property.."' already exists in the CellularLayer.\n"
+						.."Please set another name.")
 		end		
 
 		if not propertyExists(fromDsInfo:getConnInfo(), select, fromDsInfo:getType()) then
@@ -903,14 +980,14 @@ TerraLib_ = {
 		local outDs = nil
 		local outConnInfo = outDsInfo:getConnInfo()
 		local outDSetName = out
-		local outType = outDsInfo:getType()
 		local propCreatedName = ""
 		
 		if outType == "POSTGIS" then
 			outConnInfo.PG_NEWDB_NAME = string.lower(outDSetName)
-		-- elseif (outType == "OGR") then -- TODO: TERRALIB DOES NOT WORK WITH OGR (REVIEW)
-			-- local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
-			-- outConnInfo.URI = outDir..out..".shp"
+		elseif outType == "OGR" then
+			local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
+			outConnInfo.URI = outDir..out..".shp"
+			outConnInfo.DRIVER = "ESRI Shapefile"
 		end				
 		
 		local dseType = fromLayer:getSchema()
@@ -951,7 +1028,11 @@ TerraLib_ = {
 		loadProject(project, project.file) -- TODO: IT NEED RELOAD (REVIEW)
 		saveProject(project, project.layers)
 		releaseProject(project)
-		collectgarbage("collect")
+		
+		outDs:close()
+		outDs = nil
+		dseType = nil
+		collectgarbage("collect")		
 	end,
 	
 	getDataSet = function(self, project, layerName)
@@ -971,6 +1052,7 @@ TerraLib_ = {
 		local dse = ds:getDataSet(dseName)
 		local count = 0
 		local numProps = dse:getNumProperties()
+		
 		local set = createDataSetAdapted(dse)
 		
 		releaseProject(project)
@@ -1086,6 +1168,12 @@ TerraLib_ = {
 		if outType == "POSTGIS" then
 			outConnInfo.PG_NEWDB_NAME = newDstName
 			dropDataSet(outConnInfo, "POSTGIS")
+			outDs = makeAndOpenDataSource(outConnInfo, outType)
+		elseif outType == "OGR" then
+			local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
+			outConnInfo.URI = outDir..newDstName..".shp"
+			outConnInfo.DRIVER = "ESRI Shapefile"		
+			dropDataSet(outConnInfo, "OGR")
 			outDs = makeAndOpenDataSource(outConnInfo, outType)
 		end
 		

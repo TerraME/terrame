@@ -41,8 +41,8 @@ return{
 		local proj = Project {
 			file = projName,
 			create = true,
-			author = "Avancini",
-			title = "Cellular Layer"
+			author = author,
+			title = title
 		}		
 
 		local layerName1 = "Sampa"
@@ -181,7 +181,7 @@ return{
 				output = presenceLayerName
 			}
 		end
-		unitTest:assertError(attrAlreadyExists, "The attribute '".."row".."' already exists in layer '"..clName1.."'.")				
+		unitTest:assertError(attrAlreadyExists, "The attribute '".."row".."' already exists in the CellularLayer.\nPlease set another name.")				
 
 		local presenceSelectUnnecessary = function()
 			cl:fillCells{

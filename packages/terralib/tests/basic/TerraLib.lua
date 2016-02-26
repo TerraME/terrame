@@ -59,9 +59,6 @@ return {
 	addPgLayer = function(unitTest)
 		unitTest:assert(true)
 	end,
-	layerExists = function(unitTest)
-		unitTest:assert(true)
-	end,
 	dropPgTable = function(unitTest)
 		unitTest:assert(true)
 	end,

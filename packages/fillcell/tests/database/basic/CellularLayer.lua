@@ -115,8 +115,8 @@ return {
 		local proj = Project {
 			file = projName,
 			create = true,
-			author = "Avancini",
-			title = "Cellular Layer"
+			author = author,
+			title = title
 		}		
 
 		local layerName1 = "Sampa"
@@ -662,6 +662,9 @@ return {
 		end)		
 		
 		local cellSpaceLayerName = clName2.."_CellSpace_Sum"
+		
+		pgData.table = string.lower(cellSpaceLayerName)
+		tl:dropPgTable(pgData)			
 		
 		cs:save(cellSpaceLayerName, "past_sum")
 		
