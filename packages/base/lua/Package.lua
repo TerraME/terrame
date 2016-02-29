@@ -68,20 +68,19 @@ end
 -- trying to load a package that was already loaded. In this case, the package
 -- will not be loaded again. See #2 below for a different procedure.
 -- @arg package A package name.
--- @arg check A boolean value indicating whether TerraME should verify if the
--- package is already loaded (default is true). Setting this parameter
--- to false forces the package to be loaded again if it was already loaded. It
+-- @arg reload A boolean value indicating whether TerraME should load the package
+-- even if it was already loaded (default is false). In this case, it
 -- also avoids a warning indicating that the package was already loaded.
 -- @usage -- DONTRUN
 -- import("calibration")
-function import(package, check)
+function import(package, reload)
 	mandatoryArgument(1, "string", package)
-	optionalArgument(2, "boolean", check)
+	optionalArgument(2, "boolean", reload)
 
-	if check == nil then check = true end
+	if reload == nil then reload = false end
 
-	if isLoaded(package) and check then
-		customWarning("Package '"..package.."' is already loaded.")
+	if isLoaded(package) and not reload then
+		strictWarning("Package '"..package.."' is already loaded.")
 	else
 		local s = sessionInfo().separator
 		local package_path = packageInfo(package).path

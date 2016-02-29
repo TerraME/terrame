@@ -50,7 +50,7 @@ return{
 	import = function(unitTest)
 		forEachCell = nil
 
-		import("base", false)
+		import("base", true)
 
 		unitTest:assertType(forEachCell, "function")
 	end,
