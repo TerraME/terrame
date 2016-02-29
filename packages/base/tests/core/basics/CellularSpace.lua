@@ -276,16 +276,16 @@ yMin    number [0]
 		unitTest:assertEquals(32, sizes[6])
 		unitTest:assertEquals(64, sizes[9])
 
-		local verifyWrapX = function(xCell, xNeigh)
-			return xNeigh == (((xCell - 1) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol)
-			or xNeigh == ((xCell - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol)
-			or xNeigh == (((xCell + 1) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol)
+		local verifyWrapX = function(cs, cell, neigh)
+			return neigh.x == ((cell.x - 1) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin
+			or     neigh.x == cell.x
+			or     neigh.x == ((cell.x + 1) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin
 		end
 
-		local verifyWrapY = function(yCell, yNeigh)
-			return yNeigh == (((yCell - 1) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
-			or yNeigh == ((yCell - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
-			or yNeigh == (((yCell + 1) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)
+		local verifyWrapY = function(cs, cell, neigh)
+			return neigh.y == (((cell.y - 1) - cs.yMin) % (cs.yMax - cs.yMin + 1) + cs.yMin)
+			or     neigh.y == cell.y
+			or     neigh.y == (((cell.y + 1) - cs.yMin) % (cs.yMax - cs.yMin + 1) + cs.yMin)
 		end
 
 		cs:createNeighborhood{name = "my_neighborhood3", wrap = true}
@@ -297,6 +297,11 @@ yMin    number [0]
 			unitTest:assertEquals(8, neighborhoodSize)
 
 			unitTest:assert(not neighborhood:isNeighbor(cell))
+
+			forEachNeighbor(cell, function(cell, neigh)
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
+			end)
 		end)
 
 		cs:createNeighborhood{
@@ -312,6 +317,11 @@ yMin    number [0]
 			unitTest:assertEquals(9, neighborhoodSize)
 
 			unitTest:assert(neighborhood:isNeighbor(cell))
+
+			forEachNeighbor(cell, function(cell, neigh)
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
+			end)
 		end)
 
 		cs = CellularSpace{xdim = 10}
@@ -383,18 +393,6 @@ yMin    number [0]
 			wrap = true
 		}
 
-		local verifyWrapX = function(xCell, xNeigh)
-			return (xNeigh == (((xCell -1) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol)) or
-			(xNeigh == ((xCell - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol)) or 
-			(xNeigh == (((xCell + 1) - cs.minCol) % (cs.maxCol - cs.minCol + 1) + cs.minCol))
-		end
-
-		local verifyWrapY = function(yCell, yNeigh)
-			return (yNeigh == (((yCell - 1) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)) or
-			(yNeigh == ((yCell - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow)) or 
-			(yNeigh == (((yCell + 1) - cs.minRow) % (cs.maxRow - cs.minRow + 1) + cs.minRow))
-		end
-
 		forEachCell(cs, function(cell)
 			local neighborhood = cell:getNeighborhood("my_neighborhood2")
 
@@ -416,6 +414,11 @@ yMin    number [0]
 			unitTest:assertEquals(1, sumWeight, 0.00001)
 
 			unitTest:assert(not neighborhood:isNeighbor(cell))
+
+			forEachNeighbor(cell, function(cell, neigh)
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
+			end)
 		end)
 
 		cs:createNeighborhood{
@@ -434,9 +437,11 @@ yMin    number [0]
 			local sumWeight = 0
 
 			forEachNeighbor(cell, "my_neighborhood3", function(c, neigh, weight)
-				unitTest:assertEquals((1/neighborhoodSize), weight, 0.00001)
+				unitTest:assertEquals((1 / neighborhoodSize), weight, 0.00001)
 
 				unitTest:assert(neigh.x == c.x or neigh.y == c.y)
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
 			end)
 
 			unitTest:assert(neighborhood:isNeighbor(cell))
@@ -496,6 +501,9 @@ yMin    number [0]
 				unitTest:assert(neigh.x ~= c.x and neigh.y ~= c.y)
 
 				sumWeight = sumWeight + weight
+
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
 			end)
 
 			unitTest:assertEquals(1, sumWeight, 0.00001)
@@ -529,6 +537,8 @@ yMin    number [0]
 				unitTest:assert((neigh.x ~= c.x and neigh.y ~= c.y) or (c == neigh))
 
 				sumWeight = sumWeight + weight
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
 			end)
 
 			unitTest:assertEquals(1, sumWeight, 0.00001)
@@ -566,6 +576,26 @@ yMin    number [0]
 		unitTest:assertEquals(4, sizes[4])
 		unitTest:assertEquals(32, sizes[6])
 		unitTest:assertEquals(64, sizes[9])
+
+		cs:createNeighborhood{
+			strategy = "mxn",
+			m = 5,
+			wrap = true,
+			name = "mxnwrap"
+		}
+
+		local sizes = {}
+
+		forEachCell(cs, function(cell)
+			local neighborhood = cell:getNeighborhood("mxnwrap")
+			unitTest:assert(neighborhood:isNeighbor(cell))
+			unitTest:assertEquals(#neighborhood, 25)
+
+			forEachNeighbor(cell, function(cell, neigh)
+				unitTest:assert(verifyWrapX(cs, cell, neigh))
+				unitTest:assert(verifyWrapY(cs, cell, neigh))
+			end)
+		end)
 
 		local filterFunction = function(cell, neighbor)
 			return neighbor.y > cell.y
@@ -627,7 +657,6 @@ yMin    number [0]
 				unitTest:assert(neigh.x <= c.x + 1)
 				unitTest:assert(neigh.y >= c.y - 1)
 				unitTest:assert(neigh.y <= c.y + 1)
-
 				unitTest:assert(filterFunction(c, neigh))
 
 				unitTest:assertEquals(((neigh.y - c.y) / (neigh.y + c.y)), weight, 0.00001)

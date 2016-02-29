@@ -125,12 +125,22 @@ end
 local function getMxNNeighborhood(cs, data)
 	local m = math.floor(data.m / 2)
 	local n = math.floor(data.n / 2)
+	local cs = data.target
 
 	return function(cell)
 		local neighborhood = Neighborhood()
 		for lin = -n, n do
 			for col = -m, m do
-				local neighCell = data.target:get(cell.x + col, cell.y + lin)
+				local neighCell
+
+				if data.wrap then
+					neighCell = cs:get(
+						((cell.x + col) - cs.xMin) % (cs.xMax - cs.xMin + 1) + cs.xMin,
+						((cell.y + lin) - cs.yMin) % (cs.yMax - cs.yMin + 1) + cs.yMin)
+				else
+					neighCell = cs:get(cell.x + col, cell.y + lin)
+				end
+	
 				if neighCell then
 					if data.filter(cell, neighCell) then
 						neighborhood:add(neighCell, data.weight(cell, neighCell))
@@ -456,7 +466,7 @@ CellularSpace_ = {
 	-- "moore"(default) & A Moore (queen) Neighborhood, connecting each Cell to its (at most) 
 	-- eight touching Cells. & & name, self, wrap, inmemory \
 	-- "mxn" & A m (columns) by n (rows) Neighborhood within the CellularSpace or between two
-	-- CellularSpaces if target is used. & & m, name, n, filter, weight, target, inmemory \
+	-- CellularSpaces if target is used. & & m, name, n, filter, weight, wrap, target, inmemory \
 	-- "vonneumann" & A von Neumann (rook) Neighborhood, connecting each Cell to its (at most)
 	-- four ortogonally surrounding Cells. & & name, self, wrap, inmemory
 	-- @arg data.filter A function(Cell, Cell)->bool, where the first argument is the Cell itself
@@ -567,11 +577,12 @@ CellularSpace_ = {
 				data.func = getMooreNeighborhood
 			end,
 			mxn = function()
-				verifyUnnecessaryArguments(data, {"filter", "weight", "name", "strategy", "m", "n", "target", "inmemory"})
+				verifyUnnecessaryArguments(data, {"filter", "weight", "wrap", "name", "strategy", "m", "n", "target", "inmemory"})
 
 				defaultTableValue(data, "filter", function() return true end)
 				defaultTableValue(data, "weight", function() return 1 end)
 				defaultTableValue(data, "target", self)
+				defaultTableValue(data, "wrap", false)
 
 				defaultTableValue(data, "m", 3)
 				integerTableArgument(data, "m")
