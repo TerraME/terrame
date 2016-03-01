@@ -820,13 +820,14 @@ local function version()
 	print("Version: ".._Gtme.sessionInfo().version)
 	print("Location (TME_PATH): ".._Gtme.sessionInfo().path)
 
-	local lua_release, qt_version, qwt_version, terralib_version, db_version = cpp_informations()
+	local lua_release, qt_version, qwt_version = cpp_informations()
 
 	print("Compiled with:")
 	print("  "..lua_release)
 	print("  Qt "..qt_version)
 	print("  Qwt "..qwt_version)
-	print("  TerraLib "..terralib_version.." (Database version: "..db_version..")")
+	-- local tlib = terralib.TerraLib{} -- issue #905
+	-- print("  TerraLib "..tlib:version())
 end
 
 local function usage()
