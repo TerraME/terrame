@@ -30,7 +30,7 @@ find_path(SHAPELIB_SRC_DIR findCentroid.h
    HINTS 
    #PATH_SUFFIXES include/lua52 include/lua5.2 include/lua include lua52/include lua5.2/include lua/include 
    PATHS
-   ${DEPS}/shapelib
+   ${TERRAME_DEPENDENCIES_DIR}/shapelib
 )
 
 if(SHAPELIB_SRC_DIR)
