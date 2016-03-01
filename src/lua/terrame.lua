@@ -826,8 +826,11 @@ local function version()
 	print("  "..lua_release)
 	print("  Qt "..qt_version)
 	print("  Qwt "..qwt_version)
-	-- local tlib = terralib.TerraLib{} -- issue #905
-	-- print("  TerraLib "..tlib:version())
+	
+	local terralib = getPackage("terralib")
+	local tlib = terralib.TerraLib{}
+	print("  TerraLib "..tlib:getVersion())
+	tlib:finalize()	
 end
 
 local function usage()
