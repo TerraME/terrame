@@ -220,28 +220,6 @@ include_directories(${TERRAME_SRC_DIR}
 
 set(TERRAME_LIBRARIES)
 
-set(TERRAME_DEPENDENCIES_DIR ${TERRAME_ROOT_DIR}/dependencies)
-### --------------
-# Shapelib
-find_package(Shapelib REQUIRED)
-if(SHAPELIB_FOUND)
-	message("-- Found Shapelib sources in ${SHAPELIB_SRC_DIR}")
-
-	file(GLOB TERRAME_DEPENDENCIES_SHAPELIB_SRC_FILES 		${TERRAME_ROOT_DIR}/dependencies/shapelib/*.cpp 
-															${TERRAME_ROOT_DIR}/dependencies/shapelib/*.c)
-	file(GLOB TERRAME_DEPENDENCIES_SHAPELIB_HDR_FILES 		${TERRAME_ROOT_DIR}/dependencies/shapelib/*.h)
-
-	source_group("Source Files\\shapelib"	FILES ${TERRAME_DEPENDENCIES_SHAPELIB_SRC_FILES})
-	source_group("Header Files\\shapelib"	FILES ${TERRAME_DEPENDENCIES_SHAPELIB_HDR_FILES})
-					
-	set(TERRAME_FILES 	${TERRAME_FILES} 
-						${TERRAME_DEPENDENCIES_SHAPELIB_SRC_FILES} ${TERRAME_DEPENDENCIES_SHAPELIB_HDR_FILES})	
-						
-	include_directories(${SHAPELIB_SRC_DIR})	
-else(SHAPELIB_FOUND)
-	message(FATAL_ERROR "-- Shapelib source code was not found in the dependencies folder")
-endif(SHAPELIB_FOUND)
-
 ## ---------------------------------------- Find dependencies -------------------------------------------------- ##
 find_package(qwt-qt5)
 if(QWT_FOUND)

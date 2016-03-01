@@ -22,7 +22,6 @@
 #include "../components/canvas.h"
 #include "../protocol/decoder/decoder.h"
 #include "observerMap.h"
-#include "../components/painter/painterShapefile.h"
 
 using namespace TerraMEObserver;
 

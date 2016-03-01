@@ -40,7 +40,6 @@ of this library and its documentation.
 #include "../observer/types/observerLogFile.h"
 #include "../observer/types/observerTable.h"
 #include "../observer/types/observerUDPSender.h"
-#include "../observer/types/observerShapefile.h"
 
 #include "luaUtils.h"
 
@@ -513,7 +512,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
     ObserverTable *obsTable = 0;
     ObserverGraphic *obsGraphic = 0;
     ObserverLogFile *obsLog = 0;
-    ObserverShapefile *obsShape = 0;
 
     int obsId = -1;
 
@@ -603,23 +601,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
                 qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
         }
         break;
-    case TObsShapefile:
-    {
-        obsShape = (ObserverShapefile*)CellSpaceSubjectInterf::createObserver(TObsShapefile);
-        if(obsShape)
-        {
-            obsShape->loadShape(dbName);
-            obsId = obsShape->getId();
-            //if (obsVisible)
-            //obsShape->show();
-        }
-        else
-        {
-            if (execModes != Quiet)
-                qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
-        }
-        break;
-    }
     case TObsUDPSender:
         obsUDPSender = (ObserverUDPSender *) CellSpaceSubjectInterf::createObserver(TObsUDPSender);
         if (obsUDPSender)
@@ -710,14 +691,6 @@ int luaCellularSpace::createObserver(lua_State * luaL)
 		lua_pushlightuserdata(luaL, (void*) obsMap);
 
 		return 2;
-    }
-    
-    if (obsShape)
-    {
-        ((ObserverShapefile *)obsShape)->setAttributes(obsAttribs, obsParams, obsParamsAtribs);
-        observersHash.insert(obsShape->getId(), obsShape);
-        lua_pushnumber(luaL,  obsShape->getId());
-        return 1;
     }
 
     if (obsUDPSender)
@@ -986,33 +959,6 @@ int luaCellularSpace::kill(lua_State *luaL)
     bool result = CellSpaceSubjectInterf::kill(id);
     lua_pushboolean(luaL, result);
     return 1;
-}
-
-int luaCellularSpace::saveShape(lua_State *L)
-{
-	string filename = dbName;
-	int lastIndex = filename.find_last_of(".");
-	string filePrefix = filename.substr(0, lastIndex); //string filePrefix = TeGetName(dbName.c_str()); // issue #319
-    string dbfFileN = filePrefix + ".dbf";
-    DBFHandle hDBF = DBFOpen(dbfFileN.c_str(), "rb+");
-    if(hDBF == NULL) return 0;
-    int top = lua_gettop(L);
-    int cellId = lua_tonumber(L,top-3);
-    string cellAttrName = lua_tostring(L,top-2);
-    int index = DBFGetFieldIndex(hDBF,cellAttrName.c_str());
-    if(index==-1) return 0; // attribute unknow
-    int cellAttrType = lua_tonumber(L,top-4);
-    if(cellAttrType==1){
-        double cellAttrValue = lua_tonumber(L,top-1);
-        DBFWriteDoubleAttribute(hDBF,cellId, index, cellAttrValue);
-    }
-    else if(cellAttrType==2){
-        string cellAttrValue = lua_tostring(L,top-1);
-        DBFWriteStringAttribute(hDBF,cellId-1, index, cellAttrValue.c_str());
-    }
-
-    DBFClose(hDBF);
-    return 0;
 }
 
 //@RAIAN: novo loadNeighborhood

@@ -8,7 +8,6 @@
 #include "types/observerLogFile.h"
 #include "types/observerTable.h"
 #include "types/observerUDPSender.h"
-#include "types/observerShapefile.h"
 
 using namespace TerraMEObserver;
 
@@ -37,10 +36,6 @@ Observer * CellSpaceSubjectInterf::createObserver(TypesOfObservers type)
 
         case TObsMap:
             obs = new AgentObserverMap(this);
-            break;
-
-        case TObsShapefile:
-            obs = new ObserverShapefile(this);
             break;
     
         case TObsTextScreen:

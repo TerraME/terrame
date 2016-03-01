@@ -6,7 +6,6 @@
 #include "types/observerGraphic.h"
 #include "types/observerUDPSender.h"
 #include "types/observerStateMachine.h"
-#include "types/observerShapefile.h"
 
 //#include "../observer/types/agentObserverMap.h"
 

@@ -90,8 +90,6 @@ public:
     /// Sets the SQL WHERE CLAUSE to the string received as parameter
     int setWhereClause(lua_State *L );
 
-    int saveShape(lua_State *L);
-
     /// Clear all luaCellularSpace object content (cells)
     int clear(lua_State *L);
 
