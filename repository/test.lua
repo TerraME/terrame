@@ -1,7 +1,5 @@
 -- Script to test the package repository.
--- To use it, just run 'terrame repository.lua' within this directory.
---
--- Pedro R. Andrade
+-- To use it, just run 'terrame test.lua' within this directory.
 
 local initialTime = os.time(os.date("*t"))
 local s = sessionInfo().separator
@@ -74,12 +72,12 @@ local function execute(command, filename)
 		report.errors = report.errors + 1
 	end
 
-	logfile = io.open(".."..s.."repos"..s..filename, "r")
+	logfile = io.open(".."..s.."log"..s..filename, "r")
 	if logfile == nil then
-		_Gtme.printError("Creating repos log file '".._Gtme.makePathCompatibleToAllOS("repos"..s..filename.."'"))
+		_Gtme.printError("Creating log file '".._Gtme.makePathCompatibleToAllOS("log"..s..filename.."'"))
 		report.createdlogs = report.createdlogs + 1
 
-		logfile = io.open(".."..s.."repos"..s..filename, "w")
+		logfile = io.open(".."..s.."log"..s..filename, "w")
 		forEachElement(result, function(_, value)
 			logfile:write(value.."\n")
 		end)
@@ -177,11 +175,11 @@ _Gtme.printNote("The repository has "..report.packages.." packages.")
 _Gtme.printNote("Results were saved in '"..tmpdirectory.."'.")
 
 if report.createdlogs == 0 then
-	_Gtme.printNote("No repos log file was created.")
+	_Gtme.printNote("No log file was created.")
 elseif report.createdlogs == 1 then
-	_Gtme.printError("One repos log file was created during the tests. Please run the tests again.")
+	_Gtme.printError("One log file was created during the tests. Please run the tests again.")
 else
-	_Gtme.printError(report.createdlogs.." repos log files were created during the tests. Please run the tests again.")
+	_Gtme.printError(report.createdlogs.." log files were created during the tests. Please run the tests again.")
 end
 
 if report.errors == 0 then
