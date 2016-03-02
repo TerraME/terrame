@@ -1189,6 +1189,11 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 					_Gtme.printError(err)
 					--_Gtme.printError(traceback())
 				end)
+				
+				local terralib = getPackage("terralib")
+				local tlib = terralib.TerraLib{}
+				tlib:finalize()
+				
 				os.exit()
 			elseif arg == "-sketch" then
 				info_.mode = "debug"
