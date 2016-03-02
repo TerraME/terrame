@@ -119,13 +119,7 @@ function _Gtme.getVersion(str)
 end
 
 function _Gtme.downloadPackagesList()
-	local pkgs = cpp_listpackages("http://www.terrame.org/packages/")
-	local packages = {}
-
-	for w in string.gmatch(pkgs, "\"[_%.%w]+%.zip\"") do
-		packages[string.sub(w, 2, -2)] = true
-	end
-
+	local packages = load(cpp_listpackages("http://www.terrame.org/packages/test.lua"))()
 	return packages
 end
 

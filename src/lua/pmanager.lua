@@ -273,9 +273,9 @@ end
 local function installButtonClicked()
 	disableAll()
 
-	local pkgs = _Gtme.downloadPackagesList()
+	local packages = _Gtme.downloadPackagesList()
 
-	if getn(pkgs) == 0 then
+	if getn(packages) == 0 then
 		local msg = "Could not download the packages list. "..
 		            "Please verify your internet connection and try again. "..
 		            "If it still does not work, close and open TerraME again."
@@ -283,8 +283,6 @@ local function installButtonClicked()
 		enableAll()
 		return
 	end
-
-	local packages = load(cpp_listpackages("http://www.terrame.org/packages/test.lua"))()
 
 	local pkgsTab = {}
 
@@ -298,23 +296,23 @@ local function installButtonClicked()
 	local listPackages = qt.new_qobject(qt.meta.QListWidget)
 
 	local count = 0
-	forEachOrderedElement(pkgs, function(idx)
-		local sep = string.find(idx, "_")
-		local package = string.sub(idx, 1, sep - 1)
-		local version = string.sub(idx, sep + 1, string.find(idx, "zip") - 2)
+	forEachOrderedElement(packages, function(idx, data)
+		data.file = data.package.."_"..data.version..".zip"
+		data.newversion = true
 
-		pkgsTab[count] = {file = idx, newversion = true}
+		pkgsTab[count] = data
 
-		local ok, info = pcall(function() return packageInfo(package) end)
+		local ok, info = pcall(function() return packageInfo(idx) end)
+		local package = idx
 
 		if ok then
 			packages[info.package].currentVersion = info.version
 
-        	if _Gtme.verifyVersionDependency(info.version, ">=", version) then
+        	if _Gtme.verifyVersionDependency(info.version, ">=", data.version) then
 				package = package.." (already installed)"
 				pkgsTab[count].newversion = false
 			else
-				package = package.." (version "..version.." available)"
+				package = package.." (version "..data.version.." available)"
 			end
 		end
 
@@ -356,7 +354,7 @@ local function installButtonClicked()
 		    	    local isInstalled = pcall(function() packageInfo(dtable.package) end)
 
 					if not isInstalled then
-						forEachElement(pkgs, function(idx)
+						forEachElement(packages, function(idx)
 							if string.match(idx, dtable.package.."_") then
 								if not installRecursive(idx) then
 									return false
