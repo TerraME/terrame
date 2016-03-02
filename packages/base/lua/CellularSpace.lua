@@ -899,8 +899,6 @@ CellularSpace_ = {
 		mandatoryArgument(1, "string", newLayerName)
 		
 		if (attrNames ~= nil) and (attrNames ~= "") then
-			
-			
 			if type(attrNames) == "string" then 
 				attrNames = {attrNames} 
 			elseif type(attrNames) ~= "table" then
@@ -915,7 +913,12 @@ CellularSpace_ = {
 		end
 
 		local tlib = terralib.TerraLib{}
-		tlib:saveDataSet(self.project, self.layer, self.cells, newLayerName, attrNames)
+		
+		if self.project then
+			tlib:saveDataSet(self.project, self.layer, self.cells, newLayerName, attrNames)
+		else
+			customError("The CellularSpace must have a valid Project. Please, check the documentation.")
+		end
 	end,
 	--- Return the number of Cells in the CellularSpace.
 	-- @deprecated CellularSpace:#
