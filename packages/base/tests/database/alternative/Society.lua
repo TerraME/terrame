@@ -30,15 +30,15 @@ return{
 		local error_func = function()
 			sc = Society{
 				instance = Agent{},
-				database = "not_a_file.csv"
+				file = "not_a_file.csv"
 			}
 		end
-		unitTest:assertError(error_func, resourceNotFoundMsg("database", "not_a_file.csv"))
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "not_a_file.csv"))
 
 		error_func = function()
 			sc2 = Society{
 				instance = Agent{},
-				database = agents_csv,
+				file = agents_csv,
 				sep = 10
 			}
 		end
