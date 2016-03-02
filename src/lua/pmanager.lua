@@ -37,6 +37,29 @@ local runButton
 local dialog
 local oldState
 
+local function breakLines(str)
+	local result = ""
+	local lineWidth = 50
+	local lines = 1
+
+	spaceLeft = lineWidth
+
+	words = {}
+	for word in str:gmatch("%g+") do table.insert(words, word) end
+
+	forEachElement(words, function(_, word)
+    	if string.len(word) + 1 > spaceLeft then
+			result = result.."\n"..word.." "
+			lines = lines + 1
+			spaceLeft = lineWidth - string.len(word)
+    	else
+			result = result..word.." "
+        	spaceLeft = spaceLeft - (string.len(word) + 1)
+		end
+	end)
+	return result, lines
+end
+
 local function disableAll()
 	oldState = {
 		[comboboxExamples] = comboboxExamples.enabled,
@@ -261,6 +284,8 @@ local function installButtonClicked()
 		return
 	end
 
+	local packages = load(cpp_listpackages("http://www.terrame.org/packages/test.lua"))()
+
 	local pkgsTab = {}
 
 	local dialog = qt.new_qobject(qt.meta.QDialog)
@@ -283,6 +308,8 @@ local function installButtonClicked()
 		local ok, info = pcall(function() return packageInfo(package) end)
 
 		if ok then
+			packages[info.package].currentVersion = info.version
+
         	if _Gtme.verifyVersionDependency(info.version, ">=", version) then
 				package = package.." (already installed)"
 				pkgsTab[count].newversion = false
@@ -396,14 +423,68 @@ local function installButtonClicked()
 		dialog:done(0)
 	end)
 
+	local description = qt.new_qobject(qt.meta.QLabel)
+	description.text = "Select a package"..
+		"\n\t\t\t\t\t\t\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+
 	qt.connect(listPackages, "itemClicked(QListWidgetItem*)", function()
 		installButton.enabled = pkgsTab[listPackages.currentRow].newversion
+
+		local idx = pkgsTab[listPackages.currentRow].file
+
+        local sep = string.find(idx, "_")
+        local package = string.sub(idx, 1, sep - 1)
+
+		local lines = 0
+
+		local text = packages[package].title.."\n"
+		lines = lines + 1
+
+		local mtext, mlines = breakLines(packages[package].content)
+		lines = lines + mlines
+		text = text.."\n"..mtext
+		text = text.."\n\t\t\t\t\t\t"
+		lines = lines + 2
+
+		text = text.."\nNewest version: "..packages[package].version
+		lines = lines + 1
+
+		if packages[package].currentVersion then
+			text = text.."\nInstalled version: "..packages[package].currentVersion
+			lines = lines + 1
+		end
+
+		local mtext, mlines = breakLines("Author(s): "..packages[package].authors)
+		lines = lines + mlines
+		text = text.."\n"..mtext
+
+		if packages[package].depends then
+			mtext, mlines = breakLines("Depends: "..packages[package].depends)
+			lines = lines + mlines
+			text = text.."\n"..mtext
+		end
+
+
+		while lines < 16 do
+			text = text.."\n"
+			lines = lines + 1
+		end
+
+		description.text = text
 	end)
 
-	qt.ui.layout_add(externalLayout, listPackages)
-	qt.ui.layout_add(externalLayout, installButton)
-	qt.ui.layout_add(externalLayout, cancelButton)
+	internalLayout = qt.new_qobject(qt.meta.QHBoxLayout)
 
+	qt.ui.layout_add(internalLayout, listPackages)
+	qt.ui.layout_add(internalLayout, description)
+
+	qt.ui.layout_add(externalLayout, internalLayout)
+
+	internalLayout = qt.new_qobject(qt.meta.QHBoxLayout)
+	qt.ui.layout_add(internalLayout, installButton)
+	qt.ui.layout_add(internalLayout, cancelButton)
+
+	qt.ui.layout_add(externalLayout, internalLayout)
 	dialog:show()
 	dialog:exec()
 	enableAll()
@@ -479,7 +560,6 @@ local function installLocalButtonClicked()
 			qt.dialog.msg_critical(err)
 			ok = false
 		end)
-
 
 		if ok then
 			qt.dialog.msg_information("Package '"..package.."' successfully installed.")
