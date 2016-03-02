@@ -179,9 +179,8 @@ int cpp_informations(lua_State *L)
 	lua_pushstring(L, LUA_RELEASE);
 	lua_pushstring(L, qVersion());
 	lua_pushstring(L, QWT_VERSION_STR);
-	// lua_pushstring(L, TERRALIB_VERSION); // issue #319
-	// lua_pushstring(L, TeDBVERSION.c_str()); // issue #319
-	return 5;
+
+	return 3;
 }
 
 int cpp_imagecompare(lua_State *L)
