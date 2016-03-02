@@ -119,7 +119,7 @@ function _Gtme.getVersion(str)
 end
 
 function _Gtme.downloadPackagesList()
-	local packages = load(cpp_listpackages("http://www.terrame.org/packages/test.lua"))()
+	local packages = load(cpp_listpackages("http://www.terrame.org/packages/packages.lua"))()
 	return packages
 end
 
