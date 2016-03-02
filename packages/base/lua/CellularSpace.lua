@@ -911,10 +911,9 @@ CellularSpace_ = {
 				end
 			end
 		end
-
-		local tlib = terralib.TerraLib{}
 		
 		if self.project then
+			local tlib = terralib.TerraLib{}
 			tlib:saveDataSet(self.project, self.layer, self.cells, newLayerName, attrNames)
 		else
 			customError("The CellularSpace must have a valid Project. Please, check the documentation.")
