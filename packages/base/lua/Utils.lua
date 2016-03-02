@@ -1537,22 +1537,22 @@ end
 -- --     ['name'] = 'john'
 -- -- }
 function vardump(o, indent)
-	if indent == nil then indent = '' end
+	if indent == nil then indent = "" end
 
-	local indent2 = indent..'    '
+	local indent2 = indent.."    "
 	if isTable(o) then
-		local s = indent..'{'..'\n'
+		local s = "{".."\n"
 		local first = true
 		forEachOrderedElement(o, function(k, v)
-			if first == false then s = s .. ', \n' end
-			if type(k) ~= 'number' then k = "'"..tostring(k).."'" end
-			s = s..indent2..'['..k..'] = '..vardump(v, indent2)
+			if first == false then s = s .. ", \n" end
+			if type(k) ~= "number" then k = "\""..tostring(k).."\"" end
+			s = s..indent2.."["..k.."] = "..vardump(v, indent2)
 			first = false
 		end)
 
-		return s..'\n'..indent..'}'
+		return s.."\n"..indent.."}"
 	else
-		return "'"..tostring(o).."'"
+		return "\""..tostring(o).."\""
 	end
 end
 
