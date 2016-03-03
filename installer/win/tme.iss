@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TerraME"
-#define MyAppVersion "1.6.0"
+#define MyAppVersion "2.0-Alpha"
 #define MyAppPublisher "INPE"
 #define MyAppURL "http://www.terrame.org/"
 #define MyAppExeName "terrame.exe"
@@ -12,7 +12,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{C86CB7EF-FD4B-4259-B9B2-E52F58836C4D}
+AppId={{03737774-F86A-483A-A2AE-416E58757BC8}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -25,7 +25,7 @@ DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile=..\..\licenses\terrame-license-lgpl-3.0.txt
 OutputDir=setup
-OutputBaseFilename=terrame-1.6.0-win32
+OutputBaseFilename=terrame-2.0.0-winx64-alpha
 Compression=lzma
 SolidCompression=yes
 ChangesEnvironment=yes
@@ -38,48 +38,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "..\..\bin\terrame.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\cp.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\find-msys.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libgcc_s_dw2-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libGLESV2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libjpeg-9.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libmysql.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libprotobuf-9.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libqtlua.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libterralib.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libterralib_shp.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libtiff-5.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\libwinpthread-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\ls.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\lua52.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\md5sum.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\mktemp.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\msys-1.0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\msys-iconv-2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\msys-intl-8.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\Qt5Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\Qt5Gui.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\Qt5Network.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\Qt5OpenGL.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\Qt5PrintSupport.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\Qt5Svg.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\Qt5Widgets.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\qtluae.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\qwt.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\rm.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\touch.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\unzip.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\zip.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\zlib1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\bin\bearer\*"; DestDir: "{app}\bearer"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\bin\iconengines\*"; DestDir: "{app}\iconengines"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\bin\imageformats\*"; DestDir: "{app}\imageformats"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\bin\lua\*"; DestDir: "{app}\lua"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\bin\packages\*"; DestDir: "{app}\packages"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\bin\platforms\*"; DestDir: "{app}\platforms"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\bin\translations\*"; DestDir: "{app}\translations"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\bin\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

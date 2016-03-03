@@ -4,10 +4,55 @@ http://www.jrsoftware.org/isinfo.php
 ModPath was used to provide extra features.
 http://www.legroom.net/software/modpath
 
-Some parameters should be checked before generating the installer, as follows:
+Some parameters in Inno Setup (tme.iss) should be checked before generating the installer, as follows:
 1. #define MyAppVersion [version]
-2. OutputBaseFilename=terrame-[version]-win[32|x64]
-3. All "Source" in [Files] section must be checked.
+2. OutputBaseFilename=terrame-[version]-win[32|x64]-[alpha|beta]
+3. Generate a new GUID in Inno Setup and change the currently: click Tools | Generate GUID inside the IDE.
+4. To generate the installer to compile it.
 
-To generate the installer just open the tme.iss in Inno Setup and compile it.
-
+If your install directory was empty is necessary to copy the dependencies:
+1. Run the windeployqt in the prompt to copy Qt dependencies <qt path>\<version>\bin\windeployqt.exe terrame.exe
+	Your hands:
+	- Qt5PrintSupport.dll
+	- Qt5OpenGL.dll
+2. Copy msys dependencies in the .exe directory
+3. Copy TerraLib 3rdparty dependencies
+	- boost_system-mt.dll
+	- boost_date_time-mt.dll
+	- boost_filesystem-mt.dll
+	- boost_thread-mt.dll
+	- boost_chrono-mt.dll	
+	- qwt.dll
+	- lua.dll
+	- geos.dll
+	- proj.dll
+	- xerces-c_3_1.dll
+	- xercesc_messages_3_1.dll
+	- icuuc52.dll
+	- icudt52.dll
+	- libcurl.dll
+	- libeay32.dll
+	- ssleay32.dll
+	- zlib.dll
+	- gdal200.dll
+	- expat.dll
+	- libpq.dll
+	- hdfddll.dll
+	- mfhdfdll.dll
+	- netcdf.dll
+	- libgeotiff.dll
+	- libtiff.dll
+	- sqlite3.dll
+	- spatialite.dll
+	- geos_c.dll
+	- libpng15.dll
+	- iconv.dll
+	- freexl.dll
+	- libxml2.dll
+	- pcre.dll
+	- xdrdll.dll
+4. Copy all TerraLib dependencies
+5. Copy the rest of dependencies
+	- qtluae.dll
+	- qtlua.dll
+6. Run TerraME to check '~>terrame -version' and after run '~>terrame'
