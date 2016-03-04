@@ -24,6 +24,8 @@
 --          Rodrigo Reis Pereira
 --#########################################################################################
 
+local terralib = getPackage("terralib")
+
 local function getEmptySocialNetwork()
 	return function()
 		return SocialNetwork()
@@ -831,13 +833,13 @@ metaTableSociety_ = {
 
 --- Type to create and manipulate a set of Agents. Each Agent within a Society has a
 -- unique id, which is initialized while creating the Society. There are different ways to
--- create a Society. See the argument dbType for the options.
+-- create a Society. See the argument source for the options.
 -- Calling Utils:forEachAgent() traverses Societies.
--- @arg data.database Name of the database.
--- @arg data.dbType A string with the name of the source the Society will be read from.
+-- @arg data.file Name of the file.
+-- @arg data.source A string with the name of the source the Society will be read from.
 -- TerraME always converts this string to lower case. See the table below:
--- @tabular dbType
--- dbType & Description & Compulsory arguments & Optional arguments \
+-- @tabular source
+-- source & Description & Compulsory arguments & Optional arguments \
 -- "volatile" & Create agents from scratch. This is the default value when using the argument
 -- quantity. & quantity, instance & ...\
 -- "database" & Load agents from a database. This is the default value when using the argument
@@ -1017,31 +1019,27 @@ function Society(data)
 		end)
 	end
 
-	if type(data.database) == "string" then
-		if data.database:endswith(".csv") then
+	if type(data.file) == "string" then
+		if data.file:endswith(".csv") then
 			if data.sep and type(data.sep) ~= "string" then
 				incompatibleTypeError("sep", "string", data.sep)
 			end
-			local f = io.open(data.database)
+			local f = io.open(data.file)
 			if not f then
-				resourceNotFoundError("database", data.database)
+				resourceNotFoundError("file", data.file)
 			end
 			io.close(f)
-			local csv = CSVread(data.database, data.sep)
+			local csv = CSVread(data.file, data.sep)
 			for i = 1, #csv do
 				data:add(csv[i])
 			end
 		else
-			-- TODO: REVIEW #924
-			local cs = CellularSpace{
-				source = data.dbType,
-				file = data.database
-			}
-			forEachCell(cs, function(cell)
-				cell.type_ = "table"
-				cell.cObj_ = nil
-				data:add(cell)
-			end)
+			local tlib = terralib.TerraLib{}
+			local dSet = tlib:getShpByFilePath(data.file)
+			
+			for i = 0, #dSet do
+				data:add(dSet[i])
+			end 
 		end
 	else
 		mandatoryTableArgument(data, "quantity", "number")

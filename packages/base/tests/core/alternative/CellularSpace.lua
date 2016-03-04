@@ -752,6 +752,13 @@ return{
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg(1, -1, true))
 	end,
+	save = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+		local saveNoProjectLoaded = function()
+			cs:save("Layer")
+		end
+		unitTest:assertError(saveNoProjectLoaded, "The CellularSpace must have a valid Project. Please, check the documentation.")
+	end,
 	size = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 

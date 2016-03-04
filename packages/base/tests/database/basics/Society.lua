@@ -34,7 +34,7 @@ return{
 
 		local soc = Society {
 			instance = nonFooAgent,
-			database = filePath("agents.csv", "base")
+			file = filePath("agents.csv", "base")
 		}
 		
 		unitTest:assertEquals(4, #soc)
@@ -59,16 +59,14 @@ return{
 		unitTest:assertEquals(6, sum_metabolism)
 		unitTest:assertEquals(2, sum_immunes)
 		
-		-- TODO: REVIEW #924
 		local nonFooAgent = Agent{}
 
 		local soc = Society {
 			instance = nonFooAgent,
-			database = filePath("brazilstates.shp", "base"),
-			source = "shp"
+			file = filePath("brazilstates.shp", "base")
 		}
 
-		unitTest:assertEquals(#soc, 27) -- SKIP
+		unitTest:assertEquals(#soc, 27)
 	end
 }
 

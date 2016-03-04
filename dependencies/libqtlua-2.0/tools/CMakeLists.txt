@@ -1,4 +1,0 @@
-
-ADD_SUBDIRECTORY( qtlua )
-ADD_SUBDIRECTORY( uic )
-

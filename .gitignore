@@ -39,3 +39,4 @@ repository/.terrame*
 test/.terrame*
 test/packages/*/doc
 test/packages/.terrame*
+installer/setup
