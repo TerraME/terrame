@@ -11,7 +11,7 @@ Some parameters in Inno Setup (tme.iss) should be checked before generating the 
 4. To generate the installer to compile it.
 
 If your install directory was empty is necessary to copy the dependencies:
-1. Run the windeployqt in the prompt to copy Qt dependencies <qt path>\<version>\bin\windeployqt.exe terrame.exe
+1. Run the windeployqt in the prompt to copy Qt dependencies <qt path>\<version>\bin\windeployqt.exe <bin path>\terrame.exe
 	Your hands:
 	- Qt5PrintSupport.dll
 	- Qt5OpenGL.dll
@@ -51,8 +51,11 @@ If your install directory was empty is necessary to copy the dependencies:
 	- libxml2.dll
 	- pcre.dll
 	- xdrdll.dll
-4. Copy all TerraLib dependencies
-5. Copy the rest of dependencies
+4. Copy all TerraLib dll modules
+6. Copy directory /share in TerraLib to the .exe directory of the TerraME
+	- copy only /share/terralib/plugins; /share/terralib/schemas and /share/terralib/json generated in install
+7. Copy directory /data from 3rdparty dependencies to /share/data
+8. Copy the rest of dependencies
 	- qtluae.dll
 	- qtlua.dll
-6. Run TerraME to check '~>terrame -version' and after run '~>terrame'
+9. Run TerraME to check '~>terrame -version' and after run '~>terrame'
