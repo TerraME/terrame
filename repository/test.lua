@@ -25,14 +25,16 @@ local report = {
 }
 
 _Gtme.printNote("Downloading packages from www.terrame.org/packages")
-forEachOrderedElement(pkgs, function(pkgfile)
+forEachOrderedElement(pkgs, function(_, data)
 	report.packages = report.packages + 1
+	pkgfile = data.package.."_"..data.version..".zip"
 	_Gtme.print("Downloading "..pkgfile)
 	_Gtme.downloadPackage(pkgfile)
 end)
 
 _Gtme.printNote("Installing packages")
-forEachOrderedElement(pkgs, function(pkgfile)
+forEachOrderedElement(pkgs, function(_, data)
+	pkgfile = data.package.."_"..data.version..".zip"
 	local result = _Gtme.installPackage(pkgfile)
 end)
 
@@ -142,18 +144,14 @@ local function execute(command, filename)
 end
 
 _Gtme.printNote("Executing documentation")
-forEachOrderedElement(pkgs, function(pkgfile)
-	local sep = string.find(pkgfile, "_")
-	local package = string.sub(pkgfile, 1, sep - 1)
+forEachOrderedElement(pkgs, function(package)
 	_Gtme.print("Documenting package '"..package.."'")
 	local command = "terrame -package "..package.." -doc"
 	execute(command, "doc-"..package..".log")
 end)
 
 _Gtme.printNote("Executing tests")
-forEachOrderedElement(pkgs, function(pkgfile)
-	local sep = string.find(pkgfile, "_")
-	local package = string.sub(pkgfile, 1, sep - 1)
+forEachOrderedElement(pkgs, function(package)
 	_Gtme.print("Testing package '"..package.."'")
 	local command = "terrame -package "..package.." -test"
 	execute(command, "test-"..package..".log")
@@ -188,6 +186,14 @@ elseif report.errors == 1 then
 	_Gtme.printError("One verification stopped with an error.")
 else
 	_Gtme.printError(report.errors.." verifications stopped with an error.")
+end
+
+if report.locallogerrors == 0 then
+	_Gtme.printNote("Test and doc were successfully executed.")
+elseif report.locallogerrors == 1 then
+	_Gtme.printError("One log error was found.")
+else
+	_Gtme.printError(report.locallogerrors.." log errors were found.")
 end
 
 errors = 0
