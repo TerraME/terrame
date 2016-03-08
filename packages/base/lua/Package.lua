@@ -285,7 +285,7 @@ end
 --- Return the description of a package. This function tries to find the package in the TerraME
 -- installation directory. If it does not exist then it checks wether the package is available in
 -- the current directory. If the package does not exist then it stops with an error. Otherwise,
--- it reads file description.lua and returns the following attributes.
+-- it reads file description.lua and returns the following string attributes.
 -- @tabular NONE
 -- Attribute & Description \
 -- authors & Name of the author(s) of the package.\

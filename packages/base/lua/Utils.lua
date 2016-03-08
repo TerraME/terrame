@@ -1533,8 +1533,8 @@ end
 -- @arg indent A string to be placed in the beginning of each line of the returning string.
 -- @usage vardump{name = "john", age = 20}
 -- -- {
--- --     ['age'] = '20', 
--- --     ['name'] = 'john'
+-- --     age = 20, 
+-- --     name = "john"
 -- -- }
 function vardump(o, indent)
 	if indent == nil then indent = "" end
@@ -1545,12 +1545,28 @@ function vardump(o, indent)
 		local first = true
 		forEachOrderedElement(o, function(k, v)
 			if first == false then s = s .. ", \n" end
-			if type(k) ~= "number" then k = "\""..tostring(k).."\"" end
-			s = s..indent2.."["..k.."] = "..vardump(v, indent2)
+
 			first = false
+
+			s = s..indent2
+			if type(k) == "string" then
+				local char = string.sub(k, 1, 1)
+				if string.match(k, "%w+") == k and string.match(char, "%a") == char then
+					s = s..tostring(k).." = "..vardump(v, indent2)
+				else
+					s = s.."[\""..tostring(k).."\"] = "..vardump(v, indent2)
+				end
+			elseif type(k) ~= "number" then
+				k = "\""..tostring(k).."\""
+				s = s.."["..tostring(k).."] = "..vardump(v, indent2)
+			else -- number
+				s = s.."["..k.."] = "..vardump(v, indent2)
+			end
 		end)
 
 		return s.."\n"..indent.."}"
+	elseif type(o) == "number" then
+		return tostring(o)
 	else
 		return "\""..tostring(o).."\""
 	end

@@ -907,16 +907,35 @@ return{
 		unitTest:assertEquals(type(c), "Cell")
 	end,
 	vardump = function(unitTest)
-		local x = {a = 2, b = 3, w = {2, 3, 4}}
+		local x = vardump{a = 2, b = 3, w = {2, 3, 4}}
 
-		unitTest:assertEquals(vardump(x), [[{
-    ["a"] = "2", 
-    ["b"] = "3", 
-    ["w"] = {
-        [1] = "2", 
-        [2] = "3", 
-        [3] = "4"
+		unitTest:assertEquals(x, [[{
+    a = 2, 
+    b = 3, 
+    w = {
+        [1] = 2, 
+        [2] = 3, 
+        [3] = 4
     }
+}]])
+
+		x = vardump{abc = 2, be2 = 3, ["2bx"] = {2, 3, 4}}
+
+		unitTest:assertEquals(x, [[{
+    ["2bx"] = {
+        [1] = 2, 
+        [2] = 3, 
+        [3] = 4
+    }, 
+    abc = 2, 
+    be2 = 3
+}]])
+
+		x = vardump{name = "john", age = 20}
+
+		unitTest:assertEquals(x, [[{
+    age = 20, 
+    name = "john"
 }]])
 	end
 }
