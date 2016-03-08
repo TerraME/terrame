@@ -42,6 +42,14 @@ _Gtme.fonts = {}
 _Gtme.print = print
 _Gtme.type = type
 
+print = function(obj, ...)
+	if type(obj) == "table" then
+		obj = vardump(obj)
+	end
+
+	_Gtme.print(obj, ...)
+end
+
 function _Gtme.printError(value)
 	if sessionInfo().separator == "/" and sessionInfo().color then
 		_Gtme.print(begin_red..value..end_color)
