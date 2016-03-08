@@ -24,10 +24,6 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	validateMySql = function(unitTest)
-		local mysqlCheck = _Gtme.validateMySql()
-		unitTest:assert(mysqlCheck == "")
-	end,
 	verifyVersionDependency = function(unitTest)
 		unitTest:assert(    _Gtme.verifyVersionDependency("0.1", ">=", "0.0.3"))
 		unitTest:assert(not _Gtme.verifyVersionDependency("0.1", ">=", "0.3"))
