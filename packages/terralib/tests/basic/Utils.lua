@@ -16,5 +16,11 @@ return {
 	end,
 	getFileDir = function(unitTest)
 		unitTest:assert(true)
-	end	
+	end,
+	encodeUri = function(unitTest)
+		unitTest:assert(true)
+	end,
+	decodeUri = function(unitTest)
+		unitTest:assert(true)
+	end
 }

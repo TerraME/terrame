@@ -87,7 +87,7 @@ local function hasConnectionError(type, connInfo)
 	return msg
 end
 
-local function createPgConnInfo(host, port, user, pass, database, table, encoding)
+local function createPgConnInfo(host, port, user, pass, database, encoding)
 	local connInfo = {}
 	
 	connInfo.PG_HOST = host 
@@ -95,7 +95,6 @@ local function createPgConnInfo(host, port, user, pass, database, table, encodin
 	connInfo.PG_USER = user
 	connInfo.PG_PASSWORD = pass
 	connInfo.PG_DB_NAME = database
-	connInfo.PG_NEWDB_NAME = table
 	connInfo.PG_CONNECT_TIMEOUT = "4" 
 	connInfo.PG_CLIENT_ENCODING = encoding -- "UTF-8" --"CP1252" -- "LATIN1" --"WIN1252" 	
 	connInfo.PG_CHECK_DB_EXISTENCE = database		
@@ -138,7 +137,7 @@ local function addDataSourceInfo(type, title, connInfo)
 	dsInfo:setTitle(title)
 	dsInfo:setConnInfo(connInfo)
 	dsInfo:setDescription("Created on TerraME")
-
+	
 	if not binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo) then
 		dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfoByConnInfo(dsInfo:getConnInfoAsString())
 	end
@@ -155,9 +154,9 @@ local function makeAndOpenDataSource(connInfo, type)
 	return ds	
 end
 
-local function createLayer(name, connInfo, type)
-	local dsId = addDataSourceInfo(type, name, connInfo)	
-	
+local function createLayer(name, dSetName, connInfo, type)
+	local dsId, added = addDataSourceInfo(type, name, connInfo)	
+
 	local ds = makeAndOpenDataSource(connInfo, type)
 	ds:setId(dsId)
 	
@@ -165,18 +164,15 @@ local function createLayer(name, connInfo, type)
 	
 	local dSetType = nil
 	local dSet = nil
-	local dSetName = ""
 	local env = nil
 	local srid = 0
 
 	if type == "OGR" then
-		dSetName = getFileName(connInfo.URI)
 		dSetType = ds:getDataSetType(dSetName)
 		local gp = binding.GetFirstGeomProperty(dSetType)
 		env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
 		srid = gp:getSRID()
 	elseif type == "GDAL" then
-		dSetName = getFileNameWithExtension(connInfo.URI)
 		dSetType = ds:getDataSetType(dSetName)
 		dSet = ds:getDataSet(dSetName)
 		local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
@@ -184,7 +180,6 @@ local function createLayer(name, connInfo, type)
 		env = raster:getExtent()
 		srid = raster:getSRID()
 	elseif type == "POSTGIS" then
-		dSetName = connInfo.PG_NEWDB_NAME
 		dSetType = ds:getDataSetType(dSetName)
 		local gp = binding.GetFirstGeomProperty(dSetType)
 		env = binding.te.gm.Envelope(binding.GetExtent(dSetType:getName(), gp:getName(), ds:getId()))
@@ -229,7 +224,54 @@ local function releaseProject(project)
 	end
 end
 
+local function decodeDataSourceInfo(dsInfo)
+	local connInfo = dsInfo:getConnInfo()
+	
+	dsInfo:setTitle(decodeUri(dsInfo:getTitle()))
+	dsInfo:setDescription(decodeUri(dsInfo:getDescription()))
+
+	if connInfo.URI then
+		connInfo.URI = decodeUri(connInfo.URI)
+		dsInfo:setConnInfo(connInfo)
+	end
+	if connInfo.SOURCE then
+		connInfo.SOURCE = decodeUri(connInfo.SOURCE)
+		dsInfo:setConnInfo(connInfo)
+	end	
+end
+
+local function encodeDataSourceInfos(layers)
+	local encoded = {}
+	
+	for title, layer in pairs(layers) do
+		layer:setTitle(encodeUri(layer:getTitle()))
+		
+		local lid = layer:getDataSourceId()
+		if not encoded[lid] then
+			local dsInfo =  binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(lid)
+			local connInfo = dsInfo:getConnInfo()
+			
+			dsInfo:setTitle(encodeUri(dsInfo:getTitle()))
+			dsInfo:setDescription(encodeUri(dsInfo:getDescription()))
+
+			if connInfo.URI then
+				connInfo.URI = encodeUri(connInfo.URI)
+				dsInfo:setConnInfo(connInfo)
+			end
+			if connInfo.SOURCE then
+				connInfo.SOURCE = encodeUri(connInfo.SOURCE)
+				dsInfo:setConnInfo(connInfo)
+			end		
+			binding.te.da.DataSourceInfoManager.getInstance():remove(lid)
+			binding.te.da.DataSourceInfoManager.getInstance():add(dsInfo)
+			encoded[lid] = lid
+		end
+	end
+end
+
 local function saveProject(project, layers)
+	encodeDataSourceInfos(layers)
+
 	local writer = binding.te.xml.AbstractWriterFactory.make()
 	
 	writer:setURI(project.file)
@@ -355,6 +397,7 @@ local function loadProject(project, file)
 	while (xmlReader:getNodeType() == binding.START_ELEMENT) and
 			(xmlReader:getElementLocalName() == "DataSource") do
 		local  ds = binding.ReadDataSourceInfo(xmlReader)
+		decodeDataSourceInfo(ds)
 		binding.te.da.DataSourceInfoManager.getInstance():add(ds)
 	end
 	
@@ -389,6 +432,7 @@ local function loadProject(project, file)
 			customError("PROJECT READ ERROR.")
 		end
 		
+		layer:setTitle(decodeUri(layer:getTitle()))
 		project.layers[layer:getTitle()] = layer
 	end
 	
@@ -419,22 +463,23 @@ local function addFileLayer(project, name, filePath, type)
 	
 	loadProject(project, project.file)
 	
-	local layer = createLayer(name, connInfo, type)
+	local dSetName = ""
+	
+	if type == "OGR" then
+		dSetName = getFileName(connInfo.URI)
+	elseif type == "GDAL" then
+		dSetName = getFileNameWithExtension(connInfo.URI)
+	end
+	
+	local layer = createLayer(name, dSetName, connInfo, type)
 	
 	project.layers[layer:getTitle()] = layer
 	saveProject(project, project.layers)
 	releaseProject(project)
 end
 
-local function dataSetExists(connInfo, type)
-	local ds = nil
-	local dSetName = ""
-	
-	if type == "POSTGIS" then
-		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
-		dSetName = string.lower(connInfo.PG_NEWDB_NAME)
-	end
-	
+local function dataSetExists(connInfo, dSetName, type)
+	local ds = makeAndOpenDataSource(connInfo, type)	
 	local exists = ds:dataSetExists(dSetName)
 	
 	ds:close()
@@ -444,16 +489,10 @@ local function dataSetExists(connInfo, type)
 	return exists
 end
 
-local function propertyExists(connInfo, property, type)
+local function propertyExists(connInfo, dSetName, property, type)
 	local ds = makeAndOpenDataSource(connInfo, type)
-	local dSetName = ""
-	
-	if type == "POSTGIS" then
-		dSetName = string.lower(connInfo.PG_NEWDB_NAME)
-	elseif type == "OGR" then
-		dSetName = getFileName(connInfo.URI)
-	elseif type == "GDAL" then
-		dSetName = getFileNameWithExtension(connInfo.URI)
+
+	if type == "GDAL" then
 		local dSet = ds:getDataSet(dSetName)
 		local rpos = binding.GetFirstPropertyPos(dSet, binding.RASTER_TYPE)
 		local raster = dSet:getRaster(rpos)	
@@ -470,18 +509,9 @@ local function propertyExists(connInfo, property, type)
 	return exists
 end
 
-local function dropDataSet(connInfo, type)
-	local ds = nil
-	local dSetName = ""
-	
-	if type == "POSTGIS" then
-		ds = makeAndOpenDataSource(connInfo, "POSTGIS")
-		dSetName = string.lower(connInfo.PG_NEWDB_NAME)
-	elseif type == "OGR" then
-		ds = makeAndOpenDataSource(connInfo, "OGR")
-		dSetName = getFileName(connInfo.URI)
-	end
-	
+local function dropDataSet(connInfo, dSetName, type)
+	local ds = makeAndOpenDataSource(connInfo, type)
+
 	local tableExists = ds:dataSetExists(dSetName)
 	if tableExists then
 		ds:dropDataSet(dSetName)
@@ -503,7 +533,7 @@ local function copyLayer(from, to)
 		
 	if to.type == "POSTGIS" then
 		to.table = dSetName
-		local toConnInfo = createPgConnInfo(to.host, to.port, to.user, to.password, to.database, to.table, to.encoding)	
+		local toConnInfo = createPgConnInfo(to.host, to.port, to.user, to.password, to.database, to.encoding)	
 		local toTable = string.lower(to.table)	
 		local toDb = string.lower(to.database)	
 		-- TODO: IT IS NOT POSSIBLE CREATE A DATABASE (REVIEW)
@@ -545,7 +575,7 @@ local function copyLayer(from, to)
 	collectgarbage("collect")	
 end
 
-local function createCellSpaceLayer(inputLayer, name, resolultion, connInfo, type) 
+local function createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, type) 
 	local cLId = binding.GetRandomicId()
 	local cellLayerInfo = binding.te.da.DataSourceInfo()
 		
@@ -559,13 +589,7 @@ local function createCellSpaceLayer(inputLayer, name, resolultion, connInfo, typ
 		
 	local cellSpaceOpts = binding.te.cellspace.CellularSpacesOperations()
 	local cLType = binding.te.cellspace.CellularSpacesOperations.CELLSPACE_POLYGONS
-	
-	local cellName = ""
-	if type == "OGR" then
-		cellName = getFileName(connInfo.URI)
-	elseif type == "POSTGIS" then
-		cellName = connInfo.PG_NEWDB_NAME
-	end
+	local cellName = dSetName
 
 	cellSpaceOpts:createCellSpace(cellLayerInfo, cellName, resolultion, resolultion, inputLayer:getExtent(), inputLayer:getSRID(), cLType, inputLayer)
 end
@@ -843,31 +867,28 @@ TerraLib_ = {
 		local info = {}		
 		info.name = layer:getTitle()	
 		info.sid = layer:getDataSourceId()
-		
+		local dseName = layer:getDataSetName()
+
 		loadProject(project, project.file)
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(info.sid)
-		
+
 		local type = dsInfo:getType()
 		info.type = type
 		local connInfo = dsInfo:getConnInfo()
-		local dseName = ""
-		
+
 		if type == "POSTGIS" then
 			info.host = connInfo.PG_HOST
 			info.port = connInfo.PG_PORT
 			info.user = connInfo.PG_USER
 			info.password = connInfo.PG_PASSWORD
 			info.database = connInfo.PG_DB_NAME
-			info.table = connInfo.PG_NEWDB_NAME
-			dseName = info.table
+			info.table = dseName
 		elseif type == "OGR" then
 			info.file = connInfo.URI
-			dseName = getFileName(info.file)
 		elseif type == "GDAL" then
 			info.file = connInfo.URI
-			dseName = getFileNameWithExtension(info.file)
 		end
-		
+
 		local ds = makeAndOpenDataSource(connInfo, type)
 		local dst = ds:getDataSetType(dseName)
 
@@ -895,14 +916,15 @@ TerraLib_ = {
 	end,
 	
 	addPgLayer = function(self, project, name, data)				
-		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.table, data.encoding)
+		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 		
 		loadProject(project, project.file)
 		
 		local layer = nil
 		
-		if dataSetExists(connInfo, "POSTGIS") then
-			layer = createLayer(name, connInfo, "POSTGIS")
+		if dataSetExists(connInfo, data.table, "POSTGIS") then
+			connInfo.PG_NEWDB_NAME = data.table
+			layer = createLayer(name, data.table, connInfo, "POSTGIS")
 		else
 			releaseProject(project)
 			customError("Is not possible add the Layer. The table '"..data.table.."' does not exists.")
@@ -918,8 +940,9 @@ TerraLib_ = {
 		
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createFileConnInfo(filePath)
+		local dSetName = getFileName(connInfo.URI)
 		
-		createCellSpaceLayer(inputLayer, name, resolultion, connInfo, "OGR")
+		createCellSpaceLayer(inputLayer, name, dSetName, resolultion, connInfo, "OGR")
 		
 		self:addShpLayer(project, name, filePath)
 	end,
@@ -928,10 +951,10 @@ TerraLib_ = {
 		loadProject(project, project.file)
 
 		local inputLayer = project.layers[inputLayerTitle]
-		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.table, data.encoding)
+		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
 		
-		if not dataSetExists(connInfo, "POSTGIS") then
-			createCellSpaceLayer(inputLayer, name, resolultion, connInfo, "POSTGIS")
+		if not dataSetExists(connInfo, data.table, "POSTGIS") then
+			createCellSpaceLayer(inputLayer, name, data.table, resolultion, connInfo, "POSTGIS")
 		else
 			releaseProject(project)
 			customError("The table '"..data.table.."' already exists.")
@@ -941,8 +964,8 @@ TerraLib_ = {
 	end,	
 	
 	dropPgTable = function(self, data)
-		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.table)		
-		dropDataSet(connInfo, "POSTGIS")
+		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)		
+		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
 	end,
 	
 	copyLayer = function(self, project, from, to)
@@ -972,12 +995,12 @@ TerraLib_ = {
 			end
 		end
 		
-		if propertyExists(toDsInfo:getConnInfo(), property, toDsInfo:getType()) then
+		if propertyExists(toDsInfo:getConnInfo(), toLayer:getDataSetName(), property, toDsInfo:getType()) then
 			customError("The attribute '"..property.."' already exists in the CellularLayer.\n"
 						.."Please set another name.")
 		end		
 
-		if not propertyExists(fromDsInfo:getConnInfo(), select, fromDsInfo:getType()) then
+		if not propertyExists(fromDsInfo:getConnInfo(), fromLayer:getDataSetName(), select, fromDsInfo:getType()) then
 			customError("The attribute selected '"..select.."' not exists in layer '"..from.."'.")
 		end
 		
@@ -987,7 +1010,8 @@ TerraLib_ = {
 		local propCreatedName = ""
 		
 		if outType == "POSTGIS" then
-			outConnInfo.PG_NEWDB_NAME = string.lower(outDSetName)
+			outDSetName = string.lower(outDSetName)
+			outConnInfo.PG_NEWDB_NAME = outDSetName
 		elseif outType == "OGR" then
 			local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
 			outConnInfo.URI = outDir..out..".shp"
@@ -1026,7 +1050,7 @@ TerraLib_ = {
 		-- #875
 		-- outDs:renameDataSet(outDSetName, "rename_test")		
 
-		local outLayer = createLayer(out, outConnInfo, outType)
+		local outLayer = createLayer(out, outDSetName, outConnInfo, outType)
 		project.layers[out] = outLayer
 		
 		loadProject(project, project.file) -- TODO: IT NEED RELOAD (REVIEW)
@@ -1171,13 +1195,13 @@ TerraLib_ = {
 		local outDs = nil
 		if outType == "POSTGIS" then
 			outConnInfo.PG_NEWDB_NAME = newDstName
-			dropDataSet(outConnInfo, "POSTGIS")
+			dropDataSet(outConnInfo, newDstName, "POSTGIS")
 			outDs = makeAndOpenDataSource(outConnInfo, outType)
 		elseif outType == "OGR" then
 			local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
 			outConnInfo.URI = outDir..newDstName..".shp"
 			outConnInfo.DRIVER = "ESRI Shapefile"		
-			dropDataSet(outConnInfo, "OGR")
+			dropDataSet(outConnInfo, newDstName, "OGR")
 			outDs = makeAndOpenDataSource(outConnInfo, outType)
 		end
 		
@@ -1187,7 +1211,7 @@ TerraLib_ = {
 		outDs:add(newDstName, newDse)
 		
 		-- Create the new Layer
-		local outLayer = createLayer(toName, outConnInfo, outType)
+		local outLayer = createLayer(toName, newDstName, outConnInfo, outType)
 		project.layers[toName] = outLayer
 		
 		saveProject(project, project.layers)
