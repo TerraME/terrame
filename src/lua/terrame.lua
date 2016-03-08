@@ -852,8 +852,7 @@ local function usage()
 	print(" -mode=strict                     Execute additional verifications in the source code ")
 	print("                                  when it finds unnecessary arguments for functions.")
 	print(" -mode=quiet                      Warnings disabled.")
-	print(" -mode=silent                     print() does not show any text on the screen. This mode")
-	print("                                  can be used with the other three modes independently.")
+	print(" -silent                          print() does not show any text on the screen.")
 	print(" -version                         TerraME general information.")
 	print(" -color                           Show colored output (only for Linux and Mac systems).")
 	print(" -package <pkg>                   Select a given package. If used alone and the model has")
@@ -1080,7 +1079,7 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				info_.mode = "quiet"
 			elseif arg == "-mode=strict" then
 				info_.mode = "strict"
-			elseif arg == "-mode=silent" then
+			elseif arg == "-silent" then
 				info_.silent = true
 				print = function() end
 			elseif string.sub(arg, 1, 6) == "-mode=" then
