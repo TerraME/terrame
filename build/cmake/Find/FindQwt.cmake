@@ -36,7 +36,6 @@ find_library(QWT_LIBRARY
 	 /usr/local/lib 
 	 /opt/lib 
 	 /opt/local/lib 
-	 ${DEPS}/qwt/lib 
 	 /usr/local/qwt-6.1.1/lib 
 	 /usr/local/qwt-6.1.2/lib 	 
 )

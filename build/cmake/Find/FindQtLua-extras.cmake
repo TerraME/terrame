@@ -31,13 +31,21 @@ cmake_minimum_required(VERSION 3.0)
 
 find_library(QTLUAEXTRAS_LIBRARY
    NAMES qtluae
-   PATHS /usr/lib /usr/local/lib /opt/lib /opt/local/lib /usr/local/qtlua-extras/lib
+   PATHS 	/usr/lib 
+			/usr/local/lib 
+			/opt/lib 
+			/opt/local/lib 
+			/usr/local/qtlua-extras/lib
+			${TERRAME_DEPENDENCIES_DIR}/lib
 )
 
 # Export include and library path for linking with other libraries
 # Find path - tries to find *.h in paths hard-coded by the script
 find_path(QTLUAEXTRAS_INCLUDE_DIR qtluae_version.hpp
-	HINTS  /usr/include/QtLuaExtras /usr/local/include/QtLuaExtras /usr/local/qtlua-extras/include/QtLuaExtras/
+	HINTS  	/usr/include/QtLuaExtras 
+			/usr/local/include/QtLuaExtras 
+			/usr/local/qtlua-extras/include/QtLuaExtras
+			${TERRAME_DEPENDENCIES_DIR}/include/QtLuaExtras
 )
 
 if(QTLUAEXTRAS_INCLUDE_DIR AND QTLUAEXTRAS_LIBRARY)

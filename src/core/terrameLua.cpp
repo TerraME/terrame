@@ -41,6 +41,8 @@ Author: Tiago Garcia de Senna Carneiro
 
 #include "terrameLua.h"
 
+#include <stdlib.h> 
+
 #ifndef TME_NO_TERRALIB
 	// #include "TeVersion.h" // issue #319
 #endif
@@ -301,6 +303,10 @@ int main(int argc, char *argv[])
 		qFatal("%s environment variable should exist and point to TerraME "
 			"installation folder.", TME_PATH);
 	}
+
+#ifdef WIN32
+	_putenv_s("PATH", "%PATH%;%TME_PATH%");
+#endif
 
 	openLuaEnvironment();  // Opens Lua environment and libraries
 	registerClasses();	  // records TerraME Classes in Lua environment
