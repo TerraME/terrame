@@ -65,7 +65,6 @@ return{
  - the fifth, OPTIONAL, must be the integration increment value (default = 0.2).
 ]])
 
-
 		local myf = function() end
 
 		error_func = function()
@@ -189,12 +188,12 @@ return{
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "table", 2))
 
-		if not _Gtme.isWindowsOS() then		
+		if not _Gtme.isWindowsOS() then
 			error_func = function()
 				forEachFile(filePath("", "base"))
 			end
 			unitTest:assertError(error_func, mandatoryArgumentMsg(2)) -- SKIP
-		
+
 			error_func = function()
 				forEachFile(filePath("", "base"), 2)
 			end
@@ -320,12 +319,12 @@ return{
 			local gt = integrate{step = -0.5, equation = function() end, initial = 0}
 		end
 		unitTest:assertError(error_func, positiveArgumentMsg("step", -0.5))
-	
+
 		local error_func = function()
 			local gt = integrate{step = 0.1, method = "euler", equation = function() end, initial = 0}
 		end
 		unitTest:assertError(error_func, defaultValueMsg("method", "euler"))
-	
+
 		local error_func = function()
 			local gt = integrate{step = 0.1, method = "eler", equation = function() end, initial = 0}
 		end
@@ -481,7 +480,7 @@ return{
 			switch({}, 2)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 2))
-	
+
 		error_func = function()
 			local data = {att = "abd"}
 			switch(data, "att"):caseof{
@@ -489,7 +488,7 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, switchInvalidArgumentSuggestionMsg("abd", "att", "abc"))
-	
+
 		local options = {
 			xxx = true
 		}
@@ -501,7 +500,7 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("abd", "att", options))
-	
+
 		error_func = function()
 			local data = {att = "abd"}
 			switch(data, "att"):caseof(2)
@@ -515,6 +514,15 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, "Case 'abd' should be a function, got number.")
+	end,
+	vardump = function(unitTest)
+		local mtable = {1, 2, 3}
+		local vtable = {[mtable] = 2}
+
+		local error_func = function()
+			vardump(vtable)
+		end
+		unitTest:assertError(error_func, "Function vardump cannot handle an index of type table.")
 	end
 }
 

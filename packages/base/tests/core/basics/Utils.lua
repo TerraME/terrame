@@ -931,10 +931,11 @@ return{
     be2 = 3
 }]])
 
-		x = vardump{name = "john", age = 20}
+		x = vardump{name = "john", age = 20, [false] = 5}
 
 		unitTest:assertEquals(x, [[{
     age = 20, 
+    [false] = 5, 
     name = "john"
 }]])
 	end

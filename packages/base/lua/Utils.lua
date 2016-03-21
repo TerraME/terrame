@@ -1556,11 +1556,12 @@ function vardump(o, indent)
 				else
 					s = s.."[\""..tostring(k).."\"] = "..vardump(v, indent2)
 				end
-			elseif type(k) ~= "number" then
-				k = "\""..tostring(k).."\""
+			elseif type(k) == "boolean" then
 				s = s.."["..tostring(k).."] = "..vardump(v, indent2)
-			else -- number
+			elseif type(k) == "number" then
 				s = s.."["..k.."] = "..vardump(v, indent2)
+			else
+				customError("Function vardump cannot handle an index of type "..type(k)..".")
 			end
 		end)
 
