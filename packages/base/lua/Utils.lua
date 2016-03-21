@@ -887,17 +887,25 @@ function forEachSocialNetwork(agent, f)
 	return true
 end
 
---- Return a table with the content of the file config.lua, stored in the directory where TerraME
--- was executed. All the global variables of the file are elements of the returned table. 
+local config
+
+--- Return a table with the content of the file config.lua, stored in the current directory
+-- of the simulation. All the global variables of the file are elements of the returned table. 
 -- Some packages require specific variables in this file in order to be tested or executed.
 -- TerraME execution options -imporDb and -exportDb also use this file.
+-- Additional calls to getConfig will return the same output of the first call even
+-- if the current directory changes along the simulation.
 -- @usage getConfig()
 function getConfig()
-	if not isFile("config.lua") then
+	if config then
+		return config
+	elseif not isFile("config.lua") then
 		_Gtme.buildConfig() -- SKIP
+		return getConfig() -- SKIP
+	else
+		config = _Gtme.include("config.lua")	
+		return config
 	end
-
-	return _Gtme.include("config.lua")	
 end
 
 --- Return the extension of a given file name. It returns the substring after the last dot.

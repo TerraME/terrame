@@ -29,6 +29,15 @@ return{
 	getConfig = function(unitTest)
 		local cf = getConfig()
 		unitTest:assertNil(cf.qwertyuiop)
+
+		local cd = currentDir()
+
+		chDir(packageInfo().data)
+
+		local cf2 = getConfig()
+		unitTest:assertEquals(cf, cf2)
+
+		chDir(cd)
 	end,
 	CSVparseLine = function(unitTest)
 		local line = CSVparseLine("2,5,aa", ",")
