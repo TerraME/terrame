@@ -304,17 +304,13 @@ int main(int argc, char *argv[])
 			"installation folder.", TME_PATH);
 	}
 
-#ifdef WIN32
-	_putenv_s("PATH", "%PATH%;%TME_PATH%");
-#endif
-
 	openLuaEnvironment();  // Opens Lua environment and libraries
 	registerClasses();	  // records TerraME Classes in Lua environment
 
 	// Loads lfs functions
 	luaopen_lfs(L);
 
-#if defined (TME_WIN32)
+#ifdef WIN32
 	tmePath.append("\\lua\\terrame.lua");
 #else
 	tmePath.append("/lua/terrame.lua");

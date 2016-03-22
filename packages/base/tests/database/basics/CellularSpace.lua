@@ -96,6 +96,7 @@ return{
 			table = tName1
 		}	
 		
+		-- ###################### 1 #############################
 		local cs = CellularSpace{
 			project = proj,
 			layer = clName1
@@ -118,6 +119,7 @@ return{
 		unitTest:assertEquals(cellSpaceLayerInfo.database, database)
 		unitTest:assertEquals(cellSpaceLayerInfo.table, cellSpaceLayerNameT0)	-- TODO: VERIFY LOWER CASE IF CHANGED	
 		
+		-- ###################### 2 #############################
 		local cellSpaceLayerName = clName1.."_CellSpace"
 		
 		cs:save(cellSpaceLayerName)
@@ -129,7 +131,29 @@ return{
 		unitTest:assertEquals(cellSpaceLayerInfo.user, user)
 		unitTest:assertEquals(cellSpaceLayerInfo.password, password)
 		unitTest:assertEquals(cellSpaceLayerInfo.database, database)
-		unitTest:assertEquals(cellSpaceLayerInfo.table, cellSpaceLayerName)	-- TODO: VERIFY LOWER CASE IF CHANGED			
+		unitTest:assertEquals(cellSpaceLayerInfo.table, cellSpaceLayerName)	-- TODO: VERIFY LOWER CASE IF CHANGED	
+
+		-- ###################### 3 #############################
+		local cs = CellularSpace{
+			project = proj,
+			layer = cellSpaceLayerNameT0
+		}		
+		
+		forEachCell(cs, function(cell)
+			unitTest:assertEquals(cell.t0, 1000)
+			cell.t0 = cell.t0 + 1000
+		end)
+		
+		cs:save(cellSpaceLayerNameT0)
+		
+		local cs = CellularSpace{
+			project = proj,
+			layer = cellSpaceLayerNameT0
+		}	
+
+		forEachCell(cs, function(cell)
+			unitTest:assertEquals(cell.t0, 2000)
+		end)		
 
 		-- ###################### END #############################
 		if isFile(projName) then

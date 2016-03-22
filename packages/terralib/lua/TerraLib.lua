@@ -512,8 +512,9 @@ end
 local function dropDataSet(connInfo, dSetName, type)
 	local ds = makeAndOpenDataSource(connInfo, type)
 
-	local tableExists = ds:dataSetExists(dSetName)
-	if tableExists then
+	local dsetExists = ds:dataSetExists(dSetName)
+
+	if dsetExists then
 		ds:dropDataSet(dSetName)
 	end	
 	
@@ -1194,13 +1195,12 @@ TerraLib_ = {
 		local outType = dsInfo:getType()
 		local outDs = nil
 		if outType == "POSTGIS" then
-			outConnInfo.PG_NEWDB_NAME = newDstName
-			dropDataSet(outConnInfo, newDstName, "POSTGIS")
+			outConnInfo.PG_NEWDB_NAME = string.lower(newDstName)
+			dropDataSet(outConnInfo, string.lower(newDstName), "POSTGIS")
 			outDs = makeAndOpenDataSource(outConnInfo, outType)
 		elseif outType == "OGR" then
 			local outDir = _Gtme.makePathCompatibleToAllOS(getFileDir(outConnInfo.URI))
-			outConnInfo.URI = outDir..newDstName..".shp"
-			outConnInfo.DRIVER = "ESRI Shapefile"		
+			outConnInfo.URI = outDir..newDstName..".shp"		
 			dropDataSet(outConnInfo, newDstName, "OGR")
 			outDs = makeAndOpenDataSource(outConnInfo, outType)
 		end
