@@ -127,7 +127,7 @@ function _Gtme.buildPackage(package, clean)
 		data = true,
 		images = true,
 		font = true,
-		snapshots = true,
+		log = true,
 		doc = true
 	}
 
@@ -218,11 +218,11 @@ function _Gtme.buildPackage(package, clean)
 	if clean then
 		printNote("Cleaning package")
 
-		local dsnapshots = package..s.."snapshots"
+		local dlogs = package..s.."log"
 
-		if isDir(dsnapshots) then
-			print("Removing 'snapshots' directory")
-			rmDir(package..s.."snapshots")
+		if isDir(dlogs) then
+			print("Removing 'log' directory")
+			rmDir(package..s.."log")
 		end
 
 		local dtest = package..s.."test"
@@ -231,18 +231,6 @@ function _Gtme.buildPackage(package, clean)
 			print("Removing 'test' directory")
 			rmDir(package..s.."test")
 		end
-
-		local logs 
-		if _Gtme.isWindowsOS() then
-			logs = runCommand("find-msys \""..package.."\" -name \"*.log\"")
-		else
-			logs = runCommand("find \""..package.."\" -name \"*.log\"")
-		end
-  
-		forEachElement(logs, function(_, file)
-			print("Removing "..file)
-			rmFile(file)
-		end)
 	end
 
 	printNote("Checking Models")

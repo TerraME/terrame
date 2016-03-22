@@ -133,6 +133,57 @@ return{
 		end
 
 		unitTest:assertError(error_func, incompatibleTypeMsg(1, "string", 2))
+
+		local error_func = function()
+			u:assertFile("abcd1234.txt")
+		end
+
+		unitTest:assertError(error_func, resourceNotFoundMsg(1, "abcd1234.txt"))
+
+		local error_func = function()
+			u:assertFile(sessionInfo().path)
+		end
+
+		unitTest:assertError(error_func, "It is not possible to use a directory as #1 for assertFile().")
+
+		local c = Cell{value = 2}
+		local lg = LogFile{target = c, file = "mabc.csv"}
+
+		c:notify()
+		unitTest:assertFile("mabc.csv")
+
+		local str
+
+		local oldPrint = unitTest.printError
+
+		unitTest.printError = function(_, v)
+			str = v
+		end
+
+		local lg = LogFile{target = c, file = "mabc.csv"}
+
+		c:notify()
+		unitTest:assertFile("mabc.csv")
+		unitTest:assertEquals(str, "Log file 'mabc.csv' is used in more than one assert.")
+
+		unitTest.fail = unitTest.fail - 1
+		unitTest.success = unitTest.success + 1
+		unitTest.printError = oldPrint
+
+		local u = UnitTest{}
+
+		local c = Cell{value = 2}
+		local lg = LogFile{target = c, file = "abc.csv"}
+
+		c:notify()
+
+		local error_func = function()
+			u:assertFile("abc.csv")
+		end
+
+		u:assertError(error_func, "It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
+
+		rmFile("abc.csv")
 	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{unittest = true}

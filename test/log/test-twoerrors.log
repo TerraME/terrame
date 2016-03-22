@@ -109,8 +109,8 @@ Assert in line 244 was not executed.
 Testing tests/alternative/Cell.lua
 Testing Cell
 Error in ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:42: Test should be Map got Chart.
-Creating 'snapshots/chart_cell.bmp'.
-Creating 'snapshots/chart_cell_select.bmp'.
+Creating 'log/mac/chart_cell.bmp'.
+Creating 'log/mac/chart_cell_select.bmp'.
 Wrong execution, got error: '...errame/bin/packages/twoerrors/tests/alternative/Cell.lua:63: attempt to perform arithmetic on global 'abc' (a nil value)'.
 Stack traceback:
     File ...errame/bin/packages/twoerrors/tests/alternative/Cell.lua, line 63, in main chunk

@@ -84,14 +84,12 @@ return{
 		}
 
 		local ts = TextScreen{target = world}
-		LogFile{target = world}
+		LogFile{target = world, file = "cellularspace.csv"}
 		local vt = VisualTable{target = world}
 
 		t:run(30)
 
-		local mytable = CSVread("result.csv")
-		unitTest:assertEquals(#mytable, 30)
-		unitTest:assertFile("result.csv")
+		unitTest:assertFile("cellularspace.csv")
 
 		world:notify()
     

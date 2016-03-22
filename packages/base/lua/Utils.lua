@@ -903,7 +903,7 @@ function getConfig()
 		_Gtme.buildConfig() -- SKIP
 		return getConfig() -- SKIP
 	else
-		config = _Gtme.include("config.lua")	
+		config = _Gtme.include("config.lua") -- SKIP
 		return config
 	end
 end

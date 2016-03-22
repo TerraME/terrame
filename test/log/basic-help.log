@@ -25,7 +25,7 @@ Options:
                                   tests and initial documentation for undocumented files.
  [-package <pkg>] -build [-clean] Build an installer for the package. It executes all
                                   tests and build the documentation of the packag.
-                                  -clean option remove test files, snapshots, and logs.
+                                  -clean option remove test files and logs.
  [-package <pkg>] -uninstall      Remove an installed package.
  [-package <pkg>] -example [file] Run an example.
  [-package <pkg>] -doc            Build the documentation.

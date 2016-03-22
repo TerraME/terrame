@@ -56,14 +56,12 @@ return{
 		}
 
 		local ts = TextScreen{target = world}
-		LogFile{target = world}
+		LogFile{target = world, file = "agent.csv"}
 		local vt = VisualTable{target = world}
 
 		t:run(15)
 
-		local mytable = CSVread("result.csv")
-		unitTest:assertEquals(#mytable, 15)
-		unitTest:assertFile("result.csv")
+		unitTest:assertFile("agent.csv")
 
 		unitTest:assertSnapshot(c1, "chart_agent.bmp", 0.01)
 		unitTest:assertSnapshot(c2, "chart_agent_select.bmp", 0.01)

@@ -67,22 +67,30 @@ return{
 		unitTest:assertEquals(u.test, 2)
 	end,
 	assertFile = function(unitTest)
-		local u = UnitTest{}
-
 		local c = Cell{value = 2}
 		local lg = LogFile{target = c, file = "abc.csv"}
 
+		local success = unitTest.success
+		local test = unitTest.test
+		local fail = unitTest.fail
+
 		c:notify()
 
-		u:assertFile("abc.csv")
+		unitTest:assertFile("abc.csv")
 
-		u.printError = function() end
-		u:assertFile("abc.csv")
-		u:assertFile(packageInfo().data)
+		local oldPrint = unitTest.printError
+		unitTest.printError = function() end
+		unitTest:assertFile("abc.csv") -- file does not exist
+		unitTest:assertFile(packageInfo().data) -- not possible to use directory
 
-		unitTest:assertEquals(u.success, 1)
-		unitTest:assertEquals(u.test, 3)
-		unitTest:assertEquals(u.fail, 2)
+		unitTest.printError = oldPrint
+
+		unitTest:assertEquals(success + 1, unitTest.success)
+		unitTest:assertEquals(test + 3 + 1, unitTest.test) -- plus one because of the previous line
+		unitTest:assertEquals(fail + 2, unitTest.fail)
+
+		unitTest.fail = unitTest.fail - 2
+		unitTest.success = unitTest.success + 2
 	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{}

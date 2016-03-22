@@ -193,21 +193,73 @@ UnitTest_ = {
 
 		if not isFile(fname) then
 			self.fail = self.fail + 1
-			self:printError("File '"..fname.."' does not exist.")
+			self:printError(resourceNotFoundMsg(1, fname))
 			return
 		elseif isDir(fname) then
 			self.fail = self.fail + 1
-			self:printError("File '"..fname.."' is a directory.")
+			self:printError("It is not possible to use a directory as #1 for assertFile().")
 			return
 		end
 
+		if not self.log then
+			customError("It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
+		end
+
+		if not self.logs then self.logs = 0 end
+		self.logs = self.logs + 1
+
+		if not self.tlogs then
+			self.tlogs = {}
+		end
+
+		if self.tlogs[fname] then
+			self.fail = self.fail + 1
+			self:printError("Log file '"..fname.."' is used in more than one assert.")
+			rmFile(fname)
+			return
+		end
+
+		self.tlogs[fname] = true
+
+		if not self.tmpdir then
+			self.tmpdir = tmpDir(".terrametmp_XXXXX") -- SKIP
+		end
+
+		os.execute("cp \""..fname.."\" \""..self.tmpdir.."\"")
 		rmFile(fname)
 
 		if isFile(fname) then
 			self.fail = self.fail + 1 -- SKIP
 			self:printError("Could not remove file '"..fname.."'.")
+			return
+		end
+
+		local s = sessionInfo().separator
+		local oldLog = packageInfo(pkg).path..s.."log"..s..self.log..s..fname
+
+		if not isFile(oldLog) then
+			if not self.created_logs then -- SKIP
+				self.created_logs = 0 -- SKIP
+			end
+
+			self.created_logs = self.created_logs + 1 -- SKIP
+			_Gtme.printError("Creating '".._Gtme.makePathCompatibleToAllOS("log"..s..self.log..s..fname).."'.")
+			os.execute("cp \""..self.tmpdir..s..fname.."\" \""..oldLog.."\"") -- SKIP
+			self.test = self.test + 1 -- SKIP
+			self.success = self.success + 1 -- SKIP
 		else
-			self.success = self.success + 1
+			local result = runCommand("diff \""..self.tmpdir.."/"..fname.."\" \""..oldLog.."\"")
+
+			if #result == 0 then
+				self.success = self.success + 1
+			else
+				self:printError("Files \n  '".._Gtme.makePathCompatibleToAllOS(oldLog).."'\nand\n  '"..newImage.."'\nare different.")
+				forEachElement(result, function(_, value)
+					self:printError(value)
+				end)
+
+				self.fail = self.fail + 1 -- SKIP
+			end
 		end
 	end,
 	--- Check if a given value is nil. Otherwise it generates an error.
@@ -237,7 +289,8 @@ UnitTest_ = {
 		end
 	end,
 	--- Verify whether a Chart or a Map has a plot similar to the one defined in the
-	-- snapshot directory.
+	-- log directory. Note that this function cannot be used for the same file twice
+	-- in the tests of a given package.
 	-- @arg observer A Chart or a Map.
 	-- @arg file A string with the file name in the snapshot directory. If the file does not exist
 	-- then it will save the file in the snapshot directory.
@@ -248,7 +301,7 @@ UnitTest_ = {
 	-- chart = Chart{target = cell}
 	-- unitTest:assertSnapshot(chart, "test_chart.bmp")
 	--
-	-- rmFile(packageInfo("base").path.."/snapshots/test_chart.bmp")
+	-- rmFile(packageInfo("base").path.."/log/test_chart.bmp")
 	assertSnapshot = function(self, observer, file, tolerance)
 		if not belong(type(observer), {"Chart", "Map", "TextScreen", "Clock", "VisualTable"}) then
 			customError("Argument #1 should be Chart, Map, TextScreen, Clock or VisualTable, got "..type(observer)..".")
@@ -267,7 +320,7 @@ UnitTest_ = {
 		end
 
 		if not self.logs then
-			self.logs = 0
+			self.logs = 0 -- SKIP
 		end
 
 		self.logs = self.logs + 1
@@ -278,7 +331,7 @@ UnitTest_ = {
 
 		if self.tlogs[file] then
 			self.fail = self.fail + 1 -- SKIP
-			self:printError("File '"..file.."' is used in more than one assertShapshot().")
+			self:printError("Log file '"..file.."' is used in more than one assert.")
 			return
 		end
 
@@ -301,7 +354,7 @@ UnitTest_ = {
 			end
 
 			self.created_logs = self.created_logs + 1 -- SKIP
-			_Gtme.printError("Creating 'snapshots".._Gtme.makePathCompatibleToAllOS(s..file).."'.")
+			_Gtme.printError("Creating '".._Gtme.makePathCompatibleToAllOS("log"..s..self.log..s..file).."'.")
 			self.test = self.test + 1 -- SKIP
 			self.success = self.success + 1 -- SKIP
 		else
@@ -313,13 +366,13 @@ UnitTest_ = {
 			if merror <= tolerance then
 				self.success = self.success + 1
 			elseif tolerance > 0 then
-				local message = "Files \n  'snapshots".._Gtme.makePathCompatibleToAllOS(s..file)
+				local message = "Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..self.log..s..file)
 					.."'\nand\n  '"..newImage.."'\nare different." -- SKIP
 					.."\nError ("..merror..") is greater than maximum tolerance ("..tolerance..")." -- SKIP
 				self:printError(message)
 				self.fail = self.fail + 1 -- SKIP
 			else
-				self:printError("Files \n  'snapshots".._Gtme.makePathCompatibleToAllOS(s..file).."'\nand\n  '"..newImage.."'\nare different.")
+				self:printError("Files \n  '".._Gtme.makePathCompatibleToAllOS("log"..s..self.log..s..file).."'\nand\n  '"..newImage.."'\nare different.")
 				self.fail = self.fail + 1 -- SKIP
 			end
 		end
