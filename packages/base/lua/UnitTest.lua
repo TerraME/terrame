@@ -183,7 +183,8 @@ UnitTest_ = {
 	--- Check if a given file exists and remove it. Repeating: The file is removed when calling
 	-- this assert. If the file is a directory or does not exist then it shows an error.
 	-- @arg fname A string with a file name.
-	-- @usage unitTest = UnitTest{}
+	-- @usage -- DONTRUN
+	-- unitTest = UnitTest{}
 	-- os.execute("touch file.txt") -- create a file (only works in Linux and Mac)
 	-- unitTest:assertFile("file.txt")
 	assertFile = function(self, fname)
@@ -296,12 +297,11 @@ UnitTest_ = {
 	-- then it will save the file in the snapshot directory.
 	-- @arg tolerance A number between 0 and 1 with the maximum difference in percentage of pixels
 	-- allowed. The default value is 0.
-	-- @usage unitTest = UnitTest{}
+	-- @usage -- DONTRUN
+	-- unitTest = UnitTest{}
 	-- cell = Cell{value = 2}
 	-- chart = Chart{target = cell}
 	-- unitTest:assertSnapshot(chart, "test_chart.bmp")
-	--
-	-- rmFile(packageInfo("base").path.."/log/test_chart.bmp")
 	assertSnapshot = function(self, observer, file, tolerance)
 		if not belong(type(observer), {"Chart", "Map", "TextScreen", "Clock", "VisualTable"}) then
 			customError("Argument #1 should be Chart, Map, TextScreen, Clock or VisualTable, got "..type(observer)..".")
