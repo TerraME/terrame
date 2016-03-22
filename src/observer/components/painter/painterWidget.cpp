@@ -12,6 +12,8 @@
 #include "observerImpl.h"
 #include "../legend/legendAttributes.h"
 
+#include <math.h>
+
 static const QString COMPLEMENT("000000");
 
 using namespace TerraMEObserver;

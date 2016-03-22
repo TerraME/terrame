@@ -28,13 +28,12 @@ include(InstallRequiredSystemLibraries)
 
 set(TERRAME_BUILD_AS_BUNDLE @TERRAME_BUILD_AS_BUNDLE@)
 
-
 file(GLOB_RECURSE TERRAME_PLGS ${CMAKE_INSTALL_PREFIX}/*@CMAKE_SHARED_LIBRARY_SUFFIX@)
 
 if(APPLE AND TERRAME_BUILD_AS_BUNDLE)
   set(BU_CHMOD_BUNDLE_ITEMS ON)
   set(TERRAME_APPLICATION ${CMAKE_INSTALL_PREFIX}/terrame.app)
-  set(TERRAME_PATHS "@Qt5_DIR@/../..") # TODO: REVIEW
+  set(TERRAME_PATHS "@Qt5_DIR@/../..;@TERRAME_DEPENDENCIES_DIR@/lib;@TERRALIB_3RDPARTY_DIR@/lib;@TERRAME_LIBRARIES@;@TERRALIB_DIR@/lib;@TERRALIB_DIR@/bin")
 elseif(WIN32)
   set(TERRAME_APPLICATION ${CMAKE_INSTALL_PREFIX}/bin/terrame.exe)
   set(TERRAME_PATHS "")
@@ -53,7 +52,7 @@ if(APPLE AND TERRAME_BUILD_AS_BUNDLE)
 		set (is_Lib FALSE)
 		
 		get_filename_component (resolved_file ${item} PATH)
-		 
+
 		if("${resolved_file}" STREQUAL "")
 			set (is_Lib TRUE)
 		elseif(resolved_file MATCHES "^(@rpath)")
@@ -71,7 +70,7 @@ if(APPLE AND TERRAME_BUILD_AS_BUNDLE)
 		elseif(resolved_file MATCHES "(lib)$")
 			set (is_Lib TRUE)
 		endif()
-    
+
 		if(item MATCHES "\\.dylib$")
 			if(is_System)
 				set(${default_embedded_path_var} "@executable_path/../MacOS" PARENT_SCOPE)

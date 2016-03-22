@@ -27,8 +27,7 @@ of this library and its documentation.
 
 #include <QtCore/QtGlobal>
 
-//#include <TeDatabase.h>
-//#include <TeAsciiFile.h>
+#include <math.h>
 
 vector<ColorBar>  getColorBarVector(string& groupingColors, const bool& first)
 {
