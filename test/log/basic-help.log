@@ -13,8 +13,7 @@ Options:
  -mode=strict                     Execute additional verifications in the source code 
                                   when it finds unnecessary arguments for functions.
  -mode=quiet                      Warnings disabled.
- -mode=silent                     print() does not show any text on the screen. This mode
-                                  can be used with the other three modes independently.
+ -silent                          print() does not show any text on the screen.
  -version                         TerraME general information.
  -color                           Show colored output (only for Linux and Mac systems).
  -package <pkg>                   Select a given package. If used alone and the model has
