@@ -30,10 +30,10 @@ local printWarning = _Gtme.printWarning
 local printNote    = _Gtme.printNote
 
 local function rm(file)
-	if isFile(file) then
-		rmFile(file)
-	else
+	if isDir(file) then
 		rmDir(file)
+	else
+		rmFile(file)
 	end
 end
 
