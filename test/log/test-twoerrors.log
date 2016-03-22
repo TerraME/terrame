@@ -1,4 +1,5 @@
 Loading configuration file 'config/all.lua'
+Using log directory 'log/mac'
 Loading package 'twoerrors'
 Error: print() call detected with argument 'print when loading'
 Error: print() call detected with argument 'print when loading'
@@ -170,9 +171,9 @@ Checking Tube2.lua
 Checking Utils.lua
 Line 41 was not executed.
 Line 42 was not executed.
-Checking snapshots
-File 'snapshots/chart_cell2.bmp' was not used by any assertSnapshot().
-File 'snapshots/chart_cell3.bmp' was not used by any assertSnapshot().
+Checking logs
+File 'log/mac/chart_cell2.bmp' was not used by any assert.
+File 'log/mac/chart_cell3.bmp' was not used by any assert.
 Testing examples
 Testing continuous-rain
 Creating log file continuous-rain.log
@@ -188,8 +189,8 @@ Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
 Unit test report:
-Tests were executed in 12.69 seconds.
-Snapshots were saved in '.terrametmp_dRyI5'.
+Tests were executed in 14.82 seconds.
+Logs were saved in '.terrametmp_q8Umf'.
 2 print() calls were found when loading the package.
 2 variables are overwritten when loading the package.
 2 invalid files or directories were found in directory 'test'.
@@ -203,8 +204,8 @@ Snapshots were saved in '.terrametmp_dRyI5'.
 2 assertError() calls have error messages pointing to an internal file (wrong level).
 2 out of 70 source code functions were not tested.
 2 lines from the source code were not executed at least once.
-2 snapshot files were created. Please run the tests again.
-2 files from directory 'snapshots' were not used.
+2 log files were created. Please run the tests again.
+2 files from directory 'log/mac' were not used.
 2 errors were found in the 4 examples.
 2 log files were created in the examples. Please run the tests again.
 Summing up, 34 problems were found during the tests.

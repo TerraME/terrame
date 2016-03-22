@@ -187,6 +187,12 @@ return{
 		end
 
 		unitTest:assertError(error_func, "Argument #3 should be between 0 and 1, got -1.")
+	
+		local error_func = function()
+			u:assertSnapshot(ch, "file.bmp")
+		end
+
+		unitTest:assertError(error_func, "It is not possible to use assertSnapshot without a log directory location in a configuration file for the tests.")
 	end,
 	assertType = function(unitTest)
 		local u = UnitTest{unittest = true}

@@ -1,4 +1,5 @@
 Loading configuration file 'config/all.lua'
+Using log directory 'log/mac'
 Loading package 'onerror'
 Error: print() call detected with argument 'print when loading'
 Looking for overwritten variables
@@ -144,8 +145,8 @@ Checking ErrorHandling.lua
 Checking Tube.lua
 Checking Utils.lua
 Line 40 was not executed.
-Checking snapshots
-File 'snapshots/chart_cell2.bmp' was not used by any assertSnapshot().
+Checking logs
+File 'log/mac/chart_cell2.bmp' was not used by any assert.
 Testing examples
 Testing continuous-rain
 Testing discrete-rain
@@ -156,8 +157,8 @@ Log file: <empty>
 Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
 
 Unit test report:
-Tests were executed in 12.82 seconds.
-Snapshots were saved in '.terrametmp_rXX0M'.
+Tests were executed in 14.18 seconds.
+Logs were saved in '.terrametmp_nEz8h'.
 One print() call was found when loading the package.
 One variable is overwritten when loading the package.
 One invalid file or directory was found in directory 'test'.
@@ -171,8 +172,8 @@ One print call was found in the tests.
 One assertError() call has an error message pointing to an internal file (wrong level).
 One out of 67 source code functions was not tested.
 One line from the source code was not executed at least once.
-One snapshot file was created. Please run the tests again.
-One file from directory 'snapshots' was not used.
+One log file was created. Please run the tests again.
+One file from directory 'log/mac' was not used.
 One error was found in the 3 examples.
 One log file was created in the examples. Please run the tests again.
 Summing up, 17 problems were found during the tests.

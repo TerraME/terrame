@@ -69,7 +69,6 @@ return{
 	assertFile = function(unitTest)
 		local u = UnitTest{}
 
-
 		local c = Cell{value = 2}
 		local lg = LogFile{target = c, file = "abc.csv"}
 

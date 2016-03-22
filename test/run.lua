@@ -246,6 +246,7 @@ end)
 
 _Gtme.printNote("Testing from local directories")
 
+os.execute("cp config.lua packages")
 chDir("packages")
 
 _Gtme.printNote("Removing files")
@@ -414,6 +415,7 @@ if commands.build then
 	end)
 end
 
+rmFile("config.lua")
 chDir("..")
 
 if commands.observer then

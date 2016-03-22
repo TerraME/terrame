@@ -1,4 +1,5 @@
 Loading configuration file 'config/oneFile.lua'
+Using log directory 'log/mac'
 Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
@@ -29,12 +30,12 @@ Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking Event.lua
 Skipping lines of source code check
-Skipping snapthots check
+Skipping logs check
 Skipping examples
 
 Unit test report:
-Tests were executed in 5.53 seconds.
-Snapshots were saved in '.terrametmp_CkBI0'.
+Tests were executed in 5.68 seconds.
+Logs were saved in '.terrametmp_PXqon'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -48,7 +49,7 @@ No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 All 7 functions of the package were tested.
 No lines from the source code were verified.
-No new snapshot file was created.
-All snapshot files were used in the tests.
+No new log file was created.
+All log files were used in the tests.
 No examples were executed.
 Summing up, all tests were successfully executed.

@@ -191,6 +191,7 @@ end
 
 function _Gtme.executeTests(package, fileName)
 	local initialTime = os.clock()
+	local s = sessionInfo().separator
 
 	local data
 
@@ -203,7 +204,7 @@ function _Gtme.executeTests(package, fileName)
 		end)
 
 		if getn(data) == 0 then
-			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'sleep', 'test'}.")
+			printError("File "..fileName.." is empty. Please use at least one variable from {'examples', 'directory', 'file', 'lines', 'log', 'sleep', 'test'}.")
 			os.exit()
 		end
 
@@ -239,7 +240,17 @@ function _Gtme.executeTests(package, fileName)
 			end
 		end
 
-		verifyUnnecessaryArguments(data, {"directory", "file", "test", "sleep", "examples", "lines"})
+		if data.log ~= nil then
+			local pkg = sessionInfo().package
+			local location = packageInfo(pkg).path..s.."log"..s..data.log
+			if isDir(location) then
+				printNote("Using log directory 'log"..s..data.log.."'")
+			else
+				customError("Log directory '"..location.."' does not exist.")
+			end
+		end
+
+		verifyUnnecessaryArguments(data, {"directory", "file", "test", "sleep", "examples", "lines", "log"})
 	else
 		data = {}
 	end
@@ -249,13 +260,14 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	local check_functions = data.directory == nil and data.test == nil
-	local check_snapshots = data.directory == nil and data.test == nil and data.file == nil
+	local check_logs = data.directory == nil and data.test == nil and data.file == nil
 	if data.examples == nil then
 		data.examples = check_functions and data.file == nil
 	end
 
 	local ut = UnitTest{
 		sleep = data.sleep,
+		log = data.log,
 		package = package,
 		package_functions = 0,
 		functions_not_exist = 0,
@@ -270,12 +282,12 @@ function _Gtme.executeTests(package, fileName)
 		log_files = 0,
 		invalid_test_file = 0,
 		print_when_loading = 0,
-		snapshots = 0,
-		snapshot_files = 0,
+		logs = 0,
+		created_logs = 0,
 		lines_not_executed = 0,
 		asserts_not_executed = 0,
 		overwritten_variables = 0,
-		unused_snapshot_files = 0
+		unused_log_files = 0
 	}
 
 	if not isLoaded("base") and sessionInfo().package ~= "base" then
@@ -309,7 +321,6 @@ function _Gtme.executeTests(package, fileName)
 		import("luadoc")
 	end
 
-	local s = sessionInfo().separator
 	local baseDir = packageInfo(package).path
 
 	doc_functions = luadocMain(baseDir, dir(baseDir..s.."lua"), {}, package, {}, {}, {}, true)
@@ -717,18 +728,18 @@ function _Gtme.executeTests(package, fileName)
 		printWarning("Skipping lines of source code check")
 	end
 
-	if ut.snapshots > 0 and check_snapshots then
-		printNote("Checking snapshots")
-		local mdir = dir(packageInfo(package).path..s.."snapshots")
+	if ut.logs > 0 and check_logs then
+		printNote("Checking logs")
+		local mdir = dir(packageInfo(package).path..s.."log"..s..ut.log)
 
 		forEachElement(mdir, function(_, value)
-			if not ut.tsnapshots[value] then
-				printError("File 'snapshots/"..value.."' was not used by any assertSnapshot().")
-				ut.unused_snapshot_files = ut.unused_snapshot_files + 1
+			if not ut.tlogs[value] then
+				printError("File 'log/"..ut.log.."/"..value.."' was not used by any assert.")
+				ut.unused_log_files = ut.unused_log_files + 1
 			end
 		end)
 	else
-		printWarning("Skipping snapthots check")
+		printWarning("Skipping logs check")
 	end
 
 	-- executing examples
@@ -836,8 +847,8 @@ function _Gtme.executeTests(package, fileName)
 	end
 	printNote(text)
 
-	if ut.snapshots > 0 then
-		printNote("Snapshots were saved in '"..ut.tmpdir.."'.")
+	if ut.logs > 0 then
+		printNote("Logs were saved in '"..ut.tmpdir.."'.")
 	end
 
 	if ut.print_when_loading == 1 then
@@ -954,24 +965,24 @@ function _Gtme.executeTests(package, fileName)
 		printWarning("No lines from the source code were verified.")
 	end
 
-	if ut.snapshots > 0 then
-		if ut.snapshot_files == 1 then
-			printError("One snapshot file was created. Please run the tests again.")
-		elseif ut.snapshot_files > 1 then
-			printError(ut.snapshot_files.." snapshot files were created. Please run the tests again.")
+	if ut.logs > 0 then
+		if ut.created_logs == 1 then
+			printError("One log file was created. Please run the tests again.")
+		elseif ut.created_logs > 1 then
+			printError(ut.created_logs.." log files were created. Please run the tests again.")
 		else
-			printNote("No new snapshot file was created.")
+			printNote("No new log file was created.")
 		end
 
-		if ut.unused_snapshot_files == 1 then
-			printError("One file from directory 'snapshots' was not used.")
-		elseif ut.unused_snapshot_files > 1 then
-			printError(ut.unused_snapshot_files.." files from directory 'snapshots' were not used.")
+		if ut.unused_log_files == 1 then
+			printError("One file from directory 'log/"..ut.log.."' was not used.")
+		elseif ut.unused_log_files > 1 then
+			printError(ut.unused_log_files.." files from directory 'log/"..ut.log.."' were not used.")
 		else
-			printNote("All snapshot files were used in the tests.")
+			printNote("All log files were used in the tests.")
 		end
 	else
-		printWarning("No snapshot test was executed.")
+		printWarning("No log test was executed.")
 	end
 
 	if data.examples then
@@ -997,7 +1008,7 @@ function _Gtme.executeTests(package, fileName)
 	end
 
 	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success
-	               -ut.snapshots - ut.package_functions - ut.delayed_time -ut.sleep
+	               -ut.logs - ut.package_functions - ut.delayed_time -ut.sleep
 
 	forEachElement(ut, function(_, value, mtype)
 		if mtype == "number" then

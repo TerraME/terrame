@@ -261,44 +261,46 @@ UnitTest_ = {
 
 		verify(tolerance >= 0 and tolerance <= 1, "Argument #3 should be between 0 and 1, got "..tolerance..".")
 
-		if not self.snapshots then self.snapshots = 0 end
-
-		self.snapshots = self.snapshots + 1
 		local s = sessionInfo().separator
-		if not self.imgFolder then
-			local pkg = sessionInfo().package
-
-			self.imgFolder = packageInfo(pkg).path..s.."snapshots" -- SKIP
-
-			if not isDir(self.imgFolder) then -- SKIP
-				customError("Folder '"..self.imgFolder.."' does not exist. Please create such directory in order to use assertSnapshot().")
-			end
-			self.tsnapshots = {}
+		if not self.log then
+			customError("It is not possible to use assertSnapshot without a log directory location in a configuration file for the tests.")
 		end
 
-		if self.tsnapshots[file] then
+		if not self.logs then
+			self.logs = 0
+		end
+
+		self.logs = self.logs + 1
+
+		if not self.tlogs then
+			self.tlogs = {}
+		end
+
+		if self.tlogs[file] then
 			self.fail = self.fail + 1 -- SKIP
 			self:printError("File '"..file.."' is used in more than one assertShapshot().")
 			return
 		end
 
-		self.tsnapshots[file] = true
+		self.tlogs[file] = true
 
 		if not self.tmpdir then
 			self.tmpdir = tmpDir(".terrametmp_XXXXX") -- SKIP
 		end
 
 		local newImage = self.tmpdir..s..file
-		local oldImage = self.imgFolder..s..file
+
+		local pkg = sessionInfo().package
+		local oldImage = packageInfo(pkg).path..s.."log"..s..self.log..s..file
 
 		if not isFile(oldImage) then
 			observer:save(oldImage) -- SKIP
 
-			if not self.snapshot_files then -- SKIP
-				self.snapshot_files = 0 -- SKIP
+			if not self.created_logs then -- SKIP
+				self.created_logs = 0 -- SKIP
 			end
 
-			self.snapshot_files = self.snapshot_files + 1 -- SKIP
+			self.created_logs = self.created_logs + 1 -- SKIP
 			_Gtme.printError("Creating 'snapshots".._Gtme.makePathCompatibleToAllOS(s..file).."'.")
 			self.test = self.test + 1 -- SKIP
 			self.success = self.success + 1 -- SKIP

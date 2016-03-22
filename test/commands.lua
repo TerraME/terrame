@@ -11,6 +11,7 @@ test = {
 	twotest        = {arg = "-test", config = "twoTests.lua"},
 	twodirectories = {arg = "-test", config = "twoDirectories.lua"},
 	pattern        = {arg = "-test", config = "pattern.lua"},
+	nolog          = {arg = "-test", config = "log.lua"},
 	noexamples     = {arg = "-test", package = "noexamples"}
 }
 

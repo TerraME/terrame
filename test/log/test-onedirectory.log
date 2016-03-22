@@ -1,4 +1,5 @@
 Loading configuration file 'config/oneDirectory.lua'
+Using log directory 'log/mac'
 Loading package 'base'
 Looking for overwritten variables
 Looking for documented functions
@@ -45,7 +46,7 @@ Testing VisualTable
 Checking if all asserts were executed
 Skipping source code functions check
 Skipping lines of source code check
-Skipping snapthots check
+Skipping logs check
 Skipping examples
 
 Unit test report:
@@ -63,6 +64,6 @@ No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No source code functions were verified.
 No lines from the source code were verified.
-No snapshot test was executed.
+No log test was executed.
 No examples were executed.
 Summing up, all tests were successfully executed.

@@ -23,7 +23,7 @@ Checking if functions from source code were tested
 Checking Tube.lua
 Checking Utils.lua
 Skipping lines of source code check
-Skipping snapthots check
+Skipping logs check
 Testing examples
 Test file 'unnec2.txt' does not have a valid extension
 Testing ipd
@@ -43,7 +43,7 @@ No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 All 2 functions of the package were tested.
 No lines from the source code were verified.
-No snapshot test was executed.
+No log test was executed.
 All 1 examples were successfully executed.
 No new log file was created.
 Summing up, 4 problems were found during the tests.
