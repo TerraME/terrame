@@ -138,7 +138,7 @@ if(APPLE)
 		set(MACOSX_BUNDLE_GUI_IDENTIFIER "http://www.terrame.org")
 		set(MACOSX_BUNDLE_EXECUTABLE_NAME "TerraME")
 		set(MACOSX_BUNDLE_INFO_STRING "System for spatial dynamical modelling.")
-		set(MACOSX_BUNDLE_ICON_FILE "../app.icns")
+		set(MACOSX_BUNDLE_ICON_FILE "../Resources/icon/app.icns")
 		set(MACOSX_BUNDLE_LONG_VERSION_STRING ${TERRAME_STRING_VERSION})
 		set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${TERRAME_PKG_VERSION})
 		set(MACOSX_BUNDLE_BUNDLE_VERSION ${TERRAME_STRING_VERSION})
@@ -150,16 +150,14 @@ if(APPLE)
 		set(CPACK_BUNDLE_ICON ${CPACK_PACKAGE_ICON})
 		set(CPACK_BUNDLE_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
 
-		set (TERRAME_APP_TYPE MACOSX_BUNDLE)
+		set(TERRAME_APP_TYPE MACOSX_BUNDLE)
 	endif()
 endif()
 
 if(MINGW)
-    file(TERRAME_APP_ICON ${TERRAME_ABSOLUTE_ROOT_DIR}/res/resource.o)
+    file(GLOB TERRAME_APP_ICON ${TERRAME_ABSOLUTE_ROOT_DIR}/res/resource.o)
 elseif(MSVC)
 	file(GLOB TERRAME_APP_ICON ${TERRAME_ABSOLUTE_ROOT_DIR}/res/resource.rc)
-else()
-    file(TERRAME_APP_ICON "")
 endif()
 
 # TODO: REVIEW
@@ -276,7 +274,7 @@ set(TERRAME_FILES 	${TERRAME_CORE_SRC_FILES} ${TERRAME_CORE_HDR_FILES}
 					${TERRAME_APP_ICON}
 					)
 					
-add_executable(terrame ${TERRAME_FILES} ${TERRAME_APP_TYPE} ${PROTO_SRCS} ${PROTO_HDRS})
+add_executable(terrame ${TERRAME_APP_TYPE} ${TERRAME_FILES} ${PROTO_SRCS} ${PROTO_HDRS})
 
 #qt5_use_modules(terrame Core Gui Widgets PrintSupport) #TODO: REVIEW
 
@@ -286,12 +284,11 @@ if(APPLE)
 	target_link_libraries(terrame ${_COREFOUNDATION_LIBRARY})
 endif()
 
-set_target_properties( terrame PROPERTIES
-	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${TERRAME_BIN_DIR}
-	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${TERRAME_BIN_DIR}
-)
-
 if(WIN32 AND MSVC)
+    set_target_properties(terrame PROPERTIES
+                        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${TERRAME_BIN_DIR}
+                        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${TERRAME_BIN_DIR}
+                        )
 	set_target_properties(terrame PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
 	set_target_properties(terrame PROPERTIES RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
 	set_target_properties(terrame PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:CONSOLE")
@@ -312,24 +309,74 @@ if(NOT DEFINED CMAKE_INSTALL_PREFIX)
 	set(CMAKE_INSTALL_PREFIX ${TERRAME_ABSOLUTE_ROOT_DIR}/install)
 endif()
 
-set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
-install(DIRECTORY ${TERRAME_LUA_SRC_DIR}/
-		DESTINATION bin/lua/
-		COMPONENT runtime
-		)
-
-set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
-install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
-		DESTINATION bin/packages/
-		COMPONENT runtime
-		)
-		
 # install(FILES ${PROTOBUF_INCLUDE_DIR}/../bin/*.dll
 		# DESTINATION bin/
 		# COMPONENT runtime
 		# )
-		
-if(WIN32)
+
+if(APPLE)
+    install(DIRECTORY ${TERRALIB_DIR}/lib
+            DESTINATION ${TERRAME_INSTALL_PREFIX}
+            COMPONENT runtime
+            PATTERN "cmake" EXCLUDE
+            )
+
+    install(FILES ${TERRALIB_DIR}/bin/terralib_mod_binding_lua.so
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/lib
+            COMPONENT runtime
+            )
+
+    install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.icns
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/Resources/icon
+            COMPONENT runtime
+            )
+
+    set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
+    install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/MacOS
+            COMPONENT runtime
+            )
+
+    set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
+    install(DIRECTORY ${TERRAME_PACKAGES_DIR}
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/MacOS
+            COMPONENT runtime
+            )
+
+#    install(DIRECTORY ${TERRALIB_DIR}/share/data
+#            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/data/
+#            COMPONENT runtime
+#            )
+
+    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib/json/
+            COMPONENT runtime
+            )
+
+    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib/plugins
+            COMPONENT runtime
+            )
+
+    install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib/schemas
+            COMPONENT runtime
+            )
+
+
+elseif(WIN32)
+    set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
+    install(DIRECTORY ${TERRAME_LUA_SRC_DIR}/
+            DESTINATION bin/lua/
+            COMPONENT runtime
+            )
+
+    set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
+    install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
+            DESTINATION bin/packages/
+            COMPONENT runtime
+            )
+
 	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindows.dll
 			DESTINATION bin/platforms/
 			COMPONENT runtime
