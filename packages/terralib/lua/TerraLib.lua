@@ -793,6 +793,7 @@ local function createDataSetAdapted(dSet)
 	local count = 0
 	local numProps = dSet:getNumProperties()
 	local set = {}
+	local precision = 15
 		
 	while dSet:moveNext() do
 		local line = {}
@@ -800,7 +801,7 @@ local function createDataSetAdapted(dSet)
 			local type = dSet:getPropertyDataType(i)
 			
 			if isNumber(type) then
-				line[dSet:getPropertyName(i)] = tonumber(dSet:getAsString(i))
+				line[dSet:getPropertyName(i)] = tonumber(dSet:getAsString(i, precision))
 			elseif type == binding.BOOLEAN_TYPE then
 				line[dSet:getPropertyName(i)] = dSet:getBool(i)
 			elseif type == binding.GEOMETRY_TYPE then

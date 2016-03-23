@@ -154,6 +154,25 @@ return{
 		forEachCell(cs, function(cell)
 			unitTest:assertEquals(cell.t0, 2000)
 		end)		
+		
+		-- ###################### 4 #############################
+		-- DOUBLE PRECISION TEST
+		local num = 0.123456789012345
+
+		forEachCell(cs, function(cell)
+			cell.number = num
+		end)	
+		
+		cs:save(cellSpaceLayerNameT0, "number")
+		
+		local cs = CellularSpace{
+			project = proj,
+			layer = cellSpaceLayerNameT0
+		}
+		
+		forEachCell(cs, function(cell)
+			unitTest:assertEquals(cell.number, num)
+		end)	
 
 		-- ###################### END #############################
 		if isFile(projName) then
