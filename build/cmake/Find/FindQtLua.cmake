@@ -37,7 +37,10 @@ find_library(QTLUA_LIBRARY
 # Export include and library path for linking with other libraries
 # Find path - tries to find *.h in paths hard-coded by the script
 find_path(QTLUA_INCLUDE_DIR qtluafunction.hh
-	HINTS  /usr/include/QtLua /usr/local/include/QtLua /usr/local/qtlua/include/QtLua/
+	HINTS  	/usr/include/QtLua 
+			/usr/local/include/QtLua 
+			/usr/local/qtlua/include/QtLua
+			${TERRAME_DEPENDENCIES_DIR}/include/QtLua
 )
 
 if(QTLUA_INCLUDE_DIR AND QTLUA_LIBRARY)
