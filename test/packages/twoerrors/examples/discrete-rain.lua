@@ -25,3 +25,5 @@ t = Timer{
 
 t:run(100)
 
+a = fff + ert
+

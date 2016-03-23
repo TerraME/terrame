@@ -46,8 +46,8 @@ Testing VisualTable
 Checking if all asserts were executed
 Skipping source code functions check
 Skipping lines of source code check
-Skipping logs check
 Skipping examples
+Skipping logs check
 
 Unit test report:
 Tests were executed in 31.42 seconds.
@@ -64,6 +64,6 @@ No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No source code functions were verified.
 No lines from the source code were verified.
-No log test was executed.
 No examples were executed.
+No log test was executed.
 Summing up, all tests were successfully executed.

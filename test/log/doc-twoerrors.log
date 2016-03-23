@@ -39,7 +39,6 @@ Parsing examples/discrete-rain.lua
 Parsing examples/ipd.lua
 Description of example does not end with '.'
 Description of 'COOPERATE' does not end with '.'
-Parsing examples/ipd2.lua
 Checking undocumented files
 Example discrete-rain.lua is not documented.
 Example continuous-rain.lua is not documented.

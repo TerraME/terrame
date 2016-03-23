@@ -105,8 +105,8 @@ Skipping tests/observer/basics/Utils.lua
 Skipping tests/observer/basics/VisualTable.lua
 Skipping source code functions check
 Skipping lines of source code check
-Skipping logs check
 Skipping examples
+Skipping logs check
 
 Unit test report:
 Tests were executed in 4.76 seconds.
@@ -124,7 +124,7 @@ No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 No source code functions were verified.
 No lines from the source code were verified.
+No examples were executed.
 No new log file was created.
 All log files were used in the tests.
-No examples were executed.
 Summing up, all tests were successfully executed.

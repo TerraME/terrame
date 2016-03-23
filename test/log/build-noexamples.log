@@ -12,9 +12,9 @@ Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking single.lua
 Skipping lines of source code check
-Skipping logs check
 Testing examples
 The package has no examples
+Skipping logs check
 
 Unit test report:
 Tests were executed in 0.04 seconds.
@@ -31,9 +31,8 @@ No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 All 1 functions of the package were tested.
 No lines from the source code were verified.
-No log test was executed.
 The package has no examples.
-No new log file was created.
+No log test was executed.
 Summing up, all tests were successfully executed.
 Creating documentation of package 'noexamples'
 Building documentation for package 'noexamples'

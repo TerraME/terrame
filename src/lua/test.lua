@@ -279,7 +279,6 @@ function _Gtme.executeTests(package, fileName)
 		examples = 0,
 		examples_error = 0,
 		print_calls = 0,
-		log_files = 0,
 		invalid_test_file = 0,
 		print_when_loading = 0,
 		logs = 0,
@@ -728,20 +727,6 @@ function _Gtme.executeTests(package, fileName)
 		printWarning("Skipping lines of source code check")
 	end
 
-	if ut.logs > 0 and check_logs then
-		printNote("Checking logs")
-		local mdir = dir(packageInfo(package).path..s.."log"..s..ut.log)
-
-		forEachElement(mdir, function(_, value)
-			if not ut.tlogs[value] then
-				printError("File 'log/"..ut.log.."/"..value.."' was not used by any assert.")
-				ut.unused_log_files = ut.unused_log_files + 1
-			end
-		end)
-	else
-		printWarning("Skipping logs check")
-	end
-
 	-- executing examples
 	if data.examples then
 		printNote("Testing examples")
@@ -752,36 +737,15 @@ function _Gtme.executeTests(package, fileName)
 				if not doc_functions then io.flush() end -- theck why it is necessary to have the 'if'
 				Random{seed = 987654321}
 
-				local logfile = nil
-				local writing_log = false
+				local logfile
 				print = function(x)
 					if not logfile then
 						local lfilename = value..".log"
 
-						logfile = io.open(baseDir..s.."examples"..s..lfilename, "r")
-						if logfile == nil then
-							printError("Creating log file "..lfilename)
-							logfile = io.open(baseDir..s.."examples"..s..lfilename, "w")
-							writing_log = true
-							ut.log_files = ut.log_files + 1
-						end
+						logfile = io.open(lfilename, "w")
 					end
 
-					if writing_log then
-						local str = logfile:write(x.."\n")
-					else
-						local str = logfile:read(string.len(x) + 1)
-						if str ~= x.."\n" then
-							ut.examples_error = ut.examples_error + 1
-							printError("Error: Strings do not match:")
-							if str == nil then
-								printError("Log file: <empty>")
-							else
-								printError("Log file: '"..str.."'.")
-							end
-							printError("Simulation: '"..x.."'.")
-						end
-					end
+					logfile:write(x.."\n")
 				end
 
 				collectgarbage("collect")
@@ -808,23 +772,23 @@ function _Gtme.executeTests(package, fileName)
 					ut.examples_error = ut.examples_error + 1
 					printError("Error in ".._Gtme.makePathCompatibleToAllOS(err))
 					printError(_Gtme.traceback())
-					writing_log = true -- to avoid showing errors in the log file
 				end)
 
-				if not writing_log and logfile then
-					local str = logfile:read("*all")
-					if str and str ~= "" then
-						ut.examples_error = ut.examples_error + 1
-						printError("Output file contains text not printed by the simulation: ")
-						printError("'"..str.."'")
-					end
-				end	
+				print = _Gtme.print
 
 				if logfile ~= nil then
 					io.close(logfile)
-				end
 
-				print = _Gtme.print
+					local test = ut.test
+					local success = ut.success
+					local fail = ut.fail 
+
+					ut:assertFile(value..".log")
+
+					ut.test = test
+					ut.success = success
+					ut.fail = fail
+				end
 
 				ut:clear()
 			end)
@@ -833,6 +797,20 @@ function _Gtme.executeTests(package, fileName)
 		end
 	else
 		printWarning("Skipping examples")
+	end
+
+	if ut.logs > 0 and check_logs then
+		printNote("Checking logs")
+		local mdir = dir(packageInfo(package).path..s.."log"..s..ut.log)
+
+		forEachElement(mdir, function(_, value)
+			if not ut.tlogs[value] then
+				printError("File 'log/"..ut.log.."/"..value.."' was not used by any assert.")
+				ut.unused_log_files = ut.unused_log_files + 1
+			end
+		end)
+	else
+		printWarning("Skipping logs check")
 	end
 
 	local finalTime = os.clock()
@@ -965,6 +943,20 @@ function _Gtme.executeTests(package, fileName)
 		printWarning("No lines from the source code were verified.")
 	end
 
+	if data.examples then
+		if ut.examples == 0 then
+			printWarning("The package has no examples.")
+		elseif ut.examples_error == 0 then
+			printNote("All "..ut.examples.." examples were successfully executed.")
+		elseif ut.examples_error == 1 then
+			printError("One error was found in the "..ut.examples.." examples.")
+		else
+			printError(ut.examples_error.." errors were found in the "..ut.examples.." examples.")
+		end
+	else
+		printWarning("No examples were executed.")
+	end
+
 	if ut.logs > 0 then
 		if ut.created_logs == 1 then
 			printError("One log file was created. Please run the tests again.")
@@ -983,28 +975,6 @@ function _Gtme.executeTests(package, fileName)
 		end
 	else
 		printWarning("No log test was executed.")
-	end
-
-	if data.examples then
-		if ut.examples == 0 then
-			printWarning("The package has no examples.")
-		elseif ut.examples_error == 0 then
-			printNote("All "..ut.examples.." examples were successfully executed.")
-		elseif ut.examples_error == 1 then
-			printError("One error was found in the "..ut.examples.." examples.")
-		else
-			printError(ut.examples_error.." errors were found in the "..ut.examples.." examples.")
-		end
-
-		if ut.log_files == 1 then
-			printError("One log file was created in the examples. Please run the tests again.")
-		elseif ut.log_files > 1 then
-			printError(ut.log_files.." log files were created in the examples. Please run the tests again.")
-		else
-			printNote("No new log file was created.")
-		end
-	else
-		printWarning("No examples were executed.")
 	end
 
 	local errors = -ut.examples -ut.executed_functions -ut.test -ut.success

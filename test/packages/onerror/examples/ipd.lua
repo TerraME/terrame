@@ -190,3 +190,5 @@ for i = 1, nplayers do
 	print(p..sum)
 end
 
+a = bcs + dfg
+

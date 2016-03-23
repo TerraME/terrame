@@ -236,6 +236,7 @@ UnitTest_ = {
 		end
 
 		local s = sessionInfo().separator
+		local pkg = sessionInfo().package
 		local oldLog = packageInfo(pkg).path..s.."log"..s..self.log..s..fname
 
 		if not isFile(oldLog) then
@@ -249,14 +250,14 @@ UnitTest_ = {
 			self.test = self.test + 1 -- SKIP
 			self.success = self.success + 1 -- SKIP
 		else
-			local result = runCommand("diff \""..self.tmpdir.."/"..fname.."\" \""..oldLog.."\"")
+			local result = runCommand("diff \""..self.tmpdir..s..fname.."\" \""..oldLog.."\"")
 
 			if #result == 0 then
 				self.success = self.success + 1
 			else
-				self:printError("Files \n  '".._Gtme.makePathCompatibleToAllOS(oldLog).."'\nand\n  '"..newImage.."'\nare different.")
+				_Gtme.printError("Files \n  '".._Gtme.makePathCompatibleToAllOS(oldLog).."'\nand\n  '"..self.tmpdir..s..fname.."'\nare different.")
 				forEachElement(result, function(_, value)
-					self:printError(value)
+					_Gtme.printError(value)
 				end)
 
 				self.fail = self.fail + 1 -- SKIP

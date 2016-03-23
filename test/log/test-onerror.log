@@ -145,16 +145,22 @@ Checking ErrorHandling.lua
 Checking Tube.lua
 Checking Utils.lua
 Line 40 was not executed.
-Checking logs
-File 'log/mac/chart_cell2.bmp' was not used by any assert.
 Testing examples
 Testing continuous-rain
-Testing discrete-rain
-Creating log file discrete-rain.log
 Testing ipd
-Error: Strings do not match:
-Log file: <empty>
-Simulation: 'NTFT	90	1	0	120	87	112	80	490'.
+Error in ...dro/github/terrame/bin/packages/onerror/examples/ipd.lua:193: attempt to perform arithmetic on global 'bcs' (a nil value)
+Stack traceback:
+    File ...dro/github/terrame/bin/packages/onerror/examples/ipd.lua, line 193, in main chunk
+
+Files 
+  '/Users/pedro/github/terrame/bin/packages/onerror/log/mac/ipd.log'
+and
+  '.terrametmp_13Atd/ipd.log'
+are different.
+8d7
+< NTFT	90	1	0	120	87	112	80	490
+Checking logs
+File 'log/mac/chart_cell2.bmp' was not used by any assert.
 
 Unit test report:
 Tests were executed in 14.18 seconds.
@@ -172,8 +178,7 @@ One print call was found in the tests.
 One assertError() call has an error message pointing to an internal file (wrong level).
 One out of 67 source code functions was not tested.
 One line from the source code was not executed at least once.
+One error was found in the 2 examples.
 One log file was created. Please run the tests again.
 One file from directory 'log/mac' was not used.
-One error was found in the 3 examples.
-One log file was created in the examples. Please run the tests again.
-Summing up, 17 problems were found during the tests.
+Summing up, 16 problems were found during the tests.

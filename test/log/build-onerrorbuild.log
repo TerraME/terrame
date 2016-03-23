@@ -122,9 +122,6 @@ Checking source code
 Checking fonts
 Looking for hidden files
 Cleaning package
-Removing onerrorbuild/examples/continuous-rain.log
-Removing onerrorbuild/examples/discrete-rain.log
-Removing onerrorbuild/examples/ipd.log
 Checking Models
 Model 'Tube' is wrongly put in file 'Tube2.lua'. It should be in file 'Tube.lua'
 Checking license
