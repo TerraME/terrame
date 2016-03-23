@@ -310,11 +310,7 @@ int main(int argc, char *argv[])
 	// Loads lfs functions
 	luaopen_lfs(L);
 
-#ifdef WIN32
-	tmePath.append("\\lua\\terrame.lua");
-#else
 	tmePath.append("/lua/terrame.lua");
-#endif
 
     // runs the lua core files
     int error = luaL_loadfile(L, tmePath.toLatin1().constData()) || lua_pcall(L, 0, 0, 0);
