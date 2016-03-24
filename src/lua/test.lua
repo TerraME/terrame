@@ -779,6 +779,12 @@ function _Gtme.executeTests(package, fileName)
 				if logfile ~= nil then
 					io.close(logfile)
 
+					if ut.log == nil then
+						rmFile(value..".log")
+						printError("Eror: It is not possble to test examples with print() without a configuration file pointing a log directory.")
+						os.exit()
+					end
+
 					local test = ut.test
 					local success = ut.success
 					local fail = ut.fail 

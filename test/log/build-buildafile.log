@@ -1,0 +1,125 @@
+Building package 'buildafile'
+
+Testing package 'buildafile'
+Loading package 'buildafile'
+Looking for overwritten variables
+Looking for documented functions
+Looking for package functions
+Skip looking for lines of source code
+Testing tests/Utils.lua
+Testing elapsedTime2
+Wrong execution, got error: '...o/github/terrame/bin/packages/buildafile/tests/Utils.lua:31: Error: It is not possible to use assertFile without a log directory location in a configuration file for the tests.'.
+Stack traceback:
+    File ...o/github/terrame/bin/packages/buildafile/tests/Utils.lua, line 31, in main chunk
+
+Checking if all asserts were executed
+Checking if functions from source code were tested
+Checking Utils.lua
+Skipping lines of source code check
+Testing examples
+The package has no examples
+Skipping logs check
+
+Unit test report:
+Tests were executed in 0.08 seconds.
+No print() calls were found when loading the package.
+No variable is overwritten when loading the package.
+There are no invalid files or directories in directory 'tests'.
+All asserts were executed at least once.
+All 1 asserts were executed successfully.
+One out of 1 tested functions stopped with an unexpected error.
+All 1 tested functions have at least one assert.
+All 1 tested functions exist in the source code of the package.
+No tested function creates or updates any global variable.
+No function prints any text on the screen.
+No assertError() calls have error messages pointing to internal files.
+All 1 functions of the package were tested.
+No lines from the source code were verified.
+The package has no examples.
+No log test was executed.
+Summing up, one problem was found during the tests.
+Creating documentation of package 'buildafile'
+Building documentation for package 'buildafile'
+Loading package 'buildafile'
+Package 'buildafile' has no data
+Package 'buildafile' has no fonts
+Parsing lua files
+Parsing lua/Utils.lua
+Parsing examples
+No examples were found.
+Checking undocumented files
+Checking @usage definition
+Checking lua/Utils.lua
+Testing @usage
+Testing file lua/Utils.lua
+Testing elapsedTime2
+Checking calls to functions in @usage
+Checking lua/Utils.lua
+Checking undocumented arguments
+Checking lua/Utils.lua
+Checking 'description.lua'
+Building and checking HTML files
+Building doc/index.html
+Building doc/files/Utils.html
+Building doc/files/data.html
+Building doc/files/font.html
+Checking images
+Checking data.lua
+Checking models
+Checking examples
+Checking if all images are used
+Checking if all functions are documented
+Checking Utils.lua
+Checking if all Models are documented
+
+Documentation report:
+Documentation was built in 0.05 seconds.
+4 HTML files were created.
+All files are documented.
+All fields of 'description.lua' are correct.
+No problems were found in the documentation of data.
+No problems were found in the documentation of fonts.
+All source code lines starting with --- are valid.
+There are no Models in the package.
+All 1 global functions of the package are documented.
+All functions of each file are declared only once.
+All descriptions end with a correct character.
+There is no duplicated tag in the documentation.
+All tags with compulsory arguments were correctly used.
+All 1 non-named arguments are documented.
+No undefined arguments were found.
+All available arguments of functions are used in their HTML tables.
+All arguments used in the HTML tables are documented.
+All non-deprecated functions have @usage.
+All 1 functions call themselves in their @usage.
+All 1 functions do not have any error in their @usage.
+All @tabular are correctly described.
+No invalid tags were found in the documentation.
+All images are correctly used.
+All 0 links were correctly built.
+All 0 examples are correctly documented.
+Summing up, all the documentation was successfully built.
+
+Checking unnecessary files
+Checking basic files and directories
+Skipping examples
+Checking source code
+Checking fonts
+Looking for hidden files
+Checking Models
+Checking license
+Building package buildafile
+Creating file 'buildafile_0.1.zip'
+Package 'buildafile' successfully zipped
+
+Build report:
+Package was built in 0.32 seconds.
+Build created file 'buildafile_0.1.zip'.
+Temporary files are saved in .terrame_buildafile_uuAh4
+MD5 sum for the package is 2fed14576e931cf2794454c8b26c0409
+The package has a license file.
+Documentation was successfully built.
+There are no unnecessary files in the package.
+One error was found in the tests.
+All Models are placed in the right files.
+Summing up, one problem was found along the build.

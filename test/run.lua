@@ -84,6 +84,7 @@ local function approximateLine(line)
 	
 	if string.match(line, "seconds")             then return   5 end
 	if string.match(line, "MD5")                 then return  70 end
+	if string.match(line, "log")                 then return  70 end
 	if string.match(line, "configuration file")  then return   3 end
 	if string.match(line, "or is empty or does") then return  50 end
 	if string.match(line, "does not exist")      then return  50 end
@@ -99,7 +100,6 @@ local function approximateLine(line)
 	if string.match(line, "Lua 5")               then return   3 end
 	if string.match(line, "Qt 5")                then return   3 end
 	if string.match(line, "Qwt 6")               then return   3 end
-	if string.match(line, "log")                 then return  70 end
 
 	return 0
 end

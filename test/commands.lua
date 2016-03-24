@@ -44,6 +44,7 @@ doc = {
 
 build = {
 	build           = {arg = "-build", package = "build",        config = "all.lua"},
+	buildafile      = {arg = "-build", package = "buildafile"},
 	onerrorbuild    = {arg = "-build", package = "onerrorbuild", config = "all.lua", clean = true},
 	twoerrorsbuild  = {arg = "-build", package = "twoerrorsbuild", config = "all.lua"},
 	buildunnecfiles = {arg = "-build", package = "buildunnecfiles", config = "all.lua"},
@@ -72,6 +73,7 @@ basic = {
 	builderror2 = {arg = "-build", package = "build", config = "etwdre.lua"},
 	builderror3 = {arg = "-build", package = "build", arg = "-clea"},
 	builderror4 = {arg = "-build", package = "build", config = "pattern.lua"},
+	builderror5 = {arg = "-build", package = "onerror"},
 	trace       = {script = "trace.lua"},
 	fulltrace   = {script = "trace.lua", arg = "-ft"},
 	qwerty4321  = {package = "qwerty4321"},

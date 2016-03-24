@@ -203,6 +203,7 @@ UnitTest_ = {
 		end
 
 		if not self.log then
+			rmFile(fname)
 			customError("It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
 		end
 
