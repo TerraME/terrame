@@ -131,6 +131,10 @@ forEachOrderedElement(commands, function(idx, group)
 			command = command.." scripts"..s..args.script
 		end
 
+		if args.clean then
+			command = command.." -clean"
+		end
+
 		_Gtme.print("Testing "..name)
 
 		if show then

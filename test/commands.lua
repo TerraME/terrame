@@ -43,12 +43,12 @@ doc = {
 }
 
 build = {
-	build           = {arg = "-build",        package = "build"},
-	onerrorbuild    = {arg = "-build -clean", package = "onerrorbuild"},
-	twoerrorsbuild  = {arg = "-build",        package = "twoerrorsbuild"},
-	buildunnecfiles = {arg = "-build",        package = "buildunnecfiles"},
-	buildunneclean  = {arg = "-build -clean", package = "buildunneclean"},
-	noexamples      = {arg = "-build",        package = "noexamples"}
+	build           = {arg = "-build", package = "build"},
+	onerrorbuild    = {arg = "-build", package = "onerrorbuild", clean = true},
+	twoerrorsbuild  = {arg = "-build", package = "twoerrorsbuild"},
+	buildunnecfiles = {arg = "-build", package = "buildunnecfiles"},
+	buildunneclean  = {arg = "-build", package = "buildunneclean", clean = true},
+	noexamples      = {arg = "-build", package = "noexamples"}
 }
 
 mode = {
