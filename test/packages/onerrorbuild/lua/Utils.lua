@@ -42,7 +42,7 @@ function elapsedTime2(s)
 	local hours = floor(minutes / 60); minutes = floor(minutes % 60)
 	local days = floor(hours / 24);    hours = floor(hours % 24)
 
-	if days > 0 then
+	if days > 0 then -- SKIP
 		return string.format("%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
 	else
 		return string.format("%02d:%02d:%02d", hours, minutes, seconds)

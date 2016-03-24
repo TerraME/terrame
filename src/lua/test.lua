@@ -197,7 +197,7 @@ function _Gtme.executeTests(package, fileName)
 
 	if type(fileName) == "string" then
 		printNote("Loading configuration file '".._Gtme.makePathCompatibleToAllOS(fileName).."'")
-	
+
 		xpcall(function() data = _Gtme.include(fileName) end, function(err)
 			printError(err)
 			os.exit()

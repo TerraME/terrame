@@ -1,0 +1,3 @@
+Building package 'build'
+Parsing configuration file 'config/pattern.lua'
+Error: Argument 'file' is unnecessary.

@@ -1,11 +1,14 @@
 Building package 'buildunneclean'
+Parsing configuration file 'config/all.lua'
 
 Testing package 'buildunneclean'
+Loading configuration file 'config/all.lua'
+Using log directory 'log/mac'
 Loading package 'buildunneclean'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Skip looking for lines of source code
+Looking for lines of source code
 'tests/alternative/abc/unnec6.txt' is not a directory neither a .lua file and will be ignored.
 Directory 'tests/alternative/abc' is empty.
 'tests/alternative/unnec5.txt' is not a directory neither a .lua file and will be ignored.
@@ -22,14 +25,17 @@ Checking if all asserts were executed
 Checking if functions from source code were tested
 Checking Tube.lua
 Checking Utils.lua
-Skipping lines of source code check
-Skipping logs check
+Checking lines of source code
+Checking Tube.lua
+Checking Utils.lua
 Testing examples
 Test file 'unnec2.txt' does not have a valid extension
 Testing ipd
+Checking logs
 
 Unit test report:
 Tests were executed in 0.23 seconds.
+Logs were saved in '.terrametmp_7NHou'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 4 invalid files or directories were found in directory 'test'.
@@ -42,10 +48,10 @@ No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 All 2 functions of the package were tested.
-No lines from the source code were verified.
-No log test was executed.
+All lines from the source code were executed.
 All 1 examples were successfully executed.
 No new log file was created.
+All log files were used in the tests.
 Summing up, 4 problems were found during the tests.
 Creating documentation of package 'buildunneclean'
 Building documentation for package 'buildunneclean'
@@ -133,10 +139,7 @@ Looking for hidden files
 File 'buildunneclean/.hidden' is unnecessary and will be ignored.
 File 'buildunneclean/lua/.hidden2' is unnecessary and will be ignored.
 Cleaning package
-Removing 'snapshots' directory
-Removing buildunneclean/examples/continuous-rain.log
-Removing buildunneclean/examples/discrete-rain.log
-Removing buildunneclean/examples/ipd.log
+Removing 'log' directory
 Checking Models
 Model 'Tube' belongs to file 'Tube.lua'
 Checking license

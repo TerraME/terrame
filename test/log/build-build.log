@@ -1,11 +1,14 @@
 Building package 'build'
+Parsing configuration file 'config/all.lua'
 
 Testing package 'build'
+Loading configuration file 'config/all.lua'
+Using log directory 'log/mac'
 Loading package 'build'
 Looking for overwritten variables
 Looking for documented functions
 Looking for package functions
-Skip looking for lines of source code
+Looking for lines of source code
 Testing tests/Tube.lua
 Testing Tube
 Checking if all asserts were executed
@@ -22,13 +25,17 @@ Checking if functions from source code were tested
 Checking Tube.lua
 Checking Utils.lua
 Checking Utils2.lua
-Skipping lines of source code check
-Skipping logs check
+Checking lines of source code
+Checking Tube.lua
+Checking Utils.lua
+Checking Utils2.lua
 Testing examples
 Testing ipd
+Checking logs
 
 Unit test report:
 Tests were executed in 0.26 seconds.
+Logs were saved in '.terrametmp_PZWcg'.
 No print() calls were found when loading the package.
 No variable is overwritten when loading the package.
 There are no invalid files or directories in directory 'tests'.
@@ -41,10 +48,10 @@ No tested function creates or updates any global variable.
 No function prints any text on the screen.
 No assertError() calls have error messages pointing to internal files.
 All 3 functions of the package were tested.
-No lines from the source code were verified.
-No log test was executed.
+All lines from the source code were executed.
 All 1 examples were successfully executed.
 No new log file was created.
+All log files were used in the tests.
 Summing up, all tests were successfully executed.
 Creating documentation of package 'build'
 Building documentation for package 'build'

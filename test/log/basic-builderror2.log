@@ -1,0 +1,3 @@
+Building package 'build'
+Parsing configuration file 'config/etwdre.lua'
+Error: File 'config/etwdre.lua' does not exist.

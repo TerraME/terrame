@@ -43,11 +43,11 @@ doc = {
 }
 
 build = {
-	build           = {arg = "-build", package = "build"},
-	onerrorbuild    = {arg = "-build", package = "onerrorbuild", clean = true},
-	twoerrorsbuild  = {arg = "-build", package = "twoerrorsbuild"},
-	buildunnecfiles = {arg = "-build", package = "buildunnecfiles"},
-	buildunneclean  = {arg = "-build", package = "buildunneclean", clean = true},
+	build           = {arg = "-build", package = "build",        config = "all.lua"},
+	onerrorbuild    = {arg = "-build", package = "onerrorbuild", config = "all.lua", clean = true},
+	twoerrorsbuild  = {arg = "-build", package = "twoerrorsbuild", config = "all.lua"},
+	buildunnecfiles = {arg = "-build", package = "buildunnecfiles", config = "all.lua"},
+	buildunneclean  = {arg = "-build", package = "buildunneclean", config = "all.lua", clean = true},
 	noexamples      = {arg = "-build", package = "noexamples"}
 }
 
@@ -68,7 +68,10 @@ basic = {
 	uninstall   = {arg = "-package abcdef -uninstall"},
 	doc         = {arg = "-package abcdef -doc"},
 	test        = {arg = "-package abcdef -test"},
-	build       = {arg = "-package abcdef -build"},
+	builderror1 = {arg = "-package abcdef -build"},
+	builderror2 = {arg = "-build", package = "build", config = "etwdre.lua"},
+	builderror3 = {arg = "-build", package = "build", arg = "-clea"},
+	builderror4 = {arg = "-build", package = "build", config = "pattern.lua"},
 	trace       = {script = "trace.lua"},
 	fulltrace   = {script = "trace.lua", arg = "-ft"},
 	qwerty4321  = {package = "qwerty4321"},

@@ -37,7 +37,7 @@ local function rm(file)
 	end
 end
 
-function _Gtme.buildPackage(package, clean)
+function _Gtme.buildPackage(package, config, clean)
 	local initialTime = os.clock()
 
 	printNote("Building package '"..package.."'")
@@ -51,6 +51,24 @@ function _Gtme.buildPackage(package, clean)
 		os.exit()
 	end)
 
+	info_.mode = "debug"
+
+	if config then
+		printNote("Parsing configuration file '"..config.."'")
+		local data
+		xpcall(function() data = _Gtme.include(config) end, function(err)
+			printError(err)
+			os.exit()
+		end)
+
+		local err, msg = pcall(function() verifyUnnecessaryArguments(data, {"lines", "log"}) end)
+
+		if not err then
+			printError(msg)
+			os.exit()
+		end
+	end
+
 	local report = {
 		doc_errors = 0,
 		unnecessary_files = 0,
@@ -62,10 +80,9 @@ function _Gtme.buildPackage(package, clean)
 	local s = sessionInfo().separator
 
 	printNote("\nTesting package '"..package.."'")
-	info_.mode = "debug"
 	local testErrors = 0
 	dofile(sessionInfo().path..s.."lua"..s.."test.lua")
-	xpcall(function() testErrors = _Gtme.executeTests(package) end, function(err)
+	xpcall(function() testErrors = _Gtme.executeTests(package, config) end, function(err)
 		printError(err)
 		report.test_errors = 1
 	end)

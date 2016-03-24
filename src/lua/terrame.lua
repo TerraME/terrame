@@ -859,11 +859,11 @@ local function usage()
 	print("                                  a single model than it runs the graphical interface")
 	print("                                  creating an instance of such model.")
 	print(" -install <file>                  Install a package stored in a given file.")
-	print(" [-package <pkg>] -test           Execute unit tests.")
+	print(" [-package <pkg>] -test [<file>]  Execute unit tests.")
 	print(" [-package <pkg>] -sketch         Create test scripts for source code files missing")
 	print("                                  tests and initial documentation for undocumented files.")
-	print(" [-package <pkg>] -build [-clean] Build an installer for the package. It executes all")
-	print("                                  tests and build the documentation of the packag.")
+	print(" [-package <pkg>] -build [<file>] Build an installer for the package. It executes all")
+	print(" [-clean]                         tests and build the documentation of the package.")
 	print("                                  -clean option remove test files and logs.")
 	print(" [-package <pkg>] -uninstall      Remove an installed package.")
 	print(" [-package <pkg>] -example [file] Run an example.")
@@ -1242,9 +1242,25 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				else
 					dofile(sessionInfo().path..s.."lua"..s.."build.lua")
 
-					local clean = arguments[argCount + 1] == "-clean"
+					argCount = argCount + 1
+					local config
 
-					_Gtme.buildPackage(package, clean)
+					if arguments[argCount] ~= "-clean" then
+						config = arguments[argCount]
+						argCount = argCount + 1
+					end
+
+					local clean
+					if arguments[argCount] ~= nil then
+						if arguments[argCount] == "-clean" then
+							clean = true
+						else
+							_Gtme.printError("Option not recognized: "..arguments[argCount])
+							os.exit()
+						end
+					end
+
+					_Gtme.buildPackage(package, config, clean)
 				end
 				os.exit()
 			elseif arg == "-install" then
