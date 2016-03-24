@@ -6,11 +6,13 @@ Looking for documented functions
 Looking for package functions
 Found 1 extra functions in the documentation
 Skip looking for lines of source code
-Testing tests/core/alternative/Event.lua
+Skipping directory tests/database/alternative
+Skipping directory tests/database/basics
+Testing tests/functional/alternative/Event.lua
 Testing config
 Testing Event
 Checking if all asserts were executed
-Testing tests/core/basics/Event.lua
+Testing tests/functional/basics/Event.lua
 Testing __tostring
 Testing config
 Testing Event
@@ -19,8 +21,6 @@ Testing getPeriod
 Testing getPriority
 Testing getTime
 Checking if all asserts were executed
-Skipping directory tests/database/alternative
-Skipping directory tests/database/basics
 Skipping directory tests/internal/alternative
 Skipping directory tests/internal/basic
 Skipping directory tests/observer/alternative

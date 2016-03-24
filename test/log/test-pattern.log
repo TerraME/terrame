@@ -5,7 +5,8 @@ Looking for documented functions
 Looking for package functions
 Found 1 extra functions in the documentation
 Skip looking for lines of source code
-Testing tests/core/alternative/Agent.lua
+Skipping directory tests/database/alternative
+Testing tests/functional/alternative/Agent.lua
 Testing add
 Testing addSocialNetwork
 Testing Agent
@@ -25,7 +26,6 @@ Testing reproduce
 Testing setId
 Testing walk
 Checking if all asserts were executed
-Skipping directory tests/database/alternative
 Skipping directory tests/internal/alternative
 Testing tests/observer/alternative/Agent.lua
 Testing notify
