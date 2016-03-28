@@ -259,6 +259,22 @@ int cpp_restartobservercounter(lua_State *L)
 	return 0;
 }
 
+int cpp_putenv(lua_State* L)
+{
+	std::string path = lua_tostring(L, -1);
+
+#ifdef WIN32
+	std::string p(getenv("TME_PATH"));
+	p.append(";");
+	p.append(path);
+	p.append(";");
+	p.append(getenv("PATH"));
+	_putenv_s("PATH", p.c_str());
+#endif
+
+	return 0;
+}
+
 extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
@@ -348,6 +364,9 @@ int main(int argc, char *argv[])
 
 	lua_pushcfunction(L, cpp_restartobservercounter);
 	lua_setglobal(L, "cpp_restartobservercounter");
+
+	lua_pushcfunction(L, cpp_putenv);
+	lua_setglobal(L, "cpp_putenv");
 
 	// Execute the lua files
 	if(argc < 2)

@@ -1015,6 +1015,31 @@ function _Gtme.traceback()
 	return str
 end
 
+local function loadPackgesLibPath()
+	local tmePath = os.getenv("TME_PATH")
+	local packsPath = tmePath.."/packages"
+	local files = dir(packsPath)
+	
+	forEachFile(files, function(file)
+		if isDir(packsPath.."/"..file) then
+			local packPath = packsPath.."/"..file
+			local packDirs = dir(packPath)
+			forEachFile(packDirs, function(d)
+				if d == "lib"  then
+					packLibPath = packPath.."/"..d
+					if isDir(packLibPath) then
+						cpp_putenv(packLibPath)
+						package.cpath = package.cpath..";"..packLibPath.."/?.dll"
+													..";"..packLibPath.."/?.so"
+													..";"..packLibPath.."/?.lib"
+													..";"..packLibPath.."/?.dylib"
+					end
+				end
+			end)
+		end
+	end)	
+end
+
 function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 	info_ = { -- this variable is used by Utils:sessionInfo()
 		mode = "normal",
@@ -1052,6 +1077,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 
 	local package = "base"
 
+	loadPackgesLibPath()
+	
 	local argCount = 1
 	while argCount <= #arguments do
 		arg = arguments[argCount]
