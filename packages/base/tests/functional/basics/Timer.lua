@@ -261,16 +261,42 @@ time    number [-inf]
 				orderToken = 1
 			end},
 			Event{priority = 1, action = function(event) 
-				if event:getTime() == timeMemory then 
-					unitTest:assertEquals(1, orderToken)
-				else
-					error("OUT OF ORDER: TerraME (CRASH!!!) was expected.")
-				end
+				unitTest:assertEquals(event:getTime(), timeMemory)
+				unitTest:assertEquals(1, orderToken)
+
 				timeMemory = event:getTime()
 				orderToken = 0
 			end}
 		}
+
 		clock1:run(3)
+
+		local result = ""
+
+		local timer = Timer{
+			Event{action = function(event)
+				result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
+        	end},
+			Event{period = 2, action = function(event)
+				result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
+			end},
+			Event{start = 3, action = function(event)
+				result = result.."time "..event:getTime().." event 3 priority "..event:getPriority().."\n"
+			end}
+		}
+
+		timer:run(4)
+
+		unitTest:assertEquals(result, [[
+time 1 event 1 priority 0
+time 1 event 2 priority 0
+time 2 event 1 priority 0
+time 3 event 3 priority 0
+time 3 event 2 priority 0
+time 3 event 1 priority 0
+time 4 event 3 priority 0
+time 4 event 1 priority 0
+]])
 
 		-- negative time
 		local cont = 0
@@ -355,3 +381,4 @@ time    number [-inf]
 		unitTest:assertEquals(18, cont)
 	end
 }
+

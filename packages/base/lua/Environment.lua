@@ -313,7 +313,7 @@ Environment_ = {
 		local process
 
 		process = function(env)
-			forEachElement(env, function(idx, value, mtype)
+			forEachOrderedElement(env, function(idx, value, mtype)
 				if mtype == "Environment" and idx ~= "parent" then
 					process(value)
 				elseif mtype == "Timer" then

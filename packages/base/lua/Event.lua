@@ -119,7 +119,7 @@ metaTableEvent_ = {
 
 --- An Event represents a time instant when the simulation engine must execute some computation.
 -- In order to be executed, Events must belong to a Timer. An Event is usually rescheduled to be
--- executed again according to its period, unless its action returns false.
+-- executed again according to its period, unless its action explicitly returns false.
 -- @arg data.start A number representing the time instant when the
 -- Event will occur for the first time. The default value is 1.
 -- @arg data.period A positive number representing the periodicity of the Event.

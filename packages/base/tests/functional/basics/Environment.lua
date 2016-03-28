@@ -25,7 +25,7 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	Environment = function(self)
+	Environment = function(unitTest)
 		local cs = CellularSpace{xdim = 10}
 
 		local a = Agent{
@@ -53,7 +53,7 @@ return{
 
 		local env = Environment{cs, a, t}
 		env:run(10)
-		self:assertEquals(13, a.x)
+		unitTest:assertEquals(13, a.x)
 
 		env = Environment{}
 
@@ -62,19 +62,21 @@ return{
 		env:add(t)
 
 		env:run(10)
-		self:assertEquals(13, a.x)
+		unitTest:assertEquals(13, a.x)
 
 		local cellCont = 0
-		self:assertEquals(cellCont, 0)
+		unitTest:assertEquals(cellCont, 0)
 		local cs = CellularSpace{xdim = 2}
+
 		forEachCell(cs, function(cell)
 			cell.soilType = 0
 			cellCont = cellCont + 1
 		end)
-		self:assertEquals(cellCont, 4)
+
+		unitTest:assertEquals(cellCont, 4)
 
 		forEachCell(cs, function(cell, idx)
-			self:assertEquals(cell.soilType, 0)
+			unitTest:assertEquals(cell.soilType, 0)
 		end)
 
 		local cont = 0
@@ -157,12 +159,12 @@ return{
 		local ev = Event{start = 0, action = function() end}
 		at1:setTrajectoryStatus(true)
 		at1:execute(ev)
-		self:assertEquals(44, cont)
+		unitTest:assertEquals(44, cont)
 
 		ev = Event{start = 0, action = function() end}
 		ag1:setTrajectoryStatus(true)
 		ag1:execute(ev)
-		self:assertEquals(88, cont)
+		unitTest:assertEquals(88, cont)
 
 		M = Model{
 			init = function(model)
@@ -185,8 +187,8 @@ return{
 		M = nil -- it is necessary to make it global to verify
 		        -- that it is a Model
 
-		self:assertEquals(m1.water, 10)
-		self:assertEquals(m2.water, 10)
+		unitTest:assertEquals(m1.water, 10)
+		unitTest:assertEquals(m2.water, 10)
 	end,
 	__tostring = function(unitTest)
 		local cs1 = CellularSpace{xdim = 2}
@@ -350,245 +352,296 @@ id     string [env]
 
 		unitTest:assertEquals(#cs.cells[1]:getAgents(), #predators)
 	end,
-	run = function(self)
-		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
-		local timeMemory = 0   -- memory of time test variable 
-		self:assertEquals(orderToken, 0)
+	run = function(unitTest)
+		local result = ""
 
 		local env = Environment{
 			clock1 = Timer{
-				Event{start = 0, action = function(event) 
-					if event:getTime() == timeMemory then 
-						self:assert(orderToken <= 1)
-					end
-					timeMemory = event:getTime()
-					orderToken = 1
+				Event{start = 0, action = function(event)
+					result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
 				end},
 				Event{priority = 1, action = function(event)
-					timeMemory = event:getTime()
-					self:assert(1 <= orderToken)
-					orderToken = 2
+					result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
 				end}
 			},
 			clock2 = Timer{
-				Event{start = 0, period = 2 , priority = 2, action = function(event) 
-					timeMemory = event:getTime()	
-					self:assert(orderToken <= 2)
-					orderToken = 3
+				Event{start = 0, period = 2, priority = 2, action = function(event)
+					result = result.."time "..event:getTime().." event 3 priority "..event:getPriority().."\n"
 				end},
-				Event{priority = 3, action = function(event) 
-					self:assert(orderToken <= 4)
-					self:assertEquals(event:getTime(), timeMemory)
-					orderToken = 0
+				Event{priority = 3, action = function(event)
+					result = result.."time "..event:getTime().." event 4 priority "..event:getPriority().."\n"
 				end}
 			}
 		}
+
 		env:run(6)
 
-		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
-		local timeMemory = 0 -- memory of time test variable 
+		unitTest:assertEquals(result, [[
+time 0 event 1 priority 0
+time 0 event 3 priority 2
+time 1 event 1 priority 0
+time 1 event 2 priority 1
+time 1 event 4 priority 3
+time 2 event 1 priority 0
+time 2 event 2 priority 1
+time 2 event 3 priority 2
+time 2 event 4 priority 3
+time 3 event 1 priority 0
+time 3 event 2 priority 1
+time 3 event 4 priority 3
+time 4 event 1 priority 0
+time 4 event 2 priority 1
+time 4 event 3 priority 2
+time 4 event 4 priority 3
+time 5 event 1 priority 0
+time 5 event 2 priority 1
+time 5 event 4 priority 3
+time 6 event 1 priority 0
+time 6 event 2 priority 1
+time 6 event 3 priority 2
+time 6 event 4 priority 3
+]])
+
+		local result = ""
 
 		local env = Environment{
 			firstEnv = Environment{
 				clock1 = Timer{
-					Event{start = 0, action = function(event) 
-						if event:getTime() == timeMemory then 
-							self:assert(1 >= orderToken)
-						end
-						timeMemory = event:getTime()
-						orderToken = 1
+					Event{start = 0, action = function(event)
+						result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
 					end},
-					Event{priority = 1, action = function(event) 
-						timeMemory = event:getTime()
-
-						self:assert(1 >= orderToken)
-						orderToken = 2
+					Event{priority = 1, action = function(event)
+						result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
 					end}
 				}
 			},
 			secondEnv = Environment{
 				clock2 = Timer{
-					Event{start = 0, period = 2, priority = 2, action = function(event) 
-						self:assert(2 >= orderToken)
-						orderToken = 3
+					Event{start = 0, period = 2, priority = 2, action = function(event)
+						result = result.."time "..event:getTime().." event 3 priority "..event:getPriority().."\n"
 					end},
-					Event{priority = 3, action = function(event) 
-						self:assert(4 >= orderToken)
-						self:assertEquals(event:getTime(), timeMemory)
-						orderToken = 0
+					Event{priority = 3, action = function(event)
+						result = result.."time "..event:getTime().." event 4 priority "..event:getPriority().."\n"
 					end}
 				}
 			}
 		}
+
 		env:run(6)
 
-		local PRIO1 = 1
-		local PRIO2 = 2
-		local PRIO3 = 3
-		local PRIO4 = 4
-		local PRIO5 = 5
-		local PRIO6 = 6
-		local PRIO7 = 7
-		local PRIO8 = 8
+		unitTest:assertEquals(result, [[
+time 0 event 1 priority 0
+time 0 event 3 priority 2
+time 1 event 1 priority 0
+time 1 event 2 priority 1
+time 1 event 4 priority 3
+time 2 event 1 priority 0
+time 2 event 2 priority 1
+time 2 event 3 priority 2
+time 2 event 4 priority 3
+time 3 event 1 priority 0
+time 3 event 2 priority 1
+time 3 event 4 priority 3
+time 4 event 1 priority 0
+time 4 event 2 priority 1
+time 4 event 3 priority 2
+time 4 event 4 priority 3
+time 5 event 1 priority 0
+time 5 event 2 priority 1
+time 5 event 4 priority 3
+time 6 event 1 priority 0
+time 6 event 2 priority 1
+time 6 event 3 priority 2
+time 6 event 4 priority 3
+]])
 
-		local orderToken = 0 -- Priority test token (position reserved to the Event for this timeslice)
-		local timeMemory = 0   -- memory of time test variable 
-		self:assertEquals(orderToken, 0)
+		local result = ""
 
 		local env = Environment{
 			firstEnv = Environment{
 				clock1 = Timer{
-					Event{start = 0, priority = PRIO1, action = function(event) 
-						if event:getTime() == timeMemory then 
-							self:assert(1 >= orderToken)
-						end
-						timeMemory = event:getTime()
-						orderToken = 1
+					Event{start = 0, priority = 1, action = function(event)
+						result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
 					end},
-					Event{priority = PRIO2, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(1 >= orderToken)
-						orderToken = 2
+					Event{priority = 2, action = function(event)
+						result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
 					end}
 				},
 				clock2 = Timer{
-					Event{start = 0, period = 2 , priority = PRIO3, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(2 >= orderToken)
-						orderToken = 3
+					Event{start = 0, period = 2, priority = 3, action = function(event)
+						result = result.."time "..event:getTime().." event 3 priority "..event:getPriority().."\n"
 					end},
-					Event{priority = PRIO4, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(3 >= orderToken)
-						orderToken = 4
+					Event{priority = 4, action = function(event)
+						result = result.."time "..event:getTime().." event 4 priority "..event:getPriority().."\n"
 					end}
 				}
 			},
 			secondEnv = Environment{
 				clock1 = Timer{
-					Event{start = 0, priority = PRIO5, action = function(event)
-						timeMemory = event:getTime()
-						self:assert(4 >= orderToken)
-						orderToken = 5
+					Event{start = 0, priority = 5, action = function(event)
+						result = result.."time "..event:getTime().." event 5 priority "..event:getPriority().."\n"
 					end},
-					Event{priority = PRIO6, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(5 >= orderToken)
-						orderToken = 6
+					Event{priority = 6, action = function(event)
+						result = result.."time "..event:getTime().." event 6 priority "..event:getPriority().."\n"
 					end}
 				},
 				clock2 = Timer{
-					Event{start = 0, period = 2 , priority = PRIO7, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(6 >= orderToken)
-						orderToken = 7
+					Event{start = 0, period = 2, priority = 7, action = function(event)
+						result = result.."time "..event:getTime().." event 7 priority "..event:getPriority().."\n"
 					end},
-					Event{priority = PRIO8, action = function(event) 
-						self:assert(8 >= orderToken)
-						self:assertEquals(event:getTime(), timeMemory)
-						orderToken = 0
+					Event{priority = 8, action = function(event)
+						result = result.."time "..event:getTime().." event 8 priority "..event:getPriority().."\n"
 					end}
 				}
 			}
 		}
-		env:run(6)
 
-		local PRIO1 = 1
-		local PRIO2 = 2
-		local PRIO3 = 3
-		local PRIO4 = 4
-		local PRIO5 = 5
-		local PRIO6 = 6
-		local PRIO7 = 7
-		local PRIO8 = 8
-		local PRIO9 = 9
-		local PRIO10 = 10
-		local PRIO11 = 11
+		env:run(4)
 
-		local orderToken = -1
-		local timeMemory = 0
+		unitTest:assertEquals(result, [[
+time 0 event 1 priority 1
+time 0 event 3 priority 3
+time 0 event 5 priority 5
+time 0 event 7 priority 7
+time 1 event 1 priority 1
+time 1 event 2 priority 2
+time 1 event 4 priority 4
+time 1 event 5 priority 5
+time 1 event 6 priority 6
+time 1 event 8 priority 8
+time 2 event 1 priority 1
+time 2 event 2 priority 2
+time 2 event 3 priority 3
+time 2 event 4 priority 4
+time 2 event 5 priority 5
+time 2 event 6 priority 6
+time 2 event 7 priority 7
+time 2 event 8 priority 8
+time 3 event 1 priority 1
+time 3 event 2 priority 2
+time 3 event 4 priority 4
+time 3 event 5 priority 5
+time 3 event 6 priority 6
+time 3 event 8 priority 8
+time 4 event 1 priority 1
+time 4 event 2 priority 2
+time 4 event 3 priority 3
+time 4 event 4 priority 4
+time 4 event 5 priority 5
+time 4 event 6 priority 6
+time 4 event 7 priority 7
+time 4 event 8 priority 8
+]])
+
+result = ""
 
 		local env = Environment{
 			clock1 = Timer{
-				Event{start = 0, action = function(event) 
-					if event:getTime() == timeMemory then 
-						self:assert(-1 >= orderToken)
-					end
-					timeMemory = event:getTime()
-					orderToken = 0
+				Event{start = 0, action = function(event)
+					result = result.."time "..event:getTime().." event 1 priority "..event:getPriority().."\n"
 				end},
-				Event{priority = PRIO1, action = function(event) 
-					timeMemory = event:getTime()
-					self:assert(0 >= orderToken)
-					orderToken = 1
+				Event{priority = 1, action = function(event)
+					result = result.."time "..event:getTime().." event 2 priority "..event:getPriority().."\n"
 				end}
 			},
 			clock2 = Timer{
-				Event{start = 0, period = 2 , priority = PRIO2, action = function(event)
-					timeMemory = event:getTime()
-					self:assert(1 >= orderToken)
-					orderToken = 2
+				Event{start = 0, period = 2, priority = 2, action = function(event)
+					result = result.."time "..event:getTime().." event 3 priority "..event:getPriority().."\n"
 				end},
-				Event{priority = PRIO3, action = function(event) 
-					timeMemory = event:getTime()
-					self:assert(2 >= orderToken)
-					orderToken = 3
+				Event{priority = 3, action = function(event)
+					result = result.."time "..event:getTime().." event 4 priority "..event:getPriority().."\n"
 				end}
 			},
 			firstEnv = Environment{
 				clock1 = Timer{
-					Event{start = 0, priority = PRIO4, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(3 >= orderToken)
-						orderToken = 4
+					Event{start = 0, priority = 4, action = function(event)
+						result = result.."time "..event:getTime().." event 5 priority "..event:getPriority().."\n"
 					end},
-					Event{priority = PRIO5, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(4 >= orderToken)
-						orderToken = 5
+					Event{priority = 5, action = function(event)
+						result = result.."time "..event:getTime().." event 6 priority "..event:getPriority().."\n"
 					end}
 				},
 				clock2 = Timer{
-					Event{start = 0, period = 2, priority = PRIO6, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(5 >= orderToken)
-						orderToken = 6
+					Event{start = 0, period = 2, priority = 6, action = function(event)
+						result = result.."time "..event:getTime().." event 7 priority "..event:getPriority().."\n"
 					end},
-					Event{priority = PRIO7, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(6 >= orderToken)
-						orderToken = 7
+					Event{priority = 7, action = function(event)
+						result = result.."time "..event:getTime().." event 8 priority "..event:getPriority().."\n"
 					end}
 				}
 			},
 			secondEnv = Environment{
 				clock1 = Timer{
-					Event{start = 0, priority = PRIO8, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(7 >= orderToken)
-						orderToken = 8
+					Event{start = 0, priority = 8, action = function(event)
+						result = result.."time "..event:getTime().." event 9 priority "..event:getPriority().."\n"
 					end},
-					Event{priority = PRIO9, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(8 >= orderToken)
-						orderToken = 9
+					Event{priority = 9, action = function(event)
+						result = result.."time "..event:getTime().." event 10 priority "..event:getPriority().."\n"
 					end}
 				},
 				clock2 = Timer{
-					Event{start = 0, period = 2 , priority = PRIO10, action = function(event) 
-						timeMemory = event:getTime()
-						self:assert(9 >= orderToken)
-						orderToken = 10
+					Event{start = 0, period = 2, priority = 10, action = function(event)
+						result = result.."time "..event:getTime().." event 11 priority "..event:getPriority().."\n"
 					end},
-					Event{priority = PRIO11, action = function(event)
-						timeMemory = event:getTime()
-						self:assert(10 >= orderToken)
-						orderToken = 0
+					Event{priority = 11, action = function(event)
+						result = result.."time "..event:getTime().." event 12 priority "..event:getPriority().."\n"
 					end}
 				}
 			}
 		}
-		env:run(6)
+
+		env:run(4)
+
+		unitTest:assertEquals(result, [[
+time 0 event 1 priority 0
+time 0 event 3 priority 2
+time 0 event 5 priority 4
+time 0 event 7 priority 6
+time 0 event 9 priority 8
+time 0 event 11 priority 10
+time 1 event 1 priority 0
+time 1 event 2 priority 1
+time 1 event 4 priority 3
+time 1 event 5 priority 4
+time 1 event 6 priority 5
+time 1 event 8 priority 7
+time 1 event 9 priority 8
+time 1 event 10 priority 9
+time 1 event 12 priority 11
+time 2 event 1 priority 0
+time 2 event 2 priority 1
+time 2 event 3 priority 2
+time 2 event 4 priority 3
+time 2 event 5 priority 4
+time 2 event 6 priority 5
+time 2 event 7 priority 6
+time 2 event 8 priority 7
+time 2 event 9 priority 8
+time 2 event 10 priority 9
+time 2 event 11 priority 10
+time 2 event 12 priority 11
+time 3 event 1 priority 0
+time 3 event 2 priority 1
+time 3 event 4 priority 3
+time 3 event 5 priority 4
+time 3 event 6 priority 5
+time 3 event 8 priority 7
+time 3 event 9 priority 8
+time 3 event 10 priority 9
+time 3 event 12 priority 11
+time 4 event 1 priority 0
+time 4 event 2 priority 1
+time 4 event 3 priority 2
+time 4 event 4 priority 3
+time 4 event 5 priority 4
+time 4 event 6 priority 5
+time 4 event 7 priority 6
+time 4 event 8 priority 7
+time 4 event 9 priority 8
+time 4 event 10 priority 9
+time 4 event 11 priority 10
+time 4 event 12 priority 11
+]])
 	end,
 	getTime = function(unitTest)
 		local cs = CellularSpace{xdim = 10}

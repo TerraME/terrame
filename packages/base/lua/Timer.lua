@@ -47,7 +47,7 @@ Timer_ = {
 		local quant = #self.events
 		local time = event.time
 		local prio = event.priority
-		while pos <= quant and (time > evp.time or (time == evp.time and prio > evp.priority)) do
+		while pos <= quant and (time > evp.time or (time == evp.time and prio >= evp.priority)) do
 			pos = pos + 1
 			evp = self.events[pos]
 		end
@@ -277,7 +277,9 @@ metaTableTimer_ = {
 
 --- A Timer is an Event-based scheduler that runs the simulation. It contains a
 -- set of Events, allowing the simulation to work with processes that start
--- independently and act in different periodicities. Once it has a given simulation time,
+-- independently and act in different periodicities. As default, it execute the Events
+-- in the order they were declared, but the arguments of Event (start, priority, and period)
+-- can change this order. Once a Timer has a given simulation time,
 -- it ensures that all the Events before that time were already executed.
 -- @arg data.round A number to work with Events that have period less than one. It rounds
 -- the execution time of an Event that is going to be scheduled to be executed to
