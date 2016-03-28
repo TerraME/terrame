@@ -22,6 +22,7 @@
 --
 -- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
 --          Rodrigo Avancini
+--
 -------------------------------------------------------------------------------------------
 
 require("terralib_mod_binding_lua")
