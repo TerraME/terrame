@@ -314,7 +314,7 @@ function tmpDir(directory)
 		optionalArgument(1, "string", directory)
 		return runCommand("mktemp -d "..directory)[1]
 	elseif not _Gtme.tmpdirectory__ then
-		_Gtme.tmpdirectory__ = runCommand("mktemp -d .terrametmp_XXXXX")[1]
+		_Gtme.tmpdirectory__ = runCommand("mktemp -d .terrametmp_XXXXX")[1] -- SKIP
 	elseif not isDir(_Gtme.tmpdirectory__) then
 		os.execute("mkdir ".._Gtme.tmpdirectory__)
 	end

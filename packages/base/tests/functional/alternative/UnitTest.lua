@@ -183,7 +183,7 @@ return{
 
 		u:assertError(error_func, "It is not possible to use assertFile without a log directory location in a configuration file for the tests.")
 
-		rmFile("abc.csv")
+		unitTest:assert(not isFile("abc.csv"))
 	end,
 	assertNil = function(unitTest)
 		local u = UnitTest{unittest = true}
