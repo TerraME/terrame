@@ -192,13 +192,13 @@ UnitTest_ = {
 
 		mandatoryArgument(1, "string", fname)
 
-		if not isFile(fname) then
-			self.fail = self.fail + 1
-			self:printError(resourceNotFoundMsg(1, fname))
-			return
-		elseif isDir(fname) then
+		if isDir(fname) then
 			self.fail = self.fail + 1
 			self:printError("It is not possible to use a directory as #1 for assertFile().")
+			return
+		elseif not isFile(fname) then
+			self.fail = self.fail + 1
+			self:printError(resourceNotFoundMsg(1, fname))
 			return
 		end
 
