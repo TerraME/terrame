@@ -200,11 +200,14 @@ Timer_ = {
 	reset = function(self)
 		self.time = -math.huge
 	end,
-	--- Run the Timer until a final time. It manages the Event queue according to their execution
-	-- time and priority. The Event that has lower execution time and lower priority is executed at
-	-- each step. It this Event does not return false it is scheduled to execute again according to
+	--- Run the Timer until a given final time. It manages the Event queue according to their execution
+	-- times and priorities. The Event with lower time will be executed in each step. If there are two
+	-- Events to be executed at the same time, it executes the one with lower priority. If both have
+	-- the same priority, it executes the one that was scheuled first for that time.
+	-- In order to activate an Event, the Timer executes its action, passing the Event itself as argument.
+	-- If the action of the Event does not return false, the Event is scheduled to execute again according to
 	-- its period. The Timer then repeats its execution again and again. It stops only when all its
-	-- Events are scheduled to execute after the final time, or when there is no remaining Events.
+	-- Events are scheduled to execute after the final time, or when there are no remaining Events.
 	-- @arg finalTime A number representing the final time of the simulation.
 	-- This argument is mandatory.
 	-- @usage timer = Timer{
@@ -275,12 +278,12 @@ metaTableTimer_ = {
 	end
 }
 
---- A Timer is an Event-based scheduler that runs the simulation. It contains a
+--- A Timer is an event-based scheduler that runs the simulation. It contains a
 -- set of Events, allowing the simulation to work with processes that start
 -- independently and act in different periodicities. As default, it execute the Events
 -- in the order they were declared, but the arguments of Event (start, priority, and period)
--- can change this order. Once a Timer has a given simulation time,
--- it ensures that all the Events before that time were already executed.
+-- can change this order. Once a Timer has a given simulation time, it ensures that all the
+-- Events before that time were already executed. See Timer:run() for more details.
 -- @arg data.round A number to work with Events that have period less than one. It rounds
 -- the execution time of an Event that is going to be scheduled to be executed to
 -- a time in the future if the difference between such time and the closest integer number
