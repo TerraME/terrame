@@ -27,7 +27,95 @@
 
 return{
 	CellularSpace = function(unitTest)
-		unitTest:assert(true)
+		-- ###################### PROJECT #############################	
+		local terralib = getPackage("terralib")
+		
+		local projName = "cellspace_basic.tview"
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		local author = "Avancini"
+		local title = "Cellular Space"
+	
+		local proj = terralib.Project {
+			file = projName,
+			create = true,
+			author = author,
+			title = title
+		}		
+
+		local layerName1 = "Sampa"
+		proj:addLayer {
+			layer = layerName1,
+			file = filePath("sampa.shp", "terralib")
+		}	
+		
+		local clName1 = "Sampa_Cells_DB"
+		local tName1 = "sampa_cells"
+		
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"	
+		
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1,
+			encoding = encoding
+		}
+		
+		local tl = terralib.TerraLib{}
+		tl:dropPgTable(pgData)
+		
+		proj:addCellularLayer {
+			source = "postgis",
+			input = layerName1,
+			layer = clName1,
+			resolution = 0.3,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1
+		}		
+	
+		-- ###################### 1 #############################
+		local cs = CellularSpace{
+			project = projName,
+			layer = clName1,
+			geometry = true
+		}	
+		
+		forEachCell(cs, function(cell)
+			unitTest:assertNotNil(cell.geom)
+			unitTest:assertNil(cell.OGR_GEOMETRY)
+		end)
+
+		local cs = CellularSpace{
+			project = projName,
+			layer = clName1
+		}	
+
+		forEachCell(cs, function(cell)
+			unitTest:assertNil(cell.geom)
+			unitTest:assertNil(cell.OGR_GEOMETRY)
+		end)	
+		
+		-- ###################### END #############################
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		pgData.table = string.lower(tName1)
+		tl:dropPgTable(pgData)		
 	end,
 	createNeighborhood = function(unitTest)
 		unitTest:assert(true)
@@ -172,7 +260,39 @@ return{
 		
 		forEachCell(cs, function(cell)
 			unitTest:assertEquals(cell.number, num)
+		end)
+
+		-- ###################### 5 #############################
+		local cs = CellularSpace{
+			project = projName,
+			layer = cellSpaceLayerNameT0
+		}		
+		
+		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"		
+		cs:save(cellSpaceLayerNameGeom)
+		
+		local cs = CellularSpace{
+			project = projName,
+			layer = cellSpaceLayerNameGeom,
+			geometry = true
+		}		
+		
+		forEachCell(cs, function(cell)
+			unitTest:assertNotNil(cell.geom)
 		end)	
+
+		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"				
+		cs:save(cellSpaceLayerNameGeom2)
+		
+		local cs = CellularSpace{
+			project = projName,
+			layer = cellSpaceLayerNameGeom2,
+			geometry = true
+		}		
+		
+		forEachCell(cs, function(cell)
+			unitTest:assertNotNil(cell.geom)
+		end)			
 
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -184,7 +304,11 @@ return{
 		pgData.table = string.lower(cellSpaceLayerName)
 		tl:dropPgTable(pgData)		
 		pgData.table = string.lower(cellSpaceLayerNameT0)
-		tl:dropPgTable(pgData)			
+		tl:dropPgTable(pgData)	
+		pgData.table = string.lower(cellSpaceLayerNameGeom)
+		tl:dropPgTable(pgData)
+		pgData.table = string.lower(cellSpaceLayerNameGeom2)
+		tl:dropPgTable(pgData)		
 		
 		tl:finalize()
 	end

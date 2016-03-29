@@ -227,7 +227,8 @@ local function checkVirtual(self)
 end
 
 local function checkProject(self)
-	verifyUnnecessaryArguments(self, {"source", "layer", "project", "cObj_"})
+	defaultTableValue(self, "geometry", false)
+	verifyUnnecessaryArguments(self, {"source", "layer", "project", "cObj_", "geometry"})
 	mandatoryTableArgument(self, "layer", "string")		
 	
 	if not (type(self.project) == "Project") then	
@@ -317,7 +318,13 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 		
 		for k, v in pairs(dSet[i]) do
-			cell[k] = v
+			if (k == "OGR_GEOMETRY") or (k == "geom") then
+				if self.geometry then
+					cell["geom"] = v
+				end
+			else
+				cell[k] = v
+			end
 		end
 		
 		table.insert(self.cells, cell)
@@ -332,6 +339,7 @@ end
 local function loadShape(self)
 	local tlib = terralib.TerraLib{}
 	local dSet = tlib:getShpByFilePath(self.file)
+	self.geometry = true
 	setCellsByTerraLibDataSet(self, dSet)
 end
 
@@ -914,6 +922,39 @@ CellularSpace_ = {
 		
 		if self.project then
 			local tlib = terralib.TerraLib{}
+			
+			if not self.geometry then
+				local dset = tlib:getDataSet(self.project, self.layer)
+
+				for i = 0, #dset do
+					for k, v in pairs(dset[i]) do
+						if (k == "OGR_GEOMETRY") or (k == "geom") then
+							self.cells[i+1][k] = v
+						end
+					end		
+				end
+			else
+				local dset = tlib:getDataSet(self.project, self.layer)
+				local isOgr = false
+
+				for k, v in pairs(dset[0]) do
+					if k == "OGR_GEOMETRY" then
+						isOgr = true
+					end
+				end	
+				
+				if isOgr then
+					for i = 0, #dset do
+						for k, v in pairs(dset[i]) do
+							if k == "OGR_GEOMETRY" then
+								self.cells[i+1]["geom"] = nil
+								self.cells[i+1][k] = v
+							end
+						end		
+					end
+				end	
+			end
+			
 			tlib:saveDataSet(self.project, self.layer, self.cells, newLayerName, attrNames)
 		else
 			customError("The CellularSpace must have a valid Project. Please, check the documentation.")

@@ -154,6 +154,28 @@ return{
 		forEachCell(cs, function(cell)
 			unitTest:assertNotNil(cell.x)
 			unitTest:assertNotNil(cell.y)
+		end)
+
+		-- ###################### 3 #############################
+		local cs = CellularSpace{
+			project = projName,
+			layer = clName1,
+			geometry = true
+		}	
+		
+		forEachCell(cs, function(cell)
+			unitTest:assertNotNil(cell.geom)
+			unitTest:assertNil(cell.OGR_GEOMETRY)
+		end)
+
+		local cs = CellularSpace{
+			project = projName,
+			layer = clName1
+		}	
+
+		forEachCell(cs, function(cell)
+			unitTest:assertNil(cell.geom)
+			unitTest:assertNil(cell.OGR_GEOMETRY)
 		end)		
 		
 		-- ###################### END #############################
@@ -1268,7 +1290,65 @@ yMin    number [0]
 		-- forEachCell(cs, function(cell)
 			-- unitTest:assertEquals(cell.t0, 2000) -- SKIP
 		-- end)
+		
+		-- ###################### 3 #############################
+		local cs = CellularSpace{
+			project = projName,
+			layer = cellSpaceLayerNameT0
+		}		
+		
+		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
+		
+		local shp3 = cellSpaceLayerNameGeom..".shp"
+		local filePath3 = testDir.."/"..shp3	
+		local fn3 = terralib.getFileName(filePath3)
+		fn3 = testDir.."/"..fn3	
+		
+		for i = 1, #exts do
+			local f = fn3..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end			
+		
+		cs:save(cellSpaceLayerNameGeom)
+		
+		local cs = CellularSpace{
+			project = projName,
+			layer = cellSpaceLayerNameGeom,
+			geometry = true
+		}		
+		
+		forEachCell(cs, function(cell)
+			unitTest:assertNotNil(cell.geom)
+		end)	
 
+		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"
+		
+		local shp4 = cellSpaceLayerNameGeom2..".shp"
+		local filePath4 = testDir.."/"..shp4	
+		local fn4 = terralib.getFileName(filePath4)
+		fn4 = testDir.."/"..fn4	
+		
+		for i = 1, #exts do
+			local f = fn4..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end
+		end			
+		
+		cs:save(cellSpaceLayerNameGeom2)
+		
+		local cs = CellularSpace{
+			project = projName,
+			layer = cellSpaceLayerNameGeom2,
+			geometry = true
+		}		
+		
+		forEachCell(cs, function(cell)
+			unitTest:assertNotNil(cell.geom)
+		end)		
+		
 		-- ###################### END #############################
 		local tl = terralib.TerraLib{}
 		tl:finalize()			
@@ -1285,7 +1365,15 @@ yMin    number [0]
 			local f = fn2..exts[i]
 			if isFile(f) then
 				os.execute("rm -f "..f)
-			end			
+			end
+			local f = fn3..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end		
+			local f = fn4..exts[i]
+			if isFile(f) then
+				os.execute("rm -f "..f)
+			end				
 		end
 	end,
 	split = function(unitTest)

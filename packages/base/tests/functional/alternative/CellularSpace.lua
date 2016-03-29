@@ -240,6 +240,24 @@ return{
 		end
 		unitTest:assertError(layerDoesNotExists, "Layer '"..layerName.."' does not exists in the Project '"..projFile.."'.")
 		
+		local geometryDefaultValue = function()
+			local cs = CellularSpace {
+				project = proj,
+				layer = layerName,
+				geometry = false
+			}		
+		end
+		unitTest:assertError(geometryDefaultValue, defaultValueMsg("geometry", false))
+		
+		local geometryNotBoolean = function()
+			local cs = CellularSpace {
+				project = proj,
+				layer = layerName,
+				geometry = 123
+			}		
+		end
+		unitTest:assertError(geometryNotBoolean, incompatibleTypeMsg("geometry", "boolean", 123))
+		
 		if isFile(projFile) then
 			os.execute("rm -f "..projFile)
 		end					
