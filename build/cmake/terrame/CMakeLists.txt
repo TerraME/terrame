@@ -374,6 +374,7 @@ elseif(WIN32)
     install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
             DESTINATION bin/packages/
             COMPONENT runtime
+			PATTERN "mac" EXCLUDE			
             )
 
 	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindows.dll
