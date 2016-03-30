@@ -27,31 +27,31 @@
 
 return{
 	CellularSpace = function(unitTest)
-		-- ###################### PROJECT #############################	
+		-- ###################### PROJECT #############################
 		local terralib = getPackage("terralib")
 		
 		local projName = "cellspace_basic.tview"
 
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
 		
 		local author = "Avancini"
 		local title = "Cellular Space"
-	
+
 		local proj = terralib.Project {
 			file = projName,
 			create = true,
 			author = author,
 			title = title
-		}		
+		}
 
 		local layerName1 = "Sampa"
 		proj:addLayer {
 			layer = layerName1,
 			file = filePath("sampa.shp", "terralib")
-		}	
-		
+		}
+
 		local clName1 = "Sampa_Cells_DB"
 		local tName1 = "sampa_cells"
 		
@@ -60,8 +60,8 @@ return{
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"	
-		
+		local encoding = "CP1252"
+
 		local pgData = {
 			type = "POSTGIS",
 			host = host,
@@ -72,10 +72,10 @@ return{
 			table = tName1,
 			encoding = encoding
 		}
-		
+
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
-		
+
 		proj:addCellularLayer {
 			source = "postgis",
 			input = layerName1,
@@ -85,15 +85,15 @@ return{
 			password = password,
 			database = database,
 			table = tName1
-		}		
-	
+		}
+
 		-- ###################### 1 #############################
 		local cs = CellularSpace{
 			project = projName,
 			layer = clName1,
 			geometry = true
-		}	
-		
+		}
+
 		forEachCell(cs, function(cell)
 			unitTest:assertNotNil(cell.geom)
 			unitTest:assertNil(cell.OGR_GEOMETRY)
@@ -102,20 +102,19 @@ return{
 		local cs = CellularSpace{
 			project = projName,
 			layer = clName1
-		}	
+		}
 
 		forEachCell(cs, function(cell)
 			unitTest:assertNil(cell.geom)
 			unitTest:assertNil(cell.OGR_GEOMETRY)
-		end)	
-		
-		-- ###################### END #############################
+		end)
+
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
-		
+
 		pgData.table = string.lower(tName1)
-		tl:dropPgTable(pgData)		
+		tl:dropPgTable(pgData)
 	end,
 	createNeighborhood = function(unitTest)
 		unitTest:assert(true)
@@ -124,41 +123,41 @@ return{
 		unitTest:assert(true)
 	end,
 	save = function(unitTest)
-		-- ###################### PROJECT #############################	
+		-- ###################### PROJECT #############################
 		local terralib = getPackage("terralib")
 		
 		local projName = "cellspace_save_basic.tview"
 
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
-		
+
 		local author = "Avancini"
 		local title = "Cellular Space"
-	
+
 		local proj = terralib.Project {
 			file = projName,
 			create = true,
 			author = author,
 			title = title
-		}		
+		}
 
 		local layerName1 = "Sampa"
 		proj:addLayer {
 			layer = layerName1,
 			file = filePath("sampa.shp", "terralib")
-		}	
-		
+		}
+
 		local clName1 = "Sampa_Cells_DB"
 		local tName1 = "sampa_cells"
-		
+
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"	
-		
+		local encoding = "CP1252"
+
 		local pgData = {
 			type = "POSTGIS",
 			host = host,
@@ -169,10 +168,10 @@ return{
 			table = tName1,
 			encoding = encoding
 		}
-		
+
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
-		
+
 		proj:addCellularLayer {
 			source = "postgis",
 			input = layerName1,
@@ -182,22 +181,22 @@ return{
 			password = password,
 			database = database,
 			table = tName1
-		}	
-		
+		}
+
 		-- ###################### 1 #############################
 		local cs = CellularSpace{
 			project = proj,
 			layer = clName1
 		}
-		
+
 		forEachCell(cs, function(cell)
 			cell.t0 = 1000
-		end)		
-		
+		end)
+
 		local cellSpaceLayerNameT0 = clName1.."_CellSpace_T0"
-		
+
 		cs:save(cellSpaceLayerNameT0, "t0")
-		
+
 		local cellSpaceLayerInfo = proj:infoLayer(cellSpaceLayerNameT0)
 		unitTest:assertEquals(cellSpaceLayerInfo.source, "postgis")
 		unitTest:assertEquals(cellSpaceLayerInfo.host, host)
@@ -205,13 +204,13 @@ return{
 		unitTest:assertEquals(cellSpaceLayerInfo.user, user)
 		unitTest:assertEquals(cellSpaceLayerInfo.password, password)
 		unitTest:assertEquals(cellSpaceLayerInfo.database, database)
-		unitTest:assertEquals(cellSpaceLayerInfo.table, cellSpaceLayerNameT0)	-- TODO: VERIFY LOWER CASE IF CHANGED	
-		
+		unitTest:assertEquals(cellSpaceLayerInfo.table, cellSpaceLayerNameT0)	-- TODO: VERIFY LOWER CASE IF CHANGED
+
 		-- ###################### 2 #############################
 		local cellSpaceLayerName = clName1.."_CellSpace"
-		
+
 		cs:save(cellSpaceLayerName)
-		
+
 		local cellSpaceLayerInfo = proj:infoLayer(cellSpaceLayerName)
 		unitTest:assertEquals(cellSpaceLayerInfo.source, "postgis")
 		unitTest:assertEquals(cellSpaceLayerInfo.host, host)
@@ -219,45 +218,45 @@ return{
 		unitTest:assertEquals(cellSpaceLayerInfo.user, user)
 		unitTest:assertEquals(cellSpaceLayerInfo.password, password)
 		unitTest:assertEquals(cellSpaceLayerInfo.database, database)
-		unitTest:assertEquals(cellSpaceLayerInfo.table, cellSpaceLayerName)	-- TODO: VERIFY LOWER CASE IF CHANGED	
+		unitTest:assertEquals(cellSpaceLayerInfo.table, cellSpaceLayerName)	-- TODO: VERIFY LOWER CASE IF CHANGED
 
 		-- ###################### 3 #############################
 		local cs = CellularSpace{
 			project = proj,
 			layer = cellSpaceLayerNameT0
-		}		
-		
+		}
+
 		forEachCell(cs, function(cell)
 			unitTest:assertEquals(cell.t0, 1000)
 			cell.t0 = cell.t0 + 1000
 		end)
-		
+
 		cs:save(cellSpaceLayerNameT0)
-		
+
 		local cs = CellularSpace{
 			project = proj,
 			layer = cellSpaceLayerNameT0
-		}	
+		}
 
 		forEachCell(cs, function(cell)
 			unitTest:assertEquals(cell.t0, 2000)
-		end)		
-		
+		end)
+
 		-- ###################### 4 #############################
 		-- DOUBLE PRECISION TEST
 		local num = 0.123456789012345
 
 		forEachCell(cs, function(cell)
 			cell.number = num
-		end)	
-		
+		end)
+
 		cs:save(cellSpaceLayerNameT0, "number")
-		
+
 		local cs = CellularSpace{
 			project = proj,
 			layer = cellSpaceLayerNameT0
 		}
-		
+
 		forEachCell(cs, function(cell)
 			unitTest:assertEquals(cell.number, num)
 		end)
@@ -266,50 +265,49 @@ return{
 		local cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameT0
-		}		
-		
-		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"		
+		}
+
+		local cellSpaceLayerNameGeom = clName1.."_CellSpace_Geom"
 		cs:save(cellSpaceLayerNameGeom)
 		
 		local cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameGeom,
 			geometry = true
-		}		
-		
+		}
+
 		forEachCell(cs, function(cell)
 			unitTest:assertNotNil(cell.geom)
-		end)	
+		end)
 
-		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"				
+		local cellSpaceLayerNameGeom2 = clName1.."_CellSpace_Geom2"
 		cs:save(cellSpaceLayerNameGeom2)
-		
+
 		local cs = CellularSpace{
 			project = projName,
 			layer = cellSpaceLayerNameGeom2,
 			geometry = true
-		}		
-		
+		}
+
 		forEachCell(cs, function(cell)
 			unitTest:assertNotNil(cell.geom)
-		end)			
+		end)
 
-		-- ###################### END #############################
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
-		
+
 		pgData.table = string.lower(tName1)
 		tl:dropPgTable(pgData)
 		pgData.table = string.lower(cellSpaceLayerName)
-		tl:dropPgTable(pgData)		
+		tl:dropPgTable(pgData)
 		pgData.table = string.lower(cellSpaceLayerNameT0)
-		tl:dropPgTable(pgData)	
+		tl:dropPgTable(pgData)
 		pgData.table = string.lower(cellSpaceLayerNameGeom)
 		tl:dropPgTable(pgData)
 		pgData.table = string.lower(cellSpaceLayerNameGeom2)
-		tl:dropPgTable(pgData)		
-		
+		tl:dropPgTable(pgData)
+
 		tl:finalize()
 	end
 }

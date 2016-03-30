@@ -32,41 +32,40 @@ return{
 		unitTest:assert(true)
 	end,
 	save = function(unitTest)
-		-- ###################### PROJECT #############################	
+		-- ###################### PROJECT #############################
 		local terralib = getPackage("terralib")
-		
+
 		local projName = "cellspace_save_alt.tview"
 
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end
-		
+
 		local author = "Avancini"
 		local title = "Cellular Space"
-	
+
 		local proj = terralib.Project {
 			file = projName,
 			create = true,
 			author = author,
 			title = title
-		}		
+		}
 
 		local layerName1 = "Sampa"
 		proj:addLayer {
 			layer = layerName1,
 			file = filePath("sampa.shp", "terralib")
-		}	
-		
+		}
+
 		local clName1 = "Sampa_Cells_DB"
 		local tName1 = "sampa_cells"
-		
 		local host = "localhost"
 		local port = "5432"
 		local user = "postgres"
 		local password = "postgres"
 		local database = "postgis_22_sample"
-		local encoding = "CP1252"	
-		
+		local encoding = "CP1252"
+
 		local pgData = {
 			type = "POSTGIS",
 			host = host,
@@ -77,10 +76,10 @@ return{
 			table = tName1,
 			encoding = encoding
 		}
-		
+
 		local tl = terralib.TerraLib{}
 		tl:dropPgTable(pgData)
-		
+
 		proj:addCellularLayer {
 			source = "postgis",
 			input = layerName1,
@@ -90,38 +89,38 @@ return{
 			password = password,
 			database = database,
 			table = tName1
-		}	
-		
+		}
+
 		local cs = CellularSpace{
 			project = proj,
 			layer = clName1
 		}
-		
+
 		forEachCell(cs, function(cell)
 			cell.t0 = 1000
-		end)		
-		
+		end)
+
 		local cellSpaceLayerName = clName1.."_CellSpace"
-		
+
 		local attrNotExists = function()
 			cs:save(cellSpaceLayerName, "t1")
-		end	
+		end
 		unitTest:assertError(attrNotExists, "Attribute 't1' does not exist in the CellularSpace.")
-		
+
 		local outLayerNotString = function()
 			cs:save(123, "t0")
-		end	
+		end
 		unitTest:assertError(outLayerNotString, incompatibleTypeMsg("#1", "string", 123))
-		
+
 		local attrNotStringOrTable = function()
 			cs:save(cellSpaceLayerName, 123)
-		end	
-		unitTest:assertError(attrNotStringOrTable, "Incompatible types. Argument '#2' expected table or string.")		
-		
+		end
+		unitTest:assertError(attrNotStringOrTable, "Incompatible types. Argument '#2' expected table or string.")
+
 		local outLayerMandatory = function()
 			cs:save()
-		end	
-		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))		
+		end
+		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
 	end
 }
 

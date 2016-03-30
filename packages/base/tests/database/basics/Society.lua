@@ -58,7 +58,7 @@ return{
 		unitTest:assertEquals(11, sum_vision)
 		unitTest:assertEquals(6, sum_metabolism)
 		unitTest:assertEquals(2, sum_immunes)
-		
+
 		local nonFooAgent = Agent{}
 
 		local soc = Society {
