@@ -1,7 +1,8 @@
+############################################################################################
 # TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-# Copyright (C) 2001-2014 INPE and TerraLAB/UFOP.
+# Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
 #
-# This file is part of the TerraME framework.
+# This code is part of the TerraME framework.
 # This framework is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
@@ -16,11 +17,9 @@
 # The framework provided hereunder is on an "as is" basis, and the authors have no
 # obligation to provide maintenance, support, updates, enhancements, or modifications.
 # In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
-# indirect, special, incidental, or caonsequential damages arising out of the use
-# of this library and its documentation.
-#
-# Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
-#          Rodrigo Avancini
+# indirect, special, incidental, or consequential damages arising out of the use
+# of this software and its documentation.
+############################################################################################
 
 #terrame/src/core
 file(GLOB TERRAME_CORE_SRC_FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/src/core/*.cpp)

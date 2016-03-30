@@ -1,6 +1,6 @@
 /************************************************************************************
 TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
-Copyright (C) 2001-2008 INPE and TerraLAB/UFOP.
+Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
 
 This code is part of the TerraME framework.
 This framework is free software; you can redistribute it and/or
@@ -18,8 +18,9 @@ The framework provided hereunder is on an "as is" basis, and the authors have no
 obligation to provide maintenance, support, updates, enhancements, or modifications.
 In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 indirect, special, incidental, or consequential damages arising out of the use
-of this library and its documentation.
+of this software and its documentation.
 *************************************************************************************/
+
 /*!
   \file cell.h
   \brief This file contains definitions about the TerraME model for location representation: Society class.
