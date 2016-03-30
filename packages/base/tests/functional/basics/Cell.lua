@@ -224,7 +224,8 @@ y          number [0]
 	synchronize = function(unitTest)
 		local cell = Cell{
 			cover = "forest",
-			soilWater = 0
+			soilWater = 0,
+			geom = {0, 0}
 		}
 
 		unitTest:assertNotNil(cell.past)
@@ -233,6 +234,11 @@ y          number [0]
 		cell:synchronize()
 
 		unitTest:assertNotNil(cell.past)
+		unitTest:assertNil(cell.past.geom)
+		unitTest:assertNil(cell.past.x)
+		unitTest:assertNil(cell.past.y)
+		unitTest:assertNil(cell.past.past)
+		unitTest:assertNil(cell.past.cObj_)
 		unitTest:assertEquals(cell.cover,"forest")
 		unitTest:assertEquals(cell.cover, cell.past.cover)
 		unitTest:assertNil(cell.past.past)

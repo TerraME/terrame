@@ -266,7 +266,7 @@ Cell_ = {
 	synchronize = function(self)
 		self.past = {}
 		for k, v in pairs(self) do
-			if k ~= "past" then
+			if not belong(k, {"past", "cObj_", "x", "y", "geom"}) then
 				self.past[k] = v
 			end
 		end

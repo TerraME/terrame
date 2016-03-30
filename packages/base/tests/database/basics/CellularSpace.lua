@@ -309,6 +309,45 @@ return{
 		tl:dropPgTable(pgData)
 
 		tl:finalize()
+	end,
+	synchronize = function(unitTest)
+		local terralib = getPackage("terralib")
+
+		local projName = "cellspace_basic.tview"
+
+		if isFile(projName) then
+			rmFile(projName)
+		end
+
+		local author = "Avancini"
+		local title = "Cellular Space"
+
+		local proj = terralib.Project {
+			file = projName,
+			create = true,
+			author = author,
+			title = title
+		}
+
+		local layerName1 = "Sampa"
+		proj:addLayer {
+			layer = layerName1,
+			file = filePath("sampa.shp", "terralib")
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = layerName1,
+			geometry = true
+		}
+
+		cs:synchronize()
+
+		unitTest:assertNil(cs:sample().past.geom)
+
+		if isFile(projName) then
+			rmFile(projName)
+		end
 	end
 }
 
