@@ -103,6 +103,8 @@ return {
 		unitTest:assert(layer3.name ~= layer2.name)
 		unitTest:assertEquals(layer3.sid, layer2.sid)
 		
+		tl:dropPgTable(pgData)
+		
 		-- ###################### 3 #############################		
 		-- TODO: ADO DON'T WORK (REVIEW)
 		-- if _Gtme.isWindowsOS() then
@@ -124,10 +126,8 @@ return {
 			-- database = database,
 			-- table = tableName			
 		-- }		
-
-		tl:dropPgTable(pgData)
-		tl:finalize()
 		
+		-- ###################### END #############################	
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end		
@@ -224,7 +224,7 @@ return {
 			source = "postgis",
 			input = clName2,
 			layer = clName3,
-			resolution = 10000,
+			resolution = 0.7,
 			user = user,
 			password = password,
 			database = database,
@@ -232,7 +232,34 @@ return {
 		}	
 		local l3Info = proj:infoLayer(clName3)
 	
-		unitTest:assertEquals(l3Info.name, clName3)			
+		unitTest:assertEquals(l3Info.name, clName3)		
+
+		-- ###################### 4 #############################	
+		local newDbName = "new_pg_db_30032016"
+		pgData.database = newDbName
+		tl:dropPgDatabase(pgData)
+		pgData.database = database
+		
+		local clName4 = "New_Sampa_Cells"
+		
+		proj:addCellularLayer {
+			source = "postgis",
+			input = clName2,
+			layer = clName4,
+			resolution = 0.7,
+			user = user,
+			password = password,
+			database = newDbName
+		}
+		
+		local clLayer4 = proj:infoLayer(clName4)
+		unitTest:assertEquals(clLayer4.source, "postgis")
+		unitTest:assertEquals(clLayer4.host, host)
+		unitTest:assertEquals(clLayer4.port, port)
+		unitTest:assertEquals(clLayer4.user, user)
+		unitTest:assertEquals(clLayer4.password, password)
+		unitTest:assertEquals(clLayer4.database, newDbName)
+		unitTest:assertEquals(clLayer4.table, string.lower(clName4))		
 
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -245,5 +272,7 @@ return {
 		tl:dropPgTable(pgData)	
 		pgData.table = tName3
 		tl:dropPgTable(pgData)		
+		pgData.database = newDbName	
+		tl:dropPgDatabase(pgData)
 	end
 }

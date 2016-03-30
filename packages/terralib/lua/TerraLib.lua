@@ -77,11 +77,12 @@ local RasterAttributeCreatedMapper = {
 	sum = "_Sum"
 }
 
-local function hasConnectionError(type, connInfo)
+local function checkConnectionParams(type, connInfo)
 	local ds = binding.te.da.DataSourceFactory.make(type)
 	ds:setConnectionInfo(connInfo)
 	local msg = binding.te.da.DataSource.Exists(ds)	
 	
+	ds:close()
 	ds = nil
 	collectgarbage("collect")
 	
@@ -95,18 +96,25 @@ local function createPgConnInfo(host, port, user, pass, database, encoding)
 	connInfo.PG_PORT = port 
 	connInfo.PG_USER = user
 	connInfo.PG_PASSWORD = pass
-	connInfo.PG_DB_NAME = database
+	connInfo.PG_NEWDB_NAME = database
 	connInfo.PG_CONNECT_TIMEOUT = "4" 
 	connInfo.PG_CLIENT_ENCODING = encoding -- "UTF-8" --"CP1252" -- "LATIN1" --"WIN1252" 	
-	connInfo.PG_CHECK_DB_EXISTENCE = database		
+	connInfo.PG_CHECK_DB_EXISTENCE = database	
 
-	local errorMsg = hasConnectionError("POSTGIS", connInfo)	
+	local errorMsg = checkConnectionParams("POSTGIS", connInfo)	
 	if errorMsg ~= "" then
 		if string.match(errorMsg, "connections on port "..port) then
 			errorMsg = "Please check the port '"..port.."'."
 		end
 		customError(errorMsg)
 	end
+	
+	if not binding.te.da.DataSource.exists("POSTGIS", connInfo) then
+		binding.te.da.DataSource.create("POSTGIS", connInfo)
+	end
+	
+	connInfo.PG_NEWDB_NAME = nil
+	connInfo.PG_DB_NAME = database			
 
 	return connInfo
 end
@@ -955,7 +963,7 @@ TerraLib_ = {
 
 		local inputLayer = project.layers[inputLayerTitle]
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)
-		
+
 		if not dataSetExists(connInfo, data.table, "POSTGIS") then
 			createCellSpaceLayer(inputLayer, name, data.table, resolultion, connInfo, "POSTGIS")
 		else
@@ -969,6 +977,20 @@ TerraLib_ = {
 	dropPgTable = function(self, data)
 		local connInfo = createPgConnInfo(data.host, data.port, data.user, data.password, data.database, data.encoding)		
 		dropDataSet(connInfo, string.lower(data.table), "POSTGIS")
+	end,
+	
+	dropPgDatabase = function(self, data)
+		local connInfo = {}
+		connInfo.PG_DB_TO_DROP = data.database
+		connInfo.PG_HOST = data.host 
+		connInfo.PG_PORT = data.port 
+		connInfo.PG_USER = data.user
+		connInfo.PG_PASSWORD = data.pass
+		connInfo.PG_CHECK_DB_EXISTENCE = data.database
+		
+		if binding.te.da.DataSource.exists("POSTGIS", connInfo) then
+			binding.te.da.DataSource.drop("POSTGIS", connInfo)
+		end
 	end,
 	
 	copyLayer = function(self, project, from, to)

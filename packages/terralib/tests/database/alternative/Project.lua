@@ -373,22 +373,6 @@ return {
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.")								
-		
-		local dbWrong = "thedatabasenotexists"
-		local databaseNotExists = function()
-			proj1:addLayer {
-				source = "postgis",
-				layer = layerName2,
-				host = host,
-				port = port,
-				user = user,
-				password = password,
-				database = dbWrong,
-				table = tableName			
-			}	
-		end
-		unitTest:assertError(databaseNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  database \""..dbWrong.."\" does not exist\n.")	
 
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
@@ -524,20 +508,6 @@ return {
 			}
 		end
 		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))		
-		
-		local tableMandatory = function() 
-			proj:addCellularLayer{
-				source = "postgis",
-				input = layerName1,
-				layer = clName1,
-				resolution = 0.7,
-				user = user,
-				password = password,
-				database = database
-				--table = tName1		
-			}
-		end
-		unitTest:assertError(tableMandatory, mandatoryArgumentMsg("table"))		
 		
 		local sourceNotString = function() 
 			proj:addCellularLayer{
@@ -776,23 +746,6 @@ return {
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.")								
-		
-		local dbWrong = "thedatabasenotexists"
-		local databaseNotExists = function()
-			proj:addCellularLayer{
-				source = "postgis",
-				input = layerName1,
-				layer = clName1,
-				resolution = 0.7,
-				host = host,
-				user = user,
-				password = password,
-				database = dbWrong,
-				table = tName1
-			}
-		end
-		unitTest:assertError(databaseNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  database \""..dbWrong.."\" does not exist\n.")	
 
 		local pgData = {
 			type = "POSTGIS",

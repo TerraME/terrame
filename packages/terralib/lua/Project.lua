@@ -172,7 +172,6 @@ Project_ = {
 	-- }
 	addCellularLayer = function(self, data)
 		verifyNamedTable(data)
-
 		verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution", "file", "source", 
 											"host", "port", "user", "password", "database", "table"})
 
@@ -245,6 +244,9 @@ Project_ = {
 				--self.terralib:addTifLayer(data.layer, data.file)
 				
 			elseif data.source == "postgis" then
+				if isEmpty(data.table) then
+					data.table = string.lower(data.layer)
+				end
 				mandatoryTableArgument(data, "user", "string")
 				mandatoryTableArgument(data, "password", "string")
 				mandatoryTableArgument(data, "database", "string")

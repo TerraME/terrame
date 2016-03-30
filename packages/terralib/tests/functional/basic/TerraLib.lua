@@ -66,6 +66,9 @@ return {
 	dropPgTable = function(unitTest)
 		unitTest:assert(true)
 	end,
+	dropPgDatabase = function(unitTest)
+		unitTest:assert(true)
+	end,	
 	copyLayer = function(unitTest)
 		unitTest:assert(true)
 	end,
