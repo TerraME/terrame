@@ -88,7 +88,7 @@ int luaCellularSpace::setPort(lua_State *L){
     return 0;
 }
 
-/// Sets the database type: MySQL, ADO, etc.
+/// Sets the database type: MySQL, etc.
 int luaCellularSpace::setDBType(lua_State *L )
 {
     dbType =  string(lua_tostring(L, -1));
@@ -1889,43 +1889,3 @@ luaCell * findCell( luaCellularSpace* cs, CellIndex& cellIndex)
     if( it != cs->end() ) return (luaCell*)it->second;
     return (luaCell*)0;
 }
-
-#if defined( TME_MSVC ) && defined( TME_WIN32 )
-void configureADO(){
-    // begin - copy from tview
-    //verify what is the decimal separator
-    HKEY    hk;
-    DWORD	DataSize = 2;
-    DWORD   Type = REG_SZ;
-    char    buf[2];
-
-    string key = "Control Panel\\International";
-    string sepDecimal = "sDecimal";
-    string sepDecimalResult = "";
-
-    if (RegOpenKeyExA(HKEY_CURRENT_USER, key.c_str(), 0, KEY_READ, &hk) == ERROR_SUCCESS)
-    {
-        memset (buf, 0, 2);
-        DataSize = 2;
-        //decimal separator
-        if (RegQueryValueExA(hk, sepDecimal.c_str(), NULL, &Type, (LPBYTE)buf, &DataSize) == ERROR_SUCCESS)
-            sepDecimalResult = buf;
-
-        RegCloseKey (hk);
-    }
-
-    if((!sepDecimalResult.empty()) && (sepDecimalResult==","))
-    {
-        if (RegOpenKeyExA(HKEY_CURRENT_USER, key.c_str(), 0, KEY_SET_VALUE, &hk) == ERROR_SUCCESS)
-        {
-            memset (buf, 0, 2);
-            buf[0] = '.';
-            DataSize = 2;
-
-            RegSetValueExA(hk, sepDecimal.c_str(), NULL, Type, (LPBYTE)buf, DataSize);
-            RegCloseKey (hk);
-        }
-    }
-    // end - copy from tview
-}
-#endif

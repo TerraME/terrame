@@ -58,7 +58,7 @@ public:
     /// constructor
     luaCellularSpace(lua_State *L);
 
-    /// Sets the database type: MySQL, ADO, etc.
+    /// Sets the database type: MySQL, etc.
     int setDBType(lua_State *L );
 
     /// Sets the host name.
@@ -199,7 +199,7 @@ public:
 	int getCellByID(lua_State *L);
 
 private:
-    string dbType; ///< database type, e. g., MySQL, ADO, etc...
+    string dbType; ///< database type, e. g., MySQL, etc...
     string host;  ///< host name
     string dbName; ///< database name
     string user;  ///< user name
@@ -228,9 +228,5 @@ private:
 
 /// Find a cell given a luaCellularSpace object and a luaCellIndex object
 luaCell * findCell( luaCellularSpace* cs, CellIndex& cellIndex);
-
-#if defined( TME_MSVC ) && defined( TME_WIN32 )
-void configureADO();
-#endif
 
 #endif
