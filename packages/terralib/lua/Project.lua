@@ -1,16 +1,16 @@
---#########################################################################################
+-------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP -- www.terrame.org
--- 
+-- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU Lesser General Public
 -- License as published by the Free Software Foundation; either
 -- version 2.1 of the License, or (at your option) any later version.
--- 
+
 -- You should have received a copy of the GNU Lesser General Public
 -- License along with this library.
--- 
+
 -- The authors reassure the license terms regarding the warranties.
 -- They specifically disclaim any warranties, including, but not limited to,
 -- the implied warranties of merchantability and fitness for a particular purpose.
@@ -18,11 +18,9 @@
 -- obligation to provide maintenance, support, updates, enhancements, or modifications.
 -- In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 -- indirect, special, incidental, or consequential damages arising out of the use
--- of this library and its documentation.
--- 
--- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
---          Rodrigo Avancini
---#########################################################################################
+-- of this software and its documentation.
+--
+-------------------------------------------------------------------------------------------
 
 -- TODO: create Common for this
 local SourceTypeMapper = {
@@ -172,7 +170,6 @@ Project_ = {
 	-- }
 	addCellularLayer = function(self, data)
 		verifyNamedTable(data)
-
 		verifyUnnecessaryArguments(data, {"box", "input", "layer", "resolution", "file", "source", 
 											"host", "port", "user", "password", "database", "table"})
 
@@ -245,6 +242,9 @@ Project_ = {
 				--self.terralib:addTifLayer(data.layer, data.file)
 				
 			elseif data.source == "postgis" then
+				if isEmpty(data.table) then
+					data.table = string.lower(data.layer)
+				end
 				mandatoryTableArgument(data, "user", "string")
 				mandatoryTableArgument(data, "password", "string")
 				mandatoryTableArgument(data, "database", "string")

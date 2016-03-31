@@ -1,9 +1,9 @@
 /************************************************************************************
-TerraLib - a library for developing GIS applications.
-Copyright ? 2001-2007 INPE and Tecgraf/PUC-Rio.
+TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
+Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
 
-This code is part of the TerraLib library.
-This library is free software; you can redistribute it and/or
+This code is part of the TerraME framework.
+This framework is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation; either
 version 2.1 of the License, or (at your option) any later version.
@@ -14,12 +14,13 @@ License along with this library.
 The authors reassure the license terms regarding the warranties.
 They specifically disclaim any warranties, including, but not limited to,
 the implied warranties of merchantability and fitness for a particular purpose.
-The library provided hereunder is on an "as is" basis, and the authors have no
+The framework provided hereunder is on an "as is" basis, and the authors have no
 obligation to provide maintenance, support, updates, enhancements, or modifications.
-In no event shall INPE and Tecgraf / PUC-Rio be held liable to any party for direct,
+In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 indirect, special, incidental, or consequential damages arising out of the use
-of this library and its documentation.
+of this software and its documentation.
 *************************************************************************************/
+
 /*! \file luaCellularSpace.cpp
 \brief This file contains implementations for the luaCellularSpace objects.
 \author Tiago Garcia de Senna Carneiro
@@ -88,7 +89,7 @@ int luaCellularSpace::setPort(lua_State *L){
     return 0;
 }
 
-/// Sets the database type: MySQL, ADO, etc.
+/// Sets the database type: MySQL, etc.
 int luaCellularSpace::setDBType(lua_State *L )
 {
     dbType =  string(lua_tostring(L, -1));
@@ -1889,43 +1890,3 @@ luaCell * findCell( luaCellularSpace* cs, CellIndex& cellIndex)
     if( it != cs->end() ) return (luaCell*)it->second;
     return (luaCell*)0;
 }
-
-#if defined( TME_MSVC ) && defined( TME_WIN32 )
-void configureADO(){
-    // begin - copy from tview
-    //verify what is the decimal separator
-    HKEY    hk;
-    DWORD	DataSize = 2;
-    DWORD   Type = REG_SZ;
-    char    buf[2];
-
-    string key = "Control Panel\\International";
-    string sepDecimal = "sDecimal";
-    string sepDecimalResult = "";
-
-    if (RegOpenKeyExA(HKEY_CURRENT_USER, key.c_str(), 0, KEY_READ, &hk) == ERROR_SUCCESS)
-    {
-        memset (buf, 0, 2);
-        DataSize = 2;
-        //decimal separator
-        if (RegQueryValueExA(hk, sepDecimal.c_str(), NULL, &Type, (LPBYTE)buf, &DataSize) == ERROR_SUCCESS)
-            sepDecimalResult = buf;
-
-        RegCloseKey (hk);
-    }
-
-    if((!sepDecimalResult.empty()) && (sepDecimalResult==","))
-    {
-        if (RegOpenKeyExA(HKEY_CURRENT_USER, key.c_str(), 0, KEY_SET_VALUE, &hk) == ERROR_SUCCESS)
-        {
-            memset (buf, 0, 2);
-            buf[0] = '.';
-            DataSize = 2;
-
-            RegSetValueExA(hk, sepDecimal.c_str(), NULL, Type, (LPBYTE)buf, DataSize);
-            RegCloseKey (hk);
-        }
-    }
-    // end - copy from tview
-}
-#endif

@@ -1,27 +1,25 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP.
---
+-- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU Lesser General Public
 -- License as published by the Free Software Foundation; either
 -- version 2.1 of the License, or (at your option) any later version.
---
+
 -- You should have received a copy of the GNU Lesser General Public
 -- License along with this library.
---
+
 -- The authors reassure the license terms regarding the warranties.
 -- They specifically disclaim any warranties, including, but not limited to,
 -- the implied warranties of merchantability and fitness for a particular purpose.
 -- The framework provided hereunder is on an "as is" basis, and the authors have no
 -- obligation to provide maintenance, support, updates, enhancements, or modifications.
 -- In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
--- indirect, special, incidental, or caonsequential damages arising out of the use
--- of this library and its documentation.
+-- indirect, special, incidental, or consequential damages arising out of the use
+-- of this software and its documentation.
 --
--- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
---          Rodrigo Avancini
 -------------------------------------------------------------------------------------------
 
 return {
@@ -103,6 +101,8 @@ return {
 		unitTest:assert(layer3.name ~= layer2.name)
 		unitTest:assertEquals(layer3.sid, layer2.sid)
 		
+		tl:dropPgTable(pgData)
+		
 		-- ###################### 3 #############################		
 		-- TODO: ADO DON'T WORK (REVIEW)
 		-- if _Gtme.isWindowsOS() then
@@ -124,10 +124,8 @@ return {
 			-- database = database,
 			-- table = tableName			
 		-- }		
-
-		tl:dropPgTable(pgData)
-		tl:finalize()
 		
+		-- ###################### END #############################	
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
 		end		
@@ -224,7 +222,7 @@ return {
 			source = "postgis",
 			input = clName2,
 			layer = clName3,
-			resolution = 10000,
+			resolution = 0.7,
 			user = user,
 			password = password,
 			database = database,
@@ -232,7 +230,34 @@ return {
 		}	
 		local l3Info = proj:infoLayer(clName3)
 	
-		unitTest:assertEquals(l3Info.name, clName3)			
+		unitTest:assertEquals(l3Info.name, clName3)		
+
+		-- ###################### 4 #############################	
+		local newDbName = "new_pg_db_30032016"
+		pgData.database = newDbName
+		tl:dropPgDatabase(pgData)
+		pgData.database = database
+		
+		local clName4 = "New_Sampa_Cells"
+		
+		proj:addCellularLayer {
+			source = "postgis",
+			input = clName2,
+			layer = clName4,
+			resolution = 0.7,
+			user = user,
+			password = password,
+			database = newDbName
+		}
+		
+		local clLayer4 = proj:infoLayer(clName4)
+		unitTest:assertEquals(clLayer4.source, "postgis")
+		unitTest:assertEquals(clLayer4.host, host)
+		unitTest:assertEquals(clLayer4.port, port)
+		unitTest:assertEquals(clLayer4.user, user)
+		unitTest:assertEquals(clLayer4.password, password)
+		unitTest:assertEquals(clLayer4.database, newDbName)
+		unitTest:assertEquals(clLayer4.table, string.lower(clName4))		
 
 		-- ###################### END #############################
 		if isFile(projName) then
@@ -245,5 +270,7 @@ return {
 		tl:dropPgTable(pgData)	
 		pgData.table = tName3
 		tl:dropPgTable(pgData)		
+		pgData.database = newDbName	
+		tl:dropPgDatabase(pgData)
 	end
 }

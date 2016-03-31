@@ -1,27 +1,25 @@
 -------------------------------------------------------------------------------------------
 -- TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
--- Copyright (C) 2001-2014 INPE and TerraLAB/UFOP.
---
+-- Copyright (C) 2001-2016 INPE and TerraLAB/UFOP -- www.terrame.org
+
 -- This code is part of the TerraME framework.
 -- This framework is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU Lesser General Public
 -- License as published by the Free Software Foundation; either
 -- version 2.1 of the License, or (at your option) any later version.
---
+
 -- You should have received a copy of the GNU Lesser General Public
 -- License along with this library.
---
+
 -- The authors reassure the license terms regarding the warranties.
 -- They specifically disclaim any warranties, including, but not limited to,
 -- the implied warranties of merchantability and fitness for a particular purpose.
 -- The framework provided hereunder is on an "as is" basis, and the authors have no
 -- obligation to provide maintenance, support, updates, enhancements, or modifications.
 -- In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
--- indirect, special, incidental, or caonsequential damages arising out of the use
--- of this library and its documentation.
+-- indirect, special, incidental, or consequential damages arising out of the use
+-- of this software and its documentation.
 --
--- Authors: Pedro R. Andrade (pedro.andrade@inpe.br)
---          Rodrigo Avancini
 -------------------------------------------------------------------------------------------
 
 return {
@@ -373,22 +371,6 @@ return {
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.")								
-		
-		local dbWrong = "thedatabasenotexists"
-		local databaseNotExists = function()
-			proj1:addLayer {
-				source = "postgis",
-				layer = layerName2,
-				host = host,
-				port = port,
-				user = user,
-				password = password,
-				database = dbWrong,
-				table = tableName			
-			}	
-		end
-		unitTest:assertError(databaseNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  database \""..dbWrong.."\" does not exist\n.")	
 
 		local tableWrong = "thetablenotexists"
 		local tableNotExists = function()
@@ -524,20 +506,6 @@ return {
 			}
 		end
 		unitTest:assertError(dbMandatory, mandatoryArgumentMsg("database"))		
-		
-		local tableMandatory = function() 
-			proj:addCellularLayer{
-				source = "postgis",
-				input = layerName1,
-				layer = clName1,
-				resolution = 0.7,
-				user = user,
-				password = password,
-				database = database
-				--table = tName1		
-			}
-		end
-		unitTest:assertError(tableMandatory, mandatoryArgumentMsg("table"))		
 		
 		local sourceNotString = function() 
 			proj:addCellularLayer{
@@ -776,23 +744,6 @@ return {
 		end
 		unitTest:assertError(passWrong, "It was not possible to create a connection to the given data source due to the following error: "
 							.."FATAL:  password authentication failed for user \""..user.."\"\n.")								
-		
-		local dbWrong = "thedatabasenotexists"
-		local databaseNotExists = function()
-			proj:addCellularLayer{
-				source = "postgis",
-				input = layerName1,
-				layer = clName1,
-				resolution = 0.7,
-				host = host,
-				user = user,
-				password = password,
-				database = dbWrong,
-				table = tName1
-			}
-		end
-		unitTest:assertError(databaseNotExists, "It was not possible to create a connection to the given data source due to the following error: "
-							.."FATAL:  database \""..dbWrong.."\" does not exist\n.")	
 
 		local pgData = {
 			type = "POSTGIS",
