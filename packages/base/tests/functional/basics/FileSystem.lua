@@ -114,7 +114,8 @@ return{
 		local f = io.open(pathdata.."test.txt", "w+")
 
 		unitTest:assert(lock(f, "w"))
-
+		
+		f:close()
 		os.execute("rm \""..pathdata.."test.txt\"")
 	end,
 	lockDir = function(unitTest)
