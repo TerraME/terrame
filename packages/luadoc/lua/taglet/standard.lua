@@ -373,31 +373,35 @@ function parse_file(luapath, fileName, doc, doc_report, short_lua_path, silent)
 	local first = true
 	while line ~= nil do
 		if string.find(line, "^[\t ]*%-%-%-") then
-			-- reached a luadoc block
-			local block
-			local mline = line
-			line, block, modulename = parse_block(f, line, modulename, first, doc_report, silent)
-			table.insert(blocks, block)
+			if string.find(line, "^[\t ]*%-%-%-%-") then
+				line = f:read()
+			else
+				local block
+				local mline = line
+				line, block, modulename = parse_block(f, line, modulename, first, doc_report, silent)
 
-			if block and block.name then
-				if block.description:sub(block.description:len(), block.description:len()) ~= "." and not silent then
-					printError("Description of '"..block.name.."' does not end with '.'")
-					doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
-				end
+				table.insert(blocks, block)
 
-				if block.arg then
-					forEachElement(block.arg, function(idx, value, mtype)
-						if mtype == "string" and idx ~= "named" and type(idx) ~= "number" then
-							if not belong(value:sub(value:len(), value:len()), {".", "?", ":"}) and not silent then
-								printError("Description of argument '"..idx.."' in '"..block.name.."()' does end with '.', '?', nor ':'.")
-								doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
+				if block and block.name then
+					if block.description:sub(block.description:len(), block.description:len()) ~= "." and not silent then
+						printError("Description of '"..block.name.."' does not end with '.'")
+						doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
+					end
+
+					if block.arg then
+						forEachElement(block.arg, function(idx, value, mtype)
+							if mtype == "string" and idx ~= "named" and type(idx) ~= "number" then
+								if not belong(value:sub(value:len(), value:len()), {".", "?", ":"}) and not silent then
+									printError("Description of argument '"..idx.."' in '"..block.name.."()' does end with '.', '?', nor ':'.")
+									doc_report.wrong_descriptions = doc_report.wrong_descriptions + 1
+								end
 							end
-						end
-					end)
+						end)
+					end
+				elseif not string.find(mline, "^[\t ]*%-%-%-%-") and not silent then
+					printError("Invalid documentation line: "..mline)
+					doc_report.wrong_line = doc_report.wrong_line + 1
 				end
-			elseif not string.find(mline, "^[\t ]*%-%-%-%-") and not silent then
-				printError("Invalid documentation line: "..mline)
-				doc_report.wrong_line = doc_report.wrong_line + 1
 			end
 		else
 			-- look for a module definition
