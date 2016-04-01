@@ -92,7 +92,7 @@ return{
 			lock(f, 1)
 		end
 		unitTest:assertError(error_func, incompatibleTypeMsg(2, "string", 1))
-
+		f:close()
 		os.execute("rm \""..pathdata.."test.txt\"")
 	end,
 	lockDir = function(unitTest)

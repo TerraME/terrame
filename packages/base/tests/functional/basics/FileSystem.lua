@@ -58,7 +58,7 @@ return{
 		chDir(cur_dir)
 	end,
 	dir = function(unitTest)
-		local files = 23
+		local files = 21
 		local d = dir(packageInfo().data)
 		unitTest:assertEquals(#d, files)
 
@@ -114,7 +114,8 @@ return{
 		local f = io.open(pathdata.."test.txt", "w+")
 
 		unitTest:assert(lock(f, "w"))
-
+		
+		f:close()
 		os.execute("rm \""..pathdata.."test.txt\"")
 	end,
 	lockDir = function(unitTest)
@@ -159,7 +160,7 @@ return{
 	end, 
 	runCommand = function(unitTest)
 		local d, e = runCommand("ls "..packageInfo().data)
-		unitTest:assertEquals(#d, 23) -- 23 files
+		unitTest:assertEquals(#d, 21) -- 21 files
 		unitTest:assertEquals(#e, 0)
 	end,
 	tmpDir = function(unitTest)
