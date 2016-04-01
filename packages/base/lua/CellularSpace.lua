@@ -318,7 +318,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		for k, v in pairs(dSet[i]) do
 			if (k == "OGR_GEOMETRY") or (k == "geom") then
 				if self.geometry then
-					cell["geom"] = v
+					cell.geom = v
 				end
 			else
 				cell[k] = v
@@ -1254,6 +1254,18 @@ function CellularSpace(data)
 			end)
 			word = string.sub(word, 0, string.len(word) - 2).."]."
 			customError("'"..data.source.."' is an invalid value for argument 'source'. "..word)
+		elseif CellularSpaceDrivers[data.source].extension then
+			mandatoryTableArgument(data, "file", "string")
+			if getExtension(data.file) ~= data.source then
+				customError("source and file extension should be the same.")
+			end
+
+			local f = io.open(data.file, "r") 
+			if not f then
+				resourceNotFoundError("file", data.file)
+			else
+				io.close(f)
+			end
 		end
 	end
 

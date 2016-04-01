@@ -24,7 +24,171 @@
 
 return{
 	loadNeighborhood = function(unitTest)
-		unitTest:assert(true)
+		-- ###################### PROJECT #############################
+		local terralib = getPackage("terralib")
+
+		local projName = "environment_alt.tview"
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+
+		local author = "Avancini"
+		local title = "Cellular Space"
+
+		local proj = terralib.Project {
+			file = projName,
+			create = true,
+			author = author,
+			title = title
+		}
+
+		local layerName1 = "Sampa"
+		proj:addLayer {
+			layer = layerName1,
+			file = filePath("sampa.shp", "terralib")
+		}
+
+		local clName1 = "Sampa_Cells_DB"
+		local tName1 = "sampa_cells"
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1,
+			encoding = encoding
+		}
+
+		local tl = terralib.TerraLib{}
+		tl:dropPgTable(pgData)
+
+		proj:addCellularLayer {
+			source = "postgis",
+			input = layerName1,
+			layer = clName1,
+			resolution = 0.3,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = clName1
+		}
+		
+		local cs2 = CellularSpace{xdim = 10}
+
+		local env = Environment{cs, cs2}
+
+		local error_func = function()
+			env:loadNeighborhood{
+			source = filePath("gpmAreaCellsPols.gpm", "base"),
+		}
+		end
+		unitTest:assertError(error_func, "CellularSpaces with layers 'cells1000x1000' and 'Limit' were not found in the Environment.")
+
+		local cs1 = CellularSpace{xdim = 10}
+		cs2 = CellularSpace{xdim = 10}
+
+		local env = Environment{cs1, cs2}
+
+		cs1:createNeighborhood{}
+
+		local error_func = function()
+			env:loadNeighborhood{
+				source = nil,
+				name = "neigh1",
+				bidirect = true
+			}
+		end
+		 unitTest:assertError(error_func, mandatoryArgumentMsg("source"))	
+
+		local error_func = function()
+			env:loadNeighborhood{
+				source = 5,
+				name = "neigh1",
+				bidirect = true
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("source", "string", 5))
+
+		error_func = function()
+			env:loadNeighborhood{
+				source = "teste1",
+				name = "neigh1",
+				bidirect = true
+			}
+		end
+		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste1"))
+
+		local error_func = function()
+			env:loadNeighborhood{
+				source = "teste1.abc",
+				name = "neigh1",
+				bidirect = true
+			}
+		end
+		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "abc"))
+
+		local error_func = function()
+			env:loadNeighborhood{
+				source = filePath("emas-pollin.gpm", "base"),
+				name = 6,
+				bidirect = true
+			}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 6))
+
+		local error_func = function()
+			env:loadNeighborhood{
+				source = filePath("emas-pollin.gpm", "base"),		
+				name = "neigh1",
+				bidirect = 13
+		}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("bidirect", "boolean", 13))
+
+		local error_func = function()
+			env:loadNeighborhood{
+				source = filePath("emas-distance.gpm", "base"),
+				name = "my_neighborhood"
+		}
+		end
+		unitTest:assertError(error_func, "This function does not load neighborhoods between cells from the same CellularSpace. Use CellularSpace:loadNeighborhood() instead.")
+		
+		local error_func = function()
+			env:loadNeighborhood{
+				source = "emas-distance-xxx.gpm",
+				name = "my_neighborhood"
+			}
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", "emas-distance-xxx.gpm"))
+
+		local error_func = function()
+			env:loadNeighborhood{
+				source = "gpmlinesDbEmas_invalid.teste",
+				name = "my_neighborhood"
+			}
+		end
+		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))
+				
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		tl:dropPgTable(pgData)			
 	end
 }
 

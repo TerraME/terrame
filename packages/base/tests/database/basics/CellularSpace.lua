@@ -105,19 +105,37 @@ return{
 			unitTest:assertNil(cell.geom)
 			unitTest:assertNil(cell.OGR_GEOMETRY)
 		end)
-
+		
+		-- ###################### 2 #############################
+		unitTest:assertEquals(303, #cs.cells)
+		-- ###################### CLEANING #############################
 		if isFile(projName) then
 			rmFile(projName)
 		end
 
 		pgData.table = string.lower(tName1)
 		tl:dropPgTable(pgData)
-
+		-- ###################### PROJECT END #############################
+		
+		-- map file
 		local cs = CellularSpace{
 			file = filePath("simple.map", "base")
 		}
 
 		unitTest:assertEquals(#cs, 100)
+		
+		-- csv file
+		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), source = "csv", sep = ";"}
+		cs = CellularSpace{file = filePath("simple-cs.csv", "base"), sep = ";"}
+
+		unitTest:assertType(cs, "CellularSpace")
+		unitTest:assertEquals(2500, #cs)
+
+		forEachCell(cs, function(cell)
+			unitTest:assertType(cell.maxSugar, "number")
+		end)	
+		
+		
 	end,
 	createNeighborhood = function(unitTest)
 		unitTest:assert(true)
@@ -295,7 +313,8 @@ return{
 		forEachCell(cs, function(cell)
 			unitTest:assertNotNil(cell.geom)
 		end)
-
+		
+		-- ###################### CLEANING #############################
 		if isFile(projName) then
 			rmFile(projName)
 		end
@@ -312,6 +331,7 @@ return{
 		tl:dropPgTable(pgData)
 
 		tl:finalize()
+		-- ###################### PROJECT END #############################
 	end,
 	synchronize = function(unitTest)
 		local terralib = getPackage("terralib")

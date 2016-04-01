@@ -23,11 +23,219 @@
 -------------------------------------------------------------------------------------------
 
 return{
-	CellularSpace = function(unitTest)
-		unitTest:assert(true)
+	CellularSpace = function(unitTest)	
+		local error_func = function()
+			local cs = CellularSpace{
+				source = "post",
+				layer = "layer"
+			}
+		end
+	
+		local options = {
+ 			csv = true,
+ 			map = true,
+ 			shp = true,
+ 			virtual = true,
+			proj = true
+ 		}
+ 
+		unitTest:assertError(error_func, switchInvalidArgumentMsg("post", "source", options))
+
+ 		local error_func = function()
+ 			local cs = CellularSpace{
+				file = filePath("simple-cs.csv", "base"), 
+				source = "map", 
+				sep = ";"
+			}
+ 		end
+ 		unitTest:assertError(error_func, "source and file extension should be the same.")
+ 
+ 		local error_func = function()
+ 			local cs = CellularSpace{file = 2, source = "map", sep = ";"}
+ 		end
+ 		unitTest:assertError(error_func, incompatibleTypeMsg("file", "string", 2))
+ 
+ 		local error_func = function()
+ 			local cs = CellularSpace{file = "abc123.map", source = "map", sep = ";"}
+ 		end
+		unitTest:assertError(error_func, resourceNotFoundMsg("file", "abc123.map"))
+		
+		local error_func = function()
+ 			local cs = CellularSpace{
+ 				file = "abc123.shp"
+ 			}
+ 		end
+ 		unitTest:assertError(error_func, "File 'abc123.dbf' not found.")
 	end,
 	loadNeighborhood = function(unitTest)
-		unitTest:assert(true)
+		-- ###################### PROJECT #############################
+		local terralib = getPackage("terralib")
+
+		local projName = "cellspace_neigh_alt.tview"
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+
+		local author = "Avancini"
+		local title = "Cellular Space"
+
+		local proj = terralib.Project {
+			file = projName,
+			create = true,
+			author = author,
+			title = title
+		}
+
+		local layerName1 = "Sampa"
+		proj:addLayer {
+			layer = layerName1,
+			file = filePath("sampa.shp", "terralib")
+		}
+
+		local clName1 = "Sampa_Cells_DB"
+		local tName1 = "sampa_cells"
+		local host = "localhost"
+		local port = "5432"
+		local user = "postgres"
+		local password = "postgres"
+		local database = "postgis_22_sample"
+		local encoding = "CP1252"
+
+		local pgData = {
+			type = "POSTGIS",
+			host = host,
+			port = port,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1,
+			encoding = encoding
+		}
+
+		local tl = terralib.TerraLib{}
+		tl:dropPgTable(pgData)
+
+		proj:addCellularLayer {
+			source = "postgis",
+			input = layerName1,
+			layer = clName1,
+			resolution = 0.3,
+			user = user,
+			password = password,
+			database = database,
+			table = tName1
+		}
+
+		local cs = CellularSpace{
+			project = proj,
+			layer = clName1
+		}
+		
+		local error_func = function()
+			cs:loadNeighborhood()
+		end
+		unitTest:assertError(error_func, tableArgumentMsg())
+		
+		local error_func = function()
+			cs:loadNeighborhood{}
+		end
+		unitTest:assertError(error_func, mandatoryArgumentMsg("source"))		
+		
+		local error_func = function()
+			cs:loadNeighborhood{source = 123}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("source", "string", 123))
+
+		local error_func = function()
+			cs:loadNeighborhood{source = "neighCabecaDeBoi900x900.gpm"}
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", "neighCabecaDeBoi900x900.gpm"))
+
+		local mfile = filePath("cabecadeboi-neigh.gpm", "base")
+	
+		local error_func = function()
+			cs:loadNeighborhood{source = mfile, name = 22}
+		end
+		unitTest:assertError(error_func, incompatibleTypeMsg("name", "string", 22))
+
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		tl:dropPgTable(pgData)			
+		-- ###################### PROJECT END #############################
+		
+		-- GAL from shapefile
+		local cs = CellularSpace{
+			source = "shp",
+			file = filePath("brazilstates.shp", "base")
+		}		
+		
+		local error_func = function()	
+			cs:loadNeighborhood{source = filePath("brazil.gal", "base"), che = false}
+		end
+		unitTest:assertError(error_func, unnecessaryArgumentMsg("che"))		
+		
+		mfile = filePath("brazil.gal", "base")
+
+		local error_func = function()
+			cs:loadNeighborhood{source = mfile}
+		end
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'mylayer'.")	
+
+		local cs2 = CellularSpace{xdim = 10}
+
+		local error_func = function()
+			cs2:loadNeighborhood{source = "arquivo.gpm"}
+		end
+		unitTest:assertError(error_func, resourceNotFoundMsg("source", "arquivo.gpm"))
+
+		local error_func = function()
+			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid"}
+		end
+		unitTest:assertError(error_func, "Argument 'source' does not have an extension.")
+
+		local error_func = function()
+			cs2:loadNeighborhood{source = "gpmlinesDbEmas_invalid.teste"}
+		end
+		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))	
+
+		local error_func = function()
+			local s = sessionInfo().separator
+			cs:loadNeighborhood{source = filePath("error"..s.."cabecadeboi-invalid-neigh.gpm", "base")}
+		end
+		unitTest:assertError(error_func, "This function cannot load neighborhood between two layers. Use 'Environment:loadNeighborhood()' instead.")
+
+		mfile = filePath("cabecadeboi-neigh.gpm", "base")
+
+		local error_func = function()
+			cs2:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"
+			}
+		end
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GPM file layer: 'cells900x900'.")
+
+		mfile = filePath("cabecadeboi-neigh.gal", "base")
+
+		local error_func = function()
+			cs2:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"
+			}
+		end
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GAL file layer: 'cells900x900'.")
+
+		mfile = filePath("cabecadeboi-neigh.gwt", "base")
+
+		local error_func = function()
+			cs2:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"
+			}
+		end
+		unitTest:assertError(error_func, "Neighborhood file '"..mfile.."' was not built for this CellularSpace. CellularSpace layer: '', GWT file layer: 'cells900x900'.")		
 	end,
 	save = function(unitTest)
 		-- ###################### PROJECT #############################
@@ -96,8 +304,8 @@ return{
 
 		forEachCell(cs, function(cell)
 			cell.t0 = 1000
-		end)
-
+		end)	
+		
 		local cellSpaceLayerName = clName1.."_CellSpace"
 
 		local attrNotExists = function()
@@ -119,6 +327,12 @@ return{
 			cs:save()
 		end
 		unitTest:assertError(outLayerMandatory, mandatoryArgumentMsg("#1"))
+		
+		if isFile(projName) then
+			os.execute("rm -f "..projName)
+		end
+		
+		tl:dropPgTable(pgData)	
 	end
 }
 
