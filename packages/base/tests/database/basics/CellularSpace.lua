@@ -112,6 +112,12 @@ return{
 
 		pgData.table = string.lower(tName1)
 		tl:dropPgTable(pgData)
+
+		local cs = CellularSpace{
+			file = filePath("simple.map", "base")
+		}
+
+		unitTest:assertEquals(#cs, 100)
 	end,
 	createNeighborhood = function(unitTest)
 		unitTest:assert(true)

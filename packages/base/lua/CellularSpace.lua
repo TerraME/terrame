@@ -1211,17 +1211,20 @@ function CellularSpace(data)
 			data.source = "proj"
 		else
 			local candidates = {}
+
 			forEachElement(CellularSpaceDrivers, function(idx, value)
 				local all = true
+
 				forEachElement(value.compulsory, function(_, mvalue)
 					if data[mvalue] == nil then
 						all = false
 					end
 				end)
 
-				if value.extension then
+				if value.extension and (not data.file or getExtension(data.file) ~= idx) then
 					all = false
 				end
+
 				if all then
 					table.insert(candidates, idx)
 				end
