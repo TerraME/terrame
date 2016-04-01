@@ -183,6 +183,38 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))
+		
+		-- TODO: REVIEW
+		-- local env = Environment{cs, cs1, cs2}
+
+		-- local countTest = 1
+
+		-- gpm Regular CS x Irregular CS - without weights
+		-- local s = sessionInfo().separator
+		-- local mfile = filePath("error"..s.."gpmAreaCellsPols-error.gpm", "base")
+
+		-- local error_func = function()
+			-- env:loadNeighborhood{
+				-- source = mfile,
+				-- name = "my_neighborhood"..countTest
+			-- }
+		-- end
+		-- unitTest:assertError(error_func, "The string 'bb' found as weight in the file '"..mfile.."' could not be converted to a number.") -- SKIP
+
+		-- local mfile = filePath("error"..s.."gpmAreaCellsPols-error2.gpm", "base")
+
+		-- local error_func = function()
+			-- env:loadNeighborhood{
+			-- source = mfile,
+			-- name = "my_neighborhood"..countTest
+		-- }
+		-- end
+		
+		-- if not _Gtme.isWindowsOS() then
+			-- unitTest:assertError(error_func, "The string '' found as weight in the file '"..mfile.."' could not be converted to") -- SKIP
+		-- else
+			-- unitTest:assert(true) -- SKIP
+		-- end		
 				
 		if isFile(projName) then
 			os.execute("rm -f "..projName)
