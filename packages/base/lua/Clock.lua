@@ -48,7 +48,8 @@ Clock_ = {
 
 		self.cObj_:save(file, extension)
 	end,
-	--- Update the Clock with the latest values of its target.
+	--- Update the Clock with the latest values of its target. It is usually recommended
+    -- to use the Clock as action of an Event instead of calling this function explicitly.
 	-- @usage timer = Timer{
 	--     Event{action = function() end}
 	-- }
@@ -59,7 +60,6 @@ Clock_ = {
 	update = function(self)
 		self.target:notify()
 	end
-
 }
 
 metaTableClock_ = {__index = Clock_}

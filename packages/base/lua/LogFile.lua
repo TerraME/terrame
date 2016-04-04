@@ -24,7 +24,8 @@
 
 LogFile_ = {
 	type_ = "LogFile",
-	--- Update the LogFile with the latest values of its target.
+	--- Update the LogFile with the latest values of its target. It is usually recommended
+    -- to use the LogFile as action of an Event instead of calling this function explicitly.
 	-- @usage agent = Agent{
 	--     age = 3
 	-- }

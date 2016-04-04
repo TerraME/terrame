@@ -51,7 +51,8 @@ TextScreen_ = {
 
 		self.cObj_:save(file, extension)
 	end,
-	--- Update the TextScreen with the latest values of its target.
+	--- Update the TextScreen with the latest values of its target. It is usually recommended
+	-- to use the TextScreen as action of an Event instead of calling this function explicitly.
 	-- @arg modelTime An optional argument that can be a number with the current time or an Event.
 	-- @usage agent = Agent{
 	--     size = 5,

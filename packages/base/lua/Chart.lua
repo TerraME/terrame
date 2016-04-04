@@ -158,7 +158,8 @@ Chart_ = {
 
 		self.cObj_:save(file, extension)
 	end,
-	--- Update the Chart with the latest values of its target.
+	--- Update the Chart with the latest values of its target. It is usually recommended
+    -- to use the Chart as action of an Event instead of calling this function explicitly.
 	-- @arg modelTime A number with the current time or an Event.
 	-- @usage cell = Cell{value = 1}
 	-- chart = Chart{target = cell}
