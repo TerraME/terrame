@@ -157,6 +157,17 @@ Chart_ = {
 		extension = string.upper(extension)
 
 		self.cObj_:save(file, extension)
+	end,
+	--- Update the Chart with the latest values of its target.
+	-- @arg modelTime A number with the current time or an Event.
+	-- @usage cell = Cell{value = 1}
+	-- chart = Chart{target = cell}
+	--
+	-- chart:update(0)
+	-- chart:update(1)
+	-- chart:update(2)
+	update = function(self, modelTime)
+		self.target:notify(modelTime)
 	end
 }
 

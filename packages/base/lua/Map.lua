@@ -1514,6 +1514,25 @@ Map_ = {
 		extension = string.upper(extension)
 
 		self.cObj_:save(file, extension)
+	end,
+	--- Update the Map with the latest values of its target.
+	-- @arg modelTime An optional argument that can be a number with the current time or an Event.
+	-- @usage cs = CellularSpace{
+	--     xdim = 10
+	-- }
+	--
+	-- map = Map{
+	--     target = cs,
+	--     select = "x",
+	--     min = 0,
+	--     max = 10,
+	--     slices = 4,
+	--     color = "Blues"
+	-- }
+	--
+	-- map:update()
+	update = function(self, modelTime)
+		self.target:notify(modelTime)
 	end
 }
 

@@ -28,15 +28,13 @@ return{
 			finalTime = 10,
 			value = 1,
 			init = function(model)
-				model.timer = Timer{
-					Event{action = model}
-				}
-
-				model.step = function() end
-
 				model.ch = Chart{
 					target = model,
 					select = "value"
+				}
+
+				model.timer = Timer{
+					Event{action = model.ch}
 				}
 			end
 		}

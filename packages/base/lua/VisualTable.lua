@@ -50,6 +50,22 @@ VisualTable_ = {
 		extension = string.upper(extension)
 
 		self.cObj_:save(file, extension)
+	end,
+	--- Update the VisualTable with the latest values of its target.
+	-- @arg modelTime An optional argument that can be a number with the current time or an Event.
+	-- @usage cell = Cell{
+	--     temperature = 20,
+	--     humidity = 0.4
+	-- }
+	--
+	-- vt = VisualTable{
+	--     target = cell,
+	--     select = {"temperature", "humidity"}
+	-- }
+	--
+	-- vt:update()
+	update = function(self)
+		self.target:notify()
 	end
 }
 

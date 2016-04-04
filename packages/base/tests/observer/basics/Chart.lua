@@ -26,25 +26,26 @@ return{
 	Chart = function(unitTest)
 		local Tube = Model{
 			init = function(model)
+				model.v = 1
+
+				model.c = Chart{
+					target = model
+				}
+
 				model.t = Timer{Event{action = function(ev)
 					model.v = model.v + 1
-					model:notify(ev)
+					model.c:update(ev)
 				end}}
-				model.v = 1
+
 			end,
 			finalTime = 10
 		}
 
 		local tube = Tube{}
-
-		local c = Chart{
-			target = tube
-		}
-
-		unitTest:assertType(c, "Chart")
+		unitTest:assertType(tube.c, "Chart")
 
 		tube:run(10)
-		unitTest:assertSnapshot(c, "chart-table-0.bmp", 0.02)
+		unitTest:assertSnapshot(tube.c, "chart-table-0.bmp", 0.02)
 
 		local world = Agent{
 			count = 0,
@@ -90,14 +91,14 @@ return{
 		}
 
 		local c1 = Chart{target = world}
-		world:notify()
-		world:notify()
+		c1:update(0)
+		c1:update(1)
 		unitTest:assertSnapshot(c1, "chart-table-base.bmp", 0.02)
 
 		local c1 = Chart{target = world, select = "mCount", xAxis = "count"}
-		world:notify()
+		c1:update(0)
 		world.count = world.count + 2
-		world:notify()
+		c1:update(1)
 		unitTest:assertSnapshot(c1, "chart-table-xaxis.bmp", 0.02)
 
 		local t = {
@@ -109,16 +110,16 @@ return{
 			target = t
 		}
 
-		t:notify()
+		c1:update(0)
 	
 		local c2 = Chart{
 			target = t,
 			select = "value1"
 		}
 
-		t:notify()
-		t:notify()
-		t:notify()
+		c1:update(1)
+		c1:update(2)
+		c1:update(3)
 
 		unitTest:assertSnapshot(c1, "chart-table-1.bmp", 0.01)
 		unitTest:assertSnapshot(c2, "chart-table-2.bmp", 0.01)
@@ -148,14 +149,42 @@ return{
 		unitTest:assertSnapshot(c1, "chart-data-1.bmp", 0.01)
 		unitTest:assertSnapshot(c2, "chart-data-2.bmp", 0.01)
 	end,
+	update = function(unitTest)
+		local world = Cell{
+			water = 40,
+			execute = function(world)
+				world.water = world.water - 5
+			end
+		}
+
+		local chart = Chart{
+			target = world,
+			yLabel = "Gallons"
+		}
+
+		local chart2 = Chart{
+			target = world,
+			yLabel = "Gallons"
+		}
+
+		local t = Timer{
+			Event{action = world},
+			Event{action = chart2},
+			Event{action = chart}
+		}
+
+		t:run(10)
+
+		unitTest:assertSnapshot(chart, "chart-update-two-actions.png")
+	end,
 	save = function(unitTest)
 		local c = Cell{value = 1}
 
 		local ch = Chart{target = c}
 
-		c:notify(1)
-		c:notify(2)
-		c:notify(3)
+		ch:update(1)
+		ch:update(2)
+		ch:update(3)
 
 		local file = "save_test.bmp"
 

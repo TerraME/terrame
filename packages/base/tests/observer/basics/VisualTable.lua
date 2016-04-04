@@ -89,6 +89,20 @@ return{
 
 		unitTest:assertSnapshot(vt7, "visualtable_cellularspace.bmp", 0.059)
 		unitTest:assertSnapshot(vt8, "visualtable_cellularspace_select.bmp", 0.059)
+	end,
+	update = function(unitTest)
+		local world = Cell{
+			count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
+
+		local vt1 = VisualTable{target = world}
+
+		vt1:update()
+
+		unitTest:assertSnapshot(vt1, "visualtable_update.bmp", 0.059)
 	end
 }
 

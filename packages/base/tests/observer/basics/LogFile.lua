@@ -35,8 +35,8 @@ return{
 
 		unitTest:assertType(log, "LogFile")
 
-		world:notify()
-		world:notify()
+		log:update()
+		log:update()
 
 		unitTest:assertFile("result.csv")
 
@@ -48,11 +48,11 @@ return{
 
 		unitTest:assertType(log2, "LogFile")
 
-		world2:notify()
+		log2:update()
 
 		local log2 = LogFile{target = world2, overwrite = false, file = "logfile-1.csv"}
-		world2:notify()
-		world2:notify()
+		log2:update()
+		log2:update()
 
 		unitTest:assertFile("logfile-1.csv")
 
@@ -70,8 +70,8 @@ return{
 			overwrite = false
 		}
 
-		world:notify()
-		world:notify()
+		log:update()
+		log:update()
 
 		unitTest:assertFile("logfile-2.csv")
 
@@ -88,7 +88,7 @@ return{
 			file = "logfile-3.csv"
 		}
 
-		world:notify()
+		log:update()
 		unitTest:assertFile("logfile-3.csv")
 
 		local soc = Society{
@@ -101,7 +101,7 @@ return{
 			file = "logfile-4.csv"
 		}
 
-		soc:notify()
+		log:update()
 		unitTest:assertFile("logfile-4.csv")
 
 		local log = LogFile{
@@ -110,7 +110,7 @@ return{
 			file = "logfile-5.csv"
 		}
 
-		soc:notify()
+		log:update()
 		unitTest:assertFile("logfile-5.csv")
 
 		local soc = Society{
@@ -124,7 +124,7 @@ return{
 			file = "logfile-6.csv"
 		}
 
-		soc:notify()
+		log:update()
 		unitTest:assertFile("logfile-6.csv")
 
 		local world = CellularSpace{
@@ -146,9 +146,24 @@ return{
 			select = "mcount"
 		}
 
-		world:notify()
+		log:update()
 		unitTest:assertFile("logfile-7.csv")
 		unitTest:assertFile("logfile-8.csv")
+	end,
+	update = function(unitTest)
+		local world = Cell{
+			count = 0,
+			mcount = function(self)
+				return self.count + 1
+			end
+		}
+
+		local log = LogFile{target = world, file = "logfile-update.csv"}
+
+		log:update()
+		log:update()
+
+		unitTest:assertFile("logfile-update.csv")
 	end
 }
 

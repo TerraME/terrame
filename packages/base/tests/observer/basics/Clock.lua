@@ -24,22 +24,21 @@
 
 return{
 	Clock = function(unitTest)
-		local timer
-
-		timer = Timer{
-			ev1 = Event{action = function(event) timer:notify() end},
+		local c
+		local timer = Timer{
+			ev1 = Event{action = function() c:update() end},
 		}
 
-		local c = Clock{target = timer}
+		c = Clock{target = timer}
 		timer:run(50)
 
 		unitTest:assertSnapshot(c, "clock_single_event.bmp", 0.01)
 
 		timer = Timer{
-			ev1 = Event{priority =  1, action = function(event) timer:notify() end},
-			ev2 = Event{priority = 10, action = function(event) timer:notify() end},
-			ev3 = Event{priority = 10, action = function(event) timer:notify() end},
-			ev4 = Event{priority = 10, action = function(event) timer:notify() end}
+			ev1 = Event{priority =  1, action = function() end},
+			ev2 = Event{priority = 10, action = function() end},
+			ev3 = Event{priority = 10, action = function() end},
+			ev4 = Event{priority = 10, action = function() c:update() end}
 		}
 
 		local c = Clock{target = timer}
@@ -47,6 +46,19 @@ return{
 
 		--unitTest:assertSnapshot(c, "clock_timer_events.bmp", 0.01) -- SKIP
 		unitTest:assertType(c, "Clock")
+	end,
+	update = function(unitTest)
+		local c
+
+		local timer = Timer{
+			ev1 = Event{action = function() c:update() end},
+		}
+
+		c = Clock{target = timer}
+		timer:run(50)
+
+		--unitTest:assertSnapshot(c, "clock_single_event.bmp", 0.01) -- SKIP
+		unitTest:assert(true)
 	end
 }
 

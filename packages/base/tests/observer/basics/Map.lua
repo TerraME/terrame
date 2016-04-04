@@ -31,17 +31,8 @@ return{
 		}
 
 		unitTest:assertType(m, "Map")
-		cs:notify()
+		m:update()
 		unitTest:assertSnapshot(m, "map_none.bmp")
-
-		local m = Map{
-			target = cs,
-			color = "black"
-		}
-
-		unitTest:assertType(m, "Map")
-		cs:notify()
-		unitTest:assertSnapshot(m, "map_none_black.bmp")
 
 		local r = Random()
 
@@ -72,7 +63,7 @@ return{
 
 		unitTest:assertType(m, "Map")
 
-		cs:notify()
+		m:update()
 		unitTest:assertSnapshot(m, "map_basic.bmp")
 		unitTest:assertSnapshot(mi, "map_basic_invert.bmp")
 
@@ -89,7 +80,7 @@ return{
 
 		unitTest:assertType(m, "Map")
 
-		cs:notify()
+		m:update()
 		unitTest:assertSnapshot(m, "map_uniquevalue.bmp")
 
 		local m = Map{
@@ -99,7 +90,7 @@ return{
 
 		unitTest:assertType(m, "Map")
 
-		cs:notify()
+		m:update()
 		unitTest:assertSnapshot(m, "map_background.bmp")
 
 		local cs = CellularSpace{
@@ -143,7 +134,7 @@ return{
 			color = "Blues"
 		}
 
-		cs:notify()
+		m:update()
 		unitTest:assertSnapshot(m, "map_function.bmp")
 
 		local c = Random{"low", "medium", "high"}
@@ -161,7 +152,7 @@ return{
 
 		unitTest:assertType(m, "Map")
 
-		cs:notify()
+		m:update()
 		unitTest:assertSnapshot(m, "map_string.bmp")
 
 		local cs = CellularSpace{xdim = 10}
@@ -257,7 +248,7 @@ return{
 			grid = true
 		}
 
-		cs:notify()
+		m:update()
 		unitTest:assertSnapshot(m, "map_society_background.bmp")
 
 		local m = Map{
@@ -302,7 +293,7 @@ return{
 			color = "Blues"
 		}
 
-		cs:notify()
+		m:update()
 		unitTest:assertType(m, "Map")
 		unitTest:assertSnapshot(m, "map_save.bmp")
 
@@ -424,7 +415,7 @@ return{
 			color = "Blues"
 		}
 
-		cs:notify()
+		m:update()
 		unitTest:assertSnapshot(m, "map_function_2.bmp")
 	end,
 	save = function(unitTest)
@@ -436,6 +427,18 @@ return{
 
 		m:save("save_map.bmp")
 		unitTest:assertFile("save_map.bmp")
+	end,
+	update = function(unitTest)
+		local cs = CellularSpace{xdim = 10}
+
+		local m = Map{
+			target = cs,
+			color = "black"
+		}
+
+		unitTest:assertType(m, "Map")
+		m:update()
+		unitTest:assertSnapshot(m, "map_none_black.bmp")
 	end
 }
 

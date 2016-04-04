@@ -50,6 +50,22 @@ TextScreen_ = {
 		extension = string.upper(extension)
 
 		self.cObj_:save(file, extension)
+	end,
+	--- Update the TextScreen with the latest values of its target.
+	-- @arg modelTime An optional argument that can be a number with the current time or an Event.
+	-- @usage agent = Agent{
+	--     size = 5,
+	--     age = 1
+	-- }
+	--
+	-- ts = TextScreen{
+	--     target = agent,
+	--     select = {"size" , "age"}
+	-- }
+	--
+	-- ts:update()
+	update = function(self, modelTime)
+		self.target:notify(modelTime)
 	end
 }
 

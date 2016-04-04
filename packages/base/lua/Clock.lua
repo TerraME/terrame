@@ -47,6 +47,17 @@ Clock_ = {
 		extension = string.upper(extension)
 
 		self.cObj_:save(file, extension)
+	end,
+	--- Update the Clock with the latest values of its target.
+	-- @usage timer = Timer{
+	--     Event{action = function() end}
+	-- }
+	-- 
+	-- clock = Clock{target = timer}
+	--
+	-- clock:update()
+	update = function(self)
+		self.target:notify()
 	end
 
 }

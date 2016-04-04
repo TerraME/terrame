@@ -34,8 +34,8 @@ return{
 		local ts = TextScreen{target = world}
 
 		unitTest:assertType(ts, "TextScreen")
-		world:notify()
-		world:notify()
+		ts:update()
+		ts:update()
 
 		unitTest:assertSnapshot(ts, "textscreen_basic.bmp")
 
@@ -53,8 +53,8 @@ return{
 			select = {"mcount"}
 		}
 
-		world:notify()
-		world:notify()
+		ts1:update()
+		ts1:update()
 
 		unitTest:assertSnapshot(ts1, "textscreen_noselect.bmp")
 		unitTest:assertSnapshot(ts2, "textscreen_mcount.bmp")
@@ -67,8 +67,8 @@ return{
 		local ts1 = TextScreen{target = soc}
 		local ts2 = TextScreen{target = soc, select = "#"}
 
-		soc:notify()
-		soc:notify()
+		ts1:update()
+		ts1:update()
 
 		unitTest:assertSnapshot(ts, "textscreen_society.bmp")
 		unitTest:assertSnapshot(ts, "textscreen_society_select.bmp")
@@ -81,10 +81,10 @@ return{
 
 		local ts = TextScreen{target = soc}
 
-		soc:notify()
-		soc:notify()
-		soc:notify()
-		soc:notify()
+		ts:update()
+		ts:update()
+		ts:update()
+		ts:update()
 
 		unitTest:assertSnapshot(ts, "textscreen_society_total.bmp")
 
@@ -99,13 +99,12 @@ return{
 		local ts1 = TextScreen{target = world}
 		local ts2 = TextScreen{target = world, select = "mcount"}
 
-		world:notify()
-		world:notify()
-		world:notify()
+		ts1:update()
+		ts1:update()
+		ts1:update()
 
 		unitTest:assertSnapshot(ts1, "textscreen_cs.bmp", 0.05)
 		unitTest:assertSnapshot(ts2, "textscreen_cs_select.bmp")
-    
 	end,
 	save = function(unitTest)
 		local world = Cell{
@@ -114,12 +113,25 @@ return{
 
 		local ts = TextScreen{target = world}
 
-		world:notify()
-		world:notify()
-		world:notify()
+		ts:update()
+		ts:update()
+		ts:update()
 
 		ts:save("textscreen_save.bmp")
 		unitTest:assertFile("textscreen_save.bmp")
+	end,
+	update = function(unitTest)
+		local world = Cell{
+			count = 0,
+		}
+
+		local ts = TextScreen{target = world}
+
+		ts:update()
+		ts:update()
+		ts:update()
+
+		unitTest:assertSnapshot(ts, "textscreen_update.bmp")
 	end
 }
 

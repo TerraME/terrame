@@ -24,6 +24,21 @@
 
 LogFile_ = {
 	type_ = "LogFile",
+	--- Update the LogFile with the latest values of its target.
+	-- @usage agent = Agent{
+	--     age = 3
+	-- }
+	--
+	-- log = LogFile{
+	--     target = agent,
+	--     file = "agent.csv",
+	--     separator = ";"
+	-- }
+	--
+	-- log:update()
+	update = function(self)
+		self.target:notify()
+	end
 }
 
 metaTableLogFile_ = {__index = LogFile_}
