@@ -119,11 +119,15 @@ metaTableEvent_ = {
 -- executed again according to its period, unless its action explicitly returns false.
 -- @arg data.start A number representing the time instant when the
 -- Event will occur for the first time. The default value is 1.
+-- Whenever using types that use graphics (Chart, Map, Clock, etc.) as an action of the
+-- Event, start will be automatically reduced by the period. It guarantees that
+-- the object will draw the state of the model in the beginning of the simulation.
 -- @arg data.period A positive number representing the periodicity of the Event.
 -- The default value is 1.
 -- @arg data.priority The priority of the Event over 
--- other Events. Smaller values have higher priority. The default value is 0. Priorities can also be defined
--- as strings:
+-- other Events. Smaller values have higher priority. The default value is zero for all actions but
+-- those related to graphics (Chart, Map, Clock, etc.). In this case, the default value is 10. 
+-- Priorities can also be defined as strings:
 -- @tabular priority
 -- Value & Priority\
 -- "verylow" & 10 \
@@ -139,12 +143,12 @@ metaTableEvent_ = {
 -- the Event. See below how the objects are activated. Arrows indicate the execution order:
 -- @tabular action
 -- Object & Function(s) activated by the Event \
--- Agent/Automaton & execute -> notify \
--- CellularSpace/Cell & synchronize -> execute (if exists) -> notify \
--- function & function\
--- Model & execute (if exists) -> notify \
--- Society & execute (if exists) -> synchronize -> notify \
--- Timer & notify \
+-- Agent/Automaton & execute \
+-- CellularSpace/Cell & synchronize and then execute (if exists) \
+-- Chart/Map/Clock/LogFile/InternetSender/VisualTable/TextScreen & update \
+-- function & the function itself \
+-- Model & execute (if exists) \
+-- Society & synchronize and then execute (if exists) \
 -- Trajectory/Group & rebuild \
 -- @usage event = Event {start = 1985, period = 2, priority = -1, action = function(event)
 --     print(event:getTime())
@@ -192,6 +196,8 @@ function Event(data)
 			high     = function() data.priority = -5  end,
 			veryhigh = function() data.priority = -10 end
 		}
+	elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "FileSystem", "TextScreen"}) then
+		defaultTableValue(data, "priority", 10)
 	else
 		defaultTableValue(data, "priority", 0)
 	end
@@ -204,14 +210,12 @@ function Event(data)
 		if targettype == "Society" then
 			if data.action.execute then
 				data.action = function(event)
-					maction:execute(event)
 					maction:synchronize(event:getPeriod())
-					maction:notify(event)
+					maction:execute(event)
 				end
 			else
 				data.action = function(event)
 					maction:synchronize(event:getPeriod())
-					maction:notify(event)
 				end
 			end
 		elseif targettype == "Cell" or targettype == "CellularSpace" then
@@ -219,18 +223,15 @@ function Event(data)
 				data.action = function(event)
 					maction:synchronize()
 					maction:execute(event)
-					maction:notify(event)
 				end
 			else
 				data.action = function(event)
 					maction:synchronize()
-					maction:notify(event)
 				end
 			end
 		elseif targettype == "Agent" or targettype == "Automaton" then
 			data.action = function(event)
 				maction:execute(event)
-				maction:notify(event)
 			end
 		elseif targettype == "Group" or targettype == "Trajectory" then
 			data.action = function(event)
@@ -240,15 +241,18 @@ function Event(data)
 			if data.action.execute then
 				data.action = function(event)
 					maction:execute(event)
-					maction:notify(event)
 				end
 			else
 				data.action = function(event)
-					maction:notify(event)
 				end
 			end
+		elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "FileSystem", "TextScreen"}) then
+			data.time = data.time - data.period
+			data.action = function(event)
+				maction:update(event)
+			end
 		elseif targettype ~= "function" then
-			incompatibleTypeError("action", "one of the types from the set [Agent, Automaton, Cell, CellularSpace, function, Group, Model, Society, Timer, Trajectory]", data.action)
+			incompatibleTypeError("action", "one of the TerraME types or a function", data.action)
 		end
 	end
 
