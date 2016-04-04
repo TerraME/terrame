@@ -840,30 +840,29 @@ CellularSpace_ = {
 
 		local typename = ""
 
-			if self.obsattrs_ then
-				typename = "CellularSpace"
-				forEachElement(self.obsattrs_, function(idx)
+		if self.obsattrs_ then
+			typename = "CellularSpace"
+			forEachElement(self.obsattrs_, function(idx)
+				if type(self[idx]) ~= "function" then
+					customError("Could not execute function '"..idx.."' from CellularSpace because it was replaced by a '"..type(self[idx]).."'.")
+				end
 
-					if type(self[idx]) ~= "function" then
-						customError("Could not execute function '"..idx.."' from CellularSpace because it was replaced by a '"..type(self[idx]).."'.")
+				self[idx.."_"] = self[idx](self)
+			end)
+		end
+
+		if self.cellobsattrs_ then
+			typename = "Cell"
+			forEachElement(self.cellobsattrs_, function(idx)
+				forEachCell(self, function(cell)
+					if type(cell[idx]) ~= "function" then
+						customError("Could not execute function '"..idx.."' from Cell because it was replaced by a '"..type(cell[idx]).."'.")
 					end
 
-					self[idx.."_"] = self[idx](self)
+					cell[idx.."_"] = cell[idx](cell)
 				end)
-			end
-
-			if self.cellobsattrs_ then
-				typename = "Cell"
-				forEachElement(self.cellobsattrs_, function(idx)
-					forEachCell(self, function(cell)
-						if type(cell[idx]) ~= "function" then
-							customError("Could not execute function '"..idx.."' from Cell because it was replaced by a '"..type(cell[idx]).."'.")
-						end
-
-						cell[idx.."_"] = cell[idx](cell)
-					end)
-				end)
-			end
+			end)
+		end
 
 		self.cObj_:notify(modelTime)
 	end,
