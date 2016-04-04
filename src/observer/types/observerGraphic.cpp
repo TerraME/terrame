@@ -434,9 +434,6 @@ QStringList ObserverGraphic::getAttributes()
 
 void ObserverGraphic::setModelTime(double time)
 {
-	if(xAxisValues->size() > 0 && time == (*xAxisValues)[0] && (*xAxisValues)[xAxisValues->size() - 1] == (xAxisValues->size() - 1))
-		time = xAxisValues->size();	
-
     if (observerType == TObsDynamicGraphic)
         xAxisValues->push_back(time);
 }
