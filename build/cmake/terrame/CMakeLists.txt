@@ -352,17 +352,17 @@ if(APPLE)
 #            )
 
     install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib/json/
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib
             COMPONENT runtime
             )
 
     install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib/plugins
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib
             COMPONENT runtime
             )
 
     install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib/schemas
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib
             COMPONENT runtime
             )
 
