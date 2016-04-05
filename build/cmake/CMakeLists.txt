@@ -120,6 +120,13 @@ endif()
 set(TERRAME_BIN_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TERRAME_BIN_DIR})
 
+
+#
+# including TerraLib auxiliary macros and functions
+#
+
+include(terrame-macros.cmake)
+
 add_subdirectory(terrame)
 
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${TERRAME_ABSOLUTE_ROOT_DIR};/")

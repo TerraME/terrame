@@ -314,6 +314,10 @@ endif()
 		# )
 
 if(APPLE)
+    if(TERRAME_BUILD_AS_BUNDLE)
+        TmeInstallQtPlugins("qgif;qico;qjpeg;qmng;qtiff;qsvg;qsvgicon;qsqlite;qwindows;qcocoa")
+    endif()
+
     install(DIRECTORY ${TERRALIB_DIR}/lib
             DESTINATION ${TERRAME_INSTALL_PREFIX}
             COMPONENT runtime
