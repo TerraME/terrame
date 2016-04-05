@@ -344,6 +344,7 @@ if(APPLE)
     install(DIRECTORY ${TERRAME_PACKAGES_DIR}
             DESTINATION ${TERRAME_INSTALL_PREFIX}/MacOS
             COMPONENT runtime
+            PATTERN "log" EXCLUDE
             )
 
 #    install(DIRECTORY ${TERRALIB_DIR}/share/data
@@ -378,7 +379,7 @@ elseif(WIN32)
     install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
             DESTINATION bin/packages/
             COMPONENT runtime
-			PATTERN "mac" EXCLUDE			
+			PATTERN "log" EXCLUDE
             )
 
 	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindows.dll
