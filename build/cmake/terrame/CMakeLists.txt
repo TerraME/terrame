@@ -314,6 +314,10 @@ endif()
 		# )
 
 if(APPLE)
+    if(TERRAME_BUILD_AS_BUNDLE)
+        TmeInstallQtPlugins("qgif;qico;qjpeg;qmng;qtiff;qsvg;qsvgicon;qsqlite;qwindows;qcocoa")
+    endif()
+
     install(DIRECTORY ${TERRALIB_DIR}/lib
             DESTINATION ${TERRAME_INSTALL_PREFIX}
             COMPONENT runtime
@@ -340,6 +344,7 @@ if(APPLE)
     install(DIRECTORY ${TERRAME_PACKAGES_DIR}
             DESTINATION ${TERRAME_INSTALL_PREFIX}/MacOS
             COMPONENT runtime
+            PATTERN "log" EXCLUDE
             )
 
 #    install(DIRECTORY ${TERRALIB_DIR}/share/data
@@ -348,17 +353,17 @@ if(APPLE)
 #            )
 
     install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib/json/
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib
             COMPONENT runtime
             )
 
     install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib/plugins
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib
             COMPONENT runtime
             )
 
     install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas
-            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib/schemas
+            DESTINATION ${TERRAME_INSTALL_PREFIX}/share/terralib
             COMPONENT runtime
             )
 
@@ -374,7 +379,7 @@ elseif(WIN32)
     install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
             DESTINATION bin/packages/
             COMPONENT runtime
-			PATTERN "mac" EXCLUDE			
+			PATTERN "log" EXCLUDE
             )
 
 	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindows.dll
