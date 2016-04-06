@@ -718,7 +718,17 @@ CellularSpace_ = {
 				customWarning("As #1 is string, #2 should be nil, but got "..type(yIndex)..".")
 			end
 
-			return self.cObj_:getCellByID(xIndex)
+			if not self.index_id_ then
+				local index_id = {}
+
+				forEachCell(self, function(cell)
+					index_id[cell:getId()] = cell
+				end)
+
+				self.index_id_ = index_id
+			end
+
+			return self.index_id_[xIndex]
 		end
 
 		mandatoryArgument(1, "number", xIndex)
@@ -727,10 +737,23 @@ CellularSpace_ = {
 		mandatoryArgument(2, "number", yIndex)
 		integerArgument(2, yIndex)
 
-		local data = {x = xIndex, y = yIndex}
-		local cObj_ = TeCoord(data)
+		if not self.index_xy_ then
+			local index_xy = {}
 
-		return self.cObj_:getCell(cObj_)
+			forEachCell(self, function(cell)
+				if not index_xy[cell.x] then
+					index_xy[cell.x] = {}
+				end
+
+				index_xy[cell.x][cell.y] = cell
+			end)
+
+			self.index_xy_ = index_xy
+		end
+
+		if self.index_xy_[xIndex] then
+			return self.index_xy_[xIndex][yIndex]
+		end
 	end,
 	--- Return a Cell from the CellularSpace given its x and y location.
 	-- @arg xIndex A number with the x location of the Cell to be returned.

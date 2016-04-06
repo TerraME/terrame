@@ -186,20 +186,6 @@ int luaCellularSpace::addCell( lua_State *L)
     return 0;
 }
 
-/// Gets the luaCell object within the CellularSpace identified by the coordenates received as parameter
-/// parameters: cell index
-int luaCellularSpace::getCell(lua_State *L)
-{  
-    luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
-    CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
-    luaCell *cell = ::findCell( this, cellIndex );
-    if( cell != NULL )
-        cell->getReference(L);
-    else
-        lua_pushnil( L );
-    return 1;
-}
-
 /// Returns the number of cells of the CellularSpace object
 /// no parameters
 int luaCellularSpace::size(lua_State* L)
@@ -1831,10 +1817,6 @@ int luaCellularSpace::loadTXTNeighborhood(lua_State *L, const char* fileName,
 	return 0;
 }
 
-
-
-
-
 /// Find a cell given a cell ID
 /// \author Raian Vargas Maretto
 luaCell * luaCellularSpace::findCellByID(const char* cellID)
@@ -1854,32 +1836,6 @@ luaCell * luaCellularSpace::findCellByID(const char* cellID)
     }
     return NULL;
     //return (luaCell*)0;
-}
-
-/// Gets the luaCell object within the CellularSpace identified by the cell ID received as parameter
-/// \author Raian Vargas Maretto
-int luaCellularSpace::getCellByID(lua_State *L)
-{
-    const char *cellID = luaL_checkstring(L, -1);
-    const char *idAux;
-    luaCell *cell;
-    CellularSpace::iterator it = this->begin();
-    while( it != this->end() )
-    {
-        cell = (luaCell*)it->second;
-        if(cell != NULL)
-        {
-            idAux = cell->getID();
-            if(strcmp(idAux, cellID) == 0)
-            {
-                cell->getReference(L);
-                return 1;
-            }
-        }
-        it++;
-    }
-    lua_pushnil( L );
-    return 1;
 }
 
 //@RAIAN: Fim.

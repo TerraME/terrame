@@ -163,7 +163,6 @@ Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
 
 	method(luaCellularSpace, getReference),
 	method(luaCellularSpace, setReference),
-	method(luaCellularSpace, getCell),
 	method(luaCellularSpace, setPort),
 
 	method(luaCellularSpace, createObserver),
@@ -171,7 +170,6 @@ Luna<luaCellularSpace>::RegType luaCellularSpace::methods[] = {
 	method(luaCellularSpace, kill),
 
 	method(luaCellularSpace, getLayerName),
-	method(luaCellularSpace, getCellByID),
 	{0, 0}
 };
 

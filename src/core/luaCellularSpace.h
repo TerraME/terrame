@@ -101,10 +101,6 @@ public:
     /// parameters: x, y, luaCell
     int addCell( lua_State *L);
 
-    /// Gets the luaCell object within the CellularSpace identified by the coordenates received as parameter
-    /// parameters: cell index
-    int getCell(lua_State *L);
-
     /// Returns the number of cells of the CellularSpace object
     /// no parameters
     int size(lua_State* L);
@@ -189,16 +185,9 @@ public:
     int loadTXTNeighborhood(lua_State *L, const char* fileName,
     						const char* neighName, bool check);
 
-
-
 	/// Find a cell given a cell ID
 	/// \author Raian Vargas Maretto
 	luaCell * findCellByID(const char* cellID);
-
-	/// Gets the luaCell object within the CellularSpace identified by the cell ID received as parameter
-	/// \author Raian Vargas Maretto
-	int getCellByID(lua_State *L);
-
 private:
     string dbType; ///< database type, e. g., MySQL, etc...
     string host;  ///< host name
@@ -211,11 +200,6 @@ private:
     string whereClause;  ///< SQL WHERE CLAUSE string used to querie the TeTheme
     int port;
 
-    // @DANIEL
-    // Movido para Reference
-    //int ref; ///< The position of the object in the Lua stack
-
-    // Antonio - construtor
     lua_State *luaL; ///< Stores locally the lua stack location in memory
     TypesOfSubjects subjectType;
     bool getSpaceDimensions;

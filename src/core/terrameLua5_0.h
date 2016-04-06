@@ -428,15 +428,6 @@ public:
 
         return 0;
     }
-    // parameters: cell index
-    int getCell(lua_State *L) {
-        luaCellIndex *cI = Luna<luaCellIndex>::check(L, -1);
-        CellIndex cellIndex; cellIndex.first = cI->x; cellIndex.second = cI->y;
-        luaCell *cell = ::findCell(this, cellIndex);
-        if(cell != NULL) ::getReference(L, cell);
-        else lua_pushnil(L);
-        return 1;
-    }
     int size(lua_State* L)
     {
         lua_pushnumber(L, CellularSpace::size());
