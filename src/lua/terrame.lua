@@ -358,31 +358,31 @@ function _Gtme.buildConfig()
 
 	qt.ui.layout_add(dialog, externalLayout)
 
-	label = qt.new_qobject(qt.meta.QLabel)
+	local label = qt.new_qobject(qt.meta.QLabel)
 	label.text = "Host:"
 	qt.ui.layout_add(internalLayout, label, 0, 0)
-	lineEditHost = qt.new_qobject(qt.meta.QLineEdit)
+	local lineEditHost = qt.new_qobject(qt.meta.QLineEdit)
 	qt.ui.layout_add(internalLayout, lineEditHost, 0, 1)
 	lineEditHost:setText("localhost")
 
 	label = qt.new_qobject(qt.meta.QLabel)
 	label.text = "Port:"
 	qt.ui.layout_add(internalLayout, label, 1, 0)
-	lineEditPort = qt.new_qobject(qt.meta.QLineEdit)
+	local lineEditPort = qt.new_qobject(qt.meta.QLineEdit)
 	qt.ui.layout_add(internalLayout, lineEditPort, 1, 1)
 	lineEditPort:setText("3306")
 
 	label = qt.new_qobject(qt.meta.QLabel)
 	label.text = "User:"
 	qt.ui.layout_add(internalLayout, label, 2, 0)
-	lineEditUser = qt.new_qobject(qt.meta.QLineEdit)
+	local lineEditUser = qt.new_qobject(qt.meta.QLineEdit)
 	qt.ui.layout_add(internalLayout, lineEditUser, 2, 1)
 	lineEditUser:setText("root")
 
 	label = qt.new_qobject(qt.meta.QLabel)
 	label.text = "Password:"
 	qt.ui.layout_add(internalLayout, label, 3, 0)
-	lineEditPassword = qt.new_qobject(qt.meta.QLineEdit)
+	local lineEditPassword = qt.new_qobject(qt.meta.QLineEdit)
 	qt.ui.layout_add(internalLayout, lineEditPassword, 3, 1)
 
 	local conf = {}
@@ -396,9 +396,9 @@ function _Gtme.buildConfig()
 		if conf.host     then lineEditHost:setText(conf.host)         end
 	end
 
-	buttonsLayout = qt.new_qobject(qt.meta.QHBoxLayout)
+	local buttonsLayout = qt.new_qobject(qt.meta.QHBoxLayout)
 
-	okButton = qt.new_qobject(qt.meta.QPushButton)
+	local okButton = qt.new_qobject(qt.meta.QPushButton)
 	okButton.minimumSize = {100, 28}
 	okButton.maximumSize = {110, 28}
 	okButton.text = "OK"
@@ -407,7 +407,7 @@ function _Gtme.buildConfig()
 	local returnv
 
 	local m2function = function()
-		str = ""
+		local str = ""
 
 		if lineEditUser.text ~= "root" then
 			str = str.."user = \""..lineEditUser.text.."\"\n"
@@ -431,10 +431,18 @@ function _Gtme.buildConfig()
 
 		dialog:done(0)
 		returnv = true
+
+		each = nil
+		help = nil
+		qt = nil
+		list = nil
+		plugin = nil
+		qtype = nil
 	end
+
 	qt.connect(okButton, "clicked()", m2function)
 
-	quitButton = qt.new_qobject(qt.meta.QPushButton)
+	local quitButton = qt.new_qobject(qt.meta.QPushButton)
 	quitButton.minimumSize = {100, 28}
 	quitButton.maximumSize = {110, 28}
 	quitButton.text = "Cancel"
