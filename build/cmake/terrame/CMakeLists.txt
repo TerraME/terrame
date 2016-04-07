@@ -371,31 +371,31 @@ if(APPLE)
 elseif(WIN32)
     set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
     install(DIRECTORY ${TERRAME_LUA_SRC_DIR}/
-            DESTINATION bin/lua/
+            DESTINATION bin/lua
             COMPONENT runtime
             )
 
     set(TERRAME_PACKAGES_DIR ${TERRAME_ABSOLUTE_ROOT_DIR}/packages)
     install(DIRECTORY ${TERRAME_PACKAGES_DIR}/
-            DESTINATION bin/packages/
+            DESTINATION bin/packages
             COMPONENT runtime
 			PATTERN "log" EXCLUDE
             )
 
 	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindows.dll
-			DESTINATION bin/platforms/
+			DESTINATION bin/platforms
 			COMPONENT runtime
 			)
 
 	set(QTLUA_LIBRARY_DLL ${QTLUA_INCLUDE_DIR}/../../bin/qtlua.dll)
 	install(FILES ${QTLUA_LIBRARY_DLL}
-			DESTINATION bin/
+			DESTINATION bin
 			COMPONENT runtime
 			)
 
 	set(QTLUAEXTRAS_LIBRARY_DLL ${QTLUAEXTRAS_INCLUDE_DIR}/../../bin/qtluae.dll)		
 	install(FILES ${QTLUAEXTRAS_LIBRARY_DLL}
-			DESTINATION bin/
+			DESTINATION bin
 			COMPONENT runtime
 			)	
 			
@@ -414,32 +414,32 @@ elseif(WIN32)
 		)	
 							
 	install(FILES ${MSYS_DEPENDENCIES}
-			DESTINATION bin/
+			DESTINATION bin
 			COMPONENT runtime
 			)
 	
 	install(DIRECTORY ${TERRALIB_DIR}/bin/
-			DESTINATION bin/
+			DESTINATION bin
 			COMPONENT runtime
 			)
 	
 	install(DIRECTORY ${TERRALIB_DIR}/share/data/
-			DESTINATION bin/share/data/
+			DESTINATION bin/share/data
 			COMPONENT runtime
 			)
 			
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json/
-			DESTINATION bin/share/terralib/json/
+			DESTINATION bin/share/terralib/json
 			COMPONENT runtime
 			)	
 	
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/plugins/
-			DESTINATION bin/share/terralib/plugins/
+			DESTINATION bin/share/terralib/plugins
 			COMPONENT runtime
 			)	
 			
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas/
-			DESTINATION bin/share/terralib/schemas/
+			DESTINATION bin/share/terralib/schemas
 			COMPONENT runtime
 			)	
 	
@@ -477,10 +477,19 @@ elseif(WIN32)
 		)
 		
 	install(FILES ${TERRALIB_DEPENDENCIES}
-			DESTINATION bin/
+			DESTINATION bin
 			COMPONENT runtime
 			)		
-
+	
+	list(APPEND MSVC_DEPENDENCIES	${MSVC_REDIST_DIR}/msvcp120.dll 
+									${MSVC_REDIST_DIR}/msvcr120.dll
+		)
+		
+	install(FILES ${MSVC_DEPENDENCIES}
+			DESTINATION bin
+			COMPONENT runtime
+			)	
+			
 	# install(FILES ${TERRAME_ABSOLUTE_ROOT_DIR}/res/app.ico
         # DESTINATION bin/
 		# COMPONENT runtime
