@@ -56,7 +56,7 @@ function _Gtme.printError(value)
 end
 
 function _Gtme.printNote(value)
-	if essionInfo().color then
+	if sessionInfo().color then
 		_Gtme.print(begin_green..value..end_color)
 	else
 		_Gtme.print(value)
