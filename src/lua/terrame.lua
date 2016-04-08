@@ -48,7 +48,7 @@ print = function(obj, ...)
 end
 
 function _Gtme.printError(value)
-	if sessionInfo().separator == "/" and sessionInfo().color then
+	if sessionInfo().color then
 		_Gtme.print(begin_red..value..end_color)
 	else
 		_Gtme.print(value)
@@ -56,7 +56,7 @@ function _Gtme.printError(value)
 end
 
 function _Gtme.printNote(value)
-	if sessionInfo().separator == "/" and sessionInfo().color then
+	if essionInfo().color then
 		_Gtme.print(begin_green..value..end_color)
 	else
 		_Gtme.print(value)
@@ -64,7 +64,7 @@ function _Gtme.printNote(value)
 end
 
 function _Gtme.printWarning(value)
-	if sessionInfo().separator == "/" and sessionInfo().color then
+	if sessionInfo().color then
 		_Gtme.print(begin_yellow..value..end_color)
 	else
 		_Gtme.print(value)
