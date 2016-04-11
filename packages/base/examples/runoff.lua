@@ -30,18 +30,14 @@ cell = Cell{
 	end
 }
 
-config = getConfig()
-
 cs = CellularSpace{
-	dbType = config.dbType,
-	host = config.host,
-	user = config.user,
-	password = config.password,
-	database = "cabecadeboi",
-	theme = "cells90x90",
-	select = {"height_ as height"},
+	file = filePath("cabecadeboi.shp"),
 	instance = cell
 }
+
+forEachCell(cs, function(cell)
+	cell.height = cell.height_
+end)
 
 cs:createNeighborhood{
 	strategy = "mxn",

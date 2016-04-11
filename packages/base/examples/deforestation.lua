@@ -17,17 +17,16 @@ FINAL_TIME = 2040
 ALLOCATION = 30000
 LIMIT = 30
 
-config = getConfig()
-
 amazonia = CellularSpace{
-	dbType = config.dbType,
-	host = config.host,
-	user = config.user,
-	password = config.password,
-	database = "amazonia",
-	theme = "dinamica",
-	select = {"defor", "dist_urban_areas", "conn_markets_inv_p", "prot_all2"}
+	file = filePath("amazonia.shp")
 }
+
+forEachCell(amazonia, function(cell)
+		cell.defor = cell.defor_10
+		cell.area_indigena = cell.areadigena
+		cell.dist_portos = cell.distportos
+		cell.dist_rodovias = cell.distdovias
+end)
 
 amazonia:createNeighborhood()
 
@@ -55,6 +54,7 @@ function calculatePotNeighborhood(cs)
 				cell.pot = cell.pot + neigh.defor
 				countNeigh = countNeigh + 1
 			end)
+
 			if cell.pot > 0 then
 				-- increment the total potential
 				cell.pot = cell.pot / countNeigh
@@ -75,10 +75,10 @@ function calculatePotRegression(cs)
 		cell.pot = 0
 
 		if cell.defor < 1.0 then
-			expected =  - 0.450 * math.log10 (cell.dist_urban_areas)
-						+ 0.260 * cell.conn_markets_inv_p
-						- 0.140 * cell.prot_all2
-						+ 2.313
+			expected =  - 0.150 * math.log(cell.dist_rodovias)
+			            - 0.048 * cell.area_indigena
+			            - 0.060 * math.log(cell.dist_portos)
+			            + 2.7
 
 			if expected > cell.defor then
 				cell.pot = expected - cell.defor
@@ -114,11 +114,11 @@ function calculatePotMixed(cs)
 
 		-- Potential for change
 		if cell.defor < 1.0 then
-			expected =    0.7300 * cell.ave_neigh
-						- 0.1500 * math.log10(cell.dist_urban_areas)
-						+ 0.0500 * cell.conn_markets_inv_p
-						- 0.0700 * cell.prot_all2
-						+ 0.7734
+			expected =    1.056 * cell.ave_neigh
+						- 0.035 * math.log(cell.dist_rodovias)
+						+ 0.018 * math.log(cell.dist_portos)
+						- 0.051 * cell.area_indigena
+						+ 0.059
 
 			if expected > cell.defor then
 				cell.pot = expected - cell.defor
@@ -175,7 +175,6 @@ traj = Trajectory{
 t = Timer{
 	Event{start = 2005, action = function(event)
 		local total_pot = currentPot(amazonia)
-
 		traj:rebuild()
 		deforest(traj, total_pot)
 		amazonia:notify()
@@ -183,4 +182,3 @@ t = Timer{
 }
 
 t:run(FINAL_TIME)
-

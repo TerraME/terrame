@@ -311,7 +311,12 @@ local function setCellsByTerraLibDataSet(self, dSet)
 	for i = 0, #dSet do
 		local row = tonumber(dSet[i].row)
 		local col = tonumber(dSet[i].col)
-				
+
+		if not row then -- compatibility with shapes exported from TerraLLib 4
+			row = tonumber(dSet[i].Lin)
+			col = tonumber(dSet[i].Col)
+		end
+
 		local cell = Cell{id = tostring(i), x = col, y = row}
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 		

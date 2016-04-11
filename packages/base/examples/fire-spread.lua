@@ -46,6 +46,8 @@ cell = Cell{
 		cell.state = BURNED
 	end,
 	init = function(cell)
+		cell.accumulation = cell.accuation
+
 		if cell.firebreak == 1 then
 			cell.state = FIREBREAK
 		elseif cell.river == 1 then
@@ -58,16 +60,8 @@ cell = Cell{
 	end
 }
 
-config = getConfig()
-
 cs = CellularSpace{
-	dbType = config.dbType,
-	host = config.host,
-	user = config.user,
-	password = config.password,
-	database = "emas",
-	theme = "cells1000x1000",
-	select = {"firebreak", "river", "accumulation", "fire", "state"},
+	file = filePath("emas.shp"),
 	instance = cell
 }
 
