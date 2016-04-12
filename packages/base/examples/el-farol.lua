@@ -65,7 +65,7 @@ forEachElement(NAMES_STRATEGIES, function(_, name)
 	list_attributes[#list_attributes + 1] = name
 end)
 
-Chart{
+chartBar = Chart{
 	target = c,
 	select = {"agents_in_the_bar"},
 	symbol = "hexagon",
@@ -163,14 +163,15 @@ t = Timer{
 
 		c.agents_in_the_bar = quant
 		count_strategies(s)
-		c:notify(ev:getTime())
 
 		forEachAgent(s, function(ag)
 			ag:update(quant)
 		end)
 
 		update_last_turns(quant)
-	end}
+	end},
+	Event{action = chartStrategies},
+	Event{action = chartBar}
 }
 
 t:run(100)

@@ -118,15 +118,14 @@ metaTableEvent_ = {
 -- In order to be executed, Events must belong to a Timer. An Event is usually rescheduled to be
 -- executed again according to its period, unless its action explicitly returns false.
 -- @arg data.start A number representing the time instant when the
--- Event will occur for the first time. The default value is 1.
--- Whenever using types that use graphics (Chart, Map, Clock, etc.) as an action of the
--- Event, start will be automatically reduced by the period. It guarantees that
--- the object will draw the state of the model in the beginning of the simulation.
+-- Event will occur for the first time. The default value is one, except
+-- when using graphics (Chart, Map, Clock, etc.) as action. In this case the default value is zero,
+-- plotting the initial state of the simulation.
 -- @arg data.period A positive number representing the periodicity of the Event.
 -- The default value is 1.
 -- @arg data.priority The priority of the Event over 
 -- other Events. Smaller values have higher priority. The default value is zero for all actions but
--- those related to graphics (Chart, Map, Clock, etc.). In this case, the default value is 10. 
+-- those related to graphics (Chart, Map, Clock, etc.). In this case, the default value is 10.
 -- Priorities can also be defined as strings:
 -- @tabular priority
 -- Value & Priority\
@@ -180,14 +179,6 @@ function Event(data)
 
 	verifyUnnecessaryArguments(data, {"start", "action", "priority", "period"})
 
-	defaultTableValue(data, "start", 1)
-	defaultTableValue(data, "period", 1)
-
-	data.time = data.start
-	data.start = nil
-
-	positiveTableArgument(data, "period")
-
 	if type(data.priority) == "string" then
 		switch(data, "priority"):caseof{
 			verylow  = function() data.priority = 10  end,
@@ -196,11 +187,21 @@ function Event(data)
 			high     = function() data.priority = -5  end,
 			veryhigh = function() data.priority = -10 end
 		}
-	elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "FileSystem", "TextScreen"}) then
+	end
+
+	if belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "FileSystem", "TextScreen"}) then
 		defaultTableValue(data, "priority", 10)
+		defaultTableValue(data, "start", 0)
 	else
 		defaultTableValue(data, "priority", 0)
+		defaultTableValue(data, "start", 1)
 	end
+
+	defaultTableValue(data, "period", 1)
+	positiveTableArgument(data, "period")
+
+	data.time = data.start
+	data.start = nil
 
 	if data.action == nil then
 		customError("Argument 'action' is mandatory.")
@@ -247,7 +248,6 @@ function Event(data)
 				end
 			end
 		elseif belong(type(data.action), {"Chart", "Map", "InternetSender", "VisualTable", "Clock", "FileSystem", "TextScreen"}) then
-			data.time = data.time - data.period
 			data.action = function(event)
 				maction:update(event)
 			end

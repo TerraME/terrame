@@ -69,6 +69,11 @@ return{
 		unitTest:assertError(error_func, switchInvalidArgumentMsg("aaa", "priority", options))
 
 		error_func = function()
+			event = Event{start = 0.5, period = 2, priority = "medium", action = function(event) end}
+		end
+		unitTest:assertError(error_func, defaultValueMsg("priority", 0))
+
+		error_func = function()
 			event = Event{period = 0, priority = 1, action = function() end}
 		end
 		unitTest:assertError(error_func, incompatibleValueMsg("period", "positive number (except zero)", 0))

@@ -51,12 +51,6 @@ return{
 		event = Event{start = 0.5, period = 2, priority = "low", action = function(event) end}
 		unitTest:assertEquals(event:getPriority(), 5)
 
-		event = Event{start = 0.5, period = 2, priority = "medium", action = function(event) end}
-		unitTest:assertEquals(event:getPriority(), 0)
-
-		event = Event{start = 0.5, period = 2, priority = "high", action = function(event) end}
-		unitTest:assertEquals(event:getPriority(), -5)
-
 		event = Event{start = 0.5, period = 2, priority = "veryhigh", action = function(event) end}
 		unitTest:assertEquals(event:getPriority(), -10)
 

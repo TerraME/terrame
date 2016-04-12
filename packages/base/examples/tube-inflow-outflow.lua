@@ -3,27 +3,28 @@
 -- amounts of water in the tube.
 -- @image tube-inflow-outflow.bmp
 
-world = Cell{water = 40}
-
-Chart{
-    target = world,
-	pen = "dash"
-}
-
-t = Timer{
-    Event{action = function()
+world = Cell{
+	water = 40,
+	execute = function(world)
     	if world.water > 5 then
 	        world.water = world.water - 5
 	    else
 	    	world.water = 0
 	    end
-    end},
+    end
+}
+
+chart = Chart{
+    target = world,
+	pen = "dash"
+}
+
+t = Timer{
+    Event{action = world},
     Event{start = 10, period = 10, action = function()
     	world.water = world.water + 40 -- try another value
     end},
-    Event{start = 0, action = function(e)
-    	world:notify()
-    end}
+    Event{action = chart}
 }
 
 t:run(40)

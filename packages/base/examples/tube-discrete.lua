@@ -3,20 +3,21 @@
 -- we can see that the water flows out of the tube in discrete steps.
 -- @image tube-discrete.bmp
 
-world = Cell{water = 40}
+world = Cell{
+	water = 40,
+	execute = function(world)
+        world.water = world.water - 5
+	end
+}
 
-Chart{
+chart = Chart{
     target = world,
 	yLabel = "Gallons",
 }
 
 t = Timer{
-    Event{action = function()
-        world.water = world.water - 5
-    end},
-    Event{start = 0, period = 0.25, action = function(e)
-    	world:notify(e:getTime())
-    end}
+    Event{action = world},
+    Event{period = 0.25, action = chart}
 }
 
 t:run(8)

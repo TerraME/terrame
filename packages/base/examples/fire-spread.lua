@@ -65,7 +65,7 @@ cs = CellularSpace{
 	instance = cell
 }
 
-Map{
+map = Map{
 	target = cs,
 	select = "state",
 	color = {"white", "lightGreen",   "lightGreen",   "green",   "darkGreen",   "darkGreen",   "blue", "brown",   "red",   "black"},
@@ -83,9 +83,9 @@ itF = Trajectory{
 t = Timer{
 	Event{action = function()
 		itF:execute()
-		cs:notify()
 		itF:filter()
-	end}
+	end},
+	Event{action = map}
 }
 
 t:run(STEPS)

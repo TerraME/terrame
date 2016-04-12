@@ -28,17 +28,17 @@ e = Environment{
 
 e:createPlacement{max = 5}
 
-t = Timer{
-	Event{action = soc},
-	Event{action = cs}
-}
-
 m = Map{
 	target = soc,
 	symbol = "smile",
 	color = "yellow",
 	background = "darkGreen",
 	size = 25
+}
+
+t = Timer{
+	Event{action = soc},
+	Event{action = m}
 }
 
 t:run(100)

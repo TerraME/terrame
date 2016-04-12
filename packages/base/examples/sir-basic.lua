@@ -9,15 +9,8 @@
 world = Cell{
 	susceptible = 9998,
 	infected = 2,
-	recovered = 0
-}
-
-Chart{target = world}
-
-world:notify()
-
-t = Timer{
-	Event{action = function()
+	recovered = 0,
+	execute = function(world)
 		world.recovered = world.recovered + world.infected / 2
 		local new_infected = world.infected * 6 * 0.25
 		if new_infected > world.susceptible then
@@ -25,8 +18,14 @@ t = Timer{
 		end
 		world.infected = world.infected / 2 + new_infected
 		world.susceptible = 10000 - world.infected - world.recovered
-		world:notify()
-	end}
+	end
+}
+
+chart = Chart{target = world}
+
+t = Timer{
+	Event{action = world},
+	Event{action = chart}
 }
 
 t:run(30)

@@ -74,7 +74,7 @@ cell = Cell{
 		cell.cover = "pasture"
 		cell.count = 0
 	end,
-	regrowth = function(cell)
+	execute = function(cell)
 		if cell.cover == "soil" then
 			cell.count = cell.count + 1
 			if cell.count >= 4 then
@@ -118,31 +118,27 @@ chart = Chart{
 	color = {"red", "blue"}
 }
 
-Map{
+map1 = Map{
 	target = cs,
 	select = "cover",
 	value = {"soil", "pasture"},
 	color = {"brown", "green"}
 }
 
-Map{
+map2 = Map{
 	target = cs,
 	select = "owner",
 	value = {"empty", "predator", "prey"},
 	color = {"white", "red", "blue"}
 }
 
-
-c:notify()
-
 timer = Timer{
-	Event{action = function()
-		preys:execute()
-		predators:execute()
-		c:notify()
-		cs:regrowth()
-		cs:notify()
-	end}
+	Event{action = preys},
+	Event{action = predators},
+	Event{action = cs},
+	Event{action = map1},
+	Event{action = map2},
+	Event{action = chart},
 }
 
 timer:run(500)

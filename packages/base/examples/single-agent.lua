@@ -20,15 +20,15 @@ e = Environment{
 
 e:createPlacement()
 
-t = Timer{
-	Event{action = singleFooAgent},
-	Event{action = cs}
-}
-
 m = Map{
 	target = singleFooAgent,
 	symbol = "turtle",
 	background = "green"
+}
+
+t = Timer{
+	Event{action = singleFooAgent},
+	Event{action = m}
 }
 
 t:run(100)

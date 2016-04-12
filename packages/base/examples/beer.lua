@@ -77,13 +77,13 @@ c = Cell{
 	total_cost = 0
 }
 
-reqDeliv = Chart{
+chartDeliv = Chart{
 	target = c,
 	select = {"beer_requested", "beer_delivered"},
 	color = {"red", "blue"}
 }
 
-Chart{
+chartCost = Chart{
 	target = c,
 	select = "total_cost",
 	color = "black",
@@ -155,9 +155,9 @@ t = Timer{
 		forEachAgent(s, function(agent)
 			c.total_cost = c.total_cost + agent.costs
 		end)
-
-		c:notify()
-	end}
+	end},
+	Event{action = chartDeliv},
+	Event{action = chartCost}
 }
 
 t:run(500)

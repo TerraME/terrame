@@ -46,7 +46,7 @@ cs:createNeighborhood{
 	end
 }
 
-Map{
+map1 = Map{
 	target = cs,
 	select = "height",
 	min = 0,
@@ -55,7 +55,7 @@ Map{
 	color = "Grays"
 }
 
-map = Map{
+map2 = Map{
 	target = cs,
 	select = "logwater",
 	min = 0,
@@ -73,16 +73,9 @@ timer = Timer{
 		cs:synchronize()
 		cs:init()
 		cs:runoff()
-
-		local quantity = 0
-
-		forEachCell(cs, function(cell)
-			quantity = quantity + cell.water
-		end)
 	end},
-	Event{action = function()
-		cs:notify()
-	end}
+	Event{action = map1},
+	Event{action = map2}
 }
 
 timer:run(100)

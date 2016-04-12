@@ -13,14 +13,8 @@ chart = Chart{
 	yLabel = "Gallons"
 }
 
-chart2 = Chart{
-    target = world,
-	yLabel = "Gallons"
-}
-
 t = Timer{
     Event{action = world},
-	Event{action = chart2},
 	Event{action = chart}
 }
 

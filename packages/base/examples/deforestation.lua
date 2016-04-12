@@ -177,8 +177,8 @@ t = Timer{
 		local total_pot = currentPot(amazonia)
 		traj:rebuild()
 		deforest(traj, total_pot)
-		amazonia:notify()
-	end}
+	end},
+	Event{start = 2004, action = map}
 }
 
 t:run(FINAL_TIME)

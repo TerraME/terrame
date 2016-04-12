@@ -88,8 +88,8 @@ t = Timer{
 		csn:turn()
 		csn:chooseBest()
 		csn:update()
-		csn:notify()
-	end}
+	end},
+	Event{action = map}
 }
 
 t:run(TURNS)

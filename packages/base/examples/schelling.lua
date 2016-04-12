@@ -89,6 +89,18 @@ empty_cells = Trajectory{
 	end
 }
 
+map = Map{
+	target = cells,
+	select = "color",
+	value = {"empty", "black", "red"},
+	color = {"lightGray", "black", "red"}
+}
+
+chart = Chart{
+	target = society,
+	select = "unhappy"
+}
+
 timer = Timer{
 	Event{action = function()
 		unhappy_agents = society:unhappy_agents()
@@ -98,27 +110,13 @@ timer = Timer{
 			local myagent = unhappy_agents:sample()
 			local mycell  = empty_cells:sample()
 			myagent:move(mycell)
-			society:notify()
-			cells:notify()
 		else
 			return false
 		end 
-	end}
+	end},
+	Event{action = map},
+	Event{action = chart}
 }
-
-map = Map{
-	target = cells,
-	select = "color",
-	value = {"empty", "black", "red"},
-	color = {"lightGray", "black", "red"}
-}
-
-Chart{
-	target = society,
-	select = "unhappy"
-}
-
-society:notify()
 
 timer:run(MAX_TURNS)
 

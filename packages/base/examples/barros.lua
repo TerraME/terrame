@@ -103,6 +103,6 @@ map = Map{
 
 forEachAgent(society, function(agent)
 	agent:execute()
-	cellspace:notify()
+	map:notify()
 end)
 

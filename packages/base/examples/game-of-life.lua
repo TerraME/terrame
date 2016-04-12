@@ -59,7 +59,7 @@ cs = CellularSpace{
 
 cs:createNeighborhood()
 
-m = Map{
+map = Map{
 	target = cs,
 	select = "state",
 	color = {"black", "lightGray"},
@@ -70,8 +70,8 @@ timer = Timer{
 	Event{action = function()
 		cs:synchronize()
 		cs:execute()
-		cs:notify()
-	end}
+	end},
+	Event{action = map}
 }
 
 timer:run(TURNS)

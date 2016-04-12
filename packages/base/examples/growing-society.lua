@@ -33,18 +33,8 @@ e = Environment{
 
 e:createPlacement{}
 
-Chart{
+chart = Chart{
 	target = soc
-}
-
-soc:notify(0)
-
-t = Timer{
-	Event{action = soc},
-	Event{action = cs},
-	Event{action = function(e)
-		soc:notify(e)
-	end}
 }
 
 map = Map{
@@ -52,6 +42,14 @@ map = Map{
 	grouping = "placement",
 	value = {0, 1},
 	color = {"black", "blue"}
+}
+
+
+t = Timer{
+	Event{action = soc},
+	Event{action = cs},
+	Event{action = chart},
+	Event{action = map}
 }
 
 t:run(120)
