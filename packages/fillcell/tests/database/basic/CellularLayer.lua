@@ -417,7 +417,7 @@ return {
 		unitTest:assertEquals(weighLayerInfo.table, string.lower(weighLayerName))
 
 		-- ###################### 11 #############################	
-		local intersecLayerName = clName1.."_Mojority_Intersection"
+		local intersecLayerName = clName1.."_Majority_Intersection"
 		pgData.table = intersecLayerName
 		tl:dropPgTable(pgData)	
 		
@@ -440,7 +440,7 @@ return {
 		unitTest:assertEquals(intersecLayerInfo.table, string.lower(intersecLayerName))
 		
 		-- ###################### 12 #############################	
-		local occurrenceLayerName = clName1.."_Mojority_Occurrence"
+		local occurrenceLayerName = clName1.."_Majority_Occurrence"
 		pgData.table = occurrenceLayerName
 		tl:dropPgTable(pgData)	
 		

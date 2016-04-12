@@ -617,10 +617,16 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 				else
 					newName = string.gsub(currentProp, "B"..select.."_", property.."_")
 				end
-			else
+			elseif dsType == "POSTGIS" then
 				newName = string.gsub(currentProp, select.."_", property.."_")
+			else
+				newName = currentProp -- TODO: REVIEW TO SHAPE
 			end
-			ds:renameProperty(dSetName, currentProp, newName)
+
+			if newName ~= currentProp then
+				ds:renameProperty(dSetName, currentProp, newName)
+			end
+			
 			propsRenamed[newName] = newName
 		end		
 	end
@@ -679,7 +685,7 @@ local function getNormalizedName(name)
 	return string.sub(name, 1, 10)
 end
 
-local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName)
+local function vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, outDSetName, area)
 	local v2v = binding.te.attributefill.VectorToVectorMemory()
 	v2v:setInput(fromLayer, toLayer)			
 			
@@ -740,8 +746,8 @@ local function rasterToVector(fromLayer, toLayer, operation, select, outConnInfo
 	local rpos = binding.GetFirstPropertyPos(rDSet, binding.RASTER_TYPE)
 	local raster = rDSet:getRaster(rpos)
 	
-	if (fromLayer:getSRID() == 0) or (toLayer:getSRID() == 0) then
-		customError("Input layer with invalid SRID information.")
+	if (fromLayer:getSRID() == 0) or (toLayer:getSRID() == 0) then -- TODO: REVIEW
+		--customError("Input layer with invalid SRID information.")
 	end
 	
 	local grid = raster:getGrid()
@@ -835,17 +841,17 @@ local function finalize()
 	end
 end
 
+local function init()
+	if not initialized then
+		binding.TeSingleton.getInstance():initialize()
+		binding.te.plugin.PluginManager.getInstance():clear()		
+		binding.te.plugin.PluginManager.getInstance():loadAll()
+		initialized = true
+	end	
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
-
-	init = function()		
-		if not initialized then
-			binding.TeSingleton.getInstance():initialize()
-			binding.te.plugin.PluginManager.getInstance():clear()		
-			binding.te.plugin.PluginManager.getInstance():loadAll()
-			initialized = true
-		end
-	end,
 
 	finalize = function()
 		finalize()
@@ -860,14 +866,22 @@ TerraLib_ = {
 			customError("Please, the file extension must be '.tview'.")
 		end
 		
+		if not project.layers then
+			project.layers = layers
+		end
+		
 		saveProject(project, layers)
 	end,
 
 	openProject = function(self, project, filePath)
-		if not isValidTviewExt(project.file) then
+		if not isValidTviewExt(filePath) then
 			customError("Please, the file extension must be '.tview'.")
 		end		
-	
+		
+		if not project.file then
+			project.file = filePath
+		end
+		
 		loadProject(project, filePath)		
 	end,
 	
@@ -1045,7 +1059,11 @@ TerraLib_ = {
 		if dseType:hasRaster() then
 			propCreatedName = rasterToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out)
 		else
-			propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out)
+			propCreatedName = vectorToVector(fromLayer, toLayer, operation, select, outConnInfo, outType, out, area)
+		end
+		
+		if outType == "OGR" then
+			propCreatedName = getNormalizedName(propCreatedName)
 		end
 		
 		if (outType == "POSTGIS") and (type(select) == "string")  then
@@ -1114,15 +1132,15 @@ TerraLib_ = {
 		return set
 	end,
 	
-	saveDataSet = function(self, project, from, to, toName, attrs)
+	saveDataSet = function(self, project, fromLayerName, toSet, toName, attrs)
 		loadProject(project, project.file)
 
-		local fromLayer = project.layers[from]
+		local fromLayer = project.layers[fromLayerName]
 		
 		if fromLayer:getType() == "DATASETLAYER" then
 			fromLayer = binding.te.map.DataSetLayer.toDataSetLayer(fromLayer)	
 		else
-			customError("Unknown Layer '"..from.."'.")
+			customError("Unknown Layer '"..fromLayerName.."'.")
 		end
 
 		local dseName = fromLayer:getDataSetName()
@@ -1147,7 +1165,7 @@ TerraLib_ = {
 		local types = getPropertiesTypes(dse)
 
 		-- Config the properties of the new DataSet 
-		for k, v in pairs(to[1]) do		
+		for k, v in pairs(toSet[1]) do		
 			local isPk = (k == pkName)
 			
 			if types[k] ~= nil then
@@ -1160,9 +1178,9 @@ TerraLib_ = {
 				if type(v) == "number" then
 					newDst:add(k, isPk, binding.DOUBLE_TYPE, true)
 				elseif type(v) == "string" then
-					newDst:add(k, binding.STRING_TYPE)
+					newDst:add(k, isPk, binding.STRING_TYPE, true)
 				elseif type(v) == "boolean" then
-					newDst:add(k, binding.BOOLEAN_TYPE)
+					newDst:add(k, isPk, binding.BOOLEAN_TYPE, true)
 				end
 			end
 		end
@@ -1171,14 +1189,14 @@ TerraLib_ = {
 		local newDse = binding.te.mem.DataSet(newDst)
 		numProps = newDse:getNumProperties()
 		
-		for i = 1, #to do
+		for i = 1, #toSet do
 			local idpos = 0
 			local item = binding.te.mem.DataSetItem.create(newDse)
 
 			for j = 0, numProps - 1 do
 				local propName = newDse:getPropertyName(j)
 
-				for k, v in pairs(to[i]) do				
+				for k, v in pairs(toSet[i]) do				
 					if propName == k then 
 						local type = newDse:getPropertyDataType(j)
 						
@@ -1280,7 +1298,7 @@ function TerraLib(data)
 	else	
 		setmetatable(data, metaTableTerraLib_)
 		instance = data
-		instance:init()
+		init()
 		return data
 	end
 end

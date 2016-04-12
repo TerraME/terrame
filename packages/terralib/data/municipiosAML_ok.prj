@@ -1,0 +1,1 @@
+PROJCS["Polyconic",GEOGCS["Geographic Coordinate System",DATUM["SOUTH_AMERICAN_1969",SPHEROID["South America 1969",6378160.0,298.2499972761588]],PRIMEM["Greenwich",0.0],UNIT["degree",0.0174532925199433]],PROJECTION["Polyconic"],PARAMETER["false_easting",0.0],PARAMETER["false_northing",0.0],PARAMETER["central_meridian",-57.0],PARAMETER["latitude_of_origin",0.0],UNIT["Meter",1.0]]

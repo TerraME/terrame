@@ -28,11 +28,6 @@ return {
 		local t2 = TerraLib{}
 		
 		unitTest:assertEquals(t1, t2)
-		
-		t1:finalize()
-	end,
-	init = function(unitTest)
-		unitTest:assert(true)
 	end,
 	finalize = function(unitTest)
 		local tlib = TerraLib{}
@@ -41,19 +36,7 @@ return {
 	end,
 	getVersion = function(unitTest)
 		local tlib = TerraLib{}
-		unitTest:assertEquals(tlib:getVersion(), "5.1.0")		
-	end,
-	createProject = function(unitTest)
-		unitTest:assert(true)
-	end,
-	openProject = function(unitTest)
-		unitTest:assert(true)
-	end,
-	getLayerInfo = function(unitTest)
-		unitTest:assert(true)
-	end,
-	addShpLayer = function(unitTest)
-		unitTest:assert(true)
+		unitTest:assertEquals(tlib:getVersion(), "5.1.2")		
 	end,
 	addTifLayer = function(unitTest)
 		unitTest:assert(true)
