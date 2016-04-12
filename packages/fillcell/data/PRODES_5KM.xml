@@ -1,0 +1,13 @@
+<Projection>
+ <Name>UTM</Name>
+ <Datum>SAD69</Datum>
+ <Unit>Meters</Unit>
+ <Origin_Longitude>-57.000000000000007</Origin_Longitude>
+ <Origin_Latitude>0.000000000000000</Origin_Latitude>
+ <Parallel1>0.000000000000000</Parallel1>
+ <Parallel2>0.000000000000000</Parallel2>
+ <OffsetX>500000.000000000000000</OffsetX>
+ <OffsetY>10000000.000000000000000</OffsetY>
+ <Scale>0.999600000000000</Scale>
+ <Hemisphere>South</Hemisphere>
+</Projection>
