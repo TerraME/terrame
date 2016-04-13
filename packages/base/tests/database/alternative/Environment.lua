@@ -30,7 +30,7 @@ return{
 		local projName = "environment_alt.tview"
 
 		if isFile(projName) then
-			os.execute("rm -f "..projName)
+			rmFile(projName)
 		end
 
 		local author = "Avancini"
@@ -87,17 +87,46 @@ return{
 			project = proj,
 			layer = clName1
 		}
+
+		if isFile(projName) then
+			rmFile(projName)
+		end
 		
+		tl:dropPgTable(pgData)			
+
 		local cs2 = CellularSpace{xdim = 10}
+		local cs = CellularSpace{xdim = 10}
 
 		local env = Environment{cs, cs2}
 
 		local error_func = function()
 			env:loadNeighborhood{
-			source = filePath("gpmAreaCellsPols.gpm", "base"),
-		}
+				source = filePath("gpmAreaCellsPols.gpm", "base"),
+			}
 		end
-		unitTest:assertError(error_func, "CellularSpaces with layers 'cells1000x1000' and 'Limit' were not found in the Environment.")
+		unitTest:assertError(error_func, "CellularSpaces with layers 'emas.shp' and 'Limit_pol.shp' were not found in the Environment.")
+
+		local cs = CellularSpace{
+			file = filePath("Limit_pol.shp")
+		}
+
+		local env = Environment{cs, cs2}
+
+		local error_func = function()
+			env:loadNeighborhood{
+				source = filePath("gpmAreaCellsPols.gpm", "base"),
+			}
+		end
+		unitTest:assertError(error_func, "CellularSpace with layer 'emas.shp' was not found in the Environment.")
+
+		local env = Environment{cs2, cs}
+
+		local error_func = function()
+			env:loadNeighborhood{
+				source = filePath("gpmAreaCellsPols.gpm", "base"),
+			}
+		end
+		unitTest:assertError(error_func, "CellularSpace with layer 'emas.shp' was not found in the Environment.")
 
 		local cs1 = CellularSpace{xdim = 10}
 		cs2 = CellularSpace{xdim = 10}
@@ -183,44 +212,52 @@ return{
 			}
 		end
 		unitTest:assertError(error_func, invalidFileExtensionMsg("source", "teste"))
-		
-		-- TODO: REVIEW
-		-- local env = Environment{cs, cs1, cs2}
 
-		-- local countTest = 1
+		local cs = CellularSpace{
+			file = filePath("emas.shp")
+		}
 
-		-- gpm Regular CS x Irregular CS - without weights
-		-- local s = sessionInfo().separator
-		-- local mfile = filePath("error"..s.."gpmAreaCellsPols-error.gpm", "base")
+		local cs2 = CellularSpace{
+			file = filePath("Limit_pol.shp")
+		}
 
-		-- local error_func = function()
-			-- env:loadNeighborhood{
-				-- source = mfile,
-				-- name = "my_neighborhood"..countTest
-			-- }
-		-- end
-		-- unitTest:assertError(error_func, "The string 'bb' found as weight in the file '"..mfile.."' could not be converted to a number.") -- SKIP
+		local env = Environment{cs, cs2}
 
-		-- local mfile = filePath("error"..s.."gpmAreaCellsPols-error2.gpm", "base")
+		local countTest = 1
 
-		-- local error_func = function()
-			-- env:loadNeighborhood{
-			-- source = mfile,
-			-- name = "my_neighborhood"..countTest
-		-- }
-		-- end
-		
-		-- if not _Gtme.isWindowsOS() then
-			-- unitTest:assertError(error_func, "The string '' found as weight in the file '"..mfile.."' could not be converted to") -- SKIP
-		-- else
-			-- unitTest:assert(true) -- SKIP
-		-- end		
-				
-		if isFile(projName) then
-			os.execute("rm -f "..projName)
+		-- .gpm Regular CS x Irregular CS - without weights
+		local s = sessionInfo().separator
+		local mfile = filePath("error"..s.."gpmAreaCellsPols-error.gpm", "base")
+
+		error_func = function()
+	   		env:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"..countTest
+			}
 		end
-		
-		tl:dropPgTable(pgData)			
+		unitTest:assertError(error_func, "The string 'bb' found as weight in the file '"..mfile.."' could not be converted to a number.")
+
+		local mfile = filePath("error"..s.."gpmAreaCellsPols-error2.gpm", "base")
+
+		error_func = function()
+	   		env:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"..countTest
+			}
+		end
+
+		unitTest:assertError(error_func, "Could not read the file properly. It seems that it is corrupted.")
+
+		local mfile = filePath("error"..s.."gpmAreaCellsPols-error3.gpm", "base")
+
+		error_func = function()
+	   		env:loadNeighborhood{
+				source = mfile,
+				name = "my_neighborhood"..countTest
+			}
+		end
+
+		unitTest:assertError(error_func, "The string 'abc' found as weight in the file '"..mfile.."' could not be converted to a number.")
 	end
 }
 

@@ -456,8 +456,12 @@ Environment_ = {
 			end
 		end
 		
-		if cellSpaces[1] == nil or cellSpaces[2] == nil then
+		if cellSpaces[1] == nil and cellSpaces[2] == nil then
 			customError("CellularSpaces with layers '"..layer1Id.."' and '"..layer2Id.."' were not found in the Environment.")
+		elseif cellSpaces[1] == nil then
+			customError("CellularSpace with layer '"..layer1Id.."' was not found in the Environment.")
+		elseif cellSpaces[2] == nil then
+			customError("CellularSpace with layer '"..layer2Id.."' was not found in the Environment.")
 		end
 
 		repeat
@@ -479,6 +483,10 @@ Environment_ = {
 				local line_neighbors = file:read()
 
 				local neighIdEndIdx = string.find(line_neighbors, "%s")
+
+				if not neighIdEndIdx then
+					customError("Could not read the file properly. It seems that it is corrupted.")
+				end
 				local neighIdIdx = 1
 
 				for i = 1, numNeighbors do
