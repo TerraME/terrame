@@ -24,288 +24,282 @@
 
 return{
 	loadNeighborhood = function(unitTest)
-		unitTest:assert(true)
-		
-		-- TODO: REVIEW
-		-- local config = getConfig()
-		-- local mdbType = config.dbType
-		-- local mhost = config.host
-		-- local muser = config.user
-		-- local mpassword = config.password
-		-- local mport = config.port
-		-- local mdatabase
+		local cs = CellularSpace{
+			file = filePath("River_lin.shp")
+		}
 
-		-- if mdbType == "ado" then
-			-- mdatabase = data("emas.mdb", "base")
-		-- else
-			-- mdatabase = "emas"
-		-- end
+		local cs2 = CellularSpace{
+			file = filePath("emas.shp")
+		}
 
-		-- local cs = CellularSpace{
-			-- host = mhost,
-			-- user = muser,
-			-- password = mpassword,
-			-- port = mport,
-			-- database = mdatabase,
-			-- theme = "River"
-		-- }
+		local cs3 = CellularSpace{
+			file = filePath("Limit_pol.shp")
+		}
 
-		-- local cs2 = CellularSpace{
-			-- host = mhost,
-			-- user = muser,
-			-- password = mpassword,
-			-- port = mport,
-			-- database = mdatabase,
-			-- theme = "cells1000x1000"
-		-- }
+		unitTest:assertEquals(208, #cs)
+		unitTest:assertEquals(1435, #cs2)
+		unitTest:assertEquals(1, #cs3)
 
+		local env = Environment{cs, cs2, cs3}
 
-		-- local cs3 = CellularSpace{
-			-- host = mhost,
-			-- user = muser,
-			-- password = mpassword,
-			-- port = mport,
-			-- database = mdatabase,
-		-- }
+		local countTest = 1
 
-		-- unitTest:assertEquals(208, #cs) -- SKIP
-		-- unitTest:assertEquals(1435, #cs2) -- SKIP
-		-- unitTest:assertEquals(1, #cs3) -- SKIP
+		-- .gpm Regular CS x Irregular CS - without weights
+		env:loadNeighborhood{
+			source = filePath("gpmlinesDbEmas.gpm", "base"),
+			name = "my_neighborhood"..countTest
+		}
 
-		-- local env = Environment{cs, cs2, cs3}
+		local sizes = {}
 
-		-- local countTest = 1
+		local minSize = math.huge
+		local maxSize = -math.huge
+		local sumWeight = 0
 
-		-- .gpm Regular CS x Irregular CS -- without weights
-		-- env:loadNeighborhood{
-			-- source = file("gpmlinesDbEmas.gpm", "base"),
-			-- name = "my_neighborhood"..countTest
-		-- }
+		forEachCell(cs2, function(cell)
+			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
+			unitTest:assertNotNil(neighborhood)
 
-		-- local sizes = {}
+			local neighborhoodSize = #neighborhood
 
-		-- local minSize = math.huge
-		-- local maxSize = -math.huge
-		-- local sumWeight = 0
+			unitTest:assert(neighborhoodSize >= 0)
+			unitTest:assert(neighborhoodSize <= 9)
 
-		-- forEachCell(cs2, function(cell)
-			-- local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			-- unitTest:assertNotNil(neighborhood) -- SKIP
+			minSize = math.min(neighborhoodSize, minSize)
+			maxSize = math.max(neighborhoodSize, maxSize)
 
-			-- local neighborhoodSize = #neighborhood
+			if(sizes[neighborhoodSize] == nil)then sizes[neighborhoodSize] = 0 end
+			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
 
-			-- unitTest:assert(neighborhoodSize >= 0) -- SKIP
-			-- unitTest:assert(neighborhoodSize <= 9) -- SKIP
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+				unitTest:assertEquals(1, weight)
+				sumWeight = sumWeight + weight
+			end)
+		end)
 
-			-- minSize = math.min(neighborhoodSize, minSize)
-			-- maxSize = math.max(neighborhoodSize, maxSize)
+		unitTest:assertEquals(623, sumWeight)
+		unitTest:assertEquals(0, minSize)
+		unitTest:assertEquals(9, maxSize)
 
-			-- if(sizes[neighborhoodSize] == nil)then sizes[neighborhoodSize] = 0 end
-			-- sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
+		unitTest:assertEquals(242, sizes[1])
+		unitTest:assertEquals(28, sizes[2])
+		unitTest:assertEquals(60, sizes[3])
+		unitTest:assertEquals(11, sizes[4])
+		unitTest:assertEquals(8, sizes[5])
+		unitTest:assertEquals(4, sizes[6])
+		unitTest:assertEquals(4, sizes[7])
+		unitTest:assertEquals(1, sizes[9])
+		unitTest:assertEquals(1077, sizes[0])
 
-			-- forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				-- unitTest:assertEquals(1, weight) -- SKIP
-				-- sumWeight = sumWeight + weight
-			-- end)
-		-- end)
+		-- .gpm Regular CS x Irregular CS - file with weight
+		countTest = countTest + 1
 
-		-- unitTest:assertEquals(623, sumWeight) -- SKIP
-		-- unitTest:assertEquals(0, minSize) -- SKIP
-		-- unitTest:assertEquals(9, maxSize) -- SKIP
+		env:loadNeighborhood{
+			source = filePath("gpmAreaCellsPols.gpm", "base"),
+			name = "my_neighborhood"..countTest
+		}
 
-		-- unitTest:assertEquals(242, sizes[1]) -- SKIP
-		-- unitTest:assertEquals(28, sizes[2]) -- SKIP
-		-- unitTest:assertEquals(60, sizes[3]) -- SKIP
-		-- unitTest:assertEquals(11, sizes[4]) -- SKIP
-		-- unitTest:assertEquals(8, sizes[5]) -- SKIP
-		-- unitTest:assertEquals(4, sizes[6]) -- SKIP
-		-- unitTest:assertEquals(4, sizes[7]) -- SKIP
-		-- unitTest:assertEquals(1, sizes[9]) -- SKIP
-		-- unitTest:assertEquals(1077, sizes[0]) -- SKIP
+		local minWeight = math.huge
+		local maxWeight = -math.huge
+		sumWeight = 0
 
-		-- .gpm Regular CS x Irregular CS -- file with weight
-		-- countTest = countTest + 1
+		forEachCell(cs2, function(cell)
+			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
+			unitTest:assertNotNil(neighborhood)
 
-		-- env:loadNeighborhood{
-			-- source = file("gpmAreaCellsPols.gpm", "base"),
-			-- name = "my_neighborhood"..countTest
-		-- }
+			local neighborhoodSize = #neighborhood
 
-		-- local minWeight = math.huge
-		-- local maxWeight = -math.huge
-		-- sumWeight = 0
+			unitTest:assertEquals(1, neighborhoodSize)
 
-		-- forEachCell(cs2, function(cell)
-			-- local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			-- unitTest:assertNotNil(neighborhood) -- SKIP
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+				unitTest:assert(weight <= 1000000)
+				unitTest:assert(weight >= 304.628)
 
-			-- local neighborhoodSize = #neighborhood
+				minWeight = math.min(weight, minWeight)
+				maxWeight = math.max(weight, maxWeight)
 
-			-- unitTest:assertEquals(1, neighborhoodSize) -- SKIP
+				sumWeight = sumWeight + weight
+			end)
+		end)
 
-			-- forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				-- unitTest:assert(weight <= 1000000) -- SKIP
-				-- unitTest:assert(weight >= 304.628) -- SKIP
-				-- minWeight = math.min(weight, minWeight)
-				-- maxWeight = math.max(weight, maxWeight)
+		unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001)
+		unitTest:assertEquals(304.628, minWeight, 0.00001)
+		unitTest:assertEquals(1000000, maxWeight)
 
-				-- sumWeight = sumWeight + weight
-			-- end)
-		-- end)
+		-- .gpm Regular CS x Irregular CS - using 'bidirect' = false
+		countTest = countTest + 1
 
-		-- unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001) -- SKIP
-		-- unitTest:assertEquals(304.628, minWeight, 0.00001) -- SKIP
-		-- unitTest:assertEquals(1000000, maxWeight) -- SKIP
+		env:loadNeighborhood{
+			source = filePath("gpmAreaCellsPols.gpm", "base"),
+			name = "my_neighborhood"..countTest
+		}
 
-		-- .gpm Regular CS x Irregular CS -- using 'bidirect' = false
-		-- countTest = countTest + 1
+		minWeight = math.huge
+		maxWeight = -math.huge
+		sumWeight = 0
 
-		-- env:loadNeighborhood{
-			-- source = file("gpmAreaCellsPols.gpm", "base"),
-			-- name = "my_neighborhood"..countTest
-		-- }
+		forEachCell(cs2, function(cell)
+			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
 
-		-- minWeight = math.huge
-		-- maxWeight = --math.huge
-		-- sumWeight = 0
+			local neighborhoodSize = #neighborhood
+			unitTest:assertEquals(1, neighborhoodSize)
 
-		-- forEachCell(cs2, function(cell)
-			-- local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+				unitTest:assert(weight <= 1000000)
+				unitTest:assert(weight >= 304.628)
 
-			-- local neighborhoodSize = #neighborhood
-			-- unitTest:assertEquals(1, neighborhoodSize) -- SKIP
+				minWeight = math.min(weight, minWeight)
+				maxWeight = math.max(weight, maxWeight)
 
-			-- forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				-- unitTest:assert(weight <= 1000000) -- SKIP
-				-- unitTest:assert(weight >= 304.628) -- SKIP
+				sumWeight = sumWeight + weight
+			end)
+		end)
 
-				-- minWeight = math.min(weight, minWeight)
-				-- maxWeight = math.max(weight, maxWeight)
+		unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001)
+		unitTest:assertEquals(304.628, minWeight, 0.00001)
+		unitTest:assertEquals(1000000, maxWeight)
 
-				-- sumWeight = sumWeight + weight
-			-- end)
-		-- end)
-		-- unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001) -- SKIP
-		-- unitTest:assertEquals(304.628, minWeight, 0.00001) -- SKIP
-		-- unitTest:assertEquals(1000000, maxWeight) -- SKIP
+		-- .gpm Reg CS x Irreg CS - using 'bidirect' = true
+		countTest = countTest + 1
 
-		-- .gpm Reg CS x Irreg CS -- using 'bidirect' = true
-		-- countTest = countTest + 1
+		env:loadNeighborhood{
+			source = filePath("gpmAreaCellsPols.gpm", "base"),
+			name = "my_neighborhood"..countTest,
+			bidirect = true
+		}
 
-		-- env:loadNeighborhood{
-			-- source = file("gpmAreaCellsPols.gpm", "base"),
-			-- name = "my_neighborhood"..countTest,
-			-- bidirect = true
-		-- }
+		minWeight = math.huge
+		maxWeight = -math.huge
+		sumWeight = 0
 
-		-- minWeight = math.huge
-		-- maxWeight = -math.huge
-		-- sumWeight = 0
+		forEachCell(cs2, function(cell)
+			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
+			unitTest:assertNotNil(neighborhood)
 
-		-- forEachCell(cs2, function(cell)
-			-- local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			-- unitTest:assertNotNil(neighborhood) -- SKIP
+			local neighborhoodSize = #neighborhood
+			unitTest:assertEquals(1, neighborhoodSize)
 
-			-- local neighborhoodSize = #neighborhood
-			-- unitTest:assertEquals(1, neighborhoodSize) -- SKIP
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+				unitTest:assert(weight <= 1000000)
+				unitTest:assert(weight >= 304.628)
 
-			-- forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				-- unitTest:assert(weight <= 1000000) -- SKIP
-				-- unitTest:assert(weight >= 304.628) -- SKIP
+				minWeight = math.min(weight, minWeight)
+				maxWeight = math.max(weight, maxWeight)
 
-				-- minWeight = math.min(weight, minWeight)
-				-- maxWeight = math.max(weight, maxWeight)
+				sumWeight = sumWeight + weight
+			end)
+		end)
 
-				-- sumWeight = sumWeight + weight
-			-- end)
-		-- end)
+		unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001)
+		unitTest:assertEquals(304.628, minWeight, 0.00001)
+		unitTest:assertEquals(1000000, maxWeight)
 
-		-- unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001) -- SKIP
-		-- unitTest:assertEquals(304.628, minWeight, 0.00001) -- SKIP
-		-- unitTest:assertEquals(1000000, maxWeight) -- SKIP
-		
 		-- Verifying the other side
-		-- minWeight = math.huge
-		-- maxWeight = -math.huge
-		-- sumWeight = 0
+		minWeight = math.huge
+		maxWeight = -math.huge
+		sumWeight = 0
 
-		-- forEachCell(cs3, function(cell)
-			-- local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			-- unitTest:assertNotNil(neighborhood) -- SKIP
+		forEachCell(cs3, function(cell)
+			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
+			unitTest:assertNotNil(neighborhood)
 
-			-- local neighborhoodSize = #neighborhood
-			-- unitTest:assertEquals(1435, neighborhoodSize) -- SKIP
+			local neighborhoodSize = #neighborhood
+			unitTest:assertEquals(1435, neighborhoodSize)
 
-			-- forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				-- unitTest:assert(1000000 >= weight) -- SKIP
-				-- unitTest:assert(304.628 <= weight) -- SKIP
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+				unitTest:assert(1000000 >= weight)
+				unitTest:assert(304.628 <= weight)
 
-				-- minWeight = math.min(weight, minWeight)
-				-- maxWeight = math.max(weight, maxWeight)
+				minWeight = math.min(weight, minWeight)
+				maxWeight = math.max(weight, maxWeight)
 
-				-- sumWeight = sumWeight + weight
-			-- end)
-		-- end)
+				sumWeight = sumWeight + weight
+			end)
+		end)
 
-		-- unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001) -- SKIP
-		-- unitTest:assertEquals(304.628, minWeight, 0.00001) -- SKIP
-		-- unitTest:assertEquals(1000000, maxWeight) -- SKIP
+		unitTest:assertEquals(1326705357.3888, sumWeight, 0.00001)
+		unitTest:assertEquals(304.628, minWeight, 0.00001)
+		unitTest:assertEquals(1000000, maxWeight)
 
-		-- .gpm Irregular CS x Irregular CS -- using bidirect = false
-		-- countTest = countTest + 1
+		-- .gpm Irregular CS x Irregular CS - using bidirect = false
+		countTest = countTest + 1
 
-		-- env:loadNeighborhood{
-			-- source = file("emas--pollin.gpm", "base"),
-			-- name = "my_neighborhood"..countTest
-		-- }
+		env:loadNeighborhood{
+			source = filePath("emas-pollin.gpm", "base"),
+			name = "my_neighborhood"..countTest
+		}
 
-		-- sumWeight = 0
+		sumWeight = 0
 
-		-- forEachCell(cs3, function(cell)
-			-- local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			-- unitTest:assertNotNil(neighborhood) -- SKIP
-			-- local neighborhoodSize = #neighborhood
+		forEachCell(cs3, function(cell)
+			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
+			unitTest:assertNotNil(neighborhood)
 
-			-- unitTest:assertEquals(207, neighborhoodSize) -- SKIP
+			local neighborhoodSize = #neighborhood
 
-			-- forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				-- unitTest:assertEquals(weight, 1) -- SKIP
+			unitTest:assertEquals(207, neighborhoodSize)
 
-				-- sumWeight = sumWeight + weight
-			-- end)
-		-- end)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+				unitTest:assertEquals(weight, 1)
 
-		-- unitTest:assertEquals(207, sumWeight) -- SKIP
+				sumWeight = sumWeight + weight
+			end)
+		end)
 
-		-- .gpm Irregular CS x Irregular CS -- using bidirect = true
-		-- countTest = countTest + 1
+		unitTest:assertEquals(207, sumWeight)
 
-		-- env:loadNeighborhood{
-			-- source = file("emas--pollin.gpm", "base"),
-			-- name = "my_neighborhood"..countTest,
-			-- bidirect = true
-		-- }
+		-- .gpm Irregular CS x Irregular CS - using bidirect = true
+		countTest = countTest + 1
 
-		-- sumWeight = 0
+		env:loadNeighborhood{
+			source = filePath("emas-pollin.gpm", "base"),
+			name = "my_neighborhood"..countTest,
+			bidirect = true
+		}
 
-		-- forEachCell(cs3, function(cell)
-			-- local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
-			-- unitTest:assertNotNil(neighborhood) -- SKIP
+		sumWeight = 0
 
-			-- local neighborhoodSize = #neighborhood
-			-- unitTest:assertEquals(207, neighborhoodSize) -- SKIP
+		forEachCell(cs3, function(cell)
+			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
+			unitTest:assertNotNil(neighborhood)
 
-			-- forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
-				-- unitTest:assertEquals(weight, 1) -- SKIP
-				-- unitTest:assert(neigh:getNeighborhood("my_neighborhood"..countTest):isNeighbor(c)) -- SKIP
+			local neighborhoodSize = #neighborhood
+			unitTest:assertEquals(207, neighborhoodSize)
 
-				-- sumWeight = sumWeight + weight
-			-- end)
-		-- end)
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+				unitTest:assertEquals(weight, 1)
+				unitTest:assert(neigh:getNeighborhood("my_neighborhood"..countTest):isNeighbor(c))
 
-		-- unitTest:assertEquals(207, sumWeight) -- SKIP
-		-- unitTest:assertEquals(1, sizes[0]) -- SKIP
-		-- unitTest:assertEquals(207, sizes[1]) -- SKIP
+				sumWeight = sumWeight + weight
+			end)
+		end)
+
+		unitTest:assertEquals(207, sumWeight)
+
+		-- the other side
+		sizes = {}
+		sumWeight = 0
+
+		forEachCell(cs, function(cell)
+			local neighborhood = cell:getNeighborhood("my_neighborhood"..countTest)
+			unitTest:assertNotNil(neighborhood)
+
+			local neighborhoodSize = #neighborhood
+
+			if sizes[neighborhoodSize] == nil then sizes[neighborhoodSize] = 0 end
+			sizes[neighborhoodSize] = sizes[neighborhoodSize] + 1
+
+			forEachNeighbor(cell, "my_neighborhood"..countTest, function(c, neigh, weight)
+				unitTest:assertEquals(weight, 1)
+				unitTest:assert(neigh:getNeighborhood("my_neighborhood"..countTest):isNeighbor(c))
+
+				sumWeight = sumWeight + weight
+			end)
+		end)
+
+		unitTest:assertEquals(207, sumWeight)
+		unitTest:assertEquals(1, sizes[0])
+		unitTest:assertEquals(207, sizes[1])
 	end
 }
 

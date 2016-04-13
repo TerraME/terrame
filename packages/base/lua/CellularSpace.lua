@@ -330,6 +330,12 @@ local function setCellsByTerraLibDataSet(self, dSet)
 			end
 		end
 		
+		if cell.object_id0 then
+			cell:setId(cell.object_id0)
+		elseif cell.object_id_ then
+			cell:setId(cell.object_id_)
+		end
+
 		table.insert(self.cells, cell)
 
 		self.xMin = math.min(self.xMin, cell.x)
@@ -344,6 +350,18 @@ local function loadShape(self)
 	local dSet = tlib:getShpByFilePath(self.file)
 	self.geometry = true
 	setCellsByTerraLibDataSet(self, dSet)
+	local temp = ""
+
+	for i = self.file:len(), 1, -1 do
+		if self.file:sub(i, i) ~= sessionInfo().separator then
+			temp = self.file:sub(i, i)..temp
+		else
+			break
+		end
+	end
+
+	self.layer = temp
+	self.cObj_:setLayer(self.layer)
 end
 
 local function loadVirtual(self)
@@ -1448,6 +1466,7 @@ function CellularSpace(data)
 			setmetatable(cell, metaTableInstance)
 		end)
 	end
+
 	return data
 end
 
