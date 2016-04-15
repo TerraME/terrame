@@ -1,0 +1,1848 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+	    
+	    	<title>Error Package</title>
+	    
+	    <link rel="stylesheet" href="../luadoc.css" type="text/css" />
+		<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="product">
+				<div id="product_logo">
+					<a href="http://www.terrame.org">
+					<img src='../img/terrame.png'/><br/></div></a>
+				<div id="product_name"><big><b></b></big></div>
+				<div id="product_description"></div>
+			</div> <!-- id="product" -->
+
+			<div id="main">
+				<div id="navigation">
+					<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<h1>onerror</h1>
+<ul>
+	
+		<li><a href="../index.html">Index</a></li>
+	
+</ul>
+
+<!-- Module list -->
+
+
+<!-- Models list -->
+
+	
+	
+		
+	
+		
+			
+		
+	
+		
+	
+		
+	
+
+	
+		
+			<h1><a href="../files/models.html">Models</a></h1>
+		
+	
+
+
+<!-- Types list -->
+
+	
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+	
+
+	<ul>
+		
+		
+		
+		
+		
+	</ul>
+
+
+<!-- Files list -->
+
+	
+	
+		
+			
+		
+	
+		
+	
+		
+			
+		
+	
+		
+	
+
+	
+		<h1>Functions</h1>
+	
+
+	<ul>
+		
+					<li>
+						<a href="../files/ErrorHandling.html">ErrorHandling</a>
+					</li>
+				
+			
+		
+		
+					<li><strong>Utils</strong></li>
+				
+			
+		
+		
+	</ul>
+
+
+<!-- Examples -->
+
+	
+		<h1><a href="../files/examples.html">Examples</a></h1>
+	
+
+
+
+<!-- Data -->
+
+	
+		<h1><a href="../files/data.html">Data</a></h1>
+	
+
+
+
+<!-- Font -->
+
+
+
+				</div> <!-- id="navigation" -->
+
+				<div id="content">
+					<h1>Utils
+					
+					
+					</h1>
+
+					
+						<span class="description">Some basic and useful functions for modeling.</span>
+					
+					
+					
+					
+
+					
+						
+
+						
+							<h2 class="function_list">Functions</h2>
+							<table class="function_list">
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#belong2">belong2</a>&nbsp;
+<td class="summary">Return whether a given value belong to a table </td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#call2">call2</a>&nbsp;
+<td class="summary">Return a function that executes a given function of an object.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#createNeighborhood2">createNeighborhood2</a>&nbsp;
+<td class="summary">Create a Neighborhood for each Cell of the CellularSpace.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#elapsedTime2">elapsedTime2</a>&nbsp;
+<td class="summary">Convert the time in seconds to a more readable value.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#forEachAgent2">forEachAgent2</a>&nbsp;
+<td class="summary">Second order function to traverse a Society, Group, or Cell, applying a function to each of its Agents.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#forEachCell2">forEachCell2</a>&nbsp;
+<td class="summary">Second order function to transverse a given CellularSpace, Trajectory, or Agent, applying a given function to each of its Cells.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#forEachCellPair2">forEachCellPair2</a>&nbsp;
+<td class="summary">Second order function to transverse two CellularSpaces with the same resolution and size.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#forEachElement2">forEachElement2</a>&nbsp;
+<td class="summary">Second order function to transverse a given object, applying a function to each of its elements.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#forEachFile2">forEachFile2</a>&nbsp;
+<td class="summary">Second order function to transverse a given directory, applying a given function on each of its files.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#forEachNeighborhood2">forEachNeighborhood2</a>&nbsp;
+<td class="summary">Second order function to transverse all Neighborhoods of a Cell, applying a given function on them.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#forEachOrderedElement2">forEachOrderedElement2</a>&nbsp;
+<td class="summary">Second order function to transverse a given object, applying a function to each of its elements according to their alphabetical order.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#forEachSocialNetwork2">forEachSocialNetwork2</a>&nbsp;
+<td class="summary">Second order function to transverse all SocialNetworks of an Agent, applying a given function on them.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getExtension2">getExtension2</a>&nbsp;
+<td class="summary">Return the extension of a given file name.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#getn2">getn2</a>&nbsp;
+<td class="summary">Return the number of elements of a table, be them named or not.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#greaterByAttribute2">greaterByAttribute2</a>&nbsp;
+<td class="summary">Return a function that compares two tables (which can be, for instance, Agents or Cells).</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#greaterByCoord2">greaterByCoord2</a>&nbsp;
+<td class="summary">Return a function that compares two tables with x and y attributes (basically two regular Cells).</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#levenshtein">levenshtein</a>&nbsp;
+<td class="summary">Return the Levenshtein's distance between two strings.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#round2">round2</a>&nbsp;
+<td class="summary">Round a number given a precision.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#sessionInfo2">sessionInfo2</a>&nbsp;
+<td class="summary">Return information about the current execution.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#string.endswith2">string.endswith2</a>&nbsp;
+<td class="summary">Return whether a string ends with a given substring (no case sensitive).</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#switch2">switch2</a>&nbsp;
+<td class="summary">Implement a switch case function, where functions are associated to the available options.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#type2">type2</a>&nbsp;
+<td class="summary">Return the type of an object.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#vardump2">vardump2</a>&nbsp;
+<td class="summary">Function that returns a string describing the internal content of an object.</td>
+									</tr>
+								
+							
+						
+						</table>
+					
+
+					
+
+					<!--<br/>
+					<br/>-->
+
+					
+						
+						<dl class="function">
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="belong2">
+
+	</a><strong>belong2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return whether a given value belong to a table</span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A value.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: 
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">belon2</span>(<span class="number">2</span>, {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>})
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="call2">
+
+	</a><strong>call2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return a function that executes a given function of an object. It is particularly useful as argument action for an Event.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: Any TerraME object.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A string with the function to be executed.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">a</span> = <span class="function">Agent</span>{<span class="id">exec</span> = <span class="reserved">function</span>(<span class="id">self</span>, <span class="id">ev</span>) <span class="id">print</span>(<span class="id">ev</span>:<span class="id">getTime</span>()) <span class="reserved">end</span>}
+
+<span class="id">t</span> = <span class="function">Timer</span>{
+    <span class="function">Event</span>{<span class="id">action</span> = <span class="function">call2</span>(<span class="id">a</span>, <span class="string">"exec"</span>)}
+}
+
+<span class="id">t</span>:<span class="id">execute</span>(<span class="number">10</span>)
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="createNeighborhood2">
+
+	</a><strong>createNeighborhood2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Create a Neighborhood for each Cell of the CellularSpace.<br><br></span>
+
+
+	
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>filter</strong>: A function(Cell, Cell)->bool, where the first argument is the Cell itself and the other represent a possible neighbor. It returns true when the neighbor will be included in the relation. In the case of two CellularSpaces, this function is called twice for e ach pair of Cells, first filter(c1, c2) and then filter(c2, c1), where c1 belongs to cs1 and c2 belongs to cs2. The default value is a function that returns true.
+    </li> 
+    
+  
+    <li>
+	  <strong>inmemory</strong>: If true (default), a Neighborhood will be built and stored for each Cell of the CellularSpace. The Neighborhoods will change only if the modeler add or remove neighbors explicitly. In this case, if any of the attributes the Neighborhood is based on changes then the resulting Neighborhood might be different. Neighborhoods not in memory also help the simulation to run with larger datasets, as they are not explicitly represented, but they consume more time as they need to be built again and again along the simulation.
+    </li> 
+    
+  
+    <li>
+	  <strong>m</strong>: Number of columns. If m is even then it will be increased by one to keep the Cell in the center of the Neighborhood. The default value is 3.
+    </li> 
+    
+  
+    <li>
+	  <strong>n</strong>: Number of rows. If n is even then it will be increased by one to keep the Cell in the center of the Neighborhood. The default value is m.
+    </li> 
+    
+  
+    <li>
+	  <strong>name</strong>: A string with the name of the Neighborhood to be created. The default value is "1".
+    </li> 
+    
+  
+    <li>
+	  <strong>self</strong>: Add the Cell as neighbor of itself? The default value is false. Note that the functions that do not require this argument always depend on a filter function, which will define whether the Cell can be neighbor of itself.
+    </li> 
+    
+  
+    <li>
+	  <strong>strategy</strong>: A string with the strategy to be used for creating the Neighborhood. See the table below.
+    </li> 
+    
+      </span>
+      <!-- Strategy of the argument -->
+       
+      <table class="arg_tab">
+	  
+      
+        <tr>
+        
+          
+            <th>
+            Strategy
+            </th>
+          
+          
+            <th>
+            Description
+            </th>
+          
+          
+            <th>
+            Compulsory Arguments
+            </th>
+          
+          
+            <th>
+            Optional Arguments
+            </th>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "3x3"
+            </td>
+          
+          
+            <td>
+            A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead).
+            </td>
+          
+          
+            <td>
+            filter, inmemory, name, weight
+            </td>
+          
+          
+            <td>
+            
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "coord"
+            </td>
+          
+          
+            <td>
+            A bidirected relation between two CellularSpaces connecting Cells with the same (x, y) coordinates.
+            </td>
+          
+          
+            <td>
+            target
+            </td>
+          
+          
+            <td>
+            inmemory, name
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "function"
+            </td>
+          
+          
+            <td>
+            A Neighborhood based on a function where any other Cell can be a neighbor.
+            </td>
+          
+          
+            <td>
+            filter
+            </td>
+          
+          
+            <td>
+            inmemory, name, weight
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "moore"(default)
+            </td>
+          
+          
+            <td>
+            A Moore (queen) Neighborhood, connecting each Cell to its (at most) eight touching Cells.
+            </td>
+          
+          
+            <td>
+            
+            </td>
+          
+          
+            <td>
+            inmemory, name, self
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "mxn"
+            </td>
+          
+          
+            <td>
+            A m (columns) by n (rows) Neighborhood within the CellularSpace or between two CellularSpaces if target is used.
+            </td>
+          
+          
+            <td>
+            m
+            </td>
+          
+          
+            <td>
+            filter, inmemory, n, name, target, weight
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "vonneumann"
+            </td>
+          
+          
+            <td>
+            A von Neumann (rook) Neighborhood, connecting each Cell to its (at most) four ortogonally surrounding Cells.
+            </td>
+          
+          
+            <td>
+            
+            </td>
+          
+          
+            <td>
+            abc, inmemory, name, self
+            </td>
+          
+        
+        </tr>    
+      </table>
+      <span class="arg">
+    
+  
+    <li>
+	  <strong>target</strong>: Another CellularSpace whose Cells will be used to create neighborhoods.
+    </li> 
+    
+  
+    <li>
+	  <strong>weight</strong>: A function (Cell, Cell)->number, where the first argument is the Cell itself and the other represent its neighbor. It returns the weight of the relation. This function will be called only if filter returns true.
+    </li> 
+    
+  
+    <li>
+	  <strong>wrap</strong>: Will the Cells in the borders be connected to the Cells in the opposite border? The default value is false.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">cs</span>:<span class="function">createNeighborhood2</span>() <span class="comment">-- moore</span>
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="elapsedTime2">
+
+	</a><strong>elapsedTime2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Convert the time in seconds to a more readable value. It returns a string in the format "hours:minutes:seconds", or "days:hours:minutes:seconds" if the elapsed time is more than one day.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A number.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">print</span>(<span class="function">elapsedTime2</span>(<span class="number">100</span>)) <span class="comment">-- 00:01:40</span>
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="forEachAgent2">
+
+	</a><strong>forEachAgent2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Second order function to traverse a Society, Group, or Cell, applying a function to each of its Agents. It returns true if no call to the function taken as argument returns false, otherwise it returns false.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A Society, Group, or Cell. Cells need to have a placement in order to execute this function.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A function that takes one single Agent as argument. If some call to it returns false, forEachAgent() stops and does not process any other Agent. This function can optionally get a second argument with a positive number representing the position of the Agent in the vector of Agents.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">forEachAgent2</span>(<span class="id">group</span>, <span class="reserved">function</span>(<span class="id">agent</span>)
+    <span class="id">agent</span>.<span class="id">age</span> = <span class="id">agent</span>.<span class="id">age</span> + <span class="number">1</span>
+<span class="reserved">end</span>)
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="forEachCell2">
+
+	</a><strong>forEachCell2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Second order function to transverse a given CellularSpace, Trajectory, or Agent, applying a given function to each of its Cells. If any of the function calls returns false, forEachCell() stops and returns false, otherwise it returns true.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A CellularSpace, Trajectory, or Agent. Agents need to have a placement in order to execute this function.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A user-defined function that takes a Cell as argument. It can optionally have a second argument with a positive number representing the position of the Cell in the vector of Cells. If it returns false when processing a given Cell, forEachCell() stops and does not process any other Cell.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">forEachCell2</span>(<span class="id">cellularspace</span>, <span class="reserved">function</span>(<span class="id">cell</span>)
+    <span class="id">cell</span>.<span class="id">water</span> = <span class="id">cell</span>.<span class="id">water</span> + <span class="number">1</span>
+<span class="reserved">end</span>)
+
+<span class="id">forEachCell</span>(<span class="id">cellularspace</span>, <span class="reserved">function</span>(<span class="id">cell</span>, <span class="id">i</span>)
+    <span class="id">print</span>(<span class="id">i</span>) <span class="comment">-- 1, 2, 3, ...</span>
+<span class="reserved">end</span>)
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="forEachCellPair2">
+
+	</a><strong>forEachCellPair2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Second order function to transverse two CellularSpaces with the same resolution and size. It applies a function that gets two Cells as arguments, one from each CellularSpace. Both cells share the same (x, y) location. It returns true if no call to the function taken as argument returns false, otherwise it returns false.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A CellularSpace.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: Another CellularSpace.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: A user-defined function that takes two Cells as arguments, one coming from the first argument and the other from the second one. If some call returns false, forEachCellPair() stops and does not process any other pair of Cells.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">forEachCellPair2</span>(<span class="id">cs1</span>, <span class="id">cs2</span>, <span class="reserved">function</span>(<span class="id">cell1</span>, <span class="id">cell2</span>)
+    <span class="id">cell1</span>.<span class="id">water</span> = <span class="id">cell1</span>.<span class="id">water</span> + <span class="id">cell2</span>.<span class="id">water</span>
+    <span class="id">cell2</span>.<span class="id">water</span> = <span class="number">0</span>
+<span class="reserved">end</span>)
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="forEachElement2">
+
+	</a><strong>forEachElement2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Second order function to transverse a given object, applying a function to each of its elements. It can be used for instance to transverse all the elements of an Agent or an Environment. According to the current Lua version, if one uses this function twice, Lua does not guarantee that the objects will be transversed in the same order. If you need to guarantee this, it is recommended to use <a href=../files/Utils.html#forEachOrderedElement2>forEachOrderedElement2()</a> instead. This function returns true if no call to the function taken as argument returns false, otherwise it returns false.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A TerraME object or a table.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A user-defined function that takes three arguments: the index of the element, the element itself, and the type of the element. If some call to this function returns false then forEachElement() stops.
+    </li> 
+    
+  
+    <li>
+	  <strong>#3</strong>: A TerraME object or a table.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">forEachElement2</span>(<span class="id">cell</span>, <span class="reserved">function</span>(<span class="id">idx</span>, <span class="id">element</span>, <span class="id">etype</span>)
+    <span class="id">print</span>(<span class="id">element</span>, <span class="id">etype</span>)
+<span class="reserved">end</span>)
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="forEachFile2">
+
+	</a><strong>forEachFile2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Second order function to transverse a given directory, applying a given function on each of its files. If any of the function calls returns false, forEachFile() stops and returns false, otherwise it returns true.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string with the path to a directory, or a vector of files.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A user-defined function that takes a file name as argument. Note that the name does not include the directory where the file is placed.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">forEachFile2</span>(<span class="string">"C:"</span>, <span class="reserved">function</span>(<span class="id">file</span>)
+    <span class="id">print</span>(<span class="id">file</span>)
+<span class="reserved">end</span>)
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="forEachNeighborhood2">
+
+	</a><strong>forEachNeighborhood2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Second order function to transverse all Neighborhoods of a Cell, applying a given function on them. It returns true if no call to the function taken as argument returns false, otherwise it returns false.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A Cell.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A function that receives a Neighborhood index as argument.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="forEachOrderedElement2">
+
+	</a><strong>forEachOrderedElement2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Second order function to transverse a given object, applying a function to each of its elements according to their alphabetical order. It can be used for instance to transverse all the elements of an Agent or an Environment. This function executes first the numeric indexes and then the string ones, with upper case characters having priority over lower case. This function returns true if no call to the function taken as argument returns false, otherwise it returns false.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A TerraME object or a table.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A user-defined function that takes three arguments: the index of the element, the element itself, and the type of the element. If some call to this function returns false then forEachElement() stops.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">forEachOrderedElement2</span>(<span class="id">cell</span>, <span class="reserved">function</span>(<span class="id">idx</span>, <span class="id">element</span>, <span class="id">etype</span>)
+    <span class="id">print</span>(<span class="id">element</span>, <span class="id">etype</span>)
+<span class="reserved">end</span>)
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="forEachSocialNetwork2">
+
+	</a><strong>forEachSocialNetwork2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Second order function to transverse all SocialNetworks of an Agent, applying a given function on them. It returns true if no call to the function taken as argument returns false, otherwise it returns false.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: An Agent.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A function that receives a SocialNetwork index as argument.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">forEachSocialNetwork2</span>(<span class="id">agent</span>, <span class="reserved">function</span>(<span class="id">idx</span>)
+    <span class="id">forEachConnection</span>(<span class="id">agent</span>, <span class="id">idx</span>, <span class="reserved">function</span>()
+        <span class="comment">-- ...</span>
+    <span class="reserved">end</span>)
+<span class="reserved">end</span>)
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getExtension2">
+
+	</a><strong>getExtension2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the extension of a given file name. It returns the substring after the last dot. If it does not have a dot, an empty string is returned.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string with the file name.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">getExtension2</span>(<span class="string">"file.txt"</span>) <span class="comment">-- ".txt"</span>
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="getn2">
+
+	</a><strong>getn2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the number of elements of a table, be them named or not. It is a substitute for the old Lua function table.getn. It can also be used to compute the number of elements of any TerraME object, such as Agent or Environment.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A table.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">getn2</span>{<span class="id">name</span> = <span class="string">"john"</span>, <span class="id">age</span> = <span class="number">20</span>}
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="greaterByAttribute2">
+
+	</a><strong>greaterByAttribute2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return a function that compares two tables (which can be, for instance, Agents or Cells). The function returns which one has a priority over the other, according to an attribute of the objects and a given operator. If the function was not successfully built it returns nil.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string with the name of the attribute.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A string with the operator, which can be ">", "<", "<=", or ">=". The default value is "<".
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">greaterByAttribute2</span>()
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="greaterByCoord2">
+
+	</a><strong>greaterByCoord2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return a function that compares two tables with x and y attributes (basically two regular Cells). The function returns which one has a priority over the other, according to a given operator.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string with the operator, which can be ">", "<", "<=", or ">=". The default value is "<".
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">import</span>(<span class="string">"onerror"</span>)
+<span class="id">t</span> = <span class="function">Trajectory</span>{
+    <span class="id">target</span> = <span class="id">cs</span>,
+    <span class="id">sort</span> = <span class="function">greaterByCoord2</span>()
+}</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="levenshtein">
+
+	</a><strong>levenshtein</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the Levenshtein's distance between two strings. See <a href="http://en.wikipedia.org/wiki/Levenshtein_distance" target="_blank">http://en.wikipedia.org/wiki/Levenshtein_distance</a> for more details.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: Another string.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">levenshtein</span>(<span class="string">"abc"</span>, <span class="string">"abb"</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="round2">
+
+	</a><strong>round2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Round a number given a precision.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A number.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The number of decimal places to be used. The default value is zero.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">round2</span>(<span class="number">2.34566</span>, <span class="number">3</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="sessionInfo2">
+
+	</a><strong>sessionInfo2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return information about the current execution. The result is a table with the following values.<br><br></span>
+
+
+	 
+			<table class="arg_tab">
+			
+				<tr>
+					
+							<th>
+							Attribute
+							</th>
+						
+							<th>
+							Description
+							</th>
+						
+				<tr>
+					
+							<td>
+							dbVersion
+							</td>
+						
+							<td>
+							A string with the current TerraLib version for databases.
+							</td>
+						
+				<tr>
+					
+							<td>
+							mode
+							</td>
+						
+							<td>
+							A string with the current mode for warnings ("normal", "debug", or "quiet").
+							</td>
+						
+				<tr>
+					
+							<td>
+							path
+							</td>
+						
+							<td>
+							A string with the location of TerraME in the computer.
+							</td>
+						
+				<tr>
+					
+							<td>
+							separator
+							</td>
+						
+							<td>
+							A string with the directory separator.
+							</td>
+						
+				<tr>
+					
+							<td>
+							silent
+							</td>
+						
+							<td>
+							A boolean value indicating whether print() calls should not be shown in the screen. This parameter is set true when TerraME is executed with mode "silent".
+							</td>
+						
+				</tr>    
+			</table>
+		
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">sessionInfo2</span>().<span class="id">version</span>
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="string.endswith2">
+
+	</a><strong>string.endswith2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return whether a string ends with a given substring (no case sensitive).<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A string.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A substring describing the end of the first parameter.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">string</span>.<span class="id">endswith2</span>(<span class="string">"abcdef"</span>, <span class="string">"def"</span>)</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="switch2">
+
+	</a><strong>switch2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Implement a switch case function, where functions are associated to the available options. This function returns a table that contains a function called caseof, that gets a named table with functions describing what to do for each case (which is the index for the respective function). This table can have a field "missing" that is used when the first argument does not have an attribute whose name is the value of the second argument. The error messages of this function come from <a href=../files/ErrorHandling.html#switchInvalidArgumentMsg2>switchInvalidArgumentMsg2()</a> and <a href=../files/ErrorHandling.html#switchInvalidArgumentSuggestionMsg2>switchInvalidArgumentSuggestionMsg2()</a>.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A named table.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A string with the chosen attribute of the named table.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">data</span> = {<span class="id">protocol</span> = <span class="string">"udp"</span>}
+
+<span class="function">switch2</span>(<span class="id">data</span>, <span class="string">"protocol"</span>):<span class="id">caseof</span>{
+    <span class="id">tcp</span> = <span class="reserved">function</span>() <span class="id">print</span>(<span class="string">"tcp"</span>) <span class="reserved">end</span>,
+    <span class="id">udp</span> = <span class="reserved">function</span>() <span class="id">print</span>(<span class="string">"udp"</span>) <span class="reserved">end</span>
+}
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="type2">
+
+	</a><strong>type2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the type of an object. It extends the original Lua type() to support TerraME objects, whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: Any object or value.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">c</span> = <span class="function">Cell</span>{<span class="id">value</span> = <span class="number">3</span>}
+<span class="id">print</span>(<span class="function">type2</span>(<span class="id">c</span>)) <span class="comment">-- "Cell"</span>
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="vardump2">
+
+	</a><strong>vardump2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Function that returns a string describing the internal content of an object.<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: The object to be converted into a string.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: A string to be placed in the beginning of each line of the returning string.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">vardump2</span>{<span class="id">name</span> = <span class="string">"john"</span>, <span class="id">age</span> = <span class="number">20</span>}
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+						</dl>
+					
+
+					
+
+				</div> <!-- id="content" -->
+			</div> <!-- id="main" -->
+
+			<div id="about">
+				<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" /></a></p>
+			</div> <!-- id="about" -->
+
+		</div> <!-- id="container" -->	
+	</body>
+</html>
+

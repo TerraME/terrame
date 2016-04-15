@@ -33,10 +33,7 @@ ui_senderGUI.h
 ui_spatialObserverGUI.h
 ui_plotPropertiesGUI.h
 .project
-packages/*/doc/
-packages/*/examples/*.tme
 repository/.terrame*
 test/.terrame*
-test/packages/*/doc
 test/packages/.terrame*
 installer/setup

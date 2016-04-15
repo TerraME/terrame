@@ -1,0 +1,659 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+	    
+	    	<title>Error Package</title>
+	    
+	    <link rel="stylesheet" href="../luadoc.css" type="text/css" />
+		<!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="product">
+				<div id="product_logo">
+					<a href="http://www.terrame.org">
+					<img src='../img/terrame.png'/><br/></div></a>
+				<div id="product_name"><big><b></b></big></div>
+				<div id="product_description"></div>
+			</div> <!-- id="product" -->
+
+			<div id="main">
+				<div id="navigation">
+					<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<h1>tanular</h1>
+<ul>
+	
+		<li><a href="../index.html">Index</a></li>
+	
+</ul>
+
+<!-- Module list -->
+
+
+<!-- Models list -->
+
+	
+	
+		
+	
+
+	
+
+
+<!-- Types list -->
+
+	
+	
+		
+	
+
+	
+
+	<ul>
+		
+		
+	</ul>
+
+
+<!-- Files list -->
+
+	
+	
+		
+			
+		
+	
+
+	
+		<h1>Functions</h1>
+	
+
+	<ul>
+		
+					<li><strong>Utils</strong></li>
+				
+			
+		
+	</ul>
+
+
+<!-- Examples -->
+
+
+<!-- Data -->
+
+
+<!-- Font -->
+
+
+
+				</div> <!-- id="navigation" -->
+
+				<div id="content">
+					<h1>Utils
+					
+					
+					</h1>
+
+					
+						<span class="description">Some basic and useful functions for modeling.</span>
+					
+					
+					
+					
+
+					
+						
+
+						
+							<h2 class="function_list">Functions</h2>
+							<table class="function_list">
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#createNeighborhood2">createNeighborhood2</a>&nbsp;
+<td class="summary">Create a Neighborhood for each Cell of the CellularSpace.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#round2">round2</a>&nbsp;
+<td class="summary">Round a number given a precision.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#sessionInfo2">sessionInfo2</a>&nbsp;
+<td class="summary">Return information about the current execution.</td>
+									</tr>
+								
+							
+								
+									<tr>
+										<td class="name" nowrap><a href="#type2">type2</a>&nbsp;
+<td class="summary">Return the type of an object.</td>
+									</tr>
+								
+							
+						
+						</table>
+					
+
+					
+
+					<!--<br/>
+					<br/>-->
+
+					
+						
+						<dl class="function">
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="createNeighborhood2">
+
+	</a><strong>createNeighborhood2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Create a Neighborhood for each Cell of the CellularSpace.</span>
+
+
+	
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>filter</strong>: A function(Cell, Cell)->bool, where the first argument is the Cell itself and the other represent a possible neighbor. It returns true when the neighbor will be included in the relation. In the case of two CellularSpaces, this function is called twice for e ach pair of Cells, first filter(c1, c2) and then filter(c2, c1), where c1 belongs to cs1 and c2 belongs to cs2. The default value is a function that returns true.
+    </li> 
+    
+  
+    <li>
+	  <strong>inmemory</strong>: If true (default), a Neighborhood will be built and stored for each Cell of the CellularSpace. The Neighborhoods will change only if the modeler add or remove neighbors explicitly. In this case, if any of the attributes the Neighborhood is based on changes then the resulting Neighborhood might be different. Neighborhoods not in memory also help the simulation to run with larger datasets, as they are not explicitly represented, but they consume more time as they need to be built again and again along the simulation.
+    </li> 
+    
+  
+    <li>
+	  <strong>m</strong>: Number of columns. If m is even then it will be increased by one to keep the Cell in the center of the Neighborhood. The default value is 3.
+    </li> 
+    
+  
+    <li>
+	  <strong>n</strong>: Number of rows. If n is even then it will be increased by one to keep the Cell in the center of the Neighborhood. The default value is m.
+    </li> 
+    
+  
+    <li>
+	  <strong>name</strong>: A string with the name of the Neighborhood to be created. The default value is "1".
+    </li> 
+    
+  
+    <li>
+	  <strong>self</strong>: Add the Cell as neighbor of itself? The default value is false. Note that the functions that do not require this argument always depend on a filter function, which will define whether the Cell can be neighbor of itself.
+    </li> 
+    
+  
+    <li>
+	  <strong>strategy</strong>: A string with the strategy to be used for creating the Neighborhood. See the table below.
+    </li> 
+    
+      </span>
+      <!-- Strategy of the argument -->
+       
+      <table class="arg_tab">
+	  
+      
+        <tr>
+        
+          
+            <th>
+            Strategy
+            </th>
+          
+          
+            <th>
+            Description
+            </th>
+          
+          
+            <th>
+            Compulsory Arguments
+            </th>
+          
+          
+            <th>
+            Optional Arguments
+            </th>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "3x3"
+            </td>
+          
+          
+            <td>
+            A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead).
+            </td>
+          
+          
+            <td>
+            filter, inmemory, name, weight
+            </td>
+          
+          
+            <td>
+            
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "coord"
+            </td>
+          
+          
+            <td>
+            A bidirected relation between two CellularSpaces connecting Cells with the same (x, y) coordinates.
+            </td>
+          
+          
+            <td>
+            target
+            </td>
+          
+          
+            <td>
+            inmemory, name
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "function"
+            </td>
+          
+          
+            <td>
+            A Neighborhood based on a function where any other Cell can be a neighbor.
+            </td>
+          
+          
+            <td>
+            filter
+            </td>
+          
+          
+            <td>
+            inmemory, name, weight
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "moore"(default)
+            </td>
+          
+          
+            <td>
+            A Moore (queen) Neighborhood, connecting each Cell to its (at most) eight touching Cells.
+            </td>
+          
+          
+            <td>
+            
+            </td>
+          
+          
+            <td>
+            inmemory, name, self
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "mxn"
+            </td>
+          
+          
+            <td>
+            A m (columns) by n (rows) Neighborhood within the CellularSpace or between two CellularSpaces if target is used.
+            </td>
+          
+          
+            <td>
+            m
+            </td>
+          
+          
+            <td>
+            filter, inmemory, n, name, target, weight
+            </td>
+          
+        
+        <tr>
+        
+          
+            <td>
+            "vonneumann"
+            </td>
+          
+          
+            <td>
+            A von Neumann (rook) Neighborhood, connecting each Cell to its (at most) four ortogonally surrounding Cells.
+            </td>
+          
+          
+            <td>
+            
+            </td>
+          
+          
+            <td>
+            inmemory, name, self
+            </td>
+          
+        
+        </tr>    
+      </table>
+      <span class="arg">
+    
+  
+    <li>
+	  <strong>target</strong>: Another CellularSpace whose Cells will be used to create neighborhoods.
+    </li> 
+    
+  
+    <li>
+	  <strong>weight</strong>: A function (Cell, Cell)->number, where the first argument is the Cell itself and the other represent its neighbor. It returns the weight of the relation. This function will be called only if filter returns true.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">cs</span>:<span class="function">createNeighborhood2</span>() <span class="comment">-- moore</span>
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="round2">
+
+	</a><strong>round2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Round a number given a precision.<br><br></span>
+
+
+	 
+			<table class="arg_tab">
+			
+				<tr>
+					
+							<th>
+							b
+							</th>
+						
+				<tr>
+					
+							<td>
+							value1
+							</td>
+						
+							<td>
+							value2
+							</td>
+						
+				</tr>    
+			</table>
+		
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: A number.
+    </li> 
+    
+  
+    <li>
+	  <strong>#2</strong>: The number of decimal places to be used. The default value is zero.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="comment">-- round2(2.34566, 3)</span></code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="sessionInfo2">
+
+	</a><strong>sessionInfo2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return information about the current execution. The result is a table with the following values.<br><br></span>
+
+
+	 
+			<table class="arg_tab">
+			
+				<tr>
+					
+							<th>
+							Attribute
+							</th>
+						
+							<th>
+							Description
+							</th>
+						
+				<tr>
+					
+							<td>
+							dbVersion
+							</td>
+						
+							<td>
+							A string with the current TerraLib version for databases.
+							</td>
+						
+				<tr>
+					
+							<td>
+							mode
+							</td>
+						
+							<td>
+							A string with the current mode for warnings ("normal", "debug", or "quiet").
+							</td>
+						
+				<tr>
+					
+							<td>
+							path
+							</td>
+						
+							<td>
+							A string with the location of TerraME in the computer.
+							</td>
+						
+				<tr>
+					
+							<td>
+							separator
+							</td>
+						
+							<td>
+							A string with the directory separator.
+							</td>
+						
+				<tr>
+					
+							<td>
+							silent
+							</td>
+						
+							<td>
+							A boolean value indicating whether print() calls should not be shown in the screen. This parameter is set true when TerraME is executed with mode "silent".
+							</td>
+						
+				</tr>    
+			</table>
+		
+
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="function">sessionInfo2</span>().<span class="id">version</span>
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+									<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<dt><h2><a name="type2">
+
+	</a><strong>type2</strong>&nbsp;
+
+</h2></dt>
+<dd>
+
+
+<span class="description">
+
+Return the type of an object. It extends the original Lua type() to support TerraME objects, whose type name (for instance "CellularSpace" or "Agent") is returned instead of "table".<br><br></span>
+
+
+
+
+<!-- Function arguments -->
+  <h3>Arguments</h3>
+<ul><span class="arg">
+
+    <li>
+	  <strong>#1</strong>: Any object or value.
+    </li> 
+    
+  
+  </span></ul>
+
+
+
+
+
+
+
+<h3>Usage</h3>
+<pre class="example"><code><span class="id">c</span> = <span class="function">Cell</span>{<span class="id">value</span> = <span class="number">3</span>}
+<span class="id">print</span>(<span class="function">type2</span>(<span class="id">c</span>)) <span class="comment">-- "Cell"</span>
+</code></pre>
+
+
+
+
+</dd>
+
+
+						    	
+							
+						</dl>
+					
+
+					
+
+				</div> <!-- id="content" -->
+			</div> <!-- id="main" -->
+
+			<div id="about">
+				<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" /></a></p>
+			</div> <!-- id="about" -->
+
+		</div> <!-- id="container" -->	
+	</body>
+</html>
+
