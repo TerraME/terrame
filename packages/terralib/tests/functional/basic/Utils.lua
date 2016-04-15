@@ -24,27 +24,27 @@
 
 return {
 	getFileNameWithExtension = function(unitTest)
-		unitTest:assert(true)
+		unitTest:assertEquals(getFileNameWithExtension("/my/path/file.txt"), "file.txt")
 	end,
 	removeFileExtension = function(unitTest)
-		unitTest:assert(true)
+		unitTest:assertEquals(removeFileExtension("file.txt"), "file")
 	end,
 	getFileName = function(unitTest)
-		unitTest:assert(true)
+		unitTest:assertEquals(getFileName("/my/path/file.txt"), "file")
 	end,	
 	getFilePathAndNameAndExtension = function(unitTest)
-		unitTest:assert(true)
+		local p, n, e = getFilePathAndNameAndExtension("/my/path/file.txt")
+		unitTest:assertEquals(p, "/my/path/")
+		unitTest:assertEquals(n, "file")
+		unitTest:assertEquals(e, "txt")
 	end,	
 	getFileExtension = function(unitTest)
-		unitTest:assert(true)
+		local e = getFileExtension("/my/path/file.txt")
+		unitTest:assertEquals(e, "txt")
 	end,
 	getFileDir = function(unitTest)
-		unitTest:assert(true)
-	end,
-	encodeUri = function(unitTest)
-		unitTest:assert(true)
-	end,
-	decodeUri = function(unitTest)
-		unitTest:assert(true)
+		local p = getFileDir("/my/path/file.txt")
+		unitTest:assertEquals(p, "/my/path/")
 	end
 }
+

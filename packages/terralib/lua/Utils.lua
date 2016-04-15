@@ -22,18 +22,30 @@
 --
 -------------------------------------------------------------------------------------------
 
+--- Return the file name removing its path.
+-- @arg path A string with the file with the path.
+-- @usage import("terralib")
+-- print(getFileNameWithExtension("/my/path/file.txt")) -- "file.txt"
 function getFileNameWithExtension(path)
 	local _, fileNameWithExtension, _ = string.match(path, "(.-)([^\\/]-%.?([^%.\\/]*))$")
 	
 	return fileNameWithExtension
 end
 
+--- Return the file name removing its extension.
+-- @arg fileNameWithExtension A string with the file with extension.
+-- @usage import("terralib")
+-- print(removeFileExtension("file.txt")) -- "file"
 function removeFileExtension(fileNameWithExtension)
 	local _, _, fileName = string.find(fileNameWithExtension, "^(.*)%.[^%.]*$")
 	
 	return fileName
 end
 
+--- Return the file name removing its path and extension.
+-- @arg path A string with the file path.
+-- @usage import("terralib")
+-- print(getFileName("/my/path/file.txt")) -- "file"
 function getFileName(path) 
 	local fileNameWithExtension = getFileNameWithExtension(path)
 	local fileName = removeFileExtension(fileNameWithExtension)
@@ -41,6 +53,10 @@ function getFileName(path)
 	return fileName
 end	
 
+--- Split the path, file name, and extension from a given string.
+-- @arg path A string with the file path.
+-- @usage import("terralib")
+-- print(getFilePathAndNameAndExtension("/my/path/file.txt")) -- "/my/path/", "file", "txt"
 function getFilePathAndNameAndExtension(path)
 	local filePath, fileNameWithExtension, extension = string.match(path, "(.-)([^\\/]-%.?([^%.\\/]*))$")
 	local fileName = removeFileExtension(fileNameWithExtension)
@@ -48,34 +64,23 @@ function getFilePathAndNameAndExtension(path)
 	return filePath, fileName, extension
 end
 
+--- Return the file extension from a fiven file path.
+-- @arg path A string with the file with extension.
+-- @usage import("terralib")
+-- print(getFileExtension("/my/path/file.txt")) -- "txt"
 function getFileExtension(path)
 	local _, _, extension = getFilePathAndNameAndExtension(path)
 
 	return extension
 end
 
+--- Return the directory of a file given its path.
+-- @arg path A string with the file path.
+-- @usage import("terralib")
+-- print(getFileDir("/my/path/file.txt")) -- "/my/path"
 function getFileDir(path)
 	local dir, _, _ = getFilePathAndNameAndExtension(path)
 	
 	return dir
 end
 
-function decodeUri(str)
-	str = string.gsub(str, "+", " ")
-	str = string.gsub(str, "%%(%x%x)",
-			function(h) return string.char(tonumber(h,16)) end)
-	str = string.gsub(str, "\r\n", "\n")
-	  
-	return str	
-end
-
-function encodeUri(str)
-	if (str) then
-		str = string.gsub(str, "\n", "\r\n")
-		str = string.gsub(str, "([^%w %-%_%.%~])",
-				function (c) return string.format ("%%%02X", string.byte(c)) end)
-		str = string.gsub (str, " ", "+")
-	end
-	
-	return str
-end
