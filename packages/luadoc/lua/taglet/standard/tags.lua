@@ -143,9 +143,12 @@ local function arg(tag, block, text, doc_report, silent)
 
 	-- TODO: make this pattern more flexible, accepting empty descriptions
 	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
-	if not name and not silent then
-		printError("In "..block.name.."(), could not infer argument and description of @arg from '"..text.."'")
-		doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
+	if not name then
+		if not silent then
+			printError("In "..block.name.."(), could not infer argument and description of @arg from '"..text.."'")
+			doc_report.compulsory_arguments = doc_report.compulsory_arguments + 1
+		end
+
 		return
 	end
 
